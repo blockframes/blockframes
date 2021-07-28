@@ -1,10 +1,9 @@
 import { AvailsFilter } from '@blockframes/contract/avails/avails';
-import { Mandate } from '@blockframes/contract/contract/+state';
+import { createHoldback, Holdback, Mandate } from '@blockframes/contract/contract/+state';
 import { createLanguageKey } from '@blockframes/movie/+state';
 import { MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
 import { Media, MovieCurrency, Territory } from '@blockframes/utils/static-model';
 import { Term } from '../../term/+state/term.model';
-import { createHoldback, Holdback } from '../../contract/+state/contract.model';
 
 export interface Bucket {
   id: string;
@@ -63,7 +62,7 @@ export function createBucketTerm(params: Partial<BucketTerm> = {}): BucketTerm {
     exclusive: false,
     duration: { from: new Date(), to: new Date() },
     ...params,
-    languages: createLanguageKey(params.languages)
+    languages: createLanguageKey(params.languages),
   }
 }
 

@@ -37,22 +37,22 @@ export interface Contract<D extends Timestamp | Date = Date> {
   sellerId: string;
   /** Org ids that have contract parent of this contract */
   stakeholders: string[];
-  holdbacks: Holdback<D>[];
 }
 
-export type ContractDocument = Contract<Timestamp>;
-
-export interface Mandate extends Contract {
+export interface Mandate<D extends Timestamp | Date = Date> extends Contract<D> {
   type: 'mandate';
 }
-export interface Sale extends Contract {
+export interface Sale<D extends Timestamp | Date = Date> extends Contract<D> {
   type: 'sale';
   /** Create the anccestors organization when you create the sale */
   ancestors: string[]; // ??? The orgs that have a parent contract with the
   // incomeId: string; // Id of the terms/right on which income should occurred
   /** Free text provided by the buyer, addressed to the seller */
   specificity?: string;
+  holdbacks: Holdback<D>[];
 }
+
+export type ContractDocument = Mandate<Timestamp> | Sale<Timestamp>;
 
 export function createHoldback(params: Partial<Holdback<Date>> = {}): Holdback {
   return {
@@ -77,7 +77,6 @@ export function createMandate(params: Partial<Mandate> = {}): Mandate {
     type: 'mandate',
     status: 'pending',
     stakeholders: [],
-    holdbacks: [],
     ...params
   }
 }

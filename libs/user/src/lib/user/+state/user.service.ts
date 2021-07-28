@@ -10,6 +10,7 @@ import { DocumentMeta } from '@blockframes/utils/models-meta';
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'users' })
 export class UserService extends CollectionService<UserState> {
+  readonly useMemorization = true;
 
   public userIds$ = this.organizationQuery.selectActive().pipe(
     map(org => org.userIds)

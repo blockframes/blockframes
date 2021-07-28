@@ -59,8 +59,7 @@ export class BucketService extends CollectionService<BucketState> {
     await this.update(orgId, {
       specificity,
       delivery,
-      currency,
-      uid: this.authQuery.userId  // Specify who is updating the
+      uid: this.authQuery.userId  // Specify who is updating the bucket (this is used in the backend)
     });
 
     // Create offer
@@ -78,7 +77,8 @@ export class BucketService extends CollectionService<BucketState> {
 
     const promises = bucket.contracts.map(async (contract) => {
       const contractId = this.db.createId();
-      const terms = contract.terms.map(t => ({ ...t, contractId, id: this.db.createId() }));
+      const terms = contract.terms
+        .map(t => ({ ...t, contractId, id: this.db.createId() }));
       const termIds = terms.map(t => t.id);
       const parentTerms = await this.termService.getValue(contract.parentTermId);
       const parentContract = await this.contractService.getValue(parentTerms.contractId);
@@ -97,6 +97,7 @@ export class BucketService extends CollectionService<BucketState> {
         termIds,
         offerId,
         specificity,
+        holdbacks: contract.holdbacks,
       });
 
       // @dev: Create income & terms after contract because rules require contract to be created first

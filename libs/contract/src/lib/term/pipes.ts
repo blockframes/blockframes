@@ -15,7 +15,6 @@ export class GetTermsFromContract implements PipeTransform {
   transform(contract?: Contract | BucketContract | null) {
     if (!contract) return of([]);
     if (isBucketContract(contract)) return of(contract.terms);
-    console.log({termIds: contract.termIds})
     return this.service.valueChanges(contract.termIds);
   }
 }

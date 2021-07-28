@@ -1,0 +1,41 @@
+<main fxLayout="column" *ngIf="event">
+  <crm-bread-crumb>{{ event.type}} event</crm-bread-crumb>
+  <article fxLayout="row" fxLayoutAlign="space-around start">
+
+    <crm-event-info [event]="event"></crm-event-info>
+    <section>
+      <h2>Invite people</h2>
+      <mat-card>
+        <mat-card-content fxLayout="column">
+          <invitation-form-user [eventId]="eventId" [ownerOrgId]="event.ownerOrgId"></invitation-form-user>
+        </mat-card-content>
+      </mat-card>
+
+      <article *ngIf="event.type === 'screening' && movie">
+        <h2>Screening information</h2>
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>
+              Event for : {{ movie.title.international }} ({{ movie.internalRef }})
+            </mat-card-title>
+            <ng-container
+              *ngIf="movie.poster as poster;">
+              <img mat-card-avatar [ref]="poster" asset="empty_poster.svg">
+            </ng-container>
+          </mat-card-header>
+
+          <mat-card-content fxLayout="column">
+            <article>
+              <span>Standard view/edit </span>
+              <crm-go-to type="title" [id]="movie.id"></crm-go-to>
+            </article>
+            <a [routerLink]="['/c/o/dashboard/crm/movie', movie.id]">
+              <span>Admin edit </span>
+              <mat-icon svgIcon="edit"></mat-icon>
+            </a>
+          </mat-card-content>
+        </mat-card>
+      </article>
+    </section>
+  </article>
+</main>

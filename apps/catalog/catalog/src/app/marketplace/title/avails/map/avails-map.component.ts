@@ -1,7 +1,7 @@
 
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { combineLatest, Subscription } from 'rxjs';
+import { combineLatest } from 'rxjs';
 import { filter, map, pluck, shareReplay, startWith, take, throttleTime } from 'rxjs/operators';
 
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -27,7 +27,7 @@ import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-enc
   styleUrls: ['./avails-map.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MarketplaceMovieAvailsMapComponent implements AfterViewInit, OnDestroy {
+export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
   public hoveredTerritory: {
     name: string;
     status: string;
@@ -39,7 +39,6 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit, OnDest
   private mandates$ = this.shell.mandates$;
   private mandateTerms$ = this.shell.mandateTerms$;
   private salesTerms$ = this.shell.salesTerms$;
-  private subs: Subscription[] = [];
 
   public territoryMarkers$ = combineLatest([
     this.mandates$,
@@ -157,9 +156,5 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit, OnDest
         this.router, this.route, formState
       );
     });
-  }
-
-  ngOnDestroy() {
-    this.subs.forEach(s => s.unsubscribe());
   }
 }
