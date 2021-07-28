@@ -10,6 +10,10 @@
           <mat-label>Filter by status</mat-label>
         </static-select>
       </form>
+      <button mat-button (click)="clear()" matTooltip="Clear fields">
+        <mat-icon svgIcon="refresh_filters"></mat-icon>
+        Clear filters
+      </button>
       <button mat-button test-id="invitation-accept-all" (click)="acceptAll(invitations)">
         <mat-icon svgIcon="check_circle"></mat-icon>
         <span>Accept All</span>

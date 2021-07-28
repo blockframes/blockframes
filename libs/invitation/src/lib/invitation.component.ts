@@ -59,4 +59,8 @@ export class InvitationComponent {
     const [moduleAccess = 'dashboard'] = getOrgModuleAccess(org, app);
     return this.router.navigate([`/c/o/${moduleAccess}/home`]);
   }
+
+  clear() {
+    
+  }
 }
