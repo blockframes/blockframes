@@ -1,7 +1,7 @@
 <ng-container *ngIf="invitations$ | async as invitations; else loading">
   <ng-container *ngIf="invitationCount$ | async; else empty">
     <h1>Invitations</h1>
-    <header fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-between start">
+    <header fxLayout="row" fxLayout.xs="column" fxLayoutAlign="start">
       <form [formGroup]=form fxLayout="row" fxLayout.xs="column">
         <static-select [control]="form.get('type')" scope="invitationType" multiple="true">
           <mat-label>Filter by type</mat-label>
@@ -14,7 +14,7 @@
         <mat-icon svgIcon="refresh_filters"></mat-icon>
         <span>Clear filters</span>
       </button>
-      <button mat-button test-id="invitation-accept-all" (click)="acceptAll(invitations)">
+      <button mat-button test-id="invitation-accept-all" class="left" (click)="acceptAll(invitations)">
         <mat-icon svgIcon="check_circle"></mat-icon>
         <span>Accept All</span>
       </button>
