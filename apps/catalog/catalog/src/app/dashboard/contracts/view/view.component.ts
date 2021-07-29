@@ -51,8 +51,8 @@ export class CatalogContractViewComponent {
 
   declineContract(id: string) {
     const ref = this.dialog.open(ConfirmDeclineComponent)
-    ref.afterClosed().subscribe(declineReason => {
-      if (declineReason) this.changeStatus('declined', id, declineReason)
+    ref.afterClosed().subscribe((data) => {
+      if (data) this.changeStatus('declined', id, data.reason)
     })
   }
 
