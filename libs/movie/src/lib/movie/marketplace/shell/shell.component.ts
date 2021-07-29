@@ -46,7 +46,7 @@ export class TitleMarketplaceShellComponent implements OnInit {
     return outlet?.activatedRouteData?.animation;
   }
 
-  fullscreen(ref: StorageFile) {
-    this.dialog.open(FilePreviewComponent, { data: { ref }, width: '80vw', height: '80vh', autoFocus: false })
+  fullscreen(refs: StorageFile[], index: number) {
+    this.dialog.open(FilePreviewComponent, { data: { refs, index }, width: '80vw', height: '80vh', autoFocus: false })
   }
 }

@@ -13,6 +13,7 @@ import { ImageModule } from '../../image/directives/image.module';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   imports: [
@@ -26,7 +27,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 
     MatIconModule,
     MatButtonModule,
-    MatDialogModule
+    MatDialogModule,
+    MatTooltipModule
   ],
   exports: [FilePreviewComponent],
   declarations: [FilePreviewComponent],
