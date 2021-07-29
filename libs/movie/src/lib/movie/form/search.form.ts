@@ -9,6 +9,7 @@ import { App } from "@blockframes/utils/apps";
 import { AlgoliaOrganization, AlgoliaSearch } from '@blockframes/utils/algolia';
 import { max } from './filters/budget/budget.component';
 import { Movie } from '../+state';
+import { filters } from './filters/running-time/running-time.component';
 
 export const minReleaseYear = 1980;
 
@@ -30,6 +31,7 @@ export interface MovieSearch extends AlgoliaSearch {
   sellers: AlgoliaOrganization[];
   socialGoals: SocialGoal[];
   contentType?: ContentType;
+  runningTime: number;
 }
 
 export function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearch {
@@ -52,6 +54,7 @@ export function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearc
     minReleaseYear: minReleaseYear,
     sellers: [],
     socialGoals: [],
+    runningTime: 0,
     ...search,
   };
 }
@@ -80,6 +83,7 @@ function createMovieSearchControl(search: MovieSearch) {
     sellers: FormList.factory<AlgoliaOrganization>(search.sellers),
     socialGoals: FormList.factory(search.socialGoals),
     contentType: new FormControl(search.contentType),
+    runningTime: new FormControl(search.runningTime),
     // Max is 1000, see docs: https://www.algolia.com/doc/api-reference/api-parameters/hitsPerPage/
     hitsPerPage: new FormControl(50, Validators.max(1000))
   };
@@ -113,6 +117,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
   get socialGoals() { return this.get('socialGoals'); }
   get hitsPerPage() { return this.get('hitsPerPage'); }
   get contentType() { return this.get('contentType'); }
+  get runningTime() { return this.get('runningTime'); }
 
   isEmpty() {
     return (
@@ -151,13 +156,19 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
         this.socialGoals.value.map(goal => `socialGoals:${goal}`),
         [`contentType:${this.contentType.value || ''}`]
       ],
+      filters: ''
     };
 
     if (this.minBudget.value) {
-      search['filters'] = `budget >= ${max - this.minBudget.value ?? 0}`;
+      search.filters = `budget >= ${max - this.minBudget.value ?? 0}`;
     }
     if (this.minReleaseYear.value) {
-      search['filters'] = `release.year >= ${this.minReleaseYear.value}`;
+      if (search.filters) search.filters += ` AND `;
+      search.filters += `release.year >= ${this.minReleaseYear.value}`;
+    }
+    if (this.runningTime.value) {
+      if (search.filters) search.filters += ` AND `;
+      search.filters += filters[this.runningTime.value].filter
     }
 
     /*
