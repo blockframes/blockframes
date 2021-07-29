@@ -9,9 +9,36 @@ import { App } from "@blockframes/utils/apps";
 import { AlgoliaOrganization, AlgoliaSearch } from '@blockframes/utils/algolia';
 import { max } from './filters/budget/budget.component';
 import { Movie } from '../+state';
-import { filters } from './filters/running-time/running-time.component';
 
 export const minReleaseYear = 1980;
+
+export const runningTimeFilters = {
+  // 0 is all values
+  1: {
+    label: '< 13min',
+    filter: 'runningTime.time < 13'
+  },
+  2: {
+    label: '13min - 26min',
+    filter: 'runningTime.time: 13 TO 26'
+  },
+  3: {
+    label: '26min - 52min',
+    filter: 'runningTime.time: 26 TO 52'
+  },
+  4: {
+    label: '52min - 90min',
+    filter: 'runningTime.time: 52 TO 90'
+  },
+  5: {
+    label: '90min - 180min',
+    filter: 'runningTime.time: 90 TO 180'
+  },
+  6: {
+    label: '> 180min',
+    filter: 'runningTime.time > 180'
+  }
+}
 
 export interface LanguagesSearch {
   original: Language[];
@@ -168,7 +195,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
     }
     if (this.runningTime.value) {
       if (search.filters) search.filters += ` AND `;
-      search.filters += filters[this.runningTime.value].filter
+      search.filters += runningTimeFilters[this.runningTime.value].filter
     }
 
     /*
