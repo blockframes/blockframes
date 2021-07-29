@@ -13,9 +13,11 @@ import { ContractItemModule } from '@blockframes/contract/contract/item/contract
 import { IncomePipeModule } from '@blockframes/contract/income/pipe';
 import { TagModule } from '@blockframes/ui/tag/tag.module';
 import { HoldbackListModule } from '@blockframes/contract/contract/holdback/list/list.module';
+import { ConfirmDeclineComponentModule } from '@blockframes/contract/offer/components/confirm-decline/confirm-decline.module';
 
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [CatalogContractViewComponent],
@@ -28,13 +30,15 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     TagModule,
     ToLabelModule,
     HoldbackListModule,
+    ConfirmDeclineComponentModule,
+
     //Material
     MatButtonModule,
     MatCardModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
     MatIconModule,
-    MatSnackBarModule,
+    MatDialogModule,
     MatTooltipModule,
     RouterModule.forChild([{ path: '', component: CatalogContractViewComponent }]),
   ]

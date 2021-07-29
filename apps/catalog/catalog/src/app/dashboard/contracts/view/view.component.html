@@ -1,6 +1,6 @@
 <ng-container *ngIf="offer$ | async as offer; else loading">
   <header fxLayout="column" fxLayoutAlign="start start">
-    <a mat-icon-button routerLink="../../.." color="primary">
+    <a mat-icon-button routerLink="../.." color="primary">
       <mat-icon svgIcon="arrow_back"></mat-icon>
     </a>
     <bf-tag>{{offer.status | toLabel: 'offerStatus'}}</bf-tag>
@@ -29,7 +29,7 @@
                 <span>Accept</span>
                 <mat-icon svgIcon="check"></mat-icon>
               </button>
-              <button mat-stroked-button color="primary" (click)="changeStatus('declined',contract.id)">
+              <button mat-stroked-button color="primary" (click)="confirmDeclineOffer(contract.id)">
                 <span>Decline</span>
                 <mat-icon svgIcon="refuse"></mat-icon>
               </button>
