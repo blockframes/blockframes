@@ -10,8 +10,8 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { combineLatest } from 'rxjs';
 
 const applyFilters = (invitations: Invitation[], filters: { type: string[], status: string[] }) => {
-  const inv = filters.type.length ? invitations.filter(inv => filters.type.includes(inv.type)) : invitations;
-  return filters.status.length ? inv.filter(inv => filters.status.includes(inv.status)) : inv;
+  const inv = filters.type?.length ? invitations.filter(inv => filters.type.includes(inv.type)) : invitations;
+  return filters.status?.length ? inv.filter(inv => filters.status.includes(inv.status)) : inv;
 };
 
 @Component({
@@ -25,11 +25,16 @@ export class InvitationComponent {
     type: new FormControl([]),
     status: new FormControl([]),
   });
+
+  // Invitation count for conditions
+  invitationCount$ = this.service.myInvitations$.pipe(map(inv => inv.length));
+
   // Invitation that require an action
   invitations$ = combineLatest([
     this.service.myInvitations$,
     this.form.valueChanges.pipe(startWith({ type: [], status: []  }))
-  ]).pipe(
+  ])
+  .pipe(
     map(([invitations, filters]) => applyFilters(invitations, filters)),
     tap(invitations => {
       invitations.length ?
@@ -37,7 +42,7 @@ export class InvitationComponent {
         this.dynTitle.setPageTitle('Invitations List', 'Empty');
     })
   )
-
+  
   constructor(
     private service: InvitationService,
     private dynTitle: DynamicTitleService,
