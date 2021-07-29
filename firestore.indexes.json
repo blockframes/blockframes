@@ -73,6 +73,28 @@
       ]
     },
     {
+      "collectionGroup": "events",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "isSecret",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "meta.titleId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "type",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "end",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
       "collectionGroup": "movies",
       "queryScope": "COLLECTION",
       "fields": [

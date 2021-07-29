@@ -5,7 +5,7 @@ import {
   ChangeDetectionStrategy,
   Directive,
   ViewEncapsulation,
-  HostBinding
+  HostBinding,
 } from '@angular/core';
 
 // Blockframes
