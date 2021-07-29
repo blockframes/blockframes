@@ -29,7 +29,6 @@ export class DetailedTermsComponent implements OnInit {
           return this.data.terms.includes(label);
         });
       }
-      console.log({groups})
       this.groups$.next(groups);
     }
   }

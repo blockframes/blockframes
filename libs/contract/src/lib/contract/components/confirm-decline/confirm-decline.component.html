@@ -1,7 +1,7 @@
 <h1>Please give a reason for your refusal.</h1>
 <p>This will help the Archipel Content team understand your refusal<br />
   and lead the deal negotiation accordingly.</p>
-<form fxLayout="column">
+<form fxLayout="column" (submit)="declineContract($event)">
   <mat-form-field appearance="outline">
     <textarea matInput
       placeholder='"Offer price is too low", "Title is not available anymore", "Bad previous experience with buyer"'
@@ -11,8 +11,7 @@
     <mat-hint>Please specify why you want to decline this offer</mat-hint>
   </mat-form-field>
   <footer fxLayout="column" fxLayoutAlign="center center">
-    <button mat-flat-button color="primary" (click)="declineContract()"
-      type="button">
+    <button mat-flat-button color="primary" type="submit">
       Confirm refusal
     </button>
     <button mat-button mat-dialog-close type="button">
