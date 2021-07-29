@@ -6,8 +6,12 @@
 article {
   height: 100%;
 
+  div {
+    min-width: 40px;
+  }
+
   img {
     object-fit: contain;
-    width: 100%;
+    width: 95%;
   }
 }
