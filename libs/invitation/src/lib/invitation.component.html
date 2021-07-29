@@ -10,7 +10,7 @@
           <mat-label>Filter by status</mat-label>
         </static-select>
       </form>
-      <button mat-button (click)="clearFilters()" matTooltip="Clear fields">
+      <button mat-button (click)="form.reset()" matTooltip="Clear fields">
         <mat-icon svgIcon="refresh_filters"></mat-icon>
         <span>Clear filters</span>
       </button>
