@@ -1,19 +1,14 @@
-$button-width: 40px;
-
 :host {
-  display: block;
-  height: calc(100% - 24px);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 article {
-  height: 100%;
+  flex: 1;
+}
 
-  div {
-    min-width: $button-width;
-  }
-
-  img {
-    object-fit: contain;
-    width: calc(100% - #{$button-width * 2});
-  }
+img {
+  flex: 1;
+  min-width: 0;
 }
