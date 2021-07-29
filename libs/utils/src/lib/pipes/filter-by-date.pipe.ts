@@ -51,11 +51,8 @@ function filterByDate(value: unknown[], timeFrame: TimeFrame, key: string = 'dat
   }
   const { from, to, type, way } = timeFrame;
   const now = startOfDay(Date.now());
-  // console.log('now', now)
   const fromDate = add({ [type]: from }, now);
-  // console.log('from', fromDate)
   const toDate = add({ [type]: to }, now);
-  // console.log('to', toDate)
   return value.filter(v => {
     if (keyFinish) {
       return getValue(v, key) < toDate && getValue(v, keyFinish) >= fromDate;
@@ -87,7 +84,6 @@ export class LabelByDatePipe implements PipeTransform {
     }
     const now = startOfDay(Date.now());
     const fromDate = add({ [type]: from }, now);
-    console.log('label from', fromDate);
     switch (type) {
       case 'days': return formatDate(fromDate, 'EEEE', 'en');
       case 'weeks': return formatDate(fromDate, 'MMMM d', 'en');
