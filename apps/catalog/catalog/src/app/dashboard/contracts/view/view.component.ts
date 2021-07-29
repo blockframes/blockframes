@@ -1,11 +1,11 @@
 import {
   Component, ChangeDetectionStrategy, Optional
 } from '@angular/core';
-import { ContractService, ContractStatus, Sale } from '@blockframes/contract/contract/+state';
+import { ContractService, ContractStatus } from '@blockframes/contract/contract/+state';
 import { OfferService } from '@blockframes/contract/offer/+state';
 import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { first, pluck, shareReplay, switchMap } from 'rxjs/operators';
+import { pluck, shareReplay, switchMap } from 'rxjs/operators';
 import { Intercom } from 'ng-intercom';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDeclineComponent } from '@blockframes/contract/contract/components/confirm-decline/confirm-decline.component';
@@ -41,8 +41,7 @@ export class CatalogContractViewComponent {
   ) { }
 
   changeStatus(status: ContractStatus, id: string, declineReason?: string) {
-    let data: Partial<Sale> = { status };
-    if (declineReason) { data = { ...data, declineReason } }
+    const data = declineReason ? { status, declineReason } : { status }
     this.contractService.update(id, data)
       .catch((err) => {
         console.error(err)
@@ -51,11 +50,10 @@ export class CatalogContractViewComponent {
   }
 
   declineContract(id: string) {
-    const dialogInstance = this.dialog.open(ConfirmDeclineComponent, { data: { contractId: id } })
-    dialogInstance.afterClosed().pipe(first()).subscribe(
-      declineReason => declineReason ? this.changeStatus('declined', id, declineReason) : {}
-    )
-
+    const ref = this.dialog.open(ConfirmDeclineComponent)
+    ref.afterClosed().subscribe(declineReason => {
+      if (declineReason) this.changeStatus('declined', id, declineReason)
+    })
   }
 
   openIntercom(): void {

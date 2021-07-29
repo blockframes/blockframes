@@ -1,14 +1,9 @@
-:host {
-  & > *:not(:last-child){
-    margin-bottom: 12px;
-  }
-}
-
 form {
   width: 100%;
 }
 
-h1, p {
+h1,p {
+  margin-bottom: 12px;
   text-align: center;
 }
 

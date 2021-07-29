@@ -10,16 +10,14 @@ import { MatDialogRef } from '@angular/material/dialog';
 })
 export class ConfirmDeclineComponent {
 
-  form = new FormGroup({
-    reason: new FormControl('', Validators.required),
-  })
+  reasonControl= new FormControl('', Validators.required)
 
   constructor(
     private dialog: MatDialogRef<ConfirmDeclineComponent>,
   ) { }
 
   async declineContract() {
-    const { reason } = this.form.value;
+    const reason = this.reasonControl.value;
     this.dialog.close(reason);
   }
 }
