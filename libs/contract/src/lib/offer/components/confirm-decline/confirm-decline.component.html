@@ -1,30 +1,24 @@
-<section fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="12px" >
+<section fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="12px">
   <h1>Please give a reason for your refusal.</h1>
-  <p>This will help the Archipel Content team understand your refusal<br/>
+  <p>This will help the Archipel Content team understand your refusal<br />
     and lead the deal negotiation accordingly.</p>
   <form [formGroup]="form" fxLayout="column" (ngSubmit)="declineOffer()">
     <mat-form-field appearance="outline">
-      <textarea
-        matInput
+      <textarea matInput
         placeholder='"Offer price is too low", "Title is not available anymore", "Bad previous experience with buyer"'
-        formControlName="reason"
-        cdkTextareaAutosize
-        #autosize="cdkTextareaAutosize"
-        cdkAutosizeMinRows="4"
-        maxlength="500"
-        test-id="specific-terms">
+        formControlName="reason" cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="4"
+        maxlength="500" test-id="specific-terms">
       </textarea>
-      <!-- <mat-hint>Please specify why you want to decline this offer</mat-hint> -->
-      <mat-hint>{{data | json}}</mat-hint>
+      <mat-hint>Please specify why you want to decline this offer</mat-hint>
     </mat-form-field>
     <footer fxLayout="column" fxLayoutAlign="center center">
       <button mat-flat-button color="primary" [disabled]="form.invalid" type="submit">
         <span>
           Confirm refusal
         </span>
-          <ng-container *ngIf="form.disabled">
-            <mat-spinner diameter="16"></mat-spinner>
-          </ng-container>
+        <ng-container *ngIf="form.disabled">
+          <mat-spinner diameter="16"></mat-spinner>
+        </ng-container>
       </button>
       <button mat-button mat-dialog-close type="button">
         Cancel
