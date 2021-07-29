@@ -26,7 +26,7 @@
       <section fxLayout="column" fxLayoutAlign="center center">
         <p>You have no invitation with this filter.<br>Click on <b>clear filters</b> button to reset.</p>
         <img asset="empty_invitation.svg" alt="No invitations">
-        <button mat-button (click)="clearFilters()" matTooltip="Clear fields">
+        <button mat-button (click)="form.reset()" matTooltip="Clear fields">
           <mat-icon svgIcon="refresh_filters"></mat-icon>
           <span>Clear filters</span>
         </button>
