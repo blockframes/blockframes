@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy} from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Invitation, InvitationService } from './+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Router } from '@angular/router';
@@ -24,11 +24,11 @@ export class InvitationComponent {
   form = new FormGroup({
     type: new FormControl([]),
     status: new FormControl([]),
-  })
+  });
 
   // Invitation count for conditions
   invitationCount$ = this.service.myInvitations$.pipe(map(inv => inv.length));
-  
+
   // Invitation that require an action
   invitations$ = combineLatest([
     this.service.myInvitations$,
