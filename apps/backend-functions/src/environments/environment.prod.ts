@@ -15,7 +15,8 @@ export {
   sentryDsn,
   bigQueryAnalyticsTable,
   centralOrgId,
-  supportEmails
+  supportEmails,
+  playerId,
 } from '@env';
 
 import { firebase } from '@env';
