@@ -12,16 +12,12 @@ function fetchJSON(url: string): Promise<any> {
 		get(url, res => {
       let body = '';
       res.on('data', chunk => body += chunk);
-      res.on('end', () => {
-        const response = JSON.parse(body);
-        resolve(response);
-      });
-		}).on('error', e => {
-		    reject(e);
-		});
+      res.on('end', () => resolve(JSON.parse(body)));
+		}).on('error', e => reject(e));
 	});
 }
 
+/** Return the new url of a 302 REDIRECT request */
 function fetchRedirect(url: string): Promise<string> {
 	return new Promise((resolve, reject) => {
 		get(url, res => {
@@ -68,6 +64,8 @@ export const downloadVideo = async (req: Request, res: Response) => {
     return;
   }
 
+  const start = Date.now();
+
   // COMPUTE JSON WEB TOKEN
 
   const expires = Math.floor(new Date().getTime() / 1000) + linkDuration; // now + 5 hours
@@ -85,10 +83,11 @@ export const downloadVideo = async (req: Request, res: Response) => {
   // FILTER THE RESPONSE TO GET THE URL OF THE HIGHEST DEFINITION VIDEO FILE
 
   const fileName = apiResult.title;
-  const videos = apiResult.playlist[0].sources.filter(source => source.type === 'video/mp4').sort();
-  const hdVideo = videos.sort((a, b) => b.filesize - a.filesize)[0];
+  const [video] = apiResult.playlist[0].sources
+    .filter(source => source.type === 'video/mp4')
+    .sort((a, b) => b.filesize - a.filesize); // we want the biggest file first
 
-  const mp4FileUrl = hdVideo.file;
+  const mp4FileUrl = video.file;
 
   // REAL FILE URL IS HIDDEN BEHIND A 302 REDIRECT
 
@@ -99,6 +98,6 @@ export const downloadVideo = async (req: Request, res: Response) => {
   await transferFile(realFileUrl, `${storagePath}/${fileName}`);
 
 
-  res.status(200).json({fileName, hdVideo, realFileUrl, storagePath });
+  res.status(200).json({fileName, video, realFileUrl, storagePath, time: Date.now() - start });
   return;
 };
