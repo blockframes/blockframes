@@ -86,7 +86,7 @@ export const downloadVideo = async (req: Request, res: Response) => {
 
   const fileName = apiResult.title;
   const videos = apiResult.playlist[0].sources.filter(source => source.type === 'video/mp4').sort();
-  const hdVideo = videos.sort((a, b) => b.bitrate - a.bitrate)[0];
+  const hdVideo = videos.sort((a, b) => b.filesize - a.filesize)[0];
 
   const mp4FileUrl = hdVideo.file;
 
@@ -99,6 +99,6 @@ export const downloadVideo = async (req: Request, res: Response) => {
   await transferFile(realFileUrl, `${storagePath}/${fileName}`);
 
 
-  res.status(200).json({fileName, realFileUrl, storagePath });
+  res.status(200).json({fileName, hdVideo, realFileUrl, storagePath });
   return;
 };
