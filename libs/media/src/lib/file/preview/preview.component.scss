@@ -1,9 +1,12 @@
 :host {
-  display: block;
-  height: calc(100% - 24px);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 img {
   object-fit: contain;
-  width: 100%;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
 }
