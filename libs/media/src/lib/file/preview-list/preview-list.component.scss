@@ -4,6 +4,10 @@
   height: 100%;
 }
 
+article {
+  flex: 1;
+}
+
 img {
   object-fit: contain;
   flex: 1;
