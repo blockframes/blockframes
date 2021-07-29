@@ -21,13 +21,14 @@ const applyFilters = (invitations: Invitation[], filters: { type: string[], stat
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InvitationComponent {
-  formName = ['type', 'status'];
   form = new FormGroup({
     type: new FormControl([]),
     status: new FormControl([]),
   })
+
   // Invitation count for conditions
-  invitationCount$ = this.service.myInvitations$.pipe(map(inv => inv.length))
+  invitationCount$ = this.service.myInvitations$.pipe(map(inv => inv.length));
+  
   // Invitation that require an action
   invitations$ = combineLatest([
     this.service.myInvitations$,
