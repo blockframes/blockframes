@@ -4,7 +4,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { ConfirmDeclineComponent } from './confirm-decline.component';
-import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -18,7 +17,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     CommonModule,
     FlexLayoutModule,
     ReactiveFormsModule,
-    ImageModule,
     MatDialogModule,
     MatProgressSpinnerModule,
     MatButtonModule,
