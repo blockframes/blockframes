@@ -1,6 +1,6 @@
 import { Media, territoriesISOA3, Territory, TerritoryISOA3Value, TerritoryValue, territories } from "@blockframes/utils/static-model";
 import { Bucket, BucketTerm } from "../bucket/+state";
-import { Mandate } from "../contract/+state/contract.model"
+import { Holdback, Mandate } from "../contract/+state/contract.model"
 import { Duration, Term } from "../term/+state/term.model";
 
 export interface AvailsFilter {
@@ -311,4 +311,38 @@ export function getDurations(movieId: string, avail: AvailsFilter, bucket: Bucke
 
 export function getDurationMarkers(mandates: Mandate[], mandateTerms: Term<Date>[]) {
   return mandateTerms.map(term => toDurationMarker(mandates, term));
+}
+
+// ----------------------------
+//         HOLDBACKS         //
+// ----------------------------
+
+function collidingDurations(durationA: Duration, durationB: Duration,) {
+  const isBefore = durationA.from < durationB.from && durationA.to < durationB.from;
+  const isAfter = durationA.from > durationB.to && durationA.to > durationB.to;
+  return !isBefore && !isAfter;
+}
+
+function collidingTerritories(territoriesA: Territory[], territoriesB: Territory[]) {
+  return territoriesA.some(territory => territoriesB.includes(territory));
+}
+
+function collidingMedias(mediasA: Media[], mediasB: Media[]) {
+  return mediasA.some(media => mediasB.includes(media));
+}
+
+function collidingHoldback(holdback: Holdback, term: Term) {
+  const durationCollision = collidingDurations(holdback.duration, term.duration);
+  const mediasCollision = collidingMedias(holdback.medias, term.medias);
+  const territoryCollision = collidingTerritories(holdback.territories, term.territories);
+  return durationCollision && mediasCollision && territoryCollision;
+}
+
+export function getCollidingHoldbacks(holdbacks: Holdback[], terms: Term[]) {
+
+  const holdbackCollision = holdbacks.filter(holdback =>
+    terms.some(term => collidingHoldback(holdback, term))
+  );
+
+  return holdbackCollision;
 }

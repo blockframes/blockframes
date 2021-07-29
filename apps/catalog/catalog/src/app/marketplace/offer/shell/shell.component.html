@@ -6,12 +6,12 @@
         <h1>{{ offer.id }}</h1>
         <span>Offer created: {{ offer._meta.createdAt | date: 'DD/MM/YYYY' }}</span>
       </div>
-      <div>
-        <h2 *ngIf="contracts$ | async as contracts">
+      <div *ngIf="offer.contracts as contracts">
+        <h2>
           {{ contracts.length }} Titles
         </h2>
-        <h2 *ngIf="incomes$ | async as incomes">
-          Total: {{ incomes | total:'price' | currency:offer.currency }}
+        <h2>
+          Total: {{ contracts | total:'income.price' | currency:offer.currency }}
         </h2>
       </div>
     </article>

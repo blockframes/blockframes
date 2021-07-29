@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input, OnInit, ChangeDetectorRef } from '@angular/core';
-import { MoviePictureAdminForm } from "@blockframes/admin/admin-panel/forms/movie-admin.form";
+import { MoviePictureCrmForm } from "@blockframes/admin/crm/forms/movie-crm.form";
 import { Movie, MovieService } from '@blockframes/movie/+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
@@ -13,7 +13,7 @@ import { FileUploaderService } from '@blockframes/media/+state';
 })
 export class MoviePictureUploadComponent implements OnInit {
   @Input() movie: Movie;
-  public moviePictureForm: MoviePictureAdminForm;
+  public moviePictureForm: MoviePictureCrmForm;
 
   constructor(
     private snackBar: MatSnackBar,
@@ -22,7 +22,7 @@ export class MoviePictureUploadComponent implements OnInit {
     private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
-    this.moviePictureForm = new MoviePictureAdminForm(this.movie);
+    this.moviePictureForm = new MoviePictureCrmForm(this.movie);
   }
 
   addStill() {

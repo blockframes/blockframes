@@ -32,7 +32,7 @@ export class NoAuthGuard extends CollectionGuard<AuthState> {
             if (!org) { return '/auth/identity'; }
             const app = getCurrentApp(this.routerQuery) as App | 'crm';
             if (app === 'crm') {
-              return '/c/o/admin/panel';
+              return '/c/o/dashboard/crm';
             } else {
               const [moduleAccess = 'dashboard'] = getOrgModuleAccess(org, app);
               return `/c/o/${moduleAccess}/home`;

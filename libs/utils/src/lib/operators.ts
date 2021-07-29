@@ -40,7 +40,7 @@ interface JoinWithOptions {
  * @param options Strategy to apply on the joinWith
  */
 export function joinWith<T, Query extends QueryMap<T>>(queries: Query, options: JoinWithOptions = {}): OperatorFunction<T, Jointure<T, Query>> {
-  const shouldAwait = options.shouldAwait ?? true;
+  const shouldAwait = options.shouldAwait ?? false;
   const runQuery = (entity: Entity<T>) => {
     const obs = [];
     for (const key in queries) {

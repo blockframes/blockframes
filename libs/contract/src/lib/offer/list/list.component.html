@@ -15,10 +15,14 @@
         </ng-container>
       </button>
       <button mat-tab-link (click)="applyFilter('on_going')" [active]="(filter$ | async) === 'on_going'">
-        Ongoing Deals
+        <ng-container *ngIf="(offers | filterBy: filterByStatus: 'on_going') as offers">
+          Ongoing Deals ({{offers.length}})
+        </ng-container>
       </button>
       <button mat-tab-link (click)="applyFilter('past_deals')" [active]="(filter$ | async) === 'past_deals'">
-        Past Deals
+        <ng-container *ngIf="(offers | filterBy: filterByStatus: 'past_deals') as offers">
+          Past Deals ({{offers.length}})
+        </ng-container>
       </button>
     </nav>
 
@@ -30,11 +34,8 @@
         <ng-template colRef="contracts.length" let-length>{{ length }}</ng-template>
         <ng-template colRef="contracts" let-contracts>
           <ng-container *ngFor="let contract of contracts; let last=last">
-            <!-- Verify the titleId before calling the getTitle pipe otherwise, error is thrown for empty titleIds -->
-            <ng-container *ngIf="contract.titleId">
-              <ng-container *ngIf="contract.titleId | getTitle | async as title">
-                {{ title.title.international | maxLength:50 }}{{last ? '': ', '}}
-              </ng-container>
+            <ng-container *ngIf="contract.title as title">
+              {{ title.title.international | maxLength:50 }}{{last ? '': ', '}}
             </ng-container>
           </ng-container>
         </ng-template>

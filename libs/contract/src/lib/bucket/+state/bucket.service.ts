@@ -12,6 +12,7 @@ import { AuthQuery } from "@blockframes/auth/+state";
 import { switchMap, take } from 'rxjs/operators';
 import { createOfferId } from '@blockframes/utils/utils';
 import { createDocumentMeta } from '@blockframes/utils/models-meta';
+import { MovieCurrency } from '@blockframes/utils/static-model';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'buckets' })
@@ -51,15 +52,14 @@ export class BucketService extends CollectionService<BucketState> {
     return this.active$.pipe(take(1)).toPromise();
   }
 
-  async createOffer(specificity: string, delivery: string) {
+  async createOffer(specificity: string, delivery: string, currency: MovieCurrency) {
     const orgId = this.orgQuery.getActiveId();
     const orgName = this.orgQuery.getActive().denomination.full;
     const bucket = await this.getActive();
-
     await this.update(orgId, {
       specificity,
       delivery,
-      uid: this.authQuery.userId  // Specify who is updating the
+      uid: this.authQuery.userId  // Specify who is updating the bucket (this is used in the backend)
     });
 
     // Create offer
@@ -69,7 +69,7 @@ export class BucketService extends CollectionService<BucketState> {
       buyerUserId: this.authQuery.userId,
       specificity,
       status: 'pending',
-      currency: bucket.currency,
+      currency,
       _meta: createDocumentMeta({ createdAt: new Date() }),
       delivery,
       id: offerId,
@@ -77,7 +77,8 @@ export class BucketService extends CollectionService<BucketState> {
 
     const promises = bucket.contracts.map(async (contract) => {
       const contractId = this.db.createId();
-      const terms = contract.terms.map(t => ({ ...t, contractId, id: this.db.createId() }));
+      const terms = contract.terms
+        .map(t => ({ ...t, contractId, id: this.db.createId() }));
       const termIds = terms.map(t => t.id);
       const parentTerms = await this.termService.getValue(contract.parentTermId);
       const parentContract = await this.contractService.getValue(parentTerms.contractId);
@@ -96,6 +97,7 @@ export class BucketService extends CollectionService<BucketState> {
         termIds,
         offerId,
         specificity,
+        holdbacks: contract.holdbacks,
       });
 
       // @dev: Create income & terms after contract because rules require contract to be created first

@@ -29,14 +29,13 @@ const groupsToDisplay = [unsubscribeGroupIds.allExceptCriticals];
  * Sends a transactional email configured by the EmailRequest provided.
  *
  * Handles development mode: logs a warning when no sendgrid API key is provided.
+ * @param groupId passing 0 to groupId will make the unsubscribe link global
  */
-export async function sendMail({ to, subject, text }: EmailRequest, from: EmailJSON = getSendgridFrom(), groupId: number = criticalsEmailsGroupId) {
+export async function sendMail(email: EmailRequest, from: EmailJSON = getSendgridFrom(), groupId: number = criticalsEmailsGroupId) {
   const msg: MailDataRequired = {
+    ...email,
     from,
-    to,
-    subject,
-    text,
-    asm: { groupId, groupsToDisplay },
+    asm: groupId ? { groupId, groupsToDisplay } : undefined,
     substitutions: substitutions,
     customArgs: { projectId }
   };

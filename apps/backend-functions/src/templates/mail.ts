@@ -7,7 +7,7 @@ import { supportEmails, appUrl } from '../environments/environment';
 import { EmailRequest, EmailTemplateRequest } from '../internals/email';
 import { templateIds } from '@blockframes/utils/emails/ids';
 import { RequestDemoInformations, OrganizationDocument, PublicOrganization } from '../data/types';
-import { PublicUser, User } from '@blockframes/user/+state/user.firestore';
+import { PublicUser } from '@blockframes/user/+state/user.firestore';
 import { EventEmailData, OrgEmailData, UserEmailData } from '@blockframes/utils/emails/utils';
 import { App, appName } from '@blockframes/utils/apps';
 import { Bucket } from '@blockframes/contract/bucket/+state/bucket.model';
@@ -16,7 +16,7 @@ import { testEmail } from "@blockframes/e2e/utils/env";
 
 const ORG_HOME = '/c/o/organization/';
 const USER_CREDENTIAL_INVITATION = '/auth/identity';
-export const ADMIN_ACCEPT_ORG_PATH = '/c/o/admin/panel/organization';
+export const ADMIN_ACCEPT_ORG_PATH = '/c/o/dashboard/crm/organization';
 export const ADMIN_DATA_PATH = '/admin/data'; // backup / restore // TODO: ! Why is this here? Move elsewhere into env
 
 /**
@@ -313,12 +313,10 @@ export function offerCreatedConfirmationEmail(toUser: UserEmailData, org: Organi
 /**
  * @param orgId
  */
-const organizationCreatedTemplate = (orgId: string) =>
-  `
-  A new organization was created on the blockframes project,
-
-  Visit ${appUrl.crm}${ADMIN_ACCEPT_ORG_PATH}/${orgId} or go to ${ADMIN_ACCEPT_ORG_PATH}/${orgId} to view it.
-  `;
+ const organizationCreatedTemplate = (orgId: string) =>
+ `
+ You can review it <a href="${appUrl.crm}${ADMIN_ACCEPT_ORG_PATH}/${orgId}">here</a>.
+ `;
 
 /**
  * @param orgId
@@ -336,18 +334,19 @@ const organizationRequestAccessToAppTemplate = (org: PublicOrganization, app: Ap
  */
 const userFirstConnexionTemplate = (user: PublicUser) =>
   `
-  User ${user.firstName} ${user.lastName} connected for the first time to the app ${user._meta.createdFrom}.
+  User ${user.firstName} ${user.lastName} connected for the first time to ${appName[user._meta.createdFrom]}.
 
   Email: ${user.email}.
   `;
 
 /** Generates a transactional email request to let cascade8 admin know that a new org have been created. */
 export async function organizationCreated(org: OrganizationDocument): Promise<EmailRequest> {
-  const supportEmail = ('Cypress' in window) ? testEmail : getSupportEmail(org._meta.createdFrom);
+  const supportEmail = getSupportEmail(org._meta.createdFrom);
+
   return {
     to: supportEmail,
-    subject: 'A new organization has been created',
-    text: organizationCreatedTemplate(org.id)
+    subject: `${appName[org._meta.createdFrom]} - ${org.denomination.full} was created and needs a review`,
+    html: organizationCreatedTemplate(org.id)
   };
 }
 
@@ -359,7 +358,7 @@ export async function organizationRequestedAccessToApp(org: OrganizationDocument
   return {
     to: getSupportEmail(org._meta.createdFrom),
     subject: 'An organization requested access to an app',
-    text: organizationRequestAccessToAppTemplate(org, app)
+    html: organizationRequestAccessToAppTemplate(org, app)
   };
 }
 
