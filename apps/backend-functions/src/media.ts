@@ -44,7 +44,7 @@ export async function linkFile(data: storage.ObjectMetadata) {
   // metadata.uid is copied into uploaderUid for context consistency during transaction execution.
   // If transaction is locked by another process, it will fail to update the doc, and will try with a new attempt
   // but metadata.uid as already been removed (delete metadata[key];)
-  const uploaderUid = metadata.uid;
+  const uploaderUid = metadata?.uid;
   const [tmp] = data.name.split('/');
   if (tmp === tempUploadDir) {
 

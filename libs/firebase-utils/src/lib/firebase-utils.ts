@@ -100,3 +100,11 @@ export const heavyConfig: RuntimeOptions = {
   timeoutSeconds: 300,
   memory: '1GB',
 };
+
+/**
+ * Runtime options for super heavy functions
+ */
+ export const superHeavyConfig: RuntimeOptions = {
+  timeoutSeconds: 540,
+  memory: '4GB',
+};
