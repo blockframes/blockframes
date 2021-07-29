@@ -20,7 +20,7 @@
       </button>
     </header>
     <ng-container *ngIf="invitations.length">
-      <invitation-list [invitations]="invitations" class="surface"></invitation-list>
+      <invitation-list [invitations]="invitations"></invitation-list>
     </ng-container>
     <ng-container *ngIf="!invitations.length">
       <section fxLayout="column" fxLayoutAlign="center center">
