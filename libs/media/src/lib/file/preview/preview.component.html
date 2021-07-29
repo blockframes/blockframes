@@ -6,9 +6,7 @@
 
 <ng-container [ngSwitch]="data.ref.storagePath | fileType">
   <ng-container *ngSwitchCase="'image'">
-    <div>
-      <img [ref]="data.ref" asset="no_titles.svg" />
-    </div>
+    <img [ref]="data.ref" asset="no_titles.svg" />
   </ng-container>
   <ng-container *ngSwitchCase="'pdf'">
     <pdf-viewer [ref]="data.ref"></pdf-viewer>

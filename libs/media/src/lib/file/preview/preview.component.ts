@@ -14,7 +14,7 @@ export class FilePreviewComponent {
   constructor(
     private dialogRef: MatDialogRef<FilePreviewComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { ref: StorageFile }
-  ) {}
+  ) { }
 
   close() {
     this.dialogRef.close();
