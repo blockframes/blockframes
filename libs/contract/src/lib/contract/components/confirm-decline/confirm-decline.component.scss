@@ -1,12 +1,14 @@
-section {
-  padding: 24px;
+:host {
+  & > *:not(:last-child){
+    margin-bottom: 12px;
+  }
 }
 
 form {
   width: 100%;
 }
 
-p {
+h1, p {
   text-align: center;
 }
 

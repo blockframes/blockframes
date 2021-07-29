@@ -1,14 +1,14 @@
 import {
   Component, ChangeDetectionStrategy, Optional
 } from '@angular/core';
-import { ContractService, ContractStatus } from '@blockframes/contract/contract/+state';
+import { ContractService, ContractStatus, Sale } from '@blockframes/contract/contract/+state';
 import { OfferService } from '@blockframes/contract/offer/+state';
 import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { pluck, shareReplay, switchMap } from 'rxjs/operators';
+import { first, pluck, shareReplay, switchMap } from 'rxjs/operators';
 import { Intercom } from 'ng-intercom';
 import { MatDialog } from '@angular/material/dialog';
-import { ConfirmDeclineComponent } from '@blockframes/contract/offer/components/confirm-decline/confirm-decline.component';
+import { ConfirmDeclineComponent } from '@blockframes/contract/contract/components/confirm-decline/confirm-decline.component';
 
 
 @Component({
@@ -36,20 +36,26 @@ export class CatalogContractViewComponent {
     private contractService: ContractService,
     private route: ActivatedRoute,
     private snackbar: MatSnackBar,
-    private dialog:MatDialog,
+    private dialog: MatDialog,
     @Optional() private intercom: Intercom,
   ) { }
 
-  changeStatus(status: ContractStatus, id: string) {
-    this.contractService.update(id, { status })
+  changeStatus(status: ContractStatus, id: string, declineReason?: string) {
+    let data: Partial<Sale> = { status };
+    if (declineReason) { data = { ...data, declineReason } }
+    this.contractService.update(id, data)
       .catch((err) => {
         console.error(err)
         this.snackbar.open(`There was an error, please try again later`, '', { duration: 4000 })
       })
   }
 
-  confirmDeclineOffer(id:string){
-    this.dialog.open(ConfirmDeclineComponent, {data:{contractId:id}})
+  declineContract(id: string) {
+    const dialogInstance = this.dialog.open(ConfirmDeclineComponent, { data: { contractId: id } })
+    dialogInstance.afterClosed().pipe(first()).subscribe(
+      declineReason => declineReason ? this.changeStatus('declined', id, declineReason) : {}
+    )
+
   }
 
   openIntercom(): void {
