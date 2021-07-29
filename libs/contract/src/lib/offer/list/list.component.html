@@ -15,10 +15,14 @@
         </ng-container>
       </button>
       <button mat-tab-link (click)="applyFilter('on_going')" [active]="(filter$ | async) === 'on_going'">
-        Ongoing Deals
+        <ng-container *ngIf="(offers | filterBy: filterByStatus: 'on_going') as offers">
+          Ongoing Deals ({{offers.length}})
+        </ng-container>
       </button>
       <button mat-tab-link (click)="applyFilter('past_deals')" [active]="(filter$ | async) === 'past_deals'">
-        Past Deals
+        <ng-container *ngIf="(offers | filterBy: filterByStatus: 'past_deals') as offers">
+          Past Deals ({{offers.length}})
+        </ng-container>
       </button>
     </nav>
 
