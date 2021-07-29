@@ -12,7 +12,7 @@
       <mat-hint>Please specify why you want to decline this offer</mat-hint>
     </mat-form-field>
     <footer fxLayout="column" fxLayoutAlign="center center">
-      <button mat-flat-button color="primary" [disabled]="form.invalid" type="submit">
+      <button mat-flat-button color="primary" [disabled]="form.invalid || form.disabled" type="submit">
         <span>
           Confirm refusal
         </span>
