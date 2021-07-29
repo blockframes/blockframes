@@ -12,6 +12,34 @@ import { Movie } from '../+state';
 
 export const minReleaseYear = 1980;
 
+export const runningTimeFilters = {
+  // 0 is all values
+  1: {
+    label: '< 13min',
+    filter: 'runningTime.time < 13'
+  },
+  2: {
+    label: '13min - 26min',
+    filter: 'runningTime.time: 13 TO 26'
+  },
+  3: {
+    label: '26min - 52min',
+    filter: 'runningTime.time: 26 TO 52'
+  },
+  4: {
+    label: '52min - 90min',
+    filter: 'runningTime.time: 52 TO 90'
+  },
+  5: {
+    label: '90min - 180min',
+    filter: 'runningTime.time: 90 TO 180'
+  },
+  6: {
+    label: '> 180min',
+    filter: 'runningTime.time > 180'
+  }
+}
+
 export interface LanguagesSearch {
   original: Language[];
   dubbed: Language[];
@@ -30,6 +58,7 @@ export interface MovieSearch extends AlgoliaSearch {
   sellers: AlgoliaOrganization[];
   socialGoals: SocialGoal[];
   contentType?: ContentType;
+  runningTime: number;
 }
 
 export function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearch {
@@ -52,6 +81,7 @@ export function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearc
     minReleaseYear: minReleaseYear,
     sellers: [],
     socialGoals: [],
+    runningTime: 0,
     ...search,
   };
 }
@@ -80,6 +110,7 @@ function createMovieSearchControl(search: MovieSearch) {
     sellers: FormList.factory<AlgoliaOrganization>(search.sellers),
     socialGoals: FormList.factory(search.socialGoals),
     contentType: new FormControl(search.contentType),
+    runningTime: new FormControl(search.runningTime),
     // Max is 1000, see docs: https://www.algolia.com/doc/api-reference/api-parameters/hitsPerPage/
     hitsPerPage: new FormControl(50, Validators.max(1000))
   };
@@ -113,6 +144,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
   get socialGoals() { return this.get('socialGoals'); }
   get hitsPerPage() { return this.get('hitsPerPage'); }
   get contentType() { return this.get('contentType'); }
+  get runningTime() { return this.get('runningTime'); }
 
   isEmpty() {
     return (
@@ -151,13 +183,19 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
         this.socialGoals.value.map(goal => `socialGoals:${goal}`),
         [`contentType:${this.contentType.value || ''}`]
       ],
+      filters: ''
     };
 
     if (this.minBudget.value) {
-      search['filters'] = `budget >= ${max - this.minBudget.value ?? 0}`;
+      search.filters = `budget >= ${max - this.minBudget.value ?? 0}`;
     }
     if (this.minReleaseYear.value) {
-      search['filters'] = `release.year >= ${this.minReleaseYear.value}`;
+      if (search.filters) search.filters += ` AND `;
+      search.filters += `release.year >= ${this.minReleaseYear.value}`;
+    }
+    if (this.runningTime.value) {
+      if (search.filters) search.filters += ` AND `;
+      search.filters += runningTimeFilters[this.runningTime.value].filter
     }
 
     /*

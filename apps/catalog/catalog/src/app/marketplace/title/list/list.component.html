@@ -52,6 +52,10 @@
       <filter-release-year fxLayout="column" [form]="searchForm.minReleaseYear"></filter-release-year>
     </ng-template>
 
+    <ng-template filter label="Running Time" [form]="searchForm.runningTime">
+      <filter-running-time [form]="searchForm.runningTime"></filter-running-time>
+    </ng-template>
+
     <button mat-icon-button (click)="clear()" matTooltip="Clear all filters">
       <mat-icon svgIcon="refresh_filters"></mat-icon>
     </button>
