@@ -21,12 +21,13 @@ import { linkFile, getMediaToken as _getMediaToken } from './media';
 import { onEventDelete } from './event';
 import { getTwilioAccessToken, twilioWebhook as _twilioWebhook } from './twilio';
 import { eventWebhook as sendgridEventWebhook } from './sendgrid';
-import { heavyConfig } from '@blockframes/firebase-utils';
+import { heavyConfig, superHeavyConfig } from '@blockframes/firebase-utils';
 import { onNotificationCreate } from './notification';
 import { importAnalytics } from './pubsub/daily-analytics-import';
 import { onOfferCreate } from './offer';
 import { onContractDelete, onContractUpdate } from './contracts';
 import { onTermDelete } from './terms';
+import { downloadVideo } from './rescue';
 
 console.log('Function instance loaded');
 
@@ -257,3 +258,9 @@ export const onContractDeleteEvent = onDocumentDelete('contracts/{contractId}', 
 export const onContractUpdateEvent = onDocumentUpdate('contracts/{contractId}', onContractUpdate);
 
 export const onTermDeleteEvent = onDocumentDelete('terms/{termId}', onTermDelete);
+
+//--------------------------------
+//          JWP RESCUE          //
+//--------------------------------
+
+export const downloadVideoToStorage = functions.runWith(superHeavyConfig).https.onRequest(downloadVideo);
