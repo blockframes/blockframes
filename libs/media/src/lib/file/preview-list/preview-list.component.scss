@@ -1,0 +1,13 @@
+:host {
+  display: block;
+  height: calc(100% - 24px);
+}
+
+article {
+  height: 100%;
+
+  img {
+    object-fit: contain;
+    width: 100%;
+  }
+}

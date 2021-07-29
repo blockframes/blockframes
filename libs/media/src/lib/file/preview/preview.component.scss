@@ -3,17 +3,7 @@
   height: calc(100% - 24px);
 }
 
-article {
-  height: 100%;
-
-  img {
-    object-fit: contain;
-    width: 100%;
-    height: 100%;
-  }
-
-  mat-icon {
-    height: 3rem;
-    width: 3rem;
-  }
+img {
+  object-fit: contain;
+  width: 100%;
 }

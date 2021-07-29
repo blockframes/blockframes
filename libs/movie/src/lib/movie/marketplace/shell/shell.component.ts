@@ -6,7 +6,7 @@ import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
-import { FilePreviewComponent } from '@blockframes/media/file/preview/preview.component';
+import { FileListPreviewComponent } from '@blockframes/media/file/preview-list/preview-list.component';
 import { MatDialog } from '@angular/material/dialog';
 import { StorageFile } from '@blockframes/media/+state/media.firestore';
 
@@ -47,6 +47,6 @@ export class TitleMarketplaceShellComponent implements OnInit {
   }
 
   fullscreen(refs: StorageFile[], index: number) {
-    this.dialog.open(FilePreviewComponent, { data: { refs, index }, width: '80vw', height: '80vh', autoFocus: false })
+    this.dialog.open(FileListPreviewComponent, { data: { refs, index }, width: '80vw', height: '80vh', autoFocus: false })
   }
 }
