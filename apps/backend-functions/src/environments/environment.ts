@@ -16,6 +16,7 @@ export {
   bigQueryAnalyticsTable,
   centralOrgId,
   supportEmails,
+  playerId,
 } from '@env';
 
 import { firebase } from '@env';
