@@ -18,6 +18,6 @@ export class ConfirmDeclineComponent {
 
   async declineContract() {
     const reason = this.reasonControl.value;
-    this.dialog.close({reason});
+    this.dialog.close(reason);
   }
 }
