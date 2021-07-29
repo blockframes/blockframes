@@ -1,12 +1,13 @@
-import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { Organization } from '@blockframes/organization/+state/organization.model';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
 import { mainRoute, additionalRoute, artisticRoute, productionRoute } from '@blockframes/movie/marketplace';
-import { Event, EventService } from '@blockframes/event/+state';
+import { EventService } from '@blockframes/event/+state';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'festival-movie-view',
@@ -14,13 +15,11 @@ import { Event, EventService } from '@blockframes/event/+state';
   styleUrls: ['./view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceMovieViewComponent implements OnInit, OnDestroy {
+export class MarketplaceMovieViewComponent implements OnInit {
   public movie$: Observable<Movie>;
   public orgs$: Observable<Organization[]>;
-  public screeningOngoing = false;
-  public eventId: string;
+  public eventId$: Observable<string | null>;
   public movieId = this.movieQuery.getActiveId();
-  public sub: Subscription;
 
   public navLinks: RouteDescription[] = [
     mainRoute,
@@ -56,25 +55,9 @@ export class MarketplaceMovieViewComponent implements OnInit, OnDestroy {
     .orderBy('end', 'asc')
     .startAt(new Date());
 
-    const events$ = this.eventService.queryByType(['screening'], q);
-    this.sub = events$.subscribe(screenings => {
-      screenings.filter(s => s.start < new Date());
-      screenings.sort(this.sortByDate);
-
-      if (screenings.length) {
-        this.eventId = screenings[0].id;
-        return this.screeningOngoing = true;
-      }
-    });
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
-  }
-
-  private sortByDate(a: Event, b: Event): number {
-    if (a.start.getTime() < b.start.getTime()) return -1
-    if (a.start.getTime() > b.start.getTime()) return 1
-    return 0
+    this.eventId$ = this.eventService.valueChanges(q).pipe(
+      map(events => events.filter(e => e.start < new Date())),
+      map(events => events.length ? events[events.length - 1].id : null)
+    );
   }
 }
