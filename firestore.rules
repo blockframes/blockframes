@@ -358,7 +358,9 @@ service cloud.firestore {
     match /contracts/{contractId} {
       allow read: if isSignedIn() && notInMaintenance();
       allow create: if (userOrgId() == incomingData().buyerId) && notInMaintenance();
-      allow update: if false;
+      allow update: if (userOrgId() in existingData().stakeholders)
+                    && isOnlyChangingContractStatus()
+                    && notInMaintenance();
       allow delete: if false;
     }
 
@@ -415,6 +417,11 @@ service cloud.firestore {
 		}
 
     /// FUNCTIONS ///
+    function isOnlyChangingContractStatus() {
+      return (request.resource.data.diff(resource.data).affectedKeys()
+        .hasOnly(['status', 'declineReason']));
+    }
+
     function isOnlyChangingAttendeeStatus() {
       return isNotUpdatingId('id', existingData().id)
         && isNotUpdatingField(['allDay'])

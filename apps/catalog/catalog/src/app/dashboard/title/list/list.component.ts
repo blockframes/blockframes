@@ -74,7 +74,7 @@ export class TitleListComponent {
   }
 
   resetFilter() {
-    this.filter.reset();
+    this.filter.reset('');
     this.dynTitle.useDefault();
   }
 
