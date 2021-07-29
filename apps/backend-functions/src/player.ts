@@ -14,7 +14,7 @@ import { ErrorResultResponse } from './utils';
 import { getDocument } from './data/internals';
 import { isAllowedToAccessMedia } from './internals/media';
 import { db, getStorageBucketName } from './internals/firebase';
-import { jwplayerSecret, jwplayerKey, enableDailyFirestoreBackup } from './environments/environment';
+import { jwplayerSecret, jwplayerKey, enableDailyFirestoreBackup, playerId } from './environments/environment';
 
 
 // No typing
@@ -212,11 +212,11 @@ export const getPlayerUrl = async (
 
   const expires = Math.floor(new Date().getTime() / 1000) + linkDuration; // now + 5 hours
 
-  const toSign = `libraries/lpkRdflk.js:${expires}:${jwplayerSecret}`;
+  const toSign = `libraries/${playerId}.js:${expires}:${jwplayerSecret}`;
   const md5 = createHash('md5');
 
   const signature = md5.update(toSign).digest('hex');
 
-  const signedUrl = `https://cdn.jwplayer.com/libraries/lpkRdflk.js?exp=${expires}&sig=${signature}`;
+  const signedUrl = `https://cdn.jwplayer.com/libraries/${playerId}.js?exp=${expires}&sig=${signature}`;
   return signedUrl;
 };
