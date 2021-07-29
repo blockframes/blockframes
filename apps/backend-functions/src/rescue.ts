@@ -46,7 +46,10 @@ function transferFile(url: string, remoteFilePath: string) {
 
 export const downloadVideo = async (req: Request, res: Response) => {
 
-  const { jwPlayerId, jwPlayerSecret, storagePath } = req.query;// as Record<string, string>;
+  /**
+   * @param storagePath should not start and end with a `/`
+  */
+  const { jwPlayerId, jwPlayerSecret, storagePath } = req.query;
 
   // CHECK PARAMETERS
 
