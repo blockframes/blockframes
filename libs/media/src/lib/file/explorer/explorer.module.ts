@@ -20,7 +20,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatBadgeModule } from '@angular/material/badge';
-import { MatDialogModule } from '@angular/material/dialog';
 import { FilePreviewModule } from '../preview/preview.module';
 import { FileListUploaderModule } from '../file-list-uploader/file-list-uploader.module';
 
@@ -50,8 +49,7 @@ import { FileListUploaderModule } from '../file-list-uploader/file-list-uploader
     MatIconModule,
     MatButtonModule,
     MatTooltipModule,
-    MatBadgeModule,
-    MatDialogModule
+    MatBadgeModule
   ],
   exports: [FileExplorerComponent]
 })
