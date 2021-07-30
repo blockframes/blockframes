@@ -6,6 +6,7 @@ import { OrganizationQuery } from '@blockframes/organization/+state';
 import { MovieService } from '@blockframes/movie/+state';
 import { joinWith } from '@blockframes/utils/operators';
 import { switchMap } from 'rxjs/operators';
+import { QueryFn } from '@angular/fire/firestore';
 
 @Component({
   selector: 'catalog-offer-list',
@@ -15,13 +16,15 @@ import { switchMap } from 'rxjs/operators';
 })
 export class ListComponent {
   offers$ = this.orgQuery.selectActiveId().pipe(
-    switchMap(orgId => this.service.valueChanges(
-      ref => ref.where('buyerId', '==', orgId).orderBy('_meta.createdAt', 'desc')
-    )),
+    switchMap(orgId => this.service.valueChanges(this.query(orgId))),
     joinWith({
       contracts: offer => this.getContracts(offer.id)
     }),
   );
+
+  query: (orgId: string) => QueryFn = (orgId: string) => {
+    return ref => ref.where('buyerId', '==', orgId).orderBy('_meta.createdAt', 'desc');
+  }
 
   constructor(
     private orgQuery: OrganizationQuery,
