@@ -15,7 +15,9 @@ import { switchMap } from 'rxjs/operators';
 })
 export class ListComponent {
   offers$ = this.orgQuery.selectActiveId().pipe(
-    switchMap(orgId => this.service.valueChanges(ref => ref.where('buyerId', '==', orgId))),
+    switchMap(orgId => this.service.valueChanges(
+      ref => ref.where('buyerId', '==', orgId).orderBy('_meta.createdAt', 'desc')
+    )),
     joinWith({
       contracts: offer => this.getContracts(offer.id)
     }),

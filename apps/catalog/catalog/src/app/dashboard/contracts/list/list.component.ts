@@ -29,6 +29,7 @@ export class ContractListComponent {
   public contracts$ = this.contractService.valueChanges(
     ref => ref.where('stakeholders', 'array-contains', this.orgId)
       .where('type', '==', 'sale')
+      .orderBy('_meta.createdAt', 'desc')
   );
 
   constructor(

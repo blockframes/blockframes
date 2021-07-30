@@ -13,7 +13,7 @@ import { joinWith } from '@blockframes/utils/operators';
 })
 export class OffersListComponent {
 
-  offers$ = this.service.valueChanges().pipe(
+  offers$ = this.service.valueChanges(ref => ref.orderBy('_meta.createdAt', 'desc')).pipe(
     joinWith({
       contracts: offer => this.getContracts(offer.id)
     })
