@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-import { FilePreviewComponent } from './preview.component';
+import { FileListPreviewComponent } from './preview-list.component';
 
 import { PdfViewerModule } from '../../pdf/viewer/viewer.module';
 import { VideoViewerModule } from '../../video/viewer/viewer.module';
@@ -30,7 +30,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatDialogModule,
     MatTooltipModule
   ],
-  exports: [FilePreviewComponent],
-  declarations: [FilePreviewComponent],
+  exports: [FileListPreviewComponent],
+  declarations: [FileListPreviewComponent],
 })
-export class FilePreviewModule { }
+export class FileListPreviewModule { }
