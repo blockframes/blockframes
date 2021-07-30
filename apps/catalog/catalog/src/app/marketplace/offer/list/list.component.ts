@@ -16,15 +16,12 @@ import { QueryFn } from '@angular/fire/firestore';
 })
 export class ListComponent {
   offers$ = this.orgQuery.selectActiveId().pipe(
-    switchMap(orgId => this.service.valueChanges(this.query(orgId))),
+    switchMap(orgId => this.service.valueChanges(query(orgId))),
     joinWith({
       contracts: offer => this.getContracts(offer.id)
     }),
   );
 
-  query: (orgId: string) => QueryFn = (orgId: string) => {
-    return ref => ref.where('buyerId', '==', orgId).orderBy('_meta.createdAt', 'desc');
-  }
 
   constructor(
     private orgQuery: OrganizationQuery,
@@ -42,4 +39,8 @@ export class ListComponent {
       })
     )
   }
+}
+
+const query: (orgId: string) => QueryFn = (orgId: string) => {
+  return ref => ref.where('buyerId', '==', orgId).orderBy('_meta.createdAt', 'desc');
 }
