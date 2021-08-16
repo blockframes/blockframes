@@ -1,4 +1,5 @@
 ﻿export const production = false;
+export const e2e_mode = false;
 
 export const persistenceSettings = {
   synchronizeTabs: true

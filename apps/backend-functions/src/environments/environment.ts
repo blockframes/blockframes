@@ -17,6 +17,7 @@ export {
   centralOrgId,
   supportEmails,
   playerId,
+  e2e_mode
 } from '@env';
 
 import { firebase } from '@env';
