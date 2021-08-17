@@ -1,22 +1,20 @@
 
 import { Movie } from '@blockframes/movie/+state';
-import { loadAdminServices } from '@blockframes/firebase-utils';
+import { getCollection, loadAdminServices } from '@blockframes/firebase-utils';
 import { MovieVideo } from '@blockframes/movie/+state/movie.firestore';
 import { StorageVideo } from '@blockframes/media/+state/media.firestore';
 
 
 function isVideoOK(video: StorageVideo) {
-  return !!video.jwPlayerId &&
-    !!video.privacy && !!video.collection && !!video.docId && !!video.field &&
-    !!video.storagePath
-  ;
+  return [
+    'jwPlayerId',
+    'privacy',
+    'collection',
+    'docId',
+    'field',
+    'storagePath',
+  ].every(key => !!video[key]);
 }
-
-// function isMalformed(video: StorageVideo) {
-//   return (!video.jwPlayerId && !!video.storagePath) ||
-//     (!!video.jwPlayerId && !video.storagePath)
-//   ;
-// }
 
 /** Check for video that exists in the storage but NOT in JWP */
 function isMissingJW(video: StorageVideo) {
@@ -36,6 +34,10 @@ export async function rescueJWP() {
   //    - promotional.salesPitch
   //    - promotional.videos.otherVideos[]
   //    - promotional.videos.screener
+  // 2) Spot the malformed video
+  //  - video that exist in storage but not in JWP needs to be uploaded
+  //  - video that exist in WJP but not in storage needs to be downloaded
+  // 3) Apply the downloads & uploads // TODO
 
   const okVideos: MovieVideo[] = [];
   const emptyVideos: MovieVideo[] = [];
@@ -44,44 +46,36 @@ export async function rescueJWP() {
 
   const sortVideo = (video: StorageVideo, movieId: string) => {
     if (!video.docId) video.docId = movieId;
-    if (isVideoOK(video)) {
-      okVideos.push(video);
-    } else {
-      if (isMissingJW(video)) {
-        notInJWP.push(video);
-      } if (isMissingStorage(video)) {
-        notInStorage.push(video);
-      } else {
-        emptyVideos.push(video);
-      }
-    }
+
+    if (isVideoOK(video)) return okVideos.push(video);
+    if (isMissingJW(video)) return notInJWP.push(video);
+    if (isMissingStorage(video)) return notInStorage.push(video);
+    return emptyVideos.push(video);
   }
 
-  const moviesSnap = await db.collection('movies').get();
-  moviesSnap.forEach(movieSnap => {
-    const movie = movieSnap.data() as Movie;
+  const movies = await getCollection<Movie>('movies');
+  movies.forEach(movie => {
 
-    if (movie.promotional.salesPitch) sortVideo(movie.promotional.salesPitch, movie.id);
-    if (movie.promotional.videos) {
-      sortVideo(movie.promotional.videos.screener, movie.id);
+    const { salesPitch, videos } = movie.promotional;
 
-      movie.promotional.videos.otherVideos?.forEach(video => sortVideo(video, movie.id));
+    if (salesPitch) sortVideo(salesPitch, movie.id);
+    if (videos) {
+      sortVideo(videos.screener, movie.id);
+
+      videos.otherVideos?.forEach(video => sortVideo(video, movie.id));
     }
   });
 
-  console.log('');
 
-  console.log(`There is ${okVideos.length} correct videos`);
+  console.log(`\nThere is ${okVideos.length} correct videos`);
   console.log(`${emptyVideos.length} empty videos.`);
   console.log(`${notInStorage.length} videos that exists in JWP but not in storage (need to be downloaded)`);
   console.log(`${notInJWP.length} videos that exists in the storage but not in JWP (need to be uploaded)`);
 
-  console.log('');
-  console.log('VIDEO THAT NEED TO BE DOWNLOADED');
+  console.log('\nVIDEO THAT NEED TO BE DOWNLOADED');
   notInStorage.forEach(v => console.log(v));
 
-  console.log('');
-  console.log('VIDEO THAT NEED TO BE UPLOADED');
-  notInStorage.forEach(v => console.log(v));
-  console.log('');
+  console.log('\nVIDEO THAT NEED TO BE UPLOADED');
+  notInJWP.forEach(v => console.log(v));
+  console.log('\n');
 }
