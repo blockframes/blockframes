@@ -363,7 +363,7 @@ export async function organizationRequestedAccessToApp(org: OrganizationDocument
 }
 
 export async function userFirstConnexion(user: PublicUser): Promise<EmailRequest> {
-  const supportEmail = (e2e_mode) ? testEmail : getSupportEmail(user._meta.createdFrom);
+  const supportEmail = e2e_mode ? testEmail : getSupportEmail(user._meta.createdFrom);
   return {
     to: supportEmail,
     subject: 'New user connexion',
