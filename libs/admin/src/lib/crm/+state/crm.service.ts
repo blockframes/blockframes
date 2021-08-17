@@ -44,6 +44,6 @@ export class CrmService {
   }
 
   public sendPasswordResetEmail(email: string): Promise<void> {
-    return this.service.resetPasswordInit(email)
+    return this.service.resetPasswordInit(email);
   }
 }
