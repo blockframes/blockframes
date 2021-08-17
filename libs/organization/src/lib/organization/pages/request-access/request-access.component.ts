@@ -5,6 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { OrganizationQuery, OrganizationService } from '@blockframes/organization/+state';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { AuthService } from '@blockframes/auth/+state';
 
 @Component({
   selector: 'org-request-access',
@@ -24,7 +25,8 @@ export class OrgRequestAccessComponent implements OnInit {
     private routerQuery: RouterQuery,
     private snackBar: MatSnackBar,
     private orgService: OrganizationService,
-    private orgQuery: OrganizationQuery
+    private orgQuery: OrganizationQuery,
+    private authService: AuthService,
   ) {}
 
   ngOnInit() {
@@ -41,5 +43,9 @@ export class OrgRequestAccessComponent implements OnInit {
 
   refresh() {
     window.location.reload();
+  }
+
+  public logout() {
+    this.authService.signOut();
   }
 }
