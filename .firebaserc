@@ -364,6 +364,25 @@
           "cms-blockframes-samir"
         ]
       }
+    },
+    "blockframes-antoine-9e16b": {
+      "hosting": {
+        "catalog": [
+          "catalog-blockframes-antoine"
+        ],
+        "festival": [
+          "festival-blockframes-antoine"
+        ],
+        "crm": [
+          "crm-blockframes-antoine"
+        ],
+        "financiers": [
+          "financiers-blockframes-antoine"
+        ],
+        "cms": [
+          "cms-blockframes-antoine"
+        ]
+      }
     }
   }
 }
