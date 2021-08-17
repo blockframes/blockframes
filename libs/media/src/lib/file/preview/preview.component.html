@@ -1,8 +1,8 @@
-<section fxLayout fxLayoutAlign="end">
+<header fxLayout fxLayoutAlign="end">
   <button mat-icon-button (click)="close()">
     <mat-icon svgIcon="close"></mat-icon>
   </button>
-</section>
+</header>
 
 <ng-container [ngSwitch]="data.ref.storagePath | fileType">
   <ng-container *ngSwitchCase="'image'">

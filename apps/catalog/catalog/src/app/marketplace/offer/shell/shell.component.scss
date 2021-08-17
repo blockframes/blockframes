@@ -7,7 +7,8 @@ header {
   display: flex;
   flex-direction: column;
   align-items: start;
-  background-image: linear-gradient(to bottom, var(--primary-lighter), transparent);
+  // https://stackoverflow.com/questions/46309641/what-happens-in-safari-with-the-transparent-color
+  background-image: linear-gradient(to bottom, var(--primary-lighter), var(--background));
 
   bf-tag {
     margin-bottom: 8px;

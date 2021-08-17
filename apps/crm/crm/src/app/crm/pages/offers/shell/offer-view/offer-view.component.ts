@@ -85,7 +85,7 @@ export class OfferViewComponent implements OnDestroy, OnInit {
     this.dialog.open(ConfirmInputComponent, {
       data: {
         title: 'Are you sure you want to delete a right from this package?',
-        subtitle: 'This action cannot be undone.',
+        subtitle: 'This action can’t be undone. Before we delete this right please write “DELETE” in the field below.',
         confirmationWord: 'delete',
         placeholder: 'Please Type « DELETE »',
         confirm: 'Delete this right',

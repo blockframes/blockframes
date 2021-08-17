@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CrmStore } from './crm.store';
 import { AngularFireFunctions } from '@angular/fire/functions';
-import { AngularFireAuth } from '@angular/fire/auth';
+import { AuthService } from '@blockframes/auth/+state';
 
 interface AnalyticsActiveUser {
   user_id: string,
@@ -20,7 +20,7 @@ export class CrmService {
   constructor(
     protected store: CrmStore,
     private functions: AngularFireFunctions,
-    private auth: AngularFireAuth,
+    private service: AuthService,
   ) { }
 
   public async loadAnalyticsData() {
@@ -43,12 +43,7 @@ export class CrmService {
     return f({}).toPromise();
   }
 
-  /**
-  * Send email from Google Firebase to reset password
-  * @dev This is the "hard" reset password link, sent directly from Google.
-  * @param email
-  */
   public sendPasswordResetEmail(email: string): Promise<void> {
-    return this.auth.sendPasswordResetEmail(email);
+    return this.service.resetPasswordInit(email);
   }
 }
