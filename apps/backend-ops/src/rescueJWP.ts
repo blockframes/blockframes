@@ -1,6 +1,6 @@
 
 import { Movie } from '@blockframes/movie/+state';
-import { getCollection, loadAdminServices } from '@blockframes/firebase-utils';
+import { getCollection } from '@blockframes/firebase-utils';
 import { MovieVideo } from '@blockframes/movie/+state/movie.firestore';
 import { StorageVideo } from '@blockframes/media/+state/media.firestore';
 
@@ -27,7 +27,6 @@ function isMissingStorage(video: StorageVideo) {
 }
 
 export async function rescueJWP() {
-  const { db } = loadAdminServices();
 
   // 1) Get all videos in DB
   //  - Movies
@@ -37,7 +36,7 @@ export async function rescueJWP() {
   // 2) Spot the malformed video
   //  - video that exist in storage but not in JWP needs to be uploaded
   //  - video that exist in WJP but not in storage needs to be downloaded
-  // 3) Apply the downloads & uploads // TODO
+  // 3) Display meaningful info
 
   const okVideos: MovieVideo[] = [];
   const emptyVideos: MovieVideo[] = [];
