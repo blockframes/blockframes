@@ -28,6 +28,8 @@ export class PendingOrganizationGuard extends CollectionGuard<OrganizationState>
   sync() {
     return this.authQuery.user$.pipe(
       switchMap(user => {
+        if (!user) return of('/');
+
         if (!user.orgId) {
           return of('/auth/identity');
         } else {
