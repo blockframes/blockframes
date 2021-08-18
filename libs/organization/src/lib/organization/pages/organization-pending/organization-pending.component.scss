@@ -11,15 +11,12 @@
   background-repeat: no-repeat;
 }
 
-.logo {
+app-logo {
+  position: absolute;
   cursor: pointer;
-  app-logo {
-    position: absolute;
-    top: 24px;
-    left: 24px;
-  }
+  top: 24px;
+  left: 24px;
 }
-
 
 h1 {
   margin-bottom: 32px;

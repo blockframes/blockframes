@@ -39,7 +39,7 @@ export function createRoutes({ appsRoutes, appName, landing }: RouteOptions) {
     {
       path: 'request-access',
       canActivate: [RequestAccessGuard],
-      loadChildren: () => import('@blockframes/organization/pages/request-access/request-access.module').then(m => m.OrgRequestAccessModule)
+      loadChildren: () => import('@blockframes/organization/request-access.module').then(m => m.OrgRequestAccessModule)
     }
   ];
   return [
