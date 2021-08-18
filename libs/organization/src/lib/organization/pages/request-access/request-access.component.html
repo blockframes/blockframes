@@ -5,8 +5,8 @@
 
     <ng-container *ngIf="step === 'initial'">
       <img asset="wait.svg"/>
-      <h3>Looks like you don't have access to {{ appName[currentApp] }}... yet!</h3>
-      <p class="mat-body-1">
+      <h1>Looks like you don't have access to {{ appName[currentApp] }}... yet!</h1>
+      <p class="mat-body-2">
         Your email address is already associated with an existing user account of <ng-container *ngFor="let app of (orgExistingAccess$ | async); let isLast = last">{{ appName[app]}}{{ !isLast ? ' and ': ''}}</ng-container>. To access {{appName[currentApp]}}, please request access and wait for our team's approval.
       </p>
       <button mat-flat-button color="primary" (click)="joinOptions()" [disabled]="disabledRequest">Join {{ appName[currentApp] }}</button>
@@ -14,7 +14,7 @@
     </ng-container>
 
     <ng-container *ngIf="step === 'request'">
-      <h3>What access are your looking for ?</h3>
+      <h1>What access are your looking for ?</h1>
       <p class="mat-body-1">
         To access {{ appName[currentApp] }}, please select a "role". It will determine the features you can acccess once you've joined the platform.
       </p>

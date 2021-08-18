@@ -18,6 +18,9 @@ app-logo {
 
 mat-card {
   text-align: center;
+  padding-top: 48px;
+  margin: auto;
+  width: 50%;
 
   img {
     height: auto;
@@ -44,4 +47,9 @@ mat-button-toggle {
 
 mat-icon {
   margin-left: 4px;
+  margin-right: 12px;
+}
+
+article {
+  margin-bottom: 40px;
 }
