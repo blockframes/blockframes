@@ -94,10 +94,10 @@ export const algolia = {
 // =======
 
 export const supportEmails = {
-  default: 'dev+staging@blockframes.io', // redirect to => blockframes.dev@gmail.com
-  catalog: 'dev+staging_catalog@blockframes.io',
-  festival: 'dev+staging_festival@blockframes.io',
-  financiers: 'dev+staging_financiers@blockframes.io'
+  default: 'apoppe@cascade8.com', // redirect to => blockframes.dev@gmail.com
+  catalog: 'apoppe+catalog@cascade8.com',
+  festival: 'apoppe+festival@cascade8.com',
+  financiers: 'apoppe+financiers@cascade8.com'
 }
 
 // Yandex
