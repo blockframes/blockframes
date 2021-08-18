@@ -322,7 +322,7 @@ const organizationCreatedTemplate = (orgId: string) =>
  */
 const organizationRequestAccessToAppTemplate = (org: PublicOrganization, app: App, module: Module) =>
   `
-  Organization '${org.denomination.full}' requested access to module ${module} of app ${appName[app]},
+  Organization '${org.denomination.full}' requested access to ${module} module of app ${appName[app]},
 
   Visit ${appUrl.crm}${ADMIN_ACCEPT_ORG_PATH}/${org.id} or go to ${ADMIN_ACCEPT_ORG_PATH}/${org.id} to enable it.
   `;
