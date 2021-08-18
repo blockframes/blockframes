@@ -21,34 +21,9 @@ const firebaseConfig = {
   projectId: 'blockframes-antoine-9e16b',
   storageBucket: 'blockframes-antoine-9e16b.appspot.com',
   messagingSenderId: '892119097462',
+  appId: "1:892119097462:web:9ac42eb6f9d97f2126bf57",
+  measurementId: "G-XXXXXXXXXX"
 };
-
-const appConfigs = {
-  festival: {
-    appId: "1:176629403574:web:6b87a6bd036a31923afb17",
-    measurementId: "G-YPFLZVR4XP"
-  },
-  catalog: {
-    appId: "1:176629403574:web:d4d965add159857c3afb17",
-    measurementId: "G-91803TC0PB"
-  },
-  financiers: {
-    appId: "1:176629403574:web:d581aebb64c37aeb3afb17",
-    measurementId: "G-K6EPHB6MQ5"
-  },
-  cms: {
-    appId: "1:176629403574:web:5fdf3cbcb8eb67803afb17",
-    measurementId: "G-QCXWY2XS8V"
-  },
-  crm: {
-    appId: "1:176629403574:web:eacdbef9a019b1c33afb17",
-    measurementId: "G-WFBNNFQZZM"
-  },
-  default: {
-    appId: "1:176629403574:web:e97f704329b41f233afb17",
-    measurementId: "G-46P00JHXXK"
-  }
-}
 
 export const firebaseRegion = 'europe-west1';
 
@@ -61,14 +36,8 @@ export const emulators = {
   functions: false
 };
 
-export function firebase(app?: keyof typeof appConfigs) {
-  return app ? {
-    ...firebaseConfig,
-    ...appConfigs[app]
-  } : {
-      ...firebaseConfig,
-      ...appConfigs.default
-    }
+export function firebase(app?: string) {
+  return firebaseConfig
 }
 
 // Algolia
@@ -94,10 +63,10 @@ export const algolia = {
 // =======
 
 export const supportEmails = {
-  default: 'dev+staging@blockframes.io', // redirect to => blockframes.dev@gmail.com
-  catalog: 'dev+staging_catalog@blockframes.io',
-  festival: 'dev+staging_festival@blockframes.io',
-  financiers: 'dev+staging_financiers@blockframes.io'
+  default: 'apoppe@cascade8.com', // redirect to => blockframes.dev@gmail.com
+  catalog: 'apoppe+catalog@cascade8.com',
+  festival: 'apoppe+festival@cascade8.com',
+  financiers: 'apoppe+financiers@cascade8.com'
 }
 
 // Yandex
