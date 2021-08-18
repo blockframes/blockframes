@@ -7,7 +7,7 @@
 <section>
   <p>
     There are some holdbacks that exists for this right.<br/>
-    You can still add this right to your selection.
+   {{data.addingToSelection?" You can still add this right to your selection.":''}}
   </p>
   <holdback-list [holdbacks]="data.holdbacks"></holdback-list>
 </section>

@@ -6,6 +6,7 @@ import { FormList } from '@blockframes/utils/form';
 import { Scope } from '@blockframes/utils/static-model';
 import { Holdback } from '../../+state/contract.model';
 import { HoldbackForm } from '../form';
+import { HoldbackModalComponent } from '../modal/holdback-modal.component';
 
 @Component({
   selector: 'holdbacks-form',
@@ -15,6 +16,7 @@ import { HoldbackForm } from '../form';
 })
 export class HolbackFormComponent {
   @Input() title: Movie;
+  @Input() otherOrgHoldBacks:Holdback[]=[];
   @Input() holdbacks: Holdback[] = [];
   @Output() holdbacksChange = new EventEmitter<Holdback[]>();
 
@@ -47,6 +49,11 @@ export class HolbackFormComponent {
       this.ref.close();
     }
   }
+
+  openHoldbackModal() {
+    this.dialog.open(HoldbackModalComponent, { data: { holdbacks:this.otherOrgHoldBacks }, maxHeight: '80vh' });
+  }
+
 
   cancel() {
     this.ref.close();

@@ -12,7 +12,7 @@ import { Holdback } from '../../+state';
 export class HoldbackModalComponent {
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: { holdbacks: Holdback[] },
+    @Inject(MAT_DIALOG_DATA) public data: { holdbacks: Holdback[], addingToSelection:boolean },
     public dialogRef: MatDialogRef<HoldbackModalComponent>
   ) { }
 

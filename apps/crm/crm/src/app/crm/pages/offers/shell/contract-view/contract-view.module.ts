@@ -16,6 +16,7 @@ import { OrgChipModule } from '@blockframes/organization/components/chip/chip.mo
 import { ConfirmInputModule } from '@blockframes/ui/confirm-input/confirm-input.module';
 import { ContractItemModule } from '@blockframes/contract/contract/item/contract-item.module';
 import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe';
+import { GetTitleHoldbacksPipeModule } from '@blockframes/movie/pipes/get-title-holdbacks';
 import { HoldbackFormModule } from '@blockframes/contract/contract/holdback/form/form.module';
 
 import { ContractViewComponent } from './contract-view.component';
@@ -30,6 +31,7 @@ import { ContractViewComponent } from './contract-view.component';
     OrgChipModule,
     ConfirmInputModule,
     ContractItemModule,
+    GetTitleHoldbacksPipeModule,
     GetTitlePipeModule,
     HoldbackFormModule,
 

@@ -53,6 +53,7 @@
               </div>
               <mat-divider></mat-divider>
               <holdbacks-form
+                [otherOrgHoldBacks]="contract.titleId | getTitleHoldbacks:[orgId] | async"
                 [holdbacks]="contract.holdbacks"
                 [title]="title"
                 (holdbacksChange)="updateHoldbacks(i, $event)">

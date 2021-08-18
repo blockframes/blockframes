@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { MarketplaceSelectionComponent } from './selection.component';
 import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe';
+import { GetTitleHoldbacksPipeModule } from '@blockframes/movie/pipes/get-title-holdbacks';
 import { BucketPipesModule } from '@blockframes/contract/bucket/pipes';
 import { DeepKeyPipeModule } from '@blockframes/utils/pipes';
 import { ContractItemModule } from '@blockframes/contract/contract/item/contract-item.module';
@@ -31,6 +32,7 @@ import { MatDividerModule } from '@angular/material/divider';
     StaticSelectModule,
     ContractItemModule,
     HoldbackFormModule,
+    GetTitleHoldbacksPipeModule,
 
     // Material
     MatButtonModule,
