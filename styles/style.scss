@@ -21,6 +21,16 @@ a {
   text-decoration-line: none;
 }
 
+p, span {
+  a[href]:not([href^="mailto"]) {
+    text-decoration: underline;
+  }
+}
+
+a[href^="assets"], a[href^="mailto"] {
+  font-weight: bold;
+}
+
 ul {
   list-style-type: none;
   padding-left: 0;
