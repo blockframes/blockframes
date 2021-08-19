@@ -6,7 +6,6 @@ import { FormList } from '@blockframes/utils/form';
 import { Scope } from '@blockframes/utils/static-model';
 import { Holdback } from '../../+state/contract.model';
 import { HoldbackForm } from '../form';
-import { HoldbackModalComponent } from '../modal/holdback-modal.component';
 
 @Component({
   selector: 'holdbacks-form',

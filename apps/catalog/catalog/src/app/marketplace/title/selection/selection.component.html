@@ -53,8 +53,7 @@
                 </a>
               </div>
               <mat-divider></mat-divider>
-              <holdbacks-form
-                [holdbacks]="contract.holdbacks" [title]="title" (holdbacksChange)="updateHoldbacks(i, $event)">
+              <holdbacks-form [holdbacks]="contract.holdbacks" [title]="title" (holdbacksChange)="updateHoldbacks(i, $event)">
               </holdbacks-form>
             </ng-container>
           </footer>
