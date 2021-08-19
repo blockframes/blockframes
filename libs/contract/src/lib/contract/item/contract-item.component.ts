@@ -1,5 +1,5 @@
 import {
-  Component, Input, TemplateRef, ContentChild, ChangeDetectorRef, ChangeDetectionStrategy, SimpleChange,
+  Component, Input, TemplateRef, ContentChild, ChangeDetectorRef, ChangeDetectionStrategy
 } from '@angular/core';
 import { BucketContract } from '@blockframes/contract/bucket/+state/bucket.model';
 import { Scope, mediaGroup, territoriesGroup } from '@blockframes/utils/static-model';
