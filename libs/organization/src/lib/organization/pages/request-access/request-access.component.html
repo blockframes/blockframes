@@ -1,6 +1,6 @@
 <button app-logo (click)="logout()"></button>
 
-<mat-card fxLayout="column" fxLayoutAlign="center center">
+<section class="surface" fxLayout="column" fxLayoutAlign="center center">
   <ng-container *ngIf="step$ | async as step">
 
     <ng-container *ngIf="step === 'initial'">
@@ -36,4 +36,4 @@
     </ng-container>
 
   </ng-container>
-</mat-card>
+</section>
