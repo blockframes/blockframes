@@ -164,7 +164,6 @@ export const getAnalyticsActiveUsers = async (
   const [rows] = await executeQuery(queryAnalyticsActiveUsers);
 
   if (rows !== undefined && rows.length >= 0) {
-    console.log(rows);
     return rows;
   } else {
     throw new Error('Unexepected error.');
