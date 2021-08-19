@@ -27,7 +27,6 @@ export class MarketplaceSelectionComponent {
   private prices: number[] = [];
   priceChanges = new Subject<number>();
   total$: Observable<number>;
-  orgId:string;
 
   constructor(
     @Optional() private intercom: Intercom,
@@ -53,8 +52,6 @@ export class MarketplaceSelectionComponent {
     this.total$ = merge(bucketPrices$, localPrice$).pipe(
       map(prices => this.getTotal(prices))
     );
-
-    this.orgId = this.orgQuery.getActiveId();
   }
 
 

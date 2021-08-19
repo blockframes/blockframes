@@ -17,7 +17,6 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { HoldbackModalModule } from '../modal/holdback-modal.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
@@ -34,7 +33,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     VersionPipeModule,
     MaxLengthModule,
     LanguagesFormModule,
-    HoldbackModalModule,
     HoldbackListModule,
     MatDialogModule,
     MatDividerModule,

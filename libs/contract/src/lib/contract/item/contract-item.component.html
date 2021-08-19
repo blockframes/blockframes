@@ -1,4 +1,4 @@
-<ng-container *ngIf="contract.titleId | getTitle | async as title">
+<ng-container *ngIf="_contract?.titleId | getTitle | async as title">
   <header fxLayout fxLayoutAlign="space-between start" test-id="avails-section">
     <section fxLayout="column">
       <h2>{{ title.title.international }}</h2>
@@ -13,7 +13,7 @@
     </section>
     <ng-content select="[price]"></ng-content>
   </header>
-  <ng-container *ngIf="contract | getTermsFromContract | async as terms">
+  <ng-container *ngIf="_contract | getTermsFromContract | async as terms">
     <bf-table-filter [source]="terms" [columns]="columns" [initialColumns]="initialColumns" showFilter>
       <ng-template colRef="duration" let-duration>
         {{ duration.from | date:'M/d/y' }} - {{ duration.to | date:'M/d/y' }}
@@ -52,4 +52,7 @@
     </bf-table-filter>
   </ng-container>
   <ng-content select="footer"></ng-content>
+  <button mat-flat-button *ngIf="existingHoldbacks?.length" (click)="openHoldbackModal()">
+    <span>Other Buyers Holdbacks</span>
+  </button>
 </ng-container>

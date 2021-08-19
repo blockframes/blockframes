@@ -16,7 +16,6 @@ import { HoldbackModalComponent } from '../modal/holdback-modal.component';
 })
 export class HolbackFormComponent {
   @Input() title: Movie;
-  @Input() otherOrgHoldBacks:Holdback[]=[];
   @Input() holdbacks: Holdback[] = [];
   @Output() holdbacksChange = new EventEmitter<Holdback[]>();
 
@@ -49,11 +48,6 @@ export class HolbackFormComponent {
       this.ref.close();
     }
   }
-
-  openHoldbackModal() {
-    this.dialog.open(HoldbackModalComponent, { data: { holdbacks:this.otherOrgHoldBacks }, maxHeight: '80vh' });
-  }
-
 
   cancel() {
     this.ref.close();

@@ -1,9 +1,6 @@
 <holdback-list [holdbacks]="holdbacks"></holdback-list>
 
-<div class="actions" fxLayout [fxLayoutAlign]="otherOrgHoldBacks?.length ? 'space-between center': 'center center'">
-  <button mat-flat-button *ngIf="otherOrgHoldBacks?.length" (click)="openHoldbackModal()">
-    <span>Other Buyers Holdbacks</span>
-  </button>
+<div class="actions" fxLayout fxLayoutAlign="center center">
   <button mat-button (click)="openHoldbacks(formTemplate)">
     <mat-icon svgIcon="add"></mat-icon>
     <span>Add holdbacks for "{{ title.title.international | maxLength:10 }}"</span>

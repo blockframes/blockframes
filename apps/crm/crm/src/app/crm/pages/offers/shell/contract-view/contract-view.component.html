@@ -48,7 +48,6 @@
 
       <footer *ngIf="contract.title as title">
         <holdbacks-form
-          [otherOrgHoldBacks]="contract.titleId | getTitleHoldbacks:[contract.buyerId] | async"
           [holdbacks]="contract.holdbacks"
           [title]="title"
           (holdbacksChange)="updateHoldbacks(contract.id, $event)">

@@ -11,8 +11,10 @@ import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filte
 import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.pipe';
 import { RouterModule } from '@angular/router';
 import { MovieFeatureModule } from '@blockframes/movie/pipes/movie-feature.pipe';
+import { GetTitleHoldbacksPipe } from '@blockframes/movie/pipes/get-title-holdbacks';
 import { JoinPipeModule, VersionPipeModule, ToGroupLabelPipeModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { DetailedTermsModule } from '@blockframes/contract/term/components/detailed/detailed.module';
+import { HoldbackModalModule } from '../holdback/modal/holdback-modal.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -46,6 +48,7 @@ import { TermPipeModule } from '@blockframes/contract/term/pipes';
     VersionPipeModule,
     ToLabelModule,
     TermPipeModule,
+    HoldbackModalModule,
 
     // Material
     MatButtonModule,
@@ -58,6 +61,9 @@ import { TermPipeModule } from '@blockframes/contract/term/pipes';
     ],
   exports:[
     ContractItemComponent,
-  ]
+  ],
+  providers:[
+    GetTitleHoldbacksPipe,
+  ],
 })
 export class ContractItemModule { }
