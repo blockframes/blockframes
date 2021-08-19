@@ -1,5 +1,5 @@
 <main bgAsset="rocket_background.svg">
-  <a routerLink="/"><app-logo></app-logo></a>
+  <a app-logo routerLink="/"></a>
 
   <auth-signin-form (submited)="signin($event)">
     <span buttonText>{{ buttonText }}</span>
