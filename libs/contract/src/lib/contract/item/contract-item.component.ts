@@ -1,14 +1,13 @@
 import {
-  Component, Input, TemplateRef, ContentChild, ChangeDetectorRef, ChangeDetectionStrategy,
+  Component, Input, TemplateRef, ContentChild, ChangeDetectorRef, ChangeDetectionStrategy, SimpleChange,
 } from '@angular/core';
 import { BucketContract } from '@blockframes/contract/bucket/+state/bucket.model';
 import { Scope, mediaGroup, territoriesGroup } from '@blockframes/utils/static-model';
 import { MatDialog } from '@angular/material/dialog';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 import { HoldbackModalComponent } from '../holdback/modal/holdback-modal.component';
-import { Contract, Holdback, Sale } from '../+state';
+import { Contract, Holdback } from '../+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
-import { GetTitleHoldbacksPipe } from '@blockframes/movie/pipes/get-title-holdbacks';
 
 
 @Component({
@@ -35,9 +34,9 @@ export class ContractItemComponent {
   mediaGroup = mediaGroup;
   territoriesGroup = territoriesGroup;
   actionTemplate?: TemplateRef<unknown>;
-  _contract: BucketContract | Contract;
-  existingHoldbacks: Holdback[];
+  @Input() contract: BucketContract | Contract;
   orgId = this.orgQuery.getActiveId();
+
   @ContentChild('priceTemplate') priceTemplate: TemplateRef<unknown>;
   @ContentChild('termAction') set colActionsTemplate(template: TemplateRef<unknown>) {
     if (template) {
@@ -50,24 +49,15 @@ export class ContractItemComponent {
   constructor(
     private cdr: ChangeDetectorRef,
     private dialog: MatDialog,
-    private getTitleHoldbacks: GetTitleHoldbacksPipe,
     private orgQuery: OrganizationQuery,
   ) { }
-
-  @Input() set contract(contract: BucketContract | Contract) {
-    this._contract = contract;
-    this.getTitleHoldbacks.transform(contract.titleId, [(contract as Sale).buyerId ?? this.orgId]).then(
-      existingHoldbacks => this.existingHoldbacks = existingHoldbacks
-    )
-  }
-
 
   openDetails(terms: string, scope: Scope) {
     this.dialog.open(DetailedTermsComponent, { data: { terms, scope }, maxHeight: '80vh', autoFocus: false });
   }
 
-  openHoldbackModal() {
-    this.dialog.open(HoldbackModalComponent, { data: { holdbacks: this.existingHoldbacks }, maxHeight: '80vh' });
+  openHoldbackModal(existingHoldbacks: Holdback[]) {
+    this.dialog.open(HoldbackModalComponent, { data: { holdbacks: existingHoldbacks }, maxHeight: '80vh' });
   }
 
 }
