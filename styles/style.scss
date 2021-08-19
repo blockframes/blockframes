@@ -27,8 +27,10 @@ p, span {
   }
 }
 
-a[href^="assets"], a[href^="mailto"] {
-  font-weight: bold;
+a:not(.mat-button-base) {
+  &[href^="assets"], &[href^="mailto"] {
+    font-weight: bold;
+  }
 }
 
 ul {
