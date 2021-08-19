@@ -1,11 +1,15 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { getCurrentApp, appName } from '@blockframes/utils/apps';
+import { getCurrentApp, appName, App, getOrgAppAccess } from '@blockframes/utils/apps';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { OrganizationQuery, OrganizationService } from '@blockframes/organization/+state';
-import { Observable } from 'rxjs';
+import { OrganizationQuery, organizationRoles, OrganizationService } from '@blockframes/organization/+state';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AuthService } from '@blockframes/auth/+state';
+import { FormControl } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+
+type Steps = 'initial' | 'request';
 
 @Component({
   selector: 'org-request-access',
@@ -14,12 +18,17 @@ import { AuthService } from '@blockframes/auth/+state';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrgRequestAccessComponent implements OnInit {
-  private app = getCurrentApp(this.routerQuery);
-  public appName = appName[this.app];
+  public roles = organizationRoles;
+  public currentApp = getCurrentApp(this.routerQuery);
+  public appName = appName;
   public org$ = this.orgQuery.selectActive();
   public orgId = this.orgQuery.getActiveId();
-  public orgHasAccess$: Observable<boolean>;
+  public orgExistingAccess$: Observable<App[]>;
   public disabledRequest = false;
+  public formControl = new FormControl();
+
+  public step$: Observable<Steps>
+  private step = new BehaviorSubject<Steps>('initial');
 
   constructor(
     private routerQuery: RouterQuery,
@@ -27,22 +36,29 @@ export class OrgRequestAccessComponent implements OnInit {
     private orgService: OrganizationService,
     private orgQuery: OrganizationQuery,
     private authService: AuthService,
-  ) {}
+    private router: Router,
+    private route: ActivatedRoute,
+  ) { }
 
   ngOnInit() {
-    this.orgHasAccess$ = this.org$.pipe(
-      map(org => (org.appAccess[this.app].dashboard || org.appAccess[this.app].marketplace))
-    )
+    this.step$ = this.step.asObservable();
+    this.orgExistingAccess$ = this.org$.pipe(map(org => getOrgAppAccess(org)));
+  }
+
+  joinOptions() {
+    this.step.next('request');
   }
 
   async requestAccess() {
-    this.disabledRequest = true;
-    await this.orgService.requestAppAccess(this.app, this.orgId);
-    this.snackBar.open('Your request to access to this platform has been sent.', 'close', { duration: 5000 });
-  }
+    if (!['dashboard', 'marketplace'].includes(this.formControl.value)) {
+      this.snackBar.open('Please choose a role.', 'close', { duration: 5000 });
+      return;
+    }
 
-  refresh() {
-    window.location.reload();
+    this.disabledRequest = true;
+
+    await this.orgService.requestAppAccess(this.currentApp, this.formControl.value, this.orgId);
+    this.router.navigate(['pending'], { relativeTo: this.route });
   }
 
   public logout() {

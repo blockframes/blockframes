@@ -1,9 +1,7 @@
 <mat-divider></mat-divider>
 <section>
   <div *ngIf="(section$ | async) as section" fxLayout=" row wrap" fxLayoutAlign="start center">
-    <a [routerLink]="['/c/o', section]">
-      <app-logo></app-logo>
-    </a>
+    <a app-logo [routerLink]="['/c/o', section]"></a>
     <!-- ATM there is no about page for festival and financiers -->
     <ng-container *ngIf="'catalog' | app">
       <a mat-button [routerLink]="['/c/o/'+section+'/about']">About Us</a>
