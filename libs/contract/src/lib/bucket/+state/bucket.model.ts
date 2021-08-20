@@ -3,7 +3,7 @@ import { createHoldback, Holdback, Mandate } from '@blockframes/contract/contrac
 import { createLanguageKey } from '@blockframes/movie/+state';
 import { MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
 import { Media, MovieCurrency, Territory } from '@blockframes/utils/static-model';
-import { Term } from '../../term/+state/term.model';
+import { Term, TermBase } from '../../term/+state/term.model';
 
 export interface Bucket {
   id: string;
@@ -30,20 +30,7 @@ export interface BucketContract {
   holdbacks: Holdback<Date>[];
 }
 
-export interface BucketTerm {
-  medias: Media[];
-  duration: { from: Date, to: Date };
-  territories: Territory[];
-  exclusive: boolean;
-  languages: Record<string, MovieLanguageSpecification>;
-  runs?: {
-    broadcasts: number;
-    catchup: {
-      from: Date,
-      duration: number,
-      period: 'day' | 'week' | 'month'
-    }
-  }
+export interface BucketTerm extends TermBase<Date> {
 }
 
 export function toBucketTerm(avail: AvailsFilter): BucketTerm {

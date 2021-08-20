@@ -52,7 +52,7 @@
     </bf-table-filter>
   </ng-container>
   <ng-content select="footer"></ng-content>
-  <ng-container *ngIf="contract?.titleId| getTitleHoldbacks:[orgId] | async as existingHoldbacks">
+  <ng-container *ngIf="contract?.titleId| getTitleHoldbacks:{excludedOrgs:[orgId]} | async as existingHoldbacks">
     <button mat-flat-button *ngIf="existingHoldbacks?.length" (click)="openHoldbackModal(existingHoldbacks)">
       <span>Other Buyers Holdbacks</span>
     </button>
