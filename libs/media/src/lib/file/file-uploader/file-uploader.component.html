@@ -13,9 +13,8 @@
     <ng-content select="[title]"></ng-content>
     <p class="mat-caption">Accepted Formats: {{ allowedTypes.join(', ') }}</p>
     <p class="mat-caption">Max file size: {{ maxSize | fileSize }}</p>
-    <p class="mat-caption">Drag and drop a file here or
-      <a (click)="fileExplorer.click()">browse your computer.</a>
-    </p>
+    <p class="mat-caption">Drag and drop a file here or</p>
+    <button mat-button (click)="fileExplorer.click()">browse your computer</button>
   </section>
 
   <!-- Hovering -->
