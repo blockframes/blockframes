@@ -71,7 +71,6 @@ landing-shell-page {
 
     landing-content {
       display: block;
-      padding-top: 48px;
     }
   }
 }
@@ -81,9 +80,6 @@ landing-shell-page {
   landing-shell-page main {
     landing-header {
       padding: 60px 100px;
-    }
-    landing-content {
-      padding: 48px 140px;
     }
     form article {
       width: 80%;
@@ -96,18 +92,12 @@ landing-shell-page {
     landing-header {
       padding: 60px 36px;
     }
-    landing-content {
-      padding: 48px 64px;
-    }
   }
 }
 
 @include layout-bp(lt-sm) {
   landing-shell-page main {
     landing-header {
-      padding: 24px 8px;
-    }
-    landing-content {
       padding: 24px 8px;
     }
     form article {
