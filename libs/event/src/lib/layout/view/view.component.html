@@ -32,7 +32,7 @@
           <p class="mat-body-2">{{ event.meta.description }}</p>
           <ng-container *ngIf="event.isOwner; else notOwner">
             <h3>You are the owner of this event.</h3>
-            <p>You can invite members and <a class="link" [routerLink]="editMeeting">edit the event</a> config in your dashboard.</p>
+            <p>You can invite members and <a [routerLink]="editMeeting">edit the event</a> config in your dashboard.</p>
             <a mat-stroked-button color="primary" [routerLink]="['lobby']">Go to Event</a>
           </ng-container>
           <ng-template #notOwner>
