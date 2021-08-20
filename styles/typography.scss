@@ -33,4 +33,9 @@ pre {
   font-size: mat.font-size($bf-typography, 'body-1'); // Get size of body-1
 }
 
+h2 {
+  font-size: 26px;
+  font-weight: 700;
+}
+
 // TODO : Create a builder for typography with two polices
