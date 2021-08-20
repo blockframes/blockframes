@@ -15,6 +15,7 @@ import { GetTitleHoldbacksPipeModule } from '@blockframes/movie/pipes/get-title-
 import { JoinPipeModule, VersionPipeModule, ToGroupLabelPipeModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { DetailedTermsModule } from '@blockframes/contract/term/components/detailed/detailed.module';
 import { HoldbackModalModule } from '../holdback/modal/holdback-modal.module';
+import { CollidingHoldbacksPipeModule } from '@blockframes/contract/contract/holdback/pipes/colliding-holdback.pipe'
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -50,6 +51,7 @@ import { TermPipeModule } from '@blockframes/contract/term/pipes';
     GetTitleHoldbacksPipeModule,
     TermPipeModule,
     HoldbackModalModule,
+    CollidingHoldbacksPipeModule,
 
     // Material
     MatButtonModule,

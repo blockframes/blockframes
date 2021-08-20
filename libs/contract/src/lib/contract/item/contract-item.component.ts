@@ -6,7 +6,7 @@ import { Scope, mediaGroup, territoriesGroup } from '@blockframes/utils/static-m
 import { MatDialog } from '@angular/material/dialog';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 import { HoldbackModalComponent } from '../holdback/modal/holdback-modal.component';
-import { Contract, Holdback } from '../+state';
+import {  Holdback, Sale } from '../+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 
 
@@ -34,8 +34,8 @@ export class ContractItemComponent {
   mediaGroup = mediaGroup;
   territoriesGroup = territoriesGroup;
   actionTemplate?: TemplateRef<unknown>;
-  @Input() contract: BucketContract | Contract;
   orgId = this.orgQuery.getActiveId();
+  @Input() contract: BucketContract | Sale;
 
   @ContentChild('priceTemplate') priceTemplate: TemplateRef<unknown>;
   @ContentChild('termAction') set colActionsTemplate(template: TemplateRef<unknown>) {
