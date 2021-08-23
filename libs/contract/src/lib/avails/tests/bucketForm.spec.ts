@@ -1,36 +1,39 @@
 import { createMandate } from "../../contract/+state/contract.model";
 import { AvailsFilter, isSameMapTerm, getSelectedTerritories, toTerritoryMarker, toDurationMarker } from "./../avails";
 import { BucketForm } from '@blockframes/contract/bucket/form'
-import { createTerm } from "../../term/+state/term.model";
-import { createBucketTerm } from "@blockframes/contract/bucket/+state";
+import { createTerm, Duration } from "../../term/+state/term.model";
+import { BucketTerm, createBucketTerm } from "@blockframes/contract/bucket/+state";
 import { availDetailsExclusive } from './../fixtures/availsFilters';
+import { Territory } from "@blockframes/utils/static-model";
 
+
+const mandateA = createMandate({
+  id: 'MandateA',
+  termIds: ['termA'],
+  titleId: 'titleA',
+  sellerId: 'orgA'
+});
+
+const termA = createTerm({
+  id: 'termA',
+  contractId: mandateA.id,
+  duration: {
+    from: new Date('01/01/2020'),
+    to: new Date('01/01/2030')
+  },
+  medias: ['theatrical'],
+  territories: ['france', 'australia'],
+  exclusive: true
+});
 describe('Test BucketForm behaviors for territories', () => {
+
+
 
   it('Add 2 territories to same contract bucket', () => {
     const bucketForm = new BucketForm();
 
-    const mandate = createMandate({
-      id: 'MandateA',
-      termIds: ['termA'],
-      titleId: 'titleA',
-      sellerId: 'orgA'
-    });
-
-    const term = createTerm({
-      id: 'termA',
-      contractId: mandate.id,
-      duration: {
-        from: new Date('01/01/2020'),
-        to: new Date('01/01/2030')
-      },
-      medias: ['theatrical'],
-      territories: ['france', 'germany'],
-      exclusive: true
-    });
-
-    const selected1 = toTerritoryMarker('germany', [mandate], term);
-    const selected2 = toTerritoryMarker('france', [mandate], term);
+    const selected1 = toTerritoryMarker('australia', [mandateA], termA);
+    const selected2 = toTerritoryMarker('france', [mandateA], termA);
 
     bucketForm.addTerritory(availDetailsExclusive, selected1);
     bucketForm.addTerritory(availDetailsExclusive, selected2);
@@ -42,25 +45,6 @@ describe('Test BucketForm behaviors for territories', () => {
 
   it('Add 2 territories from various mandates resulting in 2 disctinct contracts in bucket', () => {
     const bucketForm = new BucketForm();
-
-    const mandateA = createMandate({
-      id: 'MandateA',
-      termIds: ['termA'],
-      titleId: 'titleA',
-      sellerId: 'orgA'
-    });
-
-    const termA = createTerm({
-      id: 'termA',
-      contractId: mandateA.id,
-      duration: {
-        from: new Date('01/01/2020'),
-        to: new Date('01/01/2030')
-      },
-      medias: ['theatrical'],
-      territories: ['france', 'australia'],
-      exclusive: true
-    });
 
     const mandateB = createMandate({
       id: 'MandateB',
@@ -100,29 +84,10 @@ describe('Test BucketForm behaviors for territories', () => {
   it('Removes territories from selection', () => {
     const bucketForm = new BucketForm();
 
-    const mandate = createMandate({
-      id: 'MandateA',
-      termIds: ['termA'],
-      titleId: 'titleA',
-      sellerId: 'orgA'
-    });
-
-    const term = createTerm({
-      id: 'termA',
-      contractId: mandate.id,
-      duration: {
-        from: new Date('01/01/2020'),
-        to: new Date('01/01/2030')
-      },
-      medias: ['theatrical'],
-      territories: ['france', 'germany'],
-      exclusive: true
-    });
-
-    const selected1 = toTerritoryMarker('germany', [mandate], term);
+    const selected1 = toTerritoryMarker('australia', [mandateA], termA);
     bucketForm.addTerritory(availDetailsExclusive, selected1);
 
-    const selected2 = toTerritoryMarker('france', [mandate], term);
+    const selected2 = toTerritoryMarker('france', [mandateA], termA);
     bucketForm.addTerritory(availDetailsExclusive, selected2);
 
     expect(bucketForm.isAlreadyInBucket(availDetailsExclusive, selected1)).toBe(true);
@@ -138,15 +103,16 @@ describe('Test BucketForm behaviors for territories', () => {
   });
 
   it('Should find and return termIndex', () => {
-
+    const territories: Territory[] = ['france', 'spain', 'united-states-of-america']
+    const duration: Duration = {
+      from: new Date('06/01/2021'),
+      to: new Date('12/01/2021')
+    }
     const bucketTermA = createBucketTerm({ // Not same medias
-      duration: {
-        from: new Date('06/01/2021'),
-        to: new Date('12/01/2021')
-      },
+      duration,
       medias: ['theatrical', 'hotels'],
       exclusive: true,
-      territories: ['france', 'spain', 'united-states-of-america']
+      territories,
     });
 
     const bucketTermB = createBucketTerm({// Not same dates
@@ -156,17 +122,14 @@ describe('Test BucketForm behaviors for territories', () => {
       },
       medias: ['theatrical', 'hotels'],
       exclusive: true,
-      territories: ['france', 'spain', 'united-states-of-america']
+      territories,
     });
 
     const bucketTermC = createBucketTerm({ // Matching
-      duration: {
-        from: new Date('06/01/2021'),
-        to: new Date('12/01/2021')
-      },
+      duration,
       medias: ['theatrical'],
       exclusive: true,
-      territories: ['france', 'spain', 'united-states-of-america']
+      territories,
     });
 
     const terms = [bucketTermA, bucketTermB, bucketTermC];
@@ -175,15 +138,17 @@ describe('Test BucketForm behaviors for territories', () => {
   });
 
   it('Should return -1 if index is not found', () => {
-
+    const bucketTermPartial: Partial<BucketTerm> = {
+      medias: ['theatrical', 'hotels'],
+      exclusive: true,
+      territories: ['france', 'spain', 'united-states-of-america']
+    }
     const bucketTermA = createBucketTerm({ // Not same medias
       duration: {
         from: new Date('06/01/2021'),
         to: new Date('12/01/2021')
       },
-      medias: ['theatrical', 'hotels'],
-      exclusive: true,
-      territories: ['france', 'spain', 'united-states-of-america']
+      ...bucketTermPartial,
     });
 
     const bucketTermB = createBucketTerm({// Not same dates
@@ -191,9 +156,7 @@ describe('Test BucketForm behaviors for territories', () => {
         from: new Date('06/01/2022'),
         to: new Date('12/01/2022')
       },
-      medias: ['theatrical', 'hotels'],
-      exclusive: true,
-      territories: ['france', 'spain', 'united-states-of-america']
+      ...bucketTermPartial,
     });
 
     const terms = [bucketTermA, bucketTermB];
@@ -203,57 +166,27 @@ describe('Test BucketForm behaviors for territories', () => {
 
   it('Should return territories selected', () => {
     const bucketForm = new BucketForm();
-    const mandate = createMandate({
-      id: 'MandateA',
-      termIds: ['termA'],
-      titleId: 'titleA',
-      sellerId: 'orgA'
-    });
-
-    const availDetails: AvailsFilter = {
-      duration: { from: new Date('01/01/2020'), to: new Date('01/01/2030') },
-      exclusive: true,
-      medias: ['theatrical']
-    };
-
-    const term = createTerm({
-      id: 'termA',
-      contractId: mandate.id,
-      duration: {
-        from: new Date('01/01/2020'),
-        to: new Date('01/01/2030')
-      },
-      medias: ['theatrical'],
-      territories: ['france', 'germany', 'spain'],
-      exclusive: true
-    });
-
-    const selected1 = toTerritoryMarker('germany', [mandate], term);
-    bucketForm.addTerritory(availDetails, selected1);
-
-    const selected2 = toTerritoryMarker('france', [mandate], term);
-    bucketForm.addTerritory(availDetails, selected2);
-
     const availFilter: AvailsFilter = {
-      duration: { from: new Date('01/01/2020'), to: new Date('01/01/2030') },
       exclusive: true,
-      medias: ['theatrical']
+      medias: ['theatrical'],
+      duration: { from: new Date('01/01/2020'), to: new Date('01/01/2030') },
     };
+
+    const selected1 = toTerritoryMarker('australia', [mandateA], termA);
+    bucketForm.addTerritory(availFilter, selected1);
+
+    const selected2 = toTerritoryMarker('france', [mandateA], termA);
+    bucketForm.addTerritory(availFilter, selected2);
+
     const territories = getSelectedTerritories('titleA', availFilter, bucketForm.value, 'exact');
 
     expect(territories.length).toBe(2);
     expect(territories.some(t => t === 'france')).toBe(true);
-    expect(territories.some(t => t === 'germany')).toBe(true);
+    expect(territories.some(t => t === 'australia')).toBe(true);
   });
 
   it('Should return territories in selection', () => {
     const bucketForm = new BucketForm();
-    const mandate = createMandate({
-      id: 'MandateA',
-      termIds: ['termA'],
-      titleId: 'titleA',
-      sellerId: 'orgA'
-    });
 
     const availDetails: AvailsFilter = {
       duration: { from: new Date('01/01/2019'), to: new Date('01/01/2031') },
@@ -261,19 +194,7 @@ describe('Test BucketForm behaviors for territories', () => {
       medias: ['theatrical']
     };
 
-    const term = createTerm({
-      id: 'termA',
-      contractId: mandate.id,
-      duration: {
-        from: new Date('01/01/2020'),
-        to: new Date('01/01/2030')
-      },
-      medias: ['theatrical'],
-      territories: ['france', 'germany', 'spain'],
-      exclusive: true
-    });
-
-    const selected1 = toTerritoryMarker('germany', [mandate], term);
+    const selected1 = toTerritoryMarker('australia', [mandateA], termA);
     bucketForm.addTerritory(availDetails, selected1);
 
     const availFilter: AvailsFilter = {
@@ -284,17 +205,11 @@ describe('Test BucketForm behaviors for territories', () => {
     const territories = getSelectedTerritories('titleA', availFilter, bucketForm.value, 'in');
 
     expect(territories.length).toBe(1);
-    expect(territories.some(t => t === 'germany')).toBe(true);
+    expect(territories.some(t => t === 'australia')).toBe(true);
   });
 
   it('Should return empty array if we search for another movie', () => {
     const bucketForm = new BucketForm();
-    const mandate = createMandate({
-      id: 'MandateA',
-      termIds: ['termA'],
-      titleId: 'titleA',
-      sellerId: 'orgA'
-    });
 
     const availDetails: AvailsFilter = {
       duration: { from: new Date('01/01/2019'), to: new Date('01/01/2031') },
@@ -302,19 +217,8 @@ describe('Test BucketForm behaviors for territories', () => {
       medias: ['theatrical']
     };
 
-    const term = createTerm({
-      id: 'termA',
-      contractId: mandate.id,
-      duration: {
-        from: new Date('01/01/2020'),
-        to: new Date('01/01/2030')
-      },
-      medias: ['theatrical'],
-      territories: ['france', 'germany', 'spain'],
-      exclusive: true
-    });
 
-    const selected1 = toTerritoryMarker('germany', [mandate], term);
+    const selected1 = toTerritoryMarker('germany', [mandateA], termA);
     bucketForm.addTerritory(availDetails, selected1);
 
     const availFilter: AvailsFilter = {
@@ -330,30 +234,28 @@ describe('Test BucketForm behaviors for territories', () => {
 
 describe('Test BucketForm behaviors for durations', () => {
 
+  const availDetailsA: AvailsFilter = {
+    // Set from calendar view
+    duration: {
+      from: new Date('05/05/2020'),
+      to: new Date('05/05/2030'),
+    },
+    // Set from form
+    exclusive: true,
+    territories: ['france', 'germany'],
+    medias: ['theatrical']
+  };
+
+  const mandate = createMandate({ id: 'MandateA', termIds: ['termA', 'termB'] });
+
   it('Adding two duration with same territories and medias goes to two different terms in same contract bucket', () => {
     const bucketForm = new BucketForm();
 
-    const mandate = createMandate({ id: 'MandateA', termIds: ['termA'] });
+    const marker = toDurationMarker([mandateA], termA);
 
-    const term = createTerm({ id: 'termA', contractId: mandate.id });
-
-    const marker = toDurationMarker([mandate], term);
-
-    const availDetailsA: AvailsFilter = {
-      // Set from calendar view
-      duration: {
-        from: new Date('05/05/2020'),
-        to: new Date('05/05/2030'),
-      },
-      // Set from form
-      exclusive: true,
-      territories: ['france', 'germany'],
-      medias: ['theatrical']
-    };
 
     const availDetailsB: AvailsFilter = {
       ...availDetailsA,
-      exclusive: true,
       duration: {
         from: new Date('10/10/2020'),
         to: new Date('10/10/2030'),
@@ -371,23 +273,7 @@ describe('Test BucketForm behaviors for durations', () => {
   it('Add 2 durations with differents territories resulting in two terms in same contract bucket', () => {
     const bucketForm = new BucketForm();
 
-    const mandate = createMandate({ id: 'MandateA', termIds: ['termA'] });
-
-    const term = createTerm({ id: 'termA', contractId: mandate.id });
-
-    const marker = toDurationMarker([mandate], term);
-
-    const availDetailsA: AvailsFilter = {
-      // Set from calendar view
-      duration: {
-        from: new Date('05/05/2020'),
-        to: new Date('05/05/2030'),
-      },
-      // Set from form
-      exclusive: true,
-      territories: ['france', 'germany'],
-      medias: ['theatrical']
-    };
+    const marker = toDurationMarker([mandateA], termA);
 
     const availDetailsB: AvailsFilter = {
       ...availDetailsA,
@@ -410,23 +296,7 @@ describe('Test BucketForm behaviors for durations', () => {
   it('Add 2 durations with differents medias resulting in two terms in same contract bucket', () => {
     const bucketForm = new BucketForm();
 
-    const mandate = createMandate({ id: 'MandateA', termIds: ['termA'] });
-
-    const term = createTerm({ id: 'termA', contractId: mandate.id });
-
-    const marker = toDurationMarker([mandate], term);
-
-    const availDetailsA: AvailsFilter = {
-      // Set from calendar view
-      duration: {
-        from: new Date('05/05/2020'),
-        to: new Date('05/05/2030'),
-      },
-      // Set from form
-      exclusive: true,
-      territories: ['france', 'germany'],
-      medias: ['theatrical']
-    };
+    const marker = toDurationMarker([mandateA], termA);
 
     const availDetailsB: AvailsFilter = {
       ...availDetailsA,
@@ -450,23 +320,7 @@ describe('Test BucketForm behaviors for durations', () => {
   it('Add 2 same durations but with not same exclusivity resulting in two terms in same contract bucket', () => {
     const bucketForm = new BucketForm();
 
-    const mandate = createMandate({ id: 'MandateA', termIds: ['termA'] });
-
-    const term = createTerm({ id: 'termA', contractId: mandate.id });
-
-    const marker = toDurationMarker([mandate], term);
-
-    const availDetailsA: AvailsFilter = {
-      // Set from calendar view
-      duration: {
-        from: new Date('05/05/2020'),
-        to: new Date('05/05/2030'),
-      },
-      // Set from form
-      exclusive: true,
-      territories: ['france', 'germany'],
-      medias: ['theatrical']
-    };
+    const marker = toDurationMarker([mandateA], termA);
 
     const availDetailsB: AvailsFilter = {
       ...availDetailsA,
@@ -485,13 +339,10 @@ describe('Test BucketForm behaviors for durations', () => {
   it('Add 2 durations but not from the same parent term resulting in two contracts in contract bucket', () => {
     const bucketForm = new BucketForm();
 
-    const mandate = createMandate({ id: 'MandateA', termIds: ['termA', 'termB'] });
+    const termB = createTerm({ id: 'termB', contractId: mandateA.id });
 
-    const termA = createTerm({ id: 'termA', contractId: mandate.id });
-    const termB = createTerm({ id: 'termB', contractId: mandate.id });
-
-    const markerA = toDurationMarker([mandate], termA);
-    const markerB = toDurationMarker([mandate], termB);
+    const markerA = toDurationMarker([mandateA], termA);
+    const markerB = toDurationMarker([mandateA], termB);
 
     const availDetails: AvailsFilter = {
       // Set from calendar view
@@ -514,30 +365,16 @@ describe('Test BucketForm behaviors for durations', () => {
   it('Should return contract & term index in contract bucket', () => {
     const bucketForm = new BucketForm();
 
-    const mandate = createMandate({ id: 'MandateA', termIds: ['termA', 'termB'] });
-
     const termA = createTerm({ id: 'termA', contractId: mandate.id });
     const termB = createTerm({ id: 'termB', contractId: mandate.id });
 
     const markerA = toDurationMarker([mandate], termA);
     const markerB = toDurationMarker([mandate], termB);
 
-    const availDetails: AvailsFilter = {
-      // Set from calendar view
-      duration: {
-        from: new Date('05/05/2020'),
-        to: new Date('05/05/2030'),
-      },
-      // Set from form
-      exclusive: true,
-      territories: ['france', 'germany'],
-      medias: ['theatrical']
-    };
+    bucketForm.addDuration(availDetailsA, markerA);
+    bucketForm.addDuration(availDetailsA, markerB);
 
-    bucketForm.addDuration(availDetails, markerA);
-    bucketForm.addDuration(availDetails, markerB);
-
-    const index = bucketForm.getTermIndexForCalendar(availDetails, markerB);
+    const index = bucketForm.getTermIndexForCalendar(availDetailsA, markerB);
 
     expect(index.contractIndex).toBe(1);
     expect(index.termIndex).toBe(0);
@@ -546,28 +383,14 @@ describe('Test BucketForm behaviors for durations', () => {
   it('Should return undefined if index not found in contract bucket', () => {
     const bucketForm = new BucketForm();
 
-    const mandate = createMandate({ id: 'MandateA', termIds: ['termA', 'termB'] });
-
     const termA = createTerm({ id: 'termA', contractId: mandate.id });
     const termB = createTerm({ id: 'termB', contractId: mandate.id });
 
     const markerA = toDurationMarker([mandate], termA);
     const markerB = toDurationMarker([mandate], termB);
 
-    const availDetails: AvailsFilter = {
-      // Set from calendar view
-      duration: {
-        from: new Date('05/05/2020'),
-        to: new Date('05/05/2030'),
-      },
-      // Set from form
-      exclusive: true,
-      territories: ['france', 'germany'],
-      medias: ['theatrical']
-    };
-
-    bucketForm.addDuration(availDetails, markerA);
-    const index = bucketForm.getTermIndexForCalendar(availDetails, markerB);
+    bucketForm.addDuration(availDetailsA, markerA);
+    const index = bucketForm.getTermIndexForCalendar(availDetailsA, markerB);
     expect(index).toBeUndefined();
   });
 });
