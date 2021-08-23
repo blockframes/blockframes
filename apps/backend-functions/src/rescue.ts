@@ -4,18 +4,10 @@ import { sign } from 'jsonwebtoken';
 import * as admin from 'firebase-admin';
 import { Request, Response } from 'firebase-functions';
 import { getStorageBucketName } from './internals/firebase';
+import { fetchJSON } from './utils';
 
 const linkDuration = 60 * 60 * 5; // 5 hours in seconds = 60 seconds * 60 minutes * 5 = 18 000 seconds
 
-function fetchJSON(url: string): Promise<any> {
-	return new Promise((resolve, reject) => {
-		get(url, res => {
-      let body = '';
-      res.on('data', chunk => body += chunk);
-      res.on('end', () => resolve(JSON.parse(body)));
-		}).on('error', e => reject(e));
-	});
-}
 
 /** Return the new url of a 302 REDIRECT request */
 function fetchRedirect(url: string): Promise<string> {
@@ -78,7 +70,7 @@ export const downloadVideo = async (req: Request, res: Response) => {
 
   // GET THE LIST OF ENCODED FILE FOR A GIVEN VIDEO
 
-  const apiResult = await fetchJSON(url);
+  const apiResult = await fetchJSON(url) as any;
 
   // FILTER THE RESPONSE TO GET THE URL OF THE HIGHEST DEFINITION VIDEO FILE
 

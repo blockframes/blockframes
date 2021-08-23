@@ -1,3 +1,4 @@
+import { get, request, RequestOptions } from 'https';
 import { db, functions, skipInMaintenance } from './internals/firebase';
 import { logErrors } from './internals/sentry';
 export { ErrorResultResponse } from '@blockframes/utils/utils';
@@ -58,4 +59,36 @@ export async function removeAllSubcollections(
     documents.forEach(ref => batch.delete(ref))
   }
   return batch;
+}
+
+export function fetchJSON<T = unknown>(options: string | RequestOptions | URL): Promise<T> {
+	return new Promise((resolve, reject) => {
+		get(options, res => {
+      let body = '';
+      res.on('data', chunk => body += chunk);
+      res.on('end', () => resolve(JSON.parse(body) as T));
+		}).on('error', e => reject(e));
+	});
+}
+
+export function postJSON<T = unknown>(options: RequestOptions, data?: unknown): Promise<T> {
+  const postData = JSON.stringify(data);
+  const postOptions: RequestOptions = {
+    ...options,
+    method: 'POST',
+    headers: {
+      ...options.headers,
+      'Content-Type': 'application/json',
+      'Content-Length': Buffer.byteLength(postData),
+    }
+  };
+	return new Promise((resolve, reject) => {
+		request(postOptions, res => {
+      let body = '';
+      res.on('data', chunk => body += chunk);
+      res.on('end', () => resolve(JSON.parse(body) as T));
+		})
+      .on('error', e => reject(e))
+      .write(postData);
+	});
 }
