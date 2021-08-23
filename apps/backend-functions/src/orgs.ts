@@ -11,7 +11,7 @@ import { sendMail } from './internals/email';
 import { organizationCreated, organizationRequestedAccessToApp } from './templates/mail';
 import { OrganizationDocument, PublicUser, PermissionsDocument, NotificationDocument, NotificationTypes } from './data/types';
 import { triggerNotifications, createNotification } from './notification';
-import { app, App, getOrgAppAccess, getSendgridFrom } from '@blockframes/utils/apps';
+import { app, App, getOrgAppAccess, getSendgridFrom, Module } from '@blockframes/utils/apps';
 import { getAdminIds, createPublicOrganizationDocument, createPublicUserDocument, getDocument, createDocumentMeta } from './data/internals';
 import { ErrorResultResponse } from './utils';
 import { cleanOrgMedias } from './media';
@@ -265,10 +265,10 @@ export const accessToAppChanged = async (
 }
 
 /** Send an email to C8 Admins when an organization requests to access to a new platform */
-export const onRequestFromOrgToAccessApp = async (data: { app: App, orgId: string }, context?: CallableContext) => {
-  if (!!context.auth.uid && !!data.app && !!data.orgId) {
+export const onRequestFromOrgToAccessApp = async (data: { app: App, module: Module, orgId: string }, context?: CallableContext) => {
+  if (!!context.auth.uid && !!data.app && !!data.orgId && !!data.module) {
     const organization = await getDocument<OrganizationDocument>(`orgs/${data.orgId}`);
-    const mailRequest = await organizationRequestedAccessToApp(organization, data.app);
+    const mailRequest = await organizationRequestedAccessToApp(organization, data.app, data.module);
     const from = getSendgridFrom(data.app);
     const userDocument = await getDocument<User>(`users/${context.auth.uid}`);
 
@@ -280,7 +280,8 @@ export const onRequestFromOrgToAccessApp = async (data: { app: App, orgId: strin
       type: 'userRequestAppAccess'
     });
     await triggerNotifications([notification]);
-    return sendMail(mailRequest, from).catch(e => console.warn(e.message));
+    await sendMail(mailRequest, from).catch(e => console.warn(e.message));
+    return true;
   }
   return;
 }

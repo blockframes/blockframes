@@ -21,6 +21,18 @@ a {
   text-decoration-line: none;
 }
 
+p, span {
+  a[href]:not([href^="mailto"]):not([href^="assets"]) {
+    text-decoration: underline;
+  }
+}
+
+a:not(.mat-button-base) {
+  &[href^="assets"], &[href^="mailto"] {
+    font-weight: bold;
+  }
+}
+
 ul {
   list-style-type: none;
   padding-left: 0;

@@ -11,7 +11,7 @@ const appLogos: Record<App | 'crm', string> = {
 };
 
 @Component({
-  selector: 'app-logo',
+  selector: 'app-logo, button[app-logo], a[app-logo]',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './app-logo.component.html',
   styleUrls: ['./app-logo.component.scss']

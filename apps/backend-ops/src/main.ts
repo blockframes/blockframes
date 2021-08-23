@@ -16,6 +16,7 @@ import { healthCheck } from './health-check';
 import { anonymizeLatestProdDb, downloadProdDbBackup, importEmulatorFromBucket, loadEmulator, enableMaintenanceInEmulator, uploadBackup, startEmulators } from './emulator';
 import { backupEnv, restoreEnv } from './backup';
 import { EIGHT_MINUTES_IN_MS } from '@blockframes/utils/maintenance';
+import { rescueJWP } from './rescueJWP';
 
 const args = process.argv.slice(2);
 const [cmd, ...flags] = args;
@@ -143,6 +144,9 @@ async function runCommand() {
       break;
     case 'upgradeAlgoliaUsers':
       await upgradeAlgoliaUsers();
+      break;
+    case 'rescueJWP':
+      await rescueJWP();
       break;
     default:
       showHelp();

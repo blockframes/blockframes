@@ -5,16 +5,23 @@
 }
 
 landing-header {
-  background-image: url("/assets/images/banner_header.png");
-  a {
-    margin-top: 80px;
-  }
+  background-image: url("/assets/images/banner_landing_new.jpg ");
+
   h4 {
     text-transform: uppercase;
   }
 }
 
 landing-content {
+  .landing-partners {
+    padding: 80px 80px;
+    background-color: var(--background-card);
+  }
+
+  .landing-presentation {
+    padding: 72px 80px
+  }
+
   h1 {
     margin-bottom: 12px;
   }
@@ -40,8 +47,12 @@ landing-content {
     }
   }
 
-  .join {
-    padding: 48px 0;
+  .landing-join {
+    background-image: url("/assets/images/background_hero.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;  
+    padding: 96px 0;
   }
 }
 
