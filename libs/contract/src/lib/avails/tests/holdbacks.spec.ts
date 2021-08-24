@@ -19,7 +19,6 @@ const nonCollidingTerritoriesB: Territory[] = [
   'mayotte', 'mexico', 'micronesia',
 ]
 const collidingTerritoriesA = nonCollidingTerritoriesA
-//collidingTerritoriesB will collide with nonCollidingTerritoriesA
 const collidingTerritoriesB = [...nonCollidingTerritoriesB, collidingTerritoriesA[0]]
 
 /***Durations */
@@ -38,7 +37,6 @@ const nonCollidingMediaB: Media[] = [
   'theatrical', 'video', 'planes', 'boats', 'hotels', 'educational', 'rental',
 ]
 const collidingMediaA = nonCollidingMediaA
-//collidingMediaB will collide with nonCollidingMediaA
 const collidingMediaB = [...nonCollidingMediaB, collidingMediaA[0]]
 
 /***Holdbacks and terms */
@@ -98,7 +96,6 @@ const nonCollidingHoldbacks = [
   nonCollidingHoldback,
   collidingTerritoriesHoldback,
   collidingMediasHoldback,
-  // collidingDurationHoldback, will collide with collidingAllTerm due to medias,duration attributes
 ]
 const nonCollidingTerms = [
   nonCollidingTerm, collidingTerritoriesTerm,

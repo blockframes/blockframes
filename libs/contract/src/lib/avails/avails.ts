@@ -319,7 +319,7 @@ export function getDurationMarkers(mandates: Mandate[], mandateTerms: Term<Date>
 
 
 
-export function collidingDurations(durationA: Duration, durationB: Duration,) {
+export function collidingDurations(durationA: Duration, durationB: Duration) {
   const isBefore = durationA.from < durationB.from && durationA.to < durationB.from;
   const isAfter = durationA.from > durationB.to && durationA.to > durationB.to;
   return !isBefore && !isAfter;
