@@ -9,7 +9,7 @@ import { templateIds } from '@blockframes/utils/emails/ids';
 import { RequestDemoInformations, OrganizationDocument, PublicOrganization } from '../data/types';
 import { PublicUser } from '@blockframes/user/+state/user.firestore';
 import { EventEmailData, OrgEmailData, UserEmailData } from '@blockframes/utils/emails/utils';
-import { App, appName } from '@blockframes/utils/apps';
+import { App, appName, Module } from '@blockframes/utils/apps';
 import { Bucket } from '@blockframes/contract/bucket/+state/bucket.model';
 import { format } from "date-fns";
 import { testEmail } from "@blockframes/e2e/utils/env";
@@ -17,7 +17,6 @@ import { testEmail } from "@blockframes/e2e/utils/env";
 const ORG_HOME = '/c/o/organization/';
 const USER_CREDENTIAL_INVITATION = '/auth/identity';
 export const ADMIN_ACCEPT_ORG_PATH = '/c/o/dashboard/crm/organization';
-export const ADMIN_DATA_PATH = '/admin/data'; // backup / restore // TODO: ! Why is this here? Move elsewhere into env
 
 /**
  * This method return the "support" email that should be used regarding the originating app
@@ -115,7 +114,7 @@ export function organizationAppAccessChanged(toAdmin: UserEmailData, url: string
 }
 
 /** Send email to an user to inform him that he joined an org */
-export function userJoinedAnOrganization(toUser: UserEmailData, url: string = appUrl.market, org: OrgEmailData, ): EmailTemplateRequest {
+export function userJoinedAnOrganization(toUser: UserEmailData, url: string = appUrl.market, org: OrgEmailData,): EmailTemplateRequest {
   const data = {
     pageURL: `${url}/c/o`,
     user: toUser,
@@ -129,7 +128,7 @@ export function userJoinedYourOrganization(
   toUser: UserEmailData,
   org: OrgEmailData,
   userSubject: UserEmailData):
-EmailTemplateRequest {
+  EmailTemplateRequest {
   const data = {
     user: toUser,
     org,
@@ -157,7 +156,7 @@ export function requestToJoinOrgDeclined(toUser: UserEmailData, org: OrgEmailDat
 }
 
 /** Send email to org admin to inform him that an user has left his org */
-export function userLeftYourOrganization (toAdmin: UserEmailData, userSubject: UserEmailData, org: OrgEmailData): EmailTemplateRequest {
+export function userLeftYourOrganization(toAdmin: UserEmailData, userSubject: UserEmailData, org: OrgEmailData): EmailTemplateRequest {
   const data = {
     user: toAdmin,
     userSubject,
@@ -313,17 +312,17 @@ export function offerCreatedConfirmationEmail(toUser: UserEmailData, org: Organi
 /**
  * @param orgId
  */
- const organizationCreatedTemplate = (orgId: string) =>
- `
+const organizationCreatedTemplate = (orgId: string) =>
+  `
  You can review it <a href="${appUrl.crm}${ADMIN_ACCEPT_ORG_PATH}/${orgId}">here</a>.
  `;
 
 /**
  * @param orgId
  */
-const organizationRequestAccessToAppTemplate = (org: PublicOrganization, app: App) =>
+const organizationRequestAccessToAppTemplate = (org: PublicOrganization, app: App, module: Module) =>
   `
-  Organization '${org.denomination.full}' requested access to ${appName[app]},
+  Organization '${org.denomination.full}' requested access to ${module} module of app ${appName[app]},
 
   Visit ${appUrl.crm}${ADMIN_ACCEPT_ORG_PATH}/${org.id} or go to ${ADMIN_ACCEPT_ORG_PATH}/${org.id} to enable it.
   `;
@@ -354,11 +353,11 @@ export async function organizationCreated(org: OrganizationDocument): Promise<Em
  * Generates a transactional email request to let cascade8 admin know that a new org is waiting for app access.
  * It sends an email to admin to accept or reject the request
  */
-export async function organizationRequestedAccessToApp(org: OrganizationDocument, app: App): Promise<EmailRequest> {
+export async function organizationRequestedAccessToApp(org: OrganizationDocument, app: App, module: Module): Promise<EmailRequest> {
   return {
     to: getSupportEmail(org._meta.createdFrom),
     subject: 'An organization requested access to an app',
-    html: organizationRequestAccessToAppTemplate(org, app)
+    html: organizationRequestAccessToAppTemplate(org, app, module)
   };
 }
 

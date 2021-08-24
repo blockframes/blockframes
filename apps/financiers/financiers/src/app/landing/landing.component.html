@@ -36,7 +36,7 @@
             <p class="mat-body-1">{{ feature.description }}
             </p>
             <a *ngIf="feature?.link?.href" [href]="feature.link.href" target="_blank">
-              <u>{{ feature.link.text }}</u>
+              {{ feature.link.text }}
             </a>
           </mat-card>
         </article>

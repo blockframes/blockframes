@@ -1,7 +1,5 @@
 <main bgAsset="rocket_background.svg">
-  <a routerLink="/">
-    <app-logo></app-logo>
-  </a>
+  <a app-logo routerLink="/"></a>
   <section fxLayout="column" fxLayoutAlign="center center">
     <h1>Create your account</h1>
     <p>Please fill in the form below to join the {{ appName }} platform</p>
@@ -10,7 +8,7 @@
         Already have an account? <a routerLink="/auth/connexion">Log in here</a>
       </p>
     </ng-container>
-    <mat-card fxLayout="column" fxLayoutAlign="center center">
+    <article class="surface" fxLayout="column" fxLayoutAlign="center center">
       <form [formGroup]="form" fxLayout="column">
 
         <!-- IDENTITY -->
@@ -127,7 +125,7 @@
         </button>
       </ng-template>
 
-    </mat-card>
+    </article>
   </section>
 </main>
 <ng-template #customSnackBarTemplate>

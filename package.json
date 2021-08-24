@@ -28,6 +28,7 @@
     "emulators:start": "npm start emulators",
     "test": "firebase functions:config:get > .runtimeconfig.json && firebase emulators:exec --only firestore 'cross-env nx run-many --target=test --all --configuration=$NG_CONFIG'",
     "lint": "cross-env nx run-many --target=lint --all --configuration=$NG_CONFIG",
+    "lint:backend-functions": "cross-env nx run backend-functions:lint --configuration=$NG_CONFIG",
     "e2e": "cross-env nx run-many --target=e2e --all  --configuration=$NG_CONFIG",
     "e2e:catalog": "cross-env nx e2e catalog-e2e --configuration=$NG_CONFIG --headless",
     "e2e:catalog:serve:emulator": "concurrently --kill-others 'npx nx build backend-functions --watch' 'npm:emulators:start' 'npx nx serve catalog-e2e --configuration=emulator'",
@@ -97,6 +98,7 @@
     "firebase-functions": "^3.11.0",
     "generate-password": "^1.4.2",
     "intersection-observer": "^0.11.0",
+    "jsonwebtoken": "^8.5.1",
     "jwplatform": "0.0.5",
     "leaflet": "^1.6.0",
     "lodash": "^4.17.21",
@@ -107,7 +109,7 @@
     "rxjs": "~6.5.5",
     "twilio": "3.49.2",
     "twilio-video": "^2.7.2",
-    "xlsx": "^0.15.1",
+    "xlsx": "^0.17.0",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
@@ -142,6 +144,7 @@
     "@types/faker": "^4.1.12",
     "@types/jest": "26.0.8",
     "@types/jquery": "3.3.31",
+    "@types/jsonwebtoken": "^8.5.4",
     "@types/leaflet": "^1.5.8",
     "@types/line-reader": "0.0.28",
     "@types/lodash": "^4.14.150",
@@ -170,7 +173,7 @@
     "faker": "^5.1.0",
     "firebase-functions-test": "^0.2.1",
     "firebase-tools": "^9.12.0",
-    "husky": "^3.0.5",
+    "husky": "^3.1.0",
     "inquirer": "^7.3.3",
     "jest": "26.2.2",
     "jest-environment-jsdom-thirteen": "^1.0.1",
@@ -201,5 +204,10 @@
       "maxSize": "1 MB",
       "compression": "none"
     }
-  ]
+  ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "sh ./tools/scripts/pre-commit"
+    }
+  }
 }

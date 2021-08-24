@@ -19,7 +19,7 @@ import { WishlistButtonModule } from '@blockframes/organization/components/wishl
 import { HasKeysModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { DownloadPipeModule } from '@blockframes/media/file/pipes/download.pipe';
 import { VideoViewerModule } from '@blockframes/media/video/viewer/viewer.module';
-import { FilePreviewModule } from '@blockframes/media/file/preview/preview.module';
+import { FileListPreviewModule } from '@blockframes/media/file/preview-list/preview-list.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -48,7 +48,7 @@ import { StorageFileModule } from '@blockframes/media/pipes/storageFile.pipe';
     DownloadPipeModule,
     VideoViewerModule,
     ToLabelModule,
-    FilePreviewModule,
+    FileListPreviewModule,
     StorageFileModule,
 
     // Material

@@ -17,6 +17,12 @@ export type AppStatus = 'none' | 'requested' | 'accepted';
 
 export type Organization = OrganizationBase<Date>;
 
+export const organizationRoles = {
+  catalog: { dashboard: 'Seller', marketplace: 'Buyer'},
+  festival: { dashboard: 'Sales Agent', marketplace: 'Buyer'},
+  financiers: { dashboard: 'Partners', marketplace: 'Investor'}
+};
+
 export interface OrganizationForm {
   name: string;
 }

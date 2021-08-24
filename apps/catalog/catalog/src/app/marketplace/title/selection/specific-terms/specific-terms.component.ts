@@ -30,10 +30,16 @@ export class SpecificTermsComponent implements OnInit {
     this.form.setValue({ specificity, delivery });
   }
 
-  createOffer() {
-    const { specificity, delivery } = this.form.value;
-    this.bucketService.createOffer(specificity, delivery, this.data.currency ?? 'EUR');
-    this.router.navigate(['/c/o/marketplace/selection/congratulations']);
-    this.dialog.close();
+  async createOffer() {
+    try {
+      this.form.disable();
+      const { specificity, delivery } = this.form.value;
+      await this.bucketService.createOffer(specificity, delivery, this.data.currency ?? 'EUR');
+      this.router.navigate(['/c/o/marketplace/selection/congratulations']);
+      this.dialog.close();
+    } catch (err) {
+      this.form.enable();
+      console.error(err);
+    }
   }
 }

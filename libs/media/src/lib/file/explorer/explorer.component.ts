@@ -16,8 +16,6 @@ import { AngularFirestore, QueryFn } from '@angular/fire/firestore';
 import { Organization } from '@blockframes/organization/+state';
 import { FileUploaderService, MediaService } from '@blockframes/media/+state';
 import { createStorageFile, StorageFile } from '@blockframes/media/+state/media.firestore';
-import { FilePreviewComponent } from '../preview/preview.component';
-import { MatDialog } from '@angular/material/dialog';
 import { getFileMetadata } from '@blockframes/media/+state/static-files';
 
 function getDir(root: Directory, path: string) {
@@ -72,8 +70,7 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
     private movieService: MovieService,
     private mediaService: MediaService,
     private service: FileUploaderService,
-    private routerQuery: RouterQuery,
-    private dialog: MatDialog,
+    private routerQuery: RouterQuery
   ) {}
 
   ngOnInit() {
@@ -121,13 +118,6 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
 
   getMeta(dir: FileDirectoryBase, index: number) {
     return [ ...dir.meta, index ];
-  }
-
-  openView(item: Partial<StorageFile>, event: Event) {
-    event.stopPropagation();
-    if (item) {
-      this.dialog.open(FilePreviewComponent, { data: { ref: item }, width: '80vw', height: '80vh', autoFocus: false });
-    }
   }
 
   async downloadFile(item: StorageFile, event: Event) {

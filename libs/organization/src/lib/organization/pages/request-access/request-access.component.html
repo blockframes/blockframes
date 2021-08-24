@@ -1,13 +1,36 @@
-<app-logo></app-logo>
+<button app-logo (click)="logout()"></button>
 
-<mat-card fxLayout="column" fxLayoutAlign="center center">
-  <img asset="wait.svg"/>
-  <h3>Looks like you already have an account on a Cascade8 application!</h3>
-  <p class="mat-body-1">
-    We noticed that your email address is associated with an existing user account of one of our applications.<br/>
-    To access Archipel Content, please request access and wait for our team's approval.
-  </p>
-  <p class="mat-body-2">N.B.: All members from your company will also get granted access to {{ appName }}.</p>
-  <button mat-flat-button color="primary" (click)="requestAccess()" [disabled]="disabledRequest">Request Access</button>
-  <button mat-button color="primary" (click)="refresh()">Refresh Page</button>
-</mat-card>
+<section class="surface" fxLayout="column" fxLayoutAlign="center center">
+  <ng-container [ngSwitch]="step$ | async">
+    <ng-container *ngSwitchCase="'initial'">
+      <img asset="wait.svg"/>
+      <h1>Looks like you don't have access to {{ appName[currentApp] }}... yet!</h1>
+      <p class="mat-body-2">
+        Your email address is already associated with an existing user account of <ng-container *ngFor="let app of (orgExistingAccess$ | async); let isLast = last">{{ appName[app]}}{{ !isLast ? ' and ': ''}}</ng-container>. To access {{appName[currentApp]}}, please request access and wait for our team's approval.
+      </p>
+      <button mat-flat-button color="primary" (click)="joinOptions()" [disabled]="disabledRequest">Join {{ appName[currentApp] }}</button>
+      <button mat-button color="primary" (click)="logout()">Sign up with another email</button>
+    </ng-container>
+
+    <ng-container *ngSwitchCase="'request'">
+      <h1>What access are your looking for ?</h1>
+      <p class="mat-body-1">
+        To access {{ appName[currentApp] }}, please select a "role". It will determine the features you can acccess once you've joined the platform.
+      </p>
+      <p class="mat-body-2">N.B.: All members from your company will be granted the same access.</p>
+
+      <article fxLayout fxLayoutAlign="space-between center" fxLayout.lt-md="column">
+        <label fxLayout>
+          <span>Choose your role * :</span>
+          <mat-icon svgIcon="info" matTooltip="Depending on your role, you might have access to different features of the platform."></mat-icon>
+        </label>
+        <mat-button-toggle-group [formControl]="formControl">
+          <mat-button-toggle value="marketplace">{{ roles[currentApp].marketplace }}</mat-button-toggle>
+          <mat-button-toggle value="dashboard">{{ roles[currentApp].dashboard }}</mat-button-toggle>
+        </mat-button-toggle-group>
+      </article>
+      <button mat-flat-button color="primary" (click)="requestAccess()" [disabled]="disabledRequest">Request Access</button>
+      <button mat-button color="primary" (click)="logout()">Cancel</button>
+    </ng-container>
+  </ng-container>
+</section>
