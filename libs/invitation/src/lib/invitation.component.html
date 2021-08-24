@@ -1,23 +1,24 @@
 <ng-container *ngIf="invitations$ | async as invitations; else loading">
   <ng-container *ngIf="invitationCount$ | async; else empty">
     <h1>Invitations</h1>
-    <header fxLayout="row" fxLayout.xs="column" fxLayoutAlign="start">
-      <form [formGroup]=form fxLayout="row" fxLayout.xs="column">
-        <static-select [control]="form.get('type')" scope="invitationType" multiple="true">
-          <mat-label>Filter by type</mat-label>
-        </static-select>
-        <static-select [control]="form.get('status')" scope="invitationStatus" multiple="true">
-          <mat-label>Filter by status</mat-label>
-        </static-select>
-      </form>
-      <button mat-button (click)="form.reset()" matTooltip="Clear fields">
-        <mat-icon svgIcon="refresh_filters"></mat-icon>
-        <span>Clear filters</span>
-      </button>
-      <button mat-button fxFlexOffset="auto" test-id="invitation-accept-all" (click)="acceptAll(invitations)">
-        <mat-icon svgIcon="check_circle"></mat-icon>
-        <span>Accept All</span>
-      </button>
+    <header fxLayout fxLayout.xs="column">
+        <form [formGroup]=form fxLayout fxLayout.xs="column">
+          <static-select [control]="form.get('type')" scope="invitationType" multiple="true">
+            <mat-label>Filter by type</mat-label>
+          </static-select>
+          <static-select [control]="form.get('status')" scope="invitationStatus" multiple="true">
+            <mat-label>Filter by status</mat-label>
+          </static-select>
+        </form>
+      <section fxLayoutAlign="space-between center" fxFlex>
+        <button mat-button (click)="form.reset()" matTooltip="Clear filters">
+          <mat-icon svgIcon="refresh_filters"></mat-icon>
+        </button>
+        <button mat-button fxFlexOffset="auto" test-id="invitation-accept-all" (click)="acceptAll(invitations)">
+          <mat-icon svgIcon="check_circle"></mat-icon>
+          <span>Accept All</span>
+        </button>
+      </section>
     </header>
     <ng-container *ngIf="invitations.length">
       <invitation-list [invitations]="invitations" class="surface"></invitation-list>
@@ -26,7 +27,7 @@
       <section fxLayout="column" fxLayoutAlign="center center">
         <p>You have no invitation with this filter.<br>Click on <b>clear filters</b> button to reset.</p>
         <img asset="empty_invitation.svg" alt="No invitations">
-        <button mat-button (click)="form.reset()" matTooltip="Clear fields">
+        <button mat-flat-button color="accent" (click)="form.reset()" matTooltip="Clear filters">
           <mat-icon svgIcon="refresh_filters"></mat-icon>
           <span>Clear filters</span>
         </button>
