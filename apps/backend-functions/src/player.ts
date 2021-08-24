@@ -14,7 +14,7 @@ import { ErrorResultResponse } from './utils';
 import { getDocument } from './data/internals';
 import { isAllowedToAccessMedia } from './internals/media';
 import { db, getStorageBucketName } from './internals/firebase';
-import { jwplayerSecret, jwplayerKey, jwplayerApiV2Secret, enableDailyFirestoreBackup, playerId } from './environments/environment';
+import { jwplayerSecret, enableDailyFirestoreBackup, playerId } from './environments/environment';
 import { jwplayerApiV2 } from './jwplayer-api';
 
 

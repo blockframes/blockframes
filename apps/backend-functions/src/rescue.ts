@@ -66,8 +66,6 @@ export const downloadVideo = async (req: Request, res: Response) => {
 
   const token = sign(payload, jwPlayerSecret);
 
-  const url = `https://cdn.jwplayer.com/v2/media/${jwPlayerId}?token=${token}`;
-
   // GET THE LIST OF ENCODED FILE FOR A GIVEN VIDEO
 
   const apiResult = await sendRequest({
