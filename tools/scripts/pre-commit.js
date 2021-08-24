@@ -3,13 +3,13 @@ const dotenv = require('dotenv');
 const forbiddenEntries = dotenv.parse(fs.readFileSync('.env'));
 const childProcess = require('child_process');
 const forbiddenKeys = Object.keys(forbiddenEntries);
-const exec = require('child_process').exec;
 const cmd = 'git commit -v --dry-run';
 const output = childProcess.execSync(cmd).toString();
 
 let errors = false;
-for (let key of forbiddenKeys) {
-  if (!!forbiddenEntries[key] && output.includes(forbiddenEntries[key])) {
+for (const key of forbiddenKeys) {
+  const value = forbiddenEntries[key];
+  if (!!value && output.includes(value)) {
     console.log(`You are about to commit a file with content of env var ${key} !`);
     errors = true;
   }
