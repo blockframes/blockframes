@@ -10,11 +10,12 @@ import { linkDuration } from '@blockframes/event/+state/event.firestore';
 import { StorageVideo } from '@blockframes/media/+state/media.firestore';
 
 import { PublicUser } from './data/types';
-import { ErrorResultResponse, fetchJSON, postJSON } from './utils';
+import { ErrorResultResponse } from './utils';
 import { getDocument } from './data/internals';
 import { isAllowedToAccessMedia } from './internals/media';
 import { db, getStorageBucketName } from './internals/firebase';
 import { jwplayerSecret, jwplayerKey, jwplayerApiV2Secret, enableDailyFirestoreBackup, playerId } from './environments/environment';
+import { jwplayerApiV2 } from './jwplayer-api';
 
 
 interface ReadVideoParams {
@@ -140,13 +141,7 @@ export const getPrivateVideoUrl = async (
 
   try {
     // FETCH VIDEO METADATA
-    const info = await fetchJSON({
-      host: 'api.jwplayer.com',
-      path: `/v2/sites/${jwplayerKey}/media/${jwPlayerId}/`,
-      headers: {
-        'Authorization': `Bearer ${jwplayerApiV2Secret}`,
-      },
-    });
+    const info = await jwplayerApiV2().get(jwPlayerId);
 
     return {
       error: '',
@@ -189,21 +184,7 @@ export const uploadToJWPlayer = async (file: GFile): Promise<{
   const tag = enableDailyFirestoreBackup ? 'production' : 'test';
 
   try {
-    const result = await postJSON({
-      host: 'api.jwplayer.com',
-      path: `/v2/sites/${jwplayerKey}/media`,
-      headers: {
-        'Authorization': `Bearer ${jwplayerApiV2Secret}`,
-      }
-    }, {
-      upload: {
-        method: 'fetch',
-        'download_url': videoUrl,
-      },
-      metadata: {
-        tags: [ tag ],
-      },
-    }) as any;
+    const result = await jwplayerApiV2().create(videoUrl, tag) as any;
 
     return { success: true, key: result.id }
   } catch (error: unknown) {
@@ -215,14 +196,7 @@ export const uploadToJWPlayer = async (file: GFile): Promise<{
 export const deleteFromJWPlayer = async (jwPlayerId: string) => {
 
   try {
-    const result = await fetchJSON({
-      method: 'DELETE',
-      host: 'api.jwplayer.com',
-      path: `/v2/sites/${jwplayerKey}/media/${jwPlayerId}/`,
-      headers: {
-        'Authorization': `Bearer ${jwplayerApiV2Secret}`,
-      },
-    });
+    const result = await jwplayerApiV2().delete(jwPlayerId) as any;
 
     return { success: true, keys: result }
   } catch (error: unknown) {

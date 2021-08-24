@@ -61,21 +61,11 @@ export async function removeAllSubcollections(
   return batch;
 }
 
-export function fetchJSON<T = unknown>(options: string | RequestOptions | URL): Promise<T> {
-	return new Promise((resolve, reject) => {
-		get(options, res => {
-      let body = '';
-      res.on('data', chunk => body += chunk);
-      res.on('end', () => resolve(JSON.parse(body) as T));
-		}).on('error', e => reject(e));
-	});
-}
 
-export function postJSON<T = unknown>(options: RequestOptions, data?: unknown): Promise<T> {
+export function sendRequest<T = unknown>(options: RequestOptions, data?: unknown): Promise<T> {
   const postData = JSON.stringify(data);
   const postOptions: RequestOptions = {
     ...options,
-    method: 'POST',
     headers: {
       ...options.headers,
       'Content-Type': 'application/json',
@@ -83,12 +73,12 @@ export function postJSON<T = unknown>(options: RequestOptions, data?: unknown): 
     }
   };
 	return new Promise((resolve, reject) => {
-		request(postOptions, res => {
+		request(options.method === 'POST' ? postOptions : options, res => {
       let body = '';
       res.on('data', chunk => body += chunk);
       res.on('end', () => resolve(JSON.parse(body) as T));
 		})
       .on('error', e => reject(e))
-      .write(postData);
+      .write(options.method === 'POST' ? postData : undefined);
 	});
 }
