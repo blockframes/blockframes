@@ -207,7 +207,7 @@
   ],
   "husky": {
     "hooks": {
-      "pre-commit": "sh ./tools/scripts/pre-commit"
+      "pre-commit": "node tools/scripts/pre-commit.js"
     }
   }
 }
