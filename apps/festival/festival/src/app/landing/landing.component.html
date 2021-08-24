@@ -11,6 +11,16 @@
   </landing-header>
 
   <landing-content>
+
+    <section class="landing-partners" fxLayout="column" fxLayoutAlign="start" fxLayoutGap="16px">
+      <h1 class="mat-display-1">They're using it</h1>
+      <p class="mat-body-1">Over 1300 buyers are already using Archipel, from companies like:</p>
+      <div fxLayout="row wrap" fxLayoutGap="24px">
+        <img *ngFor="let partnerLogo of partnerLogoList" [asset]='partnerLogo' [alt]='partnerLogo'>
+      </div>
+
+    </section>
+
     <section class="landing-presentation">
       <h1 class="mat-display-1">How it works</h1>
       <mat-tab-group animationDuration="1000ms" selectedIndex="0">

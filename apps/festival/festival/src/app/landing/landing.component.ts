@@ -8,6 +8,23 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 })
 export class LandingComponent {
 
+  public partnerLogoList = [
+    'partner_alibaba.png',
+    'partner_amazon.png',
+    'partner_apple_tv.png',
+    'partner_netflix.png',
+    'partner_disney.png',
+    'partner_hbo_max.png',
+    'partner_hulu.png',
+    'partner_bbc_film.png',
+    'partner_lionsgate.png',
+    'partner_mubi.png',
+    'partner_paramount.png',
+    'partner_mgm.png',
+    'partner_sony.png',
+    'partner_A24.png'
+  ];
+
   public tabNames = ['Sales Agents', 'Buyers'];
 
   public tabTitle = [
