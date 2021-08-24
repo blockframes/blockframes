@@ -6,8 +6,10 @@
 </header>
 <section>
   <p>
-    There are some holdbacks that exists for this right.<br/>
-    You can still add this right to your selection.
+    <span>There are some holdbacks that exists for this right.</span>
+    <ng-container *ngIf="data.withWarning">
+      <br /><span>You can still add this right to your selection.</span>
+    </ng-container>
   </p>
   <holdback-list [holdbacks]="data.holdbacks"></holdback-list>
 </section>

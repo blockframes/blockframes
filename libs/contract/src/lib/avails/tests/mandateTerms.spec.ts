@@ -1,10 +1,10 @@
-import { Term } from '../../term/+state/term.model';
+import { BucketTerm, Term } from '../../term/+state/term.model';
 import { AvailsFilter, getMandateTerms, isInBucket, isSold } from './../avails';
 import { mandates } from './../fixtures/mandates';
 import { sales } from './../fixtures/sales';
 import { mandateTerms as acTerms } from './../fixtures/mandateTerms';
 import { saleTerms as acSaleTerms } from './../fixtures/saleTerms';
-import { BucketTerm, createBucketTerm } from '@blockframes/contract/bucket/+state/bucket.model';
+import {  createBucketTerm } from '@blockframes/contract/bucket/+state/bucket.model';
 
 describe('Test isTermSold pure function', () => {
     const Resurrected = 'Cr3NYe9RXaMwP98LQMyD';
@@ -21,11 +21,11 @@ describe('Test isTermSold pure function', () => {
     })
 
     it(`Mandate test (territory)
-    Terms: 01/01/2022 - 06/30/2023 
+    Terms: 01/01/2022 - 06/30/2023
     Territory: South Korea
     Rights: Free TV
     Exclusive: No
-    Expected result: Not licensed`, () => { 
+    Expected result: Not licensed`, () => {
       const acHasRights = getMandateTerms({
         duration: { to: new Date('06/30/2023'), from: new Date('01/01/2022') }, territories: ['south-korea'], medias: ['freeTv'], exclusive: false },
         getTerms(Resurrected, 'mandate')
@@ -90,7 +90,7 @@ describe('Test isTermSold pure function', () => {
       );
       expect(ACRights.length).toEqual(1);
       const isTermSold = isSold(
-        availDetails, 
+        availDetails,
         getTerms(Resurrected, 'sale')
       );
       expect(isTermSold).toBe(true);
@@ -104,7 +104,7 @@ describe('Test isTermSold pure function', () => {
         Expected result: Available`, () => {
         const availDetails: AvailsFilter = { duration: { to: new Date('06/30/2022'), from: new Date('01/01/2022') }, exclusive: false, territories: ['germany', 'russia', 'czech'], medias: ['freeTv'] }
         const ACRights = getMandateTerms(
-          availDetails, 
+          availDetails,
           getTerms(Resurrected, 'mandate')
         );
         expect(ACRights.length).toEqual(1);
@@ -148,7 +148,7 @@ describe('Test isTermSold pure function', () => {
         expect(ACRights.length).toEqual(1);
         const isTermSold = isSold(
           availDetails,
-          getTerms(Resurrected, 'sale')  
+          getTerms(Resurrected, 'sale')
         );
         expect(isTermSold).toBe(false);
     });
@@ -162,12 +162,12 @@ describe('Test isTermSold pure function', () => {
     Expected result: Not available`, () => {
       const availDetails: AvailsFilter = { duration: { to: new Date('06/30/2022'), from: new Date('01/01/2022') }, exclusive: true, territories: ['argentina'], medias: ['payTv'] }
       const ACRights = getMandateTerms(
-        availDetails, 
+        availDetails,
         getTerms(Resurrected, 'mandate')
       );
       expect(ACRights.length).toEqual(1);
       const isTermSold = isSold(
-        availDetails, 
+        availDetails,
         getTerms(Resurrected, 'sale')
       );
       expect(isTermSold).toBe(true);
@@ -206,7 +206,7 @@ describe('Test isTermSold pure function', () => {
         );
         expect(ACRights.length).toEqual(1);
         const isTermSold = isSold(
-          availDetails, 
+          availDetails,
           getTerms(Resurrected, 'sale')
         );
         expect(isTermSold).toBe(true);
@@ -225,23 +225,23 @@ describe('Test isTermSold pure function', () => {
     Available: Mother Schmuckers, Bigfoot Family`, () => {
       const availDetails: AvailsFilter = { duration: { to: new Date('06/30/2023'), from: new Date('01/01/2022') }, exclusive: false, territories: ['south-korea'], medias: ['freeTv'] };
       const gazaRights = getMandateTerms(
-        availDetails, 
+        availDetails,
         getTerms(GazaMonAmour, 'mandate')
       );
       const resurrectedRights = getMandateTerms(
-        availDetails, 
+        availDetails,
         getTerms(Resurrected, 'mandate')
       );
       const hoursRights = getMandateTerms(
-        availDetails, 
+        availDetails,
         getTerms(MarinaAbramovic, 'mandate')
       );
       const motherSchmuckersRights = getMandateTerms(
-        availDetails, 
+        availDetails,
         getTerms(MotherSchmuckers, 'mandate')
       );
       const bigFootFamilyRights = getMandateTerms(
-        availDetails, 
+        availDetails,
         getTerms(BigFootFamily, 'mandate')
       );
       expect(!!gazaRights.length).toBe(true);
@@ -250,11 +250,11 @@ describe('Test isTermSold pure function', () => {
       expect(!!motherSchmuckersRights.length).toBe(true);
       expect(!!bigFootFamilyRights.length).toBe(true);
       const isGazaSold = isSold(
-        availDetails, 
+        availDetails,
         getTerms(GazaMonAmour, 'sale')
       );
       const isMotherSold = isSold(
-        availDetails, 
+        availDetails,
         getTerms(MotherSchmuckers, 'sale')
       );
       const isBigfootSold = isSold(

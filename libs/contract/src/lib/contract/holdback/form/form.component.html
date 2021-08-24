@@ -1,7 +1,7 @@
 <holdback-list [holdbacks]="holdbacks"></holdback-list>
 
-<div class="actions">
-  <button mat-button (click)="openHoldbacks(formTemplate)">
+<div class="actions" fxLayout fxLayoutAlign="center center">
+  <button mat-stroked-button (click)="openHoldbacks(formTemplate)">
     <mat-icon svgIcon="add"></mat-icon>
     <span>Add holdbacks for "{{ title.title.international | maxLength:10 }}"</span>
   </button>
@@ -21,19 +21,19 @@
     <ng-template colRef="duration" let-duration>
       {{ duration.from | date:'M/d/y' }} - {{ duration.to | date:'M/d/y' }}
     </ng-template>
-  
+
     <ng-template colRef="territories" let-territories>
       <span class="group-label" (click)="openDetails(territories, 'territories')">
         {{ territories | toGroupLabel:'territories':'World' | join | maxLength:120 }}
       </span>
     </ng-template>
-  
+
     <ng-template colRef="medias" let-medias>
       <span class="group-label" (click)="openDetails(medias, 'medias')">
         {{ medias | toGroupLabel:'medias':'All' | join | maxLength:120 }}
       </span>
     </ng-template>
-  
+
     <ng-template colRef="languages" let-languages>
       <ul>
         <li *ngFor="let language of languages | keyvalue">
@@ -41,23 +41,23 @@
         </li>
       </ul>
     </ng-template>
-  
+
     <!-- Control -->
     <ng-template formView let-control>
       <h3>Holdback Territories*</h3>
       <static-group [formControl]="control.get('territories')" scope="territories" displayAll="World" placeholder="Specify territory to filter" required test-id="territories">
         <mat-label>Select territories</mat-label>
       </static-group>
-      
+
       <mat-divider></mat-divider>
-    
+
       <h3>Holdback Rights*</h3>
       <static-group [formControl]="control.get('medias')" scope="medias" displayAll="All Rights" required placeholder="Specify right(s) to filter" [withoutValues]="['theatrical']" test-id="medias">
         <mat-label>Select rights</mat-label>
       </static-group>
-      
+
       <mat-divider></mat-divider>
-    
+
       <h3>Holdback Terms*</h3>
       <div class="duration" [formGroup]="control.get('duration')">
         <mat-form-field appearance="outline">
@@ -77,15 +77,15 @@
           <mat-error *ngIf="form.hasError('inPast', 'duration.from')">Date must be in the future</mat-error>
         </mat-form-field>
       </div>
-  
+
       <mat-divider></mat-divider>
-  
+
       <h3>Versions</h3>
       <languages-form [form]="control.get('languages')"></languages-form>
-  
+
     </ng-template>
   </bf-form-table>
-  
+
   <footer class="actions">
     <button mat-flat-button color="primary" (click)="save()">Add Holdbacks</button>
     <button mat-button (click)="cancel()">Cancel</button>

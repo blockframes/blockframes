@@ -1,9 +1,8 @@
 import { AvailsFilter } from '@blockframes/contract/avails/avails';
 import { createHoldback, Holdback, Mandate } from '@blockframes/contract/contract/+state';
 import { createLanguageKey } from '@blockframes/movie/+state';
-import { MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
-import { Media, MovieCurrency, Territory } from '@blockframes/utils/static-model';
-import { Term } from '../../term/+state/term.model';
+import { MovieCurrency } from '@blockframes/utils/static-model';
+import { Term, BucketTerm } from '../../term/+state/term.model';
 
 export interface Bucket {
   id: string;
@@ -30,21 +29,6 @@ export interface BucketContract {
   holdbacks: Holdback<Date>[];
 }
 
-export interface BucketTerm {
-  medias: Media[];
-  duration: { from: Date, to: Date };
-  territories: Territory[];
-  exclusive: boolean;
-  languages: Record<string, MovieLanguageSpecification>;
-  runs?: {
-    broadcasts: number;
-    catchup: {
-      from: Date,
-      duration: number,
-      period: 'day' | 'week' | 'month'
-    }
-  }
-}
 
 export function toBucketTerm(avail: AvailsFilter): BucketTerm {
   return createBucketTerm({
