@@ -141,7 +141,7 @@ export const getPrivateVideoUrl = async (
 
   try {
     // FETCH VIDEO METADATA
-    const info = await jwplayerApiV2().get(jwPlayerId);
+    const info = await jwplayerApiV2().getVideoInfo(jwPlayerId);
 
     return {
       error: '',
@@ -184,7 +184,7 @@ export const uploadToJWPlayer = async (file: GFile): Promise<{
   const tag = enableDailyFirestoreBackup ? 'production' : 'test';
 
   try {
-    const result = await jwplayerApiV2().create(videoUrl, tag) as any;
+    const result = await jwplayerApiV2().createVideo(videoUrl, tag) as any;
 
     return { success: true, key: result.id }
   } catch (error: unknown) {
@@ -196,7 +196,7 @@ export const uploadToJWPlayer = async (file: GFile): Promise<{
 export const deleteFromJWPlayer = async (jwPlayerId: string) => {
 
   try {
-    const result = await jwplayerApiV2().delete(jwPlayerId) as any;
+    const result = await jwplayerApiV2().deleteVideo(jwPlayerId) as any;
 
     return { success: true, keys: result }
   } catch (error: unknown) {

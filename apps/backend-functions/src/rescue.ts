@@ -4,7 +4,7 @@ import { sign } from 'jsonwebtoken';
 import * as admin from 'firebase-admin';
 import { Request, Response } from 'firebase-functions';
 import { getStorageBucketName } from './internals/firebase';
-import { fetchJSON } from './utils';
+import { sendRequest } from './utils';
 
 const linkDuration = 60 * 60 * 5; // 5 hours in seconds = 60 seconds * 60 minutes * 5 = 18 000 seconds
 
@@ -70,7 +70,11 @@ export const downloadVideo = async (req: Request, res: Response) => {
 
   // GET THE LIST OF ENCODED FILE FOR A GIVEN VIDEO
 
-  const apiResult = await fetchJSON(url) as any;
+  const apiResult = await sendRequest({
+    method: 'GET',
+    host: 'cdn.jwplayer.com',
+    path: `/v2/media/${jwPlayerId}?token=${token}`,
+  }) as any;
 
   // FILTER THE RESPONSE TO GET THE URL OF THE HIGHEST DEFINITION VIDEO FILE
 

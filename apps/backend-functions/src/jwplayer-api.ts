@@ -9,16 +9,16 @@ export function jwplayerApiV2() {
   const headers = {
     'Authorization': `Bearer ${jwplayerApiV2Secret}`,
   };
-  const basePath = `/v2/sites/${jwplayerKey}/media/`;
+  const basePath = `/v2/sites/${jwplayerKey}/media`;
 
   return {
-    get: (jwPlayerId: string) => sendRequest({
+    getVideoInfo: (jwPlayerId: string) => sendRequest({
       host,
       headers,
       method: 'GET',
-      path: `${basePath}${jwPlayerId}/`,
+      path: `${basePath}/${jwPlayerId}`,
     }),
-    create: (videoUrl: string, tag: 'production' | 'test') => sendRequest({
+    createVideo: (videoUrl: string, tag: 'production' | 'test') => sendRequest({
       host,
       headers,
       method: 'POST',
@@ -32,11 +32,11 @@ export function jwplayerApiV2() {
         tags: [ tag ],
       },
     }),
-    delete: (jwPlayerId: string) => sendRequest({
+    deleteVideo: (jwPlayerId: string) => sendRequest({
       host,
       headers,
       method: 'DELETE',
-      path: `${basePath}${jwPlayerId}/`,
+      path: `${basePath}/${jwPlayerId}`,
     }),
   };
 }
