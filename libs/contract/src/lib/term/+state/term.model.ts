@@ -7,7 +7,7 @@ export interface Duration<T extends Date | firebase.firestore.Timestamp = Date> 
   to: T,
 }
 
-export interface TermBase<T extends Date | firebase.firestore.Timestamp = Date> {
+export interface BucketTerm<T extends Date | firebase.firestore.Timestamp = Date> {
   medias: Media[];
   duration: Duration<T>;
   territories: Territory[];
@@ -21,7 +21,6 @@ export interface TermBase<T extends Date | firebase.firestore.Timestamp = Date> 
       period: 'day' | 'week' | 'month'
     }
   }
-
 }
 
 /**
@@ -31,7 +30,7 @@ export interface TermBase<T extends Date | firebase.firestore.Timestamp = Date> 
  * - exclusivity should be the same
  * - duration cannot be splitted
  */
-export interface Term<T extends Date | firebase.firestore.Timestamp = Date> extends TermBase<T> {
+export interface Term<T extends Date | firebase.firestore.Timestamp = Date> extends BucketTerm<T> {
   id: string;
   contractId: string;
   criteria: unknown[];

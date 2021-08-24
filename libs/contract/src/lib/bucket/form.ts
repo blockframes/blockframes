@@ -6,7 +6,6 @@ import { AvailsFilter, DurationMarker, isSameCalendarTerm, isSameMapTerm, Territ
 import {
   Bucket,
   BucketContract,
-  BucketTerm,
   createBucket,
   createBucketContract,
   createBucketTerm,
@@ -15,6 +14,7 @@ import {
 } from './+state/bucket.model';
 import { Subject } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { BucketTerm } from '../term/+state';
 
 //////////
 // TERM //
