@@ -28,7 +28,6 @@
     "faker":"5.1.0",
     "generate-password": "^1.4.2",
     "jsonwebtoken": "^8.5.1",
-    "jwplatform": "0.0.5",
     "lodash": "^4.17.11",
     "twilio": "3.49.2"
   }
