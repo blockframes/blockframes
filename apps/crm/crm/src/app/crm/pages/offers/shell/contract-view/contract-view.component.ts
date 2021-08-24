@@ -4,12 +4,11 @@ import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { FormControl, FormGroup } from '@angular/forms';
 
-import { filter, map, pluck, switchMap } from 'rxjs/operators';
-import { combineLatest, Observable, Subscription } from 'rxjs';
+import { filter, map, pluck } from 'rxjs/operators';
+import { combineLatest, Subscription } from 'rxjs';
 
 import { IncomeService } from '@blockframes/contract/income/+state';
-import { Term, TermService } from '@blockframes/contract/term/+state';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { Term } from '@blockframes/contract/term/+state';
 import { ContractService, contractStatus, Holdback } from '@blockframes/contract/contract/+state';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 

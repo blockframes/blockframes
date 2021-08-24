@@ -8,12 +8,12 @@ import { combineLatest, of, ReplaySubject, Subscription } from 'rxjs';
 
 import { FormList } from '@blockframes/utils/form';
 import { MovieQuery, Movie } from '@blockframes/movie/+state';
-import { Term, TermService } from '@blockframes/contract/term/+state';
+import { BucketTerm, Term, TermService } from '@blockframes/contract/term/+state';
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { BucketForm, BucketTermForm } from '@blockframes/contract/bucket/form';
 import { OrganizationQuery, OrganizationService } from '@blockframes/organization/+state';
-import { BucketService, BucketTerm } from '@blockframes/contract/bucket/+state';
+import { BucketService } from '@blockframes/contract/bucket/+state';
 import { ContractService, Holdback, isMandate, isSale, Mandate } from '@blockframes/contract/contract/+state';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 
@@ -151,7 +151,7 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
 
   /** Open a modal to display holdback warnings */
   openHoldbackModal(holdbacks: Holdback[]) {
-    this.dialog.open(HoldbackModalComponent, { data: { holdbacks }, maxHeight: '80vh' });
+    this.dialog.open(HoldbackModalComponent, { data: { holdbacks, withWarning: true }, maxHeight: '80vh' });
   }
 
   confirmExit() {

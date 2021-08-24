@@ -7,23 +7,12 @@ export interface Duration<T extends Date | firebase.firestore.Timestamp = Date> 
   to: T,
 }
 
-/**
- * Continue term that describe a contract
- * Discontinuity criteria are :
- * - only one Right can have the same ID
- * - exclusivity should be the same
- * - duration cannot be splitted
- */
-export interface Term<T extends Date | firebase.firestore.Timestamp = Date> {
-  id: string;
-  contractId: string;
-  territories: Territory[];
+export interface BucketTerm<T extends Date | firebase.firestore.Timestamp = Date> {
   medias: Media[];
-  licensedOriginal: boolean;
-  exclusive: boolean;
   duration: Duration<T>;
+  territories: Territory[];
+  exclusive: boolean;
   languages: Record<string, MovieLanguageSpecification>;
-  criteria: unknown[];
   runs?: {
     broadcasts: number;
     catchup: {
@@ -32,6 +21,20 @@ export interface Term<T extends Date | firebase.firestore.Timestamp = Date> {
       period: 'day' | 'week' | 'month'
     }
   }
+}
+
+/**
+ * Continue term that describe a contract
+ * Discontinuity criteria are :
+ * - only one Right can have the same ID
+ * - exclusivity should be the same
+ * - duration cannot be splitted
+ */
+export interface Term<T extends Date | firebase.firestore.Timestamp = Date> extends BucketTerm<T> {
+  id: string;
+  contractId: string;
+  criteria: unknown[];
+  licensedOriginal: boolean;
 }
 
 export function createTerm(params: Partial<Term<Date>> = {}): Term<Date> {

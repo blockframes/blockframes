@@ -1,15 +1,15 @@
 
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 
-import { Term } from '@blockframes/contract/term/+state';
+import { BucketTerm } from '@blockframes/contract/term/+state';
 import { getCollidingHoldbacks } from '@blockframes/contract/avails/avails';
 
 import { Holdback } from '../../+state';
 
 @Pipe({ name: 'collidingHoldbacks' })
 export class CollidingHoldbacksPipe implements PipeTransform {
-  transform(term: Term, holdbacks: Holdback[]) {
-    return getCollidingHoldbacks(holdbacks, [term]);
+  transform(term: BucketTerm | BucketTerm[], holdbacks: Holdback[]) {
+    return getCollidingHoldbacks(holdbacks, Array.isArray(term) ? term : [term]);
   }
 }
 

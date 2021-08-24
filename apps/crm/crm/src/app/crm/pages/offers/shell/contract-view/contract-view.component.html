@@ -26,12 +26,12 @@
         <button mat-flat-button color="primary" (click)="update(contract.id)">Update</button>
       </div>
     </section>
-  
+
     <contract-item [contract]="contract">
       <p price *ngIf="contract.income">
         {{ contract.income.price | currency: offer.currency }}
       </p>
-  
+
       <ng-template #termAction let-term>
         <a
           mat-icon-button
@@ -45,7 +45,7 @@
           <mat-icon svgIcon="delete"></mat-icon>
         </button>
       </ng-template>
-  
+
       <footer *ngIf="contract.title as title">
         <holdbacks-form
           [holdbacks]="contract.holdbacks"

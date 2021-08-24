@@ -1,7 +1,7 @@
 import { Media, territoriesISOA3, Territory, TerritoryISOA3Value, TerritoryValue, territories } from "@blockframes/utils/static-model";
-import { Bucket, BucketTerm } from "../bucket/+state";
+import { Bucket } from "../bucket/+state";
 import { Holdback, Mandate } from "../contract/+state/contract.model"
-import { Duration, Term } from "../term/+state/term.model";
+import { Duration, Term, BucketTerm } from "../term/+state/term.model";
 
 export interface AvailsFilter {
   medias: Media[],
@@ -331,14 +331,14 @@ function collidingMedias(mediasA: Media[], mediasB: Media[]) {
   return mediasA.some(media => mediasB.includes(media));
 }
 
-function collidingHoldback(holdback: Holdback, term: Term) {
+function collidingHoldback(holdback: Holdback, term: BucketTerm) {
   const durationCollision = collidingDurations(holdback.duration, term.duration);
   const mediasCollision = collidingMedias(holdback.medias, term.medias);
   const territoryCollision = collidingTerritories(holdback.territories, term.territories);
   return durationCollision && mediasCollision && territoryCollision;
 }
 
-export function getCollidingHoldbacks(holdbacks: Holdback[], terms: Term[]) {
+export function getCollidingHoldbacks(holdbacks: Holdback[], terms: BucketTerm[]) {
 
   const holdbackCollision = holdbacks.filter(holdback =>
     terms.some(term => collidingHoldback(holdback, term))
