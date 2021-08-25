@@ -43,7 +43,7 @@ export class LandingFooterComponent { }
 export class LandingShellComponent implements OnDestroy {
   public submitted = false;
   public appName = getAppName(getCurrentApp(this.routerQuery));
-  public buttonText = 'Send Request';
+  public buttonText = 'Submit Demo Request';
 
   @Input() roles: RequestDemoRole[] = [
     'buyer',

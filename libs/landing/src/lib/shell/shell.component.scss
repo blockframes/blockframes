@@ -32,9 +32,9 @@ landing-shell-page {
     flex: 1;
     overflow-y: auto;
 
-    .demo {
-      display: block;
-      width: 100%;
+    .demo.mat-card {
+      padding-block: 72px;
+      background-size: cover;
     }
 
     .contact-us {
@@ -52,6 +52,16 @@ landing-shell-page {
           width: 100%;
         }
       }
+    }
+
+    #email-field {
+      width: 50%;
+      padding-right: 12px;
+    }
+
+    mat-checkbox {
+      margin-bottom: 24px;
+      color: var(--primary-contrast);
     }
 
     footer {
@@ -91,6 +101,10 @@ landing-shell-page {
   landing-shell-page main {
     landing-header {
       padding: 60px 36px;
+    }
+    #email-field {
+      width: 100%;
+      padding: 0;
     }
   }
 }

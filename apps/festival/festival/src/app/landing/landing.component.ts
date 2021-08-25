@@ -121,4 +121,22 @@ export class LandingComponent {
       description: "Our online client support is available 24/7 to answer all of your questions and guide you through the platform if needed!"
     }
   ]
+
+  public clientOpinion = [
+    {
+      name: "Nate bolotin",
+      jobTitle: "Partner",
+      text: "« We use Archipel to recreate the momentum of live market screenings outside markets. It helps generate emulation around our projects and has often led to some interesting bidding wars. »",
+      logo: "XYZ_logo.png",
+      company: "XYZ Films",
+    },
+    {
+      name: "Inès Papo",
+      jobTitle: "Sales Assistant",
+      text: "« I love working with Archipel. The platform is smooth, the team is available, and most importantly, they understand how this industry works. »",
+      logo: "orangeStudio.png",
+      company: "Orange Studio",
+    },
+  ]
+
 }
