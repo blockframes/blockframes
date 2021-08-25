@@ -1,8 +1,9 @@
-<section fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="16px">
-  <h1>Your Offer was successfully sent.</h1>
+  <h1>Your Contract Offer <br/> has been successfully sent.</h1>
   <p>
-    Our team will get back to you as soon as possible to coordinate the deal.<br />
-    Feel free to <a [routerLink]="['./']" (click)="openIntercom()">contact us</a> if you have a question.</p>
+    You can always find your contract offer on <a  routerLink="../../offer"><strong>Offer & Deals</strong></a> page. <br />
+    Feel free to contact Archipel Content Team if you have a question.
+  </p>
+  <button (click)="openIntercom()" mat-button>Contact Archipel Team</button>
   <img asset="contract_offer.svg" alt="Offer has been created successfully">
-  <button mat-flat-button color="accent" [routerLink]="['/c/o/marketplace/title']">Return to Browsing</button>
-</section>
+  <a mat-flat-button color="primary" routerLink="../../offer">See Offers & Deals</a>
+  <a mat-button color="primary" routerLink="/c/o/marketplace/title">Continue browsing Library</a>
