@@ -38,7 +38,7 @@ export interface ImportEmulatorOptions {
  * This function will download the Firestore backup from specified bucket, import it into
  * the emulator and run the emulator without shutting it down. This command can be used to run
  * emulator in background while developing or running other processes.
- * @param _exportUrl GCS bucket URL for the Firestore backup
+ * @param importFrom GCS bucket URL for the Firestore backup
  * @param keepEmulatorsAlive let the emulator running or not after process ended
  *
  * If no parameter is provided, it will attempt to find the latest backup out of a number
