@@ -22,6 +22,10 @@ mat-sidenav-content {
 
   header {
     width: 100%;
+
+    a {
+      align-self: center;
+    }
   }
   main {
     height: 100%;

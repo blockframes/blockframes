@@ -1,7 +1,7 @@
 <ng-container *ngIf="(user$ | async) as user else login">
   <ng-container *ngIf="(organization$ | async) as organization">
     <article fxLayout="row">
-      <button class="profile" [widgetTarget]="menu" test-id="auth-user">
+      <button class="profile" matRipple [widgetTarget]="menu" test-id="auth-user">
         <span class="mat-body-2">{{ user | displayName }}</span>
         <img asset="profil_user.svg" [ref]="user.avatar" alt="Profile picture">
         <span class="mat-caption">{{ user.position }}</span>
