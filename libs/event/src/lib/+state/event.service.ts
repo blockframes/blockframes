@@ -126,6 +126,11 @@ export class EventService extends CollectionService<EventState> {
     }
   }
 
+  queryByMovieId(movieId: string) {
+    const queries = this.valueChanges(ref => ref.where('meta.titleId', '==', movieId));
+    return queries;
+  }
+
   /** Call a firebase function to get analytics specify to an array of eventIds.*/
   public getEventAnalytics(eventIds: string[]): Observable<EventsAnalytics[]> {
     const f = this.functions.httpsCallable('getEventAnalytics');

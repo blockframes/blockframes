@@ -41,13 +41,13 @@ export class MarketplaceMovieViewComponent implements OnInit {
   ];
 
   event$ = this.route.params.pipe(
-    pluck('titleId'),
-    switchMap((titleId: string) => this.eventService.queryDocs(titleId)),
+    pluck('movieId'),
+    switchMap((movieId: string) => this.eventService.queryByMovieId(movieId)),
   );
 
-  invitations$ = this.event$.pipe(
-    switchMap(event => this.invitationService.valueChanges(ref => ref.where('type', '==', 'attendEvent').where('eventId', '==', event.id)))
-  );
+  // invitations$ = this.event$.pipe(
+  //   switchMap(event => this.invitationService.valueChanges(ref => ref.where('type', '==', 'attendEvent').where('eventId', '==', event.id)))
+  // );
 
   constructor(
     private movieQuery: MovieQuery,
@@ -60,6 +60,8 @@ export class MarketplaceMovieViewComponent implements OnInit {
   ngOnInit() {
     this.movie$ = this.movieQuery.selectActive();
     this.orgs$ = this.orgService.valueChanges(this.movieQuery.getActive().orgIds);
+
+    this.event$.subscribe(console.log);
 
     const q = ref => ref
     .where('isSecret', '==', false)
