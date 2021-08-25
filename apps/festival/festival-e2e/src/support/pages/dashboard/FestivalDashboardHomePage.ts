@@ -19,7 +19,7 @@ export default class FestivalDashboardHomePage {
   }
 
   logout() {
-    cy.get('auth-widget button[test-id=auth-user-avatar]')
+    cy.get('auth-widget button[test-id=auth-user]')
       .click()
       .get('button[test-id=auth-logout]')
       .click();
