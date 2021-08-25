@@ -1,7 +1,7 @@
 <ng-container *ngIf="(user$ | async) as user else login">
   <ng-container *ngIf="(organization$ | async) as organization">
     <article fxLayout="row">
-      <button mat-button [widgetTarget]="menu" disableRipple test-id="auth-user">
+      <button mat-button [widgetTarget]="menu" test-id="auth-user">
         <section fxLayout>
           <div class="user-info" fxLayout="column" fxLayoutAlign="center end">
             <span class="mat-body-2">{{ user | displayName }}</span>
