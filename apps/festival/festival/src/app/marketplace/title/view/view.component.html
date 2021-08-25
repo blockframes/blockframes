@@ -23,6 +23,29 @@
       </movie-header-actions>
     </movie-header>
 
-    <movie-screening></movie-screening>
+    <!-- <movie-screening></movie-screening> -->
+    <ng-container *ngIf="event$ |  async as event">
+      <event-view [event]="event">
+        <ng-container [ngSwitch]="event.type">
+    
+          <!-- Screening -->
+          <section class="screening" *ngSwitchCase="'screening'">
+            <movie-header *ngIf="event.movie" [movie]="event.movie" [showBackArrow]="false">
+              <movie-header-preferences>
+                <p>{{ event.movie.synopsis }}</p>
+                <org-chip [org]="event.org"></org-chip>
+              </movie-header-preferences>
+              <movie-header-cta>
+                <a mat-flat-button color="primary" [routerLink]="['../../title', event.movie.id]">
+                  More Details
+                </a>
+              </movie-header-cta>
+            </movie-header>
+          </section>
+    
+        </ng-container>
+      </event-view>
+    </ng-container>
+    
   </title-marketplace-shell>
 </ng-container>

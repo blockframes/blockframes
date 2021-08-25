@@ -1,13 +1,15 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { Organization } from '@blockframes/organization/+state/organization.model';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
+import { InvitationService } from '@blockframes/invitation/+state';
 import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
 import { mainRoute, additionalRoute, artisticRoute, productionRoute } from '@blockframes/movie/marketplace';
 import { EventService } from '@blockframes/event/+state';
-import { map } from 'rxjs/operators';
+import { map, pluck, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'festival-movie-view',
@@ -38,10 +40,21 @@ export class MarketplaceMovieViewComponent implements OnInit {
     'moodboard'
   ];
 
+  event$ = this.route.params.pipe(
+    pluck('titleId'),
+    switchMap((titleId: string) => this.eventService.queryDocs(titleId)),
+  );
+
+  invitations$ = this.event$.pipe(
+    switchMap(event => this.invitationService.valueChanges(ref => ref.where('type', '==', 'attendEvent').where('eventId', '==', event.id)))
+  );
+
   constructor(
     private movieQuery: MovieQuery,
     private orgService: OrganizationService,
-    private eventService: EventService
+    private eventService: EventService,
+    private route: ActivatedRoute,
+    private invitationService: InvitationService
   ) { }
 
   ngOnInit() {
