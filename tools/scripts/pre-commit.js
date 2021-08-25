@@ -6,10 +6,15 @@ const forbiddenKeys = Object.keys(forbiddenEntries);
 const cmd = 'git commit -v --dry-run';
 const output = childProcess.execSync(cmd).toString();
 
+const skipChecksFor = [
+  'PROJECT_ID', // Common string
+  'ALGOLIA_APP_ID' // Not a secret, exists in blockframes-xxx.env.ts
+];
+
 let errors = false;
 for (const key of forbiddenKeys) {
   const value = forbiddenEntries[key];
-  if (!!value && output.includes(value)) {
+  if (!skipChecksFor.includes(key) && !!value && output.includes(value)) {
     console.log(`You are about to commit a file with content of env var ${key} !`);
     errors = true;
   }
