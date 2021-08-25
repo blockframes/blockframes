@@ -29,6 +29,11 @@ import { cleanDeprecatedData } from './db-cleaning';
 import { cleanStorage } from './storage-cleaning';
 import { resolve } from 'path';
 
+export interface ImportEmulatorOptions {
+  importFrom: string,
+  keepEmulatorsAlive?: boolean
+}
+
 /**
  * This function will download the Firestore backup from specified bucket, import it into
  * the emulator and run the emulator without shutting it down. This command can be used to run
@@ -39,8 +44,8 @@ import { resolve } from 'path';
  * If no parameter is provided, it will attempt to find the latest backup out of a number
  * of date-formatted directory names in the env's backup bucket (if there are multiple dated backups)
  */
-export async function importEmulatorFromBucket(_exportUrl: string, keepEmulatorsAlive = false) {
-  const bucketUrl = _exportUrl || await getLatestFolderURL(loadAdminServices().storage.bucket(backupBucket), 'firestore');
+export async function importEmulatorFromBucket({ importFrom, keepEmulatorsAlive = false }: ImportEmulatorOptions) {
+  const bucketUrl = importFrom || await getLatestFolderURL(loadAdminServices().storage.bucket(backupBucket), 'firestore');
   await importFirestoreEmulatorBackup(bucketUrl, defaultEmulatorBackupPath);
   let proc: ChildProcess;
   try {

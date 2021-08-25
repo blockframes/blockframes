@@ -1,20 +1,18 @@
 import { ContractDocument } from "@blockframes/contract/contract/+state";
-import { defaultEmulatorBackupPath, endMaintenance, getFirestoreExportPath, latestAnonShrinkedDbDir, loadAdminServices, removeAllSubcollections, shutdownEmulator, startMaintenance } from "@blockframes/firebase-utils";
+import { defaultEmulatorBackupPath, endMaintenance, getFirestoreExportPath, latestAnonDbDir, latestAnonShrinkedDbDir, loadAdminServices, removeAllSubcollections, shutdownEmulator, startMaintenance } from "@blockframes/firebase-utils";
 import { InvitationDocument } from "@blockframes/invitation/+state/invitation.firestore";
 import { MovieDocument } from "@blockframes/movie/+state/movie.firestore";
 import { NotificationDocument } from "@blockframes/notification/types";
 import { OrganizationDocument } from "@blockframes/organization/+state";
 import { PermissionsDocument } from "@blockframes/permissions/+state/permissions.firestore";
 import { importEmulatorFromBucket, uploadBackup } from "./emulator";
+import { backupBucket as ciBucketName } from 'env/env.blockframes-ci'
 
 export async function shrinkDb() {
   const { db } = loadAdminServices({ emulator: true });
 
   // STEP 1 load-latest anon-db into emulator and keep it running with auth & firestore
-  const proc = await importEmulatorFromBucket(
-    'gs://bruce-backups/LATEST-ANON-DB',  // @TODO #6460 change
-    true
-  );
+  const proc = await importEmulatorFromBucket({ importFrom: `gs://${ciBucketName}/${latestAnonDbDir}`, keepEmulatorsAlive: true });
 
   // STEP 2 shrink DB
   await startMaintenance(db);

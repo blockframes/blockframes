@@ -38,7 +38,7 @@ async function runCommand() {
       await loadEmulator({ importFrom: arg1 });
       break;
     case 'importEmulator':
-      await importEmulatorFromBucket(arg1);
+      await importEmulatorFromBucket({ importFrom: arg1 });
       break;
     case 'startEmulators':
     case 'emulators':
