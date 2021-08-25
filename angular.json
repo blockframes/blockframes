@@ -208,7 +208,7 @@
                 },
                 {
                   "replace": "apps/backend-functions/src/environments/environment.ts",
-                  "with": "apps/backend-functions/src/environments/environment.prod.ts"
+                  "with": "apps/backend-functions/src/environments/environment.ci.ts"
                 }
               ]
             }

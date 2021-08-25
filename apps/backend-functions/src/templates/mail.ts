@@ -3,7 +3,7 @@
  * Look at the notion page to know objects relative to emails
  * https://www.notion.so/cascade8/Email-Data-Object-8ed9d64e8cd4490ea7bc0e469c04043e
  */
-import { supportEmails, appUrl } from '../environments/environment';
+import { supportEmails, appUrl, e2e_mode } from '../environments/environment';
 import { EmailRequest, EmailTemplateRequest } from '../internals/email';
 import { templateIds } from '@blockframes/utils/emails/ids';
 import { RequestDemoInformations, OrganizationDocument, PublicOrganization } from '../data/types';
@@ -362,7 +362,7 @@ export async function organizationRequestedAccessToApp(org: OrganizationDocument
 }
 
 export async function userFirstConnexion(user: PublicUser): Promise<EmailRequest> {
-  const supportEmail = ('Cypress' in window) ? testEmail : getSupportEmail(user._meta.createdFrom);
+  const supportEmail = e2e_mode ? testEmail : getSupportEmail(user._meta.createdFrom);
   return {
     to: supportEmail,
     subject: 'New user connexion',
