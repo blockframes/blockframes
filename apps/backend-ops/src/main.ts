@@ -17,6 +17,7 @@ import { anonymizeLatestProdDb, downloadProdDbBackup, importEmulatorFromBucket, 
 import { backupEnv, restoreEnv } from './backup';
 import { EIGHT_MINUTES_IN_MS } from '@blockframes/utils/maintenance';
 import { rescueJWP } from './rescueJWP';
+import { shrinkDb } from './db-shrink';
 
 const args = process.argv.slice(2);
 const [cmd, ...flags] = args;
@@ -24,6 +25,7 @@ const [arg1, arg2] = flags;
 
 async function runCommand() {
   const { db } = loadAdminServices();
+  const { db: emulatedDb, auth: emulatedAuth } = loadAdminServices({ emulator: true });
   switch (cmd) {
     case 'prepareForTesting':
       await startMaintenance(db);
@@ -48,6 +50,11 @@ async function runCommand() {
       break;
     case 'anonProdDb':
       await anonymizeLatestProdDb();
+      break;
+    case 'shrinkDb':
+      await startMaintenance(emulatedDb);
+      await shrinkDb(emulatedDb, emulatedAuth);
+      await endMaintenance(emulatedDb);
       break;
     case 'downloadProdDbBackup':
       await downloadProdDbBackup(arg1);

@@ -149,3 +149,23 @@ export async function hasAcceptedMovies(org: OrganizationDocument, appli: App) {
 export function throwOnProduction(): never | void {
   if (firebase().projectId === 'blockframes') throw Error('DO NOT RUN ON PRODUCTION!');
 }
+
+/**
+ * Removes all one-depth subcollections
+ * @param snapshot
+ * @param batch
+ */
+ export async function removeAllSubcollections(
+  snapshot: FirebaseFirestore.DocumentSnapshot,
+  batch: FirebaseFirestore.WriteBatch,
+  db = admin.firestore(),
+  ): Promise<FirebaseFirestore.WriteBatch> {
+  console.log(`starting deletion of ${snapshot.ref.path} sub-collections`);
+  const subCollections = await snapshot.ref.listCollections();
+  for (const x of subCollections) {
+    console.log(`deleting sub collection : ${x.path}`);
+    const documents = await db.collection(x.path).listDocuments();
+    documents.forEach(ref => batch.delete(ref))
+  }
+  return batch;
+}
