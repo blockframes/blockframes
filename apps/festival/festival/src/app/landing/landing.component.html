@@ -1,9 +1,9 @@
 <landing-shell-page>
 
   <landing-header fxLayout="column" fxLayoutAlign="start start" fxLayoutAlign.lt-sm="center center" fxLayoutGap="32px">
-    <h4>Welcome to Archipel Market</h4>
+    <span class="mat-subheading-1">Welcome to Archipel Market</span>
     <p class="mat-display-2">The ongoing<br />film market</p>
-    <h3>One tool for your year-round <br/>promotion & acquisitions</h3>
+    <h2>One tool for your year-round <br/>promotion & acquisitions</h2>
     <a mat-flat-button color="accent" routerLink="/auth/identity">
       <span>Join now</span>
       <mat-icon svgIcon="arrow_forward"></mat-icon>
@@ -11,61 +11,85 @@
   </landing-header>
 
   <landing-content>
-
     <section class="landing-partners" fxLayout="column" fxLayoutAlign="start" fxLayoutGap="16px">
-      <h1 class="mat-display-1">They're using it</h1>
+      <h1 class="mat-display-2">They're using it</h1>
       <p class="mat-body-1">Over 1300 buyers are already using Archipel, from companies like:</p>
-      <div fxLayout="row wrap" fxLayoutGap="24px">
+      <div fxLayout="row wrap" fxLayoutGap="32px">
         <img *ngFor="let partnerLogo of partnerLogoList" [asset]='partnerLogo' [alt]='partnerLogo'>
       </div>
-
     </section>
 
     <section class="landing-presentation">
-      <h1 class="mat-display-1">How it works</h1>
+      <h1 class="mat-display-2">How it works</h1>
+      <p class="mat-body-1">Archipel Market is an ongoing film market platform. <br>
+        It facilitates interactions between sales agents and buyers all year round. </p>
       <mat-tab-group animationDuration="1000ms" selectedIndex="0">
         <mat-tab [label]="tabNames[0]">
-          <article fxLayout="row" fxLayoutGap="24px" fxLayout.lt-lg="column" class="tab-margin">
+          <header fxLayout fxLayoutGap="48px" fxLayout.lt-lg="column">
             <img fxHide.xs [asset]="tabTitle[0].imgAsset" alt="seller image">
             <div fxLayout="column">
-              <h3>{{ tabTitle[0].title }}</h3>
+              <h2>{{ tabTitle[0].title }}</h2>
               <ng-container *ngIf="tabTitle[0].description as description">
                 <p class="mat-body-1">{{ description }}</p>
               </ng-container>
             </div>
-          </article>
-          <h5>Features</h5>
-          <article fxLayout="row wrap" fxLayoutAlign="space-between">
-            <mat-card *ngFor="let feature of sellerFeatures">
+          </header>
+          <h2>Features</h2>
+          <article fxLayout="row wrap" fxLayoutAlign="space-between" fxLayoutGap="8px" fxLayoutAlign.lt-lg="center">
+            <div class="surface" *ngFor="let feature of sellerFeatures">
               <img [asset]="feature.imgAsset" alt="seller feature image">
               <h3>{{ feature.title }}</h3>
               <p class="mat-body-1">{{ feature.description }}</p>
-            </mat-card>
+            </div>
+          </article>
+          <h2>User Benefits</h2>
+          <article class="benefits">
+            <ng-container *ngFor="let benefit of sellerBenefits" >
+              <div fxLayout fxLayoutAlign="space-between start" fxLayoutGap="32px" fxLayout.lt-md="column" fxLayoutAlign.lt-md="space-between center">
+                <img [asset]="benefit.imgAsset" alt="seller benefit image">
+                <div fxLayout="column">
+                  <h3>{{ benefit.title }}</h3>
+                  <p class="mat-body-1">{{ benefit.description }}</p>
+                </div>
+              </div>
+            </ng-container>
           </article>
         </mat-tab>
-
+        
         <mat-tab [label]="tabNames[1]">
-          <article fxLayout="row" fxLayoutGap="24px" fxLayout.lt-lg="column" class="tab-margin">
+          <header fxLayout fxLayoutGap="48px" fxLayout.lt-lg="column">
             <img fxHide.xs [asset]="tabTitle[1].imgAsset" alt="buyer image">
             <div fxLayout="column">
-              <h3>{{ tabTitle[1].title }}</h3>
+              <h2>{{ tabTitle[1].title }}</h2>
               <ng-container *ngIf="tabTitle[1].description as description">
                 <p class="mat-body-1">{{ description }}</p>
               </ng-container>
             </div>
-          </article>
-          <h5>Features</h5>
-          <article fxLayout="row wrap" fxLayoutAlign="space-between">
-            <mat-card *ngFor="let feature of buyerFeatures">
+          </header> 
+          <h2>Features</h2>
+          <article fxLayout="row wrap" fxLayoutAlign="space-between" fxLayoutGap="8px" fxLayoutAlign.lt-lg="center">
+            <div class="surface" *ngFor="let feature of buyerFeatures">
               <img [asset]="feature.imgAsset" alt="buyer feature image">
               <h3>{{ feature.title }}</h3>
-              <p class="mat-caption">{{ feature.description }}</p>
-            </mat-card>
+              <p class="mat-body-1">{{ feature.description }}</p>
+            </div>
+          </article>
+          <h2>User Benefits</h2>
+          <article class="benefits">
+            <ng-container *ngFor="let benefit of buyerBenefits">
+              <div fxLayout fxLayoutAlign="space-between start" fxLayoutGap="32px" fxLayout.lt-md="column" fxLayoutAlign.lt-md="space-between center">
+                <img [asset]="benefit.imgAsset" alt="buyer benefit image">
+                <div fxLayout="column">
+                  <h3>{{ benefit.title }}</h3>
+                  <p class="mat-body-1">{{ benefit.description }}</p>
+                </div>
+              </div>
+            </ng-container>
           </article>
         </mat-tab>
       </mat-tab-group>
     </section>
-    
+
     <section class="dark-contrast-theme landing-join" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="32px">
       <p class="mat-display-2">Interested?</p>
       <p>Sign up now to explore Archipel Market!</p>
@@ -74,7 +98,6 @@
         <mat-icon svgIcon="arrow_forward"></mat-icon>
       </a>
     </section>
-
   </landing-content>
 
 </landing-shell-page>

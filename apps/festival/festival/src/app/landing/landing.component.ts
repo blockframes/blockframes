@@ -25,64 +25,100 @@ export class LandingComponent {
     'partner_A24.png'
   ];
 
-  public tabNames = ['Sales Agents', 'Buyers'];
+  public tabNames = ['For Sales Agents', 'For Buyers'];
 
   public tabTitle = [
     {
-      title: 'For Sales Agents.',
-      imgAsset: 'lp_festival_seller_perspective.png',
-      description: 'Showcase your line-up, get in touch with Buyers and manage meetings and screenings.'
+      title: 'For Sales Agents',
+      imgAsset: 'landing_sellers.svg',
+      description: "Archipel Market replicates the traditional film market experience online, all year round. With one single tool, showcase your line-up, organize screenings, presentations and meetings on a platform already used by hundreds of buyers... anytime, anywhere!"
     },
     {
-      title: 'For Buyers.',
-      imgAsset: 'lp_festival_buyer_perspective.png',
-      description: 'Explore a large library of films, get in touch with sales agents, plan meetings and watch screenings.'
+      title: 'For Buyers',
+      imgAsset: 'landing_buyers.svg',
+      description: 'Archipel Market enables buyers to replicate the market experience online and access projects & events from multiple sales companies, all year round on one single tool.'
     }
   ]
 
   public sellerFeatures = [
     {
-      title: 'Showcase your company & film details',
-      imgAsset: 'showcase.svg',
-      description: 'Import your metadata and promotional elements easily and have your company and films showcased on the marketplace.'
+      title: 'VIRTUAL BOOTHS',
+      imgAsset: 'virtual_booths.svg',
+      description: 'Promote your line-up on your year-round virtual booth.'
     },
     {
-      title: 'Manage your schedule',
-      imgAsset: 'calendar.svg',
-      description: 'Plan online meetings and book live screenings sessions on your calendar. Set privacy parameters and invite buyers to your events.'
+      title: 'SCREENINGS',
+      imgAsset: 'live_screenings.svg',
+      description: 'Engage buyers by organizing secure live screenings & presentations, anytime of the year.'
     },
     {
-      title: 'Match with buyers',
-      imgAsset: 'matching.svg',
-      description: 'Contact and get contacted by buyers, get requests to your screenings, and get notified when buyers show interest in your films.'
+      title: 'MEETINGS',
+      imgAsset: 'live_meetings.svg',
+      description: 'Share your documents in high quality during your meetings with buyers.'
+    }
+  ];
+
+  public sellerBenefits = [
+    {
+      title: 'Gain time and energy',
+      imgAsset: 'benefits_time.svg',
+      description: 'Use one single tool to promote your line-up all year round, during and outside festivals and markets.'
     },
     {
-      title: 'Track your films\' activity',
-      imgAsset: 'sales_statistics.svg',
-      description: 'Track your films’ activity on the platform, and get screening reports with detailed stats after each screening.'
+      title: "Simplify your buyers lives",
+      imgAsset: 'benefits_simplify.svg',
+      description: 'With one single login, buyers can discover projects and attend events from multiples companies, all year round.'
+    },
+    {
+      title: 'Expand your reach',
+      imgAsset: 'benefits_network.svg',
+      description: 'Generate interest from hundreds of buyers already using Archipel regularly.'
+    },
+    {
+      title: 'Don’t change your habits',
+      imgAsset: 'benefits_habits.svg',
+      description: "Promote, screen, meet. Keep your buyers interested... just like you're used to during markets."
     }
   ];
 
   public buyerFeatures = [
     {
-      title: 'Find the newest gems',
-      imgAsset: 'gems.svg',
-      description: 'Explore a large library of films and find the content you\'re looking for in just a few clicks thanks to search and filter functions.'
+      title: 'CENTRALIZED LISTINGS',
+      imgAsset: 'virtual_booths.svg',
+      description: 'Search and discover projects and events from multiple sales companies on one single tool, all year round.'
     },
     {
-      title: 'Match with sales agents',
-      imgAsset: 'matching.svg',
-      description: 'Access their company information and contact details, get in touch with them. Explore their line ups and screening schedules and ask for invitations to their screenings.'
+      title: 'LIVE SCREENINGS',
+      imgAsset: 'live_screenings.svg',
+      description: 'Attend live screenings and presentations from your favorite sales agents.'
     },
     {
-      title: 'Access detailed movies pages',
-      imgAsset: 'filmpage.svg',
-      description: 'Access each film\'s metadata, promotional elements and screening information.'
+      title: 'MEETINGS',
+      imgAsset: 'live_meetings.svg',
+      description: 'Get high quality videos and documents during your meetings with sales agents.'
+    }
+  ]
+
+  public buyerBenefits = [
+    {
+      title: 'Gain time and energy',
+      imgAsset: 'benefits_time.svg',
+      description: 'Stop jumping from one platform to the other. With one single password, access projects and events from multiple companies all year round.'
     },
     {
-      title: 'Plan meetings and watch screenings',
-      imgAsset: 'calendar.svg',
-      description: 'Plan online meetings with sales agents and watch film screenings at specific hours, just like in real live markets.'
+      title: "Discover new content",
+      imgAsset: 'benefits_discover.svg',
+      description: 'Get updated and discover projects or events that were not on your radar.'
+    },
+    {
+      title: 'Don’t change your habits',
+      imgAsset: 'benefits_habits.svg',
+      description: "Watch films, meet, discover and track projects... just like you're used to during markets!"
+    },
+    {
+      title: 'Have a smooth experience',
+      imgAsset: 'benefits_experience.svg',
+      description: "Our online client support is available 24/7 to answer all of your questions and guide you through the platform if needed!"
     }
   ]
 }

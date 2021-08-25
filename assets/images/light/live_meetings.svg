@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="100px" height="100px" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Illustration/Landing/live_meetings</title>
+    <g id="Illustration/Landing/live_meetings" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M91,16.5 C91.9664983,16.5 92.8414983,16.8917508 93.4748737,17.5251263 C94.1082492,18.1585017 94.5,19.0335017 94.5,20 L94.5,20 L94.5,80 C94.5,80.9664983 94.1082492,81.8414983 93.4748737,82.4748737 C92.8414983,83.1082492 91.9664983,83.5 91,83.5 L91,83.5 L9,83.5 C8.03350169,83.5 7.15850169,83.1082492 6.52512627,82.4748737 C5.89175084,81.8414983 5.5,80.9664983 5.5,80 L5.5,80 L5.5,20 C5.5,19.0335017 5.89175084,18.1585017 6.52512627,17.5251263 C7.15850169,16.8917508 8.03350169,16.5 9,16.5 L9,16.5 Z" id="Rectangle" stroke="#1F2A3B" fill="#FFFFFF"></path>
+        <g id="sms_black_24dp" transform="translate(76.000000, 0.000000)">
+            <polygon id="Path" points="0 0 24 0 24 24 0 24"></polygon>
+            <polygon id="Path" fill="#FFFFFF" fill-rule="nonzero" points="20 16 5.17 16 4 17.17 4 4 20 4"></polygon>
+            <path d="M22,2 L6,2 C4.9,2 4,2.9 4,4 L4,22 L8,18 L22,18 C23.1,18 24,17.1 24,16 L24,4 C24,2.9 23.1,2 22,2 Z M9,9 L11,9 L11,11 L9,11 L9,9 Z M17,9 L19,9 L19,11 L17,11 L17,9 Z M13,9 L15,9 L15,11 L13,11 L13,9 Z" id="Shape" fill="#879DEF" fill-rule="nonzero"></path>
+        </g>
+        <g id="emoji_emotions_black_24dp" transform="translate(65.000000, 45.000000)">
+            <rect id="Rectangle" x="0" y="0" width="19" height="19"></rect>
+            <g id="Group" transform="translate(1.000000, 1.000000)" fill="#000000" fill-rule="nonzero">
+                <circle id="Oval" cx="10.8" cy="6" r="1.2"></circle>
+                <circle id="Oval" cx="5.2" cy="6" r="1.2"></circle>
+                <path d="M8,12.8 C9.824,12.8 11.376,11.472 12,9.6 L4,9.6 C4.624,11.472 6.176,12.8 8,12.8 Z" id="Path"></path>
+                <path d="M7.992,0 C3.576,0 0,3.584 0,8 C0,12.416 3.576,16 7.992,16 C12.416,16 16,12.416 16,8 C16,3.584 12.416,0 7.992,0 Z M8,14.4 C4.464,14.4 1.6,11.536 1.6,8 C1.6,4.464 4.464,1.6 8,1.6 C11.536,1.6 14.4,4.464 14.4,8 C14.4,11.536 11.536,14.4 8,14.4 Z" id="Shape"></path>
+            </g>
+        </g>
+        <line x1="50.5" y1="31.5" x2="50.5" y2="76.5" id="Line" stroke="#1F2A3B" stroke-linecap="round"></line>
+        <path d="M17,58 L17,61 L20,61 C20,59.34 18.66,58 17,58 Z M18,55 L18,56.7142857 C20.3657143,56.7142857 22.2857143,58.6342857 22.2857143,61 L24,61 C24,57.6828571 21.3171429,55 18,55 Z M18,51 L18,52.8181818 C22.0663636,52.8181818 25.3636364,56.4818182 25.3636364,61 L27,61 C27,55.4727273 22.9663636,51 18,51 Z M35.2727273,45 L19.7272727,45 C18.7772727,45 18,45.8 18,46.7777778 L18,49.4444444 L19.7272727,49.4444444 L19.7272727,46.7777778 L35.2727273,46.7777778 L35.2727273,59.2222222 L29.2272727,59.2222222 L29.2272727,61 L35.2727273,61 C36.2227273,61 37,60.2 37,59.2222222 L37,46.7777778 C37,45.8 36.2227273,45 35.2727273,45 Z M21,49 L21,50.8 L31.2857143,50.8 L31.2857143,56.2 L28.7142857,56.2 L28.7142857,58 L33,58 L33,49 L21,49 Z" id="Shape" fill="#879DEF" fill-rule="nonzero"></path>
+        <line x1="8" y1="26" x2="91" y2="26" id="Line" stroke="#1F2A3B" stroke-linecap="round"></line>
+        <circle id="Oval" fill="#1F2A3B" cx="9.5" cy="21" r="1"></circle>
+        <circle id="Oval" fill="#1F2A3B" cx="15.5" cy="21" r="1"></circle>
+        <circle id="Oval" fill="#1F2A3B" cx="21.5" cy="21" r="1"></circle>
+    </g>
+</svg>

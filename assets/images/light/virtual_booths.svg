@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="100px" height="100px" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Illustration/Landing/line_up_promotion</title>
+    <g id="Illustration/Landing/line_up_promotion" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M91,16.5 C91.9664983,16.5 92.8414983,16.8917508 93.4748737,17.5251263 C94.1082492,18.1585017 94.5,19.0335017 94.5,20 L94.5,20 L94.5,80 C94.5,80.9664983 94.1082492,81.8414983 93.4748737,82.4748737 C92.8414983,83.1082492 91.9664983,83.5 91,83.5 L91,83.5 L9,83.5 C8.03350169,83.5 7.15850169,83.1082492 6.52512627,82.4748737 C5.89175084,81.8414983 5.5,80.9664983 5.5,80 L5.5,80 L5.5,20 C5.5,19.0335017 5.89175084,18.1585017 6.52512627,17.5251263 C7.15850169,16.8917508 8.03350169,16.5 9,16.5 L9,16.5 Z" id="Rectangle" stroke="#1F2A3B" fill="#FFFFFF"></path>
+        <g id="Group" transform="translate(8.000000, 33.000000)">
+            <g id="Rectangle-2">
+                <path d="M18.9007384,0.515575476 L19.4774646,13.180013 L1.0992616,13.7701388 L0.522535351,1.10570126 L18.9007384,0.515575476 Z" id="Rectangle" stroke="#1F2A3B" fill="#FFFFFF"></path>
+                <polygon id="Triangle-Copy" fill="#1F2A3B" transform="translate(10.500000, 7.000000) rotate(90.000000) translate(-10.500000, -7.000000) " points="10.5 5 13 9 8 9"></polygon>
+            </g>
+            <g id="Rectangle-2" transform="translate(24.000000, 0.000000)">
+                <path d="M18.9007384,0.515575476 L19.4774646,13.180013 L1.0992616,13.7701388 L0.522535351,1.10570126 L18.9007384,0.515575476 Z" id="Rectangle" stroke="#1F2A3B" fill="#FFFFFF"></path>
+                <polygon id="Triangle-Copy" fill="#1F2A3B" transform="translate(10.500000, 7.000000) rotate(90.000000) translate(-10.500000, -7.000000) " points="10.5 5 13 9 8 9"></polygon>
+            </g>
+            <g id="Rectangle-2" transform="translate(48.000000, 0.000000)">
+                <path d="M18.9007384,0.515575476 L19.4774646,13.180013 L1.0992616,13.7701388 L0.522535351,1.10570126 L18.9007384,0.515575476 Z" id="Rectangle" stroke="#1F2A3B" fill="#FFFFFF"></path>
+                <polygon id="Triangle-Copy" fill="#1F2A3B" transform="translate(10.500000, 7.000000) rotate(90.000000) translate(-10.500000, -7.000000) " points="10.5 5 13 9 8 9"></polygon>
+            </g>
+            <g id="Rectangle-2" transform="translate(72.000000, 0.000000)">
+                <path d="M18.9007384,0.515575476 L19.4774646,13.180013 L1.0992616,13.7701388 L0.522535351,1.10570126 L18.9007384,0.515575476 Z" id="Rectangle" stroke="#D6DFFF" fill="#879DEF"></path>
+                <polygon id="Triangle-Copy" fill="#D6DFFF" transform="translate(10.500000, 7.000000) rotate(90.000000) translate(-10.500000, -7.000000) " points="10.5 5 13 9 8 9"></polygon>
+            </g>
+        </g>
+        <g id="Group" transform="translate(8.000000, 59.000000)">
+            <g id="Rectangle-2">
+                <path d="M18.9007384,0.515575476 L19.4774646,13.180013 L1.0992616,13.7701388 L0.522535351,1.10570126 L18.9007384,0.515575476 Z" id="Rectangle" stroke="#1F2A3B" fill="#FFFFFF"></path>
+                <polygon id="Triangle-Copy" fill="#1F2A3B" transform="translate(10.500000, 7.000000) rotate(90.000000) translate(-10.500000, -7.000000) " points="10.5 5 13 9 8 9"></polygon>
+            </g>
+            <g id="Rectangle-2" transform="translate(24.000000, 0.000000)">
+                <path d="M18.9007384,0.515575476 L19.4774646,13.180013 L1.0992616,13.7701388 L0.522535351,1.10570126 L18.9007384,0.515575476 Z" id="Rectangle" stroke="#1F2A3B" fill="#FFFFFF"></path>
+                <polygon id="Triangle-Copy" fill="#1F2A3B" transform="translate(10.500000, 7.000000) rotate(90.000000) translate(-10.500000, -7.000000) " points="10.5 5 13 9 8 9"></polygon>
+            </g>
+            <g id="Rectangle-2" transform="translate(48.000000, 0.000000)">
+                <path d="M18.9007384,0.515575476 L19.4774646,13.180013 L1.0992616,13.7701388 L0.522535351,1.10570126 L18.9007384,0.515575476 Z" id="Rectangle" stroke="#1F2A3B" fill="#FFFFFF"></path>
+                <polygon id="Triangle-Copy" fill="#1F2A3B" transform="translate(10.500000, 7.000000) rotate(90.000000) translate(-10.500000, -7.000000) " points="10.5 5 13 9 8 9"></polygon>
+            </g>
+            <g id="Rectangle-2" transform="translate(72.000000, 0.000000)">
+                <path d="M18.9007384,0.515575476 L19.4774646,13.180013 L1.0992616,13.7701388 L0.522535351,1.10570126 L18.9007384,0.515575476 Z" id="Rectangle" stroke="#D6DFFF" fill="#879DEF"></path>
+                <polygon id="Triangle-Copy" fill="#D6DFFF" transform="translate(10.500000, 7.000000) rotate(90.000000) translate(-10.500000, -7.000000) " points="10.5 5 13 9 8 9"></polygon>
+            </g>
+        </g>
+        <line x1="8.5" y1="26" x2="91.5" y2="26" id="Line" stroke="#1F2A3B" stroke-linecap="round"></line>
+        <line x1="8.5" y1="53" x2="29.5" y2="53" id="Line" stroke="#1F2A3B" stroke-linecap="round"></line>
+        <circle id="Oval" fill="#1F2A3B" cx="10" cy="21" r="1"></circle>
+        <circle id="Oval" fill="#1F2A3B" cx="16" cy="21" r="1"></circle>
+        <circle id="Oval" fill="#1F2A3B" cx="22" cy="21" r="1"></circle>
+    </g>
+</svg>
