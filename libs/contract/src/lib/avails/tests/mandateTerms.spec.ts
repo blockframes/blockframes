@@ -6,7 +6,7 @@ import { mandateTerms as acTerms } from './../fixtures/mandateTerms';
 import { saleTerms as acSaleTerms } from './../fixtures/saleTerms';
 import {  createBucketTerm } from '@blockframes/contract/bucket/+state/bucket.model';
 
-describe('Test isTermSold pure function', () => {
+describe.skip('Test isTermSold pure function', () => {
     const Resurrected = 'Cr3NYe9RXaMwP98LQMyD';
     const GazaMonAmour = 'cXHN9C9GftkMhYmu7CV1';
     const MarinaAbramovic = 'HgU5WygrYoon1QnFqEpe';

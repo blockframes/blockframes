@@ -3,7 +3,7 @@ import { availableTerritories, getMandateTerms, getSoldTerms, toTerritoryMarker 
 import { createTerm } from "../../term/+state/term.model";
 import { availDetailsExclusive, availDetailsNonExclusive } from './../fixtures/availsFilters';
 
-describe('Test availableTerritories pure function', () => {
+describe.skip('Test availableTerritories pure function', () => {
 
   it('France should stay available', () => {
     const mandate = createMandate({
