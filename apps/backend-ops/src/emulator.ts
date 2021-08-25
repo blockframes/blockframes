@@ -33,12 +33,13 @@ import { resolve } from 'path';
  * This function will download the Firestore backup from specified bucket, import it into
  * the emulator and run the emulator without shutting it down. This command can be used to run
  * emulator in background while developing or running other processes.
- * @param bucketUrl GCS bucket URL for the Firestore backup
+ * @param _exportUrl GCS bucket URL for the Firestore backup
+ * @param keepEmulatorsAlive let the emulator running or not after process ended
  *
  * If no parameter is provided, it will attempt to find the latest backup out of a number
  * of date-formatted directory names in the env's backup bucket (if there are multiple dated backups)
  */
-export async function importEmulatorFromBucket(_exportUrl: string) {
+export async function importEmulatorFromBucket(_exportUrl: string, keepEmulatorsAlive = false) {
   const bucketUrl = _exportUrl || await getLatestFolderURL(loadAdminServices().storage.bucket(backupBucket), 'firestore');
   await importFirestoreEmulatorBackup(bucketUrl, defaultEmulatorBackupPath);
   let proc: ChildProcess;
@@ -48,7 +49,12 @@ export async function importEmulatorFromBucket(_exportUrl: string) {
       importPath: defaultEmulatorBackupPath,
       exportData: true,
     });
-    await awaitProcessExit(proc);
+
+    if (!keepEmulatorsAlive) {
+      await awaitProcessExit(proc);
+    }
+
+    return proc;
   } catch (e) {
     await shutdownEmulator(proc);
     throw e;
@@ -77,7 +83,7 @@ export async function loadEmulator({ importFrom = 'defaultImport' }: StartEmulat
   }
 }
 
-export async function startEmulators({ importFrom = 'defaultImport' }: StartEmulatorOptions = { importFrom :'defaultImport' }) {
+export async function startEmulators({ importFrom = 'defaultImport' }: StartEmulatorOptions = { importFrom: 'defaultImport' }) {
   const emulatorPath = importFrom === 'defaultImport' ? defaultEmulatorBackupPath : resolve(importFrom);
   let proc: ChildProcess;
   try {
@@ -157,7 +163,7 @@ export async function anonDbProcess() {
   console.info('Storage data clean and fresh!');
 
   console.info('Generating watermarks...');
-  await generateWatermarks({db, storage});
+  await generateWatermarks({ db, storage });
   console.info('Watermarks generated!');
 }
 

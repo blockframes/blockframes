@@ -25,7 +25,6 @@ const [arg1, arg2] = flags;
 
 async function runCommand() {
   const { db } = loadAdminServices();
-  const { db: emulatedDb, auth: emulatedAuth } = loadAdminServices({ emulator: true });
   switch (cmd) {
     case 'prepareForTesting':
       await startMaintenance(db);
@@ -52,9 +51,7 @@ async function runCommand() {
       await anonymizeLatestProdDb();
       break;
     case 'shrinkDb':
-      await startMaintenance(emulatedDb);
-      await shrinkDb(emulatedDb, emulatedAuth);
-      await endMaintenance(emulatedDb);
+      await shrinkDb();
       break;
     case 'downloadProdDbBackup':
       await downloadProdDbBackup(arg1);
