@@ -197,8 +197,8 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
   }
 
   clear() {
+    document.querySelector('#avails').scrollIntoView({ behavior: 'smooth', });
     this.avails.mapForm.reset();
     this.avails.calendarForm.reset();
-    document.querySelector('#avails').scrollIntoView({ behavior: 'smooth' });
   }
 }
