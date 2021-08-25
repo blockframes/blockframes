@@ -8,7 +8,7 @@ export default abstract class NavbarPage {
   }
 
   public openProfileMenu(){
-    cy.get('catalog-marketplace button[test-id=profile-avatar]').click();
+    cy.get('catalog-marketplace button[test-id=auth-user]').click();
   }
 
   public openSideNav(){
