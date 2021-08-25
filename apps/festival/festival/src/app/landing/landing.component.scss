@@ -14,20 +14,19 @@ landing-header {
 
 landing-content {
   .landing-partners {
-    padding: 80px 80px;
+    padding: 80px;
     background-color: var(--background-card);
+    div {
+      margin-top: 24px;
+    }
   }
 
   .landing-presentation {
-    padding: 72px 80px
+    padding: 80px
   }
 
   h1 {
     margin-bottom: 12px;
-  }
-
-  .tab-margin {
-    margin-top: 24px;
   }
 
   h5 {
@@ -35,17 +34,43 @@ landing-content {
     text-transform: uppercase;
   }
 
+  mat-tab-group {
+      padding-inline: 80px;
+      header {
+        margin-block: 32px;
+        padding-right: 32px;
+        img {
+          width: 450px;
+        }
+      } 
+  }
+  
   article {
-    mat-card {
-      width: 49%;
-      min-height: 400px;
+    .surface {
+      width: 32%;
       margin-bottom: 24px;
+      padding: 32px 72px;
       text-align: center;
-      img {
-        width: 150px;
+      div {
+        height: 128px; 
+        margin-bottom: 24px;
+        img {
+          width: 150px;
+        }
       }
     }
   }
+
+  .benefits {
+    display: grid;
+    grid-template-rows: 1fr 1fr ;
+    grid-template-columns: 1fr 1fr ;
+    > div {
+      padding: 32px;
+      background-color: var(--background-card);
+    }
+  }
+  
 
   .landing-join {
     background-image: url("/assets/images/background_hero.png");
@@ -56,10 +81,22 @@ landing-content {
   }
 }
 
+@include layout-bp(lt-lg) {
+  landing-content {
+    article .surface {
+      padding: 32px;
+    }
+  }
+}
+
 @include layout-bp(lt-md) {
   landing-content {
-    article mat-card {
+    article .surface{
       width: 75%;
+    }
+    .benefits {
+      grid-template-columns: 1fr ;
+      grid-template-rows: repeat(4, 1fr);
     }
   }
 }
@@ -67,7 +104,7 @@ landing-content {
 @include layout-bp(lt-sm) {
   landing-content {
     text-align: center;
-    article mat-card {
+    article .surface{
       width: 100%;
     }
   }
