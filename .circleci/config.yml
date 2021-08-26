@@ -316,6 +316,11 @@ jobs:
     steps:
       - prepare_environment
       - run: npm run firestore:run-db-anon-process
+  push-shrinked-db-to-ci:
+    executor: blockframes-ci
+    steps:
+      - prepare_environment
+      - run: npm run firestore:run-db-shrink-process
   copy-storage-from-prod:
     executor: blockframes-ci
     steps:
@@ -336,6 +341,13 @@ workflows:
             branches:
               only:
                 - anon-db
+  shrinked-db:
+    jobs:
+      - push-shrinked-db-to-ci:
+          filters:
+            branches:
+              only:
+                - shrinked-db
   build-deploy-prepare:
     jobs:
       - build-deploy-prepare:
