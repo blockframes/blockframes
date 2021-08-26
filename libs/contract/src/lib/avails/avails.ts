@@ -1,8 +1,10 @@
-import { Media, territoriesISOA3, Territory, TerritoryISOA3Value, TerritoryValue, territories } from "@blockframes/utils/static-model";
-import { Bucket } from "../bucket/+state";
-import { Holdback, Mandate } from "../contract/+state/contract.model"
-import { Duration, Term, BucketTerm } from "../term/+state/term.model";
-import { continuousDisjoint, continuousEqual, continuousSubset, discreteDisjoint, discreteEqual, discreteSubset } from "./sets";
+
+import { Media, territoriesISOA3, Territory, TerritoryISOA3Value, TerritoryValue, territories } from '@blockframes/utils/static-model';
+
+import { Bucket } from '../bucket/+state';
+import { Holdback, Mandate } from '../contract/+state/contract.model'
+import { Duration, Term, BucketTerm } from '../term/+state/term.model';
+import { continuousDisjoint, continuousEqual, continuousOverlap, continuousSubset, discreteDisjoint, discreteEqual, discreteOverlap, discreteSubset } from './sets';
 
 export interface AvailsFilter {
   medias: Media[],
@@ -27,59 +29,11 @@ export interface DurationMarker {
 }
 
 
-// Check if duration A and duration B are colliding
-//
-// If duration A is strictly before...
-//       A.from     A.to
-//         |--------|
-//                     |------------------|
-//                   B.from              B.to
-//
-// ...OR if duration B is strictly after...
-//                       A.from     A.to
-//                         |--------|
-//   |------------------|
-// B.from              B.to
-//
-// ... then duration are not colliding
-export function collidingDurations(durationA: Duration, durationB: Duration) {
-  const isBefore = durationA.from < durationB.from && durationA.to < durationB.from;
-  const isAfter = durationA.from > durationB.to && durationA.to > durationB.to;
-  return !isBefore && !isAfter;
-}
-
-// Check if duration A is strictly contained in duration B
-
-//       A.from     A.to
-//         |--------|
-//    |------------------|
-//  B.from              B.to
-// export function isInDuration(durationA: Duration, durationB: Duration) {
-//   const startBefore = durationA.from <= durationB.from;
-//   const endAfter = durationA.to >= durationB.to;
-//   return !startBefore && !endAfter;
-// }
-
-export function collidingTerritories(territoriesA: Territory[], territoriesB: Territory[]) {
-  return territoriesA.some(territory => territoriesB.includes(territory));
-}
-
-export function collidingMedias(mediasA: Media[], mediasB: Media[]) {
-  return mediasA.some(media => mediasB.includes(media));
-}
-
-/**
- *
- * @param avails
- * @param terms Terms of all mandates of the title
- * @returns
- */
 export function getMandateTerms(avails: AvailsFilter, terms: Term<Date>[]): Term<Date>[] | undefined {
 
   const result = terms.filter(term =>
     continuousSubset(term.duration, avails.duration) &&
     discreteSubset(term.medias, avails.medias) &&
-    // if there is no territories selected in the avails, we still want to get the term
     (!avails.territories.length || discreteSubset(term.territories, avails.territories))
   );
 
@@ -96,30 +50,17 @@ export function getMandateTerms(avails: AvailsFilter, terms: Term<Date>[]): Term
   return result;
 }
 
-/**
- *
- * @param avails
- * @param terms Terms of all sales of the title
- * @returns
- */
+
 export function isSold(avails: AvailsFilter, terms: Term<Date>[]) {
   return !!getSoldTerms(avails, terms).length;
 }
 
-/**
- * Get all the salesTerms that overlap the avails filter
- * @param avails
- * @param terms Terms of all sales of the title
- * @returns
- */
+/** Get all the salesTerms that overlap the avails filter */
 export function getSoldTerms(avails: AvailsFilter, terms: Term<Date>[]) {
   return terms.filter(term =>
-    (avails.exclusive || term.exclusive) && // If both of them are false, its available
-    // In case of non-required territories (e.g. map in Avails tab), there is no need to check the territories.
+    (avails.exclusive || term.exclusive) &&
     (!avails.territories.length || !discreteDisjoint(term.territories, avails.territories)) &&
-    // If none of the avails medias are in the term, its available
     (!avails.medias.length || !discreteDisjoint(term.medias, avails.medias)) &&
-    // If duration is non-required (e.g. calendar on Avails tab), there is no need to check the duration.
     (!avails.duration.from || !avails.duration.to || !continuousDisjoint(term.duration, avails.duration))
   );
 }
@@ -156,12 +97,7 @@ export function isSameCalendarTerm(term: BucketTerm, avail: AvailsFilter) {
 //            IN TERM        //
 // ----------------------------
 
-/**
- * Avail is included in bucketTerm
- * @param term
- * @param avail
- * @returns
- */
+/** Avail is included in bucketTerm */
 export function isInMapTerm(term: BucketTerm, avail: AvailsFilter) {
   return !isSameMapTerm(term, avail) &&
     (avail.duration?.from && avail.duration?.to) &&
@@ -264,9 +200,9 @@ export function getDurationMarkers(mandates: Mandate[], mandateTerms: Term<Date>
 
 
 export function collidingHoldback(holdback: Holdback, term: BucketTerm) {
-  const durationCollision = collidingDurations(holdback.duration, term.duration);
-  const mediasCollision = collidingMedias(holdback.medias, term.medias);
-  const territoryCollision = collidingTerritories(holdback.territories, term.territories);
+  const durationCollision = continuousOverlap(holdback.duration, term.duration);
+  const mediasCollision = discreteOverlap(holdback.medias, term.medias);
+  const territoryCollision = discreteOverlap(holdback.territories, term.territories);
   return durationCollision && mediasCollision && territoryCollision;
 }
 
