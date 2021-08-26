@@ -5,7 +5,7 @@ import { OfferService } from '@blockframes/contract/offer/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { MovieService } from '@blockframes/movie/+state';
 import { joinWith } from '@blockframes/utils/operators';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, } from 'rxjs/operators';
 import { QueryFn } from '@angular/fire/firestore';
 
 @Component({
@@ -15,13 +15,12 @@ import { QueryFn } from '@angular/fire/firestore';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListComponent {
-  offers$ = this.orgQuery.selectActiveId().pipe(
+  offers$=this.orgQuery.selectActiveId().pipe(
     switchMap(orgId => this.service.valueChanges(query(orgId))),
     joinWith({
       contracts: offer => this.getContracts(offer.id)
     }),
-  );
-
+  )
 
   constructor(
     private orgQuery: OrganizationQuery,

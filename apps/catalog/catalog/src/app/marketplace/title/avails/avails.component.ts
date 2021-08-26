@@ -19,6 +19,7 @@ import { DetailedTermsComponent } from '@blockframes/contract/term/components/de
 
 import { ExplanationComponent } from './explanation/explanation.component';
 import { HoldbackModalComponent } from '@blockframes/contract/contract/holdback/modal/holdback-modal.component';
+import { scrollIntoView } from '../../../../../../../../libs/utils/src/lib/browser/utils';
 
 @Component({
   selector: 'catalog-movie-avails',
@@ -92,7 +93,7 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
       //@why: #6383
       delay(200)
     ).subscribe(fragment => {
-      document.querySelector(`#${fragment}`).scrollIntoView({ behavior: 'smooth' });
+      scrollIntoView(document.querySelector(`#${fragment}`))
     });
 
     const paramsSub = combineLatest([
@@ -186,7 +187,7 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
       this.avails.calendarForm.patchValue({ exclusive, medias, territories });
     }
 
-    document.querySelector('#avails').scrollIntoView({ behavior: 'smooth' });
+    scrollIntoView(document.querySelector('#avails'));
   }
 
   remove(control: BucketTermForm) {
@@ -197,7 +198,7 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
   }
 
   clear() {
-    document.querySelector('#avails').scrollIntoView({ behavior: 'smooth', });
+    scrollIntoView(document.querySelector('#avails'));
     this.avails.mapForm.reset();
     this.avails.calendarForm.reset();
   }

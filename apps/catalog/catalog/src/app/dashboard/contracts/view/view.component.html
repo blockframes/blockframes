@@ -5,7 +5,7 @@
     </a>
     <bf-tag>{{offer.status | toLabel: 'offerStatus'}}</bf-tag>
     <h1>Offer Reference: {{offer.id}}</h1>
-    <span>Offer created: {{offer._meta.createdAt | date: 'MM/dd/yyyy'}}</span>
+    <span>Offer created: {{offer._meta.createdAt | date: 'dd/MM/yyyy'}}</span>
     <div fxLayout fxLayoutAlign="space-between center" class="actions">
       <div fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
         <ng-container *ngIf="contract$ | async as contract">
@@ -26,12 +26,12 @@
             </ng-container>
             <ng-container *ngSwitchDefault>
               <button mat-stroked-button color="primary" (click)="changeStatus('accepted',contract.id)">
-                <span>Accept</span>
                 <mat-icon svgIcon="check"></mat-icon>
+                <span>Accept</span>
               </button>
               <button mat-stroked-button color="primary" (click)="declineContract(contract.id)">
-                <span>Decline</span>
                 <mat-icon svgIcon="refuse"></mat-icon>
+                <span>Decline</span>
               </button>
             </ng-container>
           </ng-container>
