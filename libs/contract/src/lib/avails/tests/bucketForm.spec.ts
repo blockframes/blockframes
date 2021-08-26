@@ -26,7 +26,7 @@ const termA = createTerm({
   exclusive: true
 });
 
-describe.skip('BucketForm', () => {
+describe('BucketForm', () => {
   describe('Test BucketForm behaviors for territories', () => {
 
 

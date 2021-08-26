@@ -16,7 +16,7 @@ import {
   select
 } from '../calendar/calendar.model';
 
-describe.skip('Calendar', () => {
+describe('Calendar', () => {
   describe('Test DurationMarker', () => {
 
     it('Duration marker should contain good contract', () => {

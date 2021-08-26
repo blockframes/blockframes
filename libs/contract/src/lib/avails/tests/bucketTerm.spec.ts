@@ -2,7 +2,7 @@ import { AvailsFilter, isInCalendarTerm, isInMapTerm, isSameCalendarTerm, isSame
 import { createBucketTerm } from "@blockframes/contract/bucket/+state";
 import { Media, Territory } from "@blockframes/utils/static-model";
 
-describe.skip('BucketTerm', () => {
+describe('BucketTerm', () => {
   describe('Test isSameMapTerm pure function', () => {
     const availDetails: AvailsFilter = {
       duration: { from: new Date('01/01/2028'), to: new Date('06/30/2030') }, exclusive: false,

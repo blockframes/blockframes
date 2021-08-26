@@ -110,7 +110,7 @@ const collidingTerms = [
   collidingAllTerm,
 ]
 
-describe.skip('Holdbacks', () => {
+describe('Holdbacks', () => {
   describe('Test collidingDurations pure function', () => {
     it('Check not collidingDurations due to durationA < durationB', () => {
 

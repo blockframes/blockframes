@@ -2,6 +2,7 @@ import { Media, territoriesISOA3, Territory, TerritoryISOA3Value, TerritoryValue
 import { Bucket } from "../bucket/+state";
 import { Holdback, Mandate } from "../contract/+state/contract.model"
 import { Duration, Term, BucketTerm } from "../term/+state/term.model";
+import { continuousDisjoint, continuousEqual, continuousSubset, discreteDisjoint, discreteEqual, discreteSubset } from "./sets";
 
 export interface AvailsFilter {
   medias: Media[],
@@ -25,6 +26,48 @@ export interface DurationMarker {
   term?: Term<Date>,
 }
 
+
+// Check if duration A and duration B are colliding
+//
+// If duration A is strictly before...
+//       A.from     A.to
+//         |--------|
+//                     |------------------|
+//                   B.from              B.to
+//
+// ...OR if duration B is strictly after...
+//                       A.from     A.to
+//                         |--------|
+//   |------------------|
+// B.from              B.to
+//
+// ... then duration are not colliding
+export function collidingDurations(durationA: Duration, durationB: Duration) {
+  const isBefore = durationA.from < durationB.from && durationA.to < durationB.from;
+  const isAfter = durationA.from > durationB.to && durationA.to > durationB.to;
+  return !isBefore && !isAfter;
+}
+
+// Check if duration A is strictly contained in duration B
+
+//       A.from     A.to
+//         |--------|
+//    |------------------|
+//  B.from              B.to
+// export function isInDuration(durationA: Duration, durationB: Duration) {
+//   const startBefore = durationA.from <= durationB.from;
+//   const endAfter = durationA.to >= durationB.to;
+//   return !startBefore && !endAfter;
+// }
+
+export function collidingTerritories(territoriesA: Territory[], territoriesB: Territory[]) {
+  return territoriesA.some(territory => territoriesB.includes(territory));
+}
+
+export function collidingMedias(mediasA: Media[], mediasB: Media[]) {
+  return mediasA.some(media => mediasB.includes(media));
+}
+
 /**
  *
  * @param avails
@@ -32,38 +75,22 @@ export interface DurationMarker {
  * @returns
  */
 export function getMandateTerms(avails: AvailsFilter, terms: Term<Date>[]): Term<Date>[] | undefined {
-  const result: Term<Date>[] = [];
-  for (const term of terms) {
-    // If starts before term: not available
-    if (avails.duration.from.getTime() <= term.duration.from.getTime()) {
-      continue;
-    }
-    // If ends after term: not available
-    if (avails.duration.to.getTime() >= term.duration.to.getTime()) {
-      continue;
-    }
 
-    // If terms has some media of avails: available
-    if (term.medias.every(media => !avails.medias.includes(media))) {
-      continue;
-    }
-
-    // If terms has some territories of avails: available
-    if (avails.territories?.length && term.territories.every(territory => !avails.territories.includes(territory))) {
-      continue;
-    }
-
-    result.push(term);
-  }
+  const result = terms.filter(term =>
+    continuousSubset(term.duration, avails.duration) &&
+    discreteSubset(term.medias, avails.medias) &&
+    // if there is no territories selected in the avails, we still want to get the term
+    (!avails.territories.length || discreteSubset(term.territories, avails.territories))
+  );
 
   // If more medias are selected than there are in the mandates: not available
   const resultMedias = result.map(term => term.medias).flat();
-  if (avails.medias.some(media => !resultMedias.includes(media))) return [];
+  if (!discreteSubset(resultMedias, avails.medias)) return [];
 
   // If more territories are selected than there are in the mandates: not available
   if (avails.territories?.length) {
     const resultTerritories = result.map(term => term.territories).flat();
-    if (avails.territories.some(territory => !resultTerritories.includes(territory))) return [];
+    if (!discreteSubset(resultTerritories, avails.territories)) return [];
   }
 
   return result;
@@ -86,105 +113,42 @@ export function isSold(avails: AvailsFilter, terms: Term<Date>[]) {
  * @returns
  */
 export function getSoldTerms(avails: AvailsFilter, terms: Term<Date>[]) {
-  const result: Term<Date>[] = [];
-  for (const term of terms) {
-
-    // If both of them are false, its available
-    if (!avails.exclusive && !term.exclusive) continue;
-
+  return terms.filter(term =>
+    (avails.exclusive || term.exclusive) && // If both of them are false, its available
     // In case of non-required territories (e.g. map in Avails tab), there is no need to check the territories.
-    if (avails.territories.length) {
-      // If none of the avails territories are in the term, its available
-      if (!term.territories.some(t => avails.territories.includes(t))) continue;
-    };
-
-    if (avails.medias.length) {
-      // If none of the avails medias are in the term, its available
-      if (!term.medias.some(m => avails.medias.includes(m))) continue;
-    }
-
+    (!avails.territories.length || !discreteDisjoint(term.territories, avails.territories)) &&
+    // If none of the avails medias are in the term, its available
+    (!avails.medias.length || !discreteDisjoint(term.medias, avails.medias)) &&
     // If duration is non-required (e.g. calendar on Avails tab), there is no need to check the duration.
-    if (avails.duration.from && avails.duration.to) {
-      if (avails.duration.to.getTime() < term.duration.from.getTime()) continue
-      if (avails.duration.from.getTime() > term.duration.to.getTime()) continue;
-      // if time is the same, its sold.
-    }
-
-    result.push(term);
-  }
-  return result;
+    (!avails.duration.from || !avails.duration.to || !continuousDisjoint(term.duration, avails.duration))
+  );
 }
 
 export function isInBucket(avails: AvailsFilter, terms: BucketTerm[]) {
-  for (const term of terms) {
-    if (avails.exclusive !== term.exclusive) {
-      continue;
-    }
-    // If any territory is not included in the avail: not same term
-    if (!avails.territories.every(territory => term.territories.includes(territory))) {
-      continue;
-    }
-    // If any medium is not included in the avail: not same term
-    if (!avails.medias.every(medium => term.medias.includes(medium))) {
-      continue;
-    }
-    // If start before or end after avail: not same term
-    const startBefore = avails.duration.from.getTime() < term.duration.from.getTime();
-    const endAfter = avails.duration.to.getTime() > term.duration.to.getTime();
-    if (startBefore || endAfter) {
-      continue;
-    }
-    // If none of the above: term already in bucket
-    return true;
-  }
-  // If all check above are available: term is not in bucket
-  return false;
+  return terms.some(term =>
+    term.exclusive === avails.exclusive &&
+    discreteSubset(term.territories, avails.territories) &&
+    discreteSubset(term.medias, avails.medias) &&
+    continuousSubset(term.duration, avails.duration)
+  );
 }
 
 // ----------------------------
 //          SAME TERM        //
 // ----------------------------
 
-
-function isSameExclusivityTerm(term: BucketTerm, avail: AvailsFilter) {
-  if (term.exclusive !== avail.exclusive) return false;
-  return true;
-}
-
-function isSameMediaTerm(term: BucketTerm, avail: AvailsFilter) {
-  if (!avail.medias) return false;
-  if (term.medias.length !== avail.medias.length) return false;
-  if (term.medias.some(medium => !avail.medias.includes(medium))) return false;
-  return true;
-}
-
-function isSameTerritoriesTerm(term: BucketTerm, avail: AvailsFilter) {
-  if (!avail.territories) return false;
-  if (term.territories.length !== avail.territories.length) return false;
-  if (term.territories.some(territory => !avail.territories.includes(territory))) return false;
-  return true;
-}
-
-function isSameDurationTerm(term: BucketTerm, avail: AvailsFilter) {
-  if (!avail.duration?.from) return false;
-  if (term.duration.from.getTime() !== avail.duration.from.getTime()) return false;
-  if (!avail.duration?.to) return false;
-  if (term.duration.to.getTime() !== avail.duration.to.getTime()) return false;
-  return true;
-}
-
 /** Check if a term is exactly the same as asked in the AvailFilter of the world map */
 export function isSameMapTerm(term: BucketTerm, avail: AvailsFilter) {
-  return isSameExclusivityTerm(term, avail) &&
-    isSameDurationTerm(term, avail) &&
-    isSameMediaTerm(term, avail);
+  return term.exclusive === avail.exclusive &&
+    continuousEqual(term.duration, avail.duration) &&
+    discreteEqual(term.medias, avail.medias);
 };
 
 /** Check if a term is exactly the same as asked in the AvailFilter of the calendar */
 export function isSameCalendarTerm(term: BucketTerm, avail: AvailsFilter) {
-  return isSameExclusivityTerm(term, avail) &&
-    isSameTerritoriesTerm(term, avail) &&
-    isSameMediaTerm(term, avail);
+  return term.exclusive === avail.exclusive &&
+    discreteEqual(term.territories, avail.territories) &&
+    discreteEqual(term.medias, avail.medias);
 };
 
 
@@ -199,38 +163,19 @@ export function isSameCalendarTerm(term: BucketTerm, avail: AvailsFilter) {
  * @returns
  */
 export function isInMapTerm(term: BucketTerm, avail: AvailsFilter) {
-  if (isSameMapTerm(term, avail)) return false;
-
-  if (term.exclusive !== avail.exclusive) return false;
-
-  if (!avail.duration?.from) return false;
-  if (term.duration.from.getTime() > avail.duration.from.getTime()) return false;
-
-  if (!avail.duration?.to) return false;
-  if (term.duration.to.getTime() < avail.duration.to.getTime()) return false;
-
-  if (!avail.medias) return false;
-  if (term.medias.length !== avail.medias.length) return false;
-  if (term.medias.some(medium => !avail.medias.includes(medium))) return false;
-
-  return true;
+  return !isSameMapTerm(term, avail) &&
+    (avail.duration?.from && avail.duration?.to) &&
+    continuousSubset(term.duration, avail.duration) &&
+    avail.medias &&
+    discreteSubset(term.medias, avail.medias);
 }
 
 export function isInCalendarTerm(term: BucketTerm, avail: AvailsFilter) {
-
-  if (isSameCalendarTerm(term, avail)) return false;
-
-  if (term.exclusive !== avail.exclusive) return false;
-
-  if (!avail.medias) return false;
-  if (term.medias.length < avail.medias.length) return false;
-  if (avail.medias.some(medium => !term.medias.includes(medium))) return false;
-
-  if (!avail.territories) return false;
-  if (term.territories.length < avail.territories.length) return false;
-  if (avail.territories.some(territory => !term.territories.includes(territory))) return false;
-
-  return true;
+  return !isSameCalendarTerm(term, avail) &&
+    avail.medias &&
+    discreteSubset(term.medias, avail.medias) &&
+    avail.territories &&
+    discreteSubset(term.territories, avail.territories);
 }
 
 
@@ -318,29 +263,14 @@ export function getDurationMarkers(mandates: Mandate[], mandateTerms: Term<Date>
 // ----------------------------
 
 
-
-export function collidingDurations(durationA: Duration, durationB: Duration) {
-  const isBefore = durationA.from < durationB.from && durationA.to < durationB.from;
-  const isAfter = durationA.from > durationB.to && durationA.to > durationB.to;
-  return !isBefore && !isAfter;
-}
-
-export function collidingTerritories(territoriesA: Territory[], territoriesB: Territory[]) {
-  return territoriesA.some(territory => territoriesB.includes(territory));
-}
-
-export function collidingMedias(mediasA: Media[], mediasB: Media[]) {
-  return mediasA.some(media => mediasB.includes(media));
-}
-
-export function collidingHoldback(holdback: Holdback, term: Term) {
+export function collidingHoldback(holdback: Holdback, term: BucketTerm) {
   const durationCollision = collidingDurations(holdback.duration, term.duration);
   const mediasCollision = collidingMedias(holdback.medias, term.medias);
   const territoryCollision = collidingTerritories(holdback.territories, term.territories);
   return durationCollision && mediasCollision && territoryCollision;
 }
 
-export function getCollidingHoldbacks(holdbacks: Holdback[], terms: Term[]) {
+export function getCollidingHoldbacks(holdbacks: Holdback[], terms: BucketTerm[]) {
   const holdbackCollision = holdbacks.filter(holdback =>
     terms.some(term => collidingHoldback(holdback, term))
   );
