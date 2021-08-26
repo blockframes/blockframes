@@ -5,6 +5,7 @@
   { "key": "ALGOLIA_SEARCH_KEY", "msg": "API key for Algolia is missing." },
   { "key": "JWPLAYER_KEY", "msg": "API key for the video player is missing." },
   { "key": "JWPLAYER_SECRET", "msg": "API key for the video player is missing." },
+  { "key": "JWPLAYER_APIV2SECRET", "msg": "API V2 key for the video player is missing." },
   { "key": "GOOGLE_APPLICATION_CREDENTIALS", "msg": "You have missing service account keys. Please see: https://www.notion.so/cascade8/Preparing-your-Environment-e3c184db24d447c496c3241d4f16bc94" },
   { "key": "IMGIX_TOKEN", "msg": "API key for imgIx CDN is missing. Please see: https://www.notion.so/cascade8/Setup-ImgIx-c73142c04f8349b4a6e17e74a9f2209a" },
   { "key": "TWILIO_ACCOUNT_SID", "msg": "SID key for Twilio Account is missing. Please see : https://www.notion.so/Twilio-Video-Usage-Feedback-f67d060127b64bd8902960bdb781ae42" },
