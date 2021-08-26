@@ -17,6 +17,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
   declarations: [HolbackFormComponent],
@@ -35,6 +36,7 @@ import { MatIconModule } from '@angular/material/icon';
     HoldbackListModule,
     MatDialogModule,
     MatDividerModule,
+    FlexLayoutModule,
     MatFormFieldModule,
     MatSelectModule,
     MatDatepickerModule,

@@ -1,7 +1,7 @@
 <ng-container *ngIf="contract.titleId | getTitle | async as title">
   <header fxLayout fxLayoutAlign="space-between start" test-id="avails-section">
     <section fxLayout="column">
-      <h2>{{ title.title.international }}</h2>
+      <h2>{{ title?.title?.international }}</h2>
       <article fxLayout fxLayoutGap="12px">
         <img [ref]="title.poster | storageFile: 'movies':'poster':title.id" asset="empty_poster.svg"
           alt="Movie Illustration" [routerLink]="['/c/o/marketplace/title/', title.id]">
@@ -50,6 +50,15 @@
         {{broadcasts ?? '-'}}
       </ng-template>
     </bf-table-filter>
+    <ng-content select="footer"></ng-content>
+    <ng-container *ngIf="contract?.titleId| getTitleHoldbacks:orgId | async as existingHoldbacks">
+      <ng-container *ngIf="terms | collidingHoldbacks: existingHoldbacks as collidingHoldbacks">
+        <div fxLayout fxLayoutAlign="center center" *ngIf="collidingHoldbacks?.length" >
+          <button mat-flat-button (click)="openHoldbackModal(collidingHoldbacks)">
+            <span>Other Buyers Holdbacks</span>
+          </button>
+        </div>
+      </ng-container>
+    </ng-container>
   </ng-container>
-  <ng-content select="footer"></ng-content>
 </ng-container>

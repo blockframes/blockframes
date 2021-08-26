@@ -32,7 +32,7 @@
       </mat-card-header>
       <mat-card-content>
         <ng-container *ngIf="(term | collidingHoldbacks: holdbacks) as collision">
-          <ng-container *ngIf="(collision??[]).length">
+          <ng-container *ngIf="collision.length">
             <button mat-button (click)="openHoldbackModal(collision)">
               <mat-icon svgIcon="info"></mat-icon>
               <span>Holdback(s) exist for this right</span>

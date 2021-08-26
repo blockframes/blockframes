@@ -7,6 +7,8 @@
   $foreground: map.get($config, 'foreground');
 
   .mat-table {
+    border-radius: 10px;
+
     thead {
       background-color: mat.get-color-from-palette($background, card);
     }

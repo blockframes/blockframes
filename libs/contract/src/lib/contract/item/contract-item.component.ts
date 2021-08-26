@@ -5,6 +5,9 @@ import { BucketContract } from '@blockframes/contract/bucket/+state/bucket.model
 import { Scope, mediaGroup, territoriesGroup } from '@blockframes/utils/static-model';
 import { MatDialog } from '@angular/material/dialog';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
+import { HoldbackModalComponent } from '../holdback/modal/holdback-modal.component';
+import {  Holdback, Sale } from '../+state';
+import { OrganizationQuery } from '@blockframes/organization/+state';
 
 
 @Component({
@@ -31,7 +34,9 @@ export class ContractItemComponent {
   mediaGroup = mediaGroup;
   territoriesGroup = territoriesGroup;
   actionTemplate?: TemplateRef<unknown>;
-  @Input() contract: BucketContract;
+  orgId = this.orgQuery.getActiveId();
+  @Input() contract: BucketContract | Sale;
+
   @ContentChild('priceTemplate') priceTemplate: TemplateRef<unknown>;
   @ContentChild('termAction') set colActionsTemplate(template: TemplateRef<unknown>) {
     if (template) {
@@ -44,11 +49,15 @@ export class ContractItemComponent {
   constructor(
     private cdr: ChangeDetectorRef,
     private dialog: MatDialog,
+    private orgQuery: OrganizationQuery,
   ) { }
-
 
   openDetails(terms: string, scope: Scope) {
     this.dialog.open(DetailedTermsComponent, { data: { terms, scope }, maxHeight: '80vh', autoFocus: false });
+  }
+
+  openHoldbackModal(existingHoldbacks: Holdback[]) {
+    this.dialog.open(HoldbackModalComponent, { data: { holdbacks: existingHoldbacks }, maxHeight: '80vh' });
   }
 
 }

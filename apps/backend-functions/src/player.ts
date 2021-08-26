@@ -14,12 +14,9 @@ import { ErrorResultResponse } from './utils';
 import { getDocument } from './data/internals';
 import { isAllowedToAccessMedia } from './internals/media';
 import { db, getStorageBucketName } from './internals/firebase';
-import { jwplayerSecret, jwplayerKey, enableDailyFirestoreBackup, playerId } from './environments/environment';
+import { jwplayerSecret, enableDailyFirestoreBackup, playerId } from './environments/environment';
+import { jwplayerApiV2 } from './jwplayer-api';
 
-
-// No typing
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const JWPlayerApi = require('jwplatform');
 
 interface ReadVideoParams {
 
@@ -142,17 +139,25 @@ export const getPrivateVideoUrl = async (
 
   const signedUrl = `https://cdn.jwplayer.com/manifests/${jwPlayerId}.m3u8?exp=${expires}&sig=${signature}`;
 
-  // FETCH VIDEO METADATA
-  const jw = new JWPlayerApi({apiKey: jwplayerKey, apiSecret: jwplayerSecret});
-  const response = await jw.videos.show({video_key: jwPlayerId});
+  try {
+    // FETCH VIDEO METADATA
+    const info = await jwplayerApiV2().getVideoInfo(jwPlayerId);
 
-  return {
-    error: '',
-    result: {
-      signedUrl,
-      info: response.status === 'ok' ? response.video : undefined
-    }
-  };
+    return {
+      error: '',
+      result: { signedUrl, info }
+    };
+  } catch (error: unknown) {
+    return {
+      error: '',
+      result: {
+        signedUrl,
+        info: { duration: 0 },
+      }
+    };
+  }
+
+
 }
 
 
@@ -176,28 +181,26 @@ export const uploadToJWPlayer = async (file: GFile): Promise<{
   const expires = new Date().getTime() + 7200000; // now + 2 hours
 
   const [videoUrl] = await file.getSignedUrl({ action: 'read', expires });
+  const tag = enableDailyFirestoreBackup ? 'production' : 'test';
 
-  const jw = new JWPlayerApi({ apiKey: jwplayerKey, apiSecret: jwplayerSecret });
-  const tags = enableDailyFirestoreBackup ? 'production' : 'test';
-  const result = await jw.videos.create({ download_url: videoUrl, tags }).catch(e => ({ status: 'error', message: e.message }));
+  try {
+    const result = await jwplayerApiV2().createVideo(videoUrl, tag) as any;
 
-  if (result.status === 'error' || !result.video || !result.video.key) {
-    return { success: false, message: result.message || '' }
-  } else {
-    return { success: true, key: result.video.key }
+    return { success: true, key: result.id }
+  } catch (error: unknown) {
+    return { success: false, message: 'UPLOAD FAILED' };
   }
 }
 
 
 export const deleteFromJWPlayer = async (jwPlayerId: string) => {
 
-  const jw = new JWPlayerApi({ apiKey: jwplayerKey, apiSecret: jwplayerSecret });
-  const result = await jw.videos.delete({ video_key: jwPlayerId }).catch(e => ({ status: 'error', message: e.message }));
+  try {
+    const result = await jwplayerApiV2().deleteVideo(jwPlayerId) as any;
 
-  if (result.status === 'error' || !result.videos) {
-    return { success: false, message: result.message || '' }
-  } else {
-    return { success: true, keys: result.videos }
+    return { success: true, keys: result }
+  } catch (error: unknown) {
+    return { success: false, message: `DELETE FAILED, please delete ${jwPlayerId} manually` }
   }
 };
 
