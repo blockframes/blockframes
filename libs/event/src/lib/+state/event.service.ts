@@ -126,8 +126,13 @@ export class EventService extends CollectionService<EventState> {
     }
   }
 
-  queryByMovieId(movieId: string) {
-    const queries = this.valueChanges(ref => ref.where('meta.titleId', '==', movieId));
+  queryByMovieId(movieId: string): Observable<Event | Event[]> {
+    const queries = this.valueChanges(ref => ref
+      .where('meta.titleId', '==', movieId)
+      .where('isSecret', '==', false)
+      .where('type', '==', 'screening')
+      .where('start', '>=', new Date())
+    );
     return queries;
   }
 
