@@ -16,7 +16,10 @@ import {
   latestAnonStorageDir,
   gsutilTransfer,
   awaitProcessExit,
-  firebaseEmulatorExec
+  firebaseEmulatorExec,
+  connectAuthEmulator,
+  connectFirestoreEmulator,
+  endMaintenance
 } from '@blockframes/firebase-utils';
 import { ChildProcess } from 'child_process';
 import { join, resolve } from 'path';
@@ -86,7 +89,20 @@ export async function startEmulators({ importFrom = 'defaultImport' }: StartEmul
       importPath: emulatorPath,
       exportData: true
     })
-    openSync(join(emulatorPath, '.ready'), 'w');
+    // ! Sync Auth here live from DB. Subsequent exports will not work... fix by removing auth component from backup
+    // ! This means we must delete auth from backup when we need the backup if auth is used... we never do this?
+    // ! because in prepare... we dont launch auth, we just sync real auth... but we dont need to. we can just
+    // ! sync auth on emulator launch live from emulator data. ensure amulator auth is set only when needed!
+    // ! when syncing auth, defs enable maintenance mode... the triggerKill method can't help us during this!
+    // ! if we launch auth here... this is not used elsewhere... like this is frontend only. So we just have to connect to it
+    // ! other functiosn will not all have auth happen as long as we only enable it when needed.
+    // ! emulator connect needs fixing, but furst test if premise works....
+    // const auth = connectAuthEmulator();
+    // const db = connectFirestoreEmulator();
+    // await startMaintenance(db)
+    // await syncUsers(null, db, auth)
+    // await endMaintenance(db)
+    // openSync(join(emulatorPath, '.ready'), 'w');
     await awaitProcessExit(proc);
   } catch (e) {
     await shutdownEmulator(proc)
@@ -125,7 +141,7 @@ export async function downloadProdDbBackup(localPath?: string) {
  * This function will run db anonymization on a locally running Firestore emulator database
  */
 export async function anonDbProcess() {
-  const db = loadAdminServices({ emulator: true }).db;
+  const db = connectFirestoreEmulator();
   const { getCI, storage, auth } = loadAdminServices();
   const o = await db.listCollections();
   if (!o.length) throw Error('THERE IS NO DB TO PROCESS - DANGER!');
@@ -211,7 +227,7 @@ export async function enableMaintenanceInEmulator({ importFrom = 'defaultImport'
       importPath: emulatorPath,
       exportData: true,
     });
-    const db = loadAdminServices({ emulator: true }).db;
+    const db = connectFirestoreEmulator();
     startMaintenance(db);
   } finally {
     await shutdownEmulator(emulatorProcess);

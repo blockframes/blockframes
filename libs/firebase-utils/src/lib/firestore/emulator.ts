@@ -243,6 +243,54 @@ export function connectEmulator() {
   return { db, auth, storage };
 }
 
+export function connectFirestoreEmulator() {
+  throwOnProduction();
+
+  const firebaseJsonPath = resolve(process.cwd(), 'firebase.json')
+  const {
+    emulators: {
+      firestore: { port: dbPort },
+      storage: { port: storagePort },
+      auth: { port: authPort },
+    },
+  } = eval('require')(firebaseJsonPath);
+
+  console.log('Detected - dbPort:', dbPort, 'storagePort:', storagePort, 'authPort:', authPort);
+
+  process.env['FIRESTORE_EMULATOR_HOST'] = `localhost:${dbPort}`
+
+  const app = initializeApp({ projectId: firebase().projectId }, 'firestore');
+  const db = app.firestore() as FirestoreEmulator;
+
+  db.settings({
+    // port: dbPort,
+    merge: true,
+    ignoreUndefinedProperties: true,
+    host: 'localhost',
+    ssl: false,
+  });
+  db.clearFirestoreData = clearFirestoreData;
+  return db;
+}
+
+export function connectAuthEmulator() {
+
+  const firebaseJsonPath = resolve(process.cwd(), 'firebase.json')
+  const {
+    emulators: {
+      auth: { port: authPort },
+    },
+  } = eval('require')(firebaseJsonPath);
+
+
+  process.env['FIREBASE_AUTH_EMULATOR_HOST'] = `localhost:${authPort}`;
+
+  const app = initializeApp({ projectId: firebase().projectId }, 'auth');
+  const auth = app.auth();
+
+  return auth;
+}
+
 /**
  * This function will process a local firestore export and upload it to a storage bucket.
  * The metadata format for GCS firestore backups is slightly different, and the foldername must match the

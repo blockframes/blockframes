@@ -8,6 +8,7 @@ import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from '.
 import { migrate } from './migrations';
 import { importFirestore } from './admin';
 import {
+  connectFirestoreEmulator,
   copyFirestoreExportFromCiBucket,
   defaultEmulatorBackupPath,
   endMaintenance,
@@ -77,7 +78,7 @@ export async function prepareEmulators() {
     exportData: true
   })
   const { storage, auth } = loadAdminServices();
-  const { db } = loadAdminServices({ emulator: true });
+  const db = connectFirestoreEmulator();
   const insurance = await ensureMaintenanceMode(db); // Enable maintenance insurance
 
   console.info('Syncing users from db...');
