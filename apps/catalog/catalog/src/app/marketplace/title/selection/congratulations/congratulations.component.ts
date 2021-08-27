@@ -8,7 +8,7 @@ import { Intercom } from 'ng-intercom';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CongratulationsComponent {
-  
+
   constructor(
     @Optional() private intercom: Intercom
   ) { }

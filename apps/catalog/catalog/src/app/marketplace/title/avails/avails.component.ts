@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, ChangeDetectionStrategy, OnDestroy, AfterViewInit } from '@angular/core';
 
-import { delay, filter, switchMap } from 'rxjs/operators';
+import { delay, filter, skip, switchMap } from 'rxjs/operators';
 import { combineLatest, of, ReplaySubject, Subscription } from 'rxjs';
 
 import { FormList } from '@blockframes/utils/form';
@@ -88,13 +88,30 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
   }
 
   ngAfterViewInit() {
+    const queryParams = this.route.snapshot.queryParams
+    let skipValue = 0;
+    if ('contract' in queryParams) {
+      skipValue = 1
+      const selector = "[data-scroll-to-view-id='" + queryParams.contract + "']"
+      //@why: #6383
+      setTimeout(() => {
+        const element = document.querySelector<HTMLElement>(selector)
+        console.log({ element, selector })
+        scrollIntoView(element)
+      }, 400)
+
+    }
+
+
     const fragSub = this.route.fragment.pipe(
       filter(fragment => !!fragment),
+      skip(skipValue),
       //@why: #6383
-      delay(200)
+      delay(100)
     ).subscribe(fragment => {
       scrollIntoView(document.querySelector(`#${fragment}`))
     });
+    this.subs.push(fragSub);
 
     const paramsSub = combineLatest([
       this.route.queryParams.pipe(filter(params => !!params.contract && !!params.term)),
@@ -104,7 +121,7 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
       this.edit(term);
     });
 
-    this.subs.push(fragSub, paramsSub);
+    this.subs.push(paramsSub);
   }
 
   ngOnDestroy() {
@@ -179,7 +196,7 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
     const mode = this.router.url.split('/').pop();
 
     if (mode.includes('map')) {
-      this.bucketForm.patchValue({}); // Force observable to reload
+      this.bucketForm.patchValue({ }); // Force observable to reload
       this.avails.mapForm.setValue({ exclusive, duration, medias, territories: [] });
     }
 

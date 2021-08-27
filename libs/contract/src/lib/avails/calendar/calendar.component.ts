@@ -133,13 +133,19 @@ export class AvailsCalendarComponent implements OnInit {
       const from = new Date(year + newState.start.row, newState.start.column);
       const to = new Date(year + newState.end.row, newState.end.column);
 
+      console.log({from, to,})
       const parentMarker = this._availableMarkers.find(marker => {
-
         // From the calendar pov range starts at the first day of the month
         // but the avail term might not start at the first day of the month
         const markerFromYear = marker.from.getFullYear();
-        const markerFromMonth = marker.from.getMonth() + 1;
+        const markerFromMonth = marker.from.getMonth();
         const startDate = new Date(markerFromYear, markerFromMonth, 1).getTime();
+
+        console.log({
+          startDateTime:startDate,
+          startDate:new Date(markerFromYear, markerFromMonth,1),
+          from:from.getTime(), markerTo: marker.to,
+        })
 
         return startDate <= from.getTime() && marker.to >= to;
       });

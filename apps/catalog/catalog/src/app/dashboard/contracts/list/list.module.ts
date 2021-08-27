@@ -24,6 +24,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { TagModule } from '@blockframes/ui/tag/tag.module';
+import { IntercomModule } from 'ng-intercom';
 
 @NgModule({
   declarations: [ContractListComponent],
@@ -39,6 +40,7 @@ import { TagModule } from '@blockframes/ui/tag/tag.module';
     ImageModule,
     ToLabelModule,
     TagModule,
+    IntercomModule,
 
     // Material
     MatButtonModule,

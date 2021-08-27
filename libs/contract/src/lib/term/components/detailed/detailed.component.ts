@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnInit, Pipe, PipeTransform } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 import { BehaviorSubject } from 'rxjs';
@@ -24,10 +24,7 @@ export class DetailedTermsComponent implements OnInit {
     const groups = JSON.parse(JSON.stringify(staticGroups[this.data.scope]));
     if (groups) {
       for (const group of groups) {
-        group.items = group.items.filter(item => {
-          const label = toLabel(item, this.data.scope) as string;
-          return this.data.terms.includes(label);
-        });
+        group.items = group.items.filter(item => this.data.terms.includes(item));
       }
       this.groups$.next(groups);
     }

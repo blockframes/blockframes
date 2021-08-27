@@ -1,5 +1,5 @@
 <ng-container *ngIf="contracts$ | async as contracts; else loading">
-  <ng-container *ngIf="contracts.length; else empty">
+  <ng-container *ngIf="false; else empty">
     <header class="import-header" fxLayout="row" fxLayoutAlign="space-between center">
       <h1>Contracts</h1>
     </header>
@@ -47,8 +47,15 @@
 </ng-template>
 
 <ng-template #empty>
-  <section class="empty" fxLayout="column" fxFlexAlign="center" fxLayoutGap="16px">
-    <h1>There are no contracts to display yet.</h1>
-    <img asset="empty_results.svg" alt="Empty result image">
+  <section>
+    <h1>You have no offers created yet.</h1>
+    <p>
+      Your contracts will appear on this page when you submit them.<br />
+      Meanwhile you can browse our library to discover titles you can be interested in.
+    </p>
+    <button (click)="openIntercom()" mat-button>Contact Archipel Team</button>
+    <img asset="empty_results.svg" alt="Offer has been created successfully">
+    <a mat-flat-button color="primary" routerLink="../offer">See Offers & Deals</a>
+    <a mat-button color="primary" routerLink="/c/o/marketplace/title">Continue browsing Library</a>
   </section>
 </ng-template>
