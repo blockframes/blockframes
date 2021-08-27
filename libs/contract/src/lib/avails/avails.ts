@@ -4,7 +4,7 @@ import { Media, territoriesISOA3, Territory, TerritoryISOA3Value, TerritoryValue
 import { Bucket } from '../bucket/+state';
 import { Holdback, Mandate } from '../contract/+state/contract.model'
 import { Duration, Term, BucketTerm } from '../term/+state/term.model';
-import { continuousDisjoint, continuousEqual, continuousOverlap, continuousSubset, discreteDisjoint, discreteEqual, discreteOverlap, discreteSubset } from './sets';
+import { allOf, continuousDisjoint, continuousOverlap, continuousSubset, someOf } from './sets';
 
 export interface AvailsFilter {
   medias: Media[],
@@ -32,19 +32,19 @@ export interface DurationMarker {
 export function getMandateTerms(avails: AvailsFilter, terms: Term<Date>[]): Term<Date>[] | undefined {
 
   const result = terms.filter(term =>
-    continuousSubset(term.duration, avails.duration) &&
-    discreteSubset(term.medias, avails.medias) &&
-    (!avails.territories.length || discreteSubset(term.territories, avails.territories))
+    allOf(avails.duration).in(term.duration)
+    && allOf(avails.medias).in(term.medias)
+    && allOf(avails.territories, 'optional').in(term.territories)
   );
 
   // If more medias are selected than there are in the mandates: not available
   const resultMedias = result.map(term => term.medias).flat();
-  if (!discreteSubset(resultMedias, avails.medias)) return [];
+  if (!allOf(avails.medias).in(resultMedias)) return [];
 
   // If more territories are selected than there are in the mandates: not available
   if (avails.territories?.length) {
     const resultTerritories = result.map(term => term.territories).flat();
-    if (!discreteSubset(resultTerritories, avails.territories)) return [];
+    if (!allOf(avails.territories).in(resultTerritories)) return [];
   }
 
   return result;
@@ -57,20 +57,19 @@ export function isSold(avails: AvailsFilter, terms: Term<Date>[]) {
 
 /** Get all the salesTerms that overlap the avails filter */
 export function getSoldTerms(avails: AvailsFilter, terms: Term<Date>[]) {
-  return terms.filter(term =>
-    (avails.exclusive || term.exclusive) &&
-    (!avails.territories.length || !discreteDisjoint(term.territories, avails.territories)) &&
-    (!avails.medias.length || !discreteDisjoint(term.medias, avails.medias)) &&
-    (!avails.duration.from || !avails.duration.to || !continuousDisjoint(term.duration, avails.duration))
+  return terms.filter(term => (avails.exclusive || term.exclusive)
+    && someOf(avails.territories, 'optional').in(term.territories)
+    && someOf(avails.medias, 'optional').in(term.medias)
+    && (!avails.duration.from || !avails.duration.to || !continuousDisjoint(term.duration, avails.duration))
   );
 }
 
 export function isInBucket(avails: AvailsFilter, terms: BucketTerm[]) {
   return terms.some(term =>
-    term.exclusive === avails.exclusive &&
-    discreteSubset(term.territories, avails.territories) &&
-    discreteSubset(term.medias, avails.medias) &&
-    continuousSubset(term.duration, avails.duration)
+    term.exclusive === avails.exclusive
+    && allOf(avails.territories).in(term.territories)
+    && allOf(avails.medias).in(term.medias)
+    && allOf(term.duration).in(avails.duration)
   );
 }
 
@@ -80,16 +79,16 @@ export function isInBucket(avails: AvailsFilter, terms: BucketTerm[]) {
 
 /** Check if a term is exactly the same as asked in the AvailFilter of the world map */
 export function isSameMapTerm(term: BucketTerm, avail: AvailsFilter) {
-  return term.exclusive === avail.exclusive &&
-    continuousEqual(term.duration, avail.duration) &&
-    discreteEqual(term.medias, avail.medias);
+  return term.exclusive === avail.exclusive
+    && allOf(term.duration).equal(avail.duration)
+    && allOf(term.medias).equal(avail.medias);
 };
 
 /** Check if a term is exactly the same as asked in the AvailFilter of the calendar */
 export function isSameCalendarTerm(term: BucketTerm, avail: AvailsFilter) {
-  return term.exclusive === avail.exclusive &&
-    discreteEqual(term.territories, avail.territories) &&
-    discreteEqual(term.medias, avail.medias);
+  return term.exclusive === avail.exclusive
+    && allOf(term.territories).equal(avail.territories)
+    && allOf(term.medias).equal(avail.medias);
 };
 
 
@@ -99,19 +98,16 @@ export function isSameCalendarTerm(term: BucketTerm, avail: AvailsFilter) {
 
 /** Avail is included in bucketTerm */
 export function isInMapTerm(term: BucketTerm, avail: AvailsFilter) {
-  return !isSameMapTerm(term, avail) &&
-    (avail.duration?.from && avail.duration?.to) &&
-    continuousSubset(term.duration, avail.duration) &&
-    avail.medias &&
-    discreteSubset(term.medias, avail.medias);
+  return !isSameMapTerm(term, avail)
+    && (avail.duration?.from && avail.duration?.to)
+    && continuousSubset(term.duration, avail.duration)
+    && avail.medias && allOf(avail.medias).in(term.medias);
 }
 
 export function isInCalendarTerm(term: BucketTerm, avail: AvailsFilter) {
-  return !isSameCalendarTerm(term, avail) &&
-    avail.medias &&
-    discreteSubset(term.medias, avail.medias) &&
-    avail.territories &&
-    discreteSubset(term.territories, avail.territories);
+  return !isSameCalendarTerm(term, avail)
+    && avail.medias && allOf(avail.medias).in(term.medias)
+    && avail.territories && allOf(avail.territories).in(term.territories);
 }
 
 
@@ -200,10 +196,11 @@ export function getDurationMarkers(mandates: Mandate[], mandateTerms: Term<Date>
 
 
 export function collidingHoldback(holdback: Holdback, term: BucketTerm) {
-  const durationCollision = continuousOverlap(holdback.duration, term.duration);
-  const mediasCollision = discreteOverlap(holdback.medias, term.medias);
-  const territoryCollision = discreteOverlap(holdback.territories, term.territories);
-  return durationCollision && mediasCollision && territoryCollision;
+  const durationCollision = continuousOverlap(holdback.duration, term.duration); // TODO
+
+  return durationCollision
+    && someOf(term.medias).in(holdback.medias)
+    && someOf(term.territories).in(holdback.territories);
 }
 
 export function getCollidingHoldbacks(holdbacks: Holdback[], terms: BucketTerm[]) {
