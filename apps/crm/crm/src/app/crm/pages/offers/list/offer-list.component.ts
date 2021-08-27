@@ -25,9 +25,7 @@ export class OffersListComponent {
     private incomeService: IncomeService,
     private dynTitle: DynamicTitleService,
     private titleService: MovieService,
-  ) {
-    // this.dynTitle.setPageTitle('Offers & Deals')
-  }
+  ) { }
 
   private getContracts(offerId: string) {
     return this.contractService.valueChanges(ref => ref.where('offerId', '==', offerId)).pipe(

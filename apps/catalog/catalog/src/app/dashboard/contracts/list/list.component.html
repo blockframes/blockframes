@@ -1,5 +1,5 @@
 <ng-container *ngIf="contracts$ | async as contracts; else loading">
-  <ng-container *ngIf="false; else empty">
+  <ng-container *ngIf="contracts.length; else empty">
     <header class="import-header" fxLayout="row" fxLayoutAlign="space-between center">
       <h1>Contracts</h1>
     </header>
@@ -47,7 +47,7 @@
 </ng-template>
 
 <ng-template #empty>
-  <section>
+  <section fxLayout="column" fxLayoutAlign="center center" fxFlexGap="16">
     <h1>You have no offers created yet.</h1>
     <p>
       Your contracts will appear on this page when you submit them.<br />

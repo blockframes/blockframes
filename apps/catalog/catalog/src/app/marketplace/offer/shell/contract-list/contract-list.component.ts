@@ -18,9 +18,7 @@ export class ContractListComponent  {
   columns = columns;
   offer$ = this.shell.offer$;
 
-  constructor(
-    private shell: OfferShellComponent,
-  ) { }
+  constructor(private shell: OfferShellComponent) { }
 
 
 }

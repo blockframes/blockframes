@@ -15,17 +15,8 @@ mat-spinner {
   }
 }
 
-
 section {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  justify-items: center;
   margin-top: 24px;
-  & > * {
-    margin-bottom: 16px;
-  }
 
   h1 {
     text-align: center;
