@@ -21,6 +21,7 @@ export class MarketplaceMovieViewComponent implements OnInit {
   public movie$: Observable<Movie>;
   public orgs$: Observable<Organization[]>;
   public eventId$: Observable<string | null>;
+  public event$: Observable<any>;
   public movieId = this.movieQuery.getActiveId();
 
   public navLinks: RouteDescription[] = [
@@ -40,11 +41,6 @@ export class MarketplaceMovieViewComponent implements OnInit {
     'moodboard'
   ];
 
-  event$ = this.route.params.pipe(
-    pluck('movieId'),
-    switchMap((movieId: string) => this.eventService.queryByMovieId(movieId)),
-  );
-
   // invitations$ = this.event$.pipe(
   //   switchMap(event => this.invitationService.valueChanges(ref => ref.where('type', '==', 'attendEvent').where('eventId', '==', event.id)))
   // );
@@ -61,8 +57,6 @@ export class MarketplaceMovieViewComponent implements OnInit {
     this.movie$ = this.movieQuery.selectActive();
     this.orgs$ = this.orgService.valueChanges(this.movieQuery.getActive().orgIds);
 
-    this.event$.subscribe(console.log);
-
     const q = ref => ref
     .where('isSecret', '==', false)
     .where('meta.titleId', '==', this.movieId)
@@ -74,5 +68,8 @@ export class MarketplaceMovieViewComponent implements OnInit {
       map(events => events.filter(e => e.start < new Date())),
       map(events => events.length ? events[events.length - 1].id : null)
     );
+
+    this.event$ = this.eventService.valueChanges(q);
+    this.event$.subscribe(console.log);
   }
 }

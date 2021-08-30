@@ -24,11 +24,9 @@
     </movie-header>
 
     <!-- <movie-screening></movie-screening> -->
-    <ng-container *ngIf="event$ |  async as event">
+    <ng-container *ngIf="eventId$ |  async as event">
       <event-view [event]="event">
         <ng-container [ngSwitch]="event.type">
-    
-          <!-- Screening -->
           <section class="screening" *ngSwitchCase="'screening'">
             <movie-header *ngIf="event.movie" [movie]="event.movie" [showBackArrow]="false">
               <movie-header-preferences>
