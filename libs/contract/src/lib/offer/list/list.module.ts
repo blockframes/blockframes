@@ -21,6 +21,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     TotalPipeModule,
     ImageModule,
     TagModule,
+    RouterModule.forChild([]),
+
     // Material
     MatButtonModule,
     MatTabsModule,

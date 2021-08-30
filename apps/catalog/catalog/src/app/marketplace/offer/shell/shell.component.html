@@ -4,7 +4,7 @@
     <article>
       <div>
         <h1>{{ offer.id }}</h1>
-        <span>Offer created: {{ offer._meta.createdAt | date: 'DD/MM/YYYY' }}</span>
+        <span>Offer created: {{ offer._meta.createdAt | date: 'dd/MM/yyyy' }}</span>
       </div>
       <div *ngIf="offer.contracts as contracts">
         <h2>
@@ -20,11 +20,11 @@
       <span>Contact Archipel Team</span>
     </button>
   </header>
-  
+
   <section class="surface" *ngIf="offer.specificity">
     <h2>Specific Terms</h2>
     <p>{{ offer.specificity }}</p>
   </section>
-  
+
   <router-outlet></router-outlet>
 </ng-container>

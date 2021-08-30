@@ -9,6 +9,7 @@ import { RouteDescription } from '@blockframes/utils/common-interfaces/navigatio
 import { FileListPreviewComponent } from '@blockframes/media/file/preview-list/preview-list.component';
 import { MatDialog } from '@angular/material/dialog';
 import { StorageFile } from '@blockframes/media/+state/media.firestore';
+import { scrollIntoView } from '@blockframes/utils/browser/utils';
 
 @Component({
   selector: 'title-marketplace-shell',
@@ -38,7 +39,7 @@ export class TitleMarketplaceShellComponent implements OnInit {
   scrollIntoView() {
     /* We don't want to trigger the animation when the user just arrived on the page */
     if (this.navClicked) {
-      this.main.nativeElement.scrollIntoView({ behavior: 'smooth' });
+      scrollIntoView(this.main.nativeElement);
     }
   }
 

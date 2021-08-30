@@ -5,16 +5,18 @@
   </button>
 </header>
 <section>
-  <ng-container *ngIf="!!(groups$ | async).length; else default">
-    <ng-container *ngFor="let group of groups$ | async">
-      <article *ngIf="group.items.length">
-        <p class="mat-body-2">{{ group.label }}</p>
-        <mat-chip-list>
-          <mat-chip disableRipple *ngFor="let item of group.items">
-            {{ item | toLabel: data.scope }}
-          </mat-chip>
-        </mat-chip-list>
-      </article>
+  <ng-container *ngIf="(groups$ | async) as groups">
+    <ng-container *ngIf="!!groups.length; else default">
+      <ng-container *ngFor="let group of groups">
+        <article *ngIf="group.items.length">
+          <p class="mat-body-2">{{ group.label }}</p>
+          <mat-chip-list>
+            <mat-chip disableRipple *ngFor="let item of group.items">
+              {{ item | toLabel: data.scope }}
+            </mat-chip>
+          </mat-chip-list>
+        </article>
+      </ng-container>
     </ng-container>
   </ng-container>
   <ng-template #default>

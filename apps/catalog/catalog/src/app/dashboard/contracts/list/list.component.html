@@ -28,7 +28,7 @@
               {{income.price | currency:income.currency}}
             </ng-container>
           </ng-container>
-          <ng-template #noIncome>No Price</ng-template>
+          <ng-template #noIncome>-</ng-template>
           <ng-template #loadingPrice>
             <mat-spinner diameter="15"></mat-spinner>
           </ng-template>
@@ -47,8 +47,15 @@
 </ng-template>
 
 <ng-template #empty>
-  <section class="empty" fxLayout="column" fxFlexAlign="center" fxLayoutGap="16px">
-    <h1>There are no contracts to display yet.</h1>
-    <img asset="empty_results.svg" alt="Empty result image">
+  <section fxLayout="column" fxLayoutAlign="center center" fxFlexGap="16">
+    <h1>You have no contracts yet.</h1>
+    <p>
+      Your contracts will appear here when you submit them.<br />
+      Meanwhile, you can browse the Archipel library to discover titles.
+    </p>
+    <button (click)="openIntercom()" mat-button>Contact the Archipel Team</button>
+    <img asset="empty_results.svg" alt="Offer has been created successfully">
+    <a mat-flat-button color="primary" routerLink="../offer">See Offers & Deals</a>
+    <a mat-button color="primary" routerLink="/c/o/marketplace/title">Browse the Library</a>
   </section>
 </ng-template>

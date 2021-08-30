@@ -47,7 +47,7 @@
         <ng-template colRef="id" let-id>
           <div fxLayout="row" fxLayoutAlign="flex-start center" fxLayoutGap="8px">
             <a mat-icon-button [routerLink]="['../', id,]" matTooltip="Edit">
-              <mat-icon svgIcon="visibility"></mat-icon>
+              <mat-icon svgIcon="edit"></mat-icon>
             </a>
             <button mat-icon-button matTooltip="Delete" (click)="confirmDelete(id)">
               <mat-icon svgIcon="delete"></mat-icon>

@@ -1,6 +1,5 @@
 :host {
   display: block;
-  padding: 24px;
 }
 
 .main-header {
@@ -32,7 +31,8 @@ contract-item {
   padding-bottom: 72px;
 }
 
-.empty {
+section.empty {
+  padding: 24px;
   img {
     width: 380px;
   }
