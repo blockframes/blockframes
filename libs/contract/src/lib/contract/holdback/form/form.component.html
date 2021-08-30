@@ -3,7 +3,7 @@
 <div class="actions" fxLayout fxLayoutAlign="center center">
   <button mat-stroked-button (click)="openHoldbacks(formTemplate)">
     <mat-icon svgIcon="add"></mat-icon>
-    <span>Add holdbacks for "{{ title.title.international | maxLength:10 }}"</span>
+    <span>Add and manage holdbacks for "{{ title.title.international | maxLength:10 }}"</span>
   </button>
 </div>
 
@@ -80,13 +80,10 @@
 
       <mat-divider></mat-divider>
 
-      <h3>Versions</h3>
-      <languages-form [form]="control.get('languages')"></languages-form>
-
     </ng-template>
   </bf-form-table>
 
-  <footer class="actions">
+  <footer class="actions" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="16px">
     <button mat-flat-button color="primary" (click)="save()">Add Holdbacks</button>
     <button mat-button (click)="cancel()">Cancel</button>
   </footer>

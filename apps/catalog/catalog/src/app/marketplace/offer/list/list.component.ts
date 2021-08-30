@@ -20,8 +20,7 @@ export class ListComponent {
     joinWith({
       contracts: offer => this.getContracts(offer.id)
     }),
-  );
-
+  )
 
   constructor(
     private orgQuery: OrganizationQuery,

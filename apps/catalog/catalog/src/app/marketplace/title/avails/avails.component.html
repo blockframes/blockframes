@@ -14,7 +14,7 @@
 
 <ng-container *ngIf="(terms$ | async).length">
   <h2 id="rights">Preselected Rights</h2>
-  <mat-card *ngFor="let control of terms$ | async | reverse">
+  <mat-card *ngFor="let control of terms$ | async | reverse; index as i;" [attr.data-scroll-to-view-id]="i">
     <form [formGroup]="control" *ngIf="control.value as term">
       <mat-card-header fxLayout fxLayoutAlign="space-between center">
         <mat-card-title>

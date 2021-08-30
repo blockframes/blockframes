@@ -20,6 +20,7 @@ import { OrganizationService } from '@blockframes/organization/+state';
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
+import { scrollIntoView } from '@blockframes/utils/browser/utils';
 
 
 @Component({
@@ -110,7 +111,7 @@ export class MarketplaceMovieAvailsCalendarComponent implements AfterViewInit, O
     this.snackbar.open(`Rights ${result ? 'updated' : 'added'}`, 'Show ⇩', { duration: 5000 })
       .onAction()
       .subscribe(() => {
-        document.querySelector('#rights').scrollIntoView({ behavior: 'smooth' })
+        scrollIntoView(document.querySelector('#rights'));
       });
   }
 

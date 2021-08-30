@@ -16,6 +16,16 @@ export function isSafari() {
     );
 }
 
+export function isChrome() {return navigator.userAgent.indexOf("Chrome") != -1}
+
+export function scrollIntoView(element:HTMLElement){
+  if(isChrome()){
+    element.scrollIntoView()
+  } else {
+   element.scrollIntoView({behavior:'smooth'})
+  }
+}
+
 /**
  * This is black magic from stack-overflow to detect if the browser and its version.
  * More details about the code below here : https://stackoverflow.com/questions/5916900/how-can-you-detect-the-version-of-a-browser
