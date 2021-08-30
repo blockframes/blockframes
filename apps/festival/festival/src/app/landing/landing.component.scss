@@ -57,13 +57,14 @@ landing-content {
           width: 450px;
         }
       } 
+      article {
+        margin-bottom: 24px;
+      }
   }
   
   article {
     .surface {
       width: 32%;
-      margin-bottom: 24px;
-      padding: 32px 72px;
       text-align: center;
       div {
         height: 128px; 
@@ -93,6 +94,15 @@ landing-content {
       width: 60px;
       object-fit: contain;
     }
+
+  }
+}
+
+landing-detail {
+  padding: 80px;
+  background-color: var(--background-card);
+  mat-card {
+    width: 30%;
   }
 }
 
@@ -114,6 +124,11 @@ landing-content {
       grid-template-rows: repeat(4, 1fr);
     }
   }
+  landing-detail {
+    mat-card {
+      width: 75%
+    }
+  }
 }
 
 @include layout-bp(lt-sm) {
@@ -121,6 +136,11 @@ landing-content {
     text-align: center;
     article .surface{
       width: 100%;
+    }
+  }
+  landing-detail {
+    mat-card {
+      width: 100%
     }
   }
 }
