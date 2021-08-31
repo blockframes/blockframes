@@ -23,7 +23,9 @@
   <ng-content select="landing-content"></ng-content>
 
   <!-- Contact -->
-  <mat-card class="demo" id="demo">
+
+  <mat-card class="demo dark-contrast-theme" id="demo" bgAsset="background_learn_more.png" >
+
     <ng-container *ngIf="landingContactDirective; else contact">
       <ng-content select="landing-contact"></ng-content>
     </ng-container>
@@ -32,21 +34,19 @@
         <h1>Want to learn more?</h1>
         <h3>Schedule a demo with our team!</h3>
         <p>
-          Program a personalized demonstration of the platform with a member of the {{ appName.label }} team.
-          <br />
-          Please fill out the form and we will get back to you to choose the best time.
+          Please fill out the following form and we will get back to you asap.
         </p>
       </article>
       <form test-id="demo-form" fxLayout="column" fxLayoutAlign="start center" [formGroup]="form" (ngSubmit)="sendRequest(form)">
         <article fxLayout="row" fxLayoutAlign="space-between start" fxLayout.lt-md="column" fxLayoutGap="24px">
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="outline" hideRequiredMarker>
             <mat-label>First Name</mat-label>
             <input test-id="first-name" matInput type="text" placeholder="First Name" formControlName="firstName" required />
             <mat-error *ngIf="form.get('firstName').hasError('required')">
               First Name is <strong>required</strong>
             </mat-error>
           </mat-form-field>
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="outline" hideRequiredMarker>
             <mat-label>Last Name</mat-label>
             <input test-id="last-name" matInput type="text" placeholder="Last Name" formControlName="lastName" required />
             <mat-error *ngIf="form.get('lastName').hasError('required')">
@@ -55,14 +55,14 @@
           </mat-form-field>
         </article>
         <article fxLayout="row" fxLayoutAlign="space-between start" fxLayout.lt-md="column" fxLayoutGap="24px">
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="outline" hideRequiredMarker>
             <mat-label>Company Name</mat-label>
             <input test-id="comp-name" matInput type="text" placeholder="Company Name" formControlName="companyName" required />
             <mat-error *ngIf="form.get('companyName').hasError('required')">
               Company Name is <strong>required</strong>
             </mat-error>
           </mat-form-field>
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="outline" hideRequiredMarker>
             <mat-label>Role</mat-label>
             <mat-select test-id="role" placeholder="Activity" formControlName="role" required>
               <mat-option *ngFor="let role of roles" [value]="role">{{ role | roleLabel }}</mat-option>
@@ -72,18 +72,21 @@
             </mat-error>
           </mat-form-field>
         </article>
-        <article fxLayout="row" fxLayoutAlign="space-between start" fxLayout.lt-md="column" fxLayoutGap="24px">
-          <mat-form-field appearance="outline">
-            <mat-label>Email</mat-label>
-            <input test-id="email" matInput type="email" placeholder="Email" formControlName="email" required />
+        <article fxLayout fxLayoutAlign="space-between start" fxLayout.lt-md="column" fxLayoutGap="24px">
+          <mat-form-field appearance="outline" hideRequiredMarker>
+            <mat-label>Email Adress</mat-label>
+            <input test-id="email" matInput type="email" placeholder="E-mail address" formControlName="email" required />
             <mat-error *ngIf="form.get('email').hasError('required')">
               Email is <strong>required</strong>
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline">
             <tel-input test-id="phone-no" [form]="form.get('phoneNumber')" placeholder="Phone number"></tel-input>
-          </mat-form-field>
+          </mat-form-field> 
         </article>
+        <!-- <article fxLayout="row" fxLayoutAlign="center center">
+          <mat-checkbox formControlName="newsletter">Subscribe to the newsletter</mat-checkbox>
+        </article> -->
         <button test-id="send-request" [disabled]="submitted" fxFlexAlign="center" mat-flat-button color="accent" type="submit">{{ buttonText }}</button>
       </form>
     </ng-template>

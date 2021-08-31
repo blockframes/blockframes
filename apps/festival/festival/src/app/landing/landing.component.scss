@@ -13,6 +13,10 @@ landing-header {
 }
 
 landing-content {
+  h1 {
+    margin-bottom: 12px;
+  }
+  
   .landing-partners {
     padding: 80px;
     background-color: var(--background-card);
@@ -25,8 +29,18 @@ landing-content {
     padding: 80px
   }
 
-  h1 {
-    margin-bottom: 12px;
+  .landing-join {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;  
+    padding: 96px 0;
+  }
+
+  .landing-clients-opinion {
+    padding: 80px;
+    h3 {
+      margin-bottom: 4px;
+    }
   }
 
   h5 {
@@ -72,12 +86,13 @@ landing-content {
   }
   
 
-  .landing-join {
-    background-image: url("/assets/images/background_hero.png");
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;  
-    padding: 96px 0;
+  .opinions > div {
+    padding: 24px 56px;
+    background-color: var(--background-card);
+    img {
+      width: 60px;
+      object-fit: contain;
+    }
   }
 }
 

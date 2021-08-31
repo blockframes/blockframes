@@ -90,7 +90,7 @@
       </mat-tab-group>
     </section>
 
-    <section class="dark-contrast-theme landing-join" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="32px">
+    <section class="dark-contrast-theme landing-join" bgAsset="background_hero.png" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="32px">
       <p class="mat-display-2">Interested?</p>
       <p>Sign up now to explore Archipel Market!</p>
       <a mat-flat-button color="primary" routerLink="/auth/identity">
@@ -98,6 +98,22 @@
         <mat-icon svgIcon="arrow_forward"></mat-icon>
       </a>
     </section>
-  </landing-content>
 
+    <section class=landing-clients-opinion fxLayout="column" fxLayoutGap="24px">
+      <h1 class="mat-display-2">What our clients say</h1>
+      <article class="opinions" fxLayout.lt-lg="column" fxLayoutAlign="center stretch" fxLayoutGap="24px">
+        <ng-container *ngFor="let opinion of clientOpinion">
+          <div fxLayout="column" fxLayoutAlign="center" fxFlex>
+            <h3>{{opinion.name}}</h3>
+            <p>{{opinion.jobTitle}}</p>
+            <p class="mat-body-1">{{opinion.text}}</p>
+            <div fxLayout="row" fxLayoutAlign="center center" fxFlexAlign="end" fxLayoutGap="24px">
+              <img [asset]="opinion.logo">
+              <p>{{opinion.company}}</p>
+            </div>
+          </div>
+        </ng-container>
+      </article>
+    </section>
+  </landing-content>
 </landing-shell-page>
