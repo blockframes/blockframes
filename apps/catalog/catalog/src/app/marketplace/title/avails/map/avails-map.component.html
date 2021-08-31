@@ -1,10 +1,18 @@
-<form [formGroup]="availsForm" fxLayout fxLayout.lt-md="column" fxLayoutAlign="start start" fxLayoutGap="12px" >
+<form [formGroup]="availsForm" fxLayout fxLayout.lt-md="column" fxLayoutAlign="start start" fxLayoutGap="12px">
   <section fxLayoutGap="12px" fxFlex>
-    <static-group fxFlex formControlName="medias" scope="medias" displayAll="All Rights" required placeholder="Specify right(s) to filter" [withoutValues]="['theatrical']" test-id="medias" icon="play_arrow">
-      <mat-label>Media</mat-label>
+    <mat-form-field appearance="outline">
+      <static-group fxFlex formControlName="medias" scope="medias" displayAll="All Rights" required
+        placeholder="Specify right(s) to filter" [withoutValues]="['theatrical']" test-id="medias" icon="play_arrow">
+        <mat-label>Media</mat-label>
 
-      <span groupError *ngIf="availsForm.hasError('required', 'medias')">This field is mandatory</span>
-    </static-group>
+      </static-group>
+      <!-- <mat-hint>
+        <ng-content select="[groupHint]"></ng-content>
+      </mat-hint> -->
+      <mat-error *ngIf="availsForm.hasError('required', 'medias')">
+        <span>This field is mandatory</span>
+      </mat-error>
+    </mat-form-field>
 
     <mat-form-field fxFlex appearance="outline">
       <mat-label>Exclusivity</mat-label>
@@ -18,7 +26,7 @@
   </section>
 
   <section fxLayoutGap="12px" fxFlex formGroupName="duration">
-    <mat-form-field fxFlex appearance="outline" >
+    <mat-form-field fxFlex appearance="outline">
       <mat-label>Start Date</mat-label>
       <input matInput [matDatepicker]="datepickerFrom" formControlName="from" placeholder="MM/DD/YYYY" required>
       <mat-datepicker-toggle matPrefix [for]="datepickerFrom" test-id="dateFrom">
@@ -26,7 +34,8 @@
       </mat-datepicker-toggle>
       <mat-datepicker #datepickerFrom> </mat-datepicker>
       <mat-error *ngIf="availsForm.hasError('required', 'duration.from')">This field is mandatory</mat-error>
-      <mat-error *ngIf="availsForm.hasError('startOverEnd', 'duration.from')">Start date must not be later than end date</mat-error>
+      <mat-error *ngIf="availsForm.hasError('startOverEnd', 'duration.from')">Start date must not be later than end date
+      </mat-error>
       <mat-error *ngIf="availsForm.hasError('inPast', 'duration.from')">Date must be in the future</mat-error>
     </mat-form-field>
 
@@ -38,7 +47,8 @@
       </mat-datepicker-toggle>
       <mat-datepicker #datepickerTo> </mat-datepicker>
       <mat-error *ngIf="availsForm.hasError('required', 'duration.to')">This field is mandatory</mat-error>
-      <mat-error *ngIf="availsForm.hasError('startOverEnd', 'duration.to')">End date must not be earlier than start date</mat-error>
+      <mat-error *ngIf="availsForm.hasError('startOverEnd', 'duration.to')">End date must not be earlier than start date
+      </mat-error>
       <mat-error *ngIf="availsForm.hasError('inPast', 'duration.to')">Date must be in the future</mat-error>
     </mat-form-field>
   </section>
@@ -52,7 +62,8 @@
 
 <ng-container *ngIf="org$ | async as org">
   <p>
-    Click on the territories you're interested in to add them to your Selection. For territories that are not licensed, feel free to
+    Click on the territories you're interested in to add them to your Selection. For territories that are not licensed,
+    feel free to
     <a [routerLink]="['/c/o/marketplace/organization', org.id, 'member']">contact {{ org | orgName }}</a>.
   </p>
 </ng-container>
@@ -61,7 +72,7 @@
     <section class="overlay" fxLayout="column" fxLayoutAlign="center center">
       <article fxLayout="column" fxLayoutAlign="center center">
         <h3>
-          Please fill in Avail Search Criteria section <br/> to show results on the Map.
+          Please fill in Avail Search Criteria section <br /> to show results on the Map.
         </h3>
       </article>
     </section>
@@ -69,29 +80,23 @@
 
   <!-- MAP LAYERS -->
   <ng-container *ngFor="let tag of (available$ | async);">
-    <map-feature [tag]="tag.isoA3" color="#7795ff"
-      (click)="addTerritory(tag)"
-      (mouseover)="displayTerritoryTooltip(tag.label, 'Available')"
-      (mouseout)="clearTerritoryTooltip()">
+    <map-feature [tag]="tag.isoA3" color="#7795ff" (click)="addTerritory(tag)"
+      (mouseover)="displayTerritoryTooltip(tag.label, 'Available')" (mouseout)="clearTerritoryTooltip()">
     </map-feature>
   </ng-container>
   <ng-container *ngFor="let tag of (sold$ | async); ">
-    <map-feature [tag]="tag.isoA3" color="#9ca3c4"
-      (mouseover)="displayTerritoryTooltip(tag.label, 'Rights sold')"
+    <map-feature [tag]="tag.isoA3" color="#9ca3c4" (mouseover)="displayTerritoryTooltip(tag.label, 'Rights sold')"
       (mouseout)="clearTerritoryTooltip()">
     </map-feature>
   </ng-container>
   <ng-container *ngFor="let tag of (selected$ | async);">
-    <map-feature [tag]="tag.isoA3" color="#1a49f5"
-      (click)="removeTerritory(tag)"
-      (mouseover)="displayTerritoryTooltip(tag.label, 'Selected')"
-      (mouseout)="clearTerritoryTooltip()">
+    <map-feature [tag]="tag.isoA3" color="#1a49f5" (click)="removeTerritory(tag)"
+      (mouseover)="displayTerritoryTooltip(tag.label, 'Selected')" (mouseout)="clearTerritoryTooltip()">
     </map-feature>
   </ng-container>
   <ng-container *ngFor="let tag of (inSelection$ | async);">
     <map-feature [tag]="tag.isoA3" color="#1a49f5"
-      (mouseover)="displayTerritoryTooltip(tag.label, 'Already in selection')"
-      (mouseout)="clearTerritoryTooltip()">
+      (mouseover)="displayTerritoryTooltip(tag.label, 'Already in selection')" (mouseout)="clearTerritoryTooltip()">
     </map-feature>
   </ng-container>
 

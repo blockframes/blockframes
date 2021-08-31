@@ -1,6 +1,6 @@
 ﻿<ng-container *ngIf="groups$ | async as groups">
 	<ng-container *ngIf="value$ | async as value">
-		<mat-form-field appearance="outline">
+		<!-- <mat-form-field appearance="outline"> -->
       <mat-icon *ngIf="!!icon" matPrefix [svgIcon]="icon"></mat-icon>
 			<mat-label>
 				<ng-content select="mat-label"></ng-content>
@@ -41,12 +41,12 @@
 					{{ value | toGroupLabel: scope: displayAll|join }}
 				</mat-select-trigger>
 			</mat-select>
-      <mat-hint>
+      <!-- <mat-hint>
         <ng-content select="[groupHint]"></ng-content>
       </mat-hint>
       <mat-error>
         <ng-content select="[groupError]"></ng-content>
-      </mat-error>
-		</mat-form-field>
+      </mat-error> -->
+		<!-- </mat-form-field> -->
 	</ng-container>
 </ng-container>
