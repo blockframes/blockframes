@@ -21,7 +21,7 @@ export class MarketplaceMovieViewComponent implements OnInit {
   public movie$: Observable<Movie>;
   public orgs$: Observable<Organization[]>;
   public eventId$: Observable<string | null>;
-  public event$: Observable<any>;
+  public event$: Observable<unknown>;
   public movieId = this.movieQuery.getActiveId();
 
   public navLinks: RouteDescription[] = [
