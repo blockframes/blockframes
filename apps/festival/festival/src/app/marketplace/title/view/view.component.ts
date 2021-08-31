@@ -41,10 +41,6 @@ export class MarketplaceMovieViewComponent implements OnInit {
     'moodboard'
   ];
 
-  // invitations$ = this.event$.pipe(
-  //   switchMap(event => this.invitationService.valueChanges(ref => ref.where('type', '==', 'attendEvent').where('eventId', '==', event.id)))
-  // );
-
   constructor(
     private movieQuery: MovieQuery,
     private orgService: OrganizationService,
@@ -68,8 +64,11 @@ export class MarketplaceMovieViewComponent implements OnInit {
       map(events => events.filter(e => e.start < new Date())),
       map(events => events.length ? events[events.length - 1].id : null)
     );
-    console.log(q);
-    this.event$ = this.eventService.queryDocs("nW7jnPuXMnP2yYz3S5d8");
-    //this.event$.subscribe(console.log);
+
+    this.event$ = this.eventService.valueChanges(q).pipe(
+      map(events => events.filter(e => e.start < new Date())),
+      map(events => events.length ? events[events.length - 1].id : null),
+      switchMap(id => this.eventService.queryDocs(id))
+    );
   }
 }
