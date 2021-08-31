@@ -5,6 +5,7 @@
  * Use this setup (non-production) when the execution context is outside firebase
  * functions.
  */
+export const e2e_mode = true;
 
 export {
   factoryContract,
