@@ -64,11 +64,7 @@ export class MarketplaceMovieViewComponent implements OnInit {
       map(events => events.filter(e => e.start < new Date())),
       map(events => events.length ? events[events.length - 1].id : null)
     );
-
-    this.event$ = this.eventService.valueChanges(q).pipe(
-      map(events => events.filter(e => e.start < new Date())),
-      map(events => events.length ? events[events.length - 1].id : null),
-      switchMap(id => this.eventService.queryDocs(id))
-    );
+      
+    this.event$ = this.eventId$.pipe(switchMap(id => this.eventService.queryDocs(id)))
   }
 }

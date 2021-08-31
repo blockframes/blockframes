@@ -23,10 +23,8 @@
       </movie-header-actions>
     </movie-header>
 
-    <ng-container *ngIf="event$ |  async as event">
+    <ng-container *ngIf="event$ | async as event">
       <event-view [event]="event">
-        <ng-container [ngSwitch]="event.type">
-        </ng-container>
       </event-view>
     </ng-container>
     
