@@ -19,6 +19,10 @@ import { EventViewModule as EventViewLayoutModule } from '@blockframes/event/lay
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 
+// Pipes
+import { DisplayNameModule, DisplayPositionModule } from '@blockframes/utils/pipes';
+import { OrgNameModule } from '@blockframes/organization/pipes';
+
 const routes = [
   {
     path: '',
@@ -71,6 +75,9 @@ const routes = [
     UpcomingScreeningsModule,
     OngoingButtonModule,
     EventViewLayoutModule,
+    DisplayNameModule,
+    DisplayPositionModule,
+    OrgNameModule,
     // Material
     MatIconModule,
     MatButtonModule,
