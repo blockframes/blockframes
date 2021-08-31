@@ -116,4 +116,23 @@
       </article>
     </section>
   </landing-content>
+
+  <landing-detail>
+    <h1 class="mat-display-1">They're talking about us</h1>
+    <section fxLayout fxLayoutAlign="space-between center" fxLayout.lt-md="column wrap" fxLayoutAlign.lt-md="start center" fxLayoutGap="24px">
+      <ng-container *ngFor="let review of reviews">
+        <mat-card fxLayout="column center" fxFlexAlign="stretch"> 
+          <img mat-card-image [asset]="review.img" alt="review image">
+          <div fxLayout="column" fxLayoutAlign="space-between" fxLayoutGap="24px" fxFlex>
+            <mat-card-title>{{review.title}}</mat-card-title>
+            <mat-card-content>{{review.text}}</mat-card-content>
+            <div fxLayout fxLayoutAlign="center center" fxFlexAlign="end" fxLayoutGap="16px">
+              <span class="mat-caption">From</span>
+              <img [asset]="review.logo">
+            </div>
+          </div>
+        </mat-card>
+      </ng-container>
+    </section>
+  </landing-detail>
 </landing-shell-page>

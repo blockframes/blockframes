@@ -136,7 +136,28 @@ export class LandingComponent {
       text: "« I love working with Archipel. The platform is smooth, the team is available, and most importantly, they understand how this industry works. »",
       logo: "orangeStudio.png",
       company: "Orange Studio",
+    }
+  ]
+
+  public reviews = [
+    {
+      img: "european_sellers.png",
+      title: "European sellers discuss AFM, hybrid realities and a brighter 2021",
+      text: "« In the current market, it makes more sense to give buyers as many opportunities as possible to see our films rather than focusing on a handful of exclusive screenings in set timeframes… »",
+      logo: "screendaily.png"
     },
+    {
+      img: "market_article.png",
+      title: "Archipel Market To Provide Sales Agents, Buyers With Year-Round …",
+      text: "« A tool that can maximize sales, while uniting sales agents and buyers throughout the year; a dedicated, streamlined, efficient tool to replicate and digitally enhance the experience of a sales pitch to a buyer… » ",
+      logo: "variety.png"
+    },
+    {
+      img: "screen_international.png",
+      title: "Screen International FYC Awards Screening programme…",
+      text: "Screen International has partnered with film market platform Archipel Market on an exclusive series of screenings focused on the international feature awards race… ",
+      logo: "screendaily.png"
+    }
   ]
 
 }
