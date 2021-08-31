@@ -68,8 +68,8 @@ export class MarketplaceMovieViewComponent implements OnInit {
       map(events => events.filter(e => e.start < new Date())),
       map(events => events.length ? events[events.length - 1].id : null)
     );
-
+    console.log(q);
     this.event$ = this.eventService.queryDocs("nW7jnPuXMnP2yYz3S5d8");
-    this.event$.subscribe(console.log);
+    //this.event$.subscribe(console.log);
   }
 }
