@@ -4,7 +4,7 @@ import { Media, territoriesISOA3, Territory, TerritoryISOA3Value, TerritoryValue
 import { Bucket } from '../bucket/+state';
 import { Holdback, Mandate } from '../contract/+state/contract.model'
 import { Duration, Term, BucketTerm } from '../term/+state/term.model';
-import { allOf, continuousDisjoint, continuousOverlap, continuousSubset, someOf } from './sets';
+import { allOf, someOf } from './sets';
 
 export interface AvailsFilter {
   medias: Media[],
@@ -60,7 +60,7 @@ export function getSoldTerms(avails: AvailsFilter, terms: Term<Date>[]) {
   return terms.filter(term => (avails.exclusive || term.exclusive)
     && someOf(avails.territories, 'optional').in(term.territories)
     && someOf(avails.medias, 'optional').in(term.medias)
-    && (!avails.duration.from || !avails.duration.to || !continuousDisjoint(term.duration, avails.duration))
+    && someOf(avails.duration, 'optional').in(term.duration)
   );
 }
 
@@ -99,15 +99,14 @@ export function isSameCalendarTerm(term: BucketTerm, avail: AvailsFilter) {
 /** Avail is included in bucketTerm */
 export function isInMapTerm(term: BucketTerm, avail: AvailsFilter) {
   return !isSameMapTerm(term, avail)
-    && (avail.duration?.from && avail.duration?.to)
-    && continuousSubset(term.duration, avail.duration)
-    && avail.medias && allOf(avail.medias).in(term.medias);
+    && allOf(avail.duration, 'optional').in(term.duration)
+    && allOf(avail.medias, 'optional').in(term.medias);
 }
 
 export function isInCalendarTerm(term: BucketTerm, avail: AvailsFilter) {
   return !isSameCalendarTerm(term, avail)
-    && avail.medias && allOf(avail.medias).in(term.medias)
-    && avail.territories && allOf(avail.territories).in(term.territories);
+    && allOf(avail.medias, 'optional').in(term.medias)
+    && allOf(avail.territories, 'optional').in(term.territories);
 }
 
 
@@ -196,9 +195,7 @@ export function getDurationMarkers(mandates: Mandate[], mandateTerms: Term<Date>
 
 
 export function collidingHoldback(holdback: Holdback, term: BucketTerm) {
-  const durationCollision = continuousOverlap(holdback.duration, term.duration); // TODO
-
-  return durationCollision
+  return someOf(term.duration).in(holdback.duration)
     && someOf(term.medias).in(holdback.medias)
     && someOf(term.territories).in(holdback.territories);
 }
