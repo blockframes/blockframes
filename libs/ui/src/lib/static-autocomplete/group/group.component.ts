@@ -121,7 +121,6 @@ export class StaticGroupComponent implements ControlValueAccessor, OnInit, OnDes
   }
 
   get empty() {
-    console.log({value:this.form.value, placeholder:this._placeholder})
     return this.form.value?.length < 1;
   }
 
@@ -218,7 +217,6 @@ export class StaticGroupComponent implements ControlValueAccessor, OnInit, OnDes
 
   get errorState(): boolean {
     const value = Boolean(this.checkIsControlValid(this.form.value)) && this.touched;
-    console.log({value, touched:this.touched, placeholder: this.placeholder})
     return value;
   }
 
