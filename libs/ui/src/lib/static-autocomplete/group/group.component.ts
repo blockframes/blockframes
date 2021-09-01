@@ -172,6 +172,9 @@ export class StaticGroupComponent implements ControlValueAccessor, OnInit, OnDes
   onOpen(opened: boolean) {
     if (opened) {
       this.input.nativeElement.focus();
+      /**@Todo: wip removing the below line causes the determination of error state to not work.
+       * Checkout why, you can ask for help. You've already explored all options known to you.
+       */
       this.touched = true;
     } else {
       this.form.setValue(this.allItems);
