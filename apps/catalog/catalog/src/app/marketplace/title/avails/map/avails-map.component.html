@@ -1,14 +1,11 @@
 <form [formGroup]="availsForm" fxLayout fxLayout.lt-md="column" fxLayoutAlign="start start" fxLayoutGap="12px">
   <section fxLayoutGap="12px" fxFlex>
     <mat-form-field appearance="outline">
-      <static-group fxFlex formControlName="medias" scope="medias" displayAll="All Rights" required
-        placeholder="Specify right(s) to filter" [withoutValues]="['theatrical']" test-id="medias" icon="play_arrow">
-        <mat-label>Media</mat-label>
-
+      <mat-icon matPrefix svgIcon="play_arrow"></mat-icon>
+      <mat-label>Media</mat-label>
+      <static-group formControlName="medias" scope="medias" displayAll="All Rights" required
+        placeholder="Specify right(s) to filter" [withoutValues]="['theatrical']" test-id="medias">
       </static-group>
-      <!-- <mat-hint>
-        <ng-content select="[groupHint]"></ng-content>
-      </mat-hint> -->
       <mat-error *ngIf="availsForm.hasError('required', 'medias')">
         <span>This field is mandatory</span>
       </mat-error>

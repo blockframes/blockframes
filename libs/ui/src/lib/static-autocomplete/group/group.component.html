@@ -1,52 +1,41 @@
 ﻿<ng-container *ngIf="groups$ | async as groups">
-	<ng-container *ngIf="value$ | async as value">
-		<!-- <mat-form-field appearance="outline"> -->
-      <mat-icon *ngIf="!!icon" matPrefix [svgIcon]="icon"></mat-icon>
-			<mat-label>
-				<ng-content select="mat-label"></ng-content>
-			</mat-label>
-			<mat-select [required]="required" multiple [formControl]="form" [disabled]="disabled" (openedChange)="onOpen($event)">
-				<header>
-					<mat-checkbox color="primary" [indeterminate]="(value | getMode:groups) === 'indeterminate'"
-						[checked]="(value | getMode:groups) === 'checked'" (change)="checkAll($event.checked)" test-id="checked-all">
-					</mat-checkbox>
-					<input #inputEl matInput [placeholder]="placeholder" [formControl]="search" test-id="search-input-control"/>
-					<mat-icon *ngIf="!search.value" svgIcon="search"></mat-icon>
-					<button *ngIf="search.value" mat-icon-button type="button" (click)="search.reset()" matTooltip="Clear text">
-            <mat-icon svgIcon="refresh"></mat-icon>
+  <ng-container *ngIf="value$ | async as value">
+    <mat-select [required]="required" multiple [formControl]="form" [disabled]="disabled"
+      (openedChange)="onOpen($event)" >
+      <header>
+        <mat-checkbox color="primary" [indeterminate]="(value | getMode:groups) === 'indeterminate'"
+          [checked]="(value | getMode:groups) === 'checked'" (change)="checkAll($event.checked)" test-id="checked-all">
+        </mat-checkbox>
+        <input #inputEl matInput [placeholder]="placeholder" [formControl]="search" test-id="search-input-control" />
+        <mat-icon *ngIf="!search.value" svgIcon="search"></mat-icon>
+        <button *ngIf="search.value" mat-icon-button type="button" (click)="search.reset()" matTooltip="Clear text">
+          <mat-icon svgIcon="refresh"></mat-icon>
+        </button>
+      </header>
+      <ng-container *ngFor="let group of filteredGroups$ | async; trackBy: trackByLabel">
+        <div matRipple (click)="checkGroup(group, !checkbox.checked, $event)"
+          class="subheader mat-option mat-focus-indicator mat-option-multiple mat-optgroup-label">
+          <mat-checkbox #checkbox="matCheckbox" color="primary"
+            [indeterminate]="(value | getMode:group) === 'indeterminate'"
+            [checked]="(value | getMode:group) === 'checked'" (change)="checkGroup(group, $event.checked)"
+            class="mat-option-pseudo-checkbox">
+          </mat-checkbox>
+          <b class="mat-option-text">{{ group.label }}</b>
+          <button mat-icon-button (click)="hideGroup(group, $event)">
+            <mat-icon *ngIf="!hidden[group.label]" svgIcon="expand_less"></mat-icon>
+            <mat-icon *ngIf="hidden[group.label]" svgIcon="expand_more"></mat-icon>
           </button>
-				</header>
-				<ng-container *ngFor="let group of filteredGroups$ | async; trackBy: trackByLabel">
-					<div matRipple (click)="checkGroup(group, !checkbox.checked, $event)"
-						class="subheader mat-option mat-focus-indicator mat-option-multiple mat-optgroup-label">
-						<mat-checkbox #checkbox="matCheckbox" color="primary"
-							[indeterminate]="(value | getMode:group) === 'indeterminate'"
-							[checked]="(value | getMode:group) === 'checked'"
-							(change)="checkGroup(group, $event.checked)" class="mat-option-pseudo-checkbox">
-						</mat-checkbox>
-						<b class="mat-option-text">{{ group.label }}</b>
-						<button mat-icon-button (click)="hideGroup(group, $event)">
-              <mat-icon *ngIf="!hidden[group.label]" svgIcon="expand_less"></mat-icon>
-              <mat-icon *ngIf="hidden[group.label]" svgIcon="expand_more"></mat-icon>
-            </button>
-					</div>
-					<mat-divider></mat-divider>
-					<ng-container *ngFor="let item of group.items">
-						<mat-option class="item" [ngClass]="{ hidden: hidden[group.label] }" [value]="item">
-							{{ item | toLabel: scope }}
-						</mat-option>
-					</ng-container>
-				</ng-container>
-				<mat-select-trigger>
-					{{ value | toGroupLabel: scope: displayAll|join }}
-				</mat-select-trigger>
-			</mat-select>
-      <!-- <mat-hint>
-        <ng-content select="[groupHint]"></ng-content>
-      </mat-hint>
-      <mat-error>
-        <ng-content select="[groupError]"></ng-content>
-      </mat-error> -->
-		<!-- </mat-form-field> -->
-	</ng-container>
+        </div>
+        <mat-divider></mat-divider>
+        <ng-container *ngFor="let item of group.items">
+          <mat-option class="item" [ngClass]="{ hidden: hidden[group.label] }" [value]="item">
+            {{ item | toLabel: scope }}
+          </mat-option>
+        </ng-container>
+      </ng-container>
+      <mat-select-trigger>
+        {{ value | toGroupLabel: scope: displayAll|join }}
+      </mat-select-trigger>
+    </mat-select>
+  </ng-container>
 </ng-container>
