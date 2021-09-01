@@ -101,7 +101,7 @@ export function createOrgMedias(params: Partial<OrgMedias> = {}): OrgMedias {
 }
 
 export function orgName(org: PublicOrganization, type: 'public' | 'full' = 'public') {
-  if (org && org.denomination) {
+  if (org && !!org.denomination) {
     return org.denomination[type] || org.denomination.full;
   } else {
     return '';
