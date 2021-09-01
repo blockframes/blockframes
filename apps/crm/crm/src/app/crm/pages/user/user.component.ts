@@ -103,6 +103,7 @@ export class UserComponent implements OnInit {
         this.snackBar.open('Member removed for previous org... Please wait until it is added to the new one', 'close', { duration: 2000 });
       } catch (error) {
         this.snackBar.open(error.message, 'close', { duration: 2000 });
+        return;
       }
 
       // Waiting for backend function to be triggered (which removes the orgId from a user when userId is removed from org)
