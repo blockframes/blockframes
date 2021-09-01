@@ -98,7 +98,12 @@ export class UserComponent implements OnInit {
       const permission = permissions.roles[this.userId];
 
       // remove user from org
-      this.organizationService.removeMember(this.userId);
+      try {
+        await this.organizationService.removeMember(this.userId);
+        this.snackBar.open('Member removed for previous org... Please wait until it is added to the new one', 'close', { duration: 2000 });
+      } catch (error) {
+        this.snackBar.open(error.message, 'close', { duration: 2000 });
+      }
 
       // Waiting for backend function to be triggered (which removes the orgId from a user when userId is removed from org)
       let subscription: Subscription;
@@ -117,7 +122,8 @@ export class UserComponent implements OnInit {
       this.organizationService.update(orgId, { userIds: org.userIds });
 
       // add permission
-      this.permissionService.updateMemberRole(this.userId, permission);
+      const message = await this.permissionService.updateMemberRole(this.userId, permission, orgId);
+      this.snackBar.open(message, 'close', { duration: 2000 });
     }
 
     const update = {
@@ -148,8 +154,10 @@ export class UserComponent implements OnInit {
   /** Update user role. */
   public async updateRole(uid: string, role: UserRole) {
     const message = await this.permissionService.updateMemberRole(uid, role);
-    this.userOrgRole = role;
-    this.cdRef.markForCheck();
+    if (message === 'Role updated') {
+      this.userOrgRole = role;
+      this.cdRef.markForCheck();
+    }
     return this.snackBar.open(message, 'close', { duration: 2000 });
   }
 
@@ -171,7 +179,8 @@ export class UserComponent implements OnInit {
     // check if user is not last superAdmin
     const permissions = await this.permissionService.getValue(this.user.orgId);
     if (!!this.user.orgId && !this.permissionService.hasLastSuperAdmin(permissions, this.userId, 'member')) {
-      throw new Error('There must be at least one Super Admin in the organization.');
+      this.snackBar.open('There must be at least one Super Admin in the organization.', 'close', { duration: 2000 });
+      return;
     }
 
     const simulation = await this.simulateDeletion(this.user);
@@ -195,7 +204,7 @@ export class UserComponent implements OnInit {
   async verifyEmail() {
     this.snackBar.open('Verifying email...', 'close', { duration: 2000 });
     const f = this.functions.httpsCallable('verifyEmail');
-    await f({ uid: this.userId }).toPromise(); 
+    await f({ uid: this.userId }).toPromise();
     this.snackBar.open('Email verified', 'close', { duration: 2000 });
   }
 
