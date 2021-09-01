@@ -1,10 +1,7 @@
 
-import { jwplayerApiV2Secret, jwplayerKey } from './environments/environment';
+import { sendRequest } from './node-request';
 
-import { sendRequest } from './utils';
-
-
-export function jwplayerApiV2() {
+export function jwplayerApiV2(jwplayerKey: string, jwplayerApiV2Secret: string) {
   const host = 'api.jwplayer.com';
   const headers = {
     'Authorization': `Bearer ${jwplayerApiV2Secret}`,

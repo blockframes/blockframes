@@ -5,7 +5,7 @@ import * as admin from 'firebase-admin';
 import { File as GFile } from '@google-cloud/storage';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 
-import { upsertWatermark } from '@blockframes/firebase-utils';
+import { jwplayerApiV2, upsertWatermark } from '@blockframes/firebase-utils';
 import { linkDuration } from '@blockframes/event/+state/event.firestore';
 import { StorageVideo } from '@blockframes/media/+state/media.firestore';
 
@@ -14,8 +14,8 @@ import { ErrorResultResponse } from './utils';
 import { getDocument } from './data/internals';
 import { isAllowedToAccessMedia } from './internals/media';
 import { db, getStorageBucketName } from './internals/firebase';
-import { jwplayerSecret, enableDailyFirestoreBackup, playerId } from './environments/environment';
-import { jwplayerApiV2 } from './jwplayer-api';
+import { jwplayerKey, jwplayerApiV2Secret, jwplayerSecret, enableDailyFirestoreBackup, playerId } from './environments/environment';
+
 
 
 interface ReadVideoParams {
@@ -141,7 +141,7 @@ export const getPrivateVideoUrl = async (
 
   try {
     // FETCH VIDEO METADATA
-    const info = await jwplayerApiV2().getVideoInfo(jwPlayerId);
+    const info = await jwplayerApiV2(jwplayerKey, jwplayerApiV2Secret).getVideoInfo(jwPlayerId);
 
     return {
       error: '',
@@ -184,7 +184,7 @@ export const uploadToJWPlayer = async (file: GFile): Promise<{
   const tag = enableDailyFirestoreBackup ? 'production' : 'test';
 
   try {
-    const result = await jwplayerApiV2().createVideo(videoUrl, tag) as any;
+    const result = await jwplayerApiV2(jwplayerKey, jwplayerApiV2Secret).createVideo(videoUrl, tag) as any;
 
     return { success: true, key: result.id }
   } catch (error: unknown) {
@@ -196,7 +196,7 @@ export const uploadToJWPlayer = async (file: GFile): Promise<{
 export const deleteFromJWPlayer = async (jwPlayerId: string) => {
 
   try {
-    const result = await jwplayerApiV2().deleteVideo(jwPlayerId) as any;
+    const result = await jwplayerApiV2(jwplayerKey, jwplayerApiV2Secret).deleteVideo(jwPlayerId) as any;
 
     return { success: true, keys: result }
   } catch (error: unknown) {
