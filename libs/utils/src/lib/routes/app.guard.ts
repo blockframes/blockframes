@@ -7,31 +7,31 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 @Injectable({ providedIn: 'root' })
 export class AppGuard implements CanActivate {
-    constructor(
-        protected router: Router,
-        private query: OrganizationQuery,
-        private snackBar: MatSnackBar,
-        private routerQuery: RouterQuery) { }
+  constructor(
+    protected router: Router,
+    private query: OrganizationQuery,
+    private snackBar: MatSnackBar,
+    private routerQuery: RouterQuery) { }
 
-    canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-        const app = getCurrentApp(this.routerQuery);
-        const isMarketplace = state.url.split('/').includes('marketplace');
-        const org = this.query.getActive();
-        if (isMarketplace) {
-            if (org.appAccess[app].marketplace) {
-                return true;
-            } else if (org.appAccess[app].dashboard) {
-                return this.router.parseUrl('c/o/dashboard');
-            } else {
-                this.snackBar.open('You don\'t have access to this application.', '', { duration: 5000 });
-                return this.router.parseUrl('c/o/request-access');
-            }
-        } else {
-            if (!org.appAccess[app].dashboard && !org.appAccess[app].marketplace) {
-                this.snackBar.open('You don\'t have access to this application.', '', { duration: 5000 });
-                return this.router.parseUrl('c/o/request-access');
-            }
-            return org.appAccess[app].dashboard;
-        }
+  canActivate(_: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+    const app = getCurrentApp(this.routerQuery);
+    const isMarketplace = state.url.split('/').includes('marketplace');
+    const org = this.query.getActive();
+    if (isMarketplace) {
+      if (!!org.appAccess[app] && org.appAccess[app].marketplace) {
+        return true;
+      } else if (!!org.appAccess[app] && org.appAccess[app].dashboard) {
+        return this.router.parseUrl('c/o/dashboard');
+      } else {
+        this.snackBar.open('You don\'t have access to this application.', '', { duration: 5000 });
+        return this.router.parseUrl('c/o/request-access');
+      }
+    } else {
+      if (!org.appAccess[app] || (!org.appAccess[app].dashboard && !org.appAccess[app].marketplace)) {
+        this.snackBar.open('You don\'t have access to this application.', '', { duration: 5000 });
+        return this.router.parseUrl('c/o/request-access');
+      }
+      return org.appAccess[app].dashboard;
     }
+  }
 }
