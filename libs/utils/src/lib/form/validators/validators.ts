@@ -164,9 +164,37 @@ export function compareDates(fromKey: string, toKey: string, keyOnControl?: stri
       const from = keyOnControl === fromKey ? form.value : eventForm.value[fromKey];
       const to = keyOnControl === toKey ? form.value : eventForm.value[toKey]
 
+      let fromErrors = eventForm.controls['from'].errors;
+      let toErrors = eventForm.controls['to'].errors;
+
+      if (keyOnControl === fromKey && from && to && to < from) {
+        if (!('startOverEnd' in (toErrors ?? { }))) {
+          eventForm.controls['to'].setErrors({ ...(toErrors??{}), startOverEnd: true })
+        }
+      } else if (keyOnControl === fromKey && from && to && to > from) {
+        if (toErrors && 'startOverEnd' in toErrors) {
+          delete toErrors.startOverEnd;
+          if (Object.keys(toErrors).length < 1) { toErrors = null }
+          eventForm.controls['to'].setErrors(toErrors)
+        }
+      }
+
+      if (keyOnControl === toKey && from && to && from > to) {
+        if (!('startOverEnd' in (fromErrors ?? { }))) {
+          eventForm.controls['from'].setErrors({...(fromErrors??{}), startOverEnd: true })
+        }
+      } else if (keyOnControl === toKey && from && to && from < to) {
+        if (fromErrors && 'startOverEnd' in fromErrors) {
+          delete fromErrors.startOverEnd;
+          if (Object.keys(fromErrors).length < 1) { fromErrors = null }
+          eventForm.controls['from'].setErrors(fromErrors)
+        }
+      }
+
       if (from && to && from > to) {
         return { startOverEnd: true }
       }
+
     }
     return null;
   }
