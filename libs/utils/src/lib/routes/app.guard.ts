@@ -18,9 +18,9 @@ export class AppGuard implements CanActivate {
     const isMarketplace = state.url.split('/').includes('marketplace');
     const org = this.query.getActive();
     if (isMarketplace) {
-      if (!!org.appAccess[app] && org.appAccess[app].marketplace) {
+      if (org.appAccess[app]?.marketplace) {
         return true;
-      } else if (!!org.appAccess[app] && org.appAccess[app].dashboard) {
+      } else if (org.appAccess[app]?.dashboard) {
         return this.router.parseUrl('c/o/dashboard');
       } else {
         this.snackBar.open('You don\'t have access to this application.', '', { duration: 5000 });
