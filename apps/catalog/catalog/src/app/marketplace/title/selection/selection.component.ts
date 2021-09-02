@@ -85,7 +85,7 @@ export class MarketplaceSelectionComponent implements OnDestroy {
     });
   }
 
-  changePrice(index: number, price: string) {
+  changePrice(index: number, price: string='0') {
     this.setPrice(index, price)
     this.updatePrice(index, price)
   }
