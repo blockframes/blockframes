@@ -164,30 +164,25 @@ export function compareDates(fromKey: string, toKey: string, keyOnControl?: stri
       const from = keyOnControl === fromKey ? form.value : eventForm.value[fromKey];
       const to = keyOnControl === toKey ? form.value : eventForm.value[toKey]
 
-      let fromErrors = eventForm.controls['from'].errors;
-      let toErrors = eventForm.controls['to'].errors;
+      const fromErrors = eventForm.controls['from'].errors ?? { };
+      const toErrors = eventForm.controls['to'].errors ?? { };
 
-      if (keyOnControl === fromKey && from && to && to < from) {
-        if (!('startOverEnd' in (toErrors ?? { }))) {
-          eventForm.controls['to'].setErrors({ ...(toErrors??{}), startOverEnd: true })
-        }
-      } else if (keyOnControl === fromKey && from && to && to > from) {
-        if (toErrors && 'startOverEnd' in toErrors) {
-          delete toErrors.startOverEnd;
-          if (Object.keys(toErrors).length < 1) { toErrors = null }
-          eventForm.controls['to'].setErrors(toErrors)
-        }
-      }
-
-      if (keyOnControl === toKey && from && to && from > to) {
-        if (!('startOverEnd' in (fromErrors ?? { }))) {
-          eventForm.controls['from'].setErrors({...(fromErrors??{}), startOverEnd: true })
-        }
-      } else if (keyOnControl === toKey && from && to && from < to) {
-        if (fromErrors && 'startOverEnd' in fromErrors) {
-          delete fromErrors.startOverEnd;
-          if (Object.keys(fromErrors).length < 1) { fromErrors = null }
-          eventForm.controls['from'].setErrors(fromErrors)
+      /**
+       * Given keyOnControl, checks the value of both fields
+       * 'from' and 'to' to ensure that shown errors are logical
+       * with respect to the values of both fields.
+       */
+      const control = keyOnControl === toKey ? eventForm.controls['from'] : eventForm.controls['to']
+      let errors = keyOnControl === toKey ? fromErrors : toErrors
+      if (from && to) {
+        if (to < from) {
+          control.setErrors({ ...errors, startOverEnd: true })
+        } else if (to > from) {
+          if ('startOverEnd' in errors) {
+            delete errors.startOverEnd;
+            if (Object.keys(errors).length < 1) { errors = null }
+            control.setErrors(errors)
+          }
         }
       }
 
