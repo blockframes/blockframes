@@ -1,7 +1,7 @@
 import { InvitationDocument, MovieDocument, NotificationDocument, OrganizationDocument, NotificationTypes } from './data/types';
 import { getDocument, getOrgAppKey, createDocumentMeta } from './data/internals';
 import { NotificationSettingsTemplate, User } from '@blockframes/user/types';
-import { sendMailFromTemplate, sendMail, substitutions } from './internals/email';
+import { sendMailFromTemplate } from './internals/email';
 import { emailErrorCodes, EventEmailData, getEventEmailData, getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
 import { EventDocument, EventMeta, Screening } from '@blockframes/event/+state/event.firestore';
 import {
@@ -130,9 +130,8 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
         break;
       // Notifications relative to movies
       case 'movieSubmitted':
-        await sendMovieSubmittedEmail(recipient, notification)
-          .then(() => notification.email.isSent = true)
-          .catch(e => notification.email.error = e.message);
+        // No email is sent to user(s)'s org that submitted the movie, only a notification
+        // But an email is sent to supportEmails.[app] (catalog & MF only)
         break;
       case 'movieAccepted':
         await sendMovieAcceptedEmail(recipient, notification)
@@ -394,22 +393,6 @@ async function sendMovieAcceptedEmail(recipient: User, notification: Notificatio
   const app = notification._meta.createdFrom;
   const template = movieAcceptedEmail(toUser, movie.title.international, movieUrl);
   await sendMailFromTemplate(template, app, unsubscribeId);
-}
-
-/** Send an email to C8 members when a movie is submitted */
-async function sendMovieSubmittedEmail(recipient: User, notification: NotificationDocument) {
-  const movie = await getDocument<MovieDocument>(`movies/${notification.docId}`);
-  return sendMail({
-    to: recipient.email,
-    subject: 'A movie has been submitted.',
-    text: `
-    The new movie ${movie.title.international} has been submitted, please check it on CRM.
-
-    You received this email because you're a Blockframes Admin.
-
-    Unsubscribe here : ${substitutions.preferenceUnsubscribe}
-    `
-  });
 }
 
 /** Send an email to user when their request to attend an event has been sent */

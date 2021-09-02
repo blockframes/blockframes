@@ -4,14 +4,15 @@ import { triggerNotifications, createNotification } from './notification';
 import { createDocumentMeta, getDocument, getOrganizationsOfMovie, Timestamp } from './data/internals';
 import { removeAllSubcollections } from './utils';
 
-import { centralOrgId } from './environments/environment';
 import { orgName } from '@blockframes/organization/+state/organization.firestore';
 import { MovieAppConfig } from '@blockframes/movie/+state/movie.firestore';
 import { cleanMovieMedias } from './media';
 import { Change, EventContext } from 'firebase-functions';
 import { algolia, deleteObject, storeSearchableMovie, storeSearchableOrg } from '@blockframes/firebase-utils';
-import { App, getAllAppsExcept, getMovieAppAccess, checkMovieStatus } from '@blockframes/utils/apps';
+import { App, getAllAppsExcept, getMovieAppAccess, checkMovieStatus, getSendgridFrom } from '@blockframes/utils/apps';
 import { Bucket } from '@blockframes/contract/bucket/+state/bucket.model';
+import { sendMovieSubmittedEmail } from './templates/mail';
+import { sendMail } from './internals/email';
 
 const apps: App[] = getAllAppsExcept(['crm']);
 
@@ -127,16 +128,25 @@ export async function onMovieUpdate(
   const isMovieAccepted = isAccepted(before.app, after.app);
   const appAccess = apps.filter(a => !!after.app[a].access);
 
-  if (isMovieSubmitted) { // When movie is submitted to Archipel Content
-    const archipelContent = await getDocument<OrganizationDocument>(`orgs/${centralOrgId.catalog}`);
-    const notifications = archipelContent.userIds.map(
-      toUserId => createNotification({
-        toUserId,
-        type: 'movieSubmitted',
-        docId: after.id,
-        _meta: createDocumentMeta({ createdFrom: appAccess[0] })
-      })
-    );
+  if (isMovieSubmitted) { // When movie is submitted to Archipel Content or Media Financiers
+    const movieWasSubmittedOn = wasSubmittedOn(before.app, after.app)[0];
+    // Mail to supportEmails.[app]
+    const from = getSendgridFrom(movieWasSubmittedOn);
+    await sendMail(sendMovieSubmittedEmail(movieWasSubmittedOn, after), from);
+
+    // Notification to users related to current movie
+    const organizations = await getOrganizationsOfMovie(after.id);
+    const notifications = organizations
+      .filter(organizationDocument => !!organizationDocument && !!organizationDocument.userIds)
+      .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
+      .map(
+        toUserId => createNotification({
+          toUserId,
+          type: 'movieSubmitted',
+          docId: after.id,
+          _meta: createDocumentMeta({ createdFrom: appAccess[0] })
+        })
+      );
 
     await triggerNotifications(notifications);
   }
@@ -185,6 +195,15 @@ function isSubmitted(
   return apps.some(app => {
     return (beforeApp && beforeApp[app].status === 'draft') && (afterApp && afterApp[app].status === 'submitted');
   })
+}
+
+/** Return from which app(s) a movie is going from draft to submitted. */
+function wasSubmittedOn(
+  beforeApp: Partial<{ [app in App]: MovieAppConfig<Timestamp> }>,
+  afterApp: Partial<{ [app in App]: MovieAppConfig<Timestamp> }>): App[] {
+  return apps.map(app => {
+    return (beforeApp && beforeApp[app].status === 'draft') && (afterApp && afterApp[app].status === 'submitted') ? app : undefined;
+  }).filter(a => !!a)
 }
 
 /** Checks if the store status is going from submitted to accepted. */
