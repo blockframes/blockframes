@@ -294,4 +294,9 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
     this.cdr.markForCheck();
   }
+
+  public async logout() {
+    await this.authService.signOut();
+    this.router.navigate(['/']);
+  }
 }
