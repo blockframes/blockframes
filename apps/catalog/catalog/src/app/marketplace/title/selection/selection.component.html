@@ -29,7 +29,7 @@
           <mat-form-field appearance="outline" price>
             <mat-label>Price</mat-label>
             <input matInput type="number" min="0" [value]="contract.price" [attr.test-id]="'price-' + i"
-              (input)="setPrice(i, $event.target.value)" (blur)="updatePrice(i, $event.target.value)" />
+              (input)="setPrice(i, $event.target.value)" />
             <mat-icon matPrefix [svgIcon]="currencyForm.value"></mat-icon>
             <mat-hint>Leave this field empty to request an asking price.</mat-hint>
           </mat-form-field>
@@ -53,17 +53,19 @@
                 </a>
               </div>
               <mat-divider></mat-divider>
-              <holdbacks-form [holdbacks]="contract.holdbacks" [title]="title" (holdbacksChange)="updateHoldbacks(i, $event)">
+              <holdbacks-form [holdbacks]="contract.holdbacks" [title]="title"
+                (holdbacksChange)="updateHoldbacks(i, $event)">
               </holdbacks-form>
             </ng-container>
           </footer>
         </contract-item>
       </ng-container>
+      <footer fxLayout="column" fxLayoutAlign="center center" class="summary" test-id="footer-total-price">
+        <p test-id="total-price">Total Price: {{ total$ | async | currency:bucket.currency }}</p>
+        <button mat-flat-button color="accent" (click)="createOffer(bucket)" test-id="create-offer"
+          [disabled]="(bucket.contracts |allContractHasPrice) === false">Create Offer</button>
+      </footer>
     </ng-container>
-    <footer fxLayout="column" fxLayoutAlign="center center" class="summary" test-id="footer-total-price">
-      <p test-id="total-price">Total Price: {{ total$ | async | currency:bucket.currency }}</p>
-      <button mat-flat-button color="accent" (click)="createOffer(bucket)" test-id="create-offer">Create Offer</button>
-    </footer>
   </ng-container>
 </ng-container>
 

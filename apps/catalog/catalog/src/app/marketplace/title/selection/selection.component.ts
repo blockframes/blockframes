@@ -1,10 +1,10 @@
-import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Optional, Pipe, PipeTransform, OnDestroy } from '@angular/core';
 import { Intercom } from 'ng-intercom';
-import { Bucket, BucketService } from '@blockframes/contract/bucket/+state';
+import { Bucket, BucketContract, BucketService } from '@blockframes/contract/bucket/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { movieCurrencies } from '@blockframes/utils/static-model';
-import { Observable, Subject, merge } from 'rxjs';
-import { map, mapTo, tap } from 'rxjs/operators';
+import { Observable, Subject, merge, Subscription } from 'rxjs';
+import { debounceTime, map, mapTo, tap } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { SpecificTermsComponent } from './specific-terms/specific-terms.component';
@@ -19,14 +19,15 @@ import { Holdback } from '@blockframes/contract/contract/+state';
   styleUrls: ['./selection.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceSelectionComponent {
+export class MarketplaceSelectionComponent implements OnDestroy {
   withoutCurrencies = Object.keys(movieCurrencies).filter(currency => currency !== 'EUR' && currency !== 'USD');
   public currencyForm = new FormControl('EUR');
 
   bucket$: Observable<Bucket>;
   private prices: number[] = [];
-  priceChanges = new Subject<number>();
+  priceChanges = new Subject<{ index: number, price: string }>();
   total$: Observable<number>;
+  subs: Subscription[] = [];
 
   constructor(
     @Optional() private intercom: Intercom,
@@ -49,9 +50,18 @@ export class MarketplaceSelectionComponent {
     const localPrice$ = this.priceChanges.pipe(
       mapTo(this.prices)
     );
-    this.total$ = merge(bucketPrices$, localPrice$).pipe(
+    this.total$ = merge(bucketPrices$).pipe(
       map(prices => this.getTotal(prices))
     );
+
+    const sub = this.priceChanges.pipe(
+      debounceTime(300)
+    ).subscribe((data) => {
+      const { index, price } = data;
+      if (data)
+        this.updatePrice(index, price);
+    })
+    this.subs.push(sub);
   }
 
 
@@ -62,11 +72,6 @@ export class MarketplaceSelectionComponent {
 
   private getTotal(prices: number[]) {
     return prices.reduce((arr, curr) => (arr + curr), 0)
-  }
-
-  setPrice(index: number, price: string | null) {
-    this.prices[index] = parseFloat(price || '0');  // if "", fallback to '0'
-    this.priceChanges.next();
   }
 
   trackById(i: number, doc: { id: string }) { return doc.id; }
@@ -80,6 +85,11 @@ export class MarketplaceSelectionComponent {
     });
   }
 
+  changePrice(index: number, price: string) {
+    this.setPrice(index, price)
+    this.updatePrice(index, price)
+  }
+
   updatePrice(index: number, price: string) {
     const id = this.orgQuery.getActiveId();
     const currency = this.currencyForm.value;
@@ -89,6 +99,12 @@ export class MarketplaceSelectionComponent {
       return { contracts, currency };
     });
   }
+
+  setPrice(index: number, price: string | null) {
+    this.prices[index] = parseFloat(price || '0');  // if "", fallback to '0'
+    this.priceChanges.next({ index, price });
+  }
+
 
   removeContract(index: number, title: Movie) {
     const id = this.orgQuery.getActiveId();
@@ -150,4 +166,29 @@ export class MarketplaceSelectionComponent {
     this.intercom?.show();
   }
 
+  ngOnDestroy() {
+    this.subs.forEach(sub => sub.unsubscribe());
+  }
+
+}
+
+
+@Pipe({ name: 'allContractHasPrice' })
+export class AllContractsHasPricePipe implements PipeTransform {
+
+  transform(contracts: BucketContract[]) {
+    console.log({
+      prices: contracts.map(s => s.price),
+      results: contracts.every(contract => {
+        if (contract.price && contract.price >= 0)
+          return true;
+        return false;
+      })
+    })
+    return contracts.every(contract => {
+      if (contract.price && contract.price >= 0)
+        return true;
+      return false;
+    })
+  }
 }

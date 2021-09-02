@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule } from '@angular/router';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
-import { MarketplaceSelectionComponent } from './selection.component';
+import { AllContractsHasPricePipe, MarketplaceSelectionComponent } from './selection.component';
 import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe';
 import { BucketPipesModule } from '@blockframes/contract/bucket/pipes';
 import { DeepKeyPipeModule } from '@blockframes/utils/pipes';
@@ -21,7 +21,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
-  declarations: [MarketplaceSelectionComponent],
+  declarations: [MarketplaceSelectionComponent, AllContractsHasPricePipe],
   imports: [
     CommonModule,
     FlexLayoutModule,
@@ -51,6 +51,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
         loadChildren: () => import('./congratulations/congratulations.module').then(m => m.CongratulationsModule)
       }
     ])
+  ],
+  providers:[
+    AllContractsHasPricePipe,
   ]
 })
 export class SelectionModule { }
