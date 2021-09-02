@@ -4,7 +4,7 @@ import { Bucket, BucketContract, BucketService } from '@blockframes/contract/buc
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { movieCurrencies } from '@blockframes/utils/static-model';
 import { Observable, Subject, merge, Subscription } from 'rxjs';
-import { debounceTime, map, mapTo } from 'rxjs/operators';
+import { debounceTime, map, mapTo,tap } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { SpecificTermsComponent } from './specific-terms/specific-terms.component';
@@ -177,18 +177,6 @@ export class MarketplaceSelectionComponent implements OnDestroy {
 export class AllContractsHasPricePipe implements PipeTransform {
 
   transform(contracts: BucketContract[]) {
-    console.log({
-      prices: contracts.map(s => s.price),
-      results: contracts.every(contract => {
-        if (contract.price && contract.price >= 0)
-          return true;
-        return false;
-      })
-    })
-    return contracts.every(contract => {
-      if (contract.price && contract.price >= 0)
-        return true;
-      return false;
-    })
+    return contracts.some(contract => contract.price)
   }
 }
