@@ -90,6 +90,15 @@ section {
   }
 }
 
+button[app-logo] {
+  position: absolute;
+  cursor: pointer;
+  top: 24px;
+  left: 24px;
+  background: none;
+  border: none;
+}
+
 .custom-snackbar-message a {
   font-weight: bold;
 }

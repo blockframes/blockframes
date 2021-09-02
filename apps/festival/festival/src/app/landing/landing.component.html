@@ -45,7 +45,7 @@
           <h2>User Benefits</h2>
           <article class="benefits">
             <ng-container *ngFor="let benefit of sellerBenefits" >
-              <div fxLayout fxLayoutAlign="space-between start" fxLayoutGap="32px" fxLayout.lt-md="column" fxLayoutAlign.lt-md="space-between center">
+              <div fxLayout fxLayoutAlign="start start" fxLayoutGap="32px" fxLayout.lt-md="column" fxLayoutAlign.lt-md="space-between center">
                 <img [asset]="benefit.imgAsset" alt="seller benefit image">
                 <div fxLayout="column">
                   <h3>{{ benefit.title }}</h3>
@@ -77,7 +77,7 @@
           <h2>User Benefits</h2>
           <article class="benefits">
             <ng-container *ngFor="let benefit of buyerBenefits">
-              <div fxLayout fxLayoutAlign="space-between start" fxLayoutGap="32px" fxLayout.lt-md="column" fxLayoutAlign.lt-md="space-between center">
+              <div fxLayout fxLayoutAlign="start start" fxLayoutGap="32px" fxLayout.lt-md="column" fxLayoutAlign.lt-md="space-between center">
                 <img [asset]="benefit.imgAsset" alt="buyer benefit image">
                 <div fxLayout="column">
                   <h3>{{ benefit.title }}</h3>
