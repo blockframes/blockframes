@@ -177,7 +177,7 @@ export function compareDates(fromKey: string, toKey: string, keyOnControl?: stri
       if (from && to) {
         if (to < from) {
           control.setErrors({ ...errors, startOverEnd: true })
-        } else if (to > from) {
+        } else {
           if ('startOverEnd' in errors) {
             delete errors.startOverEnd;
             if (Object.keys(errors).length < 1) { errors = null }
