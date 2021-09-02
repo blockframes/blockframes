@@ -1,6 +1,5 @@
 
-import { isSafari } from '@blockframes/utils/browser/utils';
-import { privacies, Privacy } from "@blockframes/utils/file-sanitizer";
+import { privacies, Privacy } from '@blockframes/utils/file-sanitizer';
 import { StorageFile } from './media.firestore';
 
 
