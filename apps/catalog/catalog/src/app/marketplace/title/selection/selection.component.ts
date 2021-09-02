@@ -177,6 +177,6 @@ export class MarketplaceSelectionComponent implements OnDestroy {
 export class AllContractsHasPricePipe implements PipeTransform {
 
   transform(contracts: BucketContract[]) {
-    return contracts.some(contract => contract.price)
+    return contracts.some(contract => !contract.price)
   }
 }
