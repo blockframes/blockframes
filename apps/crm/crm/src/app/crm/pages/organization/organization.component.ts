@@ -32,7 +32,7 @@ export class OrganizationComponent implements OnInit {
   public orgForm: OrganizationCrmForm;
   public movies: Movie[];
   public members;
-  public notifyCheckbox = new FormControl(false);
+  public notifyCheckbox = new FormControl(true);
   public storagePath: string;
 
   public invitationsFromOrganization$: Observable<Invitation[]>;
