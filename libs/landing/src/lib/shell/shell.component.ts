@@ -103,7 +103,7 @@ export class LandingShellComponent implements OnDestroy {
       }
       this.sendDemoRequest(information);
       this.buttonText = 'Request Sent';
-      this.snackBar.open('Your request has been sent.', 'close', { duration: 2000 });
+      this.snackBar.open('Request sent', 'close', { duration: 2000 });
       this.submitted = true;
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 5000 });
