@@ -1,11 +1,11 @@
 // Angular
-import { Component, ChangeDetectionStrategy, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MatSidenav } from '@angular/material/sidenav';
 import { CdkScrollable } from '@angular/cdk/overlay';
 
 // RxJs
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
 // Blockframes
@@ -25,7 +25,10 @@ import { getCurrentApp, App } from '@blockframes/utils/apps';
   animations: [routeAnimation],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceComponent implements OnInit {
+export class MarketplaceComponent implements OnInit, OnDestroy {
+  private activeLinkClickSubscription: Subscription;
+  @Input() activeLinkClickEvent: Observable<void>;
+
   public user$ = this.authQuery.select('profile');
   public wishlistCount$: Observable<number>;
   public notificationCount$ = this.notificationQuery.selectCount();
@@ -46,11 +49,17 @@ export class MarketplaceComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.activeLinkClickSubscription = this.activeLinkClickEvent.subscribe(() => this.sidenav.close());
+
     this.wishlistCount$ = this.orgQuery.selectActive().pipe(
       map(org => org.wishlist),
       switchMap(movieIds => this.movieService.getValue(movieIds)),
       map((movies: Movie[]) => movies.filter(filterMovieByAppAccess(getCurrentApp(this.routerQuery))).length)
     );
+  }
+
+  ngOnDestroy() {
+    this.activeLinkClickSubscription.unsubscribe();
   }
 
   scrollToTop() {

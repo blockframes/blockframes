@@ -1,33 +1,33 @@
-<layout-marketplace>
+<layout-marketplace [activeLinkClickEvent]="activeLinkSubject.asObservable()">
   <aside>
     <mat-nav-list>
       <a mat-list-item routerLink="home" routerLinkActive="active">
         <mat-icon mat-list-icon svgIcon="home"></mat-icon>
         <span mat-line><b>Home</b></span>
       </a>
-      <a test-id="library" mat-list-item routerLink="title" routerLinkActives="active">
+      <a test-id="library" mat-list-item routerLink="title" routerLinkActive="active" #rla1="routerLinkActive" (click)="clickOnLink(rla1.isActive)">
         <mat-icon mat-list-icon svgIcon="video_library"></mat-icon>
         <span mat-line><b>Titles</b></span>
       </a>
-      <a test-id="sellers" mat-list-item routerLink="organization" routerLinkActives="active">
+      <a test-id="sellers" mat-list-item routerLink="organization" routerLinkActive="active" #rla2="routerLinkActive" (click)="clickOnLink(rla2.isActive)">
         <mat-icon mat-list-icon svgIcon="sellers"></mat-icon>
         <span mat-line><b>Sales Agents</b></span>
       </a>
-      <a mat-list-item routerLink="event" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+      <a mat-list-item routerLink="event" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" #rla3="routerLinkActive" (click)="clickOnLink(rla3.isActive)">
         <mat-icon mat-list-icon svgIcon="screening"></mat-icon>
         <span mat-line><b>Screening List</b></span>
       </a>
-      <a mat-list-item routerLink="event/calendar" routerLinkActive="active">
+      <a mat-list-item routerLink="event/calendar" routerLinkActive="active" #rla4="routerLinkActive" (click)="clickOnLink(rla4.isActive)">
         <mat-icon mat-list-icon svgIcon="calendar_today"></mat-icon>
         <span mat-line><b>My Calendar</b></span>
       </a>
-      <a mat-list-item routerLink="wishlist" routerLinkActive="active">
+      <a mat-list-item routerLink="wishlist" routerLinkActive="active" routerLinkActive #rla5="routerLinkActive" (click)="clickOnLink(rla5.isActive)">
         <mat-icon mat-list-icon svgIcon="favorite"></mat-icon>
         <span mat-line><b>Wishlist</b></span>
       </a>
       <ng-container *ngIf="org$ | async | canAccess: 'dashboard':'festival'">
         <mat-divider></mat-divider>
-        <a mat-list-item routerLink="/c/o/dashboard/home" routerLinkActive="active">
+        <a mat-list-item routerLink="/c/o/dashboard/home" routerLinkActive="active" >
           <mat-icon matListIcon svgIcon="dashboard"></mat-icon>
           <span matLine><b>My Dashboard</b></span>
         </a>
