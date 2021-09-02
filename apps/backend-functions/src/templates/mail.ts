@@ -325,7 +325,7 @@ const organizationRequestAccessToAppTemplate = (org: PublicOrganization, app: Ap
   `
   Organization '${org.denomination.full}' requested access to ${module} module of app ${appName[app]},
 
-  Visit ${appUrl.crm}${ADMIN_ACCEPT_ORG_PATH}/${org.id} or go to ${ADMIN_ACCEPT_ORG_PATH}/${org.id} to enable it.
+  Click <a href="${appUrl.crm}${ADMIN_ACCEPT_ORG_PATH}/${org.id}">here</a> or go to ${ADMIN_ACCEPT_ORG_PATH}/${org.id} to enable it.
   `;
 
 
@@ -405,10 +405,10 @@ export function sendMovieSubmittedEmail(app: App, movie: MovieDocument) {
   return {
     to: getSupportEmail(app),
     subject: 'A movie has been submitted.',
-    text: `
+    html: `
     The new movie ${movie.title.international} has been submitted.
 
-    Visit ${appUrl.crm}${ADMIN_REVIEW_MOVIE_PATH}/${movie.id} or go to ${ADMIN_REVIEW_MOVIE_PATH}/${movie.id} to review it.
+    Click <a href="${appUrl.crm}${ADMIN_REVIEW_MOVIE_PATH}/${movie.id}">here</a> or go to ${ADMIN_REVIEW_MOVIE_PATH}/${movie.id} to review it.
 
     `
   };

@@ -19,6 +19,7 @@ import { Change, EventContext } from 'firebase-functions';
 import { algolia, deleteObject, storeSearchableOrg, findOrgAppAccess, storeSearchableUser } from '@blockframes/firebase-utils';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { User } from '@blockframes/user/+state';
+import { noUnsubscribeLink } from '@blockframes/utils/emails/ids';
 
 /** Create a notification with user and org. */
 function notifyUser(toUserId: string, notificationType: NotificationTypes, org: OrganizationDocument, user: PublicUser) {
@@ -92,7 +93,7 @@ export async function onOrganizationCreate(snap: FirebaseFirestore.DocumentSnaps
 
   return Promise.all([
     // Send a mail to c8 admin to inform about the created organization
-    sendMail(emailRequest, from, 0).catch(e => console.warn(e.message)),
+    sendMail(emailRequest, from, noUnsubscribeLink).catch(e => console.warn(e.message)),
     // Update algolia's index
     storeSearchableOrg(org)
   ]);
@@ -280,7 +281,7 @@ export const onRequestFromOrgToAccessApp = async (data: { app: App, module: Modu
       type: 'userRequestAppAccess'
     });
     await triggerNotifications([notification]);
-    await sendMail(mailRequest, from).catch(e => console.warn(e.message));
+    await sendMail(mailRequest, from, noUnsubscribeLink).catch(e => console.warn(e.message));
     return true;
   }
   return;

@@ -1,6 +1,6 @@
 import SendGrid from '@sendgrid/mail';
 import { sendgridAPIKey, projectId } from '../environments/environment';
-import { unsubscribeGroupIds } from '@blockframes/utils/emails/ids';
+import { unsubscribeGroupIds, unsubscribeFromAllExceptCriticals } from '@blockframes/utils/emails/ids';
 export { EmailRequest, EmailTemplateRequest } from '@blockframes/utils/emails/utils';
 import { emailErrorCodes, EmailRequest, EmailTemplateRequest } from '@blockframes/utils/emails/utils';
 import { MailDataRequired } from '@sendgrid/helpers/classes/mail';
@@ -23,7 +23,7 @@ const criticalsEmailsGroupId = unsubscribeGroupIds.criticalsEmails;
  * Like this, we can avoid showing the criticalEmails group, which is linked for example to the reset password email.
  * Users won't be able to unsubscribe from this group and will always received email from the criticalsEmails group.
 */
-const groupsToDisplay = [unsubscribeGroupIds.allExceptCriticals];
+const groupsToDisplay = [unsubscribeFromAllExceptCriticals];
 
 /**
  * Sends a transactional email configured by the EmailRequest provided.

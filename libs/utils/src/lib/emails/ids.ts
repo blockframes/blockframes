@@ -77,3 +77,9 @@ export const unsubscribeGroupIds = {
   allExceptCriticals: 15120,
   criticalsEmails: 15136
 }
+
+// This is for letting user unsubscribe from every email except the critical ones as reset password.
+export const unsubscribeFromAllExceptCriticals = unsubscribeGroupIds.allExceptCriticals;
+
+// Use this groupId to remove unsubscribe link at mail bottom. Typically for support emails
+export const noUnsubscribeLink = 0;
