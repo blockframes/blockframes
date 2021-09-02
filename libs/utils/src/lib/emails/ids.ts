@@ -82,4 +82,5 @@ export const unsubscribeGroupIds = {
 export const unsubscribeFromAllExceptCriticals = unsubscribeGroupIds.allExceptCriticals;
 
 // Use this groupId to remove unsubscribe link at mail bottom. Typically for support emails
+// Note, only "text" emails (as opposition to "html") will remove the unsubscribe link
 export const noUnsubscribeLink = 0;

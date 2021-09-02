@@ -315,7 +315,7 @@ export function offerCreatedConfirmationEmail(toUser: UserEmailData, org: Organi
  */
 const organizationCreatedTemplate = (orgId: string) =>
   `
- You can review it <a href="${appUrl.crm}${ADMIN_ACCEPT_ORG_PATH}/${orgId}">here</a>.
+ To review it visit ${appUrl.crm}${ADMIN_ACCEPT_ORG_PATH}/${orgId}.
  `;
 
 /**
@@ -325,7 +325,7 @@ const organizationRequestAccessToAppTemplate = (org: PublicOrganization, app: Ap
   `
   Organization '${org.denomination.full}' requested access to ${module} module of app ${appName[app]},
 
-  Click <a href="${appUrl.crm}${ADMIN_ACCEPT_ORG_PATH}/${org.id}">here</a> or go to ${ADMIN_ACCEPT_ORG_PATH}/${org.id} to enable it.
+  Visit ${appUrl.crm}${ADMIN_ACCEPT_ORG_PATH}/${org.id} or go to ${ADMIN_ACCEPT_ORG_PATH}/${org.id} to enable it.
   `;
 
 
@@ -346,7 +346,7 @@ export async function organizationCreated(org: OrganizationDocument): Promise<Em
   return {
     to: supportEmail,
     subject: `${appName[org._meta.createdFrom]} - ${org.denomination.full} was created and needs a review`,
-    html: organizationCreatedTemplate(org.id)
+    text: organizationCreatedTemplate(org.id)
   };
 }
 
@@ -358,7 +358,7 @@ export async function organizationRequestedAccessToApp(org: OrganizationDocument
   return {
     to: getSupportEmail(org._meta.createdFrom),
     subject: 'An organization requested access to an app',
-    html: organizationRequestAccessToAppTemplate(org, app, module)
+    text: organizationRequestAccessToAppTemplate(org, app, module)
   };
 }
 
@@ -405,10 +405,10 @@ export function sendMovieSubmittedEmail(app: App, movie: MovieDocument) {
   return {
     to: getSupportEmail(app),
     subject: 'A movie has been submitted.',
-    html: `
+    text: `
     The new movie ${movie.title.international} has been submitted.
 
-    Click <a href="${appUrl.crm}${ADMIN_REVIEW_MOVIE_PATH}/${movie.id}">here</a> or go to ${ADMIN_REVIEW_MOVIE_PATH}/${movie.id} to review it.
+    Visit ${appUrl.crm}${ADMIN_REVIEW_MOVIE_PATH}/${movie.id} or go to ${ADMIN_REVIEW_MOVIE_PATH}/${movie.id} to review it.
 
     `
   };
