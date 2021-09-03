@@ -8,7 +8,8 @@ export function toLabel(value: string | string[], scope: Scope): string | string
     if (Array.isArray(value)) {
       return value.map(val => staticModel[scope][val]).join(', ')
     } else {
-      return staticModel[scope][value];
+      // if no value is found return the input value to avoid unexpected empty values
+      return staticModel[scope][value] ?? value;
     }
   } catch (error) {
     console.error(`Could not find label for key "${value}" in scope "${scope}"`);

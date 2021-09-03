@@ -48,17 +48,17 @@
               </mat-panel-title>
             </mat-expansion-panel-header>
             <article class="expansion-panel-content">
-              <ng-container *ngIf="(term.territories| toGroupLabel:'territories':'world') as territories">
+              <ng-container *ngIf="(term.territories | toGroupLabel:'territories':'world') as territories">
                 <ng-container *ngIf="territories.length <= maxTerritories; else moreTerritories">
                   <mat-chip-list aria-label="Territories">
-                    <mat-chip disableRipple *ngFor="let territory of territories ">{{territory }}</mat-chip>
+                    <mat-chip disableRipple *ngFor="let territory of territories">{{ territory | toLabel:'territories' }}</mat-chip>
                   </mat-chip-list>
                 </ng-container>
                 <ng-template #moreTerritories>
                   <div fxFlex fxLayout="column" fxLayoutAlign="start end">
                     <mat-chip-list aria-label="Territories">
-                      <ng-container *ngFor="let territory of territories| slice:0:maxTerritories">
-                        <mat-chip disableRipple>{{ territory }}</mat-chip>
+                      <ng-container *ngFor="let territory of territories | slice:0:maxTerritories">
+                        <mat-chip disableRipple>{{ territory | toLabel:'territories' }}</mat-chip>
                       </ng-container>
                     </mat-chip-list>
                     <button mat-button class="spacing" (click)="openTerritoryModal(territories)">
