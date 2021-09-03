@@ -30,7 +30,7 @@
             <mat-label>Price</mat-label>
             <input matInput type="number" min="0" [value]="contract.price" [attr.test-id]="'price-' + i"
               (input)="setPrice(i, $event.target.value)" />
-            <mat-icon matPrefix [svgIcon]="currencyForm.value"></mat-icon>
+            <mat-icon matPrefix [svgIcon]="currencyForm.valueChanges|async"></mat-icon>
             <mat-hint>Leave this field empty to request an asking price.</mat-hint>
           </mat-form-field>
           <ng-template #termAction let-index="index">

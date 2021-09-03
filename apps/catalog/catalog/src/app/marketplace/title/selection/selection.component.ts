@@ -21,7 +21,7 @@ import { Holdback } from '@blockframes/contract/contract/+state';
 })
 export class MarketplaceSelectionComponent implements OnDestroy {
   withoutCurrencies = Object.keys(movieCurrencies).filter(currency => currency !== 'EUR' && currency !== 'USD');
-  public currencyForm = new FormControl('EUR');
+  public currencyForm = new FormControl('EUR', { updateOn: 'change' });
 
   bucket$: Observable<Bucket>;
   private prices: number[] = [];
@@ -48,10 +48,6 @@ export class MarketplaceSelectionComponent implements OnDestroy {
       map(bucket => bucket.contracts.map(c => c.price))
     );
 
-    const localPrice$ = this.priceChanges.pipe(
-      mapTo(this.prices)
-    );
-
     this.total$ = merge(bucketPrices$).pipe(
       map(prices => this.getTotal(prices))
     );
@@ -64,7 +60,12 @@ export class MarketplaceSelectionComponent implements OnDestroy {
         this.updatePrice(index, price);
     });
 
-    this.subs.push(sub);
+    const sub1 = this.currencyForm.valueChanges.subscribe(currency => {
+      const id = this.orgQuery.getActiveId();
+      return this.bucketService.update(id, { currency });
+    })
+
+    this.subs.push(sub, sub1);
   }
 
   private setTitle(amount: number) {
@@ -73,7 +74,7 @@ export class MarketplaceSelectionComponent implements OnDestroy {
   }
 
   private getTotal(prices: number[]) {
-    return prices.reduce((arr, curr) => (arr + (curr||0)), 0)
+    return prices.reduce((arr, curr) => (arr + (curr || 0)), 0)
   }
 
   trackById(i: number, doc: { id: string }) { return doc.id; }
@@ -87,11 +88,6 @@ export class MarketplaceSelectionComponent implements OnDestroy {
     });
   }
 
-  changePrice(index: number, price: string) {
-    this.setPrice(index, price)
-    this.updatePrice(index, price)
-  }
-
   updatePrice(index: number, price: string) {
     const id = this.orgQuery.getActiveId();
     const currency = this.currencyForm.value;
@@ -103,8 +99,8 @@ export class MarketplaceSelectionComponent implements OnDestroy {
   }
 
   setPrice(index: number, price: string | null = "0") {
-    const _price = price || "0"
-    this.prices[index] = parseFloat(_price);  // if "", fallback to '0'
+    const _price = price || "0"; // if "", fallback to '0'
+    this.prices[index] = parseFloat(_price);
     this.priceChanges.next({ index, price: _price });
   }
 
