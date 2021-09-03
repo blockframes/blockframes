@@ -175,8 +175,9 @@ export function compareDates(fromKey: string, toKey: string, keyOnControl: strin
 
     const otherKey = keyOnControl === fromKey ? toKey : fromKey;
     const otherControl = parentForm.get(otherKey);
-    const otherErrors = otherControl.errors ?? {};    /**
+    const otherErrors = otherControl.errors ?? {};
 
+    /**
      * Given keyOnControl, checks the value of both fields
      * 'from' and 'to' to ensure that shown errors are logical
      * with respect to the values of both fields.
