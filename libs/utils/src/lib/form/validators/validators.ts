@@ -164,31 +164,29 @@ export function compareDates(fromKey: string, toKey: string, keyOnControl?: stri
       const from = keyOnControl === fromKey ? form.value : eventForm.value[fromKey];
       const to = keyOnControl === toKey ? form.value : eventForm.value[toKey]
 
-      const fromErrors = eventForm.controls['from'].errors ?? { };
-      const toErrors = eventForm.controls['to'].errors ?? { };
+      const fromErrors = eventForm.controls['from'].errors ?? {};
+      const toErrors = eventForm.controls['to'].errors ?? {};
 
       /**
        * Given keyOnControl, checks the value of both fields
        * 'from' and 'to' to ensure that shown errors are logical
        * with respect to the values of both fields.
        */
-      const control = keyOnControl === toKey ? eventForm.controls['from'] : eventForm.controls['to']
-      let errors = keyOnControl === toKey ? fromErrors : toErrors
+      const control = keyOnControl === toKey ? eventForm.controls['from'] : eventForm.controls['to'];
+      let errors = keyOnControl === toKey ? fromErrors : toErrors;
       if (from && to) {
         if (to < from) {
-          control.setErrors({ ...errors, startOverEnd: true })
+          control.setErrors({ ...errors, startOverEnd: true });
         } else {
           if ('startOverEnd' in errors) {
             delete errors.startOverEnd;
             if (Object.keys(errors).length < 1) { errors = null }
-            control.setErrors(errors)
+            control.setErrors(errors);
           }
         }
       }
 
-      if (from && to && from > to) {
-        return { startOverEnd: true }
-      }
+      if (from && to && from > to) return { startOverEnd: true };
 
     }
     return null;
