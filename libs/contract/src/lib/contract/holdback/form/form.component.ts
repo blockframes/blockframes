@@ -24,7 +24,6 @@ export class HolbackFormComponent {
     duration: 'Duration',
     territories: 'Territories',
     medias: 'Media',
-    languages: 'Versions',
   };
 
   constructor(private dialog: MatDialog) {}
