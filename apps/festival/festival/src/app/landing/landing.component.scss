@@ -101,10 +101,21 @@ landing-content {
 landing-detail {
   padding: 80px;
   background-color: var(--background-card);
-  mat-card {
+  a {
     width: 30%;
+    cursor: pointer;
+    transition: box-shadow 0.3s ease-in-out;
+
+    mat-card {
+      width: 100%;
+    }
+  }
+  a:hover {
+    box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.318);
+    transition: box-shadow 0.5s ease-in-out;
   }
 }
+
 
 @include layout-bp(lt-lg) {
   landing-content {
@@ -117,7 +128,8 @@ landing-detail {
 @include layout-bp(lt-md) {
   landing-content {
     article .surface{
-      width: 75%;
+      width: 100%;
+      margin-bottom: 8px;
     }
     .benefits {
       grid-template-columns: 1fr ;
@@ -125,7 +137,7 @@ landing-detail {
     }
   }
   landing-detail {
-    mat-card {
+    a {
       width: 75%
     }
   }
@@ -139,7 +151,7 @@ landing-detail {
     }
   }
   landing-detail {
-    mat-card {
+    a {
       width: 100%
     }
   }
