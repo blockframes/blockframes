@@ -27,6 +27,7 @@ export class MarketplaceSelectionComponent implements OnDestroy {
   private prices: number[] = [];
   priceChanges = new Subject<{ index: number, price: string }>();
   total$: Observable<number>;
+  disabled$: Observable<boolean>;
   subs: Subscription[] = [];
 
   constructor(
@@ -42,6 +43,10 @@ export class MarketplaceSelectionComponent implements OnDestroy {
         this.setTitle(bucket?.contracts.length);
         if (bucket?.currency) this.currencyForm.setValue(bucket.currency);
       })
+    );
+
+    this.disabled$ = this.bucket$.pipe(
+      map(bucket => bucket.contracts.some(contract => !contract.price))
     );
 
     const bucketPrices$ = this.bucket$.pipe(
@@ -169,13 +174,4 @@ export class MarketplaceSelectionComponent implements OnDestroy {
     this.subs.forEach(sub => sub.unsubscribe());
   }
 
-}
-
-
-@Pipe({ name: 'allContractHasPrice' })
-export class AllContractsHasPricePipe implements PipeTransform {
-
-  transform(contracts: BucketContract[]) {
-    return contracts.some(contract => !contract.price)
-  }
 }

@@ -63,7 +63,7 @@
       <footer fxLayout="column" fxLayoutAlign="center center" class="summary" test-id="footer-total-price">
         <p test-id="total-price">Total Price: {{ total$ | async | currency:bucket.currency }}</p>
         <button mat-flat-button color="accent" (click)="createOffer(bucket)" test-id="create-offer"
-          [disabled]="bucket.contracts |allContractHasPrice">Create Offer</button>
+          [disabled]="disabled$ | async">Create Offer</button>
       </footer>
     </ng-container>
   </ng-container>
