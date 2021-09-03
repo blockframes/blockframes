@@ -1,11 +1,11 @@
 // Angular
-import { Component, ChangeDetectionStrategy, OnInit, ViewChild } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, ChangeDetectionStrategy, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { RouterOutlet, Router, NavigationEnd, Event as NavigationEvent } from '@angular/router';
 import { MatSidenav } from '@angular/material/sidenav';
 import { CdkScrollable } from '@angular/cdk/overlay';
 
 // RxJs
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
 // Blockframes
@@ -25,14 +25,14 @@ import { getCurrentApp, App } from '@blockframes/utils/apps';
   animations: [routeAnimation],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceComponent implements OnInit {
+export class MarketplaceComponent implements OnInit, OnDestroy {
   public user$ = this.authQuery.select('profile');
   public wishlistCount$: Observable<number>;
   public notificationCount$ = this.notificationQuery.selectCount();
   public invitationCount$ = this.invitationService.myInvitations$.pipe(
     map(invitations => invitations.filter(invitation => invitation.status === 'pending').length),
   )
-
+  private routerEventSubscription: Subscription;
   @ViewChild(MatSidenav) sidenav: MatSidenav;
   @ViewChild(CdkScrollable) cdkScrollable: CdkScrollable
 
@@ -42,7 +42,8 @@ export class MarketplaceComponent implements OnInit {
     private notificationQuery: NotificationQuery,
     private authQuery: AuthQuery,
     private movieService: MovieService,
-    private routerQuery: RouterQuery
+    private routerQuery: RouterQuery,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -51,6 +52,18 @@ export class MarketplaceComponent implements OnInit {
       switchMap(movieIds => this.movieService.getValue(movieIds)),
       map((movies: Movie[]) => movies.filter(filterMovieByAppAccess(getCurrentApp(this.routerQuery))).length)
     );
+
+    /* Close sidenav if click on active link */
+    this.routerEventSubscription = this.router.events.subscribe(
+      (event: NavigationEvent) => {
+        if(event instanceof NavigationEnd && event.url.includes("/marketplace") && event.url === event.urlAfterRedirects) {
+          this.sidenav.close();
+        }
+      });
+  }
+
+  ngOnDestroy() {
+    this.routerEventSubscription.unsubscribe();
   }
 
   scrollToTop() {
