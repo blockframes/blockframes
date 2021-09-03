@@ -8,22 +8,17 @@
       <bf-table-filter [source]="contracts" [columns]="columns" [initialColumns]="initialColumns" clickable showFilter
         showPaginator (rowClick)="goToContract($event)">
         <ng-template colRef="offerId" let-id>
-          {{ id }}&nbsp;&nbsp;
-          <ng-container *ngIf="(id|getOffer|async) as offer">
-            <ng-container *ngIf="offer">
-              <bf-tag>{{offer.status | toLabel:'offerStatus'}}</bf-tag>
-            </ng-container>
-          </ng-container>
+          <span>{{ id }}</span>
         </ng-template>
         <ng-template colRef="titleId" let-titleId>
           <ng-container *ngIf="titleId">
-            <ng-container *ngIf="(titleId| getTitle | async) as title">
+            <ng-container *ngIf="(titleId | getTitle | async) as title">
               {{title.title?.international | maxLength:50}}
             </ng-container>
           </ng-container>
         </ng-template>
         <ng-template colRef="id" let-id>
-          <ng-container *ngIf="(id| getIncome | async) as income; else loadingPrice">
+          <ng-container *ngIf="(id | getIncome | async) as income; else loadingPrice">
             <ng-container *ngIf="income?.price; else noIncome">
               {{income.price | currency:income.currency}}
             </ng-container>
@@ -35,7 +30,7 @@
         </ng-template>
         <ng-template colRef="_meta.createdAt" let-date>{{date | date:'MM/dd/yyyy'}}</ng-template>
         <ng-template colRef="status" let-status>
-          <span>{{(status| titlecase)}}</span>
+          <bf-tag>{{(status | toLabel: 'contractStatus' )}}</bf-tag>
         </ng-template>
       </bf-table-filter>
     </mat-card>
