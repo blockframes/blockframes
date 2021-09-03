@@ -48,14 +48,11 @@
 
 <ng-template #empty>
   <section fxLayout="column" fxLayoutAlign="center center" fxFlexGap="16">
-    <h1>You have no contracts yet.</h1>
+    <h1>You have no contract yet.</h1>
     <p>
-      Your contracts will appear here when you submit them.<br />
-      Meanwhile, you can browse the Archipel library to discover titles.
+      You will be notified as soon as a buyer makes an offer on your titles.
     </p>
     <button (click)="openIntercom()" mat-button>Contact the Archipel Team</button>
     <img asset="empty_results.svg" alt="Offer has been created successfully">
-    <a mat-flat-button color="primary" routerLink="../offer">See Offers & Deals</a>
-    <a mat-button color="primary" routerLink="/c/o/marketplace/title">Browse the Library</a>
   </section>
 </ng-template>
