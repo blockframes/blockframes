@@ -4,7 +4,7 @@ import { Bucket, BucketContract, BucketService } from '@blockframes/contract/buc
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { movieCurrencies } from '@blockframes/utils/static-model';
 import { Observable, Subject, merge, Subscription } from 'rxjs';
-import { debounceTime, map, mapTo,tap } from 'rxjs/operators';
+import { debounceTime, map, mapTo, tap } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { SpecificTermsComponent } from './specific-terms/specific-terms.component';
@@ -47,9 +47,11 @@ export class MarketplaceSelectionComponent implements OnDestroy {
     const bucketPrices$ = this.bucket$.pipe(
       map(bucket => bucket.contracts.map(c => c.price))
     );
+
     const localPrice$ = this.priceChanges.pipe(
       mapTo(this.prices)
     );
+
     this.total$ = merge(bucketPrices$).pipe(
       map(prices => this.getTotal(prices))
     );
@@ -60,10 +62,10 @@ export class MarketplaceSelectionComponent implements OnDestroy {
       const { index, price } = data;
       if (data)
         this.updatePrice(index, price);
-    })
+    });
+
     this.subs.push(sub);
   }
-
 
   private setTitle(amount: number) {
     const title = amount ? 'My Selection' : 'No selections yet';
@@ -71,7 +73,7 @@ export class MarketplaceSelectionComponent implements OnDestroy {
   }
 
   private getTotal(prices: number[]) {
-    return prices.reduce((arr, curr) => (arr + curr), 0)
+    return prices.reduce((arr, curr) => (arr + (curr||0)), 0)
   }
 
   trackById(i: number, doc: { id: string }) { return doc.id; }
@@ -85,7 +87,7 @@ export class MarketplaceSelectionComponent implements OnDestroy {
     });
   }
 
-  changePrice(index: number, price: string='0') {
+  changePrice(index: number, price: string) {
     this.setPrice(index, price)
     this.updatePrice(index, price)
   }
@@ -100,9 +102,10 @@ export class MarketplaceSelectionComponent implements OnDestroy {
     });
   }
 
-  setPrice(index: number, price: string | null) {
-    this.prices[index] = parseFloat(price || '0');  // if "", fallback to '0'
-    this.priceChanges.next({ index, price });
+  setPrice(index: number, price: string | null = "0") {
+    const _price = price || "0"
+    this.prices[index] = parseFloat(_price);  // if "", fallback to '0'
+    this.priceChanges.next({ index, price: _price });
   }
 
 
