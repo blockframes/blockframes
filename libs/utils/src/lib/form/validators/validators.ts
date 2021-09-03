@@ -158,21 +158,24 @@ export function isKeyArrayValidator(scope: Scope): ValidatorFn {
  * @param toKey name of key of to date
  * @returns
  */
-export function compareDates(fromKey: string, toKey: string, keyOnControl?: string): ValidatorFn {
+export function compareDates(fromKey: string = 'from', toKey: string = 'to', keyOnControl?: string): ValidatorFn {
   return (form: FormControl): ValidationErrors => {
     const eventForm = form?.parent as EventForm;
+
+    if (!eventForm.contains(fromKey) && !eventForm.contains(toKey)) return { providedKeysNotInForm: true };
+
     const from = keyOnControl === fromKey ? form.value : eventForm.value[fromKey];
     const to = keyOnControl === toKey ? form.value : eventForm.value[toKey]
 
-    const fromErrors = eventForm.get('from').errors ?? {};
-    const toErrors = eventForm.get('to').errors ?? {};
+    const fromErrors = eventForm.controls[fromKey].errors ?? {};
+    const toErrors = eventForm.controls[toKey].errors ?? {};
 
     /**
      * Given keyOnControl, checks the value of both fields
      * 'from' and 'to' to ensure that shown errors are logical
      * with respect to the values of both fields.
      */
-    const control = keyOnControl === toKey ? eventForm.controls['from'] : eventForm.controls['to'];
+    const control = keyOnControl === toKey ? eventForm.controls[fromKey] : eventForm.controls[toKey];
     let errors = keyOnControl === toKey ? fromErrors : toErrors;
     if (from && to) {
       if (to < from) {
@@ -190,7 +193,6 @@ export function compareDates(fromKey: string, toKey: string, keyOnControl?: stri
 
   }
   return null;
-}
 }
 
 /**
