@@ -8,7 +8,6 @@ import {
   FormArray
 } from '@angular/forms';
 import { languages, isInKeys, Scope, staticModel } from '@blockframes/utils/static-model';
-import { EventForm } from '@blockframes/event/form/event.form';
 
 export const urlValidators = Validators.pattern(/^(http(s)?:\/\/www\.|http(s)?:\/\/)[a-z0-9]+([-.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/);
 
@@ -158,41 +157,43 @@ export function isKeyArrayValidator(scope: Scope): ValidatorFn {
  * @param toKey name of key of to date
  * @returns
  */
-export function compareDates(fromKey: string = 'from', toKey: string = 'to', keyOnControl?: string): ValidatorFn {
-  return (form: FormControl): ValidationErrors => {
-    const eventForm = form?.parent as EventForm;
+export function compareDates(fromKey: string, toKey: string, keyOnControl: string): ValidatorFn {
+  return (control: FormControl): ValidationErrors => {
+    const parentForm = control?.parent as FormGroup;
 
-    if (!eventForm.contains(fromKey) && !eventForm.contains(toKey)) return { providedKeysNotInForm: true };
+    if (!parentForm) return null;
 
-    const from = keyOnControl === fromKey ? form.value : eventForm.value[fromKey];
-    const to = keyOnControl === toKey ? form.value : eventForm.value[toKey]
+    if (!parentForm.contains(fromKey) || !parentForm.contains(toKey)) {
+      const keys = Object.keys(parentForm.controls).join(', ');
+      throw new Error(`Could not find keys ${fromKey} or ${toKey} in the form with keys ${keys}`)
+    }
 
-    const fromErrors = eventForm.controls[fromKey].errors ?? {};
-    const toErrors = eventForm.controls[toKey].errors ?? {};
+    const from = parentForm.get(fromKey).value;
+    const to = parentForm.get(toKey).value;
 
-    /**
+    if (!from || !to) return null;
+
+    const otherKey = keyOnControl === fromKey ? toKey : fromKey;
+    const otherControl = parentForm.get(otherKey);
+    const otherErrors = otherControl.errors ?? {};    /**
+
      * Given keyOnControl, checks the value of both fields
      * 'from' and 'to' to ensure that shown errors are logical
      * with respect to the values of both fields.
      */
-    const control = keyOnControl === toKey ? eventForm.controls[fromKey] : eventForm.controls[toKey];
-    let errors = keyOnControl === toKey ? fromErrors : toErrors;
-    if (from && to) {
-      if (to < from) {
-        control.setErrors({ ...errors, startOverEnd: true });
-      } else {
-        if ('startOverEnd' in errors) {
-          delete errors.startOverEnd;
-          if (Object.keys(errors).length < 1) { errors = null }
-          control.setErrors(errors);
-        }
+    if (to < from) {
+      otherControl.setErrors({ ...otherErrors, startOverEnd: true });
+      return { startOverEnd: true }
+    } else {
+      if ('startOverEnd' in otherErrors) {
+        delete otherErrors.startOverEnd;
+        !Object.keys(otherErrors).length
+          ? otherControl.setErrors(null)
+          : otherControl.setErrors(otherErrors);
       }
+      return null;
     }
-
-    if (from && to && from > to) return { startOverEnd: true };
-
   }
-  return null;
 }
 
 /**
