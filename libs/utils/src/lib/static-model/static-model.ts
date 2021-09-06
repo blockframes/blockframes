@@ -24,6 +24,7 @@ export const contractStatus = {
    * Starting from this status, contract is visible for every parties
    */
   undernegotiation: 'Under negotiation',
+  pending: ' New',
 } as const
 
 export const contractType = {
@@ -32,12 +33,12 @@ export const contractType = {
 } as const
 
 export const offerStatus = {
-  'pending': ' New',
-  'negotiating': 'In Negotiation',
-  'accepted': ' Accepted',
-  'signing': 'On Signature',
-  'signed': 'Signed',
-  'declined': 'Declined',
+  pending: ' New',
+  negotiating: 'In Negotiation',
+  accepted: ' Accepted',
+  signing: 'On Signature',
+  signed: 'Signed',
+  declined: 'Declined',
 } as const
 
 export const certifications = {
