@@ -1,4 +1,4 @@
-import { GetKeys, Scope } from './static-model';
+import { GetKeys } from './static-model';
 
 export type GroupScope = keyof typeof staticGroups;
 

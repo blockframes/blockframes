@@ -16,12 +16,11 @@ export class ListComponent {
     duration: 'Duration',
     territories: 'Territories',
     medias: 'Media',
-    languages: 'Versions',
   };
 
   constructor(private dialog: MatDialog) { }
 
-  
+
   openDetails(terms: string, scope: Scope) {
     this.dialog.open(DetailedTermsComponent, { data: { terms, scope }, maxHeight: '80vh', autoFocus: false });
   }

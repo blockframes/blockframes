@@ -1,14 +1,13 @@
-<ng-container *ngIf="offer$ | async as offer; else loading">
+<ng-container *ngIf="contract$ | async as contract; else loading">
   <header fxLayout="column" fxLayoutAlign="start start">
     <a mat-icon-button routerLink="../.." color="primary">
       <mat-icon svgIcon="arrow_back"></mat-icon>
     </a>
-    <bf-tag>{{offer.status | toLabel: 'offerStatus'}}</bf-tag>
-    <h1>Offer Reference: {{offer.id}}</h1>
-    <span>Offer created: {{offer._meta.createdAt | date: 'dd/MM/yyyy'}}</span>
+    <bf-tag>{{contract.status | toLabel: 'contractStatus'}}</bf-tag>
+    <h1>Offer Reference: {{contract.offerId}}</h1>
+    <span>Offer created: {{contract._meta.createdAt | date: 'dd/MM/yyyy'}}</span>
     <div fxLayout fxLayoutAlign="space-between center" class="actions">
       <div fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
-        <ng-container *ngIf="contract$ | async as contract">
           <ng-container [ngSwitch]="contract.status">
             <ng-container *ngSwitchCase="'accepted'">
               <button mat-flat-button color="primary" disabled
@@ -35,7 +34,6 @@
               </button>
             </ng-container>
           </ng-container>
-        </ng-container>
       </div>
       <button mat-flat-button color="primary" (click)="openIntercom()">
         <mat-icon svgIcon="comment"></mat-icon>
@@ -43,7 +41,7 @@
       </button>
     </div>
   </header>
-  <section class="surface" *ngIf="offer.specificity as specificity">
+  <section class="surface" *ngIf="contract.specificity as specificity">
     <h2>Specific Terms</h2>
     <p>{{specificity}}</p>
   </section>

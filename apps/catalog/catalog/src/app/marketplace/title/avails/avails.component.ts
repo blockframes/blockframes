@@ -163,8 +163,8 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
   }
 
   /** Open a modal to display the entire list of territories when this one is too long */
-  public openTerritoryModal(terms: string[]) {
-    this.dialog.open(DetailedTermsComponent, { data: { terms, scope: 'territories' }, maxHeight: '80vh', autoFocus: false });
+  public openTerritoryModal(term: BucketTerm) {
+    this.dialog.open(DetailedTermsComponent, { data: { terms: term.territories, scope: 'territories' }, maxHeight: '80vh', autoFocus: false });
   }
 
   /** Open a modal to display holdback warnings */
