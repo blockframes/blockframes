@@ -194,8 +194,8 @@ export function compareDates(fromKey: string, toKey: string, keyOnControl?: stri
         }
       }
     }
-    if (to < from) { return { startOverEnd: true } }
-    else { return null }
+    if (to < from) { return { startOverEnd: true } ;}
+    else { return null; }
   }
 }
 
