@@ -157,7 +157,7 @@ export function isKeyArrayValidator(scope: Scope): ValidatorFn {
  * @param toKey name of key of to date
  * @returns
  */
-export function compareDates(fromKey: string, toKey: string, keyOnControl: string): ValidatorFn {
+export function compareDates(fromKey: string, toKey: string, keyOnControl?: string): ValidatorFn {
   return (control: FormControl): ValidationErrors => {
     const parentForm = control?.parent as FormGroup;
 
@@ -173,27 +173,29 @@ export function compareDates(fromKey: string, toKey: string, keyOnControl: strin
 
     if (!from || !to) return null;
 
-    const otherKey = keyOnControl === fromKey ? toKey : fromKey;
-    const otherControl = parentForm.get(otherKey);
-    const otherErrors = otherControl.errors ?? {};
+    if (keyOnControl) {
+      const otherKey = keyOnControl === fromKey ? toKey : fromKey;
+      const otherControl = parentForm.get(otherKey);
+      const otherErrors = otherControl.errors ?? {};
 
-    /**
-     * Given keyOnControl, checks the value of both fields
-     * 'from' and 'to' to ensure that shown errors are logical
-     * with respect to the values of both fields.
-     */
-    if (to < from) {
-      otherControl.setErrors({ ...otherErrors, startOverEnd: true });
-      return { startOverEnd: true }
-    } else {
-      if ('startOverEnd' in otherErrors) {
-        delete otherErrors.startOverEnd;
-        !Object.keys(otherErrors).length
-          ? otherControl.setErrors(null)
-          : otherControl.setErrors(otherErrors);
+      /**
+       * Given keyOnControl, checks the value of both fields
+       * 'from' and 'to' to ensure that shown errors are logical
+       * with respect to the values of both fields.
+       */
+      if (to < from) {
+        otherControl.setErrors({ ...otherErrors, startOverEnd: true });
+      } else {
+        if ('startOverEnd' in otherErrors) {
+          delete otherErrors.startOverEnd;
+          !Object.keys(otherErrors).length
+            ? otherControl.setErrors(null)
+            : otherControl.setErrors(otherErrors);
+        }
       }
-      return null;
     }
+    if (to < from) { return { startOverEnd: true } }
+    else { return null }
   }
 }
 
