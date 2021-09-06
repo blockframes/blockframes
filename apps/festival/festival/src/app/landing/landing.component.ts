@@ -144,19 +144,22 @@ export class LandingComponent {
       img: "european_sellers.png",
       title: "European sellers discuss AFM, hybrid realities and a brighter 2021",
       text: "« In the current market, it makes more sense to give buyers as many opportunities as possible to see our films rather than focusing on a handful of exclusive screenings in set timeframes… »",
-      logo: "screendaily.png"
+      logo: "screendaily.png",
+      link: "https://www.screendaily.com/features/european-sellers-discuss-afm-hybrid-realities-and-a-brighter-2021/5154926.article"
     },
     {
       img: "market_article.png",
       title: "Archipel Market To Provide Sales Agents, Buyers With Year-Round …",
       text: "« A tool that can maximize sales, while uniting sales agents and buyers throughout the year; a dedicated, streamlined, efficient tool to replicate and digitally enhance the experience of a sales pitch to a buyer… » ",
-      logo: "variety.png"
+      logo: "variety.png",
+      link: "https://variety.com/2020/film/global/cannes-archipel-market-logical-pictures-charades-1234631297"
     },
     {
       img: "screen_international.png",
       title: "Screen International FYC Awards Screening programme…",
       text: "Screen International has partnered with film market platform Archipel Market on an exclusive series of screenings focused on the international feature awards race… ",
-      logo: "screendaily.png"
+      logo: "screendaily.png",
+      link: "https://www.screendaily.com/news/screen-international-fyc-awards-screening-programme/5156125.article"
     }
   ]
 
