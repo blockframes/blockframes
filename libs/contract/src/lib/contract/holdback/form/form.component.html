@@ -64,22 +64,21 @@
       <div class="duration" [formGroup]="control.get('duration')">
         <mat-form-field appearance="outline">
           <mat-label>Licence Start Date</mat-label>
-          <input matInput [matDatepicker]="datepickerFrom" formControlName="from" placeholder="MM/DD/YYYY">
+          <input matInput [matDatepicker]="datepickerFrom" [formControl]="control.get('duration.from')" placeholder="MM/DD/YYYY">
           <mat-datepicker-toggle matSuffix [for]="datepickerFrom" test-id="dateFrom"></mat-datepicker-toggle>
           <mat-datepicker #datepickerFrom> </mat-datepicker>
-          <mat-error *ngIf="form.hasError('startOverEnd', 'duration.from')">Start date must not be later than end date</mat-error>
-          <mat-error *ngIf="form.hasError('inPast', 'duration.from')">Date must be in the future</mat-error>
+          <mat-error *ngIf="control.get('duration.from').hasError('startOverEnd')">Start date must not be later than end date</mat-error>
+          <mat-error *ngIf="control.get('duration.from').hasError('inPast')">Date must be in the future</mat-error>
         </mat-form-field>
         <mat-form-field appearance="outline">
           <mat-label>Licence End Date</mat-label>
-          <input matInput [matDatepicker]="datepickerTo" formControlName="to" placeholder="MM/DD/YYYY">
+          <input matInput [matDatepicker]="datepickerTo" [formControl]="control.get('duration.to')" placeholder="MM/DD/YYYY">
           <mat-datepicker-toggle matSuffix [for]="datepickerTo" test-id="dateTo"></mat-datepicker-toggle>
           <mat-datepicker #datepickerTo> </mat-datepicker>
-          <mat-error *ngIf="form.hasError('startOverEnd', 'duration.to')">End date must not be earlier than start date</mat-error>
-          <mat-error *ngIf="form.hasError('inPast', 'duration.from')">Date must be in the future</mat-error>
+          <mat-error *ngIf="control.get('duration.to').hasError('startOverEnd') ">End date must not be earlier than start date</mat-error>
+          <mat-error *ngIf="control.get('duration.to').hasError('inPast') ">Date must be in the future</mat-error>
         </mat-form-field>
       </div>
-
       <mat-divider></mat-divider>
 
     </ng-template>

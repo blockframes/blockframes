@@ -1,9 +1,11 @@
 import { Component, ChangeDetectionStrategy, EventEmitter, TemplateRef, Input, Output } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 import { Movie } from '@blockframes/movie/+state';
 import { FormList } from '@blockframes/utils/form';
 import { Scope } from '@blockframes/utils/static-model';
+import { debounceTime, delay, map, mapTo, tap } from 'rxjs/operators';
 import { Holdback } from '../../+state/contract.model';
 import { HoldbackForm } from '../form';
 
@@ -26,14 +28,14 @@ export class HolbackFormComponent {
     medias: 'Media',
   };
 
-  constructor(private dialog: MatDialog) {}
+  constructor(private dialog: MatDialog) { }
 
   ngOnInit() {
     this.form = FormList.factory(this.holdbacks, holdback => new HoldbackForm(holdback));
   }
 
   openHoldbacks(template: TemplateRef<any>) {
-    this.ref = this.dialog.open(template, {maxHeight: '80vh', width: '1000px', maxWidth: '100vw'});
+    this.ref = this.dialog.open(template, { maxHeight: '80vh', width: '1000px', maxWidth: '100vw' });
   }
 
   openDetails(terms: string, scope: Scope) {
@@ -51,3 +53,4 @@ export class HolbackFormComponent {
     this.ref.close();
   }
 }
+
