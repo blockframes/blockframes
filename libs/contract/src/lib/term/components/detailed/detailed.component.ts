@@ -23,7 +23,13 @@ export class DetailedTermsComponent implements OnInit {
     const groups = JSON.parse(JSON.stringify(staticGroups[this.data.scope]));
     if (groups) {
       for (const group of groups) {
-        group.items = group.items.filter(item => this.data.terms.includes(item));
+
+        // if a term is the name of a group, we want to keep all the territories
+        // i.e. we don't want to filter
+        const fullGroup = this.data.terms.includes(group.label);
+        if (!fullGroup) {
+          group.items = group.items.filter(item => this.data.terms.includes(item));
+        }
       }
       this.groups$.next(groups);
     }
