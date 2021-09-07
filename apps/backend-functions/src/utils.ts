@@ -1,4 +1,4 @@
-import { get, request, RequestOptions } from 'https';
+import { request, RequestOptions } from 'https';
 import { db, functions, skipInMaintenance } from './internals/firebase';
 import { logErrors } from './internals/sentry';
 export { ErrorResultResponse } from '@blockframes/utils/utils';

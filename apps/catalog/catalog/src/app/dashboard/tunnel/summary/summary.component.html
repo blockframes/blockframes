@@ -111,15 +111,6 @@
 
     <mat-divider></mat-divider>
 
-    <!-- AVAILABLE MATERIALS -->
-    <section id="available-materials">
-      <h3>Available Materials</h3>
-      <movie-summary-available-materials [movie]="form" [link]="('available-materials' | getPath)">
-      </movie-summary-available-materials>
-    </section>
-
-    <mat-divider></mat-divider>
-
     <!-- PROMOTIONAL ELEMENTS -->
 
     <section id="promotional-elements">
@@ -127,6 +118,15 @@
       <movie-summary-media-files [movie]="form" [link]="('media-files' | getPath)"></movie-summary-media-files>
       <movie-summary-media-images [movie]="form" [link]="('media-images' | getPath)"></movie-summary-media-images>
       <movie-summary-media-videos [movie]="form" [link]="('media-videos' | getPath)"></movie-summary-media-videos>
+    </section>
+
+    <mat-divider></mat-divider>
+
+    <!-- AVAILABLE MATERIALS -->
+    <section id="available-materials">
+      <h3>Available Materials</h3>
+      <movie-summary-available-materials [movie]="form" [link]="('available-materials' | getPath)">
+      </movie-summary-available-materials>
     </section>
 
     <!-- Submit -->

@@ -20,7 +20,7 @@ import { createMovieLanguageSpecification } from '@blockframes/movie/+state/movi
 
 const separator = ';'
 type errorCodes = 'no-title-id' | 'no-seller-id' | 'no-buyer-id' | 'no-stakeholders' | 'no-territories' | 'no-medias' | 'no-duration-from' | 'no-duration-to';
-const errorsMap: {[key in errorCodes]: SpreadsheetImportError} = {
+const errorsMap: { [key in errorCodes]: SpreadsheetImportError } = {
   'no-title-id': {
     type: 'warning',
     field: 'contract.titleId',
@@ -137,6 +137,7 @@ export class ViewExtractedContractsComponent implements OnInit {
 
   private async getOrgId(name: string) {
     if (!name) return '';
+    // @TODO #6586 carefull if you are on a anonymized db, centralOrgId.catalog org name will not be 'Archipel Content' 
     if (name === 'Archipel Content') return centralOrgId.catalog;
     if (!this.memory.org[name]) {
       const orgs = await this.orgService.getValue(ref => ref.where('denomination.full', '==', name));
@@ -147,7 +148,7 @@ export class ViewExtractedContractsComponent implements OnInit {
 
   private async getTitleId(name: string) {
     if (!name) return '';
-    if (!this.memory.title[name]) { 
+    if (!this.memory.title[name]) {
       const titles = await this.movieService.getValue(ref => ref.where('title.international', '==', name));
       this.memory.title[name] = titles.length === 1 ? titles[0].id : '';
     }
@@ -191,7 +192,7 @@ export class ViewExtractedContractsComponent implements OnInit {
       const titleId = _titleId || (await this.getTitleId(internationalTitle));
 
       if (!titleId) errors.push(errorsMap['no-title-id']);
-    
+
       // BUYER / SELLER
       const [sellerId, buyerId] = await Promise.all([
         this.getOrgId(licensorName),
@@ -225,7 +226,7 @@ export class ViewExtractedContractsComponent implements OnInit {
       // TERMS //
       ///////////
       const contractId = contract.id;
-  
+
       // Duration
       if (!durationFrom) errors.push(errorsMap['no-duration-from']);
       if (!durationTo) errors.push(errorsMap['no-duration-to']);
@@ -253,7 +254,7 @@ export class ViewExtractedContractsComponent implements OnInit {
           term.languages[language][key] = true;
         }
       }
-      
+
       contract.termIds.push(termId);
 
       this.contractsToCreate.data.push({
