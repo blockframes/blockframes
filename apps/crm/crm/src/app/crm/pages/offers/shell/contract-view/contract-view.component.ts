@@ -3,6 +3,7 @@ import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { FormControl, FormGroup } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { filter, map, pluck } from 'rxjs/operators';
 import { combineLatest, Subscription } from 'rxjs';
@@ -44,6 +45,7 @@ export class ContractViewComponent implements OnInit, OnDestroy {
   constructor(
     private dialog: MatDialog,
     private route: ActivatedRoute,
+    private snackbar: MatSnackBar,
     private shell: OfferShellComponent,
     private incomeService: IncomeService,
     private contractService: ContractService,
@@ -62,12 +64,13 @@ export class ContractViewComponent implements OnInit, OnDestroy {
     this.sub.unsubscribe();
   }
 
-  update(contractId: string) {
+  async update(contractId: string) {
     const write = this.contractService.batch();
     const { status, price} = this.form.value;
     this.contractService.update(contractId, { status }, { write });
     this.incomeService.update(contractId, { price }, { write });
-    write.commit();
+    await write.commit();
+    this.snackbar.open('Offer updated!', 'ok', { duration: 1000 });
   }
 
   updateHoldbacks(contractId: string, holdbacks: Holdback[]) {

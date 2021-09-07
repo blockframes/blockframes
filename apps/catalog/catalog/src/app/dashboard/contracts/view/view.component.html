@@ -49,7 +49,12 @@
 <ng-container *ngIf="contract$| async as contract">
   <contract-item [contract]="contract">
     <ng-container *ngIf="contract.id | getIncome | async as income" price>
-      <h2>{{ income.price | currency: income.currency }}</h2>
+      <ng-container *ngIf="income.price > 0; else askPrice">
+        <h2>{{ income.price | currency: income.currency }}</h2>
+      </ng-container>
+      <ng-template #askPrice>
+        <h3>Buyer requested Asking Price</h3>
+      </ng-template>
     </ng-container>
     <footer>
       <holdback-list [holdbacks]="contract.holdbacks"></holdback-list>

@@ -44,8 +44,8 @@ export class ContractListComponent {
   ) { }
 
 
-  goToContract({ offerId, id }: Contract) {
-    this.router.navigate([offerId, id], { relativeTo: this.route });
+  goToContract({ id }: Contract) {
+    this.router.navigate([ id ], { relativeTo: this.route });
   }
   public openIntercom() {
     return this.intercom.show();
