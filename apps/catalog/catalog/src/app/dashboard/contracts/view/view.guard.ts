@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, Router } from '@angular/router';
 import { AuthQuery } from '@blockframes/auth/+state';
-import { ContractService, Mandate, Sale } from '@blockframes/contract/contract/+state';
+import { ContractService } from '@blockframes/contract/contract/+state';
 
 @Injectable({ providedIn: 'root' })
 export class CatalogContractViewGuard implements CanActivate {
@@ -12,10 +12,12 @@ export class CatalogContractViewGuard implements CanActivate {
   ) { }
 
   async canActivate(route: ActivatedRouteSnapshot) {
-    const { contractId } = route.params;
+    const contractId = route.paramMap.get('contractId');
 
-    const contract = await this.contractService.getValue(contractId) as unknown as Sale | Mandate;
-    const isStakeholder = contract.stakeholders.includes(this.authQuery.orgId);
+    if (!contractId) this.router.parseUrl('c/o/dashboard/contracts');
+
+    const contract = await this.contractService.getValue(contractId);
+    const isStakeholder = contract?.stakeholders.includes(this.authQuery.orgId);
 
     return isStakeholder
       ? true
