@@ -21,6 +21,7 @@ import { Scope } from '@blockframes/utils/static-model';
 
 // Material
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 function toTerm({ id, avails, runs, versions }, contractId: string): Partial<Term> {
   return { id, contractId, runs, languages: versions, ...avails };
@@ -56,17 +57,18 @@ export class ContractFormComponent implements OnInit {
     'versions': 'Versions',
     'runs': '# of broadcasts'
   };
-  
+
   constructor(
-    private service: MovieService,
+    private dialog: MatDialog,
     private route: ActivatedRoute,
+    private service: MovieService,
+    private snackbar: MatSnackBar,
+    private termService: TermService,
+    private titleService: MovieService,
+    private offerService: OfferService,
     private incomeService: IncomeService,
     private contractService: ContractService,
-    private termService: TermService,
-    private offerService: OfferService,
-    private titleService: MovieService,
-    private dialog: MatDialog
-  ){}
+  ) { }
 
   async ngOnInit() {
     const contractId: string = this.route.snapshot.params.contractId;
@@ -107,8 +109,9 @@ export class ContractFormComponent implements OnInit {
       if (price !== this.income?.price) {
         await this.incomeService.update(contractId, { price }, { write });
       }
-      
+
       await write.commit();
+      this.snackbar.open('Contract updated!', 'ok', { duration: 1000 });
     }
   }
 
