@@ -13,7 +13,7 @@ import { App, getAllAppsExcept, getMovieAppAccess, checkMovieStatus, getMailSend
 import { Bucket } from '@blockframes/contract/bucket/+state/bucket.model';
 import { sendMovieSubmittedEmail } from './templates/mail';
 import { sendMail } from './internals/email';
-import { unsubscribeGroupIds } from '@blockframes/utils/emails/ids';
+import { groupIds } from '@blockframes/utils/emails/ids';
 
 const apps: App[] = getAllAppsExcept(['crm']);
 
@@ -135,7 +135,7 @@ export async function onMovieUpdate(
     const movieWasSubmittedOn = wasSubmittedOn(before.app, after.app)[0];
     // Mail to supportEmails.[app]
     const from = getMailSender(movieWasSubmittedOn);
-    await sendMail(sendMovieSubmittedEmail(movieWasSubmittedOn, after), from, unsubscribeGroupIds.noUnsubscribeLink);
+    await sendMail(sendMovieSubmittedEmail(movieWasSubmittedOn, after), from, groupIds.noUnsubscribeLink);
 
     // Notification to users related to current movie
     const organizations = await getOrganizationsOfMovie(after.id);

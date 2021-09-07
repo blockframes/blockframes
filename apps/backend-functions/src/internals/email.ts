@@ -1,6 +1,6 @@
 import SendGrid from '@sendgrid/mail';
 import { sendgridAPIKey, projectId } from '../environments/environment';
-import { unsubscribeGroupIds } from '@blockframes/utils/emails/ids';
+import { groupIds } from '@blockframes/utils/emails/ids';
 export { EmailRequest, EmailTemplateRequest } from '@blockframes/utils/emails/utils';
 import { emailErrorCodes, EmailRequest, EmailTemplateRequest } from '@blockframes/utils/emails/utils';
 import { MailDataRequired } from '@sendgrid/helpers/classes/mail';
@@ -22,7 +22,7 @@ const substitutions = { // @TODO #6586 looks like unused
  * Like this, we can avoid showing the criticalEmails group, which is linked for example to the reset password email.
  * Users won't be able to unsubscribe from this group and will always received email from the criticalsEmails group.
 */
-const groupsToDisplay = [unsubscribeGroupIds.allExceptCriticals];
+const groupsToDisplay = [groupIds.allExceptCriticals];
 
 /**
  * Sends a transactional email configured by the EmailRequest provided.
@@ -30,7 +30,7 @@ const groupsToDisplay = [unsubscribeGroupIds.allExceptCriticals];
  * Handles development mode: logs a warning when no sendgrid API key is provided.
  * @param groupId passing 0 to groupId will make the unsubscribe link global
  */
-export async function sendMail(email: EmailRequest, from: EmailJSON = getMailSender(), groupId: number = unsubscribeGroupIds.criticalsEmails) {
+export async function sendMail(email: EmailRequest, from: EmailJSON = getMailSender(), groupId: number = groupIds.criticalsEmails) {
   const msg: MailDataRequired = {
     ...email,
     from,
@@ -42,7 +42,7 @@ export async function sendMail(email: EmailRequest, from: EmailJSON = getMailSen
   return send(msg);
 }
 
-export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequest, app: App, groupId: number = unsubscribeGroupIds.criticalsEmails) {
+export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequest, app: App, groupId: number = groupIds.criticalsEmails) {
   const from: EmailJSON = getMailSender(app);
   const { label } = getAppName(app);
   const appText = appDescription[app];

@@ -4,7 +4,7 @@ import { generate as passwordGenerator } from 'generate-password';
 import { OrganizationDocument, InvitationType } from '../data/types';
 import { createDocumentMeta, createPublicUserDocument, getDocument } from '../data/internals';
 import { userInvite, userFirstConnexion } from '../templates/mail';
-import { unsubscribeGroupIds, templateIds } from '@blockframes/utils/emails/ids';
+import { groupIds, templateIds } from '@blockframes/utils/emails/ids';
 import { auth, db } from './firebase';
 import { sendMailFromTemplate, sendMail } from './email';
 import { PublicUser } from '@blockframes/user/types';
@@ -90,5 +90,5 @@ export const createUserFromEmail = async (email: string, createdFrom: App = 'fes
 export const sendFirstConnexionEmail = async (user: PublicUser) => {
   const mailRequest = await userFirstConnexion(user);
   const from = getMailSender(user._meta.createdFrom);
-  return sendMail(mailRequest, from, unsubscribeGroupIds.noUnsubscribeLink).catch(e => console.warn(e.message));
+  return sendMail(mailRequest, from, groupIds.noUnsubscribeLink).catch(e => console.warn(e.message));
 };

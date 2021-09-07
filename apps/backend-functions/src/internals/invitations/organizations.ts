@@ -12,7 +12,7 @@ import { getAdminIds, getDocument, getOrgAppKey, createPublicOrganizationDocumen
 import { wasAccepted, wasDeclined, wasCreated } from './utils';
 import { applicationUrl } from '@blockframes/utils/apps';
 import { getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
-import { unsubscribeFromAllExceptCriticals } from '@blockframes/utils/emails/ids';
+import { groupIds } from '@blockframes/utils/emails/ids';
 
 async function addUserToOrg(userId: string, organizationId: string) {
   const db = admin.firestore();
@@ -157,7 +157,7 @@ async function onRequestFromUserToJoinOrgAccept({
   const org = getOrgEmailData(toOrg);
   const toUser = getUserEmailData(fromUser);
   const template = userJoinedAnOrganization(toUser, urlToUse, org);
-  return sendMailFromTemplate(template, app, unsubscribeFromAllExceptCriticals); 
+  return sendMailFromTemplate(template, app, groupIds.allExceptCriticals); 
 }
 
 /** Send a notification to admins of organization to notify them that the request is declined. */
