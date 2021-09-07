@@ -1,10 +1,10 @@
 
-import { App, getSendgridFrom, applicationUrl } from '@blockframes/utils/apps';
+import { App, getMailSender, applicationUrl } from '@blockframes/utils/apps';
 import { generate as passwordGenerator } from 'generate-password';
 import { OrganizationDocument, InvitationType } from '../data/types';
 import { createDocumentMeta, createPublicUserDocument, getDocument } from '../data/internals';
 import { userInvite, userFirstConnexion } from '../templates/mail';
-import { noUnsubscribeLink, templateIds } from '@blockframes/utils/emails/ids';
+import { unsubscribeGroupIds, templateIds } from '@blockframes/utils/emails/ids';
 import { auth, db } from './firebase';
 import { sendMailFromTemplate, sendMail } from './email';
 import { PublicUser } from '@blockframes/user/types';
@@ -89,6 +89,6 @@ export const createUserFromEmail = async (email: string, createdFrom: App = 'fes
  */
 export const sendFirstConnexionEmail = async (user: PublicUser) => {
   const mailRequest = await userFirstConnexion(user);
-  const from = getSendgridFrom(user._meta.createdFrom);
-  return sendMail(mailRequest, from, noUnsubscribeLink).catch(e => console.warn(e.message));
+  const from = getMailSender(user._meta.createdFrom);
+  return sendMail(mailRequest, from, unsubscribeGroupIds.noUnsubscribeLink).catch(e => console.warn(e.message));
 };

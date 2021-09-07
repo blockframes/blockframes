@@ -11,7 +11,7 @@ import { sendMail } from './internals/email';
 import { organizationCreated, organizationRequestedAccessToApp } from './templates/mail';
 import { OrganizationDocument, PublicUser, PermissionsDocument, NotificationDocument, NotificationTypes } from './data/types';
 import { triggerNotifications, createNotification } from './notification';
-import { app, App, getOrgAppAccess, getSendgridFrom, Module } from '@blockframes/utils/apps';
+import { app, App, getOrgAppAccess, getMailSender, Module } from '@blockframes/utils/apps';
 import { getAdminIds, createPublicOrganizationDocument, createPublicUserDocument, getDocument, createDocumentMeta } from './data/internals';
 import { ErrorResultResponse } from './utils';
 import { cleanOrgMedias } from './media';
@@ -19,7 +19,7 @@ import { Change, EventContext } from 'firebase-functions';
 import { algolia, deleteObject, storeSearchableOrg, findOrgAppAccess, storeSearchableUser } from '@blockframes/firebase-utils';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { User } from '@blockframes/user/+state';
-import { noUnsubscribeLink } from '@blockframes/utils/emails/ids';
+import { unsubscribeGroupIds } from '@blockframes/utils/emails/ids';
 
 /** Create a notification with user and org. */
 function notifyUser(toUserId: string, notificationType: NotificationTypes, org: OrganizationDocument, user: PublicUser) {
@@ -89,11 +89,11 @@ export async function onOrganizationCreate(snap: FirebaseFirestore.DocumentSnaps
     throw new Error('organization update function got invalid org data');
   }
   const emailRequest = await organizationCreated(org);
-  const from = getSendgridFrom(org._meta.createdFrom);
+  const from = getMailSender(org._meta.createdFrom);
 
   return Promise.all([
     // Send a mail to c8 admin to inform about the created organization
-    sendMail(emailRequest, from, noUnsubscribeLink).catch(e => console.warn(e.message)),
+    sendMail(emailRequest, from, unsubscribeGroupIds.noUnsubscribeLink).catch(e => console.warn(e.message)),
     // Update algolia's index
     storeSearchableOrg(org)
   ]);
@@ -129,7 +129,7 @@ export async function onOrganizationUpdate(change: Change<FirebaseFirestore.Docu
   const becomeAccepted = before.status === 'pending' && after.status === 'accepted';
 
   if (becomeAccepted) {
-    const appAccess = getOrgAppAccess(after)
+    const appAccess = getOrgAppAccess(after);
     // Send a notification to the creator of the organization
     const notification = createNotification({
       // At this moment, the organization was just created, so we are sure to have only one userId in the array
@@ -270,7 +270,7 @@ export const onRequestFromOrgToAccessApp = async (data: { app: App, module: Modu
   if (!!context.auth.uid && !!data.app && !!data.orgId && !!data.module) {
     const organization = await getDocument<OrganizationDocument>(`orgs/${data.orgId}`);
     const mailRequest = await organizationRequestedAccessToApp(organization, data.app, data.module);
-    const from = getSendgridFrom(data.app);
+    const from = getMailSender(data.app);
     const userDocument = await getDocument<User>(`users/${context.auth.uid}`);
 
     const notification = createNotification({
@@ -281,7 +281,7 @@ export const onRequestFromOrgToAccessApp = async (data: { app: App, module: Modu
       type: 'userRequestAppAccess'
     });
     await triggerNotifications([notification]);
-    await sendMail(mailRequest, from, noUnsubscribeLink).catch(e => console.warn(e.message));
+    await sendMail(mailRequest, from, unsubscribeGroupIds.noUnsubscribeLink).catch(e => console.warn(e.message));
     return true;
   }
   return;

@@ -74,13 +74,11 @@ export const templateIds = {
  * Presently, there is only the Reset Password email, the Verification Email and the first invitation email with credentials that are mandatory
 */
 export const unsubscribeGroupIds = {
+  // This is for letting user unsubscribe from every email except the critical ones as reset password.
   allExceptCriticals: 15120,
-  criticalsEmails: 15136
+  // Critical emails that we don't want users to unsusbcribe
+  criticalsEmails: 15136,
+  // Use this groupId to remove unsubscribe link at mail bottom. Typically for support emails
+  // Note, only "text" emails (as opposition to "html") will remove the unsubscribe link
+  noUnsubscribeLink: 0
 }
-
-// This is for letting user unsubscribe from every email except the critical ones as reset password.
-export const unsubscribeFromAllExceptCriticals = unsubscribeGroupIds.allExceptCriticals;
-
-// Use this groupId to remove unsubscribe link at mail bottom. Typically for support emails
-// Note, only "text" emails (as opposition to "html") will remove the unsubscribe link
-export const noUnsubscribeLink = 0;
