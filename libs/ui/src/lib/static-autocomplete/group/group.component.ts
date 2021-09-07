@@ -52,6 +52,18 @@ function getItems(groups: StaticGroup[]): string[] {
   return groups.reduce((items, group) => items.concat(group.items), []);
 }
 
+
+function checkIsControlValid(values: string[]): ValidationErrors | null {
+  if (values?.length < 1) {
+    return {
+      mustBePositive: {
+        length: values.length
+      }
+    };
+  }
+  return null;
+}
+
 @Component({
   selector: 'static-group',
   templateUrl: './group.component.html',
@@ -61,7 +73,7 @@ function getItems(groups: StaticGroup[]): string[] {
     { provide: MatFormFieldControl, useExisting: forwardRef(() => StaticGroupComponent) },
   ]
 })
-export class StaticGroupComponent implements ControlValueAccessor, OnInit, OnDestroy, Validator, MatFormFieldControl<string[]> {
+export class StaticGroupComponent implements ControlValueAccessor, OnInit, OnDestroy, MatFormFieldControl<string[]> {
   private subs: Subscription[] = [];
   private onTouch: () => void;
   modes: Record<string, Observable<GroupMode>> = { };
@@ -87,8 +99,8 @@ export class StaticGroupComponent implements ControlValueAccessor, OnInit, OnDes
   @Input() displayAll = '';
   @Input() withoutValues: string[] = [];
   @Input() scope: GroupScope;
-  @Input() set placeholder(plh) {
-    this._placeholder = plh;
+  @Input() set placeholder(placeholder:string) {
+    this._placeholder = placeholder;
     this.stateChanges.next();
   };
   @Input() get required() { return this._required; };
@@ -121,7 +133,7 @@ export class StaticGroupComponent implements ControlValueAccessor, OnInit, OnDes
   }
 
   get empty() {
-    return this.form.value?.length < 1;
+    return !this.form.value?.length;
   }
 
   search = new FormControl();
@@ -171,9 +183,6 @@ export class StaticGroupComponent implements ControlValueAccessor, OnInit, OnDes
   onOpen(opened: boolean) {
     if (opened) {
       this.input.nativeElement.focus();
-      /**@Todo: wip removing the below line causes the determination of error state to not work.
-       * Checkout why, you can ask for help. You've already explored all options known to you.
-       */
       this.touched = true;
     } else {
       this.form.setValue(this.allItems);
@@ -199,25 +208,8 @@ export class StaticGroupComponent implements ControlValueAccessor, OnInit, OnDes
     this.disabled = isDisabled;
   }
 
-  checkIsControlValid(values: string[]): ValidationErrors | null {
-    if (values?.length < 1) {
-      return {
-        mustBePositive: {
-          length: values.length
-        }
-      };
-    }
-    return null;
-  }
-
-  validate(control: AbstractControl): ValidationErrors | null {
-    const values = control.value;
-    return this.checkIsControlValid(values)
-  }
-
   get errorState(): boolean {
-    const value = Boolean(this.checkIsControlValid(this.form.value)) && this.touched;
-    return value;
+    return Boolean(checkIsControlValid(this.form.value)) && this.touched;
   }
 
 
