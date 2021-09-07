@@ -175,7 +175,7 @@ export class UserComponent implements OnInit {
   public async sendPasswordResetEmail() {
     const app: App = this.userOrg && getOrgAppAccess(this.userOrg).length === 1
       ? getOrgAppAccess(this.userOrg)[0]
-      : 'crm'
+      : 'crm';
 
     await this.crmService.sendPasswordResetEmail(this.user.email, app);
     this.snackBar.open(`Reset password email sent to : ${this.user.email}`, 'close', { duration: 2000 });

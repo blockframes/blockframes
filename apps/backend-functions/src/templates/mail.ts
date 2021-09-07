@@ -54,7 +54,7 @@ export function userResetPassword(email: string, link: string, app: App): EmailT
   const data = {
     pageURL: link
   };
-  const templateId = app === 'crm' ? templateIds.user.resetPasswordFromCRM : templateIds.user.resetPassword
+  const templateId = app === 'crm' ? templateIds.user.resetPasswordFromCRM : templateIds.user.resetPassword;
   return { to: email, templateId, data };
 }
 
