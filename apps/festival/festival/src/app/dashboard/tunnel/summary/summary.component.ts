@@ -15,8 +15,12 @@ import { map } from 'rxjs/operators';
 })
 export class TunnelSummaryComponent implements OnInit {
   form = this.shell.getForm('movie');
-  missingFields: string[] = [];
-  invalidFields: string[] = [];
+  // Fields displayed in component that are in error or missing but mandatory
+  blockingFields: string[] = [];
+  // Missing but mandatory fields
+  private missingFields: string[] = [];
+  // Fields in error
+  private invalidFields: string[] = [];
   isPublished$ = this.query.selectActive(movie => movie.app.festival.status).pipe(
     map(status => status === 'accepted' || status === 'submitted')
   );
@@ -32,9 +36,10 @@ export class TunnelSummaryComponent implements OnInit {
   }
 
   ngOnInit() {
-    const { missingFields, errorFields } = findInvalidControls(this.form)
+    const { missingFields, errorFields } = findInvalidControls(this.form);
     this.invalidFields = errorFields;
     this.missingFields = missingFields;
+    this.blockingFields = errorFields.concat(missingFields);
   }
 
   public async submit() {
