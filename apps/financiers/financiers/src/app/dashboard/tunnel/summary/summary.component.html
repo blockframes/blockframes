@@ -5,14 +5,9 @@
       validation.
     </p>
 
-    <div *ngIf="invalidFields.length" class="mat-body">
-      <div class="mandatory-control">
-        <span *ngIf="invalidFields.length">You have {{ invalidFields.length }} mandatory fields
-          to fill in.</span>
-        <span class="mandatory-control">
-          {{ invalidFields | fromCamelCase | titlecase }}
-        </span>
-      </div>
+    <div *ngIf="blockingFields.length" class="mat-body">
+      <span class="invalid-fields">You have {{ blockingFields.length }} blocking field{{blockingFields.length > 1 ? 's' : ''}}
+        to fill in or fix: {{ blockingFields | fromCamelCase | titlecase }}</span>
     </div>
 
     <!-- MAIN INFORMATION -->
