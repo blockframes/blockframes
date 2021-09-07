@@ -4,8 +4,13 @@
       <mat-icon svgIcon="arrow_back"></mat-icon>
     </a>
     <bf-tag>{{contract.status | toLabel: 'contractStatus'}}</bf-tag>
-    <h1>Offer Reference: {{contract.offerId}}</h1>
-    <span>Offer created: {{contract._meta.createdAt | date: 'dd/MM/yyyy'}}</span>
+    <ng-container *ngIf="contract.buyerId | getOrg | async as org">
+      <span fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
+        <img height="100" width="100" [ref]="org?.logo" asset="empty_organization.svg" type="logo" alt="Organization Logo">
+        <h1>{{ org | orgName }}</h1>
+      </span>
+    </ng-container>
+    <span>Ref {{ contract.offerId }} / Offer created: {{contract._meta.createdAt | date: 'dd/MM/yyyy'}}</span>
     <div fxLayout fxLayoutAlign="space-between center" class="actions">
       <div fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
           <ng-container [ngSwitch]="contract.status">
@@ -49,7 +54,12 @@
 <ng-container *ngIf="contract$| async as contract">
   <contract-item [contract]="contract">
     <ng-container *ngIf="contract.id | getIncome | async as income" price>
-      <h2>{{ income.price | currency: income.currency }}</h2>
+      <ng-container *ngIf="income.price > 0; else askPrice">
+        <h2>{{ income.price | currency: income.currency }}</h2>
+      </ng-container>
+      <ng-template #askPrice>
+        <h3>Buyer requested Asking Price</h3>
+      </ng-template>
     </ng-container>
     <footer>
       <holdback-list [holdbacks]="contract.holdbacks"></holdback-list>
