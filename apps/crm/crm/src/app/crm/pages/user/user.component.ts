@@ -16,6 +16,7 @@ import { Invitation, InvitationService } from '@blockframes/invitation/+state';
 import { EventService } from '@blockframes/event/+state/event.service';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import { AngularFireFunctions } from '@angular/fire/functions';
+import { App, getOrgAppAccess } from '@blockframes/utils/apps';
 
 @Component({
   selector: 'crm-user',
@@ -172,7 +173,11 @@ export class UserComponent implements OnInit {
   }
 
   public async sendPasswordResetEmail() {
-    await this.crmService.sendPasswordResetEmail(this.user.email);
+    const app: App = this.userOrg && getOrgAppAccess(this.userOrg).length === 1
+      ? getOrgAppAccess(this.userOrg)[0]
+      : 'crm'
+
+    await this.crmService.sendPasswordResetEmail(this.user.email, app);
     this.snackBar.open(`Reset password email sent to : ${this.user.email}`, 'close', { duration: 2000 });
   }
 

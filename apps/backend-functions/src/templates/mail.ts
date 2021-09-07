@@ -50,11 +50,12 @@ export function accountCreationEmail(email: string, link: string, user: UserEmai
   return { to: email, templateId: templateIds.user.welcomeMessage, data };
 }
 
-export function userResetPassword(email: string, link: string): EmailTemplateRequest {
+export function userResetPassword(email: string, link: string, app: App): EmailTemplateRequest {
   const data = {
     pageURL: link
   };
-  return { to: email, templateId: templateIds.user.resetPassword, data };
+  const templateId = app === 'crm' ? templateIds.user.resetPasswordFromCRM : templateIds.user.resetPassword
+  return { to: email, templateId, data };
 }
 
 /** Send email to an user who is requesting new app access */

@@ -12,6 +12,7 @@ export const templateIds = {
     // Template for sending the verify email
     verifyEmail: 'd-81438bdf511b43cfa866ca63a45a02ae',
     resetPassword: 'd-6a0710945bc841ffb6955e3dc202704c',
+    resetPasswordFromCRM: 'd-496956508c64403393a6e5f5e2392e6c',
 
     // Templates for informing new user that his account have been created
     credentials: {
