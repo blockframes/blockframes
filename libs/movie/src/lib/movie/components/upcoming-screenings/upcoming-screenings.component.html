@@ -25,7 +25,7 @@
 </ng-container>
 <ng-template #noScreenings>
   <ng-container *ngFor=" let org of orgs$ | async">
-    <span class="mat-body-1">There is no screening scheduled at the moment. You can contact
+    <span class="mat-body-1">There is no screening scheduled at the moment. <br/> You can contact
       {{ org.denomination?.public || 'the organization' }} for any
       questions.</span>
     <a mat-flat-button color="accent" [href]="'mailto:'+ org.email">Contact Sales Agent</a>
