@@ -4,16 +4,20 @@ import { triggerNotifications, createNotification } from './notification';
 import { createDocumentMeta, getDocument, getOrganizationsOfMovie, Timestamp } from './data/internals';
 import { removeAllSubcollections } from './utils';
 
-import { centralOrgId } from './environments/environment';
 import { orgName } from '@blockframes/organization/+state/organization.firestore';
 import { MovieAppConfig } from '@blockframes/movie/+state/movie.firestore';
 import { cleanMovieMedias } from './media';
 import { Change, EventContext } from 'firebase-functions';
 import { algolia, deleteObject, storeSearchableMovie, storeSearchableOrg } from '@blockframes/firebase-utils';
-import { App, getAllAppsExcept, getMovieAppAccess, checkMovieStatus } from '@blockframes/utils/apps';
+import { App, getAllAppsExcept, getMovieAppAccess, checkMovieStatus, getMailSender } from '@blockframes/utils/apps';
 import { Bucket } from '@blockframes/contract/bucket/+state/bucket.model';
+import { sendMovieSubmittedEmail } from './templates/mail';
+import { sendMail } from './internals/email';
+import { groupIds } from '@blockframes/utils/emails/ids';
 
 const apps: App[] = getAllAppsExcept(['crm']);
+
+type AppConfigMap = Partial<{ [app in App]: MovieAppConfig<Timestamp> }>;
 
 /** Function triggered when a document is added into movies collection. */
 export async function onMovieCreate(
@@ -125,18 +129,27 @@ export async function onMovieUpdate(
 
   const isMovieSubmitted = isSubmitted(before.app, after.app);
   const isMovieAccepted = isAccepted(before.app, after.app);
-  const appAccess = apps.filter(a => !!after.app[a].access);
+  const appAccess = apps.find(a => !!after.app[a].access);
 
-  if (isMovieSubmitted) { // When movie is submitted to Archipel Content
-    const archipelContent = await getDocument<OrganizationDocument>(`orgs/${centralOrgId.catalog}`);
-    const notifications = archipelContent.userIds.map(
-      toUserId => createNotification({
-        toUserId,
-        type: 'movieSubmitted',
-        docId: after.id,
-        _meta: createDocumentMeta({ createdFrom: appAccess[0] })
-      })
-    );
+  if (isMovieSubmitted) { // When movie is submitted to Archipel Content or Media Financiers
+    const movieWasSubmittedOn = wasSubmittedOn(before.app, after.app)[0];
+    // Mail to supportEmails.[app]
+    const from = getMailSender(movieWasSubmittedOn);
+    await sendMail(sendMovieSubmittedEmail(movieWasSubmittedOn, after), from, groupIds.noUnsubscribeLink);
+
+    // Notification to users related to current movie
+    const organizations = await getOrganizationsOfMovie(after.id);
+    const notifications = organizations
+      .filter(organizationDocument => !!organizationDocument?.userIds?.length)
+      .reduce((ids: string[], org) => ids.concat(org.userIds), [])
+      .map(
+        toUserId => createNotification({
+          toUserId,
+          type: 'movieSubmitted',
+          docId: after.id,
+          _meta: createDocumentMeta({ createdFrom: appAccess })
+        })
+      );
 
     await triggerNotifications(notifications);
   }
@@ -144,14 +157,14 @@ export async function onMovieUpdate(
   if (isMovieAccepted) { // When Archipel Content accept the movie
     const organizations = await getOrganizationsOfMovie(after.id);
     const notifications = organizations
-      .filter(organizationDocument => !!organizationDocument && !!organizationDocument.userIds)
-      .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
+      .filter(organizationDocument => !!organizationDocument?.userIds?.length)
+      .reduce((ids: string[], org) => ids.concat(org.userIds), [])
       .map(toUserId => {
         return createNotification({
           toUserId,
           type: 'movieAccepted',
           docId: after.id,
-          _meta: createDocumentMeta({ createdFrom: appAccess[0] })
+          _meta: createDocumentMeta({ createdFrom: appAccess })
         });
       });
 
@@ -179,25 +192,31 @@ export async function onMovieUpdate(
 }
 
 /** Checks if the store status is going from draft to submitted. */
-function isSubmitted(
-  beforeApp: Partial<{ [app in App]: MovieAppConfig<Timestamp> }>,
-  afterApp: Partial<{ [app in App]: MovieAppConfig<Timestamp> }>) {
+function isSubmitted(previousAppConfig: AppConfigMap, currentAppConfig: AppConfigMap) {
   return apps.some(app => {
-    return (beforeApp && beforeApp[app].status === 'draft') && (afterApp && afterApp[app].status === 'submitted');
+    return (previousAppConfig && previousAppConfig[app].status === 'draft') && (currentAppConfig && currentAppConfig[app].status === 'submitted');
   })
 }
 
+/** Return from which app(s) a movie is going from draft to submitted. */
+function wasSubmittedOn(previousAppConfig: AppConfigMap, currentAppConfig: AppConfigMap): App[] {
+  return apps.filter(app => {
+    if (!previousAppConfig[app] || !currentAppConfig[app]) return false;
+    const wasDraft = previousAppConfig[app].status === 'draft';
+    const isSubmitted = currentAppConfig[app].status === 'submitted';
+    return wasDraft && isSubmitted;
+  });
+}
+
 /** Checks if the store status is going from submitted to accepted. */
-function isAccepted(
-  beforeApp: Partial<{ [app in App]: MovieAppConfig<Timestamp> }>,
-  afterApp: Partial<{ [app in App]: MovieAppConfig<Timestamp> }>) {
+function isAccepted(previousAppConfig: AppConfigMap, currentAppConfig: AppConfigMap) {
   return apps.some(app => {
     if (app === 'festival') {
       // in festival `draft` -> `accepted`
-      return (beforeApp && beforeApp[app].status === 'draft') && (afterApp && afterApp[app].status === 'accepted');
+      return (previousAppConfig && previousAppConfig[app].status === 'draft') && (currentAppConfig && currentAppConfig[app].status === 'accepted');
     }
     // in catalog/financiers `draft` -> `submitted` -> `accepted`
-    return (beforeApp && beforeApp[app].status === 'submitted') && (afterApp && afterApp[app].status === 'accepted');
+    return (previousAppConfig && previousAppConfig[app].status === 'submitted') && (currentAppConfig && currentAppConfig[app].status === 'accepted');
   });
 }
 
