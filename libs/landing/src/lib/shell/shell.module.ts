@@ -11,6 +11,7 @@ import {
   LandingHeaderDirective,
   LandingContentDirective,
   LandingContactDirective,
+  LandingDetailDirective,
   LandingFooterComponent
 } from './shell.component';
 
@@ -30,6 +31,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   imports: [
@@ -50,19 +52,22 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MatFormFieldModule,
     MatSelectModule,
     MatInputModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatDividerModule
   ],
   exports: [
     LandingShellComponent,
     LandingHeaderDirective,
     LandingContentDirective,
     LandingContactDirective,
+    LandingDetailDirective,
     LandingFooterComponent],
   declarations: [
     LandingShellComponent,
     LandingHeaderDirective,
     LandingContentDirective,
     LandingContactDirective,
+    LandingDetailDirective,
     LandingFooterComponent
   ],
 })

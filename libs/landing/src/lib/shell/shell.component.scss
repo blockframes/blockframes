@@ -65,11 +65,19 @@ landing-shell-page {
     }
 
     footer {
-      margin: 48px 0;
+      padding: 80px;
       text-align: center;
       width: 100%;
+      background-color: var(--background-card);
+      > * {
+        width: 100%;
+      }
+      mat-divider {
+        width: 100%;
+        border-top-width: 2px;
+      }
       img {
-        height: 40px;
+        height: 30px;
       }
     }
 
@@ -80,6 +88,10 @@ landing-shell-page {
     }
 
     landing-content {
+      display: block;
+    }
+
+    landing-detail {
       display: block;
     }
   }
