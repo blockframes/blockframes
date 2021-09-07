@@ -4,8 +4,13 @@
       <mat-icon svgIcon="arrow_back"></mat-icon>
     </a>
     <bf-tag>{{contract.status | toLabel: 'contractStatus'}}</bf-tag>
-    <h1>Offer Reference: {{contract.offerId}}</h1>
-    <span>Offer created: {{contract._meta.createdAt | date: 'dd/MM/yyyy'}}</span>
+    <ng-container *ngIf="contract.buyerId | getOrg | async as org">
+      <span fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
+        <img height="100" width="100" [ref]="org?.logo" asset="empty_organization.svg" type="logo" alt="Organization Logo">
+        <h1>{{ org | orgName }}</h1>
+      </span>
+    </ng-container>
+    <span>Ref {{ contract.offerId }} / Offer created: {{contract._meta.createdAt | date: 'dd/MM/yyyy'}}</span>
     <div fxLayout fxLayoutAlign="space-between center" class="actions">
       <div fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
           <ng-container [ngSwitch]="contract.status">
