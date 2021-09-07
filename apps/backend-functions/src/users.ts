@@ -61,7 +61,7 @@ export const startResetPasswordEmail = async (data: EmailFlowData) => {
 
   try {
     const resetLink = await admin.auth().generatePasswordResetLink(email);
-    const template = userResetPassword(email, resetLink);
+    const template = userResetPassword(email, resetLink, app);
     await sendMailFromTemplate(template, app);
   } catch (e) {
     throw new Error(`There was an error while sending reset password email : ${e.message}`);

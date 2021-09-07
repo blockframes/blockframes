@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { CrmStore } from './crm.store';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { AuthService } from '@blockframes/auth/+state';
+import { App } from '@blockframes/utils/apps';
 
 interface AnalyticsActiveUser {
   user_id: string,
@@ -43,7 +44,7 @@ export class CrmService {
     return f({}).toPromise();
   }
 
-  public sendPasswordResetEmail(email: string): Promise<void> {
-    return this.service.resetPasswordInit(email);
+  public sendPasswordResetEmail(email: string, app: App): Promise<void> {
+    return this.service.resetPasswordInit(email, app);
   }
 }
