@@ -2,6 +2,14 @@ import { db } from './internals/firebase';
 import { Contract, ContractStatus, Mandate, Sale } from '@blockframes/contract/contract/+state/contract.model';
 import { Change } from 'firebase-functions';
 import { Offer } from '@blockframes/contract/offer/+state';
+import { templateIds } from '@blockframes/utils/emails/ids';
+import { centralOrgId } from '@env'
+import { EmailTemplateRequest } from '@blockframes/utils/emails/utils';
+import { getDocument } from '@blockframes/firebase-utils';
+import { User } from '@blockframes/auth/+state';
+import { App } from '@blockframes/utils/apps';
+import { Movie } from '@blockframes/movie/+state';
+import { sendMailFromTemplate } from './internals/email';
 
 export async function onContractDelete(contractSnapshot: FirebaseFirestore.DocumentSnapshot<Contract>) {
 
@@ -33,6 +41,29 @@ export async function onContractDelete(contractSnapshot: FirebaseFirestore.Docum
   }
 
   console.log(`Contract ${contract.id} removed`);
+}
+
+export async function onContractCreate(contractSnapshot: FirebaseFirestore.DocumentSnapshot<Contract>) {
+
+  const contract = contractSnapshot.data() as Contract;
+  if (contract.type !== 'sale') return;
+  const stakeholders = contract.stakeholders.filter(
+    stakeholder => (stakeholder !== contract.buyerId) && stakeholder !== centralOrgId.catalog
+  );
+  const app: App = 'catalog';
+  const promises = stakeholders.map(async stakeholder => {
+    const user = await getDocument<User>(`users/${stakeholder}`)
+    const title = await getDocument<Movie>(`movies/${contract.titleId}`)
+    const request: EmailTemplateRequest = {
+      to: user.email,
+      templateId: templateIds.contract.created,
+      data: { user, app: { name: app }, title: { names: title.title.international } }
+    }
+    return sendMailFromTemplate(request, app);
+  })
+
+  return Promise.all(promises)
+
 }
 
 

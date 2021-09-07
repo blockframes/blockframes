@@ -65,6 +65,9 @@ export const templateIds = {
   },
   offer: {
     created: 'd-94a20b20085842f68fb2d64fe325638a'
+  },
+  contract: {
+    created: 'd-f7c2e13b7d6b427daf08bdfdf904d697'
   }
 }
 
