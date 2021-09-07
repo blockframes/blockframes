@@ -2,7 +2,7 @@
     <p>Broadcasts</p>
     <mat-form-field appearance="outline">
       <mat-label>Number of Broadcasts</mat-label>
-      <input matInput type="number" placeholder="Number of Broadcasts" formControlName="broadcasts">
+      <input matInput type="number" min="0" placeholder="Number of Broadcasts" formControlName="broadcasts">
     </mat-form-field>
     <p>Catch Up Rights</p>
     <div fxFlex fxLayout fxLayoutGap="16px" fxLayoutAlign="start space-between" formGroupName="catchup">
@@ -16,7 +16,7 @@
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex>
         <mat-label>Duration</mat-label>
-        <input matInput type="number" placeholder="Duration" formControlName="duration">
+        <input matInput type="number" min="0" placeholder="Duration" formControlName="duration">
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex>
         <mat-label>Period</mat-label>
