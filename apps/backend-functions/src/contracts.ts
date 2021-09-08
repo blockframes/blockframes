@@ -10,6 +10,7 @@ import { User } from '@blockframes/auth/+state';
 import { App } from '@blockframes/utils/apps';
 import { Movie } from '@blockframes/movie/+state';
 import { sendMailFromTemplate } from './internals/email';
+import { Organization } from '@blockframes/organization/+state';
 
 export async function onContractDelete(contractSnapshot: FirebaseFirestore.DocumentSnapshot<Contract>) {
 
@@ -52,17 +53,20 @@ export async function onContractCreate(contractSnapshot: FirebaseFirestore.Docum
   );
   const app: App = 'catalog';
   const promises = stakeholders.map(async stakeholder => {
-    const user = await getDocument<User>(`users/${stakeholder}`)
+    const org = await getDocument<Organization>(`orgs/${stakeholder}`)
     const title = await getDocument<Movie>(`movies/${contract.titleId}`)
-    const request: EmailTemplateRequest = {
-      to: user.email,
-      templateId: templateIds.contract.created,
-      data: { user, app: { name: app }, title: { names: title.title.international } }
-    }
-    return sendMailFromTemplate(request, app);
+    return org.userIds.map(async userId => {
+      const user = await getDocument<User>(`users/${stakeholder}`)
+      const request: EmailTemplateRequest = {
+        to: user.email,
+        templateId: templateIds.contract.created,
+        data: { user, app: { name: app }, title: { names: title.title.international } }
+      }
+      return sendMailFromTemplate(request, app);
+    })
   })
 
-  return Promise.all(promises)
+  return Promise.all(promises.flat(1))
 
 }
 
