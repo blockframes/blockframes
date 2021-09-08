@@ -7,7 +7,7 @@
 
     <div *ngIf="blockingFields.length" class="mat-body">
       <span class="invalid-fields">You have {{ blockingFields.length }} blocking field{{blockingFields.length > 1 ? 's' : ''}}
-        to fill in or fix: {{ blockingFields | fromCamelCase | titlecase }}</span>
+        to fill in or fix: {{ blockingFields | toLabel : 'movieFormFields' }}</span>
     </div>
 
     <!-- MAIN INFORMATION -->
