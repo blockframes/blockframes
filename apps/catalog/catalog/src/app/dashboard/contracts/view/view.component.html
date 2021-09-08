@@ -5,10 +5,10 @@
     </a>
     <bf-tag>{{contract.status | toLabel: 'contractStatus'}}</bf-tag>
     <ng-container *ngIf="contract.buyerId | getOrg | async as org">
-      <span fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
+      <div fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
         <img height="100" width="100" [ref]="org?.logo" asset="empty_organization.svg" type="logo" alt="Organization Logo">
         <h1>{{ org | orgName }}</h1>
-      </span>
+      </div>
     </ng-container>
     <span>Ref {{ contract.offerId }} / Offer created: {{contract._meta.createdAt | date: 'dd/MM/yyyy'}}</span>
     <div fxLayout fxLayoutAlign="space-between center" class="actions">
