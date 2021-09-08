@@ -21,7 +21,7 @@
       <ng-template colRef="territories" let-territories>
         <span class="group-label" (click)="openDetails(territories, 'territories')">
           <p class="ellipsis">
-            {{ territories |toGroupLabel:'territories':'World' | join}}
+            {{ territories | toGroupLabel:'territories':'World' | join}}
           </p>
         </span>
       </ng-template>
@@ -41,7 +41,7 @@
       <ng-template colRef="languages" let-languages>
         <ul *ngIf="languages?.length > 0; else noLanguage">
           <li *ngFor="let language of languages| keyvalue">
-            {{language.key|toLabel:'languages'}} ({{language.value | versionPipe | join}})
+            {{language.key | toLabel:'languages'}} ({{language.value | versionPipe | join}})
           </li>
         </ul>
         <ng-template #noLanguage>-</ng-template>
@@ -55,7 +55,7 @@
       <ng-container *ngIf="terms | collidingHoldbacks: existingHoldbacks as collidingHoldbacks">
         <div fxLayout fxLayoutAlign="center center" *ngIf="collidingHoldbacks?.length" >
           <button mat-flat-button (click)="openHoldbackModal(collidingHoldbacks)">
-            <span>Other Buyers Holdbacks</span>
+            <span>Other Buyers' Holdbacks</span>
           </button>
         </div>
       </ng-container>

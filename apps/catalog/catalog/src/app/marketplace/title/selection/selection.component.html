@@ -5,7 +5,7 @@
       <div class="main-title" fxLayout="column" fxLayoutAlign="center center">
         <h1>My Selection</h1>
         <p>There are {{ bucket.contracts.length }} titles in my selection</p>
-        <p>Total price: {{ total$ | async | currency:bucket.currency }}</p>
+        <p>Total price: {{ total$ | async | currency:currencyForm.value }}</p>
       </div>
       <div fxLayout="column" fxLayoutAlign="center center">
         <p *ngIf="bucket | bucketTitles | getTitle | async as titles">
@@ -61,7 +61,7 @@
       </ng-container>
     </ng-container>
     <footer fxLayout="column" fxLayoutAlign="center center" class="summary" test-id="footer-total-price">
-      <p test-id="total-price">Total Price: {{ total$ | async | currency:bucket.currency }}</p>
+      <p test-id="total-price">Total Price: {{ total$ | async | currency:currencyForm.value }}</p>
       <button mat-flat-button color="accent" (click)="createOffer(bucket)" test-id="create-offer">Create Offer</button>
     </footer>
   </ng-container>

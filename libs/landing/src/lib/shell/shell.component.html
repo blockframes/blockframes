@@ -39,14 +39,14 @@
       </article>
       <form test-id="demo-form" fxLayout="column" fxLayoutAlign="start center" [formGroup]="form" (ngSubmit)="sendRequest(form)">
         <article fxLayout="row" fxLayoutAlign="space-between start" fxLayout.lt-md="column" fxLayoutGap="24px">
-          <mat-form-field appearance="outline" hideRequiredMarker>
+          <mat-form-field appearance="outline">
             <mat-label>First Name</mat-label>
             <input test-id="first-name" matInput type="text" placeholder="First Name" formControlName="firstName" required />
             <mat-error *ngIf="form.get('firstName').hasError('required')">
               First Name is <strong>required</strong>
             </mat-error>
           </mat-form-field>
-          <mat-form-field appearance="outline" hideRequiredMarker>
+          <mat-form-field appearance="outline">
             <mat-label>Last Name</mat-label>
             <input test-id="last-name" matInput type="text" placeholder="Last Name" formControlName="lastName" required />
             <mat-error *ngIf="form.get('lastName').hasError('required')">
@@ -55,14 +55,14 @@
           </mat-form-field>
         </article>
         <article fxLayout="row" fxLayoutAlign="space-between start" fxLayout.lt-md="column" fxLayoutGap="24px">
-          <mat-form-field appearance="outline" hideRequiredMarker>
+          <mat-form-field appearance="outline">
             <mat-label>Company Name</mat-label>
             <input test-id="comp-name" matInput type="text" placeholder="Company Name" formControlName="companyName" required />
             <mat-error *ngIf="form.get('companyName').hasError('required')">
               Company Name is <strong>required</strong>
             </mat-error>
           </mat-form-field>
-          <mat-form-field appearance="outline" hideRequiredMarker>
+          <mat-form-field appearance="outline">
             <mat-label>Role</mat-label>
             <mat-select test-id="role" placeholder="Activity" formControlName="role" required>
               <mat-option *ngFor="let role of roles" [value]="role">{{ role | roleLabel }}</mat-option>
@@ -73,7 +73,7 @@
           </mat-form-field>
         </article>
         <article fxLayout fxLayoutAlign="space-between start" fxLayout.lt-md="column" fxLayoutGap="24px">
-          <mat-form-field appearance="outline" hideRequiredMarker>
+          <mat-form-field appearance="outline">
             <mat-label>Email Adress</mat-label>
             <input test-id="email" matInput type="email" placeholder="E-mail address" formControlName="email" required />
             <mat-error *ngIf="form.get('email').hasError('required')">

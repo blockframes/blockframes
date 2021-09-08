@@ -28,6 +28,7 @@ import { MatIconModule } from '@angular/material/icon'
 
 // Tunnel routes
 import { tunnelRoutes } from './tunnel/movie-tunnel.routes';
+import { CatalogContractViewGuard } from './contracts/view/view.guard';
 
 const routes: Routes = [
   {
@@ -62,7 +63,8 @@ const routes: Routes = [
         loadChildren: () => import('./contracts/list/list.module').then(m => m.ContractListModule)
       },
       {
-        path: 'contracts/:offerId/:contractId',
+        path: 'contracts/:contractId',
+        canActivate: [ CatalogContractViewGuard ],
         loadChildren: () => import('./contracts/view/view.module').then(m => m.CatalogContractViewModule)
       },
       {
