@@ -116,7 +116,7 @@ export class UserService extends CollectionService<UserState> {
 
     if (auth.emailVerified) {
       const user = await this.getValue(auth.uid);
-      if (user._meta.emailVerified === false) {
+      if (!user._meta?.emailVerified) { // attribute does not exists or is set to false
         const _meta: DocumentMeta<Date | FirebaseFirestore.Timestamp> = {
           ...user._meta,
           emailVerified: true

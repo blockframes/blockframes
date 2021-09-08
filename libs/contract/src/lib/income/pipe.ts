@@ -22,7 +22,7 @@ export class GetIncomesFromTitlePipe implements PipeTransform {
   transform(titleId: string) {
     return this.contractService.valueChanges(ref =>
       ref.where('titleId', '==', titleId)
-        .where('status', '==', 'approved')
+        .where('status', '==', 'accepted')
         .where('type', '==', 'sale')
     ).pipe(
       map(contracts => contracts.map(contract => contract.id)),

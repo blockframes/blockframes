@@ -120,6 +120,10 @@ export class TwilioService {
     // Connect to Twilio room and register event listeners
     this.room = await connect(token, { name: eventId, tracks });
 
+    this.room.participants.forEach((participant: RemoteParticipant) => {
+      this.twilioStore.upsert(participant.sid, { id: participant.sid, kind: 'remote', userName: JSON.parse(participant.identity).displayName,  tracks: {} })
+    })
+
     this.room.on('participantConnected', (participant: RemoteParticipant) => {
       this.twilioStore.upsert(
         participant.sid,

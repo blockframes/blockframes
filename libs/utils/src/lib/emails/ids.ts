@@ -12,6 +12,7 @@ export const templateIds = {
     // Template for sending the verify email
     verifyEmail: 'd-81438bdf511b43cfa866ca63a45a02ae',
     resetPassword: 'd-6a0710945bc841ffb6955e3dc202704c',
+    resetPasswordFromCRM: 'd-496956508c64403393a6e5f5e2392e6c',
 
     // Templates for informing new user that his account have been created
     credentials: {
@@ -69,11 +70,16 @@ export const templateIds = {
 }
 
 /**
- * This is the ids of the unsubscribe group on Sendgrid.
+ * This is the ids of the email groups on Sendgrid.
  * We need to pass an id for each template we send to Sendgrid to avoid the default unsubscribe link at the end of the email.
  * Presently, there is only the Reset Password email, the Verification Email and the first invitation email with credentials that are mandatory
 */
-export const unsubscribeGroupIds = {
+export const groupIds = {
+  // This is for letting user unsubscribe from every email except the critical ones as reset password.
   allExceptCriticals: 15120,
-  criticalsEmails: 15136
+  // Critical emails that we don't want users to unsusbcribe
+  criticalsEmails: 15136,
+  // Use this groupId to remove unsubscribe link at mail bottom. Typically for support emails
+  // Note, only "text" emails (as opposition to "html") will remove the unsubscribe link
+  noUnsubscribeLink: 0
 }

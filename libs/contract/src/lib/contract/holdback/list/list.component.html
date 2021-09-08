@@ -1,5 +1,5 @@
 <ng-container *ngIf="holdbacks.length">
-  <h3>Holdbacks</h3>
+  <h3>Existing Holdbacks</h3>
   <bf-table-filter [source]="holdbacks" [columns]="columns">
     <ng-template colRef="duration" let-duration>
       {{ duration.from | date:'M/d/y' }} - {{ duration.to | date:'M/d/y' }}
@@ -15,14 +15,6 @@
       <span class="group-label" (click)="openDetails(medias, 'medias')">
         {{ medias | toGroupLabel:'medias':'All' | join | maxLength:120 }}
       </span>
-    </ng-template>
-
-    <ng-template colRef="languages" let-languages>
-      <ul>
-        <li *ngFor="let language of languages | keyvalue">
-          <strong>{{ language.key | toLabel: 'languages' }}</strong>: {{ language.value | versionPipe | join }}
-        </li>
-      </ul>
     </ng-template>
   </bf-table-filter>
 </ng-container>

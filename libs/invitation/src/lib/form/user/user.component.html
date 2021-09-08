@@ -28,7 +28,7 @@
         </div>
       </ng-template>
     </algolia-chips-autocomplete>
-    <button mat-icon-button (click)="invite()" test-id="event-invite" [disabled]="!currentLimit.canSend">
+    <button mat-icon-button (click)="invite()" test-id="event-invite" [disabled]="!currentLimit.canSend" matTooltip="Send invitations">
       <mat-icon svgIcon="send"></mat-icon>
     </button>
   </div>

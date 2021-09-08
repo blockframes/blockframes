@@ -81,8 +81,8 @@ service cloud.firestore {
       	&& userId() == incomingData().uid
         && isNotUpdatingId('uid', existingData().uid)
         && isNotUpdatingField(['email'])
-        && isNotUpdatingField(['privacyPolicy', 'date'])
-        && isNotUpdatingField(['privacyPolicy', 'ip'])
+        && (isNotUpdatingField(['privacyPolicy', 'date']) || isCreatingField(['privacyPolicy', 'date']))
+        && (isNotUpdatingField(['privacyPolicy', 'ip']) || isCreatingField(['privacyPolicy', 'ip']))
         && ( isNotUpdatingField(['orgId']) || isCreatingField(['orgId']))
     }
 
