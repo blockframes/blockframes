@@ -2,7 +2,7 @@ import { InvitationDocument, MovieDocument, NotificationDocument, OrganizationDo
 import { getDocument, getOrgAppKey, createDocumentMeta } from './data/internals';
 import { NotificationSettingsTemplate, User } from '@blockframes/user/types';
 import { sendMailFromTemplate, sendMail, substitutions } from './internals/email';
-import { emailErrorCodes, EventEmailData, getEventEmailData, getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
+import { emailErrorCodes, EmailTemplateRequest, EventEmailData, getEventEmailData, getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
 import { EventDocument, EventMeta, Screening } from '@blockframes/event/+state/event.firestore';
 import {
   reminderEventToUser,
@@ -191,6 +191,11 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
         break;
       case 'invitationToAttendEventUpdated':
         await sendInvitationToAttendEventUpdatedEmail(recipient, notification)
+          .then(() => notification.email.isSent = true)
+          .catch(e => notification.email.error = e.message);
+        break;
+      case 'contractCreatedConfirmation':
+        await sendContractCreatedConfirmation(recipient, notification)
           .then(() => notification.email.isSent = true)
           .catch(e => notification.email.error = e.message);
         break;
@@ -442,6 +447,19 @@ async function sendRequestToJoinOrgDeclined(recipient: User, notification: Notif
   const toUser = getUserEmailData(notification.user);
   const app = notification._meta.createdFrom;
   const template = requestToJoinOrgDeclined(toUser, orgData);
+  await sendMailFromTemplate(template, app, unsubscribeId);
+}
+
+/** Send copy of offer that buyer has created to all non-buyer stakeholders */
+async function sendContractCreatedConfirmation(recipient: User, notification: NotificationDocument) {
+  const app: App = 'catalog';
+  const toUser = getUserEmailData(recipient);
+  const template: EmailTemplateRequest = {
+    to: toUser.email,
+    templateId: templateIds.contract.created,
+    data: { user: toUser, app: { name: app }, title: { names: notification.title?.title?.international } }
+  }
+
   await sendMailFromTemplate(template, app, unsubscribeId);
 }
 

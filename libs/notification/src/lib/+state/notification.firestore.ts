@@ -6,6 +6,7 @@ import { DocumentMeta } from '@blockframes/utils/models-meta';
 import { EmailErrorCodes } from '@blockframes/utils/emails/utils';
 import { Bucket } from '@blockframes/contract/bucket/+state/bucket.model';
 import { App } from '@blockframes/utils/apps';
+import { Movie } from '@blockframes/movie/+state';
 
 // Type of notification used in front
 export const notificationTypesBase = [
@@ -28,6 +29,7 @@ export const notificationTypesBase = [
   'invitationToAttendScreeningCreated',
 
   // Notifications related to offers
+  'contractCreatedConfirmation',
   'offerCreatedConfirmation'
 ] as const;
 
@@ -60,6 +62,7 @@ export interface NotificationBase<D> {
   organization?: PublicOrganization;
   invitation?: PublicInvitation;
   bucket?: Bucket;
+  title?:Movie;
   appAccess?: App;
   /** @dev Type of the notification */
   type: NotificationTypes;

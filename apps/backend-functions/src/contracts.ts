@@ -2,15 +2,11 @@ import { db } from './internals/firebase';
 import { Contract, ContractStatus, Mandate, Sale } from '@blockframes/contract/contract/+state/contract.model';
 import { Change } from 'firebase-functions';
 import { Offer } from '@blockframes/contract/offer/+state';
-import { templateIds } from '@blockframes/utils/emails/ids';
 import { centralOrgId } from '@env'
-import { EmailTemplateRequest } from '@blockframes/utils/emails/utils';
 import { getDocument } from '@blockframes/firebase-utils';
-import { User } from '@blockframes/auth/+state';
-import { App } from '@blockframes/utils/apps';
 import { Movie } from '@blockframes/movie/+state';
-import { sendMailFromTemplate } from './internals/email';
 import { Organization } from '@blockframes/organization/+state';
+import { createNotification, triggerNotifications } from './notification';
 
 export async function onContractDelete(contractSnapshot: FirebaseFirestore.DocumentSnapshot<Contract>) {
 
@@ -51,22 +47,25 @@ export async function onContractCreate(contractSnapshot: FirebaseFirestore.Docum
   const stakeholders = contract.stakeholders.filter(
     stakeholder => (stakeholder !== contract.buyerId) && stakeholder !== centralOrgId.catalog
   );
-  const app: App = 'catalog';
+
+  if (!stakeholders.length) { return }
+
   const promises = stakeholders.map(async stakeholder => {
     const org = await getDocument<Organization>(`orgs/${stakeholder}`)
     const title = await getDocument<Movie>(`movies/${contract.titleId}`)
-    return org.userIds.map(async userId => {
-      const user = await getDocument<User>(`users/${stakeholder}`)
-      const request: EmailTemplateRequest = {
-        to: user.email,
-        templateId: templateIds.contract.created,
-        data: { user, app: { name: app }, title: { names: title.title.international } }
-      }
-      return sendMailFromTemplate(request, app);
+    // Send copy of offer to all non-buyer stakeholders
+    const notifications = org.userIds.map(userId => {
+      return createNotification({
+        toUserId: userId,
+        type: 'contractCreatedConfirmation',
+        docId: contract.offerId,
+        title,
+      })
     })
+    return triggerNotifications(notifications)
   })
 
-  return Promise.all(promises.flat(1))
+  return Promise.all(promises)
 
 }
 
