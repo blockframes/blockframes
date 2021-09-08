@@ -194,7 +194,7 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
           .then(() => notification.email.isSent = true)
           .catch(e => notification.email.error = e.message);
         break;
-      case 'contractCreatedConfirmation':
+      case 'contractCreated':
         await sendContractCreatedConfirmation(recipient, notification)
           .then(() => notification.email.isSent = true)
           .catch(e => notification.email.error = e.message);

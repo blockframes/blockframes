@@ -41,31 +41,30 @@ export async function onContractDelete(contractSnapshot: FirebaseFirestore.Docum
 }
 
 export async function onContractCreate(contractSnapshot: FirebaseFirestore.DocumentSnapshot<Contract>) {
-
   const contract = contractSnapshot.data() as Contract;
+
   if (contract.type !== 'sale') return;
+
   const stakeholders = contract.stakeholders.filter(
     stakeholder => (stakeholder !== contract.buyerId) && stakeholder !== centralOrgId.catalog
   );
 
   if (!stakeholders.length) { return }
 
-  const promises = stakeholders.map(async stakeholder => {
-    const org = await getDocument<Organization>(`orgs/${stakeholder}`)
-    const title = await getDocument<Movie>(`movies/${contract.titleId}`)
-    // Send copy of offer to all non-buyer stakeholders
-    const notifications = org.userIds.map(userId => {
-      return createNotification({
-        toUserId: userId,
-        type: 'contractCreatedConfirmation',
-        docId: contract.offerId,
-        title,
-      })
-    })
-    return triggerNotifications(notifications)
-  })
+  const title = await getDocument<Movie>(`movies/${contract.titleId}`)
 
-  return Promise.all(promises)
+  const getNotifications = (org: Organization) => org.userIds.map(userId => createNotification({
+    toUserId: userId,
+    type: 'contractCreated',
+    docId: contract.offerId,
+    title,
+  }));
+
+  for (const stakeholder of stakeholders) {
+    getDocument<Organization>(`orgs/${stakeholder}`)
+      .then(getNotifications)
+      .then(triggerNotifications);
+  }
 
 }
 

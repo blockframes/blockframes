@@ -229,6 +229,13 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           message: `Your offer was successfully sent.`,
           placeholderUrl: 'profil_user.svg'
         }
+      case 'contractCreated':
+        return {
+          _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
+          message: `An offer is made on one of your titles.`,
+          placeholderUrl: 'profil_user.svg',
+          url: `${applicationUrl['catalog']}/c/o/${module}/title/${notification.title.id}`
+        }
       default:
         return {
           message: 'Error while displaying notification.'
