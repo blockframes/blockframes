@@ -52,7 +52,7 @@ export class ContractItemComponent {
     private orgQuery: OrganizationQuery,
   ) { }
 
-  openDetails(terms: string, scope: Scope) {
+  openDetails(terms: string[], scope: Scope) {
     this.dialog.open(DetailedTermsComponent, { data: { terms, scope }, maxHeight: '80vh', autoFocus: false });
   }
 

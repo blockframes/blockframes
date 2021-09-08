@@ -2,7 +2,7 @@
 
   <landing-header fxLayout="column" fxLayoutAlign="start start" fxLayoutAlign.lt-sm="center center" fxLayoutGap="32px">
     <span class="mat-subheading-1">Welcome to Archipel Market</span>
-    <p class="mat-display-2">The ongoing<br />film market</p>
+    <h1 class="mat-display-2">The ongoing<br />film market</h1>
     <h2>One tool for your year-round <br/>promotion & acquisitions</h2>
     <a mat-flat-button color="accent" routerLink="/auth/identity">
       <span>Join now</span>
@@ -12,7 +12,7 @@
 
   <landing-content>
     <section class="landing-partners" fxLayout="column" fxLayoutAlign="start" fxLayoutGap="16px">
-      <h1 class="mat-display-2">They're using it</h1>
+      <h2 class="mat-display-1">They're using it</h2>
       <p class="mat-body-1">Over 1300 buyers are already using Archipel, from companies like:</p>
       <div fxLayout="row wrap" fxLayoutGap="32px">
         <img *ngFor="let partnerLogo of partnerLogoList" [asset]='partnerLogo' [alt]='partnerLogo'>
@@ -20,7 +20,7 @@
     </section>
 
     <section class="landing-presentation">
-      <h1 class="mat-display-2">How it works</h1>
+      <h2 class="mat-display-1">How it works</h2>
       <p class="mat-body-1">Archipel Market is an ongoing film market platform. <br>
         It facilitates interactions between sales agents and buyers all year round. </p>
       <mat-tab-group animationDuration="1000ms" selectedIndex="0">
@@ -35,7 +35,7 @@
             </div>
           </header>
           <h2>Features</h2>
-          <article fxLayout="row wrap" fxLayoutAlign="space-between" fxLayoutGap="8px" fxLayoutAlign.lt-lg="center">
+          <article fxLayout="row wrap" fxLayoutAlign="space-between" fxLayoutGap.mt-lg="8px" fxLayoutAlign.lt-lg="center">
             <div class="surface" *ngFor="let feature of sellerFeatures">
               <img [asset]="feature.imgAsset" alt="seller feature image">
               <h3>{{ feature.title }}</h3>
@@ -67,7 +67,7 @@
             </div>
           </header> 
           <h2>Features</h2>
-          <article fxLayout="row wrap" fxLayoutAlign="space-between" fxLayoutGap="8px" fxLayoutAlign.lt-lg="center">
+          <article fxLayout="row wrap" fxLayoutAlign="space-between" fxLayoutGap.mt-lg="8px" fxLayoutAlign.lt-lg="center">
             <div class="surface" *ngFor="let feature of buyerFeatures">
               <img [asset]="feature.imgAsset" alt="buyer feature image">
               <h3>{{ feature.title }}</h3>
@@ -90,14 +90,51 @@
       </mat-tab-group>
     </section>
 
-    <section class="dark-contrast-theme landing-join" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="32px">
-      <p class="mat-display-2">Interested?</p>
+    <section class="dark-contrast-theme landing-join" bgAsset="background_hero.png" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="32px">
+      <p class="mat-display-1">Interested?</p>
       <p>Sign up now to explore Archipel Market!</p>
       <a mat-flat-button color="primary" routerLink="/auth/identity">
         <span>Join now</span>
         <mat-icon svgIcon="arrow_forward"></mat-icon>
       </a>
     </section>
+
+    <section class=landing-clients-opinion fxLayout="column" fxLayoutGap="24px">
+      <h2 class="mat-display-1">What our clients say</h2>
+      <article class="opinions" fxLayout.lt-lg="column" fxLayoutAlign="center stretch" fxLayoutGap="24px">
+        <ng-container *ngFor="let opinion of clientOpinion">
+          <div fxLayout="column" fxLayoutAlign="center" fxFlex>
+            <h3>{{opinion.name}}</h3>
+            <p>{{opinion.jobTitle}}</p>
+            <p class="mat-body-1">{{opinion.text}}</p>
+            <div fxLayout="row" fxLayoutAlign="center center" fxFlexAlign="end" fxLayoutGap="24px">
+              <img [asset]="opinion.logo">
+              <p>{{opinion.company}}</p>
+            </div>
+          </div>
+        </ng-container>
+      </article>
+    </section>
   </landing-content>
 
+  <landing-detail>
+    <h1 class="mat-display-1">They're talking about us</h1>
+    <section fxLayout fxLayoutAlign="space-between center" fxLayout.lt-md="column wrap" fxLayoutAlign.lt-md="start center" fxLayoutGap="24px">
+      <ng-container *ngFor="let review of reviews">
+        <a href="{{review.link}}" target="_blank" fxLayout fxFlexAlign="stretch">
+          <mat-card fxLayout="column center" fxFlexAlign="stretch"> 
+            <img mat-card-image [asset]="review.img" alt="review image">
+            <div fxLayout="column" fxLayoutAlign="space-between" fxLayoutGap="24px" fxFlex>
+              <mat-card-title>{{review.title}}</mat-card-title>
+              <mat-card-content>{{review.text}}</mat-card-content>
+              <div fxLayout fxLayoutAlign="center center" fxFlexAlign="end" fxLayoutGap="16px">
+                <span class="mat-caption">From</span>
+                <img [asset]="review.logo">
+              </div>
+            </div>
+          </mat-card>
+        </a>
+      </ng-container>
+    </section>
+  </landing-detail>
 </landing-shell-page>

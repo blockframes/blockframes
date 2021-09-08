@@ -1,9 +1,10 @@
-import { Component, ChangeDetectionStrategy, } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Optional, } from '@angular/core';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { appName, getCurrentApp } from '@blockframes/utils/apps';
 import { Contract, ContractService } from '@blockframes/contract/contract/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Intercom } from 'ng-intercom';
 
 const columns = {
   'offerId': 'Offer Reference',
@@ -38,10 +39,16 @@ export class ContractListComponent {
     private routerQuery: RouterQuery,
     private router: Router,
     private route: ActivatedRoute,
+    @Optional() private intercom: Intercom,
+
   ) { }
 
 
   goToContract({ offerId, id }: Contract) {
     this.router.navigate([offerId, id], { relativeTo: this.route });
   }
+  public openIntercom() {
+    return this.intercom.show();
+  }
+
 }

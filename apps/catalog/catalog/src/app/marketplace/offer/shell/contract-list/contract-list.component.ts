@@ -20,4 +20,5 @@ export class ContractListComponent  {
 
   constructor(private shell: OfferShellComponent) { }
 
+
 }

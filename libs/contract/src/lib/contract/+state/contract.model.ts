@@ -14,7 +14,6 @@ export interface Holdback<D extends Timestamp | Date = Date> {
   territories: Territory[];
   medias: Media[];
   duration: Duration<D>;
-  languages: Record<string, MovieLanguageSpecification>;
 }
 
 export interface Contract<D extends Timestamp | Date = Date> {
@@ -61,7 +60,6 @@ export function createHoldback(params: Partial<Holdback<Date>> = {}): Holdback {
     medias: [],
     duration: { from: new Date(), to: new Date() },
     ...params,
-    languages: createLanguageKey(params.languages)
   }
 }
 

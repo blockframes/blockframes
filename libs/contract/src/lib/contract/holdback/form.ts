@@ -1,5 +1,4 @@
 import { FormControl, FormGroup } from "@angular/forms";
-import { createLanguageControl, MovieVersionInfoForm } from "@blockframes/movie/form/movie.form";
 import { FormEntity, FormStaticValueArray } from "@blockframes/utils/form";
 import { createHoldback, Holdback } from "../+state";
 
@@ -12,7 +11,6 @@ function createHoldbackControl(params: Partial<Holdback> = {}) {
       from: new FormControl(term.duration?.from),
       to: new FormControl(term.duration?.to)
     }),
-    languages: MovieVersionInfoForm.factory(term.languages, createLanguageControl),
   }
 }
 

@@ -9,7 +9,7 @@ import { map, startWith, switchMap, tap } from 'rxjs/operators';
 
 type QueryMap<T> = Record<string, (data: Entity<T>) => any>
 type Entity<T> = T extends Array<infer I> ? I : T;
-type GetSnapshot<F extends (...data: any) => any> = 
+type GetSnapshot<F extends (...data: any) => any> =
   F extends (...data: any) => Observable<infer I> ? I
   : F extends (...data: any) => Promise<infer J> ? J
   : ReturnType<F>;
@@ -22,10 +22,10 @@ interface JoinWithOptions {
   /** If set to false, the subqueries will be filled with undefined and hydrated as they come through */
   shouldAwait?: boolean;
 }
-  
+
 /**
  * Operator that join the source with sub queries.
- * There are two stategies : 
+ * There are two stategies :
  * 1. `shouldAwait: true`: Await all subqueries to emit once before emitting a next value
  * 2. `shouldAwait: false`: Emit the source and hydrate it with the subqueries along the way
  * @example
@@ -72,10 +72,12 @@ export function joinWith<T, Query extends QueryMap<T>>(queries: Query, options: 
       map(() => entity as any),
     );
   }
-  
-  return switchMap((data: T) => {
-    return Array.isArray(data)
-      ? combineLatest(data.map(runQuery))
-      : runQuery(data as Entity<T>);
+
+  return switchMap((data: T|T[]) => {
+    if (Array.isArray(data)) {
+      if (!data.length) return of([]);
+      return combineLatest((data as Entity<T>[]).map(runQuery));
+    }
+    return runQuery(data as Entity<T>);
   });
 }

@@ -75,6 +75,6 @@ describe('Create a new bucket and finalize a new offer', () => {
     p3.createNewOffer(specificText, deliveryText);
     assertMoveTo('/c/o/marketplace/selection/congratulations');
     cy.log("Check if offer is sent");
-    cy.get('catalog-congratulations h1', {timeout: 10 * SEC}).should('contain', 'Your Offer was successfully sent.');
+    cy.get('catalog-congratulations h1', {timeout: 10 * SEC}).should('contain', 'has been successfully sent.');
   });
 });

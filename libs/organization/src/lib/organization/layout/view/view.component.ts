@@ -3,6 +3,7 @@ import { Organization } from '@blockframes/organization/+state';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { Location } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
+import { scrollIntoView } from '@blockframes/utils/browser/utils';
 
 @Component({
   selector: 'org-view',
@@ -26,7 +27,7 @@ export class ViewComponent {
   scrollIntoView() {
     /* We don't want to trigger the animation when the user just arrived on the page */
     if (this.navClicked) {
-      this.main.nativeElement.scrollIntoView({ behavior: 'smooth' });
+      scrollIntoView(this.main.nativeElement);
     }
   }
 
