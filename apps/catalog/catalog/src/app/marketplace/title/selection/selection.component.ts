@@ -24,7 +24,6 @@ export class MarketplaceSelectionComponent {
   public currencyForm = new FormControl('EUR');
 
   bucket$: Observable<Bucket>;
-  disabled$: Observable<boolean>;
   private prices: number[] = [];
   priceChanges = new Subject<number>();
   total$: Observable<number>;
@@ -42,10 +41,6 @@ export class MarketplaceSelectionComponent {
         this.setTitle(bucket?.contracts.length);
         if (bucket?.currency) this.currencyForm.setValue(bucket.currency);
       })
-    );
-
-    this.disabled$ = this.bucket$.pipe(
-      map(bucket => bucket.contracts.some(contract => !contract.price))
     );
 
     const bucketPrices$ = this.bucket$.pipe(
