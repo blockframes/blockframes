@@ -25,7 +25,8 @@ const titleType: Record<NotificationTypesBase, NotificationSetting> = {
   requestToAttendEventCreated: { text: 'A user wants to join an event you\'re organizing. (RECOMMENDED)', tooltip: true },
   invitationToAttendMeetingCreated: { text: 'You are invited to a meeting. (RECOMMENDED)', tooltip: true },
   invitationToAttendScreeningCreated: { text: 'You are invited to a screening. (RECOMMENDED)', tooltip: true },
-  offerCreatedConfirmation: { text: 'You send an offer', tooltip: false }
+  offerCreatedConfirmation: { text: 'You send an offer', tooltip: false },
+  contractCreatedConfirmation: { text: 'Someone wants to buy your movie. (RECOMMENDED)', tooltip: true }
 };
 
 const tables: { title: string, types: string[], appAuthorized: App[] }[] = [
