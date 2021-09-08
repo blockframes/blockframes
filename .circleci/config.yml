@@ -376,7 +376,7 @@ jobs:
     steps:
       - prepare_environment
       - run: npm start prepareEmulators
-      - run: npx nx build backend-functions
+      - run: npx nx build backend-functions --configuration=emulator
       - save_cache:
           key: emulator-cache-v1-{{ epoch }}
           paths:

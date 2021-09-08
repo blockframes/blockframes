@@ -173,10 +173,6 @@
               "inspect": false,
               "fileReplacements": [
                 {
-                  "replace": "env/env.ts",
-                  "with": "env/env.blockframes.ts"
-                },
-                {
                   "replace": "apps/backend-functions/src/environments/environment.ts",
                   "with": "apps/backend-functions/src/environments/environment.prod.ts"
                 }
@@ -188,27 +184,17 @@
               "inspect": false,
               "fileReplacements": [
                 {
-                  "replace": "env/env.ts",
-                  "with": "env/env.blockframes-staging.ts"
-                },
-                {
                   "replace": "apps/backend-functions/src/environments/environment.ts",
                   "with": "apps/backend-functions/src/environments/environment.prod.ts"
                 }
               ]
             },
-            "ci": {
+            "emulator": {
               "optimization": true,
-              "extractLicenses": true,
-              "inspect": false,
               "fileReplacements": [
                 {
-                  "replace": "env/env.ts",
-                  "with": "env/env.blockframes-ci.ts"
-                },
-                {
                   "replace": "apps/backend-functions/src/environments/environment.ts",
-                  "with": "apps/backend-functions/src/environments/environment.ci.ts"
+                  "with": "apps/backend-functions/src/environments/environment.emulator.ts"
                 }
               ]
             }

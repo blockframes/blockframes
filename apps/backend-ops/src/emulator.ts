@@ -85,7 +85,7 @@ export async function startEmulators({ importFrom = 'defaultImport' }: StartEmul
   let proc: ChildProcess;
   try {
     proc = await firebaseEmulatorExec({
-      emulators: ['functions', 'firestore', 'pubsub'],
+      emulators: ['auth', 'functions', 'firestore', 'pubsub'],
       importPath: emulatorPath,
       exportData: true
     })
@@ -97,11 +97,11 @@ export async function startEmulators({ importFrom = 'defaultImport' }: StartEmul
     // ! if we launch auth here... this is not used elsewhere... like this is frontend only. So we just have to connect to it
     // ! other functiosn will not all have auth happen as long as we only enable it when needed.
     // ! emulator connect needs fixing, but furst test if premise works....
-    // const auth = connectAuthEmulator();
-    // const db = connectFirestoreEmulator();
-    // await startMaintenance(db)
-    // await syncUsers(null, db, auth)
-    // await endMaintenance(db)
+    const auth = connectAuthEmulator();
+    const db = connectFirestoreEmulator();
+    await startMaintenance(db)
+    await syncUsers(null, db, auth)
+    await endMaintenance(db)
     // openSync(join(emulatorPath, '.ready'), 'w');
     await awaitProcessExit(proc);
   } catch (e) {
