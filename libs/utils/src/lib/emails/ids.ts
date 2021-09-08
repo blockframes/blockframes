@@ -76,7 +76,8 @@ export const templateIds = {
 */
 export const groupIds = {
   // This is for letting user unsubscribe from every email except the critical ones as reset password.
-  allExceptCriticals: 15120,
+  unsubscribeAll: 15120,
+  // forceUnsubscribeAll : if we ever need a group to unsubscribe from all email even critical, we will use this namming
   // Critical emails that we don't want users to unsusbcribe
   criticalsEmails: 15136,
   // Use this groupId to remove unsubscribe link at mail bottom. Typically for support emails
