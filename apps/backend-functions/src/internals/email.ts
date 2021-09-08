@@ -22,7 +22,7 @@ const substitutions = { // @TODO #6586 looks like unused
  * Like this, we can avoid showing the criticalEmails group, which is linked for example to the reset password email.
  * Users won't be able to unsubscribe from this group and will always received email from the criticalsEmails group.
 */
-const groupsToDisplay = [groupIds.allExceptCriticals];
+const groupsToDisplay = [groupIds.unsubscribeAll];
 
 /**
  * Sends a transactional email configured by the EmailRequest provided.
