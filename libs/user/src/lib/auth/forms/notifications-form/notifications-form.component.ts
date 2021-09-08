@@ -56,7 +56,10 @@ const tables: { title: string, types: string[], appAuthorized: App[] }[] = [
   },
   {
     title: 'Offer Management',
-    types: ['offerCreatedConfirmation'],
+    types: [
+      'offerCreatedConfirmation',
+      'contractCreatedConfirmation',
+    ],
     appAuthorized: ['catalog']
   }
 ];
