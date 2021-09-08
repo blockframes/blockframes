@@ -45,11 +45,11 @@ export async function onContractCreate(contractSnapshot: FirebaseFirestore.Docum
 
   if (contract.type !== 'sale') return;
 
-  const stakeholders = contract.stakeholders.filter(
-    stakeholder => (stakeholder !== contract.buyerId) && stakeholder !== centralOrgId.catalog
-  );
+  const stakeholders = contract.stakeholders.filter(stakeholder => {
+    return (stakeholder !== contract.buyerId) && stakeholder !== centralOrgId.catalog;
+  });
 
-  if (!stakeholders.length) { return }
+  if (!stakeholders.length) return
 
   const title = await getDocument<Movie>(`movies/${contract.titleId}`)
 

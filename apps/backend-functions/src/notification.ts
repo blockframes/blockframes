@@ -451,7 +451,7 @@ async function sendRequestToJoinOrgDeclined(recipient: User, notification: Notif
 }
 
 /** Send copy of offer that buyer has created to all non-buyer stakeholders */
-async function sendContractCreatedConfirmation(recipient: User, notification: NotificationDocument) {
+function sendContractCreatedConfirmation(recipient: User, notification: NotificationDocument) {
   const app: App = 'catalog';
   const toUser = getUserEmailData(recipient);
   const template: EmailTemplateRequest = {
@@ -460,7 +460,7 @@ async function sendContractCreatedConfirmation(recipient: User, notification: No
     data: { user: toUser, app: { name: app }, title: { names: notification.title?.title?.international } }
   }
 
-  await sendMailFromTemplate(template, app, unsubscribeId);
+  return sendMailFromTemplate(template, app, unsubscribeId);
 }
 
 /** Send copy of offer that recipient has created */
