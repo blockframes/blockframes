@@ -53,17 +53,6 @@ function getItems(groups: StaticGroup[]): string[] {
 }
 
 
-function checkIsControlValid(values: string[]): ValidationErrors | null {
-  if (values?.length < 1) {
-    return {
-      mustBePositive: {
-        length: values.length
-      }
-    };
-  }
-  return null;
-}
-
 @Component({
   selector: 'static-group',
   templateUrl: './group.component.html',
@@ -209,7 +198,7 @@ export class StaticGroupComponent implements ControlValueAccessor, OnInit, OnDes
   }
 
   get errorState(): boolean {
-    return Boolean(checkIsControlValid(this.form.value)) && this.touched;
+    return this.form.errors && Object.keys(this.form.errors).length && this.touched;
   }
 
 

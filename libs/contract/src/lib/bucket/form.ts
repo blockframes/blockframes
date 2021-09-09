@@ -23,7 +23,7 @@ function createBucketTermControl(params: Partial<BucketTerm> = {}) {
   const term = createBucketTerm(params);
   return {
     territories: new FormStaticValueArray<'territories'>(term.territories, 'territories'),
-    medias: new FormStaticValueArray<'medias'>(term.medias, 'medias',),
+    medias: new FormStaticValueArray<'medias'>(term.medias, 'medias'),
     exclusive: new FormControl(term.exclusive ?? true),
     duration: new FormGroup({
       from: new FormControl(term.duration?.from),
