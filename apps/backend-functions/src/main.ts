@@ -25,7 +25,7 @@ import { heavyConfig, superHeavyConfig } from '@blockframes/firebase-utils';
 import { onNotificationCreate } from './notification';
 import { importAnalytics } from './pubsub/daily-analytics-import';
 import { onOfferCreate } from './offer';
-import { onContractDelete, onContractUpdate } from './contracts';
+import { onContractCreate, onContractDelete, onContractUpdate } from './contracts';
 import { onTermDelete } from './terms';
 import { downloadVideo } from './rescue';
 
@@ -254,6 +254,8 @@ export const sendgridEventWebhookListener = functions.https.onRequest(sendgridEv
 //--------------------------------
 
 export const onContractDeleteEvent = onDocumentDelete('contracts/{contractId}', onContractDelete);
+
+export const onContractCreateEvent = onDocumentCreate('contracts/{contractId}', onContractCreate);
 
 export const onContractUpdateEvent = onDocumentUpdate('contracts/{contractId}', onContractUpdate);
 

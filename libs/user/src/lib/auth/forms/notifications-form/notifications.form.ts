@@ -4,7 +4,7 @@ import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 
 function createNotificationSettingsControls(settings: Partial<NotificationSettingsTemplate> = {}, disabled = false) {
   return {
-    email: new FormControl({ value: settings.email ?? true, disabled: false}, Validators.required),
+    email: new FormControl({ value: settings.email ?? true, disabled: false }, Validators.required),
     app: new FormControl({ value: settings.app ?? true, disabled }, Validators.required),
   }
 }
@@ -28,10 +28,11 @@ function createNotificationsControls(settings: Partial<NotificationSettings> = {
     invitationToAttendEventUpdated: new NotificationSettingsForm(settings.invitationToAttendEventUpdated),
     requestToAttendEventUpdated: new NotificationSettingsForm(settings.requestToAttendEventUpdated),
     movieAccepted: new NotificationSettingsForm(settings.movieAccepted),
-    requestToAttendEventCreated: new  NotificationSettingsForm(settings.requestToAttendEventCreated, true),
-    invitationToAttendMeetingCreated: new  NotificationSettingsForm(settings.invitationToAttendMeetingCreated, true),
-    invitationToAttendScreeningCreated: new  NotificationSettingsForm(settings.invitationToAttendScreeningCreated, true),
-    offerCreatedConfirmation: new NotificationSettingsForm(settings.offerCreatedConfirmation)
+    requestToAttendEventCreated: new NotificationSettingsForm(settings.requestToAttendEventCreated, true),
+    invitationToAttendMeetingCreated: new NotificationSettingsForm(settings.invitationToAttendMeetingCreated, true),
+    invitationToAttendScreeningCreated: new NotificationSettingsForm(settings.invitationToAttendScreeningCreated, true),
+    offerCreatedConfirmation: new NotificationSettingsForm(settings.offerCreatedConfirmation),
+    contractCreated: new NotificationSettingsForm(settings.contractCreated)
   }
 }
 
