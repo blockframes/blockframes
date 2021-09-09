@@ -195,7 +195,7 @@ export function getMoviePublishStatus(a: App): StoreStatus {
  * Returns the "from" email that should be used depending on the current app
  * @param a
  */
-export function getSendgridFrom(a?: App): EmailJSON {
+export function getMailSender(a?: App): EmailJSON {
   if (!a) {
     return sendgridEmailsFrom.default;
   } else {

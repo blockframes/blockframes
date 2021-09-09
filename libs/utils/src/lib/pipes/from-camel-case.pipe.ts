@@ -5,8 +5,7 @@ import { Pipe, PipeTransform, NgModule } from '@angular/core';
 })
 export class FromCamelCasePipe implements PipeTransform {
   transform(value: string[]): string {
-    return value.map(string => string.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase())).join(', ')
-
+    return value.filter(v => !!v).map(string => string.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase())).join(', ');
   }
 }
 

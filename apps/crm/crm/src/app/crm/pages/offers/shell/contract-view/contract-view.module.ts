@@ -10,6 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
 import { OrgChipModule } from '@blockframes/organization/components/chip/chip.module';
@@ -43,6 +44,7 @@ import { ContractViewComponent } from './contract-view.component';
     MatButtonModule,
     MatSelectModule,
     MatTooltipModule,
+    MatSnackBarModule,
     MatFormFieldModule,
 
     RouterModule.forChild([{ path: '', component: ContractViewComponent }]),
