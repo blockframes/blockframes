@@ -59,7 +59,7 @@ movie-slide {
 
 @include layout-bp(gt-sm) {
   .banner, movie-slide {
-    padding: 80px;
+    padding: 38px 80px;
   }
   .banner {
     flex-direction: row;
