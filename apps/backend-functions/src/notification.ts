@@ -440,7 +440,7 @@ function sendContractCreatedConfirmation(recipient: User, notification: Notifica
   const toUser = getUserEmailData(recipient);
   const template = contractCreatedEmail(toUser, notification.title?.title?.international,'catalog')
   console.log({template})
-  return sendMailFromTemplate(template, app, groupIds.allExceptCriticals);
+  return sendMailFromTemplate(template, app, groupIds.unsubscribeAll);
 }
 
 /** Send copy of offer that recipient has created */
