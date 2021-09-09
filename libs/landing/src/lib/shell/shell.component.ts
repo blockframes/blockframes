@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ContentChild, Directive, HostBinding, Input, OnDestroy, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ContentChild, Directive, HostBinding, Input, OnDestroy, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { createDemoRequestInformations, RequestDemoInformations } from '@blockframes/utils/request-demo';
 import { MatSnackBar } from '@angular/material/snack-bar'
@@ -71,7 +71,8 @@ export class LandingShellComponent implements OnDestroy {
     private snackBar: MatSnackBar,
     private routerQuery: RouterQuery,
     private functions: AngularFireFunctions,
-    private theme: ThemeService
+    private theme: ThemeService,
+    private cdr: ChangeDetectorRef
   ) {
     theme.setTheme('light')
   }
@@ -88,7 +89,7 @@ export class LandingShellComponent implements OnDestroy {
   }
 
   /** Triggers when a user click on the button from LearnMoreComponent.  */
-  public sendRequest(form: FormGroup) {
+  public async sendRequest(form: FormGroup) {
     if (form.invalid) {
       this.snackBar.open('Please fill the required informations.', 'close', { duration: 2000 });
       return;
@@ -101,10 +102,12 @@ export class LandingShellComponent implements OnDestroy {
         information.test = true;
         information.testEmailTo = testEmail;
       }
-      this.sendDemoRequest(information);
+      await this.sendDemoRequest(information);
+
       this.buttonText = 'Request Sent';
       this.snackBar.open('Request sent', 'close', { duration: 2000 });
       this.submitted = true;
+      this.cdr.markForCheck();
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 5000 });
     }
