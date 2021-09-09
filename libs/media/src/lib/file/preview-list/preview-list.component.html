@@ -5,7 +5,7 @@
 </header>
 
 <article fxLayout fxLayoutAlign="center center">
-  <button mat-icon-button (click)="previous()" matTooltip="Previous" [disabled]="index === 0">
+  <button *ngIf="index && data.refs.length" mat-icon-button (click)="previous()" matTooltip="Previous">
     <mat-icon svgIcon="chevron_left"></mat-icon>
   </button>
   <ng-container [ngSwitch]="data.refs[index].storagePath | fileType">
@@ -23,7 +23,7 @@
       <p>Currently supported file are: pdf, images, and videos</p>
     </ng-container>
   </ng-container>
-  <button mat-icon-button (click)="next()" matTooltip="Next" [disabled]="(index + 1) >= data.refs.length">
+  <button *ngIf="(index + 1) < data.refs.length" mat-icon-button (click)="next()" matTooltip="Next">
     <mat-icon svgIcon="chevron_right"></mat-icon>
   </button>
 </article>

@@ -24,17 +24,16 @@ export class HolbackFormComponent {
     duration: 'Duration',
     territories: 'Territories',
     medias: 'Media',
-    languages: 'Versions',
   };
 
-  constructor(private dialog: MatDialog) {}
+  constructor(private dialog: MatDialog) { }
 
   ngOnInit() {
     this.form = FormList.factory(this.holdbacks, holdback => new HoldbackForm(holdback));
   }
 
   openHoldbacks(template: TemplateRef<any>) {
-    this.ref = this.dialog.open(template, {maxHeight: '80vh', width: '1000px', maxWidth: '100vw'});
+    this.ref = this.dialog.open(template, { maxHeight: '80vh', width: '1000px', maxWidth: '100vw' });
   }
 
   openDetails(terms: string, scope: Scope) {
@@ -52,3 +51,4 @@ export class HolbackFormComponent {
     this.ref.close();
   }
 }
+

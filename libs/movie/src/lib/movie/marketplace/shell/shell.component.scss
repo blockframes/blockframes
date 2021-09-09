@@ -3,7 +3,7 @@ nav {
 }
 
 footer {
-  margin: 24px;
+  margin: 24px 24px 72px 24px;
 
   mat-card {
     display: flex;
@@ -27,7 +27,7 @@ footer {
     margin: 0 24px;
     video-viewer {
       display: block;
-      height: 90%;
+      height: 100%;
     }
     p {
       padding-top: 8px;

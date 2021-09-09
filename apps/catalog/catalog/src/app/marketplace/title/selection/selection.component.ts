@@ -61,7 +61,9 @@ export class MarketplaceSelectionComponent {
   }
 
   private getTotal(prices: number[]) {
-    return prices.reduce((arr, curr) => (arr + curr), 0)
+    return prices.reduce((total, price) => {
+      return total + (price || 0);  // if "", fallback to '0'
+    }, 0)
   }
 
   setPrice(index: number, price: string | null) {

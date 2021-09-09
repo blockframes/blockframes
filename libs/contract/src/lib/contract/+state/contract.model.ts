@@ -1,8 +1,7 @@
-import { MovieLanguageSpecification } from "@blockframes/movie/+state/movie.firestore";
+
 import { createDocumentMeta, DocumentMeta } from "@blockframes/utils/models-meta";
 import { Media, Territory } from "@blockframes/utils/static-model";
 import { Duration } from '../../term/+state/term.model';
-import { createLanguageKey } from "@blockframes/movie/+state";
 import { Timestamp } from "@blockframes/utils/common-interfaces/timestamp";
 import { toDate } from "@blockframes/utils/helpers";
 

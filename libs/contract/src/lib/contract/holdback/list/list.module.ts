@@ -17,8 +17,6 @@ import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filte
     JoinPipeModule,
     MaxLengthModule,
     ToGroupLabelPipeModule,
-    ToLabelModule,
-    VersionPipeModule
   ]
 })
 export class HoldbackListModule { }

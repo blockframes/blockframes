@@ -6,7 +6,7 @@
  */
 import * as functions from 'firebase-functions';
 
-export const e2eMode = false;
+export const e2eMode = true;
 
 export {
   factoryContract,
