@@ -28,6 +28,7 @@ export const notificationTypesBase = [
   'invitationToAttendScreeningCreated',
 
   // Notifications related to offers
+  'contractCreated',
   'offerCreatedConfirmation'
 ] as const;
 
