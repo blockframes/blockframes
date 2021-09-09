@@ -199,8 +199,13 @@ export function findInvalidControls(formToInvestigate: FormGroup | FormArray) {
 
       if (control.invalid) {
         if (control.errors) {
-          if (Object.keys(control.errors).includes('required')) missingFields.push(rootControlName || getName(control))
-          else errorFields.push(rootControlName);
+          const isRequired = Object.keys(control.errors).includes('required');
+          const name = rootControlName || getName(control);
+          if (isRequired) {
+            missingFields.push(name);
+          } else if (rootControlName) {
+            errorFields.push(rootControlName);
+          }
         }
       }
 
@@ -208,6 +213,7 @@ export function findInvalidControls(formToInvestigate: FormGroup | FormArray) {
         missingFields.concat(recursiveFunc(control, getName(control.parent) || getName(control)));
       }
     }
+
     return {
       errorFields: Array.from(new Set(errorFields)),
       missingFields: Array.from(new Set(missingFields))
@@ -222,29 +228,8 @@ export function findInvalidControls(formToInvestigate: FormGroup | FormArray) {
  * @returns the name of the control
  */
 function getName(control: AbstractControl): string | null {
-  const group = <FormGroup>control.parent;
+  const group = control.parent as FormGroup;
   if (!group) return null;
-
-  let name: string;
-  Object.keys(group.controls).forEach(key => {
-    const childControl = group.get(key);
-    if (childControl !== control) return;
-    name = key;
-  });
-
-  return toPrettyControlName(name);
-}
-
-/**
- * Used to let the end user better understand where is locatted the error with something he can understand
- * @param controlName 
- * @returns 
- */
-function toPrettyControlName(controlName: string) {
-  switch (controlName.toLowerCase()) {
-    case 'languages':
-      return 'Available Versions';
-    default:
-      return controlName;
-  }
+  const name = Object.keys(group.controls).find(key => group.get(key) === control);
+  return name;
 }
