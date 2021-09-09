@@ -22,12 +22,14 @@ import {
   invitationToEventFromOrgUpdated,
   userJoinOrgPendingRequest,
   offerCreatedConfirmationEmail,
-  appAccessEmail
+  appAccessEmail,
+  contractCreatedEmail
 } from './templates/mail';
 import { templateIds, groupIds } from '@blockframes/utils/emails/ids';
 import { canAccessModule } from '@blockframes/organization/+state/organization.firestore';
 import { App, applicationUrl } from '@blockframes/utils/apps';
 import * as admin from 'firebase-admin';
+import { Movie } from '@blockframes/movie/+state';
 
 // @TODO (#2848) forcing to festival since invitations to events are only on this one
 const eventAppKey: App = 'festival';
@@ -188,6 +190,11 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
         break;
       case 'invitationToAttendEventUpdated':
         await sendInvitationToAttendEventUpdatedEmail(recipient, notification)
+          .then(() => notification.email.isSent = true)
+          .catch(e => notification.email.error = e.message);
+        break;
+      case 'contractCreated':
+        await sendContractCreated(recipient, notification)
           .then(() => notification.email.isSent = true)
           .catch(e => notification.email.error = e.message);
         break;
@@ -424,6 +431,15 @@ async function sendRequestToJoinOrgDeclined(recipient: User, notification: Notif
   const app = notification._meta.createdFrom;
   const template = requestToJoinOrgDeclined(toUser, orgData);
   await sendMailFromTemplate(template, app, groupIds.unsubscribeAll);
+}
+
+/** Send copy of offer that buyer has created to all non-buyer stakeholders */
+async function sendContractCreated(recipient: User, notification: NotificationDocument) {
+  const app: App = 'catalog';
+  const toUser = getUserEmailData(recipient);
+  const movie = await getDocument<Movie>(`movies/${notification.docId}`)
+  const template = contractCreatedEmail(toUser, movie.title?.international, 'catalog');
+  return sendMailFromTemplate(template, app, groupIds.unsubscribeAll);
 }
 
 /** Send copy of offer that recipient has created */

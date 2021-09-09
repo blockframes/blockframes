@@ -2,6 +2,10 @@ import { db } from './internals/firebase';
 import { Contract, ContractStatus, Mandate, Sale } from '@blockframes/contract/contract/+state/contract.model';
 import { Change } from 'firebase-functions';
 import { Offer } from '@blockframes/contract/offer/+state';
+import { centralOrgId } from '@env'
+import { Organization } from '@blockframes/organization/+state';
+import { createNotification, triggerNotifications } from './notification';
+import { getDocument, createDocumentMeta } from './data/internals';
 
 export async function onContractDelete(contractSnapshot: FirebaseFirestore.DocumentSnapshot<Contract>) {
 
@@ -33,6 +37,31 @@ export async function onContractDelete(contractSnapshot: FirebaseFirestore.Docum
   }
 
   console.log(`Contract ${contract.id} removed`);
+}
+
+export async function onContractCreate(contractSnapshot: FirebaseFirestore.DocumentSnapshot<Contract>) {
+  const contract = contractSnapshot.data() as Contract;
+
+  if (contract.type !== 'sale') return;
+
+  const stakeholders = contract.stakeholders.filter(stakeholder => {
+    return (stakeholder !== contract.buyerId) && stakeholder !== centralOrgId.catalog;
+  });
+
+  if (!stakeholders.length) return;
+
+  const getNotifications = (org: Organization) => org.userIds.map(userId => createNotification({
+    toUserId: userId,
+    type: 'contractCreated',
+    docId: contract.titleId,
+    _meta: createDocumentMeta({ createdFrom: 'catalog' })
+  }));
+
+  for (const stakeholder of stakeholders) {
+    getDocument<Organization>(`orgs/${stakeholder}`)
+      .then(getNotifications)
+      .then(triggerNotifications);
+  }
 }
 
 
