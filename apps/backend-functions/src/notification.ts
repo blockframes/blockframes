@@ -1,8 +1,8 @@
 import { InvitationDocument, MovieDocument, NotificationDocument, OrganizationDocument, NotificationTypes } from './data/types';
 import { getDocument, getOrgAppKey, createDocumentMeta } from './data/internals';
 import { NotificationSettingsTemplate, User } from '@blockframes/user/types';
-import { sendMailFromTemplate, sendMail, substitutions } from './internals/email';
-import { emailErrorCodes, EmailTemplateRequest, EventEmailData, getEventEmailData, getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
+import { sendMailFromTemplate,  } from './internals/email';
+import { emailErrorCodes, EventEmailData, getEventEmailData, getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
 import { EventDocument, EventMeta, Screening } from '@blockframes/event/+state/event.firestore';
 import {
   reminderEventToUser,
@@ -439,7 +439,8 @@ function sendContractCreatedConfirmation(recipient: User, notification: Notifica
   const app: App = 'catalog';
   const toUser = getUserEmailData(recipient);
   const template = contractCreatedEmail(toUser, notification.title?.title?.international,'catalog')
-  return sendMailFromTemplate(template, app, unsubscribeId);
+  console.log({template})
+  return sendMailFromTemplate(template, app, groupIds.allExceptCriticals);
 }
 
 /** Send copy of offer that recipient has created */
