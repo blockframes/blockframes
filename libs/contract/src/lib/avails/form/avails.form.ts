@@ -21,7 +21,7 @@ function createAvailControl(avail: Partial<AvailsFilter> = {}, required: ('terri
 
   return {
     territories: new FormStaticValueArray<'territories'>(avail.territories, 'territories', required.includes('territories') ? [Validators.required] : []),
-    medias: new FormStaticValueArray<'medias'>(avail.medias, 'medias', [Validators.required]),
+    medias: new FormStaticValueArray<'medias'>(avail.medias, 'medias', [Validators.required, Validators.minLength(0)]),
     exclusive: new FormControl(avail.exclusive ?? true, Validators.required),
     duration: new FormGroup({
       from: new FormControl(avail.duration?.from, fromValidators),
