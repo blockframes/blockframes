@@ -173,6 +173,7 @@ export class UserComponent implements OnInit {
   }
 
   public async sendPasswordResetEmail() {
+    // User can have no org or access to multiple applcations, in that case we don't know which application name to user in the email and thus send a general Cascade8 email
     const app: App = this.userOrg && getOrgAppAccess(this.userOrg).length === 1
       ? getOrgAppAccess(this.userOrg)[0]
       : 'crm';
