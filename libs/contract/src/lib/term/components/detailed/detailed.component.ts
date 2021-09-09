@@ -3,8 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 import { BehaviorSubject } from 'rxjs';
 
-import { toLabel } from '@blockframes/utils/pipes';
-import { Scope, StaticGroup, staticGroups } from '@blockframes/utils/static-model';
+import { GroupScope, StaticGroup, staticGroups } from '@blockframes/utils/static-model';
 
 @Component({
   selector: 'contract-detailed-terms',
@@ -16,7 +15,7 @@ export class DetailedTermsComponent implements OnInit {
   groups$ = new BehaviorSubject<StaticGroup[]>([]);
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: { terms: string[], scope: Scope },
+    @Inject(MAT_DIALOG_DATA) public data: { terms: string[], scope: GroupScope },
     public dialogRef: MatDialogRef<DetailedTermsComponent>
   ) { }
 
@@ -24,10 +23,13 @@ export class DetailedTermsComponent implements OnInit {
     const groups = JSON.parse(JSON.stringify(staticGroups[this.data.scope]));
     if (groups) {
       for (const group of groups) {
-        group.items = group.items.filter(item => {
-          const label = toLabel(item, this.data.scope) as string;
-          return this.data.terms.includes(label);
-        });
+
+        // if a term is the name of a group, we want to keep all the territories
+        // i.e. we don't want to filter
+        const fullGroup = this.data.terms.includes(group.label);
+        if (!fullGroup) {
+          group.items = group.items.filter(item => this.data.terms.includes(item));
+        }
       }
       this.groups$.next(groups);
     }

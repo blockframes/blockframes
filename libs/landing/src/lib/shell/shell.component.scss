@@ -32,9 +32,9 @@ landing-shell-page {
     flex: 1;
     overflow-y: auto;
 
-    .demo {
-      display: block;
-      width: 100%;
+    .demo.mat-card {
+      padding-block: 72px;
+      background-size: cover;
     }
 
     .contact-us {
@@ -54,12 +54,30 @@ landing-shell-page {
       }
     }
 
+    #email-field {
+      width: 50%;
+      padding-right: 12px;
+    }
+
+    mat-checkbox {
+      margin-bottom: 24px;
+      color: var(--primary-contrast);
+    }
+
     footer {
-      margin: 48px 0;
+      padding: 80px;
       text-align: center;
       width: 100%;
+      background-color: var(--background-card);
+      > * {
+        width: 100%;
+      }
+      mat-divider {
+        width: 100%;
+        border-top-width: 2px;
+      }
       img {
-        height: 40px;
+        height: 30px;
       }
     }
 
@@ -70,6 +88,10 @@ landing-shell-page {
     }
 
     landing-content {
+      display: block;
+    }
+
+    landing-detail {
       display: block;
     }
   }
@@ -91,6 +113,10 @@ landing-shell-page {
   landing-shell-page main {
     landing-header {
       padding: 60px 36px;
+    }
+    #email-field {
+      width: 100%;
+      padding: 0;
     }
   }
 }

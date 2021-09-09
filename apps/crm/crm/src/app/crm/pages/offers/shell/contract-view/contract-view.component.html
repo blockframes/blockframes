@@ -28,8 +28,13 @@
     </section>
 
     <contract-item [contract]="contract">
-      <p price *ngIf="contract.income">
-        {{ contract.income.price | currency: offer.currency }}
+      <p price *ngIf="contract.income as income">
+        <ng-container *ngIf="income.price > 0; else askPrice">
+          <span>{{ income.price | currency: offer.currency }}</span>
+        </ng-container>
+        <ng-template #askPrice>
+          <span>Buyer requested Asking Price</span>
+        </ng-template>
       </p>
 
       <ng-template #termAction let-term>

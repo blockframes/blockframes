@@ -1,14 +1,16 @@
 button.profile {
   display: grid;
   grid-template-columns: auto 40px;
-  grid-template-rows: auto auto;
+  grid-template-rows: 1fr;
   column-gap: 12px;
-  text-align: end;
   cursor: pointer;
   border: none;
   background: none;
   padding: 4px 12px;
   border-radius: 4px;
+  div {
+    height: 100%;
+  }
 
   img {
     width: 40px;

@@ -3,6 +3,7 @@ import { ContractService } from '@blockframes/contract/contract/+state';
 import { IncomeService } from '@blockframes/contract/income/+state';
 import { OfferService } from '@blockframes/contract/offer/+state';
 import { MovieService } from '@blockframes/movie/+state';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { joinWith } from '@blockframes/utils/operators';
 
 @Component({
@@ -22,6 +23,7 @@ export class OffersListComponent {
     private service: OfferService,
     private contractService: ContractService,
     private incomeService: IncomeService,
+    private dynTitle: DynamicTitleService,
     private titleService: MovieService,
   ) { }
 

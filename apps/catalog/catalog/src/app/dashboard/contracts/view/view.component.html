@@ -1,14 +1,18 @@
-<ng-container *ngIf="offer$ | async as offer; else loading">
+<ng-container *ngIf="contract$ | async as contract; else loading">
   <header fxLayout="column" fxLayoutAlign="start start">
     <a mat-icon-button routerLink="../.." color="primary">
       <mat-icon svgIcon="arrow_back"></mat-icon>
     </a>
-    <bf-tag>{{offer.status | toLabel: 'offerStatus'}}</bf-tag>
-    <h1>Offer Reference: {{offer.id}}</h1>
-    <span>Offer created: {{offer._meta.createdAt | date: 'MM/dd/yyyy'}}</span>
+    <bf-tag>{{contract.status | toLabel: 'contractStatus'}}</bf-tag>
+    <ng-container *ngIf="contract.buyerId | getOrg | async as org">
+      <div fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
+        <img height="100" width="100" [ref]="org?.logo" asset="empty_organization.svg" type="logo" alt="Organization Logo">
+        <h1>{{ org | orgName }}</h1>
+      </div>
+    </ng-container>
+    <span>Ref {{ contract.offerId }} / Offer created: {{contract._meta.createdAt | date: 'dd/MM/yyyy'}}</span>
     <div fxLayout fxLayoutAlign="space-between center" class="actions">
       <div fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
-        <ng-container *ngIf="contract$ | async as contract">
           <ng-container [ngSwitch]="contract.status">
             <ng-container *ngSwitchCase="'accepted'">
               <button mat-flat-button color="primary" disabled
@@ -26,16 +30,15 @@
             </ng-container>
             <ng-container *ngSwitchDefault>
               <button mat-stroked-button color="primary" (click)="changeStatus('accepted',contract.id)">
-                <span>Accept</span>
                 <mat-icon svgIcon="check"></mat-icon>
+                <span>Accept</span>
               </button>
               <button mat-stroked-button color="primary" (click)="declineContract(contract.id)">
-                <span>Decline</span>
                 <mat-icon svgIcon="refuse"></mat-icon>
+                <span>Decline</span>
               </button>
             </ng-container>
           </ng-container>
-        </ng-container>
       </div>
       <button mat-flat-button color="primary" (click)="openIntercom()">
         <mat-icon svgIcon="comment"></mat-icon>
@@ -43,7 +46,7 @@
       </button>
     </div>
   </header>
-  <section class="surface" *ngIf="offer.specificity as specificity">
+  <section class="surface" *ngIf="contract.specificity as specificity">
     <h2>Specific Terms</h2>
     <p>{{specificity}}</p>
   </section>
@@ -51,7 +54,12 @@
 <ng-container *ngIf="contract$| async as contract">
   <contract-item [contract]="contract">
     <ng-container *ngIf="contract.id | getIncome | async as income" price>
-      <h2>{{ income.price | currency: income.currency }}</h2>
+      <ng-container *ngIf="income.price > 0; else askPrice">
+        <h2>{{ income.price | currency: income.currency }}</h2>
+      </ng-container>
+      <ng-template #askPrice>
+        <h3>Buyer requested Asking Price</h3>
+      </ng-template>
     </ng-container>
     <footer>
       <holdback-list [holdbacks]="contract.holdbacks"></holdback-list>

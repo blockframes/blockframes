@@ -1,6 +1,7 @@
 @import "~@angular/flex-layout/mq";
 
 landing-header {
+  padding: 60px 200px;
   background-image: url("/assets/images/banner_header.png");
   a {
     margin-top: 80px;
@@ -14,6 +15,9 @@ landing-header {
 }
 
 landing-content {
+  // TODO issue #6523 move all this commit's code to shell component 
+  padding: 48px 240px;
+
   h1 {
     margin-bottom: 12px;
   }
@@ -48,6 +52,12 @@ landing-content {
   }
 }
 
+@include layout-bp(lt-lg) {
+  landing-content {
+    padding: 48px 140px;
+  }
+}
+
 @include layout-bp(lt-md) {
   landing-header {
     p {
@@ -55,6 +65,7 @@ landing-content {
     }
   }
   landing-content {
+    padding: 48px 64px;
     article mat-card {
       width: 75%;
     }
@@ -69,6 +80,7 @@ landing-content {
     }
   }
   landing-content {
+    padding: 24px 8px;
     text-align: center;
     article mat-card {
       width: 100%;

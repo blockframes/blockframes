@@ -58,8 +58,11 @@
 </ng-template>
 
 <ng-template #empty>
-  <section class="empty" fxLayout="column" fxFlexAlign="center" fxLayoutGap="16px">
-    <h1>There are no offers to display yet.</h1>
+  <section class="empty" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="16px">
+    <h1>You have no offers created yet.</h1>
+    <p>Your contracts will appear on this page when you submit them.</p>
+    <p>Meanwhile, you can browser our library to discover titles you can be interested in.</p>
     <img asset="empty_results.svg" alt="Empty result image">
+    <a mat-flat-button color="primary" routerLink="../title">Discover Titles</a>
   </section>
 </ng-template>

@@ -6,7 +6,7 @@ header {
   padding: 32px 48px;
   display: flex;
   flex-direction: column;
-  align-items: start;
+  align-items: flex-start;
   // https://stackoverflow.com/questions/46309641/what-happens-in-safari-with-the-transparent-color
   background-image: linear-gradient(to bottom, var(--primary-lighter), var(--background));
 

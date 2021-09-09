@@ -22,6 +22,9 @@ export class LandingContentDirective { }
 @Directive({selector: 'landing-contact, [landingContact]'})
 export class LandingContactDirective { }
 
+@Directive({selector: 'landing-detail, [landingDetail]'})
+export class LandingDetailDirective { }
+
 @Component({
   selector: 'landing-footer',
   template: `<ng-content></ng-content>`,
@@ -43,7 +46,7 @@ export class LandingFooterComponent { }
 export class LandingShellComponent implements OnDestroy {
   public submitted = false;
   public appName = getAppName(getCurrentApp(this.routerQuery));
-  public buttonText = 'Send Request';
+  public buttonText = 'Submit Demo Request';
 
   @Input() roles: RequestDemoRole[] = [
     'buyer',
@@ -61,6 +64,7 @@ export class LandingShellComponent implements OnDestroy {
   });
 
   @ContentChild(LandingContactDirective) landingContactDirective: LandingContactDirective
+  @ContentChild(LandingDetailDirective) landingDetailDirective: LandingDetailDirective
   @ContentChild(LandingFooterComponent) landingFooterComponent: LandingFooterComponent
 
   constructor(
@@ -99,7 +103,7 @@ export class LandingShellComponent implements OnDestroy {
       }
       this.sendDemoRequest(information);
       this.buttonText = 'Request Sent';
-      this.snackBar.open('Your request has been sent.', 'close', { duration: 2000 });
+      this.snackBar.open('Request sent', 'close', { duration: 2000 });
       this.submitted = true;
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 5000 });

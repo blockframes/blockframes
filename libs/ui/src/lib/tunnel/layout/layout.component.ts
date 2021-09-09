@@ -22,7 +22,7 @@ import { RouteDescription } from '@blockframes/utils/common-interfaces';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { FormArray, FormGroup } from '@angular/forms';
+import { AbstractControl, FormArray, FormGroup } from '@angular/forms';
 import type { ShellConfig } from '@blockframes/movie/form/movie.shell.interfaces';
 import { FORMS_CONFIG } from '@blockframes/movie/form/movie.shell.interfaces';
 import { FormSaveOptions } from "@blockframes/utils/common-interfaces";
@@ -192,24 +192,44 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
 export function findInvalidControls(formToInvestigate: FormGroup | FormArray) {
   const errorFields = [];
   const missingFields = [];
-  const recursiveFunc = (form: FormGroup | FormArray) => {
+  const recursiveFunc = (form: FormGroup | FormArray, rootControlName?: string) => {
 
     for (const field in form.controls) {
       const control = form.get(field);
 
       if (control.invalid) {
         if (control.errors) {
-          if (Object.keys(control.errors).includes('required')) missingFields.push(field)
-          else errorFields.push(field);
+          const isRequired = Object.keys(control.errors).includes('required');
+          const name = rootControlName || getName(control);
+          if (isRequired) {
+            missingFields.push(name);
+          } else if (rootControlName) {
+            errorFields.push(rootControlName);
+          }
         }
       }
 
-
       if (control instanceof FormArray || control instanceof FormGroup) {
-        missingFields.concat(recursiveFunc(control));
+        missingFields.concat(recursiveFunc(control, getName(control.parent) || getName(control)));
       }
     }
-    return { errorFields, missingFields };
+
+    return {
+      errorFields: Array.from(new Set(errorFields)),
+      missingFields: Array.from(new Set(missingFields))
+    };
   }
   return recursiveFunc(formToInvestigate);
+}
+
+/**
+ * 
+ * @param control 
+ * @returns the name of the control
+ */
+function getName(control: AbstractControl): string | null {
+  const group = control.parent as FormGroup;
+  if (!group) return null;
+  const name = Object.keys(group.controls).find(key => group.get(key) === control);
+  return name;
 }

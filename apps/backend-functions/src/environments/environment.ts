@@ -5,6 +5,8 @@
  * Use this setup (non-production) when the execution context is outside firebase
  * functions.
  */
+//If running e2e tests locally, set e2eMode to true 
+export const e2eMode = false;
 
 export {
   factoryContract,

@@ -1,5 +1,6 @@
 import { Component, Input, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { Movie } from '@blockframes/movie/+state';
+import { scrollIntoView } from '@blockframes/utils/browser/utils';
 
 @Component({
   selector: '[movie] movie-promotional-links',
@@ -18,7 +19,6 @@ export class PromotionalLinksComponent implements OnInit {
   }
 
   scrollToFooter() {
-    const footer = document.getElementById('videoFooter');
-    footer.scrollIntoView({ behavior: 'smooth' });
+    scrollIntoView(document.getElementById('videoFooter'));
   }
 }

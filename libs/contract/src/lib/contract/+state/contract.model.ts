@@ -1,8 +1,7 @@
-import { MovieLanguageSpecification } from "@blockframes/movie/+state/movie.firestore";
+
 import { createDocumentMeta, DocumentMeta } from "@blockframes/utils/models-meta";
 import { Media, Territory } from "@blockframes/utils/static-model";
 import { Duration } from '../../term/+state/term.model';
-import { createLanguageKey } from "@blockframes/movie/+state";
 import { Timestamp } from "@blockframes/utils/common-interfaces/timestamp";
 import { toDate } from "@blockframes/utils/helpers";
 
@@ -14,7 +13,6 @@ export interface Holdback<D extends Timestamp | Date = Date> {
   territories: Territory[];
   medias: Media[];
   duration: Duration<D>;
-  languages: Record<string, MovieLanguageSpecification>;
 }
 
 export interface Contract<D extends Timestamp | Date = Date> {
@@ -61,7 +59,6 @@ export function createHoldback(params: Partial<Holdback<Date>> = {}): Holdback {
     medias: [],
     duration: { from: new Date(), to: new Date() },
     ...params,
-    languages: createLanguageKey(params.languages)
   }
 }
 

@@ -8,6 +8,7 @@ import { startWith } from 'rxjs/operators';
 import { Contract } from '@blockframes/contract/contract/+state';
 import { Movie } from '@blockframes/movie/+state';
 import { Income } from '@blockframes/contract/income/+state';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 const columns = {
   'id': 'Offer Reference',
@@ -46,7 +47,10 @@ export class ListComponent {
   filter = new FormControl('');
   filter$: Observable<AllOfferStatus> = this.filter.valueChanges.pipe(startWith(this.filter.value ?? ''));
 
-  constructor(private routerQuery: RouterQuery) { }
+  constructor(
+    private routerQuery: RouterQuery,
+    private dynTitle: DynamicTitleService,
+    ) { this.dynTitle.setPageTitle('Offers & Deals')}
 
   /** Dynamic filter of offers for each tab. */
   applyFilter(filter?: AllOfferStatus) {

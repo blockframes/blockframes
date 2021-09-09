@@ -27,7 +27,6 @@ const SHORT_PASSWORD = '123';
 const LONG_PASSWORD = '123456789123456789123456789';
 
 const CREATEPATH = '/c/organization/create-congratulations';
-const JOINPATH = '/c/organization/join-congratulations';
 const IDENTITYPATH = '/auth/identity';
 
 // TEST
