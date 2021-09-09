@@ -62,7 +62,6 @@ export interface NotificationBase<D> {
   organization?: PublicOrganization;
   invitation?: PublicInvitation;
   bucket?: Bucket;
-  title?:Movie;
   appAccess?: App;
   /** @dev Type of the notification */
   type: NotificationTypes;

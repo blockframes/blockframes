@@ -234,7 +234,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `An offer is made on one of your titles.`,
           placeholderUrl: 'profil_user.svg',
-          url: `${applicationUrl['catalog']}/c/o/${module}/title/${notification.title.id}`
+          url: `${applicationUrl['catalog']}/c/o/${module}/title/${notification.docId}`
         }
       default:
         return {

@@ -29,6 +29,7 @@ import { templateIds, groupIds } from '@blockframes/utils/emails/ids';
 import { canAccessModule } from '@blockframes/organization/+state/organization.firestore';
 import { App, applicationUrl } from '@blockframes/utils/apps';
 import * as admin from 'firebase-admin';
+import { Movie } from '@blockframes/movie/+state';
 
 // @TODO (#2848) forcing to festival since invitations to events are only on this one
 const eventAppKey: App = 'festival';
@@ -62,8 +63,6 @@ async function appendNotificationSettings(notification: NotificationDocument) {
   } else {
     updateNotif({ app: true, email: true });
   }
-
-  console.log({notification})
 
   // Theses notifications are never displayed in front
   const notificationsForInvitations: NotificationTypes[] = [
@@ -435,11 +434,11 @@ async function sendRequestToJoinOrgDeclined(recipient: User, notification: Notif
 }
 
 /** Send copy of offer that buyer has created to all non-buyer stakeholders */
-function sendContractCreatedConfirmation(recipient: User, notification: NotificationDocument) {
+async function sendContractCreatedConfirmation(recipient: User, notification: NotificationDocument) {
   const app: App = 'catalog';
   const toUser = getUserEmailData(recipient);
-  const template = contractCreatedEmail(toUser, notification.title?.title?.international,'catalog')
-  console.log({template})
+  const movie = await getDocument<Movie>(`movies/${notification.docId}`)
+  const template = contractCreatedEmail(toUser, movie.title?.international,'catalog')
   return sendMailFromTemplate(template, app, groupIds.unsubscribeAll);
 }
 

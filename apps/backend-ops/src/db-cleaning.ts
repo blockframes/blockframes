@@ -309,6 +309,7 @@ export function cleanDocsIndex(
  * @param notification the notification to check
  * @param existingIds the ids to compare with notification fields
  * @TODO: #6460 & #6608: new notification type `contractCreated` created. Remember to take this into account.
+ * and title?:Movie added in NotiticationBase
  */
 function isNotificationValid(notification: NotificationDocument, existingIds: string[]): boolean {
   if (!existingIds.includes(notification.toUserId)) return false;

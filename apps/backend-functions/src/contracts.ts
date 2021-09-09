@@ -3,10 +3,9 @@ import { Contract, ContractStatus, Mandate, Sale } from '@blockframes/contract/c
 import { Change } from 'firebase-functions';
 import { Offer } from '@blockframes/contract/offer/+state';
 import { centralOrgId } from '@env'
-import { getDocument } from '@blockframes/firebase-utils';
-import { Movie } from '@blockframes/movie/+state';
 import { Organization } from '@blockframes/organization/+state';
 import { createNotification, triggerNotifications } from './notification';
+import { getDocument, createDocumentMeta } from './data/internals';
 
 export async function onContractDelete(contractSnapshot: FirebaseFirestore.DocumentSnapshot<Contract>) {
 
@@ -49,23 +48,20 @@ export async function onContractCreate(contractSnapshot: FirebaseFirestore.Docum
     return (stakeholder !== contract.buyerId) && stakeholder !== centralOrgId.catalog;
   });
 
-  if (!stakeholders.length) return
-
-  const title = await getDocument<Movie>(`movies/${contract.titleId}`)
+  if (!stakeholders.length) return;
 
   const getNotifications = (org: Organization) => org.userIds.map(userId => createNotification({
     toUserId: userId,
     type: 'contractCreated',
-    docId: contract.offerId,
-    title,
+    docId: contract.titleId,
+    _meta: createDocumentMeta({ createdFrom: 'catalog' })
   }));
 
   for (const stakeholder of stakeholders) {
-    getDocument<Organization>(`orgs/${stakeholder}`)
-      .then(getNotifications)
-      .then(triggerNotifications);
+    const org = await getDocument<Organization>(`orgs/${stakeholder}`);
+    const notification = await getNotifications(org);
+    triggerNotifications(notification);
   }
-
 }
 
 
