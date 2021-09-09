@@ -1,7 +1,7 @@
 import { InvitationDocument, MovieDocument, NotificationDocument, OrganizationDocument, NotificationTypes } from './data/types';
 import { getDocument, getOrgAppKey, createDocumentMeta } from './data/internals';
 import { NotificationSettingsTemplate, User } from '@blockframes/user/types';
-import { sendMailFromTemplate,  } from './internals/email';
+import { sendMailFromTemplate } from './internals/email';
 import { emailErrorCodes, EventEmailData, getEventEmailData, getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
 import { EventDocument, EventMeta, Screening } from '@blockframes/event/+state/event.firestore';
 import {
@@ -438,7 +438,7 @@ async function sendContractCreatedConfirmation(recipient: User, notification: No
   const app: App = 'catalog';
   const toUser = getUserEmailData(recipient);
   const movie = await getDocument<Movie>(`movies/${notification.docId}`)
-  const template = contractCreatedEmail(toUser, movie.title?.international,'catalog')
+  const template = contractCreatedEmail(toUser, movie.title?.international, 'catalog')
   return sendMailFromTemplate(template, app, groupIds.unsubscribeAll);
 }
 

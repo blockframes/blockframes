@@ -6,7 +6,6 @@ import { DocumentMeta } from '@blockframes/utils/models-meta';
 import { EmailErrorCodes } from '@blockframes/utils/emails/utils';
 import { Bucket } from '@blockframes/contract/bucket/+state/bucket.model';
 import { App } from '@blockframes/utils/apps';
-import { Movie } from '@blockframes/movie/+state';
 
 // Type of notification used in front
 export const notificationTypesBase = [
