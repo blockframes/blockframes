@@ -22,7 +22,8 @@ import {
   invitationToEventFromOrgUpdated,
   userJoinOrgPendingRequest,
   offerCreatedConfirmationEmail,
-  appAccessEmail
+  appAccessEmail,
+  contractCreatedEmail
 } from './templates/mail';
 import { templateIds, unsubscribeGroupIds } from '@blockframes/utils/emails/ids';
 import { canAccessModule } from '@blockframes/organization/+state/organization.firestore';
@@ -63,6 +64,8 @@ async function appendNotificationSettings(notification: NotificationDocument) {
   } else {
     updateNotif({ app: true, email: true });
   }
+
+  console.log({notification})
 
   // Theses notifications are never displayed in front
   const notificationsForInvitations: NotificationTypes[] = [
@@ -454,12 +457,7 @@ async function sendRequestToJoinOrgDeclined(recipient: User, notification: Notif
 function sendContractCreatedConfirmation(recipient: User, notification: NotificationDocument) {
   const app: App = 'catalog';
   const toUser = getUserEmailData(recipient);
-  const template: EmailTemplateRequest = {
-    to: toUser.email,
-    templateId: templateIds.contract.created,
-    data: { user: toUser, app: { name: app }, title: { names: notification.title?.title?.international } }
-  }
-
+  const template = contractCreatedEmail(toUser, notification.title?.title?.international,'catalog')
   return sendMailFromTemplate(template, app, unsubscribeId);
 }
 
