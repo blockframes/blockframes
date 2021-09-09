@@ -157,7 +157,7 @@ async function onRequestFromUserToJoinOrgAccept({
   const org = getOrgEmailData(toOrg);
   const toUser = getUserEmailData(fromUser);
   const template = userJoinedAnOrganization(toUser, urlToUse, org);
-  return sendMailFromTemplate(template, app, groupIds.allExceptCriticals); 
+  return sendMailFromTemplate(template, app, groupIds.unsubscribeAll); 
 }
 
 /** Send a notification to admins of organization to notify them that the request is declined. */

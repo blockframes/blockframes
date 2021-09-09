@@ -40,7 +40,7 @@ export class TunnelSummaryComponent implements OnInit {
     const { missingFields, errorFields } = findInvalidControls(this.form);
     this.invalidFields = errorFields;
     this.missingFields = missingFields;
-    this.blockingFields = errorFields.concat(missingFields);
+    this.blockingFields = Array.from(new Set(errorFields.concat(missingFields)));
   }
 
   public async submit() {

@@ -5,7 +5,7 @@
 </header>
 
 <article fxLayout fxLayoutAlign="center center">
-  <button *ngIf="index !== 0 && data.refs.length > 1" mat-icon-button (click)="previous()" matTooltip="Previous">
+  <button *ngIf="index && data.refs.length" mat-icon-button (click)="previous()" matTooltip="Previous">
     <mat-icon svgIcon="chevron_left"></mat-icon>
   </button>
   <ng-container [ngSwitch]="data.refs[index].storagePath | fileType">

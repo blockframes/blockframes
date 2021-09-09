@@ -1256,6 +1256,50 @@ export const budgetRange = {
   999999999: 'More than $20 millions'
 } as const;
 
+/**
+ * https://docs.google.com/spreadsheets/d/1z4FFNABgDyRGgD5AQZf-ebWbA_m-7hlueFMCVUuk2fI/edit#gid=279324582
+ */
+const movieFormFields = {
+  promotional: 'Promotional Elements',
+  audience: 'Positioning',
+  boxOffice: 'Box Office',
+  cast: 'Cast Members',
+  certifications: 'Qualifications',
+  color: 'Color',
+  contentType: 'Content Type',
+  crew: 'Crew Members',
+  customGenres: 'Genres',
+  directors: 'Director',
+  estimatedBudget: 'Budget',
+  expectedPremiere: 'Expected Premiere',
+  format: 'Shooting Format',
+  formatQuality: 'Format Quality',
+  genres: 'Genres',
+  internalRef: 'Title Reference',
+  keyAssets: 'Key Assets',
+  keywords: 'Keywords',
+  languages: 'Available Versions',
+  logline: 'Logline',
+  isOriginalVersionAvailable: 'Original Version',
+  originalLanguages: 'Original Language(s)',
+  originalRelease: 'Release',
+  originCountries: 'Country of Origin',
+  prizes: 'Festivals & Awards',
+  customPrizes: 'Festivals & Awards',
+  producers: 'Producer',
+  productionStatus: 'Production Status',
+  rating: 'Rating',
+  release: 'Release',
+  review: 'Selections & Reviews',
+  runningTime: 'Running Time',
+  shooting: 'Shooting Information',
+  soundFormat: 'Sound Format',
+  stakeholders: 'Production Companies',
+  synopsis: 'Synopsis',
+  title: 'Title',
+  delivery: 'Files',
+} as const;
+
 export const staticModel = {
   budgetRange,
   contractStatus,
@@ -1298,6 +1342,7 @@ export const staticModel = {
   territoriesISOA3,
   appName,
   offerStatus,
+  movieFormFields,
 };
 
 export type StaticModel = typeof staticModel;

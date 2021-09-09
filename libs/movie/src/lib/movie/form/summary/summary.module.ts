@@ -70,7 +70,6 @@ import { StorageFileModule } from '@blockframes/media/pipes/storageFile.pipe';
     CommonModule,
     FlexLayoutModule,
     TunnelPageModule,
-    ToLabelModule,
     DownloadPipeModule,
     StorageFileModule,
 
