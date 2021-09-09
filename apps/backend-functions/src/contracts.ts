@@ -58,9 +58,9 @@ export async function onContractCreate(contractSnapshot: FirebaseFirestore.Docum
   }));
 
   for (const stakeholder of stakeholders) {
-    const org = await getDocument<Organization>(`orgs/${stakeholder}`);
-    const notification = await getNotifications(org);
-    triggerNotifications(notification);
+    getDocument<Organization>(`orgs/${stakeholder}`)
+      .then(getNotifications)
+      .then(triggerNotifications);
   }
 }
 

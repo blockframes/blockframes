@@ -438,7 +438,7 @@ async function sendContractCreatedConfirmation(recipient: User, notification: No
   const app: App = 'catalog';
   const toUser = getUserEmailData(recipient);
   const movie = await getDocument<Movie>(`movies/${notification.docId}`)
-  const template = contractCreatedEmail(toUser, movie.title?.international, 'catalog')
+  const template = contractCreatedEmail(toUser, movie.title?.international, 'catalog');
   return sendMailFromTemplate(template, app, groupIds.unsubscribeAll);
 }
 

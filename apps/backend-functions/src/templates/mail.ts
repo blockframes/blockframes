@@ -303,7 +303,7 @@ export function movieAcceptedEmail(toUser: UserEmailData, movieTitle: string, mo
 /** Inform user of org whose movie is being bought */
 export function contractCreatedEmail(toUser: UserEmailData, movieTitle: string, app: App): EmailTemplateRequest {
   const data = { user: toUser, app: { name: app }, title: { names: movieTitle } };
-  return { to: toUser.email, templateId: templateIds.contract.created, data }
+  return { to: toUser.email, templateId: templateIds.contract.created, data };
 }
 
 /** Template for admins. It is to inform admins of Archipel Content a new offer has been created with titles, prices, etc in the template */
