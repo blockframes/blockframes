@@ -14,6 +14,8 @@ const currentTimestamp = new Date().getTime();
 export const dayInMillis = 1000 * 60 * 60 * 24;
 const EMPTY_MEDIA = createStorageFile();
 
+// @TODO #6460 not existing users found in movies._meta.createdBy ..
+
 /** Reusable data cleaning script that can be updated along with data model */
 
 export async function cleanDeprecatedData(db: FirebaseFirestore.Firestore, auth: admin.auth.Auth) {
