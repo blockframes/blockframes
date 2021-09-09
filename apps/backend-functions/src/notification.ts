@@ -194,7 +194,7 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
           .catch(e => notification.email.error = e.message);
         break;
       case 'contractCreated':
-        await sendContractCreatedConfirmation(recipient, notification)
+        await sendContractCreated(recipient, notification)
           .then(() => notification.email.isSent = true)
           .catch(e => notification.email.error = e.message);
         break;
@@ -434,7 +434,7 @@ async function sendRequestToJoinOrgDeclined(recipient: User, notification: Notif
 }
 
 /** Send copy of offer that buyer has created to all non-buyer stakeholders */
-async function sendContractCreatedConfirmation(recipient: User, notification: NotificationDocument) {
+async function sendContractCreated(recipient: User, notification: NotificationDocument) {
   const app: App = 'catalog';
   const toUser = getUserEmailData(recipient);
   const movie = await getDocument<Movie>(`movies/${notification.docId}`)
