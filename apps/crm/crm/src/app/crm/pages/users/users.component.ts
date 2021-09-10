@@ -9,6 +9,8 @@ import { OrganizationService } from '@blockframes/organization/+state/organizati
 import { orgName } from '@blockframes/organization/+state';
 import { getAllAppsExcept, appName, getOrgModuleAccess, modules } from '@blockframes/utils/apps';
 import { territories } from '@blockframes/utils/static-model/static-model';
+import { take, tap } from 'rxjs/operators';
+import { User } from '@sentry/types';
 
 @Component({
   selector: 'crm-users',
@@ -42,7 +44,7 @@ export class UsersComponent implements OnInit {
     'sessionCount',
     'createdFrom',
   ];
-  public rows = [];
+  public users$?: Promise<User[]>;
   public exporting = new BehaviorStore(false);
   public app = getAllAppsExcept(['crm']);
 
@@ -56,28 +58,28 @@ export class UsersComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    const [users, orgs] = await Promise.all([
-      this.userService.getAllUsers(),
-      this.orgService.getValue(),
+    // Use valueChanges to take advantage of caching
+    this.users$ = Promise.all([
+      this.userService.valueChanges().pipe(take(1)).toPromise(),
+      this.orgService.valueChanges().pipe(take(1)).toPromise(),
       this.crmService.loadAnalyticsData()
-    ]);
-    this.rows = users.map(u => {
-      const org = orgs.find(o => o.id === u.orgId);
-      return {
-        uid: u.uid,
-        firstName: u.firstName,
-        lastName: u.lastName,
-        email: u.email,
-        firstConnexion: this.crmQuery.getFirstConnexion(u.uid),
-        lastConnexion: this.crmQuery.getLastConnexion(u.uid),
-        pageView: this.crmQuery.getPageView(u.uid),
-        sessionCount: this.crmQuery.getSessionCount(u.uid),
-        createdFrom: u._meta?.createdFrom ? appName[u._meta?.createdFrom] : '',
-        org: org,
-      };
-    })
-
-    this.cdRef.markForCheck();
+    ]).then(([users, orgs]) => {
+      return users.map(u => {
+        const org = orgs.find(o => o.id === u.orgId);
+        return {
+          uid: u.uid,
+          firstName: u.firstName,
+          lastName: u.lastName,
+          email: u.email,
+          firstConnexion: this.crmQuery.getFirstConnexion(u.uid),
+          lastConnexion: this.crmQuery.getLastConnexion(u.uid),
+          pageView: this.crmQuery.getPageView(u.uid),
+          sessionCount: this.crmQuery.getSessionCount(u.uid),
+          createdFrom: u._meta?.createdFrom ? appName[u._meta?.createdFrom] : '',
+          org: org,
+        };
+      })
+    });
   }
 
   public goToEdit(user) {

@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { getValue, downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { OrganizationCreateComponent } from '../../components/organization/create-organization/create.component';
 import { Organization } from '@blockframes/organization/+state';
 import { getAllAppsExcept, appName, modules } from '@blockframes/utils/apps';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'crm-organizations',
@@ -13,7 +14,7 @@ import { getAllAppsExcept, appName, modules } from '@blockframes/utils/apps';
   styleUrls: ['./organizations.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OrganizationsComponent implements OnInit {
+export class OrganizationsComponent {
   public versionColumns = {
     'id': { value: 'Id', disableSort: true },
     'status': 'Status',
@@ -37,22 +38,14 @@ export class OrganizationsComponent implements OnInit {
     'email',
     'appAccess',
   ];
-  public rows: Organization[] = [];
-  public orgListLoaded = false;
+  public orgs$ = this.service.valueChanges().pipe(take(1)).toPromise();
   public app = getAllAppsExcept(['crm']);
 
   constructor(
-    private organizationService: OrganizationService,
-    private cdRef: ChangeDetectorRef,
+    private service: OrganizationService,
     private dialog: MatDialog,
     private router: Router
   ) { }
-
-  async ngOnInit() {
-    this.rows = await this.organizationService.getValue();
-    this.orgListLoaded = true;
-    this.cdRef.markForCheck();
-  }
 
   goToEdit(org: Organization) {
     this.router.navigate([`/c/o/dashboard/crm/organization/${org.id}`]);
@@ -71,8 +64,8 @@ export class OrganizationsComponent implements OnInit {
     return dataStr.toLowerCase().indexOf(filter) !== -1;
   }
 
-  public exportTable() {
-    const exportedRows = this.rows.map(r => {
+  public exportTable(orgs: Organization[]) {
+    const exportedRows = orgs.map(r => {
       const row = {
         id: r.id,
         fullDenomination: r.denomination.full,
