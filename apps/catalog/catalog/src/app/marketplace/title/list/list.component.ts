@@ -116,7 +116,7 @@ export class ListComponent implements OnDestroy, OnInit {
       this.availsForm.valueChanges.pipe(startWith(this.availsForm.value)),
       this.bucketService.active$.pipe(startWith(undefined)),
       queries$,
-    ]).pipe(shareReplay(1));
+    ]).pipe(shareReplay({ refCount: true, bufferSize: 1 }));
 
     const subStateUrl = search$.pipe(
       skip(1)
