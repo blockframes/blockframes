@@ -2,7 +2,7 @@
 import { Media, territoriesISOA3, Territory, TerritoryISOA3Value, TerritoryValue, territories } from '@blockframes/utils/static-model';
 
 import { Bucket } from '../bucket/+state';
-import { Holdback, Mandate } from '../contract/+state/contract.model'
+import { Holdback, Mandate, Sale } from '../contract/+state/contract.model'
 import { Duration, Term, BucketTerm } from '../term/+state/term.model';
 import { allOf, someOf } from './sets';
 
@@ -205,4 +205,30 @@ export function getCollidingHoldbacks(holdbacks: Holdback[], terms: BucketTerm[]
     terms.some(term => collidingHoldback(holdback, term))
   );
   return holdbackCollision;
+}
+
+// ----------------------------
+//           MOVIE           //
+// ----------------------------
+
+
+export function isMovieAvailable(titleId: string, avails: AvailsFilter, bucket: Bucket, mandates: Mandate[], sales: Sale[], terms: Term[]) {
+  if (!terms.length) return false;
+
+  const titleMandates = mandates.filter(mandate => mandate.titleId === titleId);
+  const titleSales = sales.filter(sale => sale.titleId === titleId);
+
+  if (!titleMandates.length && !titleSales.length) return false;
+
+  const saleTerms = titleSales.map(sale => sale.termIds).flat().map(termId => terms.find(term => term.id === termId));
+  const mandateTerms = titleMandates.map(mandate => mandate.termIds).flat().map(termId => terms.find(term => term.id === termId));
+
+  const parentTerms = getMandateTerms(avails, mandateTerms);
+
+  if (!parentTerms.length) return false;
+
+  this.parentTerms[titleId] = parentTerms;
+  const bucketTerms = bucket?.contracts.find(c => c.titleId === titleId)?.terms ?? [];
+
+  return !isSold(avails, saleTerms) && !isInBucket(avails, bucketTerms);
 }
