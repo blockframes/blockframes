@@ -151,8 +151,6 @@ export class ListComponent implements OnDestroy, OnInit {
           const titleMandates = this.mandates.filter(mandate => mandate.titleId === titleId);
           const titleSales = this.sales.filter(sale => sale.titleId === titleId);
 
-          console.log(titleMandates, titleSales);
-
           if (!this.terms.length) return false;
           if (!titleMandates.length && !titleSales.length) return false;
 
