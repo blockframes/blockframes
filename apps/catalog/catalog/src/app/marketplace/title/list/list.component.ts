@@ -10,8 +10,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 // RxJs
-import { Observable, BehaviorSubject, Subscription, combineLatest } from 'rxjs';
-import { debounceTime, switchMap, startWith, distinctUntilChanged, skip, shareReplay, tap, map } from 'rxjs/operators';
+import { Observable, Subscription, combineLatest } from 'rxjs';
+import { debounceTime, switchMap, startWith, distinctUntilChanged, skip, shareReplay,  map } from 'rxjs/operators';
 
 import { SearchResponse } from '@algolia/client-search';
 
@@ -27,12 +27,12 @@ import { OrganizationQuery } from '@blockframes/organization/+state';
 import { Media, StoreStatus } from '@blockframes/utils/static-model/types';
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
 import { TermService } from '@blockframes/contract/term/+state/term.service';
+import { AvailsFilter, isMovieAvailable } from '@blockframes/contract/avails/avails';
 import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
 import { ContractService, Mandate, Sale } from '@blockframes/contract/contract/+state';
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
 import { Bucket, BucketService, createBucket } from '@blockframes/contract/bucket/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { AvailsFilter, getMandateTerms, isInBucket, isMovieAvailable, isSold } from '@blockframes/contract/avails/avails';
 import { BucketContract, createBucketContract, createBucketTerm } from '@blockframes/contract/bucket/+state/bucket.model';
 
 
@@ -44,8 +44,6 @@ import { BucketContract, createBucketContract, createBucketTerm } from '@blockfr
 })
 export class ListComponent implements OnDestroy, OnInit {
 
-  private movieResultsState = new BehaviorSubject<Movie[]>(null);
-
   public movies$: Observable<Movie[]>;
 
   public storeStatus: StoreStatus = 'accepted';
@@ -55,7 +53,7 @@ export class ListComponent implements OnDestroy, OnInit {
   public nbHits: number;
   public hitsViewed = 0;
 
-  private subs: Subscription[] = [];
+  private sub: Subscription;
 
   private parentTerms: Record<string, Term<Date>[]> = {};
 
@@ -75,7 +73,6 @@ export class ListComponent implements OnDestroy, OnInit {
 
 
   async ngOnInit() {
-    this.movies$ = this.movieResultsState.asObservable();
     this.searchForm.hitsPerPage.setValue(1000);
 
     const queries$ = combineLatest([
@@ -118,7 +115,7 @@ export class ListComponent implements OnDestroy, OnInit {
       queries$,
     ]).pipe(shareReplay({ refCount: true, bufferSize: 1 }));
 
-    const subStateUrl = search$.pipe(
+    this.sub = search$.pipe(
       skip(1)
     ).subscribe(([search, avails]) => encodeUrl(this.router, this.route, {
       search: {
@@ -131,22 +128,19 @@ export class ListComponent implements OnDestroy, OnInit {
       avails,
     }));
 
-    const sub = search$.pipe(
+    this.movies$ = search$.pipe(
       distinctUntilChanged(),
       debounceTime(300),
       switchMap(async ([_, availsValue, bucketValue, queries]) => [await this.searchForm.search(true), availsValue, bucketValue, queries]),
-    ).subscribe(([movies, availsValue, bucketValue, [ mandates, sales, terms ]]: [SearchResponse<Movie>, AvailsFilter, Bucket, [ Mandate[], Sale[], Term[] ] ]) => {
-      if (this.availsForm.valid) {
-
-        const hits = movies.hits.filter(movie => isMovieAvailable(movie.objectID, availsValue, bucketValue, mandates, sales, terms));
-
-        this.movieResultsState.next(hits);
-      } else { // if availsForm is invalid, put all the movies from algolia
-        this.movieResultsState.next(movies.hits)
-      }
-    });
-
-    this.subs.push(sub, subStateUrl);
+    ).pipe(
+      map(([movies, availsValue, bucketValue, [ mandates, sales, terms ]]: [SearchResponse<Movie>, AvailsFilter, Bucket, [ Mandate[], Sale[], Term[] ] ]) => {
+        if (this.availsForm.valid) {
+          return movies.hits.filter(movie => isMovieAvailable(movie.objectID, availsValue, bucketValue, mandates, sales, terms));
+        } else { // if availsForm is invalid, put all the movies from algolia
+          return movies.hits;
+        }
+      }),
+    );
   }
 
   clear() {
@@ -254,6 +248,6 @@ export class ListComponent implements OnDestroy, OnInit {
   }
 
   ngOnDestroy() {
-    this.subs.forEach(s => s.unsubscribe());
+    this.sub.unsubscribe();
   }
 }
