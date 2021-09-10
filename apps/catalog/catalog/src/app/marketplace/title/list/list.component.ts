@@ -57,11 +57,6 @@ export class ListComponent implements OnDestroy, OnInit {
 
   private subs: Subscription[] = [];
 
-  private mandates: Mandate[] = [];
-  private sales: Sale[] = [];
-  private terms: Term[] = [];
-
-
   private parentTerms: Record<string, Term<Date>[]> = {};
 
   constructor(
@@ -83,28 +78,25 @@ export class ListComponent implements OnDestroy, OnInit {
     this.movies$ = this.movieResultsState.asObservable();
     this.searchForm.hitsPerPage.setValue(1000);
 
-    const mandates$ = this.contractService.valueChanges(ref => ref.where('type', '==', 'mandate')
-      .where('buyerId', '==', centralOrgId.catalog)
-      .where('status', '==', 'accepted')
-    ).pipe(
-      tap((mandates: Mandate[]) => this.mandates = mandates),
-    );
+    const queries$ = combineLatest([
+      this.contractService.valueChanges(ref => ref.where('type', '==', 'mandate')
+        .where('buyerId', '==', centralOrgId.catalog)
+        .where('status', '==', 'accepted')
+      ),
+      this.contractService.valueChanges(ref => ref.where('type', '==', 'sale')
+        .where('status', '==', 'accepted')
+      ),
+    ]).pipe(
+      switchMap(([mandates, sales]) => {
 
-    const sales$ = this.contractService.valueChanges(ref => ref.where('type', '==', 'sale')
-      .where('status', '==', 'accepted')
-    ).pipe(
-      tap((sales: Sale[]) => this.sales = sales),
-    );
-
-    const termSub = combineLatest([ mandates$, sales$ ]).pipe(
-      map(([mandates, sales]) => {
         const mandateTermIds = mandates.map(mandate => mandate.termIds).flat();
         const saleTermIds = sales.map(sale => sale.termIds).flat();
+        const termIds = [...mandateTermIds, ...saleTermIds];
 
-        return [...mandateTermIds, ...saleTermIds];
+        return this.termService.valueChanges(termIds).pipe(map(terms => [ mandates, sales, terms ]));
       }),
-      switchMap(termIds => this.termService.valueChanges(termIds)),
-    ).subscribe(terms => this.terms = terms);
+      startWith([ [], [], [] ]),
+    );
 
     const {
       search,
@@ -122,7 +114,8 @@ export class ListComponent implements OnDestroy, OnInit {
     const search$ = combineLatest([
       this.searchForm.valueChanges.pipe(startWith(this.searchForm.value)),
       this.availsForm.valueChanges.pipe(startWith(this.availsForm.value)),
-      this.bucketService.active$.pipe(startWith(undefined))
+      this.bucketService.active$.pipe(startWith(undefined)),
+      queries$,
     ]).pipe(shareReplay(1));
 
     const subStateUrl = search$.pipe(
@@ -141,30 +134,30 @@ export class ListComponent implements OnDestroy, OnInit {
     const sub = search$.pipe(
       distinctUntilChanged(),
       debounceTime(300),
-      switchMap(async ([_, availsValue, bucketValue]) => [await this.searchForm.search(true), availsValue, bucketValue]),
-    ).subscribe(([movies, availsValue, bucketValue]: [SearchResponse<Movie>, AvailsFilter, Bucket]) => {
+      switchMap(async ([_, availsValue, bucketValue, queries]) => [await this.searchForm.search(true), availsValue, bucketValue, queries]),
+    ).subscribe(([movies, availsValue, bucketValue, [ mandates, sales, terms ]]: [SearchResponse<Movie>, AvailsFilter, Bucket, [ Mandate[], Sale[], Term[] ] ]) => {
       if (this.availsForm.valid) {
 
         const hits = movies.hits.filter(movie => {
           const titleId = movie.objectID;
 
-          const titleMandates = this.mandates.filter(mandate => mandate.titleId === titleId);
-          const titleSales = this.sales.filter(sale => sale.titleId === titleId);
+          const titleMandates = mandates.filter(mandate => mandate.titleId === titleId);
+          const titleSales = sales.filter(sale => sale.titleId === titleId);
 
-          if (!this.terms.length) return false;
+          if (!terms.length) return false;
           if (!titleMandates.length && !titleSales.length) return false;
 
-          const saleTerms = titleSales.map(sale => sale.termIds).flat().map(termId => this.terms.find(term => term.id === termId));
-          const mandateTerms = titleMandates.map(mandate => mandate.termIds).flat().map(termId => this.terms.find(term => term.id === termId));
+          const saleTerms = titleSales.map(sale => sale.termIds).flat().map(termId => terms.find(term => term.id === termId));
+          const mandateTerms = titleMandates.map(mandate => mandate.termIds).flat().map(termId => terms.find(term => term.id === termId));
 
           const parentTerms = getMandateTerms(availsValue, mandateTerms);
 
           if (!parentTerms.length) return false;
 
           this.parentTerms[titleId] = parentTerms;
-          const terms = bucketValue?.contracts.find(c => c.titleId === titleId)?.terms ?? [];
+          const bucketTerms = bucketValue?.contracts.find(c => c.titleId === titleId)?.terms ?? [];
 
-          return !isSold(availsValue, saleTerms) && !isInBucket(availsValue, terms);
+          return !isSold(availsValue, saleTerms) && !isInBucket(availsValue, bucketTerms);
         });
 
         this.movieResultsState.next(hits);
@@ -173,7 +166,7 @@ export class ListComponent implements OnDestroy, OnInit {
       }
     });
 
-    this.subs.push(sub, subStateUrl, termSub);
+    this.subs.push(sub, subStateUrl);
   }
 
   clear() {
