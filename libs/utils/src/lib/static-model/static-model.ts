@@ -3,6 +3,7 @@ import { Territory } from './types'
 
 export const contractStatus = {
   accepted: 'Accepted',
+  declined: 'Declined',
   paid: 'Paid',
   unknown: 'Unknown',
   waitingsignature: 'Waiting for signature',

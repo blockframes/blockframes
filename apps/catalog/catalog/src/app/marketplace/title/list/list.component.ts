@@ -1,36 +1,40 @@
 // Angular
 import {
-  Component,
-  ChangeDetectionStrategy,
   OnInit,
-  ChangeDetectorRef, OnDestroy,
+  OnDestroy,
+  Component,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 // RxJs
 import { Observable, BehaviorSubject, Subscription, combineLatest } from 'rxjs';
-import { debounceTime, switchMap, startWith, distinctUntilChanged, skip, shareReplay } from 'rxjs/operators';
+import { debounceTime, switchMap, startWith, distinctUntilChanged, skip, shareReplay, tap, map } from 'rxjs/operators';
+
+import { SearchResponse } from '@algolia/client-search';
+
+import { centralOrgId } from '@env';
 
 // Blockframes
 import { Movie } from '@blockframes/movie/+state';
-import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
-import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { toDate } from '@blockframes/utils/helpers';
+import { AlgoliaMovie } from '@blockframes/utils/algolia';
+import { Territory } from '@blockframes/utils/static-model';
+import { Term } from '@blockframes/contract/term/+state/term.model';
+import { OrganizationQuery } from '@blockframes/organization/+state';
 import { Media, StoreStatus } from '@blockframes/utils/static-model/types';
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
-import { AvailsFilter, getMandateTerms, isInBucket, isSold } from '@blockframes/contract/avails/avails';
-import { Contract, ContractService } from '@blockframes/contract/contract/+state';
-import { Term } from '@blockframes/contract/term/+state/term.model';
 import { TermService } from '@blockframes/contract/term/+state/term.service';
-import { SearchResponse } from '@algolia/client-search';
-import { Bucket, BucketService, createBucket } from '@blockframes/contract/bucket/+state';
-import { OrganizationQuery } from '@blockframes/organization/+state';
-import { centralOrgId } from '@env';
-import { BucketContract, createBucketContract, createBucketTerm } from '@blockframes/contract/bucket/+state/bucket.model';
-import { toDate } from '@blockframes/utils/helpers';
-import { Territory } from '@blockframes/utils/static-model';
-import { AlgoliaMovie } from '@blockframes/utils/algolia';
 import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
+import { ContractService, Mandate, Sale } from '@blockframes/contract/contract/+state';
+import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
+import { Bucket, BucketService, createBucket } from '@blockframes/contract/bucket/+state';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { AvailsFilter, getMandateTerms, isInBucket, isSold } from '@blockframes/contract/avails/avails';
+import { BucketContract, createBucketContract, createBucketTerm } from '@blockframes/contract/bucket/+state/bucket.model';
+
 
 @Component({
   selector: 'catalog-marketplace-title-list',
@@ -53,7 +57,11 @@ export class ListComponent implements OnDestroy, OnInit {
 
   private subs: Subscription[] = [];
 
-  private terms: { [movieId: string]: { mandate: Term<Date>[], sale: Term<Date>[] } } = {};
+  private mandates: Mandate[] = [];
+  private sales: Sale[] = [];
+  private terms: Term[] = [];
+
+
   private parentTerms: Record<string, Term<Date>[]> = {};
 
   constructor(
@@ -73,13 +81,30 @@ export class ListComponent implements OnDestroy, OnInit {
 
   async ngOnInit() {
     this.movies$ = this.movieResultsState.asObservable();
-    this.searchForm.hitsPerPage.setValue(1000)
+    this.searchForm.hitsPerPage.setValue(1000);
 
-    // No need to await for the results
-    await Promise.all([
-      this.getContract('mandate'),
-      this.getContract('sale')
-    ])
+    const mandates$ = this.contractService.valueChanges(ref => ref.where('type', '==', 'mandate')
+      .where('buyerId', '==', centralOrgId.catalog)
+      .where('status', '==', 'accepted')
+    ).pipe(
+      tap((mandates: Mandate[]) => this.mandates = mandates),
+    );
+
+    const sales$ = this.contractService.valueChanges(ref => ref.where('type', '==', 'sale')
+      .where('status', '==', 'accepted')
+    ).pipe(
+      tap((sales: Sale[]) => this.sales = sales),
+    );
+
+    const termSub = combineLatest([ mandates$, sales$ ]).pipe(
+      map(([mandates, sales]) => {
+        const mandateTermIds = mandates.map(mandate => mandate.termIds).flat();
+        const saleTermIds = sales.map(sale => sale.termIds).flat();
+
+        return [...mandateTermIds, ...saleTermIds];
+      }),
+      switchMap(termIds => this.termService.valueChanges(termIds)),
+    ).subscribe(terms => this.terms = terms);
 
     const {
       search,
@@ -102,24 +127,16 @@ export class ListComponent implements OnDestroy, OnInit {
 
     const subStateUrl = search$.pipe(
       skip(1)
-    )
-      .subscribe(
-        ([search, avails]) => {
-          encodeUrl(
-            this.router,
-            this.route,
-            {
-              search: {
-                query: search.query,
-                genres: search.genres,
-                originCountries: search.originCountries,
-                contentType: search.contentType,
-                release: search.release
-              },
-              avails,
-            }
-          )
-        })
+    ).subscribe(([search, avails]) => encodeUrl(this.router, this.route, {
+      search: {
+        query: search.query,
+        genres: search.genres,
+        originCountries: search.originCountries,
+        contentType: search.contentType,
+        release: search.release
+      },
+      avails,
+    }));
 
     const sub = search$.pipe(
       distinctUntilChanged(),
@@ -127,22 +144,38 @@ export class ListComponent implements OnDestroy, OnInit {
       switchMap(async ([_, availsValue, bucketValue]) => [await this.searchForm.search(true), availsValue, bucketValue]),
     ).subscribe(([movies, availsValue, bucketValue]: [SearchResponse<Movie>, AvailsFilter, Bucket]) => {
       if (this.availsForm.valid) {
+
         const hits = movies.hits.filter(movie => {
           const titleId = movie.objectID;
-          if (!this.terms[titleId]) return false;
-          const parentTerms = getMandateTerms(availsValue, this.terms[titleId].mandate);
+
+          const titleMandates = this.mandates.filter(mandate => mandate.titleId === titleId);
+          const titleSales = this.sales.filter(sale => sale.titleId === titleId);
+
+          console.log(titleMandates, titleSales);
+
+          if (!this.terms.length) return false;
+          if (!titleMandates.length && !titleSales.length) return false;
+
+          const saleTerms = titleSales.map(sale => sale.termIds).flat().map(termId => this.terms.find(term => term.id === termId));
+          const mandateTerms = titleMandates.map(mandate => mandate.termIds).flat().map(termId => this.terms.find(term => term.id === termId));
+
+          const parentTerms = getMandateTerms(availsValue, mandateTerms);
+
           if (!parentTerms.length) return false;
+
           this.parentTerms[titleId] = parentTerms;
           const terms = bucketValue?.contracts.find(c => c.titleId === titleId)?.terms ?? [];
-          return !isSold(availsValue, this.terms[titleId].sale) && !isInBucket(availsValue, terms);
-        })
+
+          return !isSold(availsValue, saleTerms) && !isInBucket(availsValue, terms);
+        });
+
         this.movieResultsState.next(hits);
       } else { // if availsForm is invalid, put all the movies from algolia
         this.movieResultsState.next(movies.hits)
       }
-    })
+    });
 
-    this.subs.push(sub, subStateUrl)
+    this.subs.push(sub, subStateUrl, termSub);
   }
 
   clear() {
@@ -150,24 +183,6 @@ export class ListComponent implements OnDestroy, OnInit {
     this.searchForm.reset(initial);
     this.availsForm.reset();
     this.cdr.markForCheck();
-  }
-
-  private async getContract(type: Contract['type']) {
-    const contracts = type === 'mandate'
-      ? await this.contractService.getValue(ref => ref.where('type', '==', 'mandate').where('buyerId', '==', centralOrgId.catalog).where('status', '==', 'accepted'))
-      : await this.contractService.getValue(ref => ref.where('type', '==', 'sale').where('status', '==', 'accepted'))
-    const termIdsByTitle = {};
-
-    for (const contract of contracts) {
-      if (!termIdsByTitle[contract.titleId]) termIdsByTitle[contract.titleId] = [];
-      termIdsByTitle[contract.titleId] = termIdsByTitle[contract.titleId].concat(contract.termIds);
-    }
-
-    const promises = Object.entries(termIdsByTitle).map(([titleId, termIds]) => {
-      if (!this.terms[titleId]) this.terms[titleId] = { mandate: [], sale: [] };
-      return this.termService.getValue(termIds).then(terms => this.terms[titleId][type] = terms);
-    });
-    return Promise.all(promises);
   }
 
   async addAvail(title: AlgoliaMovie) {
