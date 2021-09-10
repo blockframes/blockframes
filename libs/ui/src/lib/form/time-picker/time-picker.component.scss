@@ -15,6 +15,7 @@
     }
     &.time {
       text-align: right;
+      justify-content: flex-end; // Needed for Safari alignment
     }
   }
 }

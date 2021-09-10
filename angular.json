@@ -195,6 +195,7 @@
                 {
                   "replace": "apps/backend-functions/src/environments/environment.ts",
                   "with": "apps/backend-functions/src/environments/environment.emulator.ts"
+
                 }
               ]
             }

@@ -158,17 +158,44 @@ export function isKeyArrayValidator(scope: Scope): ValidatorFn {
  * @returns
  */
 export function compareDates(fromKey: string, toKey: string, keyOnControl?: string): ValidatorFn {
-  return (form: FormControl): ValidationErrors => {
-    const eventForm = form?.parent as FormGroup;
-    if (eventForm) {
-      const from = keyOnControl === fromKey ? form.value : eventForm.value[fromKey];
-      const to = keyOnControl === toKey ? form.value : eventForm.value[toKey]
+  return (control: FormControl): ValidationErrors => {
+    const parentForm = control?.parent as FormGroup;
 
-      if (from && to && from > to) {
-        return { startOverEnd: true }
+    if (!parentForm) return null;
+
+    if (!parentForm.contains(fromKey) || !parentForm.contains(toKey)) {
+      const keys = Object.keys(parentForm.controls).join(', ');
+      throw new Error(`Could not find keys ${fromKey} or ${toKey} in the form with keys ${keys}`)
+    }
+
+    const from = parentForm.get(fromKey).value;
+    const to = parentForm.get(toKey).value;
+
+    if (!from || !to) return null;
+
+    if (keyOnControl) {
+      const otherKey = keyOnControl === fromKey ? toKey : fromKey;
+      const otherControl = parentForm.get(otherKey);
+      const otherErrors = otherControl.errors ?? {};
+
+      /**
+       * Given keyOnControl, checks the value of both fields
+       * 'from' and 'to' to ensure that shown errors are logical
+       * with respect to the values of both fields.
+       */
+      if (to < from) {
+        otherControl.setErrors({ ...otherErrors, startOverEnd: true });
+      } else {
+        if ('startOverEnd' in otherErrors) {
+          delete otherErrors.startOverEnd;
+          !Object.keys(otherErrors).length
+            ? otherControl.setErrors(null)
+            : otherControl.setErrors(otherErrors);
+        }
       }
     }
-    return null;
+    if (to < from) { return { startOverEnd: true } ;}
+    else { return null; }
   }
 }
 

@@ -8,6 +8,10 @@ header,
 header {
   padding: 24px;
   background: linear-gradient(to bottom, var(--primary-lighter), var(--background));
+
+  h1 {
+    margin: 0;
+  }
 }
 
 section.surface {

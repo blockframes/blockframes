@@ -8,22 +8,17 @@
       <bf-table-filter [source]="contracts" [columns]="columns" [initialColumns]="initialColumns" clickable showFilter
         showPaginator (rowClick)="goToContract($event)">
         <ng-template colRef="offerId" let-id>
-          {{ id }}&nbsp;&nbsp;
-          <ng-container *ngIf="(id|getOffer|async) as offer">
-            <ng-container *ngIf="offer">
-              <bf-tag>{{offer.status | toLabel:'offerStatus'}}</bf-tag>
-            </ng-container>
-          </ng-container>
+          <span>{{ id }}</span>
         </ng-template>
         <ng-template colRef="titleId" let-titleId>
           <ng-container *ngIf="titleId">
-            <ng-container *ngIf="(titleId| getTitle | async) as title">
+            <ng-container *ngIf="(titleId | getTitle | async) as title">
               {{title.title?.international | maxLength:50}}
             </ng-container>
           </ng-container>
         </ng-template>
         <ng-template colRef="id" let-id>
-          <ng-container *ngIf="(id| getIncome | async) as income; else loadingPrice">
+          <ng-container *ngIf="(id | getIncome | async) as income; else loadingPrice">
             <ng-container *ngIf="income?.price; else noIncome">
               {{income.price | currency:income.currency}}
             </ng-container>
@@ -35,7 +30,7 @@
         </ng-template>
         <ng-template colRef="_meta.createdAt" let-date>{{date | date:'MM/dd/yyyy'}}</ng-template>
         <ng-template colRef="status" let-status>
-          <span>{{(status| titlecase)}}</span>
+          <bf-tag>{{(status | toLabel: 'contractStatus' )}}</bf-tag>
         </ng-template>
       </bf-table-filter>
     </mat-card>
@@ -48,14 +43,11 @@
 
 <ng-template #empty>
   <section fxLayout="column" fxLayoutAlign="center center" fxFlexGap="16">
-    <h1>You have no contracts yet.</h1>
+    <h1>You have no contract yet.</h1>
     <p>
-      Your contracts will appear here when you submit them.<br />
-      Meanwhile, you can browse the Archipel library to discover titles.
+      You will be notified as soon as a buyer makes an offer on your titles.
     </p>
     <button (click)="openIntercom()" mat-button>Contact the Archipel Team</button>
     <img asset="empty_results.svg" alt="Offer has been created successfully">
-    <a mat-flat-button color="primary" routerLink="../offer">See Offers & Deals</a>
-    <a mat-button color="primary" routerLink="/c/o/marketplace/title">Browse the Library</a>
   </section>
 </ng-template>

@@ -2,9 +2,11 @@
   <ng-container *ngIf="(organization$ | async) as organization">
     <article fxLayout="row">
       <button class="profile" matRipple [widgetTarget]="menu" test-id="auth-user">
-        <span class="mat-body-2">{{ user | displayName }}</span>
+        <div fxLayout="column" fxLayoutAlign="center end">
+          <span class="mat-body-2">{{ user | displayName }}</span>
+          <span class="mat-caption">{{ user.position }}</span>
+        </div>
         <img asset="profil_user.svg" [ref]="user.avatar" alt="Profile picture">
-        <span class="mat-caption">{{ user.position }}</span>
       </button>
       <span class="mat-caption bf-admin" *ngIf="isBfAdmin | async">Blockframes Admin (db <strong>v{{ (appVersion$ |
           async)?.currentVersion }}</strong> | emulators : <strong>{{ emulators }}</strong> )</span>

@@ -1,7 +1,7 @@
 ---
-name: App Review
-about: app review
-title: 'Review: '
+name: Bug / Review
+about: Describe what issue you found, how to reproduce it, and possible solution
+title: ''
 labels: ''
 assignees: ''
 ---

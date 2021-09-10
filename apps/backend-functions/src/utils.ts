@@ -1,4 +1,4 @@
-import { get, request, RequestOptions } from 'https';
+import { request, RequestOptions } from 'https';
 import { db, functions, skipInMaintenance } from './internals/firebase';
 import { logErrors } from './internals/sentry';
 export { ErrorResultResponse } from '@blockframes/utils/utils';
@@ -63,7 +63,7 @@ export async function removeAllSubcollections(
 
 
 export function sendRequest<T = unknown>(options: RequestOptions, data?: unknown): Promise<T> {
-  const postData = JSON.stringify(data);
+  const postData = JSON.stringify(data) ?? '';
   const postOptions: RequestOptions = {
     ...options,
     headers: {
@@ -73,12 +73,15 @@ export function sendRequest<T = unknown>(options: RequestOptions, data?: unknown
     }
   };
 	return new Promise((resolve, reject) => {
-		request(options.method === 'POST' ? postOptions : options, res => {
+		const req = request(options.method === 'POST' ? postOptions : options, res => {
       let body = '';
       res.on('data', chunk => body += chunk);
       res.on('end', () => resolve(JSON.parse(body) as T));
-		})
-      .on('error', e => reject(e))
-      .write(options.method === 'POST' ? postData : undefined);
+      res.on('error', e => reject(e))
+		});
+    req.on('error', e => reject(e));
+    if (options.method === 'POST') req.write(postData);
+
+    req.end();
 	});
 }

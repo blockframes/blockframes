@@ -11,31 +11,34 @@
       </ng-template>
     </button>
   </article>
-  <bf-table-filter [source]="rows" [columns]="versionColumns" [initialColumns]="initialColumns"
-    [filterPredicate]="filterPredicate" showFilter [pageSize]="50" showLoader showPaginator clickable (rowClick)="goToEdit($event)">
-    <ng-template colRef="avatar" let-avatar>
-      <img class="avatar" [ref]="avatar" asset="empty_poster.svg">
-    </ng-template>
-    <ng-template colRef="org" let-org>
-      <a *ngIf="org else noOrg" [routerLink]="['/c/o/dashboard/crm/organization', org.id]">
-        <span>{{ org | orgName:'long'}} </span><mat-icon svgIcon="visibility"></mat-icon>
-      </a>
-      <ng-template #noOrg>--</ng-template>
-    </ng-template>
-    <ng-template colRef="orgCountry" let-orgCountry>
-      <span *ngIf="orgCountry else noOrgCountry">{{ orgCountry }}</span>
-      <ng-template #noOrgCountry>--</ng-template>
-    </ng-template>
-    <ng-template colRef="firstConnexion" let-firstConnexion>
-      {{ firstConnexion | date: 'mediumDate' }}
-    </ng-template>
-    <ng-template colRef="lastConnexion" let-lastConnexion>
-      {{ lastConnexion | date: 'mediumDate' }}
-    </ng-template>
-    <ng-template colRef="org.addresses.main.country" let-country>
-      {{ country ? country : '--' }}
-    </ng-template>
-  </bf-table-filter>
+  <ng-container *ngIf="users$ | async as users; else loading">
+    <bf-table-filter [source]="users" [columns]="versionColumns" [initialColumns]="initialColumns"
+      [filterPredicate]="filterPredicate" [pageSize]="50" showLoader showPaginator clickable (rowClick)="goToEdit($event)">
+      <ng-template colRef="avatar" let-avatar>
+        <img class="avatar" [ref]="avatar" asset="empty_poster.svg">
+      </ng-template>
+      <ng-template colRef="org" let-org>
+        <a *ngIf="org else noOrg" [routerLink]="['/c/o/dashboard/crm/organization', org.id]">
+          <span>{{ org | orgName:'long'}} </span><mat-icon svgIcon="visibility"></mat-icon>
+        </a>
+        <ng-template #noOrg>--</ng-template>
+      </ng-template>
+      <ng-template colRef="orgCountry" let-orgCountry>
+        <span *ngIf="orgCountry else noOrgCountry">{{ orgCountry }}</span>
+        <ng-template #noOrgCountry>--</ng-template>
+      </ng-template>
+      <ng-template colRef="firstConnexion" let-firstConnexion>
+        {{ firstConnexion | date: 'mediumDate' }}
+      </ng-template>
+      <ng-template colRef="lastConnexion" let-lastConnexion>
+        {{ lastConnexion | date: 'mediumDate' }}
+      </ng-template>
+      <ng-template colRef="org.addresses.main.country" let-country>
+        {{ country ? country : '--' }}
+      </ng-template>
+    </bf-table-filter>
+  </ng-container>
 
+  <ng-template #loading>...loading users</ng-template>
   <crm-dashboard dashboard="users"></crm-dashboard>
 </main>

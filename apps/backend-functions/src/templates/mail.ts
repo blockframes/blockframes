@@ -3,10 +3,10 @@
  * Look at the notion page to know objects relative to emails
  * https://www.notion.so/cascade8/Email-Data-Object-8ed9d64e8cd4490ea7bc0e469c04043e
  */
-import { supportEmails, appUrl, e2e_mode } from '../environments/environment';
+import { supportEmails, appUrl, e2eMode } from '../environments/environment';
 import { EmailRequest, EmailTemplateRequest } from '../internals/email';
 import { templateIds } from '@blockframes/utils/emails/ids';
-import { RequestDemoInformations, OrganizationDocument, PublicOrganization } from '../data/types';
+import { RequestDemoInformations, OrganizationDocument, PublicOrganization, MovieDocument } from '../data/types';
 import { PublicUser } from '@blockframes/user/+state/user.firestore';
 import { EventEmailData, OrgEmailData, UserEmailData } from '@blockframes/utils/emails/utils';
 import { App, appName, Module } from '@blockframes/utils/apps';
@@ -16,7 +16,8 @@ import { testEmail } from "@blockframes/e2e/utils/env";
 
 const ORG_HOME = '/c/o/organization/';
 const USER_CREDENTIAL_INVITATION = '/auth/identity';
-export const ADMIN_ACCEPT_ORG_PATH = '/c/o/dashboard/crm/organization';
+const ADMIN_ACCEPT_ORG_PATH = '/c/o/dashboard/crm/organization';
+const ADMIN_REVIEW_MOVIE_PATH = '/c/o/dashboard/crm/movie';
 
 /**
  * This method return the "support" email that should be used regarding the originating app
@@ -49,11 +50,12 @@ export function accountCreationEmail(email: string, link: string, user: UserEmai
   return { to: email, templateId: templateIds.user.welcomeMessage, data };
 }
 
-export function userResetPassword(email: string, link: string): EmailTemplateRequest {
+export function userResetPassword(email: string, link: string, app: App): EmailTemplateRequest {
   const data = {
     pageURL: link
   };
-  return { to: email, templateId: templateIds.user.resetPassword, data };
+  const templateId = app === 'crm' ? templateIds.user.resetPasswordFromCRM : templateIds.user.resetPassword;
+  return { to: email, templateId, data };
 }
 
 /** Send email to an user who is requesting new app access */
@@ -298,6 +300,12 @@ export function movieAcceptedEmail(toUser: UserEmailData, movieTitle: string, mo
   return { to: toUser.email, templateId: templateIds.movie.accepted, data };
 }
 
+/** Inform user of org whose movie is being bought */
+export function contractCreatedEmail(toUser: UserEmailData, movieTitle: string, app: App): EmailTemplateRequest {
+  const data = { user: toUser, app: { name: app }, title: { names: movieTitle } };
+  return { to: toUser.email, templateId: templateIds.contract.created, data };
+}
+
 /** Template for admins. It is to inform admins of Archipel Content a new offer has been created with titles, prices, etc in the template */
 export function offerCreatedConfirmationEmail(toUser: UserEmailData, org: OrganizationDocument, bucket: Bucket): EmailTemplateRequest {
   const date = format(new Date(), 'dd MMMM, yyyy');
@@ -314,7 +322,7 @@ export function offerCreatedConfirmationEmail(toUser: UserEmailData, org: Organi
  */
 const organizationCreatedTemplate = (orgId: string) =>
   `
- You can review it <a href="${appUrl.crm}${ADMIN_ACCEPT_ORG_PATH}/${orgId}">here</a>.
+ To review it visit ${appUrl.crm}${ADMIN_ACCEPT_ORG_PATH}/${orgId}.
  `;
 
 /**
@@ -345,7 +353,7 @@ export async function organizationCreated(org: OrganizationDocument): Promise<Em
   return {
     to: supportEmail,
     subject: `${appName[org._meta.createdFrom]} - ${org.denomination.full} was created and needs a review`,
-    html: organizationCreatedTemplate(org.id)
+    text: organizationCreatedTemplate(org.id)
   };
 }
 
@@ -357,12 +365,12 @@ export async function organizationRequestedAccessToApp(org: OrganizationDocument
   return {
     to: getSupportEmail(org._meta.createdFrom),
     subject: 'An organization requested access to an app',
-    html: organizationRequestAccessToAppTemplate(org, app, module)
+    text: organizationRequestAccessToAppTemplate(org, app, module)
   };
 }
 
 export async function userFirstConnexion(user: PublicUser): Promise<EmailRequest> {
-  const supportEmail = e2e_mode ? testEmail : getSupportEmail(user._meta.createdFrom);
+  const supportEmail = e2eMode ? testEmail : getSupportEmail(user._meta.createdFrom);
   return {
     to: supportEmail,
     subject: 'New user connexion',
@@ -397,4 +405,18 @@ export function sendContactEmail(userName: string, userMail: string, subject: st
     Message from user :
     ${message}`
   }
+}
+
+/** Send an email to supportEmails.[app](catalog & MF only) when a movie is submitted*/
+export function sendMovieSubmittedEmail(app: App, movie: MovieDocument) {
+  return {
+    to: getSupportEmail(app),
+    subject: 'A movie has been submitted.',
+    text: `
+    The new movie ${movie.title.international} has been submitted.
+
+    Visit ${appUrl.crm}${ADMIN_REVIEW_MOVIE_PATH}/${movie.id} or go to ${ADMIN_REVIEW_MOVIE_PATH}/${movie.id} to review it.
+
+    `
+  };
 }

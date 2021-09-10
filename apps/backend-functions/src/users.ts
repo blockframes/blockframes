@@ -6,10 +6,11 @@ import { sendMailFromTemplate, sendMail } from './internals/email';
 import { RequestDemoInformations, PublicUser, PermissionsDocument, OrganizationDocument, InvitationDocument } from './data/types';
 import { upsertWatermark, getCollection, storeSearchableUser, deleteObject, algolia } from '@blockframes/firebase-utils';
 import { getDocument } from './data/internals';
-import { getSendgridFrom, applicationUrl, App } from '@blockframes/utils/apps';
+import { getMailSender, applicationUrl, App } from '@blockframes/utils/apps';
 import { sendFirstConnexionEmail, createUserFromEmail } from './internals/users';
 import { cleanUserMedias } from './media';
 import { getUserEmailData, OrgEmailData } from '@blockframes/utils/emails/utils';
+import { groupIds } from '@blockframes/utils/emails/ids';
 
 type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
@@ -61,7 +62,7 @@ export const startResetPasswordEmail = async (data: EmailFlowData) => {
 
   try {
     const resetLink = await admin.auth().generatePasswordResetLink(email);
-    const template = userResetPassword(email, resetLink);
+    const template = userResetPassword(email, resetLink, app);
     await sendMailFromTemplate(template, app);
   } catch (e) {
     throw new Error(`There was an error while sending reset password email : ${e.message}`);
@@ -194,8 +195,8 @@ export async function onUserDelete(userSnapshot: FirebaseFirestore.DocumentSnaps
 }
 
 export const sendDemoRequest = async (data: RequestDemoInformations): Promise<RequestDemoInformations> => {
-  const from = getSendgridFrom(data.app);
-  await sendMail(sendDemoRequestMail(data), from);
+  const from = getMailSender(data.app);
+  await sendMail(sendDemoRequestMail(data), from, groupIds.noUnsubscribeLink); 
   return data;
 }
 
@@ -209,7 +210,7 @@ export const sendUserMail = async (data: { subject: string, message: string, app
     throw new Error('Subject and message are mandatory parameters for the "sendUserMail()" function');
   }
 
-  const from = getSendgridFrom(app);
+  const from = getMailSender(app);
 
   await sendMail(sendContactEmail(`${user.firstName} ${user.lastName}`, user.email, subject, message, app), from);
 }

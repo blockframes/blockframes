@@ -1,9 +1,12 @@
 <form [formGroup]="availsForm" fxLayout fxLayoutAlign="space-evenly center" fxLayoutGap="12px" id="avails">
-  <static-group fxFlex formControlName="medias" scope="medias" displayAll="All Rights" required placeholder="Specify right(s) to filter" [withoutValues]="['theatrical']" test-id="medias" icon="play_arrow">
-    <mat-label>Media</mat-label>
-  </static-group>
 
   <mat-form-field fxFlex appearance="outline">
+    <mat-icon matPrefix svgIcon="play_arrow"></mat-icon>
+    <mat-label>Media</mat-label>
+    <static-group formControlName="medias" scope="medias" displayAll="All Rights" required [withoutValues]="['theatrical']" test-id="medias" placeholder="Specify right(s) to filter">
+    </static-group>
+  </mat-form-field>
+    <mat-form-field fxFlex appearance="outline">
     <mat-label>Exlusivity</mat-label>
     <mat-select formControlName="exclusive" required>
       <mat-option [value]="true">Exclusive</mat-option>
@@ -12,9 +15,12 @@
     <mat-icon matPrefix svgIcon="star"></mat-icon>
   </mat-form-field>
 
-  <static-group fxFlex formControlName="territories" scope="territories" displayAll="World" placeholder="Specify territory to filter" required test-id="territories" icon="world">
+  <mat-form-field fxFlex appearance="outline">
+    <mat-icon matPrefix svgIcon="world"></mat-icon>
     <mat-label>Territories</mat-label>
-  </static-group>
+    <static-group formControlName="territories" scope="territories" displayAll="World" required test-id="territories" placeholder="Specify territory to filter">
+    </static-group>
+  </mat-form-field>
 
   <button mat-icon-button (click)="clear()" matTooltip="Clear fields">
     <mat-icon svgIcon="refresh_filters"></mat-icon>

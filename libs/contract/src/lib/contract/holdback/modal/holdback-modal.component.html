@@ -1,14 +1,14 @@
 <header>
-  <h1>Holdbacks exist for this right</h1>
+  <h1>Holdbacks exist for this Right</h1>
   <button mat-icon-button (click)="close()">
     <mat-icon svgIcon="close"></mat-icon>
   </button>
 </header>
 <section>
   <p>
-    <span>There are some holdbacks that exists for this right.</span>
+    <span>There are some holdbacks that exist for this Right.</span>
     <ng-container *ngIf="data.withWarning">
-      <br /><span>You can still add this right to your selection.</span>
+      <br /><span>You can still add this Right to your Selection.</span>
     </ng-container>
   </p>
   <holdback-list [holdbacks]="data.holdbacks"></holdback-list>
