@@ -32,7 +32,7 @@ import { ContractService, Mandate, Sale } from '@blockframes/contract/contract/+
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
 import { Bucket, BucketService, createBucket } from '@blockframes/contract/bucket/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { AvailsFilter, getMandateTerms, isInBucket, isSold } from '@blockframes/contract/avails/avails';
+import { AvailsFilter, getMandateTerms, isInBucket, isMovieAvailable, isSold } from '@blockframes/contract/avails/avails';
 import { BucketContract, createBucketContract, createBucketTerm } from '@blockframes/contract/bucket/+state/bucket.model';
 
 
@@ -138,27 +138,7 @@ export class ListComponent implements OnDestroy, OnInit {
     ).subscribe(([movies, availsValue, bucketValue, [ mandates, sales, terms ]]: [SearchResponse<Movie>, AvailsFilter, Bucket, [ Mandate[], Sale[], Term[] ] ]) => {
       if (this.availsForm.valid) {
 
-        const hits = movies.hits.filter(movie => {
-          const titleId = movie.objectID;
-
-          const titleMandates = mandates.filter(mandate => mandate.titleId === titleId);
-          const titleSales = sales.filter(sale => sale.titleId === titleId);
-
-          if (!terms.length) return false;
-          if (!titleMandates.length && !titleSales.length) return false;
-
-          const saleTerms = titleSales.map(sale => sale.termIds).flat().map(termId => terms.find(term => term.id === termId));
-          const mandateTerms = titleMandates.map(mandate => mandate.termIds).flat().map(termId => terms.find(term => term.id === termId));
-
-          const parentTerms = getMandateTerms(availsValue, mandateTerms);
-
-          if (!parentTerms.length) return false;
-
-          this.parentTerms[titleId] = parentTerms;
-          const bucketTerms = bucketValue?.contracts.find(c => c.titleId === titleId)?.terms ?? [];
-
-          return !isSold(availsValue, saleTerms) && !isInBucket(availsValue, bucketTerms);
-        });
+        const hits = movies.hits.filter(movie => isMovieAvailable(movie.objectID, availsValue, bucketValue, mandates, sales, terms));
 
         this.movieResultsState.next(hits);
       } else { // if availsForm is invalid, put all the movies from algolia
