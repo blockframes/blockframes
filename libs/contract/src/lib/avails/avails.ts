@@ -213,11 +213,11 @@ export function getCollidingHoldbacks(holdbacks: Holdback[], terms: BucketTerm[]
 
 
 export function isMovieAvailable(titleId: string, avails: AvailsFilter, bucket: Bucket, mandates: Mandate[], sales: Sale[], terms: Term[]) {
+  if (!terms.length) return false;
 
   const titleMandates = mandates.filter(mandate => mandate.titleId === titleId);
   const titleSales = sales.filter(sale => sale.titleId === titleId);
 
-  if (!terms.length) return false;
   if (!titleMandates.length && !titleSales.length) return false;
 
   const saleTerms = titleSales.map(sale => sale.termIds).flat().map(termId => terms.find(term => term.id === termId));
