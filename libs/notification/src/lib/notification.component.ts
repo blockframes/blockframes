@@ -27,7 +27,7 @@ export class NotificationComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.dynTitle.setPageTitle('Activity Feed');
+    this.dynTitle.setPageTitle('Notifications');
   }
 
   markAll() {
