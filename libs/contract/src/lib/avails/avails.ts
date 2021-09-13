@@ -212,22 +212,24 @@ export function getCollidingHoldbacks(holdbacks: Holdback[], terms: BucketTerm[]
 // ----------------------------
 
 
+export function getParentTerms(titleId: string, avails: AvailsFilter, mandates: Mandate[], terms: Term[]) {
+  const titleMandates = mandates.filter(mandate => mandate.titleId === titleId);
+  if (!titleMandates.length) return [];
+  const mandateTerms = titleMandates.map(mandate => mandate.termIds).flat().map(termId => terms.find(term => term.id === termId));
+  return getMandateTerms(avails, mandateTerms);
+}
+
 export function isMovieAvailable(titleId: string, avails: AvailsFilter, bucket: Bucket, mandates: Mandate[], sales: Sale[], terms: Term[]) {
   if (!terms.length) return false;
 
-  const titleMandates = mandates.filter(mandate => mandate.titleId === titleId);
   const titleSales = sales.filter(sale => sale.titleId === titleId);
 
-  if (!titleMandates.length && !titleSales.length) return false;
-
   const saleTerms = titleSales.map(sale => sale.termIds).flat().map(termId => terms.find(term => term.id === termId));
-  const mandateTerms = titleMandates.map(mandate => mandate.termIds).flat().map(termId => terms.find(term => term.id === termId));
 
-  const parentTerms = getMandateTerms(avails, mandateTerms);
+  const parentTerms = getParentTerms(titleId, avails, mandates, terms);
 
   if (!parentTerms.length) return false;
 
-  this.parentTerms[titleId] = parentTerms;
   const bucketTerms = bucket?.contracts.find(c => c.titleId === titleId)?.terms ?? [];
 
   return !isSold(avails, saleTerms) && !isInBucket(avails, bucketTerms);
