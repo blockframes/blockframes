@@ -7,15 +7,19 @@ import { delay } from '@blockframes/utils/helpers';
 import { storageFileExist } from 'libs/firebase-utils/src/lib/firebase-utils';
 
 
+type StorageVideoKeys = keyof StorageVideo;
+
+const keysToCheck: StorageVideoKeys[] = [
+  'jwPlayerId',
+  'privacy',
+  'collection',
+  'docId',
+  'field',
+  'storagePath'
+];
+
 function isVideoOK(video: StorageVideo) {
-  return [
-    'jwPlayerId',
-    'privacy',
-    'collection',
-    'docId',
-    'field',
-    'storagePath',
-  ].every(key => !!video[key]);
+  return keysToCheck.every(key => !!video[key]);
 }
 
 function checkStorageFile(video: StorageVideo) {
@@ -27,7 +31,7 @@ async function checkJWP(jwplayerKey: string, jwplayerApiV2Secret: string, videoI
   const api = jwplayerApiV2(jwplayerKey, jwplayerApiV2Secret);
 
   // if we send empty string '' it will list all videos
-  const info = await api.getVideoInfo(videoId ?? 'thisIdDoesNotExist') as any;
+  const info = await api.getVideoInfo(videoId ?? 'thisIdDoesNotExist');
   if (info.status === 'ready') return true;
   return false;
 }
@@ -46,8 +50,14 @@ export async function rescueJWP(options: {jwplayerKey: string, jwplayerApiV2Secr
 
   const { jwplayerKey, jwplayerApiV2Secret } = options;
 
-  if (!jwplayerKey || !jwplayerApiV2Secret) {
-    console.log('\nMISSING ARG !');
+  if (!jwplayerKey) {
+    console.log('\nMISSING JWPLAYER KEY ! you should pass it as the 1st argument');
+    console.log('\ncommand syntax :\n\tnpm run backend-ops rescueJWP <JWP-KEY> <JPW-API-V2-SECRET>\n');
+    return;
+  }
+
+  if (!jwplayerApiV2Secret) {
+    console.log('\nMISSING JWPLAYER API V2 SECRET ! you should pass it as the 2nd argument');
     console.log('\ncommand syntax :\n\tnpm run backend-ops rescueJWP <JWP-KEY> <JPW-API-V2-SECRET>\n');
     return;
   }

@@ -1,5 +1,5 @@
 
-import {request, RequestOptions } from 'https';
+import { request, RequestOptions } from 'https';
 
 export function sendRequest<T = unknown>(options: RequestOptions, data?: unknown): Promise<T> {
   const postData = JSON.stringify(data) ?? '';
