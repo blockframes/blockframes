@@ -1,6 +1,7 @@
-import { db, functions, skipInMaintenance } from './internals/firebase';
+import { functions, skipInMaintenance } from './internals/firebase';
 import { logErrors } from './internals/sentry';
 export { ErrorResultResponse } from '@blockframes/utils/utils';
+export { removeAllSubcollections } from '@blockframes/firebase-utils';
 
 ///////////////////////////////////
 // DOCUMENT ON-CHANGES FUNCTIONS //
@@ -38,24 +39,3 @@ export function onDocumentCreate(docPath: string, fn: FunctionType) {
     .onCreate(skipInMaintenance(logErrors(fn)));
 }
 
-////////////////////
-// MISC FUNCTIONS //
-////////////////////
-
-/**
- * Removes all one-depth subcollections
- * @param snapshot
- * @param batch
- */
-export async function removeAllSubcollections(
-  snapshot: FirebaseFirestore.DocumentSnapshot,
-  batch: FirebaseFirestore.WriteBatch): Promise<FirebaseFirestore.WriteBatch> {
-  console.log(`starting deletion of ${snapshot.ref.path} sub-collections`);
-  const subCollections = await snapshot.ref.listCollections();
-  for (const x of subCollections) {
-    console.log(`deleting sub collection : ${x.path}`);
-    const documents = await db.collection(x.path).listDocuments();
-    documents.forEach(ref => batch.delete(ref))
-  }
-  return batch;
-}
