@@ -1,4 +1,5 @@
 @import "~@angular/flex-layout/mq";
+$banner-background: rgba(5, 7, 54);
 
 landing-shell-page {
   display: flex;
@@ -32,9 +33,18 @@ landing-shell-page {
     flex: 1;
     overflow-y: auto;
 
-    .demo.mat-card {
-      padding-block: 72px;
-      background-size: cover;
+    .demo {
+      display: grid;
+      grid-template-columns: 1fr minmax(0, 1920px) 1fr;
+
+      section {
+        padding-block: 72px;
+        background: linear-gradient(91deg, $banner-background 0%, rgb(52 20 86) 48%, $banner-background 100%);
+      }
+
+      .banner-spacing {
+        background-color: $banner-background;
+      }
     }
 
     .contact-us {
@@ -65,19 +75,21 @@ landing-shell-page {
     }
 
     footer {
-      padding: 80px;
-      text-align: center;
-      width: 100%;
       background-color: var(--background-card);
-      > * {
+      section {
+        padding: 80px;
+        text-align: center;
         width: 100%;
-      }
-      mat-divider {
-        width: 100%;
-        border-top-width: 2px;
-      }
-      img {
-        height: 30px;
+        > * {
+          width: 100%;
+        }
+        mat-divider {
+          width: 100%;
+          border-top-width: 2px;
+        }
+        img {
+          height: 30px;
+        }
       }
     }
 

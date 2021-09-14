@@ -1,16 +1,29 @@
 @import "~@angular/flex-layout/mq";
+$banner-background: rgba(5, 7, 54);
 
 landing-header {
-  padding: 60px 200px;
-  background-image: url("/assets/images/banner_header.png");
-  a {
-    margin-top: 80px;
+  display: grid;
+  grid-template-columns: 1fr minmax(0, 1920px) 1fr;
+  padding: 0;
+
+  header {
+    padding: 60px 200px;
+    background-image: url("/assets/images/banner_header.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    a, h2 {
+      margin-top: 24px;
+    }
+    h4 {
+      text-transform: uppercase;
+    }
+    p {
+      width: 75%;
+    }
   }
-  h4 {
-    text-transform: uppercase;
-  }
-  p {
-    width: 75%;
+
+  .banner-spacing {
+    background-color: $banner-background;
   }
 }
 
@@ -85,5 +98,24 @@ landing-content {
     article mat-card {
       width: 100%;
     }
+  }
+}
+
+@include layout-bp(gt-lg) {
+  landing-header {
+    header {
+      background-image: linear-gradient(
+        to right, 
+        $banner-background 0%,
+        rgba(0, 0, 0, 0) 40px,
+        rgba(0, 0, 0, 0) calc(100% - 40px),
+        $banner-background 100%
+      ),
+      url("/assets/images/banner_header.png");
+    }
+  }
+
+  landing-content {
+    padding: 48px 0px;
   }
 }

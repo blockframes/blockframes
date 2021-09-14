@@ -1,23 +1,27 @@
 <landing-shell-page [roles]="userRoles">
 
-  <landing-header fxLayout="column" fxLayoutAlign="start start" fxLayoutAlign.lt-sm="center center">
-    <h4>Welcome to Media Financiers</h4>
-    <p class="mat-display-2 p-margin">The professional financing hub <br /> for films and TV series</p>
-    <p class="mat-body-1 p-width">Media Financiers enables private investors to co-produce exclusive films and TV series
-      on the same conditions as top professional content financiers.</p>
-    <a mat-flat-button color="accent" routerLink="/auth/identity">
-      <span>Join now</span>
-      <mat-icon svgIcon="arrow_forward"></mat-icon>
-    </a>
-    <a mat-button [href]="pdfLink" target="_blank" class="download-link">
-      <mat-icon svgIcon="cloud_download"></mat-icon>
-      <span>
-        Download cinema investing guide
-      </span>
-    </a>
+  <landing-header>
+    <div class="banner-spacing"></div>
+    <header class="max-width" fxLayout="column" fxLayoutAlign="start start" fxLayoutAlign.lt-sm="center center">
+      <h4>Welcome to Media Financiers</h4>
+      <p class="mat-display-2 p-margin">The professional financing hub <br /> for films and TV series</p>
+      <p class="mat-body-1 p-width">Media Financiers enables private investors to co-produce exclusive films and TV series
+        on the same conditions as top professional content financiers.</p>
+      <a mat-flat-button color="accent" routerLink="/auth/identity">
+        <span>Join now</span>
+        <mat-icon svgIcon="arrow_forward"></mat-icon>
+      </a>
+      <a mat-button [href]="pdfLink" target="_blank" class="download-link">
+        <mat-icon svgIcon="cloud_download"></mat-icon>
+        <span>
+          Download cinema investing guide
+        </span>
+      </a>
+    </header>
+    <div class="banner-spacing"></div>
   </landing-header>
 
-  <landing-content>
+  <landing-content class="max-width">
     <h1 class="mat-display-1">How it works</h1>
     <mat-tab-group animationDuration="1000ms" selectedIndex="0">
       <mat-tab [label]="tabNames[0]">

@@ -1,4 +1,5 @@
 @import "~@angular/flex-layout/mq";
+$banner-background: rgba(57, 64, 158);
 
 :host {
   display: block;
@@ -7,32 +8,43 @@
 }
 
 landing-header {
-  padding: 60px 200px;
-  background-image: url("/assets/images/banner_landing.png");
-  h4 {
-    text-transform: uppercase;
+  display: grid;
+  grid-template-columns: 1fr minmax(0, 1920px) 1fr;
+  padding: 0;
+
+  header {
+    padding: 60px 200px;
+    background-image: url("/assets/images/banner_landing.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    h4 {
+      text-transform: uppercase;
+    }
+
+    .p-margin {
+      margin-bottom: 24px;
+    }
+
+    .p-width {
+      width: 70%;
+    }
+
+    a {
+      margin-top: 24px;
+    }
+
+    .download-link {
+      margin-top: 16px;
+    }
   }
 
-  .p-margin {
-    margin-bottom: 24px;
-  }
-
-  .p-width {
-    width: 70%;
-  }
-
-  a {
-    margin-top: 24px;
-  }
-
-  .download-link {
-    margin-top: 16px;
+  .banner-spacing {
+    background-color: $banner-background;
   }
 }
 
 landing-content {
   //TODO issue #6523 move all this commit's code to shell component
-
   padding: 48px 240px;
 
   h1 {
@@ -118,5 +130,24 @@ landing-content {
     article mat-card {
       width: 100%;
     }
+  }
+}
+
+@include layout-bp(gt-lg) {
+  landing-header {
+    header {
+      background-image: linear-gradient(
+        to right, 
+        $banner-background 0%,
+        rgba(0, 0, 0, 0) 40px,
+        rgba(0, 0, 0, 0) calc(100% - 40px),
+        $banner-background 100%
+      ),
+      url("/assets/images/banner_landing.png");
+    }
+  }
+
+  landing-content {
+    padding: 48px 0px;
   }
 }
