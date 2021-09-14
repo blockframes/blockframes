@@ -53,10 +53,9 @@ export class ListComponent implements OnDestroy, OnInit {
   public nbHits: number;
   public hitsViewed = 0;
 
-  private sub: Subscription;
+  private subs: Subscription[] = [];
 
-  private queries$: Observable<[ Mandate[], Sale[], Term[] ]>;
-  // private parentTerms: Record<string, Term<Date>[]> = {};
+  private queries$: Observable<{ mandates: Mandate[], sales: Sale[], terms: Term[] }>;
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -91,9 +90,10 @@ export class ListComponent implements OnDestroy, OnInit {
         const saleTermIds = sales.map(sale => sale.termIds).flat();
         const termIds = [...mandateTermIds, ...saleTermIds];
 
-        return this.termService.valueChanges(termIds).pipe(map(terms => [ mandates, sales, terms ])) as Observable<[ Mandate[], Sale[], Term[] ]>;
+        return this.termService.valueChanges(termIds).pipe(map(terms => ({ mandates, sales, terms })));
       }),
-      startWith([ [], [], [] ]),
+      startWith({ mandates: [], sales: [], terms: [] }),
+      shareReplay({ refCount: true, bufferSize: 1 }),
     );
 
     const {
@@ -116,7 +116,7 @@ export class ListComponent implements OnDestroy, OnInit {
       this.queries$,
     ]).pipe(shareReplay({ refCount: true, bufferSize: 1 }));
 
-    this.sub = search$.pipe(
+    const searchSub = search$.pipe(
       skip(1)
     ).subscribe(([search, avails]) => encodeUrl(this.router, this.route, {
       search: {
@@ -128,13 +128,14 @@ export class ListComponent implements OnDestroy, OnInit {
       },
       avails,
     }));
+    this.subs.push(searchSub);
 
     this.movies$ = search$.pipe(
       distinctUntilChanged(),
       debounceTime(300),
       switchMap(async ([_, availsValue, bucketValue, queries]) => [await this.searchForm.search(true), availsValue, bucketValue, queries]),
     ).pipe(
-      map(([movies, availsValue, bucketValue, [ mandates, sales, terms ]]: [SearchResponse<Movie>, AvailsFilter, Bucket, [ Mandate[], Sale[], Term[] ] ]) => {
+      map(([movies, availsValue, bucketValue, { mandates, sales, terms }]: [SearchResponse<Movie>, AvailsFilter, Bucket, { mandates: Mandate[], sales: Sale[], terms: Term[] }]) => {
         if (this.availsForm.valid) {
           return movies.hits.filter(movie => isMovieAvailable(movie.objectID, availsValue, bucketValue, mandates, sales, terms));
         } else { // if availsForm is invalid, put all the movies from algolia
@@ -161,29 +162,7 @@ export class ListComponent implements OnDestroy, OnInit {
     const titleId = title.objectID;
     const avails = this.availsForm.value;
 
-
-    // TODO ###########################
-
-    // This can probably be replaced by the line bellow, but it return empty arrays, maybe we should use some shareReplay ???
-    // const [ mandates, sales, terms ] = await this.queries$.pipe(take(1)).toPromise();
-
-    const mandates = await this.contractService.valueChanges(ref => ref.where('type', '==', 'mandate')
-      .where('buyerId', '==', centralOrgId.catalog)
-      .where('status', '==', 'accepted')
-    ).pipe(take(1)).toPromise() as Mandate[];
-
-    const sales = await this.contractService.valueChanges(ref => ref.where('type', '==', 'sale')
-      .where('status', '==', 'accepted')
-    ).pipe(take(1)).toPromise() as Sale[];
-
-    const mandateTermIds = mandates.map(mandate => mandate.termIds).flat();
-    const saleTermIds = sales.map(sale => sale.termIds).flat();
-    const termIds = [...mandateTermIds, ...saleTermIds];
-
-    const terms = await this.termService.valueChanges(termIds).pipe(take(1)).toPromise();
-
-    // TODO ###########################
-
+    const { mandates, sales, terms } = await this.queries$.pipe(take(1)).toPromise();
 
     const parentTerms = getParentTerms(titleId, avails, mandates, terms);
     if (!parentTerms.length) {
@@ -289,6 +268,6 @@ export class ListComponent implements OnDestroy, OnInit {
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe();
+    this.subs.forEach(sub => sub.unsubscribe());
   }
 }

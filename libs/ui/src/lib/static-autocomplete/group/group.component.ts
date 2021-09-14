@@ -108,7 +108,7 @@ export class StaticGroupComponent implements ControlValueAccessor, OnInit, OnDes
   // defer the startWith value with subscription happens to get first value
   value$ = defer(() => this.form.valueChanges.pipe(
     startWith(this.form.value || []),
-    shareReplay(1)
+    shareReplay({ refCount: true, bufferSize: 1 }),
   ));
 
   get groups() {

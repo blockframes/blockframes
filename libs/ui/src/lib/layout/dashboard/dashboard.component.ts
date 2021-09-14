@@ -32,7 +32,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
 
   public mode$ = this.breakpointsService.ltMd.pipe(
     map(ltMd => ltMd ? 'over' : 'side'),
-    shareReplay(1)
+    shareReplay({ refCount: true, bufferSize: 1 }),
   );
 
   public movieIndex: string;

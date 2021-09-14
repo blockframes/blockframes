@@ -78,7 +78,7 @@ export class MarketplaceMovieAvailsCalendarComponent implements AfterViewInit, O
       if (this.availsForm.invalid) return [];
       return getDurationMarkers(mandates, mandateTerms);
     }),
-    shareReplay(1),
+    shareReplay({ refCount: true, bufferSize: 1 }),
   );
 
   constructor(

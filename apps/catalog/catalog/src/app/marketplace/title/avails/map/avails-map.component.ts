@@ -94,7 +94,7 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
       if (this.availsForm.invalid) return [];
       return availableTerritories(selected, sold, inSelection, this.availsForm.value, mandates, mandateTerms);
     }),
-    shareReplay(1), // Multicast with replay
+    shareReplay({ refCount: true, bufferSize: 1 }), // Multicast with replay
   );
 
   constructor(
