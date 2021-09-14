@@ -99,11 +99,11 @@
   <ng-content select="landing-detail"></ng-content>
 
   <!-- Footer -->
-  <footer>
-    <ng-container *ngIf="landingFooterComponent; else footer">
-      <ng-content select="landing-footer"></ng-content>
-    </ng-container>
-    <ng-template #footer>
+  <ng-container *ngIf="landingFooterComponent; else footer">
+    <ng-content select="landing-footer"></ng-content>
+  </ng-container>
+  <ng-template #footer>
+    <footer>
       <section class="max-width" fxLayout="column" fxLayoutAlign="start center" fxLayoutAlign.lt-md="center center"
         fxLayoutGap="32px">
         <div fxLayout fxLayoutAlign="start">
@@ -143,8 +143,8 @@
           </article>
         </div>
       </section>
-    </ng-template>
-  </footer>
+    </footer>
+  </ng-template>
 
 </main>
 
