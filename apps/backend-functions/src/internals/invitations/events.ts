@@ -165,7 +165,7 @@ export async function createNotificationsForEventsToStart() {
 
   // 1 Fetch events that are about to start
   const eventsDayCollection = await fetchEventStartingIn(oneDay, (oneDay + oneHour));
-  const eventsHourCollection = await fetchEventStartingIn(oneHour, (oneHour + halfHour));
+  const eventsHourCollection = await fetchEventStartingIn(halfHour, oneHour);
 
   // 2 Fetch attendees (invitations accepted)
   const invitationsDay = await fetchAttendeesToEvent(eventsDayCollection.docs);

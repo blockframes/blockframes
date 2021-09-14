@@ -25,6 +25,7 @@ export class CrmService {
   ) { }
 
   public async loadAnalyticsData() {
+    if (this.store.getValue().analytics.connectedUsers?.length) return;
     const rows = await this.getAnalyticsActiveUsers();
     this.store.update({
       analytics: {

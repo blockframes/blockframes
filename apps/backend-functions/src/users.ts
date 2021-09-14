@@ -10,6 +10,7 @@ import { getMailSender, applicationUrl, App } from '@blockframes/utils/apps';
 import { sendFirstConnexionEmail, createUserFromEmail } from './internals/users';
 import { cleanUserMedias } from './media';
 import { getUserEmailData, OrgEmailData } from '@blockframes/utils/emails/utils';
+import { groupIds } from '@blockframes/utils/emails/ids';
 
 type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
@@ -195,7 +196,7 @@ export async function onUserDelete(userSnapshot: FirebaseFirestore.DocumentSnaps
 
 export const sendDemoRequest = async (data: RequestDemoInformations): Promise<RequestDemoInformations> => {
   const from = getMailSender(data.app);
-  await sendMail(sendDemoRequestMail(data), from);
+  await sendMail(sendDemoRequestMail(data), from, groupIds.noUnsubscribeLink); 
   return data;
 }
 

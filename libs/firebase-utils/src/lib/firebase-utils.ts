@@ -108,3 +108,15 @@ export const heavyConfig: RuntimeOptions = {
   timeoutSeconds: 540,
   memory: '4GB',
 };
+
+
+export async function storageFileExist(path: string) {
+  const storage = admin.storage();
+  const file = await storage.bucket().file(path);
+
+  // for more info check
+  //  - https://googleapis.dev/nodejs/storage/latest/File.html#exists
+  //  - https://googleapis.dev/nodejs/storage/latest/global.html#FileExistsResponse
+  const result = await file.exists();
+  return result[0];
+}

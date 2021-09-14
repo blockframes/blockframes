@@ -150,7 +150,7 @@ async function runCommand() {
       await upgradeAlgoliaUsers();
       break;
     case 'rescueJWP':
-      await rescueJWP();
+      await rescueJWP({ jwplayerKey: arg1, jwplayerApiV2Secret: arg2 });
       break;
     default:
       showHelp();
