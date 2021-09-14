@@ -375,7 +375,7 @@ jobs:
     executor: blockframes-ci
     steps:
       - prepare_environment
-      - run: npm start prepareEmulators
+      - run: npm start prepareEmulators gs://bruce-backups/LATEST-ANON-SHRINKED-DB
       - run: npx nx build backend-functions --configuration=emulator
       - save_cache:
           key: emulator-cache-v1-{{ epoch }}

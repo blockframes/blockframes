@@ -89,21 +89,35 @@ export async function startEmulators({ importFrom = 'defaultImport' }: StartEmul
       importPath: emulatorPath,
       exportData: true
     })
-    // ! Sync Auth here live from DB. Subsequent exports will not work... fix by removing auth component from backup
-    // ! This means we must delete auth from backup when we need the backup if auth is used... we never do this?
-    // ! because in prepare... we dont launch auth, we just sync real auth... but we dont need to. we can just
-    // ! sync auth on emulator launch live from emulator data. ensure amulator auth is set only when needed!
-    // ! when syncing auth, defs enable maintenance mode... the triggerKill method can't help us during this!
-    // ! if we launch auth here... this is not used elsewhere... like this is frontend only. So we just have to connect to it
-    // ! other functiosn will not all have auth happen as long as we only enable it when needed.
-    // ! emulator connect needs fixing, but furst test if premise works....
+    await awaitProcessExit(proc);
+  } catch (e) {
+    await shutdownEmulator(proc)
+    throw e;
+  }
+}
+
+/**
+ * This creates users in Auth emulator from a running instance of the Firestore emulator
+ * By keeping this clean and separate, we don't need to launch functions emulator when this is happening,
+ * just Firestore and Auth. Cleaner and faster, less risk of triggers/leaks
+ * This will shut down the emulator but the backup will contain a working version with Auth synched
+ * IF AUTH GETS TOO BIG, THINGS WILL FAIL
+ */
+export async function syncAuthEmulatorWithFirestoreEmulator({ importFrom = 'defaultImport' }: StartEmulatorOptions = { importFrom :'defaultImport' }) {
+  const emulatorPath = importFrom === 'defaultImport' ? defaultEmulatorBackupPath : resolve(importFrom);
+  let proc: ChildProcess;
+  try {
+    proc = await firebaseEmulatorExec({
+      emulators: ['auth', 'firestore'],
+      importPath: emulatorPath,
+      exportData: true,
+    });
     const auth = connectAuthEmulator();
     const db = connectFirestoreEmulator();
     await startMaintenance(db)
     await syncUsers(null, db, auth)
     await endMaintenance(db)
-    // openSync(join(emulatorPath, '.ready'), 'w');
-    await awaitProcessExit(proc);
+    await shutdownEmulator(proc)
   } catch (e) {
     await shutdownEmulator(proc)
     throw e;
