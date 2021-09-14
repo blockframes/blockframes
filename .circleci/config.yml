@@ -382,6 +382,7 @@ jobs:
           paths:
             - ".firebase/emulator"
             - "dist/apps/backend-functions"
+            # ? - "/home/circleci/.cache/firebase/emulators"
             - "~/.cache/firebase/emulators"
             - "tools/fixtures"
 workflows:
