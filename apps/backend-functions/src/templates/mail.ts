@@ -322,7 +322,7 @@ export function offerCreatedConfirmationEmail(toUser: UserEmailData, org: Organi
  */
 const organizationCreatedTemplate = (orgId: string) =>
   `
- To review it visit ${appUrl.crm}${ADMIN_ACCEPT_ORG_PATH}/${orgId}.
+ To review it visit ${appUrl.crm}${ADMIN_ACCEPT_ORG_PATH}/${orgId}
  `;
 
 /**
