@@ -17,7 +17,13 @@ import { Campaign } from "@blockframes/campaign/+state/campaign.model";
 
 // Users for E2E tests
 import staticUsers from 'tools/static-users.json';
-import { USER } from '@blockframes/e2e/fixtures/users'; // Temp this should be removed when fixtures are updated
+export enum USER {
+  Vincent = 'MDnN2GlVUeadIVJbzTToQQNAMWZ2',
+  Jean = '2OJUZoWtTVcew27YDZa8FQQdg5q2',
+  Ivo = 'K0ZCSd8bhwcNd9Bh9xJER9eP2DQ2',
+  Daphney = 'B8UsXliuxwY6ztjtLuh6f7UD1GV2',
+  Camilla = 'qFbytROWQYWJplzck42RLdgAr3K3'
+} // Temp this should be removed when fixtures are updated. Same as libs/e2e/src/lib/fixtures/users.ts but not included since this file is using generated fixtures non present during process
 
 /**
  * @TODO #6460 remove this 
