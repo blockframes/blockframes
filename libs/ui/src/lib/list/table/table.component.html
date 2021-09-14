@@ -1,0 +1,33 @@
+<thead *ngIf="columns">
+  <ng-container *ngFor="let column of columns">
+    <th>
+      <span>{{ column.label }}</span>
+      <ng-container *ngIf="column.isSortable">
+        <button mat-icon-button (click)="column.toggleSort()">
+          <mat-icon *ngIf="column.asc else desc" svgIcon="arrow_up"></mat-icon>
+        </button>
+      </ng-container>
+    </th>
+  </ng-container>
+</thead>
+<tbody>
+  <tr *ngFor="let row of data$ | async">
+    <ng-container *ngFor="let column of columns">
+      <td>
+        <ng-template
+          [ngTemplateOutlet]="column.template"
+          [ngTemplateOutletContext]="{ $implicit: row | deepKey:column.name, item: row }"
+        >
+        </ng-template>
+      </td>
+    </ng-container>
+  </tr>
+</tbody>
+<tfoot *ngIf="paginator">
+
+</tfoot>
+
+
+<ng-template #desc>
+  <mat-icon svgIcon="arrow_down"></mat-icon>
+</ng-template>
