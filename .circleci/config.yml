@@ -390,6 +390,7 @@ workflows:
     jobs:
       - copy-storage-from-prod
       - push-anon-db-to-ci
+      - push-shrinked-db-to-ci
   deploy:
     jobs:
       - deploy-to-prod:

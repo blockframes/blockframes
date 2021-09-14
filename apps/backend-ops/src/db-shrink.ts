@@ -12,10 +12,12 @@ import * as admin from 'firebase-admin';
 import { Offer } from "@blockframes/contract/offer/+state";
 import { Bucket } from "@blockframes/contract/bucket/+state";
 import { getValue } from "@blockframes/utils/helpers";
-import staticUsers from 'tools/static-users.json'
 import { isString } from "lodash";
 import { Campaign } from "@blockframes/campaign/+state/campaign.model";
 
+// Users for E2E tests
+import staticUsers from 'tools/static-users.json';
+import { USER } from '@blockframes/e2e/fixtures/users'; // Temp this should be removed when fixtures are updated
 
 /**
  * @TODO #6460 remove this 
@@ -251,7 +253,7 @@ export async function processDb(db: FirebaseFirestore.Firestore) {
     }
   }
 
-  const e2eUsers = Object.values(staticUsers);
+  const e2eUsers = Object.values(staticUsers).concat(Object.values(USER));
   const usersToKeep: string[] = Array.from(new Set(_usersLinkedToMovies.concat(e2eUsers))).filter(uid => _users.docs.find(d => d.id === uid));
   console.log('Users to keep', usersToKeep.length);
 
