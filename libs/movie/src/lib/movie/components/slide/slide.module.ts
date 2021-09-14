@@ -7,7 +7,7 @@ import { MovieSlideComponent, MovieSlideActions, MovieSlideCTA } from './slide.c
 
 // Blockframes
 import { MovieTitleFeaturesModule } from '../title-features/title-features.module';
-import { TruncateStringModule } from '@blockframes/utils/pipes/truncate-string.pipe';
+import { MaxLengthModule } from '@blockframes/utils/pipes/max-length.pipe';
 
 @NgModule({
     imports: [
@@ -15,7 +15,7 @@ import { TruncateStringModule } from '@blockframes/utils/pipes/truncate-string.p
         FlexLayoutModule,
         // Blockframes
         MovieTitleFeaturesModule,
-        TruncateStringModule
+        MaxLengthModule
     ],
     declarations: [MovieSlideComponent, MovieSlideActions, MovieSlideCTA],
     exports: [MovieSlideComponent, MovieSlideActions, MovieSlideCTA]

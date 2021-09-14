@@ -2,7 +2,7 @@
     <h1 *ngIf="movieView.titles.international" class="mat-display-2">{{ movieView.titles.international }}</h1>
     <h2 *ngIf="movieView.titles.original">{{ movieView.titles.original }}</h2>
     <movie-title-features [movie]="title"></movie-title-features>
-    <p *ngIf="movieView.synopsis" class="mat-body-2">{{ movieView.synopsis | truncateString }}</p>
+    <p *ngIf="movieView.synopsis" class="mat-body-2">{{ movieView.synopsis | maxLength:350:true }}</p>
 </header>
 <footer>
     <ng-content select="movie-slide-cta"></ng-content>
