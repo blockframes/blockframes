@@ -13,12 +13,17 @@ import { Offer } from "@blockframes/contract/offer/+state";
 import { Bucket } from "@blockframes/contract/bucket/+state";
 import { getValue } from "@blockframes/utils/helpers";
 import staticUsers from 'tools/static-users.json'
+import { isString } from "lodash";
+import { Campaign } from "@blockframes/campaign/+state/campaign.model";
 
 
 /**
  * @TODO #6460 remove this 
  * 
  * npm run backend-ops importEmulator gs://ci-backups-blockframes/LATEST-ANON-DB
+ * 
+ * to test db: 
+ *  npm run backend-ops importEmulator gs://bruce-backups/LATEST-ANON-SHRINKED-DB
  * 
  * npm run backend-ops startMaintenance
  * npm run backend-ops importFirestore LATEST-ANON-SHRINKED-DB
@@ -27,7 +32,7 @@ import staticUsers from 'tools/static-users.json'
  */
 
 type Timestamp = admin.firestore.Timestamp;
-type InspectionResult = { uid: string, collection: string, docId: string, attr: string };
+type InspectionResult = { uid?: string, id?: string, collection: string, docId: string, attr: string };
 
 const userMap = {
   notifications: [
@@ -63,7 +68,7 @@ const userMap = {
     'canUpdate',
     'canDelete',
   ],
-  blockframesAdmin: [''],
+  blockframesAdmin: [''], // document id
   events: [
     'organizerUid'
   ],
@@ -71,6 +76,29 @@ const userMap = {
     '_meta.createdBy',
     '_meta.updatedBy',
     '_meta.deletedBy'
+  ]
+}
+
+const orgMap = {
+  events: [
+    'ownerOrgId'
+  ],
+  notifications: [
+    'organization.id',
+  ],
+  invitations: [
+    'fromOrg.id',
+    'toOrg.id'
+  ],
+  movies: [
+    'orgIds'
+  ],
+  buckets: [
+    '', // document id
+    'contracts'
+  ],
+  campaigns: [
+    'orgId'
   ]
 }
 
@@ -106,6 +134,7 @@ export async function processDb(db: FirebaseFirestore.Firestore) {
     _blockframesAdmin,
     _offers,
     _buckets,
+    _campaigns
   ] = await Promise.all([
     db.collection('notifications').get(),
     db.collection('invitations').get(),
@@ -119,7 +148,7 @@ export async function processDb(db: FirebaseFirestore.Firestore) {
     db.collection('blockframesAdmin').get(),
     db.collection('offers').get(),
     db.collection('buckets').get(),
-    // @TODO #6460  campaigns, terms, etc... permissionsSubCollection
+    db.collection('campaigns').get(),
   ]);
 
   const notifications = _notifications.docs.map(d => d.data() as NotificationDocument);
@@ -132,7 +161,7 @@ export async function processDb(db: FirebaseFirestore.Firestore) {
   const blockframesAdmin = _blockframesAdmin.docs.map(d => d.id);
   const offers = _offers.docs.map(d => d.data() as Offer);
   const buckets = _buckets.docs.map(d => d.data() as Bucket);
-
+  const campaigns = _campaigns.docs.map(d => d.data() as Campaign);
 
   const collectionMap: { name: string, docs: any[], refs: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData> }[] = [
     {
@@ -184,6 +213,11 @@ export async function processDb(db: FirebaseFirestore.Firestore) {
       name: 'buckets',
       docs: buckets,
       refs: _buckets
+    },
+    {
+      name: 'campaigns',
+      docs: campaigns,
+      refs: _campaigns
     }
   ];
 
@@ -196,6 +230,7 @@ export async function processDb(db: FirebaseFirestore.Firestore) {
 
 
   const _usersLinkedToMovies = [];
+  const _orgsLinkedToMovies = [];
 
   for (const movie of movies) {
     if (movie._meta.createdBy) {
@@ -212,6 +247,7 @@ export async function processDb(db: FirebaseFirestore.Firestore) {
 
     for (const orgId of movie.orgIds) {
       _usersLinkedToMovies.push(getOrgSuperAdmin(orgId, permissions));
+      _orgsLinkedToMovies.push(orgId);
     }
   }
 
@@ -220,17 +256,37 @@ export async function processDb(db: FirebaseFirestore.Firestore) {
   console.log('Users to keep', usersToKeep.length);
 
 
+  const orgsLinkedToEvents = [];
+  for (const event of events) {
+    orgsLinkedToEvents.push(event.ownerOrgId);
+  }
+
+  const orgsToKeep: string[] = Array.from(new Set(_orgsLinkedToMovies.concat(orgsLinkedToEvents))).filter(id => _organizations.docs.find(d => d.id === id));
+  console.log('Orgs to keep', orgsToKeep.length);
+
+
   //////////////////
   // FILTER DOCUMENT TO DELETE
   //////////////////
 
   const usedDocuments: InspectionResult[] = [];
-  const _usedDocuments = usersToKeep.map(uid => {
+  const _usedDocumentsForUsers = usersToKeep.map(uid => {
     const user = _users.docs.find(d => d.id === uid);
     return inspectUser(user, collectionMap);
   }).reduce((a: InspectionResult[], b: InspectionResult[]) => a.concat(b), []);
 
-  _usedDocuments.forEach(d => {
+  const _usedDocumentsForOgs = orgsToKeep.map(id => {
+    const org = _organizations.docs.find(d => d.id === id);
+    return inspectOrg(org, collectionMap);
+  }).reduce((a: InspectionResult[], b: InspectionResult[]) => a.concat(b), []);
+
+  _usedDocumentsForUsers.forEach(d => {
+    if (!usedDocuments.find(u => u.docId === d.docId && u.collection === d.collection)) {
+      usedDocuments.push(d);
+    }
+  });
+
+  _usedDocumentsForOgs.forEach(d => {
     if (!usedDocuments.find(u => u.docId === d.docId && u.collection === d.collection)) {
       usedDocuments.push(d);
     }
@@ -339,13 +395,41 @@ function inspectUser(
   const inspectionResult: InspectionResult[] = [];
   for (const collection of collections) {
     for (const document of collection.docs) {
-      for (const attr of userMap[collection.name]) {
-        if (isMatchingValue(user.id, document, attr, collection.name)) {
-          if (verbose) {
-            console.log(`Found User ${user.id} in ${collection.name} document ${document.id || document.uid || document} in attr ${attr || 'documentId'}`);
-          }
+      if (userMap[collection.name]) {
+        for (const attr of userMap[collection.name]) {
+          if (isMatchingValue(user.id, document, attr, collection.name)) {
+            if (verbose) {
+              console.log(`Found User ${user.id} in ${collection.name} document ${document.id || document.uid || document} in attr ${attr || 'documentId'}`);
+            }
 
-          inspectionResult.push({ uid: user.id, collection: collection.name, docId: document.id || document.uid || document, attr });
+            inspectionResult.push({ uid: user.id, collection: collection.name, docId: document.id || document.uid || document, attr });
+          }
+        }
+      }
+    }
+  }
+
+  return inspectionResult;
+}
+
+function inspectOrg(
+  org: FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>,
+  collections: { name: string, docs: any[] }[],
+  verbose = false
+) {
+
+  const inspectionResult: InspectionResult[] = [];
+  for (const collection of collections) {
+    for (const document of collection.docs) {
+      if (orgMap[collection.name]) {
+        for (const attr of orgMap[collection.name]) {
+          if (isMatchingValue(org.id, document, attr, collection.name)) {
+            if (verbose) {
+              console.log(`Found Org ${org.id} in ${collection.name} document ${document.id || document.uid || document} in attr ${attr || 'documentId'}`);
+            }
+
+            inspectionResult.push({ id: org.id, collection: collection.name, docId: document.id || document.uid || document, attr });
+          }
         }
       }
     }
@@ -358,7 +442,7 @@ function inspectUser(
 function isMatchingValue(stringToFind: string, document: unknown, attr: string, collectionName: string) {
   if (!stringToFind) return;
 
-  if (collectionName === 'blockframesAdmin') {
+  if (['blockframesAdmin', 'buckets'].includes(collectionName) && attr == '') {
     return stringToFind === document;
   }
 
@@ -367,7 +451,7 @@ function isMatchingValue(stringToFind: string, document: unknown, attr: string, 
   if (collectionName === 'permissions' && attr === 'roles') {
     return !!val[stringToFind];
   } else if (Array.isArray(val)) {
-    return val.some(v => v === stringToFind);
+    return val.some(v => isString(v) ? v === stringToFind : JSON.stringify(v).indexOf(stringToFind));  // for object or string arrays
   } else {
     return val === stringToFind;
   }
