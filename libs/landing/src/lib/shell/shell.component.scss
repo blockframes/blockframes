@@ -1,5 +1,5 @@
 @import "~@angular/flex-layout/mq";
-$banner-background: rgba(5, 7, 54);
+$banner-background: rgba(5, 7, 36);
 
 landing-shell-page {
   display: flex;
@@ -36,10 +36,11 @@ landing-shell-page {
     .demo {
       display: grid;
       grid-template-columns: 1fr minmax(0, 1920px) 1fr;
+      background-color: $banner-background;
 
       section {
         padding-block: 72px;
-        background: linear-gradient(91deg, $banner-background 0%, rgb(52 20 86) 48%, $banner-background 100%);
+        background: linear-gradient(to right, $banner-background 0%, #2a1d34 50%, $banner-background 100%);
       }
 
       .banner-spacing {
@@ -95,6 +96,7 @@ landing-shell-page {
 
     landing-header {
       display: block;
+      background: $banner-background;
       background-size: cover;
       padding: 72px 80px;
     }

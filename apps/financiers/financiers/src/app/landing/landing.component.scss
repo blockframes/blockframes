@@ -11,6 +11,7 @@ landing-header {
   display: grid;
   grid-template-columns: 1fr minmax(0, 1920px) 1fr;
   padding: 0;
+  background-color: $banner-background;
 
   header {
     padding: 60px 200px;

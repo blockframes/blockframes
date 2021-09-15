@@ -1,5 +1,5 @@
 @import "~@angular/flex-layout/mq";
-$banner-background: rgba(5, 7, 54);
+$banner-background: rgba(5, 7, 36);
 
 :host {
   display: block;
@@ -45,9 +45,10 @@ landing-content {
   .landing-join-wrapper {
     display: grid;
     grid-template-columns: 1fr minmax(0, 1920px) 1fr;
+    background-color: $banner-background;
 
     .landing-join {
-      background: linear-gradient(91deg, $banner-background 0%, rgb(52 20 86) 48%, $banner-background 100%);
+      background: linear-gradient(91deg, $banner-background 0%, #2a1d34 50%, $banner-background 100%);
       padding: 96px 0;
     }
   }
