@@ -48,14 +48,14 @@ export const titlesSchema = (params: TemplateParams): TitlesSchema => ({
 export class TitlesComponent implements OnInit {
   private mode?: 'query' | 'titleIds';
   @Input() form?: FormEntity<TitlesSchema>;
-  
-  
+
+
   app$ = this.route.paramMap.pipe(map( p => p.get('app')));
   titles$ = this.app$.pipe(
     map(app => getTitlesQueryFn(app)),
     switchMap(queryFn => this.service.valueChanges(queryFn)),
     map(toMap),
-    shareReplay(1)
+    shareReplay({ refCount: true, bufferSize: 1 }),
   );
 
   displayLabel = (title?: Movie) => title?.title.international;
