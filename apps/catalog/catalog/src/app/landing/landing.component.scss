@@ -2,8 +2,6 @@
 $banner-background: rgba(5, 7, 36);
 
 landing-header {
-  display: grid;
-  grid-template-columns: 1fr minmax(0, 1920px) 1fr;
   padding: 0;
 
   header {
@@ -20,10 +18,6 @@ landing-header {
     p {
       width: 75%;
     }
-  }
-
-  .banner-spacing {
-    background-color: $banner-background;
   }
 }
 

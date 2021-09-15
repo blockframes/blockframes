@@ -8,8 +8,6 @@ $banner-background: rgba(57, 64, 158);
 }
 
 landing-header {
-  display: grid;
-  grid-template-columns: 1fr minmax(0, 1920px) 1fr;
   padding: 0;
   background-color: $banner-background;
 
@@ -37,10 +35,6 @@ landing-header {
     .download-link {
       margin-top: 16px;
     }
-  }
-
-  .banner-spacing {
-    background-color: $banner-background;
   }
 }
 

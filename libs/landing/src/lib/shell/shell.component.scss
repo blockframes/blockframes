@@ -34,8 +34,6 @@ landing-shell-page {
     overflow-y: auto;
 
     .demo {
-      display: grid;
-      grid-template-columns: 1fr minmax(0, 1920px) 1fr;
       background-color: $banner-background;
 
       section {

@@ -5,13 +5,7 @@ $banner-background: rgba(5, 7, 36);
   display: block;
 }
 
-.banner-spacing {
-  background-color: $banner-background;
-}
-
 landing-header {
-  display: grid;
-  grid-template-columns: 1fr minmax(0, 1920px) 1fr;
   padding: 0;
 
   header {
@@ -43,8 +37,6 @@ landing-content {
   }
 
   .landing-join-wrapper {
-    display: grid;
-    grid-template-columns: 1fr minmax(0, 1920px) 1fr;
     background-color: $banner-background;
 
     .landing-join {
