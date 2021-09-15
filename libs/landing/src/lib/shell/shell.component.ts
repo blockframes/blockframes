@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, Component, ContentChild, Directive, HostBindin
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { createDemoRequestInformations, RequestDemoInformations } from '@blockframes/utils/request-demo';
 import { MatSnackBar } from '@angular/material/snack-bar'
-import { getCurrentApp, getAppName } from '@blockframes/utils/apps';
+import { getCurrentApp } from '@blockframes/utils/apps';
+import { MailchimpTag } from '@blockframes/utils/mailchimp/mailchimp-model';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { RequestDemoRole } from '@blockframes/utils/request-demo';
@@ -45,7 +46,8 @@ export class LandingFooterComponent { }
 })
 export class LandingShellComponent implements OnDestroy {
   public submitted = false;
-  public appName = getAppName(getCurrentApp(this.routerQuery));
+  public newslettersSubmitted = false;
+  public appName = getCurrentApp(this.routerQuery);
   public buttonText = 'Submit Demo Request';
 
   @Input() roles: RequestDemoRole[] = [
@@ -60,7 +62,12 @@ export class LandingShellComponent implements OnDestroy {
     email: new FormControl('', Validators.email),
     phoneNumber: new FormControl(''),
     companyName: new FormControl(''),
-    role: new FormControl('')
+    role: new FormControl(''),
+    newsletters: new FormControl(false)
+  });
+
+  public newslettersForm = new FormGroup({
+    email: new FormControl('', Validators.email)
   });
 
   @ContentChild(LandingContactDirective) landingContactDirective: LandingContactDirective
@@ -88,6 +95,13 @@ export class LandingShellComponent implements OnDestroy {
     return f(information).toPromise();
   }
 
+  /** Register an email to a mailchimp mailing list */
+  private async registerEmailToNewsletters(email: string) {
+    const f = this.functions.httpsCallable('registerToNewsletter');
+    const appTags: MailchimpTag[] = ['landing', this.appName, `landing - ${this.appName}`] as MailchimpTag[]
+    return f({email, appTags}).toPromise();
+  }
+
   /** Triggers when a user click on the button from LearnMoreComponent.  */
   public async sendRequest(form: FormGroup) {
     if (form.invalid) {
@@ -102,12 +116,29 @@ export class LandingShellComponent implements OnDestroy {
         information.test = true;
         information.testEmailTo = testEmail;
       }
+
       await this.sendDemoRequest(information);
+      if (information.newsletters) {
+        await this.registerEmailToNewsletters(information.email);
+        this.newslettersSubmitted = true;
+      }
 
       this.buttonText = 'Request Sent';
       this.snackBar.open('Request sent', 'close', { duration: 2000 });
       this.submitted = true;
       this.cdr.markForCheck();
+    } catch (error) {
+      this.snackBar.open(error.message, 'close', { duration: 5000 });
+    }
+  }
+
+  public async subscribeToNewsletters(form: FormGroup) {
+    try {
+      await this.registerEmailToNewsletters(form.value.email);
+      this.newslettersSubmitted = true;
+      this.snackBar.open('Subscribed to newsletters', 'close', { duration: 2000 });
+      this.cdr.markForCheck();
+
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 5000 });
     }

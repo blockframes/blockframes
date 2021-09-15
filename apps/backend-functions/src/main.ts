@@ -2,6 +2,7 @@ import { functions, skipInMaintenance } from './internals/firebase';
 import * as users from './users';
 import * as consent from './consent';
 import * as invitations from './invitation';
+import * as mailchimp from './mailchimp';
 import {
   onDocumentCreate,
   onDocumentDelete,
@@ -78,6 +79,8 @@ export const getEventAnalytics = functions.https.onCall(skipInMaintenance(logErr
 
 /** Trigger: REST call bigQuery to fetch analytics active users */
 export const getAnalyticsActiveUsers = functions.https.onCall(skipInMaintenance(logErrors(bigQuery.getAnalyticsActiveUsers)));
+
+export const registerToNewsletter = functions.https.onCall(skipInMaintenance(logErrors(mailchimp.registerToNewsletters)));
 
 //--------------------------------
 //      Player  Management      //

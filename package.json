@@ -80,6 +80,7 @@
     "@google-cloud/pubsub": "^1.7.2",
     "@google-cloud/storage": "^5.0.0",
     "@juggle/resize-observer": "^3.2.0",
+    "@mailchimp/mailchimp_marketing": "^3.0.65",
     "@sendgrid/eventwebhook": "^7.4.5",
     "@sendgrid/helpers": "^6.4.0",
     "@sendgrid/mail": "^6.4.0",

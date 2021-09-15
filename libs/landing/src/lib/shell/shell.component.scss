@@ -72,6 +72,20 @@ landing-shell-page {
       > * {
         width: 100%;
       }
+
+      form {
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        mat-form-field {
+          width: 500px;
+        }
+        #newsletterButton {
+          margin-top: 0.5em;
+        }
+      }
+
       mat-divider {
         width: 100%;
         border-top-width: 2px;

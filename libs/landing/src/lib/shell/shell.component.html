@@ -84,9 +84,9 @@
             <tel-input test-id="phone-no" [form]="form.get('phoneNumber')" placeholder="Phone number"></tel-input>
           </mat-form-field> 
         </article>
-        <!-- <article fxLayout="row" fxLayoutAlign="center center">
-          <mat-checkbox formControlName="newsletter">Subscribe to the newsletter</mat-checkbox>
-        </article> -->
+        <article fxLayout="row" fxLayoutAlign="center center">
+          <mat-checkbox formControlName="newsletters">Subscribe to the newsletter</mat-checkbox>
+        </article>
         <button test-id="send-request" [disabled]="submitted" fxFlexAlign="center" mat-flat-button color="accent" type="submit">{{ buttonText }}</button>
       </form>
     </ng-template>
@@ -104,8 +104,20 @@
   <ng-template #footer>
     <footer fxLayout="column" fxLayoutAlign="start center" fxLayoutAlign.lt-md="center center"
       fxLayoutGap="32px">
-      <div fxLayout fxLayoutAlign="start">
+      <div fxLayout="row wrap" fxLayoutAlign="space-between">
         <app-logo></app-logo>
+        <form [formGroup]="newslettersForm" (ngSubmit)="subscribeToNewsletters(newslettersForm)" >
+          <mat-form-field appearance="outline" hideRequiredMarker>
+            <div>
+              <input test-id="email" matInput type="email" placeholder="Enter your email address" formControlName="email" required />
+            </div>
+            <mat-hint class="mat-caption">Subscribe to our newsletter now!</mat-hint>
+            <mat-error *ngIf="form.get('email').hasError('required')">
+              Email is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+          <button id="newsletterButton" [disabled]="newslettersSubmitted" mat-flat-button color="accent" type="submit">Subscribe</button>
+        </form>
       </div>
       <mat-divider></mat-divider>
       <div fxLayout fxLayoutAlign="space-between" fxLayout.lt-md="column" fxLayoutGap.lt-md="24px">

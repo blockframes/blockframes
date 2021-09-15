@@ -11,6 +11,7 @@ export interface RequestDemoInformations {
   role: RequestDemoRole;
   test?: boolean; // @TODO #6586 can be removed and we only check if !!testEmailTo
   testEmailTo?: string;
+  newsletters: boolean
 }
 
 export const requestDemoRole = {
