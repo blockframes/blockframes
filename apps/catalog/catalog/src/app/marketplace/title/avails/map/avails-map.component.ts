@@ -7,13 +7,13 @@ import { filter, map, pluck, shareReplay, startWith, take, throttleTime } from '
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import {
-  getSoldTerms,
   getSelectedTerritories,
   TerritoryMarker,
   toTerritoryMarker,
   getTerritoryMarkers,
   availableTerritories,
   AvailsFilter,
+  collidingTerms,
 } from '@blockframes/contract/avails/avails';
 import { territoriesISOA3, TerritoryValue } from '@blockframes/utils/static-model';
 
@@ -41,6 +41,7 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
   private mandateTerms$ = this.shell.mandateTerms$;
   private salesTerms$ = this.shell.salesTerms$;
 
+  /** All mandates markers by territory (they might be already sold or already selected selected (from the bucket) or already in selection) */
   public territoryMarkers$ = combineLatest([
     this.mandates$,
     this.mandateTerms$,
@@ -48,6 +49,7 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
     map(([mandates, mandateTerms]) => getTerritoryMarkers(mandates, mandateTerms)),
   );
 
+  /** Array of selected (from the bucket) markers */
   public selected$ = combineLatest([
     this.availsForm.value$,
     this.shell.bucketForm.value$,
@@ -69,13 +71,13 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
   );
 
   public sold$ = combineLatest([
-    this.mandates$,
+    this.mandates$, // we need mandates here, because markers (even sold) needs to reference their parent mandate
     this.salesTerms$,
     this.availsForm.value$,
   ]).pipe(
     filter(() => this.availsForm.valid),
     map(([mandates, sales, avails]) => {
-      const soldTerms = getSoldTerms(avails, sales);
+      const soldTerms = collidingTerms(avails, sales);
       return soldTerms.map(term => term.territories
         .filter(territory => !!territoriesISOA3[territory])
         .map(territory => toTerritoryMarker(territory, mandates, term))
