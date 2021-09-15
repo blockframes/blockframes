@@ -10,8 +10,6 @@ import { AlgoliaOrganization, AlgoliaSearch } from '@blockframes/utils/algolia';
 import { max } from './filters/budget/budget.component';
 import { Movie } from '../+state';
 
-export const minReleaseYear = 1980;
-
 export const runningTimeFilters = {
   // 0 is all values
   1: {
@@ -78,7 +76,7 @@ export function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearc
     },
     productionStatus: [],
     minBudget: 0,
-    minReleaseYear: minReleaseYear,
+    minReleaseYear: 0,
     sellers: [],
     socialGoals: [],
     runningTime: 0,
@@ -158,7 +156,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
       this.languages.value?.caption.length === 0 &&
       this.productionStatus?.value.length === 0 &&
       this.minBudget?.value === 0 &&
-      this.minReleaseYear.value === minReleaseYear &&
+      this.minReleaseYear.value === 0 &&
       this.sellers?.value.length === 0 &&
       !this.contentType.value);
   }

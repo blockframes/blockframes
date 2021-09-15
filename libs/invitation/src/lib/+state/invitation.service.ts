@@ -18,8 +18,8 @@ import { map, shareReplay, switchMap } from 'rxjs/operators';
 @CollectionConfig({ path: 'invitations' })
 export class InvitationService extends CollectionService<InvitationState> {
   readonly useMemorization = true;
-  /** 
-   * Return true if there is already a pending invitation for a list of users 
+  /**
+   * Return true if there is already a pending invitation for a list of users
    */
   public hasUserAnOrgOrIsAlreadyInvited = this.functions.httpsCallable('hasUserAnOrgOrIsAlreadyInvited');
 
@@ -39,7 +39,7 @@ export class InvitationService extends CollectionService<InvitationState> {
       } else return of()
     }),
     map(([toOrg, toUser]) => [...toOrg, ...toUser]),
-    shareReplay(1)
+    shareReplay({ refCount: true, bufferSize: 1 }),
   )
 
   /** Invitations where current user is a guest */
@@ -49,9 +49,9 @@ export class InvitationService extends CollectionService<InvitationState> {
       this.valueChanges(ref => ref.where('toUser.uid', '==', user.uid).where('mode', '==', 'invitation'))
     ])),
     map(([fromUser, toUser]) => [...fromUser, ...toUser]),
-    shareReplay(1)
+    shareReplay({ refCount: true, bufferSize: 1 }),
   )
-  
+
   constructor(
     store: InvitationStore,
     private authQuery: AuthQuery,
