@@ -8,11 +8,11 @@ import { filter, map, shareReplay, startWith, throttleTime } from 'rxjs/operator
 
 import {
   getDurations,
-  getSoldTerms,
   DurationMarker,
   toDurationMarker,
   getDurationMarkers,
   AvailsFilter,
+  collidingTerms,
 } from '@blockframes/contract/avails/avails';
 import { MovieQuery } from '@blockframes/movie/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
@@ -64,7 +64,7 @@ export class MarketplaceMovieAvailsCalendarComponent implements AfterViewInit, O
   ]).pipe(
     filter(() => this.availsForm.valid),
     map(([mandates, salesTerms, avails]) => {
-      const soldTerms = getSoldTerms(avails, salesTerms);
+      const soldTerms = collidingTerms(avails, salesTerms);
       return soldTerms.map(term => toDurationMarker(mandates, term)).flat();
     })
   );
@@ -78,7 +78,7 @@ export class MarketplaceMovieAvailsCalendarComponent implements AfterViewInit, O
       if (this.availsForm.invalid) return [];
       return getDurationMarkers(mandates, mandateTerms);
     }),
-    shareReplay(1),
+    shareReplay({ refCount: true, bufferSize: 1 }),
   );
 
   constructor(

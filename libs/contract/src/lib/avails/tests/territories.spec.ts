@@ -1,5 +1,5 @@
 import { createMandate } from "../../contract/+state/contract.model";
-import { availableTerritories, getMandateTerms, getSoldTerms, toTerritoryMarker } from "./../avails";
+import { availableTerritories, getMandateTerms, collidingTerms, toTerritoryMarker } from "./../avails";
 import { createTerm } from "../../term/+state/term.model";
 import { availDetailsExclusive, availDetailsNonExclusive } from './../fixtures/availsFilters';
 
@@ -101,7 +101,7 @@ describe('Test availableTerritories pure function', () => {
       exclusive: true
     });
 
-    const soldTerms = getSoldTerms(availDetailsExclusive, [termA, termB, termC, termD]);
+    const soldTerms = collidingTerms(availDetailsExclusive, [termA, termB, termC, termD]);
 
     expect(soldTerms.length).toBe(2);
     expect(soldTerms[0].id).toBe('termA');
@@ -153,7 +153,7 @@ describe('Test availableTerritories pure function', () => {
       exclusive: false
     });
 
-    const soldTerms = getSoldTerms(availDetailsNonExclusive, [termA, termB, termC, termD]);
+    const soldTerms = collidingTerms(availDetailsNonExclusive, [termA, termB, termC, termD]);
 
     expect(soldTerms.length).toBe(0);
   });

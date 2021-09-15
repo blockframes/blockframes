@@ -45,14 +45,14 @@ export class OrgsComponent implements OnInit {
   private mode?: 'query' | 'orgIds';
   params$ = this.route.paramMap;
   @Input() form?: FormEntity<OrgsSchema>;
-  
+
   orgs$ = this.params$.pipe(
     map(params => getOrgsQueryFn(params.get('app'))),
     switchMap(queryFn => this.service.valueChanges(queryFn)),
     map(toMap),
-    shareReplay(1)
+    shareReplay({ refCount: true, bufferSize: 1 }),
   );
-    
+
   displayLabel = (org?: Organization) => orgName(org);
   getValue = (org?: Organization) => org?.id;
 
