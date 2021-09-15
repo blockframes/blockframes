@@ -211,22 +211,10 @@ export function getCollidingHoldbacks(holdbacks: Holdback[], terms: BucketTerm[]
 //           MOVIE           //
 // ----------------------------
 
+export function isMovieAvailable(titleId: string, avails: AvailsFilter, bucket: Bucket, mandateTerms: Term[], saleTerms: Term[]) {
+  if (!mandateTerms.length || saleTerms.length) return false;
 
-export function getParentTerms(titleId: string, avails: AvailsFilter, mandates: Mandate[], terms: Term[]) {
-  const titleMandates = mandates.filter(mandate => mandate.titleId === titleId);
-  if (!titleMandates.length) return [];
-  const mandateTerms = titleMandates.map(mandate => mandate.termIds).flat().map(termId => terms.find(term => term.id === termId));
-  return getMandateTerms(avails, mandateTerms);
-}
-
-export function isMovieAvailable(titleId: string, avails: AvailsFilter, bucket: Bucket, mandates: Mandate[], sales: Sale[], terms: Term[]) {
-  if (!terms.length) return false;
-
-  const titleSales = sales.filter(sale => sale.titleId === titleId);
-
-  const saleTerms = titleSales.map(sale => sale.termIds).flat().map(termId => terms.find(term => term.id === termId));
-
-  const parentTerms = getParentTerms(titleId, avails, mandates, terms);
+  const parentTerms = getMandateTerms(avails, mandateTerms);
 
   if (!parentTerms.length) return false;
 
