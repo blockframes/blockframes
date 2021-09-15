@@ -1,0 +1,49 @@
+:host {
+  border-spacing: 0;
+  width: 100%;
+}
+
+th, td {
+  padding: 0;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+}
+
+thead {
+  tr {
+    height: 56px;
+  }
+  td {
+    text-align: left;
+  }
+}
+
+tbody tr {
+  height: 48px;
+}
+
+tfoot {
+  tr {
+    height: 56px;
+  }
+  td {
+    border: solid 1px var(--foreground-divider);
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+    text-align: right;
+  }
+  span {
+    margin-right: 8px;
+  }
+}
+
+// First column
+th:first-of-type, td:first-of-type, td:first-of-type {
+  padding-left: 24px;
+}
+
+// Last column
+th:last-of-type, td:last-of-type, td:last-of-type {
+  padding-right: 24px;
+}
+

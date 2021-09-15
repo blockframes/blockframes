@@ -1,8 +1,10 @@
-import { ChangeDetectionStrategy, Component, ContentChildren, Directive, Input, QueryList } from '@angular/core';
-import { BehaviorSubject, combineLatest, merge, Observable, of } from 'rxjs';
-import { debounceTime, map, startWith, switchMap } from 'rxjs/operators';
+import { ChangeDetectionStrategy, Component, ContentChildren, Directive, Input, QueryList, TemplateRef } from '@angular/core';
+import { BehaviorSubject, merge, Observable, of } from 'rxjs';
+import { debounceTime, map, startWith, switchMap, tap } from 'rxjs/operators';
 import { getDeepValue } from '@blockframes/utils/pipes/deep-key.pipe';
 import { FormControl } from '@angular/forms';
+import { coerceNumberProperty } from '@angular/cdk/coercion';
+import { Paginator } from './paginator';
 
 /** Ascending sorting */
 function sortValue<T>(a: T, b: T) {
@@ -24,7 +26,7 @@ export class ColumnDirective<T> {
     return value.toLowerCase().includes(input);
   }
 
-  constructor() {}
+  constructor(public template: TemplateRef<any>) {}
 
   get isSortable() {
     return this.sortable === '' || !!this.sortable;
@@ -43,7 +45,6 @@ export class ColumnDirective<T> {
     return this.control.valueChanges.pipe(
       map(asc => asc ? 1 : -1),
       map(order => data.sort((a, b) => sort(a, b) * order)),
-      startWith(data),
     );
   }
 }
@@ -63,11 +64,15 @@ function filterTable<T>(data: T[], value: string, columns: QueryList<ColumnDirec
 @Component({
   selector: 'bf-table-filter',
   template: `
-    <mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Filter</mat-label>
       <input matInput [formControl]="control" />
     </mat-form-field>
   `,
-  styles: [],
+  styles: [`
+    :host { display: block; }
+    mat-form-field { display: block; }
+  `],
   exportAs: 'bfTableFilter',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -86,20 +91,29 @@ export class TableFilterComponent<T> {
 }
 
 @Component({
-  selector: 'table [bfTable]',
+  selector: 'table[bfTable]',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
+  host: {
+    class: 'mat-table',
+    role: 'table'
+  },
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableComponent<T> {
   private dataSource = new BehaviorSubject<T[]>([]);
+  private page = new BehaviorSubject(0);
+  paginator = new Paginator();
   data$: Observable<T[]>;
 
   @ContentChildren(ColumnDirective) columns!: QueryList<ColumnDirective<T>>;
-  @Input() paginator: number = 0;
   @Input() filter?: TableFilterComponent<T>;
-  @Input() set source(source: T[]) {
+  @Input('bfTable') set source(source: T[]) {
     this.dataSource.next(source);
+  }
+  @Input() set pagination(amount: number | string) {
+    const pageSize = coerceNumberProperty(amount);
+    if (typeof pageSize === 'number') this.paginator.pageSize = pageSize;
   }
 
   constructor() {
@@ -107,9 +121,26 @@ export class TableComponent<T> {
       switchMap(data => this.filter ? this.filter.$filter(data, this.columns) : of(data)),
       switchMap(data => {
         const sorting = this.columns.filter(c => c.isSortable).map(column => column.$sort(data));
-        return merge(...sorting);
+        if (!sorting.length) return of(data);
+        return merge(...sorting).pipe(startWith(data)); // Prevent first merging to overfire
       }),
-      debounceTime(50),  // Prevent first merging to overfire
+      switchMap(data => this.paginate(data)),
+    );
+  }
+
+
+  ////////////////
+  // Pagination //
+  ////////////////
+
+  private paginate(data: T[]) {
+    this.paginator.size = data.length;
+    if (this.paginator.pageIndex > this.paginator.maxIndex) this.paginator.last();
+    return this.paginator.state.pipe(
+      map(({ pageSize, pageIndex }) => {
+        if (!pageSize) return data;
+        return data.slice(pageIndex * pageSize, (pageIndex + 1) * pageSize);
+      })
     );
   }
 }
