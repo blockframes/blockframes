@@ -23,14 +23,12 @@
       <event-details-edit [form]="form"></event-details-edit>
     </mat-card>
 
-    <!-- Meta content -->
-    <ng-content></ng-content>
-
-
-    <h2>Invitations</h2>
-    <mat-card class="invitations" fxLayout="column"  fxFlex="35">
-      <invitation-form-user [eventId]="form.value.id" [invitations]="invitations"></invitation-form-user>
-      <invitation-guest-list [invitations]="invitations"></invitation-guest-list>
-    </mat-card>
+    <nav mat-tab-nav-bar>
+      <ng-container *ngFor="let tab of tabs[form.value.type]">
+        <a mat-tab-link [routerLink]="tab.path">{{ tab.label }}</a>
+      </ng-container>
+    </nav>
   </section>
 </form>
+
+<router-outlet></router-outlet>

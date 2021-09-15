@@ -1,0 +1,46 @@
+﻿<h2>Screening</h2>
+<section [formGroup]="form.meta" fxLayout="column">
+  <div class="link" fxLayout>
+    <mat-form-field class="link" appearance="outline" fxFlex>
+      <mat-label>Direct link to Screening Room</mat-label>
+      <input matInput type="text" disabled [value]="link">
+    </mat-form-field>
+    <button mat-icon-button [cdkCopyToClipboard]="link" matTooltip="Copy the link">
+      <mat-icon svgIcon="file_copy"></mat-icon>
+    </button>
+  </div>
+  <ng-container *ngIf="(titles$ | async) as titles else loading">
+    <!-- Title -->
+    <mat-form-field appearance="outline">
+      <mat-label>Select the title to display</mat-label>
+      <mat-select formControlName="titleId">
+        <mat-option *ngFor="let title of titles" [value]="title.id" [disabled]="!title.promotional.videos?.screener?.jwPlayerId">
+          <ng-container *ngIf="title.promotional.videos?.screener?.jwPlayerId else noVideo">
+            {{ title.title.international }}
+          </ng-container>
+          <ng-template #noVideo>
+            <span class="text-disabled">{{ title.title.international }}</span>
+            <span> - </span>
+            <span class="text-warn">Upload video first.</span>
+          </ng-template>
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Description -->
+    <mat-form-field appearance="outline">
+      <mat-label>Description</mat-label>
+      <textarea matInput
+        placeholder="Add a description"
+        formControlName="description"
+        cdkTextareaAutosize
+        #autosize="cdkTextareaAutosize"
+        cdkAutosizeMinRows="4"
+        maxlength="500"></textarea>
+      <mat-hint>Limited to 500 characters.</mat-hint>
+    </mat-form-field>
+  </ng-container>
+  <ng-template #loading>
+    <mat-spinner diameter="50"></mat-spinner>
+  </ng-template>
+</section>

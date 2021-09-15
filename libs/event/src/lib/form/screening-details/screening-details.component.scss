@@ -1,0 +1,16 @@
+section {
+  background-color: var(--background-card);
+  border-radius: 4px;
+  border: solid 1px var(--foreground-divider);
+  padding: 24px 16px;
+}
+
+.link {
+  mat-form-field {
+    display: block;
+  }
+
+  button {
+    margin-top: 20px;
+  }
+}

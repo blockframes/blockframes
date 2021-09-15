@@ -1,0 +1,7 @@
+﻿<h2>Invitations</h2>
+<section>
+  <mat-card class="invitations" fxLayout="column"  fxFlex="35">
+    <invitation-form-user [eventId]="eventId$ | async" [invitations]="invitations$ | async"></invitation-form-user>
+    <invitation-guest-list [invitations]="invitations$ | async"></invitation-guest-list>
+  </mat-card>
+</section>

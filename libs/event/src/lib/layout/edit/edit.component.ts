@@ -2,12 +2,23 @@ import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core
 import { Router, ActivatedRoute } from '@angular/router';
 import { EventForm } from '../../form/event.form';
 import { EventService } from '../../+state/event.service';
-import { Invitation }  from '@blockframes/invitation/+state/invitation.model';
-import { createAlgoliaUserForm } from '@blockframes/utils/algolia';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Invitation } from '@blockframes/invitation/+state/invitation.model';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 
+const tabs = {
+  screening: [
+    { path: 'screening', label: 'Screening' },
+    { path: 'invitations', label: 'Invitations' },
+    { path: 'attendance', label: 'Attendance' },
+  ],
+  meeting: [
+    { path: 'meeting', label: 'Meeting' },
+    { path: 'invitations', label: 'Invitations' },
+    { path: 'files', label: 'Files' },
+    { path: 'attendance', label: 'Attendance' },
+  ],
+}
 @Component({
   selector: 'event-edit',
   templateUrl: './edit.component.html',
@@ -15,15 +26,10 @@ import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
   changeDetection: ChangeDetectionStrategy.Default  // required for changes on "pristine" for the save button
 })
 export class EventEditComponent implements OnInit {
-
+  tabs = tabs;
   @Input() form = new EventForm();
   @Input() invitations: Invitation[] = [];
-  invitationForm = createAlgoliaUserForm();
-  progress: Observable<number>;
-  sending = new BehaviorSubject(false);
   eventLink: string;
-
-  private duration: number;
 
   constructor(
     private service: EventService,
@@ -35,21 +41,14 @@ export class EventEditComponent implements OnInit {
   ngOnInit() {
     const type = this.form.value.type === 'meeting' ? 'lobby' : 'session';
     this.eventLink = `/c/o/marketplace/event/${this.form.value.id}/${type}`;
-
-    const { start, end } = this.form.value;
-    this.duration = end.getTime() - start.getTime();
-  }
-
-  get meta() {
-    return this.form.get('meta');
   }
 
   save() {
     if (this.form.valid && this.form.dirty) {
       const value = this.form.value;
       if (this.form.value.allDay) {
-        value.start.setHours(0,0,0);
-        value.end.setHours(23,59,59);
+        value.start.setHours(0, 0, 0);
+        value.end.setHours(23, 59, 59);
       }
       this.service.update(value);
       this.form.markAsPristine();
@@ -69,17 +68,5 @@ export class EventEditComponent implements OnInit {
       },
       autoFocus: false,
     })
-  }
-
-  onEventChange(key: 'start' | 'end') {
-    const { start, end } = this.form.value;
-    if (end.getTime() - start.getTime() <= 0) {
-      const keyToUpdate = key === 'start' ? 'end' : 'start';
-      const time = this.form.value[key].getTime();
-      const date = new Date(key === 'start' ? time + this.duration : time - this.duration);
-      this.form.get(keyToUpdate).setValue(date);
-    } else {
-      this.duration = end.getTime() - start.getTime();
-    }
   }
 }

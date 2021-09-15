@@ -1,0 +1,21 @@
+section {
+  background-color: var(--background-card);
+  border-radius: 4px;
+  border: solid 1px var(--foreground-divider);
+  padding: 24px 16px;
+
+  .manage-files-btn {
+    margin-bottom: 40px;
+  }
+
+  p.no-files { // @TODO #5895 Meeting Third Tab
+    width: 70%;
+    text-align: center;
+    margin: 32px auto;
+  }
+
+  mat-list-item {// @TODO #5895 Meeting Third Tab
+    cursor: pointer;
+  }
+}
+

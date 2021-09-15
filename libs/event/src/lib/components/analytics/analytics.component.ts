@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnInit, Input, ChangeDetectorRef } from '@angular/core';;
 import { EventService } from '@blockframes/event/+state/event.service';
-import { EventAnalytics, EventMeta, EventsAnalytics } from '@blockframes/event/+state/event.firestore';
+import { EventAnalytics, EventMeta } from '@blockframes/event/+state/event.firestore';
 import { Event } from '@blockframes/event/+state';
 import { InvitationQuery } from '@blockframes/invitation/+state';
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';

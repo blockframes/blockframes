@@ -1,56 +1,62 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { ReactiveFormsModule } from '@angular/forms';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { EditComponent } from './edit.component';
-import { DisplayNameModule } from '@blockframes/utils/pipes';
-import { FilePickerModule } from '@blockframes/media/file/picker/picker.module';
 import { EventEditModule as LayoutEventEditModule } from '@blockframes/event/layout/edit/edit.module';
-import { FilePreviewModule } from '@blockframes/media/file/preview/preview.module';
+import { ScreeningDetailsModule } from '@blockframes/event/form/screening-details/screening-details.module';
+import { ScreeningDetailsComponent } from '@blockframes/event/form/screening-details/screening-details.component';
+import { InvitationDetailsComponent } from '@blockframes/event/form/invitation-details/invitation-details.component';
+import { InvitationDetailsModule } from '@blockframes/event/form/invitation-details/invitation-details.module';
+import { MeetingDetailsModule } from '@blockframes/event/form/meeting-details/meeting-details.module';
+import { MeetingDetailsComponent } from '@blockframes/event/form/meeting-details/meeting-details.component';
+import { AnalyticsDetailsModule } from '@blockframes/event/pages/analytics-details/analytics-details.module';
+import { AnalyticsDetailsComponent } from '@blockframes/event/pages/analytics-details/analytics-details.component';
+import { MeetingFilesModule } from '@blockframes/event/form/meeting-files/meeting-files.module';
+import { MeetingFilesComponent } from '@blockframes/event/form/meeting-files/meeting-files.component';
 
-// Material
-import { MatSelectModule } from '@angular/material/select';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatCardModule } from '@angular/material/card';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
-import { EventAnalyticsModule } from '@blockframes/event/components/analytics/analytics.module';
-import { MatListModule } from '@angular/material/list';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatDividerModule } from '@angular/material/divider';
-import { ClipboardModule } from '@angular/cdk/clipboard';
-import { MatTooltipModule } from '@angular/material/tooltip';
+import { EventTypeGuard } from '@blockframes/event/guard/event-type.guard';
+
 
 @NgModule({
   declarations: [EditComponent],
   imports: [
     CommonModule,
-    FlexLayoutModule,
-    ReactiveFormsModule,
     LayoutEventEditModule,
-    EventAnalyticsModule,
-    DisplayNameModule,
-    FilePickerModule,
-    FileNameModule,
-    ClipboardModule,
-    FilePreviewModule,
+    ScreeningDetailsModule,
+    InvitationDetailsModule,
+    MeetingDetailsModule,
+    AnalyticsDetailsModule,
+    MeetingFilesModule,
+    RouterModule.forChild([
+      {
+        path: '',
+        component: EditComponent,
+        canActivate: [EventTypeGuard],
+        children: [
+          {
+            path: 'screening',
+            component: ScreeningDetailsComponent,
+          },
+          {
+            path: 'meeting',
+            component: MeetingDetailsComponent,
+          },
+          {
+            path: 'invitations',
+            component: InvitationDetailsComponent,
+          },
+          {
+            path: 'attendance',
+            component: AnalyticsDetailsComponent
+          },
+          {
+            path: 'files',
+            component: MeetingFilesComponent,
+          }
+        ],
+      }
 
-    // Material
-    MatProgressSpinnerModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    MatListModule,
-    MatButtonModule,
-    MatIconModule,
-    MatDividerModule,
-    MatTooltipModule,
-
-    RouterModule.forChild([{ path: '', component: EditComponent }])
+    ])
   ]
 })
 export class EventEditModule { }
