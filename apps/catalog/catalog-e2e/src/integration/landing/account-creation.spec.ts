@@ -139,7 +139,7 @@ describe('Try with each fields except one', () => {
     assertMoveTo(IDENTITYPATH);
   });
 
-  it('Fill all the fields except password', () => {
+  it.skip('Fill all the fields except password', () => {
     const p1 = new AuthIdentityPage();
     const newEmail = `dev+pwd${Date.now()}@cascade8.com`;
     p1.fillSignupExceptOne(USER, 'password', newEmail);
