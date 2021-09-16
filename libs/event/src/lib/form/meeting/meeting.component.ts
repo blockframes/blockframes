@@ -9,13 +9,13 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { EventEditComponent } from '@blockframes/event/layout/edit/edit.component';
 
 @Component({
-  selector: 'event-meeting-details',
-  templateUrl: './meeting-details.component.html',
-  styleUrls: ['./meeting-details.component.scss'],
+  selector: 'event-meeting',
+  templateUrl: './meeting.component.html',
+  styleUrls: ['./meeting.component.scss'],
   animations: [slideUpList('h2, mat-card')],// @TODO #5895 check
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MeetingDetailsComponent implements OnInit {
+export class MeetingComponent implements OnInit {
 
   members$: Observable<User[]>;
 

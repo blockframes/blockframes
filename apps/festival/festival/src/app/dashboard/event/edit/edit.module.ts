@@ -3,14 +3,14 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { EditComponent } from './edit.component';
 import { EventEditModule as LayoutEventEditModule } from '@blockframes/event/layout/edit/edit.module';
-import { ScreeningDetailsModule } from '@blockframes/event/form/screening-details/screening-details.module';
-import { ScreeningDetailsComponent } from '@blockframes/event/form/screening-details/screening-details.component';
-import { InvitationDetailsComponent } from '@blockframes/event/form/invitation-details/invitation-details.component';
-import { InvitationDetailsModule } from '@blockframes/event/form/invitation-details/invitation-details.module';
-import { MeetingDetailsModule } from '@blockframes/event/form/meeting-details/meeting-details.module';
-import { MeetingDetailsComponent } from '@blockframes/event/form/meeting-details/meeting-details.component';
-import { AnalyticsDetailsModule } from '@blockframes/event/pages/analytics-details/analytics-details.module';
-import { AnalyticsDetailsComponent } from '@blockframes/event/pages/analytics-details/analytics-details.component';
+import { ScreeningModule } from '@blockframes/event/form/screening/screening.module';
+import { ScreeningComponent } from '@blockframes/event/form/screening/screening.component';
+import { InvitationComponent } from '@blockframes/event/form/invitation/invitation.component';
+import { InvitationModule } from '@blockframes/event/form/invitation/invitation.module';
+import { MeetingModule } from '@blockframes/event/form/meeting/meeting.module';
+import { MeetingComponent } from '@blockframes/event/form/meeting/meeting.component';
+import { AnalyticsModule } from '@blockframes/event/pages/analytics/analytics.module';
+import { AnalyticsComponent } from '@blockframes/event/pages/analytics/analytics.component';
 import { MeetingFilesModule } from '@blockframes/event/form/meeting-files/meeting-files.module';
 import { MeetingFilesComponent } from '@blockframes/event/form/meeting-files/meeting-files.component';
 
@@ -22,10 +22,10 @@ import { EventTypeGuard } from '@blockframes/event/guard/event-type.guard';
   imports: [
     CommonModule,
     LayoutEventEditModule,
-    ScreeningDetailsModule,
-    InvitationDetailsModule,
-    MeetingDetailsModule,
-    AnalyticsDetailsModule,
+    ScreeningModule,
+    InvitationModule,
+    MeetingModule,
+    AnalyticsModule,
     MeetingFilesModule,
     RouterModule.forChild([ // @TODO #5895 check effet de slide du movie form + echec movie form bruce
       {
@@ -38,19 +38,19 @@ import { EventTypeGuard } from '@blockframes/event/guard/event-type.guard';
           },
           {
             path: 'screening',
-            component: ScreeningDetailsComponent,
+            component: ScreeningComponent,
           },
           {
             path: 'meeting',
-            component: MeetingDetailsComponent,
+            component: MeetingComponent,
           },
           {
             path: 'invitations',
-            component: InvitationDetailsComponent,
+            component: InvitationComponent,
           },
           {
             path: 'attendance',
-            component: AnalyticsDetailsComponent
+            component: AnalyticsComponent
           },
           {
             path: 'files',

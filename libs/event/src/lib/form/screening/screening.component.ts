@@ -8,13 +8,13 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { EventEditComponent } from '@blockframes/event/layout/edit/edit.component';
 
 @Component({
-  selector: 'event-screening-details',
-  templateUrl: './screening-details.component.html',
-  styleUrls: ['./screening-details.component.scss'],
+  selector: 'event-screening',
+  templateUrl: './screening.component.html',
+  styleUrls: ['./screening.component.scss'],
   animations: [slideUpList('h2, mat-card')],// @TODO #5895 check
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ScreeningDetailsComponent implements OnInit {
+export class ScreeningComponent implements OnInit {
 
   titles$: Observable<Movie[]>;
 
@@ -32,8 +32,6 @@ export class ScreeningDetailsComponent implements OnInit {
   get link() {
     return this.shell.link;
   }
-
-  // @TODO #5895 supprimer les -details des componenents
 
   ngOnInit(): void {
     this.dynTitle.setPageTitle('Add an event', 'Screening info');
