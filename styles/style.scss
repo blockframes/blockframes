@@ -1,5 +1,4 @@
 /* You can add global styles to this file, and also import other style files */
-$max-width: 1920px; // equal to "lg" in Angular breakpoints
 
 :root {
   --layout-margin: 24px;
@@ -53,12 +52,6 @@ span + .mat-icon {
 
 main {
   height: 100%;
-}
-
-// Maximum width for large screens
-.max-width {
-  max-width: $max-width;
-  margin: auto;
 }
 
 /* Leaflet WorldMap default pane */

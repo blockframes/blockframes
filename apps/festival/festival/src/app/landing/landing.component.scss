@@ -5,6 +5,12 @@ $banner-background: rgba(5, 7, 36);
   display: block;
 }
 
+// Maximum width for large screens
+.max-width {
+  max-width: 1920px; // equal to "lg" in Angular breakpoints
+  margin: auto;
+}
+
 landing-header {
   padding: 0;
 
@@ -40,7 +46,7 @@ landing-content {
     background-color: $banner-background;
 
     .landing-join {
-      background: linear-gradient(91deg, $banner-background 0%, #2a1d34 50%, $banner-background 100%);
+      background: linear-gradient(to right, $banner-background 0%, #2a1d34 50%, $banner-background 100%);
       padding: 96px 0;
     }
   }

@@ -1,6 +1,12 @@
 @import "~@angular/flex-layout/mq";
 $banner-background: rgba(5, 7, 36);
 
+// Maximum width for large screens
+.max-width {
+  max-width: 1920px; // equal to "lg" in Angular breakpoints
+  margin: auto;
+}
+
 landing-header {
   padding: 0;
 

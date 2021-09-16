@@ -7,6 +7,12 @@ $banner-background: rgba(57, 64, 158);
   overflow: auto;
 }
 
+// Maximum width for large screens
+.max-width {
+  max-width: 1920px; // equal to "lg" in Angular breakpoints
+  margin: auto;
+}
+
 landing-header {
   padding: 0;
   background-color: $banner-background;
