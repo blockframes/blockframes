@@ -28,7 +28,7 @@ export class EditComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-
+    // @TODO #5895 clean or can be removed entierely ?
     const eventId$ = this.route.params.pipe(pluck('eventId'));
 
     this.invitations$ = eventId$.pipe(

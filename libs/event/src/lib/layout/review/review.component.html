@@ -14,7 +14,7 @@
     <h5>Date & Time</h5>
     <pre class="mat-body-1">{{ event | eventRange }}</pre>
   </mat-card>
-  
+  <!-- @TODO #5895  need tabs here also ? + attendance when event is ended -->
   <h2>Invitations</h2>
   <mat-card>
     <invitation-guest-list [invitations]="invitations$ | async"></invitation-guest-list>

@@ -13,11 +13,11 @@
       </ng-template>
     </div>
   </header>
+  <!-- @TODO #5895 add a popup if trying to leave page without saving (same as movie form)-->
 </ng-template>
-
 <form [formGroup]="form">
   <section fxLayout="column" fxLayoutGap="24px">
-    <a fxFlexAlign="center" mat-stroked-button color="primary" [routerLink]="internalLink">Go to Event Page</a>
+    <a fxFlexAlign="center" mat-stroked-button color="primary" [routerLink]="internalLink">Go to Event Page</a> <!-- @TODO #5895 move to bottom-->
     <h2>Details</h2>
     <mat-card class="details" fxLayout="column" fxFlex="65">
       <event-details-edit [form]="form"></event-details-edit>
