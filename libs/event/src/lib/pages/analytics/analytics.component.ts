@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { slideUpList } from '@blockframes/utils/animations/fade';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { EventEditComponent } from '@blockframes/event/layout/edit/edit.component';
+import { EventFormShellComponent } from '@blockframes/event/form/shell/shell.component';
 
 @Component({
   selector: 'event-analytics-page',
@@ -14,7 +14,7 @@ export class AnalyticsComponent implements OnInit {
 
   constructor(
     private dynTitle: DynamicTitleService,
-    private shell: EventEditComponent,
+    private shell: EventFormShellComponent,
   ) { }
 
   get event() {

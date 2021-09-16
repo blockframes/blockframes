@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MeetingComponent } from './meeting.component';
-import { EventEditModule as LayoutEventEditModule } from '@blockframes/event/layout/edit/edit.module';
+import { EventFromShellModule } from '../shell/shell.module';
 import { DisplayNameModule } from '@blockframes/utils/pipes';
 
 // Material
@@ -16,13 +16,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
+
 @NgModule({
   declarations: [MeetingComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
     ReactiveFormsModule,
-    LayoutEventEditModule,
+    EventFromShellModule,
     DisplayNameModule,
     ClipboardModule,
 

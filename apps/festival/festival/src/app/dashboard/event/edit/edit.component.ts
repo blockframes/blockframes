@@ -1,8 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { EventForm } from '@blockframes/event/form/event.form';
 import { EventService } from '@blockframes/event/+state';
-import { Invitation, InvitationService } from '@blockframes/invitation/+state';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { switchMap, pluck } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { slideUpList } from '@blockframes/utils/animations/fade';
@@ -18,12 +17,11 @@ export class EditComponent implements OnInit, OnDestroy {
   private sub: Subscription;
   private formSub: Subscription;
   form: EventForm;
-  invitations$: Observable<Invitation[]>;
 
   constructor(
     private service: EventService,
     private route: ActivatedRoute,
-    private invitationService: InvitationService,
+
     private cdr: ChangeDetectorRef,
   ) { }
 
@@ -31,9 +29,7 @@ export class EditComponent implements OnInit, OnDestroy {
     // @TODO #5895 clean or can be removed entierely ? => Bruce
     const eventId$ = this.route.params.pipe(pluck('eventId'));
 
-    this.invitations$ = eventId$.pipe(
-      switchMap((eventId) => this.invitationService.valueChanges(ref => ref.where('type', '==', 'attendEvent').where('eventId', '==', eventId)))
-    );
+
 
     this.sub = eventId$.pipe(
       switchMap((eventId: string) => this.service.valueChanges(eventId))

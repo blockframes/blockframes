@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
 import { slideUpList } from '@blockframes/utils/animations/fade';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { EventEditComponent } from '@blockframes/event/layout/edit/edit.component';
+import { EventFormShellComponent } from '../shell/shell.component';
 
 @Component({
   selector: 'event-screening',
@@ -22,7 +22,7 @@ export class ScreeningComponent implements OnInit {
     private movieService: MovieService,
     private orgQuery: OrganizationQuery,
     private dynTitle: DynamicTitleService,
-    private shell: EventEditComponent,
+    private shell: EventFormShellComponent,
   ) { }
 
   get formMeta() {

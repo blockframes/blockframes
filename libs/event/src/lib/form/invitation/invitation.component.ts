@@ -3,7 +3,7 @@ import { InvitationService, Invitation } from '@blockframes/invitation/+state';
 import { Observable } from 'rxjs';
 import { slideUpList } from '@blockframes/utils/animations/fade';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { EventEditComponent } from '@blockframes/event/layout/edit/edit.component';
+import { EventFormShellComponent } from '../shell/shell.component';
 
 @Component({
   selector: 'event-invitation',
@@ -19,7 +19,7 @@ export class InvitationComponent implements OnInit {
   constructor(
     private invitationService: InvitationService,
     private dynTitle: DynamicTitleService,
-    private shell: EventEditComponent,
+    private shell: EventFormShellComponent,
   ) { }
 
   get eventId() {

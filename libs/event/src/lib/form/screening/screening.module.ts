@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ScreeningComponent } from './screening.component';
-import { EventEditModule as LayoutEventEditModule } from '@blockframes/event/layout/edit/edit.module';
+import { EventFromShellModule } from '../shell/shell.module';
 
 // Material
 import { MatSelectModule } from '@angular/material/select';
@@ -22,7 +22,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     CommonModule,
     FlexLayoutModule,
     ReactiveFormsModule,
-    LayoutEventEditModule,
+    EventFromShellModule,
     ClipboardModule,
 
     // Material

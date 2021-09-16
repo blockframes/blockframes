@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AnalyticsComponent } from './analytics.component';
-import { EventEditModule as LayoutEventEditModule } from '@blockframes/event/layout/edit/edit.module';
+import { EventFromShellModule } from '@blockframes/event/form/shell/shell.module';
 
 // Material
 import { EventAnalyticsModule } from '@blockframes/event/components/analytics/analytics.module';
@@ -10,7 +10,7 @@ import { EventAnalyticsModule } from '@blockframes/event/components/analytics/an
   declarations: [AnalyticsComponent],
   imports: [
     CommonModule,
-    LayoutEventEditModule,
+    EventFromShellModule,
     EventAnalyticsModule,
   ]
 })

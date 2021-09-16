@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { EditComponent } from './edit.component';
-import { EventEditModule as LayoutEventEditModule } from '@blockframes/event/layout/edit/edit.module';
+import { EventFromShellModule } from '@blockframes/event/form/shell/shell.module';
 import { ScreeningModule } from '@blockframes/event/form/screening/screening.module';
 import { ScreeningComponent } from '@blockframes/event/form/screening/screening.component';
 import { InvitationComponent } from '@blockframes/event/form/invitation/invitation.component';
@@ -21,7 +21,7 @@ import { EventTypeGuard } from '@blockframes/event/guard/event-type.guard';
   declarations: [EditComponent],
   imports: [
     CommonModule,
-    LayoutEventEditModule,
+    EventFromShellModule,
     ScreeningModule,
     InvitationModule,
     MeetingModule,

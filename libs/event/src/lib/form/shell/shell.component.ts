@@ -2,7 +2,6 @@ import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core
 import { Router, ActivatedRoute } from '@angular/router';
 import { EventForm } from '../../form/event.form';
 import { EventService } from '../../+state/event.service';
-import { Invitation } from '@blockframes/invitation/+state/invitation.model';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
@@ -22,15 +21,14 @@ const tabs = {
   ],
 }
 @Component({
-  selector: 'event-edit',
-  templateUrl: './edit.component.html',
-  styleUrls: ['./edit.component.scss'],
+  selector: 'event-shell',
+  templateUrl: './shell.component.html',
+  styleUrls: ['./shell.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default  // required for changes on "pristine" for the save button
 })
-export class EventEditComponent implements OnInit {
+export class EventFormShellComponent implements OnInit {
   tabs = tabs;
   @Input() form = new EventForm();
-  @Input() invitations: Invitation[] = [];
   internalLink: string;
   link: string;
 
@@ -42,7 +40,6 @@ export class EventEditComponent implements OnInit {
     private routerQuery: RouterQuery,
   ) { }
 
-  //@TODO #5895 move into shell dir Bruce
   ngOnInit() {
     const type = this.form.value.type === 'meeting' ? 'lobby' : 'session';
     this.internalLink = `/c/o/marketplace/event/${this.form.value.id}/${type}`;
@@ -78,5 +75,4 @@ export class EventEditComponent implements OnInit {
     })
   }
 
-  // @TODO #5895 onEventChange ? Bruce
 }

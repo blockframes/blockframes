@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { MeetingForm } from '@blockframes/event/form/event.form';
-import { EventEditComponent } from '@blockframes/event/layout/edit/edit.component';
+import { EventFormShellComponent } from '../shell/shell.component';
 import { take } from 'rxjs/operators';
 import { slideUpList } from '@blockframes/utils/animations/fade';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
@@ -22,7 +22,7 @@ export class MeetingFilesComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private dynTitle: DynamicTitleService,
     private dialog: MatDialog,
-    private shell: EventEditComponent,
+    private shell: EventFormShellComponent,
   ) { }
 
   get files() {

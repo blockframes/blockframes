@@ -4,7 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MeetingFilesComponent } from './meeting-files.component';
 import { FilePickerModule } from '@blockframes/media/file/picker/picker.module';
-import { EventEditModule as LayoutEventEditModule } from '@blockframes/event/layout/edit/edit.module';
+import { EventFromShellModule } from '../shell/shell.module';
 import { FilePreviewModule } from '@blockframes/media/file/preview/preview.module';
 
 // Material
@@ -20,7 +20,7 @@ import { MatDividerModule } from '@angular/material/divider';
     CommonModule,
     FlexLayoutModule,
     ReactiveFormsModule,
-    LayoutEventEditModule,
+    EventFromShellModule,
     FilePickerModule,
     FileNameModule,
     FilePreviewModule,
