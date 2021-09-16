@@ -8,7 +8,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { Event } from '@blockframes/event/+state';
 
 @Component({
-  selector: 'event-analytics',
+  selector: 'event-analytics-page',
   templateUrl: './analytics.component.html',
   styleUrls: ['./analytics.component.scss'],
   animations: [slideUpList('h2, mat-card')],// @TODO #5895 check
