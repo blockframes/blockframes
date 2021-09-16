@@ -21,15 +21,11 @@ export class EditComponent implements OnInit, OnDestroy {
   constructor(
     private service: EventService,
     private route: ActivatedRoute,
-
     private cdr: ChangeDetectorRef,
   ) { }
 
   ngOnInit(): void {
-    // @TODO #5895 clean or can be removed entierely ? => Bruce
     const eventId$ = this.route.params.pipe(pluck('eventId'));
-
-
 
     this.sub = eventId$.pipe(
       switchMap((eventId: string) => this.service.valueChanges(eventId))
