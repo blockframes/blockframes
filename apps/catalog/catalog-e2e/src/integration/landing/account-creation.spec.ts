@@ -97,8 +97,8 @@ describe('User can create new account and join an organization', () => {
   });
 });
 
-describe.skip('Try with each fields except one', () => {
-  it('Fill all the fields except email', () => {
+describe('Try with each fields except one', () => {
+  it.skip('Fill all the fields except email', () => {
     const p1 = new AuthIdentityPage();
     p1.fillSignupExceptOne(USER, 'email');
 
@@ -111,7 +111,7 @@ describe.skip('Try with each fields except one', () => {
     assertMoveTo(IDENTITYPATH);
   });
 
-  it('Fill all the fields except name', () => {
+  it.skip('Fill all the fields except name', () => {
     const p1 = new AuthIdentityPage();
     const newEmail = `dev+name${Date.now()}@cascade8.com`;
     p1.fillSignupExceptOne(USER, 'name', newEmail);
@@ -125,7 +125,7 @@ describe.skip('Try with each fields except one', () => {
     assertMoveTo(IDENTITYPATH);
   });
 
-  it('Fill all the fields except surname', () => {
+  it.skip('Fill all the fields except surname', () => {
     const p1 = new AuthIdentityPage();
     const newEmail = `dev+surname${Date.now()}@cascade8.com`;
     p1.fillSignupExceptOne(USER, 'surname', newEmail);
@@ -153,7 +153,7 @@ describe.skip('Try with each fields except one', () => {
     assertMoveTo(IDENTITYPATH);
   });
 
-  it('Fill all the fields except password confirm', () => {
+  it.skip('Fill all the fields except password confirm', () => {
     const p1 = new AuthIdentityPage();
     const newEmail =`dev+pwdC${Date.now()}@cascade8.com`;
     p1.fillSignupExceptOne(USER, 'passwordConfirm', newEmail);
