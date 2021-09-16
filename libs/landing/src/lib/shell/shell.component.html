@@ -108,9 +108,7 @@
         <app-logo></app-logo>
         <form [formGroup]="newslettersForm" (ngSubmit)="subscribeToNewsletters(newslettersForm)" >
           <mat-form-field appearance="outline" hideRequiredMarker>
-            <div>
-              <input test-id="email" matInput type="email" placeholder="Enter your email address" formControlName="email" required />
-            </div>
+            <input test-id="email" matInput type="email" placeholder="Enter your email address" formControlName="email" required />
             <mat-hint class="mat-caption">Subscribe to our newsletter now!</mat-hint>
             <mat-error *ngIf="form.get('email').hasError('required')">
               Email is <strong>required</strong>

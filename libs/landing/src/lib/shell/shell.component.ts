@@ -98,8 +98,8 @@ export class LandingShellComponent implements OnDestroy {
   /** Register an email to a mailchimp mailing list */
   private async registerEmailToNewsletters(email: string) {
     const f = this.functions.httpsCallable('registerToNewsletter');
-    const appTags: MailchimpTag[] = ['landing', this.appName, `landing - ${this.appName}`] as MailchimpTag[]
-    return f({email, appTags}).toPromise();
+    const tags: MailchimpTag[] = ['landing', this.appName, `landing - ${this.appName}`] as MailchimpTag[]
+    return f({email, tags}).toPromise();
   }
 
   /** Triggers when a user click on the button from LearnMoreComponent.  */
@@ -140,6 +140,7 @@ export class LandingShellComponent implements OnDestroy {
       this.cdr.markForCheck();
 
     } catch (error) {
+      console.log("error", error)
       this.snackBar.open(error.message, 'close', { duration: 5000 });
     }
   }

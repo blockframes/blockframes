@@ -4,7 +4,7 @@ export type MailchimpTag =
 'catalog' | 
 'financiers' | 
 'crm' |
-`landing - festival` |
+'landing - festival' |
 'landing - catalog' |
 'landing - financiers' |
 'landing - crm';

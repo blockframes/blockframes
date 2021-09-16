@@ -7,11 +7,12 @@ mailchimp.setConfig({
   server: mailchimpServer,
 });
 
-export const registerToNewsletters = async (data: {email: string, appTag: MailchimpTag[]}) => {
-  const {email, appTag} = data;
-  
-  return await mailchimp.lists.addListMember(mailchimpListId, {
-    email_address: email,
-    tags: [appTag]
-  });
+export const registerToNewsletters = async (data: {email: string, tags: MailchimpTag[]}) => {
+  const {email: email_address, tags} = data;
+
+  return await mailchimp.lists.addListMember(mailchimpListId, 
+    {email_address, 
+    tags,
+    status: "unsubscribed"}
+  );
 }
