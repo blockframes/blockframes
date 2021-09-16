@@ -39,7 +39,7 @@ beforeEach(() => {
 })
 
 // USER TEST
-describe('User can create new account and create a new organization', () => {
+describe.only('User can create new account and create a new organization', () => {
   beforeEach(() => {
       //Clear all messages on server before the test
       cy.mailosaurDeleteAllMessages(serverId).then(() => {
