@@ -25,7 +25,12 @@
 
     <nav mat-tab-nav-bar>
       <ng-container *ngFor="let tab of tabs[form.value.type]"> <!-- @TODO #5895 active Antoine -->
-        <a mat-tab-link [routerLink]="tab.path">{{ tab.label }}</a>
+        <a mat-tab-link 
+        [routerLink]="tab.path" 
+        routerLinkActive 
+        #rla="routerLinkActive"
+        [active]="rla.isActive">
+        {{ tab.label }}</a>
       </ng-container>
     </nav>
   </section>
