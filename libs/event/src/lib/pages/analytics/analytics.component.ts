@@ -1,11 +1,7 @@
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { EventService } from '@blockframes/event/+state';
-import { Subscription } from 'rxjs';
-import { switchMap, pluck } from 'rxjs/operators';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { slideUpList } from '@blockframes/utils/animations/fade';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { Event } from '@blockframes/event/+state';
+import { EventEditComponent } from '@blockframes/event/layout/edit/edit.component';
 
 @Component({
   selector: 'event-analytics-page',
@@ -14,38 +10,25 @@ import { Event } from '@blockframes/event/+state';
   animations: [slideUpList('h2, mat-card')],// @TODO #5895 check
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AnalyticsComponent implements OnInit, OnDestroy {
-
-  private sub: Subscription;
-  event: Event;
+export class AnalyticsComponent implements OnInit {
 
   constructor(
-    private service: EventService,
-    private route: ActivatedRoute,
-    private cdr: ChangeDetectorRef,
     private dynTitle: DynamicTitleService,
+    private shell: EventEditComponent,
   ) { }
+
+  get event() {
+    return this.shell.form.value;
+  }
 
   ngOnInit(): void {
     this.dynTitle.setPageTitle('Add an event', 'Event Attendance');
-    const eventId$ = this.route.params.pipe(pluck('eventId'));
-
-    this.sub = eventId$.pipe(
-      switchMap((eventId: string) => this.service.valueChanges(eventId))
-    ).subscribe(event => {
-      this.event = event;
-      this.cdr.markForCheck();
-    });
   }
 
   // Will be used to show event statistics only if event started
   isEventStarted() {
     const start = this.event.start;
     return start.getTime() < Date.now();
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
   }
 
 }
