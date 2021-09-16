@@ -264,6 +264,30 @@ const fields = {
 };
 
 type fieldsKey = keyof typeof fields;
+type ParseFieldFn = (value: string | string[], state: any, rowIndex?: number) => any;
+/**
+* item: The current object to return (contract, movie, org, ...)
+* value: value of the cell (array of string if the cell has several lines)
+* path: The key in the transform object (without the column segment)
+* transform: the callback of the key
+*/
+function parse(item: any = {}, values: string | string[], path: string, transform: ParseFieldFn, rowIndex: number) {
+  // Here we assume the column section has already been removed from the path
+  const segments = path.split('.');
+  const [segment, ...remainingSegments] = segments;
+  const last = !remainingSegments?.length;
+  if (segment.endsWith('[]')) {
+    const field = segment.replace('[]', '');
+    if (Array.isArray(values)) {
+      // console.log({values, transform:transform(values[0], item, rowIndex)})
+      if (last) item[field] = values.map((value, index) => transform(value, item, index));
+      if (!last) item[field] = values.map((value,index) => parse(item[field] || {}, value, segments.join('.'), transform, rowIndex));
+    }
+  } else {
+    if (last) item[segment] = transform(values, item);
+    if (!last) item[segment] = parse(item[segment] || {}, values, segments.join('.'), transform, rowIndex);
+  }
+}
 
 @Component({
   selector: 'import-view-extracted-movies',
@@ -301,221 +325,286 @@ export class ViewExtractedMoviesComponent implements OnInit {
     this.cdRef.markForCheck();
   }
 
+
+  extract(rawRows: string[][], extractParams: Record<string, ParseFieldFn> = {}) {
+    let extraParamsEntries = Object.entries(extractParams);
+    const state = {};
+    extraParamsEntries = extraParamsEntries.sort(([keyA], [keyB]) => keyA.split('_')[0] > keyB.split('_')[0] ? 1 : -1);
+    extraParamsEntries.forEach(([columnIndexedKey, parseFieldFn], index) => {
+      const combinedKeys = columnIndexedKey.split('_').pop();
+      const extraParamValue = rawRows.map(row => row[index] ?? '');
+      parse(state, extraParamValue, combinedKeys, parseFieldFn, index)
+      // if (!combinedKeys.includes('.')) {
+      //   state[combinedKeys] = extraParamValue;
+      // } else {
+      //   const keys = combinedKeys.split('.')
+      //   keys.forEach(keySymbol => {
+      //     if (keySymbol.endsWith('[]')) {
+      //       const key = keySymbol.substring(0, keySymbol.length - 1);
+      //       if (!state[key]) {
+      //         state[key] = []
+      //       }
+      //     } else { }
+      //   })
+      // }
+
+
+    });
+    return state
+  }
+
+
   public async format(sheetTab: SheetTab) {
     this.clearDataSources();
 
     let i = 0;
     this.currentRows = sheetTab.rows.slice(i, i + this.dedicatedLinesPerTitle);
+
     while (this.currentRows.length) {
-      Object.keys(fields).forEach(k => {
-        this.mapping[k] = this.getFieldContent(fields[k]);
+      const returnValue = this.extract(this.currentRows, {
+        'a_internationalTitle': ([value]: string[],) => value,
+        'b_originalTitle': ([value]: string[],) => value,
+        'c_internalRef': ([value]: string[],) => value,
+        'd_contentType': ([value]: string[],) => value,
+        'e_series': ([value]: string[],) => value,
+        'f_episodeCount': ([value]: string[],) => value,
+        'g_productionStatus': ([value]: string[],) => value,
+        'h_releaseYear': ([value]: string[],) => value,
+        'i_releaseYearStatus': ([value]: string[],) => value,
+        // 'c_internalRef': ([value]: string[],) => value,
+        'j_directors[].firstName': (rows: string[], state, rowIndex) => {
+          return rows[rowIndex];
+        },
+        'k_directors[].lastName': (rows: string[], state, rowIndex) => {
+          return rows[rowIndex];
+        },
+        'l_directors[].description': (rows: string[], state, rowIndex) => {
+          return rows[rowIndex];
+        },
+        // 'a_internationalTitle': ([value]: string[], state, rowIndex) => {
+        //   return value
+        // },
       })
 
-      if (!this.mapping.originalTitle) { break; }
-
-      // Fetch movie from internalRef if set or create a new movie
-      let movie = createMovie();
-      if (this.mapping.internalRef) {
-        try {
-          const _movie = await this.movieService.getFromInternalRef(this.mapping.internalRef, !this.isUserBlockframesAdmin ? this.authQuery.user.orgId : undefined);
-          if (_movie) { movie = _movie };
-        } catch (e) { console.log(e) }
-      }
-      const importErrors = { movie, errors: [] } as MovieImportState;
-
-      // ORIGINAL TITLE (Original Title)
-      movie.title.original = this.mapping.originalTitle;
-
-      // INTERNATIONAL TITLE (International Title)
-      if (this.mapping.internationalTitle) {
-        movie.title.international = this.mapping.internationalTitle;
-      }
-
-      // INTERNAL REF (Film Code)
-      if (this.mapping.internalRef) {
-        movie.internalRef = this.mapping.internalRef;
-      }
-
-      if (this.mapping.series) {
-        movie.title.series = parseInt(this.mapping.series, 10);
-      }
-
-      if (this.mapping.episodeCount) {
-        movie.runningTime.episodeCount = parseInt(this.mapping.episodeCount, 10);
-      }
-
-      // WORK TYPE
-      formatContentType(this.mapping.contentType, movie, importErrors);
-
-      // DIRECTORS
-      movie.directors = formatCredits(this.mapping.directors);
-
-      // ORIGIN COUNTRIES (Countries of Origin)
-      movie.originCountries = formatOriginCountries(this.mapping.originCountries, importErrors);
-
-      // PRODUCTION STATUS
-      formatProductionStatus(this.mapping.productionStatus, movie, importErrors);
-
-      // RELEASE YEAR
-      if (!isNaN(this.mapping.releaseYear)) {
-        formatReleaseYear(this.mapping.releaseYear, this.mapping.releaseYearStatus, movie);
-      } else {
-        formatSingleValue(this.mapping.releaseYearStatus, 'screeningStatus', 'movie.release.status', movie);
-      }
-
-      // PRODUCTION COMPANIES (Production Companie(s))
-      formatStakeholders(this.mapping.stakeholders, movie, importErrors);
-
-      // ORIGIN COUNTRY RELEASE DATE (Release date in Origin Country)
-      movie.originalRelease = formatOriginalRelease(this.mapping.originalRelease, importErrors);
-
-      // LANGUAGES (Original Language(s))
-      movie.originalLanguages = formatOriginalLanguages(this.mapping.originalLanguages, importErrors);
-
-      // GENRES (Genres)
-      formatGenres(this.mapping.genres, this.mapping.customGenres, movie, importErrors);
-
-      // RUNNING TIME (Total Run Time)
-      formatRunningTime(this.mapping.runningTime, this.mapping.runningTimeStatus, movie);
-
-      // CREDITS (Principal Cast)
-      movie.cast = formatCredits(this.mapping.cast, 'memberStatus');
-
-      // PRIZES (Prizes)
-      formatPrizes(this.mapping.prizes, movie);
-
-      // SYNOPSIS (Synopsis)
-      movie.synopsis = this.mapping.synopsis;
-
-      // KEY ASSETS (Key Assets)
-      movie.keyAssets = this.mapping.keyAssets;
-
-      // KEYWORDS
-      movie.keywords = this.mapping.keywords;
-
-      // PRODUCERS
-      movie.producers = formatCredits(this.mapping.producers, 'producerRoles') as Producer[];
-
-      // CREW
-      movie.crew = formatCredits(this.mapping.crew, 'crewRoles') as Crew[];
-
-      // BUDGET RANGE
-      formatSingleValue(this.mapping.budgetRange, 'budgetRange', 'estimatedBudget', movie);
-
-      // BOX OFFICE
-      movie.boxOffice = formatBoxOffice(this.mapping.boxoffice, importErrors);
-
-      // QUALIFICATIONS (certifications)
-      movie.certifications = formatCertifications(this.mapping.certifications, importErrors);
-
-      // RATINGS
-      movie.rating = formatRatings(this.mapping.ratings, importErrors);
-
-      // FILM REVIEW
-      movie.review = formatReview(this.mapping.reviews);
-
-      // COLOR
-      formatSingleValue(this.mapping.color, 'colors', 'color', movie);
-
-      // FORMAT
-      formatSingleValue(this.mapping.format, 'movieFormat', 'format', movie);
-
-      // FORMAT QUALITY
-      formatSingleValue(this.mapping.formatQuality, 'movieFormatQuality', 'formatQuality', movie);
-
-      // SOUND QUALITY
-      formatSingleValue(this.mapping.soundFormat, 'soundFormat', 'soundFormat', movie);
-
-      // ORIGINAL VERSION
-      movie.isOriginalVersionAvailable = this.mapping.isOriginalVersionAvailable.toLowerCase() === 'yes' ? true : false;
-
-      // LANGUAGES (Available versions(s))
-      formatAvailableLanguages(this.mapping.languages, movie, importErrors);
-
-      // LOGLINE (Logline)
-      movie.logline = this.mapping.logline;
-
-      // POSITIONING (Positioning)
-      movie.audience = formatAudienceGoals(this.mapping.audience);
-
-      // SALES PITCH (Description)
-      movie.promotional.salesPitch.description = this.mapping.salesPitch;
-
-      //////////////////
-      // ADMIN FIELDS
-      //////////////////
-
-      let statusSetAsBlockframesAdmin = false;
-      if (this.isUserBlockframesAdmin) {
-
-        /**
-       * MOVIE APP ACCESS
-       * For each app, we set a status. If there is no status registered, it will be draft by default.
-       */
-        // CATALOG STATUS
-        formatSingleValue(this.mapping.catalogStatus, 'storeStatus', `app.catalog.status`, movie);
-        if (this.mapping.catalogStatus) {
-          movie.app.catalog.access = true;
-          statusSetAsBlockframesAdmin = true;
-        }
-
-        // FESTIVAL STATUS
-        formatSingleValue(this.mapping.festivalStatus, 'storeStatus', `app.festival.status`, movie);
-        if (this.mapping.festivalStatus) {
-          movie.app.festival.access = true;
-          statusSetAsBlockframesAdmin = true;
-        }
-
-        // FINANCIERS STATUS
-        formatSingleValue(this.mapping.financiersStatus, 'storeStatus', `app.financiers.status`, movie);
-        if (this.mapping.financiersStatus) {
-          movie.app.financiers.access = true;
-          statusSetAsBlockframesAdmin = true;
-        }
-
-        // USER ID (to override who is creating this title)
-        if (this.mapping.ownerId) {
-          movie._meta = createDocumentMeta();
-          const user = await this.userService.getUser(this.mapping.ownerId);
-          if (user && user.orgId) {
-            movie._meta.createdBy = user.uid;
-            movie.orgIds = [user.orgId];
-          } else {
-            importErrors.errors.push({
-              type: 'error',
-              field: 'movie._meta.createdBy',
-              name: 'Movie owned id',
-              reason: `User Id specified for movie admin does not exists or does not have an org "${this.mapping.ownerId}"`,
-              hint: 'Edit corresponding sheet field.'
-            });
-          }
-        }
-      }
-
-      if (!statusSetAsBlockframesAdmin) {
-        const currentApp = getCurrentApp(this.router);
-        movie.app[currentApp].access = true;
-      }
-
-      ///////////////
-      // VALIDATION
-      ///////////////
-
-      const movieWithErrors = this.validateMovie(importErrors);
-      if (movieWithErrors.movie.id) {
-        this.moviesToUpdate.data.push(movieWithErrors);
-        this.moviesToUpdate.data = [... this.moviesToUpdate.data];
-      } else {
-        this.moviesToCreate.data.push(movieWithErrors);
-        this.moviesToCreate.data = [... this.moviesToCreate.data];
-      }
-      this.cdRef.markForCheck();
+      // 'y_directors[].firstName': (value: string[], rowIndex: number) => {
+      //   return (director, index) => director.firstName = value[index];
+      // }
 
       i += this.currentRows.length;
       this.currentRows = sheetTab.rows.slice(i, i + this.dedicatedLinesPerTitle);
+      console.log({ returnValue });
     }
 
 
+
+    // while (this.currentRows.length) {
+    //   Object.keys(fields).forEach(k => {
+    //     this.mapping[k] = this.getFieldContent(fields[k]);
+    //   })
+
+    //   if (!this.mapping.originalTitle) { break; }
+
+    //   // Fetch movie from internalRef if set or create a new movie
+    //   let movie = createMovie();
+    //   if (this.mapping.internalRef) {
+    //     try {
+    //       const _movie = await this.movieService.getFromInternalRef(this.mapping.internalRef, !this.isUserBlockframesAdmin ? this.authQuery.user.orgId : undefined);
+    //       if (_movie) { movie = _movie };
+    //     } catch (e) { console.log(e) }
+    //   }
+    //   const importErrors = { movie, errors: [] } as MovieImportState;
+
+    //   // ORIGINAL TITLE (Original Title)
+    //   movie.title.original = this.mapping.originalTitle;
+
+    //   // INTERNATIONAL TITLE (International Title)
+    //   if (this.mapping.internationalTitle) {
+    //     movie.title.international = this.mapping.internationalTitle;
+    //   }
+
+    //   // INTERNAL REF (Film Code)
+    //   if (this.mapping.internalRef) {
+    //     movie.internalRef = this.mapping.internalRef;
+    //   }
+
+    //   if (this.mapping.series) {
+    //     movie.title.series = parseInt(this.mapping.series, 10);
+    //   }
+
+    //   if (this.mapping.episodeCount) {
+    //     movie.runningTime.episodeCount = parseInt(this.mapping.episodeCount, 10);
+    //   }
+
+    //   // WORK TYPE
+    //   formatContentType(this.mapping.contentType, movie, importErrors);
+
+    //   // DIRECTORS
+    //   movie.directors = formatCredits(this.mapping.directors);
+
+    //   // ORIGIN COUNTRIES (Countries of Origin)
+    //   movie.originCountries = formatOriginCountries(this.mapping.originCountries, importErrors);
+
+    //   // PRODUCTION STATUS
+    //   formatProductionStatus(this.mapping.productionStatus, movie, importErrors);
+
+    //   // RELEASE YEAR
+    //   if (!isNaN(this.mapping.releaseYear)) {
+    //     formatReleaseYear(this.mapping.releaseYear, this.mapping.releaseYearStatus, movie);
+    //   } else {
+    //     formatSingleValue(this.mapping.releaseYearStatus, 'screeningStatus', 'movie.release.status', movie);
+    //   }
+
+    //   // PRODUCTION COMPANIES (Production Companie(s))
+    //   formatStakeholders(this.mapping.stakeholders, movie, importErrors);
+
+    //   // ORIGIN COUNTRY RELEASE DATE (Release date in Origin Country)
+    //   movie.originalRelease = formatOriginalRelease(this.mapping.originalRelease, importErrors);
+
+    //   // LANGUAGES (Original Language(s))
+    //   movie.originalLanguages = formatOriginalLanguages(this.mapping.originalLanguages, importErrors);
+
+    //   // GENRES (Genres)
+    //   formatGenres(this.mapping.genres, this.mapping.customGenres, movie, importErrors);
+
+    //   // RUNNING TIME (Total Run Time)
+    //   formatRunningTime(this.mapping.runningTime, this.mapping.runningTimeStatus, movie);
+
+    //   // CREDITS (Principal Cast)
+    //   movie.cast = formatCredits(this.mapping.cast, 'memberStatus');
+
+    //   // PRIZES (Prizes)
+    //   formatPrizes(this.mapping.prizes, movie);
+
+    //   // SYNOPSIS (Synopsis)
+    //   movie.synopsis = this.mapping.synopsis;
+
+    //   // KEY ASSETS (Key Assets)
+    //   movie.keyAssets = this.mapping.keyAssets;
+
+    //   // KEYWORDS
+    //   movie.keywords = this.mapping.keywords;
+
+    //   // PRODUCERS
+    //   movie.producers = formatCredits(this.mapping.producers, 'producerRoles') as Producer[];
+
+    //   // CREW
+    //   movie.crew = formatCredits(this.mapping.crew, 'crewRoles') as Crew[];
+
+    //   // BUDGET RANGE
+    //   formatSingleValue(this.mapping.budgetRange, 'budgetRange', 'estimatedBudget', movie);
+
+    //   // BOX OFFICE
+    //   movie.boxOffice = formatBoxOffice(this.mapping.boxoffice, importErrors);
+
+    //   // QUALIFICATIONS (certifications)
+    //   movie.certifications = formatCertifications(this.mapping.certifications, importErrors);
+
+    //   // RATINGS
+    //   movie.rating = formatRatings(this.mapping.ratings, importErrors);
+
+    //   // FILM REVIEW
+    //   movie.review = formatReview(this.mapping.reviews);
+
+    //   // COLOR
+    //   formatSingleValue(this.mapping.color, 'colors', 'color', movie);
+
+    //   // FORMAT
+    //   formatSingleValue(this.mapping.format, 'movieFormat', 'format', movie);
+
+    //   // FORMAT QUALITY
+    //   formatSingleValue(this.mapping.formatQuality, 'movieFormatQuality', 'formatQuality', movie);
+
+    //   // SOUND QUALITY
+    //   formatSingleValue(this.mapping.soundFormat, 'soundFormat', 'soundFormat', movie);
+
+    //   // ORIGINAL VERSION
+    //   movie.isOriginalVersionAvailable = this.mapping.isOriginalVersionAvailable.toLowerCase() === 'yes' ? true : false;
+
+    //   // LANGUAGES (Available versions(s))
+    //   formatAvailableLanguages(this.mapping.languages, movie, importErrors);
+
+    //   // LOGLINE (Logline)
+    //   movie.logline = this.mapping.logline;
+
+    //   // POSITIONING (Positioning)
+    //   movie.audience = formatAudienceGoals(this.mapping.audience);
+
+    //   // SALES PITCH (Description)
+    //   movie.promotional.salesPitch.description = this.mapping.salesPitch;
+
+    //   //////////////////
+    //   // ADMIN FIELDS
+    //   //////////////////
+
+    //   let statusSetAsBlockframesAdmin = false;
+    //   if (this.isUserBlockframesAdmin) {
+
+    //     /**
+    //    * MOVIE APP ACCESS
+    //    * For each app, we set a status. If there is no status registered, it will be draft by default.
+    //    */
+    //     // CATALOG STATUS
+    //     formatSingleValue(this.mapping.catalogStatus, 'storeStatus', `app.catalog.status`, movie);
+    //     if (this.mapping.catalogStatus) {
+    //       movie.app.catalog.access = true;
+    //       statusSetAsBlockframesAdmin = true;
+    //     }
+
+    //     // FESTIVAL STATUS
+    //     formatSingleValue(this.mapping.festivalStatus, 'storeStatus', `app.festival.status`, movie);
+    //     if (this.mapping.festivalStatus) {
+    //       movie.app.festival.access = true;
+    //       statusSetAsBlockframesAdmin = true;
+    //     }
+
+    //     // FINANCIERS STATUS
+    //     formatSingleValue(this.mapping.financiersStatus, 'storeStatus', `app.financiers.status`, movie);
+    //     if (this.mapping.financiersStatus) {
+    //       movie.app.financiers.access = true;
+    //       statusSetAsBlockframesAdmin = true;
+    //     }
+
+    //     // USER ID (to override who is creating this title)
+    //     if (this.mapping.ownerId) {
+    //       movie._meta = createDocumentMeta();
+    //       const user = await this.userService.getUser(this.mapping.ownerId);
+    //       if (user && user.orgId) {
+    //         movie._meta.createdBy = user.uid;
+    //         movie.orgIds = [user.orgId];
+    //       } else {
+    //         importErrors.errors.push({
+    //           type: 'error',
+    //           field: 'movie._meta.createdBy',
+    //           name: 'Movie owned id',
+    //           reason: `User Id specified for movie admin does not exists or does not have an org "${this.mapping.ownerId}"`,
+    //           hint: 'Edit corresponding sheet field.'
+    //         });
+    //       }
+    //     }
+    //   }
+
+    //   if (!statusSetAsBlockframesAdmin) {
+    //     const currentApp = getCurrentApp(this.router);
+    //     movie.app[currentApp].access = true;
+    //   }
+
+    //   ///////////////
+    //   // VALIDATION
+    //   ///////////////
+
+    //   const movieWithErrors = this.validateMovie(importErrors);
+    //   if (movieWithErrors.movie.id) {
+    //     this.moviesToUpdate.data.push(movieWithErrors);
+    //     this.moviesToUpdate.data = [... this.moviesToUpdate.data];
+    //   } else {
+    //     this.moviesToCreate.data.push(movieWithErrors);
+    //     this.moviesToCreate.data = [... this.moviesToCreate.data];
+    //   }
+    //   this.cdRef.markForCheck();
+
+    //   i += this.currentRows.length;
+    //   this.currentRows = sheetTab.rows.slice(i, i + this.dedicatedLinesPerTitle);
+    // }
   }
 
   private validateMovie(importErrors: MovieImportState): MovieImportState {
@@ -774,39 +863,40 @@ export class ViewExtractedMoviesComponent implements OnInit {
   }
 
   private getFieldContent(fieldConfig: any) {
-    if (fieldConfig.multiLine) {
-      if (fieldConfig.fields) {
-        return this.currentRows.map(r => {
-          const obj = {};
-          Object.keys(fieldConfig.fields).forEach(k => {
-            const value = r[fieldConfig.fields[k]];
-            if (value) {
-              obj[k] = isNaN(value) ? value.trim() : value.toString();
-            } else {
-              obj[k] = '';
-            }
-          });
-          return obj;
-        })
+    if (this.currentRows.length) {
+      const value = this.currentRows[0][fieldConfig.index];
+      if (value) {
+        return isNaN(value) ? value.trim() : value.toString();
       } else {
-        return this.currentRows.map(r => {
-          const value = r[fieldConfig.index];
-          if (value) {
-            return isNaN(value) ? value.trim() : value.toString();
-          } else {
-            return '';
-          }
-        }).filter(m => !!m);
+        return '';
       }
-    } else {
-      if (this.currentRows.length) {
-        const value = this.currentRows[0][fieldConfig.index];
+    } else { return ''; }
+  }
+
+  private getFieldContentMultilineFields(fieldConfig: any) {
+    return this.currentRows.map(r => {
+      const obj = {};
+      Object.keys(fieldConfig.fields).forEach(k => {
+        const value = r[fieldConfig.fields[k]];
         if (value) {
-          return isNaN(value) ? value.trim() : value.toString();
+          obj[k] = isNaN(value) ? value.trim() : value.toString();
         } else {
-          return '';
+          obj[k] = '';
         }
-      } else { return ''; }
-    }
+      });
+      return obj;
+    })
+
+  }
+
+  private getFieldContentMultiline(fieldConfig: any) {
+    return this.currentRows.map(r => {
+      const value = r[fieldConfig.index];
+      if (value) {
+        return isNaN(value) ? value.trim() : value.toString();
+      } else {
+        return '';
+      }
+    }).filter(m => !!m);
   }
 }
