@@ -13,7 +13,7 @@ import { StorageFile } from '@blockframes/media/+state/media.firestore';
   selector: 'event-meeting-files',
   templateUrl: './meeting-files.component.html',
   styleUrls: ['./meeting-files.component.scss'],
-  animations: [slideUpList('h2, mat-card')],// @TODO #5895 check
+  animations: [slideUpList('h2, mat-card')],// @TODO #5895 check Antoine
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MeetingFilesComponent implements OnInit {

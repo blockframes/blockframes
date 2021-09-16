@@ -12,13 +12,13 @@ const tabs = {
   screening: [
     { path: 'screening', label: 'Screening' },
     { path: 'invitations', label: 'Invitations' },
-    { path: 'attendance', label: 'Attendance' }, //  @TODO #5895 que si event terminé (ou en cours),
+    { path: 'attendance', label: 'Attendance' }, //  @TODO #5895 only if event started or ended , instead of "Attendance" we'll have "Statistics" (name & route) Antoine
   ],
   meeting: [
     { path: 'meeting', label: 'Meeting' },
     { path: 'invitations', label: 'Invitations' },
     { path: 'files', label: 'Files' },
-    { path: 'attendance', label: 'Attendance' }, // @TODO #5895 que si event terminé (ou en cours), plus lite que pr screening
+    { path: 'attendance', label: 'Attendance' }, // @TODO #5895 only if  event started or ended , plus lite que pr screening, instead of "Attendance" we'll have "Statistics" (name & route) Antoine
   ],
 }
 @Component({
@@ -42,7 +42,7 @@ export class EventEditComponent implements OnInit {
     private routerQuery: RouterQuery,
   ) { }
 
-  //@TODO #5895 move into shell dir
+  //@TODO #5895 move into shell dir Bruce
   ngOnInit() {
     const type = this.form.value.type === 'meeting' ? 'lobby' : 'session';
     this.internalLink = `/c/o/marketplace/event/${this.form.value.id}/${type}`;
@@ -78,5 +78,5 @@ export class EventEditComponent implements OnInit {
     })
   }
 
-  // @TODO #5895 onEventChange ? 
+  // @TODO #5895 onEventChange ? Bruce
 }

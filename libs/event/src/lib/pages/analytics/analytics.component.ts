@@ -7,7 +7,7 @@ import { EventEditComponent } from '@blockframes/event/layout/edit/edit.componen
   selector: 'event-analytics-page',
   templateUrl: './analytics.component.html',
   styleUrls: ['./analytics.component.scss'],
-  animations: [slideUpList('h2, mat-card')],// @TODO #5895 check
+  animations: [slideUpList('h2, mat-card')],// @TODO #5895 check Antoine
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AnalyticsComponent implements OnInit {
