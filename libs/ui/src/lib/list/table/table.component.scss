@@ -17,6 +17,11 @@ table {
   width: 100%;
 }
 
+// Required when for sticky columns
+tr {
+  background: inherit;
+}
+
 th, td {
   padding: 8px;
   border-bottom-width: 1px;
@@ -78,13 +83,25 @@ footer {
 }
 
 // First column
-th:first-of-type, td:first-of-type, td:first-of-type {
+th:first-of-type, td:first-of-type {
   padding-left: 24px;
+  &.sticky {
+    background: inherit;
+    position: sticky;
+    left: 0;
+    border-right: solid 1px var(--foreground-divider);
+  }
 }
 
 // Last column
-th:last-of-type, td:last-of-type, td:last-of-type {
+th:last-of-type, td:last-of-type {
   padding-right: 24px;
+  &.sticky {
+    background: inherit;
+    position: sticky;
+    right: 0;
+    border-left: solid 1px var(--foreground-divider);
+  }
 }
 
 

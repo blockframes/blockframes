@@ -25,9 +25,9 @@
       </tr>
     </thead>
     <tbody role="rowgroup">
-      <tr *ngFor="let row of data$ | async" class="mat-row" role="row">
+      <tr *ngFor="let row of data$ | async" class="mat-row" role="row" >
         <ng-container *ngFor="let column of columns">
-          <td class="mat-cell mat-body-1" role="cell" [attr.headers]="column.name">
+          <td class="mat-cell mat-body-1" role="cell"  [ngClass]="{ sticky: column.sticky }" [attr.headers]="column.name">
             <ng-template
               [ngTemplateOutlet]="column.template"
               [ngTemplateOutletContext]="{ $implicit: row | deepKey:column.name, item: row }"

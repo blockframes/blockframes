@@ -31,6 +31,7 @@ export class ColumnDirective<T> {
   control = new FormControl(true);
 
   @Input('colRef') name!: string;
+  @Input() @boolean sticky = false;
   @Input() label?: string;
   @Input() sort?: '' | ((a: any, b: any) => number);
   @Input() filter = (input: string, value: any, row: T) => {
