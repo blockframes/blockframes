@@ -1,50 +1,58 @@
-<thead role="rowgroup">
-  <tr class="mat-header-row" role="row">
-    <ng-container *ngFor="let column of columns">
-      <th [attr.id]="column.name" class="mat-header-cell" role="columnheader">
-        <span>{{ column.label }}</span>
-        <ng-container *ngIf="column.isSortable">
-          <button mat-icon-button (click)="column.toggleSort()">
-            <mat-icon *ngIf="column.asc else desc" svgIcon="arrow_upward"></mat-icon>
-          </button>
-        </ng-container>
-      </th>
-    </ng-container>
-  </tr>
-</thead>
-<tbody role="rowgroup">
-  <tr *ngFor="let row of data$ | async" class="mat-row" role="row">
-    <ng-container *ngFor="let column of columns">
-      <td class="mat-cell" role="cell" [attr.headers]="column.name">
-        <ng-template
-          [ngTemplateOutlet]="column.template"
-          [ngTemplateOutletContext]="{ $implicit: row | deepKey:column.name, item: row }"
-        >
-        </ng-template>
-      </td>
-    </ng-container>
-  </tr>
-</tbody>
-<tfoot *ngIf="paginator" role="rowgroup">
-  <tr class="mat-footer-row" role="row">
-    <td [attr.colspan]="columns.length">
-      <span class="mat-caption">Page {{ paginator.pageIndex + 1 }} of {{ paginator.maxIndex + 1 }}</span>
-      <button mat-icon-button [disabled]="paginator.pageIndex === 0" (click)="paginator.first()">
-        <mat-icon svgIcon="first_page"></mat-icon>
-      </button>
-      <button mat-icon-button [disabled]="paginator.pageIndex === 0" (click)="paginator.previous()">
-        <mat-icon svgIcon="chevron_left"></mat-icon>
-      </button>
-      <button mat-icon-button [disabled]="paginator.pageIndex === paginator.maxIndex" (click)="paginator.next()">
-        <mat-icon svgIcon="chevron_right"></mat-icon>
-      </button>
-      <button mat-icon-button [disabled]="paginator.pageIndex === paginator.maxIndex" (click)="paginator.last()">
-        <mat-icon svgIcon="last_page"></mat-icon>
-      </button>
-    </td>
-  </tr>
-</tfoot>
+<!-- Filter -->
+<ng-container *ngIf="filter">
+  <mat-form-field appearance="outline">
+    <mat-label>Tap to filter in the list below</mat-label>
+    <input matInput [formControl]="search" />
+    <mat-icon matSuffix svgIcon="filter_list"></mat-icon>
+  </mat-form-field>
+</ng-container>
 
-<ng-template #desc>
-  <mat-icon svgIcon="arrow_downward"></mat-icon>
-</ng-template>
+<!-- Table -->
+<div class="table-container">
+  <table class="mat-table" role="table">
+    <thead role="rowgroup">
+      <tr class="mat-header-row" role="row">
+        <ng-container *ngFor="let column of columns">
+          <th [attr.id]="column.name" class="mat-header-cell" role="columnheader">
+            <span>{{ column.label }}</span>
+            <ng-container *ngIf="column.isSortable">
+              <button class="sort" [ngClass]="{ asc: column.asc }" mat-icon-button (click)="column.toggleSort()">
+                <mat-icon svgIcon="arrow_upward"></mat-icon>
+              </button>
+            </ng-container>
+          </th>
+        </ng-container>
+      </tr>
+    </thead>
+    <tbody role="rowgroup">
+      <tr *ngFor="let row of data$ | async" class="mat-row" role="row">
+        <ng-container *ngFor="let column of columns">
+          <td class="mat-cell mat-body-1" role="cell" [attr.headers]="column.name">
+            <ng-template
+              [ngTemplateOutlet]="column.template"
+              [ngTemplateOutletContext]="{ $implicit: row | deepKey:column.name, item: row }"
+            >
+            </ng-template>
+          </td>
+        </ng-container>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Pagination -->
+<footer *ngIf="paginator" class="mat-paginator">
+  <span class="mat-caption">Page {{ paginator.pageIndex + 1 }} of {{ paginator.maxIndex + 1 }}</span>
+  <button mat-icon-button [disabled]="paginator.pageIndex === 0" (click)="paginator.first()">
+    <mat-icon svgIcon="first_page"></mat-icon>
+  </button>
+  <button mat-icon-button [disabled]="paginator.pageIndex === 0" (click)="paginator.previous()">
+    <mat-icon svgIcon="chevron_left"></mat-icon>
+  </button>
+  <button mat-icon-button [disabled]="paginator.pageIndex === paginator.maxIndex" (click)="paginator.next()">
+    <mat-icon svgIcon="chevron_right"></mat-icon>
+  </button>
+  <button mat-icon-button [disabled]="paginator.pageIndex === paginator.maxIndex" (click)="paginator.last()">
+    <mat-icon svgIcon="last_page"></mat-icon>
+  </button>
+</footer>
