@@ -27,7 +27,7 @@ import { EventTypeGuard } from '@blockframes/event/guard/event-type.guard';
     MeetingModule,
     AnalyticsModule,
     MeetingFilesModule,
-    RouterModule.forChild([ // @TODO #5895 check effet de slide du movie form + echec movie form bruce
+    RouterModule.forChild([ // @TODO #5895 check slide effect movie form + correct bad sliding after movie form update (release 3.4 bruce)
       {
         path: '',
         component: EditComponent,

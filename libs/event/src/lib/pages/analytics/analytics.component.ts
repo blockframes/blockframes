@@ -8,13 +8,13 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { Event } from '@blockframes/event/+state';
 
 @Component({
-  selector: 'event-analytics-details',
-  templateUrl: './analytics-details.component.html',
-  styleUrls: ['./analytics-details.component.scss'],
+  selector: 'event-analytics',
+  templateUrl: './analytics.component.html',
+  styleUrls: ['./analytics.component.scss'],
   animations: [slideUpList('h2, mat-card')],// @TODO #5895 check
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AnalyticsDetailsComponent implements OnInit, OnDestroy {
+export class AnalyticsComponent implements OnInit, OnDestroy {
 
   private sub: Subscription;
   event: Event;
