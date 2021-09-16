@@ -27,12 +27,15 @@ import { EventTypeGuard } from '@blockframes/event/guard/event-type.guard';
     MeetingDetailsModule,
     AnalyticsDetailsModule,
     MeetingFilesModule,
-    RouterModule.forChild([
+    RouterModule.forChild([ // @TODO #5895 check effet de slide du movie form + echec movie form bruce
       {
         path: '',
         component: EditComponent,
-        canActivate: [EventTypeGuard],
         children: [
+          {
+            path: '',
+            canActivate: [EventTypeGuard],
+          },
           {
             path: 'screening',
             component: ScreeningDetailsComponent,

@@ -1,10 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { InvitationService, Invitation } from '@blockframes/invitation/+state';
 import { Observable } from 'rxjs';
-import { switchMap, pluck } from 'rxjs/operators';
-import { ActivatedRoute } from '@angular/router';
 import { slideUpList } from '@blockframes/utils/animations/fade';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { EventEditComponent } from '@blockframes/event/layout/edit/edit.component';
 
 @Component({
   selector: 'event-invitation-details',
@@ -14,21 +13,21 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InvitationDetailsComponent implements OnInit {
-  eventId$: Observable<string>;
+
   invitations$: Observable<Invitation[]>;
 
   constructor(
     private invitationService: InvitationService,
-    private route: ActivatedRoute,
     private dynTitle: DynamicTitleService,
+    private shell: EventEditComponent,
   ) { }
+
+  get eventId() {
+    return this.shell.form.get('id').value;
+  }
 
   ngOnInit(): void {
     this.dynTitle.setPageTitle('Add an event', 'Event invitations');
-    this.eventId$ = this.route.params.pipe(pluck('eventId'));
-
-    this.invitations$ = this.eventId$.pipe(
-      switchMap((eventId) => this.invitationService.valueChanges(ref => ref.where('type', '==', 'attendEvent').where('eventId', '==', eventId)))
-    );
+    this.invitations$ = this.invitationService.valueChanges(ref => ref.where('type', '==', 'attendEvent').where('eventId', '==', this.eventId));
   }
 }

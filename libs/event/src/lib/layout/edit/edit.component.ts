@@ -5,18 +5,20 @@ import { EventService } from '../../+state/event.service';
 import { Invitation } from '@blockframes/invitation/+state/invitation.model';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { getCurrentApp , applicationUrl} from '@blockframes/utils/apps';
 
 const tabs = {
   screening: [
     { path: 'screening', label: 'Screening' },
     { path: 'invitations', label: 'Invitations' },
-    { path: 'attendance', label: 'Attendance' },
+    { path: 'attendance', label: 'Attendance' }, //  @TODO #5895 que si event terminé (ou en cours),
   ],
   meeting: [
     { path: 'meeting', label: 'Meeting' },
     { path: 'invitations', label: 'Invitations' },
     { path: 'files', label: 'Files' },
-    { path: 'attendance', label: 'Attendance' },
+    { path: 'attendance', label: 'Attendance' }, // @TODO #5895 que si event terminé (ou en cours), plus lite que pr screening
   ],
 }
 @Component({
@@ -29,18 +31,24 @@ export class EventEditComponent implements OnInit {
   tabs = tabs;
   @Input() form = new EventForm();
   @Input() invitations: Invitation[] = [];
-  eventLink: string;
+  internalLink: string;
+  link: string;
 
   constructor(
     private service: EventService,
     private router: Router,
     private route: ActivatedRoute,
     private dialog: MatDialog,
+    private routerQuery: RouterQuery,
   ) { }
 
+  //@TODO #5895 move into shell dir
   ngOnInit() {
     const type = this.form.value.type === 'meeting' ? 'lobby' : 'session';
-    this.eventLink = `/c/o/marketplace/event/${this.form.value.id}/${type}`;
+    this.internalLink = `/c/o/marketplace/event/${this.form.value.id}/${type}`;
+    const app = getCurrentApp(this.routerQuery);
+    const url = applicationUrl[app];
+    this.link = `${url}${this.internalLink}`;
   }
 
   save() {

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, UrlTree, ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
+import { CanActivate, UrlTree, ActivatedRouteSnapshot, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { EventService } from '../+state';
@@ -12,17 +12,10 @@ export class EventTypeGuard implements CanActivate {
     private router: Router,
   ) { }
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> {
-    const nextPage = state.url.split('/').pop();
+  canActivate(route: ActivatedRouteSnapshot): Observable<boolean | UrlTree> {
     return this.service.valueChanges(route.params['eventId'] as string).pipe(
       // @TODO #5895 if event is ended => redirect to anaylitcs tab
-      map(event => {
-        if (nextPage === 'edit') {
-          return this.router.parseUrl(`/c/o/dashboard/event/${event.id}/edit/${event.type}`)
-        } else {
-          return true;
-        }
-      })
+      map(event => this.router.parseUrl(`/c/o/dashboard/event/${event.id}/edit/${event.type}`)) // @TODO #5895 relative route possible ?
     );
   }
 }

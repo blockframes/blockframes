@@ -17,14 +17,14 @@
 
 <form [formGroup]="form">
   <section fxLayout="column" fxLayoutGap="24px">
-    <a fxFlexAlign="center" mat-stroked-button color="primary" [routerLink]="eventLink">Go to Event Page</a>
+    <a fxFlexAlign="center" mat-stroked-button color="primary" [routerLink]="internalLink">Go to Event Page</a>
     <h2>Details</h2>
     <mat-card class="details" fxLayout="column" fxFlex="65">
       <event-details-edit [form]="form"></event-details-edit>
     </mat-card>
 
     <nav mat-tab-nav-bar>
-      <ng-container *ngFor="let tab of tabs[form.value.type]">
+      <ng-container *ngFor="let tab of tabs[form.value.type]"> <!-- @TODO #5895 active -->
         <a mat-tab-link [routerLink]="tab.path">{{ tab.label }}</a>
       </ng-container>
     </nav>
