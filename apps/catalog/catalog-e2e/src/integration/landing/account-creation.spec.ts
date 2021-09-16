@@ -39,7 +39,7 @@ beforeEach(() => {
 })
 
 // USER TEST
-describe.only('User can create new account and create a new organization', () => {
+describe('User can create new account and create a new organization', () => {
   beforeEach(() => {
       //Clear all messages on server before the test
       cy.mailosaurDeleteAllMessages(serverId).then(() => {
@@ -79,7 +79,7 @@ describe.only('User can create new account and create a new organization', () =>
 
 //! This one is failing because of the data that are coming from Algolia. The data about organization are not prefilled in the
 //! org form when a test user clicked on a existing organization. I don't know how I can prefilled the field with algolia data.
-describe.skip('User can create new account and join an organization', () => {
+describe('User can create new account and join an organization', () => {
   it('Fill all the fields', () => {
     const p1 = new AuthIdentityPage();
     p1.fillUserInformations(USER);
