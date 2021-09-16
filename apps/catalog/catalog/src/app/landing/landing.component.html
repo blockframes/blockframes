@@ -1,15 +1,17 @@
 <landing-shell-page>
-  <landing-header fxLayout="column" fxLayoutAlign="start start" fxLayoutAlign.lt-sm="center center">
-    <h4>Welcome to Archipel Content</h4>
-    <p class="mat-display-2">The only marketplace offering package deals</p>
-    <h2>for TV, VOD and ancillary rights</h2>
-    <a mat-flat-button color="accent" routerLink="/auth/identity">
-      <span>Join now</span>
-      <mat-icon svgIcon="arrow_forward"></mat-icon>
-    </a>
+  <landing-header>
+    <header class="max-width" fxLayout="column" fxLayoutAlign="start start" fxLayoutAlign.lt-sm="center center">
+      <h4>Welcome to Archipel Content</h4>
+      <p class="mat-display-2">The only marketplace offering package deals</p>
+      <h2>for TV, VOD and ancillary rights</h2>
+      <a mat-flat-button color="accent" routerLink="/auth/identity">
+        <span>Join now</span>
+        <mat-icon svgIcon="arrow_forward"></mat-icon>
+      </a>
+    </header>
   </landing-header>
 
-  <landing-content>
+  <landing-content class="max-width">
     <catalog-view-marketplace></catalog-view-marketplace>
     <catalog-key-features></catalog-key-features>
     <h1 class="mat-display-1">How it works</h1>

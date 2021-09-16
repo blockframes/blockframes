@@ -1,4 +1,11 @@
 @import "~@angular/flex-layout/mq";
+$banner-background: rgba(5, 7, 36);
+
+// Maximum width for large screens
+.max-width {
+  max-width: 1920px; // equal to "lg" in Angular breakpoints
+  margin: auto;
+}
 
 landing-shell-page {
   display: flex;
@@ -32,9 +39,17 @@ landing-shell-page {
     flex: 1;
     overflow-y: auto;
 
-    .demo.mat-card {
-      padding-block: 72px;
-      background-size: cover;
+    .demo {
+      background-color: $banner-background;
+
+      section {
+        padding-block: 72px;
+        background: linear-gradient(to right, $banner-background 0%, #2a1d34 50%, $banner-background 100%);
+      }
+
+      .banner-spacing {
+        background-color: $banner-background;
+      }
     }
 
     .contact-us {
@@ -65,24 +80,27 @@ landing-shell-page {
     }
 
     footer {
-      padding: 80px;
-      text-align: center;
-      width: 100%;
       background-color: var(--background-card);
-      > * {
+      section {
+        padding: 80px;
+        text-align: center;
         width: 100%;
-      }
-      mat-divider {
-        width: 100%;
-        border-top-width: 2px;
-      }
-      img {
-        height: 30px;
+        > * {
+          width: 100%;
+        }
+        mat-divider {
+          width: 100%;
+          border-top-width: 2px;
+        }
+        img {
+          height: 30px;
+        }
       }
     }
 
     landing-header {
       display: block;
+      background: $banner-background;
       background-size: cover;
       padding: 72px 80px;
     }
