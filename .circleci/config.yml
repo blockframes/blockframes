@@ -35,6 +35,14 @@ references:
     - staging
 
 commands:
+  start_e2e_emulators:
+    steps:
+      - restore_cache:
+          keys:
+            - emulator-cache-v1-
+      - run:
+          background: true
+          command: npm start emulators
   fail_on_production:
     description: Exit if run against production - failsafe
     steps:
@@ -76,6 +84,7 @@ commands:
       - run: touch .env # dotenv will crash without this
       - run: cp env/env.blockframes-ci.ts env/env.ts # required for the typechecking & file rewrite to work
       - run: npm install
+      - run: npx cypress install
       - run:
           name: 'Verify that this PR is not introducing weird package.json changes'
           command: |
@@ -89,7 +98,8 @@ commands:
       - save_cache:
           paths:
             - node_modules
-          key: dependencies-v1-{{ .Environment.CACHE_VERSION }}-{{ checksum "package.json" }}
+            - /home/circleci/.cache/Cypress
+          key: dependencies-{{ .Environment.CACHE_VERSION }}-{{ checksum "package.json" }}
       - save_cache:
           key: source-v1-{{ .Branch }}-{{ .Revision }}
           paths:
@@ -152,7 +162,7 @@ commands:
 
               npx nx run crm-e2e:e2e:ci --headless && crm_ret_code=$? || crm_ret_code=$?
 
-              if [ $catalog_ret_code -eq 0 ] && [ $festival_ret_code -eq 0 ] && [ $financiers_ret_code -eq 0 ] && [ $crm_ret_code -eq 0 ]; then 
+              if [ $catalog_ret_code -eq 0 ] && [ $festival_ret_code -eq 0 ] && [ $financiers_ret_code -eq 0 ] && [ $crm_ret_code -eq 0 ]; then
                 exit 0;
               else
                 exit 1;
@@ -162,6 +172,7 @@ commands:
             name: Uploading screenshots
             path: ~/repo/dist/cypress/apps
 orbs:
+  cypress: cypress-io/cypress@1
   do-exclusively: miyajan/do-exclusively@0.1.0
   slack: circleci/slack@3.4.0
 executors:
@@ -328,6 +339,52 @@ jobs:
     steps:
       - prepare_environment
       - run: gcloud firestore export "gs://blockframes-backups/firestore-backup-$(date +%d-%m-%Y)/"
+  crm-e2e:
+    executor: blockframes-ci
+    steps:
+      - prepare_environment
+      - start_e2e_emulators
+      - run: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,catalog-e2e,financiers-e2e
+      - store_artifacts:
+          path: dist/cypress/apps
+  festival-e2e:
+    executor: blockframes-ci
+    steps:
+      - prepare_environment
+      - start_e2e_emulators
+      - run: npx nx affected:e2e --configuration=emulator --exclude=catalog-e2e,crm-e2e,financiers-e2e
+      - store_artifacts:
+          path: dist/cypress/apps
+  financiers-e2e:
+    executor: blockframes-ci
+    steps:
+      - prepare_environment
+      - start_e2e_emulators
+      - run: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,crm-e2e,catalog-e2e
+      - store_artifacts:
+          path: dist/cypress/apps
+  catalog-e2e:
+    executor: blockframes-ci
+    steps:
+      - prepare_environment
+      - start_e2e_emulators
+      - run: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,crm-e2e,financiers-e2e
+      - store_artifacts:
+          path: dist/cypress/apps
+  prepare-emulators:
+    executor: blockframes-ci
+    steps:
+      - prepare_environment
+      - run: npm start prepareEmulators gs://bruce-backups/LATEST-ANON-SHRINKED-DB
+      - run: npx nx build backend-functions --configuration=emulator
+      - save_cache:
+          key: emulator-cache-v1-{{ epoch }}
+          paths:
+            - ".firebase/emulator"
+            - "dist/apps/backend-functions"
+            # ? - "/home/circleci/.cache/firebase/emulators"
+            - "~/.cache/firebase/emulators"
+            - "tools/fixtures"
 workflows:
   anon-db:
     jobs:
@@ -418,3 +475,15 @@ workflows:
             branches:
               only:
                 - ci
+  e2e-tests:
+    jobs:
+      - prepare-emulators:
+          filters:
+            branches:
+              ignore: *deployment_branches
+      - catalog-e2e:
+          requires:
+            - prepare-emulators
+          filters:
+            branches:
+              ignore: *deployment_branches

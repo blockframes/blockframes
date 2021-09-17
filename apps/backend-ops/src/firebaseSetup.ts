@@ -8,6 +8,8 @@ import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from '.
 import { migrate } from './migrations';
 import { importFirestore } from './admin';
 import {
+  connectAuthEmulator,
+  connectFirestoreEmulator,
   copyFirestoreExportFromCiBucket,
   defaultEmulatorBackupPath,
   endMaintenance,
@@ -25,6 +27,7 @@ import { firebase } from '@env';
 import { generateFixtures } from './generate-fixtures';
 import { ensureMaintenanceMode } from './tools';
 import { backupBucket as ciBucketName } from 'env/env.blockframes-ci'
+import { EIGHT_MINUTES_IN_MS } from '@blockframes/utils/maintenance';
 const { storageBucket } = firebase();
 
 export async function prepareForTesting() {
@@ -64,23 +67,24 @@ export async function prepareForTesting() {
   insurance(); // Switch off maintenance insurance
 }
 
-export async function prepareEmulators() {
+export async function prepareEmulators({ dbBackupURL }: { dbBackupURL?: string } = {}) {
   console.log('Importing golden Firestore DB data from CI...');
-  const anonBackupURL = `gs://${ciBucketName}/${latestAnonDbDir}`;
-  await importFirestoreEmulatorBackup(anonBackupURL, defaultEmulatorBackupPath);
+  const _dbBackupURL = dbBackupURL ?? `gs://${ciBucketName}/${latestAnonDbDir}`;
+  await importFirestoreEmulatorBackup(_dbBackupURL, defaultEmulatorBackupPath);
   console.log('Done!');
 
   const proc = await firebaseEmulatorExec({
-    emulators: 'firestore',
+    emulators: ['auth', 'firestore'],
     importPath: defaultEmulatorBackupPath,
-    exportData: true
-  })
-  const { storage, auth } = loadAdminServices();
-  const { db } = loadAdminServices({ emulator: true });
+    exportData: true,
+  });
+  const { storage } = loadAdminServices();
+  const db = connectFirestoreEmulator();
+  const auth = connectAuthEmulator();
   const insurance = await ensureMaintenanceMode(db); // Enable maintenance insurance
 
   console.info('Syncing users from db...');
-  await syncUsers(null, db, auth);
+  await syncUsers(null, db, auth)
   console.info('Users synced!');
 
   console.info('Syncing storage with blockframes-ci...');
@@ -102,7 +106,7 @@ export async function prepareEmulators() {
   console.info('Algolia ready for testing!');
 
   insurance(); // Switch off maintenance insurance
-  await endMaintenance(db);
+  await endMaintenance(db, EIGHT_MINUTES_IN_MS);
   await shutdownEmulator(proc);
 }
 

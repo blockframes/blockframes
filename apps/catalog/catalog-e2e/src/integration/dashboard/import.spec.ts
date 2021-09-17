@@ -43,7 +43,7 @@ const logInAdminAndNavigate = () => {
     .click();
 }
 
-describe('User can fill and save contract tunnel form', () => {
+describe.skip('User can fill and save contract tunnel form', () => {
   beforeEach(() => {
     cy.viewport('ipad-2', 'landscape');
   });
