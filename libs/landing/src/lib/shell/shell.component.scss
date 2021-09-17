@@ -88,13 +88,16 @@ landing-shell-page {
         > * {
           width: 100%;
         }
+        app-logo {
+          margin: 0 24px 24px 0;
+        }
         form {
           display: flex;
           gap: 16px;
           align-items: flex-start;
-          flex-wrap: wrap;
+          flex-wrap: nowrap;
           mat-form-field {
-            width: 500px;
+            flex: 1;
           }
           #newsletterButton {
             margin-top: 0.5em;

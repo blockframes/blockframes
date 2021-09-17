@@ -104,9 +104,9 @@
     <footer>
       <section class="max-width" fxLayout="column" fxLayoutAlign="start center" fxLayoutAlign.lt-md="center center"
         fxLayoutGap="32px">
-        <div fxLayout="row wrap" fxLayoutAlign="space-between">
-          <app-logo></app-logo>
-          <form [formGroup]="newslettersForm" (ngSubmit)="subscribeToNewsletters(newslettersForm)" >
+        <div fxLayout="row wrap">
+          <app-logo fxLayout fxFlex></app-logo>
+          <form fxFlex [formGroup]="newslettersForm" (ngSubmit)="subscribeToNewsletters(newslettersForm)" >
             <mat-form-field appearance="outline" hideRequiredMarker>
               <input test-id="email" matInput type="email" placeholder="Enter your email address" formControlName="email" required />
               <mat-hint class="mat-caption">Subscribe to our newsletter now!</mat-hint>
