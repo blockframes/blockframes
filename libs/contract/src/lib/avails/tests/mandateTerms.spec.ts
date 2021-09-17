@@ -1,5 +1,5 @@
 import { BucketTerm, Term } from '../../term/+state/term.model';
-import { AvailsFilter, getMandateTerms, isInBucket, isSold } from './../avails';
+import { AvailsFilter, getMandateTerms, isInBucket, termsCollision } from './../avails';
 import { mandates } from './../fixtures/mandates';
 import { sales } from './../fixtures/sales';
 import { mandateTerms as acTerms } from './../fixtures/mandateTerms';
@@ -70,7 +70,7 @@ describe('Test isTermSold pure function', () => {
         getTerms(Resurrected, 'mandate')
       );
       expect(ACRights.length).toEqual(1);
-      const isTermSold = isSold(
+      const isTermSold = termsCollision(
         availDetails,
         getTerms(Resurrected, 'sale')
       );
@@ -89,7 +89,7 @@ describe('Test isTermSold pure function', () => {
         getTerms(Resurrected, 'mandate')
       );
       expect(ACRights.length).toEqual(1);
-      const isTermSold = isSold(
+      const isTermSold = termsCollision(
         availDetails,
         getTerms(Resurrected, 'sale')
       );
@@ -108,7 +108,7 @@ describe('Test isTermSold pure function', () => {
           getTerms(Resurrected, 'mandate')
         );
         expect(ACRights.length).toEqual(1);
-        const isTermSold = isSold(
+        const isTermSold = termsCollision(
           availDetails,
           getTerms(Resurrected, 'sale')
         );
@@ -127,7 +127,7 @@ describe('Test isTermSold pure function', () => {
           getTerms(Resurrected, 'mandate')
         );
         expect(ACRights.length).toEqual(1);
-        const isTermSold = isSold(
+        const isTermSold = termsCollision(
           availDetails,
           getTerms(Resurrected, 'sale')
         );
@@ -146,7 +146,7 @@ describe('Test isTermSold pure function', () => {
           getTerms(Resurrected, 'mandate')
         );
         expect(ACRights.length).toEqual(1);
-        const isTermSold = isSold(
+        const isTermSold = termsCollision(
           availDetails,
           getTerms(Resurrected, 'sale')
         );
@@ -166,7 +166,7 @@ describe('Test isTermSold pure function', () => {
         getTerms(Resurrected, 'mandate')
       );
       expect(ACRights.length).toEqual(1);
-      const isTermSold = isSold(
+      const isTermSold = termsCollision(
         availDetails,
         getTerms(Resurrected, 'sale')
       );
@@ -185,7 +185,7 @@ describe('Test isTermSold pure function', () => {
           getTerms(Resurrected, 'mandate')
         );
         expect(ACRights.length).toEqual(1);
-        const isTermSold = isSold(
+        const isTermSold = termsCollision(
           availDetails,
           getTerms(Resurrected, 'sale')
         );
@@ -205,7 +205,7 @@ describe('Test isTermSold pure function', () => {
           getTerms(Resurrected, 'mandate')
         );
         expect(ACRights.length).toEqual(1);
-        const isTermSold = isSold(
+        const isTermSold = termsCollision(
           availDetails,
           getTerms(Resurrected, 'sale')
         );
@@ -249,15 +249,15 @@ describe('Test isTermSold pure function', () => {
       expect(!!hoursRights.length).toBe(false);
       expect(!!motherSchmuckersRights.length).toBe(true);
       expect(!!bigFootFamilyRights.length).toBe(true);
-      const isGazaSold = isSold(
+      const isGazaSold = termsCollision(
         availDetails,
         getTerms(GazaMonAmour, 'sale')
       );
-      const isMotherSold = isSold(
+      const isMotherSold = termsCollision(
         availDetails,
         getTerms(MotherSchmuckers, 'sale')
       );
-      const isBigfootSold = isSold(
+      const isBigfootSold = termsCollision(
         availDetails,
         getTerms(BigFootFamily, 'sale')
       );
@@ -306,15 +306,15 @@ describe('Test isTermSold pure function', () => {
       expect(!!hoursRights.length).toBe(true);
       expect(!!motherSchmuckersRights.length).toBe(true);
       expect(!!bigFootFamilyRights.length).toBe(true);
-      const isMotherSold = isSold(
+      const isMotherSold = termsCollision(
         availDetails,
         getTerms(MotherSchmuckers, 'sale')
       );
-      const isHoursSold = isSold(
+      const isHoursSold = termsCollision(
         availDetails,
         getTerms(MarinaAbramovic, 'sale')
       );
-      const isBigfootSold = isSold(
+      const isBigfootSold = termsCollision(
         availDetails,
         getTerms(BigFootFamily, 'sale')
       );
@@ -363,19 +363,19 @@ describe('Test isTermSold pure function', () => {
       expect(!!hoursRights.length).toBe(true);
       expect(!!motherSchmuckersRights.length).toBe(true);
       expect(!!bigFootFamilyRights.length).toBe(true);
-      const isMotherSold = isSold(
+      const isMotherSold = termsCollision(
         availDetails,
         getTerms(MotherSchmuckers, 'sale')
       );
-      const isHoursSold = isSold(
+      const isHoursSold = termsCollision(
         availDetails,
         getTerms(MarinaAbramovic, 'sale')
       );
-      const isBigfootSold = isSold(
+      const isBigfootSold = termsCollision(
         availDetails,
         getTerms(BigFootFamily, 'sale')
       );
-      const isGazaSold = isSold(
+      const isGazaSold = termsCollision(
         availDetails,
         getTerms(GazaMonAmour, 'sale')
       );
@@ -424,23 +424,23 @@ describe('Test isTermSold pure function', () => {
       expect(!!hoursRights.length).toBe(true);
       expect(!!motherSchmuckersRights.length).toBe(true);
       expect(!!bigFootFamilyRights.length).toBe(true);
-      const isMotherSold = isSold(
+      const isMotherSold = termsCollision(
         availDetails,
         getTerms(MotherSchmuckers, 'sale')
       );
-      const isHoursSold = isSold(
+      const isHoursSold = termsCollision(
         availDetails,
         getTerms(MarinaAbramovic, 'sale')
       );
-      const isBigfootSold = isSold(
+      const isBigfootSold = termsCollision(
         availDetails,
         getTerms(BigFootFamily, 'sale')
       );
-      const isResurrectedSold = isSold(
+      const isResurrectedSold = termsCollision(
         availDetails,
         getTerms(Resurrected, 'sale')
       );
-      const isGazaSold = isSold(
+      const isGazaSold = termsCollision(
         availDetails,
         getTerms(GazaMonAmour, 'sale')
       );
@@ -490,23 +490,23 @@ describe('Test isTermSold pure function', () => {
       expect(!!hoursRights.length).toBe(true);
       expect(!!motherSchmuckersRights.length).toBe(true);
       expect(!!bigFootFamilyRights.length).toBe(true);
-      const isMotherSold = isSold(
+      const isMotherSold = termsCollision(
         availDetails,
         getTerms(MotherSchmuckers, 'sale')
       );
-      const isHoursSold = isSold(
+      const isHoursSold = termsCollision(
         availDetails,
         getTerms(MarinaAbramovic, 'sale')
       );
-      const isBigfootSold = isSold(
+      const isBigfootSold = termsCollision(
         availDetails,
         getTerms(BigFootFamily, 'sale')
       );
-      const isResurrectedSold = isSold(
+      const isResurrectedSold = termsCollision(
         availDetails,
         getTerms(Resurrected, 'sale')
       );
-      const isGazaSold = isSold(
+      const isGazaSold = termsCollision(
         availDetails,
         getTerms(GazaMonAmour, 'sale')
       );
@@ -556,23 +556,23 @@ describe('Test isTermSold pure function', () => {
       expect(!!hoursRights.length).toBe(true);
       expect(!!motherSchmuckersRights.length).toBe(true);
       expect(!!bigFootFamilyRights.length).toBe(true);
-      const isMotherSold = isSold(
+      const isMotherSold = termsCollision(
         availDetails,
         getTerms(MotherSchmuckers, 'sale')
       );
-      const isHoursSold = isSold(
+      const isHoursSold = termsCollision(
         availDetails,
         getTerms(MarinaAbramovic, 'sale')
       );
-      const isBigfootSold = isSold(
+      const isBigfootSold = termsCollision(
         availDetails,
         getTerms(BigFootFamily, 'sale')
       );
-      const isResurrectedSold = isSold(
+      const isResurrectedSold = termsCollision(
         availDetails,
         getTerms(Resurrected, 'sale')
       );
-      const isGazaSold = isSold(
+      const isGazaSold = termsCollision(
         availDetails,
         getTerms(GazaMonAmour, 'sale')
       );
@@ -623,23 +623,23 @@ describe('Test isTermSold pure function', () => {
       expect(!!hoursRights.length).toBe(true);
       expect(!!motherSchmuckersRights.length).toBe(true);
       expect(!!bigFootFamilyRights.length).toBe(true);
-      const isMotherSold = isSold(
+      const isMotherSold = termsCollision(
         availDetails,
         getTerms(MotherSchmuckers, 'sale')
       );
-      const isHoursSold = isSold(
+      const isHoursSold = termsCollision(
         availDetails,
         getTerms(MarinaAbramovic, 'sale')
       );
-      const isBigfootSold = isSold(
+      const isBigfootSold = termsCollision(
         availDetails,
         getTerms(BigFootFamily, 'sale')
       );
-      const isResurrectedSold = isSold(
+      const isResurrectedSold = termsCollision(
         availDetails,
         getTerms(Resurrected, 'sale')
       );
-      const isGazaSold = isSold(
+      const isGazaSold = termsCollision(
         availDetails,
         getTerms(GazaMonAmour, 'sale')
       );
@@ -689,23 +689,23 @@ describe('Test isTermSold pure function', () => {
       expect(!!hoursRights.length).toBe(true);
       expect(!!motherSchmuckersRights.length).toBe(true);
       expect(!!bigFootFamilyRights.length).toBe(true);
-      const isMotherSold = isSold(
+      const isMotherSold = termsCollision(
         availDetails,
         getTerms(MotherSchmuckers, 'sale')
       );
-      const isHoursSold = isSold(
+      const isHoursSold = termsCollision(
         availDetails,
         getTerms(MarinaAbramovic, 'sale')
       );
-      const isBigfootSold = isSold(
+      const isBigfootSold = termsCollision(
         availDetails,
         getTerms(BigFootFamily, 'sale')
       );
-      const isResurrectedSold = isSold(
+      const isResurrectedSold = termsCollision(
         availDetails,
         getTerms(Resurrected, 'sale')
       );
-      const isGazaSold = isSold(
+      const isGazaSold = termsCollision(
         availDetails,
         getTerms(GazaMonAmour, 'sale')
       );
@@ -755,23 +755,23 @@ describe('Test isTermSold pure function', () => {
       expect(!!hoursRights.length).toBe(true);
       expect(!!motherSchmuckersRights.length).toBe(true);
       expect(!!bigFootFamilyRights.length).toBe(true);
-      const isMotherSold = isSold(
+      const isMotherSold = termsCollision(
         availDetails,
         getTerms(MotherSchmuckers, 'sale')
       );
-      const isHoursSold = isSold(
+      const isHoursSold = termsCollision(
         availDetails,
         getTerms(MarinaAbramovic, 'sale')
       );
-      const isBigfootSold = isSold(
+      const isBigfootSold = termsCollision(
         availDetails,
         getTerms(BigFootFamily, 'sale')
       );
-      const isResurrectedSold = isSold(
+      const isResurrectedSold = termsCollision(
         availDetails,
         getTerms(Resurrected, 'sale')
       );
-      const isGazaSold = isSold(
+      const isGazaSold = termsCollision(
         availDetails,
         getTerms(GazaMonAmour, 'sale')
       );
@@ -821,23 +821,23 @@ describe('Test isTermSold pure function', () => {
       expect(!!hoursRights.length).toBe(true);
       expect(!!motherSchmuckersRights.length).toBe(true);
       expect(!!bigFootFamilyRights.length).toBe(true);
-      const isMotherSold = isSold(
+      const isMotherSold = termsCollision(
         availDetails,
         getTerms(MotherSchmuckers, 'sale')
       );
-      const isHoursSold = isSold(
+      const isHoursSold = termsCollision(
         availDetails,
         getTerms(MarinaAbramovic, 'sale')
       );
-      const isBigfootSold = isSold(
+      const isBigfootSold = termsCollision(
         availDetails,
         getTerms(BigFootFamily, 'sale')
       );
-      const isResurrectedSold = isSold(
+      const isResurrectedSold = termsCollision(
         availDetails,
         getTerms(Resurrected, 'sale')
       );
-      const isGazaSold = isSold(
+      const isGazaSold = termsCollision(
         availDetails,
         getTerms(GazaMonAmour, 'sale')
       );
@@ -887,23 +887,23 @@ describe('Test isTermSold pure function', () => {
       expect(!!hoursRights.length).toBe(true);
       expect(!!motherSchmuckersRights.length).toBe(true);
       expect(!!bigFootFamilyRights.length).toBe(true);
-      const isMotherSold = isSold(
+      const isMotherSold = termsCollision(
         availDetails,
         getTerms(MotherSchmuckers, 'sale')
       );
-      const isHoursSold = isSold(
+      const isHoursSold = termsCollision(
         availDetails,
         getTerms(MarinaAbramovic, 'sale')
       );
-      const isBigfootSold = isSold(
+      const isBigfootSold = termsCollision(
         availDetails,
         getTerms(BigFootFamily, 'sale')
       );
-      const isResurrectedSold = isSold(
+      const isResurrectedSold = termsCollision(
         availDetails,
         getTerms(Resurrected, 'sale')
       );
-      const isGazaSold = isSold(
+      const isGazaSold = termsCollision(
         availDetails,
         getTerms(GazaMonAmour, 'sale')
       );
@@ -954,23 +954,23 @@ describe('Test isTermSold pure function', () => {
       expect(!!hoursRights.length).toBe(true);
       expect(!!motherSchmuckersRights.length).toBe(true);
       expect(!!bigFootFamilyRights.length).toBe(true);
-      const isMotherSold = isSold(
+      const isMotherSold = termsCollision(
         availDetails,
         getTerms(MotherSchmuckers, 'sale')
       );
-      const isHoursSold = isSold(
+      const isHoursSold = termsCollision(
         availDetails,
         getTerms(MarinaAbramovic, 'sale')
       );
-      const isBigfootSold = isSold(
+      const isBigfootSold = termsCollision(
         availDetails,
         getTerms(BigFootFamily, 'sale')
       );
-      const isResurrectedSold = isSold(
+      const isResurrectedSold = termsCollision(
         availDetails,
         getTerms(Resurrected, 'sale')
       );
-      const isGazaSold = isSold(
+      const isGazaSold = termsCollision(
         availDetails,
         getTerms(GazaMonAmour, 'sale')
       );

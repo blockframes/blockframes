@@ -51,12 +51,12 @@ export function getMandateTerms(avails: AvailsFilter, terms: Term<Date>[]): Term
 }
 
 
-export function isSold(avails: AvailsFilter, terms: Term<Date>[]) {
-  return !!getSoldTerms(avails, terms).length;
+export function termsCollision(avails: AvailsFilter, terms: Term<Date>[]) {
+  return !!collidingTerms(avails, terms).length;
 }
 
-/** Get all the salesTerms that overlap the avails filter */
-export function getSoldTerms(avails: AvailsFilter, terms: Term<Date>[]) {
+/** Get all the terms that overlap the avails filter */
+export function collidingTerms(avails: AvailsFilter, terms: Term<Date>[]) {
   return terms.filter(term => (avails.exclusive || term.exclusive)
     && someOf(avails.territories, 'optional').in(term.territories)
     && someOf(avails.medias, 'optional').in(term.medias)
@@ -211,24 +211,14 @@ export function getCollidingHoldbacks(holdbacks: Holdback[], terms: BucketTerm[]
 //           MOVIE           //
 // ----------------------------
 
-
-export function isMovieAvailable(titleId: string, avails: AvailsFilter, bucket: Bucket, mandates: Mandate[], sales: Sale[], terms: Term[]) {
-  if (!terms.length) return false;
-
-  const titleMandates = mandates.filter(mandate => mandate.titleId === titleId);
-  const titleSales = sales.filter(sale => sale.titleId === titleId);
-
-  if (!titleMandates.length && !titleSales.length) return false;
-
-  const saleTerms = titleSales.map(sale => sale.termIds).flat().map(termId => terms.find(term => term.id === termId));
-  const mandateTerms = titleMandates.map(mandate => mandate.termIds).flat().map(termId => terms.find(term => term.id === termId));
+export function isMovieAvailable(titleId: string, avails: AvailsFilter, bucket: Bucket, mandateTerms: Term[], saleTerms: Term[]) {
+  if (!mandateTerms.length || saleTerms.length) return false;
 
   const parentTerms = getMandateTerms(avails, mandateTerms);
 
   if (!parentTerms.length) return false;
 
-  this.parentTerms[titleId] = parentTerms;
   const bucketTerms = bucket?.contracts.find(c => c.titleId === titleId)?.terms ?? [];
 
-  return !isSold(avails, saleTerms) && !isInBucket(avails, bucketTerms);
+  return !collidingTerms(avails, saleTerms) && !isInBucket(avails, bucketTerms);
 }
