@@ -19,7 +19,7 @@
     </div>
   </article>
 
-  <bf-table [source]="orgs" pagination="5" filter>
+  <bf-table [source]="orgs" pagination="5" useFilter>
     <ng-template colRef="logo" label="Logo" let-logo sticky>
       <ng-container *ngIf="logo.storagePath; else nologo">
         <img class="logo" [ref]="logo" asset="empty_poster.svg">
@@ -34,7 +34,7 @@
     <ng-template colRef="denomination.public" label="Full Name" let-publicName>
       {{ publicName }}
     </ng-template>
-    <ng-template colRef="addresses.main.country" label="Country" sort let-country>
+    <ng-template colRef="addresses.main.country" defaultSort label="Country" sort let-country>
       {{ country ?? '--' }}
     </ng-template>
     <ng-template colRef="activity" label="Activity" let-activity>

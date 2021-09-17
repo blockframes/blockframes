@@ -31,8 +31,9 @@ export class ColumnDirective<T> {
   control = new FormControl(true);
 
   @Input('colRef') name!: string;
-  @Input() @boolean sticky = false;
   @Input() label?: string;
+  @Input() @boolean sticky = false;
+  @Input() @boolean defaultSort: boolean;
   @Input() sort?: '' | ((a: any, b: any) => number);
   @Input() filter = (input: string, value: any, row: T) => {
     if (typeof value !== 'string') return false;
@@ -55,7 +56,10 @@ export class ColumnDirective<T> {
 
   $sort(data: T[]): Observable<T[]> {
     const sort = this.sort || sortValue;
-    return this.control.valueChanges.pipe(
+    const value$ = this.defaultSort
+      ? this.control.valueChanges.pipe(startWith(this.control.value))
+      : this.control.valueChanges;
+    return value$.pipe(
       map(asc => asc ? 1 : -1),
       map(order => data.sort((a, b) => {
         const sorting = sort(getDeepValue(a, this.name), getDeepValue(b, this.name));
@@ -89,7 +93,7 @@ export class TableComponent<T> {
   @Input() set source(source: T[]) {
     this.dataSource.next(source);
   }
-  @Input() @boolean filter: boolean;
+  @Input() @boolean useFilter: boolean;
   @Input() set pagination(amount: number | string) {
     const pageSize = coerceNumberProperty(amount);
     if (typeof pageSize === 'number') this.paginator.pageSize = pageSize;
@@ -100,7 +104,6 @@ export class TableComponent<T> {
       switchMap(data => this.$filter(data)),
       switchMap(data => this.$sort(data)),
       switchMap(data => this.$paginate(data)),
-      tap(console.log),
     );
   }
 
@@ -122,7 +125,7 @@ export class TableComponent<T> {
   }
 
   private $filter(data: T[]) {
-    if (!this.filter) return of(data);
+    if (!this.useFilter) return of(data);
     return this.search.valueChanges.pipe(
       debounceTime(200),
       map(value => filterTable(data, value, this.columns)),

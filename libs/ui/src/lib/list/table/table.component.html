@@ -1,5 +1,5 @@
 <!-- Filter -->
-<ng-container *ngIf="filter">
+<ng-container *ngIf="useFilter">
   <mat-form-field appearance="outline">
     <mat-label>Tap to filter in the list below</mat-label>
     <input matInput [formControl]="search" />
@@ -41,7 +41,7 @@
 </div>
 
 <!-- Pagination -->
-<footer *ngIf="paginator" class="mat-paginator">
+<footer *ngIf="paginator.shouldDisplay$ | async" class="mat-paginator">
   <span class="mat-caption">Page {{ paginator.pageIndex + 1 }} of {{ paginator.maxIndex + 1 }}</span>
   <button mat-icon-button [disabled]="paginator.pageIndex === 0" (click)="paginator.first()">
     <mat-icon svgIcon="first_page"></mat-icon>

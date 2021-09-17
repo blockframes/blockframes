@@ -1,4 +1,5 @@
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 interface PageState {
   pageSize: number;
@@ -11,6 +12,12 @@ export class Paginator {
     pageSize: 0,
     pageIndex: 0, 
   });
+  shouldDisplay$ = combineLatest([
+    this.size$,
+    this.state,
+  ]).pipe(
+    map(([size, state]) => state.pageSize && size > state.pageSize)
+  );
 
   private setState(state: Partial<PageState>) {
     this.state.next({ ...this.state.getValue(), ...state});
