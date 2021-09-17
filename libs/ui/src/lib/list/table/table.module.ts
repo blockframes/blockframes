@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TableComponent, ColumnDirective } from './table.component';
 import { MatIconModule } from '@angular/material/icon';
@@ -15,6 +16,7 @@ import { DeepKeyPipeModule } from '@blockframes/utils/pipes';
   exports: [TableComponent, ColumnDirective],
   imports: [
     CommonModule,
+    RouterModule,
     ReactiveFormsModule,
     MatIconModule,
     MatFormFieldModule,

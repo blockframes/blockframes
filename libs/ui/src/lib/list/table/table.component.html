@@ -10,33 +10,44 @@
 <!-- Table -->
 <div class="table-container">
   <table class="mat-table" role="table">
+    <!-- Head -->
     <thead role="rowgroup">
       <tr class="mat-header-row" role="row">
         <ng-container *ngFor="let column of columns">
-          <th [attr.id]="column.name" class="mat-header-cell" role="columnheader">
-            <span>{{ column.label }}</span>
-            <ng-container *ngIf="column.isSortable">
-              <button class="sort" [ngClass]="{ asc: column.asc }" mat-icon-button (click)="column.toggleSort()">
-                <mat-icon svgIcon="arrow_upward"></mat-icon>
-              </button>
+          <th [attr.id]="column.name" [ngClass]="{ sticky: column.sticky }" class="mat-header-cell" role="columnheader">
+            <ng-container *ngIf="!column.isSortable else sortableHeader">
+              <span>{{ column.label }}</span>
             </ng-container>
+            <ng-template #sortableHeader>
+              <div class="sortable">
+                <span>{{ column.label }}</span>
+                <button class="sort" [ngClass]="{ asc: column.asc }" mat-icon-button (click)="column.toggleSort()">
+                  <mat-icon svgIcon="arrow_upward"></mat-icon>
+                </button>
+              </div>
+            </ng-template>
           </th>
         </ng-container>
       </tr>
     </thead>
+    <!-- Body -->
     <tbody role="rowgroup">
-      <tr *ngFor="let row of data$ | async" class="mat-row" role="row" >
-        <ng-container *ngFor="let column of columns">
-          <td class="mat-cell mat-body-1" role="cell"  [ngClass]="{ sticky: column.sticky }" [attr.headers]="column.name">
-            <ng-template
-              [ngTemplateOutlet]="column.template"
-              [ngTemplateOutletContext]="{ $implicit: row | deepKey:column.name, item: row }"
-            >
-            </ng-template>
-          </td>
-        </ng-container>
-      </tr>
+      <ng-container *ngFor="let row of data$ | async">
+        <tr class="mat-row" role="row" (click)="rowClick.emit(row)">
+          <ng-container *ngFor="let column of columns">
+            <td class="mat-cell mat-body-1" role="cell" [ngClass]="{ sticky: column.sticky }" [attr.headers]="column.name">
+              <ng-template
+                [ngTemplateOutlet]="column.template"
+                [ngTemplateOutletContext]="{ $implicit: row | deepKey:column.name, item: row }"
+              >
+              </ng-template>
+            </td>
+          </ng-container>
+        </tr>
+      </ng-container>
     </tbody>
+    <!-- Foot -->
+    <ng-content select="tfoot"></ng-content>
   </table>
 </div>
 

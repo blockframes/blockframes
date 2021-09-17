@@ -15,6 +15,7 @@ import { take } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationsComponent {
+  editLink = org => [`/c/o/dashboard/crm/organization/${org.id}`];
   // public versionColumns = {
   //   'id': { value: 'Id', disableSort: true },
   //   'status': 'Status',

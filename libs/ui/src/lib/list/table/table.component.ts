@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, ContentChildren, Directive, Input, QueryList, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ContentChildren, Directive, EventEmitter, HostBinding, Input, Output, QueryList, TemplateRef } from '@angular/core';
 import { BehaviorSubject, merge, Observable, of } from 'rxjs';
-import { debounceTime, map, startWith, switchMap, tap } from 'rxjs/operators';
+import { debounceTime, map, startWith, switchMap } from 'rxjs/operators';
 import { getDeepValue } from '@blockframes/utils/pipes/deep-key.pipe';
 import { FormControl } from '@angular/forms';
 import { coerceNumberProperty } from '@angular/cdk/coercion';
@@ -11,6 +11,7 @@ import { Paginator } from './paginator';
 function sortValue<T>(a: T, b: T) {
   if (typeof a === 'string' && typeof b === 'string') return a.toUpperCase() > b.toUpperCase() ? 1 : -1;
   if (typeof a === 'number' && typeof b === 'number') return a - b;
+  if (a instanceof Date && b instanceof Date) return a.getTime() - b.getTime();
   return 0;
 }
 
@@ -70,13 +71,6 @@ export class ColumnDirective<T> {
 }
 
 
-
-
-
-
-
-
-
 @Component({
   selector: 'bf-table',
   templateUrl: './table.component.html',
@@ -88,16 +82,20 @@ export class TableComponent<T> {
   search = new FormControl();
   paginator = new Paginator();
   data$: Observable<T[]>;
+  
 
   @ContentChildren(ColumnDirective) columns!: QueryList<ColumnDirective<T>>;
+  @HostBinding('class.clickable') @Input() @boolean clickable: boolean;
+  @Input() @boolean useFilter: boolean;
   @Input() set source(source: T[]) {
     this.dataSource.next(source);
   }
-  @Input() @boolean useFilter: boolean;
   @Input() set pagination(amount: number | string) {
     const pageSize = coerceNumberProperty(amount);
     if (typeof pageSize === 'number') this.paginator.pageSize = pageSize;
   }
+
+  @Output() rowClick = new EventEmitter<T>();
 
   constructor() {
     this.data$ = this.dataSource.asObservable().pipe(

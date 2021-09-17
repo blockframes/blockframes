@@ -19,8 +19,8 @@
     </div>
   </article>
 
-  <bf-table [source]="orgs" pagination="5" useFilter>
-    <ng-template colRef="logo" label="Logo" let-logo sticky>
+  <bf-table clickable [source]="orgs" pagination="5" useFilter (rowClick)="goToEdit($event)">
+    <ng-template colRef="logo" label="Logo" let-logo>
       <ng-container *ngIf="logo.storagePath; else nologo">
         <img class="logo" [ref]="logo" asset="empty_poster.svg">
       </ng-container>
@@ -40,10 +40,11 @@
     <ng-template colRef="activity" label="Activity" let-activity>
       {{ activity | toLabel: 'orgActivity'}}
     </ng-template>
+    <!-- TODO: wrong order of background when sticky & clickable hover -->
     <ng-template colRef="appAccess" label="App Access" let-appAccess sticky>
       <ul>
         <ng-container *ngFor="let a of app">
-          <li>{{ a | appName:true }} : {{ !!appAccess[a] && appAccess[a].dashboard ? 'yes': 'no' }} : {{ !!appAccess[a] && appAccess[a].marketplace ? 'yes': 'no' }} </li>
+          <li>{{ a | appName:true }} : {{ appAccess[a]?.dashboard ? 'yes': 'no' }} : {{ appAccess[a]?.marketplace ? 'yes': 'no' }} </li>
         </ng-container>
       </ul>
     </ng-template>
