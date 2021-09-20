@@ -1,18 +1,25 @@
+
 import { Injectable } from '@angular/core';
+
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
-import { BucketStore, BucketState } from './bucket.store';
-import { Bucket, createBucket } from './bucket.model';
+
+import { centralOrgId } from '@env';
+
+import { switchMap, take } from 'rxjs/operators';
+import { AuthQuery } from '@blockframes/auth/+state';
+import { createOfferId } from '@blockframes/utils/utils';
+import { MovieCurrency } from '@blockframes/utils/static-model';
+import { AvailsFilter } from '@blockframes/contract/avails/avails';
+import { createDocumentMeta } from '@blockframes/utils/models-meta';
+import { OrganizationQuery } from '@blockframes/organization/+state';
+
 import { TermService } from '../../term/+state';
-import { ContractService, convertDuration } from '../../contract/+state';
 import { OfferService } from '../../offer/+state';
 import { IncomeService } from '../../income/+state';
-import { OrganizationQuery } from '@blockframes/organization/+state';
-import { centralOrgId } from '@env';
-import { AuthQuery } from "@blockframes/auth/+state";
-import { switchMap, take } from 'rxjs/operators';
-import { createOfferId } from '@blockframes/utils/utils';
-import { createDocumentMeta } from '@blockframes/utils/models-meta';
-import { MovieCurrency } from '@blockframes/utils/static-model';
+import { Bucket, createBucket } from './bucket.model';
+import { BucketStore, BucketState } from './bucket.store';
+import { createBucketTerm, createBucketContract} from './bucket.model';
+import { ContractService, convertDuration } from '../../contract/+state';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'buckets' })
@@ -115,5 +122,30 @@ export class BucketService extends CollectionService<BucketState> {
 
     });
     return Promise.all(promises);
+  }
+
+
+  async addTerm(titleId: string, parentTermId: string, avails: AvailsFilter) {
+
+    const orgId = this.orgQuery.getActiveId();
+    const rawBucket = await this.getActive();
+    const bucket = createBucket({ id: orgId, ...rawBucket });
+
+    const term = createBucketTerm(avails);
+
+    const sale = bucket.contracts.find(contract => contract.titleId === titleId && contract.parentTermId === parentTermId);
+
+    if (sale) {
+      sale.terms.push();
+    } else {
+      const contract = createBucketContract({ titleId, parentTermId, terms: [ term ] });
+      bucket.contracts.push(contract);
+    }
+
+    if (rawBucket) {
+      this.update(orgId, bucket);
+    } else {
+      this.add(bucket);
+    }
   }
 }

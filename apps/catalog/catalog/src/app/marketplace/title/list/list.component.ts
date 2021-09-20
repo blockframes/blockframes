@@ -20,20 +20,16 @@ import { centralOrgId } from '@env';
 // Blockframes
 import { Movie } from '@blockframes/movie/+state';
 import { AlgoliaMovie } from '@blockframes/utils/algolia';
-import { allOf } from '@blockframes/contract/avails/sets';
-import { Territory } from '@blockframes/utils/static-model';
 import { Term } from '@blockframes/contract/term/+state/term.model';
-import { OrganizationQuery } from '@blockframes/organization/+state';
-import { ContractService } from '@blockframes/contract/contract/+state';
-import { Media, StoreStatus } from '@blockframes/utils/static-model/types';
+import { StoreStatus } from '@blockframes/utils/static-model/types';
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
+import { Bucket, BucketService } from '@blockframes/contract/bucket/+state';
 import { TermService } from '@blockframes/contract/term/+state/term.service';
 import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
+import { ContractService, Mandate, Sale } from '@blockframes/contract/contract/+state';
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
-import { Bucket, BucketService, createBucket } from '@blockframes/contract/bucket/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { AvailsFilter, getMandateTerms, isMovieAvailable } from '@blockframes/contract/avails/avails';
-import { createBucketContract, createBucketTerm } from '@blockframes/contract/bucket/+state/bucket.model';
 
 
 @Component({
@@ -48,14 +44,14 @@ export class ListComponent implements OnDestroy, OnInit {
 
   public storeStatus: StoreStatus = 'accepted';
   public searchForm = new MovieSearchForm('catalog', this.storeStatus);
-  public availsForm = new AvailsForm({}, ['duration', 'territories'])
+  public availsForm = new AvailsForm({}, ['duration', 'territories']);
 
   public nbHits: number;
   public hitsViewed = 0;
 
   private subs: Subscription[] = [];
 
-  private queries$: Observable< { mandateTerms: Term[], saleTerms: Term[] }>;
+  private queries$: Observable< { mandates: Mandate[], mandateTerms: Term[], sales: Sale[], saleTerms: Term[] }>;
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -65,7 +61,6 @@ export class ListComponent implements OnDestroy, OnInit {
     private termService: TermService,
     private snackbar: MatSnackBar,
     private bucketService: BucketService,
-    private orgQuery: OrganizationQuery,
     private router: Router,
   ) {
     this.dynTitle.setPageTitle('Films On Our Market Today');
@@ -86,13 +81,13 @@ export class ListComponent implements OnDestroy, OnInit {
     ]).pipe(
       switchMap(( [mandates, sales] ) => {
         const mandateTermIds = mandates.map(mandate => mandate.termIds).flat();
-        return this.termService.valueChanges(mandateTermIds).pipe(map(mandateTerms => ({ mandateTerms, sales })));
+        return this.termService.valueChanges(mandateTermIds).pipe(map(mandateTerms => ({ mandates, mandateTerms, sales })));
       }),
-      switchMap(({ mandateTerms, sales }) => {
+      switchMap(({ mandates, mandateTerms, sales }) => {
         const saleTermIds = sales.map(sale => sale.termIds).flat();
-        return this.termService.valueChanges(saleTermIds).pipe(map(saleTerms => ({ mandateTerms, saleTerms })));
+        return this.termService.valueChanges(saleTermIds).pipe(map(saleTerms => ({ mandates, mandateTerms, sales, saleTerms })));
       }),
-      startWith({ mandateTerms: [], saleTerms: [] }),
+      startWith({ mandates: [], mandateTerms: [], sales: [], saleTerms: [] }),
       shareReplay({ refCount: true, bufferSize: 1 }),
     );
 
@@ -135,9 +130,9 @@ export class ListComponent implements OnDestroy, OnInit {
       debounceTime(300),
       switchMap(async ([_, availsValue, bucketValue, queries]) => [await this.searchForm.search(true), availsValue, bucketValue, queries]),
     ).pipe(
-      map(([movies, availsValue, bucketValue, { mandateTerms, saleTerms }]: [SearchResponse<Movie>, AvailsFilter, Bucket, { mandateTerms: Term[], saleTerms: Term[] }]) => {
+      map(([movies, availsValue, bucketValue, { mandates, mandateTerms, sales, saleTerms }]: [SearchResponse<Movie>, AvailsFilter, Bucket, { mandates: Mandate[], mandateTerms: Term[], sales: Sale[], saleTerms: Term[] }]) => {
         if (this.availsForm.valid) {
-          return movies.hits.filter(movie => isMovieAvailable(movie.objectID, availsValue, bucketValue, mandateTerms, saleTerms));
+          return movies.hits.filter(movie => isMovieAvailable(movie.objectID, availsValue, bucketValue, mandates, mandateTerms, sales, saleTerms, true));
         } else { // if availsForm is invalid, put all the movies from algolia
           return movies.hits;
         }
@@ -161,8 +156,6 @@ export class ListComponent implements OnDestroy, OnInit {
 
     const titleId = title.objectID;
     const avails = this.availsForm.value;
-    const orgId = this.orgQuery.getActiveId();
-    const bucket = await this.bucketService.getActive();
 
     const { mandateTerms } = await this.queries$.pipe(take(1)).toPromise();
 
@@ -172,89 +165,7 @@ export class ListComponent implements OnDestroy, OnInit {
       return;
     }
 
-    // keep only what's in common between avails & parentTerm
-    const medias = parentTerm.medias.filter(media => avails.medias.includes(media));
-    const territories = parentTerm.territories.filter(territory => avails.territories.includes(territory));
-    const terms = [createBucketTerm({ ...avails, medias, territories })];
-
-    /** New BucketContracts that the user want to add */
-    const newContract = createBucketContract({ titleId, parentTermId: parentTerm.id, terms });
-
-
-    if (bucket) {
-      const bucketContracts = bucket.contracts ?? [];
-      // Check if there is already a contract that apply on the same parentTermId
-      const existingBucketContract = bucketContracts.find(c => c.parentTermId === newContract.parentTermId);
-
-      if (!existingBucketContract) {
-        bucketContracts.push(newContract);
-      } else { // append its terms with the new one.
-
-        const validTerms: AvailsFilter[] = [];
-        const conflictingTerms: AvailsFilter[] = [];
-
-        // Terms that have same duration and exclusivity needs to be merged together
-        // and then added to the valid terms
-
-        for (const existingTerm of existingBucketContract.terms) {
-          if (existingTerm.exclusive === avails.exclusive
-            && allOf(existingTerm.duration).equal(avails.duration)
-          ) {
-            conflictingTerms.push(existingTerm);
-          } else {
-            validTerms.push(existingTerm);
-          }
-        }
-
-        if (!conflictingTerms.length) {
-          existingBucketContract.terms.push(createBucketTerm(avails));
-
-        // Merge corresponding territories and medias
-        } else {
-
-          conflictingTerms.push(avails);
-
-          //                                                                 from term A   from term B
-          //                                                                    /    \       |
-          // Accumulate Medias by Territory across terms ->     'france':   [ 'TV', 'VOD', 'DVD' ]
-          //                                                    'germany':  ['TV', 'VOD', 'DVD', 'Hotels']
-          //                                                    'uk':       ['TV', 'VOD', 'DVD']
-          // Note: instead of a media array we use a record of media -> boolean to easily avoid duplicate
-          const mediasByTerritory: Record<string, Record<Media, boolean>> = {};
-          for (const term of conflictingTerms) {
-            for (const territory of term.territories) {
-              for (const media of term.medias) {
-                mediasByTerritory[territory][media] = true;
-              }
-            }
-          }
-
-          // Accumulate Territories by MediaS ->                'DVD;TV;VOD':         [ 'france', 'uk' ]
-          //                                                    'DVD;Hotels;TV;VOD':  [ 'germany' ]
-          // Note: instead of a media array we use a record of media -> boolean to easily avoid duplicate
-          const territoriesByMedias: Record<string, Record<Territory, boolean>> = {};
-          for (const territory in mediasByTerritory) {
-            const key = Object.keys(mediasByTerritory[territory]).sort().join(';'); // use medias array as unique key
-            territoriesByMedias[key][territory] = true;
-          }
-
-          // extract Medias & Territories from the record and create terms
-          for (const key in territoriesByMedias) {
-            const medias = key.split(';') as Media[];
-            const territories = Object.keys(territoriesByMedias[key]) as Territory[];
-            const recreatedTerm: AvailsFilter = { duration: avails.duration, exclusive: avails.exclusive, medias, territories }
-            validTerms.push(recreatedTerm);
-          }
-
-          existingBucketContract.terms = validTerms.map(createBucketTerm);
-        }
-      }
-      this.bucketService.update(orgId, { contracts: bucketContracts });
-
-    } else {
-      const bucket = createBucket({ id: orgId, contracts: [newContract] });
-      this.bucketService.add(bucket);
-    }
+    this.bucketService.addTerm(titleId, parentTerm.id, this.availsForm.value);
 
     this.snackbar.open(`${title.title.international} was added to your Selection`, 'GO TO SELECTION', { duration: 4000 })
       .onAction()
