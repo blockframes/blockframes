@@ -136,7 +136,7 @@ export class BucketService extends CollectionService<BucketState> {
     const sale = bucket.contracts.find(contract => contract.titleId === titleId && contract.parentTermId === parentTermId);
 
     if (sale) {
-      sale.terms.push();
+      sale.terms.push(term);
     } else {
       const contract = createBucketContract({ titleId, parentTermId, terms: [ term ] });
       bucket.contracts.push(contract);

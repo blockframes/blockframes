@@ -210,9 +210,9 @@ export function getCollidingHoldbacks(holdbacks: Holdback[], terms: BucketTerm[]
 //           MOVIE           //
 // ----------------------------
 
-export function isMovieAvailable(titleId: string, avails: AvailsFilter, bucket: Bucket, mandates: Mandate[], mandateTerms: Term[], sales: Sale[], saleTerms: Term[], debug = false) {
+export function isMovieAvailable(titleId: string, avails: AvailsFilter, bucket: Bucket, mandates: Mandate[], mandateTerms: Term[], sales: Sale[], saleTerms: Term[]) {
 
-  // A Title is available if it succeed every checks
+  // A Title is available if it succeed every check
 
 
   // Gather only mandates & mandate terms related to this title
