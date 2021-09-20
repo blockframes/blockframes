@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, Optional } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MovieService, createMovie } from '@blockframes/movie/+state';
-import { SheetTab } from '@blockframes/utils/spreadsheet';
+import { extract, ParseFieldFn, SheetTab } from '@blockframes/utils/spreadsheet';
 import { Crew, Producer } from '@blockframes/utils/common-interfaces/identity';
 import { Intercom } from 'ng-intercom';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
@@ -33,362 +33,142 @@ import { UserService } from '@blockframes/user/+state';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentApp } from '@blockframes/utils/apps';
 
-let index = 0;
 /**
  * Comments "// LETTER(S)" refers to the column index in the spreadsheet file
  */
-const fields = {
-  internationalTitle: { // A
-    multiLine: false,
-    index: index++
-  },
-  originalTitle: { // B
-    multiLine: false,
-    index: index++
-  },
-  internalRef: { // C
-    multiLine: false,
-    index: index++
-  },
-  contentType: { // D
-    multiLine: false,
-    index: index++
-  },
-  series: { // E
-    multiLine: false,
-    index: index++
-  },
-  episodeCount: { // F
-    multiLine: false,
-    index: index++
-  },
-  productionStatus: { // G
-    multiLine: false,
-    index: index++
-  },
-  releaseYear: { // H
-    multiLine: false,
-    index: index++
-  },
-  releaseYearStatus: { // I
-    multiLine: false,
-    index: index++
-  },
-  directors: {
-    multiLine: true,
-    fields: {
-      firstName: index++, // J
-      lastName: index++, // K
-      description: index++, // L
-    }
-  },
-  originCountries: { // M
-    multiLine: true,
-    index: index++
-  },
-  stakeholders: {
-    multiLine: true,
-    fields: {
-      displayName: index++, // N
-      role: index++, // O
-      country: index++, // P
-    }
-  },
-  originalRelease: {
-    multiLine: true,
-    fields: {
-      country: index++, // Q
-      media: index++, // R
-      date: index++, // S
-    }
-  },
-  originalLanguages: { // T
-    multiLine: true,
-    index: index++
-  },
-  genres: { // U
-    multiLine: true,
-    index: index++
-  },
-  customGenres: { // V
-    multiLine: true,
-    index: index++
-  },
-  runningTime: { // W
-    multiLine: false,
-    index: index++
-  },
-  runningTimeStatus: { // X
-    multiLine: false,
-    index: index++
-  },
-  cast: {
-    multiLine: true,
-    fields: {
-      firstName: index++, // Y
-      lastName: index++, // z
-      status: index++, // AA
-    }
-  },
-  prizes: {
-    multiLine: true,
-    fields: {
-      name: index++, // AB
-      year: index++, // AC
-      prize: index++, // AD
-      premiere: index++, // AE
-    }
-  },
-  logline: { // AF
-    multiLine: false,
-    index: index++
-  },
-  synopsis: { // AG
-    multiLine: false,
-    index: index++
-  },
-  keyAssets: { // AH
-    multiLine: false,
-    index: index++
-  },
-  keywords: { // AI
-    multiLine: true,
-    index: index++
-  },
-  producers: {
-    multiLine: true,
-    fields: {
-      firstName: index++, // AJ
-      lastName: index++, // AK
-      role: index++, // AL
-    }
-  },
-  crew: {
-    multiLine: true,
-    fields: {
-      firstName: index++, // AM
-      lastName: index++, // AN
-      role: index++, // AO
-    }
-  },
-  budgetRange: { // AP
-    multiLine: false,
-    index: index++
-  },
-  boxoffice: {
-    multiLine: true,
-    fields: {
-      territory: index++, // AQ
-      unit: index++, // AR
-      value: index++, // AS
-    }
-  },
-  certifications: { // AT
-    multiLine: true,
-    index: index++
-  },
-  ratings: {
-    multiLine: true,
-    fields: {
-      country: index++, // AU
-      value: index++, // AV
-    }
-  },
-  audience: {
-    multiLine: true,
-    fields: {
-      targets: index++, // AW
-      goals: index++ // AX
-    }
-  },
-  reviews: {
-    multiLine: true,
-    fields: {
-      filmCriticName: index++, // AY
-      revue: index++, // AZ
-      link: index++, // BA
-      quote: index++, // BB
-    }
-  },
-  color: { // BC
-    multiLine: false,
-    index: index++
-  },
-  format: { // BD
-    multiLine: false,
-    index: index++
-  },
-  formatQuality: { // BE
-    multiLine: false,
-    index: index++
-  },
-  soundFormat: { // BF
-    multiLine: false,
-    index: index++
-  },
-  isOriginalVersionAvailable: { // BG
-    multiLine: false,
-    index: index++
-  },
-  languages: {
-    multiLine: true,
-    fields: {
-      language: index++, // BH
-      dubbed: index++, // BI
-      subtitle: index++, // BJ
-      caption: index++, // BK
-    }
-  },
-  salesPitch: { // BL
-    multiLine: false,
-    index: index++
-  },
+const fields = [
+  'internationalTitle',
+  'originalTitle',
+  'internalRef',
+  'contentType',
+  'series',
+  'episodeCount',
+  'productionStatus',
+  'releaseYear',
+  'releaseYearStatus',
+  'directors',
+  'originCountries',
+  'stakeholders',
+  'originalRelease',
+  'originalLanguages',
+  'genres',
+  'customGenres',
+  'runningTime',
+  'runningTimeStatus',
+  'cast',
+  'prizes',
+  'logline',
+  'synopsis',
+  'keyAssets',
+  'keywords',
+  'producers',
+  'crew',
+  'budgetRange',
+  'boxoffice',
+  'certifications',
+  'ratings',
+  'audience',
+  'reviews',
+  'color',
+  'format',
+  'formatQuality',
+  'soundFormat',
+  'isOriginalVersionAvailable',
+  'languages',
+  'salesPitch',
   //////////////////
   // ADMIN FIELDS
   //////////////////
-  catalogStatus: { // BM
-    multiLine: false,
-    index: index++
-  },
-  festivalStatus: { // BN
-    multiLine: false,
-    index: index++
-  },
-  financiersStatus: { // BO
-    multiLine: false,
-    index: index++
-  },
-  ownerId: { // BP
-    multiLine: false,
-    index: index++
-  },
-};
+  'catalogStatus',
+  'festivalStatus',
+  'financiersStatus',
+  'ownerId',
+] as const;
 
-type fieldsKey = keyof typeof fields;
+type fieldsKey = typeof fields[number];
 type importType = Record<fieldsKey, any>
-type ParseFieldFn = (value: string | string[], state: any, rowIndex?: number) => any;
 
 const fieldsConfig: Record<string, ParseFieldFn> = {
-  'a_internationalTitle': (value: string,) => value,
-  'b_originalTitle': (value: string,) => value,
-  'c_internalRef': (value: string,) => value,
-  'd_contentType': (value: string,) => value,
-  'e_series': (value: string,) => formatNumber(value),
-  'f_episodeCount': (value: string,) => formatNumber(value),
-  'g_productionStatus': (value: string,) => value,
-  'h_releaseYear': (value: string,) => value,
-  'i_releaseYearStatus': (value: string,) => value,
-  'j_directors[].firstName': (value: string) => value,
-  'k_directors[].lastName': (value: string) => value,
-  'l_directors[].description': (value: string) => value,
-  'm_originCountries[]': (value: string) => value,
-  'n_stakeholders[].displayName': (value: string) => value,
-  'o_stakeholders[].role': (value: string) => value,
-  'p_stakeholders[].country': (value: string) => value,
-  'q_originalRelease[].country': (value: string) => value,
-  'r_originalRelease[].media': (value: string) => value,
-  's_originalRelease[].date': (value: string) => value,
-  't_originalLanguages[]': (value: string) => value,
-  'u_genres[]': (value: string) => value,
-  'v_customGenres[]': (value: string) => value,
-  'w_runningTime': (value: string) => value,
-  'x_runningTimeStatus': (value: string) => value,
-  'y_cast[].firstName': (value: string) => value,
-  'z_cast[].lastName': (value: string) => value,
-  'aa_cast[].status': (value: string) => value,
-  'ab_prizes[].name': (value: string) => value,
-  'ac_prizes[].year': (value: string) => value,
-  'ad_prizes[].prize': (value: string) => value,
-  'ae_prizes[].premiere': (value: string) => value,
-  'af_logline': (value: string) => value,
-  'ag_synopsis': (value: string) => value,
-  'ah_keyAssets': (value: string) => value,
-  'ai_keywords[]': (value: string) => value,
-  'aj_producers[].firstName': (value: string) => value,
-  'ak_producers[].lastName': (value: string) => value,
-  'al_producers[].role': (value: string) => value,
-  'am_crew[].firstName': (value: string) => value,
-  'an_crew[].lastName': (value: string) => value,
-  'ao_crew[].role': (value: string) => value,
-  'ap_budgetRange': (value: string) => value,
-  'aq_boxoffice[].territory': (value: string) => value,
-  'ar_boxoffice[].unit': (value: string) => value,
-  'as_boxoffice[].value': (value: string) => value,
-  'at_certifications[]': (value: string) => value,
-  'au_ratings[].country': (value: string) => value,
-  'av_ratings[].value': (value: string) => value,
-  'aw_audience[].targets': (value: string) => value,
-  'ax_audience[].goals': (value: string) => value,
-  'ay_reviews[].filmCriticName': (value: string) => value,
-  'az_reviews[].revue': (value: string) => value,
-  'ba_reviews[].link': (value: string) => value,
-  'bb_reviews[].quote': (value: string) => value,
-  'bc_color': (value: string) => value,
-  'bd_format': (value: string) => value,
-  'be_formatQuality': (value: string) => value,
-  'bf_soundFormat': (value: string) => value,
-  'bg_isOriginalVersionAvailable': (value: string) => value,
-  'bh_languages[].language': (value: string) => value,
-  'bi_languages[].dubbed': (value: string) => value,
-  'bj_languages[].subtitle': (value: string) => value,
-  'bk_languages[].caption': (value: string) => value,
-  'bl_salesPitch': (value: string) => value,
-  'bm_catalogStatus': (value: string) => value,
-  'bn_festivalStatus': (value: string) => value,
-  'bo_financiersStatus': (value: string) => value,
-  'bp_ownerId': (value: string) => value,
+  /* a */ 'internationalTitle': (value: string) => value,
+  /* b */ 'originalTitle': (value: string) => value,
+  /* c */ 'internalRef': (value: string) => value,
+  /* d */ 'contentType': (value: string) => value,
+  /* e */ 'series': (value: string) => {
+    if (value && !isNaN(formatNumber(value))) {
+      return formatNumber(value);
+    }
+    return value
+  },
+  /* f */ 'episodeCount': (value: string) => {
+    if (value && !isNaN(formatNumber(value))) {
+      return formatNumber(value);
+    }
+    return value
+  },
+  /* g */ 'productionStatus': (value: string) => value,
+  /* h */ 'releaseYear': (value: string) => value,
+  /* i */ 'releaseYearStatus': (value: string) => value,
+  /* j */ 'directors[].firstName': (value: string) => value,
+  /* k */ 'directors[].lastName': (value: string) => value,
+  /* l */ 'directors[].description': (value: string) => value,
+  /* m */ 'originCountries[]': (value: string) => value,
+  /* n */ 'stakeholders[].displayName': (value: string) => value,
+  /* o */ 'stakeholders[].role': (value: string) => value,
+  /* p */ 'stakeholders[].country': (value: string) => value,
+  /* q */ 'originalRelease[].country': (value: string) => value,
+  /* r */ 'originalRelease[].media': (value: string) => value,
+  /* s */ 'originalRelease[].date': (value: string) => value,
+  /* t */ 'originalLanguages[]': (value: string) => value,
+  /* u */ 'genres[]': (value: string) => value,
+  /* v */ 'customGenres[]': (value: string) => value,
+  /* w */ 'runningTime': (value: string) => value,
+  /* x */ 'runningTimeStatus': (value: string) => value,
+  /* y */ 'cast[].firstName': (value: string) => value,
+  /* z */ 'cast[].lastName': (value: string) => value,
+  /* aa */ 'cast[].status': (value: string) => value,
+  /* ab */ 'prizes[].name': (value: string) => value,
+  /* ac */ 'prizes[].year': (value: string) => value,
+  /* ad */ 'prizes[].prize': (value: string) => value,
+  /* ae */ 'prizes[].premiere': (value: string) => value,
+  /* af */ 'logline': (value: string) => value,
+  /* ag */ 'synopsis': (value: string) => value,
+  /* ah */ 'keyAssets': (value: string) => value,
+  /* ai */ 'keywords[]': (value: string) => value,
+  /* aj */ 'producers[].firstName': (value: string) => value,
+  /* ak */ 'producers[].lastName': (value: string) => value,
+  /* al */ 'producers[].role': (value: string) => value,
+  /* am */ 'crew[].firstName': (value: string) => value,
+  /* an */ 'crew[].lastName': (value: string) => value,
+  /* ao */ 'crew[].role': (value: string) => value,
+  /* ap */ 'budgetRange': (value: string) => value,
+  /* aq */ 'boxoffice[].territory': (value: string) => value,
+  /* ar */ 'boxoffice[].unit': (value: string) => value,
+  /* as */ 'boxoffice[].value': (value: string) => value,
+  /* at */ 'certifications[]': (value: string) => value,
+  /* au */ 'ratings[].country': (value: string) => value,
+  /* av */ 'ratings[].value': (value: string) => value,
+  /* aw */ 'audience[].targets': (value: string) => value,
+  /* ax */ 'audience[].goals': (value: string) => value,
+  /* ay */ 'reviews[].filmCriticName': (value: string) => value,
+  /* az */ 'reviews[].revue': (value: string) => value,
+  /* ba */ 'reviews[].link': (value: string) => value,
+  /* bb */ 'reviews[].quote': (value: string) => value,
+  /* bc */ 'color': (value: string) => value,
+  /* bd */ 'format': (value: string) => value,
+  /* be */ 'formatQuality': (value: string) => value,
+  /* bf */ 'soundFormat': (value: string) => value,
+  /* bg */ 'isOriginalVersionAvailable': (value: string) => value,
+  /* bh */ 'languages[].language': (value: string) => value,
+  /* bi */ 'languages[].dubbed': (value: string) => value,
+  /* bj */ 'languages[].subtitle': (value: string) => value,
+  /* bk */ 'languages[].caption': (value: string) => value,
+  /* bl */ 'salesPitch': (value: string) => value,
+  /* bm */ 'catalogStatus': (value: string) => value,
+  /* bn */ 'festivalStatus': (value: string) => value,
+  /* bo */ 'financiersStatus': (value: string) => value,
+  /* bp */ 'ownerId': (value: string) => value,
 };
 
-/**
-* item: The current object to return (contract, movie, org, ...)
-* value: value of the cell (array of string if the cell has several lines)
-* path: The key in the transform object (without the column segment)
-* transform: the callback of the key
-*/
-function parse(item: any = {}, values: string | string[], path: string, transform: ParseFieldFn, rowIndex: number) {
-  // Here we assume the column section has already been removed from the path
-  const segments = path.split('.');
-  // const [segment, ...remainingSegments] = segments;
-  const segment = segments.shift()
-  const last = !segments?.length;
-  if (segment.endsWith('[]')) {
-    const field = segment.replace('[]', '');
-    if (Array.isArray(values)) {
-      //@TODO: transform should have state instead of item
-      if (last) item[field] = values.map((value, index) => transform(value, item, rowIndex));
-      if (!last) {
-        if (!item[field]) item[field] = new Array(values.length).fill(null).map(() => ({}));
-        values.forEach((value, index) => {
-          parse(item[field][index], value, segments.join('.'), transform, rowIndex)
-        })
-
-      }
-    }
-  } else {
-    const value = Array.isArray(values) ? values[0] : values
-    if (last) {
-      item[segment] = transform(value, item, rowIndex);
-    }
-
-    if (!last) item[segment] = parse(item[segment] || {}, values, segments.join('.'), transform, rowIndex);
-  }
-}
-
-function cleanUp(data: any) {
-  if (!data) return;
-  const cleanedData = {};
-  Object.entries(data).forEach(([key, value]) => {
-    if (Array.isArray(value)) {
-      cleanedData[key] = value.filter(datum => isEmpty(datum));
-    }
-    cleanedData[key] = value;
-  });
-  return cleanedData;
-}
-
-function isEmpty(data: any) {
-  return Object.values(data).every(value => !!value);
-}
 
 @Component({
   selector: 'import-view-extracted-movies',
@@ -426,25 +206,6 @@ export class ViewExtractedMoviesComponent implements OnInit {
     this.cdRef.markForCheck();
   }
 
-
-  extract<T>(rawRows: string[][], extractParams: Record<string, ParseFieldFn> = {}) {
-    let extraParamsEntries = Object.entries(extractParams);
-    const state = {};
-    extraParamsEntries = extraParamsEntries.sort(([keyA], [keyB]) => {
-      const sumCharCodesA = keyA.split('_')[0].split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-      const sumCharCodesB = keyB.split('_')[0].split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-      return sumCharCodesA > sumCharCodesB ? 1 : -1
-    });
-    extraParamsEntries.forEach(([columnIndexedKey, parseFieldFn], index) => {
-      const combinedKeys = columnIndexedKey.split('_').pop();
-      const extraParamValues = rawRows.map(row => row[index] ?? '');
-      console.log({ extraParamValues, combinedKeys })
-      parse(state, extraParamValues, combinedKeys, parseFieldFn, index)
-    });
-    return state as T
-  }
-
-
   public async format(sheetTab: SheetTab) {
     this.clearDataSources();
 
@@ -452,8 +213,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
     this.currentRows = sheetTab.rows.slice(i, i + this.dedicatedLinesPerTitle);
 
     while (this.currentRows.length) {
-      this.mapping = this.extract<importType>(this.currentRows, fieldsConfig)
-
+      this.mapping = extract<importType>(this.currentRows, fieldsConfig)
       if (!this.mapping.originalTitle) { break; }
 
       // Fetch movie from internalRef if set or create a new movie
