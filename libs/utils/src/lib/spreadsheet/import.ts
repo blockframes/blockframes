@@ -105,7 +105,11 @@ export function isEmpty(data: any,) {
   return response;
 }
 
-
+/**
+ * This method assumes that the keys of extractparams doesn't posses number as this will throw
+ * off the ordering of the elements when we call Object.values/ Object.keys / Object.entries.
+ * with the fields including the numbers coming first no matter their position in the object.
+ */
 export function extract<T>(rawRows: string[][], extractParams: Record<string, ParseFieldFn> = {}) {
   const extraParamsEntries = Object.entries(extractParams);
   const state = {};
