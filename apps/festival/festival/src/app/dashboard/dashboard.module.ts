@@ -139,7 +139,6 @@ const routes: Routes = [{
     ToLabelModule,
     OrgAccessModule,
     MovieFormShellModule,
-    EventEditModule,
 
     // Material
     MatDividerModule,

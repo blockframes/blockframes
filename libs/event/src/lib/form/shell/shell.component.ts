@@ -31,7 +31,7 @@ const tabs = {
 export class EventFormShellComponent implements OnInit {
   tabs = tabs;
   @Input() form = new EventForm();
-  @ViewChild('confirmExit', {static: true}) confirmExitTemplate: TemplateRef<any>
+  @ViewChild('confirmExit', {static: true}) confirmExitTemplate: TemplateRef<any>;
   internalLink: string;
   link: string;
 
@@ -72,7 +72,8 @@ export class EventFormShellComponent implements OnInit {
         confirm: 'Delete',
         onConfirm: () => {
           this.service.remove(this.form.value.id);
-          this.router.navigate(['../..'], { relativeTo: this.route, state: {eventDeleted: true} })
+          //Here we add an eventDeleted to inform the guard thatthere is no need to display the popup
+          this.router.navigate(['../..'], { relativeTo: this.route, state: {eventDeleted: true} });
         },
       },
       autoFocus: false,
@@ -91,9 +92,9 @@ export class EventFormShellComponent implements OnInit {
       switchMap(shouldSave => {
         /* Undefined means user clicked on the backdrop, meaning just close the modal */
         if (typeof shouldSave === 'undefined') {
-          return of(false)
+          return of(false);
         }
-        return shouldSave ? of(this.save()) : of(true)
+        return shouldSave ? of(this.save()) : of(true);
       })
     );
   } 

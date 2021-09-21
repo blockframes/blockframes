@@ -4,7 +4,7 @@ import { OrganizationQuery } from '@blockframes/organization/+state';
 import { EventService } from '../+state';
 import { Observable } from 'rxjs';
 
-export interface FormRoot {
+interface FormRoot {
   confirmExit: () => Observable<boolean>;
 }
 @Injectable({ providedIn: 'root' })
@@ -32,7 +32,7 @@ export class EventOrganizationGuard implements CanActivate, CanDeactivate<unknow
       return true;
     }
 
-    return component.confirmExit()
+    return component.confirmExit();
   }
 
    
