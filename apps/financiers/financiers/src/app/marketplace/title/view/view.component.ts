@@ -106,7 +106,7 @@ export class MarketplaceMovieViewComponent implements OnInit {
   }
 
   async sendEmail(emailData: EmailData, title: string, orgs: Organization[]) {
-    let edata = null;
+    let email_ready = false;
     const templateId = templateIds.financiers.invest;
     const userSubject = getUserEmailData(this.authQuery.user);
 
@@ -117,9 +117,9 @@ export class MarketplaceMovieViewComponent implements OnInit {
       const users = await this.userService.getValue(org.userIds);
       for (const user of users) {
         let toUser = getUserEmailData(user);
-
+        const cyCheck = 'Cypress' in window;
         // For e2e test purpose
-        if ('Cypress' in window) {
+        if (cyCheck) {
           toUser = {...toUser, email: testEmail};
         }
 
@@ -132,10 +132,9 @@ export class MarketplaceMovieViewComponent implements OnInit {
           title,
         };
 
-        if (('Cypress' in window) && (edata === null) && (toUser.firstName !== userSubject.firstName)) {
-          edata = JSON.stringify(data);
+        if (cyCheck && (!email_ready && (toUser.firstName !== userSubject.firstName))) {
+          email_ready = true;
           window['Cypress_e2e'] = data;
-          console.log(data);
         }
 
         const promise = this.sendgrid.sendWithTemplate({

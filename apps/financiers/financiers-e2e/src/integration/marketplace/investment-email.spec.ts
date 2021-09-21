@@ -26,7 +26,6 @@ describe('Invest Interest Email Test', () => {
   });
 
   it('Connect to Financiers and send an invest interest email to the owners of a movie', () => {
-    let discussionDataTest;
     let investor = {firstName: '', lastName: '', email: ''};
     let user = {firstName: '', lastName: '', email: ''};
     let orgName = '';
@@ -53,7 +52,7 @@ describe('Invest Interest Email Test', () => {
     p4.openDiscussionModale();
 
     cy.log('Check if we cannot submit Discussion Form');
-    discussionDataTest = {...discussionData}; 
+    const discussionDataTest = {...discussionData}; 
     delete discussionDataTest.subject;
     p4.fillDiscussionForm(discussionDataTest);
     p4.checkDiscussionForm();
@@ -61,8 +60,6 @@ describe('Invest Interest Email Test', () => {
     cy.log('Fill Discussion Form completely and trigger emails');
     Object.assign(discussionDataTest, discussionData);
     p4.fillDiscussionForm(discussionDataTest);
-    // Object.assign(discussionDataTest, discussionData);
-    // p4.fillDiscussionForm(discussionDataTest);
     p4.sendDiscussionEmail();
 
     // Waiting this snackbar to appear, because it appears after the emails have been sent.
@@ -82,7 +79,6 @@ describe('Invest Interest Email Test', () => {
         user = test_info.user;
         investor = test_info.userSubject;
         orgName = test_info.org.denomination;
-        console.log(messages);
         let idMail = '';
         messages.every(email => {
           expect(email.subject).to.contain(`is interested in ${titleInvest}`);
