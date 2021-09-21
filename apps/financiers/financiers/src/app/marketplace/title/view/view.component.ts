@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, ViewChild, TemplateRef } from '@angular/core';
+﻿import { Component, OnInit, ChangeDetectionStrategy, ViewChild, TemplateRef } from '@angular/core';
 import { getCurrencySymbol } from '@angular/common';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -106,8 +106,7 @@ export class MarketplaceMovieViewComponent implements OnInit {
   }
 
   async sendEmail(emailData: EmailData, title: string, orgs: Organization[]) {
-
-    this.dialogRef.close();
+    let edata = null;
     const templateId = templateIds.financiers.invest;
     const userSubject = getUserEmailData(this.authQuery.user);
 
@@ -132,6 +131,12 @@ export class MarketplaceMovieViewComponent implements OnInit {
           org: orgUserSubject,
           title,
         };
+
+        if (('Cypress' in window) && (edata === null) && (toUser.firstName !== userSubject.firstName)) {
+          edata = JSON.stringify(data);
+          window['Cypress_e2e'] = data;
+          console.log(data);
+        }
 
         const promise = this.sendgrid.sendWithTemplate({
           request: { templateId, data, to: toUser.email },
