@@ -1,10 +1,12 @@
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { EventForm } from '@blockframes/event/form/event.form';
 import { EventService } from '@blockframes/event/+state';
 import { Subscription } from 'rxjs';
 import { switchMap, pluck } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { slideUpList } from '@blockframes/utils/animations/fade';
+import { EventFormShellComponent } from '@blockframes/event/form/shell/shell.component'
+
 @Component({
   selector: 'festival-event-edit',
   templateUrl: './edit.component.html',
@@ -17,6 +19,7 @@ export class EditComponent implements OnInit, OnDestroy {
   private sub: Subscription;
   private formSub: Subscription;
   form: EventForm;
+  @ViewChild('eventShell') eventShell: EventFormShellComponent;
 
   constructor(
     private service: EventService,
@@ -49,6 +52,10 @@ export class EditComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.sub.unsubscribe();
     this.formSub.unsubscribe();
+  }
+
+  confirmExit() {
+    return this.eventShell.confirmExit();
   }
 
 }

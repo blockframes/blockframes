@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { EventForm } from '../../form/event.form';
 import { EventService } from '../../+state/event.service';
@@ -6,6 +6,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentApp , applicationUrl} from '@blockframes/utils/apps';
+import { of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 const tabs = {
   screening: [
@@ -29,6 +31,7 @@ const tabs = {
 export class EventFormShellComponent implements OnInit {
   tabs = tabs;
   @Input() form = new EventForm();
+  @ViewChild('confirmExit', {static: true}) confirmExitTemplate: TemplateRef<any>
   internalLink: string;
   link: string;
 
@@ -58,6 +61,7 @@ export class EventFormShellComponent implements OnInit {
       this.service.update(value);
       this.form.markAsPristine();
     }
+    return true;
   }
 
   async remove() {
@@ -68,11 +72,29 @@ export class EventFormShellComponent implements OnInit {
         confirm: 'Delete',
         onConfirm: () => {
           this.service.remove(this.form.value.id);
-          this.router.navigate(['../..'], { relativeTo: this.route })
+          this.router.navigate(['../..'], { relativeTo: this.route, state: {eventDeleted: true} })
         },
       },
       autoFocus: false,
     })
   }
 
+  confirmExit() {
+    if (!this.form.dirty) {
+      return true;
+    }
+
+    const dialogRef = this.dialog.open(this.confirmExitTemplate, {
+      width: '80%'
+    });
+    return dialogRef.afterClosed().pipe(
+      switchMap(shouldSave => {
+        /* Undefined means user clicked on the backdrop, meaning just close the modal */
+        if (typeof shouldSave === 'undefined') {
+          return of(false)
+        }
+        return shouldSave ? of(this.save()) : of(true)
+      })
+    );
+  } 
 }

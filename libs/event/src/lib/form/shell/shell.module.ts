@@ -13,6 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [EventFormShellComponent],
@@ -30,7 +31,8 @@ import { MatTabsModule } from '@angular/material/tabs';
     MatButtonModule,
     MatIconModule,
     MatFormFieldModule,
-    MatTabsModule
+    MatTabsModule,
+    MatDialogModule,
   ]
 })
 export class EventFromShellModule { }
