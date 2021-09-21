@@ -64,12 +64,11 @@ export function collidingTerms(avails: AvailsFilter, terms: Term<Date>[]) {
   );
 }
 
-export function isInBucket(avails: AvailsFilter, terms: BucketTerm[]) {
-  return terms.some(term =>
-    term.exclusive === avails.exclusive
+export function allOfAvailInTerms(avails: AvailsFilter, terms: BucketTerm[]) {
+  return terms.some(term => term.exclusive === avails.exclusive
     && allOf(avails.territories).in(term.territories)
     && allOf(avails.medias).in(term.medias)
-    && allOf(term.duration).in(avails.duration)
+    && allOf(avails.duration).in(term.duration)
   );
 }
 
@@ -211,14 +210,39 @@ export function getCollidingHoldbacks(holdbacks: Holdback[], terms: BucketTerm[]
 //           MOVIE           //
 // ----------------------------
 
-export function isMovieAvailable(titleId: string, avails: AvailsFilter, bucket: Bucket, mandateTerms: Term[], saleTerms: Term[]) {
-  if (!mandateTerms.length || saleTerms.length) return false;
+export function isMovieAvailable(titleId: string, avails: AvailsFilter, bucket: Bucket, mandates: Mandate[], mandateTerms: Term[], sales: Sale[], saleTerms: Term[]) {
 
-  const parentTerms = getMandateTerms(avails, mandateTerms);
+  // A Title is available if it succeed every check
 
-  if (!parentTerms.length) return false;
 
+  // Gather only mandates & mandate terms related to this title
+  const titleMandates = mandates.filter(mandate => mandate.titleId === titleId);
+  const titleMandateTerms = mandateTerms.filter(mandateTerm => titleMandates.some(mandate => mandate.id === mandateTerm.contractId));
+
+  // CHECK (1) if the title has no mandates at all it can't be available
+  if (!titleMandates.length) return false;
+
+
+  // CHECK (2) if no mandates matches the avails requested by the user, then the title is not available for this request
+  const mandatesColliding = allOfAvailInTerms(avails, titleMandateTerms);
+  if (!mandatesColliding) return false;
+
+
+  // CHECK (3) if all the requested avails are already existing in a term in the bucket for this title,
+  // then it shouldn't be displayed to avoid the user selecting it twice
   const bucketTerms = bucket?.contracts.find(c => c.titleId === titleId)?.terms ?? [];
+  const inBucket = allOfAvailInTerms(avails, bucketTerms);
+  if (inBucket) return false;
 
-  return !collidingTerms(avails, saleTerms) && !isInBucket(avails, bucketTerms);
+
+  // Gather only sales & sale terms related to this title
+  const titleSales = sales.filter(sale => sale.titleId === titleId);
+  const titleSaleTerms = saleTerms.filter(saleTerm => titleSales.some(sale => sale.id === saleTerm.contractId));
+
+
+  // CHECK (4) if the title is already sold on some part of the requested avails, then it's not available for these avails
+  const salesColliding = termsCollision(avails, titleSaleTerms);
+  if (salesColliding) return false;
+
+  return true;
 }

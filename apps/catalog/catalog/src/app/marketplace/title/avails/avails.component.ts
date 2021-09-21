@@ -47,11 +47,11 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
 
   /** Raw mandates, straight from the db
    *
-   * _(mandates = available contracts)_
+   * _(mandates = contracts to sold might be available or already sold)_
   */
   public mandates$ = new ReplaySubject<Mandate[]>();
 
-  /** Raw mandate **(available)** terms, straight from the db
+  /** Raw mandate terms, straight from the db (might be available or already sold)
    *
    * _(term = continuous subdivision of a contract, a contract is composed of one or more terms)_
   */
@@ -95,10 +95,9 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
       const selector = "[data-scroll-to-view-id='" + queryParams.contract + "']"
       //@why: #6383
       setTimeout(() => {
-        const element = document.querySelector<HTMLElement>(selector)
-        console.log({ element, selector })
-        scrollIntoView(element)
-      }, 400)
+        const element = document.querySelector<HTMLElement>(selector);
+        scrollIntoView(element);
+      }, 400);
 
     }
 
@@ -108,9 +107,8 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
       skip(skipValue),
       //@why: #6383
       delay(100)
-    ).subscribe(fragment => {
-      scrollIntoView(document.querySelector(`#${fragment}`))
-    });
+    ).subscribe(fragment => scrollIntoView(document.querySelector(`#${fragment}`)));
+
     this.subs.push(fragSub);
 
     const paramsSub = combineLatest([

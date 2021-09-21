@@ -1,5 +1,5 @@
 import { BucketTerm, Term } from '../../term/+state/term.model';
-import { AvailsFilter, getMandateTerms, isInBucket, termsCollision } from './../avails';
+import { AvailsFilter, getMandateTerms, allOfAvailInTerms, termsCollision } from './../avails';
 import { mandates } from './../fixtures/mandates';
 import { sales } from './../fixtures/sales';
 import { mandateTerms as acTerms } from './../fixtures/mandateTerms';
@@ -265,7 +265,7 @@ describe('Test isTermSold pure function', () => {
       expect(isMotherSold).toBe(false);
       expect(isBigfootSold).toBe(false);
       bucket.push(createBucketTerm(availDetails));
-      expect(isInBucket(availDetails, bucket)).toBe(true)
+      expect(allOfAvailInTerms(availDetails, bucket)).toBe(true)
     })
 
     it(`Mandate test (terms)
@@ -322,7 +322,7 @@ describe('Test isTermSold pure function', () => {
       expect(isHoursSold).toBe(true);
       expect(isBigfootSold).toBe(false);
       bucket.push(createBucketTerm(availDetails));
-      expect(isInBucket(availDetails, bucket)).toBe(true)
+      expect(allOfAvailInTerms(availDetails, bucket)).toBe(true)
     })
 
     it(`Mandate test (rights)
@@ -384,7 +384,7 @@ describe('Test isTermSold pure function', () => {
       expect(isBigfootSold).toBe(false);
       expect(isGazaSold).toBe(false);
       bucket.push(createBucketTerm(availDetails));
-      expect(isInBucket(availDetails, bucket)).toBe(true)
+      expect(allOfAvailInTerms(availDetails, bucket)).toBe(true)
     })
 
     it(`Terms check (existing ended sale)
@@ -450,7 +450,7 @@ describe('Test isTermSold pure function', () => {
       expect(isHoursSold).toBe(false);
       expect(isBigfootSold).toBe(false);
       bucket.push(createBucketTerm(availDetails));
-      expect(isInBucket(availDetails, bucket)).toBe(true)
+      expect(allOfAvailInTerms(availDetails, bucket)).toBe(true)
     })
 
     it(`Terms check (existing ongoing sale)
@@ -516,7 +516,7 @@ describe('Test isTermSold pure function', () => {
       expect(isHoursSold).toBe(false);
       expect(isBigfootSold).toBe(false);
       bucket.push(createBucketTerm(availDetails));
-      expect(isInBucket(availDetails, bucket)).toBe(true)
+      expect(allOfAvailInTerms(availDetails, bucket)).toBe(true)
     })
 
     it(`Cross territory check + exclusivity
@@ -582,7 +582,7 @@ describe('Test isTermSold pure function', () => {
       expect(isBigfootSold).toBe(true);
       expect(isResurrectedSold).toBe(false);
       bucket.push(createBucketTerm(availDetails));
-      expect(isInBucket(availDetails, bucket)).toBe(true)
+      expect(allOfAvailInTerms(availDetails, bucket)).toBe(true)
     })
 
 
@@ -649,7 +649,7 @@ describe('Test isTermSold pure function', () => {
       expect(isBigfootSold).toBe(true);
       expect(isResurrectedSold).toBe(true);
       bucket.push(createBucketTerm(availDetails));
-      expect(isInBucket(availDetails, bucket)).toBe(true)
+      expect(allOfAvailInTerms(availDetails, bucket)).toBe(true)
     })
 
     it(`Rights check
@@ -715,7 +715,7 @@ describe('Test isTermSold pure function', () => {
       expect(isBigfootSold).toBe(true);
       expect(isResurrectedSold).toBe(false);
       bucket.push(createBucketTerm(availDetails));
-      expect(isInBucket(availDetails, bucket)).toBe(true)
+      expect(allOfAvailInTerms(availDetails, bucket)).toBe(true)
     })
 
     it(`Rights check
@@ -781,7 +781,7 @@ describe('Test isTermSold pure function', () => {
       expect(isBigfootSold).toBe(false);
       expect(isResurrectedSold).toBe(true);
       bucket.push(createBucketTerm(availDetails));
-      expect(isInBucket(availDetails, bucket)).toBe(true)
+      expect(allOfAvailInTerms(availDetails, bucket)).toBe(true)
     })
 
     it(`Rights check
@@ -847,7 +847,7 @@ describe('Test isTermSold pure function', () => {
       expect(isBigfootSold).toBe(false);
       expect(isResurrectedSold).toBe(true);
       bucket.push(createBucketTerm(availDetails));
-      expect(isInBucket(availDetails, bucket)).toBe(true)
+      expect(allOfAvailInTerms(availDetails, bucket)).toBe(true)
     })
 
     it(`Exclusivity test (non exclusive)
@@ -913,7 +913,7 @@ describe('Test isTermSold pure function', () => {
       expect(isBigfootSold).toBe(true);
       expect(isResurrectedSold).toBe(false);
       bucket.push(createBucketTerm(availDetails));
-      expect(isInBucket(availDetails, bucket)).toBe(true)
+      expect(allOfAvailInTerms(availDetails, bucket)).toBe(true)
     })
 
 
@@ -980,7 +980,7 @@ describe('Test isTermSold pure function', () => {
       expect(isBigfootSold).toBe(false);
       expect(isResurrectedSold).toBe(true);
       bucket.push(createBucketTerm(availDetails));
-      expect(isInBucket(availDetails, bucket)).toBe(true)
+      expect(allOfAvailInTerms(availDetails, bucket)).toBe(true)
     })
 })
 

@@ -1,13 +1,17 @@
 <form [formGroup]="form">
+
   <hr />
+
   <h3>Territories*</h3>
   <mat-form-field appearance="outline">
     <mat-label>Select territories</mat-label>
-    <!-- Dont use formControlName instead of [formControl] because of form Group Directive parents -->
+    <!-- Don't use formControlName instead of [formControl] because of form Group Directive parents -->
     <static-group [formControl]="form.get('territories')" scope="territories" displayAll="World"
       placeholder="Specify territory to filter" required test-id="territories">
     </static-group>
   </mat-form-field>
+
+  <hr />
 
   <h3>Terms*</h3>
   <div formGroupName="duration" fxLayout fxLayoutAlign="space-between" fxLayoutGap="16px">
@@ -31,7 +35,9 @@
     </mat-form-field>
   </div>
 
-  <hr />
+  <!-- We need to add more space so that the Territories don't cover the Rights -->
+  <!-- This is quick fix until we find a good UI/theme level fix see issue#5841 -->
+  <hr class="more-space" />
 
   <h3>Rights*</h3>
   <mat-form-field appearance="outline">

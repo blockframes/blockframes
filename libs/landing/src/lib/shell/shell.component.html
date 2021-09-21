@@ -24,122 +24,134 @@
 
   <!-- Contact -->
 
-  <mat-card class="demo dark-contrast-theme" id="demo" bgAsset="background_learn_more.png" >
-
-    <ng-container *ngIf="landingContactDirective; else contact">
-      <ng-content select="landing-contact"></ng-content>
-    </ng-container>
-    <ng-template #contact>
-      <article fxLayout="column" fxLayoutAlign="start center" class="contact-us">
-        <h1 class="mat-display-1">Want to learn more?</h1>
-        <h3>Schedule a demo with our team!</h3>
-        <p>
-          Please fill out the following form and we will get back to you asap.
-        </p>
-      </article>
-      <form test-id="demo-form" fxLayout="column" fxLayoutAlign="start center" [formGroup]="form" (ngSubmit)="sendRequest(form)">
-        <article fxLayout="row" fxLayoutAlign="space-between start" fxLayout.lt-md="column" fxLayoutGap="24px">
-          <mat-form-field appearance="outline">
-            <mat-label>First Name</mat-label>
-            <input test-id="first-name" matInput type="text" placeholder="First Name" formControlName="firstName" required />
-            <mat-error *ngIf="form.get('firstName').hasError('required')">
-              First Name is <strong>required</strong>
-            </mat-error>
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>Last Name</mat-label>
-            <input test-id="last-name" matInput type="text" placeholder="Last Name" formControlName="lastName" required />
-            <mat-error *ngIf="form.get('lastName').hasError('required')">
-              Last Name is <strong>required</strong>
-            </mat-error>
-          </mat-form-field>
+  <section class="demo dark-contrast-theme" id="demo">
+    <section class="max-width">
+      <ng-container *ngIf="landingContactDirective; else contact">
+        <ng-content select="landing-contact"></ng-content>
+      </ng-container>
+      <ng-template #contact>
+        <article fxLayout="column" fxLayoutAlign="start center" class="contact-us">
+          <h1 class="mat-display-1">Want to learn more?</h1>
+          <h3>Schedule a demo with our team!</h3>
+          <p>
+            Please fill out the following form and we will get back to you asap.
+          </p>
         </article>
-        <article fxLayout="row" fxLayoutAlign="space-between start" fxLayout.lt-md="column" fxLayoutGap="24px">
-          <mat-form-field appearance="outline">
-            <mat-label>Company Name</mat-label>
-            <input test-id="comp-name" matInput type="text" placeholder="Company Name" formControlName="companyName" required />
-            <mat-error *ngIf="form.get('companyName').hasError('required')">
-              Company Name is <strong>required</strong>
-            </mat-error>
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>Role</mat-label>
-            <mat-select test-id="role" placeholder="Activity" formControlName="role" required>
-              <mat-option *ngFor="let role of roles" [value]="role">{{ role | roleLabel }}</mat-option>
-            </mat-select>
-            <mat-error *ngIf="form.get('role').hasError('required')">
-              Role is <strong>required</strong>
-            </mat-error>
-          </mat-form-field>
-        </article>
-        <article fxLayout fxLayoutAlign="space-between start" fxLayout.lt-md="column" fxLayoutGap="24px">
-          <mat-form-field appearance="outline">
-            <mat-label>Email Adress</mat-label>
-            <input test-id="email" matInput type="email" placeholder="E-mail address" formControlName="email" required />
-            <mat-error *ngIf="form.get('email').hasError('required')">
-              Email is <strong>required</strong>
-            </mat-error>
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <tel-input test-id="phone-no" [form]="form.get('phoneNumber')" placeholder="Phone number"></tel-input>
-          </mat-form-field> 
-        </article>
-        <!-- <article fxLayout="row" fxLayoutAlign="center center">
-          <mat-checkbox formControlName="newsletter">Subscribe to the newsletter</mat-checkbox>
-        </article> -->
-        <button test-id="send-request" [disabled]="submitted" fxFlexAlign="center" mat-flat-button color="accent" type="submit">{{ buttonText }}</button>
-      </form>
-    </ng-template>
-  </mat-card>
+        <form test-id="demo-form" fxLayout="column" fxLayoutAlign="start center" [formGroup]="form" (ngSubmit)="sendRequest(form)">
+          <article fxLayout="row" fxLayoutAlign="space-between start" fxLayout.lt-md="column" fxLayoutGap="24px">
+            <mat-form-field appearance="outline">
+              <mat-label>First Name</mat-label>
+              <input test-id="first-name" matInput type="text" placeholder="First Name" formControlName="firstName" required />
+              <mat-error *ngIf="form.get('firstName').hasError('required')">
+                First Name is <strong>required</strong>
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Last Name</mat-label>
+              <input test-id="last-name" matInput type="text" placeholder="Last Name" formControlName="lastName" required />
+              <mat-error *ngIf="form.get('lastName').hasError('required')">
+                Last Name is <strong>required</strong>
+              </mat-error>
+            </mat-form-field>
+          </article>
+          <article fxLayout="row" fxLayoutAlign="space-between start" fxLayout.lt-md="column" fxLayoutGap="24px">
+            <mat-form-field appearance="outline">
+              <mat-label>Company Name</mat-label>
+              <input test-id="comp-name" matInput type="text" placeholder="Company Name" formControlName="companyName" required />
+              <mat-error *ngIf="form.get('companyName').hasError('required')">
+                Company Name is <strong>required</strong>
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Role</mat-label>
+              <mat-select test-id="role" placeholder="Activity" formControlName="role" required>
+                <mat-option *ngFor="let role of roles" [value]="role">{{ role | roleLabel }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="form.get('role').hasError('required')">
+                Role is <strong>required</strong>
+              </mat-error>
+            </mat-form-field>
+          </article>
+          <article fxLayout fxLayoutAlign="space-between start" fxLayout.lt-md="column" fxLayoutGap="24px">
+            <mat-form-field appearance="outline">
+              <mat-label>Email Adress</mat-label>
+              <input test-id="email" matInput type="email" placeholder="E-mail address" formControlName="email" required />
+              <mat-error *ngIf="form.get('email').hasError('required')">
+                Email is <strong>required</strong>
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <tel-input test-id="phone-no" [form]="form.get('phoneNumber')" placeholder="Phone number"></tel-input>
+            </mat-form-field> 
+          </article>
+          <article fxLayout="row" fxLayoutAlign="center center">
+            <mat-checkbox formControlName="newsletters">Subscribe to the newsletters</mat-checkbox>
+          </article>
+          <button test-id="send-request" [disabled]="submitted" fxFlexAlign="center" mat-flat-button color="accent" type="submit">{{ buttonText }}</button>
+        </form>
+      </ng-template>
+    </section>
+  </section>
 
   <!-- Festival landing page - They're talking about us -->
-
   <ng-content select="landing-detail"></ng-content>
 
   <!-- Footer -->
-
   <ng-container *ngIf="landingFooterComponent; else footer">
     <ng-content select="landing-footer"></ng-content>
   </ng-container>
   <ng-template #footer>
-    <footer fxLayout="column" fxLayoutAlign="start center" fxLayoutAlign.lt-md="center center"
-      fxLayoutGap="32px">
-      <div fxLayout fxLayoutAlign="start">
-        <app-logo></app-logo>
-      </div>
-      <mat-divider></mat-divider>
-      <div fxLayout fxLayoutAlign="space-between" fxLayout.lt-md="column" fxLayoutGap.lt-md="24px">
-        <article fxLayout="column" fxLayoutAlign="space-between start">
-          <p class="mat-body-2">Proudly associated with the following partners</p>
-          <span fxLayout="row wrap" fxLayoutAlign="start" fxLayoutGap="16px">
-            <img asset="BPI_france.png" type="logo" alt="BPI France logo" />
-            <img asset="creative_media_europe.png" type="logo" alt="creative media europe logo" />
-            <img asset="IFCIC_logo.png" type="logo" alt="ifcic">
-            <img asset="CNC_logo.png" type="logo" alt="cnc">
-          </span>
-        </article>
-        <article fxLayout="column" fxLayoutAlign="space-between start">
-          <p>Powered by</p>
-          <img asset="cascade8.svg" type="logo" alt="cascade8">
-        </article>
-        <article fxLayout="column" fxLayoutAlign="space-between start">
-          <p>Follow us</p>
-          <span fxLayout fxLayoutGap="24px">
-            <a href="https://twitter.com/cascade8_apps?lang=en" target="_blank">
-              <img asset="twitter.svg" type="logo" alt="twitter">
-            </a>
-            <a href="https://www.linkedin.com/company/cascade8/" target="_blank">
-              <img asset="linkedin.svg" type="logo" alt="linkedin" />
-            </a>
-            <a href="https://www.instagram.com/cascade8_apps/" target="_blank">
-              <img asset="instagram.svg" type="logo" alt="instagram" />
-            </a>
-            <a href="https://www.facebook.com/Cascade8" target="_blank">
-              <img asset="facebook.svg" type="logo" alt="facebook">
-            </a>
-          </span>
-        </article>
-      </div>
+    <footer>
+      <section class="max-width" fxLayout="column" fxLayoutAlign="start center" fxLayoutAlign.lt-md="center center"
+        fxLayoutGap="32px">
+        <div fxLayout="row wrap">
+          <app-logo fxLayout fxFlex></app-logo>
+          <form fxFlex [formGroup]="newslettersForm" (ngSubmit)="subscribeToNewsletters(newslettersForm)" >
+            <mat-form-field appearance="outline" hideRequiredMarker>
+              <input test-id="email" matInput type="email" placeholder="Enter your email address" formControlName="email" required />
+              <mat-hint class="mat-caption">Subscribe to our newsletter now!</mat-hint>
+              <mat-error *ngIf="form.get('email').hasError('required')">
+                Email is <strong>required</strong>
+              </mat-error>
+            </mat-form-field>
+            <button id="newsletterButton" [disabled]="newslettersSubmitted" mat-flat-button color="accent" type="submit">Subscribe</button>
+          </form>
+        </div>
+        
+        <mat-divider></mat-divider>
+        <div fxLayout fxLayoutAlign="space-between" fxLayout.lt-md="column" fxLayoutGap.lt-md="24px">
+          <article fxLayout="column" fxLayoutAlign="space-between start">
+            <p class="mat-body-2">Proudly associated with the following partners</p>
+            <span fxLayout="row wrap" fxLayoutAlign="start" fxLayoutGap="16px">
+              <img asset="BPI_france.png" type="logo" alt="BPI France logo" />
+              <img asset="creative_media_europe.png" type="logo" alt="creative media europe logo" />
+              <img asset="IFCIC_logo.png" type="logo" alt="ifcic">
+              <img asset="CNC_logo.png" type="logo" alt="cnc">
+            </span>
+          </article>
+          <article fxLayout="column" fxLayoutAlign="space-between start">
+            <p>Powered by</p>
+            <img asset="cascade8.svg" type="logo" alt="cascade8">
+          </article>
+          <article fxLayout="column" fxLayoutAlign="space-between start">
+            <p>Follow us</p>
+            <span fxLayout fxLayoutGap="24px">
+              <a href="https://twitter.com/cascade8_apps?lang=en" target="_blank">
+                <img asset="twitter.svg" type="logo" alt="twitter">
+              </a>
+              <a href="https://www.linkedin.com/company/cascade8/" target="_blank">
+                <img asset="linkedin.svg" type="logo" alt="linkedin" />
+              </a>
+              <a href="https://www.instagram.com/cascade8_apps/" target="_blank">
+                <img asset="instagram.svg" type="logo" alt="instagram" />
+              </a>
+              <a href="https://www.facebook.com/Cascade8" target="_blank">
+                <img asset="facebook.svg" type="logo" alt="facebook">
+              </a>
+            </span>
+          </article>
+        </div>
+      </section>
     </footer>
   </ng-template>
 

@@ -1,14 +1,25 @@
 @import "~@angular/flex-layout/mq";
+$banner-background: rgba(5, 7, 36);
 
 :host {
   display: block;
 }
 
-landing-header {
-  background-image: url("/assets/images/banner_landing_new.jpg ");
+// Maximum width for large screens
+.max-width {
+  max-width: 1920px; // equal to "lg" in Angular breakpoints
+  margin: auto;
+}
 
-  h4 {
-    text-transform: uppercase;
+landing-header {
+  padding: 0;
+
+  header {
+    padding: 60px 80px;
+    background-image: url("/assets/images/banner_landing_new.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;  
   }
 }
 
@@ -18,10 +29,12 @@ landing-content {
   }
   
   .landing-partners {
-    padding: 80px;
     background-color: var(--background-card);
-    div {
-      margin-top: 24px;
+    article {
+      padding: 80px;
+      div {
+        margin-top: 24px;
+      }
     }
   }
 
@@ -29,11 +42,13 @@ landing-content {
     padding: 80px
   }
 
-  .landing-join {
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;  
-    padding: 96px 0;
+  .landing-join-wrapper {
+    background-color: $banner-background;
+
+    .landing-join {
+      background: linear-gradient(to right, $banner-background 0%, #2a1d34 50%, $banner-background 100%);
+      padding: 96px 0;
+    }
   }
 
   .landing-clients-opinion {
@@ -153,6 +168,21 @@ landing-detail {
   landing-detail {
     a {
       width: 100%
+    }
+  }
+}
+
+@include layout-bp(gt-lg) {
+  landing-header {
+    header {
+      background-image: linear-gradient(
+        to right, 
+        $banner-background 0%,
+        rgba(0, 0, 0, 0) 40px,
+        rgba(0, 0, 0, 0) calc(100% - 40px),
+        $banner-background 100%
+      ),
+      url("/assets/images/banner_landing_new.jpg");
     }
   }
 }
