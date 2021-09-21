@@ -48,7 +48,7 @@ const fields = [
 ] as const;
 
 type fieldsKey = typeof fields[number];
-type ImportType = Record<fieldsKey, any>
+type ImportType = Record<fieldsKey, string>
 
 const fieldsConfig: Record<string, ParseFieldFn> = {
   /* a */ 'fullDenomination': (value: string) => value,
@@ -245,7 +245,7 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
 
         // APP ACCESS
         if (catalogAccess) {
-          const [module1, module2]: Module[] = catalogAccess.split(this.separator).map(m => m.trim().toLowerCase());
+          const [module1, module2]: Module[] = catalogAccess.split(this.separator).map(m => m.trim().toLowerCase()) as Module[];
           if (module1) {
             importErrors.org.appAccess.catalog[module1] = true;
           }
@@ -255,7 +255,7 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
         }
 
         if (festivalAccess) {
-          const [module1, module2]: Module[] = festivalAccess.split(this.separator).map(m => m.trim().toLowerCase());
+          const [module1, module2]: Module[] = festivalAccess.split(this.separator).map(m => m.trim().toLowerCase()) as Module[];
           if (module1) {
             importErrors.org.appAccess.festival[module1] = true;
           }
@@ -265,7 +265,7 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
         }
 
         if (financiersAccess) {
-          const [module1, module2]: Module[] = financiersAccess.split(this.separator).map(m => m.trim().toLowerCase());
+          const [module1, module2]: Module[] = financiersAccess.split(this.separator).map(m => m.trim().toLowerCase()) as Module[];
           if (module1) {
             importErrors.org.appAccess.financiers[module1] = true;
           }

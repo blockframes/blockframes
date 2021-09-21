@@ -118,8 +118,8 @@ const fields = [
   '_stakeholdersList',
 ] as const;
 
-type fieldsKey = typeof fields[number];
-type ImportType = Record<fieldsKey, any>
+type FieldsKey = typeof fields[number];
+type ImportType = Record<FieldsKey, string>
 
 
 const fieldsConfig: Record<string, ParseFieldFn> = {
@@ -247,7 +247,7 @@ export class ViewExtractedContractsComponent implements OnInit {
       // CONTRACT
       let baseContract: Partial<Mandate | Sale> = {};
       if (_contractId) {
-        baseContract = await this.contractService.getValue(_contractId as string);
+        baseContract = await this.contractService.getValue(_contractId);
         if (!baseContract) throw new Error('No contract found for id' + _contractId);
       } else {
         baseContract.id = this.fire.createId();
