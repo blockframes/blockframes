@@ -15,6 +15,7 @@ import { MeetingFilesModule } from '@blockframes/event/form/meeting-files/meetin
 import { MeetingFilesComponent } from '@blockframes/event/form/meeting-files/meeting-files.component';
 
 import { EventTypeGuard } from '@blockframes/event/guard/event-type.guard';
+import { EventOrganizationGuard } from '@blockframes/event/guard/event-organization.guard';
 
 
 @NgModule({
@@ -31,6 +32,7 @@ import { EventTypeGuard } from '@blockframes/event/guard/event-type.guard';
       {
         path: '',
         component: EditComponent,
+        canDeactivate: [EventOrganizationGuard],
         children: [
           {
             path: '',

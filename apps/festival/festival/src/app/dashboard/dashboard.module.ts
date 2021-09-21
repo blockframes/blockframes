@@ -13,7 +13,7 @@ import { ToLabelModule } from '@blockframes/utils/pipes';
 import { MovieFormShellModule } from '@blockframes/movie/form/shell/shell.module';
 import { MovieShellConfig } from '@blockframes/movie/form/movie.shell.config';
 import { FORMS_CONFIG } from '@blockframes/movie/form/movie.shell.interfaces';
-
+import { EventEditModule } from './event/edit/edit.module';
 // Tunnel routes
 import { tunnelRoutes } from './tunnel/movie-tunnel.routes';
 
