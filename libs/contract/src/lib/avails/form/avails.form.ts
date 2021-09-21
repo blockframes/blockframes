@@ -26,7 +26,7 @@ function createAvailControl(avail: Partial<AvailsFilter> = {}, required: ('terri
     duration: new FormGroup({
       from: new FormControl(avail.duration?.from, fromValidators),
       to: new FormControl(avail.duration?.to, toValidators)
-    })
+    }),
   }
 }
 
