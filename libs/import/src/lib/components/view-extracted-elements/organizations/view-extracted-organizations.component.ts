@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, Optional } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
-import { SheetTab } from '@blockframes/utils/spreadsheet';
+import { extract, ParseFieldFn, SheetTab } from '@blockframes/utils/spreadsheet';
 import { Intercom } from 'ng-intercom';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { OrganizationsImportState } from '../../../import-utils';
@@ -28,6 +28,45 @@ enum SpreadSheetOrganization {
   festivalAccess,
   financiersAccess,
 }
+
+const fields = [
+  'fullDenomination',
+  'publicDenomination',
+  'email',
+  'activity',
+  'fiscalNumber',
+  'street',
+  'city',
+  'zipCode',
+  'region',
+  'country',
+  'phoneNumber',
+  'superAdminEmail',
+  'catalogAccess',
+  'festivalAccess',
+  'financiersAccess',
+] as const;
+
+type fieldsKey = typeof fields[number];
+type ImportType = Record<fieldsKey, any>
+
+const fieldsConfig: Record<string, ParseFieldFn> = {
+  /* a */ 'fullDenomination': (value: string) => value,
+  /* b */ 'publicDenomination': (value: string) => value,
+  /* c */ 'email': (value: string) => value,
+  /* d */ 'activity': (value: string) => value,
+  /* e */ 'fiscalNumber': (value: string) => value,
+  /* f */ 'street': (value: string) => value,
+  /* g */ 'city': (value: string) => value,
+  /* h */ 'zipCode': (value: string) => value,
+  /* i */ 'region': (value: string) => value,
+  /* j */ 'country': (value: string) => value,
+  /* k */ 'phoneNumber': (value: string) => value,
+  /* l */ 'superAdminEmail': (value: string) => value,
+  /* m */ 'catalogAccess': (value: string) => value,
+  /* n */ 'festivalAccess': (value: string) => value,
+  /* o */ 'financiersAccess': (value: string) => value,
+};
 
 @Component({
   selector: 'import-view-extracted-organizations',
@@ -65,12 +104,19 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
     const matSnackbarRef = this.snackBar.open('Loading... Please wait', 'close');
     for (const spreadSheetRow of sheetTab.rows) {
 
+      const {
+        fullDenomination, publicDenomination, email,
+        activity: extractedActivity, fiscalNumber, street, city, zipCode,
+        region, country: extractCountry, phoneNumber, superAdminEmail,
+        catalogAccess, festivalAccess, financiersAccess,
+      } = extract<ImportType>([spreadSheetRow], fieldsConfig);
+
       // ORG ID
       // Create/retreive the org
       let org = createOrganization();
       let newOrg = true;
-      if (spreadSheetRow[SpreadSheetOrganization.email]) {
-        const [existingOrg] = await this.organizationService.getValue(ref => ref.where('email', '==', spreadSheetRow[SpreadSheetOrganization.email] as string));
+      if (email) {
+        const [existingOrg] = await this.organizationService.getValue(ref => ref.where('email', '==', email));
         if (existingOrg) {
           org = existingOrg;
           newOrg = false;
@@ -84,8 +130,8 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
       } as OrganizationsImportState;
 
       let superAdmin = createUser();
-      if (spreadSheetRow[SpreadSheetOrganization.superAdminEmail]) {
-        const [existingSuperAdmin] = await this.userService.getValue(ref => ref.where('email', '==', spreadSheetRow[SpreadSheetOrganization.superAdminEmail] as string));
+      if (superAdminEmail) {
+        const [existingSuperAdmin] = await this.userService.getValue(ref => ref.where('email', '==', superAdminEmail));
         if (existingSuperAdmin) {
           superAdmin = existingSuperAdmin;
 
@@ -106,34 +152,34 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
 
       importErrors.superAdmin = superAdmin;
 
-      if (spreadSheetRow[SpreadSheetOrganization.fullDenomination]) {
+      if (fullDenomination) {
         /**
         * @dev We process this data only if this is for a new org
         */
         if (newOrg) {
           // SUPER ADMIN
-          if (spreadSheetRow[SpreadSheetOrganization.superAdminEmail]) {
-            importErrors.superAdmin.email = spreadSheetRow[SpreadSheetOrganization.superAdminEmail].trim().toLowerCase();
+          if (superAdminEmail) {
+            importErrors.superAdmin.email = superAdminEmail.trim().toLowerCase();
           }
         }
 
         // DENOMINATION
-        if (spreadSheetRow[SpreadSheetOrganization.fullDenomination]) {
-          importErrors.org.denomination.full = spreadSheetRow[SpreadSheetOrganization.fullDenomination].trim();
+        if (fullDenomination) {
+          importErrors.org.denomination.full = fullDenomination.trim();
         }
 
-        if (spreadSheetRow[SpreadSheetOrganization.publicDenomination]) {
-          importErrors.org.denomination.public = spreadSheetRow[SpreadSheetOrganization.publicDenomination].trim();
+        if (publicDenomination) {
+          importErrors.org.denomination.public = publicDenomination.trim();
         }
 
         // EMAIL
-        if (spreadSheetRow[SpreadSheetOrganization.email]) {
-          importErrors.org.email = spreadSheetRow[SpreadSheetOrganization.email].trim().toLowerCase();
+        if (email) {
+          importErrors.org.email = email.trim().toLowerCase();
         }
 
         // ORG INFOS
-        if (spreadSheetRow[SpreadSheetOrganization.activity]) {
-          const activity = getKeyIfExists('orgActivity', spreadSheetRow[SpreadSheetOrganization.activity]);
+        if (extractedActivity) {
+          const activity = getKeyIfExists('orgActivity', extractedActivity);
           if (activity) {
             importErrors.org.activity = activity;
           } else {
@@ -141,7 +187,7 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
               type: 'warning',
               field: 'activity',
               name: 'Activity',
-              reason: `${spreadSheetRow[SpreadSheetOrganization.activity]} not found in activity list`,
+              reason: `${extractedActivity} not found in activity list`,
               hint: 'Edit corresponding sheet field.'
             });
           }
@@ -156,29 +202,29 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
           });
         }
 
-        if (spreadSheetRow[SpreadSheetOrganization.fiscalNumber]) {
-          importErrors.org.fiscalNumber = spreadSheetRow[SpreadSheetOrganization.fiscalNumber];
+        if (fiscalNumber) {
+          importErrors.org.fiscalNumber = fiscalNumber;
         }
 
         // ADDRESS
-        if (spreadSheetRow[SpreadSheetOrganization.street]) {
-          importErrors.org.addresses.main.street = spreadSheetRow[SpreadSheetOrganization.street];
+        if (street) {
+          importErrors.org.addresses.main.street = street;
         }
 
-        if (spreadSheetRow[SpreadSheetOrganization.city]) {
-          importErrors.org.addresses.main.city = spreadSheetRow[SpreadSheetOrganization.city];
+        if (city) {
+          importErrors.org.addresses.main.city = city;
         }
 
-        if (spreadSheetRow[SpreadSheetOrganization.zipCode]) {
-          importErrors.org.addresses.main.zipCode = spreadSheetRow[SpreadSheetOrganization.zipCode];
+        if (zipCode) {
+          importErrors.org.addresses.main.zipCode = zipCode;
         }
 
-        if (spreadSheetRow[SpreadSheetOrganization.region]) {
-          importErrors.org.addresses.main.region = spreadSheetRow[SpreadSheetOrganization.region];
+        if (region) {
+          importErrors.org.addresses.main.region = region;
         }
 
-        if (spreadSheetRow[SpreadSheetOrganization.country]) {
-          const country = getKeyIfExists('territories', spreadSheetRow[SpreadSheetOrganization.country]);
+        if (extractCountry) {
+          const country = getKeyIfExists('territories', extractCountry);
           if (country) {
             importErrors.org.addresses.main.country = country;
           } else {
@@ -186,20 +232,20 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
               type: 'warning',
               field: 'addresses.main.country',
               name: 'Country',
-              reason: `${spreadSheetRow[SpreadSheetOrganization.country]} not found in territories list`,
+              reason: `${extractCountry} not found in territories list`,
               hint: 'Edit corresponding sheet field.'
             });
           }
 
         }
 
-        if (spreadSheetRow[SpreadSheetOrganization.phoneNumber]) {
-          importErrors.org.addresses.main.phoneNumber = spreadSheetRow[SpreadSheetOrganization.phoneNumber];
+        if (phoneNumber) {
+          importErrors.org.addresses.main.phoneNumber = phoneNumber;
         }
 
         // APP ACCESS
-        if (spreadSheetRow[SpreadSheetOrganization.catalogAccess]) {
-          const [module1, module2]: Module[] = spreadSheetRow[SpreadSheetOrganization.catalogAccess].split(this.separator).map(m => m.trim().toLowerCase());
+        if (catalogAccess) {
+          const [module1, module2]: Module[] = catalogAccess.split(this.separator).map(m => m.trim().toLowerCase());
           if (module1) {
             importErrors.org.appAccess.catalog[module1] = true;
           }
@@ -208,8 +254,8 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
           }
         }
 
-        if (spreadSheetRow[SpreadSheetOrganization.festivalAccess]) {
-          const [module1, module2]: Module[] = spreadSheetRow[SpreadSheetOrganization.festivalAccess].split(this.separator).map(m => m.trim().toLowerCase());
+        if (festivalAccess) {
+          const [module1, module2]: Module[] = festivalAccess.split(this.separator).map(m => m.trim().toLowerCase());
           if (module1) {
             importErrors.org.appAccess.festival[module1] = true;
           }
@@ -218,8 +264,8 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
           }
         }
 
-        if (spreadSheetRow[SpreadSheetOrganization.financiersAccess]) {
-          const [module1, module2]: Module[] = spreadSheetRow[SpreadSheetOrganization.financiersAccess].split(this.separator).map(m => m.trim().toLowerCase());
+        if (financiersAccess) {
+          const [module1, module2]: Module[] = financiersAccess.split(this.separator).map(m => m.trim().toLowerCase());
           if (module1) {
             importErrors.org.appAccess.financiers[module1] = true;
           }
