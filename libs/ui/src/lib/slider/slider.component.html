@@ -1,6 +1,6 @@
 <!-- Slides -->
 <ul #slideList role="listbox">
-  <li *ngFor="let slide of slides.changes | async" role="option">
+  <li *ngFor="let slide of slides" role="option">
     <ng-template [ngTemplateOutlet]="slide.templateRef"></ng-template>
   </li>
 </ul>
