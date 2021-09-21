@@ -1,8 +1,4 @@
-import { region } from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import { firebaseRegion } from '@env';
-export const functions = region(firebaseRegion);
-
 import { backupBucket, storageBucket } from '../environments/environment';
 import { isInMaintenance } from '@blockframes/firebase-utils';
 import { IMaintenanceDoc, META_COLLECTION_NAME, MAINTENANCE_DOCUMENT_NAME, _isInMaintenance } from '@blockframes/utils/maintenance';
