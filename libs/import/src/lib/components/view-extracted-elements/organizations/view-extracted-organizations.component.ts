@@ -11,23 +11,23 @@ import { UserService } from '@blockframes/user/+state';
 import { getOrgModuleAccess, Module } from '@blockframes/utils/apps';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
 
-enum SpreadSheetOrganization {
-  fullDenomination,
-  publicDenomination,
-  email,
-  activity,
-  fiscalNumber,
-  street,
-  city,
-  zipCode,
-  region,
-  country,
-  phoneNumber,
-  superAdminEmail,
-  catalogAccess,
-  festivalAccess,
-  financiersAccess,
-}
+// enum SpreadSheetOrganization {
+//   fullDenomination,
+//   publicDenomination,
+//   email,
+//   activity,
+//   fiscalNumber,
+//   street,
+//   city,
+//   zipCode,
+//   region,
+//   country,
+//   phoneNumber,
+//   superAdminEmail,
+//   catalogAccess,
+//   festivalAccess,
+//   financiersAccess,
+// }
 
 const fields = [
   'fullDenomination',
@@ -47,10 +47,7 @@ const fields = [
   'financiersAccess',
 ] as const;
 
-type fieldsKey = typeof fields[number];
-type ImportType = Record<fieldsKey, string>
-
-const fieldsConfig: Record<string, ParseFieldFn> = {
+const fieldsConfig= {
   /* a */ 'fullDenomination': (value: string) => value,
   /* b */ 'publicDenomination': (value: string) => value,
   /* c */ 'email': (value: string) => value,
@@ -66,7 +63,15 @@ const fieldsConfig: Record<string, ParseFieldFn> = {
   /* m */ 'catalogAccess': (value: string) => value,
   /* n */ 'festivalAccess': (value: string) => value,
   /* o */ 'financiersAccess': (value: string) => value,
-};
+} as const;
+
+
+type fieldsKey =  keyof typeof fieldsConfig;
+// type ImportType = Record<fieldsKey, string>
+type ImportType = {
+  [key in fieldsKey]: ReturnType<typeof fieldsConfig[key]>
+}
+
 
 @Component({
   selector: 'import-view-extracted-organizations',

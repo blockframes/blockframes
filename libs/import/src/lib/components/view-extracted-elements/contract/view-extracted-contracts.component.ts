@@ -121,34 +121,85 @@ const fields = [
 
 
 const fieldsConfig = {
-  /* a */ 'internationalTitle': (value: string) => value,
-  /* b */ 'contractType': (value: string) => value.toLowerCase(),
-  /* c */ 'licensorName': (value: string) => value,
-  /* d */ 'licenseeName': (value: string) => value,
-  /* e */ 'territoriesList': (value: string) => value,
-  /* f */ 'mediaList': (value: string) => value,
-  /* g */ 'isExclusive': (value: string) => value.toLowerCase() === 'yes' ? true : false,
-  /* h */ 'durationFrom': (value: string) => {
-    if (value) return getDate(value);
-    return value;
+  'internationalTitle': { /* a */
+    getValue: (value: string) => value,
+    validators: [],
   },
-  /* i */ 'durationTo': (value: string) => {
-    if (value) return getDate(value);
-    return value;
+  'contractType': { /* b */
+    getValue: (value: string) => value.toLowerCase(),
+    validators: [],
   },
-  /* j */ 'ignored_originalLanguageLicensed': (value: string) => value,
-  /* k */ 'dubbed': (value: string) => value,
-  /* l */ 'subtitle': (value: string) => value,
-  /* m */ 'closedCaptioning': (value: string) => value,
-  /* n optional*/ 'contractId': (value: string) => value,
-  /* o optional and ignored*/ 'parentTermId': (value: string) => value,
-  /* p optional*/ 'titleId': (value: string) => value,
-  /* q optional*/ 'stakeholdersList': (value: string) => value ? split(value) : value,
+  'licensorName': { /* c */
+    getValue: (value: string) => value,
+    validators: [],
+  },
+  'licenseeName': { /* d */
+    getValue: (value: string) => value,
+    validators: [],
+  },
+  'territoriesList': { /* e */
+    getValue: (value: string) => value,
+    validators: [],
+  },
+  'mediaList': { /* f */
+    getValue: (value: string) => value,
+    validators: [],
+  },
+  'isExclusive': { /* g */
+    getValue: (value: string) => value.toLowerCase() === 'yes' ? true : false,
+    validators: [],
+  },
+  'durationFrom': { /* h */
+    getValue: (value: string) => {
+      if (value) return getDate(value);
+      return value;
+    },
+    validators: [],
+  },
+  'durationTo': { /* i */
+    getValue: (value: string) => {
+      if (value) return getDate(value);
+      return value;
+    },
+    validators: [],
+  },
+  'ignored_originalLanguageLicensed': { /* j */
+    getValue: (value: string) => value,
+    validators: [],
+  },
+  'dubbed': { /* k */
+    getValue: (value: string) => value,
+    validators: [],
+  },
+  'subtitle': { /* l */
+    getValue: (value: string) => value,
+    validators: [],
+  },
+  'closedCaptioning': { /* m */
+    getValue: (value: string) => value,
+    validators: [],
+  },
+  'contractId': { /* n optional*/
+    getValue: (value: string) => value,
+    validators: [],
+  },
+  'parentTermId': { /* o optional and ignored*/
+    getValue: (value: string) => value,
+    validators: [],
+  },
+  'titleId': { /* p optional*/
+    getValue: (value: string) => value,
+    validators: [],
+  },
+  'stakeholdersList': { /* q optional*/
+    getValue: (value: string) => value ? split(value) : value,
+    validators: [],
+  },
 } as const;
 
 type FieldsType = keyof typeof fieldsConfig;
 type ImportType = {
-  [key in FieldsType]: ReturnType<typeof fieldsConfig[key]>
+  [key in FieldsType]: ReturnType<typeof fieldsConfig[key].getValue >
 }
 
 
@@ -227,14 +278,14 @@ export class ViewExtractedContractsComponent implements OnInit {
         durationTo, dubbed, stakeholdersList,
         subtitle, closedCaptioning,
         contractId: extractedContractId,
-        titleId: ExtractedTitleId,
+        titleId: extractedTitleId,
       } = extract<ImportType>([row], fieldsConfig)
 
       //////////////
       // CONTRACT //
       //////////////
       // TITLE
-      const titleId = ExtractedTitleId || (await this.getTitleId(internationalTitle));
+      const titleId = extractedTitleId || (await this.getTitleId(internationalTitle));
 
       if (!titleId) errors.push(errorsMap['no-title-id']);
 
