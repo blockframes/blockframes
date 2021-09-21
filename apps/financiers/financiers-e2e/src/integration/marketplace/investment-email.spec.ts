@@ -107,7 +107,8 @@ describe('Invest Interest Email Test', () => {
             const startIndex = emailSent.indexOf('Hi ');
             const endIndex = emailSent.indexOf('\n\nUns');
             console.log(emailSent, startIndex, endIndex);
-            const actualEmailSummary = emailSent.substr(startIndex, endIndex - startIndex);
+            const regx = new RegExp(String.fromCharCode(160), "gi");
+            const actualEmailSummary = emailSent.substr(startIndex, endIndex - startIndex).replace(regx, " ");
             console.log(actualEmailSummary);
             console.log(expectedEmailSummary);
             expect(actualEmailSummary).to.equal(expectedEmailSummary);
