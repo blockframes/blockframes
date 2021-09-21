@@ -18,15 +18,9 @@ export class MeetingVideoComponent implements AfterViewInit, OnDestroy {
     this.userInitials = this.name?.split(' ').map(name => name[0]).join('') ?? '?';
     this.local = value.kind === 'local';
 
-    if (!this.track.audio && !!value.tracks.audio) {
-      this.track.audio = value.tracks.audio;
-      this.setUpTracks('audio');
-    }
-
-    if (!this.track.video && !!value.tracks.video) {
-      this.track.video = value.tracks.video;
-      this.setUpTracks('video');
-    }
+    this.track.audio = value.tracks.audio;
+    this.track.video = value.tracks.video;
+    this.setUpTracks('video', 'audio');
   }
 
   track: Tracks = { audio: null, video: null };
