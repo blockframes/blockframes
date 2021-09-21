@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, Optional } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
-import { SheetTab } from '@blockframes/utils/spreadsheet';
+import { extract, ParseFieldFn, SheetTab } from '@blockframes/utils/spreadsheet';
 import { createMandate, createSale, Mandate, Sale } from '@blockframes/contract/contract/+state/contract.model';
 import { createTerm } from '@blockframes/contract/term/+state/term.model';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
@@ -20,6 +20,7 @@ import { createMovieLanguageSpecification } from '@blockframes/movie/+state/movi
 
 const separator = ';'
 type errorCodes = 'no-title-id' | 'no-seller-id' | 'no-buyer-id' | 'no-stakeholders' | 'no-territories' | 'no-medias' | 'no-duration-from' | 'no-duration-to';
+
 const errorsMap: { [key in errorCodes]: SpreadsheetImportError } = {
   'no-title-id': {
     type: 'warning',
@@ -99,6 +100,49 @@ function getStatic(scope: Scope, value: string) {
   return split(value).map(v => getKeyIfExists(scope, v)).filter(v => !!v);
 }
 
+const fields = [
+  'internationalTitle',
+  'contractType',
+  'licensorName',
+  'licenseeName',
+  'territoriesList',
+  'mediaList',
+  'isExclusive',
+  'durationFrom',
+  'durationTo',
+  'dubbed',
+  'subtitle',
+  'closedCaptioning',
+  '_contractId',
+  '_titleId',
+  '_stakeholdersList',
+] as const;
+
+type fieldsKey = typeof fields[number];
+type ImportType = Record<fieldsKey, any>
+
+
+const fieldsConfig: Record<string, ParseFieldFn> = {
+  /* a */ 'internationalTitle': (value: string) => value,
+  /* b */ 'contractType': (value: string) => value,
+  /* c */ 'licensorName': (value: string) => value,
+  /* d */ 'licenseeName': (value: string) => value,
+  /* e */ 'territoriesList': (value: string) => value,
+  /* f */ 'mediaList': (value: string) => value,
+  /* g */ 'isExclusive': (value: string) => value,
+  /* h */ 'durationFrom': (value: string) => value,
+  /* i */ 'durationTo': (value: string) => value,
+  /* j */ 'ignored_originalLanguageLicensed': (value: string) => value,
+  /* k */ 'dubbed': (value: string) => value,
+  /* l */ 'subtitle': (value: string) => value,
+  /* m */ 'closedCaptioning': (value: string) => value,
+  /* n */ '_contractId': (value: string) => value,
+  /* o */ 'ignored__parentTermId': (value: string) => value,
+  /* p */ '_titleId': (value: string) => value,
+  /* q */ '_stakeholdersList': (value: string) => value,
+};
+
+
 @Component({
   selector: 'import-view-extracted-contracts',
   templateUrl: './view-extracted-contracts.component.html',
@@ -137,7 +181,7 @@ export class ViewExtractedContractsComponent implements OnInit {
 
   private async getOrgId(name: string) {
     if (!name) return '';
-    // @TODO #6586 carefull if you are on a anonymized db, centralOrgId.catalog org name will not be 'Archipel Content' 
+    // @TODO #6586 carefull if you are on a anonymized db, centralOrgId.catalog org name will not be 'Archipel Content'
     if (name === 'Archipel Content') return centralOrgId.catalog;
     if (!this.memory.org[name]) {
       const orgs = await this.orgService.getValue(ref => ref.where('denomination.full', '==', name));
@@ -165,25 +209,16 @@ export class ViewExtractedContractsComponent implements OnInit {
       if (!row.length) continue;
 
       // optional fields are prefixed with underscore
-      const [
-        internationalTitle,
-        contractType,
-        licensorName,
-        licenseeName,
-        territoriesList, // Ok
-        mediaList,      // Ok
-        isExclusive,    // Ok
-        durationFrom,   // Ok
-        durationTo,     // Ok
-        , /* originalLanguageLicensed, ignored lint fix */
-        dubbed,
-        subtitle,
-        closedCaptioning,
-        _contractId,      // Ok
-        , /* _parentTermId,            ignored lint fix */
-        _titleId,         // Ok
-        _stakeholdersList, // Ok
-      ] = row;
+      const {
+        internationalTitle, contractType,
+        licensorName, licenseeName,
+        territoriesList, mediaList,
+        isExclusive, durationFrom,
+        durationTo, dubbed,
+        subtitle, closedCaptioning,
+        _contractId, _titleId,
+        _stakeholdersList,
+      } = extract<ImportType>([row], fieldsConfig)
 
       //////////////
       // CONTRACT //
