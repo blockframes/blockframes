@@ -2,7 +2,6 @@ import { Component, ChangeDetectionStrategy, Input, OnInit, OnDestroy } from '@a
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { map, distinctUntilChanged } from 'rxjs/operators';
-import { minReleaseYear } from '../../search.form';
 
 @Component({
   selector: '[form] filter-release-year',
@@ -12,15 +11,15 @@ import { minReleaseYear } from '../../search.form';
 })
 export class ReleaseYearFilterComponent implements OnInit, OnDestroy {
 
-  minReleaseYear = minReleaseYear;
+  minReleaseYear = 1980;
   maxReleaseYear = 2030;
-  inverted = new FormControl(minReleaseYear);
+  inverted = new FormControl(this.minReleaseYear);
 
   @Input() form: FormControl;
 
   private sub: Subscription;
 
-  invert = (value: number) => this.maxReleaseYear - value + minReleaseYear;
+  invert = (value: number) => this.maxReleaseYear - value + this.minReleaseYear;
 
   ngOnInit() {
     this.inverted.setValue(this.invert(this.form.value));

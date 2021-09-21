@@ -83,7 +83,7 @@ export class MarketplaceMovieViewComponent implements OnInit {
     this.movie$ = this.movieQuery.selectActive();
     this.orgs$ = this.movieQuery.selectActive().pipe(
       switchMap(movie => this.orgService.valueChanges(movie.orgIds)),
-      shareReplay(1)
+      shareReplay({ refCount: true, bufferSize: 1 }),
     );
     this.campaign$ = this.movieQuery.selectActiveId().pipe(
       switchMap(id => this.campaignService.valueChanges(id)),

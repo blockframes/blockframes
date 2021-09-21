@@ -79,7 +79,7 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
   public previous: RouteDescription;
   public mode$ = this.breakpointsService.ltMd.pipe(
     map(ltMd => ltMd ? 'over' : 'side'),
-    shareReplay(1)
+    shareReplay({ refCount: true, bufferSize: 1 }),
   );
 
   @ViewChild(MatSidenavContent) sidenavContent: MatSidenavContent;
@@ -111,7 +111,7 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.routeBeforeTunnel = this.exitRedirect || '/c/o/';
-    this.urlBynav$ = combineLatest([this.url$, new BehaviorSubject(this.steps).asObservable()]).pipe(shareReplay(1))
+    this.urlBynav$ = combineLatest([this.url$, new BehaviorSubject(this.steps).asObservable()]).pipe(shareReplay({ refCount: true, bufferSize: 1 }));
     this.getRoute();
 
     // https://github.com/angular/components/issues/4280
@@ -223,8 +223,8 @@ export function findInvalidControls(formToInvestigate: FormGroup | FormArray) {
 }
 
 /**
- * 
- * @param control 
+ *
+ * @param control
  * @returns the name of the control
  */
 function getName(control: AbstractControl): string | null {

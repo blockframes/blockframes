@@ -40,7 +40,7 @@ export class Layout implements OnInit, OnDestroy {
     this.layout$ = this.width.asObservable().pipe(
       map(width => getLayoutGrid(width)),
       distinctUntilChanged((a, b) => a.columns === b.columns && a.gutter === b.gutter && a.margin === b.margin),
-      shareReplay(1)
+      shareReplay({ refCount: true, bufferSize: 1 }),
     );
     const ResizeObserver = (window as any).ResizeObserver || (await import('@juggle/resize-observer')).ResizeObserver;
     this.observer = new ResizeObserver(([entry]) => this.width.next(entry.contentRect.width));

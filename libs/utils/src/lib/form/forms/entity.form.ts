@@ -16,7 +16,7 @@ export class FormEntity<C extends EntityControl<T>, T = any> extends FormGroup {
   // defer the startWith value with subscription happens to get first value
   value$ = defer(() => this.valueChanges.pipe(
     startWith(this.value),
-    shareReplay(1)
+    shareReplay({ refCount: true, bufferSize: 1 }),
   ));
 
   createControl?: (value?: Partial<T>) => C

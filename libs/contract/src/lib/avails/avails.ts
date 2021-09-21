@@ -51,12 +51,12 @@ export function getMandateTerms(avails: AvailsFilter, terms: Term<Date>[]): Term
 }
 
 
-export function isSold(avails: AvailsFilter, terms: Term<Date>[]) {
-  return !!getSoldTerms(avails, terms).length;
+export function termsCollision(avails: AvailsFilter, terms: Term<Date>[]) {
+  return !!collidingTerms(avails, terms).length;
 }
 
-/** Get all the salesTerms that overlap the avails filter */
-export function getSoldTerms(avails: AvailsFilter, terms: Term<Date>[]) {
+/** Get all the terms that overlap the avails filter */
+export function collidingTerms(avails: AvailsFilter, terms: Term<Date>[]) {
   return terms.filter(term => (avails.exclusive || term.exclusive)
     && someOf(avails.territories, 'optional').in(term.territories)
     && someOf(avails.medias, 'optional').in(term.medias)
@@ -64,12 +64,11 @@ export function getSoldTerms(avails: AvailsFilter, terms: Term<Date>[]) {
   );
 }
 
-export function isInBucket(avails: AvailsFilter, terms: BucketTerm[]) {
-  return terms.some(term =>
-    term.exclusive === avails.exclusive
+export function allOfAvailInTerms(avails: AvailsFilter, terms: BucketTerm[]) {
+  return terms.some(term => term.exclusive === avails.exclusive
     && allOf(avails.territories).in(term.territories)
     && allOf(avails.medias).in(term.medias)
-    && allOf(term.duration).in(avails.duration)
+    && allOf(avails.duration).in(term.duration)
   );
 }
 
@@ -211,24 +210,39 @@ export function getCollidingHoldbacks(holdbacks: Holdback[], terms: BucketTerm[]
 //           MOVIE           //
 // ----------------------------
 
+export function isMovieAvailable(titleId: string, avails: AvailsFilter, bucket: Bucket, mandates: Mandate[], mandateTerms: Term[], sales: Sale[], saleTerms: Term[]) {
 
-export function isMovieAvailable(titleId: string, avails: AvailsFilter, bucket: Bucket, mandates: Mandate[], sales: Sale[], terms: Term[]) {
-  if (!terms.length) return false;
+  // A Title is available if it succeed every check
 
+
+  // Gather only mandates & mandate terms related to this title
   const titleMandates = mandates.filter(mandate => mandate.titleId === titleId);
-  const titleSales = sales.filter(sale => sale.titleId === titleId);
+  const titleMandateTerms = mandateTerms.filter(mandateTerm => titleMandates.some(mandate => mandate.id === mandateTerm.contractId));
 
-  if (!titleMandates.length && !titleSales.length) return false;
+  // CHECK (1) if the title has no mandates at all it can't be available
+  if (!titleMandates.length) return false;
 
-  const saleTerms = titleSales.map(sale => sale.termIds).flat().map(termId => terms.find(term => term.id === termId));
-  const mandateTerms = titleMandates.map(mandate => mandate.termIds).flat().map(termId => terms.find(term => term.id === termId));
 
-  const parentTerms = getMandateTerms(avails, mandateTerms);
+  // CHECK (2) if no mandates matches the avails requested by the user, then the title is not available for this request
+  const mandatesColliding = allOfAvailInTerms(avails, titleMandateTerms);
+  if (!mandatesColliding) return false;
 
-  if (!parentTerms.length) return false;
 
-  this.parentTerms[titleId] = parentTerms;
+  // CHECK (3) if all the requested avails are already existing in a term in the bucket for this title,
+  // then it shouldn't be displayed to avoid the user selecting it twice
   const bucketTerms = bucket?.contracts.find(c => c.titleId === titleId)?.terms ?? [];
+  const inBucket = allOfAvailInTerms(avails, bucketTerms);
+  if (inBucket) return false;
 
-  return !isSold(avails, saleTerms) && !isInBucket(avails, bucketTerms);
+
+  // Gather only sales & sale terms related to this title
+  const titleSales = sales.filter(sale => sale.titleId === titleId);
+  const titleSaleTerms = saleTerms.filter(saleTerm => titleSales.some(sale => sale.id === saleTerm.contractId));
+
+
+  // CHECK (4) if the title is already sold on some part of the requested avails, then it's not available for these avails
+  const salesColliding = termsCollision(avails, titleSaleTerms);
+  if (salesColliding) return false;
+
+  return true;
 }

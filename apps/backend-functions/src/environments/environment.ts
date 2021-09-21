@@ -41,4 +41,8 @@ export const twilioAccountSecret = mockConfigIfNeeded('twilio', 'account', 'secr
 export const twilioApiKeySecret = mockConfigIfNeeded('twilio', 'api', 'key', 'secret');
 export const twilioApiKeySid = mockConfigIfNeeded('twilio', 'api', 'key', 'sid');
 
+export const mailchimpAPIKey = mockConfigIfNeeded('mailchimp', 'api_key');
+export const mailchimpServer = mockConfigIfNeeded('mailchimp', 'server');
+export const mailchimpListId = mockConfigIfNeeded('mailchimp', 'list_id');
+
 export const enableDailyFirestoreBackup = false;
