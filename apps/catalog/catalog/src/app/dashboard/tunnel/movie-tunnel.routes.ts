@@ -22,7 +22,7 @@ export const tunnelRoutes: Routes = [
     path: '',
     component: MovieFormShellComponent,
     canDeactivate: [TunnelGuard],
-    data:{appSteps},
+    data: { appSteps },
     children: [
       {
         path: '',
@@ -75,34 +75,34 @@ export const tunnelRoutes: Routes = [
         loadChildren: () => import('@blockframes/movie/form/technical-info/technical-info.module').then(m => m.TunnelTechnicalInfoModule),
       },
       {
-        path: 'available-materials',
-        data: { animation: 9 },
-        loadChildren: () => import('@blockframes/movie/form/available-materials/available-materials.module').then(m => m.MovieFormAvailableMaterialsModule),
-      },
-      {
         path: 'available-versions',
-        data: { animation: 10 },
+        data: { animation: 9 },
         loadChildren: () => import('@blockframes/movie/form/available-versions/available-versions.module').then(m => m.MovieFormAvailableVersionsModule),
       },
       {
         path: 'sales-pitch',
-        data: { animation: 11 },
+        data: { animation: 10 },
         loadChildren: () => import('@blockframes/movie/form/sales-pitch/sales-pitch.module').then(m => m.MovieFormSalesPitchModule),
       },
       {
         path: 'media-files',
-        data: { animation: 12 },
+        data: { animation: 11 },
         loadChildren: () => import('@blockframes/movie/form/media-files/media-files.module').then(m => m.MovieFormMediaFilesModule),
       },
       {
         path: 'media-images',
-        data: { animation: 13 },
+        data: { animation: 12 },
         loadChildren: () => import('@blockframes/movie/form/media-images/media-images.module').then(m => m.MovieFormMediaImagesModule),
       },
       {
         path: 'media-videos',
-        data: { animation: 14 },
+        data: { animation: 13 },
         loadChildren: () => import('@blockframes/movie/form/media-videos/media-videos.module').then(m => m.MediaFormVideosModule),
+      },
+      {
+        path: 'available-materials',
+        data: { animation: 14 },
+        loadChildren: () => import('@blockframes/movie/form/available-materials/available-materials.module').then(m => m.MovieFormAvailableMaterialsModule),
       },
       {
         path: 'summary',
