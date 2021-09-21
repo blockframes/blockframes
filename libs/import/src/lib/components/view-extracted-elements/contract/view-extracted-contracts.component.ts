@@ -113,34 +113,44 @@ const fields = [
   'dubbed',
   'subtitle',
   'closedCaptioning',
-  '_contractId',
-  '_titleId',
-  '_stakeholdersList',
+  'extractedContractId',
+  'ExtractedTitleId',
+  'stakeholdersList',
 ] as const;
 
-type FieldsKey = typeof fields[number];
-type ImportType = Record<FieldsKey, string>
 
 
-const fieldsConfig: Record<string, ParseFieldFn> = {
+const fieldsConfig = {
   /* a */ 'internationalTitle': (value: string) => value,
-  /* b */ 'contractType': (value: string) => value,
+  /* b */ 'contractType': (value: string) => value.toLowerCase(),
   /* c */ 'licensorName': (value: string) => value,
   /* d */ 'licenseeName': (value: string) => value,
   /* e */ 'territoriesList': (value: string) => value,
   /* f */ 'mediaList': (value: string) => value,
-  /* g */ 'isExclusive': (value: string) => value,
-  /* h */ 'durationFrom': (value: string) => value,
-  /* i */ 'durationTo': (value: string) => value,
+  /* g */ 'isExclusive': (value: string) => value.toLowerCase() === 'yes' ? true : false,
+  /* h */ 'durationFrom': (value: string) => {
+    if (value) return getDate(value);
+    return value;
+  },
+  /* i */ 'durationTo': (value: string) => {
+    if (value) return getDate(value);
+    return value;
+  },
   /* j */ 'ignored_originalLanguageLicensed': (value: string) => value,
   /* k */ 'dubbed': (value: string) => value,
   /* l */ 'subtitle': (value: string) => value,
   /* m */ 'closedCaptioning': (value: string) => value,
-  /* n */ '_contractId': (value: string) => value,
-  /* o */ 'ignored__parentTermId': (value: string) => value,
-  /* p */ '_titleId': (value: string) => value,
-  /* q */ '_stakeholdersList': (value: string) => value,
-};
+  /* n optional*/ 'contractId': (value: string) => value,
+  /* o optional and ignored*/ 'parentTermId': (value: string) => value,
+  /* p optional*/ 'titleId': (value: string) => value,
+  /* q optional*/ 'stakeholdersList': (value: string) => value ? split(value) : value,
+} as const;
+
+type FieldsType = keyof typeof fieldsConfig;
+type ImportType = {
+  [key in FieldsType]: ReturnType<typeof fieldsConfig[key]>
+}
+
 
 
 @Component({
@@ -214,17 +224,17 @@ export class ViewExtractedContractsComponent implements OnInit {
         licensorName, licenseeName,
         territoriesList, mediaList,
         isExclusive, durationFrom,
-        durationTo, dubbed,
+        durationTo, dubbed, stakeholdersList,
         subtitle, closedCaptioning,
-        _contractId, _titleId,
-        _stakeholdersList,
+        contractId: extractedContractId,
+        titleId: ExtractedTitleId,
       } = extract<ImportType>([row], fieldsConfig)
 
       //////////////
       // CONTRACT //
       //////////////
       // TITLE
-      const titleId = _titleId || (await this.getTitleId(internationalTitle));
+      const titleId = ExtractedTitleId || (await this.getTitleId(internationalTitle));
 
       if (!titleId) errors.push(errorsMap['no-title-id']);
 
@@ -237,7 +247,7 @@ export class ViewExtractedContractsComponent implements OnInit {
       if (!buyerId) errors.push(errorsMap['no-buyer-id']);
 
       // STAKEHOLDER
-      const getStakeholders = _stakeholdersList ? split(_stakeholdersList).map(orgName => this.getOrgId(orgName)) : [];
+      const getStakeholders = Array.isArray(stakeholdersList) ? stakeholdersList.map(orgName => this.getOrgId(orgName)) : [];
       const stakeholders = (await Promise.all(getStakeholders)).filter(s => !!s);
       if (!stakeholders.length) errors.push(errorsMap['no-stakeholders']);
 
@@ -246,9 +256,9 @@ export class ViewExtractedContractsComponent implements OnInit {
 
       // CONTRACT
       let baseContract: Partial<Mandate | Sale> = {};
-      if (_contractId) {
-        baseContract = await this.contractService.getValue(_contractId);
-        if (!baseContract) throw new Error('No contract found for id' + _contractId);
+      if (extractedContractId) {
+        baseContract = await this.contractService.getValue(extractedContractId);
+        if (!baseContract) throw new Error('No contract found for id' + extractedContractId);
       } else {
         baseContract.id = this.fire.createId();
       }
@@ -266,14 +276,14 @@ export class ViewExtractedContractsComponent implements OnInit {
       if (!durationFrom) errors.push(errorsMap['no-duration-from']);
       if (!durationTo) errors.push(errorsMap['no-duration-to']);
       const duration = {
-        from: getDate(durationFrom),
-        to: getDate(durationTo)
+        from: durationFrom as unknown as Date,
+        to: durationTo as unknown as Date
       };
 
       // Statics
       const territories = getStatic('territories', territoriesList);
       const medias = getStatic('medias', mediaList);
-      const exclusive = isExclusive.toLowerCase() === 'yes' ? true : false;
+      const exclusive = isExclusive as unknown as boolean;
 
       if (!territories.length) errors.push(errorsMap['no-territories']);
       if (!medias.length) errors.push(errorsMap['no-medias']);
@@ -294,7 +304,7 @@ export class ViewExtractedContractsComponent implements OnInit {
 
       this.contractsToCreate.data.push({
         contract,
-        newContract: !_contractId,
+        newContract: !extractedContractId,
         errors,
         terms: [term]
       });
