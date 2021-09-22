@@ -42,7 +42,7 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
   private salesTerms$ = this.shell.salesTerms$;
 
   /** All mandates markers by territory (they might be already sold or already selected selected (from the bucket) or already in selection) */
-  public territoryMarkers$ = combineLatest([
+  private territoryMarkers$ = combineLatest([
     this.mandates$,
     this.mandateTerms$,
   ]).pipe(
@@ -71,17 +71,17 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
   );
 
   public sold$ = combineLatest([
-    this.mandates$, // we need mandates here, because markers (even sold) needs to reference their parent mandate
     this.salesTerms$,
     this.availsForm.value$,
   ]).pipe(
     filter(() => this.availsForm.valid),
-    map(([mandates, sales, avails]) => {
-      const soldTerms = collidingTerms(avails, sales);
-      return soldTerms.map(term => term.territories
+    map(([salesTerms, avails]) => {
+      const soldTerms = collidingTerms(avails, salesTerms);
+      const markers = soldTerms.map(term => term.territories
         .filter(territory => !!territoriesISOA3[territory])
-        .map(territory => toTerritoryMarker(territory, mandates, term))
+        .map(territory => toTerritoryMarker(territory, [], term))
       ).flat();
+      return markers;
     }),
   );
 

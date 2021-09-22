@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, ViewChild, TemplateRef } from '@angular/core';
+﻿import { Component, OnInit, ChangeDetectionStrategy, ViewChild, TemplateRef } from '@angular/core';
 import { getCurrencySymbol } from '@angular/common';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -106,8 +106,7 @@ export class MarketplaceMovieViewComponent implements OnInit {
   }
 
   async sendEmail(emailData: EmailData, title: string, orgs: Organization[]) {
-
-    this.dialogRef.close();
+    let email_ready = false;
     const templateId = templateIds.financiers.invest;
     const userSubject = getUserEmailData(this.authQuery.user);
 
@@ -118,9 +117,9 @@ export class MarketplaceMovieViewComponent implements OnInit {
       const users = await this.userService.getValue(org.userIds);
       for (const user of users) {
         let toUser = getUserEmailData(user);
-
+        const cyCheck = 'Cypress' in window;
         // For e2e test purpose
-        if ('Cypress' in window) {
+        if (cyCheck) {
           toUser = {...toUser, email: testEmail};
         }
 
@@ -132,6 +131,11 @@ export class MarketplaceMovieViewComponent implements OnInit {
           org: orgUserSubject,
           title,
         };
+
+        if (cyCheck && (!email_ready && (toUser.firstName !== userSubject.firstName))) {
+          email_ready = true;
+          window['Cypress_e2e'] = data;
+        }
 
         const promise = this.sendgrid.sendWithTemplate({
           request: { templateId, data, to: toUser.email },

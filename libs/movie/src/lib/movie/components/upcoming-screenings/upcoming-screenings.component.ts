@@ -10,7 +10,7 @@ import { OrganizationService } from '@blockframes/organization/+state';
 import { Screening } from '@blockframes/event/+state/event.firestore';
 
 // RxJs
-import { map, take } from 'rxjs/operators';
+import { map, shareReplay } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
 
 @Component({
@@ -28,7 +28,8 @@ export class UpcomingScreeningsComponent {
 
   public movie$ = this.query.selectActive();
 
-  public screenings$: Observable<Event<Screening>[]>;
+  public ongoingScreenings$: Observable<Event<Screening>[]>;
+  public futureScreenings$: Observable<Event<Screening>[]>;
 
   public orgs$ = this.orgService.queryFromMovie(this.query.getActive());
 
@@ -40,25 +41,32 @@ export class UpcomingScreeningsComponent {
     private invitationService: InvitationService,
     private orgService: OrganizationService,
   ) {
+    const now = new Date();
     const q = ref => ref
       .where('isSecret', '==', false)
       .where('meta.titleId', '==', this.query.getActiveId())
       .orderBy('end')
-      .startAt(new Date())
+      .startAt(now)
 
-    this.screenings$ = this.eventService.queryByType(['screening'], q).pipe(
-      map((screenings: Event<Screening>[]) => screenings.sort(this.sortByDate).slice(0, 5))
-    )
+    const screenings$ = this.eventService.queryByType(['screening'], q).pipe(
+      map((screenings: Event<Screening>[]) => screenings.sort(this.sortByDate).slice(0, 5)),
+      shareReplay({ refCount: true, bufferSize: 1 })
+    );
+
+    this.ongoingScreenings$ = screenings$.pipe(
+      map(screenings => screenings.filter(screening => screening.start < now && screening.end > now)),
+    );
+
+    this.futureScreenings$ = screenings$.pipe(
+      map(screenings => screenings.filter(screening => screening.start > now ))
+    );
 
     this.checkInvitationStatus();
   }
 
   askForInvitation(events: Event[]) {
-    const eventId = events[this.sessionCtrl.value].id;
-    this.orgs$.pipe(take(1)).subscribe(orgs => {
-      orgs.forEach(org => this.invitationService.request(org.id).to('attendEvent', eventId))
-      this.checkInvitationStatus();
-    })
+    const event = events[this.sessionCtrl.value];
+    this.invitationService.request(event.ownerOrgId).to('attendEvent', event.id);
   }
 
   private sortByDate(a: Event, b: Event): number {
@@ -70,10 +78,10 @@ export class UpcomingScreeningsComponent {
   checkInvitationStatus() {
     const index = this.sessionCtrl.value;
     this.buttonState$ = combineLatest([
-      this.screenings$,
+      this.futureScreenings$,
       this.invitationService.guestInvitations$
     ]).pipe(
-      map(([screenings, invitations]) => !!invitations.some(invitation => invitation.eventId === screenings[index].id))
+      map(([screenings, invitations]) => invitations.some(invitation => invitation.eventId === screenings[index].id))
     )
   }
 }

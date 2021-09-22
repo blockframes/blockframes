@@ -27,6 +27,16 @@
       </div>
     </section>
 
+    <section class="surface" *ngIf="contract.status === 'declined'">
+      <h3>Why it has been declined</h3>
+      <ng-container *ngIf="contract.declineReason; else noReason">
+        <p>{{contract.declineReason}}</p>
+      </ng-container>
+      <ng-template #noReason>
+        <p>Seller hasn't given any reason.</p>
+      </ng-template>
+    </section>
+
     <contract-item [contract]="contract">
       <p price *ngIf="contract.income as income">
         <ng-container *ngIf="income.price > 0; else askPrice">

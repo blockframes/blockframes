@@ -4,6 +4,7 @@ import { GetKeys } from '@blockframes/utils/static-model/static-model';
 import { Subscription, combineLatest } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 import { LanguageVersionControl } from '@blockframes/movie/form/search.form';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: '[languagesFilterForm] title-language-filter',
@@ -18,7 +19,7 @@ export class LanguageFilterComponent implements OnInit, OnDestroy {
   /** list of selected language (chips), they can later be added in *'original'*, *'subtitle'*, etc... */
   public selectedLanguages = FormList.factory<GetKeys<'languages'>>([]);
 
-  public versions = FormList.factory<GetKeys<'movieLanguageTypes'>>([]);
+  public versions = FormList.factory<GetKeys<'movieLanguageTypes'>>(['original', 'dubbed', 'subtitle'], el => new FormControl(el))
 
   private sub: Subscription;
   private formSub: Subscription;

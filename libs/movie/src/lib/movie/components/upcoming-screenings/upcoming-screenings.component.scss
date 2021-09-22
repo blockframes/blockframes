@@ -19,7 +19,11 @@ span.mat-body-1 {
   text-align: center;
 }
 
-mat-divider {
+mat-divider:not([vertical]) {
+  width: 100%;
+}
+
+mat-divider[vertical] {
   height: 96px;
 }
 
