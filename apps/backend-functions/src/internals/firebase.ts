@@ -1,6 +1,6 @@
 import { region } from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import { firebaseRegion } from '@env'
+import { firebaseRegion } from '@env';
 export const functions = (config = defaultConfig) => region(firebaseRegion).runWith(config);
 import { backupBucket, storageBucket } from '../environments/environment';
 import { defaultConfig, isInMaintenance } from '@blockframes/firebase-utils';
