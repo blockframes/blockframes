@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input, OnInit, ViewChild, TemplateRef } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, RouterOutlet } from '@angular/router';
+import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { EventForm } from '../../form/event.form';
 import { EventService } from '../../+state/event.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -28,6 +29,7 @@ const navTabs: NavTabs = {
   selector: 'event-shell',
   templateUrl: './shell.component.html',
   styleUrls: ['./shell.component.scss'],
+  animations: [routeAnimation],
   changeDetection: ChangeDetectionStrategy.Default  // required for changes on "pristine" for the save button
 })
 export class EventFormShellComponent implements OnInit {
@@ -104,5 +106,9 @@ export class EventFormShellComponent implements OnInit {
         return shouldSave ? of(this.save()) : of(true);
       })
     );
-  }
+  } 
+
+  animationOutlet(outlet: RouterOutlet) {
+    return outlet?.activatedRouteData?.animation;
+  } 
 }

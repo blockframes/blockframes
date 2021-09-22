@@ -49,7 +49,9 @@
   </section>
 </form>
 
-<router-outlet></router-outlet>
+<div [@routeAnimation]="animationOutlet(outlet)">
+  <router-outlet #outlet="outlet"></router-outlet> 
+</div>
 <section fxLayoutAlign="center">
   <a fxFlexAlign="center" mat-stroked-button color="primary" [routerLink]="internalLink">Go to Event Page</a>
 </section>

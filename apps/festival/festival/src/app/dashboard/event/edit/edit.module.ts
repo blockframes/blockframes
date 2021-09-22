@@ -41,22 +41,27 @@ import { EventOrganizationGuard } from '@blockframes/event/guard/event-organizat
           {
             path: 'screening',
             component: ScreeningComponent,
+            data: { animation: 0 }
           },
           {
             path: 'meeting',
             component: MeetingComponent,
+            data: { animation: 1 }
           },
           {
             path: 'invitations',
             component: InvitationComponent,
-          },
-          {
-            path: 'statistics',
-            component: AnalyticsComponent
+            data: { animation: 2 }
           },
           {
             path: 'files',
             component: MeetingFilesComponent,
+            data: { animation: 3 }
+          },
+          {
+            path: 'statistics',
+            component: AnalyticsComponent,
+            data: { animation: 4 }
           }
         ],
       }
