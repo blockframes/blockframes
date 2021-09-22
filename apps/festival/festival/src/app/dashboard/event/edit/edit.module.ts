@@ -59,7 +59,7 @@ import { EventOrganizationGuard } from '@blockframes/event/guard/event-organizat
             data: { animation: 3 }
           },
           {
-            path: 'attendance',
+            path: 'statistics',
             component: AnalyticsComponent,
             data: { animation: 4 }
           }

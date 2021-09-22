@@ -22,7 +22,7 @@ export class AnalyticsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.dynTitle.setPageTitle('Add an event', 'Event Attendance');
+    this.dynTitle.setPageTitle('Add an event', 'Event Statistics');
   }
 
   // Will be used to show event statistics only if event started

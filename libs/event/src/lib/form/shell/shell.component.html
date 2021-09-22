@@ -37,7 +37,7 @@
     </mat-card>
 
     <nav mat-tab-nav-bar>
-      <ng-container *ngFor="let tab of tabs[form.value.type]"> 
+      <ng-container *ngFor="let tab of (tabs$ |async)"> 
         <a mat-tab-link 
         [routerLink]="tab.path" 
         routerLinkActive 

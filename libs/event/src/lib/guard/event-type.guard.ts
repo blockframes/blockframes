@@ -14,8 +14,10 @@ export class EventTypeGuard implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot): Observable<boolean | UrlTree> {
     return this.service.valueChanges(route.params['eventId'] as string).pipe(
-      // @TODO #5895 if event is started or ended => redirect to anaylitcs tab Antoine
-      map(event => this.router.parseUrl(`/c/o/dashboard/event/${event.id}/edit/${event.type}`))
+      map(event => {
+        const path = event.start < new Date() ? 'statistics' : event.type;
+        return this.router.parseUrl(`/c/o/dashboard/event/${event.id}/edit/${path}`)
+      })
     );
   }
 }
