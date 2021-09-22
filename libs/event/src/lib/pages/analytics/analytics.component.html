@@ -1,4 +1,4 @@
-<ng-container *ngIf="event && isEventStarted()">
-  <event-analytics [event]="event"></event-analytics>
+<ng-container *ngIf="event$ | async as event">
+  <event-analytics *ngIf="isEventStarted(event)" [event]="event"></event-analytics>
 </ng-container>
 

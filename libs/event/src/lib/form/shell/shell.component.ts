@@ -9,9 +9,8 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentApp, applicationUrl } from '@blockframes/utils/apps';
 import { Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
+import { NavTabs, TabConfig } from '@blockframes/utils/event';
 
-type TabConfig = { path: string, label: string };
-type NavTabs = { screening: TabConfig[], meeting: TabConfig[] };
 const statisticsTab = { path: 'statistics', label: 'Statistics' };
 
 const navTabs: NavTabs = {
