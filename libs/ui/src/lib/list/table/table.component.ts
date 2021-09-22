@@ -31,11 +31,22 @@ function filterTable<T>(data: T[], value: string, columns: QueryList<ColumnDirec
 export class ColumnDirective<T> {
   control = new FormControl(true);
 
+  /** Path of the value in the row */
   @Input('colRef') name!: string;
+  
+  /** Text to display in the column header. Header will fallback to colRef value if not provided */
   @Input() label?: string;
+
+  /** Specify if the column is sticky. Only first & last column can be sticky */
   @Input() @boolean sticky = false;
+
+  /** If set to true, the data will be sorted with this column. There should be max one defaultSort column */
   @Input() @boolean defaultSort: boolean;
+
+  /** Does the column support sorting. If a function is provided, the function is used to sort the column */
   @Input() sort?: '' | ((a: any, b: any) => number);
+
+  /** A custom function to filter the column. `useFilter` should be set on the `bf-table` */
   @Input() filter = (input: string, value: any, row: T) => {
     if (typeof value !== 'string') return false;
     return value.toLowerCase().includes(input);
@@ -88,16 +99,24 @@ export class TableComponent<T> {
   
 
   @ContentChildren(ColumnDirective) columns!: QueryList<ColumnDirective<T>>;
+
+  /** If true, each line is clickable. Listen on (rowClick) output to get the click event */
   @HostBinding('class.clickable') @Input() @boolean clickable: boolean;
+
+  /** Display the filter input above table */
   @Input() @boolean useFilter: boolean;
+
+  /** The content to display in the table */
   @Input() set source(source: T[]) {
     this.dataSource.next(source);
   }
+  /** Amount of item per page. If not set, paginator will be disabled */
   @Input() set pagination(amount: number | string) {
     const pageSize = coerceNumberProperty(amount);
     if (typeof pageSize === 'number') this.paginator.pageSize = pageSize;
   }
 
+  /** Emits the content of the row when clicked. Requires input "clickable" to be set  */
   @Output() rowClick = new EventEmitter<T>();
 
   constructor() {
@@ -122,7 +141,7 @@ export class TableComponent<T> {
   private $sort(data: T[]) {
     const sorting = this.columns.filter(c => c.isSortable).map(column => column.$sort(data));
     if (!sorting.length) return of(data);
-    return merge(...sorting).pipe(startWith(data)); // Prevent first merging to overfire
+    return merge(...sorting).pipe(startWith(data)); 
   }
 
   private $filter(data: T[]) {
