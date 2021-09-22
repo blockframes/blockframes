@@ -1,4 +1,4 @@
-import { SEC } from "@blockframes/e2e/utils";
+﻿import { SEC } from "@blockframes/e2e/utils";
 
 export default class ViewPage {
 
@@ -12,19 +12,39 @@ export default class ViewPage {
 
   public fillDiscussionForm(data) {
     //Subject
-    cy.get('mat-select[formControlName="subject"]', {timeout: 3 * SEC}).click();
-    cy.get(`mat-option`, {timeout: 3 * SEC}).contains(data.subject).click();
+    if (data.subject) {
+      cy.get('mat-select[formControlName="subject"]', {timeout: 3 * SEC}).click();
+      cy.get(`mat-option`, {timeout: 3 * SEC}).contains(data.subject).click();
+    }
 
     // Scope
-    cy.get('input[formControlName="from"]', {timeout: 3 * SEC}).type(data.scope.from);
-    cy.get('input[formControlName="to"]', {timeout: 3 * SEC}).type(data.scope.to);
+    if (data.scope.from) {
+      cy.get('input[formControlName="from"]', {timeout: 3 * SEC})
+        .clear()
+        .type(data.scope.from);
+    }
+
+    if (data.scope.to) {
+      cy.get('input[formControlName="to"]', {timeout: 3 * SEC})
+        .clear()
+        .type(data.scope.to);
+    }
 
     // Message
-    cy.get('textarea[formControlName="message"]', {timeout: 3 * SEC}).type(data.message);
+    if (data.message) {
+      cy.get('textarea[formControlName="message"]', {timeout: 3 * SEC})
+        .clear()
+        .type(data.message);
+    }
   }
 
   public sendDiscussionEmail() {
     cy.get('button[type="submit"]', {timeout: 3 * SEC}).contains('Send your message').click();
   }
-}
 
+  public checkDiscussionForm() {
+    cy.log('Submit button should be disabled');
+    cy.get('button[type="submit"]', {timeout: 3 * SEC})
+      .should('be.disabled');
+  }
+}
