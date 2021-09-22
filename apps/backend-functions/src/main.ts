@@ -22,13 +22,13 @@ import { linkFile, getMediaToken as _getMediaToken } from './media';
 import { onEventDelete } from './event';
 import { getTwilioAccessToken, twilioWebhook as _twilioWebhook } from './twilio';
 import { eventWebhook as sendgridEventWebhook } from './sendgrid';
+import { heavyConfig, superHeavyConfig } from '@blockframes/firebase-utils';
 import { onNotificationCreate } from './notification';
 import { importAnalytics } from './pubsub/daily-analytics-import';
 import { onOfferCreate } from './offer';
 import { onContractCreate, onContractDelete, onContractUpdate } from './contracts';
 import { onTermDelete } from './terms';
 import { downloadVideo } from './rescue';
-import { heavyConfig, superHeavyConfig } from '@blockframes/firebase-utils';
 
 console.log('Function instance loaded');
 
