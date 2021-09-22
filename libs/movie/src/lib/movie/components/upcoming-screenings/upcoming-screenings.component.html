@@ -1,33 +1,50 @@
-<ng-container *ngIf="(screenings$ | async)?.length; else noScreenings">
-  <ng-container *ngIf="screenings$ | async as screenings">
-    <h3>Next Screenings</h3>
-    <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
-      <ng-container *ngFor="let screening of screenings; let index = index; let isLast = last">
-        <div fxLayout="column" fxLayoutAlign="center center">
-          <h5>{{ sessions[index] }} Session</h5>
-          <span class="mat-body-1">{{ screening | eventRange }}</span>
-        </div>
-        <mat-divider *ngIf="index < 4 && !isLast" vertical></mat-divider>
+<ng-container *ngIf="ongoingScreenings$ | async as ongoingScreenings">
+  <ng-container *ngIf="futureScreenings$ | async as futureScreenings">
+
+    <!-- No ongoing and no upcoming screenings -->
+    <ng-container *ngIf="!ongoingScreenings.length && !futureScreenings.length">
+      <ng-container *ngFor="let org of orgs$ | async">
+        <h3>There is no screening scheduled at the moment.</h3>
+        <p class="mat-body-1">You can contact <a [href]="'mailto:' + org.email">{{ org.denomination?.public || 'the organization' }}</a> for any questions.</p>
+        <a mat-flat-button color="accent" [href]="'mailto:'+ org.email">Contact Sales Agent</a>
       </ng-container>
-    </div>
-    <mat-form-field appearance="outline">
-      <mat-label>Choose screening session</mat-label>
-      <mat-select [formControl]="sessionCtrl" (selectionChange)="checkInvitationStatus()">
-        <mat-option
-        *ngFor="let screening of screenings; let index = index"
-        [value]="index">
-          {{ sessions[index] | titlecase }} Session
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    <button mat-flat-button color="accent" (click)="askForInvitation(screenings)" [disabled]="buttonState$ | async">Register for this session</button>
+    </ng-container>
+
+    <!-- Ongoing screening -->
+    <ng-container *ngIf="ongoingScreenings.length">
+      <h3>Screenings</h3>
+      <a ongoing-event-button [routerLink]="['/c/o/marketplace/event', ongoingScreenings[0].id]">Ongoing Screening Right Now</a>
+      <mat-divider></mat-divider>
+      <a *ngIf="!futureScreenings.length" mat-flat-button color="primary" [routerLink]="['/c/o/marketplace/event/', ongoingScreenings[0].id]">Access Event</a>
+    </ng-container>
+
+    <!-- No ongoing screening but with future screening(s) -->
+    <h3 *ngIf="!ongoingScreenings.length && futureScreenings.length">Next Screenings</h3>
+    <ng-container *ngIf="futureScreenings.length">
+      <section fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+        <ng-container *ngFor="let screening of futureScreenings; let index = index; let isLast = last">
+          <article fxLayout="column" fxLayoutAlign="center center">
+            <h5>{{ sessions[index] }} Session</h5>
+            <span class="mat-body-1">{{ screening | eventRange }}</span>
+          </article>
+          <mat-divider *ngIf="index < 4 && !isLast" vertical></mat-divider>
+        </ng-container>
+      </section>
+      <mat-form-field appearance="outline">
+        <mat-label>Choose screening session</mat-label>
+        <mat-select [formControl]="sessionCtrl" (selectionChange)="checkInvitationStatus()">
+          <mat-option *ngFor="let screening of futureScreenings; let index = index" [value]="index">
+            {{ sessions[index] | titlecase }} Session
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <ng-container *ngIf="buttonState$ | async else noInvitation">
+        <button mat-flat-button disabled>Already applied for this Session</button>
+      </ng-container>
+      <ng-template #noInvitation>
+        <button mat-flat-button color="accent" (click)="askForInvitation(futureScreenings)">Register for this session</button>
+      </ng-template>
+    </ng-container>
+
   </ng-container>
 </ng-container>
-<ng-template #noScreenings>
-  <ng-container *ngFor=" let org of orgs$ | async">
-    <span class="mat-body-1">There is no screening scheduled at the moment. <br/> You can contact
-      {{ org.denomination?.public || 'the organization' }} for any
-      questions.</span>
-    <a mat-flat-button color="accent" [href]="'mailto:'+ org.email">Contact Sales Agent</a>
-  </ng-container>
-</ng-template>
