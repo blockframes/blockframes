@@ -20,7 +20,11 @@
   </article>
 
   <bf-table clickable [source]="orgs" pagination="5" useFilter (rowClick)="goToEdit($event)">
-    <ng-template colRef="logo" label="Logo" let-logo>
+    <ng-template colRef="id" let-id sort>{{ id }}</ng-template>
+    <ng-template colRef="status" let-status sort>
+      <bf-tag>{{ status }}</bf-tag>
+    </ng-template>
+    <ng-template colRef="logo" let-logo>
       <ng-container *ngIf="logo.storagePath; else nologo">
         <img class="logo" [ref]="logo" asset="empty_poster.svg">
       </ng-container>
@@ -31,17 +35,17 @@
     <ng-template colRef="denomination.full" label="Name" sort let-fullName>
       {{ fullName }}
     </ng-template>
-    <ng-template colRef="denomination.public" label="Full Name" let-publicName>
+    <ng-template colRef="denomination.public" label="Full Name" sort let-publicName>
       {{ publicName }}
     </ng-template>
     <ng-template colRef="addresses.main.country" defaultSort label="Country" sort let-country>
-      {{ country ?? '--' }}
+      {{ country ?? '--' | titlecase }}
     </ng-template>
-    <ng-template colRef="activity" label="Activity" let-activity>
+    <ng-template colRef="email" sort let-email>{{ email }}</ng-template>
+    <ng-template colRef="activity" sort let-activity>
       {{ activity | toLabel: 'orgActivity'}}
     </ng-template>
-    <!-- TODO: wrong order of background when sticky & clickable hover -->
-    <ng-template colRef="appAccess" label="App Access" let-appAccess sticky>
+    <ng-template colRef="appAccess" label="App Access" let-appAccess>
       <ul>
         <ng-container *ngFor="let a of app">
           <li>{{ a | appName:true }} : {{ appAccess[a]?.dashboard ? 'yes': 'no' }} : {{ appAccess[a]?.marketplace ? 'yes': 'no' }} </li>
@@ -49,37 +53,6 @@
       </ul>
     </ng-template>
   </bf-table>
-
-  <!-- <bf-table-filter [source]="orgs" [columns]="versionColumns" [initialColumns]="initialColumns" [pageSize]="50"
-    [filterPredicate]="filterPredicate" showFilter showLoader showPaginator clickable (rowClick)="goToEdit($event)">
-    <ng-template colRef="logo" let-logo>
-      <ng-container *ngIf="logo.storagePath; else nologo">
-        <img class="logo" [ref]="logo" asset="empty_poster.svg">
-      </ng-container>
-      <ng-template #nologo>
-        --
-      </ng-template>
-    </ng-template>
-    <ng-template colRef="denomination.full" let-denominationFull>
-      {{ denominationFull }}
-    </ng-template>
-    <ng-template colRef="denomination.public" let-denominationPublic>
-      {{ denominationPublic }}
-    </ng-template>
-    <ng-template colRef="addresses.main.country" let-country>
-      {{ country ? country : '--' }}
-    </ng-template>
-    <ng-template colRef="activity" let-activity>
-      {{ activity | toLabel: 'orgActivity'}}
-    </ng-template>
-    <ng-template colRef="appAccess" let-appAccess>
-      <ul>
-        <ng-container *ngFor="let a of app">
-          <li>{{ a | appName:true }} : {{ !!appAccess[a] && appAccess[a].dashboard ? 'yes': 'no' }} : {{ !!appAccess[a] && appAccess[a].marketplace ? 'yes': 'no' }} </li>
-        </ng-container>
-      </ul>
-    </ng-template>
-  </bf-table-filter> -->
 </ng-container>
 
 <ng-template #loading>...loading orgs</ng-template>

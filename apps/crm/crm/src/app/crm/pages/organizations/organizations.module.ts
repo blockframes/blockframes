@@ -11,6 +11,7 @@ import { AppPipeModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { GoToAppModule } from '@blockframes/admin/crm/pipes/go-to.pipe';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { TagModule } from '@blockframes/ui/tag/tag.module';
 
 
 @NgModule({
@@ -24,6 +25,7 @@ import { MatButtonModule } from '@angular/material/button';
     AppPipeModule,
     ToLabelModule,
     GoToAppModule,
+    TagModule,
     MatIconModule,
     MatButtonModule,
     RouterModule.forChild([{ path: '', component: OrganizationsComponent }])

@@ -75,6 +75,9 @@ export class ColumnDirective<T> {
   selector: 'bf-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
+  host: {
+    class: 'surface',
+  },
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableComponent<T> {

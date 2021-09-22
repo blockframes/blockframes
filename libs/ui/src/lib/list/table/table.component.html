@@ -1,9 +1,9 @@
 <!-- Filter -->
 <ng-container *ngIf="useFilter">
-  <mat-form-field appearance="outline">
+  <mat-form-field>
     <mat-label>Tap to filter in the list below</mat-label>
     <input matInput [formControl]="search" />
-    <mat-icon matSuffix svgIcon="filter_list"></mat-icon>
+    <mat-icon matPrefix svgIcon="filter_list"></mat-icon>
   </mat-form-field>
 </ng-container>
 
@@ -20,7 +20,7 @@
             </ng-container>
             <ng-template #sortableHeader>
               <div class="sortable">
-                <span>{{ column.label }}</span>
+                <span>{{ column.label || column.name }}</span>
                 <button class="sort" [ngClass]="{ asc: column.asc }" mat-icon-button (click)="column.toggleSort()">
                   <mat-icon svgIcon="arrow_upward"></mat-icon>
                 </button>

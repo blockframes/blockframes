@@ -18,7 +18,7 @@ mat-form-field {
 .table-container {
   display: block;
   overflow: auto;
-  max-width: 100%;
+  max-width: 100%;  
 }
 
 table {
@@ -37,10 +37,11 @@ tr {
 }
 
 th, td {
-  padding: 0 16px;
   border-bottom-width: 1px;
   border-bottom-style: solid;
   max-width: 800px;
+  
+  line-height: 18px;  // Custom Font (validated with Stephanie)
 }
 
 thead {
@@ -64,28 +65,34 @@ thead {
       display: flex;
       align-items: center;
     }
+    button.sort {
+      // Await opacity off before animating transform
+      // We don't use animation keyframes else it's triggered by default
+      transition: transform 0.5s 0.3s, opacity 0.3s;
+      opacity: 0;
+    }
     button.sort mat-icon {
       transform: scale(0.8);
     }
 
     button.sort.asc {
-      animation: slideup-leave 0.3s;
-      transform: translateY(-100px);
+      transform: translateY(100px);
     }
     button.sort:not(.asc) {
-      animation: slidedown-leave 0.3s;
       transform: translateY(-100px) rotate(-180deg);
     }
   }
 
   th:hover {
-    button.sort.asc {
-      animation: slideup-enter 0.3s;
-      transform: translateY(0);
-    }
-    button.sort:not(.asc) {
-      animation: slidedown-enter 0.3s;
-      transform: translateY(0) rotate(-180deg);
+    button.sort {
+      transition: transform 0.2s, opacity 0.5s;
+      opacity: 1;
+      &.asc {
+        transform: translateY(0);
+      }
+      &:not(.asc) {
+        transform: translateY(0) rotate(-180deg);
+      }
     }
   }
 }
@@ -97,9 +104,9 @@ tbody tr {
 footer {
   height: 56px;
   padding: 8px 24px;
-  border: solid 1px var(--foreground-divider);
+  // border: solid 1px var(--foreground-divider);
   border-top: none;
-  border-radius: 0 0 10px 10px;
+  // border-radius: 0 0 10px 10px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -128,6 +135,15 @@ th:last-of-type, td:last-of-type {
     position: sticky;
     right: 0;
     border-left: solid 1px var(--foreground-divider);
+  }
+}
+
+tr:last-of-type {
+  td:last-of-type {
+    border-bottom-right-radius: 4px;
+  }
+  td:first-of-type {
+    border-bottom-left-radius: 4px;
   }
 }
 

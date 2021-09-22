@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
-import { getValue, downloadCsvFromJson } from '@blockframes/utils/helpers';
+import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { MatDialog } from '@angular/material/dialog';
 import { OrganizationCreateComponent } from '../../components/organization/create-organization/create.component';
@@ -15,30 +15,6 @@ import { take } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationsComponent {
-  editLink = org => [`/c/o/dashboard/crm/organization/${org.id}`];
-  // public versionColumns = {
-  //   'id': { value: 'Id', disableSort: true },
-  //   'status': 'Status',
-  //   'logo': { value: 'Logo', disableSort: true },
-  //   'denomination.full': 'Company name',
-  //   'denomination.public': 'Short name',
-  //   'addresses.main.country': 'Country',
-  //   'email': 'Email',
-  //   'activity': 'Activity',
-  //   'appAccess': { value: 'App  : Dashboard : Marketplace', disableSort: true }
-  // };
-
-  // public initialColumns: string[] = [
-  //   'id',
-  //   'logo',
-  //   'denomination.full',
-  //   'denomination.public',
-  //   'addresses.main.country',
-  //   'status',
-  //   'activity',
-  //   'email',
-  //   'appAccess',
-  // ];
   public orgs$ = this.service.valueChanges(ref => ref.limit(23)).pipe(take(1)).toPromise();
   public app = getAllAppsExcept(['crm']);
 
@@ -48,22 +24,10 @@ export class OrganizationsComponent {
     private router: Router
   ) { }
 
+
   goToEdit(org: Organization) {
     this.router.navigate([`/c/o/dashboard/crm/organization/${org.id}`]);
   }
-
-  // public filterPredicate(data, filter: string) {
-  //   const columnsToFilter = [
-  //     'id',
-  //     'denomination.full',
-  //     'denomination.public',
-  //     'addresses.main.country',
-  //     'status',
-  //     'email',
-  //   ];
-  //   const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
-  //   return dataStr.toLowerCase().indexOf(filter) !== -1;
-  // }
 
   public exportTable(orgs: Organization[]) {
     const exportedRows = orgs.map(r => {
