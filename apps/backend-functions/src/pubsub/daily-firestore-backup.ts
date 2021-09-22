@@ -1,8 +1,7 @@
-import { db, storage } from '../internals/firebase'
-import { exportFirestoreToBucket, getBackupBucket } from '@blockframes/firebase-utils';
+import { db, functions, storage } from '../internals/firebase'
+import { exportFirestoreToBucket, getBackupBucket, heavyConfig } from '@blockframes/firebase-utils';
 import { enableDailyFirestoreBackup } from '../environments/environment'
 import type { Bucket } from '@google-cloud/storage';
-import { heavyFunctions } from '../internals/functions/heavyConfig';
 
 async function dailyBackupHandler() {
   const bucket: Bucket = await getBackupBucket(storage);
@@ -13,4 +12,4 @@ async function dailyBackupHandler() {
   return Promise.resolve(msg)
 }
 
-export const dailyFirestoreBackup = heavyFunctions.pubsub.schedule('0 1 * * *').onRun(dailyBackupHandler)
+export const dailyFirestoreBackup = functions(heavyConfig).pubsub.schedule('0 1 * * *').onRun(dailyBackupHandler)

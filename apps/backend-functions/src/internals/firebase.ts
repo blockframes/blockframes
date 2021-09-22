@@ -1,7 +1,11 @@
 import * as admin from 'firebase-admin';
 import { backupBucket, storageBucket } from '../environments/environment';
-import { isInMaintenance } from '@blockframes/firebase-utils';
+import { defaultConfig, isInMaintenance } from '@blockframes/firebase-utils';
 import { IMaintenanceDoc, META_COLLECTION_NAME, MAINTENANCE_DOCUMENT_NAME, _isInMaintenance } from '@blockframes/utils/maintenance';
+import { region, RuntimeOptions } from 'firebase-functions';
+import { firebaseRegion } from '@env';
+
+export const functions = (config: RuntimeOptions = defaultConfig) => region(firebaseRegion).runWith(config);
 
 if (!admin.apps.length) {
   admin.initializeApp();

@@ -4,6 +4,7 @@ import { chunk } from "lodash";
 import * as env from '@env'
 import type { File as GFile } from '@google-cloud/storage';
 import { deconstructFilePath } from "@blockframes/utils/file-sanitizer";
+import { RuntimeOptions } from 'firebase-functions';
 
 export function getDocumentRef(path: string): Promise<FirebaseFirestore.DocumentSnapshot<FirebaseFirestore.DocumentData>> {
   const db = admin.firestore();
@@ -91,6 +92,30 @@ export function getLatestFile(files: GFile[]) {
     )
     .pop();
 }
+
+/**
+ * Default runtime options for functions
+ */
+ export const defaultConfig: RuntimeOptions = {
+  timeoutSeconds: 60,
+  memory: '256MB',
+};
+
+/**
+ * Runtime options for heavy functions
+ */
+export const heavyConfig: RuntimeOptions = {
+  timeoutSeconds: 300,
+  memory: '1GB',
+};
+
+/**
+ * Runtime options for super heavy functions
+ */
+ export const superHeavyConfig: RuntimeOptions = {
+  timeoutSeconds: 540,
+  memory: '4GB',
+};
 
 export async function storageFileExist(path: string) {
   const storage = admin.storage();
