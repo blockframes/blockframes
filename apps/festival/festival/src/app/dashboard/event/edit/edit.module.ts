@@ -28,7 +28,7 @@ import { EventOrganizationGuard } from '@blockframes/event/guard/event-organizat
     MeetingModule,
     AnalyticsModule,
     MeetingFilesModule,
-    RouterModule.forChild([ // @TODO #5895 check slide effect movie form # Antoine 
+    RouterModule.forChild([
       {
         path: '',
         component: EditComponent,
