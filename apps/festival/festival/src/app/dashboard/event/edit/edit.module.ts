@@ -51,7 +51,7 @@ import { EventOrganizationGuard } from '@blockframes/event/guard/event-organizat
             component: InvitationComponent,
           },
           {
-            path: 'attendance',
+            path: 'statistics',
             component: AnalyticsComponent
           },
           {
