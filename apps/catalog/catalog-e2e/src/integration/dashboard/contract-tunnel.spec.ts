@@ -29,7 +29,7 @@ beforeEach(() => {
   p1.clickSignup();
 });
 
-describe.skip('User can fill and save contract tunnel form', () => {
+describe('User can fill and save contract tunnel form', () => {
   //TODO: Issue 3787
   // Current implementation is not ok and might change
   // The tests will be updated when changes are properly implented

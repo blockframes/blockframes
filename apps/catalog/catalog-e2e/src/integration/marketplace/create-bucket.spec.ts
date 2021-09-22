@@ -31,7 +31,7 @@ beforeEach(() => {
   p2.clickSignIn();
 });
 
-describe.skip('Create a new bucket and finalize a new offer', () => {
+describe('Create a new bucket and finalize a new offer', () => {
   it('Log in, go to the library page, add movie to the bucket and create an offer', () => {
     const p1 = new HomePage();
     p1.openSidenavMenuAndNavigate('library');

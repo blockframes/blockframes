@@ -240,7 +240,7 @@ const debugMovieTitle = (id: string, loc: string) => {
   acceptCookie();
 }
 
-describe.skip('User can navigate to the movie tunnel pages start and main.', () => {
+describe('User can navigate to the movie tunnel pages start and main.', () => {
   // Log in and create a new movie
   it('User logs in, can navigate to add new title page', () => {
     clearDataAndPrepareTest('/');
