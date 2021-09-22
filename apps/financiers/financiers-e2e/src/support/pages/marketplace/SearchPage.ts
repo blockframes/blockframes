@@ -50,7 +50,7 @@ export default class SearchPage {
     cy.get('movie-card', {timeout: 30 * SEC})
       .contains(movieName).parent().parent()
       .find('a').click();
-    cy.wait(0.5 * SEC);
+    cy.wait(5 * SEC);
     return new ViewPage();
   }
 }
