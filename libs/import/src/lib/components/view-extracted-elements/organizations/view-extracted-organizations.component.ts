@@ -29,24 +29,6 @@ import { getKeyIfExists } from '@blockframes/utils/helpers';
 //   financiersAccess,
 // }
 
-const fields = [
-  'fullDenomination',
-  'publicDenomination',
-  'email',
-  'activity',
-  'fiscalNumber',
-  'street',
-  'city',
-  'zipCode',
-  'region',
-  'country',
-  'phoneNumber',
-  'superAdminEmail',
-  'catalogAccess',
-  'festivalAccess',
-  'financiersAccess',
-] as const;
-
 const fieldsConfig= {
   /* a */ 'fullDenomination': (value: string) => value,
   /* b */ 'publicDenomination': (value: string) => value,
@@ -67,7 +49,6 @@ const fieldsConfig= {
 
 
 type fieldsKey =  keyof typeof fieldsConfig;
-// type ImportType = Record<fieldsKey, string>
 type ImportType = {
   [key in fieldsKey]: ReturnType<typeof fieldsConfig[key]>
 }

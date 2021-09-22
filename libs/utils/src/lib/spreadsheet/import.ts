@@ -1,4 +1,5 @@
-import { WorkBook, WorkSheet, utils, read}  from 'xlsx';
+import { SpreadsheetImportError } from 'libs/import/src/lib/import-utils';
+import { WorkBook, WorkSheet, utils, read } from 'xlsx';
 
 type Matrix = any[][]; //@todo find better type
 
@@ -11,7 +12,7 @@ export interface SheetTab {
 
 export type ParseFieldFn = (value: string | string[], state: any, rowIndex?: number) => any;
 
-export function importSpreadsheet(bytes: Uint8Array, range? :string) : SheetTab[] {
+export function importSpreadsheet(bytes: Uint8Array, range?: string): SheetTab[] {
 
   // convert Uint8Array to binary String
   let bstr = "";
@@ -22,7 +23,7 @@ export function importSpreadsheet(bytes: Uint8Array, range? :string) : SheetTab[
   const workBook: WorkBook = read(bstr, { type: 'binary' });
 
   // For each tab
-  const tabs : SheetTab[] = workBook.SheetNames.map( (name, index)  => {
+  const tabs: SheetTab[] = workBook.SheetNames.map((name, index) => {
     const worksheet: WorkSheet = workBook.Sheets[name];
     const rows = <Matrix>(utils.sheet_to_json(worksheet, { header: 1, range }));
     const headers = rows.shift();
@@ -40,7 +41,7 @@ export function importSpreadsheet(bytes: Uint8Array, range? :string) : SheetTab[
 * path: The key in the transform object (without the column segment)
 * transform: the callback of the key
 */
-export function parse(item: any = {}, values: string | string[], path: string, transform: ParseFieldFn, rowIndex: number) {
+export function parse(item: any = {}, values: string | string[], path: string, transform: ParseFieldFn, rowIndex: number, warnings:SpreadsheetImportError[], errors:SpreadsheetImportError[]) {
   // Here we assume the column section has already been removed from the path
   const segments = path.split('.');
   // const [segment, ...remainingSegments] = segments;
@@ -54,19 +55,33 @@ export function parse(item: any = {}, values: string | string[], path: string, t
       if (!last) {
         if (!item[field]) item[field] = new Array(values.length).fill(null).map(() => ({}));
         values.forEach((value, index) => {
-          parse(item[field][index], value, segments.join('.'), transform, rowIndex)
+          parse(item[field][index], value, segments.join('.'), transform, rowIndex, warnings, errors)
         })
 
       }
     }
   } else {
     const value = Array.isArray(values) ? values[0] : values
+    try{
     if (last) {
-      item[segment] = transform(value, item, rowIndex);
+      const warningValue = transform(value, item, rowIndex);
+      if(warningValue instanceof ValueWithWarning){
+        warnings.push(warningValue.warning);
+        item[segment] = warningValue.value;
+      }else {
+        item[segment] = warningValue;
+      }
+    }
+    }catch(err:any){
+      errors.push(err.message);
     }
 
-    if (!last) item[segment] = parse(item[segment] || {}, values, segments.join('.'), transform, rowIndex);
+    if (!last) item[segment] = parse(item[segment] || {}, values, segments.join('.'), transform, rowIndex, warnings, errors);
   }
+}
+
+export class ValueWithWarning<T=any>{
+  constructor(public value:T, public warning?:SpreadsheetImportError){}
 }
 
 /**
@@ -111,11 +126,17 @@ export function isEmpty(data: any,) {
  * with the fields including the numbers coming first no matter their position in the object.
  */
 export function extract<T>(rawRows: string[][], extractParams: Record<string, ParseFieldFn> = {}) {
+  const warnings: SpreadsheetImportError[] = [];
+  const errors: SpreadsheetImportError[] = [];
+
   const extraParamsEntries = Object.entries(extractParams);
   const state = {};
   extraParamsEntries.forEach(([columnIndexedKey, parseFieldFn], index) => {
     const extraParamValues = rawRows.map(row => row[index] ?? '');
-    parse(state, extraParamValues, columnIndexedKey, parseFieldFn, index)
+    parse(state, extraParamValues, columnIndexedKey, parseFieldFn, index, warnings, errors)
   });
-  return cleanUp(state as T)
+  return {
+    data: cleanUp(state as T),
+    errors, warnings,
+  }
 }

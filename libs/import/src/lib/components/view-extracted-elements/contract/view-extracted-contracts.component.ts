@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, Optional } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
-import { extract, ParseFieldFn, SheetTab } from '@blockframes/utils/spreadsheet';
+import { extract, ParseFieldFn, SheetTab, ValueWithWarning } from '@blockframes/utils/spreadsheet';
 import { createMandate, createSale, Mandate, Sale } from '@blockframes/contract/contract/+state/contract.model';
 import { createTerm } from '@blockframes/contract/term/+state/term.model';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
@@ -19,7 +19,7 @@ import { Scope } from '@blockframes/utils/static-model/static-model';
 import { createMovieLanguageSpecification } from '@blockframes/movie/+state/movie.model';
 
 const separator = ';'
-type errorCodes = 'no-title-id' | 'no-seller-id' | 'no-buyer-id' | 'no-stakeholders' | 'no-territories' | 'no-medias' | 'no-duration-from' | 'no-duration-to';
+type errorCodes = 'no-title-id' | 'no-seller-id' | 'wrong-contract-id' | 'no-buyer-id' | 'no-stakeholders' | 'no-territories' | 'no-medias' | 'no-duration-from' | 'no-duration-to';
 
 const errorsMap: { [key in errorCodes]: SpreadsheetImportError } = {
   'no-title-id': {
@@ -41,6 +41,13 @@ const errorsMap: { [key in errorCodes]: SpreadsheetImportError } = {
     field: 'contract.buyerId',
     reason: `Couldn't find Licensee with the provided name.`,
     name: 'Buyer ID',
+    hint: 'Edit corresponding sheet field.'
+  },
+  'wrong-contract-id': {
+    type: 'warning',
+    field: 'contract.contractId',
+    reason: `Couldn't find contract with provided Id`,
+    name: 'Contract Id',
     hint: 'Edit corresponding sheet field.'
   },
   'no-stakeholders': {
@@ -100,107 +107,44 @@ function getStatic(scope: Scope, value: string) {
   return split(value).map(v => getKeyIfExists(scope, v)).filter(v => !!v);
 }
 
-const fields = [
-  'internationalTitle',
-  'contractType',
-  'licensorName',
-  'licenseeName',
-  'territoriesList',
-  'mediaList',
-  'isExclusive',
-  'durationFrom',
-  'durationTo',
-  'dubbed',
-  'subtitle',
-  'closedCaptioning',
-  'extractedContractId',
-  'ExtractedTitleId',
-  'stakeholdersList',
-] as const;
-
-
-
 const fieldsConfig = {
-  'internationalTitle': { /* a */
-    getValue: (value: string) => value,
-    validators: [],
+   /* a */'internationalTitle': (value: string) => {
+    // const titleId = await getTitleId(value);
+    return new ValueWithWarning(value)
   },
-  'contractType': { /* b */
-    getValue: (value: string) => value.toLowerCase(),
-    validators: [],
+   /* b */'contractType': (value: string) => value.toLowerCase(),
+   /* c */'licensorName': (value: string) => value,
+   /* d */'licenseeName': (value: string) => value,
+   /* e */'territoriesList': (value: string) => value,
+   /* f */'mediaList': (value: string) => value,
+   /* g */'isExclusive': (value: string) => {
+    return value.toLowerCase() === 'yes' ? true : false;
   },
-  'licensorName': { /* c */
-    getValue: (value: string) => value,
-    validators: [],
+   /* h */'duration.from': (value: string) => {
+    const date = getDate(value);
+    if (isNaN(date.getTime()))
+      return new ValueWithWarning(value, errorsMap['no-duration-from']);
+    return date
   },
-  'licenseeName': { /* d */
-    getValue: (value: string) => value,
-    validators: [],
+   /* i */'duration.to': (value: string) => {
+    const date = getDate(value);
+    if (isNaN(date.getTime()))
+      return new ValueWithWarning(value, errorsMap['no-duration-to']);
+    return date
   },
-  'territoriesList': { /* e */
-    getValue: (value: string) => value,
-    validators: [],
-  },
-  'mediaList': { /* f */
-    getValue: (value: string) => value,
-    validators: [],
-  },
-  'isExclusive': { /* g */
-    getValue: (value: string) => value.toLowerCase() === 'yes' ? true : false,
-    validators: [],
-  },
-  'durationFrom': { /* h */
-    getValue: (value: string) => {
-      if (value) return getDate(value);
-      return value;
-    },
-    validators: [],
-  },
-  'durationTo': { /* i */
-    getValue: (value: string) => {
-      if (value) return getDate(value);
-      return value;
-    },
-    validators: [],
-  },
-  'ignored_originalLanguageLicensed': { /* j */
-    getValue: (value: string) => value,
-    validators: [],
-  },
-  'dubbed': { /* k */
-    getValue: (value: string) => value,
-    validators: [],
-  },
-  'subtitle': { /* l */
-    getValue: (value: string) => value,
-    validators: [],
-  },
-  'closedCaptioning': { /* m */
-    getValue: (value: string) => value,
-    validators: [],
-  },
-  'contractId': { /* n optional*/
-    getValue: (value: string) => value,
-    validators: [],
-  },
-  'parentTermId': { /* o optional and ignored*/
-    getValue: (value: string) => value,
-    validators: [],
-  },
-  'titleId': { /* p optional*/
-    getValue: (value: string) => value,
-    validators: [],
-  },
-  'stakeholdersList': { /* q optional*/
-    getValue: (value: string) => value ? split(value) : value,
-    validators: [],
-  },
+   /* j ignored*/'originalLanguageLicensed': (value: string) => value,
+   /* k */'dubbed': (value: string) => value,
+   /* l */'subtitle': (value: string) => value,
+   /* m */'closedCaptioning': (value: string) => value,
+   /* n optional*/'contractId': (value: string) => value,
+   /* o optional and ignored*/'parentTermId': (value: string) => value,
+   /* p optional*/'titleId': (value: string) => value,
+   /* q optional*/'stakeholdersList': (value: string) => value ? split(value) : value,
 } as const;
 
 type FieldsType = keyof typeof fieldsConfig;
-type ImportType = {
-  [key in FieldsType]: ReturnType<typeof fieldsConfig[key].getValue >
-}
+type GetValue<T> = T extends ValueWithWarning ? T["value"] : T
+type ImportType = { [key in FieldsType]: GetValue<ReturnType<typeof fieldsConfig[key]>> }
 
 
 
@@ -265,20 +209,21 @@ export class ViewExtractedContractsComponent implements OnInit {
     const matSnackbarRef = this.snackBar.open('Loading... Please wait', 'close');
 
     for (const rawRow of sheetTab.rows) {
-      const errors: SpreadsheetImportError[] = [];
       const row = rawRow.map(cell => typeof cell === "string" ? cell.trim() : cell.toString());
       if (!row.length) continue;
 
       // optional fields are prefixed with underscore
       const {
-        internationalTitle, contractType,
-        licensorName, licenseeName,
-        territoriesList, mediaList,
-        isExclusive, durationFrom,
-        durationTo, dubbed, stakeholdersList,
-        subtitle, closedCaptioning,
-        contractId: extractedContractId,
-        titleId: extractedTitleId,
+        data: {
+          internationalTitle, contractType,
+          licensorName, licenseeName,
+          territoriesList, mediaList,
+          isExclusive,
+          duration, dubbed, stakeholdersList,
+          subtitle, closedCaptioning,
+          contractId: extractedContractId,
+          titleId: extractedTitleId,
+        }, errors, warnings,
       } = extract<ImportType>([row], fieldsConfig)
 
       //////////////
@@ -309,7 +254,7 @@ export class ViewExtractedContractsComponent implements OnInit {
       let baseContract: Partial<Mandate | Sale> = {};
       if (extractedContractId) {
         baseContract = await this.contractService.getValue(extractedContractId);
-        if (!baseContract) throw new Error('No contract found for id' + extractedContractId);
+        if (!baseContract) errors.push(errorsMap['wrong-contract-id']);
       } else {
         baseContract.id = this.fire.createId();
       }
@@ -324,12 +269,12 @@ export class ViewExtractedContractsComponent implements OnInit {
       const contractId = contract.id;
 
       // Duration
-      if (!durationFrom) errors.push(errorsMap['no-duration-from']);
-      if (!durationTo) errors.push(errorsMap['no-duration-to']);
-      const duration = {
-        from: durationFrom as unknown as Date,
-        to: durationTo as unknown as Date
-      };
+      // if (!durationFrom) ;
+      // if (!durationTo) ;
+      // const duration = {
+      //   from: durationFrom as unknown as Date,
+      //   to: durationTo as unknown as Date
+      // };
 
       // Statics
       const territories = getStatic('territories', territoriesList);
@@ -356,7 +301,7 @@ export class ViewExtractedContractsComponent implements OnInit {
       this.contractsToCreate.data.push({
         contract,
         newContract: !extractedContractId,
-        errors,
+        errors: warnings,
         terms: [term]
       });
       // Forcing change detection
