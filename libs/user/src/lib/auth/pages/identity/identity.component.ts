@@ -183,7 +183,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
     if (this.existingOrgId) {
       await this.invitationService.request(this.existingOrgId, user).to('joinOrganization');
       this.snackBar.open('Your account has been created and request to join org sent ! ', 'close', { duration: this.snackbarDuration });
-     return this.router.navigate(['c/organization/join-congratulations']);
+      return this.router.navigate(['c/organization/join-congratulations']); // BRUCE
     } else {
       const { denomination, addresses, activity, appAccess } = this.orgForm.value;
 

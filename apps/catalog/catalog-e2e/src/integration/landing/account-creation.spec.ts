@@ -75,6 +75,19 @@ describe('User can create new account and create a new organization', () => {
       });
     });
   });
+
+  it('use already existing org name', () => { // @todo rename exisint org name ? + depend on  line 50
+    const p1 = new AuthIdentityPage();
+    p1.fillUserInformations(USER);
+
+    const p2 = new OrganizationLiteFormPage();
+    p2.createNewDashboardOrg();
+
+    p1.clickTermsAndCondition();
+    p1.clickPrivacyPolicy();
+    p1.submitForm();
+    assertMoveTo(IDENTITYPATH);
+  })
 });
 
 //! This one is failing because of the data that are coming from Algolia. The data about organization are not prefilled in the
@@ -169,18 +182,6 @@ describe.skip('Try with each fields except one', () => {
 });
 
 describe('Try email address', () => {
-  it('use already exist email address', () => { // @todo rename exisint org name ?
-    const p1 = new AuthIdentityPage();
-    p1.fillUserInformations(USER);
-
-    const p2 = new OrganizationLiteFormPage();
-    p2.createNewDashboardOrg();
-
-    p1.clickTermsAndCondition();
-    p1.clickPrivacyPolicy();
-    p1.submitForm();
-    assertMoveTo(IDENTITYPATH);
-  })
   it.skip('use wrong format email address', () => {
     const p1 = new AuthIdentityPage();
     p1.fillEmail(WRONG_EMAIL_FORM);
