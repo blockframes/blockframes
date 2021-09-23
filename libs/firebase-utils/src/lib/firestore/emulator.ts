@@ -183,7 +183,7 @@ function createEmulatorMetadataJson(emuPath: string) {
  * @param proc the `ChildPRocess` object for the running emulator process.
  * @param timeLimit number of seconds to await gracefull shutdown before SIGKILL
  */
-export async function shutdownEmulator(proc: ChildProcess, exportDir = defaultEmulatorBackupPath, timeLimit: number = 60 * 2) {
+export async function shutdownEmulator(proc: ChildProcess, exportDir = defaultEmulatorBackupPath, timeLimit: number = 30) {
   if (!proc) {
     console.warn('Kill emulator process cannot run as there is no process');
     return;
@@ -240,6 +240,54 @@ export function connectEmulator() {
   });
   db.clearFirestoreData = clearFirestoreData;
   return { db, auth, storage };
+}
+
+export function connectFirestoreEmulator() {
+  throwOnProduction();
+
+  const firebaseJsonPath = resolve(process.cwd(), 'firebase.json')
+  const {
+    emulators: {
+      firestore: { port: dbPort },
+      storage: { port: storagePort },
+      auth: { port: authPort },
+    },
+  } = eval('require')(firebaseJsonPath);
+
+  console.log('Detected - dbPort:', dbPort, 'storagePort:', storagePort, 'authPort:', authPort);
+
+  process.env['FIRESTORE_EMULATOR_HOST'] = `localhost:${dbPort}`
+
+  const app = initializeApp({ projectId: firebase().projectId }, 'firestore');
+  const db = app.firestore() as FirestoreEmulator;
+
+  db.settings({
+    // port: dbPort,
+    merge: true,
+    ignoreUndefinedProperties: true,
+    host: 'localhost',
+    ssl: false,
+  });
+  db.clearFirestoreData = clearFirestoreData;
+  return db;
+}
+
+export function connectAuthEmulator() {
+
+  const firebaseJsonPath = resolve(process.cwd(), 'firebase.json')
+  const {
+    emulators: {
+      auth: { port: authPort },
+    },
+  } = eval('require')(firebaseJsonPath);
+
+
+  process.env['FIREBASE_AUTH_EMULATOR_HOST'] = `localhost:${authPort}`;
+
+  const app = initializeApp({ projectId: firebase().projectId }, 'auth');
+  const auth = app.auth();
+
+  return auth;
 }
 
 /**

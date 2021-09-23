@@ -16,10 +16,13 @@ import {
   latestAnonStorageDir,
   gsutilTransfer,
   awaitProcessExit,
-  firebaseEmulatorExec
+  firebaseEmulatorExec,
+  connectAuthEmulator,
+  connectFirestoreEmulator,
+  endMaintenance
 } from '@blockframes/firebase-utils';
 import { ChildProcess } from 'child_process';
-import { join } from 'path';
+import { join, resolve } from 'path';
 import { backupBucket as prodBackupBucket, firebase as prodFirebase } from 'env/env.blockframes';
 import admin from 'firebase-admin'
 import { backupBucket, firebase } from '@env'
@@ -27,7 +30,7 @@ import { migrate } from './migrations';
 import { generateWatermarks, syncUsers } from './users';
 import { cleanDeprecatedData } from './db-cleaning';
 import { cleanStorage } from './storage-cleaning';
-import { resolve } from 'path';
+import { openSync } from 'fs';
 
 export interface ImportEmulatorOptions {
   importFrom: string,
@@ -93,11 +96,44 @@ export async function startEmulators({ importFrom = 'defaultImport' }: StartEmul
   let proc: ChildProcess;
   try {
     proc = await firebaseEmulatorExec({
-      emulators: ['functions', 'firestore', 'pubsub'],
+      emulators: [
+        // 'auth',
+        'functions',
+        'firestore',
+        'pubsub'
+      ],
       importPath: emulatorPath,
-      exportData: true
-    })
+      exportData: true,
+    });
     await awaitProcessExit(proc);
+  } catch (e) {
+    await shutdownEmulator(proc)
+    throw e;
+  }
+}
+
+/**
+ * This creates users in Auth emulator from a running instance of the Firestore emulator
+ * By keeping this clean and separate, we don't need to launch functions emulator when this is happening,
+ * just Firestore and Auth. Cleaner and faster, less risk of triggers/leaks
+ * This will shut down the emulator but the backup will contain a working version with Auth synched
+ * IF AUTH GETS TOO BIG, THINGS WILL FAIL
+ */
+export async function syncAuthEmulatorWithFirestoreEmulator({ importFrom = 'defaultImport' }: StartEmulatorOptions = { importFrom :'defaultImport' }) {
+  const emulatorPath = importFrom === 'defaultImport' ? defaultEmulatorBackupPath : resolve(importFrom);
+  let proc: ChildProcess;
+  try {
+    proc = await firebaseEmulatorExec({
+      emulators: ['auth', 'firestore'],
+      importPath: emulatorPath,
+      exportData: true,
+    });
+    const auth = connectAuthEmulator();
+    const db = connectFirestoreEmulator();
+    await startMaintenance(db)
+    await syncUsers(null, db, auth)
+    await endMaintenance(db)
+    await shutdownEmulator(proc)
   } catch (e) {
     await shutdownEmulator(proc)
     throw e;
@@ -135,7 +171,7 @@ export async function downloadProdDbBackup(localPath?: string) {
  * This function will run db anonymization on a locally running Firestore emulator database
  */
 export async function anonDbProcess() {
-  const db = loadAdminServices({ emulator: true }).db;
+  const db = connectFirestoreEmulator();
   const { getCI, storage, auth } = loadAdminServices();
   const o = await db.listCollections();
   if (!o.length) throw Error('THERE IS NO DB TO PROCESS - DANGER!');
@@ -221,7 +257,7 @@ export async function enableMaintenanceInEmulator({ importFrom = 'defaultImport'
       importPath: emulatorPath,
       exportData: true,
     });
-    const db = loadAdminServices({ emulator: true }).db;
+    const db = connectFirestoreEmulator();
     startMaintenance(db);
   } finally {
     await shutdownEmulator(emulatorProcess);

@@ -59,12 +59,14 @@ export async function copyAnonDbFromCi(storage: admin.storage.Storage, ci: admin
   });
 }
 
-export async function copyFirestoreExportFromCiBucket() {
-  if (ciBucketName as unknown === backupBucket) return;
-
-  const anonBackupURL = `gs://${ciBucketName}/${latestAnonDbDir}`;
+export async function copyFirestoreExportFromCiBucket(dbBackupURL?: string) {
+  if (!dbBackupURL && ciBucketName as unknown === backupBucket) {
+    console.log('Skipping copying of DB to local bucket since it\'s already in the local CI bucket since we are in CI')
+    return;
+  }
+  const anonBackupURL = dbBackupURL || `gs://${ciBucketName}/${latestAnonDbDir}`;
   const localBucketURL = `gs://${backupBucket}/${latestAnonDbDir}`;
 
-  console.log('Copying golden data from CI');
+  console.log('Copying golden data from CI. From\n', anonBackupURL, ' To:\n', localBucketURL);
   await gsutilTransfer({ rsync: true, mirror: true, from: anonBackupURL, to: localBucketURL });
 }

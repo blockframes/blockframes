@@ -13,7 +13,7 @@ import { generateFixtures } from './generate-fixtures';
 import { exportFirestore, importFirestore } from './admin';
 import { selectEnvironment } from './select-environment';
 import { healthCheck } from './health-check';
-import { anonymizeLatestProdDb, downloadProdDbBackup, importEmulatorFromBucket, loadEmulator, enableMaintenanceInEmulator, uploadBackup, startEmulators } from './emulator';
+import { anonymizeLatestProdDb, downloadProdDbBackup, importEmulatorFromBucket, loadEmulator, enableMaintenanceInEmulator, uploadBackup, startEmulators, syncAuthEmulatorWithFirestoreEmulator } from './emulator';
 import { backupEnv, restoreEnv } from './backup';
 import { EIGHT_MINUTES_IN_MS } from '@blockframes/utils/maintenance';
 import { rescueJWP } from './rescueJWP';
@@ -28,7 +28,7 @@ async function runCommand() {
   switch (cmd) {
     case 'prepareForTesting':
       await startMaintenance(db);
-      await prepareForTesting();
+      await prepareForTesting({ dbBackupURL: arg1 });
       await endMaintenance(db, EIGHT_MINUTES_IN_MS);
       break;
     case 'displayCredentials':
@@ -45,7 +45,7 @@ async function runCommand() {
       await startEmulators({ importFrom: arg1 });
       break;
     case 'prepareEmulators':
-      await prepareEmulators();
+      await prepareEmulators({ dbBackupURL: arg1 });
       break;
     case 'anonProdDb':
       await anonymizeLatestProdDb();
@@ -118,6 +118,9 @@ async function runCommand() {
       await startMaintenance(db);
       await migrate();
       await endMaintenance(db);
+      break;
+    case 'syncAuthEmulatorWithFirestoreEmulator':
+      await syncAuthEmulatorWithFirestoreEmulator({ importFrom: arg1 });
       break;
     case 'syncUsers':
       await startMaintenance(db);
