@@ -35,6 +35,29 @@ references:
     - staging
 
 commands:
+  check_app_size:
+    description: Check size of apps being built and post to Zapier
+    steps:
+      - run:
+          name: Check size of apps being build
+          command: |
+            # Generate default json for bundlesize
+            # This is a quick hack to get bundlesize AND affected build working.
+            # Maintain this script to keep checking new apps.
+            mkdir -p dist/apps/catalog \
+                     dist/apps/festival \
+                     dist/apps/backend-functions
+            touch ./dist/apps/catalog/main.dummy.js \
+                  ./dist/apps/festival/main.dummy.js \
+                  ./dist/apps/backend-functions/main.dummy.js
+            npm run bundlesize
+      - run:
+          name: Post sizes of apps to zapier
+          command: |
+            if [ "${CIRCLE_BRANCH}" = "production" ] || [ "${CIRCLE_BRANCH}" = "master" ]; then
+              npm run build:all;
+              curl -X POST "${ZAPPIER_WEBHOOK}" --header "Build-number:${CIRCLE_BUILD_NUM}" --header "Branch:${CIRCLE_BRANCH}" --header  "Date:`date "+%D"`" --header  Catalog-size:`cat ./dist/apps/catalog/main**.js | wc -c` --header  Festival-size:`cat ./dist/apps/festival/main**.js | wc -c` --header  Functions-size:`cat ./dist/apps/backend-functions/main**.js | wc -c`;
+            fi
   start_e2e_emulators:
     steps:
       - restore_cache:
@@ -244,15 +267,7 @@ jobs:
       - run: npm run build:all
       - run: npm run lint
       - save_build_cache
-      - run:
-          name: Check size of apps being build
-          command: npm run bundlesize
-      - run:
-          name: Post sizes of apps to zapier
-          command: |
-            if [ "${CIRCLE_BRANCH}" = "production" ] || [ "${CIRCLE_BRANCH}" = "master" ]; then
-              curl -X POST "${ZAPPIER_WEBHOOK}" --header "Build-number:${CIRCLE_BUILD_NUM}" --header "Branch:${CIRCLE_BRANCH}" --header  "Date:`date "+%D"`" --header  Catalog-size:`cat ./dist/apps/catalog/main**.js  | wc -c` --header  Festival-size:`cat ./dist/apps/festival/main**.js  | wc -c` --header  Functions-size:`cat ./dist/apps/backend-functions/main**.js | wc -c`;
-            fi
+      - check_app_size
   build-and-test-prs:
     executor: blockframes-ci
     steps:
@@ -263,27 +278,8 @@ jobs:
           command: npm run affected:test
           no_output_timeout: 15m
       - save_build_cache
-      - run:
-          name: Check size of apps being build
-          command: |
-            # Generate default json for bundlesize
-            # This is a quick hack to get bundlesize AND affected build working.
-            # Maintain this script to keep checking new apps.
-            mkdir -p dist/apps/catalog \
-                     dist/apps/festival \
-                     dist/apps/backend-functions
-            touch ./dist/apps/catalog/main.dummy.js \
-                  ./dist/apps/festival/main.dummy.js \
-                  ./dist/apps/backend-functions/main.dummy.js
-            npm run bundlesize
-      - run:
-          name: Post sizes of apps to zapier
-          command: |
-            if [ "${CIRCLE_BRANCH}" = "production" ] || [ "${CIRCLE_BRANCH}" = "master" ]; then
-              npm run build:all;
-              curl -X POST "${ZAPPIER_WEBHOOK}" --header "Build-number:${CIRCLE_BUILD_NUM}" --header "Branch:${CIRCLE_BRANCH}" --header  "Date:`date "+%D"`" --header  Catalog-size:`cat ./dist/apps/catalog/main**.js | wc -c` --header  Festival-size:`cat ./dist/apps/festival/main**.js | wc -c` --header  Functions-size:`cat ./dist/apps/backend-functions/main**.js | wc -c`;
-            fi
-  test-e2e-ci: # TODO: This needs to be refactored - runs tests against CI project when there's a commit to CI & nightly tests
+      - check_app_size
+  test-e2e-ci:
     executor: blockframes-ci
     steps:
       - slack/notify:
