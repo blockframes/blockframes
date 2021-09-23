@@ -1,42 +1,51 @@
 <main fxLayout="column">
   <crm-bread-crumb></crm-bread-crumb>
-  <article fxLayout="column" fxLayoutAlign="center center">
-    <button [disabled]="exporting.$ | async" mat-flat-button color="primary" (click)="exportTable()">
-      <ng-container *ngIf="exporting.$ | async else export">
-        <span>Generating CSV...</span>
-      </ng-container>
-      <ng-template #export>
-        <span>Export to CSV</span>
-        <mat-icon svgIcon="arrow_upward"></mat-icon>
-      </ng-template>
-    </button>
-  </article>
   <ng-container *ngIf="users$ | async as users; else loading">
-    <bf-table-filter [source]="users" [columns]="versionColumns" [initialColumns]="initialColumns"
-      [filterPredicate]="filterPredicate" [pageSize]="50" showLoader showPaginator clickable (rowClick)="goToEdit($event)">
-      <ng-template colRef="avatar" let-avatar>
-        <img class="avatar" [ref]="avatar" asset="empty_poster.svg">
-      </ng-template>
-      <ng-template colRef="org" let-org>
+
+    <article fxLayout="column" fxLayoutAlign="center center">
+      <button [disabled]="exporting.$ | async" mat-flat-button color="primary" (click)="exportTable()">
+        <ng-container *ngIf="exporting.$ | async else export">
+          <span>Generating CSV...</span>
+        </ng-container>
+        <ng-template #export>
+          <span>Export to CSV</span>
+          <mat-icon svgIcon="arrow_upward"></mat-icon>
+        </ng-template>
+      </button>
+    </article>
+
+    <bf-table clickable [source]="users" pagination="50" useFilter (rowClick)="goToEdit($event)">
+      <ng-template colRef="uid" let-uid>{{ uid }}</ng-template>
+      <ng-template colRef="firstName" sort label="First Name" let-name>{{ name }}</ng-template>
+      <ng-template colRef="lastName" sort label="Last Name" let-name>{{ name }}</ng-template>
+      <ng-template colRef="org" let-org label="Organization">
         <a *ngIf="org else noOrg" [routerLink]="['/c/o/dashboard/crm/organization', org.id]">
           <span>{{ org | orgName:'long'}} </span><mat-icon svgIcon="visibility"></mat-icon>
         </a>
         <ng-template #noOrg>--</ng-template>
       </ng-template>
-      <ng-template colRef="orgCountry" let-orgCountry>
+      <ng-template colRef="email" sort let-email>{{ email }}</ng-template>
+      <ng-template colRef="avatar" let-avatar>
+        <img class="avatar" [ref]="avatar" asset="profil_user.svg">
+      </ng-template>
+      <ng-template colRef="orgCountry" label="Org Country" sort let-orgCountry>
         <span *ngIf="orgCountry else noOrgCountry">{{ orgCountry }}</span>
         <ng-template #noOrgCountry>--</ng-template>
       </ng-template>
-      <ng-template colRef="firstConnexion" let-firstConnexion>
-        {{ firstConnexion | date: 'mediumDate' }}
+      <ng-template colRef="firstConnection" sort  label="First Connection" let-firstConnection>
+        {{ firstConnection | date: 'mediumDate' }}
       </ng-template>
-      <ng-template colRef="lastConnexion" let-lastConnexion>
-        {{ lastConnexion | date: 'mediumDate' }}
+      <ng-template colRef="lastConnection" sort label="Last Connection" let-lastConnection>
+        {{ lastConnection | date: 'mediumDate' }}
       </ng-template>
-      <ng-template colRef="org.addresses.main.country" let-country>
+      <ng-template colRef="pageView" label="Page View" sort let-pageView>{{ pageView }}</ng-template>
+      <ng-template colRef="sessionCount" label="Session Count" sort let-sessionCount>{{ sessionCount }}</ng-template>
+      <ng-template colRef="createdFrom" label="Created From" sort let-app>{{ app }}</ng-template>
+      <ng-template colRef="org.addresses.main.country" sort label="Country" let-country>
         {{ country ? country : '--' }}
       </ng-template>
-    </bf-table-filter>
+    </bf-table>
+
   </ng-container>
 
   <ng-template #loading>...loading users</ng-template>

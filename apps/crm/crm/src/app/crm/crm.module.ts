@@ -36,7 +36,6 @@ import { OverviewComponent } from './pages/overview/overview.component';
 import { MoviesComponent } from './pages/movies/movies.component';
 import { OrganizationComponent } from './pages/organization/organization.component';
 import { MovieComponent } from './pages/movie/movie.component';
-import { UsersComponent } from './pages/users/users.component';
 import { UserComponent } from './pages/user/user.component';
 import { EventsComponent } from './pages/events/events.component';
 import { EventComponent } from './pages/event/event.component';
@@ -56,7 +55,7 @@ export const panelRoutes: Routes = [
   { path: 'organizations', loadChildren: () => import('./pages/organizations/organizations.module').then(m => m.OrganizationListModule)},
   { path: 'organization/:orgId', component: OrganizationComponent },
   { path: 'movie/:movieId', component: MovieComponent },
-  { path: 'users', component: UsersComponent },
+  { path: 'users', loadChildren: () => import('./pages/users/users.module').then(m => m.UserListModule)},
   { path: 'user/:userId', component: UserComponent },
   { path: 'events', component: EventsComponent },
   { path: 'event/:eventId', component: EventComponent },
@@ -107,7 +106,6 @@ export const panelRoutes: Routes = [
   declarations: [
     MoviesComponent,
     MovieComponent,
-    UsersComponent,
     UserComponent,
     EventsComponent,
     MailsComponent,

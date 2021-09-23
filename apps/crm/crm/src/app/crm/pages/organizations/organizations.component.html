@@ -19,7 +19,7 @@
     </div>
   </article>
 
-  <bf-table clickable [source]="orgs" pagination="5" useFilter (rowClick)="goToEdit($event)">
+  <bf-table clickable [source]="orgs" pagination="50" useFilter (rowClick)="goToEdit($event)">
     <ng-template colRef="id" let-id sort>{{ id }}</ng-template>
     <ng-template colRef="status" let-status sort>
       <bf-tag>{{ status }}</bf-tag>
