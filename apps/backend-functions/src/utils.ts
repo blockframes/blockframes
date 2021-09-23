@@ -16,25 +16,25 @@ type FunctionType = (...args: any[]) => any;
  * Handles internal features such as skipping functions when we backup / restore the db.
  */
 export function onDocumentWrite(docPath: string, fn: FunctionType) {
-  return functions.firestore
+  return functions().firestore
     .document(docPath)
     .onWrite(skipInMaintenance(logErrors(fn)));
 }
 
 export function onDocumentUpdate(docPath: string, fn: FunctionType) {
-  return functions.firestore
+  return functions().firestore
     .document(docPath)
     .onUpdate(skipInMaintenance(logErrors(fn)));
 }
 
 export function onDocumentDelete(docPath: string, fn: FunctionType) {
-  return functions.firestore
+  return functions().firestore
     .document(docPath)
     .onDelete(skipInMaintenance(fn))
 }
 
 export function onDocumentCreate(docPath: string, fn: FunctionType) {
-  return functions.firestore
+  return functions().firestore
     .document(docPath)
     .onCreate(skipInMaintenance(logErrors(fn)));
 }
