@@ -375,7 +375,7 @@ jobs:
     executor: blockframes-ci
     steps:
       - prepare_environment
-      - run: npm run firestore:run-db-anon-process
+      - run: npm start anonProdDb
   copy-storage-from-prod:
     executor: blockframes-ci
     steps:
@@ -496,7 +496,7 @@ workflows:
           filters:
             branches:
               only: *deployment_branches
-  build-lint-unit-test-each-commit: # build, lint and unit test commits that aren't release related
+  build-and-test: # build, lint and unit test commits that aren't release related
     jobs:
       - unit-test-commits:
           filters:
