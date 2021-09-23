@@ -475,15 +475,33 @@ workflows:
             branches:
               only:
                 - ci
-  e2e-tests:
-    jobs:
-      - prepare-emulators:
-          filters:
-            branches:
-              ignore: *deployment_branches
-      - catalog-e2e:
-          requires:
-            - prepare-emulators
-          filters:
-            branches:
-              ignore: *deployment_branches
+  # e2e-tests:
+  #   jobs:
+  #     - prepare-emulators:
+  #         filters:
+  #           branches:
+  #             ignore: *deployment_branches
+  #     - catalog-e2e:
+  #         requires:
+  #           - prepare-emulators
+  #         filters:
+  #           branches:
+  #             ignore: *deployment_branches
+  #     - festival-e2e:
+  #         requires:
+  #           - prepare-emulators
+  #         filters:
+  #           branches:
+  #             ignore: *deployment_branches
+  #     - crm-e2e:
+  #         requires:
+  #           - prepare-emulators
+  #         filters:
+  #           branches:
+  #             ignore: *deployment_branches
+  #     - financiers-e2e:
+  #         requires:
+  #           - prepare-emulators
+  #         filters:
+  #           branches:
+  #             ignore: *deployment_branches
