@@ -7,6 +7,7 @@ import { boolean } from '@blockframes/utils/decorators/decorators';
 import { MovieService } from '@blockframes/movie/+state';
 import { Observable } from 'rxjs';
 import { OrganizationQuery, OrganizationService } from '@blockframes/organization/+state';
+import { Router } from '@angular/router';
 
 @Directive({
   selector: 'wishlist-add-text [wishlistAddText]',
@@ -43,6 +44,7 @@ export class WishlistButtonComponent implements OnInit {
     private movieService: MovieService,
     private orgQuery: OrganizationQuery,
     private orgService: OrganizationService,
+    private router: Router,
     private snackbar: MatSnackBar
   ) { }
 
@@ -56,7 +58,9 @@ export class WishlistButtonComponent implements OnInit {
     const movie = await this.movieService.getValue(this.movieId);
     const title = movie.title?.international ?? movie.title.original;
     this.orgService.updateWishlist(movie);
-    this.snackbar.open(`${title} has been added to your wishlist.`, 'close', { duration: 2000 });
+    this.snackbar.open(`${title} was successfully to your Wishlist.`, 'GO TO WISHLIST', { duration: 4000 })
+      .onAction()
+      .subscribe(() => this.router.navigate(['/c/o/marketplace/wishlist']));
     this.added.emit(this.movieId)
   }
 
@@ -66,7 +70,9 @@ export class WishlistButtonComponent implements OnInit {
     const movie = await this.movieService.getValue(this.movieId);
     const title = movie.title.international;
     this.orgService.updateWishlist(movie);
-    this.snackbar.open(`${title} has been removed from your selection.`, 'close', { duration: 2000 });
+    this.snackbar.open(`${title} was removed from your Wishlist.`, 'GO TO WISHLIST', { duration: 4000 })
+      .onAction()
+      .subscribe(() => this.router.navigate(['/c/o/marketplace/wishlist']));
     this.removed.emit(this.movieId)
   }
 
