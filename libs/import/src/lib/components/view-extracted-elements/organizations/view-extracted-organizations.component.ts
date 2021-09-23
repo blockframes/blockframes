@@ -109,40 +109,34 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
     const matSnackbarRef = this.snackBar.open('Loading... Please wait', 'close');
     for (const spreadSheetRow of sheetTab.rows) {
 
-      const {
-        data: {
-          denomination, email,
-          org, superAdminEmail,
-          catalogAccess, festivalAccess, financiersAccess,
-        }, errors, warnings,
-      } = extract<ImportType>([spreadSheetRow], fieldsConfig);
+      const { data, errors, warnings,      } = extract<ImportType>([spreadSheetRow], fieldsConfig);
 
       // ORG ID
       // Create/retreive the org
       let org = createOrganization();
       let newOrg = true;
-      if (email) {
-        const [existingOrg] = await this.organizationService.getValue(ref => ref.where('email', '==', email));
+      if (data.email) {
+        const [existingOrg] = await this.organizationService.getValue(ref => ref.where('email', '==', data.email));
         if (existingOrg) {
-          org = existingOrg;
+          data.org = existingOrg;
           newOrg = false;
         }
       }
 
       const importErrors = {
-        org,
+        data.org,
         newOrg,
         errors:warnings,
       } as OrganizationsImportState;
 
       let superAdmin = createUser();
-      if (superAdminEmail) {
-        const [existingSuperAdmin] = await this.userService.getValue(ref => ref.where('email', '==', superAdminEmail));
+      if (data.superAdminEmail) {
+        const [existingSuperAdmin] = await this.userService.getValue(ref => ref.where('email', '==', data.superAdminEmail));
         if (existingSuperAdmin) {
           superAdmin = existingSuperAdmin;
 
           if (superAdmin.orgId) {
-            if (newOrg || superAdmin.orgId !== org.id) {
+            if (newOrg || superAdmin.orgId !== data.org.id) {
               // Cannot set user as superAdmin because he already belongs to an org
               importErrors.errors.push({
                 type: 'error',
@@ -158,40 +152,40 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
 
       importErrors.superAdmin = superAdmin;
 
-      if (denomination && denomination) {
+      if (data.denomination && data.denomination) {
         /**
         * @dev We process this data only if this is for a new org
         */
         if (newOrg) {
           // SUPER ADMIN
-          if (superAdminEmail) {
-            importErrors.superAdmin.email = superAdminEmail.trim().toLowerCase();
+          if (data.superAdminEmail) {
+            importErrors.superAdmin.email = data.superAdminEmail.trim().toLowerCase();
           }
         }
 
         // DENOMINATION
-        importErrors.org.denomination.full = denomination.full;
+        importErrors.org.denomination.full = data.denomination.full;
         // if (denomination.full) {
         // }
 
-        if (denomination.public) {
-          importErrors.org.denomination.public = denomination.public;
+        if (data.denomination.public) {
+          importErrors.org.denomination.public = data.denomination.public;
         }
 
         // EMAIL
-        if (email) {
-          importErrors.org.email = email;
+        if (data.email) {
+          importErrors.org.email = data.email;
         }
 
         // ORG INFOS
-        if (org) {//
-          importErrors.org = org;
+        if (data.org) {//
+          importErrors.org = data.org;
         }
 
 
         // APP ACCESS
-        if (catalogAccess) {
-          const [module1, module2]: Module[] = catalogAccess;
+        if (data.catalogAccess) {
+          const [module1, module2]: Module[] = data.catalogAccess;
           if (module1) {
             importErrors.org.appAccess.catalog[module1] = true;
           }
@@ -200,8 +194,8 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
           }
         }
 
-        if (festivalAccess) {
-          const [module1, module2]: Module[] = festivalAccess;
+        if (data.festivalAccess) {
+          const [module1, module2]: Module[] = data.festivalAccess;
           if (module1) {
             importErrors.org.appAccess.festival[module1] = true;
           }
@@ -210,8 +204,8 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
           }
         }
 
-        if (financiersAccess) {
-          const [module1, module2]: Module[] = financiersAccess;
+        if (data.financiersAccess) {
+          const [module1, module2]: Module[] = data.financiersAccess;
           if (module1) {
             importErrors.org.appAccess.financiers[module1] = true;
           }
@@ -220,7 +214,7 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
           }
         }
 
-        if (getOrgModuleAccess(org).length === 0) {
+        if (getOrgModuleAccess(data.org).length === 0) {
           importErrors.errors.push({
             type: 'error',
             field: 'appAccess',

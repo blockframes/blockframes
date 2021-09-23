@@ -124,7 +124,7 @@ function getStaticList(scope: Scope, value: string, error?: SpreadsheetImportErr
 
 const fieldsConfig = {
    /* a */'title.international': (value: string) => value,
-   /* b */'contractType': (value: string) => value.toLowerCase() as 'mandate' | 'sale',
+   /* b */'type': (value: string) => value.toLowerCase() as 'mandate' | 'sale',
    /* c */'licensorName': (value: string) => value,
    /* d */'licenseeName': (value: string) => value,
    /* e */'territories': (value: string) => getStaticList('territories', value, errorsMap['no-territories']),
@@ -215,37 +215,26 @@ export class ViewExtractedContractsComponent implements OnInit {
       if (!row.length) continue;
 
       // optional fields are prefixed with underscore
-      const {
-        data: {
-          title, contractType,
-          licensorName, licenseeName,
-          territories, medias,
-          exclusive,
-          duration, dubbed, stakeholdersList,
-          subtitle, closedCaptioning,
-          contractId: extractedContractId,
-          titleId: extractedTitleId,
-        }, errors, warnings,
-      } = extract<ImportType>([row], fieldsConfig)
+      const { data, errors, warnings, } = extract<ImportType>([row], fieldsConfig)
 
       //////////////
       // CONTRACT //
       //////////////
       // TITLE
-      const titleId = extractedTitleId || (await this.getTitleId(title.international));
+      const titleId = data.extractedTitleId || (await this.getTitleId(data.title.international));
 
       if (!titleId) errors.push(errorsMap['no-title-id']);
 
       // BUYER / SELLER
       const [sellerId, buyerId] = await Promise.all([
-        this.getOrgId(licensorName),
-        this.getOrgId(licenseeName)
+        this.getOrgId(data.licensorName),
+        this.getOrgId(data.licenseeName)
       ])
       if (!sellerId) errors.push(errorsMap['no-seller-id']);
       if (!buyerId) errors.push(errorsMap['no-buyer-id']);
 
       // STAKEHOLDER
-      const getStakeholders = Array.isArray(stakeholdersList) ? stakeholdersList.map(orgName => this.getOrgId(orgName)) : [];
+      const getStakeholders = Array.isArray(data.stakeholdersList) ? data.stakeholdersList.map(orgName => this.getOrgId(orgName)) : [];
       const stakeholders = (await Promise.all(getStakeholders)).filter(s => !!s);
       if (!stakeholders.length) errors.push(errorsMap['no-stakeholders']);
 
@@ -254,13 +243,13 @@ export class ViewExtractedContractsComponent implements OnInit {
 
       // CONTRACT
       let baseContract: Partial<Mandate | Sale> = {};
-      if (extractedContractId) {
-        baseContract = await this.contractService.getValue(extractedContractId);
+      if (data.extractedContractId) {
+        baseContract = await this.contractService.getValue(data.extractedContractId);
         if (!baseContract) errors.push(errorsMap['wrong-contract-id']);
       } else {
         baseContract.id = this.fire.createId();
       }
-      const contract = contractType === 'mandate'
+      const contract = data.type === 'mandate'
         ? createMandate({ ...baseContract as Mandate, titleId, buyerId, sellerId, stakeholders, status: 'accepted' })
         : createSale({ ...baseContract as Sale, titleId, buyerId, sellerId, stakeholders, status: 'accepted' });
 
@@ -271,10 +260,10 @@ export class ViewExtractedContractsComponent implements OnInit {
       const contractId = contract.id;
 
       const termId = this.fire.createId();
-      const term = createTerm({ id: termId, contractId, duration, territories, medias, exclusive });
+      const term = createTerm({ id: termId, contractId, duration: data.duration, territories: data.territories, medias: data.medias, exclusive: data.exclusive });
 
       // Languages
-      for (const [key, languages] of Object.entries({ dubbed, subtitle, closedCaptioning })) {
+      for (const [key, languages] of Object.entries({ dubbed: data.dubbed, subtitle: data.subtitle, closedCaptioning: data.closedCaptioning })) {
         for (const language of languages) {
           if (!term.languages[language]) term.languages[language] = createMovieLanguageSpecification();
           term.languages[language][key] = true;
@@ -285,7 +274,7 @@ export class ViewExtractedContractsComponent implements OnInit {
 
       this.contractsToCreate.data.push({
         contract,
-        newContract: !extractedContractId,
+        newContract: !data.extractedContractId,
         errors: warnings,
         terms: [term]
       });
