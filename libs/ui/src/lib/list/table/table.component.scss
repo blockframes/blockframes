@@ -1,0 +1,168 @@
+:host {
+  display: block;
+}
+
+:host.clickable tbody {
+  tr {
+    cursor: pointer;
+  }
+  tr:hover {
+    background-color: var(--background-hover);
+  }
+}
+
+mat-form-field {
+  display: block;
+}
+
+.table-container {
+  display: block;
+  overflow: auto;
+  max-width: 100%;  
+}
+
+table {
+  border-spacing: 0;
+  width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+// Required when for sticky columns
+tr {
+  background: inherit;
+}
+
+th, td {
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  max-width: 800px;
+  
+  line-height: 18px;  // Custom Font (validated with Stephanie)
+}
+
+thead {
+  tr {
+    height: 56px;
+  }
+  th {
+    align-items: center;
+    text-align: left;
+    text-transform: uppercase;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    
+    span {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .sortable {
+      display: flex;
+      align-items: center;
+    }
+    button.sort {
+      // Await opacity off before animating transform
+      // We don't use animation keyframes else it's triggered by default
+      transition: transform 0.5s 0.3s, opacity 0.3s;
+      opacity: 0;
+    }
+    button.sort mat-icon {
+      transform: scale(0.8);
+    }
+
+    button.sort.asc {
+      transform: translateY(100px);
+    }
+    button.sort:not(.asc) {
+      transform: translateY(-100px) rotate(-180deg);
+    }
+  }
+
+  th:hover {
+    button.sort {
+      transition: transform 0.2s, opacity 0.5s;
+      opacity: 1;
+      &.asc {
+        transform: translateY(0);
+      }
+      &:not(.asc) {
+        transform: translateY(0) rotate(-180deg);
+      }
+    }
+  }
+}
+
+tbody tr {
+  height: 48px;
+}
+
+footer {
+  height: 56px;
+  padding: 8px 24px;
+  // border: solid 1px var(--foreground-divider);
+  border-top: none;
+  // border-radius: 0 0 10px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  span {
+    margin-right: 8px;
+  }
+}
+
+// First column
+th:first-of-type, td:first-of-type {
+  padding-left: 24px;
+  &.sticky {
+    background: inherit;
+    position: sticky;
+    left: 0;
+    border-right: solid 1px var(--foreground-divider);
+  }
+}
+
+// Last column
+th:last-of-type, td:last-of-type {
+  padding-right: 24px;
+  &.sticky {
+    background: inherit;
+    position: sticky;
+    right: 0;
+    border-left: solid 1px var(--foreground-divider);
+  }
+}
+
+tr:last-of-type {
+  td:last-of-type {
+    border-bottom-right-radius: 4px;
+  }
+  td:first-of-type {
+    border-bottom-left-radius: 4px;
+  }
+}
+
+
+
+@keyframes slideup-enter {
+  from { transform: translateY(100px); }
+  to { transform: translateY(0); }
+}
+@keyframes slideup-leave {
+  from { transform: translateY(0); }
+  to { transform: translateY(-100px); }
+}
+
+@keyframes slidedown-enter {
+  from { transform: rotate(-180deg) translateY(100px); }
+  to { transform: rotate(-180deg) translateY(0); }
+}
+@keyframes slidedown-leave {
+  from { transform: rotate(-180deg) translateY(0); }
+  to { transform: rotate(-180deg) translateY(-100px); }
+}
