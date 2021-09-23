@@ -19,7 +19,9 @@ import {
   firebaseEmulatorExec,
   connectAuthEmulator,
   connectFirestoreEmulator,
-  endMaintenance
+  endMaintenance,
+  forceEmulatorExport,
+  latestAnonShrinkedDbDir
 } from '@blockframes/firebase-utils';
 import { ChildProcess } from 'child_process';
 import { join, resolve } from 'path';
@@ -30,19 +32,23 @@ import { migrate } from './migrations';
 import { generateWatermarks, syncUsers } from './users';
 import { cleanDeprecatedData } from './db-cleaning';
 import { cleanStorage } from './storage-cleaning';
-import { openSync } from 'fs';
+import { shrinkDb } from './db-shrink';
+
+export interface ImportEmulatorOptions {
+  importFrom: string,
+}
 
 /**
  * This function will download the Firestore backup from specified bucket, import it into
  * the emulator and run the emulator without shutting it down. This command can be used to run
  * emulator in background while developing or running other processes.
- * @param bucketUrl GCS bucket URL for the Firestore backup
+ * @param importFrom GCS bucket URL for the Firestore backup
  *
  * If no parameter is provided, it will attempt to find the latest backup out of a number
  * of date-formatted directory names in the env's backup bucket (if there are multiple dated backups)
  */
-export async function importEmulatorFromBucket(_exportUrl: string) {
-  const bucketUrl = _exportUrl || await getLatestFolderURL(loadAdminServices().storage.bucket(backupBucket), 'firestore');
+export async function importEmulatorFromBucket({ importFrom }: ImportEmulatorOptions) {
+  const bucketUrl = importFrom || await getLatestFolderURL(loadAdminServices().storage.bucket(backupBucket), 'firestore');
   await importFirestoreEmulatorBackup(bucketUrl, defaultEmulatorBackupPath);
   let proc: ChildProcess;
   try {
@@ -51,6 +57,7 @@ export async function importEmulatorFromBucket(_exportUrl: string) {
       importPath: defaultEmulatorBackupPath,
       exportData: true,
     });
+
     await awaitProcessExit(proc);
   } catch (e) {
     await shutdownEmulator(proc);
@@ -80,7 +87,7 @@ export async function loadEmulator({ importFrom = 'defaultImport' }: StartEmulat
   }
 }
 
-export async function startEmulators({ importFrom = 'defaultImport' }: StartEmulatorOptions = { importFrom :'defaultImport' }) {
+export async function startEmulators({ importFrom = 'defaultImport' }: StartEmulatorOptions = { importFrom: 'defaultImport' }) {
   const emulatorPath = importFrom === 'defaultImport' ? defaultEmulatorBackupPath : resolve(importFrom);
   let proc: ChildProcess;
   try {
@@ -193,7 +200,7 @@ export async function anonDbProcess() {
   console.info('Storage data clean and fresh!');
 
   console.info('Generating watermarks...');
-  await generateWatermarks({db, storage});
+  await generateWatermarks({ db, storage });
   console.info('Watermarks generated!');
 }
 
@@ -211,11 +218,18 @@ export async function anonymizeLatestProdDb() {
   });
   try {
     await anonDbProcess();
+    await forceEmulatorExport(defaultEmulatorBackupPath);
+    console.log('Storing golden database data');
+    await uploadBackup({ localRelPath: getFirestoreExportPath(defaultEmulatorBackupPath), remoteDir: latestAnonDbDir });
+
+    const db = connectFirestoreEmulator();
+    await shrinkDb(db)
+    await forceEmulatorExport(defaultEmulatorBackupPath);
+    console.log('Storing shrunk golden database data');
+    await uploadBackup({ localRelPath: getFirestoreExportPath(defaultEmulatorBackupPath), remoteDir: latestAnonShrinkedDbDir });
   } finally {
-    await shutdownEmulator(proc, defaultEmulatorBackupPath);
+    await shutdownEmulator(proc, defaultEmulatorBackupPath, 10); // We don't need to wait for it to export anymore
   }
-  console.log('Storing golden database data');
-  await uploadBackup({ localRelPath: getFirestoreExportPath(defaultEmulatorBackupPath), remoteDir: latestAnonDbDir });
 
   console.log('Storing golden storage data');
   const anonBucketBackupDirURL = `gs://${CI_STORAGE_BACKUP}/${latestAnonStorageDir}/`;
