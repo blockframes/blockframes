@@ -106,18 +106,21 @@ export class MarketplaceMovieViewComponent implements OnInit {
   }
 
   async sendEmail(emailData: EmailData, title: string, orgs: Organization[]) {
-    let email_ready = false;
     const templateId = templateIds.financiers.invest;
     const userSubject = getUserEmailData(this.authQuery.user);
 
     const orgUserSubject = getOrgEmailData(this.orgQuery.getActive());
     const promises: Promise<ErrorResultResponse>[] = [];
 
+    const cyCheck = 'Cypress' in window;
+    let emailReady = false;
+    let numEmails = 0;
+
     for (const org of orgs) {
       const users = await this.userService.getValue(org.userIds);
       for (const user of users) {
         let toUser = getUserEmailData(user);
-        const cyCheck = 'Cypress' in window;
+        let userEmail = toUser.email;
         // For e2e test purpose
         if (cyCheck) {
           toUser = {...toUser, email: testEmail};
@@ -132,8 +135,14 @@ export class MarketplaceMovieViewComponent implements OnInit {
           title,
         };
 
-        if (cyCheck && (!email_ready && (toUser.firstName !== userSubject.firstName))) {
-          email_ready = true;
+        /*
+         * If running E2E, for user other than sender, 
+         * store it for access in E2E test.
+         * A single email is sufficient to check the email template 
+         */
+        if (cyCheck && (userEmail !== userSubject.email)) {
+          emailReady = true;
+          ++numEmails;
           window['Cypress_e2e'] = data;
         }
 
@@ -143,6 +152,10 @@ export class MarketplaceMovieViewComponent implements OnInit {
         });
         promises.push(promise);
       }
+    }
+
+    if (cyCheck && emailReady) {
+      window['Cypress_e2e'].numEmails = numEmails;
     }
     const res = await Promise.all(promises);
     const success = res.some(r => r.result);
