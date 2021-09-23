@@ -162,25 +162,8 @@ export class IdentityComponent implements OnInit, OnDestroy {
   }
 
   private async create() {
-    const { email, password, firstName, lastName } = this.form.value;
-
-    const privacyPolicy = await this.authService.getPrivacyPolicy();
-    const ctx = {
-      firstName,
-      lastName,
-      _meta: { createdFrom: this.app },
-      privacyPolicy
-    };
-
-    const credentials = await this.authService.signup(email.trim(), password, { ctx });
-    const user = createPublicUser({
-      firstName,
-      lastName,
-      email,
-      uid: credentials.user.uid
-    });
-
     if (this.existingOrgId) {
+      const user = await this.createUser(this.form.value);
       await this.invitationService.request(this.existingOrgId, user).to('joinOrganization');
       this.snackBar.open('Your account has been created and request to join org sent ! ', 'close', { duration: this.snackbarDuration });
       return this.router.navigate(['c/organization/join-congratulations']); // BRUCE
@@ -197,6 +180,8 @@ export class IdentityComponent implements OnInit, OnDestroy {
         return;
       }
 
+      const user = await this.createUser(this.form.value);
+
       const org = createOrganization({ denomination, addresses, activity });
 
       org.appAccess[this.app][appAccess] = true;
@@ -206,6 +191,28 @@ export class IdentityComponent implements OnInit, OnDestroy {
       this.snackBar.open('Your User Account was successfully created. Please wait for our team to check your Company Information. ', 'close', { duration: this.snackbarDuration });
       return this.router.navigate(['c/organization/create-congratulations']);
     }
+  }
+
+  /**
+   * Create the new user on auth 
+   * @param user 
+   * @returns 
+   */
+  private async createUser(user: { email, password, firstName, lastName }) {
+    const privacyPolicy = await this.authService.getPrivacyPolicy();
+    const ctx = {
+      firstName: user.firstName,
+      lastName: user.lastName,
+      _meta: { createdFrom: this.app },
+      privacyPolicy
+    };
+    const credentials = await this.authService.signup(user.email.trim(), user.password, { ctx });
+    return createPublicUser({
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      uid: credentials.user.uid
+    });
   }
 
   private async update() {
