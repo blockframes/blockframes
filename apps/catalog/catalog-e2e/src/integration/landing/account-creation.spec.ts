@@ -76,7 +76,7 @@ describe('User can create new account and create a new organization', () => {
     });
   });
 
-  it('use already existing org name', () => { // @todo rename exisint org name ? + depend on  line 50
+  it('use already existing org name', () => {
     const p1 = new AuthIdentityPage();
     p1.fillUserInformations(USER);
 
