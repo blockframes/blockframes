@@ -8,7 +8,6 @@ import { PermissionsDocument } from "@blockframes/permissions/+state/permissions
 import { uploadBackup } from "./emulator";
 import { backupBucket as ciBucketName } from 'env/env.blockframes-ci'
 import { EventDocument } from "@blockframes/event/+state/event.firestore";
-import * as admin from 'firebase-admin';
 import { Offer } from "@blockframes/contract/offer/+state";
 import { Bucket } from "@blockframes/contract/bucket/+state";
 import { getValue } from "@blockframes/utils/helpers";
@@ -17,8 +16,9 @@ import { Campaign } from "@blockframes/campaign/+state/campaign.model";
 
 // Users for E2E tests
 import staticUsers from 'tools/static-users.json';
-import type { ChildProcess } from "child_process";
 import { EIGHT_MINUTES_IN_MS } from "@blockframes/utils/maintenance";
+import type * as admin from 'firebase-admin';
+import type { ChildProcess } from "child_process";
 
 export enum USER {
   Vincent = 'MDnN2GlVUeadIVJbzTToQQNAMWZ2',

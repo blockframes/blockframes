@@ -206,8 +206,12 @@ export function forceEmulatorExport(exportDir = defaultEmulatorBackupPath) {
 
 export type FirestoreEmulator = FirebaseFirestore.Firestore & { clearFirestoreData?: typeof clearFirestoreData; };
 
+let db;
+let auth;
+
 export function connectFirestoreEmulator() {
   throwOnProduction();
+  if (db) return db;
 
   const firebaseJsonPath = resolve(process.cwd(), 'firebase.json')
   const {
@@ -223,7 +227,7 @@ export function connectFirestoreEmulator() {
   process.env['FIRESTORE_EMULATOR_HOST'] = `localhost:${dbPort}`
 
   const app = initializeApp({ projectId: firebase().projectId }, 'firestore');
-  const db = app.firestore() as FirestoreEmulator;
+  db = app.firestore() as FirestoreEmulator;
 
   db.settings({
     // port: dbPort,
@@ -237,7 +241,7 @@ export function connectFirestoreEmulator() {
 }
 
 export function connectAuthEmulator() {
-
+  if (auth) return auth;
   const firebaseJsonPath = resolve(process.cwd(), 'firebase.json')
   const {
     emulators: {
@@ -249,7 +253,7 @@ export function connectAuthEmulator() {
   process.env['FIREBASE_AUTH_EMULATOR_HOST'] = `localhost:${authPort}`;
 
   const app = initializeApp({ projectId: firebase().projectId }, 'auth');
-  const auth = app.auth();
+  auth = app.auth();
 
   return auth;
 }
