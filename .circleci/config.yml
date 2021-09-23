@@ -499,13 +499,13 @@ workflows:
       - build-deploy-prepare-staging:
           <<: *release_only
       - unit-test-staging:
-           requires:
+          requires:
             - build-deploy-prepare-staging
-        <<: *release_only
+          <<: *release_only
       - test-e2e-staging:
           requires:
             - build-deploy-prepare-staging
-        <<: *release_only
+          <<: *release_only
   nightly-tests:
     triggers:
       - schedule:
