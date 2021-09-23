@@ -18,12 +18,12 @@ describe('Organization Rules Tests', () => {
       await assertSucceeds(orgDocRef.get());
     });
 
-    test('doc status: pending, should not be able to create document', async () => {
+    test('should not be able to create document', async () => {
       const orgDocRef = db.doc('orgs/O007');
       await assertFails(orgDocRef.set({ status: 'pending' }));
     });
 
-    test('non-member should not be able to update document', async () => {
+    test('should not be able to update document', async () => {
       const orgDocRef = db.doc('orgs/O001');
       await assertFails(orgDocRef.update({ note: 'document updated' }));
     });
