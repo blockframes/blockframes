@@ -38,7 +38,7 @@ const fieldsConfig = {
   /* b */ 'title.original': (value: string) => value,
   /* c */ 'internalRef': (value: string) => value,
   /* d */ 'contentType': (value: string) => value,
-  /* e */ 'series': (value: string) => {
+  /* e */ 'title.series': (value: string) => {
     if (value && !isNaN(formatNumber(value))) {
       return formatNumber(value);
     }
@@ -181,10 +181,6 @@ export class ViewExtractedMoviesComponent implements OnInit {
       // INTERNAL REF (Film Code)
       if (this.mapping.internalRef) {
         movie.internalRef = this.mapping.internalRef;
-      }
-
-      if (this.mapping.series) {
-        movie.title.series = this.mapping.series;
       }
 
       if (this.mapping.episodeCount) {
