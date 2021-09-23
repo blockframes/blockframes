@@ -47,6 +47,7 @@ export interface Sale<D extends Timestamp | Date = Date> extends Contract<D> {
   // incomeId: string; // Id of the terms/right on which income should occurred
   /** Free text provided by the buyer, addressed to the seller */
   specificity?: string;
+  delivery?: string;
   declineReason?:string;
   holdbacks: Holdback<D>[];
 }
