@@ -67,7 +67,7 @@ describe('Invest Interest Email Test', () => {
     cy.log('Email sent');
     
     cy.window().then((win) => {
-      testInfo = (win as any).Cypress_e2e;
+      testInfo = (win as any).cyEmailData;
       console.log(testInfo);
     }).then(() => {
       // Check if emails are well sent.

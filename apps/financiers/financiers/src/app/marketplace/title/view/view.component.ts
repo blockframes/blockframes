@@ -120,10 +120,10 @@ export class MarketplaceMovieViewComponent implements OnInit {
       const users = await this.userService.getValue(org.userIds);
       for (const user of users) {
         let toUser = getUserEmailData(user);
-        let userEmail = toUser.email;
+        const userEmail = toUser.email;
         // For e2e test purpose
         if (cyCheck) {
-          toUser = {...toUser, email: testEmail};
+          toUser = { ...toUser, email: testEmail };
         }
 
         const data = {
@@ -143,7 +143,7 @@ export class MarketplaceMovieViewComponent implements OnInit {
         if (cyCheck && (userEmail !== userSubject.email)) {
           emailReady = true;
           ++numEmails;
-          window['Cypress_e2e'] = data;
+          window['cyEmailData'] = data;
         }
 
         const promise = this.sendgrid.sendWithTemplate({
@@ -155,7 +155,7 @@ export class MarketplaceMovieViewComponent implements OnInit {
     }
 
     if (cyCheck && emailReady) {
-      window['Cypress_e2e'].numEmails = numEmails;
+      window['cyEmailData'].numEmails = numEmails;
     }
     const res = await Promise.all(promises);
     const success = res.some(r => r.result);
