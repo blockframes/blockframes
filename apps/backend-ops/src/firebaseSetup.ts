@@ -74,13 +74,15 @@ export async function prepareEmulators({ dbBackupURL }: { dbBackupURL?: string }
   console.log('Done!');
 
   const proc = await firebaseEmulatorExec({
-    emulators: ['auth', 'firestore'],
+    emulators: [
+      // 'auth',
+      'firestore'],
     importPath: defaultEmulatorBackupPath,
     exportData: true,
   });
-  const { storage } = loadAdminServices();
+  const { storage, auth } = loadAdminServices();
   const db = connectFirestoreEmulator();
-  const auth = connectAuthEmulator();
+  // const auth = connectAuthEmulator();
   const insurance = await ensureMaintenanceMode(db); // Enable maintenance insurance
 
   console.info('Syncing users from db...');
