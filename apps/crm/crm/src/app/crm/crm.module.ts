@@ -34,7 +34,6 @@ import { MoviePictureUploadModule } from '@blockframes/movie/components/picture-
 // Components
 import { OverviewComponent } from './pages/overview/overview.component';
 import { MoviesComponent } from './pages/movies/movies.component';
-import { OrganizationsComponent } from './pages/organizations/organizations.component';
 import { OrganizationComponent } from './pages/organization/organization.component';
 import { MovieComponent } from './pages/movie/movie.component';
 import { UsersComponent } from './pages/users/users.component';
@@ -54,7 +53,7 @@ export const panelRoutes: Routes = [
   { path: '', redirectTo: 'overview', pathMatch: 'full' },
   { path: 'overview', component: OverviewComponent },
   { path: 'movies', component: MoviesComponent },
-  { path: 'organizations', component: OrganizationsComponent },
+  { path: 'organizations', loadChildren: () => import('./pages/organizations/organizations.module').then(m => m.OrganizationListModule)},
   { path: 'organization/:orgId', component: OrganizationComponent },
   { path: 'movie/:movieId', component: MovieComponent },
   { path: 'users', component: UsersComponent },
@@ -107,7 +106,6 @@ export const panelRoutes: Routes = [
   ],
   declarations: [
     MoviesComponent,
-    OrganizationsComponent,
     MovieComponent,
     UsersComponent,
     UserComponent,
