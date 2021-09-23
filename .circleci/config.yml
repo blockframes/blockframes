@@ -35,6 +35,17 @@ references:
     - staging
 
 commands:
+  restore_fixtures_from_cache:
+    steps:
+      - restore_cache:
+          keys:
+            - fixture-cache-v1-{{ .Branch }}-{{ .Environment.CIRCLE_SHA1 }}
+  save_fixtures_in_cache:
+    steps:
+      - save_cache:
+          key: fixture-cache-v1-{{ .Branch }}-{{ .Environment.CIRCLE_SHA1 }} # ! This is how you isolate per workflow
+          paths:
+            - "tools/fixtures"
   check_app_size:
     description: Check size of apps being built and post to Zapier
     steps:
@@ -207,20 +218,46 @@ executors:
     working_directory: ~/repo
     resource_class: large
 jobs:
+  unit-test-staging:
+    executor: blockframes-ci
+    environment:
+        NG_CONFIG: staging
+        PROJECT_ID: blockframes-staging
+    steps:
+      - prepare_environment
+      - restore_fixtures_from_cache
+      - run:
+          command: npm run test
+          no_output_timeout: 15m
+      - slack/notify:
+          message: 'Unit tests complete on STAGING << pipeline.git.branch >>'
   unit-tests-ci:
     executor: blockframes-ci
     steps:
       - prepare_environment
+      - restore_fixtures_from_cache
       - run:
           command: npm run test
           no_output_timeout: 15m
       - slack/notify:
           message: 'Unit tests complete on CI << pipeline.git.branch >>'
+  build-deploy-prepare-staging:
+    executor: blockframes-ci
+    environment:
+        NG_CONFIG: staging
+        PROJECT_ID: blockframes-staging
+    steps:
+      - prepare_environment
+      - build_deploy_prepare
+      - save_fixtures_in_cache
+      - slack/notify:
+          message: 'Build, Deploy & PFT complete for STAGING << pipeline.git.branch >>'
   build-deploy-prepare-ci:
     executor: blockframes-ci
     steps:
       - prepare_environment
       - build_deploy_prepare
+      - save_fixtures_in_cache
       - slack/notify:
           message: 'Build, Deploy & PFT complete for CI << pipeline.git.branch >>'
   build-deploy-prepare-branch-against-selected-env:
@@ -285,6 +322,7 @@ jobs:
       - slack/notify:
           message: '🚲 Deploying & testing e2e (https://blockframes-ci.web.app/)'
       - prepare_environment
+      - restore_fixtures_from_cache
       - test_e2e_all
       - save_build_cache
       - run:
@@ -293,7 +331,7 @@ jobs:
           when: always
           require: test_e2e_all
       - slack/status
-  test-e2e-release: # * Will build and test each release commit against staging
+  test-e2e-staging:
     executor: blockframes-ci
     environment:
         NG_CONFIG: staging
@@ -302,11 +340,8 @@ jobs:
       - slack/notify:
           message: '🛵 🤠 Deploying release to staging.. (https://staging.blockframes.io/)'
       - prepare_environment
-      - build_deploy_prepare
+      - restore_fixtures_from_cache
       - test_e2e_all
-      - run:
-          command: npm run test
-          no_output_timeout: 15m
       - save_build_cache
       - slack/status
   deploy-to-prod:
@@ -459,10 +494,18 @@ workflows:
           filters:
             branches:
               only: *deployment_branches
-      - test-e2e-release:
+  run-all-tests-on-release-branches-against-staging:
+    jobs:
+      - build-deploy-prepare-staging:
           <<: *release_only
+      - unit-test-staging:
+           requires:
+            - build-deploy-prepare-staging
+        <<: *release_only
+      - test-e2e-staging:
           requires:
-            - build-and-test-all
+            - build-deploy-prepare-staging
+        <<: *release_only
   nightly-tests:
     triggers:
       - schedule:
