@@ -195,7 +195,7 @@ async function fetchEventStartingIn(from: number, to: number) {
  * @param collectionDocs Event docs
  * @param pendingInvites Set true for invitations that are pending invites (not requests)
  */
-async function fetchAttendeesToEvent(collectionDocs: FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>[], pendingInvites: boolean = false) {
+async function fetchAttendeesToEvent(collectionDocs: FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>[], pendingInvites = false) {
   const db = admin.firestore();
   const invitations: InvitationDocument[] = [];
 
