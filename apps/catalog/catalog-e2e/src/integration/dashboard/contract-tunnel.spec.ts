@@ -1,6 +1,5 @@
 ﻿/// <reference types="cypress" />
 
-import { HomePage } from "../../support/pages/marketplace";
 import { LandingPage } from '../../support/pages/landing';
 import { TunnelContractLobbyPage, TunnelContractPage, TunnelContractSummaryPage } from "../../support/pages/dashboard";
 import { User, USER } from '@blockframes/e2e/fixtures/users';
@@ -19,7 +18,6 @@ const CURRENCY = 'Euro';
 const CURRENCY_SUMMARY = 'EUR';
 const PACKAGE_PRICE = '1000000';
 const PACKAGE_PRICE_SUMMARY = '€1,000,000.00';
-const PERCENTAGE = '60';
 const TRIGGERING_EVENT = 'First theatrical release';
 
 beforeEach(() => {
