@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, Optional } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
-import { extract, ParseFieldFn, SheetTab, ValueWithWarning } from '@blockframes/utils/spreadsheet';
+import { extract, SheetTab, ValueWithWarning } from '@blockframes/utils/spreadsheet';
 import { createMandate, createSale, Mandate, Sale } from '@blockframes/contract/contract/+state/contract.model';
 import { createTerm } from '@blockframes/contract/term/+state/term.model';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
@@ -108,10 +108,7 @@ function getStatic(scope: Scope, value: string) {
 }
 
 const fieldsConfig = {
-   /* a */'internationalTitle': (value: string) => {
-    // const titleId = await getTitleId(value);
-    return new ValueWithWarning(value)
-  },
+   /* a */'internationalTitle': (value: string) => value,
    /* b */'contractType': (value: string) => value.toLowerCase(),
    /* c */'licensorName': (value: string) => value,
    /* d */'licenseeName': (value: string) => value,
