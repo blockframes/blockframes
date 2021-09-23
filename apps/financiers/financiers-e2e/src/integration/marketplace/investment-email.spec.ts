@@ -14,7 +14,7 @@ const MOVIE_LIST_PATH = '/c/o/marketplace/title';
 //! IMPORTANT for this test to run, we need to do the movie import test in catalog before.
 //! Actually, we have no movie on financiers, so we need to import some to be able to work on E2E test for Financiers
 describe('Invest Interest Email Test', () => {
-  let test_info;
+  let testInfo;
 
   beforeEach(() => {
     cy.viewport('ipad-2', 'landscape');
@@ -67,18 +67,23 @@ describe('Invest Interest Email Test', () => {
     cy.log('Email sent');
     
     cy.window().then((win) => {
-      test_info = (win as any).Cypress_e2e;
+      testInfo = (win as any).cyEmailData;
+      console.log(testInfo);
     }).then(() => {
       // Check if emails are well sent.
       cy.log('Checking emails...');
       cy.mailosaurSearchMessages(serverId, {
-        sentTo: testEmail
+        sentTo: testEmail,
+      },{
+        timeout: 20 * SEC,
+        page: 0,
+        itemsPerPage: testInfo.numEmails,
       }).then((result: MessageListResult) => {
         cy.log(`You've Got ${result.items.length} Mails! 💓`);
         const messages = result.items;
-        user = test_info.user;
-        investor = test_info.userSubject;
-        orgName = test_info.org.denomination;
+        user = testInfo.user;
+        investor = testInfo.userSubject;
+        orgName = testInfo.org.denomination;
         let idMail = '';
         messages.every(email => {
           expect(email.subject).to.contain(`is interested in ${titleInvest}`);
