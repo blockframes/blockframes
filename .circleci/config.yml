@@ -297,7 +297,7 @@ jobs:
       - slack/status
       - slack/notify:
           message: 'Deploy and PFT complete for << pipeline.git.branch >>'
-  build-and-test-all:
+  build-and-lint-full-release:
     executor: blockframes-ci
     steps:
       - checkout_project
@@ -305,12 +305,18 @@ jobs:
       - run: npm run lint
       - save_build_cache
       - check_app_size
-  build-and-test-prs:
+  build-and-lint-commits:
     executor: blockframes-ci
     steps:
       - prepare_environment
       - run: npm run affected:build
       - run: npm run affected:lint
+      - save_build_cache
+      - check_app_size
+  unit-test-commits:
+    executor: blockframes-ci
+    steps:
+      - prepare_environment
       - run:
           command: npm run affected:test
           no_output_timeout: 15m
@@ -484,16 +490,22 @@ workflows:
           <<: *production_only
       - deploy-to-staging:
           <<: *staging_only
-  build-and-test:
+  build-and-lint-full-release:
     jobs:
-      - build-and-test-prs: # build only PR related branches
-          filters:
-            branches:
-              ignore: *deployment_branches
-      - build-and-test-all: # build EVERYTHING and trigger test release on deployment branch
+      - build-and-lint-full-release: # build and lint EVERYTHING release related
           filters:
             branches:
               only: *deployment_branches
+  build-lint-unit-test-each-commit: # build, lint and unit test commits that aren't release related
+    jobs:
+      - unit-test-commits:
+          filters:
+            branches:
+              ignore: *deployment_branches
+      - build-and-lint-commits:
+          filters:
+            branches:
+              ignore: *deployment_branches
   run-all-tests-on-release-branches-against-staging:
     jobs:
       - build-deploy-prepare-staging:
