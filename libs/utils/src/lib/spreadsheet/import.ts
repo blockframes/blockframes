@@ -35,26 +35,22 @@ export function importSpreadsheet(bytes: Uint8Array, range?: string): SheetTab[]
 }
 
 
-/**
-* item: The current object to return (contract, movie, org, ...)
-* value: value of the cell (array of string if the cell has several lines)
-* path: The key in the transform object (without the column segment)
-* transform: the callback of the key
-*/
 export function parse(item: any = {}, values: string | string[], path: string, transform: ParseFieldFn, rowIndex: number, warnings: SpreadsheetImportError[], errors: SpreadsheetImportError[]) {
-  // Here we assume the column section has already been removed from the path
   const segments = path.split('.');
-  // const [segment, ...remainingSegments] = segments;
   const segment = segments.shift()
   const last = !segments?.length;
+
+  //Array field
   if (segment.endsWith('[]')) {
     const field = segment.replace('[]', '');
     if (Array.isArray(values)) {
       //@TODO: transform should have state instead of item
       if (last) item[field] = values.map((value, index) => transform(value, item, rowIndex));
       if (!last) {
+        //Creating array at this field to which will be pushed the other sub fields
         if (!item[field]) item[field] = new Array(values.length).fill(null).map(() => ({}));
         values.forEach((value, index) => {
+          //Filling in objects into above created array
           parse(item[field][index], value, segments.join('.'), transform, rowIndex, warnings, errors)
         })
 
@@ -116,7 +112,6 @@ export function isEmpty(data: any,) {
   } else {
     response = !data
   }
-
   return response;
 }
 

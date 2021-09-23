@@ -134,14 +134,14 @@ const fieldsConfig = {
   },
    /* h */'duration.from': (value: string) => getDate(value, errorsMap['no-duration-from']),
    /* i */'duration.to': (value: string) => getDate(value, errorsMap['no-duration-to']),
-   /* j ignored*/'originalLanguageLicensed': (value: string) => value,
+   /* j */'originalLanguageLicensed': (value: string) => value,
    /* k */'dubbed': (value: string) => getStaticList('languages', value),
    /* l */'subtitle': (value: string) => getStaticList('languages', value),
    /* m */'closedCaptioning': (value: string) => getStaticList('languages', value),
-   /* n optional*/'contractId': (value: string) => value,
-   /* o optional and ignored*/'parentTermId': (value: string) => value,
-   /* p optional*/'titleId': (value: string) => value,
-   /* q optional*/'stakeholdersList': (value: string) => value ? split(value) : value,
+   /* n */'contractId': (value: string) => value,
+   /* o */'parentTermId': (value: string) => value,
+   /* p */'titleId': (value: string) => value,
+   /* q */'stakeholdersList': (value: string) => value ? split(value) : value,
 } as const;
 
 type FieldsType = keyof typeof fieldsConfig;

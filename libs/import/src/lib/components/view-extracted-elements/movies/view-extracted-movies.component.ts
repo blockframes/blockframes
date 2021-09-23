@@ -613,42 +613,4 @@ export class ViewExtractedMoviesComponent implements OnInit {
     this.moviesToCreate.data = [];
     this.moviesToUpdate.data = [];
   }
-
-  private getFieldContent(fieldConfig: any) {
-    if (this.currentRows.length) {
-      const value = this.currentRows[0][fieldConfig.index];
-      if (value) {
-        return isNaN(value) ? value.trim() : value.toString();
-      } else {
-        return '';
-      }
-    } else { return ''; }
-  }
-
-  private getFieldContentMultilineFields(fieldConfig: any) {
-    return this.currentRows.map(r => {
-      const obj = {};
-      Object.keys(fieldConfig.fields).forEach(k => {
-        const value = r[fieldConfig.fields[k]];
-        if (value) {
-          obj[k] = isNaN(value) ? value.trim() : value.toString();
-        } else {
-          obj[k] = '';
-        }
-      });
-      return obj;
-    })
-
-  }
-
-  private getFieldContentMultiline(fieldConfig: any) {
-    return this.currentRows.map(r => {
-      const value = r[fieldConfig.index];
-      if (value) {
-        return isNaN(value) ? value.trim() : value.toString();
-      } else {
-        return '';
-      }
-    }).filter(m => !!m);
-  }
 }
