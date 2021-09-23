@@ -17,7 +17,8 @@
         "@angular-eslint/component-selector": [
           "warn",
           { "type": "element", "prefix": "catalog", "style": "kebab-case" }
-        ]
+        ],
+        "@angular-eslint/no-host-metadata-property": ["warn"]
       }
     },
     { "files": ["*.html"], "extends": ["plugin:@nrwl/nx/angular-template"], "rules": {} }

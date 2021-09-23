@@ -27,7 +27,7 @@ async function runCommand() {
   switch (cmd) {
     case 'prepareForTesting':
       await startMaintenance(db);
-      await prepareForTesting();
+      await prepareForTesting({ dbBackupURL: arg1 });
       await endMaintenance(db, EIGHT_MINUTES_IN_MS);
       break;
     case 'displayCredentials':

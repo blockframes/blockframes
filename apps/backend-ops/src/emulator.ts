@@ -85,10 +85,15 @@ export async function startEmulators({ importFrom = 'defaultImport' }: StartEmul
   let proc: ChildProcess;
   try {
     proc = await firebaseEmulatorExec({
-      emulators: ['auth', 'functions', 'firestore', 'pubsub'],
+      emulators: [
+        // 'auth',
+        'functions',
+        'firestore',
+        'pubsub'
+      ],
       importPath: emulatorPath,
-      exportData: true
-    })
+      exportData: true,
+    });
     await awaitProcessExit(proc);
   } catch (e) {
     await shutdownEmulator(proc)
