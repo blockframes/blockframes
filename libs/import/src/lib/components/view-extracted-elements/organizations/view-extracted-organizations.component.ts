@@ -1,45 +1,66 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, Optional } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
-import { extract, ParseFieldFn, SheetTab } from '@blockframes/utils/spreadsheet';
+import { extract, SheetTab, ValueWithWarning } from '@blockframes/utils/spreadsheet';
 import { Intercom } from 'ng-intercom';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { OrganizationsImportState } from '../../../import-utils';
+import { OrganizationsImportState, SpreadsheetImportError } from '../../../import-utils';
 import { AuthQuery, createUser } from '@blockframes/auth/+state';
 import { createOrganization, OrganizationService } from '@blockframes/organization/+state';
 import { UserService } from '@blockframes/user/+state';
 import { getOrgModuleAccess, Module } from '@blockframes/utils/apps';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
 
-// enum SpreadSheetOrganization {
-//   fullDenomination,
-//   publicDenomination,
-//   email,
-//   activity,
-//   fiscalNumber,
-//   street,
-//   city,
-//   zipCode,
-//   region,
-//   country,
-//   phoneNumber,
-//   superAdminEmail,
-//   catalogAccess,
-//   festivalAccess,
-//   financiersAccess,
-// }
 
-const fieldsConfig= {
+const fieldsConfig = {
   /* a */ 'fullDenomination': (value: string) => value,
   /* b */ 'publicDenomination': (value: string) => value,
   /* c */ 'email': (value: string) => value,
-  /* d */ 'activity': (value: string) => value,
+  /* d */ 'activity': (value: string) => {
+    if (!value) {
+      throw new Error(JSON.stringify({
+        type: 'warning',
+        field: 'organization.activity',
+        name: 'Activity',
+        reason: 'Optional field is missing',
+        hint: 'Edit corresponding sheet field.'
+      }))
+    }
+    const activity = getKeyIfExists('orgActivity', value);
+    if (activity) {
+      return activity;
+    } else {
+      const warning: SpreadsheetImportError = {
+        type: 'warning',
+        field: 'activity',
+        name: 'Activity',
+        reason: `${value} not found in activity list`,
+        hint: 'Edit corresponding sheet field.'
+      };
+
+      return new ValueWithWarning(value, warning);
+    }
+  },
   /* e */ 'fiscalNumber': (value: string) => value,
   /* f */ 'street': (value: string) => value,
   /* g */ 'city': (value: string) => value,
   /* h */ 'zipCode': (value: string) => value,
   /* i */ 'region': (value: string) => value,
-  /* j */ 'country': (value: string) => value,
+  /* j */ 'country': (value: string) => {
+    const country = getKeyIfExists('territories', value);
+    if (country) {
+      return country;
+    } else {
+      const warning: SpreadsheetImportError = {
+        type: 'warning',
+        field: 'addresses.main.country',
+        name: 'Country',
+        reason: `${value} not found in territories list`,
+        hint: 'Edit corresponding sheet field.'
+      };
+      return new ValueWithWarning(value, warning);
+    }
+  },
   /* k */ 'phoneNumber': (value: string) => value,
   /* l */ 'superAdminEmail': (value: string) => value,
   /* m */ 'catalogAccess': (value: string) => value,
@@ -48,10 +69,9 @@ const fieldsConfig= {
 } as const;
 
 
-type fieldsKey =  keyof typeof fieldsConfig;
-type ImportType = {
-  [key in fieldsKey]: ReturnType<typeof fieldsConfig[key]>
-}
+type FieldsType = keyof typeof fieldsConfig;
+type GetValue<T> = T extends ValueWithWarning ? T["value"] : T
+type ImportType = { [key in FieldsType]: GetValue<ReturnType<typeof fieldsConfig[key]>> }
 
 
 @Component({
@@ -91,10 +111,12 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
     for (const spreadSheetRow of sheetTab.rows) {
 
       const {
-        fullDenomination, publicDenomination, email,
-        activity: extractedActivity, fiscalNumber, street, city, zipCode,
-        region, country: extractCountry, phoneNumber, superAdminEmail,
-        catalogAccess, festivalAccess, financiersAccess,
+        data: {
+          fullDenomination, publicDenomination, email,
+          activity: extractedActivity, fiscalNumber, street, city, zipCode,
+          region, country: extractedCountry, phoneNumber, superAdminEmail,
+          catalogAccess, festivalAccess, financiersAccess,
+        }, errors, warnings,
       } = extract<ImportType>([spreadSheetRow], fieldsConfig);
 
       // ORG ID
@@ -112,7 +134,7 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
       const importErrors = {
         org,
         newOrg,
-        errors: [],
+        errors:warnings,
       } as OrganizationsImportState;
 
       let superAdmin = createUser();
@@ -150,9 +172,9 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
         }
 
         // DENOMINATION
-        if (fullDenomination) {
-          importErrors.org.denomination.full = fullDenomination.trim();
-        }
+        importErrors.org.denomination.full = fullDenomination.trim();
+        // if (fullDenomination) {
+        // }
 
         if (publicDenomination) {
           importErrors.org.denomination.public = publicDenomination.trim();
@@ -165,27 +187,7 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
 
         // ORG INFOS
         if (extractedActivity) {
-          const activity = getKeyIfExists('orgActivity', extractedActivity);
-          if (activity) {
-            importErrors.org.activity = activity;
-          } else {
-            importErrors.errors.push({
-              type: 'warning',
-              field: 'activity',
-              name: 'Activity',
-              reason: `${extractedActivity} not found in activity list`,
-              hint: 'Edit corresponding sheet field.'
-            });
-          }
-        } else {
-          // ACTIVITY
-          importErrors.errors.push({
-            type: 'warning',
-            field: 'organization.activity',
-            name: 'Activity',
-            reason: 'Optional field is missing',
-            hint: 'Edit corresponding sheet field.'
-          });
+          importErrors.org.activity = extractedActivity;
         }
 
         if (fiscalNumber) {
@@ -209,20 +211,8 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
           importErrors.org.addresses.main.region = region;
         }
 
-        if (extractCountry) {
-          const country = getKeyIfExists('territories', extractCountry);
-          if (country) {
-            importErrors.org.addresses.main.country = country;
-          } else {
-            importErrors.errors.push({
-              type: 'warning',
-              field: 'addresses.main.country',
-              name: 'Country',
-              reason: `${extractCountry} not found in territories list`,
-              hint: 'Edit corresponding sheet field.'
-            });
-          }
-
+        if (extractedCountry) {
+          importErrors.org.addresses.main.country = extractedCountry;
         }
 
         if (phoneNumber) {
@@ -305,7 +295,7 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
 
     // EMAIL
     if (!organization.email) {
-      importErrors.errors.push({
+      errors.push({
         type: 'warning',
         field: 'organization.email',
         name: 'Organization email',

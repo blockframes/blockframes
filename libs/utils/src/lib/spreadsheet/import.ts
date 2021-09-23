@@ -41,7 +41,7 @@ export function importSpreadsheet(bytes: Uint8Array, range?: string): SheetTab[]
 * path: The key in the transform object (without the column segment)
 * transform: the callback of the key
 */
-export function parse(item: any = {}, values: string | string[], path: string, transform: ParseFieldFn, rowIndex: number, warnings:SpreadsheetImportError[], errors:SpreadsheetImportError[]) {
+export function parse(item: any = {}, values: string | string[], path: string, transform: ParseFieldFn, rowIndex: number, warnings: SpreadsheetImportError[], errors: SpreadsheetImportError[]) {
   // Here we assume the column section has already been removed from the path
   const segments = path.split('.');
   // const [segment, ...remainingSegments] = segments;
@@ -62,26 +62,26 @@ export function parse(item: any = {}, values: string | string[], path: string, t
     }
   } else {
     const value = Array.isArray(values) ? values[0] : values
-    try{
-    if (last) {
-      const warningValue = transform(value, item, rowIndex);
-      if(warningValue instanceof ValueWithWarning){
-        warnings.push(warningValue.warning);
-        item[segment] = warningValue.value;
-      }else {
-        item[segment] = warningValue;
+    try {
+      if (last) {
+        const warningValue = transform(value, item, rowIndex);
+        if (warningValue instanceof ValueWithWarning) {
+          warnings.push(warningValue.warning);
+          item[segment] = warningValue.value;
+        } else {
+          item[segment] = warningValue;
+        }
       }
-    }
-    }catch(err:any){
-      errors.push(err.message);
+    } catch (err: any) {
+      errors.push(err.message ? JSON.parse(err.message) : err.message);
     }
 
     if (!last) item[segment] = parse(item[segment] || {}, values, segments.join('.'), transform, rowIndex, warnings, errors);
   }
 }
 
-export class ValueWithWarning<T=any>{
-  constructor(public value:T, public warning?:SpreadsheetImportError){}
+export class ValueWithWarning<T = any>{
+  constructor(public value: T, public warning?: SpreadsheetImportError) { }
 }
 
 /**

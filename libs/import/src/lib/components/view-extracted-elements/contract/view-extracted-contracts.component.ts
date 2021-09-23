@@ -276,7 +276,7 @@ export class ViewExtractedContractsComponent implements OnInit {
       // Statics
       const territories = getStatic('territories', territoriesList);
       const medias = getStatic('medias', mediaList);
-      const exclusive = isExclusive as unknown as boolean;
+      const exclusive = isExclusive;
 
       if (!territories.length) errors.push(errorsMap['no-territories']);
       if (!medias.length) errors.push(errorsMap['no-medias']);
