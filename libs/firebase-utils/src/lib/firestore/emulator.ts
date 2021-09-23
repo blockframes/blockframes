@@ -1,7 +1,6 @@
 import { firebase } from '@env'
 import { initializeApp } from 'firebase-admin'
-import { clearFirestoreData, withFunctionTriggersDisabled } from '@firebase/rules-unit-testing';
-import { ClearFirestoreDataOptions } from '@firebase/rules-unit-testing/dist/src/api';
+import { clearFirestoreData } from '@firebase/rules-unit-testing';
 import { ChildProcess, execSync } from 'child_process';
 import { Dirent, existsSync, mkdirSync, readdirSync, rmdirSync, writeFileSync, renameSync } from 'fs';
 import { join, resolve, sep } from 'path';
@@ -195,56 +194,24 @@ export async function shutdownEmulator(proc: ChildProcess, exportDir = defaultEm
   const emuTerminated = await Promise.race([emuP, timeP]);
   if (!emuTerminated) {
     console.error('Unable to shut down emulator process, forcing export and killing emulator...');
-    const cmd = `firebase emulators:export ${exportDir} --force`
-    await runShellCommand(cmd);
+    await forceEmulatorExport(exportDir);
     proc.kill('SIGKILL');
   }
 }
 
+export function forceEmulatorExport(exportDir = defaultEmulatorBackupPath) {
+  const cmd = `firebase emulators:export ${exportDir} --force`
+  return runShellCommand(cmd);
+}
+
 export type FirestoreEmulator = FirebaseFirestore.Firestore & { clearFirestoreData?: typeof clearFirestoreData; };
 
-/**
- * This is a helper function that will return a Firestore db object connected to
- * the local emulator. It also adds on a fast`clearFirestoreData` method for
- * clearing the local emulator.
- */
-export function connectEmulator() {
-  throwOnProduction();
-
-  const firebaseJsonPath = resolve(process.cwd(), 'firebase.json')
-  const {
-    emulators: {
-      firestore: { port: dbPort },
-      storage: { port: storagePort },
-      auth: { port: authPort },
-    },
-  } = eval('require')(firebaseJsonPath);
-
-  console.log('Detected - dbPort:', dbPort, 'storagePort:', storagePort, 'authPort:', authPort);
-
-  process.env['FIRESTORE_EMULATOR_HOST'] = `localhost:${dbPort}`
-  // process.env['FIRESTORE_STORAGE_EMULATOR_HOST'] = `localhost:${storagePort}`
-  // process.env['FIREBASE_AUTH_EMULATOR_HOST'] = `localhost:${authPort}`;
-  // delete process.env['GOOGLE_APPLICATION_CREDENTIALS']
-
-  const app = initializeApp({ projectId: firebase().projectId }, 'emulator');
-  const storage = app.storage();
-  const db = app.firestore() as FirestoreEmulator;
-  const auth = app.auth();
-
-  db.settings({
-    // port: dbPort,
-    merge: true,
-    ignoreUndefinedProperties: true,
-    host: 'localhost',
-    ssl: false,
-  });
-  db.clearFirestoreData = clearFirestoreData;
-  return { db, auth, storage };
-}
+let db;
+let auth;
 
 export function connectFirestoreEmulator() {
   throwOnProduction();
+  if (db) return db;
 
   const firebaseJsonPath = resolve(process.cwd(), 'firebase.json')
   const {
@@ -260,7 +227,7 @@ export function connectFirestoreEmulator() {
   process.env['FIRESTORE_EMULATOR_HOST'] = `localhost:${dbPort}`
 
   const app = initializeApp({ projectId: firebase().projectId }, 'firestore');
-  const db = app.firestore() as FirestoreEmulator;
+  db = app.firestore() as FirestoreEmulator;
 
   db.settings({
     // port: dbPort,
@@ -274,7 +241,7 @@ export function connectFirestoreEmulator() {
 }
 
 export function connectAuthEmulator() {
-
+  if (auth) return auth;
   const firebaseJsonPath = resolve(process.cwd(), 'firebase.json')
   const {
     emulators: {
@@ -286,7 +253,7 @@ export function connectAuthEmulator() {
   process.env['FIREBASE_AUTH_EMULATOR_HOST'] = `localhost:${authPort}`;
 
   const app = initializeApp({ projectId: firebase().projectId }, 'auth');
-  const auth = app.auth();
+  auth = app.auth();
 
   return auth;
 }

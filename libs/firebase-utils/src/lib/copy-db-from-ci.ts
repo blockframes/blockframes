@@ -10,6 +10,8 @@ export const latestAnonDbFilename = 'LATEST-ANONYMIZED.jsonl';
 
 export const latestAnonDbDir = 'LATEST-ANON-DB';
 
+export const latestAnonShrinkedDbDir = 'LATEST-ANON-SHRINKED-DB';
+
 export async function copyAnonDbFromCi(storage: admin.storage.Storage, ci: admin.app.App) {
   const folder = join(process.cwd(), 'tmp');
 

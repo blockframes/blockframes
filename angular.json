@@ -167,6 +167,7 @@
             "buildLibsFromSource": true
           },
           "configurations": {
+            "ci": {},
             "production": {
               "optimization": true,
               "extractLicenses": true,
