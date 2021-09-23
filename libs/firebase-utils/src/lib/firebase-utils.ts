@@ -94,6 +94,14 @@ export function getLatestFile(files: GFile[]) {
 }
 
 /**
+ * Default runtime options for functions
+ */
+ export const defaultConfig: RuntimeOptions = {
+  timeoutSeconds: 60,
+  memory: '256MB',
+};
+
+/**
  * Runtime options for heavy functions
  */
 export const heavyConfig: RuntimeOptions = {
@@ -108,7 +116,6 @@ export const heavyConfig: RuntimeOptions = {
   timeoutSeconds: 540,
   memory: '4GB',
 };
-
 
 export async function storageFileExist(path: string) {
   const storage = admin.storage();

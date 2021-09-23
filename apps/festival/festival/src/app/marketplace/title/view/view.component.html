@@ -17,7 +17,7 @@
         </ng-container>
       </movie-header-cta>
 
-      <movie-header-actions fxLayout.lt-sm="column" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="24px">
+      <movie-header-actions fxHide.lt-sm fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="24px">
         <wishlist-button [movieId]="movie.id"></wishlist-button>
         <movie-promotional-links [movie]="movie" [links]="promoLinks"></movie-promotional-links>
       </movie-header-actions>
