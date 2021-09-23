@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ViewEncapsulation } from '@angular/core';
 import { fromOrgAndAccepted, Movie, MovieService } from '@blockframes/movie/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { Observable } from 'rxjs';
@@ -12,6 +12,7 @@ import { EventFormShellComponent } from '../shell/shell.component';
   templateUrl: './screening.component.html',
   styleUrls: ['./screening.component.scss'],
   animations: [slideUpList('h2, mat-card')],// @TODO #5895 check Antoine
+  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ScreeningComponent implements OnInit {

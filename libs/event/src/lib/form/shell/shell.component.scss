@@ -4,6 +4,12 @@ header {
 
 section {
   padding: 16px;
+  mat-card {
+    padding: 24px;
+  }
+  nav {
+    border-bottom: none;
+  }
 }
 
 .routerContainer {

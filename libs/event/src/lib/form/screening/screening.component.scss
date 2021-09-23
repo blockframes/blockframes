@@ -2,7 +2,7 @@ section {
   background-color: var(--background-card);
   border-radius: 4px;
   border: solid 1px var(--foreground-divider);
-  padding: 24px 16px;
+  padding: 24px;
 }
 
 .link {
@@ -12,5 +12,9 @@ section {
 
   button {
     margin-top: 20px;
+  }
+
+  .mat-form-field-appearance-outline.mat-form-field-disabled .mat-form-field-outline {
+    color: var(--foreground-divider);
   }
 }
