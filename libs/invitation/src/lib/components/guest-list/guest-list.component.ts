@@ -34,6 +34,7 @@ export class GuestListComponent implements OnInit {
   userIndex = algolia.indexNameUsers;
   searchControl = new FormControl();
   search$: Observable<Invitation[]>;
+  @Input() title: string
 
   @ContentChild(TemplateRef) itemTemplate: TemplateRef<unknown>;
 
