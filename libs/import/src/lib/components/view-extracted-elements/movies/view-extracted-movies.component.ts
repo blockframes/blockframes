@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, Optional } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MovieService, createMovie } from '@blockframes/movie/+state';
-import { extract, ParseFieldFn, SheetTab } from '@blockframes/utils/spreadsheet';
+import { extract, SheetTab, ValueWithWarning } from '@blockframes/utils/spreadsheet';
 import { Crew, Producer } from '@blockframes/utils/common-interfaces/identity';
 import { Intercom } from 'ng-intercom';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
@@ -33,64 +33,9 @@ import { UserService } from '@blockframes/user/+state';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentApp } from '@blockframes/utils/apps';
 
-/**
- * Comments "// LETTER(S)" refers to the column index in the spreadsheet file
- */
-const fields = [
-  'internationalTitle',
-  'originalTitle',
-  'internalRef',
-  'contentType',
-  'series',
-  'episodeCount',
-  'productionStatus',
-  'releaseYear',
-  'releaseYearStatus',
-  'directors',
-  'originCountries',
-  'stakeholders',
-  'originalRelease',
-  'originalLanguages',
-  'genres',
-  'customGenres',
-  'runningTime',
-  'runningTimeStatus',
-  'cast',
-  'prizes',
-  'logline',
-  'synopsis',
-  'keyAssets',
-  'keywords',
-  'producers',
-  'crew',
-  'budgetRange',
-  'boxoffice',
-  'certifications',
-  'ratings',
-  'audience',
-  'reviews',
-  'color',
-  'format',
-  'formatQuality',
-  'soundFormat',
-  'isOriginalVersionAvailable',
-  'languages',
-  'salesPitch',
-  //////////////////
-  // ADMIN FIELDS
-  //////////////////
-  'catalogStatus',
-  'festivalStatus',
-  'financiersStatus',
-  'ownerId',
-] as const;
-
-type fieldsKey = typeof fields[number];
-type importType = Record<fieldsKey, any>
-
-const fieldsConfig: Record<string, ParseFieldFn> = {
-  /* a */ 'internationalTitle': (value: string) => value,
-  /* b */ 'originalTitle': (value: string) => value,
+const fieldsConfig = {
+  /* a */ 'title.international': (value: string) => value,
+  /* b */ 'title.original': (value: string) => value,
   /* c */ 'internalRef': (value: string) => value,
   /* d */ 'contentType': (value: string) => value,
   /* e */ 'series': (value: string) => {
@@ -100,10 +45,7 @@ const fieldsConfig: Record<string, ParseFieldFn> = {
     return value
   },
   /* f */ 'episodeCount': (value: string) => {
-    if (value && !isNaN(formatNumber(value))) {
-      return formatNumber(value);
-    }
-    return value
+    return parseInt(value, 10);
   },
   /* g */ 'productionStatus': (value: string) => value,
   /* h */ 'releaseYear': (value: string) => value,
@@ -169,6 +111,10 @@ const fieldsConfig: Record<string, ParseFieldFn> = {
   /* bp */ 'ownerId': (value: string) => value,
 };
 
+type FieldsType = keyof typeof fieldsConfig;
+type GetValue<T> = T extends ValueWithWarning ? T["value"] : T
+type ImportType = { [key in FieldsType]: GetValue<ReturnType<typeof fieldsConfig[key]>> }
+
 
 @Component({
   selector: 'import-view-extracted-movies',
@@ -187,7 +133,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
   public currentRows = [];
 
-  private mapping = {} as importType;
+  private mapping = {} as ImportType;
 
   constructor(
     @Optional() private intercom: Intercom,
@@ -213,9 +159,9 @@ export class ViewExtractedMoviesComponent implements OnInit {
     this.currentRows = sheetTab.rows.slice(i, i + this.dedicatedLinesPerTitle);
 
     while (this.currentRows.length) {
-      const { data, errors, warnings } = extract<importType>(this.currentRows, fieldsConfig)
+      const { data, errors, warnings } = extract<ImportType>(this.currentRows, fieldsConfig)
       this.mapping = data;
-      if (!this.mapping.originalTitle) { break; }
+      if (!this.mapping.title.original) { break; }
 
       // Fetch movie from internalRef if set or create a new movie
       let movie = createMovie();
@@ -225,14 +171,11 @@ export class ViewExtractedMoviesComponent implements OnInit {
           if (_movie) { movie = _movie };
         } catch (e) { console.error(e) }
       }
-      const importErrors = { movie, errors:warnings } as MovieImportState;
+      const importErrors = { movie, errors: warnings } as MovieImportState;
 
-      // ORIGINAL TITLE (Original Title)
-      movie.title.original = this.mapping.originalTitle;
-
-      // INTERNATIONAL TITLE (International Title)
-      if (this.mapping.internationalTitle) {
-        movie.title.international = this.mapping.internationalTitle;
+      // TITLE
+      if (this.mapping.title) {
+        movie.title = this.mapping.title;
       }
 
       // INTERNAL REF (Film Code)
@@ -245,7 +188,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
       }
 
       if (this.mapping.episodeCount) {
-        movie.runningTime.episodeCount = parseInt(this.mapping.episodeCount, 10);
+        movie.runningTime.episodeCount = this.mapping.episodeCount;
       }
 
       // WORK TYPE

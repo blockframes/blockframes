@@ -92,7 +92,7 @@ function split(cell: string) {
 }
 
 // Time is MM/DD/YYYY
-function getDate(time: string) {
+function convertDate(time: string) {
   if (isNaN(+time)) {
     const [month, day, year] = time.split(/[/.]+/).map(t => parseInt(t, 10));
     return new Date(year, month - 1, day, 0, 0, 0);
@@ -101,38 +101,43 @@ function getDate(time: string) {
   }
 }
 
+function getDate(value: string, error: SpreadsheetImportError) {
+  const date = convertDate(value);
+  if (isNaN(date.getTime()))
+    return new ValueWithWarning(value, error);
+  return date;
+}
+
 function getStatic(scope: Scope, value: string) {
   if (!value) return []
   if (value.toLowerCase() === 'all') return parseToAll(scope, 'all');
   return split(value).map(v => getKeyIfExists(scope, v)).filter(v => !!v);
 }
 
+function getStaticList(scope: Scope, value: string, error?: SpreadsheetImportError) {
+  const values = getStatic(scope, value);
+  if (error && !values.length) {
+    return new ValueWithWarning(values, error);
+  }
+  return values;
+}
+
 const fieldsConfig = {
-   /* a */'internationalTitle': (value: string) => value,
-   /* b */'contractType': (value: string) => value.toLowerCase(),
+   /* a */'title.international': (value: string) => value,
+   /* b */'contractType': (value: string) => value.toLowerCase() as 'mandate' | 'sale',
    /* c */'licensorName': (value: string) => value,
    /* d */'licenseeName': (value: string) => value,
-   /* e */'territoriesList': (value: string) => value,
-   /* f */'mediaList': (value: string) => value,
-   /* g */'isExclusive': (value: string) => {
+   /* e */'territories': (value: string) => getStaticList('territories', value, errorsMap['no-territories']),
+   /* f */'medias': (value: string) => getStaticList('medias', value, errorsMap['no-medias']),
+   /* g */'exclusive': (value: string) => {
     return value.toLowerCase() === 'yes' ? true : false;
   },
-   /* h */'duration.from': (value: string) => {
-    const date = getDate(value);
-    if (isNaN(date.getTime()))
-      return new ValueWithWarning(value, errorsMap['no-duration-from']);
-    return date
-  },
-   /* i */'duration.to': (value: string) => {
-    const date = getDate(value);
-    if (isNaN(date.getTime()))
-      return new ValueWithWarning(value, errorsMap['no-duration-to']);
-    return date
-  },
+   /* h */'duration.from': (value: string) => getDate(value, errorsMap['no-duration-from']),
+   /* i */'duration.to': (value: string) => getDate(value, errorsMap['no-duration-to']),
    /* j ignored*/'originalLanguageLicensed': (value: string) => value,
-   /* k */'dubbed': (value: string) => value,
-   /* l */'subtitle': (value: string) => value,
-   /* m */'closedCaptioning': (value: string) => value,
+   /* k */'dubbed': (value: string) => getStaticList('languages', value),
+   /* l */'subtitle': (value: string) => getStaticList('languages', value),
+   /* m */'closedCaptioning': (value: string) => getStaticList('languages', value),
    /* n optional*/'contractId': (value: string) => value,
    /* o optional and ignored*/'parentTermId': (value: string) => value,
    /* p optional*/'titleId': (value: string) => value,
@@ -212,10 +217,10 @@ export class ViewExtractedContractsComponent implements OnInit {
       // optional fields are prefixed with underscore
       const {
         data: {
-          internationalTitle, contractType,
+          title, contractType,
           licensorName, licenseeName,
-          territoriesList, mediaList,
-          isExclusive,
+          territories, medias,
+          exclusive,
           duration, dubbed, stakeholdersList,
           subtitle, closedCaptioning,
           contractId: extractedContractId,
@@ -227,7 +232,7 @@ export class ViewExtractedContractsComponent implements OnInit {
       // CONTRACT //
       //////////////
       // TITLE
-      const titleId = extractedTitleId || (await this.getTitleId(internationalTitle));
+      const titleId = extractedTitleId || (await this.getTitleId(title.international));
 
       if (!titleId) errors.push(errorsMap['no-title-id']);
 
@@ -265,28 +270,11 @@ export class ViewExtractedContractsComponent implements OnInit {
       ///////////
       const contractId = contract.id;
 
-      // Duration
-      // if (!durationFrom) ;
-      // if (!durationTo) ;
-      // const duration = {
-      //   from: durationFrom as unknown as Date,
-      //   to: durationTo as unknown as Date
-      // };
-
-      // Statics
-      const territories = getStatic('territories', territoriesList);
-      const medias = getStatic('medias', mediaList);
-      const exclusive = isExclusive;
-
-      if (!territories.length) errors.push(errorsMap['no-territories']);
-      if (!medias.length) errors.push(errorsMap['no-medias']);
-
       const termId = this.fire.createId();
       const term = createTerm({ id: termId, contractId, duration, territories, medias, exclusive });
 
       // Languages
-      for (const [key, value] of Object.entries({ dubbed, subtitle, closedCaptioning })) {
-        const languages = getStatic('languages', value);
+      for (const [key, languages] of Object.entries({ dubbed, subtitle, closedCaptioning })) {
         for (const language of languages) {
           if (!term.languages[language]) term.languages[language] = createMovieLanguageSpecification();
           term.languages[language][key] = true;
