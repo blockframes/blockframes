@@ -32,7 +32,7 @@ export class NotFullyVerifiedGuard implements CanActivate  {
     const org = await this.service.getValue(orgId);
 
     if (org.status === 'pending') {
-      return this.router.parseUrl('c/organization/create-congratulations');
+      //return this.router.parseUrl('c/organization/create-congratulations');
     } else {
       return this.router.parseUrl('c/o');
     }

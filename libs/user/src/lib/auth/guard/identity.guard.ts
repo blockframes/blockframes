@@ -42,7 +42,7 @@ export class IdentityGuard extends CollectionGuard<AuthState> {
               }
 
               if (org.status === 'pending') {
-                return this.router.navigate(['c/organization/create-congratulations']);
+                //return this.router.navigate(['c/organization/create-congratulations']);
               } else {
                 return this.router.navigate(['c/o']);
               }

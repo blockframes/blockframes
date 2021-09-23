@@ -204,7 +204,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
       await this.orgService.addOrganization(org, this.app, user);
 
       this.snackBar.open('Your User Account was successfully created. Please wait for our team to check your Company Information. ', 'close', { duration: this.snackbarDuration });
-      return this.router.navigate(['c/organization/create-congratulations']);
+      return;// this.router.navigate(['c/organization/create-congratulations']);
     }
   }
 
