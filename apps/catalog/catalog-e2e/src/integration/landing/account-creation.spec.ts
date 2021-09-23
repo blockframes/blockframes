@@ -63,7 +63,7 @@ describe('User can create new account and create a new organization', () => {
     cy.log(`{${USER.firstName} ${USER.lastName}} logged In!`);
   });
 
-  it('Check emails are sent properly', () => {
+  it.skip('Check emails are sent properly', () => {
     cy.mailosaurSearchMessages(serverId, {
       sentTo: testEmail
     }).then((result: MessageListResult) => {
@@ -169,7 +169,7 @@ describe.skip('Try with each fields except one', () => {
 });
 
 describe('Try email address', () => {
-  it.only('use already exist email address', () => {
+  it('use already exist email address', () => { // @todo rename exisint org name ?
     const p1 = new AuthIdentityPage();
     p1.fillUserInformations(USER);
 
@@ -181,7 +181,7 @@ describe('Try email address', () => {
     p1.submitForm();
     assertMoveTo(IDENTITYPATH);
   })
-  it('use wrong format email address', () => {
+  it.skip('use wrong format email address', () => {
     const p1 = new AuthIdentityPage();
     p1.fillEmail(WRONG_EMAIL_FORM);
     p1.fillFirstAndLastName(USER);
