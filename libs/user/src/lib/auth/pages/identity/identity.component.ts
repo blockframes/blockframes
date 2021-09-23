@@ -163,7 +163,9 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
   private async create() {
     if (this.existingOrgId) {
+      // Create user
       const user = await this.createUser(this.form.value);
+      // Request to join existing org
       await this.invitationService.request(this.existingOrgId, user).to('joinOrganization');
       this.snackBar.open('Your account has been created and request to join org sent ! ', 'close', { duration: this.snackbarDuration });
       return this.router.navigate(['c/organization/join-congratulations']);
@@ -180,12 +182,12 @@ export class IdentityComponent implements OnInit, OnDestroy {
         return;
       }
 
+      // Create user
       const user = await this.createUser(this.form.value);
 
+      // Create the org
       const org = createOrganization({ denomination, addresses, activity });
-
       org.appAccess[this.app][appAccess] = true;
-
       await this.orgService.addOrganization(org, this.app, user);
 
       this.snackBar.open('Your User Account was successfully created. Please wait for our team to check your Company Information. ', 'close', { duration: this.snackbarDuration });
@@ -194,9 +196,9 @@ export class IdentityComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Create the new user on auth 
+   * Create the new auth user
    * @param user 
-   * @returns 
+   * @returns PublicUser
    */
   private async createUser(user: { email, password, firstName, lastName }) {
     const privacyPolicy = await this.authService.getPrivacyPolicy();
