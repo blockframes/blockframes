@@ -213,7 +213,8 @@ export class ViewExtractedMoviesComponent implements OnInit {
     this.currentRows = sheetTab.rows.slice(i, i + this.dedicatedLinesPerTitle);
 
     while (this.currentRows.length) {
-      this.mapping = extract<importType>(this.currentRows, fieldsConfig)
+      const { data, errors, warnings } = extract<importType>(this.currentRows, fieldsConfig)
+      this.mapping = data;
       if (!this.mapping.originalTitle) { break; }
 
       // Fetch movie from internalRef if set or create a new movie
@@ -222,9 +223,9 @@ export class ViewExtractedMoviesComponent implements OnInit {
         try {
           const _movie = await this.movieService.getFromInternalRef(this.mapping.internalRef, !this.isUserBlockframesAdmin ? this.authQuery.user.orgId : undefined);
           if (_movie) { movie = _movie };
-        } catch (e) { console.log(e) }
+        } catch (e) { console.error(e) }
       }
-      const importErrors = { movie, errors: [] } as MovieImportState;
+      const importErrors = { movie, errors:warnings } as MovieImportState;
 
       // ORIGINAL TITLE (Original Title)
       movie.title.original = this.mapping.originalTitle;
