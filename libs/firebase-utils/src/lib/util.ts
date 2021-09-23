@@ -90,10 +90,8 @@ export interface AdminServices {
   getCI: () => admin.app.App;
 }
 
-export function loadAdminServices({ emulator = false }: { emulator: boolean } = { emulator: false }): AdminServices {
+export function loadAdminServices(): AdminServices {
   config();
-
-  if (emulator) return { getCI, ...connectEmulator(), firebaseConfig: firebase() };
 
   if (!admin.apps.length) {
     admin.initializeApp({
