@@ -30,12 +30,12 @@ import { backupBucket as ciBucketName } from 'env/env.blockframes-ci'
 import { EIGHT_MINUTES_IN_MS } from '@blockframes/utils/maintenance';
 const { storageBucket } = firebase();
 
-export async function prepareForTesting() {
+export async function prepareForTesting({ dbBackupURL }: { dbBackupURL?: string } = {}) {
   const { storage, db, auth } = loadAdminServices();
   const insurance = await ensureMaintenanceMode(db); // Enable maintenance insurance
 
   console.log('Copying AnonDb from CI...');
-  await copyFirestoreExportFromCiBucket();
+  await copyFirestoreExportFromCiBucket(dbBackupURL);
   console.log('Copied!');
 
   console.log('Clearing Firestore db and importing latest anonymized db...');
