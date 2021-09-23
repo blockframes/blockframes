@@ -6,7 +6,7 @@
         <ng-container *ngIf="showSession else showVideo">
           <article class="dark-contrast-theme screen" [bgRef]="event.movie.banner" bgAsset="empty_banner.png">
             <div class="overlay" fxLayout="column" fxLayoutAlign="center center">
-              <img class="organizationLogo" [ref]="event.org.logo" asset="empty_organization.svg" type="logo" alt="organisation logo">
+              <img class="organizationLogo" [ref]="event?.org?.logo" asset="empty_organization.svg" type="logo" alt="organization logo">
               <h4>{{ event.org | orgName }} presents</h4>
               <h1 class="mat-display-2">{{ event.movie.title.international }}</h1>
               <h2>by {{ event.movie.directors | displayName }}</h2>

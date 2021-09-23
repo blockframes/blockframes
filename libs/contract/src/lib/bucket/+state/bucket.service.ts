@@ -104,6 +104,7 @@ export class BucketService extends CollectionService<BucketState> {
         termIds,
         offerId,
         specificity,
+        delivery,
         holdbacks: contract.holdbacks,
       });
 
