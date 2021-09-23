@@ -35,6 +35,40 @@ references:
     - staging
 
 commands:
+  restore_fixtures_from_cache:
+    steps:
+      - restore_cache:
+          keys:
+            - fixture-cache-v1-{{ .Branch }}-{{ .Environment.CIRCLE_SHA1 }}
+  save_fixtures_in_cache:
+    steps:
+      - save_cache:
+          key: fixture-cache-v1-{{ .Branch }}-{{ .Environment.CIRCLE_SHA1 }} # ! This is how you isolate per workflow
+          paths:
+            - "tools/fixtures"
+  check_app_size:
+    description: Check size of apps being built and post to Zapier
+    steps:
+      - run:
+          name: Check size of apps being build
+          command: |
+            # Generate default json for bundlesize
+            # This is a quick hack to get bundlesize AND affected build working.
+            # Maintain this script to keep checking new apps.
+            mkdir -p dist/apps/catalog \
+                     dist/apps/festival \
+                     dist/apps/backend-functions
+            touch ./dist/apps/catalog/main.dummy.js \
+                  ./dist/apps/festival/main.dummy.js \
+                  ./dist/apps/backend-functions/main.dummy.js
+            npm run bundlesize
+      - run:
+          name: Post sizes of apps to zapier
+          command: |
+            if [ "${CIRCLE_BRANCH}" = "production" ] || [ "${CIRCLE_BRANCH}" = "master" ]; then
+              npm run build:all;
+              curl -X POST "${ZAPPIER_WEBHOOK}" --header "Build-number:${CIRCLE_BUILD_NUM}" --header "Branch:${CIRCLE_BRANCH}" --header  "Date:`date "+%D"`" --header  Catalog-size:`cat ./dist/apps/catalog/main**.js | wc -c` --header  Festival-size:`cat ./dist/apps/festival/main**.js | wc -c` --header  Functions-size:`cat ./dist/apps/backend-functions/main**.js | wc -c`;
+            fi
   start_e2e_emulators:
     steps:
       - restore_cache:
@@ -131,7 +165,7 @@ commands:
     steps:
       - run:
           command: |
-            npm run backend-ops displayCredentials &&
+            npm start displayCredentials &&
             npm run deploy:storage &&
             npm run deploy:firestore &&
             npx nx run-many --target=deploy --all
@@ -140,16 +174,16 @@ commands:
     description: 'Build & deploy Blockframes apps to Firebase & run upgrade if needed'
     steps:
       - deploy
-      - run: npm run backend-ops upgrade
+      - run: npm start upgrade
       - slack/status
   build_deploy_prepare:
-    description: 'Build & deploy project & prepare by loading test data'
+    description: 'Build & deploy project & prepare by loading live online test data'
     steps:
       - deploy
-      - run: npm run backend-ops prepareForTesting
+      - run: npm start prepareForTesting
       - slack/status
   test_e2e_all:
-    description: 'Run all e2e tests'
+    description: 'Run all e2e tests sequentially against non-emulated services (online)'
     steps:
         - run: npx cypress install
         - run:
@@ -184,7 +218,49 @@ executors:
     working_directory: ~/repo
     resource_class: large
 jobs:
-  build-deploy-prepare:
+  unit-test-staging:
+    executor: blockframes-ci
+    environment:
+        NG_CONFIG: staging
+        PROJECT_ID: blockframes-staging
+    steps:
+      - prepare_environment
+      - restore_fixtures_from_cache
+      - run:
+          command: npm run test
+          no_output_timeout: 15m
+      - slack/notify:
+          message: 'Unit tests complete on STAGING << pipeline.git.branch >>'
+  unit-tests-ci:
+    executor: blockframes-ci
+    steps:
+      - prepare_environment
+      - restore_fixtures_from_cache
+      - run:
+          command: npm run test
+          no_output_timeout: 15m
+      - slack/notify:
+          message: 'Unit tests complete on CI << pipeline.git.branch >>'
+  build-deploy-prepare-staging:
+    executor: blockframes-ci
+    environment:
+        NG_CONFIG: staging
+        PROJECT_ID: blockframes-staging
+    steps:
+      - prepare_environment
+      - build_deploy_prepare
+      - save_fixtures_in_cache
+      - slack/notify:
+          message: 'Build, Deploy & PFT complete for STAGING << pipeline.git.branch >>'
+  build-deploy-prepare-ci:
+    executor: blockframes-ci
+    steps:
+      - prepare_environment
+      - build_deploy_prepare
+      - save_fixtures_in_cache
+      - slack/notify:
+          message: 'Build, Deploy & PFT complete for CI << pipeline.git.branch >>'
+  build-deploy-prepare-branch-against-selected-env:
     executor: blockframes-ci
     environment:
       NG_CONFIG: ''
@@ -196,7 +272,7 @@ jobs:
       - build_deploy_prepare
       - slack/notify:
           message: 'PFT complete for << pipeline.git.branch >>'
-  build-deploy-upgrade:
+  build-deploy-upgrade-branch-against-selected-env:
     executor: blockframes-ci
     environment:
       NG_CONFIG: ''
@@ -208,7 +284,7 @@ jobs:
       - build_deploy_upgrade
       - slack/notify:
           message: 'UPGRADE complete for << pipeline.git.branch >>'
-  prepare-for-testing:
+  prepare-for-testing-branch-against-selected-env:
     executor: blockframes-ci
     environment:
       NG_CONFIG: ''
@@ -221,62 +297,38 @@ jobs:
       - slack/status
       - slack/notify:
           message: 'Deploy and PFT complete for << pipeline.git.branch >>'
-  build-and-test-all:
+  build-and-lint-full-release:
     executor: blockframes-ci
     steps:
       - checkout_project
       - run: npm run build:all
       - run: npm run lint
       - save_build_cache
-      - run:
-          name: Check size of apps being build
-          command: npm run bundlesize
-      - run:
-          name: Post sizes of apps to zapier
-          command: |
-            if [ "${CIRCLE_BRANCH}" = "production" ] || [ "${CIRCLE_BRANCH}" = "master" ]; then
-              curl -X POST "${ZAPPIER_WEBHOOK}" --header "Build-number:${CIRCLE_BUILD_NUM}" --header "Branch:${CIRCLE_BRANCH}" --header  "Date:`date "+%D"`" --header  Catalog-size:`cat ./dist/apps/catalog/main**.js  | wc -c` --header  Festival-size:`cat ./dist/apps/festival/main**.js  | wc -c` --header  Functions-size:`cat ./dist/apps/backend-functions/main**.js | wc -c`;
-            fi
-  build-and-test-prs:
+      - check_app_size
+  build-and-lint-commits:
     executor: blockframes-ci
     steps:
       - prepare_environment
       - run: npm run affected:build
       - run: npm run affected:lint
+      - save_build_cache
+      - check_app_size
+  unit-test-commits:
+    executor: blockframes-ci
+    steps:
+      - prepare_environment
       - run:
           command: npm run affected:test
           no_output_timeout: 15m
       - save_build_cache
-      - run:
-          name: Check size of apps being build
-          command: |
-            # Generate default json for bundlesize
-            # This is a quick hack to get bundlesize AND affected build working.
-            # Maintain this script to keep checking new apps.
-            mkdir -p dist/apps/catalog \
-                     dist/apps/festival \
-                     dist/apps/backend-functions
-            touch ./dist/apps/catalog/main.dummy.js \
-                  ./dist/apps/festival/main.dummy.js \
-                  ./dist/apps/backend-functions/main.dummy.js
-            npm run bundlesize
-      - run:
-          name: Post sizes of apps to zapier
-          command: |
-            if [ "${CIRCLE_BRANCH}" = "production" ] || [ "${CIRCLE_BRANCH}" = "master" ]; then
-              npm run build:all;
-              curl -X POST "${ZAPPIER_WEBHOOK}" --header "Build-number:${CIRCLE_BUILD_NUM}" --header "Branch:${CIRCLE_BRANCH}" --header  "Date:`date "+%D"`" --header  Catalog-size:`cat ./dist/apps/catalog/main**.js | wc -c` --header  Festival-size:`cat ./dist/apps/festival/main**.js | wc -c` --header  Functions-size:`cat ./dist/apps/backend-functions/main**.js | wc -c`;
-            fi
-  test-e2e: # TODO: This needs to be refactored - runs tests against CI project when there's a commit to CI & nightly tests
+      - check_app_size
+  test-e2e-ci:
     executor: blockframes-ci
     steps:
       - slack/notify:
           message: '🚲 Deploying & testing e2e (https://blockframes-ci.web.app/)'
       - prepare_environment
-      - build_deploy_prepare
-      - run:
-          command: npm run test
-          no_output_timeout: 15m
+      - restore_fixtures_from_cache
       - test_e2e_all
       - save_build_cache
       - run:
@@ -285,7 +337,7 @@ jobs:
           when: always
           require: test_e2e_all
       - slack/status
-  test-e2e-release: # * Will build and test each release commit against staging
+  test-e2e-staging:
     executor: blockframes-ci
     environment:
         NG_CONFIG: staging
@@ -294,11 +346,8 @@ jobs:
       - slack/notify:
           message: '🛵 🤠 Deploying release to staging.. (https://staging.blockframes.io/)'
       - prepare_environment
-      - build_deploy_prepare
+      - restore_fixtures_from_cache
       - test_e2e_all
-      - run:
-          command: npm run test
-          no_output_timeout: 15m
       - save_build_cache
       - slack/status
   deploy-to-prod:
@@ -326,7 +375,7 @@ jobs:
     executor: blockframes-ci
     steps:
       - prepare_environment
-      - run: npm run firestore:run-db-anon-process
+      - run: npm start anonProdDb
   copy-storage-from-prod:
     executor: blockframes-ci
     steps:
@@ -386,30 +435,30 @@ jobs:
             - "~/.cache/firebase/emulators"
             - "tools/fixtures"
 workflows:
-  anon-db:
+  run-anon-db-and-store-golden-data:
     jobs:
       - push-anon-db-to-ci:
           filters:
             branches:
               only:
                 - anon-db
-  build-deploy-prepare:
+  build-deploy-prepare-branch-against-selected-env:
     jobs:
-      - build-deploy-prepare:
+      - build-deploy-prepare-branch-against-selected-env:
           filters:
             branches:
               only:
                 - /deploy\/.*/
-  build-deploy-upgrade:
+  build-deploy-upgrade-branch-against-selected-env:
     jobs:
-      - build-deploy-upgrade:
+      - build-deploy-upgrade-branch-against-selected-env:
           filters:
             branches:
               only:
                 - /upgrade\/.*/
-  prepare-for-testing:
+  prepare-for-testing-branch-against-selected-env:
     jobs:
-      - prepare-for-testing:
+      - prepare-for-testing-branch-against-selected-env:
           filters:
             branches:
               only:
@@ -435,12 +484,40 @@ workflows:
     jobs:
       - copy-storage-from-prod
       - push-anon-db-to-ci
-  deploy:
+  deploy-to-prod-or-staging:
     jobs:
       - deploy-to-prod:
           <<: *production_only
       - deploy-to-staging:
           <<: *staging_only
+  build-and-lint-full-release:
+    jobs:
+      - build-and-lint-full-release: # build and lint EVERYTHING release related
+          filters:
+            branches:
+              only: *deployment_branches
+  build-and-test: # build, lint and unit test commits that aren't release related
+    jobs:
+      - unit-test-commits:
+          filters:
+            branches:
+              ignore: *deployment_branches
+      - build-and-lint-commits:
+          filters:
+            branches:
+              ignore: *deployment_branches
+  run-all-tests-on-release-branches-against-staging:
+    jobs:
+      - build-deploy-prepare-staging:
+          <<: *release_only
+      - unit-test-staging:
+          requires:
+            - build-deploy-prepare-staging
+          <<: *release_only
+      - test-e2e-staging:
+          requires:
+            - build-deploy-prepare-staging
+          <<: *release_only
   nightly-tests:
     triggers:
       - schedule:
@@ -450,27 +527,30 @@ workflows:
               only:
                 - develop
     jobs:
-      - build-and-test-all
-      - test-e2e:
+      - build-deploy-prepare-ci
+      - test-e2e-ci:
           requires:
-            - build-and-test-all
-  build-and-test:
+            - build-deploy-prepare-ci
+      - unit-tests-ci:
+          requires:
+            - build-deploy-prepare-ci
+  run-sequential-online-e2e-tests-against-CI-branch-and-project:
     jobs:
-      - build-and-test-prs: # build only PR related branches
+      - build-deploy-prepare-ci:
           filters:
             branches:
-              ignore: *deployment_branches
-      - build-and-test-all: # build EVERYTHING and trigger test release on deployment branch
+              only:
+                - ci
+      - test-e2e-ci:
+          requires:
+            - build-deploy-prepare-ci
           filters:
             branches:
-              only: *deployment_branches
-      - test-e2e-release:
-          <<: *release_only
+              only:
+                - ci
+      - unit-tests-ci:
           requires:
-            - build-and-test-all
-      - test-e2e:
-          requires:
-            - build-and-test-all
+            - build-deploy-prepare-ci
           filters:
             branches:
               only:
