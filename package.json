@@ -52,8 +52,6 @@
     "bundlesize": "bundlesize",
     "postinstall": "ngcc --properties es2015 browser module main && node ./decorate-angular-cli.js",
     "prerender:festival": "nx build festival --prod && nx run festival:server --configuration production && angular-prerender --browser-target festival:build --server-target festival:server",
-    "firestore:run-db-anon-process": "npm run backend-ops anonProdDb",
-    "firestore:run-db-shrink-process": "npm run backend-ops shrinkDb",
     "backend-ops": "ts-node -P tools/tsconfig.tools.json apps/backend-ops/src/main.ts"
   },
   "private": true,

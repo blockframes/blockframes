@@ -1,11 +1,11 @@
 import { ContractDocument } from "@blockframes/contract/contract/+state";
-import { defaultEmulatorBackupPath, endMaintenance, getFirestoreExportPath, latestAnonDbDir, latestAnonShrinkedDbDir, loadAdminServices, removeAllSubcollections, shutdownEmulator, startMaintenance } from "@blockframes/firebase-utils";
+import { connectFirestoreEmulator, defaultEmulatorBackupPath, endMaintenance, firebaseEmulatorExec, getFirestoreExportPath, importFirestoreEmulatorBackup, latestAnonDbDir, latestAnonShrinkedDbDir, loadAdminServices, removeAllSubcollections, shutdownEmulator, startMaintenance } from "@blockframes/firebase-utils";
 import { InvitationDocument } from "@blockframes/invitation/+state/invitation.firestore";
 import { MovieDocument } from "@blockframes/movie/+state/movie.firestore";
 import { NotificationDocument } from "@blockframes/notification/types";
 import { OrganizationDocument } from "@blockframes/organization/+state";
 import { PermissionsDocument } from "@blockframes/permissions/+state/permissions.firestore";
-import { importEmulatorFromBucket, uploadBackup } from "./emulator";
+import { uploadBackup } from "./emulator";
 import { backupBucket as ciBucketName } from 'env/env.blockframes-ci'
 import { EventDocument } from "@blockframes/event/+state/event.firestore";
 import * as admin from 'firebase-admin';
@@ -17,6 +17,9 @@ import { Campaign } from "@blockframes/campaign/+state/campaign.model";
 
 // Users for E2E tests
 import staticUsers from 'tools/static-users.json';
+import type { ChildProcess } from "child_process";
+import { EIGHT_MINUTES_IN_MS } from "@blockframes/utils/maintenance";
+
 export enum USER {
   Vincent = 'MDnN2GlVUeadIVJbzTToQQNAMWZ2',
   Jean = '2OJUZoWtTVcew27YDZa8FQQdg5q2',
@@ -26,13 +29,13 @@ export enum USER {
 } // Temp this should be removed when fixtures are updated. Same as libs/e2e/src/lib/fixtures/users.ts but not included since this file is using generated fixtures non present during process
 
 /**
- * @TODO #6460 remove this 
- * 
+ * @TODO #6460 remove this
+ *
  * npm run backend-ops importEmulator gs://ci-backups-blockframes/LATEST-ANON-DB
- * 
- * to test db: 
+ *
+ * to test db:
  *  npm run backend-ops importEmulator gs://bruce-backups/LATEST-ANON-SHRINKED-DB
- * 
+ *
  * npm run backend-ops startMaintenance
  * npm run backend-ops importFirestore LATEST-ANON-SHRINKED-DB
  * npm run backend-ops syncUsers
@@ -110,25 +113,38 @@ const orgMap = {
   ]
 }
 
-export async function shrinkDb() {
-  const { db } = loadAdminServices({ emulator: true });
+export async function loadAndShrinkLatestAnonDbAndUpload() {
+  let proc: ChildProcess;
+  try {
+    // STEP 1 load-latest anon-db into emulator and keep it running with auth & firestore
+    const importFrom = `gs://${ciBucketName}/${latestAnonDbDir}`;
+    await importFirestoreEmulatorBackup(importFrom, defaultEmulatorBackupPath);
 
-  // STEP 1 load-latest anon-db into emulator and keep it running with auth & firestore
-  const proc = await importEmulatorFromBucket({ importFrom: `gs://${ciBucketName}/${latestAnonDbDir}`, keepEmulatorsAlive: true });
+    proc = await firebaseEmulatorExec({
+      emulators: 'firestore',
+      importPath: defaultEmulatorBackupPath,
+      exportData: true,
+    });
 
-  // STEP 2 shrink DB
-  await startMaintenance(db);
-  await processDb(db);
-  await endMaintenance(db);
+    // STEP 2 shrink DB
+    const db = connectFirestoreEmulator()
+    await startMaintenance(db);
+    await shrinkDb(db);
+    await endMaintenance(db, EIGHT_MINUTES_IN_MS);
 
-  // STEP 3 shutdown emulator & export db
-  await shutdownEmulator(proc, defaultEmulatorBackupPath);
+    // STEP 3 shutdown emulator & export db
+    await shutdownEmulator(proc, defaultEmulatorBackupPath);
 
-  // STEP 3 upload to backup bucket
-  await uploadBackup({ localRelPath: getFirestoreExportPath(defaultEmulatorBackupPath), remoteDir: latestAnonShrinkedDbDir });
+    // STEP 4 upload to backup bucket
+    await uploadBackup({ localRelPath: getFirestoreExportPath(defaultEmulatorBackupPath), remoteDir: latestAnonShrinkedDbDir });
+
+  } catch (e) {
+    await shutdownEmulator(proc);
+    throw e;
+  }
 }
 
-export async function processDb(db: FirebaseFirestore.Firestore) {
+export async function shrinkDb(db: FirebaseFirestore.Firestore) {
   const [
     _notifications,
     _invitations,

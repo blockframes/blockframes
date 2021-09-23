@@ -7,7 +7,6 @@ import requiredVars from 'tools/mandatory-env-vars.json';
 import { OrganizationDocument } from '@blockframes/organization/+state/organization.model';
 import { resolve } from 'path';
 import { App } from '@blockframes/utils/apps';
-import { connectEmulator } from './firestore';
 
 /**
  * This function is an iterator that allows you to fetch documents from a collection in chunks

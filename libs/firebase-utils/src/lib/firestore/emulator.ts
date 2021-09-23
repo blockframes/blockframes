@@ -194,53 +194,17 @@ export async function shutdownEmulator(proc: ChildProcess, exportDir = defaultEm
   const emuTerminated = await Promise.race([emuP, timeP]);
   if (!emuTerminated) {
     console.error('Unable to shut down emulator process, forcing export and killing emulator...');
-    const cmd = `firebase emulators:export ${exportDir} --force`
-    await runShellCommand(cmd);
+    await forceEmulatorExport(exportDir);
     proc.kill('SIGKILL');
   }
 }
 
-export type FirestoreEmulator = FirebaseFirestore.Firestore & { clearFirestoreData?: typeof clearFirestoreData; };
-
-/**
- * This is a helper function that will return a Firestore db object connected to
- * the local emulator. It also adds on a fast`clearFirestoreData` method for
- * clearing the local emulator.
- */
-export function connectEmulator() {
-  throwOnProduction();
-
-  const firebaseJsonPath = resolve(process.cwd(), 'firebase.json')
-  const {
-    emulators: {
-      firestore: { port: dbPort },
-      storage: { port: storagePort },
-      auth: { port: authPort },
-    },
-  } = eval('require')(firebaseJsonPath);
-
-  console.log('Detected - dbPort:', dbPort, 'storagePort:', storagePort, 'authPort:', authPort);
-
-  process.env['FIRESTORE_EMULATOR_HOST'] = `localhost:${dbPort}`
-  // process.env['FIRESTORE_STORAGE_EMULATOR_HOST'] = `localhost:${storagePort}`
-  // process.env['FIREBASE_AUTH_EMULATOR_HOST'] = `localhost:${authPort}`;
-  // delete process.env['GOOGLE_APPLICATION_CREDENTIALS']
-
-  const app = initializeApp({ projectId: firebase().projectId }, 'emulator');
-  const storage = app.storage();
-  const db = app.firestore() as FirestoreEmulator;
-  const auth = app.auth();
-
-  db.settings({
-    // port: dbPort,
-    merge: true,
-    ignoreUndefinedProperties: true,
-    host: 'localhost',
-    ssl: false,
-  });
-  db.clearFirestoreData = clearFirestoreData;
-  return { db, auth, storage };
+export function forceEmulatorExport(exportDir = defaultEmulatorBackupPath) {
+  const cmd = `firebase emulators:export ${exportDir} --force`
+  return runShellCommand(cmd);
 }
+
+export type FirestoreEmulator = FirebaseFirestore.Firestore & { clearFirestoreData?: typeof clearFirestoreData; };
 
 export function connectFirestoreEmulator() {
   throwOnProduction();

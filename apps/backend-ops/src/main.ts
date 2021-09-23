@@ -17,7 +17,7 @@ import { anonymizeLatestProdDb, downloadProdDbBackup, importEmulatorFromBucket, 
 import { backupEnv, restoreEnv } from './backup';
 import { EIGHT_MINUTES_IN_MS } from '@blockframes/utils/maintenance';
 import { rescueJWP } from './rescueJWP';
-import { shrinkDb } from './db-shrink';
+import { loadAndShrinkLatestAnonDbAndUpload } from './db-shrink';
 
 const args = process.argv.slice(2);
 const [cmd, ...flags] = args;
@@ -51,7 +51,7 @@ async function runCommand() {
       await anonymizeLatestProdDb();
       break;
     case 'shrinkDb':
-      await shrinkDb();
+      await loadAndShrinkLatestAnonDbAndUpload();
       break;
     case 'downloadProdDbBackup':
       await downloadProdDbBackup(arg1);
