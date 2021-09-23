@@ -28,7 +28,7 @@ export class IdentityGuard extends CollectionGuard<AuthState> {
           return of(true);
         };
         if (!userAuth.emailVerified) {
-          return of(this.router.navigate(['c/organization/join-congratulations'])); // BRUCE
+          return of(this.router.navigate(['c/organization/join-congratulations']));
         }
         return this.service.sync().pipe(
           catchError(() => Promise.resolve(true)),

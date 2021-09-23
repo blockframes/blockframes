@@ -63,7 +63,7 @@ describe('User can create new account and create a new organization', () => {
     cy.log(`{${USER.firstName} ${USER.lastName}} logged In!`);
   });
 
-  it.skip('Check emails are sent properly', () => {
+  it('Check emails are sent properly', () => {
     cy.mailosaurSearchMessages(serverId, {
       sentTo: testEmail
     }).then((result: MessageListResult) => {
@@ -110,7 +110,7 @@ describe.skip('User can create new account and join an organization', () => {
   });
 });
 
-describe.skip('Try with each fields except one', () => {
+describe('Try with each fields except one', () => {
   it('Fill all the fields except email', () => {
     const p1 = new AuthIdentityPage();
     p1.fillSignupExceptOne(USER, 'email');
@@ -182,7 +182,7 @@ describe.skip('Try with each fields except one', () => {
 });
 
 describe('Try email address', () => {
-  it.skip('use wrong format email address', () => {
+  it('use wrong format email address', () => {
     const p1 = new AuthIdentityPage();
     p1.fillEmail(WRONG_EMAIL_FORM);
     p1.fillFirstAndLastName(USER);
@@ -198,7 +198,7 @@ describe('Try email address', () => {
   })
 });
 
-describe.skip('Try password', () => {
+describe('Try password', () => {
   it('Try with different passwords in password confirm', () => {
     const p1 = new AuthIdentityPage();
     const newEmail =`dev+wrongPwd${Date.now()}@cascade8.com`;
@@ -249,7 +249,7 @@ describe.skip('Try password', () => {
 })
 
 // ORGANIZATION TEST
-describe.skip('Create a new account and org, but doesn\'t fill one field of the org', () => {
+describe('Create a new account and org, but doesn\'t fill one field of the org', () => {
   it('Try without the company name field', () => {
     const p1 = new AuthIdentityPage();
     p1.fillUserInformations(USER);
