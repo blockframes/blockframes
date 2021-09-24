@@ -5,15 +5,15 @@
 </ng-template>
 
 <ng-container *ngIf="event$ | async as event">
-  <h2>Details</h2>
-  <mat-card>
+  <section class="surface">
+    <h2>Details</h2>
     <h5>Event Title</h5>
     <p>{{ event.title }}</p>
     <h5>Is Private</h5>
     <p>{{ event.isPrivate ? 'Yes' : 'No' }}</p>
     <h5>Date & Time</h5>
     <pre class="mat-body-1">{{ event | eventRange }}</pre>
-  </mat-card>
+  </section>
 
   <nav mat-tab-nav-bar>
     <ng-container *ngFor="let tab of tabs"> 

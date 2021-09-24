@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ViewEncapsulation  } from '@angular/core';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { UserService } from '@blockframes/user/+state';
 import { User } from '@blockframes/auth/+state';
@@ -13,6 +13,7 @@ import { EventFormShellComponent } from '../shell/shell.component';
   templateUrl: './meeting.component.html',
   styleUrls: ['./meeting.component.scss'],
   animations: [slideUpList('h2, mat-card')],// @TODO #5895 check Antoine
+  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MeetingComponent implements OnInit {

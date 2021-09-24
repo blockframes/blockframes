@@ -1,11 +1,6 @@
 section {
-  background-color: var(--background-card);
-  border-radius: 4px;
-  border: solid 1px var(--foreground-divider);
-  padding: 24px 16px;
-
   .manage-files-btn {
-    margin-bottom: 40px;
+    margin-block: 40px;
   }
 
   p.no-files {
