@@ -20,23 +20,23 @@
       <ng-template colRef="title.international" label="International title" sort let-title>
         {{ title }}
       </ng-template>
-      <ng-template colRef="org" let-org>
+      <ng-template colRef="org" label="Organization" let-org>
         <a *ngIf="org else noOrg" [routerLink]="['/c/o/dashboard/crm/organization', org.id]">
           <span>{{ org | orgName:'long'}} </span>
           <mat-icon svgIcon="visibility"></mat-icon>
         </a>
         <ng-template #noOrg>--</ng-template>
       </ng-template>
-      <ng-template colRef="app.catalog.status" sort let-status>
+      <ng-template colRef="app.catalog.status" label="Catalog Status" sort let-status>
         <bf-tag>{{ status }}</bf-tag>
       </ng-template>
-      <ng-template colRef="app.festival.status" sort let-status>
+      <ng-template colRef="app.festival.status" label="Festival Status" sort let-status>
         <bf-tag>{{ status }}</bf-tag>
       </ng-template>
-      <ng-template colRef="app.financiers.status" sort let-status>
+      <ng-template colRef="app.financiers.status" label="Financiers Status" sort let-status>
         <bf-tag>{{ status }}</bf-tag>
       </ng-template>
-      <ng-template colRef="screeningCount" sort let-screeningCount>
+      <ng-template colRef="screeningCount" label="Screening count" sort let-screeningCount>
         {{ screeningCount }}
       </ng-template>
     </bf-table>

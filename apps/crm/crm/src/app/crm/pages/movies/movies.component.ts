@@ -10,7 +10,7 @@ import { Observable, combineLatest } from 'rxjs';
 
 interface CrmMovie extends Movie {
   org: Organization;
-  screeningCount: string;
+  screeningCount: number;
 }
 
 @Component({
@@ -40,7 +40,7 @@ export class MoviesComponent implements OnInit {
         const screenings = events.filter(isScreening);
         return movies.map(movie => {
           const org = orgs.find(o => o.id === movie.orgIds[0]);
-          const screeningCount = screenings.filter(e => e.meta?.titleId === movie.id).length.toString();
+          const screeningCount = screenings.filter(e => e.meta?.titleId === movie.id).length;
           return { ...movie, org, screeningCount } as CrmMovie;
         })
       }),
@@ -58,16 +58,16 @@ export class MoviesComponent implements OnInit {
       const exportedRows = movies.map(m => ({
         'movie id': m.id,
         'title': m.title.international,
-        'internal ref': m.internalRef ? m.internalRef : '--',
+        'internal ref': m.internalRef ?? '--',
         'org': m.org ? orgName(m.org) : '--',
-        'orgId': m.org ? m.org.id : '--',
+        'orgId': m.org?.id ?? '--',
         'catalog status': m.app.catalog.status,
         'catalog access': m.app.catalog.access ? 'yes' : 'no',
         'festival status': m.app.festival.status,
         'festival access': m.app.festival.access ? 'yes' : 'no',
         'financiers status': m.app.financiers.status,
         'financiers access': m.app.financiers.access ? 'yes' : 'no',
-        'screeningCount': m.screeningCount,
+        'screeningCount': `${m.screeningCount}`,
       }));
 
       downloadCsvFromJson(exportedRows, 'movies-list');
