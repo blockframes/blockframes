@@ -37,15 +37,15 @@ export class OrganizationsComponent {
         fullDenomination: r.denomination.full,
         publicDenormination: r.denomination.public,
         status: r.status,
-        country: r && r.addresses.main.country ? r.addresses.main.country : '--',
+        country: r.addresses.main.country ?? '--',
         email: r.email,
         memberCount: r.userIds.length,
-        activity: r.activity ? r.activity : '--',
+        activity: r.activity ?? '--',
       }
 
       for (const a of this.app) {
         for (const module of modules) {
-          row[`${appName[a]} - ${module}`] = !!r.appAccess[a] && r.appAccess[a][module] ? 'true' : 'false';
+          row[`${appName[a]} - ${module}`] = !!r.appAccess[a]?.[module] ? 'true' : 'false';
         }
       }
 
