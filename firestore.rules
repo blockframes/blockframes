@@ -216,8 +216,7 @@ service cloud.firestore {
     /// RULES ///
 
     match /orgs/{orgId} {
-      allow read: if isSignedIn()
-        && notInMaintenance();
+      allow read: if notInMaintenance();
     	allow create: if isSignedIn()
         && isRequestFieldValueEqualTo(['status'], 'pending')
         && isRequestFieldValueEqualToOrNotSetted(['id'], orgId)
