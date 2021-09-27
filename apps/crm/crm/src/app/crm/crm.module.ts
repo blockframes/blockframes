@@ -30,6 +30,7 @@ import { GoToModule } from './components/go-to/go-to.module';
 import { AdminOrganizationFormModule } from './components/organization/forms/organization-form/organization-form.module';
 import { MovieVideoUploadModule } from '@blockframes/movie/components/video-upload/video-upload.module';
 import { MoviePictureUploadModule } from '@blockframes/movie/components/picture-upload/picture-upload.module';
+import { FormListModule } from '@blockframes/ui/form/list/form-list.module';
 
 // Components
 import { OverviewComponent } from './pages/overview/overview.component';
@@ -102,7 +103,8 @@ export const panelRoutes: Routes = [
     StaticSelectModule,
     ToDateModule,
     DashboardModule,
-    BreadCrumbModule
+    BreadCrumbModule,
+    FormListModule
   ],
   declarations: [
     MoviesComponent,

@@ -97,7 +97,7 @@ export function createAlgoliaOrganization(org: OrganizationDocument): AlgoliaOrg
 
 export function storeSearchableMovie(
   movie: MovieDocument,
-  organizationName: string,
+  organizationNames: string[],
   adminKey?: string
 ): Promise<any> {
   if (!algolia.adminKey && !adminKey) {
@@ -142,7 +142,7 @@ export function storeSearchableMovie(
       status: movie.productionStatus ? movie.productionStatus : '',
       storeStatus: '',
       budget: movie.estimatedBudget || null,
-      orgName: organizationName,
+      orgNames: organizationNames,
       originalLanguages: movie.originalLanguages,
       runningTime: {
         status: movie.runningTime.status,

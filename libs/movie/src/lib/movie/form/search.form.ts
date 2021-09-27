@@ -176,7 +176,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
           ...this.languages.get('caption').controls.map(lang => `languages.caption:${lang.value}`),
         ],
         this.productionStatus.value.map(status => `status:${status}`),
-        this.sellers.value.map(seller => `orgName:${seller.name}`),
+        this.sellers.value.map(seller => `orgNames:${seller.name}`),
         this.storeStatus.value.map(config => `storeStatus:${config}`),
         this.socialGoals.value.map(goal => `socialGoals:${goal}`),
         [`contentType:${this.contentType.value || ''}`]

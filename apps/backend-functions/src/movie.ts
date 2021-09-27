@@ -1,7 +1,8 @@
 import { db } from './internals/firebase';
-import { MovieDocument, OrganizationDocument, PublicUser } from './data/types';
+import { MovieDocument } from './data/types';
+import { createDocPermissions } from 'libs/organization/src/lib/permissions/+state/permissions.firestore';
 import { triggerNotifications, createNotification } from './notification';
-import { createDocumentMeta, getDocument, getOrganizationsOfMovie, Timestamp } from './data/internals';
+import { createDocumentMeta, getOrganizationsOfMovie, Timestamp } from './data/internals';
 import { removeAllSubcollections } from './utils';
 
 import { orgName } from '@blockframes/organization/+state/organization.firestore';
@@ -9,7 +10,7 @@ import { MovieAppConfig } from '@blockframes/movie/+state/movie.firestore';
 import { cleanMovieMedias } from './media';
 import { Change, EventContext } from 'firebase-functions';
 import { algolia, deleteObject, storeSearchableMovie, storeSearchableOrg } from '@blockframes/firebase-utils';
-import { App, getAllAppsExcept, getMovieAppAccess, checkMovieStatus, getMailSender } from '@blockframes/utils/apps';
+import { App, getAllAppsExcept, getMovieAppAccess, getMailSender } from '@blockframes/utils/apps';
 import { Bucket } from '@blockframes/contract/bucket/+state/bucket.model';
 import { sendMovieSubmittedEmail } from './templates/mail';
 import { sendMail } from './internals/email';
@@ -30,15 +31,12 @@ export async function onMovieCreate(
     throw new Error('movie update function got invalid movie data');
   }
 
-  const user = await getDocument<PublicUser>(`users/${movie._meta.createdBy}`);
-  const organization = await getDocument<OrganizationDocument>(`orgs/${user.orgId}`);
-
-  if (checkMovieStatus(movie, 'accepted')) {
-    await storeSearchableOrg(organization);
+  const organizations = await getOrganizationsOfMovie(movie.id);
+  for (const org of organizations) {
+    storeSearchableOrg(org);
   }
-
-  // Update algolia's index
-  return storeSearchableMovie(movie, orgName(organization));
+  const orgNames = organizations.map(org => orgName(org));
+  return storeSearchableMovie(movie, orgNames);
 }
 
 /** Remove a movie and send notifications to all users of concerned organizations. */
@@ -130,6 +128,7 @@ export async function onMovieUpdate(
   const isMovieSubmitted = isSubmitted(before.app, after.app);
   const isMovieAccepted = isAccepted(before.app, after.app);
   const appAccess = apps.find(a => !!after.app[a].access);
+  const organizations = await getOrganizationsOfMovie(after.id);
 
   if (isMovieSubmitted) { // When movie is submitted to Archipel Content or Media Financiers
     const movieWasSubmittedOn = wasSubmittedOn(before.app, after.app)[0];
@@ -138,7 +137,6 @@ export async function onMovieUpdate(
     await sendMail(sendMovieSubmittedEmail(movieWasSubmittedOn, after), from, groupIds.noUnsubscribeLink);
 
     // Notification to users related to current movie
-    const organizations = await getOrganizationsOfMovie(after.id);
     const notifications = organizations
       .filter(organizationDocument => !!organizationDocument?.userIds?.length)
       .reduce((ids: string[], org) => ids.concat(org.userIds), [])
@@ -155,7 +153,6 @@ export async function onMovieUpdate(
   }
 
   if (isMovieAccepted) { // When Archipel Content accept the movie
-    const organizations = await getOrganizationsOfMovie(after.id);
     const notifications = organizations
       .filter(organizationDocument => !!organizationDocument?.userIds?.length)
       .reduce((ids: string[], org) => ids.concat(org.userIds), [])
@@ -176,17 +173,27 @@ export async function onMovieUpdate(
     await removeMovieFromWishlists(after);
   }
 
-  // insert orgName & orgID to the algolia movie index (this is needed in order to filter on the frontend)
-  const creator = await getDocument<PublicUser>(`users/${after._meta.createdBy}`);
-  const creatorOrg = await getDocument<OrganizationDocument>(`orgs/${creator.orgId}`);
+  // Change documentPermission docs based on orgIds change
+  const addedOrgIds = after.orgIds.filter(id => !before.orgIds.includes(id));
+  const removedOrgIds = before.orgIds.filter(id => !after.orgIds.includes(id));
 
-  if (creatorOrg.denomination?.full) {
-    await storeSearchableOrg(creatorOrg);
-    await storeSearchableMovie(after, orgName(creatorOrg));
-    for (const app in after.app) {
-      if (after.app[app].access === false && before.app[app].access !== after.app[app].access) {
-        await deleteObject(algolia.indexNameMovies[app], before.id);
-      }
+  const addedPromises = addedOrgIds.map(orgId => {
+    const permissions = createDocPermissions({ id: after.id, ownerId: orgId });
+    return db.doc(`permissions/${orgId}/documentPermissions/${after.id}`).set(permissions);
+  });
+  const removedPromises = removedOrgIds.map(orgId => db.doc(`permissions/${orgId}/documentPermissions/${after.id}`).delete());
+  await Promise.all([...addedPromises, ...removedPromises]); 
+
+  // insert orgName & orgID to the algolia movie index (this is needed in order to filter on the frontend)
+  for (const org of organizations) {
+    await storeSearchableOrg(org);
+  }
+  const orgNames = organizations.map(org => orgName(org));
+  await storeSearchableMovie(after, orgNames);
+
+  for (const app in after.app) {
+    if (after.app[app].access === false && before.app[app].access !== after.app[app].access) {
+      await deleteObject(algolia.indexNameMovies[app], before.id);
     }
   }
 }
