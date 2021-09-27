@@ -1,21 +1,23 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, Optional } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
-import { extract, SheetTab, ValueWithWarning } from '@blockframes/utils/spreadsheet';
+import {
+   extract, ExtractConfig, SheetTab, ValueWithWarning, getStatic,
+   getStaticList,
+   split,
+ } from '@blockframes/utils/spreadsheet';
 import { createMandate, createSale, Mandate, Sale } from '@blockframes/contract/contract/+state/contract.model';
 import { createTerm } from '@blockframes/contract/term/+state/term.model';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { Intercom } from 'ng-intercom';
-import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { ContractsImportState, SpreadsheetImportError } from '../../../import-utils';
 import { AuthQuery } from '@blockframes/auth/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { parseToAll } from '@blockframes/utils/static-model';
+import { Media, Territory } from '@blockframes/utils/static-model';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { centralOrgId } from '@env';
-import { Scope } from '@blockframes/utils/static-model/static-model';
 import { createMovieLanguageSpecification } from '@blockframes/movie/+state/movie.model';
 
 const separator = ';'
@@ -87,10 +89,6 @@ const errorsMap: { [key in errorCodes]: SpreadsheetImportError } = {
   }
 }
 
-function split(cell: string) {
-  return cell.split(separator).filter(v => !!v).map(v => v.trim());
-}
-
 // Time is MM/DD/YYYY
 function convertDate(time: string) {
   if (isNaN(+time)) {
@@ -108,45 +106,55 @@ function getDate(value: string, error: SpreadsheetImportError) {
   return date;
 }
 
-function getStatic(scope: Scope, value: string) {
-  if (!value) return []
-  if (value.toLowerCase() === 'all') return parseToAll(scope, 'all');
-  return split(value).map(v => getKeyIfExists(scope, v)).filter(v => !!v);
+interface FieldsConfig {
+  title: {
+    international: string,
+  },
+  type:'mandate' | 'sale',
+  licensorName: string,
+  licenseeName: string,
+  territories: Territory[],
+  medias: Media[],
+  exclusive:boolean,
+  duration:{
+    from:Date,
+    to:Date,
+  },
+  originalLanguageLicensed:string,
+  dubbed:Territory[],
+  subtitle:Territory[],
+  closedCaptioning:Territory[],
+  contractId:string,
+  parentTermId:string,
+  titleId?:string,
+  stakeholdersList:string[],
 }
 
-function getStaticList(scope: Scope, value: string, error?: SpreadsheetImportError) {
-  const values = getStatic(scope, value);
-  if (error && !values.length) {
-    return new ValueWithWarning(values, error);
-  }
-  return values;
-}
+type FieldsConfigType = ExtractConfig<FieldsConfig>;
 
-const fieldsConfig = {
+
+const fieldsConfig: FieldsConfigType = {
    /* a */'title.international': (value: string) => value,
    /* b */'type': (value: string) => value.toLowerCase() as 'mandate' | 'sale',
    /* c */'licensorName': (value: string) => value,
    /* d */'licenseeName': (value: string) => value,
-   /* e */'territories': (value: string) => getStaticList('territories', value, errorsMap['no-territories']),
-   /* f */'medias': (value: string) => getStaticList('medias', value, errorsMap['no-medias']),
+   /* e */'territories': (value: string) => getStaticList('territories', value, separator, errorsMap['no-territories']) as Territory[],
+   /* f */'medias': (value: string) => getStaticList('medias', value, separator, errorsMap['no-medias']) as Media[],
    /* g */'exclusive': (value: string) => {
     return value.toLowerCase() === 'yes' ? true : false;
   },
-   /* h */'duration.from': (value: string) => getDate(value, errorsMap['no-duration-from']),
-   /* i */'duration.to': (value: string) => getDate(value, errorsMap['no-duration-to']),
+   /* h */'duration.from': (value: string) => getDate(value, errorsMap['no-duration-from']) as Date,
+   /* i */'duration.to': (value: string) => getDate(value, errorsMap['no-duration-to']) as Date,
    /* j */'originalLanguageLicensed': (value: string) => value,
-   /* k */'dubbed': (value: string) => getStaticList('languages', value),
-   /* l */'subtitle': (value: string) => getStaticList('languages', value),
-   /* m */'closedCaptioning': (value: string) => getStaticList('languages', value),
+   /* k */'dubbed': (value: string) => getStaticList('languages', value, separator) as Territory[],
+   /* l */'subtitle': (value: string) => getStaticList('languages', value, separator) as Territory[],
+   /* m */'closedCaptioning': (value: string) => getStaticList('languages', value, separator) as Territory[],
    /* n */'contractId': (value: string) => value,
    /* o */'parentTermId': (value: string) => value,
    /* p */'titleId': (value: string) => value,
-   /* q */'stakeholdersList': (value: string) => value ? split(value) : value,
+   /* q */'stakeholdersList': (value: string) => value ? split(value, separator) : [value],
 } as const;
 
-type FieldsType = keyof typeof fieldsConfig;
-type GetValue<T> = T extends ValueWithWarning ? T["value"] : T
-type ImportType = { [key in FieldsType]: GetValue<ReturnType<typeof fieldsConfig[key]>> }
 
 
 
@@ -214,14 +222,13 @@ export class ViewExtractedContractsComponent implements OnInit {
       const row = rawRow.map(cell => typeof cell === "string" ? cell.trim() : cell.toString());
       if (!row.length) continue;
 
-      // optional fields are prefixed with underscore
-      const { data, errors, warnings, } = extract<ImportType>([row], fieldsConfig)
+      const { data, errors:warnings, warnings:errors, } = extract<FieldsConfig>([row], fieldsConfig)
 
       //////////////
       // CONTRACT //
       //////////////
       // TITLE
-      const titleId = data.extractedTitleId || (await this.getTitleId(data.title.international));
+      const titleId = data.titleId || (await this.getTitleId(data.title.international));
 
       if (!titleId) errors.push(errorsMap['no-title-id']);
 
@@ -235,7 +242,7 @@ export class ViewExtractedContractsComponent implements OnInit {
 
       // STAKEHOLDER
       const getStakeholders = Array.isArray(data.stakeholdersList) ? data.stakeholdersList.map(orgName => this.getOrgId(orgName)) : [];
-      const stakeholders = (await Promise.all(getStakeholders)).filter(s => !!s);
+      const stakeholders: string[] = (await Promise.all(getStakeholders)).filter(s => !!s);
       if (!stakeholders.length) errors.push(errorsMap['no-stakeholders']);
 
       // PARENT TERM ID
@@ -243,8 +250,8 @@ export class ViewExtractedContractsComponent implements OnInit {
 
       // CONTRACT
       let baseContract: Partial<Mandate | Sale> = {};
-      if (data.extractedContractId) {
-        baseContract = await this.contractService.getValue(data.extractedContractId);
+      if (data.contractId) {
+        baseContract = await this.contractService.getValue(data.contractId as string);
         if (!baseContract) errors.push(errorsMap['wrong-contract-id']);
       } else {
         baseContract.id = this.fire.createId();
@@ -274,10 +281,11 @@ export class ViewExtractedContractsComponent implements OnInit {
 
       this.contractsToCreate.data.push({
         contract,
-        newContract: !data.extractedContractId,
-        errors: warnings,
+        newContract: !data.contractId,
+        errors,
         terms: [term]
       });
+      console.log({contract:this.contractsToCreate})
       // Forcing change detection
       this.contractsToCreate.data = [...this.contractsToCreate.data];
       this.cdRef.markForCheck();

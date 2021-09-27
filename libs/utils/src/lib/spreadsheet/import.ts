@@ -1,5 +1,7 @@
 import { SpreadsheetImportError } from 'libs/import/src/lib/import-utils';
 import { WorkBook, WorkSheet, utils, read } from 'xlsx';
+import { getKeyIfExists } from '../helpers';
+import { parseToAll, Scope } from '../static-model';
 
 type Matrix = any[][]; //@todo find better type
 
@@ -10,7 +12,27 @@ export interface SheetTab {
   rows: any[][];
 }
 
+type Join<K extends string, P extends string> = '' extends P ? K : `${K}.${P}`;
+type DeepKeys<T> = T extends Record<string, any>
+  ? { [K in Extract<keyof T, string>]: K | Join<K, DeepKeys<T[K]>> }[Extract<keyof T, string>]
+  : '';
+
+type DeepValue<T, K> = K extends `${infer I}.${infer J}`
+  ? I extends keyof T ? DeepValue<T[I], J> : never
+  : K extends keyof T ? T[K] : never;
+
+
 export type ParseFieldFn = (value: string | string[], state: any, rowIndex?: number) => any;
+export type ExtractConfig<T> = Partial<{
+  [key in DeepKeys<T>]: (value: string | string[], state: any, rowIndex?: number) => DeepValue<T, key>
+}>
+
+export interface ExtractOutput<T> {
+  data: T,
+  warnings: SpreadsheetImportError[],
+  errors: SpreadsheetImportError[]
+}
+
 
 export function importSpreadsheet(bytes: Uint8Array, range?: string): SheetTab[] {
 
@@ -35,7 +57,10 @@ export function importSpreadsheet(bytes: Uint8Array, range?: string): SheetTab[]
 }
 
 
-export function parse(item: any = {}, values: string | string[], path: string, transform: ParseFieldFn, rowIndex: number, warnings: SpreadsheetImportError[], errors: SpreadsheetImportError[]) {
+export function parse(
+  item: any = {}, values: string | string[], path: string, transform: ParseFieldFn,
+  rowIndex: number, warnings: SpreadsheetImportError[], errors: SpreadsheetImportError[]
+) {
   const segments = path.split('.');
   const segment = segments.shift()
   const last = !segments?.length;
@@ -72,7 +97,11 @@ export function parse(item: any = {}, values: string | string[], path: string, t
       errors.push(err.message ? JSON.parse(err.message) : err.message);
     }
 
-    if (!last) item[segment] = parse(item[segment] || {}, values, segments.join('.'), transform, rowIndex, warnings, errors);
+    if (!last) {
+      if (!item[segment])
+        item[segment] = {}
+      parse(item[segment], values, segments.join('.'), transform, rowIndex, warnings, errors);
+    }
   }
 }
 
@@ -120,7 +149,7 @@ export function isEmpty(data: any,) {
  * off the ordering of the elements when we call Object.values/ Object.keys / Object.entries.
  * with the fields including the numbers coming first no matter their position in the object.
  */
-export function extract<T>(rawRows: string[][], extractParams: Record<string, ParseFieldFn> = {}) {
+export function extract<T>(rawRows: string[][], extractParams: ExtractConfig<T> = {}): ExtractOutput<T> {
   const warnings: SpreadsheetImportError[] = [];
   const errors: SpreadsheetImportError[] = [];
 
@@ -128,10 +157,29 @@ export function extract<T>(rawRows: string[][], extractParams: Record<string, Pa
   const state = {};
   extraParamsEntries.forEach(([columnIndexedKey, parseFieldFn], index) => {
     const extraParamValues = rawRows.map(row => row[index] ?? '');
-    parse(state, extraParamValues, columnIndexedKey, parseFieldFn, index, warnings, errors)
+    parse(state, extraParamValues, columnIndexedKey, parseFieldFn as any, index, warnings, errors)
   });
+  console.log({ state })
   return {
     data: cleanUp(state as T),
     errors, warnings,
   }
+}
+
+export function getStatic(scope: Scope, value: string, separator:string) {
+  if (!value) return []
+  if (value.toLowerCase() === 'all') return parseToAll(scope, 'all');
+  return split(value,separator).map(v => getKeyIfExists(scope, v)).filter(v => !!v);
+}
+
+export function getStaticList(scope: Scope, value: string, separator:string, error?: SpreadsheetImportError) {
+  const values = getStatic(scope, value, separator);
+  if (error && !values.length) {
+    return new ValueWithWarning(values, error);
+  }
+  return values;
+}
+
+export function split(cell: string, separator:string) {
+  return cell.split(separator).filter(v => !!v).map(v => v.trim());
 }

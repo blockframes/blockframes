@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, Optional } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
-import { extract, SheetTab, ValueWithWarning } from '@blockframes/utils/spreadsheet';
+import { extract, ExtractConfig, SheetTab, ValueWithWarning } from '@blockframes/utils/spreadsheet';
 import { Intercom } from 'ng-intercom';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { OrganizationsImportState, SpreadsheetImportError } from '../../../import-utils';
@@ -10,10 +10,39 @@ import { createOrganization, OrganizationService } from '@blockframes/organizati
 import { UserService } from '@blockframes/user/+state';
 import { getOrgModuleAccess, Module } from '@blockframes/utils/apps';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
+import { Territory } from '@blockframes/utils/static-model';
 
 const separator = ',';
 
-const fieldsConfig = {
+interface FieldsConfig {
+  denomination: {
+    full: string,
+    public: string
+  },
+  email: string,
+  org: {
+    activity: any,
+    fiscalNumber: string,
+    addresses: {
+      main: {
+        street: string,
+        city: string,
+        zipCode: string,
+        region: string,
+        country: Territory,
+        phoneNumber: string,
+      }
+    }
+  },
+  superAdminEmail: string,
+  catalogAccess: Module[],
+  festivalAccess: Module[],
+  financiersAccess: Module[],
+}
+
+type FieldsConfigType = ExtractConfig<FieldsConfig>;
+
+const fieldsConfig: FieldsConfigType = {
   /* a */ 'denomination.full': (value: string) => value.trim(),
   /* b */ 'denomination.public': (value: string) => value.trim(),
   /* c */ 'email': (value: string) => value.trim().toLowerCase().trim(),
@@ -66,12 +95,7 @@ const fieldsConfig = {
   /* m */ 'catalogAccess': (value: string) => value.split(separator).map(m => m.trim().toLowerCase()) as Module[],
   /* n */ 'festivalAccess': (value: string) => value.split(separator).map(m => m.trim().toLowerCase()) as Module[],
   /* o */ 'financiersAccess': (value: string) => value.split(separator).map(m => m.trim().toLowerCase()) as Module[],
-} as const;
-
-
-type FieldsType = keyof typeof fieldsConfig;
-type GetValue<T> = T extends ValueWithWarning ? T["value"] : T
-type ImportType = { [key in FieldsType]: GetValue<ReturnType<typeof fieldsConfig[key]>> }
+};
 
 
 @Component({
@@ -109,8 +133,8 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
     const matSnackbarRef = this.snackBar.open('Loading... Please wait', 'close');
     for (const spreadSheetRow of sheetTab.rows) {
 
-      const { data, errors, warnings,      } = extract<ImportType>([spreadSheetRow], fieldsConfig);
-
+      const { data, errors, warnings, } = extract<FieldsConfig>([spreadSheetRow], fieldsConfig);
+      console.log({ data, errors, warnings })
       // ORG ID
       // Create/retreive the org
       let org = createOrganization();
@@ -118,15 +142,15 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
       if (data.email) {
         const [existingOrg] = await this.organizationService.getValue(ref => ref.where('email', '==', data.email));
         if (existingOrg) {
-          data.org = existingOrg;
+          org = existingOrg;
           newOrg = false;
         }
       }
 
       const importErrors = {
-        data.org,
+        org,
         newOrg,
-        errors:warnings,
+        errors: warnings,
       } as OrganizationsImportState;
 
       let superAdmin = createUser();
@@ -136,7 +160,7 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
           superAdmin = existingSuperAdmin;
 
           if (superAdmin.orgId) {
-            if (newOrg || superAdmin.orgId !== data.org.id) {
+            if (newOrg || superAdmin.orgId !== org.id) {
               // Cannot set user as superAdmin because he already belongs to an org
               importErrors.errors.push({
                 type: 'error',
@@ -164,9 +188,9 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
         }
 
         // DENOMINATION
-        importErrors.org.denomination.full = data.denomination.full;
-        // if (denomination.full) {
-        // }
+        if (data.denomination.full) {
+          importErrors.org.denomination.full = data.denomination.full;
+        }
 
         if (data.denomination.public) {
           importErrors.org.denomination.public = data.denomination.public;
@@ -179,7 +203,10 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
 
         // ORG INFOS
         if (data.org) {//
-          importErrors.org = data.org;
+          importErrors.org = {
+            ...importErrors.org,
+            ...data.org,
+          };
         }
 
 
@@ -214,7 +241,7 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
           }
         }
 
-        if (getOrgModuleAccess(data.org).length === 0) {
+        if (getOrgModuleAccess(org).length === 0) {
           importErrors.errors.push({
             type: 'error',
             field: 'appAccess',

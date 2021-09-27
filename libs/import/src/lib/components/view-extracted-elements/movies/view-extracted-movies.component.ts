@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, Optional } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MovieService, createMovie } from '@blockframes/movie/+state';
-import { extract, SheetTab, ValueWithWarning } from '@blockframes/utils/spreadsheet';
+import { extract, ExtractConfig, SheetTab, ValueWithWarning } from '@blockframes/utils/spreadsheet';
 import { Crew, Producer } from '@blockframes/utils/common-interfaces/identity';
 import { Intercom } from 'ng-intercom';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
@@ -32,6 +32,83 @@ import { createDocumentMeta } from '@blockframes/utils/models-meta';
 import { UserService } from '@blockframes/user/+state';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentApp } from '@blockframes/utils/apps';
+
+
+interface FieldsConfig {
+  title: {
+    international: string,
+    original: string,
+    series: number | string,
+  },
+  internalRef: string,
+  contentType: string,
+  episodeCount: number,
+  productionStatus: string,
+  releaseYear: string,
+  releaseYearStatus: string,
+  directors: {
+    firstName: string, lastName: string,
+    description: string
+  }[],
+  originCountries: string[],
+  stakeholders: {
+    displayName: string, role: string,
+  }[],
+  originalRelease: {
+    country: string, media: string,
+    date: string
+  }[],
+  originalLanguages: string[],
+  genres: string[],
+  customGenres: string[],
+  runningTime: string,
+  runningTimeStatus: string,
+  cast: {
+    firstName: string, lastName: string, status: string
+  }[],
+  prizes: {
+    name: string, year: string,
+    prize: string, premiere: string,
+  }[],
+  logline: string,
+  synopsis: string,
+  keyAssets: string,
+  keywords: string[],
+  producers: {
+    firstName: string, lastName: string, role: string
+  }[],
+  crew: {
+    firstName: string, lastName: string, role: string
+  }[],
+  budgetRange: string,
+  boxoffice: {
+    territory: string, unit: string, value: string
+  }[],
+  certifications: string[],
+  ratings: { country: string, value: string, }[],
+  audience: { targets: string, goals: string, }[],
+  reviews: {
+    filmCriticName: string, revue: string,
+    link: string, quote: string,
+  }[],
+  color:string,
+  format:string,
+  formatQuality:string,
+  soundFormat:string,
+  isOriginalVersionAvailable:string,
+  languages: {
+    language: string, dubbed: string,
+    subtitle: string, caption: string,
+  }[],
+  salesPitch:string,
+  catalogStatus:string,
+  festivalStatus:string,
+  financiersStatus:string,
+  ownerId:string,
+}
+
+type FieldsConfigType = ExtractConfig<FieldsConfig>;
+
 
 const fieldsConfig = {
   /* a */ 'title.international': (value: string) => value,
@@ -113,7 +190,8 @@ const fieldsConfig = {
 
 type FieldsType = keyof typeof fieldsConfig;
 type GetValue<T> = T extends ValueWithWarning ? T["value"] : T
-type ImportType = { [key in FieldsType]: GetValue<ReturnType<typeof fieldsConfig[key]>> }
+// type ImportType = { [key in FieldsType]: GetValue<ReturnType<typeof fieldsConfig[key]>> };
+type ImportType = any;
 
 
 @Component({
