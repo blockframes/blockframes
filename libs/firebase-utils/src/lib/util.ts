@@ -7,7 +7,6 @@ import requiredVars from 'tools/mandatory-env-vars.json';
 import { OrganizationDocument } from '@blockframes/organization/+state/organization.model';
 import { resolve } from 'path';
 import { App } from '@blockframes/utils/apps';
-import { connectEmulator } from './firestore';
 
 /**
  * This function is an iterator that allows you to fetch documents from a collection in chunks
@@ -90,10 +89,8 @@ export interface AdminServices {
   getCI: () => admin.app.App;
 }
 
-export function loadAdminServices({ emulator = false }: { emulator: boolean } = { emulator: false }): AdminServices {
+export function loadAdminServices(): AdminServices {
   config();
-
-  if (emulator) return { getCI, ...connectEmulator(), firebaseConfig: firebase() };
 
   if (!admin.apps.length) {
     admin.initializeApp({
@@ -148,4 +145,24 @@ export async function hasAcceptedMovies(org: OrganizationDocument, appli: App) {
 
 export function throwOnProduction(): never | void {
   if (firebase().projectId === 'blockframes') throw Error('DO NOT RUN ON PRODUCTION!');
+}
+
+/**
+ * Removes all one-depth subcollections
+ * @param snapshot
+ * @param batch
+ */
+ export async function removeAllSubcollections(
+  snapshot: FirebaseFirestore.DocumentSnapshot,
+  batch: FirebaseFirestore.WriteBatch,
+  db = admin.firestore(),
+  ): Promise<FirebaseFirestore.WriteBatch> {
+  console.log(`starting deletion of ${snapshot.ref.path} sub-collections`);
+  const subCollections = await snapshot.ref.listCollections();
+  for (const x of subCollections) {
+    console.log(`deleting sub collection : ${x.path}`);
+    const documents = await db.collection(x.path).listDocuments();
+    documents.forEach(ref => batch.delete(ref))
+  }
+  return batch;
 }

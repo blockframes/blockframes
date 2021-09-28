@@ -35,7 +35,7 @@
     <!-- Previous / Next -->
     <footer fxLayout="row" fxLayoutGap="24px" fxLayoutAlign="center center" class="footnote">
       <ng-container *ngIf="previous">
-        <a test-id="back" mat-stroked-button color="accent" [routerLink]="previous.path" fxLayoutAlign="center center">
+        <a test-id="back" mat-button color="accent" [routerLink]="previous.path" fxLayoutAlign="center center">
           <mat-icon svgIcon="arrow_back"></mat-icon>
           <span>Back</span>
         </a>

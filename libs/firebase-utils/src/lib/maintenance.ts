@@ -7,11 +7,6 @@ import {
 } from '@blockframes/utils/maintenance';
 import { loadAdminServices } from './util';
 
-interface MaintenanceOptions {
-  checkMissingVars?: boolean,
-  db?: FirebaseFirestore.Firestore
-}
-
 const maintenanceRef = (db?: FirebaseFirestore.Firestore) => {
   if (!db) db = loadAdminServices().db;
   return db.collection(META_COLLECTION_NAME).doc(MAINTENANCE_DOCUMENT_NAME);
