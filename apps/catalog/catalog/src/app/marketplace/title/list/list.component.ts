@@ -29,7 +29,7 @@ import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-enc
 import { ContractService, Mandate, Sale } from '@blockframes/contract/contract/+state';
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { AvailsFilter, getMandateTerms, isMovieAvailable } from '@blockframes/contract/avails/avails';
+import { AvailsFilter, filterByTitleId, getMandateTerms, isMovieAvailable } from '@blockframes/contract/avails/avails';
 
 
 @Component({
@@ -132,7 +132,10 @@ export class ListComponent implements OnDestroy, OnInit {
     ).pipe(
       map(([movies, availsValue, bucketValue, { mandates, mandateTerms, sales, saleTerms }]: [SearchResponse<Movie>, AvailsFilter, Bucket, { mandates: Mandate[], mandateTerms: Term[], sales: Sale[], saleTerms: Term[] }]) => {
         if (this.availsForm.valid) {
-          return movies.hits.filter(movie => isMovieAvailable(movie.objectID, availsValue, bucketValue, mandates, mandateTerms, sales, saleTerms));
+          return movies.hits.filter(movie => {
+            const { titleMandateTerms, titleSaleTerms } = filterByTitleId(movie.objectID, mandates, mandateTerms, sales, saleTerms);
+            return isMovieAvailable(movie.objectID, availsValue, bucketValue, titleMandateTerms, titleSaleTerms);
+          });
         } else { // if availsForm is invalid, put all the movies from algolia
           return movies.hits;
         }

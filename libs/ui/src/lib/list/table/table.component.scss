@@ -40,7 +40,7 @@ th, td {
   border-bottom-width: 1px;
   border-bottom-style: solid;
   max-width: 800px;
-  
+  white-space: nowrap;
   line-height: 18px;  // Custom Font (validated with Stephanie)
 }
 
@@ -145,24 +145,4 @@ tr:last-of-type {
   td:first-of-type {
     border-bottom-left-radius: 4px;
   }
-}
-
-
-
-@keyframes slideup-enter {
-  from { transform: translateY(100px); }
-  to { transform: translateY(0); }
-}
-@keyframes slideup-leave {
-  from { transform: translateY(0); }
-  to { transform: translateY(-100px); }
-}
-
-@keyframes slidedown-enter {
-  from { transform: rotate(-180deg) translateY(100px); }
-  to { transform: rotate(-180deg) translateY(0); }
-}
-@keyframes slidedown-leave {
-  from { transform: rotate(-180deg) translateY(0); }
-  to { transform: rotate(-180deg) translateY(-100px); }
 }

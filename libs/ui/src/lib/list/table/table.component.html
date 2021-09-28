@@ -16,7 +16,7 @@
         <ng-container *ngFor="let column of columns">
           <th [attr.id]="column.name" [ngClass]="{ sticky: column.sticky }" class="mat-header-cell" role="columnheader">
             <ng-container *ngIf="!column.isSortable else sortableHeader">
-              <span>{{ column.label }}</span>
+              <span>{{ column.label || column.name }}</span>
             </ng-container>
             <ng-template #sortableHeader>
               <div class="sortable">
