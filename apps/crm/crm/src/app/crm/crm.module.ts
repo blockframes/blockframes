@@ -33,10 +33,8 @@ import { MoviePictureUploadModule } from '@blockframes/movie/components/picture-
 
 // Components
 import { OverviewComponent } from './pages/overview/overview.component';
-import { MoviesComponent } from './pages/movies/movies.component';
 import { OrganizationComponent } from './pages/organization/organization.component';
 import { MovieComponent } from './pages/movie/movie.component';
-import { UsersComponent } from './pages/users/users.component';
 import { UserComponent } from './pages/user/user.component';
 import { EventsComponent } from './pages/events/events.component';
 import { EventComponent } from './pages/event/event.component';
@@ -52,11 +50,11 @@ import { BreadCrumbModule } from './components/bread-crumb/bread-crumb.module';
 export const panelRoutes: Routes = [
   { path: '', redirectTo: 'overview', pathMatch: 'full' },
   { path: 'overview', component: OverviewComponent },
-  { path: 'movies', component: MoviesComponent },
+  { path: 'movies', loadChildren: () => import('./pages/movies/movies.module').then(m => m.MovieListModule)},
+  { path: 'movie/:movieId', component: MovieComponent },
   { path: 'organizations', loadChildren: () => import('./pages/organizations/organizations.module').then(m => m.OrganizationListModule)},
   { path: 'organization/:orgId', component: OrganizationComponent },
-  { path: 'movie/:movieId', component: MovieComponent },
-  { path: 'users', component: UsersComponent },
+  { path: 'users', loadChildren: () => import('./pages/users/users.module').then(m => m.UserListModule)},
   { path: 'user/:userId', component: UserComponent },
   { path: 'events', component: EventsComponent },
   { path: 'event/:eventId', component: EventComponent },
@@ -105,9 +103,7 @@ export const panelRoutes: Routes = [
     BreadCrumbModule
   ],
   declarations: [
-    MoviesComponent,
     MovieComponent,
-    UsersComponent,
     UserComponent,
     EventsComponent,
     MailsComponent,
