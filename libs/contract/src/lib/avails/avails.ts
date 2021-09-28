@@ -56,7 +56,7 @@ export function termsCollision(avails: AvailsFilter, terms: BucketTerm<Date>[]) 
 }
 
 /** Get all the terms that overlap the avails filter */
-export function collidingTerms(avails: AvailsFilter, terms: BucketTerm<Date>[]) {
+export function collidingTerms<T extends BucketTerm>(avails: AvailsFilter, terms: T[]) {
   return terms.filter(term => (avails.exclusive || term.exclusive)
     && someOf(avails.territories, 'optional').in(term.territories)
     && someOf(avails.medias, 'optional').in(term.medias)

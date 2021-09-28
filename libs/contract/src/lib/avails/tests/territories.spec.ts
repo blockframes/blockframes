@@ -94,14 +94,14 @@ describe('Test availableTerritories pure function', () => {
       id: 'termD',
       duration: {
         from: new Date('07/01/2020'),
-        to: new Date('01/01/2022')
+        to: new Date('01/01/2022'),
       },
       medias: ['theatrical'],
       territories: ['france'],
       exclusive: true
     });
 
-    const soldTerms = collidingTerms(availDetailsExclusive, [termA, termB, termC, termD]) as Term[];
+    const soldTerms = collidingTerms(availDetailsExclusive, [termA, termB, termC, termD]);
 
     expect(soldTerms.length).toBe(2);
     expect(soldTerms[0].id).toBe('termA');
