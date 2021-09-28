@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, ViewChild, TemplateRef, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute, RouterOutlet } from '@angular/router';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { EventForm } from '../../form/event.form';
@@ -7,8 +7,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentApp, applicationUrl } from '@blockframes/utils/apps';
-import { Observable, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { Observable, of, Subscription } from 'rxjs';
+import { map, pluck, switchMap } from 'rxjs/operators';
 import { NavTabs, TabConfig } from '@blockframes/utils/event';
 
 const statisticsTab = { path: 'statistics', label: 'Statistics' };
@@ -31,9 +31,11 @@ const navTabs: NavTabs = {
   animations: [routeAnimation],
   changeDetection: ChangeDetectionStrategy.Default  // required for changes on "pristine" for the save button
 })
-export class EventFormShellComponent implements OnInit {
+export class EventFormShellComponent implements OnInit, OnDestroy {
   tabs$: Observable<TabConfig[]>;
-  @Input() form = new EventForm();
+  private sub: Subscription;
+  private formSub: Subscription;
+  form: EventForm = new EventForm();
   @ViewChild('confirmExit', { static: true }) confirmExitTemplate: TemplateRef<any>;
   internalLink: string;
   link: string;
@@ -44,19 +46,45 @@ export class EventFormShellComponent implements OnInit {
     private route: ActivatedRoute,
     private dialog: MatDialog,
     private routerQuery: RouterQuery,
+    private cdr: ChangeDetectorRef,
   ) { }
 
-  ngOnInit() {
-    const type = this.form.value.type;
-    const path = type === 'meeting' ? 'lobby' : 'session';
-    this.internalLink = `/c/o/marketplace/event/${this.form.value.id}/${path}`;
-    const app = getCurrentApp(this.routerQuery);
-    const url = applicationUrl[app];
-    this.link = `${url}${this.internalLink}`;
+  ngOnInit(): void {
+    const eventId$ = this.route.params.pipe(pluck('eventId'));
 
-    this.tabs$ = this.service.valueChanges(this.form.value.id).pipe(
-      map(e => e.start < new Date() ? navTabs[type].concat(statisticsTab): navTabs[type])
-    )
+    this.sub = eventId$.pipe(
+      switchMap((eventId: string) => this.service.valueChanges(eventId))
+    ).subscribe(event => {
+
+      this.form = new EventForm(event);
+
+      const type = this.form.value.type;
+      const path = type === 'meeting' ? 'lobby' : 'session';
+      this.internalLink = `/c/o/marketplace/event/${this.form.value.id}/${path}`;
+      const app = getCurrentApp(this.routerQuery);
+      const url = applicationUrl[app];
+      this.link = `${url}${this.internalLink}`;
+
+      this.tabs$ = this.service.valueChanges(this.form.value.id).pipe(
+        map(e => e.start < new Date() ? navTabs[type].concat(statisticsTab) : navTabs[type])
+      )
+
+      // FormArray (used in FormList) does not mark as dirty on push,
+      // so we do it manually to enable the save button
+      // more info : https://github.com/angular/angular/issues/16370
+      if (this.formSub) {
+        this.formSub.unsubscribe();
+        delete this.formSub;
+      }
+      this.formSub = this.form.meta.valueChanges.subscribe(() => this.form.markAsDirty());
+
+      this.cdr.markForCheck();
+    });
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
+    this.formSub.unsubscribe();
   }
 
   save() {
@@ -105,9 +133,9 @@ export class EventFormShellComponent implements OnInit {
         return shouldSave ? of(this.save()) : of(true);
       })
     );
-  } 
+  }
 
   animationOutlet(outlet: RouterOutlet) {
     return outlet?.activatedRouteData?.animation;
-  } 
+  }
 }

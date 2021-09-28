@@ -13,7 +13,18 @@ import { ToLabelModule } from '@blockframes/utils/pipes';
 import { MovieFormShellModule } from '@blockframes/movie/form/shell/shell.module';
 import { MovieShellConfig } from '@blockframes/movie/form/movie.shell.config';
 import { FORMS_CONFIG } from '@blockframes/movie/form/movie.shell.interfaces';
-import { EventEditModule } from './event/edit/edit.module';
+import { ScreeningComponent } from '@blockframes/event/form/screening/screening.component';
+import { ScreeningModule } from '@blockframes/event/form/screening/screening.module';
+import { MeetingComponent } from '@blockframes/event/form/meeting/meeting.component';
+import { MeetingModule } from '@blockframes/event/form/meeting/meeting.module';
+import { InvitationComponent } from '@blockframes/event/form/invitation/invitation.component';
+import { InvitationModule } from '@blockframes/event/form/invitation/invitation.module';
+import { MeetingFilesComponent } from '@blockframes/event/form/meeting-files/meeting-files.component';
+import { MeetingFilesModule } from '@blockframes/event/form/meeting-files/meeting-files.module';
+import { AnalyticsComponent } from '@blockframes/event/pages/analytics/analytics.component';
+import { AnalyticsModule } from '@blockframes/event/pages/analytics/analytics.module';
+import { EventFormShellComponent } from '@blockframes/event/form/shell/shell.component';
+
 // Tunnel routes
 import { tunnelRoutes } from './tunnel/movie-tunnel.routes';
 
@@ -22,6 +33,7 @@ import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 import { MovieTunnelGuard } from '@blockframes/movie/guards/movie-tunnel.guard';
 import { TunnelGuard } from '@blockframes/ui/tunnel';
 import { EventOrganizationGuard } from "@blockframes/event/guard/event-organization.guard";
+import { EventTypeGuard } from '@blockframes/event/guard/event-type.guard';
 
 // Material
 import { MatListModule } from '@angular/material/list';
@@ -86,7 +98,39 @@ const routes: Routes = [{
               loadChildren: () => import('./event/review/review.module').then(m => m.EventReviewModule)
             }, {
               path: 'edit',
-              loadChildren: () => import('./event/edit/edit.module').then(m => m.EventEditModule)
+              component: EventFormShellComponent,
+              canDeactivate: [EventOrganizationGuard],
+              children: [
+                {
+                  path: '',
+                  canActivate: [EventTypeGuard],
+                },
+                {
+                  path: 'screening',
+                  component: ScreeningComponent,
+                  data: { animation: 0 }
+                },
+                {
+                  path: 'meeting',
+                  component: MeetingComponent,
+                  data: { animation: 1 }
+                },
+                {
+                  path: 'invitations',
+                  component: InvitationComponent,
+                  data: { animation: 2 }
+                },
+                {
+                  path: 'files',
+                  component: MeetingFilesComponent,
+                  data: { animation: 3 }
+                },
+                {
+                  path: 'statistics',
+                  component: AnalyticsComponent,
+                  data: { animation: 4 }
+                }
+              ],
             },
           ],
         },
@@ -139,6 +183,11 @@ const routes: Routes = [{
     ToLabelModule,
     OrgAccessModule,
     MovieFormShellModule,
+    ScreeningModule,
+    InvitationModule,
+    MeetingModule,
+    AnalyticsModule,
+    MeetingFilesModule,
 
     // Material
     MatDividerModule,
