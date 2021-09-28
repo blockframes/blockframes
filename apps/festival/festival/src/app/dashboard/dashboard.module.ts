@@ -13,6 +13,7 @@ import { ToLabelModule } from '@blockframes/utils/pipes';
 import { MovieFormShellModule } from '@blockframes/movie/form/shell/shell.module';
 import { MovieShellConfig } from '@blockframes/movie/form/movie.shell.config';
 import { FORMS_CONFIG } from '@blockframes/movie/form/movie.shell.interfaces';
+import { OrgAccessModule } from '@blockframes/organization/pipes/org-access.pipe';
 import { ScreeningComponent } from '@blockframes/event/form/screening/screening.component';
 import { ScreeningModule } from '@blockframes/event/form/screening/screening.module';
 import { MeetingComponent } from '@blockframes/event/form/meeting/meeting.component';
@@ -24,6 +25,10 @@ import { MeetingFilesModule } from '@blockframes/event/form/meeting-files/meetin
 import { AnalyticsComponent } from '@blockframes/event/pages/analytics/analytics.component';
 import { AnalyticsModule } from '@blockframes/event/pages/analytics/analytics.module';
 import { EventFormShellComponent } from '@blockframes/event/form/shell/shell.component';
+import { GuestListModule } from '@blockframes/event/pages/guest-list/guest-list.module';
+import { GuestListComponent } from '@blockframes/event/pages/guest-list/guest-list.component';
+import { ReviewComponent } from '@blockframes/event/layout/review/review.component';
+import { LayoutEventReviewModule } from '@blockframes/event/layout/review/review.module';
 
 // Tunnel routes
 import { tunnelRoutes } from './tunnel/movie-tunnel.routes';
@@ -40,7 +45,6 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDividerModule } from '@angular/material/divider';
-import { OrgAccessModule } from '@blockframes/organization/pipes/org-access.pipe';
 
 const routes: Routes = [{
   path: '',
@@ -95,7 +99,24 @@ const routes: Routes = [{
           children: [
             {
               path: '',
-              loadChildren: () => import('./event/review/review.module').then(m => m.EventReviewModule)
+              component: ReviewComponent,
+              children: [
+                {
+                  path: '',
+                  pathMatch: 'full',
+                  redirectTo: 'statistics'
+                },
+                {
+                  path: 'invitations',
+                  component: GuestListComponent,
+                  data: { animation: 1 }
+                },
+                {
+                  path: 'statistics',
+                  component: AnalyticsComponent,
+                  data: { animation: 2 }
+                }
+              ],
             }, {
               path: 'edit',
               component: EventFormShellComponent,
@@ -188,6 +209,8 @@ const routes: Routes = [{
     MeetingModule,
     AnalyticsModule,
     MeetingFilesModule,
+    GuestListModule,
+    LayoutEventReviewModule,
 
     // Material
     MatDividerModule,
