@@ -5,8 +5,11 @@
 :host.vertical {
   flex-direction: column;
   .duration {
-    mat-form-field:first-of-type {
-      margin-right: 16px;
+    mat-form-field {
+      flex: 1;
+      &:first-of-type {
+        margin-right: 16px;
+      }
     }
   }
 }
