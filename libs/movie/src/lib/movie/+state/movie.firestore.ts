@@ -22,14 +22,10 @@ import {
 import { NumberRange } from "@blockframes/utils/static-model/types";
 import { Producer, Crew, Cast, Stakeholder, Director } from "@blockframes/utils/common-interfaces/identity";
 import type firebase from 'firebase';
-import { AnalyticsEvents } from '@blockframes/utils/analytics/analytics-model';
+import { AnalyticsEvents, AnalyticsBase } from '@blockframes/utils/analytics/analytics-model';
 import { App } from "@blockframes/utils/apps";
 import { DocumentMeta } from "@blockframes/utils/models-meta";
-import { AnalyticsBase } from '@blockframes/utils/analytics/analytics-model';
 import { StorageFile, StorageVideo } from "@blockframes/media/+state/media.firestore";
-import { FormEntity } from "@blockframes/utils/form";
-import { Movie } from ".";
-import { StorageFileForm } from "@blockframes/media/form/media.form";
 
 //////////////////
 // MOVIE OBJECT //
@@ -287,21 +283,3 @@ export interface MovieAnalytics extends AnalyticsBase {
     past: MovieEventAnalytics[]
   }
 }
-
-// ---------------------------------
-//        MOVIE DELIVERY
-// ---------------------------------
-export class MovieDeliveryForm extends FormEntity<MovieDeliveryControl> {
-  constructor(delivery: Partial<Movie['delivery']> = {}) {
-    super(createMovieDeliveryControls(delivery));
-  }
-}
-
-function createMovieDeliveryControls(delivery: Partial<Movie['delivery']>) {
-  const file = new StorageFileForm(delivery.file)
-  return {
-    file,
-  }
-}
-
-type MovieDeliveryControl = ReturnType<typeof createMovieDeliveryControls>;

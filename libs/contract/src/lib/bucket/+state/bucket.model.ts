@@ -1,34 +1,9 @@
 import { AvailsFilter } from '@blockframes/contract/avails/avails';
-import { createHoldback, Holdback, Mandate } from '@blockframes/contract/contract/+state';
+import { createHoldback, Mandate } from '@blockframes/contract/contract/+state';
 import { createLanguageKey } from '@blockframes/movie/+state';
-import { MovieCurrency } from '@blockframes/utils/static-model';
 import { Term, BucketTerm } from '../../term/+state/term.model';
-
-export interface Bucket {
-  id: string;
-  currency: MovieCurrency;
-  /** One contract per orgId / titleId / parent terms Id */
-  contracts: BucketContract[];
-  specificity: string;
-  delivery: string;
-  /** Needed to show user in email to business team */
-  uid?: string;
-}
-
-export interface BucketContract {
-  titleId: string;
-  /** The orgId that own the contract (mandate in this case) that  */
-  orgId: string;
-  /** Price used to create the income */
-  price: number;
-  /** Parent terms on which the contract is create. */
-  parentTermId: string;
-  /** List of sub terms derived from the parent terms that the buyer want to buy */
-  terms: BucketTerm[];
-  specificity: string;
-  holdbacks: Holdback<Date>[];
-}
-
+import { Bucket, BucketContract } from './bucket.firestore';
+export { BucketContract, Bucket } from './bucket.firestore';
 
 export function toBucketTerm(avail: AvailsFilter): BucketTerm {
   return createBucketTerm({
@@ -54,7 +29,7 @@ export function createBucketContract(params: Partial<BucketContract> = {}): Buck
   return {
     titleId: '',
     orgId: '',
-    price: null ,
+    price: null,
     parentTermId: '',
     specificity: '',
     ...params,
