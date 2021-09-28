@@ -19,6 +19,9 @@ const columns = {
   selector: 'event-analytics',
   templateUrl: './analytics.component.html',
   styleUrls: ['./analytics.component.scss'],
+  host: {
+    class: 'surface'
+  },
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EventAnalyticsComponent implements OnInit {
