@@ -108,16 +108,6 @@ export class MovieService extends CollectionService<MovieState> {
     return movies.length ? createMovie(movies[0]) : undefined;
   }
 
-  /**
-   * @dev ADMIN method
-   * Fetch all movies for administration uses
-   */
-  public async getAllMovies(): Promise<Movie[]> {
-    const movies = await this.getValue()
-
-    return movies.map(movie => createMovie(movie));
-  }
-
   queryDashboard(app: App) {
     const queryAnalytics: Query<MovieWithAnalytics> = {
       path: 'movies',
