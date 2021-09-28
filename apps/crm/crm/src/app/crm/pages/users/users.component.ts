@@ -96,7 +96,7 @@ export class UsersComponent implements OnInit {
 
         for (const a of this.app) {
           for (const module of modules) {
-            row[`${appName[a]} - ${module}`] = !!r.org?.appAccess[a]?.[module] ? 'true' : 'false';
+            row[`${appName[a]} - ${module}`] = r.org?.appAccess[a]?.[module] ? 'true' : 'false';
           }
         }
 
