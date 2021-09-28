@@ -1,0 +1,21 @@
+.counter-display {
+  border: solid 1px var(--primary);
+  border-radius: 4px;
+  padding: 16px 40px;
+
+  .mat-caption, .mat-title {
+    margin: 0;
+  }
+
+  .numberContainer {
+    position: relative;
+    height: 35px;
+    width: 40px;
+    overflow: hidden;
+  
+    p {
+      position: absolute;
+      height: 100%;
+    }
+  }
+}

@@ -1,0 +1,9 @@
+<div *ngIf="(timeLeft$ | async) as t" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="16px">
+  <span class="mat-body-1">Event will start in :</span>
+  <counter-display 
+    [daysLeft]="t.daysToDday"
+    [hoursLeft]="t.hoursToDday" 
+    [minutesLeft]="t.minutesToDday">
+  </counter-display>
+
+</div>
