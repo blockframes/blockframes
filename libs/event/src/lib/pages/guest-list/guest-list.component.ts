@@ -1,5 +1,4 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { slideUpList } from '@blockframes/utils/animations/fade';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Invitation, InvitationService } from '@blockframes/invitation/+state';
 import { Observable } from 'rxjs';
@@ -10,7 +9,6 @@ import { switchMap } from 'rxjs/operators';
   selector: 'event-guest-list',
   templateUrl: './guest-list.component.html',
   styleUrls: ['./guest-list.component.scss'],
-  animations: [slideUpList('h2, mat-card')],// @TODO #5895 check Antoine
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GuestListComponent implements OnInit {

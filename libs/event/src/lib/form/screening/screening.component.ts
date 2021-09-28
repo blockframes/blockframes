@@ -3,7 +3,6 @@ import { fromOrgAndAccepted, Movie, MovieService } from '@blockframes/movie/+sta
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { Observable } from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
-import { slideUpList } from '@blockframes/utils/animations/fade';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { EventFormShellComponent } from '../shell/shell.component';
 
@@ -11,7 +10,6 @@ import { EventFormShellComponent } from '../shell/shell.component';
   selector: 'event-screening',
   templateUrl: './screening.component.html',
   styleUrls: ['./screening.component.scss'],
-  animations: [slideUpList('h2, mat-card')],// @TODO #5895 check Antoine
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })

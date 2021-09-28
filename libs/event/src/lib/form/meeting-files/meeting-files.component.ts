@@ -2,7 +2,6 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@
 import { MeetingForm } from '@blockframes/event/form/event.form';
 import { EventFormShellComponent } from '../shell/shell.component';
 import { take } from 'rxjs/operators';
-import { slideUpList } from '@blockframes/utils/animations/fade';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MatDialog } from '@angular/material/dialog';
 import { FilePickerComponent } from '@blockframes/media/file/picker/picker.component';
@@ -13,7 +12,6 @@ import { StorageFile } from '@blockframes/media/+state/media.firestore';
   selector: 'event-meeting-files',
   templateUrl: './meeting-files.component.html',
   styleUrls: ['./meeting-files.component.scss'],
-  animations: [slideUpList('h2, mat-card')],// @TODO #5895 check Antoine
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MeetingFilesComponent implements OnInit {

@@ -1,5 +1,4 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { slideUpList } from '@blockframes/utils/animations/fade';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Event } from '@blockframes/event/+state';
 import { ActivatedRoute } from '@angular/router';
@@ -11,7 +10,6 @@ import { Observable } from 'rxjs';
   selector: 'event-analytics-page',
   templateUrl: './analytics.component.html',
   styleUrls: ['./analytics.component.scss'],
-  animations: [slideUpList('h2, mat-card')],// @TODO #5895 check Antoine
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AnalyticsComponent implements OnInit {

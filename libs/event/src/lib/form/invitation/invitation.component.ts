@@ -1,7 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { InvitationService, Invitation } from '@blockframes/invitation/+state';
 import { Observable } from 'rxjs';
-import { slideUpList } from '@blockframes/utils/animations/fade';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { EventFormShellComponent } from '../shell/shell.component';
 
@@ -9,7 +8,6 @@ import { EventFormShellComponent } from '../shell/shell.component';
   selector: 'event-invitation',
   templateUrl: './invitation.component.html',
   styleUrls: ['./invitation.component.scss'],
-  animations: [slideUpList('h2, mat-card')], // @TODO #5895 check Antoine
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InvitationComponent implements OnInit {
