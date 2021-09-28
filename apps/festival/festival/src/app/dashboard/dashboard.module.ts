@@ -109,12 +109,12 @@ const routes: Routes = [{
                 {
                   path: 'invitations',
                   component: GuestListComponent,
-                  data: { animation: 1 }
+                  data: { animation: 0 }
                 },
                 {
                   path: 'statistics',
                   component: AnalyticsComponent,
-                  data: { animation: 2 }
+                  data: { animation: 1 }
                 }
               ],
             }, {
