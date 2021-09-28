@@ -65,14 +65,13 @@ export function collidingTerms(avails: AvailsFilter, terms: BucketTerm<Date>[]) 
 }
 
 export function allOfAvailInTerms(avails: AvailsFilter, terms: BucketTerm[], optional?: 'optional') {
-  return terms.some(term => (
-      optional && !avails.exclusive
-      || term.exclusive === avails.exclusive
-    )
-    && allOf(avails.territories, optional).in(term.territories)
-    && allOf(avails.medias, optional).in(term.medias)
-    && allOf(avails.duration, optional).in(term.duration)
-  );
+  return terms.some(term => {
+    const exclusiveCheck = optional && !avails.exclusive || term.exclusive === avails.exclusive;
+    const territoriesCheck = allOf(avails.territories, optional).in(term.territories);
+    const mediasCheck = allOf(avails.medias, optional).in(term.medias);
+    const durationCheck = allOf(avails.duration, optional).in(term.duration);
+    return exclusiveCheck && territoriesCheck && mediasCheck && durationCheck;
+  });
 }
 
 // ----------------------------
