@@ -13,12 +13,20 @@ export interface SheetTab {
 }
 
 type Join<K extends string, P extends string> = '' extends P ? K : `${K}.${P}`;
+type GetKey<T, K extends Extract<keyof T, string>> =
+  T[K] extends Array<infer I> ? K | `${K}[]` | Join<`${K}[]`, DeepKeys<I>>
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  : T[K] extends Function ? never
+  : K | Join<K, DeepKeys<T[K]>>;
+
 type DeepKeys<T> = T extends Record<string, any>
-  ? { [K in Extract<keyof T, string>]: K | Join<K, DeepKeys<T[K]>> }[Extract<keyof T, string>]
+  ? { [K in Extract<keyof T, string>]: GetKey<T, K> }[Extract<keyof T, string>]
   : '';
 
-type DeepValue<T, K> = K extends `${infer I}.${infer J}`
-  ? I extends keyof T ? DeepValue<T[I], J> : never
+type DeepValue<T, K> =
+  K extends `${infer I}[].${infer J}` ? I extends keyof T ? T[I] extends Array<infer Y> ? DeepValue<Y, J> : never : never
+  : K extends `${infer I}.${infer J}` ? I extends keyof T ? DeepValue<T[I], J> : never
+  : K extends `${infer I}[]` ? I extends keyof T ? T[I] extends Array<infer Y> ? Y : T[I] : never
   : K extends keyof T ? T[K] : never;
 
 

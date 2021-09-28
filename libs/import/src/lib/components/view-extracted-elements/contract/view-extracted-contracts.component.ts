@@ -2,10 +2,10 @@ import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, Optional
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import {
-   extract, ExtractConfig, SheetTab, ValueWithWarning, getStatic,
-   getStaticList,
-   split,
- } from '@blockframes/utils/spreadsheet';
+  extract, ExtractConfig, SheetTab, ValueWithWarning, getStatic,
+  getStaticList,
+  split,
+} from '@blockframes/utils/spreadsheet';
 import { createMandate, createSale, Mandate, Sale } from '@blockframes/contract/contract/+state/contract.model';
 import { createTerm } from '@blockframes/contract/term/+state/term.model';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
@@ -110,39 +110,37 @@ interface FieldsConfig {
   title: {
     international: string,
   },
-  type:'mandate' | 'sale',
+  type: 'mandate' | 'sale',
   licensorName: string,
   licenseeName: string,
   territories: Territory[],
   medias: Media[],
-  exclusive:boolean,
-  duration:{
-    from:Date,
-    to:Date,
+  exclusive: boolean,
+  duration: {
+    from: Date,
+    to: Date,
   },
-  originalLanguageLicensed:string,
-  dubbed:Territory[],
-  subtitle:Territory[],
-  closedCaptioning:Territory[],
-  contractId:string,
-  parentTermId:string,
-  titleId?:string,
-  stakeholdersList:string[],
+  originalLanguageLicensed: string,
+  dubbed: Territory[],
+  subtitle: Territory[],
+  closedCaptioning: Territory[],
+  contractId: string,
+  parentTermId: string,
+  titleId?: string,
+  stakeholdersList: string[],
 }
 
 type FieldsConfigType = ExtractConfig<FieldsConfig>;
 
 
 const fieldsConfig: FieldsConfigType = {
-   /* a */'title.international': (value: string) => value,
-   /* b */'type': (value: string) => value.toLowerCase() as 'mandate' | 'sale',
-   /* c */'licensorName': (value: string) => value,
-   /* d */'licenseeName': (value: string) => value,
-   /* e */'territories': (value: string) => getStaticList('territories', value, separator, errorsMap['no-territories']) as Territory[],
+  /* a */'title.international': (value: string) => value,
+  /* b */'type': (value: string) => value.toLowerCase() as 'mandate' | 'sale',
+  /* c */'licensorName': (value: string) => value,
+  /* d */'licenseeName': (value: string) => value,
+  /* e */'territories': (value: string) => getStaticList('territories', value, separator, errorsMap['no-territories']) as Territory[],
    /* f */'medias': (value: string) => getStaticList('medias', value, separator, errorsMap['no-medias']) as Media[],
-   /* g */'exclusive': (value: string) => {
-    return value.toLowerCase() === 'yes' ? true : false;
-  },
+   /* g */'exclusive': (value: string) => value.toLowerCase() === 'yes' ? true : false,
    /* h */'duration.from': (value: string) => getDate(value, errorsMap['no-duration-from']) as Date,
    /* i */'duration.to': (value: string) => getDate(value, errorsMap['no-duration-to']) as Date,
    /* j */'originalLanguageLicensed': (value: string) => value,
@@ -222,7 +220,7 @@ export class ViewExtractedContractsComponent implements OnInit {
       const row = rawRow.map(cell => typeof cell === "string" ? cell.trim() : cell.toString());
       if (!row.length) continue;
 
-      const { data, errors:warnings, warnings:errors, } = extract<FieldsConfig>([row], fieldsConfig)
+      const { data, errors: warnings, warnings: errors, } = extract<FieldsConfig>([row], fieldsConfig)
 
       //////////////
       // CONTRACT //
@@ -285,7 +283,7 @@ export class ViewExtractedContractsComponent implements OnInit {
         errors,
         terms: [term]
       });
-      console.log({contract:this.contractsToCreate})
+      console.log({ contract: this.contractsToCreate })
       // Forcing change detection
       this.contractsToCreate.data = [...this.contractsToCreate.data];
       this.cdRef.markForCheck();

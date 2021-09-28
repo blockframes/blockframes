@@ -131,10 +131,12 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
   public async format(sheetTab: SheetTab) {
     this.clearDataSources();
     const matSnackbarRef = this.snackBar.open('Loading... Please wait', 'close');
-    for (const spreadSheetRow of sheetTab.rows) {
+    let i = 0;
+    while (sheetTab.rows[i].length > 0) {
+      const spreadSheetRow= sheetTab.rows[i];
+      i++;
 
       const { data, errors, warnings, } = extract<FieldsConfig>([spreadSheetRow], fieldsConfig);
-      console.log({ data, errors, warnings })
       // ORG ID
       // Create/retreive the org
       let org = createOrganization();

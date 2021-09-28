@@ -53,6 +53,7 @@ interface FieldsConfig {
   originCountries: string[],
   stakeholders: {
     displayName: string, role: string,
+    country:string,
   }[],
   originalRelease: {
     country: string, media: string,
@@ -91,26 +92,26 @@ interface FieldsConfig {
     filmCriticName: string, revue: string,
     link: string, quote: string,
   }[],
-  color:string,
-  format:string,
-  formatQuality:string,
-  soundFormat:string,
-  isOriginalVersionAvailable:string,
+  color: string,
+  format: string,
+  formatQuality: string,
+  soundFormat: string,
+  isOriginalVersionAvailable: string,
   languages: {
     language: string, dubbed: string,
     subtitle: string, caption: string,
   }[],
-  salesPitch:string,
-  catalogStatus:string,
-  festivalStatus:string,
-  financiersStatus:string,
-  ownerId:string,
+  salesPitch: string,
+  catalogStatus: string,
+  festivalStatus: string,
+  financiersStatus: string,
+  ownerId: string,
 }
 
 type FieldsConfigType = ExtractConfig<FieldsConfig>;
 
 
-const fieldsConfig = {
+const fieldsConfig: FieldsConfigType = {
   /* a */ 'title.international': (value: string) => value,
   /* b */ 'title.original': (value: string) => value,
   /* c */ 'internalRef': (value: string) => value,
@@ -237,10 +238,10 @@ export class ViewExtractedMoviesComponent implements OnInit {
     this.currentRows = sheetTab.rows.slice(i, i + this.dedicatedLinesPerTitle);
 
     while (this.currentRows.length) {
+      console.log({rows:this.currentRows})
       const { data, errors, warnings } = extract<ImportType>(this.currentRows, fieldsConfig)
       this.mapping = data;
       if (!this.mapping.title.original) { break; }
-
       // Fetch movie from internalRef if set or create a new movie
       let movie = createMovie();
       if (this.mapping.internalRef) {
