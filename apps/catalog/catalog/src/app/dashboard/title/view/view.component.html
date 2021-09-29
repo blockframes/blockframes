@@ -4,12 +4,20 @@
 <ng-container *ngIf="(movie$ | async) as movie;">
   <title-dashboard-shell [routes]="navLinks">
     <movie-cta fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="space-between end" fxFlex>
-      <a *ngIf="(org$ | async | canAccess: 'marketplace': 'catalog') && movie.app.catalog.status !== 'archived'" mat-button color="primary" [routerLink]="['/c/o/marketplace/title', movie.id, 'main']">
-        <mat-icon svgIcon="visibility" color="primary"></mat-icon>
-        <span>Marketplace Preview</span>
+      <a mat-button color="primary" [routerLink]="['/c/o/dashboard/avails', movie.id]">
+        <mat-icon svgIcon="calendar_today" color="primary"></mat-icon>
+        <span>Consult Avails</span>
       </a>
       <actions-dashboard-shell fxFlex #actions="actionsDashboardShell">
         <movie-action-menu>
+          <a mat-menu-item [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]">
+            <mat-icon svgIcon="edit"></mat-icon><span>Edit Title</span>
+          </a>
+          <a *ngIf="(org$ | async | canAccess: 'marketplace': 'catalog') && movie.app.catalog.status !== 'archived'" mat-menu-item [routerLink]="['/c/o/marketplace/title', movie.id, 'main']">
+            <mat-icon svgIcon="visibility"></mat-icon>
+            <span>Marketplace Preview</span>
+          </a>
+
           <a mat-menu-item *ngIf="!['accepted','submitted'].includes(movie.app.catalog.status)"
             [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id, 'summary']" fragment="submit">
             <mat-icon svgIcon="cloud_upload"></mat-icon><span>Submit Title</span>
@@ -22,9 +30,7 @@
             (click)="actions.updateStatus('draft', 'Title back to Draft.')">
             <mat-icon svgIcon="drafts"></mat-icon><span>Switch back to Draft</span>
           </button>
-          <a mat-menu-item [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]">
-            <mat-icon svgIcon="edit"></mat-icon><span>Edit Title</span>
-          </a>
+
           <button mat-menu-item (click)="actions.updateStatus('archived', 'Title archived.')">
             <mat-icon svgIcon="archive"></mat-icon><span>Archive Title</span>
           </button>
