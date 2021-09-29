@@ -63,6 +63,10 @@ const routes: Routes = [
         loadChildren: () => import('./contracts/list/list.module').then(m => m.ContractListModule)
       },
       {
+        path: 'sales/import',
+        loadChildren: () => import('./sales/import/import-sales.module').then(m => m.ImportModule)
+      },
+      {
         path: 'contracts/:contractId',
         canActivate: [ CatalogContractViewGuard ],
         loadChildren: () => import('./contracts/view/view.module').then(m => m.CatalogContractViewModule)
