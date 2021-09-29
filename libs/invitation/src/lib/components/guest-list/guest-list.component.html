@@ -1,41 +1,38 @@
-<section class="surface">
-  <h2 *ngIf="title">{{title}}</h2>
+<h2 *ngIf="title">{{title}}</h2>
+<mat-list>
+  <mat-list-item>
+    <mat-icon matListIcon svgIcon="group"></mat-icon>
+    <span matLine>{{ invitations.length }} Guests</span>
+    <span matLine>
+      <small class="mat-caption">
+        {{ invitations | statusLength: 'accepted' }} accepted,
+        {{ invitations | statusLength: 'declined' }} declined,
+        {{ invitations | statusLength: 'pending' }} unanswered
+      </small>
+    </span>
+    <button mat-icon-button [cdkCopyToClipboard]="copy(invitations)" test-id="invitation-copy" matTooltip="Copy Guests' Emails">
+      <mat-icon svgIcon="file_copy"></mat-icon>
+    </button>
+  </mat-list-item>
+</mat-list>
+
+<mat-form-field *ngIf="invitations.length">
+  <mat-label>Search for a Guest</mat-label>
+  <mat-icon matPrefix svgIcon="search_table"></mat-icon>
+  <input matInput [formControl]="searchControl" placeholder="Search for a Guest"/>
+</mat-form-field>
+
+<cdk-virtual-scroll-viewport [itemSize]="72" *ngIf="invitations.length">
   <mat-list>
-    <mat-list-item>
-      <mat-icon matListIcon svgIcon="group"></mat-icon>
-      <span matLine>{{ invitations.length }} Guests</span>
-      <span matLine>
-        <small class="mat-caption">
-          {{ invitations | statusLength: 'accepted' }} accepted,
-          {{ invitations | statusLength: 'declined' }} declined,
-          {{ invitations | statusLength: 'pending' }} unanswered
-        </small>
-      </span>
-      <button mat-icon-button [cdkCopyToClipboard]="copy(invitations)" test-id="invitation-copy" matTooltip="Copy Guests' Emails">
-        <mat-icon svgIcon="file_copy"></mat-icon>
-      </button>
-    </mat-list-item>
+    <ng-container *cdkVirtualFor="let invitation of search$ | async; trackBy: trackBy">
+      <ng-template
+        [ngTemplateOutlet]="itemTemplate || default"
+        [ngTemplateOutletContext]="{ $implicit: invitation }"
+      ></ng-template>
+    </ng-container>
   </mat-list>
+</cdk-virtual-scroll-viewport>
 
-  <mat-form-field *ngIf="invitations.length">
-    <mat-label>Search for a Guest</mat-label>
-    <mat-icon matPrefix svgIcon="search_table"></mat-icon>
-    <input matInput [formControl]="searchControl" placeholder="Search for a Guest"/>
-  </mat-form-field>
-
-  <cdk-virtual-scroll-viewport [itemSize]="72" *ngIf="invitations.length">
-    <mat-list>
-      <ng-container *cdkVirtualFor="let invitation of search$ | async; trackBy: trackBy">
-        <ng-template
-          [ngTemplateOutlet]="itemTemplate || default"
-          [ngTemplateOutletContext]="{ $implicit: invitation }"
-        ></ng-template>
-      </ng-container>
-    </mat-list>
-  </cdk-virtual-scroll-viewport>
-
-  <ng-template #default let-invitation>
-    <invitation-guest-item [invitation]="invitation"></invitation-guest-item>
-  </ng-template>
-
-</section>
+<ng-template #default let-invitation>
+  <invitation-guest-item [invitation]="invitation"></invitation-guest-item>
+</ng-template>
