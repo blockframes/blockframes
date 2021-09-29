@@ -11,7 +11,7 @@
           <h6>{{event.isPrivate ? 'Private' : 'Public'}} {{ event.type }}</h6>
           <pre class="mat-body-1">{{ event | eventRange }}</pre>
           <p class="mat-body-2">{{ event.meta.description }}</p>
-          <event-countdown [event]=event></event-countdown>
+          <countdown-timer [date]="event.start"></countdown-timer>
           <ng-container *ngIf="event.isOwner; else notOwner">
             <h3>You are the owner of this event.</h3>
             <p>You can invite members and edit the event config in your dashboard.</p>
