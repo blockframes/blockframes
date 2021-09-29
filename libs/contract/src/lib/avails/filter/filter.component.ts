@@ -21,6 +21,7 @@ function toRecord(value: AvailsKeys | AvailsKeys[]): AvailsRecord {
 })
 export class AvailsFilterComponent {
   hideKeys: AvailsRecord = {};
+  // eslint-disable-next-line @angular-eslint/no-input-rename
   @Input('availsFilter') form: AvailsForm;
   @HostBinding('class.vertical') @Input() @boolean vertical: boolean;
   @Input() @boolean required: boolean;
