@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, Optional } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MovieService, createMovie } from '@blockframes/movie/+state';
-import { SheetTab } from '@blockframes/utils/spreadsheet';
+import { extract, ExtractConfig, SheetTab, ValueWithWarning } from '@blockframes/utils/spreadsheet';
 import { Crew, Producer } from '@blockframes/utils/common-interfaces/identity';
 import { Intercom } from 'ng-intercom';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
@@ -13,6 +13,7 @@ import {
   formatContentType,
   formatCredits,
   formatGenres,
+  formatNumber,
   formatOriginalLanguages,
   formatOriginalRelease,
   formatOriginCountries,
@@ -32,238 +33,167 @@ import { UserService } from '@blockframes/user/+state';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentApp } from '@blockframes/utils/apps';
 
-let index = 0;
-/**
- * Comments "// LETTER(S)" refers to the column index in the spreadsheet file
- */
-const fields = {
-  internationalTitle: { // A
-    multiLine: false,
-    index: index++
+
+interface FieldsConfig {
+  title: {
+    international: string,
+    original: string,
+    series: number | string,
   },
-  originalTitle: { // B
-    multiLine: false,
-    index: index++
-  },
-  internalRef: { // C
-    multiLine: false,
-    index: index++
-  },
-  contentType: { // D
-    multiLine: false,
-    index: index++
-  },
-  series: { // E
-    multiLine: false,
-    index: index++
-  },
-  episodeCount: { // F
-    multiLine: false,
-    index: index++
-  },
-  productionStatus: { // G
-    multiLine: false,
-    index: index++
-  },
-  releaseYear: { // H
-    multiLine: false,
-    index: index++
-  },
-  releaseYearStatus: { // I
-    multiLine: false,
-    index: index++
-  },
+  internalRef: string,
+  contentType: string,
+  episodeCount: number,
+  productionStatus: string,
+  releaseYear: string,
+  releaseYearStatus: string,
   directors: {
-    multiLine: true,
-    fields: {
-      firstName: index++, // J
-      lastName: index++, // K
-      description: index++, // L
-    }
-  },
-  originCountries: { // M
-    multiLine: true,
-    index: index++
-  },
+    firstName: string, lastName: string,
+    description: string
+  }[],
+  originCountries: string[],
   stakeholders: {
-    multiLine: true,
-    fields: {
-      displayName: index++, // N
-      role: index++, // O
-      country: index++, // P
-    }
-  },
+    displayName: string, role: string,
+    country:string,
+  }[],
   originalRelease: {
-    multiLine: true,
-    fields: {
-      country: index++, // Q
-      media: index++, // R
-      date: index++, // S
-    }
-  },
-  originalLanguages: { // T
-    multiLine: true,
-    index: index++
-  },
-  genres: { // U
-    multiLine: true,
-    index: index++
-  },
-  customGenres: { // V
-    multiLine: true,
-    index: index++
-  },
-  runningTime: { // W
-    multiLine: false,
-    index: index++
-  },
-  runningTimeStatus: { // X
-    multiLine: false,
-    index: index++
-  },
+    country: string, media: string,
+    date: string
+  }[],
+  originalLanguages: string[],
+  genres: string[],
+  customGenres: string[],
+  runningTime: string,
+  runningTimeStatus: string,
   cast: {
-    multiLine: true,
-    fields: {
-      firstName: index++, // Y
-      lastName: index++, // A
-      status: index++, // AA
-    }
-  },
+    firstName: string, lastName: string, status: string
+  }[],
   prizes: {
-    multiLine: true,
-    fields: {
-      name: index++, // AB
-      year: index++, // AC
-      prize: index++, // AD
-      premiere: index++, // AE
-    }
-  },
-  logline: { // AF
-    multiLine: false,
-    index: index++
-  },
-  synopsis: { // AG
-    multiLine: false,
-    index: index++
-  },
-  keyAssets: { // AH
-    multiLine: false,
-    index: index++
-  },
-  keywords: { // AI
-    multiLine: true,
-    index: index++
-  },
+    name: string, year: string,
+    prize: string, premiere: string,
+  }[],
+  logline: string,
+  synopsis: string,
+  keyAssets: string,
+  keywords: string[],
   producers: {
-    multiLine: true,
-    fields: {
-      firstName: index++, // AJ
-      lastName: index++, // AK
-      role: index++, // AL
-    }
-  },
+    firstName: string, lastName: string, role: string
+  }[],
   crew: {
-    multiLine: true,
-    fields: {
-      firstName: index++, // AM
-      lastName: index++, // AN
-      role: index++, // AO
-    }
-  },
-  budgetRange: { // AP
-    multiLine: false,
-    index: index++
-  },
+    firstName: string, lastName: string, role: string
+  }[],
+  budgetRange: string,
   boxoffice: {
-    multiLine: true,
-    fields: {
-      territory: index++, // AQ
-      unit: index++, // AR
-      value: index++, // AS
-    }
-  },
-  certifications: { // AT
-    multiLine: true,
-    index: index++
-  },
-  ratings: {
-    multiLine: true,
-    fields: {
-      country: index++, // AU
-      value: index++, // AV
-    }
-  },
-  audience: {
-    multiLine: true,
-    fields: {
-      targets: index++, // AW
-      goals: index++ // AX
-    }
-  },
+    territory: string, unit: string, value: string
+  }[],
+  certifications: string[],
+  ratings: { country: string, value: string, }[],
+  audience: { targets: string, goals: string, }[],
   reviews: {
-    multiLine: true,
-    fields: {
-      filmCriticName: index++, // AY
-      revue: index++, // AZ
-      link: index++, // BA
-      quote: index++, // BB
-    }
-  },
-  color: { // BC
-    multiLine: false,
-    index: index++
-  },
-  format: { // BD
-    multiLine: false,
-    index: index++
-  },
-  formatQuality: { // BE
-    multiLine: false,
-    index: index++
-  },
-  soundFormat: { // BF
-    multiLine: false,
-    index: index++
-  },
-  isOriginalVersionAvailable: { // BG
-    multiLine: false,
-    index: index++
-  },
+    filmCriticName: string, revue: string,
+    link: string, quote: string,
+  }[],
+  color: string,
+  format: string,
+  formatQuality: string,
+  soundFormat: string,
+  isOriginalVersionAvailable: string,
   languages: {
-    multiLine: true,
-    fields: {
-      language: index++, // BH
-      dubbed: index++, // BI
-      subtitle: index++, // BJ
-      caption: index++, // BK
+    language: string, dubbed: string,
+    subtitle: string, caption: string,
+  }[],
+  salesPitch: string,
+  catalogStatus: string,
+  festivalStatus: string,
+  financiersStatus: string,
+  ownerId: string,
+}
+
+type FieldsConfigType = ExtractConfig<FieldsConfig>;
+
+
+const fieldsConfig: FieldsConfigType = {
+  /* a */ 'title.international': (value: string) => value,
+  /* b */ 'title.original': (value: string) => value,
+  /* c */ 'internalRef': (value: string) => value,
+  /* d */ 'contentType': (value: string) => value,
+  /* e */ 'title.series': (value: string) => {
+    if (value && !isNaN(formatNumber(value))) {
+      return formatNumber(value);
     }
+    return value
   },
-  salesPitch: { // BL
-    multiLine: false,
-    index: index++
+  /* f */ 'episodeCount': (value: string) => {
+    return parseInt(value, 10);
   },
-  //////////////////
-  // ADMIN FIELDS
-  //////////////////
-  catalogStatus: { // BM
-    multiLine: false,
-    index: index++
-  },
-  festivalStatus: { // BN
-    multiLine: false,
-    index: index++
-  },
-  financiersStatus: { // BO
-    multiLine: false,
-    index: index++
-  },
-  ownerId: { // BP
-    multiLine: false,
-    index: index++
-  },
+  /* g */ 'productionStatus': (value: string) => value,
+  /* h */ 'releaseYear': (value: string) => value,
+  /* i */ 'releaseYearStatus': (value: string) => value,
+  /* j */ 'directors[].firstName': (value: string) => value,
+  /* k */ 'directors[].lastName': (value: string) => value,
+  /* l */ 'directors[].description': (value: string) => value,
+  /* m */ 'originCountries[]': (value: string) => value,
+  /* n */ 'stakeholders[].displayName': (value: string) => value,
+  /* o */ 'stakeholders[].role': (value: string) => value,
+  /* p */ 'stakeholders[].country': (value: string) => value,
+  /* q */ 'originalRelease[].country': (value: string) => value,
+  /* r */ 'originalRelease[].media': (value: string) => value,
+  /* s */ 'originalRelease[].date': (value: string) => value,
+  /* t */ 'originalLanguages[]': (value: string) => value,
+  /* u */ 'genres[]': (value: string) => value,
+  /* v */ 'customGenres[]': (value: string) => value,
+  /* w */ 'runningTime': (value: string) => value,
+  /* x */ 'runningTimeStatus': (value: string) => value,
+  /* y */ 'cast[].firstName': (value: string) => value,
+  /* z */ 'cast[].lastName': (value: string) => value,
+  /* aa */ 'cast[].status': (value: string) => value,
+  /* ab */ 'prizes[].name': (value: string) => value,
+  /* ac */ 'prizes[].year': (value: string) => value,
+  /* ad */ 'prizes[].prize': (value: string) => value,
+  /* ae */ 'prizes[].premiere': (value: string) => value,
+  /* af */ 'logline': (value: string) => value,
+  /* ag */ 'synopsis': (value: string) => value,
+  /* ah */ 'keyAssets': (value: string) => value,
+  /* ai */ 'keywords[]': (value: string) => value,
+  /* aj */ 'producers[].firstName': (value: string) => value,
+  /* ak */ 'producers[].lastName': (value: string) => value,
+  /* al */ 'producers[].role': (value: string) => value,
+  /* am */ 'crew[].firstName': (value: string) => value,
+  /* an */ 'crew[].lastName': (value: string) => value,
+  /* ao */ 'crew[].role': (value: string) => value,
+  /* ap */ 'budgetRange': (value: string) => value,
+  /* aq */ 'boxoffice[].territory': (value: string) => value,
+  /* ar */ 'boxoffice[].unit': (value: string) => value,
+  /* as */ 'boxoffice[].value': (value: string) => value,
+  /* at */ 'certifications[]': (value: string) => value,
+  /* au */ 'ratings[].country': (value: string) => value,
+  /* av */ 'ratings[].value': (value: string) => value,
+  /* aw */ 'audience[].targets': (value: string) => value,
+  /* ax */ 'audience[].goals': (value: string) => value,
+  /* ay */ 'reviews[].filmCriticName': (value: string) => value,
+  /* az */ 'reviews[].revue': (value: string) => value,
+  /* ba */ 'reviews[].link': (value: string) => value,
+  /* bb */ 'reviews[].quote': (value: string) => value,
+  /* bc */ 'color': (value: string) => value,
+  /* bd */ 'format': (value: string) => value,
+  /* be */ 'formatQuality': (value: string) => value,
+  /* bf */ 'soundFormat': (value: string) => value,
+  /* bg */ 'isOriginalVersionAvailable': (value: string) => value,
+  /* bh */ 'languages[].language': (value: string) => value,
+  /* bi */ 'languages[].dubbed': (value: string) => value,
+  /* bj */ 'languages[].subtitle': (value: string) => value,
+  /* bk */ 'languages[].caption': (value: string) => value,
+  /* bl */ 'salesPitch': (value: string) => value,
+  /* bm */ 'catalogStatus': (value: string) => value,
+  /* bn */ 'festivalStatus': (value: string) => value,
+  /* bo */ 'financiersStatus': (value: string) => value,
+  /* bp */ 'ownerId': (value: string) => value,
 };
 
-type fieldsKey = keyof typeof fields;
+type FieldsType = keyof typeof fieldsConfig;
+type GetValue<T> = T extends ValueWithWarning ? T["value"] : T
+// type ImportType = { [key in FieldsType]: GetValue<ReturnType<typeof fieldsConfig[key]>> };
+type ImportType = any;
+
 
 @Component({
   selector: 'import-view-extracted-movies',
@@ -282,7 +212,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
   public currentRows = [];
 
-  private mapping = {} as Record<fieldsKey, any>;
+  private mapping = {} as ImportType;
 
   constructor(
     @Optional() private intercom: Intercom,
@@ -306,29 +236,25 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
     let i = 0;
     this.currentRows = sheetTab.rows.slice(i, i + this.dedicatedLinesPerTitle);
+
     while (this.currentRows.length) {
-      Object.keys(fields).forEach(k => {
-        this.mapping[k] = this.getFieldContent(fields[k]);
-      })
-
-      if (!this.mapping.originalTitle) { break; }
-
+      console.log({rows:this.currentRows})
+      const { data, errors, warnings } = extract<ImportType>(this.currentRows, fieldsConfig)
+      this.mapping = data;
+      if (!this.mapping.title.original) { break; }
       // Fetch movie from internalRef if set or create a new movie
       let movie = createMovie();
       if (this.mapping.internalRef) {
         try {
           const _movie = await this.movieService.getFromInternalRef(this.mapping.internalRef, !this.isUserBlockframesAdmin ? this.authQuery.user.orgId : undefined);
           if (_movie) { movie = _movie };
-        } catch (e) { console.log(e) }
+        } catch (e) { console.error(e) }
       }
-      const importErrors = { movie, errors: [] } as MovieImportState;
+      const importErrors = { movie, errors: warnings } as MovieImportState;
 
-      // ORIGINAL TITLE (Original Title)
-      movie.title.original = this.mapping.originalTitle;
-
-      // INTERNATIONAL TITLE (International Title)
-      if (this.mapping.internationalTitle) {
-        movie.title.international = this.mapping.internationalTitle;
+      // TITLE
+      if (this.mapping.title) {
+        movie.title = this.mapping.title;
       }
 
       // INTERNAL REF (Film Code)
@@ -336,12 +262,8 @@ export class ViewExtractedMoviesComponent implements OnInit {
         movie.internalRef = this.mapping.internalRef;
       }
 
-      if (this.mapping.series) {
-        movie.title.series = parseInt(this.mapping.series, 10);
-      }
-
       if (this.mapping.episodeCount) {
-        movie.runningTime.episodeCount = parseInt(this.mapping.episodeCount, 10);
+        movie.runningTime.episodeCount = this.mapping.episodeCount;
       }
 
       // WORK TYPE
@@ -514,8 +436,6 @@ export class ViewExtractedMoviesComponent implements OnInit {
       i += this.currentRows.length;
       this.currentRows = sheetTab.rows.slice(i, i + this.dedicatedLinesPerTitle);
     }
-
-
   }
 
   private validateMovie(importErrors: MovieImportState): MovieImportState {
@@ -771,42 +691,5 @@ export class ViewExtractedMoviesComponent implements OnInit {
   private clearDataSources() {
     this.moviesToCreate.data = [];
     this.moviesToUpdate.data = [];
-  }
-
-  private getFieldContent(fieldConfig: any) {
-    if (fieldConfig.multiLine) {
-      if (fieldConfig.fields) {
-        return this.currentRows.map(r => {
-          const obj = {};
-          Object.keys(fieldConfig.fields).forEach(k => {
-            const value = r[fieldConfig.fields[k]];
-            if (value) {
-              obj[k] = isNaN(value) ? value.trim() : value.toString();
-            } else {
-              obj[k] = '';
-            }
-          });
-          return obj;
-        })
-      } else {
-        return this.currentRows.map(r => {
-          const value = r[fieldConfig.index];
-          if (value) {
-            return isNaN(value) ? value.trim() : value.toString();
-          } else {
-            return '';
-          }
-        }).filter(m => !!m);
-      }
-    } else {
-      if (this.currentRows.length) {
-        const value = this.currentRows[0][fieldConfig.index];
-        if (value) {
-          return isNaN(value) ? value.trim() : value.toString();
-        } else {
-          return '';
-        }
-      } else { return ''; }
-    }
   }
 }
