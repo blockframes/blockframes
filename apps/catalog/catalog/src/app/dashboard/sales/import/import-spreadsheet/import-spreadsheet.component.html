@@ -1,0 +1,53 @@
+﻿<article fxLayout="column" fxLayoutAlign="center">
+  <section fxLayout="column" fxLayoutAlign="center center">
+    <h1>Import Sales outside Archipel</h1>
+
+    <div fxLayout="column" fxLayoutAlign="center" fxLayoutGap="8px">
+      <button mat-stroked-button color="primary" (click)="downloadTemplate()">
+        <mat-icon svgIcon="cloud_download"></mat-icon><span>Download our template to import Sales</span>
+      </button>
+    </div>
+  </section>
+
+  <section class="help-section" fxLayout="column" fxLayoutAlign="center center">
+    <p>Once you have filled it out, please upload it below.</p>
+    <button mat-button (click)="openIntercom()">Need help?</button>
+  </section>
+
+  <section class="file-section" fxLayout="column" fxLayoutAlign="center center">
+
+    <ng-container *ngIf="sheets.length; else fileUpload">
+      <p test-id="status-import">
+        <mat-icon svgIcon="attachment"></mat-icon>
+        <span>File uploaded, click on "Start import" to continue!</span>
+      </p>
+    </ng-container>
+
+    <ng-template #fileUpload>
+      <input #filePicker id="filePicker" [accept]="allowedTypes" type="file"
+        (change)="importSpreadsheet($event.target.files)" />
+      <button test-id="import-file" mat-flat-button color="primary" (click)="filePicker.click()">Import File</button>
+      <p class="mat-caption">Accepted Formats: .xls, .csv</p>
+    </ng-template>
+  </section>
+
+  <section fxLayout="column" fxLayoutAlign="center center">
+
+    <img asset="import_bulk.svg" alt="Start import" width="220px">
+
+    <section fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="12px">
+      <ng-container *ngIf="sheets.length">
+        <button test-id="remove-file" mat-flat-button color="warn" (click)="removeFile()">
+          <mat-icon svgIcon="delete"></mat-icon>
+        </button>
+      </ng-container>
+
+      <button test-id="start-import" mat-flat-button color="primary" (click)="next()" [disabled]="sheets.length === 0">
+        Start import
+        <mat-icon svgIcon="arrow_downward"></mat-icon>
+      </button>
+
+    </section>
+
+  </section>
+</article>
