@@ -31,7 +31,7 @@
   </ng-template>
 
   <form [formGroup]="form">
-    <mat-card >
+    <mat-card>
       <h2>Details</h2>
       <event-details-edit [form]="form"></event-details-edit>
     </mat-card>
@@ -52,7 +52,7 @@
     <router-outlet #outlet="outlet"></router-outlet> 
   </div>
 
-  <div class="buttonContainer" fxLayoutAlign="center">
-    <a mat-button fxFlexAlign="center" mat-flat-button color="primary" [routerLink]="internalLink">Go to Event Page</a>
+  <div class="buttonContainer">
+    <a mat-button mat-flat-button color="primary" [routerLink]="internalLink">Go to Event Page</a>
   </div>
 </ng-container>
