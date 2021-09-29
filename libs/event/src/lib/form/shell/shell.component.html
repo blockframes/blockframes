@@ -31,23 +31,21 @@
   </ng-template>
 
   <form [formGroup]="form">
-    <section fxLayout="column" fxLayoutGap="24px">
-      <mat-card class="details" fxLayout="column" fxFlex="65">
-        <h2>Details</h2>
-        <event-details-edit [form]="form"></event-details-edit>
-      </mat-card>
+    <mat-card >
+      <h2>Details</h2>
+      <event-details-edit [form]="form"></event-details-edit>
+    </mat-card>
 
-      <nav mat-tab-nav-bar>
-        <ng-container *ngFor="let tab of (tabs$ |async)"> 
-          <a mat-tab-link 
-          [routerLink]="tab.path" 
-          routerLinkActive 
-          #rla="routerLinkActive"
-          [active]="rla.isActive">
-          {{ tab.label }}</a>
-        </ng-container>
-      </nav>
-    </section>
+    <nav mat-tab-nav-bar>
+      <ng-container *ngFor="let tab of (tabs$ |async)"> 
+        <a mat-tab-link 
+        [routerLink]="tab.path" 
+        routerLinkActive 
+        #rla="routerLinkActive"
+        [active]="rla.isActive">
+        {{ tab.label }}</a>
+      </ng-container>
+    </nav>
   </form>
 
   <div class="routerContainer" [@routeAnimation]="animationOutlet(outlet)">

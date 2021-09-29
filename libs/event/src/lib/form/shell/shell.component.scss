@@ -2,10 +2,11 @@ header {
   width: 100%;
 }
 
-section {
+form {
   padding: 16px;
   mat-card {
     padding: 24px;
+    margin-bottom: 24px;
   }
   nav {
     border-bottom: none;
