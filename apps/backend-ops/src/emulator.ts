@@ -211,25 +211,34 @@ export async function anonDbProcess() {
  */
 export async function anonymizeLatestProdDb() {
   await downloadProdDbBackup(defaultEmulatorBackupPath);
-  const proc = await firebaseEmulatorExec({
-    emulators: 'firestore',
-    importPath: defaultEmulatorBackupPath,
-    exportData: true,
-  });
+  let proc;
   try {
+   proc = await firebaseEmulatorExec({
+     emulators: 'firestore',
+     importPath: defaultEmulatorBackupPath,
+     exportData: true,
+   });
     await anonDbProcess();
-    await forceEmulatorExport(defaultEmulatorBackupPath);
-    console.log('Storing golden database data');
-    await uploadBackup({ localRelPath: getFirestoreExportPath(defaultEmulatorBackupPath), remoteDir: latestAnonDbDir });
-
-    const db = connectFirestoreEmulator();
-    await shrinkDb(db)
-    await forceEmulatorExport(defaultEmulatorBackupPath);
-    console.log('Storing shrunk golden database data');
-    await uploadBackup({ localRelPath: getFirestoreExportPath(defaultEmulatorBackupPath), remoteDir: latestAnonShrinkedDbDir });
   } finally {
-    await shutdownEmulator(proc, defaultEmulatorBackupPath, 10); // We don't need to wait for it to export anymore
+    await shutdownEmulator(proc, defaultEmulatorBackupPath, 30);
   }
+
+  console.log('Storing golden database data');
+  await uploadBackup({ localRelPath: getFirestoreExportPath(defaultEmulatorBackupPath), remoteDir: latestAnonDbDir });
+
+  try {
+    proc = await firebaseEmulatorExec({
+      emulators: 'firestore',
+      importPath: defaultEmulatorBackupPath,
+      exportData: true,
+    });
+    const db = connectFirestoreEmulator();
+    await shrinkDb(db);
+  } finally {
+    await shutdownEmulator(proc, defaultEmulatorBackupPath, 30);
+  }
+  console.log('Storing shrunk golden database data');
+  await uploadBackup({ localRelPath: getFirestoreExportPath(defaultEmulatorBackupPath), remoteDir: latestAnonShrinkedDbDir });
 
   console.log('Storing golden storage data');
   const anonBucketBackupDirURL = `gs://${CI_STORAGE_BACKUP}/${latestAnonStorageDir}/`;
