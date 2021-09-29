@@ -1,6 +1,6 @@
-import { Component, OnInit, Input} from '@angular/core';
-import { interval, Observable } from "rxjs";
-import { startWith, tap } from 'rxjs/operators';
+import { Component, OnInit, OnDestroy, Input, ChangeDetectorRef, ChangeDetectionStrategy} from '@angular/core';
+import { interval, Subscription } from "rxjs";
+import { tap, startWith } from 'rxjs/operators';
 import {
   trigger,
   style,
@@ -36,80 +36,79 @@ function anim() {
     ]),
   ]);
 }
+
+/* 
+  This component is an adaptable countdown : 
+  It will only display the time units that it will receive as a property array :
+  example : ['hours', 'minutes']
+  It also needs a date property to calculate the end of the countdown
+  Important : As we sometime need to display a "0" value, we cannot use 0 as "false" value.
+  Here we'll use -1 to express false or undefined.
+*/ 
 @Component({
-  selector: 'event-countdown',
+  selector: 'countdown-timer',
   templateUrl: './countdown.component.html',
   styleUrls: ['./countdown.component.scss'],
-  animations: [tempAnim(), anim()]
+  animations: [tempAnim(), anim()],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CountdownComponent implements OnInit {
-  public timeLeft$: Observable<number>;
+export class CountdownComponent implements OnInit, OnDestroy {
+  private subscription: Subscription;
   @Input() date;
-  public minutes: number
-  public hours: number
-  public days: number
-  public newMinutes: number ;
-  public newHours: number ;
-  public newDays: number ;
+  @Input() timeUnits;
+  
+  public time = {
+    days: { current: -1, new: -1},
+    hours: { current: -1, new: -1},
+    minutes: { current: -1, new: -1},
+    seconds: { current: -1, new: -1}
+  }
+
+  constructor(private ref: ChangeDetectorRef) {
+  }
 
   ngOnInit() {
-    this.timeLeft$ = interval(1000).pipe(
-      startWith(),
-      tap(() => this.calcDateDiff()),
-    )
+    this.subscription = interval(1000).pipe(
+      startWith(0),
+      tap(_ => this.calcDateDiff()),
+    ).subscribe()
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   calcDateDiff() {
     const dDay = this.date.valueOf();
-  
     const milliSecondsInASecond = 1000;
     const hoursInADay = 24;
     const minutesInAnHour = 60;
     const secondsInAMinute = 60;
   
     const timeDifference = dDay - Date.now();
-  
-    const daysToDday = Math.floor(
-      timeDifference /
-        (milliSecondsInASecond * minutesInAnHour * secondsInAMinute * hoursInADay)
-    );
-  
-    const hoursToDday = Math.floor(
-      (timeDifference /
-        (milliSecondsInASecond * minutesInAnHour * secondsInAMinute)) %
-        hoursInADay
-    );
-  
-    const minutesToDday = Math.floor(
-      (timeDifference / (milliSecondsInASecond * minutesInAnHour)) %
-        secondsInAMinute
-    );
 
-    if(this.minutes !== minutesToDday) {
-      this.newMinutes = minutesToDday;
+    const _time = {
+      days: Math.floor(timeDifference / (milliSecondsInASecond * minutesInAnHour * secondsInAMinute * hoursInADay)),
+      hours: Math.floor((timeDifference / (milliSecondsInASecond * minutesInAnHour * secondsInAMinute)) % hoursInADay),
+      minutes: Math.floor((timeDifference / (milliSecondsInASecond * minutesInAnHour)) % secondsInAMinute),
+      seconds: Math.floor((timeDifference / milliSecondsInASecond)) % secondsInAMinute
     }
-    if(this.hours !== hoursToDday) {
-      this.newHours = hoursToDday;
+
+    for (const unit of this.timeUnits) {
+      if (this.time[unit].current !== _time[unit]) {
+        this.time[unit].new = _time[unit];
+      }
     }
-    if(this.days !== daysToDday) {
-      this.newDays = daysToDday;
-    }
+
+    this.ref.markForCheck();
   }
 
   onAnimationDone() {
-    if (this.newMinutes > -1) {
-      this.minutes = this.newMinutes as number;
-      this.newMinutes = -1;
-    }
-
-    if (this.newHours > -1) {
-      this.hours = this.newHours as number;
-      this.newHours = -1;
-    }
-
-    if (this.newDays > -1) {
-      this.days = this.newDays as number;
-      this.newDays = -1;
-    }
+    this.timeUnits.forEach(elm => {
+      if(this.time[elm].new > -1) {
+        this.time[elm].current = this.time[elm].new as number;
+        this.time[elm].new = -1
+      }
+    });
   }
 }
