@@ -1,33 +1,30 @@
-﻿<section class="surface">
-  <h6>My Files for this Meeting</h6>
-  <p>
-    Add the files you'll want to share during the meeting.
-    If you can't find the files you're looking for, you can upload them directly in <a routerLink="/c/o/dashboard/files">My Files</a> page.
-  </p>
+﻿<h6>My Files for this Meeting</h6>
+<p>
+  Add the files you'll want to share during the meeting.
+  If you can't find the files you're looking for, you can upload them directly in <a routerLink="/c/o/dashboard/files">My Files</a> page.
+</p>
 
-  <div fxLayout="row">
-    <button class="manage-files-btn" mat-stroked-button color="primary" (click)="openFileSelector()">
-      <mat-icon svgIcon="folder"></mat-icon>
-      <span>Add Files</span>
-    </button>
-  </div>
+<div fxLayout="row">
+  <button class="manage-files-btn" mat-stroked-button color="primary" (click)="openFileSelector()">
+    <mat-icon svgIcon="folder"></mat-icon>
+    <span>Add Files</span>
+  </button>
+</div>
 
-  <p>Selected Files ({{files.value.length}})</p>
-  <mat-divider></mat-divider>
+<p>Selected Files ({{files.value.length}})</p>
+<mat-divider></mat-divider>
 
-  <ng-container *ngIf="!!files.value.length; else empty">
-    <mat-list>
-      <mat-list-item *ngFor="let file of files.value; let i = index" (click)="previewFile(file)">
-        <mat-icon mat-list-icon [svgIcon]="file.storagePath | fileTypeImage: 'icon'"></mat-icon>
-        <div mat-line>{{file | filePath: ' > ' | async}}</div>
-        <button mat-icon-button (click)="removeSelectedFile(i, $event)">
-          <mat-icon svgIcon="delete" color="primary"></mat-icon>
-        </button>
-      </mat-list-item>
-    </mat-list>
-  </ng-container>
-  <ng-template #empty>
-    <p class="no-files">There is no selected files yet. Please click the button above to add files.</p>
-  </ng-template>
-
-</section>
+<ng-container *ngIf="!!files.value.length; else empty">
+  <mat-list>
+    <mat-list-item *ngFor="let file of files.value; let i = index" (click)="previewFile(file)">
+      <mat-icon mat-list-icon [svgIcon]="file.storagePath | fileTypeImage: 'icon'"></mat-icon>
+      <div mat-line>{{file | filePath: ' > ' | async}}</div>
+      <button mat-icon-button (click)="removeSelectedFile(i, $event)">
+        <mat-icon svgIcon="delete" color="primary"></mat-icon>
+      </button>
+    </mat-list-item>
+  </mat-list>
+</ng-container>
+<ng-template #empty>
+  <p class="no-files">There is no selected files yet. Please click the button above to add files.</p>
+</ng-template>

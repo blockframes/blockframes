@@ -8,6 +8,9 @@ import { EventFormShellComponent } from '../shell/shell.component';
   selector: 'event-invitation',
   templateUrl: './invitation.component.html',
   styleUrls: ['./invitation.component.scss'],
+  host: {
+    class: 'invitations surface'
+  },
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InvitationComponent implements OnInit {
