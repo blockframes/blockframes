@@ -414,3 +414,7 @@ export function formatAvailableLanguages(versions: { language: string, dubbed: s
     }
   });
 }
+
+export function formatNumber(number:string){
+  return parseInt(number,10)
+}
