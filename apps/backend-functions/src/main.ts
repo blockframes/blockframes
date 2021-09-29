@@ -29,6 +29,7 @@ import { onOfferCreate } from './offer';
 import { onContractCreate, onContractDelete, onContractUpdate } from './contracts';
 import { onTermDelete } from './terms';
 import { downloadVideo } from './rescue';
+import { production } from '@env';
 
 console.log('Function instance loaded');
 
@@ -113,7 +114,8 @@ export const onInvitationWriteEvent = onDocumentWrite('invitations/{invitationID
 export const hasUserAnOrgOrIsAlreadyInvited = functions().https.onCall(invitations.hasUserAnOrgOrIsAlreadyInvited);
 
 /** Used to get invitation linked to an email when users signup for the first time */
-export const getInvitationLinkedToEmail = functions().https.onCall(invitations.getInvitationLinkedToEmail);
+/** Keep one instance warm on production in order to show up invitation pass field faster when Signing up */
+export const getInvitationLinkedToEmail = functions({ maxInstances: production ? 1 : 0}).https.onCall(invitations.getInvitationLinkedToEmail);
 
 //--------------------------------
 //    Events Management          //
