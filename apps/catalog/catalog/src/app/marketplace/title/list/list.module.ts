@@ -31,7 +31,7 @@ import { BudgetFilterModule } from '@blockframes/movie/form/filters/budget/budge
 import { ReleaseYearFilterModule } from '@blockframes/movie/form/filters/release-year/release-year.module';
 import { RunningTimeFilterModule } from '@blockframes/movie/form/filters/running-time/running-time.module';
 import { StaticCheckBoxesModule } from '@blockframes/ui/static-autocomplete/check-boxes/check-boxes.module';
-import { AvailsFilterModule } from '@blockframes/contract/term/form/filter/avails/avails-filter.module';
+import { AvailsFilterModule } from '@blockframes/contract/avails/filter/filter.module';
 import { FormContentTypeModule } from '@blockframes/ui/form/content-type/content-type.module';
 
 @NgModule({
