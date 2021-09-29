@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, ViewChild, TemplateRef } from '@angular/core';
+﻿import { Component, OnInit, ChangeDetectionStrategy, ViewChild, TemplateRef } from '@angular/core';
 import { getCurrencySymbol } from '@angular/common';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -106,22 +106,24 @@ export class MarketplaceMovieViewComponent implements OnInit {
   }
 
   async sendEmail(emailData: EmailData, title: string, orgs: Organization[]) {
-
-    this.dialogRef.close();
     const templateId = templateIds.financiers.invest;
     const userSubject = getUserEmailData(this.authQuery.user);
 
     const orgUserSubject = getOrgEmailData(this.orgQuery.getActive());
     const promises: Promise<ErrorResultResponse>[] = [];
 
+    const cyCheck = 'Cypress' in window;
+    let emailReady = false;
+    let numEmails = 0;
+
     for (const org of orgs) {
       const users = await this.userService.getValue(org.userIds);
       for (const user of users) {
         let toUser = getUserEmailData(user);
-
+        const userEmail = toUser.email;
         // For e2e test purpose
-        if ('Cypress' in window) {
-          toUser = {...toUser, email: testEmail};
+        if (cyCheck) {
+          toUser = { ...toUser, email: testEmail };
         }
 
         const data = {
@@ -133,12 +135,27 @@ export class MarketplaceMovieViewComponent implements OnInit {
           title,
         };
 
+        /*
+         * If running E2E, for user other than sender, 
+         * store it for access in E2E test.
+         * A single email is sufficient to check the email template 
+         */
+        if (cyCheck && (userEmail !== userSubject.email)) {
+          emailReady = true;
+          ++numEmails;
+          window['cyEmailData'] = data;
+        }
+
         const promise = this.sendgrid.sendWithTemplate({
           request: { templateId, data, to: toUser.email },
           app: 'financiers'
         });
         promises.push(promise);
       }
+    }
+
+    if (cyCheck && emailReady) {
+      window['cyEmailData'].numEmails = numEmails;
     }
     const res = await Promise.all(promises);
     const success = res.some(r => r.result);

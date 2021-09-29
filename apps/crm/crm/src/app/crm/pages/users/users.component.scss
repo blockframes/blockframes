@@ -1,12 +1,14 @@
+:host {
+  display: block;
+  padding: 40px;
+}
+
+article {
+  margin-bottom: 24px;
+}
+
 .avatar {
   height: 50px;
   width: 50px;
-}
-
-main {
-  margin: 40px;
-
-  bf-table-filter {
-    margin-bottom: 24px;
-  }
+  border-radius: 50%;
 }

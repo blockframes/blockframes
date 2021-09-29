@@ -5,7 +5,7 @@
  * Use this setup (non-production) when the execution context is outside firebase
  * functions.
  */
-//If running e2e tests locally, set e2eMode to true 
+
 export const e2eMode = false;
 
 export {
@@ -18,7 +18,7 @@ export {
   bigQueryAnalyticsTable,
   centralOrgId,
   supportEmails,
-  playerId,
+  playerId
 } from '@env';
 
 import { firebase } from '@env';
@@ -40,5 +40,9 @@ export const twilioAccountSid = mockConfigIfNeeded('twilio', 'account', 'sid');
 export const twilioAccountSecret = mockConfigIfNeeded('twilio', 'account', 'secret');
 export const twilioApiKeySecret = mockConfigIfNeeded('twilio', 'api', 'key', 'secret');
 export const twilioApiKeySid = mockConfigIfNeeded('twilio', 'api', 'key', 'sid');
+
+export const mailchimpAPIKey = mockConfigIfNeeded('mailchimp', 'api_key');
+export const mailchimpServer = mockConfigIfNeeded('mailchimp', 'server');
+export const mailchimpListId = mockConfigIfNeeded('mailchimp', 'list_id');
 
 export const enableDailyFirestoreBackup = false;

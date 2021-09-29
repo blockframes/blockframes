@@ -1,4 +1,4 @@
-/// <reference types="cypress" />
+﻿/// <reference types="cypress" />
 
 import { LandingPage } from '../../support/pages/landing';
 import { User, serverId, testEmail } from "@blockframes/e2e/utils";
@@ -75,6 +75,19 @@ describe('User can create new account and create a new organization', () => {
       });
     });
   });
+
+  it('use already existing org name', () => {
+    const p1 = new AuthIdentityPage();
+    p1.fillUserInformations(USER);
+
+    const p2 = new OrganizationLiteFormPage();
+    p2.createNewDashboardOrg();
+
+    p1.clickTermsAndCondition();
+    p1.clickPrivacyPolicy();
+    p1.submitForm();
+    assertMoveTo(IDENTITYPATH);
+  })
 });
 
 //! This one is failing because of the data that are coming from Algolia. The data about organization are not prefilled in the
@@ -169,18 +182,6 @@ describe('Try with each fields except one', () => {
 });
 
 describe('Try email address', () => {
-  it('use already exist email address', () => {
-    const p1 = new AuthIdentityPage();
-    p1.fillUserInformations(USER);
-
-    const p2 = new OrganizationLiteFormPage();
-    p2.createNewDashboardOrg();
-
-    p1.clickTermsAndCondition();
-    p1.clickPrivacyPolicy();
-    p1.submitForm();
-    assertMoveTo(IDENTITYPATH);
-  })
   it('use wrong format email address', () => {
     const p1 = new AuthIdentityPage();
     p1.fillEmail(WRONG_EMAIL_FORM);

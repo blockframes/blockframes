@@ -18,6 +18,10 @@
     }
     .links {
       margin-top: 24px;
+
+      a {
+        height: fit-content
+      }
     }
   }
 }

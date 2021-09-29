@@ -9,7 +9,10 @@
   </a>
   <article fxLayout="column" fxLayoutAlign="space-between start">
     <div>
-      <h3><a [routerLink]="['/c/o/marketplace/event/', event.id]">{{ event.title }}</a></h3>
+      <div fxLayout fxLayoutAlign="space-between">
+        <h3><a [routerLink]="['/c/o/marketplace/event/', event.id]">{{ event.title }}</a></h3>
+        <a ongoing-event-button [routerLink]="['/c/o/marketplace/event', event.id]">Ongoing Screening</a>
+      </div>
       <h5>{{ event.isPrivate ? 'Private' : 'Public' }} Screening </h5>
       <pre class="mat-body-1">{{ event | eventRange }}</pre>
       <ng-container *ngIf="event.ownerOrgId | getOrg | async as org">

@@ -19,7 +19,7 @@
         <div class="movie-details">
           <h4>{{ movieView.directors | displayName }}</h4>
           <h1 class="mat-display-2">{{ movieView.title.international }}</h1>
-          <h2>{{ movieView.title.original }}</h2>
+          <h2 fxHide.lt-md>{{ movieView.title.original }}</h2>
           <movie-title-features [movie]="movie"></movie-title-features>
         </div>
         <ng-content select="movie-header-preferences"></ng-content>

@@ -4,8 +4,11 @@ form {
 }
 
 hr {
-  border: 0.5px solid var(--foreground-divider);
-  border-bottom-width: 0px;
+  border: none;
   margin-top: 0px;
   margin-bottom: 24px;
+}
+
+.more-space {
+  margin-bottom: 36px;
 }

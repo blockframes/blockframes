@@ -6,6 +6,7 @@
  */
 import * as functions from 'firebase-functions';
 
+
 export const e2eMode = false;
 
 export {
@@ -39,5 +40,9 @@ export const twilioAccountSid = functions.config().twilio.account.sid;
 export const twilioAccountSecret = functions.config().twilio.account.secret;
 export const twilioApiKeySecret = functions.config().twilio.api.key.secret;
 export const twilioApiKeySid = functions.config().twilio.api.key.sid;
+
+export const mailchimpAPIKey = functions.config().mailchimp.api_key;
+export const mailchimpServer = functions.config().mailchimp.server;
+export const mailchimpListId = functions.config().mailchimp.list_id;
 
 export const enableDailyFirestoreBackup = false;
