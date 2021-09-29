@@ -1,6 +1,5 @@
 import { db } from './internals/firebase';
-import { MovieDocument } from './data/types';
-import { createDocPermissions } from 'libs/organization/src/lib/permissions/+state/permissions.firestore';
+import { MovieDocument, createDocPermissions } from './data/types';
 import { triggerNotifications, createNotification } from './notification';
 import { createDocumentMeta, getOrganizationsOfMovie, Timestamp } from './data/internals';
 import { removeAllSubcollections } from './utils';
@@ -33,9 +32,9 @@ export async function onMovieCreate(
 
   const organizations = await getOrganizationsOfMovie(movie.id);
   for (const org of organizations) {
-    storeSearchableOrg(org);
+    await storeSearchableOrg(org);
   }
-  const orgNames = organizations.map(org => orgName(org));
+  const orgNames = organizations.map(org => orgName(org)).filter(orgName => !!orgName);
   return storeSearchableMovie(movie, orgNames);
 }
 
@@ -188,7 +187,7 @@ export async function onMovieUpdate(
   for (const org of organizations) {
     await storeSearchableOrg(org);
   }
-  const orgNames = organizations.map(org => orgName(org));
+  const orgNames = organizations.map(org => orgName(org)).filter(orgName => !!orgName);
   await storeSearchableMovie(after, orgNames);
 
   for (const app in after.app) {
