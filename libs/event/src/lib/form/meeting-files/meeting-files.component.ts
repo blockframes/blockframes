@@ -12,9 +12,6 @@ import { StorageFile } from '@blockframes/media/+state/media.firestore';
   selector: 'event-meeting-files',
   templateUrl: './meeting-files.component.html',
   styleUrls: ['./meeting-files.component.scss'],
-  host: {
-    class: 'surface'
-  },
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MeetingFilesComponent implements OnInit {

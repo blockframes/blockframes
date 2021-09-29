@@ -1,58 +1,60 @@
-﻿<ng-template pageBar>
-  <header fxLayout fxLayoutAlign="space-between center">
-    <a mat-icon-button routerLink="../..">
-      <mat-icon svgIcon="arrow_back"></mat-icon>
-    </a>
-    <div fxLayout fxLayoutAlign="end center">
-      <button type="button" mat-button color="warn" (click)="remove()">Delete</button>
-      <ng-container *ngIf="form.dirty else disabled">
-        <button type="submit" mat-stroked-button color="primary" (click)="save()" test-id="event-save">Save</button>
-      </ng-container>
-      <ng-template #disabled>
-        <button mat-button disabled>Save</button>
-      </ng-template>
-    </div>
-  </header>
-</ng-template>
+﻿<ng-container *ngIf="form">
+  <ng-template pageBar>
+    <header fxLayout fxLayoutAlign="space-between center">
+      <a mat-icon-button routerLink="../..">
+        <mat-icon svgIcon="arrow_back"></mat-icon>
+      </a>
+      <div fxLayout fxLayoutAlign="end center">
+        <button type="button" mat-button color="warn" (click)="remove()">Delete</button>
+        <ng-container *ngIf="form.dirty else disabled">
+          <button type="submit" mat-stroked-button color="primary" (click)="save()" test-id="event-save">Save</button>
+        </ng-container>
+        <ng-template #disabled>
+          <button mat-button disabled>Save</button>
+        </ng-template>
+      </div>
+    </header>
+  </ng-template>
 
-<ng-template #confirmExit>
-  <div class="confirm-exit" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="16px">
-    <h1>You are about to leave the form.</h1>
-    <p>Some changes have not been saved. If you leave now, you will lose these changes.</p>
-    <div fxLayout="row" fxLayoutAlign="center">
-      <button class="save" mat-flat-button color="primary" [mat-dialog-close]="true">
-        Save & Exit</button>
-      <button class="text-primary" mat-button [mat-dialog-close]="false">
-        Close without saving
-      </button>
+  <ng-template #confirmExit>
+    <div class="confirm-exit" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="16px">
+      <h1>You are about to leave the form.</h1>
+      <p>Some changes have not been saved. If you leave now, you will lose these changes.</p>
+      <div fxLayout="row" fxLayoutAlign="center">
+        <button class="save" mat-flat-button color="primary" [mat-dialog-close]="true">
+          Save & Exit</button>
+        <button class="text-primary" mat-button [mat-dialog-close]="false">
+          Close without saving
+        </button>
+      </div>
     </div>
+  </ng-template>
+
+  <form [formGroup]="form">
+    <section fxLayout="column" fxLayoutGap="24px">
+      <mat-card class="details" fxLayout="column" fxFlex="65">
+        <h2>Details</h2>
+        <event-details-edit [form]="form"></event-details-edit>
+      </mat-card>
+
+      <nav mat-tab-nav-bar>
+        <ng-container *ngFor="let tab of (tabs$ |async)"> 
+          <a mat-tab-link 
+          [routerLink]="tab.path" 
+          routerLinkActive 
+          #rla="routerLinkActive"
+          [active]="rla.isActive">
+          {{ tab.label }}</a>
+        </ng-container>
+      </nav>
+    </section>
+  </form>
+
+  <div class="routerContainer" [@routeAnimation]="animationOutlet(outlet)">
+    <router-outlet #outlet="outlet"></router-outlet> 
   </div>
-</ng-template>
 
-<form [formGroup]="form">
-  <section fxLayout="column" fxLayoutGap="24px">
-    <mat-card class="details" fxLayout="column" fxFlex="65">
-      <h2>Details</h2>
-      <event-details-edit [form]="form"></event-details-edit>
-    </mat-card>
-
-    <nav mat-tab-nav-bar>
-      <ng-container *ngFor="let tab of (tabs$ |async)"> 
-        <a mat-tab-link 
-        [routerLink]="tab.path" 
-        routerLinkActive 
-        #rla="routerLinkActive"
-        [active]="rla.isActive">
-        {{ tab.label }}</a>
-      </ng-container>
-    </nav>
-  </section>
-</form>
-
-<div class="routerContainer" [@routeAnimation]="animationOutlet(outlet)">
-  <router-outlet #outlet="outlet"></router-outlet> 
-</div>
-
-<div class="buttonContainer" fxLayoutAlign="center">
-  <a mat-button fxFlexAlign="center" mat-flat-button color="primary" [routerLink]="internalLink">Go to Event Page</a>
-</div>
+  <div class="buttonContainer" fxLayoutAlign="center">
+    <a mat-button fxFlexAlign="center" mat-flat-button color="primary" [routerLink]="internalLink">Go to Event Page</a>
+  </div>
+</ng-container>

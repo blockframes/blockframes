@@ -35,7 +35,7 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
   tabs$: Observable<TabConfig[]>;
   private sub: Subscription;
   private formSub: Subscription;
-  form: EventForm = new EventForm();
+  form: EventForm;
   @ViewChild('confirmExit', { static: true }) confirmExitTemplate: TemplateRef<any>;
   internalLink: string;
   link: string;
