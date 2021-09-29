@@ -438,7 +438,7 @@ jobs:
     executor: blockframes-ci
     steps:
       - prepare_environment
-      - run: npm start prepareEmulators gs://bruce-backups/LATEST-ANON-SHRINKED-DB
+      - run: npm start prepareEmulators gs://ci-backups-blockframes/LATEST-ANON-SHRINKED-DB
       - run: npx nx build backend-functions --configuration=emulator
       - save_cache:
           key: emulator-cache-v1-{{ epoch }}
@@ -569,54 +569,54 @@ workflows:
             branches:
               only:
                 - ci
-  run-sequential-online-e2e-tests-against-CI-branch-and-shrunk-project:
-    jobs:
-      - build-deploy-prepare-shrunk-ci:
-          filters:
-            branches:
-              only:
-                - ci
-      - test-e2e-ci:
-          requires:
-            - build-deploy-prepare-shrunk-ci
-          filters:
-            branches:
-              only:
-                - ci
-      - unit-tests-ci:
-          requires:
-            - build-deploy-prepare-shrunk-ci
-          filters:
-            branches:
-              only:
-                - ci
-  # e2e-tests:
+  # run-sequential-online-e2e-tests-against-CI-branch-and-shrunk-project:
   #   jobs:
-  #     - prepare-emulators:
+  #     - build-deploy-prepare-shrunk-ci:
   #         filters:
   #           branches:
-  #             ignore: *deployment_branches
-  #     - catalog-e2e:
+  #             only:
+  #               - ci
+  #     - test-e2e-ci:
   #         requires:
-  #           - prepare-emulators
+  #           - build-deploy-prepare-shrunk-ci
   #         filters:
   #           branches:
-  #             ignore: *deployment_branches
-  #     - festival-e2e:
+  #             only:
+  #               - ci
+  #     - unit-tests-ci:
   #         requires:
-  #           - prepare-emulators
+  #           - build-deploy-prepare-shrunk-ci
   #         filters:
   #           branches:
-  #             ignore: *deployment_branches
-  #     - crm-e2e:
-  #         requires:
-  #           - prepare-emulators
-  #         filters:
-  #           branches:
-  #             ignore: *deployment_branches
-  #     - financiers-e2e:
-  #         requires:
-  #           - prepare-emulators
-  #         filters:
-  #           branches:
-  #             ignore: *deployment_branches
+  #             only:
+  #               - ci
+  e2e-tests:
+    jobs:
+      - prepare-emulators:
+          filters:
+            branches:
+              ignore: *deployment_branches
+      - catalog-e2e:
+          requires:
+            - prepare-emulators
+          filters:
+            branches:
+              ignore: *deployment_branches
+      - festival-e2e:
+          requires:
+            - prepare-emulators
+          filters:
+            branches:
+              ignore: *deployment_branches
+      - crm-e2e:
+          requires:
+            - prepare-emulators
+          filters:
+            branches:
+              ignore: *deployment_branches
+      - financiers-e2e:
+          requires:
+            - prepare-emulators
+          filters:
+            branches:
+              ignore: *deployment_branches
