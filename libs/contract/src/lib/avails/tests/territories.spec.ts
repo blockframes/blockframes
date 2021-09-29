@@ -1,6 +1,6 @@
 import { createMandate } from "../../contract/+state/contract.model";
 import { availableTerritories, getMandateTerms, collidingTerms, toTerritoryMarker } from "./../avails";
-import { createTerm } from "../../term/+state/term.model";
+import { createTerm, Term } from "../../term/+state/term.model";
 import { availDetailsExclusive, availDetailsNonExclusive } from './../fixtures/availsFilters';
 
 describe('Test availableTerritories pure function', () => {
@@ -94,7 +94,7 @@ describe('Test availableTerritories pure function', () => {
       id: 'termD',
       duration: {
         from: new Date('07/01/2020'),
-        to: new Date('01/01/2022')
+        to: new Date('01/01/2022'),
       },
       medias: ['theatrical'],
       territories: ['france'],

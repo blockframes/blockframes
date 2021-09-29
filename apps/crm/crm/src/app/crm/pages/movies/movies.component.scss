@@ -1,7 +1,12 @@
-main {
-  margin: 40px;
+:host {
+  display: block;
+  padding: 40px;
 }
+
+article {
+  margin-bottom: 24px;
+}
+
 .poster {
-  height: 75x;
   width: 50px;
 }

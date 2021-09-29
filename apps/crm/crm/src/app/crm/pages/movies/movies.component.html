@@ -1,39 +1,49 @@
 <main fxLayout="column">
   <crm-bread-crumb></crm-bread-crumb>
-  <article fxLayout="column" fxLayoutAlign="center center">
-    <button [disabled]="exporting.$ | async" mat-flat-button color="primary" (click)="exportTable()">
-      <ng-container *ngIf="exporting.$ | async else export">
-        <span>Generating CSV...</span>
-      </ng-container>
-      <ng-template #export>
-        <span>Export to CSV</span>
-        <mat-icon svgIcon="arrow_upward"></mat-icon>
+  <ng-container *ngIf="movies$ | async as movies; else loading">
+    <article fxLayout="column" fxLayoutAlign="center center">
+      <button [disabled]="exporting.$ | async" mat-flat-button color="primary" (click)="exportTable(movies)">
+        <ng-container *ngIf="exporting.$ | async else export">
+          <span>Generating CSV...</span>
+        </ng-container>
+        <ng-template #export>
+          <span>Export to CSV</span>
+          <mat-icon svgIcon="arrow_upward"></mat-icon>
+        </ng-template>
+      </button>
+    </article>
+    <bf-table [source]="movies" clickable useFilter pagination="50" (rowClick)="goToEdit($event)">
+      <ng-template colRef="id" let-id>{{ id }}</ng-template>
+      <ng-template colRef="poster" let-poster>
+        <img class="poster" [ref]="poster" asset="empty_poster.svg">
       </ng-template>
-    </button>
-  </article>
-  <bf-table-filter
-    [source]="rows"
-    [columns]="versionColumns"
-    [initialColumns]="initialColumns"
-    [filterPredicate]="filterPredicate"
-    showFilter
-    showLoader
-    [pageSize]="50"
-    showPaginator
-    clickable
-    (rowClick)="goToEdit($event)">
-    <ng-template colRef="poster" let-posters>
-      <ng-container *ngIf="posters.storagePath">
-        <img class="poster" [ref]="posters" asset="empty_poster.svg">
-      </ng-container>
-    </ng-template>
-    <ng-template colRef="org" let-org>
-      <a *ngIf="org else noOrg" [routerLink]="['/c/o/dashboard/crm/organization', org.id]">
-        <span>{{ org | orgName:'long'}} </span><mat-icon svgIcon="visibility"></mat-icon>
-      </a>
-      <ng-template #noOrg>--</ng-template>
-    </ng-template>
-  </bf-table-filter>
+      <ng-template colRef="title.international" label="International title" sort let-title>
+        {{ title }}
+      </ng-template>
+      <ng-template colRef="org" label="Organization" let-org>
+        <a *ngIf="org else noOrg" [routerLink]="['/c/o/dashboard/crm/organization', org.id]">
+          <span>{{ org | orgName:'long'}} </span>
+          <mat-icon svgIcon="visibility"></mat-icon>
+        </a>
+        <ng-template #noOrg>--</ng-template>
+      </ng-template>
+      <ng-template colRef="app.catalog.status" label="Catalog Status" sort let-status>
+        <bf-tag>{{ status }}</bf-tag>
+      </ng-template>
+      <ng-template colRef="app.festival.status" label="Festival Status" sort let-status>
+        <bf-tag>{{ status }}</bf-tag>
+      </ng-template>
+      <ng-template colRef="app.financiers.status" label="Financiers Status" sort let-status>
+        <bf-tag>{{ status }}</bf-tag>
+      </ng-template>
+      <ng-template colRef="screeningCount" label="Screening count" sort let-screeningCount>
+        {{ screeningCount }}
+      </ng-template>
+    </bf-table>
+  </ng-container>
+  <ng-template #loading>
+    ...loading movies
+  </ng-template>
 </main>
 
 
