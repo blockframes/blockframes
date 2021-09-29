@@ -21,11 +21,12 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 
 import { MapModule } from '@blockframes/ui/map';
 import { OrgNameModule } from '@blockframes/organization/pipes';
-import { StaticGroupModule } from '@blockframes/ui/static-autocomplete/group/group.module';
 
 
 import { MarketplaceMovieAvailsCalendarComponent } from './avails-calendar.component';
 import { AvailsCalendarModule } from '@blockframes/contract/avails/calendar/calendar.module';
+import { AvailsFilterModule } from '@blockframes/contract/avails/filter/filter.module';
+
 
 @NgModule({
   declarations: [ MarketplaceMovieAvailsCalendarComponent ],
@@ -36,7 +37,7 @@ import { AvailsCalendarModule } from '@blockframes/contract/avails/calendar/cale
 
     MapModule,
     OrgNameModule,
-    StaticGroupModule,
+    AvailsFilterModule,
     AvailsCalendarModule,
 
     MatCardModule,

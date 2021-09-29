@@ -29,7 +29,7 @@
   <list-filter>
 
     <ng-template filter label="Avails" [form]="availsForm">
-      <avails-filter [form]="availsForm"></avails-filter>
+      <form [availsFilter]="availsForm" vertical required></form>
     </ng-template>
 
     <ng-template filter label="Content Type" [form]="searchForm.contentType">

@@ -1,0 +1,92 @@
+<mat-form-field appearance="outline" *ngIf="!hideKeys['territories']">
+  <mat-label>Select territories</mat-label>
+  <mat-icon matPrefix svgIcon="world"></mat-icon>
+  <static-group
+    [formControl]="form.get('territories')"
+    scope="territories"
+    displayAll="World"
+    placeholder="Specify territory to filter"
+    [required]="required"
+    test-id="territories">
+  </static-group>
+  <mat-error *ngIf="form.hasError('required', 'territories')">
+    This field is mandatory
+  </mat-error>
+</mat-form-field>
+
+<mat-form-field appearance="outline" *ngIf="!hideKeys['medias']">
+  <mat-label>Select rights</mat-label>
+  <mat-icon matPrefix svgIcon="play_arrow"></mat-icon>
+  <static-group
+    [formControl]="form.get('medias')"
+    scope="medias"
+    displayAll="All Rights"
+    [required]="required"
+    placeholder="Specify right(s) to filter"
+    [withoutValues]="['theatrical']"
+    test-id="medias">
+  </static-group>
+  <mat-error *ngIf="form.hasError('required', 'medias')">
+    This field is mandatory
+  </mat-error>
+</mat-form-field>
+
+<div class="duration" [formGroup]="form.get('duration')" *ngIf="!hideKeys['duration']">
+  <mat-form-field appearance="outline">
+    <mat-label>Licence Start Date</mat-label>
+    <input
+      matInput
+      [matDatepicker]="datepickerFrom"
+      formControlName="from"
+      [required]="required"
+      placeholder="MM/DD/YYYY"
+    />
+    <mat-datepicker-toggle matSuffix [for]="datepickerFrom" test-id="dateFrom"></mat-datepicker-toggle>
+    <mat-datepicker #datepickerFrom> </mat-datepicker>
+    <mat-error *ngIf="form.hasError('startOverEnd', 'duration.from')">Start date must not be later than end date
+    </mat-error>
+    <mat-error *ngIf="form.hasError('inPast', 'duration.from')">Date must be in the future</mat-error>
+    <mat-error *ngIf="form.hasError('required', 'duration.from')">
+      This field is mandatory
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Licence End Date</mat-label>
+    <input
+      matInput
+      [matDatepicker]="datepickerTo"
+      formControlName="to"
+      [required]="required"
+      placeholder="MM/DD/YYYY"
+    />
+    <mat-datepicker-toggle matSuffix [for]="datepickerTo" test-id="dateTo"></mat-datepicker-toggle>
+    <mat-datepicker #datepickerTo> </mat-datepicker>
+    <mat-error *ngIf="form.hasError('startOverEnd', 'duration.to')">
+      End date must not be earlier than start date
+    </mat-error>
+    <mat-error *ngIf="form.hasError('inPast', 'duration.from')">
+      Date must be in the future
+    </mat-error>
+    <mat-error *ngIf="form.hasError('required', 'duration.to')">
+      This field is mandatory
+    </mat-error>
+  </mat-form-field>
+</div>
+
+<mat-form-field appearance="outline" *ngIf="!hideKeys['exclusive']">
+  <mat-label>Exclusivity</mat-label>
+  <mat-icon matPrefix svgIcon="star"></mat-icon>
+  <mat-select [formControl]="form.get('exclusive')" [required]="required">
+    <mat-option [value]="true">Exclusive</mat-option>
+    <mat-option [value]="false">Non exclusive</mat-option>
+  </mat-select>
+  <mat-error *ngIf="form.hasError('required', 'exclusive')">
+    This field is mandatory
+  </mat-error>
+</mat-form-field>
+
+<ng-container *ngIf="!vertical">
+  <button mat-icon-button type="reset" (click)="form.reset()" matTooltip="Clear Fields">
+    <mat-icon svgIcon="refresh_filters"></mat-icon>
+  </button>
+</ng-container>
