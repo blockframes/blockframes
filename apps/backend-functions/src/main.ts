@@ -22,7 +22,7 @@ import { linkFile, getMediaToken as _getMediaToken } from './media';
 import { onEventDelete } from './event';
 import { getTwilioAccessToken, twilioWebhook as _twilioWebhook } from './twilio';
 import { eventWebhook as sendgridEventWebhook } from './sendgrid';
-import { heavyConfig, superHeavyConfig } from '@blockframes/firebase-utils';
+import { hotConfig, heavyConfig, superHeavyConfig } from '@blockframes/firebase-utils';
 import { onNotificationCreate } from './notification';
 import { importAnalytics } from './pubsub/daily-analytics-import';
 import { onOfferCreate } from './offer';
@@ -113,7 +113,7 @@ export const onInvitationWriteEvent = onDocumentWrite('invitations/{invitationID
 export const hasUserAnOrgOrIsAlreadyInvited = functions().https.onCall(invitations.hasUserAnOrgOrIsAlreadyInvited);
 
 /** Used to get invitation linked to an email when users signup for the first time */
-export const getInvitationLinkedToEmail = functions().https.onCall(invitations.getInvitationLinkedToEmail);
+export const getInvitationLinkedToEmail = functions(hotConfig).https.onCall(invitations.getInvitationLinkedToEmail);
 
 //--------------------------------
 //    Events Management          //
