@@ -4,6 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ScreeningComponent } from './screening.component';
 import { EventFromShellModule } from '../shell/shell.module';
+import { RouterModule } from '@angular/router';
 
 // Material
 import { MatSelectModule } from '@angular/material/select';
@@ -24,6 +25,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     ReactiveFormsModule,
     EventFromShellModule,
     ClipboardModule,
+    RouterModule.forChild([{ path: '', component: ScreeningComponent }]),
 
     // Material
     MatProgressSpinnerModule,

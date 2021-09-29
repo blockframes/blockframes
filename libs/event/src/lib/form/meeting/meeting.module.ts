@@ -5,6 +5,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MeetingComponent } from './meeting.component';
 import { EventFromShellModule } from '../shell/shell.module';
 import { DisplayNameModule } from '@blockframes/utils/pipes';
+import { RouterModule } from '@angular/router';
 
 // Material
 import { MatSelectModule } from '@angular/material/select';
@@ -16,7 +17,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
-
 @NgModule({
   declarations: [MeetingComponent],
   imports: [
@@ -26,6 +26,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     EventFromShellModule,
     DisplayNameModule,
     ClipboardModule,
+    RouterModule.forChild([{ path: '', component: MeetingComponent }]),
 
     // Material
     MatCardModule,

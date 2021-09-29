@@ -14,19 +14,8 @@ import { MovieFormShellModule } from '@blockframes/movie/form/shell/shell.module
 import { MovieShellConfig } from '@blockframes/movie/form/movie.shell.config';
 import { FORMS_CONFIG } from '@blockframes/movie/form/movie.shell.interfaces';
 import { OrgAccessModule } from '@blockframes/organization/pipes/org-access.pipe';
-import { ScreeningComponent } from '@blockframes/event/form/screening/screening.component';
-import { ScreeningModule } from '@blockframes/event/form/screening/screening.module';
-import { MeetingComponent } from '@blockframes/event/form/meeting/meeting.component';
-import { MeetingModule } from '@blockframes/event/form/meeting/meeting.module';
-import { InvitationComponent } from '@blockframes/event/form/invitation/invitation.component';
-import { InvitationModule } from '@blockframes/event/form/invitation/invitation.module';
-import { MeetingFilesComponent } from '@blockframes/event/form/meeting-files/meeting-files.component';
-import { MeetingFilesModule } from '@blockframes/event/form/meeting-files/meeting-files.module';
-import { AnalyticsComponent } from '@blockframes/event/pages/analytics/analytics.component';
-import { AnalyticsModule } from '@blockframes/event/pages/analytics/analytics.module';
 import { EventFormShellComponent } from '@blockframes/event/form/shell/shell.component';
-import { GuestListModule } from '@blockframes/event/pages/guest-list/guest-list.module';
-import { GuestListComponent } from '@blockframes/event/pages/guest-list/guest-list.component';
+import { EventFromShellModule } from '@blockframes/event/form/shell/shell.module';
 import { ReviewComponent } from '@blockframes/event/layout/review/review.component';
 import { LayoutEventReviewModule } from '@blockframes/event/layout/review/review.module';
 
@@ -108,12 +97,12 @@ const routes: Routes = [{
                 },
                 {
                   path: 'invitations',
-                  component: GuestListComponent,
+                  loadChildren: () => import('@blockframes/event/pages/guest-list/guest-list.module').then(m => m.GuestListModule),
                   data: { animation: 0 }
                 },
                 {
                   path: 'statistics',
-                  component: AnalyticsComponent,
+                  loadChildren: () => import('@blockframes/event/pages/analytics/analytics.module').then(m => m.AnalyticsModule),
                   data: { animation: 1 }
                 }
               ],
@@ -128,27 +117,27 @@ const routes: Routes = [{
                 },
                 {
                   path: 'screening',
-                  component: ScreeningComponent,
+                  loadChildren: () => import('@blockframes/event/form/screening/screening.module').then(m => m.ScreeningModule),
                   data: { animation: 0 }
                 },
                 {
                   path: 'meeting',
-                  component: MeetingComponent,
+                  loadChildren: () => import('@blockframes/event/form/meeting/meeting.module').then(m => m.MeetingModule),
                   data: { animation: 1 }
                 },
                 {
                   path: 'invitations',
-                  component: InvitationComponent,
+                  loadChildren: () => import('@blockframes/event/form/invitation/invitation.module').then(m => m.InvitationModule),
                   data: { animation: 2 }
                 },
                 {
                   path: 'files',
-                  component: MeetingFilesComponent,
+                  loadChildren: () => import('@blockframes/event/form/meeting-files/meeting-files.module').then(m => m.MeetingFilesModule),
                   data: { animation: 3 }
                 },
                 {
                   path: 'statistics',
-                  component: AnalyticsComponent,
+                  loadChildren: () => import('@blockframes/event/pages/analytics/analytics.module').then(m => m.AnalyticsModule),
                   data: { animation: 4 }
                 }
               ],
@@ -204,12 +193,7 @@ const routes: Routes = [{
     ToLabelModule,
     OrgAccessModule,
     MovieFormShellModule,
-    ScreeningModule,
-    InvitationModule,
-    MeetingModule,
-    AnalyticsModule,
-    MeetingFilesModule,
-    GuestListModule,
+    EventFromShellModule,
     LayoutEventReviewModule,
 
     // Material

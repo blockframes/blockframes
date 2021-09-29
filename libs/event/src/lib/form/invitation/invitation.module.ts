@@ -4,6 +4,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { InvitationComponent } from './invitation.component';
 import { InvitationFormUserModule } from '@blockframes/invitation/form/user/user.module';
 import { GuestListModule } from '@blockframes/invitation/components/guest-list/guest-list.module';
+import { RouterModule } from '@angular/router';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -15,6 +16,7 @@ import { MatCardModule } from '@angular/material/card';
     FlexLayoutModule,
     GuestListModule,
     InvitationFormUserModule,
+    RouterModule.forChild([{ path: '', component: InvitationComponent }]),
 
     // Material
     MatCardModule,
