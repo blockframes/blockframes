@@ -1,6 +1,6 @@
 import { Holdback } from '@blockframes/contract/contract/+state/contract.firestore';
 import { BucketTerm } from '@blockframes/contract/term/+state/term.firestore';
-import { MovieCurrency } from '@blockframes/utils/static-model';
+import type { MovieCurrency } from '@blockframes/utils/static-model';
 
 export interface Bucket {
   id: string;

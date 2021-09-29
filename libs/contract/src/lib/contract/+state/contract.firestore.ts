@@ -1,6 +1,6 @@
 
 import { DocumentMeta } from "@blockframes/utils/models-meta";
-import { Media, Territory } from "@blockframes/utils/static-model";
+import type { Media, Territory } from "@blockframes/utils/static-model";
 import { Duration } from '../../term/+state/term.firestore';
 import { Timestamp } from "@blockframes/utils/common-interfaces/timestamp";
 

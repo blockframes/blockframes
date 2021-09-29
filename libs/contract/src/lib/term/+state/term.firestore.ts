@@ -1,5 +1,5 @@
 import { MovieLanguageSpecification } from "@blockframes/movie/+state/movie.firestore";
-import { Media, Territory } from "@blockframes/utils/static-model";
+import type { Media, Territory } from "@blockframes/utils/static-model";
 import type firebase from 'firebase'
 
 export interface Duration<T extends Date | firebase.firestore.Timestamp = Date> {

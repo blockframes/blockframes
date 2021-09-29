@@ -1,4 +1,4 @@
-import {
+import type {
   Language,
   MediaValue,
   Scoring,
@@ -17,9 +17,9 @@ import {
   ShootingPeriod,
   HostedVideoType,
   Territory,
-  SocialGoal
-} from "@blockframes/utils/static-model";
-import { NumberRange } from "@blockframes/utils/static-model/types";
+  SocialGoal,
+  NumberRange
+} from "@blockframes/utils/static-model/types";
 import { Producer, Crew, Cast, Stakeholder, Director } from "@blockframes/utils/common-interfaces/identity";
 import type firebase from 'firebase';
 import { AnalyticsEvents, AnalyticsBase } from '@blockframes/utils/analytics/analytics-model';
