@@ -22,14 +22,13 @@ import { linkFile, getMediaToken as _getMediaToken } from './media';
 import { onEventDelete } from './event';
 import { getTwilioAccessToken, twilioWebhook as _twilioWebhook } from './twilio';
 import { eventWebhook as sendgridEventWebhook } from './sendgrid';
-import { heavyConfig, superHeavyConfig } from '@blockframes/firebase-utils';
+import { hotConfig, heavyConfig, superHeavyConfig } from '@blockframes/firebase-utils';
 import { onNotificationCreate } from './notification';
 import { importAnalytics } from './pubsub/daily-analytics-import';
 import { onOfferCreate } from './offer';
 import { onContractCreate, onContractDelete, onContractUpdate } from './contracts';
 import { onTermDelete } from './terms';
 import { downloadVideo } from './rescue';
-import { production } from '@env';
 
 console.log('Function instance loaded');
 
@@ -114,8 +113,7 @@ export const onInvitationWriteEvent = onDocumentWrite('invitations/{invitationID
 export const hasUserAnOrgOrIsAlreadyInvited = functions().https.onCall(invitations.hasUserAnOrgOrIsAlreadyInvited);
 
 /** Used to get invitation linked to an email when users signup for the first time */
-/** Keep one instance warm on production in order to show up invitation pass field faster when Signing up */
-export const getInvitationLinkedToEmail = functions({ maxInstances: production ? 1 : 0}).https.onCall(invitations.getInvitationLinkedToEmail);
+export const getInvitationLinkedToEmail = functions(hotConfig).https.onCall(invitations.getInvitationLinkedToEmail);
 
 //--------------------------------
 //    Events Management          //
