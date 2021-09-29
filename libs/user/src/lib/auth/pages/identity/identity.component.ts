@@ -220,6 +220,8 @@ export class IdentityComponent implements OnInit, OnDestroy {
   private async update() {
     if (this.form.get('generatedPassword').enabled && this.form.get('password').enabled && this.form.get('generatedPassword').value === this.form.get('password').value) {
       this.snackBar.open('Your new password has to be different than the invitation pass.', 'close', { duration: 5000 });
+      this.creating = false;
+      this.cdr.markForCheck();
       return;
     }
 
