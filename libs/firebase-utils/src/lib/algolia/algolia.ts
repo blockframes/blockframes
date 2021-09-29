@@ -71,7 +71,9 @@ export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string)
   const promises = orgAppAccess.map(async appName => {
     org['hasAcceptedMovies'] = await hasAcceptedMovies(org, appName);
     const orgRecord = createAlgoliaOrganization(org);
-    return indexBuilder(algolia.indexNameOrganizations[appName], adminKey).saveObject(orgRecord);
+    if (orgRecord.name) {
+      return indexBuilder(algolia.indexNameOrganizations[appName], adminKey).saveObject(orgRecord);
+    };
   });
 
   return Promise.all(promises)
@@ -97,7 +99,7 @@ export function createAlgoliaOrganization(org: OrganizationDocument): AlgoliaOrg
 
 export function storeSearchableMovie(
   movie: MovieDocument,
-  organizationName: string,
+  organizationNames: string[],
   adminKey?: string
 ): Promise<any> {
   if (!algolia.adminKey && !adminKey) {
@@ -142,7 +144,7 @@ export function storeSearchableMovie(
       status: movie.productionStatus ? movie.productionStatus : '',
       storeStatus: '',
       budget: movie.estimatedBudget || null,
-      orgName: organizationName,
+      orgNames: organizationNames,
       originalLanguages: movie.originalLanguages,
       runningTime: {
         status: movie.runningTime.status,

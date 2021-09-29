@@ -4,7 +4,7 @@ import { PublicInvitation } from '@blockframes/invitation/+state/invitation.fire
 import { firestore } from 'firebase-admin';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
 import { EmailErrorCodes } from '@blockframes/utils/emails/utils';
-import { Bucket } from '@blockframes/contract/bucket/+state/bucket.model';
+import { Bucket } from '@blockframes/contract/bucket/+state/bucket.firestore';
 import { App } from '@blockframes/utils/apps';
 
 // Type of notification used in front

@@ -11,6 +11,12 @@ section.surface {
 article {
   width: 100%;
   margin-bottom: 40px;
+
+  bf-form-list {
+    mat-form-field {
+      width: 100%;
+    }
+  }
 }
 
 fieldset {
