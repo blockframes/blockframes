@@ -260,6 +260,9 @@ jobs:
           message: 'Build, Deploy & PFT complete for STAGING << pipeline.git.branch >>'
   build-deploy-prepare-shrunk-ci:
     executor: blockframes-ci
+    environment:
+      PROJECT_ID: blockframes-demo-1
+      NG_CONFIG: ''
     steps:
       - prepare_environment
       - build_deploy_prepare_shrunkdb
@@ -350,6 +353,19 @@ jobs:
           command: ./.circleci/submit-stability.sh dist/test-reports
           when: always
           require: test_e2e_all
+      - slack/status
+  test-e2e-demo-1:
+    executor: blockframes-ci
+    environment:
+      PROJECT_ID: blockframes-demo-1
+      NG_CONFIG: ''
+    steps:
+      - slack/notify:
+          message: '🛵 🤠 Deploying & testing e2e against demo-1 (shrunk db)'
+      - prepare_environment
+      - restore_fixtures_from_cache
+      - test_e2e_all
+      - save_build_cache
       - slack/status
   test-e2e-staging:
     executor: blockframes-ci
@@ -569,27 +585,27 @@ workflows:
             branches:
               only:
                 - ci
-  # run-sequential-online-e2e-tests-against-CI-branch-and-shrunk-project:
-  #   jobs:
-  #     - build-deploy-prepare-shrunk-ci:
-  #         filters:
-  #           branches:
-  #             only:
-  #               - ci
-  #     - test-e2e-ci:
-  #         requires:
-  #           - build-deploy-prepare-shrunk-ci
-  #         filters:
-  #           branches:
-  #             only:
-  #               - ci
-  #     - unit-tests-ci:
-  #         requires:
-  #           - build-deploy-prepare-shrunk-ci
-  #         filters:
-  #           branches:
-  #             only:
-  #               - ci
+  run-sequential-online-e2e-tests-against-CI-branch-and-shrunk-project:
+    jobs:
+      - build-deploy-prepare-shrunk-ci:
+          filters:
+            branches:
+              only:
+                - ci
+      - test-e2e-demo-1:
+          requires:
+            - build-deploy-prepare-shrunk-ci
+          filters:
+            branches:
+              only:
+                - ci
+      # - unit-tests-ci:
+      #     requires:
+      #       - build-deploy-prepare-shrunk-ci
+      #     filters:
+      #       branches:
+      #         only:
+      #           - ci
   e2e-tests:
     jobs:
       - prepare-emulators:
