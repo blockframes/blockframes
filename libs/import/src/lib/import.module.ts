@@ -14,11 +14,11 @@ import { MatSelectModule } from '@angular/material/select';
 
 // Libraries
 import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-uploader.module';
-import { ViewExtractedElementsModule } from './components/view-extracted-elements/view-extracted-elements.module';
+import { ViewExtractedElementsModule } from './view-extracted-elements/view-extracted-elements.module';
 
 // Components
-import { ImportContainerComponent } from './pages/import-container/import-container.component';
-import { ImportSpreadsheetComponent } from './components/import-spreadsheet/import-spreadsheet.component';
+import { ImportContainerComponent } from './import.component';
+import { ImportSpreadsheetComponent } from './import-spreadsheet/import-spreadsheet.component';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
 

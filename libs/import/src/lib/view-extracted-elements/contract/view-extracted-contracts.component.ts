@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, Optional
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import {
-  extract, ExtractConfig, SheetTab, ValueWithWarning, getStatic,
+  extract, ExtractConfig, SheetTab, ValueWithWarning,
   getStaticList,
   split,
 } from '@blockframes/utils/spreadsheet';
@@ -11,7 +11,7 @@ import { createTerm } from '@blockframes/contract/term/+state/term.model';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { Intercom } from 'ng-intercom';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { ContractsImportState, SpreadsheetImportError } from '../../../import-utils';
+import { ContractsImportState, SpreadsheetImportError } from '../../utils';
 import { AuthQuery } from '@blockframes/auth/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { Media, Territory } from '@blockframes/utils/static-model';

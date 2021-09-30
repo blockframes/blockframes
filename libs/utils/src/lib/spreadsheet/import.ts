@@ -1,4 +1,4 @@
-import { SpreadsheetImportError } from 'libs/import/src/lib/import-utils';
+import { SpreadsheetImportError } from 'libs/import/src/lib/utils';
 import { WorkBook, WorkSheet, utils, read } from 'xlsx';
 import { getKeyIfExists } from '../helpers';
 import { parseToAll, Scope } from '../static-model';

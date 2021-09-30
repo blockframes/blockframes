@@ -27,7 +27,7 @@ import {
   formatStakeholders
 } from '@blockframes/utils/spreadsheet/format';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
-import { MovieImportState } from '../../../import-utils';
+import { MovieImportState } from '../../utils';
 import { createDocumentMeta } from '@blockframes/utils/models-meta';
 import { UserService } from '@blockframes/user/+state';
 import { RouterQuery } from '@datorama/akita-ng-router-store';

@@ -4,7 +4,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { extract, ExtractConfig, SheetTab, ValueWithWarning } from '@blockframes/utils/spreadsheet';
 import { Intercom } from 'ng-intercom';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { OrganizationsImportState, SpreadsheetImportError } from '../../../import-utils';
+import { OrganizationsImportState, SpreadsheetImportError } from '../../utils';
 import { AuthQuery, createUser } from '@blockframes/auth/+state';
 import { createOrganization, OrganizationService } from '@blockframes/organization/+state';
 import { UserService } from '@blockframes/user/+state';
