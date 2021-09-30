@@ -1,33 +1,102 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, Optional } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
-import { SheetTab } from '@blockframes/utils/spreadsheet';
+import { extract, ExtractConfig, SheetTab, ValueWithWarning } from '@blockframes/utils/spreadsheet';
 import { Intercom } from 'ng-intercom';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { OrganizationsImportState } from '../../../import-utils';
+import { OrganizationsImportState, SpreadsheetImportError } from '../../../import-utils';
 import { AuthQuery, createUser } from '@blockframes/auth/+state';
 import { createOrganization, OrganizationService } from '@blockframes/organization/+state';
 import { UserService } from '@blockframes/user/+state';
 import { getOrgModuleAccess, Module } from '@blockframes/utils/apps';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
+import { Territory } from '@blockframes/utils/static-model';
 
-enum SpreadSheetOrganization {
-  fullDenomination,
-  publicDenomination,
-  email,
-  activity,
-  fiscalNumber,
-  street,
-  city,
-  zipCode,
-  region,
-  country,
-  phoneNumber,
-  superAdminEmail,
-  catalogAccess,
-  festivalAccess,
-  financiersAccess,
+const separator = ',';
+
+interface FieldsConfig {
+  denomination: {
+    full: string,
+    public: string
+  },
+  email: string,
+  org: {
+    activity: any,
+    fiscalNumber: string,
+    addresses: {
+      main: {
+        street: string,
+        city: string,
+        zipCode: string,
+        region: string,
+        country: Territory,
+        phoneNumber: string,
+      }
+    }
+  },
+  superAdminEmail: string,
+  catalogAccess: Module[],
+  festivalAccess: Module[],
+  financiersAccess: Module[],
 }
+
+type FieldsConfigType = ExtractConfig<FieldsConfig>;
+
+const fieldsConfig: FieldsConfigType = {
+  /* a */ 'denomination.full': (value: string) => value.trim(),
+  /* b */ 'denomination.public': (value: string) => value.trim(),
+  /* c */ 'email': (value: string) => value.trim().toLowerCase().trim(),
+  /* d */ 'org.activity': (value: string) => {
+    if (!value) {
+      throw new Error(JSON.stringify({
+        type: 'warning',
+        field: 'organization.activity',
+        name: 'Activity',
+        reason: 'Optional field is missing',
+        hint: 'Edit corresponding sheet field.'
+      }))
+    }
+    const activity = getKeyIfExists('orgActivity', value);
+    if (activity) {
+      return activity;
+    } else {
+      const warning: SpreadsheetImportError = {
+        type: 'warning',
+        field: 'activity',
+        name: 'Activity',
+        reason: `${value} not found in activity list`,
+        hint: 'Edit corresponding sheet field.'
+      };
+      return new ValueWithWarning(value, warning);
+    }
+  },
+  /* e */ 'org.fiscalNumber': (value: string) => value,
+  /* f */ 'org.addresses.main.street': (value: string) => value,
+  /* g */ 'org.addresses.main.city': (value: string) => value,
+  /* h */ 'org.addresses.main.zipCode': (value: string) => value,
+  /* i */ 'org.addresses.main.region': (value: string) => value,
+  /* j */ 'org.addresses.main.country': (value: string) => {
+    const country = getKeyIfExists('territories', value);
+    if (country) {
+      return country;
+    } else {
+      const warning: SpreadsheetImportError = {
+        type: 'warning',
+        field: 'addresses.main.country',
+        name: 'Country',
+        reason: `${value} not found in territories list`,
+        hint: 'Edit corresponding sheet field.'
+      };
+      return new ValueWithWarning(value, warning);
+    }
+  },
+  /* k */ 'org.addresses.main.phoneNumber': (value: string) => value,
+  /* l */ 'superAdminEmail': (value: string) => value,
+  /* m */ 'catalogAccess': (value: string) => value.split(separator).map(m => m.trim().toLowerCase()) as Module[],
+  /* n */ 'festivalAccess': (value: string) => value.split(separator).map(m => m.trim().toLowerCase()) as Module[],
+  /* o */ 'financiersAccess': (value: string) => value.split(separator).map(m => m.trim().toLowerCase()) as Module[],
+};
+
 
 @Component({
   selector: 'import-view-extracted-organizations',
@@ -39,7 +108,6 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
 
   public orgsToUpdate = new MatTableDataSource<OrganizationsImportState>();
   public orgsToCreate = new MatTableDataSource<OrganizationsImportState>();
-  private separator = ',';
   public isUserBlockframesAdmin = false;
 
   constructor(
@@ -63,14 +131,18 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
   public async format(sheetTab: SheetTab) {
     this.clearDataSources();
     const matSnackbarRef = this.snackBar.open('Loading... Please wait', 'close');
-    for (const spreadSheetRow of sheetTab.rows) {
+    let i = 0;
+    while (sheetTab.rows[i].length > 0) {
+      const spreadSheetRow= sheetTab.rows[i];
+      i++;
 
+      const { data, errors, warnings, } = extract<FieldsConfig>([spreadSheetRow], fieldsConfig);
       // ORG ID
       // Create/retreive the org
       let org = createOrganization();
       let newOrg = true;
-      if (spreadSheetRow[SpreadSheetOrganization.email]) {
-        const [existingOrg] = await this.organizationService.getValue(ref => ref.where('email', '==', spreadSheetRow[SpreadSheetOrganization.email] as string));
+      if (data.email) {
+        const [existingOrg] = await this.organizationService.getValue(ref => ref.where('email', '==', data.email));
         if (existingOrg) {
           org = existingOrg;
           newOrg = false;
@@ -80,12 +152,12 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
       const importErrors = {
         org,
         newOrg,
-        errors: [],
+        errors: warnings,
       } as OrganizationsImportState;
 
       let superAdmin = createUser();
-      if (spreadSheetRow[SpreadSheetOrganization.superAdminEmail]) {
-        const [existingSuperAdmin] = await this.userService.getValue(ref => ref.where('email', '==', spreadSheetRow[SpreadSheetOrganization.superAdminEmail] as string));
+      if (data.superAdminEmail) {
+        const [existingSuperAdmin] = await this.userService.getValue(ref => ref.where('email', '==', data.superAdminEmail));
         if (existingSuperAdmin) {
           superAdmin = existingSuperAdmin;
 
@@ -106,100 +178,43 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
 
       importErrors.superAdmin = superAdmin;
 
-      if (spreadSheetRow[SpreadSheetOrganization.fullDenomination]) {
+      if (data.denomination && data.denomination) {
         /**
         * @dev We process this data only if this is for a new org
         */
         if (newOrg) {
           // SUPER ADMIN
-          if (spreadSheetRow[SpreadSheetOrganization.superAdminEmail]) {
-            importErrors.superAdmin.email = spreadSheetRow[SpreadSheetOrganization.superAdminEmail].trim().toLowerCase();
+          if (data.superAdminEmail) {
+            importErrors.superAdmin.email = data.superAdminEmail.trim().toLowerCase();
           }
         }
 
         // DENOMINATION
-        if (spreadSheetRow[SpreadSheetOrganization.fullDenomination]) {
-          importErrors.org.denomination.full = spreadSheetRow[SpreadSheetOrganization.fullDenomination].trim();
+        if (data.denomination.full) {
+          importErrors.org.denomination.full = data.denomination.full;
         }
 
-        if (spreadSheetRow[SpreadSheetOrganization.publicDenomination]) {
-          importErrors.org.denomination.public = spreadSheetRow[SpreadSheetOrganization.publicDenomination].trim();
+        if (data.denomination.public) {
+          importErrors.org.denomination.public = data.denomination.public;
         }
 
         // EMAIL
-        if (spreadSheetRow[SpreadSheetOrganization.email]) {
-          importErrors.org.email = spreadSheetRow[SpreadSheetOrganization.email].trim().toLowerCase();
+        if (data.email) {
+          importErrors.org.email = data.email;
         }
 
         // ORG INFOS
-        if (spreadSheetRow[SpreadSheetOrganization.activity]) {
-          const activity = getKeyIfExists('orgActivity', spreadSheetRow[SpreadSheetOrganization.activity]);
-          if (activity) {
-            importErrors.org.activity = activity;
-          } else {
-            importErrors.errors.push({
-              type: 'warning',
-              field: 'activity',
-              name: 'Activity',
-              reason: `${spreadSheetRow[SpreadSheetOrganization.activity]} not found in activity list`,
-              hint: 'Edit corresponding sheet field.'
-            });
-          }
-        } else {
-          // ACTIVITY
-          importErrors.errors.push({
-            type: 'warning',
-            field: 'organization.activity',
-            name: 'Activity',
-            reason: 'Optional field is missing',
-            hint: 'Edit corresponding sheet field.'
-          });
+        if (data.org) {//
+          importErrors.org = {
+            ...importErrors.org,
+            ...data.org,
+          };
         }
 
-        if (spreadSheetRow[SpreadSheetOrganization.fiscalNumber]) {
-          importErrors.org.fiscalNumber = spreadSheetRow[SpreadSheetOrganization.fiscalNumber];
-        }
-
-        // ADDRESS
-        if (spreadSheetRow[SpreadSheetOrganization.street]) {
-          importErrors.org.addresses.main.street = spreadSheetRow[SpreadSheetOrganization.street];
-        }
-
-        if (spreadSheetRow[SpreadSheetOrganization.city]) {
-          importErrors.org.addresses.main.city = spreadSheetRow[SpreadSheetOrganization.city];
-        }
-
-        if (spreadSheetRow[SpreadSheetOrganization.zipCode]) {
-          importErrors.org.addresses.main.zipCode = spreadSheetRow[SpreadSheetOrganization.zipCode];
-        }
-
-        if (spreadSheetRow[SpreadSheetOrganization.region]) {
-          importErrors.org.addresses.main.region = spreadSheetRow[SpreadSheetOrganization.region];
-        }
-
-        if (spreadSheetRow[SpreadSheetOrganization.country]) {
-          const country = getKeyIfExists('territories', spreadSheetRow[SpreadSheetOrganization.country]);
-          if (country) {
-            importErrors.org.addresses.main.country = country;
-          } else {
-            importErrors.errors.push({
-              type: 'warning',
-              field: 'addresses.main.country',
-              name: 'Country',
-              reason: `${spreadSheetRow[SpreadSheetOrganization.country]} not found in territories list`,
-              hint: 'Edit corresponding sheet field.'
-            });
-          }
-
-        }
-
-        if (spreadSheetRow[SpreadSheetOrganization.phoneNumber]) {
-          importErrors.org.addresses.main.phoneNumber = spreadSheetRow[SpreadSheetOrganization.phoneNumber];
-        }
 
         // APP ACCESS
-        if (spreadSheetRow[SpreadSheetOrganization.catalogAccess]) {
-          const [module1, module2]: Module[] = spreadSheetRow[SpreadSheetOrganization.catalogAccess].split(this.separator).map(m => m.trim().toLowerCase());
+        if (data.catalogAccess) {
+          const [module1, module2]: Module[] = data.catalogAccess;
           if (module1) {
             importErrors.org.appAccess.catalog[module1] = true;
           }
@@ -208,8 +223,8 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
           }
         }
 
-        if (spreadSheetRow[SpreadSheetOrganization.festivalAccess]) {
-          const [module1, module2]: Module[] = spreadSheetRow[SpreadSheetOrganization.festivalAccess].split(this.separator).map(m => m.trim().toLowerCase());
+        if (data.festivalAccess) {
+          const [module1, module2]: Module[] = data.festivalAccess;
           if (module1) {
             importErrors.org.appAccess.festival[module1] = true;
           }
@@ -218,8 +233,8 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
           }
         }
 
-        if (spreadSheetRow[SpreadSheetOrganization.financiersAccess]) {
-          const [module1, module2]: Module[] = spreadSheetRow[SpreadSheetOrganization.financiersAccess].split(this.separator).map(m => m.trim().toLowerCase());
+        if (data.financiersAccess) {
+          const [module1, module2]: Module[] = data.financiersAccess;
           if (module1) {
             importErrors.org.appAccess.financiers[module1] = true;
           }
@@ -273,7 +288,7 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
 
     // EMAIL
     if (!organization.email) {
-      importErrors.errors.push({
+      errors.push({
         type: 'warning',
         field: 'organization.email',
         name: 'Organization email',

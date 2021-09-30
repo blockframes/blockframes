@@ -152,7 +152,10 @@ export class SliderComponent implements OnDestroy, AfterContentInit, AfterViewIn
 
     this.slides.changes.pipe(
       takeUntil(this.destroy$)
-    ).subscribe(slides => this.hideArrows = slides.length === 1);
+    ).subscribe(slides => {
+      this.hideArrows = slides.length === 1
+      this.cdr.markForCheck()
+    });
   }
 
   ngAfterContentInit() {

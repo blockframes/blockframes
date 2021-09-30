@@ -113,7 +113,7 @@ export interface AlgoliaMovie extends AlgoliaDefaultProperty {
   status: ProductionStatus | string,
   storeStatus: StoreStatus | string,
   budget: number,
-  orgName: string,
+  orgNames: string[],
   poster: string,
   banner: string,
   originalLanguages: Language[],
