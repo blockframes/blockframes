@@ -1,4 +1,6 @@
-import { Component, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef, OnInit } from '@angular/core';
+import {
+  Component, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef
+} from '@angular/core';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { SpreadsheetImportEvent, ViewExtractedContractsComponent } from '@blockframes/import';
 
