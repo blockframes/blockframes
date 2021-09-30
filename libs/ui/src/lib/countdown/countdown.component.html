@@ -1,9 +1,9 @@
 <section fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="16px">
   <span class="mat-body-1">Event will start in :</span>
-  <div class="counter-display" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="24px">
+  <article fxLayout fxLayoutAlign="space-between center" fxLayoutGap="24px">
     <ng-container *ngFor="let unit of timeUnits; let last = last">
       <span fxLayout="column" fxLayoutAlign="center center"> 
-        <div class="numberContainer" fxLayout fxLayoutAlign="center center">
+        <div fxLayout fxLayoutAlign="center center">
           <p 
             *ngIf="time[unit].current > -1"
             class="mat-title"  
@@ -11,17 +11,17 @@
               {{ time[unit].current | number: "2.0"}}
           </p> 
           <p
-          class="mat-title"
-          *ngIf="time[unit].new > -1"
-          (@tempNumberAnim.done)="onAnimationDone()"
-          [@tempNumberAnim]>
-            {{ time[unit].new | number: "2.0"}}
+            class="mat-title"
+            *ngIf="time[unit].new > -1"
+            (@tempNumberAnim.done)="onAnimationDone()"
+            [@tempNumberAnim]>
+              {{ time[unit].new | number: "2.0"}}
           </p>
         </div>
         <p class="mat-caption">{{ unit }}</p>
       </span>
       <p *ngIf="!last" class="mat-title">:</p>
     </ng-container>
-  </div>
+  </article>
 
 </section>

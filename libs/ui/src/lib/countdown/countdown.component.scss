@@ -1,7 +1,7 @@
 section {
   margin-block: 40px;
   
-  .counter-display {
+  article {
     border: solid 1px var(--primary);
     border-radius: 4px;
     padding: 16px 40px;
@@ -10,7 +10,7 @@ section {
       margin: 0;
     }
   
-    .numberContainer {
+    div {
       position: relative;
       height: 35px;
       width: 40px;
