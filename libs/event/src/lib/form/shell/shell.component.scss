@@ -1,3 +1,7 @@
+:host {
+  display: grid;
+}
+
 header {
   width: 100%;
 }
@@ -17,7 +21,6 @@ form {
   margin: 16px 16px 0 16px;
 }
 
-.buttonContainer {
-  margin-block: 24px;
-  text-align: center;
+.goToEvent {
+  margin: 24px auto 0 auto;
 }
