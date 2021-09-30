@@ -21,11 +21,11 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
-import { CatalogContractViewComponent } from './view.component';
+import { CatalogSaleViewComponent } from './view.component';
 
 
 @NgModule({
-  declarations: [CatalogContractViewComponent],
+  declarations: [CatalogSaleViewComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
@@ -48,7 +48,7 @@ import { CatalogContractViewComponent } from './view.component';
     MatIconModule,
     MatDialogModule,
     MatTooltipModule,
-    RouterModule.forChild([{ path: '', component: CatalogContractViewComponent }]),
+    RouterModule.forChild([{ path: '', component: CatalogSaleViewComponent }]),
   ]
 })
-export class CatalogContractViewModule { }
+export class CatalogSaleViewModule { }

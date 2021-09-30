@@ -4,6 +4,18 @@
   flex-direction: column;
 }
 
+header.import-header {
+  margin-bottom: 24px;
+}
+
+header[mat-tab-nav-bar] button {
+  border: none;
+  background-color: transparent;
+  span {
+    margin-left: 4px;
+  }
+}
+
 mat-spinner {
   align-self: center;
 }

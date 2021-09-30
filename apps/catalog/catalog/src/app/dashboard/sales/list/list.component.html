@@ -1,0 +1,68 @@
+<ng-container *ngIf="sales$ | async as sales; else loading">
+  <ng-container *ngIf="sales.length; else empty">
+    <header class="import-header" fxLayout="row" fxLayoutAlign="space-between center">
+      <h1>My Sales</h1>
+      <div fxLayoutGap="24px">
+        <a test-id="import-titles" mat-stroked-button color="primary" routerLink="./import">
+          <mat-icon svgIcon="excel"></mat-icon>
+          <span>Import Sales</span>
+        </a>
+      </div>
+    </header>
+
+    <header mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
+      <button mat-tab-link (click)="resetFilter()" [active]="(filter$|async) === ''">
+        All Sales<span *ngIf="(salesCount$ | async) as salesCount">({{ salesCount.all }})</span>
+      </button>
+      <button mat-tab-link (click)="applyFilter('pending')" [active]="(filter$ | async) === 'pending'">
+        New <span *ngIf="(salesCount$ | async) as salesCount">({{ salesCount.new }})</span>
+      </button>
+      <button mat-tab-link (click)="applyFilter('accepted')" [active]="(filter$ | async) === 'accepted'">
+        Accepted <span *ngIf="(salesCount$ | async) as salesCount">({{ salesCount.accepted }})</span>
+      </button>
+      <button mat-tab-link (click)="applyFilter('declined')" [active]="(filter$ | async) === 'declined'">
+        Declined <span *ngIf="(salesCount$ | async) as salesCount">({{ salesCount.declined }})</span>
+      </button>
+      <button mat-tab-link (click)="applyFilter('archived')" [active]="(filter$ | async) === 'archived'">
+        Archived <span *ngIf="(salesCount$ | async) as salesCount">({{ salesCount.archived }})</span>
+      </button>
+    </header>
+
+
+    <mat-card>
+      <bf-table [source]="sales | filterBy: filterBySalesStatus: filter.value" clickable useFilter pagination="50" (rowClick)="goToSale($event)">
+        <ng-template colRef="_meta.createdAt" label="Date" let-date>{{ date | date:'MM/dd/yyyy'}}</ng-template>
+        <ng-template colRef="licensor" label="Licensor" let-licensor>{{ licensor }}</ng-template>
+        <ng-template colRef="licensee" label="Licensee" let-licensee>{{ licensee }}</ng-template>
+        <ng-template colRef="offerId" label="Offer Reference" let-id>{{ id }}</ng-template>
+        <ng-template colRef="title" label="Title" let-title>
+          {{ title | maxLength:50 }}
+        </ng-template>
+        <ng-template colRef="price" label="Price" let-income>
+          <ng-container *ngIf="income?.price; else noIncome">
+            {{income.price | currency:income.currency}}
+          </ng-container>
+        </ng-template>
+        <ng-template #noIncome>-</ng-template>
+        <ng-template colRef="status" label="Approval" let-status>
+          <bf-tag>{{ status | toLabel: 'contractStatus' }}</bf-tag>
+        </ng-template>
+      </bf-table>
+    </mat-card>
+  </ng-container>
+</ng-container>
+
+<ng-template #loading>
+  <mat-spinner></mat-spinner>
+</ng-template>
+
+<ng-template #empty>
+  <section fxLayout="column" fxLayoutAlign="center center" fxFlexGap="16">
+    <h1>You have no Sales yet.</h1>
+    <p>
+      You will be notified as soon as a buyer makes an offer on your titles.
+    </p>
+    <button (click)="openIntercom()" mat-button>Contact the Archipel Team</button>
+    <img asset="empty_contract.svg" alt="Image, you have no sales yet">
+  </section>
+</ng-template>
