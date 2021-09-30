@@ -1,6 +1,6 @@
 export interface PermissionsDocument {
   id: string;
-  roles: Roles
+  roles: Roles;
   canCreate: string[];
   canRead: string[];
   canUpdate: string[];
