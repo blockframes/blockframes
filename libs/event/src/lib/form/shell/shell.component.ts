@@ -52,6 +52,7 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const eventId$ = this.route.params.pipe(pluck('eventId'));
 
+    // @TODO #6780
     this.sub = eventId$.pipe(
       switchMap((eventId: string) => this.service.valueChanges(eventId))
     ).subscribe(event => {
