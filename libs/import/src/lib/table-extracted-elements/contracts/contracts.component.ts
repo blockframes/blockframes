@@ -8,7 +8,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { ViewImportErrorsComponent } from '../view-import-errors/view-import-errors.component';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { sortingDataAccessor } from '@blockframes/utils/table';
-import { ContractsImportState, SpreadsheetImportError } from '../../../import-utils';
+import { ContractsImportState, SpreadsheetImportError } from '../../utils';
 import { TermService } from '@blockframes/contract/term/+state/term.service';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { getCurrentApp } from '@blockframes/utils/apps';
