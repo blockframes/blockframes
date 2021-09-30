@@ -1,4 +1,4 @@
-<ng-container *ngIf="!!event">
+<ng-container *ngIf="isEventStarted(event$ | async)">
   <h2>Statistics</h2>
   <ng-container *ngIf="analytics as analytics; else loading">
     <ng-container *ngIf="analytics.length else noAnalytics">
@@ -59,3 +59,4 @@
     </article>
   </ng-template>
 </ng-container>
+

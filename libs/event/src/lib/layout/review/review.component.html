@@ -4,19 +4,29 @@
   </a>
 </ng-template>
 
-<ng-container *ngIf="event">
-  <h2>Details</h2>
-  <mat-card>
+<ng-container *ngIf="event$ | async as event">
+  <section class="surface">
+    <h2>Details</h2>
     <h5>Event Title</h5>
     <p>{{ event.title }}</p>
     <h5>Is Private</h5>
     <p>{{ event.isPrivate ? 'Yes' : 'No' }}</p>
     <h5>Date & Time</h5>
     <pre class="mat-body-1">{{ event | eventRange }}</pre>
-  </mat-card>
-  
-  <h2>Invitations</h2>
-  <mat-card>
-    <invitation-guest-list [invitations]="invitations$ | async"></invitation-guest-list>
-  </mat-card>
+  </section>
+
+  <nav mat-tab-nav-bar>
+    <ng-container *ngFor="let tab of tabs"> 
+      <a mat-tab-link 
+      [routerLink]="tab.path" 
+      routerLinkActive 
+      #rla="routerLinkActive"
+      [active]="rla.isActive">
+      {{ tab.label }}</a>
+    </ng-container>
+  </nav>
 </ng-container>
+
+<div class="routerContainer" [@routeAnimation]="animationOutlet(outlet)">
+  <router-outlet #outlet="outlet"></router-outlet> 
+</div>
