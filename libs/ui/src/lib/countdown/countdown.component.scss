@@ -1,27 +1,33 @@
-section {
+:host {
   margin-block: 40px;
+  margin-inline: auto;
+  text-align: center;
+  > :first-child {
+    margin-bottom: 16px;
+  } 
   
-  article {
-    border: solid 1px var(--primary);
-    border-radius: 4px;
-    padding: 16px 40px;
+}
+
+article {
+  border: solid 1px var(--primary);
+  border-radius: 4px;
+  padding: 16px 40px;
+
+  .mat-caption, .mat-title {
+    margin: 0;
+  }
+
+ > * div {
+    height: 35px;
+    width: 40px;
+    overflow: hidden;
   
-    .mat-caption, .mat-title {
-      margin: 0;
-    }
-  
-    div {
-      position: relative;
-      height: 35px;
-      width: 40px;
-      overflow: hidden;
-    
-      p {
-        position: absolute;
-        height: 100%;
-      }
+    p {
+      position: absolute;
+      height: 100%;
     }
   }
 }
+
 
 

@@ -1,27 +1,12 @@
-<section fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="16px">
-  <span class="mat-body-1">Event will start in :</span>
+  <p class="mat-body-1">Event will start in :</p>
   <article fxLayout fxLayoutAlign="space-between center" fxLayoutGap="24px">
     <ng-container *ngFor="let unit of timeUnits; let last = last">
-      <span fxLayout="column" fxLayoutAlign="center center"> 
-        <div fxLayout fxLayoutAlign="center center">
-          <p 
-            *ngIf="time[unit].current > -1"
-            class="mat-title"  
-            [@numberAnim]="time[unit].new">
-              {{ time[unit].current | number: "2.0"}}
-          </p> 
-          <p
-            class="mat-title"
-            *ngIf="time[unit].new > -1"
-            (@tempNumberAnim.done)="onAnimationDone()"
-            [@tempNumberAnim]>
-              {{ time[unit].new | number: "2.0"}}
-          </p>
+      <ng-container *ngIf="time[unit] | async as value">
+        <div fxLayout="column">
+          <p class="mat-title" [@slideUp]="value">{{ value }}</p>
+          <p class="mat-caption">{{ unit }}</p>
         </div>
-        <p class="mat-caption">{{ unit }}</p>
-      </span>
+      </ng-container>
       <p *ngIf="!last" class="mat-title">:</p>
     </ng-container>
   </article>
-
-</section>
