@@ -4,12 +4,10 @@
   If you can't find the files you're looking for, you can upload them directly in <a routerLink="/c/o/dashboard/files">My Files</a> page.
 </p>
 
-<div fxLayout="row">
-  <button class="manage-files-btn" mat-stroked-button color="primary" (click)="openFileSelector()">
-    <mat-icon svgIcon="folder"></mat-icon>
-    <span>Add Files</span>
-  </button>
-</div>
+<button class="manage-files-btn" mat-stroked-button color="primary" (click)="openFileSelector()">
+  <mat-icon svgIcon="folder"></mat-icon>
+  <span>Add Files</span>
+</button>
 
 <p>Selected Files ({{files.value.length}})</p>
 <mat-divider></mat-divider>

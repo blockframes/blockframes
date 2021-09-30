@@ -29,7 +29,7 @@ const navTabs: NavTabs = {
   templateUrl: './shell.component.html',
   styleUrls: ['./shell.component.scss'],
   animations: [routeAnimation],
-  changeDetection: ChangeDetectionStrategy.Default  // required for changes on "pristine" for the save button
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EventFormShellComponent implements OnInit, OnDestroy {
   tabs$: Observable<TabConfig[]>;
@@ -97,6 +97,7 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
       }
       this.service.update(value);
       this.form.markAsPristine();
+      this.cdr.markForCheck();
     }
     return true;
   }
