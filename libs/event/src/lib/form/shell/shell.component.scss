@@ -1,5 +1,6 @@
 :host {
-  display: grid;
+  display: flex;
+  flex-direction: column;
 }
 
 header {
@@ -22,5 +23,6 @@ form {
 }
 
 .goToEvent {
-  margin: 24px auto 0 auto;
+  margin-top: 24px;
+  align-self: center;
 }
