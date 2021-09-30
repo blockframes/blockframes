@@ -1,10 +1,12 @@
+
 import { Component, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef, OnInit } from '@angular/core';
+
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { AuthQuery } from '@blockframes/auth/+state';
+
+import { SpreadsheetImportEvent } from './utils';
 import { ViewExtractedMoviesComponent } from './view-extracted-elements/movies/view-extracted-movies.component';
 import { ViewExtractedContractsComponent } from './view-extracted-elements/contract/view-extracted-contracts.component';
 import { ViewExtractedOrganizationsComponent } from './view-extracted-elements/organizations/view-extracted-organizations.component';
-import { SpreadsheetImportEvent } from './import-spreadsheet/import-spreadsheet.component';
 
 @Component({
   selector: 'import-container',
@@ -14,24 +16,18 @@ import { SpreadsheetImportEvent } from './import-spreadsheet/import-spreadsheet.
 })
 export class ImportContainerComponent implements OnInit {
 
-  @ViewChild('viewExtractedMoviesComponent') viewExtractedMoviesComponent: ViewExtractedMoviesComponent;
-  @ViewChild('viewExtractedContractsComponent') viewExtractedContractsComponent: ViewExtractedContractsComponent;
-  @ViewChild('viewExtractedOrganizationsComponent') viewExtractedOrganizationsComponent: ViewExtractedOrganizationsComponent;
+  @ViewChild('viewExtractedComponent') viewExtractedComponent: ViewExtractedMoviesComponent |ViewExtractedContractsComponent | ViewExtractedOrganizationsComponent;
 
-  public importedFiles = false;
   public fileType: string;
-  public isUserBlockframesAdmin = false;
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private dynTitle: DynamicTitleService,
-    private authQuery: AuthQuery,
   ) {
-    this.dynTitle.setPageTitle('Submit your titles')
+    this.dynTitle.setPageTitle('Submit your titles');
   }
 
   ngOnInit() {
-    this.isUserBlockframesAdmin = this.authQuery.isBlockframesAdmin;
     this.cdRef.markForCheck();
   }
 
@@ -39,8 +35,7 @@ export class ImportContainerComponent implements OnInit {
     this.fileType = importEvent.fileType;
     this.cdRef.detectChanges();
 
-    const childViewName = `viewExtracted${importEvent.fileType[0].toUpperCase() + importEvent.fileType.substr(1).toLowerCase()}Component`;
-    this[childViewName].format(importEvent.sheet);
+    this.viewExtractedComponent.format(importEvent.sheet);
   }
 
   back() {

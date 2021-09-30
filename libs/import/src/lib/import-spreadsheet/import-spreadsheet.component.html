@@ -3,16 +3,31 @@
     <h1>{{ pageTitle }} </h1>
 
     <div fxLayout="column" fxLayoutAlign="center" fxLayoutGap="8px">
-      <button mat-stroked-button color="primary" (click)="downloadTemplate('title')">
-        <mat-icon svgIcon="cloud_download"></mat-icon><span>Download our template to import in bulk</span>
-      </button>
+      <a
+        color="primary"
+        mat-stroked-button
+        download="import-title-template-admin.xlsx"
+        href="/assets/templates/import-title-template-admin.xlsx"
+      >
+        <mat-icon svgIcon="cloud_download"></mat-icon><span>Download our excel titles template</span>
+      </a>
       <ng-container *ngIf="isUserBlockframesAdmin">
-        <button mat-stroked-button color="primary" (click)="downloadTemplate('contracts')">
+        <a
+          color="primary"
+          mat-stroked-button
+          download="import-contracts-template-admin.xlsx"
+          href="/assets/templates/import-contracts-template-admin.xlsx"
+        >
           <mat-icon svgIcon="cloud_download"></mat-icon><span>Download our excel contracts template</span>
-        </button>
-        <button mat-stroked-button color="primary" (click)="downloadTemplate('organizations')">
-          <mat-icon svgIcon="cloud_download"></mat-icon><span>Download our excel organization template</span>
-        </button>
+        </a>
+        <a
+          color="primary"
+          mat-stroked-button
+          download="import-organizations-template-admin.xlsx"
+          href="/assets/templates/import-organizations-template-admin.xlsx"
+        >
+          <mat-icon svgIcon="cloud_download"></mat-icon><span>Download our excel organizations template</span>
+        </a>
       </ng-container>
     </div>
   </section>
@@ -21,7 +36,7 @@
     <mat-form-field appearance="outline">
       <mat-label>Select import type</mat-label>
       <mat-select [formControl]="fileType" test-id="import-select">
-        <mat-option value="movies">Movies</mat-option>
+        <mat-option value="titles">Titles</mat-option>
         <mat-option value="contracts">Contracts</mat-option>
         <mat-option value="organizations">Organizations</mat-option>
       </mat-select>
@@ -43,7 +58,7 @@
     </ng-container>
 
     <ng-template #fileUpload>
-      <input #filePicker id="filePicker" [accept]="allowedTypes" type="file" (change)="importSpreadsheet($event.target.files)" />
+      <input #filePicker id="filePicker" type="file" [accept]="['.xls', '.xlsx', '.ods', '.csv']" (change)="importSpreadsheet($event.target.files)" />
       <button test-id="import-file" mat-flat-button color="primary" (click)="filePicker.click()">Import File</button>
       <p class="mat-caption">Accepted Formats: .xls, .csv</p>
     </ng-template>
