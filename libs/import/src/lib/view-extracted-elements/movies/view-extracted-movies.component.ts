@@ -238,7 +238,6 @@ export class ViewExtractedMoviesComponent implements OnInit {
     this.currentRows = sheetTab.rows.slice(i, i + this.dedicatedLinesPerTitle);
 
     while (this.currentRows.length) {
-      console.log({rows:this.currentRows})
       const { data, errors, warnings } = extract<ImportType>(this.currentRows, fieldsConfig)
       this.mapping = data;
       if (!this.mapping.title.original) { break; }

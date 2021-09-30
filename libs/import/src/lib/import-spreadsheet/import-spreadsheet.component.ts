@@ -1,18 +1,18 @@
-import { Component, Output, EventEmitter, ChangeDetectionStrategy, OnInit, ChangeDetectorRef, Optional, OnDestroy } from '@angular/core';
-import { SheetTab, importSpreadsheet } from '@blockframes/utils/spreadsheet';
-import { FormControl } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
-import { Intercom } from 'ng-intercom';
-import { AuthQuery } from '@blockframes/auth/+state';
-import { Subscription } from 'rxjs';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { allowedFiles } from '@blockframes/utils/utils';
-import { getMimeType } from '@blockframes/utils/file-sanitizer';
 
-export interface SpreadsheetImportEvent {
-  sheet: SheetTab,
-  fileType: string,
-}
+import { Component, Output, EventEmitter, ChangeDetectionStrategy, OnInit, ChangeDetectorRef, Optional } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
+import { Intercom } from 'ng-intercom';
+
+import { getMimeType } from '@blockframes/utils/file-sanitizer';
+import { SheetTab, importSpreadsheet } from '@blockframes/utils/spreadsheet';
+
+import { sheetRanges, SpreadsheetImportEvent } from '../utils';
+import { AuthQuery } from '@blockframes/auth/+state';
+
+
+const allowedMimeTypes = ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.oasis.opendocument.spreadsheet', 'text/csv'];
 
 @Component({
   selector: 'import-spreadsheet',
@@ -20,130 +20,72 @@ export interface SpreadsheetImportEvent {
   styleUrls: ['./import-spreadsheet.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ImportSpreadsheetComponent implements OnInit, OnDestroy {
+export class ImportSpreadsheetComponent implements OnInit {
+
   @Output() importEvent = new EventEmitter<{ sheet: SheetTab, fileType: string }>();
+
   public sheets: SheetTab[] = [];
   public fileType = new FormControl();
-  public isUserBlockframesAdmin = false;
+  public isUserBlockframesAdmin = this.authQuery.isBlockframesAdmin;
   public pageTitle = 'Import multiple titles at once';
-  public allowedTypes: string[] = [];
-  public mimeTypes: string[] = [];
-
-  private sub: Subscription;
-  private file: File;
 
   constructor(
-    @Optional() private intercom: Intercom,
-    private http: HttpClient,
     private authQuery: AuthQuery,
-    private cdRef: ChangeDetectorRef,
     private snackBar: MatSnackBar,
+    private cdRef: ChangeDetectorRef,
+    @Optional() private intercom: Intercom,
   ) {
-    this.fileType.setValue('movies');
-
-    const allowedTypes = ['xls', 'csv'];
-    allowedTypes.forEach(type => {
-      this.allowedTypes = this.allowedTypes.concat(allowedFiles[type].extension)
-      this.mimeTypes = this.mimeTypes.concat(allowedFiles[type].mime)
-    });
+    this.fileType.setValue('titles');
   }
 
   ngOnInit() {
-    this.isUserBlockframesAdmin = this.authQuery.isBlockframesAdmin;
     if (this.isUserBlockframesAdmin) {
       this.pageTitle = '[ADMIN] Import multiple items at once';
     }
     this.cdRef.markForCheck();
-
-    this.sub = this.fileType.valueChanges.subscribe(() => {  
-      if (this.sheets.length) {
-        this.importSpreadsheet(this.file);
-      }
-    });
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
   }
 
   importSpreadsheet(files: FileList | File) {
 
+    let file: File;
+
     if ('item' in files) { // FileList
-      if (!files.item(0)) {
-        this.snackBar.open('No file found', 'close', { duration: 1000 });
-        return;
-      }
-      this.file = files.item(0);
-    } else if (!files) { // No files
-        this.snackBar.open('No file found', 'close', { duration: 1000 });
-        return;
+      file = files.item(0);
     } else { // Single file
-      this.file = files;
+      file = files;
     }
 
-    const fileType = getMimeType(this.file);
-    const isFileTypeValid = this.mimeTypes && this.mimeTypes.includes(fileType);
-    if (!isFileTypeValid) {
-      this.snackBar.open(`Unsupported file type: "${fileType}".`, 'close', { duration: 3000 });
-      this.file = undefined;
+    if (!file) {
+      this.snackBar.open('No file found', 'close', { duration: 1000 });
       return;
     }
 
-    let sheetRange: string;
-    if (this.fileType.value === 'movies') {
-      sheetRange = 'A14:BZ1000';
-    } else if (this.fileType.value === 'contracts') {
-      sheetRange = 'A1:Q100';
-    } else if (this.fileType.value === 'organizations') {
-      sheetRange = 'A10:Z100';
-    } else {
-      sheetRange = 'A10:AD100';
+    const mimeType = getMimeType(file);
+    const isMimeTypeValid = allowedMimeTypes.includes(mimeType);
+    if (!isMimeTypeValid) {
+      this.snackBar.open(`Unsupported file type: "${mimeType}".`, 'close', { duration: 3000 });
+      return;
     }
 
     const reader = new FileReader();
     reader.addEventListener('loadend', () => {
       const buffer = new Uint8Array(reader.result as ArrayBuffer);
-      this.sheets = importSpreadsheet(buffer, sheetRange);
+      this.sheets = importSpreadsheet(buffer, sheetRanges[this.fileType.value]);
       this.cdRef.markForCheck();
     })
-    reader.readAsArrayBuffer(this.file);
+    reader.readAsArrayBuffer(file);
   }
 
-  next(): void {
+  next() {
     // trigger the import event to tell parent component go to the next mat-stepper step
     this.importEvent.next({ sheet: this.sheets[0], fileType: this.fileType.value } as SpreadsheetImportEvent);
   }
 
   removeFile() {
     this.sheets = [];
-    this.file = undefined;
   }
 
-  public openIntercom(): void {
+  openIntercom() {
     return this.intercom.show();
   }
-
-  downloadTemplate(templateType: string) {
-    const fileName = this.getTemplateName(templateType);
-    this.http.get(`/assets/templates/${fileName}`, { responseType: 'arraybuffer' })
-      .subscribe(response => {
-        const buffer = new Uint8Array(response);
-        const blob = new Blob([buffer], { type: "application/ms-excel" });
-        const url = URL.createObjectURL(blob);
-        const element = document.createElement('a');
-        element.setAttribute('href', url);
-        element.setAttribute('download', fileName);
-        const event = new MouseEvent('click');
-        element.dispatchEvent(event);
-      });
-  }
-
-  getTemplateName(templateType: string) {
-    if (this.isUserBlockframesAdmin) {
-      return `import-${templateType}-template-admin.xlsx`;
-    } else {
-      return `import-${templateType}-template-customer.xlsx`;
-    }
-  }
-
 }
