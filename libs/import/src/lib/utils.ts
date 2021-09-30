@@ -3,6 +3,13 @@ import { Mandate, Sale } from "@blockframes/contract/contract/+state/contract.mo
 import { Organization } from "@blockframes/organization/+state";
 import { User } from "@blockframes/user/+state/user.model";
 import { Term } from "@blockframes/contract/term/+state/term.model";
+import { SheetTab } from "@blockframes/utils/spreadsheet";
+
+
+export interface SpreadsheetImportEvent {
+  sheet: SheetTab,
+  fileType: string,
+}
 
 export interface SpreadsheetImportError {
   field: string;
@@ -29,4 +36,11 @@ export interface OrganizationsImportState {
   org: Organization;
   superAdmin: User;
   newOrg: boolean;
+}
+
+
+export const sheetRanges = {
+  titles: 'A14:BZ1000',
+  contracts: 'A1:Q100',
+  organizations: 'organizations',
 }
