@@ -1,18 +1,14 @@
-import { Component, Output, EventEmitter, ChangeDetectionStrategy, OnInit, ChangeDetectorRef, Optional, OnDestroy } from '@angular/core';
+import {
+  Component, Output, EventEmitter, ChangeDetectionStrategy, ChangeDetectorRef, Optional,
+} from '@angular/core';
 import { SheetTab, importSpreadsheet } from '@blockframes/utils/spreadsheet';
-import { FormControl } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Intercom } from 'ng-intercom';
 import { AuthQuery } from '@blockframes/auth/+state';
-import { Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { allowedFiles } from '@blockframes/utils/utils';
 import { getMimeType } from '@blockframes/utils/file-sanitizer';
-
-export interface SpreadsheetImportEvent {
-  sheet: SheetTab,
-  fileType: string,
-}
+import { SpreadsheetImportEvent } from '@blockframes/import';
 
 @Component({
   selector: 'import-spreadsheet',
@@ -20,13 +16,11 @@ export interface SpreadsheetImportEvent {
   styleUrls: ['./import-spreadsheet.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ImportSpreadsheetComponent implements OnInit, OnDestroy {
+export class ImportSpreadsheetComponent {
   @Output() importEvent = new EventEmitter<{ sheet: SheetTab, fileType: string }>();
   public sheets: SheetTab[] = [];
-  public fileType = new FormControl('contracts');
   public allowedTypes: string[] = [];
-  public mimeTypes: string[] = [];
-  private sub: Subscription;
+  private mimeTypes: string[] = [];
   private file: File;
 
   constructor(
@@ -36,8 +30,6 @@ export class ImportSpreadsheetComponent implements OnInit, OnDestroy {
     private cdRef: ChangeDetectorRef,
     private snackBar: MatSnackBar,
   ) {
-    // this.fileType.setValue('movies');
-
     const allowedTypes = ['xls', 'csv'];
     allowedTypes.forEach(type => {
       this.allowedTypes = this.allowedTypes.concat(allowedFiles[type].extension)
@@ -45,19 +37,6 @@ export class ImportSpreadsheetComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnInit() {
-    this.cdRef.markForCheck();
-
-    this.sub = this.fileType.valueChanges.subscribe(() => {
-      if (this.sheets.length) {
-        this.importSpreadsheet(this.file);
-      }
-    });
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
-  }
 
   importSpreadsheet(files: FileList | File) {
 
@@ -68,8 +47,8 @@ export class ImportSpreadsheetComponent implements OnInit, OnDestroy {
       }
       this.file = files.item(0);
     } else if (!files) { // No files
-        this.snackBar.open('No file found', 'close', { duration: 1000 });
-        return;
+      this.snackBar.open('No file found', 'close', { duration: 1000 });
+      return;
     } else { // Single file
       this.file = files;
     }
@@ -82,16 +61,7 @@ export class ImportSpreadsheetComponent implements OnInit, OnDestroy {
       return;
     }
 
-    let sheetRange: string;
-    if (this.fileType.value === 'movies') {
-      sheetRange = 'A14:BZ1000';
-    } else if (this.fileType.value === 'contracts') {
-      sheetRange = 'A1:Q100';
-    } else if (this.fileType.value === 'organizations') {
-      sheetRange = 'A10:Z100';
-    } else {
-      sheetRange = 'A10:AD100';
-    }
+    const sheetRange = 'A1:Q100';
 
     const reader = new FileReader();
     reader.addEventListener('loadend', () => {
@@ -104,7 +74,7 @@ export class ImportSpreadsheetComponent implements OnInit, OnDestroy {
 
   next(): void {
     // trigger the import event to tell parent component go to the next mat-stepper step
-    this.importEvent.next({ sheet: this.sheets[0], fileType: this.fileType.value } as SpreadsheetImportEvent);
+    this.importEvent.next({ sheet: this.sheets[0], fileType: 'contracts' } as SpreadsheetImportEvent);
   }
 
   removeFile() {

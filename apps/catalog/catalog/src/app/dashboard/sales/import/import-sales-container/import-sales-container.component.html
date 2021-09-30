@@ -1,7 +1,7 @@
-﻿<import-spreadsheet *ngIf="!fileType" (importEvent)="next($event)"></import-spreadsheet>
-<import-view-extracted-contracts *ngIf="fileType === 'contracts'" #viewExtractedContractsComponent>
+﻿<import-spreadsheet *ngIf="!fileImported" (importEvent)="next($event)"></import-spreadsheet>
+<import-view-extracted-contracts *ngIf="fileImported" #viewExtractedContractsComponent>
 </import-view-extracted-contracts>
-<section *ngIf="fileType" fxLayout="column" fxLayoutAlign="center center">
+<section *ngIf="fileImported" fxLayout="column" fxLayoutAlign="center center">
   <p>Please make sure everything is correct. Once you submit your titles they will instantaneously appear on the Archipel Market platform.</p>
   <button test-id="cancel-import" mat-stroked-button color="warn" (click)="back()">
     <mat-icon svgIcon="block"></mat-icon><span>Cancel</span>

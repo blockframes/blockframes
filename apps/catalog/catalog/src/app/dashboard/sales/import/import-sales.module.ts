@@ -40,7 +40,6 @@ const routes: Routes = [
     MatIconModule,
     MatButtonModule,
 
-    // Librairies
     ViewExtractedElementsModule,
     ImageModule
   ]
