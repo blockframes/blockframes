@@ -8,7 +8,7 @@ import { SpreadsheetImportEvent, ViewExtractedContractsComponent } from '@blockf
   styleUrls: ['./import-sales-container.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ImportSalesContainerComponent implements OnInit {
+export class ImportSalesContainerComponent {
 
   @ViewChild('viewExtractedContractsComponent') viewExtractedContractsComponent: ViewExtractedContractsComponent;
 
@@ -19,10 +19,6 @@ export class ImportSalesContainerComponent implements OnInit {
     private dynTitle: DynamicTitleService,
   ) {
     this.dynTitle.setPageTitle('Import Sales')
-  }
-
-  ngOnInit() {
-    this.cdRef.markForCheck();
   }
 
   async next(importEvent: SpreadsheetImportEvent) {
