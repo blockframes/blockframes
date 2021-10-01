@@ -75,8 +75,8 @@ export class SaleListComponent implements OnInit{
 
   applyFilter(filter?: ContractStatus) {
     this.filter.setValue(filter);
-    const finalFilter = filter === 'pending' ? 'new' : filter;
-    const pageTitle = `My Sales ( ${finalFilter ? capitalize(finalFilter) : 'All'} )`;
+    const titleFilter = filter === 'pending' ? 'new' : filter;
+    const pageTitle = `My Sales ( ${titleFilter ? capitalize(titleFilter) : 'All'} )`;
     this.dynTitle.setPageTitle(pageTitle);
   }
 
