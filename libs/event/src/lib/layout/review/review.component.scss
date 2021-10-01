@@ -1,3 +1,8 @@
+:host {
+  display: block;
+  padding: 24px;
+}
+
 h2 {
   margin-bottom: 24px;
 }
@@ -6,6 +11,7 @@ h5 {
   margin: 0;
 }
 
-mat-card {
-  margin-bottom: 40px;
+.mat-tab-nav-bar {
+  border-bottom: none;
+  margin-block: 24px;
 }
