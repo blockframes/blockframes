@@ -53,7 +53,7 @@
       "@blockframes/event/*": ["libs/event/src/lib/*"],
       "@blockframes/e2e/*": ["libs/e2e/src/lib/*"],
       "@blockframes/landing/*": ["libs/landing/src/lib/*"],
-      "@blockframes/import": ["libs/import/src/index.ts"],
+      "@blockframes/import/*": ["libs/import/src/lib/*"],
       "@blockframes/media/*": ["libs/media/src/lib/*"],
       "@blockframes/testing/*": ["libs/testing/src/lib/*"],
       "@blockframes/firebase-utils": ["libs/firebase-utils/src/index.ts"],
