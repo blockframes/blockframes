@@ -1,7 +1,7 @@
-import { Component, ChangeDetectionStrategy, Optional, } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Optional, OnInit, } from '@angular/core';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { appName, getCurrentApp } from '@blockframes/utils/apps';
-import { Contract, ContractService, contractStatus, ContractStatus, Sale } from '@blockframes/contract/contract/+state';
+import { Contract, ContractService, ContractStatus, Sale } from '@blockframes/contract/contract/+state';
 import { OrganizationQuery, OrganizationService } from '@blockframes/organization/+state';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Intercom } from 'ng-intercom';
@@ -12,7 +12,11 @@ import { IncomeService } from '@blockframes/contract/income/+state';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { sl } from 'date-fns/locale';
+
+
+function capitalize(text: string) {
+  return `${text[0].toUpperCase()}${text.substring(1)}`
+}
 
 
 @Component({
@@ -21,7 +25,7 @@ import { sl } from 'date-fns/locale';
   styleUrls: ['./list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SaleListComponent {
+export class SaleListComponent implements OnInit{
   public app = getCurrentApp(this.routerQuery);
   public appName = appName[this.app];
   public orgId = this.orgQuery.getActiveId();
@@ -71,22 +75,25 @@ export class SaleListComponent {
 
   applyFilter(filter?: ContractStatus) {
     this.filter.setValue(filter);
-    this.dynTitle.setPageTitle(contractStatus[filter]);
+    const finalFilter = filter === 'pending' ? 'new' : filter;
+    const pageTitle = `My Sales ( ${finalFilter ? capitalize(finalFilter) : 'All'} )`;
+    this.dynTitle.setPageTitle(pageTitle);
   }
 
   resetFilter() {
     this.filter.reset('');
-    this.dynTitle.useDefault();
+    this.dynTitle.setPageTitle('My Sales ( All )');
   }
 
   /* index paramater is unused because it is a default paramater from the filter javascript function */
   filterBySalesStatus(sale: Sale, index: number, status: ContractStatus): boolean {
-    //@TODO FILTER DOESN'T FUNCTION FINE.
-    if (status) return false;
-    return sale.status !== status;
+    if (!status) return true;
+    return sale.status === status;
   }
 
-
+  ngOnInit(){
+    this.dynTitle.setPageTitle('My Sales ( All )');
+  }
 
   public openIntercom() {
     return this.intercom.show();

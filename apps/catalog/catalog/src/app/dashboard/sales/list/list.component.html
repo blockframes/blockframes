@@ -28,27 +28,25 @@
       </button>
     </header>
 
-
-    <mat-card>
-      <bf-table [source]="sales | filterBy: filterBySalesStatus: filter.value" clickable useFilter pagination="50" (rowClick)="goToSale($event)">
-        <ng-template colRef="_meta.createdAt" label="Date" let-date>{{ date | date:'MM/dd/yyyy'}}</ng-template>
-        <ng-template colRef="licensor" label="Licensor" let-licensor>{{ licensor }}</ng-template>
-        <ng-template colRef="licensee" label="Licensee" let-licensee>{{ licensee }}</ng-template>
-        <ng-template colRef="offerId" label="Offer Reference" let-id>{{ id }}</ng-template>
-        <ng-template colRef="title" label="Title" let-title>
-          {{ title | maxLength:50 }}
-        </ng-template>
-        <ng-template colRef="price" label="Price" let-income>
-          <ng-container *ngIf="income?.price; else noIncome">
-            {{income.price | currency:income.currency}}
-          </ng-container>
-        </ng-template>
-        <ng-template #noIncome>-</ng-template>
-        <ng-template colRef="status" label="Approval" let-status>
-          <bf-tag>{{ status | toLabel: 'contractStatus' }}</bf-tag>
-        </ng-template>
-      </bf-table>
-    </mat-card>
+    <bf-table [source]="sales | filterBy: filterBySalesStatus: filter.value" clickable useFilter pagination="50"
+      (rowClick)="goToSale($event)">
+      <ng-template colRef="_meta.createdAt" label="Date" let-date>{{ date | date:'MM/dd/yyyy'}}</ng-template>
+      <ng-template colRef="licensor" label="Licensor" let-licensor>{{ licensor | maxLength:50 }}</ng-template>
+      <ng-template colRef="licensee" label="Licensee" let-licensee>{{ licensee | maxLength:50 }}</ng-template>
+      <ng-template colRef="offerId" label="Offer Reference" let-id>{{ id }}</ng-template>
+      <ng-template colRef="title" label="Title" let-title>
+        {{ title | maxLength:50 }}
+      </ng-template>
+      <ng-template colRef="price" label="Price" let-income>
+        <ng-container *ngIf="income?.price; else noIncome">
+          {{income.price | currency:income.currency}}
+        </ng-container>
+      </ng-template>
+      <ng-template #noIncome>-</ng-template>
+      <ng-template colRef="status" label="Approval" let-status>
+        <bf-tag>{{ status | toLabel: 'contractStatus' }}</bf-tag>
+      </ng-template>
+    </bf-table>
   </ng-container>
 </ng-container>
 
@@ -60,8 +58,13 @@
   <section fxLayout="column" fxLayoutAlign="center center" fxFlexGap="16">
     <h1>You have no Sales yet.</h1>
     <p>
-      You will be notified as soon as a buyer makes an offer on your titles.
+      You will be notified as soon as a buyer makes an offer on your titles.<br />
+      Or, you can import your external sales by clicking on the below button.
     </p>
+    <a test-id="import-titles" mat-stroked-button color="primary" routerLink="./import">
+      <mat-icon svgIcon="excel"></mat-icon>
+      <span>Import external Sales</span>
+    </a>
     <button (click)="openIntercom()" mat-button>Contact the Archipel Team</button>
     <img asset="empty_contract.svg" alt="Image, you have no sales yet">
   </section>
