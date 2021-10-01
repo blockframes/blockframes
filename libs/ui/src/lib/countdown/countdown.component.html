@@ -1,4 +1,4 @@
-  <p class="mat-body-1">Event will start in :</p>
+  <p class="mat-body-1">{{ title }}</p>
   <article fxLayout fxLayoutAlign="space-between center" fxLayoutGap="24px">
     <ng-container *ngFor="let unit of timeUnits; let last = last">
       <ng-container *ngIf="time[unit] | async as value">

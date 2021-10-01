@@ -46,7 +46,7 @@ function toDays(delta: number) {
   return days.toString().padStart(2, "0");
 }
 @Component({
-  selector: '[date][timeUnits] countdown-timer',
+  selector: '[date][timeUnits][title] countdown-timer',
   templateUrl: './countdown.component.html',
   styleUrls: ['./countdown.component.scss'],
   animations: [slideUp()],
@@ -56,6 +56,7 @@ export class CountdownComponent implements OnInit {
 
   @Input() date: Date;
   @Input() timeUnits: (keyof TimeObservable)[];
+  @Input() title: string;
   public time: TimeObservable;
   public seconds$: Observable<string>;
   public minutes$: Observable<number>;
