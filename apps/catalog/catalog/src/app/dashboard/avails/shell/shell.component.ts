@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, } from "@angular/core";
 import { ActivatedRoute, } from "@angular/router";
 import { AvailsForm } from "@blockframes/contract/avails/form/avails.form";
 import { BucketForm } from "@blockframes/contract/bucket/form";
-import { ContractService, Mandate, Sale } from "@blockframes/contract/contract/+state";
-import { TermService } from "@blockframes/contract/term/+state";
+import { Contract, ContractService, Mandate, Sale } from "@blockframes/contract/contract/+state";
+import { Term, TermService } from "@blockframes/contract/term/+state";
 import { Movie, MovieService } from "@blockframes/movie/+state";
 import { OrganizationService } from "@blockframes/organization/+state";
 import { combineLatest, Observable, of } from "rxjs";
@@ -50,30 +50,28 @@ export class CatalogAvailsShellComponent {
     map(contracts => contracts.filter(contract => contract.type === 'sale'))
   ) as Observable<Sale[]>;
 
-  public mandateTerms$ = this.mandates$.pipe(
-    switchMap((mandates: Mandate[]) => {
-      const list = mandates.flatMap(movie => movie.termIds);
-      if (list.length === 0) return of([]);
-      return this.termsService.valueChanges(
-        ref => ref.where('id', 'in', list))
-    }),
-    shareReplay({ bufferSize: 1, refCount: true }),
-  );
+  public mandateTerms$ = this.getTerms$(this.mandates$);
 
-  public salesTerms$ = this.sales$.pipe(
-    switchMap((sales: Sale[]) => {
-      const list = sales.flatMap(movie => movie.termIds);
-      if (list.length === 0) return of([]);
-      return this.termsService.valueChanges(
-        ref => ref.where('id', 'in', list)
-      )
-    }),
-    shareReplay({ bufferSize: 1, refCount: true }),
-  );
+  public salesTerms$ = this.getTerms$(this.sales$);
 
   public terms$ = combineLatest(this.mandateTerms$, this.salesTerms$).pipe(
     map(terms => terms.flat())
   )
+
+  private getTerms$(contracts$: Observable<Contract[]>) {
+    return contracts$.pipe(
+      switchMap((contract) => {
+        const list = contract.flatMap(movie => movie.termIds);
+        if (list.length === 0) return (of([]) as Observable<Term<Date>[]>);
+        return this.termsService.valueChanges(
+          ref => ref.where('id', 'in', list)
+        )
+      }),
+      shareReplay({ bufferSize: 1, refCount: true }),
+    )
+  }
+
+
 
 
   constructor(
