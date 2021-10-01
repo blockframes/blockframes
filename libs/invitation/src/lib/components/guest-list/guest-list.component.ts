@@ -27,6 +27,9 @@ const points: Record<InvitationStatus, number> = {
   selector: 'invitation-guest-list',
   templateUrl: './guest-list.component.html',
   styleUrls: ['./guest-list.component.scss'],
+  host: {
+    class: 'surface'
+  },
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GuestListComponent implements OnInit {
@@ -34,6 +37,7 @@ export class GuestListComponent implements OnInit {
   userIndex = algolia.indexNameUsers;
   searchControl = new FormControl();
   search$: Observable<Invitation[]>;
+  @Input() title: string
 
   @ContentChild(TemplateRef) itemTemplate: TemplateRef<unknown>;
 

@@ -1,4 +1,4 @@
-import { SpreadsheetImportError } from 'libs/import/src/lib/import-utils';
+import { SpreadsheetImportError } from 'libs/import/src/lib/utils';
 import { WorkBook, WorkSheet, utils, read } from 'xlsx';
 import { getKeyIfExists } from '../helpers';
 import { parseToAll, Scope } from '../static-model';
@@ -167,7 +167,6 @@ export function extract<T>(rawRows: string[][], extractParams: ExtractConfig<T> 
     const extraParamValues = rawRows.map(row => row[index] ?? '');
     parse(state, extraParamValues, columnIndexedKey, parseFieldFn as any, index, warnings, errors)
   });
-  console.log({ state })
   return {
     data: cleanUp(state as T),
     errors, warnings,
