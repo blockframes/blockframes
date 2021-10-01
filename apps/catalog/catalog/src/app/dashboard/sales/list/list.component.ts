@@ -12,10 +12,17 @@ import { IncomeService } from '@blockframes/contract/income/+state';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { CollectionReference } from '@angular/fire/firestore';
 
 
 function capitalize(text: string) {
   return `${text[0].toUpperCase()}${text.substring(1)}`
+}
+
+function queryFn(ref: CollectionReference) {
+  return ref.where('stakeholders', 'array-contains', this.orgId)
+    .where('type', '==', 'sale')
+    .orderBy('_meta.createdAt', 'desc')
 }
 
 
@@ -25,15 +32,12 @@ function capitalize(text: string) {
   styleUrls: ['./list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SaleListComponent implements OnInit{
+export class SaleListComponent implements OnInit {
   public app = getCurrentApp(this.routerQuery);
   public appName = appName[this.app];
   public orgId = this.orgQuery.getActiveId();
 
-  public sales$ = this.contractService.valueChanges(ref => ref.where('stakeholders', 'array-contains', this.orgId)
-    .where('type', '==', 'sale')
-    .orderBy('_meta.createdAt', 'desc')
-  ).pipe(
+  public sales$ = this.contractService.valueChanges(queryFn).pipe(
     joinWith({
       licensor: (sale: Sale) => this.orgService.valueChanges(sale.sellerId).pipe(map(seller => seller.denomination.full)),
       licensee: (sale: Sale) => this.orgService.valueChanges(sale.buyerId).pipe(map(buyer => buyer.denomination.full)),
@@ -91,7 +95,7 @@ export class SaleListComponent implements OnInit{
     return sale.status === status;
   }
 
-  ngOnInit(){
+  ngOnInit() {
     this.dynTitle.setPageTitle('My Sales ( All )');
   }
 
