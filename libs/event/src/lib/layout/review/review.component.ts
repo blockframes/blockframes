@@ -1,30 +1,41 @@
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { Event } from '../../+state/event.model';
-import { InvitationService, Invitation } from '@blockframes/invitation/+state';
 import { Observable } from 'rxjs';
+import { TabConfig } from '@blockframes/utils/event';
+import { ActivatedRoute, RouterOutlet } from '@angular/router';
+import { routeAnimation } from '@blockframes/utils/animations/router-animations';
+import { EventService } from '@blockframes/event/+state';
+import { pluck, switchMap } from 'rxjs/operators';
+
+const navTabs: TabConfig[] = [
+  { path: 'invitations', label: 'Invitations' },
+  { path: 'statistics', label: 'Statistics' }
+];
 
 @Component({
   selector: 'event-review',
   templateUrl: './review.component.html',
   styleUrls: ['./review.component.scss'],
+  animations: [routeAnimation],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ReviewComponent {
-  private _event: Event;
-  invitations$: Observable<Invitation[]>
+export class ReviewComponent implements OnInit {
+  tabs = navTabs;
+  event$: Observable<Event>;
 
-  @Input() 
-  set event(event: Event) {
-    if (event) {
-      this._event = event;
-      this.invitations$ = this.invitationService.valueChanges(ref => ref.where('type', '==', 'attendEvent').where('eventId', '==', event.id));
-    }
+  constructor(
+    private service: EventService,
+    private route: ActivatedRoute
+  ) { }
+
+  ngOnInit() {
+    this.event$ = this.route.params.pipe(
+      pluck('eventId'),
+      switchMap((eventId: string) => this.service.valueChanges(eventId))
+    );
   }
-  get event() {
-    return this._event;
+
+  animationOutlet(outlet: RouterOutlet) {
+    return outlet?.activatedRouteData?.animation;
   }
-
-  constructor(private invitationService: InvitationService) { }
-
-
 }

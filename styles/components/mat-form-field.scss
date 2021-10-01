@@ -12,7 +12,7 @@
     &.ng-valid, &.ng-invalid {
       .mat-form-field-wrapper {
         padding-bottom: 0.6em;
-      }
+      } 
     }
 
     &-underline {
@@ -71,6 +71,11 @@
       .mat-form-field-outline-end,
       .mat-form-field-outline-gap {
         border-width: 1px;
+      }
+    }
+    &.mat-form-field-disabled {
+      .mat-form-field-outline {
+        color: mat.get-color-from-palette($foreground, divider);
       }
     }
   }

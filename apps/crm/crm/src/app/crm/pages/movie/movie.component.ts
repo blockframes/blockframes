@@ -81,7 +81,8 @@ export class MovieComponent implements OnInit {
       ...this.movie,
       app: this.updateAppAccess(),
       productionStatus: this.movieForm.get('productionStatus').value,
-      internalRef: this.movieForm.get('internalRef').value
+      internalRef: this.movieForm.get('internalRef').value,
+      orgIds: this.movieForm.get('orgIds').value
     }
 
     const hasCampaign = await this.campaignService.getValue(this.movieId);

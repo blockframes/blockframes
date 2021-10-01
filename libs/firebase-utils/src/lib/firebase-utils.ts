@@ -102,6 +102,15 @@ export function getLatestFile(files: GFile[]) {
 };
 
 /**
+ * Runtime options to keep a function hot
+ * Used to improve response time
+ */
+export const hotConfig: RuntimeOptions = {
+  ...defaultConfig,
+  maxInstances: env.production ? 1 : 0
+}
+
+/**
  * Runtime options for heavy functions
  */
 export const heavyConfig: RuntimeOptions = {
