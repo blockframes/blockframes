@@ -14,7 +14,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 // @blockframes
-import { AvailsFilterModule } from '@blockframes/contract/term/form/filter/avails/avails-filter.module';
+import { AvailsFilterModule } from '@blockframes/contract/avails/filter/filter.module';
 import { FormTableModule } from "@blockframes/ui/form/table/form-table.module";
 import { TableFilterModule } from "@blockframes/ui/list/table-filter/table-filter.module";
 import { LanguagesFormModule } from "@blockframes/movie/form/languages/languages.module";

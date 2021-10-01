@@ -8,7 +8,7 @@ import {
   Movie,
   populateMovieLanguageSpecification
 } from "@blockframes/movie/+state/movie.model";
-import { MovieImportState } from "libs/import/src/lib/import-utils";
+import { MovieImportState } from "libs/import/src/lib/utils";
 import { createCredit, createStakeholder } from "../common-interfaces/identity";
 import { getKeyIfExists } from "../helpers";
 import { Scope } from "../static-model/static-model";
@@ -413,4 +413,8 @@ export function formatAvailableLanguages(versions: { language: string, dubbed: s
       });
     }
   });
+}
+
+export function formatNumber(number:string){
+  return parseInt(number,10)
 }

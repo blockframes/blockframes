@@ -30,7 +30,7 @@ function createAvailControl(avail: Partial<AvailsFilter> = {}, required: ('terri
   }
 }
 
-type AvailControl = ReturnType<typeof createAvailControl>
+export type AvailControl = ReturnType<typeof createAvailControl>
 
 export class AvailsForm extends FormEntity<AvailControl, AvailsFilter> {
   constructor(avail: Partial<AvailsFilter> = { territories: [] }, required: ('territories' | 'duration')[]) {

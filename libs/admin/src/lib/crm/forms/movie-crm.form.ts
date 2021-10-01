@@ -9,6 +9,7 @@ function createMovieCrmControls(entity: Partial<Movie>) {
   return {
     productionStatus: new FormControl(movie.productionStatus),
     internalRef: new FormControl(movie.internalRef),
+    orgIds: FormList.factory(movie.orgIds, el => new FormControl(el))
   };
 }
 

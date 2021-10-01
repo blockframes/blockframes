@@ -19,7 +19,6 @@ import {
   MovieVideos,
   MovieVideo,
   MovieAppConfig,
-  MovieDeliveryForm,
 } from '../+state/movie.firestore';
 import {
   Movie,
@@ -1052,3 +1051,21 @@ function createMovieNoteFormControl(entity?: Partial<MovieNote>) {
 
 type MovieNoteControl = ReturnType<typeof createMovieNoteFormControl>;
 
+// ---------------------------------
+//        MOVIE DELIVERY
+// ---------------------------------
+
+class MovieDeliveryForm extends FormEntity<MovieDeliveryControl> {
+  constructor(delivery: Partial<Movie['delivery']> = {}) {
+    super(createMovieDeliveryControls(delivery));
+  }
+}
+
+function createMovieDeliveryControls(delivery: Partial<Movie['delivery']>) {
+  const file = new StorageFileForm(delivery.file)
+  return {
+    file,
+  }
+}
+
+type MovieDeliveryControl = ReturnType<typeof createMovieDeliveryControls>;

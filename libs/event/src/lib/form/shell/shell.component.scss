@@ -1,0 +1,28 @@
+:host {
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  width: 100%;
+}
+
+form {
+  padding: 16px;
+  mat-card {
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+  nav {
+    border-bottom: none;
+  }
+}
+
+.routerContainer {
+  margin: 16px;
+}
+
+.goToEvent {
+  margin: 8px 0 24px 0;
+  align-self: center;
+}

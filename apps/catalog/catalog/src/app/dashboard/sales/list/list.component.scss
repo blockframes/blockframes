@@ -1,0 +1,48 @@
+:host {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+header.import-header {
+  margin-bottom: 24px;
+}
+
+header[mat-tab-nav-bar] button {
+  border: none;
+  background-color: transparent;
+  span {
+    margin-left: 4px;
+  }
+}
+
+bf-table{
+  margin-top: 24px;
+}
+
+mat-spinner {
+  align-self: center;
+}
+
+.empty {
+  img {
+    width: 380px;
+    margin: 0 auto;
+  }
+}
+
+section {
+  margin-top: 24px;
+
+  h1 {
+    text-align: center;
+  }
+
+  p {
+    text-align: center;
+  }
+
+  img {
+    width: 300px;
+  }
+}
