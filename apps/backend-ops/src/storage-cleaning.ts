@@ -132,7 +132,7 @@ export async function cleanWatermarkDir(bucket: Bucket) {
       // Cleaning files that have a too long name
       if (await f.delete()) { deleted++; }
     } else {
-      const userId = f.name.split('/')[2].replace('.svg', ''); // @TODO #6754
+      const userId = f.name.split('/')[2].replace('.svg', '').split('-')[0];
       const user = await getDocument<PublicUser>(`users/${userId}`);
       if (user) {
         if (user.watermark.storagePath === f.name) {
