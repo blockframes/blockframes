@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-import { ContractListComponent } from './list.component';
+import { SaleListComponent } from './list.component';
 
 // Blockframes
 import {
@@ -25,9 +25,12 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { TagModule } from '@blockframes/ui/tag/tag.module';
 import { IntercomModule } from 'ng-intercom';
+import { TableModule } from '@blockframes/ui/list/table/table.module';
+import { MatTabsModule } from '@angular/material/tabs';
+import { FilterByModule } from '@blockframes/utils/pipes/filter-by.pipe';
 
 @NgModule({
-  declarations: [ContractListComponent],
+  declarations: [SaleListComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -41,14 +44,17 @@ import { IntercomModule } from 'ng-intercom';
     ToLabelModule,
     TagModule,
     IntercomModule,
+    TableModule,
+    FilterByModule,
 
     // Material
     MatButtonModule,
     MatIconModule,
+    MatTabsModule,
     MatCardModule,
     MatProgressSpinnerModule,
     // Router
-    RouterModule.forChild([{ path: '', component: ContractListComponent }])
-  ]
+    RouterModule.forChild([{ path: '', component: SaleListComponent }])
+  ],
 })
-export class ContractListModule { }
+export class SaleListModule { }

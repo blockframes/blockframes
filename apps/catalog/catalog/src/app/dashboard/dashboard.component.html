@@ -9,9 +9,9 @@
         <mat-icon matListIcon svgIcon="video_library"></mat-icon>
         <span matLine><b>My Titles</b></span>
       </a>
-      <a mat-list-item routerLink="contracts" routerLinkActive="active">
+      <a mat-list-item routerLink="sales" routerLinkActive="active">
         <mat-icon matListIcon svgIcon="document"></mat-icon>
-        <span matLine><b>Contracts</b></span>
+        <span matLine><b>My Sales</b></span>
       </a>
       <ng-container *ngIf="org$ | async | canAccess: 'marketplace':'catalog'">
         <mat-divider></mat-divider>

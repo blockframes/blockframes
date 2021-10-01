@@ -10,15 +10,15 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDeclineComponent } from '@blockframes/contract/contract/components/confirm-decline/confirm-decline.component';
 
 @Component({
-  selector: 'catalog-contract-view',
+  selector: 'catalog-sale-view',
   templateUrl: './view.component.html',
   styleUrls: ['./view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CatalogContractViewComponent {
+export class CatalogSaleViewComponent {
 
-  contract$ = this.route.params.pipe(
-    pluck('contractId'),
+  sale$ = this.route.params.pipe(
+    pluck('saleId'),
     switchMap((id: string) => this.contractService.valueChanges(id)),
     shareReplay({ bufferSize: 1, refCount: true }),
   );
@@ -29,7 +29,7 @@ export class CatalogContractViewComponent {
     private snackbar: MatSnackBar,
     private dialog: MatDialog,
     @Optional() private intercom: Intercom,
-  ) { }
+  ) {}
 
   changeStatus(status: ContractStatus, id: string, declineReason?: string) {
     const data = declineReason ? { status, declineReason } : { status }

@@ -4,7 +4,7 @@ import { AuthQuery } from '@blockframes/auth/+state';
 import { ContractService } from '@blockframes/contract/contract/+state';
 
 @Injectable({ providedIn: 'root' })
-export class CatalogContractViewGuard implements CanActivate {
+export class CatalogSaleViewGuard implements CanActivate {
   constructor(
     private router: Router,
     private authQuery: AuthQuery,
@@ -12,15 +12,15 @@ export class CatalogContractViewGuard implements CanActivate {
   ) { }
 
   async canActivate(route: ActivatedRouteSnapshot) {
-    const contractId = route.paramMap.get('contractId');
+    const saleId = route.paramMap.get('saleId');
 
-    if (!contractId) this.router.parseUrl('c/o/dashboard/contracts');
+    if (!saleId) this.router.parseUrl('c/o/dashboard/sales');
 
-    const contract = await this.contractService.getValue(contractId);
+    const contract = await this.contractService.getValue(saleId);
     const isStakeholder = contract?.stakeholders.includes(this.authQuery.orgId);
 
     return isStakeholder
       ? true
-      : this.router.parseUrl('c/o/dashboard/contracts');
+      : this.router.parseUrl('c/o/dashboard/sales');
   }
 }
