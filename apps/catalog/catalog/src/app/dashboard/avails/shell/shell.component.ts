@@ -2,12 +2,12 @@ import { ChangeDetectionStrategy, Component, } from "@angular/core";
 import { ActivatedRoute, } from "@angular/router";
 import { AvailsForm } from "@blockframes/contract/avails/form/avails.form";
 import { BucketForm } from "@blockframes/contract/bucket/form";
-import { Contract, ContractService, Mandate, Sale } from "@blockframes/contract/contract/+state";
+import { Contract, ContractService, isMandate, isSale } from "@blockframes/contract/contract/+state";
 import { Term, TermService } from "@blockframes/contract/term/+state";
 import { Movie, MovieService } from "@blockframes/movie/+state";
 import { OrganizationService } from "@blockframes/organization/+state";
 import { combineLatest, Observable, of } from "rxjs";
-import { map, pluck, shareReplay, switchMap, } from "rxjs/operators";
+import { map, pluck, switchMap, } from "rxjs/operators";
 
 @Component({
   templateUrl: './shell.component.html',
@@ -20,9 +20,8 @@ export class CatalogAvailsShellComponent {
   )
 
   public movie$ = this.movieId$.pipe(
-    switchMap(id => this.movieService.valueChanges(id)),
-    shareReplay({ bufferSize: 1, refCount: true }),
-  ) as Observable<Movie>;
+    switchMap((id: string) => this.movieService.valueChanges(id)),
+  );
 
   public bucketForm = new BucketForm();
 
@@ -39,16 +38,15 @@ export class CatalogAvailsShellComponent {
     switchMap((movie: Movie) => this.contractService.valueChanges(
       ref => ref.where('titleId', '==', movie.id)
     )),
-    shareReplay({ bufferSize: 1, refCount: true }),
   );
 
   public mandates$ = this.contracts$.pipe(
-    map(contracts => contracts.filter(contract => contract.type === 'mandate'))
-  ) as Observable<Mandate[]>;
+    map(contracts => contracts.filter(isMandate))
+  );
 
   public sales$ = this.contracts$.pipe(
-    map(contracts => contracts.filter(contract => contract.type === 'sale'))
-  ) as Observable<Sale[]>;
+    map(contracts => contracts.filter(isSale))
+  );
 
   public mandateTerms$ = this.getTerms$(this.mandates$);
 
@@ -58,22 +56,6 @@ export class CatalogAvailsShellComponent {
     map(terms => terms.flat())
   )
 
-  private getTerms$(contracts$: Observable<Contract[]>) {
-    return contracts$.pipe(
-      switchMap((contract) => {
-        const list = contract.flatMap(movie => movie.termIds);
-        if (list.length === 0) return (of([]) as Observable<Term<Date>[]>);
-        return this.termsService.valueChanges(
-          ref => ref.where('id', 'in', list)
-        )
-      }),
-      shareReplay({ bufferSize: 1, refCount: true }),
-    )
-  }
-
-
-
-
   constructor(
     private route: ActivatedRoute,
     private termsService: TermService,
@@ -81,5 +63,18 @@ export class CatalogAvailsShellComponent {
     private orgService: OrganizationService,
     private contractService: ContractService,
   ) { }
+
+  private getTerms$(contracts$: Observable<Contract[]>) {
+    return contracts$.pipe(
+      switchMap((contract) => {
+        const list = contract.flatMap(movie => movie.termIds);
+        if (list.length === 0) return (of([]) as Observable<Term<Date>[]>);
+        return this.termsService.valueChanges(list);
+      }),
+    )
+  }
+
+
+
 
 }

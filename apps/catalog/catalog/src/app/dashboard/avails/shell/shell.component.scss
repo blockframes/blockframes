@@ -1,7 +1,12 @@
-mat-card, h2{
-  margin: 12px 24px;
+h2 {
+  margin: 16px 0;
 }
 
-mat-spinner{
+:host {
+  padding: 24px;
+  display: block;
+}
+
+mat-spinner {
   margin: auto;
 }

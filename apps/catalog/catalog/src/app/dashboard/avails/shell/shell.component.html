@@ -1,18 +1,18 @@
 <ng-container *ngIf="terms$ | async as terms; else loading">
   <header fxLayout="column" fxLayoutAlign="start start">
-    <button mat-button fxLayout="row" fxLayoutAlign="center center" routerLink="/c/o/dashboard/avails">
+    <a mat-icon-button fxLayout="row" fxLayoutAlign="center center" routerLink="/c/o/dashboard/avails">
       <mat-icon svgIcon="arrow_back"></mat-icon>
-    </button>
+    </a>
     <h2>Project International Title</h2>
   </header>
 
-  <mat-card fxLayout="column" fxLayoutGap="16px">
+  <section class="surface">
     <nav fxLayout fxLayoutAlign="center center" fxLayoutGap="16px">
       <a mat-flat-button routerLink="map" routerLinkActive="mat-primary">Multiple Territory</a>
       <a mat-flat-button routerLink="calendar" routerLinkActive="mat-primary">Single Territory</a>
     </nav>
     <router-outlet></router-outlet>
-  </mat-card>
+  </section>
 </ng-container>
 
 <ng-template #loading>
