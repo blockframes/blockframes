@@ -1,0 +1,20 @@
+<ng-container *ngIf="terms$ | async as terms; else loading">
+  <header fxLayout="column" fxLayoutAlign="start start">
+    <a mat-icon-button fxLayout="row" fxLayoutAlign="center center" routerLink="/c/o/dashboard/avails">
+      <mat-icon svgIcon="arrow_back"></mat-icon>
+    </a>
+    <h2>{{(movie$|async).title.international}}</h2>
+  </header>
+
+  <section class="surface">
+    <nav fxLayout fxLayoutAlign="center center" fxLayoutGap="16px">
+      <a mat-flat-button routerLink="map" routerLinkActive="mat-primary">Multiple Territory</a>
+      <a mat-flat-button routerLink="calendar" routerLinkActive="mat-primary">Single Territory</a>
+    </nav>
+    <router-outlet></router-outlet>
+  </section>
+</ng-container>
+
+<ng-template #loading>
+  <mat-spinner></mat-spinner>
+</ng-template>
