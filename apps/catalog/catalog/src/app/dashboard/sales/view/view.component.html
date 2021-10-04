@@ -35,7 +35,7 @@
                 <mat-icon svgIcon="check"></mat-icon>
                 <span>Accept</span>
               </button>
-              <button mat-stroked-button color="primary" (click)="declineContract(sale.id)">
+              <button mat-stroked-button color="primary" (click)="changeStatus('declined',sale.id)">
                 <mat-icon svgIcon="refuse"></mat-icon>
                 <span>Decline</span>
               </button>

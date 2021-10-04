@@ -36,20 +36,15 @@ export class CatalogSaleViewComponent {
   ) { }
 
 
-  changeStatus(status: ContractStatus, id: string, declineReason?: string) {
-    const data = declineReason ? { status, declineReason } : { status }
-    this.contractService.update(id, data)
-      .catch((err) => {
-        console.error(err)
-        this.snackbar.open(`There was an error, please try again later`, '', { duration: 4000 })
+  changeStatus(status: ContractStatus, id: string) {
+    if (status === 'declined') {
+      const ref = this.dialog.open(ConfirmDeclineComponent)
+      ref.afterClosed().subscribe(declineReason => {
+        if (typeof declineReason === 'string') this.contractService.update(id, { declineReason, status: 'declined' })
       })
-  }
-
-  declineContract(id: string) {
-    const ref = this.dialog.open(ConfirmDeclineComponent)
-    ref.afterClosed().subscribe((reason) => {
-      if (typeof reason === 'string') this.changeStatus('declined', id, reason)
-    })
+    } else {
+      this.contractService.update(id, { status });
+    }
   }
 
   openIntercom(): void {
