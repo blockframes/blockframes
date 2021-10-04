@@ -15,11 +15,8 @@ import { map, pluck, switchMap, } from "rxjs/operators";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CatalogAvailsShellComponent {
-  public movieId$ = this.route.params.pipe(
-    pluck('titleId')
-  )
-
-  public movie$ = this.movieId$.pipe(
+  public movie$ = this.route.params.pipe(
+    pluck('titleId'),
     switchMap((id: string) => this.movieService.valueChanges(id)),
   );
 
