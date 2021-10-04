@@ -1,4 +1,4 @@
-<ng-container *ngIf="contract$ | async as contract; else loading">
+<ng-container *ngIf="sale$ | async as contract; else loading">
   <header fxLayout="column" fxLayoutAlign="start start">
     <a mat-icon-button routerLink="../.." color="primary">
       <mat-icon svgIcon="arrow_back"></mat-icon>
@@ -51,7 +51,7 @@
     <p>{{specificity}}</p>
   </section>
 </ng-container>
-<ng-container *ngIf="contract$| async as contract">
+<ng-container *ngIf="sale$| async as contract">
   <contract-item [contract]="contract">
     <ng-container *ngIf="contract.id | getIncome | async as income" price>
       <ng-container *ngIf="income.price > 0; else askPrice">
