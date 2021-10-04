@@ -20,6 +20,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import {MatSelectModule} from '@angular/material/select';
 
 import { CatalogSaleViewComponent } from './view.component';
 
@@ -47,6 +48,7 @@ import { CatalogSaleViewComponent } from './view.component';
     MatProgressSpinnerModule,
     MatIconModule,
     MatDialogModule,
+    MatSelectModule,
     MatTooltipModule,
     RouterModule.forChild([{ path: '', component: CatalogSaleViewComponent }]),
   ]
