@@ -68,6 +68,10 @@ const routes: Routes = [
         loadChildren: () => import('./sales/view/view.module').then(m => m.CatalogSaleViewModule)
       },
       {
+        path: 'avails/:titleId',
+        loadChildren: () => import('./avails/shell/shell.module').then(m => m.CatalogAvailsShellModule)
+      },
+      {
         path: 'title',
         children: [{
           path: '',
