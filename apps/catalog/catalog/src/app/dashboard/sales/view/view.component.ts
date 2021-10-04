@@ -1,16 +1,15 @@
 import {
-  Component, ChangeDetectionStrategy, Optional, OnInit, OnDestroy
+  Component, ChangeDetectionStrategy, Optional
 } from '@angular/core';
 import { ContractService, ContractStatus, contractStatus } from '@blockframes/contract/contract/+state';
 import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { map, pluck, shareReplay, switchMap } from 'rxjs/operators';
+import { pluck, switchMap } from 'rxjs/operators';
 import { Intercom } from 'ng-intercom';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDeclineComponent } from '@blockframes/contract/contract/components/confirm-decline/confirm-decline.component';
 import { centralOrgId } from '@env';
-import { FormControl } from '@angular/forms';
-import { Subscription } from 'rxjs';
+
 
 @Component({
   selector: 'catalog-sale-view',
@@ -18,20 +17,15 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CatalogSaleViewComponent implements OnInit, OnDestroy {
+export class CatalogSaleViewComponent {
 
-  contractId: string = this.route.snapshot.params.saleId;
-
-  sale$ = this.contractService.valueChanges(this.contractId);
-
+  centralOrgId = centralOrgId;
+  sale$ = this.route.params.pipe(
+    pluck('saleId'),
+    switchMap((id: string) => this.contractService.valueChanges(id)),
+  );
   contractStatus = contractStatus;
 
-  isOnPlatformSale$ = this.sale$.pipe(
-    map(sale => sale.sellerId === centralOrgId.catalog)
-  )
-
-  statusControl = new FormControl()
-  sub: Subscription;
 
   constructor(
     private contractService: ContractService,
@@ -41,15 +35,6 @@ export class CatalogSaleViewComponent implements OnInit, OnDestroy {
     @Optional() private intercom: Intercom,
   ) { }
 
-  ngOnInit() {
-    this.sub = this.statusControl.valueChanges.subscribe(status => {
-      this.changeStatus(status, this.contractId);
-    });
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
-  }
 
   changeStatus(status: ContractStatus, id: string, declineReason?: string) {
     const data = declineReason ? { status, declineReason } : { status }
