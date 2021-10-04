@@ -1,13 +1,16 @@
 import {
-  Component, ChangeDetectionStrategy, Optional
+  Component, ChangeDetectionStrategy, Optional, OnInit, OnDestroy
 } from '@angular/core';
-import { ContractService, ContractStatus } from '@blockframes/contract/contract/+state';
+import { ContractService, ContractStatus, contractStatus } from '@blockframes/contract/contract/+state';
 import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { pluck, shareReplay, switchMap } from 'rxjs/operators';
+import { map, pluck, shareReplay, switchMap } from 'rxjs/operators';
 import { Intercom } from 'ng-intercom';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDeclineComponent } from '@blockframes/contract/contract/components/confirm-decline/confirm-decline.component';
+import { centralOrgId } from '@env';
+import { FormControl } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'catalog-sale-view',
@@ -15,13 +18,20 @@ import { ConfirmDeclineComponent } from '@blockframes/contract/contract/componen
   styleUrls: ['./view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CatalogSaleViewComponent {
+export class CatalogSaleViewComponent implements OnInit, OnDestroy {
 
-  sale$ = this.route.params.pipe(
-    pluck('saleId'),
-    switchMap((id: string) => this.contractService.valueChanges(id)),
-    shareReplay({ bufferSize: 1, refCount: true }),
-  );
+  contractId: string = this.route.snapshot.params.saleId;
+
+  sale$ = this.contractService.valueChanges(this.contractId);
+
+  contractStatus = contractStatus;
+
+  isOnPlatformSale$ = this.sale$.pipe(
+    map(sale => sale.sellerId === centralOrgId.catalog)
+  )
+
+  statusControl = new FormControl()
+  sub: Subscription;
 
   constructor(
     private contractService: ContractService,
@@ -29,7 +39,17 @@ export class CatalogSaleViewComponent {
     private snackbar: MatSnackBar,
     private dialog: MatDialog,
     @Optional() private intercom: Intercom,
-  ) {}
+  ) { }
+
+  ngOnInit() {
+    this.sub = this.statusControl.valueChanges.subscribe(status => {
+      this.changeStatus(status, this.contractId);
+    });
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
+  }
 
   changeStatus(status: ContractStatus, id: string, declineReason?: string) {
     const data = declineReason ? { status, declineReason } : { status }

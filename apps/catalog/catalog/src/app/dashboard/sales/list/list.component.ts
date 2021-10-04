@@ -19,8 +19,8 @@ function capitalize(text: string) {
   return `${text[0].toUpperCase()}${text.substring(1)}`
 }
 
-function queryFn(ref: CollectionReference) {
-  return ref.where('stakeholders', 'array-contains', this.orgId)
+function queryFn(ref: CollectionReference, orgId: string) {
+  return ref.where('stakeholders', 'array-contains', orgId)
     .where('type', '==', 'sale')
     .orderBy('_meta.createdAt', 'desc')
 }
@@ -37,7 +37,10 @@ export class SaleListComponent implements OnInit {
   public appName = appName[this.app];
   public orgId = this.orgQuery.getActiveId();
 
-  public sales$ = this.contractService.valueChanges(queryFn).pipe(
+
+  public sales$ = this.contractService.valueChanges(
+    ref => queryFn(ref, this.orgId)
+  ).pipe(
     joinWith({
       licensor: (sale: Sale) => this.orgService.valueChanges(sale.sellerId).pipe(map(seller => seller.denomination.full)),
       licensee: (sale: Sale) => this.orgService.valueChanges(sale.buyerId).pipe(map(buyer => buyer.denomination.full)),
