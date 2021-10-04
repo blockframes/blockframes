@@ -13,7 +13,7 @@ import { sheetRanges, SpreadsheetImportEvent, SpreadsheetImportType } from '../u
 const allowedMimeTypes = ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.oasis.opendocument.spreadsheet', 'text/csv'];
 
 @Component({
-  selector: '[importType] import-spreadsheet',
+  selector: 'import-spreadsheet',
   templateUrl: './import-spreadsheet.component.html',
   styleUrls: ['./import-spreadsheet.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
