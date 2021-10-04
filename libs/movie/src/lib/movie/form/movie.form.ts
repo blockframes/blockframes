@@ -13,7 +13,6 @@ import {
   MoviePlannedShooting,
   MovieShootingLocations,
   MovieGoalsAudience,
-  MovieSalesPitch,
   MovieNote,
   MovieShooting,
   MovieVideos,
@@ -33,7 +32,6 @@ import {
   createShootingPlannedObject,
   createExpectedPremiere,
   createAudienceGoals,
-  createSalesPitch,
   createShooting,
   createMovieVideos,
   createMovieNote,
@@ -51,6 +49,7 @@ import { toDate } from '@blockframes/utils/helpers';
 import { Language } from '@blockframes/utils/static-model';
 import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 import { App } from '@blockframes/utils/apps';
+import { Privacy } from '@blockframes/utils/file-sanitizer';
 
 function createMovieControls(movie: Partial<Movie>) {
   const entity = createMovie(movie);
@@ -594,7 +593,6 @@ function createMoviePromotionalElementsControls(promotionalElements?: Partial<Mo
     scenario: new StorageFileForm(entity.scenario),
     moodboard: new StorageFileForm(entity.moodboard),
     notes: FormList.factory(entity.notes, el => new MovieNoteForm(el)),
-    salesPitch: new MovieSalesPitchForm(entity.salesPitch),
 
     // Hosted Videos
     videos: new MovieVideosForm(entity.videos),
@@ -632,30 +630,6 @@ export type MovieNotesControl = ReturnType<typeof createMovieNoteControls>
 export class MovieNotesForm extends FormEntity<MovieNotesControl> {
   constructor(note?: Partial<MovieNote>) {
     super(createMovieNoteControls(note));
-  }
-}
-
-// ------------------------------
-//         SALES PITCH
-// ------------------------------
-
-function createMovieSalesPitchControl(pitch: Partial<MovieSalesPitch> = {}) {
-  const salesPitch = createSalesPitch(pitch);
-  return {
-    description: new FormControl(salesPitch.description ?? ''),
-    privacy: new FormControl(salesPitch.privacy),
-    collection: new FormControl(salesPitch.collection),
-    docId: new FormControl(salesPitch.docId),
-    field: new FormControl(salesPitch.field),
-    storagePath: new FormControl(salesPitch.storagePath),
-  }
-}
-
-export type MovieSalesPitchControls = ReturnType<typeof createMovieSalesPitchControl>;
-
-export class MovieSalesPitchForm extends FormEntity<MovieSalesPitchControls, MovieSalesPitch> {
-  constructor(review?: Partial<MovieSalesPitch>) {
-    super(createMovieSalesPitchControl(review));
   }
 }
 
@@ -996,12 +970,22 @@ export class MovieVideoForm extends FormEntity<MovieVideoControls, MovieVideo> {
   get title() { return this.get('title'); }
   get description() { return this.get('description'); }
   get type() { return this.get('type'); }
+
+  get isPublic(): boolean {
+    return this.get('privacy').value === 'public';
+  }
+
+  togglePrivacy(isPublic: boolean) {
+    const privacy: Privacy = isPublic ? 'public' : 'protected';
+    this.get('privacy').setValue(privacy);
+  }
 }
 
 function createMovieVideosControl(videos: Partial<MovieVideos> = {}) {
-  const { screener, otherVideos } = createMovieVideos(videos);
+  const { screener, salesPitch, otherVideos } = createMovieVideos(videos);
   return {
     screener: new MovieVideoForm(screener),
+    salesPitch: new MovieVideoForm(salesPitch),
     otherVideos: FormList.factory(otherVideos, otherVideo => new MovieVideoForm(otherVideo)),
   }
 }
@@ -1020,6 +1004,10 @@ export class MovieVideosForm extends FormEntity<MovieVideosControls, MovieVideos
 
   get screener() {
     return this.get('screener');
+  }
+
+  get salesPitch() {
+    return this.get('salesPitch');
   }
 }
 

@@ -124,8 +124,8 @@ function processMovie(movie: Movie): Movie {
   if (movie.promotional?.videos?.otherVideos) {
     movie.promotional.videos.otherVideos = movie.promotional.videos.otherVideos.map(updateHostedVideo);
   }
-  if (movie.promotional?.salesPitch?.jwPlayerId) {
-    movie.promotional.salesPitch = updateHostedVideo(movie.promotional.salesPitch);
+  if (movie.promotional?.videos?.salesPitch?.jwPlayerId) {
+    movie.promotional.videos.salesPitch = updateHostedVideo(movie.promotional.videos.salesPitch);
   }
   return movie;
 }

@@ -76,18 +76,6 @@
       <mat-divider></mat-divider>
     </ng-container>
 
-    <!-- SALES PITCH -->
-
-    <ng-container *ngIf="form | hasStatus: ['development', 'shooting', 'post_production', 'finished']">
-
-      <section id="sales-pitch">
-        <h3>Sales Pitch</h3>
-        <movie-summary-sales-pitch [movie]="form" [link]="('sales-pitch' | getPath)"></movie-summary-sales-pitch>
-      </section>
-
-      <mat-divider></mat-divider>
-    </ng-container>
-
     <!-- TECHNICAL INFORMATION -->
 
     <section id="technical-information">

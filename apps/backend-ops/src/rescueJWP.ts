@@ -64,7 +64,7 @@ export async function rescueJWP(options: {jwplayerKey: string, jwplayerApiV2Secr
 
   // 1) Get all videos in DB
   //  - Movies
-  //    - promotional.salesPitch
+  //    - promotional.videos.salesPitch
   //    - promotional.videos.otherVideos[]
   //    - promotional.videos.screener
   // 2) Spot the malformed video
@@ -92,11 +92,11 @@ export async function rescueJWP(options: {jwplayerKey: string, jwplayerApiV2Secr
   const movies = await getCollection<Movie>('movies');
   movies.forEach(movie => {
 
-    const { salesPitch, videos } = movie.promotional;
+    const { videos } = movie.promotional;
 
-    if (salesPitch) sortVideo(salesPitch, movie.id);
     if (videos) {
       sortVideo(videos.screener, movie.id);
+      sortVideo(videos.salesPitch, movie.id)
 
       videos.otherVideos?.forEach(video => sortVideo(video, movie.id));
     }

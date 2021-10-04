@@ -1,14 +1,19 @@
 <section fxLayout="column" fxLayoutAlign="center" fxLayoutGap="24px">
-  <form [formGroup]="salesPitchForm" fxLayout="column" fxLayoutAlign="center" fxFlex>
+  <form [formGroup]="form" fxLayout="column" fxLayoutAlign="center" fxFlex>
     <h2>Upload Sales Pitch</h2>
-    <mat-form-field appearance="outline" fxFlex>
-      <mat-label>Description</mat-label>
-      <textarea test-id="description" matInput [formControl]="salesPitchForm.get('description')" cdkTextareaAutosize
-        cdkAutosizeMinRows="10"></textarea>
-    </mat-form-field>
-    <file-uploader [form]="salesPitchForm" [meta]="['movies', 'salesPitch', movie.id]" accept="video" listenToChanges>
-      <h3 title>Sales Pitch Video</h3>
-    </file-uploader>
+    <div formGroupName="salesPitch" fxLayout="column">
+      <mat-form-field appearance="outline" fxFlex>
+        <mat-label>Description</mat-label>
+        <textarea test-id="description" matInput formControlName="description" cdkTextareaAutosize
+          cdkAutosizeMinRows="10"></textarea>
+      </mat-form-field>
+      <mat-checkbox [checked]="form.salesPitch.isPublic" (change)="form.salesPitch.togglePrivacy($event.checked)" color="primary">
+        <b>Public</b> (Buyers can see video on Marketplace)
+      </mat-checkbox>
+      <file-uploader [form]="form.salesPitch" [meta]="['movies', 'salesPitch', movie.id]" accept="video" listenToChanges>
+        <h3 title>Sales Pitch Video</h3>
+      </file-uploader>
+    </div>
   </form>
   
   <form [formGroup]="form" fxLayout="column" fxLayoutAlign="center" fxFlex>
