@@ -1,46 +1,17 @@
 ﻿<article fxLayout="column" fxLayoutAlign="center">
   <section fxLayout="column" fxLayoutAlign="center center">
-    <h1>{{ pageTitle }} </h1>
+    <h1>Import multiple {{ importType }} at once</h1>
 
     <div fxLayout="column" fxLayoutAlign="center" fxLayoutGap="8px">
       <a
         color="primary"
         mat-stroked-button
-        download="import-title-template-admin.xlsx"
-        href="/assets/templates/import-title-template-admin.xlsx"
+        [download]="'import-' + importType + '-template-admin.xlsx'"
+        [href]="'/assets/templates/import-' + importType + '-template-admin.xlsx'"
       >
-        <mat-icon svgIcon="cloud_download"></mat-icon><span>Download our excel titles template</span>
+        <mat-icon svgIcon="cloud_download"></mat-icon><span>Download our excel {{ importType }} template</span>
       </a>
-      <ng-container *ngIf="isUserBlockframesAdmin">
-        <a
-          color="primary"
-          mat-stroked-button
-          download="import-contracts-template-admin.xlsx"
-          href="/assets/templates/import-contracts-template-admin.xlsx"
-        >
-          <mat-icon svgIcon="cloud_download"></mat-icon><span>Download our excel contracts template</span>
-        </a>
-        <a
-          color="primary"
-          mat-stroked-button
-          download="import-organizations-template-admin.xlsx"
-          href="/assets/templates/import-organizations-template-admin.xlsx"
-        >
-          <mat-icon svgIcon="cloud_download"></mat-icon><span>Download our excel organizations template</span>
-        </a>
-      </ng-container>
     </div>
-  </section>
-
-  <section fxLayout="row" fxLayoutAlign="center center" *ngIf="isUserBlockframesAdmin" class="type">
-    <mat-form-field appearance="outline">
-      <mat-label>Select import type</mat-label>
-      <mat-select [formControl]="fileType" test-id="import-select">
-        <mat-option value="titles">Titles</mat-option>
-        <mat-option value="contracts">Contracts</mat-option>
-        <mat-option value="organizations">Organizations</mat-option>
-      </mat-select>
-    </mat-form-field>
   </section>
 
   <section class="help-section" fxLayout="column" fxLayoutAlign="center center">
@@ -76,7 +47,7 @@
       </ng-container>
 
       <button test-id="start-import" mat-flat-button color="primary" (click)="next()" [disabled]="sheets.length === 0">
-        Start import
+        <span>Start import</span>
         <mat-icon svgIcon="arrow_downward"></mat-icon>
       </button>
 
