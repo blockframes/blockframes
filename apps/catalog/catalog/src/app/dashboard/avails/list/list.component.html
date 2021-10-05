@@ -1,0 +1,25 @@
+<h2>Availabilities</h2>
+<section class="surface" fxLayout="column" fxLayoutGap="16px">
+  <h3>Search Criteria</h3>
+  <form [availsFilter]="availsForm" required></form>
+</section>
+
+<section class="surface">
+  <h3>Results</h3>
+  <ng-container *ngIf="query$ | async as sales; else loading">
+    <bf-table [source]="sales" clickable useFilter pagination="50"
+    >
+      <ng-template colRef="title.international" label="Title" let-title>{{ title |  maxLength:50}}</ng-template>
+      <ng-template colRef="sales" label="Total Sales" let-sales>{{ sales.length }}</ng-template>
+      <ng-template colRef="totalIncome" label="Total Gross Receipts" let-totalIncome >
+        dummyNumber
+        <ng-container *ngif="totalIncome"></ng-container>
+        ( {{ totalIncome.dollar | currency:'USD' }}, {{ totalIncome.dollar | currency:'USD' }}
+      </ng-template>
+    </bf-table>
+  </ng-container>
+</section>
+
+<ng-template #loading>
+  <mat-spinner></mat-spinner>
+</ng-template>
