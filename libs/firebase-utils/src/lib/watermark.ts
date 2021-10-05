@@ -23,23 +23,24 @@ export function getWatermark(email: string, firstName: string = '', lastName: st
  * - Store the watermark file in the storage bucket
  * - Update the user document
  */
-export async function upsertWatermark(user: PublicUser, bucketName: string, storage?: admin.storage.Storage, privacy : Privacy = 'public'): Promise<any> {
-
+export async function upsertWatermark(user: PublicUser, bucketName: string, storage?: admin.storage.Storage): Promise<any> {
+  const privacy: Privacy = 'public';
   if (!user.email) {
     throw new Error(`Cannot generate watermark for user ${user.uid} because 'email' is not provided.`);
   }
 
   const watermark = getWatermark(user.email, user.firstName, user.lastName);
-
-  const ref = `${privacy}/users/${user.uid}/watermark/${user.uid}.svg`;
+  const randomStr = Math.random().toString(36).substr(2);
+  const storagePath = `users/${user.uid}/watermark/${user.uid}-${randomStr}.svg`;
+  const ref = `${privacy}/${storagePath}`;
   const file = storage ? storage.bucket(bucketName).file(ref) : admin.storage().bucket(bucketName).file(ref);
-  const metadata = { metadata: { uid: user.uid, privacy: 'public', collection: 'users', field: 'watermark', docId: user.uid } };
+  const metadata = { metadata: { uid: user.uid, privacy, collection: 'users', field: 'watermark', docId: user.uid } };
 
   await file.save(watermark, { metadata });
 
   const db = admin.firestore();
   const doc = db.collection('users').doc(user.uid);
-  const storageFile = createStorageFile({ storagePath: ref, privacy: 'public', collection: 'users', field: 'watermark', docId: user.uid });
+  const storageFile = createStorageFile({ storagePath, privacy, collection: 'users', field: 'watermark', docId: user.uid });
   await doc.update({ watermark: storageFile });
 
   return file;

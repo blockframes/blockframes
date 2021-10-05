@@ -1,9 +1,8 @@
 import { initFunctionsTestMock, populate, getTestingProjectId } from '@blockframes/testing/firebase/functions';
 import { StorageMocked } from '@blockframes/testing/firebase';
-import { cleanStorage, cleanMovieDir, cleanMoviesDir, cleanOrgsDir, cleanUsersDir, cleanWatermarkDir } from './storage-cleaning';
+import { cleanStorage, cleanMovieDir, cleanMoviesDir, cleanOrgsDir, cleanUsersDir } from './storage-cleaning';
 import { clearFirestoreData } from '@firebase/testing';
 import { getCollectionRef } from '@blockframes/firebase-utils';
-import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 
 let bucket;
 describe('Storage cleaning script', () => {
@@ -131,77 +130,4 @@ describe('Storage cleaning script', () => {
     expect(filesAfter.length).toEqual(2);
   });
 
-  it('should empty public/watermark directory', async () => {
-    const users = [
-      {
-        uid: 'A',
-        watermark: { storagePath: null }
-      },
-      {
-        uid: 'C',
-        watermark: { storagePath: null }
-      }
-    ];
-
-    const prefix = 'public/watermark';
-    const filesBefore = [
-      'A.svg',
-      'B.svg',
-      'C.svg',
-    ];
-
-    // Load our test set
-    await populate('users', users);
-    bucket.populate(filesBefore, prefix);
-
-    // Check if data have been correctly added
-    const documents = await getCollectionRef('users');
-    expect(documents.docs.length).toEqual(2);
-
-    const output = await cleanWatermarkDir(bucket);
-    expect(output.total).toEqual(filesBefore.length);
-    expect(output.deleted).toEqual(3);
-
-    const filesAfter = (await bucket.getFiles({ prefix: `${prefix}/` }))[0];
-    expect(filesAfter.length).toEqual(0);
-  });
-
-  it('should skip files while emptying public/watermark directory if migration 29 went badly', async () => {
-    const prefix = 'public/watermark';
-    const users = [
-      {
-        uid: 'A',
-        watermark: createStorageFile({
-          storagePath: `public/users/A/watermark/A.svg` // Good watermark location
-        })
-      },
-      {
-        uid: 'C',
-        watermark: createStorageFile({
-          storagePath: `${prefix}/C.svg` // Bad watermark location
-        })
-      }
-    ];
-
-    const filesBefore = [
-      'A.svg',
-      'B.svg',
-      'C.svg',
-    ];
-
-    // Load our test set
-    await populate('users', users);
-    bucket.populate(filesBefore, prefix);
-
-    // Check if data have been correctly added
-    const documents = await getCollectionRef('users');
-    expect(documents.docs.length).toEqual(2);
-
-    const output = await cleanWatermarkDir(bucket);
-    expect(output.total).toEqual(filesBefore.length);
-    expect(output.deleted).toEqual(2);
-
-    const filesAfter = (await bucket.getFiles({ prefix: `${prefix}/` }))[0];
-    expect(filesAfter.length).toEqual(1);
-  });
 });
