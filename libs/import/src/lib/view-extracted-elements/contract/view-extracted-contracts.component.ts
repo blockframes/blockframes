@@ -184,7 +184,7 @@ export class ViewExtractedContractsComponent implements OnInit {
     private orgService: OrganizationService,
     private fire: AngularFirestore
   ) {
-    this.dynTitle.setPageTitle('Submit your titles')
+    this.dynTitle.setPageTitle('Submit your contracts');
   }
 
   ngOnInit() {

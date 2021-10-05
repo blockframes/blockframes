@@ -32,7 +32,7 @@ export class ImportContainerComponent implements OnInit {
   }
 
   async next(importEvent: SpreadsheetImportEvent) {
-    this.fileType = importEvent.fileType;
+    this.fileType = importEvent.importType;
     this.cdRef.detectChanges();
 
     this.viewExtractedComponent.format(importEvent.sheet);
