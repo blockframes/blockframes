@@ -1,35 +1,8 @@
-article {
-  width: 50%;
-  margin: 20px auto;
-  img {
-    width: 220px;
-    margin-bottom: 24px;
-  }
-
-  h1 {
-    text-align: center;
-    margin-bottom: 30px;
-  }
-
-  min-height: calc(100vh - (var(--toolbarHeight) * 2) - 30px);
-
-  section.help-section {
-    margin: 30px 0 20px;
-  }
-
-  section.file-section {
-    margin: 30px 0;
-  }
-}
 
 #filePicker {
   display: none;
 }
 
-p.mat-caption {
-  margin-bottom: 8px;
-}
-
-.type {
-  margin-top: 16px;
+mat-icon {
+  margin-bottom: 4px;
 }
