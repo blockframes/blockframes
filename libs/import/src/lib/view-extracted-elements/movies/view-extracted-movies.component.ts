@@ -223,7 +223,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
     private userService: UserService,
     private router: RouterQuery
   ) {
-    this.dynTitle.setPageTitle('Submit your titles')
+    this.dynTitle.setPageTitle('Submit your titles');
   }
 
   ngOnInit() {

@@ -1,7 +1,6 @@
 // Angular
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Routes } from '@angular/router';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -14,13 +13,6 @@ import { ViewExtractedElementsModule } from './view-extracted-elements/view-extr
 // Components
 import { ImportContainerComponent } from './import.component';
 
-
-const routes: Routes = [
-  {
-    path: '',
-    component: ImportContainerComponent
-  }
-];
 
 @NgModule({
   declarations: [ ImportContainerComponent ],
@@ -35,7 +27,6 @@ const routes: Routes = [
     ImportSpreadsheetModule,
     ViewExtractedElementsModule,
 
-    RouterModule.forChild(routes),
-  ]
+  ], exports: [ ImportContainerComponent ],
 })
 export class ImportModule { }

@@ -56,7 +56,7 @@ const routes: Routes = [
       },
       {
         path: 'import', // Import bulk of movies
-        loadChildren: () => import('@blockframes/import/import.module').then(m => m.ImportModule)
+        loadChildren: () => import('./title/import/import.module').then(m => m.TitleImportModule),
       },
       {
         path: 'sales',

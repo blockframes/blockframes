@@ -1,9 +1,9 @@
 ﻿
-<import-spreadsheet *ngIf="!fileType" (importEvent)="next($event)"></import-spreadsheet>
+<import-spreadsheet *ngIf="!fileType" [importType]="importType" (importEvent)="next($event)"></import-spreadsheet>
 
-<import-view-extracted-movies *ngIf="fileType === 'titles'" #viewExtractedComponent></import-view-extracted-movies>
-<import-view-extracted-contracts *ngIf="fileType === 'contracts'" #viewExtractedComponent></import-view-extracted-contracts>
-<import-view-extracted-organizations *ngIf="fileType === 'organizations'" #viewExtractedComponent></import-view-extracted-organizations>
+<import-view-extracted-movies *ngIf="importType === 'titles'" #viewExtractedComponent></import-view-extracted-movies>
+<import-view-extracted-contracts *ngIf="importType === 'contracts'" #viewExtractedComponent></import-view-extracted-contracts>
+<import-view-extracted-organizations *ngIf="importType === 'organizations'" #viewExtractedComponent></import-view-extracted-organizations>
 
 <section *ngIf="fileType" fxLayout="column" fxLayoutAlign="center center">
   <p>Please make sure everything is correct. Once you submit your titles they will instantaneously appear on the Archipel Market platform.</p>
