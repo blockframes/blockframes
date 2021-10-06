@@ -473,7 +473,6 @@ export const moveMedia = async (before: StorageFile, after: StorageFile) => {
 export async function moveMovieMedia(before: MovieDocument, after: MovieDocument): Promise<void> {
 
   const paths = [
-    // 'promotional.videos.screener', privacy state cant be changed
     'promotional.videos.salesPitch',
     'promotional.videos.otherVideos'
   ];
