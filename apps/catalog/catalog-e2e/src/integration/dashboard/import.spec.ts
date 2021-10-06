@@ -57,7 +57,7 @@ describe('User can fill and save contract tunnel form', () => {
       .click();
 
     cy.get('mat-option')
-      .contains("Movies")
+      .contains("Titles")
       .click();
 
     //Import the Movie file here
