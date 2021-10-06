@@ -2,7 +2,7 @@ import { Injectable, Optional } from '@angular/core';
 import { AuthStore, User, AuthState, createUser } from './auth.store';
 import { AuthQuery } from './auth.query';
 import { AngularFireFunctions } from '@angular/fire/functions';
-import type firebase from 'firebase';
+import firebase from 'firebase';
 import { UserCredential } from '@firebase/auth-types';
 import { FireAuthService, CollectionConfig } from 'akita-ng-fire';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
@@ -81,6 +81,22 @@ export class AuthService extends FireAuthService<AuthState> {
 
   onSignup(userCredential: UserCredential) {
     this.updateIntercom(userCredential);
+  }
+
+  async signupFromAnonymous(email: string, password: string, options: any = {}) {
+    const credentials = firebase.auth.EmailAuthProvider.credential(email, password);
+    const cred = await firebase.auth().currentUser.linkWithCredential(credentials);
+
+    const { write = this.db.firestore.batch(), ctx } = options;
+    await this.onSignup(cred);
+    const profile = await this.createProfile(cred.user, ctx);
+    const { ref } = this.db.collection('users').doc(cred.user.uid);
+    write.set(ref, profile);
+    if (!options.write) {
+      await write.commit();
+    }
+    
+    return cred;
   }
 
   /**

@@ -216,7 +216,8 @@ service cloud.firestore {
     /// RULES ///
 
     match /orgs/{orgId} {
-      allow read: if notInMaintenance();
+      allow read: if isSignedIn('anonymous')
+        && notInMaintenance();
     	allow create: if isSignedIn()
         && isRequestFieldValueEqualTo(['status'], 'pending')
         && isRequestFieldValueEqualToOrNotSetted(['id'], orgId)
@@ -502,13 +503,22 @@ service cloud.firestore {
       return request.auth;
     }
 
+    function currentAuthToken() {
+      return currentUser().token;
+    }
+
+    function currentSigninProvider() {
+      return currentAuthToken().firebase.sign_in_provider;
+    }
+
     function userId() {
       return currentUser().uid;
     }
 
   	// Check if the user is logged in the app.
-    function isSignedIn() {
-      return currentUser() != null;
+    function isSignedIn(method) {
+      return (method == null && currentUser() != null && currentSigninProvider() == 'password') ||
+       (method != null && currentUser() != null && currentSigninProvider() in ['password', method])
     }
 
   	function userOrgId() {
