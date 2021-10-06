@@ -6,9 +6,13 @@ import { Term } from "@blockframes/contract/term/+state/term.model";
 import { SheetTab } from "@blockframes/utils/spreadsheet";
 
 
+export const spreadsheetImportTypes = [ 'titles', 'organizations', 'contracts' ] as const;
+
+export type SpreadsheetImportType = typeof spreadsheetImportTypes[number];
+
 export interface SpreadsheetImportEvent {
   sheet: SheetTab,
-  fileType: string,
+  importType: SpreadsheetImportType,
 }
 
 export interface SpreadsheetImportError {
@@ -39,8 +43,8 @@ export interface OrganizationsImportState {
 }
 
 
-export const sheetRanges = {
+export const sheetRanges: Record<SpreadsheetImportType, string> = {
   titles: 'A14:BZ1000',
   contracts: 'A1:Q100',
-  organizations: 'organizations',
+  organizations: 'A10:Z100',
 }

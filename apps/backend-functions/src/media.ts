@@ -295,6 +295,11 @@ export async function cleanUserMedias(before: PublicUser, after?: PublicUser): P
     if (needsToBeCleaned(before.avatar, after.avatar)) {
       mediaToDelete.push(before.avatar);
     }
+
+    // Check if watermark have been changed/removed
+    if (needsToBeCleaned(before.watermark, after.watermark)) {
+      mediaToDelete.push(before.watermark);
+    }
   } else { // Deleting
     if (before.avatar) {
       mediaToDelete.push(before.avatar);

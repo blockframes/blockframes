@@ -14,8 +14,6 @@ export async function cleanStorage(bucket: Bucket) {
   console.log(`Cleaned ${cleanOrgsDirOutput.deleted}/${cleanOrgsDirOutput.total} from "public/orgs" directory.`);
   const cleanUsersDirOutput = await cleanUsersDir(bucket);
   console.log(`Cleaned ${cleanUsersDirOutput.deleted}/${cleanUsersDirOutput.total} from "public/users" directory.`);
-  const cleanWatermarkDirOutput = await cleanWatermarkDir(bucket);
-  console.log(`Cleaned ${cleanWatermarkDirOutput.deleted}/${cleanWatermarkDirOutput.total} from "public/watermark" directory.`);
 
   return true;
 }
@@ -112,33 +110,6 @@ export async function cleanUsersDir(bucket: Bucket) {
       const userId = f.name.split('/')[2];
       const user = await getDocument<PublicUser>(`users/${userId}`);
       if (!user && await f.delete()) { deleted++; }
-    }
-  });
-
-  return { deleted, total: files.length };
-}
-
-/**
- * watermark dir is not used anymore
- * watermarks are in public/users/${userId}/${userId}.svg
- * @param bucket
- */
-export async function cleanWatermarkDir(bucket: Bucket) {
-  const files: GFile[] = (await bucket.getFiles({ prefix: 'public/watermark/' }))[0];
-  let deleted = 0;
-
-  await runChunks(files, async (f) => {
-    if (f.name.split('/').pop().length >= 255) {
-      // Cleaning files that have a too long name
-      if (await f.delete()) { deleted++; }
-    } else {
-      const userId = f.name.split('/')[2].replace('.svg', '');
-      const user = await getDocument<PublicUser>(`users/${userId}`);
-      if (user) {
-        if (user.watermark.storagePath === f.name) {
-          console.log('This should not have happened if migration 29 went well..');
-        } else if (await f.delete()) { deleted++; }
-      } else if (await f.delete()) { deleted++; }
     }
   });
 

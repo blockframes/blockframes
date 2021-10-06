@@ -28,7 +28,7 @@ import { MatIconModule } from '@angular/material/icon'
 
 // Tunnel routes
 import { tunnelRoutes } from './tunnel/movie-tunnel.routes';
-import { CatalogContractViewGuard } from './contracts/view/view.guard';
+import { CatalogSaleViewGuard } from './sales/view/view.guard';
 
 const routes: Routes = [
   {
@@ -56,16 +56,20 @@ const routes: Routes = [
       },
       {
         path: 'import', // Import bulk of movies
-        loadChildren: () => import('@blockframes/import/import.module').then(m => m.ImportModule)
+        loadChildren: () => import('@blockframes/movie/import/import.module').then(m => m.TitleImportModule),
       },
       {
-        path: 'contracts',
-        loadChildren: () => import('./contracts/list/list.module').then(m => m.ContractListModule)
+        path: 'sales',
+        loadChildren: () => import('./sales/list/list.module').then(m => m.SaleListModule)
       },
       {
-        path: 'contracts/:contractId',
-        canActivate: [ CatalogContractViewGuard ],
-        loadChildren: () => import('./contracts/view/view.module').then(m => m.CatalogContractViewModule)
+        path: 'sales/:saleId',
+        canActivate: [ CatalogSaleViewGuard ],
+        loadChildren: () => import('./sales/view/view.module').then(m => m.CatalogSaleViewModule)
+      },
+      {
+        path: 'avails/:titleId',
+        loadChildren: () => import('./avails/shell/shell.module').then(m => m.CatalogAvailsShellModule)
       },
       {
         path: 'title',

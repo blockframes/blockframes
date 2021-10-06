@@ -1,0 +1,12 @@
+  <p class="mat-body-1">{{ title }}</p>
+  <article fxLayout fxLayoutAlign="space-between center" fxLayoutGap="24px">
+    <ng-container *ngFor="let unit of timeUnits; let last = last">
+      <ng-container *ngIf="time[unit] | async as value">
+        <div fxLayout="column">
+          <p class="mat-title" [@slideUp]="value">{{ value }}</p>
+          <p class="mat-caption">{{ unit }}</p>
+        </div>
+      </ng-container>
+      <p *ngIf="!last" class="mat-title">:</p>
+    </ng-container>
+  </article>

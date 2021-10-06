@@ -120,7 +120,7 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
     private authQuery: AuthQuery,
     private dynTitle: DynamicTitleService
   ) {
-    this.dynTitle.setPageTitle('Import organizations')
+    this.dynTitle.setPageTitle('Submit your organizations');
   }
 
   ngOnInit() {
