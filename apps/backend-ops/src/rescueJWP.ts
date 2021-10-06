@@ -96,7 +96,7 @@ export async function rescueJWP(options: {jwplayerKey: string, jwplayerApiV2Secr
 
     if (videos) {
       sortVideo(videos.screener, movie.id);
-      sortVideo(videos.salesPitch, movie.id)
+      sortVideo(videos.salesPitch, movie.id);
 
       videos.otherVideos?.forEach(video => sortVideo(video, movie.id));
     }

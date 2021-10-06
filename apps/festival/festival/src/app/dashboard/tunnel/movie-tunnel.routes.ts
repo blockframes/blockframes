@@ -66,27 +66,27 @@ export const tunnelRoutes: Routes = [
       },
       {
         path: 'media-files',
-        data: { animation: 11 },
+        data: { animation: 10 },
         loadChildren: () => import('@blockframes/movie/form/media-files/media-files.module').then(m => m.MovieFormMediaFilesModule),
       },
       {
         path: 'media-notes',
-        data: { animation: 12 },
+        data: { animation: 11 },
         loadChildren: () => import('@blockframes/movie/form/media-notes/notes.module').then(m => m.MovieFormNotesModule),
       },
       {
         path: 'media-images',
-        data: { animation: 13 },
+        data: { animation: 12 },
         loadChildren: () => import('@blockframes/movie/form/media-images/media-images.module').then(m => m.MovieFormMediaImagesModule),
       },
       {
         path: 'media-videos',
-        data: { animation: 14 },
+        data: { animation: 13 },
         loadChildren: () => import('@blockframes/movie/form/media-videos/media-videos.module').then(m => m.MediaFormVideosModule),
       },
       {
         path: 'summary',
-        data: { animation: 15 },
+        data: { animation: 14 },
         loadChildren: () => import('./summary/summary.module').then(m => m.TunnelSummaryModule),
       }
     ]

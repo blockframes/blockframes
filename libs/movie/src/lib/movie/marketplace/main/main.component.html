@@ -7,7 +7,7 @@
       <h3>Sales Pitch</h3>
       <article fxLayout="row" fxLayoutGap="40px">
         <video-viewer [ref]="salesPitch" *ngIf="salesPitch.jwPlayerId"></video-viewer>
-        <p>{{ salesPitch.description }}</p>
+        <p *ngIf="salesPitch.description">{{ salesPitch.description }}</p>
       </article>
       <mat-divider></mat-divider>
     </section>
