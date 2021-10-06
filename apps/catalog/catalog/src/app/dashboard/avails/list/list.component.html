@@ -1,25 +1,48 @@
 <h2>Availabilities</h2>
 <section class="surface" fxLayout="column" fxLayoutGap="16px">
   <h3>Search Criteria</h3>
-  <form [availsFilter]="availsForm" required></form>
+  <form [availsFilter]="availsForm" fxLayout="row wrap"></form>
 </section>
 
-<section class="surface">
-  <h3>Results</h3>
-  <ng-container *ngIf="query$ | async as sales; else loading">
-    <bf-table [source]="sales" clickable useFilter pagination="50"
-    >
-      <ng-template colRef="title.international" label="Title" let-title>{{ title |  maxLength:50}}</ng-template>
-      <ng-template colRef="sales" label="Total Sales" let-sales>{{ sales.length }}</ng-template>
-      <ng-template colRef="totalIncome" label="Total Gross Receipts" let-totalIncome >
-        dummyNumber
-        <ng-container *ngif="totalIncome"></ng-container>
-        ( {{ totalIncome.dollar | currency:'USD' }}, {{ totalIncome.dollar | currency:'USD' }}
+<section *ngIf="results$ | async as sales; else loading">
+  <ng-container *ngIf="sales.length; else noSales">
+    <h3>Results</h3>
+    <bf-table [source]="sales" clickable useFilter pagination="50">
+      <ng-template colRef="title.international" label="TITLE" let-title>{{ title | maxLength:50}}</ng-template>
+      <ng-template colRef="contracts" label="CONTRACTS" let-contracts>{{ contracts?.length|| '-' }}</ng-template>
+      <ng-template colRef="salesCount" label="SALES" let-salesCount>{{ salesCount || '-' }}</ng-template>
+      <ng-template colRef="totalIncome" label="TOTAL GROSS RECEIPT" let-totalIncome>
+        <ng-container *ngIf="totalIncome.usd"> {{ totalIncome.usd | currency:'USD' }} </ng-container>
+        <ng-container *ngIf="totalIncome.usd && totalIncome.euro"> and</ng-container>
+        <ng-container *ngIf="totalIncome.euro"> {{ totalIncome.euro | currency:'EUR' }} </ng-container>
+        <ng-container *ngIf="!totalIncome.usd && !totalIncome.euro"> - </ng-container>
+      </ng-template>
+      <ng-template colRef="id" label="ACTIONS" let-id>
+        <div fxLayout fxLayoutGap="16px">
+          <a mat-icon-button (click)="goTo('map')">
+            <mat-icon svgIcon="world"></mat-icon>
+          </a>
+          <a mat-icon-button (click)="goTo('calendar')">
+            <mat-icon svgIcon="calendar_today"></mat-icon>
+          </a>
+        </div>
       </ng-template>
     </bf-table>
   </ng-container>
 </section>
 
 <ng-template #loading>
-  <mat-spinner></mat-spinner>
+  <section fxFlex fxLayoutAlign="center center">
+    <mat-spinner fxLayoutAlign="center center"></mat-spinner>
+  </section>
+</ng-template>
+
+<ng-template #noSales>
+  <section fxLayout="column" fxLayoutAlign="center center" fxFlexGap="16">
+    <h1>No results found</h1>
+    <p>
+      No results found for the filtering parameters<br />
+    </p>
+    <img asset="empty_contract.svg" alt="Image, you have no contracts yet">
+  </section>
 </ng-template>

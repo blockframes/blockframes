@@ -32,11 +32,11 @@ function continuousAllOf(a: Range, optional?: 'optional') {
     // B.from      B.to
     //
     // we also pre-suppose that Range are not malformed (i.e. from must be before to)
-    in: (b: Range) => optional && (!a?.from || !a?.to) ? true : a.from >= b.from && a.to <= b.to,
+    in: (b: Range) => optional && (!a?.from || !a?.to) ? true : a?.from >= b?.from && a?.to <= b?.to,
 
     // To check if it's equal we simply check if `a.to === b.to && a.from === b.from`
     // BUT since we cannot compare Date with `===` we use "not lesser than && not greater than"
-    equal: (b: Range) => optional && (!a?.from || !a?.to) ? true : !(a.from < b.from) && !(a.from > b.from) && !(a.to < b.to) && !(a.to > b.to),
+    equal: (b: Range) => optional && (!a?.from || !a?.to) ? true : !(a?.from < b?.from) && !(a?.from > b?.from) && !(a?.to < b?.to) && !(a?.to > b?.to),
   }
 }
 
@@ -76,7 +76,7 @@ function discreteNoneOf(a: string[], optional?: 'optional') {
 //       B.to
 function continuousNoneOf(a: Range, optional?: 'optional') {
   return {
-    in: (b: Range) => optional && (!a.from || !a.to) ? true : a.to < b.from || b.to < a.from,
+    in: (b: Range) => optional && (!a?.from || !a?.to) ? true : a?.to < b?.from || b?.to < a?.from,
   };
 }
 
@@ -121,7 +121,7 @@ function discreteSomeOf(a: string[], optional?: 'optional') {
 //   B.from     B.to
 function continuousSomeOf(a: Range, optional?: 'optional') {
   return {
-    in: (b: Range) => optional && (!a.from || !a.to) ? true : (a.from >= b.from && a.from <= b.to) || (a.to >= b.from && a.to <= b.to) || continuousAllOf(b, optional).in(a),
+    in: (b: Range) => optional && (!a?.from || !a?.to) ? true : (a?.from >= b?.from && a?.from <= b?.to) || (a?.to >= b?.from && a?.to <= b?.to) || continuousAllOf(b, optional).in(a),
   };
 }
 

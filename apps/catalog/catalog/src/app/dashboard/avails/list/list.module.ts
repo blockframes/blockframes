@@ -1,6 +1,8 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FlexLayoutModule } from "@angular/flex-layout";
+import { MatButtonModule } from "@angular/material/button";
+import { MatIconModule } from "@angular/material/icon";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { RouterModule, Routes } from "@angular/router";
 import { AvailsFilterModule } from "@blockframes/contract/avails/filter/filter.module";
@@ -32,6 +34,8 @@ const routes: Routes = [
 
     //Material
     MatProgressSpinnerModule,
+    MatButtonModule,
+    MatIconModule,
   ]
 })
 export class CatalogAvailsListModule{}
