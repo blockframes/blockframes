@@ -464,7 +464,7 @@ export const moveMedia = async (before: StorageFile, after: StorageFile) => {
 
   const [exists] = await fileObject.exists();
   if (!exists) {
-    console.log(`Move Error : File "${beforePath}" does not exists in the storage`);
+    logger.error(`Move Error : File "${beforePath}" does not exists in the storage`);
   } else {
     return fileObject.move(afterPath);
   }
