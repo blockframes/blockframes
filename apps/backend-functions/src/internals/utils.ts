@@ -11,3 +11,9 @@ export async function getUser(userId: string): Promise<PublicUser> {
   const user = await db.doc(`users/${userId}`).get();
   return user.data() as PublicUser;
 }
+
+export function getDeepValue<T>(object: unknown, path: string): T {
+  if (typeof object === 'object') {
+    return path.split('.').reduce((result, key) => result?.[key], object);
+  }
+}
