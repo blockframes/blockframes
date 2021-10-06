@@ -416,10 +416,10 @@ function validateMovie(importErrors: MovieImportState): MovieImportState {
     });
   }
 
-  if (!movie.promotional.salesPitch.description) {
+  if (!movie.promotional.videos.salesPitch.description) {
     errors.push({
       type: 'warning',
-      field: 'movie.promotional.salesPitch',
+      field: 'movie.promotional.videos.salesPitch',
       name: 'Sales Pitch',
       reason: 'Optional field is missing',
       hint: 'Edit corresponding sheet field.'
@@ -560,7 +560,7 @@ export async function formatTitle(sheetTab: SheetTab, movieService: MovieService
     movie.audience = formatAudienceGoals(data.audience);
 
     // SALES PITCH (Description)
-    movie.promotional.salesPitch.description = data.salesPitch;
+    movie.promotional.videos.salesPitch.description = data.salesPitch;
 
     //////////////////
     // ADMIN FIELDS

@@ -26,10 +26,10 @@ export class MovieFormMediaVideosComponent implements OnInit, OnDestroy {
     private movie: MovieService,
     private shell: MovieFormShellComponent,
     private dynTitle: DynamicTitleService,
-    private route: ActivatedRoute,
+    private route: ActivatedRoute
   ) { }
 
-  ngOnInit() {
+ ngOnInit() {
     this.dynTitle.setPageTitle('Videos');
 
     this.sub = this.movie.valueChanges(this.movieId).subscribe(title => {
@@ -47,6 +47,10 @@ export class MovieFormMediaVideosComponent implements OnInit, OnDestroy {
 
   get screenerForm() {
     return this.form.promotional.videos.screener;
+  }
+
+  get salesPitchForm() {
+    return this.form.promotional.videos.salesPitch;
   }
 
   get videoList() {

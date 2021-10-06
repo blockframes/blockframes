@@ -13,7 +13,7 @@ import { firebase, testVideoId } from '@env'
 import { runChunks } from '../firebase-utils';
 import { IMaintenanceDoc } from '@blockframes/utils/maintenance';
 import { firestore } from 'firebase-admin';
-import { MovieSalesPitch, MovieVideo } from '@blockframes/movie/+state/movie.firestore';
+import { MovieVideo } from '@blockframes/movie/+state/movie.firestore';
 
 const userCache: { [uid: string]: User | PublicUser } = {};
 const orgCache: { [id: string]: Organization | PublicOrganization } = {};
@@ -109,7 +109,7 @@ function updateOrg(org: Organization | PublicOrganization) {
   throw Error(`Unable to process org: ${JSON.stringify(org, null, 4)}`);
 }
 
-function updateHostedVideo(screener: MovieVideo): MovieVideo | MovieSalesPitch {
+function updateHostedVideo(screener: MovieVideo): MovieVideo {
   const jwPlayerId = testVideoId;
   return {
     ...screener,
@@ -124,8 +124,8 @@ function processMovie(movie: Movie): Movie {
   if (movie.promotional?.videos?.otherVideos) {
     movie.promotional.videos.otherVideos = movie.promotional.videos.otherVideos.map(updateHostedVideo);
   }
-  if (movie.promotional?.salesPitch?.jwPlayerId) {
-    movie.promotional.salesPitch = updateHostedVideo(movie.promotional.salesPitch);
+  if (movie.promotional?.videos?.salesPitch?.jwPlayerId) {
+    movie.promotional.videos.salesPitch = updateHostedVideo(movie.promotional.videos.salesPitch);
   }
   return movie;
 }
