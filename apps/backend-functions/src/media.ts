@@ -484,7 +484,7 @@ export async function moveMovieMedia(before: MovieDocument, after: MovieDocument
     if (Array.isArray(beforeFile)) {
       before.promotional.videos.otherVideos?.forEach(beforeFile => {
         const afterFile = after.promotional.videos.otherVideos?.find(file => file.storagePath === beforeFile.storagePath);
-        if (afterFile) {
+        if (afterFile && beforeFile.privacy !== afterFile.privacy) {
           moveMedia(beforeFile, afterFile);
         }
       });
