@@ -11,13 +11,14 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TableExtractedElementsModule } from '../table-extracted-elements/table-extracted-elements.module';
 
 // Components
-import { ViewExtractedMoviesComponent } from './movies/view-extracted-movies.component';
+import { ViewExtractedTitlesComponent } from './titles/view-extracted-titles.component';
 import { ViewExtractedContractsComponent } from './contract/view-extracted-contracts.component';
 import { ViewExtractedOrganizationsComponent } from './organizations/view-extracted-organizations.component';
 
+
 @NgModule({
   declarations: [
-    ViewExtractedMoviesComponent,
+    ViewExtractedTitlesComponent,
     ViewExtractedContractsComponent,
     ViewExtractedOrganizationsComponent,
   ],
@@ -31,7 +32,7 @@ import { ViewExtractedOrganizationsComponent } from './organizations/view-extrac
     MatProgressSpinnerModule,
   ],
   exports: [
-    ViewExtractedMoviesComponent,
+    ViewExtractedTitlesComponent,
     ViewExtractedContractsComponent,
     ViewExtractedOrganizationsComponent,
   ],
