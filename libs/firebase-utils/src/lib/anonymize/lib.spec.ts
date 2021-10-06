@@ -172,6 +172,10 @@ describe('Test MOVIES anonymization function', () => {
               title: 'test screener',
               jwPlayerId: 'IDjwplayer1'
             },
+            salesPitch: {
+              title: 'test salesPitch',
+              jwPlayerId: 'IDjwplayersalesPitch'
+            },
             otherVideos: [
               {
                 title: 'test otherVideos1',
@@ -182,11 +186,7 @@ describe('Test MOVIES anonymization function', () => {
                 jwPlayerId: 'IDjwplayerotherVideos2'
               }
             ]
-          },
-          salesPitch: {
-            title: 'test salesPitch',
-            jwPlayerId: 'IDjwplayersalesPitch'
-          },
+          }
         }
       }
     }
