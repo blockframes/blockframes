@@ -43,10 +43,12 @@ export interface Screening {
   description: string;
 }
 
+
+export type AccessibilityTypes = 'public' | 'invitation-only' | 'private';
 export interface EventBase<D extends Timestamp | Date, Meta extends EventMeta = Record<string, unknown>> {
   id: string;
   ownerOrgId: string;
-  isPrivate: boolean;
+  accessibility: AccessibilityTypes;
   isSecret: boolean;
   type: EventTypes;
   title: string;

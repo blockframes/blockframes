@@ -34,8 +34,8 @@
   <ng-template colRef="event.end" let-end>
     {{ end | date: 'medium'}}
   </ng-template>
-  <ng-template colRef="event.isPrivate" let-privateEvent>
-    {{ privateEvent ? 'private' : 'public'}}
+  <ng-template colRef="event.accessibility" let-accessibility>
+    {{ accessibility }}
   </ng-template>
   <ng-template colRef="movie" let-movie>
     <div *ngIf="movie else noMovie" fxLayout="row">

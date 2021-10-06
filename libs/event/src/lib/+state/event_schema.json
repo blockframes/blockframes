@@ -9,8 +9,8 @@
       "type": "string"
     },
     {
-      "name": "isPrivate",
-      "type": "boolean"
+      "name": "accessibility",
+      "type": "string"
     },
     {
       "name": "isSecret",
