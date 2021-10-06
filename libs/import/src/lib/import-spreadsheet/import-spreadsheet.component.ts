@@ -70,7 +70,6 @@ export class ImportSpreadsheetComponent {
   }
 
   remove() {
-    console.log('remove');
     delete this.file;
     this.sheets = [];
     this.cdRef.markForCheck();

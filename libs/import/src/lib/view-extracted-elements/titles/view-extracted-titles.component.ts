@@ -38,13 +38,15 @@ export class ViewExtractedTitlesComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
+    const orgId = !this.authQuery.isBlockframesAdmin ? this.authQuery.user.orgId : undefined;
+
     const { moviesToCreate, moviesToUpdate } = await formatTitle(
       this.sheetTab,
       this.movieService,
       this.userService,
       this.authQuery.isBlockframesAdmin,
       getCurrentApp(this.router),
-      !this.authQuery.isBlockframesAdmin ? this.authQuery.user.orgId : undefined
+      orgId,
     );
     this.moviesToCreate$.next(new MatTableDataSource(moviesToCreate));
     this.moviesToUpdate$.next(new MatTableDataSource(moviesToUpdate));
