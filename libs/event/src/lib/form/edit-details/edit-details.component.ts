@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { EventForm } from '../event.form';
 import { appName, getCurrentApp } from '@blockframes/utils/apps';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
+
 @Component({
   selector: '[form] event-details-edit',
   templateUrl: 'edit-details.component.html',

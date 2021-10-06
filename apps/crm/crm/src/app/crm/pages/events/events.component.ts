@@ -4,6 +4,7 @@ import { EventService } from '@blockframes/event/+state';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { Router } from '@angular/router';
 import { OrganizationService, orgName } from '@blockframes/organization/+state';
+import { toLabel } from '@blockframes/utils/pipes';
 
 @Component({
   selector: 'crm-events',
@@ -22,7 +23,7 @@ export class EventsComponent implements OnInit {
     'invited': 'Number of invitations',
     'confirmed': 'Confirmed',
     'pending': 'Pending',
-    'privacyStatus': 'Privacy status',
+    'accessibility': 'Accessibility',
     'isSecret': 'Hidden on Marketplace'
   };
 
@@ -36,7 +37,7 @@ export class EventsComponent implements OnInit {
     'invited',
     'confirmed',
     'pending',
-    'privacyStatus',
+    'accessibility',
     'isSecret'
   ];
   public rows = [];
@@ -47,7 +48,7 @@ export class EventsComponent implements OnInit {
     private invitationService: InvitationService,
     private cdRef: ChangeDetectorRef,
     private router: Router,
-    private orgService: OrganizationService,
+    private orgService: OrganizationService
   ) { }
 
   async ngOnInit() {
@@ -67,7 +68,7 @@ export class EventsComponent implements OnInit {
       row.invited = invitations.length;
       row.confirmed = invitations.filter(i => i.status === 'accepted').length;
       row.pending = invitations.filter(i => i.status === 'pending').length;
-      row.privacyStatus = event.accessibility;
+      row.accessibility = toLabel(event.accessibility, 'accessibility');
       row.isSecret = event.isSecret ? 'Yes' : 'No';
       return row;
     })
@@ -85,7 +86,7 @@ export class EventsComponent implements OnInit {
       'id',
       'title',
       'type',
-      'privacyStatus',
+      'accessibility',
       'isSecret',
       'hostedBy',
     ];
@@ -104,7 +105,7 @@ export class EventsComponent implements OnInit {
       'invited': i.invited,
       'confirmed': i.confirmed,
       'pending': i.pending,
-      'privacy status': i.privacyStatus,
+      'accessibility': i.accessibility,
       'hidden on marketplace': i.isSecret
     }))
     downloadCsvFromJson(exportedRows, 'events-list');

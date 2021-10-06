@@ -15,7 +15,7 @@ import { OngoingButtonModule } from '@blockframes/ui/ongoing-button/ongoing-butt
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatRippleModule } from '@angular/material/core';
-
+import { ToLabelModule } from '@blockframes/utils/pipes';
 @NgModule({
   declarations: [ScreeningItemComponent],
   exports: [ScreeningItemComponent],
@@ -32,7 +32,8 @@ import { MatRippleModule } from '@angular/material/core';
     OngoingButtonModule,
     MatIconModule,
     MatButtonModule,
-    MatRippleModule
+    MatRippleModule,
+    ToLabelModule
   ]
 })
 export class ScreeningItemModule { }

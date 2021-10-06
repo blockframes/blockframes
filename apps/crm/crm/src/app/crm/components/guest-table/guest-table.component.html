@@ -35,7 +35,7 @@
     {{ end | date: 'medium'}}
   </ng-template>
   <ng-template colRef="event.accessibility" let-accessibility>
-    {{ accessibility }}
+    {{ accessibility | toLabel:'accessibility' }}
   </ng-template>
   <ng-template colRef="movie" let-movie>
     <div *ngIf="movie else noMovie" fxLayout="row">
