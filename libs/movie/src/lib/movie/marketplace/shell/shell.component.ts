@@ -37,7 +37,7 @@ export class TitleMarketplaceShellComponent implements OnInit {
     this.movie$ = this.movieQuery.selectActive().pipe(
       map(movie => {
         let title = createMovie(movie);
-        if (movie.promotional.videos?.otherVideos) {
+        if (title.promotional.videos?.otherVideos) {
           title.promotional.videos.otherVideos = title.promotional.videos.otherVideos.filter(video => video.privacy === 'public');
         }
         return title;
