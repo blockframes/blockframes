@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnInit, TemplateRef, ViewChild, ChangeDetectorRef, Optional, OnDestroy } from '@angular/core';
 import { AuthService, AuthQuery } from '../../+state';
+import type { UserCredential } from '@firebase/auth-types';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { InvitationService } from '@blockframes/invitation/+state';
@@ -18,7 +19,6 @@ import { createLocation } from '@blockframes/utils/common-interfaces/utility';
 import { debounceTime } from 'rxjs/internal/operators/debounceTime';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import firebase from 'firebase/app';
 
 @Component({
   selector: 'auth-identity',
@@ -42,7 +42,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
   public existingUser = false;
   private existingOrgId: string;
   private sub: Subscription;
-  private anonymousUser: void | firebase.auth.UserCredential;
+  private anonymousUser: UserCredential;
   private publicUser: PublicUser;
 
   constructor(
@@ -99,7 +99,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
     this.sub.unsubscribe();
     // We created anonymous user but it was not transformed into real one
     if (this.anonymousUser && !this.publicUser) {
-      await firebase.auth().currentUser?.delete();
+      await this.authService.deleteAnonymousUser();
     }
   }
 
@@ -185,8 +185,11 @@ export class IdentityComponent implements OnInit, OnDestroy {
        * without forcing us to allow orgs collection reads for non-logged-in users in firestore rules.
        * @TODO #6756 add to notion page https://www.notion.so/cascade8/Release-troubleshooting-8085a54303de4019b0a129116d60fa13 to enable anonymous login for prod env
        * If we beleive this is not enough for data safety, an https function must be used (with anonymous login ?)
+       * 
+       * Once the account is converted from anonymous to real, authState will remain as anonymous for a few seconds 
+       * (this explain the need to allow the anonymous sign-in for user update in firestore rules)
        */
-      this.anonymousUser = await firebase.auth().signInAnonymously();
+      this.anonymousUser = await this.authService.signInAnonymously();
 
       // Check if the org name is already existing
       const unique = await this.orgService.uniqueOrgName(denomination.full);
@@ -239,12 +242,11 @@ export class IdentityComponent implements OnInit, OnDestroy {
   * @returns PublicUser
   */
   private async createUserFromAnonymous(user: { email, password, firstName, lastName }) {
-    console.log(this.anonymousUser ? this.anonymousUser.user.uid : '');
     const privacyPolicy = await this.authService.getPrivacyPolicy();
     const ctx = {
       firstName: user.firstName,
       lastName: user.lastName,
-      _meta: { createdFrom: this.app },
+      _meta: { createdFrom: this.app, createdBy: 'anonymous', },
       privacyPolicy
     };
     const credentials = await this.authService.signupFromAnonymous(user.email.trim(), user.password, { ctx });
@@ -347,7 +349,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
   }
 
   public async logout() {
-    await this.authService.signOut();
+    await this.authService.deleteAnonymousUserOrSignOut();
     this.router.navigate(['/']);
   }
 }
