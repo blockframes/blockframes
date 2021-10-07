@@ -13,7 +13,7 @@ describe('Contracts Rules Tests', () => {
   let db: Firestore;
 
   beforeAll(async () => {
-    db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-sAdmin' });
+    db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-sAdmin', firebase: { sign_in_provider: 'password' } });
   });
 
   afterAll(() => Promise.all(apps().map((app) => app.delete())));

@@ -13,7 +13,7 @@ describe('Invitation Rules Tests', () => {
 
   describe('With User not in org', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-sAdmin' });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-sAdmin', firebase: { sign_in_provider: 'password' } });
     });
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
@@ -31,7 +31,7 @@ describe('Invitation Rules Tests', () => {
 
   describe('With User in org', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2' });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2', firebase: { sign_in_provider: 'password' } });
     });
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));

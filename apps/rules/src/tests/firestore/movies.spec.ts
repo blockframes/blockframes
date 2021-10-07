@@ -38,7 +38,7 @@ describe('Movies Rules Tests', () => {
     };
 
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2' });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2', firebase: { sign_in_provider: 'password' } });
     });
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
@@ -106,9 +106,9 @@ describe('Movies Rules Tests', () => {
         ['_meta', { createdBy: '' }],
         ['_meta', { createdAt: '' }],
         ['_type', 'drama'],
-        ['app', { catalog: { access: true }}],
-        ['app', { catalog: { status: 'rejected' }}],
-        ['app', { festival: { access: {} }}],
+        ['app', { catalog: { access: true } }],
+        ['app', { catalog: { status: 'rejected' } }],
+        ['app', { festival: { access: {} } }],
       ];
       test.each(fields)("updating restricted '%s' field shouldn't be able", async (key, value) => {
         const movieRef = db.doc(`movies/${existMovieInDraft}`);
@@ -129,7 +129,7 @@ describe('Movies Rules Tests', () => {
     const draftMovieId = 'MI-0d7';
 
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-admin' });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-admin', firebase: { sign_in_provider: 'password' } });
     });
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
@@ -147,9 +147,7 @@ describe('Movies Rules Tests', () => {
     const newMovieDetails = { id: `${newMovieId}` };
 
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {
-        uid: 'uid-peeptom',
-      });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-peeptom', firebase: { sign_in_provider: 'password' } });
     });
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
@@ -175,9 +173,7 @@ describe('Movies Rules Tests', () => {
     const acceptedMovieId = 'M001';
 
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {
-        uid: 'uid-user3'
-      })
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user3', firebase: { sign_in_provider: 'password' } })
     });
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));

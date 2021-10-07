@@ -12,7 +12,7 @@ describe('Events Rules Tests', () => {
 
   describe('With User in org', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2' });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2', firebase: { sign_in_provider: 'password' } });
     });
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
@@ -62,13 +62,35 @@ describe('Events Rules Tests', () => {
       const eventRef = db.doc('events/E007');
       await assertSucceeds(eventRef.delete());
     });
+
+    test("user with valid org but not ownerOrgId as orgId should be able to update attendees status", async () => {
+      const eventRef = db.doc('events/E002');
+      const eventDetails = { meta: { attendees: { 'uid-user2': 'requesting' } } };
+      await assertSucceeds(eventRef.update(eventDetails));
+    });
+
+    test("user with valid org but not ownerOrgId as orgId should not be able to accept himself", async () => {
+      const eventRef = db.doc('events/E002');
+      const eventDetails = { meta: { attendees: { 'uid-user2': 'accepted' } } };
+      await assertFails(eventRef.update(eventDetails));
+    });
+
+    test("user with valid org but not ownerOrgId as orgId should not be able to set himself as owner", async () => {
+      const eventRef = db.doc('events/E002');
+      const eventDetails = { meta: { attendees: { 'uid-user2': 'owner' } } };
+      await assertFails(eventRef.update(eventDetails));
+    });
+
+    test("user with valid org but not ownerOrgId as orgId should not be able to update event accessibility", async () => {
+      const eventRef = db.doc('events/E002');
+      const eventDetails = { accessibility: 'public' };
+      await assertFails(eventRef.update(eventDetails));
+    });
   });
 
   describe('With User not in org', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {
-        uid: 'uid-peeptom',
-      });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-peeptom', firebase: { sign_in_provider: 'password' } });
     });
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));

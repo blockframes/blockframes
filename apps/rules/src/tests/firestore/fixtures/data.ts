@@ -251,6 +251,12 @@ export const testFixture = {
     id: 'E001',
   },
 
+  'events/E002': {
+    id: 'E002',
+    ownerOrgId: 'foo',
+    accessibility: 'private'
+  },
+
   //Notifications
   'notifications/001': {
     id: '001',

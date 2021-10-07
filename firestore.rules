@@ -77,7 +77,7 @@ service cloud.firestore {
 
     function isOnlyUpdatingAllowedUserFields() {
       // Only "firstName" and "lastName" can be updated.
-      return isSignedIn('anonymous')
+      return isSignedInAnonymously()
       	&& userId() == incomingData().uid
         && isNotUpdatingId('uid', existingData().uid)
         && isNotUpdatingField(['email'])
@@ -216,9 +216,9 @@ service cloud.firestore {
     /// RULES ///
 
     match /orgs/{orgId} {
-      allow read: if isSignedIn('anonymous')
+      allow read: if isSignedInAnonymously()
         && notInMaintenance();
-    	allow create: if isSignedIn('anonymous')
+    	allow create: if isSignedInAnonymously()
         && isRequestFieldValueEqualTo(['status'], 'pending')
         && isRequestFieldValueEqualToOrNotSetted(['id'], orgId)
         && notInMaintenance();
@@ -515,10 +515,14 @@ service cloud.firestore {
       return currentUser().uid;
     }
 
-  	// Check if the user is logged in the app.
-    function isSignedIn(method) {
-      return (method == null && currentUser() != null && currentSigninProvider() == 'password') ||
-       (method != null && currentUser() != null && currentSigninProvider() in ['password', method])
+  	// Check if the user is logged in the app with a real account.
+    function isSignedIn() {
+      return currentUser() != null && currentSigninProvider() == 'password';
+    }
+
+    // Check if user is signed in as anonymous or regular
+    function isSignedInAnonymously() {
+      return isSignedIn() || (currentUser() != null && currentSigninProvider() == 'anonymous');
     }
 
   	function userOrgId() {
