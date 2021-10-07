@@ -6,7 +6,7 @@ import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-enc
 import { downloadCsvFromJson } from "@blockframes/utils/helpers";
 import { territoriesISOA3, TerritoryValue } from "@blockframes/utils/static-model";
 import { combineLatest, Subscription } from "rxjs";
-import { filter, map, shareReplay, startWith, throttleTime } from "rxjs/operators";
+import { filter, first, map, shareReplay, startWith, throttleTime } from "rxjs/operators";
 import { CatalogAvailsShellComponent } from "../shell/shell.component";
 
 @Component({
@@ -103,8 +103,9 @@ export class CatalogDashboardAvailsMapComponent implements AfterViewInit, OnDest
   }
 
   downloadCsv() {
-    downloadCsvFromJson([
-      { column1: ['hello', 'world', 'how',] }
-    ])
+    this.available$.pipe(first()).subscribe(data => {
+      console.log({ data })
+      downloadCsvFromJson(data)
+    })
   }
 }
