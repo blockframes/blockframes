@@ -54,6 +54,9 @@
             <mat-option *ngFor="let type of hostedVideoTypes" [value]="type">{{ type | toLabel: 'hostedVideoTypes' }}</mat-option>
           </mat-select>
         </mat-form-field>
+        <mat-checkbox [checked]="otherVideo.isPublic" (change)="otherVideo.togglePrivacy($event.checked)" color="primary">
+          <b>Public</b> (Buyers can see video on Marketplace)
+        </mat-checkbox>
         <file-uploader
           [form]="otherVideo"
           [meta]="['movies', 'otherVideos', movie.id]"
