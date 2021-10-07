@@ -104,7 +104,6 @@ export class CatalogDashboardAvailsMapComponent implements AfterViewInit, OnDest
 
   downloadCsv() {
     this.available$.pipe(first()).subscribe(data => {
-      console.log({ data })
       downloadCsvFromJson(data)
     })
   }
