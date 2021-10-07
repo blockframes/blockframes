@@ -51,6 +51,7 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
       const extra = this.getExtra();
       if (extra) {
         this.metadata = { ...this.metadata, ...extra }
+        if (storageFile.privacy) this.metadata.privacy = storageFile.privacy;
         const task = this.uploaderService.retrieveFromQueue(this.storagePath, this.queueIndex);
         if (task) {
           task.metadata = this.metadata;

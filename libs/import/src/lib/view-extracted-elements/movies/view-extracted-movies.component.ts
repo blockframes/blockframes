@@ -360,7 +360,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
       movie.audience = formatAudienceGoals(this.mapping.audience);
 
       // SALES PITCH (Description)
-      movie.promotional.salesPitch.description = this.mapping.salesPitch;
+      movie.promotional.videos.salesPitch.description = this.mapping.salesPitch;
 
       //////////////////
       // ADMIN FIELDS
@@ -670,10 +670,10 @@ export class ViewExtractedMoviesComponent implements OnInit {
       });
     }
 
-    if (!movie.promotional.salesPitch.description) {
+    if (!movie.promotional.videos.salesPitch.description) {
       errors.push({
         type: 'warning',
-        field: 'movie.promotional.salesPitch',
+        field: 'movie.promotional.videos.salesPitch',
         name: 'Sales Pitch',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'

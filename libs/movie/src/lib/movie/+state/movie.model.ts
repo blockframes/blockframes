@@ -17,7 +17,6 @@ import {
   MovieExpectedPremiere,
   MoviePlannedShooting,
   MovieGoalsAudience,
-  MovieSalesPitch,
   MovieVideos,
   MovieVideo,
   MovieBase,
@@ -107,22 +106,11 @@ export function createMoviePromotional(
     ...params,
     moodboard: createStorageFile(params?.moodboard),
     notes: params?.notes?.map(note => createMovieNote(note)) ?? [],
-    salesPitch: createSalesPitch(params.salesPitch),
     still_photo: params?.still_photo?.map(still => createStorageFile(still)) ?? [],
     presentation_deck: createStorageFile(params?.presentation_deck),
     scenario: createStorageFile(params?.scenario),
     videos: createMovieVideos(params?.videos),
   };
-}
-
-export function createSalesPitch(params: Partial<MovieSalesPitch> = {}): MovieSalesPitch {
-  const video = createStorageFile(params);
-  return {
-    description: '',
-    jwPlayerId: '',
-    ...video,
-    ...params,
-  }
 }
 
 export function createLanguageKey(languages: Partial<{ [language in Language]: MovieLanguageSpecification }> = {}): LanguageRecord {
@@ -330,8 +318,8 @@ export function createMovieVideos(params: Partial<MovieVideos>): MovieVideos {
   return {
     ...params,
     screener: createMovieVideo(params?.screener),
-    // @TODO #5494 remove "?" in "map?."
-    otherVideos: params?.otherVideos?.map?.(video => createMovieVideo(video)) || [],
+    salesPitch: createMovieVideo(params?.salesPitch),
+    otherVideos: params?.otherVideos?.map(video => createMovieVideo(video)) || [],
   }
 }
 
