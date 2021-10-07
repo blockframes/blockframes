@@ -1,7 +1,7 @@
 ﻿import FestivalDashboardHomePage from './FestivalDashboardHomePage';
 import { SEC } from '@blockframes/e2e/utils';
 
-export default class EventEditPage {
+export default class EventDetailsEditPage {
   constructor() {
     cy.get('event-details-edit', { timeout: 90 * SEC });
     cy.wait(10 * SEC);
@@ -42,12 +42,14 @@ export default class EventEditPage {
   //set event access
   uncheckPrivate(isPublic: boolean = false) {
     if (!isPublic) {
-      cy.get('event-details-edit [type="radio"]', { timeout: 3 * SEC })
-        .first()
-        .check({force: true});
-    } else {
+      //last radio button correspond to "private" privacy status
       cy.get('event-details-edit [type="radio"]', { timeout: 3 * SEC })
         .eq(2)
+        .check({force: true});
+    } else {
+      //first radio button correspond to "public" privacy status
+      cy.get('event-details-edit [type="radio"]', { timeout: 3 * SEC })
+        .first()
         .check({force: true});
     }
   }
