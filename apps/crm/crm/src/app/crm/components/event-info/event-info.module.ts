@@ -11,6 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { EventRangeModule } from '@blockframes/event/pipes/event-range.pipe';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { GoToModule } from '../go-to/go-to.module';
+import { ToLabelModule } from '@blockframes/utils/pipes';
 
 // Components 
 import { EventInfoComponent } from './event-info.component';
@@ -28,6 +29,7 @@ import { EventInfoComponent } from './event-info.component';
     MatCardModule,
     OrgNameModule,
     MatIconModule,
+    ToLabelModule
   ]
 })
 export class EventInfoModule { }

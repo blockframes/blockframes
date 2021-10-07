@@ -26,16 +26,16 @@
       <ng-container  *ngSwitchCase="'early'">
         <button test-id="invitation-request" mat-button (click)="request(event)">
           <mat-icon svgIcon="calendar_today"></mat-icon>
-          <span *ngIf="event.isPrivate">Ask for Invitation</span>
-          <span *ngIf="!event.isPrivate">Add to My Calendar</span>
+          <span *ngIf="event.accessibility === 'public'; else askForInvitation">Add to My Calendar</span>
+          <ng-template #askForInvitation>Ask for Invitation</ng-template>
         </button>
       </ng-container>
       <ng-container *ngSwitchCase="'onTime'">
         <p>This event has already started.</p>
         <button test-id="invitation-request" mat-button (click)="request(event)">
           <mat-icon svgIcon="calendar_today"></mat-icon>
-          <span *ngIf="event.isPrivate">Request Access</span>
-          <span *ngIf="!event.isPrivate">Access Event</span>
+          <span *ngIf="event.accessibility === 'public'; else onTime">Access Event</span>
+          <ng-template #onTime>Request Access</ng-template>
         </button>
       </ng-container>
     </ng-container>
