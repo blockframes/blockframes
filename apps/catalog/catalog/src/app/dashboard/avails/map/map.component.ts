@@ -1,0 +1,110 @@
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy } from "@angular/core";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { ActivatedRoute, Router } from "@angular/router";
+import { availableTerritories, AvailsFilter, collidingTerms, getTerritoryMarkers, toTerritoryMarker } from "@blockframes/contract/avails/avails";
+import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
+import { downloadCsvFromJson } from "@blockframes/utils/helpers";
+import { territoriesISOA3, TerritoryValue } from "@blockframes/utils/static-model";
+import { combineLatest, Subscription } from "rxjs";
+import { filter, map, shareReplay, startWith, throttleTime } from "rxjs/operators";
+import { CatalogAvailsShellComponent } from "../shell/shell.component";
+
+@Component({
+  selector: 'catalog-dashboard-avails-map',
+  templateUrl: './map.component.html',
+  styleUrls: ['./map.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class CatalogDashboardAvailsMapComponent implements AfterViewInit, OnDestroy {
+  public hoveredTerritory: {
+    name: string;
+    status: string;
+  }
+
+  sub: Subscription;
+  availsForm = this.shell.avails.mapForm;
+
+  public org$ = this.shell.movieOrg$;
+  public status$ = this.availsForm.statusChanges.pipe(startWith(this.availsForm.valid ? 'VALID' : 'INVALID'));
+  private mandates$ = this.shell.mandates$;
+  private mandateTerms$ = this.shell.mandateTerms$;
+  private salesTerms$ = this.shell.salesTerms$;
+
+  /** All mandates markers by territory (they might be already sold or already selected selected (from the bucket) or already in selection) */
+  private territoryMarkers$ = combineLatest([
+    this.mandates$,
+    this.mandateTerms$,
+  ]).pipe(
+    map(([mandates, mandateTerms]) => getTerritoryMarkers(mandates, mandateTerms)),
+  );
+
+  public sold$ = combineLatest([
+    this.salesTerms$,
+    this.availsForm.value$,
+  ]).pipe(
+    filter(() => this.availsForm.valid),
+    map(([salesTerms, avails]) => {
+      const soldTerms = collidingTerms(avails, salesTerms);
+      const markers = soldTerms.map(term => term.territories
+        .filter(territory => !!territoriesISOA3[territory])
+        .map(territory => toTerritoryMarker(territory, [], term))
+      ).flat();
+      return markers;
+    }),
+  );
+
+  public available$ = combineLatest([
+    this.mandates$,
+    this.sold$,
+    this.mandateTerms$
+  ]).pipe(
+    map(([mandates, sold, mandateTerms,]) => {
+      if (this.availsForm.invalid) return [];
+      return availableTerritories([], sold, [], this.availsForm.value, mandates, mandateTerms);
+    }),
+    shareReplay({ refCount: true, bufferSize: 1 }),
+  );
+
+
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private shell: CatalogAvailsShellComponent,
+    private snackbar: MatSnackBar,
+  ) { }
+
+  ngAfterViewInit() {
+    const decodedData = decodeUrl(this.route);
+    this.availsForm.patchValue(decodedData);
+    const subSearchUrl = this.availsForm.valueChanges.pipe(
+      throttleTime(1000)
+    ).subscribe(formState => {
+      encodeUrl<AvailsFilter>(this.router, this.route, formState);
+    });
+    this.sub = subSearchUrl;
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
+  }
+
+  /** Display the territories information in the tooltip */
+  public displayTerritoryTooltip(territory: TerritoryValue, status: string) {
+    this.hoveredTerritory = { name: territory, status }
+  }
+
+  /** Clear the territories information */
+  public clearTerritoryTooltip() {
+    this.hoveredTerritory = null;
+  }
+
+  clear() {
+    this.shell.avails.mapForm.reset();
+  }
+
+  downloadCsv() {
+    downloadCsvFromJson([
+      { column1: ['hello', 'world', 'how',] }
+    ])
+  }
+}

@@ -64,7 +64,7 @@ const routes: Routes = [
       },
       {
         path: 'sales/:saleId',
-        canActivate: [ CatalogSaleViewGuard ],
+        canActivate: [CatalogSaleViewGuard],
         loadChildren: () => import('./sales/view/view.module').then(m => m.CatalogSaleViewModule)
       },
       {
