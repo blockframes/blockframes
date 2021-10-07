@@ -29,8 +29,8 @@ export class MainComponent implements OnInit {
   }
 
   showSalesPitch(movie: Movie) {
-    return movie.promotional.videos?.salesPitch?.privacy === 'public'
-      && ( movie.promotional.videos?.salesPitch?.jwPlayerId || movie.promotional.videos?.salesPitch?.description );
+    const { privacy, jwPlayerId, description } = movie.promotional.videos?.salesPitch;
+    return privacy === 'public' && (jwPlayerId || description);
   }
 
 }

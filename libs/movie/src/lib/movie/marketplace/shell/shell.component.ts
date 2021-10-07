@@ -35,13 +35,7 @@ export class TitleMarketplaceShellComponent implements OnInit {
   ngOnInit() {
     this.movie$ = this.route.params.pipe(
       map(params => params.movieId),
-      switchMap((id: string) => this.movie.valueChanges(id)),
-      map(movie => {
-        if (movie.promotional.videos?.otherVideos) {
-          movie.promotional.videos.otherVideos = movie.promotional.videos.otherVideos.filter(video => video.privacy === 'public');
-        }
-        return movie;
-      })
+      switchMap((id: string) => this.movie.valueChanges(id))
     )
   }
 
