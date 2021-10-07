@@ -128,7 +128,7 @@ export const hostedVideoTypes = {
   teaser: 'Teaser',
   reel: 'Promo Reel',
   clip: 'Clip',
-  pitch: 'Pitch',
+  other: 'Other'
 } as const
 
 // @TODO (#1658) Update LANGUAGES static model to be RFC-5646 compliant
