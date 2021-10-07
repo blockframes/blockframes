@@ -41,7 +41,7 @@ describe('Demo Request Email', () => {
       .click()
       .then(() => cy.log("Form clicked!"));
 
-    cy.wait(15 * SEC);
+    cy.wait(30 * SEC);
 
     //Test for arrival of email..
     cy.mailosaurGetMessage(serverId, {
