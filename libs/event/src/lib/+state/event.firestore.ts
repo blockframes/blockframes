@@ -1,7 +1,7 @@
 import type firebase from 'firebase';
 import { AnalyticsEvents } from '@blockframes/utils/analytics/analytics-model';
 import { StorageFile } from '@blockframes/media/+state/media.firestore';
-
+import { AccessibilityTypes } from '@blockframes/utils/static-model/types'
 type Timestamp = firebase.firestore.Timestamp;
 
 // Event types
@@ -43,8 +43,6 @@ export interface Screening {
   description: string;
 }
 
-
-export type AccessibilityTypes = 'public' | 'invitation-only' | 'private';
 export interface EventBase<D extends Timestamp | Date, Meta extends EventMeta = Record<string, unknown>> {
   id: string;
   ownerOrgId: string;
