@@ -21,7 +21,7 @@
     </div>
   </div>
 
-  <div *ngIf="!displayPrivacySettings" fxLayout="column" fxLayoutGap="12px">
+  <div *ngIf="displayPrivacySettings" fxLayout="column" fxLayoutGap="12px">
     <h3>Privacy Settings</h3>
     <mat-radio-group fxLayout="column" [value]="form.value.accessibility" formControlName="accessibility" (change)="onPrivacyChange($event.value)">
       <mat-radio-button  color="primary" value="public">
