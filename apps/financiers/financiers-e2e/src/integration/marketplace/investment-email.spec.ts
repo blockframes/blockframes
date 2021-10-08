@@ -13,12 +13,12 @@ const MOVIE_LIST_PATH = '/c/o/marketplace/title';
 
 //! IMPORTANT for this test to run, we need to do the movie import test in catalog before.
 //! Actually, we have no movie on financiers, so we need to import some to be able to work on E2E test for Financiers
-describe('Invest Interest Email Test', () => {
+describe.skip('Invest Interest Email Test', () => {
   let testInfo;
 
   beforeEach(() => {
     cy.viewport('ipad-2', 'landscape');
-    
+
     //Clear all messages on server before the test
     cy.mailosaurDeleteAllMessages(serverId).then(() => {
       cy.log('Inbox empty. Ready to roll..');
@@ -29,7 +29,7 @@ describe('Invest Interest Email Test', () => {
     let investor = {firstName: '', lastName: '', email: ''};
     let user = {firstName: '', lastName: '', email: ''};
     let orgName = '';
-    
+
     cy.log("Log in Admin user Vincent");
     cy.login(users[0].email, users[0].password);
     cy.visit('/c/o/marketplace/home');
@@ -52,7 +52,7 @@ describe('Invest Interest Email Test', () => {
     p4.openDiscussionModale();
 
     cy.log('Check if we cannot submit Discussion Form');
-    const discussionDataTest = {...discussionData}; 
+    const discussionDataTest = {...discussionData};
     delete discussionDataTest.subject;
     p4.fillDiscussionForm(discussionDataTest);
     p4.checkDiscussionForm();
@@ -65,7 +65,7 @@ describe('Invest Interest Email Test', () => {
     // Waiting this snackbar to appear, because it appears after the emails have been sent.
     cy.get('snack-bar-container', {timeout: 60 * SEC}).should('contain', 'Your email has been sent.');
     cy.log('Email sent');
-    
+
     cy.window().then((win) => {
       testInfo = (win as any).cyEmailData;
       console.log(testInfo);
