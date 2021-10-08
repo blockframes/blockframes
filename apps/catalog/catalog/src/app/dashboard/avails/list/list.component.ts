@@ -1,7 +1,7 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, OnInit } from "@angular/core";
 import { QueryFn } from "@angular/fire/firestore";
 import { AvailsForm } from "@blockframes/contract/avails/form/avails.form";
-import { ContractService } from "@blockframes/contract/contract/+state";
+import { ContractService, Sale, Mandate } from "@blockframes/contract/contract/+state";
 import { IncomeService } from "@blockframes/contract/income/+state";
 import { Movie, MovieService } from "@blockframes/movie/+state";
 import { OrganizationQuery } from "@blockframes/organization/+state";
@@ -15,10 +15,7 @@ import { AvailsFilter, isMovieAvailable } from "@blockframes/contract/avails/ava
 import { combineLatest, Subscription } from "rxjs";
 import { TermService } from "@blockframes/contract/term/+state";
 
-const salesQuery = (title: Movie): QueryFn => {
-  return ref => ref.where('titleId', '==', title.id)//.where('type', '==', 'sale')
-  //.where('status', '==', 'accepted');
-}
+const contractsQuery = (title: Movie): QueryFn => ref => ref.where('titleId', '==', title.id);
 
 const organizationQuery = (orgId: string): QueryFn => {
   return ref => ref.where('orgIds', 'array-contains', orgId)
@@ -42,6 +39,11 @@ const hydrateTitles = (titles) => titles.map(title => {
   return title;
 })
 
+function isAcceptedSale(contract: Sale<Date> | Mandate<Date>) {
+  return contract.status === 'accepted';
+}
+
+
 @Component({
   selector: 'catalog-avails-list',
   templateUrl: './list.component.html',
@@ -51,14 +53,18 @@ const hydrateTitles = (titles) => titles.map(title => {
 export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnInit {
   public availsForm = new AvailsForm({ territories: [] }, ['territories']);
   private orgId = this.orgQuery.getActiveId();
-  private subs: Subscription[] = [];
+  private sub: Subscription;
+
+  public queryParams$ = this.route.queryParamMap.pipe(
+    map(query => ({ formValue: query.get('formValue') })),
+  )
 
   public query$ = this.titleService.valueChanges(organizationQuery(this.orgId)).pipe(
     joinWith({
       contracts: title => {
-        return this.contractService.valueChanges(salesQuery(title)).pipe(
+        return this.contractService.valueChanges(contractsQuery(title)).pipe(
           joinWith({
-            income: contract => this.incomeService.valueChanges(contract.id),
+            income: contract => (isAcceptedSale(contract)) ? this.incomeService.valueChanges(contract.id) : null,
             terms: contract => this.termsService.valueChanges(contract.termIds),
           })
         )
@@ -91,9 +97,8 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
     private termsService: TermService,
   ) { }
 
-  goTo(section: string) {
-    const formValue = this.route.snapshot.queryParams.formValue
-    this.router.navigate([section], { relativeTo: this.route, queryParams: { formValue } })
+  ngOnInit() {
+    this.dynTitleService.setPageTitle('My Avails');
   }
 
   ngAfterViewInit() {
@@ -104,12 +109,12 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
     ).subscribe(formState => {
       encodeUrl<AvailsFilter>(this.router, this.route, formState);
     });
-    this.subs.push(subSearchUrl);
+    this.sub = subSearchUrl;
   }
 
-  ngOnDestroy() { this.subs.forEach(sub => sub.unsubscribe()); }
-
-  ngOnInit() {
-    this.dynTitleService.setPageTitle('My Avails');
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
+
 }
+

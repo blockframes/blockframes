@@ -121,7 +121,10 @@ function discreteSomeOf(a: string[], optional?: 'optional') {
 //   B.from     B.to
 function continuousSomeOf(a: Range, optional?: 'optional') {
   return {
-    in: (b: Range) => optional && (!a?.from || !a?.to) ? true : (a?.from >= b?.from && a?.from <= b?.to) || (a?.to >= b?.from && a?.to <= b?.to) || continuousAllOf(b, optional).in(a),
+    in: (b: Range) => {
+      if (optional && (!a?.from || !a?.to)) return true;
+      return (a?.from >= b?.from && a?.from <= b?.to) || (a?.to >= b?.from && a?.to <= b?.to) || continuousAllOf(b, optional).in(a)
+    },
   };
 }
 

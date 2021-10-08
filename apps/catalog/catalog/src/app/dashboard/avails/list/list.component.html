@@ -1,4 +1,5 @@
 <h2>Availabilities</h2>
+
 <section class="surface" fxLayout="column" fxLayoutGap="16px">
   <h3>Search Criteria</h3>
   <form [availsFilter]="availsForm" fxLayout="row wrap"></form>
@@ -9,20 +10,20 @@
     <h3>Results</h3>
     <bf-table [source]="sales" clickable useFilter pagination="50">
       <ng-template colRef="title.international" label="TITLE" let-title>{{ title | maxLength:50}}</ng-template>
-      <ng-template colRef="contracts" label="CONTRACTS" let-contracts>{{ contracts?.length|| '-' }}</ng-template>
-      <ng-template colRef="salesCount" label="SALES" let-salesCount>{{ salesCount || '-' }}</ng-template>
-      <ng-template colRef="totalIncome" label="TOTAL GROSS RECEIPT" let-totalIncome>
+      <ng-template colRef="contracts" label="contracts" let-contracts>{{ contracts?.length|| '-' }}</ng-template>
+      <ng-template colRef="salesCount" label="sales" let-salesCount>{{ salesCount || '-' }}</ng-template>
+      <ng-template colRef="totalIncome" label="total gross receipt" let-totalIncome>
         <ng-container *ngIf="totalIncome.usd"> {{ totalIncome.usd | currency:'USD' }} </ng-container>
         <ng-container *ngIf="totalIncome.usd && totalIncome.euro"> and</ng-container>
         <ng-container *ngIf="totalIncome.euro"> {{ totalIncome.euro | currency:'EUR' }} </ng-container>
         <ng-container *ngIf="!totalIncome.usd && !totalIncome.euro"> - </ng-container>
       </ng-template>
-      <ng-template colRef="id" label="ACTIONS" let-id>
-        <div fxLayout fxLayoutGap="16px">
-          <a mat-icon-button (click)="goTo('map')">
+      <ng-template colRef="id" label="actions" let-id>
+        <div fxLayout fxLayoutGap="16px" *ngIf="queryParams$ | async as queryParams">
+          <a mat-icon-button [routerLink]="['./map']" [queryParams]="queryParams">
             <mat-icon svgIcon="world"></mat-icon>
           </a>
-          <a mat-icon-button (click)="goTo('calendar')">
+          <a mat-icon-button [routerLink]="['./calendar']" [queryParams]="queryParams">
             <mat-icon svgIcon="calendar_today"></mat-icon>
           </a>
         </div>
