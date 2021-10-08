@@ -32,9 +32,9 @@ const hydrateTitles = (titles) => titles.map(title => {
   title.totalIncome = title.contracts?.filter(
     contract => contract.type === 'sale' && contract.status === 'accepted'
   ).reduce((total, sale) => {
-    if (sale.income.currency === 'USD') {
+    if (sale.income && sale.income.currency === 'USD') {
       total.usd += sale.income.price
-    } else {
+    } else if (sale.income) {
       total.euro += sale.income.price
     }
     return total;
@@ -75,6 +75,7 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
     map(([titles, avails]) => titles.filter(title => {
       const mandateTerms = title.contracts?.filter(contract => contract.type === 'mandate' && contract.status === 'accepted').map(contract => contract.terms).flat();
       const saleTerms = title.contracts?.filter(contract => contract.type === 'sale' && contract.status === 'accepted').map(contract => contract.terms).flat();
+
       return isMovieAvailable(title.id, avails, null, mandateTerms ?? [], saleTerms ?? [], 'optional');
     })),
   );
