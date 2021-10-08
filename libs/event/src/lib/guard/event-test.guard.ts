@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { AngularFireAuth } from '@angular/fire/auth';
 import { CanActivate, Router, UrlTree, ActivatedRouteSnapshot } from '@angular/router';
 import { AuthService } from '@blockframes/auth/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
@@ -15,6 +16,7 @@ export class EventTestGuard implements CanActivate {
     private userService: UserService,
     private orgService: OrganizationService,
     private router: Router,
+    private afAuth: AngularFireAuth
   ) { }
 
   async canActivate(route: ActivatedRouteSnapshot): Promise<boolean | UrlTree> {
@@ -38,7 +40,13 @@ export class EventTestGuard implements CanActivate {
       if (org.status === 'pending') {
         return this.router.createUrlTree(['c/organization/create-congratulations']);
       }
+
+      // Starting authState populate
+      this.authService.sync(); // @TODO #6756 if user is logged in => test
     }
+
+    // Listenning for authState changes
+    this.listenOnCurrentUserState();
 
     /**
      * An anonymous account is created in order to fetch the required data for the event
@@ -77,5 +85,14 @@ export class EventTestGuard implements CanActivate {
       });
   }
 
-
+  private listenOnCurrentUserState() {
+    let user;
+    this.afAuth.authState.subscribe(u => {
+      if(user && !u){
+        this.router.navigate(['/']);
+      } else {
+        user = u;
+      }
+    });
+  }
 }

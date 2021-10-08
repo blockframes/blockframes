@@ -8,6 +8,9 @@ import { RouterModule, Routes } from '@angular/router';
 // Components
 import { EventComponent } from './event.component';
 
+// Modules 
+import { AuthWidgetModule } from '@blockframes/auth/components/widget/widget.module';
+
 // Guards
 import { EventTestGuard } from '../guard/event-test.guard';
 
@@ -24,6 +27,9 @@ const routes: Routes = [{
     // Angular
     CommonModule,
     FlexLayoutModule,
+
+    // Modules
+    AuthWidgetModule
   ]
 })
 export class EventModule { }

@@ -1,4 +1,4 @@
-<ng-container *ngIf="(user$ | async) as user else login">
+<ng-container *ngIf="(user$ | async) as user else anonymous">
   <ng-container *ngIf="(organization$ | async) as organization">
     <article fxLayout="row">
       <button class="profile" matRipple [widgetTarget]="menu" test-id="auth-user">
@@ -38,6 +38,36 @@
     </article>
   </ng-container>
 </ng-container>
+
+<ng-template #anonymous>
+  <ng-container *ngIf="anonymousUser else login">
+    <article fxLayout="row">
+      <button class="profile" matRipple [widgetTarget]="menu" test-id="auth-user">
+        <div fxLayout="column" fxLayoutAlign="center end">
+          <span class="mat-body-2">Anonymous</span>
+        </div>
+        <img asset="profil_user.svg" alt="Profile picture">
+      </button>
+      <overlay-widget #menu>
+        <widget-card>
+          <mat-nav-list>
+            <mat-list-item *ngIf="theme$ | async as theme">
+              <mat-slide-toggle [checked]="theme === 'dark'" (change)="setTheme($event)">
+                Use {{ theme === 'dark' ? 'Light' : 'Dark' }} Theme
+              </mat-slide-toggle>
+            </mat-list-item>
+          </mat-nav-list>
+          <footer widgetFooter>
+            <button mat-button test-id="logout" color="warn" (click)="logout()" test-id="auth-logout">
+              <mat-icon svgIcon="logout"></mat-icon>
+              <span>Log out</span>
+            </button>
+          </footer>
+        </widget-card>
+      </overlay-widget>
+    </article>
+  </ng-container>
+</ng-template>
 
 <ng-template #login>
   <a test-id="profile" mat-icon-button routerLink="/c">
