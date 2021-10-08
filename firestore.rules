@@ -124,7 +124,10 @@ service cloud.firestore {
     /// RULES ///
 
     match /invitations/{invitationId} {
-    	allow read: if isAllowedToReadInvitation()
+      allow get: if existingData().type == 'attendEvent' 
+        && isSignedInAnonymously()
+        && notInMaintenance();
+    	allow list: if isAllowedToReadInvitation()
         && notInMaintenance();
       allow create: if isInvitationCreator()
         && isRequestFieldValueEqualTo(['status'], 'pending')
@@ -216,7 +219,9 @@ service cloud.firestore {
     /// RULES ///
 
     match /orgs/{orgId} {
-      allow read: if isSignedInAnonymously()
+      allow get: if isSignedInAnonymously()
+        && notInMaintenance()
+      allow list: if isSignedInAnonymously() // @TODO #6756 updated with userHasValidOrg() when a solution for this is found.
         && notInMaintenance();
     	allow create: if isSignedInAnonymously()
         && isRequestFieldValueEqualTo(['status'], 'pending')
@@ -293,12 +298,16 @@ service cloud.firestore {
     /// RULES ///
 
     match /movies/{movieId} {
-    	// @TODO (#2049) We allow all movie read as Archipel Content is a catalog of public movies.
-      allow read: if userHasValidOrg()
+      allow get: if isSignedInAnonymously()
         && notInMaintenance()
         && ( checkStatus(existingData(), 'accepted')
         || ( isOrgMember(userOrgId()) && ( userOrgId() in existingData().orgIds ))
-        )
+        );
+      allow list: if userHasValidOrg()
+        && notInMaintenance()
+        && ( checkStatus(existingData(), 'accepted')
+        || ( isOrgMember(userOrgId()) && ( userOrgId() in existingData().orgIds ))
+        );
       allow create: if userHasValidOrg()
         && checkAllStatusAreEqual(incomingData(), 'draft')
         && isRequestFieldValueEqualToOrNotSetted(['id'], movieId)
@@ -393,7 +402,8 @@ service cloud.firestore {
 
     /// EVENTS RULES ///
     match /events/{eventId} {
-    	allow read: if userHasValidOrg() && notInMaintenance();
+    	allow get: if isSignedInAnonymously() && notInMaintenance();
+      allow list: if userHasValidOrg() && notInMaintenance();
       allow create: if userHasValidOrg()
         && isRequestFieldValueEqualToOrNotSetted(['id'], eventId)
         && isRequestFieldValueEqualTo(['ownerOrgId'], userOrgId())

@@ -60,6 +60,17 @@ describe('Organization Rules Tests', () => {
       const orgDocRef = db.doc('orgs/A001');
       await assertFails(orgDocRef.delete());
     });
+
+     // @TODO #6756 updated with userHasValidOrg() when a solution for this is found.
+    test.skip('anonymous user should not be able to list all orgs', async () => {
+      const allDocs = db.collection('orgs');
+      await assertFails(allDocs.get());
+    });
+
+    test('anonymous user should be able to fetch an org by ID', async () => {
+      const docRef = db.doc('orgs/O001');
+      await assertSucceeds(docRef.get());
+    });
   });
 
   describe('With User as Org non-Member', () => {
