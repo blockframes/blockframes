@@ -18,6 +18,19 @@ interface RouteOptions {
   landing?: Route,
 }
 
+const eventsRoutes = (appName: string) => {
+  if(appName === 'festival'){
+    return [
+      {
+        path: 'events',
+        loadChildren: () => import('@blockframes/event/module/event.module').then(m => m.EventModule)
+      }
+    ];
+  }
+  
+  return [];
+}
+
 export function createRoutes({ appsRoutes, appName, landing }: RouteOptions) {
   // Used for internal app
   landing = landing || { path: '', redirectTo: 'auth', pathMatch: 'full' };
@@ -81,6 +94,7 @@ export function createRoutes({ appsRoutes, appName, landing }: RouteOptions) {
             }
           ]
         },
+        ...eventsRoutes(appName),
         {
           path: 'not-found',
           loadChildren: () => import('@blockframes/ui/error/error-not-found.module').then(m => m.ErrorNotFoundModule)
