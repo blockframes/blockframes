@@ -40,7 +40,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   }
 
   public async orgNameExist(orgName: string) {
-    // @TODO #2650 #2692 use publicOrg since we can not let anyone retrieve the whole organization component
+    // @TODO #6756 a better solution for this should be found. use algolia ?
     const orgs = await this.getValue(ref => ref.where('denomination.full', '==', orgName));
     return orgs.length !== 0;
   }

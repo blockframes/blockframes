@@ -38,7 +38,7 @@ describe('Movies Rules Tests', () => {
     };
 
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2' });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2', firebase: { sign_in_provider: 'password' } });
     });
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
@@ -106,9 +106,9 @@ describe('Movies Rules Tests', () => {
         ['_meta', { createdBy: '' }],
         ['_meta', { createdAt: '' }],
         ['_type', 'drama'],
-        ['app', { catalog: { access: true }}],
-        ['app', { catalog: { status: 'rejected' }}],
-        ['app', { festival: { access: {} }}],
+        ['app', { catalog: { access: true } }],
+        ['app', { catalog: { status: 'rejected' } }],
+        ['app', { festival: { access: {} } }],
       ];
       test.each(fields)("updating restricted '%s' field shouldn't be able", async (key, value) => {
         const movieRef = db.doc(`movies/${existMovieInDraft}`);
@@ -129,7 +129,7 @@ describe('Movies Rules Tests', () => {
     const draftMovieId = 'MI-0d7';
 
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-admin' });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-admin', firebase: { sign_in_provider: 'password' } });
     });
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
@@ -147,16 +147,19 @@ describe('Movies Rules Tests', () => {
     const newMovieDetails = { id: `${newMovieId}` };
 
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {
-        uid: 'uid-peeptom',
-      });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-peeptom', firebase: { sign_in_provider: 'password' } });
     });
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
 
-    test("user without valid org shouldn't be able to read movie title", async () => {
+    test("user without valid org should be able to read movie title", async () => {
       const movieRef = db.doc('movies/M001');
-      await assertFails(movieRef.get());
+      await assertSucceeds(movieRef.get());
+    });
+
+    test("user without valid org shouldn't be able to get movie list", async () => {
+      const moviesRef = db.collection('movies');
+      await assertFails(moviesRef.get());
     });
 
     test("user without valid org shouldn't be able to create movie title", async () => {
@@ -175,9 +178,7 @@ describe('Movies Rules Tests', () => {
     const acceptedMovieId = 'M001';
 
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {
-        uid: 'uid-user3'
-      })
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user3', firebase: { sign_in_provider: 'password' } })
     });
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
@@ -190,6 +191,29 @@ describe('Movies Rules Tests', () => {
     test("user without rights to edit movie should be able to read movie title when accepted", async () => {
       const movieRef = db.doc(`movies/${acceptedMovieId}`);
       await assertSucceeds(movieRef.get())
+    });
+  });
+
+  describe('With Anonymous user', () => {
+    beforeAll(async () => {
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-c8-anon', firebase: { sign_in_provider: 'anonymous' } });
+    });
+
+    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+
+    test('anonymous user should not be able to list all movies', async () => {
+      const allDocs = db.collection('movies');
+      await assertFails(allDocs.get());
+    });
+
+    test('anonymous user should not be able to fetch a draft movie by ID', async () => {
+      const docRef = db.doc('movies/MI-077');
+      await assertFails(docRef.get());
+    });
+    
+    test('anonymous user should be able to fetch an accepted movie by ID', async () => {
+      const docRef = db.doc('movies/MI-0d7');
+      await assertSucceeds(docRef.get());
     });
   });
 });

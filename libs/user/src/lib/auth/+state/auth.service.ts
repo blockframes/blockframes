@@ -2,7 +2,7 @@ import { Injectable, Optional } from '@angular/core';
 import { AuthStore, User, AuthState, createUser } from './auth.store';
 import { AuthQuery } from './auth.query';
 import { AngularFireFunctions } from '@angular/fire/functions';
-import type firebase from 'firebase';
+import firebase from 'firebase';
 import { UserCredential } from '@firebase/auth-types';
 import { FireAuthService, CollectionConfig } from 'akita-ng-fire';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
@@ -82,6 +82,7 @@ export class AuthService extends FireAuthService<AuthState> {
   onSignup(userCredential: UserCredential) {
     this.updateIntercom(userCredential);
   }
+
 
   /**
    * @description function that gets triggered when
@@ -163,5 +164,80 @@ export class AuthService extends FireAuthService<AuthState> {
     this.db.doc<User>(`users/${userCredential.user.uid}`).valueChanges().pipe(take(1)).subscribe(user => {
       this.ngIntercom?.update(getIntercomOptions(user));
     });
+  }
+
+  ////////////////////
+  // ANONYMOUS AUTH //
+  ////////////////////
+
+  /**
+   * Sign in an user anonymously, he will get an uid and will be stored in firebase auth as anonymous
+   * @returns Promise<firebase.auth.UserCredential>
+   */
+  signInAnonymously() {
+    return firebase.auth().signInAnonymously();
+  }
+
+  /**
+   * Takes an anonymous user and convert it to a real one with email and password.
+   * This keeps the same uid
+   * @param email 
+   * @param password 
+   * @param options 
+   * @returns Promise<firebase.auth.UserCredential>
+   */
+  async signupFromAnonymous(email: string, password: string, options: any = {}) {
+    const credentials = firebase.auth.EmailAuthProvider.credential(email, password);
+
+    const isAnonymous = await this.isSignedInAnonymously();
+    if (!isAnonymous) {
+      throw new Error('Current user is not anonymous');
+    }
+    const cred = await firebase.auth().currentUser.linkWithCredential(credentials);
+
+    const { write = this.db.firestore.batch(), ctx } = options;
+    await this.onSignup(cred);
+    const profile = await this.createProfile(cred.user, ctx);
+    const { ref } = this.db.collection('users').doc(cred.user.uid);
+    write.set(ref, profile);
+    if (!options.write) {
+      await write.commit();
+    }
+
+    return cred;
+  }
+
+  /**
+   * Check if current user is logged-in anonymously
+   * @returns Promise<boolean>
+   */
+  async isSignedInAnonymously() {
+    const tokenInformation = await firebase.auth().currentUser.getIdTokenResult();
+    return tokenInformation.signInProvider === 'anonymous';
+  }
+
+  /**
+   * Deletes anonymous user (+ signOut) or performs a regular signOut
+   * @returns Promise<void>
+   */
+  async deleteAnonymousUserOrSignOut() {
+    const isAnonymous = await this.isSignedInAnonymously();
+    if (isAnonymous) {
+      return this.deleteAnonymousUser();
+    } else {
+      return this.signOut();
+    }
+  }
+
+  /**
+   * Deletes and signOut an anonymous user
+   * @returns Promise<void>
+   */
+  async deleteAnonymousUser() {
+    const isAnonymous = await this.isSignedInAnonymously();
+    if (!isAnonymous) {
+      throw new Error('Current user is not anonymous');
+    }
+    return firebase.auth().currentUser.delete();
   }
 }

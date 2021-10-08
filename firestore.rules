@@ -77,7 +77,7 @@ service cloud.firestore {
 
     function isOnlyUpdatingAllowedUserFields() {
       // Only "firstName" and "lastName" can be updated.
-      return isSignedIn()
+      return isSignedInAnonymously()
       	&& userId() == incomingData().uid
         && isNotUpdatingId('uid', existingData().uid)
         && isNotUpdatingField(['email'])
@@ -124,7 +124,10 @@ service cloud.firestore {
     /// RULES ///
 
     match /invitations/{invitationId} {
-    	allow read: if isAllowedToReadInvitation()
+      allow get: if existingData().type == 'attendEvent' 
+        && isSignedInAnonymously()
+        && notInMaintenance();
+    	allow list: if isAllowedToReadInvitation()
         && notInMaintenance();
       allow create: if isInvitationCreator()
         && isRequestFieldValueEqualTo(['status'], 'pending')
@@ -216,8 +219,11 @@ service cloud.firestore {
     /// RULES ///
 
     match /orgs/{orgId} {
-      allow read: if notInMaintenance();
-    	allow create: if isSignedIn()
+      allow get: if isSignedInAnonymously()
+        && notInMaintenance()
+      allow list: if isSignedInAnonymously() // @TODO #6756 updated with userHasValidOrg() when a solution for this is found.
+        && notInMaintenance();
+    	allow create: if isSignedInAnonymously()
         && isRequestFieldValueEqualTo(['status'], 'pending')
         && isRequestFieldValueEqualToOrNotSetted(['id'], orgId)
         && notInMaintenance();
@@ -292,12 +298,16 @@ service cloud.firestore {
     /// RULES ///
 
     match /movies/{movieId} {
-    	// @TODO (#2049) We allow all movie read as Archipel Content is a catalog of public movies.
-      allow read: if userHasValidOrg()
+      allow get: if isSignedInAnonymously()
         && notInMaintenance()
         && ( checkStatus(existingData(), 'accepted')
         || ( isOrgMember(userOrgId()) && ( userOrgId() in existingData().orgIds ))
-        )
+        );
+      allow list: if userHasValidOrg()
+        && notInMaintenance()
+        && ( checkStatus(existingData(), 'accepted')
+        || ( isOrgMember(userOrgId()) && ( userOrgId() in existingData().orgIds ))
+        );
       allow create: if userHasValidOrg()
         && checkAllStatusAreEqual(incomingData(), 'draft')
         && isRequestFieldValueEqualToOrNotSetted(['id'], movieId)
@@ -392,7 +402,8 @@ service cloud.firestore {
 
     /// EVENTS RULES ///
     match /events/{eventId} {
-    	allow read: if userHasValidOrg() && notInMaintenance();
+    	allow get: if isSignedInAnonymously() && notInMaintenance();
+      allow list: if userHasValidOrg() && notInMaintenance();
       allow create: if userHasValidOrg()
         && isRequestFieldValueEqualToOrNotSetted(['id'], eventId)
         && isRequestFieldValueEqualTo(['ownerOrgId'], userOrgId())
@@ -502,13 +513,26 @@ service cloud.firestore {
       return request.auth;
     }
 
+    function currentAuthToken() {
+      return currentUser().token;
+    }
+
+    function currentSigninProvider() {
+      return currentAuthToken().firebase.sign_in_provider;
+    }
+
     function userId() {
       return currentUser().uid;
     }
 
-  	// Check if the user is logged in the app.
+  	// Check if the user is logged in the app with a real account.
     function isSignedIn() {
-      return currentUser() != null;
+      return currentUser() != null && currentSigninProvider() == 'password';
+    }
+
+    // Check if user is signed in as anonymous or regular
+    function isSignedInAnonymously() {
+      return isSignedIn() || (currentUser() != null && currentSigninProvider() == 'anonymous');
     }
 
   	function userOrgId() {

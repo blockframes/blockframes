@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnInit, TemplateRef, ViewChild, ChangeDetectorRef, Optional, OnDestroy } from '@angular/core';
 import { AuthService, AuthQuery } from '../../+state';
+import type { UserCredential } from '@firebase/auth-types';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { InvitationService } from '@blockframes/invitation/+state';
@@ -41,6 +42,8 @@ export class IdentityComponent implements OnInit, OnDestroy {
   public existingUser = false;
   private existingOrgId: string;
   private sub: Subscription;
+  private anonymousUser: UserCredential;
+  private publicUser: PublicUser;
 
   constructor(
     private authService: AuthService,
@@ -92,8 +95,12 @@ export class IdentityComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy() {
+  async ngOnDestroy() {
     this.sub.unsubscribe();
+    // We created anonymous user but it was not transformed into real one
+    if (this.anonymousUser && !this.publicUser) {
+      await this.authService.deleteAnonymousUser();
+    }
   }
 
   public openIntercom(): void {
@@ -164,13 +171,25 @@ export class IdentityComponent implements OnInit, OnDestroy {
   private async create() {
     if (this.existingOrgId) {
       // Create user
-      const user = await this.createUser(this.form.value);
+      this.publicUser = await this.createUser(this.form.value);
       // Request to join existing org
-      await this.invitationService.request(this.existingOrgId, user).to('joinOrganization');
+      await this.invitationService.request(this.existingOrgId, this.publicUser).to('joinOrganization');
       this.snackBar.open('Your account has been created and request to join org sent ! ', 'close', { duration: this.snackbarDuration });
       return this.router.navigate(['c/organization/join-congratulations']);
     } else {
       const { denomination, addresses, activity, appAccess } = this.orgForm.value;
+
+
+      /**
+       * @dev This anonymous user is used to call "this.orgService.uniqueOrgName()"
+       * without forcing us to allow orgs collection reads for non-logged-in users in firestore rules.
+       * @TODO #6756 add to notion page https://www.notion.so/cascade8/Release-troubleshooting-8085a54303de4019b0a129116d60fa13 to enable anonymous login for prod env
+       * If we beleive this is not enough for data safety, an https function must be used (with anonymous login ?).
+       * 
+       * Once the account is converted from anonymous to real, authState will remain as anonymous for a few seconds 
+       * (this explain the need to allow the anonymous sign-in for user update in firestore rules)
+       */
+      this.anonymousUser = await this.authService.signInAnonymously();
 
       // Check if the org name is already existing
       const unique = await this.orgService.uniqueOrgName(denomination.full);
@@ -183,12 +202,12 @@ export class IdentityComponent implements OnInit, OnDestroy {
       }
 
       // Create user
-      const user = await this.createUser(this.form.value);
+      this.publicUser = await this.createUserFromAnonymous(this.form.value);
 
       // Create the org
       const org = createOrganization({ denomination, addresses, activity });
       org.appAccess[this.app][appAccess] = true;
-      await this.orgService.addOrganization(org, this.app, user);
+      await this.orgService.addOrganization(org, this.app, this.publicUser);
 
       this.snackBar.open('Your User Account was successfully created. Please wait for our team to check your Company Information. ', 'close', { duration: this.snackbarDuration });
       return this.router.navigate(['c/organization/create-congratulations']);
@@ -216,6 +235,29 @@ export class IdentityComponent implements OnInit, OnDestroy {
       uid: credentials.user.uid
     });
   }
+
+  /**
+  * Convert the anonymous user into a real one
+  * @param user 
+  * @returns PublicUser
+  */
+  private async createUserFromAnonymous(user: { email, password, firstName, lastName }) {
+    const privacyPolicy = await this.authService.getPrivacyPolicy();
+    const ctx = {
+      firstName: user.firstName,
+      lastName: user.lastName,
+      _meta: { createdFrom: this.app, createdBy: 'anonymous', },
+      privacyPolicy
+    };
+    const credentials = await this.authService.signupFromAnonymous(user.email.trim(), user.password, { ctx });
+    return createPublicUser({
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      uid: credentials.user.uid
+    });
+  }
+
 
   private async update() {
     if (this.form.get('generatedPassword').enabled && this.form.get('password').enabled && this.form.get('generatedPassword').value === this.form.get('password').value) {
@@ -307,7 +349,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
   }
 
   public async logout() {
-    await this.authService.signOut();
+    await this.authService.deleteAnonymousUserOrSignOut();
     this.router.navigate(['/']);
   }
 }

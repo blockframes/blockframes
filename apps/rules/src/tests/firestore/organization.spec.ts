@@ -13,9 +13,9 @@ describe('Organization Rules Tests', () => {
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
 
-    test('should be able to read document', async () => {
+    test('should not be able to read document', async () => {
       const orgDocRef = db.doc('orgs/O001');
-      await assertSucceeds(orgDocRef.get());
+      await assertFails(orgDocRef.get());
     });
 
     test('should not be able to create document', async () => {
@@ -34,9 +34,48 @@ describe('Organization Rules Tests', () => {
     });
   });
 
+  describe('With Anonymous user', () => {
+    beforeAll(async () => {
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-c8-anon', firebase: { sign_in_provider: 'anonymous' } });
+    });
+
+    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+
+    test('should be able to read document', async () => {
+      const orgDocRef = db.doc('orgs/A001');
+      await assertSucceeds(orgDocRef.get());
+    });
+
+    test('doc status: pending, should be able to create document', async () => {
+      const orgDocRef = db.doc('orgs/A007');
+      await assertSucceeds(orgDocRef.set({ status: 'pending' }));
+    });
+
+    test('anonymous user should not be able to update document', async () => {
+      const orgDocRef = db.doc('orgs/A001');
+      await assertFails(orgDocRef.update({ note: 'document updated' }));
+    });
+
+    test('anonymous user should not be able to delete document', async () => {
+      const orgDocRef = db.doc('orgs/A001');
+      await assertFails(orgDocRef.delete());
+    });
+
+     // @TODO #6756 updated with userHasValidOrg() when a solution for this is found.
+    test.skip('anonymous user should not be able to list all orgs', async () => {
+      const allDocs = db.collection('orgs');
+      await assertFails(allDocs.get());
+    });
+
+    test('anonymous user should be able to fetch an org by ID', async () => {
+      const docRef = db.doc('orgs/O001');
+      await assertSucceeds(docRef.get());
+    });
+  });
+
   describe('With User as Org non-Member', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-c8' });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-c8', firebase: { sign_in_provider: 'password' } });
     });
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
@@ -64,7 +103,7 @@ describe('Organization Rules Tests', () => {
 
   describe('With User as or going to be Org Member', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user5' });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user5', firebase: { sign_in_provider: 'password' } });
     });
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
@@ -117,7 +156,7 @@ describe('Organization Rules Tests', () => {
 
   describe('With User as Org Admin', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-admin4' });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-admin4', firebase: { sign_in_provider: 'password' } });
     });
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
@@ -157,7 +196,7 @@ describe('Organization Rules Tests', () => {
 
   describe('With User as Org Admin', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-admin6' });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-admin6', firebase: { sign_in_provider: 'password' } });
     });
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
