@@ -45,9 +45,9 @@ export class CatalogAvailsShellComponent {
     map(contracts => contracts.filter(isSale))
   );
 
-  public mandateTerms$ = this.getTerms$(this.mandates$);
+  public mandateTerms$ = this.getTerms(this.mandates$);
 
-  public salesTerms$ = this.getTerms$(this.sales$);
+  public salesTerms$ = this.getTerms(this.sales$);
 
   public terms$ = combineLatest(this.mandateTerms$, this.salesTerms$).pipe(
     map(terms => terms.flat())
@@ -61,7 +61,7 @@ export class CatalogAvailsShellComponent {
     private contractService: ContractService,
   ) { }
 
-  private getTerms$(contracts$: Observable<Contract[]>) {
+  private getTerms(contracts$: Observable<Contract[]>) {
     return contracts$.pipe(
       switchMap((contract) => {
         const list = contract.flatMap(movie => movie.termIds);

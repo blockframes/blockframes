@@ -14,6 +14,10 @@ const routes: Routes = [
     component: CatalogAvailsShellComponent,
     children: [
       {
+        path: 'map',
+        loadChildren: () => import('../map/map.module').then(m => m.CatalogDashboardAvailsMapModule)
+      },
+      {
         redirectTo: 'map',
         pathMatch: 'full',
         path: '',

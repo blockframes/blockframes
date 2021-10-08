@@ -6,8 +6,7 @@ import { MovieService } from "@blockframes/movie/+state";
 import { OrganizationQuery } from "@blockframes/organization/+state";
 import { DynamicTitleService } from "@blockframes/utils/dynamic-title/dynamic-title.service";
 import { joinWith } from "@blockframes/utils/operators";
-import { MovieCurrency } from "@blockframes/utils/static-model";
-import { map, pluck, tap } from "rxjs/operators";
+import { map, tap } from "rxjs/operators";
 
 @Component({
   selector: 'catalog-avails-list',
