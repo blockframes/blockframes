@@ -1,4 +1,4 @@
-﻿import EventEditPage from './EventEditPage';
+﻿import EventDetailsEditPage from './EventDetailsEditPage';
 import { SEC } from '@blockframes/e2e/utils';
 
 export default class EventPage {
@@ -28,7 +28,7 @@ export default class EventPage {
               screeningName: string, isPublic: boolean = false,
               inviteeList:string[] = []) {
     cy.log(`createEvent : {${eventTitle}}`);
-    const event: EventEditPage = this.createDetailedEvent(eventDate, 'Screening', eventTitle);
+    const event: EventDetailsEditPage = this.createDetailedEvent(eventDate, 'Screening', eventTitle);
 
     if (inviteeList.length !== 0) {
       event.inviteUser(inviteeList);
@@ -82,7 +82,7 @@ export default class EventPage {
     cy.get('button[test-id=more-details]', {timeout: 1 * SEC})
       .click();
     cy.wait(0.5 * SEC);
-    return new EventEditPage();
+    return new EventDetailsEditPage();
   }
 
 }
