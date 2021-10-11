@@ -114,14 +114,13 @@ export class CatalogDashboardAvailsMapComponent implements AfterViewInit, OnDest
   downloadCsv() {
     this.available$.pipe(first()).subscribe(territoryMarker => {
       const availsFilter = this.availsForm.value;
-      const data = territoryMarker.flatMap(
-        marker => marker.term.territories.map(territory => ({
-          Territories: territory,
-          Medias: availsFilter.medias.map(medium => medias[medium]),
+      const data = territoryMarker.map(
+        marker => ({
+          Territories: marker.term.territories.join(';'),
+          Medias: availsFilter.medias.map(medium => medias[medium]).join(';'),
           Exclusive: availsFilter.exclusive ? 'Exclusive' : 'Non Exclusive',
           'Start Date - End Date': `${this.formatDate(availsFilter.duration.from)} - ${this.formatDate(availsFilter.duration.to)}`
         })
-        )
       );
       downloadCsvFromJson(data, 'my-avails');
     })
