@@ -17,17 +17,18 @@ import { Term, TermService } from "@blockframes/contract/term/+state";
 
 interface TotalIncome { EUR: number; USD: number; }
 
-const contractsQuery = (title: Movie): QueryFn => ref => ref.where('titleId', '==', title.id)
-  .where('status', '==', 'accepted').where('type', '==', 'sale');
-
-const organizationQuery = (orgId: string): QueryFn => {
-  return ref => ref.where('orgIds', 'array-contains', orgId);
-}
 type SaleWithIncomeAndTerms = (Sale<Date> | Mandate<Date>) & { income?: Income; terms?: Term<Date>[]; }
 
 type JoinTitleType = {
   sales?: SaleWithIncomeAndTerms[], id: string,
   saleCount?: number, totalIncome?: TotalIncome
+}
+
+const contractsQuery = (title: Movie): QueryFn => ref => ref.where('titleId', '==', title.id)
+  .where('status', '==', 'accepted').where('type', '==', 'sale');
+
+const organizationQuery = (orgId: string): QueryFn => {
+  return ref => ref.where('orgIds', 'array-contains', orgId);
 }
 
 const getSaleCountAndTotalPrice = (title: JoinTitleType) => {
@@ -45,11 +46,6 @@ const getSaleCountAndTotalPrice = (title: JoinTitleType) => {
   }, initialTotal) ?? initialTotal;
   return title;
 }
-
-function isAcceptedSale(contract: Sale<Date> | Mandate<Date>) {
-  return contract.status === 'accepted';
-}
-
 
 @Component({
   selector: 'catalog-avails-list',

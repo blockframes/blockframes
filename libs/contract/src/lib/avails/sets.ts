@@ -23,7 +23,7 @@ function discreteAllOf(a: string[], optional?: 'optional') {
   };
 }
 
-function continuousAllOf(a: Range, optional?: 'optional') {
+function continuousAllOf(a?: Range, optional?: 'optional') {
   return {
     // for continuous data, A is "in" B if the range are like that
     //   A.from   A.to
@@ -32,11 +32,17 @@ function continuousAllOf(a: Range, optional?: 'optional') {
     // B.from      B.to
     //
     // we also pre-suppose that Range are not malformed (i.e. from must be before to)
-    in: (b: Range) => optional && (!a?.from || !a?.to) ? true : a?.from >= b?.from && a?.to <= b?.to,
+    in: (b?: Range) => {
+      if (optional && (!a?.from || !a?.to)) return true
+      else return a?.from >= b?.from && a?.to <= b?.to
+    },
 
     // To check if it's equal we simply check if `a.to === b.to && a.from === b.from`
     // BUT since we cannot compare Date with `===` we use "not lesser than && not greater than"
-    equal: (b: Range) => optional && (!a?.from || !a?.to) ? true : !(a?.from < b?.from) && !(a?.from > b?.from) && !(a?.to < b?.to) && !(a?.to > b?.to),
+    equal: (b?: Range) => {
+      if (optional && (!a?.from || !a?.to)) return true
+      else return !(a?.from < b?.from) && !(a?.from > b?.from) && !(a?.to < b?.to) && !(a?.to > b?.to)
+    },
   }
 }
 
@@ -119,9 +125,9 @@ function discreteSomeOf(a: string[], optional?: 'optional') {
 //   |----------------|
 //     |----------|
 //   B.from     B.to
-function continuousSomeOf(a: Range, optional?: 'optional') {
+function continuousSomeOf(a?: Range, optional?: 'optional') {
   return {
-    in: (b: Range) => {
+    in: (b?: Range) => {
       if (optional && (!a?.from || !a?.to)) return true;
       return (a?.from >= b?.from && a?.from <= b?.to) || (a?.to >= b?.from && a?.to <= b?.to) || continuousAllOf(b, optional).in(a)
     },
@@ -137,8 +143,8 @@ function continuousSomeOf(a: Range, optional?: 'optional') {
  * someOf(a).in(b);
  * someOf([], 'optional').in(b); // true
  */
-export function someOf(a: string[], optional?: 'optional'): ReturnType<typeof discreteSomeOf>;
-export function someOf(a: Range, optional?: 'optional'): ReturnType<typeof continuousSomeOf>;
-export function someOf(a: string[] | Range, optional?: 'optional') {
+export function someOf(a?: string[], optional?: 'optional'): ReturnType<typeof discreteSomeOf>;
+export function someOf(a?: Range, optional?: 'optional'): ReturnType<typeof continuousSomeOf>;
+export function someOf(a?: string[] | Range, optional?: 'optional') {
   return Array.isArray(a) ? discreteSomeOf(a, optional) : continuousSomeOf(a, optional);
 }
