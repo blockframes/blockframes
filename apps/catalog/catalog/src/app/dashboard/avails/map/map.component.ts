@@ -9,7 +9,8 @@ import { combineLatest, Subscription } from "rxjs";
 import { filter, first, map, shareReplay, startWith, throttleTime } from "rxjs/operators";
 import { CatalogAvailsShellComponent } from "../shell/shell.component";
 import { format } from 'date-fns';
-import { medias } from '@blockframes/utils/static-model'
+import { medias, territories } from '@blockframes/utils/static-model'
+
 @Component({
   selector: 'catalog-dashboard-avails-map',
   templateUrl: './map.component.html',
@@ -112,17 +113,23 @@ export class CatalogDashboardAvailsMapComponent implements AfterViewInit, OnDest
   }
 
   downloadCsv() {
-    this.available$.pipe(first()).subscribe(territoryMarker => {
-      const availsFilter = this.availsForm.value;
-      const data = territoryMarker.map(
-        marker => ({
-          Territories: marker.term.territories.join(';'),
+    combineLatest(
+      this.available$.pipe(first()),
+      this.shell.movie$.pipe(first())
+    )
+      .subscribe(([territoryMarker, movie]) => {
+        const availsFilter = this.availsForm.value;
+        const territoriesMap = territoryMarker.flatMap(marker => marker.term.territories);
+        const termTerritories = Array.from(new Set(territoriesMap))
+        console.log({ territories: termTerritories })
+        const data = [{
+          "International Title": movie.title.international,
           Medias: availsFilter.medias.map(medium => medias[medium]).join(';'),
-          Exclusive: availsFilter.exclusive ? 'Exclusive' : 'Non Exclusive',
-          'Start Date - End Date': `${this.formatDate(availsFilter.duration.from)} - ${this.formatDate(availsFilter.duration.to)}`
-        })
-      );
-      downloadCsvFromJson(data, 'my-avails');
-    })
+          Exclusivity: availsFilter.exclusive ? 'Exclusive' : 'Non Exclusive',
+          'Start Date - End Date': `${this.formatDate(availsFilter.duration.from)} - ${this.formatDate(availsFilter.duration.to)}`,
+          "Available Territories": termTerritories.map(territory => territories[territory]).join(';'),
+        }]
+        downloadCsvFromJson(data, 'my-avails');
+      })
   }
 }

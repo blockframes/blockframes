@@ -7,7 +7,7 @@ import { Term, TermService } from "@blockframes/contract/term/+state";
 import { Movie, MovieService } from "@blockframes/movie/+state";
 import { OrganizationService } from "@blockframes/organization/+state";
 import { combineLatest, Observable, of } from "rxjs";
-import { map, pluck, switchMap, } from "rxjs/operators";
+import { map, pluck, shareReplay, switchMap } from "rxjs/operators";
 
 @Component({
   templateUrl: './shell.component.html',
@@ -18,6 +18,7 @@ export class CatalogAvailsShellComponent {
   public movie$ = this.route.params.pipe(
     pluck('titleId'),
     switchMap((id: string) => this.movieService.valueChanges(id)),
+    shareReplay({ bufferSize: 1, refCount: true })
   );
 
   public bucketForm = new BucketForm();
