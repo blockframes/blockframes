@@ -9,9 +9,9 @@
   <ng-container *ngIf="sales.length; else noSales">
     <h3>Results</h3>
     <bf-table [source]="sales" clickable useFilter pagination="50">
-      <ng-template colRef="title.international" label="TITLE" let-title>{{ title | maxLength:50}}</ng-template>
-      <ng-template colRef="contracts" label="contracts" let-contracts>{{ contracts?.length|| '-' }}</ng-template>
-      <ng-template colRef="salesCount" label="sales" let-salesCount>{{ salesCount || '-' }}</ng-template>
+      <ng-template colRef="title.international" label="Title" let-title>{{ title | maxLength:50}}</ng-template>
+      <ng-template colRef="contracts" label="All Sales" let-contracts>{{ contracts?.length|| '-' }}</ng-template>
+      <ng-template colRef="salesCount" label="Archipel Sales" let-salesCount>{{ salesCount || '-' }}</ng-template>
       <ng-template colRef="totalIncome" label="total gross receipt" let-totalIncome>
         <ng-container *ngIf="totalIncome.usd"> {{ totalIncome.usd | currency:'USD' }} </ng-container>
         <ng-container *ngIf="totalIncome.usd && totalIncome.euro"> and</ng-container>
@@ -21,10 +21,10 @@
       <ng-template colRef="id" label="actions" let-id>
         <div fxLayout fxLayoutGap="16px" *ngIf="queryParams$ | async as queryParams">
           <a mat-icon-button [routerLink]="['./map']" [queryParams]="queryParams">
-            <mat-icon svgIcon="world"></mat-icon>
+            <mat-icon svgIcon="territories_avails"></mat-icon>
           </a>
           <a mat-icon-button [routerLink]="['./calendar']" [queryParams]="queryParams">
-            <mat-icon svgIcon="calendar_today"></mat-icon>
+            <mat-icon svgIcon="calendar_avails"></mat-icon>
           </a>
         </div>
       </ng-template>

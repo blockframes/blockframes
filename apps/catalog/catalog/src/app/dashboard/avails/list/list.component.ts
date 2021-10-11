@@ -2,7 +2,7 @@ import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, OnInit } 
 import { QueryFn } from "@angular/fire/firestore";
 import { AvailsForm } from "@blockframes/contract/avails/form/avails.form";
 import { ContractService, Sale, Mandate } from "@blockframes/contract/contract/+state";
-import { IncomeService } from "@blockframes/contract/income/+state";
+import { Income, IncomeService } from "@blockframes/contract/income/+state";
 import { Movie, MovieService } from "@blockframes/movie/+state";
 import { OrganizationQuery } from "@blockframes/organization/+state";
 import { DynamicTitleService } from "@blockframes/utils/dynamic-title/dynamic-title.service";
@@ -13,31 +13,38 @@ import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-enc
 import { ActivatedRoute, Router } from "@angular/router";
 import { AvailsFilter, isMovieAvailable } from "@blockframes/contract/avails/avails";
 import { combineLatest, Subscription } from "rxjs";
-import { TermService } from "@blockframes/contract/term/+state";
+import { Term, TermService } from "@blockframes/contract/term/+state";
 
-const contractsQuery = (title: Movie): QueryFn => ref => ref.where('titleId', '==', title.id);
+interface TotalIncome { EUR: number; USD: number; }
+
+const contractsQuery = (title: Movie): QueryFn => ref => ref.where('titleId', '==', title.id)
+  .where('status', '==', 'accepted').where('type', '==', 'sale');
 
 const organizationQuery = (orgId: string): QueryFn => {
-  return ref => ref.where('orgIds', 'array-contains', orgId)
+  return ref => ref.where('orgIds', 'array-contains', orgId);
+}
+type SaleWithIncomeAndTerms = (Sale<Date> | Mandate<Date>) & { income?: Income; terms?: Term<Date>[]; }
+
+type JoinTitleType = {
+  sales?: SaleWithIncomeAndTerms[], id: string,
+  saleCount?: number, totalIncome?: TotalIncome
 }
 
-const hydrateTitles = (titles) => titles.map(title => {
-  const initialTotal = { euro: 0, usd: 0 };
-  title.saleCount = title.contracts?.filter(
-    contract => contract.sellerId === centralOrgId.catalog && contract.status === 'accepted'
+const getSaleCountAndTotalPrice = (title: JoinTitleType) => {
+  const initialTotal = { EUR: 0, USD: 0 };
+  title.saleCount = title.sales?.filter(
+    sale => sale.sellerId === centralOrgId.catalog
   ).length;
-  title.totalIncome = title.contracts?.filter(
-    contract => contract.type === 'sale' && contract.status === 'accepted'
-  ).reduce((total, sale) => {
+  title.totalIncome = title.sales?.reduce((total, sale) => {
     if (sale.income && sale.income.currency === 'USD') {
-      total.usd += sale.income.price
+      total.USD += sale.income.price
     } else if (sale.income) {
-      total.euro += sale.income.price
+      total.EUR += sale.income.price
     }
     return total;
   }, initialTotal) ?? initialTotal;
   return title;
-})
+}
 
 function isAcceptedSale(contract: Sale<Date> | Mandate<Date>) {
   return contract.status === 'accepted';
@@ -61,28 +68,27 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
 
   public query$ = this.titleService.valueChanges(organizationQuery(this.orgId)).pipe(
     joinWith({
-      contracts: title => {
+      sales: title => {
         return this.contractService.valueChanges(contractsQuery(title)).pipe(
           joinWith({
-            income: contract => (isAcceptedSale(contract)) ? this.incomeService.valueChanges(contract.id) : null,
+            income: contract => this.incomeService.valueChanges(contract.id),
             terms: contract => this.termsService.valueChanges(contract.termIds),
           })
         )
       },
       saleCount: () => 0,
-      totalIncome: () => ({ euro: 0, usd: 0 }), // used for typings
+      totalIncome: () => ({ EUR: 0, USD: 0 }), // used for typings
     }, { debounceTime: 200 }),
-    map(hydrateTitles),
+    map(titles => titles.map(getSaleCountAndTotalPrice)),
   );
   public results$ = combineLatest([
     this.query$,
     this.availsForm.valueChanges
   ]).pipe(
     map(([titles, avails]) => titles.filter(title => {
-      const mandateTerms = title.contracts?.filter(contract => contract.type === 'mandate' && contract.status === 'accepted').map(contract => contract.terms).flat();
-      const saleTerms = title.contracts?.filter(contract => contract.type === 'sale' && contract.status === 'accepted').map(contract => contract.terms).flat();
+      const saleTerms = title.sales?.map(sale => sale.terms).flat();
 
-      return isMovieAvailable(title.id, avails, null, mandateTerms ?? [], saleTerms ?? [], 'optional');
+      return isMovieAvailable(title.id, avails, null, [], saleTerms ?? [], 'optional');
     })),
   );
 
