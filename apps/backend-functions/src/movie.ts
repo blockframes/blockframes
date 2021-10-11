@@ -6,7 +6,7 @@ import { removeAllSubcollections } from './utils';
 
 import { orgName } from '@blockframes/organization/+state/organization.firestore';
 import { MovieAppConfig } from '@blockframes/movie/+state/movie.firestore';
-import { cleanMovieMedias } from './media';
+import { cleanMovieMedias, moveMovieMedia } from './media';
 import { Change, EventContext } from 'firebase-functions';
 import { algolia, deleteObject, storeSearchableMovie, storeSearchableOrg } from '@blockframes/firebase-utils';
 import { App, getAllAppsExcept, getMovieAppAccess, getMailSender } from '@blockframes/utils/apps';
@@ -123,6 +123,7 @@ export async function onMovieUpdate(
   if (!after) { return; }
 
   await cleanMovieMedias(before, after);
+  await moveMovieMedia(before, after);
 
   const isMovieSubmitted = isSubmitted(before.app, after.app);
   const isMovieAccepted = isAccepted(before.app, after.app);

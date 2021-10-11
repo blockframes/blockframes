@@ -172,6 +172,10 @@ describe('Test MOVIES anonymization function', () => {
               title: 'test screener',
               jwPlayerId: 'IDjwplayer1'
             },
+            salesPitch: {
+              title: 'test salesPitch',
+              jwPlayerId: 'IDjwplayersalesPitch'
+            },
             otherVideos: [
               {
                 title: 'test otherVideos1',
@@ -182,11 +186,7 @@ describe('Test MOVIES anonymization function', () => {
                 jwPlayerId: 'IDjwplayerotherVideos2'
               }
             ]
-          },
-          salesPitch: {
-            title: 'test salesPitch',
-            jwPlayerId: 'IDjwplayersalesPitch'
-          },
+          }
         }
       }
     }
@@ -201,8 +201,8 @@ describe('Test MOVIES anonymization function', () => {
 
     doc.content.promotional.videos.otherVideos.map(o => expect(o.jwPlayerId).toEqual(anonymizedJwplayerId));
 
-    expect(doc.content.promotional.salesPitch.title).toEqual(titleRecord.content.promotional.salesPitch.title);
-    expect(doc.content.promotional.salesPitch.jwPlayerId).toEqual(anonymizedJwplayerId);
+    expect(doc.content.promotional.videos.salesPitch.title).toEqual(titleRecord.content.promotional.videos.salesPitch.title);
+    expect(doc.content.promotional.videos.salesPitch.jwPlayerId).toEqual(anonymizedJwplayerId);
   });
 });
 

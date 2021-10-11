@@ -66,9 +66,6 @@ function getSteps(status: ProductionStatus, appSteps: TunnelStep[] = []): Tunnel
     time: 10,
     routes: [
       {
-        path: 'sales-pitch',
-        label: 'Sales Pitch',
-      }, {
         path: 'media-files',
         label: 'Files'
       }, {

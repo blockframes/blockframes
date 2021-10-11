@@ -1,6 +1,24 @@
 <tunnel-page>
   <ng-container tunnel-form>
 
+    <h3>Sales Pitch</h3>
+    <section fxLayout="column">
+      <p>Please provide your sales presentation description to interest buyers and investors.</p>
+      <mat-form-field appearance="outline" fxFlex>
+        <mat-label>Description</mat-label>
+        <textarea test-id="description" matInput [formControl]="salesPitchForm.get('description')" cdkTextareaAutosize
+          cdkAutosizeMinRows="10"></textarea>
+      </mat-form-field>
+      <mat-checkbox [checked]="salesPitchForm.isPublic" (change)="salesPitchForm.togglePrivacy($event.checked)" color="primary">
+        <b>Public</b> (Buyers can see video on Marketplace)
+      </mat-checkbox>
+      <file-uploader [form]="salesPitchForm" [meta]="['movies', 'salesPitch', movieId]" accept="video" listenToChanges>
+        <h3 title>Sales Pitch Video</h3>
+      </file-uploader>
+    </section>
+
+    <mat-divider class="thick"></mat-divider>
+
     <h3>Screener</h3>
     <section>
       <p>The screener is the full video of this title, it will be used for virtual screenings.</p>
@@ -16,7 +34,6 @@
     <h3>Other Videos</h3>
     <section>
       <p>Upload other videos such as a trailer, teaser, promo reel, etc.</p>
-
       <bf-form-list [form]="videoList" listPosition="bottom" keepFormOpen reverseList>
         <ng-template itemRef let-video>
           {{ video.type | toLabel: 'hostedVideoTypes' }} - {{ video.title }} - {{ (video.storagePath | fileName) }}
@@ -27,11 +44,16 @@
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Title</mat-label>
                 <input matInput type="text" placeholder="Title of the video" [formControl]="activeForm.get('title')" />
+                <mat-hint>You can give a name to your video</mat-hint>
               </mat-form-field>
               <static-select scope="hostedVideoTypes" [control]="activeForm.get('type')" fxFlex>
                 <mat-label>Video Type</mat-label>
+                <mat-hint>Trailer, Teaser, Clip...</mat-hint>
               </static-select>
             </span>
+            <mat-checkbox [checked]="activeForm.isPublic" (change)="activeForm.togglePrivacy($event.checked)" color="primary">
+              <b>Public</b> (Buyers can see video on Marketplace)
+            </mat-checkbox>
             <file-uploader [queueIndex]="index | fileListIndex: videoList.value" [form]="activeForm" [formIndex]="index" [meta]="['movies', 'otherVideos', movieId]" accept="video">
               <h3 title>Upload Video</h3>
             </file-uploader>
