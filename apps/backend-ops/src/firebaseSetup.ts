@@ -39,7 +39,13 @@ export async function prepareForTesting({ dbBackupURL }: { dbBackupURL?: string 
   console.log('Copied!');
 
   console.log('Clearing Firestore db and importing latest anonymized db...');
-  await importFirestore(latestAnonDbDir);
+  let importFirestoreDirName: string; // ! Cleanest temp hack to make this work with other dirnames
+  if (dbBackupURL) {
+    importFirestoreDirName = dbBackupURL.split('/').slice(3).join('/');
+  } else {
+    importFirestoreDirName = latestAnonDbDir;
+  }
+  await importFirestore(importFirestoreDirName);
   console.log('DB imported!');
 
   console.info('Syncing users from db...');
@@ -75,14 +81,14 @@ export async function prepareEmulators({ dbBackupURL }: { dbBackupURL?: string }
 
   const proc = await firebaseEmulatorExec({
     emulators: [
-      // 'auth',
+      'auth',
       'firestore'],
     importPath: defaultEmulatorBackupPath,
     exportData: true,
   });
-  const { storage, auth } = loadAdminServices();
+  const { storage } = loadAdminServices();
   const db = connectFirestoreEmulator();
-  // const auth = connectAuthEmulator();
+  const auth = connectAuthEmulator();
   const insurance = await ensureMaintenanceMode(db); // Enable maintenance insurance
 
   console.info('Syncing users from db...');

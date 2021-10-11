@@ -96,6 +96,7 @@ export type MovieDocument = MovieBase<Timestamp>
 
 export interface MovieVideos {
   screener?: MovieVideo; // Main screener
+  salesPitch?: MovieVideo; // Sales pitch
   otherVideos?: MovieVideo[]; // Other videos
 }
 
@@ -113,7 +114,6 @@ export interface MoviePromotionalElements {
   moodboard: StorageFile,
   notes: MovieNote[],
   presentation_deck: StorageFile,
-  salesPitch: MovieSalesPitch,
   scenario: StorageFile,
   still_photo: StorageFile[],
   videos?: MovieVideos,
@@ -247,10 +247,6 @@ export interface MovieExpectedPremiereRaw<D> {
 }
 
 export type MovieExpectedPremiere = MovieExpectedPremiereRaw<Date>
-
-export interface MovieSalesPitch extends StorageVideo {
-  description?: string,
-}
 
 export interface MovieGoalsAudience {
   targets: string[],

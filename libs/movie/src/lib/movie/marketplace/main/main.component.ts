@@ -28,4 +28,10 @@ export class MainComponent implements OnInit {
     this.dynTitle.setPageTitle('Film Page', 'Main Info');
   }
 
+  showSalesPitch(movie: Movie) {
+    if (!movie.promotional?.videos?.salesPitch) return false;
+    const { privacy, jwPlayerId, description } = movie.promotional.videos.salesPitch;
+    return privacy === 'public' && (jwPlayerId || description);
+  }
+
 }
