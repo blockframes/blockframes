@@ -118,7 +118,7 @@ export class ImageDirective implements OnInit, OnDestroy {
     // apply latest changes
     this.sub = combineLatest(obs$).subscribe(async ([asset, params, theme, ref]) => {
 
-      if (ref) {
+      if (ref?.storagePath) {
         // ref
         this.srcset = await this.mediaService.generateImageSrcset(ref, params);
         this.src = this.srcset.split(' ')[0];
