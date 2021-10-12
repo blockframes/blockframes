@@ -9,9 +9,9 @@ const users  =  [ userFixture.getByUID(USER.Jean) ];
 
 export function signInAndNavigateToMain() {
   const p1 = new LandingPage();
-  //Note: Here we click sign-up because inside signIn
-  //we switchmode to Login.
-  p1.clickSignup();   
+  // Note: Here we click sign-up because inside signIn
+  // we switch mode to Login.
+  p1.clickSignup();
   signIn(users[0]);
   const p3 = new HomePage();
 
