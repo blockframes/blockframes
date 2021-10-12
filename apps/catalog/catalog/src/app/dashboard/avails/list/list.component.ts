@@ -121,12 +121,11 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
     if (!decodedData.territories) decodedData.territories = [];
     if (!decodedData.medias) decodedData.medias = [];
     this.availsForm.patchValue(decodedData);
-    const subSearchUrl = this.availsForm.valueChanges.pipe(
+    this.sub = this.availsForm.valueChanges.pipe(
       throttleTime(1000)
     ).subscribe(formState => {
       encodeUrl<AvailsFilter>(this.router, this.route, formState);
     });
-    this.sub = subSearchUrl;
   }
 
   ngOnDestroy() {
