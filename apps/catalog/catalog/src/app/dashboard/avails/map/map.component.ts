@@ -5,7 +5,7 @@ import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-enc
 import { downloadCsvFromJson } from "@blockframes/utils/helpers";
 import { territoriesISOA3, TerritoryValue } from "@blockframes/utils/static-model";
 import { combineLatest, Subscription } from "rxjs";
-import { filter, first, map, mapTo, shareReplay, startWith, tap, throttleTime } from "rxjs/operators";
+import { filter, first, map, shareReplay, startWith, tap, throttleTime } from "rxjs/operators";
 import { CatalogAvailsShellComponent } from "../shell/shell.component";
 import { format } from 'date-fns';
 import { medias, territories } from '@blockframes/utils/static-model'
