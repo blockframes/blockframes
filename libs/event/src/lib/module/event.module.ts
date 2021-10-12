@@ -15,8 +15,10 @@ import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
 import { FooterModule } from '@blockframes/ui/layout/footer/footer.module';
 
 // Guards
-import { EventTestGuard } from '../guard/event-test.guard';
+import { EventAccessGuard } from '../guard/event-access.guard';
 import { EventAuthGuard } from '../guard/event-auth.guard';
+import { EventActiveGuard } from '../guard/event-active.guard';
+import { MaintenanceGuard } from '@blockframes/ui/maintenance';
 
 // Material
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -30,8 +32,8 @@ import { MatBadgeModule } from '@angular/material/badge';
 const routes: Routes = [{
   path: ':eventId',
   component: EventComponent,
-  canActivate: [EventAuthGuard, EventTestGuard],
-  canDeactivate: [EventAuthGuard],
+  canActivate: [MaintenanceGuard, EventAuthGuard, EventActiveGuard, EventAccessGuard],
+  canDeactivate: [EventAuthGuard, EventActiveGuard],
 }];
 
 @NgModule({
@@ -59,4 +61,4 @@ const routes: Routes = [{
     AuthWidgetModule
   ]
 })
-export class EventModule { }
+export class EventModule { } // @TODO #6756 rename

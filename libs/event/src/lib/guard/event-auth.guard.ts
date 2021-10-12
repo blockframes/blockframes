@@ -6,6 +6,7 @@ import { hasDisplayName } from '@blockframes/utils/helpers';
 import { AuthQuery, AuthService, AuthState } from '@blockframes/auth/+state';
 import { of } from 'rxjs';
 import { OrganizationService } from '@blockframes/organization/+state';
+import { NotificationService } from '@blockframes/notification/+state';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,7 @@ export class EventAuthGuard extends CollectionGuard<AuthState> {
     private query: AuthQuery,
     private afAuth: AngularFireAuth,
     private orgService: OrganizationService,
+    private notitificationService: NotificationService,
   ) {
     super(service);
   }
@@ -36,7 +38,6 @@ export class EventAuthGuard extends CollectionGuard<AuthState> {
           catchError(() => this.router.navigate(['/'])),
           map(() => this.query.user),
           map(async user => {
-
             // Check that onboarding is complete
             const validUser = hasDisplayName(user) && user._meta.emailVerified && user.orgId; // @TODO #6756 check user._meta.emailVerified required ?
             if (!validUser) {
@@ -50,6 +51,12 @@ export class EventAuthGuard extends CollectionGuard<AuthState> {
               this.router.navigate(['/c/organization/create-congratulations']);
               return false;
             }
+
+            // Sync notifications
+            this.notitificationService.syncCollection(ref => ref
+              .where('toUserId', '==', user.uid)
+              .where('app.isRead', '==', false)
+            ).subscribe();
 
             // Everyting is ok
             return true;
