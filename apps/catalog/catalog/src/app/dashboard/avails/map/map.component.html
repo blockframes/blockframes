@@ -1,7 +1,7 @@
 <form [availsFilter]="availsForm" required hide='territories'></form>
 <world-map>
   <ng-container *ngIf="(status$ | async) === 'INVALID'">
-    <section class="overlay" fxLayout="column" fxLayoutAlign="center center">
+    <section fxLayout="column" fxLayoutAlign="center center">
       <article fxLayout="column" fxLayoutAlign="center center">
         <h3>
           Please fill in Avail Search Criteria section <br /> to show results on the Map.
@@ -58,4 +58,5 @@
   </article>
 </world-map>
 
-<button  mat-stroked-button color="primary" fxFlexAlign="center" (click)="downloadCsv()">Download .CSV</button>
+<button mat-flat-button color="primary" fxFlexAlign="center" (click)="downloadCsv()"
+  [disabled]="formInvalidOrNoTerritories$|async">Download .CSV</button>

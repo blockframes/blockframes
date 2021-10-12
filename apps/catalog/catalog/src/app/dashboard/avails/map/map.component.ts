@@ -1,12 +1,11 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy } from "@angular/core";
-import { MatSnackBar } from "@angular/material/snack-bar";
 import { ActivatedRoute, Router } from "@angular/router";
-import { availableTerritories, AvailsFilter, collidingTerms, getTerritoryMarkers, toTerritoryMarker } from "@blockframes/contract/avails/avails";
+import { availableTerritories, AvailsFilter, collidingTerms, toTerritoryMarker } from "@blockframes/contract/avails/avails";
 import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
 import { downloadCsvFromJson } from "@blockframes/utils/helpers";
 import { territoriesISOA3, TerritoryValue } from "@blockframes/utils/static-model";
 import { combineLatest, Subscription } from "rxjs";
-import { filter, first, map, shareReplay, startWith, throttleTime } from "rxjs/operators";
+import { filter, first, map, mapTo, shareReplay, startWith, tap, throttleTime } from "rxjs/operators";
 import { CatalogAvailsShellComponent } from "../shell/shell.component";
 import { format } from 'date-fns';
 import { medias, territories } from '@blockframes/utils/static-model'
@@ -25,24 +24,12 @@ export class CatalogDashboardAvailsMapComponent implements AfterViewInit, OnDest
 
   sub: Subscription;
   public availsForm = this.shell.avails.mapForm;
-  private availsFormValues$ = this.availsForm.valueChanges.pipe(
-    shareReplay({ refCount: true, bufferSize: 1 }),
-  )
-
 
   public org$ = this.shell.movieOrg$;
   public status$ = this.availsForm.statusChanges.pipe(startWith(this.availsForm.valid ? 'VALID' : 'INVALID'));
   private mandates$ = this.shell.mandates$;
   private mandateTerms$ = this.shell.mandateTerms$;
   private salesTerms$ = this.shell.salesTerms$;
-
-  /** All mandates markers by territory (they might be already sold or already selected selected (from the bucket) or already in selection) */
-  private territoryMarkers$ = combineLatest([
-    this.mandates$,
-    this.mandateTerms$,
-  ]).pipe(
-    map(([mandates, mandateTerms]) => getTerritoryMarkers(mandates, mandateTerms)),
-  );
 
   public sold$ = combineLatest([
     this.salesTerms$,
@@ -71,23 +58,35 @@ export class CatalogDashboardAvailsMapComponent implements AfterViewInit, OnDest
     shareReplay({ refCount: true, bufferSize: 1 }),
   );
 
+  formInvalidOrNoTerritories$ = combineLatest(
+    this.availsForm.statusChanges.pipe(map(() => this.availsForm.invalid)),
+    this.available$.pipe(
+      map(territoryMarker => {
+        const gotTerritories = territoryMarker.some(marker => marker.term.territories.length > 0);
+        return !gotTerritories
+      }),
+    ),
+  ).pipe(
+    map(([formInvalid, noTerritories]) => formInvalid || noTerritories),
+    startWith(true),
+    tap(value => console.log({ value }))
+  )
+
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private shell: CatalogAvailsShellComponent,
-    private snackbar: MatSnackBar,
   ) { }
 
   ngAfterViewInit() {
     const decodedData = decodeUrl(this.route);
     this.availsForm.patchValue(decodedData);
-    const subSearchUrl = this.availsForm.valueChanges.pipe(
+    this.sub = this.availsForm.valueChanges.pipe(
       throttleTime(1000)
     ).subscribe(formState => {
       encodeUrl<AvailsFilter>(this.router, this.route, formState);
     });
-    this.sub = subSearchUrl;
   }
 
   ngOnDestroy() {
@@ -121,7 +120,6 @@ export class CatalogDashboardAvailsMapComponent implements AfterViewInit, OnDest
         const availsFilter = this.availsForm.value;
         const territoriesMap = territoryMarker.flatMap(marker => marker.term.territories);
         const termTerritories = Array.from(new Set(territoriesMap))
-        console.log({ territories: termTerritories })
         const data = [{
           "International Title": movie.title.international,
           Medias: availsFilter.medias.map(medium => medias[medium]).join(';'),
@@ -129,7 +127,8 @@ export class CatalogDashboardAvailsMapComponent implements AfterViewInit, OnDest
           'Start Date - End Date': `${this.formatDate(availsFilter.duration.from)} - ${this.formatDate(availsFilter.duration.to)}`,
           "Available Territories": termTerritories.map(territory => territories[territory]).join(';'),
         }]
-        downloadCsvFromJson(data, 'my-avails');
+        const filename = `${movie.title.international.split(' ').join('_')}_avails`;
+        downloadCsvFromJson(data, filename);
       })
   }
 }

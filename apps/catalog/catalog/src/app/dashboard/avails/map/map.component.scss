@@ -1,6 +1,6 @@
 @use '~@angular/material' as mat;
 
-:host{
+:host {
   margin-top: 16px;
   display: flex;
   flex-direction: column;
@@ -13,7 +13,7 @@ world-map {
   border-radius: 4px;
   margin-bottom: 16px;
 
-  .overlay {
+  section {
     position: absolute;
     top: 0;
     bottom: 0;
