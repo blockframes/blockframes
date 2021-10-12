@@ -14,7 +14,7 @@
     <span>Ref {{ sale.offerId }} / Offer created: {{sale._meta.createdAt | date: 'dd/MM/yyyy'}}</span>
     <div fxLayout fxLayoutAlign="space-between center" class="actions">
       <div fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
-        <ng-container *ngIf="sale.sellerId === centralOrgId.catalog; else outOfPlatformSale">
+        <ng-container *ngIf="sale === centralOrgId.catalog; else outOfPlatformSale">
           <ng-container [ngSwitch]="sale.status">
             <ng-container *ngSwitchCase="'accepted'">
               <button mat-flat-button color="primary" disabled

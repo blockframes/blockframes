@@ -7,7 +7,7 @@ import { Movie, MovieService } from "@blockframes/movie/+state";
 import { OrganizationQuery } from "@blockframes/organization/+state";
 import { DynamicTitleService } from "@blockframes/utils/dynamic-title/dynamic-title.service";
 import { joinWith } from "@blockframes/utils/operators";
-import { map, throttleTime } from "rxjs/operators";
+import { filter, map, throttleTime } from "rxjs/operators";
 import { centralOrgId } from '@env';
 import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -20,12 +20,12 @@ interface TotalIncome { EUR: number; USD: number; }
 type SaleWithIncomeAndTerms = (Sale<Date> | Mandate<Date>) & { income?: Income; terms?: Term<Date>[]; }
 
 type JoinTitleType = {
-  sales?: SaleWithIncomeAndTerms[], id: string,
+  contracts?: SaleWithIncomeAndTerms[], id: string,
   saleCount?: number, totalIncome?: TotalIncome
 }
 
-const contractsQuery = (title: Movie): QueryFn => ref => ref.where('titleId', '==', title.id)
-  .where('status', '==', 'accepted').where('type', '==', 'sale');
+const contractsQuery = (title: Movie): QueryFn => ref => ref.where('titleId', '==', title.id);
+// .where('status', '==', 'accepted').where('type', '==', 'sale');
 
 const organizationQuery = (orgId: string): QueryFn => {
   return ref => ref.where('orgIds', 'array-contains', orgId);
@@ -33,10 +33,12 @@ const organizationQuery = (orgId: string): QueryFn => {
 
 const getSaleCountAndTotalPrice = (title: JoinTitleType) => {
   const initialTotal = { EUR: 0, USD: 0 };
-  title.saleCount = title.sales?.filter(
-    sale => sale.sellerId === centralOrgId.catalog
+  title.saleCount = title.contracts?.filter(
+    contract => contract.sellerId === centralOrgId.catalog && contract.status === 'accepted'
   ).length;
-  title.totalIncome = title.sales?.reduce((total, sale) => {
+  title.totalIncome = title.contracts?.filter(
+    contract => contract.type === 'sale' && contract.status === 'accepted'
+  ).reduce((total, sale) => {
     if (sale.income && sale.income.currency === 'USD') {
       total.USD += sale.income.price
     } else if (sale.income) {
@@ -45,6 +47,10 @@ const getSaleCountAndTotalPrice = (title: JoinTitleType) => {
     return total;
   }, initialTotal) ?? initialTotal;
   return title;
+}
+
+function isAcceptedSale(contract: Sale<Date> | Mandate<Date>) {
+  return contract.status === 'accepted' && contract.type==='sale'
 }
 
 @Component({
@@ -64,10 +70,10 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
 
   public query$ = this.titleService.valueChanges(organizationQuery(this.orgId)).pipe(
     joinWith({
-      sales: title => {
+      contracts: title => {
         return this.contractService.valueChanges(contractsQuery(title)).pipe(
           joinWith({
-            income: contract => this.incomeService.valueChanges(contract.id),
+            income: contract => (isAcceptedSale(contract)) ? this.incomeService.valueChanges(contract.id) : null,
             terms: contract => this.termsService.valueChanges(contract.termIds),
           })
         )
@@ -77,14 +83,16 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
     }, { debounceTime: 200 }),
     map(titles => titles.map(getSaleCountAndTotalPrice)),
   );
+
   public results$ = combineLatest([
     this.query$,
     this.availsForm.valueChanges
   ]).pipe(
     map(([titles, avails]) => titles.filter(title => {
-      const saleTerms = title.sales?.map(sale => sale.terms).flat();
+      const mandateTerms = title.contracts?.filter(contract => contract.type === 'mandate' && contract.status === 'accepted').map(contract => contract.terms).flat();
+      const saleTerms = title.contracts?.filter(contract => contract.type === 'sale' && contract.status === 'accepted').map(contract => contract.terms).flat();
 
-      return isMovieAvailable(title.id, avails, null, [], saleTerms ?? [], 'optional');
+      return isMovieAvailable(title.id, avails, null, mandateTerms ?? [], saleTerms ?? [], 'optional');
     })),
   );
 
