@@ -69,7 +69,6 @@ export class CatalogDashboardAvailsMapComponent implements AfterViewInit, OnDest
   ).pipe(
     map(([formInvalid, noTerritories]) => formInvalid || noTerritories),
     startWith(true),
-    tap(value => console.log({ value }))
   )
 
 
