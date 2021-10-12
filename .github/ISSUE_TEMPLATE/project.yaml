@@ -1,0 +1,51 @@
+name: Project
+description: Describe new functionality with specifications, test scenario and everything
+body:
+  - type: textarea
+    attributes:
+      label: Description
+      description: A bit of context why the feature needs to be made and a general description of how it will be used
+    validations: 
+      required: false
+  - type: textarea
+    attributes:
+      label: What's new
+      description: A list of all new features that need to be added
+      placeholder: |
+        - Add on Dashboard side an overview of my titles
+        - Add on Marketplace side a way to contact a seller
+        - Email organization admin when an offer has been made
+      validations:
+        required: false
+  - type: textarea
+    attributes:
+      label: User Scenario's
+      description: Think about what each actor should be able to do. Be as detailed as you can because these scenarios will be used to create tests.
+      placeholder: |
+        - As a Buyer I want to be able to create an offer
+        - As a Seller I want to be able to show off my titles
+        - As a Blockframes Admin I want to be able to add a title
+      validations:
+        required: false
+  - type: input
+    attributes:
+      label: Estimation
+      description: How long do you think it will take to do all this?
+      placeholder: TBD / 3 sprints for 2 devs / 1 sprint
+  - type: dropdown
+    attributes:
+      label: Priority
+      description: How would you prioritize this?
+      options:
+        - High
+        - Medium
+        - Low
+  - type: textarea
+    attributes:
+      label: Anything else?
+      description: |
+        Links? References? Anything that will give us more context about the issue you are encountering!
+
+        Tip: You can attach images or log files by clicking this area to highlight it and then dragging files in.
+    validations:
+      required: false
