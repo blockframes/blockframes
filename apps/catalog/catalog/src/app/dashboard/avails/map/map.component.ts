@@ -5,10 +5,15 @@ import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-enc
 import { downloadCsvFromJson } from "@blockframes/utils/helpers";
 import { territoriesISOA3, TerritoryValue } from "@blockframes/utils/static-model";
 import { combineLatest, Subscription } from "rxjs";
-import { filter, first, map, shareReplay, startWith, tap, throttleTime } from "rxjs/operators";
+import { filter, first, map, shareReplay, startWith, throttleTime } from "rxjs/operators";
 import { CatalogAvailsShellComponent } from "../shell/shell.component";
 import { format } from 'date-fns';
 import { medias, territories } from '@blockframes/utils/static-model'
+
+function formatDate(date: Date) {
+  return format(date, 'dd/MM/yyy')
+}
+
 
 @Component({
   selector: 'catalog-dashboard-avails-map',
@@ -16,7 +21,7 @@ import { medias, territories } from '@blockframes/utils/static-model'
   styleUrls: ['./map.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CatalogDashboardAvailsMapComponent implements AfterViewInit, OnDestroy {
+export class DashboardAvailsMapComponent implements AfterViewInit, OnDestroy {
   public hoveredTerritory: {
     name: string;
     status: string;
@@ -58,16 +63,15 @@ export class CatalogDashboardAvailsMapComponent implements AfterViewInit, OnDest
     shareReplay({ refCount: true, bufferSize: 1 }),
   );
 
-  formInvalidOrNoTerritories$ = combineLatest(
+  private hasTerritories$ = this.available$.pipe(
+    map(territoryMarker => territoryMarker.some(marker => marker.term.territories.length > 0)),
+  );
+
+  disableCsv$ = combineLatest([
     this.availsForm.statusChanges.pipe(map(() => this.availsForm.invalid)),
-    this.available$.pipe(
-      map(territoryMarker => {
-        const gotTerritories = territoryMarker.some(marker => marker.term.territories.length > 0);
-        return !gotTerritories
-      }),
-    ),
-  ).pipe(
-    map(([formInvalid, noTerritories]) => formInvalid || noTerritories),
+    this.hasTerritories$,
+  ]).pipe(
+    map(([formInvalid, hasTerritories]) => formInvalid || !hasTerritories),
     startWith(true),
   )
 
@@ -106,24 +110,21 @@ export class CatalogDashboardAvailsMapComponent implements AfterViewInit, OnDest
     this.shell.avails.mapForm.reset();
   }
 
-  formatDate(date: Date) {
-    return format(date, 'dd/MM/yyy')
-  }
 
   downloadCsv() {
-    combineLatest(
-      this.available$.pipe(first()),
-      this.shell.movie$.pipe(first())
-    )
+    combineLatest([
+      this.available$,
+      this.shell.movie$
+    ]).pipe(first())
       .subscribe(([territoryMarker, movie]) => {
         const availsFilter = this.availsForm.value;
-        const territoriesMap = territoryMarker.flatMap(marker => marker.term.territories);
-        const termTerritories = Array.from(new Set(territoriesMap))
+        const territories = territoryMarker.flatMap(marker => marker.term.territories);
+        const termTerritories = Array.from(new Set(territories))
         const data = [{
           "International Title": movie.title.international,
           Medias: availsFilter.medias.map(medium => medias[medium]).join(';'),
           Exclusivity: availsFilter.exclusive ? 'Exclusive' : 'Non Exclusive',
-          'Start Date - End Date': `${this.formatDate(availsFilter.duration.from)} - ${this.formatDate(availsFilter.duration.to)}`,
+          'Start Date - End Date': `${formatDate(availsFilter.duration.from)} - ${formatDate(availsFilter.duration.to)}`,
           "Available Territories": termTerritories.map(territory => territories[territory]).join(';'),
         }]
         const filename = `${movie.title.international.split(' ').join('_')}_avails`;

@@ -5,34 +5,28 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatListModule } from "@angular/material/list";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
-import { RouterModule, Routes } from "@angular/router";
+import { RouterModule } from "@angular/router";
 import { AvailsFilterModule } from "@blockframes/contract/avails/filter/filter.module";
 import { TableModule } from "@blockframes/ui/list/table/table.module";
 import { MapModule } from "@blockframes/ui/map";
 import { MaxLengthModule } from "@blockframes/utils/pipes";
-import { CatalogDashboardAvailsMapComponent } from "./map.component";
+import { DashboardAvailsMapComponent } from "./map.component";
 
-const routes: Routes = [
-  {
-    path: '',
-    component: CatalogDashboardAvailsMapComponent,
-  },
-]
+
 
 
 
 
 @NgModule({
-  declarations:[
-    CatalogDashboardAvailsMapComponent,
+  declarations: [
+    DashboardAvailsMapComponent,
   ],
-  imports:[
+  imports: [
     CommonModule,
     MaxLengthModule,
     FlexLayoutModule,
     TableModule,
     AvailsFilterModule,
-    RouterModule.forChild(routes),
     MapModule,
 
     //Material
@@ -40,6 +34,8 @@ const routes: Routes = [
     MatProgressSpinnerModule,
     MatListModule,
     MatIconModule,
+
+    RouterModule.forChild([{ path: '', component: DashboardAvailsMapComponent }])
   ]
 })
-export class CatalogDashboardAvailsMapModule{}
+export class CatalogDashboardAvailsMapModule { }
