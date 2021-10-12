@@ -1,74 +1,86 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { CanActivate, Router, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
 import { AuthService } from '@blockframes/auth/+state';
 import { OrganizationService, OrganizationStore } from '@blockframes/organization/+state';
 import { UserService } from '@blockframes/user/+state';
-import { EventQuery } from '../+state';
+import { switchMap } from 'rxjs/internal/operators/switchMap';
+import { EventService } from '../+state';
 
 @Injectable({ providedIn: 'root' })
 export class EventAccessGuard implements CanActivate {
 
   constructor(
+    private service: EventService,
     private authService: AuthService,
     private userService: UserService,
     private orgService: OrganizationService,
-    private eventQuery: EventQuery,
     private router: Router,
     private afAuth: AngularFireAuth,
     private orgStore: OrganizationStore,
   ) { }
 
-  async canActivate(): Promise<boolean | UrlTree> {
+  canActivate(route: ActivatedRouteSnapshot) {
     /**
      * In order to fetch the required data for the event, user needs to be connected with a
      * regular account (password) (or with an anonymous account will be created if not).
      */
-    const currentUser = await this.authService.auth.currentUser;
+    return this.afAuth.authState.pipe(
+      switchMap(async userAuth => {
+        /**
+         * If current user is not anonymous, we populate org stage
+         */
+        if (userAuth && !userAuth.isAnonymous) {
+          const user = await this.userService.getUser(userAuth.uid);
+          const org = await this.orgService.getValue(user.orgId);
 
-    /**
-     * If current user is not anonymous, we populate org stage
-     */
-    if (currentUser && !currentUser.isAnonymous) {
-      const user = await this.userService.getUser(currentUser.uid);
-      const org = await this.orgService.getValue(user.orgId);
-
-      // Starting orgState populate
-      this.orgStore.upsert(org.id, org);
-      this.orgStore.setActive(org.id);
-      this.orgService.syncActive({ id: org.id });
-    }
-
-    // Listenning for authState changes
-    this.listenOnCurrentUserState();
-
-    /**
-     * An anonymous account is created in order to fetch the required data for the event
-     */
-    if (!currentUser) { await this.authService.signInAnonymously(); }
-
-    /**
-     * With eventId and invitationId we can now evaluate what should be the next page
-     */
-    const event = this.eventQuery.getActive();
-    switch (event.accessibility) {
-      case 'public':
-        // @TODO #6756 event is public, no invitation required
-        if (currentUser.isAnonymous) {
-          // Redirect to "choose your role" page
-        } else {
-          // User have a real account, we can find directly if he is owner or not
+          // Starting orgState populate @TODO #6756 check if can be improved
+          this.orgStore.upsert(org.id, org);
+          this.orgStore.setActive(org.id);
+          this.orgService.syncActive({ id: org.id });
         }
-        return true;
-      case 'invitation-only':
-        // @TODO #6756 check invitationId if not logged in
-        return true;
-      case 'private':
-        // @TODO #6756 check invitationId in not logged in 
-        return true;
-      /*default:
-        return this.router.parseUrl(`/c/o/dashboard/event/${event.id}/edit/${path}`)*/
-    }
+
+        /**
+         * An anonymous account is created in order to fetch the required data for the event
+         */
+        if (!userAuth) { await this.authService.signInAnonymously(); }
+
+        // Listenning for authState changes
+        this.listenOnCurrentUserState();
+
+        /**
+        * With eventId and invitationId we can now evaluate what should be the next page
+        */
+        return this.service.getValue(route.params['eventId'] as string)
+          .then(event => {
+            switch (event.accessibility) {
+              case 'public':
+                // @TODO #6756 event is public, no invitation required
+                if (userAuth.isAnonymous) {
+                  // Redirect to "choose your role" page
+                } else {
+                  // User have a real account, we can find directly if he is owner or not
+                }
+                return true;
+              case 'invitation-only':
+                // @TODO #6756 check invitationId if not logged in
+                return true;
+              case 'private':
+                // @TODO #6756 check invitationId in not logged in
+                return true;
+              /*default:
+                return this.router.parseUrl(`/c/o/dashboard/event/${event.id}/edit/${path}`)*/
+            }
+          })
+          .catch(e => {
+            // Something went wrong, we redirect user to homepage
+            console.log(e);
+            this.router.navigate(['/']);
+            return false;
+          });
+
+      })
+    );
 
   }
 

@@ -17,7 +17,6 @@ import { FooterModule } from '@blockframes/ui/layout/footer/footer.module';
 // Guards
 import { EventAccessGuard } from '../guard/event-access.guard';
 import { EventAuthGuard } from '../guard/event-auth.guard';
-import { EventActiveGuard } from '../guard/event-active.guard';
 import { MaintenanceGuard } from '@blockframes/ui/maintenance';
 
 // Material
@@ -32,8 +31,8 @@ import { MatBadgeModule } from '@angular/material/badge';
 const routes: Routes = [{
   path: ':eventId',
   component: EventComponent,
-  canActivate: [MaintenanceGuard, EventAuthGuard, EventActiveGuard, EventAccessGuard],
-  canDeactivate: [EventAuthGuard, EventActiveGuard],
+  canActivate: [MaintenanceGuard, EventAuthGuard, EventAccessGuard],
+  canDeactivate: [EventAuthGuard],
 }];
 
 @NgModule({
