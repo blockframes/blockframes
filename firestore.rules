@@ -63,15 +63,13 @@ service cloud.firestore {
     /// RULES ///
 
     match /users/{userId} {
-      // TODO (#1359): We can read user data from the same organization as us until we got public users collection.
-    	allow read: if userId() == existingData().uid	|| (isSignedIn() && isOrgMember(orgIdOf(userId()))) && notInMaintenance();
+      allow get: if isSignedInAnonymously() && notInMaintenance();
+    	allow list: if userId() == existingData().uid	|| (isSignedIn() && isOrgMember(orgIdOf(userId()))) && notInMaintenance();
     	allow update: if isOnlyUpdatingAllowedUserFields() && notInMaintenance();
     	allow create: if userId() == incomingData().uid
         && isRequestFieldValueEqualTo(['uid'], userId) && notInMaintenance();
       allow delete: if userId() == existingData().uid && notInMaintenance();
     }
-
-    // TODO (#1359): publicUser rules goes here.
 
     /// FUNCTIONS ///
 
