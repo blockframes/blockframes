@@ -10,6 +10,7 @@ import { UserService } from '@blockframes/user/+state';
 import { FormEntity } from '@blockframes/utils/form';
 import { OrganizationCrmForm } from '@blockframes/admin/crm/forms/organization-crm.form';
 import { getOrgAppAccess } from '@blockframes/utils/apps';
+import { OrgEmailData } from '@blockframes/utils/emails/utils';
 
 @Component({
   selector: 'organization-create',
@@ -46,6 +47,12 @@ export class OrganizationCreateComponent {
       return;
     }
 
+    const [fromApp] = getOrgAppAccess(this.form.value, this.fromApp.value);
+    if (!fromApp) {
+      this.snackBar.open('Please pick an app where the user is created from or give org app access', 'close', { duration: 2000 })
+      return
+    }
+
     const superAdminEmail = this.superAdminForm.get('email').value;
     const [existingSuperAdmin] = await this.userService.getValue(ref => ref.where('email', '==', superAdminEmail));
 
@@ -55,17 +62,22 @@ export class OrganizationCreateComponent {
       return;
     }
 
+    const orgEmailData: OrgEmailData = {
+      denomination: this.form.get('denomination').get('full').value,
+      id: '',
+      email: this.form.get('email').value
+    }
+
     const baseUser = existingSuperAdmin
       ? existingSuperAdmin
       : await this.authService.createUser(
         superAdminEmail,
-        this.form.get('denomination').get('full').value,
-        this.fromApp.value
+        orgEmailData,
+        fromApp
       );
     const superAdmin = createPublicUser(baseUser);
 
-    const [firstApp] = getOrgAppAccess(this.form.value);
-    const orgId = await this.orgService.addOrganization(this.form.value, firstApp, superAdmin);
+    const orgId = await this.orgService.addOrganization(this.form.value, fromApp, superAdmin);
 
     this.router.navigate(['/c/o/dashboard/crm/organization/', orgId]);
     this.dialogRef.close();
