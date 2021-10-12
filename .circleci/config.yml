@@ -548,22 +548,22 @@ workflows:
           requires:
             - build-deploy-prepare-staging
           <<: *release_only
-  nightly-tests:
-    triggers:
-      - schedule:
-          cron: '0 0 * * *'
-          filters:
-            branches:
-              only:
-                - develop
-    jobs:
-      - build-deploy-prepare-ci
-      - test-e2e-ci:
-          requires:
-            - build-deploy-prepare-ci
-      - unit-tests-ci:
-          requires:
-            - build-deploy-prepare-ci
+  # nightly-tests:
+  #   triggers:
+  #     - schedule:
+  #         cron: '0 0 * * *'
+  #         filters:
+  #           branches:
+  #             only:
+  #               - develop
+  #   jobs:
+  #     - build-deploy-prepare-ci
+  #     - test-e2e-ci:
+  #         requires:
+  #           - build-deploy-prepare-ci
+  #     - unit-tests-ci:
+  #         requires:
+  #           - build-deploy-prepare-ci
   run-sequential-online-e2e-tests-against-CI-branch-and-project:
     jobs:
       - build-deploy-prepare-ci:
