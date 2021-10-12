@@ -21,7 +21,8 @@ type SaleWithIncomeAndTerms = (Sale<Date> | Mandate<Date>) & { income?: Income; 
 
 type JoinTitleType = {
   contracts?: SaleWithIncomeAndTerms[], id: string,
-  saleCount?: number, totalIncome?: TotalIncome
+  saleCount?: number, totalIncome?: TotalIncome,
+  allSaleCount?: number,
 }
 
 const contractsQuery = (title: Movie): QueryFn => ref => ref.where('titleId', '==', title.id);
@@ -30,23 +31,21 @@ const organizationQuery = (orgId: string): QueryFn => {
   return ref => ref.where('orgIds', 'array-contains', orgId);
 }
 
+const isCatalogSale = (contract: SaleWithIncomeAndTerms): boolean => contract.sellerId === centralOrgId.catalog && contract.status === 'accepted';
+const isSale = (contract: SaleWithIncomeAndTerms): boolean => contract.type === 'sale' && contract.status === 'accepted';
+
 const getSaleCountAndTotalPrice = (title: JoinTitleType) => {
-  const initialTotal = { EUR: 0, USD: 0 };
-  title.saleCount = title.contracts?.filter(
-    contract => contract.sellerId === centralOrgId.catalog && contract.status === 'accepted'
-  ).length;
-  title.totalIncome = title.contracts?.filter(
-    contract => contract.type === 'sale' && contract.status === 'accepted'
-  ).reduce((total, sale) => {
-    if (sale.income && sale.income.currency === 'USD') {
-      total.USD += sale.income.price
-    } else if (sale.income) {
-      total.EUR += sale.income.price
-    }
+  const initialTotal: TotalIncome = { EUR: 0, USD: 0 };
+  if (!title.contracts) return title;
+  title.saleCount = title.contracts.filter(isCatalogSale).length;
+  title.allSaleCount = title.contracts.filter(isSale).length;
+  title.totalIncome = title.contracts.filter(isSale).reduce((total, sale) => {
+    if (sale.income) total[sale.income.currency] += sale.income.price
     return total;
-  }, initialTotal) ?? initialTotal;
+  }, initialTotal);
   return title;
 }
+
 
 function isAcceptedSale(contract: Sale<Date> | Mandate<Date>) {
   return contract.status === 'accepted' && contract.type === 'sale';
@@ -59,7 +58,7 @@ function isAcceptedSale(contract: Sale<Date> | Mandate<Date>) {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnInit {
-  public availsForm = new AvailsForm({ territories: [] }, ['territories']);
+  public availsForm = new AvailsForm({}, []);
   private orgId = this.orgQuery.getActiveId();
   private sub: Subscription;
 
@@ -78,6 +77,7 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
         )
       },
       saleCount: () => 0,
+      allSaleCount: () => 0,
       totalIncome: () => ({ EUR: 0, USD: 0 }), // used for typings
     }, { debounceTime: 200 }),
     map(titles => titles.map(getSaleCountAndTotalPrice)),
@@ -111,7 +111,9 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
   }
 
   ngAfterViewInit() {
-    const decodedData = decodeUrl(this.route);
+    const decodedData: { territories?: string[], medias?: string[] } = decodeUrl(this.route);
+    if (!decodedData.territories) decodedData.territories = [];
+    if (!decodedData.medias) decodedData.medias = [];
     this.availsForm.patchValue(decodedData);
     const subSearchUrl = this.availsForm.valueChanges.pipe(
       throttleTime(1000)
