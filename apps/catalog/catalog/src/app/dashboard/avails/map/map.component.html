@@ -2,10 +2,12 @@
 <world-map>
   <ng-container *ngIf="(status$ | async) === 'INVALID'">
     <section fxLayout="column" fxLayoutAlign="center center">
+    <article fxLayout="column" fxLayoutAlign="center center">
       <h3>
         Please fill in Avail Search Criteria section <br />
         to show results on the Map.
       </h3>
+    </article>
     </section>
   </ng-container>
 
