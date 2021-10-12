@@ -45,7 +45,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     return orgs.length !== 0;
   }
 
-  syncOrgActive() {
+  syncOrgActive() { // @TODO #6756 unused
     return this.authQuery.user$.pipe(
       switchMap(user => this.syncActive({ id: user.orgId }))
     );

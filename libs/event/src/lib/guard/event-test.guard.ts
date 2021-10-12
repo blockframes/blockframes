@@ -2,9 +2,8 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { CanActivate, Router, UrlTree, ActivatedRouteSnapshot } from '@angular/router';
 import { AuthService } from '@blockframes/auth/+state';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService, OrganizationStore } from '@blockframes/organization/+state';
 import { UserService } from '@blockframes/user/+state';
-import { hasDisplayName } from '@blockframes/utils/helpers';
 import { EventService } from '../+state';
 
 @Injectable({ providedIn: 'root' })
@@ -16,7 +15,8 @@ export class EventTestGuard implements CanActivate {
     private userService: UserService,
     private orgService: OrganizationService,
     private router: Router,
-    private afAuth: AngularFireAuth
+    private afAuth: AngularFireAuth,
+    private orgStore: OrganizationStore,
   ) { }
 
   async canActivate(route: ActivatedRouteSnapshot): Promise<boolean | UrlTree> {
@@ -27,22 +27,17 @@ export class EventTestGuard implements CanActivate {
     const currentUser = await this.authService.auth.currentUser;
 
     /**
-     * If current user is not anonymous, we need to check that his onboarding is completed (basic infos + orgId)
-     * before letting him access the event
+     * If current user is not anonymous, we populate org stage
      */
     if (currentUser && !currentUser.isAnonymous) {
       const user = await this.userService.getUser(currentUser.uid);
-      if (!user._meta.emailVerified || !hasDisplayName(user) || !user.orgId) {
-        return this.router.createUrlTree(['/auth/identity']);
-      }
-
       const org = await this.orgService.getValue(user.orgId);
-      if (org.status === 'pending') {
-        return this.router.createUrlTree(['c/organization/create-congratulations']);
-      }
 
-      // Starting authState populate
-      this.authService.sync(); // @TODO #6756 if user is logged in => test
+      // Starting orgState populate
+      this.orgStore.upsert(org.id, org);
+      this.orgStore.setActive(org.id);
+      this.orgService.syncActive({ id: org.id });
+
     }
 
     // Listenning for authState changes
@@ -88,7 +83,7 @@ export class EventTestGuard implements CanActivate {
   private listenOnCurrentUserState() {
     let user;
     this.afAuth.authState.subscribe(u => {
-      if(user && !u){
+      if (user && !u) {
         this.router.navigate(['/']);
       } else {
         user = u;

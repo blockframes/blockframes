@@ -39,7 +39,7 @@ export class AuthWidgetComponent implements OnInit {
     const currentUser = await this.service.auth.currentUser;
     if (currentUser.isAnonymous) {
       this.anonymousUser = currentUser;
-      this.cdr.markForCheck()
+      this.cdr.markForCheck();
     }
   }
 
