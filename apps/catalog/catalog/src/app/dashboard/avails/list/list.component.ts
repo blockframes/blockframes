@@ -7,7 +7,7 @@ import { Movie, MovieService } from "@blockframes/movie/+state";
 import { OrganizationQuery } from "@blockframes/organization/+state";
 import { DynamicTitleService } from "@blockframes/utils/dynamic-title/dynamic-title.service";
 import { joinWith } from "@blockframes/utils/operators";
-import { filter, map, throttleTime } from "rxjs/operators";
+import { map, throttleTime } from "rxjs/operators";
 import { centralOrgId } from '@env';
 import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -25,7 +25,6 @@ type JoinTitleType = {
 }
 
 const contractsQuery = (title: Movie): QueryFn => ref => ref.where('titleId', '==', title.id);
-// .where('status', '==', 'accepted').where('type', '==', 'sale');
 
 const organizationQuery = (orgId: string): QueryFn => {
   return ref => ref.where('orgIds', 'array-contains', orgId);
@@ -50,7 +49,7 @@ const getSaleCountAndTotalPrice = (title: JoinTitleType) => {
 }
 
 function isAcceptedSale(contract: Sale<Date> | Mandate<Date>) {
-  return contract.status === 'accepted' && contract.type==='sale'
+  return contract.status === 'accepted' && contract.type === 'sale';
 }
 
 @Component({
