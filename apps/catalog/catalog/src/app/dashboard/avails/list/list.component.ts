@@ -25,6 +25,12 @@ type JoinTitleType = {
   allSaleCount?: number,
 }
 
+/**
+ * Reason why we are getting all the contracts and not only the sales is because we need the mandates to compute
+ * mandate terms to be able to compute isMovieAvailable
+ * @param title
+ * @returns
+ */
 const contractsQuery = (title: Movie): QueryFn => ref => ref.where('titleId', '==', title.id);
 
 const organizationQuery = (orgId: string): QueryFn => {
