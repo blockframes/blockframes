@@ -64,13 +64,13 @@ export class DashboardAvailsCalendarComponent implements AfterViewInit, OnDestro
     shareReplay({ refCount: true, bufferSize: 1 }),
   );
 
-  private hasTerritories$ = this.available$.pipe(
-    map(territoryMarker => territoryMarker.some(marker => marker.term.territories.length > 0)),
+  private hasAvailableDuration = this.available$.pipe(
+    map(durationMarker => durationMarker.some(marker => marker.from >= marker.to)),
   );
 
   disableCsv$ = combineLatest([
     this.availsForm.statusChanges.pipe(map(() => this.availsForm.invalid)),
-    this.hasTerritories$,
+    this.hasAvailableDuration,
   ]).pipe(
     map(([formInvalid, hasTerritories]) => formInvalid || !hasTerritories),
     startWith(true),
