@@ -23,4 +23,8 @@ export class ConfirmDeclineComponent {
     const reason = this.reasonControl.value;
     this.dialog.close(reason);
   }
+
+  async cancel(){
+    this.dialog.close()
+  }
 }
