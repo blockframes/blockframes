@@ -60,20 +60,34 @@ const routes: Routes = [
       },
       {
         path: 'sales',
-        loadChildren: () => import('./sales/list/list.module').then(m => m.SaleListModule)
-      },
-      {
-        path: 'sales/:saleId',
-        canActivate: [CatalogSaleViewGuard],
-        loadChildren: () => import('./sales/view/view.module').then(m => m.CatalogSaleViewModule)
+        children: [
+          {
+            path: '',
+            pathMatch: 'full',
+            loadChildren: () => import('./sales/list/list.module').then(m => m.SaleListModule)
+          },
+          {
+            path: 'import',
+            loadChildren: () => import('@blockframes/contract/import/import.module').then(m => m.ContractImportModule)
+          },
+          {
+            path: ':saleId',
+            canActivate: [CatalogSaleViewGuard],
+            loadChildren: () => import('./sales/view/view.module').then(m => m.CatalogSaleViewModule)
+          },
+        ]
       },
       {
         path: 'avails',
-        loadChildren: () => import('./avails/list/list.module').then(m => m.CatalogAvailsListModule)
-      },
-      {
-        path: 'avails/:titleId',
-        loadChildren: () => import('./avails/shell/shell.module').then(m => m.CatalogAvailsShellModule)
+        children: [{
+          path: '',
+          pathMatch: 'full',
+          loadChildren: () => import('./avails/list/list.module').then(m => m.CatalogAvailsListModule)
+        },
+        {
+          path: ':titleId',
+          loadChildren: () => import('./avails/shell/shell.module').then(m => m.CatalogAvailsShellModule)
+        }]
       },
       {
         path: 'title',
