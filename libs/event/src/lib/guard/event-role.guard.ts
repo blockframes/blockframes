@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CanActivate, Router } from '@angular/router';
-import { AuthService, AuthStore } from '@blockframes/auth/+state';
+import { AuthQuery, AuthService, AuthStore } from '@blockframes/auth/+state';
 import { switchMap } from 'rxjs/operators';
 import { EventQuery } from '../+state';
 
@@ -11,6 +11,7 @@ export class EventRoleGuard implements CanActivate {
 
   constructor(
     private authStore: AuthStore,
+    private authQuery: AuthQuery,
     private router: Router,
     private eventQuery: EventQuery,
     private afAuth: AngularFireAuth,
@@ -19,14 +20,15 @@ export class EventRoleGuard implements CanActivate {
   ) { }
 
   canActivate() {
-    const anonymousAuth = this.authStore.getValue().anonymousAuth; // @TODO #6756 use query ?
+    const anonymousCredentials = this.authQuery.anonymousCredentials;
+
     const event = this.eventQuery.getActive();
-    if (!anonymousAuth?.role) {
+    if (!anonymousCredentials?.role) {
       return this.router.navigate([`/events/${event.id}`]);
     }
 
     // If user choosen "organizer", he needs to login
-    if (anonymousAuth?.role === 'organizer') {
+    if (anonymousCredentials?.role === 'organizer') {
       return this.afAuth.authState.pipe(
         switchMap(async userAuth => {
           if (!userAuth) {

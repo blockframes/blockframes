@@ -41,7 +41,7 @@
 
 <ng-template #anonymous>
   <ng-container *ngIf="(anonymousUser$ |async ) as anonymousUser else login">
-    <article fxLayout="row">
+    <article *ngIf="anonymousUser.firstName else login" fxLayout="row">
       <button class="profile" matRipple [widgetTarget]="menu" test-id="auth-user">
         <div fxLayout="column" fxLayoutAlign="center end">
           <span class="mat-body-2">{{ anonymousUser | displayName }}</span>

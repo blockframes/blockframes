@@ -1,7 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthStore } from '@blockframes/auth/+state';
-import { EventQuery } from '@blockframes/event/+state';
 
 @Component({
   selector: 'event-identity',
@@ -13,15 +12,15 @@ export class EventIdenityComponent {
 
   constructor(
     private authStore: AuthStore,
-    private eventQuery: EventQuery,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute,
   ) { }
 
   click() {
     // Update store with from value
-    this.authStore.update(() => ({ anonymousAuth: { ...this.authStore.getValue().anonymousAuth, lastName: 'bruce', firstName: 'test' } }));
+    this.authStore.updateAnonymousCredentials({ lastName: 'bruce', firstName: 'test' });
     // Redirect user to event view
-    this.router.navigate([`events/${this.eventQuery.getActiveId()}/r/i`]);
+    this.router.navigate(['../i'], { relativeTo: this.route });
   }
 
 }

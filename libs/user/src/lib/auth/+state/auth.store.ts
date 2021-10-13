@@ -7,7 +7,7 @@ import { Person } from '@blockframes/utils/common-interfaces';
 
 export { User } from '@blockframes/user/+state/user.firestore';
 
-export interface AnonymousAuth extends Person{
+export interface AnonymousCredentials extends Person {
   role?: 'guest' | 'organizer'; // Role for events
   email?: string
 }
@@ -17,7 +17,7 @@ export interface Roles {
 
 export interface AuthState extends FireAuthState<User>, RoleState<Roles> {
   requestedRoute?: string;
-  anonymousAuth?: AnonymousAuth;
+  anonymousCredentials?: AnonymousCredentials;
 }
 
 export function createUser(user: Partial<User> = {}) {
@@ -36,5 +36,9 @@ export class AuthStore extends Store<AuthState> {
   }
   public updateProfile(profile: Partial<User>) {
     this.update(authState => ({ profile: { ...authState.profile, profile } }))
+  }
+
+  public updateAnonymousCredentials(anonymousCredentials: Partial<AnonymousCredentials>) {
+    this.update(authState => ({ anonymousCredentials: { ...authState.anonymousCredentials, ...anonymousCredentials } }));
   }
 }

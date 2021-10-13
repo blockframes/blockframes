@@ -1,7 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthStore } from '@blockframes/auth/+state';
-import { EventQuery } from '@blockframes/event/+state';
 
 @Component({
   selector: 'event-role',
@@ -13,15 +12,16 @@ export class EventRoleComponent {
 
   constructor(
     private authStore: AuthStore,
-    private eventQuery: EventQuery,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute,
   ) { }
 
   click(role: 'organizer' | 'guest') {
     // Update store with from value
-    this.authStore.update(() => ({ anonymousAuth: { role } }));
+    this.authStore.updateAnonymousCredentials({ role });
+
     // Redirect user to identity page
-    this.router.navigate([`events/${this.eventQuery.getActiveId()}/r/identity`]);
+    this.router.navigate(['r/identity'], { relativeTo: this.route });
   }
 
 }
