@@ -7,7 +7,7 @@ import { Location } from '@angular/common';
 import { fade } from '@blockframes/utils/animations/fade';
 
 @Component({
-  selector: 'event-view',
+  selector: 'event-view-layout',
   templateUrl: './view.component.html',
   styleUrls: ['./view.component.scss'],
   animations: [fade],

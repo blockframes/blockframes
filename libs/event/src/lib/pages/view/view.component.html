@@ -1,5 +1,5 @@
 <ng-container *ngIf="event$ |  async as event">
-  <event-view [event]="event">
+  <event-view-layout [event]="event">
     <ng-container [ngSwitch]="event.type">
 
       <!-- Screening -->
@@ -40,5 +40,5 @@
       </section>
 
     </ng-container>
-  </event-view>
+  </event-view-layout>
 </ng-container>

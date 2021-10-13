@@ -21,41 +21,57 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
     private router: Router,
     private dialog: MatDialog,
     private twilioService: TwilioService,
-  ) {}
+  ) { }
 
   async canActivate(next: ActivatedRouteSnapshot,): Promise<boolean | UrlTree> {
     const event = this.eventQuery.getActive();
-console.log(event)
-    // if the event is not a meeting the lobby page is not accessible
-    // redirect directly to the session page,
-    // the guard will then be re-evaluated for invitation etc... on the session page
-    if (event.type !== 'meeting' && next.routeConfig.path === 'lobby') {
-      return this.router.parseUrl(`/events/${event.id}/session`);
+
+
+    switch (event.accessibility) {
+      case 'public':
+        /**
+         * Event is public, anyone can access
+         */
+        // @TODO #6756 check lastName & firstName setted if not logged in
+        return true;
+      case 'invitation-only':
+        return true; // @TODO #6756
+      case 'private': {
+        // if the event is not a meeting the lobby page is not accessible
+        // redirect directly to the session page,
+        // the guard will then be re-evaluated for invitation etc... on the session page
+        if (event.type !== 'meeting' && next.routeConfig.path === 'lobby') {
+          return this.router.parseUrl(`/events/${event.id}/session`);
+        }
+
+        if (eventTime(event) !== 'onTime') {
+          return this.router.parseUrl(`/events/${event.id}`);
+        }
+
+        if (event.isOwner) {
+          return true;
+        }
+        const hasUserAccepted = this.invitationQuery.hasEntity((invitation: Invitation) => {
+          return (
+            invitation.eventId === event.id &&
+            invitation.status === 'accepted' && (
+              invitation.mode === 'request' && invitation.fromUser.uid === this.authQuery.userId ||
+              invitation.mode === 'invitation' && invitation.toUser.uid === this.authQuery.userId
+            )
+          );
+        });
+
+        // if user wasn't invited OR hasn't accepted yet
+        if (!hasUserAccepted) {
+          return this.router.parseUrl(`/events/${event.id}`);
+        }
+
+        return true;
+      }
+
     }
 
-    if (eventTime(event) !== 'onTime') {
-      return this.router.parseUrl(`/events/${event.id}`);
-    }
 
-    if (event.isOwner) {
-      return true;
-    }
-    const hasUserAccepted = this.invitationQuery.hasEntity((invitation: Invitation) => {
-      return (
-        invitation.eventId === event.id &&
-        invitation.status === 'accepted' && (
-          invitation.mode === 'request' && invitation.fromUser.uid === this.authQuery.userId ||
-          invitation.mode === 'invitation' && invitation.toUser.uid === this.authQuery.userId
-        )
-      );
-    });
-
-    // if user wasn't invited OR hasn't accepted yet
-    if (!hasUserAccepted) {
-      return this.router.parseUrl(`/events/${event.id}`);
-    }
-
-    return true;
   }
 
   canDeactivate(
@@ -63,7 +79,7 @@ console.log(event)
     currentRoute: ActivatedRouteSnapshot,
     currentState: RouterStateSnapshot,
     nextState: RouterStateSnapshot
-  ): (boolean |Observable<boolean>) {
+  ): (boolean | Observable<boolean>) {
 
     // we don't show the confirm dialog if the user don't quit the event
     // i.e. if the user navigate  lobby <-> session
@@ -74,7 +90,7 @@ console.log(event)
     }
 
     // If userId = null, that means the user has disconnected. If she/he wants to logout, we don't show the confirm message
-    if(this.authQuery.userId === null) {
+    if (this.authQuery.userId === null) {
       this.twilioService.disconnect();
       return true;
     } else {

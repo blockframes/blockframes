@@ -6,7 +6,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 // Components
-import { EventComponent } from './event.component';
+import { MainComponent } from './main.component';
 
 // Modules 
 import { AuthWidgetModule } from '@blockframes/auth/components/widget/widget.module';
@@ -33,7 +33,7 @@ import { EventActiveGuard } from '../../guard/event-active.guard';
 
 const routes: Routes = [{
   path: ':eventId',
-  component: EventComponent,
+  component: MainComponent,
   canActivate: [MaintenanceGuard, EventAuthGuard, EventAccessGuard],
   canDeactivate: [EventAuthGuard],
   children: [
@@ -63,7 +63,7 @@ const routes: Routes = [{
 }];
 
 @NgModule({
-  declarations: [EventComponent],
+  declarations: [MainComponent],
   imports: [
     RouterModule.forChild(routes),
     AppBarModule,
