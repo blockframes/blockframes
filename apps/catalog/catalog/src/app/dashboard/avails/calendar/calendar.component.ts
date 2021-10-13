@@ -20,13 +20,13 @@ function getDuration(durations: DurationMarker[]) {
 
 
 @Component({
-  selector: 'catalog-dashboard-calendar-map',
+  selector: 'catalog-dashboard-avails-calendar',
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardAvailsCalendarComponent implements AfterViewInit, OnDestroy {
-  sub: Subscription;
+  private sub: Subscription;
   public availsForm = this.shell.avails.mapForm;
 
   public status$ = this.availsForm.statusChanges.pipe(startWith(this.availsForm.valid ? 'VALID' : 'INVALID'));
@@ -78,7 +78,10 @@ export class DashboardAvailsCalendarComponent implements AfterViewInit, OnDestro
   ) { }
 
   ngAfterViewInit() {
-    const decodedData = decodeUrl(this.route);
+    const decodedData: any = decodeUrl(this.route);
+    if (!decodedData.territories) decodedData.territories = []
+    if (!decodedData.medias) decodedData.medias = []
+
     this.availsForm.patchValue(decodedData);
     this.sub = this.availsForm.valueChanges.pipe(
       throttleTime(1000)
