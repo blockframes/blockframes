@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { switchMap, pluck } from 'rxjs/operators';
 
 @Component({
-  selector: 'festival-event-view',
+  selector: 'event-view',
   templateUrl: './view.component.html',
   styleUrls: ['./view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

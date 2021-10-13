@@ -9,7 +9,7 @@ import { Event, EventQuery } from '@blockframes/event/+state';
 import { Meeting } from '@blockframes/event/+state/event.firestore';
 
 @Component({
-  selector: 'festival-event-meeting-session-ended',
+  selector: 'event-meeting-session-ended',
   templateUrl: './meeting-ended.component.html',
   styleUrls: ['./meeting-ended.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

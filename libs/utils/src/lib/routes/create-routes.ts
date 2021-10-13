@@ -23,7 +23,7 @@ const eventsRoutes = (appName: string) => {
     return [
       {
         path: 'events',
-        loadChildren: () => import('@blockframes/event/module/event.module').then(m => m.EventModule)
+        loadChildren: () => import('@blockframes/event/layout/main/main.module').then(m => m.MainModule)
       }
     ];
   }

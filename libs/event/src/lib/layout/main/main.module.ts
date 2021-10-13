@@ -15,11 +15,10 @@ import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
 import { FooterModule } from '@blockframes/ui/layout/footer/footer.module';
 
 // Guards
-import { EventAccessGuard } from '../guard/event-access.guard';
-import { EventAuthGuard } from '../guard/event-auth.guard';
+import { EventAccessGuard } from '../../guard/event-access.guard';
+import { EventAuthGuard } from '../../guard/event-auth.guard';
 import { MaintenanceGuard } from '@blockframes/ui/maintenance';
-import { EventGuard } from '../guard/event.guard';
-import { SessionGuard } from '../guard/session.guard';
+import { EventGuard } from '../../guard/event.guard';
 
 // Material
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -29,7 +28,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatBadgeModule } from '@angular/material/badge';
-import { EventActiveGuard } from '../guard/event-active.guard';
+import { EventActiveGuard } from '../../guard/event-active.guard';
 
 
 const routes: Routes = [{
@@ -42,23 +41,23 @@ const routes: Routes = [{
       path: '',
       canActivate: [EventActiveGuard],
       canDeactivate: [EventActiveGuard],
-      loadChildren: () => import('./view/view.module').then(m => m.EventViewModule),
+      loadChildren: () => import('./../../pages/view/view.module').then(m => m.EventViewModule),
     }, {
       path: 'session',
       canActivate: [EventActiveGuard],
       canDeactivate: [EventActiveGuard],
-      loadChildren: () => import('./session/session.module').then(m => m.SessionModule),
+      loadChildren: () => import('./../../pages/session/session.module').then(m => m.SessionModule),
     },
     {
       path: 'lobby',
       canActivate: [EventActiveGuard, EventGuard],
       canDeactivate: [EventGuard],
-      loadChildren: () => import('./lobby/lobby.module').then(m => m.LobbyModule),
+      loadChildren: () => import('./../../pages/lobby/lobby.module').then(m => m.LobbyModule),
     },
     {
       path: 'ended',
       canActivate: [EventActiveGuard, EventGuard],
-      loadChildren: () => import('./ended/meeting-ended.module').then(m => m.MeetingEndedModule),
+      loadChildren: () => import('./../../pages/ended/meeting-ended.module').then(m => m.MeetingEndedModule),
     }
   ]
 }];
@@ -88,4 +87,4 @@ const routes: Routes = [{
     AuthWidgetModule
   ]
 })
-export class EventModule { } // @TODO #6756 rename
+export class MainModule { }

@@ -13,13 +13,13 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 @Component({
-  selector: 'event-module',
-  templateUrl: './event.component.html',
-  styleUrls: ['./event.component.scss'],
+  selector: 'event-main',
+  templateUrl: './main.component.html',
+  styleUrls: ['./main.component.scss'],
   animations: [routeAnimation],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EventComponent implements OnInit {
+export class MainComponent implements OnInit {
   public user$ = this.authQuery.select('profile');
   public wishlistCount$: Observable<number>;
   public notificationCount$ = this.notificationQuery.selectCount();

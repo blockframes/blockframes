@@ -14,7 +14,7 @@ import { AttendeeStatus, Meeting } from '@blockframes/event/+state/event.firesto
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
-  selector: 'festival-lobby',
+  selector: 'event-lobby',
   templateUrl: './lobby.component.html',
   styleUrls: ['./lobby.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
