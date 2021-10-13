@@ -3,8 +3,8 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { AvailsFilter, collidingTerms, DurationMarker, getDurationMarkers, toDurationMarker } from "@blockframes/contract/avails/avails";
 import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
 import { downloadCsvFromJson } from "@blockframes/utils/helpers";
-import { territories, TerritoryValue } from "@blockframes/utils/static-model";
-import { combineLatest, Subject, Subscription } from "rxjs";
+import { territories } from "@blockframes/utils/static-model";
+import { combineLatest, Subscription } from "rxjs";
 import { filter, first, map, shareReplay, startWith, throttleTime } from "rxjs/operators";
 import { CatalogAvailsShellComponent } from "../shell/shell.component";
 import { format } from 'date-fns';
@@ -26,15 +26,9 @@ function getDuration(durations: DurationMarker[]) {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardAvailsCalendarComponent implements AfterViewInit, OnDestroy {
-  public hoveredTerritory: {
-    name: string;
-    status: string;
-  }
-
   sub: Subscription;
   public availsForm = this.shell.avails.mapForm;
 
-  public org$ = this.shell.movieOrg$;
   public status$ = this.availsForm.statusChanges.pipe(startWith(this.availsForm.valid ? 'VALID' : 'INVALID'));
   private mandates$ = this.shell.mandates$;
   private mandateTerms$ = this.shell.mandateTerms$;
@@ -95,20 +89,6 @@ export class DashboardAvailsCalendarComponent implements AfterViewInit, OnDestro
 
   ngOnDestroy() {
     this.sub.unsubscribe();
-  }
-
-  /** Display the territories information in the tooltip */
-  public displayTerritoryTooltip(territory: TerritoryValue, status: string) {
-    this.hoveredTerritory = { name: territory, status }
-  }
-
-  /** Clear the territories information */
-  public clearTerritoryTooltip() {
-    this.hoveredTerritory = null;
-  }
-
-  clear() {
-    this.shell.avails.mapForm.reset();
   }
 
 
