@@ -34,7 +34,6 @@ export class AuthWidgetComponent {
     private userService: UserService,
   ) { }
 
-
   public async logout() {
     await this.service.deleteAnonymousUserOrSignOut();
   }
