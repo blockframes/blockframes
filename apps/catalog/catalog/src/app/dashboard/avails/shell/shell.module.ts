@@ -18,6 +18,10 @@ const routes: Routes = [
         pathMatch: 'full',
         path: '',
       },
+      {
+        path: 'map',
+        loadChildren: () => import('../map/map.module').then(m => m.CatalogDashboardAvailsMapModule)
+      },
     ],
   },
 ]
