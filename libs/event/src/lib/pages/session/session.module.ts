@@ -24,11 +24,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
 import { MatDividerModule } from '@angular/material/divider';
 
-// Guards
-import { EventGuard } from '@blockframes/event/guard/event.guard';
-import { SessionGuard } from '@blockframes/event/guard/session.guard';
-
-
 @NgModule({
   declarations: [SessionComponent],
   imports: [
@@ -54,11 +49,7 @@ import { SessionGuard } from '@blockframes/event/guard/session.guard';
     MatProgressSpinnerModule,
     MatDividerModule,
 
-    RouterModule.forChild([{ 
-      path: '', component: SessionComponent,
-      canActivate: [EventGuard, SessionGuard],
-      canDeactivate: [EventGuard],
-    }])
+    RouterModule.forChild([{  path: '', component: SessionComponent }])
   ]
 })
 export class SessionModule { }

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { AuthService, AuthQuery } from '../../+state';
 import { ThemeService } from '@blockframes/ui/theme';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
@@ -8,6 +8,8 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { dbVersionDoc, IVersionDoc } from '@blockframes/utils/maintenance';
 import { emulators } from '@env';
 import type firebase from 'firebase';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'auth-widget',
@@ -15,7 +17,7 @@ import type firebase from 'firebase';
   styleUrls: ['./widget.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AuthWidgetComponent implements OnInit {
+export class AuthWidgetComponent implements OnInit, OnDestroy {
   user$ = this.query.user$;
   organization$ = this.organizationQuery.selectActive();
   theme$ = this.themeService.theme$;
@@ -24,9 +26,11 @@ export class AuthWidgetComponent implements OnInit {
   emulatorList = Object.keys(emulators).filter(key => !!emulators[key]);
   emulators = this.emulatorList.length ? this.emulatorList.join(' - ') : 'none';
   anonymousUser: firebase.User;
+  private sub: Subscription;
 
   constructor(
     private db: AngularFirestore,
+    private afAuth: AngularFireAuth,
     private service: AuthService,
     private query: AuthQuery,
     private organizationQuery: OrganizationQuery,
@@ -35,12 +39,14 @@ export class AuthWidgetComponent implements OnInit {
     private cdr: ChangeDetectorRef
   ) { }
 
-  public async ngOnInit() {
-    const currentUser = await this.service.auth.currentUser;
-    if (currentUser.isAnonymous) {
-      this.anonymousUser = currentUser;
-      this.cdr.markForCheck();
-    }
+  public ngOnInit() {
+    this.sub = this.afAuth.authState.subscribe(currentUser => {
+        if (currentUser && currentUser.isAnonymous) {
+          this.anonymousUser = currentUser;
+          this.cdr.markForCheck();
+        }
+      }
+    );
   }
 
   public async logout() {
@@ -50,5 +56,9 @@ export class AuthWidgetComponent implements OnInit {
   setTheme({ checked }: MatSlideToggleChange) {
     const mode = checked ? 'dark' : 'light';
     this.themeService.theme = mode;
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 }

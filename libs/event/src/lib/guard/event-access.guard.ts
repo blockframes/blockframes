@@ -4,14 +4,16 @@ import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
 import { AuthService } from '@blockframes/auth/+state';
 import { OrganizationService, OrganizationStore } from '@blockframes/organization/+state';
 import { UserService } from '@blockframes/user/+state';
+import { AccessibilityTypes } from '@blockframes/utils/static-model';
 import { switchMap } from 'rxjs/internal/operators/switchMap';
-import { EventService } from '../+state';
+import { EventService, EventState, EventStore } from '../+state';
 
 @Injectable({ providedIn: 'root' })
 export class EventAccessGuard implements CanActivate {
 
   constructor(
     private service: EventService,
+    private eventStore: EventStore,
     private authService: AuthService,
     private userService: UserService,
     private orgService: OrganizationService,
@@ -48,23 +50,24 @@ export class EventAccessGuard implements CanActivate {
         // Listenning for authState changes
         this.listenOnCurrentUserState();
 
+        const eventState = this.eventStore.getValue();
         /**
         * With eventId and invitationId we can now evaluate what should be the next page
         */
         return this.service.getValue(route.params['eventId'] as string)
-          .then(event => {
+          .then(async event => {
+            const currentUser = await this.authService.user;
             switch (event.accessibility) {
               case 'public':
+              case 'invitation-only':
                 // @TODO #6756 event is public, no invitation required
-                if (userAuth.isAnonymous) {
-                  // Redirect to "choose your role" page
+                
+                if (currentUser.isAnonymous) {
+                  return hasAnonymousIdentity(eventState, event.accessibility) || this.router.navigate([`/events/${event.id}`]);
                 } else {
                   // User have a real account, we can find directly if he is owner or not
+                  return true;
                 }
-                return true;
-              case 'invitation-only':
-                // @TODO #6756 check invitationId if not logged in
-                return true;
               case 'private':
                 // @TODO #6756 check invitationId in not logged in
                 return true;
@@ -94,4 +97,9 @@ export class EventAccessGuard implements CanActivate {
       }
     });
   }
+}
+
+function hasAnonymousIdentity(eventState: EventState, accessibility: AccessibilityTypes) {
+  const hasIdentity = !!eventState.lastName && !!eventState.firstName && !!eventState.role;
+  return accessibility === 'public' ? hasIdentity : hasIdentity && !!eventState.email;
 }
