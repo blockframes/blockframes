@@ -133,7 +133,6 @@ export function getOrgAppAccess(org: OrganizationDocument | OrganizationBase<Dat
 
   // If org have access to several app, including "first",
   // we put it in first place of the response array
-  // @TODO (#2848)
   if (apps.length > 1 && apps.includes(first)) {
     return [first, ...apps.filter(a => a !== first)];
   } else {
