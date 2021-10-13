@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { AvailsFilter, collidingTerms, DurationMarker, getDurationMarkers, toDurationMarker } from "@blockframes/contract/avails/avails";
 import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
 import { downloadCsvFromJson } from "@blockframes/utils/helpers";
-import { TerritoryValue } from "@blockframes/utils/static-model";
+import { territories, TerritoryValue } from "@blockframes/utils/static-model";
 import { combineLatest, Subject, Subscription } from "rxjs";
 import { filter, first, map, shareReplay, startWith, throttleTime } from "rxjs/operators";
 import { CatalogAvailsShellComponent } from "../shell/shell.component";
@@ -118,15 +118,14 @@ export class DashboardAvailsCalendarComponent implements AfterViewInit, OnDestro
       this.shell.movie$
     ]).pipe(first())
       .subscribe(([durationMarkers, movie]) => {
-        console.log({ durationMarker: durationMarkers })
         const availsFilter = this.availsForm.value;
-        const territories = availsFilter.territories;
+        const formTerritories = availsFilter.territories;
         const data = [{
           "International Title": movie.title.international,
           Medias: availsFilter.medias.map(medium => medias[medium]).join(';'),
           Exclusivity: availsFilter.exclusive ? 'Exclusive' : 'Non Exclusive',
           'Start Date - End Date': getDuration(durationMarkers).join(';'),
-          "Available Territories": territories.map(territory => territories[territory]).join(';'),
+          "Available Territories": formTerritories.map(territory => territories[territory]).join(';'),
         }]
         const filename = `${movie.title.international.split(' ').join('_')}_avails`;
         downloadCsvFromJson(data, filename);

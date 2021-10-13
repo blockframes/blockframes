@@ -29,10 +29,8 @@
     fxFlexAlign.lt-md="start"
     [availableMarkers]="available$ | async"
     [soldMarkers]="sold$ | async"
+    [disableSelect]="true"
     ></avails-calendar>
-    <!-- [inSelectionMarkers]="inSelection$ | async"
-    [selectedMarker]="selected$ | async"
-   -->
 
 
   <div *ngIf="(status$ | async) === 'INVALID'" class="overlay" fxLayoutAlign="center center">
