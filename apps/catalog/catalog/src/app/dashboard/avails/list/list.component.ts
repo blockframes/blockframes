@@ -7,7 +7,7 @@ import { Movie, MovieService } from "@blockframes/movie/+state";
 import { OrganizationQuery } from "@blockframes/organization/+state";
 import { DynamicTitleService } from "@blockframes/utils/dynamic-title/dynamic-title.service";
 import { joinWith } from "@blockframes/utils/operators";
-import { map, throttleTime } from "rxjs/operators";
+import { map, startWith, tap, throttleTime } from "rxjs/operators";
 import { centralOrgId } from '@env';
 import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -72,26 +72,26 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
     map(query => ({ formValue: query.get('formValue') })),
   )
 
-  public query$ = this.titleService.valueChanges(organizationQuery(this.orgId)).pipe(
+  private query$ = this.titleService.valueChanges(organizationQuery(this.orgId)).pipe(
     joinWith({
       contracts: title => {
         return this.contractService.valueChanges(contractsQuery(title)).pipe(
           joinWith({
             income: contract => (isAcceptedSale(contract)) ? this.incomeService.valueChanges(contract.id) : null,
             terms: contract => this.termsService.valueChanges(contract.termIds),
-          })
+          }, { shouldAwait: true, })
         )
       },
       saleCount: () => 0,
       allSaleCount: () => 0,
       totalIncome: () => ({ EUR: 0, USD: 0 }), // used for typings
-    }, { debounceTime: 200 }),
+    }, { shouldAwait: true, }),
     map(titles => titles.map(getSaleCountAndTotalPrice)),
   );
 
   public results$ = combineLatest([
-    this.query$,
-    this.availsForm.valueChanges
+    this.query$.pipe(tap(query => console.log({ query }))),
+    this.availsForm.value$
   ]).pipe(
     map(([titles, avails]) => titles.filter(title => {
       const mandateTerms = title.contracts?.filter(contract => contract.type === 'mandate' && contract.status === 'accepted').map(contract => contract.terms).flat();
@@ -99,6 +99,7 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
 
       return isMovieAvailable(title.id, avails, null, mandateTerms ?? [], saleTerms ?? [], 'optional');
     })),
+    tap(result => console.log({ result }))
   );
 
   constructor(
