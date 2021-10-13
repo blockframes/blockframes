@@ -66,7 +66,7 @@ export class DashboardAvailsCalendarComponent implements AfterViewInit, OnDestro
     this.availsForm.statusChanges.pipe(map(() => this.availsForm.invalid)),
     this.hasAvailableDuration,
   ]).pipe(
-    map(([formInvalid, hasTerritories]) => formInvalid || !hasTerritories),
+    map(([formInvalid, hasAvailableDuration]) => formInvalid || !hasAvailableDuration),
     startWith(true),
   )
 
