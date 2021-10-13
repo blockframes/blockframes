@@ -6,6 +6,7 @@ import { AuthStore, AuthState } from './auth.store';
 export class AuthQuery extends Query<AuthState> {
   public user$ = this.select(state => state.profile);
   public hasVerifiedEmail$ = this.select(state => state.emailVerified);
+  public anonymousCredentials$ = this.select(state => state.anonymousAuth);
 
   constructor(protected store: AuthStore) {
     super(store);

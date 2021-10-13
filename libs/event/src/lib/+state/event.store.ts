@@ -4,12 +4,6 @@ import { EntityState, EntityStore, StoreConfig, ActiveState } from '@datorama/ak
 
 export interface EventState extends EntityState<Event>, ActiveState<string> {
   localSessionStart: number | undefined;
-  // Event role
-  role?: 'guest' | 'organizer';
-  // Public and invitation-only events
-  lastName?: string,
-  firstName?: string,
-  email?: string,
 }
 
 @Injectable({ providedIn: 'root' })

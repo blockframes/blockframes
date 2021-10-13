@@ -1,19 +1,19 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
-import { AuthService } from '@blockframes/auth/+state';
+import { AnonymousAuth, AuthService, AuthStore } from '@blockframes/auth/+state';
 import { OrganizationService, OrganizationStore } from '@blockframes/organization/+state';
 import { UserService } from '@blockframes/user/+state';
 import { AccessibilityTypes } from '@blockframes/utils/static-model';
 import { switchMap } from 'rxjs/internal/operators/switchMap';
-import { EventService, EventState, EventStore } from '../+state';
+import { EventService } from '../+state';
 
 @Injectable({ providedIn: 'root' })
 export class EventAccessGuard implements CanActivate {
 
   constructor(
     private service: EventService,
-    private eventStore: EventStore,
+    private authStore: AuthStore,
     private authService: AuthService,
     private userService: UserService,
     private orgService: OrganizationService,
@@ -50,7 +50,7 @@ export class EventAccessGuard implements CanActivate {
         // Listenning for authState changes
         this.listenOnCurrentUserState();
 
-        const eventState = this.eventStore.getValue();
+        const anonymousAuth = this.authStore.getValue().anonymousAuth;
         /**
         * With eventId and invitationId we can now evaluate what should be the next page
         */
@@ -63,7 +63,7 @@ export class EventAccessGuard implements CanActivate {
                 // @TODO #6756 event is public, no invitation required
                 
                 if (currentUser.isAnonymous) {
-                  return hasAnonymousIdentity(eventState, event.accessibility) || this.router.navigate([`/events/${event.id}`]);
+                  return hasAnonymousIdentity(anonymousAuth, event.accessibility) || this.router.navigate([`/events/${event.id}`]);
                 } else {
                   // User have a real account, we can find directly if he is owner or not
                   return true;
@@ -99,7 +99,7 @@ export class EventAccessGuard implements CanActivate {
   }
 }
 
-function hasAnonymousIdentity(eventState: EventState, accessibility: AccessibilityTypes) {
-  const hasIdentity = !!eventState.lastName && !!eventState.firstName && !!eventState.role;
-  return accessibility === 'public' ? hasIdentity : hasIdentity && !!eventState.email;
+function hasAnonymousIdentity(anonymousAuth: AnonymousAuth, accessibility: AccessibilityTypes) {
+  const hasIdentity = !!anonymousAuth?.lastName && !!anonymousAuth?.firstName && !!anonymousAuth?.role;
+  return accessibility === 'public' ? hasIdentity : hasIdentity && !!anonymousAuth?.email;
 }
