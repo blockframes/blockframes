@@ -36,13 +36,11 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 const routes: Routes = [{
   path: ':eventId',
   component: MainComponent,
-  canActivate: [MaintenanceGuard, EventAuthGuard],
+  canActivate: [MaintenanceGuard, EventAuthGuard, EventActiveGuard],
   canDeactivate: [EventAuthGuard],
   children: [
     {
       path: '',
-      canActivate: [EventActiveGuard],
-      canDeactivate: [EventActiveGuard],
       loadChildren: () => import('./../../pages/role/role.module').then(m => m.RoleModule),
     },
     {
@@ -51,7 +49,7 @@ const routes: Routes = [{
     },
     {
       path: 'r',
-      canActivate: [EventActiveGuard, EventRoleGuard],
+      canActivate: [EventRoleGuard],
       children: [
         {
           path: '',
