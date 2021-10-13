@@ -25,16 +25,16 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
 
   async canActivate(next: ActivatedRouteSnapshot,): Promise<boolean | UrlTree> {
     const event = this.eventQuery.getActive();
-
+console.log(event)
     // if the event is not a meeting the lobby page is not accessible
     // redirect directly to the session page,
     // the guard will then be re-evaluated for invitation etc... on the session page
     if (event.type !== 'meeting' && next.routeConfig.path === 'lobby') {
-      return this.router.parseUrl(`/c/o/marketplace/event/${event.id}/session`);
+      return this.router.parseUrl(`/events/${event.id}/session`);
     }
 
     if (eventTime(event) !== 'onTime') {
-      return this.router.parseUrl(`/c/o/marketplace/event/${event.id}`);
+      return this.router.parseUrl(`/events/${event.id}`);
     }
 
     if (event.isOwner) {
@@ -52,7 +52,7 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
 
     // if user wasn't invited OR hasn't accepted yet
     if (!hasUserAccepted) {
-      return this.router.parseUrl(`/c/o/marketplace/event/${event.id}`);
+      return this.router.parseUrl(`/events/${event.id}`);
     }
 
     return true;

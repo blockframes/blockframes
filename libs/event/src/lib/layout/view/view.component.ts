@@ -40,6 +40,7 @@ export class EventViewComponent implements OnInit, OnDestroy {
     this.editMeeting = `/c/o/dashboard/event/${this.event.id}/edit`;
     this.accessRoute = `/c/o/marketplace/event/${this.event.id}/${this.event.type === 'meeting' ? 'lobby' : 'session'}`;
 
+    // @TODO #6756
     this.sub = combineLatest([
       this.event$.pipe(filter(event => !!event)),
       this.invitationService.guestInvitations$
@@ -57,13 +58,5 @@ export class EventViewComponent implements OnInit, OnDestroy {
 
   goBack() {
     this.location.back();
-  }
-
-  /**
-   * Creates a request to attend event.
-   * If event is public (event.isPrivate === false), it will be automatically setted to 'accepted'
-   */
-  addToCalendar() {
-    this.invitationService.request(this.event.ownerOrgId).to('attendEvent', this.event.id);
   }
 }

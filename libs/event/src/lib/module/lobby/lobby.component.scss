@@ -1,0 +1,49 @@
+
+:host {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+}
+
+h1 {
+  margin: 24px 0 12px 0;
+}
+
+section {
+  flex: 1;
+
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  min-height: 50vh;
+  margin-bottom: 64px;
+
+  aside {
+    width: 50%;
+    margin-right: 64px;
+    min-height: 300px;
+  }
+
+  meeting-video {
+    width: 50%;
+    margin-left: 64px;
+    border-radius: 4px;
+  }
+
+  aside {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .request {
+    margin-top: 64px;
+  }
+}
+
+img {
+  width: 70%;
+}

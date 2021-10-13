@@ -33,4 +33,4 @@ import { MatButtonModule} from '@angular/material/button';
     RouterModule.forChild([{ path: '', component: EventViewComponent }])
   ]
 })
-export class EventViewModule { } // @TODO #6756 delete 
+export class EventViewModule { }

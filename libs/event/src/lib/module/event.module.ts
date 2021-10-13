@@ -18,6 +18,8 @@ import { FooterModule } from '@blockframes/ui/layout/footer/footer.module';
 import { EventAccessGuard } from '../guard/event-access.guard';
 import { EventAuthGuard } from '../guard/event-auth.guard';
 import { MaintenanceGuard } from '@blockframes/ui/maintenance';
+import { EventGuard } from '../guard/event.guard';
+import { SessionGuard } from '../guard/session.guard';
 
 // Material
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -27,12 +29,38 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatBadgeModule } from '@angular/material/badge';
+import { EventActiveGuard } from '../guard/event-active.guard';
+
 
 const routes: Routes = [{
   path: ':eventId',
   component: EventComponent,
   canActivate: [MaintenanceGuard, EventAuthGuard, EventAccessGuard],
   canDeactivate: [EventAuthGuard],
+  children: [
+    {
+      path: '',
+      canActivate: [EventActiveGuard],
+      canDeactivate: [EventActiveGuard],
+      loadChildren: () => import('./view/view.module').then(m => m.EventViewModule),
+    }, {
+      path: 'session',
+      canActivate: [EventActiveGuard],
+      canDeactivate: [EventActiveGuard],
+      loadChildren: () => import('./session/session.module').then(m => m.SessionModule),
+    },
+    {
+      path: 'lobby',
+      canActivate: [EventActiveGuard, EventGuard],
+      canDeactivate: [EventGuard],
+      loadChildren: () => import('./lobby/lobby.module').then(m => m.LobbyModule),
+    },
+    {
+      path: 'ended',
+      canActivate: [EventActiveGuard, EventGuard],
+      loadChildren: () => import('./ended/meeting-ended.module').then(m => m.MeetingEndedModule),
+    }
+  ]
 }];
 
 @NgModule({
