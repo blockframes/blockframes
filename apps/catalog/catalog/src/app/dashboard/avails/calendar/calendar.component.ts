@@ -1,10 +1,10 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { availableTerritories, AvailsFilter, collidingTerms, toTerritoryMarker } from "@blockframes/contract/avails/avails";
+import { AvailsFilter, collidingTerms, DurationMarker, getDurationMarkers, toDurationMarker } from "@blockframes/contract/avails/avails";
 import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
 import { downloadCsvFromJson } from "@blockframes/utils/helpers";
-import { territoriesISOA3, TerritoryValue } from "@blockframes/utils/static-model";
-import { combineLatest, Subscription } from "rxjs";
+import { TerritoryValue } from "@blockframes/utils/static-model";
+import { combineLatest, Subject, Subscription } from "rxjs";
 import { filter, first, map, shareReplay, startWith, throttleTime } from "rxjs/operators";
 import { CatalogAvailsShellComponent } from "../shell/shell.component";
 import { format } from 'date-fns';
@@ -14,14 +14,18 @@ function formatDate(date: Date) {
   return format(date, 'dd/MM/yyy')
 }
 
+function getDuration(durations: DurationMarker[]) {
+  return durations.map(duration => `${formatDate(duration.from)} - ${formatDate(duration.to)}`);
+}
+
 
 @Component({
-  selector: 'catalog-dashboard-avails-map',
-  templateUrl: './map.component.html',
-  styleUrls: ['./map.component.scss'],
+  selector: 'catalog-dashboard-calendar-map',
+  templateUrl: './calendar.component.html',
+  styleUrls: ['./calendar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DashboardAvailsMapComponent implements AfterViewInit, OnDestroy {
+export class DashboardAvailsCalendarComponent implements AfterViewInit, OnDestroy {
   public hoveredTerritory: {
     name: string;
     status: string;
@@ -37,28 +41,25 @@ export class DashboardAvailsMapComponent implements AfterViewInit, OnDestroy {
   private salesTerms$ = this.shell.salesTerms$;
 
   public sold$ = combineLatest([
+    this.mandates$,
     this.salesTerms$,
     this.availsForm.value$,
   ]).pipe(
     filter(() => this.availsForm.valid),
-    map(([salesTerms, avails]) => {
+    map(([mandates, salesTerms, avails]) => {
       const soldTerms = collidingTerms(avails, salesTerms);
-      const markers = soldTerms.map(term => term.territories
-        .filter(territory => !!territoriesISOA3[territory])
-        .map(territory => toTerritoryMarker(territory, [], term))
-      ).flat();
-      return markers;
-    }),
+      return soldTerms.map(term => toDurationMarker(mandates, term)).flat();
+    })
   );
 
   public available$ = combineLatest([
     this.mandates$,
-    this.sold$,
-    this.mandateTerms$
+    this.mandateTerms$,
+    this.availsForm.value$,
   ]).pipe(
-    map(([mandates, sold, mandateTerms,]) => {
+    map(([mandates, mandateTerms]) => {
       if (this.availsForm.invalid) return [];
-      return availableTerritories([], sold, [], this.availsForm.value, mandates, mandateTerms);
+      return getDurationMarkers(mandates, mandateTerms);
     }),
     shareReplay({ refCount: true, bufferSize: 1 }),
   );
@@ -116,16 +117,16 @@ export class DashboardAvailsMapComponent implements AfterViewInit, OnDestroy {
       this.available$,
       this.shell.movie$
     ]).pipe(first())
-      .subscribe(([territoryMarker, movie]) => {
+      .subscribe(([durationMarkers, movie]) => {
+        console.log({ durationMarker: durationMarkers })
         const availsFilter = this.availsForm.value;
-        const territories = territoryMarker.flatMap(marker => marker.term.territories);
-        const termTerritories = Array.from(new Set(territories))
+        const territories = availsFilter.territories;
         const data = [{
           "International Title": movie.title.international,
           Medias: availsFilter.medias.map(medium => medias[medium]).join(';'),
           Exclusivity: availsFilter.exclusive ? 'Exclusive' : 'Non Exclusive',
-          'Start Date - End Date': `${formatDate(availsFilter.duration.from)} - ${formatDate(availsFilter.duration.to)}`,
-          "Available Territories": termTerritories.map(territory => territories[territory]).join(';'),
+          'Start Date - End Date': getDuration(durationMarkers).join(';'),
+          "Available Territories": territories.map(territory => territories[territory]).join(';'),
         }]
         const filename = `${movie.title.international.split(' ').join('_')}_avails`;
         downloadCsvFromJson(data, filename);
