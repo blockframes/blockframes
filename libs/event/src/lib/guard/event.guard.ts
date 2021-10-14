@@ -32,7 +32,7 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
         /**
          * Event is public, anyone can access
          */
-        // @TODO #6756 check lastName & firstName setted if not logged in
+        // @TODO #6756 
         return true;
       case 'invitation-only':
         return true; // @TODO #6756

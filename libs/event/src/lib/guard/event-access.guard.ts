@@ -1,11 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
-import { AnonymousCredentials, AuthQuery, AuthService } from '@blockframes/auth/+state';
-import { OrganizationService, OrganizationStore } from '@blockframes/organization/+state';
-import { UserService } from '@blockframes/user/+state';
-import { AccessibilityTypes } from '@blockframes/utils/static-model';
-import { switchMap } from 'rxjs/internal/operators/switchMap';
+import { AuthQuery, AuthService } from '@blockframes/auth/+state';
+import { hasAnonymousIdentity } from '@blockframes/utils/event';
 import { EventService } from '../+state';
 
 @Injectable({ providedIn: 'root' })
@@ -15,76 +12,43 @@ export class EventAccessGuard implements CanActivate {
     private service: EventService,
     private authQuery: AuthQuery,
     private authService: AuthService,
-    private userService: UserService,
-    private orgService: OrganizationService,
     private router: Router,
     private afAuth: AngularFireAuth,
-    private orgStore: OrganizationStore,
   ) { }
 
   canActivate(route: ActivatedRouteSnapshot) {
+    // Listenning for authState changes
+    this.listenOnCurrentUserState();
+
     /**
-     * In order to fetch the required data for the event, user needs to be connected with a
-     * regular account (password) (or with an anonymous account will be created if not).
-     */
-    return this.afAuth.authState.pipe(
-      switchMap(async userAuth => {
-        /**
-         * If current user is not anonymous, we populate org stage
-         */
-        if (userAuth && !userAuth.isAnonymous) {
-          const user = await this.userService.getUser(userAuth.uid);
-          const org = await this.orgService.getValue(user.orgId);
-
-          // Starting orgState populate @TODO #6756 check if can be improved
-          this.orgStore.upsert(org.id, org);
-          this.orgStore.setActive(org.id);
-          this.orgService.syncActive({ id: org.id });
-        }
-
-        /**
-         * An anonymous account is created in order to fetch the required data for the event
-         */
-        if (!userAuth) { await this.authService.signInAnonymously(); }
-
-        // Listenning for authState changes
-        this.listenOnCurrentUserState();
-
-        const anonymousCredentials = this.authQuery.anonymousCredentials;
-
-        /**
-        * With eventId and invitationId we can now evaluate what should be the next page
-        */
-        return this.service.getValue(route.params['eventId'] as string)
-          .then(async event => {
-            const currentUser = await this.authService.user;
-            switch (event.accessibility) {
-              case 'public':
-              case 'invitation-only':
-                // @TODO #6756 event is public, no invitation required
-
-                if (currentUser.isAnonymous) {
-                  return hasAnonymousIdentity(anonymousCredentials, event.accessibility) || this.router.navigate([`/events/${event.id}`]);
-                } else {
-                  // User have a real account, we can find directly if he is owner or not
-                  return true;
-                }
-              case 'private':
-                // @TODO #6756 check invitationId in not logged in
-                return true;
-              /*default:
-                return this.router.parseUrl(`/c/o/dashboard/event/${event.id}/edit/${path}`)*/
+    * With eventId and invitationId we can now evaluate what should be the next page
+    */
+    return this.service.getValue(route.params['eventId'] as string)
+      .then(async event => {
+        const currentUser = await this.authService.user;
+        switch (event.accessibility) {
+          case 'public':
+          case 'invitation-only': {
+            const anonymousCredentials = this.authQuery.anonymousCredentials;
+            // @TODO #6756 event is public, no invitation required, required if invitation-only
+            if (currentUser.isAnonymous) {
+              return hasAnonymousIdentity(anonymousCredentials, event.accessibility) || this.router.navigate([`/events/${event.id}`]);
             }
-          })
-          .catch(e => {
-            // Something went wrong, we redirect user to homepage
-            console.log(e);
-            this.router.navigate(['/']);
-            return false;
-          });
+            return true;
+          }
+          case 'private':
+            if (!currentUser.isAnonymous) {
+              return true;
+            } else {
+              // @TODO #6756 if invitationId  in params => redirect to this.router.navigate([`/events/${event.id}/r/login`])
+            }
 
-      })
-    );
+        }
+      }).catch(() => {
+        // Something went wrong, we redirect user to homepage
+        this.router.navigate(['/']);
+        return false;
+      });
 
   }
 
@@ -100,7 +64,3 @@ export class EventAccessGuard implements CanActivate {
   }
 }
 
-function hasAnonymousIdentity(creds: AnonymousCredentials, accessibility: AccessibilityTypes) {
-  const hasIdentity = !!creds?.lastName && !!creds?.firstName && !!creds?.role;
-  return accessibility === 'public' ? hasIdentity : hasIdentity && !!creds?.email;
-}

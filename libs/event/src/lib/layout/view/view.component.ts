@@ -41,7 +41,7 @@ export class EventViewComponent implements OnInit, OnDestroy {
     this.accessRoute = `/c/o/marketplace/event/${this.event.id}/${this.event.type === 'meeting' ? 'lobby' : 'session'}`;
 
     // @TODO #6756
-    this.sub = combineLatest([
+    /*this.sub = combineLatest([
       this.event$.pipe(filter(event => !!event)),
       this.invitationService.guestInvitations$
     ]).pipe(
@@ -49,7 +49,7 @@ export class EventViewComponent implements OnInit, OnDestroy {
     ).subscribe(invitation => {
       this.invitation = invitation
       this.cdr.markForCheck();
-    });
+    });*/
   }
 
   ngOnDestroy() {

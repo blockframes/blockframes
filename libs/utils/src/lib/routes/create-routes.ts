@@ -8,7 +8,7 @@ import { NotificationsGuard } from '@blockframes/notification/notifications.guar
 import { InvitationGuard } from '@blockframes/invitation/guard/invitations.guard';
 import { MaintenanceGuard } from '@blockframes/ui/maintenance';
 import { RequestAccessGuard } from '@blockframes/organization/guard/request-access.guard';
-
+import { EventAuthGuard } from '@blockframes/event/guard/event-auth.guard';
 interface RouteOptions {
   /** The routes of the apps */
   appsRoutes: Routes,
@@ -23,6 +23,7 @@ const eventsRoutes = (appName: string) => {
     return [
       {
         path: 'events',
+        canActivate: [MaintenanceGuard, EventAuthGuard],
         loadChildren: () => import('@blockframes/event/layout/main/main.module').then(m => m.MainModule)
       }
     ];

@@ -16,12 +16,11 @@ import { FooterModule } from '@blockframes/ui/layout/footer/footer.module';
 
 // Guards
 import { EventAccessGuard } from '../../guard/event-access.guard';
-import { EventAuthGuard } from '../../guard/event-auth.guard';
-import { MaintenanceGuard } from '@blockframes/ui/maintenance';
 import { EventGuard } from '../../guard/event.guard';
 import { EventActiveGuard } from '../../guard/event-active.guard';
-import { SessionGuard } from '@blockframes/event/guard/session.guard';
-import { EventRoleGuard } from '@blockframes/event/guard/event-role.guard';
+import { SessionGuard } from '../../guard/session.guard';
+import { IdentityCheckGuard } from '../../guard/identity-check-guard';
+import { AnonymousAuthGuard } from '@blockframes/auth/guard/anonymous-auth-guard';
 
 // Material
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -33,23 +32,20 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
+
 const routes: Routes = [{
   path: ':eventId',
   component: MainComponent,
-  canActivate: [MaintenanceGuard, EventAuthGuard, EventActiveGuard],
-  canDeactivate: [EventAuthGuard],
+  canActivate: [AnonymousAuthGuard],
   children: [
     {
       path: '',
+      canActivate: [IdentityCheckGuard],
       loadChildren: () => import('./../../pages/role/role.module').then(m => m.RoleModule),
     },
     {
-      path: 'login',
-      loadChildren: () => import('./../../pages/login/login.module').then(m => m.LoginModule),
-    },
-    {
       path: 'r',
-      canActivate: [EventRoleGuard],
+      canActivate: [EventActiveGuard],
       children: [
         {
           path: '',
@@ -59,6 +55,10 @@ const routes: Routes = [{
         {
           path: 'identity',
           loadChildren: () => import('./../../pages/identity/identity.module').then(m => m.IdentityModule),
+        },
+        {
+          path: 'login',
+          loadChildren: () => import('./../../pages/login/login.module').then(m => m.LoginModule),
         },
         {
           path: 'i',
@@ -89,12 +89,6 @@ const routes: Routes = [{
           ]
         }
       ]
-    },
-    {
-      path: 'public-access',
-      canActivate: [EventActiveGuard],
-      canDeactivate: [EventActiveGuard],
-      loadChildren: () => import('./../../pages/public-access/public-access.module').then(m => m.PublicAccessModule),
     }
   ]
 }];

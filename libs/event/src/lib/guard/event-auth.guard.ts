@@ -5,7 +5,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { hasDisplayName } from '@blockframes/utils/helpers';
 import { AuthQuery, AuthService, AuthState } from '@blockframes/auth/+state';
 import { of } from 'rxjs';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService, OrganizationStore } from '@blockframes/organization/+state';
 import { NotificationService } from '@blockframes/notification/+state';
 
 @Injectable({
@@ -19,6 +19,7 @@ export class EventAuthGuard extends CollectionGuard<AuthState> {
     private afAuth: AngularFireAuth,
     private orgService: OrganizationService,
     private notitificationService: NotificationService,
+    private orgStore: OrganizationStore,
   ) {
     super(service);
   }
@@ -27,7 +28,7 @@ export class EventAuthGuard extends CollectionGuard<AuthState> {
     return this.afAuth.authState.pipe(
       switchMap(userAuth => {
         /**
-         * User is not logged-in or is anonymous. Next guard will take this into account
+         * User is not logged-in or is anonymous.
          */
         if (!userAuth || userAuth.isAnonymous) return of(true);
 
@@ -52,6 +53,18 @@ export class EventAuthGuard extends CollectionGuard<AuthState> {
               return false;
             }
 
+            /**
+             * If current user is not anonymous, we populate org stage
+             */
+            if (userAuth && !userAuth.isAnonymous) {
+              const org = await this.orgService.getValue(user.orgId);
+
+              // Starting orgState populate @TODO #6756 check if can be improved
+              this.orgStore.upsert(org.id, org);
+              this.orgStore.setActive(org.id);
+              this.orgService.syncActive({ id: org.id });
+            }
+
             // Sync notifications
             this.notitificationService.syncCollection(ref => ref
               .where('toUserId', '==', user.uid)
@@ -65,4 +78,5 @@ export class EventAuthGuard extends CollectionGuard<AuthState> {
       })
     );
   }
+
 }

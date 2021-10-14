@@ -175,6 +175,7 @@ export class AuthService extends FireAuthService<AuthState> {
    * @returns Promise<firebase.auth.UserCredential>
    */
   signInAnonymously() {
+    console.log('signInAnonymously')
     return firebase.auth().signInAnonymously();
   }
 
