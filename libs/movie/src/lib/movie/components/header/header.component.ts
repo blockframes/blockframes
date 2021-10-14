@@ -14,6 +14,7 @@ import { Location } from '@angular/common';
 
 function createMovieView(movie: Movie) {
   return {
+    id: movie.id,
     directors: movie.directors,
     title: {
       original: movie.title.original,
