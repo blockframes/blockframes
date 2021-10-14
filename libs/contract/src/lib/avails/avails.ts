@@ -239,6 +239,7 @@ export function isMovieAvailable(titleId: string, avails: AvailsFilter, bucket: 
   if (!mandatesColliding) return false;
 
 
+
   // CHECK (2) if all the requested avails are already existing in a term in the bucket for this title,
   // then it shouldn't be displayed to avoid the user selecting it twice
   const bucketTerms = bucket?.contracts.find(c => c.titleId === titleId)?.terms ?? [];
@@ -247,6 +248,7 @@ export function isMovieAvailable(titleId: string, avails: AvailsFilter, bucket: 
 
   // CHECK (3) if the title is already sold on some part of the requested avails, then it's not available for these avails
   const salesColliding = termsCollision(avails, saleTerms);
+
   if (salesColliding) return false;
 
   return true;
