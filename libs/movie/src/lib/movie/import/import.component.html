@@ -25,7 +25,7 @@
     <import-spreadsheet importType="titles" (importEvent)="imported($event)"></import-spreadsheet>
   </ng-container>
   <ng-template #ready>
-    <import-view-extracted-titles [sheetTab]="sheetTab" (cancelEvent)="cancel()"></import-view-extracted-titles>
+    <import-view-extracted-titles [sheetTab]="sheetTab"></import-view-extracted-titles>
     <p>Please make sure everything is correct. Once you submit your titles they will instantaneously appear on the platform.</p>
     <button test-id="cancel-import" mat-stroked-button color="warn" (click)="cancel()">
       <mat-icon svgIcon="block"></mat-icon>
