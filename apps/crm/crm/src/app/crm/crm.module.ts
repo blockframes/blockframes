@@ -64,12 +64,15 @@ export const panelRoutes: Routes = [
   { path: 'dev-area', component: DevAreaComponent },
   { path: 'offer', loadChildren:() => import('./pages/offers/list/offer-list.module').then(s => s.CrmOfferListModule) },
   { path: 'offer/:offerId', loadChildren: () => import('./pages/offers/shell/shell.module').then(m => m.OfferShellModule) },
+  { path: 'import', loadChildren: () => import('./pages/import/import.module').then(m => m.CrmImportModule)},
 ];
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    FlexLayoutModule,
+
     MatIconModule,
     MatCardModule,
     MatInputModule,
@@ -79,12 +82,11 @@ export const panelRoutes: Routes = [
     MatProgressSpinnerModule,
     MatSelectModule,
     MatCheckboxModule,
-    FlexLayoutModule,
+
     TableFilterModule,
     ImageModule,
     AlgoliaAutocompleteModule,
     EventModule,
-    RouterModule.forChild(panelRoutes),
     OrganizationAdminModule,
     ToLabelModule,
     OrgNameModule,
@@ -102,7 +104,9 @@ export const panelRoutes: Routes = [
     ToDateModule,
     DashboardModule,
     BreadCrumbModule,
-    FormListModule
+    FormListModule,
+
+    RouterModule.forChild(panelRoutes),
   ],
   declarations: [
     MovieComponent,
