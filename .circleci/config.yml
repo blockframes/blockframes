@@ -406,6 +406,7 @@ jobs:
     steps:
       - prepare_environment
       - run: npm start anonProdDb
+      - run: npm start shrinkDb
   copy-storage-from-prod:
     executor: blockframes-ci
     steps:
