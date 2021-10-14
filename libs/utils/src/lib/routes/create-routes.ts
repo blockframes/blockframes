@@ -22,7 +22,7 @@ const eventsRoutes = (appName: string) => {
   if(appName === 'festival'){
     return [
       {
-        path: 'events',
+        path: 'events', // @TODO #6756 rename into 'event'
         canActivate: [MaintenanceGuard, EventAuthGuard],
         loadChildren: () => import('@blockframes/event/layout/main/main.module').then(m => m.MainModule)
       }

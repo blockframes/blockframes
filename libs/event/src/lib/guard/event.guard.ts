@@ -23,7 +23,7 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
     private twilioService: TwilioService,
   ) { }
 
-  async canActivate(next: ActivatedRouteSnapshot,): Promise<boolean | UrlTree> {
+  async canActivate(next: ActivatedRouteSnapshot): Promise<boolean | UrlTree> {
     const event = this.eventQuery.getActive();
 
 
