@@ -23,7 +23,7 @@ export class EventAccessGuard implements CanActivate {
     /**
     * With eventId and invitationId we can now evaluate what should be the next page
     */
-    return this.service.getValue(route.params['eventId'] as string)
+    return this.service.getValue(route.params.eventId as string)
       .then(async event => {
         const currentUser = await this.authService.user;
         switch (event.accessibility) {
