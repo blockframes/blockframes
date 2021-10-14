@@ -13,28 +13,28 @@ const separator = ',';
 
 interface FieldsConfig {
   denomination: {
-    full: string,
+    full: string;
     public: string
-  },
-  email: string,
+  };
+  email: string;
   org: {
-    activity: any,
-    fiscalNumber: string,
+    activity: any;
+    fiscalNumber: string;
     addresses: {
       main: {
-        street: string,
-        city: string,
-        zipCode: string,
-        region: string,
-        country: Territory,
-        phoneNumber: string,
+        street: string;
+        city: string;
+        zipCode: string;
+        region: string;
+        country: Territory;
+        phoneNumber: string;
       }
     }
-  },
-  superAdminEmail: string,
-  catalogAccess: Module[],
-  festivalAccess: Module[],
-  financiersAccess: Module[],
+  };
+  superAdminEmail: string;
+  catalogAccess: Module[];
+  festivalAccess: Module[];
+  financiersAccess: Module[];
 }
 
 type FieldsConfigType = ExtractConfig<FieldsConfig>;

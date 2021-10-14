@@ -100,26 +100,26 @@ function getDate(value: string, error: SpreadsheetImportError) {
 
 interface FieldsConfig {
   title: {
-    international: string,
-  },
-  type: 'mandate' | 'sale',
-  licensorName: string,
-  licenseeName: string,
-  territories: Territory[],
-  medias: Media[],
-  exclusive: boolean,
+    international: string;
+  };
+  type: 'mandate' | 'sale';
+  licensorName: string;
+  licenseeName: string;
+  territories: Territory[];
+  medias: Media[];
+  exclusive: boolean;
   duration: {
-    from: Date,
-    to: Date,
-  },
-  originalLanguageLicensed: string,
-  dubbed: Territory[],
-  subtitle: Territory[],
-  closedCaptioning: Territory[],
-  contractId: string,
-  parentTermId: string,
-  titleId?: string,
-  stakeholdersList: string[],
+    from: Date;
+    to: Date;
+  };
+  originalLanguageLicensed: string;
+  dubbed: Territory[];
+  subtitle: Territory[];
+  closedCaptioning: Territory[];
+  contractId: string;
+  parentTermId: string;
+  titleId?: string;
+  stakeholdersList: string[];
 }
 
 type FieldsConfigType = ExtractConfig<FieldsConfig>;
