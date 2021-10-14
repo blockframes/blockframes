@@ -45,7 +45,7 @@
       <button class="profile" matRipple [widgetTarget]="menu" test-id="auth-user">
         <div fxLayout="column" fxLayoutAlign="center end">
           <span class="mat-body-2">{{ anonymousUser | displayName }}</span>
-          <span class="mat-caption">Anonymous</span>
+          <span class="mat-caption">{{ anonymousUser.email || 'anonymous' }}</span>
         </div>
         <img asset="profil_user.svg" alt="Profile picture">
       </button>

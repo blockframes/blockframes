@@ -21,6 +21,7 @@ import { EventActiveGuard } from '../../guard/event-active.guard';
 import { SessionGuard } from '../../guard/session.guard';
 import { IdentityCheckGuard } from '../../guard/identity-check-guard';
 import { AnonymousAuthGuard } from '@blockframes/auth/guard/anonymous-auth-guard';
+import { EventRoleGuard } from '../../guard/event-role.guard';
 
 // Material
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -36,7 +37,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 const routes: Routes = [{
   path: ':eventId',
   component: MainComponent,
-  canActivate: [AnonymousAuthGuard],
+  canActivate: [AnonymousAuthGuard, EventActiveGuard],
   children: [
     {
       path: '',
@@ -45,7 +46,7 @@ const routes: Routes = [{
     },
     {
       path: 'r',
-      canActivate: [EventActiveGuard],
+      canActivate: [EventRoleGuard],
       children: [
         {
           path: '',
@@ -55,6 +56,10 @@ const routes: Routes = [{
         {
           path: 'identity',
           loadChildren: () => import('./../../pages/identity/identity.module').then(m => m.IdentityModule),
+        },
+        {
+          path: 'email',
+          loadChildren: () => import('./../../pages/email/email.module').then(m => m.EmailModule),
         },
         {
           path: 'login',

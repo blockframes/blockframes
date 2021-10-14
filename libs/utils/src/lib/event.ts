@@ -10,7 +10,7 @@ export type NavTabs = { screening: TabConfig[], meeting: TabConfig[] };
  * @param accessibility 
  * @returns 
  */
-export function hasAnonymousIdentity(creds: AnonymousCredentials, accessibility?: AccessibilityTypes) {
+export function hasAnonymousIdentity(creds: AnonymousCredentials, accessibility: AccessibilityTypes) {
   const hasIdentity = !!creds?.lastName && !!creds?.firstName && !!creds?.role;
-  return (accessibility === 'public' || !accessibility) ? hasIdentity : hasIdentity && !!creds?.email;
+  return accessibility === 'public' ? hasIdentity : hasIdentity && !!creds?.email;
 }
