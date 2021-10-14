@@ -17,6 +17,7 @@ import {
   createAvailCalendarState,
 } from './calendar.model';
 import { DurationMarker } from '../avails';
+import { boolean } from '@blockframes/utils/decorators/decorators';
 
 
 @Component({
@@ -63,7 +64,7 @@ export class AvailsCalendarComponent implements OnInit {
     this.updateMatrix();
   }
 
-  @Input() disableSelect = false;
+  @Input() @boolean disableSelect = false;
 
   @Output() selected = new EventEmitter<DurationMarker>();
 
