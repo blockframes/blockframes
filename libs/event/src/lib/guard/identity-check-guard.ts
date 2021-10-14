@@ -26,12 +26,12 @@ export class IdentityCheckGuard implements CanActivate {
       map(([userAuth, creds, event]) => {
         if ((userAuth && !userAuth.isAnonymous) || hasAnonymousIdentity(creds, event.accessibility)) {
           // Redirect user to event view
-          this.router.navigate([`events/${event.id}/r/i`], { queryParams: route.queryParams });
+          this.router.navigate([`events/${event.id}/r/i`],{queryParams: route.queryParams});
         } else if (creds?.role) {
           // Redirect user to identity or login page
           const identityPage = event.accessibility === 'invitation-only' ? 'email' : 'identity';
           const page = creds.role === 'guest' && event.accessibility !== 'private' ? identityPage : 'login';
-          this.router.navigate([`events/${event.id}/r/${page}`], { queryParams: route.queryParams });
+          this.router.navigate([`events/${event.id}/r/${page}`]);
         }
       })
     ).subscribe();
