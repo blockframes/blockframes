@@ -17,6 +17,7 @@ import {
   createAvailCalendarState,
 } from './calendar.model';
 import { DurationMarker } from '../avails';
+import { boolean } from '@blockframes/utils/decorators/decorators';
 
 
 @Component({
@@ -63,6 +64,8 @@ export class AvailsCalendarComponent implements OnInit {
     this.updateMatrix();
   }
 
+  @Input() @boolean disableSelect = false;
+
   @Output() selected = new EventEmitter<DurationMarker>();
 
   ngOnInit() {
@@ -105,18 +108,21 @@ export class AvailsCalendarComponent implements OnInit {
   }
 
   onHover(row: number, column: number) {
+    if (this.disableSelect) return;
     const state = this.state$.getValue();
     const newState = hover(row, column, this.stateMatrix, state);
     this.state$.next(newState);
   }
 
   onExit() {
+    if (this.disableSelect) return;
     const state = this.state$.getValue();
     const newState = reset(state, this.stateMatrix);
     this.state$.next(newState);
   }
 
   onSelect(row: number, column: number) {
+    if (this.disableSelect) return;
     const state = this.state$.getValue();
 
     // Prevent user to end selection on the same month as the start month (i.e. selection must be at least 2 month long)

@@ -14,11 +14,13 @@
       (mouseleave)="onExit()"
       (click)="onSelect(r, c)"
     >
-      <span *ngIf="state.highlightedRange[r][c]" [ngClass]="{highlighted: true, highlightedStart: state.start.row === r && state.start.column === c, highlightedEnd: (state.end.row === r && state.end.column === c) || (state.hoverEnd.row === r && state.hoverEnd.column === c) }"></span>
-      <span *ngIf="state.hoverStart.row === r && state.hoverStart.column === c" class="selection-chip hover-start">start</span>
-      <span *ngIf="state.start.row === r && state.start.column === c" class="selection-chip start">start</span>
-      <span *ngIf="state.hoverEnd.row === r && state.hoverEnd.column === c" class="selection-chip hover-end">end</span>
-      <span *ngIf="state.end.row === r && state.end.column === c" class="selection-chip end">end</span>
+      <ng-container *ngIf="!disableSelect">
+        <span *ngIf="state.highlightedRange[r][c]" [ngClass]="{highlighted: true, highlightedStart: state.start.row === r && state.start.column === c, highlightedEnd: (state.end.row === r && state.end.column === c) || (state.hoverEnd.row === r && state.hoverEnd.column === c) }"></span>
+        <span *ngIf="state.hoverStart.row === r && state.hoverStart.column === c" class="selection-chip hover-start">start</span>
+        <span *ngIf="state.start.row === r && state.start.column === c" class="selection-chip start">start</span>
+        <span *ngIf="state.hoverEnd.row === r && state.hoverEnd.column === c" class="selection-chip hover-end">end</span>
+        <span *ngIf="state.end.row === r && state.end.column === c" class="selection-chip end">end</span>
+      </ng-container>
     </td>
   </tr>
 </table>
