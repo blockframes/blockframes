@@ -167,7 +167,7 @@ export async function linkFile(data: storage.ObjectMetadata) {
     // Post processing such as: signal end of upload flow, trigger upload to JWPlayer, ...
 
     const isVideo = data.contentType.indexOf('video/') === 0 && ['movies', 'orgs'].includes(metadata.collection);
-    if (isVideo) {
+    if (isVideo && metadata.moving !== 'true') {
 
       const uploadResult = await uploadToJWPlayer(file);
 
@@ -210,6 +210,9 @@ export async function linkFile(data: storage.ObjectMetadata) {
         await transaction.update(docRef, doc);
       });
       return true;
+    } else if (metadata.moving === 'true') {
+      // removing the 'moving' flag from metadata 
+      file.setMetadata({ metadata: { moving: null }});
     }
   }
 
@@ -466,6 +469,12 @@ export const moveMedia = async (before: StorageFile, after: StorageFile) => {
   if (!exists) {
     logger.error(`Move Error : File "${beforePath}" does not exists in the storage`);
   } else {
+    
+    // set moving flag to prevent upload to jwPlayer
+    await fileObject.setMetadata({ metadata: {
+      privacy: after.privacy,
+      moving: 'true'
+    }});
     return fileObject.move(afterPath);
   }
 }
