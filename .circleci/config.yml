@@ -406,6 +406,10 @@ jobs:
     steps:
       - prepare_environment
       - run: npm start anonProdDb
+  push-shrink-db-to-ci:
+    executor: blockframes-ci
+    steps:
+      - prepare_environment
       - run: npm start shrinkDb
   copy-storage-from-prod:
     executor: blockframes-ci
@@ -473,6 +477,13 @@ workflows:
             branches:
               only:
                 - anon-db
+      - push-shrink-db-to-ci:
+          requires:
+            - push-anon-db-to-ci
+          filters:
+            branches:
+              only:
+                - anon-db
   build-deploy-prepare-branch-against-selected-env:
     jobs:
       - build-deploy-prepare-branch-against-selected-env:
@@ -515,6 +526,9 @@ workflows:
     jobs:
       - copy-storage-from-prod
       - push-anon-db-to-ci
+      - push-shrink-db-to-ci:
+          requires:
+            - push-anon-db-to-ci
   deploy-to-prod-or-staging:
     jobs:
       - deploy-to-prod:
