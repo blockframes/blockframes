@@ -18,7 +18,7 @@ import { ContractsImportState } from '../../utils';
 import { formatContract } from './utils';
 
 @Component({
-  selector: 'import-view-extracted-contracts',
+  selector: 'import-view-extracted-contracts[sheetTab]',
   templateUrl: './view-extracted-contracts.component.html',
   styleUrls: ['./view-extracted-contracts.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default
@@ -26,7 +26,6 @@ import { formatContract } from './utils';
 export class ViewExtractedContractsComponent implements OnInit {
 
   @Input() sheetTab: SheetTab;
-  @Output() cancelEvent = new EventEmitter<boolean>();
 
   public contractsToCreate$ = new BehaviorSubject<MatTableDataSource<ContractsImportState>>(null);
 

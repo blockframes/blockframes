@@ -100,26 +100,26 @@ function getDate(value: string, error: SpreadsheetImportError) {
 
 interface FieldsConfig {
   title: {
-    international: string,
-  },
-  type: 'mandate' | 'sale',
-  licensorName: string,
-  licenseeName: string,
-  territories: Territory[],
-  medias: Media[],
-  exclusive: boolean,
+    international: string;
+  };
+  type: 'mandate' | 'sale';
+  licensorName: string;
+  licenseeName: string;
+  territories: Territory[];
+  medias: Media[];
+  exclusive: boolean;
   duration: {
-    from: Date,
-    to: Date,
-  },
-  originalLanguageLicensed: string,
-  dubbed: Territory[],
-  subtitle: Territory[],
-  closedCaptioning: Territory[],
-  contractId: string,
-  parentTermId: string,
-  titleId?: string,
-  stakeholdersList: string[],
+    from: Date;
+    to: Date;
+  };
+  originalLanguageLicensed: string;
+  dubbed: Territory[];
+  subtitle: Territory[];
+  closedCaptioning: Territory[];
+  contractId: string;
+  parentTermId: string;
+  titleId?: string;
+  stakeholdersList: string[];
 }
 
 type FieldsConfigType = ExtractConfig<FieldsConfig>;
@@ -131,18 +131,18 @@ const fieldsConfig: FieldsConfigType = {
   /* c */'licensorName': (value: string) => value,
   /* d */'licenseeName': (value: string) => value,
   /* e */'territories': (value: string) => getStaticList('territories', value, separator, errorsMap['no-territories']) as Territory[],
-   /* f */'medias': (value: string) => getStaticList('medias', value, separator, errorsMap['no-medias']) as Media[],
-   /* g */'exclusive': (value: string) => value.toLowerCase() === 'yes' ? true : false,
-   /* h */'duration.from': (value: string) => getDate(value, errorsMap['no-duration-from']) as Date,
-   /* i */'duration.to': (value: string) => getDate(value, errorsMap['no-duration-to']) as Date,
-   /* j */'originalLanguageLicensed': (value: string) => value,
-   /* k */'dubbed': (value: string) => getStaticList('languages', value, separator) as Territory[],
-   /* l */'subtitle': (value: string) => getStaticList('languages', value, separator) as Territory[],
-   /* m */'closedCaptioning': (value: string) => getStaticList('languages', value, separator) as Territory[],
-   /* n */'contractId': (value: string) => value,
-   /* o */'parentTermId': (value: string) => value,
-   /* p */'titleId': (value: string) => value,
-   /* q */'stakeholdersList': (value: string) => value ? split(value, separator) : [value],
+  /* f */'medias': (value: string) => getStaticList('medias', value, separator, errorsMap['no-medias']) as Media[],
+  /* g */'exclusive': (value: string) => value.toLowerCase() === 'yes' ? true : false,
+  /* h */'duration.from': (value: string) => getDate(value, errorsMap['no-duration-from']) as Date,
+  /* i */'duration.to': (value: string) => getDate(value, errorsMap['no-duration-to']) as Date,
+  /* j */'originalLanguageLicensed': (value: string) => value,
+  /* k */'dubbed': (value: string) => getStaticList('languages', value, separator) as Territory[],
+  /* l */'subtitle': (value: string) => getStaticList('languages', value, separator) as Territory[],
+  /* m */'closedCaptioning': (value: string) => getStaticList('languages', value, separator) as Territory[],
+  /* n */'contractId': (value: string) => value,
+  /* o */'parentTermId': (value: string) => value,
+  /* p */'titleId': (value: string) => value,
+  /* q */'stakeholdersList': (value: string) => value ? split(value, separator) : [value],
 } as const;
 
 
