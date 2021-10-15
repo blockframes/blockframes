@@ -4,7 +4,7 @@ import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy } from '@a
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { combineLatest, Observable, Subscription } from 'rxjs';
-import { filter, map, shareReplay, startWith, throttleTime } from 'rxjs/operators';
+import { filter, map, shareReplay, startWith, tap, throttleTime } from 'rxjs/operators';
 
 import {
   getDurations,
@@ -74,9 +74,10 @@ export class MarketplaceMovieAvailsCalendarComponent implements AfterViewInit, O
     this.mandateTerms$,
     this.availsForm.value$,
   ]).pipe(
-    map(([mandates, mandateTerms]) => {
+    map(([mandates, mandateTerms, avails]) => {
       if (this.availsForm.invalid) return [];
-      return getDurationMarkers(mandates, mandateTerms);
+      const collidingMandateTerms = collidingTerms(avails, mandateTerms);
+      return getDurationMarkers(mandates, collidingMandateTerms);
     }),
     shareReplay({ refCount: true, bufferSize: 1 }),
   );
