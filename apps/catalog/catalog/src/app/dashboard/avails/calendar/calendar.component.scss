@@ -1,0 +1,42 @@
+:host {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+li {
+  display: inline-block;
+  margin-left: 16px;
+
+  svg {
+    margin-right: 4px;
+  }
+}
+
+section {
+  margin-bottom: 24px;
+  position: relative;
+  overflow-x: auto;
+
+  avails-calendar {
+    margin-top: 8px;
+    margin-bottom: 32px;
+    width: 760px;
+  }
+
+  div {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    article {
+      padding: 48px;
+      border-radius: 8px;
+      background-color: var(--background-disabled-button);
+      max-width: 80%;
+      text-align: center;
+    }
+  }
+}

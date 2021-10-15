@@ -117,7 +117,7 @@ commands:
             - build-v1-{{ .Branch }}-{{ .Revision }}
       - run: touch .env # dotenv will crash without this
       - run: cp env/env.blockframes-ci.ts env/env.ts # required for the typechecking & file rewrite to work
-      - run: npm install
+      - run: npm ci
       - run: npx cypress install
       - run:
           name: 'Verify that this PR is not introducing weird package.json changes'
@@ -406,6 +406,11 @@ jobs:
     steps:
       - prepare_environment
       - run: npm start anonProdDb
+  push-shrink-db-to-ci:
+    executor: blockframes-ci
+    steps:
+      - prepare_environment
+      - run: npm start shrinkDb
   copy-storage-from-prod:
     executor: blockframes-ci
     steps:
@@ -472,6 +477,13 @@ workflows:
             branches:
               only:
                 - anon-db
+      - push-shrink-db-to-ci:
+          requires:
+            - push-anon-db-to-ci
+          filters:
+            branches:
+              only:
+                - anon-db
   build-deploy-prepare-branch-against-selected-env:
     jobs:
       - build-deploy-prepare-branch-against-selected-env:
@@ -514,6 +526,9 @@ workflows:
     jobs:
       - copy-storage-from-prod
       - push-anon-db-to-ci
+      - push-shrink-db-to-ci:
+          requires:
+            - push-anon-db-to-ci
   deploy-to-prod-or-staging:
     jobs:
       - deploy-to-prod:
@@ -548,22 +563,22 @@ workflows:
           requires:
             - build-deploy-prepare-staging
           <<: *release_only
-  nightly-tests:
-    triggers:
-      - schedule:
-          cron: '0 0 * * *'
-          filters:
-            branches:
-              only:
-                - develop
-    jobs:
-      - build-deploy-prepare-ci
-      - test-e2e-ci:
-          requires:
-            - build-deploy-prepare-ci
-      - unit-tests-ci:
-          requires:
-            - build-deploy-prepare-ci
+  # nightly-tests:
+  #   triggers:
+  #     - schedule:
+  #         cron: '0 0 * * *'
+  #         filters:
+  #           branches:
+  #             only:
+  #               - develop
+  #   jobs:
+  #     - build-deploy-prepare-ci
+  #     - test-e2e-ci:
+  #         requires:
+  #           - build-deploy-prepare-ci
+  #     - unit-tests-ci:
+  #         requires:
+  #           - build-deploy-prepare-ci
   run-sequential-online-e2e-tests-against-CI-branch-and-project:
     jobs:
       - build-deploy-prepare-ci:

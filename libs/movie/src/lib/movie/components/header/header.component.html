@@ -13,7 +13,9 @@
     </a>
     <div class="movie-info" fxLayout fxLayoutGap="20px">
       <!-- Poster -->
-      <img fxHide.lt-md [ref]="movieView.poster" asset="empty_poster.svg" alt="Movie Poster" class="poster">
+      <a [routerLink]="['/c/o/marketplace/title/', movieView.id]">
+        <img fxHide.lt-md [ref]="movieView.poster" asset="empty_poster.svg" alt="Movie Poster" class="poster">
+      </a>
       <!-- Descriptions -->
       <div fxFlex fxLayout="column" fxLayoutAlign="space-between start">
         <div class="movie-details">
