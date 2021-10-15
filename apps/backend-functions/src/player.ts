@@ -6,7 +6,7 @@ import { File as GFile } from '@google-cloud/storage';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 
 import { jwplayerApiV2, upsertWatermark } from '@blockframes/firebase-utils';
-import { linkDuration } from '@blockframes/event/+state/event.firestore';
+import { EventDocument, EventMeta, linkDuration } from '@blockframes/event/+state/event.firestore';
 import { StorageVideo } from '@blockframes/media/+state/media.firestore';
 
 import { PublicUser } from './data/types';
@@ -15,8 +15,6 @@ import { getDocument } from './data/internals';
 import { isAllowedToAccessMedia } from './internals/media';
 import { db, getStorageBucketName } from './internals/firebase';
 import { jwplayerKey, jwplayerApiV2Secret, jwplayerSecret, enableDailyFirestoreBackup, playerId } from './environments/environment';
-
-
 
 interface ReadVideoParams {
 
@@ -30,6 +28,11 @@ interface ReadVideoParams {
    * Mandatory if the video is for a meeting.
    */
   eventId?: string,
+
+  /**
+   * The email of the user for 'invitation-only' events
+   */
+  email?: string,
 }
 
 export const getPrivateVideoUrl = async (
@@ -48,7 +51,15 @@ export const getPrivateVideoUrl = async (
     }
   }
 
-  const access = await isAllowedToAccessMedia(data.video, context.auth.uid, data.eventId);
+  if (!data.eventId) {
+    return {
+      error: 'UNKNOWN_EVENT',
+      result: 'No event in params, this parameter is mandatory!'
+    }
+  }
+
+  const eventData = await getDocument<EventDocument<EventMeta>>(`events/${data.eventId}`);
+  const access = await isAllowedToAccessMedia(data.video, context.auth.uid, eventData, data.email);
 
   if (!access) {
     return {
@@ -77,51 +88,53 @@ export const getPrivateVideoUrl = async (
     }
   }
 
-  // watermark fallback : in case the user's watermark doesn't exist we generate it
-  const userRef = db.collection('users').doc(context.auth.uid);
-  const userSnap = await userRef.get();
-  const user = userSnap.data() as PublicUser;
+  if (eventData.accessibility === 'private') {
+    // watermark fallback : in case the user's watermark doesn't exist we generate it
+    const userRef = db.collection('users').doc(context.auth.uid);
+    const userSnap = await userRef.get();
+    const user = userSnap.data() as PublicUser;
 
-  const bucketName = getStorageBucketName();
+    const bucketName = getStorageBucketName();
 
-  let fileExists = false;
+    let fileExists = false;
 
-  // if we have a ref we should assert that it points to an existing file
-  const { privacy, storagePath } = user.watermark;
-  if (user.watermark.storagePath) {
-    const file = admin.storage().bucket(bucketName).file(`${privacy}/${storagePath}`);
-    [fileExists] = await file.exists();
-  }
+    // if we have a ref we should assert that it points to an existing file
+    const { privacy, storagePath } = user.watermark;
+    if (user.watermark.storagePath) {
+      const file = admin.storage().bucket(bucketName).file(`${privacy}/${storagePath}`);
+      [fileExists] = await file.exists();
+    }
 
-  // if we don't have a ref OR if the file doesn't exists : we regenerate the Watermark
-  if (!user.watermark || !fileExists) {
+    // if we don't have a ref OR if the file doesn't exists : we regenerate the Watermark
+    if (!user.watermark || !fileExists) {
 
-    upsertWatermark(user, bucketName);
+      upsertWatermark(user, bucketName);
 
-    // wait for the function to update the user document after watermark creation
-    const success = await new Promise(resolve => {
+      // wait for the function to update the user document after watermark creation
+      const success = await new Promise(resolve => {
 
-      const unsubscribe = userRef.onSnapshot(snap => {
-        const userData = snap.data() as PublicUser;
+        const unsubscribe = userRef.onSnapshot(snap => {
+          const userData = snap.data() as PublicUser;
 
-        if (userData.watermark) {
+          if (userData.watermark) {
+            unsubscribe();
+            resolve(true);
+          }
+        });
+
+        // timeout after 10s
+        setTimeout(() => {
           unsubscribe();
-          resolve(true);
-        }
+          resolve(false);
+        }, 10000);
       });
 
-      // timeout after 10s
-      setTimeout(() => {
-        unsubscribe();
-        resolve(false);
-      }, 10000);
-    });
-
-    if (!success) {
-      return {
-        error: 'WATERMARK_CREATION_TIMEOUT',
-        result: `The watermark creation has timeout, please try again later`
-      };
+      if (!success) {
+        return {
+          error: 'WATERMARK_CREATION_TIMEOUT',
+          result: `The watermark creation has timeout, please try again later`
+        };
+      }
     }
   }
 

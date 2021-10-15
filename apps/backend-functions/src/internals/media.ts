@@ -5,7 +5,7 @@ import * as admin from 'firebase-admin';
 
 // Blockframes dependencies
 import { getDocument } from '@blockframes/firebase-utils';
-import { Meeting, Screening } from '@blockframes/event/+state/event.firestore';
+import { EventDocument, EventMeta, Meeting, Screening } from '@blockframes/event/+state/event.firestore';
 import { createPublicUser } from '@blockframes/user/types';
 import { StorageFile } from '@blockframes/media/+state/media.firestore';
 
@@ -15,13 +15,17 @@ import { isUserInvitedToEvent } from './invitations/events';
 import { MovieDocument } from '../data/types';
 import { Privacy } from '@blockframes/utils/file-sanitizer';
 
-export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eventId?: string): Promise<boolean> {
+export async function isAllowedToAccessMedia(file: StorageFile, uid: string, event?: string | EventDocument<EventMeta>, email?: string): Promise<boolean> {
 
-  const user = await db.collection('users').doc(uid).get();
-  if (!user.exists) { return false; }
-  const userDoc = createPublicUser(user.data());
+  const eventData = typeof event === 'string' ? await getDocument<EventDocument<EventMeta>>(`events/${event}`) : event;
 
-  if (!userDoc.orgId) { return false; }
+  let userDoc = createPublicUser({ uid, email });
+  if (eventData.accessibility === 'private') {
+    const user = await db.collection('users').doc(uid).get();
+    if (!user.exists) { return false; }
+    userDoc = createPublicUser(user.data());
+    if (!userDoc.orgId) { return false; }
+  }
 
   const blockframesAdmin = await db.collection('blockframesAdmin').doc(uid).get();
   if (blockframesAdmin.exists) { return true; }
@@ -75,13 +79,9 @@ export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eve
 
   // use is not currently authorized,
   // but he might be invited to an event where the file is shared
-  if (!canAccess && !!eventId) {
-    const eventRef = db.collection('events').doc(eventId);
-    const eventSnap = await eventRef.get();
+  if (!canAccess && !!event) {
 
-    if (eventSnap.exists) {
-
-      const eventData = eventSnap.data();
+    if (eventData?.id) {
 
       const now = admin.firestore.Timestamp.now();
 
@@ -90,7 +90,7 @@ export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eve
         return false;
       }
 
-      const isInvited = await isUserInvitedToEvent(uid, eventId);
+      const isInvited = await isUserInvitedToEvent(uid, eventData, email);
       if (!isInvited) { return false; }
 
       // if event is a Meeting and has the file
