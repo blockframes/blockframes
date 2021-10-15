@@ -51,9 +51,10 @@ export class DashboardAvailsCalendarComponent implements AfterViewInit, OnDestro
     this.mandateTerms$,
     this.availsForm.value$,
   ]).pipe(
-    map(([mandates, mandateTerms]) => {
+    map(([mandates, mandateTerms, availsFilter]) => {
       if (this.availsForm.invalid) return [];
-      return getDurationMarkers(mandates, mandateTerms);
+      const collidingMandateTerms = collidingTerms(availsFilter, mandateTerms);
+      return getDurationMarkers(mandates, collidingMandateTerms);
     }),
     shareReplay({ refCount: true, bufferSize: 1 }),
   );
