@@ -1,0 +1,32 @@
+﻿<section class="surface" [formGroup]="formMeta" fxLayout="column">
+  <h2>Meeting</h2>
+  <div class="link" fxLayout>
+    <mat-form-field class="link" appearance="outline" fxFlex>
+      <mat-label>Link to Video Call</mat-label>
+      <input matInput type="text" disabled [value]="link">
+    </mat-form-field>
+    <button mat-icon-button [cdkCopyToClipboard]="link" matTooltip="Copy the link">
+      <mat-icon svgIcon="file_copy"></mat-icon>
+    </button>
+  </div>
+  <mat-form-field appearance="outline">
+    <mat-label>Organized by</mat-label>
+    <mat-select formControlName="organizerUid">
+      <ng-container *ngFor="let member of members$ | async">
+        <mat-option [value]="member.uid">{{ member | displayName }}</mat-option>
+      </ng-container>
+    </mat-select>
+    <mat-hint>This person will appear as event organizer on the marketplace and all invitations will be sent in their name.</mat-hint>
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Description</mat-label>
+    <textarea matInput
+      placeholder="Add a message"
+      formControlName="description"
+      cdkTextareaAutosize
+      #autosize="cdkTextareaAutosize"
+      cdkAutosizeMinRows="4"
+      maxlength="500"></textarea>
+    <mat-hint>Limited to 500 characters.</mat-hint>
+  </mat-form-field>
+</section>

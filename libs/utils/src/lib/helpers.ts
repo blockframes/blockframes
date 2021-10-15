@@ -107,7 +107,7 @@ export async function asyncFilter<T>(items: T[], filterFunction: (item: T) => Pr
  * @param base
  * @param code
  */
-export function getKeyIfExists(base: Scope, code: string) {
+export function getKeyIfExists(base: Scope, code: string): any {
   // Sanitized input to properly compare with base data
   const sanitizedCode = code.trim().toLowerCase();
   const candidate = Object.entries(staticModel[base]).find(([key, value]) => [key.toLowerCase(), value.toLowerCase()].includes(sanitizedCode));

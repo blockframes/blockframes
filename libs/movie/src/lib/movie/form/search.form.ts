@@ -10,6 +10,34 @@ import { AlgoliaOrganization, AlgoliaSearch } from '@blockframes/utils/algolia';
 import { max } from './filters/budget/budget.component';
 import { Movie } from '../+state';
 
+export const runningTimeFilters = {
+  // 0 is all values
+  1: {
+    label: '< 13min',
+    filter: 'runningTime.time < 13'
+  },
+  2: {
+    label: '13min - 26min',
+    filter: 'runningTime.time: 13 TO 26'
+  },
+  3: {
+    label: '26min - 52min',
+    filter: 'runningTime.time: 26 TO 52'
+  },
+  4: {
+    label: '52min - 90min',
+    filter: 'runningTime.time: 52 TO 90'
+  },
+  5: {
+    label: '90min - 180min',
+    filter: 'runningTime.time: 90 TO 180'
+  },
+  6: {
+    label: '> 180min',
+    filter: 'runningTime.time > 180'
+  }
+}
+
 export interface LanguagesSearch {
   original: Language[];
   dubbed: Language[];
@@ -24,12 +52,15 @@ export interface MovieSearch extends AlgoliaSearch {
   languages: LanguagesSearch;
   productionStatus: ProductionStatus[];
   minBudget: number;
+  minReleaseYear: number;
   sellers: AlgoliaOrganization[];
   socialGoals: SocialGoal[];
   contentType?: ContentType;
+  runningTime: number;
 }
 
 export function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearch {
+
   return {
     query: '',
     page: 0,
@@ -45,8 +76,10 @@ export function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearc
     },
     productionStatus: [],
     minBudget: 0,
+    minReleaseYear: 0,
     sellers: [],
     socialGoals: [],
+    runningTime: 0,
     ...search,
   };
 }
@@ -71,9 +104,11 @@ function createMovieSearchControl(search: MovieSearch) {
     languages: new FormEntity<LanguageVersionControl>(createLanguageVersionControl(search.languages)),
     productionStatus: FormList.factory<ProductionStatus>(search.productionStatus),
     minBudget: new FormControl(search.minBudget),
+    minReleaseYear: new FormControl(search.minReleaseYear),
     sellers: FormList.factory<AlgoliaOrganization>(search.sellers),
     socialGoals: FormList.factory(search.socialGoals),
     contentType: new FormControl(search.contentType),
+    runningTime: new FormControl(search.runningTime),
     // Max is 1000, see docs: https://www.algolia.com/doc/api-reference/api-parameters/hitsPerPage/
     hitsPerPage: new FormControl(50, Validators.max(1000))
   };
@@ -101,11 +136,13 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
   get languages() { return this.get('languages'); }
   get productionStatus() { return this.get('productionStatus'); }
   get minBudget() { return this.get('minBudget'); }
+  get minReleaseYear() { return this.get('minReleaseYear'); }
   get sellers() { return this.get('sellers'); }
   get storeStatus() { return this.get('storeStatus'); }
   get socialGoals() { return this.get('socialGoals'); }
   get hitsPerPage() { return this.get('hitsPerPage'); }
   get contentType() { return this.get('contentType'); }
+  get runningTime() { return this.get('runningTime'); }
 
   isEmpty() {
     return (
@@ -119,11 +156,12 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
       this.languages.value?.caption.length === 0 &&
       this.productionStatus?.value.length === 0 &&
       this.minBudget?.value === 0 &&
+      this.minReleaseYear.value === 0 &&
       this.sellers?.value.length === 0 &&
       !this.contentType.value);
   }
 
-  search() {
+  search(needMultipleQueries = false) {
     const search = {
       hitsPerPage: this.hitsPerPage.value,
       query: this.query.value,
@@ -138,17 +176,36 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
           ...this.languages.get('caption').controls.map(lang => `languages.caption:${lang.value}`),
         ],
         this.productionStatus.value.map(status => `status:${status}`),
-        this.sellers.value.map(seller => `orgName:${seller.name}`),
+        this.sellers.value.map(seller => `orgNames:${seller.name}`),
         this.storeStatus.value.map(config => `storeStatus:${config}`),
         this.socialGoals.value.map(goal => `socialGoals:${goal}`),
         [`contentType:${this.contentType.value || ''}`]
       ],
-
+      filters: ''
     };
 
     if (this.minBudget.value) {
-      search['filters'] = `budget >= ${max - this.minBudget.value ?? 0}`;
+      search.filters = `budget >= ${max - this.minBudget.value ?? 0}`;
     }
+    if (this.minReleaseYear.value) {
+      if (search.filters) search.filters += ` AND `;
+      search.filters += `release.year >= ${this.minReleaseYear.value}`;
+    }
+    if (this.runningTime.value) {
+      if (search.filters) search.filters += ` AND `;
+      search.filters += runningTimeFilters[this.runningTime.value].filter
+    }
+
+    /*
+    Allow the user to use comma or space to separate their research.
+    ex : `France, Berlinale, Action` can be a research but without the `optionalWords`
+    it will be considered as one string/research and not 3 differents.
+    */
+    if (needMultipleQueries) {
+      const multipleQueries: string[] = this.query.value.split(',' || ' ');
+      search['optionalWords'] = multipleQueries;
+    }
+
     return this.movieIndex.search<Movie>(search.query, search);
   }
 }

@@ -1,8 +1,8 @@
-<section fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="12px">
+<section fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="12px" >
   <h1>Specific Terms</h1>
   <p>Please indicate any specific conditions you'd like to request for this deal.<br/>
   These terms will be applied to the whole contract</p>
-  <form [formGroup]="form" fxLayout="column">
+  <form [formGroup]="form" fxLayout="column" (ngSubmit)="createOffer()">
     <mat-form-field appearance="outline">
       <mat-label>Specific Terms</mat-label>
       <textarea
@@ -29,12 +29,19 @@
         test-id="delivery-list">
       </textarea>
     </mat-form-field>
+    <footer fxLayout="column" fxLayoutAlign="center center">
+      <button mat-flat-button color="primary" [disabled]="form.disabled" type="submit" test-id="send-offer">
+        <span>
+          Send Your Offer
+        </span>
+          <ng-container *ngIf="form.disabled">
+            <mat-spinner diameter="16"></mat-spinner>
+          </ng-container>
+      </button>
+      <button mat-button mat-dialog-close type="button">
+        Cancel
+      </button>
+    </footer>
   </form>
 
-  <button mat-flat-button color="primary" (click)="createOffer()" test-id="send-offer">
-    Send Your Offer
-  </button>
-  <button mat-button mat-dialog-close>
-    Cancel
-  </button>
 </section>

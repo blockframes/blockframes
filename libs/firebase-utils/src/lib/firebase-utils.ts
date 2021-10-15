@@ -94,9 +94,45 @@ export function getLatestFile(files: GFile[]) {
 }
 
 /**
+ * Default runtime options for functions
+ */
+ export const defaultConfig: RuntimeOptions = {
+  timeoutSeconds: 60,
+  memory: '256MB',
+};
+
+/**
+ * Runtime options to keep a function hot
+ * Used to improve response time
+ */
+export const hotConfig: RuntimeOptions = {
+  ...defaultConfig,
+  maxInstances: env.production ? 1 : 0
+}
+
+/**
  * Runtime options for heavy functions
  */
 export const heavyConfig: RuntimeOptions = {
   timeoutSeconds: 300,
   memory: '1GB',
 };
+
+/**
+ * Runtime options for super heavy functions
+ */
+ export const superHeavyConfig: RuntimeOptions = {
+  timeoutSeconds: 540,
+  memory: '4GB',
+};
+
+export async function storageFileExist(path: string) {
+  const storage = admin.storage();
+  const file = await storage.bucket().file(path);
+
+  // for more info check
+  //  - https://googleapis.dev/nodejs/storage/latest/File.html#exists
+  //  - https://googleapis.dev/nodejs/storage/latest/global.html#FileExistsResponse
+  const result = await file.exists();
+  return result[0];
+}

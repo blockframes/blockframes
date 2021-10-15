@@ -1,0 +1,97 @@
+<holdback-list [holdbacks]="holdbacks"></holdback-list>
+
+<div class="actions" fxLayout fxLayoutAlign="center center">
+  <button mat-stroked-button (click)="openHoldbacks(formTemplate)">
+    <mat-icon svgIcon="add"></mat-icon>
+    <span>Add and manage holdbacks for "{{ title.title.international | maxLength:10 }}"</span>
+  </button>
+</div>
+
+<!-- DIALOG -->
+
+<ng-template #formTemplate>
+  <header>
+    <h1>Holdback for "{{ title.title.international }}"</h1>
+    <button mat-icon-button (click)="cancel()">
+      <mat-icon svgIcon="close"></mat-icon>
+    </button>
+  </header>
+  <bf-form-table [columns]="columns" [form]="form">
+    <!-- Table -->
+    <ng-template colRef="duration" let-duration>
+      {{ duration.from | date:'M/d/y' }} - {{ duration.to | date:'M/d/y' }}
+    </ng-template>
+
+    <ng-template colRef="territories" let-territories>
+      <span class="group-label" (click)="openDetails(territories, 'territories')">
+        {{ territories | toGroupLabel:'territories':'World' | join | maxLength:120 }}
+      </span>
+    </ng-template>
+
+    <ng-template colRef="medias" let-medias>
+      <span class="group-label" (click)="openDetails(medias, 'medias')">
+        {{ medias | toGroupLabel:'medias':'All' | join | maxLength:120 }}
+      </span>
+    </ng-template>
+
+    <ng-template colRef="languages" let-languages>
+      <ul>
+        <li *ngFor="let language of languages | keyvalue">
+          <strong>{{ language.key | toLabel: 'languages' }}</strong>: {{ language.value | versionPipe | join }}
+        </li>
+      </ul>
+    </ng-template>
+
+    <!-- Control -->
+    <ng-template formView let-control>
+      <h3>Holdback Territories*</h3>
+      <mat-form-field appearance="outline">
+        <mat-label>Select territories</mat-label>
+        <static-group [formControl]="control.get('territories')" scope="territories" displayAll="World"
+          placeholder="Specify territory to filter" required test-id="territories">
+        </static-group>
+        <mat-error groupError *ngIf="control.get('territories').hasError('required')">This field is required</mat-error>
+      </mat-form-field>
+
+      <mat-divider></mat-divider>
+
+      <h3>Holdback Rights*</h3>
+      <mat-form-field appearance="outline">
+        <mat-label>Select rights</mat-label>
+        <static-group [formControl]="control.get('medias')" scope="medias" displayAll="All Rights" required
+          placeholder="Specify right(s) to filter" [withoutValues]="['theatrical']" test-id="medias">
+        </static-group>
+        <mat-error groupError *ngIf="control.get('medias').hasError('required')">This field is required</mat-error>
+      </mat-form-field>
+
+      <mat-divider></mat-divider>
+
+      <h3>Holdback Terms*</h3>
+      <div class="duration" [formGroup]="control.get('duration')">
+        <mat-form-field appearance="outline">
+          <mat-label>Licence Start Date</mat-label>
+          <input matInput [matDatepicker]="datepickerFrom" formControlName="from" placeholder="MM/DD/YYYY">
+          <mat-datepicker-toggle matSuffix [for]="datepickerFrom" test-id="dateFrom"></mat-datepicker-toggle>
+          <mat-datepicker #datepickerFrom> </mat-datepicker>
+          <mat-error *ngIf="control.get('duration.from').hasError('startOverEnd')">Start date must not be later than end date</mat-error>
+          <mat-error *ngIf="control.get('duration.from').hasError('inPast')">Date must be in the future</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Licence End Date</mat-label>
+          <input matInput [matDatepicker]="datepickerTo" formControlName="to" placeholder="MM/DD/YYYY">
+          <mat-datepicker-toggle matSuffix [for]="datepickerTo" test-id="dateTo"></mat-datepicker-toggle>
+          <mat-datepicker #datepickerTo> </mat-datepicker>
+          <mat-error *ngIf="control.get('duration.to').hasError('startOverEnd') ">End date must not be earlier than start date</mat-error>
+          <mat-error *ngIf="control.get('duration.to').hasError('inPast') ">Date must be in the future</mat-error>
+        </mat-form-field>
+      </div>
+      <mat-divider></mat-divider>
+
+    </ng-template>
+  </bf-form-table>
+
+  <footer class="actions" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="16px">
+    <button mat-flat-button color="primary" (click)="save()">Add Holdbacks</button>
+    <button mat-button (click)="cancel()">Cancel</button>
+  </footer>
+</ng-template>

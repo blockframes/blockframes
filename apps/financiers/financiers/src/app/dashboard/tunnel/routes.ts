@@ -84,74 +84,69 @@ export const titleTunnelRoutes: Routes = [
         loadChildren: () => import('@blockframes/movie/form/technical-info/technical-info.module').then(m => m.TunnelTechnicalInfoModule),
       },
       {
-        path: 'available-materials',
+        path: 'available-versions',
         data: { animation: 9 },
-        loadChildren: () => import('@blockframes/movie/form/available-materials/available-materials.module').then(m => m.MovieFormAvailableMaterialsModule),
-      },
-      {
-        path: 'sales-pitch',
-        data: { animation: 10 },
-        loadChildren: () => import('@blockframes/movie/form/sales-pitch/sales-pitch.module').then(m => m.MovieFormSalesPitchModule),
+        loadChildren: () => import('@blockframes/movie/form/available-versions/available-versions.module').then(m => m.MovieFormAvailableVersionsModule),
       },
       {
         path: 'media-files',
-        data: { animation: 11 },
+        data: { animation: 10 },
         loadChildren: () => import('@blockframes/movie/form/media-files/media-files.module').then(m => m.MovieFormMediaFilesModule),
       },
       {
         path: 'media-notes',
-        data: { animation: 12 },
+        data: { animation: 11 },
         loadChildren: () => import('@blockframes/movie/form/media-notes/notes.module').then(m => m.MovieFormNotesModule),
       },
       {
         path: 'media-images',
-        data: { animation: 13 },
+        data: { animation: 12 },
         loadChildren: () => import('@blockframes/movie/form/media-images/media-images.module').then(m => m.MovieFormMediaImagesModule),
       },
       {
         path: 'media-videos',
-        data: { animation: 14 },
+        data: { animation: 13 },
         loadChildren: () => import('@blockframes/movie/form/media-videos/media-videos.module').then(m => m.MediaFormVideosModule),
       },
 
       // Financial Elements
       {
         path: 'budget',
-        data: { animation: 15 },
+        data: { animation: 14 },
         loadChildren: () => import('@blockframes/campaign/form/budget/budget.module').then(m => m.CampaignFormBudgetModule),
       },
       {
         path: 'fundings',
-        data: { animation: 16 },
+        data: { animation: 15 },
         loadChildren: () => import('@blockframes/campaign/form/fundings/fundings.module').then(m => m.CampaignFormFundingsModule),
       },
       {
         path: 'profits',
-        data: { animation: 17 },
+        data: { animation: 16 },
         loadChildren: () => import('@blockframes/campaign/form/profits/profits.module').then(m => m.CampaignFormProfitsModule),
       },
 
       // Campaign
       {
         path: 'proposal',
-        data: { animation: 18 },
+        data: { animation: 17 },
         loadChildren: () => import('@blockframes/campaign/form/proposal/proposal.module').then(m => m.CampaignFormProposalModule),
       },
       {
         path: 'perks',
-        data: { animation: 19 },
+        data: { animation: 18 },
         loadChildren: () => import('@blockframes/campaign/form/perks/perks.module').then(m => m.CampaignFormPerksModule),
       },
 
       // Summary
       {
         path: 'summary',
-        data: { animation: 20 },
+        data: { animation: 19 },
         loadChildren: () => import('./summary/summary.module').then(m => m.TunnelSummaryModule),
       },
       {
         path: 'end',
-        data: { animation: 21 },
+        data: { animation: 20 },
         loadChildren: () => import('@blockframes/movie/form/end/end.module').then(m => m.EndTunnelModule),
       },
     ]

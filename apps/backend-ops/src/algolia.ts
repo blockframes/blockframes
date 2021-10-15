@@ -74,21 +74,14 @@ export async function upgradeAlgoliaMovies(appConfig?: App) {
       const promises = movies.map(async movie => {
         try {
 
-          const orgsDocs = await Promise.all(movie.orgIds.map(id => db.doc(`orgs/${id}`).get()))
-
-          const orgs = orgsDocs.map(doc => doc.data() as OrganizationDocument)
+          const orgsDocs = await Promise.all(movie.orgIds.map(id => db.doc(`orgs/${id}`).get()));
+          const orgs = orgsDocs.map(doc => doc.data() as OrganizationDocument);
 
           if (!orgs.length) {
             console.error(`Movie ${movie.id} is not part of any orgs`);
           }
 
-          // TODO : here we might decide to arbitrary choose first org
-          /*    if (querySnap.size > 1) {
-               throw new Error(`Movie ${movie.id} is part of several orgs (${querySnap.docs.map(doc => doc.id).join(', ')})`);
-             } */
-
-          const org = orgs[0];
-          const organizationName = orgName(org);
+          const organizationNames = orgs.map(org => orgName(org));
 
           if (appConfig === 'financiers') {
             const campaign = await getDocument<Campaign>(`campaign/${movie.id}`);
@@ -97,7 +90,7 @@ export async function upgradeAlgoliaMovies(appConfig?: App) {
             }
           }
 
-          await storeSearchableMovie(movie, organizationName, process.env['ALGOLIA_API_KEY'])
+          await storeSearchableMovie(movie, organizationNames, process.env['ALGOLIA_API_KEY']);
         } catch (error) {
           console.error(`\n\n\tFailed to insert a movie ${movie.id} : skipping\n\n`);
           console.error(error);
@@ -120,7 +113,7 @@ export async function upgradeAlgoliaUsers() {
       'email',
       'firstName',
       'lastName',
-      'orgName'
+      'orgNames'
     ],
     attributesForFaceting: [
       'email'
@@ -152,14 +145,21 @@ const baseConfig: AlgoliaConfig = {
     'title.international',
     'title.original',
     'directors',
-    'keywords'
+    'keywords',
+    'originCountries',
+    'genres',
+    'originalLanguages',
+    'orgNames',
+    'festivals',
+    'productionCompany',
+    'salesAgent'
   ],
   attributesForFaceting: [
     // filters
     'filterOnly(budget)',
 
     // searchable facets
-    'searchable(orgName)',
+    'searchable(orgNames)',
 
     // other facets
     'genres',

@@ -54,7 +54,7 @@ export class MemberAddComponent {
     if (this.error) return;
     try {
       this._isSending.next(true);
-      const emails = this.form.value;
+      const emails = Array.from(new Set(this.form.value.map(email => email.trim().toLowerCase())));
       const invitationsExist = await this.invitationService.hasUserAnOrgOrIsAlreadyInvited(emails).toPromise<boolean>();
       if (invitationsExist) throw new Error('There is already an invitation existing for one or more of these users');
       await this.invitationService.invite(emails, this.org).to('joinOrganization');

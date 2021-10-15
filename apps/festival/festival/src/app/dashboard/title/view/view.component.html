@@ -2,7 +2,34 @@
   <mat-spinner color="accent" #loading></mat-spinner>
 </ng-template>
 <ng-container *ngIf="(movie$ | async) as movie;">
-
-  <title-dashboard-shell [routes]="navLinks"></title-dashboard-shell>
-
+  <title-dashboard-shell [routes]="navLinks">
+    <movie-cta fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="space-between end" fxFlex>
+      <a *ngIf="(org$ | async | canAccess: 'marketplace': 'festival') && movie.app.festival.status !== 'archived'" mat-button color="primary" [routerLink]="['/c/o/marketplace/title', movie.id, 'main']">
+        <mat-icon svgIcon="visibility" color="primary"></mat-icon>
+        <span>Marketplace Preview</span>
+      </a>
+      <actions-dashboard-shell fxFlex #actions="actionsDashboardShell">
+        <movie-action-menu>
+          <a mat-menu-item *ngIf="movie.app.festival.status === 'draft'"
+            [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id, 'summary']" fragment="publish">
+            <mat-icon svgIcon="publish"></mat-icon><span>Publish on Marketplace</span>
+          </a>
+          <button *ngIf="movie.app.festival.status === 'accepted'" mat-menu-item
+            (click)="actions.updateStatus('draft', 'Title removed from Marketplace.')">
+            <mat-icon svgIcon="cancel"></mat-icon><span>Remove from Marketplace</span>
+          </button>
+          <button *ngIf="movie.app.festival.status === 'submitted'" mat-menu-item
+            (click)="actions.updateStatus('draft', 'Title back to Draft.')">
+            <mat-icon svgIcon="drafts"></mat-icon><span>Switch back to Draft</span>
+          </button>
+          <a mat-menu-item [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]">
+            <mat-icon svgIcon="edit"></mat-icon><span>Edit Title</span>
+          </a>
+          <button mat-menu-item (click)="actions.updateStatus('archived', 'Title archived.')">
+            <mat-icon svgIcon="archive"></mat-icon><span>Archive Title</span>
+          </button>
+        </movie-action-menu>
+      </actions-dashboard-shell>
+    </movie-cta>
+  </title-dashboard-shell>
 </ng-container>

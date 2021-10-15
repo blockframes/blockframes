@@ -13,6 +13,11 @@ import { ToLabelModule } from '@blockframes/utils/pipes';
 import { MovieFormShellModule } from '@blockframes/movie/form/shell/shell.module';
 import { MovieShellConfig } from '@blockframes/movie/form/movie.shell.config';
 import { FORMS_CONFIG } from '@blockframes/movie/form/movie.shell.interfaces';
+import { OrgAccessModule } from '@blockframes/organization/pipes/org-access.pipe';
+import { EventFormShellComponent } from '@blockframes/event/form/shell/shell.component';
+import { EventFromShellModule } from '@blockframes/event/form/shell/shell.module';
+import { ReviewComponent } from '@blockframes/event/layout/review/review.component';
+import { LayoutEventReviewModule } from '@blockframes/event/layout/review/review.module';
 
 // Tunnel routes
 import { tunnelRoutes } from './tunnel/movie-tunnel.routes';
@@ -22,13 +27,13 @@ import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 import { MovieTunnelGuard } from '@blockframes/movie/guards/movie-tunnel.guard';
 import { TunnelGuard } from '@blockframes/ui/tunnel';
 import { EventOrganizationGuard } from "@blockframes/event/guard/event-organization.guard";
+import { EventTypeGuard } from '@blockframes/event/guard/event-type.guard';
 
 // Material
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDividerModule } from '@angular/material/divider';
-import { OrgAccessModule } from '@blockframes/organization/pipes/org-access.pipe';
 
 const routes: Routes = [{
   path: '',
@@ -53,7 +58,7 @@ const routes: Routes = [{
     },
     {
       path: 'import', // Import bulk of movies
-      loadChildren: () => import('@blockframes/import').then(m => m.ImportModule)
+      loadChildren: () => import('@blockframes/movie/import/import.module').then(m => m.TitleImportModule),
     },
     {
       path: 'title',
@@ -83,10 +88,59 @@ const routes: Routes = [{
           children: [
             {
               path: '',
-              loadChildren: () => import('./event/review/review.module').then(m => m.EventReviewModule)
+              component: ReviewComponent,
+              children: [
+                {
+                  path: '',
+                  pathMatch: 'full',
+                  redirectTo: 'statistics'
+                },
+                {
+                  path: 'invitations',
+                  loadChildren: () => import('@blockframes/event/pages/guest-list/guest-list.module').then(m => m.GuestListModule),
+                  data: { animation: 0 }
+                },
+                {
+                  path: 'statistics',
+                  loadChildren: () => import('@blockframes/event/pages/analytics/analytics.module').then(m => m.AnalyticsModule),
+                  data: { animation: 1 }
+                }
+              ],
             }, {
               path: 'edit',
-              loadChildren: () => import('./event/edit/edit.module').then(m => m.EventEditModule)
+              component: EventFormShellComponent,
+              canDeactivate: [EventOrganizationGuard],
+              children: [
+                {
+                  path: '',
+                  canActivate: [EventTypeGuard],
+                },
+                {
+                  path: 'screening',
+                  loadChildren: () => import('@blockframes/event/form/screening/screening.module').then(m => m.ScreeningModule),
+                  data: { animation: 0 }
+                },
+                {
+                  path: 'meeting',
+                  loadChildren: () => import('@blockframes/event/form/meeting/meeting.module').then(m => m.MeetingModule),
+                  data: { animation: 1 }
+                },
+                {
+                  path: 'invitations',
+                  loadChildren: () => import('@blockframes/event/form/invitation/invitation.module').then(m => m.InvitationModule),
+                  data: { animation: 2 }
+                },
+                {
+                  path: 'files',
+                  loadChildren: () => import('@blockframes/event/form/meeting-files/meeting-files.module').then(m => m.MeetingFilesModule),
+                  data: { animation: 3 }
+                },
+                {
+                  path: 'statistics',
+                  loadChildren: () => import('@blockframes/event/pages/analytics/analytics.module').then(m => m.AnalyticsModule),
+                  data: { animation: 4 }
+                }
+              ],
             },
           ],
         },
@@ -139,6 +193,8 @@ const routes: Routes = [{
     ToLabelModule,
     OrgAccessModule,
     MovieFormShellModule,
+    EventFromShellModule,
+    LayoutEventReviewModule,
 
     // Material
     MatDividerModule,

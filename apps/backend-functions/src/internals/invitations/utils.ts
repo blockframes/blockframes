@@ -34,7 +34,7 @@ export function wasCreated(before: InvitationOrUndefined, after: InvitationDocum
   const invitationPromises = userEmails.map(email => db.collection('invitations')
     .where('type', '==', 'joinOrganization')
     .where('toUser.email', '==', email)
-    .where('status', 'in', invitationStatus.filter(s => s !== 'declined'))
+    .where('status', 'in', Object.keys(invitationStatus).filter(s => s !== 'declined'))
     .get());
   const invitationQuery = await Promise.all(invitationPromises);
 

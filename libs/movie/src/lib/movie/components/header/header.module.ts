@@ -2,6 +2,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { RouterModule } from '@angular/router';
 
 // Component
 import {
@@ -30,7 +31,8 @@ import { MatIconModule } from '@angular/material/icon';
     DisplayNameModule,
     ImageModule,
     MovieTitleFeaturesModule,
-    MatIconModule
+    MatIconModule,
+    RouterModule
   ],
   exports: [
     HeaderComponent,

@@ -1,0 +1,37 @@
+:host {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-image: url('/assets/images/clouds.svg');
+  background-size: 100%;
+  background-repeat: no-repeat;
+}
+
+button[app-logo] {
+  position: absolute;
+  cursor: pointer;
+  top: 24px;
+  left: 24px;
+  background: none;
+  border: none;
+}
+
+section.surface {
+  text-align: center;
+  padding-top: 48px;
+  margin: auto;
+  width: 50%;
+  
+  img {
+    height: 200px;
+    width: 200px;
+    margin-bottom: 32px;
+  }
+
+  p.mat-body-2 {
+    margin-bottom: 40px;
+  }
+}
+

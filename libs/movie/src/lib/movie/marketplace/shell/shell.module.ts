@@ -19,7 +19,7 @@ import { WishlistButtonModule } from '@blockframes/organization/components/wishl
 import { HasKeysModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { DownloadPipeModule } from '@blockframes/media/file/pipes/download.pipe';
 import { VideoViewerModule } from '@blockframes/media/video/viewer/viewer.module';
-import { FilePreviewModule } from '@blockframes/media/file/preview/preview.module';
+import { FileListPreviewModule } from '@blockframes/media/file/preview-list/preview-list.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -28,6 +28,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatCardModule } from '@angular/material/card';
+import { StorageFileModule } from '@blockframes/media/pipes/storageFile.pipe';
 
 @NgModule({
   declarations: [TitleMarketplaceShellComponent],
@@ -47,7 +48,8 @@ import { MatCardModule } from '@angular/material/card';
     DownloadPipeModule,
     VideoViewerModule,
     ToLabelModule,
-    FilePreviewModule,
+    FileListPreviewModule,
+    StorageFileModule,
 
     // Material
     MatChipsModule,
@@ -60,4 +62,4 @@ import { MatCardModule } from '@angular/material/card';
     RouterModule
   ]
 })
-export class MovieShellModule {}
+export class MovieShellModule { }

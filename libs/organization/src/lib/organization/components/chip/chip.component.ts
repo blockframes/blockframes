@@ -9,4 +9,5 @@ import { Organization } from '@blockframes/organization/+state';
 })
 export class ChipComponent {
   @Input() org: Organization;
+  @Input() baseUrl = '/c/o/marketplace/organization';
 }

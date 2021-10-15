@@ -1,0 +1,92 @@
+<ng-container *ngIf="sale$ | async as sale; else loading">
+  <header fxLayout="column" fxLayoutAlign="start start">
+    <a mat-icon-button routerLink="/c/o/dashboard/sales" color="primary">
+      <mat-icon svgIcon="arrow_back"></mat-icon>
+    </a>
+    <bf-tag>{{sale.status | toLabel: 'contractStatus'}}</bf-tag>
+    <ng-container *ngIf="sale.buyerId | getOrg | async as org">
+      <div fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
+        <img height="100" width="100" [ref]="org?.logo" asset="empty_organization.svg" type="logo"
+          alt="Organization Logo">
+        <h1>{{ org | orgName }}</h1>
+      </div>
+    </ng-container>
+    <span>Ref {{ sale.offerId }} / Offer created: {{sale._meta.createdAt | date: 'dd/MM/yyyy'}}</span>
+    <div fxLayout fxLayoutAlign="space-between center" class="actions">
+      <div fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
+        <ng-container *ngIf="sale.sellerId === centralOrgId.catalog; else outOfPlatformSale">
+          <ng-container [ngSwitch]="sale.status">
+            <ng-container *ngSwitchCase="'accepted'">
+              <button mat-flat-button color="primary" disabled
+                matTooltip="You have already accepted this offer, please connect with the AC Team">
+                <span>Accepted</span>
+                <mat-icon svgIcon="check"></mat-icon>
+              </button>
+            </ng-container>
+            <ng-container *ngSwitchCase="'declined'">
+              <button mat-flat-button color="primary" disabled
+                matTooltip="You have already declined this offer, please connect with the AC Team">
+                <span>Declined</span>
+                <mat-icon svgIcon="refuse"></mat-icon>
+              </button>
+            </ng-container>
+            <ng-container *ngSwitchDefault>
+              <button mat-stroked-button color="primary" (click)="changeStatus('accepted',sale.id)">
+                <mat-icon svgIcon="check"></mat-icon>
+                <span>Accept</span>
+              </button>
+              <button mat-stroked-button color="primary" (click)="changeStatus('declined',sale.id)">
+                <mat-icon svgIcon="refuse"></mat-icon>
+                <span>Decline</span>
+              </button>
+            </ng-container>
+          </ng-container>
+        </ng-container>
+        <ng-template #outOfPlatformSale>
+          <mat-form-field appearance="fill">
+            <mat-label>Contract status</mat-label>
+            <mat-select (selectionChange)="changeStatus($event, sale.id)">
+              <mat-option *ngFor="let status of contractStatus" [value]="status">
+                {{status|uppercase}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+        </ng-template>
+      </div>
+      <button mat-flat-button color="primary" (click)="openIntercom()">
+        <mat-icon svgIcon="comment"></mat-icon>
+        <span>Contact Archipel Content Team</span>
+      </button>
+    </div>
+  </header>
+  <ng-container *ngIf="sale.sellerId === centralOrgId.catalog">
+    <section class="surface" *ngIf="sale.specificity as specificity">
+      <h2>Specific Terms</h2>
+      <p>{{specificity}}</p>
+    </section>
+    <section class="surface" *ngIf="sale.delivery as delivery">
+      <h2>Delivery Wishlist</h2>
+      <p>{{delivery}}</p>
+    </section>
+  </ng-container>
+</ng-container>
+<ng-container *ngIf="sale$| async as contract">
+  <contract-item [contract]="contract">
+    <ng-container *ngIf="contract.id | getIncome | async as income" price>
+      <ng-container *ngIf="income.price > 0; else askPrice">
+        <h2>{{ income.price | currency: income.currency }}</h2>
+      </ng-container>
+      <ng-template #askPrice>
+        <h3>Buyer requested Asking Price</h3>
+      </ng-template>
+    </ng-container>
+    <footer>
+      <holdback-list [holdbacks]="contract.holdbacks"></holdback-list>
+    </footer>
+  </contract-item>
+</ng-container>
+
+<ng-template #loading>
+  <mat-spinner></mat-spinner>
+</ng-template>

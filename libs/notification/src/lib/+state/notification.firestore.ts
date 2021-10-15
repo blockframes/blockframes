@@ -1,11 +1,10 @@
 import { PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
-import { PublicMovie } from '@blockframes/movie/types';
 import { PublicUser } from '@blockframes/user/+state/user.firestore';
 import { PublicInvitation } from '@blockframes/invitation/+state/invitation.firestore';
 import { firestore } from 'firebase-admin';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
 import { EmailErrorCodes } from '@blockframes/utils/emails/utils';
-import { Bucket } from '@blockframes/contract/bucket/+state/bucket.model';
+import { Bucket } from '@blockframes/contract/bucket/+state/bucket.firestore';
 import { App } from '@blockframes/utils/apps';
 
 // Type of notification used in front
@@ -29,6 +28,7 @@ export const notificationTypesBase = [
   'invitationToAttendScreeningCreated',
 
   // Notifications related to offers
+  'contractCreated',
   'offerCreatedConfirmation'
 ] as const;
 
@@ -58,7 +58,6 @@ export interface NotificationBase<D> {
   /** @dev Possible subjects of the notification */
   user?: Partial<PublicUser>;
   docId?: string;
-  movie?: PublicMovie;
   organization?: PublicOrganization;
   invitation?: PublicInvitation;
   bucket?: Bucket;

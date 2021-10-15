@@ -1,0 +1,112 @@
+{
+  "fields": [
+    {
+      "name": "date",
+      "type": "timestamp"
+    },
+    {
+      "name": "eventId",
+      "type": "string"
+    },
+    {
+      "name": "id",
+      "type": "string"
+    },
+    {
+      "name": "mode",
+      "type": "string"
+    },
+    {
+      "name": "status",
+      "type": "string"
+    },
+    {
+      "name": "type",
+      "type": "string"
+    },
+    {
+      "name": "fromOrg",
+      "type": "map",
+      "fields": [
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "denomination",
+          "type": "map",
+          "fields": [
+            {
+              "name": "full",
+              "type": "string"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "fromUser",
+      "type": "map",
+      "fields": [
+        {
+          "name": "uid",
+          "type": "string"
+        },
+        {
+          "name": "firstName",
+          "type": "string"
+        },
+        {
+          "name": "lastName",
+          "type": "string"
+        },
+        {
+          "name": "email",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "toUser",
+      "type": "map",
+      "fields": [
+        {
+          "name": "uid",
+          "type": "string"
+        },
+        {
+          "name": "firstName",
+          "type": "string"
+        },
+        {
+          "name": "lastName",
+          "type": "string"
+        },
+        {
+          "name": "email",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "toOrg",
+      "type": "map",
+      "fields": [
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "denomination",
+          "type": "map",
+          "fields": [
+            {
+              "name": "full",
+              "type": "string"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

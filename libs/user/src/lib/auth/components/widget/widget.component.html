@@ -1,12 +1,12 @@
 <ng-container *ngIf="(user$ | async) as user else login">
   <ng-container *ngIf="(organization$ | async) as organization">
     <article fxLayout="row">
-      <div class="user-info" fxLayout="column" fxLayoutAlign="center end">
-        <span class="mat-body-2">{{ user | displayName }}</span>
-        <span class="mat-caption">{{ user.position }}</span>
-      </div>
-      <button mat-icon-button [widgetTarget]="menu" test-id="profile-avatar" test-id="auth-user-avatar">
-        <img asset="profil_user.webp" [ref]="user.avatar" alt="Profile picture">
+      <button class="profile" matRipple [widgetTarget]="menu" test-id="auth-user">
+        <div fxLayout="column" fxLayoutAlign="center end">
+          <span class="mat-body-2">{{ user | displayName }}</span>
+          <span class="mat-caption">{{ user.position }}</span>
+        </div>
+        <img asset="profil_user.svg" [ref]="user.avatar" alt="Profile picture">
       </button>
       <span class="mat-caption bf-admin" *ngIf="isBfAdmin | async">Blockframes Admin (db <strong>v{{ (appVersion$ |
           async)?.currentVersion }}</strong> | emulators : <strong>{{ emulators }}</strong> )</span>

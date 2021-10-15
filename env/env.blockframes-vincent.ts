@@ -60,7 +60,7 @@ export const algolia = {
   indexNameUsers: 'vincent_users',
 };
 
-// Support emails 
+// Support emails
 // =======
 
 export const supportEmails = {
@@ -70,7 +70,7 @@ export const supportEmails = {
   financiers: 'vchoukroun+financiers@cascade8.com'
 }
 
-// Yandex 
+// Yandex
 // =======
 
 export const yandex = {
@@ -111,7 +111,7 @@ export const relayer = {
 
 export const omdbApiKey = '4d1be897';
 
-// Sentry 
+// Sentry
 // =======
 
 export const sentryEnv = '';
@@ -172,4 +172,5 @@ export const chunkSize = 25;
 // @see https://dashboard.jwplayer.com/#/content/detail?key=7R9ttesP&property=75507f12-83b6-11ea-ab11-3e60acbe08db&spotlight=default&tab=metadata&view=list
 // ========
 
-export const testVideoId = '7R9ttesP';
+export const playerId = 'LVeBD5vf';
+export const testVideoId = 'YlSFNnkR';

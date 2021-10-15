@@ -31,7 +31,8 @@ beforeEach(() => {
   p2.clickSignIn();
 });
 
-describe('Create a new bucket and finalize a new offer', () => {
+//TODO : Issue: 6757 - Fix import spec to get this to work
+describe.skip('Create a new bucket and finalize a new offer', () => {
   it('Log in, go to the library page, add movie to the bucket and create an offer', () => {
     const p1 = new HomePage();
     p1.openSidenavMenuAndNavigate('library');
@@ -75,6 +76,6 @@ describe('Create a new bucket and finalize a new offer', () => {
     p3.createNewOffer(specificText, deliveryText);
     assertMoveTo('/c/o/marketplace/selection/congratulations');
     cy.log("Check if offer is sent");
-    cy.get('catalog-congratulations h1', {timeout: 10 * SEC}).should('contain', 'Your Offer was successfully sent.');
+    cy.get('catalog-congratulations h1', {timeout: 10 * SEC}).should('contain', 'has been successfully sent.');
   });
 });

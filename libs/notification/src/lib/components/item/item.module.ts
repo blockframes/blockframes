@@ -8,6 +8,7 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 
 @NgModule({
   declarations: [ItemComponent],
@@ -20,6 +21,7 @@ import { MatIconModule } from '@angular/material/icon';
     MatListModule,
     MatButtonModule,
     MatIconModule,
+    MatMenuModule
   ]
 })
 export class NotificationItemModule { }

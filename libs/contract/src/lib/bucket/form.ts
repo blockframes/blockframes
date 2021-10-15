@@ -1,11 +1,11 @@
 import { FormControl, FormGroup } from '@angular/forms';
 import { FormEntity, FormList, FormStaticValueArray } from '@blockframes/utils/form';
 import { MovieVersionInfoForm, createLanguageControl } from '@blockframes/movie/form/movie.form';
+import { RunsForm } from '@blockframes/contract/avails/form/runs.form';
 import { AvailsFilter, DurationMarker, isSameCalendarTerm, isSameMapTerm, TerritoryMarker } from '../avails/avails';
 import {
   Bucket,
   BucketContract,
-  BucketTerm,
   createBucket,
   createBucketContract,
   createBucketTerm,
@@ -14,6 +14,7 @@ import {
 } from './+state/bucket.model';
 import { Subject } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { BucketTerm } from '../term/+state';
 
 //////////
 // TERM //
@@ -29,14 +30,7 @@ function createBucketTermControl(params: Partial<BucketTerm> = {}) {
       to: new FormControl(term.duration?.to)
     }),
     languages: MovieVersionInfoForm.factory(term.languages, createLanguageControl),
-    runs: new FormGroup({
-      broadcasts: new FormControl(term.runs?.broadcasts),
-      catchup: new FormGroup({
-        from: new FormControl(term.runs?.catchup.from),
-        duration: new FormControl(term.runs?.catchup.duration),
-        period: new FormControl(term.runs?.catchup.period),
-      }),
-    })
+    runs: new RunsForm(term.runs),
   }
 }
 

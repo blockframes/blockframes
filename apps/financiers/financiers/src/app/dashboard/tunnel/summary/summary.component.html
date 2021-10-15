@@ -5,14 +5,9 @@
       validation.
     </p>
 
-    <div *ngIf="invalidFields.length" class="mat-body">
-      <div class="mandatory-control">
-        <span *ngIf="invalidFields.length">You have {{ invalidFields.length }} mandatory fields
-          to fill in.</span>
-        <span class="mandatory-control">
-          {{ invalidFields | fromCamelCase | titlecase }}
-        </span>
-      </div>
+    <div *ngIf="blockingFields.length" class="mat-body">
+      <span class="invalid-fields">You have {{ blockingFields.length }} blocking { blockingFields.length, plural, =0 {} =1 {field} other {fields}}
+        to fill in or fix: {{ blockingFields | toLabel : 'movieFormFields' }}</span>
     </div>
 
     <!-- MAIN INFORMATION -->
@@ -81,18 +76,6 @@
       <mat-divider></mat-divider>
     </ng-container>
 
-    <!-- SALES PITCH -->
-
-    <ng-container *ngIf="form | hasStatus: ['development', 'shooting', 'post_production', 'finished']">
-
-      <section id="sales-pitch">
-        <h3>Sales Pitch</h3>
-        <movie-summary-sales-pitch [movie]="form" [link]="('sales-pitch' | getPath)"></movie-summary-sales-pitch>
-      </section>
-
-      <mat-divider></mat-divider>
-    </ng-container>
-
     <!-- TECHNICAL INFORMATION -->
 
     <section id="technical-information">
@@ -102,12 +85,12 @@
 
     <mat-divider></mat-divider>
 
-    <!-- AVAILABLE MATERIALS -->
+    <!-- AVAILABLE VERSIONS -->
 
-    <section id="available-materials">
-      <h3>Available Materials</h3>
-      <movie-summary-available-materials [movie]="form" [link]="('available-materials' | getPath)">
-      </movie-summary-available-materials>
+    <section id="available-versions">
+      <h3>Available Versions</h3>
+      <movie-summary-available-versions [movie]="form" [link]="('available-versions' | getPath)">
+      </movie-summary-available-versions>
     </section>
 
     <mat-divider></mat-divider>
@@ -143,7 +126,7 @@
     </section>
 
     <!-- Submit -->
-    <button test-id="submit" mat-flat-button color="accent" class="submit" (click)="submit()"
+    <button id="submit" test-id="submit" mat-flat-button color="accent" class="submit" (click)="submit()"
       [disabled]="isPublished$ | async">
       <span>Submit for Validation</span>
       <mat-icon svgIcon="arrow_forward"></mat-icon>

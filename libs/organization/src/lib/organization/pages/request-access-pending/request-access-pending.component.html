@@ -1,0 +1,9 @@
+<button app-logo (click)="logout()"></button>
+
+<section class="surface" fxLayout="column" fxLayoutAlign="center center">
+  <img asset="congratulations.svg"/>
+  <h1>Your request was successfully sent. Our team will get back to you ASAP.</h1>
+  <p class="mat-body-2">N.B.: You will receive a notification by email once your request is approved.</p>
+  <button mat-flat-button color="primary" (click)="refresh()">Refresh</button>
+  <button mat-button color="primary" (click)="logout()">Exit</button>
+</section>

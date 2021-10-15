@@ -21,13 +21,22 @@ export class UploadWidgetComponent {
   @HostBinding('@slideUp') animation = true;
 
   @HostListener('window:beforeunload', [ '$event' ])
-  beforeUnloadHandler() {
+  beforeUnloadHandler(event: Event) {
     // check if there are tasks paused or errored; if so, then remove the reference
     for (const task of this.tasks.value) {
       const state = task.task.snapshot.state as 'success' | 'paused' | 'running' | 'canceled'
       if (state === 'paused' || state === 'canceled') {
         this.removeReference(task)
       }
+    }
+
+    const uploading = this.tasks.value.some(task => {
+      const state = task.task.snapshot.state as 'success' | 'paused' | 'running' | 'canceled';
+      return state === 'running';
+    });
+    if (uploading) {
+      // Prompts warning to ask if you want to leave the page
+      event.returnValue = true;
     }
   }
 

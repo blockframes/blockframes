@@ -1,5 +1,0 @@
-{
-  "sourcesPath": "./contracts/sol/",
-  "targetPath": "./contracts/build/",
-  "compiler": "native"
-}

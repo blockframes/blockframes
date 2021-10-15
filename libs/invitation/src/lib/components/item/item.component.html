@@ -1,8 +1,8 @@
-<mat-list-item *ngIf="!!_invitation">
-  <img matListAvatar *ngIf="_invitation.fromUser" asset="profil_user.webp" [ref]="_invitation.fromUser.avatar"
-    alt="Profile picture">
-  <img matListAvatar *ngIf="_invitation.fromOrg" asset="profil_user.webp" [ref]="_invitation.fromOrg.logo"
-    alt="Organization logo">
+﻿<mat-list-item *ngIf="!!_invitation">
+  <img matListAvatar *ngIf="_invitation.fromUser" asset="profil_user.svg" [ref]="_invitation.fromUser.avatar"
+  alt="Profile picture">
+  <img matListAvatar *ngIf="_invitation.fromOrg" asset="profil_user.svg" [ref]="_invitation.fromOrg.logo"
+  alt="Organization logo">
   <div matLine>
     <ng-container [ngSwitch]="_invitation.type">
       <ng-container *ngSwitchCase="'attendEvent'">
@@ -12,15 +12,26 @@
             <ng-container *ngIf="event.type === 'meeting'; else inviteScreening">
 
               <ng-container *ngIf="fromUser.$ | async as user">
-                <a [href]="'mailto:' + user.email">{{ user | displayUser | async }}</a> invited you to {{ event.type }}
-                <a [target]="targetLink" [href]="[applicationUrl.festival + '/c/o/marketplace/event/' + _invitation.eventId + '/lobby']" id="link">{{ event.title }}</a>.
+                <p matLine fxLayout="row wrap" fxLayoutGap="6px">
+                  <a [href]="'mailto:' + user.email">{{ user | displayUser | async }}</a> 
+                  <span>
+                    invited you to {{ event.type }}
+                    <a [target]="targetLink" [href]="[applicationUrl.festival + '/c/o/marketplace/event/' + _invitation.eventId + '/lobby']" id="link">{{ event.title }}</a>
+                  </span>
+                  <span>({{ event | eventRange }})</span>
+                </p>
               </ng-container>
 
             </ng-container>
             <ng-template #inviteScreening>
-              <a [routerLink]="['/c/o/marketplace/organization', _invitation.fromOrg.id]">{{ _invitation.fromOrg | orgName }}</a> invited you to
-              <a [target]="targetLink" [href]="[applicationUrl.festival + '/c/o/marketplace/event/' + _invitation.eventId + '/session']" id="link">{{ event.title }}</a>.
-              ({{event | eventRange }})
+              <p matLine fxLayout="row wrap" fxLayoutGap="6px">
+                <a [routerLink]="['/c/o/marketplace/organization', _invitation.fromOrg.id]">{{ _invitation.fromOrg | orgName }}</a>
+                <span>
+                  invited you to
+                  <a [target]="targetLink" [href]="[applicationUrl.festival + '/c/o/marketplace/event/' + _invitation.eventId + '/session']" id="link">{{ event.title }}</a>
+                </span>
+                <span>({{event | eventRange }})</span>
+              </p>
             </ng-template>
           </ng-container>
           <!-- Request to attendEvent -->
@@ -28,16 +39,26 @@
             <ng-container *ngIf="event.type === 'meeting'; else requestScreening">
 
               <ng-container *ngIf="fromUser.$ | async as user">
-                <a [href]="'mailto:' + user.email">{{ user | displayUser | async }}</a> would like to attend {{ event.type }}
-                <a [target]="targetLink" [href]="[applicationUrl.festival + '/c/o/marketplace/event/' + _invitation.eventId]" id="link">{{ event.title }}</a>.
-                ({{ event | eventRange }})
+                <p matLine fxLayout="row wrap" fxLayoutGap="6px">
+                  <a [href]="'mailto:' + user.email">{{ user | displayUser | async }}</a> 
+                  <span>
+                    would like to attend {{ event.type }}
+                    <a [target]="targetLink" [href]="[applicationUrl.festival + '/c/o/marketplace/event/' + _invitation.eventId]" id="link">{{ event.title }}</a>
+                  </span>
+                <span>({{ event | eventRange }})</span>
+                </p>
               </ng-container>
 
             </ng-container>
             <ng-template #requestScreening>
-              <a [href]="'mailto:' + _invitation.fromUser.email">{{ _invitation.fromUser | displayUser | async }}</a> would like to attend {{ event.type }}
-              <a [target]="targetLink" [href]="[applicationUrl.festival + '/c/o/marketplace/event/' + _invitation.eventId]" id="link">{{ event.title }}</a>.
-              ({{ event | eventRange }})
+              <p matLine fxLayout="row wrap" fxLayoutGap="6px">
+                <a [href]="'mailto:' + _invitation.fromUser.email">{{ _invitation.fromUser | displayUser | async }}</a> 
+                <span>
+                  would like to attend {{ event.type }}
+                  <a [target]="targetLink" [href]="[applicationUrl.festival + '/c/o/marketplace/event/' + _invitation.eventId]" id="link">{{ event.title }}</a>.
+                </span>
+                <span>({{ event | eventRange }})</span>
+              </p>
             </ng-template>
           </ng-template>
         </ng-container>
@@ -54,13 +75,12 @@
   </div>
   <span matLine>
     <small class="mat-caption">
-      {{ _invitation.date | date: 'medium' }}
+      {{ _invitation.date | timesince }} ago
     </small>
   </span>
-  <invitation-action [invitation]="_invitation" fxLayoutAlign="end"></invitation-action>
+  <invitation-action [invitation]="_invitation" fxLayoutAlign="end" small></invitation-action>
   <button mat-icon-button test-id="more" [matMenuTriggerFor]="menu" aria-label="Trigger for a menu">
-    <mat-icon svgIcon="more_vert">
-    </mat-icon>
+    <mat-icon svgIcon="more_vert"></mat-icon>
   </button>
 </mat-list-item>
 <mat-menu #menu="matMenu">

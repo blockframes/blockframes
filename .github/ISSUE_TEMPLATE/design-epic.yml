@@ -1,0 +1,43 @@
+name: Design Epic
+description: Create an Epic
+body:
+  - type: textarea
+    attributes:
+      label: Preparation
+      description: Tasks which should be done before execution can start. E.g. research, learning a new tool, making an inventory
+      placeholder: List all places in the app where ...
+  - type: textarea
+    attributes:
+      label: Execution
+      description: List all the tasks that need to be done in order to complete the feature. Maximum size of task should be around 4 hours of work.
+      placeholder: |
+        - Create new design for log in page
+        - Create new illustration for log in page
+        - Describe 'show password' functionality on password field
+  - type: textarea
+    attributes:
+      label: Clean up
+      description: e.g. Create documentation, update all designs, remove draft versions
+      placeholder: |
+        - Remove draft versions
+        - Update all mockups
+  - type: input
+    attributes:
+      label: Estimation
+      description: How long do you think it will take to do all this?
+      placeholder: 1 sprint / 3 days
+  - type: dropdown
+    attributes:
+      label: Priority
+      description: How would you prioritize this?
+      options:
+        - High
+        - Medium
+        - Low
+  - type: textarea
+    attributes:
+      label: Anything else?
+      description: |
+        Links? References? Anything that will give us more context about the issue you are encountering!
+
+        Tip: You can attach images or log files by clicking this area to highlight it and then dragging files in.

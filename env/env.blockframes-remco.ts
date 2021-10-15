@@ -59,7 +59,7 @@ export const algolia = {
   indexNameUsers: 'remco_users',
 };
 
-// Support emails 
+// Support emails
 // =======
 
 export const supportEmails = {
@@ -69,7 +69,7 @@ export const supportEmails = {
   financiers: 'rsimonides+financiers@cascade8.com'
 }
 
-// Yandex 
+// Yandex
 // =======
 
 export const yandex = {
@@ -110,7 +110,7 @@ export const relayer = {
 
 export const omdbApiKey = '4d1be897';
 
-// Sentry 
+// Sentry
 // =======
 
 export const sentryEnv = undefined;
@@ -149,7 +149,8 @@ export const bigQueryAnalyticsTable = 'blockframes-remco.analytics_234801912.eve
 
 export const datastudio = {
   user: '1564ae35-5e86-4632-bfef-ef7f4db7a865/page/P9czB',
-  users: '978dc4a0-6dfc-4499-b159-f69f53aeb3a5/page/00YOC'
+  users: '978dc4a0-6dfc-4499-b159-f69f53aeb3a5/page/00YOC',
+  events: 'a98badcf-df61-4f32-903d-6e703c75fd3d/page/TK5PC'
 }
 
 // Archipel OrgIds
@@ -171,4 +172,5 @@ export const chunkSize = 25
 // @see https://dashboard.jwplayer.com/#/content/detail?key=7R9ttesP&property=75507f12-83b6-11ea-ab11-3e60acbe08db&spotlight=default&tab=metadata&view=list
 // ========
 
-export const testVideoId = '7R9ttesP';
+export const playerId = 'LVeBD5vf';
+export const testVideoId = 'YlSFNnkR';

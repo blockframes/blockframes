@@ -1,0 +1,27 @@
+<section fxLayout="column" fxLayoutAlign="center center">
+  <h1>Create Organization </h1>
+  <!-- SUPER ADMIN -->
+  <form [formGroup]="superAdminForm">
+    <mat-form-field appearance="outline">
+      <mat-label>Super Admin Email</mat-label>
+      <input matInput type="email" placeholder="Email" aria-label="email" formControlName="email" required />
+      <mat-error *ngIf="superAdminForm.get('email').hasError('email') && !superAdminForm.get('email').hasError('required')">
+        Please enter a <strong>valid</strong> email address.
+      </mat-error>
+      <mat-error *ngIf="superAdminForm.get('email').hasError('taken')">
+        User of this email address already has an organization.
+      </mat-error>
+    </mat-form-field>
+  </form>
+
+  <static-select scope="appName" [control]="fromApp" [withoutValues]="['cms', 'crm']" placeholder="From app">
+    <mat-label>From App</mat-label>
+  </static-select>
+
+  <crm-organization-form [form]="form" disableCropper></crm-organization-form>
+
+  <button test-id="create" mat-flat-button color="accent" (click)="addOrganization()">
+    <span>Create</span>
+    <mat-icon svgIcon="arrow_forward"></mat-icon>
+  </button>
+</section>

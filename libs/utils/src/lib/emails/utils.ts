@@ -5,11 +5,12 @@ import { EventDocument, EventMeta, EventTypes } from "@blockframes/event/+state/
 import { Organization, OrganizationDocument } from "@blockframes/organization/+state";
 import { User } from "@blockframes/auth/+state";
 
-export interface EmailRequest {
+interface EmailData {
   to: string;
   subject: string;
-  text: string;
 }
+
+export type EmailRequest = EmailData &({ text: string } | { html: string });
 
 export interface EmailTemplateRequest {
   to: string;

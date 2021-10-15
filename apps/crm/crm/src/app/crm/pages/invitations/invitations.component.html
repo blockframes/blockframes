@@ -1,0 +1,10 @@
+<main fxLayout="column">
+  <crm-bread-crumb></crm-bread-crumb>
+  <article fxLayout="column" fxLayoutAlign="center center">
+    <button [disabled]="!invitationListLoaded" mat-flat-button color="primary" (click)="exportTable()">
+      <span>Export to CSV</span>
+      <mat-icon svgIcon="arrow_upward"></mat-icon>
+    </button>
+  </article>
+  <invitation-guest-table [initialColumns]="columns" [invitations]="invitations"></invitation-guest-table>
+</main>

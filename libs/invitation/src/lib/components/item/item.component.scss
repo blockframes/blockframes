@@ -1,8 +1,16 @@
 invitation-action {
-  width: 250px;
+  width: 150px;
 }
 
 #link {
-  text-decoration: underline;
   color: var(--primary);
+}
+
+p {
+  margin: 0;
+  line-height: normal;
+}
+
+mat-list-item span {
+  line-height: normal;
 }

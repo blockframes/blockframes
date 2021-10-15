@@ -1,0 +1,28 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 0 60px;
+  padding-top: 28px;
+}
+nav[mat-tab-nav-bar] button {
+  border: none;
+  background-color: transparent;
+}
+
+.mat-card {
+  width: 100%;
+}
+
+.empty{
+  margin: auto;
+  h1, p{
+   text-align: center;
+ }
+ img{
+   margin-top: 24px;
+   max-width: 200px;
+   max-height: 200px;
+ }
+}

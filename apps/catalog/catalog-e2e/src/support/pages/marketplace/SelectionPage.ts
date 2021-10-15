@@ -10,13 +10,17 @@ export default class SelectionPage {
   public selectCurrency(currency: Currency = defaultCurrency) {
     cy.log('Check if currency input is here.')
     cy.get('static-select[test-id=selection-currency]', {timeout: 30 * SEC})
-      .should('contain', `${currency.label}`);
+      .should('contain', `${defaultCurrency.label}`);
 
-    cy.get('static-select[test-id=selection-currency]', {timeout: 30 * SEC}).click({scrollBehavior: false});
-    cy.get('mat-option', {timeout: 30 * SEC}).contains(currency.label).click();
+    cy.get('static-select[test-id=selection-currency]', {timeout: 30 * SEC})
+      .click({scrollBehavior: false});
+    cy.get('mat-option', {timeout: 30 * SEC})
+      .contains(currency.label)
+      .click();
+    cy.wait(0.5 * SEC);
 
     cy.log('Check if the currency is updated and stable on distribution right section.');
-    cy.get(`section[test-id="avails-section"]`, {timeout: 30 * SEC})
+    cy.get(`header[test-id="avails-section"]`, {timeout: 30 * SEC})
       .first()
       .find(`mat-form-field[price]`, {timeout: 1 * SEC})
       .find('mat-icon[matPrefix]')
@@ -25,19 +29,19 @@ export default class SelectionPage {
 
   /** Check how many sections we should get on the selection page (one by sales agent and by film) */
   public checkNumberOfSection(number: number) {
-    cy.get('section[test-id="avails-section"]', {timeout: 30 * SEC})
+    cy.get('header[test-id="avails-section"]', {timeout: 30 * SEC})
       .should('have.length', number);
     cy.log(`Found ${number} sections`);
   }
 
   public checkTitleContract(title: string) {
     cy.log(`Find section with ${title} movie`);
-    cy.get('section[test-id="avails-section"]', {timeout: 30 * SEC})
+    cy.get('header[test-id="avails-section"]', {timeout: 30 * SEC})
       .find('h2').contains(title);
   }
 
   public fillPrice(title: string, price: number) {
-    cy.get(`section[test-id="avails-section"]`, {timeout: 30 * SEC})
+    cy.get(`header[test-id="avails-section"]`, {timeout: 30 * SEC})
       .each(($el, i) => {
         cy.wrap($el).find('h2').then(($movie) => {
           if ($movie.text() === title) {
@@ -56,7 +60,7 @@ export default class SelectionPage {
   }
 
   public deleteContract() {
-    cy.get('section[test-id="avails-section"]', {timeout: 30 * SEC}).first().find('button[test-id="delete-contract"]').click();
+    cy.get('header[test-id="avails-section"]', {timeout: 30 * SEC}).first().find('button[test-id="delete-contract"]').click();
   }
 
   public createNewOffer(specificText: string, deliveryText: string) {

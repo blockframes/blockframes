@@ -49,6 +49,14 @@ export function readJsonlFile(dbBackupPath: string) {
 let missingVarsMessageShown = false;
 
 export function warnMissingVars(): void | never {
+  if (process.env['PROJECT_ID'] !== firebase().projectId) {
+    console.warn(
+      'WARNING! Your PROJECT_ID in your shell environment does not match your'
+      + 'Firebase project ID found in your Firebase configuration!'
+      + 'Please use the "use" command to reset this unless you know what you\'re doing.'
+      + '\nIf you are using a demo project ID for emulator, this is to be expected.'
+    );
+  }
   const warn = (key: string, msg: string) => {
     console.warn(`Please ensure the following variable is set in .env : ${key}`);
     console.warn(`More info: ${msg}\n`);
@@ -77,15 +85,12 @@ export interface AdminServices {
   auth: admin.auth.Auth;
   db: admin.firestore.Firestore;
   storage: admin.storage.Storage;
-  firebaseConfig: { projectId: string };
+  firebaseConfig: ReturnType<typeof firebase>;
   getCI: () => admin.app.App;
 }
 
-let ci: admin.app.App;
-
 export function loadAdminServices(): AdminServices {
   config();
-  warnMissingVars();
 
   if (!admin.apps.length) {
     admin.initializeApp({
@@ -94,19 +99,6 @@ export function loadAdminServices(): AdminServices {
     });
   }
 
-  const getCI = () => {
-    if (!ci) {
-      ci = admin.initializeApp(
-        {
-          projectId: firebaseCI().projectId,
-          credential: admin.credential.applicationDefault(),
-        },
-        'CI-app'
-      );
-    }
-    return ci;
-  };
-
   return {
     getCI,
     auth: admin.auth(),
@@ -114,6 +106,21 @@ export function loadAdminServices(): AdminServices {
     firebaseConfig: firebase(),
     storage: admin.storage(),
   };
+}
+
+let ci: admin.app.App;
+
+function getCI() {
+  if (!ci) {
+    ci = admin.initializeApp(
+      {
+        projectId: firebaseCI().projectId,
+        credential: admin.credential.applicationDefault(),
+      },
+      'CI-app'
+    );
+  }
+  return ci;
 }
 
 export const sleep = (ms: number) => new Promise<void>(res => setTimeout(res, ms));
@@ -138,4 +145,24 @@ export async function hasAcceptedMovies(org: OrganizationDocument, appli: App) {
 
 export function throwOnProduction(): never | void {
   if (firebase().projectId === 'blockframes') throw Error('DO NOT RUN ON PRODUCTION!');
+}
+
+/**
+ * Removes all one-depth subcollections
+ * @param snapshot
+ * @param batch
+ */
+ export async function removeAllSubcollections(
+  snapshot: FirebaseFirestore.DocumentSnapshot,
+  batch: FirebaseFirestore.WriteBatch,
+  db = admin.firestore(),
+  ): Promise<FirebaseFirestore.WriteBatch> {
+  console.log(`starting deletion of ${snapshot.ref.path} sub-collections`);
+  const subCollections = await snapshot.ref.listCollections();
+  for (const x of subCollections) {
+    console.log(`deleting sub collection : ${x.path}`);
+    const documents = await db.collection(x.path).listDocuments();
+    documents.forEach(ref => batch.delete(ref))
+  }
+  return batch;
 }

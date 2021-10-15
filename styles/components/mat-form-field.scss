@@ -12,7 +12,7 @@
     &.ng-valid, &.ng-invalid {
       .mat-form-field-wrapper {
         padding-bottom: 0.6em;
-      }
+      } 
     }
 
     &-underline {
@@ -31,7 +31,7 @@
 
     // this is needed to make mat-form field icons red on error
     &.ng-invalid.ng-touched {
-      mat-icon {
+      .mat-icon {
         svg {
           margin-bottom: 4px;
           path {
@@ -71,6 +71,11 @@
       .mat-form-field-outline-end,
       .mat-form-field-outline-gap {
         border-width: 1px;
+      }
+    }
+    &.mat-form-field-disabled {
+      .mat-form-field-outline {
+        color: mat.get-color-from-palette($foreground, divider);
       }
     }
   }

@@ -1,4 +1,3 @@
-
 <header fxLayout fxLayoutAlign="space-between center" id="avails">
   <h2>Search & buy Rights</h2>
   <button mat-button (click)="explain()" fxLayout="row" fxLayoutAlign="center center">
@@ -15,10 +14,13 @@
 
 <ng-container *ngIf="(terms$ | async).length">
   <h2 id="rights">Preselected Rights</h2>
-  <mat-card *ngFor="let control of terms$ | async | reverse">
+  <mat-card *ngFor="let control of terms$ | async | reverse; index as i;" [attr.data-scroll-to-view-id]="i">
     <form [formGroup]="control" *ngIf="control.value as term">
       <mat-card-header fxLayout fxLayoutAlign="space-between center">
-        <mat-card-title>{{ term.exclusive ? 'Exclusive' : 'Non Exclusive' }} Rights from {{ term.duration.from | date: 'MM/dd/yyyy' }} until {{ term.duration.to | date: 'MM/dd/yyyy' }}</mat-card-title>
+        <mat-card-title>
+          {{ term.exclusive ? 'Exclusive' : 'Non Exclusive' }} Rights from {{ term.duration.from | date:
+          'MM/dd/yyyy' }} until {{ term.duration.to | date: 'MM/dd/yyyy' }}
+        </mat-card-title>
         <section fxLayoutGap="12px">
           <button mat-icon-button (click)="edit(term)" matTooltip="Edit">
             <mat-icon svgIcon="edit"></mat-icon>
@@ -29,6 +31,14 @@
         </section>
       </mat-card-header>
       <mat-card-content>
+        <ng-container *ngIf="(term | collidingHoldbacks: holdbacks) as collision">
+          <ng-container *ngIf="collision.length">
+            <button mat-button (click)="openHoldbackModal(collision)">
+              <mat-icon svgIcon="info"></mat-icon>
+              <span>Holdback(s) exist for this right</span>
+            </button>
+          </ng-container>
+        </ng-container>
         <mat-accordion>
           <!-- TERRITORIES -->
           <mat-expansion-panel expanded>
@@ -38,21 +48,25 @@
               </mat-panel-title>
             </mat-expansion-panel-header>
             <article class="expansion-panel-content">
-              <ng-container *ngIf="term.territories.length <= maxTerritories; else moreTerritories">
-                <mat-chip-list aria-label="Territories">
-                  <mat-chip *ngFor="let territory of term.territories">{{ territory | toLabel: 'territories' }}</mat-chip>
-                </mat-chip-list>
-              </ng-container>
-              <ng-template #moreTerritories>
-                <div fxFlex fxLayout="column" fxLayoutAlign="start end">
+              <ng-container *ngIf="(term.territories | toGroupLabel:'territories':'world') as territories">
+                <ng-container *ngIf="territories.length <= maxTerritories; else moreTerritories">
                   <mat-chip-list aria-label="Territories">
-                    <ng-container *ngFor="let territory of term.territories, index as i">
-                      <mat-chip *ngIf="i < maxTerritories">{{ territory | toLabel: 'territories' }}</mat-chip>
-                    </ng-container>
+                    <mat-chip disableRipple *ngFor="let territory of territories">{{ territory }}</mat-chip>
                   </mat-chip-list>
-                  <button mat-button class="spacing" (click)="openTerritoryModal(term.territories, 'territories')">... See {{ term.territories.length - 30 }} More</button>
-                </div>
-              </ng-template>
+                </ng-container>
+                <ng-template #moreTerritories>
+                  <div fxFlex fxLayout="column" fxLayoutAlign="start end">
+                    <mat-chip-list aria-label="Territories">
+                      <ng-container *ngFor="let territory of territories | slice:0:maxTerritories">
+                        <mat-chip disableRipple>{{ territory }}</mat-chip>
+                      </ng-container>
+                    </mat-chip-list>
+                    <button mat-button class="spacing" (click)="openTerritoryModal(term)">
+                      ...See {{ territories.length - 30 }} More
+                    </button>
+                  </div>
+                </ng-template>
+              </ng-container>
             </article>
 
           </mat-expansion-panel>
@@ -66,7 +80,9 @@
             </mat-expansion-panel-header>
             <article class="expansion-panel-content">
               <mat-chip-list aria-label="Medias">
-                <mat-chip *ngFor="let media of term.medias">{{ media | toLabel: 'medias' }}</mat-chip>
+                <mat-chip disableRipple *ngFor="let media of term.medias  | toGroupLabel:'medias':'All'">
+                  {{ media }}
+                </mat-chip>
               </mat-chip-list>
             </article>
           </mat-expansion-panel>
@@ -96,36 +112,7 @@
                 <span class="mat-body-2">&nbsp;(Non Mandatory)</span>
               </mat-panel-title>
             </mat-expansion-panel-header>
-            <article class="expansion-panel-content" fxLayout="column" fxFlex formGroupName="runs">
-              <p>Broadcasts</p>
-              <mat-form-field appearance="outline">
-                <mat-label>Number of Broadcasts</mat-label>
-                <input matInput type="number" placeholder="Number of Broadcasts" formControlName="broadcasts">
-              </mat-form-field>
-              <p>Catch Up Rights</p>
-              <div fxFlex fxLayout fxLayoutGap="16px" fxLayoutAlign="start space-between" formGroupName="catchup">
-                <mat-form-field appearance="outline" fxFlex>
-                  <mat-label>Start Date</mat-label>
-                  <input matInput [matDatepicker]="datePicker" placeholder="MM/DD/YYYY" formControlName="from">
-                  <mat-datepicker-toggle matPrefix [for]="datePicker">
-                    <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
-                  </mat-datepicker-toggle>
-                  <mat-datepicker #datePicker></mat-datepicker>
-                </mat-form-field>
-                <mat-form-field appearance="outline" fxFlex>
-                  <mat-label>Duration</mat-label>
-                  <input matInput type="number" placeholder="Duration" formControlName="duration">
-                </mat-form-field>
-                <mat-form-field appearance="outline" fxFlex>
-                  <mat-label>Period</mat-label>
-                  <mat-select matInput placeholder="Period" formControlName="period">
-                    <mat-option *ngFor="let period of periods" [value]="period">
-                      {{ period | titlecase }}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>
-            </article>
+            <runs-form class="expansion-panel-content" [form]="control.get('runs')"></runs-form>
           </mat-expansion-panel>
         </mat-accordion>
       </mat-card-content>

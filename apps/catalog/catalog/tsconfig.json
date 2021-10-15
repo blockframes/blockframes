@@ -3,7 +3,7 @@
   "compilerOptions": {
     "types": ["node", "jest"]
   },
-  "include": [],
+  "include": ["src/environment/environment*.ts"],
   "files": [],
   "references": [
     {

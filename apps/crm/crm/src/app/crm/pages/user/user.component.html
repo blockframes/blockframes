@@ -1,0 +1,126 @@
+<crm-bread-crumb *ngIf="user">{{ user.email }}</crm-bread-crumb>
+<section fxLayout="row" *ngIf="user" fxLayoutAlign="space-around start" fxLayoutGap="40px">
+  <mat-card  fxLayout="column" fxLayoutAlign="center" fxFlex>
+    <mat-card-header fxLayoutAlign="center center">
+      <img mat-card-avatar [ref]="user.avatar" asset="empty_poster.svg" alt="User avatar">
+      <h4>{{ user.firstName }} {{ user.lastName }}</h4>
+    </mat-card-header>
+    <mat-card-content fxLayout="row" fxLayoutAlign="center center" fxFlex fxLayoutGap="24px">
+      <article fxLayout="column" fxLayoutAlign="start start">
+        <h3>Main infos</h3>
+        <ul>
+          <li><b>Id : </b> {{ user.uid }}</li>
+          <li><b>Email : </b> {{ user.email }}</li>
+          <li>
+            <b>Email Verified: </b> {{ (user$ | async)?._meta.emailVerified }}
+            <button *ngIf="!user._meta.emailVerified" mat-button color="primary" (click)="verifyEmail()">Verify</button>
+          </li>
+          <li><b>Position : </b> {{ user.position }}</li>
+          <li><b>Phone Number : </b> {{ user.phoneNumber }}</li>
+        </ul>
+        <h3>Organization infos</h3>
+        <ul>
+          <li *ngIf="userOrg">
+            <b>Organization : </b>
+            <span>{{ userOrg | orgName:'long' }}</span>
+            <button mat-icon-button color="primary" [routerLink]="['/c/o/dashboard/crm/organization', userOrg.id]">
+              <mat-icon svgIcon="visibility"></mat-icon>
+            </button>
+          </li>
+          <li *ngIf="userOrgRole">
+            <b>User Role : </b>
+            <span>{{ userOrgRole }}</span>
+            <member-permissions
+              [uid]="userId"
+              icon="edit"
+              (memberRemoved)="removeMember($event)"
+              (updatedToSuperAdmin)="updateRole($event, 'superAdmin')"
+              (updatedToAdmin)="updateRole($event, 'admin')"
+              (updatedToMember)="updateRole($event, 'member')">
+              >
+            </member-permissions>
+          </li>
+        </ul>
+        <h3>Other settings</h3>
+        <ul>
+          <li>
+            <b>Blockframes admin : </b>
+            <a class="blockframes-admin-link" (click)="setBlockframesAdmin()">
+              <span>{{ isUserBlockframesAdmin? 'remove' : 'add' }}</span>
+              <mat-icon [svgIcon]="isUserBlockframesAdmin  ? 'star_fill': 'star'"></mat-icon>
+            </a>
+          </li>
+          <li>
+            <b>Password : </b>
+            <a class="blockframes-admin-link" (click)="sendPasswordResetEmail()">
+              <span>Send reset password email</span>
+              <mat-icon svgIcon="mail"></mat-icon>
+            </a>
+          </li>
+        </ul>
+      </article>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card *ngIf="userForm"  fxLayout="column" fxLayoutAlign="center" fxFlex>
+    <form [formGroup]="userForm" fxLayout="column">
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput type="text" placeholder="Email" formControlName="email" required />
+        <mat-error *ngIf="userForm.get('email').hasError('required')">
+          Email is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Organization</mat-label>
+        <input matInput type="text" placeholder="Organization id" formControlName="orgId" required />
+        <mat-error *ngIf="userForm.get('orgId').hasError('required')">
+          Organization is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>FirstName</mat-label>
+        <input matInput type="text" placeholder="FirstName" formControlName="firstName" required />
+        <mat-error *ngIf="userForm.get('firstName').hasError('required')">
+          FirstName is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>LastName</mat-label>
+        <input matInput type="text" placeholder="LastName" formControlName="lastName" required />
+        <mat-error *ngIf="userForm.get('lastName').hasError('required')">
+          LastName is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Phone number</mat-label>
+        <input matInput type="text" placeholder="Phone number" formControlName="phoneNumber" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Position</mat-label>
+        <input matInput type="text" placeholder="Position" formControlName="position" />
+      </mat-form-field>
+      <mat-card-actions fxLayoutAlign="end" fxLayoutGap="24px">
+        <button type="submit" mat-flat-button color="primary" (click)="update()">Update</button>
+        <button type="submit" mat-flat-button color="warn" (click)="deleteUser()">Delete</button>
+      </mat-card-actions>
+    </form>
+  </mat-card>
+</section>
+
+<section *ngIf="invitations">
+  <mat-card fxFlex>
+    <bf-table-filter
+      [source]="invitations"
+      [columns]="invitationsColumns"
+      [initialColumns]="initialInvitationsColumns"
+      showFilter
+      showPaginator>
+      <ng-template colRef="date" let-date>
+        <span>{{ date | date: 'short' }}</span>
+      </ng-template>
+    </bf-table-filter>
+  </mat-card>
+</section>
+
+<crm-dashboard dashboard="user" [params]="{ 'ds2.user_id': userId }"></crm-dashboard>

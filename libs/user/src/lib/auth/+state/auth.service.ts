@@ -56,9 +56,8 @@ export class AuthService extends FireAuthService<AuthState> {
    * Initiate the password reset process for this user.
    * @param email email of the user
   */
-  public resetPasswordInit(email: string) {
+  public resetPasswordInit(email: string, app: App = getCurrentApp(this.routerQuery)) {
     const callSendReset = this.functions.httpsCallable('sendResetPasswordEmail');
-    const app = getCurrentApp(this.routerQuery);
     return callSendReset({ email, app }).toPromise();
   }
 
@@ -127,7 +126,7 @@ export class AuthService extends FireAuthService<AuthState> {
     privacyPolicy: PrivacyPolicy
   }) {
     return {
-      _meta: createDocumentMeta(ctx._meta),
+      _meta: createDocumentMeta({ emailVerified: false, ...ctx._meta }),
       uid: user.uid,
       email: user.email,
       firstName: ctx.firstName,

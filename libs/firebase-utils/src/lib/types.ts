@@ -9,3 +9,4 @@ export type QuerySnapshot = admin.firestore.QuerySnapshot;
 export type Transaction = admin.firestore.Transaction;
 export type UserRecord = admin.auth.UserRecord;
 export type CollectionReference = admin.firestore.CollectionReference;
+export type UserIdentifier = admin.auth.UserIdentifier;

@@ -1,4 +1,4 @@
-<a matRipple [routerLink]="['/c/o/marketplace/organization', org.id]">
-  <img [ref]="org.logo" asset="empty_organization.webp" type="logo" alt="Organization Logo">
+<a matRipple [routerLink]="[baseUrl, org?.id]">
+  <img height="40" width="40" [ref]="org?.logo" asset="empty_organization.svg" type="logo" alt="Organization Logo">
   <span class="mat-body-1"><b>{{ org | orgName }}</b></span>
 </a>

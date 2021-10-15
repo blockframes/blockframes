@@ -1,0 +1,46 @@
+:host {
+  text-transform: uppercase;
+  display: flex;
+  padding: 12px 16px;
+  border-radius: 4px;
+  color: #FFF;
+  background-color: #8da4fa;
+  transition: background-color 1s;
+  animation: pulse 2s infinite cubic-bezier(0.20, 0, 0, 0.5);
+  cursor: pointer;
+
+  svg {
+    margin-right: 8px;
+
+    circle.satellite {
+      transform-origin: center;
+      animation: circle 10s infinite linear;
+    }
+  }
+}
+
+:host:hover {
+  background: #3C64F7;
+}
+
+span {
+  margin: 0;
+}
+
+@keyframes pulse {
+  from {
+    box-shadow: 0 0 0 0 rgba(87, 95, 148, 0.64);
+  }
+  to {
+    box-shadow: 0 0 0 15px rgba(232, 76, 61, 0);
+  }
+}
+
+@keyframes circle {
+  from {
+    transform: rotateZ(0deg)
+  }
+  to {
+    transform: rotateZ(360deg)
+  }
+}

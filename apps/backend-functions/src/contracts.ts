@@ -1,5 +1,11 @@
 import { db } from './internals/firebase';
-import { Contract } from '@blockframes/contract/contract/+state/contract.model';
+import { Contract, ContractStatus, Mandate, Sale } from '@blockframes/contract/contract/+state/contract.model';
+import { Change } from 'firebase-functions';
+import { Offer } from '@blockframes/contract/offer/+state';
+import { centralOrgId } from '@env'
+import { Organization } from '@blockframes/organization/+state';
+import { createNotification, triggerNotifications } from './notification';
+import { getDocument, createDocumentMeta } from './data/internals';
 
 export async function onContractDelete(contractSnapshot: FirebaseFirestore.DocumentSnapshot<Contract>) {
 
@@ -12,9 +18,15 @@ export async function onContractDelete(contractSnapshot: FirebaseFirestore.Docum
     await term.ref.delete();
   }
 
-  // Delete offers belonging to contract, if any
+  // An offer can have multiple contracts
+  // We don't want to delete the offer if it still have other contracts
+  // We want to delete the offer only when we delete its last contract
   if (contract.offerId) {
-    await db.doc(`offers/${contract.offerId}`).delete();
+    const offerContractsRef = db.collection('contracts').where('offerId', '==', contract.offerId);
+    const offerContractsSnap = await offerContractsRef.get();
+    if (offerContractsSnap.empty) {
+      await db.doc(`offers/${contract.offerId}`).delete();
+    }
   }
 
   // Delete incomes documents, if any
@@ -25,4 +37,73 @@ export async function onContractDelete(contractSnapshot: FirebaseFirestore.Docum
   }
 
   console.log(`Contract ${contract.id} removed`);
+}
+
+export async function onContractCreate(contractSnapshot: FirebaseFirestore.DocumentSnapshot<Contract>) {
+  const contract = contractSnapshot.data() as Contract;
+
+  if (contract.type !== 'sale') return;
+
+  const stakeholders = contract.stakeholders.filter(stakeholder => {
+    return (stakeholder !== contract.buyerId) && stakeholder !== centralOrgId.catalog;
+  });
+
+  if (!stakeholders.length) return;
+
+  const getNotifications = (org: Organization) => org.userIds.map(userId => createNotification({
+    toUserId: userId,
+    type: 'contractCreated',
+    docId: contract.titleId,
+    _meta: createDocumentMeta({ createdFrom: 'catalog' })
+  }));
+
+  for (const stakeholder of stakeholders) {
+    getDocument<Organization>(`orgs/${stakeholder}`)
+      .then(getNotifications)
+      .then(triggerNotifications);
+  }
+}
+
+
+export async function onContractUpdate(
+  change: Change<FirebaseFirestore.DocumentSnapshot>
+) {
+
+  const before = change.before;
+  const after = change.after;
+
+  if (!before || !after) {
+    throw new Error('Parameter "change" not found');
+  }
+
+  const contractBefore = before.data() as Sale | Mandate | undefined;
+  const contractAfter = after.data() as Sale | Mandate | undefined;
+
+  // KEEP THE OFFER STATUS IN SYNC WITH IT'S CONTRACTS
+  const isSale = contractBefore.type === contractAfter.type && contractBefore.type === 'sale' // contract is of type 'sale'
+  const statusHasChanged = contractBefore.status !== contractAfter.status // contract status has changed
+
+  if (isSale && statusHasChanged) {
+
+    const offerRef = db.doc(`offers/${contractAfter.offerId}`);
+    const offerSnap = await offerRef.get();
+    const offer = offerSnap.data() as Offer;
+
+    if (offer.status === 'signed' || offer.status === 'signing') return
+
+    const offerContractsQuery = db.collection('contracts')
+      .where('offerId', '==', contractAfter.offerId)
+      .where('type', '==', 'sale');
+    const offerContractsSnap = await offerContractsQuery.get();
+
+    const contractsStatus: ContractStatus[] = offerContractsSnap.docs.map(doc => doc.data().status);
+
+    let newOfferStatus = offer.status;
+    newOfferStatus = contractsStatus.some(status => status !== 'pending') ? 'negotiating' : newOfferStatus;
+    newOfferStatus = contractsStatus.every(status => status === 'accepted') ? 'accepted' : newOfferStatus;
+    newOfferStatus = contractsStatus.every(status => status === 'declined') ? 'declined' : newOfferStatus;
+
+    if (newOfferStatus === offer.status) return;
+    offerRef.update({ status: newOfferStatus });
+  }
 }

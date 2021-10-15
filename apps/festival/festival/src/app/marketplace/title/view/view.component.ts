@@ -6,6 +6,8 @@ import { Organization } from '@blockframes/organization/+state/organization.mode
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
 import { mainRoute, additionalRoute, artisticRoute, productionRoute } from '@blockframes/movie/marketplace';
+import { EventService } from '@blockframes/event/+state';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'festival-movie-view',
@@ -16,6 +18,8 @@ import { mainRoute, additionalRoute, artisticRoute, productionRoute } from '@blo
 export class MarketplaceMovieViewComponent implements OnInit {
   public movie$: Observable<Movie>;
   public orgs$: Observable<Organization[]>;
+  public eventId$: Observable<string | null>;
+  public movieId = this.movieQuery.getActiveId();
 
   public navLinks: RouteDescription[] = [
     mainRoute,
@@ -28,25 +32,32 @@ export class MarketplaceMovieViewComponent implements OnInit {
     }
   ];
 
-  // @TODO #5350 Now we can upload video, clean old links
   promoLinks = [
-    'promo_reel_link',
     'scenario',
-    'screener_link',
-    'teaser_link',
     'presentation_deck',
-    'trailer_link',
     'moodboard'
   ];
 
   constructor(
     private movieQuery: MovieQuery,
     private orgService: OrganizationService,
+    private eventService: EventService
   ) { }
 
   ngOnInit() {
     this.movie$ = this.movieQuery.selectActive();
     this.orgs$ = this.orgService.valueChanges(this.movieQuery.getActive().orgIds);
-  }
 
+    const q = ref => ref
+    .where('isSecret', '==', false)
+    .where('meta.titleId', '==', this.movieId)
+    .where('type', '==', 'screening')
+    .orderBy('end', 'asc')
+    .startAt(new Date());
+
+    this.eventId$ = this.eventService.valueChanges(q).pipe(
+      map(events => events.filter(e => e.start < new Date())),
+      map(events => events.length ? events[events.length - 1].id : null)
+    );
+  }
 }

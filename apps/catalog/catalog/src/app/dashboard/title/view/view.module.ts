@@ -7,9 +7,16 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 // Components
 import { TitleViewComponent } from './view.component';
 import { DashboardTitleShellModule } from '@blockframes/movie/dashboard/shell/shell.module';
+import { DashboardActionsShellModule } from '@blockframes/movie/dashboard/actions/actions.module';
 
 // Material
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
+
+// Modules
+import { OrgAccessModule } from '@blockframes/organization/pipes';
 
 const routes = [{
   path: '',
@@ -44,7 +51,12 @@ const routes = [{
       path: 'additional',
       loadChildren: () => import('@blockframes/movie/dashboard/additional/additional.module').then(m => m.MovieViewAdditionalModule),
       data: { animation: 4 }
-    }
+    },
+    {
+      path: 'delivery',
+      loadChildren: () => import('@blockframes/movie/dashboard/delivery/delivery.module').then(m => m.MovieViewDeliveryModule),
+      data: { animation: 5 }
+    },
   ]
 }];
 
@@ -53,9 +65,15 @@ const routes = [{
   imports: [
     CommonModule,
     FlexLayoutModule,
+    // Blockframes
     DashboardTitleShellModule,
+    DashboardActionsShellModule,
+    OrgAccessModule,
     // Material
     MatProgressSpinnerModule,
+    MatIconModule,
+    MatButtonModule,
+    MatMenuModule,
     // Routes
     RouterModule.forChild(routes)
   ]

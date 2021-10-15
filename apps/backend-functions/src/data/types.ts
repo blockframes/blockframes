@@ -1,4 +1,4 @@
-export { MovieDocument, PublicMovie } from '@blockframes/movie/+state/movie.firestore';
+export { MovieDocument } from '@blockframes/movie/+state/movie.firestore';
 export {
   OrganizationDocument,
   PublicOrganization

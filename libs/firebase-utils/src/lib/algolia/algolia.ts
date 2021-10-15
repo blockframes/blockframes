@@ -1,7 +1,7 @@
 import algoliasearch from 'algoliasearch';
 import { algolia as algoliaClient, centralOrgId } from '@env';
 import * as functions from 'firebase-functions';
-import { Language } from '@blockframes/utils/static-model';
+import { festival, Language } from '@blockframes/utils/static-model';
 import { App, app, getOrgModuleAccess, modules } from "@blockframes/utils/apps";
 import { AlgoliaOrganization, AlgoliaMovie, AlgoliaUser, AlgoliaConfig } from '@blockframes/utils/algolia';
 import { OrganizationDocument, orgName } from '@blockframes/organization/+state/organization.firestore';
@@ -71,7 +71,9 @@ export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string)
   const promises = orgAppAccess.map(async appName => {
     org['hasAcceptedMovies'] = await hasAcceptedMovies(org, appName);
     const orgRecord = createAlgoliaOrganization(org);
-    return indexBuilder(algolia.indexNameOrganizations[appName], adminKey).saveObject(orgRecord);
+    if (orgRecord.name) {
+      return indexBuilder(algolia.indexNameOrganizations[appName], adminKey).saveObject(orgRecord);
+    };
   });
 
   return Promise.all(promises)
@@ -97,7 +99,7 @@ export function createAlgoliaOrganization(org: OrganizationDocument): AlgoliaOrg
 
 export function storeSearchableMovie(
   movie: MovieDocument,
-  organizationName: string,
+  organizationNames: string[],
   adminKey?: string
 ): Promise<any> {
   if (!algolia.adminKey && !adminKey) {
@@ -119,6 +121,10 @@ export function storeSearchableMovie(
         movie.directors.map((director) => `${director.firstName} ${director.lastName}`) :
         [],
       keywords: movie.keywords ? movie.keywords : [],
+      // Register the entire festival name because it will be used for research by users
+      festivals: movie.prizes.map(prize => festival[prize.name]) || [],
+      productionCompany: movie.stakeholders.productionCompany.map(company => company.displayName) || [],
+      salesAgent: movie.stakeholders.salesAgent.map(agent => agent.displayName) || [],
 
       // facets
       genres: movie.genres ? movie.genres : [],
@@ -138,7 +144,7 @@ export function storeSearchableMovie(
       status: movie.productionStatus ? movie.productionStatus : '',
       storeStatus: '',
       budget: movie.estimatedBudget || null,
-      orgName: organizationName,
+      orgNames: organizationNames,
       originalLanguages: movie.originalLanguages,
       runningTime: {
         status: movie.runningTime.status,

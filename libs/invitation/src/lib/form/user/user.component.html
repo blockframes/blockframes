@@ -20,7 +20,7 @@
     >
       <ng-template let-user>
         <div class="profile-item" fxLayout fxLayoutAlign="strt center" fxLayoutGap="8px">
-          <img [ref]="user.avatar | storageFile: 'users':'avatar':user.uid" asset="profil_user.webp" alt="Profile">
+          <img [ref]="user.avatar | storageFile: 'users':'avatar':user.uid" asset="profil_user.svg" alt="Profile">
           <span *ngIf="user.firstName">{{ user | displayUser | async }}</span>
           <!-- We display the organisation's name differently here because of the AlgoliaUser that doesn't get the orgId -->
           <span *ngIf="user.orgName">({{ user.orgName }})</span>
@@ -28,7 +28,7 @@
         </div>
       </ng-template>
     </algolia-chips-autocomplete>
-    <button mat-icon-button (click)="invite()" test-id="event-invite" [disabled]="!currentLimit.canSend">
+    <button mat-icon-button (click)="invite()" test-id="event-invite" [disabled]="!currentLimit.canSend" matTooltip="Send invitations">
       <mat-icon svgIcon="send"></mat-icon>
     </button>
   </div>

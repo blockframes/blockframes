@@ -4,18 +4,19 @@
   <!-- Drop -->
   <article *ngSwitchCase="'drop'" class="drop-zone">
     <button mat-icon-button aria-label="file upload button" (click)="fileUploader.click()">
-      <img class="add-files-icon" asset="add_files.webp" alt="upload image">
+      <img class="add-files-icon" asset="add_files.svg" alt="upload image">
     </button>
     <ng-content select="[title]"></ng-content>
     <p class="mat-body-2">{{ cropDimensions }}</p>
-    <p class="mat-caption">Accepted Formats: {{ accept.join(', ') }}</p>
-    <p class="mat-caption">Max file size: {{ maxSize | fileSize }}</p>
-    <p class="mat-caption">Drag and drop a file here or <a (click)="fileUploader.click()">browse your computer.</a></p>
+    <p class="mat-caption">Accepted Formats: {{ accept.join(', ') }}<br/>
+    Max file size: {{ maxSize | fileSize }}</p>
+    <p class="mat-caption">Drag and drop a file here or</p>
+    <button mat-button (click)="fileUploader.click()">Browse computer</button> 
   </article>
 
   <!-- Hovering -->
   <article *ngSwitchCase="'hovering'" class="drop-zone">
-    <img asset="add_files.webp" alt="upload image" class="picture-hover">
+    <img asset="add_files.svg" alt="upload image" class="picture-hover">
     <h3>Drop your file here</h3>
   </article>
 

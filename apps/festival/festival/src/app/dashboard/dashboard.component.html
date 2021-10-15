@@ -20,7 +20,7 @@
       <ng-container *ngIf="org$ | async | canAccess: 'marketplace':'festival'">
         <mat-divider></mat-divider>
         <a mat-list-item routerLink="/c/o/marketplace/home" routerLinkActive="active">
-          <mat-icon matListIcon svgIcon="search_table"></mat-icon>
+          <mat-icon matListIcon svgIcon="marketplace"></mat-icon>
           <span matLine><b>Buyer's Platform</b></span>
         </a>
       </ng-container>
@@ -28,7 +28,7 @@
     <mat-nav-list *ngIf="org$ | async as org">
       <mat-divider></mat-divider>
       <a mat-list-item [routerLink]="['/c/o/organization', org.id]" routerLinkActive="active">
-        <img matListAvatar [ref]="org.logo" asset="empty_organization.webp" type="logo" alt="Organization logo">
+        <img matListAvatar [ref]="org.logo" asset="empty_organization.svg" type="logo" alt="Organization logo">
         <span mat-line>{{ org | orgName }}
           <small mat-line class="mat-caption">{{ org.activity | toLabel: 'orgActivity' }}</small>
         </span>

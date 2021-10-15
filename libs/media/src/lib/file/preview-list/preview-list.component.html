@@ -1,0 +1,29 @@
+<header fxLayout fxLayoutAlign="end">
+  <button mat-icon-button (click)="close()">
+    <mat-icon svgIcon="close"></mat-icon>
+  </button>
+</header>
+
+<article fxLayout fxLayoutAlign="center center">
+  <button *ngIf="index && data.refs.length" mat-icon-button (click)="previous()" matTooltip="Previous">
+    <mat-icon svgIcon="chevron_left"></mat-icon>
+  </button>
+  <ng-container [ngSwitch]="data.refs[index].storagePath | fileType">
+    <ng-container *ngSwitchCase="'image'">
+      <img [ref]="data.refs[index]" asset="no_titles.svg" />
+    </ng-container>
+    <ng-container *ngSwitchCase="'pdf'">
+      <pdf-viewer [ref]="data.refs[index]"></pdf-viewer>
+    </ng-container>
+    <ng-container *ngSwitchCase="'video'">
+      <video-viewer [ref]="data.refs[index]"></video-viewer>
+    </ng-container>
+    <ng-container *ngSwitchDefault>
+      <p>Sorry, we don't know how to display this file.</p>
+      <p>Currently supported file are: pdf, images, and videos</p>
+    </ng-container>
+  </ng-container>
+  <button *ngIf="(index + 1) < data.refs.length" mat-icon-button (click)="next()" matTooltip="Next">
+    <mat-icon svgIcon="chevron_right"></mat-icon>
+  </button>
+</article>

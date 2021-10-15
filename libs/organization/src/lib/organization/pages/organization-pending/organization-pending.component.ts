@@ -9,6 +9,7 @@ import { filter, switchMap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { Intercom } from 'ng-intercom';
 import { User } from '@blockframes/user/+state';
+import { AuthService } from '@blockframes/auth/+state';
 
 const queryFn = (uid: string) => ref => ref.where('mode', '==', 'request')
   .where('type', '==', 'joinOrganization')
@@ -36,6 +37,7 @@ export class OrganizationPendingComponent {
     private service: OrganizationService,
     private invitationService: InvitationService,
     private authQuery: AuthQuery,
+    private authService: AuthService,
     private routerQuery: RouterQuery,
     @Optional() private intercom: Intercom
   ) { }
@@ -48,5 +50,9 @@ export class OrganizationPendingComponent {
 
   public openIntercom(): void {
     return this.intercom.show();
+  }
+
+  public logout() {
+    this.authService.signOut();
   }
 }

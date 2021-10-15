@@ -10,6 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   imports: [
@@ -18,7 +19,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     ReactiveFormsModule,
     ImageModule,
     MatDialogModule,
-
+    MatProgressSpinnerModule,
     MatButtonModule,
     MatInputModule,
     MatFormFieldModule,

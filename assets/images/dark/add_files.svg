@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Illustrations/Dark/48px/add_files</title>
+    <defs>
+        <filter x="-153.2%" y="-292.4%" width="406.3%" height="667.6%" filterUnits="objectBoundingBox" id="filter-1">
+            <feGaussianBlur stdDeviation="4" in="SourceGraphic"></feGaussianBlur>
+        </filter>
+        <filter x="-600.0%" y="-181.2%" width="1300.0%" height="462.3%" filterUnits="objectBoundingBox" id="filter-2">
+            <feGaussianBlur stdDeviation="4" in="SourceGraphic"></feGaussianBlur>
+        </filter>
+    </defs>
+    <g id="Illustrations/Dark/48px/add_files" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group" transform="translate(3.000000, 10.000000)" fill="#404B8A" fill-rule="nonzero" stroke="#404B8A" stroke-width="0.5">
+            <path d="M25,0 C31.0735007,0 35.4384507,5.2302517 35.5625002,10.810264 C39.2730997,11.96146 42,15.4668959 42,19.6785748 C42,24.8205318 37.9646497,29 33,29 L9,29 C3.69700025,29 0,25.3109942 0,20.7142887 C0,16.9958686 2.44145025,13.3844377 6.04689975,12.5418223 C6.16984975,9.49537339 7.56884925,7.22016885 9.5,6.02008714 C11.3937492,4.8432572 13.7325502,4.70012154 15.7969002,5.59932836 C17.4519502,2.50870625 20.7124002,0 25,0 Z M25,1.03571392 C20.9212502,1.03571392 17.8745497,3.49641482 16.4530997,6.44084591 C16.3278117,6.69535768 16.0272026,6.79672967 15.7812502,6.66740833 C13.9377502,5.71273903 11.7293002,5.83552292 10,6.91012789 C8.27069975,7.98478465 7,9.99753929 7,12.9464239 C6.99536565,13.1974563 6.81754842,13.4088889 6.57809975,13.4480823 C3.30239975,14.0173625 1,17.3502381 1,20.7142887 C1,24.7447176 4.13429925,27.9642861 9,27.9642861 L33,27.9642861 C37.4242502,27.9642861 41,24.2607803 41,19.6785748 C41,15.8012761 38.4333997,12.5603616 34.9687502,11.6517816 C34.7421613,11.5912964 34.5863689,11.3761545 34.5937502,11.1339246 C34.6412502,5.99119072 30.6309497,1.03571392 25,1.03571392 L25,1.03571392 Z" id="Shape"></path>
+        </g>
+        <g id="Group-2" transform="translate(20.000000, 22.000000)" stroke="#8DA4FA" stroke-width="2">
+            <polyline id="Path-2" filter="url(#filter-1)" points="0 5 4.00000013 0.573124605 8.31575813 5.18181818"></polyline>
+            <line x1="4" y1="2" x2="4" y2="8.36363636" id="Line" stroke-linecap="square" filter="url(#filter-2)"></line>
+        </g>
+        <g id="Group-2" transform="translate(20.000000, 22.000000)" stroke="#8DA4FA" stroke-width="2">
+            <polyline id="Path-2" points="0 5 4.00000013 0.573124605 8.31575813 5.18181818"></polyline>
+            <line x1="4" y1="2" x2="4" y2="8.36363636" id="Line" stroke-linecap="square"></line>
+        </g>
+    </g>
+</svg>

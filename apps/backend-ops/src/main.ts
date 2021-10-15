@@ -4,7 +4,7 @@ config(); // * Must be run here!
 import { endMaintenance, loadAdminServices, startMaintenance, warnMissingVars } from '@blockframes/firebase-utils';
 warnMissingVars()
 
-import { prepareDb, prepareStorage, prepareForTesting, upgrade } from './firebaseSetup';
+import { prepareDb, prepareStorage, prepareForTesting, upgrade, prepareEmulators } from './firebaseSetup';
 import { migrate } from './migrations';
 import { disableMaintenanceMode, displayCredentials, isMigrationRequired, showHelp } from './tools';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
@@ -13,9 +13,11 @@ import { generateFixtures } from './generate-fixtures';
 import { exportFirestore, importFirestore } from './admin';
 import { selectEnvironment } from './select-environment';
 import { healthCheck } from './health-check';
-import { anonymizeLatestProdDb, downloadProdDbBackup, importEmulatorFromBucket, loadEmulator, enableMaintenanceInEmulator, uploadBackup } from './emulator';
+import { anonymizeLatestProdDb, downloadProdDbBackup, importEmulatorFromBucket, loadEmulator, enableMaintenanceInEmulator, uploadBackup, startEmulators, syncAuthEmulatorWithFirestoreEmulator } from './emulator';
 import { backupEnv, restoreEnv } from './backup';
 import { EIGHT_MINUTES_IN_MS } from '@blockframes/utils/maintenance';
+import { rescueJWP } from './rescueJWP';
+import { loadAndShrinkLatestAnonDbAndUpload } from './db-shrink';
 
 const args = process.argv.slice(2);
 const [cmd, ...flags] = args;
@@ -26,7 +28,7 @@ async function runCommand() {
   switch (cmd) {
     case 'prepareForTesting':
       await startMaintenance(db);
-      await prepareForTesting();
+      await prepareForTesting({ dbBackupURL: arg1 });
       await endMaintenance(db, EIGHT_MINUTES_IN_MS);
       break;
     case 'displayCredentials':
@@ -36,10 +38,20 @@ async function runCommand() {
       await loadEmulator({ importFrom: arg1 });
       break;
     case 'importEmulator':
-      await importEmulatorFromBucket(arg1);
+      await importEmulatorFromBucket({ importFrom: arg1 });
+      break;
+    case 'startEmulators':
+    case 'emulators':
+      await startEmulators({ importFrom: arg1 });
+      break;
+    case 'prepareEmulators':
+      await prepareEmulators({ dbBackupURL: arg1 });
       break;
     case 'anonProdDb':
       await anonymizeLatestProdDb();
+      break;
+    case 'shrinkDb':
+      await loadAndShrinkLatestAnonDbAndUpload();
       break;
     case 'downloadProdDbBackup':
       await downloadProdDbBackup(arg1);
@@ -107,6 +119,9 @@ async function runCommand() {
       await migrate();
       await endMaintenance(db);
       break;
+    case 'syncAuthEmulatorWithFirestoreEmulator':
+      await syncAuthEmulatorWithFirestoreEmulator({ importFrom: arg1 });
+      break;
     case 'syncUsers':
       await startMaintenance(db);
       await syncUsers();
@@ -137,6 +152,9 @@ async function runCommand() {
     case 'upgradeAlgoliaUsers':
       await upgradeAlgoliaUsers();
       break;
+    case 'rescueJWP':
+      await rescueJWP({ jwplayerKey: arg1, jwplayerApiV2Secret: arg2 });
+      break;
     default:
       showHelp();
       await Promise.reject('Command not recognised');
@@ -161,7 +179,7 @@ runCommand()
     process.exit(0);
   })
   .catch((e) => {
-    console.error(e);
+    console.error('ERROR!\n', e);
     console.timeEnd(consoleMsg);
     process.exit(1);
   });

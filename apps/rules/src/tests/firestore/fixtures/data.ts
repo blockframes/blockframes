@@ -301,11 +301,6 @@ export const testFixture = {
     id: 'C002',
     stakeholders: []
   },
-
-  //Public Contracts
-  'publicContracts/PC01': {
-    id: 'PC01',
-  },
   // Consents
   'consents/O001': {
     id: 'O001',

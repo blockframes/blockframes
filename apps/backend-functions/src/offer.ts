@@ -10,7 +10,7 @@ import { staticModel } from '@blockframes/utils/static-model';
 import { format } from "date-fns";
 import { User } from '@blockframes/user/types';
 import { createNotification, triggerNotifications } from './notification';
-import { templateIds } from './templates/ids';
+import { templateIds } from '@blockframes/utils/emails/ids';
 
 export async function onOfferCreate(snap: FirebaseFirestore.DocumentSnapshot): Promise<void> {
   const offer = snap.data() as Offer;

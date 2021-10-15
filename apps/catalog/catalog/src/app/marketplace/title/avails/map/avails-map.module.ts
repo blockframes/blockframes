@@ -21,10 +21,10 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 
 import { MapModule } from '@blockframes/ui/map';
 import { OrgNameModule } from '@blockframes/organization/pipes';
-import { StaticGroupModule } from '@blockframes/ui/static-autocomplete/group/group.module';
 
 
 import { MarketplaceMovieAvailsMapComponent } from './avails-map.component';
+import { AvailsFilterModule } from '@blockframes/contract/avails/filter/filter.module';
 
 
 @NgModule({
@@ -36,8 +36,7 @@ import { MarketplaceMovieAvailsMapComponent } from './avails-map.component';
 
     MapModule,
     OrgNameModule,
-    StaticGroupModule,
-
+    AvailsFilterModule,
     MatCardModule,
     MatIconModule,
     MatListModule,

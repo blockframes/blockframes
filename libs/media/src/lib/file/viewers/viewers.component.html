@@ -2,7 +2,7 @@
 <ng-container *ngIf="!!ref">
   <ng-container [ngSwitch]="ref.storagePath | fileType">
     <ng-container *ngSwitchCase="'image'">
-      <img [ref]="ref" asset="no_titles.webp" />
+      <img [ref]="ref" asset="no_titles.svg" />
     </ng-container>
     <ng-container *ngSwitchCase="'pdf'">
       <pdf-viewer [eventId]="eventId" [ref]="ref" [control]="control"></pdf-viewer>
@@ -13,7 +13,7 @@
     <ng-container *ngSwitchDefault>
       <article>
         <h3>Sorry</h3>
-        <img asset="no_titles.webp" alt="Flying saucer">
+        <img asset="no_titles.svg" alt="Flying saucer">
         <p>We don't know how to display this file.</p>
         <p class="mat-caption">Supported files are: pdfs, images, and videos</p>
       </article>

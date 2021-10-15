@@ -16,7 +16,6 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
-import { CatalogDealsGuard } from '../guards/deals.guard';
 
 const routes: Routes = [{
   path: '',
@@ -63,17 +62,6 @@ const routes: Routes = [{
       data: { animation: 'wishlist' }
     },
     {
-      path: 'deals',
-      children: [{
-        path: '',
-        canActivate: [CatalogDealsGuard],
-        loadChildren: () => import('./right/list/list.module').then(m => m.RightListModule),
-      }, {
-        path: ':contractId',
-        loadChildren: () => import('./right/view/view.module').then(m => m.RightViewModule)
-      }]
-    },
-    {
       path: 'title',
       children: [{
         path: '',
@@ -99,6 +87,18 @@ const routes: Routes = [{
         data: { animation: 'view' },
       }]
     },
+    {
+      path: 'offer',
+      children: [{
+        path: '',
+        loadChildren: () => import('./offer/list/list.module').then(m => m.ListModule),
+        data: { animation: 'list' }
+      }, {
+        path: ':offerId',
+        loadChildren: () => import('./offer/shell/shell.module').then(m => m.ShellModule),
+        data: { animation: 'list' }
+      }]
+    }
   ]
 }];
 

@@ -117,14 +117,9 @@ const Movie = {
     "colorInfo": 'Color & Black & White',
     "soundMix": 'Dolby SR'
   },
-  availableMaterials: {
+  availableVersions: {
     "languages": 'English',
     "original-version": false,
-  },
-  salesPitch : {
-    "description": 'Lagerfeld Confidential was created with a delicate balance between comedy and drama.',
-    //"target-audience": '',
-    //"goal": ''
   },
   files: {
     //"presentation-deck": '',
@@ -141,13 +136,7 @@ const Movie = {
 
   },
   videos: {
-    "teaserLink": 'https://www.youtube.com/watch?v=1',
-    "trailerLink": 'https://www.youtube.com/watch?v=2',
-    "promoReelLink": 'https://www.youtube.com/watch?v=3',
-    "screenerLink": 'https://www.youtube.com/watch?v=4',
-    "clipLink": 'https://www.youtube.com/watch?v=5',
-    "otherLinkName": 'Best Scene',
-    "otherLinkUrl": 'https://www.youtube.com/watch?v=6'
+    "description": "Lagerfeld Confidential was created with a delicate balance between comedy and drama."
   }
 }
 
@@ -189,10 +178,8 @@ const testSteps = [
     input: 'shootingInformation', comp_save: [], save_form: true, debug: false},
   {title: 'Technical Specification', selector: 'movie-form-technical-info static-select',
     input: 'techSpec', comp_save: [], save_form: true, debug: false},
-  {title: 'Available Materials', selector: 'movie-form-available-materials mat-slide-toggle, input',
-    input: 'availableMaterials', comp_save: [], save_form: true, debug: false},
-  {title: 'Sales Pitch', selector: 'movie-form-sales-pitch textarea, input, mat-select',
-    input: 'salesPitch', comp_save: [], save_form: true, debug: false},
+  {title: 'Available Versions', selector: 'movie-form-available-versions mat-slide-toggle, input',
+    input: 'availableVersions', comp_save: [], save_form: true, debug: false},
   {title: 'Files', selector: 'movie-form-media-files file-uploader',
     input: 'files',  comp_save: [], save_form: true, debug: false},
   {title: 'Notes & Statements', selector: 'movie-form-media-notes input, mat-select, file-uploader',
@@ -240,7 +227,7 @@ const debugMovieTitle = (id: string, loc: string) => {
   acceptCookie();
 }
 
-describe('User can navigate to the movie tunnel pages start and main.', () => {
+describe.skip('User can navigate to the movie tunnel pages start and main.', () => {
   // Log in and create a new movie
   it('User logs in, can navigate to add new title page', () => {
     clearDataAndPrepareTest('/');

@@ -1,0 +1,68 @@
+<ng-container *ngIf="offers else loading">
+  <ng-container *ngIf="offers.length else empty">
+
+    <header class="import-header" fxLayout="row" fxLayoutAlign="space-between center">
+      <h1>Offers & Deals</h1>
+    </header>
+
+    <nav mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
+      <button mat-tab-link (click)="applyFilter('')" [active]="(filter$ | async) === ''">
+        All Offers ({{offers.length}})
+      </button>
+      <button mat-tab-link (click)="applyFilter('pending')" [active]="(filter$ | async) === 'pending'">
+        <ng-container *ngIf="(offers | filterBy: filterByStatus: 'pending') as offers">
+          Offers ({{offers.length}})
+        </ng-container>
+      </button>
+      <button mat-tab-link (click)="applyFilter('on_going')" [active]="(filter$ | async) === 'on_going'">
+        <ng-container *ngIf="(offers | filterBy: filterByStatus: 'on_going') as offers">
+          Ongoing Deals ({{offers.length}})
+        </ng-container>
+      </button>
+      <button mat-tab-link (click)="applyFilter('past_deals')" [active]="(filter$ | async) === 'past_deals'">
+        <ng-container *ngIf="(offers | filterBy: filterByStatus: 'past_deals') as offers">
+          Past Deals ({{offers.length}})
+        </ng-container>
+      </button>
+    </nav>
+
+    <mat-card>
+      <bf-table-filter [source]="offers | filterBy: filterByStatus: filter.value" [columns]="columns"
+        [initialColumns]="initialColumns" clickable showFilter showPaginator link=".">
+        <ng-template colRef="id" let-reference>{{ reference }}</ng-template>
+        <ng-template colRef="_meta.createdAt" let-date>{{ date| date : 'M/d/y'}}</ng-template>
+        <ng-template colRef="contracts.length" let-length>{{ length }}</ng-template>
+        <ng-template colRef="contracts" let-contracts>
+          <ng-container *ngFor="let contract of contracts; let last=last">
+            <ng-container *ngIf="contract.title as title">
+              {{ title.title.international | maxLength:50 }}{{last ? '': ', '}}
+            </ng-container>
+          </ng-container>
+        </ng-template>
+        <ng-template colRef="specificity" let-specificity>
+          {{ specificity ? 'YES' : '-' }}
+        </ng-template>
+        <ng-template colRef="incomes" let-incomes let-offer="item">
+          {{ offer.contracts | total: 'income.price' | currency: offer.currency }}
+        </ng-template>
+        <ng-template colRef="status" let-status>
+          <bf-tag>{{ status | toLabel: 'offerStatus' }}</bf-tag>
+        </ng-template>
+      </bf-table-filter>
+    </mat-card>
+  </ng-container>
+</ng-container>
+
+<ng-template #loading>
+  <mat-spinner fxFlexAlign="center"></mat-spinner>
+</ng-template>
+
+<ng-template #empty>
+  <section class="empty" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="16px">
+    <h1>You have no offers created yet.</h1>
+    <p>Your contracts will appear on this page when you submit them.</p>
+    <p>Meanwhile, you can browser our library to discover titles you can be interested in.</p>
+    <img asset="empty_results.svg" alt="Empty result image">
+    <a mat-flat-button color="primary" routerLink="../title">Discover Titles</a>
+  </section>
+</ng-template>

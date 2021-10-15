@@ -1,0 +1,30 @@
+<ng-container *ngIf="offer$ | async as offer">
+  <header>
+    <bf-tag>{{ offer.status | toLabel:'offerStatus' }}</bf-tag>
+    <article>
+      <div>
+        <h1>{{ offer.id }}</h1>
+        <span>Offer created: {{ offer._meta.createdAt | date: 'dd/MM/yyyy' }}</span>
+      </div>
+      <div *ngIf="offer.contracts as contracts">
+        <h2>
+          {{ contracts.length }} Titles
+        </h2>
+        <h2>
+          Total: {{ contracts | total:'income.price' | currency:offer.currency }}
+        </h2>
+      </div>
+    </article>
+    <button mat-flat-button color="primary" (click)="openIntercom()">
+      <mat-icon svgIcon="comment"></mat-icon>
+      <span>Contact Archipel Team</span>
+    </button>
+  </header>
+
+  <section class="surface" *ngIf="offer.specificity">
+    <h2>Specific Terms</h2>
+    <p>{{ offer.specificity }}</p>
+  </section>
+
+  <router-outlet></router-outlet>
+</ng-container>

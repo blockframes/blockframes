@@ -5,9 +5,8 @@ import { Observable } from 'rxjs';
 import { StoreStatus } from '@blockframes/utils/static-model/types';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Movie } from '@blockframes/movie/+state/movie.model';
-import { fromOrg, MovieService } from '@blockframes/movie/+state/movie.service';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { OrganizationQuery } from '@blockframes/organization/+state';
 import { storeStatus } from '@blockframes/utils/static-model';
 import { Intercom } from 'ng-intercom';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
@@ -16,9 +15,10 @@ import { appName, getCurrentApp } from '@blockframes/utils/apps';
 const columns = {
   'title.international': 'Title',
   'release.year': 'Release Year',
-  directors: 'Director(s)',
-  views: { value: '# Views', disableSort: true },
-  'app.catalog.status': 'Status'
+  'directors': 'Director(s)',
+  'analytics.views': '# Views',
+  'app.catalog.status': 'Status',
+  'id': { value: '#Sales (Total Gross Receipt)', disableSort: true },
 };
 
 @Component({
@@ -31,20 +31,27 @@ export class TitleListComponent {
   public app = getCurrentApp(this.routerQuery);
   public appName = appName[this.app];
   columns = columns;
-  initialColumns = ['title.international', 'release.year', 'directors', 'views', 'app.catalog.status']; // 'sales' should be added here but removed due to the #5060 issue
+  initialColumns = ['title.international', 'release.year', 'directors', 'analytics.views', 'id', 'app.catalog.status'];
   filter = new FormControl();
   filter$: Observable<StoreStatus | ''> = this.filter.valueChanges.pipe(startWith(this.filter.value || ''));
-  movies$ = this.service.valueChanges(fromOrg(this.orgQuery.getActiveId())).pipe(
-    map(movies => movies.sort((movieA, movieB) => movieA.title.international < movieB.title.international ? -1 : 1)),
-    map(movies => movies.filter(m => m.app.catalog.access)),
-    tap(movies => movies?.length ? this.dynTitle.setPageTitle('My titles') : this.dynTitle.setPageTitle('My titles', 'Empty')));
+
+  movies$ = this.service.queryDashboard(this.app).pipe(
+    tap(movies => this.dynTitle.setPageTitle('My titles', movies.length ? '' : 'Empty'))
+  )
+
+  movieCount$ = this.movies$.pipe(map(m => ({
+    all: m.length,
+    draft: m.filter(m => m.app.catalog.status === 'draft').length,
+    submitted: m.filter(m => m.app.catalog.status === 'submitted').length,
+    accepted: m.filter(m => m.app.catalog.status === 'accepted').length,
+    archived: m.filter(m => m.app.catalog.status === 'archived').length,
+  })));
 
   constructor(
     private service: MovieService,
     private router: Router,
     private route: ActivatedRoute,
     private dynTitle: DynamicTitleService,
-    private orgQuery: OrganizationQuery,
     private routerQuery: RouterQuery,
     @Optional() private intercom: Intercom
   ) { }
@@ -67,7 +74,7 @@ export class TitleListComponent {
   }
 
   resetFilter() {
-    this.filter.reset();
+    this.filter.reset('');
     this.dynTitle.useDefault();
   }
 

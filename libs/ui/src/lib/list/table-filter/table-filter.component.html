@@ -17,7 +17,7 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="sortColumnDisabled(column.value)">
         {{ column.value?.value || column.value }}
       </th>
-      <td [ngClass]="{'clickable': clickable}" mat-cell *matCellDef="let row">
+      <td [ngClass]="{'clickable': link ?? clickable}" mat-cell *matCellDef="let row">
         <ng-container *ngIf="(cols | findColRef:column.key) as col; else default">
           <ng-template [ngTemplateOutlet]="col.template"
             [ngTemplateOutletContext]="{ $implicit: row | deepKey:column.key, item: row }">
@@ -49,7 +49,7 @@
   </table>
 
   <!-- Loading if no data -->
-  <ng-container *ngIf="dataSource.data.length === 0 && showLoader">
+  <ng-container *ngIf="!(dataSource.data?.length) && showLoader">
     <div class="loader-container">
       <ng-container *ngIf="noData else spinner">
         <div class="no-data">No data found</div>

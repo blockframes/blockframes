@@ -49,16 +49,18 @@
 
 file-uploader {
   display: block;
-  margin: 12px 0;
+  padding: 24px;
+  height: auto;
 }
 
 image-uploader {
   display: block;
-  margin: 12px 0;
+  padding: 24px;
 }
 
 .save {
   margin-bottom: 12px;
+  margin-right: 24px;
 }
 
 file-list-uploader {

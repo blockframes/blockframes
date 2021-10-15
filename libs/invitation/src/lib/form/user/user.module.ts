@@ -15,6 +15,7 @@ import { StorageFileModule } from '@blockframes/media/pipes/storageFile.pipe';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [UserComponent],
@@ -32,7 +33,8 @@ import { MatButtonModule } from '@angular/material/button';
     // Material
     MatProgressBarModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    MatTooltipModule
   ]
 })
 export class InvitationFormUserModule { }

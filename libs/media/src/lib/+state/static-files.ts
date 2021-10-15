@@ -31,6 +31,9 @@ export const fileLabels = [
   'otherVideos',
   'salesPitch',
 
+  //catalog & movies
+  'delivery',
+
   // orgs & movies
   'notes',
 
@@ -60,8 +63,9 @@ export const storagePaths: Record<CollectionHoldingFile, Partial<Record<FileLabe
     'still_photo': 'promotional.still_photo',
     screener: 'promotional.videos.screener',
     otherVideos: 'promotional.videos.otherVideos',
-    salesPitch: 'promotional.salesPitch',
-    notes: 'promotional.notes'
+    salesPitch: 'promotional.videos.salesPitch',
+    notes: 'promotional.notes',
+    delivery: 'delivery.file',
   },
   campaigns: {
     budget: 'files.budget',
@@ -97,8 +101,9 @@ export function getFileMetadata(collection: CollectionHoldingFile, label: FileLa
       'still_photo': { uid: '', privacy: 'public', collection, docId, field: 'promotional.still_photo' },
       notes: { uid: '', privacy: 'public', collection, docId, field: 'promotional.notes' },
       screener: { uid: '', privacy: 'protected', collection, docId, field: 'promotional.videos.screener' },
-      otherVideos: { uid: '', privacy: 'public', collection, docId, field: 'promotional.videos.otherVideos' },
-      salesPitch: { uid: '', privacy: 'public', collection, docId, field: 'promotional.salesPitch' },
+      otherVideos: { uid: '', privacy: 'protected', collection, docId, field: 'promotional.videos.otherVideos' },
+      salesPitch: { uid: '', privacy: 'protected', collection, docId, field: 'promotional.videos.salesPitch' },
+      delivery: { uid: '', privacy: 'public', collection, docId, field: 'delivery.file' },
     },
     campaigns: {
       budget: { uid: '', privacy: 'public', collection, docId, field: 'files.budget' },

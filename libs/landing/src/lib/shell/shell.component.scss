@@ -1,4 +1,11 @@
 @import "~@angular/flex-layout/mq";
+$banner-background: rgba(5, 7, 36);
+
+// Maximum width for large screens
+.max-width {
+  max-width: 1920px; // equal to "lg" in Angular breakpoints
+  margin: auto;
+}
 
 landing-shell-page {
   display: flex;
@@ -16,7 +23,7 @@ landing-shell-page {
         margin-right: auto;
       }
 
-      .logo {
+      a[app-logo] {
         margin-right: 96px;
       }
 
@@ -33,8 +40,16 @@ landing-shell-page {
     overflow-y: auto;
 
     .demo {
-      display: block;
-      width: 100%;
+      background-color: $banner-background;
+
+      section {
+        padding-block: 72px;
+        background: linear-gradient(to right, $banner-background 0%, #2a1d34 50%, $banner-background 100%);
+      }
+
+      .banner-spacing {
+        background-color: $banner-background;
+      }
     }
 
     .contact-us {
@@ -54,24 +69,63 @@ landing-shell-page {
       }
     }
 
+    #email-field {
+      width: 50%;
+      padding-right: 12px;
+    }
+
+    mat-checkbox {
+      margin-bottom: 24px;
+      color: var(--primary-contrast);
+    }
+
     footer {
-      margin: 48px 0;
-      text-align: center;
-      width: 100%;
-      img {
-        height: 40px;
+      background-color: var(--background-card);
+      section {
+        padding: 80px;
+        text-align: center;
+        width: 100%;
+        > * {
+          width: 100%;
+        }
+        app-logo {
+          margin: 0 24px 24px 0;
+        }
+        form {
+          display: flex;
+          gap: 16px;
+          align-items: flex-start;
+          flex-wrap: nowrap;
+          mat-form-field {
+            flex: 1;
+          }
+          #newsletterButton {
+            margin-top: 0.5em;
+          }
+        }
+        mat-divider {
+          width: 100%;
+          border-top-width: 2px;
+        }
+        img {
+          height: 30px;
+        }
       }
     }
 
     landing-header {
       display: block;
+      background: $banner-background;
       background-size: cover;
-      padding: 60px 200px;
+      padding: 72px 80px;
     }
 
     landing-content {
       display: block;
-      padding: 48px 240px;
+    }
+
+    landing-detail {
+      display: block;
     }
   }
 }
@@ -81,9 +135,6 @@ landing-shell-page {
   landing-shell-page main {
     landing-header {
       padding: 60px 100px;
-    }
-    landing-content {
-      padding: 48px 140px;
     }
     form article {
       width: 80%;
@@ -96,8 +147,9 @@ landing-shell-page {
     landing-header {
       padding: 60px 36px;
     }
-    landing-content {
-      padding: 48px 64px;
+    #email-field {
+      width: 100%;
+      padding: 0;
     }
   }
 }
@@ -105,9 +157,6 @@ landing-shell-page {
 @include layout-bp(lt-sm) {
   landing-shell-page main {
     landing-header {
-      padding: 24px 8px;
-    }
-    landing-content {
       padding: 24px 8px;
     }
     form article {

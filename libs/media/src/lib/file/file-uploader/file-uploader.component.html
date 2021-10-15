@@ -6,21 +6,20 @@
   <section *ngSwitchCase="'waiting'" class="drop-zone">
     <label class="upload-button-container">
       <button mat-icon-button aria-label="file upload button" (click)="fileExplorer.click()">
-        <img asset="add_files.webp" alt="upload image">
+        <img asset="add_files.svg" alt="upload image">
       </button>
 
     </label>
     <ng-content select="[title]"></ng-content>
     <p class="mat-caption">Accepted Formats: {{ allowedTypes.join(', ') }}</p>
     <p class="mat-caption">Max file size: {{ maxSize | fileSize }}</p>
-    <p class="mat-caption">Drag and drop a file here or
-      <a (click)="fileExplorer.click()">browse your computer.</a>
-    </p>
+    <p class="mat-caption">Drag and drop a file here or</p>
+    <button mat-button (click)="fileExplorer.click()">Browse computer</button>
   </section>
 
   <!-- Hovering -->
   <section *ngSwitchCase="'hovering'" class="drop-zone">
-    <img asset="add_files.webp" alt="upload image" class="picture-hover">
+    <img asset="add_files.svg" alt="upload image" class="picture-hover">
     <h3>Drop your file here</h3>
   </section>
 

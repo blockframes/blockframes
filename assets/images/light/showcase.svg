@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="170px" height="170px" viewBox="0 0 170 170" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="Illustrations/Light/170px/showcase" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-3" transform="translate(27.000000, 47.000000)">
+            <g id="Group-2">
+                <path d="M2.07960214,-2.08425869e-13 L17.6482439,-2.08425869e-13 L17.6482439,-2.08425869e-13 L112.781116,-2.08425869e-13 C113.885685,-2.16477214e-13 114.781116,0.8954305 114.781116,2 L114.781116,74.78125 C114.781116,75.8858195 113.885685,76.78125 112.781116,76.78125 L2.07960214,76.78125 C0.975032635,76.78125 0.0796021351,75.8858195 0.0796021351,74.78125 L0.0796021351,2 C0.0796021351,0.8954305 0.975032635,-2.08222963e-13 2.07960214,-2.08425869e-13 Z" id="Rectangle-2" stroke="#000000" stroke-width="2"></path>
+                <polygon id="Path-2" fill="#000000" fill-rule="nonzero" points="114.073508 8.55555556 114.074074 10.2666665 0.000565643071 10.3182235 3.55271368e-13 8.60711252"></polygon>
+                <polygon id="Path-2-Copy" fill="#000000" fill-rule="nonzero" points="57.9997124 29 58 30.5999999 0.000287596444 30.648209 0 29.0482091"></polygon>
+                <circle id="Oval" fill="#000000" cx="5.7037037" cy="4.99074074" r="1.42592593"></circle>
+                <circle id="Oval" fill="#000000" cx="11.4074074" cy="4.99074074" r="1.42592593"></circle>
+                <circle id="Oval" fill="#000000" cx="17.1111111" cy="4.99074074" r="1.42592593"></circle>
+            </g>
+            <line x1="57.75" y1="10.0833333" x2="57.75" y2="76.0833333" id="Line" stroke="#000000" stroke-width="2" stroke-linecap="square"></line>
+            <polygon id="Triangle" fill="#8DA4FA" transform="translate(85.250000, 43.750000) rotate(90.000000) translate(-85.250000, -43.750000) " points="85.25 38.5 91.6666667 49 78.8333333 49"></polygon>
+            <g id="Group" transform="translate(5.000000, 36.000000)" stroke="#000000" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="0" y1="20.5" x2="47.9974495" y2="20.5" id="Line-2-Copy-6" stroke-width="1.5"></line>
+                <line x1="0" y1="16.5" x2="47.9974495" y2="16.5" id="Line-2-Copy-7" stroke-width="1.5"></line>
+                <line x1="0" y1="12.5" x2="47.9974495" y2="12.5" id="Line-2-Copy-8" stroke-width="1.5"></line>
+                <line x1="0" y1="24.5" x2="47.9974495" y2="24.5" id="Line-2-Copy-5" stroke-width="1.5"></line>
+                <line x1="0" y1="29" x2="47.9974495" y2="29" id="Line-2-Copy-9" stroke-width="1.5"></line>
+                <line x1="1" y1="1" x2="32" y2="1" id="Line-2" stroke-width="3"></line>
+                <line x1="1" y1="6" x2="18.5" y2="6" id="Line-2-Copy" stroke-width="3"></line>
+                <line x1="0" y1="33" x2="27.5" y2="33" id="Line-2-Copy-10" stroke-width="1.5"></line>
+            </g>
+        </g>
+    </g>
+</svg>

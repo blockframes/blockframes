@@ -15,7 +15,7 @@ import { UserService, OrganizationMember, createOrganizationMember, PublicUser }
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { getCurrentApp, App } from '@blockframes/utils/apps';
+import { getCurrentApp, App, Module, createOrgAppAccess } from '@blockframes/utils/apps';
 import { createDocumentMeta, formatDocumentMetaFromFirestore } from '@blockframes/utils/models-meta';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 
@@ -59,7 +59,8 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   formatFromFirestore(org: OrganizationDocument): Organization {
     return {
       ...org,
-      _meta: formatDocumentMetaFromFirestore(org._meta)
+      appAccess: createOrgAppAccess(org.appAccess),
+      _meta: formatDocumentMetaFromFirestore(org?._meta)
     };
   }
 
@@ -98,12 +99,12 @@ export class OrganizationService extends CollectionService<OrganizationState> {
 
   public notifyAppAccessChange(orgId: string, app: App) {
     const callOnAccessToAppChanged = this.functions.httpsCallable('onAccessToAppChanged');
-    return callOnAccessToAppChanged({orgId, app}).toPromise();
+    return callOnAccessToAppChanged({ orgId, app }).toPromise();
   }
 
-  public requestAppAccess(app: App, orgId: string) {
+  public requestAppAccess(app: App, module: Module, orgId: string) {
     const f = this.functions.httpsCallable('requestFromOrgToAccessApp');
-    return f({ app, orgId }).toPromise();
+    return f({ app, module, orgId }).toPromise();
   }
 
   ////////////

@@ -1,26 +1,4 @@
-<form [formGroup]="availsForm" fxLayout fxLayoutAlign="space-evenly center" fxLayoutGap="12px" id="avails">
-  <static-group fxFlex formControlName="medias" scope="medias" displayAll="All Rights" required placeholder="Specify right(s) to filter" [withoutValues]="['theatrical']" test-id="medias" icon="play_arrow">
-    <mat-label>Media</mat-label>
-  </static-group>
-
-  <mat-form-field fxFlex appearance="outline">
-    <mat-label>Exlusivity</mat-label>
-    <mat-select formControlName="exclusive" required>
-      <mat-option [value]="true">Exclusive</mat-option>
-      <mat-option [value]="false">Non exclusive</mat-option>
-    </mat-select>
-    <mat-icon matPrefix svgIcon="star"></mat-icon>
-  </mat-form-field>
-
-  <static-group fxFlex formControlName="territories" scope="territories" displayAll="World" placeholder="Specify territory to filter" required test-id="territories" icon="world">
-    <mat-label>Territories</mat-label>
-  </static-group>
-
-  <button mat-icon-button (click)="clear()" matTooltip="Clear fields">
-    <mat-icon svgIcon="refresh_filters"></mat-icon>
-  </button>
-
-</form>
+<form [availsFilter]="availsForm" required hide="duration"></form>
 
 <h2>Available Dates</h2>
 <ng-container *ngIf="org$ | async as org">

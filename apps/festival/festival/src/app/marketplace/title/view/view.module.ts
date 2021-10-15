@@ -1,6 +1,7 @@
 // Angular
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Component
 import { MarketplaceMovieViewComponent } from './view.component';
@@ -11,6 +12,7 @@ import { OrgChipModule } from '@blockframes/organization/components/chip/chip.mo
 import { WishlistButtonModule } from '@blockframes/organization/components/wishlist-button/wishlist-button.module';
 import { PromotionalLinksModule } from '@blockframes/movie/components/promotional-links/promotional-links.module';
 import { UpcomingScreeningsModule } from '@blockframes/movie/components/upcoming-screenings/upcoming-screenings.module';
+import { OngoingButtonModule } from '@blockframes/ui/ongoing-button/ongoing-button.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -59,12 +61,14 @@ const routes = [
   declarations: [MarketplaceMovieViewComponent],
   imports: [
     CommonModule,
+    FlexLayoutModule,
     MovieShellModule,
     MovieHeaderModule,
     OrgChipModule,
     WishlistButtonModule,
     PromotionalLinksModule,
     UpcomingScreeningsModule,
+    OngoingButtonModule,
     // Material
     MatIconModule,
     MatButtonModule,

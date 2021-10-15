@@ -29,7 +29,7 @@
   <list-filter>
 
     <ng-template filter label="Avails" [form]="availsForm">
-      <avails-filter [form]="availsForm"></avails-filter>
+      <form [availsFilter]="availsForm" vertical required></form>
     </ng-template>
 
     <ng-template filter label="Content Type" [form]="searchForm.contentType">
@@ -46,6 +46,18 @@
       <chips-autocomplete [form]="searchForm.originCountries" placeholder="Country of Origin" scope="territories" [withoutValues]="['world']">
         <mat-label>Country of Origin</mat-label>
       </chips-autocomplete>
+    </ng-template>
+
+    <ng-template filter label="Language & Version" [form]="searchForm.languages">
+      <title-language-filter [languagesFilterForm]="searchForm.languages"></title-language-filter>
+    </ng-template>
+
+    <ng-template filter label="Release Year" [form]="searchForm.minReleaseYear">
+      <filter-release-year fxLayout="column" [form]="searchForm.minReleaseYear"></filter-release-year>
+    </ng-template>
+
+    <ng-template filter label="Running Time" [form]="searchForm.runningTime">
+      <filter-running-time [form]="searchForm.runningTime"></filter-running-time>
     </ng-template>
 
     <button mat-icon-button (click)="clear()" matTooltip="Clear all filters">

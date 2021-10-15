@@ -1,18 +1,12 @@
 <tunnel-page>
-  <section tunnel-form fxLayout="column" fxLayoutGap="32px">
+  <section tunnel-form fxLayout="column" fxLayoutGap="32px" class="surface">
+    <span><b>Please upload your available material list</b></span>
+    <file-uploader [form]="fileForm" [meta]="['movies', 'delivery', movieId]"
+      [accept]="['pdf','xls', 'docx']" listenToChanges>
+      <h3 title>Document</h3>
+    </file-uploader>
+    <small>Please note that this document will be available for download on the marketplace.</small>
 
-    <h3>Original Version</h3>
-    <article fxLayout="column" fxLayoutGap="16px">
-      <mat-slide-toggle test-id="original-version" [formControl]="form.get('isOriginalVersionAvailable')"
-        color="primary">Original Version
-        Authorized</mat-slide-toggle>
-      <span class="mat-caption">Please specify if the original version can be made available or not.</span>
-    </article>
-
-    <h3>Add Versions</h3>
-
-    <!-- Form -->
-    <languages-form [form]="form.languages"></languages-form>
 
   </section>
 </tunnel-page>

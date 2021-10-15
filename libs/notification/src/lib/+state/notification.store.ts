@@ -50,7 +50,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `Your organization was accepted by the ${this.appName} team.`,
           imgRef: notification.organization?.logo,
-          placeholderUrl: 'empty_organization.webp',
+          placeholderUrl: 'empty_organization.svg',
           url: `${applicationUrl[this.app]}/c/o/organization/${notification.organization.id}/view/org`,
         };
       case 'requestFromUserToJoinOrgDeclined':
@@ -58,7 +58,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `${displayUserName}'s request to join your organization was refused.`,
           imgRef: notification.user.avatar,
-          placeholderUrl: 'profil_user.webp',
+          placeholderUrl: 'profil_user.svg',
           url: `${applicationUrl[this.app]}/c/o/organization/${notification.organization.id}/view/members`,
         };
       case 'invitationToJoinOrgDeclined':
@@ -66,7 +66,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `Your invitation to ${displayUserName} to join your organization was refused.`,
           imgRef: notification.user.avatar,
-          placeholderUrl: 'profil_user.webp',
+          placeholderUrl: 'profil_user.svg',
           url: `${applicationUrl[this.app]}/c/o/organization/${notification.organization.id}/view/members`,
         };
       case 'orgMemberUpdated':
@@ -86,7 +86,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `Members of your organization have been updated`,
           imgRef: notification.user.avatar,
-          placeholderUrl: 'profil_user.webp',
+          placeholderUrl: 'profil_user.svg',
           url: `${applicationUrl[this.app]}/c/o/organization/${notification.organization.id}/view/members`,
         };
       case 'movieSubmitted':
@@ -105,7 +105,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `A new movie was successfully submitted`,
           imgRef: this.getPoster(notification.docId),
-          placeholderUrl: 'empty_poster.webp',
+          placeholderUrl: 'empty_poster.svg',
           url: `${applicationUrl[this.app]}/c/o/dashboard/title/${notification.docId}`,
         };
       case 'movieAccepted':
@@ -124,7 +124,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `Your project was successfully published on the marketplace.`,
           imgRef: this.getPoster(notification.docId),
-          placeholderUrl: 'empty_poster.webp',
+          placeholderUrl: 'empty_poster.svg',
           url: `/c/o/dashboard/title/${notification.docId}/main`,
         };
       case 'orgAppAccessChanged': {
@@ -134,7 +134,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: msg,
-          placeholderUrl: `empty_organization.webp`,
+          placeholderUrl: `empty_organization.svg`,
           imgRef: notification.organization?.logo,
           url: `${applicationUrl[notification.appAccess]}`
         }
@@ -158,7 +158,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `REMINDER - Your event "${notification.docId}" is about to start.`,
-          placeholderUrl: 'empty_poster.webp',
+          placeholderUrl: 'empty_poster.svg',
           url: `${applicationUrl['festival']}/c/o/marketplace/event/${notification.docId}`,
         };
       case 'oneDayReminder':
@@ -180,7 +180,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `REMINDER - Your event "${notification.docId}" is tomorrow.`,
-          placeholderUrl: 'empty_poster.webp',
+          placeholderUrl: 'empty_poster.svg',
           url: `${applicationUrl['festival']}/c/o/marketplace/event/${notification.docId}`,
         };
       case 'invitationToAttendEventUpdated':
@@ -201,7 +201,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `Someone has ${notification.invitation.status} your ${notification.invitation.mode} to attend an event.`,
           imgRef: notification.user?.avatar || notification.organization?.logo,
-          placeholderUrl: 'profil_user.webp',
+          placeholderUrl: 'profil_user.svg',
           url: `${applicationUrl['festival']}/c/o/${module}/event/${notification.docId}`
         };
       case 'requestToAttendEventSent':
@@ -220,14 +220,21 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `Your request to attend event "${notification.docId}" has been sent.`,
           imgRef: notification.user.avatar,
-          placeholderUrl: 'profil_user.webp',
+          placeholderUrl: 'profil_user.svg',
           url: `${applicationUrl['festival']}/c/o/${module}/event/${notification.docId}`
         };
       case 'offerCreatedConfirmation':
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `Your offer was successfully sent.`,
-          placeholderUrl: 'profil_user.webp'
+          placeholderUrl: 'profil_user.svg'
+        }
+      case 'contractCreated':
+        return {
+          _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
+          message: `An offer is made on one of your titles.`,
+          placeholderUrl: 'profil_user.svg',
+          url: `${applicationUrl['catalog']}/c/o/${module}/title/${notification.docId}`
         }
       default:
         return {

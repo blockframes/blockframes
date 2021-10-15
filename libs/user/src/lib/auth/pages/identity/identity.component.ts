@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, TemplateRef, ViewChild, ChangeDetectorRef, Optional } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, TemplateRef, ViewChild, ChangeDetectorRef, Optional, OnDestroy } from '@angular/core';
 import { AuthService, AuthQuery } from '../../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -16,6 +16,8 @@ import { hasDisplayName } from '@blockframes/utils/helpers';
 import { Intercom } from 'ng-intercom';
 import { createLocation } from '@blockframes/utils/common-interfaces/utility';
 import { debounceTime } from 'rxjs/internal/operators/debounceTime';
+import { FormControl } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'auth-identity',
@@ -24,7 +26,7 @@ import { debounceTime } from 'rxjs/internal/operators/debounceTime';
   animations: [slideUp, slideDown],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class IdentityComponent implements OnInit {
+export class IdentityComponent implements OnInit, OnDestroy {
   @ViewChild('customSnackBarTemplate') customSnackBarTemplate: TemplateRef<unknown>;
   public user$ = this.query.user$;
   public creating = false;
@@ -33,10 +35,12 @@ export class IdentityComponent implements OnInit {
   public indexGroup = 'indexNameOrganizations';
   private snackbarDuration = 8000;
   public form = new IdentityForm();
+  public orgControl = new FormControl();
   public orgForm = new OrganizationLiteForm();
   public useAlgolia = true;
   public existingUser = false;
   private existingOrgId: string;
+  private sub: Subscription;
 
   constructor(
     private authService: AuthService,
@@ -67,6 +71,11 @@ export class IdentityComponent implements OnInit {
 
     this.form.patchValue(identity);
 
+    this.sub = this.orgControl.valueChanges.subscribe(value => {
+      const error = value && this.existingOrgId === undefined ? {} : undefined
+      this.orgControl.setErrors(error);
+    });
+
     if (existingUserWithDisplayName) {
       // Updating user (already logged in and with display name setted) : user will only choose or create an org
       this.updateFormForExistingIdentity(this.query.user);
@@ -81,6 +90,10 @@ export class IdentityComponent implements OnInit {
     this.form.get('email').valueChanges.pipe(debounceTime(500)).subscribe(() => {
       if (this.form.get('email').valid) this.searchForInvitation();
     });
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
   public openIntercom(): void {
@@ -149,25 +162,10 @@ export class IdentityComponent implements OnInit {
   }
 
   private async create() {
-    const { email, password, firstName, lastName } = this.form.value;
-
-    const privacyPolicy = await this.authService.getPrivacyPolicy();
-    const ctx = {
-      firstName,
-      lastName,
-      _meta: { createdFrom: this.app },
-      privacyPolicy
-    };
-
-    const credentials = await this.authService.signup(email.trim(), password, { ctx });
-    const user = createPublicUser({
-      firstName,
-      lastName,
-      email,
-      uid: credentials.user.uid
-    });
-
     if (this.existingOrgId) {
+      // Create user
+      const user = await this.createUser(this.form.value);
+      // Request to join existing org
       await this.invitationService.request(this.existingOrgId, user).to('joinOrganization');
       this.snackBar.open('Your account has been created and request to join org sent ! ', 'close', { duration: this.snackbarDuration });
       return this.router.navigate(['c/organization/join-congratulations']);
@@ -184,10 +182,12 @@ export class IdentityComponent implements OnInit {
         return;
       }
 
+      // Create user
+      const user = await this.createUser(this.form.value);
+
+      // Create the org
       const org = createOrganization({ denomination, addresses, activity });
-
       org.appAccess[this.app][appAccess] = true;
-
       await this.orgService.addOrganization(org, this.app, user);
 
       this.snackBar.open('Your User Account was successfully created. Please wait for our team to check your Company Information. ', 'close', { duration: this.snackbarDuration });
@@ -195,9 +195,33 @@ export class IdentityComponent implements OnInit {
     }
   }
 
+  /**
+   * Create the new auth user
+   * @param user 
+   * @returns PublicUser
+   */
+  private async createUser(user: { email, password, firstName, lastName }) {
+    const privacyPolicy = await this.authService.getPrivacyPolicy();
+    const ctx = {
+      firstName: user.firstName,
+      lastName: user.lastName,
+      _meta: { createdFrom: this.app },
+      privacyPolicy
+    };
+    const credentials = await this.authService.signup(user.email.trim(), user.password, { ctx });
+    return createPublicUser({
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      uid: credentials.user.uid
+    });
+  }
+
   private async update() {
     if (this.form.get('generatedPassword').enabled && this.form.get('password').enabled && this.form.get('generatedPassword').value === this.form.get('password').value) {
-      this.snackBar.open('You must choose a new password', 'close', { duration: 5000 });
+      this.snackBar.open('Your new password has to be different than the invitation pass.', 'close', { duration: 5000 });
+      this.creating = false;
+      this.cdr.markForCheck();
       return;
     }
 
@@ -280,5 +304,10 @@ export class IdentityComponent implements OnInit {
     }
 
     this.cdr.markForCheck();
+  }
+
+  public async logout() {
+    await this.authService.signOut();
+    this.router.navigate(['/']);
   }
 }

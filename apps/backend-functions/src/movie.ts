@@ -1,19 +1,23 @@
 import { db } from './internals/firebase';
-import { MovieDocument, OrganizationDocument, PublicUser } from './data/types';
+import { MovieDocument, createDocPermissions } from './data/types';
 import { triggerNotifications, createNotification } from './notification';
-import { createDocumentMeta, getDocument, getOrganizationsOfMovie, Timestamp } from './data/internals';
+import { createDocumentMeta, getOrganizationsOfMovie, Timestamp } from './data/internals';
 import { removeAllSubcollections } from './utils';
 
-import { centralOrgId } from './environments/environment';
 import { orgName } from '@blockframes/organization/+state/organization.firestore';
 import { MovieAppConfig } from '@blockframes/movie/+state/movie.firestore';
-import { cleanMovieMedias } from './media';
+import { cleanMovieMedias, moveMovieMedia } from './media';
 import { Change, EventContext } from 'firebase-functions';
 import { algolia, deleteObject, storeSearchableMovie, storeSearchableOrg } from '@blockframes/firebase-utils';
-import { App, getAllAppsExcept, getMovieAppAccess, checkMovieStatus } from '@blockframes/utils/apps';
+import { App, getAllAppsExcept, getMovieAppAccess, getMailSender } from '@blockframes/utils/apps';
 import { Bucket } from '@blockframes/contract/bucket/+state/bucket.model';
+import { sendMovieSubmittedEmail } from './templates/mail';
+import { sendMail } from './internals/email';
+import { groupIds } from '@blockframes/utils/emails/ids';
 
 const apps: App[] = getAllAppsExcept(['crm']);
+
+type AppConfigMap = Partial<{ [app in App]: MovieAppConfig<Timestamp> }>;
 
 /** Function triggered when a document is added into movies collection. */
 export async function onMovieCreate(
@@ -26,15 +30,12 @@ export async function onMovieCreate(
     throw new Error('movie update function got invalid movie data');
   }
 
-  const user = await getDocument<PublicUser>(`users/${movie._meta.createdBy}`);
-  const organization = await getDocument<OrganizationDocument>(`orgs/${user.orgId}`);
-
-  if (checkMovieStatus(movie, 'accepted')) {
-    await storeSearchableOrg(organization);
+  const organizations = await getOrganizationsOfMovie(movie.id);
+  for (const org of organizations) {
+    await storeSearchableOrg(org);
   }
-
-  // Update algolia's index
-  return storeSearchableMovie(movie, orgName(organization));
+  const orgNames = organizations.map(org => orgName(org)).filter(orgName => !!orgName);
+  return storeSearchableMovie(movie, orgNames);
 }
 
 /** Remove a movie and send notifications to all users of concerned organizations. */
@@ -122,36 +123,45 @@ export async function onMovieUpdate(
   if (!after) { return; }
 
   await cleanMovieMedias(before, after);
+  await moveMovieMedia(before, after);
 
   const isMovieSubmitted = isSubmitted(before.app, after.app);
   const isMovieAccepted = isAccepted(before.app, after.app);
-  const appAccess = apps.filter(a => !!after.app[a].access);
+  const appAccess = apps.find(a => !!after.app[a].access);
+  const organizations = await getOrganizationsOfMovie(after.id);
 
-  if (isMovieSubmitted) { // When movie is submitted to Archipel Content
-    const archipelContent = await getDocument<OrganizationDocument>(`orgs/${centralOrgId.catalog}`);
-    const notifications = archipelContent.userIds.map(
-      toUserId => createNotification({
-        toUserId,
-        type: 'movieSubmitted',
-        docId: after.id,
-        _meta: createDocumentMeta({ createdFrom: appAccess[0] })
-      })
-    );
+  if (isMovieSubmitted) { // When movie is submitted to Archipel Content or Media Financiers
+    const movieWasSubmittedOn = wasSubmittedOn(before.app, after.app)[0];
+    // Mail to supportEmails.[app]
+    const from = getMailSender(movieWasSubmittedOn);
+    await sendMail(sendMovieSubmittedEmail(movieWasSubmittedOn, after), from, groupIds.noUnsubscribeLink);
+
+    // Notification to users related to current movie
+    const notifications = organizations
+      .filter(organizationDocument => !!organizationDocument?.userIds?.length)
+      .reduce((ids: string[], org) => ids.concat(org.userIds), [])
+      .map(
+        toUserId => createNotification({
+          toUserId,
+          type: 'movieSubmitted',
+          docId: after.id,
+          _meta: createDocumentMeta({ createdFrom: appAccess })
+        })
+      );
 
     await triggerNotifications(notifications);
   }
 
   if (isMovieAccepted) { // When Archipel Content accept the movie
-    const organizations = await getOrganizationsOfMovie(after.id);
     const notifications = organizations
-      .filter(organizationDocument => !!organizationDocument && !!organizationDocument.userIds)
-      .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
+      .filter(organizationDocument => !!organizationDocument?.userIds?.length)
+      .reduce((ids: string[], org) => ids.concat(org.userIds), [])
       .map(toUserId => {
         return createNotification({
           toUserId,
           type: 'movieAccepted',
           docId: after.id,
-          _meta: createDocumentMeta({ createdFrom: appAccess[0] })
+          _meta: createDocumentMeta({ createdFrom: appAccess })
         });
       });
 
@@ -163,41 +173,57 @@ export async function onMovieUpdate(
     await removeMovieFromWishlists(after);
   }
 
-  // insert orgName & orgID to the algolia movie index (this is needed in order to filter on the frontend)
-  const creator = await getDocument<PublicUser>(`users/${after._meta.createdBy}`);
-  const creatorOrg = await getDocument<OrganizationDocument>(`orgs/${creator.orgId}`);
+  // Change documentPermission docs based on orgIds change
+  const addedOrgIds = after.orgIds.filter(id => !before.orgIds.includes(id));
+  const removedOrgIds = before.orgIds.filter(id => !after.orgIds.includes(id));
 
-  if (creatorOrg.denomination?.full) {
-    await storeSearchableOrg(creatorOrg);
-    await storeSearchableMovie(after, orgName(creatorOrg));
-    for (const app in after.app) {
-      if (after.app[app].access === false && before.app[app].access !== after.app[app].access) {
-        await deleteObject(algolia.indexNameMovies[app], before.id);
-      }
+  const addedPromises = addedOrgIds.map(orgId => {
+    const permissions = createDocPermissions({ id: after.id, ownerId: orgId });
+    return db.doc(`permissions/${orgId}/documentPermissions/${after.id}`).set(permissions);
+  });
+  const removedPromises = removedOrgIds.map(orgId => db.doc(`permissions/${orgId}/documentPermissions/${after.id}`).delete());
+  await Promise.all([...addedPromises, ...removedPromises]); 
+
+  // insert orgName & orgID to the algolia movie index (this is needed in order to filter on the frontend)
+  for (const org of organizations) {
+    await storeSearchableOrg(org);
+  }
+  const orgNames = organizations.map(org => orgName(org)).filter(orgName => !!orgName);
+  await storeSearchableMovie(after, orgNames);
+
+  for (const app in after.app) {
+    if (after.app[app].access === false && before.app[app].access !== after.app[app].access) {
+      await deleteObject(algolia.indexNameMovies[app], before.id);
     }
   }
 }
 
 /** Checks if the store status is going from draft to submitted. */
-function isSubmitted(
-  beforeApp: Partial<{ [app in App]: MovieAppConfig<Timestamp> }>,
-  afterApp: Partial<{ [app in App]: MovieAppConfig<Timestamp> }>) {
+function isSubmitted(previousAppConfig: AppConfigMap, currentAppConfig: AppConfigMap) {
   return apps.some(app => {
-    return (beforeApp && beforeApp[app].status === 'draft') && (afterApp && afterApp[app].status === 'submitted');
+    return (previousAppConfig && previousAppConfig[app].status === 'draft') && (currentAppConfig && currentAppConfig[app].status === 'submitted');
   })
 }
 
+/** Return from which app(s) a movie is going from draft to submitted. */
+function wasSubmittedOn(previousAppConfig: AppConfigMap, currentAppConfig: AppConfigMap): App[] {
+  return apps.filter(app => {
+    if (!previousAppConfig[app] || !currentAppConfig[app]) return false;
+    const wasDraft = previousAppConfig[app].status === 'draft';
+    const isSubmitted = currentAppConfig[app].status === 'submitted';
+    return wasDraft && isSubmitted;
+  });
+}
+
 /** Checks if the store status is going from submitted to accepted. */
-function isAccepted(
-  beforeApp: Partial<{ [app in App]: MovieAppConfig<Timestamp> }>,
-  afterApp: Partial<{ [app in App]: MovieAppConfig<Timestamp> }>) {
+function isAccepted(previousAppConfig: AppConfigMap, currentAppConfig: AppConfigMap) {
   return apps.some(app => {
     if (app === 'festival') {
       // in festival `draft` -> `accepted`
-      return (beforeApp && beforeApp[app].status === 'draft') && (afterApp && afterApp[app].status === 'accepted');
+      return (previousAppConfig && previousAppConfig[app].status === 'draft') && (currentAppConfig && currentAppConfig[app].status === 'accepted');
     }
     // in catalog/financiers `draft` -> `submitted` -> `accepted`
-    return (beforeApp && beforeApp[app].status === 'submitted') && (afterApp && afterApp[app].status === 'accepted');
+    return (previousAppConfig && previousAppConfig[app].status === 'submitted') && (currentAppConfig && currentAppConfig[app].status === 'accepted');
   });
 }
 

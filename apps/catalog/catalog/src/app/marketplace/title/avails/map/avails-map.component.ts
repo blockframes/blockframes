@@ -1,25 +1,26 @@
 
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { combineLatest, Subscription } from 'rxjs';
+import { combineLatest } from 'rxjs';
 import { filter, map, pluck, shareReplay, startWith, take, throttleTime } from 'rxjs/operators';
 
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import {
-  getSoldTerms,
   getSelectedTerritories,
   TerritoryMarker,
   toTerritoryMarker,
   getTerritoryMarkers,
   availableTerritories,
   AvailsFilter,
+  collidingTerms,
 } from '@blockframes/contract/avails/avails';
 import { territoriesISOA3, TerritoryValue } from '@blockframes/utils/static-model';
 
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
+import { scrollIntoView } from '@blockframes/utils/browser/utils';
 
 @Component({
   selector: 'catalog-movie-avails-map',
@@ -27,7 +28,7 @@ import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-enc
   styleUrls: ['./avails-map.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MarketplaceMovieAvailsMapComponent implements OnInit, OnDestroy {
+export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
   public hoveredTerritory: {
     name: string;
     status: string;
@@ -39,15 +40,16 @@ export class MarketplaceMovieAvailsMapComponent implements OnInit, OnDestroy {
   private mandates$ = this.shell.mandates$;
   private mandateTerms$ = this.shell.mandateTerms$;
   private salesTerms$ = this.shell.salesTerms$;
-  private subs: Subscription[] = [];
 
-  public territoryMarkers$ = combineLatest([
+  /** All mandates markers by territory (they might be already sold or already selected selected (from the bucket) or already in selection) */
+  private territoryMarkers$ = combineLatest([
     this.mandates$,
     this.mandateTerms$,
   ]).pipe(
     map(([mandates, mandateTerms]) => getTerritoryMarkers(mandates, mandateTerms)),
   );
 
+  /** Array of selected (from the bucket) markers */
   public selected$ = combineLatest([
     this.availsForm.value$,
     this.shell.bucketForm.value$,
@@ -69,17 +71,17 @@ export class MarketplaceMovieAvailsMapComponent implements OnInit, OnDestroy {
   );
 
   public sold$ = combineLatest([
-    this.mandates$,
     this.salesTerms$,
     this.availsForm.value$,
   ]).pipe(
     filter(() => this.availsForm.valid),
-    map(([mandates, sales, avails]) => {
-      const soldTerms = getSoldTerms(avails, sales);
-      return soldTerms.map(term => term.territories
+    map(([salesTerms, avails]) => {
+      const soldTerms = collidingTerms(avails, salesTerms);
+      const markers = soldTerms.map(term => term.territories
         .filter(territory => !!territoriesISOA3[territory])
-        .map(territory => toTerritoryMarker(territory, mandates, term))
+        .map(territory => toTerritoryMarker(territory, [], term))
       ).flat();
+      return markers;
     }),
   );
 
@@ -94,7 +96,7 @@ export class MarketplaceMovieAvailsMapComponent implements OnInit, OnDestroy {
       if (this.availsForm.invalid) return [];
       return availableTerritories(selected, sold, inSelection, this.availsForm.value, mandates, mandateTerms);
     }),
-    shareReplay(1), // Multicast with replay
+    shareReplay({ refCount: true, bufferSize: 1 }), // Multicast with replay
   );
 
   constructor(
@@ -143,13 +145,13 @@ export class MarketplaceMovieAvailsMapComponent implements OnInit, OnDestroy {
     this.snackbar.open(`Rights added`, 'Show ⇩', { duration: 5000 })
       .onAction()
       .subscribe(() => {
-        document.querySelector('#rights').scrollIntoView({ behavior: 'smooth' })
+        scrollIntoView(document.querySelector('#rights'));
       });
   }
 
-  ngOnInit() {
+  ngAfterViewInit() {
     const decodedData = decodeUrl(this.route);
-    this.availsForm.patchValue(decodedData)
+    this.availsForm.patchValue(decodedData);
     this.availsForm.valueChanges.pipe(
       throttleTime(1000)
     ).subscribe(formState => {
@@ -157,9 +159,5 @@ export class MarketplaceMovieAvailsMapComponent implements OnInit, OnDestroy {
         this.router, this.route, formState
       );
     });
-  }
-
-  ngOnDestroy() {
-    this.subs.forEach(s => s.unsubscribe());
   }
 }

@@ -21,15 +21,10 @@
       <mat-label>Position</mat-label>
       <input matInput test-id="position-form" placeholder="Position" type="text" [formControl]="form.get('position')" />
     </mat-form-field>
-    <section fxLayout fxLayoutAlign="space-between start">
-      <mat-form-field appearance="outline">
-        <mat-label>Email Address</mat-label>
-        <input matInput test-id="phone-form" placeholder="Email Address" type="tel" [formControl]="form.get('email')" />
-      </mat-form-field>
-      <div *ngIf="(authQuery.hasVerifiedEmail$ | async) === false" fxLayoutAlign="start center">
-        <button mat-flat-button color="accent" (click)="sendEmailVerification()" [disabled]="emailSent">{{ emailSent ? 'Email Sent' : 'Verify Email' }}</button>
-      </div>
-    </section>
+    <mat-form-field appearance="outline">
+      <mat-label>Email Address</mat-label>
+      <input matInput test-id="phone-form" placeholder="Email Address" type="tel" [formControl]="form.get('email')" />
+    </mat-form-field>
     <mat-form-field appearance="outline">
       <mat-label>Phone number</mat-label>
       <input matInput test-id="phone-form" placeholder="Phone number" type="tel" [formControl]="form.get('phoneNumber')" />

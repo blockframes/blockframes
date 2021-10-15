@@ -60,38 +60,33 @@ export const tunnelRoutes: Routes = [
           import('@blockframes/movie/form/technical-info/technical-info.module').then(m => m.TunnelTechnicalInfoModule),
       },
       {
-        path: 'available-materials',
+        path: 'available-versions',
         data: { animation: 9 },
-        loadChildren: () => import('@blockframes/movie/form/available-materials/available-materials.module').then(m => m.MovieFormAvailableMaterialsModule),
-      },
-      {
-        path: 'sales-pitch',
-        data: { animation: 10 },
-        loadChildren: () => import('@blockframes/movie/form/sales-pitch/sales-pitch.module').then(m => m.MovieFormSalesPitchModule),
+        loadChildren: () => import('@blockframes/movie/form/available-versions/available-versions.module').then(m => m.MovieFormAvailableVersionsModule),
       },
       {
         path: 'media-files',
-        data: { animation: 11 },
+        data: { animation: 10 },
         loadChildren: () => import('@blockframes/movie/form/media-files/media-files.module').then(m => m.MovieFormMediaFilesModule),
       },
       {
         path: 'media-notes',
-        data: { animation: 12 },
+        data: { animation: 11 },
         loadChildren: () => import('@blockframes/movie/form/media-notes/notes.module').then(m => m.MovieFormNotesModule),
       },
       {
         path: 'media-images',
-        data: { animation: 13 },
+        data: { animation: 12 },
         loadChildren: () => import('@blockframes/movie/form/media-images/media-images.module').then(m => m.MovieFormMediaImagesModule),
       },
       {
         path: 'media-videos',
-        data: { animation: 14 },
+        data: { animation: 13 },
         loadChildren: () => import('@blockframes/movie/form/media-videos/media-videos.module').then(m => m.MediaFormVideosModule),
       },
       {
         path: 'summary',
-        data: { animation: 15 },
+        data: { animation: 14 },
         loadChildren: () => import('./summary/summary.module').then(m => m.TunnelSummaryModule),
       }
     ]

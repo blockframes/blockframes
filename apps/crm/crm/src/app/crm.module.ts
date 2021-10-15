@@ -14,12 +14,12 @@ const routes: Routes = createRoutes({
   },
   appsRoutes: [{
     path: '',
-    redirectTo: 'admin',
+    redirectTo: 'dashboard',
     pathMatch: 'full'
   },
   {
-    path: 'admin',
-    loadChildren: () => import('@blockframes/admin/admin/admin.module').then(m => m.AdminModule)
+    path: 'dashboard',
+    loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule)
   }]
 });
 

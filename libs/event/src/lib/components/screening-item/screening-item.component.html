@@ -1,16 +1,21 @@
 <ng-container *ngIf="event$ | async as event">
   <a matRipple [routerLink]="['/c/o/marketplace/event/', event.id]">
     <img fxHide.lt-sm
-      [ref]="(event.meta.titleId | getTitle | async)?.poster" 
-      asset="empty_poster.webp"
-      width="225px"
-      height="300px"
-      alt="Movie poster of the screening">
+    [ref]="(event.meta.titleId | getTitle | async)?.poster"
+    asset="empty_poster.svg"
+    width="225px"
+    height="300px"
+    alt="Movie poster of the screening">
   </a>
   <article fxLayout="column" fxLayoutAlign="space-between start">
-    <div fxLayout="column" fxLayoutAlign="start start">
-      <h3><a [routerLink]="['/c/o/marketplace/event/', event.id]">{{ event.title }}</a></h3>
-      <h5>{{ event.isPrivate ? 'Private' : 'Public' }} Screening </h5>
+    <div>
+      <div fxLayout fxLayoutAlign="space-between">
+        <h3><a [routerLink]="['/c/o/marketplace/event/', event.id]">{{ event.title }}</a></h3>
+        <ng-container *ngIf="(event | eventTime) === 'onTime'">
+          <a ongoing-event-button [routerLink]="['/c/o/marketplace/event', event.id]">Ongoing Screening</a>
+        </ng-container>
+      </div>
+      <h5>{{ event.isPrivate ? 'Private' : 'Public' }} Screening</h5>
       <pre class="mat-body-1">{{ event | eventRange }}</pre>
       <ng-container *ngIf="event.ownerOrgId | getOrg | async as org">
         <org-chip @fade [org]="org"></org-chip>

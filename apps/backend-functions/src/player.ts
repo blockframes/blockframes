@@ -5,7 +5,7 @@ import * as admin from 'firebase-admin';
 import { File as GFile } from '@google-cloud/storage';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 
-import { upsertWatermark } from '@blockframes/firebase-utils';
+import { jwplayerApiV2, upsertWatermark } from '@blockframes/firebase-utils';
 import { linkDuration } from '@blockframes/event/+state/event.firestore';
 import { StorageVideo } from '@blockframes/media/+state/media.firestore';
 
@@ -14,12 +14,9 @@ import { ErrorResultResponse } from './utils';
 import { getDocument } from './data/internals';
 import { isAllowedToAccessMedia } from './internals/media';
 import { db, getStorageBucketName } from './internals/firebase';
-import { jwplayerSecret, jwplayerKey, enableDailyFirestoreBackup } from './environments/environment';
+import { jwplayerKey, jwplayerApiV2Secret, jwplayerSecret, enableDailyFirestoreBackup, playerId } from './environments/environment';
 
 
-// No typing
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const JWPlayerApi = require('jwplatform');
 
 interface ReadVideoParams {
 
@@ -142,17 +139,25 @@ export const getPrivateVideoUrl = async (
 
   const signedUrl = `https://cdn.jwplayer.com/manifests/${jwPlayerId}.m3u8?exp=${expires}&sig=${signature}`;
 
-  // FETCH VIDEO METADATA
-  const jw = new JWPlayerApi({apiKey: jwplayerKey, apiSecret: jwplayerSecret});
-  const response = await jw.videos.show({video_key: jwPlayerId});
+  try {
+    // FETCH VIDEO METADATA
+    const info = await jwplayerApiV2(jwplayerKey, jwplayerApiV2Secret).getVideoInfo(jwPlayerId);
 
-  return {
-    error: '',
-    result: {
-      signedUrl,
-      info: response.status === 'ok' ? response.video : undefined
-    }
-  };
+    return {
+      error: '',
+      result: { signedUrl, info }
+    };
+  } catch (error: unknown) {
+    return {
+      error: '',
+      result: {
+        signedUrl,
+        info: { duration: 0 },
+      }
+    };
+  }
+
+
 }
 
 
@@ -176,28 +181,26 @@ export const uploadToJWPlayer = async (file: GFile): Promise<{
   const expires = new Date().getTime() + 7200000; // now + 2 hours
 
   const [videoUrl] = await file.getSignedUrl({ action: 'read', expires });
+  const tag = enableDailyFirestoreBackup ? 'production' : 'test';
 
-  const jw = new JWPlayerApi({ apiKey: jwplayerKey, apiSecret: jwplayerSecret });
-  const tags = enableDailyFirestoreBackup ? 'production' : 'test';
-  const result = await jw.videos.create({ download_url: videoUrl, tags }).catch(e => ({ status: 'error', message: e.message }));
+  try {
+    const result = await jwplayerApiV2(jwplayerKey, jwplayerApiV2Secret).createVideo(videoUrl, tag);
 
-  if (result.status === 'error' || !result.video || !result.video.key) {
-    return { success: false, message: result.message || '' }
-  } else {
-    return { success: true, key: result.video.key }
+    return { success: true, key: result.id }
+  } catch (error: unknown) {
+    return { success: false, message: 'UPLOAD FAILED' };
   }
 }
 
 
 export const deleteFromJWPlayer = async (jwPlayerId: string) => {
 
-  const jw = new JWPlayerApi({ apiKey: jwplayerKey, apiSecret: jwplayerSecret });
-  const result = await jw.videos.delete({ video_key: jwPlayerId }).catch(e => ({ status: 'error', message: e.message }));
+  try {
+    const result = await jwplayerApiV2(jwplayerKey, jwplayerApiV2Secret).deleteVideo(jwPlayerId);
 
-  if (result.status === 'error' || !result.videos) {
-    return { success: false, message: result.message || '' }
-  } else {
-    return { success: true, keys: result.videos }
+    return { success: true, keys: result }
+  } catch (error: unknown) {
+    return { success: false, message: `DELETE FAILED, please delete ${jwPlayerId} manually` }
   }
 };
 
@@ -212,11 +215,11 @@ export const getPlayerUrl = async (
 
   const expires = Math.floor(new Date().getTime() / 1000) + linkDuration; // now + 5 hours
 
-  const toSign = `libraries/lpkRdflk.js:${expires}:${jwplayerSecret}`;
+  const toSign = `libraries/${playerId}.js:${expires}:${jwplayerSecret}`;
   const md5 = createHash('md5');
 
   const signature = md5.update(toSign).digest('hex');
 
-  const signedUrl = `https://cdn.jwplayer.com/libraries/lpkRdflk.js?exp=${expires}&sig=${signature}`;
+  const signedUrl = `https://cdn.jwplayer.com/libraries/${playerId}.js?exp=${expires}&sig=${signature}`;
   return signedUrl;
 };

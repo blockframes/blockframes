@@ -24,6 +24,12 @@
         "ignoreExistingTslintConfig": true,
         "removeTSLintIfNoMoreTSLintTargets": true
       }
+    },
+    "@nrwl/angular:component": {
+      "displayBlock": true,
+      "changeDetection": "OnPush",
+      "skipTests": true,
+      "style": "scss"
     }
   },
   "projects": {
@@ -161,15 +167,12 @@
             "buildLibsFromSource": true
           },
           "configurations": {
+            "ci": {},
             "production": {
               "optimization": true,
               "extractLicenses": true,
               "inspect": false,
               "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.blockframes.ts"
-                },
                 {
                   "replace": "apps/backend-functions/src/environments/environment.ts",
                   "with": "apps/backend-functions/src/environments/environment.prod.ts"
@@ -182,36 +185,37 @@
               "inspect": false,
               "fileReplacements": [
                 {
-                  "replace": "env/env.ts",
-                  "with": "env/env.blockframes-staging.ts"
-                },
-                {
                   "replace": "apps/backend-functions/src/environments/environment.ts",
                   "with": "apps/backend-functions/src/environments/environment.prod.ts"
                 }
               ]
             },
-            "ci": {
+            "emulator": {
               "optimization": true,
-              "extractLicenses": true,
-              "inspect": false,
               "fileReplacements": [
                 {
-                  "replace": "env/env.ts",
-                  "with": "env/env.blockframes-ci.ts"
-                },
-                {
                   "replace": "apps/backend-functions/src/environments/environment.ts",
-                  "with": "apps/backend-functions/src/environments/environment.prod.ts"
+                  "with": "apps/backend-functions/src/environments/environment.emulator.ts"
+
                 }
               ]
             }
           }
         },
         "serve": {
-          "builder": "@nrwl/node:execute",
+          "builder": "@nrwl/workspace:run-commands",
           "options": {
-            "buildTarget": "backend-functions:build"
+            "envFile": ".env",
+            "commands": [
+              {
+                "command": "npx nx build backend-functions --watch"
+              },
+              {
+                "command": "npm run backend-ops startEmulators"
+              }
+            ],
+            "parallel": true,
+            "color": true
           }
         },
         "lint": {
@@ -262,12 +266,6 @@
       "prefix": "backend-ops",
       "schematics": {},
       "architect": {
-        "serve": {
-          "builder": "@nrwl/node:execute",
-          "options": {
-            "buildTarget": "backend-ops:build"
-          }
-        },
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
@@ -328,11 +326,6 @@
     },
     "catalog": {
       "projectType": "application",
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
-        }
-      },
       "root": "apps/catalog/catalog",
       "sourceRoot": "apps/catalog/catalog/src",
       "prefix": "catalog",
@@ -369,6 +362,14 @@
             "namedChunks": true
           },
           "configurations": {
+            "emulator": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/catalog/catalog/src/environment/environment.ts",
+                  "with": "apps/catalog/catalog/src/environment/environment.emulator.ts"
+                }
+              ]
+            },
             "production": {
               "fileReplacements": [
                 {
@@ -460,6 +461,9 @@
             "browserTarget": "catalog:build"
           },
           "configurations": {
+            "emulator": {
+              "browserTarget": "catalog:build:emulator"
+            },
             "production": {
               "browserTarget": "catalog:build:production"
             }
@@ -514,15 +518,38 @@
       "sourceRoot": "apps/catalog/catalog-e2e/src",
       "projectType": "application",
       "architect": {
+        "serve": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/catalog/catalog-e2e/cypress.json",
+            "tsConfig": "apps/catalog/catalog-e2e/tsconfig.e2e.json",
+            "baseUrl": "http://localhost:4200",
+            "watch": true,
+            "headless": false,
+            "exit": false,
+            "record": false,
+            "browser": "chrome",
+            "devServerTarget": "catalog:serve"
+          },
+          "configurations": {
+            "emulator": {
+              "devServerTarget": "catalog:serve:emulator"
+            }
+          }
+        },
         "e2e": {
           "builder": "@nrwl/cypress:cypress",
           "options": {
             "cypressConfig": "apps/catalog/catalog-e2e/cypress.json",
             "tsConfig": "apps/catalog/catalog-e2e/tsconfig.e2e.json",
             "baseUrl": "http://localhost:4200",
-            "browser": "chrome"
+            "browser": "chrome",
+            "devServerTarget": "catalog:serve"
           },
           "configurations": {
+            "emulator": {
+              "devServerTarget": "catalog:serve:emulator"
+            },
             "production": {
               "devServerTarget": "catalog:serve:production"
             },
@@ -547,11 +574,6 @@
     },
     "festival": {
       "projectType": "application",
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
-        }
-      },
       "root": "apps/festival/festival",
       "sourceRoot": "apps/festival/festival/src",
       "prefix": "festival",
@@ -590,6 +612,14 @@
             "namedChunks": true
           },
           "configurations": {
+            "emulator": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/festival/festival/src/environment/environment.ts",
+                  "with": "apps/festival/festival/src/environment/environment.emulator.ts"
+                }
+              ]
+            },
             "production": {
               "fileReplacements": [
                 {
@@ -679,6 +709,9 @@
             "browserTarget": "festival:build"
           },
           "configurations": {
+            "emulator": {
+              "browserTarget": "festival:build:emulator"
+            },
             "production": {
               "browserTarget": "festival:build:production"
             }
@@ -733,24 +766,43 @@
       "sourceRoot": "apps/festival/festival-e2e/src",
       "projectType": "application",
       "architect": {
+        "serve": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/festival/festival-e2e/cypress.json",
+            "tsConfig": "apps/festival/festival-e2e/tsconfig.e2e.json",
+            "baseUrl": "http://localhost:4200",
+            "watch": true,
+            "headless": false,
+            "exit": false,
+            "record": false,
+            "browser": "chrome",
+            "devServerTarget": "festival:serve"
+          },
+          "configurations": {
+            "emulator": {
+              "devServerTarget": "festival:serve:emulator"
+            }
+          }
+        },
         "e2e": {
           "builder": "@nrwl/cypress:cypress",
           "options": {
             "cypressConfig": "apps/festival/festival-e2e/cypress.json",
             "tsConfig": "apps/festival/festival-e2e/tsconfig.e2e.json",
             "baseUrl": "http://localhost:4200",
-            "browser": "chrome"
+            "browser": "chrome",
+            "devServerTarget": "festival:serve"
           },
           "configurations": {
+            "emulator": {
+              "devServerTarget": "festival:serve:emulator"
+            },
             "production": {
               "devServerTarget": "festival:serve:production"
             },
-            "ci": {
-              "devServerTarget": "festival:serve"
-            },
-            "staging": {
-              "devServerTarget": "festival:serve"
-            }
+            "ci": { },
+            "staging": { }
           }
         },
         "lint": {
@@ -783,11 +835,6 @@
             "passWithNoTests": true
           }
         }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "styleext": "scss"
-        }
       }
     },
     "event": {
@@ -808,11 +855,6 @@
             "jestConfig": "libs/event/jest.config.js",
             "passWithNoTests": true
           }
-        }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "styleext": "scss"
         }
       }
     },
@@ -835,11 +877,6 @@
             "passWithNoTests": true
           }
         }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "styleext": "scss"
-        }
       }
     },
     "landing": {
@@ -860,11 +897,6 @@
             "jestConfig": "libs/landing/jest.config.js",
             "passWithNoTests": true
           }
-        }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
         }
       }
     },
@@ -887,11 +919,6 @@
             "passWithNoTests": true
           }
         }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
-        }
       }
     },
     "media": {
@@ -913,20 +940,10 @@
             "passWithNoTests": true
           }
         }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
-        }
       }
     },
     "crm": {
       "projectType": "application",
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
-        }
-      },
       "root": "apps/crm/crm",
       "sourceRoot": "apps/crm/crm/src",
       "prefix": "crm",
@@ -962,6 +979,14 @@
             "namedChunks": true
           },
           "configurations": {
+            "emulator": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/crm/crm/src/environment/environment.ts",
+                  "with": "apps/crm/crm/src/environment/environment.emulator.ts"
+                }
+              ]
+            },
             "production": {
               "fileReplacements": [
                 {
@@ -1051,6 +1076,9 @@
             "browserTarget": "crm:build"
           },
           "configurations": {
+            "emulator": {
+              "browserTarget": "crm:build:emulator"
+            },
             "production": {
               "browserTarget": "crm:build:production"
             }
@@ -1102,24 +1130,43 @@
       "sourceRoot": "apps/crm/crm-e2e/src",
       "projectType": "application",
       "architect": {
+        "serve": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/crm/crm-e2e/cypress.json",
+            "tsConfig": "apps/crm/crm-e2e/tsconfig.e2e.json",
+            "baseUrl": "http://localhost:4200",
+            "watch": true,
+            "headless": false,
+            "exit": false,
+            "record": false,
+            "browser": "chrome",
+            "devServerTarget": "crm:serve"
+          },
+          "configurations": {
+            "emulator": {
+              "devServerTarget": "crm:serve:emulator"
+            }
+          }
+        },
         "e2e": {
           "builder": "@nrwl/cypress:cypress",
           "options": {
             "cypressConfig": "apps/crm/crm-e2e/cypress.json",
             "tsConfig": "apps/crm/crm-e2e/tsconfig.e2e.json",
             "baseUrl": "http://localhost:4200",
-            "browser": "chrome"
+            "browser": "chrome",
+            "devServerTarget": "crm:serve"
           },
           "configurations": {
+            "emulator": {
+              "devServerTarget": "crm:serve:emulator"
+            },
             "production": {
               "devServerTarget": "crm:serve:production"
             },
-            "ci": {
-              "devServerTarget": "crm:serve"
-            },
-            "staging": {
-              "devServerTarget": "crm:serve"
-            }
+            "ci": { },
+            "staging": { }
           }
         },
         "lint": {
@@ -1171,11 +1218,6 @@
             "setupFile": "libs/invitation/src/test-setup.ts"
           }
         }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
-        }
       }
     },
     "firebase-utils": {
@@ -1204,11 +1246,6 @@
     },
     "financiers": {
       "projectType": "application",
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
-        }
-      },
       "root": "apps/financiers/financiers",
       "sourceRoot": "apps/financiers/financiers/src",
       "prefix": "financiers",
@@ -1245,6 +1282,14 @@
             "namedChunks": true
           },
           "configurations": {
+            "emulator": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/financiers/financiers/src/environment/environment.ts",
+                  "with": "apps/financiers/financiers/src/environment/environment.emulator.ts"
+                }
+              ]
+            },
             "production": {
               "fileReplacements": [
                 {
@@ -1306,6 +1351,9 @@
             "browserTarget": "financiers:build"
           },
           "configurations": {
+            "emulator": {
+              "browserTarget": "financiers:build:emulator"
+            },
             "production": {
               "browserTarget": "financiers:build:production"
             }
@@ -1361,24 +1409,43 @@
       "sourceRoot": "apps/financiers/financiers-e2e/src",
       "projectType": "application",
       "architect": {
+        "serve": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/financiers/financiers-e2e/cypress.json",
+            "tsConfig": "apps/financiers/financiers-e2e/tsconfig.e2e.json",
+            "baseUrl": "http://localhost:4200",
+            "watch": true,
+            "headless": false,
+            "exit": false,
+            "record": false,
+            "browser": "chrome",
+            "devServerTarget": "financiers:serve"
+          },
+          "configurations": {
+            "emulator": {
+              "devServerTarget": "financiers:serve:emulator"
+            }
+          }
+        },
         "e2e": {
           "builder": "@nrwl/cypress:cypress",
           "options": {
             "cypressConfig": "apps/financiers/financiers-e2e/cypress.json",
             "tsConfig": "apps/financiers/financiers-e2e/tsconfig.e2e.json",
             "baseUrl": "http://localhost:4200",
-            "browser": "chrome"
+            "browser": "chrome",
+            "devServerTarget": "financiers:serve"
           },
           "configurations": {
+            "emulator": {
+              "devServerTarget": "financiers:serve:emulator"
+            },
             "production": {
               "devServerTarget": "financiers:serve:production"
             },
-            "ci": {
-              "devServerTarget": "financiers:serve"
-            },
-            "staging": {
-              "devServerTarget": "financiers:serve"
-            }
+            "ci": { },
+            "staging": { }
           }
         },
         "lint": {
@@ -1412,20 +1479,10 @@
             "setupFile": "libs/campaign/src/test-setup.ts"
           }
         }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
-        }
       }
     },
     "cms": {
       "projectType": "application",
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
-        }
-      },
       "root": "apps/cms",
       "sourceRoot": "apps/cms/src",
       "prefix": "cms",
@@ -1458,6 +1515,14 @@
             "namedChunks": true
           },
           "configurations": {
+            "emulator": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/cms/src/environment/environment.ts",
+                  "with": "apps/cms/src/environment/environment.emulator.ts"
+                }
+              ]
+            },
             "production": {
               "fileReplacements": [
                 {
@@ -1523,6 +1588,9 @@
             "browserTarget": "cms:build"
           },
           "configurations": {
+            "emulator": {
+              "browserTarget": "cms:build:emulator"
+            },
             "production": {
               "browserTarget": "cms:build:production"
             }
@@ -1606,11 +1674,6 @@
             "passWithNoTests": true,
             "setupFile": "libs/consents/src/test-setup.ts"
           }
-        }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
         }
       }
     }

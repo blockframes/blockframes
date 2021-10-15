@@ -1,0 +1,17 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+article {
+  flex: 1;
+  padding-bottom: 62px;
+}
+
+img {
+  object-fit: contain;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+}

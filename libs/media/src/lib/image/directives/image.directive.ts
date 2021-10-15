@@ -79,7 +79,7 @@ export class ImageDirective implements OnInit, OnDestroy {
    * The placeholder asset to display.
    * Just specify the file name, and the component
    * will compute the image path depending on the theme, image format, etc...
-   * @example asset="empty_poster.webp"
+   * @example asset="empty_poster.svg"
    */
   @Input() set asset(asset: string) {
     this.asset$.next(asset);
@@ -118,7 +118,7 @@ export class ImageDirective implements OnInit, OnDestroy {
     // apply latest changes
     this.sub = combineLatest(obs$).subscribe(async ([asset, params, theme, ref]) => {
 
-      if (ref) {
+      if (ref?.storagePath) {
         // ref
         this.srcset = await this.mediaService.generateImageSrcset(ref, params);
         this.src = this.srcset.split(' ')[0];

@@ -165,16 +165,18 @@ export async function createNotificationsForEventsToStart() {
 
   // 1 Fetch events that are about to start
   const eventsDayCollection = await fetchEventStartingIn(oneDay, (oneDay + oneHour));
-  const eventsHourCollection = await fetchEventStartingIn(oneHour, (oneHour + halfHour));
+  const eventsHourCollection = await fetchEventStartingIn(halfHour, oneHour);
 
   // 2 Fetch attendees (invitations accepted)
   const invitationsDay = await fetchAttendeesToEvent(eventsDayCollection.docs);
+  const invitationsDayPending = await fetchAttendeesToEvent(eventsDayCollection.docs, true);
   const invitationsHour = await fetchAttendeesToEvent(eventsHourCollection.docs);
 
   // 3 Create notifications if not already exists
   const notificationsDays = await createNotificationIfNotExists(invitationsDay, 'oneDayReminder');
-  const notificationsHours = await createNotificationIfNotExists(invitationsHour, 'eventIsAboutToStart')
-  const notifications = notificationsDays.concat(notificationsHours);
+  const notificationsDaysPending = await createNotificationIfNotExists(invitationsDayPending, 'oneDayReminder');
+  const notificationsHours = await createNotificationIfNotExists(invitationsHour, 'eventIsAboutToStart');
+  const notifications = notificationsDays.concat(notificationsHours).concat(notificationsDaysPending);
 
   return notifications.length ? triggerNotifications(notifications) : undefined;
 }
@@ -188,13 +190,19 @@ async function fetchEventStartingIn(from: number, to: number) {
     .get();
 }
 
-/** Fetch accepted invitations to an event */
-async function fetchAttendeesToEvent(collectionDocs: FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>[]) {
+/**
+ * Fetch accepted or pending invitations to an event
+ * @param collectionDocs Event docs
+ * @param pendingInvites Set true for invitations that are pending invites (not requests)
+ */
+async function fetchAttendeesToEvent(collectionDocs: FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>[], pendingInvites = false) {
   const db = admin.firestore();
   const invitations: InvitationDocument[] = [];
 
   const docsIds: string[] = collectionDocs.map(doc => doc.data().id);
-  const promises = docsIds.map(id => db.collection('invitations').where('eventId', '==', id).where('status', '==', 'accepted').get());
+  const promises = pendingInvites
+    ? docsIds.map(id => db.collection('invitations').where('eventId', '==', id).where('mode', '==', 'invitation').where('status', '==', 'pending').get())
+    : docsIds.map(id => db.collection('invitations').where('eventId', '==', id).where('status', '==', 'accepted').get())
   const invitationsSnaps = await Promise.all(promises);
   invitationsSnaps.forEach(snap => snap.docs.forEach(doc => invitations.push(doc.data() as InvitationDocument)));
 

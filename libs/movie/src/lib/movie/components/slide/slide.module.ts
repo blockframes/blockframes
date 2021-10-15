@@ -6,7 +6,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MovieSlideComponent, MovieSlideActions, MovieSlideCTA } from './slide.component';
 
 // Blockframes
-import { DisplayNameModule } from '@blockframes/utils/pipes';
 import { MovieTitleFeaturesModule } from '../title-features/title-features.module';
 import { MaxLengthModule } from '@blockframes/utils/pipes/max-length.pipe';
 
@@ -14,10 +13,8 @@ import { MaxLengthModule } from '@blockframes/utils/pipes/max-length.pipe';
     imports: [
         CommonModule,
         FlexLayoutModule,
-
         // Blockframes
         MovieTitleFeaturesModule,
-        DisplayNameModule,
         MaxLengthModule
     ],
     declarations: [MovieSlideComponent, MovieSlideActions, MovieSlideCTA],

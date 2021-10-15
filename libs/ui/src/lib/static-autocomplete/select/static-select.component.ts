@@ -16,6 +16,7 @@ export class StaticSelectComponent implements OnInit {
   public staticValue: string[];
   @ContentChild(TemplateRef) template: TemplateRef<unknown>;
   @Input() scope: Scope
+  @Input() @boolean multiple: boolean;
   @Input() control: FormControl;
   @Input() mode: 'legacy' | 'standard' | 'fill' | 'outline' = 'outline';
   @Input() placeholder: string;

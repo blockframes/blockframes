@@ -4,9 +4,9 @@
     <section *ngSwitchCase="'screening'" fxLayout="column" fxLayoutAlign="space-between center"  class="screening">
       <ng-container *ngIf="event.movie else noMovie">
         <ng-container *ngIf="showSession else showVideo">
-          <article class="dark-contrast-theme screen" [bgRef]="event.movie.banner" bgAsset="empty_banner.webp">
+          <article class="dark-contrast-theme screen" [bgRef]="event.movie.banner" bgAsset="empty_banner.png">
             <div class="overlay" fxLayout="column" fxLayoutAlign="center center">
-              <img class="organizationLogo" [ref]="event.org.logo" asset="empty_organization.webp" type="logo" alt="organisation logo">
+              <img class="organizationLogo" [ref]="event?.org?.logo" asset="empty_organization.svg" type="logo" alt="organization logo">
               <h4>{{ event.org | orgName }} presents</h4>
               <h1 class="mat-display-2">{{ event.movie.title.international }}</h1>
               <h2>by {{ event.movie.directors | displayName }}</h2>
@@ -25,7 +25,7 @@
           </article>
         </ng-template>
 
-        <img asset="screening_now.webp" alt="Cinema room">
+        <img asset="screening_now.svg" alt="Cinema room">
       </ng-container>
 
       <ng-template #noMovie>
@@ -74,7 +74,7 @@
 
       </section>
 
-      <img *ngIf="!event.isOwner" asset="meeting.webp" alt="Meeting room">
+      <img *ngIf="!event.isOwner" asset="meeting.svg" alt="Meeting room">
 
     </ng-container>
   </ng-container>

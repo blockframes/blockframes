@@ -8,12 +8,13 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { TitleListComponent } from './list.component';
 
 // Blockframes
-import { DisplayNameModule, ToLabelModule } from '@blockframes/utils/pipes';
+import { DisplayNameModule, NumberPipeModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { FilterByModule } from '@blockframes/utils/pipes/filter-by.pipe';
-import { AnalyticsPipeModule } from '@blockframes/movie/pipes/analytics.pipe';
 import { NoTitleModule } from '@blockframes/ui/dashboard/components/no-title/no-title.module';
+import { TagModule } from '@blockframes/ui/tag/tag.module';
+import { IncomePipeModule } from '@blockframes/contract/income/pipe';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -33,9 +34,12 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     ToLabelModule,
     ImageModule,
     FilterByModule,
-    AnalyticsPipeModule,
     DisplayNameModule,
     NoTitleModule,
+    TagModule,
+    NumberPipeModule,
+    IncomePipeModule,
+
     // Material
     MatButtonModule,
     MatTabsModule,

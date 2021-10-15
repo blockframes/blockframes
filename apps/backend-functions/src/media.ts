@@ -21,6 +21,7 @@ import { imgixToken } from './environments/environment';
 import { db, getStorageBucketName } from './internals/firebase';
 import { isAllowedToAccessMedia } from './internals/media';
 import { testVideoId } from '@env';
+import { getDeepValue } from './internals/utils';
 
 
 /**
@@ -44,7 +45,7 @@ export async function linkFile(data: storage.ObjectMetadata) {
   // metadata.uid is copied into uploaderUid for context consistency during transaction execution.
   // If transaction is locked by another process, it will fail to update the doc, and will try with a new attempt
   // but metadata.uid as already been removed (delete metadata[key];)
-  const uploaderUid = metadata.uid;
+  const uploaderUid = metadata?.uid;
   const [tmp] = data.name.split('/');
   if (tmp === tempUploadDir) {
 
@@ -166,7 +167,7 @@ export async function linkFile(data: storage.ObjectMetadata) {
     // Post processing such as: signal end of upload flow, trigger upload to JWPlayer, ...
 
     const isVideo = data.contentType.indexOf('video/') === 0 && ['movies', 'orgs'].includes(metadata.collection);
-    if (isVideo) {
+    if (isVideo && metadata.moving !== 'true') {
 
       const uploadResult = await uploadToJWPlayer(file);
 
@@ -209,6 +210,9 @@ export async function linkFile(data: storage.ObjectMetadata) {
         await transaction.update(docRef, doc);
       });
       return true;
+    } else if (metadata.moving === 'true') {
+      // removing the 'moving' flag from metadata 
+      file.setMetadata({ metadata: { moving: null }});
     }
   }
 
@@ -295,6 +299,11 @@ export async function cleanUserMedias(before: PublicUser, after?: PublicUser): P
     if (needsToBeCleaned(before.avatar, after.avatar)) {
       mediaToDelete.push(before.avatar);
     }
+
+    // Check if watermark have been changed/removed
+    if (needsToBeCleaned(before.watermark, after.watermark)) {
+      mediaToDelete.push(before.watermark);
+    }
   } else { // Deleting
     if (before.avatar) {
       mediaToDelete.push(before.avatar);
@@ -377,6 +386,10 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
       mediaToDelete.push(before.promotional.videos.screener);
     }
 
+    if (needsToBeCleaned(before.promotional.videos?.salesPitch, after.promotional.videos?.salesPitch)) {
+      mediaToDelete.push(before.promotional.videos.salesPitch);
+    }
+
     // FILES LIST
 
     const otherVideosToDelete = checkFileList(
@@ -424,6 +437,10 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
       mediaToDelete.push(before.promotional.videos.screener);
     }
 
+    if (before.promotional.videos?.salesPitch?.storagePath) {
+      mediaToDelete.push(before.promotional.videos.salesPitch);
+    }
+
     if (before.promotional.videos?.otherVideos?.length) {
       before.promotional.videos.otherVideos.forEach(n => mediaToDelete.push(n));
     }
@@ -439,4 +456,52 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
 
   await Promise.all(mediaToDelete.map(m => deleteMedia(m)));
 
+}
+
+export const moveMedia = async (before: StorageFile, after: StorageFile) => {
+
+  const bucket = admin.storage().bucket(getStorageBucketName());
+  const beforePath = `${before.privacy}/${before.storagePath}`;
+  const afterPath = `${after.privacy}/${after.storagePath}`;
+  const fileObject = bucket.file(beforePath);
+
+  const [exists] = await fileObject.exists();
+  if (!exists) {
+    logger.error(`Move Error : File "${beforePath}" does not exists in the storage`);
+  } else {
+    
+    // set moving flag to prevent upload to jwPlayer
+    await fileObject.setMetadata({ metadata: {
+      privacy: after.privacy,
+      moving: 'true'
+    }});
+    return fileObject.move(afterPath);
+  }
+}
+
+export async function moveMovieMedia(before: MovieDocument, after: MovieDocument): Promise<void> {
+
+  const paths = [
+    'promotional.videos.salesPitch',
+    'promotional.videos.otherVideos'
+  ];
+
+  for (const path of paths) {
+    const beforeFile: StorageFile | StorageFile[] = getDeepValue(before, path);
+
+    if (Array.isArray(beforeFile)) {
+      before.promotional.videos.otherVideos?.forEach(beforeFile => {
+        const afterFile = after.promotional.videos.otherVideos?.find(file => file.storagePath === beforeFile.storagePath);
+        if (afterFile && beforeFile.privacy !== afterFile.privacy) {
+          moveMedia(beforeFile, afterFile);
+        }
+      });
+      
+    } else {
+      const afterFile: StorageFile = getDeepValue(after, path);
+      if (beforeFile.privacy !== afterFile.privacy) {
+        moveMedia(beforeFile, afterFile);
+      }
+    }
+  }
 }

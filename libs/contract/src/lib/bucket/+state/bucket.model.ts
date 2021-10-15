@@ -1,49 +1,9 @@
 import { AvailsFilter } from '@blockframes/contract/avails/avails';
-import { Mandate } from '@blockframes/contract/contract/+state';
-import { Term } from '@blockframes/contract/term/+state/term.model';
+import { createHoldback, Mandate } from '@blockframes/contract/contract/+state';
 import { createLanguageKey } from '@blockframes/movie/+state';
-import { MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
-import { Media, MovieCurrency, Territory } from '@blockframes/utils/static-model';
-
-export interface Bucket {
-  id: string;
-  currency: MovieCurrency;
-  /** One contract per orgId / titleId / parent terms Id */
-  contracts: BucketContract[];
-  specificity: string;
-  delivery: string;
-  /** Needed to show user in email to business team */
-  uid?: string;
-}
-
-export interface BucketContract {
-  titleId: string;
-  /** The orgId that own the contract (mandate in this case) that  */
-  orgId: string;
-  /** Price used to create the income */
-  price: number;
-  /** Parent terms on which the contract is create. */
-  parentTermId: string;
-  /** List of sub terms derived from the parent terms that the buyer want to buy */
-  terms: BucketTerm[];
-  specificity: string;
-}
-
-export interface BucketTerm {
-  medias: Media[];
-  duration: { from: Date, to: Date };
-  territories: Territory[];
-  exclusive: boolean;
-  languages: Record<string, MovieLanguageSpecification>;
-  runs?: {
-    broadcasts: number;
-    catchup: {
-      from: Date,
-      duration: number,
-      period: 'day' | 'week' | 'month'
-    }
-  }
-}
+import { Term, BucketTerm } from '../../term/+state/term.model';
+import { Bucket, BucketContract } from './bucket.firestore';
+export { BucketContract, Bucket } from './bucket.firestore';
 
 export function toBucketTerm(avail: AvailsFilter): BucketTerm {
   return createBucketTerm({
@@ -61,7 +21,7 @@ export function createBucketTerm(params: Partial<BucketTerm> = {}): BucketTerm {
     exclusive: false,
     duration: { from: new Date(), to: new Date() },
     ...params,
-    languages: createLanguageKey(params.languages)
+    languages: createLanguageKey(params.languages),
   }
 }
 
@@ -69,11 +29,12 @@ export function createBucketContract(params: Partial<BucketContract> = {}): Buck
   return {
     titleId: '',
     orgId: '',
-    price: null ,
+    price: null,
     parentTermId: '',
     specificity: '',
     ...params,
-    terms: params.terms?.map(createBucketTerm) ?? []
+    terms: params.terms?.map(createBucketTerm) ?? [],
+    holdbacks: params.holdbacks?.map(createHoldback) ?? [],
   }
 }
 

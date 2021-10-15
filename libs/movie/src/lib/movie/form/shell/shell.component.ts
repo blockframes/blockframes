@@ -12,6 +12,7 @@ import { map, startWith } from 'rxjs/operators';
 import { Observable, Subscription, combineLatest } from 'rxjs';
 import { ProductionStatus } from '@blockframes/utils/static-model';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { isChrome } from '@blockframes/utils/browser/utils';
 
 function isStatus(prodStatus: ProductionStatus, acceptableStatus: ProductionStatus[]) {
   return acceptableStatus.includes(prodStatus)
@@ -55,8 +56,8 @@ function getSteps(status: ProductionStatus, appSteps: TunnelStep[] = []): Tunnel
       path: 'technical-spec',
       label: 'Technical Specification'
     }, {
-      path: 'available-materials',
-      label: 'Available Materials',
+      path: 'available-versions',
+      label: 'Available Versions',
       shouldHide: isStatus(status, ['development'])
     }]
   }, {
@@ -65,9 +66,6 @@ function getSteps(status: ProductionStatus, appSteps: TunnelStep[] = []): Tunnel
     time: 10,
     routes: [
       {
-        path: 'sales-pitch',
-        label: 'Sales Pitch',
-      }, {
         path: 'media-files',
         label: 'Files'
       }, {
@@ -135,8 +133,9 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, OnDestroy {
     );
     const routerSub = this.route.selectFragment().subscribe(async (fragment: string) => {
       const el: HTMLElement = await this.checkIfElementIsReady(fragment);
+
       el?.scrollIntoView({
-        behavior: 'smooth',
+        behavior: isChrome() ? 'auto' : 'smooth',
         block: 'center',
         inline: 'start',
       });

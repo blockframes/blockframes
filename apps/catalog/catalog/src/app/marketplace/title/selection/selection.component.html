@@ -1,11 +1,11 @@
 <!-- In case bucket doesn't exist yet, empty is shown -->
 <ng-container *ngIf="bucket$ | async as bucket; else empty">
-  <ng-container *ngIf="!!bucket.contracts.length else empty">
-    <header class="dark-contrast-theme main-header" bgAsset="banner_header_page.webp">
+  <ng-container *ngIf="bucket.contracts.length else empty">
+    <header class="dark-contrast-theme main-header" bgAsset="banner_header_page.png">
       <div class="main-title" fxLayout="column" fxLayoutAlign="center center">
         <h1>My Selection</h1>
         <p>There are {{ bucket.contracts.length }} titles in my selection</p>
-        <p>Total price: {{ total$ | async | currency:bucket.currency }}</p>
+        <p>Total price: {{ total$ | async | currency:currencyForm.value }}</p>
       </div>
       <div fxLayout="column" fxLayoutAlign="center center">
         <p *ngIf="bucket | bucketTitles | getTitle | async as titles">
@@ -15,7 +15,7 @@
       </div>
     </header>
 
-    <section>
+    <section class="currency">
       <h2>Please select a currency</h2>
       <static-select test-id="selection-currency" [control]="currencyForm" scope="movieCurrencies"
         [withoutValues]="withoutCurrencies">
@@ -26,45 +26,52 @@
     <ng-container *ngIf="(bucket$ |async) as bucket">
       <ng-container *ngFor="let contract of bucket.contracts; trackBy: trackById; let i = index">
         <contract-item [contract]="contract">
-            <mat-form-field appearance="outline" price>
-              <mat-label>Price</mat-label>
-              <input matInput type="number" min="0" [value]="contract.price" [attr.test-id]="'price-' + i"
-                (input)="setPrice(i, $event.target.value)" (blur)="updatePrice(i, $event.target.value)" />
-              <mat-icon matPrefix [svgIcon]="currencyForm.value"></mat-icon>
-            </mat-form-field>
-            <ng-template #termAction let-term let-index="index">
-              <a mat-icon-button [routerLink]="['/c/o/marketplace/title', contract.titleId, 'avails']" [queryParams]="{ contract: i, term: index }" matTooltip="Edit">
-                <mat-icon svgIcon="edit"></mat-icon>
-              </a>
-              <button mat-icon-button (click)="removeTerm(i, index)" matTooltip="Delete">
-                <mat-icon svgIcon="delete"></mat-icon>
-              </button>
-            </ng-template>
-            <footer fxLayout fxLayoutAlign="space-between">
-              <ng-container *ngIf="contract.titleId | getTitle | async as title">
+          <mat-form-field appearance="outline" price>
+            <mat-label>Price</mat-label>
+            <input matInput type="number" min="0" [value]="contract.price" [attr.test-id]="'price-' + i"
+              (input)="setPrice(i, $event.target.value)" (blur)="updatePrice(i, $event.target.value)" />
+            <mat-icon matPrefix [svgIcon]="currencyForm.value"></mat-icon>
+            <mat-hint>Leave this field empty to request an asking price.</mat-hint>
+          </mat-form-field>
+          <ng-template #termAction let-index="index">
+            <a mat-icon-button [routerLink]="['/c/o/marketplace/title', contract.titleId, 'avails']"
+              [queryParams]="{ contract: i, term: index }" matTooltip="Edit">
+              <mat-icon svgIcon="edit"></mat-icon>
+            </a>
+            <button mat-icon-button (click)="removeTerm(i, index)" matTooltip="Delete">
+              <mat-icon svgIcon="delete"></mat-icon>
+            </button>
+          </ng-template>
+          <footer>
+            <ng-container *ngIf="contract.titleId | getTitle | async as title">
+              <div fxLayout fxLayoutAlign="space-between">
                 <button mat-button (click)="removeContract(i, title)" test-id="delete-contract">
-                  Delete all rights for this title
+                  Delete all Rights for this Title
                 </button>
                 <a mat-flat-button [routerLink]="['../title', title.id, 'avails']" color="primary">
                   Add Rights
                 </a>
-              </ng-container>
-            </footer>
+              </div>
+              <mat-divider></mat-divider>
+              <holdbacks-form [holdbacks]="contract.holdbacks" [title]="title" (holdbacksChange)="updateHoldbacks(i, $event)">
+              </holdbacks-form>
+            </ng-container>
+          </footer>
         </contract-item>
       </ng-container>
     </ng-container>
     <footer fxLayout="column" fxLayoutAlign="center center" class="summary" test-id="footer-total-price">
-      <p test-id="total-price">Total Price: {{ total$ | async | currency:bucket.currency }}</p>
+      <p test-id="total-price">Total Price: {{ total$ | async | currency:currencyForm.value }}</p>
       <button mat-flat-button color="accent" (click)="createOffer(bucket)" test-id="create-offer">Create Offer</button>
     </footer>
   </ng-container>
 </ng-container>
 
 <ng-template #empty>
-  <section class="empty" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="16px">
+  <section class="empty" fxLayout="column" fxLayoutAlign="center center">
     <h1>There is no title to display in your Selection.</h1>
     <span>Select titles to populate your Selection.</span>
-    <img asset="empty_selection.png" alt="No rights in selection">
-    <button mat-flat-button color="accent" [routerLink]="['/c/o/marketplace/title']">Browse Library</button>
+    <img asset="empty_selection.svg" alt="No rights in selection">
+    <button mat-flat-button color="accent" [routerLink]="['/c/o/marketplace/title']">Discover Titles</button>
   </section>
 </ng-template>

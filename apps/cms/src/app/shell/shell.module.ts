@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Route } from '@angular/router';
 import { ShellComponent } from './shell.component';
 
-import { BlockframesAdminGuard } from '@blockframes/admin/admin-panel/guard/blockframes-admin.guard';
+import { BlockframesAdminGuard } from '@blockframes/admin/guard/blockframes-admin.guard';
 
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';

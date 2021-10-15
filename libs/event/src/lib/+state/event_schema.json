@@ -1,0 +1,46 @@
+{
+  "fields": [
+    {
+      "name": "id",
+      "type": "string"
+    },
+    {
+      "name":"ownerOrgId",
+      "type": "string"
+    },
+    {
+      "name": "isPrivate",
+      "type": "boolean"
+    },
+    {
+      "name": "isSecret",
+      "type": "boolean"
+    },
+    {
+      "name": "type",
+      "type": "string"
+    },
+    {
+      "name": "title",
+      "type": "string"
+    },
+    {
+      "name": "start",
+      "type": "timestamp",
+      "column_name": "start_date"
+    },
+    {
+      "name": "end",
+      "type": "timestamp",
+      "column_name": "end_date"
+    },
+    {
+      "name": "allDay",
+      "type": "boolean"
+    },
+    {
+      "name": "meta",
+      "type": "stringified_map"
+    }
+  ]
+}

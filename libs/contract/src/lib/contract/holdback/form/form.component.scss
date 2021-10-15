@@ -1,0 +1,49 @@
+:host {
+  display: block;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  overflow: hidden;
+  h1 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+holdback-list {
+  margin-bottom: 24px;
+}
+
+bf-form-table {
+  margin-bottom: 24px;
+  languages-form {
+    margin-bottom: 24px;
+  }
+}
+
+static-group {
+  width: 100%;
+}
+
+mat-divider {
+  margin: 16px 0;
+}
+
+.duration {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.group-label {
+  cursor: pointer;
+}
+
+.actions {
+  button {
+    margin-bottom: 16px;
+  }
+}

@@ -6,11 +6,11 @@ import type firebase from 'firebase';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { UserService } from '@blockframes/user/+state';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'permissions' })
 export class PermissionsService extends CollectionService<PermissionsState> {
+  readonly useMemorization = true;
+
   constructor(
     private organizationQuery: OrganizationQuery,
     private userService: UserService,
@@ -51,8 +51,8 @@ export class PermissionsService extends CollectionService<PermissionsState> {
   }
 
   /** Update user role. */
-  public async updateMemberRole(uid: string, role: UserRole): Promise<string> {
-    const orgId = (await this.userService.getValue(uid)).orgId;
+  public async updateMemberRole(uid: string, role: UserRole, _orgId?: string): Promise<string> {
+    const orgId = _orgId || (await this.userService.getValue(uid)).orgId;
     const permissions = await this.getValue(orgId);
     if (permissions.roles[uid] === role) {
       return 'This user already has this role.';

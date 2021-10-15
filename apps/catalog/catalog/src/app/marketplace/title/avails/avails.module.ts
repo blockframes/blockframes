@@ -20,12 +20,16 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { LanguagesFormModule } from '@blockframes/movie/form/languages/languages.module';
+import { RunsFormModule } from "@blockframes/contract/term/form/runs/runs-form.module";
 
 import { AvailsGuard } from './avails.guard';
 import { MarketplaceMovieAvailsComponent } from './avails.component';
 import { ExplanationModule } from './explanation/explanation.module';
 import { ReverseModule } from '@blockframes/utils/pipes/reverse.pipe';
+import { ToGroupLabelPipeModule } from '@blockframes/utils/pipes/group-label.pipe';
 import { ConfirmModule } from '@blockframes/ui/confirm/confirm.module';
+import { HoldbackModalModule } from '@blockframes/contract/contract/holdback/modal/holdback-modal.module';
+import { CollidingHoldbacksPipeModule } from '@blockframes/contract/contract/holdback/pipes/colliding-holdback.pipe'
 
 const routes: Routes = [
   {
@@ -57,6 +61,10 @@ const routes: Routes = [
     ExplanationModule,
     ReverseModule,
     ConfirmModule,
+    ToGroupLabelPipeModule,
+    RunsFormModule,
+    HoldbackModalModule,
+    CollidingHoldbacksPipeModule,
 
     // Material
     MatCardModule,

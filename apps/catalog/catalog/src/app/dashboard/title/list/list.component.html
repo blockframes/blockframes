@@ -1,6 +1,6 @@
 <ng-container *ngIf="movies$ | async as movies; else loading">
   <ng-container *ngIf="movies.length; else empty">
-    <header class="import-header"  fxLayout="row" fxLayoutAlign="space-between center">
+    <header class="import-header" fxLayout="row" fxLayoutAlign="space-between center">
       <h1>My Titles</h1>
       <div fxLayoutGap="24px">
         <a test-id="import-titles" mat-stroked-button color="primary" routerLink="../import">
@@ -14,21 +14,35 @@
     </header>
 
     <header mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
-      <button mat-tab-link (click)="resetFilter()" [active]="(filter$ | async) === ('' || null) ">All</button>
-      <button mat-tab-link (click)="applyFilter('draft')" [active]="(filter$ | async) === 'draft'">Drafts</button>
-      <button mat-tab-link (click)="applyFilter('submitted')" [active]="(filter$ | async) === 'submitted'">Submitted</button>
-      <button mat-tab-link (click)="applyFilter('accepted')" [active]="(filter$ | async) === 'accepted'">Published</button>
-      <button mat-tab-link (click)="applyFilter('archived')" [active]="(filter$ | async) === 'archived'">Archived</button>
+      <button mat-tab-link (click)="resetFilter()" [active]="(filter$|async) === ''">All <span *ngIf="(movieCount$ | async) as movieCount">({{ movieCount.all }})</span></button>
+      <button mat-tab-link (click)="applyFilter('draft')" [active]="(filter$ | async) === 'draft'">Drafts <span *ngIf="(movieCount$ | async) as movieCount">({{ movieCount.draft }})</span></button>
+      <button mat-tab-link (click)="applyFilter('submitted')"
+        [active]="(filter$ | async) === 'submitted'">Submitted <span *ngIf="(movieCount$ | async) as movieCount">({{ movieCount.submitted }})</span></button>
+      <button mat-tab-link (click)="applyFilter('accepted')"
+        [active]="(filter$ | async) === 'accepted'">Published <span *ngIf="(movieCount$ | async) as movieCount">({{ movieCount.accepted }})</span></button>
+      <button mat-tab-link (click)="applyFilter('archived')"
+        [active]="(filter$ | async) === 'archived'">Archived <span *ngIf="(movieCount$ | async) as movieCount">({{ movieCount.archived }})</span></button>
     </header>
 
     <mat-card>
-      <bf-table-filter [source]="movies | filterBy: filterByMovie: { value: filter.value, exclude: 'archived' }" [columns]="columns"
-        [initialColumns]="initialColumns" clickable showFilter showPaginator (rowClick)="goToTitle($event)">
+      <bf-table-filter [source]="movies | filterBy: filterByMovie: { value: filter.value, exclude: 'archived' }"
+        [columns]="columns" [initialColumns]="initialColumns" clickable showFilter showPaginator
+        (rowClick)="goToTitle($event)">
         <ng-template colRef="title.international" let-title><b>{{ title }}</b></ng-template>
+        <ng-template colRef="id" let-titleId>
+          <ng-container *ngIf="titleId | getIncomesFromTitle | async as incomes">
+            {{ incomes.length }}
+            <ng-container *ngIf="incomes.length > 0; else noIncome">
+              ({{ incomes | sum : 'price' | currency:incomes[0].currency }})
+            </ng-container>
+            <ng-template #noIncome>($0)</ng-template>
+          </ng-container>
+        </ng-template>
         <ng-template colRef="release.year" let-year><b>{{ year }}</b></ng-template>
         <ng-template colRef="directors" let-directors><b>{{ directors | displayName }}</b></ng-template>
-        <ng-template colRef="views" let-movie="item"><b>{{movie.id | getViews | async}}</b></ng-template>
-        <ng-template colRef="app.catalog.status" let-status>{{ status | toLabel: 'storeStatus' }}</ng-template>
+        <ng-template colRef="app.catalog.status" let-status>
+          <bf-tag>{{ status | toLabel: 'storeStatus' }}</bf-tag>
+        </ng-template>
       </bf-table-filter>
     </mat-card>
   </ng-container>
@@ -43,11 +57,11 @@
     <dashboard-no-title></dashboard-no-title>
     <article fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center" fxLayoutGap="24px">
       <mat-card class="no-title-card" fxLayout="column" fxLayoutalign="center center">
-        <img asset="add_title.webp" alt="Add title">
+        <img asset="add_title.svg" alt="Add title">
         <a routerLink="lobby" mat-button color="primary">Add one title</a>
       </mat-card>
       <mat-card class="no-title-card" fxLayout="column">
-        <img asset="add_files.webp" alt="Upload files">
+        <img asset="add_files.svg" alt="Upload files">
         <a routerLink="../import" mat-button color="primary">Import titles in bulk</a>
       </mat-card>
     </article>

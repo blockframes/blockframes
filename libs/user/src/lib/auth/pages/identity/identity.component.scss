@@ -19,7 +19,7 @@ main {
   min-height: 100vh;
 }
 
-app-logo {
+a[app-logo] {
   position: absolute;
   top: 24px;
   left: 24px;
@@ -40,7 +40,7 @@ section {
     }
   }
 
-  mat-card {
+  article.surface {
     padding: 36px;
 
     mat-form-field {
@@ -88,6 +88,15 @@ section {
     height: 40px;
     border-radius: 50%;
   }
+}
+
+button[app-logo] {
+  position: absolute;
+  cursor: pointer;
+  top: 24px;
+  left: 24px;
+  background: none;
+  border: none;
 }
 
 .custom-snackbar-message a {

@@ -7,7 +7,7 @@ config()
 async function predeploy() {
   if (!process.env['SKIP_PREDEPLOY_HOOKS']) {
     // * run predeploy hooks
-    await runShellCommand('npm run lint backend-functions');
+    await runShellCommand('npm run lint:backend-functions');
     await runShellCommand('npm run build:backend-functions');
     await runShellCommand('npm run deploy:functions:config');
   } else {

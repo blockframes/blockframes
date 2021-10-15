@@ -1,5 +1,5 @@
 
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -8,11 +8,11 @@ import { filter, map, shareReplay, startWith, throttleTime } from 'rxjs/operator
 
 import {
   getDurations,
-  getSoldTerms,
   DurationMarker,
   toDurationMarker,
   getDurationMarkers,
   AvailsFilter,
+  collidingTerms,
 } from '@blockframes/contract/avails/avails';
 import { MovieQuery } from '@blockframes/movie/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
@@ -20,6 +20,7 @@ import { OrganizationService } from '@blockframes/organization/+state';
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
+import { scrollIntoView } from '@blockframes/utils/browser/utils';
 
 
 @Component({
@@ -28,7 +29,7 @@ import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-enc
   styleUrls: ['./avails-calendar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MarketplaceMovieAvailsCalendarComponent implements OnInit, OnDestroy {
+export class MarketplaceMovieAvailsCalendarComponent implements AfterViewInit, OnDestroy {
 
   public availsForm = this.shell.avails.calendarForm;
 
@@ -63,7 +64,7 @@ export class MarketplaceMovieAvailsCalendarComponent implements OnInit, OnDestro
   ]).pipe(
     filter(() => this.availsForm.valid),
     map(([mandates, salesTerms, avails]) => {
-      const soldTerms = getSoldTerms(avails, salesTerms);
+      const soldTerms = collidingTerms(avails, salesTerms);
       return soldTerms.map(term => toDurationMarker(mandates, term)).flat();
     })
   );
@@ -77,7 +78,7 @@ export class MarketplaceMovieAvailsCalendarComponent implements OnInit, OnDestro
       if (this.availsForm.invalid) return [];
       return getDurationMarkers(mandates, mandateTerms);
     }),
-    shareReplay(1),
+    shareReplay({ refCount: true, bufferSize: 1 }),
   );
 
   constructor(
@@ -110,11 +111,11 @@ export class MarketplaceMovieAvailsCalendarComponent implements OnInit, OnDestro
     this.snackbar.open(`Rights ${result ? 'updated' : 'added'}`, 'Show ⇩', { duration: 5000 })
       .onAction()
       .subscribe(() => {
-        document.querySelector('#rights').scrollIntoView({ behavior: 'smooth' })
+        scrollIntoView(document.querySelector('#rights'));
       });
   }
 
-  ngOnInit() {
+  ngAfterViewInit() {
     const decodedData = decodeUrl(this.route);
     this.availsForm.patchValue(decodedData)
     const subSearchUrl = this.availsForm.valueChanges.pipe(

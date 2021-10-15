@@ -18,12 +18,12 @@ export class LandingComponent {
   public tabTitle = [
     {
       title: 'For Investors',
-      imgAsset: 'lp_financiers_seller_perspective.webp',
+      imgAsset: 'lp_financiers_seller_perspective.png',
       description: 'A reliable way to invest in top film & TV projects, backed by professional financiers. By sharing their investment, investors benefit from their expertise in dealmaking and content acquisition.'
     },
     {
       title: 'For Professionals',
-      imgAsset: 'lp_financiers_buyer_perspective.webp',
+      imgAsset: 'lp_financiers_buyer_perspective.png',
       description: 'Package the financing of your projects by connecting with high-capacity investors looking to invest in films and series.'
     }
   ]
@@ -58,17 +58,17 @@ export class LandingComponent {
   public financierFeatures = [
     {
       title: 'Access a new qualified investors network',
-      imgAsset: 'gems.webp',
+      imgAsset: 'gems.svg',
       description: 'Benefit from a selected pool of high- capacity investors coming from all around the world.'
     },
     {
       title: 'Increase your investment capacity',
-      imgAsset: 'matching.webp',
+      imgAsset: 'matching.svg',
       description: 'Share or refinance your investment ticket to complete your financing, access bigger projects and hedge your risk.'
     },
     {
       title: 'Take a fee on the money you raise',
-      imgAsset: 'filmpage.webp',
+      imgAsset: 'filmpage.svg',
       description: 'Be rewarded for the financing you gather.'
     }
   ]

@@ -2,14 +2,13 @@
   <header fxLayout fxLayout.lt-md="column" fxLayoutGap="16px">
     <ng-container *ngIf="movie$ | async as movie">
       <section fxLayout fxLayoutGap="16px" fxFlex>
-        <img fxHide.xs [ref]="movie.poster" asset="empty_poster.webp" alt="movie poster">
+        <img fxHide.xs [ref]="movie.poster" asset="empty_poster.svg" alt="movie poster">
 
-        <article fxLayout="column" fxFlex>
+        <article fxLayout="column" fxFlex fxLayoutAlign="start start">
           <h4>{{ movie | movieFeature }}</h4>
           <h1>{{ movie.title.international }}</h1>
-          <mat-chip class="tag">
-            <p>{{ movie.app[appName].status }}</p>
-          </mat-chip>
+          <bf-tag>{{ movie.app[appName].status }}</bf-tag>
+
           <h6>{{ movie.directors | displayName }}</h6>
           <p>
             <span>{{ movie.originCountries | toLabel: 'territories'}}</span>
@@ -18,18 +17,8 @@
           </p>
         </article>
       </section>
-      <aside fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="start end" fxLayoutGap="8px">
-        <a mat-button [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]">
-          <mat-icon svgIcon="edit"></mat-icon>
-          <span>Edit</span>
-        </a>
-        <ng-container *ngIf="org$ | async | canAccess: 'marketplace': appName">
-          <a mat-button [routerLink]="['/c/o/marketplace/title', movie.id, 'main']">
-            <mat-icon svgIcon="marketplace"></mat-icon>
-            <span>Marketplace Preview</span>
-          </a>
-        </ng-container>
-        <ng-content></ng-content>
+      <aside fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="space-between end" >
+        <ng-content select="movie-cta"></ng-content>
       </aside>
     </ng-container>
   </header>

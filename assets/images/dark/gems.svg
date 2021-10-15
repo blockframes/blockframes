@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="170px" height="170px" viewBox="0 0 170 170" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <filter x="-128.6%" y="-157.1%" width="357.1%" height="414.3%" filterUnits="objectBoundingBox" id="filter-1">
+            <feGaussianBlur stdDeviation="3" in="SourceGraphic"></feGaussianBlur>
+        </filter>
+        <filter x="-32.5%" y="-54.2%" width="165.0%" height="208.3%" filterUnits="objectBoundingBox" id="filter-2">
+            <feGaussianBlur stdDeviation="3" in="SourceGraphic"></feGaussianBlur>
+        </filter>
+    </defs>
+    <g id="Illustrations/170px/gems" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-3" transform="translate(27.000000, 47.000000)">
+            <g id="Group-2">
+                <path d="M2.07960214,-2.08425869e-13 L17.6482439,-2.08425869e-13 L17.6482439,-2.08425869e-13 L112.781116,-2.08425869e-13 C113.885685,-2.16477214e-13 114.781116,0.8954305 114.781116,2 L114.781116,74.78125 C114.781116,75.8858195 113.885685,76.78125 112.781116,76.78125 L2.07960214,76.78125 C0.975032635,76.78125 0.0796021351,75.8858195 0.0796021351,74.78125 L0.0796021351,2 C0.0796021351,0.8954305 0.975032635,-2.08222963e-13 2.07960214,-2.08425869e-13 Z" id="Rectangle-2" stroke="#404B8A" stroke-width="2"></path>
+                <polygon id="Path-2" fill="#404B8A" fill-rule="nonzero" points="114.073508 8.55555556 114.074074 10.2666665 0.000565643071 10.3182235 3.55271368e-13 8.60711252"></polygon>
+                <circle id="Oval" fill="#404B8A" cx="5.7037037" cy="4.99074074" r="1.42592593"></circle>
+                <circle id="Oval" fill="#404B8A" cx="11.4074074" cy="4.99074074" r="1.42592593"></circle>
+                <circle id="Oval" fill="#404B8A" cx="17.1111111" cy="4.99074074" r="1.42592593"></circle>
+            </g>
+            <polygon id="Triangle" fill="#404B8A" transform="translate(8.500000, 31.863636) rotate(90.000000) translate(-8.500000, -31.863636) " points="8.5 29 12 34.7272727 5 34.7272727"></polygon>
+            <polygon id="Triangle-Copy-4" fill="#404B8A" transform="translate(8.500000, 63.363636) rotate(90.000000) translate(-8.500000, -63.363636) " points="8.5 60.5 12 66.2272727 5 66.2272727"></polygon>
+            <polygon id="Triangle-Copy" fill="#404B8A" transform="translate(41.500000, 31.863636) rotate(90.000000) translate(-41.500000, -31.863636) " points="41.5 29 45 34.7272727 38 34.7272727"></polygon>
+            <polygon id="Triangle-Copy-5" fill="#404B8A" transform="translate(41.500000, 63.363636) rotate(90.000000) translate(-41.500000, -63.363636) " points="41.5 60.5 45 66.2272727 38 66.2272727"></polygon>
+            <polygon id="Triangle-Copy-2" fill="#8DA4FA" filter="url(#filter-1)" transform="translate(75.500000, 31.863636) rotate(90.000000) translate(-75.500000, -31.863636) " points="75.5 29 79 34.7272727 72 34.7272727"></polygon>
+            <polygon id="Triangle-Copy-2" fill="#8DA4FA" transform="translate(75.500000, 31.863636) rotate(90.000000) translate(-75.500000, -31.863636) " points="75.5 29 79 34.7272727 72 34.7272727"></polygon>
+            <polygon id="Triangle-Copy-6" fill="#404B8A" transform="translate(75.500000, 63.363636) rotate(90.000000) translate(-75.500000, -63.363636) " points="75.5 60.5 79 66.2272727 72 66.2272727"></polygon>
+            <polygon id="Triangle-Copy-3" fill="#404B8A" transform="translate(107.500000, 31.863636) rotate(90.000000) translate(-107.500000, -31.863636) " points="107.5 29 111 34.7272727 104 34.7272727"></polygon>
+            <polygon id="Triangle-Copy-7" fill="#404B8A" transform="translate(107.500000, 63.363636) rotate(90.000000) translate(-107.500000, -63.363636) " points="107.5 60.5 111 66.2272727 104 66.2272727"></polygon>
+            <rect id="Rectangle" stroke="#404B8A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" x="0" y="23" width="22" height="18"></rect>
+            <rect id="Rectangle-Copy-4" stroke="#404B8A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" x="0" y="54.5" width="22" height="18"></rect>
+            <rect id="Rectangle-Copy" stroke="#404B8A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" x="26" y="23" width="30" height="18"></rect>
+            <rect id="Rectangle-Copy-5" stroke="#404B8A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" x="26" y="54.5" width="30" height="18"></rect>
+            <rect id="Rectangle-Copy-2" stroke="#8DA4FA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#filter-2)" x="60" y="23" width="30" height="18"></rect>
+            <rect id="Rectangle-Copy-2" stroke="#8DA4FA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" x="60" y="23" width="30" height="18"></rect>
+            <rect id="Rectangle-Copy-6" stroke="#404B8A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" x="60" y="54.5" width="30" height="18"></rect>
+            <rect id="Rectangle-Copy-3" stroke="#404B8A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" x="94" y="23" width="21" height="18"></rect>
+            <rect id="Rectangle-Copy-7" stroke="#404B8A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" x="94" y="54.5" width="21" height="18"></rect>
+            <line x1="3" y1="17" x2="23.5" y2="17" id="Line-2-Copy" stroke="#404B8A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></line>
+            <line x1="3" y1="48.5" x2="23.5" y2="48.5" id="Line-2-Copy-2" stroke="#404B8A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></line>
+        </g>
+    </g>
+</svg>

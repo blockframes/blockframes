@@ -14,6 +14,8 @@ const currentTimestamp = new Date().getTime();
 export const dayInMillis = 1000 * 60 * 60 * 24;
 const EMPTY_MEDIA = createStorageFile();
 
+// @TODO #6460 not existing users found in movies._meta.createdBy ..
+
 /** Reusable data cleaning script that can be updated along with data model */
 
 export async function cleanDeprecatedData(db: FirebaseFirestore.Firestore, auth: admin.auth.Auth) {
@@ -308,6 +310,7 @@ export function cleanDocsIndex(
  * Check each type of notification and return false if a referenced document doesn't exist
  * @param notification the notification to check
  * @param existingIds the ids to compare with notification fields
+ * @TODO: #6460 & #6608: new notification type `contractCreated` created. Remember to take this into account.
  */
 function isNotificationValid(notification: NotificationDocument, existingIds: string[]): boolean {
   if (!existingIds.includes(notification.toUserId)) return false;

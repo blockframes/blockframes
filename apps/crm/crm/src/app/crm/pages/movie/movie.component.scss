@@ -1,0 +1,24 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  margin: 40px;
+}
+
+section.surface {
+  margin-bottom: 40px;
+}
+
+article {
+  width: 100%;
+  margin-bottom: 40px;
+
+  bf-form-list {
+    mat-form-field {
+      width: 100%;
+    }
+  }
+}
+
+fieldset {
+  border: none;
+}

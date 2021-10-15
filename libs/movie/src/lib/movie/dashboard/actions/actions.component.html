@@ -1,0 +1,26 @@
+<ng-container *ngIf="movie$ | async as movie">
+  <aside fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="space-between end" fxFlex>
+    <ng-container *ngIf="movie.app[appName].status === 'archived'">
+      <button mat-button color="primary" (click)="updateStatus('draft', 'Title restored.')">
+        <mat-icon svgIcon="restore"></mat-icon>
+        <span>Restore Title</span>
+      </button>
+    </ng-container>
+    <ng-container *ngIf="movie.app[appName].status === 'archived' else actionsMenu">
+      <button mat-button (click)="removeAppAccess()" matTooltip="Delete Title">
+        <mat-icon svgIcon="delete"></mat-icon>
+        <span>Delete Title</span>
+      </button>
+    </ng-container>
+    <ng-template #actionsMenu>
+      <button class="align-bottom" mat-button [matMenuTriggerFor]="actionMenuMenu">
+        <mat-icon svgIcon="more_horiz"></mat-icon>
+        <span>Actions</span>
+        <mat-icon svgIcon="arrow_drop_down"></mat-icon>
+      </button>
+      <mat-menu #actionMenuMenu="matMenu">
+        <ng-content select="movie-action-menu"></ng-content>
+      </mat-menu>
+    </ng-template>
+  </aside>
+</ng-container>

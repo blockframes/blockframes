@@ -1,7 +1,10 @@
-import { Media, territoriesISOA3, Territory, TerritoryISOA3Value, TerritoryValue, territories } from "@blockframes/utils/static-model";
-import { Bucket, BucketTerm } from "../bucket/+state";
-import { Mandate } from "../contract/+state/contract.model"
-import { Duration, Term } from "../term/+state/term.model";
+
+import { Media, territoriesISOA3, Territory, TerritoryISOA3Value, TerritoryValue, territories } from '@blockframes/utils/static-model';
+
+import { Bucket } from '../bucket/+state';
+import { Holdback, Mandate, Sale } from '../contract/+state/contract.model'
+import { Duration, Term, BucketTerm } from '../term/+state/term.model';
+import { allOf, someOf } from './sets';
 
 export interface AvailsFilter {
   medias: Media[],
@@ -25,166 +28,68 @@ export interface DurationMarker {
   term?: Term<Date>,
 }
 
-/**
- *
- * @param avails
- * @param terms Terms of all mandates of the title
- * @returns
- */
+
 export function getMandateTerms(avails: AvailsFilter, terms: Term<Date>[]): Term<Date>[] | undefined {
-  const result: Term<Date>[] = [];
-  for (const term of terms) {
-    // If starts before term: not available
-    if (avails.duration.from.getTime() <= term.duration.from.getTime()) {
-      continue;
-    }
-    // If ends after term: not available
-    if (avails.duration.to.getTime() >= term.duration.to.getTime()) {
-      continue;
-    }
 
-    // If terms has some media of avails: available
-    if (term.medias.every(media => !avails.medias.includes(media))) {
-      continue;
-    }
-
-    // If terms has some territories of avails: available
-    if (avails.territories?.length && term.territories.every(territory => !avails.territories.includes(territory))) {
-      continue;
-    }
-
-    result.push(term);
-  }
+  const result = terms.filter(term =>
+    allOf(avails.duration).in(term.duration)
+    && allOf(avails.medias).in(term.medias)
+    && allOf(avails.territories, 'optional').in(term.territories)
+  );
 
   // If more medias are selected than there are in the mandates: not available
   const resultMedias = result.map(term => term.medias).flat();
-  if (avails.medias.some(media => !resultMedias.includes(media))) return [];
+  if (!allOf(avails.medias).in(resultMedias)) return [];
 
   // If more territories are selected than there are in the mandates: not available
   if (avails.territories?.length) {
     const resultTerritories = result.map(term => term.territories).flat();
-    if (avails.territories.some(territory => !resultTerritories.includes(territory))) return [];
+    if (!allOf(avails.territories).in(resultTerritories)) return [];
   }
 
   return result;
 }
 
-/**
- *
- * @param avails
- * @param terms Terms of all sales of the title
- * @returns
- */
-export function isSold(avails: AvailsFilter, terms: Term<Date>[]) {
-  return !!getSoldTerms(avails, terms).length;
+
+export function termsCollision(avails: AvailsFilter, terms: BucketTerm<Date>[]) {
+  return !!collidingTerms(avails, terms).length;
 }
 
-/**
- * Get all the salesTerms that overlap the avails filter
- * @param avails
- * @param terms Terms of all sales of the title
- * @returns
- */
-export function getSoldTerms(avails: AvailsFilter, terms: Term<Date>[]) {
-  const result: Term<Date>[] = [];
-  for (const term of terms) {
-
-    // If both of them are false, its available
-    if (!avails.exclusive && !term.exclusive) continue;
-
-    // In case of non-required territories (e.g. map in Avails tab), there is no need to check the territories.
-    if (avails.territories.length) {
-      // If none of the avails territories are in the term, its available
-      if (!term.territories.some(t => avails.territories.includes(t))) continue;
-    };
-
-    if (avails.medias.length) {
-      // If none of the avails medias are in the term, its available
-      if (!term.medias.some(m => avails.medias.includes(m))) continue;
-    }
-
-    // If duration is non-required (e.g. calendar on Avails tab), there is no need to check the duration.
-    if (avails.duration.from && avails.duration.to) {
-      if (avails.duration.to.getTime() < term.duration.from.getTime()) continue
-      if (avails.duration.from.getTime() > term.duration.to.getTime()) continue;
-      // if time is the same, its sold.
-    }
-
-    result.push(term);
-  }
-  return result;
+/** Get all the terms that overlap the avails filter */
+export function collidingTerms<T extends BucketTerm>(avails: AvailsFilter, terms: T[]) {
+  return terms.filter(term => (avails.exclusive || term.exclusive)
+    && someOf(avails.territories, 'optional').in(term.territories)
+    && someOf(avails.medias, 'optional').in(term.medias)
+    && someOf(avails.duration, 'optional').in(term.duration)
+  );
 }
 
-export function isInBucket(avails: AvailsFilter, terms: BucketTerm[]) {
-  for (const term of terms) {
-    if (avails.exclusive !== term.exclusive) {
-      continue;
-    }
-    // If any territory is not included in the avail: not same term
-    if (!avails.territories.every(territory => term.territories.includes(territory))) {
-      continue;
-    }
-    // If any medium is not included in the avail: not same term
-    if (!avails.medias.every(medium => term.medias.includes(medium))) {
-      continue;
-    }
-    // If start before or end after avail: not same term
-    const startBefore = avails.duration.from.getTime() < term.duration.from.getTime();
-    const endAfter = avails.duration.to.getTime() > term.duration.to.getTime();
-    if (startBefore || endAfter) {
-      continue;
-    }
-    // If none of the above: term already in bucket
-    return true;
-  }
-  // If all check above are available: term is not in bucket
-  return false;
+export function allOfAvailInTerms(avails: AvailsFilter, terms: BucketTerm[], optional?: 'optional') {
+  return terms.some(term => {
+    const exclusiveCheck = optional && !avails.exclusive || term.exclusive === avails.exclusive;
+    const territoriesCheck = allOf(avails.territories, optional).in(term.territories);
+    const mediasCheck = allOf(avails.medias, optional).in(term.medias);
+    const durationCheck = allOf(avails.duration, optional).in(term.duration);
+    return exclusiveCheck && territoriesCheck && mediasCheck && durationCheck;
+  });
 }
 
 // ----------------------------
 //          SAME TERM        //
 // ----------------------------
 
-
-function isSameExclusivityTerm(term: BucketTerm, avail: AvailsFilter) {
-  if (term.exclusive !== avail.exclusive) return false;
-  return true;
-}
-
-function isSameMediaTerm(term: BucketTerm, avail: AvailsFilter) {
-  if (!avail.medias) return false;
-  if (term.medias.length !== avail.medias.length) return false;
-  if (term.medias.some(medium => !avail.medias.includes(medium))) return false;
-  return true;
-}
-
-function isSameTerritoriesTerm(term: BucketTerm, avail: AvailsFilter) {
-  if (!avail.territories) return false;
-  if (term.territories.length !== avail.territories.length) return false;
-  if (term.territories.some(territory => !avail.territories.includes(territory))) return false;
-  return true;
-}
-
-function isSameDurationTerm(term: BucketTerm, avail: AvailsFilter) {
-  if (!avail.duration?.from) return false;
-  if (term.duration.from.getTime() !== avail.duration.from.getTime()) return false;
-  if (!avail.duration?.to) return false;
-  if (term.duration.to.getTime() !== avail.duration.to.getTime()) return false;
-  return true;
-}
-
 /** Check if a term is exactly the same as asked in the AvailFilter of the world map */
 export function isSameMapTerm(term: BucketTerm, avail: AvailsFilter) {
-  return isSameExclusivityTerm(term, avail) &&
-    isSameDurationTerm(term, avail) &&
-    isSameMediaTerm(term, avail);
+  return term.exclusive === avail.exclusive
+    && allOf(term.duration).equal(avail.duration)
+    && allOf(term.medias).equal(avail.medias);
 };
 
 /** Check if a term is exactly the same as asked in the AvailFilter of the calendar */
 export function isSameCalendarTerm(term: BucketTerm, avail: AvailsFilter) {
-  return isSameExclusivityTerm(term, avail) &&
-    isSameTerritoriesTerm(term, avail) &&
-    isSameMediaTerm(term, avail);
+  return term.exclusive === avail.exclusive
+    && allOf(term.territories).equal(avail.territories)
+    && allOf(term.medias).equal(avail.medias);
 };
 
 
@@ -192,45 +97,17 @@ export function isSameCalendarTerm(term: BucketTerm, avail: AvailsFilter) {
 //            IN TERM        //
 // ----------------------------
 
-/**
- * Avail is included in bucketTerm
- * @param term
- * @param avail
- * @returns
- */
+/** Avail is included in bucketTerm */
 export function isInMapTerm(term: BucketTerm, avail: AvailsFilter) {
-  if (isSameMapTerm(term, avail)) return false;
-
-  if (term.exclusive !== avail.exclusive) return false;
-
-  if (!avail.duration?.from) return false;
-  if (term.duration.from.getTime() > avail.duration.from.getTime()) return false;
-
-  if (!avail.duration?.to) return false;
-  if (term.duration.to.getTime() < avail.duration.to.getTime()) return false;
-
-  if (!avail.medias) return false;
-  if (term.medias.length !== avail.medias.length) return false;
-  if (term.medias.some(medium => !avail.medias.includes(medium))) return false;
-
-  return true;
+  return !isSameMapTerm(term, avail)
+    && allOf(avail.duration, 'optional').in(term.duration)
+    && allOf(avail.medias, 'optional').in(term.medias);
 }
 
 export function isInCalendarTerm(term: BucketTerm, avail: AvailsFilter) {
-
-  if (isSameCalendarTerm(term, avail)) return false;
-
-  if (term.exclusive !== avail.exclusive) return false;
-
-  if (!avail.medias) return false;
-  if (term.medias.length < avail.medias.length) return false;
-  if (avail.medias.some(medium => !term.medias.includes(medium))) return false;
-
-  if (!avail.territories) return false;
-  if (term.territories.length < avail.territories.length) return false;
-  if (avail.territories.some(territory => !term.territories.includes(territory))) return false;
-
-  return true;
+  return !isSameCalendarTerm(term, avail)
+    && allOf(avail.medias, 'optional').in(term.medias)
+    && allOf(avail.territories, 'optional').in(term.territories);
 }
 
 
@@ -311,4 +188,68 @@ export function getDurations(movieId: string, avail: AvailsFilter, bucket: Bucke
 
 export function getDurationMarkers(mandates: Mandate[], mandateTerms: Term<Date>[]) {
   return mandateTerms.map(term => toDurationMarker(mandates, term));
+}
+
+// ----------------------------
+//         HOLDBACKS         //
+// ----------------------------
+
+
+export function collidingHoldback(holdback: Holdback, term: BucketTerm) {
+  return someOf(term.duration).in(holdback.duration)
+    && someOf(term.medias).in(holdback.medias)
+    && someOf(term.territories).in(holdback.territories);
+}
+
+export function getCollidingHoldbacks(holdbacks: Holdback[], terms: BucketTerm[]) {
+  const holdbackCollision = holdbacks.filter(holdback =>
+    terms.some(term => collidingHoldback(holdback, term))
+  );
+  return holdbackCollision;
+}
+
+// ----------------------------
+//           MOVIE           //
+// ----------------------------
+
+export function filterByTitleId(titleId: string, mandates: Mandate[], mandateTerms: Term[], sales: Sale[], saleTerms: Term[]) {
+  // Gather only mandates & mandate terms related to this title
+  const titleMandates = mandates.filter(mandate => mandate.titleId === titleId);
+  const titleMandateTerms = mandateTerms.filter(mandateTerm => titleMandates.some(mandate => mandate.id === mandateTerm.contractId));
+
+  // Gather only sales & sale terms related to this title
+  const titleSales = sales.filter(sale => sale.titleId === titleId);
+  const titleSaleTerms = saleTerms.filter(saleTerm => titleSales.some(sale => sale.id === saleTerm.contractId));
+
+  return { titleMandates, titleMandateTerms, titleSales, titleSaleTerms };
+}
+
+/**
+ * Check if a movie is available according to the avails requested.
+ * The `mandateTerms` & `saleTerms` should already be filtered for the given title.
+ * _(you can use the `filterByTitleId` function for that)_
+ * @param optional if this parameter is set, avails can be partial, and the function will try to match only existing avails properties
+ */
+export function isMovieAvailable(titleId: string, avails: AvailsFilter, bucket: Bucket, mandateTerms: BucketTerm[], saleTerms: BucketTerm[], optional?: 'optional') {
+
+  // A Title is available if it succeed every check
+
+  // CHECK (1) if no mandates matches the avails requested by the user, then the title is not available for this request
+  const mandatesColliding = allOfAvailInTerms(avails, mandateTerms, optional);
+  if (!mandatesColliding) return false;
+
+
+
+  // CHECK (2) if all the requested avails are already existing in a term in the bucket for this title,
+  // then it shouldn't be displayed to avoid the user selecting it twice
+  const bucketTerms = bucket?.contracts.find(c => c.titleId === titleId)?.terms ?? [];
+  const inBucket = allOfAvailInTerms(avails, bucketTerms, optional);
+  if (inBucket) return false;
+
+  // CHECK (3) if the title is already sold on some part of the requested avails, then it's not available for these avails
+  const salesColliding = termsCollision(avails, saleTerms);
+
+  if (salesColliding) return false;
+
+  return true;
 }

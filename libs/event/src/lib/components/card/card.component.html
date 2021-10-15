@@ -7,7 +7,7 @@
   <!-- Screening -->
   <ng-container *ngSwitchCase="'screening'">
     <ng-container *ngIf="event.movie as movie; else noMovie">
-      <div class="dark-contrast-theme background" [bgRef]="movie | screeningBackground : size" bgAsset="empty_poster.webp">
+      <div class="dark-contrast-theme background" [bgRef]="movie | screeningBackground : size" bgAsset="empty_poster.svg">
         <div class="overlay">
           <h5 test-id="movie-title">{{ movie.title.international }}</h5>
         </div>

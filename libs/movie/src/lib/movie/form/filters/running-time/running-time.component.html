@@ -1,0 +1,12 @@
+<mat-radio-group [formControl]="form" fxLayout fxLayoutAlign="space-between">
+  <div fxLayout="column" fxLayoutGap="12px">
+    <mat-radio-button [value]="1">{{ filters[1].label }}</mat-radio-button>
+    <mat-radio-button [value]="2">{{ filters[2].label }}</mat-radio-button>
+    <mat-radio-button [value]="3">{{ filters[3].label }}</mat-radio-button>    
+  </div>
+  <div fxLayout="column" fxLayoutGap="12px">
+    <mat-radio-button [value]="4">{{ filters[4].label }}</mat-radio-button>
+    <mat-radio-button [value]="5">{{ filters[5].label }}</mat-radio-button>
+    <mat-radio-button [value]="6">{{ filters[6].label }}</mat-radio-button>
+  </div>
+</mat-radio-group>

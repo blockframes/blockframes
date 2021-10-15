@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="100px" height="100px" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Illustrations/Dark/100px/contact</title>
+    <defs>
+        <filter x="-18.2%" y="-38.1%" width="136.4%" height="176.2%" filterUnits="objectBoundingBox" id="filter-1">
+            <feGaussianBlur stdDeviation="4" in="SourceGraphic"></feGaussianBlur>
+        </filter>
+    </defs>
+    <g id="Illustrations/Dark/100px/contact" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group" transform="translate(13.000000, 25.000000)">
+            <polygon id="Path" fill="#8DA4FA" filter="url(#filter-1)" points="4.07752044 -1.75672103e-15 69.9611308 -4.28560608e-14 37 31.505527"></polygon>
+            <polygon id="Path" fill="#8DA4FA" points="4.07752044 1.11930117e-13 69.9611308 7.0830777e-14 37 31.505527"></polygon>
+            <rect id="Rectangle" stroke="#404B8A" stroke-width="2" x="0" y="0" width="74" height="50" rx="3"></rect>
+            <polyline id="Path-14" stroke="#404B8A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="1.29336933 1.28701013 37 35.505527 72.681095 1.28701013"></polyline>
+            <line x1="1.29336933" y1="49.1602691" x2="26.1620263" y2="25.2212287" id="Path-15" stroke="#404B8A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></line>
+            <line x1="72.681095" y1="49.1602691" x2="47.654508" y2="25.2212287" id="Path-16" stroke="#404B8A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></line>
+        </g>
+    </g>
+</svg>

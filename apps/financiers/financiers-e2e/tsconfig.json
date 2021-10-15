@@ -1,7 +1,12 @@
 ﻿{
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
-    "types": ["cypress", "node", "cypress-wait-until"]
+    "types": [
+      "cypress",
+      "node",
+      "cypress-wait-until",
+      "cypress-mailosaur"
+    ],
   },
   "include": [],
   "files": [],

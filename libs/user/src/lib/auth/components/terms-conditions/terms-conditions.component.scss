@@ -20,10 +20,6 @@ mat-card {
     list-style-type: disc;
     margin-left: 16px;
   }
-
-  a {
-    text-decoration: underline;
-  }
 }
 
 @include layout-bp(lt-lg) {

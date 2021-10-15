@@ -2,8 +2,6 @@ import { Component, ChangeDetectionStrategy, Inject, OnInit } from '@angular/cor
 import { FormControl } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
-
 @Component({
   selector: 'blockframes-confirm-input',
   templateUrl: './confirm-input.component.html',
@@ -22,13 +20,17 @@ export class ConfirmInputComponent implements OnInit {
       text?: string,
       warning?: string,
       simulation?: string[],
+      placeholder?: string,
       confirmationWord: string,
       confirmButtonText: string,
+      cancelButtonText?: string,
       onConfirm?: () => void
     },
     public dialogRef: MatDialogRef<ConfirmInputComponent>,
     private snackbar: MatSnackBar
-  ) { }
+  ) {
+    if (!this.data.cancelButtonText) { this.data.cancelButtonText = 'Cancel'; }
+  }
 
   ngOnInit() {
     this.actionConfirm.valueChanges.subscribe(value => {

@@ -1,13 +1,11 @@
 /**
  * Apps definition
  */
-import { OrganizationDocument } from "@blockframes/organization/+state/organization.firestore";
-import { Organization } from "@blockframes/organization/+state/organization.model";
+import { OrganizationBase, OrganizationDocument } from "@blockframes/organization/+state/organization.firestore";
 import { StoreStatus } from "./static-model";
 import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
 import { appUrl } from "@env";
-import { MovieDocument } from "@blockframes/movie/+state/movie.firestore";
-import { Movie } from "@blockframes/movie/+state/movie.model";
+import { MovieBase, MovieDocument } from "@blockframes/movie/+state/movie.firestore";
 import type { RouterQuery } from '@datorama/akita-ng-router-store';
 
 export interface AppMailSetting {
@@ -50,10 +48,11 @@ export const sendgridEmailsFrom: Record<App | 'default', EmailJSON> = {
   default: { email: 'team@cascade8.com', name: 'Cascade 8' }
 } as const;
 
+// Those logos have to be in PNG because Gmail doesn't support SVG images
 export const appLogo = {
-  catalog: `${appUrl.content}/assets/logo/light/content-primary-blue.png`,
-  festival: `${appUrl.market}/assets/logo/light/market-primary-blue.png`,
-  financiers: `${appUrl.financiers}/assets/logo/light/mf-primary-blue.png`,
+  catalog: `${appUrl.content}/assets/email/archipel-content.png`,
+  festival: `${appUrl.market}/assets/email/archipel-market.png`,
+  financiers: `${appUrl.financiers}/assets/email/media-financiers.png`,
   crm: ''
 };
 type AppLogoValue = typeof appLogo[App];
@@ -123,7 +122,7 @@ export function getAppName(slug: App, short = false) {
  * getOrgAppAccess(orgA); // ['catalog', 'festival']
  * getOrgAppAccess(orgB); // ['festival']
  */
-export function getOrgAppAccess(org: OrganizationDocument | Organization, first: App = 'festival'): App[] {
+export function getOrgAppAccess(org: OrganizationDocument | OrganizationBase<Date>, first: App = 'festival'): App[] {
   const apps: App[] = [];
   for (const a of app) {
     const hasAccess = modules.some(m => !!org.appAccess[a]?.[m]);
@@ -134,7 +133,6 @@ export function getOrgAppAccess(org: OrganizationDocument | Organization, first:
 
   // If org have access to several app, including "first",
   // we put it in first place of the response array
-  // @TODO (#2848)
   if (apps.length > 1 && apps.includes(first)) {
     return [first, ...apps.filter(a => a !== first)];
   } else {
@@ -143,12 +141,12 @@ export function getOrgAppAccess(org: OrganizationDocument | Organization, first:
 }
 
 /** Return an array of the app access of the movie */
-export function getMovieAppAccess(movie: MovieDocument | Movie): App[] {
+export function getMovieAppAccess(movie: MovieDocument | MovieBase<Date>): App[] {
   return app.filter(a => !['crm'].includes(a) && movie.app[a].access);
 }
 
 /** Return true if the movie has the status passed in parameter for at least one application */
-export function checkMovieStatus(movie: MovieDocument| Movie, status: StoreStatus) {
+export function checkMovieStatus(movie: MovieDocument | MovieBase<Date>, status: StoreStatus) {
   return (Object.keys(movie.app).some(a => movie.app[a].status === status))
 }
 
@@ -161,7 +159,7 @@ export function checkMovieStatus(movie: MovieDocument| Movie, status: StoreStatu
  * getOrgModuleAccess(orgA); // ['dashboard', 'marketplace']
  * getOrgModuleAccess(orgB); // ['marketplace']
  */
-export function getOrgModuleAccess(org: OrganizationDocument | Organization, _a?: App): Module[] {
+export function getOrgModuleAccess(org: OrganizationDocument | OrganizationBase<Date>, _a?: App): Module[] {
   const allowedModules = {} as Record<Module, boolean>;
 
   if (_a) {
@@ -194,7 +192,7 @@ export function getMoviePublishStatus(a: App): StoreStatus {
  * Returns the "from" email that should be used depending on the current app
  * @param a
  */
-export function getSendgridFrom(a?: App): EmailJSON {
+export function getMailSender(a?: App): EmailJSON {
   if (!a) {
     return sendgridEmailsFrom.default;
   } else {

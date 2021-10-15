@@ -9,17 +9,23 @@
   background-repeat: no-repeat;
 }
 
-app-logo {
+button[app-logo] {
   position: absolute;
+  cursor: pointer;
   top: 24px;
   left: 24px;
+  background: none;
+  border: none;
 }
 
-mat-card {
+section.surface {
   text-align: center;
+  padding-top: 48px;
+  margin: auto;
+  width: 50%;
 
   img {
-    height: auto;
+    height: 200px;
     width: 200px;
     margin-bottom: 32px;
   }
@@ -33,4 +39,18 @@ mat-card {
   }
 }
 
+mat-button-toggle-group {
+  margin-bottom: 8px;
+}
 
+mat-button-toggle {
+  min-width: 125px;
+}
+
+label {
+  padding: 0 12px;
+}
+
+article {
+  margin-bottom: 40px;
+}

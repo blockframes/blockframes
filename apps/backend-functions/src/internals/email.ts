@@ -1,50 +1,49 @@
 import SendGrid from '@sendgrid/mail';
-import { sendgridAPIKey } from '../environments/environment';
-import { unsubscribeGroupIds } from '../templates/ids';
+import { sendgridAPIKey, projectId } from '../environments/environment';
+import { groupIds } from '@blockframes/utils/emails/ids';
 export { EmailRequest, EmailTemplateRequest } from '@blockframes/utils/emails/utils';
 import { emailErrorCodes, EmailRequest, EmailTemplateRequest } from '@blockframes/utils/emails/utils';
 import { MailDataRequired } from '@sendgrid/helpers/classes/mail';
 import { ErrorResultResponse } from '../utils';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import * as admin from 'firebase-admin';
-import { App, getSendgridFrom, AppMailSetting, getAppName, appLogo, applicationUrl, appDescription } from '@blockframes/utils/apps';
+import { App, getMailSender, AppMailSetting, getAppName, appLogo, applicationUrl, appDescription } from '@blockframes/utils/apps';
 import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
 import { logger } from 'firebase-functions';
 
-export const substitutions = {
+const substitutions = { // @TODO #6586 looks like unused
   groupUnsubscribe: "<%asm_group_unsubscribe_raw_url%>",
   preferenceUnsubscribe: "<%asm_preferences_raw_url%>",
   notificationPage: "/c/o/account/profile/view/notifications"
 };
 
-const criticalsEmailsGroupId = unsubscribeGroupIds.criticalsEmails;
 /**
  * Array of unsubscribe groups we want to display when users click on the preference link.
  * Like this, we can avoid showing the criticalEmails group, which is linked for example to the reset password email.
  * Users won't be able to unsubscribe from this group and will always received email from the criticalsEmails group.
 */
-const groupsToDisplay = [unsubscribeGroupIds.allExceptCriticals];
+const groupsToDisplay = [groupIds.unsubscribeAll];
 
 /**
  * Sends a transactional email configured by the EmailRequest provided.
  *
  * Handles development mode: logs a warning when no sendgrid API key is provided.
+ * @param groupId passing 0 to groupId will make the unsubscribe link global
  */
-export async function sendMail({ to, subject, text }: EmailRequest, from: EmailJSON = getSendgridFrom(), groupId: number = criticalsEmailsGroupId) {
+export async function sendMail(email: EmailRequest, from: EmailJSON = getMailSender(), groupId: number = groupIds.criticalsEmails) {
   const msg: MailDataRequired = {
+    ...email,
     from,
-    to,
-    subject,
-    text,
-    asm: { groupId, groupsToDisplay },
-    substitutions: substitutions
+    asm: groupId ? { groupId, groupsToDisplay } : undefined,
+    substitutions: substitutions,
+    customArgs: { projectId }
   };
 
   return send(msg);
 }
 
-export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequest, app: App, groupId: number = criticalsEmailsGroupId) {
-  const from: EmailJSON = getSendgridFrom(app);
+export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequest, app: App, groupId: number = groupIds.criticalsEmails) {
+  const from: EmailJSON = getMailSender(app);
   const { label } = getAppName(app);
   const appText = appDescription[app];
   const appLogoLink = appLogo[app];
@@ -56,7 +55,8 @@ export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequ
     to,
     templateId,
     dynamicTemplateData: { ...data, ...substitutions, app: appMailSettings, from },
-    asm: { groupId, groupsToDisplay }
+    asm: { groupId, groupsToDisplay },
+    customArgs: { projectId }
   };
 
   return send(msg);
@@ -100,7 +100,7 @@ export const sendMailAsAdmin = async (
   if (!bfadmin.exists) { throw new Error('Permission denied: you are not blockframes admin'); }
 
   try {
-    await sendMail(data.request, data.from || getSendgridFrom());
+    await sendMail(data.request, data.from || getMailSender());
     return { error: '', result: 'OK' };
   } catch (error) {
     return {

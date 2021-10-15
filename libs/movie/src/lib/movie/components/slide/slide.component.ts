@@ -8,7 +8,7 @@ import { Title } from '@blockframes/movie/+state/movie.firestore';
 interface MovieSliderView {
   directors: Credit[],
   titles: Title,
-  synopsis: string,
+  synopsis: string
 }
 
 function createMovieSliderView(movie: Movie): MovieSliderView {

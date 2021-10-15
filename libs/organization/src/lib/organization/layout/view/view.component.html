@@ -16,17 +16,17 @@
           <span>{{ org | orgName }}</span>
           <span class="mat-caption">{{ org.activity | toLabel: 'orgActivity' }}</span>
         </div>
-        <img [ref]="org.logo" type="logo" asset="empty_organization.webp" alt="organization logo">
+        <img [ref]="org.logo" type="logo" asset="empty_organization.svg" alt="organization logo">
       </div>
     </div>
   </ng-template>
 
-  <header fxLayout="column" fxLayoutGap="20px" class="dark-contrast-theme" bgAsset="profil_banner.webp">
+  <header fxLayout="column" fxLayoutGap="20px" class="dark-contrast-theme" bgAsset="profil_banner.png">
     <a mat-icon-button (click)="goBack()">
       <mat-icon svgIcon="arrow_back"></mat-icon>
     </a>
     <div class="org-info" fxLayout="row" fxLayoutGap="20px">
-      <img [ref]="org.logo" asset="empty_organization.webp" alt="organization logo">
+      <img [ref]="org.logo" asset="empty_organization.svg" alt="organization logo">
       <article fxFlex fxLayout="column" fxLayoutAlign="start start">
         <h4>{{ org.activity | toLabel: 'orgActivity' }}</h4>
         <h1 class="mat-display-2">{{ org | orgName }}</h1>

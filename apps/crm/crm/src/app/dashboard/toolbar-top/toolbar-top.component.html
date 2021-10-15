@@ -1,0 +1,105 @@
+<mat-toolbar fxLayout="row" fxLayoutAlign="space-between center" id="crm-toolbar">
+
+  <button mat-button [matMenuTriggerFor]="homeMenu">
+    <mat-icon svgIcon="home"></mat-icon><span matLine></span>
+  </button>
+
+  <button mat-button routerLink="/c/o/dashboard/crm/users">
+    <mat-icon svgIcon="account_circle"></mat-icon><span matLine>Users</span>
+  </button>
+
+  <button mat-button routerLink="/c/o/dashboard/crm/organizations">
+    <mat-icon svgIcon="group"></mat-icon><span matLine>Organizations</span>
+  </button>
+
+  <button mat-button routerLink="/c/o/dashboard/crm/movies">
+    <mat-icon svgIcon="movie"></mat-icon><span matLine>Movies</span>
+  </button>
+
+  <button mat-button [matMenuTriggerFor]="eventsMenu">
+    <mat-icon svgIcon="calendar_today"></mat-icon><span matLine>Events</span>
+  </button>
+
+
+  <a mat-button routerLink="crm/offer">
+    <mat-icon svgIcon="document"></mat-icon><span matLine>Offers</span>
+  </a>
+
+  <a mat-button routerLink="/c/o/dashboard/crm/import">
+    <mat-icon svgIcon="excel"></mat-icon><span matLine>Import</span>
+  </a>
+
+  <button mat-button [matMenuTriggerFor]="toolsMenu">
+    <mat-icon svgIcon="build"></mat-icon><span matLine>Tools</span>
+  </button>
+
+  <span fxFlex="auto"></span>
+
+  <auth-widget></auth-widget>
+
+</mat-toolbar>
+
+<mat-menu #homeMenu="matMenu">
+  <button mat-menu-item routerLink="/c/o/dashboard/crm/overview">
+    <mat-icon svgIcon="home"></mat-icon><span matLine>Admin panel</span>
+  </button>
+
+  <button mat-menu-item [matMenuTriggerFor]="contentMenu">
+    <mat-icon svgIcon="logo_archipel_content_fill"></mat-icon><span matLine>Archipel Content</span>
+  </button>
+
+  <button mat-menu-item [matMenuTriggerFor]="marketMenu">
+    <mat-icon svgIcon="logo_archipel_market_fill"></mat-icon><span matLine>Archipel Market</span>
+  </button>
+
+  <button mat-menu-item [matMenuTriggerFor]="financiersMenu">
+    <mat-icon svgIcon="logo_media_financiers_fill"></mat-icon><span matLine>Media Financiers</span>
+  </button>
+
+
+</mat-menu>
+
+<mat-menu #contentMenu="matMenu">
+  <a mat-menu-item [href]="'catalog' | goToApp:'marketplace'">
+    <mat-icon svgIcon="marketplace"></mat-icon><span matLine>Marketplace</span>
+  </a>
+  <a mat-menu-item [href]="'catalog' | goToApp:'dashboard'">
+    <mat-icon svgIcon="dashboard"></mat-icon><span matLine>Dashboard</span>
+  </a>
+</mat-menu>
+
+<mat-menu #marketMenu="matMenu">
+  <a mat-menu-item [href]="'festival' | goToApp:'marketplace'">
+    <mat-icon svgIcon="marketplace"></mat-icon><span matLine>Marketplace</span>
+  </a>
+  <a mat-menu-item [href]="'festival' | goToApp:'dashboard'">
+    <mat-icon svgIcon="dashboard"></mat-icon><span matLine>Dashboard</span>
+  </a>
+</mat-menu>
+
+<mat-menu #financiersMenu="matMenu">
+  <a mat-menu-item [href]="'financiers' | goToApp:'marketplace'">
+    <mat-icon svgIcon="marketplace"></mat-icon><span matLine>Marketplace</span>
+  </a>
+  <a mat-menu-item [href]="'financiers' | goToApp:'dashboard'">
+    <mat-icon svgIcon="dashboard"></mat-icon><span matLine>Dashboard</span>
+  </a>
+</mat-menu>
+
+<mat-menu #eventsMenu="matMenu">
+  <button mat-menu-item routerLink="/c/o/dashboard/crm/events">
+    <mat-icon svgIcon="calendar_today"></mat-icon><span matLine>Events list</span>
+  </button>
+  <button mat-menu-item routerLink="/c/o/dashboard/crm/invitations">
+    <mat-icon svgIcon="person_add"></mat-icon><span matLine>Invitations list</span>
+  </button>
+</mat-menu>
+
+<mat-menu #toolsMenu="matMenu">
+  <button mat-menu-item routerLink="/c/o/dashboard/crm/mails">
+    <mat-icon svgIcon="mail"></mat-icon><span matLine>Emails</span>
+  </button>
+  <button mat-menu-item routerLink="/c/o/dashboard/crm/dev-area">
+    <mat-icon class="unicorn" svgIcon="unicorn"></mat-icon><span matLine>Developpers playground</span>
+  </button>
+</mat-menu>

@@ -1,0 +1,69 @@
+<!-- Filter -->
+<ng-container *ngIf="useFilter">
+  <mat-form-field>
+    <mat-label>Tap to filter in the list below</mat-label>
+    <input matInput [formControl]="search" />
+    <mat-icon matPrefix svgIcon="filter_list"></mat-icon>
+  </mat-form-field>
+</ng-container>
+
+<!-- Table -->
+<div class="table-container">
+  <table class="mat-table" role="table">
+    <!-- Head -->
+    <thead role="rowgroup">
+      <tr class="mat-header-row" role="row">
+        <ng-container *ngFor="let column of columns">
+          <th [attr.id]="column.name" [ngClass]="{ sticky: column.sticky }" class="mat-header-cell" role="columnheader">
+            <ng-container *ngIf="!column.isSortable else sortableHeader">
+              <span>{{ column.label || column.name }}</span>
+            </ng-container>
+            <ng-template #sortableHeader>
+              <div class="sortable">
+                <span>{{ column.label || column.name }}</span>
+                <button class="sort" [ngClass]="{ asc: column.asc }" mat-icon-button (click)="column.toggleSort()">
+                  <mat-icon svgIcon="arrow_upward"></mat-icon>
+                </button>
+              </div>
+            </ng-template>
+          </th>
+        </ng-container>
+      </tr>
+    </thead>
+    <!-- Body -->
+    <tbody role="rowgroup">
+      <ng-container *ngFor="let row of data$ | async">
+        <tr class="mat-row" role="row" (click)="rowClick.emit(row)">
+          <ng-container *ngFor="let column of columns">
+            <td class="mat-cell mat-body-1" role="cell" [ngClass]="{ sticky: column.sticky }" [attr.headers]="column.name">
+              <ng-template
+                [ngTemplateOutlet]="column.template"
+                [ngTemplateOutletContext]="{ $implicit: row | deepKey:column.name, item: row }"
+              >
+              </ng-template>
+            </td>
+          </ng-container>
+        </tr>
+      </ng-container>
+    </tbody>
+    <!-- Foot -->
+    <ng-content select="tfoot"></ng-content>
+  </table>
+</div>
+
+<!-- Pagination -->
+<footer *ngIf="paginator.shouldDisplay$ | async" class="mat-paginator">
+  <span class="mat-caption">Page {{ paginator.pageIndex + 1 }} of {{ paginator.maxIndex + 1 }}</span>
+  <button mat-icon-button [disabled]="paginator.pageIndex === 0" (click)="paginator.first()">
+    <mat-icon svgIcon="first_page"></mat-icon>
+  </button>
+  <button mat-icon-button [disabled]="paginator.pageIndex === 0" (click)="paginator.previous()">
+    <mat-icon svgIcon="chevron_left"></mat-icon>
+  </button>
+  <button mat-icon-button [disabled]="paginator.pageIndex === paginator.maxIndex" (click)="paginator.next()">
+    <mat-icon svgIcon="chevron_right"></mat-icon>
+  </button>
+  <button mat-icon-button [disabled]="paginator.pageIndex === paginator.maxIndex" (click)="paginator.last()">
+    <mat-icon svgIcon="last_page"></mat-icon>
+  </button>
+</footer>

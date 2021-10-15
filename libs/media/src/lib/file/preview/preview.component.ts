@@ -10,6 +10,7 @@ import { StorageFile } from '@blockframes/media/+state/media.firestore';
 })
 
 export class FilePreviewComponent {
+
   constructor(
     private dialogRef: MatDialogRef<FilePreviewComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { ref: StorageFile }

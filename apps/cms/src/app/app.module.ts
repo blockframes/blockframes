@@ -15,7 +15,7 @@ import { AngularFirePerformanceModule } from '@angular/fire/performance';
 import { firebase, firebaseRegion } from '@env';
 
 import { FormFactoryModule } from 'ng-form-factory';
-import { getEmulatorsConfig } from '@blockframes/utils/emulator-front-setup';
+import { emulatorConfig } from '../environment/environment';
 
 @NgModule({
   declarations: [AppComponent],
@@ -34,7 +34,7 @@ import { getEmulatorsConfig } from '@blockframes/utils/emulator-front-setup';
   ],
   providers: [
     { provide: REGION, useValue: firebaseRegion },
-    ...getEmulatorsConfig()
+    ...emulatorConfig
   ],
   bootstrap: [AppComponent],
 })

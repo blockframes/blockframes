@@ -1,0 +1,24 @@
+:host {
+  display: block;
+  padding: 32px;
+}
+
+section, footer {
+  margin-bottom: 32px;
+  p {
+    font-weight: bold;
+  }
+  mat-form-field {
+    width: 100%;
+  }
+}
+
+
+.add-title {
+  margin-top: 24px;
+  width: min-content;
+}
+
+mat-option {
+  text-transform: capitalize;
+}

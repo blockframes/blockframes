@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="100px" height="100px" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Illustrations/Dark/100px/presentation-deck</title>
+    <defs>
+        <filter x="-469.6%" y="-13.8%" width="1039.1%" height="127.6%" filterUnits="objectBoundingBox" id="filter-1">
+            <feGaussianBlur stdDeviation="4" in="SourceGraphic"></feGaussianBlur>
+        </filter>
+        <filter x="-469.6%" y="-13.8%" width="1039.1%" height="127.6%" filterUnits="objectBoundingBox" id="filter-2">
+            <feGaussianBlur stdDeviation="4" in="SourceGraphic"></feGaussianBlur>
+        </filter>
+    </defs>
+    <g id="Illustrations/Dark/100px/presentation-deck" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="presentation-deck" transform="translate(5.000000, 17.000000)">
+            <g id="Group" transform="translate(4.555556, 0.166667)"></g>
+            <rect id="Rectangle" stroke="#404B8A" x="6.05555556" y="0.666666667" width="79" height="49"></rect>
+            <path d="M40.7777778,54.7222222 L47.7777778,54.7222222 C48.0539202,54.7222222 48.2777778,54.9460798 48.2777778,55.2222222 L48.2777778,56.7822222 C48.2777778,57.0583646 48.0539202,57.2822222 47.7777778,57.2822222 L40.7777778,57.2822222 C40.5016354,57.2822222 40.2777778,57.0583646 40.2777778,56.7822222 L40.2777778,55.2222222 C40.2777778,54.9460798 40.5016354,54.7222222 40.7777778,54.7222222 Z" id="Rectangle" fill="#8DA4FA" transform="translate(44.277778, 56.002222) rotate(90.000000) translate(-44.277778, -56.002222) "></path>
+            <polygon id="blur" fill="#8DA4FA" filter="url(#filter-1)" transform="translate(45.277778, 51.444444) rotate(90.000000) translate(-45.277778, -51.444444) " points="44 8 46.5555556 8 46.5555556 94.8888889 44 94.8888889"></polygon>
+            <path d="M45,5 L45.5555556,5 C46.1078403,5 46.5555556,5.44771525 46.5555556,6 L46.5555556,94 C46.5555556,94.5522847 46.1078403,95 45.5555556,95 L45,95 C44.4477153,95 44,94.5522847 44,94 L44,6 C44,5.44771525 44.4477153,5 45,5 Z" id="bottom-bar" fill="#8DA4FA" transform="translate(45.277778, 50.000000) rotate(90.000000) translate(-45.277778, -50.000000) "></path>
+            <polygon id="blur" fill="#8DA4FA" filter="url(#filter-2)" transform="translate(45.277778, 1.444444) rotate(90.000000) translate(-45.277778, -1.444444) " points="44 -42 46.5555556 -42 46.5555556 44.8888889 44 44.8888889"></polygon>
+            <path d="M45.5555556,-39.5555556 L46.1111111,-39.5555556 C46.6633959,-39.5555556 47.1111111,-39.1078403 47.1111111,-38.5555556 L47.1111111,41.4444444 C47.1111111,41.9967292 46.6633959,42.4444444 46.1111111,42.4444444 L45.5555556,42.4444444 C45.0032708,42.4444444 44.5555556,41.9967292 44.5555556,41.4444444 L44.5555556,-38.5555556 C44.5555556,-39.1078403 45.0032708,-39.5555556 45.5555556,-39.5555556 Z" id="top-bar" fill="#8DA4FA" transform="translate(45.833333, 1.444444) rotate(90.000000) translate(-45.833333, -1.444444) "></path>
+            <g id="ball" transform="translate(39.000000, 60.000000)">
+                <circle id="Oval" fill="#879DEF" cx="6" cy="6" r="5"></circle>
+                <circle id="Oval" stroke="#404B8A" cx="5" cy="5" r="5"></circle>
+            </g>
+            <g id="cheese" transform="translate(47.000000, 11.000000)">
+                <circle id="Oval" fill="#879DEF" cx="15" cy="15" r="12"></circle>
+                <circle id="Oval" stroke="#404B8A" stroke-width="1.2" cx="17.5772358" cy="16.5772358" r="12"></circle>
+                <polygon id="Triangle" fill="#121424" transform="translate(11.037864, 11.164178) rotate(128.000000) translate(-11.037864, -11.164178) " points="11.2121973 2.90692048 17.7684155 19.4214347 4.30731237 18.9987947"></polygon>
+                <polygon id="Triangle" fill="#879DEF" transform="translate(9.603983, 9.853307) rotate(128.000000) translate(-9.603983, -9.853307) " points="9.67664186 4.44880025 14.5271078 15.0268482 4.68085758 15.2578136"></polygon>
+            </g>
+            <g id="chart-bars" transform="translate(14.000000, 20.000000)" fill="#8DA4FA" stroke="#404B8A">
+                <rect id="Rectangle" x="0.5" y="10.5" width="6" height="9" rx="0.5"></rect>
+                <rect id="Rectangle" x="10.5" y="5.5" width="6" height="14" rx="0.5"></rect>
+                <rect id="Rectangle" x="19.5" y="0.5" width="6" height="19" rx="0.5"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,7 @@
+<h1>
+  <a routerLink="/c/o/dashboard/crm/">CRM dashboard</a>
+  <ng-container *ngFor="let item of (breadcrumb$ | async)"> > 
+    <a *ngIf="item.path && item.label else ngContent" [routerLink]="'/c/o/dashboard/crm/'+item.path">{{ item.label}}</a>
+    <ng-template #ngContent><ng-content></ng-content></ng-template>
+  </ng-container>
+</h1>

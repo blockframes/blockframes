@@ -1,5 +1,5 @@
 // Angular
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, Optional } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Optional } from '@angular/core';
 
 // Blockframes
 import { MovieService, fromOrg } from '@blockframes/movie/+state';
@@ -11,7 +11,7 @@ import { appName, getCurrentApp } from '@blockframes/utils/apps';
 
 // RxJs
 import { map, switchMap, shareReplay, tap } from 'rxjs/operators';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 
 // Intercom
 import { Intercom } from 'ng-intercom';
@@ -22,15 +22,15 @@ import { Intercom } from 'ng-intercom';
   styleUrls: ['./home.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HomeComponent implements OnInit, OnDestroy {
-
-  private sub: Subscription;
+export class HomeComponent implements OnInit {
 
   public app = getCurrentApp(this.routerQuery);
   public appName = appName[this.app];
-  public allMoviesFromOrg$: Observable<Movie[]>
-  public hasAcceptedMovies$: Observable<boolean>;
+  // accepted and submitted movies only
+  public titles$: Observable<Movie[]>;
   public hasMovies$: Observable<boolean>;
+  public hasAcceptedMovies$: Observable<boolean>;
+  public hasDraftMovies$: Observable<boolean>;
 
   constructor(
     private movieService: MovieService,
@@ -41,33 +41,32 @@ export class HomeComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.allMoviesFromOrg$ = this.orgQuery.selectActive().pipe(
+    const allMoviesFromOrg$ = this.orgQuery.selectActive().pipe(
       switchMap(({ id }) => this.movieService.valueChanges(fromOrg(id))),
-      shareReplay(1),
+      shareReplay({ refCount: true, bufferSize: 1 }),
+      map(titles => titles.filter(title => title.app[this.app].access))
     );
 
-    this.hasAcceptedMovies$ = this.allMoviesFromOrg$.pipe(
+    this.hasAcceptedMovies$ = allMoviesFromOrg$.pipe(
       map(movies => movies.some(movie => movie.app[this.app].status === 'accepted'))
     );
 
-    this.hasMovies$ = this.allMoviesFromOrg$.pipe(
+    this.hasMovies$ = allMoviesFromOrg$.pipe(
       map(movies => !!movies.length)
     );
 
-    const titles$ = this.allMoviesFromOrg$.pipe(
-      map(movies => movies.filter(movie => movie.app[this.app].status === 'accepted')),
+    this.hasDraftMovies$ = allMoviesFromOrg$.pipe(
+      map(movies => movies.some(movie => movie.app[this.app].status === 'draft'))
+    )
+
+    this.titles$ = allMoviesFromOrg$.pipe(
+      map(movies => movies.filter(movie => ['accepted', 'submitted'].includes(movie.app[this.app].status))),
       tap(movies => {
         movies.length ?
           this.dynTitle.setPageTitle('Dashboard') :
           this.dynTitle.setPageTitle('Dashboard', 'Empty');
       }),
     );
-
-    this.sub = titles$.subscribe();
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
   }
 
   public openIntercom(): void {

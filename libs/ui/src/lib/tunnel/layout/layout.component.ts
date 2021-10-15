@@ -22,7 +22,7 @@ import { RouteDescription } from '@blockframes/utils/common-interfaces';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { FormArray, FormGroup } from '@angular/forms';
+import { AbstractControl, FormArray, FormGroup } from '@angular/forms';
 import type { ShellConfig } from '@blockframes/movie/form/movie.shell.interfaces';
 import { FORMS_CONFIG } from '@blockframes/movie/form/movie.shell.interfaces';
 import { FormSaveOptions } from "@blockframes/utils/common-interfaces";
@@ -79,7 +79,7 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
   public previous: RouteDescription;
   public mode$ = this.breakpointsService.ltMd.pipe(
     map(ltMd => ltMd ? 'over' : 'side'),
-    shareReplay(1)
+    shareReplay({ refCount: true, bufferSize: 1 }),
   );
 
   @ViewChild(MatSidenavContent) sidenavContent: MatSidenavContent;
@@ -111,7 +111,7 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.routeBeforeTunnel = this.exitRedirect || '/c/o/';
-    this.urlBynav$ = combineLatest([this.url$, new BehaviorSubject(this.steps).asObservable()]).pipe(shareReplay(1))
+    this.urlBynav$ = combineLatest([this.url$, new BehaviorSubject(this.steps).asObservable()]).pipe(shareReplay({ refCount: true, bufferSize: 1 }));
     this.getRoute();
 
     // https://github.com/angular/components/issues/4280
@@ -169,7 +169,8 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
       for (const name in this.configs) {
         const form = this.getForm(name as keyof ShellConfig);
         if (form.invalid) {
-          const fields = findInvalidControls(form);
+          const arrays = findInvalidControls(form);
+          const fields = arrays.errorFields.concat(arrays.missingFields);
           throw new Error(`Form "${name}" should be valid before publishing.Invalid fields are: ${fields.join()} `);
         }
       }
@@ -187,21 +188,48 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
   }
 }
 
-
-/* Utils function to get the list of invalid form. Not used yet, but could be useful later */
+/* Utils function to get the list of invalid form. */
 export function findInvalidControls(formToInvestigate: FormGroup | FormArray) {
-  const recursiveFunc = (form: FormGroup | FormArray) => {
-    const fields = [];
+  const errorFields = [];
+  const missingFields = [];
+  const recursiveFunc = (form: FormGroup | FormArray, rootControlName?: string) => {
+
     for (const field in form.controls) {
       const control = form.get(field);
+
       if (control.invalid) {
-        fields.push(field);
+        if (control.errors) {
+          const isRequired = Object.keys(control.errors).includes('required');
+          const name = rootControlName || getName(control);
+          if (isRequired) {
+            missingFields.push(name);
+          } else if (rootControlName) {
+            errorFields.push(rootControlName);
+          }
+        }
       }
+
       if (control instanceof FormArray || control instanceof FormGroup) {
-        fields.concat(recursiveFunc(control));
+        missingFields.concat(recursiveFunc(control, getName(control.parent) || getName(control)));
       }
     }
-    return fields;
+
+    return {
+      errorFields: Array.from(new Set(errorFields)),
+      missingFields: Array.from(new Set(missingFields))
+    };
   }
   return recursiveFunc(formToInvestigate);
+}
+
+/**
+ *
+ * @param control
+ * @returns the name of the control
+ */
+function getName(control: AbstractControl): string | null {
+  const group = control.parent as FormGroup;
+  if (!group) return null;
+  const name = Object.keys(group.controls).find(key => group.get(key) === control);
+  return name;
 }

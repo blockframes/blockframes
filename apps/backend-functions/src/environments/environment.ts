@@ -6,6 +6,8 @@
  * functions.
  */
 
+export const e2eMode = false;
+
 export {
   factoryContract,
   backupBucket,
@@ -16,6 +18,7 @@ export {
   bigQueryAnalyticsTable,
   centralOrgId,
   supportEmails,
+  playerId
 } from '@env';
 
 import { firebase } from '@env';
@@ -29,6 +32,7 @@ export const adminPassword = mockConfigIfNeeded('admin', 'password');
 
 export const jwplayerSecret = mockConfigIfNeeded('jwplayer', 'secret');
 export const jwplayerKey = mockConfigIfNeeded('jwplayer', 'key');
+export const jwplayerApiV2Secret = mockConfigIfNeeded('jwplayer', 'apiv2secret');
 
 export const imgixToken = mockConfigIfNeeded('imgix', 'token');
 
@@ -36,5 +40,9 @@ export const twilioAccountSid = mockConfigIfNeeded('twilio', 'account', 'sid');
 export const twilioAccountSecret = mockConfigIfNeeded('twilio', 'account', 'secret');
 export const twilioApiKeySecret = mockConfigIfNeeded('twilio', 'api', 'key', 'secret');
 export const twilioApiKeySid = mockConfigIfNeeded('twilio', 'api', 'key', 'sid');
+
+export const mailchimpAPIKey = mockConfigIfNeeded('mailchimp', 'api_key');
+export const mailchimpServer = mockConfigIfNeeded('mailchimp', 'server');
+export const mailchimpListId = mockConfigIfNeeded('mailchimp', 'list_id');
 
 export const enableDailyFirestoreBackup = false;

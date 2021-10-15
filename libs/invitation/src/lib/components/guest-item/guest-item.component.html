@@ -2,10 +2,10 @@
   <mat-list-item>
     <div matListAvatar class="avatar-status">
       <ng-container *ngIf="!!user.avatar.storagePath else noProfileUser">
-        <img [ref]="user.avatar" asset="profil_user.webp">
+        <img [ref]="user.avatar" asset="profil_user.svg">
       </ng-container>
       <ng-template #noProfileUser>
-        <img asset="profil_user.webp">
+        <img asset="profil_user.svg">
       </ng-template>
       <mat-icon [svgIcon]="invitation.status | statusIcon" [color]="invitation.status | statusColor"></mat-icon>
     </div>

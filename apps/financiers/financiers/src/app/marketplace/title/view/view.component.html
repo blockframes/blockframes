@@ -10,7 +10,7 @@
           </a>
         </ng-container>
       </movie-header-cta>
-      <movie-header-actions fxLayout.lt-sm="column" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="24px">
+      <movie-header-actions fxHide.lt-sm fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="24px">
         <wishlist-button [movieId]="movie.id"></wishlist-button>
         <movie-promotional-links [movie]="movie" [links]="promoLinks"></movie-promotional-links>
       </movie-header-actions>
@@ -21,7 +21,7 @@
       <campaign-progress [campaign]="campaign$ | async"></campaign-progress>
       <ng-container *ngIf="orgs$ | async as orgs">
         <p class="mat-caption">Contact financier for further information</p>
-        <button mat-flat-button color="accent" (click)="openForm(orgs)">
+        <button test-id="open-discussion" mat-flat-button color="accent" (click)="openForm(orgs)">
           Open discussion
         </button>
       </ng-container>
@@ -53,7 +53,7 @@
           Please precise the amount you would like to invest.<br />
           If you are not ready to provide us with such kind of information, just leave a message.
         </p>
-        <div fxLayout fxLayoutGap="24px">
+        <div fxLayout fxLayoutGap="24px" formGroupName="scope">
           <mat-form-field fxFlex appearance="outline">
             <mat-label>From</mat-label>
             <input type="number" matInput formControlName="from" min="0" />
@@ -67,7 +67,7 @@
         </div>
         <mat-form-field appearance="outline">
           <mat-label>Message</mat-label>
-          <textarea matInput formControlName="message"
+          <textarea required matInput formControlName="message"
             placeholder="Questions about cast, financing, investment conditions..."></textarea>
         </mat-form-field>
         <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="32px">

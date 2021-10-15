@@ -1,19 +1,23 @@
-section {
+:host {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  justify-items: center;
   margin-top: 24px;
+  & > * {
+    margin-bottom: 16px;
+  }
+}
 
-  h1 {
-    text-align: center;
-  }
-  
-  p {
-    text-align: center;
-  
-    a {
-      text-decoration: underline;
-    }
-  }
+h1 {
+  text-align: center;
+}
 
-  img {
-    width: 300px;
-  }
+p {
+  text-align: center;
+}
+
+img {
+  width: 300px;
 }

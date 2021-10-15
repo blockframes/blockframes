@@ -13,6 +13,7 @@
     "@google-cloud/storage": "^4.3.1",
     "@sendgrid/helpers": "^6.4.0",
     "@sendgrid/mail": "^6.4.0",
+    "@sendgrid/eventwebhook": "^7.4.5",
     "@sentry/browser": "^5.5.0",
     "@sentry/node": "^5.5.0",
     "@types/date-fns": "^2.6.0",
@@ -26,7 +27,7 @@
     "firebase-functions": "^3.11.0",
     "faker":"5.1.0",
     "generate-password": "^1.4.2",
-    "jwplatform": "0.0.5",
+    "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.11",
     "twilio": "3.49.2"
   }

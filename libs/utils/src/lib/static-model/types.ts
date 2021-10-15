@@ -8,7 +8,8 @@ import {
   crewRoles,
   genres,
   hostedVideoTypes,
-  legalRoles,
+  invitationType,
+  invitationStatus,
   medias,
   movieCurrencies,
   movieFormat,
@@ -26,13 +27,9 @@ import {
   soundFormat,
   stakeholderRoles,
   storeStatus,
-  subLicensorRoles,
   unitBox,
   territories,
   territoriesISOA3,
-  territoriesISOA2,
-  territoriesNUMCODE,
-  territoriesFR,
   budgetRange
 } from './static-model';
 
@@ -57,10 +54,10 @@ export type GenresValue = keyof typeof genres[Genre] & string;
 
 export type HostedVideoType = keyof typeof hostedVideoTypes;
 
+export type InvitationType = keyof typeof invitationType;
+
 export type Language = keyof typeof languages;
 export type LanguageValue = typeof languages[Language];
-
-export type LegalRole = keyof typeof legalRoles;
 
 export type Media = keyof typeof medias;
 export type MediaValue = typeof medias[Media];
@@ -75,7 +72,10 @@ export type MovieLanguageType = keyof typeof movieLanguageTypes;
 export type MovieLanguageTypeValue = typeof movieLanguageTypes[MovieLanguageType];
 
 export type OrgActivity = keyof typeof orgActivity;
+
 export type OrganizationStatus = keyof typeof organizationStatus;
+
+export type InvitationStatus = keyof typeof invitationStatus;
 
 export type PremiereType = keyof typeof premiereType;
 
@@ -99,18 +99,9 @@ export type StakeholderRoleValue = keyof typeof stakeholderRoles[StakeholderRole
 
 export type StoreStatus = keyof typeof storeStatus;
 
-export type SubLicensorRole = keyof typeof subLicensorRoles;
-
 export type UnitBox = keyof typeof unitBox;
-export type UnitBoxValue = typeof unitBox[UnitBox];
 
 export type Territory = keyof typeof territories;
 export type TerritoryValue = typeof territories[Territory];
-export type TerritoryISOA2 = keyof typeof territoriesISOA2;
-export type TerritoryISOA2Value = typeof territoriesISOA2[TerritoryISOA2];
 export type TerritoryISOA3 = keyof typeof territoriesISOA3;
 export type TerritoryISOA3Value = typeof territoriesISOA3[TerritoryISOA3];
-export type TerritoryNUMCODE = keyof typeof territoriesNUMCODE;
-export type TerritoryNUMCODEValue = typeof territoriesNUMCODE[TerritoryNUMCODE];
-export type TerritoryFR = keyof typeof territoriesFR;
-export type TerritoryFRValue = typeof territoriesFR[TerritoryFR];

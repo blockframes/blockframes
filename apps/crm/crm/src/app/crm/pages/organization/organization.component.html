@@ -1,0 +1,89 @@
+<ng-container *ngIf="org">
+  <main fxLayout="column" fxFlex fxLayoutGap="40px">
+    <crm-bread-crumb>{{ org | orgName:'long' }}</crm-bread-crumb>
+    <section *ngIf="org" fxLayout="column" fxLayoutGap="40px">
+      <article fxLayout="row" fxLayoutAlign="space-between end">
+        <organization-display [organization]="org">
+          <mat-card-header>
+            <mat-card-title>{{ org | orgName:'long' }} </mat-card-title>
+          </mat-card-header>
+        </organization-display>
+
+        <button mat-flat-button color="warn" (click)="deleteOrg()">Delete this org</button>
+      </article>
+
+      <mat-card *ngIf="orgForm" fxFlex fxLayoutGap="40px">
+        <crm-organization-form [form]="orgForm" [orgId]="org.id"></crm-organization-form>
+
+        <form [formGroup]="orgForm" fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="8px">
+          <mat-checkbox [formControl]="notifyCheckbox">
+            Notify admin(s) of app access changes ?
+          </mat-checkbox>
+
+          <button type="submit" mat-flat-button color="primary" (click)="update()">Update</button>
+        </form>
+      </mat-card>
+    </section>
+
+    <member-repertory
+      [members]="members"
+      [isSuperAdmin]="true"
+      [showFilter]="true"
+      [memberColumns]="memberColumns"
+      [memberColumnsIndex]="memberColumnsIndex"
+      (memberRemoved)="removeMember($event)"
+      (updatedToSuperAdmin)="updateRole($event, 'superAdmin')"
+      (updatedToAdmin)="updateRole($event, 'admin')"
+      (updatedToMember)="updateRole($event, 'member')">
+    </member-repertory>
+
+    <ng-container *ngIf="(invitationsFromOrganization$ | async) as invitationsMember">
+      <member-pending *ngIf="invitationsMember.length > 0"
+        [invitations]="invitationsMember"
+        (declined)="deleteInvitation($event)"
+        [isAdmin]="true">
+      </member-pending>
+    </ng-container>
+
+    <ng-container *ngIf="(invitationsToJoinOrganization$ | async) as invitations">
+      <member-request *ngIf="invitations.length > 0"
+        (declined)="declineInvitation($event)"
+        (accepted)="acceptInvitation($event)"
+        [invitations]="invitations"
+        [isAdmin]="true">
+      </member-request>
+    </ng-container>
+
+    <member-add [org]="org"></member-add>
+
+    <mat-card fxFlex>
+      <h2>Movies</h2>
+      <bf-table-filter
+        [source]="movies"
+        [columns]="versionColumnsMovies"
+        [initialColumns]="initialColumnsMovies"
+        [filterPredicate]="filterPredicateMovies"
+        showFilter
+        showLoader
+        showPaginator
+        clickable
+        (rowClick)="goToMovieEdit($event)">
+        <ng-template colRef="poster" let-posters>
+          <ng-container *ngIf="posters.storagePath; else noposter">
+            <img class="poster" [ref]="posters" asset="empty_poster.svg">
+          </ng-container>
+          <ng-template #noposter>
+            --
+          </ng-template>
+        </ng-template>
+      </bf-table-filter>
+    </mat-card>
+
+    <mat-card class="file-explorer">
+      <mat-card-title>Organization's resources</mat-card-title>
+      <mat-card-content>
+        <file-explorer [org]="org"></file-explorer>
+      </mat-card-content>
+    </mat-card>
+  </main>
+</ng-container>

@@ -34,7 +34,7 @@ import { ErrorLoggerModule } from '@blockframes/utils/error-logger.module';
 import { CrmModule } from './crm.module';
 
 import { MatNativeDateModule } from '@angular/material/core';
-import { getEmulatorsConfig } from '@blockframes/utils/emulator-front-setup';
+import { emulatorConfig } from '../environment/environment';
 
 @NgModule({
   declarations: [AppComponent],
@@ -73,7 +73,7 @@ import { getEmulatorsConfig } from '@blockframes/utils/emulator-front-setup';
   providers: [
     ScreenTrackingService, UserTrackingService,
     { provide: REGION, useValue: firebaseRegion },
-    ...getEmulatorsConfig()
+    ...emulatorConfig
   ],
   bootstrap: [AppComponent]
 })

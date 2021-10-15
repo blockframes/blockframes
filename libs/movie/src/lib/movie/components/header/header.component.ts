@@ -5,7 +5,7 @@ import {
   ChangeDetectionStrategy,
   Directive,
   ViewEncapsulation,
-  HostBinding
+  HostBinding,
 } from '@angular/core';
 
 // Blockframes
@@ -14,6 +14,7 @@ import { Location } from '@angular/common';
 
 function createMovieView(movie: Movie) {
   return {
+    id: movie.id,
     directors: movie.directors,
     title: {
       original: movie.title.original,

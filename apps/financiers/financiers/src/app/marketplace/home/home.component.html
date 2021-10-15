@@ -8,8 +8,8 @@
     professional content financiers.
   </p>
   <div class="actions" fxLayout="row" fxLayoutGap="24px">
-    <a mat-flat-button color="accent" test-id="library" routerLink="../title">Projects</a>
-    <a mat-stroked-button test-id="sales agent" routerLink="../organization">Financiers</a>
+    <a mat-flat-button color="accent" routerLink="../title">Projects</a>
+    <a mat-stroked-button routerLink="../organization">Financiers</a>
   </div>
 </header>
 
@@ -70,9 +70,7 @@
         <h3>{{ benefit.title }}</h3>
         <p class="mat-body-1 benefits">{{ benefit.description }}</p>
         <a *ngIf="benefit?.link?.href" [href]="benefit.link.href" target="_blank">
-          <u>
-            {{ benefit.link.text }}
-          </u>
+          {{ benefit.link.text }}
         </a>
       </mat-card>
     </bf-carousel>

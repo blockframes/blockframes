@@ -13,6 +13,8 @@ import {
   RemoteTrackPublication,
   Room,
   RemoteTrack,
+  LocalVideoTrackPublication,
+  LocalAudioTrackPublication,
 } from 'twilio-video';
 
 import {
@@ -85,15 +87,47 @@ export class TwilioService {
     this.twilioStore.remove(local?.id);
   }
 
-  toggleTrack(kind: TrackKind) {
+  async toggleTrack(kind: TrackKind) {
     const track = this.twilioQuery.localAttendee.tracks[kind];
-
     if (!track) return;
 
+    const localAttendee = this.twilioQuery.localAttendee;
     if (track.isEnabled) {
       track.disable();
+      track.stop();
+
+      this.twilioStore.upsert(localAttendee.id, {
+        id: localAttendee.id,
+        tracks: {
+          video: kind === 'video' ? track as LocalVideoTrack : localAttendee.tracks.video,
+          audio: kind === 'audio' ? track as LocalAudioTrack : localAttendee.tracks.audio
+        }
+      })
+
+      if (this.room) {
+        const key = kind === 'video' ? 'videoTracks' : 'audioTracks';
+        this.room.localParticipant[key].forEach((publication: LocalVideoTrackPublication | LocalAudioTrackPublication) => {
+          publication.track.stop();
+          publication.unpublish();
+        })
+      }
     } else {
-      track.enable();
+      // https://www.twilio.com/docs/video/javascript-getting-started#mute-and-unmute-audio-and-video
+      const localTrack = kind === 'video'
+        ? await createLocalVideoTrack().catch(() => null)
+        : await createLocalAudioTrack().catch(() => null);
+
+      this.twilioStore.upsert(localAttendee.id, {
+        id: localAttendee.id,
+        tracks: {
+          video: kind === 'video' ? localTrack as LocalVideoTrack : localAttendee.tracks.video,
+          audio: kind === 'audio' ? localTrack as LocalAudioTrack : localAttendee.tracks.audio
+        }
+      })
+
+      if (this.room) {
+        this.room.localParticipant.publishTrack(localTrack);
+      }
     }
   }
 
@@ -120,6 +154,10 @@ export class TwilioService {
     // Connect to Twilio room and register event listeners
     this.room = await connect(token, { name: eventId, tracks });
 
+    this.room.participants.forEach((participant: RemoteParticipant) => {
+      this.twilioStore.upsert(participant.sid, { id: participant.sid, kind: 'remote', userName: JSON.parse(participant.identity).displayName,  tracks: {} })
+    })
+
     this.room.on('participantConnected', (participant: RemoteParticipant) => {
       this.twilioStore.upsert(
         participant.sid,
@@ -139,6 +177,19 @@ export class TwilioService {
         );
       },
     );
+
+    this.room.on(
+      'trackUnsubscribed',
+      (track: RemoteTrack, publication: RemoteTrackPublication, participant: RemoteParticipant) => {
+        if (track.kind === 'data') return;
+        const remoteTracks: RemoteTracks = { [track.kind]: null };
+        this.twilioStore.upsert(
+          participant.sid,
+          (enitity: RemoteAttendee) => ({ tracks: { ...enitity.tracks, ...remoteTracks }}),
+          id => ({ id, kind: 'remote', userName: JSON.parse(participant.identity).displayName, tracks: remoteTracks })
+        )
+      }
+    )
 
     this.room.on('participantDisconnected', (participant: RemoteParticipant) => {
       this.twilioStore.remove(participant.sid);

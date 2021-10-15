@@ -5,14 +5,19 @@
       <movie-header-cta fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="32px">
         <ng-container *ngFor="let org of orgs$ | async">
           <org-chip [org]="org"></org-chip>
-          <a mat-flat-button color="primary" [href]="'mailto:' + org.email">
-            <span>{{ org.activity === 'intlSales' ? 'Contact Sales Agent' : 'Contact' }}</span>
-            <mat-icon svgIcon="arrow_forward"></mat-icon>
-          </a>
+          <div class="cta-button" fxFlex fxLayout fxLayoutAlign="space-between start" fxLayout.lt-md="column" fxLayoutGap.lt-md="16px">
+            <a mat-flat-button color="primary" [href]="'mailto:' + org.email">
+              <span>{{ org.activity === 'intlSales' ? 'Contact Sales Agent' : 'Contact' }}</span>
+              <mat-icon svgIcon="arrow_forward"></mat-icon>
+            </a>
+            <ng-container *ngIf="(eventId$ | async) as eventId">
+              <a ongoing-event-button [routerLink]="['/c/o/marketplace/event', eventId]">Ongoing Screening</a>
+            </ng-container>
+          </div>
         </ng-container>
       </movie-header-cta>
 
-      <movie-header-actions fxLayout.lt-sm="column" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="24px">
+      <movie-header-actions fxHide.lt-sm fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="24px">
         <wishlist-button [movieId]="movie.id"></wishlist-button>
         <movie-promotional-links [movie]="movie" [links]="promoLinks"></movie-promotional-links>
       </movie-header-actions>

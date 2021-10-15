@@ -1,0 +1,26 @@
+<main fxLayout="column">
+  <crm-bread-crumb></crm-bread-crumb>
+  <article fxLayout="column" fxLayoutAlign="center center">
+    <button [disabled]="!eventListLoaded" mat-flat-button color="primary" (click)="exportTable()">
+      <span>Export to CSV</span>
+      <mat-icon svgIcon="arrow_upward"></mat-icon>
+    </button>
+  </article>
+
+  <bf-table-filter [source]="rows" [columns]="versionColumns" [initialColumns]="initialColumns"
+    [filterPredicate]="filterPredicate" [pageSize]="50" showFilter showLoader showPaginator clickable (rowClick)="goToEdit($event)">
+    <ng-template colRef="edit" let-edit>
+      <a [routerLink]="edit.link">
+        <mat-icon svgIcon="edit"></mat-icon>
+      </a>
+    </ng-template>
+    <ng-template colRef="start" let-start>
+      {{ start | date: 'medium'}}
+    </ng-template>
+    <ng-template colRef="end" let-end>
+      {{ end | date: 'medium'}}
+    </ng-template>
+  </bf-table-filter>
+
+  <crm-dashboard dashboard="events"></crm-dashboard>
+</main>

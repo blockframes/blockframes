@@ -39,6 +39,9 @@ export class RequestAccessGuard extends CollectionGuard<OrganizationState> {
             map(org => {
               if (org.status === 'accepted') {
                 const app = getCurrentApp(this.routerQuery);
+                if (!org.appAccess[app]) {
+                  return;
+                }
                 if (org.appAccess[app].marketplace) {
                   return '/c/o/marketplace/home';
                 }

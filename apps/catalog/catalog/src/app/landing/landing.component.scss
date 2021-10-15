@@ -1,19 +1,36 @@
 @import "~@angular/flex-layout/mq";
+$banner-background: rgba(5, 7, 36);
+
+// Maximum width for large screens
+.max-width {
+  max-width: 1920px; // equal to "lg" in Angular breakpoints
+  margin: auto;
+}
 
 landing-header {
-  background-image: url("/assets/images/banner_header.png");
-  a {
-    margin-top: 80px;
-  }
-  h4 {
-    text-transform: uppercase;
-  }
-  p {
-    width: 75%;
+  padding: 0;
+
+  header {
+    padding: 60px 200px;
+    background-image: url("/assets/images/banner_header.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    a, h2 {
+      margin-top: 24px;
+    }
+    h4 {
+      text-transform: uppercase;
+    }
+    p {
+      width: 75%;
+    }
   }
 }
 
 landing-content {
+  // TODO issue #6523 move all this commit's code to shell component 
+  padding: 48px 240px;
+
   h1 {
     margin-bottom: 12px;
   }
@@ -48,6 +65,12 @@ landing-content {
   }
 }
 
+@include layout-bp(lt-lg) {
+  landing-content {
+    padding: 48px 140px;
+  }
+}
+
 @include layout-bp(lt-md) {
   landing-header {
     p {
@@ -55,6 +78,7 @@ landing-content {
     }
   }
   landing-content {
+    padding: 48px 64px;
     article mat-card {
       width: 75%;
     }
@@ -69,9 +93,29 @@ landing-content {
     }
   }
   landing-content {
+    padding: 24px 8px;
     text-align: center;
     article mat-card {
       width: 100%;
     }
+  }
+}
+
+@include layout-bp(gt-lg) {
+  landing-header {
+    header {
+      background-image: linear-gradient(
+        to right, 
+        $banner-background 0%,
+        rgba(0, 0, 0, 0) 40px,
+        rgba(0, 0, 0, 0) calc(100% - 40px),
+        $banner-background 100%
+      ),
+      url("/assets/images/banner_header.png");
+    }
+  }
+
+  landing-content {
+    padding: 48px 0px;
   }
 }

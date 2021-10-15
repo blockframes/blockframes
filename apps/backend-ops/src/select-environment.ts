@@ -46,7 +46,7 @@ async function updateSAKPathInDotenv(projectId: string) {
     if (isJSON(process.env[GAPKey])) {
       // * Is an object, write to disk
       await writeFile(resolve(SAKDirPath, 'creds.json'), process.env[GAPKey], 'utf-8');
-      return updateDotenv(SAKKeyName, join(SAKDirPath, 'creds.json'));
+      return updateDotenv(SAKKeyName, join(process.cwd(), SAKDirPath, 'creds.json'));
     } else return updateDotenv(SAKKeyName, process.env[GAPKey]); // * Is a path
   }
 
@@ -58,7 +58,7 @@ async function updateSAKPathInDotenv(projectId: string) {
   const SAKFilename = await findSAKFilename(SAKDirPath, projectId);
 
   if (SAKFilename) {
-    const SAKPath = join(SAKDirPath, SAKFilename);
+    const SAKPath = join(process.cwd(), SAKDirPath, SAKFilename);
     return updateDotenv(SAKKeyName, SAKPath);
   } else {
     console.warn('WARNING: Service account key may not exist or have correct permissions! Run health check to confirm...');

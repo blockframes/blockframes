@@ -5,8 +5,8 @@ interface WebkitElement extends Element {
   webkitExitFullscreen();
 }
 
-function isWebkit(el: Node): el is WebkitElement {
-  return 'webkitRequestFullscreen' in el && 'webkitExitFullscreen' in el;
+function isWebkit(el: Node, mode: 'request' | 'exit' ): el is WebkitElement {
+  return mode === 'request' ? 'webkitRequestFullscreen' in el : 'webkitExitFullscreen' in el;
 }
 
 /** Toggle the full screen mode depending on the current full screen state */
@@ -15,14 +15,14 @@ export function toggleFullScreen(container: ElementRef<HTMLDivElement>, document
     if (container.nativeElement.requestFullscreen) {
       container.nativeElement.requestFullscreen();
       // Safari Browser
-    } else if (isWebkit(container.nativeElement)) {
+    } else if (isWebkit(container.nativeElement, 'request')) {
       container.nativeElement.webkitRequestFullscreen();
     }
   } else {
     if (document.exitFullscreen) {
       document.exitFullscreen();
       // Safari Browser
-    } else if (isWebkit(document)) {
+    } else if (isWebkit(document, 'exit')) {
       document.webkitExitFullscreen();
     }
   }

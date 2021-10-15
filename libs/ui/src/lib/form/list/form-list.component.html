@@ -6,7 +6,7 @@
 
   <ng-container *ngIf="list$ | async as list">
     <ng-container *ngIf="list.length">
-      <mat-list class="surface">
+      <mat-list>
         <mat-list-item *ngFor="let item of list; let index = index">
           <ng-template [ngTemplateOutlet]="itemRef || text" [ngTemplateOutletContext]="{ $implicit: item, index: index }" matLine>
           </ng-template>

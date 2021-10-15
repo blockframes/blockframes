@@ -1,12 +1,14 @@
-import { ChangeDetectionStrategy, Component, ContentChild, Directive, HostBinding, Input, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ContentChild, Directive, HostBinding, Input, OnDestroy, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { createDemoRequestInformations, RequestDemoInformations } from '@blockframes/utils/request-demo';
 import { MatSnackBar } from '@angular/material/snack-bar'
-import { getCurrentApp, getAppName } from '@blockframes/utils/apps';
+import { getCurrentApp } from '@blockframes/utils/apps';
+import { MailchimpTag } from '@blockframes/utils/mailchimp/mailchimp-model';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { RequestDemoRole } from '@blockframes/utils/request-demo';
 import { ThemeService } from '@blockframes/ui/theme';
+import { testEmail } from "@blockframes/e2e/utils/env";
 
 @Directive({
   selector: 'landing-header, [landingHeader]',
@@ -20,6 +22,9 @@ export class LandingContentDirective { }
 
 @Directive({selector: 'landing-contact, [landingContact]'})
 export class LandingContactDirective { }
+
+@Directive({selector: 'landing-detail, [landingDetail]'})
+export class LandingDetailDirective { }
 
 @Component({
   selector: 'landing-footer',
@@ -39,10 +44,11 @@ export class LandingFooterComponent { }
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })
-export class LandingShellComponent {
+export class LandingShellComponent implements OnDestroy {
   public submitted = false;
-  public appName = getAppName(getCurrentApp(this.routerQuery));
-  public buttonText = 'Send Request';
+  public newslettersSubmitted = false;
+  public appName = getCurrentApp(this.routerQuery);
+  public buttonText = 'Submit Demo Request';
 
   @Input() roles: RequestDemoRole[] = [
     'buyer',
@@ -56,19 +62,31 @@ export class LandingShellComponent {
     email: new FormControl('', Validators.email),
     phoneNumber: new FormControl(''),
     companyName: new FormControl(''),
-    role: new FormControl('')
+    role: new FormControl(''),
+    newsletters: new FormControl(false)
+  });
+
+  public newslettersForm = new FormGroup({
+    email: new FormControl('', Validators.email)
   });
 
   @ContentChild(LandingContactDirective) landingContactDirective: LandingContactDirective
+  @ContentChild(LandingDetailDirective) landingDetailDirective: LandingDetailDirective
   @ContentChild(LandingFooterComponent) landingFooterComponent: LandingFooterComponent
 
   constructor(
     private snackBar: MatSnackBar,
     private routerQuery: RouterQuery,
     private functions: AngularFireFunctions,
-    theme: ThemeService)
-  {
-    theme.initTheme('light');
+    private theme: ThemeService,
+    private cdr: ChangeDetectorRef
+  ) {
+    theme.setTheme('light')
+  }
+
+  ngOnDestroy() {
+    // resetting theme to theme preference of system/browser
+    this.theme.initTheme('light')
   }
 
   /** Send a mail to the admin with user's informations. */
@@ -77,8 +95,15 @@ export class LandingShellComponent {
     return f(information).toPromise();
   }
 
+  /** Register an email to a mailchimp mailing list */
+  private async registerEmailToNewsletters(email: string) {
+    const f = this.functions.httpsCallable('registerToNewsletter');
+    const tags: MailchimpTag[] = ['landing', this.appName, `landing - ${this.appName}`] as MailchimpTag[]
+    return f({email, tags}).toPromise();
+  }
+
   /** Triggers when a user click on the button from LearnMoreComponent.  */
-  public sendRequest(form: FormGroup) {
+  public async sendRequest(form: FormGroup) {
     if (form.invalid) {
       this.snackBar.open('Please fill the required informations.', 'close', { duration: 2000 });
       return;
@@ -87,12 +112,35 @@ export class LandingShellComponent {
       this.buttonText = 'Sending Request...';
       const currentApp = getCurrentApp(this.routerQuery);
       const information: RequestDemoInformations = createDemoRequestInformations({ app: currentApp, ...form.value });
+      if ('Cypress' in window) {
+        information.test = true;
+        information.testEmailTo = testEmail;
+      }
 
-      this.sendDemoRequest(information);
+      await this.sendDemoRequest(information);
+      if (information.newsletters) {
+        await this.registerEmailToNewsletters(information.email);
+        this.newslettersSubmitted = true;
+      }
+
       this.buttonText = 'Request Sent';
-      this.snackBar.open('Your request has been sent.', 'close', { duration: 2000 });
+      this.snackBar.open('Request sent', 'close', { duration: 2000 });
       this.submitted = true;
+      this.cdr.markForCheck();
     } catch (error) {
+      this.snackBar.open(error.message, 'close', { duration: 5000 });
+    }
+  }
+
+  public async subscribeToNewsletters(form: FormGroup) {
+    try {
+      await this.registerEmailToNewsletters(form.value.email);
+      this.newslettersSubmitted = true;
+      this.snackBar.open('Subscribed to newsletters', 'close', { duration: 2000 });
+      this.cdr.markForCheck();
+
+    } catch (error) {
+      console.log("error", error)
       this.snackBar.open(error.message, 'close', { duration: 5000 });
     }
   }

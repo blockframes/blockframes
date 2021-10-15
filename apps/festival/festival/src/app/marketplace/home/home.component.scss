@@ -18,6 +18,10 @@
     }
     .links {
       margin-top: 24px;
+
+      a {
+        height: fit-content
+      }
     }
   }
 }
@@ -59,7 +63,7 @@ movie-slide {
 
 @include layout-bp(gt-sm) {
   .banner, movie-slide {
-    padding: 80px;
+    padding: 40px 80px;
   }
   .banner {
     flex-direction: row;

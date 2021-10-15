@@ -1,7 +1,7 @@
 <ng-container *ngIf="organization$ | async as org">
   <header fxLayout="row" fxLayoutAlign="space-between start">
     <article fxLayout="row" fxLayoutAlign="space-around start">
-      <img [ref]="org.logo" type="logo" asset="empty_organization.webp" alt="organization logo">
+      <img [ref]="org.logo" type="logo" asset="empty_organization.svg" alt="organization logo">
       <div class="org-info">
         <h1>{{ org | orgName }}</h1>
         <h3>{{ org.activity | toLabel: 'orgActivity' }}</h3>

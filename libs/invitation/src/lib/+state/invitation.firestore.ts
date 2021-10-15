@@ -1,7 +1,8 @@
 import { PublicOrganization } from "@blockframes/organization/+state/organization.firestore";
 import type firebase from 'firebase';
 import { PublicUser } from "@blockframes/user/+state/user.firestore";
-
+import type { InvitationStatus, InvitationType } from "@blockframes/utils/static-model";
+export  { InvitationType, InvitationStatus, invitationStatus } from "@blockframes/utils/static-model";
 type Timestamp = firebase.firestore.Timestamp;
 
 /**
@@ -43,13 +44,6 @@ export interface PublicInvitation {
 /** Specific types of Invitation, both used in firebase functions. */
 export type InvitationDocument = InvitationBase<Timestamp>;
 export type InvitationOrUndefined = InvitationDocument | undefined;
-
-/** Status of an Invitation. Set to pending by default, get erased if accepted, archived if declined. */
-export const invitationStatus = ['accepted', 'declined', 'pending'] as const;
-export type InvitationStatus = typeof invitationStatus[number];
-
-/** Type of Invitation depending of its purpose. */
-export type InvitationType = 'attendEvent' | 'joinOrganization';
 
 export type InvitationMode = 'request' | 'invitation';
 

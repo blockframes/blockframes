@@ -1,0 +1,38 @@
+
+<section fxLayout="column" fxLayoutAlign="center center">
+  <h1>Import multiple titles at once</h1>
+
+  <div fxLayout="column" fxLayoutAlign="center" fxLayoutGap="8px">
+    <a
+      color="primary"
+      mat-stroked-button
+      download="import-titles-template.xlsx"
+      href="/assets/templates/import-titles-template.xlsx"
+    >
+      <mat-icon svgIcon="cloud_download"></mat-icon><span>Download our excel titles template</span>
+    </a>
+  </div>
+</section>
+
+<section class="help-section" fxLayout="column" fxLayoutAlign="center center">
+  <p>Once you have filled it out, please upload it below.</p>
+  <button mat-button (click)="openIntercom()">Need help?</button>
+</section>
+
+<section class="file-section" fxLayout="column" fxLayoutAlign="center center">
+
+  <ng-container *ngIf="!sheetTab; else ready">
+    <import-spreadsheet importType="titles" (importEvent)="imported($event)"></import-spreadsheet>
+  </ng-container>
+  <ng-template #ready>
+    <import-view-extracted-titles [sheetTab]="sheetTab"></import-view-extracted-titles>
+    <p>Please make sure everything is correct. Once you submit your titles they will instantaneously appear on the platform.</p>
+    <button test-id="cancel-import" mat-stroked-button color="warn" (click)="cancel()">
+      <mat-icon svgIcon="block"></mat-icon>
+      <span>Cancel</span>
+    </button>
+  </ng-template>
+
+</section>
+
+<img asset="import_bulk.svg" alt="Start import" width="220px">

@@ -39,26 +39,32 @@
   <!-- Footer -->
   <footer>
     <article
-      *ngIf="movie | hasKeys: ['promotional.scenario.storagePath', 'promotional.moodboard.storagePath', 'promotional.presentation_deck.storagePath']"
-    >
+      *ngIf="movie | hasKeys: ['promotional.scenario.storagePath', 'promotional.moodboard.storagePath', 'promotional.presentation_deck.storagePath']">
       <h2>Files</h2>
       <div grid>
+        <mat-card [col]="3" *ngIf="movie.delivery?.file?.storagePath">
+          <img asset="delivery_list.svg" alt="file with gears"/>
+          <a mat-button [href]="movie.delivery?.file| getDownloadUrl | async" target="_blank">
+            <mat-icon svgIcon="cloud_download"></mat-icon>
+            <span>Available Materials</span>
+          </a>
+        </mat-card>
         <mat-card [col]="3" *ngIf="!!movie.promotional.presentation_deck.storagePath">
-          <img asset="deck.webp" />
+          <img asset="deck.svg" />
           <a mat-button [href]="movie.promotional.presentation_deck | getUrl | async" target="_blank">
             <mat-icon svgIcon="cloud_download"></mat-icon>
             <span>Presentation Deck</span>
           </a>
         </mat-card>
         <mat-card [col]="3" *ngIf="!!movie.promotional.scenario.storagePath">
-          <img asset="scenario.webp" />
+          <img asset="scenario.svg" />
           <a mat-button [href]="movie.promotional.scenario | getUrl | async" target="_blank">
             <mat-icon svgIcon="cloud_download"></mat-icon>
             <span>Script</span>
           </a>
         </mat-card>
         <mat-card [col]="3" *ngIf="!!movie.promotional.moodboard.storagePath">
-          <img asset="moodboard.webp" />
+          <img asset="moodboard.svg" />
           <a mat-button [href]="movie.promotional.moodboard | getUrl | async" target="_blank">
             <mat-icon svgIcon="cloud_download"></mat-icon>
             <span>Moodboard</span>
@@ -70,8 +76,9 @@
     <article *ngIf="movie.promotional.still_photo.length">
       <h2>Images</h2>
       <bf-carousel flex [min]="3">
-        <ng-container *ngFor="let photo of movie.promotional.still_photo">
-          <img carouselItem [col]="4" [ref]="photo" asset="empty_still_photo.webp" loading="eager" (click)="fullscreen(photo)">
+        <ng-container *ngFor="let photo of movie.promotional.still_photo; let i = index">
+          <img carouselItem [col]="4" [ref]="photo" asset="empty_still_photo.svg" loading="eager"
+            (click)="fullscreen(movie.promotional.still_photo, i)">
         </ng-container>
       </bf-carousel>
     </article>
@@ -79,10 +86,12 @@
     <article id="videoFooter" *ngIf="movie.promotional.videos.otherVideos.length">
       <h2>Videos</h2>
       <div gdColumns="1fr 1fr" gdGap="16px">
-        <div class="video-container" *ngFor="let video of movie.promotional.videos.otherVideos">
-          <video-viewer [ref]="video" *ngIf="video.jwPlayerId"></video-viewer>
-          <p>{{ video.title || (video.type | toLabel: 'hostedVideoTypes') }}</p>
-        </div>
+        <ng-container *ngFor="let video of movie.promotional.videos.otherVideos">
+          <div class="video-container" *ngIf="video.privacy === 'public'">
+            <video-viewer [ref]="video" *ngIf="video.jwPlayerId"></video-viewer>
+            <p>{{ video.title || (video.type | toLabel: 'hostedVideoTypes') }}</p>
+          </div>
+        </ng-container>
       </div>
     </article>
   </footer>

@@ -18,3 +18,8 @@ export * from './date.pipe';
 export * from './url.pipe';
 export * from './cms.pipe';
 export * from './sort-array.pipe';
+export * from './join.pipe'
+export * from './total.pipe'
+export * from './first-user-from-orgId.pipe'
+export * from './group-label.pipe'
+export * from './version.pipe'

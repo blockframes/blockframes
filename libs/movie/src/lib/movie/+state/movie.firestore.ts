@@ -1,4 +1,4 @@
-import {
+import type {
   Language,
   MediaValue,
   Scoring,
@@ -17,15 +17,14 @@ import {
   ShootingPeriod,
   HostedVideoType,
   Territory,
-  SocialGoal
-} from "@blockframes/utils/static-model";
-import { NumberRange } from "@blockframes/utils/static-model/types";
+  SocialGoal,
+  NumberRange
+} from "@blockframes/utils/static-model/types";
 import { Producer, Crew, Cast, Stakeholder, Director } from "@blockframes/utils/common-interfaces/identity";
 import type firebase from 'firebase';
-import { AnalyticsEvents } from '@blockframes/utils/analytics/analytics-model';
+import { AnalyticsEvents, AnalyticsBase } from '@blockframes/utils/analytics/analytics-model';
 import { App } from "@blockframes/utils/apps";
 import { DocumentMeta } from "@blockframes/utils/models-meta";
-import { AnalyticsBase } from '@blockframes/utils/analytics/analytics-model';
 import { StorageFile, StorageVideo } from "@blockframes/media/+state/media.firestore";
 
 //////////////////
@@ -43,7 +42,7 @@ export interface MovieBase<D> {
   promotional: MoviePromotionalElements;
 
   // Every field concerning the movie
-  app: Partial<{[app in App]: MovieAppConfig<D>}>, //! required
+  app: Partial<{ [app in App]: MovieAppConfig<D> }>, //! required
   audience?: MovieGoalsAudience,
   banner?: StorageFile;
   boxOffice?: BoxOffice[],
@@ -84,20 +83,20 @@ export interface MovieBase<D> {
   synopsis: string, //! required
   title: Title, //! required
   orgIds: string[] //! required
-  campaignStarted: D
+  campaignStarted: D,
+
+  //CATALOG specific
+  delivery?: {
+    file: StorageFile,
+  }
 }
 
 /** Document model of a Movie */
 export type MovieDocument = MovieBase<Timestamp>
 
-/** Public interface of a movie (to notifications). */
-export interface PublicMovie {
-  id: string;
-  title: Title;
-}
-
 export interface MovieVideos {
   screener?: MovieVideo; // Main screener
+  salesPitch?: MovieVideo; // Sales pitch
   otherVideos?: MovieVideo[]; // Other videos
 }
 
@@ -112,24 +111,12 @@ export interface MovieVideo extends StorageVideo {
 ////////////////////
 
 export interface MoviePromotionalElements {
-
-  financialDetails: StorageFile,
   moodboard: StorageFile,
   notes: MovieNote[],
   presentation_deck: StorageFile,
-  salesPitch: MovieSalesPitch,
   scenario: StorageFile,
   still_photo: StorageFile[],
   videos?: MovieVideos,
-
-  // @TODO #5350 remove the component for external links
-  // + migration for cleaning
-  clip_link: string,
-  promo_reel_link: string,
-  screener_link: string,
-  teaser_link: string,
-  trailer_link: string,
-  other_links: OtherLink[],
 }
 
 ////////////////////
@@ -221,11 +208,6 @@ export interface MovieRunningTime {
   episodeCount?: number
 }
 
-export interface OtherLink {
-  name: string;
-  url: string;
-}
-
 export interface MovieShootingRaw<D> {
   dates?: MovieShootingDateRaw<D>,
   locations?: MovieShootingLocations[]
@@ -265,10 +247,6 @@ export interface MovieExpectedPremiereRaw<D> {
 }
 
 export type MovieExpectedPremiere = MovieExpectedPremiereRaw<Date>
-
-export interface MovieSalesPitch extends StorageVideo {
-  description?: string,
-}
 
 export interface MovieGoalsAudience {
   targets: string[],

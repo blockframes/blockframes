@@ -63,3 +63,9 @@ tools/fixtures/**
 
 # cache
 .cache
+
+# Report
+report.*.json
+
+# Cypress Env
+**/cypress.env.json

@@ -22,12 +22,16 @@ const functionsConfigMap: Record<string, string> = {
   'relayer.mnemonic': 'ETHEREUM_MNEMONIC',
   'jwplayer.key': 'JWPLAYER_KEY',// @see https://www.notion.so/cascade8/Setup-JWPlayer-2276fce57b464b329f0b6d2e7c6d9f1d
   'jwplayer.secret': 'JWPLAYER_SECRET',
+  'jwplayer.apiv2secret': 'JWPLAYER_APIV2SECRET',
   'algolia.api_key': 'ALGOLIA_API_KEY',
   'imgix.token': 'IMGIX_TOKEN',// @see https://www.notion.so/cascade8/Setup-ImgIx-c73142c04f8349b4a6e17e74a9f2209a
   'twilio.account.sid': 'TWILIO_ACCOUNT_SID',
   'twilio.account.secret': 'TWILIO_ACCOUNT_SECRET',
   'twilio.api.key.secret': 'TWILIO_API_KEY_SECRET',
-  'twilio.api.key.sid': 'TWILIO_API_KEY_SID'
+  'twilio.api.key.sid': 'TWILIO_API_KEY_SID',
+  'mailchimp.api_key': 'MAILCHIMP_API_KEY',
+  'mailchimp.server': 'MAILCHIMP_SERVER',
+  'mailchimp.list_id': 'MAILCHIMP_LIST_ID'
 }
 
 /**

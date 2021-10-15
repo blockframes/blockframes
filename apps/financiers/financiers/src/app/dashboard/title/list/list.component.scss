@@ -11,6 +11,9 @@ header.import-header {
 header[mat-tab-nav-bar] button {
   border: none;
   background-color: transparent;
+  span {
+    margin-left: 4px;
+  }
 }
 
 h3 {

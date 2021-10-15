@@ -1,7 +1,7 @@
 import type firebase from 'firebase';
 import { Location, createLocation } from '@blockframes/utils/common-interfaces/utility';
 import { OrgAppAccess, createOrgAppAccess, Module, App, getAllAppsExcept } from '@blockframes/utils/apps';
-import { OrgActivity, OrganizationStatus } from '@blockframes/utils/static-model/types';
+import type { OrgActivity, OrganizationStatus } from '@blockframes/utils/static-model/types';
 import { createStorageFile, StorageFile, StorageVideo } from '@blockframes/media/+state/media.firestore';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
 
@@ -50,7 +50,7 @@ export interface AddressSet {
 }
 
 /** Default placeholder logo used when an Organization is created. */
-export const PLACEHOLDER_LOGO = '/assets/logo/empty_organization.webp';
+export const PLACEHOLDER_LOGO = '/assets/logo/empty_organization.svg';
 
 
 /** A factory function that creates an OrganizationDocument. */
@@ -101,7 +101,7 @@ export function createOrgMedias(params: Partial<OrgMedias> = {}): OrgMedias {
 }
 
 export function orgName(org: PublicOrganization, type: 'public' | 'full' = 'public') {
-  if (org) {
+  if (org?.denomination) {
     return org.denomination[type] || org.denomination.full;
   } else {
     return '';

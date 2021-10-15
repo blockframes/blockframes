@@ -7,6 +7,7 @@ import { OrganizationService } from '@blockframes/organization/+state';
 import { ENTER, COMMA, SEMICOLON, SPACE } from '@angular/cdk/keycodes';
 import { Validators } from '@angular/forms';
 import { map, startWith } from 'rxjs/operators';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: '[eventId] invitation-form-user',
@@ -50,6 +51,7 @@ export class UserComponent implements OnInit {
     private invitationService: InvitationService,
     private invitationQuery: InvitationQuery,
     private orgService: OrganizationService,
+    private snackBar: MatSnackBar
   ) { }
 
   ngOnInit() {
@@ -76,12 +78,40 @@ export class UserComponent implements OnInit {
   /** Send an invitation to a list of persons, either to existing user or by creating user  */
   async invite() {
     if (this.form.valid && this.form.value.length) {
-      const emails = this.form.value.map(guest => guest.email.trim());
-      this.form.reset([]);
-      this.sending.next(true);
-      const fromOrg = this.ownerOrgId ? await this.orgService.getValue(this.ownerOrgId) : undefined;
-      await this.invitationService.invite(emails, fromOrg).to('attendEvent', this.eventId);
-      this.sending.next(false);
+      try {
+        const unique = Array.from(new Set(this.form.value.map(guest => guest.email.trim().toLowerCase())));
+
+        // Retreive emails that are not already invited and that did not already made a request to attend event
+        const isInvited = (inv, email) => inv.toUser?.email === email && inv.mode === 'invitation';
+        const hasRequested = (inv, email) => inv.fromUser?.email === email && inv.mode === 'request';
+
+        const emails = unique.filter(email => !this.invitations.some(inv => isInvited(inv, email) || hasRequested(inv, email)));
+
+        // Retreive existing requests for emails we want to invite
+        const requests = unique.map(email => this.invitations.find(inv => hasRequested(inv, email) && inv.status === 'pending')).filter(inv => !!inv);
+
+        this.form.reset([]);
+        this.sending.next(true);
+        const fromOrg = this.ownerOrgId ? await this.orgService.getValue(this.ownerOrgId) : undefined;
+
+        // Send invitation to emails
+        if (emails.length) {
+          await this.invitationService.invite(emails, fromOrg).to('attendEvent', this.eventId);
+        }
+
+        // Accept existing requests
+        const promises = requests.map(req => this.invitationService.acceptInvitation(req));
+        await Promise.all(promises);
+
+        if (promises.length === 0 && emails.length === 0) {
+          this.snackBar.open('All selected emails are already invited', 'close', { duration: 5000 });
+        }
+
+        this.sending.next(false);
+      } catch (error) {
+        this.sending.next(false);
+        this.snackBar.open(error.message, 'close', { duration: 5000 });
+      }
     }
   }
 

@@ -1,0 +1,23 @@
+
+<ng-container *ngIf="offer$ | async as offer; else loading">
+  <header class="dark-contrast-theme" fxLayout fxLayoutAlign="space-between center" bgAsset="empty_banner.png">
+    <div>
+      <a mat-icon-button routerLink="..">
+        <mat-icon svgIcon="arrow_back"></mat-icon>
+      </a>
+      <h1>Offer Reference: {{offer.id}}</h1>
+      <p>Offer created: {{offer._meta.createdAt | date: 'dd/MM/yyyy'}}</p>
+      <org-chip *ngIf="offer.buyer as org" [org]="org" baseUrl="/c/o/dashboard/crm/organization" ></org-chip>
+    </div>
+    <div class="contracts" *ngIf="offer.contracts as contracts">
+      <p>{{ contracts.length }} titles</p>
+      <p>Total: {{ contracts | total:'income.price' | currency: offer.currency }}</p>
+    </div>
+  </header>
+
+  <router-outlet></router-outlet>
+
+</ng-container>
+<ng-template #loading>
+  <mat-spinner></mat-spinner>
+</ng-template>

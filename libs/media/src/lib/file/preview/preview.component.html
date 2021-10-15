@@ -1,12 +1,12 @@
-<section fxLayout fxLayoutAlign="end">
+<header fxLayout fxLayoutAlign="end">
   <button mat-icon-button (click)="close()">
     <mat-icon svgIcon="close"></mat-icon>
   </button>
-</section>
+</header>
 
 <ng-container [ngSwitch]="data.ref.storagePath | fileType">
   <ng-container *ngSwitchCase="'image'">
-    <img [ref]="data.ref" asset="no_titles.webp" />
+    <img [ref]="data.ref" asset="no_titles.svg" />
   </ng-container>
   <ng-container *ngSwitchCase="'pdf'">
     <pdf-viewer [ref]="data.ref"></pdf-viewer>

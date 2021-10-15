@@ -23,6 +23,7 @@ mat-sidenav-content {
     the content and we don't want to use !important */
     a {
       margin-right: 24px;
+      align-self: center;
     }
 
     a:first-of-type {
@@ -45,6 +46,6 @@ app-bar {
 }
 
 /* Outline none used to remove the automatic rectangular focus on Safari */
-.outline-logo {
+a[app-logo] {
   outline: none;
 }

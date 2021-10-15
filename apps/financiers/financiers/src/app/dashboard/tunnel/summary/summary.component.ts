@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
@@ -7,7 +7,6 @@ import { ConsentsService } from '@blockframes/consents/+state/consents.service';
 import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
 import { findInvalidControls } from '@blockframes/ui/tunnel/layout/layout.component';
 import { map } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 
@@ -17,12 +16,15 @@ import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-inp
   styleUrls: ['./summary.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TunnelSummaryComponent implements OnInit, OnDestroy {
+export class TunnelSummaryComponent implements OnInit {
   form = this.shell.getForm('movie');
   campaignForm = this.shell.getForm('campaign');
-  subscription: Subscription;
-  missingFields: string[] = [];
-  invalidFields: string[] = [];
+  // Fields displayed in component that are in error or missing but mandatory
+  blockingFields: string[] = [];
+  // Missing but mandatory fields
+  private missingFields: string[] = [];
+  // Fields in error
+  private invalidFields: string[] = [];
   isPublished$ = this.query.selectActive(movie => movie.app.financiers.status).pipe(
     map(status => status === 'accepted' || status === 'submitted')
   )
@@ -42,12 +44,10 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.missingFields = findInvalidControls(this.form);
-    this.subscription = this.form.valueChanges.subscribe(() => this.missingFields = findInvalidControls(this.form));
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    const { missingFields, errorFields } = findInvalidControls(this.form);
+    this.invalidFields = errorFields;
+    this.missingFields = missingFields;
+    this.blockingFields = Array.from(new Set(errorFields.concat(missingFields)));
   }
 
   public async submit() {
@@ -67,12 +67,15 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
             const ref = this.snackBar.open(text, '', { duration: 1000 });
             ref.afterDismissed().subscribe(() => this.router.navigate(['../end'], { relativeTo: this.route }))
           } catch (err) {
-            console.error(err);
             // Log the invalid forms
-            this.snackBar.open('Mandatory information is missing.', '', { duration: 2000 });
+            if (this.invalidFields.length) {
+              this.snackBar.open('Some fields have invalid information.', '', { duration: 2000 });
+            } else if (this.missingFields.length) {
+              this.snackBar.open('Mandatory information is missing.', '', { duration: 2000 });
+            }
           }
         }
       }
-    })
+    });
   }
 }

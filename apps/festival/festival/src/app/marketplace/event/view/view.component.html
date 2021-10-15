@@ -10,7 +10,7 @@
             <org-chip [org]="event.org"></org-chip>
           </movie-header-preferences>
           <movie-header-cta>
-            <a mat-stroked-button color="primary" [routerLink]="['../../title', event.movie.id]">
+            <a mat-flat-button color="primary" [routerLink]="['../../title', event.movie.id]">
               More Details
             </a>
           </movie-header-cta>
@@ -23,7 +23,7 @@
           <h2>Organized by</h2>
           <div fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
             <a matRipple [routerLink]="['/c/o/marketplace/organization', event.org.id]">
-              <img [ref]="event.org.logo" asset="empty_organization.webp" type="logo" alt="Organization Logo">
+              <img [ref]="event.org.logo" asset="empty_organization.svg" type="logo" alt="Organization Logo">
             </a>
             <div fxLayout="column" fxLayoutGap="4px">
               <h6><a [routerLink]="['/c/o/marketplace/organization', event.org.id]">{{ event.org | orgName }}</a></h6>

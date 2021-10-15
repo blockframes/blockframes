@@ -12,13 +12,11 @@ import {
   Prize,
   BoxOffice,
   MovieRelease,
-  OtherLink,
   MovieShooting,
   MovieShootingDate,
   MovieExpectedPremiere,
   MoviePlannedShooting,
   MovieGoalsAudience,
-  MovieSalesPitch,
   MovieVideos,
   MovieVideo,
   MovieBase,
@@ -32,7 +30,7 @@ import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 import { App, getAllAppsExcept } from '@blockframes/utils/apps';
 
 // Export for other files
-export { Credit, SalesAgent } from '@blockframes/utils/common-interfaces/identity';
+export { Credit } from '@blockframes/utils/common-interfaces/identity';
 export {
   MoviePromotionalElements,
   MovieStakeholders,
@@ -105,34 +103,14 @@ export function createMoviePromotional(
   params: Partial<MoviePromotionalElements> = {}
 ): MoviePromotionalElements {
   return {
-    clip_link: params.clip_link ?? '',
-    promo_reel_link: params.promo_reel_link ?? '',
-    screener_link: params.screener_link ?? '',
-    trailer_link: params.trailer_link ?? '',
-    teaser_link: params.teaser_link ?? '',
-    other_links: params.other_links ?? [],
-
     ...params,
-
-    financialDetails: createStorageFile(params?.financialDetails),
     moodboard: createStorageFile(params?.moodboard),
     notes: params?.notes?.map(note => createMovieNote(note)) ?? [],
-    salesPitch: createSalesPitch(params.salesPitch),
     still_photo: params?.still_photo?.map(still => createStorageFile(still)) ?? [],
     presentation_deck: createStorageFile(params?.presentation_deck),
     scenario: createStorageFile(params?.scenario),
     videos: createMovieVideos(params?.videos),
   };
-}
-
-export function createSalesPitch(params: Partial<MovieSalesPitch> = {}): MovieSalesPitch {
-  const video = createStorageFile(params);
-  return {
-    description: '',
-    jwPlayerId: '',
-    ...video,
-    ...params,
-  }
 }
 
 export function createLanguageKey(languages: Partial<{ [language in Language]: MovieLanguageSpecification }> = {}): LanguageRecord {
@@ -336,19 +314,12 @@ export function getMovieTotalViews(analytics: MovieAnalytics[], movieId: string)
   }
 }
 
-export function createOtherLink(otherLink: Partial<OtherLink> = {}): OtherLink {
-  return {
-    name: otherLink.name ?? '',
-    url: otherLink.url ?? '',
-  }
-}
-
 export function createMovieVideos(params: Partial<MovieVideos>): MovieVideos {
   return {
     ...params,
     screener: createMovieVideo(params?.screener),
-    // @TODO #5494 remove "?" in "map?."
-    otherVideos: params?.otherVideos?.map?.(video => createMovieVideo(video)) || [],
+    salesPitch: createMovieVideo(params?.salesPitch),
+    otherVideos: params?.otherVideos?.map(video => createMovieVideo(video)) || [],
   }
 }
 
