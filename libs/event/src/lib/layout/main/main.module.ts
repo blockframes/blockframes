@@ -22,6 +22,7 @@ import { SessionGuard } from '../../guard/session.guard';
 import { IdentityCheckGuard } from '../../guard/identity-check-guard';
 import { AnonymousAuthGuard } from '@blockframes/auth/guard/anonymous-auth-guard';
 import { EventRoleGuard } from '../../guard/event-role.guard';
+import { InvitationGuard } from '@blockframes/invitation/guard/invitations.guard';
 
 // Material
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -37,7 +38,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 const routes: Routes = [{
   path: ':eventId',
   component: MainComponent,
-  canActivate: [AnonymousAuthGuard, EventActiveGuard],
+  canActivate: [AnonymousAuthGuard, EventActiveGuard, InvitationGuard],
   canDeactivate: [AnonymousAuthGuard],
   children: [
     {

@@ -31,7 +31,7 @@ export class SessionGuard implements CanActivate {
       if (status === 'accepted' || status === 'owner') {
         return true;
       }
-      return this.router.parseUrl(`/c/o/marketplace/event/${event.id}/lobby`);
+      return this.router.parseUrl(`/event/${event.id}/r/i/lobby`);
     }
 
     return true;

@@ -54,7 +54,6 @@ export class SessionComponent implements OnInit, OnDestroy {
   private countdownId: number = undefined;
 
   private watchTimeInterval: Subscription;
-  private invitationId: string;
   public isPlaying = false;
 
   constructor(
@@ -94,13 +93,14 @@ export class SessionComponent implements OnInit, OnDestroy {
               filterBy: invit => invit.eventId === event.id &&
                 (
                   invit.toUser?.uid === this.authQuery.userId ||
+                  invit.toUser?.email === this.authQuery.anonymousCredentials?.email ||
                   invit.fromUser?.uid === this.authQuery.userId
                 )
             });
 
+            const invitationId = invitation.id || this.authQuery.anonymousCredentials?.invitationId;
             // this should never happen since previous checks & guard should have worked
-            if (!invitation) throw new Error(`Missing Screening Invitation`);
-            this.invitationId = invitation.id;
+            if (!invitationId) throw new Error(`Missing Screening Invitation`);
 
             this.watchTimeInterval?.unsubscribe();
 
@@ -108,16 +108,16 @@ export class SessionComponent implements OnInit, OnDestroy {
               filter(() => !!this.isPlaying),
               scan(watchTime => watchTime + 1, invitation.watchTime ?? 0),
               finalizeWithValue(watchTime => {
-                if (watchTime !== undefined) this.invitationService.update(this.invitationId, { watchTime });
+                if (watchTime !== undefined) this.invitationService.update(invitationId, { watchTime });
               }),
               filter(watchTime => watchTime % 60 === 0),
             ).subscribe(watchTime => {
-              this.invitationService.update(this.invitationId, { watchTime });
+              this.invitationService.update(invitationId, { watchTime });
             });
           }
         }
 
-      // MEETING
+        // MEETING
       } else if (isMeeting(event)) {
 
         this.dynTitle.setPageTitle(event.title, 'Meeting');
@@ -165,14 +165,14 @@ export class SessionComponent implements OnInit, OnDestroy {
         if (event.isOwner) {
           const attendees = event.meta.attendees;
           if (attendees[uid] !== 'owner') {
-            const meta: Meeting = { ...event.meta, attendees: { ...event.meta.attendees, [uid]: 'owner' }};
+            const meta: Meeting = { ...event.meta, attendees: { ...event.meta.attendees, [uid]: 'owner' } };
             this.service.update(event.id, { meta });
           }
 
           const requestUids = Object.keys(attendees).filter(userId => attendees[userId] === 'requesting');
           const requests = await this.userService.getValue(requestUids);
           if (requests.length) {
-            this.bottomSheet.open(DoorbellBottomSheetComponent, { data: { eventId: event.id, requests}, hasBackdrop: false });
+            this.bottomSheet.open(DoorbellBottomSheetComponent, { data: { eventId: event.id, requests }, hasBackdrop: false });
           }
 
           // If the current selected file hasn't any controls yet we should create them
@@ -191,7 +191,7 @@ export class SessionComponent implements OnInit, OnDestroy {
                   this.creatingControl$.next(true);
                   const control = await this.createPdfControl(selectedFile, event.id);
                   const controls = { ...event.meta.controls, [event.meta.selectedFile]: control };
-                  const meta  = { ...event.meta, controls };
+                  const meta = { ...event.meta, controls };
                   await this.service.update(event.id, { meta });
                   this.creatingControl$.next(false);
                   break;
@@ -199,7 +199,7 @@ export class SessionComponent implements OnInit, OnDestroy {
                   this.creatingControl$.next(true);
                   const control = await this.createVideoControl((selectedFile as StorageVideo), event.id);
                   const controls = { ...event.meta.controls, [event.meta.selectedFile]: control };
-                  const meta  = { ...event.meta, controls };
+                  const meta = { ...event.meta, controls };
                   await this.service.update(event.id, { meta });
                   this.creatingControl$.next(false);
                   break;
@@ -288,7 +288,7 @@ export class SessionComponent implements OnInit, OnDestroy {
   async createVideoControl(video: StorageVideo, eventId: string): Promise<MeetingVideoControl> {
     const getVideoInfo = this.functions.httpsCallable('privateVideo');
 
-    const { error, result} = await getVideoInfo({ video, eventId }).toPromise();
+    const { error, result } = await getVideoInfo({ video, eventId }).toPromise();
     if (error) {
       // if error is set, result will contain the error message
       throw new Error(result);

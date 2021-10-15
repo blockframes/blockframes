@@ -33,7 +33,7 @@ export class EventRoleGuard extends CollectionGuard<EventState> {
           }
 
           // If user choosen "organizer", he needs to login
-          if (anonymousCredentials?.role === 'organizer' && currentPage !== 'login') {
+          if (anonymousCredentials?.role === 'organizer' && currentPage.indexOf('login') !== 0) {
             return this.router.navigate([`/event/${eventId}/r/login`], { queryParams: next.queryParams });
           }
 

@@ -9,7 +9,8 @@ export { User } from '@blockframes/user/+state/user.firestore';
 
 export interface AnonymousCredentials extends Person {
   role?: 'guest' | 'organizer'; // Role for events
-  email?: string
+  email?: string,
+  invitationId?: string, // Invitation for the event
 }
 export interface Roles {
   blockframesAdmin: boolean;
