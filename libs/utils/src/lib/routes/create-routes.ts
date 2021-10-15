@@ -27,6 +27,21 @@ export function createRoutes({ appsRoutes, appName, landing, events }: RouteOpti
     ? [...landing.canActivate, UserRedirectionGuard]
     : [UserRedirectionGuard];
 
+  const endRules: Routes = [
+    {
+      path: 'not-found',
+      loadChildren: () => import('@blockframes/ui/error/error-not-found.module').then(m => m.ErrorNotFoundModule)
+    },
+    {
+      path: '**',
+      loadChildren: () => import('@blockframes/ui/error/error-not-found.module').then(m => m.ErrorNotFoundModule)
+    }
+  ];
+
+  if (events) {
+    endRules.unshift(events);
+  }
+
   // We need to put the spread operator in a local variable to make build works on prod
   const children = [
     ...appsRoutes,
@@ -83,15 +98,7 @@ export function createRoutes({ appsRoutes, appName, landing, events }: RouteOpti
             }
           ]
         },
-        events,
-        {
-          path: 'not-found',
-          loadChildren: () => import('@blockframes/ui/error/error-not-found.module').then(m => m.ErrorNotFoundModule)
-        },
-        {
-          path: '**',
-          loadChildren: () => import('@blockframes/ui/error/error-not-found.module').then(m => m.ErrorNotFoundModule)
-        }
+        ...endRules
       ]
     }]
 }
