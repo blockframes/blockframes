@@ -7,8 +7,8 @@
           <org-chip [org]="org"></org-chip>
           <div class="cta-button" fxFlex fxLayout fxLayoutAlign="space-between start" fxLayout.lt-md="column" fxLayoutGap.lt-md="16px">
             <a mat-flat-button color="primary" [href]="'mailto:' + org.email">
+              <mat-icon svgIcon="mail"></mat-icon>
               <span>{{ org.activity === 'intlSales' ? 'Contact Sales Agent' : 'Contact' }}</span>
-              <mat-icon svgIcon="arrow_forward"></mat-icon>
             </a>
             <ng-container *ngIf="(eventId$ | async) as eventId">
               <a ongoing-event-button [routerLink]="['/c/o/marketplace/event', eventId]">Ongoing Screening</a>
