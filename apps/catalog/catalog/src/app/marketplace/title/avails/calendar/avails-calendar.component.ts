@@ -4,7 +4,7 @@ import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy } from '@a
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { combineLatest, Observable, Subscription } from 'rxjs';
-import { filter, map, shareReplay, startWith, tap, throttleTime } from 'rxjs/operators';
+import { filter, map, shareReplay, startWith, throttleTime } from 'rxjs/operators';
 
 import {
   getDurations,
