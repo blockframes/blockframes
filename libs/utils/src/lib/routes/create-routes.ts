@@ -8,7 +8,6 @@ import { NotificationsGuard } from '@blockframes/notification/notifications.guar
 import { InvitationGuard } from '@blockframes/invitation/guard/invitations.guard';
 import { MaintenanceGuard } from '@blockframes/ui/maintenance';
 import { RequestAccessGuard } from '@blockframes/organization/guard/request-access.guard';
-import { EventAuthGuard } from '@blockframes/event/guard/event-auth.guard';
 interface RouteOptions {
   /** The routes of the apps */
   appsRoutes: Routes,
@@ -16,23 +15,12 @@ interface RouteOptions {
   appName: string,
   /** The route to the landing page if any */
   landing?: Route,
+  /** Event routes if any */
+  events?: Route,
 }
 
-const eventsRoutes = (appName: string) => {
-  if(appName === 'festival'){
-    return [
-      {
-        path: 'events', // @TODO #6756 rename into 'event'
-        canActivate: [MaintenanceGuard, EventAuthGuard],
-        loadChildren: () => import('@blockframes/event/layout/main/main.module').then(m => m.MainModule)
-      }
-    ];
-  }
-  
-  return [];
-}
 
-export function createRoutes({ appsRoutes, appName, landing }: RouteOptions) {
+export function createRoutes({ appsRoutes, appName, landing, events }: RouteOptions) {
   // Used for internal app
   landing = landing || { path: '', redirectTo: 'auth', pathMatch: 'full' };
   landing.canActivate = landing.canActivate
@@ -95,7 +83,7 @@ export function createRoutes({ appsRoutes, appName, landing }: RouteOptions) {
             }
           ]
         },
-        ...eventsRoutes(appName),
+        events,
         {
           path: 'not-found',
           loadChildren: () => import('@blockframes/ui/error/error-not-found.module').then(m => m.ErrorNotFoundModule)
