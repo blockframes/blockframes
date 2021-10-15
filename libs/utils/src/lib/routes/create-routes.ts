@@ -8,6 +8,7 @@ import { NotificationsGuard } from '@blockframes/notification/notifications.guar
 import { InvitationGuard } from '@blockframes/invitation/guard/invitations.guard';
 import { MaintenanceGuard } from '@blockframes/ui/maintenance';
 import { RequestAccessGuard } from '@blockframes/organization/guard/request-access.guard';
+
 interface RouteOptions {
   /** The routes of the apps */
   appsRoutes: Routes,
@@ -18,7 +19,6 @@ interface RouteOptions {
   /** Event routes if any */
   events?: Route,
 }
-
 
 export function createRoutes({ appsRoutes, appName, landing, events }: RouteOptions) {
   // Used for internal app
