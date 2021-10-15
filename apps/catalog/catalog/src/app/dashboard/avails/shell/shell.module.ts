@@ -22,6 +22,10 @@ const routes: Routes = [
         path: 'map',
         loadChildren: () => import('../map/map.module').then(m => m.CatalogDashboardAvailsMapModule)
       },
+      {
+        path: 'calendar',
+        loadChildren: () => import('../calendar/calendar.module').then(m => m.CatalogDashboardAvailsCalendarModule)
+      },
     ],
   },
 ]
@@ -33,13 +37,14 @@ const routes: Routes = [
   imports: [
     CommonModule,
     FlexLayoutModule,
-    RouterModule.forChild(routes),
 
     //material
     MatProgressSpinnerModule,
     MatButtonModule,
     MatIconModule,
     MatCardModule,
+
+    RouterModule.forChild(routes),
   ]
 })
 export class CatalogAvailsShellModule { }
