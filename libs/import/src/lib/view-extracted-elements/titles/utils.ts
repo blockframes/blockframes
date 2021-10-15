@@ -30,76 +30,76 @@ import {
 
 interface FieldsConfig {
   title: {
-    international: string,
-    original: string,
-    series: number | string,
-  },
-  internalRef: string,
-  contentType: string,
-  episodeCount: number,
-  productionStatus: string,
-  releaseYear: string,
-  releaseYearStatus: string,
+    international: string;
+    original: string;
+    series: number | string;
+  };
+  internalRef: string;
+  contentType: string;
+  episodeCount: number;
+  productionStatus: string;
+  releaseYear: string;
+  releaseYearStatus: string;
   directors: {
-    firstName: string, lastName: string,
+    firstName: string; lastName: string;
     description: string
-  }[],
-  originCountries: string[],
+  }[];
+  originCountries: string[];
   stakeholders: {
-    displayName: string, role: string,
-    country:string,
-  }[],
+    displayName: string; role: string;
+    country:string;
+  }[];
   originalRelease: {
-    country: string, media: string,
+    country: string; media: string;
     date: string
-  }[],
-  originalLanguages: string[],
-  genres: string[],
-  customGenres: string[],
-  runningTime: string,
-  runningTimeStatus: string,
+  }[];
+  originalLanguages: string[];
+  genres: string[];
+  customGenres: string[];
+  runningTime: string;
+  runningTimeStatus: string;
   cast: {
-    firstName: string, lastName: string, status: string
-  }[],
+    firstName: string; lastName: string; status: string
+  }[];
   prizes: {
-    name: string, year: string,
-    prize: string, premiere: string,
-  }[],
-  logline: string,
-  synopsis: string,
-  keyAssets: string,
-  keywords: string[],
+    name: string; year: string;
+    prize: string; premiere: string;
+  }[];
+  logline: string;
+  synopsis: string;
+  keyAssets: string;
+  keywords: string[];
   producers: {
-    firstName: string, lastName: string, role: string
-  }[],
+    firstName: string; lastName: string; role: string
+  }[];
   crew: {
-    firstName: string, lastName: string, role: string
-  }[],
-  budgetRange: string,
+    firstName: string; lastName: string; role: string
+  }[];
+  budgetRange: string;
   boxoffice: {
-    territory: string, unit: string, value: string
-  }[],
-  certifications: string[],
-  ratings: { country: string, value: string, }[],
-  audience: { targets: string, goals: string, }[],
+    territory: string; unit: string; value: string
+  }[];
+  certifications: string[];
+  ratings: { country: string; value: string; }[];
+  audience: { targets: string; goals: string; }[];
   reviews: {
-    filmCriticName: string, revue: string,
-    link: string, quote: string,
-  }[],
-  color: string,
-  format: string,
-  formatQuality: string,
-  soundFormat: string,
-  isOriginalVersionAvailable: string,
+    filmCriticName: string; revue: string;
+    link: string; quote: string;
+  }[];
+  color: string;
+  format: string;
+  formatQuality: string;
+  soundFormat: string;
+  isOriginalVersionAvailable: string;
   languages: {
-    language: string, dubbed: string,
-    subtitle: string, caption: string,
-  }[],
-  salesPitch: string,
-  catalogStatus: string,
-  festivalStatus: string,
-  financiersStatus: string,
-  ownerId: string,
+    language: string; dubbed: string;
+    subtitle: string; caption: string;
+  }[];
+  salesPitch: string;
+  catalogStatus: string;
+  festivalStatus: string;
+  financiersStatus: string;
+  ownerId: string;
 }
 
 type FieldsConfigType = ExtractConfig<FieldsConfig>;

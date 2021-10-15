@@ -1,0 +1,16 @@
+
+<main fxLayout="column">
+  <crm-bread-crumb></crm-bread-crumb>
+
+  <a mat-button routerLink="titles" routerLinkActive="mat-primary">
+    <mat-icon svgIcon="movie"></mat-icon><span matLine>Titles</span>
+  </a>
+  <a mat-button routerLink="orgs" routerLinkActive="mat-primary">
+    <mat-icon svgIcon="group"></mat-icon><span matLine>Organizations</span>
+  </a>
+  <a mat-button routerLink="contracts" routerLinkActive="mat-primary">
+    <mat-icon svgIcon="document"></mat-icon><span matLine>Contracts</span>
+  </a>
+
+  <router-outlet></router-outlet>
+</main>

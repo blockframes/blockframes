@@ -19,8 +19,12 @@ export class ConfirmDeclineComponent {
   ) { }
 
   async declineContract(event:Event) {
-    event.preventDefault();//ensures page doesn't reloads
+    event.preventDefault(); // ensures page doesn't reloads
     const reason = this.reasonControl.value;
     this.dialog.close(reason);
+  }
+
+  async cancel(){
+    this.dialog.close()
   }
 }

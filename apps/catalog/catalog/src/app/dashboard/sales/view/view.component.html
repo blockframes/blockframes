@@ -60,7 +60,7 @@
       </button>
     </div>
   </header>
-  <ng-container *ngIf="sale === centralOrgId.catalog">
+  <ng-container *ngIf="sale.sellerId === centralOrgId.catalog">
     <section class="surface" *ngIf="sale.specificity as specificity">
       <h2>Specific Terms</h2>
       <p>{{specificity}}</p>
