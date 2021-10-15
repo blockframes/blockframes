@@ -12,9 +12,9 @@
   </ng-container>
   <ng-template #displayStatus>
     <div test-id="invitation-status" class="status" [ngSwitch]="invit.status">
-      <span class="primary" *ngSwitchCase="'accepted'">Accepted</span>
-      <span class="warn" *ngSwitchCase="'declined'">Declined</span>
-      <span class="primary" *ngSwitchCase="'pending'">Pending</span>
+      <span *ngSwitchCase="'accepted'">Accepted</span>
+      <span *ngSwitchCase="'declined'">Declined</span>
+      <span *ngSwitchCase="'pending'">Pending</span>
     </div>
   </ng-template>
 </ng-container>

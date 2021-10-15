@@ -14,7 +14,7 @@
         </a>
       </ng-container>
     </ng-template>
-    <button mat-button *ngIf="_links.length > 1" [matMenuTriggerFor]="more">
+    <button mat-button *ngIf="_links.length > 1 || (videos && _links.length > 0)" [matMenuTriggerFor]="more">
       <mat-icon svgIcon="more_horiz"></mat-icon>
       <span class="mat-caption">More</span>
     </button>
