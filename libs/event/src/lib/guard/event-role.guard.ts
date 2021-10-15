@@ -29,12 +29,12 @@ export class EventRoleGuard extends CollectionGuard<EventState> {
           const anonymousCredentials = this.authQuery.anonymousCredentials;
 
           if (!anonymousCredentials?.role) {
-            return this.router.navigate([`/events/${eventId}`], { queryParams: next.queryParams });
+            return this.router.navigate([`/event/${eventId}`], { queryParams: next.queryParams });
           }
 
           // If user choosen "organizer", he needs to login
           if (anonymousCredentials?.role === 'organizer' && currentPage !== 'login') {
-            return this.router.navigate([`/events/${eventId}/r/login`], { queryParams: next.queryParams });
+            return this.router.navigate([`/event/${eventId}/r/login`], { queryParams: next.queryParams });
           }
 
           return true;

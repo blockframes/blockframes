@@ -32,7 +32,7 @@ export class EventAccessGuard implements CanActivate {
             const anonymousCredentials = this.authQuery.anonymousCredentials;
             // @TODO #6756 event is public, no invitation required, required if invitation-only
             if (currentUser.isAnonymous) {
-              return hasAnonymousIdentity(anonymousCredentials, event.accessibility) || this.router.navigate([`/events/${event.id}`], { queryParams: route.queryParams });
+              return hasAnonymousIdentity(anonymousCredentials, event.accessibility) || this.router.navigate([`/event/${event.id}`], { queryParams: route.queryParams });
             }
             return true;
           }
@@ -40,7 +40,7 @@ export class EventAccessGuard implements CanActivate {
             if (!currentUser.isAnonymous) {
               return true;
             } else {
-              // @TODO #6756 if invitationId  in params => redirect to this.router.navigate([`/events/${event.id}/r/login`])
+              // @TODO #6756 if invitationId  in params => redirect to this.router.navigate([`/event/${event.id}/r/login`])
             }
 
         }

@@ -9,6 +9,7 @@ import { orgName } from "@blockframes/organization/+state/organization.firestore
 /** Query to get analytics of the number of views for the festival app event sessions pages
  * for an array of eventId
  */
+// @TODO #6756 marketplace/event
 const queryEventAnalytics = `
 SELECT
   event_name as event_name,

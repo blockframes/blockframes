@@ -32,7 +32,7 @@ const routes: Routes = createRoutes({
     }
   ],
   events: {
-    path: 'events', // @TODO #6756 rename into 'event'
+    path: 'event',
     canActivate: [MaintenanceGuard, EventAuthGuard],
     loadChildren: () => import('@blockframes/event/layout/main/main.module').then(m => m.MainModule)
   }

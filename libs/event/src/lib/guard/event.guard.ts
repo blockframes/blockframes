@@ -41,11 +41,11 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
         // redirect directly to the session page,
         // the guard will then be re-evaluated for invitation etc... on the session page
         if (event.type !== 'meeting' && next.routeConfig.path === 'lobby') {
-          return this.router.parseUrl(`/events/${event.id}/session`);
+          return this.router.parseUrl(`/event/${event.id}/session`);
         }
 
         if (eventTime(event) !== 'onTime') {
-          return this.router.parseUrl(`/events/${event.id}`);
+          return this.router.parseUrl(`/event/${event.id}`);
         }
 
         if (event.isOwner) {
@@ -63,7 +63,7 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
 
         // if user wasn't invited OR hasn't accepted yet
         if (!hasUserAccepted) {
-          return this.router.parseUrl(`/events/${event.id}`);
+          return this.router.parseUrl(`/event/${event.id}`);
         }
 
         return true;

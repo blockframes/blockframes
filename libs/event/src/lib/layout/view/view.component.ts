@@ -43,7 +43,7 @@ export class EventViewComponent implements OnInit, OnDestroy {
   async ngOnInit() {
 
     this.editMeeting = `/c/o/dashboard/event/${this.event.id}/edit`;
-    this.accessRoute = `/events/${this.event.id}/r/i/${this.event.type === 'meeting' ? 'lobby' : 'session'}`;
+    this.accessRoute = `/event/${this.event.id}/r/i/${this.event.type === 'meeting' ? 'lobby' : 'session'}`;
 
     const { i: invitationId } = this.route.snapshot.queryParams;
     let invitation: Invitation;
@@ -67,9 +67,8 @@ export class EventViewComponent implements OnInit, OnDestroy {
             if (hasAnonymousIdentity(anonymousCredentials, event.accessibility) && invitation?.eventId === event.id) {
               return invitation;
 
-              // ==> Auto accept invitation onCreate ? + add email & i query params => Antoine
             } else {
-              // @TODO #6756 bad invitation id snackbar message?
+              // @TODO #6756 bad invitation id => snackbar message?
               return null;
             }
           case 'private':
