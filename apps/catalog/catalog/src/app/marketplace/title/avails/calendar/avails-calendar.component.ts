@@ -74,9 +74,10 @@ export class MarketplaceMovieAvailsCalendarComponent implements AfterViewInit, O
     this.mandateTerms$,
     this.availsForm.value$,
   ]).pipe(
-    map(([mandates, mandateTerms]) => {
+    map(([mandates, mandateTerms, avails]) => {
       if (this.availsForm.invalid) return [];
-      return getDurationMarkers(mandates, mandateTerms);
+      const collidingMandateTerms = collidingTerms(avails, mandateTerms);
+      return getDurationMarkers(mandates, collidingMandateTerms);
     }),
     shareReplay({ refCount: true, bufferSize: 1 }),
   );
