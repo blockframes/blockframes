@@ -76,7 +76,6 @@ export class EventViewComponent implements OnInit, OnDestroy {
         }
       })
     ).subscribe(invitation => {
-      console.log(invitation);
       this.invitation = invitation
       this.cdr.markForCheck();
     });

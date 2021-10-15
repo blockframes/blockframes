@@ -38,6 +38,7 @@ const routes: Routes = [{
   path: ':eventId',
   component: MainComponent,
   canActivate: [AnonymousAuthGuard, EventActiveGuard],
+  canDeactivate: [AnonymousAuthGuard],
   children: [
     {
       path: '',
