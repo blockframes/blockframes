@@ -1,14 +1,17 @@
 ﻿/// <reference types="cypress" />
 
-import { User, USER } from '@blockframes/e2e/fixtures/users';
+import { User, User as UserType, USER } from '@blockframes/e2e/fixtures/users';
 import { assertMoveTo } from "@blockframes/e2e/utils/functions";
 
 import { SEC } from "@blockframes/e2e/utils/env";
 
 const MY_TITLES_PAGE = '/c/o/dashboard/title';
+const MY_SALES_PAGE = '/c/o/dashboard/sales';
 
 const userFixture = new User();
-const users  =  [ userFixture.getByUID(USER.Jean) ];
+const users  =  [ userFixture.getByUID(USER.Jean),
+                  userFixture.getByUID(USER.Vincent)
+                ];
 
 const movieFixture = 'movie.xlsx';
 const contractFixture = 'contract.xlsx';
@@ -18,9 +21,9 @@ const contractRecords = 19;
 const MOVIE_IMPORT_TIMEOUT = 120 * SEC;
 const CONTRACT_IMPORT_TIMEOUT = 240 * SEC;
 
-const logInAndNavigate = () => {
+const logInAndNavigate = (user: Partial<UserType>) => {
   cy.log("Log in with user Jean");
-  cy.login(users[0].email, users[0].password);
+  cy.login(user.email, user.password);
   cy.visit('/c/o/marketplace/home');
 
   cy.location('pathname', {timeout: 120 * SEC})
@@ -41,14 +44,14 @@ describe('User can fill and save contract tunnel form', () => {
   });
 
   it('Login as Dashboard user, Select Movies and import ', () => {
-    logInAndNavigate();
+    logInAndNavigate(users[0]);
 
     cy.get('aside a[routerlink="title"]', {timeout: 5 * SEC})
       .click();
 
     assertMoveTo(MY_TITLES_PAGE);
 
-    cy.log("Navigate to import page");
+    cy.log("Navigated to import title page");
     cy.get('a[test-id="import-titles"]', {timeout: 30 * SEC})
       .click();
 
@@ -80,36 +83,25 @@ describe('User can fill and save contract tunnel form', () => {
   });
 
   // TODO correct the test once the contract import page is ready #6757
-  it.skip('Login as admin, Select contracts and import ', () => {
-    logInAndNavigate();
+  it('Login as admin, Select contracts and import ', () => {
+    logInAndNavigate(users[1]);
     cy.wait(1 * SEC);
 
-    cy.log("Select Contract type to upload");
-    cy.get('mat-form-field', {timeout: 30 * SEC}) // ! THIS WILL FAIL, THERE IS NO MORE SELECT
+    cy.get('aside a[routerlink="sales"]', {timeout: 5 * SEC})
       .click();
 
-    cy.get('mat-option')
-      .contains("Contract")
+    assertMoveTo(MY_SALES_PAGE);
+
+    cy.log("Navigated to import contracts page");
+    cy.get('a[test-id="import-contracts"]', {timeout: 30 * SEC})
       .click();
 
-    //Import the Contracts file here
+    cy.wait(1 * SEC);
+
+    //Import the Movie file here
     cy.log("Start upload by attaching the fixture");
-    cy.get('#filePicker', {timeout: 10 * SEC})
+    cy.get('input', {timeout: 10 * SEC})
       .attachFile(contractFixture);
-
-    cy.get('[test-id="status-import"]', { timeout: 30 * SEC })
-      .should('be.visible')
-      .should('contain', 'File uploaded');
-
-    cy.log("Contract File uploaded successfully; Starting import..");
-
-    cy.get('button[test-id="start-import"]', { timeout: 30 * SEC })
-      .click();
-
-    cy.log("Check if we reached submission container");
-    cy.wait(30 * SEC);
-    cy.get('h1', {timeout: 30 * SEC})
-      .contains("finalize your import");
 
     cy.log(`Check for ${contractRecords} records in the extracted data`);
     cy.get('p[test-id="record-length"]', {timeout: CONTRACT_IMPORT_TIMEOUT})
