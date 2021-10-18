@@ -17,10 +17,10 @@ import { Term, TermService } from "@blockframes/contract/term/+state";
 
 interface TotalIncome { EUR: number; USD: number; }
 
-type SaleWithIncomeAndTerms = (Sale<Date> | Mandate<Date>) & { income?: Income; terms?: Term<Date>[]; }
+type ContractWithIncomeAndTerms = (Sale<Date> | Mandate<Date>) & { income?: Income; terms?: Term<Date>[]; }
 
-type JoinTitleType = {
-  contracts?: SaleWithIncomeAndTerms[], id: string,
+type JoinSaleTitleType = {
+  sales?: ContractWithIncomeAndTerms[], id: string,
   saleCount?: number, totalIncome?: TotalIncome,
   allSaleCount?: number,
 }
@@ -31,30 +31,26 @@ type JoinTitleType = {
  * @param title
  * @returns
  */
-const contractsQuery = (title: Movie): QueryFn => ref => ref.where('titleId', '==', title.id);
+const mandateQuery = (title: Movie): QueryFn => ref => ref.where('titleId', '==', title.id).where('type', '==', 'mandate');
+const saleQuery = (title: Movie): QueryFn => ref => ref.where('titleId', '==', title.id).where('type', '==', 'sale')
+  .where('status', '==', 'accepted');
 
 const organizationQuery = (orgId: string): QueryFn => {
   return ref => ref.where('orgIds', 'array-contains', orgId);
 }
 
-const isCatalogSale = (contract: SaleWithIncomeAndTerms): boolean => contract.sellerId === centralOrgId.catalog && contract.status === 'accepted';
-const isSale = (contract: SaleWithIncomeAndTerms): boolean => contract.type === 'sale' && contract.status === 'accepted';
+const isCatalogSale = (contract: ContractWithIncomeAndTerms): boolean => contract.sellerId === centralOrgId.catalog && contract.status === 'accepted';
 
-const getSaleCountAndTotalPrice = (title: JoinTitleType) => {
+const saleCountAndTotalPrice = (title: JoinSaleTitleType) => {
   const initialTotal: TotalIncome = { EUR: 0, USD: 0 };
-  if (!title.contracts) return title;
-  title.saleCount = title.contracts.filter(isCatalogSale).length;
-  title.allSaleCount = title.contracts.filter(isSale).length;
-  title.totalIncome = title.contracts.filter(isSale).reduce((total, sale) => {
+  if (!title.sales) return title;
+  title.saleCount = title.sales.filter(isCatalogSale).length;
+  title.allSaleCount = title.sales.length;
+  title.totalIncome = title.sales.reduce((total, sale) => {
     if (sale.income) total[sale.income.currency] += sale.income.price
     return total;
   }, initialTotal);
   return title;
-}
-
-
-function isAcceptedSale(contract: Sale<Date> | Mandate<Date>) {
-  return contract.status === 'accepted' && contract.type === 'sale';
 }
 
 @Component({
@@ -72,13 +68,13 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
     map(query => ({ formValue: query.get('formValue') })),
   )
 
-  private query$ = this.titleService.valueChanges(organizationQuery(this.orgId)).pipe(
+  private saleQuery$ = this.titleService.valueChanges(organizationQuery(this.orgId)).pipe(
     joinWith({
-      contracts: title => {
-        return this.contractService.valueChanges(contractsQuery(title)).pipe(
+      sales: title => {
+        return this.contractService.valueChanges(saleQuery(title)).pipe(
           joinWith({
-            income: contract => (isAcceptedSale(contract)) ? this.incomeService.valueChanges(contract.id) : null,
-            terms: contract => this.termsService.valueChanges(contract.termIds),
+            income: sale => this.incomeService.valueChanges(sale.id),
+            terms: sale => this.termsService.valueChanges(sale.termIds),
           }, { shouldAwait: true, })
         )
       },
@@ -86,16 +82,30 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
       allSaleCount: () => 0,
       totalIncome: () => ({ EUR: 0, USD: 0 }), // used for typings
     }, { shouldAwait: true, }),
-    map(titles => titles.map(getSaleCountAndTotalPrice)),
+    map(titles => titles.map(saleCountAndTotalPrice)),
+  );
+
+  private mandateQuery$ = this.titleService.valueChanges(organizationQuery(this.orgId)).pipe(
+    joinWith({
+      mandates: title => {
+        return this.contractService.valueChanges(mandateQuery(title)).pipe(
+          joinWith({
+            terms: sale => this.termsService.valueChanges(sale.termIds),
+          }, { shouldAwait: true, })
+        )
+      },
+    }, { shouldAwait: true, }),
   );
 
   public results$ = combineLatest([
-    this.query$,
+    this.saleQuery$,
+    this.mandateQuery$,
     this.availsForm.value$
   ]).pipe(
-    map(([titles, avails]) => titles.filter(title => {
-      const mandateTerms = title.contracts?.filter(contract => contract.type === 'mandate' && contract.status === 'accepted').map(contract => contract.terms).flat();
-      const saleTerms = title.contracts?.filter(contract => contract.type === 'sale' && contract.status === 'accepted').map(contract => contract.terms).flat();
+    map(([titlesWithSales, titlesWithMandates, avails]) => titlesWithSales.filter(title => {
+      const mandateTitle = titlesWithMandates.find(aTitleWithMandate => aTitleWithMandate.id === title.id);
+      const mandateTerms = mandateTitle?.mandates?.filter(contract => contract.type === 'mandate' && contract.status === 'accepted').map(contract => contract.terms).flat();
+      const saleTerms = title.sales?.map(contract => contract.terms).flat();
 
       return isMovieAvailable(title.id, avails, null, mandateTerms ?? [], saleTerms ?? [], 'optional');
     })),
