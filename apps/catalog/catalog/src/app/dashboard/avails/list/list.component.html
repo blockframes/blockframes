@@ -1,0 +1,49 @@
+<h2>Availabilities</h2>
+
+<section class="surface" fxLayout="column" fxLayoutGap="16px">
+  <h3>Search Criteria</h3>
+  <form [availsFilter]="availsForm" fxLayout="row wrap"></form>
+</section>
+
+<section *ngIf="results$ | async as sales; else loading">
+  <ng-container *ngIf="sales.length; else noSales">
+    <h3>Results</h3>
+    <bf-table [source]="sales" clickable useFilter pagination="50">
+      <ng-template colRef="title.international" label="Title" let-title>{{ title | maxLength:50}}</ng-template>
+      <ng-template colRef="allSaleCount" label="All Sales" let-allSaleCount>{{ allSaleCount || '-' }}</ng-template>
+      <ng-template colRef="salesCount" label="Archipel Sales" let-salesCount>{{ salesCount || '-' }}</ng-template>
+      <ng-template colRef="totalIncome" label="total gross receipt" let-totalIncome>
+        <ng-container *ngIf="totalIncome.USD"> {{ totalIncome.USD | currency:'USD' }} </ng-container>
+        <ng-container *ngIf="totalIncome.USD && totalIncome.EUR"> and</ng-container>
+        <ng-container *ngIf="totalIncome.EUR"> {{ totalIncome.EUR | currency:'EUR' }} </ng-container>
+        <ng-container *ngIf="!totalIncome.USD && !totalIncome.EUR"> - </ng-container>
+      </ng-template>
+      <ng-template colRef="id" label="actions" let-id>
+        <div fxLayout fxLayoutGap="16px" *ngIf="queryParams$ | async as queryParams">
+          <a mat-icon-button [routerLink]="['./map']" [queryParams]="queryParams">
+            <mat-icon svgIcon="territories_avails"></mat-icon>
+          </a>
+          <a mat-icon-button [routerLink]="['./calendar']" [queryParams]="queryParams">
+            <mat-icon svgIcon="calendar_avails"></mat-icon>
+          </a>
+        </div>
+      </ng-template>
+    </bf-table>
+  </ng-container>
+</section>
+
+<ng-template #loading>
+  <section fxLayout fxLayoutAlign="center center">
+    <mat-spinner fxLayoutAlign="center center"></mat-spinner>
+  </section>
+</ng-template>
+
+<ng-template #noSales>
+  <section fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="16">
+    <h1>No results found</h1>
+    <p>
+      Oops! it looks like there's no result corresponding to your earch criteria.
+    </p>
+    <img asset="empty_contract.svg" alt="Image, you have no contracts yet">
+  </section>
+</ng-template>

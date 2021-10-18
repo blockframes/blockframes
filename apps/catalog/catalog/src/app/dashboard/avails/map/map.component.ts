@@ -8,7 +8,7 @@ import { combineLatest, Subscription } from "rxjs";
 import { filter, first, map, shareReplay, startWith, throttleTime } from "rxjs/operators";
 import { CatalogAvailsShellComponent } from "../shell/shell.component";
 import { format } from 'date-fns';
-import { medias, territories } from '@blockframes/utils/static-model'
+import { medias } from '@blockframes/utils/static-model'
 
 function formatDate(date: Date) {
   return format(date, 'dd/MM/yyy')
