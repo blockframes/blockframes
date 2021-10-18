@@ -18,6 +18,7 @@ export interface UploadData {
  */
 export interface FileMetaData {
   uid: string;
+  fileId?: string; // unique id required for list of videos
   privacy: Privacy;
   collection: 'users' | 'orgs' | 'movies' | 'campaigns';
   docId: string;
