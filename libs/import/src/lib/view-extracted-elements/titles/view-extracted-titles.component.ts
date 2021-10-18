@@ -25,7 +25,6 @@ import { MovieImportState } from '../../utils';
 export class ViewExtractedTitlesComponent implements OnInit {
 
   @Input() sheetTab: SheetTab;
-  @Output() cancelEvent = new EventEmitter<boolean>();
 
   public moviesToCreate$ = new BehaviorSubject<MatTableDataSource<MovieImportState>>(null);
   public moviesToUpdate$ = new BehaviorSubject<MatTableDataSource<MovieImportState>>(null);

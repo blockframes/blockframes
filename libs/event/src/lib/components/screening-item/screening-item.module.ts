@@ -10,6 +10,7 @@ import { InvitationActionModule } from '@blockframes/invitation/components/actio
 import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe';
 import { GetOrgPipeModule } from '@blockframes/organization/pipes/get-org.pipe';
 import { OngoingButtonModule } from '@blockframes/ui/ongoing-button/ongoing-button.module';
+import { EventTimeModule } from '@blockframes/event/pipes/event-time.pipe';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -30,6 +31,7 @@ import { MatRippleModule } from '@angular/material/core';
     GetTitlePipeModule,
     GetOrgPipeModule,
     OngoingButtonModule,
+    EventTimeModule,
     MatIconModule,
     MatButtonModule,
     MatRippleModule

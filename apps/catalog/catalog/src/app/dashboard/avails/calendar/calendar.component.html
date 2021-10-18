@@ -1,0 +1,44 @@
+<form [availsFilter]="availsForm" required hide='duration'></form>
+
+
+<section class="surface" fxLayout="column">
+  <!-- CALENDAR LEGEND -->
+  <ul>
+    <li>
+      <svg viewBox="0 0 100 100" width="10px" height="10px">
+        <rect fill="var(--primary)" x="0" y="0" width="100" height="100" rx="10" ry="10" />
+      </svg>
+      <span class="mat-caption">Available</span>
+    </li>
+    <li>
+      <svg viewBox="0 0 100 100" width="10px" height="10px">
+        <rect fill="var(--foreground-disabled-text)" x="0" y="0" width="100" height="100" rx="10" ry="10" />
+      </svg>
+      <span class="mat-caption">Sold</span>
+    </li>
+    <li>
+      <svg viewBox="0 0 100 100" width="10px" height="10px">
+        <rect fill="var(--primary-lighter)" x="0" y="0" width="100" height="100" rx="10" ry="10" />
+      </svg>
+      <span class="mat-caption">Already Selected</span>
+    </li>
+  </ul>
+
+  <avails-calendar
+    fxFlexAlign="center"
+    fxFlexAlign.lt-md="start"
+    [availableMarkers]="available$ | async"
+    [soldMarkers]="sold$ | async"
+    disableSelect
+    ></avails-calendar>
+
+
+  <div *ngIf="(status$ | async) === 'INVALID'" fxLayoutAlign="center center">
+    <article class="mat-body-2">
+      Please fill in Avail Search Criteria section to show results on the Calendar.
+    </article>
+  </div>
+</section>
+
+<button mat-flat-button color="primary" fxFlexAlign="center" (click)="downloadCsv()"
+  [disabled]="disableCsv$|async">Download .CSV</button>

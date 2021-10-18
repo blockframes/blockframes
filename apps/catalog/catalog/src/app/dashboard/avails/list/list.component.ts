@@ -7,7 +7,7 @@ import { Movie, MovieService } from "@blockframes/movie/+state";
 import { OrganizationQuery } from "@blockframes/organization/+state";
 import { DynamicTitleService } from "@blockframes/utils/dynamic-title/dynamic-title.service";
 import { joinWith } from "@blockframes/utils/operators";
-import { map, startWith, tap, throttleTime } from "rxjs/operators";
+import { map, throttleTime } from "rxjs/operators";
 import { centralOrgId } from '@env';
 import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -90,7 +90,7 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
   );
 
   public results$ = combineLatest([
-    this.query$.pipe(tap(query => console.log({ query }))),
+    this.query$,
     this.availsForm.value$
   ]).pipe(
     map(([titles, avails]) => titles.filter(title => {
@@ -99,7 +99,6 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
 
       return isMovieAvailable(title.id, avails, null, mandateTerms ?? [], saleTerms ?? [], 'optional');
     })),
-    tap(result => console.log({ result }))
   );
 
   constructor(
