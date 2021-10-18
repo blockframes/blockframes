@@ -4,6 +4,7 @@ import { format } from "date-fns";
 import { EventDocument, EventMeta, EventTypes } from "@blockframes/event/+state/event.firestore";
 import { Organization, OrganizationDocument } from "@blockframes/organization/+state";
 import { User } from "@blockframes/auth/+state";
+import { AccessibilityTypes } from "../static-model";
 
 interface EmailData {
   to: string;
@@ -35,7 +36,8 @@ export interface EventEmailData {
   end: string,
   type: EventTypes,
   viewUrl: string,
-  sessionUrl: string
+  sessionUrl: string,
+  accessibility: AccessibilityTypes
 }
 
 export interface OrgEmailData {
@@ -109,8 +111,9 @@ export function getEventEmailData(event?: Partial<EventDocument<EventMeta>>): Ev
     start: eventStart,
     end: eventEnd,
     type: event?.type,
-    viewUrl: event?.id ? `/c/o/marketplace/event/${event.id}` : '',
-    sessionUrl: event?.id ? `/c/o/marketplace/event/${event.id}/session` : ''
+    viewUrl: event?.id ? `/event/${event.id}/r/i` : '', //to change
+    sessionUrl: event?.id ? `/event/${event.id}/r/i/session` : '', //to change
+    accessibility: event?.accessibility
   }
 }
 

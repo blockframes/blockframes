@@ -354,7 +354,7 @@ async function sendRequestToAttendEventCreatedEmail(recipient: User, notificatio
   const eventData: EventEmailData = getEventEmailData(eventDoc);
   const org = await getDocument<OrganizationDocument>(`orgs/${notification.user.orgId}`);
   const userOrg = getOrgEmailData(org);
-  const link = getEventLink(org);
+  const link = getEventLink(eventData.id);
   const urlToUse = applicationUrl[eventAppKey];
   const userSubject = getUserEmailData(notification.user);
   const toAdmin = getUserEmailData(recipient);
@@ -372,21 +372,14 @@ async function sendInvitationToAttendEventCreatedEmail(recipient: User, notifica
   const toUser = getUserEmailData(recipient);
   const urlToUse = applicationUrl[eventAppKey];
   const orgData = getOrgEmailData(org);
-  const link = getEventLink(org);
-
+  const link = getEventLink(eventEmailData.id);
   console.log(`Sending invitation email for an event (${notification.docId}) from ${orgData.denomination} to : ${toUser.email}`);
   const templateInvitation = invitationToEventFromOrg(toUser, orgData, eventEmailData, link, urlToUse);
   return sendMailFromTemplate(templateInvitation, eventAppKey, groupIds.unsubscribeAll).catch(e => console.warn(e.message));
 }
 
-function getEventLink(org: OrganizationDocument) {
-  if (canAccessModule('marketplace', org)) {
-    return '/c/o/marketplace/invitations';
-  } else if (canAccessModule('dashboard', org)) {
-    return '/c/o/dashboard/invitations';
-  } else {
-    return "";
-  }
+function getEventLink(eventId: string) {
+  return `/event/${eventId}/r/i`;
 }
 
 /** Send an email to org admin when his/her org is accepted */
