@@ -83,7 +83,7 @@ export class DashboardAvailsMapComponent implements AfterViewInit, OnDestroy {
   ) { }
 
   ngAfterViewInit() {
-    const decodedData: any = decodeUrl(this.route);
+    const decodedData = decodeUrl<Partial<AvailsFilter>>(this.route);
     if (!decodedData.territories) decodedData.territories = []
     if (!decodedData.medias) decodedData.medias = []
     this.availsForm.patchValue(decodedData);
@@ -120,7 +120,6 @@ export class DashboardAvailsMapComponent implements AfterViewInit, OnDestroy {
     ]).pipe(first())
       .subscribe(([territoryMarker, movie]) => {
         const availsFilter = this.availsForm.value;
-        availsFilter.territories
         const availableTerritories = territoryMarker.flatMap(marker => marker.term.territories);
         const termTerritories = Array.from(new Set(availableTerritories))
         const data = [{
