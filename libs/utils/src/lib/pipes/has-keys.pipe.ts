@@ -23,7 +23,10 @@ export class HasKeysPipe implements PipeTransform {
       return true;
     }
     return keys[filter](key => {
-      const value = key.split('.').reduce((result, k) => result[k], base);
+      const value = key.split('.').reduce((result, k) => {
+        if (result) return result[k]
+        return null
+      }, base);
       return hasValue(value);
     });
   }
@@ -34,4 +37,4 @@ export class HasKeysPipe implements PipeTransform {
   exports: [HasKeysPipe],
   imports: [CommonModule]
 })
-export class HasKeysModule {}
+export class HasKeysModule { }

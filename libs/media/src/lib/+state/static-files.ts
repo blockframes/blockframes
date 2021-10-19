@@ -82,11 +82,12 @@ export function getFileStoragePath(collection: CollectionHoldingFile, label: Fil
 }
 
 export function getFileMetadata(collection: CollectionHoldingFile, label: FileLabel, docId: string) {
+  const fileId = Math.random().toString(36).substr(2);
   const metadatas: Record<CollectionHoldingFile, Partial<Record<FileLabel, FileMetaData>>> = {
     orgs: {
       logo: { uid: '', privacy: 'public', collection, docId, field: 'logo' },
       notes: { uid: '', privacy: 'protected', collection, docId, field: 'documents.notes' },
-      videos: { uid: '', privacy: 'protected', collection, docId, field: 'documents.videos' },
+      videos: { uid: '', privacy: 'protected', collection, docId, field: 'documents.videos', fileId },
     },
     users: {
       avatar: { uid: '', privacy: 'public', collection, docId, field: 'avatar' },
@@ -101,7 +102,7 @@ export function getFileMetadata(collection: CollectionHoldingFile, label: FileLa
       'still_photo': { uid: '', privacy: 'public', collection, docId, field: 'promotional.still_photo' },
       notes: { uid: '', privacy: 'public', collection, docId, field: 'promotional.notes' },
       screener: { uid: '', privacy: 'protected', collection, docId, field: 'promotional.videos.screener' },
-      otherVideos: { uid: '', privacy: 'protected', collection, docId, field: 'promotional.videos.otherVideos' },
+      otherVideos: { uid: '', privacy: 'protected', collection, docId, field: 'promotional.videos.otherVideos', fileId },
       salesPitch: { uid: '', privacy: 'protected', collection, docId, field: 'promotional.videos.salesPitch' },
       delivery: { uid: '', privacy: 'public', collection, docId, field: 'delivery.file' },
     },
