@@ -1,9 +1,7 @@
-<article>
-  <mat-radio-group [value]="queryMode" (change)="select($event)">
-    <mat-radio-button value="eventIds">IDs</mat-radio-button>
-    <mat-radio-button value="query">Firestore Query</mat-radio-button>
-  </mat-radio-group>
-</article>
+<mat-radio-group [value]="queryMode" (change)="select($event)">
+  <mat-radio-button value="eventIds">IDs</mat-radio-button>
+  <mat-radio-button value="query">Firestore Query</mat-radio-button>
+</mat-radio-group>
 
 <!-- get events before avoid loading time -->
 <article [ngSwitch]="queryMode">

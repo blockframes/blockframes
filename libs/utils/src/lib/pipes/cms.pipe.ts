@@ -20,7 +20,7 @@ function getQueryFn(section): QueryFn {
       return query.orderBy(params.field, params.direction);
     }
     if (params.method === 'startAt') {
-      if (params.value === 'now') {
+      if (params.value === 'runningAndUpcomingEvents') {
         return query.startAt(new Date());
       } else {
         return query.startAt(params.value);

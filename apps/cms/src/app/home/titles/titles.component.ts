@@ -18,7 +18,7 @@ import { map, shareReplay, switchMap } from 'rxjs/operators';
 import { sortingOptions } from '@blockframes/utils/pipes/sort-array.pipe';
 
 
-type TitlesSchema = FormGroupSchema<TitlesSection>;
+export type TitlesSchema = FormGroupSchema<TitlesSection>;
 
 export const titlesSchema = (params: TemplateParams): TitlesSchema => ({
   form: 'group',

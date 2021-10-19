@@ -9,7 +9,7 @@ import { FirestoreFormModule } from '../../forms/firestore';
 import { FormChipsAutocompleteModule } from '../../forms/chips-autocomplete';
 import { SelectFormModule } from '../../forms/select';
 import { getEventsQueryFn, toMap } from '../pipes';
-import { map, shareReplay } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { EventService } from '@blockframes/event/+state/event.service';
 import { Event } from '@blockframes/event/+state';
 
@@ -25,8 +25,7 @@ export class EventsSliderComponent implements OnInit {
   @Input() form?: FormEntity<EventsSliderSchema>;
 
   events$ = this.service.valueChanges(getEventsQueryFn()).pipe(
-    map(toMap),
-    shareReplay({ refCount: true, bufferSize: 1 })
+    map(toMap)
   );
 
   displayLabel = (event?: Event) => event?.title;
