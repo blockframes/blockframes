@@ -24,6 +24,13 @@ export function getOrgTitlesQueryFn(app: string, orgId: string): QueryFn {
   return ref => ref.where(...accepted).where(...appAccess).where(...fromOrg);
 }
 
+export function getEventsQueryFn(): QueryFn {
+  return ref => ref
+    .where('type', '==', 'screening')
+    .where('isSecret', '==', false)
+    .orderBy('end')
+}
+
 export function toMap<T extends { id: string }>(list: T[]) {
   const record: Record<string, T> = {};
   for (const item of list) {
