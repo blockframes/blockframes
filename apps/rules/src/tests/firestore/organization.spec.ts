@@ -61,7 +61,7 @@ describe('Organization Rules Tests', () => {
       await assertFails(orgDocRef.delete());
     });
 
-     // @TODO #6756 updated with userHasValidOrg() when a solution for this is found.
+     // @TODO #6908 updated with userHasValidOrg() when a solution for this is found.
     test.skip('anonymous user should not be able to list all orgs', async () => {
       const allDocs = db.collection('orgs');
       await assertFails(allDocs.get());
