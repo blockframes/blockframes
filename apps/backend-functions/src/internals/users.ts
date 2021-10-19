@@ -1,7 +1,7 @@
 
 import { App, getMailSender, applicationUrl } from '@blockframes/utils/apps';
 import { generate as passwordGenerator } from 'generate-password';
-import { OrganizationDocument } from '../data/types';
+import { OrganizationDocument, PublicOrganization } from '../data/types';
 import { createDocumentMeta, createPublicUserDocument, getDocument } from '../data/internals';
 import { userInvite, userFirstConnexion } from '../templates/mail';
 import { groupIds, templateIds } from '@blockframes/utils/emails/ids';
@@ -10,7 +10,8 @@ import { sendMailFromTemplate, sendMail } from './email';
 import { PublicUser } from '@blockframes/user/types';
 import { EventEmailData, getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
 import { logger } from 'firebase-functions';
-import { InvitationBase } from '@blockframes/invitation/+state/invitation.firestore';
+import { InvitationBase, InvitationStatus } from '@blockframes/invitation/+state/invitation.firestore';
+import * as admin from 'firebase-admin';
 
 interface UserProposal {
   uid: string;
@@ -26,38 +27,40 @@ const generatePassword = () =>
 /**
  * Get user by email & create one if there is no user for this email
  */
-export const getOrInviteUserByMail = async (email: string, invitation: InvitationBase<Date>, app: App = 'catalog', eventData: EventEmailData): Promise<UserProposal | PublicUser> => {
-  const invitationType = invitation.type;
-  const invitationMode = invitation.mode;
-  const fromOrgId = invitation.fromOrg.id
+export const getOrInviteUserByMail = async (
+  email: string, 
+  invitation: {id: string, type: string, mode: string, fromOrg: PublicOrganization}, 
+  app: App = 'catalog', 
+  eventData: EventEmailData
+): Promise<{user: UserProposal | PublicUser, invitationStatus?: InvitationStatus}> => {
+  const fromOrgId = invitation.fromOrg.id;
   try {
     const { uid } = await auth.getUserByEmail(email);
     const user = await getDocument<PublicUser>(`users/${uid}`);
-    return user || { uid, email }
+    return {user: user || { uid, email }}
   } catch {
     try {
       const newUser = await createUserFromEmail(email, app);
       const toUser = getUserEmailData(newUser.user, newUser.password);
-
+      let invitationStatus;
       // User does not exists, send him an email.
       const fromOrg = await getDocument<OrganizationDocument>(`orgs/${fromOrgId}`);
       const orgEmailData = getOrgEmailData(fromOrg);
       const urlToUse = applicationUrl[app];
 
-      let templateId = templateIds.user.credentials[invitationType]; // private || public/invitation-only
+      const credsTemplates = templateIds.user.credentials;
 
-      if(invitationType !== 'joinOrganization') {
-        templateId = eventData.accessibility !== 'private' ? 
-          templateIds.user.credentials['attendNonPrivateEvent'] :
-          templateIds.user.credentials['attendEvent']
+      const invitationTemplateId = eventData.accessibility !== 'private' ? credsTemplates.attendNonPrivateEvent : credsTemplates.attendEvent;
+          
+      const templateId = invitation.type === 'joinOrganization' ? templateIds.user.credentials.joinOrganization : invitationTemplateId;
+
+      if(invitation.mode === 'invitation' && eventData.accessibility === 'invitation-only') {
+        invitationStatus = 'accepted';
       }
 
-      if(invitationMode === 'invitation' && eventData.accessibility === 'invitation-only') {
-        await db.doc(`invitations/${invitation.id}`).set({ status: 'accepted' }, { merge: true });
-      }
       const template = userInvite(toUser, orgEmailData, urlToUse, templateId, eventData);
       await sendMailFromTemplate(template, app);
-      return newUser.user;
+      return {user: newUser.user, invitationStatus };
     } catch (e) {
       throw new Error(`There was an error while sending email to newly created user : ${e.message}`);
     }

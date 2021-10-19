@@ -30,6 +30,7 @@ import { canAccessModule } from '@blockframes/organization/+state/organization.f
 import { App, applicationUrl } from '@blockframes/utils/apps';
 import * as admin from 'firebase-admin';
 import { Movie } from '@blockframes/movie/+state';
+import { InvitationMode } from '@blockframes/invitation/+state/invitation.firestore';
 
 // @TODO (#2848) forcing to festival since invitations to events are only on this one
 const eventAppKey: App = 'festival';
@@ -354,7 +355,7 @@ async function sendRequestToAttendEventCreatedEmail(recipient: User, notificatio
   const eventData: EventEmailData = getEventEmailData(eventDoc);
   const org = await getDocument<OrganizationDocument>(`orgs/${notification.user.orgId}`);
   const userOrg = getOrgEmailData(org);
-  const link = getEventLink(eventData.id);
+  const link = getEventLink(notification.invitation.mode, eventData, org);
   const urlToUse = applicationUrl[eventAppKey];
   const userSubject = getUserEmailData(notification.user);
   const toAdmin = getUserEmailData(recipient);
@@ -372,14 +373,24 @@ async function sendInvitationToAttendEventCreatedEmail(recipient: User, notifica
   const toUser = getUserEmailData(recipient);
   const urlToUse = applicationUrl[eventAppKey];
   const orgData = getOrgEmailData(org);
-  const link = getEventLink(eventEmailData.id);
+  const link = getEventLink(notification.invitation.mode, eventEmailData, org);
   console.log(`Sending invitation email for an event (${notification.docId}) from ${orgData.denomination} to : ${toUser.email}`);
   const templateInvitation = invitationToEventFromOrg(toUser, orgData, eventEmailData, link, urlToUse);
   return sendMailFromTemplate(templateInvitation, eventAppKey, groupIds.unsubscribeAll).catch(e => console.warn(e.message));
 }
 
-function getEventLink(eventId: string) {
-  return `/event/${eventId}/r/i`;
+function getEventLink(invitationMode: InvitationMode, eventData: EventEmailData, org: OrganizationDocument) {
+  if (invitationMode === "request" || (invitationMode === 'invitation' && eventData.accessibility === 'private')) {
+    if (canAccessModule('marketplace', org)) {
+      return '/c/o/marketplace/invitations';
+    } else if (canAccessModule('dashboard', org)) {
+      return '/c/o/dashboard/invitations';
+    } else {
+      return "";
+    }
+  } else {
+    return `/event/${eventData.id}/r/i`;
+  }
 }
 
 /** Send an email to org admin when his/her org is accepted */

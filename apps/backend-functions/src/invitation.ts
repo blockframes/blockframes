@@ -173,12 +173,16 @@ export const inviteUsers = async (data: UserInvitation, context: CallableContext
   }
 
   for (const email of data.emails) {
-    const isLastIndex = await getOrInviteUserByMail(email, invitation, data.app, eventData)
-      .then(u => createPublicUser(u))
+    const {id, type, mode, fromOrg} = invitation;
+    const isLastIndex = await getOrInviteUserByMail(email, {id, type, mode, fromOrg}, data.app, eventData)
+      .then(u => {
+        if(u.invitationStatus) invitation.status = u.invitationStatus; 
+        return createPublicUser(u.user)
+      })
       .then(toUser => {
         invitation.toUser = toUser;
-        const id = db.collection('invitations').doc().id;
-        invitation.id = id;
+        const invitationId = db.collection('invitations').doc().id;
+        invitation.id = invitationId;
       })
       .then(() => db.collection('invitations').doc(invitation.id).set(invitation))
       .then(result => promises.push({ result, error: '' }))

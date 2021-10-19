@@ -111,8 +111,8 @@ export function getEventEmailData(event?: Partial<EventDocument<EventMeta>>): Ev
     start: eventStart,
     end: eventEnd,
     type: event?.type,
-    viewUrl: event?.id ? `/event/${event.id}/r/i` : '', //to change
-    sessionUrl: event?.id ? `/event/${event.id}/r/i/session` : '', //to change
+    viewUrl: event?.id ? `/event/${event.id}/r/i` : '', //to change #6756
+    sessionUrl: event?.id ? `/event/${event.id}/r/i/session` : '', //to change #6756
     accessibility: event?.accessibility
   }
 }
