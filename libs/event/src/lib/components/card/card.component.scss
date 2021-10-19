@@ -25,11 +25,16 @@
   background-color: rgb(black, 0.6);
 }
 
-h5, span {
+b, span {
   max-width: 100%;
   white-space: normal;
   text-align: center;
   padding: 0 8px;
+}
+
+b {
+  color: var(--foreground-text);
+  line-height: 1;
 }
 
 .large {
