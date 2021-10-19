@@ -9,7 +9,7 @@ export function createEventControl(params?: Partial<Event>) {
   const event = createEvent(params);
   return {
     id: new FormControl(event.id),
-    isPrivate: new FormControl(event.isPrivate),
+    accessibility: new FormControl(event.accessibility),
     isSecret: new FormControl(event.isSecret),
     ownerOrgId: new FormControl(event.ownerOrgId),
     type: new FormControl(event.type, Validators.required),

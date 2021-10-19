@@ -12,6 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { CountdownModule } from '@blockframes/ui/countdown/countdown.module';
+import { ToLabelModule } from '@blockframes/utils/pipes';
 
 @NgModule({
   declarations: [EventViewComponent],
@@ -27,7 +28,8 @@ import { CountdownModule } from '@blockframes/ui/countdown/countdown.module';
     MatButtonModule,
     MatIconModule,
     MatTooltipModule,
-    CountdownModule
+    CountdownModule,
+    ToLabelModule
   ]
 })
 export class EventViewModule { }

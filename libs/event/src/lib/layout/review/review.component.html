@@ -9,8 +9,8 @@
     <h2>Details</h2>
     <h5>Event Title</h5>
     <p>{{ event.title }}</p>
-    <h5>Is Private</h5>
-    <p>{{ event.isPrivate ? 'Yes' : 'No' }}</p>
+    <h5>Accessibility</h5>
+    <p>{{ event.accessibility | toLabel:'accessibility'}}</p>
     <h5>Date & Time</h5>
     <pre class="mat-body-1">{{ event | eventRange }}</pre>
   </section>

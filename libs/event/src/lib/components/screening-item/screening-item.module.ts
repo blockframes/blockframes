@@ -16,7 +16,7 @@ import { EventTimeModule } from '@blockframes/event/pipes/event-time.pipe';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatRippleModule } from '@angular/material/core';
-
+import { ToLabelModule } from '@blockframes/utils/pipes';
 @NgModule({
   declarations: [ScreeningItemComponent],
   exports: [ScreeningItemComponent],
@@ -34,7 +34,8 @@ import { MatRippleModule } from '@angular/material/core';
     EventTimeModule,
     MatIconModule,
     MatButtonModule,
-    MatRippleModule
+    MatRippleModule,
+    ToLabelModule
   ]
 })
 export class ScreeningItemModule { }

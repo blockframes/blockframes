@@ -1257,6 +1257,12 @@ export const budgetRange = {
   999999999: 'More than $20 millions'
 } as const;
 
+export const accessibility = {
+  public: 'Public',
+  'invitation-only': 'Invitation only',
+  private: 'Private',
+} as const;
+
 /**
  * https://docs.google.com/spreadsheets/d/1z4FFNABgDyRGgD5AQZf-ebWbA_m-7hlueFMCVUuk2fI/edit#gid=279324582
  */
@@ -1344,6 +1350,7 @@ export const staticModel = {
   appName,
   offerStatus,
   movieFormFields,
+  accessibility
 };
 
 export type StaticModel = typeof staticModel;
