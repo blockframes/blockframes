@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { availableTerritories, AvailsFilter, collidingTerms, toTerritoryMarker } from "@blockframes/contract/avails/avails";
 import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
 import { downloadCsvFromJson } from "@blockframes/utils/helpers";
-import { territoriesISOA3, TerritoryValue } from "@blockframes/utils/static-model";
+import { territories, territoriesISOA3, TerritoryValue } from "@blockframes/utils/static-model";
 import { combineLatest, Subscription } from "rxjs";
 import { filter, first, map, shareReplay, startWith, throttleTime } from "rxjs/operators";
 import { CatalogAvailsShellComponent } from "../shell/shell.component";
@@ -83,7 +83,9 @@ export class DashboardAvailsMapComponent implements AfterViewInit, OnDestroy {
   ) { }
 
   ngAfterViewInit() {
-    const decodedData = decodeUrl(this.route);
+    const decodedData = decodeUrl<Partial<AvailsFilter>>(this.route);
+    if (!decodedData.territories) decodedData.territories = []
+    if (!decodedData.medias) decodedData.medias = []
     this.availsForm.patchValue(decodedData);
     this.sub = this.availsForm.valueChanges.pipe(
       throttleTime(1000)
@@ -118,8 +120,8 @@ export class DashboardAvailsMapComponent implements AfterViewInit, OnDestroy {
     ]).pipe(first())
       .subscribe(([territoryMarker, movie]) => {
         const availsFilter = this.availsForm.value;
-        const territories = territoryMarker.flatMap(marker => marker.term.territories);
-        const termTerritories = Array.from(new Set(territories))
+        const availableTerritories = territoryMarker.flatMap(marker => marker.term.territories);
+        const termTerritories = Array.from(new Set(availableTerritories))
         const data = [{
           "International Title": movie.title.international,
           Medias: availsFilter.medias.map(medium => medias[medium]).join(';'),
