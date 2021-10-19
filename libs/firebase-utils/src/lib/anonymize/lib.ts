@@ -66,8 +66,8 @@ function processInvitation(i: Invitation): Invitation {
     ...i,
     fromOrg: updateOrg(i.fromOrg),
     toOrg: updateOrg(i.toOrg),
-    fromUser: updateUser(i.fromUser),
-    toUser: updateUser(i.toUser),
+    fromUser: updateUser(i.fromUser, true),
+    toUser: updateUser(i.toUser, true),
   };
 }
 
@@ -75,7 +75,7 @@ function processNotification(n: NotificationDocument): NotificationDocument {
   return {
     ...n,
     organization: updateOrg(n.organization),
-    user: updateUser(n.user as PublicUser), // ! TODO: If possible don't use Partial in this type!
+    user: updateUser(n.user as PublicUser, true), // ! TODO: If possible don't use Partial in this type!
   };
 }
 
