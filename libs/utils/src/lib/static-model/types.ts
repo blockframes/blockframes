@@ -30,7 +30,8 @@ import {
   unitBox,
   territories,
   territoriesISOA3,
-  budgetRange
+  budgetRange,
+  accessibility
 } from './static-model';
 
 export type NumberRange = keyof typeof budgetRange;
@@ -105,3 +106,7 @@ export type Territory = keyof typeof territories;
 export type TerritoryValue = typeof territories[Territory];
 export type TerritoryISOA3 = keyof typeof territoriesISOA3;
 export type TerritoryISOA3Value = typeof territoriesISOA3[TerritoryISOA3];
+
+export type AccessibilityTypes = keyof typeof accessibility;
+export type AccessibilityTypesValue = typeof accessibility[AccessibilityTypes];
+ 

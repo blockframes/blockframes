@@ -10,7 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
-
+import { ToLabelModule } from '@blockframes/utils/pipes';
 // Components
 import { GuestTableComponent } from './guest-table.component';
 
@@ -25,6 +25,7 @@ import { GuestTableComponent } from './guest-table.component';
     MatIconModule,
     RouterModule,
     ImageModule,
+    ToLabelModule
   ]
 })
 export class GuestTableModule { }
