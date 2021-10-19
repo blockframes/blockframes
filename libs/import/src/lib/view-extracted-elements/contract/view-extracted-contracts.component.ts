@@ -16,6 +16,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 
 import { ContractsImportState } from '../../utils';
 import { formatContract } from './utils';
+import { AuthQuery } from '@blockframes/auth/+state';
 
 @Component({
   selector: 'import-view-extracted-contracts[sheetTab]',
@@ -30,6 +31,7 @@ export class ViewExtractedContractsComponent implements OnInit {
   public contractsToCreate$ = new BehaviorSubject<MatTableDataSource<ContractsImportState>>(null);
 
   constructor(
+    private authQuery: AuthQuery,
     private titleService: MovieService,
     private firestore: AngularFirestore,
     private dynTitle: DynamicTitleService,
@@ -46,6 +48,7 @@ export class ViewExtractedContractsComponent implements OnInit {
       this.titleService,
       this.contractService,
       this.firestore,
+      this.authQuery.isBlockframesAdmin,
     );
     this.contractsToCreate$.next(new MatTableDataSource(contractsToCreate));
   }

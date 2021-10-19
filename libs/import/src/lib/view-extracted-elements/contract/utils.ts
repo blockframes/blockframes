@@ -13,18 +13,37 @@ import { centralOrgId } from '@env';
 import { AngularFirestore } from '@angular/fire/firestore';
 
 const separator = ';'
-type errorCodes = 'no-title-id' | 'no-seller-id' | 'wrong-contract-id' | 'no-buyer-id' | 'no-stakeholders' | 'no-territories' | 'no-medias' | 'no-duration-from' | 'no-duration-to';
+const errorCodes = [
+  'no-title-id',
+  'sales-only',
+  'no-seller-id',
+  'wrong-contract-id',
+  'no-buyer-id',
+  'no-stakeholders',
+  'no-territories',
+  'no-medias',
+  'no-duration-from',
+  'no-duration-to',
+] as const;
+type ErrorCode = typeof errorCodes[number];
 
-const errorsMap: { [key in errorCodes]: SpreadsheetImportError } = {
+const errorsMap: { [key in ErrorCode]: SpreadsheetImportError } = {
   'no-title-id': {
-    type: 'warning',
+    type: 'error',
     field: 'contract.titleId',
     reason: `No title found`,
     name: 'no-title-id',
     hint: 'Please check the international title or enter the ID of the title'
   },
+  'sales-only': {
+    type: 'error',
+    field: 'contract.type',
+    reason: `This contract is not a sale`,
+    name: 'sales-only',
+    hint: 'You are only allowed to import "sale" contracts, please edit the corresponding sheet field.'
+  },
   'no-seller-id': {
-    type: 'warning',
+    type: 'error',
     field: 'contract.sellerId',
     reason: `Couldn't find Licensor with the provided name.`,
     name: 'Seller ID',
@@ -45,7 +64,7 @@ const errorsMap: { [key in errorCodes]: SpreadsheetImportError } = {
     hint: 'Edit corresponding sheet field.'
   },
   'no-stakeholders': {
-    type: 'warning',
+    type: 'warning', // TODO issue#6900 maybe this should be an error instead of a warning
     field: 'contract.stakeholders',
     name: 'Stakeholders',
     reason: 'If this mandate has stakeholders, please fill in the name',
@@ -66,14 +85,14 @@ const errorsMap: { [key in errorCodes]: SpreadsheetImportError } = {
     hint: 'Edit corresponding sheet field.'
   },
   'no-duration-from': {
-    type: 'warning',
+    type: 'error',
     field: 'term.duration.from',
     name: 'Duration from',
     reason: 'Archipel Content needs to know the starting date of the contract.',
     hint: 'Edit corresponding sheet field.'
   },
   'no-duration-to': {
-    type: 'warning',
+    type: 'error',
     field: 'term.duration.to',
     name: 'Duration to',
     reason: 'Archipel Content needs to know the ending date of the contract.',
@@ -146,18 +165,38 @@ const fieldsConfig: FieldsConfigType = {
 } as const;
 
 
-async function getOrgId(name: string, orgService: OrganizationService) {
+async function getOrgId(name: string, orgService: OrganizationService, cache: Record<string, string>) {
   if (!name) return '';
   // @TODO #6586 careful if you are on an anonymized db, centralOrgId.catalog org name will not be 'Archipel Content'
   if (name === 'Archipel Content') return centralOrgId.catalog;
+
+  if (cache[name]) return cache[name];
+
   const orgs = await orgService.getValue(ref => ref.where('denomination.full', '==', name));
-  return orgs.length === 1 ? orgs[0].id : '';
+  const result = orgs.length === 1 ? orgs[0].id : '';
+  cache[name] = result;
+  return result;
 }
 
-async function getTitleId(name: string, titleService: MovieService) {
+async function getTitleId(name: string, titleService: MovieService, cache: Record<string, string>) {
   if (!name) return '';
+
+  if (cache[name]) return cache[name];
+
   const titles = await titleService.getValue(ref => ref.where('title.international', '==', name));
-  return titles.length === 1 ? titles[0].id : '';
+  const result =  titles.length === 1 ? titles[0].id : '';
+  cache[name] = result;
+  return result;
+}
+
+async function getContract(id: string, contractService: ContractService, cache: Record<string, (Mandate | Sale)>) {
+  if (!id) return;
+
+  if (cache[id]) return cache[id];
+
+  const contract = await contractService.getValue(id);
+  cache[id] = contract;
+  return contract;
 }
 
 export async function formatContract(
@@ -166,7 +205,13 @@ export async function formatContract(
   titleService: MovieService,
   contractService: ContractService,
   firestore: AngularFirestore,
+  blockframesAdmin: boolean,
 ) {
+
+  // Cache to avoid  querying db every time
+  const orgNameCache: Record<string, string> = {};
+  const titleNameCache: Record<string, string> = {};
+  const contractCache: Record<string, (Mandate | Sale)> = {};
 
   const contractsToCreate: ContractsImportState[] = [];
 
@@ -174,37 +219,48 @@ export async function formatContract(
     const row = rawRow.map(cell => typeof cell === "string" ? cell.trim() : cell.toString());
     if (!row.length) continue;
 
-    const { data, warnings: errors, } = extract<FieldsConfig>([row], fieldsConfig)
+    const { data, errors } = extract<FieldsConfig>([row], fieldsConfig);
 
     //////////////
     // CONTRACT //
     //////////////
 
     // TITLE
-    const titleId = data.titleId || (await getTitleId(data.title.international, titleService));
+    const titleId = data.titleId || (await getTitleId(data.title.international, titleService, titleNameCache));
 
     if (!titleId) errors.push(errorsMap['no-title-id']);
 
+
+    // TYPE
+    if (!blockframesAdmin && data.type !== 'sale') {
+      errors.push(errorsMap['sales-only']);
+    }
+
     // BUYER / SELLER
     const [sellerId, buyerId] = await Promise.all([
-      getOrgId(data.licensorName, orgService),
-      getOrgId(data.licenseeName, orgService),
+      getOrgId(data.licensorName, orgService, orgNameCache),
+      getOrgId(data.licenseeName, orgService, orgNameCache),
     ])
     if (!sellerId) errors.push(errorsMap['no-seller-id']);
     if (!buyerId) errors.push(errorsMap['no-buyer-id']);
 
     // STAKEHOLDER
-    const getStakeholders = Array.isArray(data.stakeholdersList) ? data.stakeholdersList.map(orgName => getOrgId(orgName, orgService)) : [];
+    const getStakeholders = Array.isArray(data.stakeholdersList) ? data.stakeholdersList.map(orgName => getOrgId(orgName, orgService, orgNameCache)) : [];
     const stakeholders: string[] = (await Promise.all(getStakeholders)).filter(s => !!s);
     if (!stakeholders.length) errors.push(errorsMap['no-stakeholders']);
 
     // PARENT TERM ID
+    // TODO issue#6900
     // TODO add parentTermId to the sales & mandates
+    // TODO mandates don't have a parentTermId ???
+    // TODO only admin internal sales (inside of AC) import require a parentTermId ???
+    // TODO sales outside of AC don't have a parentTermId ????
+    // TODO maybe property Contract.parentTermId should be move to Sale.parentTermId? a be optional ???
 
     // CONTRACT
     let baseContract: Partial<Mandate | Sale> = {};
     if (data.contractId) {
-      baseContract = await contractService.getValue(data.contractId as string);
+      baseContract = await getContract(data.contractId, contractService, contractCache);
       if (!baseContract) errors.push(errorsMap['wrong-contract-id']);
     } else {
       baseContract.id = firestore.createId();
