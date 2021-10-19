@@ -174,7 +174,7 @@ That would have exceeded the current limit which is ${MEETING_MAX_INVITATIONS_NU
 
   for (const email of data.emails) {
     const isLastIndex = await getOrInviteUserByMail(email, invitation.fromOrg.id, invitation.type, data.app, eventData)
-      .then(u => createPublicUser(u)) // @TODO #6756 remove unwanted attribute, invitations contains privacyPolicy & all user fields
+      .then(u => createPublicUser(u))
       .then(toUser => {
         invitation.toUser = toUser;
         const id = db.collection('invitations').doc().id;
