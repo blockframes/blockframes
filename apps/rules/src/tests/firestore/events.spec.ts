@@ -12,7 +12,7 @@ describe('Events Rules Tests', () => {
 
   describe('With User in org', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2' });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2', firebase: { sign_in_provider: 'password' } });
     });
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
@@ -20,6 +20,11 @@ describe('Events Rules Tests', () => {
     test('user with valid org should be able to read event', async () => {
       const eventRef = db.doc('events/E001');
       await assertSucceeds(eventRef.get());
+    });
+
+    test('user with valid org should be able to list all events', async () => {
+      const allEvents = db.collection('events');
+      await assertSucceeds(allEvents.get());
     });
 
     test("user with valid org, invalid event id shouldn't be able to create event", async () => {
@@ -62,20 +67,60 @@ describe('Events Rules Tests', () => {
       const eventRef = db.doc('events/E007');
       await assertSucceeds(eventRef.delete());
     });
+
+    test("user with valid org but not ownerOrgId as orgId should be able to update attendees status", async () => {
+      const eventRef = db.doc('events/E002');
+      const eventDetails = { meta: { attendees: { 'uid-user2': 'requesting' } } };
+      await assertSucceeds(eventRef.update(eventDetails));
+    });
+
+    test("user with valid org but not ownerOrgId as orgId should not be able to accept himself", async () => {
+      const eventRef = db.doc('events/E002');
+      const eventDetails = { meta: { attendees: { 'uid-user2': 'accepted' } } };
+      await assertFails(eventRef.update(eventDetails));
+    });
+
+    test("user with valid org but not ownerOrgId as orgId should not be able to set himself as owner", async () => {
+      const eventRef = db.doc('events/E002');
+      const eventDetails = { meta: { attendees: { 'uid-user2': 'owner' } } };
+      await assertFails(eventRef.update(eventDetails));
+    });
+
+    test("user with valid org but not ownerOrgId as orgId should not be able to update event accessibility", async () => {
+      const eventRef = db.doc('events/E002');
+      const eventDetails = { accessibility: 'public' };
+      await assertFails(eventRef.update(eventDetails));
+    });
   });
 
-  describe('With User not in org', () => {
+  describe('With Anonymous user', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {
-        uid: 'uid-peeptom',
-      });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-c8-anon', firebase: { sign_in_provider: 'anonymous' } });
     });
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
 
-    test("user without valid org shouldn't be able to read event", async () => {
-      const eventRef = db.doc('events/E001');
-      await assertFails(eventRef.get());
+    test('anonymous user should not be able to list all events', async () => {
+      const allDocs = db.collection('events');
+      await assertFails(allDocs.get());
+    });
+
+    test('anonymous user should be able to fetch an event by ID', async () => {
+      const docRef = db.doc('events/E001');
+      await assertSucceeds(docRef.get());
+    });
+  });
+
+  describe('With User not in org', () => {
+    beforeAll(async () => {
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-peeptom', firebase: { sign_in_provider: 'password' } });
+    });
+
+    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+
+    test("user without valid org shouldn't be able to list all event", async () => {
+      const allEvents = db.collection('events');
+      await assertFails(allEvents.get());
     });
 
     test("user without valid org shouldn't be able to create event", async () => {

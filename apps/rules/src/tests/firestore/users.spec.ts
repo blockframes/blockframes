@@ -11,7 +11,7 @@ describe('Org Admin', () => {
   let db: Firestore;
 
   beforeAll(async () => {
-    db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-admin' });
+    db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-admin', firebase: { sign_in_provider: 'password' } });
   });
 
   afterAll(() => Promise.all(apps().map((app) => app.delete())));
@@ -27,7 +27,7 @@ describe('General User', () => {
   let db: Firestore;
 
   beforeAll(async () => {
-    db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2' });
+    db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2', firebase: { sign_in_provider: 'password' } });
   });
 
   afterAll(() => Promise.all(apps().map((app) => app.delete())));
@@ -45,7 +45,7 @@ describe('Users Collection Rules Tests', () => {
   let db: Firestore;
 
   beforeAll(async () => {
-    db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2' });
+    db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2', firebase: { sign_in_provider: 'password' } });
   });
 
   afterAll(() => Promise.all(apps().map((app) => app.delete())));
@@ -76,5 +76,32 @@ describe('Users Collection Rules Tests', () => {
     const expUser = await expUserSnap.data();
     expect(user).toEqual(expUser);
   });
+
+  test('user should be able to list all users', async () => {
+    const allDocs = db.collection('users');
+    await assertFails(allDocs.get());
+  });
+});
+
+describe('With Anonymous user', () => {
+  const projectId = `rules-spec-${Date.now()}`;
+  let db: Firestore;
+
+  beforeAll(async () => {
+     db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-c8-anon', firebase: { sign_in_provider: 'anonymous' } });
+  });
+
+  afterAll(() => Promise.all(apps().map((app) => app.delete())));
+
+  test('anonymous user should not be able to list all users', async () => {
+    const allDocs = db.collection('users');
+    await assertFails(allDocs.get());
+  });
+
+  test('anonymous user should be able to fetch an user by ID', async () => {
+    const docRef = db.doc('users/uid-c8');
+    await assertSucceeds(docRef.get());
+  });
+
 });
 

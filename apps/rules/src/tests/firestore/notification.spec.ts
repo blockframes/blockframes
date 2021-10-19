@@ -13,7 +13,7 @@ describe('Notification Rules Tests', () => {
 
   describe('With User not in TO field', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2' });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2', firebase: { sign_in_provider: 'password' } });
     });
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
@@ -46,7 +46,7 @@ describe('Notification Rules Tests', () => {
 
   describe('With User in TO field', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-c8' });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-c8', firebase: { sign_in_provider: 'password' } });
     });
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
