@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { availableTerritories, AvailsFilter, collidingTerms, toTerritoryMarker } from "@blockframes/contract/avails/avails";
 import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
 import { downloadCsvFromJson } from "@blockframes/utils/helpers";
-import { territoriesISOA3, TerritoryValue } from "@blockframes/utils/static-model";
+import { territories, territoriesISOA3, TerritoryValue } from "@blockframes/utils/static-model";
 import { combineLatest, Subscription } from "rxjs";
 import { filter, first, map, shareReplay, startWith, throttleTime } from "rxjs/operators";
 import { CatalogAvailsShellComponent } from "../shell/shell.component";
