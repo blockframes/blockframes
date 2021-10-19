@@ -42,8 +42,7 @@ export async function upgrade(db: Firestore, storage: Storage) {
       await doc.ref.set(user);
     }
 
-  },
-  ).catch(err => console.error(err));
-}
+  }).catch(err => console.error(err));
 
-console.log('watermarks removed !');
+  console.log('watermarks removed !');
+}
