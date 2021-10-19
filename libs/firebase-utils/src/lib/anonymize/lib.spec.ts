@@ -53,8 +53,7 @@ describe('Test USERS anonymization function', () => {
         lastName: 'Bar',
         privacyPolicy: {
           ip: '127.0.0.1'
-        },
-        watermark: {}
+        }
       }
     };
 
@@ -90,8 +89,7 @@ describe('Test INVITATIONS anonymization function', () => {
           lastName: 'Bar',
           privacyPolicy: {
             ip: '127.0.0.1'
-          },
-          watermark: {}
+          }
         }
       }
     };
@@ -133,8 +131,7 @@ describe('Test NOTIFICATIONS anonymization function', () => {
           lastName: 'Bar',
           privacyPolicy: {
             ip: '127.0.0.1'
-          },
-          watermark: {}
+          }
         }
       }
     };

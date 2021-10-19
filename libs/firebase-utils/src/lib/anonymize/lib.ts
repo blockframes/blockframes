@@ -79,16 +79,11 @@ function processNotification(n: NotificationDocument): NotificationDocument {
   };
 }
 
-function updateUser(user: User | PublicUser | Partial<User>) {
+function updateUser(user: User | PublicUser | Partial<User>, toPublicUser = false) {
   if (!user) return;
-  if (hasKeys<PublicUser>(user, 'uid') && !hasKeys<User>(user, 'watermark')) {
-    // Is public
-    const newUser = userCache?.[user.uid] || (userCache[user.uid] = processUser(user));
-    return createPublicUser(newUser);
-    // If not in cache, process the user, write to cache, make it a publicUser and return it
-  }
   if (hasKeys<User>(user, 'uid')) {
-    return userCache?.[user.uid] || (userCache[user.uid] = processUser(user));
+    const processedUser = userCache?.[user.uid] || (userCache[user.uid] = processUser(user));
+    return toPublicUser ? createPublicUser(processedUser) : processedUser; // @TODO #6905
   }
   if (!hasKeys<User>(user, 'uid')) {
     console.warn('WARNING - user does not have UID!', user)

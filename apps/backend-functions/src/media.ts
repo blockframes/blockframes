@@ -209,7 +209,7 @@ export async function linkFile(data: storage.ObjectMetadata) {
       return true;
     } else if (metadata.moving === 'true') {
       // removing the 'moving' flag from metadata 
-      file.setMetadata({ metadata: { moving: null }});
+      file.setMetadata({ metadata: { moving: null } });
     }
   }
 
@@ -289,29 +289,14 @@ function checkFileList(before: StorageFile[] | undefined, after: StorageFile[] |
   return filesToClean;
 };
 
-export async function cleanUserMedias(before: PublicUser, after?: PublicUser): Promise<void> {
-  const mediaToDelete: StorageFile[] = [];
-  if (after) { // Updating
-    // Check if avatar have been changed/removed
-    if (needsToBeCleaned(before.avatar, after.avatar)) {
-      mediaToDelete.push(before.avatar);
-    }
-
-    // Check if watermark have been changed/removed
-    if (needsToBeCleaned(before.watermark, after.watermark)) {
-      mediaToDelete.push(before.watermark);
-    }
-  } else { // Deleting
-    if (before.avatar) {
-      mediaToDelete.push(before.avatar);
-    }
-
-    if (before.watermark) {
-      mediaToDelete.push(before.watermark);
-    }
+export async function cleanUserMedias(before: PublicUser, after?: PublicUser): Promise<unknown> {
+  // Updating, check if avatar have been changed/removed
+  const needUpdate = after && needsToBeCleaned(before.avatar, after.avatar);
+  // Deleting
+  const needDelete = !after && !!before.avatar;
+  if (needUpdate || needDelete) {
+    return deleteMedia(before.avatar);
   }
-
-  await Promise.all(mediaToDelete.map(m => deleteMedia(m)));
 }
 
 export async function cleanOrgMedias(before: OrganizationDocument, after?: OrganizationDocument): Promise<void> {
@@ -466,12 +451,14 @@ export const moveMedia = async (before: StorageFile, after: StorageFile) => {
   if (!exists) {
     logger.error(`Move Error : File "${beforePath}" does not exists in the storage`);
   } else {
-    
+
     // set moving flag to prevent upload to jwPlayer
-    await fileObject.setMetadata({ metadata: {
-      privacy: after.privacy,
-      moving: 'true'
-    }});
+    await fileObject.setMetadata({
+      metadata: {
+        privacy: after.privacy,
+        moving: 'true'
+      }
+    });
     return fileObject.move(afterPath);
   }
 }
@@ -493,7 +480,7 @@ export async function moveMovieMedia(before: MovieDocument, after: MovieDocument
           moveMedia(beforeFile, afterFile);
         }
       });
-      
+
     } else {
       const afterFile: StorageFile = getDeepValue(after, path);
       if (beforeFile.privacy !== afterFile.privacy) {

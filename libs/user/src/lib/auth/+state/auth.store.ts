@@ -17,8 +17,7 @@ export interface AuthState extends FireAuthState<User>, RoleState<Roles> {
 export function createUser(user: Partial<User> = {}) {
   return {
     ...user,
-    avatar: createStorageFile(user.avatar),
-    watermark: createStorageFile(user.watermark)
+    avatar: createStorageFile(user.avatar)
   } as User;
 }
 

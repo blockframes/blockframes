@@ -18,7 +18,6 @@ export const fileLabels = [
 
   // users
   'avatar',
-  'watermark',
 
   // movies
   'poster',
@@ -51,8 +50,7 @@ export const storagePaths: Record<CollectionHoldingFile, Partial<Record<FileLabe
     videos: 'documents.videos',
   },
   users: {
-    avatar: 'avatar',
-    watermark: 'watermark',
+    avatar: 'avatar'
   },
   movies: {
     poster: 'poster',
@@ -90,8 +88,7 @@ export function getFileMetadata(collection: CollectionHoldingFile, label: FileLa
       videos: { uid: '', privacy: 'protected', collection, docId, field: 'documents.videos', fileId },
     },
     users: {
-      avatar: { uid: '', privacy: 'public', collection, docId, field: 'avatar' },
-      watermark: { uid: '', privacy: 'public', collection, docId, field: 'watermark' },
+      avatar: { uid: '', privacy: 'public', collection, docId, field: 'avatar' }
     },
     movies: {
       poster: { uid: '', privacy: 'public', collection, docId, field: 'poster' },
