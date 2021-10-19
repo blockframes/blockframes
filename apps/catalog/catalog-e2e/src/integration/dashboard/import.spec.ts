@@ -23,7 +23,6 @@ const MOVIE_IMPORT_TIMEOUT = 120 * SEC;
 const CONTRACT_IMPORT_TIMEOUT = 240 * SEC;
 
 const logInAndNavigate = (user: Partial<UserType>) => {
-  cy.log('Log in with user Jean');
   cy.login(user.email, user.password);
   cy.visit('/c/o/marketplace/home');
 
@@ -39,7 +38,7 @@ const logInAndNavigate = (user: Partial<UserType>) => {
   cy.wait(5 * SEC);
 }
 
-describe('User can fill and save contract tunnel form', () => {
+describe('User can import templates', () => {
   beforeEach(() => {
     cy.viewport('ipad-2', 'landscape');
   });
@@ -99,7 +98,7 @@ describe('User can fill and save contract tunnel form', () => {
 
     cy.wait(1 * SEC);
 
-    //Import the Movie file here
+    //Import the Contract file here
     cy.log('Start upload by attaching the fixture');
     cy.get('input', {timeout: 10 * SEC})
       .attachFile(contractFixture);
