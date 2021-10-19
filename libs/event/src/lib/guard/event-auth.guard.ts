@@ -40,7 +40,7 @@ export class EventAuthGuard extends CollectionGuard<AuthState> {
           map(() => this.query.user),
           map(async user => {
             // Check that onboarding is complete
-            const validUser = hasDisplayName(user) && user._meta.emailVerified && user.orgId; // @TODO #6756 check user._meta.emailVerified required ?
+            const validUser = hasDisplayName(user) && user._meta.emailVerified && user.orgId;
             if (!validUser) {
               this.router.navigate(['/auth/identity']);
               return false;
@@ -57,7 +57,6 @@ export class EventAuthGuard extends CollectionGuard<AuthState> {
              * If current user is not anonymous, we populate org stage
              */
             if (userAuth && !userAuth.isAnonymous) {
-              const org = await this.orgService.getValue(user.orgId);
 
               // Starting orgState populate @TODO #6756 check if can be improved
               this.orgStore.upsert(org.id, org);

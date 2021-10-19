@@ -34,7 +34,6 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
-
 const routes: Routes = [{
   path: ':eventId',
   component: MainComponent,

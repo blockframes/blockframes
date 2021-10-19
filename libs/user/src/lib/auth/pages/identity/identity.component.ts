@@ -182,12 +182,10 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
       /**
        * @dev This anonymous user is used to call "this.orgService.uniqueOrgName()"
-       * without forcing us to allow orgs collection reads for non-logged-in users in firestore rules.
-       * @TODO #6756 add to notion page https://www.notion.so/cascade8/Release-troubleshooting-8085a54303de4019b0a129116d60fa13 to enable anonymous login for prod env
-       * If we beleive this is not enough for data safety, an https function must be used (with anonymous login ?).
-       * 
+       * without forcing us to allow orgs collection reads for non-logged-in users in firestore rules
        * Once the account is converted from anonymous to real, authState will remain as anonymous for a few seconds 
        * (this explain the need to allow the anonymous sign-in for user update in firestore rules)
+       * #6908
        */
       this.anonymousUser = await this.authService.signInAnonymously();
 
