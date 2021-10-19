@@ -218,7 +218,7 @@ service cloud.firestore {
     match /orgs/{orgId} {
       allow get: if isSignedInAnonymously()
         && notInMaintenance()
-      allow list: if isSignedInAnonymously() // @TODO #6756 updated with userHasValidOrg() when a solution for this is found.
+      allow list: if isSignedInAnonymously() // @TODO #6908 update with userHasValidOrg() when a solution for this is found.
         && notInMaintenance();
     	allow create: if isSignedInAnonymously()
         && isRequestFieldValueEqualTo(['status'], 'pending')
