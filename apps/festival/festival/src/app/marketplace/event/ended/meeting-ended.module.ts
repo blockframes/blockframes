@@ -8,7 +8,7 @@ import { EventRangeModule } from '@blockframes/event/pipes/event-range.pipe';
 
 import { MeetingEndedComponent } from './meeting-ended.component';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
-
+import { ToLabelModule } from '@blockframes/utils/pipes';
 @NgModule({
   declarations: [ MeetingEndedComponent ],
   imports: [
@@ -16,7 +16,8 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
     DurationModule,
     EventRangeModule,
     ImageModule,
-
+    ToLabelModule,
+    
     RouterModule.forChild([{ path: '', component: MeetingEndedComponent }])
   ],
 })
