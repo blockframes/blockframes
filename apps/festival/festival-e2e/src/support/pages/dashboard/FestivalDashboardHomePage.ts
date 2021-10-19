@@ -1,5 +1,5 @@
 ﻿import EventPage from './EventPage';
-import EventEditPage from './EventEditPage';
+import EventDetailsEditPage from './EventDetailsEditPage';
 import FestivalInvitationsPage from './FestivalInvitationsPage';
 import FestivalMarketplaceNotifications from '../marketplace/FestivalMarketplaceNotificationsPage';
 import { SEC } from '@blockframes/e2e/utils';
@@ -53,7 +53,7 @@ export default class FestivalDashboardHomePage {
       }
       cy.wait(1 * SEC);
       cy.get('button[test-id="menu"]', { timeout: 3 * SEC }).first().click();
-      const event: EventEditPage = eventPage.createDetailedEvent(eventDate);
+      const event: EventDetailsEditPage = eventPage.createDetailedEvent(eventDate);
       event.addEventTitle(eventTitle);
       event.selectMovie(screeningName);
       event.uncheckPrivate(isPublic);

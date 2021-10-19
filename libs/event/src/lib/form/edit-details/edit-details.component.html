@@ -21,9 +21,21 @@
     </div>
   </div>
 
-  <div fxLayout="column" fxLayoutGap="12px">
+  <div *ngIf="displayPrivacySettings" fxLayout="column" fxLayoutGap="12px">
     <h3>Privacy Settings</h3>
-    <mat-checkbox test-id="event-private" formControlName="isPrivate" color="primary">PRIVATE - upon invitation only</mat-checkbox>
+    <mat-radio-group fxLayout="column" formControlName="accessibility">
+      <mat-radio-button  color="primary" value="public">
+        PUBLIC - anyone who has a link can access your event (no statistics, no watermark) -- best for meetings
+      </mat-radio-button>
+      <!-- @TODO #6756 uncomment once all is done 
+      <mat-radio-button  color="primary" value="invitation-only">
+        INVITATION ONLY - upon invited guests can access your event
+      </mat-radio-button>-->
+      <mat-radio-button  color="primary" value="private">
+        PRIVATE - only {{ appName }} users can access your event --- best for Screenings
+      </mat-radio-button>
+    </mat-radio-group>
+    
     <div fxLayout fxLayoutAlign="start center" fxLayoutGap="8px">
       <mat-checkbox formControlName="isSecret" color="primary">SECRET - not listed on the Marketplace</mat-checkbox>
       <mat-icon svgIcon="info" matTooltip="Only users with a direct link will be able to access your event."></mat-icon>
