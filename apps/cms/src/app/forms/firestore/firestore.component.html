@@ -21,6 +21,9 @@
         <ng-container *ngSwitchCase="'limitToLast'">
           <form-text [form]="control.get('limit')"></form-text>
         </ng-container>
+        <ng-container *ngSwitchCase="'startAt'">
+          <form-text [form]="control.get('value')"></form-text>
+        </ng-container>
       </div>
       <button mat-icon-button (click)="form.removeAt(i)" [disabled]="control.disabled">
         <mat-icon svgIcon="cancel"></mat-icon>

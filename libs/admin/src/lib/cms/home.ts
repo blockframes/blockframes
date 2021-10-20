@@ -44,6 +44,12 @@ export interface SliderSection extends Section {
   query: FirestoreQuery;
 }
 
+export interface EventsSliderSection extends Section {
+  _type: 'eventsSlider';
+  eventIds: string[];
+  query: FirestoreQuery;
+}
+
 export interface TitlesSection extends Section {
   _type: 'titles',
   title: string;
@@ -60,4 +66,5 @@ export type HomeSection =
   | OrgTitlesSection
   | OrgsSection
   | SliderSection
-  | TitlesSection;
+  | TitlesSection
+  | EventsSliderSection;
