@@ -380,13 +380,13 @@ async function sendInvitationToAttendEventCreatedEmail(recipient: User, notifica
 }
 
 function getEventLink(invitationMode: InvitationMode, eventData: EventEmailData, org: OrganizationDocument) {
-  if (invitationMode === "request" || (invitationMode === 'invitation' && eventData.accessibility === 'private')) {
+  if (invitationMode === 'request' || (invitationMode === 'invitation' && eventData.accessibility === 'private')) {
     if (canAccessModule('marketplace', org)) {
       return '/c/o/marketplace/invitations';
     } else if (canAccessModule('dashboard', org)) {
       return '/c/o/dashboard/invitations';
     } else {
-      return "";
+      return '';
     }
   } else {
     return `/event/${eventData.id}/r/i`;

@@ -173,11 +173,11 @@ export const inviteUsers = async (data: UserInvitation, context: CallableContext
   }
 
   for (const email of data.emails) {
-    const {id, type, mode, fromOrg} = invitation;
+    const { id, type, mode, fromOrg } = invitation;
     const isLastIndex = await getOrInviteUserByMail(email, {id, type, mode, fromOrg}, data.app, eventData)
       .then(u => {
         if(u.invitationStatus) invitation.status = u.invitationStatus; 
-        return createPublicUser(u.user)
+        return createPublicUser(u.user);
       })
       .then(toUser => {
         invitation.toUser = toUser;

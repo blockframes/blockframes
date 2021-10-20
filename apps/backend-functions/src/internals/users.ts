@@ -37,7 +37,7 @@ export const getOrInviteUserByMail = async (
   try {
     const { uid } = await auth.getUserByEmail(email);
     const user = await getDocument<PublicUser>(`users/${uid}`);
-    return {user: user || { uid, email }}
+    return { user: user || { uid, email } };
   } catch {
     try {
       const newUser = await createUserFromEmail(email, app);
@@ -52,7 +52,7 @@ export const getOrInviteUserByMail = async (
 
       const invitationTemplateId = eventData.accessibility !== 'private' ? credsTemplates.attendNonPrivateEvent : credsTemplates.attendEvent;
           
-      const templateId = invitation.type === 'joinOrganization' ? templateIds.user.credentials.joinOrganization : invitationTemplateId;
+      const templateId = invitation.type === 'joinOrganization' ? credsTemplates.joinOrganization : invitationTemplateId;
 
       if(invitation.mode === 'invitation' && eventData.accessibility === 'invitation-only') {
         invitationStatus = 'accepted';
@@ -60,7 +60,10 @@ export const getOrInviteUserByMail = async (
 
       const template = userInvite(toUser, orgEmailData, urlToUse, templateId, eventData);
       await sendMailFromTemplate(template, app);
-      return {user: newUser.user, invitationStatus };
+      return { 
+        user: newUser.user, 
+        invitationStatus 
+      };
     } catch (e) {
       throw new Error(`There was an error while sending email to newly created user : ${e.message}`);
     }
