@@ -56,7 +56,7 @@ export function events(): (WhereQuery | OrderByQuery | StartAtQuery)[] {
     direction: 'asc'
   }, {
     method: 'startAt',
-    value: 'runningAndUpcomingEvents'
+    value: 'now'
   }];
 }
 
