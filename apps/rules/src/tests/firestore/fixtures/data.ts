@@ -80,7 +80,7 @@ export const testFixture = {
   'orgs/O001': {
     id: 'O001',
     status: 'accepted',
-    userIds: ['uid-admin', 'uid-sAdmin', 'uid-user2', ],
+    userIds: ['uid-admin', 'uid-sAdmin', 'uid-user2'],
   },
   'orgs/O002': {
     status: 'accepted',
@@ -251,6 +251,12 @@ export const testFixture = {
     id: 'E001',
   },
 
+  'events/E002': {
+    id: 'E002',
+    ownerOrgId: 'foo',
+    accessibility: 'private'
+  },
+
   //Notifications
   'notifications/001': {
     id: '001',
@@ -281,7 +287,7 @@ export const testFixture = {
   'invitations/I010': {
     type: 'cancelEvent',
   },
-  'invitations/I011' : {
+  'invitations/I011': {
     type: 'cancelEvent',
     fromOrg: { id: 'O011' },
     fromUser: { uid: 'uid-user2' },
@@ -290,6 +296,10 @@ export const testFixture = {
     type: 'cancelEvent',
     fromOrg: { id: 'O001' },
     fromUser: { uid: 'uid-user2' },
+  },
+  'invitations/I013': {
+    type: 'attendEvent',
+    eventId: 'E003-public'
   },
 
   //Contracts
