@@ -19,6 +19,24 @@ import {
 import { DurationMarker } from '../avails';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 
+/** Available [A], Today[T], Expired[E]
+*               A.from       A.to
+*   xxxxxxxxxxxxx|------T-----|xxxxxx
+*   xxxxxxxxxxxxx|-----|xxxxxxxxxxxx
+*              E.from   E.to
+*
+* Determines date ranges amongst the available markers that are already in the past.
+*/
+function getExpiredMarkers(availableMarkers: DurationMarker[]) {
+  const today = new Date();
+  const previousMonthDate = new Date();
+  previousMonthDate.setDate(0); // sets date to last date of previous month.
+  const partiallyExpiredMarkers = availableMarkers.filter(marker => {
+    return marker.from < today;
+  });
+  return partiallyExpiredMarkers.map(marker => ({ ...marker, to: previousMonthDate }));
+}
+
 
 @Component({
   selector: 'avails-calendar',
@@ -46,18 +64,7 @@ export class AvailsCalendarComponent implements OnInit {
     if (!markers) return;
     this._availableMarkers = markers;
 
-    const today = new Date()
-    const previousMonthDate = new Date()
-    previousMonthDate.setDate(0) // sets date to last date of previous month.
-    const previousMonthThisYear = new Date(
-      previousMonthDate.getFullYear(),
-      previousMonthDate.getMonth(),
-      previousMonthDate.getDate()
-    );
-    const partiallyExpiredMarkers = markers.filter(marker => {
-      return marker.from < today
-    })
-    this._partialyExpiredMarkers = partiallyExpiredMarkers.map(marker => ({ ...marker, to: previousMonthThisYear }))
+    this._partialyExpiredMarkers = getExpiredMarkers(markers);
     this.updateMatrix();
   }
 
