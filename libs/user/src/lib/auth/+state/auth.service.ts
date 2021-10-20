@@ -213,8 +213,8 @@ export class AuthService extends FireAuthService<AuthState> {
   async isSignedInAnonymously() {
     const currentUser = firebase.auth().currentUser;
     if (!currentUser) return false;
-    const tokenInformation = await currentUser.getIdTokenResult();
-    return tokenInformation.signInProvider === 'anonymous';
+    const { signInProvider } = await currentUser.getIdTokenResult();
+    return signInProvider === 'anonymous';
   }
 
   /**
@@ -238,6 +238,7 @@ export class AuthService extends FireAuthService<AuthState> {
     const isAnonymous = await this.isSignedInAnonymously();
     if (!isAnonymous) return false;
     // Clean anonymousCredentials
+    await this.onSignout();
     this.store.reset();
     // Delete (and logout) user
     return firebase.auth().currentUser.delete();
