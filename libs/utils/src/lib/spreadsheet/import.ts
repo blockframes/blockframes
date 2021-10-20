@@ -165,7 +165,7 @@ export function extract<T>(rawRows: string[][], extractParams: ExtractConfig<T> 
   const state = {};
   extraParamsEntries.forEach(([columnIndexedKey, parseFieldFn], index) => {
     const extraParamValues = rawRows.map(row => row[index] ?? '');
-    parse(state, extraParamValues, columnIndexedKey, parseFieldFn as any, index, warnings, errors)
+    parse(state, extraParamValues, columnIndexedKey, parseFieldFn as any, index, warnings, errors);
   });
   return {
     data: cleanUp(state as T),
