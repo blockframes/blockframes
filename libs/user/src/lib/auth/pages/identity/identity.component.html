@@ -1,10 +1,5 @@
 <main bgAsset="rocket_background.svg">
-  <ng-container *ngIf="(user$ | async) === null else logoutUser">
-    <a app-logo routerLink="/"></a>
-  </ng-container>
-  <ng-template #logoutUser>
-    <button app-logo (click)="logout()"></button>
-  </ng-template>
+  <button app-logo (click)="logout()"></button>
   <section fxLayout="column" fxLayoutAlign="center center">
     <h1>Create your account</h1>
     <p>Please fill in the form below to join the {{ appName }} platform</p>
