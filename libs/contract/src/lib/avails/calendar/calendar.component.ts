@@ -19,6 +19,21 @@ import {
 import { DurationMarker } from '../avails';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 
+/** Available [A], Today[T], Expired[E]
+*               A.from       A.to
+*   xxxxxxxxxxxxx|------T-----|xxxxxx
+*   xxxxxxxxxxxxx|ooooo|------|xxxxxx
+*              E.from  E.to
+*
+* Determines date ranges amongst the available markers that are already in the past.
+*/
+function getExpiredMarkers(availableMarkers: DurationMarker[]) {
+  const today = new Date();
+  const previousMonthDate = new Date();
+  previousMonthDate.setDate(0); // sets date to last date of previous month.
+  return availableMarkers.filter(marker => marker.from < today).map(marker => ({ ...marker, to: previousMonthDate }));
+}
+
 
 @Component({
   selector: 'avails-calendar',
@@ -36,6 +51,7 @@ export class AvailsCalendarComponent implements OnInit {
   public state$ = new BehaviorSubject<AvailCalendarState>(createAvailCalendarState());
 
   private _availableMarkers: DurationMarker[] = [];
+  private _expiredMarkers: DurationMarker[] = [];
   private _soldMarkers: DurationMarker[] = [];
   private _inSelectionMarkers: DurationMarker[] = [];
   private _selectedMarker?: DurationMarker;
@@ -44,6 +60,8 @@ export class AvailsCalendarComponent implements OnInit {
   @Input() set availableMarkers(markers: DurationMarker[] | undefined) {
     if (!markers) return;
     this._availableMarkers = markers;
+
+    this._expiredMarkers = getExpiredMarkers(markers);
     this.updateMatrix();
   }
 
@@ -79,6 +97,7 @@ export class AvailsCalendarComponent implements OnInit {
     // set available/sold/selected blocks into the stateMatrix (this will display the colored rectangles)
     let matrix: CellState[][] = this.rows.map(() => this.columns.map(() => 'empty'));
     if (this._availableMarkers.length) matrix = markersToMatrix(this._availableMarkers, this.stateMatrix, 'available');
+    if (this._expiredMarkers.length) matrix = markersToMatrix(this._expiredMarkers, this.stateMatrix, 'expired');
     if (this._soldMarkers.length) matrix = markersToMatrix(this._soldMarkers, this.stateMatrix, 'sold');
     if (this._inSelectionMarkers.length) matrix = markersToMatrix(this._inSelectionMarkers, this.stateMatrix, 'selected');
     this.stateMatrix = matrix;

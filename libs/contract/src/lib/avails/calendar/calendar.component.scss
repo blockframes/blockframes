@@ -26,6 +26,11 @@ table {
     background-color: var(--primary);
   }
 
+  .expired {
+    cursor: default;
+    background-color: var(--background-disabled-button);
+  }
+
   .sold {
     cursor: default;
     background-color: var(--foreground-disabled-text);
