@@ -520,7 +520,7 @@ service cloud.firestore {
 
     // Check if user is signed in as anonymous or regular
     function isSignedIn() {
-      return isSignedInWithPassword() || (currentUser() != null && currentSigninProvider() == 'anonymous');
+      return currentUser() != null || (currentUser() != null && currentSigninProvider() == 'anonymous');
     }
 
   	function userOrgId() {

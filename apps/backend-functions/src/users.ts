@@ -149,7 +149,7 @@ export async function onUserUpdate(change: functions.Change<FirebaseFirestore.Do
 async function initUser(user: PublicUser) {
   const promises = [sendFirstConnexionEmail(user)];
 
-  if (user._meta?.createdBy === 'anonymous' && !!user.email) {
+  if (user._meta?.createdBy === 'anonymous' && user.email) {
     const authUser = await admin.auth().getUser(user.uid);
     if (!authUser.emailVerified) {
       promises.push(startAccountCreationEmailFlow({ email: user.email, publicUser: user, app: user._meta.createdFrom }));
