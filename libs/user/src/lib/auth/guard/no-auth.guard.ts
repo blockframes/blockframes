@@ -23,7 +23,7 @@ export class NoAuthGuard extends CollectionGuard<AuthState> {
   sync() {
     return this.afAuth.authState.pipe(
       switchMap(userAuth => {
-        if (!userAuth) { return Promise.resolve(true); }
+        if (!userAuth || userAuth.isAnonymous) { return Promise.resolve(true); }
         return this.service.sync().pipe(
           catchError(() => Promise.resolve(true)),
           map(() => this.query.orgId),
