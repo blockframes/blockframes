@@ -15,7 +15,7 @@ import { FirestoreFormModule, firestoreQuery, orgsFromApp } from '../../forms/fi
 import { map,shareReplay,switchMap } from 'rxjs/operators';
 
 
-type OrgsSchema = FormGroupSchema<OrgsSection>;
+export type OrgsSchema = FormGroupSchema<OrgsSection>;
 
 
 export const orgsSchema = (params: TemplateParams): OrgsSchema => ({
