@@ -1,0 +1,20 @@
+<mat-radio-group [value]="queryMode" (change)="select($event)">
+  <mat-radio-button value="eventIds">IDs</mat-radio-button>
+  <mat-radio-button value="query">Firestore Query</mat-radio-button>
+</mat-radio-group>
+
+<!-- get events before avoid loading time -->
+<article [ngSwitch]="queryMode">
+  <ng-container *ngSwitchCase="'eventIds'">
+    <form-chips-autocomplete
+      [form]="form.get('eventIds')"
+      [options]="events$ | async"
+      [getValue]="getValue"
+      [displayLabel]="displayLabel">
+    </form-chips-autocomplete>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'query'">
+    <form-firestore [form]="form.get('query')"></form-firestore>
+  </ng-container>
+</article>

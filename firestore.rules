@@ -23,7 +23,7 @@ service cloud.firestore {
     }
 
     match /blockframesAdmin/{userId} {
-      allow read: if ( userId() == userId || (isSignedIn() && isOrgMember(orgIdOf(userId))) ) && notInMaintenance();
+      allow read: if ( userId() == userId || (isSignedInWithPassword() && isOrgMember(orgIdOf(userId))) ) && notInMaintenance();
       allow write: if false;
     }
 
@@ -63,8 +63,8 @@ service cloud.firestore {
     /// RULES ///
 
     match /users/{userId} {
-      allow get: if isSignedInAnonymously() && notInMaintenance();
-    	allow list: if isSignedIn() && isOrgMember(orgIdOf(userId())) && notInMaintenance();
+      allow get: if isSignedIn() && notInMaintenance();
+    	allow list: if isSignedInWithPassword() && isOrgMember(orgIdOf(userId())) && notInMaintenance();
     	allow update: if isOnlyUpdatingAllowedUserFields() && notInMaintenance();
     	allow create: if userId() == incomingData().uid
         && isRequestFieldValueEqualTo(['uid'], userId) && notInMaintenance();
@@ -75,7 +75,7 @@ service cloud.firestore {
 
     function isOnlyUpdatingAllowedUserFields() {
       // Only "firstName" and "lastName" can be updated.
-      return isSignedInAnonymously()
+      return isSignedIn()
       	&& userId() == incomingData().uid
         && isNotUpdatingId('uid', existingData().uid)
         && isNotUpdatingField(['email'])
@@ -123,7 +123,7 @@ service cloud.firestore {
 
     match /invitations/{invitationId} {
       allow get: if existingData().type == 'attendEvent' 
-        && isSignedInAnonymously()
+        && isSignedIn()
         && notInMaintenance();
     	allow list: if isAllowedToReadInvitation()
         && notInMaintenance();
@@ -150,7 +150,7 @@ service cloud.firestore {
 
     function isAllowedToReadInvitation() {
       return (
-        ( existingData().type == 'attendEvent' && isSignedIn() )
+        ( existingData().type == 'attendEvent' && isSignedInWithPassword() )
         || isConcerned() // is host or guest
       )
     }
@@ -217,11 +217,11 @@ service cloud.firestore {
     /// RULES ///
 
     match /orgs/{orgId} {
-      allow get: if isSignedInAnonymously()
+      allow get: if isSignedIn()
         && notInMaintenance()
-      allow list: if isSignedInAnonymously() // @TODO #6756 updated with userHasValidOrg() when a solution for this is found.
+      allow list: if isSignedIn() // @TODO #6756 updated with userHasValidOrg() when a solution for this is found.
         && notInMaintenance();
-    	allow create: if isSignedInAnonymously()
+    	allow create: if isSigned()
         && isRequestFieldValueEqualTo(['status'], 'pending')
         && isRequestFieldValueEqualToOrNotSetted(['id'], orgId)
         && notInMaintenance();
@@ -296,7 +296,7 @@ service cloud.firestore {
     /// RULES ///
 
     match /movies/{movieId} {
-      allow get: if isSignedInAnonymously()
+      allow get: if isSignedIn()
         && notInMaintenance()
         && ( checkStatus(existingData(), 'accepted')
         || ( isOrgMember(userOrgId()) && ( userOrgId() in existingData().orgIds ))
@@ -363,7 +363,7 @@ service cloud.firestore {
     }
 
     match /contracts/{contractId} {
-      allow read: if isSignedIn() && notInMaintenance();
+      allow read: if isSignedInWithPassword() && notInMaintenance();
       allow create: if (userOrgId() == incomingData().buyerId) && notInMaintenance();
       allow update: if (userOrgId() in existingData().stakeholders)
                     && isOnlyChangingContractStatus()
@@ -372,7 +372,7 @@ service cloud.firestore {
     }
 
     match /terms/{termId} {
-      allow read: if isSignedIn() && notInMaintenance();
+      allow read: if isSignedInWithPassword() && notInMaintenance();
       allow create: if (userOrgId() == getContract(incomingData().contractId).buyerId)
         && notInMaintenance();
       allow update: if false;
@@ -400,7 +400,7 @@ service cloud.firestore {
 
     /// EVENTS RULES ///
     match /events/{eventId} {
-    	allow get: if isSignedInAnonymously() && notInMaintenance();
+    	allow get: if isSignedIn() && notInMaintenance();
       allow list: if userHasValidOrg() && notInMaintenance();
       allow create: if userHasValidOrg()
         && isRequestFieldValueEqualToOrNotSetted(['id'], eventId)
@@ -451,7 +451,7 @@ service cloud.firestore {
 
     // note: campaign is using the movieId as id
     match /campaigns/{movieId} {
-      allow read: if isSignedIn() && notInMaintenance();
+      allow read: if isSignedInWithPassword() && notInMaintenance();
       allow write: if isOrgMember(incomingData().orgId)
                   && orgCan('canUpdate', incomingData().orgId, movieId)
                   && notInMaintenance();
@@ -511,12 +511,8 @@ service cloud.firestore {
       return request.auth;
     }
 
-    function currentAuthToken() {
-      return currentUser().token;
-    }
-
     function currentSigninProvider() {
-      return currentAuthToken().firebase.sign_in_provider;
+      return currentUser().token.firebase.sign_in_provider;
     }
 
     function userId() {
@@ -524,13 +520,18 @@ service cloud.firestore {
     }
 
   	// Check if the user is logged in the app with a real account.
-    function isSignedIn() {
-      return currentUser() != null && currentSigninProvider() == 'password';
+    function isSignedInWithPassword() {
+      return currentSigninProvider() == 'password';
+    }
+
+    // Check if the user is logged in the app with an anonymous account.
+    function isSignedInAnonymously() {
+      return currentSigninProvider() == 'anonymous';
     }
 
     // Check if user is signed in as anonymous or regular
-    function isSignedInAnonymously() {
-      return isSignedIn() || (currentUser() != null && currentSigninProvider() == 'anonymous');
+    function isSignedIn() {
+      return isSignedInWithPassword() || isSignedInAnonymously();
     }
 
   	function userOrgId() {
