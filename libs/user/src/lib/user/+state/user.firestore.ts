@@ -12,7 +12,6 @@ export interface User extends PublicUser {
   position: string;
   orgId: string;
   avatar: StorageFile;
-  watermark: StorageFile;
   privacyPolicy: PrivacyPolicy;
   settings?: UserSettings
 }
@@ -36,7 +35,6 @@ export interface PublicUser {
   uid: string;
   email: string;
   avatar?: StorageFile;
-  watermark?: StorageFile;
   firstName?: string;
   lastName?: string;
   orgId?: string;
@@ -47,7 +45,6 @@ export function createPublicUser(user: Partial<User> = {}): PublicUser {
     uid: user.uid ?? '',
     email: user.email ?? '',
     avatar: createStorageFile(user?.avatar),
-    watermark: createStorageFile(user?.watermark),
     firstName: user.firstName ?? '',
     lastName: user.lastName ?? '',
     orgId: user.orgId ?? ''

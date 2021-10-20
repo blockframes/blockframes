@@ -53,8 +53,7 @@ describe('Test USERS anonymization function', () => {
         lastName: 'Bar',
         privacyPolicy: {
           ip: '127.0.0.1'
-        },
-        watermark: {}
+        }
       }
     };
 
@@ -63,6 +62,7 @@ describe('Test USERS anonymization function', () => {
     expect(doc.content.email).not.toEqual(userRecord.content.email);
     expect(doc.content.firstName).not.toEqual(userRecord.content.firstName);
     expect(doc.content.lastName).not.toEqual(userRecord.content.lastName);
+    expect(doc.content.privacyPolicy).toBeDefined();
     expect(doc.content.privacyPolicy.ip).not.toEqual(userRecord.content.privacyPolicy.ip);
   });
 });
@@ -87,11 +87,7 @@ describe('Test INVITATIONS anonymization function', () => {
           uid: 'uidA',
           email: 'uidA@foo.org',
           firstName: `Foo`,
-          lastName: 'Bar',
-          privacyPolicy: {
-            ip: '127.0.0.1'
-          },
-          watermark: {}
+          lastName: 'Bar'
         }
       }
     };
@@ -107,7 +103,7 @@ describe('Test INVITATIONS anonymization function', () => {
     expect(doc.content.toUser.email).not.toEqual(invitationRecord.content.toUser.email);
     expect(doc.content.toUser.firstName).not.toEqual(invitationRecord.content.toUser.firstName);
     expect(doc.content.toUser.lastName).not.toEqual(invitationRecord.content.toUser.lastName);
-    expect(doc.content.toUser.privacyPolicy.ip).not.toEqual(invitationRecord.content.toUser.privacyPolicy.ip);
+    expect(doc.content.toUser.privacyPolicy).toBeUndefined();
     expect(doc.content.fromOrg.email).not.toEqual(invitationRecord.content.fromOrg.email);
     expect(doc.content.fromOrg.fiscalNumber).not.toEqual(invitationRecord.content.fromOrg.fiscalNumber);
   });
@@ -130,11 +126,7 @@ describe('Test NOTIFICATIONS anonymization function', () => {
           uid: 'uidC',
           email: 'uidC@foo.org',
           firstName: `Foo`,
-          lastName: 'Bar',
-          privacyPolicy: {
-            ip: '127.0.0.1'
-          },
-          watermark: {}
+          lastName: 'Bar'
         }
       }
     };
@@ -151,7 +143,7 @@ describe('Test NOTIFICATIONS anonymization function', () => {
     expect(doc.content.user.email).not.toEqual(notificationRecord.content.user.email);
     expect(doc.content.user.firstName).not.toEqual(notificationRecord.content.user.firstName);
     expect(doc.content.user.lastName).not.toEqual(notificationRecord.content.user.lastName);
-    expect(doc.content.user.privacyPolicy.ip).not.toEqual(notificationRecord.content.user.privacyPolicy.ip);
+    expect(doc.content.user.privacyPolicy).toBeUndefined();
     expect(doc.content.organization.email).not.toEqual(notificationRecord.content.organization.email);
     expect(doc.content.organization.fiscalNumber).toBeUndefined();
   });

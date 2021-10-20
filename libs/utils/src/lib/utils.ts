@@ -166,3 +166,30 @@ export function createOfferId(orgName: string) {
   }
   return `${suffix}-${id}`;
 }
+
+/**
+ * 
+ * @param email 
+ * @param firstName 
+ * @param lastName 
+ * @returns string
+ * 
+ * https://developer.jwplayer.com/jwplayer/docs/jw8-javascript-api-reference
+ * https://developer.jwplayer.com/jwplayer/docs/jw8-add-custom-icons
+ * https://css-tricks.com/probably-dont-base64-svg/
+ */
+export function getWatermark(email: string, firstName: string = '', lastName: string = '') {
+  const svg = `
+    <svg id="jwplayer-user-watermark" viewBox="0 0 640 360" xmlns="http://www.w3.org/2000/svg">
+      <style>
+        #jwplayer-user-watermark text { text-anchor: end; }
+        #jwplayer-user-watermark .name { font: 32px Arial; }
+        #jwplayer-user-watermark .email { font: italic 24px Arial;}
+      </style>
+      <text x="100%" y="35%" fill="#fff" stroke="#000" class="name">${firstName} ${lastName}</text>
+      <text x="100%" y="25%" fill="#fff" stroke="#000" class="email">${email}</text>
+    </svg>
+  `;
+
+  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+}

@@ -6,10 +6,9 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { AuthQuery } from "@blockframes/auth/+state";
 import { MeetingVideoControl } from "@blockframes/event/+state/event.firestore";
 import { MediaService } from "../../+state/media.service";
-import { ImageParameters } from '../../image/directives/imgix-helpers';
-import { loadJWPlayerScript } from "@blockframes/utils/utils";
+import { getWatermark, loadJWPlayerScript } from "@blockframes/utils/utils";
 import { BehaviorSubject } from "rxjs";
-import { toggleFullScreen  } from '../../file/viewers/utils';
+import { toggleFullScreen } from '../../file/viewers/utils';
 import { StorageVideo } from "@blockframes/media/+state/media.firestore";
 
 declare const jwplayer: any;
@@ -113,16 +112,11 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
       } else {
 
         // Watermark
-        const parameters: ImageParameters = {
-          auto: 'compress,format',
-          fit: 'crop',
-        };
-        const watermarkRef = this.authQuery.user.watermark;
-        if (!watermarkRef.storagePath) {
+        const watermark = getWatermark(this.authQuery.user.email, this.authQuery.user.firstName, this.authQuery.user.lastName);
+
+        if (!watermark) {
           throw new Error('We cannot load video without watermark.');
         }
-        const watermarkUrl = await this.mediaService.generateImgIxUrl(watermarkRef, parameters);
-
         // Auto refresh page when url expires
         const signedUrl = new URL(result.signedUrl);
         const expires = signedUrl.searchParams.get('exp');
@@ -141,12 +135,11 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
         // Setup player
         this.player = jwplayer(this.playerContainerId);
 
-
         this.player.setup({
           controls: !this.control,
           file: result.signedUrl,
           logo: {
-            file: watermarkUrl,
+            file: watermark,
           },
           image: `https://cdn.jwplayer.com/thumbs/${result.info.key}.jpg`,
         });
@@ -157,7 +150,7 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
         this.player.on('complete', () => this.stateChange.emit('complete'));
         this.updatePlayer();
       }
-    } catch(error) {
+    } catch (error) {
       this.loading$.next(false);
       console.warn(error);
       this.snackBar.open('Error while playing the video: ' + error, 'close', { duration: 8000 });

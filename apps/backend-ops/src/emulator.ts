@@ -19,9 +19,7 @@ import {
   firebaseEmulatorExec,
   connectAuthEmulator,
   connectFirestoreEmulator,
-  endMaintenance,
-  forceEmulatorExport,
-  latestAnonShrinkedDbDir
+  endMaintenance
 } from '@blockframes/firebase-utils';
 import { ChildProcess } from 'child_process';
 import { join, resolve } from 'path';
@@ -29,10 +27,9 @@ import { backupBucket as prodBackupBucket, firebase as prodFirebase } from 'env/
 import admin from 'firebase-admin'
 import { backupBucket, firebase } from '@env'
 import { migrate } from './migrations';
-import { generateWatermarks, syncUsers } from './users';
+import { syncUsers } from './users';
 import { cleanDeprecatedData } from './db-cleaning';
 import { cleanStorage } from './storage-cleaning';
-import { shrinkDb } from './db-shrink';
 
 export interface ImportEmulatorOptions {
   importFrom: string,
@@ -199,9 +196,6 @@ export async function anonDbProcess() {
   await cleanStorage(await getBackupBucket(storage));
   console.info('Storage data clean and fresh!');
 
-  console.info('Generating watermarks...');
-  await generateWatermarks({ db, storage });
-  console.info('Watermarks generated!');
 }
 
 /**

@@ -196,20 +196,26 @@ describe('DB cleaning script', () => {
   it('should clean organizations', async () => {
     const testUsers = [{ uid: 'A', email: 'A@fake.com' }, { uid: 'B', email: 'B@fake.com' }, { uid: 'C', email: 'C@fake.com' }, { uid: 'D', email: 'D@fake.com' }];
     const testMovies = [
-      { id: 'mov-A', app: {
-        catalog: { status: 'accepted', access: true },
-        festival: { status: 'draft', access: false },
-        financiers: { status: 'draft', access: false }}
+      {
+        id: 'mov-A', app: {
+          catalog: { status: 'accepted', access: true },
+          festival: { status: 'draft', access: false },
+          financiers: { status: 'draft', access: false }
+        }
       },
-      { id: 'mov-B', app: {
-        catalog: { status: 'draft', access: true },
-        festival: { status: 'draft', access: false },
-        financiers: { status: 'draft', access: false }}
+      {
+        id: 'mov-B', app: {
+          catalog: { status: 'draft', access: true },
+          festival: { status: 'draft', access: false },
+          financiers: { status: 'draft', access: false }
+        }
       },
-      { id: 'mov-C', app: {
-        catalog: { status: 'refused', access: false },
-        festival: { status: 'draft', access: false },
-        financiers: { status: 'draft', access: false }}
+      {
+        id: 'mov-C', app: {
+          catalog: { status: 'refused', access: false },
+          festival: { status: 'draft', access: false },
+          financiers: { status: 'draft', access: false }
+        }
       }
     ];
 
@@ -451,8 +457,8 @@ describe('DB cleaning script', () => {
     ];
 
     const testUsers = [
-      { uid: 'A', email: 'A@fake.com', watermark: 'A.svg', avatar: 'A.png' },
-      { uid: 'B', email: 'B@fake.com', watermark: 'B.svg', avatar: 'B.png' }
+      { uid: 'A', email: 'A@fake.com', avatar: 'A.png' },
+      { uid: 'B', email: 'B@fake.com', avatar: 'B.png' }
     ];
 
     const testOrgs = [{ id: 'org-A', email: 'org-A@fake.com', logo: 'org-A.svg' }];
@@ -647,8 +653,8 @@ describe('DB cleaning script', () => {
     ];
 
     const testUsers = [
-      { uid: 'A', email: 'A@fake.com', watermark: 'A.svg', avatar: 'A.png' },
-      { uid: 'B', email: 'B@fake.com', watermark: 'B.svg', avatar: 'B.png' }
+      { uid: 'A', email: 'A@fake.com', avatar: 'A.png' },
+      { uid: 'B', email: 'B@fake.com', avatar: 'B.png' }
     ];
 
     const testOrgs = [{ id: 'org-A', email: 'org-A@fake.com', logo: 'org-A.svg' }];
@@ -731,20 +737,26 @@ describe('DB cleaning script', () => {
       { id: 'org-C', email: 'org-C@fake.com', userIds: [testUsers[2].uid], wishlist: ['mov-B', 'mov-A', 'mov-C'] },
     ];
     const testMovies = [
-      { id: 'mov-A', app: {
-        catalog: { status: 'accepted', access: true },
-        festival: { status: 'accepted', access: true },
-        financiers: { status: 'accepted', access: true }}
+      {
+        id: 'mov-A', app: {
+          catalog: { status: 'accepted', access: true },
+          festival: { status: 'accepted', access: true },
+          financiers: { status: 'accepted', access: true }
+        }
       },
-      { id: 'mov-B', app: {
-        catalog: { status: 'accepted', access: true },
-        festival: { status: 'accepted', access: true },
-        financiers: { status: 'accepted', access: true }}
+      {
+        id: 'mov-B', app: {
+          catalog: { status: 'accepted', access: true },
+          festival: { status: 'accepted', access: true },
+          financiers: { status: 'accepted', access: true }
+        }
       },
-      { id: 'mov-C', app: {
-        catalog: { status: 'accepted', access: true },
-        festival: { status: 'accepted', access: true },
-        financiers: { status: 'accepted', access: true }}
+      {
+        id: 'mov-C', app: {
+          catalog: { status: 'accepted', access: true },
+          festival: { status: 'accepted', access: true },
+          financiers: { status: 'accepted', access: true }
+        }
       }
     ];
     // Load our test set
@@ -849,7 +861,7 @@ function isOrgClean(
 
 function isNotificationClean(doc: FirebaseFirestore.DocumentSnapshot) {
   const d = doc.data();
-  if (d.user && (!d.user.avatar || !d.user.watermark)) {
+  if (d.user && !d.user.avatar) {
     return false;
   }
 
@@ -875,11 +887,11 @@ function isInvitationClean(doc: FirebaseFirestore.DocumentSnapshot) {
     return false;
   }
 
-  if (d.fromUser?.uid && (!d.fromUser.avatar || !d.fromUser.watermark)) {
+  if (d.fromUser?.uid && !d.fromUser.avatar) {
     return false;
   }
 
-  if (d.toUser?.uid && (!d.toUser.avatar || !d.toUser.watermark)) {
+  if (d.toUser?.uid && !d.toUser.avatar) {
     return false;
   }
 

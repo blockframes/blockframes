@@ -1,5 +1,5 @@
 import { restoreFromBackupBucket } from '@blockframes/firebase-utils';
-import { syncUsers, generateWatermarks } from './users';
+import { syncUsers } from './users';
 import { exportFirestoreToBucket, getBackupBucket, } from '@blockframes/firebase-utils';
 import { last } from 'lodash';
 import { loadDBVersion, selectAndOrderMigrations, updateDBVersion } from './migrations';
@@ -55,11 +55,6 @@ export async function prepareForTestingOld() {
   await upgradeAlgoliaMovies();
   await upgradeAlgoliaUsers();
   console.info('Algolia ready for testing!');
-
-  console.info('Generating watermarks...');
-  await generateWatermarks();
-  console.info('Watermarks generated!');
-
 }
 
 export async function upgradeOld() {
@@ -82,10 +77,6 @@ export async function upgradeOld() {
   await upgradeAlgoliaMovies();
   await upgradeAlgoliaUsers();
   console.info('Algolia ready for testing!');
-
-  console.info('Generating watermarks...');
-  await generateWatermarks();
-  console.info('Watermarks generated!');
 }
 
 
