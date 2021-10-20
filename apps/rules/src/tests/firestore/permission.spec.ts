@@ -9,7 +9,7 @@ describe('Permission Rules Tests', () => {
 
   describe('With User as Org Member', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2' });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2', firebase: { sign_in_provider: 'password' } });
     });
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
@@ -47,7 +47,7 @@ describe('Permission Rules Tests', () => {
 
   describe('With User as or going to be Org Member', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user4' });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user4', firebase: { sign_in_provider: 'password' } });
     });
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
@@ -72,7 +72,7 @@ describe('Permission Rules Tests', () => {
 
   describe('With User as Org Admin', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-admin' });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-admin', firebase: { sign_in_provider: 'password' } });
     });
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
@@ -95,7 +95,7 @@ describe('Permission Rules Tests', () => {
 
   describe('With User as Super Admin', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-sAdmin' });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-sAdmin', firebase: { sign_in_provider: 'password' } });
     });
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
@@ -125,7 +125,7 @@ describe('Document Permission Sub Collection Rules Tests', () => {
 
   describe('With User as Org Member', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2' });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2', firebase: { sign_in_provider: 'password' } });
     });
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
@@ -163,7 +163,7 @@ describe('Document Permission Sub Collection Rules Tests', () => {
 
   describe('With User as Org Admin', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-admin' });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-admin', firebase: { sign_in_provider: 'password' } });
     });
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));

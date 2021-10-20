@@ -11,7 +11,7 @@ describe('Org Admin', () => {
   let db: Firestore;
 
   beforeAll(async () => {
-    db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-admin' });
+    db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-admin', firebase: { sign_in_provider: 'password' } });
   });
 
   afterAll(() => Promise.all(apps().map((app) => app.delete())));
@@ -27,7 +27,7 @@ describe('General User', () => {
   let db: Firestore;
 
   beforeAll(async () => {
-    db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2' });
+    db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2', firebase: { sign_in_provider: 'password' } });
   });
 
   afterAll(() => Promise.all(apps().map((app) => app.delete())));
@@ -45,7 +45,7 @@ describe('Users Collection Rules Tests', () => {
   let db: Firestore;
 
   beforeAll(async () => {
-    db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2' });
+    db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2', firebase: { sign_in_provider: 'password' } });
   });
 
   afterAll(() => Promise.all(apps().map((app) => app.delete())));
