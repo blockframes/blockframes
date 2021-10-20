@@ -512,7 +512,7 @@ service cloud.firestore {
     }
 
     function currentSigninProvider() {
-      return currentUser().token.firebase.sign_in_provider;
+      return userId() != null ? currentUser().token.firebase.sign_in_provider : '';
     }
 
     function userId() {
