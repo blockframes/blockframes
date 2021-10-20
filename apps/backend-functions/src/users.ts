@@ -1,6 +1,6 @@
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
-import { db, getStorageBucketName } from './internals/firebase';
+import { db } from './internals/firebase';
 import { userResetPassword, sendDemoRequestMail, sendContactEmail, accountCreationEmail, userInvite, userVerifyEmail } from './templates/mail';
 import { sendMailFromTemplate, sendMail } from './internals/email';
 import { RequestDemoInformations, PublicUser, PermissionsDocument, OrganizationDocument, InvitationDocument } from './data/types';
@@ -139,7 +139,6 @@ async function initUser(user: PublicUser) {
       promises.push(startAccountCreationEmailFlow({ email: user.email, publicUser: user, app: user._meta.createdFrom }));
     }
     promises.push(storeSearchableUser(user));
-    promises.push(upsertWatermark(user, getStorageBucketName()));
   }
   return Promise.all(promises);
 }
