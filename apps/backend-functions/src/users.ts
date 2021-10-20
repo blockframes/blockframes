@@ -74,7 +74,7 @@ export const onUserCreate = async (user: UserRecord) => {
   const { email, uid } = user;
 
   if (!email || !uid) {
-    console.warn(`Email and uid are mandatory parameter, provided email (${email}), uid (${uid}). The user may have been created anonymously.`);
+    functions.logger.warn(`Email and uid are mandatory parameter, provided email (${email}), uid (${uid}). The user may have been created anonymously.`);
     return;
   }
 
