@@ -1,7 +1,7 @@
 
 import { DurationMarker } from '../avails';
 
-export type CellState = 'empty' | 'available' | 'sold' | 'selected';
+export type CellState = 'empty' | 'available' | 'expired' | 'sold' | 'selected';
 export type SelectionState = 'waiting' | 'started' | 'selected';
 
 export const calendarColumns = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
