@@ -1,9 +1,9 @@
 import { FormArraySchema, FormEntity, FormGroupSchema, FormList } from 'ng-form-factory';
-import { QueryMethods, CollectionQuery, Conditions, WhereQuery, Direction, OrderByQuery, LimitQuery } from '@blockframes/admin/cms';
+import { QueryMethods, CollectionQuery, Conditions, WhereQuery, Direction, OrderByQuery, LimitQuery, StartAtQuery } from '@blockframes/admin/cms';
 import { matSelect } from '../select';
 import { matText } from '../text';
 
-export const queryMethods: QueryMethods[] = ['where', 'limit', 'limitToLast', 'orderBy'];
+export const queryMethods: QueryMethods[] = ['where', 'limit', 'limitToLast', 'orderBy', 'startAt'];
 export const methodSchema = matSelect<QueryMethods>({ label: 'Method', options: queryMethods });
 
 export type CollectionQuerySchema = FormGroupSchema<CollectionQuery>;
@@ -58,6 +58,17 @@ export const limitQuerySchema: LimitQuerySchema = {
   }
 }
 
+export type StartAtQuerySchema = FormGroupSchema<StartAtQuery>;
+export type StartAtQueryForm = FormEntity<StartAtQuerySchema>;
+
+export const startAtQuerySchema: StartAtQuerySchema = {
+  form: 'group',
+  controls: {
+    method: methodSchema,
+    value: matText({ label: 'Value', type: 'text' })
+  }
+}
+
 
 ///////////
 // QUERY //
@@ -73,6 +84,7 @@ const collectionSchema = {
   orderBy: orderByQuerySchema,
   limit: limitQuerySchema,
   limitToLast: limitQuerySchema,
+  startAt: startAtQuerySchema
 }
 
 export function firestoreQuery(params: Partial<FirestoreQuerySchema>): FirestoreQuerySchema {

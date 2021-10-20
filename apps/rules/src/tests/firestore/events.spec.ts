@@ -68,25 +68,25 @@ describe('Events Rules Tests', () => {
       await assertSucceeds(eventRef.delete());
     });
 
-    test("user with valid org but not ownerOrgId as orgId should be able to update attendees status", async () => {
+    test('user with valid org but not ownerOrgId as orgId should be able to update attendees status', async () => {
       const eventRef = db.doc('events/E002');
       const eventDetails = { meta: { attendees: { 'uid-user2': 'requesting' } } };
       await assertSucceeds(eventRef.update(eventDetails));
     });
 
-    test("user with valid org but not ownerOrgId as orgId should not be able to accept himself", async () => {
+    test('user with valid org but not ownerOrgId as orgId should not be able to accept himself', async () => {
       const eventRef = db.doc('events/E002');
       const eventDetails = { meta: { attendees: { 'uid-user2': 'accepted' } } };
       await assertFails(eventRef.update(eventDetails));
     });
 
-    test("user with valid org but not ownerOrgId as orgId should not be able to set himself as owner", async () => {
+    test('user with valid org but not ownerOrgId as orgId should not be able to set himself as owner', async () => {
       const eventRef = db.doc('events/E002');
       const eventDetails = { meta: { attendees: { 'uid-user2': 'owner' } } };
       await assertFails(eventRef.update(eventDetails));
     });
 
-    test("user with valid org but not ownerOrgId as orgId should not be able to update event accessibility", async () => {
+    test('user with valid org but not ownerOrgId as orgId should not be able to update event accessibility', async () => {
       const eventRef = db.doc('events/E002');
       const eventDetails = { accessibility: 'public' };
       await assertFails(eventRef.update(eventDetails));

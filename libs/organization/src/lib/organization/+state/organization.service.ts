@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { map, switchMap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { AuthQuery, User } from '@blockframes/auth/+state';
 import {
   Organization,
@@ -40,16 +40,11 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   }
 
   public async orgNameExist(orgName: string) {
-    // @TODO #6756 a better solution for this should be found. use algolia ?
+    // @TODO #6908 a better solution for this should be found.
     const orgs = await this.getValue(ref => ref.where('denomination.full', '==', orgName));
     return orgs.length !== 0;
   }
 
-  syncOrgActive() { // @TODO #6756 unused
-    return this.authQuery.user$.pipe(
-      switchMap(user => this.syncActive({ id: user.orgId }))
-    );
-  }
 
   /**
    * This converts the OrganizationDocument into an Organization

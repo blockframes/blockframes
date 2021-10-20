@@ -1,5 +1,6 @@
 import { NgModule, Pipe, PipeTransform } from '@angular/core';
 import { Query, QueryFn } from '@angular/fire/firestore';
+import { EventService } from '@blockframes/event/+state';
 import { MovieService } from '@blockframes/movie/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { distinctUntilChanged } from 'rxjs/operators';
@@ -17,6 +18,13 @@ function getQueryFn(section): QueryFn {
     }
     if (params.method === 'orderBy') {
       return query.orderBy(params.field, params.direction);
+    }
+    if (params.method === 'startAt') {
+      if (params.value === 'now') {
+        return query.startAt(new Date());
+      } else {
+        return query.startAt(params.value);
+      }
     }
   }, ref);
 }
@@ -53,10 +61,25 @@ export class HomeQueryOrgsPipe implements PipeTransform {
   }
 }
 
+@Pipe({ name: 'queryEvents' })
+export class HomeQueryEventsPipe implements PipeTransform {
+  constructor(private service: EventService) {}
+  transform(section: any) {
+    if (section.query?.length) {
+      return this.service.valueChanges(getQueryFn(section)).pipe(
+        distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
+      );
+    } else {
+      return this.service.valueChanges(section.eventIds).pipe(
+        distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
+      );
+    }
+  }
+}
 
 
 @NgModule({
-  declarations: [HomeQueryOrgsPipe, HomeQueryTitlesPipe],
-  exports: [HomeQueryOrgsPipe, HomeQueryTitlesPipe]
+  declarations: [HomeQueryOrgsPipe, HomeQueryTitlesPipe, HomeQueryEventsPipe],
+  exports: [HomeQueryOrgsPipe, HomeQueryTitlesPipe, HomeQueryEventsPipe]
 })
 export class CMSPipeModule{}

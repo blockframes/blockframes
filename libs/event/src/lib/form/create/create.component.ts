@@ -18,7 +18,7 @@ export class EventCreateComponent {
   accessibility: AccessibilityTypes;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) data: {event: Event, types: string[] },
+    @Inject(MAT_DIALOG_DATA) data: { event: Event, types: string[] },
     public dialogRef: MatDialogRef<EventCreateComponent>,
     private orgQuery: OrganizationQuery,
     private authService: AuthService
@@ -34,21 +34,14 @@ export class EventCreateComponent {
       event.meta.organizerUid = (await this.authService.user).uid;
     }
     if (event.allDay) {
-      event.start.setHours(0,0,0);
-      event.end.setHours(23,59,59);
+      event.start.setHours(0, 0, 0);
+      event.end.setHours(23, 59, 59);
     }
     event.accessibility = this.accessibility;
     this.dialogRef.close({ event });
   }
 
   onTypeSelected(event) {
-    switch (event.value) {
-      case "meeting":
-        this.accessibility = "public";
-        break;
-      case "screening":
-        this.accessibility = 'private';
-        break; 
-    }
+    this.accessibility = event.value === 'meeting' ? 'public' : 'private';
   }
 }

@@ -80,7 +80,7 @@ export const testFixture = {
   'orgs/O001': {
     id: 'O001',
     status: 'accepted',
-    userIds: ['uid-admin', 'uid-sAdmin', 'uid-user2',],
+    userIds: ['uid-admin', 'uid-sAdmin', 'uid-user2'],
   },
   'orgs/O002': {
     status: 'accepted',

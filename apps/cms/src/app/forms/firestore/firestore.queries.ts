@@ -1,5 +1,5 @@
 // Prebuilt queries for titles form
-import { LimitQuery, WhereQuery } from '@blockframes/admin/cms';
+import { LimitQuery, OrderByQuery, StartAtQuery, WhereQuery } from '@blockframes/admin/cms';
 import { App } from '@blockframes/utils/apps';
 
 export function titlesFromApp(app: App): WhereQuery[] {
@@ -36,6 +36,27 @@ export function orgsFromApp(app: App): WhereQuery[] {
     field: `status`,
     condition: '==',
     value: 'accepted'
+  }];
+}
+
+export function events(): (WhereQuery | OrderByQuery | StartAtQuery)[] {
+  return [{
+    method: 'where',
+    field: 'type',
+    condition: '==',
+    value: 'screening'
+  }, {
+    method: 'where',
+    field: 'isSecret',
+    condition: '==',
+    value: false
+  }, {
+    method: 'orderBy',
+    field: 'end',
+    direction: 'asc'
+  }, {
+    method: 'startAt',
+    value: 'now'
   }];
 }
 
