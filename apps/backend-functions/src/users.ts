@@ -1,10 +1,10 @@
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
-import { db, getStorageBucketName } from './internals/firebase';
+import { db } from './internals/firebase';
 import { userResetPassword, sendDemoRequestMail, sendContactEmail, accountCreationEmail, userInvite, userVerifyEmail } from './templates/mail';
 import { sendMailFromTemplate, sendMail } from './internals/email';
 import { RequestDemoInformations, PublicUser, PermissionsDocument, OrganizationDocument, InvitationDocument } from './data/types';
-import { upsertWatermark, getCollection, storeSearchableUser, deleteObject, algolia } from '@blockframes/firebase-utils';
+import { getCollection, storeSearchableUser, deleteObject, algolia } from '@blockframes/firebase-utils';
 import { getDocument } from './data/internals';
 import { getMailSender, applicationUrl, App } from '@blockframes/utils/apps';
 import { sendFirstConnexionEmail, createUserFromEmail } from './internals/users';
@@ -100,10 +100,7 @@ export const onUserCreate = async (user: UserRecord) => {
   const userSnap = await userDocRef.get();
   const userData = userSnap.data() as PublicUser;
 
-  return Promise.all([
-    storeSearchableUser(userData),
-    upsertWatermark(userData, getStorageBucketName()),
-  ]);
+  return storeSearchableUser(userData);
 };
 
 export async function onUserCreateDocument(snap: FirebaseFirestore.DocumentSnapshot) {
@@ -121,8 +118,6 @@ export async function onUserUpdate(change: functions.Change<FirebaseFirestore.Do
 
   await cleanUserMedias(before, after);
 
-  const promises = [];
-
   // if name, email, avatar or orgId has changed : update algolia record
   if (
     before.firstName !== after.firstName ||
@@ -131,19 +126,8 @@ export async function onUserUpdate(change: functions.Change<FirebaseFirestore.Do
     before.avatar?.storagePath !== after.avatar?.storagePath ||
     before.orgId !== after.orgId
   ) {
-    promises.push(storeSearchableUser(after));
+    return storeSearchableUser(after);
   }
-
-  // if name or email has changed : update watermark
-  if (
-    before.firstName !== after.firstName ||
-    before.lastName !== after.lastName ||
-    before.email !== after.email
-  ) {
-    promises.push(upsertWatermark(after, getStorageBucketName()));
-  }
-
-  return Promise.all(promises);
 }
 
 async function initUser(user: PublicUser) {
@@ -155,7 +139,6 @@ async function initUser(user: PublicUser) {
       promises.push(startAccountCreationEmailFlow({ email: user.email, publicUser: user, app: user._meta.createdFrom }));
     }
     promises.push(storeSearchableUser(user));
-    promises.push(upsertWatermark(user, getStorageBucketName()));
   }
   return Promise.all(promises);
 }

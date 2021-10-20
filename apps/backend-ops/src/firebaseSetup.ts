@@ -3,7 +3,7 @@
  *
  * This module provides functions to trigger a firestore restore and test user creations.
  */
-import { syncUsers, generateWatermarks } from './users';
+import { syncUsers } from './users';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
 import { migrate } from './migrations';
 import { importFirestore } from './admin';
@@ -155,7 +155,4 @@ export async function upgrade() {
   await upgradeAlgoliaUsers();
   console.info('Algolia ready for testing!');
 
-  console.info('Generating watermarks...');
-  await generateWatermarks({ db, storage });
-  console.info('Watermarks generated!');
 }

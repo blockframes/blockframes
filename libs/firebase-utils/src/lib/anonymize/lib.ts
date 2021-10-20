@@ -66,8 +66,8 @@ function processInvitation(i: Invitation): Invitation {
     ...i,
     fromOrg: updateOrg(i.fromOrg),
     toOrg: updateOrg(i.toOrg),
-    fromUser: updateUser(i.fromUser),
-    toUser: updateUser(i.toUser),
+    fromUser: updateUser(i.fromUser, true),
+    toUser: updateUser(i.toUser, true),
   };
 }
 
@@ -75,20 +75,15 @@ function processNotification(n: NotificationDocument): NotificationDocument {
   return {
     ...n,
     organization: updateOrg(n.organization),
-    user: updateUser(n.user as PublicUser), // ! TODO: If possible don't use Partial in this type!
+    user: updateUser(n.user as PublicUser, true), // ! TODO: If possible don't use Partial in this type!
   };
 }
 
-function updateUser(user: User | PublicUser | Partial<User>) {
+function updateUser(user: User | PublicUser | Partial<User>, toPublicUser = false) {
   if (!user) return;
-  if (hasKeys<PublicUser>(user, 'uid') && !hasKeys<User>(user, 'watermark')) {
-    // Is public
-    const newUser = userCache?.[user.uid] || (userCache[user.uid] = processUser(user));
-    return createPublicUser(newUser);
-    // If not in cache, process the user, write to cache, make it a publicUser and return it
-  }
   if (hasKeys<User>(user, 'uid')) {
-    return userCache?.[user.uid] || (userCache[user.uid] = processUser(user));
+    const processedUser = userCache?.[user.uid] || (userCache[user.uid] = processUser(user));
+    return toPublicUser ? createPublicUser(processedUser) : processedUser; // @TODO #6905
   }
   if (!hasKeys<User>(user, 'uid')) {
     console.warn('WARNING - user does not have UID!', user)
