@@ -17,6 +17,7 @@ export const templateIds = {
     // Templates for informing new user that his account have been created
     credentials: {
       attendEvent: 'd-ce3e57248a694cefacad49bc4c820078',
+      attendNonPrivateEvent: 'd-5123a0ceda2d463db60717dc94005b65',
       joinOrganization: 'd-f0c4f1b2582a4fc6ab12fcd2d7c02f5c'
     },
   },
