@@ -81,11 +81,6 @@ describe('Users Collection Rules Tests', () => {
     const expUser = await expUserSnap.data();
     expect(user).toEqual(expUser);
   });
-
-  test('user should be able to list all users', async () => {
-    const allDocs = db.collection('users');
-    await assertFails(allDocs.get());
-  });
 });
 
 describe('With Anonymous user', () => {
