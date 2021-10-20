@@ -98,28 +98,6 @@ describe('With Anonymous user', () => {
 
   afterAll(() => Promise.all(apps().map((app) => app.delete())));
 
-  test('anonymous user should not be able to list all users', async () => {
-    const allDocs = db.collection('users');
-    await assertFails(allDocs.get());
-  });
-
-  test('anonymous user should be able to fetch an user by ID', async () => {
-    const docRef = db.doc('users/uid-c8');
-    await assertSucceeds(docRef.get());
-  });
-
-});
-
-describe('With Anonymous user', () => {
-  const projectId = `rules-spec-${Date.now()}`;
-  let db: Firestore;
-
-  beforeAll(async () => {
-     db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-c8-anon', firebase: { sign_in_provider: 'anonymous' } });
-  });
-
-  afterAll(() => Promise.all(apps().map((app) => app.delete())));
-
   test('should not be able to list all users', async () => {
     const allDocs = db.collection('users');
     await assertFails(allDocs.get());
