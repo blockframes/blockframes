@@ -24,9 +24,9 @@ export class IdentityGuard extends CollectionGuard<AuthState> {
   sync() {
     return this.afAuth.authState.pipe(
       switchMap(userAuth => {
-        if (!userAuth) {
+        if (!userAuth || userAuth.isAnonymous) {
           return of(true);
-        };
+        }
         if (!userAuth.emailVerified) {
           return of(this.router.navigate(['c/organization/join-congratulations']));
         }
