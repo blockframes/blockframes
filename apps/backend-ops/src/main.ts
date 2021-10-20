@@ -8,7 +8,7 @@ import { prepareDb, prepareStorage, prepareForTesting, upgrade, prepareEmulators
 import { migrate } from './migrations';
 import { disableMaintenanceMode, displayCredentials, isMigrationRequired, showHelp } from './tools';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
-import { clearUsers, createUsers, printUsers, generateWatermarks, syncUsers } from './users';
+import { clearUsers, createUsers, printUsers, syncUsers } from './users';
 import { generateFixtures } from './generate-fixtures';
 import { exportFirestore, importFirestore } from './admin';
 import { selectEnvironment } from './select-environment';
@@ -139,9 +139,6 @@ async function runCommand() {
       await startMaintenance(db);
       await createUsers();
       await endMaintenance(db);
-      break;
-    case 'generateWatermarks':
-      await generateWatermarks();
       break;
     case 'upgradeAlgoliaOrgs':
       await upgradeAlgoliaOrgs();

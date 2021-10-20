@@ -6,7 +6,7 @@
 import { differenceBy } from 'lodash';
 import { loadAdminServices, getCollectionInBatches, sleep } from '@blockframes/firebase-utils';
 import readline from 'readline';
-import { Auth, UserRecord, upsertWatermark, runChunks, DbRecord } from '@blockframes/firebase-utils';
+import { Auth, UserRecord, DbRecord } from '@blockframes/firebase-utils';
 import { deleteAllUsers, importAllUsers } from '@blockframes/testing/firebase';
 import * as env from '@env';
 import { User } from '@blockframes/user/types';
@@ -93,12 +93,12 @@ function readUsersFromJsonlFixture(db: DbRecord[]): UserConfig[] {
     }));
 }
 
-async function getUsersFromDb(db:FirebaseFirestore.Firestore ) {
+async function getUsersFromDb(db: FirebaseFirestore.Firestore) {
   const usersIterator = getCollectionInBatches<User>(db.collection('users'), 'uid', 300);
   let output: UserConfig[] = [];
   for await (const users of usersIterator) {
     const password = USER_FIXTURES_PASSWORD;
-    const outputChunk = users.map(({ uid, email }) => ({ uid, email, password} ))
+    const outputChunk = users.map(({ uid, email }) => ({ uid, email, password }))
     output = output.concat(outputChunk);
   }
   return output;
@@ -108,7 +108,7 @@ async function getUsersFromDb(db:FirebaseFirestore.Firestore ) {
  * If `jsonl` param is not provided, the function will read users from local Firestore
  * @param jsonl optional Jsonl record array (usually from local db backup) to read users from
  */
-export async function syncUsers( jsonl?: DbRecord[], db = loadAdminServices().db, auth = loadAdminServices().auth) {
+export async function syncUsers(jsonl?: DbRecord[], db = loadAdminServices().db, auth = loadAdminServices().auth) {
   const expectedUsers = jsonl ? readUsersFromJsonlFixture(jsonl) : await getUsersFromDb(db);
   await deleteAllUsers(auth);
   const createResult = await importAllUsers(auth, expectedUsers);
@@ -183,17 +183,4 @@ export async function createUsers() {
   const { auth } = loadAdminServices();
   const users = await readUsersFromSTDIN();
   return createAllUsers(users, auth);
-}
-
-export async function generateWatermarks({ db = loadAdminServices().db, storage = loadAdminServices().storage } = {}) {
-  // * activate maintenance to prevent cloud functions to trigger
-
-  const usersBatch = getCollectionInBatches<User>(db.collection('users'), 'uid');
-  for await (const users of usersBatch) {
-    await runChunks(
-      users,
-      (user: User) => upsertWatermark(user, storageBucket, storage),
-      env?.['heavyChunkSize'] ?? 10
-    ).catch(err => console.error(err));
-  }
 }

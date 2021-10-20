@@ -5,8 +5,6 @@ import { AngularFireFunctions } from "@angular/fire/functions";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { AuthQuery } from "@blockframes/auth/+state";
 import { MeetingVideoControl } from "@blockframes/event/+state/event.firestore";
-import { MediaService } from "../../+state/media.service";
-import { ImageParameters } from '../../image/directives/imgix-helpers';
 import { getWatermark, loadJWPlayerScript } from "@blockframes/utils/utils";
 import { BehaviorSubject } from "rxjs";
 import { toggleFullScreen } from '../../file/viewers/utils';
@@ -93,7 +91,6 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private authQuery: AuthQuery,
-    private mediaService: MediaService,
     private functions: AngularFireFunctions,
     private snackBar: MatSnackBar,
     private eventService: EventService,
@@ -120,23 +117,11 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
         const event = await this.eventService.getValue(this.eventId);
 
         // Watermark
-        const parameters: ImageParameters = {
-          auto: 'compress,format',
-          fit: 'crop',
-        };
-
-        const watermarkRef = this.authQuery.user?.watermark;
-        let watermark: string;
-        if (watermarkRef?.storagePath) {
-          watermark = await this.mediaService.generateImgIxUrl(watermarkRef, parameters);
-        } else if (event.accessibility !== 'private' && hasAnonymousIdentity(anonymousCredentials, event.accessibility)) {
-          // Part of #6393
+        let watermark;
+        if (this.authQuery.user) {
+          watermark = getWatermark(this.authQuery.user.email, this.authQuery.user.firstName, this.authQuery.user.lastName);
+        } else if (hasAnonymousIdentity(anonymousCredentials, event.accessibility)) {
           watermark = getWatermark(anonymousCredentials.email, anonymousCredentials.firstName, anonymousCredentials.lastName);
-          // https://developer.jwplayer.com/jwplayer/docs/jw8-javascript-api-reference
-          // https://developer.jwplayer.com/jwplayer/docs/jw8-add-custom-icons
-          // https://css-tricks.com/probably-dont-base64-svg/
-          // working: data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath d='M224%20387.814V512L32 320l192-192v126.912C447.375 260.152 437.794 103.016 380.93 0 521.287 151.707 491.48 394.785 224 387.814z'/%3E%3C/svg%3E
-          watermark = `data:image/svg+xml;utf8,${encodeURIComponent(watermark)}`;
         }
 
         if (!watermark) {

@@ -1,19 +1,16 @@
 
 import { get } from 'lodash';
 import { createHash } from 'crypto';
-import * as admin from 'firebase-admin';
 import { File as GFile } from '@google-cloud/storage';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 
-import { jwplayerApiV2, upsertWatermark } from '@blockframes/firebase-utils';
+import { jwplayerApiV2 } from '@blockframes/firebase-utils';
 import { EventDocument, EventMeta, linkDuration } from '@blockframes/event/+state/event.firestore';
 import { StorageVideo } from '@blockframes/media/+state/media.firestore';
 
-import { PublicUser } from './data/types';
 import { ErrorResultResponse } from './utils';
 import { getDocument } from './data/internals';
 import { isAllowedToAccessMedia } from './internals/media';
-import { db, getStorageBucketName } from './internals/firebase';
 import { jwplayerKey, jwplayerApiV2Secret, jwplayerSecret, enableDailyFirestoreBackup, playerId } from './environments/environment';
 
 interface ReadVideoParams {
@@ -88,56 +85,6 @@ export const getPrivateVideoUrl = async (
     }
   }
 
-  if (eventData.accessibility === 'private') {
-    // watermark fallback : in case the user's watermark doesn't exist we generate it
-    const userRef = db.collection('users').doc(context.auth.uid);
-    const userSnap = await userRef.get();
-    const user = userSnap.data() as PublicUser;
-
-    const bucketName = getStorageBucketName();
-
-    let fileExists = false;
-
-    // if we have a ref we should assert that it points to an existing file
-    const { privacy, storagePath } = user.watermark;
-    if (user.watermark.storagePath) {
-      const file = admin.storage().bucket(bucketName).file(`${privacy}/${storagePath}`);
-      [fileExists] = await file.exists();
-    }
-
-    // if we don't have a ref OR if the file doesn't exists : we regenerate the Watermark
-    if (!user.watermark || !fileExists) {
-
-      upsertWatermark(user, bucketName);
-
-      // wait for the function to update the user document after watermark creation
-      const success = await new Promise(resolve => {
-
-        const unsubscribe = userRef.onSnapshot(snap => {
-          const userData = snap.data() as PublicUser;
-
-          if (userData.watermark) {
-            unsubscribe();
-            resolve(true);
-          }
-        });
-
-        // timeout after 10s
-        setTimeout(() => {
-          unsubscribe();
-          resolve(false);
-        }, 10000);
-      });
-
-      if (!success) {
-        return {
-          error: 'WATERMARK_CREATION_TIMEOUT',
-          result: `The watermark creation has timeout, please try again later`
-        };
-      }
-    }
-  }
-
   //GENERATE THE VIDEO ACCESS URL
 
   // we need expiry date in UNIX Timestamp (aka seconds), JS Date give use milliseconds,
@@ -149,7 +96,6 @@ export const getPrivateVideoUrl = async (
   const md5 = createHash('md5');
 
   const signature = md5.update(toSign).digest('hex');
-
   const signedUrl = `https://cdn.jwplayer.com/manifests/${jwPlayerId}.m3u8?exp=${expires}&sig=${signature}`;
 
   try {
@@ -169,7 +115,6 @@ export const getPrivateVideoUrl = async (
       }
     };
   }
-
 
 }
 

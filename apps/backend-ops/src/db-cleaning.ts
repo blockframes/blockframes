@@ -106,7 +106,6 @@ async function cleanOneNotification(doc: QueryDocumentSnapshot, notification: No
   if (notification.user) {
     const d = await getDocument<PublicUser>(`users/${notification.user.uid}`);
     notification.user.avatar = d?.avatar || EMPTY_MEDIA;
-    notification.user.watermark = d?.watermark || EMPTY_MEDIA;
   }
 
   await doc.ref.update(notification);
@@ -141,13 +140,11 @@ async function cleanOneInvitation(doc: QueryDocumentSnapshot, invitation: Invita
   if (invitation.fromUser?.uid) {
     const d = await getDocument<PublicUser>(`users/${invitation.fromUser.uid}`);
     invitation.fromUser.avatar = d?.avatar || EMPTY_MEDIA;
-    invitation.fromUser.watermark = d?.watermark || EMPTY_MEDIA;
   }
 
   if (invitation.toUser?.uid) {
     const d = await getDocument<PublicUser>(`users/${invitation.toUser.uid}`);
     invitation.toUser.avatar = d?.avatar || EMPTY_MEDIA;
-    invitation.toUser.watermark = d?.watermark || EMPTY_MEDIA;
   }
 
   await doc.ref.update(invitation);
