@@ -5,7 +5,7 @@ export interface Link {
   color: 'primary' | 'accent' | 'warn' | '';
 }
 
-export type QueryMethods = "where" | "orderBy" | "limit" | "limitToLast";
+export type QueryMethods = "where" | "orderBy" | "limit" | "limitToLast" | "startAt";
 export interface CollectionQuery {
   method: QueryMethods;
 }
@@ -25,6 +25,10 @@ export interface OrderByQuery extends CollectionQuery {
 
 export interface LimitQuery extends CollectionQuery {
   limit: number
+}
+
+export interface StartAtQuery extends CollectionQuery {
+  value: string | boolean | number;
 }
 
 export type FirestoreQuery = CollectionQuery[];
