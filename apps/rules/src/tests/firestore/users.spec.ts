@@ -55,6 +55,11 @@ describe('Users Collection Rules Tests', () => {
     await assertSucceeds(usersRef.get({}));
   });
 
+  test('user should be able to list all users', async () => {
+    const allDocs = db.collection('users');
+    await assertSucceeds(allDocs.get());
+  });
+
   test('should allow user to delete own user doc (own uid)', async () => {
     const usersRef = db.doc('users/uid-user2');
     await assertSucceeds(usersRef.delete());
@@ -75,11 +80,6 @@ describe('Users Collection Rules Tests', () => {
     const expUserSnap = await usersRef.get();
     const expUser = await expUserSnap.data();
     expect(user).toEqual(expUser);
-  });
-
-  test('user should be able to list all users', async () => {
-    const allDocs = db.collection('users');
-    await assertFails(allDocs.get());
   });
 });
 

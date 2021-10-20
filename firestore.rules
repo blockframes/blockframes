@@ -64,7 +64,7 @@ service cloud.firestore {
 
     match /users/{userId} {
       allow get: if isSignedInAnonymously() && notInMaintenance();
-    	allow list: if userId() == existingData().uid	|| (isSignedIn() && isOrgMember(orgIdOf(userId()))) && notInMaintenance();
+    	allow list: if isSignedIn() && isOrgMember(orgIdOf(userId())) && notInMaintenance();
     	allow update: if isOnlyUpdatingAllowedUserFields() && notInMaintenance();
     	allow create: if userId() == incomingData().uid
         && isRequestFieldValueEqualTo(['uid'], userId) && notInMaintenance();
