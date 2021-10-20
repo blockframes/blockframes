@@ -201,17 +201,17 @@ describe('Movies Rules Tests', () => {
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
 
-    test('anonymous user should not be able to list all movies', async () => {
+    test('should not be able to list all movies', async () => {
       const allDocs = db.collection('movies');
       await assertFails(allDocs.get());
     });
 
-    test('anonymous user should not be able to fetch a draft movie by ID', async () => {
+    test('should not be able to fetch a draft movie by ID', async () => {
       const docRef = db.doc('movies/MI-077');
       await assertFails(docRef.get());
     });
     
-    test('anonymous user should be able to fetch an accepted movie by ID', async () => {
+    test('should be able to fetch an accepted movie by ID', async () => {
       const docRef = db.doc('movies/MI-0d7');
       await assertSucceeds(docRef.get());
     });

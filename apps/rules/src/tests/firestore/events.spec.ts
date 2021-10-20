@@ -100,12 +100,12 @@ describe('Events Rules Tests', () => {
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
 
-    test('anonymous user should not be able to list all events', async () => {
+    test('should not be able to list all events', async () => {
       const allDocs = db.collection('events');
       await assertFails(allDocs.get());
     });
 
-    test('anonymous user should be able to fetch an event by ID', async () => {
+    test('should be able to fetch an event by ID', async () => {
       const docRef = db.doc('events/E001');
       await assertSucceeds(docRef.get());
     });
