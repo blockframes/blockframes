@@ -159,8 +159,8 @@ export const inviteUsers = async (data: UserInvitation, context: CallableContext
         if (querySnap.size + data.emails.length > MEETING_MAX_INVITATIONS_NUMBER) {
           throw new Error(
             `MEETING MAX INVITATIONS EXCEEDED : Meeting ${eventId} has already ${querySnap.size} invitations
-and user ${user.uid} tried to add ${data.emails.length} new invitations.
-That would have exceeded the current limit which is ${MEETING_MAX_INVITATIONS_NUMBER} invitations.`)
+            and user ${user.uid} tried to add ${data.emails.length} new invitations.
+            That would have exceeded the current limit which is ${MEETING_MAX_INVITATIONS_NUMBER} invitations.`)
         }
       }
     }
@@ -173,12 +173,16 @@ That would have exceeded the current limit which is ${MEETING_MAX_INVITATIONS_NU
   }
 
   for (const email of data.emails) {
-    const isLastIndex = await getOrInviteUserByMail(email, invitation.fromOrg.id, invitation.type, data.app, eventData)
-      .then(u => createPublicUser(u))
+    const { id, type, mode, fromOrg } = invitation;
+    const isLastIndex = await getOrInviteUserByMail(email, {id, type, mode, fromOrg}, data.app, eventData)
+      .then(u => {
+        if(u.invitationStatus) invitation.status = u.invitationStatus; 
+        return createPublicUser(u.user);
+      })
       .then(toUser => {
         invitation.toUser = toUser;
-        const id = db.collection('invitations').doc().id;
-        invitation.id = id;
+        const invitationId = db.collection('invitations').doc().id;
+        invitation.id = invitationId;
       })
       .then(() => db.collection('invitations').doc(invitation.id).set(invitation))
       .then(result => promises.push({ result, error: '' }))
