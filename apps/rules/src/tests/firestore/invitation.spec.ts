@@ -13,7 +13,7 @@ describe('Invitation Rules Tests', () => {
 
   describe('With User not in org', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-sAdmin' });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-sAdmin', firebase: { sign_in_provider: 'password' } });
     });
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
@@ -31,7 +31,7 @@ describe('Invitation Rules Tests', () => {
 
   describe('With User in org', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2' });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2', firebase: { sign_in_provider: 'password' } });
     });
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
@@ -92,6 +92,31 @@ describe('Invitation Rules Tests', () => {
         await assertSucceeds(inviteRef.update({note: 'important'}));
       });
     });
+  });
+
+  describe('With Anonymous user', () => {
+    beforeAll(async () => {
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-c8-anon', firebase: { sign_in_provider: 'anonymous' } });
+    });
+
+    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+
+    test('should not be able to list all invitations', async () => {
+      const allDocs = db.collection('invitations');
+      await assertFails(allDocs.get());
+    });
+
+    test('should be able to fetch an invitation to an event by ID', async () => {
+      const docRef = db.doc('invitations/I013');
+      await assertSucceeds(docRef.get());
+    });
+
+    test('should not be able to fetch an invitation by ID that is not attendEvent', async () => {
+      const docRef = db.doc('invitations/I012');
+      await assertFails(docRef.get());
+    });
+
+    
   });
 });
 
