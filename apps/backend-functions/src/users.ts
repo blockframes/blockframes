@@ -74,7 +74,8 @@ export const onUserCreate = async (user: UserRecord) => {
   const { email, uid } = user;
 
   if (!email || !uid) {
-    throw new Error(`email and uid are mandatory parameter, provided email (${email}), uid (${uid})`);
+    functions.logger.warn(`Email and uid are mandatory parameter, provided email (${email}), uid (${uid}). The user may have been created anonymously.`);
+    return;
   }
 
   const userDocRef = db.collection('users').doc(user.uid);
@@ -104,17 +105,15 @@ export const onUserCreate = async (user: UserRecord) => {
 
 export async function onUserCreateDocument(snap: FirebaseFirestore.DocumentSnapshot) {
   const after = snap.data() as PublicUser;
-  if (after.firstName) { await sendFirstConnexionEmail(after) }
+  if (after.firstName) { await initUser(after); }
   return true;
 }
 
-export async function onUserUpdate(change: functions.Change<FirebaseFirestore.DocumentSnapshot>)  {
+export async function onUserUpdate(change: functions.Change<FirebaseFirestore.DocumentSnapshot>) {
   const before = change.before.data() as PublicUser;
   const after = change.after.data() as PublicUser;
-
-
   if ((before.firstName === undefined || before.firstName === '') && !!after.firstName) {
-    await sendFirstConnexionEmail(after);
+    await initUser(after);
   }
 
   await cleanUserMedias(before, after);
@@ -129,6 +128,20 @@ export async function onUserUpdate(change: functions.Change<FirebaseFirestore.Do
   ) {
     return storeSearchableUser(after);
   }
+}
+
+async function initUser(user: PublicUser) {
+  const promises = [sendFirstConnexionEmail(user)];
+
+  if (user._meta?.createdBy === 'anonymous' && user.email) {
+    const authUser = await admin.auth().getUser(user.uid);
+    if (!authUser.emailVerified) {
+      promises.push(startAccountCreationEmailFlow({ email: user.email, publicUser: user, app: user._meta.createdFrom }));
+    }
+    promises.push(storeSearchableUser(user));
+    promises.push(upsertWatermark(user, getStorageBucketName()));
+  }
+  return Promise.all(promises);
 }
 
 export async function onUserDelete(userSnapshot: FirebaseFirestore.DocumentSnapshot<PublicUser>) {
@@ -180,7 +193,7 @@ export async function onUserDelete(userSnapshot: FirebaseFirestore.DocumentSnaps
 
 export const sendDemoRequest = async (data: RequestDemoInformations): Promise<RequestDemoInformations> => {
   const from = getMailSender(data.app);
-  await sendMail(sendDemoRequestMail(data), from, groupIds.noUnsubscribeLink); 
+  await sendMail(sendDemoRequestMail(data), from, groupIds.noUnsubscribeLink);
   return data;
 }
 
@@ -244,7 +257,7 @@ export const verifyEmail = async (data: { uid: string }, context: CallableContex
   }
 
   try {
-    await admin.auth().updateUser(uid, { emailVerified: true});
+    await admin.auth().updateUser(uid, { emailVerified: true });
 
     const { _meta } = await getDocument<PublicUser>(`users/${uid}`);
     _meta.emailVerified = true;

@@ -23,7 +23,7 @@ service cloud.firestore {
     }
 
     match /blockframesAdmin/{userId} {
-      allow read: if ( userId() == userId || (isSignedIn() && isOrgMember(orgIdOf(userId))) ) && notInMaintenance();
+      allow read: if ( userId() == userId || (isSignedInWithPassword() && isOrgMember(orgIdOf(userId))) ) && notInMaintenance();
       allow write: if false;
     }
 
@@ -64,7 +64,7 @@ service cloud.firestore {
 
     match /users/{userId} {
       // TODO (#1359): We can read user data from the same organization as us until we got public users collection.
-    	allow read: if userId() == existingData().uid	|| (isSignedIn() && isOrgMember(orgIdOf(userId()))) && notInMaintenance();
+    	allow read: if userId() == existingData().uid	|| (isSignedInWithPassword() && isOrgMember(orgIdOf(userId()))) && notInMaintenance();
     	allow update: if isOnlyUpdatingAllowedUserFields() && notInMaintenance();
     	allow create: if userId() == incomingData().uid
         && isRequestFieldValueEqualTo(['uid'], userId) && notInMaintenance();
@@ -149,7 +149,7 @@ service cloud.firestore {
 
     function isAllowedToReadInvitation() {
       return (
-        ( existingData().type == 'attendEvent' && isSignedIn() )
+        ( existingData().type == 'attendEvent' && isSignedInWithPassword() )
         || isConcerned() // is host or guest
       )
     }
@@ -216,7 +216,10 @@ service cloud.firestore {
     /// RULES ///
 
     match /orgs/{orgId} {
-      allow read: if notInMaintenance();
+      allow get: if isSignedIn()
+        && notInMaintenance()
+      allow list: if isSignedIn() // @TODO #6908 update with userHasValidOrg() when a solution for this is found.
+        && notInMaintenance();
     	allow create: if isSignedIn()
         && isRequestFieldValueEqualTo(['status'], 'pending')
         && isRequestFieldValueEqualToOrNotSetted(['id'], orgId)
@@ -355,7 +358,7 @@ service cloud.firestore {
     }
 
     match /contracts/{contractId} {
-      allow read: if isSignedIn() && notInMaintenance();
+      allow read: if isSignedInWithPassword() && notInMaintenance();
       allow create: if (userOrgId() == incomingData().buyerId) && notInMaintenance();
       allow update: if (userOrgId() in existingData().stakeholders)
                     && isOnlyChangingContractStatus()
@@ -364,7 +367,7 @@ service cloud.firestore {
     }
 
     match /terms/{termId} {
-      allow read: if isSignedIn() && notInMaintenance();
+      allow read: if isSignedInWithPassword() && notInMaintenance();
       allow create: if (userOrgId() == getContract(incomingData().contractId).buyerId)
         && notInMaintenance();
       allow update: if false;
@@ -442,7 +445,7 @@ service cloud.firestore {
 
     // note: campaign is using the movieId as id
     match /campaigns/{movieId} {
-      allow read: if isSignedIn() && notInMaintenance();
+      allow read: if isSignedInWithPassword() && notInMaintenance();
       allow write: if isOrgMember(incomingData().orgId)
                   && orgCan('canUpdate', incomingData().orgId, movieId)
                   && notInMaintenance();
@@ -502,13 +505,22 @@ service cloud.firestore {
       return request.auth;
     }
 
+    function currentSigninProvider() {
+      return currentUser().token.firebase.sign_in_provider;
+    }
+
     function userId() {
       return currentUser().uid;
     }
 
-  	// Check if the user is logged in the app.
+  	// Check if the user is logged in the app with a real account.
+    function isSignedInWithPassword() {
+      return currentUser() != null && currentSigninProvider() == 'password';
+    }
+
+    // Check if user is signed in as anonymous or regular
     function isSignedIn() {
-      return currentUser() != null;
+      return currentUser() != null || (currentUser() != null && currentSigninProvider() == 'anonymous');
     }
 
   	function userOrgId() {
