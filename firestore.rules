@@ -75,7 +75,7 @@ service cloud.firestore {
 
     function isOnlyUpdatingAllowedUserFields() {
       // Only "firstName" and "lastName" can be updated.
-      return isSignedInAnonymously()
+      return isSignedIn()
       	&& userId() == incomingData().uid
         && isNotUpdatingId('uid', existingData().uid)
         && isNotUpdatingField(['email'])
