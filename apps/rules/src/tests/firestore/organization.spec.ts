@@ -32,6 +32,11 @@ describe('Organization Rules Tests', () => {
       const orgDocRef = db.doc('orgs/O001');
       await assertFails(orgDocRef.delete());
     });
+
+    test('not logged in user should not be able to list all orgs', async () => {
+      const allDocs = db.collection('orgs');
+      await assertFails(allDocs.get());
+    });
   });
 
   describe('With Anonymous user', () => {
@@ -51,23 +56,23 @@ describe('Organization Rules Tests', () => {
       await assertSucceeds(orgDocRef.set({ status: 'pending' }));
     });
 
-    test('anonymous user should not be able to update document', async () => {
+    test('should not be able to update document', async () => {
       const orgDocRef = db.doc('orgs/A001');
       await assertFails(orgDocRef.update({ note: 'document updated' }));
     });
 
-    test('anonymous user should not be able to delete document', async () => {
+    test('should not be able to delete document', async () => {
       const orgDocRef = db.doc('orgs/A001');
       await assertFails(orgDocRef.delete());
     });
 
      // @TODO #6908 updated with userHasValidOrg() when a solution for this is found.
-    test.skip('anonymous user should not be able to list all orgs', async () => {
+    test.skip('should not be able to list all orgs', async () => {
       const allDocs = db.collection('orgs');
       await assertFails(allDocs.get());
     });
 
-    test('anonymous user should be able to fetch an org by ID', async () => {
+    test('should be able to fetch an org by ID', async () => {
       const docRef = db.doc('orgs/O001');
       await assertSucceeds(docRef.get());
     });
@@ -83,6 +88,11 @@ describe('Organization Rules Tests', () => {
     test('should be able to read document', async () => {
       const orgDocRef = db.doc('orgs/O001');
       await assertSucceeds(orgDocRef.get());
+    });
+
+    test('should be able to list all orgs', async () => {
+      const allDocs = db.collection('orgs');
+      await assertSucceeds(allDocs.get());
     });
 
     test('doc status: pending, should be able to create document', async () => {

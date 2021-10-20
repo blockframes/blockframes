@@ -63,15 +63,13 @@ service cloud.firestore {
     /// RULES ///
 
     match /users/{userId} {
-      // TODO (#1359): We can read user data from the same organization as us until we got public users collection.
-    	allow read: if userId() == existingData().uid	|| (isSignedInWithPassword() && isOrgMember(orgIdOf(userId()))) && notInMaintenance();
+      allow get: if isSignedIn() && notInMaintenance();
+    	allow list: if isSignedInWithPassword() && isOrgMember(orgIdOf(userId())) && notInMaintenance();
     	allow update: if isOnlyUpdatingAllowedUserFields() && notInMaintenance();
     	allow create: if userId() == incomingData().uid
         && isRequestFieldValueEqualTo(['uid'], userId) && notInMaintenance();
       allow delete: if userId() == existingData().uid && notInMaintenance();
     }
-
-    // TODO (#1359): publicUser rules goes here.
 
     /// FUNCTIONS ///
 
@@ -124,7 +122,10 @@ service cloud.firestore {
     /// RULES ///
 
     match /invitations/{invitationId} {
-    	allow read: if isAllowedToReadInvitation()
+      allow get: if existingData().type == 'attendEvent' 
+        && isSignedIn()
+        && notInMaintenance();
+    	allow list: if isAllowedToReadInvitation()
         && notInMaintenance();
       allow create: if isInvitationCreator()
         && isRequestFieldValueEqualTo(['status'], 'pending')
@@ -218,7 +219,7 @@ service cloud.firestore {
     match /orgs/{orgId} {
       allow get: if isSignedIn()
         && notInMaintenance()
-      allow list: if isSignedIn() // @TODO #6908 update with userHasValidOrg() when a solution for this is found.
+      allow list: if isSignedIn() // @TODO #6756 updated with userHasValidOrg() when a solution for this is found.
         && notInMaintenance();
     	allow create: if isSignedIn()
         && isRequestFieldValueEqualTo(['status'], 'pending')
@@ -295,12 +296,16 @@ service cloud.firestore {
     /// RULES ///
 
     match /movies/{movieId} {
-    	// @TODO (#2049) We allow all movie read as Archipel Content is a catalog of public movies.
-      allow read: if userHasValidOrg()
+      allow get: if isSignedIn()
         && notInMaintenance()
         && ( checkStatus(existingData(), 'accepted')
         || ( isOrgMember(userOrgId()) && ( userOrgId() in existingData().orgIds ))
-        )
+        );
+      allow list: if userHasValidOrg()
+        && notInMaintenance()
+        && ( checkStatus(existingData(), 'accepted')
+        || ( isOrgMember(userOrgId()) && ( userOrgId() in existingData().orgIds ))
+        );
       allow create: if userHasValidOrg()
         && checkAllStatusAreEqual(incomingData(), 'draft')
         && isRequestFieldValueEqualToOrNotSetted(['id'], movieId)
@@ -395,7 +400,8 @@ service cloud.firestore {
 
     /// EVENTS RULES ///
     match /events/{eventId} {
-    	allow read: if userHasValidOrg() && notInMaintenance();
+    	allow get: if isSignedIn() && notInMaintenance();
+      allow list: if userHasValidOrg() && notInMaintenance();
       allow create: if userHasValidOrg()
         && isRequestFieldValueEqualToOrNotSetted(['id'], eventId)
         && isRequestFieldValueEqualTo(['ownerOrgId'], userOrgId())
@@ -506,7 +512,7 @@ service cloud.firestore {
     }
 
     function currentSigninProvider() {
-      return currentUser().token.firebase.sign_in_provider;
+      return userId() != null ? currentUser().token.firebase.sign_in_provider : '';
     }
 
     function userId() {
@@ -515,12 +521,17 @@ service cloud.firestore {
 
   	// Check if the user is logged in the app with a real account.
     function isSignedInWithPassword() {
-      return currentUser() != null && currentSigninProvider() == 'password';
+      return currentSigninProvider() == 'password';
+    }
+
+    // Check if the user is logged in the app with an anonymous account.
+    function isSignedInAnonymously() {
+      return currentSigninProvider() == 'anonymous';
     }
 
     // Check if user is signed in as anonymous or regular
     function isSignedIn() {
-      return currentUser() != null || (currentUser() != null && currentSigninProvider() == 'anonymous');
+      return isSignedInWithPassword() || isSignedInAnonymously();
     }
 
   	function userOrgId() {
