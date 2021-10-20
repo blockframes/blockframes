@@ -257,17 +257,6 @@ export const testFixture = {
     accessibility: 'private'
   },
 
-  'events/E003-public': {
-    id: 'E003-public',
-    ownerOrgId: 'O001',
-    accessibility: 'public',
-    title: 'My public screening event',
-    type: 'screening',
-    meta: {
-      titleId: 'MI-0d7'
-    }
-  },
-
   //Notifications
   'notifications/001': {
     id: '001',
