@@ -167,13 +167,15 @@ export const inviteUsers = async (data: UserInvitation, context: CallableContext
   }
 
   let eventData: EventEmailData = getEventEmailData();
-  if (invitation.type === 'attendEvent' && !!invitation.eventId) {
-    const event = await getDocument<EventDocument<EventMeta>>(`events/${invitation.eventId}`);
-    eventData = getEventEmailData(event);
-  }
 
   for (const email of data.emails) {
-    const { id, type, mode, fromOrg } = invitation;
+    const { id, type, mode, fromOrg, eventId } = invitation;
+
+    if (type === 'attendEvent' && !!eventId) {
+      const event = await getDocument<EventDocument<EventMeta>>(`events/${invitation.eventId}`);
+      eventData = getEventEmailData(event, email, id);
+    }
+
     const isLastIndex = await getOrInviteUserByMail(email, {id, type, mode, fromOrg}, data.app, eventData)
       .then(u => {
         if(u.invitationStatus) invitation.status = u.invitationStatus; 

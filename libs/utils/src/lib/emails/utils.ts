@@ -90,7 +90,7 @@ export function createEmailRequest(params: Partial<EmailRequest> = {}): EmailReq
   };
 }
 
-export function getEventEmailData(event?: Partial<EventDocument<EventMeta>>): EventEmailData {
+export function getEventEmailData(event?: Partial<EventDocument<EventMeta>>, userEmail?: string, invitationId?: string): EventEmailData {
   let eventStart = '';
   let eventEnd = '';
   if (event) {
@@ -105,14 +105,16 @@ export function getEventEmailData(event?: Partial<EventDocument<EventMeta>>): Ev
     eventEnd = format(eventEndDate, 'Pppp');
   }
 
+  const eventUrlParams = userEmail && invitationId ? `?email=${userEmail}&i=${invitationId}` : '';
+
   return {
     id: event?.id || '',
     title: event?.title || '',
     start: eventStart,
     end: eventEnd,
     type: event?.type,
-    viewUrl: event?.id ? `/event/${event.id}/r/i` : '', //to change #6756
-    sessionUrl: event?.id ? `/event/${event.id}/r/i/session` : '', //to change #6756
+    viewUrl: event?.id ? `/event/${event.id}/r/i${eventUrlParams}` : '', //to change #6756
+    sessionUrl: event?.id ? `/event/${event.id}/r/i/session${eventUrlParams}` : '', //to change #6756
     accessibility: event?.accessibility
   }
 }
