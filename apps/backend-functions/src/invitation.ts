@@ -166,29 +166,25 @@ export const inviteUsers = async (data: UserInvitation, context: CallableContext
     }
   }
 
-  let eventData: EventEmailData = getEventEmailData();
-  let event: EventDocument<unknown> | null = null;
+  const eventId = invitation.type === 'attendEvent' && invitation.eventId;
+  const event = eventId ? await getDocument<EventDocument<EventMeta>>(`events/${eventId}`) : undefined
 
-  if (invitation.type === 'attendEvent' && invitation.eventId) {
-    event = await getDocument<EventDocument<EventMeta>>(`events/${invitation.eventId}`);
-  }
 
   for (const email of data.emails) {
     const { type, mode, fromOrg } = invitation;
     const invitationId = db.collection('invitations').doc().id;
 
-    if(event) {
-      eventData = getEventEmailData(event, email, invitationId);
-    }
+    const eventData = getEventEmailData(event, email, invitationId);
+
 
     const isLastIndex = await getOrInviteUserByMail(
-      email, 
-      {id: invitationId, type, mode, fromOrg}, 
-      data.app, 
+      email,
+      { id: invitationId, type, mode, fromOrg },
+      data.app,
       eventData
     )
       .then(u => {
-        if(u.invitationStatus) invitation.status = u.invitationStatus; 
+        if (u.invitationStatus) invitation.status = u.invitationStatus;
         return createPublicUser(u.user);
       })
       .then(toUser => {

@@ -4,14 +4,14 @@ import { format } from "date-fns";
 import { EventDocument, EventMeta, EventTypes } from "@blockframes/event/+state/event.firestore";
 import { Organization, OrganizationDocument } from "@blockframes/organization/+state";
 import { User } from "@blockframes/auth/+state";
-import { AccessibilityTypes } from "../static-model";
+import { AccessibilityTypes, InvitationType } from "../static-model";
 
 interface EmailData {
   to: string;
   subject: string;
 }
 
-export type EmailRequest = EmailData &({ text: string } | { html: string });
+export type EmailRequest = EmailData & ({ text: string } | { html: string });
 
 export interface EmailTemplateRequest {
   to: string;
@@ -90,7 +90,7 @@ export function createEmailRequest(params: Partial<EmailRequest> = {}): EmailReq
   };
 }
 
-export function getEventEmailData(event?: Partial<EventDocument<EventMeta>>, userEmail?: string, invitationId?: string): EventEmailData {
+export function getEventEmailData(event?: Partial<EventDocument<EventMeta>>, userEmail?: string, invitationId?: string, invitationType?: InvitationType): EventEmailData {
   let eventStart = '';
   let eventEnd = '';
   if (event) {
@@ -105,7 +105,8 @@ export function getEventEmailData(event?: Partial<EventDocument<EventMeta>>, use
     eventEnd = format(eventEndDate, 'Pppp');
   }
 
-  const eventUrlParams = userEmail && invitationId ? `?email=${userEmail}&i=${invitationId}` : '';
+  const eventUrlParams = userEmail && invitationId && invitationType === 'attendEvent' ? `?email=${userEmail}&i=${invitationId}` : '';
+  const url = invitationType === 'attendEvent' ? `/event/${event?.id}/r/i` : `/c/o/marketplace/event/${event?.id}`
 
   return {
     id: event?.id || '',
@@ -113,8 +114,8 @@ export function getEventEmailData(event?: Partial<EventDocument<EventMeta>>, use
     start: eventStart,
     end: eventEnd,
     type: event?.type,
-    viewUrl: event?.id ? `/event/${event.id}/r/i${eventUrlParams}` : '', //to change #6756
-    sessionUrl: event?.id ? `/event/${event.id}/r/i/session${eventUrlParams}` : '', //to change #6756
+    viewUrl: event?.id ? url + eventUrlParams : '', //to change #6756
+    sessionUrl: event?.id ? `${url}/session${eventUrlParams}` : '', //to change #6756
     accessibility: event?.accessibility
   }
 }
