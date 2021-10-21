@@ -3,13 +3,12 @@ import { DOCUMENT } from "@angular/common";
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Inject, Input, OnDestroy, Output, ViewChild, ViewEncapsulation } from "@angular/core";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { AuthQuery } from "@blockframes/auth/+state";
+import { AuthQuery, hasAnonymousIdentity } from "@blockframes/auth/+state";
 import { MeetingVideoControl } from "@blockframes/event/+state/event.firestore";
 import { getWatermark, loadJWPlayerScript } from "@blockframes/utils/utils";
 import { BehaviorSubject } from "rxjs";
 import { toggleFullScreen } from '../../file/viewers/utils';
 import { StorageVideo } from "@blockframes/media/+state/media.firestore";
-import { hasAnonymousIdentity } from '@blockframes/utils/event';
 import { EventService } from "@blockframes/event/+state";
 
 declare const jwplayer: any;

@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
-import { AuthQuery } from '@blockframes/auth/+state';
-import { hasAnonymousIdentity } from '@blockframes/utils/event';
+import { AuthQuery, hasAnonymousIdentity } from '@blockframes/auth/+state';
 import { combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { EventQuery } from '../+state';
