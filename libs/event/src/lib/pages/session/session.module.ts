@@ -24,6 +24,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
 import { MatDividerModule } from '@angular/material/divider';
 
+
 @NgModule({
   declarations: [SessionComponent],
   imports: [
@@ -49,7 +50,7 @@ import { MatDividerModule } from '@angular/material/divider';
     MatProgressSpinnerModule,
     MatDividerModule,
 
-    RouterModule.forChild([{  path: '', component: SessionComponent }])
+    RouterModule.forChild([{ path: '', component: SessionComponent }])
   ]
 })
 export class SessionModule { }

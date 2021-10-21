@@ -53,7 +53,7 @@ export class MediaService {
    * @param parameters ImageParameters
    */
   async generateImgIxUrl(file: StorageFile, parameters: ImageParameters = {}, eventId?: string): Promise<string> {
-    if (file.privacy === 'protected') {
+      if (file.privacy === 'protected') {
       const [token] = await this.getProtectedMediaToken(file, [parameters], eventId);
       parameters.s = token;
     }
