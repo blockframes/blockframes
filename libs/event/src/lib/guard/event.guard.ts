@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router, UrlTree, CanDeactivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { InvitationQuery, Invitation } from '@blockframes/invitation/+state';
+import { InvitationQuery, Invitation, InvitationService } from '@blockframes/invitation/+state';
 import { Observable } from 'rxjs';
 import { EventQuery } from '../+state';
 import { eventTime } from '../pipes/event-time.pipe';
@@ -17,6 +17,7 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
   constructor(
     private authQuery: AuthQuery,
     private invitationQuery: InvitationQuery,
+    private invitationService: InvitationService,
     private eventQuery: EventQuery,
     private router: Router,
     private dialog: MatDialog,
@@ -26,27 +27,52 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
   async canActivate(next: ActivatedRouteSnapshot): Promise<boolean | UrlTree> {
     const event = this.eventQuery.getActive();
 
+    // if the event is not a meeting the lobby page is not accessible
+    // redirect directly to the session page,
+    // the guard will then be re-evaluated for invitation etc... on the session page
+    if (event.type !== 'meeting' && next.routeConfig.path === 'lobby') {
+      return this.router.parseUrl(`/event/${event.id}/r/i/session`);
+    }
+
+    if (eventTime(event) !== 'onTime') {
+      return this.router.parseUrl(`/event/${event.id}/r/i`);
+    }
 
     switch (event.accessibility) {
       case 'public':
-        /**
-         * Event is public, anyone can access
-         */
-        // @TODO #6756 
         return true;
-      case 'invitation-only':
-        return true; // @TODO #6756
-      case 'private': {
-        // if the event is not a meeting the lobby page is not accessible
-        // redirect directly to the session page,
-        // the guard will then be re-evaluated for invitation etc... on the session page
-        if (event.type !== 'meeting' && next.routeConfig.path === 'lobby') {
-          return this.router.parseUrl(`/event/${event.id}/session`);
+      case 'invitation-only': {
+
+        if (event.isOwner) {
+          return true;
         }
 
-        if (eventTime(event) !== 'onTime') {
-          return this.router.parseUrl(`/event/${event.id}`);
+        const hasRealAccountInvitation = this.invitationQuery.hasEntity((invitation: Invitation) => {
+          return (
+            invitation.eventId === event.id &&
+            invitation.status === 'accepted' && (
+              invitation.mode === 'request' && invitation.fromUser.uid === this.authQuery.userId ||
+              invitation.mode === 'invitation' && invitation.toUser.uid === this.authQuery.userId
+            )
+          );
+        });
+
+        let hasAnonymousInvitation = false;
+        const anonymousCreds = this.authQuery.anonymousCredentials;
+        const invitationId = anonymousCreds?.invitationId;
+        if (invitationId && event.accessibility === 'invitation-only') {
+          const invitation = await this.invitationService.getValue(invitationId);
+          hasAnonymousInvitation = invitation?.toUser?.email === anonymousCreds.email && event.id === invitation?.eventId && invitation.status === 'accepted';
         }
+
+        // if user wasn't invited OR hasn't accepted yet
+        if (!hasRealAccountInvitation && !hasAnonymousInvitation) {
+          return this.router.parseUrl(`/event/${event.id}/r/i`);
+        }
+
+        return true;
+      }
+      case 'private': {
 
         if (event.isOwner) {
           return true;
@@ -63,14 +89,13 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
 
         // if user wasn't invited OR hasn't accepted yet
         if (!hasUserAccepted) {
-          return this.router.parseUrl(`/event/${event.id}`);
+          return this.router.parseUrl(`/event/${event.id}/r/i`);
         }
 
         return true;
       }
 
     }
-
 
   }
 
