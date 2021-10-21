@@ -115,9 +115,22 @@
       [columns]="invitationsColumns"
       [initialColumns]="initialInvitationsColumns"
       showFilter
-      showPaginator>
+      showPaginator
+      clickable
+      (rowClick)="goTo($event)">
       <ng-template colRef="date" let-date>
         <span>{{ date | date: 'short' }}</span>
+      </ng-template>
+      <ng-template colRef="eventId" let-eventId>
+        <ng-container *ngIf="eventId else noEvent">
+          <ng-container *ngIf="eventId | getEvent | async as event">
+            <span>{{ event.title }}</span>
+          </ng-container>
+          <a mat-icon-button [routerLink]="['/c/o/dashboard/crm/event', eventId]">
+            <mat-icon svgIcon="visibility"></mat-icon>
+          </a>
+        </ng-container>
+        <ng-template #noEvent>-</ng-template>
       </ng-template>
     </bf-table-filter>
   </mat-card>
