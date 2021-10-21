@@ -30,9 +30,9 @@ type DeepValue<T, K> =
   : K extends keyof T ? T[K] : never;
 
 
-export type ParseFieldFn = (value: string | string[], state: any, rowIndex?: number) => any;
+export type ParseFieldFn = (value: string | string[], item: any, state: any[], rowIndex?: number) => any | Promise<any>;
 export type ExtractConfig<T> = Partial<{
-  [key in DeepKeys<T>]: (value: string | string[], state: any, rowIndex?: number) => DeepValue<T, key>
+  [key in DeepKeys<T>]: (value: string | string[], item: any, state: any[], rowIndex?: number) => DeepValue<T, key> | Promise<DeepValue<T, key>>;
 }>
 
 export interface ExtractOutput<T> {
@@ -65,40 +65,51 @@ export function importSpreadsheet(bytes: Uint8Array, range?: string): SheetTab[]
 }
 
 
-export function parse(
-  item: any = {}, values: string | string[], path: string, transform: ParseFieldFn,
-  rowIndex: number, warnings: SpreadsheetImportError[], errors: SpreadsheetImportError[]
+/**
+ * @param state all previous entities
+ * @param item current entity (Title, Org, Contract, ...)
+ */
+export async function parse(
+  state: any[],
+  item: any = {},
+  values: string | string[],
+  path: string,
+  transform: ParseFieldFn,
+  rowIndex: number,
+  warnings: SpreadsheetImportError[],
+  errors: SpreadsheetImportError[],
 ) {
   const segments = path.split('.');
-  const segment = segments.shift()
+  const segment = segments.shift();
   const last = !segments?.length;
 
-  //Array field
+  // Array field
   if (segment.endsWith('[]')) {
     const field = segment.replace('[]', '');
     if (Array.isArray(values)) {
-      //@TODO: transform should have state instead of item
-      if (last) item[field] = values.map((value, index) => transform(value, item, rowIndex));
-      if (!last) {
-        //Creating array at this field to which will be pushed the other sub fields
+      if (last) {
+        const promises = values.map(value => transform(value, item, state, rowIndex));
+        item[field] = await Promise.all(promises);
+      } else {
+        // Creating array at this field to which will be pushed the other sub fields
         if (!item[field]) item[field] = new Array(values.length).fill(null).map(() => ({}));
-        values.forEach((value, index) => {
-          //Filling in objects into above created array
-          parse(item[field][index], value, segments.join('.'), transform, rowIndex, warnings, errors)
-        })
+        for (let index = 0 ; index < values.length ; index++) {
+          // Filling in objects into above created array
+          await parse(state, item[field][index], values[index], segments.join('.'), transform, rowIndex, warnings, errors);
+        }
 
       }
     }
   } else {
-    const value = Array.isArray(values) ? values[0] : values
+    const value = Array.isArray(values) ? values[0] : values; // ? when is this supposed to happen ?
     try {
       if (last) {
-        const warningValue = transform(value, item, rowIndex);
-        if (warningValue instanceof ValueWithWarning) {
-          warnings.push(warningValue.warning);
-          item[segment] = warningValue.value;
+        const result = await transform(value, item, state, rowIndex);
+        if (result instanceof ValueWithWarning) {
+          warnings.push(result.warning);
+          item[segment] = result.value;
         } else {
-          item[segment] = warningValue;
+          item[segment] = result;
         }
       }
     } catch (err: any) {
@@ -106,9 +117,8 @@ export function parse(
     }
 
     if (!last) {
-      if (!item[segment])
-        item[segment] = {}
-      parse(item[segment], values, segments.join('.'), transform, rowIndex, warnings, errors);
+      if (!item[segment]) item[segment] = {};
+      await parse(state, item[segment], values, segments.join('.'), transform, rowIndex, warnings, errors);
     }
   }
 }
@@ -153,24 +163,31 @@ export function isEmpty(data: any,) {
 }
 
 /**
- * This method assumes that the keys of extractparams doesn't posses number as this will throw
+ * This method assumes that the keys of extractParams doesn't posses number as this will throw
  * off the ordering of the elements when we call Object.values/ Object.keys / Object.entries.
  * with the fields including the numbers coming first no matter their position in the object.
  */
-export function extract<T>(rawRows: string[][], extractParams: ExtractConfig<T> = {}): ExtractOutput<T> {
-  const warnings: SpreadsheetImportError[] = [];
-  const errors: SpreadsheetImportError[] = [];
+export async function extract<T>(rawRows: string[][], config: ExtractConfig<T> = {}, concurrentRow = 1): Promise<ExtractOutput<T>[]> {
+  const results: ExtractOutput<T>[] = [];
+  const state = [];
 
-  const extraParamsEntries = Object.entries(extractParams);
-  const state = {};
-  extraParamsEntries.forEach(([columnIndexedKey, parseFieldFn], index) => {
-    const extraParamValues = rawRows.map(row => row[index] ?? '');
-    parse(state, extraParamValues, columnIndexedKey, parseFieldFn as any, index, warnings, errors)
-  });
-  return {
-    data: cleanUp(state as T),
-    errors, warnings,
+  const flatRows = flattenConcurrentRows(rawRows, concurrentRow);
+
+  for (const row of flatRows) {
+    const item = {};
+    const warnings: SpreadsheetImportError[] = [];
+    const errors: SpreadsheetImportError[] = [];
+    const entries = Object.entries(config);
+    for (let index = 0 ; index < entries.length ; index++) {
+      const [ key, transform ] = entries[index];
+      const value = row[index];
+      await parse(state, item, value, key, transform as ParseFieldFn, index, warnings, errors)
+    }
+    const data = cleanUp(item) as T;
+    state.push(data);
+    results.push({ data, errors, warnings });
   }
+  return results;
 }
 
 export function getStatic(scope: Scope, value: string, separator:string) {
@@ -189,4 +206,27 @@ export function getStaticList(scope: Scope, value: string, separator:string, err
 
 export function split(cell: string, separator:string) {
   return cell.split(separator).filter(v => !!v).map(v => v.trim());
+}
+
+function flattenConcurrentRows(rawRows: string[][], concurrent: number) {
+
+  const flattened: string[][][] = new Array(Math.ceil(rawRows.length / concurrent));
+
+  for (let row = 0 ; row < rawRows.length ; row++) {
+    const flattenRow = Math.floor(row / concurrent);
+    if (!flattened[flattenRow]) flattened[flattenRow] = [];
+    for (let column = 0 ; column < rawRows[row].length ; column++) {
+      if (!flattened[flattenRow][column]) flattened[flattenRow].push([]);
+      flattened[flattenRow][column].push(rawRows[row][column]);
+    }
+  }
+
+  const filteredColumns = flattened.map(row => row.map(column => {
+    const filteredValues = column.filter(value => !!value);
+    if (!filteredValues.length) return undefined;
+    if (filteredValues.length === 1) return filteredValues[0];
+    return filteredValues;
+  }));
+
+  return filteredColumns.filter(row => !!row.length);
 }

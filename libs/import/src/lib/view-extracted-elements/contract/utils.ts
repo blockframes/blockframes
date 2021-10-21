@@ -1,12 +1,13 @@
 
-import { Media, Territory } from '@blockframes/utils/static-model';
+import { Language, Media, Territory } from '@blockframes/utils/static-model';
 import { OrganizationService } from '@blockframes/organization/+state';
+import { Term } from '@blockframes/contract/term/+state/term.firestore';
 import { createTerm } from '@blockframes/contract/term/+state/term.model';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { Mandate, Sale } from '@blockframes/contract/contract/+state/contract.firestore';
 import { ContractsImportState, SpreadsheetImportError } from '@blockframes/import/utils';
 import { createMovieLanguageSpecification, MovieService } from '@blockframes/movie/+state';
-import { createMandate, createSale } from '@blockframes/contract/contract/+state/contract.model';
+import { createMandate, createSale, isSale } from '@blockframes/contract/contract/+state/contract.model';
 import { extract, ExtractConfig, getStaticList, SheetTab, split, ValueWithWarning } from '@blockframes/utils/spreadsheet';
 
 import { centralOrgId } from '@env';
@@ -118,52 +119,32 @@ function getDate(value: string, error: SpreadsheetImportError) {
 }
 
 interface FieldsConfig {
-  title: {
-    international: string;
+  contract: {
+    titleId: string;
+    type: 'mandate' | 'sale';
+    sellerId: string;
+    buyerId: string;
+    id?: string;
+    stakeholders: string[];
   };
-  type: 'mandate' | 'sale';
-  licensorName: string;
-  licenseeName: string;
-  territories: Territory[];
-  medias: Media[];
-  exclusive: boolean;
-  duration: {
-    from: Date;
-    to: Date;
+  term: {
+    territories: Territory[];
+    medias: Media[];
+    exclusive: boolean;
+    duration: {
+      from: Date;
+      to: Date;
+    };
+    licensedOriginal: boolean;
+    dubbed: Language[];
+    subtitle: Language[];
+    closedCaptioning: Language[];
   };
-  originalLanguageLicensed: string;
-  dubbed: Territory[];
-  subtitle: Territory[];
-  closedCaptioning: Territory[];
-  contractId: string;
-  parentTermId: string;
-  titleId?: string;
-  stakeholdersList: string[];
+  parentTerm: string | number;
+  _titleId?: string;
 }
 
 type FieldsConfigType = ExtractConfig<FieldsConfig>;
-
-
-const fieldsConfig: FieldsConfigType = {
-  /* a */'title.international': (value: string) => value,
-  /* b */'type': (value: string) => value.toLowerCase() as 'mandate' | 'sale',
-  /* c */'licensorName': (value: string) => value,
-  /* d */'licenseeName': (value: string) => value,
-  /* e */'territories': (value: string) => getStaticList('territories', value, separator, errorsMap['no-territories']) as Territory[],
-  /* f */'medias': (value: string) => getStaticList('medias', value, separator, errorsMap['no-medias']) as Media[],
-  /* g */'exclusive': (value: string) => value.toLowerCase() === 'yes' ? true : false,
-  /* h */'duration.from': (value: string) => getDate(value, errorsMap['no-duration-from']) as Date,
-  /* i */'duration.to': (value: string) => getDate(value, errorsMap['no-duration-to']) as Date,
-  /* j */'originalLanguageLicensed': (value: string) => value,
-  /* k */'dubbed': (value: string) => getStaticList('languages', value, separator) as Territory[],
-  /* l */'subtitle': (value: string) => getStaticList('languages', value, separator) as Territory[],
-  /* m */'closedCaptioning': (value: string) => getStaticList('languages', value, separator) as Territory[],
-  /* n */'contractId': (value: string) => value,
-  /* o */'parentTermId': (value: string) => value,
-  /* p */'titleId': (value: string) => value,
-  /* q */'stakeholdersList': (value: string) => value ? split(value, separator) : [value],
-} as const;
-
 
 async function getOrgId(name: string, orgService: OrganizationService, cache: Record<string, string>) {
   if (!name) return '';
@@ -178,12 +159,18 @@ async function getOrgId(name: string, orgService: OrganizationService, cache: Re
   return result;
 }
 
-async function getTitleId(name: string, titleService: MovieService, cache: Record<string, string>) {
+async function getTitleId(name: string, titleService: MovieService, cache: Record<string, string>, userOrgId: string, blockframesAdmin: boolean) {
   if (!name) return '';
-
   if (cache[name]) return cache[name];
 
-  const titles = await titleService.getValue(ref => ref.where('title.international', '==', name));
+  const titles = await titleService.getValue(ref => {
+    if (blockframesAdmin) {
+      return ref.where('title.international', '==', name);
+    } else {
+      return ref.where('title.international', '==', name)
+        .where('orgIds', 'array-contains', userOrgId);
+    }
+  });
   const result =  titles.length === 1 ? titles[0].id : '';
   cache[name] = result;
   return result;
@@ -199,6 +186,46 @@ async function getContract(id: string, contractService: ContractService, cache: 
   return contract;
 }
 
+
+function toTerm(rawTerm: FieldsConfig['term'], contractId: string, firestore: AngularFirestore): Term {
+
+  const { medias, duration, territories, exclusive, licensedOriginal } = rawTerm;
+
+  const languages: Term['languages'] = {};
+
+  // TODO ASK BUSINESS WTF IS CLOSED CAPTIONING
+  // TODO language only support `caption` but term in db have an unknown extra `closedCaptioning` parameter
+  // TODO maybe it refer to the same thing but with two different name ????
+  rawTerm.closedCaptioning.forEach(language => {
+    if (!languages[language]) languages[language] = { caption: true, dubbed: false, subtitle: false };
+    else languages[language].caption = true;;
+  });
+
+  rawTerm.dubbed.forEach(language => {
+    if (!languages[language]) languages[language] = { caption: false, dubbed: true, subtitle: false };
+    else languages[language].dubbed = true;;
+  });
+
+  rawTerm.subtitle.forEach(language => {
+    if (!languages[language]) languages[language] = { caption: false, dubbed: true, subtitle: true };
+    else languages[language].subtitle = true;;
+  });
+
+  const id = firestore.createId();
+
+  return {
+    id,
+    languages,
+    contractId,
+    medias,
+    duration,
+    territories,
+    exclusive,
+    licensedOriginal,
+    criteria: [],
+  };
+}
+
 export async function formatContract(
   sheetTab: SheetTab,
   orgService: OrganizationService,
@@ -206,6 +233,7 @@ export async function formatContract(
   contractService: ContractService,
   firestore: AngularFirestore,
   blockframesAdmin: boolean,
+  userOrgId: string,
 ) {
 
   // Cache to avoid  querying db every time
@@ -213,87 +241,54 @@ export async function formatContract(
   const titleNameCache: Record<string, string> = {};
   const contractCache: Record<string, (Mandate | Sale)> = {};
 
-  const contractsToCreate: ContractsImportState[] = [];
+  const contracts: ContractsImportState[] = [];
 
-  for (const rawRow of sheetTab.rows) {
-    const row = rawRow.map(cell => typeof cell === "string" ? cell.trim() : cell.toString());
-    if (!row.length) continue;
+  const fieldsConfig: FieldsConfigType = {
+    /* a */'contract.titleId': async (value: string) => {
+      // TODO issue#6929
+      // const titleId = await getTitleId(value, titleService, titleNameCache, userOrgId, blockframesAdmin);
+      // throw errorsMap['no-title-id'];
+      return value;
+    },
+    /* b */'contract.type': (value: string) => value.toLowerCase() as 'mandate' | 'sale',
+    /* c */'contract.sellerId': (value: string) => value,
+    /* d */'contract.buyerId': (value: string) => value,
+    /* e */'term.territories': (value: string) => getStaticList('territories', value, separator, errorsMap['no-territories']) as Territory[],
+    /* f */'term.medias': (value: string) => getStaticList('medias', value, separator, errorsMap['no-medias']) as Media[],
+    /* g */'term.exclusive': (value: string) => value.toLowerCase() === 'yes',
+    /* h */'term.duration.from': (value: string) => getDate(value, errorsMap['no-duration-from']) as Date,
+    /* i */'term.duration.to': (value: string) => getDate(value, errorsMap['no-duration-to']) as Date,
 
-    const { data, errors } = extract<FieldsConfig>([row], fieldsConfig);
+    /* j */'term.licensedOriginal': (value: string) => value.toLowerCase() === 'yes', // ? Is this caption ??
+    /* k */'term.dubbed': (value: string) => getStaticList('languages', value, separator) as Language[],
+    /* l */'term.subtitle': (value: string) => getStaticList('languages', value, separator) as Language[],
+    /* m */'term.closedCaptioning': (value: string) => getStaticList('languages', value, separator) as Language[],
 
-    //////////////
-    // CONTRACT //
-    //////////////
+    /* n */'contract.id': (value: string) => value,
+    /* o */'parentTerm': (value: string) => value,
+    /* p */'_titleId': (value: string) => value,
+    /* q */'contract.stakeholders': (value: string) => value ? split(value, separator) : [value],
+  };
 
-    // TITLE
-    const titleId = data.titleId || (await getTitleId(data.title.international, titleService, titleNameCache));
-
-    if (!titleId) errors.push(errorsMap['no-title-id']);
+  const results = await extract<FieldsConfig>(sheetTab.rows, fieldsConfig);
 
 
-    // TYPE
-    if (!blockframesAdmin && data.type !== 'sale') {
-      errors.push(errorsMap['sales-only']);
+  for (const result of results) {
+    const { data, errors, warnings } = result;
+
+    const contract =  data.contract.type === 'sale'
+      ? createSale({ ...data.contract as Sale})
+      : createMandate({ ...data.contract as Mandate });
+
+    const term = toTerm(data.term, contract.id, firestore);
+
+    if (typeof data.parentTerm === 'number') {
+      contract.parentTermId = contracts[data.parentTerm - 2].terms[0].id; // excel lines start at 1 and first line is the column names
+      if (!contract.parentTermId) errors.push(errorsMap['TODO']) // TODO issue#6929
     }
 
-    // BUYER / SELLER
-    const [sellerId, buyerId] = await Promise.all([
-      getOrgId(data.licensorName, orgService, orgNameCache),
-      getOrgId(data.licenseeName, orgService, orgNameCache),
-    ])
-    if (!sellerId) errors.push(errorsMap['no-seller-id']);
-    if (!buyerId) errors.push(errorsMap['no-buyer-id']);
-
-    // STAKEHOLDER
-    const getStakeholders = Array.isArray(data.stakeholdersList) ? data.stakeholdersList.map(orgName => getOrgId(orgName, orgService, orgNameCache)) : [];
-    const stakeholders: string[] = (await Promise.all(getStakeholders)).filter(s => !!s);
-    if (!stakeholders.length) errors.push(errorsMap['no-stakeholders']);
-
-    // PARENT TERM ID
-    // TODO issue#6900
-    // TODO add parentTermId to the sales & mandates
-    // TODO mandates don't have a parentTermId ???
-    // TODO only admin internal sales (inside of AC) import require a parentTermId ???
-    // TODO sales outside of AC don't have a parentTermId ????
-    // TODO maybe property Contract.parentTermId should be move to Sale.parentTermId? a be optional ???
-
-    // CONTRACT
-    let baseContract: Partial<Mandate | Sale> = {};
-    if (data.contractId) {
-      baseContract = await getContract(data.contractId, contractService, contractCache);
-      if (!baseContract) errors.push(errorsMap['wrong-contract-id']);
-    } else {
-      baseContract.id = firestore.createId();
-    }
-    const contract = data.type === 'mandate'
-      ? createMandate({ ...baseContract as Mandate, titleId, buyerId, sellerId, stakeholders, status: 'accepted' })
-      : createSale({ ...baseContract as Sale, titleId, buyerId, sellerId, stakeholders, status: 'accepted' });
-
-
-    ///////////
-    // TERMS //
-    ///////////
-    const contractId = contract.id;
-
-    const termId = firestore.createId();
-    const term = createTerm({ id: termId, contractId, duration: data.duration, territories: data.territories, medias: data.medias, exclusive: data.exclusive });
-
-    // Languages
-    for (const [key, languages] of Object.entries({ dubbed: data.dubbed, subtitle: data.subtitle, closedCaptioning: data.closedCaptioning })) {
-      for (const language of languages) {
-        if (!term.languages[language]) term.languages[language] = createMovieLanguageSpecification();
-        term.languages[language][key] = true;
-      }
-    }
-
-    contract.termIds.push(termId);
-
-    contractsToCreate.push({
-      contract,
-      newContract: !data.contractId,
-      errors,
-      terms: [term]
-    });
+    contracts.push({ contract, terms: [term], errors: [ ...errors, ...warnings ], newContract: true });
   }
-  return contractsToCreate;
+
+  return contracts;
 }
