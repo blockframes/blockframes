@@ -1,8 +1,3 @@
-/**
- * Tooling to setup the firebase project before running tests.
- *
- * This module provides functions to trigger a firestore restore and test user creations.
- */
 import { syncUsers } from './users';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
 import { migrate } from './migrations';
@@ -22,7 +17,6 @@ import {
 } from '@blockframes/firebase-utils';
 import { cleanDeprecatedData } from './db-cleaning';
 import { cleanStorage } from './storage-cleaning';
-import { restoreStorageFromCi } from '@blockframes/firebase-utils';
 import { firebase } from '@env';
 import { generateFixtures } from './generate-fixtures';
 import { ensureMaintenanceMode } from './tools';
@@ -61,7 +55,7 @@ export async function prepareForTesting({ dbBackupURL }: { dbBackupURL?: string 
   console.info('Migrations complete!');
 
   console.info('Generating fixtures...');
-  await generateFixtures();
+  await generateFixtures(db);
   console.info('Fixtures generated in: tools/fixtures/*.json');
 
   console.info('Preparing Algolia...');
@@ -104,7 +98,7 @@ export async function prepareEmulators({ dbBackupURL }: { dbBackupURL?: string }
   console.info('Migrations complete!');
 
   console.info('Generating fixtures...');
-  await generateFixtures();
+  await generateFixtures(db);
   console.info('Fixtures generated in: tools/fixtures/*.json');
 
   console.info('Preparing Algolia...');
@@ -118,21 +112,6 @@ export async function prepareEmulators({ dbBackupURL }: { dbBackupURL?: string }
   await shutdownEmulator(proc);
 }
 
-export async function prepareDb() {
-  console.warn('This script only restores the DB - does NOT refresh Firebase Auth, Sync storage, generate fixtures.');
-  console.warn('Nor does this script check for a new/updated anonymized db from the ci environment - latest from storage backup used');
-  console.log('Restoring latest db from storage...')
-  await importFirestore(latestAnonDbDir);
-  console.log('Anonymized DB restored. Migrating...');
-  await migrate({ withBackup: false });
-}
-
-export async function prepareStorage() {
-  const { getCI } = loadAdminServices();
-  console.info('Syncing storage with golden backup stored in blockframes-ci...');
-  await restoreStorageFromCi(getCI());
-  console.info('Storage synced!');
-}
 
 export async function upgrade() {
   const { db, auth, storage } = loadAdminServices();

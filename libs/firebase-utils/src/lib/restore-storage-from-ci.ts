@@ -7,6 +7,10 @@ import { getLatestDirName } from './anonymize';
 export const CI_STORAGE_BACKUP = 'blockframes-ci-storage-backup';
 export const latestAnonStorageDir = 'LATEST-ANON-STORAGE';
 
+/**
+ * This method is
+ * @deprecated
+ */
 export async function restoreStorageFromCi(ciApp: admin.app.App) {
   if (
     firebase().storageBucket === 'blockframes.appspot.com' ||
