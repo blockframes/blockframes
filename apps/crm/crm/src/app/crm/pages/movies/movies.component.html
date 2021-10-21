@@ -13,9 +13,14 @@
       </button>
     </article>
     <bf-table [source]="movies" clickable useFilter pagination="50" (rowClick)="goToEdit($event)">
-      <ng-template colRef="id" let-id>{{ id }}</ng-template>
       <ng-template colRef="poster" let-poster>
         <img class="poster" [ref]="poster" asset="empty_poster.svg">
+      </ng-template>
+      <ng-template colRef="id" let-id>
+        <span>{{ id }}</span>
+        <button mat-icon-button [cdkCopyToClipboard]="id" (click)="$event.stopPropagation()">
+          <mat-icon svgIcon="file_copy"></mat-icon>
+        </button>
       </ng-template>
       <ng-template colRef="title.international" label="International title" sort let-title>
         {{ title }}
@@ -35,9 +40,6 @@
       </ng-template>
       <ng-template colRef="app.financiers.status" label="Financiers Status" sort let-status>
         <bf-tag>{{ status }}</bf-tag>
-      </ng-template>
-      <ng-template colRef="screeningCount" label="Screening count" sort let-screeningCount>
-        {{ screeningCount }}
       </ng-template>
     </bf-table>
   </ng-container>

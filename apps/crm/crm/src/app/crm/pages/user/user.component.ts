@@ -39,6 +39,7 @@ export class UserComponent implements OnInit {
 
   public invitationsColumns = {
     date: 'Date Created',
+    eventId: 'Event Name',
     mode: 'Mode',
     type: 'Type',
     'fromOrg.denomination.full': 'From Organization',
@@ -46,7 +47,7 @@ export class UserComponent implements OnInit {
     status: 'Status',
   };
 
-  public initialInvitationsColumns = ['date', 'mode', 'type', 'fromOrg.denomination.full', 'toOrg.denomination.full', 'status'];
+  public initialInvitationsColumns = ['date', 'eventId', 'mode', 'type', 'fromOrg.denomination.full', 'toOrg.denomination.full', 'status'];
 
   constructor(
     private userService: UserService,
@@ -238,5 +239,14 @@ export class UserComponent implements OnInit {
     }
 
     return output;
+  }
+
+  goTo(invitation: Invitation) {
+    if (invitation.type === 'attendEvent') {
+      this.router.navigate(['/c/o/dashboard/crm/event', invitation.eventId]);
+    } else if (invitation.type === 'joinOrganization') {
+      const id = invitation.fromOrg ? invitation.fromOrg.id : invitation.toOrg?.id;
+      this.router.navigate(['/c/o/dashboard/crm/organization', id]);
+    }
   }
 }

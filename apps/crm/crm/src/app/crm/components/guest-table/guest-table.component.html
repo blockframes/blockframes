@@ -47,5 +47,10 @@
       </a>
     </div>
     <ng-template #noMovie>--</ng-template>
-  </ng-template>>
+  </ng-template>
+  <ng-template colRef="guest" let-guest>
+    <a [routerLink]="['/c/o/dashboard/crm/user/', guest.uid]">
+      <span>{{ guest.email }} </span><mat-icon svgIcon="visibility"></mat-icon>
+    </a>
+  </ng-template>
 </bf-table-filter>

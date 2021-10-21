@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -31,6 +32,7 @@ import { AdminOrganizationFormModule } from './components/organization/forms/org
 import { MovieVideoUploadModule } from '@blockframes/movie/components/video-upload/video-upload.module';
 import { MoviePictureUploadModule } from '@blockframes/movie/components/picture-upload/picture-upload.module';
 import { FormListModule } from '@blockframes/ui/form/list/form-list.module';
+import { GetEventPipeModule } from '@blockframes/event/pipes/get-event.pipe';
 
 // Components
 import { OverviewComponent } from './pages/overview/overview.component';
@@ -105,6 +107,8 @@ export const panelRoutes: Routes = [
     DashboardModule,
     BreadCrumbModule,
     FormListModule,
+    GetEventPipeModule,
+    ClipboardModule,
 
     RouterModule.forChild(panelRoutes),
   ],
