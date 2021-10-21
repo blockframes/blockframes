@@ -11,7 +11,9 @@ export { User } from '@blockframes/user/+state/user.firestore';
 export interface AnonymousCredentials extends Person {
   role?: 'guest' | 'organizer'; // Role for events
   email?: string,
+  emailVerified?: boolean, // @TODO #6756 check if needed
   invitationId?: string, // Invitation for the event
+  invitationCode?: string, // @TODO #6756 check if needed + update player backend to check if invitation code is ok
 }
 export interface Roles {
   blockframesAdmin: boolean;
@@ -22,7 +24,6 @@ export interface AuthState extends FireAuthState<User>, RoleState<Roles> {
   anonymousCredentials?: AnonymousCredentials;
 }
 
-
 /**
  * Check if anonymous user has given enough informations to access event
  * @param creds 
@@ -32,6 +33,20 @@ export interface AuthState extends FireAuthState<User>, RoleState<Roles> {
 export function hasAnonymousIdentity(creds: AnonymousCredentials, accessibility: AccessibilityTypes) {
   const hasIdentity = !!creds?.lastName && !!creds?.firstName && !!creds?.role;
   return accessibility === 'public' ? hasIdentity : hasIdentity && !!creds?.email;
+}
+
+/**
+ * Check if anonymous user has verified his email if event requires it
+ * @param creds 
+ * @param accessibility 
+ * @returns 
+ */
+export function isAnonymousEmailVerified(creds: AnonymousCredentials, accessibility: AccessibilityTypes) {
+  return accessibility === 'public' ? true : creds?.emailVerified && !!creds?.email;
+}
+
+export function hasVerifiedAnonymousIdentity(creds: AnonymousCredentials, accessibility: AccessibilityTypes) {
+  return hasAnonymousIdentity(creds, accessibility) && isAnonymousEmailVerified(creds, accessibility);
 }
 
 export function createUser(user: Partial<User> = {}) {

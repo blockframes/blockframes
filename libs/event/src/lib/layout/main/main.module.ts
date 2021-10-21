@@ -64,6 +64,10 @@ const routes: Routes = [{
           loadChildren: () => import('./../../pages/email/email.module').then(m => m.EmailModule),
         },
         {
+          path: 'email-verify',
+          loadChildren: () => import('./../../pages/email-verify/email-verify.module').then(m => m.EmailVerifyModule),
+        },
+        {
           path: 'login',
           loadChildren: () => import('./../../pages/login/login.module').then(m => m.LoginModule),
         },

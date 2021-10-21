@@ -6,7 +6,6 @@ import { hasDisplayName } from '@blockframes/utils/helpers';
 import { AuthQuery, AuthService, AuthState } from '@blockframes/auth/+state';
 import { of } from 'rxjs';
 import { OrganizationService, OrganizationStore } from '@blockframes/organization/+state';
-import { NotificationService } from '@blockframes/notification/+state';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +17,6 @@ export class EventAuthGuard extends CollectionGuard<AuthState> {
     private query: AuthQuery,
     private afAuth: AngularFireAuth,
     private orgService: OrganizationService,
-    private notitificationService: NotificationService,
     private orgStore: OrganizationStore,
   ) {
     super(service);

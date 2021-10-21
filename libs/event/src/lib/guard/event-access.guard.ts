@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
-import { AuthQuery, AuthService, AuthStore, hasAnonymousIdentity } from '@blockframes/auth/+state';
+import { AuthQuery, AuthService, AuthStore, hasAnonymousIdentity, hasVerifiedAnonymousIdentity } from '@blockframes/auth/+state';
 import { createInvitation, InvitationService } from '@blockframes/invitation/+state';
 import { combineLatest } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -47,7 +47,7 @@ export class EventAccessGuard implements CanActivate {
             if (invitationId) {
               const invitation = await this.invitationService.getValue(invitationId).catch(() => createInvitation());
               if (invitation?.toUser?.email === anonymousCredentials?.email && invitation?.eventId === event.id) {
-                return hasAnonymousIdentity(anonymousCredentials, event.accessibility) || this.router.navigate([`/event/${event.id}`]);
+                return hasVerifiedAnonymousIdentity(anonymousCredentials, event.accessibility) || this.router.navigate([`/event/${event.id}`]);
               } else {
                 this.snackBar.open('Incorrect invitation for event', 'close', { duration: 5000 });
                 this.router.navigate(['/']);
