@@ -39,17 +39,15 @@ export class OrganizationComponent implements OnInit {
   public invitationsToJoinOrganization$: Observable<Invitation[]>;
 
   public versionColumnsMovies = {
-    'id': { value: 'Id', disableSort: true },
-    'internalRef': 'Internal Ref',
     'poster': { value: 'Poster', disableSort: true },
+    'id': { value: 'Id', disableSort: true },
     'title.international': 'International title',
     'releaseYear': 'Release year',
   };
 
   public initialColumnsMovies: string[] = [
-    'id',
     'poster',
-    'internalRef',
+    'id',
     'title.international',
     'releaseYear',
   ];
@@ -57,7 +55,6 @@ export class OrganizationComponent implements OnInit {
   public memberColumns = {
     uid: '',
     firstName: 'First Name',
-    avatar: 'Avatar',
     lastName: 'Last Name',
     email: 'Email Address',
     position: 'Position',
@@ -65,7 +62,7 @@ export class OrganizationComponent implements OnInit {
     edit: 'Edit',
   };
 
-  public memberColumnsIndex = ['firstName', 'avatar', 'lastName', 'email', 'position', 'role', 'edit'];
+  public memberColumnsIndex = ['firstName', 'lastName', 'email', 'position', 'role', 'edit'];
 
   constructor(
     private organizationService: OrganizationService,
