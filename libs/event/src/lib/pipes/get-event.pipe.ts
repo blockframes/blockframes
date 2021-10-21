@@ -10,13 +10,13 @@ export class GetEventPipe implements PipeTransform {
     private service: EventService
   ) { }
 
-  transform(titleId: string): Observable<Event>
-  transform(titleId: string[]): Observable<Event[]>
-  transform(titleId: string | string[]) {
+  transform(eventId: string): Observable<Event>
+  transform(eventId: string[]): Observable<Event[]>
+  transform(eventId: string | string[]) {
     // We need that for the compiler to be happy, else it doesn't understand params
-    return Array.isArray(titleId)
-      ? this.service.valueChanges(titleId)
-      : this.service.valueChanges(titleId);
+    return Array.isArray(eventId)
+      ? this.service.valueChanges(eventId)
+      : this.service.valueChanges(eventId);
   }
 }
 
