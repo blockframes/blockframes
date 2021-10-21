@@ -6,7 +6,7 @@ import { catchError, filter, map } from 'rxjs/operators';
 import { Location } from '@angular/common';
 import { fade } from '@blockframes/utils/animations/fade';
 import { AuthQuery } from '@blockframes/auth/+state';
-import { hasAnonymousIdentity } from '@blockframes/utils/event';
+
 @Component({
   selector: 'event-view-layout',
   templateUrl: './view.component.html',
@@ -48,7 +48,6 @@ export class EventViewComponent implements OnInit, OnDestroy {
       emailInvitation = await this.invitationService.getValue(this.authQuery.anonymousCredentials?.invitationId);
     }
 
-    // @TODO #6756
     this.sub = combineLatest([
       this.event$.pipe(filter(event => !!event)),
       this.invitationService.guestInvitations$.pipe(catchError(() => of([]))),
@@ -56,22 +55,15 @@ export class EventViewComponent implements OnInit, OnDestroy {
       map(([event, invitations]) => {
         switch (event.accessibility) {
           case 'public':
-            console.log('@TODO #6756 no invitation needed');
-            return null;
+            return undefined;
           case 'invitation-only': {
             const regularInvitation = invitations.find(invitation => invitation.eventId === event.id) ?? null;
             if (regularInvitation) return regularInvitation;
-            if (emailInvitation 
-              && hasAnonymousIdentity(anonymousCredentials, event.accessibility)
-              && emailInvitation.eventId === event.id && emailInvitation.toUser.email === anonymousCredentials.email) {
-              return emailInvitation;
-            } else {
-              // @TODO #6756 bad invitation id => snackbar message?
-              return null;
-            }
+            if (emailInvitation) return emailInvitation;
+            return undefined;
           }
           case 'private':
-            return invitations.find(invitation => invitation.eventId === event.id) ?? null;
+            return invitations.find(invitation => invitation.eventId === event.id) ?? undefined;
         }
       })
     ).subscribe(invitation => {

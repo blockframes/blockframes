@@ -24,7 +24,7 @@ export class EmailComponent implements OnInit {
 
   click() {
     // Update store with from value
-    this.authStore.updateAnonymousCredentials({ lastName: 'bruce', firstName: 'test', email: 'foo@bar.com', invitationId: this.route.snapshot.queryParams.i });
+    this.authStore.updateAnonymousCredentials({ lastName: 'bruce', firstName: 'test', email: 'foo@bar.com'});
     // Redirect user to event view
     this.router.navigate(['../i'], { relativeTo: this.route, queryParams: this.route.snapshot.queryParams });
   }
