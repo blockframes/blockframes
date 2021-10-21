@@ -59,9 +59,9 @@ export async function prepareForTesting({ dbBackupURL }: { dbBackupURL?: string 
   console.info('Fixtures generated in: tools/fixtures/*.json');
 
   console.info('Preparing Algolia...');
-  await upgradeAlgoliaOrgs();
-  await upgradeAlgoliaMovies();
-  await upgradeAlgoliaUsers();
+  await upgradeAlgoliaOrgs(null, db);
+  await upgradeAlgoliaMovies(null, db);
+  await upgradeAlgoliaUsers(db);
   console.info('Algolia ready for testing!');
 
   insurance(); // Switch off maintenance insurance
@@ -102,9 +102,9 @@ export async function prepareEmulators({ dbBackupURL }: { dbBackupURL?: string }
   console.info('Fixtures generated in: tools/fixtures/*.json');
 
   console.info('Preparing Algolia...');
-  await upgradeAlgoliaOrgs();
-  await upgradeAlgoliaMovies();
-  await upgradeAlgoliaUsers();
+  await upgradeAlgoliaOrgs(null, db);
+  await upgradeAlgoliaMovies(null, db);
+  await upgradeAlgoliaUsers(db);
   console.info('Algolia ready for testing!');
 
   insurance(); // Switch off maintenance insurance
@@ -129,9 +129,9 @@ export async function upgrade() {
   console.info('Storage data clean and fresh!');
 
   console.info('Preparing Algolia...');
-  await upgradeAlgoliaOrgs();
-  await upgradeAlgoliaMovies();
-  await upgradeAlgoliaUsers();
+  await upgradeAlgoliaOrgs(null, db);
+  await upgradeAlgoliaMovies(null, db);
+  await upgradeAlgoliaUsers(db);
   console.info('Algolia ready for testing!');
 
 }

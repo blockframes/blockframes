@@ -17,9 +17,9 @@ import { Campaign } from '@blockframes/campaign/+state/campaign.model';
 import { AlgoliaConfig } from '@blockframes/utils/algolia';
 
 
-export async function upgradeAlgoliaOrgs(appConfig?: App) {
+export async function upgradeAlgoliaOrgs(appConfig?: App, db: FirebaseFirestore.Firestore = loadAdminServices().db) {
   if (!appConfig) {
-    const promises = getAllAppsExcept(['crm']).map(upgradeAlgoliaOrgs);
+    const promises = getAllAppsExcept(['crm']).map(app => upgradeAlgoliaOrgs(app, db));
     await Promise.all(promises);
   } else {
 
@@ -41,7 +41,6 @@ export async function upgradeAlgoliaOrgs(appConfig?: App) {
     await clearIndex(algolia.indexNameOrganizations[appConfig], process.env['ALGOLIA_API_KEY']);
     await setIndexConfiguration(algolia.indexNameOrganizations[appConfig], config, process.env['ALGOLIA_API_KEY']);
 
-    const { db } = loadAdminServices();
     const orgsIterator = getCollectionInBatches<OrganizationDocument>(db.collection('orgs'), 'id', 300)
     for await (const orgs of orgsIterator) {
       const promises = orgs.map(org => storeSearchableOrg(org, process.env['ALGOLIA_API_KEY']));
@@ -54,10 +53,10 @@ export async function upgradeAlgoliaOrgs(appConfig?: App) {
   }
 }
 
-export async function upgradeAlgoliaMovies(appConfig?: App) {
+export async function upgradeAlgoliaMovies(appConfig?: App, db: FirebaseFirestore.Firestore = loadAdminServices().db) {
 
   if (!appConfig) {
-    const promises = getAllAppsExcept(['crm']).map(upgradeAlgoliaMovies);
+    const promises = getAllAppsExcept(['crm']).map(app => upgradeAlgoliaMovies(app, db));
     await Promise.all(promises);
   } else {
 
@@ -67,7 +66,6 @@ export async function upgradeAlgoliaMovies(appConfig?: App) {
     await clearIndex(algolia.indexNameMovies[appConfig], process.env['ALGOLIA_API_KEY']);
     await setIndexConfiguration(algolia.indexNameMovies[appConfig], config, process.env['ALGOLIA_API_KEY']);
 
-    const { db } = loadAdminServices();
     const moviesIterator = getCollectionInBatches<MovieDocument>(db.collection('movies'), 'id', 300);
 
     for await (const movies of moviesIterator) {
@@ -105,7 +103,7 @@ export async function upgradeAlgoliaMovies(appConfig?: App) {
   }
 }
 
-export async function upgradeAlgoliaUsers() {
+export async function upgradeAlgoliaUsers(db: FirebaseFirestore.Firestore = loadAdminServices().db) {
 
   // reset config, clear index and fill it up from the db (which is the only source of truth)
   const config: AlgoliaConfig = {
@@ -123,7 +121,6 @@ export async function upgradeAlgoliaUsers() {
   await clearIndex(algolia.indexNameUsers, process.env['ALGOLIA_API_KEY']);
   await setIndexConfiguration(algolia.indexNameUsers, config, process.env['ALGOLIA_API_KEY']);
 
-  const { db } = loadAdminServices();
   const usersIterator = getCollectionInBatches<PublicUser>(db.collection('users'), 'uid', 300)
   for await (const users of usersIterator) {
     const promises = users.map(async user => {
