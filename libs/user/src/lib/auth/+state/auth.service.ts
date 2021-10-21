@@ -83,7 +83,6 @@ export class AuthService extends FireAuthService<AuthState> {
     this.updateIntercom(userCredential);
   }
 
-
   /**
    * @description function that gets triggered when
    * AuthService.signOut is called
