@@ -54,21 +54,13 @@ export class EventAuthGuard extends CollectionGuard<AuthState> {
             }
 
             /**
-             * If current user is not anonymous, we populate org stage
+             * If current user is not anonymous, we populate org store
              */
             if (userAuth && !userAuth.isAnonymous) {
-
-              // Starting orgState populate @TODO #6756 check if can be improved
               this.orgStore.upsert(org.id, org);
               this.orgStore.setActive(org.id);
               this.orgService.syncActive({ id: org.id });
             }
-
-            // Sync notifications
-            this.notitificationService.syncCollection(ref => ref
-              .where('toUserId', '==', user.uid)
-              .where('app.isRead', '==', false)
-            ).subscribe();
 
             // Everyting is ok
             return true;
