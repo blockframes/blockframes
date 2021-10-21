@@ -106,7 +106,7 @@ export function getEventEmailData(event?: Partial<EventDocument<EventMeta>>, use
   }
 
   const eventUrlParams = userEmail && invitationId && invitationType === 'attendEvent' ? `?email=${userEmail}&i=${invitationId}` : '';
-  const url = invitationType === 'attendEvent' ? `/event/${event?.id}/r/i` : `/c/o/marketplace/event/${event?.id}`
+  const url = invitationType === 'attendEvent' ? `/event/${event?.id}/r/i` : `/c/o/marketplace/event/${event?.id}`;
 
   return {
     id: event?.id || '',
@@ -114,8 +114,8 @@ export function getEventEmailData(event?: Partial<EventDocument<EventMeta>>, use
     start: eventStart,
     end: eventEnd,
     type: event?.type,
-    viewUrl: event?.id ? url + eventUrlParams : '', //to change #6756
-    sessionUrl: event?.id ? `${url}/session${eventUrlParams}` : '', //to change #6756
+    viewUrl: event?.id ? `${url}${eventUrlParams}` : '',
+    sessionUrl: event?.id ? `${url}/session${eventUrlParams}` : '',
     accessibility: event?.accessibility
   }
 }

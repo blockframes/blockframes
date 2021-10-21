@@ -167,7 +167,7 @@ export const inviteUsers = async (data: UserInvitation, context: CallableContext
   }
 
   const eventId = invitation.type === 'attendEvent' && invitation.eventId;
-  const event = eventId ? await getDocument<EventDocument<EventMeta>>(`events/${eventId}`) : undefined
+  const event = eventId ? await getDocument<EventDocument<EventMeta>>(`events/${eventId}`) : undefined;
 
 
   for (const email of data.emails) {
