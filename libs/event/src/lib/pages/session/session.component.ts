@@ -89,18 +89,23 @@ export class SessionComponent implements OnInit, OnDestroy {
 
           // if user is not a screening owner we need to track the watch time
           if (event.ownerOrgId !== this.authQuery.orgId) {
-            const [invitation] = this.invitationQuery.getAll({
+            // Try to get invitation the regular way
+            let [invitation] = this.invitationQuery.getAll({
               filterBy: invit => invit.eventId === event.id &&
                 (
                   invit.toUser?.uid === this.authQuery.userId ||
-                  invit.toUser?.email === this.authQuery.anonymousCredentials?.email ||
                   invit.fromUser?.uid === this.authQuery.userId
                 )
             });
 
-            const invitationId = invitation.id || this.authQuery.anonymousCredentials?.invitationId;
+            // If user is logged-in as anonymous
+            if (!invitation && this.authQuery.anonymousCredentials) {
+              const invitationId = this.authQuery.anonymousCredentials?.invitationId;
+              invitation = await this.invitationService.getValue(invitationId);
+            }
+
             // this should never happen since previous checks & guard should have worked
-            if (!invitationId) throw new Error(`Missing Screening Invitation`);
+            if (!invitation) throw new Error(`Missing Screening Invitation`);
 
             this.watchTimeInterval?.unsubscribe();
 
@@ -108,11 +113,11 @@ export class SessionComponent implements OnInit, OnDestroy {
               filter(() => !!this.isPlaying),
               scan(watchTime => watchTime + 1, invitation.watchTime ?? 0),
               finalizeWithValue(watchTime => {
-                if (watchTime !== undefined) this.invitationService.update(invitationId, { watchTime });
+                if (watchTime !== undefined) this.invitationService.update(invitation.id, { watchTime });
               }),
               filter(watchTime => watchTime % 60 === 0),
             ).subscribe(watchTime => {
-              this.invitationService.update(invitationId, { watchTime });
+              this.invitationService.update(invitation.id, { watchTime });
             });
           }
         }

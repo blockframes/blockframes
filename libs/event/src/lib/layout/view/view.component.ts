@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ChangeDetectionStrategy, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Event } from '../../+state/event.model';
-import { InvitationService, Invitation, InvitationStore } from '@blockframes/invitation/+state';
+import { InvitationService, Invitation } from '@blockframes/invitation/+state';
 import { BehaviorSubject, Subscription, combineLatest, of } from 'rxjs';
 import { catchError, filter, map } from 'rxjs/operators';
 import { Location } from '@angular/common';
@@ -33,7 +33,6 @@ export class EventViewComponent implements OnInit, OnDestroy {
   constructor(
     private cdr: ChangeDetectorRef,
     private invitationService: InvitationService,
-    private invitationStore: InvitationStore,
     private location: Location,
     private authQuery: AuthQuery
   ) { }
@@ -65,7 +64,6 @@ export class EventViewComponent implements OnInit, OnDestroy {
             if (emailInvitation 
               && hasAnonymousIdentity(anonymousCredentials, event.accessibility)
               && emailInvitation.eventId === event.id && emailInvitation.toUser.email === anonymousCredentials.email) {
-              this.invitationStore.upsert(emailInvitation.id, emailInvitation);
               return emailInvitation;
             } else {
               // @TODO #6756 bad invitation id => snackbar message?

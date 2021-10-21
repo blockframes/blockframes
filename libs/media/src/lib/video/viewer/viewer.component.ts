@@ -114,10 +114,9 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
         throw new Error(result);
       } else {
 
-        const event = await this.eventService.getValue(this.eventId);
-
         // Watermark
         let watermark;
+        const event = await this.eventService.getValue(this.eventId);
         if (this.authQuery.user) {
           watermark = getWatermark(this.authQuery.user.email, this.authQuery.user.firstName, this.authQuery.user.lastName);
         } else if (hasAnonymousIdentity(anonymousCredentials, event.accessibility)) {
@@ -127,6 +126,7 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
         if (!watermark) {
           throw new Error('We cannot load video without watermark.');
         }
+
         // Auto refresh page when url expires
         const signedUrl = new URL(result.signedUrl);
         const expires = signedUrl.searchParams.get('exp');

@@ -79,7 +79,7 @@ export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eve
 
   // use is not currently authorized,
   // but he might be invited to an event where the file is shared
-  if (!canAccess && !!event) {
+  if (!canAccess && event) {
 
     if (eventData?.id) {
 
