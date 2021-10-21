@@ -10,16 +10,6 @@ import { Movie } from '@blockframes/movie/+state';
 import { Income } from '@blockframes/contract/income/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
-const columns = {
-  'id': 'Offer Reference',
-  '_meta.createdAt': 'Offer created',
-  'contracts.length': '# Of Titles In Package',
-  'contracts': 'Titles',
-  'specificity': 'Specific Terms',
-  'incomes': 'Total Package Price',
-  'status': 'Status'
-};
-const initialColumns = Object.keys(columns);
 
 type AllOfferStatus = '' | 'pending' | 'on_going' | 'past_deals';
 
@@ -42,8 +32,6 @@ export class ListComponent {
   @Input() offers?: null | OfferView[];
   app = getCurrentApp(this.routerQuery);
   appName = appName[this.app];
-  columns = columns;
-  initialColumns = initialColumns;
   filter = new FormControl('');
   filter$: Observable<AllOfferStatus> = this.filter.valueChanges.pipe(startWith(this.filter.value ?? ''));
 

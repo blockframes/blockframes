@@ -1,6 +1,6 @@
 <crm-bread-crumb *ngIf="user">{{ user.email }}</crm-bread-crumb>
 <section fxLayout="row" *ngIf="user" fxLayoutAlign="space-around start" fxLayoutGap="40px">
-  <mat-card  fxLayout="column" fxLayoutAlign="center" fxFlex>
+  <mat-card fxLayout="column" fxLayoutAlign="center" fxFlex>
     <mat-card-header fxLayoutAlign="center center">
       <img mat-card-avatar [ref]="user.avatar" asset="empty_poster.svg" alt="User avatar">
       <h4>{{ user.firstName }} {{ user.lastName }}</h4>
@@ -30,12 +30,8 @@
           <li *ngIf="userOrgRole">
             <b>User Role : </b>
             <span>{{ userOrgRole }}</span>
-            <member-permissions
-              [uid]="userId"
-              icon="edit"
-              (memberRemoved)="removeMember($event)"
-              (updatedToSuperAdmin)="updateRole($event, 'superAdmin')"
-              (updatedToAdmin)="updateRole($event, 'admin')"
+            <member-permissions [uid]="userId" icon="edit" (memberRemoved)="removeMember($event)"
+              (updatedToSuperAdmin)="updateRole($event, 'superAdmin')" (updatedToAdmin)="updateRole($event, 'admin')"
               (updatedToMember)="updateRole($event, 'member')">
               >
             </member-permissions>
@@ -62,7 +58,7 @@
     </mat-card-content>
   </mat-card>
 
-  <mat-card *ngIf="userForm"  fxLayout="column" fxLayoutAlign="center" fxFlex>
+  <mat-card *ngIf="userForm" fxLayout="column" fxLayoutAlign="center" fxFlex>
     <form [formGroup]="userForm" fxLayout="column">
       <mat-form-field appearance="outline">
         <mat-label>Email</mat-label>
@@ -108,32 +104,25 @@
   </mat-card>
 </section>
 
-<section *ngIf="invitations">
-  <mat-card fxFlex>
-    <bf-table-filter
-      [source]="invitations"
-      [columns]="invitationsColumns"
-      [initialColumns]="initialInvitationsColumns"
-      showFilter
-      showPaginator
-      clickable
-      (rowClick)="goTo($event)">
-      <ng-template colRef="date" let-date>
-        <span>{{ date | date: 'short' }}</span>
-      </ng-template>
-      <ng-template colRef="eventId" let-eventId>
-        <ng-container *ngIf="eventId else noEvent">
-          <ng-container *ngIf="eventId | getEvent | async as event">
-            <span>{{ event.title }}</span>
-          </ng-container>
-          <a mat-icon-button [routerLink]="['/c/o/dashboard/crm/event', eventId]">
-            <mat-icon svgIcon="visibility"></mat-icon>
-          </a>
-        </ng-container>
-        <ng-template #noEvent>-</ng-template>
-      </ng-template>
-    </bf-table-filter>
-  </mat-card>
-</section>
+<bf-table  *ngIf="invitations" [source]="invitations" showFilter showPaginator pagination="50">
+  <ng-template colRef="date" label="Date Created" let-date>
+    <span>{{ date | date: 'short' }}</span>
+  </ng-template>
+  <ng-template colRef="mode" label="Mode" let-mode>
+    {{mode}}
+  </ng-template>
+  <ng-template colRef="type" label="Type" let-type>
+    {{type}}
+  </ng-template>
+  <ng-template colRef="fromOrg.denomination.full" label="From Organization" let-full>
+    {{full}}
+  </ng-template>
+  <ng-template colRef="toOrg.denomination.full" label="To Organization" let-full>
+    {{full}}
+  </ng-template>
+  <ng-template colRef="status" label="Status" let-status>
+    {{status}}
+  </ng-template>
+</bf-table>
 
 <crm-dashboard dashboard="user" [params]="{ 'ds2.user_id': userId }"></crm-dashboard>

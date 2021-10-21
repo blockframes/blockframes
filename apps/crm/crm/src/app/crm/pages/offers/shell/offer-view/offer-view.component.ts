@@ -29,15 +29,6 @@ export class OfferViewComponent implements OnDestroy, OnInit {
   })
   subscription: Subscription;
 
-  public columns = {
-    'titleId': 'Title ID',
-    'title.title.international': 'Title',
-    'status': 'Seller Approved',
-    'seller.denomination.public': 'Seller\'s name',
-    'seller.email': 'Seller\'s email',
-    'id': 'Actions',
-  };
-
   constructor(
     private shell: OfferShellComponent,
     private dialog: MatDialog,

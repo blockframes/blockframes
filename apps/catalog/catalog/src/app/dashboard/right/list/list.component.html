@@ -2,9 +2,12 @@
 <header mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
   <button mat-tab-link (click)="resetFilter()" [active]="(filter$ | async) === '' ">All Offers</button>
   <button mat-tab-link (click)="applyFilter('draft')" [active]="(filter$ | async) === 'draft'">Offers</button>
-  <button mat-tab-link (click)="applyFilter('submitted')" [active]="(filter$ | async) === 'submitted'">Ongoing
-    Deals</button>
-  <button mat-tab-link (click)="applyFilter('accepted')" [active]="(filter$ | async) === 'accepted'">Past Deals</button>
+  <button mat-tab-link (click)="applyFilter('submitted')" [active]="(filter$ | async) === 'submitted'">
+    Ongoing Deals
+  </button>
+  <button mat-tab-link (click)="applyFilter('accepted')" [active]="(filter$ | async) === 'accepted'">
+    Past Deals
+  </button>
 </header>
 <bf-table-filter [source]="contracts" [columns]="columns" [initialColumns]="initialColumns" clickable showFilter
   showPaginator (rowClick)="goToTitle($event)">

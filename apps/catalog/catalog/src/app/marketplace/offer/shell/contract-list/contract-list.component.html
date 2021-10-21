@@ -1,18 +1,18 @@
 <ng-container *ngIf="offer$ | async as offer">
-  <bf-table-filter link="." [source]="offer.contracts" [columns]="columns" showPaginator>
+  <bf-table link="." [source]="offer.contracts" pagination="50">
     <!-- Title -->
-    <ng-template colRef="title.title.international" let-title>
+    <ng-template colRef="title.title.international" label="Title" let-title>
       {{ title | maxLength:50 }}
     </ng-template>
-    <ng-template colRef="title.release.year" let-year>
+    <ng-template colRef="title.release.year" label="Release Year" let-year>
       {{ year }}
     </ng-template>
-    <ng-template colRef="title.directors" let-directors>
+    <ng-template colRef="title.directors" label="Directors" let-directors>
       {{ directors | displayName | maxLength:50 }}
     </ng-template>
     <!-- Price -->
-    <ng-template colRef="income.price" let-price>
+    <ng-template colRef="income.price" label="Price" let-price>
       {{ price | currency:offer.currenty }}
     </ng-template>
-  </bf-table-filter>
+  </bf-table>
 </ng-container>

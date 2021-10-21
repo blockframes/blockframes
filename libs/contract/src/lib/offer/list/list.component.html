@@ -27,28 +27,27 @@
     </nav>
 
     <mat-card>
-      <bf-table-filter [source]="offers | filterBy: filterByStatus: filter.value" [columns]="columns"
-        [initialColumns]="initialColumns" clickable showFilter showPaginator link=".">
-        <ng-template colRef="id" let-reference>{{ reference }}</ng-template>
-        <ng-template colRef="_meta.createdAt" let-date>{{ date| date : 'M/d/y'}}</ng-template>
-        <ng-template colRef="contracts.length" let-length>{{ length }}</ng-template>
-        <ng-template colRef="contracts" let-contracts>
+      <bf-table [source]="offers | filterBy: filterByStatus: filter.value"  clickable showFilter showPaginator link="." pagination="50">
+        <ng-template colRef="id" label="Offer Reference" let-reference>{{ reference }}</ng-template>
+        <ng-template colRef="_meta.createdAt" label="Offer created" let-date>{{ date| date : 'M/d/y'}}</ng-template>
+        <ng-template colRef="contracts.length" label="# Of Titles In Package" let-length>{{ length }}</ng-template>
+        <ng-template colRef="contracts" label="Titles" let-contracts>
           <ng-container *ngFor="let contract of contracts; let last=last">
             <ng-container *ngIf="contract.title as title">
               {{ title.title.international | maxLength:50 }}{{last ? '': ', '}}
             </ng-container>
           </ng-container>
         </ng-template>
-        <ng-template colRef="specificity" let-specificity>
+        <ng-template colRef="specificity" label="Specific Terms" let-specificity>
           {{ specificity ? 'YES' : '-' }}
         </ng-template>
-        <ng-template colRef="incomes" let-incomes let-offer="item">
+        <ng-template colRef="incomes" label="Total Package Price" let-incomes let-offer="item">
           {{ offer.contracts | total: 'income.price' | currency: offer.currency }}
         </ng-template>
-        <ng-template colRef="status" let-status>
+        <ng-template colRef="status" label="Status" let-status>
           <bf-tag>{{ status | toLabel: 'offerStatus' }}</bf-tag>
         </ng-template>
-      </bf-table-filter>
+      </bf-table>
     </mat-card>
   </ng-container>
 </ng-container>

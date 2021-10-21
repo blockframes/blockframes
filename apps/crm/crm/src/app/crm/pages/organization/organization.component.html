@@ -25,32 +25,21 @@
       </mat-card>
     </section>
 
-    <member-repertory
-      [members]="members"
-      [isSuperAdmin]="true"
-      [showFilter]="true"
-      [memberColumns]="memberColumns"
-      [memberColumnsIndex]="memberColumnsIndex"
-      (memberRemoved)="removeMember($event)"
-      (updatedToSuperAdmin)="updateRole($event, 'superAdmin')"
-      (updatedToAdmin)="updateRole($event, 'admin')"
+    <member-repertory [members]="members" [isSuperAdmin]="true" [showFilter]="true" [memberColumns]="memberColumns"
+      [memberColumnsIndex]="memberColumnsIndex" (memberRemoved)="removeMember($event)"
+      (updatedToSuperAdmin)="updateRole($event, 'superAdmin')" (updatedToAdmin)="updateRole($event, 'admin')"
       (updatedToMember)="updateRole($event, 'member')">
     </member-repertory>
 
     <ng-container *ngIf="(invitationsFromOrganization$ | async) as invitationsMember">
-      <member-pending *ngIf="invitationsMember.length > 0"
-        [invitations]="invitationsMember"
-        (declined)="deleteInvitation($event)"
-        [isAdmin]="true">
+      <member-pending *ngIf="invitationsMember.length > 0" [invitations]="invitationsMember"
+        (declined)="deleteInvitation($event)" [isAdmin]="true">
       </member-pending>
     </ng-container>
 
     <ng-container *ngIf="(invitationsToJoinOrganization$ | async) as invitations">
-      <member-request *ngIf="invitations.length > 0"
-        (declined)="declineInvitation($event)"
-        (accepted)="acceptInvitation($event)"
-        [invitations]="invitations"
-        [isAdmin]="true">
+      <member-request *ngIf="invitations.length > 0" (declined)="declineInvitation($event)"
+        (accepted)="acceptInvitation($event)" [invitations]="invitations" [isAdmin]="true">
       </member-request>
     </ng-container>
 
@@ -58,17 +47,12 @@
 
     <mat-card fxFlex>
       <h2>Movies</h2>
-      <bf-table-filter
-        [source]="movies"
-        [columns]="versionColumnsMovies"
-        [initialColumns]="initialColumnsMovies"
-        [filterPredicate]="filterPredicateMovies"
-        showFilter
-        showLoader
-        showPaginator
-        clickable
+      <bf-table [source]="movies" pagination="50" showFilter showLoader showPaginator clickable
         (rowClick)="goToMovieEdit($event)">
-        <ng-template colRef="poster" let-posters>
+        <ng-template colRef="id" label="Id" let-id>
+          {{id}}
+        </ng-template>
+        <ng-template colRef="poster" label="Internal Ref" let-posters>
           <ng-container *ngIf="posters.storagePath; else noposter">
             <img class="poster" [ref]="posters" asset="empty_poster.svg">
           </ng-container>
@@ -76,7 +60,16 @@
             --
           </ng-template>
         </ng-template>
-      </bf-table-filter>
+        <ng-template colRef="internalRef" label="Poster" let-internalRef>
+          {{internalRef}}
+        </ng-template>
+        <ng-template colRef="title.international" label="International title" let-international>
+          {{international}}
+        </ng-template>
+        <ng-template colRef="releaseYear" label="Release year" let-releaseYear>
+          {{releaseYear}}
+        </ng-template>
+      </bf-table>
     </mat-card>
 
     <mat-card class="file-explorer">

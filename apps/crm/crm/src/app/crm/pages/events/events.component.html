@@ -7,26 +7,38 @@
     </button>
   </article>
 
-  <bf-table-filter [source]="rows" [columns]="versionColumns" [initialColumns]="initialColumns"
-    [filterPredicate]="filterPredicate" [pageSize]="50" showFilter showLoader showPaginator clickable (rowClick)="goToEdit($event)">
-    <ng-template colRef="id" let-id>
-      <span>{{ id }}</span>
-      <button mat-icon-button [cdkCopyToClipboard]="id" (click)="$event.stopPropagation()">
-        <mat-icon svgIcon="file_copy"></mat-icon>
-      </button>
+  <bf-table [source]="rows" pagination="50" showFilter showLoader showPaginator clickable (rowClick)="goToEdit($event)">
+    <ng-template colRef="id" label="Id" let-id>
+      {{id}}
     </ng-template>
-    <ng-template colRef="edit" let-edit>
-      <a [routerLink]="edit.link">
-        <mat-icon svgIcon="edit"></mat-icon>
-      </a>
+    <ng-template colRef="title" label="Title" let-title>
+      {{title}}
     </ng-template>
-    <ng-template colRef="start" let-start>
+    <ng-template colRef="type" label="Type" let-type>
+      {{type}}
+    </ng-template>
+    <ng-template colRef="start" label="Start" let-start>
       {{ start | date: 'medium'}}
     </ng-template>
-    <ng-template colRef="end" let-end>
-      {{ end | date: 'medium'}}
+    <ng-template colRef="hostedBy" label="Hosted by" let-hostedBy>
+      {{hostedBy}}
     </ng-template>
-  </bf-table-filter>
+    <ng-template colRef="invited" label="Number of invitations" let-invited>
+      {{invited}}
+    </ng-template>
+    <ng-template colRef="confirmed" label="Confirmed" let-confirmed>
+      {{confirmed}}
+    </ng-template>
+    <ng-template colRef="pending" label="Pending" let-pending>
+      {{pending}}
+    </ng-template>
+    <ng-template colRef="accessibility" label="Accessibility" let-accessibility>
+      {{accessibility}}
+    </ng-template>
+    <ng-template colRef="isSecret" label="Hidden on Marketplace" let-isSecret>
+      {{isSecret}}
+    </ng-template>
+  </bf-table>
 
   <crm-dashboard dashboard="events"></crm-dashboard>
 </main>

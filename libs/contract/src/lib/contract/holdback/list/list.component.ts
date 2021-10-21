@@ -12,11 +12,6 @@ import { Holdback } from '../../+state';
 })
 export class ListComponent {
   @Input() holdbacks: Holdback[] = [];
-  columns = {
-    duration: 'Duration',
-    territories: 'Territories',
-    medias: 'Media',
-  };
 
   constructor(private dialog: MatDialog) { }
 
