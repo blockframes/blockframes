@@ -107,7 +107,7 @@ export class SessionComponent implements OnInit, OnDestroy {
             if (!invitation && event.accessibility !== 'public') {
               // this should never happen since previous checks & guard should have worked
               throw new Error('Missing Screening Invitation');
-            } else if (invitation) {
+            } else if (invitation) { 
               this.watchTimeInterval?.unsubscribe();
 
               this.watchTimeInterval = interval(1000).pipe(
