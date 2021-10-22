@@ -1,28 +1,26 @@
-import { getCollection, getDocument, loadAdminServices } from '@blockframes/firebase-utils';
-import { User } from '@blockframes/user/types';
 import { promises as fsPromises } from 'fs';
 import { join } from 'path';
 import { USER_FIXTURES_PASSWORD } from './users';
-import { Movie } from '@blockframes/movie/+state/movie.model';
-import { Organization } from '@blockframes/organization/+state/organization.model';
 import staticUsers from 'tools/static-users.json'
+import type { Movie } from '@blockframes/movie/+state/movie.model';
+import type { Organization } from '@blockframes/organization/+state/organization.model';
+import type { User } from '@blockframes/user/types';
 
-export async function generateFixtures() {
-  loadAdminServices()
-  await generateUsers();
-  await generateMovies();
-  await generateOrgs();
-  await generateStaticUsers();
+export async function generateFixtures(db: FirebaseFirestore.Firestore) {
+  await generateUsers(db);
+  await generateMovies(db);
+  await generateOrgs(db);
+  await generateStaticUsers(db);
 }
 
 /**
  * This function will generate `tools/fixtures/users.json` from local Firestore
  */
-async function generateUsers() {
+async function generateUsers(db: FirebaseFirestore.Firestore) {
   console.log('Generating user fixtures file from Firestore...');
 
   console.time('Fetching users from Firestore');
-  const users = await getCollection<User>('users');
+  const users = (await db.collection('users').get()).docs as unknown as User[]
   console.timeEnd('Fetching users from Firestore');
 
   const output = users.map((user) => ({
@@ -40,11 +38,11 @@ async function generateUsers() {
 /**
  * This function will generate `tools/fixtures/movies.json` from local Firestore
  */
-async function generateMovies() {
+async function generateMovies(db: FirebaseFirestore.Firestore) {
   console.log('Generating movie fixtures file from Firestore...');
 
   console.time('Fetching movies from Firestore');
-  const movies = await getCollection<Movie>('movies');
+  const movies = (await db.collection('movies').get()).docs as unknown as Movie[]
   console.timeEnd('Fetching movies from Firestore');
 
   const output: Partial<Movie>[] = movies.map((movie) => ({
@@ -60,11 +58,11 @@ async function generateMovies() {
 /**
  * This function will generate `tools/fixtures/orgs.json` from local Firestore
  */
-async function generateOrgs() {
+async function generateOrgs(db: FirebaseFirestore.Firestore) {
   console.log('Generating orgs fixtures file from Firestore...');
 
   console.time('Fetching orgs from Firestore');
-  const orgs = await getCollection<Organization>('orgs');
+  const orgs = (await db.collection('orgs').get()).docs as unknown as Organization[]
   console.timeEnd('Fetching orgs from Firestore');
 
   const output: Partial<Organization>[] = orgs.map((org) => ({
@@ -80,12 +78,12 @@ async function generateOrgs() {
   console.log('Orgs fixture saved:', dest);
 }
 
-async function generateStaticUsers() {
+async function generateStaticUsers(db: FirebaseFirestore.Firestore) {
   console.log('Generating static user fixtures...');
 
   for (const userType in staticUsers) {
     try {
-      const { email, uid } = await getDocument<User>(`users/${staticUsers[userType]}`);
+      const { email, uid } = (await db.doc(`users/${staticUsers[userType]}`).get()).data() as unknown as User
       console.log(`User type: ${userType} found! UID: ${uid}`)
       staticUsers[userType] = { uid, email, password: USER_FIXTURES_PASSWORD }
     } catch (e) {
