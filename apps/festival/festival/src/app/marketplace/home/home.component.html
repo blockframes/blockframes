@@ -109,7 +109,7 @@
     </header>
     <bf-slider hideIndicators loop class="dark-contrast-theme">
       <ng-container *ngFor="let event of section | queryEvents | async">
-        <bf-slide hideOverlay [bgAsset]="null">
+        <bf-slide hideOverlay [asset]="null">
           <event-slide [event]="event"></event-slide>
         </bf-slide>
       </ng-container>

@@ -15,7 +15,7 @@ export class InvitationHasActionPipe implements PipeTransform {
   }
 }
 
-@Pipe({ name: 'status', pure: true })
+@Pipe({ name: 'invitationStatus', pure: true })
 export class InvitationStatusPipe implements PipeTransform {
   transform(invitation: Invitation, small: boolean) {
     const status = invitation.status[0].toUpperCase() + invitation.status.slice(1);

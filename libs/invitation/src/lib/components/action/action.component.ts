@@ -26,7 +26,7 @@ export class ActionComponent {
   }
 
   @Input() @boolean small = false;
-  @Input() @boolean styledButtons = false;
+  @Input() @boolean flat = false;
 
   private requestPending = false;
 

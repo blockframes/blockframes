@@ -1,19 +1,29 @@
 <!-- Has pending invitation -->
 <ng-container *ngIf="invit; else noInvitation">
   <ng-container *ngIf="invit | hasAction else displayStatus">
-    <section fxLayout fxLayoutGap="16px">
-      <button mat-button [ngClass]="{'mat-flat-button': styledButtons}" [color]="styledButtons ? 'primary' : null" test-id="invitation-accept" (click)="accept(invit)">
+    <ng-container *ngIf="flat else defaultButtons">
+      <button class="margin-right" mat-flat-button color="primary" test-id="invitation-accept" (click)="accept(invit)">
         <mat-icon svgIcon="check_circle"></mat-icon>
         <span *ngIf="!small">Accept Invitation</span>
       </button>
-      <button mat-button [ngClass]="{'mat-stroked-button': styledButtons}" test-id="invitation-refuse" (click)="decline(invit)">
+      <button mat-stroked-button test-id="invitation-refuse" (click)="decline(invit)">
         <mat-icon svgIcon="cancel"></mat-icon>
         <span *ngIf="!small">Decline Invitation</span>
       </button>
-    </section>
+    </ng-container>
+    <ng-template #defaultButtons>
+      <button class="margin-right" mat-button test-id="invitation-accept" (click)="accept(invit)">
+        <mat-icon svgIcon="check_circle"></mat-icon>
+        <span *ngIf="!small">Accept Invitation</span>
+      </button>
+      <button mat-button test-id="invitation-refuse" (click)="decline(invit)">
+        <mat-icon svgIcon="cancel"></mat-icon>
+        <span *ngIf="!small">Decline Invitation</span>
+      </button>
+    </ng-template>
   </ng-container>
   <ng-template #displayStatus>
-    <bf-tag test-id="invitation-status">{{ invit | status:small }}</bf-tag>
+    <bf-tag test-id="invitation-status">{{ invit | invitationStatus:small }}</bf-tag>
   </ng-template>
 </ng-container>
 

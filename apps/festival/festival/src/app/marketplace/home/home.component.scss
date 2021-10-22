@@ -63,7 +63,7 @@
   background-repeat: no-repeat;
 
   header {
-    margin: 8px 24px 0px 24px;
+    padding: 8px 24px;
 
     h2 {
       margin-bottom: 0px;
@@ -71,7 +71,7 @@
   }
 
   event-slide {
-    height: 450px;
+    padding-bottom: 24px;
   }
 }
 
