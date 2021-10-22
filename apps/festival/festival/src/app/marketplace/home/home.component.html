@@ -97,6 +97,26 @@
   </section>
 </ng-template>
 
+<!-- Events Slider -->
+<ng-template #eventsSlider let-section>
+  <section class="events-slider" bgAsset="events_slider_background.png">
+    <header fxLayout fxLayoutAlign="space-between center" class="dark-contrast-theme">
+      <h2>{{ section.title }}</h2>
+      <a mat-button [routerLink]="section.link || '../organization'">
+        <span>See all</span>
+        <mat-icon svgIcon="arrow_forward"></mat-icon>
+      </a>
+    </header>
+    <bf-slider hideIndicators loop class="dark-contrast-theme">
+      <ng-container *ngFor="let event of section | queryEvents | async">
+        <bf-slide hideOverlay [bgAsset]="null">
+          <event-slide [event]="event"></event-slide>
+        </bf-slide>
+      </ng-container>
+    </bf-slider>
+  </section>
+</ng-template>
+
 <!-- Org Titles -->
 <ng-template #orgTitles let-section>
   <section class="org-titles cards">

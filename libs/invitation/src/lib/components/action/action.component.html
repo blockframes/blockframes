@@ -1,21 +1,19 @@
 <!-- Has pending invitation -->
 <ng-container *ngIf="invit; else noInvitation">
   <ng-container *ngIf="invit | hasAction else displayStatus">
-    <button mat-button test-id="invitation-accept" (click)="accept(invit)">
-      <mat-icon svgIcon="check_circle"></mat-icon>
-      <span *ngIf="!small">Accept Invitation</span>
-    </button>
-    <button mat-button test-id="invitation-refuse" (click)="decline(invit)">
-      <mat-icon svgIcon="cancel"></mat-icon>
-      <span *ngIf="!small">Decline Invitation</span>
-    </button>
+    <section fxLayout fxLayoutGap="16px">
+      <button mat-button [ngClass]="{'mat-flat-button': styledButtons}" [color]="styledButtons ? 'primary' : null" test-id="invitation-accept" (click)="accept(invit)">
+        <mat-icon svgIcon="check_circle"></mat-icon>
+        <span *ngIf="!small">Accept Invitation</span>
+      </button>
+      <button mat-button [ngClass]="{'mat-stroked-button': styledButtons}" test-id="invitation-refuse" (click)="decline(invit)">
+        <mat-icon svgIcon="cancel"></mat-icon>
+        <span *ngIf="!small">Decline Invitation</span>
+      </button>
+    </section>
   </ng-container>
   <ng-template #displayStatus>
-    <div test-id="invitation-status" class="status" [ngSwitch]="invit.status">
-      <span *ngSwitchCase="'accepted'">Accepted</span>
-      <span *ngSwitchCase="'declined'">Declined</span>
-      <span *ngSwitchCase="'pending'">Pending</span>
-    </div>
+    <bf-tag test-id="invitation-status">{{ invit | status:small }}</bf-tag>
   </ng-template>
 </ng-container>
 
@@ -30,7 +28,6 @@
         </button>
       </ng-container>
       <ng-container *ngSwitchCase="'onTime'">
-        <p>This event has already started.</p>
         <button test-id="invitation-request" mat-button (click)="request(event)">
           <mat-icon svgIcon="calendar_today"></mat-icon>
           <span>{{ event.accessibility === 'public' ? 'Access Event' : 'Request Access' }}</span>

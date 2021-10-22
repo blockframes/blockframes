@@ -57,6 +57,24 @@
   background-color: var(--background-card);
 }
 
+.events-slider {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  header {
+    margin: 8px 24px 0px 24px;
+
+    h2 {
+      margin-bottom: 0px;
+    }
+  }
+
+  event-slide {
+    height: 450px;
+  }
+}
+
 movie-slide {
   height: 700px;
 }
