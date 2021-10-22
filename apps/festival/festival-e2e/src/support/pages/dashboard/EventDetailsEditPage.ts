@@ -44,7 +44,7 @@ export default class EventDetailsEditPage {
     if (!isPublic) {
       //last radio button correspond to "private" privacy status
       cy.get('event-details-edit [type="radio"]', { timeout: 3 * SEC })
-        .eq(2)
+        .eq(1) // @TODO #6756 change to 2 once 'invitation-only' radio is uncommented 
         .check({force: true});
     } else {
       //first radio button correspond to "public" privacy status
