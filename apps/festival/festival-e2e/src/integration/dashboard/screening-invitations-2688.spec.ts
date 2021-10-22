@@ -32,13 +32,14 @@ enum UserIndex {
   Admin
 }
 
-describe('Organiser invites other users to private screening', () => {
+describe.skip('Organiser invites other users to private screening', () => {
   beforeEach(() => {
     clearDataAndPrepareTest('/');
     const p1 = new LandingPage();
     p1.clickLogin();
   });
 
+  //TODO: Issue: 6757 - Fix this issue separately
   it('Organiser creates screening & invites 2 users to the screening', () => {
     signIn(users[UserIndex.Organiser]);
     acceptCookie();
