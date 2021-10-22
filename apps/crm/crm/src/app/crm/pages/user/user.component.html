@@ -30,10 +30,13 @@
           <li *ngIf="userOrgRole">
             <b>User Role : </b>
             <span>{{ userOrgRole }}</span>
-            <member-permissions [uid]="userId" icon="edit" (memberRemoved)="removeMember($event)"
-              (updatedToSuperAdmin)="updateRole($event, 'superAdmin')" (updatedToAdmin)="updateRole($event, 'admin')"
+            <member-permissions
+              [uid]="userId"
+              icon="edit"
+              (memberRemoved)="removeMember($event)"
+              (updatedToSuperAdmin)="updateRole($event, 'superAdmin')"
+              (updatedToAdmin)="updateRole($event, 'admin')"
               (updatedToMember)="updateRole($event, 'member')">
-              >
             </member-permissions>
           </li>
         </ul>
@@ -104,7 +107,7 @@
   </mat-card>
 </section>
 
-<bf-table  *ngIf="invitations" [source]="invitations" useFilter pagination="50">
+<bf-table *ngIf="invitations" [source]="invitations" useFilter pagination="50">
   <ng-template colRef="date" label="Date Created" let-date>
     <span>{{ date | date: 'short' }}</span>
   </ng-template>

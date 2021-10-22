@@ -25,21 +25,34 @@
       </mat-card>
     </section>
 
-    <member-repertory [members]="members" [isSuperAdmin]="true" [showFilter]="true" [memberColumns]="memberColumns"
-      [memberColumnsIndex]="memberColumnsIndex" (memberRemoved)="removeMember($event)"
-      (updatedToSuperAdmin)="updateRole($event, 'superAdmin')" (updatedToAdmin)="updateRole($event, 'admin')"
+    <member-repertory
+      [members]="members"
+      [isSuperAdmin]="true"
+      [showFilter]="true"
+      [memberColumns]="memberColumns"
+      [memberColumnsIndex]="memberColumnsIndex"
+      (memberRemoved)="removeMember($event)"
+      (updatedToSuperAdmin)="updateRole($event, 'superAdmin')"
+      (updatedToAdmin)="updateRole($event, 'admin')"
       (updatedToMember)="updateRole($event, 'member')">
     </member-repertory>
 
     <ng-container *ngIf="(invitationsFromOrganization$ | async) as invitationsMember">
-      <member-pending *ngIf="invitationsMember.length > 0" [invitations]="invitationsMember"
-        (declined)="deleteInvitation($event)" [isAdmin]="true">
+      <member-pending
+        *ngIf="invitationsMember.length > 0"
+        [invitations]="invitationsMember"
+        (declined)="deleteInvitation($event)"
+        [isAdmin]="true">
       </member-pending>
     </ng-container>
 
     <ng-container *ngIf="(invitationsToJoinOrganization$ | async) as invitations">
-      <member-request *ngIf="invitations.length > 0" (declined)="declineInvitation($event)"
-        (accepted)="acceptInvitation($event)" [invitations]="invitations" [isAdmin]="true">
+      <member-request
+        *ngIf="invitations.length > 0"
+        (declined)="declineInvitation($event)"
+        (accepted)="acceptInvitation($event)"
+        [invitations]="invitations"
+        [isAdmin]="true">
       </member-request>
     </ng-container>
 
@@ -47,7 +60,12 @@
 
     <mat-card fxFlex>
       <h2>Movies</h2>
-      <bf-table [source]="movies" pagination="50" useFilter clickable (rowClick)="goToMovieEdit($event)">
+      <bf-table
+        [source]="movies"
+        pagination="50"
+        useFilter
+        clickable
+        (rowClick)="goToMovieEdit($event)">
         <ng-template colRef="id" label="Id" let-id>
           {{id}}
         </ng-template>

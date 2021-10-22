@@ -27,7 +27,7 @@
     </nav>
 
     <mat-card>
-      <bf-table [source]="offers | filterBy: filterByStatus: filter.value"  clickable showFilter showPaginator link="." pagination="50">
+      <bf-table [source]="offers | filterBy: filterByStatus: filter.value"  clickable useFilter link="." pagination="50">
         <ng-template colRef="id" label="Offer Reference" let-reference>{{ reference }}</ng-template>
         <ng-template colRef="_meta.createdAt" label="Offer created" let-date>{{ date| date : 'M/d/y'}}</ng-template>
         <ng-template colRef="contracts.length" label="# Of Titles In Package" let-length>{{ length }}</ng-template>

@@ -27,10 +27,8 @@
     </header>
 
     <mat-card>
-      <!-- [initialColumns]="initialColumns"  -->
-      <!-- [columns]="columns"  -->
       <bf-table [source]="movies | filterBy: filterByMovie: { value: filter.value, exclude: 'archived' }"
-        (rowClick)="goToTitle($event)" clickable showFilter pagination="50">
+        (rowClick)="goToTitle($event)" clickable useFilter pagination="50">
         <ng-template colRef="title.international" label="Title" let-title><b>{{ title| maxLength:50 }}</b></ng-template>
         <ng-template colRef="id" label="#Sales (Total Gross Receipt)" let-titleId>
           <ng-container *ngIf="titleId | getIncomesFromTitle | async as incomes">

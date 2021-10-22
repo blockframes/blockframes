@@ -1,5 +1,5 @@
 <ng-container *ngIf="offer$ | async as offer">
-  <bf-table link="." [source]="offer.contracts" pagination="50">
+  <bf-table link="." [source]="offer.contracts" pagination="50" useFilter>
     <!-- Title -->
     <ng-template colRef="title.title.international" label="Title" let-title>
       {{ title | maxLength:50 }}
