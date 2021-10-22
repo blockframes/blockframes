@@ -55,7 +55,7 @@ export default class EventDetailsEditPage {
   }
 
   selectMovie(movieName: string) {
-    cy.get('event-details-edit mat-select[formControlName=titleId]', { timeout: 100 * SEC }).click();
+    cy.get('mat-select[formControlName=titleId]', { timeout: 100 * SEC }).click();
     cy.get('mat-option').contains(movieName).click();
   }
 
