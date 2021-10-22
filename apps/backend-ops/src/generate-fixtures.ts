@@ -86,7 +86,8 @@ async function generateStaticUsers(db: FirebaseFirestore.Firestore) {
 
   for (const userType in staticUsers) {
     try {
-      const { email, uid } = (await db.doc(`users/${staticUsers[userType]}`).get()).data() as unknown as User
+      const doc = await db.doc(`users/${staticUsers[userType]}`).get();
+      const { email, uid } = doc.data() as User;
       console.log(`User type: ${userType} found! UID: ${uid}`)
       staticUsers[userType] = { uid, email, password: USER_FIXTURES_PASSWORD }
     } catch (e) {
