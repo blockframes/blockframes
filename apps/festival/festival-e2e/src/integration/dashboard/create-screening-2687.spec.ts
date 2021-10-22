@@ -32,8 +32,7 @@ const users  =  [
   (userFixture.getByUID(USER.Vincent))
 ];
 
-//TODO: Issue: 6757 - Fix this issue separately
-describe.skip('User create a screening', () => {
+describe('User create a screening', () => {
   beforeEach(() => {
     clearDataAndPrepareTest('/');
     tomorrow = new Date(new Date().setDate(NOW.getDate() + 1));
