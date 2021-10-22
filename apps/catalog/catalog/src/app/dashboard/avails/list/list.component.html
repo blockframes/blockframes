@@ -20,10 +20,10 @@
       </ng-template>
       <ng-template colRef="id" label="actions" let-id>
         <div fxLayout fxLayoutGap="16px" *ngIf="queryParams$ | async as queryParams">
-          <a mat-icon-button [routerLink]="['./map']" [queryParams]="queryParams">
+          <a mat-icon-button [routerLink]="[id,'map']" [queryParams]="queryParams">
             <mat-icon svgIcon="territories_avails"></mat-icon>
           </a>
-          <a mat-icon-button [routerLink]="['./calendar']" [queryParams]="queryParams">
+          <a mat-icon-button [routerLink]="[id,'calendar']" [queryParams]="queryParams">
             <mat-icon svgIcon="calendar_avails"></mat-icon>
           </a>
         </div>
