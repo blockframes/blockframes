@@ -13,19 +13,19 @@
     </li>
     <li fxLayout="column">
       <strong>Fundings</strong>
-      <bf-table-filter [source]="fundings" [columns]="columns" [initialColumns]="initialColumns"
-        *ngIf="fundings.length; else noFundings">
-        <ng-template colRef="name" let-name><b>{{ name }}</b></ng-template>
-        <ng-template colRef="kind" let-kind>{{ kind }}</ng-template>
-        <ng-template colRef="amount" let-amount>{{ amount | currency: form.getCurrency() : 'symbol' : '1.0-0' }}
+      <bf-table [source]="fundings" pagination="50" *ngIf="fundings.length; else noFundings">
+        <ng-template colRef="name" label="Organization name" let-name><b>{{ name }}</b></ng-template>
+        <ng-template colRef="kind" label="Nature" let-kind>{{ kind }}</ng-template>
+        <ng-template colRef="amount" label="Amount" let-amount>{{ amount | currency: form.getCurrency() : 'symbol' :
+          '1.0-0' }}
         </ng-template>
-        <ng-template colRef="status" let-status>{{ status | titlecase }}</ng-template>
+        <ng-template colRef="status" label="Status" let-status>{{ status | titlecase }}</ng-template>
         <ng-template colRef="edit">
           <a mat-icon-button [routerLink]="link">
             <mat-icon svgIcon="edit"></mat-icon>
           </a>
         </ng-template>
-      </bf-table-filter>
+      </bf-table>
       <ng-template #noFundings>
         <missing-control [control]="form.get('fundings')" [link]="link"></missing-control>
       </ng-template>

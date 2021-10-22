@@ -1,20 +1,20 @@
 <mat-card>
   <mat-card-title>New Member Requests</mat-card-title>
-  <bf-table-filter
+  <!-- [columns]="invitationColumns"
+  [initialColumns]="initialColumns" -->
+  <bf-table
     [source]="users"
-    [columns]="invitationColumns"
-    [initialColumns]="initialColumns"
-    showPaginator >
-    <ng-template colRef="firstName" let-firstName>
+    pagination="50" >
+    <ng-template colRef="firstName" label="FirstName" let-firstName>
       <b>{{ firstName | titlecase }}</b>
     </ng-template>
-    <ng-template colRef="lastName" let-lastName>
+    <ng-template colRef="lastName" label="Lastname" let-lastName>
       <b>{{ lastName | titlecase }}</b>
     </ng-template>
-    <ng-template colRef="email" let-email>
+    <ng-template colRef="email" label="Email Address" let-email>
       {{ email }}
     </ng-template>
-    <ng-template colRef="uid" let-uid>
+    <ng-template *ngIf="this.isAdmin" colRef="uid" label="Actions" let-uid>
       <div fxLayout="row" fxLayoutAlign="end">
         <button class="mat-elevation-z0" mat-mini-fab color="primary" (click)="accepted.emit(findRequest(uid))">
           <mat-icon svgIcon="how_to_reg"></mat-icon>
@@ -24,5 +24,5 @@
         </button>
       </div>
     </ng-template>
-  </bf-table-filter>
+  </bf-table>
 </mat-card>

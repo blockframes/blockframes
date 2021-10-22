@@ -47,8 +47,7 @@
 
     <mat-card fxFlex>
       <h2>Movies</h2>
-      <bf-table [source]="movies" pagination="50" showFilter showLoader showPaginator clickable
-        (rowClick)="goToMovieEdit($event)">
+      <bf-table [source]="movies" pagination="50" useFilter clickable (rowClick)="goToMovieEdit($event)">
         <ng-template colRef="id" label="Id" let-id>
           {{id}}
         </ng-template>

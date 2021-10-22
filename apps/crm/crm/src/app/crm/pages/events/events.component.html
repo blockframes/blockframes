@@ -7,7 +7,7 @@
     </button>
   </article>
 
-  <bf-table [source]="rows" pagination="50" showFilter showLoader showPaginator clickable (rowClick)="goToEdit($event)">
+  <bf-table [source]="rows" pagination="50" useFilter clickable (rowClick)="goToEdit($event)">
     <ng-template colRef="id" label="Id" let-id>
       {{id}}
     </ng-template>

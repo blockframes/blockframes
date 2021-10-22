@@ -104,7 +104,7 @@
   </mat-card>
 </section>
 
-<bf-table  *ngIf="invitations" [source]="invitations" showFilter showPaginator pagination="50">
+<bf-table  *ngIf="invitations" [source]="invitations" useFilter pagination="50">
   <ng-template colRef="date" label="Date Created" let-date>
     <span>{{ date | date: 'short' }}</span>
   </ng-template>

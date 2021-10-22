@@ -1,33 +1,33 @@
 <mat-card>
   <mat-card-title>Company Members</mat-card-title>
-  <bf-table-filter
-    [source]="members"
-    [columns]="memberColumns"
-    [initialColumns]="initialColumns"
-    showPaginator
-    [showFilter]="showFilter" >
-    <ng-template colRef="firstName" let-firstName>
+  <bf-table [source]="members" pagination="50"
+    [useFilter]="showFilter">
+    <ng-template colRef="firstName" label="First Name" let-firstName>
       <b>{{ firstName }}</b>
     </ng-template>
-    <ng-template colRef="lastName" let-lastName>
+    <ng-template colRef="lastName" label="Last Name" let-lastName>
       <b>{{ lastName }}</b>
     </ng-template>
-    <ng-template colRef="role" let-role>
+    <ng-container *ngFor="let col of variableColumns">
+      <ng-template [colRef]="col" [label]="memberColumns[col]" let-value>
+        {{ value }}
+      </ng-template>
+    </ng-container>
+    <ng-template colRef="role" label="Permissions" let-role>
       {{ displayRole(role) }}
     </ng-template>
-    <ng-template colRef="uid" let-uid>
-      <member-permissions
-        [uid]="uid"
-        (memberRemoved)="memberRemoved.emit(uid)"
-        (updatedToSuperAdmin)="updatedToSuperAdmin.emit(uid)"
-        (updatedToAdmin)="updatedToAdmin.emit(uid)"
+    <ng-template *ngIf="this.isSuperAdmin" colRef="uid" let-uid>
+      <member-permissions [uid]="uid" (memberRemoved)="memberRemoved.emit(uid)"
+        (updatedToSuperAdmin)="updatedToSuperAdmin.emit(uid)" (updatedToAdmin)="updatedToAdmin.emit(uid)"
         (updatedToMember)="updatedToMember.emit(uid)">
       </member-permissions>
     </ng-template>
-    <ng-template colRef="edit" let-edit>
-      <a [routerLink]="edit.link"><mat-icon svgIcon="edit"></mat-icon></a>
+    <ng-template  *ngIf="this.isSuperAdmin" colRef="edit" label="Edit" let-edit>
+      <a [routerLink]="edit?.link">
+        <mat-icon svgIcon="edit"></mat-icon>
+      </a>
     </ng-template>
-  </bf-table-filter>
+  </bf-table>
   <h6>What is “Grant permissions”?</h6>
   <p class="mat-body-2">Permissions give your company's members access to the different platform features.</p>
   <ul class="mat-body-2">

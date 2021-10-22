@@ -9,10 +9,10 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ListComponent } from './list.component';
 
 // Blocfkrames
-import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { ToLabelModule } from '@blockframes/utils/pipes/to-label.pipe';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { NoTitleModule } from '@blockframes/ui/dashboard/components/no-title/no-title.module';
+import { TableModule } from '@blockframes/ui/list/table/table.module';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -28,7 +28,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     CommonModule,
     ReactiveFormsModule,
     FlexLayoutModule,
-    TableFilterModule,
+    TableModule,
     ImageModule,
     NoTitleModule,
     ToLabelModule,

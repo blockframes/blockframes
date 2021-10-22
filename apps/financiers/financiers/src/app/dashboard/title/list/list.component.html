@@ -14,27 +14,30 @@
     </header>
 
     <header mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
-      <button mat-tab-link (click)="applyFilter('all')" [active]="filter.value === 'all'">All Projects <span *ngIf="(titleCount$ | async) as titleCount">({{ titleCount.all }})</span></button>
-      <button mat-tab-link (click)="applyFilter('draft')" [active]="filter.value === 'draft'">Draft <span *ngIf="(titleCount$ | async) as titleCount">({{ titleCount.draft }})</span></button>
-      <button mat-tab-link (click)="applyFilter('ongoing')" [active]="filter.value === 'ongoing'">Ongoing <span *ngIf="(titleCount$ | async) as titleCount">({{ titleCount.ongoing }})</span></button>
-      <button mat-tab-link (click)="applyFilter('achieved')" [active]="filter.value === 'achieved'">Achieved <span *ngIf="(titleCount$ | async) as titleCount">({{ titleCount.achieved }})</span></button>
-      <button mat-tab-link (click)="applyFilter('archived')" [active]="filter.value === 'archived'">Archived <span *ngIf="(titleCount$ | async) as titleCount">({{ titleCount.archived }})</span></button>
+      <button mat-tab-link (click)="applyFilter('all')" [active]="filter.value === 'all'">All Projects <span
+          *ngIf="(titleCount$ | async) as titleCount">({{ titleCount.all }})</span></button>
+      <button mat-tab-link (click)="applyFilter('draft')" [active]="filter.value === 'draft'">Draft <span
+          *ngIf="(titleCount$ | async) as titleCount">({{ titleCount.draft }})</span></button>
+      <button mat-tab-link (click)="applyFilter('ongoing')" [active]="filter.value === 'ongoing'">Ongoing <span
+          *ngIf="(titleCount$ | async) as titleCount">({{ titleCount.ongoing }})</span></button>
+      <button mat-tab-link (click)="applyFilter('achieved')" [active]="filter.value === 'achieved'">Achieved <span
+          *ngIf="(titleCount$ | async) as titleCount">({{ titleCount.achieved }})</span></button>
+      <button mat-tab-link (click)="applyFilter('archived')" [active]="filter.value === 'archived'">Archived <span
+          *ngIf="(titleCount$ | async) as titleCount">({{ titleCount.archived }})</span></button>
     </header>
 
-    <mat-card>
-      <bf-table-filter [source]="titles" [columns]="columns" [initialColumns]="initialColumns" showFilter showPaginator
-        clickable (rowClick)="goToTitle($event)">
-        <ng-template colRef="title" let-title><b>{{ title.international }}</b></ng-template>
-        <ng-template colRef="productionStatus" let-prod>{{ prod | toLabel: 'productionStatus' }}</ng-template>
-        <ng-template colRef="campaign.cap" let-cap let-movie="item">
-          {{ cap ? (cap | currency : movie.campaign.currency : 'symbol' : '1.0-0') : '-' }}
-        </ng-template>
-        <ng-template colRef="campaign.received" let-received let-movie="item">
-          {{ received ? (received | currency : movie.campaign.currency : 'symbol' : '1.0-0') : '-' }}
-        </ng-template>
-        <ng-template colRef="campaignStarted" let-date>{{ date | date: 'short' }}</ng-template>
-      </bf-table-filter>
-    </mat-card>
+    <bf-table [source]="titles" useFilter pagination="50" clickable (rowClick)="goToTitle($event)">
+      <ng-template colRef="title" label="Title" let-title><b>{{ title.international }}</b></ng-template>
+      <ng-template colRef="productionStatus" label="Production Status" let-prod>{{ prod | toLabel: 'productionStatus'
+        }}</ng-template>
+      <ng-template colRef="campaign.cap" label="Goal Funding" let-cap let-movie="item">
+        {{ cap ? (cap | currency : movie.campaign.currency : 'symbol' : '1.0-0') : '-' }}
+      </ng-template>
+      <ng-template colRef="campaign.received" label="Funding Raised" let-received let-movie="item">
+        {{ received ? (received | currency : movie.campaign.currency : 'symbol' : '1.0-0') : '-' }}
+      </ng-template>
+      <ng-template colRef="campaignStarted" label="Campaign Started" let-date>{{ date | date: 'short' }}</ng-template>
+    </bf-table>
   </ng-container>
 
 </ng-container>

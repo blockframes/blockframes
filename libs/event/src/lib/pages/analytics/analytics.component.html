@@ -32,17 +32,17 @@
               </ng-template>
             </button>
           </article>
-          <bf-table-filter
-            showFilter
-            showPaginator
-            [initialColumns]="initialColumns"
-            [columns]="columns"
-            [source]="analytics">
-            <ng-template colRef="name" let-name>{{ name | titlecase }}</ng-template>
-            <ng-template colRef="orgActivity" let-orgActivity>{{ orgActivity | toLabel: 'orgActivity' }}</ng-template>
-            <ng-template colRef="orgCountry" let-orgCountry>{{ orgCountry | toLabel: 'territories' }}</ng-template>
-            <ng-template colRef="watchTime" let-watchTime>{{ watchTime * 1000 | duration: '0min' }}</ng-template>
-          </bf-table-filter>
+          <bf-table pagination="50" useFilter [source]="analytics">
+            <ng-template colRef="name" label="Name" let-name>{{ name | titlecase }}</ng-template>
+            <ng-template colRef="email" label="Email Address" let-email>{{ email }}</ng-template>
+            <ng-template colRef="orgName" label="Company Name" let-orgName>{{ orgName }}</ng-template>
+            <ng-template colRef="orgActivity" label="Company Activity" let-orgActivity>{{ orgActivity | toLabel:
+              'orgActivity' }}</ng-template>
+            <ng-template colRef="orgCountry" label="Country" let-orgCountry>{{ orgCountry | toLabel: 'territories' }}
+            </ng-template>
+            <ng-template *ngIf="hasWatchTime" colRef="watchTime" label="watch time" let-watchTime>{{ watchTime * 1000 | duration: '0min' }}
+            </ng-template>
+          </bf-table>
         </mat-card>
       </section>
     </ng-container>
@@ -59,4 +59,3 @@
     </article>
   </ng-template>
 </ng-container>
-

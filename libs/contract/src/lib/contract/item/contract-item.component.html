@@ -14,23 +14,23 @@
     <ng-content select="[price]"></ng-content>
   </header>
   <ng-container *ngIf="contract | getTermsFromContract | async as terms">
-    <bf-table-filter [source]="terms" [columns]="columns" [initialColumns]="initialColumns" showFilter>
-      <ng-template colRef="duration" let-duration>
+    <bf-table [source]="terms" useFilter pagination="50">
+      <ng-template colRef="duration" label="Terms" let-duration>
         {{ duration.from | date:'M/d/y' }} - {{ duration.to | date:'M/d/y' }}
       </ng-template>
-      <ng-template colRef="territories" let-territories>
+      <ng-template colRef="territories" label="Territories" let-territories>
         <span class="group-label" (click)="openDetails(territories, 'territories')">
           <p class="ellipsis">
             {{ territories | toGroupLabel:'territories':'World' | join}}
           </p>
         </span>
       </ng-template>
-      <ng-template colRef="medias" let-medias>
+      <ng-template colRef="medias" label="Rights" let-medias>
         <span class="group-label" (click)="openDetails(medias, 'medias')">
           {{ medias | toGroupLabel:'medias':'All'| join }}
         </span>
       </ng-template>
-      <ng-template colRef="exclusive" let-exclusive>
+      <ng-template colRef="exclusive" label="Exclusivity" let-exclusive>
         {{ exclusive ? 'Yes' : 'No' }}
       </ng-template>
       <ng-template *ngIf="actionTemplate" colAction="action" label="Actions" let-term let-termIndex="index">
@@ -38,7 +38,7 @@
           [ngTemplateOutletContext]="{ $implicit:term, index:termIndex }">
         </ng-template>
       </ng-template>
-      <ng-template colRef="languages" let-languages>
+      <ng-template colRef="languages" label="Versions" let-languages>
         <ul *ngIf="languages?.length > 0; else noLanguage">
           <li *ngFor="let language of languages| keyvalue">
             {{language.key | toLabel:'languages'}} ({{language.value | versionPipe | join}})
@@ -46,10 +46,10 @@
         </ul>
         <ng-template #noLanguage>-</ng-template>
       </ng-template>
-      <ng-template colRef="runs.broadcasts" let-broadcasts>
+      <ng-template colRef="runs.broadcasts" label="# of Broadcasts" let-broadcasts>
         {{broadcasts ?? '-'}}
       </ng-template>
-    </bf-table-filter>
+    </bf-table>
     <ng-content select="footer"></ng-content>
     <ng-container *ngIf="contract?.titleId| getTitleHoldbacks:orgId | async as existingHoldbacks">
       <ng-container *ngIf="terms | collidingHoldbacks: existingHoldbacks as collidingHoldbacks">
