@@ -90,7 +90,7 @@ describe('User create a screening', () => {
     p4.checkEventsInMarket(eventNames);
   });
 
-  it('Organiser accepts private screening request', () => {
+  it.skip('Organiser accepts private screening request', () => {
     signIn(users[0]);
     acceptCookie();
     const p1 = (new FestivalMarketplaceHomePage()).goToDashboard();
@@ -98,7 +98,7 @@ describe('User create a screening', () => {
     p2.acceptInvitationScreening();
   });
 
-  it('Invitee adds public screening to his calendar', () => {
+  it.skip('Invitee adds public screening to his calendar', () => {
     const OrgName = orgsFixture.getByID(EVENTS[0].org.id).denomination.public;
     //Screening event prefixed 2 created above.
     const screeningEvent = EVENTS[0].event + '2';
