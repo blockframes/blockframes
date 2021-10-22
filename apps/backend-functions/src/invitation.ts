@@ -166,22 +166,29 @@ export const inviteUsers = async (data: UserInvitation, context: CallableContext
     }
   }
 
-  let eventData: EventEmailData = getEventEmailData();
-  if (invitation.type === 'attendEvent' && !!invitation.eventId) {
-    const event = await getDocument<EventDocument<EventMeta>>(`events/${invitation.eventId}`);
-    eventData = getEventEmailData(event);
-  }
+  const eventId = invitation.type === 'attendEvent' && invitation.eventId;
+  const event = eventId ? await getDocument<EventDocument<EventMeta>>(`events/${eventId}`) : undefined;
+
 
   for (const email of data.emails) {
-    const { id, type, mode, fromOrg } = invitation;
-    const isLastIndex = await getOrInviteUserByMail(email, {id, type, mode, fromOrg}, data.app, eventData)
+    const { type, mode, fromOrg } = invitation;
+    const invitationId = db.collection('invitations').doc().id;
+
+    const eventData = getEventEmailData(event, email, invitationId);
+
+
+    const isLastIndex = await getOrInviteUserByMail(
+      email,
+      { id: invitationId, type, mode, fromOrg },
+      data.app,
+      eventData
+    )
       .then(u => {
-        if(u.invitationStatus) invitation.status = u.invitationStatus; 
+        if (u.invitationStatus) invitation.status = u.invitationStatus;
         return createPublicUser(u.user);
       })
       .then(toUser => {
         invitation.toUser = toUser;
-        const invitationId = db.collection('invitations').doc().id;
         invitation.id = invitationId;
       })
       .then(() => db.collection('invitations').doc(invitation.id).set(invitation))
