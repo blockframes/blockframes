@@ -62,7 +62,10 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
         const invitationId = anonymousCreds?.invitationId;
         if (invitationId && event.accessibility === 'invitation-only') {
           const invitation = await this.invitationService.getValue(invitationId);
-          hasAnonymousInvitation = invitation?.toUser?.email === anonymousCreds.email && event.id === invitation?.eventId && invitation.status === 'accepted';
+          hasAnonymousInvitation = invitation?.toUser?.email === anonymousCreds.email &&
+            event.id === invitation?.eventId &&
+            invitation.status === 'accepted' &&
+            invitation.accessAllowed;
         }
 
         // if user wasn't invited OR hasn't accepted yet

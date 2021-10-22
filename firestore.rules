@@ -206,6 +206,8 @@ service cloud.firestore {
         && isNotUpdatingField(['toUser', 'uid'])
         && isNotUpdatingField(['eventId'])
         && isNotUpdatingField(['type'])
+        && isNotUpdatingField(['accessAllowed'])
+        && isNotUpdatingField(['accessCode'])
       );
     }
 

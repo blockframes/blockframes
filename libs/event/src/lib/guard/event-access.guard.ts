@@ -47,7 +47,7 @@ export class EventAccessGuard implements CanActivate {
             if (invitationId) {
               const invitation = await this.invitationService.getValue(invitationId).catch(() => createInvitation());
               if (invitation?.toUser?.email === anonymousCredentials?.email && invitation?.eventId === event.id) {
-                return hasVerifiedAnonymousIdentity(anonymousCredentials, event.accessibility) || this.router.navigate([`/event/${event.id}`]);
+                return hasVerifiedAnonymousIdentity(anonymousCredentials, event.accessibility) || this.router.navigate([`/event/${event.id}`], { queryParams: route.queryParams });
               } else {
                 this.snackBar.open('Incorrect invitation for event', 'close', { duration: 5000 });
                 this.router.navigate(['/']);

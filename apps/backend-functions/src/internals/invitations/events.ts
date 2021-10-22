@@ -247,7 +247,6 @@ async function createNotificationIfNotExists(invitations: InvitationDocument[], 
  */
 export async function isUserInvitedToEvent(userId: string, event: EventDocument<EventMeta>, email?: string) {
   const db = admin.firestore();
-  const promises = [];
 
   const acceptedInvitations = db.collection('invitations')
     .where('type', '==', 'attendEvent')
@@ -256,8 +255,6 @@ export async function isUserInvitedToEvent(userId: string, event: EventDocument<
     .where('status', '==', 'accepted')
     .where('mode', '==', 'invitation');
 
-  promises.push(acceptedInvitations);
-
   const acceptedRequests = db.collection('invitations')
     .where('type', '==', 'attendEvent')
     .where('eventId', '==', event.id)
@@ -265,19 +262,24 @@ export async function isUserInvitedToEvent(userId: string, event: EventDocument<
     .where('status', '==', 'accepted')
     .where('mode', '==', 'request');
 
-  promises.push(acceptedRequests);
+  const [invitations, requests] = await Promise.all([
+    acceptedInvitations.get(),
+    acceptedRequests.get()
+  ]);
+
+  if (!(invitations.size === 0 && requests.size === 0)) return true;
 
   if (email && event.accessibility === 'invitation-only') {
-    const emailInvitations = db.collection('invitations')
+    const emailInvitations = await db.collection('invitations')
       .where('type', '==', 'attendEvent')
       .where('eventId', '==', event.id)
       .where('toUser.email', '==', email)
       .where('status', '==', 'accepted')
-      .where('mode', '==', 'invitation');
-    promises.push(emailInvitations);
+      .where('mode', '==', 'invitation')
+      .where('accessAllowed', '==', true).get();
+
+    return emailInvitations.size > 0;
   }
 
-  const [invitations, requests, emailInvitations] = await Promise.all(promises);
-
-  return !(invitations.size === 0 && requests.size === 0 && emailInvitations.size === 0);
+  return true;
 }
