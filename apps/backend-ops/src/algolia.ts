@@ -17,7 +17,7 @@ import { Campaign } from '@blockframes/campaign/+state/campaign.model';
 import { AlgoliaConfig } from '@blockframes/utils/algolia';
 
 
-export async function upgradeAlgoliaOrgs(appConfig?: App, db: FirebaseFirestore.Firestore = loadAdminServices().db) {
+export async function upgradeAlgoliaOrgs(appConfig?: App, db = loadAdminServices().db) {
   if (!appConfig) {
     const promises = getAllAppsExcept(['crm']).map(app => upgradeAlgoliaOrgs(app, db));
     await Promise.all(promises);
@@ -53,7 +53,7 @@ export async function upgradeAlgoliaOrgs(appConfig?: App, db: FirebaseFirestore.
   }
 }
 
-export async function upgradeAlgoliaMovies(appConfig?: App, db: FirebaseFirestore.Firestore = loadAdminServices().db) {
+export async function upgradeAlgoliaMovies(appConfig?: App, db = loadAdminServices().db) {
 
   if (!appConfig) {
     const promises = getAllAppsExcept(['crm']).map(app => upgradeAlgoliaMovies(app, db));
@@ -103,7 +103,7 @@ export async function upgradeAlgoliaMovies(appConfig?: App, db: FirebaseFirestor
   }
 }
 
-export async function upgradeAlgoliaUsers(db: FirebaseFirestore.Firestore = loadAdminServices().db) {
+export async function upgradeAlgoliaUsers(db = loadAdminServices().db) {
 
   // reset config, clear index and fill it up from the db (which is the only source of truth)
   const config: AlgoliaConfig = {

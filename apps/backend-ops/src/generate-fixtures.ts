@@ -20,7 +20,8 @@ async function generateUsers(db: FirebaseFirestore.Firestore) {
   console.log('Generating user fixtures file from Firestore...');
 
   console.time('Fetching users from Firestore');
-  const users = (await db.collection('users').get()).docs as unknown as User[]
+  const { docs } = await db.collection('users').get();
+  const users = docs.map(d => d.data() as User);
   console.timeEnd('Fetching users from Firestore');
 
   const output = users.map((user) => ({
@@ -42,7 +43,8 @@ async function generateMovies(db: FirebaseFirestore.Firestore) {
   console.log('Generating movie fixtures file from Firestore...');
 
   console.time('Fetching movies from Firestore');
-  const movies = (await db.collection('movies').get()).docs as unknown as Movie[]
+  const { docs } = await db.collection('movies').get();
+  const movies =  docs.map(d => d.data() as Movie);
   console.timeEnd('Fetching movies from Firestore');
 
   const output: Partial<Movie>[] = movies.map((movie) => ({
@@ -62,7 +64,8 @@ async function generateOrgs(db: FirebaseFirestore.Firestore) {
   console.log('Generating orgs fixtures file from Firestore...');
 
   console.time('Fetching orgs from Firestore');
-  const orgs = (await db.collection('orgs').get()).docs as unknown as Organization[]
+  const { docs } = await db.collection('orgs').get();
+  const orgs =  docs.map(d => d.data() as Organization);
   console.timeEnd('Fetching orgs from Firestore');
 
   const output: Partial<Organization>[] = orgs.map((org) => ({
