@@ -9,9 +9,9 @@
     Past Deals
   </button>
 </header>
-<bf-table-filter [source]="contracts" [columns]="columns" [initialColumns]="initialColumns" clickable showFilter
-  showPaginator (rowClick)="goToTitle($event)">
-  <ng-template colRef="title" let-title><b>{{ title.international }}</b></ng-template>
-  <ng-template colRef="receipt" let-receipt> <b>{{ receipt | currency }}</b></ng-template>
-  <ng-template colRef="status" let-status>{{ status | toLabel: 'storeStatus' }}</ng-template>
-</bf-table-filter>
+<bf-table [source]="contracts" clickable useFilter showPaginator (rowClick)="goToTitle($event)">
+  <ng-template colRef="title" label="Title" let-title><b>{{ title.international }}</b></ng-template>
+  <ng-template colRef="receipt" label="Receipt" let-receipt> <b>{{ receipt | currency }}</b></ng-template>
+  <ng-template colRef="status" lable="Status" let-status>{{ status | toLabel: 'storeStatus' }}</ng-template>
+  <ng-template colRef="id" lable="ID" let-id>{{id}}</ng-template>
+</bf-table>
