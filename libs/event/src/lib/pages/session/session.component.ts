@@ -99,26 +99,29 @@ export class SessionComponent implements OnInit, OnDestroy {
             });
 
             // If user is logged-in as anonymous
-            if (!invitation && this.authQuery.anonymousCredentials) {
+            if (!invitation && this.authQuery.anonymousCredentials?.invitationId) {
               const invitationId = this.authQuery.anonymousCredentials?.invitationId;
               invitation = await this.invitationService.getValue(invitationId);
             }
 
-            // this should never happen since previous checks & guard should have worked
-            if (!invitation) throw new Error(`Missing Screening Invitation`);
+            if (!invitation && event.accessibility !== 'public') {
+              // this should never happen since previous checks & guard should have worked
+              throw new Error('Missing Screening Invitation');
+            } else {
+              this.watchTimeInterval?.unsubscribe();
 
-            this.watchTimeInterval?.unsubscribe();
+              this.watchTimeInterval = interval(1000).pipe(
+                filter(() => !!this.isPlaying),
+                scan(watchTime => watchTime + 1, invitation.watchTime ?? 0),
+                finalizeWithValue(watchTime => {
+                  if (watchTime !== undefined) this.invitationService.update(invitation.id, { watchTime });
+                }),
+                filter(watchTime => watchTime % 60 === 0),
+              ).subscribe(watchTime => {
+                this.invitationService.update(invitation.id, { watchTime });
+              });
+            }
 
-            this.watchTimeInterval = interval(1000).pipe(
-              filter(() => !!this.isPlaying),
-              scan(watchTime => watchTime + 1, invitation.watchTime ?? 0),
-              finalizeWithValue(watchTime => {
-                if (watchTime !== undefined) this.invitationService.update(invitation.id, { watchTime });
-              }),
-              filter(watchTime => watchTime % 60 === 0),
-            ).subscribe(watchTime => {
-              this.invitationService.update(invitation.id, { watchTime });
-            });
           }
         }
 
