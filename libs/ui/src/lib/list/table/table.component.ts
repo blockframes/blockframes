@@ -32,7 +32,7 @@ function filterTable<T>(data: T[], value: string, columns: QueryList<ColumnDirec
  * in english characters
  * @link https://stackoverflow.com/a/37511463/6441976
  */
-function replaceAccentedCharacters(str: unknown) {
+function replaceAccentedCharacters<T>(str: T) {
   if (typeof str === 'string')
     return str.normalize("NFD").replace(/\p{Diacritic}/gu, "");
   return str;
