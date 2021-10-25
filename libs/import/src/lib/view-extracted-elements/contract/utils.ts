@@ -12,6 +12,7 @@ import { extract, ExtractConfig, getStaticList, SheetTab, split, ValueWithWarnin
 
 import { centralOrgId } from '@env';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
 
 const separator = ';'
 const errorCodes = [
@@ -193,23 +194,19 @@ function toTerm(rawTerm: FieldsConfig['term'], contractId: string, firestore: An
 
   const languages: Term['languages'] = {};
 
+  const updateLanguage = (key: keyof MovieLanguageSpecification, rawLanguages: Language[]) => {
+    for (const language of rawLanguages) {
+      if (!languages[language]) languages[language] = { caption: false, dubbed: false, subtitle: false };
+      languages[language][key] = true;
+    }
+  }
+
   // TODO ASK BUSINESS WTF IS CLOSED CAPTIONING
   // TODO language only support `caption` but term in db have an unknown extra `closedCaptioning` parameter
   // TODO maybe it refer to the same thing but with two different name ????
-  rawTerm.closedCaptioning.forEach(language => {
-    if (!languages[language]) languages[language] = { caption: true, dubbed: false, subtitle: false };
-    else languages[language].caption = true;;
-  });
-
-  rawTerm.dubbed.forEach(language => {
-    if (!languages[language]) languages[language] = { caption: false, dubbed: true, subtitle: false };
-    else languages[language].dubbed = true;;
-  });
-
-  rawTerm.subtitle.forEach(language => {
-    if (!languages[language]) languages[language] = { caption: false, dubbed: true, subtitle: true };
-    else languages[language].subtitle = true;;
-  });
+  updateLanguage('caption', rawTerm.closedCaptioning);
+  updateLanguage('dubbed', rawTerm.dubbed);
+  updateLanguage('subtitle', rawTerm.subtitle);
 
   const id = firestore.createId();
 
@@ -283,7 +280,7 @@ export async function formatContract(
     const term = toTerm(data.term, contract.id, firestore);
 
     if (typeof data.parentTerm === 'number') {
-      contract.parentTermId = contracts[data.parentTerm - 2].terms[0].id; // excel lines start at 1 and first line is the column names
+      contract.parentTermId = contracts[data.parentTerm - 2]?.terms[0]?.id; // excel lines start at 1 and first line is the column names
       if (!contract.parentTermId) errors.push(errorsMap['TODO']) // TODO issue#6929
     }
 

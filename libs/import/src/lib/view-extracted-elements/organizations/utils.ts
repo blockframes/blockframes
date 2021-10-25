@@ -105,7 +105,7 @@ export async function formatOrg(sheetTab: SheetTab, organizationService: Organiz
   for (const result of results) {
     const { data, errors, warnings } = result;
 
-    const org = createOrganization({...data});
+    const org = createOrganization(data);
     // TODO issue#6929
     orgs.push({ errors,  org, superAdmin: {} as User, newOrg: false });
   }

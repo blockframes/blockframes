@@ -208,10 +208,33 @@ export function split(cell: string, separator:string) {
   return cell.split(separator).filter(v => !!v).map(v => v.trim());
 }
 
+/**
+ * Some excel import template let the users use several lines a single entity,
+ * (_e.g. 10 lines per movie_) this function will take the raw data array form the import
+ * and will flatten it so that one entity equal one line. This will create arrays in some columns.
+ * @param rawRows raw data from excel import
+ * @param concurrent number of lines per entity
+ * @example
+ * const rawMovies = [
+ *  ['Harry Potter', 'France'], // Movie 1
+ *  [undefined, 'Germany'],
+ *  [undefined, 'UK'],
+ *  ['Jurassic Park', 'USA'], // Movie 2
+ * ];
+ * const flattenedMovies = flattenConcurrentRows(rawMovies, 3);
+ * // flattenedMovies will look like this
+ * const flattenedMovies = [
+ *   [ 'Harry Potter', [ 'France', 'Germany', 'UK' ] ],
+ *   [ 'Jurassic Park', 'USA' ],
+ * ];
+ */
 function flattenConcurrentRows(rawRows: string[][], concurrent: number) {
 
+  // initializing the result array with the correct number of (undefined) entities
   const flattened: string[][][] = new Array(Math.ceil(rawRows.length / concurrent));
 
+  // copy the raw (source) array into the flattened (destination) array,
+  // every concurrent row of the source is merged into a single row of the destination
   for (let row = 0 ; row < rawRows.length ; row++) {
     const flattenRow = Math.floor(row / concurrent);
     if (!flattened[flattenRow]) flattened[flattenRow] = [];
@@ -221,12 +244,19 @@ function flattenConcurrentRows(rawRows: string[][], concurrent: number) {
     }
   }
 
-  const filteredColumns = flattened.map(row => row.map(column => {
-    const filteredValues = column.filter(value => !!value);
-    if (!filteredValues.length) return undefined;
-    if (filteredValues.length === 1) return filteredValues[0];
-    return filteredValues;
-  }));
+  // Now that the array is flattened, we need to clean it as it contain a lot of undefined and empty arrays
+  const filtered = flattened.map(row => // for each row
+    row.map(column => { // for each column
 
-  return filteredColumns.filter(row => !!row.length);
+      // remove undefined, transform empty arrays into undefined, and transform single element array into regular values
+      const filteredValues = column.filter(value => !!value);
+      if (!filteredValues.length) return undefined;
+      if (filteredValues.length === 1) return filteredValues[0];
+      return filteredValues;
+
+    })
+  );
+
+  // Remove empty lines and return
+  return filtered.filter(row => !!row.length);
 }
