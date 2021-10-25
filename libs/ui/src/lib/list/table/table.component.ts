@@ -18,13 +18,24 @@ function sortValue<T>(a: T, b: T) {
 
 /** Filter the table fields based on the input value */
 function filterTable<T>(data: T[], value: string, columns: QueryList<ColumnDirective<T>>) {
-  const input = value.toLowerCase();
+  const input = replaceAccentedCharacters(value.toLowerCase());
   return data.filter(row => {
     return columns.some(column => {
-      const value = getDeepValue(row, column.name);
+      const value = replaceAccentedCharacters(getDeepValue(row, column.name));
       return column.filter(input, value, row);
     })
   });
+}
+
+/**
+ * replaces accented characters with their closes neighbour
+ * in english characters
+ * @link https://stackoverflow.com/a/37511463/6441976
+ */
+function replaceAccentedCharacters(str: any) {
+  if (typeof str === 'string')
+    return str.normalize("NFD").replace(/\p{Diacritic}/gu, "");
+  return str;
 }
 
 @Directive({ selector: '[colRef]' })
@@ -33,7 +44,7 @@ export class ColumnDirective<T> {
 
   /** Path of the value in the row */
   @Input('colRef') name!: string;
-  
+
   /** Text to display in the column header. Header will fallback to colRef value if not provided */
   @Input() label?: string;
 
@@ -52,7 +63,7 @@ export class ColumnDirective<T> {
     return value.toLowerCase().includes(input);
   }
 
-  constructor(public template: TemplateRef<any>) {}
+  constructor(public template: TemplateRef<any>) { }
 
   get isSortable() {
     return this.sort === '' || !!this.sort;
@@ -96,7 +107,7 @@ export class TableComponent<T> {
   search = new FormControl();
   paginator = new Paginator();
   data$: Observable<T[]>;
-  
+
 
   @ContentChildren(ColumnDirective) columns!: QueryList<ColumnDirective<T>>;
 
@@ -141,7 +152,7 @@ export class TableComponent<T> {
   private $sort(data: T[]) {
     const sorting = this.columns.filter(c => c.isSortable).map(column => column.$sort(data));
     if (!sorting.length) return of(data);
-    return merge(...sorting).pipe(startWith(data)); 
+    return merge(...sorting).pipe(startWith(data));
   }
 
   private $filter(data: T[]) {
