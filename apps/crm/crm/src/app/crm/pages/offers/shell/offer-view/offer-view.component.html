@@ -26,22 +26,22 @@
       </section>
     </form>
 
-    <section class="surface">
+    <section>
       <p>Contracts in the package</p>
       <bf-table [source]="contracts" pagination="50">
-        <ng-template colRef="titleId" label="Title ID" let-titleId>
+        <ng-template colRef="titleId" label="Title ID" let-titleId sort>
           {{ titleId }}
         </ng-template>
-        <ng-template colRef="title.title.international" label="Title" let-name>
+        <ng-template colRef="title.title.international" label="Title" let-name sort>
           {{ name | maxLength: 50 }}
         </ng-template>
-        <ng-template colRef="status" label="Seller Approved" let-status>
+        <ng-template colRef="status" label="Seller Approved" let-status sort>
           <bf-tag>{{ status }}</bf-tag>
         </ng-template>
-        <ng-template colRef="seller.denomination.public" label="Seller's name" let-name>
+        <ng-template colRef="seller.denomination.public" label="Seller's name" let-name sort>
           {{ name }}
         </ng-template>
-        <ng-template colRef="seller.email" label="Seller's email" let-email>
+        <ng-template colRef="seller.email" label="Seller's email" let-email sort>
           {{ email }}
         </ng-template>
         <ng-template colRef="id" label="Actions" let-id>

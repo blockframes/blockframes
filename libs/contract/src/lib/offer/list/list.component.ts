@@ -9,6 +9,7 @@ import { Contract } from '@blockframes/contract/contract/+state';
 import { Movie } from '@blockframes/movie/+state';
 import { Income } from '@blockframes/contract/income/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 
 type AllOfferStatus = '' | 'pending' | 'on_going' | 'past_deals';
@@ -37,6 +38,8 @@ export class ListComponent {
 
   constructor(
     private routerQuery: RouterQuery,
+    private router:Router,
+    private route:ActivatedRoute,
     private dynTitle: DynamicTitleService,
     ) { this.dynTitle.setPageTitle('Offers & Deals')}
 
@@ -57,5 +60,9 @@ export class ListComponent {
       default:
         return true;
     }
+  }
+
+  rowClick({id}:{id:string}){
+    this.router.navigate([id], {relativeTo:this.route})
   }
 }

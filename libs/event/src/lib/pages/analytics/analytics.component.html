@@ -33,14 +33,14 @@
             </button>
           </article>
           <bf-table pagination="50" useFilter [source]="analytics">
-            <ng-template colRef="name" label="Name" let-name>{{ name | titlecase }}</ng-template>
-            <ng-template colRef="email" label="Email Address" let-email>{{ email }}</ng-template>
-            <ng-template colRef="orgName" label="Company Name" let-orgName>{{ orgName }}</ng-template>
+            <ng-template colRef="name" label="Name" let-name sort>{{ name | titlecase }}</ng-template>
+            <ng-template colRef="email" label="Email Address" let-email sort>{{ email }}</ng-template>
+            <ng-template colRef="orgName" label="Company Name" let-orgName sort>{{ orgName }}</ng-template>
             <ng-template colRef="orgActivity" label="Company Activity" let-orgActivity>{{ orgActivity | toLabel:
               'orgActivity' }}</ng-template>
             <ng-template colRef="orgCountry" label="Country" let-orgCountry>{{ orgCountry | toLabel: 'territories' }}
             </ng-template>
-            <ng-template *ngIf="hasWatchTime" colRef="watchTime" label="watch time" let-watchTime>{{ watchTime * 1000 | duration: '0min' }}
+            <ng-template *ngIf="hasWatchTime" colRef="watchTime" label="watch time" let-watchTime sort>{{ watchTime * 1000 | duration: '0min' }}
             </ng-template>
           </bf-table>
         </mat-card>

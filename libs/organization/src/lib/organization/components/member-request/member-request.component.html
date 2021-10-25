@@ -1,17 +1,13 @@
 <mat-card>
   <mat-card-title>New Member Requests</mat-card-title>
-  <!-- [columns]="invitationColumns"
-  [initialColumns]="initialColumns" -->
-  <bf-table
-    [source]="users"
-    pagination="50" >
-    <ng-template colRef="firstName" label="FirstName" let-firstName>
+  <bf-table [source]="users" pagination="50">
+    <ng-template colRef="firstName" label="FirstName" let-firstName sort>
       <b>{{ firstName | titlecase }}</b>
     </ng-template>
-    <ng-template colRef="lastName" label="Lastname" let-lastName>
+    <ng-template colRef="lastName" label="Lastname" let-lastName sort>
       <b>{{ lastName | titlecase }}</b>
     </ng-template>
-    <ng-template colRef="email" label="Email Address" let-email>
+    <ng-template colRef="email" label="Email Address" let-email sort>
       {{ email }}
     </ng-template>
     <ng-template *ngIf="this.isAdmin" colRef="uid" label="Actions" let-uid>

@@ -107,23 +107,23 @@
   </mat-card>
 </section>
 
-<bf-table *ngIf="invitations" [source]="invitations" useFilter pagination="50">
-  <ng-template colRef="date" label="Date Created" let-date>
+<bf-table *ngIf="invitations" [source]="invitations" useFilter pagination="50" (rowClick)="goTo($event)">
+  <ng-template colRef="date" label="Date Created" let-date sort>
     <span>{{ date | date: 'short' }}</span>
   </ng-template>
-  <ng-template colRef="mode" label="Mode" let-mode>
+  <ng-template colRef="mode" label="Mode" let-mode sort>
     {{mode}}
   </ng-template>
-  <ng-template colRef="type" label="Type" let-type>
+  <ng-template colRef="type" label="Type" let-type sort>
     {{type}}
   </ng-template>
-  <ng-template colRef="fromOrg.denomination.full" label="From Organization" let-full>
+  <ng-template colRef="fromOrg.denomination.full" label="From Organization" let-full sort>
     {{full}}
   </ng-template>
-  <ng-template colRef="toOrg.denomination.full" label="To Organization" let-full>
+  <ng-template colRef="toOrg.denomination.full" label="To Organization" let-full sort>
     {{full}}
   </ng-template>
-  <ng-template colRef="status" label="Status" let-status>
+  <ng-template colRef="status" label="Status" let-status sort>
     {{status}}
   </ng-template>
 </bf-table>

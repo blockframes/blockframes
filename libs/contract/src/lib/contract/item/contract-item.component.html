@@ -15,7 +15,7 @@
   </header>
   <ng-container *ngIf="contract | getTermsFromContract | async as terms">
     <bf-table [source]="terms" useFilter pagination="50">
-      <ng-template colRef="duration" label="Terms" let-duration>
+      <ng-template colRef="duration" label="Terms" let-duration sort>
         {{ duration.from | date:'M/d/y' }} - {{ duration.to | date:'M/d/y' }}
       </ng-template>
       <ng-template colRef="territories" label="Territories" let-territories>
@@ -30,7 +30,7 @@
           {{ medias | toGroupLabel:'medias':'All'| join }}
         </span>
       </ng-template>
-      <ng-template colRef="exclusive" label="Exclusivity" let-exclusive>
+      <ng-template colRef="exclusive" label="Exclusivity" let-exclusive sort>
         {{ exclusive ? 'Yes' : 'No' }}
       </ng-template>
       <ng-template *ngIf="actionTemplate" colAction="action" label="Actions" let-term let-termIndex="index">
@@ -46,7 +46,7 @@
         </ul>
         <ng-template #noLanguage>-</ng-template>
       </ng-template>
-      <ng-template colRef="runs.broadcasts" label="# of Broadcasts" let-broadcasts>
+      <ng-template colRef="runs.broadcasts" label="# of Broadcasts" let-broadcasts sort>
         {{broadcasts ?? '-'}}
       </ng-template>
     </bf-table>

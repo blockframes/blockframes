@@ -24,10 +24,11 @@
           *ngIf="(titleCount$ | async) as titleCount">({{ titleCount.archived }})</span></button>
     </header>
 
-    <bf-table [source]="titles | filterBy: filterByMovie: { value: filter.value, exclude: 'archived' }" pagination="50"
-      useFilter clickable (rowClick)="goToTitle($event)">
-      <ng-template colRef="title.international" label="Title" let-title><b>{{ title }}</b></ng-template>
-      <ng-template colRef="analytics.views" label="# Views" let-views>{{views}}</ng-template>
+    <bf-table
+      [source]="titles | filterBy: filterByMovie: { value: filter.value, exclude: 'archived' }"
+      pagination="50" useFilter  clickable (rowClick)="goToTitle($event)">
+      <ng-template colRef="title.international" label="Title" let-title sort><b>{{ title }}</b></ng-template>
+      <ng-template colRef="analytics.views" label="# Views" let-views sort>{{views}}</ng-template>
       <ng-template colRef="directors" label="Director(s)" let-directors>{{ directors | displayName }}</ng-template>
       <ng-template colRef="productionStatus" label="Production Status" let-prod>{{ prod | toLabel: 'productionStatus'
         }}</ng-template>

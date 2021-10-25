@@ -8,34 +8,34 @@
   </article>
 
   <bf-table [source]="rows" pagination="50" useFilter clickable (rowClick)="goToEdit($event)">
-    <ng-template colRef="id" label="Id" let-id>
+    <ng-template colRef="id" label="Id" let-id sort>
       {{id}}
     </ng-template>
-    <ng-template colRef="title" label="Title" let-title>
+    <ng-template colRef="title" label="Title" let-title sort>
       {{title}}
     </ng-template>
-    <ng-template colRef="type" label="Type" let-type>
+    <ng-template colRef="type" label="Type" let-type sort>
       {{type}}
     </ng-template>
-    <ng-template colRef="start" label="Start" let-start>
+    <ng-template colRef="start" label="Start" let-start sort>
       {{ start | date: 'medium'}}
     </ng-template>
-    <ng-template colRef="hostedBy" label="Hosted by" let-hostedBy>
+    <ng-template colRef="hostedBy" label="Hosted by" let-hostedBy sort>
       {{hostedBy}}
     </ng-template>
-    <ng-template colRef="invited" label="Number of invitations" let-invited>
+    <ng-template colRef="invited" label="Number of invitations" let-invited sort>
       {{invited}}
     </ng-template>
-    <ng-template colRef="confirmed" label="Confirmed" let-confirmed>
+    <ng-template colRef="confirmed" label="Confirmed" let-confirmed sort>
       {{confirmed}}
     </ng-template>
-    <ng-template colRef="pending" label="Pending" let-pending>
+    <ng-template colRef="pending" label="Pending" let-pending sort>
       {{pending}}
     </ng-template>
-    <ng-template colRef="accessibility" label="Accessibility" let-accessibility>
+    <ng-template colRef="accessibility" label="Accessibility" let-accessibility sort>
       {{accessibility}}
     </ng-template>
-    <ng-template colRef="isSecret" label="Hidden on Marketplace" let-isSecret>
+    <ng-template colRef="isSecret" label="Hidden on Marketplace" let-isSecret sort>
       {{isSecret}}
     </ng-template>
   </bf-table>

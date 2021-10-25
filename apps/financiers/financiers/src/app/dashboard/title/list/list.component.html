@@ -27,7 +27,7 @@
     </header>
 
     <bf-table [source]="titles" useFilter pagination="50" clickable (rowClick)="goToTitle($event)">
-      <ng-template colRef="title" label="Title" let-title><b>{{ title.international }}</b></ng-template>
+      <ng-template colRef="title.international" label="Title" let-title sort><b>{{ title }}</b></ng-template>
       <ng-template colRef="productionStatus" label="Production Status" let-prod>{{ prod | toLabel: 'productionStatus'
         }}</ng-template>
       <ng-template colRef="campaign.cap" label="Goal Funding" let-cap let-movie="item">
@@ -36,7 +36,7 @@
       <ng-template colRef="campaign.received" label="Funding Raised" let-received let-movie="item">
         {{ received ? (received | currency : movie.campaign.currency : 'symbol' : '1.0-0') : '-' }}
       </ng-template>
-      <ng-template colRef="campaignStarted" label="Campaign Started" let-date>{{ date | date: 'short' }}</ng-template>
+      <ng-template colRef="campaignStarted" label="Campaign Started" let-date sort>{{ date | date: 'short' }}</ng-template>
     </bf-table>
   </ng-container>
 

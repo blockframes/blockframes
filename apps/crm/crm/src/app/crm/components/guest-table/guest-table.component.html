@@ -22,10 +22,10 @@
       <mat-icon svgIcon="visibility"></mat-icon>
     </a>
   </ng-template>
-  <ng-template colRef="event.start" label="Event start" let-start>
+  <ng-template colRef="event.start" label="Event start" let-start sort>
     {{ start | date: 'medium'}}
   </ng-template>
-  <ng-template colRef="event.end" label="Event end" let-end>
+  <ng-template colRef="event.end" label="Event end" let-end sort>
     {{ end | date: 'medium'}}
   </ng-template>
   <ng-template colRef="event.accessibility" label="Accessibility" let-accessibility>
