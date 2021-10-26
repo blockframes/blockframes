@@ -12,6 +12,7 @@ import { boolean } from '@blockframes/utils/decorators/decorators';
 export class SlideComponent implements ListKeyManagerOption, Slide {
 
   @Input() image: Slide['image'];
+  @Input() asset: string;
 
   @Input()
   get overlayColor(): Slide['overlayColor'] { return this._overlayColor }
