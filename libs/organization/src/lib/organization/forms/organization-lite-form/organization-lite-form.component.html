@@ -26,7 +26,6 @@
         <mat-icon svgIcon="info"
           matTooltip="Depending on your role, you might have access to different features of the platform."></mat-icon>
       </div>
-
       <mat-button-toggle-group test-id="appAccessToggleGroup" [ngClass]="{ disabled: false }" name="appAccess"
         [formControl]="form.get('appAccess')">
         <mat-button-toggle value="marketplace">{{ roles[app].marketplace }}</mat-button-toggle>
