@@ -7,7 +7,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe';
 import { StorageFileModule } from '@blockframes/media/pipes/storageFile.pipe'
-import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.pipe';
 import { RouterModule } from '@angular/router';
 import { MovieFeatureModule } from '@blockframes/movie/pipes/movie-feature.pipe';
@@ -16,6 +15,7 @@ import { JoinPipeModule, VersionPipeModule, ToGroupLabelPipeModule, ToLabelModul
 import { DetailedTermsModule } from '@blockframes/contract/term/components/detailed/detailed.module';
 import { HoldbackModalModule } from '../holdback/modal/holdback-modal.module';
 import { CollidingHoldbacksPipeModule } from '@blockframes/contract/contract/holdback/pipes/colliding-holdback.pipe'
+import { TableModule } from '@blockframes/ui/list/table/table.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -40,7 +40,7 @@ import { TermPipeModule } from '@blockframes/contract/term/pipes';
     GetTitlePipeModule,
     ImageModule,
     StorageFileModule,
-    TableFilterModule,
+    TableModule,
     DisplayNameModule,
     MovieFeatureModule,
     ToGroupLabelPipeModule,

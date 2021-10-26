@@ -1,6 +1,6 @@
 <ng-container *ngIf="(titles$ | async) as titles; else loading">
   <ng-container *ngIf="titles.length; else empty">
-    <header class="import-header"  fxLayout="row" fxLayoutAlign="space-between center">
+    <header class="import-header" fxLayout="row" fxLayoutAlign="space-between center">
       <h1>My Titles</h1>
       <div fxLayoutGap="24px">
         <a mat-stroked-button color="primary" routerLink="../import">
@@ -14,23 +14,28 @@
     </header>
 
     <header mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
-      <button mat-tab-link (click)="resetFilter()" [active]="(filter$ | async) === ('' || null) ">All <span *ngIf="(titleCount$ | async) as titleCount">({{ titleCount.all }})</span></button>
-      <button mat-tab-link (click)="applyFilter('draft')" [active]="(filter$ | async) === 'draft'">Drafts <span *ngIf="(titleCount$ | async) as titleCount">({{ titleCount.draft }})</span></button>
-      <button mat-tab-link (click)="applyFilter('accepted')" [active]="(filter$ | async) === 'accepted'">Published <span *ngIf="(titleCount$ | async) as titleCount">({{ titleCount.accepted }})</span></button>
-      <button mat-tab-link (click)="applyFilter('archived')" [active]="(filter$ | async) === 'archived'">Archived <span *ngIf="(titleCount$ | async) as titleCount">({{ titleCount.archived }})</span></button>
+      <button mat-tab-link (click)="resetFilter()" [active]="(filter$ | async) === ('' || null) ">All <span
+          *ngIf="(titleCount$ | async) as titleCount">({{ titleCount.all }})</span></button>
+      <button mat-tab-link (click)="applyFilter('draft')" [active]="(filter$ | async) === 'draft'">Drafts <span
+          *ngIf="(titleCount$ | async) as titleCount">({{ titleCount.draft }})</span></button>
+      <button mat-tab-link (click)="applyFilter('accepted')" [active]="(filter$ | async) === 'accepted'">Published <span
+          *ngIf="(titleCount$ | async) as titleCount">({{ titleCount.accepted }})</span></button>
+      <button mat-tab-link (click)="applyFilter('archived')" [active]="(filter$ | async) === 'archived'">Archived <span
+          *ngIf="(titleCount$ | async) as titleCount">({{ titleCount.archived }})</span></button>
     </header>
 
-    <mat-card>
-      <bf-table-filter [source]="titles | filterBy: filterByMovie: { value: filter.value, exclude: 'archived' }" [columns]="columns" [initialColumns]="initialColumns" showFilter showPaginator clickable
-        (rowClick)="goToTitle($event)">
-        <ng-template colRef="title.international" let-title><b>{{ title }}</b></ng-template>
-        <ng-template colRef="directors" let-directors>{{ directors | displayName }}</ng-template>
-        <ng-template colRef="productionStatus" let-prod>{{ prod | toLabel: 'productionStatus' }}</ng-template>
-        <ng-template colRef="app.festival.status" let-status>
-          <bf-tag>{{ status | toLabel: 'storeStatus' }}</bf-tag>
-        </ng-template>
-      </bf-table-filter>
-    </mat-card>
+    <bf-table
+      [source]="titles | filterBy: filterByMovie: { value: filter.value, exclude: 'archived' }"
+      pagination="50" useFilter  clickable (rowClick)="goToTitle($event)">
+      <ng-template colRef="title.international" label="Title" let-title sort><b>{{ title }}</b></ng-template>
+      <ng-template colRef="analytics.views" label="# Views" let-views sort>{{views}}</ng-template>
+      <ng-template colRef="directors" label="Director(s)" let-directors>{{ directors | displayName }}</ng-template>
+      <ng-template colRef="productionStatus" label="Production Status" let-prod>{{ prod | toLabel: 'productionStatus'
+        }}</ng-template>
+      <ng-template colRef="app.festival.status" label="Status" let-status>
+        <bf-tag>{{ status | toLabel: 'storeStatus' }}</bf-tag>
+      </ng-template>
+    </bf-table>
   </ng-container>
 
 </ng-container>
