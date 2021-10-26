@@ -11,6 +11,7 @@ import { OrganizationQuery } from '@blockframes/organization/+state';
 import { Duration } from '@blockframes/contract/term/+state';
 
 
+
 @Component({
   selector: 'contract-item',
   templateUrl: './contract-item.component.html',
@@ -47,6 +48,8 @@ export class ContractItemComponent {
     }
   }
 
+  sortDuration = (a: Duration, b: Duration) => a.from.getTime() - b.from.getTime();
+
   constructor(
     private cdr: ChangeDetectorRef,
     private dialog: MatDialog,
@@ -61,8 +64,5 @@ export class ContractItemComponent {
     this.dialog.open(HoldbackModalComponent, { data: { holdbacks: existingHoldbacks }, maxHeight: '80vh' });
   }
 
-  sortDuration(a: Duration, b: Duration) {
-    return a.from.getTime() - b.from.getTime();
-  }
 }
 
