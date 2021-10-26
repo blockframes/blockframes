@@ -21,6 +21,7 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { GetLinkModule, CMSPipeModule } from '@blockframes/utils/pipes';
 import { GetOrgPipeModule } from '@blockframes/organization/pipes/get-org.pipe';
 import { SortByPipeModule } from '@blockframes/utils/pipes/sort-array.pipe';
+import { EventSlideModule } from '@blockframes/event/components/slide/slide.module';
 
 // Page
 import { HomeComponent } from './home.component';
@@ -47,6 +48,7 @@ import { HomeComponent } from './home.component';
     CMSPipeModule,
     GetOrgPipeModule,
     SortByPipeModule,
+    EventSlideModule,
 
     // Material
     MatButtonModule,
