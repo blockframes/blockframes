@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 
 // Modules
 import { MemberPermissionsModule } from '../member-permissions/member-permissions.module';
-import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
+import { TableModule } from '@blockframes/ui/list/table/table.module';
 
 // Components
 import { MemberRepertoryComponent } from './member-repertory.component';
@@ -22,7 +22,7 @@ import { RouterModule } from '@angular/router';
   ],
   imports: [
     CommonModule,
-    TableFilterModule,
+    TableModule,
     RouterModule,
     MemberPermissionsModule,
     ImageModule,

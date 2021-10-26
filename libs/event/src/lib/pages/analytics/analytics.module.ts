@@ -4,10 +4,10 @@ import { AnalyticsComponent } from './analytics.component';
 import { EventFromShellModule } from '@blockframes/event/form/shell/shell.module';
 import { RouterModule } from '@angular/router';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
-import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { DurationModule } from '@blockframes/utils/pipes/duration.pipe';
+import { TableModule } from '@blockframes/ui/list/table/table.module';
 
 // Angular
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -20,7 +20,7 @@ import { MatButtonModule } from '@angular/material/button';
   imports: [
     CommonModule,
     ImageModule,
-    TableFilterModule,
+    TableModule,
     FlexLayoutModule,
     MatCardModule,
     MatIconModule,

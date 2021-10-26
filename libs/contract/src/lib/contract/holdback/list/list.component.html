@@ -1,20 +1,20 @@
 <ng-container *ngIf="holdbacks.length">
   <h3>Holdbacks</h3>
-  <bf-table-filter [source]="holdbacks" [columns]="columns">
-    <ng-template colRef="duration" let-duration>
+  <bf-table [source]="holdbacks" pagination="50" useFilter>
+    <ng-template colRef="duration" label="Duration Again" let-duration sort>
       {{ duration.from | date:'M/d/y' }} - {{ duration.to | date:'M/d/y' }}
     </ng-template>
 
-    <ng-template colRef="territories" let-territories>
+    <ng-template colRef="territories" label="Territories" let-territories>
       <span class="group-label" (click)="openDetails(territories, 'territories')">
         {{ territories | toGroupLabel:'territories':'World'| join | maxLength:120 }}
       </span>
     </ng-template>
 
-    <ng-template colRef="medias" let-medias>
+    <ng-template colRef="medias" label="Media" let-medias>
       <span class="group-label" (click)="openDetails(medias, 'medias')">
         {{ medias | toGroupLabel:'medias':'All' | join | maxLength:120 }}
       </span>
     </ng-template>
-  </bf-table-filter>
+  </bf-table>
 </ng-container>

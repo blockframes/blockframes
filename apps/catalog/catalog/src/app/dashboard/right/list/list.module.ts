@@ -4,13 +4,13 @@ import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RightListComponent } from './list.component';
-import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 
 // Material
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { TableModule } from '@blockframes/ui/list/table/table.module';
 
 @NgModule({
   declarations: [RightListComponent],
@@ -18,7 +18,7 @@ import { MatButtonModule } from '@angular/material/button';
     CommonModule,
     ReactiveFormsModule,
     FlexLayoutModule,
-    TableFilterModule,
+    TableModule,
     ToLabelModule,
 
     // Material

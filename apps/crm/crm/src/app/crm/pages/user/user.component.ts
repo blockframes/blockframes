@@ -37,18 +37,6 @@ export class UserComponent implements OnInit {
 
   public dashboardURL: SafeResourceUrl
 
-  public invitationsColumns = {
-    date: 'Date Created',
-    eventId: 'Event Name',
-    mode: 'Mode',
-    type: 'Type',
-    'fromOrg.denomination.full': 'From Organization',
-    'toOrg.denomination.full': 'To Organization',
-    status: 'Status',
-  };
-
-  public initialInvitationsColumns = ['date', 'eventId', 'mode', 'type', 'fromOrg.denomination.full', 'toOrg.denomination.full', 'status'];
-
   constructor(
     private userService: UserService,
     private eventService: EventService,

@@ -7,19 +7,19 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatIconModule } from '@angular/material/icon';
 
 // Modules
-import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 // Components
 import { GuestTableComponent } from './guest-table.component';
+import { TableModule } from '@blockframes/ui/list/table/table.module';
 
 @NgModule({
   declarations: [GuestTableComponent],
   exports: [GuestTableComponent],
   imports: [
     CommonModule,
-    TableFilterModule,
+    TableModule,
     FlexLayoutModule,
     OrgNameModule,
     MatIconModule,

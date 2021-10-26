@@ -17,7 +17,6 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { OrganizationComponent } from './organization.component';
 
 // Modules
-import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { OrganizationDisplayModule } from '@blockframes/organization/components/organization-display/organization-display.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { MemberRepertoryModule } from '@blockframes/organization/components/member-repertory/member-repertory.module';
@@ -29,6 +28,7 @@ import { GoToModule } from '../../components/go-to/go-to.module';
 import { AdminOrganizationFormModule } from '../../components/organization/forms/organization-form/organization-form.module';
 import { FileExplorerModule } from '@blockframes/media/file/explorer/explorer.module';
 import { BreadCrumbModule } from '../../components/bread-crumb/bread-crumb.module';
+import { TableModule } from '@blockframes/ui/list/table/table.module';
 
 @NgModule({
   imports: [
@@ -45,7 +45,7 @@ import { BreadCrumbModule } from '../../components/bread-crumb/bread-crumb.modul
     MatDialogModule,
     FlexLayoutModule,
     OrganizationDisplayModule,
-    TableFilterModule,
+    TableModule,
     ImageModule,
     MemberRepertoryModule,
     MemberPendingModule,
