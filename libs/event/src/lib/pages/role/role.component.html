@@ -1,2 +1,20 @@
-<button color="warn" (click)="click('organizer')" mat-button>Organizer</button>
-<button color="primary" (click)="click('guest')" mat-button>Guest</button>
+<section bgAsset="stars_wallpaper.svg" fxLayoutAlign="center center">
+  <a app-logo routerLink="/"></a>
+  <div class="surface">
+    <h1>Welcome</h1>
+    <h2>to the Archipel Market Platform</h2>
+    <p class="mat-body-1">You are here as a:</p>
+    <div fxLayout>
+      <button color="warn" (click)="click('organizer')" mat-button>
+        <img [asset]="'event_organizer.svg'" alt="organizer image">
+        <p>Organizer</p>
+      </button>
+      <button color="primary" (click)="click('guest')" mat-button>
+        <img [asset]="'event_guest.svg'" alt="guest image">
+        <p>Guest</p>
+      </button>
+    </div>
+  </div>
+</section>
+
+

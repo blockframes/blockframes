@@ -1,1 +1,33 @@
-<button (click)="click()" mat-button>Choose your identity</button>
+
+<section bgAsset="stars_wallpaper.svg" fxLayout="column" fxLayoutAlign="center center">
+  <a app-logo routerLink="/"></a>
+
+  <div class="surface" fxLayout="column">
+    <a fxFlexAlign="start" mat-icon-button [routerLink]="['/event/', eventId]" color="black">
+      <mat-icon svgIcon="arrow_back"></mat-icon>
+    </a>
+
+    <form fxLayout="column" [formGroup]="identityForm" (ngSubmit)="validateIdentity()" >
+      <h1>Welcome to Archipel Market!</h1>
+      <p class="mat-body-1">Please fill in your first and last name <br> to identify yourself.</p>
+
+      <mat-form-field appearance="outline">
+        <input test-id="firstname" matInput type="text" placeholder="First name" formControlName="firstname" required />
+        <mat-error *ngIf="identityForm.get('firstname').hasError('required')">
+          First name is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <input test-id="lastname" matInput type="text" placeholder="Last name" formControlName="lastname" required />
+        <mat-error *ngIf="identityForm.get('lastname').hasError('required')">
+          Last name is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+      <div>
+        <button mat-flat-button color="primary" type="submit">Join event</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+

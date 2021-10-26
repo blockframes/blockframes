@@ -38,13 +38,14 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 const routes: Routes = [{
   path: ':eventId',
   component: MainComponent,
-  canActivate: [AnonymousAuthGuard, EventActiveGuard, InvitationGuard, NotificationsGuard],
-  canDeactivate: [AnonymousAuthGuard, EventActiveGuard, InvitationGuard, NotificationsGuard],
+  // canActivate: [AnonymousAuthGuard, EventActiveGuard, InvitationGuard, NotificationsGuard],
+  // canDeactivate: [AnonymousAuthGuard, EventActiveGuard, InvitationGuard, NotificationsGuard],
   children: [
     {
       path: '',
-      canActivate: [IdentityCheckGuard],
-      loadChildren: () => import('./../../pages/role/role.module').then(m => m.RoleModule),
+      // canActivate: [IdentityCheckGuard],
+      // loadChildren: () => import('./../../pages/role/role.module').then(m => m.RoleModule),
+      loadChildren: () => import('./../../pages/email/email.module').then(m => m.EmailModule),
     },
     {
       path: 'r',

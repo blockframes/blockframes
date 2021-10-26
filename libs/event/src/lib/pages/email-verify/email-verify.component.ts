@@ -1,10 +1,11 @@
-import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, OnDestroy, Optional } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthQuery, AuthStore } from '@blockframes/auth/+state';
 import { EventQuery } from '@blockframes/event/+state';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { Subscription } from 'rxjs';
+import { Intercom } from 'ng-intercom';
 
 @Component({
   selector: 'event-email-verify',
@@ -16,6 +17,7 @@ export class EmailVerifyComponent implements OnInit, OnDestroy {
 
   private invitationId: string;
   private sub: Subscription;
+  public eventId: string;
   constructor(
     private authStore: AuthStore,
     private authQuery: AuthQuery,
@@ -23,11 +25,13 @@ export class EmailVerifyComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     private invitationService: InvitationService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    @Optional() private intercom: Intercom,
   ) { }
 
   async ngOnInit() {
     const { i, code } = this.route.snapshot.queryParams;
+    this.eventId = this.route.snapshot.params.eventId;
     this.invitationId = i;
     if (code) {
       await this.invitationService.validateInvitationOnlyEventAccess(code, this.invitationId);
@@ -48,11 +52,21 @@ export class EmailVerifyComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe()
+    if (this.invitationId) {
+      this.sub.unsubscribe();
+    }
   }
 
   async click() {
     await this.invitationService.requestInvitationOnlyEventAccess(this.authQuery.anonymousCredentials.email, this.invitationId, this.eventQuery.getActiveId());
     console.log('mail sent !');
+  }
+
+  openIntercom() {
+    this.intercom.show();
+  }
+
+  refresh() {
+    window.location.reload();
   }
 }

@@ -1,1 +1,33 @@
-<button (click)="click()" mat-button>Login</button>
+<section bgAsset="stars_wallpaper.svg" fxLayout="column" fxLayoutAlign="center center">
+  <a app-logo routerLink="/"></a>
+  <div class="surface" fxLayout="column">
+    <a fxFlexAlign="start" mat-icon-button [routerLink]="['/event/', eventId]" color="black"> <!-- Todo -->
+      <mat-icon svgIcon="arrow_back"></mat-icon>
+    </a>
+
+    <form fxLayout="column" [formGroup]="loginForm" (ngSubmit)="validateLogin()" >
+      <h1>Welcome to Archipel Market!</h1>
+      <p class="mat-body-1">I don't have an account</p>
+      <a routerLink="/auth/identity">Sign up</a>
+
+      <mat-form-field appearance="outline">
+        <input test-id="email" matInput type="text" placeholder="Email" formControlName="email" required />
+        <mat-error *ngIf="loginForm.get('email').hasError('required')">
+          Email is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <input test-id="password" matInput type="password" placeholder="Password" formControlName="password" required />
+        <mat-error *ngIf="loginForm.get('password').hasError('required')">
+          Password is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+
+      <a routerLink="/auth/reset-password" color="primary">Forgot your password ?</a>
+      <div>
+        <button mat-flat-button color="primary" type="submit">Login</button>
+      </div>
+    </form>
+  </div>
+</section>
+
