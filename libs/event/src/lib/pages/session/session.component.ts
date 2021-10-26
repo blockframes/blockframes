@@ -184,7 +184,7 @@ export class SessionComponent implements OnInit, OnDestroy {
           if (event.accessibility === 'public' && requests.length !== requestUids.length) {
             const anonymousUsers = requestUids.filter(r => !requests.find(u => u.uid === r));
             anonymousUsers.forEach(uid => {
-              requests.push(createAnonymousUser({ uid })); 
+              requests.push(createAnonymousUser({ uid }));
             })
           }
 
