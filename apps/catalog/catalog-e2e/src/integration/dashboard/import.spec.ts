@@ -38,7 +38,8 @@ const logInAndNavigate = (user: Partial<UserType>) => {
   cy.wait(5 * SEC);
 }
 
-describe('User can import templates', () => {
+// TODO issue#6929
+describe.skip('User can import templates', () => {
   beforeEach(() => {
     cy.viewport('ipad-2', 'landscape');
   });

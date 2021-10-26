@@ -10,6 +10,7 @@ import { OrganizationService } from '@blockframes/organization/+state';
 
 import { formatOrg } from './utils';
 import { OrganizationsImportState } from '../../utils';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 
 @Component({
@@ -27,12 +28,12 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
 
   constructor(
     private userService: UserService,
+    private firestore: AngularFirestore,
     private organizationService: OrganizationService,
   ) { }
 
   async ngOnInit() {
-    const { orgsToCreate, orgsToUpdate } = await formatOrg(this.sheetTab, this.organizationService, this.userService);
+    const orgsToCreate = await formatOrg(this.sheetTab, this.organizationService, this.userService, this.firestore);
     this.orgsToCreate$.next(new MatTableDataSource(orgsToCreate));
-    this.orgsToUpdate$.next(new MatTableDataSource(orgsToUpdate));
   }
 }
