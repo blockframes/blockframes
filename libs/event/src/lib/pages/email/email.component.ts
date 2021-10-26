@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthStore } from '@blockframes/auth/+state';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 @Component({
   selector: 'event-email',
   templateUrl: './email.component.html',
@@ -14,6 +15,7 @@ export class EmailComponent implements OnInit {
     private authStore: AuthStore,
     private router: Router,
     private route: ActivatedRoute,
+    private snackBar: MatSnackBar,
   ) { }
 
   public eventId: string;
@@ -30,6 +32,10 @@ export class EmailComponent implements OnInit {
   }
 
   validateForm() {
+    if (!this.emailForm.valid) {
+      this.snackBar.open('Form invalid, please check error messages', 'close', { duration: 2000 });
+      return;
+    }
     const { firstName, lastName, email } = this.emailForm.value;
     // Update store with from value
     this.authStore.updateAnonymousCredentials({ lastName, firstName, email });

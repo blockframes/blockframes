@@ -12,13 +12,15 @@
       <p class="mat-body-1">Please fill in your first and last name <br> to identify yourself.</p>
 
       <mat-form-field appearance="outline">
-        <input test-id="firstname" matInput type="text" placeholder="First name" formControlName="firstname" required />
+        <mat-label>First name</mat-label>
+        <input test-id="firstName" matInput type="text" placeholder="First name" formControlName="firstName" required />
         <mat-error *ngIf="identityForm.get('firstname').hasError('required')">
           First name is <strong>required</strong>
         </mat-error>
       </mat-form-field>
       <mat-form-field appearance="outline">
-        <input test-id="lastname" matInput type="text" placeholder="Last name" formControlName="lastname" required />
+        <mat-label>Last name</mat-label>
+        <input test-id="lastName" matInput type="text" placeholder="Last name" formControlName="lastName" required />
         <mat-error *ngIf="identityForm.get('lastname').hasError('required')">
           Last name is <strong>required</strong>
         </mat-error>
