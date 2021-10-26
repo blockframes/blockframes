@@ -22,7 +22,7 @@ import { InvitationService } from '@blockframes/invitation/+state/invitation.ser
 import { InvitationQuery } from '@blockframes/invitation/+state';
 import { filter, scan } from 'rxjs/operators';
 import { finalizeWithValue } from '@blockframes/utils/observable-helpers';
-import { createUser } from '@blockframes/auth/+state';
+import { createAnonymousUser } from '@blockframes/auth/+state';
 
 
 const isMeeting = (meetingEvent: Event): meetingEvent is Event<Meeting> => {
@@ -184,7 +184,7 @@ export class SessionComponent implements OnInit, OnDestroy {
           if (event.accessibility === 'public' && requests.length !== requestUids.length) {
             const anonymousUsers = requestUids.filter(r => !requests.find(u => u.uid === r));
             anonymousUsers.forEach(uid => {
-              requests.push(createUser({ uid, lastName: 'anonymous', firstName: 'user' }));
+              requests.push(createAnonymousUser({ uid }));
             })
           }
 
