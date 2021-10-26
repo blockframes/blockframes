@@ -6,6 +6,7 @@ import { FormControl } from '@angular/forms';
 import { coerceNumberProperty } from '@angular/cdk/coercion';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { Paginator } from './paginator';
+import {  removeAccent } from '@blockframes/utils/utils';
 
 /** Ascending sorting */
 function sortValue<T>(a: T, b: T) {
@@ -18,23 +19,13 @@ function sortValue<T>(a: T, b: T) {
 
 /** Filter the table fields based on the input value */
 function filterTable<T>(data: T[], value: string, columns: QueryList<ColumnDirective<T>>) {
-  const input = replaceAccentedCharacters(value.toLowerCase());
+  const input = removeAccent(value.toLowerCase());
   return data.filter(row => {
     return columns.some(column => {
-      const value = replaceAccentedCharacters(getDeepValue(row, column.name));
+      const value = removeAccent(getDeepValue(row, column.name));
       return column.filter(input, value, row);
     })
   });
-}
-
-/**
- * replaces accented characters with their closes neighbour
- * in english characters
- * @link https://stackoverflow.com/a/37511463/6441976
- */
-function replaceAccentedCharacters<T>(str: T) {
-  if (typeof str === 'string') return str.normalize("NFD").replace(/\p{Diacritic}/gu, "");
-  return str;
 }
 
 @Directive({ selector: '[colRef]' })
@@ -163,3 +154,4 @@ export class TableComponent<T> {
     );
   }
 }
+
