@@ -13,6 +13,7 @@ import { AuthWidgetModule } from '@blockframes/auth/components/widget/widget.mod
 import { AppBarModule } from '@blockframes/ui/app-bar';
 import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
 import { FooterModule } from '@blockframes/ui/layout/footer/footer.module';
+import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
 
 // Guards
 import { EventAccessGuard } from '../../guard/event-access.guard';
@@ -38,14 +39,13 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 const routes: Routes = [{
   path: ':eventId',
   component: MainComponent,
-  // canActivate: [AnonymousAuthGuard, EventActiveGuard, InvitationGuard, NotificationsGuard],
-  // canDeactivate: [AnonymousAuthGuard, EventActiveGuard, InvitationGuard, NotificationsGuard],
+  canActivate: [AnonymousAuthGuard, EventActiveGuard, InvitationGuard, NotificationsGuard],
+  canDeactivate: [AnonymousAuthGuard, EventActiveGuard, InvitationGuard, NotificationsGuard],
   children: [
     {
       path: '',
-      // canActivate: [IdentityCheckGuard],
-      // loadChildren: () => import('./../../pages/role/role.module').then(m => m.RoleModule),
-      loadChildren: () => import('./../../pages/email/email.module').then(m => m.EmailModule),
+      canActivate: [IdentityCheckGuard],
+      loadChildren: () => import('./../../pages/role/role.module').then(m => m.RoleModule),
     },
     {
       path: 'r',
@@ -112,6 +112,7 @@ const routes: Routes = [{
     AppBarModule,
     AppLogoModule,
     FooterModule,
+    MatLayoutModule,
 
     // Material
     MatToolbarModule,

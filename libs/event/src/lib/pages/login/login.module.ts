@@ -15,6 +15,7 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
 import { ReactiveFormsModule } from '@angular/forms';
 
+
 @NgModule({
   declarations: [EventLoginComponent],
   imports: [

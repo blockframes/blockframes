@@ -11,14 +11,6 @@ import { InvitationQuery } from '@blockframes/invitation/+state';
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { toLabel } from '@blockframes/utils/pipes';
 
-const columns = {
-  name: 'Name',
-  email: 'Email Address',
-  orgName: 'Company Name',
-  orgActivity: 'Company Activity',
-  orgCountry: 'Country',
-};
-
 @Component({
   selector: 'event-analytics-page',
   templateUrl: './analytics.component.html',
@@ -34,9 +26,7 @@ export class AnalyticsComponent implements OnInit {
   event$: Observable<Event<EventMeta>>;
   private eventType: EventTypes;
   analytics: EventAnalytics[];
-
-  public columns: Record<string, string> = columns;
-  public initialColumns = Object.keys(columns);
+  public hasWatchTime = false;
   public exporting = new BehaviorStore(false);
   public averageWatchTime = 0; // in seconds
 
@@ -87,8 +77,7 @@ export class AnalyticsComponent implements OnInit {
         // if event is a screening we add the watch time column to the table
         // and we compute the average watch time
         if (this.eventType === 'screening') {
-          this.columns.watchTime = 'Watch Time';
-          if (!this.initialColumns.includes('watchTime')) this.initialColumns.push('watchTime');
+          this.hasWatchTime = true;
           const totalWatchTime = this.analytics.reduce((acc, curr) => acc + curr.watchTime, 0);
           this.averageWatchTime = totalWatchTime / this.analytics.length;
         }
@@ -128,7 +117,7 @@ export class AnalyticsComponent implements OnInit {
 
   // Will be used to show event statistics only if event started
   isEventStarted(event: Event) {
-    if(!event) return false;
+    if (!event) return false;
     const start = event.start;
     return start.getTime() < Date.now();
   }

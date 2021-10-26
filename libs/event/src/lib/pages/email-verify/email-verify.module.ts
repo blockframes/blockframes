@@ -19,6 +19,7 @@ import { MatIconModule } from '@angular/material/icon';
     AppLogoModule,
     MatIconModule,
     ImageModule,
+
     RouterModule.forChild([{ path: '', component: EmailVerifyComponent }]),
   ]
 })

@@ -4,6 +4,7 @@ import { AuthStore } from '@blockframes/auth/+state';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
+
 @Component({
   selector: 'event-identity',
   templateUrl: './identity.component.html',
@@ -11,7 +12,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EventIdenityComponent implements OnInit {
-
   public identityForm = new FormGroup({
     firstName: new FormControl('', [Validators.required]),
     lastName: new FormControl('', [Validators.required])

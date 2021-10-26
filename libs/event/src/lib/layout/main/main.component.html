@@ -9,9 +9,10 @@
     <ng-content select="aside"></ng-content>
   </mat-sidenav>
 
-  <mat-sidenav-content fxLayout="column"  (toggle)="sidenav.toggle()" layout>
+
+  <mat-sidenav-content fxLayout="column" [appContainer]="app" (toggle)="sidenav.toggle()" layout>
     <!-- TOOLBAR -->
-    <!-- <app-bar #app>
+    <app-bar #app>
       <header fxLayout fxLayoutAlign="start center">
         <button test-id="menu" mat-icon-button (click)="sidenav.toggle()">
           <mat-icon svgIcon="menu"></mat-icon>
@@ -28,18 +29,20 @@
         </a>
         <div fxLayout="row" fxLayoutGap="24px">
           <ng-container *ngIf="(user$ | async)">
-            <mat-divider vertical></mat-divider> -->
+
+            <mat-divider vertical></mat-divider>
             <!-- Invitations -->
-            <!-- <a mat-icon-button routerLink="/c/o/marketplace/invitations" test-id="invitations-link">
+            <a mat-icon-button routerLink="/c/o/marketplace/invitations" test-id="invitations-link">
               <ng-container *ngIf="invitationCount$ | async as count; else noInvitation">
                 <mat-icon svgIcon="invitation" [matBadge]="count" matBadgeColor="accent" matBadgeSize="small"></mat-icon>
               </ng-container>
               <ng-template #noInvitation>
                 <mat-icon svgIcon="invitation"></mat-icon>
               </ng-template>
-            </a> -->
+
+            </a>
             <!-- Notifications -->
-            <!-- <a mat-icon-button routerLink="/c/o/marketplace/notifications" test-id="notifications-link">
+            <a mat-icon-button routerLink="/c/o/marketplace/notifications" test-id="notifications-link">
               <ng-container *ngIf="notificationCount$ | async as count; else noNotification">
                 <mat-icon svgIcon="notifications" [matBadge]="count" matBadgeColor="accent" matBadgeSize="small">
                 </mat-icon>
@@ -52,14 +55,14 @@
           <auth-widget></auth-widget>
         </div>
       </header>
-    </app-bar> -->
+    </app-bar>
 
     <!-- CONTENT -->
     <main fxFlex cdkScrollable>
       <div class="page" [@routeAnimation]="animationOutlet(outlet)">
         <router-outlet #outlet="outlet" (activate)="scrollToTop()"></router-outlet>
       </div>
-      <!-- <bf-footer></bf-footer> -->
+      <bf-footer></bf-footer>
     </main>
 
   </mat-sidenav-content>

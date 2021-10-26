@@ -12,15 +12,6 @@ import { Intercom } from 'ng-intercom';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { appName, getCurrentApp } from '@blockframes/utils/apps';
 
-const columns = {
-  'title.international': 'Title',
-  'release.year': 'Release Year',
-  'directors': 'Director(s)',
-  'analytics.views': '# Views',
-  'app.catalog.status': 'Status',
-  'id': { value: '#Sales (Total Gross Receipt)', disableSort: true },
-};
-
 @Component({
   selector: 'catalog-title-list',
   templateUrl: './list.component.html',
@@ -30,8 +21,6 @@ const columns = {
 export class TitleListComponent {
   public app = getCurrentApp(this.routerQuery);
   public appName = appName[this.app];
-  columns = columns;
-  initialColumns = ['title.international', 'release.year', 'directors', 'analytics.views', 'id', 'app.catalog.status'];
   filter = new FormControl();
   filter$: Observable<StoreStatus | ''> = this.filter.valueChanges.pipe(startWith(this.filter.value || ''));
 

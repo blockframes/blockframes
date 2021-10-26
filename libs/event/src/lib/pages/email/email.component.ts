@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthStore } from '@blockframes/auth/+state';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+
 @Component({
   selector: 'event-email',
   templateUrl: './email.component.html',

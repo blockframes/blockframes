@@ -49,6 +49,7 @@ export class ViewExtractedContractsComponent implements OnInit {
       this.contractService,
       this.firestore,
       this.authQuery.isBlockframesAdmin,
+      this.authQuery.orgId,
     );
     this.contractsToCreate$.next(new MatTableDataSource(contractsToCreate));
   }

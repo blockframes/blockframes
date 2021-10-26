@@ -35,4 +35,8 @@ export class AuthQuery extends Query<AuthState> {
   get anonymousCredentials() {
     return this.getValue().anonymousCredentials;
   }
+
+  get anonymousUserId() {
+    return this.getValue().anonymousCredentials.uid;
+  }
 }

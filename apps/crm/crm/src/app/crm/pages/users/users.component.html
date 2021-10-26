@@ -15,7 +15,21 @@
     </article>
 
     <bf-table clickable [source]="users" pagination="50" useFilter (rowClick)="goToEdit($event)">
-      <ng-template colRef="uid" let-uid>{{ uid }}</ng-template>
+      <ng-template colRef="uid" let-uid>
+        <span>{{ uid }}</span>
+        <button mat-icon-button [cdkCopyToClipboard]="uid" (click)="$event.stopPropagation()">
+          <mat-icon svgIcon="file_copy"></mat-icon>
+        </button>
+        <button mat-icon-button (click)="goToEditNewTab(uid)">
+          <mat-icon svgIcon="launch"></mat-icon>
+        </button>
+      </ng-template>
+      <ng-template colRef="email" sort let-email>
+        <span>{{ email }}</span>
+        <button mat-icon-button [cdkCopyToClipboard]="email" (click)="$event.stopPropagation()">
+          <mat-icon svgIcon="file_copy"></mat-icon>
+        </button>
+      </ng-template>
       <ng-template colRef="firstName" sort label="First Name" let-name>{{ name }}</ng-template>
       <ng-template colRef="lastName" sort label="Last Name" let-name>{{ name }}</ng-template>
       <ng-template colRef="org" let-org label="Organization">
@@ -24,7 +38,6 @@
         </a>
         <ng-template #noOrg>--</ng-template>
       </ng-template>
-      <ng-template colRef="email" sort let-email>{{ email }}</ng-template>
       <ng-template colRef="avatar" let-avatar>
         <img class="avatar" [ref]="avatar" asset="profil_user.svg">
       </ng-template>

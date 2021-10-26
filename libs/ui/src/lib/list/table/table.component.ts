@@ -11,7 +11,10 @@ import { Paginator } from './paginator';
 function sortValue<T>(a: T, b: T) {
   if (typeof a === 'string' && typeof b === 'string') return a.toUpperCase() > b.toUpperCase() ? 1 : -1;
   if (typeof a === 'number' && typeof b === 'number') return a - b;
-  if (a instanceof Date && b instanceof Date) return a.getTime() - b.getTime();
+  if (typeof a === 'boolean' && typeof b === 'boolean') {
+    if (a && b) return 0;
+    return a ? 1 : -1;
+  }
   return 0;
 }
 
@@ -33,7 +36,7 @@ export class ColumnDirective<T> {
 
   /** Path of the value in the row */
   @Input('colRef') name!: string;
-  
+
   /** Text to display in the column header. Header will fallback to colRef value if not provided */
   @Input() label?: string;
 
@@ -52,7 +55,7 @@ export class ColumnDirective<T> {
     return value.toLowerCase().includes(input);
   }
 
-  constructor(public template: TemplateRef<any>) {}
+  constructor(public template: TemplateRef<any>) { }
 
   get isSortable() {
     return this.sort === '' || !!this.sort;
@@ -96,7 +99,7 @@ export class TableComponent<T> {
   search = new FormControl();
   paginator = new Paginator();
   data$: Observable<T[]>;
-  
+
 
   @ContentChildren(ColumnDirective) columns!: QueryList<ColumnDirective<T>>;
 
@@ -141,7 +144,7 @@ export class TableComponent<T> {
   private $sort(data: T[]) {
     const sorting = this.columns.filter(c => c.isSortable).map(column => column.$sort(data));
     if (!sorting.length) return of(data);
-    return merge(...sorting).pipe(startWith(data)); 
+    return merge(...sorting).pipe(startWith(data));
   }
 
   private $filter(data: T[]) {

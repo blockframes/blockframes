@@ -26,25 +26,25 @@
       </section>
     </form>
 
-    <section class="surface">
+    <section>
       <p>Contracts in the package</p>
-      <bf-table-filter [source]="contracts" [columns]="columns">
-        <ng-template colRef="titleId" let-titleId>
+      <bf-table [source]="contracts" pagination="50">
+        <ng-template colRef="titleId" label="Title ID" let-titleId sort>
           {{ titleId }}
         </ng-template>
-        <ng-template colRef="status" let-status>
-          <bf-tag>{{ status }}</bf-tag>
-        </ng-template>
-        <ng-template colRef="title.title.international" let-name>
+        <ng-template colRef="title.title.international" label="Title" let-name sort>
           {{ name | maxLength: 50 }}
         </ng-template>
-        <ng-template colRef="seller.denomination.public" let-name>
+        <ng-template colRef="status" label="Seller Approved" let-status sort>
+          <bf-tag>{{ status }}</bf-tag>
+        </ng-template>
+        <ng-template colRef="seller.denomination.public" label="Seller's name" let-name sort>
           {{ name }}
         </ng-template>
-        <ng-template colRef="seller.email" let-email>
+        <ng-template colRef="seller.email" label="Seller's email" let-email sort>
           {{ email }}
         </ng-template>
-        <ng-template colRef="id" let-id>
+        <ng-template colRef="id" label="Actions" let-id>
           <div fxLayout="row" fxLayoutAlign="flex-start center" fxLayoutGap="8px">
             <a mat-icon-button [routerLink]="['../', id,]" matTooltip="Edit">
               <mat-icon svgIcon="edit"></mat-icon>
@@ -54,7 +54,7 @@
             </button>
           </div>
         </ng-template>
-      </bf-table-filter>
+      </bf-table>
     </section>
   </ng-container>
 </ng-container>

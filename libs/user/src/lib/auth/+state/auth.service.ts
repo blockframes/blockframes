@@ -173,8 +173,10 @@ export class AuthService extends FireAuthService<AuthState> {
    * Sign in an user anonymously, he will get an uid and will be stored in firebase auth as anonymous
    * @returns Promise<firebase.auth.UserCredential>
    */
-  signInAnonymously() {
-    return firebase.auth().signInAnonymously();
+  async signInAnonymously() {
+    const creds = await firebase.auth().signInAnonymously();
+    this.store.updateAnonymousCredentials({ uid: creds.user.uid });
+    return creds;
   }
 
   /**

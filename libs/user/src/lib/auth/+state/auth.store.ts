@@ -9,6 +9,8 @@ import { AccessibilityTypes } from '@blockframes/utils/static-model/types';
 export { User } from '@blockframes/user/+state/user.firestore';
 
 export interface AnonymousCredentials extends Person {
+
+  uid: string;
   role?: 'guest' | 'organizer'; // Role for events
   email?: string,
   emailVerified?: boolean,

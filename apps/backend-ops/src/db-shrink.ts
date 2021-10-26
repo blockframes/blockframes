@@ -20,27 +20,19 @@ import { EIGHT_MINUTES_IN_MS } from "@blockframes/utils/maintenance";
 import type * as admin from 'firebase-admin';
 import type { ChildProcess } from "child_process";
 
-export enum USER {
-  Vincent = 'MDnN2GlVUeadIVJbzTToQQNAMWZ2',
-  Jean = '2OJUZoWtTVcew27YDZa8FQQdg5q2',
-  Ivo = 'K0ZCSd8bhwcNd9Bh9xJER9eP2DQ2',
-  Daphney = 'B8UsXliuxwY6ztjtLuh6f7UD1GV2',
-  Camilla = 'qFbytROWQYWJplzck42RLdgAr3K3'
-} // Temp this should be removed when fixtures are updated. Same as libs/e2e/src/lib/fixtures/users.ts but not included since this file is using generated fixtures non present during process
-
 /**
- * @TODO #6460 remove this
- *
- * npm run backend-ops importEmulator gs://ci-backups-blockframes/LATEST-ANON-DB
- *
- * to test db:
- *  npm run backend-ops importEmulator gs://bruce-backups/LATEST-ANON-SHRINKED-DB
- *
- * npm run backend-ops startMaintenance
- * npm run backend-ops importFirestore LATEST-ANON-SHRINKED-DB
- * npm run backend-ops syncUsers
- * npm run backend-ops endMaintenance
+ * Temp this should be removed when fixtures are updated. 
+ *  - libs/e2e/src/lib/fixtures/users.ts
+ *  - libs/e2e/src/lib/utils/screenings.ts
  */
+const USERS = [
+  'MDnN2GlVUeadIVJbzTToQQNAMWZ2',
+  '2OJUZoWtTVcew27YDZa8FQQdg5q2',
+  'K0ZCSd8bhwcNd9Bh9xJER9eP2DQ2',
+  'B8UsXliuxwY6ztjtLuh6f7UD1GV2',
+  'qFbytROWQYWJplzck42RLdgAr3K3',
+  'mVUZ097xoAeubsPiQlqrzgUF8y83'
+];
 
 type Timestamp = admin.firestore.Timestamp;
 type InspectionResult = { uid?: string, id?: string, collection: string, docId: string, attr: string };
@@ -275,7 +267,7 @@ export async function shrinkDb(db: FirebaseFirestore.Firestore) {
     }
   }
 
-  const e2eUsers = Object.values(staticUsers).concat(Object.values(USER));
+  const e2eUsers = Object.values(staticUsers).concat(USERS);
   const usersToKeep: string[] = Array.from(new Set(_usersLinkedToMovies.concat(e2eUsers))).filter(uid => _users.docs.find(d => d.id === uid));
   console.log('Users to keep', usersToKeep.length);
 

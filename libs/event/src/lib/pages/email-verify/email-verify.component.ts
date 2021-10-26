@@ -7,6 +7,7 @@ import { InvitationService } from '@blockframes/invitation/+state';
 import { Subscription } from 'rxjs';
 import { Intercom } from 'ng-intercom';
 
+
 @Component({
   selector: 'event-email-verify',
   templateUrl: './email-verify.component.html',
@@ -18,6 +19,7 @@ export class EmailVerifyComponent implements OnInit, OnDestroy {
   private invitationId: string;
   private sub: Subscription;
   public eventId: string;
+
   constructor(
     private authStore: AuthStore,
     private authQuery: AuthQuery,

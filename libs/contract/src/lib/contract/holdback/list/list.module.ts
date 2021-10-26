@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ListComponent } from './list.component';
 
 import { StaticGroupModule } from '@blockframes/ui/static-autocomplete/group/group.module';
-import { JoinPipeModule, MaxLengthModule, ToGroupLabelPipeModule, ToLabelModule, VersionPipeModule } from '@blockframes/utils/pipes';
-import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
+import { JoinPipeModule, MaxLengthModule, ToGroupLabelPipeModule, } from '@blockframes/utils/pipes';
+import { TableModule } from '@blockframes/ui/list/table/table.module';
 
 
 @NgModule({
@@ -12,7 +12,7 @@ import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filte
   exports: [ListComponent],
   imports: [
     CommonModule,
-    TableFilterModule,
+    TableModule,
     StaticGroupModule,
     JoinPipeModule,
     MaxLengthModule,

@@ -27,7 +27,7 @@ export class GuestTableComponent {
     'guestOrg': 'Guest org',
     'mode': 'Mode',
     'status': 'Status',
-    'guest.email': 'Email',
+    'guest': 'Email',
     'movie': 'Movie'
   };
 
@@ -36,9 +36,9 @@ export class GuestTableComponent {
     'date',
     'guest.firstName',
     'guest.lastName',
+    'guest',
     'mode',
-    'status',
-    'guest.email',
+    'status'
   ];
 
   @Input() set invitations(invitations: InvitationDetailed[]) {

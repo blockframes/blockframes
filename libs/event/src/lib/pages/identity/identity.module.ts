@@ -27,6 +27,7 @@ import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
     ImageModule,
     AppLogoModule,
     MatIconModule,
+
     RouterModule.forChild([{ path: '', component: EventIdenityComponent }]),
   ]
 })

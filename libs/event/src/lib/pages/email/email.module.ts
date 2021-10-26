@@ -14,6 +14,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
 import { ReactiveFormsModule } from '@angular/forms';
+
 @NgModule({
   declarations: [EmailComponent],
   imports: [
@@ -26,6 +27,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     ImageModule,
     AppLogoModule,
     ReactiveFormsModule,
+
     RouterModule.forChild([{ path: '', component: EmailComponent }]),
   ]
 })
