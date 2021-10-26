@@ -10,10 +10,11 @@ import { Paginator } from './paginator';
 /** Ascending sorting */
 function sortValue<T>(a: T, b: T) {
   if (typeof a === 'string' && typeof b === 'string') return a.toUpperCase() > b.toUpperCase() ? 1 : -1;
-  if (
-    (typeof a === 'number' && typeof b === 'number') ||
-    (typeof a === 'boolean' && typeof b === 'boolean')
-  ) return (a as number) - (b as number);
+  if (typeof a === 'number' && typeof b === 'number') return a - b;
+  if (typeof a === 'boolean' && typeof b === 'boolean') {
+    if (a && b) return 0;
+    return a ? 1 : -1;
+  }
   return 0;
 }
 
