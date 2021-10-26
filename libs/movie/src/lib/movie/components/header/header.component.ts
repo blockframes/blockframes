@@ -6,11 +6,16 @@ import {
   Directive,
   ViewEncapsulation,
   HostBinding,
+  OnInit,
+  OnDestroy,
 } from '@angular/core';
 
 // Blockframes
 import { Movie } from '@blockframes/movie/+state';
 import { Location } from '@angular/common';
+import { Router, NavigationEnd, Event } from '@angular/router';
+import { filter } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 
 function createMovieView(movie: Movie) {
   return {
@@ -34,12 +39,17 @@ type MovieHeaderView = ReturnType<typeof createMovieView>
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit, OnDestroy {
 
   public movieView: MovieHeaderView;
   private _movie: Movie;
+  private countRouteEvents = 1;
+  private sub: Subscription;
 
-  constructor(private location: Location) { }
+  constructor(
+    private location: Location,
+    private router: Router,
+  ) { }
 
   @Input() showBackArrow = true;
   @Input() set movie(movie: Movie) {
@@ -51,8 +61,18 @@ export class HeaderComponent {
 
   get movie() { return this._movie }
 
+  ngOnInit() {
+    this.sub = this.router.events
+      .pipe(filter((evt: Event) => evt instanceof NavigationEnd))
+      .subscribe(() => this.countRouteEvents++);
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
+  }
+
   goBack() {
-    this.location.back();
+    this.location.historyGo(-this.countRouteEvents);
   }
 }
 

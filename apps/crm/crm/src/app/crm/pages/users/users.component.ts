@@ -8,7 +8,6 @@ import { CrmQuery } from '@blockframes/admin/crm/+state/crm.query';
 import { OrganizationService, Organization } from '@blockframes/organization/+state';
 import { orgName } from '@blockframes/organization/+state';
 import { getAllAppsExcept, appName, getOrgModuleAccess, modules } from '@blockframes/utils/apps';
-import { territories } from '@blockframes/utils/static-model/static-model';
 import { take, map } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
 
@@ -66,6 +65,13 @@ export class UsersComponent implements OnInit {
 
   public goToEdit(user) {
     this.router.navigate([`c/o/dashboard/crm/user/${user.uid}`]);
+  }
+
+  public goToEditNewTab(uid) {
+    const url = this.router.serializeUrl(
+      this.router.createUrlTree([`c/o/dashboard/crm/user/${uid}`])
+    );
+    window.open(url, '_blank');
   }
 
   public async exportTable(users: CrmUser[]) {

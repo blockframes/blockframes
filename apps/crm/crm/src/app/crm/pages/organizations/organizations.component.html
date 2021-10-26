@@ -24,24 +24,12 @@
     <ng-template colRef="status" let-status sort>
       <bf-tag>{{ status }}</bf-tag>
     </ng-template>
-    <ng-template colRef="logo" let-logo>
-      <ng-container *ngIf="logo.storagePath; else nologo">
-        <img class="logo" [ref]="logo" asset="empty_poster.svg">
-      </ng-container>
-      <ng-template #nologo>
-        --
-      </ng-template>
-    </ng-template>
     <ng-template colRef="denomination.full" label="Name" sort let-fullName>
       {{ fullName }}
-    </ng-template>
-    <ng-template colRef="denomination.public" label="Full Name" sort let-publicName>
-      {{ publicName }}
     </ng-template>
     <ng-template colRef="addresses.main.country" defaultSort label="Country" sort let-country>
       {{ country ?? '--' | titlecase }}
     </ng-template>
-    <ng-template colRef="email" sort let-email>{{ email }}</ng-template>
     <ng-template colRef="activity" sort let-activity>
       {{ activity | toLabel: 'orgActivity'}}
     </ng-template>
