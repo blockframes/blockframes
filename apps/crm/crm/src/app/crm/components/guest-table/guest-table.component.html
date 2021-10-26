@@ -1,5 +1,5 @@
 <bf-table [source]="_invitations" useFilter pagination="100">
-  <ng-template colRef="date" label="Invitation date" let-date>
+  <ng-template colRef="date" label="Invitation date" let-date sort>
     {{ date | date: 'medium'}}
   </ng-template>
   <ng-template colRef="org" label="Org" let-org>

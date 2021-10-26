@@ -66,7 +66,7 @@
         useFilter
         clickable
         (rowClick)="goToMovieEdit($event)">
-        <ng-template colRef="id" label="Id" let-id>
+        <ng-template colRef="id" label="Id" let-id sort>
           {{id}}
         </ng-template>
         <ng-template colRef="poster" label="Internal Ref" let-posters>
@@ -77,13 +77,13 @@
             --
           </ng-template>
         </ng-template>
-        <ng-template colRef="internalRef" label="Poster" let-internalRef>
+        <ng-template colRef="internalRef" label="Poster" let-internalRef sort>
           {{internalRef}}
         </ng-template>
-        <ng-template colRef="title.international" label="International title" let-international>
+        <ng-template colRef="title.international" label="International title" let-international sort>
           {{international}}
         </ng-template>
-        <ng-template colRef="releaseYear" label="Release year" let-releaseYear>
+        <ng-template colRef="releaseYear" label="Release year" let-releaseYear sort>
           {{releaseYear}}
         </ng-template>
       </bf-table>

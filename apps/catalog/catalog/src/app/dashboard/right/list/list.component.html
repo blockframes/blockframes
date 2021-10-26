@@ -13,5 +13,5 @@
   <ng-template colRef="title.international" label="Title" let-title sort><b>{{ title }}</b></ng-template>
   <ng-template colRef="receipt" label="Receipt" let-receipt sort> <b>{{ receipt | currency }}</b></ng-template>
   <ng-template colRef="status" lable="Status" let-status>{{ status | toLabel: 'storeStatus' }}</ng-template>
-  <ng-template colRef="id" lable="ID" let-id>{{id}}</ng-template>
+  <ng-template colRef="id" lable="ID" let-id sort>{{id}}</ng-template>
 </bf-table>

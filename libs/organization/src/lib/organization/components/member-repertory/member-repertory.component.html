@@ -1,9 +1,6 @@
 <mat-card>
   <mat-card-title>Company Members</mat-card-title>
-  <bf-table
-    [source]="members"
-    pagination="50"
-    [useFilter]="showFilter">
+  <bf-table [source]="members" pagination="50" [useFilter]="showFilter">
     <ng-template colRef="firstName" label="First Name" let-firstName sort>
       <b>{{ firstName }}</b>
     </ng-template>
@@ -15,7 +12,7 @@
         {{ value }}
       </ng-template>
     </ng-container>
-    <ng-template colRef="role" label="Permissions" let-role>
+    <ng-template colRef="role" label="Permissions" let-role sort>
       {{ displayRole(role) }}
     </ng-template>
     <ng-template *ngIf="this.isSuperAdmin" colRef="uid" let-uid>
