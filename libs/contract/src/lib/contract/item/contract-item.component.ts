@@ -62,10 +62,7 @@ export class ContractItemComponent {
   }
 
   sortDuration(a: Duration, b: Duration) {
-    if (b.from === a.from) return 0;
-    if (b.from > a.from) return 1;
-    return -1
+    return a.from.getTime() - b.from.getTime();
   }
-
 }
 
