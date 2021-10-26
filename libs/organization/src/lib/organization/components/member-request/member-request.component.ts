@@ -21,18 +21,6 @@ export class MemberRequestComponent {
     this.users = invitations.map(invitation => invitation.fromUser);
   }
 
-  public invitationColumns = {
-    firstName: 'FirstName',
-    lastName: 'Lastname',
-    email: 'Email Address',
-    uid: 'Actions'
-  };
-
-  get initialColumns() {
-    return this.isAdmin
-      ? ['firstName', 'lastName', 'email', 'uid']
-      : ['firstName', 'lastName', 'email']
-  }
 
   public findRequest(uid: string) {
     return this.memberInvitations.find(invitation => (invitation.fromUser.uid === uid && invitation.type === 'joinOrganization' && invitation.mode === 'request'));
