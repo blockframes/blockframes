@@ -32,8 +32,7 @@ const users  =  [
   (userFixture.getByUID(USER.Vincent))
 ];
 
-//TODO: Issue: 6757 - Fix this issue separately
-describe.skip('User create a screening', () => {
+describe('User create a screening', () => {
   beforeEach(() => {
     clearDataAndPrepareTest('/');
     tomorrow = new Date(new Date().setDate(NOW.getDate() + 1));
@@ -83,6 +82,11 @@ describe.skip('User create a screening', () => {
     const p4: FestivalScreeningPage = p3.clickOnScreeningSchedule();
     cy.log('=>Test Screenings are listed');
     p4.assertScreeningsExists(eventNames);
+
+    // Handle the delay for the scenario where button "test-id=invitation-request"
+    // takes time to appear.
+    cy.log("Wait for event to be ready - button ");
+    p4.waitForUpdate(eventNames[0]);
 
     cy.log('=>Test Request invite for private screening');
     p4.clickRequestInvitation(eventNames[0], false);

@@ -20,6 +20,21 @@ export default class FestivalScreeningPage {
   }
 
   /**
+   * waitForUpdate - 
+   * @param screeningTitle 
+   */
+  waitForUpdate(screeningTitle: string) {
+    cy.get('festival-screening event-screening-item', {timeout: 30 * SEC})
+      .contains(screeningTitle)
+      .parent().parent().parent().then(($el) => {
+          //Wait for button element to appear
+          const el = cy.wrap($el);
+          el.get('button[test-id="invitation-request"]', {timeout: 30 * SEC})
+            .should('exist');
+      });
+  }
+
+  /**
    * clickRequestInvitation - Click the action button
    *   Private Event : Invitation request is sent
    *   Public Event  : Event is added to user's calendar
@@ -29,14 +44,14 @@ export default class FestivalScreeningPage {
     cy.get('festival-screening event-screening-item', {timeout: 30 * SEC})
       .contains(screeningTitle)
       .parent().parent().parent()
-      .find('button[test-id=invitation-request]')
+      .find('button[test-id="invitation-request"]')
       .should('exist');
 
     //Check for change of status to 'Accepted' after clicking..
     cy.get('festival-screening event-screening-item', {timeout: 30 * SEC})
       .contains(screeningTitle)
       .parent().parent().parent()
-      .find('button[test-id=invitation-request]').click();
+      .find('button[test-id="invitation-request"]').click();
 
     cy.wait(0.5 * SEC);
 
@@ -44,20 +59,20 @@ export default class FestivalScreeningPage {
       cy.get('festival-screening event-screening-item', {timeout: 120 * SEC})
         .contains(screeningTitle)
         .parent().parent().parent()
-        .find('[test-id=invitation-status]')
+        .find('[test-id="invitation-status"]')
         .should('not.contain', 'Pending');
 
       cy.get('festival-screening event-screening-item', {timeout: 90 * SEC})
         .contains(screeningTitle)
         .parent().parent().parent()
-        .find('[test-id=invitation-status]')
+        .find('[test-id="invitation-status"]')
         .should('contain', 'Accepted');
       cy.wait(2.5 * SEC);
     }
   }
 
   clickOnMenu() {
-    cy.get('festival-marketplace button[test-id=menu]', {timeout: 3 * SEC})
+    cy.get('festival-marketplace button[test-id="menu"]', {timeout: 3 * SEC})
       .click();
     cy.wait(1 * SEC);
   }

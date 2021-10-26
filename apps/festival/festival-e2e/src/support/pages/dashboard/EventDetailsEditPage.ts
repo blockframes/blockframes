@@ -44,7 +44,7 @@ export default class EventDetailsEditPage {
     if (!isPublic) {
       //last radio button correspond to "private" privacy status
       cy.get('event-details-edit [type="radio"]', { timeout: 3 * SEC })
-        .eq(2)
+        .eq(1)
         .check({force: true});
     } else {
       //first radio button correspond to "public" privacy status
@@ -55,7 +55,7 @@ export default class EventDetailsEditPage {
   }
 
   selectMovie(movieName: string) {
-    cy.get('event-details-edit mat-select[formControlName=titleId]', { timeout: 100 * SEC }).click();
+    cy.get('[formControlName="titleId"]', { timeout: 100 * SEC }).click();
     cy.get('mat-option').contains(movieName).click();
   }
 
