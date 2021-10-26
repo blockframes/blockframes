@@ -355,6 +355,7 @@ export async function formatTitle(sheetTab: SheetTab, movieService: MovieService
 
   const titles: MovieImportState[] = [];
 
+  // ! The order of the property should be the same as excel columns
   const fieldsConfig: FieldsConfigType = {
     /* a */ 'title.international': (value: string) => value,
     /* b */ 'title.original': (value: string) => value,

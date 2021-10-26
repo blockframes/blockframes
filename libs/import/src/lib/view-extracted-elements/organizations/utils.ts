@@ -211,6 +211,7 @@ export async function formatOrg(sheetTab: SheetTab, organizationService: Organiz
   const orgNameCache: Record<string, string> = {};
   const userNameCache: Record<string, string> = {};
 
+  // ! The order of the property should be the same as excel columns
   const fieldsConfig: FieldsConfigType = {
     /* a */ 'org.denomination.full': async (value: string) => {
       const trimmed = value.trim();

@@ -200,6 +200,7 @@ export async function formatContract(
 
   const contracts: ContractsImportState[] = [];
 
+  // ! The order of the property should be the same as excel columns
   const fieldsConfig: FieldsConfigType = {
     /* a */'contract.titleId': async (value: string) => {
       // TODO issue#6929

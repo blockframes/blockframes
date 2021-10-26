@@ -245,8 +245,8 @@ function flattenConcurrentRows(rawRows: string[][], concurrent: number) {
   }
 
   // Now that the array is flattened, we need to clean it as it contain a lot of undefined and empty arrays
-  const filtered = flattened.map(row => // for each row
-    row.map(column => { // for each column
+  const filtered = flattened.map(row => { // for each row
+    return row.map(column => { // for each column
 
       // remove undefined, transform empty arrays into undefined, and transform single element array into regular values
       const filteredValues = column.filter(value => !!value);
@@ -254,8 +254,8 @@ function flattenConcurrentRows(rawRows: string[][], concurrent: number) {
       if (filteredValues.length === 1) return filteredValues[0];
       return filteredValues;
 
-    })
-  );
+    });
+  });
 
   // Remove empty lines and return
   return filtered.filter(row => !!row.length);
