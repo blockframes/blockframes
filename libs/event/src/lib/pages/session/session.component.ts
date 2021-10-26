@@ -22,6 +22,7 @@ import { InvitationService } from '@blockframes/invitation/+state/invitation.ser
 import { InvitationQuery } from '@blockframes/invitation/+state';
 import { filter, scan } from 'rxjs/operators';
 import { finalizeWithValue } from '@blockframes/utils/observable-helpers';
+import { createUser } from '@blockframes/auth/+state';
 
 
 const isMeeting = (meetingEvent: Event): meetingEvent is Event<Meeting> => {
@@ -169,7 +170,7 @@ export class SessionComponent implements OnInit, OnDestroy {
         }
 
         // Manage redirect depending on attendees status & presence of meeting owners
-        const uid = this.authQuery.userId;
+        const uid = this.authQuery.userId || this.authQuery.anonymousUserId;
         if (event.isOwner) {
           const attendees = event.meta.attendees;
           if (attendees[uid] !== 'owner') {
@@ -179,6 +180,14 @@ export class SessionComponent implements OnInit, OnDestroy {
 
           const requestUids = Object.keys(attendees).filter(userId => attendees[userId] === 'requesting');
           const requests = await this.userService.getValue(requestUids);
+
+          if (event.accessibility === 'public' && requests.length !== requestUids.length) {
+            const anonymousUsers = requestUids.filter(r => !requests.find(u => u.uid === r));
+            anonymousUsers.forEach(uid => {
+              requests.push(createUser({ uid, lastName: 'anonymous', firstName: 'user' }));
+            })
+          }
+
           if (requests.length) {
             this.bottomSheet.open(DoorbellBottomSheetComponent, { data: { eventId: event.id, requests }, hasBackdrop: false });
           }
