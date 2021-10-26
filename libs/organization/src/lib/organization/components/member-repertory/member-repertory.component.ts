@@ -30,8 +30,9 @@ export class MemberRepertoryComponent {
 
   @Input() memberColumnsIndex = ['firstName', 'lastName', 'email', 'position', 'role'];
 
-  get initialColumns() {
-    return this.isSuperAdmin ? [...this.memberColumnsIndex, 'uid'] : this.memberColumnsIndex;
+
+  get variableColumns() {
+    return this.memberColumnsIndex.filter(col => !['firstName', 'lastName', 'role', 'uid', 'edit'].includes(col))
   }
 
   public displayRole(role: UserRole) {

@@ -22,6 +22,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   @ViewChild('slider') slider?: TemplateRef<unknown>;
   @ViewChild('orgs') orgs?: TemplateRef<unknown>;
   @ViewChild('orgTitles') orgTitles?: TemplateRef<unknown>;
+  @ViewChild('eventsSlider') eventsSlider?: TemplateRef<unknown>;
 
   @HostBinding('test-id="content"') testId
   public page$: Observable<CmsPage>;
@@ -48,6 +49,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       slider: this.slider,
       orgs: this.orgs,
       orgTitles: this.orgTitles,
+      eventsSlider: this.eventsSlider
     }
   }
 }

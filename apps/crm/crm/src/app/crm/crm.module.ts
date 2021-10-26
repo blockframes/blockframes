@@ -49,6 +49,7 @@ import { ConfirmInputModule } from '@blockframes/ui/confirm-input/confirm-input.
 import { StaticSelectModule } from "@blockframes/ui/static-autocomplete/select/static-select.module";
 import { DashboardModule } from './components/dashboard/dashboard.module';
 import { BreadCrumbModule } from './components/bread-crumb/bread-crumb.module';
+import { TableModule } from '@blockframes/ui/list/table/table.module';
 
 export const panelRoutes: Routes = [
   { path: '', redirectTo: 'overview', pathMatch: 'full' },
@@ -85,7 +86,7 @@ export const panelRoutes: Routes = [
     MatSelectModule,
     MatCheckboxModule,
 
-    TableFilterModule,
+    TableModule,
     ImageModule,
     AlgoliaAutocompleteModule,
     EventModule,
