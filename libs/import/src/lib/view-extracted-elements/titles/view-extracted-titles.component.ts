@@ -39,7 +39,7 @@ export class ViewExtractedTitlesComponent implements OnInit {
   async ngOnInit() {
     const orgId = !this.authQuery.isBlockframesAdmin ? this.authQuery.user.orgId : undefined;
 
-    const { moviesToCreate, moviesToUpdate } = await formatTitle(
+    const titles = await formatTitle(
       this.sheetTab,
       this.movieService,
       this.userService,
@@ -47,7 +47,6 @@ export class ViewExtractedTitlesComponent implements OnInit {
       getCurrentApp(this.router),
       orgId,
     );
-    this.moviesToCreate$.next(new MatTableDataSource(moviesToCreate));
-    this.moviesToUpdate$.next(new MatTableDataSource(moviesToUpdate));
+    this.moviesToCreate$.next(new MatTableDataSource(titles));
   }
 }
