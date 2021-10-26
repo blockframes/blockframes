@@ -15,7 +15,7 @@
   </header>
   <ng-container *ngIf="contract | getTermsFromContract | async as terms">
     <bf-table [source]="terms" useFilter pagination="50">
-      <ng-template colRef="duration" label="Terms" let-duration sort>
+      <ng-template colRef="duration" label="Terms" let-duration>
         {{ duration.from | date:'M/d/y' }} - {{ duration.to | date:'M/d/y' }}
       </ng-template>
       <ng-template colRef="territories" label="Territories" let-territories>
@@ -53,7 +53,7 @@
     <ng-content select="footer"></ng-content>
     <ng-container *ngIf="contract?.titleId| getTitleHoldbacks:orgId | async as existingHoldbacks">
       <ng-container *ngIf="terms | collidingHoldbacks: existingHoldbacks as collidingHoldbacks">
-        <div fxLayout fxLayoutAlign="center center" *ngIf="collidingHoldbacks?.length" >
+        <div fxLayout fxLayoutAlign="center center" *ngIf="collidingHoldbacks?.length">
           <button mat-flat-button (click)="openHoldbackModal(collidingHoldbacks)">
             <span>Other Buyers' Holdbacks</span>
           </button>
