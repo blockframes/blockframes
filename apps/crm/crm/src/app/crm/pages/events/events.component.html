@@ -9,6 +9,12 @@
 
   <bf-table-filter [source]="rows" [columns]="versionColumns" [initialColumns]="initialColumns"
     [filterPredicate]="filterPredicate" [pageSize]="50" showFilter showLoader showPaginator clickable (rowClick)="goToEdit($event)">
+    <ng-template colRef="id" let-id>
+      <span>{{ id }}</span>
+      <button mat-icon-button [cdkCopyToClipboard]="id" (click)="$event.stopPropagation()">
+        <mat-icon svgIcon="file_copy"></mat-icon>
+      </button>
+    </ng-template>
     <ng-template colRef="edit" let-edit>
       <a [routerLink]="edit.link">
         <mat-icon svgIcon="edit"></mat-icon>
