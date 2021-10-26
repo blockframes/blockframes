@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 // Modules
-import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 
 // Components
 import { MemberRequestComponent } from './member-request.component';
@@ -11,6 +10,7 @@ import { MemberRequestComponent } from './member-request.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
+import { TableModule } from '@blockframes/ui/list/table/table.module';
 
 @NgModule({
   declarations: [
@@ -18,7 +18,7 @@ import { MatCardModule } from '@angular/material/card';
   ],
   imports: [
     CommonModule,
-    TableFilterModule,
+    TableModule,
 
     // Material
     MatButtonModule,

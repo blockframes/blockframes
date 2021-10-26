@@ -38,7 +38,8 @@
     </member-repertory>
 
     <ng-container *ngIf="(invitationsFromOrganization$ | async) as invitationsMember">
-      <member-pending *ngIf="invitationsMember.length > 0"
+      <member-pending
+        *ngIf="invitationsMember.length > 0"
         [invitations]="invitationsMember"
         (declined)="deleteInvitation($event)"
         [isAdmin]="true">
@@ -46,7 +47,8 @@
     </ng-container>
 
     <ng-container *ngIf="(invitationsToJoinOrganization$ | async) as invitations">
-      <member-request *ngIf="invitations.length > 0"
+      <member-request
+        *ngIf="invitations.length > 0"
         (declined)="declineInvitation($event)"
         (accepted)="acceptInvitation($event)"
         [invitations]="invitations"
@@ -58,17 +60,16 @@
 
     <mat-card fxFlex>
       <h2>Movies</h2>
-      <bf-table-filter
+      <bf-table
         [source]="movies"
-        [columns]="versionColumnsMovies"
-        [initialColumns]="initialColumnsMovies"
-        [filterPredicate]="filterPredicateMovies"
-        showFilter
-        showLoader
-        showPaginator
+        pagination="50"
+        useFilter
         clickable
         (rowClick)="goToMovieEdit($event)">
-        <ng-template colRef="poster" let-posters>
+        <ng-template colRef="id" label="Id" let-id sort>
+          {{id}}
+        </ng-template>
+        <ng-template colRef="poster" label="Internal Ref" let-posters>
           <ng-container *ngIf="posters.storagePath; else noposter">
             <img class="poster" [ref]="posters" asset="empty_poster.svg">
           </ng-container>
@@ -76,7 +77,16 @@
             --
           </ng-template>
         </ng-template>
-      </bf-table-filter>
+        <ng-template colRef="internalRef" label="Poster" let-internalRef sort>
+          {{internalRef}}
+        </ng-template>
+        <ng-template colRef="title.international" label="International title" let-international sort>
+          {{international}}
+        </ng-template>
+        <ng-template colRef="releaseYear" label="Release year" let-releaseYear sort>
+          {{releaseYear}}
+        </ng-template>
+      </bf-table>
     </mat-card>
 
     <mat-card class="file-explorer">

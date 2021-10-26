@@ -14,11 +14,6 @@ import { startWith } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RightListComponent {
-  columns = {
-    id: 'Id',
-    status: 'Status'
-  };
-  initialColumns = ['id', 'status'];
   filter = new FormControl();
   filter$: Observable<string> = this.filter.valueChanges.pipe(startWith(this.filter.value || ''));
   contracts = []

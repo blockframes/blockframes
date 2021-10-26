@@ -4,12 +4,12 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { TableModule } from "@blockframes/ui/list/table/table.module";
 
 import { TitleListComponent } from './list.component';
 
 // Blockframes
-import { DisplayNameModule, NumberPipeModule, ToLabelModule } from '@blockframes/utils/pipes';
-import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
+import { DisplayNameModule, MaxLengthModule, NumberPipeModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { FilterByModule } from '@blockframes/utils/pipes/filter-by.pipe';
 import { NoTitleModule } from '@blockframes/ui/dashboard/components/no-title/no-title.module';
@@ -30,7 +30,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     CommonModule,
     ReactiveFormsModule,
     FlexLayoutModule,
-    TableFilterModule,
+    TableModule,
+    MaxLengthModule,
     ToLabelModule,
     ImageModule,
     FilterByModule,
