@@ -12,10 +12,6 @@ section button {
   padding: 12px;
 }
 
-.margin-right {
-  margin-right: 16px;
-}
-
 @include layout-bp(xs) {
   .mat-button {
     padding: 0;
