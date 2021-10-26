@@ -36,7 +36,7 @@ const testEventsScreening = [
 ];
 const testUsers = [{ uid: 'uidUserTest', email: 'A@fake.com' }, { uid: 'uidUserTestNotAccepted' }];
 const testOrgs = [{ id: 'org-A', email: 'org-A@fake.com' }];
-const testRequestAccessToken: RequestAccessToken = { eventId: 'eventTest' };
+const testRequestAccessToken: RequestAccessToken = { eventId: 'eventTest', credentials: { firstName: 'foo', lastName: 'bar' } };
 
 describe('Twilio test script', () => {
 
