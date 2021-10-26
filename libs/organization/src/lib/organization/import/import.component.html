@@ -22,7 +22,7 @@
 <section fxLayout="column" fxLayoutAlign="center center">
 
   <ng-container *ngIf="!sheetTab; else ready">
-    <import-spreadsheet importType="titles" (importEvent)="imported($event)"></import-spreadsheet>
+    <import-spreadsheet importType="organizations" (importEvent)="imported($event)"></import-spreadsheet>
   </ng-container>
   <ng-template #ready>
     <import-view-extracted-organizations [sheetTab]="sheetTab"></import-view-extracted-organizations>

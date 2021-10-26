@@ -267,9 +267,6 @@ export async function formatOrg(sheetTab: SheetTab, organizationService: Organiz
       if (!value) return new ValueWithWarning(value, warningMap['no-address-phone-number']);
       return value;
     },
-    /* m */ 'org.appAccess.catalog': (value: string) => formatAccess(value, 'unknown-catalog-module'),
-    /* n */ 'org.appAccess.festival': (value: string) => formatAccess(value, 'unknown-festival-module'),
-    /* o */ 'org.appAccess.financiers': (value: string) => formatAccess(value, 'unknown-financiers-module'),
     /* l */ 'superAdmin.email': async (value: string) => {
       const trimmed = value.trim().toLowerCase();
       if (!trimmed) throw new Error(errorMap['no-admin-email']);
@@ -279,6 +276,9 @@ export async function formatOrg(sheetTab: SheetTab, organizationService: Organiz
 
       return trimmed;
     },
+    /* m */ 'org.appAccess.catalog': (value: string) => formatAccess(value, 'unknown-catalog-module'),
+    /* n */ 'org.appAccess.festival': (value: string) => formatAccess(value, 'unknown-festival-module'),
+    /* o */ 'org.appAccess.financiers': (value: string) => formatAccess(value, 'unknown-financiers-module'),
   };
 
   const results = await extract<FieldsConfig>(sheetTab.rows, fieldsConfig);
