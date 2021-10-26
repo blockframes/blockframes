@@ -15,13 +15,13 @@
     <ng-template colRef="role" label="Permissions" let-role sort>
       {{ displayRole(role) }}
     </ng-template>
-    <ng-template *ngIf="this.isSuperAdmin" colRef="uid" let-uid>
+    <ng-template *ngIf="isSuperAdmin" colRef="uid" let-uid>
       <member-permissions [uid]="uid" (memberRemoved)="memberRemoved.emit(uid)"
         (updatedToSuperAdmin)="updatedToSuperAdmin.emit(uid)" (updatedToAdmin)="updatedToAdmin.emit(uid)"
         (updatedToMember)="updatedToMember.emit(uid)">
       </member-permissions>
     </ng-template>
-    <ng-template  *ngIf="this.isSuperAdmin" colRef="edit" label="Edit" let-edit>
+    <ng-template  *ngIf="isSuperAdmin" colRef="edit" label="Edit" let-edit>
       <a [routerLink]="edit?.link">
         <mat-icon svgIcon="edit"></mat-icon>
       </a>
