@@ -139,4 +139,15 @@ export class InvitationService extends CollectionService<InvitationState> {
       }
     }
   }
+
+  requestInvitationOnlyEventAccess(email: string, invitationId: string, eventId: string) {
+    const f = this.functions.httpsCallable('accessInvitationOnlyEvent');
+    return f({ mode: 'generate', email, invitationId, eventId }).toPromise();
+  }
+
+  validateInvitationOnlyEventAccess(code: string, invitationId: string) {
+    const f = this.functions.httpsCallable('accessInvitationOnlyEvent');
+    return f({ mode: 'verify', invitationId, code }).toPromise();
+  }
+
 }

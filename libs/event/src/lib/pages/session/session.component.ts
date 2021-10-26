@@ -22,6 +22,7 @@ import { InvitationService } from '@blockframes/invitation/+state/invitation.ser
 import { InvitationQuery } from '@blockframes/invitation/+state';
 import { filter, scan } from 'rxjs/operators';
 import { finalizeWithValue } from '@blockframes/utils/observable-helpers';
+import { createUser } from '@blockframes/auth/+state';
 
 
 const isMeeting = (meetingEvent: Event): meetingEvent is Event<Meeting> => {
@@ -29,7 +30,7 @@ const isMeeting = (meetingEvent: Event): meetingEvent is Event<Meeting> => {
 };
 
 @Component({
-  selector: 'festival-session',
+  selector: 'event-session',
   templateUrl: './session.component.html',
   styleUrls: ['./session.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -54,7 +55,6 @@ export class SessionComponent implements OnInit, OnDestroy {
   private countdownId: number = undefined;
 
   private watchTimeInterval: Subscription;
-  private invitationId: string;
   public isPlaying = false;
 
   constructor(
@@ -90,7 +90,8 @@ export class SessionComponent implements OnInit, OnDestroy {
 
           // if user is not a screening owner we need to track the watch time
           if (event.ownerOrgId !== this.authQuery.orgId) {
-            const [invitation] = this.invitationQuery.getAll({
+            // Try to get invitation the regular way
+            let [invitation] = this.invitationQuery.getAll({
               filterBy: invit => invit.eventId === event.id &&
                 (
                   invit.toUser?.uid === this.authQuery.userId ||
@@ -98,26 +99,34 @@ export class SessionComponent implements OnInit, OnDestroy {
                 )
             });
 
-            // this should never happen since previous checks & guard should have worked
-            if (!invitation) throw new Error(`Missing Screening Invitation`);
-            this.invitationId = invitation.id;
+            // If user is logged-in as anonymous
+            if (!invitation && this.authQuery.anonymousCredentials?.invitationId) {
+              const invitationId = this.authQuery.anonymousCredentials?.invitationId;
+              invitation = await this.invitationService.getValue(invitationId);
+            }
 
-            this.watchTimeInterval?.unsubscribe();
+            if (!invitation && event.accessibility !== 'public') {
+              // this should never happen since previous checks & guard should have worked
+              throw new Error('Missing Screening Invitation');
+            } else if (invitation) {
+              this.watchTimeInterval?.unsubscribe();
 
-            this.watchTimeInterval = interval(1000).pipe(
-              filter(() => !!this.isPlaying),
-              scan(watchTime => watchTime + 1, invitation.watchTime ?? 0),
-              finalizeWithValue(watchTime => {
-                if (watchTime !== undefined) this.invitationService.update(this.invitationId, { watchTime });
-              }),
-              filter(watchTime => watchTime % 60 === 0),
-            ).subscribe(watchTime => {
-              this.invitationService.update(this.invitationId, { watchTime });
-            });
+              this.watchTimeInterval = interval(1000).pipe(
+                filter(() => !!this.isPlaying),
+                scan(watchTime => watchTime + 1, invitation.watchTime ?? 0),
+                finalizeWithValue(watchTime => {
+                  if (watchTime !== undefined) this.invitationService.update(invitation.id, { watchTime });
+                }),
+                filter(watchTime => watchTime % 60 === 0),
+              ).subscribe(watchTime => {
+                this.invitationService.update(invitation.id, { watchTime });
+              });
+            }
+
           }
         }
 
-      // MEETING
+        // MEETING
       } else if (isMeeting(event)) {
 
         this.dynTitle.setPageTitle(event.title, 'Meeting');
@@ -161,18 +170,26 @@ export class SessionComponent implements OnInit, OnDestroy {
         }
 
         // Manage redirect depending on attendees status & presence of meeting owners
-        const uid = this.authQuery.userId;
+        const uid = this.authQuery.userId || this.authQuery.anonymousUserId;
         if (event.isOwner) {
           const attendees = event.meta.attendees;
           if (attendees[uid] !== 'owner') {
-            const meta: Meeting = { ...event.meta, attendees: { ...event.meta.attendees, [uid]: 'owner' }};
+            const meta: Meeting = { ...event.meta, attendees: { ...event.meta.attendees, [uid]: 'owner' } };
             this.service.update(event.id, { meta });
           }
 
           const requestUids = Object.keys(attendees).filter(userId => attendees[userId] === 'requesting');
           const requests = await this.userService.getValue(requestUids);
+
+          if (event.accessibility === 'public' && requests.length !== requestUids.length) {
+            const anonymousUsers = requestUids.filter(r => !requests.find(u => u.uid === r));
+            anonymousUsers.forEach(uid => {
+              requests.push(createUser({ uid, lastName: 'anonymous', firstName: 'user' }));
+            })
+          }
+
           if (requests.length) {
-            this.bottomSheet.open(DoorbellBottomSheetComponent, { data: { eventId: event.id, requests}, hasBackdrop: false });
+            this.bottomSheet.open(DoorbellBottomSheetComponent, { data: { eventId: event.id, requests }, hasBackdrop: false });
           }
 
           // If the current selected file hasn't any controls yet we should create them
@@ -191,7 +208,7 @@ export class SessionComponent implements OnInit, OnDestroy {
                   this.creatingControl$.next(true);
                   const control = await this.createPdfControl(selectedFile, event.id);
                   const controls = { ...event.meta.controls, [event.meta.selectedFile]: control };
-                  const meta  = { ...event.meta, controls };
+                  const meta = { ...event.meta, controls };
                   await this.service.update(event.id, { meta });
                   this.creatingControl$.next(false);
                   break;
@@ -199,7 +216,7 @@ export class SessionComponent implements OnInit, OnDestroy {
                   this.creatingControl$.next(true);
                   const control = await this.createVideoControl((selectedFile as StorageVideo), event.id);
                   const controls = { ...event.meta.controls, [event.meta.selectedFile]: control };
-                  const meta  = { ...event.meta, controls };
+                  const meta = { ...event.meta, controls };
                   await this.service.update(event.id, { meta });
                   this.creatingControl$.next(false);
                   break;
@@ -288,7 +305,7 @@ export class SessionComponent implements OnInit, OnDestroy {
   async createVideoControl(video: StorageVideo, eventId: string): Promise<MeetingVideoControl> {
     const getVideoInfo = this.functions.httpsCallable('privateVideo');
 
-    const { error, result} = await getVideoInfo({ video, eventId }).toPromise();
+    const { error, result } = await getVideoInfo({ video, eventId }).toPromise(); // @TODO #6756 meetings
     if (error) {
       // if error is set, result will contain the error message
       throw new Error(result);

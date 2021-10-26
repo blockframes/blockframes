@@ -6,9 +6,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 import { MarketplaceComponent } from './marketplace.component';
-import { EventActiveGuard } from '@blockframes/event/guard/event-active.guard';
-import { EventGuard } from '@blockframes/event/guard/event.guard';
-import { SessionGuard } from '@blockframes/event/guard/session.guard';
 import { MarketplaceLayoutModule } from '@blockframes/ui/layout/marketplace/marketplace.module';
 import { OrgAccessModule } from '@blockframes/organization/pipes/org-access.pipe';
 
@@ -75,32 +72,6 @@ const routes: Routes = [{
         path: 'calendar',
         loadChildren: () => import('./event/calendar/calendar.module').then(m => m.EventCalendarModule),
         data: { animation: 'list' },
-      }, {
-        path: ':eventId',
-        canActivate: [EventActiveGuard],
-        canDeactivate: [EventActiveGuard],
-        data: { animation: 'view' },
-        children: [{
-          path: '',
-          loadChildren: () => import('./event/view/view.module').then(m => m.EventViewModule),
-        }, {
-          path: 'session',
-          canActivate: [EventGuard, SessionGuard],
-          canDeactivate: [EventGuard],
-          loadChildren: () => import('./event/session/session.module').then(m => m.SessionModule),
-        },
-        {
-          path: 'lobby',
-          canActivate: [EventGuard],
-          canDeactivate: [EventGuard],
-          loadChildren: () => import('./event/lobby/lobby.module').then(m => m.LobbyModule),
-        },
-        {
-          path: 'ended',
-          canActivate: [EventGuard],
-          loadChildren: () => import('./event/ended/meeting-ended.module').then(m => m.MeetingEndedModule),
-        },
-        ]
       }]
     },
     {

@@ -4,12 +4,12 @@ import { ActivatedRoute } from '@angular/router';
 import { switchMap, pluck } from 'rxjs/operators';
 
 @Component({
-  selector: 'festival-event-view',
+  selector: 'event-view',
   templateUrl: './view.component.html',
   styleUrls: ['./view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EventViewComponent {
+export class EventViewComponent { // @TODO #6756 merge with ../layout/view
 
   event$ = this.route.params.pipe(
     pluck('eventId'),

@@ -14,7 +14,7 @@ import { AttendeeStatus, Meeting } from '@blockframes/event/+state/event.firesto
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
-  selector: 'festival-lobby',
+  selector: 'event-lobby',
   templateUrl: './lobby.component.html',
   styleUrls: ['./lobby.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -44,7 +44,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.event$ = this.eventQuery.selectActive();
     this.local$ = this.twilioQuery.selectLocal();
-    const name = displayName(this.authQuery.user);
+    const name = displayName(this.authQuery.user || this.authQuery.anonymousCredentials);
     this.twilioService.initLocal(name);
 
     this.sub = this.event$.subscribe(event => {
@@ -52,7 +52,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
         this.dynTitle.setPageTitle(event.title, 'Lobby');
         const attendees = (event.meta as Meeting).attendees;
         this.ownerIsPresent = Object.values(attendees).some(value => value === 'owner');
-        this.attendeeStatus = event.isOwner ? 'owner' : attendees[this.authQuery.userId];
+        this.attendeeStatus = event.isOwner ? 'owner' : attendees[this.authQuery.userId || this.authQuery.anonymousUserId];
         if (this.attendeeStatus === 'accepted') {
           this.router.navigate(['../', 'session'], { relativeTo: this.route });
         }
@@ -71,9 +71,9 @@ export class LobbyComponent implements OnInit, OnDestroy {
   }
 
   requestAccess() {
-    const uid = this.authQuery.userId;
+    const uid = this.authQuery.userId || this.authQuery.anonymousUserId;
     const event = this.eventQuery.getActive() as Event<Meeting>;
-    const meta: Meeting = { ...event.meta, attendees: { ...event.meta.attendees, [uid]: 'requesting' }};
+    const meta: Meeting = { ...event.meta, attendees: { ...event.meta.attendees, [uid]: 'requesting' } };
     this.eventService.update(event.id, { meta });
   }
 }

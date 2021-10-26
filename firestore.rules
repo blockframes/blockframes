@@ -206,6 +206,8 @@ service cloud.firestore {
         && isNotUpdatingField(['toUser', 'uid'])
         && isNotUpdatingField(['eventId'])
         && isNotUpdatingField(['type'])
+        && isNotUpdatingField(['accessAllowed'])
+        && isNotUpdatingField(['accessCode'])
       );
     }
 
@@ -406,17 +408,18 @@ service cloud.firestore {
         && isRequestFieldValueEqualToOrNotSetted(['id'], eventId)
         && isRequestFieldValueEqualTo(['ownerOrgId'], userOrgId())
         && notInMaintenance();
-      allow update: if userHasValidOrg()
-        && isNotUpdatingId('id', existingData().id)
-        && ( existingData().ownerOrgId == userOrgId()
-          || (
-            (
-              isRequestFieldValueEqualTo(['meta', 'attendees', userId()], 'requesting')
-              || isRequestFieldValueEqualTo(['meta', 'attendees', userId()], 'ended')
-              || isRemovingField(['meta', 'attendees', userId()])
+      allow update: if isNotUpdatingId('id', existingData().id)
+        && ( 
+            ( userHasValidOrg() && existingData().ownerOrgId == userOrgId())
+            || (
+              isSignedIn() && 
+              (
+                isRequestFieldValueEqualTo(['meta', 'attendees', userId()], 'requesting')
+                || isRequestFieldValueEqualTo(['meta', 'attendees', userId()], 'ended')
+                || isRemovingField(['meta', 'attendees', userId()])
+              )
+              && isOnlyChangingAttendeeStatus()
             )
-            && isOnlyChangingAttendeeStatus()
-          )
         )
         && notInMaintenance();
       allow delete: if userHasValidOrg()

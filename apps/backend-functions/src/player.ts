@@ -5,15 +5,13 @@ import { File as GFile } from '@google-cloud/storage';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 
 import { jwplayerApiV2 } from '@blockframes/firebase-utils';
-import { linkDuration } from '@blockframes/event/+state/event.firestore';
+import { EventDocument, EventMeta, linkDuration } from '@blockframes/event/+state/event.firestore';
 import { StorageVideo } from '@blockframes/media/+state/media.firestore';
 
 import { ErrorResultResponse } from './utils';
 import { getDocument } from './data/internals';
 import { isAllowedToAccessMedia } from './internals/media';
 import { jwplayerKey, jwplayerApiV2Secret, jwplayerSecret, enableDailyFirestoreBackup, playerId } from './environments/environment';
-
-
 
 interface ReadVideoParams {
 
@@ -27,6 +25,11 @@ interface ReadVideoParams {
    * Mandatory if the video is for a meeting.
    */
   eventId?: string,
+
+  /**
+   * The email of the user for 'invitation-only' events
+   */
+  email?: string,
 }
 
 export const getPrivateVideoUrl = async (
@@ -45,7 +48,15 @@ export const getPrivateVideoUrl = async (
     }
   }
 
-  const access = await isAllowedToAccessMedia(data.video, context.auth.uid, data.eventId);
+  if (!data.eventId) {
+    return {
+      error: 'UNKNOWN_EVENT',
+      result: 'No event in params, this parameter is mandatory!'
+    }
+  }
+
+  const eventData = await getDocument<EventDocument<EventMeta>>(`events/${data.eventId}`);
+  const access = await isAllowedToAccessMedia(data.video, context.auth.uid, eventData, data.email);
 
   if (!access) {
     return {

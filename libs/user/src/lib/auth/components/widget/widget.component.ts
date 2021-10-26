@@ -21,23 +21,26 @@ export class AuthWidgetComponent {
   isBfAdmin = this.userService.isBlockframesAdmin(this.query.getValue().uid);
   appVersion$ = this.db.doc<IVersionDoc>(dbVersionDoc).valueChanges();
   emulatorList = Object.keys(emulators).filter(key => !!emulators[key]);
-  emulators = this.emulatorList.length ? this.emulatorList.join(' - ') : 'none'
+  emulators = this.emulatorList.length ? this.emulatorList.join(' - ') : 'none';
+  anonymousUser$ = this.authQuery.anonymousCredentials$;
 
   constructor(
     private db: AngularFirestore,
+    private authQuery: AuthQuery,
     private service: AuthService,
     private query: AuthQuery,
     private organizationQuery: OrganizationQuery,
     private themeService: ThemeService,
-    private userService: UserService
+    private userService: UserService,
   ) { }
 
   public async logout() {
-    await this.service.signOut();
+    await this.service.deleteAnonymousUserOrSignOut();
   }
 
   setTheme({ checked }: MatSlideToggleChange) {
     const mode = checked ? 'dark' : 'light';
     this.themeService.theme = mode;
   }
+
 }

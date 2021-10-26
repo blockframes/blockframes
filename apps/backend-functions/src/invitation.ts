@@ -234,3 +234,39 @@ export async function getInvitationLinkedToEmail(email: string): Promise<boolean
 
   return false;
 }
+
+export const accessInvitationOnlyEvent = async (data: { mode: 'generate' | 'verify', invitationId: string, email?: string, eventId?: string, code?: string }, context: CallableContext) => {
+
+  if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
+
+  const invitation = await getDocument<InvitationBase<Date>>(`invitations/${data.invitationId}`);
+
+  if (!invitation) { throw new Error('Error: unknown invitation.'); }
+
+  if (data.mode === 'generate') {
+
+    if (invitation.eventId !== data.eventId) { throw new Error(`Error: invitation ${data.invitationId} is not for event ${data.eventId}.`); }
+
+    if (invitation.toUser?.email !== data.email) { throw new Error(`Error: invitation ${data.invitationId} is not for email ${data.email}.`); }
+
+    if (invitation.accessCode) { throw new Error(`Error: invitation ${data.invitationId} already have an access code.`); }
+
+    const code = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 8);
+    invitation.accessCode = code;
+    await db.doc(`invitations/${invitation.id}`).set(invitation);
+
+    // @TODO #6756 send code by email example : event/01HwnSypEDprUOr8rZpw/r/email-verify?i=00VT3vLb25mxcnQ6c9Ie&code=jvwretr
+    console.log(invitation.accessCode);
+
+    return true;
+  } else if (data.code) {
+    if (data.code === invitation.accessCode) {
+      invitation.accessAllowed = true;
+      await db.doc(`invitations/${invitation.id}`).set(invitation);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+}

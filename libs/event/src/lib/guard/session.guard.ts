@@ -26,12 +26,12 @@ export class SessionGuard implements CanActivate {
 
     // for meeting event we also nee to check "Request Access"
     if (event.type === 'meeting') {
-      const status = (event.meta as Meeting).attendees[this.authQuery.userId];
+      const status = (event.meta as Meeting).attendees[this.authQuery.userId || this.authQuery.anonymousUserId];
 
       if (status === 'accepted' || status === 'owner') {
         return true;
       }
-      return this.router.parseUrl(`/c/o/marketplace/event/${event.id}/lobby`);
+      return this.router.parseUrl(`/event/${event.id}/r/i/lobby`);
     }
 
     return true;
