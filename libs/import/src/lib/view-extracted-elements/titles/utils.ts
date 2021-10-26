@@ -440,7 +440,7 @@ export async function formatTitle(sheetTab: SheetTab, movieService: MovieService
 
     const title = createMovie({...data as any});
     // TODO issue#6929
-    titles.push({ errors,  movie: title });
+    titles.push({ errors: [ ...errors, ...warnings ],  movie: title });
   }
 
   return titles;

@@ -32,7 +32,7 @@ type DeepValue<T, K> =
 
 export type ParseFieldFn = (value: string | string[], item: any, state: any[], rowIndex?: number) => any | Promise<any>;
 export type ExtractConfig<T> = Partial<{
-  [key in DeepKeys<T>]: (value: string | string[], item: any, state: any[], rowIndex?: number) => DeepValue<T, key> | Promise<DeepValue<T, key>>;
+  [key in DeepKeys<T>]: (value: string | string[], item: any, state: any[], rowIndex?: number) => DeepValue<T, key> | ValueWithWarning<DeepValue<T, key>> | Promise<DeepValue<T, key> | ValueWithWarning<DeepValue<T, key>>>;
 }>
 
 export interface ExtractOutput<T> {

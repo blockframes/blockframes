@@ -147,46 +147,6 @@ interface FieldsConfig {
 
 type FieldsConfigType = ExtractConfig<FieldsConfig>;
 
-async function getOrgId(name: string, orgService: OrganizationService, cache: Record<string, string>) {
-  if (!name) return '';
-  // @TODO #6586 careful if you are on an anonymized db, centralOrgId.catalog org name will not be 'Archipel Content'
-  if (name === 'Archipel Content') return centralOrgId.catalog;
-
-  if (cache[name]) return cache[name];
-
-  const orgs = await orgService.getValue(ref => ref.where('denomination.full', '==', name));
-  const result = orgs.length === 1 ? orgs[0].id : '';
-  cache[name] = result;
-  return result;
-}
-
-async function getTitleId(name: string, titleService: MovieService, cache: Record<string, string>, userOrgId: string, blockframesAdmin: boolean) {
-  if (!name) return '';
-  if (cache[name]) return cache[name];
-
-  const titles = await titleService.getValue(ref => {
-    if (blockframesAdmin) {
-      return ref.where('title.international', '==', name);
-    } else {
-      return ref.where('title.international', '==', name)
-        .where('orgIds', 'array-contains', userOrgId);
-    }
-  });
-  const result =  titles.length === 1 ? titles[0].id : '';
-  cache[name] = result;
-  return result;
-}
-
-async function getContract(id: string, contractService: ContractService, cache: Record<string, (Mandate | Sale)>) {
-  if (!id) return;
-
-  if (cache[id]) return cache[id];
-
-  const contract = await contractService.getValue(id);
-  cache[id] = contract;
-  return contract;
-}
-
 
 function toTerm(rawTerm: FieldsConfig['term'], contractId: string, firestore: AngularFirestore): Term {
 
