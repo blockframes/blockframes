@@ -6,8 +6,9 @@ import { Scope, mediaGroup, territoriesGroup } from '@blockframes/utils/static-m
 import { MatDialog } from '@angular/material/dialog';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 import { HoldbackModalComponent } from '../holdback/modal/holdback-modal.component';
-import {  Holdback, Sale } from '../+state';
+import { Holdback, Sale } from '../+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
+import { Duration } from '@blockframes/contract/term/+state';
 
 
 @Component({
@@ -58,6 +59,12 @@ export class ContractItemComponent {
 
   openHoldbackModal(existingHoldbacks: Holdback[]) {
     this.dialog.open(HoldbackModalComponent, { data: { holdbacks: existingHoldbacks }, maxHeight: '80vh' });
+  }
+
+  sortDuration(a: Duration, b: Duration) {
+    if (b.from === a.from) return 0;
+    if (b.from > a.from) return 1;
+    return -1
   }
 
 }
