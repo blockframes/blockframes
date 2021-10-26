@@ -31,6 +31,7 @@
           <h6>{{ event.accessibility | toLabel:'accessibility' }} {{ event.type }}</h6>
           <pre class="mat-body-1">{{ event | eventRange }}</pre>
           <p class="mat-body-2">{{ event.meta.description }}</p>
+          <p *ngIf="invitation === null">This event has already started.</p>
           <ng-container *ngIf="event.isOwner; else notOwner">
             <h3>You are the owner of this event.</h3>
             <p>You can invite members and <a [routerLink]="editMeeting">edit the event</a> config in your dashboard.</p>
