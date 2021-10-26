@@ -13,6 +13,7 @@ import { AuthWidgetModule } from '@blockframes/auth/components/widget/widget.mod
 import { AppBarModule } from '@blockframes/ui/app-bar';
 import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
 import { FooterModule } from '@blockframes/ui/layout/footer/footer.module';
+import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
 
 // Guards
 import { EventAccessGuard } from '../../guard/event-access.guard';
@@ -111,6 +112,7 @@ const routes: Routes = [{
     AppBarModule,
     AppLogoModule,
     FooterModule,
+    MatLayoutModule,
 
     // Material
     MatToolbarModule,
