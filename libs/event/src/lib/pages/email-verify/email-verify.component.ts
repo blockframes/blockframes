@@ -45,6 +45,8 @@ export class EmailVerifyComponent implements OnInit, OnDestroy {
           this.authStore.updateAnonymousCredentials({ emailVerified: true });
           // Redirect user to event view
           this.router.navigate(['../i'], { relativeTo: this.route, queryParams: this.route.snapshot.queryParams });
+        } else {
+          this.invitationService.requestInvitationOnlyEventAccess(this.authQuery.anonymousCredentials.email, this.invitationId, this.eventQuery.getActiveId());
         }
       });
     } else {
@@ -58,11 +60,6 @@ export class EmailVerifyComponent implements OnInit, OnDestroy {
     }
   }
 
-  async click() {
-    await this.invitationService.requestInvitationOnlyEventAccess(this.authQuery.anonymousCredentials.email, this.invitationId, this.eventQuery.getActiveId());
-    console.log('mail sent !');
-  }
-
   openIntercom() {
     this.intercom.show();
   }
@@ -73,6 +70,6 @@ export class EmailVerifyComponent implements OnInit, OnDestroy {
 
   clickBack() {
     this.authStore.updateAnonymousCredentials({ role: undefined, firstName: undefined, lastName: undefined, email: undefined });
-    this.router.navigate(['../../'], { relativeTo: this.route });
+    this.router.navigate(['../../'], { relativeTo: this.route, queryParams: this.route.snapshot.queryParams });
   }
 }

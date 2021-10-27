@@ -45,6 +45,6 @@ export class EventLoginComponent implements OnInit {
 
   clickBack() {
     this.authStore.updateAnonymousCredentials({ role: undefined });
-    this.router.navigate(['../../'], { relativeTo: this.route });
+    this.router.navigate(['../../'], { relativeTo: this.route, queryParams: this.route.snapshot.queryParams });
   }
 }
