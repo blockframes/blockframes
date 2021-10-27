@@ -1,10 +1,12 @@
-import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, OnDestroy, Optional } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthQuery, AuthStore } from '@blockframes/auth/+state';
 import { EventQuery } from '@blockframes/event/+state';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { Subscription } from 'rxjs';
+import { Intercom } from 'ng-intercom';
+
 
 @Component({
   selector: 'event-email-verify',
@@ -14,8 +16,6 @@ import { Subscription } from 'rxjs';
 })
 export class EmailVerifyComponent implements OnInit, OnDestroy {
 
-  private invitationId: string;
-  private sub: Subscription;
   constructor(
     private authStore: AuthStore,
     private authQuery: AuthQuery,
@@ -23,8 +23,13 @@ export class EmailVerifyComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     private invitationService: InvitationService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    @Optional() private intercom: Intercom,
   ) { }
+
+  private invitationId: string;
+  private sub: Subscription;
+  public eventId = this.eventQuery.getActiveId();
 
   async ngOnInit() {
     const { i, code } = this.route.snapshot.queryParams;
@@ -40,6 +45,8 @@ export class EmailVerifyComponent implements OnInit, OnDestroy {
           this.authStore.updateAnonymousCredentials({ emailVerified: true });
           // Redirect user to event view
           this.router.navigate(['../i'], { relativeTo: this.route, queryParams: this.route.snapshot.queryParams });
+        } else if (!i.accessCode) {
+          this.invitationService.requestInvitationOnlyEventAccess(this.authQuery.anonymousCredentials.email, this.invitationId, this.eventQuery.getActiveId());
         }
       });
     } else {
@@ -48,11 +55,21 @@ export class EmailVerifyComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe()
+    if (this.invitationId) {
+      this.sub.unsubscribe();
+    }
   }
 
-  async click() {
-    await this.invitationService.requestInvitationOnlyEventAccess(this.authQuery.anonymousCredentials.email, this.invitationId, this.eventQuery.getActiveId());
-    console.log('mail sent !');
+  openIntercom() {
+    this.intercom.show();
+  }
+
+  refresh() {
+    window.location.reload();
+  }
+
+  clickBack() {
+    this.authStore.updateAnonymousCredentials({ role: undefined, firstName: undefined, lastName: undefined, email: undefined });
+    this.router.navigate(['../../'], { relativeTo: this.route, queryParams: this.route.snapshot.queryParams });
   }
 }
