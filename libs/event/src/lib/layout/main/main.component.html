@@ -8,7 +8,7 @@
     </mat-toolbar>
     <ng-content select="aside"></ng-content>
   </mat-sidenav>
-
+  
   <mat-sidenav-content fxLayout="column" [appContainer]="app" (toggle)="sidenav.toggle()" layout>
     <!-- TOOLBAR -->
     <app-bar #app>
@@ -28,6 +28,7 @@
         </a>
         <div fxLayout="row" fxLayoutGap="24px">
           <ng-container *ngIf="(user$ | async)">
+
             <mat-divider vertical></mat-divider>
             <!-- Invitations -->
             <a mat-icon-button routerLink="/c/o/marketplace/invitations" test-id="invitations-link">
@@ -37,6 +38,7 @@
               <ng-template #noInvitation>
                 <mat-icon svgIcon="invitation"></mat-icon>
               </ng-template>
+
             </a>
             <!-- Notifications -->
             <a mat-icon-button routerLink="/c/o/marketplace/notifications" test-id="notifications-link">

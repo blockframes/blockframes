@@ -1,3 +1,22 @@
-:host {
-  display: block;
+section {
+  width: 100vw;
+  height: 100vh;
+  background-position: center;
+  background-repeat: no-repeat;
+  
+  a[app-logo] {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+  }
+
+  .surface {
+    display: inline-block;
+    padding: 56px;
+    text-align: center;
+
+    button p {
+      color: var(--primary);
+    }
+  }
 }

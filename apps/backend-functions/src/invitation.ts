@@ -171,12 +171,9 @@ export const inviteUsers = async (data: UserInvitation, context: CallableContext
 
 
   for (const email of data.emails) {
-    const { type, mode, fromOrg } = invitation;
     const invitationId = db.collection('invitations').doc().id;
-
+    const { type, mode, fromOrg } = invitation;
     const eventData = getEventEmailData(event, email, invitationId);
-
-
     const isLastIndex = await getOrInviteUserByMail(
       email,
       { id: invitationId, type, mode, fromOrg },
