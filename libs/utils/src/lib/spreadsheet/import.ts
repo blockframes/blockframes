@@ -1,5 +1,8 @@
-import { SpreadsheetImportError } from 'libs/import/src/lib/utils';
+
 import { WorkBook, WorkSheet, utils, read } from 'xlsx';
+
+import { MandatoryError, SpreadsheetImportError } from 'libs/import/src/lib/utils';
+
 import { getKeyIfExists } from '../helpers';
 import { parseToAll, Scope } from '../static-model';
 
@@ -190,17 +193,30 @@ export async function extract<T>(rawRows: string[][], config: ExtractConfig<T> =
   return results;
 }
 
-export function getStatic(scope: Scope, value: string, separator:string) {
-  if (!value) return []
+export function getStatic(scope: Scope, value: string, separator:string, { field, name }: { field: string, name: string }) {
+  if (!value) return [];
   if (value.toLowerCase() === 'all') return parseToAll(scope, 'all');
-  return split(value,separator).map(v => getKeyIfExists(scope, v)).filter(v => !!v);
+  const raw = split(value,separator).map(v => getKeyIfExists(scope, v));
+  const hasWrongData = raw.some(v => !!v);
+  const values = raw.filter(v => !!v);
+  if (hasWrongData) return new ValueWithWarning(values, {
+    type: 'warning',
+    field,
+    name: `Wrong ${name}`,
+    reason: `Be careful, one or more values was wrong and will be omitted.`,
+    hint: 'Please check the corresponding sheet field.'
+  });
+  return values
 }
 
-export function getStaticList(scope: Scope, value: string, separator:string, error?: SpreadsheetImportError) {
-  const values = getStatic(scope, value, separator);
-  if (error && !values.length) {
-    return new ValueWithWarning(values, error);
-  }
+export function getStaticList(scope: Scope, value: string, separator:string, errorData: { field: string, name: string }, mandatory = true) {
+  const values = getStatic(scope, value, separator, errorData);
+  if (
+    mandatory && (
+      ('length' in values && values.length === 0) ||
+      ('value' in values && values.value.length === 0)
+    )
+  ) throw new MandatoryError(errorData);
   return values;
 }
 

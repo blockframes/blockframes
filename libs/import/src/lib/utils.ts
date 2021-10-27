@@ -92,6 +92,17 @@ export async function getContract(id: string, contractService: ContractService, 
   return contract;
 }
 
+export async function checkParentTerm(id: string, contractService: ContractService, cache: Record<string, boolean>) {
+  if (!id) return false;
+  if (cache[id]) return cache[id];
+
+  const contract = await contractService.getValue(ref =>
+    ref.where('type', '==', 'mandate').where('termIds', 'array-contains', id)
+  );
+  cache[id] = !!contract;
+  return !!contract;
+}
+
 
 export async function getUserId(email: string, userService: UserService, cache: Record<string, string>) {
   if (!email) return '';
@@ -101,4 +112,97 @@ export async function getUserId(email: string, userService: UserService, cache: 
   const result =  user.length === 1 ? user[0].email : '';
   cache[email] = result;
   return result;
+}
+
+export async function userExist(id: string, userService: UserService, cache: Record<string, boolean>) {
+  if (!id) return false;
+  if (cache[id]) return cache[id];
+
+  const user = await userService.getValue(id);
+  cache[id] = !!user;
+  return !!user;
+}
+
+// Time is MM/DD/YYYY
+function convertDate(time: string) {
+  if (isNaN(+time)) {
+    const [month, day, year] = time.split(/[/.]+/).map(t => parseInt(t, 10));
+    return new Date(year, month - 1, day, 0, 0, 0);
+  } else {
+    return new Date(Math.round(+time - 25569) * 86400 * 1000);
+  }
+}
+
+export function getDate(value: string, errorData: { field: string, name: string }) {
+  const date = convertDate(value);
+  if (isNaN(date.getTime())) throw new WrongValueError(errorData);
+  return date;
+}
+
+export class MandatoryError extends Error {
+  constructor({ field, name }: { field: string, name: string }) {
+    super(JSON.stringify({
+      type: 'error',
+      field,
+      name: `Missing ${name}`,
+      reason: 'Mandatory field is missing.',
+      hint: 'Please fill in the corresponding sheet field.'
+    }));
+  }
+}
+
+export class UnknownEntityError extends Error {
+  constructor({ field, name }: { field: string, name: string }) {
+    super(JSON.stringify({
+      type: 'error',
+      field,
+      name: `Unknown ${name}`,
+      reason: `${name} should exist in the app but we couldn't find it.`,
+      hint: `Please check the corresponding sheet field for mistake, create the corresponding ${name} if you can, or contact us.`
+    }));
+  }
+}
+
+export class WrongValueError extends Error {
+  constructor({ field, name }: { field: string, name: string }) {
+    super(JSON.stringify({
+      type: 'error',
+      field,
+      name: `Wrong ${name}`,
+      reason: `${name} should be a value of the given list.`,
+      hint: `Please check the corresponding sheet field for mistakes, be sure to select a value form the list.`
+    }));
+  }
+}
+
+export class AlreadyExistError extends Error {
+  constructor({ field, name }: { field: string, name: string }) {
+    super(JSON.stringify({
+      type: 'error',
+      field,
+      name: `${name} already exist`,
+      reason: `We could not create a this ${name} because it already exist on the app.`,
+      hint: `Please edit the corresponding sheet field with a different value.`
+    }));
+  }
+}
+
+export function optionalWarning({ field, name }: { field: string, name: string }): SpreadsheetImportError {
+  return {
+    type: 'warning',
+    field,
+    name: `Missing ${name}`,
+    reason: 'Optional field is missing.',
+    hint: 'Fill in the corresponding sheet field to add a value.'
+  };
+}
+
+export function adminOnlyWarning({ field, name }: { field: string, name: string }): SpreadsheetImportError {
+  return {
+    type: 'warning',
+    field,
+    name: `${name} is only for Admins`,
+    reason: 'This field is reserved for admins, it\'s value will be omitted.',
+    hint: 'Remove the corresponding sheet field to silence this warning.'
+  };
 }
