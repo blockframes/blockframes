@@ -10,7 +10,7 @@ import { IncomePipeModule } from '@blockframes/contract/income/pipe';
 import { MaxLengthModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { GetOrgPipeModule } from '@blockframes/organization/pipes/get-org.pipe';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
-import { ContractItemModule } from '@blockframes/contract/contract/item/contract-item.module';
+import { ContractItemModule } from '@blockframes/contract/contract/components/item/contract-item.module';
 import { HoldbackListModule } from '@blockframes/contract/contract/holdback/list/list.module';
 import { ConfirmDeclineComponentModule } from '@blockframes/contract/contract/components/confirm-decline/confirm-decline.module';
 
@@ -20,7 +20,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import {MatSelectModule} from '@angular/material/select';
+import { MatSelectModule } from '@angular/material/select';
 
 import { CatalogSaleViewComponent } from './view.component';
 

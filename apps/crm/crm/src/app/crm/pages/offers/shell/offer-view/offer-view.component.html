@@ -28,7 +28,7 @@
 
     <section>
       <p>Contracts in the package</p>
-      <bf-table [source]="contracts" pagination="50">
+      <bf-table [source]="contracts" pagination="50" useFilter>
         <ng-template colRef="titleId" label="Title ID" let-titleId sort>
           {{ titleId }}
         </ng-template>
