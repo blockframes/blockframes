@@ -104,10 +104,10 @@ export async function parse(
       }
     }
   } else {
-    const value = Array.isArray(values) ? values[0] : values; // ? when is this supposed to happen ?
+    const value = Array.isArray(values) ? values[0] : values;
     try {
       if (last) {
-        const result = await transform(value, item, state, rowIndex);
+        const result = await transform(value.trim(), item, state, rowIndex);
         if (result instanceof ValueWithWarning) {
           warnings.push(result.warning);
           item[segment] = result.value;
