@@ -1,12 +1,12 @@
 
-import { createUser } from '@blockframes/auth/+state';
-import { UserService } from '@blockframes/user/+state';
+import { createUser, User } from '@blockframes/auth/+state';
 import { Territory } from '@blockframes/utils/static-model';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
+import { UserService } from '@blockframes/user/+state';
 import { Module, ModuleAccess, modules } from '@blockframes/utils/apps';
 import { extract, ExtractConfig, SheetTab, ValueWithWarning } from '@blockframes/utils/spreadsheet';
 import { createOrganization, Organization, OrganizationService } from '@blockframes/organization/+state';
-import { AlreadyExistError, getOrgId, getUserId, MandatoryError, optionalWarning, OrganizationsImportState, SpreadsheetImportError, UnknownEntityError, WrongValueError } from '@blockframes/import/utils';
+import { AlreadyExistError, getOrgId, getUser, MandatoryError, optionalWarning, OrganizationsImportState, WrongValueError } from '@blockframes/import/utils';
 
 const separator = ',';
 
@@ -59,28 +59,26 @@ export async function formatOrg(sheetTab: SheetTab, organizationService: Organiz
 
   // Cache to avoid  querying db every time
   const orgNameCache: Record<string, string> = {};
-  const userNameCache: Record<string, string> = {};
+  const userCache: Record<string, User> = {};
 
   // ! The order of the property should be the same as excel columns
   const fieldsConfig: FieldsConfigType = {
     /* a */ 'org.denomination.full': async (value: string) => {
-      const trimmed = value.trim();
-      if (!trimmed) throw new MandatoryError({ field: 'org.denomination.full', name: 'Organization Name' });
-      const exist = await getOrgId(trimmed, organizationService, orgNameCache);
+      if (!value) throw new MandatoryError({ field: 'org.denomination.full', name: 'Organization Name' });
+      const exist = await getOrgId(value, organizationService, orgNameCache);
       if (exist) throw new AlreadyExistError({ field: 'org.denomination.full', name: 'Organization Name' });
-      return trimmed
+      return value
     },
     /* b */ 'org.denomination.public': async (value: string, data: Partial<FieldsConfig>) => {
-      const trimmed = value.trim();
-      if (!trimmed) return new ValueWithWarning(data.org.denomination.full ?? '', optionalWarning({ field: 'org.denomination.public', name: 'Organization Public Name' }));
-      const exist = await getOrgId(trimmed, organizationService, orgNameCache);
+      if (!value) return new ValueWithWarning(data.org.denomination.full ?? '', optionalWarning({ field: 'org.denomination.public', name: 'Organization Public Name' }));
+      const exist = await getOrgId(value, organizationService, orgNameCache);
       if (exist) throw new AlreadyExistError({ field: 'org.denomination.public', name: 'Organization Public Name' });
-      return trimmed;
+      return value;
     },
     /* c */ 'org.email': async (value: string) => {
-      const trimmed = value.trim().toLowerCase();
-      if (!trimmed) throw new MandatoryError({ field: 'org.email', name: 'Contract Email' });
-      return trimmed;
+      const lower = value.toLowerCase();
+      if (!lower) throw new MandatoryError({ field: 'org.email', name: 'Contract Email' });
+      return lower;
     },
     /* d */ 'org.activity': (value: string) => {
       if (!value) return new ValueWithWarning(value, optionalWarning({ field: 'org.activity', name: 'Activity' }));
@@ -119,13 +117,13 @@ export async function formatOrg(sheetTab: SheetTab, organizationService: Organiz
       return value;
     },
     /* l */ 'superAdmin.email': async (value: string) => {
-      const trimmed = value.trim().toLowerCase();
-      if (!trimmed) throw new MandatoryError({ field: 'superAdmin.email', name: 'Admin Email' });
+      const lower = value.toLowerCase();
+      if (!lower) throw new MandatoryError({ field: 'superAdmin.email', name: 'Admin Email' });
 
-      const exist = await getUserId(trimmed, userService, userNameCache);
+      const exist = await getUser({ email: lower}, userService, userCache);
       if (exist) throw new AlreadyExistError({ field: 'superAdmin.email', name: 'Admin Email' });
 
-      return trimmed;
+      return lower;
     },
     /* m */ 'org.appAccess.catalog': (value: string) => formatAccess(value, { field: 'org.appAccess.catalog', name: 'Catalog Access' }),
     /* n */ 'org.appAccess.festival': (value: string) => formatAccess(value, { field: 'org.appAccess.festival', name: 'Festival Access' }),
