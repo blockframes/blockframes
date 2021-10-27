@@ -3,6 +3,8 @@ import { CollectionGuard, CollectionGuardConfig } from "akita-ng-fire";
 import { EventState } from "../+state/event.store";
 import { EventService } from "../+state/event.service";
 import { ActivatedRouteSnapshot } from "@angular/router";
+import { catchError } from "rxjs/operators";
+import { of } from "rxjs";
 
 @Injectable({ providedIn: 'root' })
 @CollectionGuardConfig({ awaitSync: true })
@@ -14,6 +16,6 @@ export class EventActiveGuard extends CollectionGuard<EventState> {
 
   // Sync and set active
   sync(next: ActivatedRouteSnapshot) {
-    return this.service.syncActive({ id: next.params.eventId });
+    return this.service.syncActive({ id: next.params.eventId }).pipe(catchError(() => of()));
   }
 }

@@ -248,19 +248,15 @@ async function createNotificationIfNotExists(invitations: InvitationDocument[], 
 export async function isUserInvitedToEvent(userId: string, event: EventDocument<EventMeta>, email?: string) {
   const db = admin.firestore();
 
-  const acceptedInvitations = db.collection('invitations')
-    .where('type', '==', 'attendEvent')
-    .where('eventId', '==', event.id)
-    .where('toUser.uid', '==', userId)
-    .where('status', '==', 'accepted')
-    .where('mode', '==', 'invitation');
+  if (event.accessibility === 'public') return true;
 
-  const acceptedRequests = db.collection('invitations')
+  const accepted = db.collection('invitations')
     .where('type', '==', 'attendEvent')
     .where('eventId', '==', event.id)
-    .where('fromUser.uid', '==', userId)
-    .where('status', '==', 'accepted')
-    .where('mode', '==', 'request');
+    .where('status', '==', 'accepted');
+
+  const acceptedInvitations = accepted.where('toUser.uid', '==', userId).where('mode', '==', 'invitation');
+  const acceptedRequests = accepted.where('fromUser.uid', '==', userId).where('mode', '==', 'request');
 
   const [invitations, requests] = await Promise.all([
     acceptedInvitations.get(),
@@ -270,16 +266,9 @@ export async function isUserInvitedToEvent(userId: string, event: EventDocument<
   if (!(invitations.size === 0 && requests.size === 0)) return true;
 
   if (email && event.accessibility === 'invitation-only') {
-    const emailInvitations = await db.collection('invitations')
-      .where('type', '==', 'attendEvent')
-      .where('eventId', '==', event.id)
-      .where('toUser.email', '==', email)
-      .where('status', '==', 'accepted')
-      .where('mode', '==', 'invitation')
-      .where('accessAllowed', '==', true).get();
-
+    const emailInvitations = await accepted.where('toUser.email', '==', email).where('mode', '==', 'invitation').get();
     return emailInvitations.size > 0;
   }
 
-  return true;
+  return false;
 }

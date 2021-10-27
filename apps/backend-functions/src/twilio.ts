@@ -6,18 +6,18 @@ import { EventDocument, Meeting } from "@blockframes/event/+state/event.firestor
 import { ErrorResultResponse, displayName } from "@blockframes/utils/utils";
 
 import { projectId, twilioAccountSid, twilioAccountSecret, twilioApiKeySecret, twilioApiKeySid } from './environments/environment';
-import { hasUserAcceptedEvent } from "./internals/invitations/meetings";
 import Twilio from "twilio/lib/rest/Twilio";
 import AccessToken, { VideoGrant } from "twilio/lib/jwt/AccessToken";
 import { firebaseRegion } from "./internals/utils";
 import * as admin from 'firebase-admin';
 import { getUser } from "./internals/utils";
 import { Request, Response } from "firebase-functions";
-import { Person } from "@blockframes/utils/common-interfaces/identity";
+import { isUserInvitedToEvent } from "./internals/invitations/events";
+import { PublicUser } from "@blockframes/user/types";
 
 export interface RequestAccessToken {
   eventId: string,
-  credentials: Person,
+  credentials: PublicUser,
 }
 
 /**
@@ -79,7 +79,7 @@ export const getTwilioAccessToken = async (
   }
 
   // Check if user is owner or is invited to event
-  if (event.accessibility !== 'public' && !(await isOwner() || await hasUserAcceptedEvent(context.auth.uid, eventId))) {
+  if (!(await isOwner() || await isUserInvitedToEvent(context.auth.uid, event, data.credentials.email))) {
     return {
       error: 'NOT_ACCEPTED',
       result: `You are not the owner of the event or you have not been invited to see this meeting`
@@ -139,9 +139,11 @@ export const twilioWebhook = async (req: Request, res: Response) => {
 
     if (req.body.StatusCallbackEvent === 'participant-disconnected') {
 
-      const user = JSON.parse(req.body.ParticipantIdentity) as { id: string, displayName: string };
-      eventRef.update({ [`meta.attendees.${user.id}`]: 'ended' });
-
+      const { id: userId } = JSON.parse(req.body.ParticipantIdentity) as { id: string };
+      const event = eventSnap.data() as EventDocument<Meeting>;
+      const attendee = event.meta?.attendees[userId];
+      attendee.status = 'ended';
+      eventRef.update({ [`meta.attendees.${userId}`]: attendee });
     } else {
       eventRef.update({ 'meta.attendees': {} });
     }

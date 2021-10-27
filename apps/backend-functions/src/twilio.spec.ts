@@ -22,7 +22,8 @@ const testEvents = [
     start: new Date(),
     end: new Date(),
     meta: { organizerUid: 'uidUserTest' },
-    ownerOrgId: 'idOrgTest'
+    ownerOrgId: 'idOrgTest',
+    accessibility: 'private'
   }
 ];
 const testEventsScreening = [
@@ -31,12 +32,20 @@ const testEventsScreening = [
     type: 'screening',
     start: new Date(),
     end: new Date(),
-    meta: { organizerUid: 'uidUserTest' }
+    meta: { organizerUid: 'uidUserTest' },
+    accessibility: 'private'
   }
 ];
-const testUsers = [{ uid: 'uidUserTest', email: 'A@fake.com' }, { uid: 'uidUserTestNotAccepted' }];
+const acceptedUser = {
+  uid: 'uidUserTest',
+  email: 'A@fake.com',
+  firstName: 'foo',
+  lastName: 'bar'
+};
+
+const testUsers = [acceptedUser, { uid: 'uidUserTestNotAccepted' }];
 const testOrgs = [{ id: 'org-A', email: 'org-A@fake.com' }];
-const testRequestAccessToken: RequestAccessToken = { eventId: 'eventTest', credentials: { firstName: 'foo', lastName: 'bar' } };
+const testRequestAccessToken: RequestAccessToken = { eventId: 'eventTest', credentials: acceptedUser };
 
 describe('Twilio test script', () => {
 

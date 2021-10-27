@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { Observable, Subscription } from 'rxjs';
 
-import { Event, EventQuery, EventService } from '@blockframes/event/+state';
+import { createMeetingAttendee, Event, EventQuery, EventService } from '@blockframes/event/+state';
 import { TwilioService } from '@blockframes/event/components/meeting/+state/twilio.service';
 import { AuthQuery } from '@blockframes/auth/+state';
 import { LocalAttendee, TrackKind } from '@blockframes/event/components/meeting/+state/twilio.model';
@@ -51,8 +51,8 @@ export class LobbyComponent implements OnInit, OnDestroy {
       if (event.type === 'meeting') {
         this.dynTitle.setPageTitle(event.title, 'Lobby');
         const attendees = (event.meta as Meeting).attendees;
-        this.ownerIsPresent = Object.values(attendees).some(value => value === 'owner');
-        this.attendeeStatus = event.isOwner ? 'owner' : attendees[this.authQuery.userId || this.authQuery.anonymousUserId];
+        this.ownerIsPresent = Object.values(attendees).some(value => value.status === 'owner');
+        this.attendeeStatus = event.isOwner ? 'owner' : attendees[this.authQuery.userId || this.authQuery.anonymousUserId]?.status;
         if (this.attendeeStatus === 'accepted') {
           this.router.navigate(['../', 'session'], { relativeTo: this.route });
         }
@@ -72,8 +72,9 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
   requestAccess() {
     const uid = this.authQuery.userId || this.authQuery.anonymousUserId;
+    const attendee = createMeetingAttendee(this.authQuery.user || this.authQuery.anonymousCredentials, 'requesting');
     const event = this.eventQuery.getActive() as Event<Meeting>;
-    const meta: Meeting = { ...event.meta, attendees: { ...event.meta.attendees, [uid]: 'requesting' } };
+    const meta: Meeting = { ...event.meta, attendees: { ...event.meta.attendees, [uid]: attendee } };
     this.eventService.update(event.id, { meta });
   }
 }
