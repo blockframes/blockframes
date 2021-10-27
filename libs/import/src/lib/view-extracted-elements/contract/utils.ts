@@ -121,9 +121,9 @@ export async function formatContract(
       return titleId;
     },
     /* b */'contract.type': (value: string) => {
-      const trimmed = value.trim();
+      const trimmed = value.trim().toLowerCase();
       if (!trimmed) throw new MandatoryError({ field: 'contract.type', name: 'Type' });
-      const type = getKeyIfExists('contractType', value);
+      const type = getKeyIfExists('contractType', trimmed[0].toUpperCase() + trimmed.substr(1));
       if (!type) throw new WrongValueError({ field: 'contract.type', name: 'Type' });
       if (type === 'mandate' && !blockframesAdmin) throw new Error(JSON.stringify({
         type: 'error',
