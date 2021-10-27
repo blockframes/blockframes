@@ -56,7 +56,6 @@ export function createUser(user: Partial<User> = {}) {
   } as User;
 }
 
-
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'auth' })
 export class AuthStore extends Store<AuthState> {
