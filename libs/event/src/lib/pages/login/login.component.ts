@@ -3,6 +3,7 @@ import { AuthService } from '@blockframes/auth/+state';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { EventQuery } from '@blockframes/event/+state';
 
 @Component({
   selector: 'event-login',
@@ -16,9 +17,10 @@ export class EventLoginComponent implements OnInit {
     private service: AuthService,
     private route: ActivatedRoute,
     private snackBar: MatSnackBar,
+    private eventQuery: EventQuery,
     ) { }
   
-  public eventId: string;
+  public eventId = this.eventQuery.getActiveId();
   public loginForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('')

@@ -16,10 +16,6 @@ import { Intercom } from 'ng-intercom';
 })
 export class EmailVerifyComponent implements OnInit, OnDestroy {
 
-  private invitationId: string;
-  private sub: Subscription;
-  public eventId: string;
-
   constructor(
     private authStore: AuthStore,
     private authQuery: AuthQuery,
@@ -31,9 +27,12 @@ export class EmailVerifyComponent implements OnInit, OnDestroy {
     @Optional() private intercom: Intercom,
   ) { }
 
+  private invitationId: string;
+  private sub: Subscription;
+  public eventId = this.eventQuery.getActiveId();
+
   async ngOnInit() {
     const { i, code } = this.route.snapshot.queryParams;
-    this.eventId = this.route.snapshot.params.eventId;
     this.invitationId = i;
     if (code) {
       await this.invitationService.validateInvitationOnlyEventAccess(code, this.invitationId);

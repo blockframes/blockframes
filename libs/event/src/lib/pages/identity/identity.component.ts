@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthStore } from '@blockframes/auth/+state';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { EventQuery } from '@blockframes/event/+state';
 
 
 @Component({
@@ -16,13 +17,14 @@ export class EventIdenityComponent implements OnInit {
     firstName: new FormControl('', [Validators.required]),
     lastName: new FormControl('', [Validators.required])
   });
-  public eventId: string;
+  public eventId = this.eventQuery.getActiveId();
 
   constructor(
     private authStore: AuthStore,
     private router: Router,
     private route: ActivatedRoute,
     private snackBar: MatSnackBar,
+    private eventQuery: EventQuery,
   ) { }
 
   ngOnInit() {
