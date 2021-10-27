@@ -33,6 +33,7 @@ const users  =  [
   (userFixture.getByUID(USER.Vincent))
 ];
 
+//TODO : Check on Server.. WIP
 describe('User create a screening', () => {
   beforeEach(() => {
     clearDataAndPrepareTest('/');
