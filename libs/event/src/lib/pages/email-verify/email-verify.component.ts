@@ -45,7 +45,7 @@ export class EmailVerifyComponent implements OnInit, OnDestroy {
           this.authStore.updateAnonymousCredentials({ emailVerified: true });
           // Redirect user to event view
           this.router.navigate(['../i'], { relativeTo: this.route, queryParams: this.route.snapshot.queryParams });
-        } else {
+        } else if (!i.accessCode) {
           this.invitationService.requestInvitationOnlyEventAccess(this.authQuery.anonymousCredentials.email, this.invitationId, this.eventQuery.getActiveId());
         }
       });
