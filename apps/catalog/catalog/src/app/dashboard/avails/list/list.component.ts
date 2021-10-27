@@ -7,7 +7,7 @@ import { Movie, MovieService } from "@blockframes/movie/+state";
 import { OrganizationQuery } from "@blockframes/organization/+state";
 import { DynamicTitleService } from "@blockframes/utils/dynamic-title/dynamic-title.service";
 import { joinWith } from "@blockframes/utils/operators";
-import { map, throttleTime } from "rxjs/operators";
+import { map, tap, throttleTime } from "rxjs/operators";
 import { centralOrgId } from '@env';
 import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -83,6 +83,7 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
       totalIncome: () => ({ EUR: 0, USD: 0 }), // used for typings
     }, { shouldAwait: true, }),
     map(titles => titles.map(saleCountAndTotalPrice)),
+    tap(sales => console.log({sales}))
   );
 
   private mandateQuery$ = this.titleService.valueChanges(organizationQuery(this.orgId)).pipe(
@@ -95,6 +96,7 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
         )
       },
     }, { shouldAwait: true, }),
+    tap(mandates => console.log({mandates}))
   );
 
   public results$ = combineLatest([
