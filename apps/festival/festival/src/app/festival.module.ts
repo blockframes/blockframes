@@ -5,6 +5,7 @@ import { AppGuard } from '@blockframes/utils/routes/app.guard';
 import { NoAuthGuard } from '@blockframes/auth/guard/no-auth.guard';
 import { IdlePreload, IdlePreloadModule } from 'angular-idle-preload';
 import { EventAuthGuard } from '@blockframes/event/guard/event-auth.guard';
+import { AnonymousAuthGuard } from '@blockframes/auth/guard/anonymous-auth-guard';
 
 const routes: Routes = createRoutes({
   appName: 'festival',
@@ -32,7 +33,8 @@ const routes: Routes = createRoutes({
   ],
   events: {
     path: 'event',
-    canActivate: [EventAuthGuard],
+    canActivate: [EventAuthGuard, AnonymousAuthGuard],
+    canDeactivate: [AnonymousAuthGuard],
     loadChildren: () => import('@blockframes/event/layout/main/main.module').then(m => m.MainModule)
   }
 });
