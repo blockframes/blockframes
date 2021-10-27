@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ViewChild, ElementRef } from '@angular/core';
-import { EventService, Event, EventQuery, isScreening } from '@blockframes/event/+state';
+import { EventService, Event, EventQuery, isScreening, createMeetingAttendee } from '@blockframes/event/+state';
 import { BehaviorSubject, interval, Observable, Subscription } from 'rxjs';
 import { Meeting, MeetingPdfControl, MeetingVideoControl, Screening } from '@blockframes/event/+state/event.firestore';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
@@ -22,8 +22,6 @@ import { InvitationService } from '@blockframes/invitation/+state/invitation.ser
 import { InvitationQuery } from '@blockframes/invitation/+state';
 import { filter, scan } from 'rxjs/operators';
 import { finalizeWithValue } from '@blockframes/utils/observable-helpers';
-import { createAnonymousUser } from '@blockframes/auth/+state';
-
 
 const isMeeting = (meetingEvent: Event): meetingEvent is Event<Meeting> => {
   return meetingEvent.type === 'meeting';
@@ -173,20 +171,14 @@ export class SessionComponent implements OnInit, OnDestroy {
         const uid = this.authQuery.userId || this.authQuery.anonymousUserId;
         if (event.isOwner) {
           const attendees = event.meta.attendees;
-          if (attendees[uid] !== 'owner') {
-            const meta: Meeting = { ...event.meta, attendees: { ...event.meta.attendees, [uid]: 'owner' } };
+          if (attendees[uid]?.status !== 'owner') {
+            const attendee = createMeetingAttendee(this.authQuery.user || this.authQuery.anonymousCredentials, 'owner');
+            const meta: Meeting = { ...event.meta, attendees: { ...event.meta.attendees, [uid]: attendee } };
             this.service.update(event.id, { meta });
           }
 
-          const requestUids = Object.keys(attendees).filter(userId => attendees[userId] === 'requesting');
-          const requests = await this.userService.getValue(requestUids);
+          const requests = Object.values(attendees).filter(attendee => attendee.status === 'requesting');
 
-          if (event.accessibility === 'public' && requests.length !== requestUids.length) {
-            const anonymousUsers = requestUids.filter(r => !requests.find(u => u.uid === r));
-            anonymousUsers.forEach(uid => {
-              requests.push(createAnonymousUser({ uid }));
-            })
-          }
 
           if (requests.length) {
             this.bottomSheet.open(DoorbellBottomSheetComponent, { data: { eventId: event.id, requests }, hasBackdrop: false });
@@ -227,13 +219,13 @@ export class SessionComponent implements OnInit, OnDestroy {
         } else {
           const userStatus = event.meta.attendees[uid];
 
-          if (!userStatus || userStatus === 'ended') { // meeting session is over
+          if (!userStatus || userStatus?.status === 'ended') { // meeting session is over
             this.router.navigateByUrl(`/c/o/marketplace/event/${event.id}/ended`);
-          } else if (userStatus !== 'accepted') { // user has been banned or something else
+          } else if (userStatus?.status !== 'accepted') { // user has been banned or something else
             this.router.navigateByUrl(`/c/o/marketplace/event/${event.id}/lobby`);
           } else {
 
-            const hasOwner = Object.values(event.meta.attendees).some(status => status === 'owner');
+            const hasOwner = Object.values(event.meta.attendees).some(attendee => attendee.status === 'owner');
             if (!hasOwner) {
               this.createCountDown();
             } else if (!!hasOwner && !!this.countdownId) {

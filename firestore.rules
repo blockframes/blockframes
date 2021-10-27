@@ -414,8 +414,8 @@ service cloud.firestore {
             || (
               isSignedIn() && 
               (
-                isRequestFieldValueEqualTo(['meta', 'attendees', userId()], 'requesting')
-                || isRequestFieldValueEqualTo(['meta', 'attendees', userId()], 'ended')
+                isRequestFieldValueEqualTo(['meta', 'attendees', userId(), 'status'], 'requesting')
+                || isRequestFieldValueEqualTo(['meta', 'attendees', userId(), 'status'], 'ended')
                 || isRemovingField(['meta', 'attendees', userId()])
               )
               && isOnlyChangingAttendeeStatus()
@@ -621,7 +621,8 @@ service cloud.firestore {
 
     // Incoming field path must be setted with a value equal to "value"
     function isRequestFieldValueEqualTo(fieldArray, value) {
-      return (incomingData()[fieldArray[0]][fieldArray[1]][fieldArray[2]] == value)
+      return (incomingData()[fieldArray[0]][fieldArray[1]][fieldArray[2]][fieldArray[3]] == value)
+        || (incomingData()[fieldArray[0]][fieldArray[1]][fieldArray[2]] == value)
         || (incomingData()[fieldArray[0]][fieldArray[1]] == value)
         || (incomingData()[fieldArray[0]] == value);
     }

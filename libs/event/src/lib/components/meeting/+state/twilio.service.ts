@@ -1,7 +1,7 @@
 
 import { Injectable } from '@angular/core';
 import { AngularFireFunctions } from '@angular/fire/functions';
-import { Person } from '@blockframes/utils/common-interfaces';
+import { PublicUser } from '@blockframes/user/types';
 import { ErrorResultResponse } from '@blockframes/utils/utils';
 
 import {
@@ -42,7 +42,7 @@ export class TwilioService {
     private twilioQuery: TwilioQuery,
   ) { }
 
-  getToken(eventId: string, credentials: Person) {
+  getToken(eventId: string, credentials: Partial<PublicUser>) {
     return this.getAccessToken({ eventId, credentials }).toPromise<ErrorResultResponse>();
   }
 
@@ -132,7 +132,7 @@ export class TwilioService {
     }
   }
 
-  async connect(eventId: string, credentials: Person) {
+  async connect(eventId: string, credentials: Partial<PublicUser>) {
     if (this.room) return;
 
     // Get Twilio token & ensure that there is no error

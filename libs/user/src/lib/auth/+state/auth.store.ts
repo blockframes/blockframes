@@ -56,9 +56,6 @@ export function createUser(user: Partial<User> = {}) {
   } as User;
 }
 
-export function createAnonymousUser(user: Partial<User> = {}) {
-  return createUser({ firstName: 'anonymous', lastName: 'user', ...user});
-}
 
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'auth' })

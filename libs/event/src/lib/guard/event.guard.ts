@@ -124,7 +124,7 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
     } else {
       const event = this.eventQuery.getActive();
       if (event.type === 'meeting') {
-        if ((event.meta as Meeting).attendees[this.authQuery.userId] === 'ended') {
+        if ((event.meta as Meeting).attendees[this.authQuery.userId]?.status === 'ended') {
           this.twilioService.disconnect();
           return true;
         }
