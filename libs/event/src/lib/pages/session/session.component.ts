@@ -6,7 +6,6 @@ import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { MatBottomSheet } from '@angular/material/bottom-sheet'
 import { DoorbellBottomSheetComponent } from '@blockframes/event/components/doorbell/doorbell.component';
-import { UserService } from '@blockframes/user/+state/user.service';
 import { Router } from '@angular/router';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -65,7 +64,6 @@ export class SessionComponent implements OnInit, OnDestroy {
     private mediaService: MediaService,
     private authQuery: AuthQuery,
     private bottomSheet: MatBottomSheet,
-    private userService: UserService,
     private router: Router,
     private dynTitle: DynamicTitleService,
     private dialog: MatDialog,
@@ -297,7 +295,7 @@ export class SessionComponent implements OnInit, OnDestroy {
   async createVideoControl(video: StorageVideo, eventId: string): Promise<MeetingVideoControl> {
     const getVideoInfo = this.functions.httpsCallable('privateVideo');
 
-    const { error, result } = await getVideoInfo({ video, eventId }).toPromise(); // @TODO #6756 meetings
+    const { error, result } = await getVideoInfo({ video, eventId }).toPromise();
     if (error) {
       // if error is set, result will contain the error message
       throw new Error(result);
