@@ -28,7 +28,7 @@ export class EventIdenityComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.eventId = this.route.snapshot.params.eventId;
+    this.eventId = this.eventQuery.getActiveId();
   }
 
   validateIdentity() {

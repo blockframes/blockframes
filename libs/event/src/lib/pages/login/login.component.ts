@@ -30,7 +30,7 @@ export class EventLoginComponent implements OnInit {
 
   ngOnInit() {
     const { email } = this.route.snapshot.queryParams;
-    this.eventId = this.route.snapshot.params.eventId;
+    this.eventId = this.eventQuery.getActiveId();
     this.loginForm.get('email').setValue(email);
   }
 
