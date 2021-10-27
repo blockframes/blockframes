@@ -22,7 +22,8 @@ const testEvents = [
     start: new Date(),
     end: new Date(),
     meta: { organizerUid: 'uidUserTest' },
-    ownerOrgId: 'idOrgTest'
+    ownerOrgId: 'idOrgTest',
+    accessibility: 'private'
   }
 ];
 const testEventsScreening = [
@@ -31,7 +32,8 @@ const testEventsScreening = [
     type: 'screening',
     start: new Date(),
     end: new Date(),
-    meta: { organizerUid: 'uidUserTest' }
+    meta: { organizerUid: 'uidUserTest' },
+    accessibility: 'private'
   }
 ];
 const acceptedUser = {

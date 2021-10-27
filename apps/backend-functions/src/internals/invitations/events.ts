@@ -268,5 +268,5 @@ export async function isUserInvitedToEvent(userId: string, event: EventDocument<
     return emailInvitations.size > 0;
   }
 
-  return true;
+  return false;
 }
