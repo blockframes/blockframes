@@ -2,9 +2,9 @@
   <a app-logo routerLink="/"></a>
 
   <div class="surface" fxLayout="column" fxLayoutAlign="center center ">
-    <a fxFlexAlign="start" mat-icon-button [routerLink]="['/event/', eventId]" color="black">
+    <button fxFlexAlign="start" mat-icon-button color="black" (click)="clickBack()">
       <mat-icon svgIcon="arrow_back"></mat-icon>
-    </a>
+    </button>
     <h1>Welcome to Archipel Market!</h1>
     <h2>Please check your emails <br> to validate your email address.</h2>
     <p>You will be redirected to the event automatically <br> after validating your email.</p>

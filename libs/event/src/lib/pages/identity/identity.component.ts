@@ -44,4 +44,9 @@ export class EventIdenityComponent implements OnInit {
     // Redirect user to event view
     this.router.navigate(['../i'], { relativeTo: this.route, queryParams: this.route.snapshot.queryParams });
   }
+
+  clickBack() {
+    this.authStore.updateAnonymousCredentials({ role: undefined });
+    this.router.navigate(['../../'], { relativeTo: this.route });
+  }
 }

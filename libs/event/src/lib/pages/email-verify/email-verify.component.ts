@@ -70,4 +70,9 @@ export class EmailVerifyComponent implements OnInit, OnDestroy {
   refresh() {
     window.location.reload();
   }
+
+  clickBack() {
+    this.authStore.updateAnonymousCredentials({ role: undefined, firstName: undefined, lastName: undefined, email: undefined });
+    this.router.navigate(['../../'], { relativeTo: this.route });
+  }
 }

@@ -2,9 +2,9 @@
   <a app-logo routerLink="/"></a>
 
   <div class="surface" fxLayout="column">
-    <a fxFlexAlign="start" mat-icon-button [routerLink]="['/event/', eventId]" color="black"> <!--Todo-->
+    <button fxFlexAlign="start" mat-icon-button color="black" (click)="clickBack()">
       <mat-icon svgIcon="arrow_back"></mat-icon>
-    </a>
+    </button>
 
     <form fxLayout="column" fxLayoutGap="16px" [formGroup]="emailForm" (ngSubmit)="validateForm()" >
       <h1>Welcome to Archipel Market!</h1>
@@ -34,7 +34,7 @@
       <div>
         <button mat-flat-button color="primary" type="submit">Join event</button>
       </div>
-      <a routerLink="/auth/connexion">Log with existing account</a>
+      <a routerLink="../login">Log with existing account</a>
     </form>
   </div>
 </section>

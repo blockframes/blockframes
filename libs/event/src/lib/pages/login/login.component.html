@@ -1,9 +1,9 @@
 <section bgAsset="stars_wallpaper.svg" fxLayout="column" fxLayoutAlign="center center">
   <a app-logo routerLink="/"></a>
   <div class="surface" fxLayout="column">
-    <a fxFlexAlign="start" mat-icon-button [routerLink]="['/event/', eventId]" color="black"> <!-- Todo -->
+    <button fxFlexAlign="start" mat-icon-button (click)="clickBack()" color="black">
       <mat-icon svgIcon="arrow_back"></mat-icon>
-    </a>
+    </button>
 
     <form fxLayout="column" [formGroup]="loginForm" (ngSubmit)="validateLogin()" >
       <h1>Welcome to Archipel Market!</h1>

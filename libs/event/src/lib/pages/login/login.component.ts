@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { AuthService } from '@blockframes/auth/+state';
+import { AuthService, AuthStore } from '@blockframes/auth/+state';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EventQuery } from '@blockframes/event/+state';
 
@@ -15,6 +15,8 @@ export class EventLoginComponent implements OnInit {
 
   constructor(
     private service: AuthService,
+    private authStore: AuthStore,
+    private router: Router,
     private route: ActivatedRoute,
     private snackBar: MatSnackBar,
     private eventQuery: EventQuery,
@@ -39,5 +41,10 @@ export class EventLoginComponent implements OnInit {
     }
     await this.service.deleteAnonymousUser();
     await this.service.signin(this.loginForm.value.email, this.loginForm.value.password);
+  }
+
+  clickBack() {
+    this.authStore.updateAnonymousCredentials({ role: undefined });
+    this.router.navigate(['../../'], { relativeTo: this.route });
   }
 }

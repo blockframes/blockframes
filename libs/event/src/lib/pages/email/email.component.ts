@@ -45,4 +45,9 @@ export class EmailComponent implements OnInit {
     this.router.navigate(['../email-verify'], { relativeTo: this.route, queryParams: this.route.snapshot.queryParams });
   }
 
+  clickBack() {
+    this.authStore.updateAnonymousCredentials({ role: undefined });
+    this.router.navigate(['../../'], { relativeTo: this.route });
+  }
+
 }
