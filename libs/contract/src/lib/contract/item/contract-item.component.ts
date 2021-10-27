@@ -6,8 +6,10 @@ import { Scope, mediaGroup, territoriesGroup } from '@blockframes/utils/static-m
 import { MatDialog } from '@angular/material/dialog';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 import { HoldbackModalComponent } from '../holdback/modal/holdback-modal.component';
-import {  Holdback, Sale } from '../+state';
+import { Holdback, Sale } from '../+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
+import { Duration } from '@blockframes/contract/term/+state';
+
 
 
 @Component({
@@ -45,6 +47,8 @@ export class ContractItemComponent {
       this.cdr.markForCheck();
     }
   }
+
+  sortDuration = (a: Duration, b: Duration) => a.from.getTime() - b.from.getTime();
 
   constructor(
     private cdr: ChangeDetectorRef,
