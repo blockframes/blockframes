@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
+import { CollectionReference } from '@angular/fire/firestore';
 import { ActivatedRoute } from '@angular/router';
 import { ContractService } from '@blockframes/contract/contract/+state';
 import { IncomeService } from '@blockframes/contract/income/+state';
@@ -36,7 +37,8 @@ export class OfferShellComponent {
   ) { }
 
   private getContracts(offerId: string) {
-    return this.contractService.valueChanges(ref => ref.where('offerId', '==', offerId)).pipe(
+    const queryContracts = (ref: CollectionReference) => ref.where('offerId', '==', offerId).where('status', '!=', 'declined')
+    return this.contractService.valueChanges(queryContracts).pipe(
       joinWith({
         title: contract => this.titleService.valueChanges(contract.titleId),
         income: contract => this.incomeService.valueChanges(contract.id),
