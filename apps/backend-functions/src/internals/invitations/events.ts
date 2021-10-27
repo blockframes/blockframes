@@ -248,6 +248,8 @@ async function createNotificationIfNotExists(invitations: InvitationDocument[], 
 export async function isUserInvitedToEvent(userId: string, event: EventDocument<EventMeta>, email?: string) {
   const db = admin.firestore();
 
+  if (event.accessibility === 'public') return true;
+
   const accepted = db.collection('invitations')
     .where('type', '==', 'attendEvent')
     .where('eventId', '==', event.id)

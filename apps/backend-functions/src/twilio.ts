@@ -79,7 +79,7 @@ export const getTwilioAccessToken = async (
   }
 
   // Check if user is owner or is invited to event
-  if (event.accessibility !== 'public' && !(await isOwner() || await isUserInvitedToEvent(context.auth.uid, event, data.credentials.email))) {
+  if (!(await isOwner() || await isUserInvitedToEvent(context.auth.uid, event, data.credentials.email))) {
     return {
       error: 'NOT_ACCEPTED',
       result: `You are not the owner of the event or you have not been invited to see this meeting`
