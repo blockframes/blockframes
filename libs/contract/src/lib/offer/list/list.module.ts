@@ -15,7 +15,6 @@ import { TagModule } from '@blockframes/ui/tag/tag.module';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 
 // Material
-import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
@@ -48,7 +47,6 @@ import { RouterModule } from '@angular/router';
     MatButtonModule,
     MatTabsModule,
     MatIconModule,
-    MatCardModule,
     MatProgressSpinnerModule,
     MatTooltipModule,
   ],

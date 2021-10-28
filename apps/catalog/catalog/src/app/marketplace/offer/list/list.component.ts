@@ -6,7 +6,7 @@ import { OrganizationQuery } from '@blockframes/organization/+state';
 import { MovieService } from '@blockframes/movie/+state';
 import { joinWith } from '@blockframes/utils/operators';
 import { switchMap } from 'rxjs/operators';
-import { QueryFn } from '@angular/fire/firestore';
+import { CollectionReference, QueryFn } from '@angular/fire/firestore';
 
 @Component({
   selector: 'catalog-offer-list',
@@ -31,7 +31,8 @@ export class ListComponent {
   ) { }
 
   private getContracts(offerId: string) {
-    return this.contractService.valueChanges(ref => ref.where('offerId', '==', offerId)).pipe(
+    const queryContracts = (ref: CollectionReference) => ref.where('offerId', '==', offerId).where('status', '!=', 'declined')
+    return this.contractService.valueChanges(queryContracts).pipe(
       joinWith({
         title: contract => this.titleService.valueChanges(contract.titleId),
         income: contract => this.incomeService.valueChanges(contract.id)

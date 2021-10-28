@@ -13,7 +13,7 @@ import { MovieFeatureModule } from '@blockframes/movie/pipes/movie-feature.pipe'
 import { GetTitleHoldbacksPipeModule } from '@blockframes/movie/pipes/get-title-holdbacks';
 import { JoinPipeModule, VersionPipeModule, ToGroupLabelPipeModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { DetailedTermsModule } from '@blockframes/contract/term/components/detailed/detailed.module';
-import { HoldbackModalModule } from '../holdback/modal/holdback-modal.module';
+import { HoldbackModalModule } from '../../holdback/modal/holdback-modal.module';
 import { CollidingHoldbacksPipeModule } from '@blockframes/contract/contract/holdback/pipes/colliding-holdback.pipe'
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 
