@@ -61,7 +61,7 @@ export default class EventDetailsEditPage {
 
   inputDescription(description: string) {
     //Input description
-    cy.get('textarea[formControlName="description"]', {timeout: 1 * SEC})
+    cy.get('textarea[formControlName="description"]', {timeout: 10 * SEC})
       .click({force: true})
       .clear()
       .type(description);
