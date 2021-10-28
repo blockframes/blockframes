@@ -48,15 +48,7 @@ export const getPrivateVideoUrl = async (
     }
   }
 
-  if (!data.eventId) {
-    return {
-      error: 'UNKNOWN_EVENT',
-      result: 'No event in params, this parameter is mandatory!'
-    }
-  }
-
-  const eventData = await getDocument<EventDocument<EventMeta>>(`events/${data.eventId}`);
-  const access = await isAllowedToAccessMedia(data.video, context.auth.uid, eventData, data.email);
+  const access = await isAllowedToAccessMedia(data.video, context.auth.uid, data.eventId, data.email);
 
   if (!access) {
     return {
