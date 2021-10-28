@@ -7,10 +7,10 @@ import { SummaryPerksComponent } from './perks/perks.component';
 import { MissingControlModule } from '@blockframes/ui/missing-control/missing-control.module';
 import { ToLabelModule, FileNameModule, MaxLengthModule } from '@blockframes/utils/pipes';
 import { PerksPipeModule, FundingsPipeModule, BudgetPipeModule } from '../../pipes';
+import { TableModule } from '@blockframes/ui/list/table/table.module';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -30,7 +30,7 @@ import { SummaryBudgetComponent } from './budget/budget.component';
     FundingsPipeModule,
     BudgetPipeModule,
     FlexLayoutModule,
-    TableFilterModule,
+    TableModule,
     MissingControlModule,
     MatButtonModule,
     MatIconModule,

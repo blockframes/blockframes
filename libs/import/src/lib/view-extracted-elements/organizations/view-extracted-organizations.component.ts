@@ -31,8 +31,7 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    const { orgsToCreate, orgsToUpdate } = await formatOrg(this.sheetTab, this.organizationService, this.userService);
+    const orgsToCreate = await formatOrg(this.sheetTab, this.organizationService, this.userService);
     this.orgsToCreate$.next(new MatTableDataSource(orgsToCreate));
-    this.orgsToUpdate$.next(new MatTableDataSource(orgsToUpdate));
   }
 }

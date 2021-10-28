@@ -80,7 +80,7 @@
   <section class="slider">
     <bf-slider loop class="dark-contrast-theme">
       <ng-container *ngFor="let movie of section | queryTitles | async" >
-        <bf-slide overlayColor="gradient" [image]="movie.banner">
+        <bf-slide overlayColor="gradient" [image]="movie.banner" asset="empty_slider.png">
           <movie-slide [movie]="movie">
             <movie-slide-cta>
               <a mat-flat-button color="primary" [routerLink]="['../title', movie.id]" class="detail">
@@ -91,6 +91,26 @@
               <wishlist-button [movieId]="movie.id"></wishlist-button>
             </movie-slide-actions>
           </movie-slide>
+        </bf-slide>
+      </ng-container>
+    </bf-slider>
+  </section>
+</ng-template>
+
+<!-- Events Slider -->
+<ng-template #eventsSlider let-section>
+  <section class="events-slider" bgAsset="events_slider_background.png">
+    <header fxLayout fxLayoutAlign="space-between center" class="dark-contrast-theme">
+      <h2>{{ section.title }}</h2>
+      <a mat-button [routerLink]="section.link || '../organization'">
+        <span>See all</span>
+        <mat-icon svgIcon="arrow_forward"></mat-icon>
+      </a>
+    </header>
+    <bf-slider hideIndicators loop class="dark-contrast-theme">
+      <ng-container *ngFor="let event of section | queryEvents | async">
+        <bf-slide hideOverlay>
+          <event-slide [event]="event"></event-slide>
         </bf-slide>
       </ng-container>
     </bf-slider>

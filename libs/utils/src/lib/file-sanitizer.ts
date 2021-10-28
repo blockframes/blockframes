@@ -103,7 +103,7 @@ export function getFileExtension(fileName: string) {
   // get the part after the last slash and remove url parameters like "#" and "?"
   const lastSlash = fileName.split('/').pop();
   const filePart = lastSlash !== undefined ? lastSlash.split(/#|\?/) : [];
-  return filePart.length > 0 ? filePart[0].split('.').pop() : '';
+  return filePart.length > 0 ? filePart[0].split('.').pop().toLowerCase() : '';
 }
 
 /**

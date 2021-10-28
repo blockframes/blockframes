@@ -11,6 +11,7 @@ import { Contract, ContractService } from '@blockframes/contract/contract/+state
 import { Organization, OrganizationService } from '@blockframes/organization/+state';
 import { joinWith } from '@blockframes/utils/operators';
 import { MovieService } from '@blockframes/movie/+state';
+import { CollectionReference } from '@angular/fire/firestore';
 
 @Component({
   selector: 'offer-shell',
@@ -54,7 +55,8 @@ export class OfferShellComponent {
   ) { }
 
   getContract(offerId: string) {
-    return this.contractService.valueChanges(ref => ref.where('offerId', '==', offerId)).pipe(
+    const queryContracts = (ref: CollectionReference) => ref.where('offerId', '==', offerId).where('status', '!=', 'declined')
+    return this.contractService.valueChanges(queryContracts).pipe(
       joinWith({
         title: contract => this.titleService.valueChanges(contract.titleId),
         income: contract => this.incomeService.valueChanges(contract.id),

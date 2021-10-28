@@ -1,21 +1,31 @@
 <!-- Has pending invitation -->
 <ng-container *ngIf="invit; else noInvitation">
   <ng-container *ngIf="invit | hasAction else displayStatus">
-    <button mat-button test-id="invitation-accept" (click)="accept(invit)">
-      <mat-icon svgIcon="check_circle"></mat-icon>
-      <span *ngIf="!small">Accept Invitation</span>
-    </button>
-    <button mat-button test-id="invitation-refuse" (click)="decline(invit)">
-      <mat-icon svgIcon="cancel"></mat-icon>
-      <span *ngIf="!small">Decline Invitation</span>
-    </button>
+    <section fxLayout fxLayout.lt-sm="column" fxLayoutGap="16px">
+      <ng-container *ngIf="flat else defaultButtons">
+        <button mat-flat-button color="primary" test-id="invitation-accept" (click)="accept(invit)">
+          <mat-icon svgIcon="check_circle"></mat-icon>
+          <span *ngIf="!small">Accept Invitation</span>
+        </button>
+        <button mat-stroked-button test-id="invitation-refuse" (click)="decline(invit)">
+          <mat-icon svgIcon="cancel"></mat-icon>
+          <span *ngIf="!small">Decline Invitation</span>
+        </button>
+      </ng-container>
+      <ng-template #defaultButtons>
+        <button mat-button test-id="invitation-accept" (click)="accept(invit)">
+          <mat-icon svgIcon="check_circle"></mat-icon>
+          <span *ngIf="!small">Accept Invitation</span>
+        </button>
+        <button mat-button test-id="invitation-refuse" (click)="decline(invit)">
+          <mat-icon svgIcon="cancel"></mat-icon>
+          <span *ngIf="!small">Decline Invitation</span>
+        </button>
+      </ng-template>
+    </section>
   </ng-container>
   <ng-template #displayStatus>
-    <div test-id="invitation-status" class="status" [ngSwitch]="invit.status">
-      <span *ngSwitchCase="'accepted'">Accepted</span>
-      <span *ngSwitchCase="'declined'">Declined</span>
-      <span *ngSwitchCase="'pending'">Pending</span>
-    </div>
+    <bf-tag test-id="invitation-status">{{ invit | invitationStatus:small }}</bf-tag>
   </ng-template>
 </ng-container>
 
@@ -30,7 +40,6 @@
         </button>
       </ng-container>
       <ng-container *ngSwitchCase="'onTime'">
-        <p>This event has already started.</p>
         <button test-id="invitation-request" mat-button (click)="request(event)">
           <mat-icon svgIcon="calendar_today"></mat-icon>
           <span>{{ event.accessibility === 'public' ? 'Access Event' : 'Request Access' }}</span>
