@@ -2,7 +2,7 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { combineLatest } from 'rxjs';
-import { filter, map, pluck, shareReplay, startWith, take, tap, throttleTime } from 'rxjs/operators';
+import { filter, map, pluck, shareReplay, startWith, take, throttleTime } from 'rxjs/operators';
 
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -56,7 +56,6 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
     this.territoryMarkers$,
     this.route.params.pipe(pluck('movieId'))
   ]).pipe(
-    tap(data => console.log({data})),
     map(([avail, bucket, markers, movieId]) => getSelectedTerritories(movieId, avail, bucket, 'exact').map(t => markers[t])),
     startWith([]),
   );
