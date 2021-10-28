@@ -25,7 +25,7 @@ export class EventLoginComponent implements OnInit {
   public eventId = this.eventQuery.getActiveId();
   public loginForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('')
+    password: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(24)])
   });
 
   ngOnInit() {
@@ -40,7 +40,10 @@ export class EventLoginComponent implements OnInit {
       return;
     }
     await this.service.deleteAnonymousUser();
-    await this.service.signin(this.loginForm.value.email, this.loginForm.value.password);
+    await this.service.signin(this.loginForm.value.email, this.loginForm.value.password)
+    .catch(_ => {
+      this.snackBar.open('Informations not valid', 'close', { duration: 2000 });
+    });
   }
 
   clickBack() {

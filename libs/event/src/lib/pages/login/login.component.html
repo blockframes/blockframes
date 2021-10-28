@@ -23,6 +23,14 @@
         <mat-error *ngIf="loginForm.get('password').hasError('required')">
           Password is <strong>required</strong>
         </mat-error>
+        <mat-error *ngIf="loginForm.get('password').hasError('minlength')">
+          6 characters minimum
+        </mat-error>
+        <mat-error *ngIf="loginForm.get('password').hasError('maxlength')">
+          24 characters maximum
+        </mat-error>
+        <mat-hint>Between 6 and 24 characters</mat-hint>
+
       </mat-form-field>
 
       <a routerLink="/auth/reset-password" color="primary">Forgot your password ?</a>
