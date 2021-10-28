@@ -1,7 +1,7 @@
 import {
   ChangeDetectionStrategy, Component, Input, forwardRef,
   Pipe, PipeTransform, ElementRef, ViewChild, OnInit,
-  OnDestroy, Optional, Self, HostBinding
+  OnDestroy, Optional, Self, HostBinding, ChangeDetectorRef
 } from "@angular/core";
 import {
   FormControl, ControlValueAccessor,
@@ -68,7 +68,7 @@ export class StaticGroupComponent implements ControlValueAccessor, OnInit, OnDes
   modes: Record<string, Observable<GroupMode>> = { };
   filteredGroups$: Observable<StaticGroup[]>;
   groups$ = new BehaviorSubject<StaticGroup[]>([]);
-  private _placeholder = 'Tap to filter';
+  public _placeholder = 'Tap to filter';
   focused = false;
   touched = false;
   private _required = false;
@@ -90,6 +90,7 @@ export class StaticGroupComponent implements ControlValueAccessor, OnInit, OnDes
   @Input() scope: GroupScope;
   @Input() set placeholder(placeholder:string) {
     this._placeholder = placeholder;
+    this.cdr.markForCheck();
     this.stateChanges.next();
   };
   @Input() get required() { return this._required; };
@@ -131,6 +132,7 @@ export class StaticGroupComponent implements ControlValueAccessor, OnInit, OnDes
   constructor(
     @Optional() @Self() public ngControl: NgControl,
     private _elementRef: ElementRef<HTMLElement>,
+    private cdr: ChangeDetectorRef,
   ) {
     if (this.ngControl != null) {
       this.ngControl.valueAccessor = this;

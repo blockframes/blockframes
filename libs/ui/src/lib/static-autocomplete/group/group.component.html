@@ -6,7 +6,7 @@
         <mat-checkbox color="primary" [indeterminate]="(value | getMode:groups) === 'indeterminate'"
           [checked]="(value | getMode:groups) === 'checked'" (change)="checkAll($event.checked)" test-id="checked-all">
         </mat-checkbox>
-        <input #inputEl matInput [placeholder]="placeholder" [formControl]="search" test-id="search-input-control" />
+        <input #inputEl matInput [placeholder]="_placeholder" [formControl]="search" test-id="search-input-control" />
         <mat-icon *ngIf="!search.value" svgIcon="search"></mat-icon>
         <button *ngIf="search.value" mat-icon-button type="button" (click)="search.reset()" matTooltip="Clear text">
           <mat-icon svgIcon="refresh"></mat-icon>
