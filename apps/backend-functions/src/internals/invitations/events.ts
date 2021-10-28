@@ -263,7 +263,7 @@ export async function isUserInvitedToEvent(userId: string, event: EventDocument<
     acceptedRequests.get()
   ]);
 
-  if (!(invitations.size === 0 && requests.size === 0)) return true;
+  if (invitations.size || requests.size) return true;
 
   if (email && event.accessibility === 'invitation-only') {
     const emailInvitations = await accepted.where('toUser.email', '==', email).where('mode', '==', 'invitation').get();
