@@ -6,16 +6,18 @@ import { EventDocument, Meeting } from "@blockframes/event/+state/event.firestor
 import { ErrorResultResponse, displayName } from "@blockframes/utils/utils";
 
 import { projectId, twilioAccountSid, twilioAccountSecret, twilioApiKeySecret, twilioApiKeySid } from './environments/environment';
-import { hasUserAcceptedEvent } from "./internals/invitations/meetings";
 import Twilio from "twilio/lib/rest/Twilio";
 import AccessToken, { VideoGrant } from "twilio/lib/jwt/AccessToken";
 import { firebaseRegion } from "./internals/utils";
 import * as admin from 'firebase-admin';
 import { getUser } from "./internals/utils";
 import { Request, Response } from "firebase-functions";
+import { isUserInvitedToEvent } from "./internals/invitations/events";
+import { PublicUser } from "@blockframes/user/types";
 
 export interface RequestAccessToken {
   eventId: string,
+  credentials: PublicUser,
 }
 
 /**
@@ -70,32 +72,31 @@ export const getTwilioAccessToken = async (
     };
   }
 
-  const user = await getUser(context.auth.uid);
-
   const isOwner = async () => {
+    const user = await getUser(context.auth.uid);
     if (event.meta.organizerUid === context.auth.uid) return true;
     return !!user && !!user.orgId && user.orgId === event.ownerOrgId;
   }
 
   // Check if user is owner or is invited to event
-  if (!(await isOwner() || await hasUserAcceptedEvent(context.auth.uid, eventId))) {
+  if (!(await isOwner() || await isUserInvitedToEvent(context.auth.uid, event, data.credentials.email))) {
     return {
       error: 'NOT_ACCEPTED',
       result: `You are not the owner of the event or you have not been invited to see this meeting`
     };
   }
 
-  const identity = JSON.stringify({ id: user.uid, displayName: displayName(user) });
+  const identity = JSON.stringify({ id: context.auth.uid, displayName: displayName(data.credentials) });
 
   // Create access token with twilio global var et identity of the user as identity of token
   const token = new AccessToken(twilioAccountSid, twilioApiKeySid, twilioApiKeySecret, { identity });
   // Create VideoGrant of room. RoomName is the EventId
-  const videoGrant = new VideoGrant({room: eventId});
+  const videoGrant = new VideoGrant({ room: eventId });
   // add Grant to token
   token.addGrant(videoGrant);
 
   const client = new Twilio(twilioAccountSid, twilioAccountSecret);
-  const [ roomAlreadyExists ] = await client.video.rooms.list({ uniqueName: eventId, limit: 1 });
+  const [roomAlreadyExists] = await client.video.rooms.list({ uniqueName: eventId, limit: 1 });
   if (!roomAlreadyExists) {
     await client.video.rooms.create({
       uniqueName: eventId,
@@ -138,9 +139,11 @@ export const twilioWebhook = async (req: Request, res: Response) => {
 
     if (req.body.StatusCallbackEvent === 'participant-disconnected') {
 
-      const user = JSON.parse(req.body.ParticipantIdentity) as { id: string, displayName: string};
-      eventRef.update({ [`meta.attendees.${user.id}`]: 'ended' });
-
+      const { id: userId } = JSON.parse(req.body.ParticipantIdentity) as { id: string };
+      const event = eventSnap.data() as EventDocument<Meeting>;
+      const attendee = event.meta?.attendees[userId];
+      attendee.status = 'ended';
+      eventRef.update({ [`meta.attendees.${userId}`]: attendee });
     } else {
       eventRef.update({ 'meta.attendees': {} });
     }
