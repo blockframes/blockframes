@@ -33,7 +33,6 @@ const users  =  [
   (userFixture.getByUID(USER.Vincent))
 ];
 
-//TODO : Check on Server.. WIP
 describe('User create a screening', () => {
   beforeEach(() => {
     clearDataAndPrepareTest('/');
@@ -85,11 +84,19 @@ describe('User create a screening', () => {
     cy.log('=>Test Screenings are listed');
     p4.assertScreeningsExists(eventNames);
 
+    /*
+    // TODO : Clean this up!!!!
     // Handle the delay for the scenario where button "test-id=invitation-request"
     // takes time to appear.
     cy.log("Wait for event to be ready - button ");
-    p4.waitForUpdate(eventNames[0]);
-
+    //p4.waitForUpdate(eventNames[3]);
+    cy.get('festival-screening event-screening-item', {timeout: 30 * SEC})
+      .contains(eventNames[3])
+      .parentsUntil('article').parent()
+      .find('button[test-id="invitation-request"]', {timeout: 30 * SEC})
+      .should('exist');
+    return;
+    */
     cy.log('=>Test Request invite for private screening');
     p4.clickRequestInvitation(eventNames[0], false);
 
