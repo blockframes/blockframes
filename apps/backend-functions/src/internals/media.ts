@@ -19,7 +19,7 @@ export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eve
   const eventData = eventId ? await getDocument<EventDocument<EventMeta>>(`events/${eventId}`) : undefined;
 
   let userDoc = createPublicUser({ uid, email });
-  if (eventData?.accessibility === 'private') {
+  if (!eventData || eventData?.accessibility === 'private') {
     const user = await db.collection('users').doc(uid).get();
     if (!user.exists) { return false; }
     userDoc = createPublicUser(user.data());

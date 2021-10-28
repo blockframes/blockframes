@@ -219,6 +219,5 @@ async function populateAndGetTwilioAccessToken(eventMeeting = true, requestAcces
   const testCallbackContext: CallableContextOptions = {
     auth: uid
   }
-  requestAccessTokenTest = (requestAccessTokenTest === null) ? testRequestAccessToken : requestAccessTokenTest;
-  return await getTwilioAccessToken(requestAccessTokenTest, testCallbackContext as CallableContext);
+  return await getTwilioAccessToken(requestAccessTokenTest || testRequestAccessToken, testCallbackContext as CallableContext);
 }
