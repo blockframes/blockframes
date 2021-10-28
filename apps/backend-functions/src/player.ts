@@ -13,7 +13,7 @@ import { getDocument } from './data/internals';
 import { isAllowedToAccessMedia } from './internals/media';
 import { jwplayerKey, jwplayerApiV2Secret, jwplayerSecret, enableDailyFirestoreBackup, playerId } from './environments/environment';
 
-interface ReadVideoParams {
+export interface ReadVideoParams {
 
   /**
    * The reference to the video in storage
