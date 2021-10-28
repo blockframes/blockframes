@@ -18,12 +18,10 @@
             <a mat-stroked-button color="primary" [routerLink]="editMeeting">Edit Event</a>
           </ng-container>
           <ng-template #notOwner>
-            <ng-container *ngIf="invitation !== undefined">
-              <invitation-action @fade [invitation]="invitation" [event]="event"></invitation-action>
-              <ng-container *ngIf="invitation?.status === 'accepted'">
+              <invitation-action *ngIf="invitation !== undefined" @fade [invitation]="invitation" [event]="event"></invitation-action>
+              <ng-container *ngIf="invitation?.status === 'accepted'  || event.accessibility === 'public'">
                 <a mat-flat-button color="accent" disabled matTooltip="You'll be able to join the screening when it starts.">Access {{ event.type | titlecase }} Room</a>
               </ng-container>
-            </ng-container>
           </ng-template>
         </ng-container>
 
@@ -31,18 +29,26 @@
           <h6>{{ event.accessibility | toLabel:'accessibility' }} {{ event.type }}</h6>
           <pre class="mat-body-1">{{ event | eventRange }}</pre>
           <p class="mat-body-2">{{ event.meta.description }}</p>
+          <p *ngIf="invitation === null">This event has already started.</p>
           <ng-container *ngIf="event.isOwner; else notOwner">
             <h3>You are the owner of this event.</h3>
             <p>You can invite members and <a [routerLink]="editMeeting">edit the event</a> config in your dashboard.</p>
             <a mat-stroked-button color="primary" [routerLink]="['lobby']">Go to Event</a>
           </ng-container>
           <ng-template #notOwner>
-            <div @fade *ngIf="invitation !== undefined" fxLayout="column" fxLayoutAlign="center center">
-              <invitation-action [invitation]="invitation" [event]="event"></invitation-action>
-              <ng-container *ngIf="invitation?.status === 'accepted'">
+            <ng-container *ngIf="event.accessibility !== 'public' else publicEvent">
+              <div @fade *ngIf="invitation !== undefined" fxLayout="column" fxLayoutAlign="center center">
+                <invitation-action [invitation]="invitation" [event]="event"></invitation-action>
+                <ng-container *ngIf="invitation?.status === 'accepted'">
+                  <a test-id="event-room" mat-flat-button [routerLink]="accessRoute" color="accent">Access {{ event.type | titlecase }} Room</a>
+                </ng-container>
+              </div>
+            </ng-container>
+            <ng-template #publicEvent>
+              <div @fade fxLayout="column" fxLayoutAlign="center center">
                 <a test-id="event-room" mat-flat-button [routerLink]="accessRoute" color="accent">Access {{ event.type | titlecase }} Room</a>
-              </ng-container>
-            </div>
+              </div>
+            </ng-template>
           </ng-template>
         </ng-container>
 

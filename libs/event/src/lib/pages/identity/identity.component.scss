@@ -1,0 +1,25 @@
+section {
+  width: 100vw;
+  height: 100vh;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  a[app-logo] {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+  }
+
+  .surface {
+    display: inline-block;
+    padding: 16px;
+    text-align: center;
+  
+    form {
+      padding: 40px;
+      div {
+        margin-top: 16px;
+      }
+    }
+  }
+}

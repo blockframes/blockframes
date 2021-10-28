@@ -6,7 +6,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { OfferViewComponent } from './offer-view.component';
 
-import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { ConfirmModule } from '@blockframes/ui/confirm/confirm.module';
 import { FirstUserFromOrgIdModule, MaxLengthModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { TagModule } from '@blockframes/ui/tag/tag.module';
@@ -20,12 +19,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { TableModule } from '@blockframes/ui/list/table/table.module';
 
 @NgModule({
   declarations: [OfferViewComponent],
   imports: [
     CommonModule,
-    TableFilterModule,
+    TableModule,
     ReactiveFormsModule,
     ConfirmModule,
     FlexLayoutModule,

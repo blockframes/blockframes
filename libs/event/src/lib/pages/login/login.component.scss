@@ -1,0 +1,36 @@
+section {
+  width: 100vw;
+  height: 100vh;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  p {
+    margin: 0;
+  }
+  
+  a[app-logo] {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+  }
+
+  .surface {
+    display: inline-block;
+    padding: 16px;
+    text-align: center;
+
+    form {
+      padding: 40px;
+
+      >a {
+        text-decoration: underline;
+        font-weight: bold;
+        margin-bottom: 24px;
+      }
+
+      mat-form-field:last-of-type {
+        margin-bottom: 58px;
+      }
+    }
+  }
+}

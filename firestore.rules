@@ -206,6 +206,8 @@ service cloud.firestore {
         && isNotUpdatingField(['toUser', 'uid'])
         && isNotUpdatingField(['eventId'])
         && isNotUpdatingField(['type'])
+        && isNotUpdatingField(['accessAllowed'])
+        && isNotUpdatingField(['accessCode'])
       );
     }
 
@@ -219,7 +221,7 @@ service cloud.firestore {
     match /orgs/{orgId} {
       allow get: if isSignedIn()
         && notInMaintenance()
-      allow list: if isSignedIn() // @TODO #6756 updated with userHasValidOrg() when a solution for this is found.
+      allow list: if isSignedIn() // @TODO #6908 updated with userHasValidOrg() when a solution for this is found.
         && notInMaintenance();
     	allow create: if isSignedIn()
         && isRequestFieldValueEqualTo(['status'], 'pending')
@@ -406,17 +408,18 @@ service cloud.firestore {
         && isRequestFieldValueEqualToOrNotSetted(['id'], eventId)
         && isRequestFieldValueEqualTo(['ownerOrgId'], userOrgId())
         && notInMaintenance();
-      allow update: if userHasValidOrg()
-        && isNotUpdatingId('id', existingData().id)
-        && ( existingData().ownerOrgId == userOrgId()
-          || (
-            (
-              isRequestFieldValueEqualTo(['meta', 'attendees', userId()], 'requesting')
-              || isRequestFieldValueEqualTo(['meta', 'attendees', userId()], 'ended')
-              || isRemovingField(['meta', 'attendees', userId()])
+      allow update: if isNotUpdatingId('id', existingData().id)
+        && ( 
+            ( userHasValidOrg() && existingData().ownerOrgId == userOrgId())
+            || (
+              isSignedIn() && 
+              (
+                isRequestFieldValueEqualTo(['meta', 'attendees', userId(), 'status'], 'requesting')
+                || isRequestFieldValueEqualTo(['meta', 'attendees', userId(), 'status'], 'ended')
+                || isRemovingField(['meta', 'attendees', userId()])
+              )
+              && isOnlyChangingAttendeeStatus()
             )
-            && isOnlyChangingAttendeeStatus()
-          )
         )
         && notInMaintenance();
       allow delete: if userHasValidOrg()
@@ -618,7 +621,8 @@ service cloud.firestore {
 
     // Incoming field path must be setted with a value equal to "value"
     function isRequestFieldValueEqualTo(fieldArray, value) {
-      return (incomingData()[fieldArray[0]][fieldArray[1]][fieldArray[2]] == value)
+      return (incomingData()[fieldArray[0]][fieldArray[1]][fieldArray[2]][fieldArray[3]] == value)
+        || (incomingData()[fieldArray[0]][fieldArray[1]][fieldArray[2]] == value)
         || (incomingData()[fieldArray[0]][fieldArray[1]] == value)
         || (incomingData()[fieldArray[0]] == value);
     }

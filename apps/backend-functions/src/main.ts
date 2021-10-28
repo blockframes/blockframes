@@ -115,6 +115,9 @@ export const hasUserAnOrgOrIsAlreadyInvited = functions().https.onCall(invitatio
 /** Used to get invitation linked to an email when users signup for the first time */
 export const getInvitationLinkedToEmail = functions(hotConfig).https.onCall(invitations.getInvitationLinkedToEmail);
 
+/** Trigger: REST call to send an email with access code for the event. */
+export const accessInvitationOnlyEvent = functions().https.onCall(skipInMaintenance(logErrors(invitations.accessInvitationOnlyEvent)));
+
 //--------------------------------
 //    Events Management          //
 //--------------------------------

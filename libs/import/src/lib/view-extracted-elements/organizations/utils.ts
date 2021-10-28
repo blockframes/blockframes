@@ -1,302 +1,147 @@
 
-import { createUser } from '@blockframes/auth/+state';
-import { UserService } from '@blockframes/user/+state';
+import { createUser, User } from '@blockframes/auth/+state';
 import { Territory } from '@blockframes/utils/static-model';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
-import { getOrgModuleAccess, Module } from '@blockframes/utils/apps';
-import { createOrganization, OrganizationService } from '@blockframes/organization/+state';
-import { OrganizationsImportState, SpreadsheetImportError } from '@blockframes/import/utils';
+import { UserService } from '@blockframes/user/+state';
+import { Module, ModuleAccess, modules } from '@blockframes/utils/apps';
 import { extract, ExtractConfig, SheetTab, ValueWithWarning } from '@blockframes/utils/spreadsheet';
-
+import { createOrganization, Organization, OrganizationService } from '@blockframes/organization/+state';
+import { AlreadyExistError, getOrgId, getUser, MandatoryError, optionalWarning, OrganizationsImportState, WrongValueError } from '@blockframes/import/utils';
 
 const separator = ',';
 
 interface FieldsConfig {
-  denomination: {
-    full: string;
-    public: string
-  };
-  email: string;
   org: {
-    activity: any;
-    fiscalNumber: string;
+    activity: string;
     addresses: {
       main: {
-        street: string;
         city: string;
-        zipCode: string;
-        region: string;
         country: Territory;
         phoneNumber: string;
+        region: string;
+        street: string;
+        zipCode: string;
       }
-    }
+    };
+    appAccess: {
+      catalog: ModuleAccess;
+      festival: ModuleAccess;
+      financiers: ModuleAccess;
+    };
+    denomination: {
+      full: string;
+      public: string
+    };
+    email: string;
+    fiscalNumber: string;
+    userIds: string[];
   };
-  superAdminEmail: string;
-  catalogAccess: Module[];
-  festivalAccess: Module[];
-  financiersAccess: Module[];
+  superAdmin: {
+    email: string;
+  };
+}
+
+function formatAccess(value: string, errorData: { field: string, name: string }) {
+  const rawModules = value.split(separator).map(m => m.trim().toLowerCase()) as Module[];
+  const wrongValue = rawModules.some(module => !modules.includes(module));
+  if (wrongValue) throw new WrongValueError(errorData);
+  const access: Partial<ModuleAccess> = {};
+  for (const module of modules) access[module] = false;
+  for (const module of rawModules) access[module] = true;
+  return access as ModuleAccess;
 }
 
 type FieldsConfigType = ExtractConfig<FieldsConfig>;
 
-const fieldsConfig: FieldsConfigType = {
-  /* a */ 'denomination.full': (value: string) => value.trim(),
-  /* b */ 'denomination.public': (value: string) => value.trim(),
-  /* c */ 'email': (value: string) => value.trim().toLowerCase().trim(),
-  /* d */ 'org.activity': (value: string) => {
-    if (!value) {
-      throw new Error(JSON.stringify({
-        type: 'warning',
-        field: 'organization.activity',
-        name: 'Activity',
-        reason: 'Optional field is missing',
-        hint: 'Edit corresponding sheet field.'
-      }))
-    }
-    const activity = getKeyIfExists('orgActivity', value);
-    if (activity) {
-      return activity;
-    } else {
-      const warning: SpreadsheetImportError = {
-        type: 'warning',
-        field: 'activity',
-        name: 'Activity',
-        reason: `${value} not found in activity list`,
-        hint: 'Edit corresponding sheet field.'
-      };
-      return new ValueWithWarning(value, warning);
-    }
-  },
-  /* e */ 'org.fiscalNumber': (value: string) => value,
-  /* f */ 'org.addresses.main.street': (value: string) => value,
-  /* g */ 'org.addresses.main.city': (value: string) => value,
-  /* h */ 'org.addresses.main.zipCode': (value: string) => value,
-  /* i */ 'org.addresses.main.region': (value: string) => value,
-  /* j */ 'org.addresses.main.country': (value: string) => {
-    const country = getKeyIfExists('territories', value);
-    if (country) {
-      return country;
-    } else {
-      const warning: SpreadsheetImportError = {
-        type: 'warning',
-        field: 'addresses.main.country',
-        name: 'Country',
-        reason: `${value} not found in territories list`,
-        hint: 'Edit corresponding sheet field.'
-      };
-      return new ValueWithWarning(value, warning);
-    }
-  },
-  /* k */ 'org.addresses.main.phoneNumber': (value: string) => value,
-  /* l */ 'superAdminEmail': (value: string) => value,
-  /* m */ 'catalogAccess': (value: string) => value.split(separator).map(m => m.trim().toLowerCase()) as Module[],
-  /* n */ 'festivalAccess': (value: string) => value.split(separator).map(m => m.trim().toLowerCase()) as Module[],
-  /* o */ 'financiersAccess': (value: string) => value.split(separator).map(m => m.trim().toLowerCase()) as Module[],
-};
-
-
 export async function formatOrg(sheetTab: SheetTab, organizationService: OrganizationService, userService: UserService) {
 
-  const orgsToUpdate: OrganizationsImportState[] = [];
-  const orgsToCreate: OrganizationsImportState[] = [];
+  const orgs: OrganizationsImportState[] = [];
 
-  let i = 0;
-  while (sheetTab.rows[i].length > 0) {
-    const spreadSheetRow= sheetTab.rows[i];
-    i++;
+  // Cache to avoid  querying db every time
+  const orgNameCache: Record<string, string> = {};
+  const userCache: Record<string, User> = {};
 
-    const { data, warnings, } = extract<FieldsConfig>([spreadSheetRow], fieldsConfig);
-    // ORG ID
-    // Create/retrieve the org
-    let org = createOrganization();
-    let newOrg = true;
-    if (data.email) {
-      const [existingOrg] = await organizationService.getValue(ref => ref.where('email', '==', data.email));
-      if (existingOrg) {
-        org = existingOrg;
-        newOrg = false;
-      }
-    }
+  // ! The order of the property should be the same as excel columns
+  const fieldsConfig: FieldsConfigType = {
+    /* a */ 'org.denomination.full': async (value: string) => {
+      if (!value) throw new MandatoryError({ field: 'org.denomination.full', name: 'Organization Name' });
+      const exist = await getOrgId(value, organizationService, orgNameCache);
+      if (exist) throw new AlreadyExistError({ field: 'org.denomination.full', name: 'Organization Name' });
+      return value
+    },
+    /* b */ 'org.denomination.public': async (value: string, data: Partial<FieldsConfig>) => {
+      if (!value) return new ValueWithWarning(data.org.denomination.full ?? '', optionalWarning({ field: 'org.denomination.public', name: 'Organization Public Name' }));
+      const exist = await getOrgId(value, organizationService, orgNameCache);
+      if (exist) throw new AlreadyExistError({ field: 'org.denomination.public', name: 'Organization Public Name' });
+      return value;
+    },
+    /* c */ 'org.email': async (value: string) => {
+      const lower = value.toLowerCase();
+      if (!lower) throw new MandatoryError({ field: 'org.email', name: 'Contract Email' });
+      return lower;
+    },
+    /* d */ 'org.activity': (value: string) => {
+      if (!value) return new ValueWithWarning(value, optionalWarning({ field: 'org.activity', name: 'Activity' }));
+      const activity = getKeyIfExists('orgActivity', value);
+      if (!activity) throw new WrongValueError({ field: 'org.activity', name: 'Activity' });
+      return activity;
+    },
+    /* e */ 'org.fiscalNumber': (value: string) => {
+      if (!value) return new ValueWithWarning(value, optionalWarning({ field: 'org.fiscalNumber', name: 'Fiscal Number' }));
+      return value;
+    },
+    /* f */ 'org.addresses.main.street': (value: string) => {
+      if (!value) return new ValueWithWarning(value, optionalWarning({ field: 'org.address.main.street', name: 'Fiscal Number' }));
+      return value;
+    },
+    /* g */ 'org.addresses.main.city': (value: string) => {
+      if (!value) return new ValueWithWarning(value, optionalWarning({ field: 'org.address.main.city', name: 'City' }));
+      return value;
+    },
+    /* h */ 'org.addresses.main.zipCode': (value: string) => {
+      if (!value) return new ValueWithWarning(value, optionalWarning({ field: 'org.address.main.zipCode', name: 'Zip Code' }));
+      return value;
+    },
+    /* i */ 'org.addresses.main.region': (value: string) => {
+      if (!value) return new ValueWithWarning(value, optionalWarning({ field: 'org.address.main.region', name: 'Region' }));
+      return value;
+    },
+    /* j */ 'org.addresses.main.country': (value: string) => {
+      if (!value) return new ValueWithWarning(value, optionalWarning({ field: 'org.address.main.country', name: 'Country' }));
+      const country = getKeyIfExists('territories', value);
+      if (!country) throw new WrongValueError({ field: 'org.addresses.main.country', name: 'Country' });
+      return country;
+    },
+    /* k */ 'org.addresses.main.phoneNumber': (value: string) => {
+      if (!value) return new ValueWithWarning(value, optionalWarning({ field: 'org.address.main.phoneNumber', name: 'Phone Number' }));
+      return value;
+    },
+    /* l */ 'superAdmin.email': async (value: string) => {
+      const lower = value.toLowerCase();
+      if (!lower) throw new MandatoryError({ field: 'superAdmin.email', name: 'Admin Email' });
 
-    const importErrors = {
-      org,
-      newOrg,
-      errors: warnings,
-    } as OrganizationsImportState;
+      const exist = await getUser({ email: lower}, userService, userCache);
+      if (exist) throw new AlreadyExistError({ field: 'superAdmin.email', name: 'Admin Email' });
 
-    let superAdmin = createUser();
-    if (data.superAdminEmail) {
-      const [existingSuperAdmin] = await userService.getValue(ref => ref.where('email', '==', data.superAdminEmail));
-      if (existingSuperAdmin) {
-        superAdmin = existingSuperAdmin;
+      return lower;
+    },
+    /* m */ 'org.appAccess.catalog': (value: string) => formatAccess(value, { field: 'org.appAccess.catalog', name: 'Catalog Access' }),
+    /* n */ 'org.appAccess.festival': (value: string) => formatAccess(value, { field: 'org.appAccess.festival', name: 'Festival Access' }),
+    /* o */ 'org.appAccess.financiers': (value: string) => formatAccess(value, { field: 'org.appAccess.financiers', name: 'Financiers Access' }),
+  };
 
-        if (superAdmin.orgId) {
-          if (newOrg || superAdmin.orgId !== org.id) {
-            // Cannot set user as superAdmin because he already belongs to an org
-            importErrors.errors.push({
-              type: 'error',
-              field: 'superAdmin.email',
-              name: 'Super Admin email',
-              reason: 'User already belongs to another org',
-              hint: 'Edit corresponding sheet field.'
-            });
-          }
-        }
-      }
-    }
+  const results = await extract<FieldsConfig>(sheetTab.rows, fieldsConfig);
 
-    importErrors.superAdmin = superAdmin;
+  for (const result of results) {
+    const { data, errors, warnings } = result;
 
-    if (data.denomination && data.denomination) {
-      /**
-      * @dev We process this data only if this is for a new org
-      */
-      if (newOrg) {
-        // SUPER ADMIN
-        if (data.superAdminEmail) {
-          importErrors.superAdmin.email = data.superAdminEmail.trim().toLowerCase();
-        }
-      }
+    const org = createOrganization(data.org as Partial<Organization>);
 
-      // DENOMINATION
-      if (data.denomination.full) {
-        importErrors.org.denomination.full = data.denomination.full;
-      }
+    const superAdmin = createUser(data.superAdmin);
 
-      if (data.denomination.public) {
-        importErrors.org.denomination.public = data.denomination.public;
-      }
-
-      // EMAIL
-      if (data.email) {
-        importErrors.org.email = data.email;
-      }
-
-      // ORG INFOS
-      if (data.org) {//
-        importErrors.org = {
-          ...importErrors.org,
-          ...data.org,
-        };
-      }
-
-
-      // APP ACCESS
-      if (data.catalogAccess) {
-        const [module1, module2]: Module[] = data.catalogAccess;
-        if (module1) {
-          importErrors.org.appAccess.catalog[module1] = true;
-        }
-        if (module2) {
-          importErrors.org.appAccess.catalog[module2] = true;
-        }
-      }
-
-      if (data.festivalAccess) {
-        const [module1, module2]: Module[] = data.festivalAccess;
-        if (module1) {
-          importErrors.org.appAccess.festival[module1] = true;
-        }
-        if (module2) {
-          importErrors.org.appAccess.festival[module2] = true;
-        }
-      }
-
-      if (data.financiersAccess) {
-        const [module1, module2]: Module[] = data.financiersAccess;
-        if (module1) {
-          importErrors.org.appAccess.financiers[module1] = true;
-        }
-        if (module2) {
-          importErrors.org.appAccess.financiers[module2] = true;
-        }
-      }
-
-      if (getOrgModuleAccess(org).length === 0) {
-        importErrors.errors.push({
-          type: 'error',
-          field: 'appAccess',
-          name: 'Application access',
-          reason: `You need to give access to modules for at least one app`,
-          hint: 'Edit corresponding sheet field.'
-        });
-      }
-
-      ///////////////
-      // VALIDATION
-      ///////////////
-
-
-      const orgWithErrors = await validate(importErrors);
-
-      if (!orgWithErrors.newOrg) {
-        orgsToUpdate.push(orgWithErrors);
-      } else {
-        orgWithErrors.org.id = organizationService['db'].createId();
-        orgsToCreate.push(orgWithErrors);
-      }
-    }
+    orgs.push({ errors: [ ...errors, ...warnings ], org, superAdmin, newOrg: false });
   }
-  return { orgsToCreate, orgsToUpdate };
+
+  return orgs;
 }
 
-async function validate(importErrors: OrganizationsImportState): Promise<OrganizationsImportState> {
-
-  const organization = importErrors.org;
-  const superAdmin = importErrors.superAdmin;
-  const errors = importErrors.errors;
-
-  //////////////////
-  // REQUIRED FIELDS
-  //////////////////
-
-  // EMAIL
-  if (!organization.email) {
-    errors.push({
-      type: 'warning',
-      field: 'organization.email',
-      name: 'Organization email',
-      reason: 'Organization email not defined',
-      hint: 'Edit corresponding sheet field.'
-    });
-  }
-
-  // FULL DENOMINATION
-  if (!organization.denomination.full) {
-    errors.push({
-      type: 'error',
-      field: 'organization.denomination.full',
-      name: 'Full demomination',
-      reason: 'Organization full denomination not defined',
-      hint: 'Edit corresponding sheet field.'
-    });
-  }
-
-  // SUPER ADMIN
-  if (!superAdmin.email) {
-    errors.push({
-      type: 'error',
-      field: 'superAdmin.email',
-      name: 'Super admin email',
-      reason: 'Org super admin email not defined',
-      hint: 'Edit corresponding sheet field.'
-    });
-  }
-
-  //////////////////
-  // OPTIONAL FIELDS
-  //////////////////
-
-  // PUBLIC DENOMINATION
-  if (!organization.denomination.public) {
-    errors.push({
-      type: 'warning',
-      field: 'organization.denomination.public',
-      name: 'Public demomination',
-      reason: 'Optional field is missing',
-      hint: 'Edit corresponding sheet field.'
-    });
-  }
-
-  return importErrors;
-}

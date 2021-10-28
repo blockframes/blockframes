@@ -37,17 +37,6 @@ export class UserComponent implements OnInit {
 
   public dashboardURL: SafeResourceUrl
 
-  public invitationsColumns = {
-    date: 'Date Created',
-    mode: 'Mode',
-    type: 'Type',
-    'fromOrg.denomination.full': 'From Organization',
-    'toOrg.denomination.full': 'To Organization',
-    status: 'Status',
-  };
-
-  public initialInvitationsColumns = ['date', 'mode', 'type', 'fromOrg.denomination.full', 'toOrg.denomination.full', 'status'];
-
   constructor(
     private userService: UserService,
     private eventService: EventService,
@@ -238,5 +227,14 @@ export class UserComponent implements OnInit {
     }
 
     return output;
+  }
+
+  goTo(invitation: Invitation) {
+    if (invitation.type === 'attendEvent') {
+      this.router.navigate(['/c/o/dashboard/crm/event', invitation.eventId]);
+    } else if (invitation.type === 'joinOrganization') {
+      const id = invitation.fromOrg ? invitation.fromOrg.id : invitation.toOrg?.id;
+      this.router.navigate(['/c/o/dashboard/crm/organization', id]);
+    }
   }
 }

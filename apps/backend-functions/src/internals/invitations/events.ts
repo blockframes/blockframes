@@ -62,7 +62,7 @@ async function onInvitationToAnEventCreate(invitation: InvitationDocument) {
         docId: invitation.eventId,
         invitation: createPublicInvitationDocument(invitation),
         type: event.type === 'meeting' ? 'invitationToAttendMeetingCreated' : 'invitationToAttendScreeningCreated',
-        _meta: createDocumentMeta({ createdFrom: 'festival'}) // Events are only on festival
+        _meta: createDocumentMeta({ createdFrom: 'festival' }) // Events are only on festival
       }));
     });
 
@@ -77,7 +77,7 @@ async function onInvitationToAnEventCreate(invitation: InvitationDocument) {
       docId: invitation.eventId,
       invitation: createPublicInvitationDocument(invitation),
       type: 'requestToAttendEventSent',
-      _meta: createDocumentMeta({ createdFrom: 'festival'}) // Events are only on festival
+      _meta: createDocumentMeta({ createdFrom: 'festival' }) // Events are only on festival
     }));
 
     // Notification to request recipients
@@ -88,7 +88,7 @@ async function onInvitationToAnEventCreate(invitation: InvitationDocument) {
         docId: invitation.eventId,
         invitation: createPublicInvitationDocument(invitation),
         type: 'requestToAttendEventCreated',
-        _meta: createDocumentMeta({ createdFrom: 'festival'}) // Events are only on festival
+        _meta: createDocumentMeta({ createdFrom: 'festival' }) // Events are only on festival
       }));
     });
 
@@ -113,7 +113,7 @@ async function onInvitationToAnEventAcceptedOrRejected(invitation: InvitationDoc
       invitation: createPublicInvitationDocument(invitation),
       type: 'requestToAttendEventUpdated',
       organization: invitation.toOrg, // The subject that have accepted or rejected the request
-      _meta: createDocumentMeta({ createdFrom: 'festival'}) // Events are only on festival
+      _meta: createDocumentMeta({ createdFrom: 'festival' }) // Events are only on festival
     });
     notifications.push(notification);
   } else if (!!invitation.fromOrg && invitation.mode === 'invitation') {
@@ -126,7 +126,7 @@ async function onInvitationToAnEventAcceptedOrRejected(invitation: InvitationDoc
         invitation: createPublicInvitationDocument(invitation),
         type: 'invitationToAttendEventUpdated',
         user: invitation.toUser, // The subject that have accepted or rejected the invitation
-        _meta: createDocumentMeta({ createdFrom: 'festival'}) // Events are only on festival
+        _meta: createDocumentMeta({ createdFrom: 'festival' }) // Events are only on festival
       });
 
       notifications.push(notification);
@@ -231,7 +231,7 @@ async function createNotificationIfNotExists(invitations: InvitationDocument[], 
         toUserId,
         docId: invitation.eventId,
         type: notificationType,
-        _meta: createDocumentMeta({ createdFrom: 'festival'}) // Events are only on festival
+        _meta: createDocumentMeta({ createdFrom: 'festival' }) // Events are only on festival
       }));
     }
   }
@@ -242,28 +242,33 @@ async function createNotificationIfNotExists(invitations: InvitationDocument[], 
 /**
  * Check if a given user has accepted an invitation to an event.
  * @param userId
- * @param eventId
+ * @param event
+ * @param email
  */
-export async function isUserInvitedToEvent(userId: string, eventId: string) {
+export async function isUserInvitedToEvent(userId: string, event: EventDocument<EventMeta>, email?: string) {
   const db = admin.firestore();
-  const acceptedInvitations = db.collection('invitations')
-    .where('type', '==', 'attendEvent')
-    .where('eventId', '==', eventId)
-    .where('toUser.uid', '==', userId)
-    .where('status', '==', 'accepted')
-    .where('mode', '==', 'invitation');
 
-  const acceptedRequests = db.collection('invitations')
+  if (event.accessibility === 'public') return true;
+
+  const accepted = db.collection('invitations')
     .where('type', '==', 'attendEvent')
-    .where('eventId', '==', eventId)
-    .where('fromUser.uid', '==', userId)
-    .where('status', '==', 'accepted')
-    .where('mode', '==', 'request');
+    .where('eventId', '==', event.id)
+    .where('status', '==', 'accepted');
+
+  const acceptedInvitations = accepted.where('toUser.uid', '==', userId).where('mode', '==', 'invitation');
+  const acceptedRequests = accepted.where('fromUser.uid', '==', userId).where('mode', '==', 'request');
 
   const [invitations, requests] = await Promise.all([
     acceptedInvitations.get(),
     acceptedRequests.get()
   ]);
 
-  return !(invitations.size === 0 && requests.size === 0);
+  if (!(invitations.size === 0 && requests.size === 0)) return true;
+
+  if (email && event.accessibility === 'invitation-only') {
+    const emailInvitations = await accepted.where('toUser.email', '==', email).where('mode', '==', 'invitation').get();
+    return emailInvitations.size > 0;
+  }
+
+  return false;
 }

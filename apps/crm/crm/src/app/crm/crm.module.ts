@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -31,6 +32,7 @@ import { AdminOrganizationFormModule } from './components/organization/forms/org
 import { MovieVideoUploadModule } from '@blockframes/movie/components/video-upload/video-upload.module';
 import { MoviePictureUploadModule } from '@blockframes/movie/components/picture-upload/picture-upload.module';
 import { FormListModule } from '@blockframes/ui/form/list/form-list.module';
+import { GetEventPipeModule } from '@blockframes/event/pipes/get-event.pipe';
 
 // Components
 import { OverviewComponent } from './pages/overview/overview.component';
@@ -47,6 +49,7 @@ import { ConfirmInputModule } from '@blockframes/ui/confirm-input/confirm-input.
 import { StaticSelectModule } from "@blockframes/ui/static-autocomplete/select/static-select.module";
 import { DashboardModule } from './components/dashboard/dashboard.module';
 import { BreadCrumbModule } from './components/bread-crumb/bread-crumb.module';
+import { TableModule } from '@blockframes/ui/list/table/table.module';
 
 export const panelRoutes: Routes = [
   { path: '', redirectTo: 'overview', pathMatch: 'full' },
@@ -83,7 +86,7 @@ export const panelRoutes: Routes = [
     MatSelectModule,
     MatCheckboxModule,
 
-    TableFilterModule,
+    TableModule,
     ImageModule,
     AlgoliaAutocompleteModule,
     EventModule,
@@ -105,6 +108,8 @@ export const panelRoutes: Routes = [
     DashboardModule,
     BreadCrumbModule,
     FormListModule,
+    GetEventPipeModule,
+    ClipboardModule,
 
     RouterModule.forChild(panelRoutes),
   ],

@@ -11,13 +11,6 @@ import { appName, getCurrentApp } from '@blockframes/utils/apps';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { StoreStatus } from '@blockframes/utils/static-model/types';
 
-const columns = {
-  'title.international': 'Title',
-  'analytics.views': '# Views',
-  directors: 'Director(s)',
-  productionStatus: 'Production Status',
-  'app.festival.status': 'Status'
-};
 
 @Component({
   selector: 'festival-dashboard-title-list',
@@ -28,8 +21,6 @@ const columns = {
 export class ListComponent {
   public app = getCurrentApp(this.routerQuery);
   public appName = appName[this.app];
-  columns = columns;
-  initialColumns = ['title.international', 'analytics.views', 'directors', 'productionStatus', 'app.festival.status'];
   filter = new FormControl();
   filter$ = this.filter.valueChanges.pipe(startWith(this.filter.value));
 

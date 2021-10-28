@@ -2,7 +2,7 @@ import { PublicOrganization } from "@blockframes/organization/+state/organizatio
 import type firebase from 'firebase';
 import { PublicUser } from "@blockframes/user/+state/user.firestore";
 import type { InvitationStatus, InvitationType } from "@blockframes/utils/static-model";
-export  { InvitationType, InvitationStatus, invitationStatus } from "@blockframes/utils/static-model";
+export { InvitationType, InvitationStatus, invitationStatus } from "@blockframes/utils/static-model";
 type Timestamp = firebase.firestore.Timestamp;
 
 /**
@@ -15,7 +15,7 @@ type Timestamp = firebase.firestore.Timestamp;
  *  If user that received an email invitation and
  *  created an account, we will then be able to replace email by the coresponding new user.
  * */
-export interface InvitationBase<D extends Timestamp | Date> extends PublicInvitation{
+export interface InvitationBase<D extends Timestamp | Date> extends PublicInvitation {
   date: D;
   /** @dev An invitation is created by an user or an org (fromOrg or fromUser) */
   fromOrg?: PublicOrganization,
@@ -31,6 +31,10 @@ export interface InvitationBase<D extends Timestamp | Date> extends PublicInvita
 
   /** Watch time in secondes, only used for 'screening' events */
   watchTime?: number;
+
+  /** For 'invitation-only' events */
+  accessCode?: string;
+  accessAllowed?: boolean;
 }
 
 /** Public interface of an invitation (for notifications). */
@@ -50,7 +54,7 @@ export type InvitationMode = 'request' | 'invitation';
 
 /** Create an Invitation */
 export function createInvitation(params: Partial<InvitationBase<Date>> = {}): InvitationBase<Date> {
-  return  {
+  return {
     id: '',
     mode: 'invitation',   // We need a default value for backend-function strict mode
     type: 'attendEvent',  // We need a default value for backend-function strict mode

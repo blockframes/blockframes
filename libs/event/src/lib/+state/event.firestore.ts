@@ -2,6 +2,7 @@ import type firebase from 'firebase';
 import { AnalyticsEvents } from '@blockframes/utils/analytics/analytics-model';
 import { StorageFile } from '@blockframes/media/+state/media.firestore';
 import { AccessibilityTypes } from '@blockframes/utils/static-model/types';
+import { Person } from '@blockframes/utils/common-interfaces/identity';
 type Timestamp = firebase.firestore.Timestamp;
 
 // Event types
@@ -9,11 +10,15 @@ export type EventTypes = 'standard' | 'meeting' | 'screening' | 'local';
 export type EventMeta = Meeting | Screening | unknown;
 
 export type AttendeeStatus = 'owner' | 'requesting' | 'accepted' | 'denied' | 'ended';
+export interface MeetingAttendee extends Person {
+  uid: string,
+  status: AttendeeStatus,
+}
 
 export interface Meeting {
   organizerUid: string;
   description: string;
-  attendees: Record<string, AttendeeStatus>;
+  attendees: Record<string, MeetingAttendee>;
   files: StorageFile[];
   selectedFile: string;
   controls: Record<string, MeetingMediaControl>

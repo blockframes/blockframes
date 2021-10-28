@@ -6,22 +6,26 @@ import { FormControl } from '@angular/forms';
 import { coerceNumberProperty } from '@angular/cdk/coercion';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { Paginator } from './paginator';
+import {  removeAccent } from '@blockframes/utils/utils';
 
 /** Ascending sorting */
 function sortValue<T>(a: T, b: T) {
   if (typeof a === 'string' && typeof b === 'string') return a.toUpperCase() > b.toUpperCase() ? 1 : -1;
   if (typeof a === 'number' && typeof b === 'number') return a - b;
-  if (a instanceof Date && b instanceof Date) return a.getTime() - b.getTime();
+  if (typeof a === 'boolean' && typeof b === 'boolean') {
+    if (a && b) return 0;
+    return a ? 1 : -1;
+  }
   return 0;
 }
 
 
 /** Filter the table fields based on the input value */
 function filterTable<T>(data: T[], value: string, columns: QueryList<ColumnDirective<T>>) {
-  const input = value.toLowerCase();
+  const input = removeAccent(value.toLowerCase());
   return data.filter(row => {
     return columns.some(column => {
-      const value = getDeepValue(row, column.name);
+      const value = removeAccent(getDeepValue(row, column.name));
       return column.filter(input, value, row);
     })
   });
@@ -33,7 +37,7 @@ export class ColumnDirective<T> {
 
   /** Path of the value in the row */
   @Input('colRef') name!: string;
-  
+
   /** Text to display in the column header. Header will fallback to colRef value if not provided */
   @Input() label?: string;
 
@@ -52,7 +56,7 @@ export class ColumnDirective<T> {
     return value.toLowerCase().includes(input);
   }
 
-  constructor(public template: TemplateRef<any>) {}
+  constructor(public template: TemplateRef<any>) { }
 
   get isSortable() {
     return this.sort === '' || !!this.sort;
@@ -96,7 +100,7 @@ export class TableComponent<T> {
   search = new FormControl();
   paginator = new Paginator();
   data$: Observable<T[]>;
-  
+
 
   @ContentChildren(ColumnDirective) columns!: QueryList<ColumnDirective<T>>;
 
@@ -141,7 +145,7 @@ export class TableComponent<T> {
   private $sort(data: T[]) {
     const sorting = this.columns.filter(c => c.isSortable).map(column => column.$sort(data));
     if (!sorting.length) return of(data);
-    return merge(...sorting).pipe(startWith(data)); 
+    return merge(...sorting).pipe(startWith(data));
   }
 
   private $filter(data: T[]) {

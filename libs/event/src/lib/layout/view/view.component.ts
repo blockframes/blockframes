@@ -1,13 +1,14 @@
 import { Component, OnInit, Input, ChangeDetectionStrategy, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Event } from '../../+state/event.model';
 import { InvitationService, Invitation } from '@blockframes/invitation/+state';
-import { BehaviorSubject, Subscription, combineLatest } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { BehaviorSubject, Subscription, combineLatest, of } from 'rxjs';
+import { catchError, filter, map } from 'rxjs/operators';
 import { Location } from '@angular/common';
 import { fade } from '@blockframes/utils/animations/fade';
+import { AuthQuery } from '@blockframes/auth/+state';
 
 @Component({
-  selector: 'event-view',
+  selector: 'event-view-layout',
   templateUrl: './view.component.html',
   styleUrls: ['./view.component.scss'],
   animations: [fade],
@@ -32,19 +33,39 @@ export class EventViewComponent implements OnInit, OnDestroy {
   constructor(
     private cdr: ChangeDetectorRef,
     private invitationService: InvitationService,
-    private location: Location
+    private location: Location,
+    private authQuery: AuthQuery
   ) { }
 
-  ngOnInit(): void {
+  async ngOnInit() {
 
     this.editMeeting = `/c/o/dashboard/event/${this.event.id}/edit`;
-    this.accessRoute = `/c/o/marketplace/event/${this.event.id}/${this.event.type === 'meeting' ? 'lobby' : 'session'}`;
+    this.accessRoute = `/event/${this.event.id}/r/i/${this.event.type === 'meeting' ? 'lobby' : 'session'}`;
+
+    let emailInvitation: Invitation;
+    const anonymousCredentials = this.authQuery.anonymousCredentials;
+    if (anonymousCredentials?.invitationId) {
+      emailInvitation = await this.invitationService.getValue(this.authQuery.anonymousCredentials?.invitationId);
+    }
 
     this.sub = combineLatest([
       this.event$.pipe(filter(event => !!event)),
-      this.invitationService.guestInvitations$
+      this.invitationService.guestInvitations$.pipe(catchError(() => of([]))),
     ]).pipe(
-      map(([event, invitations]) => invitations.find(invitation => invitation.eventId === event.id) ?? null)
+      map(([event, invitations]) => {
+        switch (event.accessibility) {
+          case 'public':
+            return undefined;
+          case 'invitation-only': {
+            const regularInvitation = invitations.find(invitation => invitation.eventId === event.id) ?? null;
+            if (regularInvitation) return regularInvitation;
+            if (emailInvitation && emailInvitation.accessAllowed) return emailInvitation;
+            return undefined;
+          }
+          case 'private':
+            return invitations.find(invitation => invitation.eventId === event.id) ?? undefined;
+        }
+      })
     ).subscribe(invitation => {
       this.invitation = invitation
       this.cdr.markForCheck();
@@ -57,13 +78,5 @@ export class EventViewComponent implements OnInit, OnDestroy {
 
   goBack() {
     this.location.back();
-  }
-
-  /**
-   * Creates a request to attend event.
-   * If event is public (event.isPrivate === false), it will be automatically setted to 'accepted'
-   */
-  addToCalendar() {
-    this.invitationService.request(this.event.ownerOrgId).to('attendEvent', this.event.id);
   }
 }

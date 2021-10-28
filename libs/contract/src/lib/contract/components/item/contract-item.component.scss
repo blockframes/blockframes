@@ -1,0 +1,28 @@
+:host {
+  display: block;
+  padding: 24px;
+
+  img {
+    max-width: 150px;
+    max-height: 200px;
+    cursor: pointer;
+  }
+}
+
+.ellipsis {
+  max-width: 400px;
+  cursor: pointer;
+}
+
+ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+span.group-label {
+  cursor: pointer;
+}
+
+bf-table{
+  margin-top: 24px;
+}

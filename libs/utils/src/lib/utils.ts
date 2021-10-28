@@ -5,6 +5,16 @@ export interface ErrorResultResponse {
   result: any;
 }
 
+/**
+ * replaces accented characters with their closes neighbour
+ * in english characters
+ * @link https://stackoverflow.com/a/37511463/6441976
+ */
+export function removeAccent<T>(str: T) {
+  if (typeof str === 'string') return str.normalize("NFD").replace(/\p{Diacritic}/gu, "");
+  return str;
+}
+
 export function titleCase(text: string) {
   if (!text) return '';
   return text[0].toUpperCase() + text.substring(1);
@@ -168,12 +178,12 @@ export function createOfferId(orgName: string) {
 }
 
 /**
- * 
- * @param email 
- * @param firstName 
- * @param lastName 
+ *
+ * @param email
+ * @param firstName
+ * @param lastName
  * @returns string
- * 
+ *
  * https://developer.jwplayer.com/jwplayer/docs/jw8-javascript-api-reference
  * https://developer.jwplayer.com/jwplayer/docs/jw8-add-custom-icons
  * https://css-tricks.com/probably-dont-base64-svg/

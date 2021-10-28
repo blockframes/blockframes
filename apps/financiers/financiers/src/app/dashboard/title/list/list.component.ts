@@ -13,14 +13,6 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 type Filters = 'all' | 'draft' | 'ongoing' | 'achieved' | 'archived';
 
-const columns = {
-  title: 'Title',
-  productionStatus: 'Production Status',
-  'campaign.cap': 'Goal Funding',
-  'campaign.received': 'Funding Raised',
-  campaignStarted: 'Campaign Started'
-};
-
 function filterMovieCampaign(movies: MovieCampaign[], filter: Filters) {
   switch (filter) {
     case 'all': return movies.filter(movie => movie.app.financiers.status !== 'archived');
@@ -40,8 +32,6 @@ function filterMovieCampaign(movies: MovieCampaign[], filter: Filters) {
 export class ListComponent implements OnInit {
   public app = getCurrentApp(this.routerQuery);
   public appName = appName[this.app];
-  columns = columns;
-  initialColumns = ['title', 'productionStatus', 'campaign.cap', 'campaign.received', 'campaignStarted'];
   titles$: Observable<MovieCampaign[]>;
   titleCount$: Observable<Record<string, number>>;
   filter = new FormControl('all');

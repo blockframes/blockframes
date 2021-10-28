@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 import { ActionComponent } from './action.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { InvitationHasActionPipeModule } from './has-action.pipe';
+import { InvitationActionPipeModule } from './action.pipe';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { EventTimeModule } from '@blockframes/event/pipes/event-time.pipe'
-
+import { TagModule } from '@blockframes/ui/tag/tag.module';
 
 @NgModule({
   declarations: [ActionComponent],
@@ -17,7 +17,8 @@ import { EventTimeModule } from '@blockframes/event/pipes/event-time.pipe'
     MatIconModule,
     EventTimeModule,
     FlexLayoutModule,
-    InvitationHasActionPipeModule
+    InvitationActionPipeModule,
+    TagModule
   ]
 })
 export class InvitationActionModule { }
