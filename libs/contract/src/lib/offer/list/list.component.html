@@ -26,30 +26,28 @@
       </button>
     </nav>
 
-    <mat-card>
-      <bf-table [source]="offers | filterBy: filterByStatus: filter.value" clickable useFilter pagination="50"
-        (rowClick)="rowClick($event)">
-        <ng-template colRef="id" label="Offer Reference" let-reference sort>{{ reference }}</ng-template>
-        <ng-template colRef="_meta.createdAt" label="Offer created" let-date sort>{{ date| date : 'M/d/y'}}</ng-template>
-        <ng-template colRef="contracts.length" label="# Of Titles In Package" let-length sort>{{ length }}</ng-template>
-        <ng-template colRef="contracts" label="Titles" let-contracts>
-          <ng-container *ngFor="let contract of contracts; let last=last">
-            <ng-container *ngIf="contract.title as title">
-              {{ title.title.international | maxLength:50 }}{{last ? '': ', '}}
-            </ng-container>
+    <bf-table [source]="offers | filterBy: filterByStatus: filter.value" clickable useFilter pagination="50"
+      (rowClick)="rowClick($event)">
+      <ng-template colRef="id" label="Offer Reference" let-reference sort>{{ reference }}</ng-template>
+      <ng-template colRef="_meta.createdAt" label="Offer created" let-date sort>{{ date| date : 'M/d/y'}}</ng-template>
+      <ng-template colRef="contracts.length" label="# Of Titles In Package" let-length sort>{{ length }}</ng-template>
+      <ng-template colRef="contracts" label="Titles" let-contracts>
+        <ng-container *ngFor="let contract of contracts; let last=last">
+          <ng-container *ngIf="contract.title as title">
+            {{ title.title.international | maxLength:50 }}{{last ? '': ', '}}
           </ng-container>
-        </ng-template>
-        <ng-template colRef="specificity" label="Specific Terms" let-specificity sort>
-          {{ specificity ? 'YES' : '-' }}
-        </ng-template>
-        <ng-template colRef="incomes" label="Total Package Price" let-incomes let-offer="item">
-          {{ offer.contracts | total: 'income.price' | currency: offer.currency }}
-        </ng-template>
-        <ng-template colRef="status" label="Status" let-status>
-          <bf-tag>{{ status | toLabel: 'offerStatus' }}</bf-tag>
-        </ng-template>
-      </bf-table>
-    </mat-card>
+        </ng-container>
+      </ng-template>
+      <ng-template colRef="specificity" label="Specific Terms" let-specificity sort>
+        {{ specificity ? 'YES' : '-' }}
+      </ng-template>
+      <ng-template colRef="incomes" label="Total Package Price" let-incomes let-offer="item">
+        {{ offer.contracts | total: 'income.price' | currency: offer.currency }}
+      </ng-template>
+      <ng-template colRef="status" label="Status" let-status>
+        <bf-tag>{{ status | toLabel: 'offerStatus' }}</bf-tag>
+      </ng-template>
+    </bf-table>
   </ng-container>
 </ng-container>
 
