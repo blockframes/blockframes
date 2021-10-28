@@ -1,13 +1,13 @@
-import { Component, OnInit, Input, ChangeDetectionStrategy, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { EventService } from '@blockframes/event/+state';
-import { Event } from '../../+state/event.model';
 import { ActivatedRoute } from '@angular/router';
 import { InvitationService, Invitation } from '@blockframes/invitation/+state';
-import { BehaviorSubject, Subscription, combineLatest, of } from 'rxjs';
+import { Subscription, combineLatest, of } from 'rxjs';
 import { catchError, filter, map, switchMap, pluck } from 'rxjs/operators';
 import { Location } from '@angular/common';
 import { fade } from '@blockframes/utils/animations/fade';
-import { AuthQuery } from '@blockframes/auth/+state';
+import { AuthQuery, AuthStore } from '@blockframes/auth/+state';
+
 
 @Component({
   selector: 'event-view',
@@ -16,13 +16,11 @@ import { AuthQuery } from '@blockframes/auth/+state';
   animations: [fade],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EventViewComponent implements OnInit, OnDestroy { // @TODO #6756 merge with ../layout/view
+export class EventViewComponent implements OnInit, OnDestroy {
   private sub: Subscription;
-  private eventSub: Subscription;
   invitation: Invitation;
   editMeeting: string;
   accessRoute: string;
-  event: Event;
   event$ = this.route.params.pipe(
     pluck('eventId'),
     switchMap((eventId: string) => this.service.queryDocs(eventId)),
@@ -34,20 +32,15 @@ export class EventViewComponent implements OnInit, OnDestroy { // @TODO #6756 me
     private cdr: ChangeDetectorRef,
     private invitationService: InvitationService,
     private location: Location,
-    private authQuery: AuthQuery
+    private authQuery: AuthQuery,
+    private authStore: AuthStore,
   ) { }
 
   async ngOnInit() {
-    this.eventSub = this.event$.subscribe(event => {
-      this.event = event;
-      this.editMeeting = `/c/o/dashboard/event/${event.id}/edit`;
-      this.accessRoute = `/event/${event.id}/r/i/${event.type === 'meeting' ? 'lobby' : 'session'}`;
-    })
-
     let emailInvitation: Invitation;
     const anonymousCredentials = this.authQuery.anonymousCredentials;
     if (anonymousCredentials?.invitationId) {
-      emailInvitation = await this.invitationService.getValue(this.authQuery.anonymousCredentials?.invitationId);
+      emailInvitation = await this.invitationService.getValue(anonymousCredentials?.invitationId);
     }
 
     this.sub = combineLatest([
@@ -55,6 +48,9 @@ export class EventViewComponent implements OnInit, OnDestroy { // @TODO #6756 me
       this.invitationService.guestInvitations$.pipe(catchError(() => of([]))),
     ]).pipe(
       map(([event, invitations]) => {
+        this.editMeeting = `/c/o/dashboard/event/${event.id}/edit`;
+        this.accessRoute = `/event/${event.id}/r/i/${event.type === 'meeting' ? 'lobby' : 'session'}`;
+
         switch (event.accessibility) {
           case 'public':
             return undefined;
@@ -76,10 +72,10 @@ export class EventViewComponent implements OnInit, OnDestroy { // @TODO #6756 me
 
   ngOnDestroy() {
     this.sub.unsubscribe();
-    this.eventSub.unsubscribe();
   }
 
   goBack() {
+    this.authStore.updateAnonymousCredentials({ role: undefined, firstName: undefined, lastName: undefined, email: undefined });
     this.location.back();
   }
 }
