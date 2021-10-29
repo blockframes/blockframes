@@ -7,12 +7,10 @@ import { RouterModule, Routes } from '@angular/router';
 import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 import { MarketplaceComponent } from './marketplace.component';
 import { MarketplaceLayoutModule } from '@blockframes/ui/layout/marketplace/marketplace.module';
-import { OrgAccessModule } from '@blockframes/organization/pipes/org-access.pipe';
+import { AsideModule } from '@blockframes/ui/layout/marketplace/aside/aside.module';
 
 // Material
-import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
-import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 
 const routes: Routes = [{
@@ -97,12 +95,10 @@ const routes: Routes = [{
     CommonModule,
     FlexLayoutModule,
     MarketplaceLayoutModule,
-    OrgAccessModule,
+    AsideModule,
     
     // Material
-    MatListModule,
     MatIconModule,
-    MatToolbarModule,
     MatButtonModule,
   ]
 })
