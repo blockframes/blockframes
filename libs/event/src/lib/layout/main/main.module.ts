@@ -5,9 +5,6 @@ import { NgModule } from '@angular/core';
 // Routes
 import { RouterModule, Routes } from '@angular/router';
 
-// Components
-import { MainComponent } from './main.component';
-
 // Modules 
 import { AuthWidgetModule } from '@blockframes/auth/components/widget/widget.module';
 import { AppBarModule } from '@blockframes/ui/app-bar';
@@ -38,7 +35,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 const routes: Routes = [
   {
     path: ':eventId',
-    component: MainComponent,
     canActivate: [EventActiveGuard, InvitationGuard, NotificationsGuard],
     canDeactivate: [EventActiveGuard, InvitationGuard, NotificationsGuard],
     children: [
@@ -111,7 +107,6 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [MainComponent],
   imports: [
     RouterModule.forChild(routes),
     AppBarModule,

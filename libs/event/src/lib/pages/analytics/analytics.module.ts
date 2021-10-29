@@ -8,6 +8,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { DurationModule } from '@blockframes/utils/pipes/duration.pipe';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
+import { EventLayoutModule } from '@blockframes/ui/layout/event/event.module';
 
 // Angular
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -29,6 +30,7 @@ import { MatButtonModule } from '@angular/material/button';
     DurationModule,
     MatProgressSpinnerModule,
     EventFromShellModule,
+    EventLayoutModule,
     RouterModule.forChild([{ path: '', component: AnalyticsComponent }]),
   ]
 })

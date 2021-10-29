@@ -56,13 +56,14 @@
       </header>
     </app-bar>
 
-    <!-- CONTENT -->
     <main fxFlex cdkScrollable>
-      <div class="page" [@routeAnimation]="animationOutlet(outlet)">
-        <router-outlet #outlet="outlet" (activate)="scrollToTop()"></router-outlet>
+      <div class="page">
+        <ng-content></ng-content>
       </div>
       <bf-footer></bf-footer>
     </main>
+
+ 
 
   </mat-sidenav-content>
 </mat-sidenav-container>

@@ -16,6 +16,7 @@ import { FileCarouselModule } from '@blockframes/media/file/carousel/carousel.mo
 import { MeetingVideoRoomModule } from '@blockframes/event/components/meeting/room/video-room.module';
 import { DoorbellBottomSheetModule } from '@blockframes/event/components/doorbell/doorbell.module';
 import { ConfirmModule } from '@blockframes/ui/confirm/confirm.module';
+import { EventLayoutModule } from '@blockframes/ui/layout/event/event.module';
 
 // Materials
 import { MatButtonModule } from '@angular/material/button';
@@ -43,7 +44,7 @@ import { MatDividerModule } from '@angular/material/divider';
     MeetingVideoRoomModule,
     DoorbellBottomSheetModule,
     ConfirmModule,
-
+    EventLayoutModule,
     // Materials
     MatButtonModule,
     MatIconModule,
