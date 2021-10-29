@@ -5,6 +5,7 @@
 } from '@firebase/rules-unit-testing';
 import { testFixture } from './fixtures/data';
 import { Firestore, initFirestoreApp } from '@blockframes/testing/firebase/functions';
+import { EventDocument, Meeting, MeetingAttendee } from '@blockframes/event/+state/event.firestore';
 
 describe('Events Rules Tests', () => {
   const projectId = `evrules-spec-${Date.now()}`;
@@ -63,6 +64,23 @@ describe('Events Rules Tests', () => {
       await assertSucceeds(eventRef.update(eventDetails));
     });
 
+    test('user with valid org, ownerOrgId as orgId should be able to allow user access to meeting event', async () => {
+      const docRef = db.doc('events/E003');
+      const doc = await docRef.get()
+      const event = doc.data() as EventDocument<Meeting>;
+
+      // Load our test set
+      const credentials = {
+        uid: 'uid-foo',
+        firstName: 'anonymous',
+        lastName: 'user',
+        status: 'accepted',
+      } as MeetingAttendee;
+
+      event.meta.attendees[credentials.uid] = credentials;
+      await assertSucceeds(docRef.update(event));
+    });
+
     test('user with valid org, ownerOrgId as orgId should be able to delete event', async () => {
       const eventRef = db.doc('events/E007');
       await assertSucceeds(eventRef.delete());
@@ -109,6 +127,58 @@ describe('Events Rules Tests', () => {
       const docRef = db.doc('events/E001');
       await assertSucceeds(docRef.get());
     });
+
+    it('user can request to enter meeting room', async () => {
+      const docRef = db.doc('events/E003');
+      const doc = await docRef.get()
+      const event = doc.data() as EventDocument<Meeting>;
+
+      // Load our test set
+      const credentials = {
+        uid: 'uid-c8-anon',
+        firstName: 'anonymous',
+        lastName: 'user',
+        status: 'requesting',
+      } as MeetingAttendee;
+
+      event.meta.attendees[credentials.uid] = credentials;
+      await assertSucceeds(docRef.update(event));
+    });
+
+    it('user can leave meeting room', async () => {
+      const docRef = db.doc('events/E003');
+      const doc = await docRef.get()
+      const event = doc.data() as EventDocument<Meeting>;
+
+      // Load our test set
+      const credentials = {
+        uid: 'uid-c8-anon',
+        firstName: 'anonymous',
+        lastName: 'user',
+        status: 'ended',
+      } as MeetingAttendee;
+
+      event.meta.attendees[credentials.uid] = credentials;
+      await assertSucceeds(docRef.update(event));
+    });
+
+    it('user cannot allow himself into meeting room', async () => {
+      const docRef = db.doc('events/E003');
+      const doc = await docRef.get()
+      const event = doc.data() as EventDocument<Meeting>;
+
+      // Load our test set
+      const credentials = {
+        uid: 'uid-c8-anon',
+        firstName: 'anonymous',
+        lastName: 'user',
+        status: 'accepted',
+      } as MeetingAttendee;
+
+      event.meta.attendees[credentials.uid] = credentials;
+      await assertFails(docRef.update(event));
+    });
+
   });
 
   describe('With User not in org', () => {

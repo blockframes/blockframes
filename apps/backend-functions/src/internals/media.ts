@@ -10,17 +10,16 @@ import { createPublicUser } from '@blockframes/user/types';
 import { StorageFile } from '@blockframes/media/+state/media.firestore';
 
 // Internal dependencies
-import { db } from './firebase';
 import { isUserInvitedToEvent } from './invitations/events';
 import { MovieDocument } from '../data/types';
 import { Privacy } from '@blockframes/utils/file-sanitizer';
 
-export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eventId?: string | EventDocument<EventMeta>, email?: string): Promise<boolean> {
-
+export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eventId?: string, email?: string): Promise<boolean> {
+  const db = admin.firestore();
   const eventData = eventId ? await getDocument<EventDocument<EventMeta>>(`events/${eventId}`) : undefined;
 
   let userDoc = createPublicUser({ uid, email });
-  if (eventData?.accessibility === 'private') {
+  if (!eventData || eventData?.accessibility === 'private') {
     const user = await db.collection('users').doc(uid).get();
     if (!user.exists) { return false; }
     userDoc = createPublicUser(user.data());

@@ -5,7 +5,7 @@ import { File as GFile } from '@google-cloud/storage';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 
 import { jwplayerApiV2 } from '@blockframes/firebase-utils';
-import { EventDocument, EventMeta, linkDuration } from '@blockframes/event/+state/event.firestore';
+import { linkDuration } from '@blockframes/event/+state/event.firestore';
 import { StorageVideo } from '@blockframes/media/+state/media.firestore';
 
 import { ErrorResultResponse } from './utils';
@@ -13,7 +13,7 @@ import { getDocument } from './data/internals';
 import { isAllowedToAccessMedia } from './internals/media';
 import { jwplayerKey, jwplayerApiV2Secret, jwplayerSecret, enableDailyFirestoreBackup, playerId } from './environments/environment';
 
-interface ReadVideoParams {
+export interface ReadVideoParams {
 
   /**
    * The reference to the video in storage
