@@ -4,7 +4,7 @@ import { SEC } from '@blockframes/e2e/utils';
 export default class EventDetailsEditPage {
   constructor() {
     cy.get('event-details-edit', { timeout: 90 * SEC });
-    cy.wait(10 * SEC);
+    //cy.wait(10 * SEC);
   }
 
   addEventTitle(title: string) {
