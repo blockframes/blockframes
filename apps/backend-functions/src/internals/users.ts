@@ -10,8 +10,7 @@ import { sendMailFromTemplate, sendMail } from './email';
 import { PublicUser } from '@blockframes/user/types';
 import { EventEmailData, getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
 import { logger } from 'firebase-functions';
-import { InvitationBase, InvitationStatus } from '@blockframes/invitation/+state/invitation.firestore';
-import * as admin from 'firebase-admin';
+import { InvitationStatus } from '@blockframes/invitation/+state/invitation.firestore';
 
 interface UserProposal {
   uid: string;
@@ -42,7 +41,7 @@ export const getOrInviteUserByMail = async (
     try {
       const newUser = await createUserFromEmail(email, app);
       const toUser = getUserEmailData(newUser.user, newUser.password);
-      let invitationStatus;
+      let invitationStatus : InvitationStatus;
       // User does not exists, send him an email.
       const fromOrg = await getDocument<OrganizationDocument>(`orgs/${fromOrgId}`);
       const orgEmailData = getOrgEmailData(fromOrg);
