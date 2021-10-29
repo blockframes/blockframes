@@ -1,4 +1,4 @@
-<mat-nav-list>
+<mat-nav-list *ngIf="org$ | async as org">
   <a mat-list-item routerLink="/c/o/marketplace/home" routerLinkActive="active">
     <mat-icon mat-list-icon svgIcon="home"></mat-icon>
     <span mat-line><b>Home</b></span>
@@ -23,7 +23,7 @@
     <mat-icon mat-list-icon svgIcon="favorite"></mat-icon>
     <span mat-line><b>Wishlist</b></span>
   </a>
-  <ng-container *ngIf="org$ | async | canAccess: 'dashboard':'festival'">
+  <ng-container *ngIf="org | canAccess: 'dashboard':'festival'">
     <mat-divider></mat-divider>
     <a mat-list-item routerLink="/c/o/dashboard/home" routerLinkActive="active">
       <mat-icon matListIcon svgIcon="dashboard"></mat-icon>
