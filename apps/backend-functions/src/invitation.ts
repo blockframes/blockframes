@@ -11,7 +11,7 @@ import { ErrorResultResponse } from './utils';
 import { CallableContext } from "firebase-functions/lib/providers/https";
 import { App } from '@blockframes/utils/apps';
 import { EventDocument, EventMeta, MEETING_MAX_INVITATIONS_NUMBER } from '@blockframes/event/+state/event.firestore';
-import { EventEmailData, getEventEmailData } from '@blockframes/utils/emails/utils';
+import { getEventEmailData } from '@blockframes/utils/emails/utils';
 import { Change } from 'firebase-functions';
 import { AlgoliaOrganization } from '@blockframes/utils/algolia';
 import { createAlgoliaOrganization } from '@blockframes/firebase-utils';
@@ -169,11 +169,10 @@ export const inviteUsers = async (data: UserInvitation, context: CallableContext
   const eventId = invitation.type === 'attendEvent' && invitation.eventId;
   const event = eventId ? await getDocument<EventDocument<EventMeta>>(`events/${eventId}`) : undefined;
 
-
   for (const email of data.emails) {
     const invitationId = db.collection('invitations').doc().id;
     const { type, mode, fromOrg } = invitation;
-    const eventData = getEventEmailData(event, email, invitationId);
+    const eventData = getEventEmailData(event, email, invitationId, type);
     const isLastIndex = await getOrInviteUserByMail(
       email,
       { id: invitationId, type, mode, fromOrg },
