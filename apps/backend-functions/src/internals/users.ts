@@ -30,7 +30,7 @@ export const getOrInviteUserByMail = async (
   email: string, 
   invitation: {id: string, type: string, mode: string, fromOrg: PublicOrganization}, 
   app: App = 'catalog', 
-  eventData: EventEmailData
+  eventData?: EventEmailData
 ): Promise<{user: UserProposal | PublicUser, invitationStatus?: InvitationStatus}> => {
   const fromOrgId = invitation.fromOrg.id;
   try {
@@ -49,11 +49,11 @@ export const getOrInviteUserByMail = async (
 
       const credsTemplates = templateIds.user.credentials;
 
-      const invitationTemplateId = eventData.accessibility !== 'private' ? credsTemplates.attendNonPrivateEvent : credsTemplates.attendEvent;
+      const invitationTemplateId = eventData?.accessibility !== 'private' ? credsTemplates.attendNonPrivateEvent : credsTemplates.attendEvent;
           
       const templateId = invitation.type === 'joinOrganization' ? credsTemplates.joinOrganization : invitationTemplateId;
 
-      if(invitation.mode === 'invitation' && eventData.accessibility === 'invitation-only') {
+      if(invitation.mode === 'invitation' && eventData?.accessibility === 'invitation-only') {
         invitationStatus = 'accepted';
       }
 

@@ -159,7 +159,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `REMINDER - Your event "${notification.docId}" is about to start.`,
           placeholderUrl: 'empty_poster.svg',
-          url: `${applicationUrl['festival']}/c/o/marketplace/event/${notification.docId}`,
+          url: `${applicationUrl['festival']}/event/${notification.docId}/r/i`,
         };
       case 'oneDayReminder':
 
@@ -181,7 +181,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `REMINDER - Your event "${notification.docId}" is tomorrow.`,
           placeholderUrl: 'empty_poster.svg',
-          url: `${applicationUrl['festival']}/c/o/marketplace/event/${notification.docId}`,
+          url: `${applicationUrl['festival']}/event/${notification.docId}/r/i`,
         };
       case 'invitationToAttendEventUpdated':
       case 'requestToAttendEventUpdated':

@@ -4,7 +4,7 @@ import { format } from "date-fns";
 import { EventDocument, EventMeta, EventTypes } from "@blockframes/event/+state/event.firestore";
 import { Organization, OrganizationDocument } from "@blockframes/organization/+state";
 import { User } from "@blockframes/auth/+state";
-import { AccessibilityTypes, InvitationType } from "../static-model";
+import { AccessibilityTypes } from "../static-model";
 
 interface EmailData {
   to: string;
@@ -90,33 +90,26 @@ export function createEmailRequest(params: Partial<EmailRequest> = {}): EmailReq
   };
 }
 
-export function getEventEmailData(event?: Partial<EventDocument<EventMeta>>, userEmail?: string, invitationId?: string, invitationType?: InvitationType): EventEmailData {
-  let eventStart = '';
-  let eventEnd = '';
-  if (event) {
-    const eventStartDate = new Date(event.start.toDate());
-    const eventEndDate = new Date(event.end.toDate());
+export function getEventEmailData(event: Partial<EventDocument<EventMeta>>, userEmail?: string, invitationId?: string): EventEmailData {
 
-    /**
-     * @dev Format from date-fns lib, here the date will be 'month/day/year, hours:min:sec am/pm GMT'
-     * See the doc here : https://date-fns.org/v2.16.1/docs/format
-     */
-    eventStart = format(eventStartDate, 'Pppp');
-    eventEnd = format(eventEndDate, 'Pppp');
-  }
+  const eventStartDate = new Date(event.start.toDate());
+  const eventEndDate = new Date(event.end.toDate());
+  const eventUrlParams = userEmail && invitationId ? `?email=${encodeURIComponent(userEmail)}&i=${invitationId}` : '';
 
-  const eventUrlParams = userEmail && invitationId && invitationType === 'attendEvent' ? `?email=${encodeURIComponent(userEmail)}&i=${invitationId}` : '';
-  const url = invitationType === 'attendEvent' ? `/event/${event?.id}/r/i` : `/c/o/marketplace/event/${event?.id}`;
+  /**
+   * @dev Format from date-fns lib, here the date will be 'month/day/year, hours:min:sec am/pm GMT'
+   * See the doc here : https://date-fns.org/v2.16.1/docs/format
+   */
 
   return {
-    id: event?.id || '',
-    title: event?.title || '',
-    start: eventStart,
-    end: eventEnd,
-    type: event?.type,
-    viewUrl: event?.id ? `${url}${eventUrlParams}` : '',
-    sessionUrl: event?.id ? `${url}/session${eventUrlParams}` : '',
-    accessibility: event?.accessibility
+    id: event.id,
+    title: event.title,
+    start: format(eventStartDate, 'Pppp'),
+    end: format(eventEndDate, 'Pppp'),
+    type: event.type,
+    viewUrl: `/event/${event.id}/r/i${eventUrlParams}`,
+    sessionUrl: `/event/${event.id}/r/i/session${eventUrlParams}`,
+    accessibility: event.accessibility
   }
 }
 

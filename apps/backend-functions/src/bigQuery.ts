@@ -9,14 +9,13 @@ import { orgName } from "@blockframes/organization/+state/organization.firestore
 /** Query to get analytics of the number of views for the festival app event sessions pages
  * for an array of eventId
  */
-// @TODO #6756 marketplace/event
 const queryEventAnalytics = `
 SELECT
   event_name as event_name,
   COUNT(*) as hits,
   value.string_value as eventIdPage,
   user_id as userId,
-  REGEXP_EXTRACT(value.string_value, '.*/marketplace/event/([^/]+)/session') as eventId
+  REGEXP_EXTRACT(value.string_value, '/event/([^/]+)/r/i/session') as eventId
 FROM
   \`${bigQueryAnalyticsTable}*\`,
   UNNEST(event_params) AS params
@@ -24,7 +23,7 @@ WHERE
     (
       event_name = @pageView
       AND key = 'page_path'
-      AND REGEXP_EXTRACT(value.string_value, '.*/marketplace/event/([^/]+)/session') in UNNEST(@eventIds)
+      AND REGEXP_EXTRACT(value.string_value, '/event/([^/]+)//r/i/session') in UNNEST(@eventIds)
     )
 
 GROUP BY
