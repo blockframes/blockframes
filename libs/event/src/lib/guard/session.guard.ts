@@ -15,7 +15,7 @@ export class SessionGuard implements CanActivate {
     private authQuery: AuthQuery,
     private eventQuery: EventQuery,
     private router: Router,
-  ) {}
+  ) { }
 
   async canActivate(): Promise<boolean | UrlTree> {
     const event = this.eventQuery.getActive();

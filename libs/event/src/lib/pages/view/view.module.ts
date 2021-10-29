@@ -4,24 +4,28 @@ import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { EventViewComponent } from './view.component';
-
-import { EventViewModule as EventViewLayoutModule } from '@blockframes/event/layout/view/view.module';
 import { EventRangeModule } from '@blockframes/event/pipes/event-range.pipe';
+import { EventTimeModule } from '@blockframes/event/pipes/event-time.pipe';
 import { MovieHeaderModule } from '@blockframes/movie/components/header/header.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { OrganizationCardModule } from '@blockframes/organization/components/card/card.module';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { OrgChipModule } from '@blockframes/organization/components/chip/chip.module';
 import { DisplayNameModule, DisplayPositionModule } from '@blockframes/utils/pipes';
+import { CountdownModule } from '@blockframes/ui/countdown/countdown.module';
+import { ToLabelModule } from '@blockframes/utils/pipes';
+import { InvitationActionModule } from '@blockframes/invitation/components/action/action.module';
+
 import { MatButtonModule} from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [EventViewComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
-    EventViewLayoutModule,
     EventRangeModule,
+    EventTimeModule,
     MovieHeaderModule,
     ImageModule,
     OrgNameModule,
@@ -29,7 +33,11 @@ import { MatButtonModule} from '@angular/material/button';
     OrganizationCardModule,
     DisplayNameModule,
     DisplayPositionModule,
+    InvitationActionModule,
+    CountdownModule,
+    ToLabelModule,
     MatButtonModule,
+    MatIconModule,
     RouterModule.forChild([{ path: '', component: EventViewComponent }])
   ]
 })

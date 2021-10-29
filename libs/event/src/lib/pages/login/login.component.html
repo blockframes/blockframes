@@ -23,12 +23,27 @@
         <mat-error *ngIf="loginForm.get('password').hasError('required')">
           Password is <strong>required</strong>
         </mat-error>
+        <mat-error *ngIf="loginForm.get('password').hasError('minlength')">
+          New password with less than <strong>6</strong> characters.
+        </mat-error>
+        <mat-error *ngIf="loginForm.get('password').hasError('maxlength')">
+          New password with more than <strong>24</strong> characters.
+        </mat-error>
+        <mat-hint>Between 6 and 24 characters.</mat-hint>
+
       </mat-form-field>
 
       <a routerLink="/auth/reset-password" color="primary">Forgot your password ?</a>
       <div>
-        <button mat-flat-button color="primary" type="submit">Login</button>
+        <button mat-flat-button color="primary" type="submit">{{ buttonText }}</button>
       </div>
     </form>
   </div>
 </section>
+
+<ng-template #customSnackBarTemplate>
+  <div class="custom-snackbar-message" fxLayoutGap="50px">
+    <span>This account does not exist.</span>
+    <a routerLink="/auth/identity">CREATE ACCOUNT</a>
+  </div>
+</ng-template>

@@ -10,17 +10,16 @@ import { createPublicUser } from '@blockframes/user/types';
 import { StorageFile } from '@blockframes/media/+state/media.firestore';
 
 // Internal dependencies
-import { db } from './firebase';
 import { isUserInvitedToEvent } from './invitations/events';
 import { MovieDocument } from '../data/types';
 import { Privacy } from '@blockframes/utils/file-sanitizer';
 
-export async function isAllowedToAccessMedia(file: StorageFile, uid: string, event?: string | EventDocument<EventMeta>, email?: string): Promise<boolean> {
-
-  const eventData = typeof event === 'string' ? await getDocument<EventDocument<EventMeta>>(`events/${event}`) : event;
+export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eventId?: string, email?: string): Promise<boolean> {
+  const db = admin.firestore();
+  const eventData = eventId ? await getDocument<EventDocument<EventMeta>>(`events/${eventId}`) : undefined;
 
   let userDoc = createPublicUser({ uid, email });
-  if (eventData.accessibility === 'private') {
+  if (!eventData || eventData?.accessibility === 'private') {
     const user = await db.collection('users').doc(uid).get();
     if (!user.exists) { return false; }
     userDoc = createPublicUser(user.data());
@@ -79,37 +78,34 @@ export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eve
 
   // use is not currently authorized,
   // but he might be invited to an event where the file is shared
-  if (!canAccess && event) {
+  if (!canAccess && eventData?.id) {
 
-    if (eventData?.id) {
+    const now = admin.firestore.Timestamp.now();
 
-      const now = admin.firestore.Timestamp.now();
+    // check if meeting is ongoing (not too early nor too late)
+    if (now.seconds < eventData.start.seconds || now.seconds > eventData.end.seconds) {
+      return false;
+    }
 
-      // check if meeting is ongoing (not too early nor too late)
-      if (now.seconds < eventData.start.seconds || now.seconds > eventData.end.seconds) {
-        return false;
-      }
+    const isInvited = await isUserInvitedToEvent(uid, eventData, email);
+    if (!isInvited) { return false; }
 
-      const isInvited = await isUserInvitedToEvent(uid, eventData, email);
-      if (!isInvited) { return false; }
+    // if event is a Meeting and has the file
+    if (eventData.type === 'meeting') {
 
-      // if event is a Meeting and has the file
-      if (eventData.type === 'meeting') {
+      // Check if the given file exists among the event's files
+      canAccess = (eventData.meta as Meeting).files.some(eventFile =>
+        eventFile.privacy === privacy && // trusted value from db
+        eventFile.collection === file.collection &&
+        eventFile.docId === file.docId &&
+        eventFile.field === file.field &&
+        eventFile.storagePath === storagePath // trusted value from db
+      );
 
-        // Check if the given file exists among the event's files
-        canAccess = (eventData.meta as Meeting).files.some(eventFile =>
-          eventFile.privacy === privacy && // trusted value from db
-          eventFile.collection === file.collection &&
-          eventFile.docId === file.docId &&
-          eventFile.field === file.field &&
-          eventFile.storagePath === storagePath // trusted value from db
-        );
-
-      } else if (eventData.type === 'screening') {
-        // only give access for this specific movie screener
-        canAccess = file.field === 'promotional.videos.screener'
-          && file.docId === (eventData.meta as Screening).titleId;
-      }
+    } else if (eventData.type === 'screening') {
+      // only give access for this specific movie screener
+      canAccess = file.field === 'promotional.videos.screener'
+        && file.docId === (eventData.meta as Screening).titleId;
     }
   }
 
