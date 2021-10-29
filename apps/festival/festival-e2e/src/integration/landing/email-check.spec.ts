@@ -5,7 +5,7 @@ import { clearDataAndPrepareTest, setForm, serverId, testEmail, SEC } from "@blo
 //Test if email is sent correctly.
 const SUBJECT_DEMO = 'A demo has been requested';
 
-describe('Demo Request Email', () => {
+describe.skip('Demo Request Email', () => {
   const demo_contact = {
     'first-name': 'Reed',
     'last-name': 'Hastings',
