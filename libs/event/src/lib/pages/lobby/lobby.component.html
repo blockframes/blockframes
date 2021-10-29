@@ -1,91 +1,92 @@
 <layout-event>
   <ng-container *ngIf="(event$ | async) as event; else loading">
-    <h1>Meeting Lobby</h1>
-    <h2>{{event.title}}</h2>
-    <section *ngIf="(local$ | async) as local">
+    <main fxLayout="column" fxLayoutAlign="center center">
+      <h1>Meeting Lobby</h1>
+      <h2>{{event.title}}</h2>
+      <section *ngIf="(local$ | async) as local">
 
-      <meeting-video [attendee]="local"></meeting-video>
+        <meeting-video [attendee]="local"></meeting-video>
 
-      <aside>
-        <div fxLayout="row" fxLayoutGap="32px">
-          <ng-container *ngIf="local.tracks.video as videoTrack">
-            <button
-              mat-fab
-              color="primary"
-              [matTooltip]="'Turn ' + (videoTrack.isEnabled ? 'off' : 'on') + ' camera'"
-              (click)="toggleLocalTrack('video')"
-            >
-              <mat-icon *ngIf="videoTrack.isEnabled" svgIcon="videocam"></mat-icon>
-              <mat-icon *ngIf="!videoTrack.isEnabled" svgIcon="videocam_off"></mat-icon>
-            </button>
-          </ng-container>
-          <ng-container *ngIf="!local.tracks.video">
-            <!-- We put the tooltip on a parent <span> because tooltip are not displayed on disabled buttons -->
-            <span matTooltip="Your browser doesn't allow us to access your camera. To activate it, please change your browser preferences.">
-              <button mat-fab disabled>
-                <mat-icon svgIcon="videocam"></mat-icon>
+        <aside>
+          <div fxLayout="row" fxLayoutGap="32px">
+            <ng-container *ngIf="local.tracks.video as videoTrack">
+              <button
+                mat-fab
+                color="primary"
+                [matTooltip]="'Turn ' + (videoTrack.isEnabled ? 'off' : 'on') + ' camera'"
+                (click)="toggleLocalTrack('video')"
+              >
+                <mat-icon *ngIf="videoTrack.isEnabled" svgIcon="videocam"></mat-icon>
+                <mat-icon *ngIf="!videoTrack.isEnabled" svgIcon="videocam_off"></mat-icon>
               </button>
-            </span>
-          </ng-container>
+            </ng-container>
+            <ng-container *ngIf="!local.tracks.video">
+              <!-- We put the tooltip on a parent <span> because tooltip are not displayed on disabled buttons -->
+              <span matTooltip="Your browser doesn't allow us to access your camera. To activate it, please change your browser preferences.">
+                <button mat-fab disabled>
+                  <mat-icon svgIcon="videocam"></mat-icon>
+                </button>
+              </span>
+            </ng-container>
 
-          <ng-container *ngIf="local.tracks.audio as audioTrack">
-            <button
-              mat-fab
-              color="primary"
-              [matTooltip]="'Turn ' + (audioTrack.isEnabled ? 'off' : 'on') + ' mic'"
-              (click)="toggleLocalTrack('audio')"
-            >
-              <mat-icon *ngIf="audioTrack.isEnabled" svgIcon="mic"></mat-icon>
-              <mat-icon *ngIf="!audioTrack.isEnabled" svgIcon="mic_off"></mat-icon>
-            </button>
-          </ng-container>
-          <ng-container *ngIf="!local.tracks.audio">
-            <!-- We put the tooltip on a parent <span> because tooltip are not displayed on disabled buttons -->
-            <span matTooltip="Your browser doesn't allow us to access your microphone. To activate it, please change your browser preferences.">
-              <button mat-fab disabled>
-                <mat-icon svgIcon="mic"></mat-icon>
+            <ng-container *ngIf="local.tracks.audio as audioTrack">
+              <button
+                mat-fab
+                color="primary"
+                [matTooltip]="'Turn ' + (audioTrack.isEnabled ? 'off' : 'on') + ' mic'"
+                (click)="toggleLocalTrack('audio')"
+              >
+                <mat-icon *ngIf="audioTrack.isEnabled" svgIcon="mic"></mat-icon>
+                <mat-icon *ngIf="!audioTrack.isEnabled" svgIcon="mic_off"></mat-icon>
               </button>
-            </span>
-          </ng-container>
-        </div>
-
-        <div fxLayout="column" fxLayoutAlign="end center" class="request">
-          <ng-container [ngSwitch]="attendeeStatus">
-
-            <ng-container *ngSwitchCase="'owner' || 'accepted'">
-              <a mat-flat-button routerLink="../session" color="accent">Access {{ event.type | titlecase }} Room</a>
             </ng-container>
-
-            <ng-container *ngSwitchCase="'requesting'">
-              <p>Waiting for request to be accepted...</p>
-              <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+            <ng-container *ngIf="!local.tracks.audio">
+              <!-- We put the tooltip on a parent <span> because tooltip are not displayed on disabled buttons -->
+              <span matTooltip="Your browser doesn't allow us to access your microphone. To activate it, please change your browser preferences.">
+                <button mat-fab disabled>
+                  <mat-icon svgIcon="mic"></mat-icon>
+                </button>
+              </span>
             </ng-container>
+          </div>
 
-            <ng-container *ngSwitchCase="'denied'">
-              <p class="mat-error">Your request to join has been denied.</p>
-              <a mat-flat-button (click)="requestAccess()" color="accent">Ask to join again</a>
-            </ng-container>
+          <div fxLayout="column" fxLayoutAlign="end center" class="request">
+            <ng-container [ngSwitch]="attendeeStatus">
 
-            <ng-container *ngSwitchDefault>
-              <ng-container *ngIf="ownerIsPresent else ownerNotPresent">
-                <a mat-flat-button (click)="requestAccess()" color="accent">Ask to join {{ event.type | titlecase }} Room</a>
+              <ng-container *ngSwitchCase="'owner' || 'accepted'">
+                <a mat-flat-button routerLink="../session" color="accent">Access {{ event.type | titlecase }} Room</a>
               </ng-container>
 
-              <ng-template #ownerNotPresent>
-                <p>Waiting for owner to start the Meeting</p>
+              <ng-container *ngSwitchCase="'requesting'">
+                <p>Waiting for request to be accepted...</p>
                 <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-              </ng-template>
+              </ng-container>
 
+              <ng-container *ngSwitchCase="'denied'">
+                <p class="mat-error">Your request to join has been denied.</p>
+                <a mat-flat-button (click)="requestAccess()" color="accent">Ask to join again</a>
+              </ng-container>
+
+              <ng-container *ngSwitchDefault>
+                <ng-container *ngIf="ownerIsPresent else ownerNotPresent">
+                  <a mat-flat-button (click)="requestAccess()" color="accent">Ask to join {{ event.type | titlecase }} Room</a>
+                </ng-container>
+
+                <ng-template #ownerNotPresent>
+                  <p>Waiting for owner to start the Meeting</p>
+                  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                </ng-template>
+
+              </ng-container>
             </ng-container>
-          </ng-container>
-        </div>
+          </div>
 
-      </aside>
+        </aside>
 
-    </section>
+      </section>
 
-    <img asset="meeting.svg" alt="Meeting room">
-
+      <img asset="meeting.svg" alt="Meeting room">
+    </main>
   </ng-container>
 </layout-event>
 
