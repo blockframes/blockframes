@@ -13,7 +13,7 @@
 
     <ng-container *ngIf="attendees$ | async as attendees">
       <h3>There were {{attendees.length}} attendee{attendees.length, plural, =1 {} other {s}}</h3>
-      <p *ngFor="let user of attendees">{{user.firstName}} {{user.lastName}}</p>
+      <p *ngFor="let user of attendees">{{user | displayName }}</p>
     </ng-container>
   </section>
 </ng-container>
