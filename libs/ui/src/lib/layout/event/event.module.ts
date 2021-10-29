@@ -31,31 +31,26 @@ import { MatMenuModule } from '@angular/material/menu';
   imports: [
     // Angular
     CommonModule,
-    RouterModule,
     FlexLayoutModule,
-    ScrollingModule,
-    MatLayoutModule,
     AppLogoModule,
     FooterModule,
     AsideModule,
 
     // Material
     MatToolbarModule,
-    MatListModule,
     MatSidenavModule,
     MatIconModule,
     MatButtonModule,
     MatDividerModule,
     MatBadgeModule,
-    MatMenuModule,
 
     // Libraries
     ImageModule,
     AppBarModule,
 
     // Widgets
-    SearchWidgetModule,
     AuthWidgetModule,
   ]
 })
 export class EventLayoutModule { }
+MatLayoutModule

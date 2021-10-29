@@ -22,7 +22,6 @@ import { getCurrentApp, App } from '@blockframes/utils/apps';
   selector: 'layout-event',
   templateUrl: './event.component.html',
   styleUrls: ['./event.component.scss'],
-  animations: [routeAnimation],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EventComponent implements OnInit {
@@ -59,10 +58,6 @@ export class EventComponent implements OnInit {
       this.cdkScrollable.scrollTo({ top: 0 });
       this.sidenav.close();
     }
-  }
-
-  animationOutlet(outlet: RouterOutlet) {
-    return outlet?.activatedRouteData?.animation;
   }
 }
 
