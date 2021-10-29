@@ -3,7 +3,7 @@
     <a mat-icon-button fxLayout="row" fxLayoutAlign="center center" routerLink="/c/o/dashboard/avails">
       <mat-icon svgIcon="arrow_back"></mat-icon>
     </a>
-    <a *ngIf="movie$|async as movie" routerLink="/c/o/marketplace/title/{{movie.id}}">
+    <a *ngIf="movie$|async as movie" routerLink="/c/o/dashboard/title/{{movie.id}}">
       <h2>{{movie.title.international}}</h2>
     </a>
   </header>
