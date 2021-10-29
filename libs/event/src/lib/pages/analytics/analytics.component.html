@@ -1,65 +1,61 @@
-<layout-event>
-  <ng-container *ngIf="isEventStarted(event$ | async)">
-    <main fxLayout="column" fxLayoutAlign="center center">
-      <h2>Statistics</h2>
-      <ng-container *ngIf="analytics as analytics; else loading">
-        <ng-container *ngIf="analytics.length else noAnalytics">
-          <section class="analytics">
-            <span fxLayout="row" fxLayoutGap="24px">
-              <mat-card class="attendees">
-                <span fxLayout="row" fxLayoutAlign="start center">
-                  <mat-icon svgIcon="group"></mat-icon>
-                  <span class="mat-body-2">Number of attendees</span>
-                </span>
-                <h2>{{ analytics.length }}</h2>
-              </mat-card>
-              <mat-card class="attendees">
-                <span fxLayout="row" fxLayoutAlign="start center">
-                  <mat-icon svgIcon="access_time"></mat-icon>
-                  <span class="mat-body-2">Average Watch Time</span>
-                </span>
-                <h2>{{ averageWatchTime * 1000 | duration: '0min' }}</h2>
-              </mat-card>
+<ng-container *ngIf="isEventStarted(event$ | async)">
+  <h2>Statistics</h2>
+  <ng-container *ngIf="analytics as analytics; else loading">
+    <ng-container *ngIf="analytics.length else noAnalytics">
+      <section class="analytics">
+        <span fxLayout="row" fxLayoutGap="24px">
+          <mat-card class="attendees">
+            <span fxLayout="row" fxLayoutAlign="start center">
+              <mat-icon svgIcon="group"></mat-icon>
+              <span class="mat-body-2">Number of attendees</span>
             </span>
-            <mat-card>
-              <article fxLayout="row" fxLayoutAlign="space-between start" flex>
-                <h3>Attendees</h3>
-                <button [disabled]="exporting.$ | async" mat-button color="primary" (click)="exportTable()">
-                  <ng-container *ngIf="exporting.$ | async else export">
-                    <span>Generating CSV...</span>
-                  </ng-container>
-                  <ng-template #export>
-                    <mat-icon svgIcon="excel"></mat-icon>
-                    <span>Export to CSV</span>
-                  </ng-template>
-                </button>
-              </article>
-              <bf-table pagination="50" useFilter [source]="analytics">
-                <ng-template colRef="name" label="Name" let-name sort>{{ name | titlecase }}</ng-template>
-                <ng-template colRef="email" label="Email Address" let-email sort>{{ email }}</ng-template>
-                <ng-template colRef="orgName" label="Company Name" let-orgName sort>{{ orgName }}</ng-template>
-                <ng-template colRef="orgActivity" label="Company Activity" let-orgActivity>{{ orgActivity | toLabel:
-                  'orgActivity' }}</ng-template>
-                <ng-template colRef="orgCountry" label="Country" let-orgCountry>{{ orgCountry | toLabel: 'territories' }}
-                </ng-template>
-                <ng-template *ngIf="hasWatchTime" colRef="watchTime" label="watch time" let-watchTime sort>{{ watchTime * 1000 | duration: '0min' }}
-                </ng-template>
-              </bf-table>
-            </mat-card>
-          </section>
-        </ng-container>
-      </ng-container>
-      <ng-template #noAnalytics>
-        <article class="no-analytics" fxLayout="column" fxLayoutAlign="center center">
-          <img asset="wait.svg" alt="waiting">
-          <p class="mat-body-2">There is no statistics available here yet.</p>
-        </article>
-      </ng-template>
-      <ng-template #loading>
-        <article fxLayout="row" fxLayoutAlign="center">
-          <mat-spinner></mat-spinner>
-        </article>
-      </ng-template>
-    </main>
+            <h2>{{ analytics.length }}</h2>
+          </mat-card>
+          <mat-card class="attendees">
+            <span fxLayout="row" fxLayoutAlign="start center">
+              <mat-icon svgIcon="access_time"></mat-icon>
+              <span class="mat-body-2">Average Watch Time</span>
+            </span>
+            <h2>{{ averageWatchTime * 1000 | duration: '0min' }}</h2>
+          </mat-card>
+        </span>
+        <mat-card>
+          <article fxLayout="row" fxLayoutAlign="space-between start" flex>
+            <h3>Attendees</h3>
+            <button [disabled]="exporting.$ | async" mat-button color="primary" (click)="exportTable()">
+              <ng-container *ngIf="exporting.$ | async else export">
+                <span>Generating CSV...</span>
+              </ng-container>
+              <ng-template #export>
+                <mat-icon svgIcon="excel"></mat-icon>
+                <span>Export to CSV</span>
+              </ng-template>
+            </button>
+          </article>
+          <bf-table pagination="50" useFilter [source]="analytics">
+            <ng-template colRef="name" label="Name" let-name sort>{{ name | titlecase }}</ng-template>
+            <ng-template colRef="email" label="Email Address" let-email sort>{{ email }}</ng-template>
+            <ng-template colRef="orgName" label="Company Name" let-orgName sort>{{ orgName }}</ng-template>
+            <ng-template colRef="orgActivity" label="Company Activity" let-orgActivity>{{ orgActivity | toLabel:
+              'orgActivity' }}</ng-template>
+            <ng-template colRef="orgCountry" label="Country" let-orgCountry>{{ orgCountry | toLabel: 'territories' }}
+            </ng-template>
+            <ng-template *ngIf="hasWatchTime" colRef="watchTime" label="watch time" let-watchTime sort>{{ watchTime * 1000 | duration: '0min' }}
+            </ng-template>
+          </bf-table>
+        </mat-card>
+      </section>
+    </ng-container>
   </ng-container>
-</layout-event>
+  <ng-template #noAnalytics>
+    <article class="no-analytics" fxLayout="column" fxLayoutAlign="center center">
+      <img asset="wait.svg" alt="waiting">
+      <p class="mat-body-2">There is no statistics available here yet.</p>
+    </article>
+  </ng-template>
+  <ng-template #loading>
+    <article fxLayout="row" fxLayoutAlign="center">
+      <mat-spinner></mat-spinner>
+    </article>
+  </ng-template>
+</ng-container>

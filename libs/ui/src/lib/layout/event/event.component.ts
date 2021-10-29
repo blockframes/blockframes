@@ -38,16 +38,16 @@ export class EventComponent implements OnInit {
 
   constructor(
     private orgQuery: OrganizationQuery,
+    private authQuery: AuthQuery,
     private invitationService: InvitationService,
     private notificationQuery: NotificationQuery,
-    private authQuery: AuthQuery,
     private movieService: MovieService,
     private routerQuery: RouterQuery
   ) { }
 
   ngOnInit() {
     this.wishlistCount$ = this.orgQuery.selectActive().pipe(
-      map(org => org.wishlist),
+      map(org => org?.wishlist ? org.wishlist : []),
       switchMap(movieIds => this.movieService.getValue(movieIds)),
       map((movies: Movie[]) => movies.filter(filterMovieByAppAccess(getCurrentApp(this.routerQuery))).length)
     );
