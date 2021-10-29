@@ -13,6 +13,7 @@ import { AuthWidgetModule } from '@blockframes/auth/components/widget/widget.mod
 import { AppBarModule } from '@blockframes/ui/app-bar';
 import { AppLogoModule } from '../app-logo/app-logo.module';
 import { FooterModule } from '../footer/footer.module';
+import { AsideModule } from '../marketplace/aside/aside.module';
 
 // Material
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -36,6 +37,7 @@ import { MatMenuModule } from '@angular/material/menu';
     MatLayoutModule,
     AppLogoModule,
     FooterModule,
+    AsideModule,
 
     // Material
     MatToolbarModule,

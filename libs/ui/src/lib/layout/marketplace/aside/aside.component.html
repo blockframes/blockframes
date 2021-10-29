@@ -1,0 +1,34 @@
+<mat-nav-list>
+  <a mat-list-item routerLink="/c/o/marketplace/home" routerLinkActive="active">
+    <mat-icon mat-list-icon svgIcon="home"></mat-icon>
+    <span mat-line><b>Home</b></span>
+  </a>
+  <a test-id="library" mat-list-item routerLink="/c/o/marketplace/title" routerLinkActive="active">
+    <mat-icon mat-list-icon svgIcon="video_library"></mat-icon>
+    <span mat-line><b>Titles</b></span>
+  </a>
+  <a test-id="sellers" mat-list-item routerLink="/c/o/marketplace/organization" routerLinkActive="active">
+    <mat-icon mat-list-icon svgIcon="sellers"></mat-icon>
+    <span mat-line><b>Sales Agents</b></span>
+  </a>
+  <a mat-list-item routerLink="/c/o/marketplace/event" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+    <mat-icon mat-list-icon svgIcon="screening"></mat-icon>
+    <span mat-line><b>Screening List</b></span>
+  </a>
+  <a mat-list-item routerLink="/c/o/marketplace/event/calendar" routerLinkActive="active">
+    <mat-icon mat-list-icon svgIcon="calendar_today"></mat-icon>
+    <span mat-line><b>My Calendar</b></span>
+  </a>
+  <a mat-list-item routerLink="/c/o/marketplace/wishlist" routerLinkActive="active">
+    <mat-icon mat-list-icon svgIcon="favorite"></mat-icon>
+    <span mat-line><b>Wishlist</b></span>
+  </a>
+  <ng-container *ngIf="org$ | async | canAccess: 'dashboard':'festival'">
+    <mat-divider></mat-divider>
+    <a mat-list-item routerLink="/c/o/dashboard/home" routerLinkActive="active">
+      <mat-icon matListIcon svgIcon="dashboard"></mat-icon>
+      <span matLine><b>My Dashboard</b></span>
+    </a>
+  </ng-container>
+</mat-nav-list>
+
