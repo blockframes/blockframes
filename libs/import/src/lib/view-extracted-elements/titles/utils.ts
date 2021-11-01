@@ -5,8 +5,8 @@ import { MandatoryError, MovieImportState, WrongValueError, optionalWarning, get
 import { createMovie } from '@blockframes/movie/+state';
 import { extract, ExtractConfig, SheetTab, ValueWithWarning } from '@blockframes/utils/spreadsheet';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
-import { MovieAppConfig, MovieGoalsAudience, MovieRelease, MovieRunningTime } from '@blockframes/movie/+state/movie.firestore';
-import { Genre, Language, NumberRange, SocialGoal, StoreStatus, Territory } from '@blockframes/utils/static-model';
+import { MovieAppConfig, MovieGoalsAudience, MovieLanguageSpecification, MovieRelease, MovieRunningTime, MovieStakeholders } from '@blockframes/movie/+state/movie.firestore';
+import { Certification, Color, ContentType, CrewRole, Genre, Language, MediaValue, MovieFormat, MovieFormatQuality, NumberRange, PremiereType, ProducerRole, ProductionStatus, SocialGoal, SoundFormat, StakeholderRole, StoreStatus, Territory } from '@blockframes/utils/static-model';
 import { User } from '@blockframes/auth/+state';
 
 interface FieldsConfig {
@@ -16,8 +16,8 @@ interface FieldsConfig {
     series: number;
   };
   internalRef: string;
-  contentType: string;
-  productionStatus: string;
+  contentType: ContentType;
+  productionStatus: ProductionStatus;
   release: MovieRelease;
   directors: {
     firstName: string; lastName: string;
@@ -25,11 +25,12 @@ interface FieldsConfig {
   }[];
   originCountries: Territory[];
   stakeholders: {
-    displayName: string; role: string;
+    displayName: string;
+    role: StakeholderRole;
     country:string;
   }[];
   originalRelease: {
-    country: string; media: string;
+    country: Territory; media: MediaValue;
     date: Date
   }[];
   originalLanguages: Language[];
@@ -43,17 +44,17 @@ interface FieldsConfig {
     name: string;
     year: number;
     prize: string;
-    premiere: string;
+    premiere: PremiereType;
   }[];
   logline: string;
   synopsis: string;
   keyAssets: string;
   keywords: string[];
   producers: {
-    firstName: string; lastName: string; role: string
+    firstName: string; lastName: string; role: ProducerRole
   }[];
   crew: {
-    firstName: string; lastName: string; role: string
+    firstName: string; lastName: string; role: CrewRole
   }[];
   budgetRange: NumberRange;
   boxoffice: {
@@ -61,17 +62,17 @@ interface FieldsConfig {
     unit: string;
     value: number;
   }[];
-  certifications: string[];
+  certifications: Certification[];
   ratings: { country: string; value: string; }[];
   audience: MovieGoalsAudience;
   reviews: {
     filmCriticName: string; revue: string;
     link: string; quote: string;
   }[];
-  color: string;
-  format: string;
-  formatQuality: string;
-  soundFormat: string;
+  color: Color;
+  format: MovieFormat;
+  formatQuality: MovieFormatQuality;
+  soundFormat: SoundFormat;
   isOriginalVersionAvailable: boolean;
   languages: {
     language: string;
@@ -116,7 +117,7 @@ export async function formatTitle(
     },
     /* d */ 'contentType': (value: string) => { // ! required
       if (!value) throw new MandatoryError({ field: 'contentType', name: 'Content Type' });
-      const key = getKeyIfExists('contentType', value);
+      const key = getKeyIfExists('contentType', value) as ContentType;
       if (!key) throw new WrongValueError({ field: 'contentType', name: 'Content Type' });
       return key
     },
@@ -134,7 +135,7 @@ export async function formatTitle(
     },
     /* g */ 'productionStatus': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'productionStatus', name: 'Production Status' }));
-      const status = getKeyIfExists('productionStatus', value);
+      const status = getKeyIfExists('productionStatus', value) as ProductionStatus;
       if (!status) throw new WrongValueError({ field: 'productionStatus', name: 'Production Status' });
       return status;
     },
@@ -175,7 +176,7 @@ export async function formatTitle(
     },
     /* o */ 'stakeholders[].role': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'stakeholders[].role', name: 'Stakeholders Role' }));
-      const role = getKeyIfExists('stakeholderRoles', value);
+      const role = getKeyIfExists('stakeholderRoles', value) as StakeholderRole;
       if (!role) throw new WrongValueError({ field: 'stakeholders[].role', name: 'Stakeholders Role' });
       return role;
     },
@@ -187,13 +188,13 @@ export async function formatTitle(
     },
     /* q */ 'originalRelease[].country': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'originalRelease[].country', name: 'Original release Country' }));
-      const country = getKeyIfExists('territories', value);
+      const country = getKeyIfExists('territories', value) as Territory;
       if (!country) throw new WrongValueError({ field: 'originalRelease[].country', name: 'Original release Country' });
       return country;
     },
     /* r */ 'originalRelease[].media': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'originalRelease[].media', name: 'Original release Media' }));
-      const media = getKeyIfExists('medias', value);
+      const media = getKeyIfExists('medias', value) as MediaValue;
       if (!media) throw new WrongValueError({ field: 'originalRelease[].media', name: 'Original release Media' });
       return media;
     },
@@ -263,7 +264,7 @@ export async function formatTitle(
     },
     /* ae */ 'prizes[].premiere': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'prizes[].premiere', name: 'Festival Prizes Premiere' }));
-      const premiere = getKeyIfExists('premiereType', value);
+      const premiere = getKeyIfExists('premiereType', value) as PremiereType;
       if (!premiere) throw new WrongValueError({ field: 'prizes[].premiere', name: 'Festival Prizes Premiere'});
       return premiere;
     },
@@ -293,7 +294,7 @@ export async function formatTitle(
     },
     /* al */ 'producers[].role': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'producers[].role', name: 'Producer(s) Role' }));
-      const role = getKeyIfExists('producerRoles', value);
+      const role = getKeyIfExists('producerRoles', value) as ProducerRole;
       if (!role) throw new WrongValueError({ field: 'producers[].role', name: 'Producer(s) Role' });
       return role;
     },
@@ -307,7 +308,7 @@ export async function formatTitle(
     },
     /* ao */ 'crew[].role': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'crew[].role', name: 'Crew Member(s) Role' }));
-      const role = getKeyIfExists('crewRoles', value);
+      const role = getKeyIfExists('crewRoles', value) as CrewRole;
       if (!role) throw new WrongValueError({ field: 'crew[].role', name: 'Crew Member(s) Role' });
       return role;
     },
@@ -337,7 +338,7 @@ export async function formatTitle(
     },
     /* at */ 'certifications[]': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'certifications[]', name: 'Certification' }));
-      const certification = getKeyIfExists('certifications', value);
+      const certification = getKeyIfExists('certifications', value) as Certification;
       if (!certification) throw new WrongValueError({ field: 'certifications[', name: 'Certification' });
       return certification;
     },
@@ -380,25 +381,25 @@ export async function formatTitle(
     },
     /* bc */ 'color': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'color', name: 'Color / Black & White' }));
-      const color = getKeyIfExists('colors', value);
+      const color = getKeyIfExists('colors', value) as Color;
       if (!color) throw new WrongValueError({ field: 'color', name: 'Color / Black & White '});
       return color;
     },
     /* bd */ 'format': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'format', name: 'Shooting Format' }));
-      const format = getKeyIfExists('movieFormat', value);
+      const format = getKeyIfExists('movieFormat', value) as MovieFormat;
       if (!format) throw new WrongValueError({ field: 'format', name: 'Shooting Format' });
       return format;
     },
     /* be */ 'formatQuality': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'formatQuality', name: 'Available Format Quality' }));
-      const quality = getKeyIfExists('movieFormatQuality', value);
+      const quality = getKeyIfExists('movieFormatQuality', value) as MovieFormatQuality;
       if (!quality) throw new WrongValueError({ field: 'formatQuality', name: 'Available Format Quality' });
       return quality;
     },
     /* bf */ 'soundFormat': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'soundFormat', name: 'Sound Format' }));
-      const sound = getKeyIfExists('soundFormat', value);
+      const sound = getKeyIfExists('soundFormat', value) as SoundFormat;
       if (!sound) throw new WrongValueError({ field: 'soundFormat', name: 'Sound Format' });
       return sound;
     },
@@ -480,9 +481,24 @@ export async function formatTitle(
   for (const result of results) {
     const { data, errors, warnings } = result;
 
-    // TODO FORMAT STAKEHOLDERS & LANGUAGES
+    const stakeholders: MovieStakeholders = {
+      productionCompany: data.stakeholders.filter(s => s.role === 'executiveProducer'),
+      coProductionCompany:  data.stakeholders.filter(s => s.role === 'coProducer'),
+      broadcasterCoproducer:  data.stakeholders.filter(s => s.role === 'broadcasterCoproducer'),
+      lineProducer:  data.stakeholders.filter(s => s.role === 'lineProducer'),
+      distributor:  data.stakeholders.filter(s => s.role === 'distributor'),
+      salesAgent:  data.stakeholders.filter(s => s.role === 'salesAgent'),
+      laboratory:  data.stakeholders.filter(s => s.role === 'laboratory'),
+      financier:  data.stakeholders.filter(s => s.role === 'financier'),
+    };
 
-    const title = createMovie(data as any);
+    const languages: Partial<{ [language in Language]: MovieLanguageSpecification }> = {};
+    for (const l of data.languages) {
+      const { language, dubbed, subtitle, caption } = l;
+      languages[language] = { dubbed, subtitle, caption };
+    }
+
+    const title = createMovie({ ...data, languages, stakeholders });
 
     if (!title.directors || !title.directors.length) errors.push({
       type: 'error',
