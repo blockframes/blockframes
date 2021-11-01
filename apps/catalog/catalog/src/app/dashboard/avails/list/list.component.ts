@@ -31,7 +31,7 @@ type JoinSaleTitleType = {
  * @param title
  * @returns
  */
-const mandateQuery = (title: Movie): QueryFn => ref => ref.where('titleId', '==', title.id).where('type', '==', 'mandate');
+const mandateQuery = (title: Movie): QueryFn => ref => ref.where('titleId', '==', title.id).where('type', '==', 'mandate').where('status' , '==', 'accepted');
 const saleQuery = (title: Movie): QueryFn => ref => ref.where('titleId', '==', title.id).where('type', '==', 'sale')
   .where('status', '==', 'accepted');
 
@@ -104,8 +104,8 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
   ]).pipe(
     map(([titlesWithSales, titlesWithMandates, avails]) => titlesWithSales.filter(title => {
       const mandateTitle = titlesWithMandates.find(aTitleWithMandate => aTitleWithMandate.id === title.id);
-      const mandateTerms = mandateTitle?.mandates?.filter(contract => contract.type === 'mandate' && contract.status === 'accepted').map(contract => contract.terms).flat();
-      const saleTerms = title.sales?.map(contract => contract.terms).flat();
+      const mandateTerms = mandateTitle?.mandates?.flatMap(contract => contract.terms);
+      const saleTerms = title.sales?.flatMap(contract => contract.terms);
 
       return isMovieAvailable(title.id, avails, null, mandateTerms ?? [], saleTerms ?? [], 'optional');
     })),
