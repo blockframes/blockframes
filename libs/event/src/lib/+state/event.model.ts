@@ -1,5 +1,5 @@
 import { CalendarEvent } from 'angular-calendar';
-import { Meeting, EventBase, Screening, EventMeta } from './event.firestore';
+import { Meeting, EventBase, Screening, EventMeta, MeetingAttendee, AttendeeStatus } from './event.firestore';
 import { toDate } from '@blockframes/utils/helpers';
 import { Movie } from '@blockframes/movie/+state';
 import { Organization } from '@blockframes/organization/+state';
@@ -91,5 +91,14 @@ export function createCalendarEvent<M>(event: Partial<EventBase<Date | Timestamp
     isOwner,
     draggable: isOwner,
     resizable: { beforeStart: isOwner, afterEnd: isOwner },
+  }
+}
+
+export function createMeetingAttendee(user: User, status: AttendeeStatus = 'requesting'): MeetingAttendee {
+  return {
+    uid: user.uid,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    status
   }
 }

@@ -21,7 +21,7 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
     private router: Router,
     private dialog: MatDialog,
     private twilioService: TwilioService,
-  ) {}
+  ) { }
 
   async canActivate(next: ActivatedRouteSnapshot,): Promise<boolean | UrlTree> {
     const event = this.eventQuery.getActive();
@@ -63,7 +63,7 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
     currentRoute: ActivatedRouteSnapshot,
     currentState: RouterStateSnapshot,
     nextState: RouterStateSnapshot
-  ): (boolean |Observable<boolean>) {
+  ): (boolean | Observable<boolean>) {
 
     // we don't show the confirm dialog if the user don't quit the event
     // i.e. if the user navigate  lobby <-> session
@@ -74,13 +74,13 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
     }
 
     // If userId = null, that means the user has disconnected. If she/he wants to logout, we don't show the confirm message
-    if(this.authQuery.userId === null) {
+    if (this.authQuery.userId === null) {
       this.twilioService.disconnect();
       return true;
     } else {
       const event = this.eventQuery.getActive();
       if (event.type === 'meeting') {
-        if ((event.meta as Meeting).attendees[this.authQuery.userId] === 'ended') {
+        if ((event.meta as Meeting).attendees[this.authQuery.userId]?.status === 'ended') {
           this.twilioService.disconnect();
           return true;
         }

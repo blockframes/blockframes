@@ -13,9 +13,7 @@ import { getDocument } from './data/internals';
 import { isAllowedToAccessMedia } from './internals/media';
 import { jwplayerKey, jwplayerApiV2Secret, jwplayerSecret, enableDailyFirestoreBackup, playerId } from './environments/environment';
 
-
-
-interface ReadVideoParams {
+export interface ReadVideoParams {
 
   /**
    * The reference to the video in storage
@@ -27,6 +25,11 @@ interface ReadVideoParams {
    * Mandatory if the video is for a meeting.
    */
   eventId?: string,
+
+  /**
+   * The email of the user for 'invitation-only' events
+   */
+  email?: string,
 }
 
 export const getPrivateVideoUrl = async (
@@ -45,7 +48,7 @@ export const getPrivateVideoUrl = async (
     }
   }
 
-  const access = await isAllowedToAccessMedia(data.video, context.auth.uid, data.eventId);
+  const access = await isAllowedToAccessMedia(data.video, context.auth.uid, data.eventId, data.email);
 
   if (!access) {
     return {
