@@ -1,33 +1,13 @@
 
 import { App } from '@blockframes/utils/apps';
 import { UserService } from '@blockframes/user/+state';
-import { MandatoryError, MovieImportState, WrongValueError, optionalWarning } from '@blockframes/import/utils';
-import { createDocumentMeta } from '@blockframes/utils/models-meta';
-import { createMovie, Movie, MovieService } from '@blockframes/movie/+state';
-import { Crew, Producer } from '@blockframes/utils/common-interfaces';
-import { extract, ExtractConfig, getStaticList, SheetTab, ValueWithWarning } from '@blockframes/utils/spreadsheet';
-import {
-  formatCredits,
-  formatOriginalLanguages,
-  formatOriginalRelease,
-  formatOriginCountries,
-  formatProductionStatus,
-  formatReleaseYear,
-  formatSingleValue,
-  formatStakeholders,
-  formatGenres,
-  formatRunningTime,
-  formatPrizes,
-  formatBoxOffice,
-  formatCertifications,
-  formatRatings,
-  formatReview,
-  formatAvailableLanguages,
-  formatAudienceGoals,
-} from '@blockframes/utils/spreadsheet/format';
+import { MandatoryError, MovieImportState, WrongValueError, optionalWarning, getDate, adminOnlyWarning, getUser, UnknownEntityError } from '@blockframes/import/utils';
+import { createMovie } from '@blockframes/movie/+state';
+import { extract, ExtractConfig, SheetTab, ValueWithWarning } from '@blockframes/utils/spreadsheet';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
-import { MovieRelease, MovieRunningTime } from '@blockframes/movie/+state/movie.firestore';
-import { Genre, Language, Territory } from '@blockframes/utils/static-model';
+import { MovieAppConfig, MovieGoalsAudience, MovieRelease, MovieRunningTime } from '@blockframes/movie/+state/movie.firestore';
+import { Genre, Language, NumberRange, SocialGoal, StoreStatus, Territory } from '@blockframes/utils/static-model';
+import { User } from '@blockframes/auth/+state';
 
 interface FieldsConfig {
   title: {
@@ -50,7 +30,7 @@ interface FieldsConfig {
   }[];
   originalRelease: {
     country: string; media: string;
-    date: string
+    date: Date
   }[];
   originalLanguages: Language[];
   genres: Genre[];
@@ -60,8 +40,10 @@ interface FieldsConfig {
     firstName: string; lastName: string; status: string
   }[];
   prizes: {
-    name: string; year: string;
-    prize: string; premiere: string;
+    name: string;
+    year: number;
+    prize: string;
+    premiere: string;
   }[];
   logline: string;
   synopsis: string;
@@ -73,13 +55,15 @@ interface FieldsConfig {
   crew: {
     firstName: string; lastName: string; role: string
   }[];
-  budgetRange: string;
+  budgetRange: NumberRange;
   boxoffice: {
-    territory: string; unit: string; value: string
+    territory: string;
+    unit: string;
+    value: number;
   }[];
   certifications: string[];
   ratings: { country: string; value: string; }[];
-  audience: { targets: string; goals: string; }[];
+  audience: MovieGoalsAudience;
   reviews: {
     filmCriticName: string; revue: string;
     link: string; quote: string;
@@ -88,228 +72,33 @@ interface FieldsConfig {
   format: string;
   formatQuality: string;
   soundFormat: string;
-  isOriginalVersionAvailable: string;
+  isOriginalVersionAvailable: boolean;
   languages: {
-    language: string; dubbed: string;
-    subtitle: string; caption: string;
+    language: string;
+    dubbed: boolean;
+    subtitle: boolean;
+    caption: boolean;
   }[];
   salesPitch: string;
-  catalogStatus: string;
-  festivalStatus: string;
-  financiersStatus: string;
-  ownerId: string;
+  app: Partial<{ [app in App]: MovieAppConfig<Date> }>
+
+  orgIds: string[];
 }
 
 type FieldsConfigType = ExtractConfig<FieldsConfig>;
 
 
-function validateMovie(importErrors: MovieImportState): MovieImportState {
-  const movie = importErrors.movie;
-  const errors = importErrors.errors;
 
-  //////////////////
-  // OPTIONAL FIELDS
-  //////////////////
-
-
-  if (!movie.runningTime.time) {
-    errors.push({
-      type: 'warning',
-      field: 'movie.runningTime.time',
-      name: 'Total Run Time',
-      reason: 'Optional field is missing',
-      hint: 'Edit corresponding sheet field.'
-    });
-  }
-
-  if (!movie.runningTime.status) {
-    errors.push({
-      type: 'warning',
-      field: 'movie.runningTime.status',
-      name: 'Running type status',
-      reason: 'Optional field is missing',
-      hint: 'Edit corresponding sheet field.'
-    });
-  }
-
-  let stakeholdersCount = 0;
-  Object.keys(movie.stakeholders).forEach(k => { stakeholdersCount += k.length });
-  if (stakeholdersCount === 0) {
-    errors.push({
-      type: 'warning',
-      field: 'movie.stakeholders',
-      name: 'Stakeholder(s)',
-      reason: 'Optional field is missing',
-      hint: 'Edit corresponding sheet field.'
-    });
-  }
-
-  if (!movie.color) {
-    errors.push({
-      type: 'warning',
-      field: 'movie.color',
-      name: 'Color / Black & White ',
-      reason: 'Optional field is missing',
-      hint: 'Edit corresponding sheet field.'
-    });
-  }
-
-  if (movie.originCountries.length === 0) {
-    errors.push({
-      type: 'warning',
-      field: 'movie.originCountries',
-      name: 'Countries of origin',
-      reason: 'Optional field is missing',
-      hint: 'Edit corresponding sheet field.'
-    });
-  }
-
-  if (!movie.certifications) {
-    errors.push({
-      type: 'warning',
-      field: 'movie.certifications',
-      name: 'Certifications',
-      reason: 'Optional field is missing',
-      hint: 'Edit corresponding sheet field.'
-    });
-  }
-
-  if (movie.rating.length === 0) {
-    errors.push({
-      type: 'warning',
-      field: 'movie.rating',
-      name: 'Rating',
-      reason: 'Optional field is missing',
-      hint: 'Edit corresponding sheet field.'
-    });
-  }
-
-  if (movie.cast.length === 0) {
-    errors.push({
-      type: 'warning',
-      field: 'movie.cast',
-      name: "Principal Cast",
-      reason: 'Optional fields are missing',
-      hint: 'Edit corresponding sheets fields: directors, principal cast.'
-    });
-  }
-
-  if (!movie.synopsis) {
-    errors.push({
-      type: 'warning',
-      field: 'movie.synopsis',
-      name: 'Synopsis',
-      reason: 'Optional field is missing',
-      hint: 'Edit corresponding sheet field.'
-    });
-  }
-
-  if (movie.genres.length === 0) {
-    errors.push({
-      type: 'warning',
-      field: 'movie.genres',
-      name: 'Genres',
-      reason: 'Optional field is missing',
-      hint: 'Edit corresponding sheet field.'
-    });
-  }
-
-  if (movie.customPrizes.length === 0 && movie.prizes.length === 0) {
-    errors.push({
-      type: 'warning',
-      field: 'movie.prizes',
-      name: 'Festival Prizes',
-      reason: 'Optional field is missing',
-      hint: 'Edit corresponding sheet field.'
-    });
-  }
-
-  if (movie.keyAssets.length === 0) {
-    errors.push({
-      type: 'warning',
-      field: 'movie.keyAssets',
-      name: 'Key assets',
-      reason: 'Optional field is missing',
-      hint: 'Edit corresponding sheet field.'
-    });
-  }
-
-  if (movie.keywords.length === 0) {
-    errors.push({
-      type: 'warning',
-      field: 'movie.keywords',
-      name: 'Keywords',
-      reason: 'Optional field is missing',
-      hint: 'Edit corresponding sheet field.'
-    });
-  }
-
-  if (movie.originalLanguages.length === 0) {
-    errors.push({
-      type: 'warning',
-      field: 'movie.originalLanguages',
-      name: 'Languages',
-      reason: 'Optional field is missing',
-      hint: 'Edit corresponding sheet field.'
-    });
-  }
-
-  if (movie.languages === {}) {
-    errors.push({
-      type: 'warning',
-      field: 'movie.languages',
-      name: 'Dubbings | Subtitles | Captions ',
-      reason: 'Optional field is missing',
-      hint: 'Edit corresponding sheet field.'
-    });
-  }
-
-  if (!movie.logline) {
-    errors.push({
-      type: 'warning',
-      field: 'movie.logline',
-      name: 'Logline',
-      reason: 'Optional field is missing',
-      hint: 'Edit corresponding sheet field.'
-    });
-  }
-
-  if (movie.review.length === 0) {
-    errors.push({
-      type: 'warning',
-      field: 'movie.review',
-      name: 'Review',
-      reason: 'Optional field is missing',
-      hint: 'Edit corresponding sheet field.'
-    });
-  }
-
-  if (movie.audience.goals.length === 0 && movie.audience.targets.length === 0) {
-    errors.push({
-      type: 'warning',
-      field: 'movie.audience',
-      name: 'Positioning',
-      reason: 'Optional field is missing',
-      hint: 'Edit corresponding sheet field.'
-    });
-  }
-
-  if (!movie.promotional.videos.salesPitch.description) {
-    errors.push({
-      type: 'warning',
-      field: 'movie.promotional.videos.salesPitch',
-      name: 'Sales Pitch',
-      reason: 'Optional field is missing',
-      hint: 'Edit corresponding sheet field.'
-    });
-  }
-
-  return importErrors;
-}
-
-export async function formatTitle(sheetTab: SheetTab, movieService: MovieService, userService: UserService, blockframesAdmin: boolean, currentApp: App, orgId?: string) {
+export async function formatTitle(
+  sheetTab: SheetTab,
+  userService: UserService,
+  blockframesAdmin: boolean,
+  userOrgId: string
+) {
 
   const titles: MovieImportState[] = [];
+
+  const userCache: Record<string, User> = {};
 
   // ! The order of the property should be the same as excel columns
   const fieldsConfig: FieldsConfigType = {
@@ -361,7 +150,7 @@ export async function formatTitle(sheetTab: SheetTab, movieService: MovieService
       if (!status) throw new WrongValueError({ field: 'release.year', name: 'Release Year' });
       return status;
     },
-    /* j */ 'directors[].firstName': (value: string) => { // TODO HERE
+    /* j */ 'directors[].firstName': (value: string) => {
       if (!value) throw new MandatoryError({ field: 'directors[].firstName', name: 'Director\'s first name' });
       return value;
     },
@@ -386,23 +175,31 @@ export async function formatTitle(sheetTab: SheetTab, movieService: MovieService
     },
     /* o */ 'stakeholders[].role': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'stakeholders[].role', name: 'Stakeholders Role' }));
-      return value;
+      const role = getKeyIfExists('stakeholderRoles', value);
+      if (!role) throw new WrongValueError({ field: 'stakeholders[].role', name: 'Stakeholders Role' });
+      return role;
     },
     /* p */ 'stakeholders[].country': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'stakeholders[].country', name: 'Stakeholders Country' }));
-      return value;
+      const country = getKeyIfExists('territories', value);
+      if (!country) throw new WrongValueError({ field: 'stakeholders[].country', name: 'Stakeholders Country' });
+      return country;
     },
     /* q */ 'originalRelease[].country': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'originalRelease[].country', name: 'Original release Country' }));
-      return value;
+      const country = getKeyIfExists('territories', value);
+      if (!country) throw new WrongValueError({ field: 'originalRelease[].country', name: 'Original release Country' });
+      return country;
     },
     /* r */ 'originalRelease[].media': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'originalRelease[].media', name: 'Original release Media' }));
-      return value;
+      const media = getKeyIfExists('medias', value);
+      if (!media) throw new WrongValueError({ field: 'originalRelease[].media', name: 'Original release Media' });
+      return media;
     },
     /* s */ 'originalRelease[].date': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'originalRelease[].date', name: 'Original release Date' }));
-      return value;
+      return getDate(value, { field: 'originalRelease[].date', name: 'Original release Date'}) as Date;
     },
     /* t */ 'originalLanguages[]': (value: string[]) => { // ! required
       if (!value || !value.length) throw new MandatoryError({ field: 'originalLanguages', name: 'Original Languages' });
@@ -418,9 +215,9 @@ export async function formatTitle(sheetTab: SheetTab, movieService: MovieService
       if (hasWrongGenre) throw new WrongValueError({ field: 'genres', name: 'Genres' });
       return genres as any;
     },
-    /* v */ 'customGenres[]': (value: string) => {
-      if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'customGenres[]', name: 'Custom Genres' }));
-      return value;
+    /* v */ 'customGenres[]': (value: string[]) => {
+      if (!value || !value.length) return new ValueWithWarning(null, optionalWarning({ field: 'customGenres[]', name: 'Custom Genres' }));
+      return value as any; // ExtractConfig type as issue, but it's too complex for me to fix it
     },
     /* w */ 'runningTime.time': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'runningTime.time', name: 'Running Time' }));
@@ -430,7 +227,9 @@ export async function formatTitle(sheetTab: SheetTab, movieService: MovieService
     },
     /* x */ 'runningTime.status': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'runningTime.status', name: 'Running Time Status' }));
-      return value;
+      const status = getKeyIfExists('screeningStatus', value);
+      if (!status) throw new WrongValueError({ field: 'runningTime.status', name: 'Running Time Status' });
+      return status;
     },
     /* y */ 'cast[].firstName': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'cast[].firstName', name: 'Principal Cast First Name' }));
@@ -442,15 +241,21 @@ export async function formatTitle(sheetTab: SheetTab, movieService: MovieService
     },
     /* aa */ 'cast[].status': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'cast[].status', name: 'Principal Cast Status' }));
-      return value;
+      const status = getKeyIfExists('memberStatus', value);
+      if (!status) throw new WrongValueError({ field: 'cast[].status', name: 'Principal Cast Status' });
+      return status;
     },
     /* ab */ 'prizes[].name': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'prizes[].name', name: 'Festival Prizes Festival Name' }));
-      return value;
+      const festival = getKeyIfExists('festival', value);
+      if (!festival) throw new WrongValueError({ field: 'prizes[].name', name: 'Festival Prizes Festival Name' });
+      return festival;
     },
     /* ac */ 'prizes[].year': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'prizes[].year', name: 'Festival Prizes Year' }));
-      return value;
+      const year = Number(value);
+      if (isNaN(year)) throw new WrongValueError({ field: 'prizes[].year', name: 'Festival Prizes Year'});
+      return year;
     },
     /* ad */ 'prizes[].prize': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'prizes[].prize', name: 'Festival Prizes Selection/Prize' }));
@@ -458,7 +263,9 @@ export async function formatTitle(sheetTab: SheetTab, movieService: MovieService
     },
     /* ae */ 'prizes[].premiere': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'prizes[].premiere', name: 'Festival Prizes Premiere' }));
-      return value;
+      const premiere = getKeyIfExists('premiereType', value);
+      if (!premiere) throw new WrongValueError({ field: 'prizes[].premiere', name: 'Festival Prizes Premiere'});
+      return premiere;
     },
     /* af */ 'logline': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'logline', name: 'Logline' }));
@@ -486,7 +293,9 @@ export async function formatTitle(sheetTab: SheetTab, movieService: MovieService
     },
     /* al */ 'producers[].role': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'producers[].role', name: 'Producer(s) Role' }));
-      return value;
+      const role = getKeyIfExists('producerRoles', value);
+      if (!role) throw new WrongValueError({ field: 'producers[].role', name: 'Producer(s) Role' });
+      return role;
     },
     /* am */ 'crew[].firstName': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'crew[].firstName', name: 'Crew Member(s) First Name' }));
@@ -498,43 +307,60 @@ export async function formatTitle(sheetTab: SheetTab, movieService: MovieService
     },
     /* ao */ 'crew[].role': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'crew[].role', name: 'Crew Member(s) Role' }));
-      return value;
+      const role = getKeyIfExists('crewRoles', value);
+      if (!role) throw new WrongValueError({ field: 'crew[].role', name: 'Crew Member(s) Role' });
+      return role;
     },
     /* ap */ 'budgetRange': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'budgetRange', name: 'Budget Range' }));
-      return value;
+      const budget = getKeyIfExists('budgetRange', value);
+      if (!budget) throw new WrongValueError({ field: 'budgetRange', name: 'Budget Range' });
+      return budget as any;
     },
     /* aq */ 'boxoffice[].territory': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'boxoffice[].territory', name: 'Box Office Country' }));
-      return value;
+      const country = getKeyIfExists('territories', value);
+      if (!country) throw new WrongValueError({ field: 'boxoffice[].territory', name: 'Box Office Country' });
+      return country;
     },
     /* ar */ 'boxoffice[].unit': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'boxoffice[].unit', name: 'Box Office Metric' }));
-      return value;
+      const unit = getKeyIfExists('unitBox', value);
+      if (!unit) throw new WrongValueError({ field: 'boxoffice[].unit', name: 'Box Office Metric' });
+      return unit;
     },
     /* as */ 'boxoffice[].value': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'boxoffice[].value', name: 'Box Office Number' }));
-      return value;
+      const num = Number(value);
+      if (!num) throw new WrongValueError({ field: 'boxoffice[].value', name: 'Box Office Number' });
+      return num;
     },
     /* at */ 'certifications[]': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'certifications[]', name: 'Certification' }));
-      return value;
+      const certification = getKeyIfExists('certifications', value);
+      if (!certification) throw new WrongValueError({ field: 'certifications[', name: 'Certification' });
+      return certification;
     },
     /* au */ 'ratings[].country': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'ratings[].country', name: 'Ratings Country' }));
-      return value;
+      const country = getKeyIfExists('territories', value);
+      if (!country) throw new WrongValueError({ field: 'ratings[].country', name: 'Ratings Country' });
+      return country;
     },
     /* av */ 'ratings[].value': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'ratings[].value', name: 'Ratings Value' }));
       return value;
     },
-    /* aw */ 'audience[].targets': (value: string) => {
+    /* aw */ 'audience.targets': (value: string[]) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'audience[].targets', name: 'Target Audience' }));
       return value;
     },
-    /* ax */ 'audience[].goals': (value: string) => {
+    /* ax */ 'audience.goals': (value: string[]) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'audience[].goals', name: 'Social Responsibility Goals' }));
-      return value;
+      const goals = value.map(v => getKeyIfExists('socialGoals', v) ?? undefined);
+      const invalid = goals.some(g => !g);
+      if (invalid) throw new WrongValueError({ field: 'audience[].goals', name: 'Social Responsibility Goals' });
+      return goals as SocialGoal[];
     },
     /* ay */ 'reviews[].filmCriticName': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'reviews[].filmCriticName', name: 'Film Reviews Critic Name' }));
@@ -554,39 +380,61 @@ export async function formatTitle(sheetTab: SheetTab, movieService: MovieService
     },
     /* bc */ 'color': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'color', name: 'Color / Black & White' }));
-      return value;
+      const color = getKeyIfExists('colors', value);
+      if (!color) throw new WrongValueError({ field: 'color', name: 'Color / Black & White '});
+      return color;
     },
     /* bd */ 'format': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'format', name: 'Shooting Format' }));
-      return value;
+      const format = getKeyIfExists('movieFormat', value);
+      if (!format) throw new WrongValueError({ field: 'format', name: 'Shooting Format' });
+      return format;
     },
     /* be */ 'formatQuality': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'formatQuality', name: 'Available Format Quality' }));
-      return value;
+      const quality = getKeyIfExists('movieFormatQuality', value);
+      if (!quality) throw new WrongValueError({ field: 'formatQuality', name: 'Available Format Quality' });
+      return quality;
     },
     /* bf */ 'soundFormat': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'soundFormat', name: 'Sound Format' }));
-      return value;
+      const sound = getKeyIfExists('soundFormat', value);
+      if (!sound) throw new WrongValueError({ field: 'soundFormat', name: 'Sound Format' });
+      return sound;
     },
     /* bg */ 'isOriginalVersionAvailable': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'isOriginalVersionAvailable', name: 'Original Version Authorized' }));
-      return value;
+      const lower = value.toLowerCase();
+      const valid = lower === 'yes' || lower === 'no';
+      if (!valid) throw new WrongValueError({ field: 'isOriginalVersionAvailable', name: 'Original Version Authorized' });
+      return lower === 'yes';
     },
     /* bh */ 'languages[].language': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'languages[].language', name: 'Available Version(s) Language' }));
-      return value;
+      const language = getKeyIfExists('languages', value);
+      if (!language) throw new WrongValueError({ field: 'languages[].language', name: 'Available Version(s) Language' });
+      return language;
     },
     /* bi */ 'languages[].dubbed': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'languages[].dubbed', name: 'Available Version(s) Dubbed' }));
-      return value;
+      const lower = value.toLowerCase();
+      const valid = lower === 'yes' || lower === 'no';
+      if (!valid) throw new WrongValueError({ field: 'languages[].dubbed', name: 'Available Version(s) Dubbed' });
+      return lower === 'yes';
     },
     /* bj */ 'languages[].subtitle': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'languages[].subtitle', name: 'Available Version(s) Subtitle' }));
-      return value;
+      const lower = value.toLowerCase();
+      const valid = lower === 'yes' || lower === 'no';
+      if (!valid) throw new WrongValueError({ field: 'languages[].subtitle', name: 'Available Version(s) Subtitle' });
+      return lower === 'yes';
     },
     /* bk */ 'languages[].caption': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'languages[].caption', name: 'Available Version(s) Caption' }));
-      return value;
+      const lower = value.toLowerCase();
+      const valid = lower === 'yes' || lower === 'no';
+      if (!valid) throw new WrongValueError({ field: 'languages[].caption', name: 'Available Version(s) Caption' });
+      return lower === 'yes';
     },
     /* bl */ 'salesPitch': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'salesPitch', name: 'Sales Pitch' }));
@@ -594,21 +442,36 @@ export async function formatTitle(sheetTab: SheetTab, movieService: MovieService
     },
 
     // ! ADMIN
-    /* bm */ 'catalogStatus': (value: string) => {
-      if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'catalogStatus', name: '' }));
-      return value;
+    /* bm */ 'app.catalog': (value: string) => {
+      if (!value && blockframesAdmin) return new ValueWithWarning(null, optionalWarning({ field: 'catalogStatus', name: 'Catalog Status' }));
+      if (value && !blockframesAdmin) return new ValueWithWarning({ status: 'draft', access: false }, adminOnlyWarning({ field: 'catalogStatus', name: 'Catalog Status' }));
+      const status = getKeyIfExists('storeStatus', value) as StoreStatus;
+      if (!status) throw new WrongValueError({ field: 'catalogStatus', name: 'Catalog Status' });
+      const access = status === 'accepted';
+      return { status, access, acceptedAt: null, refusedAt: null };
     },
-    /* bn */ 'festivalStatus': (value: string) => {
-      if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'festivalStatus', name: '' }));
-      return value;
+    /* bn */ 'app.festival': (value: string) => {
+      if (!value && blockframesAdmin) return new ValueWithWarning(null, optionalWarning({ field: 'festivalStatus', name: 'Festival Status' }));
+      if (value && !blockframesAdmin) return new ValueWithWarning({ status: 'draft', access: false }, adminOnlyWarning({ field: 'festivalStatus', name: 'Festival Status' }));
+      const status = getKeyIfExists('storeStatus', value) as StoreStatus;
+      if (!status) throw new WrongValueError({ field: 'festivalStatus', name: 'Festival Status' });
+      const access = status === 'accepted';
+      return { status, access, acceptedAt: null, refusedAt: null };
     },
-    /* bo */ 'financiersStatus': (value: string) => {
-      if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'financiersStatus', name: '' }));
-      return value;
+    /* bo */ 'app.financiers': (value: string) => {
+      if (!value && blockframesAdmin) return new ValueWithWarning(null, optionalWarning({ field: 'financiersStatus', name: 'Financiers Status' }));
+      if (value && !blockframesAdmin) return new ValueWithWarning({ status: 'draft', access: false }, adminOnlyWarning({ field: 'financiersStatus', name: 'Financiers Status' }));
+      const status = getKeyIfExists('storeStatus', value) as StoreStatus;
+      if (!status) throw new WrongValueError({ field: 'financiersStatus', name: 'Financiers Status' });
+      const access = status === 'accepted';
+      return { status, access, acceptedAt: null, refusedAt: null };
     },
-    /* bp */ 'ownerId': (value: string) => {
-      if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'ownerId', name: '' }));
-      return value;
+    /* bp */ 'orgIds': async (value: string) => { // ! required
+      if (!value && blockframesAdmin) throw new MandatoryError({ field: 'orgIds', name: 'Owner Id' });
+      if (value && !blockframesAdmin) return new ValueWithWarning([userOrgId], adminOnlyWarning({ field: 'orgIds', name: 'Owner Id' }));
+      const user = await getUser({ id: value }, userService, userCache);
+      if (!user) throw new UnknownEntityError({ field: 'orgIds', name: 'Owner Id' });
+      return [user.orgId];
     },
   };
 
@@ -617,7 +480,9 @@ export async function formatTitle(sheetTab: SheetTab, movieService: MovieService
   for (const result of results) {
     const { data, errors, warnings } = result;
 
-    const title = createMovie(data as any); // TODO put tye: as Partial<Movie>
+    // TODO FORMAT STAKEHOLDERS & LANGUAGES
+
+    const title = createMovie(data as any);
 
     if (!title.directors || !title.directors.length) errors.push({
       type: 'error',
@@ -627,10 +492,6 @@ export async function formatTitle(sheetTab: SheetTab, movieService: MovieService
       hint: 'Please edit the corresponding sheets field'
     });
 
-    // ! REQUIRED
-    // TODO ORG IDS
-
-    // TODO issue#6929
     titles.push({ errors: [ ...errors, ...warnings ],  movie: title });
   }
 
