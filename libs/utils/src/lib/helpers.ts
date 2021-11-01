@@ -97,17 +97,20 @@ export async function asyncFilter<T>(items: T[], filterFunction: (item: T) => Pr
 /**
  * This function is used to check if a given value (code) belongs to a type (base).
  * Return the key of the const if found, undefined otherwise
- * Code example (string):
- *   'line_up' | 'Line-Up'
- * Base example:
- *   export const storeType = {
- *     library: 'Library',
- *     line_up: 'Line-Up',
- *   } as const;
- * @param base
- * @param code
+ * @example
+ * // Code example (string):
+ * 'line_up' | 'Line-Up'
+ *
+ * // Base example (should exist in staticModel):
+ * export const storeType = {
+ *   library: 'Library',
+ *   line_up: 'Line-Up',
+ * } as const;
+ *
+ * getKeyIfExist('storeType', 'Line-Up'); // 'line-up'
+ * getKeyIfExist('storeType', 'Test'); // undefined
  */
-export function getKeyIfExists(base: Scope, code: string): any {
+export function getKeyIfExists(base: Scope, code: string){
   // Sanitized input to properly compare with base data
   const sanitizedCode = code.trim().toLowerCase();
   const candidate = Object.entries(staticModel[base]).find(([key, value]) => [key.toLowerCase(), value.toLowerCase()].includes(sanitizedCode));
