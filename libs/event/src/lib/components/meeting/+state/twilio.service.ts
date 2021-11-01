@@ -1,6 +1,7 @@
 
 import { Injectable } from '@angular/core';
 import { AngularFireFunctions } from '@angular/fire/functions';
+import { PublicUser } from '@blockframes/user/types';
 import { ErrorResultResponse } from '@blockframes/utils/utils';
 
 import {
@@ -33,7 +34,7 @@ export class TwilioService {
   private room: Room;
   private getAccessToken = this.functions.httpsCallable('getAccessToken');
 
-  private preference: {[K in TrackKind]: boolean} = { 'video': true, 'audio': true };
+  private preference: { [K in TrackKind]: boolean } = { 'video': true, 'audio': true };
 
   constructor(
     private functions: AngularFireFunctions,
@@ -41,8 +42,8 @@ export class TwilioService {
     private twilioQuery: TwilioQuery,
   ) { }
 
-  getToken(eventId: string) {
-    return this.getAccessToken({ eventId }).toPromise<ErrorResultResponse>();
+  getToken(eventId: string, credentials: Partial<PublicUser>) {
+    return this.getAccessToken({ eventId, credentials }).toPromise<ErrorResultResponse>();
   }
 
   togglePreference(kind: TrackKind) {
@@ -59,10 +60,10 @@ export class TwilioService {
     };
     this.twilioStore.upsert(local.id, local);
 
-    const [ video, audio ] = await Promise.all([
+    const [video, audio] = await Promise.all([
       createLocalVideoTrack().catch(() => null),
       createLocalAudioTrack().catch(() => null)
-    ]) as [ LocalVideoTrack | null, LocalAudioTrack | null ];
+    ]) as [LocalVideoTrack | null, LocalAudioTrack | null];
 
     // check user preference and disable tracks accordingly
     if (!this.preference['video']) video.disable();
@@ -131,11 +132,11 @@ export class TwilioService {
     }
   }
 
-  async connect(eventId: string) {
+  async connect(eventId: string, credentials: Partial<PublicUser>) {
     if (this.room) return;
 
     // Get Twilio token & ensure that there is no error
-    const response = await this.getToken(eventId);
+    const response = await this.getToken(eventId, credentials);
     if (response.error) {
       throw new Error(`${response.error}: ${response.result}`);
     }
@@ -155,7 +156,7 @@ export class TwilioService {
     this.room = await connect(token, { name: eventId, tracks });
 
     this.room.participants.forEach((participant: RemoteParticipant) => {
-      this.twilioStore.upsert(participant.sid, { id: participant.sid, kind: 'remote', userName: JSON.parse(participant.identity).displayName,  tracks: {} })
+      this.twilioStore.upsert(participant.sid, { id: participant.sid, kind: 'remote', userName: JSON.parse(participant.identity).displayName, tracks: {} })
     })
 
     this.room.on('participantConnected', (participant: RemoteParticipant) => {
@@ -185,7 +186,7 @@ export class TwilioService {
         const remoteTracks: RemoteTracks = { [track.kind]: null };
         this.twilioStore.upsert(
           participant.sid,
-          (enitity: RemoteAttendee) => ({ tracks: { ...enitity.tracks, ...remoteTracks }}),
+          (enitity: RemoteAttendee) => ({ tracks: { ...enitity.tracks, ...remoteTracks } }),
           id => ({ id, kind: 'remote', userName: JSON.parse(participant.identity).displayName, tracks: remoteTracks })
         )
       }

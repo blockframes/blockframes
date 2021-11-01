@@ -15,7 +15,7 @@ export class SessionGuard implements CanActivate {
     private authQuery: AuthQuery,
     private eventQuery: EventQuery,
     private router: Router,
-  ) {}
+  ) { }
 
   async canActivate(): Promise<boolean | UrlTree> {
     const event = this.eventQuery.getActive();
@@ -26,9 +26,9 @@ export class SessionGuard implements CanActivate {
 
     // for meeting event we also nee to check "Request Access"
     if (event.type === 'meeting') {
-      const status = (event.meta as Meeting).attendees[this.authQuery.userId];
+      const attendee = (event.meta as Meeting).attendees[this.authQuery.userId];
 
-      if (status === 'accepted' || status === 'owner') {
+      if (attendee?.status === 'accepted' || attendee?.status === 'owner') {
         return true;
       }
       return this.router.parseUrl(`/c/o/marketplace/event/${event.id}/lobby`);

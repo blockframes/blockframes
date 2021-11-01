@@ -257,6 +257,16 @@ export const testFixture = {
     accessibility: 'private'
   },
 
+  'events/E003': {
+    id: 'E002',
+    type: 'meeting',
+    start: new Date(),
+    end: new Date(),
+    meta: { organizerUid: 'uidUserTest', attendees: { 'uid-foo': { status: 'requesting' } } },
+    ownerOrgId: 'O001',
+    accessibility: 'private'
+  },
+
   //Notifications
   'notifications/001': {
     id: '001',
