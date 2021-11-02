@@ -18,7 +18,7 @@ const navLinks = [
   },
   {
     path: 'cookies',
-    label: 'Cookie'
+    label: 'Cookies'
   }
 ];
 

@@ -105,7 +105,7 @@ export function getEventEmailData(event?: Partial<EventDocument<EventMeta>>, use
     eventEnd = format(eventEndDate, 'Pppp');
   }
 
-  const eventUrlParams = userEmail && invitationId && invitationType === 'attendEvent' ? `?email=${userEmail}&i=${invitationId}` : '';
+  const eventUrlParams = userEmail && invitationId && invitationType === 'attendEvent' ? `?email=${encodeURIComponent(userEmail)}&i=${invitationId}` : '';
   const url = invitationType === 'attendEvent' ? `/event/${event?.id}/r/i` : `/c/o/marketplace/event/${event?.id}`;
 
   return {
