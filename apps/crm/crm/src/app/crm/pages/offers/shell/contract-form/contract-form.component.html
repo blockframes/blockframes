@@ -17,7 +17,7 @@
         {{ territories | toGroupLabel:'territories':'World' | join }}
       </span>
     </ng-template>
-    <ng-template colRef="avails.medias" let-media> 
+    <ng-template colRef="avails.medias" let-media>
       <span class="group-label" (click)="openDetails(media, 'medias')">
         {{ media | toGroupLabel:'medias':'All'| join }}
       </span>
@@ -40,7 +40,7 @@
       <runs-form class="surface" [form]="termForm.get('runs')"></runs-form>
     </ng-template>
   </bf-form-table>
-  
+
   <footer>
     <button mat-flat-button color="primary" type="submit">Confirm</button>
   </footer>

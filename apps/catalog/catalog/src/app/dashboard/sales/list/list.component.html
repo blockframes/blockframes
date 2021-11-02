@@ -43,7 +43,7 @@
         </ng-container>
       </ng-template>
       <ng-template #noIncome>-</ng-template>
-      <ng-template colRef="status" label="Approval" let-status>
+      <ng-template colRef="status" label="Status" let-status>
         <bf-tag>{{ status | toLabel: 'contractStatus' }}</bf-tag>
       </ng-template>
     </bf-table>

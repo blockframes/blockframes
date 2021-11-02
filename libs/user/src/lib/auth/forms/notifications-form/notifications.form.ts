@@ -32,7 +32,7 @@ function createNotificationsControls(settings: Partial<NotificationSettings> = {
     invitationToAttendMeetingCreated: new NotificationSettingsForm(settings.invitationToAttendMeetingCreated, true),
     invitationToAttendScreeningCreated: new NotificationSettingsForm(settings.invitationToAttendScreeningCreated, true),
     offerCreatedConfirmation: new NotificationSettingsForm(settings.offerCreatedConfirmation),
-    contractCreated: new NotificationSettingsForm(settings.contractCreated)
+    contractCreated: new NotificationSettingsForm(settings.contractCreated, true)
   }
 }
 
