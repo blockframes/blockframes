@@ -108,9 +108,9 @@ export async function formatOrg(sheetTab: SheetTab, organizationService: Organiz
     },
     /* j */ 'org.addresses.main.country': (value: string) => {
       if (!value) return new ValueWithWarning(value, optionalWarning({ field: 'org.address.main.country', name: 'Country' }));
-      const country = getKeyIfExists('territories', value);
+      const country = getKeyIfExists('territories', value) as Territory;
       if (!country) throw new WrongValueError({ field: 'org.addresses.main.country', name: 'Country' });
-      return country;
+      return country as any;
     },
     /* k */ 'org.addresses.main.phoneNumber': (value: string) => {
       if (!value) return new ValueWithWarning(value, optionalWarning({ field: 'org.address.main.phoneNumber', name: 'Phone Number' }));
