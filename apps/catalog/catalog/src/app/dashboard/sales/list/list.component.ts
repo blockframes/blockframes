@@ -44,7 +44,7 @@ export class SaleListComponent implements OnInit {
     joinWith({
       licensor: (sale: Sale) => this.orgService.valueChanges(sale.sellerId).pipe(map(seller => seller.denomination.full)),
       licensee: (sale: Sale) => this.orgService.valueChanges(sale.buyerId).pipe(map(buyer => buyer.denomination.full)),
-      title: (sale: Sale) => this.titleService.valueChanges(sale.titleId).pipe(map(title => title.title.original)),
+      title: (sale: Sale) => this.titleService.valueChanges(sale.titleId).pipe(map(title => title.title.international)),
       price: (sale: Sale) => this.incomeService.valueChanges(sale.id),//.pipe(map(income => income.price)),
     }),
   );

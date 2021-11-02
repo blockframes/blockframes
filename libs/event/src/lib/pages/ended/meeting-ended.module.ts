@@ -9,6 +9,8 @@ import { EventRangeModule } from '@blockframes/event/pipes/event-range.pipe';
 import { MeetingEndedComponent } from './meeting-ended.component';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { DisplayNameModule, ToLabelModule } from '@blockframes/utils/pipes';
+import { EventLayoutModule } from '@blockframes/ui/layout/event/event.module';
+
 @NgModule({
   declarations: [ MeetingEndedComponent ],
   imports: [
@@ -18,7 +20,7 @@ import { DisplayNameModule, ToLabelModule } from '@blockframes/utils/pipes';
     ImageModule,
     ToLabelModule,
     DisplayNameModule,
-    
+    EventLayoutModule,
     RouterModule.forChild([{ path: '', component: MeetingEndedComponent }])
   ],
 })

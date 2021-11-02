@@ -6,14 +6,16 @@
         <mat-icon svgIcon="arrow_back"></mat-icon>
       </button>
     </mat-toolbar>
-    <ng-content select="aside"></ng-content>
+    <aside>
+      <marketplace-aside></marketplace-aside>
+    </aside> 
   </mat-sidenav>
   
-  <mat-sidenav-content fxLayout="column" [appContainer]="app" (toggle)="sidenav.toggle()" layout>
+  <mat-sidenav-content fxLayout="column" [appContainer]="app" (toggle)="sidenav.toggle()">
     <!-- TOOLBAR -->
     <app-bar #app>
       <header fxLayout fxLayoutAlign="start center">
-        <button test-id="menu" mat-icon-button (click)="sidenav.toggle()">
+        <button *ngIf="(user$ | async)" test-id="menu" mat-icon-button (click)="sidenav.toggle()">
           <mat-icon svgIcon="menu"></mat-icon>
         </button>
         <a app-logo routerLink="."></a>
@@ -56,13 +58,14 @@
       </header>
     </app-bar>
 
-    <!-- CONTENT -->
     <main fxFlex cdkScrollable>
-      <div class="page" [@routeAnimation]="animationOutlet(outlet)">
-        <router-outlet #outlet="outlet" (activate)="scrollToTop()"></router-outlet>
+      <div class="page">
+        <ng-content></ng-content>
       </div>
       <bf-footer></bf-footer>
     </main>
+
+ 
 
   </mat-sidenav-content>
 </mat-sidenav-container>
