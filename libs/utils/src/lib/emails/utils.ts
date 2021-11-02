@@ -90,7 +90,7 @@ export function createEmailRequest(params: Partial<EmailRequest> = {}): EmailReq
   };
 }
 
-export function getEventEmailData(event: Partial<EventDocument<EventMeta>>, userEmail?: string, invitationId?: string): EventEmailData {
+export function getEventEmailData(event: EventDocument<EventMeta>, userEmail?: string, invitationId?: string): EventEmailData {
 
   const eventStartDate = new Date(event.start.toDate());
   const eventEndDate = new Date(event.end.toDate());
