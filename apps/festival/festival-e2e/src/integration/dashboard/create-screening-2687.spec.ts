@@ -50,10 +50,10 @@ const logInAndNavigate = ((user: Partial<UserType>,
   cy.visit(location);
 });
 
-describe.skip('Screening Event Creation Test', () => {
+describe('Screening Event Creation Test', () => {
   let homePage: FestivalDashboardHomePage;
 
-  describe.only('Screening Event Creation Test', () => {
+  describe('Screening Event Creation Test', () => {
     it('Logs in Event Creator', () => {
       clearDataAndPrepareTest('/');
       logInAndNavigate(users[0]);
@@ -86,12 +86,12 @@ describe.skip('Screening Event Creation Test', () => {
 });
 
 
-describe.only('Screening Events Verification Test', () => {
+describe('Screening Events Verification Test', () => {
   beforeEach(() => {
     clearDataAndPrepareTest('/');
   });
 
-  it.only('Invitee1, Verify screening page and created screenings', () => {
+  it('Invitee1, Verify screening page and created screenings', () => {
     const OrgName = orgsFixture.getByID(EVENTS[2].org.id).denomination.public;
     const event1 = EVENTS[2].event;
     const event2 = EVENTS[3].event;
