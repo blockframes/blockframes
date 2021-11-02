@@ -1,4 +1,5 @@
-﻿import { NgModule } from '@angular/core';
+﻿import { Component, NgModule } from '@angular/core';
+import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
 
 // Routes
 import { RouterModule, Routes } from '@angular/router';
@@ -13,9 +14,16 @@ import { EventRoleGuard } from './guard/event-role.guard';
 import { InvitationGuard } from '@blockframes/invitation/guard/invitations.guard';
 import { NotificationsGuard } from '@blockframes/notification/notifications.guard';
 
+@Component({
+  selector: 'event-main-component',
+  template: '<router-outlet layout></router-outlet>',
+})
+export class MainEventComponent  {}
+
 const routes: Routes = [
   {
     path: ':eventId',
+    component: MainEventComponent,
     canActivate: [EventActiveGuard, InvitationGuard, NotificationsGuard],
     canDeactivate: [EventActiveGuard, InvitationGuard, NotificationsGuard],
     children: [
@@ -88,8 +96,10 @@ const routes: Routes = [
 ];
 
 @NgModule({
+  declarations: [MainEventComponent],
   imports: [
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    MatLayoutModule,
   ]
 })
 export class MainModule { }
