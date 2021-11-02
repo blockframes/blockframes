@@ -33,9 +33,9 @@ type DeepValue<T, K> =
   : K extends keyof T ? T[K] : never;
 
 
-export type ParseFieldFn = (value: string | string[], item: any, state: any[], rowIndex?: number) => any | Promise<any>;
+export type ParseFieldFn = (value: string | string[], entity: any, state: any[], rowIndex?: number) => any | Promise<any>;
 export type ExtractConfig<T> = Partial<{
-  [key in DeepKeys<T>]: (value: string | string[], item: any, state: any[], rowIndex?: number) => DeepValue<T, key> | ValueWithWarning<DeepValue<T, key>> | Promise<DeepValue<T, key> | ValueWithWarning<DeepValue<T, key>>>;
+  [key in DeepKeys<T>]: (value: string | string[], entity: any, state: any[], rowIndex?: number) => DeepValue<T, key> | ValueWithWarning<DeepValue<T, key>> | Promise<DeepValue<T, key> | ValueWithWarning<DeepValue<T, key>>>;
 }>
 
 export interface ExtractOutput<T> {
@@ -48,7 +48,7 @@ export interface ExtractOutput<T> {
 export function importSpreadsheet(bytes: Uint8Array, range?: string): SheetTab[] {
 
   // convert Uint8Array to binary String
-  let bstr = "";
+  let bstr = '';
   for (let i = 0; i < bytes.byteLength; i++) {
     bstr += String.fromCharCode(bytes[i]);
   }
@@ -74,6 +74,7 @@ export function importSpreadsheet(bytes: Uint8Array, range?: string): SheetTab[]
  */
 export async function parse(
   state: any[],
+  entity: any = {},
   item: any = {},
   values: string | string[],
   path: string,
@@ -91,23 +92,22 @@ export async function parse(
     const field = segment.replace('[]', '');
     if (Array.isArray(values)) {
       if (last) {
-        const promises = values.map(value => transform(value, item, state, rowIndex));
+        const promises = values.map(value => transform(value, entity, state, rowIndex));
         item[field] = await Promise.all(promises);
       } else {
         // Creating array at this field to which will be pushed the other sub fields
         if (!item[field]) item[field] = new Array(values.length).fill(null).map(() => ({}));
         for (let index = 0 ; index < values.length ; index++) {
           // Filling in objects into above created array
-          await parse(state, item[field][index], values[index], segments.join('.'), transform, rowIndex, warnings, errors);
+          await parse(state, entity, item[field][index], values[index], segments.join('.'), transform, rowIndex, warnings, errors);
         }
-
       }
     }
   } else {
     const value = Array.isArray(values) ? values[0] : values;
     try {
       if (last) {
-        const result = await transform((value??'').trim(), item, state, rowIndex);
+        const result = await transform((`${value}` ?? '').trim(), entity, state, rowIndex);
         if (result instanceof ValueWithWarning) {
           warnings.push(result.warning);
           item[segment] = result.value;
@@ -116,12 +116,24 @@ export async function parse(
         }
       }
     } catch (err: any) {
-      errors.push(err.message ? JSON.parse(err.message) : err.message);
+      try {
+        errors.push(JSON.parse(err.message));
+
+      // unable to deserialize JSON error
+      } catch(err2) {
+        errors.push({
+          type: 'error',
+          field: path,
+          name: 'Unexpected Error',
+          reason: 'An unexpected error as happened, please try again, and contact us if you keep seeing this.',
+          hint: err,
+        });
+      }
     }
 
     if (!last) {
       if (!item[segment]) item[segment] = {};
-      await parse(state, item[segment], values, segments.join('.'), transform, rowIndex, warnings, errors);
+      await parse(state, entity, item[segment], values, segments.join('.'), transform, rowIndex, warnings, errors);
     }
   }
 }
@@ -176,15 +188,15 @@ export async function extract<T>(rawRows: string[][], config: ExtractConfig<T> =
 
   const flatRows = flattenConcurrentRows(rawRows, concurrentRow);
 
-  for (const row of flatRows) {
+  for (let rowIndex = 0 ; rowIndex < flatRows.length ; rowIndex++) {
     const item = {};
     const warnings: SpreadsheetImportError[] = [];
     const errors: SpreadsheetImportError[] = [];
     const entries = Object.entries(config);
-    for (let index = 0 ; index < entries.length ; index++) {
-      const [ key, transform ] = entries[index];
-      const value = row[index];
-      await parse(state, item, value, key, transform as ParseFieldFn, index, warnings, errors)
+    for (let columnIndex = 0 ; columnIndex < entries.length ; columnIndex++) {
+      const [ key, transform ] = entries[columnIndex];
+      const value = flatRows[rowIndex][columnIndex];
+      await parse(state, item, item, value, key, transform as ParseFieldFn, rowIndex, warnings, errors)
     }
     const data = cleanUp(item) as T;
     state.push(data);
