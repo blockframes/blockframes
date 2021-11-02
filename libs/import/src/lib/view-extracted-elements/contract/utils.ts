@@ -209,7 +209,7 @@ export async function formatContract(
       return value;
     },
     /* o */'parentTerm': async (value: string, data: FieldsConfig) => {
-      if (value && !blockframesAdmin) return new ValueWithWarning(firestore.createId(), adminOnlyWarning({ field: 'parentTerm', name: 'Mandate ID/Row' }));
+      if (value && !blockframesAdmin) return new ValueWithWarning('', adminOnlyWarning({ field: 'parentTerm', name: 'Mandate ID/Row' }));
       if (value && data.contract.type === 'mandate') return new ValueWithWarning('', {
         type: 'warning',
         field: 'parentTerm',

@@ -107,7 +107,7 @@ export async function parse(
     } else {
       const value = Array.isArray(values) ? values[0] : values;
         if (last) {
-          const result = await transform((`${value}` ?? '').trim(), entity, state, rowIndex);
+          const result = await transform((`${value ?? ''}`).trim(), entity, state, rowIndex);
           if (result instanceof ValueWithWarning) {
             warnings.push(result.warning);
             item[segment] = result.value;
@@ -127,7 +127,7 @@ export async function parse(
       errors.push(JSON.parse(err.message));
 
     // unable to deserialize JSON error
-    } catch(err2) {
+    } catch(_) {
       errors.push({
         type: 'error',
         field: path,
