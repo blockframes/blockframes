@@ -20,8 +20,9 @@ interface FieldsConfig {
   productionStatus: ProductionStatus;
   release: MovieRelease;
   directors: {
-    firstName: string; lastName: string;
-    description: string
+    firstName: string;
+    lastName: string;
+    description: string;
   }[];
   originCountries: Territory[];
   stakeholders: {
@@ -30,15 +31,18 @@ interface FieldsConfig {
     country:string;
   }[];
   originalRelease: {
-    country: Territory; media: MediaValue;
-    date: Date
+    country: Territory;
+    media: MediaValue;
+    date: Date;
   }[];
   originalLanguages: Language[];
   genres: Genre[];
   customGenres: string[];
   runningTime: MovieRunningTime;
   cast: {
-    firstName: string; lastName: string; status: string
+    firstName: string;
+    lastName: string;
+    status: string;
   }[];
   prizes: {
     name: string;
@@ -51,10 +55,14 @@ interface FieldsConfig {
   keyAssets: string;
   keywords: string[];
   producers: {
-    firstName: string; lastName: string; role: ProducerRole
+    firstName: string;
+    lastName: string;
+    role: ProducerRole;
   }[];
   crew: {
-    firstName: string; lastName: string; role: CrewRole
+    firstName: string;
+    lastName: string;
+    role: CrewRole;
   }[];
   budgetRange: NumberRange;
   boxoffice: {
@@ -63,11 +71,16 @@ interface FieldsConfig {
     value: number;
   }[];
   certifications: Certification[];
-  ratings: { country: string; value: string; }[];
+  ratings: {
+    country: string;
+    value: string;
+  }[];
   audience: MovieGoalsAudience;
   reviews: {
-    filmCriticName: string; revue: string;
-    link: string; quote: string;
+    filmCriticName: string;
+    revue: string;
+    link: string;
+    quote: string;
   }[];
   color: Color;
   format: MovieFormat;
@@ -493,8 +506,7 @@ export async function formatTitle(
     };
 
     const languages: Partial<{ [language in Language]: MovieLanguageSpecification }> = {};
-    for (const l of data.languages) {
-      const { language, dubbed, subtitle, caption } = l;
+    for (const { language, dubbed, subtitle, caption } of data.languages) {
       languages[language] = { dubbed, subtitle, caption };
     }
 
