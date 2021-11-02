@@ -75,7 +75,7 @@ export class EventViewComponent implements OnInit, OnDestroy {
   }
 
   goBack() {
-    this.authStore.updateAnonymousCredentials({ role: undefined, firstName: undefined, lastName: undefined, email: undefined });
+    this.authStore.updateAnonymousCredentials({ role: undefined, firstName: undefined, lastName: undefined });
     this.location.back();
   }
 }
