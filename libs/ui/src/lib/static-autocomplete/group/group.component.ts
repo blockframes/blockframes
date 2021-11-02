@@ -67,7 +67,7 @@ export class StaticGroupComponent implements ControlValueAccessor, OnInit, OnDes
   modes: Record<string, Observable<GroupMode>> = {};
   filteredGroups$: Observable<StaticGroup[]>;
   groups$ = new BehaviorSubject<StaticGroup[]>([]);
-  public _placeholder = 'Tap to filter';
+  private _placeholder = 'Tap to filter';
   focused = false;
   touched = false;
   private _required = false;

@@ -1,7 +1,7 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, OnInit } from "@angular/core";
 import { QueryFn } from "@angular/fire/firestore";
 import { AvailsForm } from "@blockframes/contract/avails/form/avails.form";
-import { ContractService, Sale, Mandate } from "@blockframes/contract/contract/+state";
+import { ContractService, Sale, Mandate, Contract } from "@blockframes/contract/contract/+state";
 import { Income, IncomeService } from "@blockframes/contract/income/+state";
 import { Movie, MovieService } from "@blockframes/movie/+state";
 import { OrganizationQuery } from "@blockframes/organization/+state";
@@ -31,7 +31,7 @@ type JoinSaleTitleType = {
  * @param title
  * @returns
  */
-const mandateQuery = (title: Movie): QueryFn => ref => ref.where('titleId', '==', title.id).where('type', '==', 'mandate').where('status' , '==', 'accepted');
+const mandateQuery = (title: Movie): QueryFn => ref => ref.where('titleId', '==', title.id).where('type', '==', 'mandate').where('status', '==', 'accepted');
 const saleQuery = (title: Movie): QueryFn => ref => ref.where('titleId', '==', title.id).where('type', '==', 'sale')
   .where('status', '==', 'accepted');
 
@@ -142,7 +142,7 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
     this.sub.unsubscribe();
   }
 
-  goToMap({ id }: { id: string }) {
+  goToMap(id: string) {
     this.router.navigate([id, 'map'], { relativeTo: this.route })
   }
 

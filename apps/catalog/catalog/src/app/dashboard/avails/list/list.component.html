@@ -8,7 +8,7 @@
 <section *ngIf="results$ | async as sales; else loading">
   <ng-container *ngIf="sales.length; else noSales">
     <h3>Results</h3>
-    <bf-table [source]="sales" clickable useFilter pagination="50" (rowClick)="goToMap($event)">
+    <bf-table [source]="sales" clickable useFilter pagination="50" (rowClick)="goToMap($event.id)">
       <ng-template colRef="title.international" label="Title" let-title>{{ title | maxLength:50}}</ng-template>
       <ng-template colRef="allSaleCount" label="All Sales" let-allSaleCount>{{ allSaleCount || '-' }}</ng-template>
       <ng-template colRef="salesCount" label="Archipel Sales" let-salesCount>{{ salesCount || '-' }}</ng-template>
