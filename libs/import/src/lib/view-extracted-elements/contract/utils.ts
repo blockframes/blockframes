@@ -157,7 +157,7 @@ export async function formatContract(
       }
     },
     /* d */'contract.buyerId': async (value: string, data: FieldsConfig) => {
-      if (!value) throw new MandatoryError({ field: 'contract.buyer', name: 'Licensee' });
+      if (!value) throw new MandatoryError({ field: 'contract.buyerId', name: 'Licensee' });
       if (data.contract.type === 'mandate') {
         if (value !== 'Archipel Content') throw new Error(JSON.stringify({
           type: 'error',
