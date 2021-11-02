@@ -1,31 +1,39 @@
-import { CdkScrollable } from '@angular/cdk/scrolling';
-import { Component, ChangeDetectionStrategy, ViewChild, OnInit } from '@angular/core';
-import { MatSidenav } from '@angular/material/sidenav';
+// Angular
+import { Component, ChangeDetectionStrategy, OnInit, ViewChild } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { AuthQuery } from '@blockframes/auth/+state';
-import { InvitationService } from '@blockframes/invitation/+state';
-import { Movie, MovieService } from '@blockframes/movie/+state';
-import { NotificationQuery } from '@blockframes/notification/+state';
-import { OrganizationQuery } from '@blockframes/organization/+state';
-import { routeAnimation } from '@blockframes/utils/animations/router-animations';
-import { App, getCurrentApp } from '@blockframes/utils/apps';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { MatSidenav } from '@angular/material/sidenav';
+import { CdkScrollable } from '@angular/cdk/overlay';
+
+// RxJs
 import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
+
+// Blockframes
+import { AuthQuery } from '@blockframes/auth/+state/auth.query';
+import { routeAnimation } from '@blockframes/utils/animations/router-animations';
+import { InvitationService } from '@blockframes/invitation/+state';
+import { NotificationQuery } from '@blockframes/notification/+state';
+import { OrganizationQuery } from '@blockframes/organization/+state';
+import { MovieService, Movie } from '@blockframes/movie/+state'
+import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { getCurrentApp, App } from '@blockframes/utils/apps';
+
 @Component({
-  selector: 'event-main',
-  templateUrl: './main.component.html',
-  styleUrls: ['./main.component.scss'],
-  animations: [routeAnimation],
+  selector: 'layout-event',
+  templateUrl: './event.component.html',
+  styleUrls: ['./event.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MainComponent implements OnInit {
+export class EventComponent implements OnInit {
   public user$ = this.authQuery.select('profile');
   public wishlistCount$: Observable<number>;
   public notificationCount$ = this.notificationQuery.selectCount();
   public invitationCount$ = this.invitationService.myInvitations$.pipe(
     map(invitations => invitations.filter(invitation => invitation.status === 'pending').length),
   )
+
+  @ViewChild(MatSidenav) sidenav: MatSidenav;
+  @ViewChild(CdkScrollable) cdkScrollable: CdkScrollable
 
   constructor(
     private orgQuery: OrganizationQuery,
@@ -36,20 +44,12 @@ export class MainComponent implements OnInit {
     private routerQuery: RouterQuery
   ) { }
 
-
-  @ViewChild(MatSidenav) sidenav: MatSidenav;
-  @ViewChild(CdkScrollable) cdkScrollable: CdkScrollable;
-
   ngOnInit() {
     this.wishlistCount$ = this.orgQuery.selectActive().pipe(
       map(org => org?.wishlist ? org.wishlist : []),
       switchMap(movieIds => this.movieService.getValue(movieIds)),
       map((movies: Movie[]) => movies.filter(filterMovieByAppAccess(getCurrentApp(this.routerQuery))).length)
     );
-  }
-
-  animationOutlet(outlet: RouterOutlet) {
-    return outlet?.activatedRouteData?.animation;
   }
 
   scrollToTop() {

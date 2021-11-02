@@ -35,7 +35,7 @@ const routes: Routes = createRoutes({
     path: 'event',
     canActivate: [EventAuthGuard, AnonymousAuthGuard],
     canDeactivate: [AnonymousAuthGuard],
-    loadChildren: () => import('@blockframes/event/layout/main/main.module').then(m => m.MainModule)
+    loadChildren: () => import('@blockframes/event/main-event.module').then(m => m.MainModule)
   }
 });
 

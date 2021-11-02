@@ -1,84 +1,86 @@
-<ng-container *ngIf="(event$ | async) as event; else loading">
-  <ng-container [ngSwitch]="event.type">
-    <!-- SCREENING TYPE -->
-    <section *ngSwitchCase="'screening'" fxLayout="column" fxLayoutAlign="space-between center"  class="screening">
-      <ng-container *ngIf="event.movie else noMovie">
-        <ng-container *ngIf="showSession else showVideo">
-          <article class="dark-contrast-theme screen" [bgRef]="event.movie.banner" bgAsset="empty_banner.png">
-            <div class="overlay" fxLayout="column" fxLayoutAlign="center center">
-              <img class="organizationLogo" [ref]="event?.org?.logo" asset="empty_organization.svg" type="logo" alt="organization logo">
-              <h4>{{ event.org | orgName }} presents</h4>
-              <h1 class="mat-display-2">{{ event.movie.title.international }}</h1>
-              <h2>by {{ event.movie.directors | displayName }}</h2>
-              <span class="mat-caption">Screening now</span>
-              <button test-id="play" mat-flat-button color="accent" (click)="showSession = false">
-                <mat-icon svgIcon="play_arrow"></mat-icon>
-                <span>Play</span>
-              </button>
-            </div>
-          </article>
-        </ng-container>
-
-        <ng-template #showVideo>
-          <article class="screen">
-            <video-viewer [eventId]="event.id" [ref]="screeningFileRef" class="overlay" (stateChange)="isPlaying = $event === 'play'"></video-viewer>
-          </article>
-        </ng-template>
-
-        <img asset="screening_now.svg" alt="Cinema room">
-      </ng-container>
-
-      <ng-template #noMovie>
-        <p>There is no movie associated with this screening</p>
-      </ng-template>
-    </section>
-
-    <!-- MEETING TYPE -->
-    <ng-container *ngSwitchCase="'meeting'">
-      <section class="meeting">
-
-        <div class="meeting-container">
-
-          <ng-container *ngIf="!!event.meta.selectedFile">
-            <article [style]="{width: mediaContainerSize}">
-              <ng-container *ngIf="creatingControl$ | async; else controlReady">
-                <section class="control-spinner">
-                  <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-                </section>
-              </ng-container>
-              <ng-template #controlReady>
-                <file-viewers [eventId]="event.id" [ref]="event.meta.files | selectedFile: event.meta.selectedFile" [control]="event.meta.controls[event.meta.selectedFile]"></file-viewers>
-              </ng-template>
-              <section *ngIf="event.isOwner">
-                <mat-divider></mat-divider>
-                <button mat-button (click)="select('')">
-                  <mat-icon svgIcon="cancel"></mat-icon>
-                  <span>Stop Sharing</span>
+<layout-event>
+  <ng-container *ngIf="(event$ | async) as event; else loading">
+    <ng-container [ngSwitch]="event.type">
+      <!-- SCREENING TYPE -->
+      <section *ngSwitchCase="'screening'" fxLayout="column" fxLayoutAlign="space-between center"  class="screening">
+        <ng-container *ngIf="event.movie else noMovie">
+          <ng-container *ngIf="showSession else showVideo">
+            <article class="dark-contrast-theme screen" [bgRef]="event.movie.banner" bgAsset="empty_banner.png">
+              <div class="overlay" fxLayout="column" fxLayoutAlign="center center">
+                <img class="organizationLogo" [ref]="event?.org?.logo" asset="empty_organization.svg" type="logo" alt="organization logo">
+                <h4>{{ event.org | orgName }} presents</h4>
+                <h1 class="mat-display-2">{{ event.movie.title.international }}</h1>
+                <h2>by {{ event.movie.directors | displayName }}</h2>
+                <span class="mat-caption">Screening now</span>
+                <button test-id="play" mat-flat-button color="accent" (click)="showSession = false">
+                  <mat-icon svgIcon="play_arrow"></mat-icon>
+                  <span>Play</span>
                 </button>
-              </section>
+              </div>
             </article>
           </ng-container>
 
-          <meeting-video-room [style]="{width: visioContainerSize}"></meeting-video-room>
+          <ng-template #showVideo>
+            <article class="screen">
+              <video-viewer [eventId]="event.id" [ref]="screeningFileRef" class="overlay" (stateChange)="isPlaying = $event === 'play'"></video-viewer>
+            </article>
+          </ng-template>
 
-        </div>
-
-        <ng-container *ngIf="event.isOwner">
-          <file-controls
-            [event]="event"
-            *ngIf="(event.meta.selectedFile | fileType) === 'pdf' || (event.meta.selectedFile | fileType) === 'video'"
-          ></file-controls>
-
-          <file-carousel fxFlex="35%" [files]="event.meta.files" [selectedFile]="event.meta.selectedFile" (selectPath)="select($event)" (picked)="picked($event)"></file-carousel>
+          <img asset="screening_now.svg" alt="Cinema room">
         </ng-container>
 
+        <ng-template #noMovie>
+          <p>There is no movie associated with this screening</p>
+        </ng-template>
       </section>
 
-      <img *ngIf="!event.isOwner" asset="meeting.svg" alt="Meeting room">
+      <!-- MEETING TYPE -->
+      <ng-container *ngSwitchCase="'meeting'">
+        <section class="meeting">
 
+          <div class="meeting-container">
+
+            <ng-container *ngIf="!!event.meta.selectedFile">
+              <article [style]="{width: mediaContainerSize}">
+                <ng-container *ngIf="creatingControl$ | async; else controlReady">
+                  <section class="control-spinner">
+                    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+                  </section>
+                </ng-container>
+                <ng-template #controlReady>
+                  <file-viewers [eventId]="event.id" [ref]="event.meta.files | selectedFile: event.meta.selectedFile" [control]="event.meta.controls[event.meta.selectedFile]"></file-viewers>
+                </ng-template>
+                <section *ngIf="event.isOwner">
+                  <mat-divider></mat-divider>
+                  <button mat-button (click)="select('')">
+                    <mat-icon svgIcon="cancel"></mat-icon>
+                    <span>Stop Sharing</span>
+                  </button>
+                </section>
+              </article>
+            </ng-container>
+
+            <meeting-video-room [style]="{width: visioContainerSize}"></meeting-video-room>
+
+          </div>
+
+          <ng-container *ngIf="event.isOwner">
+            <file-controls
+              [event]="event"
+              *ngIf="(event.meta.selectedFile | fileType) === 'pdf' || (event.meta.selectedFile | fileType) === 'video'"
+            ></file-controls>
+
+            <file-carousel fxFlex="35%" [files]="event.meta.files" [selectedFile]="event.meta.selectedFile" (selectPath)="select($event)" (picked)="picked($event)"></file-carousel>
+          </ng-container>
+
+        </section>
+
+        <img *ngIf="!event.isOwner" asset="meeting.svg" alt="Meeting room">
+
+      </ng-container>
     </ng-container>
   </ng-container>
-</ng-container>
+</layout-event>
 
 
 <ng-template #loading>

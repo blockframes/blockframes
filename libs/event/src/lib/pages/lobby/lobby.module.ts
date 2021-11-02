@@ -14,6 +14,7 @@ import { LobbyComponent } from './lobby.component';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { MeetingVideoModule } from '@blockframes/event/components/meeting/video/video.module';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { EventLayoutModule } from '@blockframes/ui/layout/event/event.module';
 
 
 @NgModule({
@@ -31,7 +32,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     MatIconModule,
     MatTooltipModule,
     ConfirmModule,
-
+    EventLayoutModule,
     RouterModule.forChild([{ path: '', component: LobbyComponent }])
   ]
 })
