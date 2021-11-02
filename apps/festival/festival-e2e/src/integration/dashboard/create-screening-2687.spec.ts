@@ -15,7 +15,7 @@ import {
   FestivalInvitationsPage,
   EventPage
 } from '../../support/pages/dashboard/index';
-import { LandingPage } from '../../support/pages/landing';
+
 // Hooks
 import { acceptCookie, clearDataAndPrepareTest, signIn } from '@blockframes/e2e/utils/functions';
 import { NOW } from '../../fixtures/data';
@@ -24,7 +24,6 @@ import { User as UserType } from '@blockframes/e2e/utils/type';
 import { User, USER } from '@blockframes/e2e/fixtures/users';
 import { Orgs } from '@blockframes/e2e/fixtures/orgs';
 import { SEC } from '@blockframes/e2e/utils';
-
 
 const userFixture = new User();
 const orgsFixture = new Orgs();
@@ -43,11 +42,13 @@ const eventInfo = [
 ];
 
 const logInAndNavigate = ((user: Partial<UserType>, 
-    location: string = '/c/o/marketplace/home') => {
+    location: string = '/c/o/marketplace/home'): FestivalMarketplaceHomePage => {
   cy.login(user.email, user.password);
-  acceptCookie();
   // Navigate to the location
   cy.visit(location);
+  const page = new FestivalMarketplaceHomePage();
+  acceptCookie();
+  return page;
 });
 
 describe('Screening Event Creation Test', () => {
@@ -56,8 +57,8 @@ describe('Screening Event Creation Test', () => {
   describe('Screening Event Creation Test', () => {
     it('Logs in Event Creator', () => {
       clearDataAndPrepareTest('/');
-      logInAndNavigate(users[0]);
-      (new FestivalMarketplaceHomePage()).goToDashboard();
+      const landingPage = logInAndNavigate(users[0]);
+      landingPage.goToDashboard();
       homePage = new FestivalDashboardHomePage();
       homePage.goToCalendar();
     });
@@ -69,8 +70,6 @@ describe('Screening Event Creation Test', () => {
 
       it('Create screening event', () => {
         cy.log('Open Calendar and mark the event');
-        //in constructor ...
-        //cy.get('festival-dashboard', { timeout: 60 * SEC });
         eventPage.checkCalendarView();
         eventPage.createEvent(date, eventName);
       });
@@ -82,7 +81,6 @@ describe('Screening Event Creation Test', () => {
       });
     });
   });
-
 });
 
 
@@ -96,12 +94,12 @@ describe('Screening Events Verification Test', () => {
     const event1 = EVENTS[2].event;
     const event2 = EVENTS[3].event;
 
-    logInAndNavigate(users[1]);
+    const p1 = logInAndNavigate(users[1]);
 
     const eventNames: string[] = [event1+'0', event2+'1',
             event1+'2', event2+'3',];
 
-    const p1 = new FestivalMarketplaceHomePage();
+    //const p1 = new FestivalMarketplaceHomePage();
     p1.clickOnMenu();
     cy.log(`Navigating to [${OrgName}] screening schedule`);
     const p2: FestivalOrganizationListPage = p1.selectSalesAgents();
@@ -122,8 +120,8 @@ describe('Screening Events Verification Test', () => {
   });
 
   it('Organiser accepts private screening request', () => {
-    logInAndNavigate(users[0]);
-    const p1 = (new FestivalMarketplaceHomePage()).goToDashboard();
+    const homePage = logInAndNavigate(users[0]);
+    const p1 = homePage.goToDashboard();
     const p2: FestivalInvitationsPage = p1.clickOnInvitations();
     p2.acceptInvitationScreening();
   });
@@ -134,10 +132,7 @@ describe('Screening Events Verification Test', () => {
     //Screening event prefixed 2 created above.
     const screeningEvent = event.event + '2';
     const movieTitle = event.movie.title.international;
-    logInAndNavigate(users[1]);
-
-    const p1 = new FestivalMarketplaceHomePage();
-
+    const p1 = logInAndNavigate(users[1]);
     p1.clickOnMenu();
     const p2: FestivalOrganizationListPage = p1.selectSalesAgents();
     cy.wait(10 * SEC);

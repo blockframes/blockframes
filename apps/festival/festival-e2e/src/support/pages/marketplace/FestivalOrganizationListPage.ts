@@ -7,11 +7,16 @@ export default class FestivalOrganizationListPage {
   }
 
   searchPartner(orgName: string) {
+    //Wait for all orgs to load first
+    cy.get('[test-id="org-spinner"]', {timeout: 90 * SEC})
+      .should('not.exist');
+
     cy.get('mat-form-field input', {timeout: 3 * SEC})
       .type(`${orgName}{enter}`, {force: true});
   }
 
   clickOnOrganization(orgName: string) {
+    cy.log(`Locating org : ${orgName}`);
     cy.get('festival-organization-list org-card', { timeout: 60 * SEC })
       .contains(orgName).parent().parent().find('a').click();
     cy.wait(1 * SEC);

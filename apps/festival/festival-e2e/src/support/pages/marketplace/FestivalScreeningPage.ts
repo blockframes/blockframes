@@ -10,6 +10,10 @@ export default class FestivalScreeningPage {
   }
 
   assertScreeningsExists(screeningNames: string[]) {
+    //Wait for screening events to load
+    cy.get('[test-id="screening-spinner"]', {timeout: 60 * SEC})
+      .should('not.exist');
+
     cy.get('festival-screening event-screening-item', {timeout: 30 * SEC})
     .then($el => {
       screeningNames.forEach(screeningName => {

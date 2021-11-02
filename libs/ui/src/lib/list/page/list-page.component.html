@@ -71,11 +71,10 @@
 
   <!-- PROGRESS -->
   <ng-content select="list-page-progress"></ng-content>
-
   <!-- LOADING -->
   <ng-template #loading>
     <div fxLayout fxLayoutAlign="center">
-      <mat-spinner color="primary"></mat-spinner>
+      <mat-spinner test-id="org-spinner" color="primary"></mat-spinner>
     </div>
   </ng-template>
 
