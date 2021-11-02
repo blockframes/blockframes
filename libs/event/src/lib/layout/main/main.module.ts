@@ -38,6 +38,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 const routes: Routes = [
   {
     path: ':eventId',
+    data: { animation: 'view' }, // @TODO #6756 need to keep ?
     component: MainComponent,
     canActivate: [EventActiveGuard, InvitationGuard, NotificationsGuard],
     canDeactivate: [EventActiveGuard, InvitationGuard, NotificationsGuard],
