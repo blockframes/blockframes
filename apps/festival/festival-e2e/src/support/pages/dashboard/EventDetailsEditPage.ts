@@ -4,7 +4,6 @@ import { SEC } from '@blockframes/e2e/utils';
 export default class EventDetailsEditPage {
   constructor() {
     cy.get('event-details-edit', { timeout: 90 * SEC });
-    //cy.wait(10 * SEC);
   }
 
   addEventTitle(title: string) {
@@ -55,8 +54,8 @@ export default class EventDetailsEditPage {
   }
 
   selectMovie(movieName: string) {
-    cy.get('[formControlName="titleId"]', { timeout: 100 * SEC }).click();
-    cy.get('mat-option').contains(movieName).click();
+    cy.get('[formControlName="titleId"]', { timeout: 10 * SEC }).click();
+    cy.get('mat-option').contains(movieName, {timeout: 5 * SEC}).click();
   }
 
   inputDescription(description: string) {
@@ -87,7 +86,7 @@ export default class EventDetailsEditPage {
 
   saveEvent() {
     cy.get('button[test-id=event-save]', { timeout:  30 * SEC }).click();
-    cy.wait(2 * SEC);
+    cy.wait(1 * SEC);
   }
 
   clickMoreDetails() {

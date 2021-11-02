@@ -1,4 +1,4 @@
-// ***********************************************
+﻿// ***********************************************
 // This example commands.js shows you how to
 // create various custom commands and overwrite
 // existing commands.
@@ -10,17 +10,10 @@
 import 'cypress-wait-until';
 import 'cypress-mailosaur';
 
-// eslint-disable-next-line @typescript-eslint/no-namespace
-declare namespace Cypress {
-  interface Chainable<Subject> {
-    login(email: string, password: string): void;
-  }
-}
-//
-// -- This is a parent command --
-Cypress.Commands.add('login', (email, password) => {
-  console.log('Custom command example: Login', email, password);
-});
+import firebase  from 'firebase/app';
+import "firebase/auth";
+import { firebase as firebaseConfig } from '@env';
+
 //
 // -- This is a child command --
 // Cypress.Commands.add("drag", { prevSubject: 'element'}, (subject, options) => { ... })
@@ -32,3 +25,22 @@ Cypress.Commands.add('login', (email, password) => {
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+
+//Init the app
+const app = firebase.initializeApp(firebaseConfig('catalog'));
+
+const login = (email: string, password: string) => {
+  return app.auth().signInWithEmailAndPassword(email, password);
+}
+
+const logout = () => {
+  return app.auth().signOut();
+}
+
+Cypress.Commands.add('login', (email: string, password: string) => {
+  return login(email, password);
+})
+
+Cypress.Commands.add('logout', () => {
+  return logout();
+})

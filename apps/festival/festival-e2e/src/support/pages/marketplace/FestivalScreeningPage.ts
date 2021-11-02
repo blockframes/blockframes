@@ -19,6 +19,15 @@ export default class FestivalScreeningPage {
     })
   }
 
+  waitForAcceptButtons() {
+    //Let the page load first
+    cy.get('[test-id="screening-spinner"]', {timeout: 60 * SEC})
+      .should('not.exist');
+
+    //Wait for buttons to be displayed
+    cy.get('button[test-id="invitation-request"]', {timeout: 60 * SEC});
+  }
+
   /**
    * clickRequestInvitation - Click the action button
    *   Private Event : Invitation request is sent
@@ -26,13 +35,6 @@ export default class FestivalScreeningPage {
    * @param screeningTitle : Title of event
    */
   clickRequestInvitation(screeningTitle: string, doPublicScreeningAction: boolean = false) {
-    // TODO : Remove this!!!
-    // cy.get('festival-screening event-screening-item', {timeout: 30 * SEC})
-    //   .contains(screeningTitle)
-    //   .parentsUntil('article').parent()
-    //   .find('button[test-id="invitation-request"]', {timeout: 30 * SEC})
-    //   .should('exist');
-
     //Check for change of status to 'Accepted' after clicking..
     cy.get('festival-screening event-screening-item', {timeout: 30 * SEC})
       .contains(screeningTitle)
@@ -82,7 +84,6 @@ export default class FestivalScreeningPage {
   }
 
   clickSpecificEvent(eventName: string, navigateToEvent: boolean = false) {
-    //TODO: check : festival-screening event-screening-item h3
     if (!navigateToEvent) {
       cy.get('article h3', {timeout: 30 * SEC})
         .contains(eventName);
@@ -111,5 +112,6 @@ export default class FestivalScreeningPage {
                     this.clickSpecificEvent(eventNames[0], true);
     cy.wait(3 * SEC);
     pageFestivalMarketplaceEvent.assertEventNameExist(eventNames[0]);
+    cy.go('back');
   }
 }
