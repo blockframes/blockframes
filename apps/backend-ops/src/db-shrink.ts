@@ -93,6 +93,11 @@ const orgMap = {
     'fromOrg.id',
     'toOrg.id'
   ],
+  contracts: [
+    'buyerId',
+    'sellerId',
+    'stakeholders',
+  ],
   movies: [
     'orgIds'
   ],
@@ -237,49 +242,65 @@ export async function shrinkDb(db: FirebaseFirestore.Firestore) {
     }
   ];
 
-
   //////////////////
   // CHECK WHAT CAN BE DELETED
   // We want to keep only the users and orgs related to movies and the ones used in e2e tests (staticUsers) along with the documents in others collections they are linked to
   //////////////////
 
-
-
-  const _usersLinkedToMovies = [];
-  const _orgsLinkedToMovies = [];
+  const _usersLinked = [];
+  const _orgsLinked = [];
 
   for (const movie of movies) {
     if (movie._meta.createdBy) {
-      _usersLinkedToMovies.push(movie._meta.createdBy);
+      _usersLinked.push(movie._meta.createdBy);
     }
 
     if (movie._meta.updatedBy) {
-      _usersLinkedToMovies.push(movie._meta.updatedBy);
+      _usersLinked.push(movie._meta.updatedBy);
     }
 
     if (movie._meta.deletedBy) {
-      _usersLinkedToMovies.push(movie._meta.deletedBy);
+      _usersLinked.push(movie._meta.deletedBy);
     }
 
     for (const orgId of movie.orgIds) {
-      _usersLinkedToMovies.push(getOrgSuperAdmin(orgId, permissions));
-      _orgsLinkedToMovies.push(orgId);
+      _usersLinked.push(getOrgSuperAdmin(orgId, permissions));
+      _orgsLinked.push(orgId);
     }
   }
 
-  const e2eUsers = Object.values(staticUsers).concat(USERS);
-  const usersToKeep: string[] = Array.from(new Set(_usersLinkedToMovies.concat(e2eUsers))).filter(uid => _users.docs.find(d => d.id === uid));
-  console.log('Users to keep', usersToKeep.length);
+  for (const contract of contracts) {
 
+    if (contract.buyerUserId) {
+      _usersLinked.push(contract.buyerUserId);
+    }
 
-  const orgsLinkedToEvents = [];
-  for (const event of events) {
-    orgsLinkedToEvents.push(event.ownerOrgId);
+    if (contract.buyerId) {
+      _orgsLinked.push(contract.buyerId);
+    }
+
+    if (contract.sellerId) {
+      _orgsLinked.push(contract.sellerId);
+    }
+
+    if (contract.stakeholders) {
+      for (const orgId of contract.stakeholders) {
+        _usersLinked.push(getOrgSuperAdmin(orgId, permissions));
+        _orgsLinked.push(orgId);
+      }
+    }
   }
 
-  const orgsToKeep: string[] = Array.from(new Set(_orgsLinkedToMovies.concat(orgsLinkedToEvents))).filter(id => _organizations.docs.find(d => d.id === id));
-  console.log('Orgs to keep', orgsToKeep.length);
+  for (const event of events) {
+    _orgsLinked.push(event.ownerOrgId);
+  }
 
+  const e2eUsers = Object.values(staticUsers).concat(USERS);
+  const usersToKeep: string[] = Array.from(new Set(_usersLinked.concat(e2eUsers))).filter(uid => _users.docs.find(d => d.id === uid));
+  console.log('Users to keep', usersToKeep.length);
+
+  const orgsToKeep: string[] = Array.from(new Set(_orgsLinked)).filter(id => _organizations.docs.find(d => d.id === id));
+  console.log('Orgs to keep', orgsToKeep.length);
 
   //////////////////
   // FILTER DOCUMENT TO DELETE
@@ -391,7 +412,6 @@ export async function shrinkDb(db: FirebaseFirestore.Firestore) {
   console.log(`Ended ! Waiting for emulator to stop and upload of shrinked db to ${latestAnonShrinkedDbDir}`);
 }
 
-
 function getPermissionById(orgId: string, permissions: PermissionsDocument[]) {
   return permissions.find(o => o.id === orgId);
 }
@@ -400,7 +420,6 @@ function getOrgSuperAdmin(orgId: string, permissions: PermissionsDocument[]) {
   const permission = getPermissionById(orgId, permissions);
   return Object.keys(permission.roles).find(userId => permission.roles[userId] === 'superAdmin')
 }
-
 
 function inspectUser(
   user: FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>,
