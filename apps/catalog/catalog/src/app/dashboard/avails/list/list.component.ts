@@ -1,7 +1,7 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, OnInit } from "@angular/core";
 import { QueryFn } from "@angular/fire/firestore";
 import { AvailsForm } from "@blockframes/contract/avails/form/avails.form";
-import { ContractService, Sale, Mandate, Contract } from "@blockframes/contract/contract/+state";
+import { ContractService, Sale, Mandate } from "@blockframes/contract/contract/+state";
 import { Income, IncomeService } from "@blockframes/contract/income/+state";
 import { Movie, MovieService } from "@blockframes/movie/+state";
 import { OrganizationQuery } from "@blockframes/organization/+state";
