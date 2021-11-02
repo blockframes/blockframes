@@ -83,57 +83,58 @@ export async function parse(
   warnings: SpreadsheetImportError[],
   errors: SpreadsheetImportError[],
 ) {
-  const segments = path.split('.');
-  const segment = segments.shift();
-  const last = !segments?.length;
+  try {
+    const segments = path.split('.');
+    const segment = segments.shift();
+    const last = !segments?.length;
 
-  // Array field
-  if (segment.endsWith('[]')) {
-    const field = segment.replace('[]', '');
-    if (Array.isArray(values)) {
-      if (last) {
-        const promises = values.map(value => transform(value, entity, state, rowIndex));
-        item[field] = await Promise.all(promises);
-      } else {
-        // Creating array at this field to which will be pushed the other sub fields
-        if (!item[field]) item[field] = new Array(values.length).fill(null).map(() => ({}));
-        for (let index = 0 ; index < values.length ; index++) {
-          // Filling in objects into above created array
-          await parse(state, entity, item[field][index], values[index], segments.join('.'), transform, rowIndex, warnings, errors);
-        }
-      }
-    }
-  } else {
-    const value = Array.isArray(values) ? values[0] : values;
-    try {
-      if (last) {
-        const result = await transform((`${value}` ?? '').trim(), entity, state, rowIndex);
-        if (result instanceof ValueWithWarning) {
-          warnings.push(result.warning);
-          item[segment] = result.value;
+    // Array field
+    if (segment.endsWith('[]')) {
+      const field = segment.replace('[]', '');
+      if (Array.isArray(values)) {
+        if (last) {
+          const promises = values.map(value => transform(value, entity, state, rowIndex));
+          item[field] = await Promise.all(promises);
         } else {
-          item[segment] = result;
+          // Creating array at this field to which will be pushed the other sub fields
+          if (!item[field]) item[field] = new Array(values.length).fill(null).map(() => ({}));
+          for (let index = 0 ; index < values.length ; index++) {
+            // Filling in objects into above created array
+            await parse(state, entity, item[field][index], values[index], segments.join('.'), transform, rowIndex, warnings, errors);
+          }
         }
       }
-    } catch (err: any) {
-      try {
-        errors.push(JSON.parse(err.message));
+    } else {
+      const value = Array.isArray(values) ? values[0] : values;
+        if (last) {
+          const result = await transform((`${value}` ?? '').trim(), entity, state, rowIndex);
+          if (result instanceof ValueWithWarning) {
+            warnings.push(result.warning);
+            item[segment] = result.value;
+          } else {
+            item[segment] = result;
+          }
+        }
 
-      // unable to deserialize JSON error
-      } catch(err2) {
-        errors.push({
-          type: 'error',
-          field: path,
-          name: 'Unexpected Error',
-          reason: 'An unexpected error as happened, please try again, and contact us if you keep seeing this.',
-          hint: err,
-        });
+
+      if (!last) {
+        if (!item[segment]) item[segment] = {};
+        await parse(state, entity, item[segment], values, segments.join('.'), transform, rowIndex, warnings, errors);
       }
     }
+  } catch (err: any) {
+    try {
+      errors.push(JSON.parse(err.message));
 
-    if (!last) {
-      if (!item[segment]) item[segment] = {};
-      await parse(state, entity, item[segment], values, segments.join('.'), transform, rowIndex, warnings, errors);
+    // unable to deserialize JSON error
+    } catch(err2) {
+      errors.push({
+        type: 'error',
+        field: path,
+        name: 'Unexpected Error',
+        reason: 'An unexpected error as happened, please try again, and contact us if you keep seeing this.',
+        hint: err,
+      });
     }
   }
 }
