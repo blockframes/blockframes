@@ -38,7 +38,7 @@ export class EventAccessGuard implements CanActivate {
             // We just check that anonymous user have lastName and firstName
             return hasAnonymousIdentity(anonymousCredentials, event.accessibility) || this.router.navigate([`/event/${event.id}`]);
           case 'invitation-only': {
-            // We check if invitation is for event and email is same as current
+
             if (route.queryParams?.i && !anonymousCredentials.invitationId) {
               this.authStore.updateAnonymousCredentials({ invitationId: route.queryParams?.i });
             }
@@ -46,6 +46,7 @@ export class EventAccessGuard implements CanActivate {
             const invitationId = route.queryParams?.i as string || anonymousCredentials?.invitationId;
             if (invitationId) {
               const invitation = await this.invitationService.getValue(invitationId).catch(() => createInvitation());
+              // We check if invitation is for event and email is same as current
               if (invitation?.toUser?.email === anonymousCredentials?.email && invitation?.eventId === event.id) {
                 return hasVerifiedAnonymousIdentity(anonymousCredentials, event.accessibility) || this.router.navigate([`/event/${event.id}`], { queryParams: route.queryParams });
               } else {

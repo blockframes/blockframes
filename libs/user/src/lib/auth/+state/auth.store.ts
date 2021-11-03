@@ -65,7 +65,11 @@ export class AuthStore extends Store<AuthState> {
     this.update(authState => ({ profile: { ...authState.profile, profile } }))
   }
 
-  public updateAnonymousCredentials(anonymousCredentials: Partial<AnonymousCredentials>) {
-    this.update(authState => ({ anonymousCredentials: { ...authState.anonymousCredentials, ...anonymousCredentials } }));
+  public updateAnonymousCredentials(anonymousCredentials: Partial<AnonymousCredentials>, options?: { reset: boolean }) {
+    if (options?.reset) {
+      this.update(() => ({ anonymousCredentials}));
+    } else {
+      this.update(authState => ({ anonymousCredentials: { ...authState.anonymousCredentials, ...anonymousCredentials } }));
+    }
   }
 }
