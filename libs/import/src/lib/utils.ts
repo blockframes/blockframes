@@ -128,7 +128,7 @@ export async function getUser(query: { email: string } | { id: string }, userSer
 
     user = await userService.getValue(query.id);
   }
-  cache[user.uid] = user;
+  if (user) cache[user.uid] = user;
   return user;
 }
 

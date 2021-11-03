@@ -176,12 +176,11 @@ export async function formatTitle(
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'directors[].description', name: 'Director(s) Description' }));
       return value;
     },
-    /* m */ 'originCountries[]': (value: string[]) => { // ! required
-      if (!value || !value.length) throw new MandatoryError({ field: 'originCountries', name: 'Origin Countries' });
-      const territories = value.map(t => getKeyIfExists('territories', t)) as Territory[];
-      const hasWrongTerritory = territories.some(t => !t);
-      if (hasWrongTerritory) throw new WrongValueError({ field: 'originCountries', name: 'Origin Countries' });
-      return territories as any;
+    /* m */ 'originCountries[]': (value: string) => { // ! required
+      if (!value) throw new MandatoryError({ field: 'originCountries', name: 'Origin Countries' });
+      const territories = getKeyIfExists('territories', value) as Territory;
+      if (!territories) throw new WrongValueError({ field: 'originCountries', name: 'Origin Countries' });
+      return territories;
     },
     /* n */ 'stakeholders[].displayName': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'stakeholders[].displayName', name: 'Stakeholders Name' }));
@@ -494,20 +493,30 @@ export async function formatTitle(
   for (const result of results) {
     const { data, errors, warnings } = result;
 
+    if (!data.stakeholders) {
+      warnings.push(optionalWarning({ field: 'stakeholders', name: 'Stakeholders' }));
+    }
+
+    const getStakeholders = (role: StakeholderRole) => data.stakeholders?.filter(s => s.role === role) ?? [];
+
     const stakeholders: MovieStakeholders = {
-      productionCompany: data.stakeholders.filter(s => s.role === 'executiveProducer'),
-      coProductionCompany:  data.stakeholders.filter(s => s.role === 'coProducer'),
-      broadcasterCoproducer:  data.stakeholders.filter(s => s.role === 'broadcasterCoproducer'),
-      lineProducer:  data.stakeholders.filter(s => s.role === 'lineProducer'),
-      distributor:  data.stakeholders.filter(s => s.role === 'distributor'),
-      salesAgent:  data.stakeholders.filter(s => s.role === 'salesAgent'),
-      laboratory:  data.stakeholders.filter(s => s.role === 'laboratory'),
-      financier:  data.stakeholders.filter(s => s.role === 'financier'),
+      productionCompany: getStakeholders('executiveProducer'),
+      coProductionCompany:  getStakeholders('coProducer'),
+      broadcasterCoproducer:  getStakeholders('broadcasterCoproducer'),
+      lineProducer:  getStakeholders('lineProducer'),
+      distributor:  getStakeholders('distributor'),
+      salesAgent:  getStakeholders('salesAgent'),
+      laboratory:  getStakeholders('laboratory'),
+      financier:  getStakeholders('financier'),
     };
 
     const languages: Partial<{ [language in Language]: MovieLanguageSpecification }> = {};
-    for (const { language, dubbed, subtitle, caption } of data.languages) {
-      languages[language] = { dubbed, subtitle, caption };
+    if (!data.languages) {
+      warnings.push(optionalWarning({ field: 'languages', name: 'Languages' }));
+    } else {
+      for (const { language, dubbed, subtitle, caption } of data.languages) {
+        languages[language] = { dubbed, subtitle, caption };
+      }
     }
 
     const title = createMovie({ ...data, languages, stakeholders });
