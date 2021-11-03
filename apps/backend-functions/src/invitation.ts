@@ -15,8 +15,6 @@ import { getEventEmailData } from '@blockframes/utils/emails/utils';
 import { Change } from 'firebase-functions';
 import { AlgoliaOrganization } from '@blockframes/utils/algolia';
 import { createAlgoliaOrganization } from '@blockframes/firebase-utils';
-import { sendMailFromTemplate } from './internals/email';
-import { validateEmailToAccessEvent } from './templates/mail';
 export { hasUserAnOrgOrIsAlreadyInvited } from './internals/invitations/utils';
 
 
@@ -231,44 +229,4 @@ export async function getInvitationLinkedToEmail(email: string): Promise<boolean
   }
 
   return false;
-}
-
-export const accessInvitationOnlyEvent = async (data: { mode: 'generate' | 'verify', invitationId: string, email?: string, eventId?: string, code?: string }, context: CallableContext) => {
-
-  if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
-
-  const invitation = await getDocument<InvitationBase<Date>>(`invitations/${data.invitationId}`);
-  const event = await getDocument<EventDocument<EventMeta>>(`events/${data.eventId}`);
-
-  if (!invitation) { throw new Error('Error: unknown invitation.'); }
-
-  if (data.mode === 'generate') {
-
-    if (invitation.eventId !== data.eventId) { throw new Error(`Error: invitation ${data.invitationId} is not for event ${data.eventId}.`); }
-
-    if (invitation.toUser?.email !== data.email) { throw new Error(`Error: invitation ${data.invitationId} is not for email ${data.email}.`); }
-
-    if (invitation.accessCode) { throw new Error(`Error: invitation ${data.invitationId} already have an access code.`); }
-
-    const code = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 8);
-    invitation.accessCode = code;
-    await db.doc(`invitations/${invitation.id}`).set(invitation);
-
-    const app: App = 'festival';
-
-    const emailData = validateEmailToAccessEvent(data.email, event, data.invitationId, code);
-
-    await sendMailFromTemplate(emailData, app);
-
-    return true;
-  } else if (data.code) {
-    if (data.code === invitation.accessCode) {
-      invitation.accessAllowed = true;
-      await db.doc(`invitations/${invitation.id}`).set(invitation);
-      return true;
-    } else {
-      return false;
-    }
-  }
-
 }

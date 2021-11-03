@@ -31,10 +31,6 @@ export interface InvitationBase<D extends Timestamp | Date> extends PublicInvita
 
   /** Watch time in secondes, only used for 'screening' events */
   watchTime?: number;
-
-  /** For 'invitation-only' events */
-  accessCode?: string;
-  accessAllowed?: boolean;
 }
 
 /** Public interface of an invitation (for notifications). */

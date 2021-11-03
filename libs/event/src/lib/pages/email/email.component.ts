@@ -41,8 +41,8 @@ export class EmailComponent implements OnInit {
     const { firstName, lastName, email } = this.emailForm.value;
     // Update store with from value
     this.authStore.updateAnonymousCredentials({ lastName, firstName, email });
-    // Redirect user to email-verify page
-    this.router.navigate(['../email-verify'], { relativeTo: this.route, queryParams: this.route.snapshot.queryParams });
+    // Redirect user to event view
+    this.router.navigate(['../i'], { relativeTo: this.route, queryParams: this.route.snapshot.queryParams });
   }
 
   clickBack() {

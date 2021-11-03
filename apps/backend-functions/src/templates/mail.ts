@@ -314,22 +314,6 @@ export function offerCreatedConfirmationEmail(toUser: UserEmailData, org: Organi
   return { to: toUser.email, templateId: templateIds.offer.created, data };
 }
 
-/** Generate an email to validate an user email adress when trying to access an invitation-only event */
-export function validateEmailToAccessEvent(email: string, event: EventDocument<EventMeta>, invitationId: string, code: string): EmailTemplateRequest {
-  const urlParams = `?email=${encodeURIComponent(email)}&i=${invitationId}&code=${code}`;
-  const url = `/event/${event.id}/r/email-verify${urlParams}`;
-  const data = {
-    eventTitle: event.title,
-    url
-  };
-
-  return {
-    to: email,
-    templateId: templateIds.user.credentials.validateEmailToAccessEvent,
-    data
-  };
-}
-
 // ------------------------- //
 //      CASCADE8 ADMIN       //
 // ------------------------- //
