@@ -83,7 +83,7 @@ export function userInvite(
     user: toUser,
     org,
     pageURL: `${pageURL}${USER_CREDENTIAL_INVITATION}?code=${encodeURIComponent(toUser.password)}&email=${encodeURIComponent(toUser.email)}`,
-    event: event,
+    event,
   };
   return { to: toUser.email, templateId, data };
 }

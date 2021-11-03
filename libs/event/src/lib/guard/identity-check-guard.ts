@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
 import { AuthQuery, hasAnonymousIdentity, hasVerifiedAnonymousIdentity, isAnonymousEmailVerified } from '@blockframes/auth/+state';
 import { combineLatest } from 'rxjs';
@@ -13,7 +14,8 @@ export class IdentityCheckGuard implements CanActivate {
     private authQuery: AuthQuery,
     private afAuth: AngularFireAuth,
     private router: Router,
-    private eventQuery: EventQuery
+    private eventQuery: EventQuery,
+    private snackBar: MatSnackBar,
   ) { }
 
   canActivate(route: ActivatedRouteSnapshot) {
@@ -23,6 +25,20 @@ export class IdentityCheckGuard implements CanActivate {
       this.eventQuery.selectActive()
     ]).pipe(
       map(([userAuth, creds, event]) => {
+        if (!event) {
+          const message = 'Incorrect event';
+          this.snackBar.open(message, 'close', { duration: 5000 });
+          this.router.navigate(['/']);
+          throw new Error(message);
+        }
+
+        if (userAuth?.isAnonymous && event.accessibility === 'invitation-only' && !route.queryParams.i) {
+          const message = 'Missing invitation parameter';
+          this.snackBar.open(message, 'close', { duration: 5000 });
+          this.router.navigate(['/']);
+          throw new Error(message);
+        }
+
         if ((userAuth && !userAuth.isAnonymous) || hasVerifiedAnonymousIdentity(creds, event.accessibility)) {
           // Redirect user to event view
           this.router.navigate([`event/${event.id}/r/i`], { queryParams: route.queryParams });

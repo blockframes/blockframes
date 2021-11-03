@@ -21,6 +21,7 @@ export class EventViewComponent implements OnInit, OnDestroy {
   invitation: Invitation;
   editMeeting: string;
   accessRoute: string;
+  user$ = this.authQuery.user$;
   event$ = this.route.params.pipe(
     pluck('eventId'),
     switchMap((eventId: string) => this.service.queryDocs(eventId)),
@@ -75,7 +76,7 @@ export class EventViewComponent implements OnInit, OnDestroy {
   }
 
   goBack() {
-    this.authStore.updateAnonymousCredentials({ role: undefined, firstName: undefined, lastName: undefined, email: undefined });
+    this.authStore.updateAnonymousCredentials({ role: undefined, firstName: undefined, lastName: undefined });
     this.location.back();
   }
 }

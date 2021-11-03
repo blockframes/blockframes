@@ -1,14 +1,11 @@
 
-import { Component, ChangeDetectionStrategy, OnInit, EventEmitter, Input, Output } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, Input } from '@angular/core';
 
 import { MatTableDataSource } from '@angular/material/table';
 
 import { BehaviorSubject } from 'rxjs';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 import { UserService } from '@blockframes/user/+state';
-import { getCurrentApp } from '@blockframes/utils/apps';
-import { MovieService } from '@blockframes/movie/+state';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 
@@ -30,22 +27,16 @@ export class ViewExtractedTitlesComponent implements OnInit {
   public moviesToUpdate$ = new BehaviorSubject<MatTableDataSource<MovieImportState>>(null);
 
   constructor(
-    private router: RouterQuery,
     private authQuery: AuthQuery,
     private userService: UserService,
-    private movieService: MovieService,
   ) { }
 
   async ngOnInit() {
-    const orgId = !this.authQuery.isBlockframesAdmin ? this.authQuery.user.orgId : undefined;
-
     const titles = await formatTitle(
       this.sheetTab,
-      this.movieService,
       this.userService,
       this.authQuery.isBlockframesAdmin,
-      getCurrentApp(this.router),
-      orgId,
+      this.authQuery.user.orgId,
     );
     this.moviesToCreate$.next(new MatTableDataSource(titles));
   }

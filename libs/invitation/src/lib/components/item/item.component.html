@@ -16,7 +16,7 @@
                   <a [href]="'mailto:' + user.email">{{ user | displayUser | async }}</a> 
                   <span>
                     invited you to {{ event.type }}
-                    <a [target]="targetLink" [href]="[applicationUrl.festival + '/c/o/marketplace/event/' + _invitation.eventId + '/lobby']" id="link">{{ event.title }}</a>
+                    <a [target]="targetLink" [href]="[applicationUrl.festival + '/event/' + _invitation.eventId + '/r/i/lobby']" id="link">{{ event.title }}</a>
                   </span>
                   <span>({{ event | eventRange }})</span>
                 </p>
@@ -28,7 +28,7 @@
                 <a [routerLink]="['/c/o/marketplace/organization', _invitation.fromOrg.id]">{{ _invitation.fromOrg | orgName }}</a>
                 <span>
                   invited you to
-                  <a [target]="targetLink" [href]="[applicationUrl.festival + '/c/o/marketplace/event/' + _invitation.eventId + '/session']" id="link">{{ event.title }}</a>
+                  <a [target]="targetLink" [href]="[applicationUrl.festival + '/event/' + _invitation.eventId + '/r/i/session']" id="link">{{ event.title }}</a>
                 </span>
                 <span>({{event | eventRange }})</span>
               </p>
@@ -43,7 +43,7 @@
                   <a [href]="'mailto:' + user.email">{{ user | displayUser | async }}</a> 
                   <span>
                     would like to attend {{ event.type }}
-                    <a [target]="targetLink" [href]="[applicationUrl.festival + '/c/o/marketplace/event/' + _invitation.eventId]" id="link">{{ event.title }}</a>
+                    <a [target]="targetLink" [href]="[applicationUrl.festival + '/event/' + _invitation.eventId + 'r', 'i']" id="link">{{ event.title }}</a>
                   </span>
                 <span>({{ event | eventRange }})</span>
                 </p>
@@ -55,7 +55,7 @@
                 <a [href]="'mailto:' + _invitation.fromUser.email">{{ _invitation.fromUser | displayUser | async }}</a> 
                 <span>
                   would like to attend {{ event.type }}
-                  <a [target]="targetLink" [href]="[applicationUrl.festival + '/c/o/marketplace/event/' + _invitation.eventId]" id="link">{{ event.title }}</a>.
+                  <a [target]="targetLink" [href]="[applicationUrl.festival + '/event/' + _invitation.eventId + 'r', 'i']" id="link">{{ event.title }}</a>.
                 </span>
                 <span>({{ event | eventRange }})</span>
               </p>

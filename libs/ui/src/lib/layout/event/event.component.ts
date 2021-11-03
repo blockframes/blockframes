@@ -1,6 +1,5 @@
 // Angular
 import { Component, ChangeDetectionStrategy, OnInit, ViewChild } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
 import { MatSidenav } from '@angular/material/sidenav';
 import { CdkScrollable } from '@angular/cdk/overlay';
 
@@ -10,7 +9,6 @@ import { map, switchMap } from 'rxjs/operators';
 
 // Blockframes
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
-import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { NotificationQuery } from '@blockframes/notification/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
