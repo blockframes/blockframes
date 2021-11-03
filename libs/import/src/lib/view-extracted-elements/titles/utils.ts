@@ -493,28 +493,22 @@ export async function formatTitle(
   for (const result of results) {
     const { data, errors, warnings } = result;
 
-    const stakeholders: MovieStakeholders = {
-      productionCompany: [],
-      coProductionCompany:  [],
-      broadcasterCoproducer:  [],
-      lineProducer:  [],
-      distributor:  [],
-      salesAgent:  [],
-      laboratory:  [],
-      financier:  [],
-    };
     if (!data.stakeholders) {
       warnings.push(optionalWarning({ field: 'stakeholders', name: 'Stakeholders' }));
-    } else {
-      stakeholders.productionCompany = data.stakeholders.filter(s => s.role === 'executiveProducer');
-      stakeholders.coProductionCompany = data.stakeholders.filter(s => s.role === 'coProducer');
-      stakeholders.broadcasterCoproducer = data.stakeholders.filter(s => s.role === 'broadcasterCoproducer');
-      stakeholders.lineProducer = data.stakeholders.filter(s => s.role === 'lineProducer');
-      stakeholders.distributor = data.stakeholders.filter(s => s.role === 'distributor');
-      stakeholders.salesAgent = data.stakeholders.filter(s => s.role === 'salesAgent');
-      stakeholders.laboratory = data.stakeholders.filter(s => s.role === 'laboratory');
-      stakeholders.financier = data.stakeholders.filter(s => s.role === 'financier');
     }
+
+    const getStakeholders = (role: StakeholderRole) => data.stakeholders?.filter(s => s.role === role) ?? [];
+
+    const stakeholders: MovieStakeholders = {
+      productionCompany: getStakeholders('executiveProducer'),
+      coProductionCompany:  getStakeholders('coProducer'),
+      broadcasterCoproducer:  getStakeholders('broadcasterCoproducer'),
+      lineProducer:  getStakeholders('lineProducer'),
+      distributor:  getStakeholders('distributor'),
+      salesAgent:  getStakeholders('salesAgent'),
+      laboratory:  getStakeholders('laboratory'),
+      financier:  getStakeholders('financier'),
+    };
 
     const languages: Partial<{ [language in Language]: MovieLanguageSpecification }> = {};
     if (!data.languages) {
