@@ -23,7 +23,6 @@ export class MainEventComponent  {}
 const routes: Routes = [
   {
     path: ':eventId',
-    data: { animation: 'view' }, // @TODO #6756 need to keep ?
     component: MainEventComponent,
     canActivate: [EventActiveGuard, InvitationGuard, NotificationsGuard],
     canDeactivate: [EventActiveGuard, InvitationGuard, NotificationsGuard],
