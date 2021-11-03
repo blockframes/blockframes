@@ -10,7 +10,7 @@ import { sendMailFromTemplate, sendMail } from './email';
 import { PublicUser } from '@blockframes/user/types';
 import { EventEmailData, getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
 import { logger } from 'firebase-functions';
-import { InvitationStatus } from '@blockframes/invitation/+state/invitation.firestore';
+import { InvitationMode, InvitationStatus, InvitationType } from '@blockframes/invitation/+state/invitation.firestore';
 
 interface UserProposal {
   uid: string;
@@ -27,11 +27,11 @@ const generatePassword = () =>
  * Get user by email & create one if there is no user for this email
  */
 export const getOrInviteUserByMail = async (
-  email: string, 
-  invitation: {id: string, type: string, mode: string, fromOrg: PublicOrganization}, 
-  app: App = 'catalog', 
-  eventData: EventEmailData
-): Promise<{user: UserProposal | PublicUser, invitationStatus?: InvitationStatus}> => {
+  email: string,
+  invitation: { id: string, type: InvitationType, mode: InvitationMode, fromOrg: PublicOrganization },
+  app: App = 'catalog',
+  eventData?: EventEmailData
+): Promise<{ user: UserProposal | PublicUser, invitationStatus?: InvitationStatus }> => {
   const fromOrgId = invitation.fromOrg.id;
   try {
     const { uid } = await auth.getUserByEmail(email);
@@ -41,7 +41,7 @@ export const getOrInviteUserByMail = async (
     try {
       const newUser = await createUserFromEmail(email, app);
       const toUser = getUserEmailData(newUser.user, newUser.password);
-      let invitationStatus : InvitationStatus;
+      let invitationStatus: InvitationStatus;
       // User does not exists, send him an email.
       const fromOrg = await getDocument<OrganizationDocument>(`orgs/${fromOrgId}`);
       const orgEmailData = getOrgEmailData(fromOrg);
@@ -49,19 +49,20 @@ export const getOrInviteUserByMail = async (
 
       const credsTemplates = templateIds.user.credentials;
 
-      const invitationTemplateId = eventData.accessibility !== 'private' ? credsTemplates.attendNonPrivateEvent : credsTemplates.attendEvent;
-          
-      const templateId = invitation.type === 'joinOrganization' ? credsTemplates.joinOrganization : invitationTemplateId;
+      let templateId = credsTemplates.joinOrganization;
+      if (invitation.type === 'attendEvent') {
+        templateId = eventData.accessibility !== 'private' ? credsTemplates.attendNonPrivateEvent : credsTemplates.attendEvent;
+      }
 
-      if(invitation.mode === 'invitation' && eventData.accessibility === 'invitation-only') {
+      if (invitation.mode === 'invitation' && eventData?.accessibility === 'invitation-only') { // @TODO #6756 #7016 change to !== private if we send the email reminders to anonymous
         invitationStatus = 'accepted';
       }
 
       const template = userInvite(toUser, orgEmailData, urlToUse, templateId, eventData);
       await sendMailFromTemplate(template, app);
-      return { 
-        user: newUser.user, 
-        invitationStatus 
+      return {
+        user: newUser.user,
+        invitationStatus
       };
     } catch (e) {
       throw new Error(`There was an error while sending email to newly created user : ${e.message}`);

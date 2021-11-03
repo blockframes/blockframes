@@ -19,12 +19,14 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatBadgeModule } from '@angular/material/badge';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [EventComponent],
   exports: [EventComponent],
   imports: [
     // Angular
+    RouterModule,
     CommonModule,
     FlexLayoutModule,
     AppLogoModule,

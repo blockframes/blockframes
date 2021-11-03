@@ -36,6 +36,7 @@ export class LoginComponent implements OnInit {
     try {
       this.buttonText = 'Logging in...'
       const { email, password } = signinForm.value;
+      await this.service.deleteAnonymousUser();
       await this.service.signin(email.trim(), password);
       // Reset page title to default
       this.dynTitle.setPageTitle();

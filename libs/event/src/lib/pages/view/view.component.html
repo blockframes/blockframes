@@ -71,7 +71,7 @@
               <p>{{ event.movie.synopsis }}</p>
               <org-chip [org]="event.org"></org-chip>
             </movie-header-preferences>
-            <movie-header-cta>
+            <movie-header-cta><!-- @TODO #6756 #6933 change link & only if connected ?-->
               <a mat-flat-button color="primary" [routerLink]="['../../title', event.movie.id]">
                 More Details
               </a>

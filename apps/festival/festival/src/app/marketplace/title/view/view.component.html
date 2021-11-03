@@ -11,7 +11,7 @@
               <span>{{ org.activity === 'intlSales' ? 'Contact Sales Agent' : 'Contact' }}</span>
             </a>
             <ng-container *ngIf="(eventId$ | async) as eventId">
-              <a ongoing-event-button [routerLink]="['/c/o/marketplace/event', eventId]">Ongoing Screening</a>
+              <a ongoing-event-button [routerLink]="['/event', eventId, '/r/i']">Ongoing Screening</a>
             </ng-container>
           </div>
         </ng-container>

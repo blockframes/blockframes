@@ -36,11 +36,9 @@ export class EventRoleGuard extends CollectionGuard<EventState> {
           if (anonymousCredentials?.role === 'organizer' && currentPage.indexOf('login') !== 0) {
             return this.router.navigate([`/event/${eventId}/r/login`], { queryParams: next.queryParams });
           }
-
-          return true;
-        } else {
-          return true;
         }
+
+        return true;
       })
     );
   }
