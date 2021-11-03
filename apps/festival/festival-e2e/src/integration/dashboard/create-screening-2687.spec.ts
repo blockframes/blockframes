@@ -47,7 +47,7 @@ const logInAndNavigate = ((user: Partial<UserType>,
   // Navigate to the location
   cy.visit(location);
   const page = new FestivalMarketplaceHomePage();
-  //acceptCookie();
+  acceptCookie();
   return page;
 });
 
@@ -87,7 +87,7 @@ describe('Screening Event Creation Test', () => {
 describe('Screening Events Verification Test', () => {
   beforeEach(() => {
     cy.logout();
-    clearDataAndPrepareTest('/');
+    //clearDataAndPrepareTest('/');
   });
 
   it('Invitee1, Verify screening page and created screenings', () => {
