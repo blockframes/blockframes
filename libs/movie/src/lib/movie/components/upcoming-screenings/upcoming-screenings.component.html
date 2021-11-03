@@ -13,9 +13,9 @@
     <!-- Ongoing screening -->
     <ng-container *ngIf="ongoingScreenings.length">
       <h3>Screenings</h3>
-      <a ongoing-event-button [routerLink]="['/event', ongoingScreenings[0].id, '/r/i']">Ongoing Screening Right Now</a>
+      <a ongoing-event-button [routerLink]="['/event', ongoingScreenings[0].id, 'r', 'i']">Ongoing Screening Right Now</a>
       <mat-divider></mat-divider>
-      <a *ngIf="!futureScreenings.length" mat-flat-button color="primary" [routerLink]="['/event', ongoingScreenings[0].id, '/r/i']">Access Event</a>
+      <a *ngIf="!futureScreenings.length" mat-flat-button color="primary" [routerLink]="['/event', ongoingScreenings[0].id, 'r', 'i']">Access Event</a>
     </ng-container>
 
     <!-- No ongoing screening but with future screening(s) -->

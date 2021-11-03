@@ -21,6 +21,7 @@ export class EventViewComponent implements OnInit, OnDestroy {
   invitation: Invitation;
   editMeeting: string;
   accessRoute: string;
+  user$ = this.authQuery.user$;
   event$ = this.route.params.pipe(
     pluck('eventId'),
     switchMap((eventId: string) => this.service.queryDocs(eventId)),
