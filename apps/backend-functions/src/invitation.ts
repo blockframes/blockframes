@@ -15,6 +15,8 @@ import { getEventEmailData } from '@blockframes/utils/emails/utils';
 import { Change } from 'firebase-functions';
 import { AlgoliaOrganization } from '@blockframes/utils/algolia';
 import { createAlgoliaOrganization } from '@blockframes/firebase-utils';
+import { sendMailFromTemplate } from './internals/email';
+import { validateEmailToAccessEvent } from './templates/mail';
 export { hasUserAnOrgOrIsAlreadyInvited } from './internals/invitations/utils';
 
 
@@ -236,6 +238,7 @@ export const accessInvitationOnlyEvent = async (data: { mode: 'generate' | 'veri
   if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
 
   const invitation = await getDocument<InvitationBase<Date>>(`invitations/${data.invitationId}`);
+  const event = await getDocument<EventDocument<EventMeta>>(`events/${data.eventId}`);
 
   if (!invitation) { throw new Error('Error: unknown invitation.'); }
 
@@ -251,8 +254,11 @@ export const accessInvitationOnlyEvent = async (data: { mode: 'generate' | 'veri
     invitation.accessCode = code;
     await db.doc(`invitations/${invitation.id}`).set(invitation);
 
-    // @TODO #6756 send code by email example : event/01HwnSypEDprUOr8rZpw/r/email-verify?i=00VT3vLb25mxcnQ6c9Ie&code=jvwretr
-    console.log(invitation.accessCode);
+    const app: App = 'festival';
+
+    const emailData = validateEmailToAccessEvent(data.email, event, data.invitationId, code);
+
+    await sendMailFromTemplate(emailData, app);
 
     return true;
   } else if (data.code) {

@@ -13,6 +13,7 @@ import { App, appName, Module } from '@blockframes/utils/apps';
 import { Bucket } from '@blockframes/contract/bucket/+state/bucket.model';
 import { format } from "date-fns";
 import { testEmail } from "@blockframes/e2e/utils/env";
+import { EventDocument, EventMeta } from '@blockframes/event/+state/event.firestore';
 
 const ORG_HOME = '/c/o/organization/';
 const USER_CREDENTIAL_INVITATION = '/auth/identity';
@@ -311,6 +312,22 @@ export function offerCreatedConfirmationEmail(toUser: UserEmailData, org: Organi
   const date = format(new Date(), 'dd MMMM, yyyy');
   const data = { org, bucket, user: toUser, baseUrl: appUrl.content, date };
   return { to: toUser.email, templateId: templateIds.offer.created, data };
+}
+
+/** Generate an email to validate an user email adress when trying to access an invitation-only event */
+export function validateEmailToAccessEvent(email: string, event: EventDocument<EventMeta>, invitationId: string, code: string): EmailTemplateRequest {
+  const urlParams = `?email=${encodeURIComponent(email)}&i=${invitationId}&code=${code}`;
+  const url = `/event/${event.id}/r/email-verify${urlParams}`;
+  const data = {
+    eventTitle: event.title,
+    url
+  };
+
+  return {
+    to: email,
+    templateId: templateIds.user.credentials.validateEmailToAccessEvent,
+    data
+  };
 }
 
 // ------------------------- //
