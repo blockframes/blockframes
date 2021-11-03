@@ -315,17 +315,17 @@ export function offerCreatedConfirmationEmail(toUser: UserEmailData, org: Organi
 }
 
 /** Generate an email to validate an user email adress when trying to access an invitation-only event */
-export function validateEmailToAccessEvent(email: string, event: EventDocument<EventMeta>, invitationId, code): EmailTemplateRequest {
+export function validateEmailToAccessEvent(email: string, event: EventDocument<EventMeta>, invitationId: string, code: string): EmailTemplateRequest {
   const urlParams = `?email=${encodeURIComponent(email)}&i=${invitationId}&code=${code}`;
   const url = `/event/${event.id}/r/email-verify${urlParams}`;
   const data = {
-    event,
+    eventTitle: event.title,
     url
   };
 
   return {
     to: email,
-    templateId: templateIds.user.credentials.verifyEmailAdress,
+    templateId: templateIds.user.credentials.validateEmailToAccessEvent,
     data
   };
 }
