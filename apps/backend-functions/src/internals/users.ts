@@ -40,12 +40,12 @@ export const getOrInviteUserByMail = async (
     //if user exists but has no orgId, we still want to send him an invitation email
     if (invitation.type === "attendEvent" && !user.orgId) {
       const invitationTemplateId = templateIds.user.credentials.attendEventRemindInvitationPass;
-      sendMailFromTemplate({
+      await sendMailFromTemplate({
         to: email,
         templateId: invitationTemplateId,
         data: { 
           event: eventData,
-          orgName: invitation.fromOrg.denomination.full
+          org: getOrgEmailData(invitation.fromOrg)
         }
       }, app)
     }
