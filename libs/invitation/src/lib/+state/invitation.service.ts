@@ -31,7 +31,7 @@ export class InvitationService extends CollectionService<InvitationState> {
 
   myInvitations$: Observable<Invitation[]> = this.authQuery.select().pipe(
     switchMap((user: AuthState) => {
-      if (user.profile) {
+      if (user.profile.orgId) {
         return combineLatest([
           this.valueChanges(ref => ref.where('toOrg.id', '==', user.profile.orgId)),
           this.valueChanges(ref => ref.where('toUser.uid', '==', user.profile.uid))
@@ -138,16 +138,6 @@ export class InvitationService extends CollectionService<InvitationState> {
         return f({ emails: recipients, invitation, app }).toPromise();
       }
     }
-  }
-
-  requestInvitationOnlyEventAccess(email: string, invitationId: string, eventId: string) {
-    const f = this.functions.httpsCallable('accessInvitationOnlyEvent');
-    return f({ mode: 'generate', email, invitationId, eventId }).toPromise();
-  }
-
-  validateInvitationOnlyEventAccess(code: string, invitationId: string) {
-    const f = this.functions.httpsCallable('accessInvitationOnlyEvent');
-    return f({ mode: 'verify', invitationId, code }).toPromise();
   }
 
 }

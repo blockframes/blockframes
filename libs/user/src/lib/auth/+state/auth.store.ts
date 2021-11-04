@@ -11,7 +11,6 @@ export interface AnonymousCredentials extends Person {
   uid: string;
   role?: 'guest' | 'organizer'; // Role for events
   email?: string,
-  emailVerified?: boolean,
   invitationId?: string, // Invitation for the event
 }
 export interface Roles {
@@ -32,20 +31,6 @@ export interface AuthState extends FireAuthState<User>, RoleState<Roles> {
 export function hasAnonymousIdentity(creds: AnonymousCredentials, accessibility: AccessibilityTypes) {
   const hasIdentity = !!creds?.lastName && !!creds?.firstName && !!creds?.role;
   return accessibility === 'public' ? hasIdentity : hasIdentity && !!creds?.email;
-}
-
-/**
- * Check if anonymous user has verified his email if event requires it
- * @param creds 
- * @param accessibility 
- * @returns 
- */
-export function isAnonymousEmailVerified(creds: AnonymousCredentials, accessibility: AccessibilityTypes) {
-  return accessibility === 'public' ? true : creds?.emailVerified && !!creds?.email;
-}
-
-export function hasVerifiedAnonymousIdentity(creds: AnonymousCredentials, accessibility: AccessibilityTypes) {
-  return hasAnonymousIdentity(creds, accessibility) && isAnonymousEmailVerified(creds, accessibility);
 }
 
 export function createUser(user: Partial<User> = {}) {

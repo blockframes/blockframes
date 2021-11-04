@@ -58,7 +58,7 @@ export class EventViewComponent implements OnInit, OnDestroy {
           case 'invitation-only': {
             const regularInvitation = invitations.find(invitation => invitation.eventId === event.id) ?? null;
             if (regularInvitation) return regularInvitation;
-            if (emailInvitation && emailInvitation.accessAllowed) return emailInvitation;
+            if (emailInvitation) return emailInvitation;
             return undefined;
           }
           case 'private':
