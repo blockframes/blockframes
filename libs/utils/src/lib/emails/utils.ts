@@ -57,7 +57,8 @@ export interface UserEmailData {
   firstName?: string,
   lastName?: string,
   email: string,
-  password?: string
+  password?: string,
+  isRegistered?: boolean
 }
 
 export type EmailErrorCodes = 'E01-unauthorized' | 'E02-general-error' | 'E03-missing-api-key' | 'E04-no-template-available';
@@ -126,6 +127,7 @@ export function getUserEmailData(user: Partial<User>, password?: string): UserEm
     firstName: user.firstName || '',
     lastName: user.lastName || '',
     email: user.email || '',
-    password
+    password,
+    isRegistered: !!user.orgId
   }
 }
