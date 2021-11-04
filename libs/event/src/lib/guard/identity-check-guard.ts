@@ -19,12 +19,12 @@ export class IdentityCheckGuard implements CanActivate {
   ) { }
 
   canActivate(route: ActivatedRouteSnapshot) {
+    const event = this.eventQuery.getActive();
     combineLatest([
       this.afAuth.authState,
-      this.authQuery.anonymousCredentials$,
-      this.eventQuery.selectActive()
+      this.authQuery.anonymousCredentials$
     ]).pipe(
-      map(([userAuth, creds, event]) => {
+      map(([userAuth, creds]) => {
         if (!event) {
           const message = 'Incorrect event';
           this.snackBar.open(message, 'close', { duration: 5000 });
