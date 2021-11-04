@@ -15,6 +15,7 @@ import {
   FestivalInvitationsPage,
   EventPage
 } from '../../support/pages/dashboard/index';
+import { LandingPage } from '../../support/pages/landing';
 
 // Hooks
 import { acceptCookie, clearDataAndPrepareTest, signIn } from '@blockframes/e2e/utils/functions';
@@ -42,13 +43,12 @@ const eventInfo = [
 ];
 
 const logInAndNavigate = ((user: Partial<UserType>, 
-    location: string = '/c/o/marketplace/home'): FestivalMarketplaceHomePage => {
+    location: string = '/c/o/marketplace/home') => {
   cy.login(user.email, user.password);
   // Navigate to the location
   cy.visit(location);
-  const page = new FestivalMarketplaceHomePage();
+  cy.wait(1 * SEC);
   acceptCookie();
-  return page;
 });
 
 describe('Screening Event Creation Test', () => {
@@ -57,9 +57,16 @@ describe('Screening Event Creation Test', () => {
   describe('Screening Event Creation Test', () => {
     it('Logs in Event Creator', () => {
       clearDataAndPrepareTest('/');
-      const landingPage = logInAndNavigate(users[0]);
-      landingPage.goToDashboard();
+      //logInAndNavigate(users[0], '/c/o/dashboard/home');
+      const p1 = new LandingPage();
+      p1.clickLogin();
+      signIn(users[0]);
+      acceptCookie();
+
+      (new FestivalMarketplaceHomePage()).goToDashboard();
       homePage = new FestivalDashboardHomePage();
+      //landingPage.goToDashboard();
+      //homePage = new FestivalDashboardHomePage();
       homePage.goToCalendar();
     });
 
@@ -87,8 +94,12 @@ describe('Screening Event Creation Test', () => {
 describe('Screening Events Verification Test', () => {
   beforeEach(() => {
     cy.logout();
-    clearDataAndPrepareTest('/');
+    cy.wait(1 * SEC);
+    //clearDataAndPrepareTest('/');
+    cy.clearCookies();
+    //cy.clearLocalStorage();
     cy.visit('/');
+    cy.wait(1 * SEC);
   });
 
   it('Invitee1, Verify screening page and created screenings', () => {
@@ -96,17 +107,19 @@ describe('Screening Events Verification Test', () => {
     const event1 = EVENTS[2].event;
     const event2 = EVENTS[3].event;
 
-    const p1 = logInAndNavigate(users[1]);
+    logInAndNavigate(users[1], 'c/o/marketplace/organization/lV0qt4hCAWKw5lRSaO1E/title');
 
     const eventNames: string[] = [event1+'0', event2+'1',
             event1+'2', event2+'3',];
 
-    //const p1 = new FestivalMarketplaceHomePage();
+    /*
+    const p1 = new FestivalMarketplaceHomePage();
     p1.clickOnMenu();
     cy.log(`Navigating to [${OrgName}] screening schedule`);
     const p2: FestivalOrganizationListPage = p1.selectSalesAgents();
     p2.searchPartner(OrgName);
-    const p3: FestivalMarketplaceOrganizationTitlePage = p2.clickOnOrganization(OrgName);
+    */
+    const p3 = new FestivalMarketplaceOrganizationTitlePage();
     const p4: FestivalScreeningPage = p3.clickOnScreeningSchedule();
     cy.log('=>Test Screenings are listed');
     p4.assertScreeningsExists(eventNames);
@@ -122,7 +135,8 @@ describe('Screening Events Verification Test', () => {
   });
 
   it('Organiser accepts private screening request', () => {
-    const homePage = logInAndNavigate(users[0]);
+    logInAndNavigate(users[0]);
+    const homePage = new FestivalMarketplaceHomePage();
     const p1 = homePage.goToDashboard();
     const p2: FestivalInvitationsPage = p1.clickOnInvitations();
     p2.acceptInvitationScreening();
@@ -134,8 +148,10 @@ describe('Screening Events Verification Test', () => {
     //Screening event prefixed 2 created above.
     const screeningEvent = event.event + '2';
     const movieTitle = event.movie.title.international;
-    const p1 = logInAndNavigate(users[1]);
-    p1.clickOnMenu();
+    logInAndNavigate(users[1], 'c/o/marketplace/organization/lV0qt4hCAWKw5lRSaO1E/title');
+
+    /*
+    const p1.clickOnMenu();
     const p2: FestivalOrganizationListPage = p1.selectSalesAgents();
     cy.wait(10 * SEC);
 
@@ -143,6 +159,9 @@ describe('Screening Events Verification Test', () => {
     cy.log(`Seek out partner: ${OrgName}`);
     p2.searchPartner(OrgName);
     const p3: FestivalMarketplaceOrganizationTitlePage = p2.clickOnOrganization(OrgName);
+    */
+
+    const p3 = new FestivalMarketplaceOrganizationTitlePage();
 
     //Check if public screening exists and request it.
     cy.log(`[A]: schedule screening of {${screeningEvent}}`);
@@ -156,7 +175,7 @@ describe('Screening Events Verification Test', () => {
     cy.log(`{${movieTitle}} must exist in user schedule! | [A]`);
     p6.assertScreeningExist(movieTitle);
 
-    const pn: FestivalMarketplaceNotificationsPage = p1.goToNotifications();
+    const pn: FestivalMarketplaceNotificationsPage = (new FestivalMarketplaceHomePage()).goToNotifications();
     // Wait notifications
     cy.wait(3 * SEC);
     cy.log(`=>Test Notification from {${OrgName}} exists`);
