@@ -58,7 +58,7 @@ export interface UserEmailData {
   lastName?: string,
   email: string,
   password?: string,
-  isRegistered? : boolean
+  isRegistered?: boolean
 }
 
 export type EmailErrorCodes = 'E01-unauthorized' | 'E02-general-error' | 'E03-missing-api-key' | 'E04-no-template-available';
