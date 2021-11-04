@@ -12,6 +12,7 @@ import { map, startWith, shareReplay, pairwise } from "rxjs/operators";
 import { GroupScope, Scope, StaticGroup, staticGroups, staticModel } from '@blockframes/utils/static-model';
 import { MatFormFieldControl } from "@angular/material/form-field";
 import { coerceBooleanProperty } from "@angular/cdk/coercion";
+import { boolean } from "@blockframes/utils/decorators/decorators";
 
 
 type GroupMode = 'indeterminate' | 'checked' | 'unchecked';
@@ -70,7 +71,7 @@ export class StaticGroupComponent implements ControlValueAccessor, OnInit, OnDes
   private _placeholder = 'Tap to filter';
   focused = false;
   touched = false;
-  private _required = false;
+  private _required: boolean;
   private _disabled = false;
   private opened = false;
   hidden: Record<string, boolean> = {}
@@ -95,11 +96,16 @@ export class StaticGroupComponent implements ControlValueAccessor, OnInit, OnDes
     this.stateChanges.next();
   };
 
+  form = new FormControl([], []);
+
   @Input() get required() { return this._required; };
   set required(req) {
     this._required = coerceBooleanProperty(req);
+    const validators = this._required ? [Validators.required] : []
+    this.form.setValidators(validators)
     this.stateChanges.next();
   }
+
   @Input() get disabled() { return this._disabled; };
   set disabled(value: boolean) {
     this._disabled = coerceBooleanProperty(value);
@@ -107,7 +113,6 @@ export class StaticGroupComponent implements ControlValueAccessor, OnInit, OnDes
     this.stateChanges.next();
   }
 
-  form = new FormControl([], this.required ? [Validators.required] : []);
   // defer the startWith value with subscription happens to get first value
   value$ = defer(() => this.form.valueChanges.pipe(
     startWith(this.form.value || []),

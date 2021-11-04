@@ -1,6 +1,6 @@
 ﻿<ng-container *ngIf="groups$ | async as groups">
   <ng-container *ngIf="value$ | async as value">
-    <mat-select [required]="required" multiple [formControl]="form" [disabled]="disabled"
+    <mat-select multiple [formControl]="form" [disabled]="disabled"
       (openedChange)="onOpen($event)" >
       <header>
         <mat-checkbox color="primary" [indeterminate]="(value | getMode:groups) === 'indeterminate'"

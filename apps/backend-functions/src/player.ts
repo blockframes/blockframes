@@ -89,7 +89,6 @@ export const getPrivateVideoUrl = async (
 
   const signature = md5.update(toSign).digest('hex');
   const signedUrl = `https://cdn.jwplayer.com/manifests/${jwPlayerId}.m3u8?exp=${expires}&sig=${signature}`;
-
   try {
     // FETCH VIDEO METADATA
     const info = await jwplayerApiV2(jwplayerKey, jwplayerApiV2Secret).getVideoInfo(jwPlayerId);
