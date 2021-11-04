@@ -37,7 +37,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
     private dynTitle: DynamicTitleService,
   ) { }
 
-  async ngOnInit() {
+  ngOnInit() {
     this.event$ = this.route.params.pipe(
       pluck('eventId'),
       switchMap((eventId: string) => this.eventService.valueChanges(eventId)),
@@ -45,7 +45,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
     this.local$ = this.twilioQuery.selectLocal();
     const name = displayName(this.authQuery.user || this.authQuery.anonymousCredentials);
-    await this.twilioService.initLocal(name);
+    this.twilioService.initLocal(name);
 
     this.sub = this.event$.subscribe((e) => {
       this.event = e as Event<Meeting>;
