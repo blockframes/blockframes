@@ -68,7 +68,7 @@ export const getOrInviteUserByMail = async (
         templateId = eventData.accessibility !== 'private' ? credsTemplates.attendNonPrivateEvent : credsTemplates.attendEvent;
       }
 
-      if (invitation.mode === 'invitation' && eventData?.accessibility === 'invitation-only') { // @TODO #6756 #7016 change to !== private if we send the email reminders to anonymous
+      if (invitation.mode === 'invitation' && eventData?.accessibility !== 'private') {
         invitationStatus = 'accepted';
       }
 
