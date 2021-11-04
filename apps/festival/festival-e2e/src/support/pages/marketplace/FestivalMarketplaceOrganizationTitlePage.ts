@@ -6,7 +6,9 @@ const NAV_CONTACT   = 'Contact';
 
 export default class FestivalMarketplaceOrganizationTitlePage {
   constructor() {
-    cy.get('festival-marketplace-organization-title', { timeout: 60 * SEC });
+    cy.get('festival-marketplace-organization-title', { timeout: 180 * SEC });
+    //Allow Algolia index request time to complete
+    cy.wait(10 * SEC);
   }
 
   clickOnScreeningSchedule() {

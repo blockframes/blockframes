@@ -15,7 +15,7 @@ export default class FestivalDashboardHomePage {
 
   goToCalendar() {
     cy.get('festival-dashboard a[test-id=calendar]', { timeout: 3 * SEC }).click();
-    //return new EventPage();
+    return new EventPage();
   }
 
   logout() {

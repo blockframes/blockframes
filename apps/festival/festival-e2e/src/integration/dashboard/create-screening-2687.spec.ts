@@ -87,7 +87,8 @@ describe('Screening Event Creation Test', () => {
 describe('Screening Events Verification Test', () => {
   beforeEach(() => {
     cy.logout();
-    //clearDataAndPrepareTest('/');
+    clearDataAndPrepareTest('/');
+    cy.visit('/');
   });
 
   it('Invitee1, Verify screening page and created screenings', () => {
