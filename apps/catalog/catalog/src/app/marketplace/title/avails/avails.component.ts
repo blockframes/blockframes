@@ -39,8 +39,8 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
   public bucketForm = new BucketForm();
 
   public avails = {
-    mapForm: new AvailsForm({ territories: [] }, ['duration']),
-    calendarForm: new AvailsForm({ territories: [] }, ['territories'])
+    mapForm: new AvailsForm({ territories: [], medias:[] }, ['duration']),
+    calendarForm: new AvailsForm({ territories: [], medias:[] }, ['territories'])
   };
 
   public movieOrg$ = this.orgService.valueChanges(this.movie.orgIds[0]);

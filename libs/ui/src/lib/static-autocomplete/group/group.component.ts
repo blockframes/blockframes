@@ -6,13 +6,13 @@ import {
 import {
   FormControl, ControlValueAccessor,
   Validators, NgControl,
-  Validator, AbstractControl, ValidationErrors,
 } from "@angular/forms";
 import { BehaviorSubject, combineLatest, Observable, Subscription, defer, Subject } from "rxjs";
 import { map, startWith, shareReplay, pairwise } from "rxjs/operators";
 import { GroupScope, Scope, StaticGroup, staticGroups, staticModel } from '@blockframes/utils/static-model';
 import { MatFormFieldControl } from "@angular/material/form-field";
 import { coerceBooleanProperty } from "@angular/cdk/coercion";
+import { boolean } from "@blockframes/utils/decorators/decorators";
 
 
 type GroupMode = 'indeterminate' | 'checked' | 'unchecked';
@@ -65,15 +65,16 @@ function getItems(groups: StaticGroup[]): string[] {
 export class StaticGroupComponent implements ControlValueAccessor, OnInit, OnDestroy, MatFormFieldControl<string[]> {
   private subs: Subscription[] = [];
   private onTouch: () => void;
-  modes: Record<string, Observable<GroupMode>> = { };
+  modes: Record<string, Observable<GroupMode>> = {};
   filteredGroups$: Observable<StaticGroup[]>;
   groups$ = new BehaviorSubject<StaticGroup[]>([]);
   private _placeholder = 'Tap to filter';
   focused = false;
   touched = false;
-  private _required = false;
+  private _required: boolean;
   private _disabled = false;
-  hidden: Record<string, boolean> = { }
+  private opened = false;
+  hidden: Record<string, boolean> = {}
   stateChanges = new Subject<void>();
 
   // all items includes the values of checked items which are not in the filter
@@ -81,22 +82,30 @@ export class StaticGroupComponent implements ControlValueAccessor, OnInit, OnDes
 
   @HostBinding() id = `static-group-${Math.random()}`;
   @HostBinding('attr.aria-describedby') _ariaDescribedBy = '';
-  @HostBinding('class.floating') get shouldLabelFloat() { return this.focused || !this.empty; }
+  @HostBinding('class.floating') get shouldLabelFloat() { return this.focused || !this.empty || this.opened; }
 
 
   @ViewChild('inputEl') input: ElementRef<HTMLInputElement>;
   @Input() displayAll = '';
   @Input() withoutValues: string[] = [];
   @Input() scope: GroupScope;
-  @Input() set placeholder(placeholder:string) {
+  @Input()
+  get placeholder() { return this._placeholder; }
+  set placeholder(placeholder: string) {
     this._placeholder = placeholder;
     this.stateChanges.next();
   };
+
+  form = new FormControl([], []);
+
   @Input() get required() { return this._required; };
   set required(req) {
     this._required = coerceBooleanProperty(req);
+    const validators = this._required ? [Validators.required] : []
+    this.form.setValidators(validators)
     this.stateChanges.next();
   }
+
   @Input() get disabled() { return this._disabled; };
   set disabled(value: boolean) {
     this._disabled = coerceBooleanProperty(value);
@@ -104,7 +113,6 @@ export class StaticGroupComponent implements ControlValueAccessor, OnInit, OnDes
     this.stateChanges.next();
   }
 
-  form = new FormControl([], this.required ? [Validators.required] : []);
   // defer the startWith value with subscription happens to get first value
   value$ = defer(() => this.form.valueChanges.pipe(
     startWith(this.form.value || []),
@@ -173,9 +181,11 @@ export class StaticGroupComponent implements ControlValueAccessor, OnInit, OnDes
     if (opened) {
       this.input.nativeElement.focus();
       this.touched = true;
+      this.opened = true;
     } else {
       this.form.setValue(this.allItems);
       this.search.setValue('');
+      this.opened = false;
     }
   }
 
@@ -202,7 +212,7 @@ export class StaticGroupComponent implements ControlValueAccessor, OnInit, OnDes
   }
 
 
-  onFocusIn(event: FocusEvent) {
+  onFocusIn() {
     if (!this.focused) {
       this.focused = true;
       this.stateChanges.next();
