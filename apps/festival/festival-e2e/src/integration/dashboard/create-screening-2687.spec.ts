@@ -33,13 +33,14 @@ const users  =  [
   (userFixture.getByUID(USER.Vincent))
 ];
 
+
+const today = new Date(new Date().setDate(NOW.getDate()));
 const tomorrow = new Date(new Date().setDate(NOW.getDate() + 1));
-const twodayslater = new Date(new Date().setDate(NOW.getDate() + 2));
 const eventInfo = [
-  [2, tomorrow, false],
-  [3, tomorrow, true],
-  [2, twodayslater, true],
-  [3, twodayslater, false]
+  [2, today, false],
+  [3, today, true],
+  [2, tomorrow, true],
+  [3, tomorrow, false]
 ];
 
 const logInAndNavigate = ((user: Partial<UserType>, 

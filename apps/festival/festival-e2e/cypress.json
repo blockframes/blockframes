@@ -13,7 +13,5 @@
   "reporter": "junit",
   "reporterOptions": {
     "mochaFile": "../../../dist/test-reports/festival-[hash].xml"
-  },
-  "waitForAnimations": false,
-  "animationDistanceThreshold": 50
+  }
 }

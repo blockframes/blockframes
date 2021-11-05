@@ -6,7 +6,8 @@ const CALENDAR_LABEL = 'My Calendar';
 
 export default class FestivalScreeningPage {
   constructor() {
-    cy.waitUntil(() => cy.get('festival-screening'));
+    //cy.waitUntil(() => cy.get('festival-screening'));
+    cy.get(('festival-screening'), {timeout: 60 *SEC});
   }
 
   assertScreeningsExists(screeningNames: string[]) {
