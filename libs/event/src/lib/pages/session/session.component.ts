@@ -21,6 +21,7 @@ import { InvitationService } from '@blockframes/invitation/+state/invitation.ser
 import { InvitationQuery } from '@blockframes/invitation/+state';
 import { filter, scan } from 'rxjs/operators';
 import { finalizeWithValue } from '@blockframes/utils/observable-helpers';
+import { AuthService } from '@blockframes/auth/+state';
 
 const isMeeting = (meetingEvent: Event): meetingEvent is Event<Meeting> => {
   return meetingEvent.type === 'meeting';
@@ -63,6 +64,7 @@ export class SessionComponent implements OnInit, OnDestroy {
     private movieService: MovieService,
     private mediaService: MediaService,
     private authQuery: AuthQuery,
+    private authService: AuthService,
     private bottomSheet: MatBottomSheet,
     private router: Router,
     private dynTitle: DynamicTitleService,
@@ -96,8 +98,8 @@ export class SessionComponent implements OnInit, OnDestroy {
             });
 
             // If user is logged-in as anonymous
-            if (!invitation && this.authQuery.anonymousCredentials?.invitationId) {
-              const invitationId = this.authQuery.anonymousCredentials?.invitationId;
+            if (!invitation && this.authService.anonymousCredentials?.invitationId) {
+              const invitationId = this.authService.anonymousCredentials?.invitationId;
               invitation = await this.invitationService.getValue(invitationId);
             }
 
@@ -166,11 +168,11 @@ export class SessionComponent implements OnInit, OnDestroy {
         }
 
         // Manage redirect depending on attendees status & presence of meeting owners
-        const uid = this.authQuery.userId || this.authQuery.anonymousUserId;
+        const uid = this.authQuery.userId || this.authService.anonymousUserId;
         if (event.isOwner) {
           const attendees = event.meta.attendees;
           if (attendees[uid]?.status !== 'owner') {
-            const attendee = createMeetingAttendee(this.authQuery.user || this.authQuery.anonymousCredentials, 'owner');
+            const attendee = createMeetingAttendee(this.authQuery.user || this.authService.anonymousCredentials, 'owner');
             const meta: Meeting = { ...event.meta, attendees: { ...event.meta.attendees, [uid]: attendee } };
             this.service.update(event.id, { meta });
           }

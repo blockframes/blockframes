@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { AuthStore } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/+state';
+import { AnonymousRole } from '@blockframes/auth/+state/auth.model';
 @Component({
   selector: 'event-role',
   templateUrl: './role.component.html',
@@ -9,12 +10,12 @@ import { AuthStore } from '@blockframes/auth/+state';
 export class EventRoleComponent {
 
   constructor(
-    private authStore: AuthStore,
+    private authService: AuthService,
   ) { }
 
-  click(role: 'organizer' | 'guest') {
+  click(role: AnonymousRole) {
     // Update store with from value
-    this.authStore.updateAnonymousCredentials({ role });
+    this.authService.updateAnonymousCredentials({ role });
   }
 
 }

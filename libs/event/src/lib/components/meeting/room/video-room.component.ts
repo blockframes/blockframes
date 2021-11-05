@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, HostListener, OnDestroy, OnInit } f
 import { Observable } from 'rxjs';
 
 import { displayName } from '@blockframes/utils/utils'
-import { AuthQuery } from '@blockframes/auth/+state';
+import { AuthQuery, AuthService } from '@blockframes/auth/+state';
 import { EventQuery } from '@blockframes/event/+state';
 
 import { Attendee, LocalAttendee, TrackKind } from '../+state/twilio.model';
@@ -31,6 +31,7 @@ export class MeetingVideoRoomComponent implements OnInit, OnDestroy {
 
   constructor(
     private authQuery: AuthQuery,
+    private authService: AuthService,
     private eventQuery: EventQuery,
     private twilioService: TwilioService,
     private twilioQuery: TwilioQuery,
@@ -45,10 +46,10 @@ export class MeetingVideoRoomComponent implements OnInit, OnDestroy {
 
     this.attendees$ = this.twilioQuery.selectAll();
 
-    const name = displayName(this.authQuery.user || this.authQuery.anonymousCredentials);
+    const name = displayName(this.authQuery.user || this.authService.anonymousCredentials);
     await this.twilioService.initLocal(name);
 
-    this.twilioService.connect(this.eventId, this.authQuery.user || this.authQuery.anonymousCredentials);
+    this.twilioService.connect(this.eventId, this.authQuery.user || this.authService.anonymousCredentials);
   }
 
   ngOnDestroy() {

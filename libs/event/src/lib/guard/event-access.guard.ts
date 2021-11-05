@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
-import { AuthQuery, AuthService, AuthStore, hasAnonymousIdentity } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/+state';
+import { hasAnonymousIdentity } from '@blockframes/auth/+state/auth.model';
 import { createInvitation, InvitationService } from '@blockframes/invitation/+state';
 import { combineLatest } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -14,8 +15,6 @@ export class EventAccessGuard implements CanActivate {
   constructor(
     private service: EventService,
     private invitationService: InvitationService,
-    private authQuery: AuthQuery,
-    private authStore: AuthStore,
     private authService: AuthService,
     private router: Router,
     private afAuth: AngularFireAuth,
@@ -29,7 +28,7 @@ export class EventAccessGuard implements CanActivate {
     return combineLatest([
       this.authService.user,
       this.service.getValue(route.params.eventId as string),
-      this.authQuery.anonymousCredentials$
+      this.authService.anonymousCredentials$
     ]).pipe(
       switchMap(async ([currentUser, event, anonymousCredentials]) => {
         if (!currentUser.isAnonymous) return true;
@@ -40,7 +39,7 @@ export class EventAccessGuard implements CanActivate {
           case 'invitation-only': {
 
             if (route.queryParams?.i && !anonymousCredentials.invitationId) {
-              this.authStore.updateAnonymousCredentials({ invitationId: route.queryParams?.i });
+              this.authService.updateAnonymousCredentials({ invitationId: route.queryParams?.i });
             }
 
             const invitationId = route.queryParams?.i as string || anonymousCredentials?.invitationId;

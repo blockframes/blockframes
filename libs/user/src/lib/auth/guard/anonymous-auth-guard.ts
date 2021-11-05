@@ -20,10 +20,7 @@ export class AnonymousAuthGuard implements CanActivate, CanDeactivate<unknown> {
    * @returns Promise<boolean>
   */
   async canActivate() {
-    const currentUser = await this.afAuth.currentUser;
-    if (!currentUser) {
-      await this.authService.signInAnonymously();
-    }
+    await this.authService.signInAnonymously();
     return true;
   }
 
