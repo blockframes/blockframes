@@ -1,40 +1,38 @@
 import { Injectable } from "@angular/core";
-import { CollectionGuard, CollectionGuardConfig } from "akita-ng-fire";
-import { EventState } from "../+state/event.store";
 import { EventService } from "../+state/event.service";
-import { ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from "@angular/router";
 import { map } from "rxjs/operators";
-import { AuthQuery } from "@blockframes/auth/+state";
+import { AuthService } from "@blockframes/auth/+state";
 import { AngularFireAuth } from "@angular/fire/auth";
+import { combineLatest } from "rxjs";
+import { hasAnonymousIdentity } from "@blockframes/auth/+state/auth.model";
 
 @Injectable({ providedIn: 'root' })
-@CollectionGuardConfig({ awaitSync: true })
-export class EventRoleGuard extends CollectionGuard<EventState> {
+export class EventRoleGuard implements CanActivate {
 
   constructor(
-    service: EventService,
-    private authQuery: AuthQuery,
+    private service: EventService,
+    private authService: AuthService,
     private afAuth: AngularFireAuth,
-  ) {
-    super(service);
-  }
+    private router: Router,
+  ) { }
 
-  // Sync and set active
-  sync(next: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    const eventId = next.params.eventId;
-    const currentPage = state.url.split('/').pop();
-    return this.afAuth.authState.pipe(
-      map(async userAuth => {
-        if (userAuth && userAuth.isAnonymous) {
-          const anonymousCredentials = this.authQuery.anonymousCredentials;
-
-          if (!anonymousCredentials?.role) {
-            return this.router.navigate([`/event/${eventId}`], { queryParams: next.queryParams });
-          }
-
-          // If user choosen "organizer", he needs to login
-          if (anonymousCredentials?.role === 'organizer' && currentPage.indexOf('login') !== 0) {
-            return this.router.navigate([`/event/${eventId}/r/login`], { queryParams: next.queryParams });
+  canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+    const currentPage = state.url.split('/').pop().split('?')[0];
+    return combineLatest([
+      this.afAuth.authState,
+      this.authService.anonymousCredentials$,
+      this.service.valueChanges(next.params.eventId as string)
+    ]).pipe(
+      map(([userAuth, creds, event]) => {
+        if (userAuth?.isAnonymous) {
+          if (!creds?.role && currentPage !== 'role') {
+            return this.router.createUrlTree([`/event/${event.id}/r/role`], { queryParams: next.queryParams });
+          } else if (creds?.role === 'organizer' && currentPage !== 'login') { // If user choosen "organizer", he needs to login
+            return this.router.createUrlTree([`/event/${event.id}/r/login`], { queryParams: next.queryParams });
+          } else if (creds?.role && !hasAnonymousIdentity(creds, event.accessibility) && !['email', 'identity', 'login'].includes(currentPage)) {
+            const page = event.accessibility === 'invitation-only' ? 'email' : 'identity';
+            return this.router.createUrlTree([`/event/${event.id}/r/${page}`], { queryParams: next.queryParams });
           }
         }
 

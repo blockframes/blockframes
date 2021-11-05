@@ -29,8 +29,8 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        canActivate: [IdentityCheckGuard],
-        loadChildren: () => import('./pages/role/role.module').then(m => m.RoleModule),
+        redirectTo: 'r',
+        pathMatch: 'full'
       },
       {
         path: 'r',
@@ -38,8 +38,12 @@ const routes: Routes = [
         children: [
           {
             path: '',
-            redirectTo: 'i',
+            redirectTo: 'role',
             pathMatch: 'full'
+          },
+          {
+            path: 'role',
+            loadChildren: () => import('./pages/role/role.module').then(m => m.RoleModule),
           },
           {
             path: 'identity',
