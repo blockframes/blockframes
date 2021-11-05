@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { createMeetingAttendee, Event, EventService } from '@blockframes/event/+state';
 import { TwilioService } from '@blockframes/event/components/meeting/+state/twilio.service';
-import { AuthQuery } from '@blockframes/auth/+state';
+import { AuthQuery, AuthService } from '@blockframes/auth/+state';
 import { LocalAttendee, TrackKind } from '@blockframes/event/components/meeting/+state/twilio.model';
 import { TwilioQuery } from '@blockframes/event/components/meeting/+state/twilio.query';
 import { displayName } from '@blockframes/utils/utils';
@@ -29,6 +29,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
   constructor(
     private authQuery: AuthQuery,
+    private authService: AuthService,
     private eventService: EventService,
     private route: ActivatedRoute,
     private router: Router,
@@ -44,7 +45,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
     );
 
     this.local$ = this.twilioQuery.selectLocal();
-    const name = displayName(this.authQuery.user || this.authQuery.anonymousCredentials);
+    const name = displayName(this.authQuery.user || this.authService.anonymousCredentials);
     this.twilioService.initLocal(name);
 
     this.sub = this.event$.subscribe((e) => {
@@ -53,7 +54,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
         this.dynTitle.setPageTitle(this.event.title, 'Lobby');
         const attendees = (this.event.meta as Meeting).attendees;
         this.ownerIsPresent = Object.values(attendees).some(value => value.status === 'owner');
-        this.attendeeStatus = this.event.isOwner ? 'owner' : attendees[this.authQuery.userId || this.authQuery.anonymousUserId]?.status;
+        this.attendeeStatus = this.event.isOwner ? 'owner' : attendees[this.authQuery.userId || this.authService.anonymousUserId]?.status;
         if (this.attendeeStatus === 'accepted') {
           this.router.navigate(['../', 'session'], { relativeTo: this.route });
         }
@@ -72,8 +73,8 @@ export class LobbyComponent implements OnInit, OnDestroy {
   }
 
   requestAccess() {
-    const uid = this.authQuery.userId || this.authQuery.anonymousUserId;
-    const attendee = createMeetingAttendee(this.authQuery.user || this.authQuery.anonymousCredentials, 'requesting');
+    const uid = this.authQuery.userId || this.authService.anonymousUserId;
+    const attendee = createMeetingAttendee(this.authQuery.user || this.authService.anonymousCredentials, 'requesting');
     const meta: Meeting = { ...this.event.meta, attendees: { ...this.event.meta.attendees, [uid]: attendee } };
     this.eventService.update(this.event.id, { meta });
   }

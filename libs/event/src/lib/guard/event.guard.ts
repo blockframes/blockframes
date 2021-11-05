@@ -6,7 +6,7 @@ import { EventQuery } from '../+state';
 import { eventTime } from '../pipes/event-time.pipe';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
-import { AuthQuery } from '@blockframes/auth/+state';
+import { AuthQuery, AuthService } from '@blockframes/auth/+state';
 import { Meeting } from '../+state/event.firestore';
 import { TwilioService } from '../components/meeting/+state/twilio.service';
 
@@ -16,6 +16,7 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
 
   constructor(
     private authQuery: AuthQuery,
+    private authService: AuthService,
     private invitationQuery: InvitationQuery,
     private invitationService: InvitationService,
     private eventQuery: EventQuery,
@@ -58,7 +59,7 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
         });
 
         let hasAnonymousInvitation = false;
-        const anonymousCreds = this.authQuery.anonymousCredentials;
+        const anonymousCreds = this.authService.anonymousCredentials;
         const invitationId = anonymousCreds?.invitationId;
         if (invitationId && event.accessibility === 'invitation-only') {
           const invitation = await this.invitationService.getValue(invitationId);

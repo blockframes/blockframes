@@ -6,7 +6,7 @@ import { Subscription, combineLatest, of } from 'rxjs';
 import { catchError, filter, map, switchMap, pluck } from 'rxjs/operators';
 import { Location } from '@angular/common';
 import { fade } from '@blockframes/utils/animations/fade';
-import { AuthQuery, AuthStore } from '@blockframes/auth/+state';
+import { AuthQuery, AuthService } from '@blockframes/auth/+state';
 
 
 @Component({
@@ -34,12 +34,12 @@ export class EventViewComponent implements OnInit, OnDestroy {
     private invitationService: InvitationService,
     private location: Location,
     private authQuery: AuthQuery,
-    private authStore: AuthStore,
+    private authService: AuthService
   ) { }
 
   async ngOnInit() {
     let emailInvitation: Invitation;
-    const anonymousCredentials = this.authQuery.anonymousCredentials;
+    const anonymousCredentials = this.authService.anonymousCredentials;
     if (anonymousCredentials?.invitationId) {
       emailInvitation = await this.invitationService.getValue(anonymousCredentials?.invitationId);
     }
@@ -76,7 +76,7 @@ export class EventViewComponent implements OnInit, OnDestroy {
   }
 
   goBack() {
-    this.authStore.updateAnonymousCredentials({ role: undefined, firstName: undefined, lastName: undefined });
+    this.authService.updateAnonymousCredentials({ role: undefined, firstName: undefined, lastName: undefined });
     this.location.back();
   }
 }
