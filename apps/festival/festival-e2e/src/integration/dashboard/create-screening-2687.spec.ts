@@ -166,6 +166,10 @@ describe('Screening Events Verification Test', () => {
     //Check if public screening exists and request it.
     cy.log(`[A]: schedule screening of {${screeningEvent}}`);
     const p4: FestivalScreeningPage = p3.clickOnScreeningSchedule();
+
+    cy.log('=>Wait for button - handle the late appearance issue');
+    p4.waitForAcceptButtons();
+    
     p4.clickRequestInvitation(screeningEvent, true);
 
     cy.log(`>Check in market place event page for {${movieTitle}}`);

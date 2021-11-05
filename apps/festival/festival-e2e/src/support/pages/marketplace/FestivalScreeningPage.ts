@@ -46,19 +46,19 @@ export default class FestivalScreeningPage {
       .find('button[test-id="invitation-request"]', {timeout: 30 * SEC})
       .click();
 
-    cy.wait(0.5 * SEC);
+    cy.wait(2 * SEC);
 
     if (doPublicScreeningAction) {
       cy.get('festival-screening event-screening-item', {timeout: 120 * SEC})
         .contains(screeningTitle)
         .parentsUntil('article').parent()
-        .find('[test-id="invitation-status"]', {timeout: 30 * SEC})
+        .find('[test-id="invitation-status"]', {timeout: 120 * SEC})
         .should('not.contain', 'Pending');
 
       cy.get('festival-screening event-screening-item', {timeout: 90 * SEC})
         .contains(screeningTitle)
         .parentsUntil('article').parent()
-        .find('[test-id="invitation-status"]', {timeout: 30 * SEC})
+        .find('[test-id="invitation-status"]', {timeout: 120 * SEC})
         .should('contain', 'Accepted');
       cy.wait(2.5 * SEC);
     }

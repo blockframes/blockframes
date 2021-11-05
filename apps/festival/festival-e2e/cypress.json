@@ -14,5 +14,6 @@
   "reporterOptions": {
     "mochaFile": "../../../dist/test-reports/festival-[hash].xml"
   },
-  "blockHosts": [ "google-analytics.com", "googletagmanager.com"]
+  "waitForAnimations": false,
+  "animationDistanceThreshold": 50
 }

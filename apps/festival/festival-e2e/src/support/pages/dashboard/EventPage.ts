@@ -63,8 +63,9 @@ export default class EventPage {
       cy.wait(1 * SEC);
     }
     cy.get('div [class="cal-day-columns"]', {timeout: 3 * SEC}).last().children().eq(day)
-      .find('mwl-calendar-week-view-hour-segment').first()
-      .click({force: true});
+      .find('mwl-calendar-week-view-hour-segment').eq(3).then($el => {
+        cy.wrap($el).click();  
+      });
     cy.wait(0.5 * SEC);
     cy.get('mat-select[test-id="event-type"]', {timeout: 3 * SEC})
       .first()
