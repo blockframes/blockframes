@@ -10,7 +10,7 @@ import { AuthWidgetModule } from '@blockframes/auth/components/widget/widget.mod
 import { AppBarModule } from '@blockframes/ui/app-bar';
 import { AppLogoModule } from '../app-logo/app-logo.module';
 import { FooterModule } from '../footer/footer.module';
-import { AsideModule } from '../marketplace/aside/aside.module';
+import { AsideModule } from '../../../../../../apps/festival/festival/src/app/marketplace/aside/aside.module';
 
 // Material
 import { MatToolbarModule } from '@angular/material/toolbar';

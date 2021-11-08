@@ -7,7 +7,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 import { MarketplaceComponent } from './marketplace.component';
 import { MarketplaceLayoutModule } from '@blockframes/ui/layout/marketplace/marketplace.module';
-import { AsideModule } from '@blockframes/ui/layout/marketplace/aside/aside.module';
+import { AsideModule } from '../marketplace/aside/aside.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -96,7 +96,7 @@ const routes: Routes = [{
     FlexLayoutModule,
     MarketplaceLayoutModule,
     AsideModule,
-    
+
     // Material
     MatIconModule,
     MatButtonModule,
