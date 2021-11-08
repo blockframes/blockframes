@@ -2,15 +2,17 @@ import {
   Component,
   ChangeDetectionStrategy,
   OnInit,
-  OnDestroy
+  OnDestroy,
+  AfterViewInit
 } from '@angular/core';
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { Movie } from '@blockframes/movie/+state';
-import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
-import { debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap } from 'rxjs/operators';
+import { MovieSearchForm, createMovieSearch, MovieSearch } from '@blockframes/movie/form/search.form';
+import { debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap, throttleTime } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { StoreStatus } from '@blockframes/utils/static-model/types';
+import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
 
 @Component({
   selector: 'festival-marketplace-title-list',
@@ -18,7 +20,7 @@ import { StoreStatus } from '@blockframes/utils/static-model/types';
   styleUrls: ['./list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ListComponent implements OnInit, OnDestroy {
+export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private movieResultsState = new BehaviorSubject<Movie[]>(null);
 
@@ -29,13 +31,14 @@ export class ListComponent implements OnInit, OnDestroy {
   public nbHits: number;
   public hitsViewed = 0;
 
-  private sub: Subscription;
+  private subs: Subscription[] = [];
   private loadMoreToggle: boolean;
   private lastPage: boolean;
 
   constructor(
     private dynTitle: DynamicTitleService,
     private route: ActivatedRoute,
+    private router: Router,
   ) {
     this.dynTitle.setPageTitle('Films On Our Market Today');
   }
@@ -51,7 +54,7 @@ export class ListComponent implements OnInit, OnDestroy {
       }
     }
 
-    this.sub = this.searchForm.valueChanges.pipe(startWith(this.searchForm.value),
+    const sub = this.searchForm.valueChanges.pipe(startWith(this.searchForm.value),
       distinctUntilChanged(),
       debounceTime(500),
       switchMap(() => this.searchForm.search(true)),
@@ -74,11 +77,45 @@ export class ListComponent implements OnInit, OnDestroy {
         this.searchForm.page.setValue(0);
       }
       this.lastPage = this.hitsViewed === this.nbHits;
-    });;
+    });
+    this.subs.push(sub);
   }
+
+  ngAfterViewInit(): void {
+    const {
+      storeStatus, genres, originCountries, productionStatus, sellers, socialGoals, languages,
+      query, minBudget, ...rest
+    }: MovieSearch = decodeUrl(this.route);
+    console.log({rest, query,
+      storeStatus, genres, originCountries, productionStatus, sellers, socialGoals, languages,
+    })
+    const sub = this.searchForm.valueChanges.pipe(
+      throttleTime(1000),
+    ).subscribe(formState => {
+      encodeUrl<MovieSearch>(this.router, this.route, formState);
+    });
+
+    // patching the formlists and formEntities
+    this.searchForm.query.patchValue(query);
+    this.searchForm.minBudget.patchValue(minBudget);
+    this.searchForm.storeStatus.patchAllValue(storeStatus);
+    this.searchForm.genres.patchAllValue(genres);
+    this.searchForm.originCountries.patchAllValue(originCountries);
+    this.searchForm.productionStatus.patchAllValue(productionStatus);
+    this.searchForm.sellers.patchAllValue(sellers);
+    this.searchForm.socialGoals.patchAllValue(socialGoals);
+    this.searchForm.languages.patchAllValue(languages);
+
+    // this.searchForm.patchValue(rest);
+    console.log({value: this.searchForm.value})
+
+    this.subs.push(sub)
+  }
+
 
   clear() {
     const initial = createMovieSearch({ storeStatus: [this.storeStatus] });
+    console.log('calling reset')
     this.searchForm.reset(initial);
   }
 
@@ -89,6 +126,8 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe();
+    this.subs.forEach(element => {
+      element.unsubscribe();
+    });
   }
 }

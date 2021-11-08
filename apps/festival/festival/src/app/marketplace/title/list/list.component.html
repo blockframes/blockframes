@@ -19,7 +19,7 @@
       <mat-form-field appearance="outline">
         <mat-label>Search for titles, directors, keywords, ...</mat-label>
         <mat-icon matPrefix svgIcon="search"></mat-icon>
-        <input matInput type="text" formControlName="query" [value]="searchForm.get('query').value">
+        <input matInput type="text" formControlName="query" [value]="searchForm.get('query').value" />
       </mat-form-field>
     </form>
   </list-page-search>
@@ -51,7 +51,8 @@
     </ng-template>
 
     <ng-template filter label="Production Status" [form]="searchForm.productionStatus">
-      <static-check-boxes fxLayout="column" fxLayoutGap="12px" [form]="searchForm.productionStatus" scope="productionStatus">
+      <static-check-boxes fxLayout="column" fxLayoutGap="12px" [form]="searchForm.productionStatus"
+        scope="productionStatus">
       </static-check-boxes>
     </ng-template>
 
@@ -76,3 +77,5 @@
   </list-page-progress>
 
 </list-page>
+
+<p>{{searchForm.value | json}}</p>

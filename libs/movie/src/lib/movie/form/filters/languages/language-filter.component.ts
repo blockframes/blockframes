@@ -51,6 +51,7 @@ export class LanguageFilterComponent implements OnInit, OnDestroy {
 
     /** Updates selectedLanguages and versions FormList when reset is called on languagesFilterForm */
     this.formSub = this.languagesFilterForm.valueChanges.subscribe((res: Array<any>) => {
+      console.log({res})
       if (Object.values(res).every(value => value.length === 0)) {
         this.languagesFilterForm.markAsPristine();
         if (!this.rebuildingForm) {
