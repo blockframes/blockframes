@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { CanActivate, Router, UrlTree, CanDeactivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { InvitationQuery, Invitation, InvitationService } from '@blockframes/invitation/+state';
 import { Observable } from 'rxjs';
-import { EventQuery } from '../+state';
+import { Event, EventService } from '../+state';
 import { eventTime } from '../pipes/event-time.pipe';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
@@ -14,43 +14,46 @@ import { TwilioService } from '../components/meeting/+state/twilio.service';
 @Injectable({ providedIn: 'root' })
 export class EventGuard implements CanActivate, CanDeactivate<unknown> {
 
+  private event: Event;
+
   constructor(
     private authQuery: AuthQuery,
     private authService: AuthService,
     private invitationQuery: InvitationQuery,
     private invitationService: InvitationService,
-    private eventQuery: EventQuery,
+    private eventService: EventService,
     private router: Router,
     private dialog: MatDialog,
     private twilioService: TwilioService,
   ) { }
 
   async canActivate(next: ActivatedRouteSnapshot): Promise<boolean | UrlTree> {
-    const event = this.eventQuery.getActive();
+    const eventId: string = next.params.eventId;
+    this.event = await this.eventService.getValue(eventId);
 
     // if the event is not a meeting the lobby page is not accessible
     // redirect directly to the session page,
     // the guard will then be re-evaluated for invitation etc... on the session page
-    if (event.type !== 'meeting' && next.routeConfig.path === 'lobby') {
-      return this.router.parseUrl(`/event/${event.id}/r/i/session`);
+    if (this.event.type !== 'meeting' && next.routeConfig.path === 'lobby') {
+      return this.router.parseUrl(`/event/${this.event.id}/r/i/session`);
     }
 
-    if (eventTime(event) !== 'onTime') {
-      return this.router.parseUrl(`/event/${event.id}/r/i`);
+    if (eventTime(this.event) !== 'onTime') {
+      return this.router.parseUrl(`/event/${this.event.id}/r/i`);
     }
 
-    switch (event.accessibility) {
+    switch (this.event.accessibility) {
       case 'public':
         return true;
       case 'invitation-only': {
 
-        if (event.isOwner) {
+        if (this.event.isOwner) {
           return true;
         }
 
         const hasRealAccountInvitation = this.invitationQuery.hasEntity((invitation: Invitation) => {
           return (
-            invitation.eventId === event.id &&
+            invitation.eventId === this.event.id &&
             invitation.status === 'accepted' && (
               invitation.mode === 'request' && invitation.fromUser.uid === this.authQuery.userId ||
               invitation.mode === 'invitation' && invitation.toUser.uid === this.authQuery.userId
@@ -61,27 +64,27 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
         let hasAnonymousInvitation = false;
         const anonymousCreds = this.authService.anonymousCredentials;
         const invitationId = anonymousCreds?.invitationId;
-        if (invitationId && event.accessibility === 'invitation-only') {
+        if (invitationId && this.event.accessibility === 'invitation-only') {
           const invitation = await this.invitationService.getValue(invitationId);
           hasAnonymousInvitation = invitation?.toUser?.email === anonymousCreds.email &&
-            event.id === invitation?.eventId && invitation.status === 'accepted'
+            this.event.id === invitation?.eventId && invitation.status === 'accepted'
         }
 
         // if user wasn't invited OR hasn't accepted yet
         if (!hasRealAccountInvitation && !hasAnonymousInvitation) {
-          return this.router.parseUrl(`/event/${event.id}/r/i`);
+          return this.router.parseUrl(`/event/${this.event.id}/r/i`);
         }
 
         return true;
       }
       case 'private': {
 
-        if (event.isOwner) {
+        if (this.event.isOwner) {
           return true;
         }
         const hasUserAccepted = this.invitationQuery.hasEntity((invitation: Invitation) => {
           return (
-            invitation.eventId === event.id &&
+            invitation.eventId === this.event.id &&
             invitation.status === 'accepted' && (
               invitation.mode === 'request' && invitation.fromUser.uid === this.authQuery.userId ||
               invitation.mode === 'invitation' && invitation.toUser.uid === this.authQuery.userId
@@ -91,7 +94,7 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
 
         // if user wasn't invited OR hasn't accepted yet
         if (!hasUserAccepted) {
-          return this.router.parseUrl(`/event/${event.id}/r/i`);
+          return this.router.parseUrl(`/event/${this.event.id}/r/i`);
         }
 
         return true;
@@ -117,20 +120,19 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
     }
 
     // If userId = null, that means the user has disconnected. If she/he wants to logout, we don't show the confirm message
-    if (this.authQuery.userId === null) {
+    if (this.authQuery.userId === null && this.authService.anonymousUserId === null) {
       this.twilioService.disconnect();
       return true;
     } else {
-      const event = this.eventQuery.getActive();
-      if (event.type === 'meeting') {
-        if ((event.meta as Meeting).attendees[this.authQuery.userId]?.status === 'ended') {
+      if (this.event.type === 'meeting') {
+        if ((this.event.meta as Meeting).attendees[this.authQuery.userId || this.authService.anonymousUserId]?.status === 'ended') {
           this.twilioService.disconnect();
           return true;
         }
       }
       const dialogRef = this.dialog.open(ConfirmComponent, {
         data: {
-          title: `You are about to leave this ${event.type}.`,
+          title: `You are about to leave this ${this.event.type}.`,
           question: `You might not be able to come back as its access is time-limited.`,
           confirm: 'Leave anyway',
           cancel: 'Stay',

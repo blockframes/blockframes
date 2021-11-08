@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { CollectionConfig, CollectionService, Query, WriteOptions, queryChanges } from 'akita-ng-fire';
-import { EventState, EventStore } from './event.store';
 import { EventDocument, EventBase, EventTypes } from './event.firestore';
 import { Event, ScreeningEvent, createCalendarEvent, EventsAnalytics, MeetingEvent, isMeeting, isScreening } from './event.model';
 import { QueryFn } from '@angular/fire/firestore/interfaces';
@@ -10,6 +9,9 @@ import { PermissionsService } from '@blockframes/permissions/+state';
 import { Observable, combineLatest } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 import type firebase from 'firebase';
+import { ActiveState, EntityState } from '@datorama/akita';
+
+interface EventState extends EntityState<Event>, ActiveState<string> {};
 type Timestamp = firebase.firestore.Timestamp;
 
 const eventQuery = (id: string) => ({
@@ -47,7 +49,6 @@ const eventQueries = {
   })
 }
 
-
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'events' })
 export class EventService extends CollectionService<EventState> {
@@ -55,12 +56,11 @@ export class EventService extends CollectionService<EventState> {
   private analytics: Record<string, EventsAnalytics> = {};
 
   constructor(
-    protected store: EventStore,
     private functions: AngularFireFunctions,
     private permissionsService: PermissionsService,
     private orgQuery: OrganizationQuery,
   ) {
-    super(store);
+    super();
   }
 
   public async queryAnalytics(eventId: string): Promise<EventsAnalytics> {
@@ -134,6 +134,10 @@ export class EventService extends CollectionService<EventState> {
 
   /** Just save local time so we will be able to compute session duration at the end */
   public startLocalSession() {
-    this.store.update(() => ({ localSessionStart: Date.now() }));
+    sessionStorage.setItem('localSessionStart', Date.now().toString());
+  }
+
+  public getLocalSession() {
+    return parseInt(sessionStorage.getItem('localSessionStart'), 10);
   }
 }

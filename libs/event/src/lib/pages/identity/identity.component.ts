@@ -1,10 +1,8 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@blockframes/auth/+state';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { EventQuery } from '@blockframes/event/+state';
-
 
 @Component({
   selector: 'event-identity',
@@ -12,24 +10,18 @@ import { EventQuery } from '@blockframes/event/+state';
   styleUrls: ['./identity.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EventIdenityComponent implements OnInit {
+export class EventIdenityComponent {
   public identityForm = new FormGroup({
     firstName: new FormControl('', [Validators.required]),
     lastName: new FormControl('', [Validators.required])
   });
-  public eventId = this.eventQuery.getActiveId();
 
   constructor(
     private authService: AuthService,
     private router: Router,
     private route: ActivatedRoute,
-    private snackBar: MatSnackBar,
-    private eventQuery: EventQuery,
+    private snackBar: MatSnackBar
   ) { }
-
-  ngOnInit() {
-    this.eventId = this.eventQuery.getActiveId();
-  }
 
   validateIdentity() {
     if (!this.identityForm.valid) {
@@ -42,7 +34,7 @@ export class EventIdenityComponent implements OnInit {
       firstName: this.identityForm.value.firstName
     });
     // Redirect user to event view
-    this.router.navigate(['../i'], { relativeTo: this.route, queryParams: this.route.snapshot.queryParams });
+    this.router.navigate(['../../r/i'], { relativeTo: this.route, queryParams: this.route.snapshot.queryParams });
   }
 
   clickBack() {

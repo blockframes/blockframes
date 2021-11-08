@@ -7,25 +7,26 @@ import { RouterModule, Routes } from '@angular/router';
 // Guards
 import { EventAccessGuard } from './guard/event-access.guard';
 import { EventGuard } from './guard/event.guard';
-import { EventActiveGuard } from './guard/event-active.guard';
 import { SessionGuard } from './guard/session.guard';
-import { IdentityCheckGuard } from './guard/identity-check-guard';
-import { EventRoleGuard } from './guard/event-role.guard';
 import { InvitationGuard } from '@blockframes/invitation/guard/invitations.guard';
 import { NotificationsGuard } from '@blockframes/notification/notifications.guard';
+import { NoEventAuthGuard } from './guard/no-event-auth.guard';
+import { NoEventIdentityGuard } from './guard/no-event-identity.guard';
+import { NoEventRoleGuard } from './guard/no-event-role.guard';
+import { IdentityGuard } from './guard/identity.guard';
+import { EventAuthGuard } from './guard/event-auth.guard';
 
 @Component({
   selector: 'event-main-component',
   template: '<router-outlet layout></router-outlet>',
 })
-export class MainEventComponent  {}
+export class MainEventComponent { }
 
 const routes: Routes = [
   {
     path: ':eventId',
     component: MainEventComponent,
-    canActivate: [EventActiveGuard, InvitationGuard, NotificationsGuard],
-    canDeactivate: [EventActiveGuard, InvitationGuard, NotificationsGuard],
+    canActivate: [EventAuthGuard],
     children: [
       {
         path: '',
@@ -33,8 +34,7 @@ const routes: Routes = [
         pathMatch: 'full'
       },
       {
-        path: 'r',
-        canActivate: [EventRoleGuard],
+        path: 'auth',
         children: [
           {
             path: '',
@@ -43,19 +43,35 @@ const routes: Routes = [
           },
           {
             path: 'role',
+            canActivate: [NoEventRoleGuard],
             loadChildren: () => import('./pages/role/role.module').then(m => m.RoleModule),
           },
           {
             path: 'identity',
+            canActivate: [NoEventIdentityGuard],
             loadChildren: () => import('./pages/identity/identity.module').then(m => m.IdentityModule),
           },
           {
             path: 'email',
+            canActivate: [NoEventIdentityGuard],
             loadChildren: () => import('./pages/email/email.module').then(m => m.EmailModule),
           },
           {
             path: 'login',
+            canActivate: [NoEventAuthGuard],
             loadChildren: () => import('./pages/login/login.module').then(m => m.LoginModule),
+          },
+        ]
+      },
+      {
+        path: 'r',
+        canActivate: [IdentityGuard, InvitationGuard, NotificationsGuard],
+        canDeactivate: [InvitationGuard, NotificationsGuard],
+        children: [
+          {
+            path: '',
+            redirectTo: 'i',
+            pathMatch: 'full'
           },
           {
             path: 'i',
@@ -63,13 +79,12 @@ const routes: Routes = [
             children: [
               {
                 path: '',
-                canDeactivate: [EventActiveGuard],
                 loadChildren: () => import('./pages/view/view.module').then(m => m.EventViewModule),
               },
               {
                 path: 'session',
                 canActivate: [EventGuard, SessionGuard],
-                canDeactivate: [EventActiveGuard, EventGuard],
+                canDeactivate: [EventGuard],
                 loadChildren: () => import('./pages/session/session.module').then(m => m.SessionModule),
               },
               {

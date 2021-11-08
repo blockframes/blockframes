@@ -255,7 +255,7 @@ export class AuthService extends FireAuthService<AuthState> {
 
   public resetAnonymousCredentials() {
     const keys = ['uid', 'role', 'email', 'invitationId', 'lastName', 'firstName'];  // keys of AnonymousCredentials
-    Object.keys(keys).forEach(k => {
+    keys.forEach(k => {
       sessionStorage.removeItem(`anonymousCredentials.${k}`);
     });
   }

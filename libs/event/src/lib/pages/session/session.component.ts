@@ -1,12 +1,12 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ViewChild, ElementRef } from '@angular/core';
-import { EventService, Event, EventQuery, isScreening, createMeetingAttendee } from '@blockframes/event/+state';
+import { EventService, Event, isScreening, createMeetingAttendee } from '@blockframes/event/+state';
 import { BehaviorSubject, interval, Observable, Subscription } from 'rxjs';
 import { Meeting, MeetingPdfControl, MeetingVideoControl, Screening } from '@blockframes/event/+state/event.firestore';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { MatBottomSheet } from '@angular/material/bottom-sheet'
 import { DoorbellBottomSheetComponent } from '@blockframes/event/components/doorbell/doorbell.component';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
@@ -19,7 +19,7 @@ import { AngularFireFunctions } from '@angular/fire/functions';
 import { StorageFile, StorageVideo } from '@blockframes/media/+state/media.firestore';
 import { InvitationService } from '@blockframes/invitation/+state/invitation.service';
 import { InvitationQuery } from '@blockframes/invitation/+state';
-import { filter, scan } from 'rxjs/operators';
+import { filter, pluck, scan, switchMap } from 'rxjs/operators';
 import { finalizeWithValue } from '@blockframes/utils/observable-helpers';
 import { AuthService } from '@blockframes/auth/+state';
 
@@ -57,7 +57,7 @@ export class SessionComponent implements OnInit, OnDestroy {
 
   constructor(
     private functions: AngularFireFunctions,
-    private eventQuery: EventQuery,
+    private route: ActivatedRoute,
     private service: EventService,
     private invitationService: InvitationService,
     private invitationQuery: InvitationQuery,
@@ -75,7 +75,11 @@ export class SessionComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.service.startLocalSession();
-    this.event$ = this.service.queryDocs(this.eventQuery.getActiveId());
+
+    this.event$ = this.route.params.pipe(
+      pluck('eventId'),
+      switchMap((eventId: string) => this.service.queryDocs(eventId)),
+    );
 
     this.sub = this.event$.subscribe(async event => {
 
@@ -191,7 +195,7 @@ export class SessionComponent implements OnInit, OnDestroy {
             );
             if (!selectedFile) {
               console.warn('Selected file doesn\'t exists in this Meeting!');
-              this.select('');
+              this.select('', event);
             }
             if (!event.meta.controls[selectedFile.storagePath]) {
               const fileType = extensionToType(getFileExtension(selectedFile.storagePath));
@@ -271,14 +275,12 @@ export class SessionComponent implements OnInit, OnDestroy {
     this.dialogSub?.unsubscribe();
   }
 
-  select(selectedFile: string) {
-    const event: Event<Meeting> = this.eventQuery.getActive() as Event<Meeting>;
+  select(selectedFile: string, event: Event<Meeting>) {
     const meta = { ...event.meta, selectedFile };
     this.service.update(event.id, { meta });
   }
 
-  picked(files: string[]) {
-    const event: Event<Meeting> = this.eventQuery.getActive() as Event<Meeting>;
+  picked(files: string[], event: Event<Meeting>) {
     const meta = { ...event.meta, files };
     this.service.update(event.id, { meta })
   }
