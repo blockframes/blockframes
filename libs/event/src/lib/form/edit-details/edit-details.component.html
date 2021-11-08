@@ -23,7 +23,7 @@
 
   <div *ngIf="displayPrivacySettings" fxLayout="column" fxLayoutGap="12px">
     <h3>Privacy Settings</h3>
-    <mat-radio-group fxLayout="column" formControlName="accessibility">
+    <mat-radio-group fxLayout="column" formControlName="accessibility" (change)="radioButtonChanged()">
       <mat-radio-button  color="primary" value="public">
         PUBLIC - anyone who has a link can access your event (no statistics, no watermark) -- best for meetings
       </mat-radio-button>
@@ -42,3 +42,18 @@
   </div>
 
 </form>
+
+<ng-template #noAccessibilityChange>
+  <div class="noAccessibilityChange" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="16px">
+    <h1>Sorry, you can't change the privacy settings</h1>
+    <p>The guests were already invited to this event. You can't change the privacy settings anymore.</p>
+    <p>If you still need to update your privacy, please contact our team</p>
+    <div fxLayout="column" fxLayoutAlign="center">
+      <button class="save" mat-flat-button color="primary" [mat-dialog-close]="true">
+        Contact archipel market team</button>
+      <button class="text-primary" mat-button [mat-dialog-close]="false">
+        Close windows
+      </button>
+    </div>
+  </div>
+</ng-template>

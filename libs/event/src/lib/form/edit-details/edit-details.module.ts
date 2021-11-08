@@ -16,6 +16,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   imports: [
@@ -31,7 +33,9 @@ import { MatRadioModule } from '@angular/material/radio';
     MatInputModule,
     MatIconModule,
     MatCheckboxModule,
-    MatRadioModule
+    MatRadioModule,
+    MatDialogModule,
+    MatButtonModule
   ],
   declarations: [EditDetailsComponent],
   exports: [EditDetailsComponent]
