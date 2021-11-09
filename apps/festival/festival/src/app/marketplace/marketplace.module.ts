@@ -11,6 +11,7 @@ import { EventGuard } from '@blockframes/event/guard/event.guard';
 import { SessionGuard } from '@blockframes/event/guard/session.guard';
 import { MarketplaceLayoutModule } from '@blockframes/ui/layout/marketplace/marketplace.module';
 import { OrgAccessModule } from '@blockframes/organization/pipes/org-access.pipe';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
 // Material
 import { MatListModule } from '@angular/material/list';
@@ -127,6 +128,7 @@ const routes: Routes = [{
     FlexLayoutModule,
     MarketplaceLayoutModule,
     OrgAccessModule,
+    ImageModule,
     
     // Material
     MatListModule,
