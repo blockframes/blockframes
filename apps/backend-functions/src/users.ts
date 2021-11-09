@@ -245,7 +245,6 @@ export const createUser = async (data: { email: string, orgEmailData: OrgEmailDa
 
     try {
       await sendMailFromTemplate(template, app);
-      functions.logger.info(`Email sent to : "${email}"`);
     } catch (err) {
       if (production) throw err;
 

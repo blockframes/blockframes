@@ -521,7 +521,6 @@ export async function formatTitle(
       }
     }
 
-    // TODO WARNING THIS KEEP THE WARNINGS INSIDE THE MOVIE, IF THE MOVIE IS CREATED THE WARNINGs WILL BE ADDED IN THE DB !!!
     const title = createMovie({ ...data, languages, stakeholders });
 
     if (!title.directors || !title.directors.length) errors.push({
