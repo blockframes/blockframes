@@ -3,11 +3,11 @@ import {
   ChangeDetectionStrategy,
   OnInit,
   OnDestroy,
-  AfterViewInit
+  AfterViewInit,
 } from '@angular/core';
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { Movie } from '@blockframes/movie/+state';
-import { MovieSearchForm, createMovieSearch, MovieSearch } from '@blockframes/movie/form/search.form';
+import { MovieSearchForm, createMovieSearch, MovieSearch, LanguagesSearch } from '@blockframes/movie/form/search.form';
 import { debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap, throttleTime } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -27,6 +27,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   public movies$: Observable<Movie[]>;
   public storeStatus: StoreStatus = 'accepted';
   public searchForm = new MovieSearchForm('festival', this.storeStatus);
+  public selectedLanguages$ = new BehaviorSubject<LanguagesSearch>(null);
 
   public nbHits: number;
   public hitsViewed = 0;
@@ -83,39 +84,31 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngAfterViewInit(): void {
     const {
-      storeStatus, genres, originCountries, productionStatus, sellers, socialGoals, languages,
-      query, minBudget, ...rest
+      storeStatus, genres, originCountries, productionStatus,
+      sellers, socialGoals, languages, query, minBudget
     }: MovieSearch = decodeUrl(this.route);
-    console.log({rest, query,
-      storeStatus, genres, originCountries, productionStatus, sellers, socialGoals, languages,
-    })
-    const sub = this.searchForm.valueChanges.pipe(
-      throttleTime(1000),
-    ).subscribe(formState => {
-      encodeUrl<MovieSearch>(this.router, this.route, formState);
-    });
 
     // patching the formlists and formEntities
-    this.searchForm.query.patchValue(query);
-    this.searchForm.minBudget.patchValue(minBudget);
-    this.searchForm.storeStatus.patchAllValue(storeStatus);
-    this.searchForm.genres.patchAllValue(genres);
-    this.searchForm.originCountries.patchAllValue(originCountries);
-    this.searchForm.productionStatus.patchAllValue(productionStatus);
-    this.searchForm.sellers.patchAllValue(sellers);
-    this.searchForm.socialGoals.patchAllValue(socialGoals);
-    this.searchForm.languages.patchAllValue(languages);
-
-    // this.searchForm.patchValue(rest);
-    console.log({value: this.searchForm.value})
-
-    this.subs.push(sub)
+    if (query) this.searchForm.query.patchValue(query)
+    if (minBudget) this.searchForm.minBudget.patchValue(minBudget);
+    if (storeStatus) this.searchForm.storeStatus.patchAllValue(storeStatus);
+    if (genres) this.searchForm.genres.patchAllValue(genres);
+    if (originCountries) this.searchForm.originCountries.patchAllValue(originCountries);
+    if (productionStatus) this.searchForm.productionStatus.patchAllValue(productionStatus);
+    if (sellers) this.searchForm.sellers.patchAllValue(sellers);
+    if (socialGoals) this.searchForm.socialGoals.patchAllValue(socialGoals);
+    if (languages) {
+      this.selectedLanguages$.next(languages)
+    }
+    const sub = this.searchForm.valueChanges.pipe(
+      throttleTime(1000),
+    ).subscribe(value => encodeUrl<MovieSearch>(this.router, this.route, value));
+    this.subs.push(sub);
   }
 
 
   clear() {
     const initial = createMovieSearch({ storeStatus: [this.storeStatus] });
-    console.log('calling reset')
     this.searchForm.reset(initial);
   }
 
@@ -126,8 +119,6 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy() {
-    this.subs.forEach(element => {
-      element.unsubscribe();
-    });
+    this.subs.forEach(element => element.unsubscribe());
   }
 }
