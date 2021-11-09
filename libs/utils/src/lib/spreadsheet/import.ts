@@ -91,17 +91,16 @@ export async function parse(
     // Array field
     if (segment.endsWith('[]')) {
       const field = segment.replace('[]', '');
-      if (Array.isArray(values)) {
-        if (last) {
-          const promises = values.map(value => transform(value, entity, state, rowIndex));
-          item[field] = await Promise.all(promises);
-        } else {
-          // Creating array at this field to which will be pushed the other sub fields
-          if (!item[field]) item[field] = new Array(values.length).fill(null).map(() => ({}));
-          for (let index = 0 ; index < values.length ; index++) {
-            // Filling in objects into above created array
-            await parse(state, entity, item[field][index], values[index], segments.join('.'), transform, rowIndex, warnings, errors);
-          }
+      const value = Array.isArray(values) ? values : [ values ];
+      if (last) {
+        const promises = value.map(v => transform(v, entity, state, rowIndex));
+        item[field] = await Promise.all(promises);
+      } else {
+        // Creating array at this field to which will be pushed the other sub fields
+        if (!item[field]) item[field] = new Array(value.length).fill(null).map(() => ({}));
+        for (let index = 0 ; index < value.length ; index++) {
+          // Filling in objects into above created array
+          await parse(state, entity, item[field][index], value[index], segments.join('.'), transform, rowIndex, warnings, errors);
         }
       }
     } else {
@@ -170,7 +169,7 @@ export function isEmpty(data: any,) {
   let response = false;
   if (Array.isArray(data)) {
     response = data.every(datum => isEmpty(datum));
-  } else if (typeof data === 'object') {
+  } else if (typeof data === 'object' && !!data) { // ! ->  typeof null === 'object'
     response = Object.values(data).every(value => isEmpty(value));
   } else {
     response = !data
@@ -209,15 +208,19 @@ export async function extract<T>(rawRows: string[][], config: ExtractConfig<T> =
 export function getStatic(scope: Scope, value: string, separator:string, { field, name }: { field: string, name: string }) {
   if (!value) return [];
   if (value.toLowerCase() === 'all') return parseToAll(scope, 'all');
-  const raw = split(value,separator).map(v => getKeyIfExists(scope, v));
-  const hasWrongData = raw.some(v => !!v);
-  const values = raw.filter(v => !!v);
-  if (hasWrongData) return new ValueWithWarning(values, {
+  const splitted = split(value, separator);
+  const keys = splitted.map(v => getKeyIfExists(scope, v));
+  const values = keys.filter(v => !!v);
+  const wrongData: string[] = [];
+  keys.forEach((k, i) => {
+    if (!k) wrongData.push(splitted[i]);
+  });
+  if (wrongData.length) return new ValueWithWarning(values, {
     type: 'warning',
     field,
     name: `Wrong ${name}`,
-    reason: `Be careful, one or more values was wrong and will be omitted.`,
-    hint: 'Please check the corresponding sheet field.'
+    reason: `Be careful, ${wrongData.length} values were wrong and will be omitted.`,
+    hint: `${wrongData.slice(0, 3).join(', ')}...`
   });
   return values
 }
