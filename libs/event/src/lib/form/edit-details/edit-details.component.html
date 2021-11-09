@@ -23,7 +23,7 @@
 
   <div *ngIf="displayPrivacySettings" fxLayout="column" fxLayoutGap="12px">
     <h3>Privacy Settings</h3>
-    <mat-radio-group fxLayout="column" formControlName="accessibility" (change)="radioButtonChanged()">
+    <mat-radio-group fxLayout="column" formControlName="accessibility" (change)="radioButtonChanged($event)">
       <mat-radio-button  color="primary" value="public">
         PUBLIC - anyone who has a link can access your event (no statistics, no watermark) -- best for meetings
       </mat-radio-button>

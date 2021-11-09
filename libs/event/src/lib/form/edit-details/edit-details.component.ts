@@ -39,20 +39,24 @@ export class EditDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  async radioButtonChanged() {
-    const invitations = await this.invitationService.getValue(ref => ref.where('type', '==', 'attendEvent').where('eventId', '==', this.form.value.id));
+  async radioButtonChanged(e) {
+    if (this.currentAccessibilityValue !== 'private' && e.value === 'private') {
+      const invitations = await this.invitationService.getValue(ref => ref.where('type', '==', 'attendEvent').where('eventId', '==', this.form.value.id));
 
-    if (invitations.length) {
-      this.form.patchValue({ accessibility: this.currentAccessibilityValue });
+      if (invitations.length) {
+        this.form.patchValue({ accessibility: this.currentAccessibilityValue });
 
-      const dialogRef = this.dialog.open(this.noAccessibilityChange, {
-        width: '80%'
-      });
-      this.dialogSub = dialogRef.afterClosed().subscribe(contactTeam => {
-        if (contactTeam) {
-          this.intercom.show();
-        }
-      });
+        const dialogRef = this.dialog.open(this.noAccessibilityChange, {
+          width: '80%'
+        });
+        this.dialogSub = dialogRef.afterClosed().subscribe(contactTeam => {
+          if (contactTeam) {
+            this.intercom.show();
+          }
+        });
+        return;
+      }
     }
+    this.currentAccessibilityValue = e.value;
   }
 }
