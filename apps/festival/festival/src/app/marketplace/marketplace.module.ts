@@ -8,6 +8,8 @@ import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 import { MarketplaceComponent } from './marketplace.component';
 import { MarketplaceLayoutModule } from '@blockframes/ui/layout/marketplace/marketplace.module';
 import { AsideModule } from '@blockframes/ui/layout/marketplace/aside/aside.module';
+import { OrgAccessModule } from '@blockframes/organization/pipes/org-access.pipe';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -96,6 +98,8 @@ const routes: Routes = [{
     FlexLayoutModule,
     MarketplaceLayoutModule,
     AsideModule,
+    OrgAccessModule,
+    ImageModule,
     
     // Material
     MatIconModule,

@@ -214,23 +214,21 @@ export async function formatTitle(
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'originalRelease[].date', name: 'Original release Date' }));
       return getDate(value, { field: 'originalRelease[].date', name: 'Original release Date'}) as Date;
     },
-    /* t */ 'originalLanguages[]': (value: string[]) => { // ! required
+    /* t */ 'originalLanguages[]': (value: string) => { // ! required
       if (!value || !value.length) throw new MandatoryError({ field: 'originalLanguages', name: 'Original Languages' });
-      const languages = value.map(t => getKeyIfExists('languages', t)) as Language[];
-      const hasWrongLanguage = languages.some(t => !t);
-      if (hasWrongLanguage) throw new WrongValueError({ field: 'originalLanguages', name: 'Original Languages' });
-      return languages as any;
+      const languages = getKeyIfExists('languages', value) as Language;
+      if (!languages) throw new WrongValueError({ field: 'originalLanguages', name: 'Original Languages' });
+      return languages;
     },
-    /* u */ 'genres[]': (value: string[]) => { // ! required
+    /* u */ 'genres[]': (value: string) => { // ! required
       if (!value || !value.length) throw new MandatoryError({ field: 'genres', name: 'Genres' });
-      const genres = value.map(t => getKeyIfExists('genres', t)) as Language[];
-      const hasWrongGenre = genres.some(t => !t);
-      if (hasWrongGenre) throw new WrongValueError({ field: 'genres', name: 'Genres' });
-      return genres as any;
+      const genres = getKeyIfExists('genres', value) as Genre;
+      if (!genres) throw new WrongValueError({ field: 'genres', name: 'Genres' });
+      return genres;
     },
-    /* v */ 'customGenres[]': (value: string[]) => {
+    /* v */ 'customGenres[]': (value: string) => {
       if (!value || !value.length) return new ValueWithWarning(null, optionalWarning({ field: 'customGenres[]', name: 'Custom Genres' }));
-      return value as any; // ExtractConfig type as issue, but it's too complex for me to fix it
+      return value;
     },
     /* w */ 'runningTime.time': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'runningTime.time', name: 'Running Time' }));
@@ -458,6 +456,7 @@ export async function formatTitle(
     /* bm */ 'app.catalog': (value: string) => {
       if (!value && blockframesAdmin) return new ValueWithWarning(null, optionalWarning({ field: 'catalogStatus', name: 'Catalog Status' }));
       if (value && !blockframesAdmin) return new ValueWithWarning({ status: 'draft', access: false }, adminOnlyWarning({ field: 'catalogStatus', name: 'Catalog Status' }));
+      if (!value) return { status: 'draft', access: false, acceptedAt: null, refusedAt: null };
       const status = getKeyIfExists('storeStatus', value) as StoreStatus;
       if (!status) throw new WrongValueError({ field: 'catalogStatus', name: 'Catalog Status' });
       const access = status === 'accepted';
@@ -466,6 +465,7 @@ export async function formatTitle(
     /* bn */ 'app.festival': (value: string) => {
       if (!value && blockframesAdmin) return new ValueWithWarning(null, optionalWarning({ field: 'festivalStatus', name: 'Festival Status' }));
       if (value && !blockframesAdmin) return new ValueWithWarning({ status: 'draft', access: false }, adminOnlyWarning({ field: 'festivalStatus', name: 'Festival Status' }));
+      if (!value) return { status: 'draft', access: false, acceptedAt: null, refusedAt: null };
       const status = getKeyIfExists('storeStatus', value) as StoreStatus;
       if (!status) throw new WrongValueError({ field: 'festivalStatus', name: 'Festival Status' });
       const access = status === 'accepted';
@@ -474,6 +474,7 @@ export async function formatTitle(
     /* bo */ 'app.financiers': (value: string) => {
       if (!value && blockframesAdmin) return new ValueWithWarning(null, optionalWarning({ field: 'financiersStatus', name: 'Financiers Status' }));
       if (value && !blockframesAdmin) return new ValueWithWarning({ status: 'draft', access: false }, adminOnlyWarning({ field: 'financiersStatus', name: 'Financiers Status' }));
+      if (!value) return { status: 'draft', access: false, acceptedAt: null, refusedAt: null };
       const status = getKeyIfExists('storeStatus', value) as StoreStatus;
       if (!status) throw new WrongValueError({ field: 'financiersStatus', name: 'Financiers Status' });
       const access = status === 'accepted';
@@ -482,6 +483,7 @@ export async function formatTitle(
     /* bp */ 'orgIds': async (value: string) => { // ! required
       if (!value && blockframesAdmin) throw new MandatoryError({ field: 'orgIds', name: 'Owner Id' });
       if (value && !blockframesAdmin) return new ValueWithWarning([userOrgId], adminOnlyWarning({ field: 'orgIds', name: 'Owner Id' }));
+      if (!value) return [userOrgId];
       const user = await getUser({ id: value }, userService, userCache);
       if (!user) throw new UnknownEntityError({ field: 'orgIds', name: 'Owner Id' });
       return [user.orgId];
