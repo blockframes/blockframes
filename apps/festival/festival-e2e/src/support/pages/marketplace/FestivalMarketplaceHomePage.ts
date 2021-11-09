@@ -35,6 +35,7 @@ export default class FestivalMarketplaceHomePage {
   selectSalesAgents() {
     cy.get('layout-marketplace a', { timeout: 3 * SEC })
       .contains('Sales Agents').click();
+    cy.wait(1 * SEC);
     return new FestivalOrganizationListPage();
   }
 

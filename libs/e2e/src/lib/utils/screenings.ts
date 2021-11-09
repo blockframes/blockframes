@@ -45,4 +45,48 @@ export const EVENTS: Partial<Screening>[] = [
     ],
     private: true
   },
+  {
+    event: 'Family Feud Screening',
+    by : {
+      uid: '8xZniVmogINJRnJHD7p2rNeXnIq2'
+    },
+    movie: {
+      id: 'SUl6QEwiJowuhyNHo4dq',
+      title: {
+        international: 'Family Feud'
+      }
+    },
+    org : {
+      id: 'lV0qt4hCAWKw5lRSaO1E',
+    },
+    invitees: [{
+        uid: 'MDnN2GlVUeadIVJbzTToQQNAMWZ2'
+      }, {
+        uid: 'mVUZ097xoAeubsPiQlqrzgUF8y83'
+      }
+    ],
+    private: true
+  },
+  {
+    event: 'Nice to Meet You Screening',
+    by : {
+      uid: '8xZniVmogINJRnJHD7p2rNeXnIq2'
+    },
+    movie: {
+      id: 'L5DkDzjlfGg79vIENueA',
+      title: {
+        international: 'Nice to Meet You'
+      }
+    },
+    org : {
+      id: 'lV0qt4hCAWKw5lRSaO1E',
+    },
+    invitees: [{
+        uid: 'MDnN2GlVUeadIVJbzTToQQNAMWZ2'
+      }, {
+        
+      }
+    ],
+    private: true
+  }
 ];

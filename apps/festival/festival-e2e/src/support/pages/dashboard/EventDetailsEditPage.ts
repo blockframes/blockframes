@@ -4,7 +4,6 @@ import { SEC } from '@blockframes/e2e/utils';
 export default class EventDetailsEditPage {
   constructor() {
     cy.get('event-details-edit', { timeout: 90 * SEC });
-    cy.wait(10 * SEC);
   }
 
   addEventTitle(title: string) {
@@ -14,11 +13,11 @@ export default class EventDetailsEditPage {
   //Sets if event is full day.
   checkAllDay(fullDay: boolean = true) {
     if (fullDay) {
-      cy.get('event-details-edit mat-slide-toggle[test-id=all-day]', { timeout: 3 * SEC })
+      cy.get('event-details-edit mat-slide-toggle[test-id=all-day]', { timeout: 10 * SEC })
         .find('input')
         .check({ force: true });
     } else {
-      cy.get('event-details-edit mat-slide-toggle[test-id=all-day]', { timeout: 3 * SEC })
+      cy.get('event-details-edit mat-slide-toggle[test-id=all-day]', { timeout: 10 * SEC })
         .find('input')
         .uncheck({ force: true });
     }
@@ -26,7 +25,7 @@ export default class EventDetailsEditPage {
 
   selectDate(date: Date) {
     // Start Date
-    cy.get('mat-form-field[test-id=event-start]').click();
+    cy.get('mat-form-field[test-id=event-start]', { timeout: 10 * SEC }).click();
     cy.get('event-details-edit time-picker[formControlName=start]')
       .get('tbody')
       .contains(date.getDate())
@@ -43,25 +42,25 @@ export default class EventDetailsEditPage {
   uncheckPrivate(isPublic: boolean = false) {
     if (!isPublic) {
       //last radio button correspond to "private" privacy status
-      cy.get('event-details-edit [type="radio"]', { timeout: 3 * SEC })
-        .eq(1) // @TODO #6756 change to 2 once 'invitation-only' radio is uncommented 
+      cy.get('event-details-edit [type="radio"]', { timeout: 10 * SEC })
+        .eq(1)
         .check({force: true});
     } else {
       //first radio button correspond to "public" privacy status
-      cy.get('event-details-edit [type="radio"]', { timeout: 3 * SEC })
+      cy.get('event-details-edit [type="radio"]', { timeout: 10 * SEC })
         .first()
         .check({force: true});
     }
   }
 
   selectMovie(movieName: string) {
-    cy.get('event-details-edit mat-select[formControlName=titleId]', { timeout: 100 * SEC }).click();
-    cy.get('mat-option').contains(movieName).click();
+    cy.get('[formControlName="titleId"]', { timeout: 10 * SEC }).click();
+    cy.get('mat-option').contains(movieName, {timeout: 5 * SEC}).click();
   }
 
   inputDescription(description: string) {
     //Input description
-    cy.get('textarea[formControlName="description"]', {timeout: 1 * SEC})
+    cy.get('textarea[formControlName="description"]', {timeout: 20 * SEC})
       .click({force: true})
       .clear()
       .type(description);
@@ -71,13 +70,13 @@ export default class EventDetailsEditPage {
     if (Array.isArray(email)) {
       let index = 0;
       while (index < email.length) {
-        cy.get('event-details-edit algolia-chips-autocomplete input').type(email[index]).type('{enter}');
+        cy.get('event-details-edit algolia-chips-autocomplete input', { timeout: 10 * SEC }).type(email[index]).type('{enter}');
         index++;
       }
     } else {
       cy.get('event-details-edit algolia-chips-autocomplete input').type(email).type('{enter}');
     }
-    cy.get('event-details-edit button[test-id=event-invite]').click({ timeout: 0.5 * SEC });
+    cy.get('event-details-edit button[test-id=event-invite]').click({ timeout: 3 * SEC });
     cy.wait(2 * SEC);
   }
 
@@ -87,7 +86,7 @@ export default class EventDetailsEditPage {
 
   saveEvent() {
     cy.get('button[test-id=event-save]', { timeout:  30 * SEC }).click();
-    cy.wait(2 * SEC);
+    cy.wait(1 * SEC);
   }
 
   clickMoreDetails() {
