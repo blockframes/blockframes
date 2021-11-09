@@ -1,20 +1,18 @@
-<layout-event>
-  <ng-container *ngIf="event$ | async as event">
-    <header class="dark-contrast-theme" bgAsset="profil_banner.png">
-      <h1 class="mat-display-2">{{ event.title }}</h1>
-      <h6>{{ event.accessibility | toLabel: 'accessibility'}} {{ event.type }}</h6>
-      <pre class="mat-body-1">{{ event | eventRange }}</pre>
-      <p class="mat-caption">{{ event.meta.description }}</p>
-    </header>
-    <section>
-      <h2>You just left the Meeting.</h2>
+<ng-container *ngIf="event$ | async as event">
+  <header class="dark-contrast-theme" bgAsset="profil_banner.png">
+    <h1 class="mat-display-2">{{ event.title }}</h1>
+    <h6>{{ event.accessibility | toLabel: 'accessibility'}} {{ event.type }}</h6>
+    <pre class="mat-body-1">{{ event | eventRange }}</pre>
+    <p class="mat-caption">{{ event.meta.description }}</p>
+  </header>
+  <section>
+    <h2>You just left the Meeting.</h2>
 
-      <h4 *ngIf="duration | duration: '' as pipedDuration">It lasted {{ pipedDuration }}.</h4>
+    <h4 *ngIf="duration | duration: '' as pipedDuration">It lasted {{ pipedDuration }}.</h4>
 
-      <ng-container *ngIf="attendees$ | async as attendees">
-        <h3>There were {{attendees.length}} attendee{attendees.length, plural, =1 {} other {s}}</h3>
-        <p *ngFor="let user of attendees">{{user | displayName }}</p>
-      </ng-container>
-    </section>
-  </ng-container>
-</layout-event>
+    <ng-container *ngIf="attendees$ | async as attendees">
+      <h3>There were {{attendees.length}} attendee{attendees.length, plural, =1 {} other {s}}</h3>
+      <p *ngFor="let user of attendees">{{user | displayName }}</p>
+    </ng-container>
+  </section>
+</ng-container>

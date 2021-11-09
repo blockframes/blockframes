@@ -1,13 +1,13 @@
 ﻿import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { NgModule } from '@angular/core';
+import { AsideModule } from '@blockframes/ui/layout/marketplace/aside/aside.module';
 
 // Routes
 import { RouterModule, Routes } from '@angular/router';
 import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 import { MarketplaceComponent } from './marketplace.component';
 import { MarketplaceLayoutModule } from '@blockframes/ui/layout/marketplace/marketplace.module';
-import { AsideModule } from '@blockframes/ui/layout/marketplace/aside/aside.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';

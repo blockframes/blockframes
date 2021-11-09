@@ -6,12 +6,10 @@
         <mat-icon svgIcon="arrow_back"></mat-icon>
       </button>
     </mat-toolbar>
-    <aside>
-      <marketplace-aside></marketplace-aside>
-    </aside> 
+    <ng-content select="aside"></ng-content>
   </mat-sidenav>
   
-  <mat-sidenav-content fxLayout="column" [appContainer]="app" (toggle)="sidenav.toggle()">
+  <mat-sidenav-content fxLayout="column" [appContainer]="app" (toggle)="sidenav.toggle()" layout>
     <!-- TOOLBAR -->
     <app-bar #app>
       <header fxLayout fxLayoutAlign="start center">
@@ -20,7 +18,7 @@
             <mat-icon svgIcon="menu"></mat-icon>
           </button>
           <a app-logo routerLink="."></a>
-          <a test-id="calender-icon" mat-icon-button routerLink="/c/o/marketplace/event/calendar">
+          <a test-id="calendar-icon" mat-icon-button routerLink="/c/o/marketplace/event/calendar">
             <mat-icon svgIcon="calendar_today"></mat-icon>
           </a>
           <a test-id="heart-icon" mat-icon-button routerLink="/c/o/marketplace/wishlist">
@@ -64,14 +62,13 @@
       </header>
     </app-bar>
 
+    <!-- CONTENT -->
     <main fxFlex cdkScrollable>
-      <div class="page">
-        <ng-content></ng-content>
+      <div class="page" [@routeAnimation]="animationOutlet(outlet)">
+        <router-outlet #outlet="outlet" (activate)="scrollToTop()"></router-outlet>
       </div>
       <bf-footer></bf-footer>
     </main>
-
- 
 
   </mat-sidenav-content>
 </mat-sidenav-container>
