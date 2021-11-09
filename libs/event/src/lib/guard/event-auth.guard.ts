@@ -25,30 +25,34 @@ export class EventAuthGuard extends CollectionGuard<AuthState> {
   sync() {
     return this.afAuth.authState.pipe(
       switchMap(userAuth => {
+
         /**
-         * User is not logged-in or is anonymous.
+         * User is not logged in
          */
-        if (!userAuth || userAuth.isAnonymous) return of(true);
+        if (!userAuth) return this.router.navigate(['/']);
+
+        /**
+         * User is anonymous.
+         */
+        if (userAuth.isAnonymous) return of(true);
 
         /**
          * User is logged in
          */
         return this.service.sync().pipe(
-          catchError(() => this.router.navigate(['/'])),
+          catchError(() => of('/')),
           map(() => this.query.user),
-          map(async user => {
+          switchMap(async user => {
             // Check that onboarding is complete
             const validUser = hasDisplayName(user) && user._meta.emailVerified && user.orgId;
             if (!validUser) {
-              this.router.navigate(['/auth/identity']);
-              return false;
+              return this.router.navigate(['/auth/identity']);
             }
 
             // Check that org is valid
             const org = await this.orgService.getValue(user.orgId);
             if (org.status === 'pending') {
-              this.router.navigate(['/c/organization/create-congratulations']);
-              return false;
+              return this.router.navigate(['/c/organization/create-congratulations']);
             }
 
             /**

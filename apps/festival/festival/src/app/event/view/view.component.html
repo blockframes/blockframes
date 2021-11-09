@@ -1,0 +1,104 @@
+<ng-container *ngIf="event$ |  async as event">
+    <!-- View component Layout header -->
+    <header class="dark-contrast-theme" fxLayout="column" fxLayoutGap="16px">
+      <a mat-icon-button (click)="goBack()">
+        <mat-icon svgIcon="arrow_back"></mat-icon>
+      </a>
+      <section fxLayout="column" fxLayoutAlign="center center">
+        <h1 class="mat-display-2">{{ event.title }}</h1>
+        <ng-container [ngSwitch]="event | eventTime">
+  
+          <ng-container *ngSwitchCase="'early'">
+            <h6>{{ event.accessibility | toLabel:'accessibility'}} {{ event.type }}</h6>
+            <pre class="mat-body-1">{{ event | eventRange }}</pre>
+            <p class="mat-body-2">{{ event.meta.description }}</p>
+            <countdown-timer [title]="'Event will start in :'" [date]="event.start" [timeUnits]="['days', 'hours', 'minutes']"></countdown-timer>
+            <ng-container *ngIf="event.isOwner; else notOwner">
+              <h3>You are the owner of this event.</h3>
+              <p>You can invite members and edit the event config in your dashboard.</p>
+              <a mat-stroked-button color="primary" [routerLink]="editMeeting">Edit Event</a>
+            </ng-container>
+            <ng-template #notOwner>
+                <invitation-action *ngIf="(invitation$ | async) !== undefined" @fade [invitation]="(invitation$ | async)" [event]="event"></invitation-action>
+                <ng-container *ngIf="(invitation$ | async)?.status === 'accepted'  || event.accessibility === 'public'">
+                  <a mat-flat-button color="accent" disabled matTooltip="You'll be able to join the screening when it starts.">Access {{ event.type | titlecase }} Room</a>
+                </ng-container>
+            </ng-template>
+          </ng-container>
+  
+          <ng-container *ngSwitchCase="'onTime'">
+            <h6>{{ event.accessibility | toLabel:'accessibility' }} {{ event.type }}</h6>
+            <pre class="mat-body-1">{{ event | eventRange }}</pre>
+            <p class="mat-body-2">{{ event.meta.description }}</p>
+            <p *ngIf="(invitation$ | async) === null">This event has already started.</p>
+            <ng-container *ngIf="event.isOwner; else notOwner">
+              <h3>You are the owner of this event.</h3>
+              <p>You can invite members and <a [routerLink]="editMeeting">edit the event</a> config in your dashboard.</p>
+              <a mat-stroked-button color="primary" [routerLink]="['lobby']">Go to Event</a>
+            </ng-container>
+            <ng-template #notOwner>
+              <ng-container *ngIf="event.accessibility !== 'public' else publicEvent">
+                <div @fade *ngIf="(invitation$ | async) !== undefined" fxLayout="column" fxLayoutAlign="center center">
+                  <invitation-action [invitation]="(invitation$ | async)" [event]="event"></invitation-action>
+                  <ng-container *ngIf="(invitation$ | async)?.status === 'accepted'">
+                    <a test-id="event-room" mat-flat-button [routerLink]="accessRoute" color="accent">Access {{ event.type | titlecase }} Room</a>
+                  </ng-container>
+                </div>
+              </ng-container>
+              <ng-template #publicEvent>
+                <div @fade fxLayout="column" fxLayoutAlign="center center">
+                  <a test-id="event-room" mat-flat-button [routerLink]="accessRoute" color="accent">Access {{ event.type | titlecase }} Room</a>
+                </div>
+              </ng-template>
+            </ng-template>
+          </ng-container>
+  
+          <ng-container *ngSwitchCase="'late'">
+            <h6>{{ event.type }} session closed</h6>
+            <pre class="mat-body-1">{{ event | eventRange }}</pre>
+          </ng-container>
+  
+        </ng-container>
+      </section>
+    </header>
+
+    <ng-container [ngSwitch]="event.type">
+      <!-- Screening -->
+      <section class="screening" *ngSwitchCase="'screening'">
+        <movie-header *ngIf="event.movie" [movie]="event.movie" [showBackArrow]="false">
+          <movie-header-preferences>
+            <p>{{ event.movie.synopsis }}</p>
+            <org-chip [org]="event.org"></org-chip>
+          </movie-header-preferences>
+          <movie-header-cta>
+            <a *ngIf="user$ | async" mat-flat-button color="primary" [routerLink]="['/c/o/marketplace/title', event.movie.id]">
+              More Details
+            </a>
+          </movie-header-cta>
+        </movie-header>
+      </section>
+
+      <!-- Meeting -->
+      <section class="meeting" fxLayout="column" fxLayoutGap="40px" *ngSwitchCase="'meeting'">
+        <article fxLayout="column" fxLayoutGap="16px" class="organized-by">
+          <h2>Organized by</h2>
+          <div fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
+            <a matRipple [routerLink]="['/c/o/marketplace/organization', event.org.id]">
+              <img [ref]="event.org.logo" asset="empty_organization.svg" type="logo" alt="Organization Logo">
+            </a>
+            <div fxLayout="column" fxLayoutGap="4px">
+              <h6><a [routerLink]="['/c/o/marketplace/organization', event.org.id]">{{ event.org | orgName }}</a></h6>
+              <ng-container *ngIf="event.organizedBy as user">
+                <span>{{ user | displayName }}{{ user | displayPosition }}</span>
+              </ng-container>
+            </div>
+          </div>
+          <ng-container *ngIf="!!event.meta.description">
+            <h5>Description</h5>
+            <p>{{ event.meta.description }}</p>
+          </ng-container>
+        </article>
+      </section>
+
+    </ng-container>
+</ng-container>

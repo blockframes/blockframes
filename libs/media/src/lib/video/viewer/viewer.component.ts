@@ -3,13 +3,14 @@ import { DOCUMENT } from "@angular/common";
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Inject, Input, OnDestroy, Output, ViewChild, ViewEncapsulation } from "@angular/core";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { AuthQuery, hasAnonymousIdentity } from "@blockframes/auth/+state";
+import { AuthQuery, AuthService } from "@blockframes/auth/+state";
 import { MeetingVideoControl } from "@blockframes/event/+state/event.firestore";
 import { getWatermark, loadJWPlayerScript } from "@blockframes/utils/utils";
 import { BehaviorSubject } from "rxjs";
 import { toggleFullScreen } from '../../file/viewers/utils';
 import { StorageVideo } from "@blockframes/media/+state/media.firestore";
 import { EventService } from "@blockframes/event/+state";
+import { hasAnonymousIdentity } from "@blockframes/auth/+state/auth.model";
 
 declare const jwplayer: any;
 
@@ -90,6 +91,7 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private authQuery: AuthQuery,
+    private authService: AuthService,
     private functions: AngularFireFunctions,
     private snackBar: MatSnackBar,
     private eventService: EventService,
@@ -103,7 +105,7 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
       const url = await playerUrl({}).toPromise<string>();
       await loadJWPlayerScript(this.document, url);
 
-      const anonymousCredentials = this.authQuery.anonymousCredentials;
+      const anonymousCredentials = this.authService.anonymousCredentials;
 
       const privateVideo = this.functions.httpsCallable('privateVideo');
       const { error, result } = await privateVideo({ eventId: this.eventId, video: this.ref, email: anonymousCredentials?.email }).toPromise();
@@ -119,7 +121,7 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
         if (this.authQuery.user) {
           watermark = getWatermark(this.authQuery.user.email, this.authQuery.user.firstName, this.authQuery.user.lastName);
         } else if (hasAnonymousIdentity(anonymousCredentials, event.accessibility)) {
-          watermark = getWatermark(anonymousCredentials.email || 'anonymous', anonymousCredentials.firstName, anonymousCredentials.lastName);
+          watermark = getWatermark(anonymousCredentials.email, anonymousCredentials.firstName, anonymousCredentials.lastName);
         }
 
         if (!watermark) {

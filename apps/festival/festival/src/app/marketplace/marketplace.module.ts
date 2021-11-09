@@ -1,13 +1,15 @@
 ﻿import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { NgModule } from '@angular/core';
+import { AsideModule } from './layout/aside/aside.module';
+import { MarketplaceComponent } from './marketplace.component';
+import { MarketplaceLayoutModule } from '@blockframes/ui/layout/marketplace/marketplace.module';
+import { OrgAccessModule } from '@blockframes/organization/pipes/org-access.pipe';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
 // Routes
 import { RouterModule, Routes } from '@angular/router';
 import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
-import { MarketplaceComponent } from './marketplace.component';
-import { MarketplaceLayoutModule } from '@blockframes/ui/layout/marketplace/marketplace.module';
-import { AsideModule } from '@blockframes/ui/layout/marketplace/aside/aside.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -96,6 +98,8 @@ const routes: Routes = [{
     FlexLayoutModule,
     MarketplaceLayoutModule,
     AsideModule,
+    OrgAccessModule,
+    ImageModule,
     
     // Material
     MatIconModule,
