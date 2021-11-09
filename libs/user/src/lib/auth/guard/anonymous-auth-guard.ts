@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
-import { CollectionGuardConfig } from 'akita-ng-fire';
 import { AuthService } from '@blockframes/auth/+state';
 import { CanActivate, CanDeactivate } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
-@CollectionGuardConfig({ awaitSync: true })
 export class AnonymousAuthGuard implements CanActivate, CanDeactivate<unknown> {
   constructor(
     private authService: AuthService
