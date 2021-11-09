@@ -96,7 +96,7 @@ const routes: Routes = [{
     FlexLayoutModule,
     MarketplaceLayoutModule,
     AsideModule,
-    
+
     // Material
     MatIconModule,
     MatButtonModule,

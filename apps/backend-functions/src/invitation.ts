@@ -168,31 +168,35 @@ export const inviteUsers = async (data: UserInvitation, context: CallableContext
 
   const eventId = invitation.type === 'attendEvent' && invitation.eventId;
   const event = eventId ? await getDocument<EventDocument<EventMeta>>(`events/${eventId}`) : undefined;
+  let promiseArraySize: number;
 
   for (const email of data.emails) {
     const invitationId = db.collection('invitations').doc().id;
     const { type, mode, fromOrg } = invitation;
     const eventData = type == 'attendEvent' ? getEventEmailData(event, email, invitationId) : undefined;
-    const isLastIndex = await getOrInviteUserByMail(
+    const user = await getOrInviteUserByMail(
       email,
       { id: invitationId, type, mode, fromOrg },
       data.app,
       eventData
     )
-      .then(u => {
-        if (u.invitationStatus) invitation.status = u.invitationStatus;
-        return createPublicUser(u.user);
-      })
-      .then(toUser => {
-        invitation.toUser = toUser;
-        invitation.id = invitationId;
-      })
-      .then(() => db.collection('invitations').doc(invitation.id).set(invitation))
-      .then(result => promises.push({ result, error: '' }))
-      .catch(error => promises.push({ result: undefined, error }))
-      .then(lastIndex => lastIndex === data.emails.length);
-    if (isLastIndex) break;
+
+    if (user.invitationStatus) invitation.status = user.invitationStatus;
+
+    const publicUser = createPublicUser(user.user);
+    invitation.toUser = publicUser;
+    invitation.id = invitationId;
+
+    try {
+      const invitationSet = await db.collection('invitations').doc(invitation.id).set(invitation);
+      promiseArraySize = promises.push({ result: invitationSet, error: '' });
+    } catch (error) {
+      promiseArraySize = promises.push({ result: undefined, error });
+    }
+
+    if (promiseArraySize === data.emails.length) break;
   }
+
   return promises;
 }
 
