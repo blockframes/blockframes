@@ -5,7 +5,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
-  selector: 'event-email',
+  selector: 'festival-event-email',
   templateUrl: './email.component.html',
   styleUrls: ['./email.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

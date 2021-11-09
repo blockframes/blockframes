@@ -7,7 +7,7 @@ import { Meeting, MeetingAttendee } from '@blockframes/event/+state/event.firest
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'event-meeting-session-ended',
+  selector: 'festival-event-meeting-session-ended',
   templateUrl: './meeting-ended.component.html',
   styleUrls: ['./meeting-ended.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

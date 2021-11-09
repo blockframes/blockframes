@@ -1,7 +1,7 @@
 ﻿import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { NgModule } from '@angular/core';
-import { AsideModule } from '@blockframes/ui/layout/marketplace/aside/aside.module';
+import { AsideModule } from './layout/aside/aside.module';
 import { MarketplaceComponent } from './marketplace.component';
 import { MarketplaceLayoutModule } from '@blockframes/ui/layout/marketplace/marketplace.module';
 import { OrgAccessModule } from '@blockframes/organization/pipes/org-access.pipe';
