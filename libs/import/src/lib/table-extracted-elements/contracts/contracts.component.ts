@@ -112,6 +112,7 @@ export class TableExtractedContractsComponent implements OnInit {
    */
   private async addContract(importState: ContractsImportState): Promise<boolean> {
     const data = this.rows.data;
+    // TODO INVESTIGATE ERROR WHEN CREATING CONTRACTS : FirebaseError: [code=invalid-argument]: Timestamp seconds out of range: 1332713170800
     const termIds = await this.termService.add(importState.terms);
     importState.contract.termIds = termIds;
     await this.contractService.add({
