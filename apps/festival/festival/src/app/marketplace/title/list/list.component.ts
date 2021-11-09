@@ -8,7 +8,7 @@ import {
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { Movie } from '@blockframes/movie/+state';
 import { MovieSearchForm, createMovieSearch, MovieSearch, LanguagesSearch } from '@blockframes/movie/form/search.form';
-import { debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap, throttleTime } from 'rxjs/operators';
+import { debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StoreStatus } from '@blockframes/utils/static-model/types';
@@ -101,7 +101,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
       this.selectedLanguages$.next(languages)
     }
     const sub = this.searchForm.valueChanges.pipe(
-      throttleTime(1000),
+      debounceTime(1000),
     ).subscribe(value => encodeUrl<MovieSearch>(this.router, this.route, value));
     this.subs.push(sub);
   }
