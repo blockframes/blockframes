@@ -27,9 +27,9 @@ export class IdentityGuard implements CanActivate {
         if (userAuth?.isAnonymous) {
           if (!creds?.role) {
             return this.router.createUrlTree([`/event/${event.id}/auth/role`], { queryParams: next.queryParams });
-          } else if (creds?.role === 'organizer' || event.accessibility === 'private') {
+          } else if (creds.role === 'organizer' || event.accessibility === 'private') {
             return this.router.createUrlTree([`/event/${event.id}/auth/login`], { queryParams: next.queryParams });
-          } else if (creds?.role && !hasAnonymousIdentity(creds, event.accessibility)) {
+          } else if (creds.role && !hasAnonymousIdentity(creds, event.accessibility)) {
             const page = event.accessibility === 'invitation-only' ? 'email' : 'identity';
             return this.router.createUrlTree([`/event/${event.id}/auth/${page}`], { queryParams: next.queryParams });
           }

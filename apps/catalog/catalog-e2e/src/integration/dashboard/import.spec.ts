@@ -10,9 +10,10 @@ const MY_TITLES_PAGE = '/c/o/dashboard/title';
 const MY_SALES_PAGE = '/c/o/dashboard/sales';
 
 const userFixture = new User();
-const [jean, vincent]  =  [ userFixture.getByUID(USER.Jean),
-                  userFixture.getByUID(USER.Vincent)
-                ];
+const [jean, vincent]  =  [
+  userFixture.getByUID(USER.Jean),
+  userFixture.getByUID(USER.Vincent),
+];
 
 const movieFixture = 'movie.xlsx';
 const contractFixture = 'contract.xlsx';
@@ -84,8 +85,8 @@ describe.skip('User can import templates', () => {
   });
 
   // TODO correct the test once the contract import page is ready #6757
-  it('Login as admin, Select contracts and import ', () => {
-    logInAndNavigate(vincent);
+  it('Login as Dashboard user, Select contracts and import ', () => {
+    logInAndNavigate(jean);
     cy.wait(1 * SEC);
 
     cy.get('aside a[routerlink="sales"]', {timeout: 5 * SEC})

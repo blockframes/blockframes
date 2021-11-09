@@ -175,7 +175,7 @@ export async function formatContract(
       }
     },
     /* e */'term.territories': (value: string) => getStaticList('territories', value, separator, { field: 'term.territories', name: 'Territories' }) as Territory[],
-    /* f */'term.medias': (value: string) => getStaticList('medias', value, separator, { field: 'term.medias', name: 'Medias' }) as Media[],
+    /* f */'term.medias': (value: string) =>  getStaticList('medias', value, separator, { field: 'term.medias', name: 'Medias' }) as Media[],
     /* g */'term.exclusive': (value: string) => {
       const lower = value.toLowerCase();
       if (!lower) throw new MandatoryError({ field: 'term.exclusive', name: 'Exclusive' });
