@@ -15,7 +15,7 @@ body:
         - Email organization admin when an offer has been made
   - type: textarea
     attributes:
-      label: User Scenario's
+      label: User Scenarios
       description: Think about what each actor should be able to do. Be as detailed as you can because these scenarios will be used to create tests.
       placeholder: |
         - As a Buyer I want to be able to create an offer
