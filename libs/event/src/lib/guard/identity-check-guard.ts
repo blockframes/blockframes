@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
-import { AuthQuery, hasAnonymousIdentity } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/+state';
+import { hasAnonymousIdentity } from '@blockframes/auth/+state/auth.model';
 import { combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { EventQuery } from '../+state';
@@ -11,7 +12,7 @@ import { EventQuery } from '../+state';
 export class IdentityCheckGuard implements CanActivate {
 
   constructor(
-    private authQuery: AuthQuery,
+    private authService: AuthService,
     private afAuth: AngularFireAuth,
     private router: Router,
     private eventQuery: EventQuery,
@@ -22,7 +23,7 @@ export class IdentityCheckGuard implements CanActivate {
     const event = this.eventQuery.getActive();
     combineLatest([
       this.afAuth.authState,
-      this.authQuery.anonymousCredentials$
+      this.authService.anonymousCredentials$
     ]).pipe(
       map(([userAuth, creds]) => {
         if (!event) {

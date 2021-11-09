@@ -6,7 +6,6 @@ import { AuthStore, AuthState } from './auth.store';
 export class AuthQuery extends Query<AuthState> {
   public user$ = this.select(state => state.profile);
   public hasVerifiedEmail$ = this.select(state => state.emailVerified);
-  public anonymousCredentials$ = this.select(state => state.anonymousCredentials);
 
   constructor(protected store: AuthStore) {
     super(store);
@@ -30,13 +29,5 @@ export class AuthQuery extends Query<AuthState> {
 
   get isBlockframesAdmin() {
     return this.getValue().roles?.blockframesAdmin || false;
-  }
-
-  get anonymousCredentials() {
-    return this.getValue().anonymousCredentials;
-  }
-
-  get anonymousUserId() {
-    return this.getValue().anonymousCredentials.uid;
   }
 }

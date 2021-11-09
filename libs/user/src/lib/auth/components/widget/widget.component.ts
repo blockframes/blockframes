@@ -22,11 +22,10 @@ export class AuthWidgetComponent {
   appVersion$ = this.db.doc<IVersionDoc>(dbVersionDoc).valueChanges();
   emulatorList = Object.keys(emulators).filter(key => !!emulators[key]);
   emulators = this.emulatorList.length ? this.emulatorList.join(' - ') : 'none';
-  anonymousUser$ = this.authQuery.anonymousCredentials$;
+  anonymousUser$ = this.service.anonymousCredentials$;
 
   constructor(
     private db: AngularFirestore,
-    private authQuery: AuthQuery,
     private service: AuthService,
     private query: AuthQuery,
     private organizationQuery: OrganizationQuery,

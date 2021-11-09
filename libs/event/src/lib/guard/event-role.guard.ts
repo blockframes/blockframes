@@ -4,7 +4,7 @@ import { EventState } from "../+state/event.store";
 import { EventService } from "../+state/event.service";
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
 import { map } from "rxjs/operators";
-import { AuthQuery } from "@blockframes/auth/+state";
+import { AuthService } from "@blockframes/auth/+state";
 import { AngularFireAuth } from "@angular/fire/auth";
 
 @Injectable({ providedIn: 'root' })
@@ -13,7 +13,7 @@ export class EventRoleGuard extends CollectionGuard<EventState> {
 
   constructor(
     service: EventService,
-    private authQuery: AuthQuery,
+    private authService: AuthService,
     private afAuth: AngularFireAuth,
   ) {
     super(service);
@@ -26,7 +26,7 @@ export class EventRoleGuard extends CollectionGuard<EventState> {
     return this.afAuth.authState.pipe(
       map(async userAuth => {
         if (userAuth && userAuth.isAnonymous) {
-          const anonymousCredentials = this.authQuery.anonymousCredentials;
+          const anonymousCredentials = this.authService.anonymousCredentials;
 
           if (!anonymousCredentials?.role) {
             return this.router.navigate([`/event/${eventId}`], { queryParams: next.queryParams });

@@ -3,7 +3,7 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { AppModule } from './app/app.module';
 import { production } from '@env';
-import { akitaConfig, akitaDevtools, enableAkitaProdMode, persistState } from '@datorama/akita';
+import { akitaConfig, akitaDevtools, enableAkitaProdMode } from '@datorama/akita';
 
 if (production) {
   enableProdMode();
@@ -15,8 +15,6 @@ if (production) {
 akitaConfig({
   resettable: true
 });
-
-persistState({include: ['auth.anonymousCredentials']});
 
 document.addEventListener('DOMContentLoaded', () => {
   platformBrowserDynamic()

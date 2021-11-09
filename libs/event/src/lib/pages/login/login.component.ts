@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, OnInit, ViewChild, TemplateRef } from '@angular/core';
-import { AuthService, AuthStore } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/+state';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -21,7 +21,6 @@ export class EventLoginComponent implements OnInit {
   
   constructor(
     private service: AuthService,
-    private authStore: AuthStore,
     private router: Router,
     private route: ActivatedRoute,
     private snackBar: MatSnackBar,
@@ -40,7 +39,7 @@ export class EventLoginComponent implements OnInit {
     try {
       this.buttonText = 'Logging in...'
       const { email, password } = this.loginForm.value;
-      this.authStore.updateAnonymousCredentials({}, { reset: true});
+      this.service.updateAnonymousCredentials({}, { reset: true});
       await this.service.signin(email.trim(), password);
     } catch (err) {
       this.buttonText = 'Log in';
@@ -56,7 +55,7 @@ export class EventLoginComponent implements OnInit {
   }
 
   clickBack() {
-    this.authStore.updateAnonymousCredentials({ role: undefined });
+    this.service.updateAnonymousCredentials({ role: undefined });
     this.router.navigate(['../../'], { relativeTo: this.route, queryParams: this.route.snapshot.queryParams });
   }
 }

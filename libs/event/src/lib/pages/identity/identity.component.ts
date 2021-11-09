@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthStore } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/+state';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EventQuery } from '@blockframes/event/+state';
@@ -20,7 +20,7 @@ export class EventIdenityComponent implements OnInit {
   public eventId = this.eventQuery.getActiveId();
 
   constructor(
-    private authStore: AuthStore,
+    private authService: AuthService,
     private router: Router,
     private route: ActivatedRoute,
     private snackBar: MatSnackBar,
@@ -37,7 +37,7 @@ export class EventIdenityComponent implements OnInit {
       return;
     }
     // Update store with from value
-    this.authStore.updateAnonymousCredentials({
+    this.authService.updateAnonymousCredentials({
       lastName: this.identityForm.value.lastName,
       firstName: this.identityForm.value.firstName
     });
@@ -46,7 +46,7 @@ export class EventIdenityComponent implements OnInit {
   }
 
   clickBack() {
-    this.authStore.updateAnonymousCredentials({ role: undefined });
+    this.authService.updateAnonymousCredentials({ role: undefined });
     this.router.navigate(['../../'], { relativeTo: this.route, queryParams: this.route.snapshot.queryParams });
   }
 }
