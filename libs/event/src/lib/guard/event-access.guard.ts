@@ -8,7 +8,7 @@ import { switchMap } from 'rxjs/operators';
 import { EventService } from '../+state';
 
 @Injectable({ providedIn: 'root' })
-export class EventAccessGuard implements CanActivate { //@TODO #6756 rework urltree 
+export class EventAccessGuard implements CanActivate {
 
   constructor(
     private service: EventService,
