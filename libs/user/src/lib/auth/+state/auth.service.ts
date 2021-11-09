@@ -174,17 +174,16 @@ export class AuthService extends FireAuthService<AuthState> {
   /**
    * Sign in an user anonymously if not already connected,
    * he will get an uid and will be stored in firebase auth as anonymous
-   * @returns Promise<firebase.auth.UserCredential>
+   * @returns Promise<AnonymousCredentials>
    */
   async signInAnonymously() {
-    const currentUser = firebase.auth().currentUser;
-    if (!currentUser) {
-      const creds = await firebase.auth().signInAnonymously();
-      this.updateAnonymousCredentials({ uid: creds.user.uid }, { reset: true });
-      return creds;
-    } else {
-      this.updateAnonymousCredentials({ uid: currentUser.uid });
+    const currentUser = await this.user;
+    if (currentUser) {
+      return this.updateAnonymousCredentials({ uid: currentUser.uid });
     }
+
+    const creds = await this.auth.signInAnonymously();
+    return this.updateAnonymousCredentials({ uid: creds.user.uid }, { reset: true });
   }
 
   /**
@@ -255,26 +254,22 @@ export class AuthService extends FireAuthService<AuthState> {
 
   public resetAnonymousCredentials() {
     const keys = ['uid', 'role', 'email', 'invitationId', 'lastName', 'firstName'];  // keys of AnonymousCredentials
-    keys.forEach(k => {
-      sessionStorage.removeItem(`anonymousCredentials.${k}`);
-    });
+    keys.forEach(k => sessionStorage.removeItem(`anonymousCredentials.${k}`));
   }
 
-  public updateAnonymousCredentials(anonymousCredentials: Partial<AnonymousCredentials>, options?: { reset: boolean }) {
+  public updateAnonymousCredentials(creds: Partial<AnonymousCredentials>, options?: { reset: boolean }) {
 
-    if (options?.reset) { // @TODO #6756 useful ?
+    if (options?.reset) {
       this.resetAnonymousCredentials();
     }
 
-    Object.keys(anonymousCredentials).forEach(k => {
-      if (!anonymousCredentials[k]) {
-        sessionStorage.removeItem(`anonymousCredentials.${k}`);
-      } else {
-        sessionStorage.setItem(`anonymousCredentials.${k}`, anonymousCredentials[k]);
-      }
-    })
+    for (const [key, value] of Object.entries(creds)) {
+      !value ? sessionStorage.removeItem(`anonymousCredentials.${key}`) : sessionStorage.setItem(`anonymousCredentials.${key}`, value as string);
+    }
 
     this.anonymousCredentials$.next(this.anonymousCredentials);
+
+    return this.anonymousCredentials;
   }
 
   get anonymousCredentials(): AnonymousCredentials {
