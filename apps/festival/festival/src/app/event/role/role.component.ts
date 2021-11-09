@@ -4,7 +4,7 @@ import { AuthService } from '@blockframes/auth/+state';
 import { AnonymousRole } from '@blockframes/auth/+state/auth.model';
 import { EventService } from '@blockframes/event/+state';
 @Component({
-  selector: 'event-role',
+  selector: 'festival-event-role',
   templateUrl: './role.component.html',
   styleUrls: ['./role.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

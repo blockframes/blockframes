@@ -5,7 +5,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
-  selector: 'event-identity',
+  selector: 'festival-event-identity',
   templateUrl: './identity.component.html',
   styleUrls: ['./identity.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

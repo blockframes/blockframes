@@ -13,7 +13,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { pluck, switchMap } from 'rxjs/operators';
 
 @Component({
-  selector: 'event-lobby',
+  selector: 'festival-event-lobby',
   templateUrl: './lobby.component.html',
   styleUrls: ['./lobby.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

@@ -9,7 +9,7 @@ import { fade } from '@blockframes/utils/animations/fade';
 import { AuthQuery, AuthService } from '@blockframes/auth/+state';
 
 @Component({
-  selector: 'event-view',
+  selector: 'festival-event-view',
   templateUrl: './view.component.html',
   styleUrls: ['./view.component.scss'],
   animations: [fade],

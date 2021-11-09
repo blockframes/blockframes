@@ -28,7 +28,7 @@ const isMeeting = (meetingEvent: Event): meetingEvent is Event<Meeting> => {
 };
 
 @Component({
-  selector: 'event-session',
+  selector: 'festival-event-session',
   templateUrl: './session.component.html',
   styleUrls: ['./session.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
