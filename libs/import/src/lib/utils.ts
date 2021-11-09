@@ -133,8 +133,39 @@ export async function getUser(query: { email: string } | { id: string }, userSer
 }
 
 export function getDate(value: string, errorData: { field: string, name: string }) {
-  const date = new Date(value);
+
+  let date = new Date(value);
+
+  // some time excel might store the date as a the number of DAYS since 1900/1/1
+  // so 1 = 1900/1/1   and   42396 = 2016/1/27
+  // if we leave the date like that and we do `new Date('42396')` we will get 42396/1/1
+  // This will break firestore (Timestamp seconds out of range error)
+  // If the value can be parsed as a number, we should expect excel format and convert it into a correct js date
+  // In Excel format the unix epoch 1970/1/1 is encoded as 25569
+
+  // (╯°□°)╯︵ ┻━┻
+
+  const isExcelDate = !isNaN(Number(value));
+  if (isExcelDate) {
+    const excelNumberOfDays = Number(value);
+    const unixNumberOfDays = 25_569;
+    const millisecondsInOneDay = 24 * 60 * 60 * 1000;
+    date = new Date( (excelNumberOfDays - unixNumberOfDays) * millisecondsInOneDay );
+  }
+
   if (isNaN(date.getTime())) throw new WrongValueError(errorData);
+
+  // if date seems strange we throw an Error
+  const year = date.getFullYear();
+  if (year < 1895 || year > 2200) {
+    throw new Error(JSON.stringify({
+      type: 'error',
+      field: errorData.field,
+      name: `Invalid ${errorData.name}`,
+      reason: 'The date seems too far away in the past or in the future.',
+      hint: 'Date must be between 1895 and 2200, if the date seems to be correct please check that Excel format the cell as a Date.'
+    }));
+  }
   return date;
 }
 
