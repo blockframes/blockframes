@@ -1,11 +1,10 @@
 
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-
 import { Observable } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
-
-import { Event, EventQuery } from '@blockframes/event/+state';
+import { filter, map, pluck, switchMap } from 'rxjs/operators';
+import { Event, EventService } from '@blockframes/event/+state';
 import { Meeting, MeetingAttendee } from '@blockframes/event/+state/event.firestore';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'event-meeting-session-ended',
@@ -20,13 +19,17 @@ export class MeetingEndedComponent implements OnInit {
   attendees$: Observable<MeetingAttendee[]>;
 
   constructor(
-    private eventQuery: EventQuery,
+    private eventService: EventService,
+    private route: ActivatedRoute,
   ) { }
 
   ngOnInit() {
-    const { localSessionStart } = this.eventQuery.getValue();
+    const localSessionStart = this.eventService.getLocalSession();
     this.duration = Date.now() - localSessionStart;
-    this.event$ = this.eventQuery.selectActive<Event<Meeting>>() as Observable<Event<Meeting>>;
+    this.event$ = this.route.params.pipe(
+      pluck('eventId'),
+      switchMap((eventId: string) => this.eventService.valueChanges(eventId) as Observable<Event<Meeting>>),
+    );
     this.attendees$ = this.event$.pipe(
       filter(event => Object.keys(event.meta.attendees).length > 0),
       map(event => Object.values(event.meta.attendees)),

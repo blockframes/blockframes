@@ -1,7 +1,6 @@
 // Angular
 import { Component, ChangeDetectionStrategy, OnInit, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
-import { CdkScrollable } from '@angular/cdk/overlay';
 
 // RxJs
 import { Observable } from 'rxjs';
@@ -31,7 +30,6 @@ export class EventComponent implements OnInit {
   )
 
   @ViewChild(MatSidenav) sidenav: MatSidenav;
-  @ViewChild(CdkScrollable) cdkScrollable: CdkScrollable
 
   constructor(
     private orgQuery: OrganizationQuery,
@@ -48,14 +46,6 @@ export class EventComponent implements OnInit {
       switchMap(movieIds => this.movieService.getValue(movieIds)),
       map((movies: Movie[]) => movies.filter(filterMovieByAppAccess(getCurrentApp(this.routerQuery))).length)
     );
-  }
-
-  scrollToTop() {
-    /* When the component is init, the cdk is not ready yet */
-    if (this.cdkScrollable) {
-      this.cdkScrollable.scrollTo({ top: 0 });
-      this.sidenav.close();
-    }
   }
 }
 

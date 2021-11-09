@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@blockframes/auth/+state';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { EventQuery } from '@blockframes/event/+state';
 
 @Component({
   selector: 'event-email',
@@ -18,10 +17,8 @@ export class EmailComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private snackBar: MatSnackBar,
-    private eventQuery: EventQuery,
   ) { }
 
-  public eventId = this.eventQuery.getActiveId();
   public emailForm = new FormGroup({
     firstName: new FormControl('', [Validators.required]),
     lastName: new FormControl('', [Validators.required]),
@@ -42,7 +39,7 @@ export class EmailComponent implements OnInit {
     // Update store with from value
     this.authService.updateAnonymousCredentials({ lastName, firstName, email });
     // Redirect user to event view
-    this.router.navigate(['../i'], { relativeTo: this.route, queryParams: this.route.snapshot.queryParams });
+    this.router.navigate(['../../r/i'], { relativeTo: this.route, queryParams: this.route.snapshot.queryParams });
   }
 
   clickBack() {

@@ -18,14 +18,14 @@ export class EventLoginComponent implements OnInit {
   });
   public buttonText = 'Log in';
   private snackbarDuration = 8000;
-  
+
   constructor(
     private service: AuthService,
     private router: Router,
     private route: ActivatedRoute,
     private snackBar: MatSnackBar,
-    ) { }
-  
+  ) { }
+
   ngOnInit() {
     const { email } = this.route.snapshot.queryParams;
     this.loginForm.get('email').setValue(email);
@@ -39,8 +39,11 @@ export class EventLoginComponent implements OnInit {
     try {
       this.buttonText = 'Logging in...'
       const { email, password } = this.loginForm.value;
-      this.service.updateAnonymousCredentials({}, { reset: true});
+      this.service.updateAnonymousCredentials({}, { reset: true });
       await this.service.signin(email.trim(), password);
+
+      // Redirect user to event view
+      this.router.navigate(['../../r/i'], { relativeTo: this.route, queryParams: this.route.snapshot.queryParams });
     } catch (err) {
       this.buttonText = 'Log in';
       console.error(err); // let the devs see what happened

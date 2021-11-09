@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/auth';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
 import { AuthService } from '@blockframes/auth/+state';
-import { hasAnonymousIdentity } from '@blockframes/auth/+state/auth.model';
 import { createInvitation, InvitationService } from '@blockframes/invitation/+state';
 import { combineLatest } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -17,14 +15,10 @@ export class EventAccessGuard implements CanActivate {
     private invitationService: InvitationService,
     private authService: AuthService,
     private router: Router,
-    private afAuth: AngularFireAuth,
     private snackBar: MatSnackBar
   ) { }
 
   canActivate(route: ActivatedRouteSnapshot) {
-    // Listenning for authState changes
-    this.listenOnCurrentUserState();
-
     return combineLatest([
       this.authService.user,
       this.service.getValue(route.params.eventId as string),
@@ -33,49 +27,41 @@ export class EventAccessGuard implements CanActivate {
       switchMap(async ([currentUser, event, anonymousCredentials]) => {
         if (!currentUser.isAnonymous) return true;
         switch (event.accessibility) {
-          case 'public':
-            // We just check that anonymous user have lastName and firstName
-            return hasAnonymousIdentity(anonymousCredentials, event.accessibility) || this.router.navigate([`/event/${event.id}`]);
           case 'invitation-only': {
-
-            if (route.queryParams?.i && !anonymousCredentials.invitationId) {
+            const credentialsUpdateNeeded = !anonymousCredentials.invitationId || anonymousCredentials.invitationId !== route.queryParams?.i;
+            if (route.queryParams?.i && credentialsUpdateNeeded) {
               this.authService.updateAnonymousCredentials({ invitationId: route.queryParams?.i });
             }
 
             const invitationId = route.queryParams?.i as string || anonymousCredentials?.invitationId;
             if (invitationId) {
               const invitation = await this.invitationService.getValue(invitationId).catch(() => createInvitation());
-              // We check if invitation is for event and email is same as current
-              if (invitation?.toUser?.email === anonymousCredentials?.email && invitation?.eventId === event.id) {
-                return hasAnonymousIdentity(anonymousCredentials, event.accessibility) || this.router.navigate([`/event/${event.id}`], { queryParams: route.queryParams });
-              } else {
-                this.snackBar.open('Incorrect invitation for event', 'close', { duration: 5000 });
-                this.router.navigate(['/']);
+              const isEmailMatchingInvitation = invitation?.toUser?.email === anonymousCredentials?.email;
+              if (!isEmailMatchingInvitation) {
+                this.snackBar.open('Provided email does not match invitation', 'close', { duration: 5000 });
+                this.authService.updateAnonymousCredentials({ email: undefined });
+                this.router.navigate([`/event/${event.id}`], { queryParams: route.queryParams });
                 return false;
               }
+
+              const isInvitationMatchingEvent = invitation?.eventId === event.id;
+              if (!isInvitationMatchingEvent) {
+                this.snackBar.open('Incorrect invitation for event', 'close', { duration: 5000 });
+                await this.authService.signOut();
+                return false;
+              }
+
+              return true;
             } else {
-              this.snackBar.open('Invitation not found', 'close', { duration: 5000 });
-              this.router.navigate(['/']);
+              this.snackBar.open('Missing invitation parameter', 'close', { duration: 5000 });
+              await this.authService.signOut();
               return false;
             }
           }
-          case 'private':
-            this.snackBar.open('You need to log-in for this event', 'close', { duration: 5000 });
-            this.router.navigate([`/event/${event.id}/r/login`]);
-            return false;
+          default:
+            return true;
         }
       }));
-  }
-
-  private listenOnCurrentUserState() {
-    let user;
-    this.afAuth.authState.subscribe(u => {
-      if (user && !u) {
-        this.router.navigate(['/']);
-      } else {
-        user = u;
-      }
-    });
   }
 }
 

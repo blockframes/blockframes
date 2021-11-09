@@ -1,12 +1,9 @@
 
 import { Injectable } from '@angular/core';
-import { CanActivate, Router, UrlTree } from '@angular/router';
-
+import { ActivatedRouteSnapshot, CanActivate, Router, UrlTree } from '@angular/router';
 import { AuthQuery, AuthService } from '@blockframes/auth/+state';
-
-import { EventQuery } from '../+state';
+import { EventService } from '../+state';
 import { Meeting } from '../+state/event.firestore';
-
 
 @Injectable({ providedIn: 'root' })
 export class SessionGuard implements CanActivate {
@@ -14,12 +11,13 @@ export class SessionGuard implements CanActivate {
   constructor(
     private authQuery: AuthQuery,
     private authService: AuthService,
-    private eventQuery: EventQuery,
+    private eventService: EventService,
     private router: Router,
   ) { }
 
-  async canActivate(): Promise<boolean | UrlTree> {
-    const event = this.eventQuery.getActive();
+  async canActivate(next: ActivatedRouteSnapshot): Promise<boolean | UrlTree> {
+    const eventId: string = next.params.eventId;
+    const event = await this.eventService.getValue(eventId);
 
     if (event.isOwner) {
       return true;

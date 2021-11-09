@@ -54,7 +54,8 @@ export class LobbyComponent implements OnInit, OnDestroy {
         this.dynTitle.setPageTitle(this.event.title, 'Lobby');
         const attendees = (this.event.meta as Meeting).attendees;
         this.ownerIsPresent = Object.values(attendees).some(value => value.status === 'owner');
-        this.attendeeStatus = this.event.isOwner ? 'owner' : attendees[this.authQuery.userId || this.authService.anonymousUserId]?.status;
+        const uid = this.authQuery.userId || this.authService.anonymousUserId;
+        this.attendeeStatus = this.event.isOwner ? 'owner' : attendees[uid]?.status;
         if (this.attendeeStatus === 'accepted') {
           this.router.navigate(['../', 'session'], { relativeTo: this.route });
         }
