@@ -15,7 +15,6 @@ import { DisplayNameModule, DisplayPositionModule } from '@blockframes/utils/pip
 import { CountdownModule } from '@blockframes/ui/countdown/countdown.module';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { InvitationActionModule } from '@blockframes/invitation/components/action/action.module';
-import { EventLayoutModule } from '@blockframes/ui/layout/event/event.module';
 
 import { MatButtonModule} from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -37,7 +36,6 @@ import { MatIconModule } from '@angular/material/icon';
     InvitationActionModule,
     CountdownModule,
     ToLabelModule,
-    EventLayoutModule,
     MatButtonModule,
     MatIconModule,
     RouterModule.forChild([{ path: '', component: EventViewComponent }])

@@ -1,6 +1,8 @@
 // Angular
 import { Component, ChangeDetectionStrategy, OnInit, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
+import { RouterOutlet } from '@angular/router';
+import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 
 // RxJs
 import { Observable } from 'rxjs';
@@ -14,11 +16,13 @@ import { OrganizationQuery } from '@blockframes/organization/+state';
 import { MovieService, Movie } from '@blockframes/movie/+state'
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentApp, App } from '@blockframes/utils/apps';
+import { CdkScrollable } from '@angular/cdk/scrolling';
 
 @Component({
   selector: 'layout-event',
   templateUrl: './event.component.html',
   styleUrls: ['./event.component.scss'],
+  animations: [routeAnimation],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EventComponent implements OnInit {
@@ -30,7 +34,8 @@ export class EventComponent implements OnInit {
   )
 
   @ViewChild(MatSidenav) sidenav: MatSidenav;
-
+  @ViewChild(CdkScrollable) cdkScrollable: CdkScrollable
+  
   constructor(
     private orgQuery: OrganizationQuery,
     private authQuery: AuthQuery,
@@ -46,6 +51,18 @@ export class EventComponent implements OnInit {
       switchMap(movieIds => this.movieService.getValue(movieIds)),
       map((movies: Movie[]) => movies.filter(filterMovieByAppAccess(getCurrentApp(this.routerQuery))).length)
     );
+  }
+
+  scrollToTop() {
+    /* When the component is init, the cdk is not ready yet */
+    if (this.cdkScrollable) {
+      this.cdkScrollable.scrollTo({ top: 0 });
+      this.sidenav.close();
+    }
+  }
+
+  animationOutlet(outlet: RouterOutlet) {
+    return outlet?.activatedRouteData?.animation;
   }
 }
 

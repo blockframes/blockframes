@@ -1,5 +1,9 @@
-﻿import { Component, NgModule } from '@angular/core';
-import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
+﻿import { NgModule } from '@angular/core';
+import { MainEventComponent } from './main-event.component';
+import { AsideModule } from '@blockframes/ui/layout/marketplace/aside/aside.module';
+import { EventLayoutModule } from '@blockframes/ui/layout/event/event.module';
+import { CommonModule } from '@angular/common';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Routes
 import { RouterModule, Routes } from '@angular/router';
@@ -16,16 +20,12 @@ import { NoEventRoleGuard } from './guard/no-event-role.guard';
 import { IdentityGuard } from './guard/identity.guard';
 import { EventAuthGuard } from './guard/event-auth.guard';
 
-@Component({
-  selector: 'event-main-component',
-  template: '<router-outlet layout></router-outlet>',
-})
-export class MainEventComponent { }
+// Material
+import { MatIconModule } from '@angular/material/icon';
 
 const routes: Routes = [
   {
     path: ':eventId',
-    component: MainEventComponent,
     canActivate: [EventAuthGuard],
     children: [
       {
@@ -75,6 +75,7 @@ const routes: Routes = [
           },
           {
             path: 'i',
+            component: MainEventComponent,
             canActivate: [EventAccessGuard],
             children: [
               {
@@ -114,7 +115,11 @@ const routes: Routes = [
   declarations: [MainEventComponent],
   imports: [
     RouterModule.forChild(routes),
-    MatLayoutModule,
+    CommonModule,
+    FlexLayoutModule,
+    EventLayoutModule,
+    AsideModule,
+    MatIconModule,
   ]
 })
 export class MainModule { }

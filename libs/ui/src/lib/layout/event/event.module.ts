@@ -10,7 +10,6 @@ import { AuthWidgetModule } from '@blockframes/auth/components/widget/widget.mod
 import { AppBarModule } from '@blockframes/ui/app-bar';
 import { AppLogoModule } from '../app-logo/app-logo.module';
 import { FooterModule } from '../footer/footer.module';
-import { AsideModule } from '../marketplace/aside/aside.module';
 
 // Material
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -20,6 +19,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatBadgeModule } from '@angular/material/badge';
 import { RouterModule } from '@angular/router';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 @NgModule({
   declarations: [EventComponent],
@@ -28,10 +28,11 @@ import { RouterModule } from '@angular/router';
     // Angular
     RouterModule,
     CommonModule,
+    MatLayoutModule,
+    ScrollingModule,
     FlexLayoutModule,
     AppLogoModule,
     FooterModule,
-    AsideModule,
 
     // Material
     MatToolbarModule,
@@ -50,4 +51,3 @@ import { RouterModule } from '@angular/router';
   ]
 })
 export class EventLayoutModule { }
-MatLayoutModule
