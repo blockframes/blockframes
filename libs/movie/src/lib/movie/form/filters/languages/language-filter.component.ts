@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, Input, OnInit, OnDestroy, ChangeDet
 import { FormList, FormEntity } from '@blockframes/utils/form';
 import { GetKeys } from '@blockframes/utils/static-model/static-model';
 import { Subscription, combineLatest, Observable } from 'rxjs';
-import { debounceTime, startWith, throttleTime } from 'rxjs/operators';
+import { startWith } from 'rxjs/operators';
 import { LanguagesSearch, LanguageVersionControl } from '@blockframes/movie/form/search.form';
 import { FormControl } from '@angular/forms';
 import { Language } from '@blockframes/utils/static-model';
@@ -54,8 +54,7 @@ export class LanguageFilterComponent implements OnInit, OnDestroy {
       );
 
     /** Updates selectedLanguages and versions FormList when reset is called on languagesFilterForm */
-    const sub1 = this.languagesFilterForm.valueChanges.pipe(throttleTime(100)).subscribe((res: LanguagesSearch) => {
-      console.log({ res })
+    const sub1 = this.languagesFilterForm.valueChanges.subscribe((res: LanguagesSearch) => {
       if (Object.values(res).every(value => value.length === 0)) {
         this.languagesFilterForm.markAsPristine();
         if (!this.rebuildingForm) {
@@ -75,10 +74,9 @@ export class LanguageFilterComponent implements OnInit, OnDestroy {
   }
 
   hardReset(data?: LanguagesSearch) {
-    if(!data) return;
+    if (!data) return;
     const duplicateCountries: Language[] = []
     const _versions: (keyof LanguagesSearch)[] = [];
-    console.log({ data })
     for (const k in data) {
       duplicateCountries.push(...data[k]);
       _versions.push(k as keyof LanguagesSearch)

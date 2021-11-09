@@ -12,7 +12,7 @@ import {
 import { FormList } from '@blockframes/utils/form';
 import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 import { staticModel, Scope } from '@blockframes/utils/static-model';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 @Component({
@@ -23,7 +23,6 @@ import { filter } from 'rxjs/operators';
 })
 export class StaticCheckBoxesComponent implements OnInit, OnDestroy {
   private sub: Subscription;
-  checked$: Observable<Record<string, boolean>>;
 
   @ViewChildren(MatCheckbox) checkboxes: QueryList<MatCheckbox>
 
