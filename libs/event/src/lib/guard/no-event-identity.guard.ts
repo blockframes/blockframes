@@ -27,18 +27,21 @@ export class NoEventIdentityGuard implements CanActivate {
       map(([userAuth, creds, event]) => {
         if (userAuth?.isAnonymous) {
 
+          const eventId = event.id;
+          const queryParams = next.queryParams;
+
           if (!creds?.role) {
-            return this.router.createUrlTree([`/event/${next.params.eventId}/auth/role`], { queryParams: next.queryParams });
-          } else if (creds?.role === 'organizer') { // If user choosen "organizer", he needs to login
-            return this.router.createUrlTree([`/event/${event.id}/auth/login`], { queryParams: next.queryParams });
+            return this.router.createUrlTree([`/event/${eventId}/auth/role`], { queryParams });
+          } else if (creds.role === 'organizer') { // If user choosen "organizer", he needs to login
+            return this.router.createUrlTree([`/event/${eventId}/auth/login`], { queryParams });
           } else if (hasAnonymousIdentity(creds, event.accessibility)) {
-            return this.router.createUrlTree([`/event/${event.id}/r/i`], { queryParams: next.queryParams });
+            return this.router.createUrlTree([`/event/${eventId}/r/i`], { queryParams });
           } else if (event.accessibility === 'invitation-only' && currentPage !== 'email') {
-            return this.router.createUrlTree([`/event/${event.id}/auth/email`], { queryParams: next.queryParams });
+            return this.router.createUrlTree([`/event/${eventId}/auth/email`], { queryParams });
           } else if (event.accessibility === 'public' && currentPage !== 'identity') {
-            return this.router.createUrlTree([`/event/${event.id}/auth/identity`], { queryParams: next.queryParams });
+            return this.router.createUrlTree([`/event/${eventId}/auth/identity`], { queryParams });
           } else if (event.accessibility === 'private') {
-            return this.router.createUrlTree([`/event/${event.id}/auth/login`], { queryParams: next.queryParams });
+            return this.router.createUrlTree([`/event/${eventId}/auth/login`], { queryParams });
           }
 
         }

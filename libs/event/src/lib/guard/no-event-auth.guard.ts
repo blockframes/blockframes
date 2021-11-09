@@ -20,10 +20,14 @@ export class NoEventAuthGuard implements CanActivate {
       this.authService.anonymousCredentials$,
     ]).pipe(
       map(([userAuth, creds]) => {
+
+        const eventId = next.params.eventId;
+        const queryParams = next.queryParams;
+
         if (!userAuth?.isAnonymous) {
-          return this.router.createUrlTree([`/event/${next.params.eventId}/r/i`], { queryParams: next.queryParams });
+          return this.router.createUrlTree([`/event/${eventId}/r/i`], { queryParams });
         } else if (!creds?.role) {
-          return this.router.createUrlTree([`/event/${next.params.eventId}/auth/role`], { queryParams: next.queryParams });
+          return this.router.createUrlTree([`/event/${eventId}/auth/role`], { queryParams });
         }
         return true;
       })
