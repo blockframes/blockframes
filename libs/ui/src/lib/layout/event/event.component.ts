@@ -39,7 +39,7 @@ export class EventComponent implements OnInit {
 
   @ViewChild(MatSidenav) sidenav: MatSidenav;
   @ViewChild(CdkScrollable) cdkScrollable: CdkScrollable
-
+  
   constructor(
     private orgQuery: OrganizationQuery,
     private authQuery: AuthQuery,
@@ -88,7 +88,6 @@ export class EventComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(exit => {
-      console.log(exit);
       if (exit === true) {
         this.authService.signOut();
       }

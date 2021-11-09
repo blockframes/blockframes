@@ -29,7 +29,7 @@ export class EventAuthGuard extends CollectionGuard<AuthState> {
         /**
          * User is not logged in
          */
-        if (!userAuth) { return this.router.navigate(['/']) }
+        if (!userAuth) return this.router.navigate(['/']);
 
         /**
          * User is anonymous.

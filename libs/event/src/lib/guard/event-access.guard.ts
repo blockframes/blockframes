@@ -28,24 +28,24 @@ export class EventAccessGuard implements CanActivate {
         if (!currentUser.isAnonymous) return true;
         switch (event.accessibility) {
           case 'invitation-only': {
-
-            if (route.queryParams?.i && !anonymousCredentials.invitationId || anonymousCredentials.invitationId !== route.queryParams.i) {
+            const credentialsUpdateNeeded = !anonymousCredentials.invitationId || anonymousCredentials.invitationId !== route.queryParams?.i;
+            if (route.queryParams?.i && credentialsUpdateNeeded) {
               this.authService.updateAnonymousCredentials({ invitationId: route.queryParams?.i });
             }
 
             const invitationId = route.queryParams?.i as string || anonymousCredentials?.invitationId;
             if (invitationId) {
               const invitation = await this.invitationService.getValue(invitationId).catch(() => createInvitation());
-              // Is invitation email the same as provided ?
-              if (invitation?.toUser?.email !== anonymousCredentials?.email) {
+              const isEmailMatchingInvitation = invitation?.toUser?.email === anonymousCredentials?.email;
+              if (!isEmailMatchingInvitation) {
                 this.snackBar.open('Provided email does not match invitation', 'close', { duration: 5000 });
                 this.authService.updateAnonymousCredentials({ email: undefined });
                 this.router.navigate([`/event/${event.id}`], { queryParams: route.queryParams });
                 return false;
               }
 
-              // Is event id same as in invitaition ?
-              if (invitation?.eventId !== event.id) {
+              const isInvitationMatchingEvent = invitation?.eventId === event.id;
+              if (!isInvitationMatchingEvent) {
                 this.snackBar.open('Incorrect invitation for event', 'close', { duration: 5000 });
                 await this.authService.signOut();
                 return false;

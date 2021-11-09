@@ -356,12 +356,12 @@ async function sendRequestToAttendEventCreatedEmail(recipient: User, notificatio
   const userOrg = getOrgEmailData(org);
   const userSubject = getUserEmailData(notification.user);
   const eventData: EventEmailData = getEventEmailData(eventDoc, userSubject.email, notification.invitation.id);
-  const link = getEventLink(
-    notification.invitation,
-    eventData,
-    org,
-    userSubject.email
-  );
+  const link = getEventLink({
+    invitation: notification.invitation,
+    eventData: eventData,
+    org: org,
+    email: userSubject.email
+  });
   const urlToUse = applicationUrl[eventAppKey];
   const toAdmin = getUserEmailData(recipient);
 
@@ -377,18 +377,19 @@ async function sendInvitationToAttendEventCreatedEmail(recipient: User, notifica
   const toUser = getUserEmailData(recipient);
   const urlToUse = applicationUrl[eventAppKey];
   const orgData = getOrgEmailData(org);
-  const link = getEventLink(
-    notification.invitation,
-    eventEmailData,
-    org,
-    recipient.email
-  );
+  const link = getEventLink({
+    invitation: notification.invitation,
+    eventData: eventEmailData,
+    org: org,
+    email: recipient.email
+  });
   console.log(`Sending invitation email for an event (${notification.docId}) from ${orgData.denomination} to : ${toUser.email}`);
   const templateInvitation = invitationToEventFromOrg(toUser, orgData, eventEmailData, link, urlToUse);
   return sendMailFromTemplate(templateInvitation, eventAppKey, groupIds.unsubscribeAll).catch(e => console.warn(e.message));
 }
 
-function getEventLink(invitation: PublicInvitation, eventData: EventEmailData, org: OrganizationDocument, userEmail: string) {
+function getEventLink(data: { invitation: PublicInvitation, eventData: EventEmailData, org: OrganizationDocument, email: string }) {
+  const { invitation, eventData, org, email } = data;
   if (invitation.mode === 'request' || (invitation.mode === 'invitation' && eventData.accessibility === 'private')) {
     if (canAccessModule('marketplace', org)) {
       return '/c/o/marketplace/invitations';
@@ -398,7 +399,7 @@ function getEventLink(invitation: PublicInvitation, eventData: EventEmailData, o
       return '';
     }
   } else {
-    return `/event/${eventData.id}/r/i?email=${userEmail}&i=${invitation.id}`;
+    return `/event/${eventData.id}/r/i?email=${email}&i=${invitation.id}`;
   }
 }
 
