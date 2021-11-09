@@ -11,7 +11,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EventIdenityComponent {
-  public identityForm = new FormGroup({
+  public form = new FormGroup({
     firstName: new FormControl('', [Validators.required]),
     lastName: new FormControl('', [Validators.required])
   });
@@ -24,15 +24,12 @@ export class EventIdenityComponent {
   ) { }
 
   validateIdentity() {
-    if (!this.identityForm.valid) {
+    if (!this.form.valid) {
       this.snackBar.open('Form invalid, please check error messages', 'close', { duration: 2000 });
       return;
     }
     // Update store with from value
-    this.authService.updateAnonymousCredentials({
-      lastName: this.identityForm.value.lastName,
-      firstName: this.identityForm.value.firstName
-    });
+    this.authService.updateAnonymousCredentials(this.form.value);
     // Redirect user to event view
     this.router.navigate(['../../r/i'], { relativeTo: this.route, queryParams: this.route.snapshot.queryParams });
   }

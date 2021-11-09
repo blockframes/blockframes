@@ -7,6 +7,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 // Material
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 // Blockframes
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
@@ -19,6 +20,7 @@ import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
     FlexLayoutModule,
     MatButtonModule,
     MatCardModule,
+    MatIconModule,
     ImageModule,
     AppLogoModule,
     RouterModule.forChild([{ path: '', component: EventRoleComponent }]),

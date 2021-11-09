@@ -18,7 +18,7 @@ export class EventRoleComponent {
     private router: Router,
   ) { }
 
-  async click(role: AnonymousRole) {
+  async update(role: AnonymousRole) {
     const eventId: string = this.route.snapshot.params.eventId;
     const event = await this.eventService.getValue(eventId);
     // Update store with from value

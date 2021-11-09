@@ -1,6 +1,17 @@
-section {
+:host-context(body.dark-theme) :host {
+  background-image: url("/assets/images/dark/stars_wallpaper.svg");
+}
+:host-context(body.light-theme) :host {
+  background-image: url("/assets/images/light/stars_wallpaper.svg");
+}
+:host {
   width: 100vw;
   height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
   background-position: center;
   background-repeat: no-repeat;
 
@@ -19,6 +30,10 @@ section {
     padding: 16px;
     text-align: center;
 
+    header {
+      text-align: left;
+    }
+
     form {
       padding: 40px;
 
@@ -32,5 +47,9 @@ section {
         margin-bottom: 58px;
       }
     }
+  }
+
+  .snack-bar-text {
+    margin-right: 24px;
   }
 }

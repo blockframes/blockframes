@@ -19,7 +19,7 @@ export class EmailComponent implements OnInit {
     private snackBar: MatSnackBar,
   ) { }
 
-  public emailForm = new FormGroup({
+  public form = new FormGroup({
     firstName: new FormControl('', [Validators.required]),
     lastName: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required, Validators.email])
@@ -27,17 +27,16 @@ export class EmailComponent implements OnInit {
 
   ngOnInit() {
     const { email } = this.route.snapshot.queryParams;
-    this.emailForm.get('email').setValue(email);
+    this.form.get('email').setValue(email);
   }
 
   validateForm() {
-    if (!this.emailForm.valid) {
+    if (!this.form.valid) {
       this.snackBar.open('Form invalid, please check error messages', 'close', { duration: 2000 });
       return;
     }
-    const { firstName, lastName, email } = this.emailForm.value;
     // Update store with from value
-    this.authService.updateAnonymousCredentials({ lastName, firstName, email });
+    this.authService.updateAnonymousCredentials(this.form.value);
     // Redirect user to event view
     this.router.navigate(['../../r/i'], { relativeTo: this.route, queryParams: this.route.snapshot.queryParams });
   }
