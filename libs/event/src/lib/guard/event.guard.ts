@@ -42,36 +42,36 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
       return this.router.parseUrl(`/event/${this.event.id}/r/i`);
     }
 
+    const hasRegularInvitation = () => {
+      return this.invitationQuery.hasEntity((invitation: Invitation) => {
+        if (invitation.eventId !== this.event.id) return false;
+        if (invitation.status !== 'accepted') return false;
+        const hasRequested = invitation.mode === 'request' && invitation.fromUser.uid === this.authQuery.userId;
+        const isInvited = invitation.mode === 'invitation' && invitation.toUser.uid === this.authQuery.userId;
+        return hasRequested || isInvited;
+      });
+    }
+
     switch (this.event.accessibility) {
       case 'public':
         return true;
       case 'invitation-only': {
 
-        if (this.event.isOwner) {
+        if (this.event.isOwner) return true;
+
+        const hasAnonymousInvitation = async () => {
+          const anonymousCreds = this.authService.anonymousCredentials;
+          const invitationId = anonymousCreds?.invitationId;
+          if (!invitationId) return false;
+          const invitation = await this.invitationService.getValue(invitationId);
+          if (invitation?.eventId !== this.event.id) return false;
+          if (invitation?.status !== 'accepted') return false;
+          if (invitation?.toUser?.email !== anonymousCreds.email) return false;
           return true;
         }
 
-        const hasRealAccountInvitation = this.invitationQuery.hasEntity((invitation: Invitation) => {
-          return (
-            invitation.eventId === this.event.id &&
-            invitation.status === 'accepted' && (
-              invitation.mode === 'request' && invitation.fromUser.uid === this.authQuery.userId ||
-              invitation.mode === 'invitation' && invitation.toUser.uid === this.authQuery.userId
-            )
-          );
-        });
-
-        let hasAnonymousInvitation = false;
-        const anonymousCreds = this.authService.anonymousCredentials;
-        const invitationId = anonymousCreds?.invitationId;
-        if (invitationId && this.event.accessibility === 'invitation-only') {
-          const invitation = await this.invitationService.getValue(invitationId);
-          hasAnonymousInvitation = invitation?.toUser?.email === anonymousCreds.email &&
-            this.event.id === invitation?.eventId && invitation.status === 'accepted'
-        }
-
         // if user wasn't invited OR hasn't accepted yet
-        if (!hasRealAccountInvitation && !hasAnonymousInvitation) {
+        if (!hasRegularInvitation() && !(await hasAnonymousInvitation())) {
           return this.router.parseUrl(`/event/${this.event.id}/r/i`);
         }
 
@@ -82,18 +82,9 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
         if (this.event.isOwner) {
           return true;
         }
-        const hasUserAccepted = this.invitationQuery.hasEntity((invitation: Invitation) => {
-          return (
-            invitation.eventId === this.event.id &&
-            invitation.status === 'accepted' && (
-              invitation.mode === 'request' && invitation.fromUser.uid === this.authQuery.userId ||
-              invitation.mode === 'invitation' && invitation.toUser.uid === this.authQuery.userId
-            )
-          );
-        });
 
         // if user wasn't invited OR hasn't accepted yet
-        if (!hasUserAccepted) {
+        if (!hasRegularInvitation()) {
           return this.router.parseUrl(`/event/${this.event.id}/r/i`);
         }
 
@@ -120,7 +111,7 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
     }
 
     // If userId = null, that means the user has disconnected. If she/he wants to logout, we don't show the confirm message
-    if (this.authQuery.userId === null && this.authService.anonymousUserId === null) {
+    if (this.authQuery.userId === null) {
       this.twilioService.disconnect();
       return true;
     } else {

@@ -89,7 +89,7 @@ export class EventComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(exit => {
       if (exit === true) {
-        this.authService.signOut();
+        this.authService.deleteAnonymousUser();
       }
     });
   }
