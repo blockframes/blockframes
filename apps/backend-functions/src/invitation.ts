@@ -190,8 +190,7 @@ export const inviteUsers = async (data: UserInvitation, context: CallableContext
     try {
       const invitationSet = await db.collection('invitations').doc(invitation.id).set(invitation);
       promiseArraySize = promises.push({ result: invitationSet, error: '' });
-    }
-    catch (error) {
+    } catch (error) {
       promiseArraySize = promises.push({ result: undefined, error });
     }
 
