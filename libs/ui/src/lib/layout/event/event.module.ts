@@ -3,6 +3,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { NgModule } from '@angular/core';
 import { EventComponent } from './event.component';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
+import { RouterModule } from '@angular/router';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 import { MatLayoutModule } from '../layout.module';
 
 // Widgets
@@ -18,8 +20,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatBadgeModule } from '@angular/material/badge';
-import { RouterModule } from '@angular/router';
-import { ScrollingModule } from '@angular/cdk/scrolling';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [EventComponent],
@@ -41,6 +42,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
     MatButtonModule,
     MatDividerModule,
     MatBadgeModule,
+    MatDialogModule,
 
     // Libraries
     ImageModule,

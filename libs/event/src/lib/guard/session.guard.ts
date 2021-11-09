@@ -19,9 +19,7 @@ export class SessionGuard implements CanActivate {
     const eventId: string = next.params.eventId;
     const event = await this.eventService.getValue(eventId);
 
-    if (event.isOwner) {
-      return true;
-    }
+    if (event.isOwner) return true;
 
     // for meeting event we also nee to check "Request Access"
     if (event.type === 'meeting') {

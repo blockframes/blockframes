@@ -56,7 +56,7 @@
           </div>
         </ng-container>
         <ng-template #anonymous>
-          <a app-logo routerLink="/"></a>
+          <button app-logo (click)="confirmLogout()"></button>
         </ng-template>
 
       </header>

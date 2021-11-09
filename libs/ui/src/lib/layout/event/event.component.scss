@@ -49,3 +49,11 @@ app-bar {
 a[app-logo] {
   outline: none;
 }
+
+button[app-logo] {
+  position: absolute;
+  cursor: pointer;
+  left: 24px;
+  background: none;
+  border: none;
+}

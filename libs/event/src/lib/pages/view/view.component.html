@@ -19,8 +19,8 @@
               <a mat-stroked-button color="primary" [routerLink]="editMeeting">Edit Event</a>
             </ng-container>
             <ng-template #notOwner>
-                <invitation-action *ngIf="invitation !== undefined" @fade [invitation]="invitation" [event]="event"></invitation-action>
-                <ng-container *ngIf="invitation?.status === 'accepted'  || event.accessibility === 'public'">
+                <invitation-action *ngIf="(invitation$ | async) !== undefined" @fade [invitation]="(invitation$ | async)" [event]="event"></invitation-action>
+                <ng-container *ngIf="(invitation$ | async)?.status === 'accepted'  || event.accessibility === 'public'">
                   <a mat-flat-button color="accent" disabled matTooltip="You'll be able to join the screening when it starts.">Access {{ event.type | titlecase }} Room</a>
                 </ng-container>
             </ng-template>
@@ -30,7 +30,7 @@
             <h6>{{ event.accessibility | toLabel:'accessibility' }} {{ event.type }}</h6>
             <pre class="mat-body-1">{{ event | eventRange }}</pre>
             <p class="mat-body-2">{{ event.meta.description }}</p>
-            <p *ngIf="invitation === null">This event has already started.</p>
+            <p *ngIf="(invitation$ | async) === null">This event has already started.</p>
             <ng-container *ngIf="event.isOwner; else notOwner">
               <h3>You are the owner of this event.</h3>
               <p>You can invite members and <a [routerLink]="editMeeting">edit the event</a> config in your dashboard.</p>
@@ -38,9 +38,9 @@
             </ng-container>
             <ng-template #notOwner>
               <ng-container *ngIf="event.accessibility !== 'public' else publicEvent">
-                <div @fade *ngIf="invitation !== undefined" fxLayout="column" fxLayoutAlign="center center">
-                  <invitation-action [invitation]="invitation" [event]="event"></invitation-action>
-                  <ng-container *ngIf="invitation?.status === 'accepted'">
+                <div @fade *ngIf="(invitation$ | async) !== undefined" fxLayout="column" fxLayoutAlign="center center">
+                  <invitation-action [invitation]="(invitation$ | async)" [event]="event"></invitation-action>
+                  <ng-container *ngIf="(invitation$ | async)?.status === 'accepted'">
                     <a test-id="event-room" mat-flat-button [routerLink]="accessRoute" color="accent">Access {{ event.type | titlecase }} Room</a>
                   </ng-container>
                 </div>
