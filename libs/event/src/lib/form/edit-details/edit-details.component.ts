@@ -42,12 +42,8 @@ export class EditDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.dialogSub) {
-      this.dialogSub.unsubscribe();
-    }
-    if (this.accessibilitySub) {
-      this.accessibilitySub.unsubscribe();
-    }
+    this.dialogSub?.unsubscribe();
+    this.accessibilitySub?.unsubscribe();
   }
 
   async accessibilityChanged(e) {

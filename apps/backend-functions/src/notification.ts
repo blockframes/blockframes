@@ -31,6 +31,7 @@ import { App, applicationUrl } from '@blockframes/utils/apps';
 import * as admin from 'firebase-admin';
 import { Movie } from '@blockframes/movie/+state';
 import { PublicInvitation } from '@blockframes/invitation/+state/invitation.firestore';
+import { logger } from 'firebase-functions';
 
 // @TODO (#2848) forcing to festival since invitations to events are only on this one
 const eventAppKey: App = 'festival';
@@ -365,9 +366,9 @@ async function sendRequestToAttendEventCreatedEmail(recipient: User, notificatio
   const urlToUse = applicationUrl[eventAppKey];
   const toAdmin = getUserEmailData(recipient);
 
-  console.log(`Sending request email to attend an event (${notification.docId}) from ${notification.user.uid} to : ${toAdmin.email}`);
+  logger.log(`Sending request email to attend an event (${notification.docId}) from ${notification.user.uid} to : ${toAdmin.email}`);
   const templateRequest = requestToAttendEventFromUser(toAdmin, userSubject, userOrg, eventData, link, urlToUse);
-  return sendMailFromTemplate(templateRequest, eventAppKey, groupIds.unsubscribeAll).catch(e => console.warn(e.message));
+  return sendMailFromTemplate(templateRequest, eventAppKey, groupIds.unsubscribeAll).catch(e => logger.warn(e.message));
 }
 
 async function sendInvitationToAttendEventCreatedEmail(recipient: User, notification: NotificationDocument) {
@@ -383,14 +384,15 @@ async function sendInvitationToAttendEventCreatedEmail(recipient: User, notifica
     org: org,
     email: recipient.email
   });
-  console.log(`Sending invitation email for an event (${notification.docId}) from ${orgData.denomination} to : ${toUser.email}`);
+  logger.log(`Sending invitation email for an event (${notification.docId}) from ${orgData.denomination} to : ${toUser.email}`);
   const templateInvitation = invitationToEventFromOrg(toUser, orgData, eventEmailData, link, urlToUse);
-  return sendMailFromTemplate(templateInvitation, eventAppKey, groupIds.unsubscribeAll).catch(e => console.warn(e.message));
+  return sendMailFromTemplate(templateInvitation, eventAppKey, groupIds.unsubscribeAll).catch(e => logger.warn(e.message));
 }
 
 function getEventLink(data: { invitation: PublicInvitation, eventData: EventEmailData, org: OrganizationDocument, email: string }) {
   const { invitation, eventData, org, email } = data;
-  if (invitation.mode === 'request' || (invitation.mode === 'invitation' && eventData.accessibility === 'private')) {
+  const isPrivateInvitation = invitation.mode === 'invitation' && eventData.accessibility === 'private';
+  if (invitation.mode === 'request' || isPrivateInvitation) {
     if (canAccessModule('marketplace', org)) {
       return '/c/o/marketplace/invitations';
     } else if (canAccessModule('dashboard', org)) {
