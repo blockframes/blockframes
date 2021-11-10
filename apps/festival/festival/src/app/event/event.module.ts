@@ -4,6 +4,7 @@ import { AsideModule } from './../marketplace/layout/aside/aside.module';
 import { EventLayoutModule } from '@blockframes/ui/layout/event/event.module';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
 // Routes
 import { RouterModule, Routes } from '@angular/router';
@@ -120,6 +121,7 @@ const routes: Routes = [
     EventLayoutModule,
     AsideModule,
     MatIconModule,
+    ImageModule
   ]
 })
 export class EventModule { }

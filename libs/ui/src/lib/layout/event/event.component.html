@@ -18,9 +18,7 @@
             <mat-icon svgIcon="menu"></mat-icon>
           </button>
           <a app-logo routerLink="."></a>
-          <a test-id="calendar-icon" mat-icon-button routerLink="/c/o/marketplace/event/calendar">
-            <mat-icon svgIcon="calendar_today"></mat-icon>
-          </a>
+          <ng-content select="header"></ng-content>
           <a test-id="heart-icon" mat-icon-button routerLink="/c/o/marketplace/wishlist">
             <mat-icon svgIcon="favorite"
               [matBadge]="wishlistCount$ | async"
