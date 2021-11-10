@@ -1,6 +1,12 @@
-section {
+:host {
   width: 100vw;
   height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background-image: url("/assets/images/light/stars_wallpaper.svg");
   background-position: center;
   background-repeat: no-repeat;
   
@@ -15,8 +21,16 @@ section {
     padding: 56px;
     text-align: center;
 
-    button p {
-      color: var(--primary);
-    }
+    button {
+      background-color: transparent;
+      border: none;
+
+      &:hover {
+        background-color: var(--background-hover);
+      }
+      h5 {
+        color: var(--primary);
+      }
+    } 
   }
 }

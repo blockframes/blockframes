@@ -11,8 +11,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EventLoginComponent implements OnInit {
-  @ViewChild('customSnackBarTemplate') customSnackBarTemplate: TemplateRef<unknown>;
-  public loginForm = new FormGroup({
+  @ViewChild('noAccount') noAccountTemplate: TemplateRef<unknown>;
+  public form = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(24)])
   });
@@ -28,17 +28,17 @@ export class EventLoginComponent implements OnInit {
 
   ngOnInit() {
     const { email } = this.route.snapshot.queryParams;
-    this.loginForm.get('email').setValue(email);
+    this.form.get('email').setValue(email);
   }
 
   async validateLogin() {
-    if (!this.loginForm.valid) {
+    if (!this.form.valid) {
       this.snackBar.open('Form invalid, please check error messages', 'close', { duration: 2000 });
       return;
     }
     try {
       this.buttonText = 'Logging in...'
-      const { email, password } = this.loginForm.value;
+      const { email, password } = this.form.value;
       this.service.updateAnonymousCredentials({}, { reset: true });
       await this.service.signin(email.trim(), password);
 
@@ -50,7 +50,7 @@ export class EventLoginComponent implements OnInit {
       if (err.message.includes('INTERNAL ASSERTION FAILED')) {
         this.snackBar.open('Network error. Please refresh this page.', 'close', { duration: this.snackbarDuration });
       } else if (err.code === 'auth/user-not-found') {
-        this.snackBar.openFromTemplate(this.customSnackBarTemplate, { duration: this.snackbarDuration });
+        this.snackBar.openFromTemplate(this.noAccountTemplate, { duration: this.snackbarDuration });
       } else {
         this.snackBar.open(err.message, 'close', { duration: this.snackbarDuration });
       }
