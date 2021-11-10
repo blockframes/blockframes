@@ -10,20 +10,23 @@
     <h1>Welcome to Archipel Market!</h1>
     <p class="mat-body-1">Please fill in your first and last name <br> and email to identify yourself.</p>
 
-    <mat-form-field appearance="outline">
-      <input test-id="firstName" matInput type="text" placeholder="First name" formControlName="firstName" required />
-      <mat-label>First name</mat-label>
-      <mat-error *ngIf="form.get('firstName').hasError('required')">
-        First name is <strong>required</strong>
-      </mat-error>
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>Last name</mat-label>
-      <input test-id="lastName" matInput type="text" placeholder="Last name" formControlName="lastName" required />
-      <mat-error *ngIf="form.get('lastName').hasError('required')">
-        Last name is <strong>required</strong>
-      </mat-error>
-    </mat-form-field>
+    <div fxLayout fxLayoutAlign="space-between center" fxLayoutGap="16px">
+      <mat-form-field appearance="outline" fxFlex="0 1">
+        <input test-id="firstName" matInput type="text" placeholder="First name" formControlName="firstName" required />
+        <mat-label>First name</mat-label>
+        <mat-error *ngIf="form.get('firstName').hasError('required')">
+          First name is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline" fxFlex="0 1">
+        <mat-label>Last name</mat-label>
+        <input test-id="lastName" matInput type="text" placeholder="Last name" formControlName="lastName" required />
+        <mat-error *ngIf="form.get('lastName').hasError('required')">
+          Last name is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+    </div>
+    
     <mat-form-field appearance="outline">
       <mat-label>Email</mat-label>
       <input test-id="email" matInput type="email" placeholder="Email" formControlName="email" required />
