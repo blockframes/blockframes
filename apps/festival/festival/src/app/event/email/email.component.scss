@@ -1,9 +1,3 @@
-:host-context(body.dark-theme) :host {
-  background-image: url("/assets/images/dark/stars_wallpaper.svg");
-}
-:host-context(body.light-theme) :host {
-  background-image: url("/assets/images/light/stars_wallpaper.svg");
-}
 :host {
   width: 100vw;
   height: 100vh;
@@ -12,6 +6,7 @@
   align-items: center;
   justify-content: center;
   position: relative;
+  background-image: url("/assets/images/light/stars_wallpaper.svg");
   background-position: center;
   background-repeat: no-repeat;
 
