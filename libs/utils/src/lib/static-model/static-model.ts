@@ -1260,7 +1260,7 @@ export const budgetRange = {
 
 export const accessibility = {
   public: 'Public',
-  'invitation-only': 'Protected',
+  protected: 'Protected',
   private: 'Private',
 } as const;
 
