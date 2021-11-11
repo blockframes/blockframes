@@ -111,20 +111,14 @@ export class TableExtractedContractsComponent implements OnInit {
    * @param importState
    */
   private async addContract(importState: ContractsImportState): Promise<boolean> {
-    const data = this.rows.data;
-    const termIds = await this.termService.add(importState.terms);
-    importState.contract.termIds = termIds;
+
+      const termIds = await this.termService.add(importState.terms);
+      importState.contract.termIds = termIds;
+
     await this.contractService.add({
       ...importState.contract,
       _meta: createDocumentMeta({createdAt: new Date()})
     });
-    const titleId = importState.contract.titleId;
-    if (!!titleId && importState.contract.type === 'mandate') {
-      const title = await this.movieService.getValue(titleId);
-      const app = getCurrentApp(this.routerQuery);
-      title.app[app].access = true;
-      this.movieService.update(title);
-    }
 
     importState.errors.push({
       type: 'error',
@@ -133,7 +127,6 @@ export class TableExtractedContractsComponent implements OnInit {
       reason: 'Contract already added',
       hint: 'Contract already added'
     });
-    this.rows.data = data;
     return true;
   }
 

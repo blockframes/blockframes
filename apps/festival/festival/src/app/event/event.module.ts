@@ -4,6 +4,7 @@ import { AsideModule } from './../marketplace/layout/aside/aside.module';
 import { EventLayoutModule } from '@blockframes/ui/layout/event/event.module';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
 // Routes
 import { RouterModule, Routes } from '@angular/router';
@@ -19,9 +20,6 @@ import { NoEventIdentityGuard } from '@blockframes/event/guard/no-event-identity
 import { NoEventRoleGuard } from '@blockframes/event/guard/no-event-role.guard';
 import { IdentityGuard } from '@blockframes/event/guard/identity.guard';
 import { EventAuthGuard } from '@blockframes/event/guard/event-auth.guard';
-
-// Material
-import { MatIconModule } from '@angular/material/icon';
 
 const routes: Routes = [
   {
@@ -119,7 +117,7 @@ const routes: Routes = [
     FlexLayoutModule,
     EventLayoutModule,
     AsideModule,
-    MatIconModule,
+    ImageModule
   ]
 })
 export class EventModule { }

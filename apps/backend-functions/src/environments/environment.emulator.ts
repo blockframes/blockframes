@@ -14,6 +14,7 @@ if (e2eMode) {
 }
 
 export {
+  production,
   factoryContract,
   backupBucket,
   relayer,

@@ -33,7 +33,6 @@ const routes: Routes = createRoutes({
   events: {
     path: 'event',
     canActivate: [AnonymousAuthGuard],
-    canDeactivate: [AnonymousAuthGuard],
     loadChildren: () => import('./event/event.module').then(m => m.EventModule)
   }
 });

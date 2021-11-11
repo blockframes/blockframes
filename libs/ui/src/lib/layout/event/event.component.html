@@ -13,12 +13,13 @@
     <!-- TOOLBAR -->
     <app-bar #app>
       <header fxLayout fxLayoutAlign="start center">
-        <ng-container *ngIf="(user$ | async) else anonymous">
-          <button test-id="menu" mat-icon-button (click)="sidenav.toggle()">
-            <mat-icon svgIcon="menu"></mat-icon>
-          </button>
-          <a app-logo routerLink="."></a>
-          <a test-id="calendar-icon" mat-icon-button routerLink="/c/o/marketplace/event/calendar">
+        <button *ngIf="(user$ | async)" test-id="menu" mat-icon-button (click)="sidenav.toggle()">
+          <mat-icon svgIcon="menu"></mat-icon>
+        </button>
+        <a app-logo [routerLink]="(user$ | async) ? '.' : '/'"></a>
+        <ng-content select="header"></ng-content>
+        <ng-container *ngIf="(user$ | async)">
+          <a test-id="calendar-icon" mat-icon-button routerLink="event/calendar">
             <mat-icon svgIcon="calendar_today"></mat-icon>
           </a>
           <a test-id="heart-icon" mat-icon-button routerLink="/c/o/marketplace/wishlist">
@@ -55,10 +56,6 @@
             <auth-widget></auth-widget>
           </div>
         </ng-container>
-        <ng-template #anonymous>
-          <button app-logo (click)="confirmLogout()"></button>
-        </ng-template>
-
       </header>
     </app-bar>
 
