@@ -146,6 +146,13 @@ describe('JwPlayer test script', () => {
     expect(output.error).toEqual('');
   });
 
+  it('private event - should be successful when user is not invited but in good org', async () => {
+    testEvents[0].end.setHours(new Date().getHours() + 4);
+    // Load our test set
+    const output = await populateAndGetPrivateVideoUrl({ ...videoParams, eventId: 'eventTestPrivate', email: undefined }, { uid: 'uidUserB' });
+    expect(output.error).toEqual('');
+   });
+
   it('invitation-only event - should return error when user is not invited', async () => {
     testEvents[1].end.setHours(new Date().getHours() + 4);
     // Load our test set
@@ -157,6 +164,13 @@ describe('JwPlayer test script', () => {
     testEvents[1].end.setHours(new Date().getHours() + 4);
     // Load our test set
     const output = await populateAndGetPrivateVideoUrl({ ...videoParams, eventId: 'eventTestInvitOnly', email: 'marc@hamill.com' }, { uid: 'uidMarcHamill' });
+    expect(output.error).toEqual('');
+  });
+
+  it('invitation-only event - should be successful when user is not invited but in good org', async () => {
+    testEvents[1].end.setHours(new Date().getHours() + 4);
+    // Load our test set
+    const output = await populateAndGetPrivateVideoUrl({ ...videoParams, eventId: 'eventTestInvitOnly', email: undefined }, { uid: 'uidUserB' });
     expect(output.error).toEqual('');
   });
 

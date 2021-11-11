@@ -4,13 +4,14 @@ import { format } from "date-fns";
 import { EventDocument, EventMeta, EventTypes } from "@blockframes/event/+state/event.firestore";
 import { Organization, OrganizationDocument } from "@blockframes/organization/+state";
 import { User } from "@blockframes/auth/+state";
+import { AccessibilityTypes } from "../static-model";
 
 interface EmailData {
   to: string;
   subject: string;
 }
 
-export type EmailRequest = EmailData &({ text: string } | { html: string });
+export type EmailRequest = EmailData & ({ text: string } | { html: string });
 
 export interface EmailTemplateRequest {
   to: string;
@@ -35,7 +36,8 @@ export interface EventEmailData {
   end: string,
   type: EventTypes,
   viewUrl: string,
-  sessionUrl: string
+  sessionUrl: string,
+  accessibility: AccessibilityTypes
 }
 
 export interface OrgEmailData {
@@ -55,7 +57,8 @@ export interface UserEmailData {
   firstName?: string,
   lastName?: string,
   email: string,
-  password?: string
+  password?: string,
+  isRegistered?: boolean
 }
 
 export type EmailErrorCodes = 'E01-unauthorized' | 'E02-general-error' | 'E03-missing-api-key' | 'E04-no-template-available';
@@ -88,29 +91,26 @@ export function createEmailRequest(params: Partial<EmailRequest> = {}): EmailReq
   };
 }
 
-export function getEventEmailData(event?: Partial<EventDocument<EventMeta>>): EventEmailData {
-  let eventStart = '';
-  let eventEnd = '';
-  if (event) {
-    const eventStartDate = new Date(event.start.toDate());
-    const eventEndDate = new Date(event.end.toDate());
+export function getEventEmailData(event: EventDocument<EventMeta>, userEmail?: string, invitationId?: string): EventEmailData {
 
-    /**
-     * @dev Format from date-fns lib, here the date will be 'month/day/year, hours:min:sec am/pm GMT'
-     * See the doc here : https://date-fns.org/v2.16.1/docs/format
-     */
-    eventStart = format(eventStartDate, 'Pppp');
-    eventEnd = format(eventEndDate, 'Pppp');
-  }
+  const eventStartDate = new Date(event.start.toDate());
+  const eventEndDate = new Date(event.end.toDate());
+  const eventUrlParams = userEmail && invitationId ? `?email=${encodeURIComponent(userEmail)}&i=${invitationId}` : '';
+
+  /**
+   * @dev Format from date-fns lib, here the date will be 'month/day/year, hours:min:sec am/pm GMT'
+   * See the doc here : https://date-fns.org/v2.16.1/docs/format
+   */
 
   return {
-    id: event?.id || '',
-    title: event?.title || '',
-    start: eventStart,
-    end: eventEnd,
-    type: event?.type,
-    viewUrl: event?.id ? `/c/o/marketplace/event/${event.id}` : '',
-    sessionUrl: event?.id ? `/c/o/marketplace/event/${event.id}/session` : ''
+    id: event.id,
+    title: event.title,
+    start: format(eventStartDate, 'Pppp'),
+    end: format(eventEndDate, 'Pppp'),
+    type: event.type,
+    viewUrl: `/event/${event.id}/r/i${eventUrlParams}`,
+    sessionUrl: `/event/${event.id}/r/i/session${eventUrlParams}`,
+    accessibility: event.accessibility
   }
 }
 
@@ -127,6 +127,7 @@ export function getUserEmailData(user: Partial<User>, password?: string): UserEm
     firstName: user.firstName || '',
     lastName: user.lastName || '',
     email: user.email || '',
-    password
+    password,
+    isRegistered: !!user.orgId
   }
 }

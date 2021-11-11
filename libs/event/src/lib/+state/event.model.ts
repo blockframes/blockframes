@@ -6,6 +6,7 @@ import { Organization } from '@blockframes/organization/+state';
 import { User } from '@blockframes/auth/+state';
 export { EventsAnalytics } from './event.firestore';
 import type firebase from 'firebase';
+import { AnonymousCredentials } from '@blockframes/auth/+state/auth.model';
 type Timestamp = firebase.firestore.Timestamp;
 
 // Event
@@ -94,7 +95,7 @@ export function createCalendarEvent<M>(event: Partial<EventBase<Date | Timestamp
   }
 }
 
-export function createMeetingAttendee(user: User, status: AttendeeStatus = 'requesting'): MeetingAttendee {
+export function createMeetingAttendee(user: User | AnonymousCredentials, status: AttendeeStatus = 'requesting'): MeetingAttendee {
   return {
     uid: user.uid,
     firstName: user.firstName,

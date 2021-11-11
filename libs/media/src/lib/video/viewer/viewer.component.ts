@@ -3,13 +3,14 @@ import { DOCUMENT } from "@angular/common";
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Inject, Input, OnDestroy, Output, ViewChild, ViewEncapsulation } from "@angular/core";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { AuthQuery } from "@blockframes/auth/+state";
+import { AuthQuery, AuthService } from "@blockframes/auth/+state";
 import { MeetingVideoControl } from "@blockframes/event/+state/event.firestore";
-import { MediaService } from "../../+state/media.service";
 import { getWatermark, loadJWPlayerScript } from "@blockframes/utils/utils";
 import { BehaviorSubject } from "rxjs";
 import { toggleFullScreen } from '../../file/viewers/utils';
 import { StorageVideo } from "@blockframes/media/+state/media.firestore";
+import { EventService } from "@blockframes/event/+state";
+import { hasAnonymousIdentity } from "@blockframes/auth/+state/auth.model";
 
 declare const jwplayer: any;
 
@@ -90,9 +91,10 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private authQuery: AuthQuery,
-    private mediaService: MediaService,
+    private authService: AuthService,
     private functions: AngularFireFunctions,
     private snackBar: MatSnackBar,
+    private eventService: EventService,
   ) { }
 
   async initPlayer() {
@@ -103,8 +105,10 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
       const url = await playerUrl({}).toPromise<string>();
       await loadJWPlayerScript(this.document, url);
 
+      const anonymousCredentials = this.authService.anonymousCredentials;
+
       const privateVideo = this.functions.httpsCallable('privateVideo');
-      const { error, result } = await privateVideo({ eventId: this.eventId, video: this.ref }).toPromise();
+      const { error, result } = await privateVideo({ eventId: this.eventId, video: this.ref, email: anonymousCredentials?.email }).toPromise();
 
       if (error) {
         // if error is set, result will contain the error message
@@ -112,11 +116,18 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
       } else {
 
         // Watermark
-        const watermark = getWatermark(this.authQuery.user.email, this.authQuery.user.firstName, this.authQuery.user.lastName);
+        let watermark;
+        const event = await this.eventService.getValue(this.eventId);
+        if (this.authQuery.user) {
+          watermark = getWatermark(this.authQuery.user.email, this.authQuery.user.firstName, this.authQuery.user.lastName);
+        } else if (hasAnonymousIdentity(anonymousCredentials, event.accessibility)) {
+          watermark = getWatermark(anonymousCredentials.email, anonymousCredentials.firstName, anonymousCredentials.lastName);
+        }
 
         if (!watermark) {
           throw new Error('We cannot load video without watermark.');
         }
+
         // Auto refresh page when url expires
         const signedUrl = new URL(result.signedUrl);
         const expires = signedUrl.searchParams.get('exp');

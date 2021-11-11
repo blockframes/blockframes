@@ -1,0 +1,51 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+mat-sidenav-container {
+  height: 100%;
+}
+
+mat-sidenav-content {
+  height: 100%;
+  overflow: hidden;
+
+  header {
+    width: 100%;
+
+    button {
+      margin-right: 24px;
+    }
+
+    /* We can't use the fxLayoutGap directive because it set the margin right
+    property to the specified value. But we need to use margin-right:auto to split
+    the content and we don't want to use !important */
+    a {
+      margin-right: 24px;
+      align-self: center;
+    }
+
+    a:first-of-type {
+      margin-right: auto;
+    }
+  }
+
+  main {
+    height: 100%;
+    overflow: auto;
+
+    .page {
+      min-height: calc(100% - 140px); /** 140px : bf-footer height . This will need an update if footer height is changed **/
+    }
+  }
+}
+
+app-bar {
+  padding: 0 24px;
+}
+
+/* Outline none used to remove the automatic rectangular focus on Safari */
+a[app-logo] {
+  outline: none;
+}

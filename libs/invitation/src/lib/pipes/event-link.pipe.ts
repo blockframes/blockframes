@@ -6,7 +6,7 @@ import { Invitation } from "../+state/invitation.model";
 export class EventLinkPipe implements PipeTransform {
 
   transform(invitation: Invitation): string[] {
-    return invitation.type === 'joinOrganization' ? ['../../organization', invitation.toOrg.id, 'view', 'members'] : ['../event/', invitation.eventId];
+    return invitation.type === 'joinOrganization' ? ['../../organization', invitation.toOrg.id, 'view', 'members'] : ['/event/', invitation.eventId, 'r', 'i'];
   }
 }
 
@@ -16,4 +16,4 @@ export class EventLinkPipe implements PipeTransform {
   declarations: [EventLinkPipe],
   exports: [EventLinkPipe],
 })
-export class EventLinkModule {}
+export class EventLinkModule { }

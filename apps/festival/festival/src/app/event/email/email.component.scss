@@ -1,0 +1,35 @@
+:host {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background-image: url("/assets/images/light/stars_wallpaper.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+
+  a[app-logo] {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+  }
+
+  .surface {
+    padding: 16px;
+    text-align: center;
+
+    header {
+      text-align: left;
+    }
+
+    form {
+      padding: 32px;
+
+      footer {
+        margin-top: 40px;
+      }
+    }
+  }
+}
