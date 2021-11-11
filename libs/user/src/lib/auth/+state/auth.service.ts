@@ -252,12 +252,12 @@ export class AuthService extends FireAuthService<AuthState> {
     return firebase.auth().currentUser.delete();
   }
 
-  public resetAnonymousCredentials() {
+  private resetAnonymousCredentials() {
     const keys = ['uid', 'role', 'email', 'invitationId', 'lastName', 'firstName'];  // keys of AnonymousCredentials
     keys.forEach(k => sessionStorage.removeItem(`anonymousCredentials.${k}`));
   }
 
-  public updateAnonymousCredentials(creds: Partial<AnonymousCredentials>, options?: { reset: boolean }) {
+  updateAnonymousCredentials(creds: Partial<AnonymousCredentials>, options?: { reset: boolean }) {
 
     if (options?.reset) {
       this.resetAnonymousCredentials();
