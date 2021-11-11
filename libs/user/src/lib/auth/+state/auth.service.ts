@@ -106,7 +106,11 @@ export class AuthService extends FireAuthService<AuthState> {
    * @param newPassword new password set by the user
    */
   public async updatePassword(currentPassword: string, newPassword: string, email = this.query.user.email) {
-    await this.signin(email, currentPassword);
+    try {
+      await this.signin(email, currentPassword);
+    } catch (error) {
+      throw new Error(error)
+    }
     const user = await this.user;
     return user.updatePassword(newPassword);
   }
