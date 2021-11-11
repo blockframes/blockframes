@@ -72,7 +72,10 @@ export function joinWith<T, Query extends QueryMap<T>>(queries: Query, options: 
     }
     if (!obs.length) return of(entity);
     return combineLatest(obs).pipe(
-      map(() => entity as any),
+      map(() => {
+        if(!entity) return entity;
+       return JSON.parse(JSON.stringify(entity)) as any
+      }),
     );
   }
 
@@ -80,7 +83,7 @@ export function joinWith<T, Query extends QueryMap<T>>(queries: Query, options: 
     if (Array.isArray(data)) {
       if (!data.length) return of([]);
       const queries = (data as Entity<T>[]).map(runQuery);
-      // Apply debounce if there 
+      // Apply debounce if there
       const allQueries = combineLatest(queries).pipe(debounceTime(debounce));
       return shouldAwait
         ? allQueries
