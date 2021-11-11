@@ -202,7 +202,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           message: `Someone has ${notification.invitation.status} your ${notification.invitation.mode} to attend an event.`,
           imgRef: notification.user?.avatar || notification.organization?.logo,
           placeholderUrl: 'profil_user.svg',
-          url: `${applicationUrl['festival']}/c/o/${module}/event/${notification.docId}`
+          url: `${applicationUrl['festival']}${module === 'marketplace' ? `/event/${notification.docId}/r/i/` : `/c/o/${module}/event/${notification.docId}`}`
         };
       case 'requestToAttendEventSent':
 
@@ -221,7 +221,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           message: `Your request to attend event "${notification.docId}" has been sent.`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.svg',
-          url: `${applicationUrl['festival']}/c/o/${module}/event/${notification.docId}`
+          url: `${applicationUrl['festival']}${module === 'marketplace' ? `/event/${notification.docId}/r/i/` : `/c/o/${module}/event/${notification.docId}`}`
         };
       case 'offerCreatedConfirmation':
         return {

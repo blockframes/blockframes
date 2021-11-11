@@ -11,7 +11,6 @@ import { sortingDataAccessor } from '@blockframes/utils/table';
 import { ContractsImportState, SpreadsheetImportError } from '../../utils';
 import { TermService } from '@blockframes/contract/term/+state/term.service';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { getCurrentApp } from '@blockframes/utils/apps';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { createDocumentMeta } from '@blockframes/utils/models-meta';
 
