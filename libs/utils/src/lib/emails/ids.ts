@@ -17,6 +17,8 @@ export const templateIds = {
     // Templates for informing new user that his account have been created
     credentials: {
       attendEvent: 'd-ce3e57248a694cefacad49bc4c820078',
+      attendNonPrivateEvent: 'd-5123a0ceda2d463db60717dc94005b65',
+      attendEventRemindInvitationPass: 'd-454847c886d4485586c3d1b4f467c03f',
       joinOrganization: 'd-f0c4f1b2582a4fc6ab12fcd2d7c02f5c'
     },
   },
@@ -58,8 +60,8 @@ export const templateIds = {
     invest: 'd-e902521de8684c57bbfa633bad88567a'
   },
   eventReminder: {
-    oneDay: 'd-0c7bcb6e4a234ddc95ed74b9ecc433dc',
-    oneHour: 'd-8a9439a404cc4b51887e9dea44f7fbd7'
+    oneDay: 'd-a2f3a222b3a34fce9f5ce6effccdba15',
+    oneHour: 'd-f2e4d3c9f55c458a84296c7b66ccad22'
   },
   movie: {
     accepted: 'd-bfcf2760bcb7484ab55f864a59331d26'

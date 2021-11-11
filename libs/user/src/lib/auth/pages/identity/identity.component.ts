@@ -1,6 +1,5 @@
 import { Component, ChangeDetectionStrategy, OnInit, TemplateRef, ViewChild, ChangeDetectorRef, Optional, OnDestroy } from '@angular/core';
 import { AuthService, AuthQuery } from '../../+state';
-import type { UserCredential } from '@firebase/auth-types';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { InvitationService } from '@blockframes/invitation/+state';
@@ -42,7 +41,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
   public existingUser = false;
   private existingOrgId: string;
   private sub: Subscription;
-  private anonymousUser: UserCredential;
+  private isUserAnonymous = false;
   private publicUser: PublicUser;
 
   constructor(
@@ -98,7 +97,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
   async ngOnDestroy() {
     this.sub.unsubscribe();
     // We created anonymous user but it was not transformed into real one
-    if (this.anonymousUser && !this.publicUser) {
+    if (this.isUserAnonymous && !this.publicUser) {
       await this.authService.deleteAnonymousUser();
     }
   }
@@ -190,7 +189,8 @@ export class IdentityComponent implements OnInit, OnDestroy {
        * (this explain the need to allow the anonymous sign-in for user update in firestore rules)
        * #6908
        */
-      this.anonymousUser = await this.authService.signInAnonymously();
+      await this.authService.signInAnonymously();
+      this.isUserAnonymous = (await this.authService.user).isAnonymous;
 
       // Check if the org name is already existing
       const unique = await this.orgService.uniqueOrgName(denomination.full);

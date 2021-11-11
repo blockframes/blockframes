@@ -61,7 +61,7 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
 
       const type = this.form.value.type;
       const path = type === 'meeting' ? 'lobby' : 'session';
-      this.internalLink = `/c/o/marketplace/event/${this.form.value.id}/${path}`;
+      this.internalLink = `/event/${this.form.value.id}/r/i/${path}`;
       const app = getCurrentApp(this.routerQuery);
       const url = applicationUrl[app];
       this.link = `${url}${this.internalLink}`;

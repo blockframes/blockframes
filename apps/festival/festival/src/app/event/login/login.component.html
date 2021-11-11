@@ -1,0 +1,47 @@
+<a app-logo routerLink="/"></a>
+<article class="surface" fxLayout="column">
+  <header>
+    <button fxFlexAlign="start" mat-icon-button (click)="clickBack()" color="black">
+      <mat-icon svgIcon="arrow_back"></mat-icon>
+    </button>
+  </header>
+
+  <form fxLayout="column" [formGroup]="form" (ngSubmit)="validateLogin()" >
+    <h1>Welcome to Archipel Market!</h1>
+    <p class="mat-body-1">I don't have an account</p>
+    <a routerLink="/auth/identity">Sign up</a>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Email</mat-label>
+      <input test-id="email" matInput type="text" placeholder="Email" formControlName="email" required />
+      <mat-error *ngIf="form.get('email').hasError('required')">
+        Email is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Password</mat-label>
+      <input test-id="password" matInput type="password" placeholder="Password" formControlName="password" required />
+      <mat-error *ngIf="form.get('password').hasError('required')">
+        Password is <strong>required</strong> 
+      </mat-error>
+      <mat-error *ngIf="form.get('password').hasError('minlength')">
+        New password with less than <strong>6</strong> characters.
+      </mat-error>
+      <mat-error *ngIf="form.get('password').hasError('maxlength')">
+        New password with more than <strong>24</strong> characters.
+      </mat-error>
+      <mat-hint>Between 6 and 24 characters.</mat-hint>
+
+    </mat-form-field>
+
+    <footer fxLayout="column" fxLayoutGap="16px">
+      <a routerLink="/auth/reset-password" color="primary">Forgot your password ?</a>
+      <button mat-flat-button color="primary" type="submit">{{ buttonText }}</button>
+    </footer>
+  </form>
+</article>
+
+<ng-template #noAccount>
+  <span class="snack-bar-text">This account does not exist.</span>
+  <a mat-button routerLink="/auth/identity">CREATE ACCOUNT</a>
+</ng-template>

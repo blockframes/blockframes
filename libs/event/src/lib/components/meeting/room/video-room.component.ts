@@ -1,11 +1,8 @@
 
 import { ChangeDetectionStrategy, Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-
 import { displayName } from '@blockframes/utils/utils'
-import { AuthQuery } from '@blockframes/auth/+state';
-import { EventQuery } from '@blockframes/event/+state';
-
+import { AuthQuery, AuthService } from '@blockframes/auth/+state';
 import { Attendee, LocalAttendee, TrackKind } from '../+state/twilio.model';
 import { TwilioService } from '../+state/twilio.service';
 import { TwilioQuery } from '../+state/twilio.query';
@@ -19,8 +16,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class MeetingVideoRoomComponent implements OnInit, OnDestroy {
 
-  public eventId: string;
-
   public local$: Observable<LocalAttendee>;
   public attendees$: Observable<Attendee[]>;
 
@@ -31,24 +26,24 @@ export class MeetingVideoRoomComponent implements OnInit, OnDestroy {
 
   constructor(
     private authQuery: AuthQuery,
-    private eventQuery: EventQuery,
+    private authService: AuthService,
     private twilioService: TwilioService,
     private twilioQuery: TwilioQuery,
     private router: Router,
-    private route: ActivatedRoute,
+    private route: ActivatedRoute
   ) { }
 
   async ngOnInit() {
-    this.eventId = this.eventQuery.getActiveId();
+    const eventId: string = this.route.snapshot.params.eventId;
 
     this.local$ = this.twilioQuery.selectLocal();
 
     this.attendees$ = this.twilioQuery.selectAll();
 
-    const name = displayName(this.authQuery.user);
+    const name = displayName(this.authQuery.user || this.authService.anonymousCredentials);
     await this.twilioService.initLocal(name);
 
-    this.twilioService.connect(this.eventId, this.authQuery.user);
+    this.twilioService.connect(eventId, this.authQuery.user || this.authService.anonymousCredentials);
   }
 
   ngOnDestroy() {
