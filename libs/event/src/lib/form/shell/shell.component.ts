@@ -69,7 +69,7 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
       this.link = `${url}${this.internalLink}`;
 
       this.tabs$ = this.service.valueChanges(this.form.value.id).pipe(
-        map(e => e.start < new Date() ? navTabs[type].concat(statisticsTab) : navTabs[type])
+        map(e => e.start < new Date() && e.type !== 'meeting' ? navTabs[type].concat(statisticsTab) : navTabs[type])
       )
 
       // FormArray (used in FormList) does not mark as dirty on push,
