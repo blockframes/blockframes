@@ -94,7 +94,15 @@ export async function parse(
       const value = Array.isArray(values) ? values : [ values ];
       if (last) {
         const promises = value.map(v => transform(v, entity, state, rowIndex));
-        item[field] = await Promise.all(promises);
+        const results = await Promise.all(promises);
+
+        const validResults = results.filter(r => !(r instanceof ValueWithWarning));
+        item[field] = validResults;
+
+        const warningResults = results.filter(r => (r instanceof ValueWithWarning)) as ValueWithWarning[];
+        warnings.push(...warningResults.map(w => w.warning));
+        item[field].push(...warningResults.map(w => w.value));
+
       } else {
         // Creating array at this field to which will be pushed the other sub fields
         if (!item[field]) item[field] = new Array(value.length).fill(null).map(() => ({}));

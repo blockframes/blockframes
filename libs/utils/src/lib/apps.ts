@@ -116,11 +116,11 @@ export function getAppName(slug: App, short = false) {
 
 /**
  * Returns the apps that the org have access to
- * @param org
- * @param first
+ * @param org The org to query
+ * @param first The app name to return first (if present)
  * @example
  * getOrgAppAccess(orgA); // ['catalog', 'festival']
- * getOrgAppAccess(orgB); // ['festival']
+ * getOrgAppAccess(orgA, 'festival'); // ['festival', 'catalog']
  */
 export function getOrgAppAccess(org: OrganizationDocument | OrganizationBase<Date>, first: App = 'festival'): App[] {
   const apps: App[] = [];

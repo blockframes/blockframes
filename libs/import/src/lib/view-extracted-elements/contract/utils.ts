@@ -217,14 +217,18 @@ export async function formatContract(
         reason: 'Mandate ID is used only for sales contracts, here the value will be omitted because the contract is a mandate.',
         hint: 'Remove the corresponding sheet field to silence this warning.'
       });
-      if (data.contract.sellerId === centralOrgId.catalog) return new ValueWithWarning('', {
-        type: 'warning',
-        field: 'parentTerm',
-        name: 'Unused Mandate ID/Row',
-        reason: 'Mandate ID is used only for internal sales, here the value will be omitted because the sale is external.',
-        hint: 'Remove the corresponding sheet field to silence this warning.'
-      });
-      if (!value && data.contract.type === 'sale') throw new MandatoryError({ field: 'parentTerm', name: 'Mandate ID/Row' });
+      if (!value && data.contract.type === 'sale' && data.contract.sellerId === centralOrgId.catalog) {
+        throw new MandatoryError({ field: 'parentTerm', name: 'Mandate ID/Row' });
+      }
+      if (value && data.contract.type === 'sale' && data.contract.sellerId !== centralOrgId.catalog) {
+        return new ValueWithWarning('', {
+          type: 'warning',
+          field: 'parentTerm',
+          name: 'Unused Mandate ID/Row',
+          reason: 'Mandate ID is used only for internal sales, here the value will be omitted because the sale is external.',
+          hint: 'Remove the corresponding sheet field to silence this warning.'
+        });
+      }
       const isId = isNaN(Number(value));
       if (isId) {
         const exist = await checkParentTerm(value, contractService, contractCache);
@@ -262,7 +266,9 @@ export async function formatContract(
 
     const term = toTerm(data.term, contract.id, firestore);
 
-    if (contract.type === 'sale') {
+    // for **internal** sales we should check the parentTerm
+    const isInternalSale = contract.type === 'sale' && contract.sellerId === centralOrgId.catalog;
+    if (isInternalSale) {
       if (typeof data.parentTerm === 'number') {
         contract.parentTermId = contracts[data.parentTerm - 2]?.terms[0]?.id; // excel lines start at 1 and first line is the column names
         if (!contract.parentTermId) errors.push({
