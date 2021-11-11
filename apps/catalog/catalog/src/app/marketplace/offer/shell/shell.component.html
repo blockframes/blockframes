@@ -1,18 +1,24 @@
 <ng-container *ngIf="offer$ | async as offer">
   <header>
+    <a mat-icon-button routerLink="..">
+      <mat-icon svgIcon="arrow_back"></mat-icon>
+    </a>
     <bf-tag>{{ offer.status | toLabel:'offerStatus' }}</bf-tag>
     <article>
       <div>
         <h1>{{ offer.id }}</h1>
-        <span>Offer created: {{ offer._meta.createdAt | date: 'dd/MM/yyyy' }}</span>
+        <span>Offer created: {{ offer._meta.createdAt | date: 'MM/dd/yyyy' }}</span>
       </div>
       <div *ngIf="offer.contracts as contracts">
         <h2>
           {{ contracts.length }} Titles
         </h2>
-        <h2>
-          Total: {{ contracts | total:'income.price' | currency:offer.currency }}
+        <h2 *ngIf="contracts | total:'income.price' as price; else noPrice">
+          Total: {{ price | currency:offer.currency }}
         </h2>
+        <ng-template #noPrice>
+          <h2>{{ contracts.length }} asking price requested</h2>
+        </ng-template>
       </div>
     </article>
     <button mat-flat-button color="primary" (click)="openIntercom()">

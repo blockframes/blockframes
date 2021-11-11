@@ -6,7 +6,7 @@
         <mat-icon svgIcon="arrow_back"></mat-icon>
       </a>
       <h1>Offer Reference: {{offer.id}}</h1>
-      <p>Offer created: {{offer._meta.createdAt | date: 'dd/MM/yyyy'}}</p>
+      <p>Offer created: {{offer._meta.createdAt | date: 'MM/dd/yyyy'}}</p>
       <org-chip *ngIf="offer.buyer as org" [org]="org" baseUrl="/c/o/dashboard/crm/organization" ></org-chip>
     </div>
     <div class="contracts" *ngIf="offer.contracts as contracts">
