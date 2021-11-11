@@ -24,15 +24,6 @@ import { Duration } from '@blockframes/contract/term/+state';
   }
 })
 export class ContractItemComponent {
-  initialColumns = ['duration', 'territories', 'medias', 'exclusive', 'languages', 'runs.broadcasts'];
-  columns = {
-    'duration': 'Terms',
-    'territories': 'Territories',
-    'medias': 'Rights',
-    'exclusive': 'Exclusivity',
-    'languages': 'Versions',
-    'runs.broadcasts': '# of Broadcasts',
-  };
   mediaGroup = mediaGroup;
   territoriesGroup = territoriesGroup;
   actionTemplate?: TemplateRef<unknown>;
@@ -42,7 +33,6 @@ export class ContractItemComponent {
   @ContentChild('priceTemplate') priceTemplate: TemplateRef<unknown>;
   @ContentChild('termAction') set colActionsTemplate(template: TemplateRef<unknown>) {
     if (template) {
-      this.initialColumns.push('action');
       this.actionTemplate = template;
       this.cdr.markForCheck();
     }

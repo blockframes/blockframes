@@ -1,7 +1,6 @@
 import { FormControl, FormGroup } from '@angular/forms';
 import { FormEntity, FormList, FormStaticValueArray } from '@blockframes/utils/form';
 import { MovieVersionInfoForm, createLanguageControl } from '@blockframes/movie/form/movie.form';
-import { RunsForm } from '@blockframes/contract/avails/form/runs.form';
 import { AvailsFilter, DurationMarker, isSameCalendarTerm, isSameMapTerm, TerritoryMarker } from '../avails/avails';
 import {
   Bucket,
@@ -30,7 +29,6 @@ function createBucketTermControl(params: Partial<BucketTerm> = {}) {
       to: new FormControl(term.duration?.to)
     }),
     languages: MovieVersionInfoForm.factory(term.languages, createLanguageControl),
-    runs: new RunsForm(term.runs),
   }
 }
 
