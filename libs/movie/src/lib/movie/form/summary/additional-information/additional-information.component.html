@@ -20,7 +20,7 @@
               <missing-control [control]="release.get('media')" [link]="link" type="medias"></missing-control> -
               <missing-control [control]="release.get('date')" [link]="link">
                 <ng-template let-date>
-                  {{ date | date: 'dd/MM/yyyy' }}
+                  {{ date | date: 'MM/dd/yyyy' }}
                 </ng-template>
               </missing-control>
             </li>
