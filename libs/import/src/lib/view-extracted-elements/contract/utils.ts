@@ -267,7 +267,8 @@ export async function formatContract(
     const term = toTerm(data.term, contract.id, firestore);
 
     // for **internal** sales we should check the parentTerm
-    if (contract.type === 'sale' && contract.sellerId === centralOrgId.catalog) {
+    const isInternalSale = contract.type === 'sale' && contract.sellerId === centralOrgId.catalog;
+    if (isInternalSale) {
       if (typeof data.parentTerm === 'number') {
         contract.parentTermId = contracts[data.parentTerm - 2]?.terms[0]?.id; // excel lines start at 1 and first line is the column names
         if (!contract.parentTermId) errors.push({
