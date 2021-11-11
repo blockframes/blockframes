@@ -3,6 +3,8 @@ import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { NotificationState } from './+state/notification.store';
 import { NotificationService } from './+state/notification.service';
+import { catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 @CollectionGuardConfig({ awaitSync: false })
@@ -16,6 +18,6 @@ export class NotificationsGuard extends CollectionGuard<NotificationState> {
     return this.service.syncCollection(ref => ref
       .where('toUserId', '==', this.authQuery.userId)
       .where('app.isRead', '==', false)
-    );
+    ).pipe(catchError(() => of()));
   }
 }

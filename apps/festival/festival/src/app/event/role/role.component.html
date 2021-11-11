@@ -1,0 +1,16 @@
+<a app-logo routerLink="/"></a>
+<div class="surface">
+  <h1>Welcome</h1>
+  <h2>to the Archipel Market Platform</h2>
+  <p class="mat-body-1">You are here as a:</p>
+  <div fxLayout fxLayoutGap="40px">
+    <button color="warn" (click)="update('organizer')">
+      <img [asset]="'event_organizer.svg'" alt="organizer image">
+      <h5>Organizer</h5>
+    </button>
+    <button color="primary" (click)="update('guest')" mat-button>
+      <img [asset]="'event_guest.svg'" alt="guest image">
+      <h5>Guest</h5>
+    </button>
+  </div>
+</div>
