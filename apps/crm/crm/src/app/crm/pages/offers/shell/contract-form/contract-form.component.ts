@@ -16,7 +16,6 @@ import { DetailedTermsComponent } from '@blockframes/contract/term/components/de
 import { FormList } from '@blockframes/utils/form';
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
 import { MovieVersionInfoForm } from "@blockframes/movie/form/movie.form";
-import { RunsForm } from "@blockframes/contract/avails/form/runs.form";
 import { Scope } from '@blockframes/utils/static-model';
 
 // Material
@@ -43,7 +42,6 @@ export class ContractFormComponent implements OnInit {
       id: new FormControl(term.id),
       avails: new AvailsForm(term, []),
       versions: new MovieVersionInfoForm(term.languages),
-      runs: new RunsForm(term.runs)
     }))
   });
   titles$ = this.service.valueChanges(ref => ref.where('app.catalog.status', '==', 'accepted'));
