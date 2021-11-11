@@ -136,10 +136,11 @@ export async function formatOrg(sheetTab: SheetTab, organizationService: Organiz
     const { data, errors, warnings } = result;
 
     const org = createOrganization(data.org as Partial<Organization>);
+    org.status = 'accepted';
 
     const superAdmin = createUser(data.superAdmin);
 
-    orgs.push({ errors: [ ...errors, ...warnings ], org, superAdmin, newOrg: false });
+    orgs.push({ errors: [ ...errors, ...warnings ], org, superAdmin, newOrg: true });
   }
 
   return orgs;
