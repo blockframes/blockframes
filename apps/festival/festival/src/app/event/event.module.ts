@@ -21,9 +21,6 @@ import { NoEventRoleGuard } from '@blockframes/event/guard/no-event-role.guard';
 import { IdentityGuard } from '@blockframes/event/guard/identity.guard';
 import { EventAuthGuard } from '@blockframes/event/guard/event-auth.guard';
 
-// Material
-import { MatIconModule } from '@angular/material/icon';
-
 const routes: Routes = [
   {
     path: ':eventId',
@@ -120,7 +117,6 @@ const routes: Routes = [
     FlexLayoutModule,
     EventLayoutModule,
     AsideModule,
-    MatIconModule,
     ImageModule
   ]
 })
