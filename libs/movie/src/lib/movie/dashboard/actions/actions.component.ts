@@ -37,7 +37,7 @@ export class DashboardActionsShellComponent {
   removeAppAccess() {
     const movie = this.query.getActive();
     const appsName = getMovieAppAccess(movie).filter(value => value !== this.appName).map(a => getAppName(a).label);
-    const subtitle = appsName.length ? `This Title will still be available on <i>${appsName.join(', ')}</i>.<br/>` : ''
+    const subtitle = appsName.length ? `This Title will still be available on <i>${appsName.join(', ')}</i>.<br/>` : '';
 
     this.dialog.open(ConfirmInputComponent, {
       data: {

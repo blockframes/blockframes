@@ -55,6 +55,6 @@ export class TitleMarketplaceShellComponent implements OnInit {
   }
 
   showVideos(movie: Movie) {
-    return movie.promotional.videos.otherVideos.some(video => video.privacy === 'public')
+    return movie.promotional.videos.otherVideos.some(video => video.privacy === 'public');
   }
 }
