@@ -35,7 +35,7 @@
       </mat-radio-button>
     </mat-radio-group>
     
-    <div fxLayout fxLayoutAlign="start center" fxLayoutGap="8px">
+    <div fxLayout fxLayoutAlign="start center" fxLayoutGap="8px" *ngIf="form.value.type !== 'meeting'">
       <mat-checkbox formControlName="isSecret" color="primary">SECRET - not listed on the Marketplace</mat-checkbox>
       <mat-icon svgIcon="info" matTooltip="Only users with a direct link will be able to access your event."></mat-icon>
     </div>

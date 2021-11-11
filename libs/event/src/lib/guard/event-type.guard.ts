@@ -15,7 +15,7 @@ export class EventTypeGuard implements CanActivate {
   canActivate(route: ActivatedRouteSnapshot): Observable<boolean | UrlTree> {
     return this.service.valueChanges(route.params['eventId'] as string).pipe(
       map(event => {
-        const path = event.end < new Date() ? 'statistics' : event.type;
+        const path = event.end < new Date() && event.type !== 'meeting' ? 'statistics' : event.type;
         return this.router.parseUrl(`/c/o/dashboard/event/${event.id}/edit/${path}`)
       })
     );
