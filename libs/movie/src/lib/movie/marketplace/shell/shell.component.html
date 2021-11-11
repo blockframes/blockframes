@@ -83,7 +83,7 @@
       </bf-carousel>
     </article>
 
-    <article id="videoFooter" *ngIf="movie.promotional.videos.otherVideos.length">
+    <article id="videoFooter" *ngIf="showVideos(movie)">
       <h2>Videos</h2>
       <div gdColumns="1fr 1fr" gdGap="16px">
         <ng-container *ngFor="let video of movie.promotional.videos.otherVideos">
