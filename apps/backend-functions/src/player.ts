@@ -27,7 +27,7 @@ export interface ReadVideoParams {
   eventId?: string,
 
   /**
-   * The email of the user for 'invitation-only' events
+   * The email of the user for 'protected' events
    */
   email?: string,
 }

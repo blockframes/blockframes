@@ -55,7 +55,7 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
     switch (this.event.accessibility) {
       case 'public':
         return true;
-      case 'invitation-only': {
+      case 'protected': {
 
         if (this.event.isOwner) return true;
 

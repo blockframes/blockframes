@@ -27,7 +27,7 @@ export class NoEventRoleGuard implements CanActivate {
           if (creds?.role === 'organizer') {
             return this.router.createUrlTree([`/event/${event.id}/auth/login`], { queryParams: next.queryParams });
           } else if (creds?.role === 'guest') {
-            const page = event.accessibility === 'invitation-only' ? 'email' : 'identity';
+            const page = event.accessibility === 'protected' ? 'email' : 'identity';
             return this.router.createUrlTree([`/event/${event.id}/auth/${page}`], { queryParams: next.queryParams });
           }
         }

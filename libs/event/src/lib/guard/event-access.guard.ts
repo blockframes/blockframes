@@ -34,7 +34,7 @@ export class EventAccessGuard implements CanActivate {
   private async guard(route: ActivatedRouteSnapshot, user: firebase.User, event: Event<unknown>, credentials: AnonymousCredentials) {
     if (!user.isAnonymous) return true;
     switch (event.accessibility) {
-      case 'invitation-only': {
+      case 'protected': {
         const credentialsUpdateNeeded = !credentials.invitationId || credentials.invitationId !== route.queryParams?.i;
         if (route.queryParams?.i && credentialsUpdateNeeded) {
           this.authService.updateAnonymousCredentials({ invitationId: route.queryParams?.i });
