@@ -24,7 +24,7 @@ export class EventRoleComponent {
     // Update store with from value
     this.authService.updateAnonymousCredentials({ role });
     // Redirect user identity or login page
-    const page = event.accessibility === 'invitation-only' ? 'email' : 'identity';
+    const page = event.accessibility === 'protected' ? 'email' : 'identity';
     this.router.navigate(['..', page], { relativeTo: this.route, queryParams: this.route.snapshot.queryParams });
   }
 

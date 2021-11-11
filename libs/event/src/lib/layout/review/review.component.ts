@@ -1,16 +1,22 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { Event } from '../../+state/event.model';
 import { Observable } from 'rxjs';
-import { TabConfig } from '@blockframes/utils/event';
+import { NavTabs, TabConfig } from '@blockframes/utils/event';
 import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { EventService } from '@blockframes/event/+state';
-import { pluck, switchMap } from 'rxjs/operators';
+import { map, pluck, switchMap } from 'rxjs/operators';
 
-const navTabs: TabConfig[] = [
-  { path: 'invitations', label: 'Invitations' },
-  { path: 'statistics', label: 'Statistics' }
-];
+
+const navTabs: NavTabs = {
+  screening: [
+    { path: 'invitations', label: 'Invitations' },
+    { path: 'statistics', label: 'Statistics' }
+  ],
+  meeting: [
+    { path: 'invitations', label: 'Invitations' },
+  ],
+}
 
 @Component({
   selector: 'event-review',
@@ -20,7 +26,7 @@ const navTabs: TabConfig[] = [
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ReviewComponent implements OnInit {
-  tabs = navTabs;
+  tabs$: Observable<TabConfig[]>;
   event$: Observable<Event>;
 
   constructor(
@@ -33,6 +39,8 @@ export class ReviewComponent implements OnInit {
       pluck('eventId'),
       switchMap((eventId: string) => this.service.valueChanges(eventId))
     );
+
+    this.tabs$ = this.event$.pipe(map(e => navTabs[e.type]))
   }
 
   animationOutlet(outlet: RouterOutlet) {

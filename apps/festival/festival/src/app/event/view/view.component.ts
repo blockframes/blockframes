@@ -44,7 +44,7 @@ export class EventViewComponent implements OnInit {
         this.accessRoute = `/event/${event.id}/r/i/${event.type === 'meeting' ? 'lobby' : 'session'}`;
 
         switch (event.accessibility) {
-          case 'invitation-only': {
+          case 'protected': {
             const regularInvitation = invitations.find(invitation => invitation.eventId === event.id) ?? undefined;
             if (regularInvitation) return regularInvitation;
             const anonymousCredentials = this.authService.anonymousCredentials;

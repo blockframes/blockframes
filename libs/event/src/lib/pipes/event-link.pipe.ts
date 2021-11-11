@@ -12,7 +12,8 @@ export class EventLinkPipe implements PipeTransform {
     const eventStarted = event.start.getTime() < Date.now();
     const eventEnded = event.end.getTime() < Date.now();
     if (module === 'dashboard') {
-      return eventEnded ? [event.id] : [event.id, 'edit'];
+      const page = event.type !== 'meeting' ? 'statistics' : 'invitations';
+      return eventEnded ? [event.id, page] : [event.id, 'edit'];
     }
     if (module === 'marketplace') {
       const inSession = eventStarted && !eventEnded;

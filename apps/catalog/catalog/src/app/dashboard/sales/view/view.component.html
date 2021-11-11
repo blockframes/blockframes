@@ -11,7 +11,7 @@
         <h1>{{ org | orgName }}</h1>
       </div>
     </ng-container>
-    <span>Ref {{ sale.offerId }} / Offer created: {{sale._meta.createdAt | date: 'dd/MM/yyyy'}}</span>
+    <span>Ref {{ sale.offerId }} / Offer created: {{sale._meta.createdAt | date: 'MM/dd/yyyy'}}</span>
     <div fxLayout fxLayoutAlign="space-between center" class="actions">
       <div fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
         <ng-container *ngIf="sale.sellerId === centralOrgId.catalog; else outOfPlatformSale">

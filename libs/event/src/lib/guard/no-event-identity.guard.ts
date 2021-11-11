@@ -36,7 +36,7 @@ export class NoEventIdentityGuard implements CanActivate {
             return this.router.createUrlTree([`/event/${eventId}/auth/login`], { queryParams });
           } else if (hasAnonymousIdentity(creds, event.accessibility)) {
             return this.router.createUrlTree([`/event/${eventId}/r/i`], { queryParams });
-          } else if (event.accessibility === 'invitation-only' && currentPage !== 'email') {
+          } else if (event.accessibility === 'protected' && currentPage !== 'email') {
             return this.router.createUrlTree([`/event/${eventId}/auth/email`], { queryParams });
           } else if (event.accessibility === 'public' && currentPage !== 'identity') {
             return this.router.createUrlTree([`/event/${eventId}/auth/identity`], { queryParams });

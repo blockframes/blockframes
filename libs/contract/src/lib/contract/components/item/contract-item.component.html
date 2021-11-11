@@ -38,13 +38,15 @@
           [ngTemplateOutletContext]="{ $implicit:term, index:termIndex }">
         </ng-template>
       </ng-template>
-      <ng-template colRef="languages" label="Versions" let-languages>
-        <ul *ngIf="languages?.length > 0; else noLanguage">
-          <li *ngFor="let language of languages| keyvalue">
-            {{language.key | toLabel:'languages'}} ({{language.value | versionPipe | join}})
-          </li>
-        </ul>
-        <ng-template #noLanguage>-</ng-template>
+      <ng-template colRef="languages" label="Versions" let-versions>
+        <ng-container *ngIf="versions | keyvalue as languages">
+          <ul *ngIf="languages.length else noLanguage">
+            <li *ngFor="let language of languages">
+              {{language.key | toLabel:'languages'}} ({{language.value | versionPipe | join}})
+            </li>
+          </ul>
+          <ng-template #noLanguage>-</ng-template>
+        </ng-container>
       </ng-template>
       <ng-template colRef="runs.broadcasts" label="# of Broadcasts" let-broadcasts sort>
         {{broadcasts ?? '-'}}

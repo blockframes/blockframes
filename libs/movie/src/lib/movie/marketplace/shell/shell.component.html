@@ -42,7 +42,7 @@
       *ngIf="movie | hasKeys: ['delivery.file.storagePath', 'promotional.scenario.storagePath', 'promotional.moodboard.storagePath', 'promotional.presentation_deck.storagePath']">
       <h2>Files</h2>
       <div grid>
-        <mat-card [col]="3" *ngIf="!!movie.delivery.file.storagePath">
+        <mat-card [col]="3" *ngIf="!!movie.delivery?.file.storagePath">
           <img asset="delivery_list.svg" alt="file with gears" />
           <a mat-button [href]="movie.delivery.file| getDownloadUrl | async" target="_blank">
             <mat-icon svgIcon="cloud_download"></mat-icon>
@@ -83,7 +83,7 @@
       </bf-carousel>
     </article>
 
-    <article id="videoFooter" *ngIf="movie.promotional.videos.otherVideos.length">
+    <article id="videoFooter" *ngIf="showVideos(movie)">
       <h2>Videos</h2>
       <div gdColumns="1fr 1fr" gdGap="16px">
         <ng-container *ngFor="let video of movie.promotional.videos.otherVideos">
