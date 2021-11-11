@@ -107,7 +107,8 @@ export async function formatTitle(
   sheetTab: SheetTab,
   userService: UserService,
   blockframesAdmin: boolean,
-  userOrgId: string
+  userOrgId: string,
+  currentApp: App,
 ) {
 
   const titles: MovieImportState[] = [];
@@ -454,31 +455,40 @@ export async function formatTitle(
 
     // ! ADMIN
     /* bm */ 'app.catalog': (value: string) => {
-      if (!value && blockframesAdmin) return new ValueWithWarning(null, optionalWarning({ field: 'catalogStatus', name: 'Catalog Status' }));
-      if (value && !blockframesAdmin) return new ValueWithWarning({ status: 'draft', access: false }, adminOnlyWarning({ field: 'catalogStatus', name: 'Catalog Status' }));
-      if (!value) return { status: 'draft', access: false, acceptedAt: null, refusedAt: null };
+      const defaultAccess: MovieAppConfig<Date> = { status: 'draft', access: 'catalog' === currentApp, acceptedAt: null, refusedAt: null };
+
+      if (!value && blockframesAdmin) return new ValueWithWarning(defaultAccess, optionalWarning({ field: 'catalogStatus', name: 'Catalog Status' }));
+      if (value && !blockframesAdmin) return new ValueWithWarning(defaultAccess, adminOnlyWarning({ field: 'catalogStatus', name: 'Catalog Status' }));
+      if (!value) return defaultAccess;
+
       const status = getKeyIfExists('storeStatus', value) as StoreStatus;
       if (!status) throw new WrongValueError({ field: 'catalogStatus', name: 'Catalog Status' });
-      const access = status === 'accepted';
-      return { status, access, acceptedAt: null, refusedAt: null };
+
+      return { status, access: true, acceptedAt: null, refusedAt: null };
     },
     /* bn */ 'app.festival': (value: string) => {
-      if (!value && blockframesAdmin) return new ValueWithWarning(null, optionalWarning({ field: 'festivalStatus', name: 'Festival Status' }));
-      if (value && !blockframesAdmin) return new ValueWithWarning({ status: 'draft', access: false }, adminOnlyWarning({ field: 'festivalStatus', name: 'Festival Status' }));
-      if (!value) return { status: 'draft', access: false, acceptedAt: null, refusedAt: null };
+      const defaultAccess: MovieAppConfig<Date> = { status: 'draft', access: 'festival' === currentApp, acceptedAt: null, refusedAt: null };
+
+      if (!value && blockframesAdmin) return new ValueWithWarning(defaultAccess, optionalWarning({ field: 'festivalStatus', name: 'Festival Status' }));
+      if (value && !blockframesAdmin) return new ValueWithWarning(defaultAccess, adminOnlyWarning({ field: 'festivalStatus', name: 'Festival Status' }));
+      if (!value) return defaultAccess;
+
       const status = getKeyIfExists('storeStatus', value) as StoreStatus;
       if (!status) throw new WrongValueError({ field: 'festivalStatus', name: 'Festival Status' });
-      const access = status === 'accepted';
-      return { status, access, acceptedAt: null, refusedAt: null };
+
+      return { status, access: true, acceptedAt: null, refusedAt: null };
     },
     /* bo */ 'app.financiers': (value: string) => {
-      if (!value && blockframesAdmin) return new ValueWithWarning(null, optionalWarning({ field: 'financiersStatus', name: 'Financiers Status' }));
-      if (value && !blockframesAdmin) return new ValueWithWarning({ status: 'draft', access: false }, adminOnlyWarning({ field: 'financiersStatus', name: 'Financiers Status' }));
-      if (!value) return { status: 'draft', access: false, acceptedAt: null, refusedAt: null };
+      const defaultAccess: MovieAppConfig<Date> = { status: 'draft', access: 'financiers' === currentApp, acceptedAt: null, refusedAt: null };
+
+      if (!value && blockframesAdmin) return new ValueWithWarning(defaultAccess, optionalWarning({ field: 'financiersStatus', name: 'Financiers Status' }));
+      if (value && !blockframesAdmin) return new ValueWithWarning(defaultAccess, adminOnlyWarning({ field: 'financiersStatus', name: 'Financiers Status' }));
+      if (!value) return defaultAccess;
+
       const status = getKeyIfExists('storeStatus', value) as StoreStatus;
       if (!status) throw new WrongValueError({ field: 'financiersStatus', name: 'Financiers Status' });
-      const access = status === 'accepted';
-      return { status, access, acceptedAt: null, refusedAt: null };
+
+      return { status, access: true, acceptedAt: null, refusedAt: null };
     },
     /* bp */ 'orgIds': async (value: string) => { // ! required
       if (!value && blockframesAdmin) throw new MandatoryError({ field: 'orgIds', name: 'Owner Id' });
