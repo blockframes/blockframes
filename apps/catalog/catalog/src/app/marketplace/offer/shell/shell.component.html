@@ -10,9 +10,12 @@
         <h2>
           {{ contracts.length }} Titles
         </h2>
-        <h2>
-          Total: {{ contracts | total:'income.price' | currency:offer.currency }}
+        <h2 *ngIf="contracts | total:'income.price' as price; else noPrice">
+          Total: {{ price | currency:offer.currency }}
         </h2>
+        <ng-template #noPrice>
+          <h2>{{ contracts.length }} Asking price requested</h2>
+        </ng-template>
       </div>
     </article>
     <button mat-flat-button color="primary" (click)="openIntercom()">
