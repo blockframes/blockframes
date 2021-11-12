@@ -30,8 +30,7 @@ export class LanguageFilterComponent implements OnInit, OnDestroy {
   constructor(private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
-    this.sub = combineLatest([this.selectedLanguages.valueChanges, this.versions.valueChanges])
-      .pipe(startWith([[], this.versions.value] as [GetKeys<'languages'>[], GetKeys<'movieLanguageTypes'>[]]))
+    this.sub = combineLatest([this.selectedLanguages.value$, this.versions.value$])
       .subscribe(
         ([languages, versions]) => {
           this.rebuildingForm = true;

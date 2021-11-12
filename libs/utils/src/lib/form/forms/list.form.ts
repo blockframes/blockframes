@@ -3,7 +3,8 @@ import { FormArray } from '@angular/forms';
 import { FormEntity } from './entity.form';
 import { Validator, AsyncValidator } from './types';
 import { createControlForm } from './create-control';
-import { Observable } from 'rxjs';
+import { defer, Observable } from 'rxjs';
+import { startWith } from 'rxjs/operators';
 
 type GetValue<T> = T extends FormEntity<infer J> ? J : T;
 
@@ -32,6 +33,7 @@ export class FormList<T, Control extends AbstractControl = any> extends FormArra
   createControl: (value?: Partial<T>, index?: number) => Control = createControlForm;
   controls: Control[];
   valueChanges: Observable<T[]>;
+  value$ = defer(() => this.valueChanges.pipe(startWith(this.value)));
 
   private constructor(controls: Control[], validators?: Validator, asyncValidators?: AsyncValidator) {
     super(controls, validators, asyncValidators);
