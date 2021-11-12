@@ -109,7 +109,7 @@ export class TableExtractedContractsComponent implements OnInit {
    */
   private async addContract(importState: ContractsImportState): Promise<boolean> {
 
-    importState.terms.forEach(t => ({ ...t, id: this.db.createId() }));
+    importState.terms.forEach(t => t.id = this.db.createId());
     importState.contract.termIds = importState.terms.map(t => t.id);
 
     await this.contractService.add({
