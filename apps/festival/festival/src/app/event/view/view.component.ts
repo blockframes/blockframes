@@ -3,10 +3,11 @@ import { EventService } from '@blockframes/event/+state';
 import { ActivatedRoute } from '@angular/router';
 import { InvitationService, Invitation } from '@blockframes/invitation/+state';
 import { combineLatest, of, Observable } from 'rxjs';
-import { catchError, filter, switchMap, pluck } from 'rxjs/operators';
+import { catchError, filter, switchMap, pluck, tap } from 'rxjs/operators';
 import { Location } from '@angular/common';
 import { fade } from '@blockframes/utils/animations/fade';
 import { AuthQuery, AuthService } from '@blockframes/auth/+state';
+import { Event } from '@blockframes/event/+state/event.model'
 
 @Component({
   selector: 'festival-event-view',
@@ -17,13 +18,10 @@ import { AuthQuery, AuthService } from '@blockframes/auth/+state';
 })
 export class EventViewComponent implements OnInit {
   invitation$: Observable<Invitation>;
-  editMeeting: string;
+  editEvent: string;
   accessRoute: string;
   user$ = this.authQuery.user$;
-  event$ = this.route.params.pipe(
-    pluck('eventId'),
-    switchMap((eventId: string) => this.service.queryDocs(eventId)),
-  );
+  event$: Observable<Event>;
 
   constructor(
     private route: ActivatedRoute,
@@ -35,17 +33,25 @@ export class EventViewComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
+
+    this.event$ = this.route.params.pipe(
+      pluck('eventId'),
+      switchMap((eventId: string) => this.service.queryDocs(eventId)),
+      tap(event => {
+        this.editEvent = `/c/o/dashboard/event/${event.id}/edit`;
+      }),
+    );
+
     this.invitation$ = combineLatest([
       this.event$.pipe(filter(event => !!event)),
       this.invitationService.guestInvitations$.pipe(catchError(() => of([]))),
     ]).pipe(
       switchMap(async ([event, invitations]) => {
-        this.editMeeting = `/c/o/dashboard/event/${event.id}/edit`;
         this.accessRoute = `/event/${event.id}/r/i/${event.type === 'meeting' ? 'lobby' : 'session'}`;
 
         switch (event.accessibility) {
           case 'protected': {
-            const regularInvitation = invitations.find(invitation => invitation.eventId === event.id) ?? undefined;
+            const regularInvitation = invitations.find(invitation => invitation.eventId === event.id) ?? null;
             if (regularInvitation) return regularInvitation;
             const anonymousCredentials = this.authService.anonymousCredentials;
             if (anonymousCredentials?.invitationId) {
@@ -55,7 +61,9 @@ export class EventViewComponent implements OnInit {
             break;
           }
           case 'private':
-            return invitations.find(invitation => invitation.eventId === event.id) ?? undefined;
+            return invitations.find(invitation => invitation.eventId === event.id) ?? null;
+          default:
+            return null;
         }
       })
     );

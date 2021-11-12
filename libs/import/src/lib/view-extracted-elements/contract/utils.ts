@@ -283,6 +283,8 @@ export async function formatContract(
       }
     }
 
+    // TODO FOR EXTERNAL SALE WE SHOULD COPY THE MANDATE STAKEHOLDERS INTO THE SALE STAKEHOLDERS
+
     contracts.push({ contract, terms: [term], errors: [ ...errors, ...warnings ], newContract: true });
   }
 

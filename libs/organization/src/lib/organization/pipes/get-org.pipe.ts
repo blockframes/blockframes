@@ -5,6 +5,7 @@ import { OrganizationService } from "../+state/organization.service";
 export class GetOrgPipe implements PipeTransform {
   constructor(private service: OrganizationService) {}
   transform(orgId: string) {
+    if (!orgId) return;
     return this.service.valueChanges(orgId);
   }
 }
