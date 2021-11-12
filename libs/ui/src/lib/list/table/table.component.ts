@@ -112,7 +112,7 @@ export class TableComponent<T> {
 
   /** The content to display in the table */
   @Input() set source(source: T[]) {
-    this.dataSource.next(source);
+    this.dataSource.next(source ?? []);
   }
   /** Amount of item per page. If not set, paginator will be disabled */
   @Input() set pagination(amount: number | string) {
@@ -130,7 +130,7 @@ export class TableComponent<T> {
       switchMap(data => this.$paginate(data)),
     );
   }
-
+  
   private $paginate(data: T[]) {
     this.paginator.size = data.length;
     if (this.paginator.pageIndex > this.paginator.maxIndex) this.paginator.last();
