@@ -2,7 +2,6 @@ import { Component, ChangeDetectionStrategy, Input, OnInit, OnDestroy, ChangeDet
 import { FormList, FormEntity } from '@blockframes/utils/form';
 import { GetKeys } from '@blockframes/utils/static-model/static-model';
 import { Subscription, combineLatest } from 'rxjs';
-import { startWith } from 'rxjs/operators';
 import { LanguageVersionControl } from '@blockframes/movie/form/search.form';
 import { FormControl } from '@angular/forms';
 
@@ -47,8 +46,6 @@ export class LanguageFilterComponent implements OnInit, OnDestroy {
           this.rebuildingForm = false;
       }
     );
-    // Setting latest value in observable for combineLatest
-    this.versions.setValue(this.versions.value);
 
     /** Updates selectedLanguages and versions FormList when reset is called on languagesFilterForm */
     this.formSub = this.languagesFilterForm.valueChanges.subscribe((res: Array<any>) => {
