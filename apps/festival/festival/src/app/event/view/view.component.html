@@ -16,7 +16,7 @@
             <ng-container *ngIf="event.isOwner; else notOwner">
               <h3>You are the owner of this event.</h3>
               <p>You can invite members and edit the event config in your dashboard.</p>
-              <a mat-stroked-button color="primary" [routerLink]="editMeeting">Edit Event</a>
+              <a mat-stroked-button color="primary" [routerLink]="editEvent">Edit Event</a>
             </ng-container>
             <ng-template #notOwner>
                 <invitation-action *ngIf="(invitation$ | async) !== undefined" @fade [invitation]="(invitation$ | async)" [event]="event"></invitation-action>
@@ -33,7 +33,7 @@
             <p *ngIf="(invitation$ | async) === null">This event has already started.</p>
             <ng-container *ngIf="event.isOwner; else notOwner">
               <h3>You are the owner of this event.</h3>
-              <p>You can invite members and <a [routerLink]="editMeeting">edit the event</a> config in your dashboard.</p>
+              <p>You can invite members and <a [routerLink]="editEvent">edit the event</a> config in your dashboard.</p>
               <a mat-stroked-button color="primary" [routerLink]="['lobby']">Go to Event</a>
             </ng-container>
             <ng-template #notOwner>
