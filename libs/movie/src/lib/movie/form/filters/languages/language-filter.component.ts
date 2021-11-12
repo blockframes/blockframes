@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, Input, OnInit, OnDestroy, ChangeDet
 import { FormList, FormEntity } from '@blockframes/utils/form';
 import { GetKeys } from '@blockframes/utils/static-model/static-model';
 import { Subscription, combineLatest } from 'rxjs';
-import { startWith } from 'rxjs/operators';
+import { first, startWith } from 'rxjs/operators';
 import { LanguageVersionControl } from '@blockframes/movie/form/search.form';
 import { FormControl } from '@angular/forms';
 
@@ -30,6 +30,11 @@ export class LanguageFilterComponent implements OnInit, OnDestroy {
   constructor(private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
+    this.selectedLanguages.valueChanges.pipe(first()).subscribe(_ => {
+      // Add value to versions observable on first language trigger only.
+      this.versions.setValue(this.versions.value);
+    });
+
     this.sub = combineLatest([this.selectedLanguages.valueChanges, this.versions.valueChanges])
       .pipe(startWith([[], []] as [GetKeys<'languages'>[], GetKeys<'movieLanguageTypes'>[]]))
       .subscribe(
