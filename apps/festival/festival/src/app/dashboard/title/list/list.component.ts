@@ -1,8 +1,8 @@
 import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
-import { startWith, map, tap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { startWith, map, tap, shareReplay } from 'rxjs/operators';
+import { combineLatest, Observable } from 'rxjs';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
@@ -25,8 +25,13 @@ export class ListComponent {
   filter$ = this.filter.valueChanges.pipe(startWith(this.filter.value));
 
   titles$ = this.service.queryDashboard(this.app).pipe(
-    tap(movies => this.dynTitle.setPageTitle('My titles', movies.length ? '' : 'Empty'))
-  )
+    tap(movies => this.dynTitle.setPageTitle('My titles', movies.length ? '' : 'Empty')),
+    shareReplay({ refCount: true, bufferSize: 1 })
+  );
+
+  result$ = combineLatest([ this.filter$, this.titles$ ]).pipe(
+    map(([status, titles]) => titles.filter(title => status ? title.app.festival.status === status : titles))
+  );
 
   titleCount$: Observable<Record<string, number>> = this.titles$.pipe(map(m => ({
     all: m.length,
@@ -61,16 +66,4 @@ export class ListComponent {
   resetFilter() {
     this.filter.reset();
   }
-
-  /* index paramater is unused because it is a default paramater from the filter javascript function */
-  filterByMovie(movie: Movie, index: number, options): boolean {
-    if (options.value) {
-      return options?.exclude !== options.value ?
-        movie.app.festival.status === options.value && movie.app.festival.status !== options.exclude :
-        movie.app.festival.status === options.value;
-    } else {
-      return options.exclude ? movie.app.festival.status !== options.exclude : true;
-    }
-  }
-
 }
