@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { map, startWith, tap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { map, shareReplay, startWith, tap } from 'rxjs/operators';
+import { combineLatest, Observable } from 'rxjs';
 import { StoreStatus } from '@blockframes/utils/static-model/types';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Movie } from '@blockframes/movie/+state/movie.model';
@@ -25,8 +25,12 @@ export class TitleListComponent {
   filter$: Observable<StoreStatus | ''> = this.filter.valueChanges.pipe(startWith(this.filter.value || ''));
 
   movies$ = this.service.queryDashboard(this.app).pipe(
-    tap(movies => this.dynTitle.setPageTitle('My titles', movies.length ? '' : 'Empty'))
-  )
+    tap(movies => this.dynTitle.setPageTitle('My titles', movies.length ? '' : 'Empty')),
+    shareReplay({ refCount: true, bufferSize: 1 })
+  );
+  result$ = combineLatest([ this.filter$, this.movies$ ]).pipe(
+    map(([status, movies]) => movies.filter(movie => status ? movie.app.catalog.status === status : movies))
+  );
 
   movieCount$ = this.movies$.pipe(map(m => ({
     all: m.length,
@@ -49,17 +53,6 @@ export class TitleListComponent {
   applyFilter(filter?: StoreStatus) {
     this.filter.setValue(filter);
     this.dynTitle.setPageTitle(storeStatus[filter]);
-  }
-
-  /* index paramater is unused because it is a default paramater from the filter javascript function */
-  filterByMovie(movie: Movie, index: number, options): boolean {
-    if (options.value) {
-      return options?.exclude !== options.value ?
-        movie.app.catalog.status === options.value && movie.app.catalog.status !== options.exclude :
-        movie.app.catalog.status === options.value;
-    } else {
-      return options.exclude ? movie.app.catalog.status !== options.exclude : true;
-    }
   }
 
   resetFilter() {
