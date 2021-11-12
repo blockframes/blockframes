@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, Input, OnInit, OnDestroy, ChangeDet
 import { FormList, FormEntity } from '@blockframes/utils/form';
 import { GetKeys } from '@blockframes/utils/static-model/static-model';
 import { Subscription, combineLatest } from 'rxjs';
-import { first, startWith } from 'rxjs/operators';
+import { startWith } from 'rxjs/operators';
 import { LanguageVersionControl } from '@blockframes/movie/form/search.form';
 import { FormControl } from '@angular/forms';
 
