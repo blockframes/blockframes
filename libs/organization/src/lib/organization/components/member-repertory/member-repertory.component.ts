@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { OrganizationMember } from '@blockframes/user/+state/user.model';
 import { UserRole } from '@blockframes/permissions/+state/permissions.model';
+import { boolean } from '@blockframes/utils/decorators/decorators';
 
 @Component({
   selector: 'member-repertory',
@@ -12,6 +13,7 @@ export class MemberRepertoryComponent {
   @Input() members: OrganizationMember[];
   @Input() showFilter = false;
   @Input() isSuperAdmin: boolean;
+  @Input() @boolean showEdit = false;
 
   @Output() memberRemoved = new EventEmitter<string>();
 
