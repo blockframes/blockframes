@@ -30,13 +30,8 @@ export class LanguageFilterComponent implements OnInit, OnDestroy {
   constructor(private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
-    this.selectedLanguages.valueChanges.pipe(first()).subscribe(_ => {
-      // Add value to versions observable on first language trigger only.
-      this.versions.setValue(this.versions.value);
-    });
-
     this.sub = combineLatest([this.selectedLanguages.valueChanges, this.versions.valueChanges])
-      .pipe(startWith([[], []] as [GetKeys<'languages'>[], GetKeys<'movieLanguageTypes'>[]]))
+      .pipe(startWith([[], this.versions.value] as [GetKeys<'languages'>[], GetKeys<'movieLanguageTypes'>[]]))
       .subscribe(
         ([languages, versions]) => {
           this.rebuildingForm = true;
@@ -53,6 +48,8 @@ export class LanguageFilterComponent implements OnInit, OnDestroy {
           this.rebuildingForm = false;
       }
     );
+    // Setting latest value in observable for combineLatest
+    this.versions.setValue(this.versions.value);
 
     /** Updates selectedLanguages and versions FormList when reset is called on languagesFilterForm */
     this.formSub = this.languagesFilterForm.valueChanges.subscribe((res: Array<any>) => {
