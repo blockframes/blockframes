@@ -47,11 +47,12 @@ export class MoviesComponent implements OnInit {
     )
   }
 
-  goToEditNewTab(id: string) {
+  goToEditNewTab(id: string, $event: Event) {
+    $event.stopPropagation()
     const url = this.router.serializeUrl(
       this.router.createUrlTree([`c/o/dashboard/crm/movie/${id}`])
     );
-    window.open(url, '_blank');
+    window.open(url, '_blank', 'noreferrer');
   }
 
   goToEdit(movie: Movie) {

@@ -21,7 +21,7 @@
         <button mat-icon-button [cdkCopyToClipboard]="id" (click)="$event.stopPropagation()">
           <mat-icon svgIcon="file_copy"></mat-icon>
         </button>
-        <button mat-icon-button (click)="goToEditNewTab(id)" (click)="$event.stopPropagation()">
+        <button mat-icon-button (click)="goToEditNewTab(id, $event)">
           <mat-icon svgIcon="launch"></mat-icon>
         </button>
       </ng-template>
