@@ -58,9 +58,9 @@ export function termsCollision(avails: AvailsFilter, terms: BucketTerm<Date>[]) 
 /** Get all the terms that overlap the avails filter */
 export function collidingTerms<T extends BucketTerm>(avails: AvailsFilter, terms: T[]) {
   return terms.filter(term => (avails.exclusive || term.exclusive)
-    && someOf(avails.territories, 'optional').in(term.territories)
-    && someOf(avails.medias, 'optional').in(term.medias)
-    && someOf(avails.duration, 'optional').in(term.duration)
+    && allOf(avails.territories, 'optional').in(term.territories)
+    && allOf(avails.medias, 'optional').in(term.medias)
+    && allOf(avails.duration, 'optional').in(term.duration)
   );
 }
 
@@ -244,6 +244,7 @@ export function isMovieAvailable(titleId: string, avails: AvailsFilter, bucket: 
   // then it shouldn't be displayed to avoid the user selecting it twice
   const bucketTerms = bucket?.contracts.find(c => c.titleId === titleId)?.terms ?? [];
   const inBucket = allOfAvailInTerms(avails, bucketTerms, optional);
+
   if (inBucket) return false;
 
   // CHECK (3) if the title is already sold on some part of the requested avails, then it's not available for these avails

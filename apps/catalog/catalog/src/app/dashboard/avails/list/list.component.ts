@@ -90,7 +90,7 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
       mandates: title => {
         return this.contractService.valueChanges(mandateQuery(title)).pipe(
           joinWith({
-            terms: sale => this.termsService.valueChanges(sale.termIds),
+            terms: mandate => this.termsService.valueChanges(mandate.termIds),
           }, { shouldAwait: true, })
         )
       },

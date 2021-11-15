@@ -5,6 +5,8 @@ import {
   of,
   from
 } from 'rxjs';
+import { cloneDeep } from 'lodash'
+
 import { debounceTime, map, startWith, switchMap, tap } from 'rxjs/operators';
 
 type QueryMap<T> = Record<string, (data: Entity<T>) => any>
@@ -73,13 +75,22 @@ export function joinWith<T, Query extends QueryMap<T>>(queries: Query, options: 
     if (!obs.length) return of(entity);
     return combineLatest(obs).pipe(
       map(() => {
-        if(!entity) return entity;
-       return JSON.parse(JSON.stringify(entity)) as any
+        if (!entity) return entity;
+        /**
+         * https://stackoverflow.com/a/122704/6441976
+         * We need a more robust deep clone method other than
+         * @code JSON.parse(JSON.stringify(my_var))
+         * Dates gets toIsoString-ified and this causes
+         * avails durationCheck in `allOfAvailInTerms` method
+         * to fail as it's verifying greater than on a date and a
+         * stringified date object ( which is at this point a string )
+         */
+        return cloneDeep(entity) as any
       }),
     );
   }
 
-  return switchMap((data: T|T[]) => {
+  return switchMap((data: T | T[]) => {
     if (Array.isArray(data)) {
       if (!data.length) return of([]);
       const queries = (data as Entity<T>[]).map(runQuery);
