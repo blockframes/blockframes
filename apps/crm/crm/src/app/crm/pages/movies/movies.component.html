@@ -21,6 +21,9 @@
         <button mat-icon-button [cdkCopyToClipboard]="id" (click)="$event.stopPropagation()">
           <mat-icon svgIcon="file_copy"></mat-icon>
         </button>
+        <button mat-icon-button (click)="goToEditNewTab(id, $event)">
+          <mat-icon svgIcon="launch"></mat-icon>
+        </button>
       </ng-template>
       <ng-template colRef="title.international" label="International title" sort let-title>
         {{ title }}
