@@ -14,6 +14,7 @@ import {
   UnknownEntityError,
   ContractsImportState,
   getUser,
+  sheetHeaderLine,
 } from '@blockframes/import/utils';
 import { centralOrgId } from '@env';
 import { MovieService } from '@blockframes/movie/+state';
@@ -280,8 +281,8 @@ export async function formatContract(
     const isInternalSale = contract.type === 'sale' && contract.sellerId === centralOrgId.catalog;
     if (isInternalSale) {
       if (typeof data.parentTerm === 'number') {
-        const mandate = contracts[data.parentTerm - 2];
-        contract.parentTermId = mandate?.terms[0]?.id; // excel lines start at 1 and first line is the column names
+        const mandate = contracts[data.parentTerm - sheetHeaderLine.contracts - 1]; // first line is the column names
+        contract.parentTermId = mandate?.terms[0]?.id;
         if (!mandate || !contract.parentTermId) errors.push({
           type: 'error',
           field: 'parentTerm',
@@ -300,7 +301,7 @@ export async function formatContract(
     }
 
     // remove duplicate from stakeholders
-    contract.stakeholders = contract.stakeholders.filter((s, i) => contract.stakeholders.indexOf(s) == i);
+    contract.stakeholders = contract.stakeholders.filter((s, i) => contract.stakeholders.indexOf(s) === i);
 
     contracts.push({ contract, terms: [term], errors: [ ...errors, ...warnings ], newContract: true });
   }
