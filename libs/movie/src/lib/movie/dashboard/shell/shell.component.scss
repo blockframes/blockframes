@@ -19,7 +19,7 @@ section, article {
     margin-top: auto;
   }
 }
-article * {
+article *:not(h1) {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
