@@ -307,8 +307,8 @@ export function filterDashboardAvails(mandateTerms: BucketTerm[], saleTerms: Buc
     // If duration ends before avails: available
     if (duration.to < avails.duration.from) return false;
 
-    // exclusive: If either avails is non-exclusive or the sale is non-exclusive: available
-    if (!avails.exclusive || !exclusive) return false
+    // exclusive: If non-exclusive && avails non-exclusive: available
+    if (!avails.exclusive && !exclusive) return false;
 
     return true;
   });
