@@ -8,10 +8,10 @@
         <section fxLayout fxLayoutGap="16px" fxFlex>
           <img fxHide.xs [ref]="movie.poster" asset="empty_poster.svg" alt="movie poster">
 
-        <article fxLayout="column" fxFlex>
-          <h4>{{ movie | movieFeature }}</h4>
-          <h1>{{ movie.title.international }}</h1>
-          <bf-tag>{{ movie.app[appName].status }}</bf-tag>
+          <article fxLayout="column" fxFlex>
+            <h4>{{ movie | movieFeature }}</h4>
+            <h1>{{ movie.title.international }}</h1>
+            <bf-tag>{{ movie.app[appName].status }}</bf-tag>
 
             <h6>{{ movie.directors | displayName }}</h6>
             <p>
