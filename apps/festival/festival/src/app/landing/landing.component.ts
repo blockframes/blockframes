@@ -21,8 +21,7 @@ export class LandingComponent {
     'partner_mubi.png',
     'partner_paramount.png',
     'partner_mgm.png',
-    'partner_sony.png',
-    'partner_A24.png'
+    'partner_sony.png'
   ];
 
   public tabNames = ['For Sales Agents', 'For Buyers'];
@@ -65,7 +64,7 @@ export class LandingComponent {
       description: 'Use one single tool to promote your line-up all year round, during and outside festivals and markets.'
     },
     {
-      title: "Simplify your buyers lives",
+      title: "Simplify your buyers' lives",
       imgAsset: 'benefits_simplify.svg',
       description: 'With one single login, buyers can discover projects and attend events from multiples companies, all year round.'
     },
@@ -124,7 +123,7 @@ export class LandingComponent {
 
   public clientOpinion = [
     {
-      name: "Nate bolotin",
+      name: "Nate Bolotin",
       jobTitle: "Partner",
       text: "« We use Archipel to recreate the momentum of live market screenings outside markets. It helps generate emulation around our projects and has often led to some interesting bidding wars. »",
       logo: "XYZ_logo.png",

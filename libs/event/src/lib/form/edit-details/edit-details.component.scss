@@ -5,3 +5,9 @@ mat-icon{
 mat-radio-group {
   margin-bottom: 16px;
 }
+
+.noAccessibilityChange {
+  p, h1 {
+    text-align: center;
+  }
+}

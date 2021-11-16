@@ -1,6 +1,7 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { AuthQuery } from '@blockframes/auth/+state';
 import { Event } from '@blockframes/event/+state';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { Invitation, InvitationService } from '../../+state';
@@ -29,11 +30,13 @@ export class ActionComponent {
   @Input() @boolean flat = false;
 
   private requestPending = false;
+  user$ = this.authQuery.user$;
 
   constructor(
     private router: Router,
     private service: InvitationService,
     private snackBar: MatSnackBar,
+    private authQuery: AuthQuery,
   ) { }
 
   accept(invitation: Invitation) {
@@ -49,7 +52,7 @@ export class ActionComponent {
     const { ownerOrgId, id, accessibility } = event;
     this.service.request(ownerOrgId).to('attendEvent', id);
     if (accessibility !== 'public') {
-      this.snackBar.open('Your request has been sent to the organizer.', 'close', { duration: 2000 });
+      this.snackBar.open('Your request has been sent to the organizer.', 'close', { duration: 3000 });
     }
     this.requestPending = true;
   }

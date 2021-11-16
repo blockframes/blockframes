@@ -1,8 +1,8 @@
 ﻿<ng-template #confirmExit>
   <div class="confirm-exit" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="16px">
     <h1>You are about to leave the form.</h1>
-    <p>Some changes have not been saved. If you leave now, you will lose these changes.</p>
-    <div fxLayout="row" fxLayoutAlign="center">
+    <p>Some changes have not been saved.<br/>If you leave now, you will lose these changes.</p>
+    <div fxLayout="column" fxLayoutAlign="center">
       <button class="save" mat-flat-button color="primary" [mat-dialog-close]="true">
         Save & Exit</button>
       <button class="text-primary" mat-button [mat-dialog-close]="false">
