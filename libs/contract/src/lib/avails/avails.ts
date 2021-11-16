@@ -255,66 +255,61 @@ export function isMovieAvailable(titleId: string, avails: AvailsFilter, bucket: 
 
 // @todo(#7139) Factorize that if possible
 export function filterDashboardAvails(mandateTerms: BucketTerm[], saleTerms: BucketTerm[], avails: AvailsFilter) {
+  
+  if (!mandateTerms.length) return false;
+
+  // If one field not provided: available
+  if (!avails.territories?.length) return true;
+  if (!avails.medias?.length) return true;
+  if (!avails.duration?.from || !avails.duration?.to) return true;
+  if (typeof avails.exclusive !== 'boolean') return true;
+
   //////////////
   // MANDATES //
   //////////////
   // If a no mandate include the avails, it's not available
   const hasMandateCovered = mandateTerms.some(mandate => {
     const { territories, medias, duration, exclusive } = mandate;
-    // territories: If none of the avails territories are in the mandates
-    if (avails.territories?.length) {
-      if (avails.territories.every(t => !territories.includes(t))) return false;
-    }
-    // medias: If none of the avails medias are in the mandates
-    if (avails.medias?.length) {
-      if (avails.medias.every(t => !medias.includes(t))) return false;
-    }
-    // duration
-    if (avails.duration?.from && avails.duration?.to) {
-      if (duration.from > avails.duration.to) return false;
-      if (duration.to < avails.duration.from) return false;
-    }
-    if (typeof avails.exclusive === 'boolean') {
-      if (avails.exclusive !== exclusive) return false
-    }
+    // territories: If some of the avails territories are not in the mandates: not available
+    if (avails.territories.some(t => !territories.includes(t))) return false;
+
+    // medias: If some of the avails medias are not in the mandates: not available
+    if (avails.medias.some(t => !medias.includes(t))) return false;
+
+    // from: If avails ends before mandates: not available
+    if (duration.from > avails.duration.to) return false;
+    // to: If avails start after mandates: not available
+    if (duration.to < avails.duration.from) return false;
+
+    // exclusivity: If non-exclusive while searching exclusive: not available
+    if (avails.exclusive && !exclusive) return false;
+
     return true;
   });
-  if (!mandateTerms.length || !hasMandateCovered) return false;
+  if (!hasMandateCovered) return false;
 
   ///////////
   // SALES //
   ///////////
-  const allTerritories = Object.keys(staticModel.territories) as Territory[];
-  const allMedias = Object.keys(staticModel.medias) as Media[];
   // If a sale includes the avails, it's not available
   const hasSaleCovered = saleTerms.some(sale => {
     const { territories, medias, duration, exclusive } = sale;
     
-    // territories: If some of the avails territories are not in the sale, return false
-    const availsTerritories = avails.territories?.length ? avails.territories : allTerritories;
-    if (availsTerritories.some(t => !territories.includes(t))) return false;
+    // territories: If none of the avails territories are in the sale: available
+    if (avails.territories.every(t => !territories.includes(t))) return false;
 
-    // medias: If some of the avails medias are not in the sale, return false
-    const availsMedias = avails.medias?.length ? avails.medias : allMedias;
-    if (availsMedias.some(t => !medias.includes(t))) return false;
+    // medias: If none of the avails medias are in the sale: available
+    if (avails.medias.every(t => !medias.includes(t))) return false;
 
-    // duration: 
-    if (avails.duration?.from && avails.duration?.to) {
-      // If duration starts after avails
-      if (duration.from > avails.duration.to) return false;
-      // If duration ends before avails
-      if (duration.to < avails.duration.from) return false;
-    } else {
-      // If duration ends before today, it's not available
-      if (duration.to < new Date()) return true;
-      // It will be available at some point
-      return false;
-    }
+    // If duration starts after avails: available
+    if (duration.from > avails.duration.to) return false;
 
-    // exclusive: if non
-    if (typeof avails.exclusive === 'boolean') {
-      if (avails.exclusive !== exclusive) return false
-    }
+    // If duration ends before avails: available
+    if (duration.to < avails.duration.from) return false;
+
+    // exclusive: If either avails is non-exclusive or the sale is non-exclusive: available
+    if (!avails.exclusive || !exclusive) return false
+
     return true;
   });
   if (hasSaleCovered) return false;
