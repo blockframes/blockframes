@@ -53,7 +53,7 @@ export interface OrganizationsImportState {
  */
 export const sheetHeaderLine: Record<SpreadsheetImportType, number> = {
   titles: 14,
-  contracts: 1,
+  contracts: 10,
   organizations: 10,
 };
 
