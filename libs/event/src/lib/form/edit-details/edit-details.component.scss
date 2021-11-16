@@ -6,6 +6,8 @@ mat-radio-group {
   margin-bottom: 16px;
 }
 
-.noAccessibilityChange p {
-  text-align: center;
+.noAccessibilityChange {
+  p, h1 {
+    text-align: center;
+  }
 }
