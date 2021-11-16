@@ -197,7 +197,7 @@ export function getWatermark(email: string = '', firstName: string = '', lastNam
         #jwplayer-user-watermark .email { font: italic 24px Arial;}
       </style>
       <text x="100%" y="35%" fill="#fff" stroke="#000" class="name">${firstName} ${lastName}</text>
-      <text x="100%" y="25%" fill="#fff" stroke="#000" class="email">${email}</text>
+      <text x="100%" y="25%" fill="#fff" stroke="#000" class="email">${email ?? ''}</text>
     </svg>
   `;
 
