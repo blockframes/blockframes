@@ -39,7 +39,7 @@
         {{views}}
       </ng-template>
       <ng-template colRef="directors" label="Director(s)" let-directors>
-        {{ directors | displayName }}
+        {{ directors | displayName | maxLength:50 }}
       </ng-template>
       <ng-template colRef="productionStatus" label="Production Status" let-prod>
         {{ prod | toLabel: 'productionStatus' }}

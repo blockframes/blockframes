@@ -41,7 +41,7 @@
         <b>{{ title| maxLength:50 }}</b>
       </ng-template>
       <ng-template colRef="directors" label="Director(s)" let-directors>
-        <b>{{ directors | displayName }}</b>
+        <b>{{ directors | displayName | maxLength:50 }}</b>
       </ng-template>
       <ng-template colRef="release.year" label="Release Year" let-year sort>
         <b>{{ year }}</b>

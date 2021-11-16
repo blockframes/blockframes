@@ -46,11 +46,22 @@ export interface OrganizationsImportState {
 }
 
 
+/**
+ * This hold the excel line number where the data start.
+ * It should always match the column names line in the excel files.
+ * The org/titles/contract should then be directly under this line.
+ */
+export const sheetHeaderLine: Record<SpreadsheetImportType, number> = {
+  titles: 14,
+  contracts: 1,
+  organizations: 10,
+};
+
 export const sheetRanges: Record<SpreadsheetImportType, string> = {
-  titles: 'A14:BZ1000',
-  contracts: 'A1:Q100',
-  organizations: 'A10:Z100',
-}
+  titles: `A${sheetHeaderLine.titles}:BZ1000`,
+  contracts: `A${sheetHeaderLine.contracts}:Q100`,
+  organizations: `A${sheetHeaderLine.organizations}:Z100`,
+};
 
 
 export async function getOrgId(name: string, orgService: OrganizationService, cache: Record<string, string>) {

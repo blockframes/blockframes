@@ -18,4 +18,18 @@ footer {
   button {
     margin: 0 8px;
   }
+
+  button.enter-fullscreen {
+    position: absolute;
+    right: 12px;
+    margin-top: 4px;
+  }
+  
+  button.fullscreen {
+    background: #000;
+    position: absolute;
+    right: 8px;
+    margin: 8px;
+  }
 }
+
