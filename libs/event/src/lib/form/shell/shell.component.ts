@@ -127,7 +127,8 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
     }
 
     const dialogRef = this.dialog.open(this.confirmExitTemplate, {
-      width: '80%'
+      width: '80%',
+      minWidth: '50vw'
     });
     return dialogRef.afterClosed().pipe(
       switchMap(shouldSave => {
