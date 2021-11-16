@@ -5,6 +5,7 @@ import { EventLayoutModule } from '@blockframes/ui/layout/event/event.module';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
+import { SafariBannerModule } from '@blockframes/utils/safari-banner/safari-banner.module';
 
 // Routes
 import { RouterModule, Routes } from '@angular/router';
@@ -117,7 +118,8 @@ const routes: Routes = [
     FlexLayoutModule,
     EventLayoutModule,
     AsideModule,
-    ImageModule
+    ImageModule,
+    SafariBannerModule
   ]
 })
 export class EventModule { }
