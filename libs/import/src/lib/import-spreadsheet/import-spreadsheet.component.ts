@@ -9,7 +9,7 @@ import { SheetTab, importSpreadsheet } from '@blockframes/utils/spreadsheet';
 import { sheetRanges, SpreadsheetImportType } from '../utils';
 
 
-const allowedMimeTypes = ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.oasis.opendocument.spreadsheet', 'text/csv'];
+const allowedMimeTypes = ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.oasis.opendocument.spreadsheet', 'text/csv', 'text/html'];
 
 @Component({
   selector: 'import-spreadsheet[importType]',

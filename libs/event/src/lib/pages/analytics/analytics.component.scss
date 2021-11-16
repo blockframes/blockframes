@@ -25,8 +25,12 @@ bf-table-filter {
   height: 100%;
 }
 
-.analytics, .no-analytics {
+.analytics {
   margin-bottom: 300px;
+}
+
+.no-analytics {
+  margin-bottom:100px;
 }
 
 @include layout-bp(xs) {

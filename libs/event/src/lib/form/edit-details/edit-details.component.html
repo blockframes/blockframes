@@ -45,14 +45,15 @@
 
 <ng-template #noAccessibilityChange>
   <div class="noAccessibilityChange" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="16px">
-    <h1>Sorry, you can't change the privacy settings</h1>
-    <p>The guests were already invited to this event. You can't change the privacy settings anymore.</p>
+    <h1>Sorry! You can't change this event's Privacy Settings anymore.</h1>
+    <p>Some guests were already invited to this event according to previously selected Privacy Settings. Their invitations have been sent and their access cannot be modified now. If you've changed your mind, please contact our team directly.</p>
     <p>If you still need to update your privacy, please contact our team</p>
     <div fxLayout="column" fxLayoutAlign="center">
       <button class="save" mat-flat-button color="primary" [mat-dialog-close]="true">
-        Contact archipel market team</button>
+        Contact us
+      </button>
       <button class="text-primary" mat-button [mat-dialog-close]="false">
-        Close windows
+        Back to Event
       </button>
     </div>
   </div>
