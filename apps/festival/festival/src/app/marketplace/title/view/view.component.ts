@@ -60,4 +60,8 @@ export class MarketplaceMovieViewComponent implements OnInit {
       map(events => events.length ? events[events.length - 1].id : null)
     );
   }
+
+  getEmails(orgs: Organization[]) {
+    return orgs.map(org => org.email).join(', ')
+  }
 }
