@@ -60,8 +60,8 @@ export const templateIds = {
     invest: 'd-e902521de8684c57bbfa633bad88567a'
   },
   eventReminder: {
-    oneDay: 'd-a2f3a222b3a34fce9f5ce6effccdba15',
-    oneHour: 'd-f2e4d3c9f55c458a84296c7b66ccad22'
+    oneDay: 'd-0c7bcb6e4a234ddc95ed74b9ecc433dc',
+    oneHour: 'd-8a9439a404cc4b51887e9dea44f7fbd7'
   },
   movie: {
     accepted: 'd-bfcf2760bcb7484ab55f864a59331d26'
