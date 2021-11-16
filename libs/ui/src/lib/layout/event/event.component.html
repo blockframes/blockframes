@@ -19,7 +19,7 @@
         <a app-logo [routerLink]="(user$ | async) ? '.' : '/'"></a>
         <ng-content select="header"></ng-content>
         <ng-container *ngIf="(user$ | async)">
-          <a test-id="calendar-icon" mat-icon-button routerLink="event/calendar">
+          <a test-id="calendar-icon" mat-icon-button routerLink="/c/o/marketplace/event/calendar">
             <mat-icon svgIcon="calendar_today"></mat-icon>
           </a>
           <a test-id="heart-icon" mat-icon-button routerLink="/c/o/marketplace/wishlist">
