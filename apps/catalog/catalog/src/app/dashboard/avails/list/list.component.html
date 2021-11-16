@@ -2,7 +2,7 @@
 
 <section class="surface" fxLayout="column" fxLayoutGap="16px">
   <h3>Search Criteria</h3>
-  <form [availsFilter]="availsForm" fxLayout="row wrap"></form>
+  <form [availsFilter]="availsForm"></form>
 </section>
 
 <section *ngIf="results$ | async as sales; else loading">

@@ -6,6 +6,13 @@
   flex-direction: column;
 }
 
+form {
+  flex-flow: row wrap;
+  box-sizing: border-box;
+  display: flex;
+}
+
+
 world-map {
   height: 500px;
   z-index: 0;

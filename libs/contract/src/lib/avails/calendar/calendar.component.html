@@ -9,7 +9,7 @@
     <th scope="row"  [ngClass]="{ hover: r === state.hoverRow }">{{row}}</th>
     <td
       *ngFor="let col of columns; index as c"
-      [ngClass]="stateMatrix[r][c]"
+      [ngClass]="stateMatrix[r][c] + (disableSelect ? ' select-disabled' : '')"
       (mouseenter)="onHover(r, c)"
       (mouseleave)="onExit()"
       (click)="onSelect(r, c)"

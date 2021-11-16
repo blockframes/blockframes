@@ -11,7 +11,7 @@
       </div>
       <div *ngIf="offer.contracts as contracts">
         <h2>
-          {{ contracts.length }} Titles
+          {{ contracts.length + (contracts.length>1 ? ' Titles':' Title')}}
         </h2>
         <h2 *ngIf="contracts | total:'income.price' as price; else noPrice">
           Total: {{ price | currency:offer.currency }}

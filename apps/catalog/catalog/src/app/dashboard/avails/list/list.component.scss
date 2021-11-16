@@ -10,3 +10,9 @@ h2,section{
 h1{
   margin-top: 16px;
 }
+
+form {
+  flex-flow: row wrap;
+  box-sizing: border-box;
+  display: flex;
+}

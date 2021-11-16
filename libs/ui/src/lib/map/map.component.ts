@@ -15,6 +15,7 @@ import { HttpClient } from '@angular/common/http';
 import { map as toMap, geoJSON, Path, PathOptions } from 'leaflet';
 import { Subscription, BehaviorSubject, combineLatest } from 'rxjs';
 import { startWith, switchMap, map } from 'rxjs/operators';
+import { boolean } from '@blockframes/utils/decorators/decorators';
 
 @Directive({
   selector: 'map-feature, [mapFeature]'
@@ -65,7 +66,7 @@ export class MapFeature {
 @Component({
   selector: 'world-map',
   template: '<ng-content></ng-content>',
-  styles: [`:host { display: block; background-color: var(--background-card)};`],
+  styles: [`:host { display: block; background-color: var(--background-card);}`],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MapComponent implements AfterViewInit, OnDestroy {
@@ -73,6 +74,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   layers: Record<string, Path> = {};
 
   @Input() featureTag = 'iso_a3';
+  @Input() @boolean disableSelect=false;
+
   // eslint-disable-next-line
   @Output() select = new EventEmitter();
   @ContentChildren(MapFeature, { descendants: true }) features: QueryList<MapFeature>
@@ -127,7 +130,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       fillOpacity: 0,
       stroke: true,
       weight: 1,
-      color: '#06081c'
+      color: '#06081c',
+      className:this.disableSelect? 'no-cursor': '',
     };
   }
 

@@ -15,6 +15,17 @@ export function removeAccent<T>(str: T) {
   return str;
 }
 
+export function jsonDateReviver(key: unknown, value: any) {
+  if (!value) return value;
+
+  const dateFormat = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,}|)Z$/;
+  if (typeof value === "string" && dateFormat.test(value)) return new Date(value);
+  if (typeof value === 'object' && Object.keys(value).length === 2 && ['nanoseconds', 'seconds'].every(k => k in value))
+    return new Date((value.nanoseconds * 1 ^ -6) + (value.seconds * 1000));
+
+  return value;
+}
+
 export function titleCase(text: string) {
   if (!text) return '';
   return text[0].toUpperCase() + text.substring(1);
