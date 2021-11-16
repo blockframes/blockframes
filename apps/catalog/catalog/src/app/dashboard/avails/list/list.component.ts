@@ -11,35 +11,35 @@ import { map, throttleTime } from "rxjs/operators";
 import { centralOrgId } from '@env';
 import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
 import { ActivatedRoute, Router } from "@angular/router";
-import { AvailsFilter, isMovieAvailable } from "@blockframes/contract/avails/avails";
+import { AvailsFilter, filterDashboardAvails } from "@blockframes/contract/avails/avails";
 import { combineLatest, Subscription } from "rxjs";
 import { Term, TermService } from "@blockframes/contract/term/+state";
 
 interface TotalIncome { EUR: number; USD: number; }
 
-type ContractWithIncomeAndTerms = (Sale<Date> | Mandate<Date>) & { income?: Income; terms?: Term<Date>[]; }
+type SaleWithIncomeAndTerms = (Mandate<Date> | Sale<Date>) & { income?: Income; terms?: Term<Date>[]; }
+type MandateWithTerms = (Mandate<Date> | Sale<Date>) & { terms?: Term<Date>[]; }
 
 type JoinSaleTitleType = {
-  sales?: ContractWithIncomeAndTerms[], id: string,
-  saleCount?: number, totalIncome?: TotalIncome,
+  sales?: SaleWithIncomeAndTerms[],
+  mandates?: MandateWithTerms[],
+  id: string,
+  saleCount?: number,
+  totalIncome?: TotalIncome,
   allSaleCount?: number,
 }
 
-/**
- * Reason why we are getting all the contracts and not only the sales is because we need the mandates to compute
- * mandate terms to be able to compute isMovieAvailable
- * @param title
- * @returns
- */
-const mandateQuery = (title: Movie): QueryFn => ref => ref.where('titleId', '==', title.id).where('type', '==', 'mandate').where('status', '==', 'accepted');
-const saleQuery = (title: Movie): QueryFn => ref => ref.where('titleId', '==', title.id).where('type', '==', 'sale')
+const organizationQuery = (orgId: string): QueryFn => ref => ref.where('orgIds', 'array-contains', orgId);
+// We need the mandates to compute isMovieAvailable
+const mandateQuery = (title: Movie): QueryFn => ref => ref.where('titleId', '==', title.id)
+  .where('type', '==', 'mandate')
+  .where('status', '==', 'accepted');
+const saleQuery = (title: Movie): QueryFn => ref => ref.where('titleId', '==', title.id)
+  .where('type', '==', 'sale')
   .where('status', '==', 'accepted');
 
-const organizationQuery = (orgId: string): QueryFn => {
-  return ref => ref.where('orgIds', 'array-contains', orgId);
-}
 
-const isCatalogSale = (contract: ContractWithIncomeAndTerms): boolean => contract.sellerId === centralOrgId.catalog && contract.status === 'accepted';
+const isCatalogSale = (contract: SaleWithIncomeAndTerms): boolean => contract.sellerId === centralOrgId.catalog && contract.status === 'accepted';
 
 const saleCountAndTotalPrice = (title: JoinSaleTitleType) => {
   const initialTotal: TotalIncome = { EUR: 0, USD: 0 };
@@ -60,7 +60,8 @@ const saleCountAndTotalPrice = (title: JoinSaleTitleType) => {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnInit {
-  public availsForm = new AvailsForm({}, []);
+  // @todo(#7139) remove default duration value once issue is solved
+  public availsForm = new AvailsForm({ duration: { from: null, to: null } }, []);
   private orgId = this.orgQuery.getActiveId();
   private sub: Subscription;
 
@@ -68,13 +69,20 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
     map(query => ({ formValue: query.get('formValue') })),
   )
 
-  private saleQuery$ = this.titleService.valueChanges(organizationQuery(this.orgId)).pipe(
+  private titles$ = this.titleService.valueChanges(organizationQuery(this.orgId)).pipe(
     joinWith({
       sales: title => {
         return this.contractService.valueChanges(saleQuery(title)).pipe(
           joinWith({
             income: sale => this.incomeService.valueChanges(sale.id),
             terms: sale => this.termsService.valueChanges(sale.termIds),
+          }, { shouldAwait: true, })
+        )
+      },
+      mandates: title => {
+        return this.contractService.valueChanges(mandateQuery(title)).pipe(
+          joinWith({
+            terms: mandate => this.termsService.valueChanges(mandate.termIds),
           }, { shouldAwait: true, })
         )
       },
@@ -85,30 +93,18 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
     map(titles => titles.map(saleCountAndTotalPrice)),
   );
 
-  private mandateQuery$ = this.titleService.valueChanges(organizationQuery(this.orgId)).pipe(
-    joinWith({
-      mandates: title => {
-        return this.contractService.valueChanges(mandateQuery(title)).pipe(
-          joinWith({
-            terms: sale => this.termsService.valueChanges(sale.termIds),
-          }, { shouldAwait: true, })
-        )
-      },
-    }, { shouldAwait: true, }),
-  );
-
   public results$ = combineLatest([
-    this.saleQuery$,
-    this.mandateQuery$,
+    this.titles$,
     this.availsForm.value$
   ]).pipe(
-    map(([titlesWithSales, titlesWithMandates, avails]) => titlesWithSales.filter(title => {
-      const mandateTitle = titlesWithMandates.find(aTitleWithMandate => aTitleWithMandate.id === title.id);
-      const mandateTerms = mandateTitle?.mandates?.flatMap(contract => contract.terms);
-      const saleTerms = title.sales?.flatMap(contract => contract.terms);
-
-      return isMovieAvailable(title.id, avails, null, mandateTerms ?? [], saleTerms ?? [], 'optional');
-    })),
+    map(([titles, avails]) => {
+      return titles.filter(title => {
+        const mandateTerms = title?.mandates?.flatMap(contract => contract.terms) ?? [];
+        const saleTerms = title.sales?.flatMap(contract => contract.terms) ?? [];
+        // @todo(#7139) use better filter
+        return filterDashboardAvails(mandateTerms, saleTerms, avails);
+      })
+    }),
   );
 
   constructor(
