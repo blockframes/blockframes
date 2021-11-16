@@ -295,7 +295,7 @@ export function filterDashboardAvails(mandateTerms: BucketTerm[], saleTerms: Buc
     if (availsTerritories.some(t => !territories.includes(t))) return false;
 
     // medias: If some of the avails medias are not in the sale, return false
-    const availsMedias = avails.territories?.length ? avails.territories : allMedias;
+    const availsMedias = avails.medias?.length ? avails.medias : allMedias;
     if (availsMedias.some(t => !medias.includes(t))) return false;
 
     // duration: 
