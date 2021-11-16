@@ -12,7 +12,7 @@
             <h6>{{ event.accessibility | toLabel:'accessibility'}} {{ event.type }}</h6>
             <pre class="mat-body-1">{{ event | eventRange }}</pre>
             <p class="mat-body-2">{{ event.meta.description }}</p>
-            <countdown-timer [title]="'Event will start in :'" [date]="event.start" [timeUnits]="['days', 'hours', 'minutes']"></countdown-timer>
+            <countdown-timer [title]="'Event will start in :'" [date]="event.start" [timeUnits]="['days', 'hours', 'minutes']" (timerEnded)="timerEnded($event)"></countdown-timer>
             <ng-container *ngIf="event.isOwner; else notOwner">
               <h3>You are the owner of this event.</h3>
               <p>You can invite members and edit the event config in your dashboard.</p>
@@ -21,7 +21,7 @@
             <ng-template #notOwner>
                 <invitation-action *ngIf="(invitation$ | async) !== undefined" @fade [invitation]="(invitation$ | async)" [event]="event"></invitation-action>
                 <ng-container *ngIf="(invitation$ | async)?.status === 'accepted'  || event.accessibility === 'public'">
-                  <a mat-flat-button color="accent" disabled matTooltip="You'll be able to join the screening when it starts.">Access {{ event.type | titlecase }} Room</a>
+                  <a mat-flat-button color="accent" [disabled]="!_timerEnded" matTooltip="You'll be able to join the screening when it starts.">Access {{ event.type | titlecase }} Room</a>
                 </ng-container>
             </ng-template>
           </ng-container>
