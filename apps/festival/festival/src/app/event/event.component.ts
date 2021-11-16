@@ -19,7 +19,7 @@ export class EventComponent implements OnInit {
     private service: EventService,
   ) { }
 
-  async ngOnInit() {
+  ngOnInit() {
     this.isMeeting$ = this.route.params.pipe(
       pluck('eventId'),
       switchMap((eventId: string) => this.service.queryDocs(eventId)),
