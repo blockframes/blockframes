@@ -109,10 +109,12 @@ export async function selectEnvironment(projectId: string) {
   output = execSync(cmd).toString();
   console.log(output);
 
+  const fileName = `env.${projectId}.ts`;
+  const envLine = `export * from './${fileName}'`;
   const localEnvFile = join(process.cwd(), 'env', 'env.ts');
-  const targetEnvFile = join(process.cwd(), 'env', `env.${projectId}.ts`);
-  copyFileSync(targetEnvFile, localEnvFile);
-  console.log(`env.ts file overwritten with env.${projectId}.ts`);
+  // const targetEnvFile = join(process.cwd(), 'env', `env.${projectId}.ts`); //? Do we check if exists?
+  await writeFile(localEnvFile, envLine);
+  console.log(`env.ts file points to env.${projectId}.ts`);
 }
 
 /**
