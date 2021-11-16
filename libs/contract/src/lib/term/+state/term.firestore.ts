@@ -13,14 +13,6 @@ export interface BucketTerm<T extends Date | firebase.firestore.Timestamp = Date
   territories: Territory[];
   exclusive: boolean;
   languages: Record<string, MovieLanguageSpecification>;
-  runs?: {
-    broadcasts: number;
-    catchup: {
-      from: Date,
-      duration: number,
-      period: 'day' | 'week' | 'month'
-    }
-  }
 }
 
 /**
