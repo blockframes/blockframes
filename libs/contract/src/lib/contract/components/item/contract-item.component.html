@@ -48,9 +48,6 @@
           <ng-template #noLanguage>-</ng-template>
         </ng-container>
       </ng-template>
-      <ng-template colRef="runs.broadcasts" label="# of Broadcasts" let-broadcasts sort>
-        {{broadcasts ?? '-'}}
-      </ng-template>
     </bf-table>
     <ng-content select="footer"></ng-content>
     <ng-container *ngIf="contract?.titleId| getTitleHoldbacks:orgId | async as existingHoldbacks">

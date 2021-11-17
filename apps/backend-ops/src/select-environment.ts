@@ -1,5 +1,4 @@
 import { join, resolve } from 'path';
-import { copyFileSync } from 'fs';
 import { runShellCommand, getServiceAccountObj } from '@blockframes/firebase-utils';
 import { promises as fsPromises } from 'fs';
 import { execSync } from 'child_process';
@@ -109,10 +108,11 @@ export async function selectEnvironment(projectId: string) {
   output = execSync(cmd).toString();
   console.log(output);
 
+  const fileName = `env.${projectId}`;
+  const envLine = `export * from 'env/${fileName}'`;
   const localEnvFile = join(process.cwd(), 'env', 'env.ts');
-  const targetEnvFile = join(process.cwd(), 'env', `env.${projectId}.ts`);
-  copyFileSync(targetEnvFile, localEnvFile);
-  console.log(`env.ts file overwritten with env.${projectId}.ts`);
+  await writeFile(localEnvFile, envLine);
+  console.log(`env.ts file now contains: ${envLine} `);
 }
 
 /**
