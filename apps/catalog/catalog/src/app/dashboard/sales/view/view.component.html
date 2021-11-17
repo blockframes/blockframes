@@ -4,13 +4,22 @@
       <mat-icon svgIcon="arrow_back"></mat-icon>
     </a>
     <bf-tag>{{sale.status | toLabel: 'contractStatus'}}</bf-tag>
-    <ng-container *ngIf="sale.buyerId | getOrg | async as org">
-      <div fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
-        <img height="100" width="100" [ref]="org?.logo" asset="empty_organization.svg" type="logo"
-          alt="Organization Logo">
-        <h1>{{ org | orgName }}</h1>
-      </div>
+    <ng-container *ngIf="sale.sellerId === centralOrgId.catalog; else externalSale">
+      <ng-container *ngIf="sale.buyerId | getOrg | async as org">
+        <div fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
+          <img height="100" width="100" [ref]="org?.logo" asset="empty_organization.svg" type="logo"
+            alt="Organization Logo">
+          <h1>{{ org | orgName }}</h1>
+        </div>
+      </ng-container>
     </ng-container>
+    <ng-template #externalSale>
+      <div fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
+        <img height="100" width="100" asset="empty_organization.svg" type="logo"
+          alt="Organization Logo">
+        <h1>External</h1>
+      </div>
+    </ng-template>
     <span>Ref {{ sale.offerId }} / Offer created: {{sale._meta.createdAt | date: 'MM/dd/yyyy'}}</span>
     <div fxLayout fxLayoutAlign="space-between center" class="actions">
       <div fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">

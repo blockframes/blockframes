@@ -44,7 +44,7 @@
       <div grid>
         <mat-card [col]="3" *ngIf="!!movie.delivery?.file.storagePath">
           <img asset="delivery_list.svg" alt="file with gears" />
-          <a mat-button [href]="movie.delivery.file| getDownloadUrl | async" target="_blank">
+          <a mat-button [href]="movie.delivery.file| getUrl | async" target="_blank">
             <mat-icon svgIcon="cloud_download"></mat-icon>
             <span>Available Materials</span>
           </a>

@@ -1,4 +1,7 @@
-<form-text [form]="form.get('title')"></form-text>
+<header>
+  <form-text [form]="form.get('title')"></form-text>
+  <form-text [form]="form.get('link')"></form-text>  
+</header>
 <mat-radio-group [value]="queryMode" (change)="select($event)">
   <mat-radio-button value="eventIds">IDs</mat-radio-button>
   <mat-radio-button value="query">Firestore Query</mat-radio-button>

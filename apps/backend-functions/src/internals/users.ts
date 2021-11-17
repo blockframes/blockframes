@@ -33,29 +33,36 @@ export const getOrInviteUserByMail = async (
   eventData?: EventEmailData
 ): Promise<{ user: UserProposal | PublicUser, invitationStatus?: InvitationStatus }> => {
   const fromOrgId = invitation.fromOrg.id;
+  let invitationStatus: InvitationStatus;
   try {
     const { uid } = await auth.getUserByEmail(email);
     const user = await getDocument<PublicUser>(`users/${uid}`);
-    
+
     //if user exists but has no orgId, we still want to send him an invitation email
     if (invitation.type === "attendEvent" && !user.orgId) {
       const invitationTemplateId = templateIds.user.credentials.attendEventRemindInvitationPass;
+      if (invitation.mode === 'invitation' && eventData?.accessibility !== 'private') {
+        invitationStatus = 'accepted';
+      }
       await sendMailFromTemplate({
         to: email,
         templateId: invitationTemplateId,
-        data: { 
+        data: {
           event: eventData,
           org: getOrgEmailData(invitation.fromOrg)
         }
       }, app)
     }
 
-    return { user: user || { uid, email } };
+    return {
+      user: user || { uid, email },
+      invitationStatus
+    };
   } catch {
     try {
       const newUser = await createUserFromEmail(email, app);
       const toUser = getUserEmailData(newUser.user, newUser.password);
-      let invitationStatus: InvitationStatus;
+
       // User does not exists, send him an email.
       const fromOrg = await getDocument<OrganizationDocument>(`orgs/${fromOrgId}`);
       const orgEmailData = getOrgEmailData(fromOrg);

@@ -50,5 +50,13 @@
       <mat-icon svgIcon="call_end"></mat-icon>
     </button>
 
+    <button *ngIf="!fullScreen" (click)="toggleFullScreen()" class="enter-fullscreen" mat-icon-button>
+      <mat-icon svgIcon="fullscreen"></mat-icon>
+    </button>
+    
+    <button *ngIf="fullScreen" (click)="toggleFullScreen()" class="fullscreen" mat-icon-button>
+      <mat-icon svgIcon="fullscreen_exit"></mat-icon>
+    </button>
+
   </footer>
 </ng-container>
