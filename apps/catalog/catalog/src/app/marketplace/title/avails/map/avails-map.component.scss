@@ -4,6 +4,8 @@ form {
   button {
     margin-top: 16px;
   }
+  flex-flow: row wrap;
+  display: flex;
 }
 
 p {
