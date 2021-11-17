@@ -109,7 +109,7 @@ export class AuthService extends FireAuthService<AuthState> {
     try {
       await this.signin(email, currentPassword);
     } catch (error) {
-      throw new Error(error);
+      throw error;
     }
     const user = await this.user;
     return user.updatePassword(newPassword);
