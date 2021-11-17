@@ -631,7 +631,7 @@ describe('DB cleaning script', () => {
         status: 'pending',
         date: { _seconds: currentTimestamp },
         type: 'joinOrganization',
-        fromOrg: { id: 'org-A' },
+        fromOrg: { id: 'org-A', watermark: 'test' },
         toUser: { uid: 'A' },
       },
       {
@@ -640,7 +640,7 @@ describe('DB cleaning script', () => {
         date: { _seconds: currentTimestamp },
         type: 'joinOrganization',
         toOrg: { id: 'org-A' },
-        fromUser: { uid: 'A' },
+        fromUser: { uid: 'A', watermark: 'test' },
       },
       {
         id: 'invit-C',
@@ -887,11 +887,11 @@ function isInvitationClean(doc: FirebaseFirestore.DocumentSnapshot) {
     return false;
   }
 
-  if (d.fromUser?.uid && !d.fromUser.avatar) {
+  if (d.fromUser?.uid && (!d.fromUser.avatar || d.fromUser.watermark)) {
     return false;
   }
 
-  if (d.toUser?.uid && !d.toUser.avatar) {
+  if (d.toUser?.uid && (!d.toUser.avatar || d.toUser.watermark)) {
     return false;
   }
 

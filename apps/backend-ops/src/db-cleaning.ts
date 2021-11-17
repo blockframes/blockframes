@@ -140,11 +140,13 @@ async function cleanOneInvitation(doc: QueryDocumentSnapshot, invitation: Invita
   if (invitation.fromUser?.uid) {
     const d = await getDocument<PublicUser>(`users/${invitation.fromUser.uid}`);
     invitation.fromUser.avatar = d?.avatar || EMPTY_MEDIA;
+    delete (invitation.fromUser as any).watermark;
   }
 
   if (invitation.toUser?.uid) {
     const d = await getDocument<PublicUser>(`users/${invitation.toUser.uid}`);
     invitation.toUser.avatar = d?.avatar || EMPTY_MEDIA;
+    delete (invitation.toUser as any).watermark;
   }
 
   await doc.ref.update(invitation);
