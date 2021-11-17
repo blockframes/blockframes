@@ -21,7 +21,7 @@
             <ng-template #notOwner>
                 <invitation-action *ngIf="(invitation$ | async) !== undefined" @fade [invitation]="(invitation$ | async)" [event]="event"></invitation-action>
                 <ng-container *ngIf="(invitation$ | async)?.status === 'accepted'  || event.accessibility === 'public'">
-                  <a mat-flat-button color="accent" [disabled]="!_timerEnded" matTooltip="You'll be able to join the screening when it starts.">Access {{ event.type | titlecase }} Room</a>
+                  <a mat-flat-button color="accent" [disabled]="!_timerEnded" [routerLink]="accessRoute" matTooltip="You'll be able to join the screening when it starts.">Access {{ event.type | titlecase }} Room</a>
                 </ng-container>
             </ng-template>
           </ng-container>
