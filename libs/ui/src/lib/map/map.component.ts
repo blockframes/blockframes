@@ -130,8 +130,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       fillOpacity: 0,
       stroke: true,
       weight: 1,
-      color: '#06081c',
-      className:this.disableSelect? 'no-cursor': '',
+      color: '#06081c'
     };
   }
 
