@@ -1,5 +1,5 @@
 ﻿
-<input #filePicker type="file" [accept]="['.xls', '.xlsx', '.ods', '.csv', '.xlsm', '.xlsb']" (change)="importSpreadsheet($event.target.files)" />
+<input #filePicker type="file" [accept]="allowedExtensions" (change)="importSpreadsheet($event.target.files)" />
 
 <ng-container *ngIf="file; else noFile">
 
