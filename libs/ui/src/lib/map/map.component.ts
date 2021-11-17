@@ -15,7 +15,6 @@ import { HttpClient } from '@angular/common/http';
 import { map as toMap, geoJSON, Path, PathOptions } from 'leaflet';
 import { Subscription, BehaviorSubject, combineLatest } from 'rxjs';
 import { startWith, switchMap, map } from 'rxjs/operators';
-import { boolean } from '@blockframes/utils/decorators/decorators';
 
 @Directive({
   selector: 'map-feature, [mapFeature]'

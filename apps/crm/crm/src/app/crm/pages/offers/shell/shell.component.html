@@ -9,7 +9,7 @@
       <org-chip *ngIf="offer.buyer as org" [org]="org" baseUrl="/c/o/dashboard/crm/organization"></org-chip>
     </div>
     <div class="contracts" *ngIf="offer.contracts as contracts">
-      <p> {{ contracts.length + (contracts.length>1 ? ' titles':' title')}} </p>
+      <p> {{ contracts.length }} {{contracts.length>1 ? ' titles':' title'}} </p>
       <p>Total: {{ contracts | total:'income.price' | currency: offer.currency }}</p>
     </div>
   </header>
