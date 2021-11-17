@@ -10,6 +10,7 @@
     <td
       *ngFor="let col of columns; index as c"
       [ngClass]="stateMatrix[r][c]"
+      [class.select-disabled]="disableSelect"
       (mouseenter)="onHover(r, c)"
       (mouseleave)="onExit()"
       (click)="onSelect(r, c)"
