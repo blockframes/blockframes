@@ -1,26 +1,31 @@
 <section fxLayout="column">
-  <header fxLayout fxLayout.lt-md="column" fxLayoutGap="16px">
-    <ng-container *ngIf="movie$ | async as movie">
-      <section fxLayout fxLayoutGap="16px" fxFlex>
-        <img fxHide.xs [ref]="movie.poster" asset="empty_poster.svg" alt="movie poster">
+  <header fxLayout="column">
+    <a mat-icon-button (click)="goBack()">
+      <mat-icon svgIcon="arrow_back"></mat-icon>
+    </a>
+    <section fxLayout fxLayout.lt-md="column" fxLayoutGap="16px">
+      <ng-container *ngIf="movie$ | async as movie">
+        <section fxLayout fxLayoutGap="16px" fxFlex>
+          <img fxHide.xs [ref]="movie.poster" asset="empty_poster.svg" alt="movie poster">
 
-        <article fxLayout="column" fxFlex fxLayoutAlign="start start">
-          <h4>{{ movie | movieFeature }}</h4>
-          <h1>{{ movie.title.international }}</h1>
-          <bf-tag>{{ movie.app[appName].status }}</bf-tag>
+          <article fxLayout="column" fxFlex>
+            <h4>{{ movie | movieFeature }}</h4>
+            <h1>{{ movie.title.international }}</h1>
+            <bf-tag>{{ movie.app[appName].status }}</bf-tag>
 
-          <h6>{{ movie.directors | displayName }}</h6>
-          <p>
-            <span>{{ movie.originCountries | toLabel: 'territories'}}</span>
-            <span *ngIf="movie.originCountries.length && movie.release.year"> - </span>
-            <span>{{ movie.release.year }}</span>
-          </p>
-        </article>
-      </section>
-      <aside fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="space-between end" >
-        <ng-content select="movie-cta"></ng-content>
-      </aside>
-    </ng-container>
+            <h6>{{ movie.directors | displayName }}</h6>
+            <p>
+              <span>{{ movie.originCountries | toLabel: 'territories'}}</span>
+              <span *ngIf="movie.originCountries.length && movie.release.year"> - </span>
+              <span>{{ movie.release.year }}</span>
+            </p>
+          </article>
+        </section>
+        <aside fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="space-between end" >
+          <ng-content select="movie-cta"></ng-content>
+        </aside>
+      </ng-container>
+    </section>
   </header>
 
   <nav mat-tab-nav-bar>

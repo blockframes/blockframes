@@ -54,7 +54,8 @@ export class EditDetailsComponent implements OnInit, OnDestroy {
         this.form.patchValue({ accessibility: this.previouslySavedAccessibility });
 
         const dialogRef = this.dialog.open(this.noAccessibilityChange, {
-          width: '80%'
+          width: '80%',
+          minWidth: '50vw'
         });
         this.dialogSub = dialogRef.afterClosed().subscribe(contactTeam => {
           if (contactTeam) {

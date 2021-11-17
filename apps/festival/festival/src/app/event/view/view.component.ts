@@ -22,6 +22,7 @@ export class EventViewComponent implements OnInit {
   accessRoute: string;
   user$ = this.authQuery.user$;
   event$: Observable<Event>;
+  _timerEnded = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -68,8 +69,13 @@ export class EventViewComponent implements OnInit {
       })
     );
   }
+
   goBack() {
     this.authService.updateAnonymousCredentials({ role: undefined, firstName: undefined, lastName: undefined });
     this.location.back();
+  }
+
+  timerEnded(state: boolean) {
+    this._timerEnded = state;
   }
 }

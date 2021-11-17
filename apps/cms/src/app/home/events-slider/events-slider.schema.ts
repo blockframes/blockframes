@@ -13,6 +13,7 @@ export const eventsSliderSchema = (): EventsSliderSchema => ({
   controls: {
     _type: { form: 'control' },
     title: matText({ label: 'title' }),
+    link: matText({ label: 'See all Link', placeholder: '../event' }),
     eventIds: matMultiSelect<string>({ label: 'Slider ID' }),
     query: firestoreQuery({ collection: 'events' }),
   },

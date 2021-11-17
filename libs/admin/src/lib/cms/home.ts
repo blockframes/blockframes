@@ -47,6 +47,7 @@ export interface SliderSection extends Section {
 export interface EventsSliderSection extends Section {
   _type: 'eventsSlider';
   title: string;
+  link: string;
   eventIds: string[];
   query: FirestoreQuery;
 }

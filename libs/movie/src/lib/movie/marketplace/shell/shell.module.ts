@@ -28,7 +28,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatCardModule } from '@angular/material/card';
-import { StorageFileModule } from '@blockframes/media/pipes/storageFile.pipe';
 
 @NgModule({
   declarations: [TitleMarketplaceShellComponent],
@@ -49,7 +48,6 @@ import { StorageFileModule } from '@blockframes/media/pipes/storageFile.pipe';
     VideoViewerModule,
     ToLabelModule,
     FileListPreviewModule,
-    StorageFileModule,
 
     // Material
     MatChipsModule,
