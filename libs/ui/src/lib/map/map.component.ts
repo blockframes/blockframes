@@ -65,7 +65,7 @@ export class MapFeature {
 @Component({
   selector: 'world-map',
   template: '<ng-content></ng-content>',
-  styles: [`:host { display: block; background-color: var(--background-card)};`],
+  styles: [`:host { display: block; background-color: var(--background-card);}`],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MapComponent implements AfterViewInit, OnDestroy {
@@ -73,6 +73,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   layers: Record<string, Path> = {};
 
   @Input() featureTag = 'iso_a3';
+
   // eslint-disable-next-line
   @Output() select = new EventEmitter();
   @ContentChildren(MapFeature, { descendants: true }) features: QueryList<MapFeature>
