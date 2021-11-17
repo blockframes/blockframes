@@ -30,6 +30,7 @@ export class PdfViewerComponent implements OnInit {
   get control() { return this._control; }
   @Input() set control(value: MeetingPdfControl) {
     this._control = value;
+    this.isPuppet$.next(!!value);
     this.generatePdfUrl();
   }
 
