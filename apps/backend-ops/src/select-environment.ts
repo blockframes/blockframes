@@ -108,9 +108,9 @@ export async function selectEnvironment(projectId: string) {
   output = execSync(cmd).toString();
   console.log(output);
 
-  const fileName = `env.${projectId}.ts`;
-  const envLine = `export * from './${fileName}'`;
-  const localEnvFile = join(process.cwd(), 'env', 'env');
+  const fileName = `env.${projectId}`;
+  const envLine = `export * from 'env/${fileName}'`;
+  const localEnvFile = join(process.cwd(), 'env', 'env.ts');
   await writeFile(localEnvFile, envLine);
   console.log(`env.ts file now contains: ${envLine} `);
 }
