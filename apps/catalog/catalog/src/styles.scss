@@ -6,7 +6,6 @@
 // @todo(#1617) Lazy Load this
 @import '~leaflet/dist/leaflet.css';
 
-
 .dark-theme {
   $mat-theme: getTheme($dark-theme);
   @include mat-theme($mat-theme);

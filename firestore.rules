@@ -364,7 +364,9 @@ service cloud.firestore {
 
     match /contracts/{contractId} {
       allow read: if isSignedInWithPassword() && notInMaintenance();
-      allow create: if (userOrgId() == incomingData().buyerId) && notInMaintenance();
+      allow create: if (userOrgId() == incomingData().buyerId
+        || userOrgId() == incomingData().sellerId)
+        && notInMaintenance();
       allow update: if (userOrgId() in existingData().stakeholders)
                     && isOnlyChangingContractStatus()
                     && notInMaintenance();
@@ -383,8 +385,7 @@ service cloud.firestore {
     match /incomes/{incomeId} {
       allow read: if userOrgId() in getContract(incomeId).stakeholders
         && notInMaintenance();
-      allow create: if (userOrgId() == getContract(incomeId).buyerId
-        || userOrgId() == getContract(incomeId).sellerId)
+      allow create: if (userOrgId() == getContract(incomeId).buyerId)
         && notInMaintenance();
       allow update: if false;
       allow delete: if false;

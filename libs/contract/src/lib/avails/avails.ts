@@ -243,6 +243,7 @@ export function isMovieAvailable(titleId: string, avails: AvailsFilter, bucket: 
   // then it shouldn't be displayed to avoid the user selecting it twice
   const bucketTerms = bucket?.contracts.find(c => c.titleId === titleId)?.terms ?? [];
   const inBucket = allOfAvailInTerms(avails, bucketTerms, optional);
+
   if (inBucket) return false;
 
   // CHECK (3) if the title is already sold on some part of the requested avails, then it's not available for these avails
