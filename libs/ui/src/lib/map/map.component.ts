@@ -74,7 +74,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   layers: Record<string, Path> = {};
 
   @Input() featureTag = 'iso_a3';
-  @Input() @boolean disableSelect=false;
 
   // eslint-disable-next-line
   @Output() select = new EventEmitter();

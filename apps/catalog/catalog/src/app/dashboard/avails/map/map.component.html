@@ -1,5 +1,5 @@
 <form [availsFilter]="availsForm" required hide='territories'></form>
-<world-map disableSelect>
+<world-map>
   <ng-container *ngIf="(status$ | async) === 'INVALID'">
     <section fxLayout="column" fxLayoutAlign="center center">
       <article fxLayout="column" fxLayoutAlign="center center">
