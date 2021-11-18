@@ -69,9 +69,8 @@ export class UsersComponent implements OnInit {
 
   public goToEditNewTab(uid: string, $event: Event) {
     $event.stopPropagation();
-    const url = this.router.serializeUrl(
-      this.router.createUrlTree([`c/o/dashboard/crm/user/${uid}`])
-    );
+    const urlTree = this.router.createUrlTree([`c/o/dashboard/crm/user/${uid}`])
+    const url = this.router.serializeUrl(urlTree);
     window.open(url, '_blank', 'noreferrer');
   }
 
