@@ -21,25 +21,40 @@
     </div>
   </div>
 
-  <div *ngIf="displayPrivacySettings" fxLayout="column" fxLayoutGap="12px">
+  <div *ngIf="showPrivacy" fxLayout="column" fxLayoutGap="12px">
     <h3>Privacy Settings</h3>
-    <mat-radio-group fxLayout="column" formControlName="accessibility">
-      <mat-radio-button  color="primary" value="public">
-        PUBLIC - anyone who has a link can access your event (no statistics, no watermark) -- best for meetings
+    <mat-radio-group fxLayout="column" formControlName="accessibility" (change)="accessibilityChanged($event)">
+      <mat-radio-button  color="primary" value="public" matTooltip="Best for meetings">
+        PUBLIC - Open to anyone with a link
       </mat-radio-button>
-      <!-- @TODO #6756 uncomment once all is done 
-      <mat-radio-button  color="primary" value="invitation-only">
-        INVITATION ONLY - upon invited guests can access your event
-      </mat-radio-button>-->
-      <mat-radio-button  color="primary" value="private">
-        PRIVATE - only {{ appName }} users can access your event --- best for Screenings
+      <mat-radio-button  color="primary" value="protected">
+        PROTECTED - Open to anyone invited to the event (Archipel Market user or not)
+      </mat-radio-button>
+      <mat-radio-button  color="primary" value="private" matTooltip="Best for screenings">
+        PRIVATE - Open to invited, identified Archipel Market users only
       </mat-radio-button>
     </mat-radio-group>
     
-    <div fxLayout fxLayoutAlign="start center" fxLayoutGap="8px">
+    <div fxLayout fxLayoutAlign="start center" fxLayoutGap="8px" *ngIf="form.value.type !== 'meeting'">
       <mat-checkbox formControlName="isSecret" color="primary">SECRET - not listed on the Marketplace</mat-checkbox>
       <mat-icon svgIcon="info" matTooltip="Only users with a direct link will be able to access your event."></mat-icon>
     </div>
   </div>
 
 </form>
+
+<ng-template #noAccessibilityChange>
+  <div class="noAccessibilityChange" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="16px">
+    <h1>Sorry! You can't change this event's Privacy Settings anymore.</h1>
+    <p>Some guests were already invited to this event according to previously selected Privacy Settings. Their invitations have been sent and their access cannot be modified now. If you've changed your mind, please contact our team directly.</p>
+    <p>If you still need to update your privacy, please contact our team</p>
+    <div fxLayout="column" fxLayoutAlign="center">
+      <button class="save" mat-flat-button color="primary" [mat-dialog-close]="true">
+        Contact us
+      </button>
+      <button class="text-primary" mat-button [mat-dialog-close]="false">
+        Back to Event
+      </button>
+    </div>
+  </div>
+</ng-template>

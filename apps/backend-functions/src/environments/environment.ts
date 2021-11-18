@@ -9,6 +9,7 @@
 export const e2eMode = false;
 
 export {
+  production,
   factoryContract,
   backupBucket,
   relayer,

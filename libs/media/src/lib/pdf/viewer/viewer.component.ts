@@ -30,6 +30,7 @@ export class PdfViewerComponent implements OnInit {
   get control() { return this._control; }
   @Input() set control(value: MeetingPdfControl) {
     this._control = value;
+    this.isPuppet$.next(!!value);
     this.generatePdfUrl();
   }
 
@@ -99,7 +100,8 @@ export class PdfViewerComponent implements OnInit {
     this.fetching$.next(true);
     const param: ImageParameters = {
       page: this.control.currentPage,
-      auto: 'compress,format'
+      auto: 'compress,format',
+      dpr: 2
     }
     const url = await this.mediaService.generateImgIxUrl(this.ref, param, this.eventId);
     this.pdfUrl$.next(url);

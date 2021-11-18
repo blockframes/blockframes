@@ -4,14 +4,15 @@
     <header class="dark-contrast-theme main-header" bgAsset="banner_header_page.png">
       <div class="main-title" fxLayout="column" fxLayoutAlign="center center">
         <h1>My Selection</h1>
-        <p>There are {{ bucket.contracts.length }} titles in my selection</p>
-        <p>Total price: {{ total$ | async | currency:currencyForm.value }}</p>
-      </div>
-      <div fxLayout="column" fxLayoutAlign="center center">
+        <p *ngIf="bucket.contracts.length === 1">
+          There is {{ bucket.contracts.length }} Title in my Selection:
+        </p>
+        <p *ngIf="bucket.contracts.length > 1">
+          There are {{ bucket.contracts.length }} Titles in my Selection:
+        </p>
         <p *ngIf="bucket | bucketTitles | getTitle | async as titles">
           {{ (titles | deepKey:'title.international') }}
         </p>
-        <button mat-flat-button color="primary" (click)="createOffer(bucket)">Create Offer</button>
       </div>
     </header>
 

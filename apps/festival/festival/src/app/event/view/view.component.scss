@@ -1,0 +1,76 @@
+header {
+  padding: 40px;
+  background-image: url('/assets/images/banner_empty.png');
+  background-position: center center;
+  background-size: cover;
+  mat-icon {
+    cursor: pointer;
+  }
+
+  h1.mat-display-2 {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  
+  h6 {
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  
+  pre {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 8px;
+  }
+  
+  section {
+    padding: 24px;
+  }
+  
+  h3 {
+    margin-bottom: 8px;
+  }
+  
+  p {
+    margin-bottom: 16px;
+  }
+  
+  p.mat-body-2 {
+    text-align: center;
+    max-width: 800px;
+    margin: 24px 0;
+  }
+  
+  a.mat-flat-button {
+    margin-top: 40px;
+  }
+}
+
+section {
+  padding: 24px;
+}
+
+.screening {
+  org-chip {
+    width: fit-content;
+  }
+  movie-header-cta {
+    margin-top: 16px;
+  }
+  movie-header-preferences p {
+    line-height: 24px;
+  }
+}
+
+.meeting {
+  h5 {
+    text-transform: uppercase;
+  }
+
+  .organized-by {
+    img {
+      height: 120px;
+      border-radius: 50%;
+    }
+  }
+}

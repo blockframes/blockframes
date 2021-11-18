@@ -21,7 +21,7 @@
         (updatedToMember)="updatedToMember.emit(uid)">
       </member-permissions>
     </ng-template>
-    <ng-template  *ngIf="isSuperAdmin" colRef="edit" label="Edit" let-edit>
+    <ng-template *ngIf="showEdit" colRef="edit" label="Edit" let-edit>
       <a [routerLink]="edit?.link">
         <mat-icon svgIcon="edit"></mat-icon>
       </a>

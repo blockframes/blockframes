@@ -1,4 +1,3 @@
-
 <ng-container *ngIf="offer$ | async as offer; else loading">
   <header class="dark-contrast-theme" fxLayout fxLayoutAlign="space-between center" bgAsset="empty_banner.png">
     <div>
@@ -6,11 +5,11 @@
         <mat-icon svgIcon="arrow_back"></mat-icon>
       </a>
       <h1>Offer Reference: {{offer.id}}</h1>
-      <p>Offer created: {{offer._meta.createdAt | date: 'dd/MM/yyyy'}}</p>
-      <org-chip *ngIf="offer.buyer as org" [org]="org" baseUrl="/c/o/dashboard/crm/organization" ></org-chip>
+      <p>Offer created: {{offer._meta.createdAt | date: 'MM/dd/yyyy'}}</p>
+      <org-chip *ngIf="offer.buyer as org" [org]="org" baseUrl="/c/o/dashboard/crm/organization"></org-chip>
     </div>
     <div class="contracts" *ngIf="offer.contracts as contracts">
-      <p>{{ contracts.length }} titles</p>
+      <p> {{ contracts.length }} {{contracts.length>1 ? ' titles':' title'}} </p>
       <p>Total: {{ contracts | total:'income.price' | currency: offer.currency }}</p>
     </div>
   </header>

@@ -109,34 +109,28 @@ export class TableExtractedOrganizationsComponent implements OnInit {
    * @param importState
    */
   private async addOrganization(importState: OrganizationsImportState): Promise<boolean> {
+
     const [firstApp] = getOrgAppAccess(importState.org);
     const superAdmin = importState.superAdmin;
     const orgData = getOrgEmailData(importState.org);
+    const newUser: PublicUser = await this.authService.createUser(
+      importState.superAdmin.email,
+      orgData,
+      firstApp
+    );
 
-    // If user does not exists already
-    if (!superAdmin.uid) {
-      const newUser: PublicUser = await this.authService.createUser(
-        importState.superAdmin.email,
-        orgData,
-        firstApp
-      );
-
-      superAdmin.uid = newUser.uid;
-    }
-
-    importState.org.status = 'accepted';
+    superAdmin.uid = newUser.uid;
 
     await this.orgService.addOrganization(importState.org, firstApp, superAdmin);
-    const data = this.rows.data;
 
+    // prevent user to create the same org twice
     importState.errors.push({
       type: 'error',
       field: 'organizations',
       name: 'Organizations',
-      reason: 'Organization already added',
-      hint: 'Organization already added'
+      reason: 'Organization already created!',
     });
-    this.rows.data = data;
+
     return true;
   }
 

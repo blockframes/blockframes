@@ -8,7 +8,7 @@ import { toDate } from '@blockframes/utils/helpers';
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'terms' })
 export class TermService extends CollectionService<TermState> {
-  useMemorization=true;
+  useMemorization = true;
 
   constructor(store: TermStore) {
     super(store)

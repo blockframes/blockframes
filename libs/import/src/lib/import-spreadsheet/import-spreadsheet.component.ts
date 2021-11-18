@@ -1,5 +1,5 @@
 
-import { Component, Output, EventEmitter, ChangeDetectionStrategy, ChangeDetectorRef, Optional, Input } from '@angular/core';
+import { Component, Output, EventEmitter, ChangeDetectionStrategy, ChangeDetectorRef, Input } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 
@@ -9,7 +9,17 @@ import { SheetTab, importSpreadsheet } from '@blockframes/utils/spreadsheet';
 import { sheetRanges, SpreadsheetImportType } from '../utils';
 
 
-const allowedMimeTypes = ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.oasis.opendocument.spreadsheet', 'text/csv'];
+const allowedMimeTypes = [
+  'application/vnd.ms-excel',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  'application/vnd.oasis.opendocument.spreadsheet',
+  'application/vnd.ms-excel.sheet.macroEnabled.12',
+  'application/vnd.ms-excel.sheet.binary.macroEnabled.12',
+  'text/csv',
+  'text/html'
+];
+
+const allowedExtensions = ['.xls', '.xlsx', '.ods', '.csv', '.xlsm', '.xlsb'];
 
 @Component({
   selector: 'import-spreadsheet[importType]',
@@ -30,6 +40,8 @@ export class ImportSpreadsheetComponent {
     name: string;
     size: number;
   };
+
+  public allowedExtensions = allowedExtensions;
 
   constructor(
     private snackBar: MatSnackBar,
@@ -52,10 +64,10 @@ export class ImportSpreadsheetComponent {
     }
 
     const mimeType = getMimeType(file);
-    const isMimeTypeValid = allowedMimeTypes.includes(mimeType);
+    const isMimeTypeValid = allowedMimeTypes.map(m => m.toLowerCase()).includes(mimeType.toLowerCase());
     if (!isMimeTypeValid) {
       this.snackBar.open(`Unsupported file type: "${mimeType}".`, 'close', { duration: 3000 });
-      return;
+      throw new Error(`Unsupported file type: "${mimeType}".`);
     }
 
     const reader = new FileReader();

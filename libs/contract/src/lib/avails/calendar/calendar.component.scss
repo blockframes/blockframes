@@ -21,9 +21,14 @@ table {
     cursor: default;
   }
 
+
   .available {
     cursor: pointer;
     background-color: var(--primary);
+  }
+
+  .select-disabled{
+    cursor: default;
   }
 
   .expired {
