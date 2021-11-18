@@ -59,7 +59,7 @@ export class CountdownComponent implements OnInit {
   @Input() title: string;
   /** Emit a boolean when timer reach zero */
   @Output() timerEnded = new EventEmitter<boolean>();
-  private _timerEnded = false;
+  private _ended = false;
 
   public time: TimeObservable;
   public seconds$: Observable<string>;
@@ -104,8 +104,8 @@ export class CountdownComponent implements OnInit {
     const oneMin = 60 * 1000;
     const dDay = this.date.valueOf() + oneMin;
     const timeDifference = dDay - Date.now();
-    if (timeDifference - oneMin <= 0 && !this._timerEnded) {
-      this._timerEnded = true; // To emit only once
+    if (timeDifference - oneMin <= 0 && !this._ended) {
+      this._ended = true; // To emit only once
       this.timerEnded.emit(true);
     }
     return timeDifference >= 0 ? timeDifference : 0;

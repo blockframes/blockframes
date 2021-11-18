@@ -6,7 +6,7 @@ import { createInvitation, InvitationService } from '@blockframes/invitation/+st
 import { combineLatest } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { EventService } from '../+state';
-import firebase from 'firebase';
+import type firebase from 'firebase';
 import { Event } from '@blockframes/event/+state/event.model';
 import { AnonymousCredentials } from '@blockframes/auth/+state/auth.model';
 

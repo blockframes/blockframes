@@ -301,7 +301,7 @@ export async function formatContract(
     }
 
     // remove duplicate from stakeholders
-    contract.stakeholders = contract.stakeholders.filter((s, i) => contract.stakeholders.indexOf(s) === i);
+    contract.stakeholders = Array.from(new Set([...contract.stakeholders]));
 
     contracts.push({ contract, terms: [term], errors: [ ...errors, ...warnings ], newContract: true });
   }

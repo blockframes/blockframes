@@ -44,7 +44,7 @@ export class ScreeningComponent implements OnInit {
     );
   }
 
-  linkCopied() {
+  copied() {
     this.snackBar.open('Link copied', 'CLOSE', { duration: 4000 });
   }
 }

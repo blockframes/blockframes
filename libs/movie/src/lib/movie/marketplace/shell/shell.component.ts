@@ -54,7 +54,7 @@ export class TitleMarketplaceShellComponent implements OnInit {
     this.dialog.open(FileListPreviewComponent, { data: { refs, index }, width: '80vw', height: '80vh', autoFocus: false })
   }
 
-  showVideos(movie: Movie) {
+  hasPublicVideos(movie: Movie) {
     return movie.promotional.videos.otherVideos.some(video => video.privacy === 'public');
   }
 }

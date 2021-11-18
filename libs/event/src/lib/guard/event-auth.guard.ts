@@ -26,19 +26,9 @@ export class EventAuthGuard extends CollectionGuard<AuthState> {
     return this.afAuth.authState.pipe(
       switchMap(userAuth => {
 
-        /**
-         * User is not logged in
-         */
         if (!userAuth) return this.router.navigate(['/']);
-
-        /**
-         * User is anonymous.
-         */
         if (userAuth.isAnonymous) return of(true);
 
-        /**
-         * User is logged in
-         */
         return this.service.sync().pipe(
           catchError(() => of('/')),
           map(() => this.query.user),

@@ -33,7 +33,6 @@ export class IdentityComponent implements OnInit, OnDestroy {
   public app: App;
   public appName: string;
   public indexGroup = 'indexNameOrganizations';
-  private snackbarDuration = 8000;
   public form = new IdentityForm();
   public orgControl = new FormControl();
   public orgForm = new OrganizationLiteForm();
@@ -41,7 +40,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
   public existingUser = false;
   private existingOrgId: string;
   private sub: Subscription;
-  private isUserAnonymous = false;
+  private isAnonymous = false;
   private publicUser: PublicUser;
 
   constructor(
@@ -97,7 +96,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
   async ngOnDestroy() {
     this.sub.unsubscribe();
     // We created anonymous user but it was not transformed into real one
-    if (this.isUserAnonymous && !this.publicUser) {
+    if (this.isAnonymous && !this.publicUser) {
       await this.authService.deleteAnonymousUser();
     }
   }
@@ -157,14 +156,14 @@ export class IdentityComponent implements OnInit, OnDestroy {
       this.cdr.markForCheck();
       switch (err.code) {
         case 'auth/email-already-in-use':
-          this.snackBar.openFromTemplate(this.customSnackBarTemplate, { duration: this.snackbarDuration });
+          this.snackBar.openFromTemplate(this.customSnackBarTemplate, { duration: 8000 });
           break;
         case 'auth/wrong-password':
-          this.snackBar.open('Incorrect Invitation Pass. Please check your invitation email.', 'close', { duration: this.snackbarDuration });
+          this.snackBar.open('Incorrect Invitation Pass. Please check your invitation email.', 'close', { duration: 8000 });
           break;
         default:
           console.error(err); // let the devs see what happened
-          this.snackBar.open(err.message, 'close', { duration: this.snackbarDuration });
+          this.snackBar.open(err.message, 'close', { duration: 8000 });
           break;
       }
     }
@@ -176,7 +175,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
       this.publicUser = await this.createUser(this.form.value);
       // Request to join existing org
       await this.invitationService.request(this.existingOrgId, this.publicUser).to('joinOrganization');
-      this.snackBar.open('Your account has been created and request to join org sent ! ', 'close', { duration: this.snackbarDuration });
+      this.snackBar.open('Your account has been created and request to join org sent ! ', 'close', { duration: 8000 });
       return this.router.navigate(['c/organization/join-congratulations']);
     } else {
       const { denomination, addresses, activity, appAccess } = this.orgForm.value;
@@ -190,7 +189,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
        * #6908
        */
       await this.authService.signInAnonymously();
-      this.isUserAnonymous = (await this.authService.user).isAnonymous;
+      this.isAnonymous = (await this.authService.user).isAnonymous;
 
       // Check if the org name is already existing
       const unique = await this.orgService.uniqueOrgName(denomination.full);
@@ -210,7 +209,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
       org.appAccess[this.app][appAccess] = true;
       await this.orgService.addOrganization(org, this.app, this.publicUser);
 
-      this.snackBar.open('Your User Account was successfully created. Please wait for our team to check your Company Information. ', 'close', { duration: this.snackbarDuration });
+      this.snackBar.open('Your User Account was successfully created. Please wait for our team to check your Company Information. ', 'close', { duration: 8000 });
       return this.router.navigate(['c/organization/create-congratulations']);
     }
   }
@@ -305,7 +304,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
     } else if (this.existingOrgId) {
       // User selected an existing org, make a request to be accepted and is redirected to waiting room
       await this.invitationService.request(this.existingOrgId, this.query.user).to('joinOrganization');
-      this.snackBar.open('Your account have been created and request to join org sent ! ', 'close', { duration: this.snackbarDuration });
+      this.snackBar.open('Your account have been created and request to join org sent ! ', 'close', { duration: 8000 });
       return this.router.navigate(['c/organization/join-congratulations']);
     } else {
       // User decided to create his own org and is redirected to waiting room
@@ -326,7 +325,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
       org.appAccess[this.app][appAccess] = true;
       await this.orgService.addOrganization(org, this.app, this.query.user);
 
-      this.snackBar.open('Your User Account was successfully created. Please wait for our team to check your Company Information.', 'close', { duration: this.snackbarDuration });
+      this.snackBar.open('Your User Account was successfully created. Please wait for our team to check your Company Information.', 'close', { duration: 8000 });
       return this.router.navigate(['c/organization/create-congratulations']);
     }
   }

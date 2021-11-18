@@ -10,11 +10,6 @@ export class AnonymousAuthGuard implements CanActivate {
     private authService: AuthService
   ) { }
 
-  /**
-  * A simple guard that creates an anonymous account if user is not logged-in
-  * This allow user to fetch documents in db by id.
-   * @returns Promise<boolean>
-  */
   async canActivate() {
     await this.authService.signInAnonymously();
     return true;

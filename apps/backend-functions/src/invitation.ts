@@ -168,7 +168,6 @@ export const inviteUsers = async (data: UserInvitation, context: CallableContext
 
   const eventId = invitation.type === 'attendEvent' && invitation.eventId;
   const event = eventId ? await getDocument<EventDocument<EventMeta>>(`events/${eventId}`) : undefined;
-  let promiseArraySize: number;
 
   for (const email of data.emails) {
     const invitationId = db.collection('invitations').doc().id;
@@ -189,12 +188,10 @@ export const inviteUsers = async (data: UserInvitation, context: CallableContext
 
     try {
       const invitationSet = await db.collection('invitations').doc(invitation.id).set(invitation);
-      promiseArraySize = promises.push({ result: invitationSet, error: '' });
+      promises.push({ result: invitationSet, error: '' });
     } catch (error) {
-      promiseArraySize = promises.push({ result: undefined, error });
+      promises.push({ result: undefined, error });
     }
-
-    if (promiseArraySize === data.emails.length) break;
   }
 
   return promises;

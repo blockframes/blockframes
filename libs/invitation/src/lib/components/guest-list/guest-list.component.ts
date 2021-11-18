@@ -76,7 +76,7 @@ export class GuestListComponent implements OnInit {
     return invitation.id;
   }
 
-  adressesCopied() {
+  copied() {
     this.snackBar.open('Guests emails copied', 'CLOSE', { duration: 4000 });
   }
 

@@ -18,10 +18,9 @@ import { AccessibilityTypes } from '@blockframes/utils/static-model';
 })
 export class EditDetailsComponent implements OnInit, OnDestroy {
   @Input() form: EventForm;
-  @Input() @boolean displayPrivacySettings = false;
+  @Input() @boolean showPrivacy = false;
   @ViewChild('noAccessibilityChange', { static: true }) noAccessibilityChange: TemplateRef<any>;
-  private dialogSub: Subscription;
-  private accessibilitySub: Subscription;
+  private sub: Subscription;
   appName: string = appName[getCurrentApp(this.routerQuery)];
   private previouslySavedAccessibility: AccessibilityTypes;
 
@@ -34,16 +33,15 @@ export class EditDetailsComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    if (this.displayPrivacySettings) {
-      this.accessibilitySub = this.eventService.valueChanges(this.form.value.id).subscribe(e => {
+    if (this.showPrivacy) {
+      this.sub = this.eventService.valueChanges(this.form.value.id).subscribe(e => {
         this.previouslySavedAccessibility = e.accessibility;
       });
     }
   }
 
   ngOnDestroy() {
-    this.dialogSub?.unsubscribe();
-    this.accessibilitySub?.unsubscribe();
+    this.sub?.unsubscribe();
   }
 
   async accessibilityChanged(e) {
@@ -57,7 +55,7 @@ export class EditDetailsComponent implements OnInit, OnDestroy {
           width: '80%',
           minWidth: '50vw'
         });
-        this.dialogSub = dialogRef.afterClosed().subscribe(contactTeam => {
+        dialogRef.afterClosed().subscribe(contactTeam => {
           if (contactTeam) {
             this.intercom.show();
           }

@@ -22,7 +22,7 @@ export class EventViewComponent implements OnInit {
   accessRoute: string;
   user$ = this.authQuery.user$;
   event$: Observable<Event>;
-  _timerEnded = false;
+  public timerEnded = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -75,7 +75,4 @@ export class EventViewComponent implements OnInit {
     this.location.back();
   }
 
-  timerEnded(state: boolean) {
-    this._timerEnded = state;
-  }
 }

@@ -17,7 +17,6 @@ export class EventLoginComponent implements OnInit {
     password: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(24)])
   });
   public buttonText = 'Log in';
-  private snackbarDuration = 8000;
 
   constructor(
     private service: AuthService,
@@ -48,11 +47,11 @@ export class EventLoginComponent implements OnInit {
       this.buttonText = 'Log in';
       console.error(err); // let the devs see what happened
       if (err.message.includes('INTERNAL ASSERTION FAILED')) {
-        this.snackBar.open('Network error. Please refresh this page.', 'close', { duration: this.snackbarDuration });
+        this.snackBar.open('Network error. Please refresh this page.', 'close', { duration: 8000 });
       } else if (err.code === 'auth/user-not-found') {
-        this.snackBar.openFromTemplate(this.noAccountTemplate, { duration: this.snackbarDuration });
+        this.snackBar.openFromTemplate(this.noAccountTemplate, { duration: 8000 });
       } else {
-        this.snackBar.open(err.message, 'close', { duration: this.snackbarDuration });
+        this.snackBar.open(err.message, 'close', { duration: 8000 });
       }
     }
   }

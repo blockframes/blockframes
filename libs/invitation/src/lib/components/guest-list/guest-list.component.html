@@ -10,7 +10,7 @@
         {{ invitations | statusLength: 'pending' }} unanswered
       </small>
     </span>
-    <button mat-icon-button [cdkCopyToClipboard]="copy(invitations)" (click)="adressesCopied()" test-id="invitation-copy" matTooltip="Copy Guests' Emails">
+    <button mat-icon-button [cdkCopyToClipboard]="copy(invitations)" (click)="copied()" test-id="invitation-copy" matTooltip="Copy Guests' Emails">
       <mat-icon svgIcon="file_copy"></mat-icon>
     </button>
   </mat-list-item>
