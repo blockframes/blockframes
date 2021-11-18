@@ -13,12 +13,14 @@ export const numberOfDaysToKeepNotifications = 14;
 const currentTimestamp = new Date().getTime();
 export const dayInMillis = 1000 * 60 * 60 * 24;
 const EMPTY_MEDIA = createStorageFile();
+let verbose = false;
 
 // @TODO #6460 not existing users found in movies._meta.createdBy ..
 
 /** Reusable data cleaning script that can be updated along with data model */
 
-export async function cleanDeprecatedData(db: FirebaseFirestore.Firestore, auth: admin.auth.Auth) {
+export async function cleanDeprecatedData(db: FirebaseFirestore.Firestore, auth: admin.auth.Auth, options = { verbose: true }) {
+  verbose = options.verbose;
   // Getting all collections we need to check
   const [
     notifications,
@@ -50,9 +52,9 @@ export async function cleanDeprecatedData(db: FirebaseFirestore.Firestore, auth:
 
   // Compare and update/delete documents with references to non existing documents
   await cleanUsers(users, organizationIds, auth, db);
-  console.log('Cleaned users');
+  if (verbose) console.log('Cleaned users');
   await cleanOrganizations(organizations, userIds, movies);
-  console.log('Cleaned orgs');
+  if (verbose) console.log('Cleaned orgs');
 
   // Getting all collections we need to reload
   const [organizations2, users2] = await Promise.all([
@@ -69,15 +71,15 @@ export async function cleanDeprecatedData(db: FirebaseFirestore.Firestore, auth:
   const existingIds = movieIds.concat(organizationIds2, eventIds, userIds2);
 
   await cleanPermissions(permissions, organizationIds);
-  console.log('Cleaned permissions');
+  if (verbose) console.log('Cleaned permissions');
   await cleanMovies(movies);
-  console.log('Cleaned movies');
+  if (verbose) console.log('Cleaned movies');
   await cleanDocsIndex(docsIndex, existingIds);
-  console.log('Cleaned docsIndex');
+  if (verbose) console.log('Cleaned docsIndex');
   await cleanNotifications(notifications, existingIds);
-  console.log('Cleaned notifications');
+  if (verbose) console.log('Cleaned notifications');
   await cleanInvitations(invitations, existingIds);
-  console.log('Cleaned invitations');
+  if (verbose) console.log('Cleaned invitations');
 
   return true;
 }
@@ -94,7 +96,7 @@ export function cleanNotifications(
     } else {
       await cleanOneNotification(doc, notification);
     }
-  });
+  }, undefined, verbose);
 }
 
 async function cleanOneNotification(doc: QueryDocumentSnapshot, notification: NotificationDocument) {
@@ -123,7 +125,7 @@ export function cleanInvitations(
     } else {
       await cleanOneInvitation(doc, invitation);
     }
-  });
+  }, undefined, verbose);
 }
 
 async function cleanOneInvitation(doc: QueryDocumentSnapshot, invitation: InvitationDocument) {
@@ -170,7 +172,7 @@ export async function cleanUsers(
     if (authUserId) {
       // Check if ids are the same
       if (authUserId !== user.uid) {
-        console.error(`uid mistmatch for ${user.email}. db: ${user.uid} - auth : ${authUserId}`);
+        if (verbose) console.error(`uid mistmatch for ${user.email}. db: ${user.uid} - auth : ${authUserId}`);
       } else {
         const invalidOrganization = !existingOrganizationIds.includes(user.orgId);
         let update = false;
@@ -198,7 +200,7 @@ export async function cleanUsers(
       // User does not exists on auth, should be deleted.
       if (!user.orgId || !existingOrganizationIds.includes(user.orgId)) {
         await userDoc.ref.delete();
-        console.log(`Deleted ${user.uid}.`);
+        if (verbose) console.log(`Deleted ${user.uid}.`);
       } else {
         const orgDoc = await db.doc(`orgs/${user.orgId}`).get();
         const org = orgDoc.data() as OrganizationDocument;
@@ -211,10 +213,10 @@ export async function cleanUsers(
           await permDoc.ref.update({ roles: permission.roles });
         }
         await userDoc.ref.delete();
-        console.log(`Deleted ${user.uid} and cleaned org and permissions ${user.orgId}.`);
+        if (verbose) console.log(`Deleted ${user.uid} and cleaned org and permissions ${user.orgId}.`);
       }
     }
-  });
+  }, undefined, verbose);
 }
 
 export function cleanOrganizations(
@@ -251,7 +253,7 @@ export function cleanOrganizations(
     if (validMovieIds.length !== wishlist.length) {
       await orgDoc.ref.update({ wishlist: validMovieIds });
     }
-  });
+  }, undefined, verbose);
 }
 
 export function cleanPermissions(
@@ -264,7 +266,7 @@ export function cleanPermissions(
     if (invalidPermission) {
       await permissionDoc.ref.delete();
     }
-  });
+  }, undefined, verbose);
 }
 
 export function cleanMovies(
@@ -289,7 +291,7 @@ export function cleanMovies(
       await movieDoc.ref.set(movie);
     }
 
-  });
+  }, undefined, verbose);
 }
 
 export function cleanDocsIndex(
@@ -301,7 +303,7 @@ export function cleanDocsIndex(
     if (!existingIds.includes(doc.id)) {
       await doc.ref.delete();
     }
-  });
+  }, undefined, verbose);
 
 }
 

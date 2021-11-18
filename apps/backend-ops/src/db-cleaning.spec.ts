@@ -37,7 +37,7 @@ describe('DB cleaning script', () => {
   });
 
   it('should return true when cleanDeprecatedData is called', async () => {
-    const output = await cleanDeprecatedData(db, adminAuth);
+    const output = await cleanDeprecatedData(db, adminAuth, { verbose: false });
     expect(output).toBeTruthy();
   });
 
@@ -52,7 +52,11 @@ describe('DB cleaning script', () => {
 
     await populate('users', [testUser1, testUser2]);
     await populate('orgs', [testOrg1]);
-    adminAuth.users = [testUser1, testUser2];
+
+    adminAuth.users = [
+      { uid: 'A', email: 'johndoe@fake.com', providerData: [{ uid: 'A', email: 'johndoe@fake.com', providerId: 'password' }] },
+      { uid: 'B', email: 'johnmcclain@fake.com', providerData: [{ uid: 'B', email: 'johnmcclain@fake.com', providerId: 'password' }] }
+    ];
 
     const [organizations, usersBefore] = await Promise.all([
       getCollectionRef('orgs'),
@@ -103,7 +107,7 @@ describe('DB cleaning script', () => {
     adminAuth.users.push(anonymousUser);
 
     const authBefore = await adminAuth.listUsers();
-    expect(authBefore.users.length).toEqual(4);
+    expect(authBefore.users.length).toEqual(5);
 
     await removeUnexpectedUsers(usersBefore.docs.map(u => u.data() as UserConfig), adminAuth);
 
@@ -268,8 +272,7 @@ describe('DB cleaning script', () => {
     expect(orgD.data().wishlist.length).toEqual(0);
   });
 
-  // @TODO #5371 unskip
-  it.skip('should remove orgs with no users', async () => {
+  it('should remove orgs with no users', async () => {
     const testUsers = [
       { uid: 'A', email: 'A@fake.com' },
       { uid: 'B', email: 'B@fake.com' },
