@@ -89,15 +89,18 @@ describe('DB cleaning script', () => {
 
     // See auth users
     adminAuth.users = [
-      { uid: 'A', email: 'A@fake.com' },
-      { uid: 'B', email: 'B@fake.com' },
-      { uid: 'C', email: 'C@fake.com' },
+      { uid: 'A', email: 'A@fake.com', providerData: [{ uid: 'A', email: 'A@fake.com', providerId: 'password' }] },
+      { uid: 'B', email: 'B@fake.com', providerData: [{ uid: 'B', email: 'B@fake.com', providerId: 'password' }] },
+      { uid: 'C', email: 'C@fake.com', providerData: [{ uid: 'C', email: 'C@fake.com', providerId: 'password' }] },
     ];
 
     // Add a new auth user that is not on db
-    const fakeAuthUser = { uid: 'D', email: 'D@fake.com' };
-
+    const fakeAuthUser = { uid: 'D', email: 'D@fake.com', providerData: [{ uid: 'D', email: 'D@fake.com', providerId: 'password' }] };
     adminAuth.users.push(fakeAuthUser);
+
+    // Add an anonymous user that should not be deleted even if not on DB
+    const anonymousUser = { uid: 'anonymous', providerData: [] };
+    adminAuth.users.push(anonymousUser);
 
     const authBefore = await adminAuth.listUsers();
     expect(authBefore.users.length).toEqual(4);
@@ -106,9 +109,9 @@ describe('DB cleaning script', () => {
 
     // An user should have been removed from auth because it is not in DB.
     const authAfter = await adminAuth.listUsers();
-    expect(authAfter.users.length).toEqual(3);
+    expect(authAfter.users.length).toEqual(4);
 
-    // We check if the good user (abc123) have been removed.
+    // We check if the good user (uid: 'D') have been removed.
     const user = await adminAuth.getUserByEmail(fakeAuthUser.email);
     expect(user).toEqual(undefined);
 

@@ -62,8 +62,8 @@ export async function removeUnexpectedUsers(expectedUsers: UserConfig[], auth: A
   do {
     const result = await auth.listUsers(1000, pageToken);
 
-    // This will filter users that have an email (IE: not anonymous)
-    const users = result.users.filter(u => u.email);
+    // Anonymous users filtering
+    const users = result.users.filter(u => u.providerData.length !== 0);
     pageToken = result.pageToken;
 
     // users - expected users => users that we don't want in the database.
