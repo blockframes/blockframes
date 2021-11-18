@@ -10,6 +10,7 @@ import { getCurrentApp, applicationUrl } from '@blockframes/utils/apps';
 import { Observable, of, Subscription } from 'rxjs';
 import { map, pluck, switchMap } from 'rxjs/operators';
 import { NavTabs, TabConfig } from '@blockframes/utils/event';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 const statisticsTab = { path: 'statistics', label: 'Statistics' };
 
@@ -47,6 +48,7 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private routerQuery: RouterQuery,
     private cdr: ChangeDetectorRef,
+    private snackBar: MatSnackBar,
   ) { }
 
   ngOnInit(): void {
@@ -61,13 +63,13 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
 
       const type = this.form.value.type;
       const path = type === 'meeting' ? 'lobby' : 'session';
-      this.internalLink = `/c/o/marketplace/event/${this.form.value.id}/${path}`;
+      this.internalLink = `/event/${this.form.value.id}/r/i/${path}`;
       const app = getCurrentApp(this.routerQuery);
       const url = applicationUrl[app];
       this.link = `${url}${this.internalLink}`;
 
       this.tabs$ = this.service.valueChanges(this.form.value.id).pipe(
-        map(e => e.start < new Date() ? navTabs[type].concat(statisticsTab) : navTabs[type])
+        map(e => e.start < new Date() && e.type !== 'meeting' ? navTabs[type].concat(statisticsTab) : navTabs[type])
       )
 
       // FormArray (used in FormList) does not mark as dirty on push,
@@ -98,6 +100,7 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
       this.service.update(value);
       this.form.markAsPristine();
       this.cdr.markForCheck();
+      this.snackBar.open('Event saved', 'CLOSE', { duration: 4000 });
     }
     return true;
   }
@@ -124,7 +127,8 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
     }
 
     const dialogRef = this.dialog.open(this.confirmExitTemplate, {
-      width: '80%'
+      width: '80%',
+      minWidth: '50vw'
     });
     return dialogRef.afterClosed().pipe(
       switchMap(shouldSave => {

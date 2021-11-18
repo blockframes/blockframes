@@ -17,7 +17,7 @@ export interface StorageFile {
 
 export function createStorageFile(file: Partial<StorageFile> = {}): StorageFile {
   return {
-    privacy: 'protected',
+    privacy: 'public',
     collection: 'movies',
     docId: '',
     field: '',

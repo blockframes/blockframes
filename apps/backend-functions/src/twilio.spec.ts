@@ -39,7 +39,7 @@ const testEvents = [
     end: new Date(),
     meta: { organizerUid: 'uidUserTest' },
     ownerOrgId: 'idOrgTest',
-    accessibility: 'invitation-only'
+    accessibility: 'protected'
   },
   {
     id: 'eventTestPublic',
@@ -154,7 +154,7 @@ describe('Twilio test script', () => {
     expect(output.error).toEqual('');
   });
 
-  it('invitation-only event - should be successful when user is invited', async () => {
+  it('protected event - should be successful when user is invited', async () => {
     testEvents[1].start = new Date();
     testEvents[1].end = new Date();
     testEvents[1].end.setHours(new Date().getHours() + 4);
@@ -168,7 +168,7 @@ describe('Twilio test script', () => {
     expect(output.error).toEqual('');
   });
 
-  it('invitation-only event - should return error when user is not invited', async () => {
+  it('protected event - should return error when user is not invited', async () => {
     testEvents[1].start = new Date();
     testEvents[1].end = new Date();
     testEvents[1].end.setHours(new Date().getHours() + 4);

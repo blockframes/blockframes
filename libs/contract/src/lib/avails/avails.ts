@@ -5,6 +5,7 @@ import { Bucket } from '../bucket/+state';
 import { Holdback, Mandate, Sale } from '../contract/+state/contract.model'
 import { Duration, Term, BucketTerm } from '../term/+state/term.model';
 import { allOf, someOf } from './sets';
+import * as staticModel from '@blockframes/utils/static-model'
 
 export interface AvailsFilter {
   medias: Media[],
@@ -238,18 +239,81 @@ export function isMovieAvailable(titleId: string, avails: AvailsFilter, bucket: 
   const mandatesColliding = allOfAvailInTerms(avails, mandateTerms, optional);
   if (!mandatesColliding) return false;
 
-
-
   // CHECK (2) if all the requested avails are already existing in a term in the bucket for this title,
   // then it shouldn't be displayed to avoid the user selecting it twice
   const bucketTerms = bucket?.contracts.find(c => c.titleId === titleId)?.terms ?? [];
   const inBucket = allOfAvailInTerms(avails, bucketTerms, optional);
+
   if (inBucket) return false;
 
   // CHECK (3) if the title is already sold on some part of the requested avails, then it's not available for these avails
   const salesColliding = termsCollision(avails, saleTerms);
-
   if (salesColliding) return false;
+
+  return true;
+}
+
+
+// @todo(#7139) Factorize that if possible
+export function filterDashboardAvails(mandateTerms: BucketTerm[], saleTerms: BucketTerm[], avails: AvailsFilter) {
+  
+  if (!mandateTerms.length) return false;
+
+  // If one field not provided: available
+  if (!avails.territories?.length) return true;
+  if (!avails.medias?.length) return true;
+  if (!avails.duration?.from || !avails.duration?.to) return true;
+  if (typeof avails.exclusive !== 'boolean') return true;
+
+  //////////////
+  // MANDATES //
+  //////////////
+  // If a no mandate include the avails, it's not available
+  const hasMandateCovered = mandateTerms.some(mandate => {
+    const { territories, medias, duration, exclusive } = mandate;
+    // territories: If some of the avails territories are not in the mandates: not available
+    if (avails.territories.some(t => !territories.includes(t))) return false;
+
+    // medias: If some of the avails medias are not in the mandates: not available
+    if (avails.medias.some(t => !medias.includes(t))) return false;
+
+    // from: If avails ends before mandates: not available
+    if (duration.from > avails.duration.to) return false;
+    // to: If avails start after mandates: not available
+    if (duration.to < avails.duration.from) return false;
+
+    // exclusivity: If non-exclusive while searching exclusive: not available
+    if (avails.exclusive && !exclusive) return false;
+
+    return true;
+  });
+  if (!hasMandateCovered) return false;
+
+  ///////////
+  // SALES //
+  ///////////
+  // If a sale includes the avails, it's not available
+  const hasSaleCovered = saleTerms.some(sale => {
+    const { territories, medias, duration, exclusive } = sale;
+    
+    // territories: If none of the avails territories are in the sale: available
+    if (avails.territories.every(t => !territories.includes(t))) return false;
+
+    // medias: If none of the avails medias are in the sale: available
+    if (avails.medias.every(t => !medias.includes(t))) return false;
+
+    // If duration starts after avails: available
+    if (duration.from > avails.duration.to) return false;
+
+    // If duration ends before avails: available
+    if (duration.to < avails.duration.from) return false;
+
+    // exclusive: If non-exclusive && avails non-exclusive: available
+    if (!avails.exclusive && !exclusive) return false;
+
+    return true;
+  });
+  if (hasSaleCovered) return false;
 
   return true;
 }

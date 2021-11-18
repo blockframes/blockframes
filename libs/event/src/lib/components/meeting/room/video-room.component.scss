@@ -14,8 +14,23 @@ footer {
   padding: 16px;
   display: flex;
   justify-content: center;
-
+  position: relative;
+  
   button {
     margin: 0 8px;
   }
+
+  button.enter-fullscreen {
+    position: absolute;
+    right: 16px;
+    bottom: 24px;
+  }
+  
+  button.fullscreen {
+    background: #000;
+    position: absolute;
+    right: 8px;
+    margin: 8px;
+  }
 }
+

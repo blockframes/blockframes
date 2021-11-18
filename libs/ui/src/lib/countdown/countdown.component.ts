@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ChangeDetectionStrategy} from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy, EventEmitter, Output } from '@angular/core';
 import { interval, Observable } from "rxjs";
 import { map, shareReplay, distinctUntilChanged } from 'rxjs/operators';
 import {
@@ -24,7 +24,7 @@ function slideUp() {
       animate(`150ms ${Easing.easeOutcubic}`, style({ opacity: 1, transform: 'translateY(0)' })),
     ]),
   ])
-} 
+}
 
 function toSeconds(delta: number) {
   const sec = Math.floor((delta / 1000) % 60);
@@ -42,7 +42,7 @@ function toHours(delta: number) {
 }
 
 function toDays(delta: number) {
-  const days =  Math.floor(delta / (1000 * 60 * 60 * 24))
+  const days = Math.floor(delta / (1000 * 60 * 60 * 24))
   return days.toString().padStart(2, "0");
 }
 @Component({
@@ -57,6 +57,10 @@ export class CountdownComponent implements OnInit {
   @Input() date: Date;
   @Input() timeUnits: (keyof TimeObservable)[];
   @Input() title: string;
+  /** Emit a boolean when timer reach zero */
+  @Output() timerEnded = new EventEmitter<boolean>();
+  private _ended = false;
+
   public time: TimeObservable;
   public seconds$: Observable<string>;
   public minutes$: Observable<number>;
@@ -66,13 +70,13 @@ export class CountdownComponent implements OnInit {
   ngOnInit() {
     const delay$ = interval().pipe(
       map(() => this.calcDateDiff()),
-      shareReplay({refCount: true, bufferSize: 1 })
+      shareReplay({ refCount: true, bufferSize: 1 })
     );
 
     const seconds$ = delay$.pipe(
       map(toSeconds),
     );
-    
+
     const minutes$ = delay$.pipe(
       map(toMinutes),
       distinctUntilChanged()
@@ -97,13 +101,15 @@ export class CountdownComponent implements OnInit {
   }
 
   calcDateDiff() {
-    const dDay = this.date.valueOf();
+    const oneMin = 60 * 1000;
+    const dDay = this.date.valueOf() + oneMin;
     const timeDifference = dDay - Date.now();
-    return timeDifference;
+    if (timeDifference - oneMin <= 0 && !this._ended) {
+      this._ended = true; // To emit only once
+      this.timerEnded.emit(true);
+    }
+    return timeDifference >= 0 ? timeDifference : 0;
   }
 }
-  
 
-
-  
 

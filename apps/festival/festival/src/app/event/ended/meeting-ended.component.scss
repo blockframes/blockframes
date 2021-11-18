@@ -1,0 +1,30 @@
+header {
+  padding: 40px;
+  background-size: cover;
+  background-position: center;
+  text-align: center;
+
+  h1.mat-display-2 {
+    margin-bottom: 24px;
+  }
+
+  h6 {
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  pre {
+    margin-top: 0;
+    margin-bottom: 8px;
+  }
+}
+
+section {
+  margin-top: 24px;
+  padding: 64px;
+  text-align: center;
+
+  h1 {
+    margin: 12px 0;
+  }
+}

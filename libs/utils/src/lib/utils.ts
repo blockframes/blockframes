@@ -15,6 +15,17 @@ export function removeAccent<T>(str: T) {
   return str;
 }
 
+export function jsonDateReviver(key: unknown, value: any) {
+  if (!value) return value;
+
+  const dateFormat = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,}|)Z$/;
+  if (typeof value === "string" && dateFormat.test(value)) return new Date(value);
+  if (typeof value === 'object' && Object.keys(value).length === 2 && ['nanoseconds', 'seconds'].every(k => k in value))
+    return new Date((value.nanoseconds * 1 ^ -6) + (value.seconds * 1000));
+
+  return value;
+}
+
 export function titleCase(text: string) {
   if (!text) return '';
   return text[0].toUpperCase() + text.substring(1);
@@ -169,7 +180,7 @@ export function maxAllowedFileSize(type: AllowedFileType) {
  * @param orgName:Must be greater than 2 characters.
  */
 export function createOfferId(orgName: string) {
-  const suffix = orgName.substring(0, 3).toLowerCase();
+  const suffix = orgName.substring(0, 3).toUpperCase();
   let id = '';
   for (let i = 0; i < 6; i++) {
     id += `${Math.floor(Math.random() * 10)}`;
@@ -188,7 +199,7 @@ export function createOfferId(orgName: string) {
  * https://developer.jwplayer.com/jwplayer/docs/jw8-add-custom-icons
  * https://css-tricks.com/probably-dont-base64-svg/
  */
-export function getWatermark(email: string, firstName: string = '', lastName: string = '') {
+export function getWatermark(email: string = '', firstName: string = '', lastName: string = '') {
   const svg = `
     <svg id="jwplayer-user-watermark" viewBox="0 0 640 360" xmlns="http://www.w3.org/2000/svg">
       <style>
@@ -197,7 +208,7 @@ export function getWatermark(email: string, firstName: string = '', lastName: st
         #jwplayer-user-watermark .email { font: italic 24px Arial;}
       </style>
       <text x="100%" y="35%" fill="#fff" stroke="#000" class="name">${firstName} ${lastName}</text>
-      <text x="100%" y="25%" fill="#fff" stroke="#000" class="email">${email}</text>
+      <text x="100%" y="25%" fill="#fff" stroke="#000" class="email">${email ?? ''}</text>
     </svg>
   `;
 

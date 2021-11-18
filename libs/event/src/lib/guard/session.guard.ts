@@ -1,37 +1,34 @@
 
 import { Injectable } from '@angular/core';
-import { CanActivate, Router, UrlTree } from '@angular/router';
-
-import { AuthQuery } from '@blockframes/auth/+state';
-
-import { EventQuery } from '../+state';
+import { ActivatedRouteSnapshot, CanActivate, Router, UrlTree } from '@angular/router';
+import { AuthQuery, AuthService } from '@blockframes/auth/+state';
+import { EventService } from '../+state';
 import { Meeting } from '../+state/event.firestore';
-
 
 @Injectable({ providedIn: 'root' })
 export class SessionGuard implements CanActivate {
 
   constructor(
     private authQuery: AuthQuery,
-    private eventQuery: EventQuery,
+    private authService: AuthService,
+    private eventService: EventService,
     private router: Router,
   ) { }
 
-  async canActivate(): Promise<boolean | UrlTree> {
-    const event = this.eventQuery.getActive();
+  async canActivate(next: ActivatedRouteSnapshot): Promise<boolean | UrlTree> {
+    const eventId: string = next.params.eventId;
+    const event = await this.eventService.getValue(eventId);
 
-    if (event.isOwner) {
-      return true;
-    }
+    if (event.isOwner) return true;
 
     // for meeting event we also nee to check "Request Access"
     if (event.type === 'meeting') {
-      const attendee = (event.meta as Meeting).attendees[this.authQuery.userId];
+      const attendee = (event.meta as Meeting).attendees[this.authQuery.userId || this.authService.anonymousUserId];
 
       if (attendee?.status === 'accepted' || attendee?.status === 'owner') {
         return true;
       }
-      return this.router.parseUrl(`/c/o/marketplace/event/${event.id}/lobby`);
+      return this.router.parseUrl(`/event/${event.id}/r/i/lobby`);
     }
 
     return true;

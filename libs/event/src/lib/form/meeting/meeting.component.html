@@ -5,7 +5,7 @@
       <mat-label>Link to Video Call</mat-label>
       <input matInput type="text" disabled [value]="link">
     </mat-form-field>
-    <button mat-icon-button [cdkCopyToClipboard]="link" matTooltip="Copy the link">
+    <button mat-icon-button [cdkCopyToClipboard]="link" (click)="copied()" matTooltip="Copy the link">
       <mat-icon svgIcon="file_copy"></mat-icon>
     </button>
   </div>

@@ -16,7 +16,7 @@
   </section>
 
   <nav mat-tab-nav-bar>
-    <ng-container *ngFor="let tab of tabs"> 
+    <ng-container *ngFor="let tab of (tabs$ | async)"> 
       <a mat-tab-link 
       [routerLink]="tab.path" 
       routerLinkActive 

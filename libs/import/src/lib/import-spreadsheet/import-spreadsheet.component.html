@@ -1,5 +1,5 @@
 ﻿
-<input #filePicker type="file" [accept]="['.xls', '.xlsx', '.ods', '.csv']" (change)="importSpreadsheet($event.target.files)" />
+<input #filePicker type="file" [accept]="allowedExtensions" (change)="importSpreadsheet($event.target.files)" />
 
 <ng-container *ngIf="file; else noFile">
 
@@ -15,6 +15,6 @@
 <ng-template #noFile>
   <article fxLayout="column" fxLayoutAlign="center center">
     <button test-id="import-file" mat-flat-button color="primary" (click)="filePicker.click()">Import File</button>
-    <p class="mat-caption">Accepted Formats: .xls, .csv</p>
+    <p class="mat-caption">Accepted Formats: .xlsx, .xlsm, .xlsb, .xls, .csv</p>
   </article>
 </ng-template>

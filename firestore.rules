@@ -122,7 +122,7 @@ service cloud.firestore {
     /// RULES ///
 
     match /invitations/{invitationId} {
-      allow get: if existingData().type == 'attendEvent' 
+      allow get: if existingData().type == 'attendEvent'
         && isSignedIn()
         && notInMaintenance();
     	allow list: if isAllowedToReadInvitation()
@@ -364,7 +364,9 @@ service cloud.firestore {
 
     match /contracts/{contractId} {
       allow read: if isSignedInWithPassword() && notInMaintenance();
-      allow create: if (userOrgId() == incomingData().buyerId) && notInMaintenance();
+      allow create: if (userOrgId() == incomingData().buyerId
+        || userOrgId() == incomingData().sellerId)
+        && notInMaintenance();
       allow update: if (userOrgId() in existingData().stakeholders)
                     && isOnlyChangingContractStatus()
                     && notInMaintenance();
@@ -373,7 +375,8 @@ service cloud.firestore {
 
     match /terms/{termId} {
       allow read: if isSignedInWithPassword() && notInMaintenance();
-      allow create: if (userOrgId() == getContract(incomingData().contractId).buyerId)
+      allow create: if (userOrgId() == getContract(incomingData().contractId).buyerId
+        || userOrgId() == getContract(incomingData().contractId).sellerId)
         && notInMaintenance();
       allow update: if false;
       allow delete: if false;
@@ -407,10 +410,10 @@ service cloud.firestore {
         && isRequestFieldValueEqualTo(['ownerOrgId'], userOrgId())
         && notInMaintenance();
       allow update: if isNotUpdatingId('id', existingData().id)
-        && ( 
+        && (
             ( userHasValidOrg() && existingData().ownerOrgId == userOrgId())
             || (
-              isSignedIn() && 
+              isSignedIn() &&
               (
                 isRequestFieldValueEqualTo(['meta', 'attendees', userId(), 'status'], 'requesting')
                 || isRequestFieldValueEqualTo(['meta', 'attendees', userId(), 'status'], 'ended')

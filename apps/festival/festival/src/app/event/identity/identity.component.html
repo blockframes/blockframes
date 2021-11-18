@@ -1,0 +1,35 @@
+<a app-logo routerLink="/"></a>
+
+<article class="surface">
+  <header>
+    <button fxFlexAlign="start" mat-icon-button color="black" (click)="clickBack()">
+      <mat-icon svgIcon="arrow_back"></mat-icon>
+    </button>
+  </header>
+
+  <form fxLayout="column" [formGroup]="form" (ngSubmit)="validateIdentity()" >
+    <h1>Welcome to Archipel Market!</h1>
+    <p class="mat-body-1">Please fill in your first and last name <br> to identify yourself.</p>
+
+    <div fxLayout fxLayoutAlign="space-between center" fxLayoutGap="16px">
+      <mat-form-field appearance="outline" fxFlex="0 1">
+        <mat-label>First name</mat-label>
+        <input test-id="firstName" matInput type="text" placeholder="First name" formControlName="firstName" required />
+        <mat-error *ngIf="form.get('firstName').hasError('required')">
+          First name is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline" fxFlex="0 1">
+        <mat-label>Last name</mat-label>
+        <input test-id="lastName" matInput type="text" placeholder="Last name" formControlName="lastName" required />
+        <mat-error *ngIf="form.get('lastName').hasError('required')">
+          Last name is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+    </div>
+    
+    <footer>
+      <button mat-flat-button color="primary" type="submit">Join event</button>
+    </footer>
+  </form>
+</article> 

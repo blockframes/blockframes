@@ -36,11 +36,13 @@ export class DashboardActionsShellComponent {
 
   removeAppAccess() {
     const movie = this.query.getActive();
-    const appsName = getMovieAppAccess(movie).map(a => getAppName(a).label);
+    const appsName = getMovieAppAccess(movie).filter(value => value !== this.appName).map(a => getAppName(a).label);
+    const subtitle = appsName.length ? `This Title will still be available on <i>${appsName.join(', ')}</i>.<br/>` : '';
+
     this.dialog.open(ConfirmInputComponent, {
       data: {
         title: `You are about to delete ${movie.title.international} permanently.`,
-        subtitle: `This Title will still be available on <i>${appsName.join(', ')}</i>.<br/> If you wish to proceed, please type "DELETE" in the field below.`,
+        subtitle: `${subtitle}If you wish to proceed, please type "DELETE" in the field below.`,
         confirmationWord: 'delete',
         confirmButtonText: 'delete Title',
         cancelButtonText: 'keep Title',

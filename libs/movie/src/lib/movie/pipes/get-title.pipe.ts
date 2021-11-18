@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { MovieService } from '../+state/movie.service';
 import { Movie } from '../+state/movie.model';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 @Pipe({ name: 'getTitle' })
 export class GetTitlePipe implements PipeTransform {
@@ -14,6 +14,7 @@ export class GetTitlePipe implements PipeTransform {
   transform(titleId: string[]): Observable<Movie[]>
   transform(titleId: string | string[]) {
     // We need that for the compiler to be happy, else it doesn't understand params
+    if (!titleId) return of(undefined);
     return Array.isArray(titleId)
       ? this.service.valueChanges(titleId)
       : this.service.valueChanges(titleId);

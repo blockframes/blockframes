@@ -16,6 +16,7 @@ import { NoTitleModule } from '@blockframes/ui/dashboard/components/no-title/no-
 import { FilterByModule } from '@blockframes/utils/pipes/filter-by.pipe';
 import { TagModule } from '@blockframes/ui/tag/tag.module';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
+import { MaxLengthModule } from "@blockframes/utils/pipes";
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -38,6 +39,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     NoTitleModule,
     FilterByModule,
     TagModule,
+    MaxLengthModule,
     // Material
     MatButtonModule,
     MatTabsModule,
