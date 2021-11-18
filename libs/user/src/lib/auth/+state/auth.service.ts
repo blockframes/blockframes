@@ -94,6 +94,7 @@ export class AuthService extends FireAuthService<AuthState> {
     localStorage.setItem('gdpr', gdpr);
 
     this.ngIntercom?.shutdown();
+    this.ngIntercom.boot({ app_id: intercomId });
     sessionStorage.clear();
     this.signedOut.next();
   }
