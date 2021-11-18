@@ -8,19 +8,19 @@
   
   <form fxLayout="column" fxLayoutGap="16px" [formGroup]="form" (ngSubmit)="validateForm()" >
     <h1>Welcome to Archipel Market!</h1>
-    <p class="mat-body-1">Please fill in your first and last name <br> and email to identify yourself.</p>
+    <p class="mat-body-1">Please fill the following information:</p>
 
     <div fxLayout fxLayoutAlign="space-between center" fxLayoutGap="16px">
       <mat-form-field appearance="outline" fxFlex="0 1">
-        <input test-id="firstName" matInput type="text" placeholder="First name" formControlName="firstName" required />
-        <mat-label>First name</mat-label>
+        <input test-id="firstName" matInput type="text" placeholder="First Name" formControlName="firstName" required />
+        <mat-label>First Name</mat-label>
         <mat-error *ngIf="form.get('firstName').hasError('required')">
           First name is <strong>required</strong>
         </mat-error>
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="0 1">
-        <mat-label>Last name</mat-label>
-        <input test-id="lastName" matInput type="text" placeholder="Last name" formControlName="lastName" required />
+        <mat-label>Last Name</mat-label>
+        <input test-id="lastName" matInput type="text" placeholder="Last Name" formControlName="lastName" required />
         <mat-error *ngIf="form.get('lastName').hasError('required')">
           Last name is <strong>required</strong>
         </mat-error>
@@ -28,15 +28,15 @@
     </div>
     
     <mat-form-field appearance="outline">
-      <mat-label>Email</mat-label>
-      <input test-id="email" matInput type="email" placeholder="Email" formControlName="email" required />
+      <mat-label>Email Address</mat-label>
+      <input test-id="email" matInput type="email" placeholder="Email Address" formControlName="email" required />
       <mat-error *ngIf="form.get('email').hasError('required')">
         Email is <strong>required</strong>
       </mat-error>
     </mat-form-field>
     <footer fxLayout="column" fxLayoutAlign="center center">
-      <button mat-flat-button color="primary" type="submit">Join event</button>
-      <a mat-button color="primary" routerLink="../login">Log with existing account</a>
+      <button mat-flat-button color="primary" type="submit">Join Event</button>
+      <a mat-button color="primary" routerLink="../login">Log in with existing account</a>
     </footer>
   </form>
 </article>

@@ -24,7 +24,13 @@
     button {
       background-color: transparent;
       border: none;
+      width: 215px;
+      height: 215px;
+      border-radius: 100%;
 
+      img {
+        width: 80%;
+      }
       &:hover {
         background-color: var(--background-hover);
       }
