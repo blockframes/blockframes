@@ -19,11 +19,7 @@ export function isSafari() {
 export function isChrome() {return navigator.userAgent.indexOf("Chrome") != -1}
 
 export function scrollIntoView(element:HTMLElement){
-  if(isChrome()){
-    element.scrollIntoView()
-  } else {
-   element.scrollIntoView({behavior:'smooth'})
-  }
+  element.scrollIntoView({behavior:'smooth'});
 }
 
 /**
