@@ -83,7 +83,7 @@ function updateUser(user: User | PublicUser | Partial<User>, toPublicUser = fals
   if (!user) return;
   if (hasKeys<User>(user, 'uid')) {
     const processedUser = userCache?.[user.uid] || (userCache[user.uid] = processUser(user));
-    return toPublicUser ? createPublicUser(processedUser) : processedUser; // @TODO #6905
+    return toPublicUser ? createPublicUser(processedUser) : processedUser;
   }
   if (!hasKeys<User>(user, 'uid')) {
     console.warn('WARNING - user does not have UID!', user)

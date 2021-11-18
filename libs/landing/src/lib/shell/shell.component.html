@@ -74,7 +74,7 @@
           </article>
           <article fxLayout fxLayoutAlign="space-between start" fxLayout.lt-md="column" fxLayoutGap="24px">
             <mat-form-field appearance="outline">
-              <mat-label>Email Adress</mat-label>
+              <mat-label>Email Address</mat-label>
               <input test-id="email" matInput type="email" placeholder="E-mail address" formControlName="email" required />
               <mat-error *ngIf="form.get('email').hasError('required')">
                 Email is <strong>required</strong>
