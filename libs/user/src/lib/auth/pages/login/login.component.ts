@@ -13,7 +13,6 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 })
 export class LoginComponent implements OnInit {
   @ViewChild('customSnackBarTemplate') customSnackBarTemplate: TemplateRef<unknown>;
-  private snackbarDuration = 8000;
 
   public buttonText = 'Log in';
 
@@ -30,7 +29,7 @@ export class LoginComponent implements OnInit {
 
   public async signin(signinForm: SigninForm) {
     if (signinForm.invalid) {
-      this.snackBar.open('Information not valid', 'close', { duration: this.snackbarDuration });
+      this.snackBar.open('Information not valid', 'close', { duration: 8000 });
       return;
     }
     try {
@@ -50,11 +49,11 @@ export class LoginComponent implements OnInit {
       this.buttonText = 'Log in';
       console.error(err); // let the devs see what happened
       if (err.message.includes('INTERNAL ASSERTION FAILED')) {
-        this.snackBar.open('Network error. Please refresh this page.', 'close', { duration: this.snackbarDuration });
+        this.snackBar.open('Network error. Please refresh this page.', 'close', { duration: 8000 });
       } else if (err.code === 'auth/user-not-found') {
-        this.snackBar.openFromTemplate(this.customSnackBarTemplate, { duration: this.snackbarDuration });
+        this.snackBar.openFromTemplate(this.customSnackBarTemplate, { duration: 8000 });
       } else {
-        this.snackBar.open(err.message, 'close', { duration: this.snackbarDuration });
+        this.snackBar.open(err.message, 'close', { duration: 8000 });
       }
     }
   }

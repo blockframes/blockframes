@@ -15,7 +15,7 @@ export class PromotionalLinksComponent implements OnInit {
   public videos = false;
 
   ngOnInit() {
-    this.videos = this.movie.promotional.videos.otherVideos.some(video => video.storagePath);
+    this.videos = this.movie.promotional.videos.otherVideos.some(video => video.storagePath && video.privacy === 'public');
   }
 
   scrollToFooter() {

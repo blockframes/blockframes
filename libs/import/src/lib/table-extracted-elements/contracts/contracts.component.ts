@@ -10,10 +10,8 @@ import { ContractService } from '@blockframes/contract/contract/+state/contract.
 import { sortingDataAccessor } from '@blockframes/utils/table';
 import { ContractsImportState, SpreadsheetImportError } from '../../utils';
 import { TermService } from '@blockframes/contract/term/+state/term.service';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { getCurrentApp } from '@blockframes/utils/apps';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { createDocumentMeta } from '@blockframes/utils/models-meta';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 const hasImportErrors = (importState: ContractsImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -49,8 +47,7 @@ export class TableExtractedContractsComponent implements OnInit {
     private dialog: MatDialog,
     private contractService: ContractService,
     private termService: TermService,
-    private movieService: MovieService,
-    private routerQuery: RouterQuery
+    private db: AngularFirestore,
   ) { }
 
   ngOnInit() {
@@ -111,20 +108,17 @@ export class TableExtractedContractsComponent implements OnInit {
    * @param importState
    */
   private async addContract(importState: ContractsImportState): Promise<boolean> {
-    const data = this.rows.data;
-    const termIds = await this.termService.add(importState.terms);
-    importState.contract.termIds = termIds;
+
+    importState.terms.forEach(t => t.id = this.db.createId());
+    importState.contract.termIds = importState.terms.map(t => t.id);
+
     await this.contractService.add({
       ...importState.contract,
       _meta: createDocumentMeta({createdAt: new Date()})
     });
-    const titleId = importState.contract.titleId;
-    if (!!titleId && importState.contract.type === 'mandate') {
-      const title = await this.movieService.getValue(titleId);
-      const app = getCurrentApp(this.routerQuery);
-      title.app[app].access = true;
-      this.movieService.update(title);
-    }
+
+    // @dev: Create terms after contract because rules require contract to be created first
+    await this.termService.add(importState.terms);
 
     importState.errors.push({
       type: 'error',
@@ -133,7 +127,6 @@ export class TableExtractedContractsComponent implements OnInit {
       reason: 'Contract already added',
       hint: 'Contract already added'
     });
-    this.rows.data = data;
     return true;
   }
 

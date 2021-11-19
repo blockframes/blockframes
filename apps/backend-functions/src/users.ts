@@ -8,6 +8,7 @@ import { getCollection, storeSearchableUser, deleteObject, algolia } from '@bloc
 import { getDocument } from './data/internals';
 import { getMailSender, applicationUrl, App } from '@blockframes/utils/apps';
 import { sendFirstConnexionEmail, createUserFromEmail } from './internals/users';
+import { production } from './environments/environment';
 import { cleanUserMedias } from './media';
 import { getUserEmailData, OrgEmailData } from '@blockframes/utils/emails/utils';
 import { groupIds } from '@blockframes/utils/emails/ids';
@@ -221,12 +222,18 @@ export const sendUserMail = async (data: { subject: string, message: string, app
 export const createUser = async (data: { email: string, orgEmailData: OrgEmailData, app: App }, context: CallableContext): Promise<PublicUser> => {
   const { email, orgEmailData, app } = data;
 
-  if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
+  if (!context?.auth) { throw new functions.https.HttpsError('permission-denied', 'Missing auth context!'); }
   const blockframesAdmin = await db.doc(`blockframesAdmin/${context.auth.uid}`).get();
-  if (!blockframesAdmin.exists) { throw new Error('Permission denied: you are not blockframes admin'); }
+  if (!blockframesAdmin.exists) { throw new functions.https.HttpsError('permission-denied', 'You are not a blockframes admin!'); }
 
   if (!email) {
-    throw new Error('Email is mandatory for creating user');
+    throw new functions.https.HttpsError('invalid-argument', '"email" is mandatory to create a user!');
+  }
+  if (!orgEmailData) {
+    throw new functions.https.HttpsError('invalid-argument', '"orgEmailData" is mandatory to create a user!');
+  }
+  if (!app) {
+    throw new functions.https.HttpsError('invalid-argument', '"app" is mandatory to create a user!');
   }
 
   try {
@@ -235,11 +242,21 @@ export const createUser = async (data: { email: string, orgEmailData: OrgEmailDa
     const urlToUse = applicationUrl[app];
 
     const template = userInvite(toUser, orgEmailData, urlToUse);
-    await sendMailFromTemplate(template, app);
+
+    try {
+      await sendMailFromTemplate(template, app);
+    } catch (err) {
+      if (production) throw err;
+
+      functions.logger.warn(`Email hasn't been sent because of error! This will fail in prod, we prevented the function to crash because we are not in prod.`);
+      functions.logger.warn(`Please check that your sendgrid key is authorized to send emails.`);
+      functions.logger.error(err);
+    }
+
 
     return newUser.user;
   } catch (e) {
-    throw new Error(`There was an error while sending email to newly created user : ${e.message}`);
+    throw new functions.https.HttpsError('internal', `There was an error while sending email to newly created user : ${e.message}`);
   }
 
 }

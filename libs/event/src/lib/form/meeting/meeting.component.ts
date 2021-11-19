@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { switchMap, } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { EventFormShellComponent } from '../shell/shell.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'event-meeting',
@@ -23,6 +24,7 @@ export class MeetingComponent implements OnInit {
     private orgQuery: OrganizationQuery,
     private dynTitle: DynamicTitleService,
     private shell: EventFormShellComponent,
+    private snackBar: MatSnackBar,
   ) { }
 
   get formMeta() {
@@ -39,6 +41,10 @@ export class MeetingComponent implements OnInit {
     this.members$ = this.orgQuery.selectActive().pipe(
       switchMap(org => this.userService.valueChanges(org.userIds))
     )
+  }
+
+  copied() {
+    this.snackBar.open('Link copied', 'CLOSE', { duration: 4000 });
   }
 
 }

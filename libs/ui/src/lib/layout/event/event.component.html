@@ -1,0 +1,71 @@
+<mat-sidenav-container>
+  <mat-sidenav class="dark-theme" id="dashboard-navbar" mode="over">
+    <mat-toolbar fxLayout fxLayoutAlign="space-between center">
+      <a app-logo routerLink="."></a>
+      <button mat-icon-button (click)="sidenav.close()">
+        <mat-icon svgIcon="arrow_back"></mat-icon>
+      </button>
+    </mat-toolbar>
+    <ng-content select="aside"></ng-content>
+  </mat-sidenav>
+  
+  <mat-sidenav-content fxLayout="column" [appContainer]="app" (toggle)="sidenav.toggle()" layout>
+    <!-- TOOLBAR -->
+    <app-bar #app>
+      <header fxLayout fxLayoutAlign="start center">
+        <button *ngIf="(user$ | async)" test-id="menu" mat-icon-button (click)="sidenav.toggle()">
+          <mat-icon svgIcon="menu"></mat-icon>
+        </button>
+        <a app-logo [routerLink]="(user$ | async) ? '.' : '/'"></a>
+        <ng-content select="header"></ng-content>
+        <ng-container *ngIf="(user$ | async)">
+          <a test-id="calendar-icon" mat-icon-button routerLink="/c/o/marketplace/event/calendar">
+            <mat-icon svgIcon="calendar_today"></mat-icon>
+          </a>
+          <a test-id="heart-icon" mat-icon-button routerLink="/c/o/marketplace/wishlist">
+            <mat-icon svgIcon="favorite"
+              [matBadge]="wishlistCount$ | async"
+              [matBadgeHidden]="(wishlistCount$ | async) === 0"
+              matBadgeColor="accent"
+              matBadgeSize="small">
+            </mat-icon>
+          </a>
+          <div fxLayout="row" fxLayoutGap="24px">
+            <mat-divider vertical></mat-divider>
+            <!-- Invitations -->
+            <a mat-icon-button routerLink="/c/o/marketplace/invitations" test-id="invitations-link">
+              <ng-container *ngIf="invitationCount$ | async as count; else noInvitation">
+                <mat-icon svgIcon="invitation" [matBadge]="count" matBadgeColor="accent" matBadgeSize="small"></mat-icon>
+              </ng-container>
+              <ng-template #noInvitation>
+                <mat-icon svgIcon="invitation"></mat-icon>
+              </ng-template>
+
+            </a>
+            <!-- Notifications -->
+            <a mat-icon-button routerLink="/c/o/marketplace/notifications" test-id="notifications-link">
+              <ng-container *ngIf="notificationCount$ | async as count; else noNotification">
+                <mat-icon svgIcon="notifications" [matBadge]="count" matBadgeColor="accent" matBadgeSize="small">
+                </mat-icon>
+              </ng-container>
+              <ng-template #noNotification>
+                <mat-icon svgIcon="notifications"></mat-icon>
+              </ng-template>
+            </a>
+
+            <auth-widget></auth-widget>
+          </div>
+        </ng-container>
+      </header>
+    </app-bar>
+
+    <!-- CONTENT -->
+    <main fxFlex cdkScrollable>
+      <div class="page" [@routeAnimation]="animationOutlet(outlet)">
+        <router-outlet #outlet="outlet" (activate)="scrollToTop()"></router-outlet>
+      </div>
+      <bf-footer></bf-footer>
+    </main>
+
+  </mat-sidenav-content>
+</mat-sidenav-container>

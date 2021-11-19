@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input, OnInit, OnDestroy, Inject, Directive } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterOutlet, Event } from '@angular/router';
+import { Location } from '@angular/common';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { combineLatest, Subscription } from 'rxjs';
 import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
@@ -11,6 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { storeStatus, StoreStatus } from '@blockframes/utils/static-model';
+import { filter } from 'rxjs/operators';
 
 @Directive({ selector: 'movie-cta, [movieCta]' })
 export class MovieCtaDirective { }
@@ -24,6 +26,8 @@ export class MovieCtaDirective { }
 })
 export class DashboardTitleShellComponent implements OnInit, OnDestroy {
   private sub: Subscription;
+  private routeSub: Subscription;
+  private countRouteEvents = 1;
   movie$ = this.query.selectActive();
 
   public appName = getCurrentApp(this.routerQuery);
@@ -37,16 +41,25 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private movieService: MovieService,
-    private router: Router
+    private router: Router,
+    private location: Location
   ) { }
 
   ngOnInit() {
     const obs = Object.keys(this.configs).map(name => this.configs[name].onInit()).flat();
     this.sub = combineLatest(obs).subscribe();
+    this.routeSub = this.router.events
+      .pipe(filter((event: Event) => event instanceof NavigationEnd))
+      .subscribe(() => this.countRouteEvents++)
   }
 
   ngOnDestroy() {
     this.sub?.unsubscribe();
+    this.routeSub?.unsubscribe();
+  }
+
+  goBack() {
+    this.location.historyGo(-this.countRouteEvents);
   }
 
   getForm<K extends keyof ShellConfig>(name: K): ShellConfig[K]['form'] {

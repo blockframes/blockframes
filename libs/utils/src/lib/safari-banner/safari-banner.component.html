@@ -1,0 +1,9 @@
+<mat-card *ngIf="!isHidden">
+  <mat-card-content fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center center">
+    <p fxFlex="shrink">
+      Hi, we’ve noticed you're using Safari as a web browser,
+      for a better experience on our website we recommend using Firefox or Google Chrome.
+    </p>
+    <button fxFlex="1 0 auto" mat-flat-button color="primary" (click)="userDismiss()">Dismiss</button>
+  </mat-card-content>
+</mat-card>

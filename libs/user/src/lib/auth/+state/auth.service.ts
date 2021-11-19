@@ -14,16 +14,18 @@ import { getIntercomOptions } from '@blockframes/utils/intercom/intercom.service
 import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.service';
 import { intercomId } from '@env';
 import { createDocumentMeta, DocumentMeta } from '@blockframes/utils/models-meta';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { getBrowserWithVersion } from '@blockframes/utils/browser/utils';
 import { IpService } from '@blockframes/utils/ip';
 import { OrgEmailData } from '@blockframes/utils/emails/utils';
+import { AnonymousCredentials, AnonymousRole } from './auth.model';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'users', idKey: 'uid' })
 export class AuthService extends FireAuthService<AuthState> {
   signedOut = new Subject<void>();
+  anonymousCredentials$ = new BehaviorSubject<AnonymousCredentials>(this.anonymousCredentials);
 
   constructor(
     protected store: AuthStore,
@@ -94,6 +96,7 @@ export class AuthService extends FireAuthService<AuthState> {
     localStorage.setItem('gdpr', gdpr);
 
     this.ngIntercom?.shutdown();
+    this.ngIntercom.boot({ app_id: intercomId });
     sessionStorage.clear();
     this.signedOut.next();
   }
@@ -170,11 +173,18 @@ export class AuthService extends FireAuthService<AuthState> {
   ////////////////////
 
   /**
-   * Sign in an user anonymously, he will get an uid and will be stored in firebase auth as anonymous
-   * @returns Promise<firebase.auth.UserCredential>
+   * Sign in an user anonymously if not already connected,
+   * he will get an uid and will be stored in firebase auth as anonymous
+   * @returns Promise<AnonymousCredentials>
    */
-  signInAnonymously() {
-    return firebase.auth().signInAnonymously();
+  async signInAnonymously() {
+    const currentUser = await this.user;
+    if (currentUser) {
+      return this.updateAnonymousCredentials({ uid: currentUser.uid });
+    }
+
+    const creds = await this.auth.signInAnonymously();
+    return this.updateAnonymousCredentials({ uid: creds.user.uid }, { reset: true });
   }
 
   /**
@@ -239,8 +249,44 @@ export class AuthService extends FireAuthService<AuthState> {
     if (!isAnonymous) return false;
     // Clean anonymousCredentials
     await this.onSignout();
-    this.store.reset();
     // Delete (and logout) user
     return firebase.auth().currentUser.delete();
   }
+
+  private resetAnonymousCredentials() {
+    const keys = ['uid', 'role', 'email', 'invitationId', 'lastName', 'firstName'];  // keys of AnonymousCredentials
+    keys.forEach(k => sessionStorage.removeItem(`anonymousCredentials.${k}`));
+  }
+
+  updateAnonymousCredentials(creds: Partial<AnonymousCredentials>, options?: { reset: boolean }) {
+
+    if (options?.reset) {
+      this.resetAnonymousCredentials();
+    }
+
+    for (const [key, value] of Object.entries(creds)) {
+      !value ? sessionStorage.removeItem(`anonymousCredentials.${key}`) : sessionStorage.setItem(`anonymousCredentials.${key}`, value as string);
+    }
+
+    this.anonymousCredentials$.next(this.anonymousCredentials);
+
+    return this.anonymousCredentials;
+  }
+
+  get anonymousCredentials(): AnonymousCredentials {
+    return {
+      uid: sessionStorage.getItem('anonymousCredentials.uid'),
+      lastName: sessionStorage.getItem('anonymousCredentials.lastName'),
+      firstName: sessionStorage.getItem('anonymousCredentials.firstName'),
+      role: sessionStorage.getItem('anonymousCredentials.role') as AnonymousRole,
+      email: sessionStorage.getItem('anonymousCredentials.email'),
+      invitationId: sessionStorage.getItem('anonymousCredentials.invitationId'),
+    };
+  }
+
+  get anonymousUserId() {
+    return this.anonymousCredentials.uid;
+  }
 }
+
+

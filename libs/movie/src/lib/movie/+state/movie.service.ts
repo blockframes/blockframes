@@ -18,6 +18,8 @@ import { QueryFn } from '@angular/fire/firestore';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { map } from 'rxjs/operators';
 import { getViews } from '../pipes/analytics.pipe';
+import { joinWith } from '@blockframes/utils/operators';
+import { AnalyticsService } from '@blockframes/utils/analytics/analytics.service';
 
 export const fromOrg = (orgId: string): QueryFn => ref => ref.where('orgIds', 'array-contains', orgId);
 export const fromOrgAndAccepted = (orgId: string, appli: App): QueryFn => ref => ref.where(`app.${appli}.status`, '==', 'accepted').where('orgIds', 'array-contains', orgId);
@@ -32,11 +34,12 @@ export class MovieService extends CollectionService<MovieState> {
   readonly useMemorization = true;
 
   constructor(
+    protected store: MovieStore,
     private authQuery: AuthQuery,
     private permissionsService: PermissionsService,
+    private analyticservice: AnalyticsService,
     private userService: UserService,
-    protected store: MovieStore,
-    private orgQuery: OrganizationQuery
+    private orgQuery: OrganizationQuery,
   ) {
     super(store);
   }
@@ -109,18 +112,16 @@ export class MovieService extends CollectionService<MovieState> {
   }
 
   queryDashboard(app: App) {
-    const queryAnalytics: Query<MovieWithAnalytics> = {
-      path: 'movies',
-      queryFn: fromOrg(this.orgQuery.getActiveId()),
-      analytics: (movie: Movie) => ({ path: `analytics/${movie.id}` })
-    }
-
+    const orgId = this.orgQuery.getActiveId();
+    const query: QueryFn = ref => ref.where('orgIds', 'array-contains', orgId).where(`app.${app}.access`, '==', true);
     const addViews = (movie: MovieWithAnalytics) => ({ ...movie, analytics: { ...movie.analytics, views: getViews(movie.analytics) } });
-
-    return queryChanges.call(this, queryAnalytics).pipe(
-      map((movies: MovieWithAnalytics[]) => movies.filter(movie => !!movie?.app[app].access)),
+    
+    return this.valueChanges(query).pipe(
+      joinWith({
+        analytics: movie => this.analyticservice.valueChanges(movie.id),
+      }),
       map(movies => movies.map(addViews)),
-      map(movies => movies.sort((movieA, movieB) => movieA.title.international < movieB.title.international ? -1 : 1))
+      map(movies => movies.sort((a, b) => a.title.international < b.title.international ? -1 : 1))
     );
   }
 }

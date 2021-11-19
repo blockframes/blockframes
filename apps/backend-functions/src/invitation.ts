@@ -11,7 +11,7 @@ import { ErrorResultResponse } from './utils';
 import { CallableContext } from "firebase-functions/lib/providers/https";
 import { App } from '@blockframes/utils/apps';
 import { EventDocument, EventMeta, MEETING_MAX_INVITATIONS_NUMBER } from '@blockframes/event/+state/event.firestore';
-import { EventEmailData, getEventEmailData } from '@blockframes/utils/emails/utils';
+import { getEventEmailData } from '@blockframes/utils/emails/utils';
 import { Change } from 'firebase-functions';
 import { AlgoliaOrganization } from '@blockframes/utils/algolia';
 import { createAlgoliaOrganization } from '@blockframes/firebase-utils';
@@ -159,33 +159,41 @@ export const inviteUsers = async (data: UserInvitation, context: CallableContext
         if (querySnap.size + data.emails.length > MEETING_MAX_INVITATIONS_NUMBER) {
           throw new Error(
             `MEETING MAX INVITATIONS EXCEEDED : Meeting ${eventId} has already ${querySnap.size} invitations
-and user ${user.uid} tried to add ${data.emails.length} new invitations.
-That would have exceeded the current limit which is ${MEETING_MAX_INVITATIONS_NUMBER} invitations.`)
+            and user ${user.uid} tried to add ${data.emails.length} new invitations.
+            That would have exceeded the current limit which is ${MEETING_MAX_INVITATIONS_NUMBER} invitations.`)
         }
       }
     }
   }
 
-  let eventData: EventEmailData = getEventEmailData();
-  if (invitation.type === 'attendEvent' && !!invitation.eventId) {
-    const event = await getDocument<EventDocument<EventMeta>>(`events/${invitation.eventId}`);
-    eventData = getEventEmailData(event);
-  }
+  const eventId = invitation.type === 'attendEvent' && invitation.eventId;
+  const event = eventId ? await getDocument<EventDocument<EventMeta>>(`events/${eventId}`) : undefined;
 
   for (const email of data.emails) {
-    const isLastIndex = await getOrInviteUserByMail(email, invitation.fromOrg.id, invitation.type, data.app, eventData)
-      .then(u => createPublicUser(u))
-      .then(toUser => {
-        invitation.toUser = toUser;
-        const id = db.collection('invitations').doc().id;
-        invitation.id = id;
-      })
-      .then(() => db.collection('invitations').doc(invitation.id).set(invitation))
-      .then(result => promises.push({ result, error: '' }))
-      .catch(error => promises.push({ result: undefined, error }))
-      .then(lastIndex => lastIndex === data.emails.length);
-    if (isLastIndex) break;
+    const invitationId = db.collection('invitations').doc().id;
+    const { type, mode, fromOrg } = invitation;
+    const eventData = type == 'attendEvent' ? getEventEmailData(event, email, invitationId) : undefined;
+    const user = await getOrInviteUserByMail(
+      email,
+      { id: invitationId, type, mode, fromOrg },
+      data.app,
+      eventData
+    )
+
+    if (user.invitationStatus) invitation.status = user.invitationStatus;
+
+    const publicUser = createPublicUser(user.user);
+    invitation.toUser = publicUser;
+    invitation.id = invitationId;
+
+    try {
+      const invitationSet = await db.collection('invitations').doc(invitation.id).set(invitation);
+      promises.push({ result: invitationSet, error: '' });
+    } catch (error) {
+      promises.push({ result: undefined, error });
+    }
   }
+
   return promises;
 }
 

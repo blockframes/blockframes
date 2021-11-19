@@ -18,14 +18,14 @@
 
   <!-- Small Events -->
   <ng-template calEventSmall let-event>
-    <a [ngSwitch]="event.type" [routerLink]="event | eventLink : '..'">
+    <a [ngSwitch]="event.type" [routerLink]="event | eventLink">
       <event-card [event]="event" size="small" matBadge="!" matBadgeColor="accent" [matBadgeHidden]="event | hideBadge | async"></event-card>
     </a>
   </ng-template>
 
   <!-- Large Events -->
   <ng-template calEventLarge let-event>
-    <a [ngSwitch]="event.type" [routerLink]="event | eventLink : '..'">
+    <a [ngSwitch]="event.type" [routerLink]="event | eventLink">
       <event-card [event]="event" size="large" matBadge="!" matBadgeColor="accent" [matBadgeHidden]="event | hideBadge | async"></event-card>
     </a>
   </ng-template>

@@ -159,7 +159,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `REMINDER - Your event "${notification.docId}" is about to start.`,
           placeholderUrl: 'empty_poster.svg',
-          url: `${applicationUrl['festival']}/c/o/marketplace/event/${notification.docId}`,
+          url: `${applicationUrl['festival']}/event/${notification.docId}/r/i`,
         };
       case 'oneDayReminder':
 
@@ -181,7 +181,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `REMINDER - Your event "${notification.docId}" is tomorrow.`,
           placeholderUrl: 'empty_poster.svg',
-          url: `${applicationUrl['festival']}/c/o/marketplace/event/${notification.docId}`,
+          url: `${applicationUrl['festival']}/event/${notification.docId}/r/i`,
         };
       case 'invitationToAttendEventUpdated':
       case 'requestToAttendEventUpdated':
@@ -202,7 +202,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           message: `Someone has ${notification.invitation.status} your ${notification.invitation.mode} to attend an event.`,
           imgRef: notification.user?.avatar || notification.organization?.logo,
           placeholderUrl: 'profil_user.svg',
-          url: `${applicationUrl['festival']}/c/o/${module}/event/${notification.docId}`
+          url: `${applicationUrl['festival']}${module === 'marketplace' ? `/event/${notification.docId}/r/i/` : `/c/o/${module}/event/${notification.docId}`}`
         };
       case 'requestToAttendEventSent':
 
@@ -221,7 +221,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           message: `Your request to attend event "${notification.docId}" has been sent.`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.svg',
-          url: `${applicationUrl['festival']}/c/o/${module}/event/${notification.docId}`
+          url: `${applicationUrl['festival']}${module === 'marketplace' ? `/event/${notification.docId}/r/i/` : `/c/o/${module}/event/${notification.docId}`}`
         };
       case 'offerCreatedConfirmation':
         return {

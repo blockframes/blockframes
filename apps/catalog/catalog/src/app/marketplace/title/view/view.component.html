@@ -1,21 +1,23 @@
 <ng-container *ngIf="movie$ | async as movie">
   <title-marketplace-shell [routes]="navLinks">
     <movie-header [movie]="movie">
-      <movie-header-cta fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="32px">
-        <ng-container *ngFor="let org of orgs$ | async">
-          <org-chip [org]="org"></org-chip>
-          <a mat-flat-button color="primary" routerLink="avails" fragment="avails">
-            <span>Search & Buy Rights</span>
-            <mat-icon svgIcon="arrow_forward"></mat-icon>
-          </a>
-        </ng-container>
+      <movie-header-cta fxLayout="column" fxLayoutGap="32px">
+        <section>
+          <ng-container *ngFor="let org of orgs$ | async">
+            <org-chip [org]="org"></org-chip>
+          </ng-container>
+        </section>
+        <a mat-flat-button color="primary" routerLink="avails" fragment="avails">
+          <span>Search & Buy Rights</span>
+          <mat-icon svgIcon="arrow_forward"></mat-icon>
+        </a>
       </movie-header-cta>
       <movie-header-actions fxHide.lt-sm fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="24px">
         <wishlist-button [movieId]="movie.id"></wishlist-button>
         <movie-promotional-links [movie]="movie" [links]="promoLinks"></movie-promotional-links>
       </movie-header-actions>
     </movie-header>
-    <section bgAsset="hero.png">
+    <section bgAsset="hero.png" class="hero">
       <div fxLayout="column" fxLayoutAlign="center center" class="dark-contrast-theme">
         <h2>Any questions on this Title?</h2>
         <button mat-flat-button color="accent" (click)="openIntercom()">Contact us</button>

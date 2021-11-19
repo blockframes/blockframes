@@ -14,6 +14,7 @@ import {
   UnknownEntityError,
   ContractsImportState,
   getUser,
+  sheetHeaderLine,
 } from '@blockframes/import/utils';
 import { centralOrgId } from '@env';
 import { MovieService } from '@blockframes/movie/+state';
@@ -217,14 +218,18 @@ export async function formatContract(
         reason: 'Mandate ID is used only for sales contracts, here the value will be omitted because the contract is a mandate.',
         hint: 'Remove the corresponding sheet field to silence this warning.'
       });
-      if (data.contract.sellerId === centralOrgId.catalog) return new ValueWithWarning('', {
-        type: 'warning',
-        field: 'parentTerm',
-        name: 'Unused Mandate ID/Row',
-        reason: 'Mandate ID is used only for internal sales, here the value will be omitted because the sale is external.',
-        hint: 'Remove the corresponding sheet field to silence this warning.'
-      });
-      if (!value && data.contract.type === 'sale') throw new MandatoryError({ field: 'parentTerm', name: 'Mandate ID/Row' });
+      if (!value && data.contract.type === 'sale' && data.contract.sellerId === centralOrgId.catalog) {
+        throw new MandatoryError({ field: 'parentTerm', name: 'Mandate ID/Row' });
+      }
+      if (value && data.contract.type === 'sale' && data.contract.sellerId !== centralOrgId.catalog) {
+        return new ValueWithWarning('', {
+          type: 'warning',
+          field: 'parentTerm',
+          name: 'Unused Mandate ID/Row',
+          reason: 'Mandate ID is used only for internal sales, here the value will be omitted because the sale is external.',
+          hint: 'Remove the corresponding sheet field to silence this warning.'
+        });
+      }
       const isId = isNaN(Number(value));
       if (isId) {
         const exist = await checkParentTerm(value, contractService, contractCache);
@@ -246,7 +251,17 @@ export async function formatContract(
       const exists = await Promise.all(stakeholders.map(id => getUser({ id }, userService, userCache)));
       const unknownStakeholder = exists.some(e => !e);
       if (unknownStakeholder) throw new UnknownEntityError({ field: 'contract.stakeholders', name: 'Stakeholders' });
-      return [ data.contract.buyerId, data.contract.sellerId, ...stakeholders ];
+      if (data.contract.type === 'mandate') {
+        return [ data.contract.buyerId, data.contract.sellerId, ...stakeholders ];
+      } else {
+        if (data.contract.sellerId === centralOrgId.catalog) { // internal sale
+          // seller ID is archipel, we don't need to add it, as mandate stakeholders will be copied here (copy is done bellow ~line 290)
+          return [ data.contract.buyerId, ...stakeholders ];
+        } else { // external sale
+          // if the sale is external the seller is not archipel (it's the owner org), and the buyer is unknown by definition
+          return [ data.contract.sellerId, ...stakeholders ]
+        }
+      }
     },
   };
 
@@ -262,20 +277,31 @@ export async function formatContract(
 
     const term = toTerm(data.term, contract.id, firestore);
 
-    if (contract.type === 'sale') {
+    // for **internal** sales we should check the parentTerm
+    const isInternalSale = contract.type === 'sale' && contract.sellerId === centralOrgId.catalog;
+    if (isInternalSale) {
       if (typeof data.parentTerm === 'number') {
-        contract.parentTermId = contracts[data.parentTerm - 2]?.terms[0]?.id; // excel lines start at 1 and first line is the column names
-        if (!contract.parentTermId) errors.push({
+        const mandate = contracts[data.parentTerm - sheetHeaderLine.contracts - 1]; // first line is the column names
+        contract.parentTermId = mandate?.terms[0]?.id;
+        if (!mandate || !contract.parentTermId) errors.push({
           type: 'error',
           field: 'parentTerm',
           name: 'Wrong Mandate Row',
           reason: 'Mandate Row point to a wrong sheet line.',
           hint: 'Please check that the line number is correct and that the line is a mandate.'
         });
+        contract.stakeholders.concat(mandate.contract.stakeholders);
       } else {
+        // here we are sure that the term exist because we already tested it above (~line 210, column o: contract.parentTerm)
         contract.parentTermId = data.parentTerm;
+        // moreover the corresponding mandate is already in the contractCache so the look up should be efficient
+        const mandate = await checkParentTerm(contract.parentTermId, contractService, contractCache);
+        contract.stakeholders.concat(mandate.stakeholders);
       }
     }
+
+    // remove duplicate from stakeholders
+    contract.stakeholders = Array.from(new Set([...contract.stakeholders]));
 
     contracts.push({ contract, terms: [term], errors: [ ...errors, ...warnings ], newContract: true });
   }

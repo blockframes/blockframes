@@ -2,18 +2,20 @@
   <title-marketplace-shell [routes]="navLinks">
     <movie-header [movie]="movie">
 
-      <movie-header-cta fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="32px">
-        <ng-container *ngFor="let org of orgs$ | async">
-          <org-chip [org]="org"></org-chip>
-          <div class="cta-button" fxFlex fxLayout fxLayoutAlign="space-between start" fxLayout.lt-md="column" fxLayoutGap.lt-md="16px">
-            <a mat-flat-button color="primary" [href]="'mailto:' + org.email">
-              <mat-icon svgIcon="mail"></mat-icon>
-              <span>{{ org.activity === 'intlSales' ? 'Contact Sales Agent' : 'Contact' }}</span>
-            </a>
-            <ng-container *ngIf="(eventId$ | async) as eventId">
-              <a ongoing-event-button [routerLink]="['/c/o/marketplace/event', eventId]">Ongoing Screening</a>
-            </ng-container>
-          </div>
+      <movie-header-cta fxLayout="column" fxLayoutGap="32px">
+        <section>
+          <ng-container *ngFor="let org of orgs$ | async">
+            <org-chip [org]="org"></org-chip>
+          </ng-container>
+        </section>
+        <ng-container *ngIf="(eventId$ | async) as eventId">
+          <a ongoing-event-button [routerLink]="['/event', eventId, 'r', 'i']">Ongoing Screening</a>
+        </ng-container>
+        <ng-container *ngIf="orgs$ | async as orgs">
+          <a mat-stroked-button color="primary" [href]="'mailto:' + getEmails(orgs)">
+            <mat-icon svgIcon="mail"></mat-icon>
+            <span>{{ orgs[0].activity === 'intlSales' ? 'Contact Sales Agent' : 'Contact' }}</span>
+          </a>
         </ng-container>
       </movie-header-cta>
 
