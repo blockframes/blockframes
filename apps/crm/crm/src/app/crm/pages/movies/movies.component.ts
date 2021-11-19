@@ -47,6 +47,13 @@ export class MoviesComponent implements OnInit {
     )
   }
 
+  goToEditNewTab(id: string, $event: Event) {
+    $event.stopPropagation()
+    const urlTree = this.router.createUrlTree([`c/o/dashboard/crm/movie/${id}`])
+    const url = this.router.serializeUrl(urlTree);
+    window.open(url, '_blank', 'noreferrer');
+  }
+
   goToEdit(movie: Movie) {
     this.router.navigate([`/c/o/dashboard/crm/movie/${movie.id}`])
   }

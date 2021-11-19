@@ -75,7 +75,7 @@ export class ItemComponent {
         return `${this.applicationUrl.festival}/c/o/dashboard/event/${this._invitation.eventId}/edit`;
       } else {
         const urlPart = this.eventType === 'meeting' ? 'lobby' : 'session';
-        return `${this.applicationUrl.festival}/c/o/marketplace/event/${this._invitation.eventId}/${urlPart}`;
+        return `${this.applicationUrl.festival}/event/${this._invitation.eventId}/r/i/${urlPart}`;
       }
     } else if (this._invitation.type === 'joinOrganization') {
       const orgId = this._invitation.fromOrg ? this._invitation.fromOrg.id : this._invitation.toOrg.id;

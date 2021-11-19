@@ -5,6 +5,7 @@ import { getGuest } from '../../pipes/guest.pipe';
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { startWith, debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { algolia } from '@env';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 function filterGuest(invitation: Invitation, search: string) {
   return invitation.toUser?.email.toLowerCase().includes(search)
@@ -52,6 +53,10 @@ export class GuestListComponent implements OnInit {
     return this._invitations.getValue();
   }
 
+  constructor(
+    private snackBar: MatSnackBar,
+  ) { }
+
   ngOnInit() {
     const search$ = this.searchControl.valueChanges.pipe(
       debounceTime(200),
@@ -69,6 +74,10 @@ export class GuestListComponent implements OnInit {
 
   trackBy(invitation: Invitation) {
     return invitation.id;
+  }
+
+  copied() {
+    this.snackBar.open('Guests emails copied', 'CLOSE', { duration: 4000 });
   }
 
 }

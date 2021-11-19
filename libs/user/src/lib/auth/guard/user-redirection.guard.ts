@@ -16,7 +16,7 @@ export class UserRedirectionGuard implements CanActivate {
     const user = await this.afAuth.currentUser;
 
     // If user is not logged in, stay on the page
-    if (!user) {
+    if (!user || user.isAnonymous) {
       return true;
     }
 

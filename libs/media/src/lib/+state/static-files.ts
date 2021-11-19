@@ -99,7 +99,7 @@ export function getFileMetadata(collection: CollectionHoldingFile, label: FileLa
       'still_photo': { uid: '', privacy: 'public', collection, docId, field: 'promotional.still_photo' },
       notes: { uid: '', privacy: 'public', collection, docId, field: 'promotional.notes' },
       screener: { uid: '', privacy: 'protected', collection, docId, field: 'promotional.videos.screener' },
-      otherVideos: { uid: '', privacy: 'protected', collection, docId, field: 'promotional.videos.otherVideos', fileId },
+      otherVideos: { uid: '', privacy: 'public', collection, docId, field: 'promotional.videos.otherVideos', fileId },
       salesPitch: { uid: '', privacy: 'protected', collection, docId, field: 'promotional.videos.salesPitch' },
       delivery: { uid: '', privacy: 'public', collection, docId, field: 'delivery.file' },
     },

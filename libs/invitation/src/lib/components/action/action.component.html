@@ -3,21 +3,21 @@
   <ng-container *ngIf="invit | hasAction else displayStatus">
     <section fxLayout fxLayout.lt-sm="column" fxLayoutGap="16px">
       <ng-container *ngIf="flat else defaultButtons">
-        <button mat-flat-button color="primary" test-id="invitation-accept" (click)="accept(invit)">
+        <button mat-flat-button color="primary" test-id="invitation-accept" (click)="accept(invit)" [matTooltip]="small ? 'Accept Invitation' : undefined">
           <mat-icon svgIcon="check_circle" title="Accept Invitation"></mat-icon>
           <span *ngIf="!small">Accept Invitation</span>
         </button>
-        <button mat-stroked-button test-id="invitation-refuse" (click)="decline(invit)">
+        <button mat-stroked-button test-id="invitation-refuse" (click)="decline(invit)" [matTooltip]="small ? 'Decline Invitation' : undefined">
           <mat-icon svgIcon="cancel" title="Decline Invitation"></mat-icon>
           <span *ngIf="!small">Decline Invitation</span>
         </button>
       </ng-container>
       <ng-template #defaultButtons>
-        <button mat-button test-id="invitation-accept" (click)="accept(invit)">
+        <button mat-button test-id="invitation-accept" (click)="accept(invit)" [matTooltip]="small ? 'Accept Invitation' : undefined">
           <mat-icon svgIcon="check_circle" title="Accept Invitation"></mat-icon>
           <span *ngIf="!small">Accept Invitation</span>
         </button>
-        <button mat-button test-id="invitation-refuse" (click)="decline(invit)">
+        <button mat-button test-id="invitation-refuse" (click)="decline(invit)" [matTooltip]="small ? 'Decline Invitation' : undefined">
           <mat-icon svgIcon="cancel" title="Decline Invitation"></mat-icon>
           <span *ngIf="!small">Decline Invitation</span>
         </button>
@@ -34,7 +34,7 @@
   <section fxLayout="column">
     <ng-container [ngSwitch]="event | eventTime">
       <ng-container  *ngSwitchCase="'early'">
-        <button test-id="invitation-request" mat-button (click)="request(event)">
+        <button *ngIf="user$ | async" test-id="invitation-request" mat-button (click)="request(event)">
           <mat-icon svgIcon="calendar_today"></mat-icon>
           <span>{{ event.accessibility === 'public' ? 'Add to My Calendar' : 'Ask for Invitation' }}</span>
         </button>

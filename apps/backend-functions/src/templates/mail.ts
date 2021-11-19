@@ -13,6 +13,7 @@ import { App, appName, Module } from '@blockframes/utils/apps';
 import { Bucket } from '@blockframes/contract/bucket/+state/bucket.model';
 import { format } from "date-fns";
 import { testEmail } from "@blockframes/e2e/utils/env";
+import { EventDocument, EventMeta } from '@blockframes/event/+state/event.firestore';
 
 const ORG_HOME = '/c/o/organization/';
 const USER_CREDENTIAL_INVITATION = '/auth/identity';
@@ -82,7 +83,7 @@ export function userInvite(
     user: toUser,
     org,
     pageURL: `${pageURL}${USER_CREDENTIAL_INVITATION}?code=${encodeURIComponent(toUser.password)}&email=${encodeURIComponent(toUser.email)}`,
-    event: event,
+    event,
   };
   return { to: toUser.email, templateId, data };
 }

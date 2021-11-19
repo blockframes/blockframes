@@ -8,6 +8,12 @@ li {
   }
 }
 
+form {
+  flex-flow: row wrap;
+  display: flex;
+}
+
+
 section {
   margin-bottom: 24px;
   position: relative;
