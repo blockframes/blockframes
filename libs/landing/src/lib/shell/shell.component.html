@@ -108,7 +108,8 @@
           <app-logo fxLayout fxFlex></app-logo>
           <form fxFlex [formGroup]="newslettersForm" (ngSubmit)="subscribeToNewsletters(newslettersForm)" >
             <mat-form-field appearance="outline" hideRequiredMarker>
-              <input test-id="email" matInput type="email" placeholder="Enter your email address" formControlName="email" required />
+              <mat-label>Enter your email address</mat-label>
+              <input test-id="email" matInput type="email" placeholder="Email address" formControlName="email" required />
               <mat-hint class="mat-caption">Subscribe to our newsletter now!</mat-hint>
               <mat-error *ngIf="form.get('email').hasError('required')">
                 Email is <strong>required</strong>
