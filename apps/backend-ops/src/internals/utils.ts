@@ -110,7 +110,7 @@ const orgMap: Partial<Record<Collections, string[]>> = {
   offers: [
     'buyerId'
   ],
-  // @TODO #6460 permissions: [''] ?
+  permissions: [''] // document id
 }
 
 const dataMap = { user: userMap, org: orgMap };
