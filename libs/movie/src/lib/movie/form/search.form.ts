@@ -1,10 +1,10 @@
 
 import { GetKeys } from '@blockframes/utils/static-model/static-model';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { EntityControl, FormEntity, FormList } from '@blockframes/utils/form';
 import { algolia } from '@env';
 import algoliasearch, { SearchIndex } from 'algoliasearch';
-import { StoreStatus, ProductionStatus, Territory, Language, Genre, SocialGoal, ContentType } from '@blockframes/utils/static-model/types';
+import { StoreStatus, ProductionStatus, Territory, Genre, SocialGoal, ContentType } from '@blockframes/utils/static-model/types';
 import { App } from "@blockframes/utils/apps";
 import { AlgoliaOrganization, AlgoliaSearch } from '@blockframes/utils/algolia';
 import { max } from './filters/budget/budget.component';
@@ -36,13 +36,6 @@ export const runningTimeFilters = {
     label: '> 180min',
     filter: 'runningTime.time > 180'
   }
-}
-
-export interface LanguagesSearch {
-  original: Language[];
-  dubbed: Language[];
-  subtitle: Language[];
-  caption: Language[];
 }
 
 export interface MovieSearch extends AlgoliaSearch {
