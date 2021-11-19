@@ -2,7 +2,7 @@
   <crm-bread-crumb>{{ event.type}} event</crm-bread-crumb>
   <article fxLayout="row" fxLayoutAlign="space-around start">
 
-    <crm-event-info [event]="event"></crm-event-info>
+    <crm-event-info fxFlex [event]="event"></crm-event-info>
     <section>
       <h2>Invite people</h2>
       <mat-card>
@@ -11,7 +11,7 @@
         </mat-card-content>
       </mat-card>
 
-      <article *ngIf="event.type === 'screening' && movie">
+      <ng-container *ngIf="event.type === 'screening' && movie">
         <h2>Screening information</h2>
         <mat-card>
           <mat-card-header>
@@ -25,17 +25,22 @@
           </mat-card-header>
 
           <mat-card-content fxLayout="column">
-            <article>
+            <div>
               <span>Standard view/edit </span>
               <crm-go-to type="title" [id]="movie.id"></crm-go-to>
-            </article>
+            </div>
             <a [routerLink]="['/c/o/dashboard/crm/movie', movie.id]">
               <span>Admin edit </span>
               <mat-icon svgIcon="edit"></mat-icon>
             </a>
           </mat-card-content>
         </mat-card>
-      </article>
+      </ng-container>
     </section>
   </article>
+
+  <h2>Invitations</h2>
+  <mat-card *ngIf="invitations$ | async as invitations">
+    <invitation-guest-table [invitations]="invitations"></invitation-guest-table>
+  </mat-card>
 </main>
