@@ -7,12 +7,14 @@ import {
 } from '@angular/core';
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { Movie } from '@blockframes/movie/+state';
-import { MovieSearchForm, createMovieSearch, MovieSearch, LanguagesSearch } from '@blockframes/movie/form/search.form';
+import { MovieSearchForm, createMovieSearch, MovieSearch, LanguagesSearch, LanguageVersion } from '@blockframes/movie/form/search.form';
 import { debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StoreStatus } from '@blockframes/utils/static-model/types';
 import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
+import { FormList } from '@blockframes/utils/form';
+import { GetKeys } from '@blockframes/utils/static-model';
 
 @Component({
   selector: 'festival-marketplace-title-list',
@@ -27,7 +29,6 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   public movies$: Observable<Movie[]>;
   public storeStatus: StoreStatus = 'accepted';
   public searchForm = new MovieSearchForm('festival', this.storeStatus);
-  public selectedLanguages$ = new BehaviorSubject<LanguagesSearch>(null);
 
   public nbHits: number;
   public hitsViewed = 0;
@@ -98,8 +99,13 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
     if (sellers) this.searchForm.sellers.patchAllValue(sellers);
     if (socialGoals) this.searchForm.socialGoals.patchAllValue(socialGoals);
     if (languages) {
-      this.selectedLanguages$.next(languages)
+      (this.searchForm.languages.get('languages') as FormList<GetKeys<'languages'>>).patchAllValue(languages.languages);
+      this.searchForm.languages.get('versions').get('caption').patchValue(languages.versions.caption);
+      this.searchForm.languages.get('versions').get('dubbed').patchValue(languages.versions.dubbed);
+      this.searchForm.languages.get('versions').get('original').patchValue(languages.versions.original);
+      this.searchForm.languages.get('versions').get('subtitle').patchValue(languages.versions.subtitle);
     }
+
     const sub = this.searchForm.valueChanges.pipe(
       debounceTime(1000),
     ).subscribe(value => encodeUrl<MovieSearch>(this.router, this.route, value));

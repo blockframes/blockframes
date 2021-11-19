@@ -1,7 +1,7 @@
 
 import { GetKeys } from '@blockframes/utils/static-model/static-model';
-import { FormControl, Validators } from '@angular/forms';
-import { FormEntity, FormList } from '@blockframes/utils/form';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { EntityControl, FormEntity, FormList } from '@blockframes/utils/form';
 import { algolia } from '@env';
 import algoliasearch, { SearchIndex } from 'algoliasearch';
 import { StoreStatus, ProductionStatus, Territory, Language, Genre, SocialGoal, ContentType } from '@blockframes/utils/static-model/types';
@@ -49,7 +49,7 @@ export interface MovieSearch extends AlgoliaSearch {
   storeStatus: StoreStatus[];
   genres: Genre[];
   originCountries: Territory[];
-  languages: LanguagesSearch;
+  languages: LanguageVersion;
   productionStatus: ProductionStatus[];
   minBudget: number;
   minReleaseYear: number;
@@ -69,10 +69,13 @@ export function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearc
     genres: [],
     originCountries: [],
     languages: {
-      original: [],
-      dubbed: [],
-      subtitle: [],
-      caption: [],
+      languages: [],
+      versions: {
+        original: false,
+        dubbed: false,
+        subtitle: false,
+        caption: false,
+      }
     },
     productionStatus: [],
     minBudget: 0,
@@ -84,14 +87,30 @@ export function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearc
   };
 }
 
-function createLanguageVersionControl(languages: LanguagesSearch) {
-  return {
-    original: FormList.factory<GetKeys<'languages'>>(languages.original),
-    dubbed: FormList.factory<GetKeys<'languages'>>(languages.dubbed),
-    subtitle: FormList.factory<GetKeys<'languages'>>(languages.subtitle),
-    caption: FormList.factory<GetKeys<'languages'>>(languages.caption),
-  }
+export type Versions = {
+  original: boolean,
+  dubbed: boolean,
+  subtitle: boolean,
+  caption: boolean,
 }
+
+export type LanguageVersion = {
+  languages: GetKeys<'languages'>[],
+  versions: Versions
+}
+
+function createLanguageVersionControl(data: LanguageVersion) {
+  return new FormEntity<EntityControl<LanguageVersion>, LanguageVersion>({
+    languages: FormList.factory<GetKeys<'languages'>>(data.languages),
+    versions: new FormEntity<EntityControl<Versions>, Versions>({
+      original: new FormControl(data.versions.original),
+      dubbed: new FormControl(data.versions.dubbed),
+      subtitle: new FormControl(data.versions.subtitle),
+      caption: new FormControl(data.versions.caption),
+    })
+  })
+}
+
 export type LanguageVersionControl = ReturnType<typeof createLanguageVersionControl>;
 
 function createMovieSearchControl(search: MovieSearch) {
@@ -101,7 +120,7 @@ function createMovieSearchControl(search: MovieSearch) {
     storeStatus: FormList.factory<StoreStatus>(search.storeStatus),
     genres: FormList.factory<GetKeys<'genres'>>(search.genres),
     originCountries: FormList.factory<Territory>(search.originCountries),
-    languages: new FormEntity<LanguageVersionControl>(createLanguageVersionControl(search.languages)),
+    languages: createLanguageVersionControl(search.languages),
     productionStatus: FormList.factory<ProductionStatus>(search.productionStatus),
     minBudget: new FormControl(search.minBudget),
     minReleaseYear: new FormControl(search.minReleaseYear),
@@ -150,10 +169,11 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
       this.storeStatus.value?.length === 0 &&
       this.genres.value?.length === 0 &&
       this.originCountries.value?.length === 0 &&
-      this.languages.value?.original.length === 0 &&
-      this.languages.value?.dubbed.length === 0 &&
-      this.languages.value?.subtitle.length === 0 &&
-      this.languages.value?.caption.length === 0 &&
+      (!(this.languages.value?.languages?.length === 0) ||
+        (!this.languages.value?.versions?.caption &&
+          !this.languages.value?.versions?.dubbed &&
+          !this.languages.value?.versions?.original)) &&
+      !this.languages.value?.versions?.subtitle &&
       this.productionStatus?.value.length === 0 &&
       this.minBudget?.value === 0 &&
       this.minReleaseYear.value === 0 &&
@@ -169,12 +189,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
       facetFilters: [
         this.genres.value.map(genre => `genres:${genre}`), // same facet inside an array means OR for algolia
         this.originCountries.value.map(country => `originCountries:${country}`),
-        [
-          ...this.languages.get('original').controls.map(lang => `languages.original:${lang.value}`),
-          ...this.languages.get('dubbed').controls.map(lang => `languages.dubbed:${lang.value}`),
-          ...this.languages.get('subtitle').controls.map(lang => `languages.subtitle:${lang.value}`),
-          ...this.languages.get('caption').controls.map(lang => `languages.caption:${lang.value}`),
-        ],
+        this.getLanguages(this.languages.value),
         this.productionStatus.value.map(status => `status:${status}`),
         this.sellers.value.map(seller => `orgNames:${seller.name}`),
         this.storeStatus.value.map(config => `storeStatus:${config}`),
@@ -206,6 +221,17 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
       search['optionalWords'] = multipleQueries;
     }
 
+
     return this.movieIndex.search<Movie>(search.query, search);
   }
+
+  getLanguages(data: LanguageVersion) {
+    const versions: string[] = [];
+    if (data.versions?.original) versions.push('original');
+    if (data.versions?.dubbed) versions.push('dubbed');
+    if (data.versions?.subtitle) versions.push('subtitle');
+    if (data.versions?.caption) versions.push('caption');
+    return versions.flatMap(v => data.languages.map(l => `languages.${v}:${l}`))
+  }
+
 }

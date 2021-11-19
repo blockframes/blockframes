@@ -47,7 +47,7 @@
     </ng-template>
 
     <ng-template filter label="Language & Version" [form]="searchForm.languages">
-      <title-language-filter [selectedLanguages$]="selectedLanguages$" [languagesFilterForm]="searchForm.languages"></title-language-filter>
+      <title-language-filter [form]="searchForm.languages"></title-language-filter>
     </ng-template>
 
     <ng-template filter label="Production Status" [form]="searchForm.productionStatus">
@@ -77,5 +77,3 @@
   </list-page-progress>
 
 </list-page>
-
-<p>{{searchForm.value | json}}</p>
