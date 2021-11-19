@@ -157,11 +157,11 @@ export async function shrinkDb(db: FirebaseFirestore.Firestore) {
 
   const usersLinked = uniqueArray(_usersLinked).concat(uniqueArray(_orgsLinked).map(orgId => getOrgSuperAdmin(orgId)).filter(u => u));
   const usersToKeep: string[] = uniqueArray(usersLinked).filter(uid => dbData.users.refs.docs.find(d => d.id === uid));
-  console.log('Users to keep', usersToKeep.length);
+  console.log('Users to keep :', usersToKeep.length);
 
   const orgsLinked = uniqueArray(_orgsLinked).concat(uniqueArray(_usersLinked).map(userId => getOrgIdOfUser(userId)).filter(o => o));
   const orgsToKeep: string[] = uniqueArray(orgsLinked).filter(id => dbData.orgs.refs.docs.find(d => d.id === id));
-  console.log('Orgs to keep', orgsToKeep.length);
+  console.log('Orgs to keep :', orgsToKeep.length);
 
   //////////////////
   // FILTER DOCUMENT TO DELETE
