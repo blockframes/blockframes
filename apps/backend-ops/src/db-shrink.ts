@@ -1,24 +1,27 @@
-import { ContractDocument } from "@blockframes/contract/contract/+state";
-import { connectFirestoreEmulator, defaultEmulatorBackupPath, endMaintenance, firebaseEmulatorExec, getFirestoreExportPath, importFirestoreEmulatorBackup, latestAnonDbDir, latestAnonShrinkedDbDir, loadAdminServices, removeAllSubcollections, shutdownEmulator, startMaintenance } from "@blockframes/firebase-utils";
-import { InvitationDocument } from "@blockframes/invitation/+state/invitation.firestore";
-import { MovieDocument } from "@blockframes/movie/+state/movie.firestore";
-import { NotificationDocument } from "@blockframes/notification/types";
+import {
+  connectFirestoreEmulator,
+  defaultEmulatorBackupPath,
+  endMaintenance,
+  firebaseEmulatorExec,
+  getFirestoreExportPath,
+  importFirestoreEmulatorBackup,
+  latestAnonDbDir,
+  latestAnonShrinkedDbDir,
+  removeAllSubcollections,
+  shutdownEmulator,
+  startMaintenance
+} from "@blockframes/firebase-utils";
 import { OrganizationDocument } from "@blockframes/organization/+state";
 import { PermissionsDocument } from "@blockframes/permissions/+state/permissions.firestore";
 import { uploadBackup } from "./emulator";
 import { backupBucket as ciBucketName } from 'env/env.blockframes-ci'
-import { EventDocument } from "@blockframes/event/+state/event.firestore";
-import { Offer } from "@blockframes/contract/offer/+state";
-import { Bucket } from "@blockframes/contract/bucket/+state";
-import { getValue } from "@blockframes/utils/helpers";
-import { isString } from "lodash";
-import { Campaign } from "@blockframes/campaign/+state/campaign.model";
+import { backupBucket } from '@env'
 
 // Users for E2E tests
 import staticUsers from 'tools/static-users.json';
 import { EIGHT_MINUTES_IN_MS } from "@blockframes/utils/maintenance";
-import type * as admin from 'firebase-admin';
 import type { ChildProcess } from "child_process";
+import { DocumentDescriptor, getAllDocumentCount, inspectDocumentRelations, loadAllCollections } from "./internals/utils";
 
 /**
  * Temp this should be removed when fixtures are updated. 
@@ -33,82 +36,6 @@ const USERS = [
   'qFbytROWQYWJplzck42RLdgAr3K3',
   'mVUZ097xoAeubsPiQlqrzgUF8y83'
 ];
-
-type Timestamp = admin.firestore.Timestamp;
-type InspectionResult = { uid?: string, id?: string, collection: string, docId: string, attr: string };
-
-const userMap = {
-  notifications: [
-    'toUserId',
-    'user.uid',
-    '_meta.createdBy',
-    '_meta.updatedBy',
-    '_meta.deletedBy'
-  ],
-  invitations: [
-    'toUser.uid',
-    'fromUser.uid'
-  ],
-  contracts: [
-    'buyerUserId'
-  ],
-  offers: [
-    'buyerUserId'
-  ],
-  buckets: [
-    'uid'
-  ],
-  organizations: [
-    'userIds',
-    '_meta.createdBy',
-    '_meta.updatedBy',
-    '_meta.deletedBy'
-  ],
-  permissions: [
-    'roles',
-    'canCreate',
-    'canRead',
-    'canUpdate',
-    'canDelete',
-  ],
-  blockframesAdmin: [''], // document id
-  events: [
-    'organizerUid'
-  ],
-  movies: [
-    '_meta.createdBy',
-    '_meta.updatedBy',
-    '_meta.deletedBy'
-  ]
-}
-
-const orgMap = {
-  events: [
-    'ownerOrgId'
-  ],
-  notifications: [
-    'organization.id',
-  ],
-  invitations: [
-    'fromOrg.id',
-    'toOrg.id'
-  ],
-  contracts: [
-    'buyerId',
-    'sellerId',
-    'stakeholders',
-  ],
-  movies: [
-    'orgIds'
-  ],
-  buckets: [
-    '', // document id
-    'contracts'
-  ],
-  campaigns: [
-    'orgId'
-  ]
-}
 
 export async function loadAndShrinkLatestAnonDbAndUpload() {
   let proc: ChildProcess;
@@ -126,14 +53,32 @@ export async function loadAndShrinkLatestAnonDbAndUpload() {
     // STEP 2 shrink DB
     const db = connectFirestoreEmulator()
     await startMaintenance(db);
-    await shrinkDb(db);
+    const status = await shrinkDb(db);
     await endMaintenance(db, EIGHT_MINUTES_IN_MS);
 
     // STEP 3 shutdown emulator & export db
     await shutdownEmulator(proc, defaultEmulatorBackupPath);
 
-    // STEP 4 upload to backup bucket
-    await uploadBackup({ localRelPath: getFirestoreExportPath(defaultEmulatorBackupPath), remoteDir: latestAnonShrinkedDbDir });
+    if (status) {
+      console.log(`Shrink ended ! Waiting for emulator to stop and upload of shrinked db to ${latestAnonShrinkedDbDir}`);
+      // STEP 4 upload to backup bucket
+      await uploadBackup({ localRelPath: getFirestoreExportPath(defaultEmulatorBackupPath), remoteDir: latestAnonShrinkedDbDir });
+
+      console.log(`Upload to gs://${backupBucket}/${latestAnonShrinkedDbDir} complete !`);
+      console.log(`If you want to test it, run : npm run backend-ops importEmulator gs://${backupBucket}/${latestAnonShrinkedDbDir}`);
+
+      /**
+       * @dev to test on live firebase project, run:
+       * 
+       * npm run backend-ops startMaintenance
+       * npm run backend-ops importFirestore LATEST-ANON-SHRINKED-DB
+       * npm run backend-ops syncUsers
+       * npm run backend-ops endMaintenance
+       */
+
+    } else {
+      console.log(`Something went wrong ! Skipped uploading of shrinked db to ${latestAnonShrinkedDbDir}`);
+    }
 
   } catch (e) {
     await shutdownEmulator(proc);
@@ -142,115 +87,19 @@ export async function loadAndShrinkLatestAnonDbAndUpload() {
 }
 
 export async function shrinkDb(db: FirebaseFirestore.Firestore) {
-  const [
-    _notifications,
-    _invitations,
-    _events,
-    _movies,
-    _organizations,
-    _users,
-    _permissions,
-    _docsIndex,
-    _contracts,
-    _blockframesAdmin,
-    _offers,
-    _buckets,
-    _campaigns
-  ] = await Promise.all([
-    db.collection('notifications').get(),
-    db.collection('invitations').get(),
-    db.collection('events').get(),
-    db.collection('movies').get(),
-    db.collection('orgs').get(),
-    db.collection('users').get(),
-    db.collection('permissions').get(),
-    db.collection('docsIndex').get(),
-    db.collection('contracts').get(),
-    db.collection('blockframesAdmin').get(),
-    db.collection('offers').get(),
-    db.collection('buckets').get(),
-    db.collection('campaigns').get(),
-  ]);
 
-  const notifications = _notifications.docs.map(d => d.data() as NotificationDocument);
-  const invitations = _invitations.docs.map(d => d.data() as InvitationDocument);
-  const events = _events.docs.map(d => d.data() as EventDocument<Timestamp>);
-  const movies = _movies.docs.map(d => d.data() as MovieDocument);
-  const organizations = _organizations.docs.map(d => d.data() as OrganizationDocument);
-  const permissions = _permissions.docs.map(d => d.data() as PermissionsDocument);
-  const contracts = _contracts.docs.map(d => d.data() as ContractDocument);
-  const blockframesAdmin = _blockframesAdmin.docs.map(d => d.id);
-  const offers = _offers.docs.map(d => d.data() as Offer);
-  const buckets = _buckets.docs.map(d => d.data() as Bucket);
-  const campaigns = _campaigns.docs.map(d => d.data() as Campaign);
-
-  const collectionMap: { name: string, docs: any[], refs: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData> }[] = [
-    {
-      name: 'notifications',
-      docs: notifications,
-      refs: _notifications
-    },
-    {
-      name: 'invitations',
-      docs: invitations,
-      refs: _invitations
-    },
-    {
-      name: 'events',
-      docs: events,
-      refs: _events
-    },
-    {
-      name: 'movies',
-      docs: movies,
-      refs: _movies
-    },
-    {
-      name: 'organizations',
-      docs: organizations,
-      refs: _organizations
-    },
-    {
-      name: 'permissions',
-      docs: permissions,
-      refs: _permissions
-    },
-    {
-      name: 'contracts',
-      docs: contracts,
-      refs: _contracts
-    },
-    {
-      name: 'blockframesAdmin',
-      docs: blockframesAdmin,
-      refs: _blockframesAdmin
-    },
-    {
-      name: 'offers',
-      docs: offers,
-      refs: _offers
-    },
-    {
-      name: 'buckets',
-      docs: buckets,
-      refs: _buckets
-    },
-    {
-      name: 'campaigns',
-      docs: campaigns,
-      refs: _campaigns
-    }
-  ];
+  const { dbData, collectionData } = await loadAllCollections(db);
 
   //////////////////
   // CHECK WHAT CAN BE DELETED
-  // We want to keep only the users and orgs related to movies and the ones used in e2e tests (staticUsers) along with the documents in others collections they are linked to
+  // We want to keep only the users and orgs related to movies, contracts, events and the ones used in e2e tests (staticUsers) along with the documents in others collections they are linked to
   //////////////////
 
-  const _usersLinked = [];
-  const _orgsLinked = [];
+  const e2eUsers = Object.values(staticUsers).concat(USERS);
+  const _usersLinked: string[] = e2eUsers;
+  const _orgsLinked: string[] = [];
 
-  for (const movie of movies) {
+  for (const movie of dbData.movies.documents) {
     if (movie._meta.createdBy) {
       _usersLinked.push(movie._meta.createdBy);
     }
@@ -264,13 +113,11 @@ export async function shrinkDb(db: FirebaseFirestore.Firestore) {
     }
 
     for (const orgId of movie.orgIds) {
-      _usersLinked.push(getOrgSuperAdmin(orgId, permissions));
       _orgsLinked.push(orgId);
     }
   }
 
-  for (const contract of contracts) {
-
+  for (const contract of dbData.contracts.documents) {
     if (contract.buyerUserId) {
       _usersLinked.push(contract.buyerUserId);
     }
@@ -285,95 +132,102 @@ export async function shrinkDb(db: FirebaseFirestore.Firestore) {
 
     if (contract.stakeholders) {
       for (const orgId of contract.stakeholders) {
-        _usersLinked.push(getOrgSuperAdmin(orgId, permissions));
         _orgsLinked.push(orgId);
       }
     }
   }
 
-  for (const event of events) {
+  for (const event of dbData.events.documents) {
     _orgsLinked.push(event.ownerOrgId);
+
+    if (event.meta?.organizerUid) {
+      _usersLinked.push(event.meta.organizerUid);
+    }
   }
 
-  const e2eUsers = Object.values(staticUsers).concat(USERS);
-  const usersToKeep: string[] = Array.from(new Set(_usersLinked.concat(e2eUsers))).filter(uid => _users.docs.find(d => d.id === uid));
+  const getOrgSuperAdmin = (orgId: string) => {
+    const permission = dbData.permissions.documents.find(p => p.id === orgId);
+    return Object.keys(permission.roles).find(userId => permission.roles[userId] === 'superAdmin')
+  }
+
+  function getOrgIdOfUser(userId: string) {
+    const org = dbData.orgs.documents.find(o => o.userIds.includes(userId));
+    return org?.id || undefined;
+  }
+
+  const usersLinked = uniqueArray(_usersLinked).concat(uniqueArray(_orgsLinked).map(orgId => getOrgSuperAdmin(orgId)).filter(u => u));
+  const usersToKeep: string[] = uniqueArray(usersLinked).filter(uid => dbData.users.refs.docs.find(d => d.id === uid));
   console.log('Users to keep', usersToKeep.length);
 
-  const orgsToKeep: string[] = Array.from(new Set(_orgsLinked)).filter(id => _organizations.docs.find(d => d.id === id));
+  const orgsLinked = uniqueArray(_orgsLinked).concat(uniqueArray(_usersLinked).map(userId => getOrgIdOfUser(userId)).filter(o => o));
+  const orgsToKeep: string[] = uniqueArray(orgsLinked).filter(id => dbData.orgs.refs.docs.find(d => d.id === id));
   console.log('Orgs to keep', orgsToKeep.length);
 
   //////////////////
   // FILTER DOCUMENT TO DELETE
   //////////////////
 
-  const usedDocuments: InspectionResult[] = [];
+  const usersDocumentsToKeep: DocumentDescriptor[] = dbData.users.refs.docs.filter(d => usersToKeep.includes(d.id)).map(d => ({
+    collection: 'users',
+    docId: d.id,
+  }));
+
+  const orgsDocumentsToKeep: DocumentDescriptor[] = dbData.orgs.refs.docs.filter(d => orgsToKeep.includes(d.id)).map(d => ({
+    collection: 'orgs',
+    docId: d.id
+  }));
+
   const _usedDocumentsForUsers = usersToKeep.map(uid => {
-    const user = _users.docs.find(d => d.id === uid);
-    return inspectUser(user, collectionMap);
-  }).reduce((a: InspectionResult[], b: InspectionResult[]) => a.concat(b), []);
+    const user = dbData.users.refs.docs.find(d => d.id === uid);
+    return inspectDocumentRelations(user, collectionData, 'user');
+  }).reduce((a: DocumentDescriptor[], b: DocumentDescriptor[]) => a.concat(b), []);
 
-  const _usedDocumentsForOgs = orgsToKeep.map(id => {
-    const org = _organizations.docs.find(d => d.id === id);
-    return inspectOrg(org, collectionMap);
-  }).reduce((a: InspectionResult[], b: InspectionResult[]) => a.concat(b), []);
+  const _usedDocumentsForOrgs = orgsToKeep.map(id => {
+    const org = dbData.orgs.refs.docs.find(d => d.id === id);
+    return inspectDocumentRelations(org, collectionData, 'org');
+  }).reduce((a: DocumentDescriptor[], b: DocumentDescriptor[]) => a.concat(b), []);
 
-  _usedDocumentsForUsers.forEach(d => {
-    if (!usedDocuments.find(u => u.docId === d.docId && u.collection === d.collection)) {
-      usedDocuments.push(d);
-    }
-  });
+  const usedDocuments: DocumentDescriptor[] = _usedDocumentsForUsers
+    .concat(_usedDocumentsForOrgs)
+    .concat(usersDocumentsToKeep)
+    .concat(orgsDocumentsToKeep)
+    .filter((curr, index, self) => index === self.findIndex(t => t.collection === curr.collection && t.docId === curr.docId));
 
-  _usedDocumentsForOgs.forEach(d => {
-    if (!usedDocuments.find(u => u.docId === d.docId && u.collection === d.collection)) {
-      usedDocuments.push(d);
-    }
-  });
+  console.log('Overall documents to keep :', usedDocuments.length);
 
-  console.log('Used documents to keep : ', usedDocuments.length);
-
-  const documentsToDelete: { collection: string, docId: string }[] = [];
-  for (const collection of collectionMap) {
-
-    for (const document of collection.docs) {
-      const docId = document.id || document.uid || document;
+  const documentsToDelete: DocumentDescriptor[] = [];
+  for (const collection of collectionData) {
+    for (const document of collection.refs.docs) {
+      const docId = document.id;
       if (!usedDocuments.find(u => u.collection === collection.name && u.docId === docId)) {
         documentsToDelete.push({ collection: collection.name, docId });
       }
     }
-
   }
-  console.log('Documents that can be deleted : ', documentsToDelete.length);
+
+  console.log('Documents that can be deleted :', documentsToDelete.length);
 
   //////////////////
   // ACTUAL DELETION
   //////////////////
 
-  for (const user of _users.docs) {
-    if (!usersToKeep.includes(user.id)) {
-      await user.ref.delete();
-      console.log(`deleted users/${user.id}`);
-    }
-  }
-
   for (const document of documentsToDelete) {
-    const col = collectionMap.find(c => c.name == document.collection);
-    const doc = col.refs.docs.find(d => d.id === document.docId);
+    const doc = dbData[document.collection].refs.docs.find(d => d.id === document.docId);
     await doc.ref.delete();
 
     const batch = db.batch();
-    await removeAllSubcollections(doc, batch, db);
+    await removeAllSubcollections(doc, batch, db, { verbose: false });
     await batch.commit();
-
-    console.log(`deleted ${document.collection}/${document.docId}`);
   }
 
-  for (const docIndex of _docsIndex.docs) {
-    if (!usedDocuments.some(u => u.docId === docIndex.id)) {
-      await docIndex.ref.delete();
-      console.log(`deleted docsIndex/${docIndex.id}`);
-    }
-  }
+  //////////////////
+  // DELETION SUMMARY
+  //////////////////
 
+  for (const collection of collectionData) {
+    const docs = documentsToDelete.filter(d => d.collection === collection.name);
+    console.log(`Deleted ${docs.length} ${collection.name} documents.`);
+  }
 
   //////////////////
   // CLEANING OF REMAINING DOCUMENTS
@@ -381,22 +235,17 @@ export async function shrinkDb(db: FirebaseFirestore.Firestore) {
 
   const remainingOrgs = await db.collection('orgs').get();
   for (const _org of remainingOrgs.docs) {
-    console.log(`Updating org ${_org.id}`);
     const org = _org.data() as OrganizationDocument;
     org.userIds = org.userIds.filter(uid => usersToKeep.includes(uid));
     await _org.ref.set(org);
   }
 
-  console.log('Cleaned remaining orgs');
+  console.log(`Cleaned ${remainingOrgs.docs.length} remaining orgs`);
 
   const remainingPermissions = await db.collection('permissions').get();
   for (const _perm of remainingPermissions.docs) {
-
-    console.log(`Updating perm ${_perm.id}`);
     const perm = _perm.data() as PermissionsDocument;
-
     const currentUsers = Object.keys(perm.roles);
-
     const roles = {};
     for (const orgUser of currentUsers) {
       if (usersToKeep.includes(orgUser)) {
@@ -405,89 +254,37 @@ export async function shrinkDb(db: FirebaseFirestore.Firestore) {
     }
     perm.roles = roles;
     await _perm.ref.set(perm);
-
   }
 
-  console.log('Cleaned remaining permissions');
-  console.log(`Ended ! Waiting for emulator to stop and upload of shrinked db to ${latestAnonShrinkedDbDir}`);
-}
+  console.log(`Cleaned ${remainingPermissions.docs.length} permissions`);
 
-function getPermissionById(orgId: string, permissions: PermissionsDocument[]) {
-  return permissions.find(o => o.id === orgId);
-}
+  //////////////////
+  // CHECK IF PROCESS WENT WELL
+  //////////////////
 
-function getOrgSuperAdmin(orgId: string, permissions: PermissionsDocument[]) {
-  const permission = getPermissionById(orgId, permissions);
-  return Object.keys(permission.roles).find(userId => permission.roles[userId] === 'superAdmin')
-}
-
-function inspectUser(
-  user: FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>,
-  collections: { name: string, docs: any[] }[],
-  verbose = false
-) {
-
-  const inspectionResult: InspectionResult[] = [];
-  for (const collection of collections) {
-    for (const document of collection.docs) {
-      if (userMap[collection.name]) {
-        for (const attr of userMap[collection.name]) {
-          if (isMatchingValue(user.id, document, attr, collection.name)) {
-            if (verbose) {
-              console.log(`Found User ${user.id} in ${collection.name} document ${document.id || document.uid || document} in attr ${attr || 'documentId'}`);
-            }
-
-            inspectionResult.push({ uid: user.id, collection: collection.name, docId: document.id || document.uid || document, attr });
-          }
-        }
-      }
-    }
+  let errors = false;
+  const remainingUsers = await db.collection('users').get();
+  if (usersToKeep.length !== remainingUsers.docs.length) {
+    console.log(`Remaining users VS calculated : ${remainingUsers.docs.length} / ${usersToKeep.length}`);
+    errors = true;
   }
 
-  return inspectionResult;
-}
-
-function inspectOrg(
-  org: FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>,
-  collections: { name: string, docs: any[] }[],
-  verbose = false
-) {
-
-  const inspectionResult: InspectionResult[] = [];
-  for (const collection of collections) {
-    for (const document of collection.docs) {
-      if (orgMap[collection.name]) {
-        for (const attr of orgMap[collection.name]) {
-          if (isMatchingValue(org.id, document, attr, collection.name)) {
-            if (verbose) {
-              console.log(`Found Org ${org.id} in ${collection.name} document ${document.id || document.uid || document} in attr ${attr || 'documentId'}`);
-            }
-
-            inspectionResult.push({ id: org.id, collection: collection.name, docId: document.id || document.uid || document, attr });
-          }
-        }
-      }
-    }
+  if (orgsToKeep.length !== remainingOrgs.docs.length) {
+    console.log(`Remaining orgs VS calculated : ${remainingOrgs.docs.length} / ${orgsToKeep.length}`);
+    errors = true;
   }
 
-  return inspectionResult;
+  const remainingDocumentCount = await getAllDocumentCount(db);
+  if (remainingDocumentCount !== usedDocuments.length) {
+    console.log(`Remaining overall document count VS calculated : ${remainingDocumentCount} / ${usedDocuments.length}`);
+    errors = true;
+  }
+
+  return !errors;
 }
 
 
-function isMatchingValue(stringToFind: string, document: unknown, attr: string, collectionName: string) {
-  if (!stringToFind) return;
-
-  if (['blockframesAdmin', 'buckets'].includes(collectionName) && attr == '') {
-    return stringToFind === document;
-  }
-
-  const val = getValue(document, attr);
-
-  if (collectionName === 'permissions' && attr === 'roles') {
-    return !!val[stringToFind];
-  } else if (Array.isArray(val)) {
-    return val.some(v => isString(v) ? v === stringToFind : JSON.stringify(v).indexOf(stringToFind));  // for object or string arrays
-  } else {
-    return val === stringToFind;
-  }
+function uniqueArray(arr: string[]) {
+  return Array.from(new Set(arr))
 }
+
