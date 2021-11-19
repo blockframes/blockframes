@@ -40,7 +40,7 @@ const logInAndNavigate = (user: Partial<UserType>) => {
 }
 
 // TODO issue#6929
-describe.skip('User can import templates', () => {
+describe('User can import templates', () => {
   beforeEach(() => {
     cy.viewport('ipad-2', 'landscape');
   });
@@ -75,7 +75,7 @@ describe.skip('User can import templates', () => {
     cy.get('button[test-id="submit-records"]', {timeout: 3 * SEC})
       .click();
 
-    cy.wait(30 * SEC);
+    cy.wait(10 * SEC);
 
     cy.log('Movies submitted; navigate back');
     cy.get('button[test-id="cancel-import"]', { timeout: 3 *SEC })
@@ -85,7 +85,7 @@ describe.skip('User can import templates', () => {
   });
 
   // TODO correct the test once the contract import page is ready #6757
-  it('Login as Dashboard user, Select contracts and import ', () => {
+  it.skip('Login as Dashboard user, Select contracts and import ', () => {
     logInAndNavigate(jean);
     cy.wait(1 * SEC);
 
