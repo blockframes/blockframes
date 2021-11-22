@@ -4,6 +4,8 @@ import { EventService } from '@blockframes/event/+state/event.service';
 import { Event, isScreening } from '@blockframes/event/+state/event.model';
 import { MovieService, Movie } from '@blockframes/movie/+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Observable } from 'rxjs';
+import { Invitation, InvitationService } from '@blockframes/invitation/+state';
 
 @Component({
   selector: 'crm-event',
@@ -15,6 +17,7 @@ export class EventComponent implements OnInit {
   public eventId = '';
   public event: Event;
   public movie: Movie;
+  public invitations$: Observable<Invitation[]>;
  
   constructor(
     private route: ActivatedRoute,
@@ -22,13 +25,14 @@ export class EventComponent implements OnInit {
     private eventService: EventService,
     private movieService: MovieService,
     private snackBar: MatSnackBar,
-  ) {
-  }
+    private invitationService: InvitationService,
+  ) { }
 
   async ngOnInit() {
 
     this.eventId = this.route.snapshot.paramMap.get('eventId');
     this.event = await this.eventService.getValue(this.eventId);
+    this.invitations$ = this.invitationService.valueChanges(ref => ref.where('type', '==', 'attendEvent').where('eventId', '==', this.eventId));
 
     if (isScreening(this.event)) {
       const titleId = this.event.meta.titleId;

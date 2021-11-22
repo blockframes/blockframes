@@ -14,6 +14,7 @@ import { EventInfoModule } from '../../components/event-info/event-info.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { GoToModule } from '../../components/go-to/go-to.module';
 import { BreadCrumbModule } from '../../components/bread-crumb/bread-crumb.module';
+import { GuestTableModule } from '../../components/guest-table/guest-table.module';
 
 // Components
 import { EventComponent } from './event.component';
@@ -31,6 +32,7 @@ import { EventComponent } from './event.component';
     ImageModule,
     InvitationFormUserModule,
     BreadCrumbModule,
+    GuestTableModule
   ],
   declarations: [
     EventComponent,
