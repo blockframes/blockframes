@@ -49,7 +49,7 @@ export class ProfileComponent implements OnInit {
       if (this.passwordForm.dirty) {
         if (this.passwordForm.invalid) throw new Error('Your information to change your password are not valid.');
         const { current, next } = this.passwordForm.value;
-        this.authService.updatePassword(current, next);
+        await this.authService.updatePassword(current, next);
         this.snackBar.open('Password changed.', 'close', { duration: 2000 });
       }
     } catch (error) {

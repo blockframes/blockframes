@@ -21,6 +21,8 @@ export interface ImageParameters {
   s?: string;
   /** PDF page to display : https://docs.imgix.com/apis/rendering/pdf/page */
   page?: number;
+  /** Device Pixel Ratio : https://docs.imgix.com/apis/rendering/pixel-density/dpr */
+  dpr?: 1 | 2 | 3 | 4 | 5;
 }
 
 export function getImgSize(ref?: string) {

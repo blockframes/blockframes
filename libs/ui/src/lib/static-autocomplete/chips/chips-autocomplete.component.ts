@@ -94,7 +94,7 @@ export class ChipsAutocompleteComponent implements OnInit, OnDestroy {
   private _filter(value: string) {
     const filterValue = value.toLowerCase();
     return this.items.filter(item => {
-      return staticModel[this.scope][item].toLowerCase().indexOf(filterValue) === 0;
+      return staticModel[this.scope][item].toLowerCase().includes(filterValue);
     });
   }
 

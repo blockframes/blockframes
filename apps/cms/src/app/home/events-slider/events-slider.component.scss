@@ -1,3 +1,9 @@
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
 article, mat-radio-group {
   display: flex;
   margin-bottom: 16px;

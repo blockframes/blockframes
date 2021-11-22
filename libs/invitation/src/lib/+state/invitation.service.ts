@@ -31,7 +31,7 @@ export class InvitationService extends CollectionService<InvitationState> {
 
   myInvitations$: Observable<Invitation[]> = this.authQuery.select().pipe(
     switchMap((user: AuthState) => {
-      if (user.profile) {
+      if (user.profile?.orgId) {
         return combineLatest([
           this.valueChanges(ref => ref.where('toOrg.id', '==', user.profile.orgId)),
           this.valueChanges(ref => ref.where('toUser.uid', '==', user.profile.uid))
@@ -80,13 +80,11 @@ export class InvitationService extends CollectionService<InvitationState> {
 
   /** Accept an Invitation and change its status to accepted. */
   public acceptInvitation(invitation: Invitation) {
-    // @TODO (#2500) should be handled by a backend function to prevent ugly rules
     return this.update({ ...invitation, status: 'accepted' });
   }
 
   /** Decline an Invitation and change its status to declined. */
   public declineInvitation(invitation: Invitation) {
-    // @TODO (#2500) should be handled by a backend function to prevent ugly rules
     return this.update({ ...invitation, status: 'declined' });
   }
 
@@ -139,4 +137,5 @@ export class InvitationService extends CollectionService<InvitationState> {
       }
     }
   }
+
 }

@@ -20,8 +20,12 @@ export function getTaskStateObservable(task: AngularFireUploadTask): Observable<
         subscriber.complete();
       }
     }
-    const error = () => {
-      subscriber.next('error');
+    const error = (err) => {
+      if (err.code === 'storage/canceled') {
+        subscriber.next('canceled');
+      } else {
+        subscriber.next('error');
+      }
       subscriber.complete();
     }
     task.task.on('state_changed', progress, error);

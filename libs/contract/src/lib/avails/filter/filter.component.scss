@@ -1,3 +1,5 @@
+@import '~@angular/flex-layout/mq';
+
 :host {
   display: flex;
 }
@@ -22,12 +24,16 @@
     flex: 1;
     margin-right: 16px;
   }
-  button[type="reset"] {
-    margin-top: 20px
+  button[type='reset'] {
+    margin-top: 20px;
   }
-} 
+}
 
 .duration {
   display: flex;
   justify-content: space-between;
+  @include layout-bp(gt-xs) {
+    flex-wrap: unset;
+  }
+  flex-wrap: wrap;
 }

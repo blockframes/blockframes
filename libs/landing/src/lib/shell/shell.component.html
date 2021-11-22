@@ -74,18 +74,18 @@
           </article>
           <article fxLayout fxLayoutAlign="space-between start" fxLayout.lt-md="column" fxLayoutGap="24px">
             <mat-form-field appearance="outline">
-              <mat-label>Email Adress</mat-label>
+              <mat-label>Email Address</mat-label>
               <input test-id="email" matInput type="email" placeholder="E-mail address" formControlName="email" required />
               <mat-error *ngIf="form.get('email').hasError('required')">
                 Email is <strong>required</strong>
               </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
-              <tel-input test-id="phone-no" [form]="form.get('phoneNumber')" placeholder="Phone number"></tel-input>
+              <tel-input test-id="phone-no" [form]="form.get('phoneNumber')" placeholder="Phone Number"></tel-input>
             </mat-form-field> 
           </article>
           <article fxLayout="row" fxLayoutAlign="center center">
-            <mat-checkbox formControlName="newsletters">Subscribe to the newsletters</mat-checkbox>
+            <mat-checkbox formControlName="newsletters">Subscribe to our newsletters</mat-checkbox>
           </article>
           <button test-id="send-request" [disabled]="submitted" fxFlexAlign="center" mat-flat-button color="accent" type="submit">{{ buttonText }}</button>
         </form>
@@ -108,7 +108,8 @@
           <app-logo fxLayout fxFlex></app-logo>
           <form fxFlex [formGroup]="newslettersForm" (ngSubmit)="subscribeToNewsletters(newslettersForm)" >
             <mat-form-field appearance="outline" hideRequiredMarker>
-              <input test-id="email" matInput type="email" placeholder="Enter your email address" formControlName="email" required />
+              <mat-label>Enter your email address</mat-label>
+              <input test-id="email" matInput type="email" placeholder="Email address" formControlName="email" required />
               <mat-hint class="mat-caption">Subscribe to our newsletter now!</mat-hint>
               <mat-error *ngIf="form.get('email').hasError('required')">
                 Email is <strong>required</strong>
@@ -123,10 +124,18 @@
           <article fxLayout="column" fxLayoutAlign="space-between start">
             <p class="mat-body-2">Proudly associated with the following partners</p>
             <span fxLayout="row wrap" fxLayoutAlign="start" fxLayoutGap="16px">
-              <img asset="BPI_france.png" type="logo" alt="BPI France logo" />
-              <img asset="creative_media_europe.png" type="logo" alt="creative media europe logo" />
-              <img asset="IFCIC_logo.png" type="logo" alt="ifcic">
-              <img asset="CNC_logo.png" type="logo" alt="cnc">
+              <a  href="https://www.bpifrance.fr/" target="_blank" ref="noreferrer">
+                <img asset="BPI_france.png" type="logo" alt="BPI France logo"/>
+              </a>
+              <a href="https://ec.europa.eu/culture/funding-creative-europe/creative-europe-media-strand" target="_blank" ref="noreferrer">
+                <img asset="creative_media_europe.png" type="logo" alt="creative media europe logo" />
+              </a>
+              <a href="http://www.ifcic.fr/" target="_blank" ref="noreferrer">
+                <img asset="IFCIC_logo.png" type="logo" alt="ifcic">
+              </a>
+              <a href="https://www.cnc.fr/" target="_blank" ref="noreferrer">
+                <img asset="CNC_logo.png" type="logo" alt="cnc">
+              </a>
             </span>
           </article>
           <article fxLayout="column" fxLayoutAlign="space-between start">

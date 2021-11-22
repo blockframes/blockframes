@@ -33,8 +33,8 @@ export async function onOfferCreate(snap: FirebaseFirestore.DocumentSnapshot): P
       term.exclusive = term.exclusive ? 'Yes' : 'No';
       term.medias = term.medias.map(media => staticModel['medias'][media]);
       term.territories = term.territories.map(territory => staticModel['territories'][territory]);
-      term.duration.from = format(term.duration.from.toDate(), 'dd/MM/yyyy');
-      term.duration.to = format(term.duration.to.toDate(), 'dd/MM/yyyy');
+      term.duration.from = format(term.duration.from.toDate(), 'MM/dd/yyyy');
+      term.duration.to = format(term.duration.to.toDate(), 'MM/dd/yyyy');
     }
   }
 

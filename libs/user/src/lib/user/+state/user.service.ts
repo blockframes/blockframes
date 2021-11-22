@@ -38,6 +38,7 @@ export class UserService extends CollectionService<UserState> {
    * @param uid
    */
   public async isBlockframesAdmin(uid: string): Promise<boolean> {
+    if(!uid) return false;
     const snap = await this.db.collection('blockframesAdmin').doc(uid).get().toPromise();
     return snap.exists;
   }

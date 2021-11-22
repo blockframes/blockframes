@@ -46,29 +46,6 @@ commands:
           key: fixture-cache-v1-{{ .Branch }}-{{ .Environment.CIRCLE_SHA1 }} # ! This is how you isolate per workflow
           paths:
             - "tools/fixtures"
-  check_app_size:
-    description: Check size of apps being built and post to Zapier
-    steps:
-      - run:
-          name: Check size of apps being build
-          command: |
-            # Generate default json for bundlesize
-            # This is a quick hack to get bundlesize AND affected build working.
-            # Maintain this script to keep checking new apps.
-            mkdir -p dist/apps/catalog \
-                     dist/apps/festival \
-                     dist/apps/backend-functions
-            touch ./dist/apps/catalog/main.dummy.js \
-                  ./dist/apps/festival/main.dummy.js \
-                  ./dist/apps/backend-functions/main.dummy.js
-            npm run bundlesize
-      - run:
-          name: Post sizes of apps to zapier
-          command: |
-            if [ "${CIRCLE_BRANCH}" = "production" ] || [ "${CIRCLE_BRANCH}" = "master" ]; then
-              npm run build:all;
-              curl -X POST "${ZAPPIER_WEBHOOK}" --header "Build-number:${CIRCLE_BUILD_NUM}" --header "Branch:${CIRCLE_BRANCH}" --header  "Date:`date "+%D"`" --header  Catalog-size:`cat ./dist/apps/catalog/main**.js | wc -c` --header  Festival-size:`cat ./dist/apps/festival/main**.js | wc -c` --header  Functions-size:`cat ./dist/apps/backend-functions/main**.js | wc -c`;
-            fi
   start_e2e_emulators:
     steps:
       - restore_cache:
@@ -321,7 +298,6 @@ jobs:
       - run: npm run build:all
       - run: npm run lint
       - save_build_cache
-      - check_app_size
   build-and-lint-commits:
     executor: blockframes-ci
     steps:
@@ -329,7 +305,6 @@ jobs:
       - run: npm run affected:build
       - run: npm run affected:lint
       - save_build_cache
-      - check_app_size
   unit-test-commits:
     executor: blockframes-ci
     steps:
@@ -338,7 +313,6 @@ jobs:
           command: npm run affected:test
           no_output_timeout: 15m
       - save_build_cache
-      - check_app_size
   test-e2e-ci:
     executor: blockframes-ci
     steps:

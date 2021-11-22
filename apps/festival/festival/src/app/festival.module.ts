@@ -4,8 +4,7 @@ import { createRoutes } from '@blockframes/utils/routes/create-routes';
 import { AppGuard } from '@blockframes/utils/routes/app.guard';
 import { NoAuthGuard } from '@blockframes/auth/guard/no-auth.guard';
 import { IdlePreload, IdlePreloadModule } from 'angular-idle-preload';
-
-// TODO: Add AppGuard
+import { AnonymousAuthGuard } from '@blockframes/auth/guard/anonymous-auth-guard';
 
 const routes: Routes = createRoutes({
   appName: 'festival',
@@ -30,7 +29,12 @@ const routes: Routes = createRoutes({
       canActivate: [AppGuard],
       loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule)
     }
-  ]
+  ],
+  events: {
+    path: 'event',
+    canActivate: [AnonymousAuthGuard],
+    loadChildren: () => import('./event/event.module').then(m => m.EventModule)
+  }
 });
 
 @NgModule({
@@ -39,12 +43,12 @@ const routes: Routes = createRoutes({
   imports: [
     IdlePreloadModule.forRoot(),
     RouterModule.forRoot(routes, {
-    initialNavigation: 'enabled',
-    anchorScrolling: 'enabled',
-    onSameUrlNavigation: 'reload',
-    paramsInheritanceStrategy: 'always',
-    relativeLinkResolution: 'corrected',
-    preloadingStrategy: IdlePreload
-  })],
+      initialNavigation: 'enabled',
+      anchorScrolling: 'enabled',
+      onSameUrlNavigation: 'reload',
+      paramsInheritanceStrategy: 'always',
+      relativeLinkResolution: 'corrected',
+      preloadingStrategy: IdlePreload
+    })],
 })
 export class FestivalModule { }

@@ -19,11 +19,15 @@ section, article {
     margin-top: auto;
   }
 }
-article * {
+article *:not(h1) {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   min-width: 0;
+}
+
+bf-tag {
+  width: fit-content;
 }
 
 h4 {

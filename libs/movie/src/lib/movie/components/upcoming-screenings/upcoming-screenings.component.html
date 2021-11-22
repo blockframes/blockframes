@@ -5,21 +5,21 @@
     <ng-container *ngIf="!ongoingScreenings.length && !futureScreenings.length">
       <ng-container *ngFor="let org of orgs$ | async">
         <h3>There is no screening scheduled at the moment.</h3>
-        <p class="mat-body-1">You can contact <a [href]="'mailto:' + org.email">{{ org.denomination?.public || 'the organization' }}</a> for any questions.</p>
+        <p class="mat-body-1">You can contact <a [routerLink]="['/c/o/marketplace/organization/', org.id]">{{ org.denomination?.public || 'the organization' }}</a> for any questions.</p>
         <a mat-flat-button color="accent" [href]="'mailto:'+ org.email">Contact Sales Agent</a>
       </ng-container>
     </ng-container>
 
     <!-- Ongoing screening -->
     <ng-container *ngIf="ongoingScreenings.length">
-      <h3>Screenings</h3>
-      <a ongoing-event-button [routerLink]="['/c/o/marketplace/event', ongoingScreenings[0].id]">Ongoing Screening Right Now</a>
+      <h3>SCREENINGS</h3>
+      <a ongoing-event-button [routerLink]="['/event', ongoingScreenings[0].id, 'r', 'i']">Ongoing Screening Right Now</a>
       <mat-divider></mat-divider>
-      <a *ngIf="!futureScreenings.length" mat-flat-button color="primary" [routerLink]="['/c/o/marketplace/event/', ongoingScreenings[0].id]">Access Event</a>
+      <a *ngIf="!futureScreenings.length" mat-flat-button color="primary" [routerLink]="['/event', ongoingScreenings[0].id, 'r', 'i']">Access Event</a>
     </ng-container>
 
     <!-- No ongoing screening but with future screening(s) -->
-    <h3 *ngIf="!ongoingScreenings.length && futureScreenings.length">Next Screenings</h3>
+    <h3 *ngIf="!ongoingScreenings.length && futureScreenings.length">NEXT SCREENINGS</h3>
     <ng-container *ngIf="futureScreenings.length">
       <section fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
         <ng-container *ngFor="let screening of futureScreenings; let index = index; let isLast = last">

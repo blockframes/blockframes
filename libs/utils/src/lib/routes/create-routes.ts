@@ -16,14 +16,31 @@ interface RouteOptions {
   appName: string,
   /** The route to the landing page if any */
   landing?: Route,
+  /** Event routes if any */
+  events?: Route,
 }
 
-export function createRoutes({ appsRoutes, appName, landing }: RouteOptions) {
+export function createRoutes({ appsRoutes, appName, landing, events }: RouteOptions) {
   // Used for internal app
   landing = landing || { path: '', redirectTo: 'auth', pathMatch: 'full' };
   landing.canActivate = landing.canActivate
     ? [...landing.canActivate, UserRedirectionGuard]
     : [UserRedirectionGuard];
+
+  const endRules: Routes = [
+    {
+      path: 'not-found',
+      loadChildren: () => import('@blockframes/ui/error/error-not-found.module').then(m => m.ErrorNotFoundModule)
+    },
+    {
+      path: '**',
+      loadChildren: () => import('@blockframes/ui/error/error-not-found.module').then(m => m.ErrorNotFoundModule)
+    }
+  ];
+
+  if (events) {
+    endRules.unshift(events);
+  }
 
   // We need to put the spread operator in a local variable to make build works on prod
   const children = [
@@ -81,14 +98,7 @@ export function createRoutes({ appsRoutes, appName, landing }: RouteOptions) {
             }
           ]
         },
-        {
-          path: 'not-found',
-          loadChildren: () => import('@blockframes/ui/error/error-not-found.module').then(m => m.ErrorNotFoundModule)
-        },
-        {
-          path: '**',
-          loadChildren: () => import('@blockframes/ui/error/error-not-found.module').then(m => m.ErrorNotFoundModule)
-        }
+        ...endRules
       ]
     }]
 }

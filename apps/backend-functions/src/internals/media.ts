@@ -19,11 +19,13 @@ export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eve
   const eventData = eventId ? await getDocument<EventDocument<EventMeta>>(`events/${eventId}`) : undefined;
 
   let userDoc = createPublicUser({ uid, email });
-  if (!eventData || eventData?.accessibility === 'private') {
-    const user = await db.collection('users').doc(uid).get();
-    if (!user.exists) { return false; }
+  const user = await db.collection('users').doc(uid).get();
+  if (user.exists) {
     userDoc = createPublicUser(user.data());
-    if (!userDoc.orgId) { return false; }
+  }
+
+  if ((!eventData || eventData?.accessibility === 'private') && !userDoc.orgId) {
+    return false;
   }
 
   const blockframesAdmin = await db.collection('blockframesAdmin').doc(uid).get();
