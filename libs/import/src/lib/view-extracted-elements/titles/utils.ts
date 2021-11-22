@@ -8,6 +8,7 @@ import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { MovieAppConfig, MovieGoalsAudience, MovieLanguageSpecification, MovieRelease, MovieRunningTime, MovieStakeholders } from '@blockframes/movie/+state/movie.firestore';
 import { Certification, Color, ContentType, CrewRole, Genre, Language, MediaValue, MovieFormat, MovieFormatQuality, NumberRange, PremiereType, ProducerRole, ProductionStatus, SocialGoal, SoundFormat, StakeholderRole, StoreStatus, Territory } from '@blockframes/utils/static-model';
 import { User } from '@blockframes/auth/+state';
+import { Stakeholder } from '@blockframes/utils/common-interfaces';
 
 interface FieldsConfig {
   title: {
@@ -28,7 +29,7 @@ interface FieldsConfig {
   stakeholders: {
     displayName: string;
     role: StakeholderRole;
-    country:string;
+    countries: Territory[];
   }[];
   originalRelease: {
     country: Territory;
@@ -193,9 +194,9 @@ export async function formatTitle(
       if (!role) throw new WrongValueError({ field: 'stakeholders[].role', name: 'Stakeholders Role' });
       return role;
     },
-    /* p */ 'stakeholders[].country': (value: string) => {
+    /* p */ 'stakeholders[].countries[]': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'stakeholders[].country', name: 'Stakeholders Country' }));
-      const country = getKeyIfExists('territories', value);
+      const country = getKeyIfExists('territories', value) as Territory;
       if (!country) throw new WrongValueError({ field: 'stakeholders[].country', name: 'Stakeholders Country' });
       return country;
     },
@@ -363,16 +364,15 @@ export async function formatTitle(
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'ratings[].value', name: 'Ratings Value' }));
       return value;
     },
-    /* aw */ 'audience.targets': (value: string[]) => {
-      if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'audience[].targets', name: 'Target Audience' }));
+    /* aw */ 'audience.targets[]': (value: string) => {
+      if (!value) return new ValueWithWarning(undefined, optionalWarning({ field: 'audience[].targets', name: 'Target Audience' }));
       return value;
     },
-    /* ax */ 'audience.goals': (value: string[]) => {
-      if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'audience[].goals', name: 'Social Responsibility Goals' }));
-      const goals = value.map(v => getKeyIfExists('socialGoals', v) ?? undefined);
-      const invalid = goals.some(g => !g);
-      if (invalid) throw new WrongValueError({ field: 'audience[].goals', name: 'Social Responsibility Goals' });
-      return goals as SocialGoal[];
+    /* ax */ 'audience.goals[]': (value: string) => {
+      if (!value) return new ValueWithWarning(undefined, optionalWarning({ field: 'audience[].goals[]', name: 'Social Responsibility Goals' }));
+      const valid = getKeyIfExists('socialGoals', value);
+      if (!valid) throw new WrongValueError({ field: 'audience[].goals[]', name: 'Social Responsibility Goals' });
+      return value as SocialGoal;
     },
     /* ay */ 'reviews[].filmCriticName': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'reviews[].filmCriticName', name: 'Film Reviews Critic Name' }));
@@ -509,7 +509,7 @@ export async function formatTitle(
       warnings.push(optionalWarning({ field: 'stakeholders', name: 'Stakeholders' }));
     }
 
-    const getStakeholders = (role: StakeholderRole) => data.stakeholders?.filter(s => s.role === role) ?? [];
+    const getStakeholders = (role: StakeholderRole): Stakeholder[] => data.stakeholders?.filter(s => s.role === role) ?? [];
 
     const stakeholders: MovieStakeholders = {
       productionCompany: getStakeholders('executiveProducer'),
