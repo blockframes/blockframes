@@ -923,21 +923,21 @@ function createShootingLocations(params: Partial<MovieShootingLocations>): Movie
 //        AUDIENCE AND GOALS
 // ---------------------------------
 
-export class AudienceAndGoalsForm extends FormEntity<MovieAudianceAndGoalsControl> {
+export class AudienceAndGoalsForm extends FormEntity<MovieAudienceAndGoalsControl> {
   constructor(audience?: Partial<MovieGoalsAudience>) {
-    super(createAudianceAndGoalsFormControl(audience));
+    super(createAudienceAndGoalsFormControl(audience));
   }
 }
 
-function createAudianceAndGoalsFormControl(entity?: Partial<MovieGoalsAudience>) {
+function createAudienceAndGoalsFormControl(entity?: Partial<MovieGoalsAudience>) {
   const { targets, goals } = createAudienceGoals(entity);
   return {
-    targets: FormList.factory(targets, el => new FormControl(el)),
-    goals: new FormStaticValueArray<'socialGoals'>(goals, 'socialGoals')
-  }
+    targets: FormList.factory(targets.filter(t => !!t), el => new FormControl(el)),
+    goals: new FormStaticValueArray<'socialGoals'>(goals.filter(g => !!g) ?? [], 'socialGoals')
+  };
 }
 
-type MovieAudianceAndGoalsControl = ReturnType<typeof createAudianceAndGoalsFormControl>;
+type MovieAudienceAndGoalsControl = ReturnType<typeof createAudienceAndGoalsFormControl>;
 
 
 // ------------------------------
