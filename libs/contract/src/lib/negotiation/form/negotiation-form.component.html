@@ -1,0 +1,46 @@
+<form [formGroup]="form" (ngSubmit)="save()">
+  <header>
+    <h2>{{ title?.title.international }}</h2>
+    <mat-form-field appearance="outline">
+      <mat-label>Title price</mat-label>
+      <input type="number" matInput formControlName="price" min="0"/>
+      <mat-icon matPrefix *ngIf="currency" [svgIcon]="currency"></mat-icon>
+    </mat-form-field>
+  </header>
+  <bf-form-table [form]="form.get('terms')" [columns]="termColumns" tablePosition="bottom" [active]="indexId">
+    <!-- Columns -->
+    <ng-template class="duration" colRef="avails.duration" let-duration>
+      {{ duration.from | date : 'M/d/yyyy' }} - {{ duration.to | date : 'M/d/yyyy' }}
+    </ng-template>
+    <ng-template colRef="avails.territories" let-territories>
+      <span class="group-label" (click)="openDetails(territories, 'territories')">
+        {{ territories | toGroupLabel:'territories':'World' | join }}
+      </span>
+    </ng-template>
+    <ng-template colRef="avails.medias" let-media>
+      <span class="group-label" (click)="openDetails(media, 'medias')">
+        {{ media | toGroupLabel:'medias':'All'| join }}
+      </span>
+    </ng-template>
+    <ng-template colRef="avails.exclusive" let-exclusive>
+      {{ exclusive ? 'Yes' : 'No'}}
+    </ng-template>
+    <ng-template colRef="versions" let-version>
+      <ul>
+        <li *ngFor="let language of version.languages | keyvalue">
+          <strong>{{ language.key | toLabel: 'languages' }}</strong>: {{ language.value | versionPipe | join }}
+        </li>
+      </ul>
+    </ng-template>
+    <ng-template colRef="runs" let-runs>{{ runs?.broadcasts}}</ng-template>
+    <!-- Local Form -->
+    <ng-template formView let-termForm>
+      <form [availsFilter]="termForm.get('avails')" class="surface" vertical required></form>
+      <languages-form class="surface" [form]="termForm.get('versions')"></languages-form>
+    </ng-template>
+  </bf-form-table>
+
+  <footer>
+    <button mat-flat-button color="primary" type="submit">Confirm</button>
+  </footer>
+</form>
