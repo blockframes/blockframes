@@ -98,7 +98,7 @@ export class LandingShellComponent implements OnDestroy {
   /** Register an email to a mailchimp mailing list */
   private async registerEmailToNewsletters(email: string) {
     const f = this.functions.httpsCallable('registerToNewsletter');
-    const tags: MailchimpTag[] = ['landing', this.appName, `landing - ${this.appName}`] as MailchimpTag[]
+    const tags: MailchimpTag[] = [`landing - ${this.appName}`] as MailchimpTag[]
     return f({email, tags}).toPromise();
   }
 
