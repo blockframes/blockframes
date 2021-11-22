@@ -12,7 +12,6 @@ import { map, startWith, shareReplay, pairwise } from "rxjs/operators";
 import { GroupScope, Scope, StaticGroup, staticGroups, staticModel } from '@blockframes/utils/static-model';
 import { MatFormFieldControl } from "@angular/material/form-field";
 import { coerceBooleanProperty } from "@angular/cdk/coercion";
-import { boolean } from "@blockframes/utils/decorators/decorators";
 
 
 type GroupMode = 'indeterminate' | 'checked' | 'unchecked';
@@ -158,7 +157,7 @@ export class StaticGroupComponent implements ControlValueAccessor, OnInit, OnDes
         const hiddenValues = prev.filter(value => !filteredItems.includes(value));
         if (hiddenValues.length && !next.includes(hiddenValues[0])) {
           // add back the values
-          this.form.setValue(next.concat(hiddenValues));
+          this.form.setValue(next.concat(hiddenValues),{emitEvent:false});
         }
       }
       this.allItems = this.form.value;
@@ -203,6 +202,7 @@ export class StaticGroupComponent implements ControlValueAccessor, OnInit, OnDes
   registerOnTouched(fn: () => void) {
     this.onTouch = fn;
   }
+
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
   }
