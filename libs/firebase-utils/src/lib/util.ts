@@ -152,16 +152,15 @@ export function throwOnProduction(): never | void {
  * @param snapshot
  * @param batch
  */
-export async function removeAllSubcollections(
+ export async function removeAllSubcollections(
   snapshot: FirebaseFirestore.DocumentSnapshot,
   batch: FirebaseFirestore.WriteBatch,
   db = admin.firestore(),
-  options = { verbose: true }
-): Promise<FirebaseFirestore.WriteBatch> {
-  if (options.verbose) console.log(`starting deletion of ${snapshot.ref.path} sub-collections`);
+  ): Promise<FirebaseFirestore.WriteBatch> {
+  console.log(`starting deletion of ${snapshot.ref.path} sub-collections`);
   const subCollections = await snapshot.ref.listCollections();
   for (const x of subCollections) {
-    if (options.verbose) console.log(`deleting sub collection : ${x.path}`);
+    console.log(`deleting sub collection : ${x.path}`);
     const documents = await db.collection(x.path).listDocuments();
     documents.forEach(ref => batch.delete(ref))
   }
