@@ -19,7 +19,7 @@
       <mat-form-field appearance="outline">
         <mat-label>Search for titles, directors, keywords, ...</mat-label>
         <mat-icon matPrefix svgIcon="search"></mat-icon>
-        <input matInput type="text" formControlName="query" [value]="searchForm.get('query').value">
+        <input matInput type="text" formControlName="query" [value]="searchForm.get('query').value" />
       </mat-form-field>
     </form>
   </list-page-search>
@@ -47,11 +47,12 @@
     </ng-template>
 
     <ng-template filter label="Language & Version" [form]="searchForm.languages">
-      <title-language-filter [languagesFilterForm]="searchForm.languages"></title-language-filter>
+      <title-language-filter [form]="searchForm.languages"></title-language-filter>
     </ng-template>
 
     <ng-template filter label="Production Status" [form]="searchForm.productionStatus">
-      <static-check-boxes fxLayout="column" fxLayoutGap="12px" [form]="searchForm.productionStatus" scope="productionStatus">
+      <static-check-boxes fxLayout="column" fxLayoutGap="12px" [form]="searchForm.productionStatus"
+        scope="productionStatus">
       </static-check-boxes>
     </ng-template>
 
