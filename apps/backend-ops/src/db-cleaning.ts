@@ -8,6 +8,7 @@ import { Auth, Firestore, QueryDocumentSnapshot, getDocument, runChunks } from '
 import admin from 'firebase-admin';
 import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 import { getAllAppsExcept } from '@blockframes/utils/apps';
+import { auditConsistency, DatabaseData, loadAllCollections } from './internals/utils';
 
 export const numberOfDaysToKeepNotifications = 14;
 const currentTimestamp = new Date().getTime();
@@ -16,44 +17,45 @@ const EMPTY_MEDIA = createStorageFile();
 let verbose = false;
 
 // @TODO #6460 not existing users found in movies._meta.createdBy ..
+// @TODO #6460 spot database inconsistency + users without org + org.userIds = user.orgId + movie.orgIds => exists
+// @TODO #6460 check document subcollection of permissions ?
 
 /** Reusable data cleaning script that can be updated along with data model */
 
 export async function cleanDeprecatedData(db: FirebaseFirestore.Firestore, auth: admin.auth.Auth, options = { verbose: true }) {
   verbose = options.verbose;
   // Getting all collections we need to check
-  const [
-    notifications,
-    invitations,
-    events,
-    movies,
-    organizations,
-    users,
-    permissions,
-    docsIndex
-  ] = await Promise.all([
-    db.collection('notifications').get(),
-    db.collection('invitations').get(),
-    db.collection('events').get(),
-    db.collection('movies').get(),
-    db.collection('orgs').get(),
-    db.collection('users').get(),
-    db.collection('permissions').get(),
-    db.collection('docsIndex').get()
-  ]);
+  const { dbData, collectionData } = await loadAllCollections(db);
+
+  // Data consistency check before cleaning data
+  const usersOutput = await auditConsistency(dbData, collectionData, 'users');
+  console.log(`found ${usersOutput.length} inconsistencies when auditing users.`);
+
+  const orgsOutput = await auditConsistency(dbData, collectionData, 'orgs');
+  console.log(`found ${orgsOutput.length} inconsistencies when auditing orgs.`);
+
+  await cleanData(dbData, db, auth);
+
+  // Data consistency check after cleaning data
+  // @TODO #6460 Audit data after cleaning
+
+  return true;
+}
+
+async function cleanData(dbData: DatabaseData, db: FirebaseFirestore.Firestore, auth: admin.auth.Auth) {
 
   // Getting existing document ids to compare
   const [movieIds, organizationIds, eventIds, userIds] = [
-    movies.docs.map(ref => ref.id),
-    organizations.docs.map(ref => ref.id),
-    events.docs.map(ref => ref.id),
-    users.docs.map(ref => ref.id)
+    dbData.movies.refs.docs.map(ref => ref.id),
+    dbData.orgs.refs.docs.map(ref => ref.id),
+    dbData.events.refs.docs.map(ref => ref.id),
+    dbData.users.refs.docs.map(ref => ref.id)
   ];
 
   // Compare and update/delete documents with references to non existing documents
-  await cleanUsers(users, organizationIds, auth, db);
+  await cleanUsers(dbData.users.refs, organizationIds, auth, db);
   if (verbose) console.log('Cleaned users');
-  await cleanOrganizations(organizations, userIds, movies);
+  await cleanOrganizations(dbData.orgs.refs, userIds, dbData.movies.refs);
   if (verbose) console.log('Cleaned orgs');
 
   // Getting all collections we need to reload
@@ -70,18 +72,16 @@ export async function cleanDeprecatedData(db: FirebaseFirestore.Firestore, auth:
 
   const existingIds = movieIds.concat(organizationIds2, eventIds, userIds2);
 
-  await cleanPermissions(permissions, organizationIds);
+  await cleanPermissions(dbData.permissions.refs, organizationIds);
   if (verbose) console.log('Cleaned permissions');
-  await cleanMovies(movies);
+  await cleanMovies(dbData.movies.refs);
   if (verbose) console.log('Cleaned movies');
-  await cleanDocsIndex(docsIndex, existingIds);
+  await cleanDocsIndex(dbData.docsIndex.refs, existingIds);
   if (verbose) console.log('Cleaned docsIndex');
-  await cleanNotifications(notifications, existingIds);
+  await cleanNotifications(dbData.notifications.refs, existingIds);
   if (verbose) console.log('Cleaned notifications');
-  await cleanInvitations(invitations, existingIds);
+  await cleanInvitations(dbData.invitations.refs, existingIds);
   if (verbose) console.log('Cleaned invitations');
-
-  return true;
 }
 
 export function cleanNotifications(
@@ -199,7 +199,7 @@ export async function cleanUsers(
     } else {
       // User does not exists on auth, should be deleted.
       if (!user.orgId || !existingOrganizationIds.includes(user.orgId)) {
-        await userDoc.ref.delete();
+        await userDoc.ref.delete();  // @TODO #6460 clean org delete with cascade
         if (verbose) console.log(`Deleted ${user.uid}.`);
       } else {
         const orgDoc = await db.doc(`orgs/${user.orgId}`).get();
@@ -212,7 +212,7 @@ export async function cleanUsers(
           delete permission.roles[user.uid];
           await permDoc.ref.update({ roles: permission.roles });
         }
-        await userDoc.ref.delete();
+        await userDoc.ref.delete(); // @TODO #6460 clean org delete with cascade
         if (verbose) console.log(`Deleted ${user.uid} and cleaned org and permissions ${user.orgId}.`);
       }
     }
@@ -235,11 +235,12 @@ export function cleanOrganizations(
     const { userIds = [], wishlist = [] } = org as OrganizationDocument;
 
     const validUserIds = Array.from(new Set(userIds.filter(userId => existingUserIds.includes(userId))));
-    /* @TODO #5371
+    /* @TODO #5371 #6460
     if (validUserIds.length === 0) {
       // Removes permissions and orgs doc
       const permissionRef = await getDocumentRef(`permissions/${org.id}`);
-      return Promise.all([permissionRef.ref.delete(), orgDoc.ref.delete()]);
+      if (verbose) console.log(`Deleting org and permissions ${org.id}.`);
+      return Promise.all([permissionRef.ref.delete(), orgDoc.ref.delete()]); // @TODO #6460 clean org delete with cascade
     } else */if (validUserIds.length !== userIds.length) {
       await orgDoc.ref.update({ userIds: validUserIds });
     }

@@ -272,7 +272,7 @@ describe('DB cleaning script', () => {
     expect(orgD.data().wishlist.length).toEqual(0);
   });
 
-  // @TODO #5371 unskip 
+  // @TODO #5371 unskip
   it.skip('should remove orgs with no users', async () => {
     const testUsers = [
       { uid: 'A', email: 'A@fake.com' },

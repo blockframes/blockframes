@@ -179,12 +179,12 @@ export async function shrinkDb(db: FirebaseFirestore.Firestore) {
 
   const _usedDocumentsForUsers = usersToKeep.map(uid => {
     const user = dbData.users.refs.docs.find(d => d.id === uid);
-    return inspectDocumentRelations(user, collectionData, 'user');
+    return inspectDocumentRelations(user, collectionData, 'users');
   }).reduce((a: DocumentDescriptor[], b: DocumentDescriptor[]) => a.concat(b), []);
 
   const _usedDocumentsForOrgs = orgsToKeep.map(id => {
     const org = dbData.orgs.refs.docs.find(d => d.id === id);
-    return inspectDocumentRelations(org, collectionData, 'org');
+    return inspectDocumentRelations(org, collectionData, 'orgs');
   }).reduce((a: DocumentDescriptor[], b: DocumentDescriptor[]) => a.concat(b), []);
 
   const usedDocuments: DocumentDescriptor[] = _usedDocumentsForUsers
@@ -279,6 +279,8 @@ export async function shrinkDb(db: FirebaseFirestore.Firestore) {
     console.log(`Remaining overall document count VS calculated : ${remainingDocumentCount} / ${usedDocuments.length}`);
     errors = true;
   }
+
+  // @TODO #6460 check consistency errors
 
   return !errors;
 }

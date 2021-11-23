@@ -73,7 +73,7 @@ export function toDate(date: firebase.firestore.Timestamp | Date): Date {
  * Get the value of an item based on a path
  * @example item = movie, key = 'budget.totalBudget'
  */
-export function getValue(item: any, key: string) {
+export function getValue(item: any, key: string) { // @TODO #6460 can be merged with getDeepValue ? + handle foo.bar[].field.to.extract
   const path = key.split('.');
   for (let i = 0; i < path.length; i++) {
     item = item?.[path[i]];

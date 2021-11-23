@@ -6,7 +6,7 @@ import { backupBucket } from '@env';
 import { backupBucket as ciBucketName } from 'env/env.blockframes-ci'
 import { gsutilTransfer } from './commands';
 
-export const latestAnonDbFilename = 'LATEST-ANONYMIZED.jsonl';
+export const latestAnonDbFilename = 'LATEST-ANONYMIZED.jsonl'; // @TODO #6460 ?
 
 export const latestAnonDbDir = 'LATEST-ANON-DB';
 
