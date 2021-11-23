@@ -1,5 +1,8 @@
-<chips-autocomplete scope="languages" [form]="selectedLanguages" [withoutValues]="['all']">
+<chips-autocomplete scope="languages" [form]="form.get('languages')" [withoutValues]="['all']">
   <mat-label>Language & Version</mat-label>
 </chips-autocomplete>
-<static-check-boxes fxLayout="row wrap" fxLayoutGap="12px" scope="movieLanguageTypes" [form]="versions">
-</static-check-boxes>
+<ng-container *ngFor="let item of items | keyvalue: keepOrder">
+  <mat-checkbox [formControl]="form.get('versions').get(item.key)" [value]="item.key" color="primary">
+    {{item.value}}
+  </mat-checkbox>
+</ng-container>

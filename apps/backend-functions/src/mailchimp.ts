@@ -22,6 +22,6 @@ export const registerToNewsletters = async (data: {email: string, tags: Mailchim
   return await mailchimp.lists.addListMember(mailchimpListId, 
     {email_address, 
     tags,
-    status: "unsubscribed"}
+    status: "subscribed"}
   );
 }
