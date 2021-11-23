@@ -1,9 +1,9 @@
 <ng-container *ngIf="event$ |  async as event">
     <!-- View component Layout header -->
     <header class="dark-contrast-theme" fxLayout="column" fxLayoutGap="16px">
-      <a mat-icon-button (click)="goBack()">
+      <button mat-icon-button (click)="goBack()">
         <mat-icon svgIcon="arrow_back"></mat-icon>
-      </a>
+      </button>
       <section fxLayout="column" fxLayoutAlign="center center">
         <h1 class="mat-display-2">{{ event.title }}</h1>
         <ng-container [ngSwitch]="event | eventTime">
