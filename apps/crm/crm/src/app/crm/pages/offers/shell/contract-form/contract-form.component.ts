@@ -36,18 +36,9 @@ export class ContractFormComponent implements OnInit {
   form = new NegotitationForm()
   titles$ = this.service.valueChanges(ref => ref.where('app.catalog.status', '==', 'accepted'));
   currency?: string;
-  indexId: number;
-  termColumns = {
-    'avails.duration': 'Duration',
-    'avails.territories': 'Territories',
-    'avails.medias': 'Medias',
-    'avails.exclusive': 'Exclusivity',
-    'versions': 'Versions',
-    'runs': '# of broadcasts'
-  };
+
 
   constructor(
-    private dialog: MatDialog,
     private route: ActivatedRoute,
     private service: MovieService,
     private snackbar: MatSnackBar,
@@ -75,12 +66,7 @@ export class ContractFormComponent implements OnInit {
     (this.form.get('terms') as FormList<any>).patchAllValue(terms);
 
     // We show the term sent in the Query from the view terms page
-    if (this.route.snapshot.queryParams.termId) {
-      const termId = this.route.snapshot.queryParams.termId;
-      const tabTerms = this.form.get('terms').value;
-      const index = tabTerms.findIndex(value => value.id === termId);
-      this.indexId = index;
-    }
+
   }
 
   async save() {
@@ -101,9 +87,5 @@ export class ContractFormComponent implements OnInit {
       await write.commit();
       this.snackbar.open('Contract updated!', 'ok', { duration: 1000 });
     }
-  }
-
-  openDetails(terms: string, scope: Scope) {
-    this.dialog.open(DetailedTermsComponent, { data: { terms, scope }, maxHeight: '80vh', autoFocus: false });
   }
 }
