@@ -151,8 +151,6 @@ export class FormList<T, Control extends AbstractControl = any> extends FormArra
 
   hardReset(values: GetPartial<T>[]) {
     this.clear()
-    values.forEach(value => {
-      this.add(value)
-    })
+    values.forEach(value => this.add(value));
   }
 }
