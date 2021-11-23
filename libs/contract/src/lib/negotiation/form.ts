@@ -9,7 +9,7 @@ export type Negotiation = {
   terms: Term[]
 }
 
-export class NegotitationForm extends FormEntity<EntityControl<Negotiation>, Negotiation> {
+export class NegotiationForm extends FormEntity<EntityControl<Negotiation>, Negotiation> {
   constructor(initialData?: Negotiation) {
     super({
       price: new FormControl(initialData?.price || 0, Validators.min(0)),

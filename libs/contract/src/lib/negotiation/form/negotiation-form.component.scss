@@ -1,13 +1,25 @@
-form {
-  width: 100%;
+:host {
+  display: flex;
+  flex-direction: column;
 }
 
-h1,p {
-  margin-bottom: 12px;
-  text-align: center;
+header {
+  display: flex;
+  justify-content: space-between;
 }
 
-mat-spinner {
-  margin-left: 8px;
-  display: inline-block;
+languages-form {
+  display: block;
+}
+
+.surface {
+  margin-bottom: 32px;
+}
+
+bf-form-table {
+  margin-bottom: 40px;
+}
+
+span.group-label {
+  cursor: pointer;
 }
