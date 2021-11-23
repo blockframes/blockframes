@@ -13,8 +13,6 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { ActivatedRoute, Router } from '@angular/router';
 import { StoreStatus } from '@blockframes/utils/static-model/types';
 import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
-import { FormList } from '@blockframes/utils/form';
-import { GetKeys } from '@blockframes/utils/static-model';
 
 @Component({
   selector: 'festival-marketplace-title-list',
@@ -84,27 +82,8 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    const {
-      storeStatus, genres, originCountries, productionStatus,
-      sellers, socialGoals, languages, query, minBudget
-    }: MovieSearch = decodeUrl(this.route);
-
-    // patching the formlists and formEntities
-    if (query) this.searchForm.query.patchValue(query)
-    if (minBudget) this.searchForm.minBudget.patchValue(minBudget);
-    if (storeStatus) this.searchForm.storeStatus.patchAllValue(storeStatus);
-    if (genres) this.searchForm.genres.patchAllValue(genres);
-    if (originCountries) this.searchForm.originCountries.patchAllValue(originCountries);
-    if (productionStatus) this.searchForm.productionStatus.patchAllValue(productionStatus);
-    if (sellers) this.searchForm.sellers.patchAllValue(sellers);
-    if (socialGoals) this.searchForm.socialGoals.patchAllValue(socialGoals);
-    if (languages) {
-      (this.searchForm.languages.get('languages') as FormList<GetKeys<'languages'>>).patchAllValue(languages.languages);
-      this.searchForm.languages.get('versions').get('caption').patchValue(languages.versions.caption);
-      this.searchForm.languages.get('versions').get('dubbed').patchValue(languages.versions.dubbed);
-      this.searchForm.languages.get('versions').get('original').patchValue(languages.versions.original);
-      this.searchForm.languages.get('versions').get('subtitle').patchValue(languages.versions.subtitle);
-    }
+    const decodedData: MovieSearch = decodeUrl(this.route);
+    this.searchForm.hardReset(decodedData)
 
     const sub = this.searchForm.valueChanges.pipe(
       debounceTime(1000),

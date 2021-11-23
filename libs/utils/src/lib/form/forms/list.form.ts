@@ -148,4 +148,11 @@ export class FormList<T, Control extends AbstractControl = any> extends FormArra
   ) {
     super.patchValue(value, options)
   }
+
+  hardReset(values: GetPartial<T>[]) {
+    this.clear()
+    values.forEach(value => {
+      this.add(value)
+    })
+  }
 }
