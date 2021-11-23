@@ -1,7 +1,7 @@
 <h2>Informations</h2>
 <mat-card>
   <h5>Access</h5>
-  <span>{{ event.id }} </span>
+  <span>{{ event.id }}</span>
   <crm-go-to type="event" [id]="event.id" [catalog]="false"></crm-go-to>
   <h5>Owner</h5>
   <ng-container *ngIf="org">
@@ -22,9 +22,4 @@
   <p>{{ event.accessibility | toLabel:'accessibility' }}</p>
   <h5>Date & Time</h5>
   <pre class="mat-body-1">{{ event | eventRange }}</pre>
-</mat-card>
-
-<h2>Invitations</h2>
-<mat-card *ngIf="invitations$ | async as invitations">
-  <invitation-guest-table [invitations]="invitations"></invitation-guest-table>
 </mat-card>
