@@ -9,6 +9,7 @@ import { AngularFireFunctions } from '@angular/fire/functions';
 import { RequestDemoRole } from '@blockframes/utils/request-demo';
 import { ThemeService } from '@blockframes/ui/theme';
 import { testEmail } from "@blockframes/e2e/utils/env";
+import { scrollIntoView } from '@blockframes/utils/browser/utils';
 
 @Directive({
   selector: 'landing-header, [landingHeader]',
@@ -82,6 +83,10 @@ export class LandingShellComponent implements OnDestroy {
     private cdr: ChangeDetectorRef
   ) {
     theme.setTheme('light')
+  }
+
+  scrollToTop() {
+    scrollIntoView(document.getElementsByTagName("header")[0]);
   }
 
   ngOnDestroy() {
