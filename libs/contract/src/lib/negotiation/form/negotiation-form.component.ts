@@ -8,20 +8,18 @@ import { ActivatedRoute } from '@angular/router';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 import { Movie } from '@blockframes/movie/+state';
 import { Scope } from '@blockframes/utils/static-model';
-import { NegotitationForm } from '../form';
+import { NegotiationForm } from '../form';
 
 @Component({
-  selector: 'negotiation-form',
+  selector: 'negotiation-form[form]',
   templateUrl: 'negotiation-form.component.html',
   styleUrls: ['./negotiation-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NegotiationFormComponent implements OnInit {
-  @Input() form: NegotitationForm
+  @Input() form: NegotiationForm
   @Input() title?: Movie;
   @Input() currency?: string;
-
-  @Output() save = new EventEmitter()
 
   indexId: number;
   termColumns = {
@@ -50,9 +48,4 @@ export class NegotiationFormComponent implements OnInit {
   openDetails(terms: string, scope: Scope) {
     this.dialog.open(DetailedTermsComponent, { data: { terms, scope }, maxHeight: '80vh', autoFocus: false });
   }
-
-  onSave() {
-    this.save.emit(null)
-  }
-
 }

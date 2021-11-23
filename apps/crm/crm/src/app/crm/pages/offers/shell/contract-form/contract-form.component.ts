@@ -8,15 +8,11 @@ import { Contract, ContractService } from '@blockframes/contract/contract/+state
 import { Term, TermService } from "@blockframes/contract/term/+state";
 import { OfferService } from '@blockframes/contract/offer/+state';
 
-// Components
-import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
-
 // Forms
 import { FormList } from '@blockframes/utils/form';
-import { Scope } from '@blockframes/utils/static-model';
-import { NegotitationForm } from '@blockframes/contract/negotiation/form'
+import { NegotiationForm } from '@blockframes/contract/negotiation/form'
+
 // Material
-import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 function toTerm({ id, avails, runs, versions }, contractId: string): Partial<Term> {
@@ -33,7 +29,7 @@ export class ContractFormComponent implements OnInit {
   private contract?: Contract;
   private income?: Income;
   title?: Movie;
-  form = new NegotitationForm()
+  form = new NegotiationForm()
   titles$ = this.service.valueChanges(ref => ref.where('app.catalog.status', '==', 'accepted'));
   currency?: string;
 
@@ -64,9 +60,6 @@ export class ContractFormComponent implements OnInit {
     this.currency = offer?.currency;
     const terms = await this.termService.getValue(contract.termIds);
     (this.form.get('terms') as FormList<any>).patchAllValue(terms);
-
-    // We show the term sent in the Query from the view terms page
-
   }
 
   async save() {
