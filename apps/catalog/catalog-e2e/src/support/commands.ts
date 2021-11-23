@@ -33,19 +33,17 @@ import { App } from 'libs/utils/src/lib/apps';
 
 //Init the app
 const app = firebase.initializeApp(firebaseConfig('catalog'));
-const auth = app.auth();
-const db = app.firestore();
 
 const login = (email: string, password: string) => {
-  return auth.signInWithEmailAndPassword(email, password);
+  return app.auth().signInWithEmailAndPassword(email, password);
 }
 
 const logout = () => {
-  return auth.signOut();
+  return app.auth().signOut();
 }
 
 const acceptMovieById = (appName: App, movieId: string) => {
-  const movieRef = db.collection('movies').doc(movieId);
+  const movieRef = app.firestore().collection('movies').doc(movieId);
   return movieRef.update(`app.${appName}`, {
     access: true,
     status: 'accepted',
