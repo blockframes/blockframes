@@ -157,15 +157,16 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
   get runningTime() { return this.get('runningTime'); }
 
   isEmpty() {
+    const emptyVersions = !this.languages.value?.versions?.caption &&
+      !this.languages.value?.versions?.dubbed &&
+      !this.languages.value?.versions?.original;
+    const emptyLanguages = !(this.languages.value?.languages?.length === 0) || emptyVersions
     return (
       !this.query.value?.trim() &&
       this.storeStatus.value?.length === 0 &&
       this.genres.value?.length === 0 &&
       this.originCountries.value?.length === 0 &&
-      (!(this.languages.value?.languages?.length === 0) ||
-        (!this.languages.value?.versions?.caption &&
-          !this.languages.value?.versions?.dubbed &&
-          !this.languages.value?.versions?.original)) &&
+      emptyLanguages &&
       !this.languages.value?.versions?.subtitle &&
       this.productionStatus?.value.length === 0 &&
       this.minBudget?.value === 0 &&
