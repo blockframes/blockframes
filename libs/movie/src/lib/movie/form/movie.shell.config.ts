@@ -68,7 +68,7 @@ export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
       switchMap((id: string) => this.service.getValue(id)),
       tap(movie => {
         if (this.form.release.get('status').value) {
-          movie.release.status = this.form.release.get('status').value
+          movie.release.status = this.form.release.get('status').value;
         }
 
         if (this.form.runningTime.get('status').value) {
@@ -86,7 +86,11 @@ export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
       filter(status => !!status),
       tap(status => {
         for (const path in valueByProdStatus[status]) {
-          this.form.get(path as any).setValue(valueByProdStatus[status][path]);
+          const formHasValue = this.form.get(path as any).value;
+          const configHasValue = valueByProdStatus[status][path];
+          if (configHasValue || !formHasValue) {
+            this.form.get(path as any).setValue(valueByProdStatus[status][path]);
+          }
         }
       })
     );
