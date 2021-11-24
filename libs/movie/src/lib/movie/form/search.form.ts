@@ -114,11 +114,11 @@ function createMovieSearchControl(search: MovieSearch) {
     genres: FormList.factory<GetKeys<'genres'>>(search.genres),
     originCountries: FormList.factory<Territory>(search.originCountries),
     languages: createLanguageVersionControl(search.languages),
-    productionStatus: FormList.factory<ProductionStatus>(search.productionStatus),
+    productionStatus: new FormControl(search.productionStatus),
     minBudget: new FormControl(search.minBudget),
     minReleaseYear: new FormControl(search.minReleaseYear),
     sellers: FormList.factory<AlgoliaOrganization>(search.sellers),
-    socialGoals: FormList.factory(search.socialGoals),
+    socialGoals: new FormControl(search.socialGoals),
     contentType: new FormControl(search.contentType),
     runningTime: new FormControl(search.runningTime),
     // Max is 1000, see docs: https://www.algolia.com/doc/api-reference/api-parameters/hitsPerPage/

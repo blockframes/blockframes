@@ -1,19 +1,6 @@
-import {
-  Component,
-  Input,
-  ChangeDetectionStrategy,
-  Output,
-  EventEmitter,
-  OnInit,
-  OnDestroy,
-  QueryList,
-  ViewChildren
-} from '@angular/core';
-import { FormList } from '@blockframes/utils/form';
-import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
+import { Component, Input, ChangeDetectionStrategy, OnInit, } from '@angular/core';
 import { staticModel, Scope } from '@blockframes/utils/static-model';
-import { Subscription } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: '[form][scope] static-check-boxes',
@@ -21,11 +8,7 @@ import { filter } from 'rxjs/operators';
   styleUrls: ['./check-boxes.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class StaticCheckBoxesComponent implements OnInit, OnDestroy {
-  private sub: Subscription;
-
-  @ViewChildren(MatCheckbox) checkboxes: QueryList<MatCheckbox>
-
+export class StaticCheckBoxesComponent implements OnInit {
   /**
    * The static scope or constant to display
    * @example
@@ -34,41 +17,16 @@ export class StaticCheckBoxesComponent implements OnInit, OnDestroy {
   @Input() scope: Scope;
 
   // The form to connect to
-  @Input() form: FormList<string>;
-
-  @Output() added = new EventEmitter<string>();
-  @Output() removed = new EventEmitter<number>();
+  @Input() form: FormControl;
 
   public items: unknown;
   public keepOrder = () => 1;
 
   ngOnInit() {
     this.items = staticModel[this.scope];
-    this.sub = this.form.valueChanges.pipe(
-      filter(value => !value.length) // Only trigger when value is empty
-    ).subscribe(() => this.checkboxes.forEach(box => box.checked = false))
   }
 
   isCheckedByDefault(key: string) {
     return this.form.value.includes(key);
-  }
-
-  public handleChange({checked, source}: MatCheckboxChange) {
-    if (checked) {
-      this.form.add(source.value);
-      this.form.markAsDirty();
-      this.added.emit(source.value);
-    } else {
-      const index = this.form.controls.findIndex(control => control.value === source.value);
-      this.form.removeAt(index);
-      if (!this.form.controls.length) {
-        this.form.markAsPristine();
-      }
-      this.removed.emit(index);
-    }
-  }
-
-  ngOnDestroy() {
-    this.sub?.unsubscribe()
   }
 }
