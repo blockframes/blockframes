@@ -1,7 +1,7 @@
 
 import { GetKeys } from '@blockframes/utils/static-model/static-model';
 import { FormControl, Validators } from '@angular/forms';
-import { EntityControl, FormEntity, FormList } from '@blockframes/utils/form';
+import { EntityControl, FormEntity, FormList, FormStaticValueArray } from '@blockframes/utils/form';
 import { algolia } from '@env';
 import algoliasearch, { SearchIndex } from 'algoliasearch';
 import { StoreStatus, ProductionStatus, Territory, Genre, SocialGoal, ContentType } from '@blockframes/utils/static-model/types';
@@ -114,11 +114,11 @@ function createMovieSearchControl(search: MovieSearch) {
     genres: FormList.factory<GetKeys<'genres'>>(search.genres),
     originCountries: FormList.factory<Territory>(search.originCountries),
     languages: createLanguageVersionControl(search.languages),
-    productionStatus: FormList.factory<ProductionStatus>(search.productionStatus),
+    productionStatus: new FormStaticValueArray<'productionStatus'>(search.productionStatus, 'productionStatus'),
     minBudget: new FormControl(search.minBudget),
     minReleaseYear: new FormControl(search.minReleaseYear),
     sellers: FormList.factory<AlgoliaOrganization>(search.sellers),
-    socialGoals: FormList.factory(search.socialGoals),
+    socialGoals: new FormStaticValueArray<'socialGoals'>(search.socialGoals, 'socialGoals'),
     contentType: new FormControl(search.contentType),
     runningTime: new FormControl(search.runningTime),
     // Max is 1000, see docs: https://www.algolia.com/doc/api-reference/api-parameters/hitsPerPage/

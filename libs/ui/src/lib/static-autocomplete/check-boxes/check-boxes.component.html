@@ -1,5 +1,7 @@
-<ng-container *ngFor="let item of items | keyvalue: keepOrder">
-  <mat-checkbox (change)="handleChange($event)" [checked]="isCheckedByDefault(item.key)" [value]="item.key" color="primary">
-    {{item.value}}
-  </mat-checkbox>
-</ng-container>
+<mat-selection-list [formControl]="form" [multiple]="multiple">
+  <ng-container *ngFor="let item of items | keyvalue: keepOrder">
+    <mat-list-option checkboxPosition="before" [value]="item.key" color="primary">
+      {{item.value}}
+    </mat-list-option>
+  </ng-container>
+</mat-selection-list>
