@@ -25,8 +25,4 @@ export class StaticCheckBoxesComponent implements OnInit {
   ngOnInit() {
     this.items = staticModel[this.scope];
   }
-
-  isCheckedByDefault(key: string) {
-    return this.form.value.includes(key);
-  }
 }
