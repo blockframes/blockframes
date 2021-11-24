@@ -73,10 +73,10 @@ export const getOrInviteUserByMail = async (
       let templateId = credsTemplates.joinOrganization;
       if (invitation.type === 'attendEvent') {
         templateId = eventData.accessibility !== 'private' ? credsTemplates.attendNonPrivateEvent : credsTemplates.attendEvent;
-      }
 
-      if (invitation.mode === 'invitation' && eventData?.accessibility !== 'private') {
-        invitationStatus = 'accepted';
+        if (invitation.mode === 'invitation' && eventData?.accessibility !== 'private') {
+          invitationStatus = 'accepted';
+        }
       }
 
       const template = userInvite(toUser, orgEmailData, urlToUse, templateId, eventData);

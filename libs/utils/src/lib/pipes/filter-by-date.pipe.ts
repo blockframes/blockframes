@@ -86,7 +86,7 @@ export class LabelByDatePipe implements PipeTransform {
     const fromDate = add({ [type]: from }, now);
     switch (type) {
       case 'days': return formatDate(fromDate, 'EEEE', 'en');
-      case 'weeks': return formatDate(fromDate, 'MMMM d', 'en');
+      case 'weeks': return `Week of ${formatDate(fromDate, 'MMMM d', 'en')}`;
       case 'years': return formatDate(fromDate, 'longDate', 'en');
     }
   }
