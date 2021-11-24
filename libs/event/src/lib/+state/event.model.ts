@@ -81,6 +81,7 @@ export function createScreening(screening: Partial<Screening>): Screening {
   return {
     titleId: '',
     description: '',
+    organizerUid: '',
     ...screening
   }
 }
