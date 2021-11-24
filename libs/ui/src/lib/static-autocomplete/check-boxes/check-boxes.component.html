@@ -1,5 +1,7 @@
 <mat-selection-list [formControl]="form">
-  <mat-list-option *ngFor="let item of items | keyvalue: keepOrder" checkboxPosition="before" [value]="item.key" color="primary">
-    {{item.value}}
-  </mat-list-option>
+  <ng-container *ngFor="let item of items | keyvalue: keepOrder">
+    <mat-list-option checkboxPosition="before" [value]="item.key" color="primary">
+      {{item.value}}
+    </mat-list-option>
+  </ng-container>
 </mat-selection-list>
