@@ -15,11 +15,12 @@ export function sendRequest<T = unknown>(options: RequestOptions, data?: unknown
 		const req = request(options.method === 'POST' ? postOptions : options, res => {
       let body = '';
       res.on('data', chunk => body += chunk);
-      res.on('end', () => resolve(JSON.parse(body) as T));
+      res.on('end', () => resolve(body ? JSON.parse(body) : undefined as T));
       res.on('error', e => reject(e))
 		});
     req.on('error', e => reject(e));
     if (options.method === 'POST') req.write(postData);
+    if (options.method === 'DELETE') req.on('finish', () => resolve(undefined))
 
     req.end();
 	});
