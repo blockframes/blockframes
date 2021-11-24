@@ -496,6 +496,24 @@ service cloud.firestore {
     }
 
 
+    ////////////////////////////////
+    // NEGOTIATION RULES            //
+    ////////////////////////////////
+
+    function isUpdatingOnlyStatus(){
+      return incomingData().diff(existingData()).affectedKeys().hasOnly(['status']);
+    }
+
+    match /negotiation/{negotiationId} {
+      allow create: if (userOrgId() == existingData().createdByOrg) && notInMaintenance();
+      allow read: if (userOrgId() in existingData().stakeholders) && notInMaintenance();
+      allow update: if (userOrgId() != existingData().createdByOrg)
+        && (userOrgId() in existingData().stakeholders)
+        && isUpdatingOnlyStatus() && notInMaintenance();
+      allow delete: if false;
+    }
+
+
     /////////////////////////////////////////////////////////////////////////////////
     ///                                  FUNCTIONS                                ///
     ///                  set of functions to help building rules                  ///

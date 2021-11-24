@@ -1,4 +1,4 @@
-import { Holdback } from '@blockframes/contract/contract/+state/contract.firestore';
+import { ContractStatus, Holdback } from '@blockframes/contract/contract/+state/contract.firestore';
 import { BucketTerm } from '@blockframes/contract/term/+state/term.firestore';
 import type { MovieCurrency } from '@blockframes/utils/static-model';
 
@@ -25,4 +25,5 @@ export interface BucketContract {
   terms: BucketTerm[];
   specificity: string;
   holdbacks: Holdback<Date>[];
+  status:ContractStatus;
 }
