@@ -1,6 +1,7 @@
 import { Component, Input, ChangeDetectionStrategy, OnInit, } from '@angular/core';
 import { staticModel, Scope } from '@blockframes/utils/static-model';
-import { FormControl } from '@angular/forms';
+import { FormStaticValueArray } from '@blockframes/utils/form';
+import { boolean } from '@blockframes/utils/decorators/decorators';
 
 @Component({
   selector: '[form][scope] static-check-boxes',
@@ -15,9 +16,9 @@ export class StaticCheckBoxesComponent implements OnInit {
    * <static-check-boxes scope="territories" ...
    */
   @Input() scope: Scope;
-
+  @Input() @boolean multiple = true;
   // The form to connect to
-  @Input() form: FormControl;
+  @Input() form: FormStaticValueArray<Scope>;
 
   public items: unknown;
   public keepOrder = () => 1;
