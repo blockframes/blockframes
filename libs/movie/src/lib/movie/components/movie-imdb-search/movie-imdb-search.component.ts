@@ -29,7 +29,7 @@ export class MovieImdbSearchComponent implements OnInit {
   public formSubmitted = false;
   public searchType = 'exact';
 
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(
     private dialogRef: MatDialogRef<MovieImdbSearchComponent>,
