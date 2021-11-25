@@ -15,13 +15,9 @@ export class NegotiationService extends CollectionService<NegotiationState> {
     super(store)
   }
 
-  formatFromFirestore(_negotiation: Negotiation<firebase.firestore.Timestamp>) {
+  formatFromFirestore(_negotiation: Negotiation<firebase.firestore.Timestamp>): Negotiation<Date> {
     const _meta = formatDocumentMetaFromFirestore(_negotiation?._meta);
-    const negotiation: Negotiation<Date> = {
-      ..._negotiation,
-      _meta
-    }
-    return negotiation;
+    return { ..._negotiation, _meta };
   }
 }
 

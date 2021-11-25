@@ -1,7 +1,11 @@
 import { BucketContract } from "@blockframes/contract/bucket/+state";
-import { ContractStatus } from "@blockframes/contract/contract/+state/contract.firestore";
 import { DocumentMeta } from "@blockframes/utils/models-meta";
 import type firebase from 'firebase'
+
+export const negotiationStatus = ['pending', 'accepted', 'declined'] as const;
+
+export type NegotiationStatus = typeof negotiationStatus[number];
+
 
 // We extends the BucketContract with some information for rules
 export interface Negotiation<T extends Date | firebase.firestore.Timestamp = Date> extends BucketContract {
@@ -15,5 +19,5 @@ export interface Negotiation<T extends Date | firebase.firestore.Timestamp = Dat
   sellerId: string;
   /** The org that want to buy the title */
   buyerId: string;
-  status:ContractStatus;
+  status: NegotiationStatus;
 }
