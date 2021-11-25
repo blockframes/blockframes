@@ -4,7 +4,7 @@ import type { Media, Territory } from "@blockframes/utils/static-model";
 import { Duration } from '../../term/+state/term.firestore';
 import { Timestamp } from "@blockframes/utils/common-interfaces/timestamp";
 
-export const contractStatus = ['pending', 'accepted', 'declined', 'archived'] as const;
+export const contractStatus = ['pending', 'accepted', 'declined', 'archived', 'negotiating'] as const;
 
 export type ContractStatus = typeof contractStatus[number];
 
