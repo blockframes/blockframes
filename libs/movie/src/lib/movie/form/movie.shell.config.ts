@@ -53,7 +53,7 @@ function cleanPromotionalMedia(promotional: MoviePromotionalElements): MovieProm
 
 @Injectable({ providedIn: 'root' })
 export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
-  form: MovieForm;
+  form = new MovieForm(this.query.getActive());
   name = 'Title'
   constructor(
     private query: MovieQuery,
@@ -63,7 +63,6 @@ export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
   ) { }
 
   onInit(): Observable<unknown>[] {
-    this.form = new MovieForm(this.query.getActive());
     // Update form on change
     const onMovieChanges = this.route.selectParams('movieId').pipe(
       switchMap((id: string) => this.service.getValue(id)),
