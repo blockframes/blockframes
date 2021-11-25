@@ -41,13 +41,14 @@ interface FieldsConfig {
   };
 }
 
+type ModuleOrUndefined = Module | '';
 function formatAccess(value: string, errorData: { field: string, name: string }) {
-  const rawModules = value.split(separator).map(m => m.trim().toLowerCase()) as Module[];
-  const wrongValue = rawModules.some(module => !modules.includes(module));
+  const rawModules = value.split(separator).map(m => m.trim().toLowerCase()) as ModuleOrUndefined[];
+  const wrongValue = rawModules.some(module => ![...modules, ''].includes(module));
   if (wrongValue) throw new WrongValueError(errorData);
   const access: Partial<ModuleAccess> = {};
   for (const module of modules) access[module] = false;
-  for (const module of rawModules) access[module] = true;
+  for (const module of rawModules) if (module !== '') access[module] = true;
   return access as ModuleAccess;
 }
 
@@ -120,7 +121,7 @@ export async function formatOrg(sheetTab: SheetTab, organizationService: Organiz
       const lower = value.toLowerCase();
       if (!lower) throw new MandatoryError({ field: 'superAdmin.email', name: 'Admin Email' });
 
-      const exist = await getUser({ email: lower}, userService, userCache);
+      const exist = await getUser({ email: lower }, userService, userCache);
       if (exist) throw new AlreadyExistError({ field: 'superAdmin.email', name: 'Admin Email' });
 
       return lower;
@@ -140,7 +141,7 @@ export async function formatOrg(sheetTab: SheetTab, organizationService: Organiz
 
     const superAdmin = createUser(data.superAdmin);
 
-    orgs.push({ errors: [ ...errors, ...warnings ], org, superAdmin, newOrg: true });
+    orgs.push({ errors: [...errors, ...warnings], org, superAdmin, newOrg: true });
   }
 
   return orgs;
