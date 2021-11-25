@@ -21,11 +21,7 @@ export const contractStatus = {
    * Starting from this status, the contract is visible by creator (but not editable anymore) and by admins
    */
   submitted: 'Submitted',
-  /**
-   * @dev when an admin checked a "submitted" contract and all seems good.
-   * Starting from this status, contract is visible for every parties
-   */
-  undernegotiation: 'Under negotiation',
+  negotiating: 'Negotiation',
   pending: ' New',
 } as const
 
