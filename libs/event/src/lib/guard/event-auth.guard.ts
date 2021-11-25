@@ -41,7 +41,7 @@ export class EventAuthGuard extends CollectionGuard<AuthState> {
 
             // Check that org is valid
             const org = await this.orgService.getValue(user.orgId);
-            if (org.status === 'pending') {
+            if (org.status !== 'accepted') {
               return this.router.navigate(['/c/organization/create-congratulations']);
             }
 
