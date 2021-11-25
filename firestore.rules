@@ -376,20 +376,14 @@ service cloud.firestore {
       // NEGOTIATION RULES            //
       ////////////////////////////////
 
-      function isUpdatingOnlyStatus(){
-        return incomingData().diff(existingData()).affectedKeys().hasOnly(['status']);
-      }
-
       match /negotiations/{negotiationId} {
         allow create: if (userOrgId() == incomingData().createdByOrg) && notInMaintenance();
         allow read: if (userOrgId() in existingData().stakeholders) && notInMaintenance();
         allow update: if (userOrgId() != existingData().createdByOrg)
           && (userOrgId() in existingData().stakeholders)
-          && isUpdatingOnlyStatus() && notInMaintenance();
+          && onlyChange(['status']) && notInMaintenance();
         allow delete: if false;
       }
-
-
     }
 
     match /terms/{termId} {
@@ -665,6 +659,11 @@ service cloud.firestore {
       return ( incomingData()[fieldArray[0]][fieldArray[1]].keys().hasAll([fieldArray[2]]) && (resource == null || !existingData()[fieldArray[0]][fieldArray[1]].keys().hasAll([fieldArray[2]])) )
         || ( incomingData()[fieldArray[0]].keys().hasAll([fieldArray[1]]) && (resource == null || !existingData()[fieldArray[0]].keys().hasAll([fieldArray[1]])) )
         || ( incomingData().keys().hasAll([fieldArray[0]]) && (resource == null || !existingData().keys().hasAll([fieldArray[0]])) );
+    }
+
+    //updating only the specified fields?
+    function onlyChange(fields) {
+      return incomingData().diff(existingData()).affectedKeys().hasOnly(fields);
     }
 
     // The field is removed
