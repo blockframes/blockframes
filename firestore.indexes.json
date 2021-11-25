@@ -357,22 +357,21 @@
           "order": "ASCENDING"
         }
       ]
-    }
-  ],
-  "fieldOverrides": [
+    },
     {
-      "collectionGroup": "negotiation",
-      "fieldPath": "_meta.createdAt",
-      "indexes": [
+      "collectionGroup": "negotiations",
+      "queryScope": "COLLECTION",
+      "fields": [
         {
-          "queryScope": "COLLECTION",
-          "order": "DESCENDING"
+          "fieldPath": "stakeholders",
+          "arrayConfig": "CONTAINS"
         },
         {
-          "queryScope": "COLLECTION",
-          "order": "ASCENDING"
+          "fieldPath": "_meta.createdAt",
+          "order": "DESCENDING"
         }
       ]
     }
-  ]
+  ],
+  "fieldOverrides": []
 }
