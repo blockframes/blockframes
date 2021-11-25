@@ -1,0 +1,10 @@
+<h1>Standard Terms</h1>
+<span>These are the Standard Terms applicable to <br /> all Offers made through Archipel Content.</span>
+
+<a color="primary" mat-flat-button [href]="pdfLink" target="_blank" class="download-link">
+  <mat-icon svgIcon="cloud_upload"></mat-icon>
+  <span>Download .pdf</span>
+</a>
+<object [data]="pdfLink" type="application/pdf">
+  <iframe [src]="pdfLink">Loading pdf</iframe>
+</object>

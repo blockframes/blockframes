@@ -17,6 +17,10 @@
         <mat-icon matListIcon svgIcon="document"></mat-icon>
         <span matLine><b>My Sales</b></span>
       </a>
+      <a mat-list-item routerLink="standard-terms" routerLinkActive="active">
+        <mat-icon matListIcon svgIcon="document"></mat-icon>
+        <span matLine><b>Standard Terms</b></span>
+      </a>
       <ng-container *ngIf="org$ | async | canAccess: 'marketplace':'catalog'">
         <mat-divider></mat-divider>
         <a mat-list-item routerLink="/c/o/marketplace/home" routerLinkActive="active">

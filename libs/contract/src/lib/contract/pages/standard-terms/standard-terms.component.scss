@@ -1,0 +1,19 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 24px;
+  height: 100vh;
+}
+
+a,
+object {
+  margin-top: 24px;
+}
+
+object {
+  flex: 1 1 100%;
+  width: 100%;
+}

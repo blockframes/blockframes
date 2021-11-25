@@ -154,6 +154,10 @@ const routes: Routes = [
         },
       }]
     }]
+  },
+  {
+    path:'standard-terms',
+    loadChildren: () => import('@blockframes/contract/contract/pages/standard-terms/standard-terms.module').then(m => m.StandardTermsModule)
   }
 ];
 
