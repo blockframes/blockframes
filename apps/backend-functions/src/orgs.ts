@@ -126,7 +126,7 @@ export async function onOrganizationUpdate(change: Change<FirebaseFirestore.Docu
   await notifyOnOrgMemberChanges(before, after);
 
   // Deploy org's smart-contract
-  const becomeAccepted = before.status === 'pending' && after.status === 'accepted';
+  const becomeAccepted = before.status !== 'accepted' && after.status === 'accepted';
 
   if (becomeAccepted) {
     const appAccess = getOrgAppAccess(after);
@@ -144,7 +144,7 @@ export async function onOrganizationUpdate(change: Change<FirebaseFirestore.Docu
   // Update algolia's index
 
   /* If an org gets his accepted status removed, we want to remove it also from all the indices on algolia */
-  if (before.status === 'accepted' && after.status === 'pending') {
+  if (before.status === 'accepted' && after.status !== 'accepted') {
     const promises = app.map(access => deleteObject(algolia.indexNameOrganizations[access], after.id) as Promise<boolean>)
     await Promise.all(promises)
   }
