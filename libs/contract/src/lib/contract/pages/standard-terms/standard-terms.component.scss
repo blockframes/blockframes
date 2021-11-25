@@ -16,4 +16,5 @@ object {
 object {
   flex: 1 1 100%;
   width: 100%;
+  max-width: 1920px; // equal to "lg" in Angular breakpoints
 }

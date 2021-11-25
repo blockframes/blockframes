@@ -20,8 +20,7 @@ export class StandardTermsComponent {
    */
   public get pdfLink() {
     const { protocol, hostname } = window.location;
-    let link = `${protocol}${hostname}/${this._pdfLink}`;
-    link = `https://docs.google.com/viewer?url=https://www.openska.com/pdf/formation-laravel.pdf&embedded=true`;
+    const link = `${protocol}${hostname}/${this._pdfLink}`;
     return this.sanitizer.bypassSecurityTrustResourceUrl(link);
   }
   constructor(protected sanitizer: DomSanitizer) { }
