@@ -2,9 +2,8 @@ import { InvitationOrUndefined, InvitationDocument } from "@blockframes/invitati
 import { wasCreated, wasAccepted, wasDeclined, hasUserAnOrgOrIsAlreadyInvited } from "./utils";
 import { NotificationDocument, NotificationTypes, OrganizationDocument } from "../../data/types";
 import { createNotification, triggerNotifications } from "../../notification";
-import { getUser } from "../utils";
 import { createDocumentMeta, createPublicInvitationDocument, getAdminIds, getDocument } from "../../data/internals";
-import { EventDocument, EventMeta } from "@blockframes/event/+state/event.firestore";
+import { EventDocument, EventMeta, Meeting, Screening } from "@blockframes/event/+state/event.firestore";
 import * as admin from 'firebase-admin';
 
 /**
@@ -18,7 +17,7 @@ async function onInvitationToAnEventCreate(invitation: InvitationDocument) {
   }
 
   // Fetch event and verify if it exists
-  const event = await getDocument<EventDocument<EventMeta>>(`events/${invitation.eventId}`);
+  const event = await getDocument(`events/${invitation.eventId}`) as EventDocument<Meeting | Screening>;
   if (!event) {
     throw new Error(`Event ${invitation.eventId} doesn't exist !`);
   }
@@ -43,9 +42,12 @@ async function onInvitationToAnEventCreate(invitation: InvitationDocument) {
 
     recipients.push(invitation.toUser.uid);
   } else if (invitation.toOrg) {
-    const adminIds = await getAdminIds(invitation.toOrg.id);
-    const admins = await Promise.all(adminIds.map(i => getUser(i)));
-    admins.forEach(a => recipients.push(a.uid));
+    const ids = await getAdminIds(invitation.toOrg.id);
+    if (event.meta?.organizerUid) {
+      ids.push(event.meta?.organizerUid);
+    }
+    Array.from(new Set(ids)).forEach(uid => recipients.push(uid));
+    
   } else {
     throw new Error('Who is this invitation for ?');
   }
@@ -118,8 +120,13 @@ async function onInvitationToAnEventAcceptedOrRejected(invitation: InvitationDoc
     notifications.push(notification);
   } else if (!!invitation.fromOrg && invitation.mode === 'invitation') {
     const org = await getDocument<OrganizationDocument>(`orgs/${invitation.fromOrg.id}`);
-    const adminIds = await getAdminIds(org.id);
-    adminIds.forEach(toUserId => {
+    const ids = await getAdminIds(org.id);
+
+    const event = await getDocument(`events/${invitation.eventId}`) as EventDocument<Meeting | Screening>;
+    if (event.meta?.organizerUid) {
+      ids.push(event.meta?.organizerUid);
+    }
+    Array.from(new Set(ids)).forEach(toUserId => {
       const notification = createNotification({
         toUserId,
         docId: invitation.eventId,
