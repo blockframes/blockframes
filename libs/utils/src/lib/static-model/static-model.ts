@@ -429,6 +429,7 @@ export const orgActivity = {
 /** Status of an Organization, set to pending by default when an Organization is created. */
 export const organizationStatus = {
   pending: 'Pending',
+  onhold: 'On hold',
   accepted: 'Accepted'
 } as const
 

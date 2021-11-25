@@ -76,6 +76,7 @@ export function createScreeningControl(params?: Partial<Screening>) {
   return {
     titleId: new FormControl(screening.titleId),
     description: new FormControl(screening.description, [Validators.maxLength(500)]),
+    organizerUid: new FormControl(screening.organizerUid)
   }
 }
 
