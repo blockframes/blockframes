@@ -454,7 +454,14 @@ jobs:
 workflows:
   run-anon-db-and-store-golden-data:
     jobs:
+      - copy-storage-from-prod:
+          filters:
+            branches:
+              only:
+                - anon-db
       - push-anon-db-to-ci:
+          requires:
+            - copy-storage-from-prod
           filters:
             branches:
               only:
