@@ -37,7 +37,7 @@ describe('DB cleaning script', () => {
   });
 
   it('should return true when cleanDeprecatedData is called', async () => {
-    const output = await cleanDeprecatedData(db, adminAuth);
+    const output = await cleanDeprecatedData(db, adminAuth, { verbose: false });
     expect(output).toBeTruthy();
   });
 
@@ -52,7 +52,11 @@ describe('DB cleaning script', () => {
 
     await populate('users', [testUser1, testUser2]);
     await populate('orgs', [testOrg1]);
-    adminAuth.users = [testUser1, testUser2];
+
+    adminAuth.users = [
+      { uid: 'A', email: 'johndoe@fake.com', providerData: [{ uid: 'A', email: 'johndoe@fake.com', providerId: 'password' }] },
+      { uid: 'B', email: 'johnmcclain@fake.com', providerData: [{ uid: 'B', email: 'johnmcclain@fake.com', providerId: 'password' }] }
+    ];
 
     const [organizations, usersBefore] = await Promise.all([
       getCollectionRef('orgs'),
@@ -89,26 +93,29 @@ describe('DB cleaning script', () => {
 
     // See auth users
     adminAuth.users = [
-      { uid: 'A', email: 'A@fake.com' },
-      { uid: 'B', email: 'B@fake.com' },
-      { uid: 'C', email: 'C@fake.com' },
+      { uid: 'A', email: 'A@fake.com', providerData: [{ uid: 'A', email: 'A@fake.com', providerId: 'password' }] },
+      { uid: 'B', email: 'B@fake.com', providerData: [{ uid: 'B', email: 'B@fake.com', providerId: 'password' }] },
+      { uid: 'C', email: 'C@fake.com', providerData: [{ uid: 'C', email: 'C@fake.com', providerId: 'password' }] },
     ];
 
     // Add a new auth user that is not on db
-    const fakeAuthUser = { uid: 'D', email: 'D@fake.com' };
-
+    const fakeAuthUser = { uid: 'D', email: 'D@fake.com', providerData: [{ uid: 'D', email: 'D@fake.com', providerId: 'password' }] };
     adminAuth.users.push(fakeAuthUser);
 
+    // Add an anonymous user that should not be deleted even if not on DB
+    const anonymousUser = { uid: 'anonymous', providerData: [] };
+    adminAuth.users.push(anonymousUser);
+
     const authBefore = await adminAuth.listUsers();
-    expect(authBefore.users.length).toEqual(4);
+    expect(authBefore.users.length).toEqual(5);
 
     await removeUnexpectedUsers(usersBefore.docs.map(u => u.data() as UserConfig), adminAuth);
 
     // An user should have been removed from auth because it is not in DB.
     const authAfter = await adminAuth.listUsers();
-    expect(authAfter.users.length).toEqual(3);
+    expect(authAfter.users.length).toEqual(4);
 
-    // We check if the good user (abc123) have been removed.
+    // We check if the good user (uid: 'D') have been removed.
     const user = await adminAuth.getUserByEmail(fakeAuthUser.email);
     expect(user).toEqual(undefined);
 
@@ -631,7 +638,7 @@ describe('DB cleaning script', () => {
         status: 'pending',
         date: { _seconds: currentTimestamp },
         type: 'joinOrganization',
-        fromOrg: { id: 'org-A' },
+        fromOrg: { id: 'org-A', watermark: 'test' },
         toUser: { uid: 'A' },
       },
       {
@@ -640,7 +647,7 @@ describe('DB cleaning script', () => {
         date: { _seconds: currentTimestamp },
         type: 'joinOrganization',
         toOrg: { id: 'org-A' },
-        fromUser: { uid: 'A' },
+        fromUser: { uid: 'A', watermark: 'test' },
       },
       {
         id: 'invit-C',
@@ -887,11 +894,11 @@ function isInvitationClean(doc: FirebaseFirestore.DocumentSnapshot) {
     return false;
   }
 
-  if (d.fromUser?.uid && !d.fromUser.avatar) {
+  if (d.fromUser?.uid && (!d.fromUser.avatar || d.fromUser.watermark)) {
     return false;
   }
 
-  if (d.toUser?.uid && !d.toUser.avatar) {
+  if (d.toUser?.uid && (!d.toUser.avatar || d.toUser.watermark)) {
     return false;
   }
 

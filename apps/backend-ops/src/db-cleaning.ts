@@ -13,12 +13,14 @@ export const numberOfDaysToKeepNotifications = 14;
 const currentTimestamp = new Date().getTime();
 export const dayInMillis = 1000 * 60 * 60 * 24;
 const EMPTY_MEDIA = createStorageFile();
+let verbose = false;
 
 // @TODO #6460 not existing users found in movies._meta.createdBy ..
 
 /** Reusable data cleaning script that can be updated along with data model */
 
-export async function cleanDeprecatedData(db: FirebaseFirestore.Firestore, auth: admin.auth.Auth) {
+export async function cleanDeprecatedData(db: FirebaseFirestore.Firestore, auth: admin.auth.Auth, options = { verbose: true }) {
+  verbose = options.verbose;
   // Getting all collections we need to check
   const [
     notifications,
@@ -94,7 +96,7 @@ export function cleanNotifications(
     } else {
       await cleanOneNotification(doc, notification);
     }
-  });
+  }, undefined, verbose);
 }
 
 async function cleanOneNotification(doc: QueryDocumentSnapshot, notification: NotificationDocument) {
@@ -123,7 +125,7 @@ export function cleanInvitations(
     } else {
       await cleanOneInvitation(doc, invitation);
     }
-  });
+  }, undefined, verbose);
 }
 
 async function cleanOneInvitation(doc: QueryDocumentSnapshot, invitation: InvitationDocument) {
@@ -140,11 +142,13 @@ async function cleanOneInvitation(doc: QueryDocumentSnapshot, invitation: Invita
   if (invitation.fromUser?.uid) {
     const d = await getDocument<PublicUser>(`users/${invitation.fromUser.uid}`);
     invitation.fromUser.avatar = d?.avatar || EMPTY_MEDIA;
+    delete (invitation.fromUser as any).watermark;
   }
 
   if (invitation.toUser?.uid) {
     const d = await getDocument<PublicUser>(`users/${invitation.toUser.uid}`);
     invitation.toUser.avatar = d?.avatar || EMPTY_MEDIA;
+    delete (invitation.toUser as any).watermark;
   }
 
   await doc.ref.update(invitation);
@@ -168,7 +172,7 @@ export async function cleanUsers(
     if (authUserId) {
       // Check if ids are the same
       if (authUserId !== user.uid) {
-        console.error(`uid mistmatch for ${user.email}. db: ${user.uid} - auth : ${authUserId}`);
+        if (verbose) console.error(`uid mistmatch for ${user.email}. db: ${user.uid} - auth : ${authUserId}`);
       } else {
         const invalidOrganization = !existingOrganizationIds.includes(user.orgId);
         let update = false;
@@ -196,7 +200,7 @@ export async function cleanUsers(
       // User does not exists on auth, should be deleted.
       if (!user.orgId || !existingOrganizationIds.includes(user.orgId)) {
         await userDoc.ref.delete();
-        console.log(`Deleted ${user.uid}.`);
+        if (verbose) console.log(`Deleted ${user.uid}.`);
       } else {
         const orgDoc = await db.doc(`orgs/${user.orgId}`).get();
         const org = orgDoc.data() as OrganizationDocument;
@@ -209,10 +213,10 @@ export async function cleanUsers(
           await permDoc.ref.update({ roles: permission.roles });
         }
         await userDoc.ref.delete();
-        console.log(`Deleted ${user.uid} and cleaned org and permissions ${user.orgId}.`);
+        if (verbose) console.log(`Deleted ${user.uid} and cleaned org and permissions ${user.orgId}.`);
       }
     }
-  });
+  }, undefined, verbose);
 }
 
 export function cleanOrganizations(
@@ -249,7 +253,7 @@ export function cleanOrganizations(
     if (validMovieIds.length !== wishlist.length) {
       await orgDoc.ref.update({ wishlist: validMovieIds });
     }
-  });
+  }, undefined, verbose);
 }
 
 export function cleanPermissions(
@@ -262,7 +266,7 @@ export function cleanPermissions(
     if (invalidPermission) {
       await permissionDoc.ref.delete();
     }
-  });
+  }, undefined, verbose);
 }
 
 export function cleanMovies(
@@ -287,7 +291,7 @@ export function cleanMovies(
       await movieDoc.ref.set(movie);
     }
 
-  });
+  }, undefined, verbose);
 }
 
 export function cleanDocsIndex(
@@ -299,7 +303,7 @@ export function cleanDocsIndex(
     if (!existingIds.includes(doc.id)) {
       await doc.ref.delete();
     }
-  });
+  }, undefined, verbose);
 
 }
 

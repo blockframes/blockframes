@@ -26,8 +26,8 @@ export class TableExtractedMoviesComponent implements OnInit {
 
   @Input() rows: MatTableDataSource<MovieImportState>;
   @Input() mode: string;
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
   public processedTitles = 0;
   public publishedTitles = 0;
   public currentApp: App;

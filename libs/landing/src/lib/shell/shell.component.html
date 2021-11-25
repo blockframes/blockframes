@@ -2,7 +2,7 @@
 
 <mat-toolbar fxLayout="row" fxLayoutAlign="space-between center">
   <nav fxLayout="row" fxLayoutAlign="space-between center">
-    <a app-logo routerLink="/"></a>
+    <button app-logo (click)="scrollToTop()"></button>
     <a fxHide.lt-md mat-stroked-button color="primary" href="#demo" id="demo-link">Schedule a demo</a>
     <a test-id="login" mat-button color="primary" routerLink="/auth/connexion">Log in</a>
     <a test-id="signup" mat-button color="primary" routerLink="/auth/identity">Sign up</a>
@@ -108,7 +108,8 @@
           <app-logo fxLayout fxFlex></app-logo>
           <form fxFlex [formGroup]="newslettersForm" (ngSubmit)="subscribeToNewsletters(newslettersForm)" >
             <mat-form-field appearance="outline" hideRequiredMarker>
-              <input test-id="email" matInput type="email" placeholder="Enter your email address" formControlName="email" required />
+              <mat-label>Enter your email address</mat-label>
+              <input test-id="email" matInput type="email" placeholder="Email address" formControlName="email" required />
               <mat-hint class="mat-caption">Subscribe to our newsletter now!</mat-hint>
               <mat-error *ngIf="form.get('email').hasError('required')">
                 Email is <strong>required</strong>

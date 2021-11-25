@@ -24,15 +24,21 @@
   <div *ngIf="showPrivacy" fxLayout="column" fxLayoutGap="12px">
     <h3>Privacy Settings</h3>
     <mat-radio-group fxLayout="column" formControlName="accessibility" (change)="accessibilityChanged($event)">
-      <mat-radio-button  color="primary" value="public" matTooltip="Best for meetings">
-        PUBLIC - Open to anyone with a link
-      </mat-radio-button>
+      <div fxLayout fxLayoutAlign="start center" fxLayoutGap="8px">
+        <mat-radio-button  color="primary" value="public">
+          PUBLIC - Open to anyone with a link
+        </mat-radio-button>
+        <mat-icon svgIcon="info" matTooltip="Best for meetings"></mat-icon>
+      </div>
       <mat-radio-button  color="primary" value="protected">
         PROTECTED - Open to anyone invited to the event (Archipel Market user or not)
       </mat-radio-button>
-      <mat-radio-button  color="primary" value="private" matTooltip="Best for screenings">
-        PRIVATE - Open to invited, identified Archipel Market users only
-      </mat-radio-button>
+      <div fxLayout fxLayoutAlign="start center" fxLayoutGap="8px">
+        <mat-radio-button  color="primary" value="private" >
+          PRIVATE - Open to invited, identified Archipel Market users only
+        </mat-radio-button>
+        <mat-icon svgIcon="info" matTooltip="Best for screenings"></mat-icon>
+      </div>
     </mat-radio-group>
     
     <div fxLayout fxLayoutAlign="start center" fxLayoutGap="8px" *ngIf="form.value.type !== 'meeting'">

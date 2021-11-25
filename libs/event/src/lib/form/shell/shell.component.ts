@@ -37,7 +37,7 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
   private sub: Subscription;
   private formSub: Subscription;
   form: EventForm;
-  @ViewChild('confirmExit', { static: true }) confirmExitTemplate: TemplateRef<any>;
+  @ViewChild('confirmExit') confirmExitTemplate: TemplateRef<any>;
   internalLink: string;
   link: string;
 

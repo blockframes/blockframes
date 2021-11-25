@@ -470,20 +470,27 @@ export async function moveMovieMedia(before: MovieDocument, after: MovieDocument
     'promotional.videos.otherVideos'
   ];
 
+  const containsFile = (file: StorageFile) => file && file.storagePath !== null;
+  const needsToBeMoved = (beforeFile: StorageFile, afterFile: StorageFile) => {
+    return containsFile(beforeFile)
+        && containsFile(afterFile)
+        && beforeFile.storagePath !== afterFile.storagePath;
+  }
+
   for (const path of paths) {
     const beforeFile: StorageFile | StorageFile[] = getDeepValue(before, path);
 
     if (Array.isArray(beforeFile)) {
       before.promotional.videos.otherVideos?.forEach(beforeFile => {
         const afterFile = after.promotional.videos.otherVideos?.find(file => file.storagePath === beforeFile.storagePath);
-        if (afterFile && beforeFile.privacy !== afterFile.privacy) {
+        if (needsToBeMoved(beforeFile, afterFile)) {
           moveMedia(beforeFile, afterFile);
         }
       });
 
     } else {
       const afterFile: StorageFile = getDeepValue(after, path);
-      if (beforeFile.privacy !== afterFile.privacy) {
+      if (needsToBeMoved(beforeFile, afterFile)) {
         moveMedia(beforeFile, afterFile);
       }
     }

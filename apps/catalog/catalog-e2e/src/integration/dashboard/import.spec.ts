@@ -39,8 +39,7 @@ const logInAndNavigate = (user: Partial<UserType>) => {
   cy.wait(5 * SEC);
 }
 
-// TODO issue#6929
-describe.skip('User can import templates', () => {
+describe('User can import objects with Excel', () => {
   beforeEach(() => {
     cy.viewport('ipad-2', 'landscape');
   });
@@ -75,17 +74,25 @@ describe.skip('User can import templates', () => {
     cy.get('button[test-id="submit-records"]', {timeout: 3 * SEC})
       .click();
 
-    cy.wait(30 * SEC);
+    cy.wait(10 * SEC);
 
     cy.log('Movies submitted; navigate back');
     cy.get('button[test-id="cancel-import"]', { timeout: 3 *SEC })
       .click();
 
+    // TODO NAVIGATE TO EACH MOVIE AND SUBMIT THEM issue#6951
+
     cy.logout();
+
+    // TODO APPROVE EACH SUBMITTED MOVIES issue#6951
+    // you can use the command `acceptMovieById`
+    // e.g. await cy.acceptMovieById('catalog', MOVIE_ID);
+    //
+    // Note: you probably to need to be logged in as an Admin for this command to work.
   });
 
   // TODO correct the test once the contract import page is ready #6757
-  it('Login as Dashboard user, Select contracts and import ', () => {
+  it.skip('Login as Dashboard user, Select contracts and import ', () => {
     logInAndNavigate(jean);
     cy.wait(1 * SEC);
 
