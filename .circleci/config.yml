@@ -403,6 +403,7 @@ jobs:
       - prepare_environment
       - run: npx nx build backend-functions --configuration=emulator
       - start_e2e_emulators
+      - run: npm start upgradeEmulators
       - run: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,catalog-e2e,financiers-e2e
       - store_artifacts:
           path: dist/cypress/apps
@@ -412,6 +413,7 @@ jobs:
       - prepare_environment
       - run: npx nx build backend-functions --configuration=emulator
       - start_e2e_emulators
+      - run: npm start upgradeEmulators
       - run: npx nx affected:e2e --configuration=emulator --exclude=catalog-e2e,crm-e2e,financiers-e2e
       - store_artifacts:
           path: dist/cypress/apps
@@ -421,6 +423,7 @@ jobs:
       - prepare_environment
       - run: npx nx build backend-functions --configuration=emulator
       - start_e2e_emulators
+      - run: npm start upgradeEmulators
       - run: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,crm-e2e,catalog-e2e
       - store_artifacts:
           path: dist/cypress/apps
@@ -430,6 +433,7 @@ jobs:
       - prepare_environment
       - run: npx nx build backend-functions --configuration=emulator
       - start_e2e_emulators
+      - run: npm start upgradeEmulators
       - run: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,crm-e2e,financiers-e2e
       - store_artifacts:
           path: dist/cypress/apps
