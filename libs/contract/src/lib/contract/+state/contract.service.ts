@@ -6,6 +6,8 @@ import { formatDocumentMetaFromFirestore } from "@blockframes/utils/models-meta"
 import { Timestamp } from "@blockframes/utils/common-interfaces/timestamp";
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negociation.service';
 import { map } from 'rxjs/operators';
+import { QueryFn } from '@angular/fire/firestore';
+import { OrganizationQuery } from '@blockframes/organization/+state';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'contracts' })
@@ -14,6 +16,7 @@ export class ContractService extends CollectionService<ContractState> {
 
   constructor(
     store: ContractStore,
+    private orgQuery: OrganizationQuery,
     private negotiationService: NegotiationService,
   ) {
     super(store);
@@ -39,7 +42,9 @@ export class ContractService extends CollectionService<ContractState> {
   /** Return the last negociation of the contractId */
   lastNegociation(contractId: string) {
     const options = { contractId } as PathParams;
-    return this.negotiationService.valueChanges(ref => ref.orderBy('_meta.createdAt', 'desc').limit(1), options).pipe(
+    const orgId = this.orgQuery.getActiveId();
+    const query: QueryFn = ref => ref.where('stakeholders', 'array-contains', orgId).orderBy('_meta.createdAt', 'desc').limit(1);
+    return this.negotiationService.valueChanges(query, options).pipe(
       map(negociations => negociations[0])
     );
   }
