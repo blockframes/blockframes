@@ -19,7 +19,7 @@ import { cleanDeprecatedData } from './db-cleaning';
 import { cleanStorage } from './storage-cleaning';
 import { firebase } from '@env';
 import { generateFixtures } from './generate-fixtures';
-import { ensureMaintenanceMode } from './tools';
+import { ensureMaintenanceMode, isMigrationRequired } from './tools';
 import { backupBucket as ciBucketName } from 'env/env.blockframes-ci'
 import { EIGHT_MINUTES_IN_MS } from '@blockframes/utils/maintenance';
 const { storageBucket } = firebase();
@@ -134,4 +134,36 @@ export async function upgrade() {
   await upgradeAlgoliaUsers(db);
   console.info('Algolia ready for testing!');
 
+}
+
+export async function upgradeEmulators() {
+  const db = connectFirestoreEmulator();
+  if (!await isMigrationRequired(db)) {
+    console.log('Skipping upgrade because migration is not required...');
+    return;
+  }
+  const { storage } = loadAdminServices();
+  // const auth = connectAuthEmulator();
+  const insurance = await ensureMaintenanceMode(db); // Enable maintenance insurance
+
+  console.info('Preparing the database...');
+  await migrate({ withBackup: false, db, storage });
+  console.info('Database ready for deploy!');
+
+  // console.info('Cleaning unused db data...');
+  // await cleanDeprecatedData(db, auth);
+  // console.info('DB data clean and fresh!');
+
+  // console.info('Cleaning unused storage data...');
+  // await cleanStorage(storage.bucket(storageBucket));
+  // console.info('Storage data clean and fresh!');
+
+  console.info('Preparing Algolia...');
+  await upgradeAlgoliaOrgs(null, db);
+  await upgradeAlgoliaMovies(null, db);
+  await upgradeAlgoliaUsers(db);
+  console.info('Algolia ready for testing!');
+
+  insurance(); // Switch off maintenance insurance
+  await endMaintenance(db, EIGHT_MINUTES_IN_MS);
 }

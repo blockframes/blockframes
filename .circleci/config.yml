@@ -401,7 +401,9 @@ jobs:
     executor: blockframes-ci
     steps:
       - prepare_environment
+      - run: npx nx build backend-functions --configuration=emulator
       - start_e2e_emulators
+      - run: npm start upgradeEmulators
       - run: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,catalog-e2e,financiers-e2e
       - store_artifacts:
           path: dist/cypress/apps
@@ -409,7 +411,9 @@ jobs:
     executor: blockframes-ci
     steps:
       - prepare_environment
+      - run: npx nx build backend-functions --configuration=emulator
       - start_e2e_emulators
+      - run: npm start upgradeEmulators
       - run: npx nx affected:e2e --configuration=emulator --exclude=catalog-e2e,crm-e2e,financiers-e2e
       - store_artifacts:
           path: dist/cypress/apps
@@ -417,7 +421,9 @@ jobs:
     executor: blockframes-ci
     steps:
       - prepare_environment
+      - run: npx nx build backend-functions --configuration=emulator
       - start_e2e_emulators
+      - run: npm start upgradeEmulators
       - run: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,crm-e2e,catalog-e2e
       - store_artifacts:
           path: dist/cypress/apps
@@ -425,7 +431,9 @@ jobs:
     executor: blockframes-ci
     steps:
       - prepare_environment
+      - run: npx nx build backend-functions --configuration=emulator
       - start_e2e_emulators
+      - run: npm start upgradeEmulators
       - run: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,crm-e2e,financiers-e2e
       - store_artifacts:
           path: dist/cypress/apps
@@ -446,7 +454,14 @@ jobs:
 workflows:
   run-anon-db-and-store-golden-data:
     jobs:
+      - copy-storage-from-prod:
+          filters:
+            branches:
+              only:
+                - anon-db
       - push-anon-db-to-ci:
+          requires:
+            - copy-storage-from-prod
           filters:
             branches:
               only:
@@ -454,6 +469,13 @@ workflows:
       - push-shrink-db-to-ci:
           requires:
             - push-anon-db-to-ci
+          filters:
+            branches:
+              only:
+                - anon-db
+      - prepare-emulators:
+          requires:
+            - push-shrink-db-to-ci
           filters:
             branches:
               only:
@@ -499,10 +521,15 @@ workflows:
                 - develop
     jobs:
       - copy-storage-from-prod
-      - push-anon-db-to-ci
+      - push-anon-db-to-ci:
+          requires:
+            - copy-storage-from-prod
       - push-shrink-db-to-ci:
           requires:
             - push-anon-db-to-ci
+      - prepare-emulators:
+          requires:
+            - push-shrink-db-to-ci
   deploy-to-prod-or-staging:
     jobs:
       - deploy-to-prod:
@@ -597,31 +624,19 @@ workflows:
       #           - ci
   e2e-tests:
     jobs:
-      - prepare-emulators:
-          filters:
-            branches:
-              ignore: *deployment_branches
       - catalog-e2e:
-          requires:
-            - prepare-emulators
           filters:
             branches:
               ignore: *deployment_branches
       - festival-e2e:
-          requires:
-            - prepare-emulators
           filters:
             branches:
               ignore: *deployment_branches
       - crm-e2e:
-          requires:
-            - prepare-emulators
           filters:
             branches:
               ignore: *deployment_branches
       - financiers-e2e:
-          requires:
-            - prepare-emulators
           filters:
             branches:
               ignore: *deployment_branches
