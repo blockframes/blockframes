@@ -1,5 +1,5 @@
 import {
-  Component, ChangeDetectionStrategy
+  Component, ChangeDetectionStrategy, Optional
 } from '@angular/core';
 import { ContractService, contractStatus, Sale } from '@blockframes/contract/contract/+state';
 import { ActivatedRoute } from '@angular/router';
@@ -8,6 +8,7 @@ import { centralOrgId } from '@env';
 import { joinWith } from '@blockframes/utils/operators';
 import { MovieService } from '@blockframes/movie/+state';
 import { IncomeService } from '@blockframes/contract/income/+state';
+import { Intercom } from 'ng-intercom';
 
 
 @Component({
@@ -36,5 +37,10 @@ export class SaleShellComponent {
     private titleService: MovieService,
     private route: ActivatedRoute,
     private incomeService: IncomeService,
+    @Optional() private intercom: Intercom,
   ) { }
+
+  openIntercom(): void {
+    return this.intercom.show();
+  }
 }
