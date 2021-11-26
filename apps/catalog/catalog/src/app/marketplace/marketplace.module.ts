@@ -98,6 +98,10 @@ const routes: Routes = [{
         loadChildren: () => import('./offer/shell/shell.module').then(m => m.ShellModule),
         data: { animation: 'list' }
       }]
+    },
+    {
+      path:'standard-terms',
+      loadChildren: () => import('@blockframes/contract/contract/pages/standard-terms/standard-terms.module').then(m => m.StandardTermsModule)
     }
   ]
 }];
