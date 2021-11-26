@@ -16,6 +16,7 @@ import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filte
 import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe';
 import { IncomePipeModule } from '@blockframes/contract/income/pipe';
 import { OfferPipeModule } from '@blockframes/contract/offer/pipe';
+import { GetOrgPipeModule, OrgNameModule } from '@blockframes/organization/pipes';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -46,7 +47,8 @@ import { FilterByModule } from '@blockframes/utils/pipes/filter-by.pipe';
     IntercomModule,
     TableModule,
     FilterByModule,
-
+    GetOrgPipeModule,
+    OrgNameModule,
     // Material
     MatButtonModule,
     MatIconModule,

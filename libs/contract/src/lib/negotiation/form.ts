@@ -6,7 +6,7 @@ import { Term } from "../term/+state";
 
 export type Negotiation = {
   price: number,
-  terms: Term[]
+  terms: Term<Date>[]
 }
 
 export class NegotiationForm extends FormEntity<EntityControl<Negotiation>, Negotiation> {

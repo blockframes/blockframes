@@ -357,6 +357,20 @@
           "order": "ASCENDING"
         }
       ]
+    },
+    {
+      "collectionGroup": "negotiations",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "stakeholders",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "_meta.createdAt",
+          "order": "DESCENDING"
+        }
+      ]
     }
   ],
   "fieldOverrides": []
