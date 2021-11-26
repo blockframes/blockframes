@@ -22,11 +22,14 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 
-import { CatalogSaleViewComponent } from './view.component';
-
+import { SaleShellComponent } from './shell.component';
+import { SaleViewComponent } from './view/view.component';
 
 @NgModule({
-  declarations: [CatalogSaleViewComponent],
+  declarations: [
+    SaleShellComponent,
+    SaleViewComponent,
+  ],
   imports: [
     CommonModule,
     FlexLayoutModule,
@@ -50,7 +53,7 @@ import { CatalogSaleViewComponent } from './view.component';
     MatDialogModule,
     MatSelectModule,
     MatTooltipModule,
-    RouterModule.forChild([{ path: '', component: CatalogSaleViewComponent }]),
+    RouterModule.forChild([{ path: '', component: SaleShellComponent }]),
   ]
 })
-export class CatalogSaleViewModule { }
+export class CatalogSaleShellModule { }

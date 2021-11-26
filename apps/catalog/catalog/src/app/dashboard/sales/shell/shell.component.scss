@@ -1,0 +1,21 @@
+bf-tag,
+span {
+  margin-bottom: 16px;
+}
+
+header {
+  padding: 24px;
+  background: linear-gradient(to bottom, var(--primary-lighter), var(--background));
+
+  h1 {
+    margin: 0;
+  }
+  div {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+mat-spinner {
+  margin: 16px auto;
+}

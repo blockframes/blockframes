@@ -28,7 +28,7 @@ import { MatIconModule } from '@angular/material/icon'
 
 // Tunnel routes
 import { tunnelRoutes } from './tunnel/movie-tunnel.routes';
-import { CatalogSaleViewGuard } from './sales/view/view.guard';
+import { CatalogSaleShellGuard } from './sales/shell/shell.guard';
 
 const routes: Routes = [
   {
@@ -72,8 +72,8 @@ const routes: Routes = [
           },
           {
             path: ':saleId',
-            canActivate: [CatalogSaleViewGuard],
-            loadChildren: () => import('./sales/view/view.module').then(m => m.CatalogSaleViewModule)
+            canActivate: [CatalogSaleShellGuard],
+            loadChildren: () => import('./sales/shell/shell.module').then(m => m.CatalogSaleShellModule)
           },
         ]
       },
