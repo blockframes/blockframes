@@ -1,8 +1,5 @@
-import {
-  Component, ChangeDetectionStrategy, Optional
-} from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ContractService, ContractStatus } from '@blockframes/contract/contract/+state';
-import { Intercom } from 'ng-intercom';
 import { MatDialog } from '@angular/material/dialog';
 import { SaleShellComponent } from '../shell.component';
 import { OrganizationQuery } from '@blockframes/organization/+state';
@@ -31,9 +28,7 @@ export class SaleViewComponent {
     private snackbar: MatSnackBar,
     private shell: SaleShellComponent,
     private dialog: MatDialog,
-    private query: OrganizationQuery,
-    @Optional() private intercom: Intercom,
-  ) { }
+    private query: OrganizationQuery) { }
 
 
   changeStatus(status: ContractStatus, id: string) {
@@ -61,10 +56,5 @@ export class SaleViewComponent {
       if (acceptSuccessful)
         this.snackbar.open(`You accepted contract for ${movie.title.international}`)
     })
-  }
-
-
-  openIntercom(): void {
-    return this.intercom.show();
   }
 }
