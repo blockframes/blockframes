@@ -6,6 +6,8 @@ import { hasDisplayName } from '@blockframes/utils/helpers';
 import { AuthQuery, AuthService, AuthState } from '@blockframes/auth/+state';
 import { of } from 'rxjs';
 import { OrganizationService, OrganizationStore } from '@blockframes/organization/+state';
+import { getCurrentApp } from '@blockframes/utils/apps';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +20,7 @@ export class EventAuthGuard extends CollectionGuard<AuthState> {
     private afAuth: AngularFireAuth,
     private orgService: OrganizationService,
     private orgStore: OrganizationStore,
+    private routerQuery: RouterQuery,
   ) {
     super(service);
   }
@@ -52,6 +55,15 @@ export class EventAuthGuard extends CollectionGuard<AuthState> {
               this.orgStore.upsert(org.id, org);
               this.orgStore.setActive(org.id);
               this.orgService.syncActive({ id: org.id });
+            }
+
+            /**
+             * If current user is ok, but has no access to marketplace
+             */
+            const app = getCurrentApp(this.routerQuery);
+
+            if (!org.appAccess[app]?.marketplace) {
+              return this.router.navigate(['/c/o/request-access'])
             }
 
             // Everyting is ok
