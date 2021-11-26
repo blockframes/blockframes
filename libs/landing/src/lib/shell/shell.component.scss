@@ -23,8 +23,11 @@ landing-shell-page {
         margin-right: auto;
       }
 
-      a[app-logo] {
+      button[app-logo] {
         margin-right: 96px;
+        border: none;
+        background-color: none;
+        cursor: pointer;
       }
 
       #demo-link {

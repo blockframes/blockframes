@@ -19,7 +19,7 @@ import { AccessibilityTypes } from '@blockframes/utils/static-model';
 export class EditDetailsComponent implements OnInit, OnDestroy {
   @Input() form: EventForm;
   @Input() @boolean showPrivacy = false;
-  @ViewChild('noAccessibilityChange', { static: true }) noAccessibilityChange: TemplateRef<any>;
+  @ViewChild('noAccessibilityChange') noAccessibilityChange: TemplateRef<any>;
   private sub: Subscription;
   appName: string = appName[getCurrentApp(this.routerQuery)];
   private previouslySavedAccessibility: AccessibilityTypes;

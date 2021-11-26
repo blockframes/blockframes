@@ -27,8 +27,8 @@ export class TableExtractedContractsComponent implements OnInit {
 
   @Input() rows: MatTableDataSource<ContractsImportState>;
   @Input() mode: string;
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
   public processedContracts = 0;
 
   public selection = new SelectionModel<ContractsImportState>(true, []);

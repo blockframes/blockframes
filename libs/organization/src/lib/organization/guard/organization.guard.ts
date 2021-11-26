@@ -37,7 +37,7 @@ export class OrganizationGuard extends CollectionGuard<OrganizationState> {
               if (!org) {
                 return '/auth/identity';
               }
-              if (org.status === 'pending') {
+              if (org.status !== 'accepted') {
                 return '/c/organization/create-congratulations';
               }
             })
