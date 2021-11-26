@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Route, RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { TagModule } from '@blockframes/ui/tag/tag.module';
@@ -25,6 +25,15 @@ import { MatSelectModule } from '@angular/material/select';
 import { SaleShellComponent } from './shell.component';
 import { SaleViewComponent } from './view/view.component';
 
+const routes: Route[] = [
+  {
+    path: '', component: SaleShellComponent,
+    children: [
+      { path: '', redirectTo: 'view', },
+      { path: 'view', component: SaleViewComponent },
+    ]
+  },
+]
 @NgModule({
   declarations: [
     SaleShellComponent,
@@ -53,7 +62,7 @@ import { SaleViewComponent } from './view/view.component';
     MatDialogModule,
     MatSelectModule,
     MatTooltipModule,
-    RouterModule.forChild([{ path: '', component: SaleShellComponent }]),
+    RouterModule.forChild(routes),
   ]
 })
 export class CatalogSaleShellModule { }

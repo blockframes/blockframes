@@ -28,7 +28,8 @@ export class SaleViewComponent {
     private snackbar: MatSnackBar,
     private shell: SaleShellComponent,
     private dialog: MatDialog,
-    private query: OrganizationQuery) { }
+    private query: OrganizationQuery
+  ) { }
 
 
   changeStatus(status: ContractStatus, id: string) {

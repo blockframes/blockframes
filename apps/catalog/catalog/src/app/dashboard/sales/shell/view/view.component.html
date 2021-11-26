@@ -1,4 +1,4 @@
-<ng-container *ngIf="sale$ | async as sale; else loading">
+<header *ngIf="sale$ | async as sale; else loading">
   <div fxLayout fxLayoutAlign="space-between center" class="actions">
     <div fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
       <ng-container
@@ -54,10 +54,10 @@
       <p>{{delivery}}</p>
     </section>
   </ng-container>
-</ng-container>
+</header>
 <ng-container *ngIf="sale$| async as contract">
   <contract-item [contract]="contract">
-    <ng-container *ngIf="contract.income?.price > 0; else askPrice" price>
+    <ng-container *ngIf="contract.income?.price else askPrice" price>
       <h2>{{ contract.income?.price | currency: contract.income?.currency }}</h2>
     </ng-container>
     <ng-template #askPrice>
