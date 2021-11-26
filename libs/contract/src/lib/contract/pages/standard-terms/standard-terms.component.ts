@@ -10,20 +10,20 @@ import { DomSanitizer, SafeHtml, SafeStyle, SafeScript, SafeUrl, SafeResourceUrl
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StandardTermsComponent {
-  public _pdfLink = '/assets/film-industry.pdf';
+  public localLink = '/assets/film-industry.pdf';
 
   /**
    * Note, viewing the pdf as indicated here has certain limitations.
-   * the file musn't weight more than 25mb.
+   * the file musn't weigh more than 25mb.
    * This cannot be tested locally as the file to ve viewed must be
    * accessible online. Suggestion, deploy the app to your dev env.
    */
   public get pdfLink() {
     const { protocol, hostname } = window.location;
-    const link = `${protocol}${hostname}/${this._pdfLink}`;
+    const link = `${protocol}${hostname}/${this.localLink}`;
     return this.sanitizer.bypassSecurityTrustResourceUrl(link);
   }
-  constructor(protected sanitizer: DomSanitizer) { }
+  constructor(private sanitizer: DomSanitizer) { }
 
 }
 

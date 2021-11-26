@@ -11,14 +11,14 @@
 }
 
 a,
-object {
+iframe {
   margin-top: 24px;
 }
 
-object {
+iframe {
   flex: 1 1 100%;
-  width: 100%;
-  @include layout-bp(gt-md) {
-    max-width: 80%;
+  width: 80%;
+  @include layout-bp(lt-lg) {
+    width: 100%;
   }
 }
