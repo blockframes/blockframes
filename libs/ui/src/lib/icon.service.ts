@@ -56,6 +56,7 @@ export const icons = [
   { name: 'favorite_border', url: 'assets/icons/favorite_border.svg' },
   { name: 'favorite_filled', url: 'assets/icons/favorite_filled.svg' },
   { name: 'file_copy', url: 'assets/icons/file_copy.svg' },
+  { name: 'file', url: 'assets/icons/file.svg' },
   { name: 'filter_list', url: 'assets/icons/filter_list.svg' },
   { name: 'first_page', url: 'assets/icons/first_page.svg' },
   { name: 'folder', url: 'assets/icons/folder.svg' },
@@ -88,6 +89,7 @@ export const icons = [
   { name: 'more_vert', url: 'assets/icons/more_vert.svg' },
   { name: 'mouse_pointer', url: 'assets/icons/mouse_pointer.svg' },
   { name: 'movie', url: 'assets/icons/movie.svg' },
+  { name: 'negotiate', url: 'assets/icons/negotiate.svg' },
   { name: 'notifications', url: 'assets/icons/notifications.svg' },
   { name: 'NZD', url: 'assets/icons/NZD.svg' },
   { name: 'paid', url: 'assets/icons/paid.svg' }, // can be used in static model

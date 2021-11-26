@@ -1,17 +1,6 @@
-bf-tag,
 span,
-header,
 .surface {
   margin-bottom: 16px;
-}
-
-header {
-  padding: 24px;
-  background: linear-gradient(to bottom, var(--primary-lighter), var(--background));
-
-  h1 {
-    margin: 0;
-  }
 }
 
 section.surface {
@@ -25,6 +14,7 @@ mat-spinner {
 
 .actions {
   margin-bottom: 16px;
+  padding: 0 24px;
   width: 100%;
 }
 
@@ -33,4 +23,8 @@ contract-item {
   holdback-list {
     margin-top: 16px;
   }
+}
+
+p.mat-caption {
+  text-align: end;
 }

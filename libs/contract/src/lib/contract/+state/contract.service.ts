@@ -4,7 +4,7 @@ import { CollectionConfig, CollectionService, PathParams } from 'akita-ng-fire';
 import { ContractDocument, convertDuration, createMandate, createSale, Holdback, Mandate, Sale } from './contract.model';
 import { formatDocumentMetaFromFirestore } from "@blockframes/utils/models-meta";
 import { Timestamp } from "@blockframes/utils/common-interfaces/timestamp";
-import { NegotiationService } from '@blockframes/contract/negotiation/+state/negociation.service';
+import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
 import { map } from 'rxjs/operators';
 import { QueryFn } from '@angular/fire/firestore';
 import { OrganizationQuery } from '@blockframes/organization/+state';
@@ -39,13 +39,13 @@ export class ContractService extends CollectionService<ContractState> {
       ;
   }
 
-  /** Return the last negociation of the contractId */
-  lastNegociation(contractId: string) {
+  /** Return the last negotiation of the contractId */
+  lastNegotiation(contractId: string) {
     const options = { contractId } as PathParams;
     const orgId = this.orgQuery.getActiveId();
     const query: QueryFn = ref => ref.where('stakeholders', 'array-contains', orgId).orderBy('_meta.createdAt', 'desc').limit(1);
     return this.negotiationService.valueChanges(query, options).pipe(
-      map(negociations => negociations[0])
+      map(negotiations => negotiations[0])
     );
   }
 }
