@@ -6,7 +6,7 @@ import { OrganizationQuery } from '@blockframes/organization/+state';
 import { NegotiationGuardedComponent } from './negotiation.guard'
 import { filter, first, pluck } from 'rxjs/operators'
 import { MatDialog } from '@angular/material/dialog';
-import { NegotiationStatus } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
+import { Negotiation, NegotiationStatus } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
 import { ConfirmDeclineComponent } from '@blockframes/contract/contract/components/confirm-decline/confirm-decline.component';
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
 import { Router } from '@angular/router';
@@ -31,15 +31,21 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
   onConfirm = async () => {
     const sale = await this.sale$.pipe(first()).toPromise()
     const formData = this.form.value
-    console.log({ formData })
+    const newTerm: Negotiation = {
+      ...sale.negotiation,
+      //@todo figure proper typing
+      terms: formData.avails,
+      createdByOrg: this.orgQuery.getActiveId(),
+    }
     const options = { params: { contractId: sale.id } }
-    // this.negotiationService.add({}, options)
+    this.negotiationService.add(newTerm, options)
     this.snackBar.open('Your counter offer has been sent')
-    // this.router.navigate(['../view'])
+    this.router.navigate(['../view'])
   }
 
   constructor(
     private snackBar: MatSnackBar,
+    private orgQuery: OrganizationQuery,
     private negotiationService: NegotiationService,
     private shell: SaleShellComponent,
     private query: OrganizationQuery,
