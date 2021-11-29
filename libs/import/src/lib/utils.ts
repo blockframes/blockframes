@@ -236,13 +236,18 @@ export function alreadyExistError<T = unknown>({ field, name }: { field: string,
   };
 }
 
-export function optionalWarning({ field, name }: { field: string, name: string }): SpreadsheetImportError {
+export function optionalWarning<T = unknown>({ field, name }: { field: string, name: string }, value?: T):  ValueWithError<T> {
   return {
-    type: 'warning',
-    field,
-    name: `Missing ${name}`,
-    reason: 'Optional field is missing.',
-    hint: 'Fill in the corresponding sheet field to add a value.'
+    // value is `undefined` by default because optional warning mean that the value is missing,
+    // for other warning the value should passed as a parameter
+    value,
+    error: {
+      type: 'warning',
+      field,
+      name: `Missing ${name}`,
+      reason: 'Optional field is missing.',
+      hint: 'Fill in the corresponding sheet field to add a value.'
+    }
   };
 }
 

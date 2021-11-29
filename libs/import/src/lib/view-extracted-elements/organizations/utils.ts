@@ -71,7 +71,7 @@ export async function formatOrg(sheetTab: SheetTab, organizationService: Organiz
       return value
     },
     /* b */ 'org.denomination.public': async (value: string, data: Partial<FieldsConfig>) => {
-      if (!value) return new ValueWithWarning(data.org.denomination.full ?? '', optionalWarning({ field: 'org.denomination.public', name: 'Organization Public Name' }));
+      if (!value) return optionalWarning({ field: 'org.denomination.public', name: 'Organization Public Name' }, data.org.denomination.full);
       const exist = await getOrgId(value, organizationService, orgNameCache);
       if (exist) return alreadyExistError({ field: 'org.denomination.public', name: 'Organization Public Name' });
       return value;
@@ -82,39 +82,39 @@ export async function formatOrg(sheetTab: SheetTab, organizationService: Organiz
       return lower;
     },
     /* d */ 'org.activity': (value: string) => {
-      if (!value) return new ValueWithWarning(value, optionalWarning({ field: 'org.activity', name: 'Activity' }));
+      if (!value) return optionalWarning({ field: 'org.activity', name: 'Activity' });
       const activity = getKeyIfExists('orgActivity', value);
       if (!activity) return wrongValueError({ field: 'org.activity', name: 'Activity' });
       return activity;
     },
     /* e */ 'org.fiscalNumber': (value: string) => {
-      if (!value) return new ValueWithWarning(value, optionalWarning({ field: 'org.fiscalNumber', name: 'Fiscal Number' }));
+      if (!value) return optionalWarning({ field: 'org.fiscalNumber', name: 'Fiscal Number' });
       return value;
     },
     /* f */ 'org.addresses.main.street': (value: string) => {
-      if (!value) return new ValueWithWarning(value, optionalWarning({ field: 'org.address.main.street', name: 'Fiscal Number' }));
+      if (!value) return optionalWarning({ field: 'org.address.main.street', name: 'Fiscal Number' });
       return value;
     },
     /* g */ 'org.addresses.main.city': (value: string) => {
-      if (!value) return new ValueWithWarning(value, optionalWarning({ field: 'org.address.main.city', name: 'City' }));
+      if (!value) return optionalWarning({ field: 'org.address.main.city', name: 'City' });
       return value;
     },
     /* h */ 'org.addresses.main.zipCode': (value: string) => {
-      if (!value) return new ValueWithWarning(value, optionalWarning({ field: 'org.address.main.zipCode', name: 'Zip Code' }));
+      if (!value) return optionalWarning({ field: 'org.address.main.zipCode', name: 'Zip Code' });
       return value;
     },
     /* i */ 'org.addresses.main.region': (value: string) => {
-      if (!value) return new ValueWithWarning(value, optionalWarning({ field: 'org.address.main.region', name: 'Region' }));
+      if (!value) return optionalWarning({ field: 'org.address.main.region', name: 'Region' });
       return value;
     },
     /* j */ 'org.addresses.main.country': (value: string) => {
-      if (!value) return new ValueWithWarning(value, optionalWarning({ field: 'org.address.main.country', name: 'Country' }));
+      if (!value) return optionalWarning({ field: 'org.address.main.country', name: 'Country' });
       const country = getKeyIfExists('territories', value) as Territory;
       if (!country) return wrongValueError({ field: 'org.addresses.main.country', name: 'Country' });
       return country as any;
     },
     /* k */ 'org.addresses.main.phoneNumber': (value: string) => {
-      if (!value) return new ValueWithWarning(value, optionalWarning({ field: 'org.address.main.phoneNumber', name: 'Phone Number' }));
+      if (!value) return optionalWarning({ field: 'org.address.main.phoneNumber', name: 'Phone Number' });
       return value;
     },
     /* l */ 'superAdmin.email': async (value: string) => {
