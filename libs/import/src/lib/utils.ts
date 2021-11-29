@@ -236,7 +236,7 @@ export function alreadyExistError<T = unknown>({ field, name }: { field: string,
   };
 }
 
-export function optionalWarning<T = unknown>({ field, name }: { field: string, name: string }, value?: T):  ValueWithError<T> {
+export function optionalWarning<T = unknown>({ field, name }: { field: string, name: string }, value?: T): ValueWithError<T> {
   return {
     // value is `undefined` by default because optional warning mean that the value is missing,
     // for other warning the value should passed as a parameter
@@ -251,12 +251,15 @@ export function optionalWarning<T = unknown>({ field, name }: { field: string, n
   };
 }
 
-export function adminOnlyWarning({ field, name }: { field: string, name: string }): SpreadsheetImportError {
+export function adminOnlyWarning<T = unknown>(value: T, { field, name }: { field: string, name: string }): ValueWithError<T> {
   return {
-    type: 'warning',
-    field,
-    name: `${name} is only for Admins`,
-    reason: 'This field is reserved for admins, it\'s value will be omitted.',
-    hint: 'Remove the corresponding sheet field to silence this warning.'
+    value,
+    error: {
+      type: 'warning',
+      field,
+      name: `${name} is only for Admins`,
+      reason: 'This field is reserved for admins, it\'s value will be omitted.',
+      hint: 'Remove the corresponding sheet field to silence this warning.'
+    }
   };
 }

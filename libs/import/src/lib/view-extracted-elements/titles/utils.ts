@@ -458,7 +458,8 @@ export async function formatTitle(
       const defaultAccess: MovieAppConfig<Date> = { status: 'draft', access: 'catalog' === currentApp, acceptedAt: null, refusedAt: null };
 
       if (!value && blockframesAdmin) return optionalWarning({ field: 'catalogStatus', name: 'Catalog Status' }, defaultAccess);
-      if (value && !blockframesAdmin) return new ValueWithWarning(defaultAccess, adminOnlyWarning({ field: 'catalogStatus', name: 'Catalog Status' }));
+      if (value && !blockframesAdmin) return adminOnlyWarning(defaultAccess, { field: 'catalogStatus', name: 'Catalog Status' });
+      if (value && !blockframesAdmin) return adminOnlyWarning(defaultAccess, { field: 'catalogStatus', name: 'Catalog Status' });
       if (!value) return defaultAccess;
 
       const status = getKeyIfExists('storeStatus', value) as StoreStatus;
@@ -470,7 +471,7 @@ export async function formatTitle(
       const defaultAccess: MovieAppConfig<Date> = { status: 'draft', access: 'festival' === currentApp, acceptedAt: null, refusedAt: null };
 
       if (!value && blockframesAdmin) return optionalWarning({ field: 'festivalStatus', name: 'Festival Status' }, defaultAccess);
-      if (value && !blockframesAdmin) return new ValueWithWarning(defaultAccess, adminOnlyWarning({ field: 'festivalStatus', name: 'Festival Status' }));
+      if (value && !blockframesAdmin) return adminOnlyWarning(defaultAccess, { field: 'festivalStatus', name: 'Festival Status' });
       if (!value) return defaultAccess;
 
       const status = getKeyIfExists('storeStatus', value) as StoreStatus;
@@ -482,7 +483,7 @@ export async function formatTitle(
       const defaultAccess: MovieAppConfig<Date> = { status: 'draft', access: 'financiers' === currentApp, acceptedAt: null, refusedAt: null };
 
       if (!value && blockframesAdmin) return optionalWarning({ field: 'financiersStatus', name: 'Financiers Status' }, defaultAccess);
-      if (value && !blockframesAdmin) return new ValueWithWarning(defaultAccess, adminOnlyWarning({ field: 'financiersStatus', name: 'Financiers Status' }));
+      if (value && !blockframesAdmin) return adminOnlyWarning(defaultAccess, { field: 'financiersStatus', name: 'Financiers Status' });
       if (!value) return defaultAccess;
 
       const status = getKeyIfExists('storeStatus', value) as StoreStatus;
@@ -492,7 +493,7 @@ export async function formatTitle(
     },
     /* bp */ 'orgIds': async (value: string) => { // ! required
       if (!value && blockframesAdmin) return mandatoryError({ field: 'orgIds', name: 'Owner Id' });
-      if (value && !blockframesAdmin) return new ValueWithWarning([userOrgId], adminOnlyWarning({ field: 'orgIds', name: 'Owner Id' }));
+      if (value && !blockframesAdmin) return adminOnlyWarning([userOrgId], { field: 'orgIds', name: 'Owner Id' });
       if (!value) return [userOrgId];
       const user = await getUser({ id: value }, userService, userCache);
       if (!user) return unknownEntityError({ field: 'orgIds', name: 'Owner Id' });

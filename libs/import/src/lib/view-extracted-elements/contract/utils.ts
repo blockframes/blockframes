@@ -203,14 +203,14 @@ export async function formatContract(
     /* m */'term.caption': (value: string) => getStaticList('languages', value, separator, { field: 'term.caption', name: 'CC' }, false) as Language[],
 
     /* n */'contract.id': async (value: string) => {
-      if (value && !blockframesAdmin) return new ValueWithWarning(firestore.createId(), adminOnlyWarning({ field: 'contract.id', name: 'Contract ID' }));
+      if (value && !blockframesAdmin) return adminOnlyWarning(firestore.createId(), { field: 'contract.id', name: 'Contract ID' });
       if (!value) return firestore.createId();
       const exist = await getContract(value, contractService, contractCache);
       if (exist) return alreadyExistError({ field: 'contract.id', name: 'Contract ID' });
       return value;
     },
     /* o */'parentTerm': async (value: string, data: FieldsConfig) => {
-      if (value && !blockframesAdmin) return new ValueWithWarning('', adminOnlyWarning({ field: 'parentTerm', name: 'Mandate ID/Row' }));
+      if (value && !blockframesAdmin) return adminOnlyWarning('', { field: 'parentTerm', name: 'Mandate ID/Row' });
       if (value && data.contract.type === 'mandate') return new ValueWithWarning('', {
         type: 'warning',
         field: 'parentTerm',
@@ -238,7 +238,7 @@ export async function formatContract(
       } else return Number(value);
     },
     /* p */'_titleId': (value: string) => {
-      if (value && !blockframesAdmin) return new ValueWithWarning('', adminOnlyWarning({ field: '_titleId', name: 'Import ID' }));
+      if (value && !blockframesAdmin) return adminOnlyWarning('', { field: '_titleId', name: 'Import ID' });
       if (value) return new ValueWithWarning('', {
         type: 'warning',
         field: '_titleId',
