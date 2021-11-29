@@ -1,4 +1,4 @@
-﻿import { apps, assertFails, assertSucceeds } from '@firebase/rules-unit-testing';
+﻿import { apps, assertFails, assertSucceeds } from '@firebase/testing';
 import { testFixture } from './fixtures/data';
 import { Firestore, initFirestoreApp } from '@blockframes/testing/firebase/functions';
 

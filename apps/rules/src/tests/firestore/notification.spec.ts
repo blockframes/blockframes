@@ -1,10 +1,6 @@
-﻿import {
-  apps,
-  assertFails,
-  assertSucceeds,
-} from '@firebase/rules-unit-testing';
+﻿import { apps, assertFails, assertSucceeds } from '@firebase/testing';
 import { testFixture } from './fixtures/data';
-import { Firestore, initFirestoreApp } from '@blockframes/testing/firebase/functions';
+import { Firestore, initFirestoreApp } from '@blockframes/testing/unit-tests';
 
 describe('Notification Rules Tests', () => {
   const projectId = `notrules-spec-${Date.now()}`;
@@ -13,7 +9,10 @@ describe('Notification Rules Tests', () => {
 
   describe('With User not in TO field', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2', firebase: { sign_in_provider: 'password' } });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {
+        uid: 'uid-user2',
+        firebase: { sign_in_provider: 'password' },
+      });
     });
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
@@ -46,7 +45,10 @@ describe('Notification Rules Tests', () => {
 
   describe('With User in TO field', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-c8', firebase: { sign_in_provider: 'password' } });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {
+        uid: 'uid-c8',
+        firebase: { sign_in_provider: 'password' },
+      });
     });
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));

@@ -2,7 +2,7 @@
   apps,
   assertFails,
   assertSucceeds,
-} from '@firebase/rules-unit-testing';
+} from '@firebase/testing';
 import { testFixture } from './fixtures/data';
 import { Firestore, initFirestoreApp } from '@blockframes/testing/firebase/functions';
 import { Movie } from '@blockframes/movie/+state';
@@ -210,7 +210,7 @@ describe('Movies Rules Tests', () => {
       const docRef = db.doc('movies/MI-077');
       await assertFails(docRef.get());
     });
-    
+
     test('should be able to fetch an accepted movie by ID', async () => {
       const docRef = db.doc('movies/MI-0d7');
       await assertSucceeds(docRef.get());

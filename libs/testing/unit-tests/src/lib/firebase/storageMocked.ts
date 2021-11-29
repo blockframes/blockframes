@@ -1,8 +1,6 @@
-
 const bucketFiles = {};
 
 export class MockedGFile {
-
   public name: string;
   public prefix: string;
 
@@ -17,14 +15,13 @@ export class MockedGFile {
 
   delete() {
     return new Promise((resolve) => {
-      bucketFiles[this.prefix] = bucketFiles[this.prefix].filter(f => f.name !== this.name);
+      bucketFiles[this.prefix] = bucketFiles[this.prefix].filter((f) => f.name !== this.name);
       resolve(true);
     });
   }
 }
 
 export class BucketMocked {
-
   public name: string;
 
   constructor(name: string) {
@@ -32,7 +29,7 @@ export class BucketMocked {
   }
 
   populate(files: string[], prefix) {
-    files.forEach(name => new MockedGFile(name, prefix));
+    files.forEach((name) => new MockedGFile(name, prefix));
   }
 
   getFiles(options: { prefix: string }) {

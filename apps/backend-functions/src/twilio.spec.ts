@@ -1,8 +1,12 @@
-import { getTwilioAccessToken, RequestAccessToken } from "./twilio";
-import { CallableContextOptions } from "firebase-functions-test/lib/main";
-import { CallableContext } from "firebase-functions/lib/providers/https";
-import { getTestingProjectId, initFunctionsTestMock, populate } from "@blockframes/testing/firebase/functions";
-import { clearFirestoreData } from "@firebase/testing";
+import { getTwilioAccessToken, RequestAccessToken } from './twilio';
+import { CallableContextOptions } from 'firebase-functions-test/lib/main';
+import { CallableContext } from 'firebase-functions/lib/providers/https';
+import {
+  getTestingProjectId,
+  initFunctionsTestMock,
+  populate,
+} from '@blockframes/testing/unit-tests';
+import { clearFirestoreData } from '@firebase/testing';
 
 const testInvitations = [
   {
@@ -20,7 +24,7 @@ const testInvitations = [
     status: 'accepted',
     mode: 'invitation',
     toUser: { email: 'foo@bar.com' },
-  }
+  },
 ];
 const testEvents = [
   {
@@ -30,7 +34,7 @@ const testEvents = [
     end: new Date(),
     meta: { organizerUid: 'uidUserTest' },
     ownerOrgId: 'idOrgTest',
-    accessibility: 'private'
+    accessibility: 'private',
   },
   {
     id: 'eventTestInvOnly',
@@ -39,7 +43,7 @@ const testEvents = [
     end: new Date(),
     meta: { organizerUid: 'uidUserTest' },
     ownerOrgId: 'idOrgTest',
-    accessibility: 'protected'
+    accessibility: 'protected',
   },
   {
     id: 'eventTestPublic',
@@ -48,8 +52,8 @@ const testEvents = [
     end: new Date(),
     meta: { organizerUid: 'uidUserTest' },
     ownerOrgId: 'idOrgTest',
-    accessibility: 'public'
-  }
+    accessibility: 'public',
+  },
 ];
 const testEventsScreening = [
   {
@@ -58,22 +62,24 @@ const testEventsScreening = [
     start: new Date(),
     end: new Date(),
     meta: { organizerUid: 'uidUserTest' },
-    accessibility: 'private'
-  }
+    accessibility: 'private',
+  },
 ];
 const acceptedUserA = {
   uid: 'uidUserTest',
   email: 'A@fake.com',
   firstName: 'foo',
-  lastName: 'bar'
+  lastName: 'bar',
 };
 
 const testUsers = [acceptedUserA, { uid: 'uidUserTestNotAccepted' }];
 const testOrgs = [{ id: 'org-A', email: 'org-A@fake.com' }];
-const testRequestAccessToken: RequestAccessToken = { eventId: 'eventTest', credentials: acceptedUserA };
+const testRequestAccessToken: RequestAccessToken = {
+  eventId: 'eventTest',
+  credentials: acceptedUserA,
+};
 
 describe('Twilio test script', () => {
-
   beforeAll(async () => {
     initFunctionsTestMock();
   });
@@ -109,7 +115,6 @@ describe('Twilio test script', () => {
   });
 
   it('should return error when event type is not meeting', async () => {
-
     // Load our test set
     const output = await populateAndGetTwilioAccessToken(false);
     expect(output.error).toEqual('NOT_A_MEETING');
@@ -141,7 +146,9 @@ describe('Twilio test script', () => {
     testEvents[0].end = new Date();
     testEvents[0].end.setHours(new Date().getHours() + 4);
     // Load our test set
-    const output = await populateAndGetTwilioAccessToken(true, null, { uid: 'uidUserTestNotAccepted' });
+    const output = await populateAndGetTwilioAccessToken(true, null, {
+      uid: 'uidUserTestNotAccepted',
+    });
     expect(output.error).toEqual('NOT_ACCEPTED');
   });
 
@@ -162,9 +169,13 @@ describe('Twilio test script', () => {
     const credentials = {
       email: 'foo@bar.com',
       firstName: 'foo',
-      lastName: 'bar'
+      lastName: 'bar',
     };
-    const output = await populateAndGetTwilioAccessToken(true, { eventId: 'eventTestInvOnly', credentials }, { uid: 'uidFooBar' });
+    const output = await populateAndGetTwilioAccessToken(
+      true,
+      { eventId: 'eventTestInvOnly', credentials },
+      { uid: 'uidFooBar' }
+    );
     expect(output.error).toEqual('');
   });
 
@@ -176,9 +187,13 @@ describe('Twilio test script', () => {
     const credentials = {
       email: 'marc@hamill.com',
       firstName: 'marc',
-      lastName: 'hamill'
+      lastName: 'hamill',
     };
-    const output = await populateAndGetTwilioAccessToken(true, { eventId: 'eventTestInvOnly', credentials }, { uid: 'uidMarcHamill' });
+    const output = await populateAndGetTwilioAccessToken(
+      true,
+      { eventId: 'eventTestInvOnly', credentials },
+      { uid: 'uidMarcHamill' }
+    );
     expect(output.error).toEqual('NOT_ACCEPTED');
   });
 
@@ -189,9 +204,13 @@ describe('Twilio test script', () => {
     // Load our test set
     const credentials = {
       firstName: 'anonymous',
-      lastName: 'user'
+      lastName: 'user',
     };
-    const output = await populateAndGetTwilioAccessToken(true, { eventId: 'eventTestPublic', credentials }, { uid: 'uidFooBar' });
+    const output = await populateAndGetTwilioAccessToken(
+      true,
+      { eventId: 'eventTestPublic', credentials },
+      { uid: 'uidFooBar' }
+    );
     expect(output.error).toEqual('');
   });
 
@@ -203,21 +222,32 @@ describe('Twilio test script', () => {
     // Load our test set
     const credentials = {
       firstName: 'anonymous',
-      lastName: 'user'
+      lastName: 'user',
     };
-    const output = await populateAndGetTwilioAccessToken(true, { eventId: 'eventTestPublic', credentials }, { uid: 'uidFooBar' });
+    const output = await populateAndGetTwilioAccessToken(
+      true,
+      { eventId: 'eventTestPublic', credentials },
+      { uid: 'uidFooBar' }
+    );
     expect(output.error).toEqual('NOT_ALREADY_STARTED');
   });
-})
+});
 
-async function populateAndGetTwilioAccessToken(eventMeeting = true, requestAccessTokenTest = null, uid = { uid: 'uidUserTest' }) {
+async function populateAndGetTwilioAccessToken(
+  eventMeeting = true,
+  requestAccessTokenTest = null,
+  uid = { uid: 'uidUserTest' }
+) {
   const invitation = populate('invitations', testInvitations);
-  const events = populate('events', (eventMeeting) ? testEvents : testEventsScreening);
+  const events = populate('events', eventMeeting ? testEvents : testEventsScreening);
   const users = populate('users', testUsers);
   const orgs = populate('orgs', testOrgs);
   await Promise.all([invitation, events, users, orgs]);
   const testCallbackContext: CallableContextOptions = {
-    auth: uid
-  }
-  return await getTwilioAccessToken(requestAccessTokenTest || testRequestAccessToken, testCallbackContext as CallableContext);
+    auth: uid,
+  };
+  return await getTwilioAccessToken(
+    requestAccessTokenTest || testRequestAccessToken,
+    testCallbackContext as CallableContext
+  );
 }

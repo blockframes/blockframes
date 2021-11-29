@@ -1,11 +1,21 @@
-import { backupBucket, firebase } from '@env'
-import { enableMaintenanceInEmulator } from "./emulator";
-import { clearDb, defaultEmulatorBackupPath, getLatestDirName, gsutilTransfer, importFirestoreEmulatorBackup, loadAdminServices, runShellCommandExec, uploadDbBackupToBucket } from "@blockframes/firebase-utils";
-import { deleteAllUsers } from "@blockframes/testing/firebase";
-import { ensureMaintenanceMode } from "./tools";
-import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from "./algolia";
+import { backupBucket, firebase } from '@env';
+import { enableMaintenanceInEmulator } from './emulator';
+import {
+  clearDb,
+  defaultEmulatorBackupPath,
+  getLatestDirName,
+  gsutilTransfer,
+  importFirestoreEmulatorBackup,
+  loadAdminServices,
+  runShellCommandExec,
+  uploadDbBackupToBucket,
+} from '@blockframes/firebase-utils';
+import { deleteAllUsers } from '@blockframes/testing/unit-tests';
+import { ensureMaintenanceMode } from './tools';
+import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
 
-export const getFirebaseBackupDirname = (d: Date) => `firebase-backup-${d.getDate()}-${d.getMonth() + 1}-${d.getFullYear()}`
+export const getFirebaseBackupDirname = (d: Date) =>
+  `firebase-backup-${d.getDate()}-${d.getMonth() + 1}-${d.getFullYear()}`;
 
 export async function backupEnv(dirName?: string) {
   const backupDir = dirName || getFirebaseBackupDirname(new Date());
@@ -34,8 +44,12 @@ export async function backupEnv(dirName?: string) {
 }
 
 export async function restoreEnv(dirName?: string) {
-  console.log( 'When restoring an entire env, this function will check your local environment vars for AUTH_KEY');
-  console.log( 'If not found, it will manually restore auth with a default password. Otherwise it will restore original auth backup');
+  console.log(
+    'When restoring an entire env, this function will check your local environment vars for AUTH_KEY'
+  );
+  console.log(
+    'If not found, it will manually restore auth with a default password. Otherwise it will restore original auth backup'
+  );
   const { storage, db, auth } = loadAdminServices();
   const bucket = storage.bucket(backupBucket);
   const backupDir = dirName ? `${dirName}/` : await getLatestDirName(bucket, 'firebase');
@@ -48,30 +62,34 @@ export async function restoreEnv(dirName?: string) {
 
   let cmd: string;
 
-  console.log('Clearing existing env!')
+  console.log('Clearing existing env!');
 
-  console.log('Ensuring maintenance mode stays enabled')
-  const maintenanceInsurance = await ensureMaintenanceMode(db)
+  console.log('Ensuring maintenance mode stays enabled');
+  const maintenanceInsurance = await ensureMaintenanceMode(db);
 
-  console.log('Clearing Firestore...')
+  console.log('Clearing Firestore...');
   await clearDb(db);
 
   console.log('Clearing auth...');
   await deleteAllUsers(auth);
 
-  console.log('Old env data is now cleared')
+  console.log('Old env data is now cleared');
 
-  console.log('Enabling maintenance in backup...')
+  console.log('Enabling maintenance in backup...');
   await importFirestoreEmulatorBackup(firestoreURL, defaultEmulatorBackupPath);
-  await enableMaintenanceInEmulator({importFrom: 'defaultImport'})
-  await uploadDbBackupToBucket({bucketName: backupBucket, remoteDir: `${backupDir}firestore`})
+  await enableMaintenanceInEmulator({ importFrom: 'defaultImport' });
+  await uploadDbBackupToBucket({ bucketName: backupBucket, remoteDir: `${backupDir}firestore` });
 
   console.log('Importing Firestore');
   cmd = `gcloud firestore import ${firestoreURL}`;
   await runShellCommandExec(cmd);
 
   console.log('Importing storage');
-  await gsutilTransfer({ from: `${storageURL}`, to: `gs://${firebase().storageBucket}`, mirror: true });
+  await gsutilTransfer({
+    from: `${storageURL}`,
+    to: `gs://${firebase().storageBucket}`,
+    mirror: true,
+  });
 
   console.log('Importing auth');
   await gsutilTransfer({ from: authURL, to: './tmp/', rsync: false });
@@ -85,5 +103,5 @@ export async function restoreEnv(dirName?: string) {
   await upgradeAlgoliaUsers();
   console.info('Algolia ready!');
 
-  maintenanceInsurance()
+  maintenanceInsurance();
 }
