@@ -6,7 +6,7 @@ import { UserService } from '@blockframes/user/+state';
 import { Module, ModuleAccess, modules } from '@blockframes/utils/apps';
 import { extract, ExtractConfig, SheetTab, ValueWithWarning } from '@blockframes/utils/spreadsheet';
 import { createOrganization, Organization, OrganizationService } from '@blockframes/organization/+state';
-import { AlreadyExistError, getOrgId, getUser, mandatoryError, optionalWarning, OrganizationsImportState, wrongValueError } from '@blockframes/import/utils';
+import { alreadyExistError, getOrgId, getUser, mandatoryError, optionalWarning, OrganizationsImportState, wrongValueError } from '@blockframes/import/utils';
 
 const separator = ',';
 
@@ -67,13 +67,13 @@ export async function formatOrg(sheetTab: SheetTab, organizationService: Organiz
     /* a */ 'org.denomination.full': async (value: string) => {
       if (!value) return mandatoryError({ field: 'org.denomination.full', name: 'Organization Name' });
       const exist = await getOrgId(value, organizationService, orgNameCache);
-      if (exist) throw new AlreadyExistError({ field: 'org.denomination.full', name: 'Organization Name' });
+      if (exist) return alreadyExistError({ field: 'org.denomination.full', name: 'Organization Name' });
       return value
     },
     /* b */ 'org.denomination.public': async (value: string, data: Partial<FieldsConfig>) => {
       if (!value) return new ValueWithWarning(data.org.denomination.full ?? '', optionalWarning({ field: 'org.denomination.public', name: 'Organization Public Name' }));
       const exist = await getOrgId(value, organizationService, orgNameCache);
-      if (exist) throw new AlreadyExistError({ field: 'org.denomination.public', name: 'Organization Public Name' });
+      if (exist) return alreadyExistError({ field: 'org.denomination.public', name: 'Organization Public Name' });
       return value;
     },
     /* c */ 'org.email': async (value: string) => {
@@ -122,7 +122,7 @@ export async function formatOrg(sheetTab: SheetTab, organizationService: Organiz
       if (!lower) return mandatoryError({ field: 'superAdmin.email', name: 'Admin Email' });
 
       const exist = await getUser({ email: lower }, userService, userCache);
-      if (exist) throw new AlreadyExistError({ field: 'superAdmin.email', name: 'Admin Email' });
+      if (exist) return alreadyExistError({ field: 'superAdmin.email', name: 'Admin Email' });
 
       return lower;
     },

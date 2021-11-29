@@ -10,7 +10,7 @@ import {
   checkParentTerm,
   wrongValueError,
   adminOnlyWarning,
-  AlreadyExistError,
+  alreadyExistError,
   unknownEntityError,
   ContractsImportState,
   getUser,
@@ -206,7 +206,7 @@ export async function formatContract(
       if (value && !blockframesAdmin) return new ValueWithWarning(firestore.createId(), adminOnlyWarning({ field: 'contract.id', name: 'Contract ID' }));
       if (!value) return firestore.createId();
       const exist = await getContract(value, contractService, contractCache);
-      if (exist) throw new AlreadyExistError({ field: 'contract.id', name: 'Contract ID' });
+      if (exist) return alreadyExistError({ field: 'contract.id', name: 'Contract ID' });
       return value;
     },
     /* o */'parentTerm': async (value: string, data: FieldsConfig) => {

@@ -222,17 +222,18 @@ export function wrongValueError<T = unknown>({ field, name }: { field: string, n
   };
 }
 
-// TODO REMOVE
-export class AlreadyExistError extends Error {
-  constructor({ field, name }: { field: string, name: string }) {
-    super(JSON.stringify({
+
+export function alreadyExistError<T = unknown>({ field, name }: { field: string, name: string }): ValueWithError<T> {
+  return {
+    value: undefined,
+    error: {
       type: 'error',
       field,
       name: `${name} already exist`,
       reason: `We could not create a this ${name} because it already exist on the app.`,
       hint: `Please edit the corresponding sheet field with a different value.`
-    }));
-  }
+    },
+  };
 }
 
 export function optionalWarning({ field, name }: { field: string, name: string }): SpreadsheetImportError {
