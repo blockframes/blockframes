@@ -1,7 +1,7 @@
 
 import { App } from '@blockframes/utils/apps';
 import { UserService } from '@blockframes/user/+state';
-import { mandatoryError, MovieImportState, WrongValueError, optionalWarning, getDate, adminOnlyWarning, getUser, UnknownEntityError } from '@blockframes/import/utils';
+import { mandatoryError, MovieImportState, WrongValueError, optionalWarning, getDate, adminOnlyWarning, getUser, unknownEntityError } from '@blockframes/import/utils';
 import { createMovie } from '@blockframes/movie/+state';
 import { extract, ExtractConfig, SheetTab, ValueWithWarning } from '@blockframes/utils/spreadsheet';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
@@ -495,7 +495,7 @@ export async function formatTitle(
       if (value && !blockframesAdmin) return new ValueWithWarning([userOrgId], adminOnlyWarning({ field: 'orgIds', name: 'Owner Id' }));
       if (!value) return [userOrgId];
       const user = await getUser({ id: value }, userService, userCache);
-      if (!user) throw new UnknownEntityError({ field: 'orgIds', name: 'Owner Id' });
+      if (!user) return unknownEntityError({ field: 'orgIds', name: 'Owner Id' });
       return [user.orgId];
     },
   };

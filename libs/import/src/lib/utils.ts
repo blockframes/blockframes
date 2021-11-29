@@ -194,17 +194,18 @@ export function mandatoryError<T = unknown>({ field, name }: { field: string, na
   };
 }
 
-// TODO REMOVE
-export class UnknownEntityError extends Error {
-  constructor({ field, name }: { field: string, name: string }) {
-    super(JSON.stringify({
+
+export function unknownEntityError<T = unknown>({ field, name }: { field: string, name: string }): ValueWithError<T> {
+  return {
+    value: undefined,
+    error: {
       type: 'error',
       field,
       name: `Unknown ${name}`,
       reason: `${name} should exist in the app but we couldn't find it.`,
       hint: `Please check the corresponding sheet field for mistake, create the corresponding ${name} if you can, or contact us.`
-    }));
-  }
+    },
+  };
 }
 
 // TODO REMOVE

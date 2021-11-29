@@ -11,7 +11,7 @@ import {
   WrongValueError,
   adminOnlyWarning,
   AlreadyExistError,
-  UnknownEntityError,
+  unknownEntityError,
   ContractsImportState,
   getUser,
   sheetHeaderLine,
@@ -116,7 +116,7 @@ export async function formatContract(
     /* a */'contract.titleId': async (value: string) => {
       if (!value) return mandatoryError({ field: 'contract.titleId', name: 'Title' });
       const titleId = await getTitleId(value, titleService, titleNameCache, userOrgId, blockframesAdmin);
-      if (!titleId) throw new UnknownEntityError({ field: 'contract.titleId', name: 'Title' });
+      if (!titleId) return unknownEntityError({ field: 'contract.titleId', name: 'Title' });
       return titleId;
     },
     /* b */'contract.type': (value: string) => {
@@ -146,7 +146,7 @@ export async function formatContract(
         return centralOrgId.catalog;
       } else {
         const sellerId = await getOrgId(value, orgService, orgNameCache);
-        if (!sellerId) throw new UnknownEntityError({ field: 'contract.sellerId', name: 'Licensor Organization' });
+        if (!sellerId) return unknownEntityError({ field: 'contract.sellerId', name: 'Licensor Organization' });
         if (!blockframesAdmin && sellerId !== userOrgId) throw new Error(JSON.stringify({
           type: 'error',
           field: 'contract.sellerId',
@@ -171,7 +171,7 @@ export async function formatContract(
       } else {
         const isInternal = data.contract.sellerId === centralOrgId.catalog;
         const sellerId = await getOrgId(value, orgService, orgNameCache);
-        if (isInternal && !sellerId) throw new UnknownEntityError({ field: 'contract.buyerId', name: 'Licensee Organization' });
+        if (isInternal && !sellerId) return unknownEntityError({ field: 'contract.buyerId', name: 'Licensee Organization' });
         return sellerId;
       }
     },
@@ -233,7 +233,7 @@ export async function formatContract(
       const isId = isNaN(Number(value));
       if (isId) {
         const exist = await checkParentTerm(value, contractService, contractCache);
-        if (!exist) throw new UnknownEntityError({ field: 'parentTerm', name: 'Mandate ID' });
+        if (!exist) return unknownEntityError({ field: 'parentTerm', name: 'Mandate ID' });
         return value;
       } else return Number(value);
     },
@@ -250,7 +250,7 @@ export async function formatContract(
       const stakeholders = value.split(separator).filter(v => !!v).map(v => v.trim());
       const exists = await Promise.all(stakeholders.map(id => getUser({ id }, userService, userCache)));
       const unknownStakeholder = exists.some(e => !e);
-      if (unknownStakeholder) throw new UnknownEntityError({ field: 'contract.stakeholders', name: 'Stakeholders' });
+      if (unknownStakeholder) return unknownEntityError({ field: 'contract.stakeholders', name: 'Stakeholders' });
       if (data.contract.type === 'mandate') {
         return [ data.contract.buyerId, data.contract.sellerId, ...stakeholders ];
       } else {
