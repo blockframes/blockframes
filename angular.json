@@ -1678,6 +1678,27 @@
           }
         }
       }
+    },
+    "testing-cypress": {
+      "root": "libs/testing/cypress",
+      "sourceRoot": "libs/testing/cypress/src",
+      "projectType": "library",
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/testing/cypress/**/*.ts"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/testing/cypress"],
+          "options": {
+            "jestConfig": "libs/testing/cypress/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   }
 }

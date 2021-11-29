@@ -112,6 +112,9 @@
     },
     "testing-unit-tests": {
       "tags": ["node", "local"]
+    },
+    "testing-cypress": {
+      "tags": ["node", "local"]
     }
   }
 }

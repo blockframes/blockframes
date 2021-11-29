@@ -5,5 +5,6 @@
     '<rootDir>/apps/festival',
     '<rootDir>/apps/rules',
     '<rootDir>/apps/libs',
+    '<rootDir>/libs/testing/cypress',
   ],
 };
