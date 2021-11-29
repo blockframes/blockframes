@@ -41,7 +41,7 @@ export class ContractService extends CollectionService<ContractState> {
 
   /** Return the last negotiation of the contractId */
   lastNegotiation(contractId: string) {
-    const options = { contractId } as PathParams;
+    const options = { params:{contractId} };
     const orgId = this.orgQuery.getActiveId();
     const query: QueryFn = ref => ref.where('stakeholders', 'array-contains', orgId).orderBy('_meta.createdAt', 'desc').limit(1);
     return this.negotiationService.valueChanges(query, options).pipe(

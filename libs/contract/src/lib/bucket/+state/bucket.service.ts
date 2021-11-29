@@ -1,7 +1,7 @@
 
 import { Injectable } from '@angular/core';
 
-import { CollectionConfig, CollectionService } from 'akita-ng-fire';
+import { CollectionConfig, CollectionService, PathParams } from 'akita-ng-fire';
 
 import { centralOrgId } from '@env';
 
@@ -18,8 +18,10 @@ import { OfferService } from '../../offer/+state';
 import { IncomeService } from '../../income/+state';
 import { Bucket, createBucket } from './bucket.model';
 import { BucketStore, BucketState } from './bucket.store';
-import { createBucketTerm, createBucketContract} from './bucket.model';
+import { createBucketTerm, createBucketContract } from './bucket.model';
 import { ContractService, convertDuration } from '../../contract/+state';
+import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
+import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'buckets' })
@@ -36,7 +38,8 @@ export class BucketService extends CollectionService<BucketState> {
     private offerService: OfferService,
     private contractService: ContractService,
     private incomeService: IncomeService,
-    private authQuery: AuthQuery
+    private authQuery: AuthQuery,
+    private negotiationService: NegotiationService,
   ) {
     super(store);
   }
@@ -108,6 +111,26 @@ export class BucketService extends CollectionService<BucketState> {
         holdbacks: contract.holdbacks,
       });
 
+      const defualtNegotiation: Negotiation = {
+        _meta: createDocumentMeta({ createdAt: new Date(), }),
+        id: contractId,
+        status: 'pending',
+        createdByOrg: orgId,
+        sellerId: centralOrgId.catalog,
+        stakeholders: [...Array.from(new Set([...parentContract.stakeholders, orgId]))],
+        buyerId: orgId,
+        price: contract.price,
+        titleId: contract.titleId,
+        terms: contract.terms,
+        holdbacks: contract.holdbacks,
+        parentTermId: contract.parentTermId,
+        specificity,
+        orgId: contract.orgId,
+      }
+
+      const options = { params: { contractId } }
+      await this.negotiationService.add(defualtNegotiation, options)
+
       // @dev: Create income & terms after contract because rules require contract to be created first
       // Create the terms
       await this.termService.add(terms);
@@ -139,7 +162,7 @@ export class BucketService extends CollectionService<BucketState> {
     if (sale) {
       sale.terms.push(term);
     } else {
-      const contract = createBucketContract({ titleId, parentTermId, terms: [ term ] });
+      const contract = createBucketContract({ titleId, parentTermId, terms: [term] });
       bucket.contracts.push(contract);
     }
 
