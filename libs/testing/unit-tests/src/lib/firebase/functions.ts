@@ -12,7 +12,6 @@ import {
 import type { FeaturesList } from 'firebase-functions-test/lib/features';
 import type { AppOptions } from 'firebase-admin'; // * Correct Import
 import fs from 'fs';
-import { TokenOptions } from '@firebase/testing/dist/src/api';
 
 export interface FirebaseTestConfig extends FeaturesList {
   firebaseConfig?: { projectId: string; app: admin.app.App };
@@ -78,7 +77,7 @@ export async function initFirestoreApp(
   projectId: string,
   rulePath: string,
   data: Record<string, unknown> = {},
-  auth?: TokenOptions
+  auth?: Record<string, unknown>
 ) {
   //Define these env vars to avoid getting console warnings
   process.env.GCLOUD_PROJECT = projectId;
