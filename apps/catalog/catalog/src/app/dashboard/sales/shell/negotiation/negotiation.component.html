@@ -1,0 +1,10 @@
+<negotiation-form [form]="form"></negotiation-form>
+<div fxLayout fxLayoutAlign="space-between center">
+  <button mat-stroked-button color="primary" (click)="decline()">
+    <mat-icon svgIcon="refuse"></mat-icon>
+    <span>Decline</span>
+  </button>
+  <button mat-flat-button color="primary" (click)="confirm()">
+    <span>Submit</span>
+  </button>
+</div>
