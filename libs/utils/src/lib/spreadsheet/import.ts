@@ -35,22 +35,18 @@ type DeepValue<T, K> =
 
 export type ParseFieldFn<T, K> = (value: string | string[], entity: any, state: any[], rowIndex?: number) =>
   DeepValue<T, K> |
-  ValueWithWarning<DeepValue<T, K>> | // TODO REMOVE
   ValueWithError<DeepValue<T, K>> |
   Promise<
     DeepValue<T, K> |
-    ValueWithWarning<DeepValue<T, K>> | // TODO REMOVE
     ValueWithError<DeepValue<T, K>>
   >
 ;
 export type ExtractConfig<T> = Partial<{
   [key in DeepKeys<T>]: (value: string | string[], entity: any, state: any[], rowIndex?: number) =>
     DeepValue<T, key> |
-    ValueWithWarning<DeepValue<T, key>> | // TODO REMOVE
     ValueWithError<DeepValue<T, key>> |
     Promise<
       DeepValue<T, key> |
-      ValueWithWarning<DeepValue<T, key>> | // TODO REMOVE
       ValueWithError<DeepValue<T, key>>
     >;
 }>
@@ -111,14 +107,8 @@ export async function parse<T>(
         const promises = value.map(v => transform(v, entity, state, rowIndex));
         const results = await Promise.all(promises);
 
-        // TODO REMOVE VALUE WITH WARNING
-        const validResults = results.filter(r => !(r instanceof ValueWithWarning) && !isValueWithError(r));
+        const validResults = results.filter(r => !isValueWithError(r));
         item[field] = validResults;
-
-        // TODO REMOVE THAT
-        const warningResults = results.filter(r => (r instanceof ValueWithWarning)) as ValueWithWarning[];
-        errors.push(...warningResults.map(w => w.warning));
-        item[field].push(...warningResults.map(w => w.value));
 
         const errorResults = results.filter(r => isValueWithError(r)) as ValueWithError[];
         errors.push(...errorResults.map(e => e.error));
@@ -136,10 +126,7 @@ export async function parse<T>(
       const value = Array.isArray(values) ? values[0] : values;
       if (last) {
         const result = await transform((`${value ?? ''}`).trim(), entity, state, rowIndex);
-        if (result instanceof ValueWithWarning) { // TODO REMOVE THAT
-          errors.push(result.warning);
-          item[segment] = result.value;
-        } else if (isValueWithError(result)) {
+        if (isValueWithError(result)) {
           errors.push(result.error);
           item[segment] = result.value;
         } else {
@@ -150,28 +137,15 @@ export async function parse<T>(
         await parse(state, entity, item[segment], values, segments.join('.'), transform, rowIndex, errors);
       }
     }
-
-  // TODO we shouldn't really need this anymore, but it still good to keep catch just in case
-  } catch (err: any) {
-    try {
-      errors.push(JSON.parse(err.message));
-
-    // unable to deserialize JSON error
-    } catch(_) {
-      errors.push({
-        type: 'error',
-        field: path,
-        name: 'Unexpected Error',
-        reason: 'An unexpected error as happened, please try again, and contact us if you keep seeing this.',
-        hint: err,
-      });
-    }
+  } catch (err) {
+    errors.push({
+      type: 'error',
+      field: path,
+      name: 'Unexpected Error',
+      reason: 'An unexpected error as happened, please try again, and contact us if you keep seeing this.',
+      hint: err,
+    });
   }
-}
-
-// TODO DELETE THIS CLASS
-export class ValueWithWarning<T = unknown>{
-  constructor(public value: T, public warning?: SpreadsheetImportError) { }
 }
 
 export interface ValueWithError<T = unknown> {

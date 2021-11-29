@@ -27,7 +27,7 @@ import { MovieLanguageSpecification } from '@blockframes/movie/+state/movie.fire
 import { Mandate, Sale } from '@blockframes/contract/contract/+state/contract.firestore';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { createMandate, createSale } from '@blockframes/contract/contract/+state/contract.model';
-import { extract, ExtractConfig, getStaticList, SheetTab, ValueWithWarning } from '@blockframes/utils/spreadsheet';
+import { extract, ExtractConfig, getStaticList, SheetTab } from '@blockframes/utils/spreadsheet';
 
 const separator = ';'
 
@@ -211,24 +211,30 @@ export async function formatContract(
     },
     /* o */'parentTerm': async (value: string, data: FieldsConfig) => {
       if (value && !blockframesAdmin) return adminOnlyWarning('', { field: 'parentTerm', name: 'Mandate ID/Row' });
-      if (value && data.contract.type === 'mandate') return new ValueWithWarning('', {
-        type: 'warning',
-        field: 'parentTerm',
-        name: 'Unused Mandate ID/Row',
-        reason: 'Mandate ID is used only for sales contracts, here the value will be omitted because the contract is a mandate.',
-        hint: 'Remove the corresponding sheet field to silence this warning.'
-      });
+      if (value && data.contract.type === 'mandate') return {
+        value: '',
+        error: {
+          type: 'warning',
+          field: 'parentTerm',
+          name: 'Unused Mandate ID/Row',
+          reason: 'Mandate ID is used only for sales contracts, here the value will be omitted because the contract is a mandate.',
+          hint: 'Remove the corresponding sheet field to silence this warning.'
+        }
+      };
       if (!value && data.contract.type === 'sale' && data.contract.sellerId === centralOrgId.catalog) {
         return mandatoryError({ field: 'parentTerm', name: 'Mandate ID/Row' });
       }
       if (value && data.contract.type === 'sale' && data.contract.sellerId !== centralOrgId.catalog) {
-        return new ValueWithWarning('', {
-          type: 'warning',
-          field: 'parentTerm',
-          name: 'Unused Mandate ID/Row',
-          reason: 'Mandate ID is used only for internal sales, here the value will be omitted because the sale is external.',
-          hint: 'Remove the corresponding sheet field to silence this warning.'
-        });
+        return {
+          value: '',
+          error: {
+            type: 'warning',
+            field: 'parentTerm',
+            name: 'Unused Mandate ID/Row',
+            reason: 'Mandate ID is used only for internal sales, here the value will be omitted because the sale is external.',
+            hint: 'Remove the corresponding sheet field to silence this warning.'
+          }
+        };
       }
       const isId = isNaN(Number(value));
       if (isId) {
@@ -239,12 +245,15 @@ export async function formatContract(
     },
     /* p */'_titleId': (value: string) => {
       if (value && !blockframesAdmin) return adminOnlyWarning('', { field: '_titleId', name: 'Import ID' });
-      if (value) return new ValueWithWarning('', {
-        type: 'warning',
-        field: '_titleId',
-        name: 'Deprecated Import ID',
-        reason: 'This field is not used anymore and will be removed, the value will be omitted.',
-      });
+      if (value) return {
+        value: '',
+        error: {
+          type: 'warning',
+          field: '_titleId',
+          name: 'Deprecated Import ID',
+          reason: 'This field is not used anymore and will be removed, the value will be omitted.',
+        }
+      };
     },
     /* q */'contract.stakeholders': async (value: string, data: FieldsConfig) => {
       const stakeholders = value.split(separator).filter(v => !!v).map(v => v.trim());
