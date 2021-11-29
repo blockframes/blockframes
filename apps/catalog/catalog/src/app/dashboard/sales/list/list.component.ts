@@ -46,7 +46,7 @@ export class SaleListComponent implements OnInit {
       licensee: (sale: Sale) => sale.buyerId ? this.orgService.valueChanges(sale.buyerId).pipe(map(buyer => buyer.denomination.full)) : 'External',
       title: (sale: Sale) => this.titleService.valueChanges(sale.titleId).pipe(map(title => title.title.international)),
       price: (sale: Sale) => this.incomeService.valueChanges(sale.id),
-      negotiation: (sale: Sale) => sale.status === 'negotiating' ? this.contractService.lastNegociation(sale.id) : null
+      negotiation: (sale: Sale) => sale.status === 'negotiating' ? this.contractService.lastNegotiation(sale.id) : null
     }),
   );
   filter = new FormControl();

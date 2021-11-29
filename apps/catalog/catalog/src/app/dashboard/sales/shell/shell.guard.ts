@@ -4,7 +4,7 @@ import { AuthQuery } from '@blockframes/auth/+state';
 import { ContractService } from '@blockframes/contract/contract/+state';
 
 @Injectable({ providedIn: 'root' })
-export class CatalogSaleViewGuard implements CanActivate {
+export class CatalogSaleShellGuard implements CanActivate {
   constructor(
     private router: Router,
     private authQuery: AuthQuery,
