@@ -269,7 +269,7 @@ export async function formatContract(
 
 
   for (const result of results) {
-    const { data, errors, warnings } = result;
+    const { data, errors } = result;
 
     const contract =  data.contract.type === 'sale'
       ? createSale({ ...data.contract as Sale})
@@ -303,7 +303,7 @@ export async function formatContract(
     // remove duplicate from stakeholders
     contract.stakeholders = Array.from(new Set([...contract.stakeholders]));
 
-    contracts.push({ contract, terms: [term], errors: [ ...errors, ...warnings ], newContract: true });
+    contracts.push({ contract, terms: [term], errors, newContract: true });
   }
 
   return contracts;

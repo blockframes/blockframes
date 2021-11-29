@@ -503,10 +503,10 @@ export async function formatTitle(
   const results = await extract<FieldsConfig>(sheetTab.rows, fieldsConfig, 10);
 
   for (const result of results) {
-    const { data, errors, warnings } = result;
+    const { data, errors } = result;
 
     if (!data.stakeholders) {
-      warnings.push(optionalWarning({ field: 'stakeholders', name: 'Stakeholders' }));
+      errors.push(optionalWarning({ field: 'stakeholders', name: 'Stakeholders' }));
     }
 
     const getStakeholders = (role: StakeholderRole): Stakeholder[] => data.stakeholders?.filter(s => s.role === role) ?? [];
@@ -524,7 +524,7 @@ export async function formatTitle(
 
     const languages: Partial<{ [language in Language]: MovieLanguageSpecification }> = {};
     if (!data.languages) {
-      warnings.push(optionalWarning({ field: 'languages', name: 'Languages' }));
+      errors.push(optionalWarning({ field: 'languages', name: 'Languages' }));
     } else {
       for (const { language, dubbed, subtitle, caption } of data.languages) {
         languages[language] = { dubbed, subtitle, caption };
@@ -541,7 +541,7 @@ export async function formatTitle(
       hint: 'Please edit the corresponding sheets field'
     });
 
-    titles.push({ errors: [ ...errors, ...warnings ],  movie: title });
+    titles.push({ errors,  movie: title });
   }
 
   return titles;

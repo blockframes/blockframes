@@ -6,7 +6,7 @@ import { MandatoryError, SpreadsheetImportError } from 'libs/import/src/lib/util
 import { getKeyIfExists } from '../helpers';
 import { parseToAll, Scope } from '../static-model';
 
-type Matrix = any[][]; //@todo find better type
+type Matrix = any[][]; // @todo find better type
 
 export interface SheetTab {
   name: string;
@@ -33,14 +33,30 @@ type DeepValue<T, K> =
   : K extends keyof T ? T[K] : never;
 
 
-export type ParseFieldFn = (value: string | string[], entity: any, state: any[], rowIndex?: number) => any | Promise<any>;
+export type ParseFieldFn<T, K> = (value: string | string[], entity: any, state: any[], rowIndex?: number) =>
+  DeepValue<T, K> |
+  ValueWithWarning<DeepValue<T, K>> | // TODO REMOVE
+  ValueWithError<DeepValue<T, K>> |
+  Promise<
+    DeepValue<T, K> |
+    ValueWithWarning<DeepValue<T, K>> | // TODO REMOVE
+    ValueWithError<DeepValue<T, K>>
+  >
+;
 export type ExtractConfig<T> = Partial<{
-  [key in DeepKeys<T>]: (value: string | string[], entity: any, state: any[], rowIndex?: number) => DeepValue<T, key> | ValueWithWarning<DeepValue<T, key>> | Promise<DeepValue<T, key> | ValueWithWarning<DeepValue<T, key>>>;
+  [key in DeepKeys<T>]: (value: string | string[], entity: any, state: any[], rowIndex?: number) =>
+    DeepValue<T, key> |
+    ValueWithWarning<DeepValue<T, key>> | // TODO REMOVE
+    ValueWithError<DeepValue<T, key>> |
+    Promise<
+      DeepValue<T, key> |
+      ValueWithWarning<DeepValue<T, key>> | // TODO REMOVE
+      ValueWithError<DeepValue<T, key>>
+    >;
 }>
 
 export interface ExtractOutput<T> {
   data: T,
-  warnings: SpreadsheetImportError[],
   errors: SpreadsheetImportError[]
 }
 
@@ -72,15 +88,14 @@ export function importSpreadsheet(bytes: Uint8Array, range?: string): SheetTab[]
  * @param state all previous entities
  * @param item current entity (Title, Org, Contract, ...)
  */
-export async function parse(
+export async function parse<T>(
   state: any[],
   entity: any = {},
   item: any = {},
   values: string | string[],
   path: string,
-  transform: ParseFieldFn,
+  transform: ParseFieldFn<T, typeof path>,
   rowIndex: number,
-  warnings: SpreadsheetImportError[],
   errors: SpreadsheetImportError[],
 ) {
   try {
@@ -96,39 +111,47 @@ export async function parse(
         const promises = value.map(v => transform(v, entity, state, rowIndex));
         const results = await Promise.all(promises);
 
-        const validResults = results.filter(r => !(r instanceof ValueWithWarning));
+        // TODO REMOVE VALUE WITH WARNING
+        const validResults = results.filter(r => !(r instanceof ValueWithWarning) && !isValueWithError(r));
         item[field] = validResults;
 
+        // TODO REMOVE THAT
         const warningResults = results.filter(r => (r instanceof ValueWithWarning)) as ValueWithWarning[];
-        warnings.push(...warningResults.map(w => w.warning));
+        errors.push(...warningResults.map(w => w.warning));
         item[field].push(...warningResults.map(w => w.value));
+
+        const errorResults = results.filter(r => isValueWithError(r)) as ValueWithError[];
+        errors.push(...errorResults.map(e => e.error));
+        item[field].push(...errorResults.map(e => e.value));
 
       } else {
         // Creating array at this field to which will be pushed the other sub fields
         if (!item[field]) item[field] = new Array(value.length).fill(null).map(() => ({}));
         for (let index = 0 ; index < value.length ; index++) {
           // Filling in objects into above created array
-          await parse(state, entity, item[field][index], value[index], segments.join('.'), transform, rowIndex, warnings, errors);
+          await parse(state, entity, item[field][index], value[index], segments.join('.'), transform, rowIndex, errors);
         }
       }
     } else {
       const value = Array.isArray(values) ? values[0] : values;
-        if (last) {
-          const result = await transform((`${value ?? ''}`).trim(), entity, state, rowIndex);
-          if (result instanceof ValueWithWarning) {
-            warnings.push(result.warning);
-            item[segment] = result.value;
-          } else {
-            item[segment] = result;
-          }
+      if (last) {
+        const result = await transform((`${value ?? ''}`).trim(), entity, state, rowIndex);
+        if (result instanceof ValueWithWarning) { // TODO REMOVE THAT
+          errors.push(result.warning);
+          item[segment] = result.value;
+        } else if (isValueWithError(result)) {
+          errors.push(result.error);
+          item[segment] = result.value;
+        } else {
+          item[segment] = result;
         }
-
-
-      if (!last) {
+      } else {
         if (!item[segment]) item[segment] = {};
-        await parse(state, entity, item[segment], values, segments.join('.'), transform, rowIndex, warnings, errors);
+        await parse(state, entity, item[segment], values, segments.join('.'), transform, rowIndex, errors);
       }
     }
+
+  // TODO we shouldn't really need this anymore, but it still good to keep catch just in case
   } catch (err: any) {
     try {
       errors.push(JSON.parse(err.message));
@@ -146,8 +169,18 @@ export async function parse(
   }
 }
 
-export class ValueWithWarning<T = any>{
+// TODO DELETE THIS CLASS
+export class ValueWithWarning<T = unknown>{
   constructor(public value: T, public warning?: SpreadsheetImportError) { }
+}
+
+export interface ValueWithError<T = unknown> {
+  value: T;
+  error: SpreadsheetImportError;
+}
+
+function isValueWithError(o: unknown): o is ValueWithError {
+  return typeof o === 'object' && ('value' in o) && ('error' in o);
 }
 
 /**
@@ -198,22 +231,21 @@ export async function extract<T>(rawRows: string[][], config: ExtractConfig<T> =
 
   for (let rowIndex = 0 ; rowIndex < flatRows.length ; rowIndex++) {
     const item = {};
-    const warnings: SpreadsheetImportError[] = [];
     const errors: SpreadsheetImportError[] = [];
     const entries = Object.entries(config);
     for (let columnIndex = 0 ; columnIndex < entries.length ; columnIndex++) {
       const [ key, transform ] = entries[columnIndex];
       const value = flatRows[rowIndex][columnIndex];
-      await parse(state, item, item, value, key, transform as ParseFieldFn, rowIndex, warnings, errors)
+      await parse<T>(state, item, item, value, key, transform as ParseFieldFn<T, typeof key>, rowIndex, errors)
     }
     const data = cleanUp(item) as T;
     state.push(data);
-    results.push({ data, errors, warnings });
+    results.push({ data, errors });
   }
   return results;
 }
 
-export function getStatic(scope: Scope, value: string, separator:string, { field, name }: { field: string, name: string }) {
+export function getStatic(scope: Scope, value: string, separator: string, { field, name }: { field: string, name: string }) {
   if (!value) return [];
   if (value.toLowerCase() === 'all') return parseToAll(scope, 'all');
   const splitted = split(value, separator);
@@ -223,13 +255,13 @@ export function getStatic(scope: Scope, value: string, separator:string, { field
   keys.forEach((k, i) => {
     if (!k) wrongData.push(splitted[i]);
   });
-  if (wrongData.length) return new ValueWithWarning(values, {
+  if (wrongData.length) return { value: values, error: {
     type: 'warning',
     field,
     name: `Wrong ${name}`,
     reason: `Be careful, ${wrongData.length} values were wrong and will be omitted.`,
     hint: `${wrongData.slice(0, 3).join(', ')}...`
-  });
+  }};
   return values
 }
 

@@ -3,7 +3,7 @@ import { Mandate, Sale } from "@blockframes/contract/contract/+state/contract.mo
 import { Organization, OrganizationService } from "@blockframes/organization/+state";
 import { User } from "@blockframes/user/+state/user.model";
 import { Term } from "@blockframes/contract/term/+state/term.model";
-import { SheetTab } from "@blockframes/utils/spreadsheet";
+import { SheetTab, ValueWithError } from "@blockframes/utils/spreadsheet";
 import { centralOrgId } from "@env";
 import { ContractService } from "@blockframes/contract/contract/+state/contract.service";
 import { UserService } from "@blockframes/user/+state";
@@ -180,6 +180,7 @@ export function getDate(value: string, errorData: { field: string, name: string 
   return date;
 }
 
+// TODO REMOVE
 export class MandatoryError extends Error {
   constructor({ field, name }: { field: string, name: string }) {
     super(JSON.stringify({
@@ -192,6 +193,20 @@ export class MandatoryError extends Error {
   }
 }
 
+export function mandatoryError({ field, name }: { field: string, name: string }): ValueWithError {
+  return {
+    value: undefined,
+    error: {
+      type: 'error',
+      field,
+      name: `Missing ${name}`,
+      reason: 'Mandatory field is missing.',
+      hint: 'Please fill in the corresponding sheet field.'
+    },
+  };
+}
+
+// TODO REMOVE
 export class UnknownEntityError extends Error {
   constructor({ field, name }: { field: string, name: string }) {
     super(JSON.stringify({
@@ -204,6 +219,7 @@ export class UnknownEntityError extends Error {
   }
 }
 
+// TODO REMOVE
 export class WrongValueError extends Error {
   constructor({ field, name }: { field: string, name: string }) {
     super(JSON.stringify({
@@ -216,6 +232,7 @@ export class WrongValueError extends Error {
   }
 }
 
+// TODO REMOVE
 export class AlreadyExistError extends Error {
   constructor({ field, name }: { field: string, name: string }) {
     super(JSON.stringify({
