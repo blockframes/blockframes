@@ -1,7 +1,7 @@
 
 import { App } from '@blockframes/utils/apps';
 import { UserService } from '@blockframes/user/+state';
-import { MandatoryError, MovieImportState, WrongValueError, optionalWarning, getDate, adminOnlyWarning, getUser, UnknownEntityError } from '@blockframes/import/utils';
+import { mandatoryError, MovieImportState, WrongValueError, optionalWarning, getDate, adminOnlyWarning, getUser, UnknownEntityError } from '@blockframes/import/utils';
 import { createMovie } from '@blockframes/movie/+state';
 import { extract, ExtractConfig, SheetTab, ValueWithWarning } from '@blockframes/utils/spreadsheet';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
@@ -123,7 +123,7 @@ export async function formatTitle(
       return value;
     },
     /* b */ 'title.original': (value: string) => { // ! required
-      if (!value) throw new MandatoryError({ field: 'title.original', name: 'Original Title' });
+      if (!value) return mandatoryError({ field: 'title.original', name: 'Original Title' });
       return value;
     },
     /* c */ 'internalRef': (value: string) => {
@@ -131,7 +131,7 @@ export async function formatTitle(
       return value;
     },
     /* d */ 'contentType': (value: string) => { // ! required
-      if (!value) throw new MandatoryError({ field: 'contentType', name: 'Content Type' });
+      if (!value) return mandatoryError({ field: 'contentType', name: 'Content Type' });
       const key = getKeyIfExists('contentType', value) as ContentType;
       if (!key) throw new WrongValueError({ field: 'contentType', name: 'Content Type' });
       return key
@@ -155,23 +155,23 @@ export async function formatTitle(
       return status;
     },
     /* h */ 'release.year': (value: string) => { // ! required
-      if (!value) throw new MandatoryError({ field: 'release.year', name: 'Release Year' });
+      if (!value) return mandatoryError({ field: 'release.year', name: 'Release Year' });
       const year = Number(value);
       if (isNaN(year)) throw new WrongValueError({ field: 'release.year', name: 'Release Year' });
       return year;
     },
     /* i */ 'release.status': (value: string) => { // ! required
-      if (!value) throw new MandatoryError({ field: 'release.status', name: 'Release Status' });
+      if (!value) return mandatoryError({ field: 'release.status', name: 'Release Status' });
       const status = getKeyIfExists('screeningStatus', value);
       if (!status) throw new WrongValueError({ field: 'release.year', name: 'Release Year' });
       return status;
     },
     /* j */ 'directors[].firstName': (value: string) => {
-      if (!value) throw new MandatoryError({ field: 'directors[].firstName', name: 'Director\'s first name' });
+      if (!value) return mandatoryError({ field: 'directors[].firstName', name: 'Director\'s first name' });
       return value;
     },
     /* k */ 'directors[].lastName': (value: string) => {
-      if (!value) throw new MandatoryError({ field: 'directors[].lastName', name: 'Director\'s last name' });
+      if (!value) return mandatoryError({ field: 'directors[].lastName', name: 'Director\'s last name' });
       return value;
     },
     /* l */ 'directors[].description': (value: string) => {
@@ -179,7 +179,7 @@ export async function formatTitle(
       return value;
     },
     /* m */ 'originCountries[]': (value: string) => { // ! required
-      if (!value) throw new MandatoryError({ field: 'originCountries', name: 'Origin Countries' });
+      if (!value) return mandatoryError({ field: 'originCountries', name: 'Origin Countries' });
       const territories = getKeyIfExists('territories', value) as Territory;
       if (!territories) throw new WrongValueError({ field: 'originCountries', name: 'Origin Countries' });
       return territories;
@@ -217,13 +217,13 @@ export async function formatTitle(
       return getDate(value, { field: 'originalRelease[].date', name: 'Original release Date'}) as Date;
     },
     /* t */ 'originalLanguages[]': (value: string) => { // ! required
-      if (!value || !value.length) throw new MandatoryError({ field: 'originalLanguages', name: 'Original Languages' });
+      if (!value || !value.length) return mandatoryError({ field: 'originalLanguages', name: 'Original Languages' });
       const languages = getKeyIfExists('languages', value) as Language;
       if (!languages) throw new WrongValueError({ field: 'originalLanguages', name: 'Original Languages' });
       return languages;
     },
     /* u */ 'genres[]': (value: string) => { // ! required
-      if (!value || !value.length) throw new MandatoryError({ field: 'genres', name: 'Genres' });
+      if (!value || !value.length) return mandatoryError({ field: 'genres', name: 'Genres' });
       const genres = getKeyIfExists('genres', value) as Genre;
       if (!genres) throw new WrongValueError({ field: 'genres', name: 'Genres' });
       return genres;
@@ -285,7 +285,7 @@ export async function formatTitle(
       return value;
     },
     /* ag */ 'synopsis': (value: string) => { // ! required
-      if (!value) throw new MandatoryError({ field: 'synopsis', name: 'Synopsis' });
+      if (!value) return mandatoryError({ field: 'synopsis', name: 'Synopsis' });
       return value;
     },
     /* ah */ 'keyAssets': (value: string) => {
@@ -491,7 +491,7 @@ export async function formatTitle(
       return { status, access: true, acceptedAt: null, refusedAt: null };
     },
     /* bp */ 'orgIds': async (value: string) => { // ! required
-      if (!value && blockframesAdmin) throw new MandatoryError({ field: 'orgIds', name: 'Owner Id' });
+      if (!value && blockframesAdmin) return mandatoryError({ field: 'orgIds', name: 'Owner Id' });
       if (value && !blockframesAdmin) return new ValueWithWarning([userOrgId], adminOnlyWarning({ field: 'orgIds', name: 'Owner Id' }));
       if (!value) return [userOrgId];
       const user = await getUser({ id: value }, userService, userCache);

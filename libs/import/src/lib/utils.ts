@@ -180,20 +180,8 @@ export function getDate(value: string, errorData: { field: string, name: string 
   return date;
 }
 
-// TODO REMOVE
-export class MandatoryError extends Error {
-  constructor({ field, name }: { field: string, name: string }) {
-    super(JSON.stringify({
-      type: 'error',
-      field,
-      name: `Missing ${name}`,
-      reason: 'Mandatory field is missing.',
-      hint: 'Please fill in the corresponding sheet field.'
-    }));
-  }
-}
 
-export function mandatoryError({ field, name }: { field: string, name: string }): ValueWithError {
+export function mandatoryError<T = unknown>({ field, name }: { field: string, name: string }): ValueWithError<T> {
   return {
     value: undefined,
     error: {

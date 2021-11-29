@@ -6,7 +6,7 @@ import { UserService } from '@blockframes/user/+state';
 import { Module, ModuleAccess, modules } from '@blockframes/utils/apps';
 import { extract, ExtractConfig, SheetTab, ValueWithWarning } from '@blockframes/utils/spreadsheet';
 import { createOrganization, Organization, OrganizationService } from '@blockframes/organization/+state';
-import { AlreadyExistError, getOrgId, getUser, MandatoryError, optionalWarning, OrganizationsImportState, WrongValueError } from '@blockframes/import/utils';
+import { AlreadyExistError, getOrgId, getUser, mandatoryError, optionalWarning, OrganizationsImportState, WrongValueError } from '@blockframes/import/utils';
 
 const separator = ',';
 
@@ -65,7 +65,7 @@ export async function formatOrg(sheetTab: SheetTab, organizationService: Organiz
   // ! The order of the property should be the same as excel columns
   const fieldsConfig: FieldsConfigType = {
     /* a */ 'org.denomination.full': async (value: string) => {
-      if (!value) throw new MandatoryError({ field: 'org.denomination.full', name: 'Organization Name' });
+      if (!value) return mandatoryError({ field: 'org.denomination.full', name: 'Organization Name' });
       const exist = await getOrgId(value, organizationService, orgNameCache);
       if (exist) throw new AlreadyExistError({ field: 'org.denomination.full', name: 'Organization Name' });
       return value
@@ -78,7 +78,7 @@ export async function formatOrg(sheetTab: SheetTab, organizationService: Organiz
     },
     /* c */ 'org.email': async (value: string) => {
       const lower = value.toLowerCase();
-      if (!lower) throw new MandatoryError({ field: 'org.email', name: 'Contract Email' });
+      if (!lower) return mandatoryError({ field: 'org.email', name: 'Contract Email' });
       return lower;
     },
     /* d */ 'org.activity': (value: string) => {
@@ -119,7 +119,7 @@ export async function formatOrg(sheetTab: SheetTab, organizationService: Organiz
     },
     /* l */ 'superAdmin.email': async (value: string) => {
       const lower = value.toLowerCase();
-      if (!lower) throw new MandatoryError({ field: 'superAdmin.email', name: 'Admin Email' });
+      if (!lower) return mandatoryError({ field: 'superAdmin.email', name: 'Admin Email' });
 
       const exist = await getUser({ email: lower }, userService, userCache);
       if (exist) throw new AlreadyExistError({ field: 'superAdmin.email', name: 'Admin Email' });

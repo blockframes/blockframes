@@ -6,7 +6,7 @@ import {
   getOrgId,
   getTitleId,
   getContract,
-  MandatoryError,
+  mandatoryError,
   checkParentTerm,
   WrongValueError,
   adminOnlyWarning,
@@ -114,14 +114,14 @@ export async function formatContract(
   // ! The order of the property should be the same as excel columns
   const fieldsConfig: FieldsConfigType = {
     /* a */'contract.titleId': async (value: string) => {
-      if (!value) throw new MandatoryError({ field: 'contract.titleId', name: 'Title' });
+      if (!value) return mandatoryError({ field: 'contract.titleId', name: 'Title' });
       const titleId = await getTitleId(value, titleService, titleNameCache, userOrgId, blockframesAdmin);
       if (!titleId) throw new UnknownEntityError({ field: 'contract.titleId', name: 'Title' });
       return titleId;
     },
     /* b */'contract.type': (value: string) => {
       const lower = value.toLowerCase();
-      if (!lower) throw new MandatoryError({ field: 'contract.type', name: 'Type' });
+      if (!lower) return mandatoryError({ field: 'contract.type', name: 'Type' });
       const type = getKeyIfExists('contractType', lower[0].toUpperCase() + lower.substr(1));
       if (!type) throw new WrongValueError({ field: 'contract.type', name: 'Type' });
       if (type === 'mandate' && !blockframesAdmin) throw new Error(JSON.stringify({
@@ -134,7 +134,7 @@ export async function formatContract(
       return lower.toLowerCase() as 'mandate' | 'sale';
     },
     /* c */'contract.sellerId': async (value: string) => {
-      if (!value) throw new MandatoryError({ field: 'contract.sellerId', name: 'Licensor' });
+      if (!value) return mandatoryError({ field: 'contract.sellerId', name: 'Licensor' });
       if (value === 'Archipel Content') {
         if (!blockframesAdmin) throw new Error(JSON.stringify({
           type: 'error',
@@ -158,7 +158,7 @@ export async function formatContract(
       }
     },
     /* d */'contract.buyerId': async (value: string, data: FieldsConfig) => {
-      if (!value) throw new MandatoryError({ field: 'contract.buyerId', name: 'Licensee' });
+      if (!value) return mandatoryError({ field: 'contract.buyerId', name: 'Licensee' });
       if (data.contract.type === 'mandate') {
         if (value !== 'Archipel Content') throw new Error(JSON.stringify({
           type: 'error',
@@ -179,22 +179,22 @@ export async function formatContract(
     /* f */'term.medias': (value: string) =>  getStaticList('medias', value, separator, { field: 'term.medias', name: 'Medias' }) as Media[],
     /* g */'term.exclusive': (value: string) => {
       const lower = value.toLowerCase();
-      if (!lower) throw new MandatoryError({ field: 'term.exclusive', name: 'Exclusive' });
+      if (!lower) return mandatoryError({ field: 'term.exclusive', name: 'Exclusive' });
       if (lower !== 'yes' && lower !== 'no') throw new WrongValueError({ field: 'term.exclusive', name: 'Exclusive' });
       return lower === 'yes';
     },
     /* h */'term.duration.from': (value: string) => {
-      if (!value) throw new MandatoryError({ field: 'term.duration.from', name: 'Duration From'});
+      if (!value) return mandatoryError({ field: 'term.duration.from', name: 'Duration From'});
       return getDate(value, { field: 'term.duration.from', name: 'Start of Contract'}) as Date
     },
     /* i */'term.duration.to': (value: string) => {
-      if (!value) throw new MandatoryError({ field: 'term.duration.to', name: 'Duration To'});
+      if (!value) return mandatoryError({ field: 'term.duration.to', name: 'Duration To'});
       return getDate(value, { field: 'term.duration.to', name: 'End of Contract'}) as Date
     },
 
     /* j */'term.licensedOriginal': (value: string) => {
       const lower = value.toLowerCase();
-      if (!lower) throw new MandatoryError({ field: 'term.licensedOriginal', name: 'Licensed Original' });
+      if (!lower) return mandatoryError({ field: 'term.licensedOriginal', name: 'Licensed Original' });
       if (lower !== 'yes' && lower !== 'no') throw new WrongValueError({ field: 'term.licensedOriginal', name: 'Licensed Original' });
       return lower === 'yes';
     },
@@ -219,7 +219,7 @@ export async function formatContract(
         hint: 'Remove the corresponding sheet field to silence this warning.'
       });
       if (!value && data.contract.type === 'sale' && data.contract.sellerId === centralOrgId.catalog) {
-        throw new MandatoryError({ field: 'parentTerm', name: 'Mandate ID/Row' });
+        return mandatoryError({ field: 'parentTerm', name: 'Mandate ID/Row' });
       }
       if (value && data.contract.type === 'sale' && data.contract.sellerId !== centralOrgId.catalog) {
         return new ValueWithWarning('', {

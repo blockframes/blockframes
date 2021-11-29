@@ -1,7 +1,7 @@
 
 import { WorkBook, WorkSheet, utils, read } from 'xlsx';
 
-import { MandatoryError, SpreadsheetImportError } from 'libs/import/src/lib/utils';
+import { mandatoryError, SpreadsheetImportError } from 'libs/import/src/lib/utils';
 
 import { getKeyIfExists } from '../helpers';
 import { parseToAll, Scope } from '../static-model';
@@ -272,7 +272,7 @@ export function getStaticList(scope: Scope, value: string, separator:string, err
       ('length' in values && values.length === 0) ||
       ('value' in values && values.value.length === 0)
     )
-  ) throw new MandatoryError(errorData);
+  ) return mandatoryError(errorData);
   return values;
 }
 
