@@ -1,7 +1,7 @@
 
 import { App } from '@blockframes/utils/apps';
 import { UserService } from '@blockframes/user/+state';
-import { mandatoryError, MovieImportState, WrongValueError, optionalWarning, getDate, adminOnlyWarning, getUser, unknownEntityError } from '@blockframes/import/utils';
+import { mandatoryError, MovieImportState, wrongValueError, optionalWarning, getDate, adminOnlyWarning, getUser, unknownEntityError } from '@blockframes/import/utils';
 import { createMovie } from '@blockframes/movie/+state';
 import { extract, ExtractConfig, SheetTab, ValueWithWarning } from '@blockframes/utils/spreadsheet';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
@@ -133,37 +133,37 @@ export async function formatTitle(
     /* d */ 'contentType': (value: string) => { // ! required
       if (!value) return mandatoryError({ field: 'contentType', name: 'Content Type' });
       const key = getKeyIfExists('contentType', value) as ContentType;
-      if (!key) throw new WrongValueError({ field: 'contentType', name: 'Content Type' });
+      if (!key) return wrongValueError({ field: 'contentType', name: 'Content Type' });
       return key
     },
     /* e */ 'title.series': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'title.series', name: 'Season Number' }));
       const series = Number(value);
-      if (isNaN(series)) throw new WrongValueError({ field: 'title.series', name: 'Season Number' });
+      if (isNaN(series)) return wrongValueError({ field: 'title.series', name: 'Season Number' });
       return series;
     },
     /* f */ 'runningTime.episodeCount': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'runningTime.episodeCount', name: 'Number of Episodes' }));
       const count = Number(value);
-      if (isNaN(count)) throw new WrongValueError({ field: 'runningTime.episodeCount', name: 'Number of Episodes' });
+      if (isNaN(count)) return wrongValueError({ field: 'runningTime.episodeCount', name: 'Number of Episodes' });
       return count;
     },
     /* g */ 'productionStatus': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'productionStatus', name: 'Production Status' }));
       const status = getKeyIfExists('productionStatus', value) as ProductionStatus;
-      if (!status) throw new WrongValueError({ field: 'productionStatus', name: 'Production Status' });
+      if (!status) return wrongValueError({ field: 'productionStatus', name: 'Production Status' });
       return status;
     },
     /* h */ 'release.year': (value: string) => { // ! required
       if (!value) return mandatoryError({ field: 'release.year', name: 'Release Year' });
       const year = Number(value);
-      if (isNaN(year)) throw new WrongValueError({ field: 'release.year', name: 'Release Year' });
+      if (isNaN(year)) return wrongValueError({ field: 'release.year', name: 'Release Year' });
       return year;
     },
     /* i */ 'release.status': (value: string) => { // ! required
       if (!value) return mandatoryError({ field: 'release.status', name: 'Release Status' });
       const status = getKeyIfExists('screeningStatus', value);
-      if (!status) throw new WrongValueError({ field: 'release.year', name: 'Release Year' });
+      if (!status) return wrongValueError({ field: 'release.year', name: 'Release Year' });
       return status;
     },
     /* j */ 'directors[].firstName': (value: string) => {
@@ -181,7 +181,7 @@ export async function formatTitle(
     /* m */ 'originCountries[]': (value: string) => { // ! required
       if (!value) return mandatoryError({ field: 'originCountries', name: 'Origin Countries' });
       const territories = getKeyIfExists('territories', value) as Territory;
-      if (!territories) throw new WrongValueError({ field: 'originCountries', name: 'Origin Countries' });
+      if (!territories) return wrongValueError({ field: 'originCountries', name: 'Origin Countries' });
       return territories;
     },
     /* n */ 'stakeholders[].displayName': (value: string) => {
@@ -191,25 +191,25 @@ export async function formatTitle(
     /* o */ 'stakeholders[].role': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'stakeholders[].role', name: 'Stakeholders Role' }));
       const role = getKeyIfExists('stakeholderRoles', value) as StakeholderRole;
-      if (!role) throw new WrongValueError({ field: 'stakeholders[].role', name: 'Stakeholders Role' });
+      if (!role) return wrongValueError({ field: 'stakeholders[].role', name: 'Stakeholders Role' });
       return role;
     },
     /* p */ 'stakeholders[].countries[]': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'stakeholders[].country', name: 'Stakeholders Country' }));
       const country = getKeyIfExists('territories', value) as Territory;
-      if (!country) throw new WrongValueError({ field: 'stakeholders[].country', name: 'Stakeholders Country' });
+      if (!country) return wrongValueError({ field: 'stakeholders[].country', name: 'Stakeholders Country' });
       return country;
     },
     /* q */ 'originalRelease[].country': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'originalRelease[].country', name: 'Original release Country' }));
       const country = getKeyIfExists('territories', value) as Territory;
-      if (!country) throw new WrongValueError({ field: 'originalRelease[].country', name: 'Original release Country' });
+      if (!country) return wrongValueError({ field: 'originalRelease[].country', name: 'Original release Country' });
       return country;
     },
     /* r */ 'originalRelease[].media': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'originalRelease[].media', name: 'Original release Media' }));
       const media = getKeyIfExists('medias', value) as MediaValue;
-      if (!media) throw new WrongValueError({ field: 'originalRelease[].media', name: 'Original release Media' });
+      if (!media) return wrongValueError({ field: 'originalRelease[].media', name: 'Original release Media' });
       return media;
     },
     /* s */ 'originalRelease[].date': (value: string) => {
@@ -219,13 +219,13 @@ export async function formatTitle(
     /* t */ 'originalLanguages[]': (value: string) => { // ! required
       if (!value || !value.length) return mandatoryError({ field: 'originalLanguages', name: 'Original Languages' });
       const languages = getKeyIfExists('languages', value) as Language;
-      if (!languages) throw new WrongValueError({ field: 'originalLanguages', name: 'Original Languages' });
+      if (!languages) return wrongValueError({ field: 'originalLanguages', name: 'Original Languages' });
       return languages;
     },
     /* u */ 'genres[]': (value: string) => { // ! required
       if (!value || !value.length) return mandatoryError({ field: 'genres', name: 'Genres' });
       const genres = getKeyIfExists('genres', value) as Genre;
-      if (!genres) throw new WrongValueError({ field: 'genres', name: 'Genres' });
+      if (!genres) return wrongValueError({ field: 'genres', name: 'Genres' });
       return genres;
     },
     /* v */ 'customGenres[]': (value: string) => {
@@ -235,13 +235,13 @@ export async function formatTitle(
     /* w */ 'runningTime.time': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'runningTime.time', name: 'Running Time' }));
       const time = Number(value);
-      if (isNaN(time)) throw new WrongValueError({ field: 'runningTime.time', name: 'Running Time' });
+      if (isNaN(time)) return wrongValueError({ field: 'runningTime.time', name: 'Running Time' });
       return time;
     },
     /* x */ 'runningTime.status': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'runningTime.status', name: 'Running Time Status' }));
       const status = getKeyIfExists('screeningStatus', value);
-      if (!status) throw new WrongValueError({ field: 'runningTime.status', name: 'Running Time Status' });
+      if (!status) return wrongValueError({ field: 'runningTime.status', name: 'Running Time Status' });
       return status;
     },
     /* y */ 'cast[].firstName': (value: string) => {
@@ -255,19 +255,19 @@ export async function formatTitle(
     /* aa */ 'cast[].status': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'cast[].status', name: 'Principal Cast Status' }));
       const status = getKeyIfExists('memberStatus', value);
-      if (!status) throw new WrongValueError({ field: 'cast[].status', name: 'Principal Cast Status' });
+      if (!status) return wrongValueError({ field: 'cast[].status', name: 'Principal Cast Status' });
       return status;
     },
     /* ab */ 'prizes[].name': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'prizes[].name', name: 'Festival Prizes Festival Name' }));
       const festival = getKeyIfExists('festival', value);
-      if (!festival) throw new WrongValueError({ field: 'prizes[].name', name: 'Festival Prizes Festival Name' });
+      if (!festival) return wrongValueError({ field: 'prizes[].name', name: 'Festival Prizes Festival Name' });
       return festival;
     },
     /* ac */ 'prizes[].year': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'prizes[].year', name: 'Festival Prizes Year' }));
       const year = Number(value);
-      if (isNaN(year)) throw new WrongValueError({ field: 'prizes[].year', name: 'Festival Prizes Year'});
+      if (isNaN(year)) return wrongValueError({ field: 'prizes[].year', name: 'Festival Prizes Year'});
       return year;
     },
     /* ad */ 'prizes[].prize': (value: string) => {
@@ -277,7 +277,7 @@ export async function formatTitle(
     /* ae */ 'prizes[].premiere': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'prizes[].premiere', name: 'Festival Prizes Premiere' }));
       const premiere = getKeyIfExists('premiereType', value) as PremiereType;
-      if (!premiere) throw new WrongValueError({ field: 'prizes[].premiere', name: 'Festival Prizes Premiere'});
+      if (!premiere) return wrongValueError({ field: 'prizes[].premiere', name: 'Festival Prizes Premiere'});
       return premiere;
     },
     /* af */ 'logline': (value: string) => {
@@ -307,7 +307,7 @@ export async function formatTitle(
     /* al */ 'producers[].role': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'producers[].role', name: 'Producer(s) Role' }));
       const role = getKeyIfExists('producerRoles', value) as ProducerRole;
-      if (!role) throw new WrongValueError({ field: 'producers[].role', name: 'Producer(s) Role' });
+      if (!role) return wrongValueError({ field: 'producers[].role', name: 'Producer(s) Role' });
       return role;
     },
     /* am */ 'crew[].firstName': (value: string) => {
@@ -321,43 +321,43 @@ export async function formatTitle(
     /* ao */ 'crew[].role': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'crew[].role', name: 'Crew Member(s) Role' }));
       const role = getKeyIfExists('crewRoles', value) as CrewRole;
-      if (!role) throw new WrongValueError({ field: 'crew[].role', name: 'Crew Member(s) Role' });
+      if (!role) return wrongValueError({ field: 'crew[].role', name: 'Crew Member(s) Role' });
       return role;
     },
     /* ap */ 'budgetRange': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'budgetRange', name: 'Budget Range' }));
       const budget = getKeyIfExists('budgetRange', value);
-      if (!budget) throw new WrongValueError({ field: 'budgetRange', name: 'Budget Range' });
+      if (!budget) return wrongValueError({ field: 'budgetRange', name: 'Budget Range' });
       return budget as any;
     },
     /* aq */ 'boxoffice[].territory': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'boxoffice[].territory', name: 'Box Office Country' }));
       const country = getKeyIfExists('territories', value);
-      if (!country) throw new WrongValueError({ field: 'boxoffice[].territory', name: 'Box Office Country' });
+      if (!country) return wrongValueError({ field: 'boxoffice[].territory', name: 'Box Office Country' });
       return country;
     },
     /* ar */ 'boxoffice[].unit': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'boxoffice[].unit', name: 'Box Office Metric' }));
       const unit = getKeyIfExists('unitBox', value);
-      if (!unit) throw new WrongValueError({ field: 'boxoffice[].unit', name: 'Box Office Metric' });
+      if (!unit) return wrongValueError({ field: 'boxoffice[].unit', name: 'Box Office Metric' });
       return unit;
     },
     /* as */ 'boxoffice[].value': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'boxoffice[].value', name: 'Box Office Number' }));
       const num = Number(value);
-      if (!num) throw new WrongValueError({ field: 'boxoffice[].value', name: 'Box Office Number' });
+      if (!num) return wrongValueError({ field: 'boxoffice[].value', name: 'Box Office Number' });
       return num;
     },
     /* at */ 'certifications[]': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'certifications[]', name: 'Certification' }));
       const certification = getKeyIfExists('certifications', value) as Certification;
-      if (!certification) throw new WrongValueError({ field: 'certifications[', name: 'Certification' });
+      if (!certification) return wrongValueError({ field: 'certifications[', name: 'Certification' });
       return certification;
     },
     /* au */ 'ratings[].country': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'ratings[].country', name: 'Ratings Country' }));
       const country = getKeyIfExists('territories', value);
-      if (!country) throw new WrongValueError({ field: 'ratings[].country', name: 'Ratings Country' });
+      if (!country) return wrongValueError({ field: 'ratings[].country', name: 'Ratings Country' });
       return country;
     },
     /* av */ 'ratings[].value': (value: string) => {
@@ -371,7 +371,7 @@ export async function formatTitle(
     /* ax */ 'audience.goals[]': (value: string) => {
       if (!value) return new ValueWithWarning(undefined, optionalWarning({ field: 'audience[].goals[]', name: 'Social Responsibility Goals' }));
       const valid = getKeyIfExists('socialGoals', value);
-      if (!valid) throw new WrongValueError({ field: 'audience[].goals[]', name: 'Social Responsibility Goals' });
+      if (!valid) return wrongValueError({ field: 'audience[].goals[]', name: 'Social Responsibility Goals' });
       return value as SocialGoal;
     },
     /* ay */ 'reviews[].filmCriticName': (value: string) => {
@@ -393,59 +393,59 @@ export async function formatTitle(
     /* bc */ 'color': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'color', name: 'Color / Black & White' }));
       const color = getKeyIfExists('colors', value) as Color;
-      if (!color) throw new WrongValueError({ field: 'color', name: 'Color / Black & White '});
+      if (!color) return wrongValueError({ field: 'color', name: 'Color / Black & White '});
       return color;
     },
     /* bd */ 'format': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'format', name: 'Shooting Format' }));
       const format = getKeyIfExists('movieFormat', value) as MovieFormat;
-      if (!format) throw new WrongValueError({ field: 'format', name: 'Shooting Format' });
+      if (!format) return wrongValueError({ field: 'format', name: 'Shooting Format' });
       return format;
     },
     /* be */ 'formatQuality': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'formatQuality', name: 'Available Format Quality' }));
       const quality = getKeyIfExists('movieFormatQuality', value) as MovieFormatQuality;
-      if (!quality) throw new WrongValueError({ field: 'formatQuality', name: 'Available Format Quality' });
+      if (!quality) return wrongValueError({ field: 'formatQuality', name: 'Available Format Quality' });
       return quality;
     },
     /* bf */ 'soundFormat': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'soundFormat', name: 'Sound Format' }));
       const sound = getKeyIfExists('soundFormat', value) as SoundFormat;
-      if (!sound) throw new WrongValueError({ field: 'soundFormat', name: 'Sound Format' });
+      if (!sound) return wrongValueError({ field: 'soundFormat', name: 'Sound Format' });
       return sound;
     },
     /* bg */ 'isOriginalVersionAvailable': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'isOriginalVersionAvailable', name: 'Original Version Authorized' }));
       const lower = value.toLowerCase();
       const valid = lower === 'yes' || lower === 'no';
-      if (!valid) throw new WrongValueError({ field: 'isOriginalVersionAvailable', name: 'Original Version Authorized' });
+      if (!valid) return wrongValueError({ field: 'isOriginalVersionAvailable', name: 'Original Version Authorized' });
       return lower === 'yes';
     },
     /* bh */ 'languages[].language': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'languages[].language', name: 'Available Version(s) Language' }));
       const language = getKeyIfExists('languages', value);
-      if (!language) throw new WrongValueError({ field: 'languages[].language', name: 'Available Version(s) Language' });
+      if (!language) return wrongValueError({ field: 'languages[].language', name: 'Available Version(s) Language' });
       return language;
     },
     /* bi */ 'languages[].dubbed': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'languages[].dubbed', name: 'Available Version(s) Dubbed' }));
       const lower = value.toLowerCase();
       const valid = lower === 'yes' || lower === 'no';
-      if (!valid) throw new WrongValueError({ field: 'languages[].dubbed', name: 'Available Version(s) Dubbed' });
+      if (!valid) return wrongValueError({ field: 'languages[].dubbed', name: 'Available Version(s) Dubbed' });
       return lower === 'yes';
     },
     /* bj */ 'languages[].subtitle': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'languages[].subtitle', name: 'Available Version(s) Subtitle' }));
       const lower = value.toLowerCase();
       const valid = lower === 'yes' || lower === 'no';
-      if (!valid) throw new WrongValueError({ field: 'languages[].subtitle', name: 'Available Version(s) Subtitle' });
+      if (!valid) return wrongValueError({ field: 'languages[].subtitle', name: 'Available Version(s) Subtitle' });
       return lower === 'yes';
     },
     /* bk */ 'languages[].caption': (value: string) => {
       if (!value) return new ValueWithWarning(null, optionalWarning({ field: 'languages[].caption', name: 'Available Version(s) Caption' }));
       const lower = value.toLowerCase();
       const valid = lower === 'yes' || lower === 'no';
-      if (!valid) throw new WrongValueError({ field: 'languages[].caption', name: 'Available Version(s) Caption' });
+      if (!valid) return wrongValueError({ field: 'languages[].caption', name: 'Available Version(s) Caption' });
       return lower === 'yes';
     },
     /* bl */ 'salesPitch': (value: string) => {
@@ -462,7 +462,7 @@ export async function formatTitle(
       if (!value) return defaultAccess;
 
       const status = getKeyIfExists('storeStatus', value) as StoreStatus;
-      if (!status) throw new WrongValueError({ field: 'catalogStatus', name: 'Catalog Status' });
+      if (!status) return wrongValueError({ field: 'catalogStatus', name: 'Catalog Status' });
 
       return { status, access: true, acceptedAt: null, refusedAt: null };
     },
@@ -474,7 +474,7 @@ export async function formatTitle(
       if (!value) return defaultAccess;
 
       const status = getKeyIfExists('storeStatus', value) as StoreStatus;
-      if (!status) throw new WrongValueError({ field: 'festivalStatus', name: 'Festival Status' });
+      if (!status) return wrongValueError({ field: 'festivalStatus', name: 'Festival Status' });
 
       return { status, access: true, acceptedAt: null, refusedAt: null };
     },
@@ -486,7 +486,7 @@ export async function formatTitle(
       if (!value) return defaultAccess;
 
       const status = getKeyIfExists('storeStatus', value) as StoreStatus;
-      if (!status) throw new WrongValueError({ field: 'financiersStatus', name: 'Financiers Status' });
+      if (!status) return wrongValueError({ field: 'financiersStatus', name: 'Financiers Status' });
 
       return { status, access: true, acceptedAt: null, refusedAt: null };
     },

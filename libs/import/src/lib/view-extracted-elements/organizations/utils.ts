@@ -6,7 +6,7 @@ import { UserService } from '@blockframes/user/+state';
 import { Module, ModuleAccess, modules } from '@blockframes/utils/apps';
 import { extract, ExtractConfig, SheetTab, ValueWithWarning } from '@blockframes/utils/spreadsheet';
 import { createOrganization, Organization, OrganizationService } from '@blockframes/organization/+state';
-import { AlreadyExistError, getOrgId, getUser, mandatoryError, optionalWarning, OrganizationsImportState, WrongValueError } from '@blockframes/import/utils';
+import { AlreadyExistError, getOrgId, getUser, mandatoryError, optionalWarning, OrganizationsImportState, wrongValueError } from '@blockframes/import/utils';
 
 const separator = ',';
 
@@ -45,7 +45,7 @@ type ModuleOrUndefined = Module | '';
 function formatAccess(value: string, errorData: { field: string, name: string }) {
   const rawModules = value.split(separator).map(m => m.trim().toLowerCase()) as ModuleOrUndefined[];
   const wrongValue = rawModules.some(module => ![...modules, ''].includes(module));
-  if (wrongValue) throw new WrongValueError(errorData);
+  if (wrongValue) return wrongValueError<ModuleAccess>(errorData);
   const access: Partial<ModuleAccess> = {};
   for (const module of modules) access[module] = false;
   for (const module of rawModules) if (module !== '') access[module] = true;
@@ -84,7 +84,7 @@ export async function formatOrg(sheetTab: SheetTab, organizationService: Organiz
     /* d */ 'org.activity': (value: string) => {
       if (!value) return new ValueWithWarning(value, optionalWarning({ field: 'org.activity', name: 'Activity' }));
       const activity = getKeyIfExists('orgActivity', value);
-      if (!activity) throw new WrongValueError({ field: 'org.activity', name: 'Activity' });
+      if (!activity) return wrongValueError({ field: 'org.activity', name: 'Activity' });
       return activity;
     },
     /* e */ 'org.fiscalNumber': (value: string) => {
@@ -110,7 +110,7 @@ export async function formatOrg(sheetTab: SheetTab, organizationService: Organiz
     /* j */ 'org.addresses.main.country': (value: string) => {
       if (!value) return new ValueWithWarning(value, optionalWarning({ field: 'org.address.main.country', name: 'Country' }));
       const country = getKeyIfExists('territories', value) as Territory;
-      if (!country) throw new WrongValueError({ field: 'org.addresses.main.country', name: 'Country' });
+      if (!country) return wrongValueError({ field: 'org.addresses.main.country', name: 'Country' });
       return country as any;
     },
     /* k */ 'org.addresses.main.phoneNumber': (value: string) => {

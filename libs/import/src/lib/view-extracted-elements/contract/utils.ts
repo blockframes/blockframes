@@ -8,7 +8,7 @@ import {
   getContract,
   mandatoryError,
   checkParentTerm,
-  WrongValueError,
+  wrongValueError,
   adminOnlyWarning,
   AlreadyExistError,
   unknownEntityError,
@@ -123,7 +123,7 @@ export async function formatContract(
       const lower = value.toLowerCase();
       if (!lower) return mandatoryError({ field: 'contract.type', name: 'Type' });
       const type = getKeyIfExists('contractType', lower[0].toUpperCase() + lower.substr(1));
-      if (!type) throw new WrongValueError({ field: 'contract.type', name: 'Type' });
+      if (!type) return wrongValueError({ field: 'contract.type', name: 'Type' });
       if (type === 'mandate' && !blockframesAdmin) throw new Error(JSON.stringify({
         type: 'error',
         field: 'contract.type',
@@ -180,7 +180,7 @@ export async function formatContract(
     /* g */'term.exclusive': (value: string) => {
       const lower = value.toLowerCase();
       if (!lower) return mandatoryError({ field: 'term.exclusive', name: 'Exclusive' });
-      if (lower !== 'yes' && lower !== 'no') throw new WrongValueError({ field: 'term.exclusive', name: 'Exclusive' });
+      if (lower !== 'yes' && lower !== 'no') return wrongValueError({ field: 'term.exclusive', name: 'Exclusive' });
       return lower === 'yes';
     },
     /* h */'term.duration.from': (value: string) => {
@@ -195,7 +195,7 @@ export async function formatContract(
     /* j */'term.licensedOriginal': (value: string) => {
       const lower = value.toLowerCase();
       if (!lower) return mandatoryError({ field: 'term.licensedOriginal', name: 'Licensed Original' });
-      if (lower !== 'yes' && lower !== 'no') throw new WrongValueError({ field: 'term.licensedOriginal', name: 'Licensed Original' });
+      if (lower !== 'yes' && lower !== 'no') return wrongValueError({ field: 'term.licensedOriginal', name: 'Licensed Original' });
       return lower === 'yes';
     },
     /* k */'term.dubbed': (value: string) => getStaticList('languages', value, separator, { field: 'term.dubbed', name: 'Dubbed' }, false) as Language[],

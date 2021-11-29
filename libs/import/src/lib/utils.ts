@@ -164,7 +164,7 @@ export function getDate(value: string, errorData: { field: string, name: string 
     date = new Date( (excelNumberOfDays - unixNumberOfDays) * millisecondsInOneDay );
   }
 
-  if (isNaN(date.getTime())) throw new WrongValueError(errorData);
+  if (isNaN(date.getTime())) return wrongValueError(errorData);
 
   // if date seems strange we throw an Error
   const year = date.getFullYear();
@@ -208,17 +208,18 @@ export function unknownEntityError<T = unknown>({ field, name }: { field: string
   };
 }
 
-// TODO REMOVE
-export class WrongValueError extends Error {
-  constructor({ field, name }: { field: string, name: string }) {
-    super(JSON.stringify({
+
+export function wrongValueError<T = unknown>({ field, name }: { field: string, name: string }): ValueWithError<T> {
+  return {
+    value: undefined,
+    error: {
       type: 'error',
       field,
       name: `Wrong ${name}`,
       reason: `${name} should be a value of the given list.`,
       hint: `Please check the corresponding sheet field for mistakes, be sure to select a value form the list.`
-    }));
-  }
+    },
+  };
 }
 
 // TODO REMOVE
