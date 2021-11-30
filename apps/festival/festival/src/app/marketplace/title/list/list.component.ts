@@ -13,7 +13,11 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { ActivatedRoute, Router } from '@angular/router';
 import { StoreStatus } from '@blockframes/utils/static-model/types';
 import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
+import { AlgoliaMovie } from '@blockframes/utils/algolia';
 
+import { HttpClient } from '@angular/common/http';
+import { firebaseRegion, firebase } from '@env';
+export const { projectId } = firebase();
 @Component({
   selector: 'festival-marketplace-title-list',
   templateUrl: './list.component.html',
@@ -39,6 +43,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
     private dynTitle: DynamicTitleService,
     private route: ActivatedRoute,
     private router: Router,
+    private http: HttpClient
   ) {
     this.dynTitle.setPageTitle('Films On Our Market Today');
   }
@@ -105,5 +110,33 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnDestroy() {
     this.subs.forEach(element => element.unsubscribe());
+  }
+
+  async export(movies: AlgoliaMovie[]) {
+    const params = {
+      titleIds: movies.map(m => m.objectID)
+    };
+
+    //const url = `https://${firebaseRegion}-${projectId}.cloudfunctions.net/createPdf`;
+    const url = `http://localhost:5001/${projectId}/${firebaseRegion}/createPdf`;
+
+    console.log(params, url);
+    return new Promise(resolve => {
+      this.http.post(url, params, { responseType: 'arraybuffer' })
+        .toPromise().then(response => {
+          const type = 'application/pdf';
+          const buffer = new Uint8Array(response);
+          const blob = new Blob([buffer], { type });
+          const url = URL.createObjectURL(blob);
+          const element = document.createElement('a');
+          element.setAttribute('href', url);
+          element.setAttribute('download', `export.pdf`);
+          const event = new MouseEvent('click');
+          element.dispatchEvent(event);
+          resolve(true);
+        });
+    });
+
+
   }
 }
