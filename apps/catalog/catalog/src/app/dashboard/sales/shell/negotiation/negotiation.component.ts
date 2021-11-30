@@ -11,6 +11,7 @@ import { NegotiationService } from '@blockframes/contract/negotiation/+state/neg
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { createDocumentMeta } from '@blockframes/utils/models-meta';
 
 @Component({
   selector: 'sale-negotiation',
@@ -27,25 +28,6 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
   activeOrgId = this.query.getActiveId();
   form = new NegotiationForm()
   isSafeToReroute = false; //used in NegotiationGuard
-
-  onConfirm = async () => {
-    const sale = await this.sale$.pipe(first()).toPromise()
-    const formData = this.form.value
-    const newTerm: Negotiation = {
-      ...sale.negotiation,
-      terms: formData.terms.map(term => ({
-        ...term.avails,
-        languages: term.versions
-      })),
-      status: 'pending',
-      createdByOrg: this.orgQuery.getActiveId(),
-    }
-    const options = { params: { contractId: sale.id } }
-    this.isSafeToReroute = true;
-    this.negotiationService.add(newTerm, options)
-    this.snackBar.open('Your counter offer has been sent')
-    this.router.navigate(['./..', 'view'], { relativeTo: this.route })
-  }
 
   constructor(
     private snackBar: MatSnackBar,
@@ -82,11 +64,32 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
   }
 
   async confirm() {
+    const onConfirm = async () => {
+      const sale = await this.sale$.pipe(first()).toPromise()
+      const formData = this.form.value
+      const newTerm: Negotiation = {
+        ...sale.negotiation,
+        _meta: createDocumentMeta(),
+        id:this.negotiationService.createId(),
+        terms: formData.terms.map(term => ({
+          ...term.avails,
+          languages: term.versions
+        })),
+        status: 'pending',
+        createdByOrg: this.orgQuery.getActiveId(),
+      }
+      const options = { params: { contractId: sale.id } }
+      this.isSafeToReroute = true;
+      await this.negotiationService.add(newTerm, options)
+      this.snackBar.open('Your counter offer has been sent')
+      this.router.navigate(['./..', 'view'], { relativeTo: this.route })
+    }
+
     this.dialog.open(
       ConfirmComponent,
       {
         data: {
-          onConfirm: this.onConfirm,
+          onConfirm,
           title: 'Are you sure to submit this contract?',
           question: 'Please verify if all the contract elements are convenient for you.Please verify if all the contract elements are convenient for you.',
           confirm: 'Yes, submit',

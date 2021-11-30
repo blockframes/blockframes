@@ -15,7 +15,7 @@ type NegotiationFormState = {
   }[]
 }
 
-export class NegotiationForm extends FormEntity<EntityControl<NegotiationFormState>, Negotiation|NegotiationFormState> {
+export class NegotiationForm extends FormEntity<EntityControl<NegotiationFormState>, Negotiation | NegotiationFormState> {
   constructor(initialData?: Negotiation) {
     super({
       price: new FormControl(initialData?.price || 0, Validators.min(0)),

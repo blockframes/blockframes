@@ -111,13 +111,13 @@ export class BucketService extends CollectionService<BucketState> {
         holdbacks: contract.holdbacks,
       });
 
-      const defualtNegotiation: Negotiation = {
+      const defaultNegotiation: Negotiation = {
         _meta: createDocumentMeta({ createdAt: new Date(), }),
-        id: contractId,
+        id: this.db.createId(),
         status: 'pending',
         createdByOrg: orgId,
         sellerId: centralOrgId.catalog,
-        stakeholders: [...Array.from(new Set([...parentContract.stakeholders, orgId]))],
+        stakeholders: [...parentContract.stakeholders, orgId],
         buyerId: orgId,
         price: contract.price,
         titleId: contract.titleId,
@@ -129,7 +129,7 @@ export class BucketService extends CollectionService<BucketState> {
       }
 
       const options = { params: { contractId } }
-      await this.negotiationService.add(defualtNegotiation, options)
+      await this.negotiationService.add(defaultNegotiation, options)
 
       // @dev: Create income & terms after contract because rules require contract to be created first
       // Create the terms

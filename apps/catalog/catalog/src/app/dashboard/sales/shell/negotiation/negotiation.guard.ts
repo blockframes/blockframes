@@ -9,7 +9,7 @@ import { first } from 'rxjs/operators';
 
 export type NegotiationGuardedComponent = {
   form: NegotiationForm,
-  isSafeToReroute:boolean,
+  isSafeToReroute: boolean,
 }
 
 @Injectable({ providedIn: 'root' })
@@ -26,25 +26,24 @@ export class NegotiationGuard<T extends NegotiationGuardedComponent> implements 
     const saleId = route.paramMap.get('saleId');
     const activeOrgId = this.orgQuery.getActiveId();
 
-    if (!saleId) this.router.parseUrl(`c/o/dashboard/sales`);
+    if (!saleId) return this.router.parseUrl(`c/o/dashboard/sales`);
 
-    const lastNegotiation = await this.contractService.lastNegotiation(saleId).pipe(first()).toPromise();
-    const isNegotiationPending = lastNegotiation.status === 'pending'
-    const notCreatorOrg = lastNegotiation.createdByOrg !== activeOrgId;
+    const negotiation = await this.contractService.lastNegotiation(saleId).pipe(first()).toPromise();
+    const isPending = negotiation.status === 'pending'
+    const canNegotiate = negotiation.createdByOrg !== activeOrgId;
 
-    return isNegotiationPending && notCreatorOrg
-      ? true
-      : this.router.parseUrl(`c/o/dashboard/sales/${saleId}/view`);
+    if (isPending && canNegotiate) return true
+    return this.router.parseUrl(`c/o/dashboard/sales/${saleId}/view`);
   }
 
   canDeactivate(component: T) {
     if (component.form.pristine || component.isSafeToReroute) return true;
     const dialogRef = this.dialog.open(ConfirmComponent, {
       data: {
-        title: `Are you sure you want to leave?`,
-        question: `Check if you don't have unsaved changes.`,
+        title: `Leave Page?`,
+        question: `Please pay attention that unless you submit offer the changes remain not saved.`,
+        cancel: 'Come back & Submit Offer',
         confirm: 'Leave anyway',
-        cancel: 'Stay',
       },
       autoFocus: false,
     })
