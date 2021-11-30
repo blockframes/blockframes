@@ -46,6 +46,7 @@ export interface Screening {
   /** A screening session can have one title */
   titleId: string;
   description: string;
+  organizerUid: string;
 }
 
 export interface EventBase<D extends Timestamp | Date, Meta extends EventMeta = Record<string, unknown>> {

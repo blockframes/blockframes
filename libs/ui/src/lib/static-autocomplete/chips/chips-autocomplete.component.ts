@@ -68,7 +68,7 @@ export class ChipsAutocompleteComponent implements OnInit, OnDestroy {
   private sub: Subscription;
 
   private items: string[];
-  @ViewChild('inputEl', { static: true }) inputEl: ElementRef<HTMLInputElement>;
+  @ViewChild('inputEl') inputEl: ElementRef<HTMLInputElement>;
   @ViewChild('chipList') chipList: MatChipList;
 
   ngOnInit() {

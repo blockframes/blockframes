@@ -41,10 +41,10 @@ export class IdentityGuard extends CollectionGuard<AuthState> {
                 return true;
               }
 
-              if (org.status === 'pending') {
-                return this.router.navigate(['c/organization/create-congratulations']);
-              } else {
+              if (org.status === 'accepted') {
                 return this.router.navigate(['c/o']);
+              } else {
+                return this.router.navigate(['c/organization/create-congratulations']);
               }
             } else {
               const requests = await this.invitationService.getValue(ref => ref.where('mode', '==', 'request')

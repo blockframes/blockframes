@@ -3,8 +3,9 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AuthService } from '@blockframes/auth/+state';
 import { AccessibilityTypes } from '@blockframes/utils/static-model/types';
 import { OrganizationQuery } from '@blockframes/organization/+state';
-import { Event, isMeeting } from '../../+state/event.model';
+import { Event } from '../../+state/event.model';
 import { EventForm } from '../event.form';
+import { Meeting, Screening } from '@blockframes/event/+state/event.firestore';
 
 @Component({
   selector: 'event-create',
@@ -28,11 +29,9 @@ export class EventCreateComponent {
   }
 
   async createAndRedirect() {
-    const event = this.form.value;
+    const event = this.form.value as Event<Meeting | Screening>;
     event.ownerOrgId = this.orgQuery.getActiveId();
-    if (isMeeting(event)) {
-      event.meta.organizerUid = (await this.authService.user).uid;
-    }
+    event.meta.organizerUid = (await this.authService.user).uid;
     if (event.allDay) {
       event.start.setHours(0, 0, 0);
       event.end.setHours(23, 59, 59);

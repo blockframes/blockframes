@@ -8,8 +8,7 @@ export function showHelp() {
   console.log('TODO: write a documentation');
 }
 
-export async function isMigrationRequired() {
-  const { db } = loadAdminServices();
+export async function isMigrationRequired(db = loadAdminServices().db) {
   const currentVersion = await loadDBVersion(db);
   console.log('Detecting if Firestore migration is required:');
   console.log('Latest DB version:', LATEST_VERSION);

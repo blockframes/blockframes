@@ -39,7 +39,7 @@ export const getOrInviteUserByMail = async (
     const user = await getDocument<PublicUser>(`users/${uid}`);
 
     //if user exists but has no orgId, we still want to send him an invitation email
-    if (invitation.type === "attendEvent" && !user.orgId) {
+    if (invitation.type === 'attendEvent' && !user.orgId) {
       const invitationTemplateId = templateIds.user.credentials.attendEventRemindInvitationPass;
       if (invitation.mode === 'invitation' && eventData?.accessibility !== 'private') {
         invitationStatus = 'accepted';
@@ -73,10 +73,10 @@ export const getOrInviteUserByMail = async (
       let templateId = credsTemplates.joinOrganization;
       if (invitation.type === 'attendEvent') {
         templateId = eventData.accessibility !== 'private' ? credsTemplates.attendNonPrivateEvent : credsTemplates.attendEvent;
-      }
 
-      if (invitation.mode === 'invitation' && eventData?.accessibility !== 'private') {
-        invitationStatus = 'accepted';
+        if (invitation.mode === 'invitation' && eventData?.accessibility !== 'private') {
+          invitationStatus = 'accepted';
+        }
       }
 
       const template = userInvite(toUser, orgEmailData, urlToUse, templateId, eventData);

@@ -28,8 +28,8 @@ export class TableExtractedOrganizationsComponent implements OnInit {
 
   @Input() rows: MatTableDataSource<OrganizationsImportState>;
   @Input() mode: string;
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
   public processedOrgs = 0;
 
   public selection = new SelectionModel<OrganizationsImportState>(true, []);

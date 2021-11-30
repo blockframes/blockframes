@@ -44,7 +44,8 @@ describe('User can import objects with Excel', () => {
     cy.viewport('ipad-2', 'landscape');
   });
 
-  it('Login as Dashboard user, Select Movies and import ', () => {
+  //TODO : Skip for now - Issue : 7249 
+  it.skip('Login as Dashboard user, Select Movies and import ', () => {
     logInAndNavigate(jean);
 
     cy.get('aside a[routerlink="title"]', {timeout: 5 * SEC})
