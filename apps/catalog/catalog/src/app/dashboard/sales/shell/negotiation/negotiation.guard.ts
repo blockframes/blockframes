@@ -8,11 +8,13 @@ import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { first } from 'rxjs/operators';
 
 export type NegotiationGuardedComponent = {
-  form: NegotiationForm
+  form: NegotiationForm,
+  isSafeToReroute:boolean,
 }
 
 @Injectable({ providedIn: 'root' })
 export class NegotiationGuard<T extends NegotiationGuardedComponent> implements CanActivate, CanDeactivate<T>{
+
   constructor(
     private router: Router,
     private contractService: ContractService,
@@ -36,7 +38,7 @@ export class NegotiationGuard<T extends NegotiationGuardedComponent> implements 
   }
 
   canDeactivate(component: T) {
-    if (component.form.pristine) return true;
+    if (component.form.pristine || component.isSafeToReroute) return true;
     const dialogRef = this.dialog.open(ConfirmComponent, {
       data: {
         title: `Are you sure you want to leave?`,

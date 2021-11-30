@@ -4,7 +4,7 @@
     <mat-icon svgIcon="refuse"></mat-icon>
     <span>Decline</span>
   </button>
-  <button mat-flat-button color="primary" (click)="confirm()">
+  <button mat-flat-button color="primary" (click)="confirm()" [disabled]="form.pristine || form.invalid">
     <span>Submit</span>
   </button>
 </div>
