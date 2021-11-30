@@ -32,6 +32,7 @@ export async function createPdf(templateName: string, data: any) {
 
 
 export const toPdf = async (req: Request, res: Response) => {
+  res.set('Access-Control-Allow-Origin', '*');
 
   if (req.method === 'OPTIONS') {
     // Send response to OPTIONS requests
@@ -42,7 +43,7 @@ export const toPdf = async (req: Request, res: Response) => {
     return;
   }
 
-  const titlesData: { id: string, posterUrl: string}[] = req.body.titlesData || [];
+  const titlesData: { id: string, posterUrl: string }[] = req.body.titlesData || [];
   const data = {
     name: "Alan",
     hometown: "Somewhere, TX",
@@ -61,8 +62,6 @@ export const toPdf = async (req: Request, res: Response) => {
 
   const buffer = await createPdf('titles', data);
   const file = { buffer, mimetype: 'application/pdf' };
-
-  res.set('Access-Control-Allow-Origin', '*');
 
   res.set('Content-Type', file.mimetype);
   res.set('Content-Length', file.buffer.length.toString())
