@@ -18,9 +18,12 @@ export interface SpreadsheetImportEvent {
   importType: SpreadsheetImportType,
 }
 
-export interface SpreadsheetImportError {
+export interface ImportErrorData {
   field: string;
   name: string;
+}
+
+export interface SpreadsheetImportError extends ImportErrorData {
   reason: string;
   type: 'error' | 'warning';
   hint?: string;
@@ -143,7 +146,7 @@ export async function getUser(query: { email: string } | { id: string }, userSer
   return user;
 }
 
-export function getDate(value: string, errorData: { field: string, name: string }) {
+export function getDate(value: string, errorData: ImportErrorData) {
 
   let date = new Date(value);
 
@@ -181,7 +184,7 @@ export function getDate(value: string, errorData: { field: string, name: string 
 }
 
 
-export function mandatoryError<T = unknown>({ field, name }: { field: string, name: string }): ValueWithError<T> {
+export function mandatoryError<T = unknown>({ field, name }: ImportErrorData): ValueWithError<T> {
   return {
     value: undefined,
     error: {
@@ -195,7 +198,7 @@ export function mandatoryError<T = unknown>({ field, name }: { field: string, na
 }
 
 
-export function unknownEntityError<T = unknown>({ field, name }: { field: string, name: string }): ValueWithError<T> {
+export function unknownEntityError<T = unknown>({ field, name }: ImportErrorData): ValueWithError<T> {
   return {
     value: undefined,
     error: {
@@ -209,7 +212,7 @@ export function unknownEntityError<T = unknown>({ field, name }: { field: string
 }
 
 
-export function wrongValueError<T = unknown>({ field, name }: { field: string, name: string }): ValueWithError<T> {
+export function wrongValueError<T = unknown>({ field, name }: ImportErrorData): ValueWithError<T> {
   return {
     value: undefined,
     error: {
@@ -223,7 +226,7 @@ export function wrongValueError<T = unknown>({ field, name }: { field: string, n
 }
 
 
-export function alreadyExistError<T = unknown>({ field, name }: { field: string, name: string }): ValueWithError<T> {
+export function alreadyExistError<T = unknown>({ field, name }: ImportErrorData): ValueWithError<T> {
   return {
     value: undefined,
     error: {
@@ -236,7 +239,7 @@ export function alreadyExistError<T = unknown>({ field, name }: { field: string,
   };
 }
 
-export function optionalWarning<T = unknown>({ field, name }: { field: string, name: string }, value?: T): ValueWithError<T> {
+export function optionalWarning<T = unknown>({ field, name }: ImportErrorData, value?: T): ValueWithError<T> {
   return {
     // value is `undefined` by default because optional warning mean that the value is missing,
     // for other warning the value should passed as a parameter
@@ -251,7 +254,7 @@ export function optionalWarning<T = unknown>({ field, name }: { field: string, n
   };
 }
 
-export function adminOnlyWarning<T = unknown>(value: T, { field, name }: { field: string, name: string }): ValueWithError<T> {
+export function adminOnlyWarning<T = unknown>(value: T, { field, name }: ImportErrorData): ValueWithError<T> {
   return {
     value,
     error: {

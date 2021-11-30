@@ -1,7 +1,7 @@
 
 import { WorkBook, WorkSheet, utils, read } from 'xlsx';
 
-import { mandatoryError, SpreadsheetImportError } from 'libs/import/src/lib/utils';
+import { ImportErrorData, mandatoryError, SpreadsheetImportError } from 'libs/import/src/lib/utils';
 
 import { getKeyIfExists } from '../helpers';
 import { parseToAll, Scope } from '../static-model';
@@ -32,23 +32,16 @@ type DeepValue<T, K> =
   : K extends `${infer I}[]` ? I extends keyof T ? T[I] extends Array<infer Y> ? Y : T[I] : never
   : K extends keyof T ? T[K] : never;
 
+type ValueOrError<T, K> = DeepValue<T, K> | ValueWithError<DeepValue<T, K>>;
 
 export type ParseFieldFn<T, K> = (value: string | string[], entity: any, state: any[], rowIndex?: number) =>
-  DeepValue<T, K> |
-  ValueWithError<DeepValue<T, K>> |
-  Promise<
-    DeepValue<T, K> |
-    ValueWithError<DeepValue<T, K>>
-  >
+  ValueOrError<T, K> |
+  Promise<ValueOrError<T, K>>
 ;
 export type ExtractConfig<T> = Partial<{
   [key in DeepKeys<T>]: (value: string | string[], entity: any, state: any[], rowIndex?: number) =>
-    DeepValue<T, key> |
-    ValueWithError<DeepValue<T, key>> |
-    Promise<
-      DeepValue<T, key> |
-      ValueWithError<DeepValue<T, key>>
-    >;
+    ValueOrError<T, key> |
+    Promise<ValueOrError<T, key>>;
 }>
 
 export interface ExtractOutput<T> {
@@ -219,7 +212,7 @@ export async function extract<T>(rawRows: string[][], config: ExtractConfig<T> =
   return results;
 }
 
-export function getStatic(scope: Scope, value: string, separator: string, { field, name }: { field: string, name: string }) {
+export function getStatic(scope: Scope, value: string, separator: string, { field, name }: ImportErrorData) {
   if (!value) return [];
   if (value.toLowerCase() === 'all') return parseToAll(scope, 'all');
   const splitted = split(value, separator);
@@ -239,7 +232,7 @@ export function getStatic(scope: Scope, value: string, separator: string, { fiel
   return values
 }
 
-export function getStaticList(scope: Scope, value: string, separator:string, errorData: { field: string, name: string }, mandatory = true) {
+export function getStaticList(scope: Scope, value: string, separator:string, errorData: ImportErrorData, mandatory = true) {
   const values = getStatic(scope, value, separator, errorData);
   if (
     mandatory && (

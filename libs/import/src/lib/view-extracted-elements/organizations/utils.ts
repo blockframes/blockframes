@@ -6,7 +6,7 @@ import { UserService } from '@blockframes/user/+state';
 import { Module, ModuleAccess, modules } from '@blockframes/utils/apps';
 import { extract, ExtractConfig, SheetTab } from '@blockframes/utils/spreadsheet';
 import { createOrganization, Organization, OrganizationService } from '@blockframes/organization/+state';
-import { alreadyExistError, getOrgId, getUser, mandatoryError, optionalWarning, OrganizationsImportState, wrongValueError } from '@blockframes/import/utils';
+import { alreadyExistError, getOrgId, getUser, ImportErrorData, mandatoryError, optionalWarning, OrganizationsImportState, wrongValueError } from '@blockframes/import/utils';
 
 const separator = ',';
 
@@ -42,7 +42,7 @@ interface FieldsConfig {
 }
 
 type ModuleOrUndefined = Module | '';
-function formatAccess(value: string, errorData: { field: string, name: string }) {
+function formatAccess(value: string, errorData: ImportErrorData) {
   const rawModules = value.split(separator).map(m => m.trim().toLowerCase()) as ModuleOrUndefined[];
   const wrongValue = rawModules.some(module => ![...modules, ''].includes(module));
   if (wrongValue) return wrongValueError<ModuleAccess>(errorData);
