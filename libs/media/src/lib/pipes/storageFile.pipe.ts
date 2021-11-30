@@ -5,19 +5,23 @@ import { CollectionHoldingFile, FileLabel, getFileMetadata } from '../+state/sta
 import { AngularFireStorage } from '@angular/fire/storage';
 import { Observable } from 'rxjs';
 
+export function toStorageFile(value: StorageFile | string, collection: CollectionHoldingFile, label: FileLabel, docId: string) {
+  if (typeof value === "string") {
+    const metadata = getFileMetadata(collection, label, docId)
+    return createStorageFile({
+      storagePath: value,
+      ...metadata
+    })
+  } else return value;
+}
+
 @Pipe({
   name: 'storageFile',
   pure: true
 })
 export class StorageFilePipe implements PipeTransform {
   transform(value: StorageFile | string, collection: CollectionHoldingFile, label: FileLabel, docId: string) {
-    if (typeof value === "string") {
-      const metadata = getFileMetadata(collection, label, docId)
-      return createStorageFile({
-        storagePath: value,
-        ...metadata
-      })
-    } else return value;
+    return toStorageFile(value, collection, label, docId);
   }
 }
 

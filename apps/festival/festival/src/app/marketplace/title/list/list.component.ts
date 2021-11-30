@@ -17,7 +17,10 @@ import { AlgoliaMovie } from '@blockframes/utils/algolia';
 
 import { HttpClient } from '@angular/common/http';
 import { firebaseRegion, firebase } from '@env';
+import { toStorageFile } from '@blockframes/media/pipes/storageFile.pipe';
+import { getImgIxResourceUrl } from '@blockframes/media/image/directives/imgix-helpers';
 export const { projectId } = firebase();
+
 @Component({
   selector: 'festival-marketplace-title-list',
   templateUrl: './list.component.html',
@@ -114,13 +117,19 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   async export(movies: AlgoliaMovie[]) {
     const params = {
-      titleIds: movies.map(m => m.objectID)
+      titlesData: movies.map(m => {
+        const storageFile = toStorageFile(m.poster, 'movies', 'poster', m.objectID);
+        const posterUrl = getImgIxResourceUrl(storageFile, { h: 240, w: 180 });
+        return {
+          id: m.objectID,
+          posterUrl
+        };
+      })
     };
 
     //const url = `https://${firebaseRegion}-${projectId}.cloudfunctions.net/createPdf`;
     const url = `http://localhost:5001/${projectId}/${firebaseRegion}/createPdf`;
 
-    console.log(params, url);
     return new Promise(resolve => {
       this.http.post(url, params, { responseType: 'arraybuffer' })
         .toPromise().then(response => {

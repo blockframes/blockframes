@@ -23,8 +23,6 @@ export interface ImageParameters {
   page?: number;
   /** Device Pixel Ratio : https://docs.imgix.com/apis/rendering/pixel-density/dpr */
   dpr?: 1 | 2 | 3 | 4 | 5;
-  /** Output format of image: https://docs.imgix.com/apis/rendering/format/fm */
-  fm?: 'png'
 }
 
 export function getImgSize(ref?: string) {
