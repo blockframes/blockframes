@@ -22,11 +22,11 @@ export class NegotiationFormComponent implements OnInit {
 
   indexId: number;
   termColumns = {
-    'avails.duration': 'Duration',
-    'avails.territories': 'Territories',
-    'avails.medias': 'Medias',
-    'avails.exclusive': 'Exclusivity',
-    'versions': 'Versions',
+    'duration': 'Duration',
+    'territories': 'Territories',
+    'medias': 'Medias',
+    'exclusive': 'Exclusivity',
+    'languages': 'Versions',
     'runs': '# of broadcasts'
   };
 

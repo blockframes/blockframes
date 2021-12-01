@@ -3,7 +3,7 @@ import {
 } from '@angular/core';
 import { ContractService, contractStatus, Sale } from '@blockframes/contract/contract/+state';
 import { ActivatedRoute } from '@angular/router';
-import { pluck, switchMap } from 'rxjs/operators';
+import { pluck, shareReplay, switchMap } from 'rxjs/operators';
 import { centralOrgId } from '@env';
 import { joinWith } from '@blockframes/utils/operators';
 import { MovieService } from '@blockframes/movie/+state';
@@ -25,8 +25,9 @@ export class SaleShellComponent {
     joinWith({
       income: (sale: Sale) => this.incomeService.valueChanges(sale.id),
       movie: (sale: Sale) => this.titleService.getValue(sale.titleId),
-      negotiation: (sale: Sale) => sale.status === 'negotiating' ? this.contractService.lastNegotiation(sale.id) : null,
-    })
+      negotiation: (sale: Sale) => ['pending', 'negotiating'].includes(sale.status) ? this.contractService.lastNegotiation(sale.id) : null,
+    }),
+    shareReplay({bufferSize:1, refCount:true})
   );
   centralOrgId = centralOrgId;
   contractStatus = contractStatus;

@@ -9,6 +9,7 @@ import { FormTableModule } from "@blockframes/ui/form/table/form-table.module";
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatInputModule } from '@angular/material/input';
 
 
 @NgModule({
@@ -25,8 +26,10 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     JoinPipeModule,
     LanguagesFormModule,
     ToGroupLabelPipeModule,
+
+    MatInputModule,
   ],
   exports: [NegotiationFormComponent],
   declarations: [NegotiationFormComponent]
 })
-export class NegotiationModule { }
+export class NegotiationFormModule { }

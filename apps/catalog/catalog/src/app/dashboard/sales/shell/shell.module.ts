@@ -22,7 +22,14 @@ const routes: Route[] = [
     path: '', component: SaleShellComponent,
     children: [
       { path: '', redirectTo: 'view', },
-      { path: 'view', loadChildren: () => import('./view/view.module').then(m => m.CatalogSaleViewModule) },
+      {
+        path: 'view',
+        loadChildren: () => import('./view/view.module').then(m => m.CatalogSaleViewModule)
+      },
+      {
+        path: 'negotiation',
+        loadChildren: () => import('./negotiation/negotiation.module').then(m => m.NegotiationModule),
+      },
     ]
   },
 ]

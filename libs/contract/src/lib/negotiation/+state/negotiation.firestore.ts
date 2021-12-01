@@ -19,5 +19,6 @@ export interface Negotiation<T extends Date | firebase.firestore.Timestamp = Dat
   sellerId: string;
   /** The org that want to buy the title */
   buyerId: string;
+  declineReason?:string;
   status: NegotiationStatus;
 }
