@@ -5,13 +5,11 @@ import { OrganizationQuery } from '@blockframes/organization/+state';
 import { NegotiationGuardedComponent } from '@blockframes/contract/negotiation/guard'
 import { filter, first, pluck } from 'rxjs/operators'
 import { MatDialog } from '@angular/material/dialog';
-import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
 import { ConfirmDeclineComponent } from '@blockframes/contract/contract/components/confirm-decline/confirm-decline.component';
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { createDocumentMeta } from '@blockframes/utils/models-meta';
 
 @Component({
   selector: 'sale-negotiation',
@@ -65,21 +63,17 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
   async confirm() {
     const onConfirm = async () => {
       const sale = await this.sale$.pipe(first()).toPromise()
-      const formData = this.form.value
-      const newTerm: Negotiation = {
-        ...sale.negotiation,
-        _meta: createDocumentMeta(),
-        id:this.negotiationService.createId(),
-        terms: formData.terms.map(term => ({
-          ...term.avails,
-          languages: term.versions
-        })),
-        status: 'pending',
-        createdByOrg: this.orgQuery.getActiveId(),
-      }
-      const options = { params: { contractId: sale.id } }
+      const value = this.form.value
+      const terms = value.terms.map(term => ({
+        ...term.avails,
+        languages: term.versions
+      }))
+      const price = value.price
       this.form.markAsPristine() // usefull to be able to route in the NegotiationGuard
-      await this.negotiationService.add(newTerm, options)
+      await this.negotiationService.create(sale.id, {
+        ...sale.negotiation,
+        price, terms
+      })
       this.snackBar.open('Your counter offer has been sent')
       this.router.navigate(['..', 'view'], { relativeTo: this.route })
     }

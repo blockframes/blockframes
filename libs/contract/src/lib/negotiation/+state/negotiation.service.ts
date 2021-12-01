@@ -4,9 +4,7 @@ import { CollectionConfig, CollectionService } from "akita-ng-fire";
 import { Negotiation } from "./negotiation.firestore";
 import type firebase from 'firebase';
 import { createDocumentMeta, formatDocumentMetaFromFirestore } from "@blockframes/utils/models-meta";
-import { BucketContract } from "@blockframes/contract/bucket/+state";
 import { OrganizationQuery } from "@blockframes/organization/+state";
-import { Stakeholder } from "@blockframes/utils/common-interfaces";
 import { centralOrgId } from "@env";
 
 export interface NegotiationState extends EntityState<Negotiation, string>, ActiveState<string> { }
@@ -27,7 +25,6 @@ export class NegotiationService extends CollectionService<NegotiationState> {
     return this.add({
       _meta: createDocumentMeta({ createdAt: new Date(), }),
       status: 'pending',
-      id: this.db.createId(),
       createdByOrg: activeOrgId,
       sellerId: centralOrgId.catalog,
       stakeholders: contract.stakeholders,
