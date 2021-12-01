@@ -122,7 +122,6 @@ export class TableExtractedContractsComponent implements OnInit {
 
     importState.errors.push({
       type: 'error',
-      field: 'contract',
       name: 'Contract',
       reason: 'Contract already added',
       hint: 'Contract already added'
