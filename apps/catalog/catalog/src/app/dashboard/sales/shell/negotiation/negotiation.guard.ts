@@ -9,7 +9,6 @@ import { first } from 'rxjs/operators';
 
 export type NegotiationGuardedComponent = {
   form: NegotiationForm,
-  isSafeToReroute: boolean,
 }
 
 @Injectable({ providedIn: 'root' })
@@ -37,7 +36,7 @@ export class NegotiationGuard<T extends NegotiationGuardedComponent> implements 
   }
 
   canDeactivate(component: T) {
-    if (component.form.pristine || component.isSafeToReroute) return true;
+    if (component.form.pristine ) return true;
     const dialogRef = this.dialog.open(ConfirmComponent, {
       data: {
         title: `Leave Page?`,

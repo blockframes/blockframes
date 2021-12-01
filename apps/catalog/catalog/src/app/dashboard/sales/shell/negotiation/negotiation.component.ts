@@ -27,7 +27,6 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
   contractStatus = this.shell.contractStatus;
   activeOrgId = this.query.getActiveId();
   form = new NegotiationForm()
-  isSafeToReroute = false; //used in NegotiationGuard
 
   constructor(
     private snackBar: MatSnackBar,
@@ -49,16 +48,16 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
   }
 
   async decline() {
-    this.isSafeToReroute = true;
+    this.form.markAsPristine() // usefull to be able to route in the NegotiationGuard
     const sale = await this.sale$.pipe(first()).toPromise()
     const ref = this.dialog.open(ConfirmDeclineComponent)
     const options = { params: { contractId: sale.id } }
     ref.afterClosed().subscribe(declineReason => {
       if (typeof declineReason === 'string') {
         this.negotiationService.update(
-          sale.negotiation.id, { declineReason, status: 'pending' }, options
+          sale.negotiation.id, { declineReason, status: 'declined' }, options
         )
-        this.router.navigate(['./..', 'view'], { relativeTo: this.route })
+        this.router.navigate(['..', 'view'], { relativeTo: this.route })
       }
     })
   }
@@ -79,10 +78,10 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
         createdByOrg: this.orgQuery.getActiveId(),
       }
       const options = { params: { contractId: sale.id } }
-      this.isSafeToReroute = true;
+      this.form.markAsPristine() // usefull to be able to route in the NegotiationGuard
       await this.negotiationService.add(newTerm, options)
       this.snackBar.open('Your counter offer has been sent')
-      this.router.navigate(['./..', 'view'], { relativeTo: this.route })
+      this.router.navigate(['..', 'view'], { relativeTo: this.route })
     }
 
     this.dialog.open(

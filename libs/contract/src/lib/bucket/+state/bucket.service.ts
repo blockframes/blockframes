@@ -21,7 +21,7 @@ import { BucketStore, BucketState } from './bucket.store';
 import { createBucketTerm, createBucketContract } from './bucket.model';
 import { ContractService, convertDuration } from '../../contract/+state';
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
-import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
+import { Negotiation, NegotiationStatus } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'buckets' })
@@ -92,45 +92,35 @@ export class BucketService extends CollectionService<BucketState> {
       const termIds = terms.map(t => t.id);
       const parentTerms = await this.termService.getValue(contract.parentTermId);
       const parentContract = await this.contractService.getValue(parentTerms.contractId);
+
+      const commonFields = {
+        status: 'pending' as NegotiationStatus,
+        buyerId: orgId,
+        buyerUserId: this.authQuery.userId,
+        sellerId: centralOrgId.catalog,
+        stakeholders: [...parentContract.stakeholders, orgId],
+        offerId,
+        specificity,
+        delivery,
+      }
       // Create the contract
       await this.contractService.add({
         _meta: createDocumentMeta({ createdAt: new Date(), }),
         id: contractId,
         type: 'sale',
-        status: 'pending',
         titleId: contract.titleId,
         parentTermId: contract.parentTermId,
-        buyerId: orgId,
-        buyerUserId: this.authQuery.userId,
-        sellerId: centralOrgId.catalog,
-        stakeholders: [...parentContract.stakeholders, orgId],
         termIds,
-        offerId,
-        specificity,
-        delivery,
         holdbacks: contract.holdbacks,
+        ...commonFields
       });
 
-      const defaultNegotiation: Negotiation = {
-        _meta: createDocumentMeta({ createdAt: new Date(), }),
-        id: this.db.createId(),
-        status: 'pending',
-        createdByOrg: orgId,
-        sellerId: centralOrgId.catalog,
-        stakeholders: [...parentContract.stakeholders, orgId],
-        buyerId: orgId,
-        price: contract.price,
-        titleId: contract.titleId,
-        terms: contract.terms,
-        holdbacks: contract.holdbacks,
-        parentTermId: contract.parentTermId,
-        specificity,
-        orgId: contract.orgId,
-      }
 
-      const options = { params: { contractId } }
-      await this.negotiationService.add(defaultNegotiation, options)
-
+      //add the default negotiation.
+      await this.negotiationService.create(contractId, {
+        ...contract,
+        ...commonFields
+      })
       // @dev: Create income & terms after contract because rules require contract to be created first
       // Create the terms
       await this.termService.add(terms);
