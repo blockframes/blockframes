@@ -90,10 +90,10 @@ export async function startEmulators({ importFrom = 'defaultImport' }: StartEmul
   try {
     proc = await firebaseEmulatorExec({
       emulators: [
-        'auth',
+        //'auth',
         'functions',
-        'firestore',
-        'pubsub'
+        //'firestore',
+       // 'pubsub'
       ],
       importPath: emulatorPath,
       exportData: true,
