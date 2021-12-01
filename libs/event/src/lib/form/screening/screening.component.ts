@@ -18,7 +18,6 @@ export class ScreeningComponent implements OnInit {
 
   titles$: Observable<Movie[]>;
   screenerMissing: boolean;
-  private formSub: Subscription;
 
   constructor(
     private movieService: MovieService,
@@ -55,13 +54,9 @@ export class ScreeningComponent implements OnInit {
     this.snackBar.open('Link copied', 'CLOSE', { duration: 4000 });
   }
 
-  async checkTitleScreener(titleId) {
-    const title = await this.movieService.getValue(titleId as string);
-    if (title.promotional.videos?.screener?.jwPlayerId) {
-      this.screenerMissing = false;
-    } else {
-      this.screenerMissing = true;
-    }
+  async checkTitleScreener(titleId: string) {
+    const title = await this.movieService.getValue(titleId);
+    this.screenerMissing = !title.promotional.videos?.screener?.jwPlayerId;
     this.cdr.markForCheck();
   }
 }

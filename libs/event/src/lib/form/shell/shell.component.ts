@@ -75,7 +75,7 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
         map(e => e.start < new Date() && e.type !== 'meeting' ? navTabs[type].concat(statisticsTab) : navTabs[type])
       )
 
-      if (this.form.value.type === "screening" && this.form.meta.value.titleId) {
+      if (this.form.value.type === 'screening' && this.form.meta.value.titleId) {
         this.checkTitleScreener(this.form.meta.value.titleId);
       }
 
@@ -88,7 +88,7 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
       }
       this.formSub = this.form.meta.valueChanges.subscribe((values) => {
         this.form.markAsDirty()
-        if (this.form.value.type === "screening" && values.titleId) {
+        if (this.form.value.type === 'screening' && values.titleId) {
           this.checkTitleScreener(values.titleId);
         }
       });
@@ -157,13 +157,9 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
     return outlet?.activatedRouteData?.animation;
   }
 
-  async checkTitleScreener(titleId) {
-    const title = await this.movieService.getValue(titleId as string);
-    if (title.promotional.videos?.screener?.jwPlayerId) {
-      this.screenerMissing = false;
-    } else {
-      this.screenerMissing = true;
-    }
+  async checkTitleScreener(titleId: string) {
+    const title = await this.movieService.getValue(titleId);
+    this.screenerMissing = !title.promotional.videos?.screener?.jwPlayerId;
     this.cdr.markForCheck();
   }
 }
