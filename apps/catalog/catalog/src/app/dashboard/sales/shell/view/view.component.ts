@@ -6,7 +6,7 @@ import { OrganizationQuery } from '@blockframes/organization/+state';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Movie } from '@blockframes/movie/+state';
-import { tap } from 'rxjs/operators';
+import { ConfirmDeclineComponent } from '@blockframes/contract/contract/components/confirm-decline/confirm-decline.component';
 
 
 @Component({
@@ -18,7 +18,7 @@ import { tap } from 'rxjs/operators';
 export class SaleViewComponent {
 
   centralOrgId = this.shell.centralOrgId;
-  sale$ = this.shell.sale$.pipe(tap(data => console.log({ data })));
+  sale$ = this.shell.sale$;
   contractStatus = this.shell.contractStatus;
   activeOrgId = this.query.getActiveId();
 
@@ -34,7 +34,7 @@ export class SaleViewComponent {
 
   changeStatus(status: ContractStatus, id: string) {
     if (status === 'declined') {
-      const ref = this.dialog.open(ConfirmComponent)
+      const ref = this.dialog.open(ConfirmDeclineComponent)
       ref.afterClosed().subscribe(declineReason => {
         if (typeof declineReason === 'string') this.contractService.update(id, { declineReason, status: 'declined' })
       })

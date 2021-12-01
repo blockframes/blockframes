@@ -1,7 +1,6 @@
 
 import {
-  ChangeDetectionStrategy, Component, Input,
-  OnInit, Output, EventEmitter,
+  ChangeDetectionStrategy, Component, Input, OnInit
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';

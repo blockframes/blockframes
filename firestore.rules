@@ -381,7 +381,7 @@ service cloud.firestore {
         allow read: if (userOrgId() in existingData().stakeholders) && notInMaintenance();
         allow update: if (userOrgId() != existingData().createdByOrg)
           && (userOrgId() in existingData().stakeholders)
-          && onlyChange(['status']) && notInMaintenance();
+          && onlyChange(['status', 'declineReason']) && notInMaintenance();
         allow delete: if false;
       }
     }

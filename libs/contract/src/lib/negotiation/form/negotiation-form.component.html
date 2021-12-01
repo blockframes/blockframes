@@ -2,7 +2,7 @@
   <h2>{{ title?.title.international }}</h2>
   <mat-form-field appearance="outline">
     <mat-label>Title price</mat-label>
-    <input type="number" matInput formControlName="price" min="0" />
+    <input type="number" matInput min="0" [formControl]="form.get('price')" />
     <mat-icon matPrefix *ngIf="currency" [svgIcon]="currency"></mat-icon>
   </mat-form-field>
 </header>

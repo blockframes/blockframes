@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ContractStore, ContractState } from './contract.store';
-import { CollectionConfig, CollectionService, PathParams } from 'akita-ng-fire';
+import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { ContractDocument, convertDuration, createMandate, createSale, Holdback, Mandate, Sale } from './contract.model';
 import { formatDocumentMetaFromFirestore } from "@blockframes/utils/models-meta";
 import { Timestamp } from "@blockframes/utils/common-interfaces/timestamp";
@@ -41,7 +41,7 @@ export class ContractService extends CollectionService<ContractState> {
 
   /** Return the last negotiation of the contractId */
   lastNegotiation(contractId: string) {
-    const options = { contractId } as PathParams;
+    const options = { params:{contractId} };
     const orgId = this.orgQuery.getActiveId();
     const query: QueryFn = ref => ref.where('stakeholders', 'array-contains', orgId).orderBy('_meta.createdAt', 'desc').limit(1);
     return this.negotiationService.valueChanges(query, options).pipe(
