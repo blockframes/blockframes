@@ -18,7 +18,7 @@ import { BucketTerm } from '../term/+state';
 //////////
 // TERM //
 //////////
-function createBucketTermControl(params: Partial<BucketTerm> = {}) {
+export function createBucketTermControl(params: Partial<BucketTerm> = {}) {
   const term = createBucketTerm(params);
   return {
     territories: new FormStaticValueArray<'territories'>(term.territories, 'territories'),

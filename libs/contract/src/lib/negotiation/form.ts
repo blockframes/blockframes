@@ -1,23 +1,19 @@
-import { FormControl, Validators, FormGroup } from "@angular/forms";
-import { MovieVersionInfoForm } from "@blockframes/movie/form/movie.form";
+import { FormControl, Validators } from "@angular/forms";
 import { EntityControl, FormEntity, FormList } from "@blockframes/utils/form";
-import { AvailsForm } from "../avails/form/avails.form";
-import { Term } from "../term/+state";
+import { BucketTermForm, createBucketTermControl } from "../bucket/form";
+import { BucketTerm } from "../term/+state";
+import { Negotiation } from "./+state/negotiation.firestore";
 
-export type Negotiation = {
+export type NegotiationFormState = {
   price: number,
-  terms: Term<Date>[]
+  terms: BucketTerm<Date>[]
 }
 
-export class NegotiationForm extends FormEntity<EntityControl<Negotiation>, Negotiation> {
-  constructor(initialData?: Negotiation) {
+export class NegotiationForm extends FormEntity<EntityControl<NegotiationFormState>, Negotiation | NegotiationFormState> {
+  constructor(negotiation: Partial<Negotiation> = {}) {
     super({
-      price: new FormControl(initialData?.price || 0, Validators.min(0)),
-      terms: FormList.factory(initialData?.terms || [], (term: Term) => new FormGroup({
-        id: new FormControl(term.id),
-        avails: new AvailsForm(term, []),
-        versions: new MovieVersionInfoForm(term.languages)
-      }))
+      price: new FormControl(negotiation?.price || 0, Validators.min(0)),
+      terms: FormList.factory(negotiation.terms, term => BucketTermForm.factory(term, createBucketTermControl))
     })
   }
 }

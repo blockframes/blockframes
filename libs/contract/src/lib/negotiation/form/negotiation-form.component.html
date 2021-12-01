@@ -34,7 +34,7 @@
   <ng-template colRef="runs" let-runs>{{ runs?.broadcasts}}</ng-template>
   <!-- Local Form -->
   <ng-template formView let-termForm>
-    <form [availsFilter]="termForm.get('avails')" class="surface" vertical required></form>
-    <languages-form class="surface" [form]="termForm.get('versions')"></languages-form>
+    <form [availsFilter]="termForm" class="surface" vertical required></form>
+    <languages-form class="surface" [form]="termForm.get('languages')"></languages-form>
   </ng-template>
 </bf-form-table>
