@@ -31,12 +31,10 @@ export async function updateMemberTags(email: string, tags: MailchimpTag[]): Pro
   const mailchimp = await getMailChimp();
 
   mailchimp.setConfig({
-    apiKey: '7100ec18d222451276220ff385a8c5be-us20',
-    server: 'us20'
+    apiKey: mailchimpAPIKey,
+    server: mailchimpServer
   });
 
-  const listID = 'efaccd1d28'; // TODO use mailchimpListId instead
   const subscriber_hash = createHash('md5').update(email).digest('hex');
-
-  return mailchimp.lists.updateListMemberTags(listID, subscriber_hash, { tags });
+  return mailchimp.lists.updateListMemberTags(mailchimpListId, subscriber_hash, { tags });
 }
