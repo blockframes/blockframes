@@ -1,7 +1,7 @@
 
 import { WorkBook, WorkSheet, utils, read } from 'xlsx';
 
-import { ImportErrorData, mandatoryError, SpreadsheetImportError } from 'libs/import/src/lib/utils';
+import { mandatoryError, SpreadsheetImportError } from 'libs/import/src/lib/utils';
 
 import { getKeyIfExists } from '../helpers';
 import { parseToAll, Scope } from '../static-model';
@@ -133,9 +133,8 @@ export async function parse<T>(
   } catch (err) {
     errors.push({
       type: 'error',
-      field: path,
       name: 'Unexpected Error',
-      reason: 'An unexpected error as happened, please try again, and contact us if you keep seeing this.',
+      reason: `An unexpected error as happened, please try again, and contact us if you keep seeing this. (${path})`,
       hint: err,
     });
   }
@@ -212,7 +211,7 @@ export async function extract<T>(rawRows: string[][], config: ExtractConfig<T> =
   return results;
 }
 
-export function getStatic(scope: Scope, value: string, separator: string, { field, name }: ImportErrorData) {
+export function getStatic(scope: Scope, value: string, separator: string, name: string) {
   if (!value) return [];
   if (value.toLowerCase() === 'all') return parseToAll(scope, 'all');
   const splitted = split(value, separator);
@@ -224,7 +223,6 @@ export function getStatic(scope: Scope, value: string, separator: string, { fiel
   });
   if (wrongData.length) return { value: values, error: {
     type: 'warning',
-    field,
     name: `Wrong ${name}`,
     reason: `Be careful, ${wrongData.length} values were wrong and will be omitted.`,
     hint: `${wrongData.slice(0, 3).join(', ')}...`
@@ -232,14 +230,14 @@ export function getStatic(scope: Scope, value: string, separator: string, { fiel
   return values
 }
 
-export function getStaticList(scope: Scope, value: string, separator:string, errorData: ImportErrorData, mandatory = true) {
-  const values = getStatic(scope, value, separator, errorData);
+export function getStaticList(scope: Scope, value: string, separator:string, name: string, mandatory = true) {
+  const values = getStatic(scope, value, separator, name);
   if (
     mandatory && (
       ('length' in values && values.length === 0) ||
       ('value' in values && values.value.length === 0)
     )
-  ) return mandatoryError(errorData);
+  ) return mandatoryError(name);
   return values;
 }
 
