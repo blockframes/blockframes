@@ -42,7 +42,7 @@ export async function createPdf(templateName: string, titles: PdfTitleData[]) {
   const template = hb.compile(file, { strict: true });
   const html = template(data);
 
-  fs.writeFileSync(path.resolve(`assets/templates/output-${templateName}.html`), html, 'utf8');
+  // @TODO #7045 remove fs.writeFileSync(path.resolve(`assets/templates/output-${templateName}.html`), html, 'utf8');
 
   // we are using headless mode
   const args = ['--no-sandbox', '--disable-setuid-sandbox'];
