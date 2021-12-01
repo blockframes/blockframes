@@ -1,0 +1,17 @@
+<section fxLayout fxLayoutAlign="end">
+  <button mat-icon-button (click)="close()">
+    <mat-icon svgIcon="close"></mat-icon>
+  </button>
+</section>
+
+<h1>Buying Preferences</h1>
+<p>For a more curated experience on Archipel, we offer you to specify your buying preferences.</p>
+<auth-preferences-form [form]="form"></auth-preferences-form>
+<footer fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="24px">
+  <button mat-flat-button color="accent" (click)="update()">
+    <span>Save preferences</span>
+  </button>
+  <button mat-button (click)="close()">
+    Do it later
+  </button>
+</footer>
