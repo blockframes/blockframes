@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { SaleShellComponent } from '../shell.component';
 import { NegotiationForm } from '@blockframes/contract/negotiation';
 import { OrganizationQuery } from '@blockframes/organization/+state';
-import { NegotiationGuardedComponent } from './negotiation.guard'
+import { NegotiationGuardedComponent } from '@blockframes/contract/negotiation/guard'
 import { filter, first, pluck } from 'rxjs/operators'
 import { MatDialog } from '@angular/material/dialog';
 import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
