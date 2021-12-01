@@ -5,7 +5,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ConfirmDeclineComponentModule } from '@blockframes/contract/contract/components/confirm-decline/confirm-decline.module';
 
 import { NegotiationComponent } from './negotiation.component';
-import { NegotiationGuard } from './negotiation.guard';
+import { NegotiationGuard } from '@blockframes/contract/negotiation/guard';
 import { NegotiationFormModule } from '@blockframes/contract/negotiation';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
