@@ -1,0 +1,68 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Montserrat, Helvetica Neue, sans-serif;
+}
+
+h2 {
+  font: 800 40px/32px Montserrat, Helvetica Neue, sans-serif;
+}
+
+header {
+  text-align: center;
+}
+
+header img {
+  height: 48px;
+  margin-top: 24px;
+  margin-bottom: 48px;
+}
+
+section {
+  margin: auto 48px;
+}
+
+.row {
+  display: flex;
+}
+
+.left-column {
+  flex: 30%;
+  padding: 10px;
+}
+
+.right-column {
+  flex: 70%;
+  padding: 10px;
+}
+
+.right-column p{
+  font-weight: bold;
+}
+
+.column {
+  flex: 50%;
+  padding: 10px;
+}
+
+div .synopsis {
+  color: #666B81;
+  text-align: justify;
+}
+
+hr.solid {
+  border-top: 1px solid #bbb;
+  width: 50%;
+  margin-top: 24px;
+  margin-bottom: 24px;
+}
+
+div.links div {
+  text-align: center;
+}
+
+.title {
+  break-inside: avoid;
+}

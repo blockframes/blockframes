@@ -14,11 +14,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { StoreStatus } from '@blockframes/utils/static-model/types';
 import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
 import { AlgoliaMovie } from '@blockframes/utils/algolia';
-
 import { HttpClient } from '@angular/common/http';
 import { firebaseRegion, firebase } from '@env';
 import { toStorageFile } from '@blockframes/media/pipes/storageFile.pipe';
 import { getImgIxResourceUrl } from '@blockframes/media/image/directives/imgix-helpers';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { applicationUrl, getCurrentApp } from '@blockframes/utils/apps';
 export const { projectId } = firebase();
 
 @Component({
@@ -46,7 +47,8 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
     private dynTitle: DynamicTitleService,
     private route: ActivatedRoute,
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private routerQuery: RouterQuery,
   ) {
     this.dynTitle.setPageTitle('Films On Our Market Today');
   }
@@ -116,6 +118,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   async export(movies: AlgoliaMovie[]) {
+    const app = getCurrentApp(this.routerQuery);
     const params = {
       titlesData: movies.map(m => {
         const storageFile = toStorageFile(m.poster, 'movies', 'poster', m.objectID);
@@ -124,11 +127,12 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
           id: m.objectID,
           posterUrl
         };
-      })
+      }),
+      appUrl: applicationUrl[app]
     };
 
-    //const url = `https://${firebaseRegion}-${projectId}.cloudfunctions.net/createPdf`;
-    const url = `http://localhost:5001/${projectId}/${firebaseRegion}/createPdf`;
+    const url = `https://${firebaseRegion}-${projectId}.cloudfunctions.net/createPdf`;
+    // @TODO #7045 remove const url = `http://localhost:5001/${projectId}/${firebaseRegion}/createPdf`;
 
     return new Promise(resolve => {
       this.http.post(url, params, { responseType: 'arraybuffer' })
