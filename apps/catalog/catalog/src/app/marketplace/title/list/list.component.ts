@@ -134,6 +134,7 @@ export class ListComponent implements OnDestroy, OnInit {
         if (this.availsForm.valid) {
           return movies.hits.filter(movie => {
             const { titleMandateTerms, titleSaleTerms } = filterByTitleId(movie.objectID, mandates, mandateTerms, sales, saleTerms);
+            // TODO issue#7139 if is in bucket return false, and remove bucket from param of isMovieAvailable
             return isMovieAvailable(movie.objectID, availsValue, bucketValue, titleMandateTerms, titleSaleTerms);
           });
         } else { // if availsForm is invalid, put all the movies from algolia
