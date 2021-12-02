@@ -32,13 +32,13 @@
     </thead>
     <!-- Body -->
     <tbody role="rowgroup">
-      <ng-container *ngFor="let row of data$ | async">
+      <ng-container *ngFor="let row of data$ | async; let i = index">
         <tr class="mat-row" role="row" (click)="rowClick.emit(row)">
           <ng-container *ngFor="let column of columns">
             <td class="mat-cell mat-body-1" role="cell" [ngClass]="{ sticky: column.sticky }" [attr.headers]="column.name">
               <ng-template
                 [ngTemplateOutlet]="column.template"
-                [ngTemplateOutletContext]="{ $implicit: row | deepKey:column.name, item: row }"
+                [ngTemplateOutletContext]="{ $implicit: row | deepKey:column.name, item: row, index: i }"
               >
               </ng-template>
             </td>

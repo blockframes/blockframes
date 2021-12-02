@@ -26,22 +26,15 @@ import { Duration } from '@blockframes/contract/term/+state';
 export class ContractItemComponent {
   mediaGroup = mediaGroup;
   territoriesGroup = territoriesGroup;
-  actionTemplate?: TemplateRef<unknown>;
   orgId = this.orgQuery.getActiveId();
   @Input() contract: BucketContract | Sale;
 
   @ContentChild('priceTemplate') priceTemplate: TemplateRef<unknown>;
-  @ContentChild('termAction') set colActionsTemplate(template: TemplateRef<unknown>) {
-    if (template) {
-      this.actionTemplate = template;
-      this.cdr.markForCheck();
-    }
-  }
+  @ContentChild('termAction') actionTemplate?: TemplateRef<unknown>;
 
   sortDuration = (a: Duration, b: Duration) => a.from.getTime() - b.from.getTime();
 
   constructor(
-    private cdr: ChangeDetectorRef,
     private dialog: MatDialog,
     private orgQuery: OrganizationQuery,
   ) { }
