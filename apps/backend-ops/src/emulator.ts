@@ -112,7 +112,7 @@ export async function startEmulators({ importFrom = 'defaultImport' }: StartEmul
  * This will shut down the emulator but the backup will contain a working version with Auth synched
  * IF AUTH GETS TOO BIG, THINGS WILL FAIL
  */
-export async function syncAuthEmulatorWithFirestoreEmulator({ importFrom = 'defaultImport' }: StartEmulatorOptions = { importFrom: 'defaultImport' }) {
+export async function syncAuthEmulatorWithFirestoreEmulator({ importFrom = 'defaultImport' }: StartEmulatorOptions = { importFrom :'defaultImport' }) {
   const emulatorPath = importFrom === 'defaultImport' ? defaultEmulatorBackupPath : resolve(importFrom);
   let proc: ChildProcess;
   try {
@@ -207,11 +207,11 @@ export async function anonymizeLatestProdDb() {
   await downloadProdDbBackup(defaultEmulatorBackupPath);
   let proc;
   try {
-    proc = await firebaseEmulatorExec({
-      emulators: 'firestore',
-      importPath: defaultEmulatorBackupPath,
-      exportData: true,
-    });
+   proc = await firebaseEmulatorExec({
+     emulators: 'firestore',
+     importPath: defaultEmulatorBackupPath,
+     exportData: true,
+   });
     await anonDbProcess();
   } finally {
     await shutdownEmulator(proc, defaultEmulatorBackupPath, 30);
