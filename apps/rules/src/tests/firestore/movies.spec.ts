@@ -12,7 +12,8 @@ describe('Movies Rules Tests', () => {
   const projectId = `movrules-spec-${Date.now()}`;
   let db: Firestore;
 
-  describe('With User in org', () => {
+  //TODO
+  describe.only('With User in org', () => {
     const newMovieId = 'MI-007';
     const existMovieInDraft = 'MI-077';
     const existMovieAccepted = 'M001';
@@ -50,6 +51,13 @@ describe('Movies Rules Tests', () => {
       });
 
       test('should be able to read movie with status accepted', async () => {
+        const movieRef = db.doc(`movies/${existMovieAccepted}`);
+        await assertSucceeds(movieRef.get());
+      })
+
+      //TODO : Issue #4833
+      test.only('should be able to read movie with status accepted', async () => {
+        //const movieRef = db.doc(`movies/${existMovieFinanciers}`);
         const movieRef = db.doc(`movies/${existMovieAccepted}`);
         await assertSucceeds(movieRef.get());
       })
@@ -134,7 +142,6 @@ describe('Movies Rules Tests', () => {
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
 
-    //TODO #4301
     test('should not be able to delete movie', async () => {
       const movieRef = db.doc(`movies/${draftMovieId}`);
       await assertFails(movieRef.delete());
