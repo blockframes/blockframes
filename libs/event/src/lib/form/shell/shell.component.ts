@@ -3,6 +3,7 @@ import { Router, ActivatedRoute, RouterOutlet } from '@angular/router';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { EventForm } from '../../form/event.form';
 import { EventService } from '../../+state/event.service';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
@@ -40,9 +41,11 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
   @ViewChild('confirmExit') confirmExitTemplate: TemplateRef<any>;
   internalLink: string;
   link: string;
+  screenerMissing: boolean;
 
   constructor(
-    private service: EventService,
+    private eventService: EventService,
+    private movieService: MovieService,
     private router: Router,
     private route: ActivatedRoute,
     private dialog: MatDialog,
@@ -56,7 +59,7 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
 
     // @TODO #6780
     this.sub = eventId$.pipe(
-      switchMap((eventId: string) => this.service.valueChanges(eventId))
+      switchMap((eventId: string) => this.eventService.valueChanges(eventId))
     ).subscribe(event => {
 
       this.form = new EventForm(event);
@@ -68,9 +71,13 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
       const url = applicationUrl[app];
       this.link = `${url}${this.internalLink}`;
 
-      this.tabs$ = this.service.valueChanges(this.form.value.id).pipe(
+      this.tabs$ = this.eventService.valueChanges(this.form.value.id).pipe(
         map(e => e.start < new Date() && e.type !== 'meeting' ? navTabs[type].concat(statisticsTab) : navTabs[type])
       )
+
+      if (this.form.value.type === 'screening' && this.form.meta.value.titleId) {
+        this.checkTitleScreener(this.form.meta.value.titleId);
+      }
 
       // FormArray (used in FormList) does not mark as dirty on push,
       // so we do it manually to enable the save button
@@ -79,7 +86,12 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
         this.formSub.unsubscribe();
         delete this.formSub;
       }
-      this.formSub = this.form.meta.valueChanges.subscribe(() => this.form.markAsDirty());
+      this.formSub = this.form.meta.valueChanges.subscribe((values) => {
+        this.form.markAsDirty()
+        if (this.form.value.type === 'screening' && values.titleId) {
+          this.checkTitleScreener(values.titleId);
+        }
+      });
 
       this.cdr.markForCheck();
     });
@@ -97,7 +109,7 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
         value.start.setHours(0, 0, 0);
         value.end.setHours(23, 59, 59);
       }
-      this.service.update(value);
+      this.eventService.update(value);
       this.form.markAsPristine();
       this.cdr.markForCheck();
       this.snackBar.open('Event saved', 'CLOSE', { duration: 4000 });
@@ -112,7 +124,7 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
         question: 'All of the invitations and requests associated to it will be deleted.',
         confirm: 'Delete',
         onConfirm: () => {
-          this.service.remove(this.form.value.id);
+          this.eventService.remove(this.form.value.id);
           //Here we add an eventDeleted to inform the guard thatthere is no need to display the popup
           this.router.navigate(['../..'], { relativeTo: this.route, state: { eventDeleted: true } });
         },
@@ -143,5 +155,11 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
 
   animationOutlet(outlet: RouterOutlet) {
     return outlet?.activatedRouteData?.animation;
+  }
+
+  async checkTitleScreener(titleId: string) {
+    const title = await this.movieService.getValue(titleId);
+    this.screenerMissing = !title.promotional.videos?.screener?.jwPlayerId;
+    this.cdr.markForCheck();
   }
 }
