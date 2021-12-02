@@ -139,7 +139,6 @@ export class FormTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
   edit(index: number) {
     this.calculateCurrentIndex(index);
     this.formItem = this.form.at(this.activeIndex);
-    console.log(this.formItem, this.formItem.value);
     this.activeValue = this.formItem.value;
     this.cdr.markForCheck();
   }
