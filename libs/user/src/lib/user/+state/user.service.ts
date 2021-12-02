@@ -112,6 +112,7 @@ export class UserService extends CollectionService<UserState> {
   }
 
   // TODO #6113 nce we have a custom email verified page, we can update the users' meta there
+  // #7303 if user doest not interact with userService, this is not updated (ie: user goes directly to eventPage)
   private async updateEmailVerified() {
     const auth = this.authQuery.getValue();
 
