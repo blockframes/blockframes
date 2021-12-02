@@ -1,7 +1,16 @@
 import { ActivatedRoute, Router } from "@angular/router"
 
 function dateReviver(key: string, value: string | number | boolean) {
-  if (typeof value === 'string') {
+
+  /**
+   * The internet doesn't have a waterproof way to check if a string is a date
+   * This method doesn't work for string + number like 'Movie 1'
+   * https://stackoverflow.com/questions/7445328/check-if-a-string-is-a-date-value/30870755#30870755
+   * 
+   * To minimize side effects; only revive date for fields which support date value
+   */
+  const dateKeys = ['from', 'to'];
+  if (dateKeys.includes(key) && typeof value === 'string') {
     // This could be an Invalid date
     const date = new Date(value);
     // check if the getTime is NaN. If not, it's a valid date.
