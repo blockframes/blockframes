@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { SaleShellComponent } from '../shell.component';
 import { NegotiationForm } from '@blockframes/contract/negotiation';
 import { OrganizationQuery } from '@blockframes/organization/+state';
@@ -35,7 +35,6 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
     private dialog: MatDialog,
     private router: Router,
     private route: ActivatedRoute,
-    private cdr: ChangeDetectorRef
   ) { }
 
   async ngOnInit(): Promise<void> {
