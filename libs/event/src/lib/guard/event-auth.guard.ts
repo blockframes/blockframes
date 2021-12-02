@@ -44,7 +44,7 @@ export class EventAuthGuard extends CollectionGuard<AuthState> {
           map(() => this.query.user),
           switchMap(async user => {
             // Check that onboarding is complete
-            const validUser = hasDisplayName(user) && user._meta.emailVerified && user.orgId;
+            const validUser = hasDisplayName(user) && user.orgId; // #7303 use "userAuth.emailVerified" instead of "user._meta.emailVerified"
             if (!validUser) {
               return this.router.navigate(['/auth/identity']);
             }
