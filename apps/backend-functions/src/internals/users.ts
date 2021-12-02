@@ -115,7 +115,7 @@ export const createUserFromEmail = async (email: string, createdFrom: App = 'fes
 
   // We don't have the time to wait for the trigger onUserCreate,
   // So we create it here first.
-  const userDb = { uid: user.uid, email, _meta: createDocumentMeta({ createdFrom }) };
+  const userDb = { uid: user.uid, email, _meta: createDocumentMeta({ createdFrom, emailVerified: true }) }; // #7303 get rid of emailVerified in meta ?
   await db.collection('users').doc(userDb.uid).set(userDb);
 
   return { user: createPublicUserDocument(userDb), password };
