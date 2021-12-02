@@ -5,7 +5,6 @@ import { Bucket } from '../bucket/+state';
 import { Holdback, Mandate, Sale } from '../contract/+state/contract.model'
 import { Duration, Term, BucketTerm } from '../term/+state/term.model';
 import { allOf, someOf } from './sets';
-import * as staticModel from '@blockframes/utils/static-model'
 
 export interface AvailsFilter {
   medias: Media[],
@@ -239,6 +238,7 @@ export function isMovieAvailable(titleId: string, avails: AvailsFilter, bucket: 
   const mandatesColliding = allOfAvailInTerms(avails, mandateTerms, optional);
   if (!mandatesColliding) return false;
 
+  // TODO issue#7139 we might want to extract bucket part in a different method
   // CHECK (2) if all the requested avails are already existing in a term in the bucket for this title,
   // then it shouldn't be displayed to avoid the user selecting it twice
   const bucketTerms = bucket?.contracts.find(c => c.titleId === titleId)?.terms ?? [];
@@ -256,7 +256,7 @@ export function isMovieAvailable(titleId: string, avails: AvailsFilter, bucket: 
 
 // @todo(#7139) Factorize that if possible
 export function filterDashboardAvails(mandateTerms: BucketTerm[], saleTerms: BucketTerm[], avails: AvailsFilter) {
-  
+
   if (!mandateTerms.length) return false;
 
   // If one field not provided: available
@@ -295,7 +295,7 @@ export function filterDashboardAvails(mandateTerms: BucketTerm[], saleTerms: Buc
   // If a sale includes the avails, it's not available
   const hasSaleCovered = saleTerms.some(sale => {
     const { territories, medias, duration, exclusive } = sale;
-    
+
     // territories: If none of the avails territories are in the sale: available
     if (avails.territories.every(t => !territories.includes(t))) return false;
 

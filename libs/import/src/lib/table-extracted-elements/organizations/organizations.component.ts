@@ -126,7 +126,6 @@ export class TableExtractedOrganizationsComponent implements OnInit {
     // prevent user to create the same org twice
     importState.errors.push({
       type: 'error',
-      field: 'organizations',
       name: 'Organizations',
       reason: 'Organization already created!',
     });
