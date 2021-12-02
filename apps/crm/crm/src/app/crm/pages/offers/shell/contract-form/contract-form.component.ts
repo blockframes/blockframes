@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Movie, MovieService } from "@blockframes/movie/+state";
 import { Income, IncomeService } from '@blockframes/contract/income/+state';
 import { Contract, ContractService } from '@blockframes/contract/contract/+state';
-import { Term, TermService } from "@blockframes/contract/term/+state";
+import { BucketTerm, Term, TermService } from "@blockframes/contract/term/+state";
 import { OfferService } from '@blockframes/contract/offer/+state';
 
 // Forms
@@ -15,8 +15,8 @@ import { NegotiationForm } from '@blockframes/contract/negotiation/form'
 // Material
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-function toTerm({ id, avails, runs, versions }, contractId: string): Partial<Term> {
-  return { id, contractId, runs, languages: versions, ...avails };
+function toTerm(term: BucketTerm<Date>, contractId: string): Partial<Term> {
+  return { ...term, contractId };
 }
 
 @Component({
@@ -76,7 +76,6 @@ export class ContractFormComponent implements OnInit {
       if (price !== this.income?.price) {
         await this.incomeService.update(contractId, { price }, { write });
       }
-
       await write.commit();
       this.snackbar.open('Contract updated!', 'ok', { duration: 1000 });
     }
