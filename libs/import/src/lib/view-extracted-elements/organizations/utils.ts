@@ -4,9 +4,9 @@ import { Territory } from '@blockframes/utils/static-model';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { UserService } from '@blockframes/user/+state';
 import { Module, ModuleAccess, modules } from '@blockframes/utils/apps';
-import { extract, ExtractConfig, SheetTab, ValueWithWarning } from '@blockframes/utils/spreadsheet';
+import { extract, ExtractConfig, SheetTab } from '@blockframes/utils/spreadsheet';
 import { createOrganization, Organization, OrganizationService } from '@blockframes/organization/+state';
-import { AlreadyExistError, getOrgId, getUser, MandatoryError, optionalWarning, OrganizationsImportState, WrongValueError } from '@blockframes/import/utils';
+import { alreadyExistError, getOrgId, getUser, mandatoryError, optionalWarning, OrganizationsImportState, wrongValueError } from '@blockframes/import/utils';
 
 const separator = ',';
 
@@ -42,10 +42,10 @@ interface FieldsConfig {
 }
 
 type ModuleOrUndefined = Module | '';
-function formatAccess(value: string, errorData: { field: string, name: string }) {
+function formatAccess(value: string, name: string) {
   const rawModules = value.split(separator).map(m => m.trim().toLowerCase()) as ModuleOrUndefined[];
   const wrongValue = rawModules.some(module => ![...modules, ''].includes(module));
-  if (wrongValue) throw new WrongValueError(errorData);
+  if (wrongValue) return wrongValueError<ModuleAccess>(name);
   const access: Partial<ModuleAccess> = {};
   for (const module of modules) access[module] = false;
   for (const module of rawModules) if (module !== '') access[module] = true;
@@ -65,83 +65,83 @@ export async function formatOrg(sheetTab: SheetTab, organizationService: Organiz
   // ! The order of the property should be the same as excel columns
   const fieldsConfig: FieldsConfigType = {
     /* a */ 'org.denomination.full': async (value: string) => {
-      if (!value) throw new MandatoryError({ field: 'org.denomination.full', name: 'Organization Name' });
+      if (!value) return mandatoryError('Organization Name');
       const exist = await getOrgId(value, organizationService, orgNameCache);
-      if (exist) throw new AlreadyExistError({ field: 'org.denomination.full', name: 'Organization Name' });
+      if (exist) return alreadyExistError('Organization Name');
       return value
     },
     /* b */ 'org.denomination.public': async (value: string, data: Partial<FieldsConfig>) => {
-      if (!value) return new ValueWithWarning(data.org.denomination.full ?? '', optionalWarning({ field: 'org.denomination.public', name: 'Organization Public Name' }));
+      if (!value) return optionalWarning('Organization Public Name', data.org.denomination.full);
       const exist = await getOrgId(value, organizationService, orgNameCache);
-      if (exist) throw new AlreadyExistError({ field: 'org.denomination.public', name: 'Organization Public Name' });
+      if (exist) return alreadyExistError('Organization Public Name');
       return value;
     },
     /* c */ 'org.email': async (value: string) => {
       const lower = value.toLowerCase();
-      if (!lower) throw new MandatoryError({ field: 'org.email', name: 'Contract Email' });
+      if (!lower) return mandatoryError('Contract Email');
       return lower;
     },
     /* d */ 'org.activity': (value: string) => {
-      if (!value) return new ValueWithWarning(value, optionalWarning({ field: 'org.activity', name: 'Activity' }));
+      if (!value) return optionalWarning('Activity');
       const activity = getKeyIfExists('orgActivity', value);
-      if (!activity) throw new WrongValueError({ field: 'org.activity', name: 'Activity' });
+      if (!activity) return wrongValueError('Activity');
       return activity;
     },
     /* e */ 'org.fiscalNumber': (value: string) => {
-      if (!value) return new ValueWithWarning(value, optionalWarning({ field: 'org.fiscalNumber', name: 'Fiscal Number' }));
+      if (!value) return optionalWarning('Fiscal Number');
       return value;
     },
     /* f */ 'org.addresses.main.street': (value: string) => {
-      if (!value) return new ValueWithWarning(value, optionalWarning({ field: 'org.address.main.street', name: 'Fiscal Number' }));
+      if (!value) return optionalWarning('Fiscal Number');
       return value;
     },
     /* g */ 'org.addresses.main.city': (value: string) => {
-      if (!value) return new ValueWithWarning(value, optionalWarning({ field: 'org.address.main.city', name: 'City' }));
+      if (!value) return optionalWarning('City');
       return value;
     },
     /* h */ 'org.addresses.main.zipCode': (value: string) => {
-      if (!value) return new ValueWithWarning(value, optionalWarning({ field: 'org.address.main.zipCode', name: 'Zip Code' }));
+      if (!value) return optionalWarning('Zip Code');
       return value;
     },
     /* i */ 'org.addresses.main.region': (value: string) => {
-      if (!value) return new ValueWithWarning(value, optionalWarning({ field: 'org.address.main.region', name: 'Region' }));
+      if (!value) return optionalWarning('Region');
       return value;
     },
     /* j */ 'org.addresses.main.country': (value: string) => {
-      if (!value) return new ValueWithWarning(value, optionalWarning({ field: 'org.address.main.country', name: 'Country' }));
+      if (!value) return optionalWarning('Country');
       const country = getKeyIfExists('territories', value) as Territory;
-      if (!country) throw new WrongValueError({ field: 'org.addresses.main.country', name: 'Country' });
+      if (!country) return wrongValueError('Country');
       return country as any;
     },
     /* k */ 'org.addresses.main.phoneNumber': (value: string) => {
-      if (!value) return new ValueWithWarning(value, optionalWarning({ field: 'org.address.main.phoneNumber', name: 'Phone Number' }));
+      if (!value) return optionalWarning('Phone Number');
       return value;
     },
     /* l */ 'superAdmin.email': async (value: string) => {
       const lower = value.toLowerCase();
-      if (!lower) throw new MandatoryError({ field: 'superAdmin.email', name: 'Admin Email' });
+      if (!lower) return mandatoryError('Admin Email');
 
       const exist = await getUser({ email: lower }, userService, userCache);
-      if (exist) throw new AlreadyExistError({ field: 'superAdmin.email', name: 'Admin Email' });
+      if (exist) return alreadyExistError('Admin Email');
 
       return lower;
     },
-    /* m */ 'org.appAccess.catalog': (value: string) => formatAccess(value, { field: 'org.appAccess.catalog', name: 'Catalog Access' }),
-    /* n */ 'org.appAccess.festival': (value: string) => formatAccess(value, { field: 'org.appAccess.festival', name: 'Festival Access' }),
-    /* o */ 'org.appAccess.financiers': (value: string) => formatAccess(value, { field: 'org.appAccess.financiers', name: 'Financiers Access' }),
+    /* m */ 'org.appAccess.catalog': (value: string) => formatAccess(value, 'Catalog Access'),
+    /* n */ 'org.appAccess.festival': (value: string) => formatAccess(value, 'Festival Access'),
+    /* o */ 'org.appAccess.financiers': (value: string) => formatAccess(value, 'Financiers Access'),
   };
 
   const results = await extract<FieldsConfig>(sheetTab.rows, fieldsConfig);
 
   for (const result of results) {
-    const { data, errors, warnings } = result;
+    const { data, errors } = result;
 
     const org = createOrganization(data.org as Partial<Organization>);
     org.status = 'accepted';
 
     const superAdmin = createUser(data.superAdmin);
 
-    orgs.push({ errors: [...errors, ...warnings], org, superAdmin, newOrg: true });
+    orgs.push({ errors, org, superAdmin, newOrg: true });
   }
 
   return orgs;
