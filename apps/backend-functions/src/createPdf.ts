@@ -87,7 +87,7 @@ export const createPdf = async (req: PdfRequest, res: Response) => {
         title: `${appUrl}/c/o/marketplace/title/${m.id}/main`,
         trailer: `${appUrl}/c/o/marketplace/title/${m.id}/main`
       },
-      prizes // @TODO #7045 max number of festival to display ? @see Whale Island
+      prizes
     }
   });
 
@@ -146,17 +146,16 @@ async function generate(templateName: string, app: App, titles: PdfTitleData[]) 
   const template = hb.compile(file, { strict: true });
   const html = template(data);
 
-  // @TODO #7045 remove fs.writeFileSync(path.resolve(`assets/templates/output-${templateName}.html`), html, 'utf8');
+  // @dev to see html output (without header and footer), uncomment this line
+  // fs.writeFileSync(path.resolve(`assets/templates/output-${templateName}.html`), html, 'utf8');
 
   // we are using headless mode
   const args = ['--no-sandbox', '--disable-setuid-sandbox'];
   const browser = await puppeteer.launch({ args: args });
   const page = await browser.newPage();
 
-  // We set the page content as the generated html by handlebars
-  await page.setContent(html, {
-    waitUntil: 'networkidle0', // wait for page to load completely
-  });
+  // Wait for the page to load completely
+  await page.setContent(html, { waitUntil: 'networkidle0' });
   await page.evaluateHandle('document.fonts.ready');
 
 
@@ -172,12 +171,10 @@ async function generate(templateName: string, app: App, titles: PdfTitleData[]) 
   cssFooter.push('</style>');
 
   const pdf = await page.pdf({
-    // @TODO #7045 auto height or a4 ? 
-    // height: (await page.evaluate(() => document.documentElement.offsetHeight)) + 240, // 240 = 100 + 40 px margins
-    format: 'a4',
+    height: (await page.evaluate(() => document.documentElement.offsetHeight)) + 240, // 240 = 100 + 40 margins
     displayHeaderFooter: true,
     headerTemplate: `${cssHeader.join('')}<header class="header"><img src="data:image/svg+xml;utf8,${encodeURIComponent(logo)}"></header>`,
-    footerTemplate: `${cssFooter.join('')}<h1>Page <span class="pageNumber"></span> of <span class="totalPages"></span></h1>`,
+    footerTemplate: `<p></p>`, // If left empty, default is page number
     margin: {
       top: '100px',
       bottom: '40px',

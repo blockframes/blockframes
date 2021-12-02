@@ -11,7 +11,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatOptionModule } from '@angular/material/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 // Angular
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -57,7 +56,6 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
     MatOptionModule,
     MatTooltipModule,
     MatProgressSpinnerModule,
-    MatSnackBarModule,
     RouterModule.forChild([{ path: '', component: ListComponent }])
   ]
 })

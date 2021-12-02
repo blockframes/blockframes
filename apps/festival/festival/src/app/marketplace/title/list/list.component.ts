@@ -13,15 +13,6 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { ActivatedRoute, Router } from '@angular/router';
 import { StoreStatus } from '@blockframes/utils/static-model/types';
 import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
-import { AlgoliaMovie } from '@blockframes/utils/algolia';
-import { HttpClient } from '@angular/common/http';
-import { firebaseRegion, firebase } from '@env';
-import { toStorageFile } from '@blockframes/media/pipes/storageFile.pipe';
-import { getImgIxResourceUrl } from '@blockframes/media/image/directives/imgix-helpers';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { getCurrentApp } from '@blockframes/utils/apps';
-import { MatSnackBar } from '@angular/material/snack-bar';
-export const { projectId } = firebase();
 
 @Component({
   selector: 'festival-marketplace-title-list',
@@ -36,7 +27,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   public movies$: Observable<Movie[]>;
   public storeStatus: StoreStatus = 'accepted';
   public searchForm = new MovieSearchForm('festival', this.storeStatus);
-  public exporting = false;
+
   public nbHits: number;
   public hitsViewed = 0;
 
@@ -48,9 +39,6 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
     private dynTitle: DynamicTitleService,
     private route: ActivatedRoute,
     private router: Router,
-    private http: HttpClient,
-    private routerQuery: RouterQuery,
-    private snackbar: MatSnackBar
   ) {
     this.dynTitle.setPageTitle('Films On Our Market Today');
   }
@@ -117,44 +105,5 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnDestroy() {
     this.subs.forEach(element => element.unsubscribe());
-  }
-
-  async export(movies: AlgoliaMovie[]) {
-    const snackbarRef = this.snackbar.open('Please wait, your export is being generated...');
-    this.exporting = true;
-    const app = getCurrentApp(this.routerQuery);
-    const params = {
-      titlesData: movies.map(m => {
-        const storageFile = toStorageFile(m.poster, 'movies', 'poster', m.objectID);
-        const posterUrl = getImgIxResourceUrl(storageFile, { h: 240, w: 180 });
-        return {
-          id: m.objectID,
-          posterUrl
-        };
-      }),
-      app
-    };
-
-    const url = `https://${firebaseRegion}-${projectId}.cloudfunctions.net/createPdf`;
-    // const url = `http://localhost:5001/${projectId}/${firebaseRegion}/createPdf`;// @TODO #7045 remove 
-
-    await new Promise(resolve => {
-      this.http.post(url, params, { responseType: 'arraybuffer' })
-        .toPromise().then(response => {
-          const type = 'application/pdf';
-          const buffer = new Uint8Array(response);
-          const blob = new Blob([buffer], { type });
-          const url = URL.createObjectURL(blob);
-          const element = document.createElement('a');
-          element.setAttribute('href', url);
-          element.setAttribute('download', `export.pdf`);
-          const event = new MouseEvent('click');
-          element.dispatchEvent(event);
-          resolve(true);
-        });
-    });
-
-    snackbarRef.dismiss();
-    this.exporting = false;
   }
 }

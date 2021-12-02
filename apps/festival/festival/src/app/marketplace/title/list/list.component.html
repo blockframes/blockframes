@@ -63,12 +63,6 @@
     <button mat-icon-button (click)="clear()" matTooltip="Clear all filters">
       <mat-icon svgIcon="refresh_filters"></mat-icon>
     </button>
-
-    <ng-container *ngIf="movies$ | async as movies">
-      <button [disabled]="exporting" mat-icon-button (click)="export(movies)" matTooltip="Export to PDF">
-        <mat-icon svgIcon="pdf"></mat-icon>
-      </button>
-    </ng-container>
   </list-filter>
 
 

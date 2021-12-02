@@ -11,10 +11,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 // RxJs
 import { Observable, Subscription, combineLatest } from 'rxjs';
-import { debounceTime, switchMap, startWith, distinctUntilChanged, skip, shareReplay,  map, take } from 'rxjs/operators';
-
+import { debounceTime, switchMap, startWith, distinctUntilChanged, skip, shareReplay, map, take } from 'rxjs/operators';
 import { SearchResponse } from '@algolia/client-search';
-
 import { centralOrgId } from '@env';
 
 // Blockframes
@@ -30,7 +28,13 @@ import { ContractService, Mandate, Sale } from '@blockframes/contract/contract/+
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { AvailsFilter, filterByTitleId, getMandateTerms, isMovieAvailable } from '@blockframes/contract/avails/avails';
-
+import { HttpClient } from '@angular/common/http';
+import { firebaseRegion, firebase } from '@env';
+import { toStorageFile } from '@blockframes/media/pipes/storageFile.pipe';
+import { getImgIxResourceUrl } from '@blockframes/media/image/directives/imgix-helpers';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { appName, getCurrentApp } from '@blockframes/utils/apps';
+export const { projectId } = firebase();
 
 @Component({
   selector: 'catalog-marketplace-title-list',
@@ -45,13 +49,13 @@ export class ListComponent implements OnDestroy, OnInit {
   public storeStatus: StoreStatus = 'accepted';
   public searchForm = new MovieSearchForm('catalog', this.storeStatus);
   public availsForm = new AvailsForm({}, ['duration', 'territories']);
-
+  public exporting = false;
   public nbHits: number;
   public hitsViewed = 0;
 
   private subs: Subscription[] = [];
 
-  private queries$: Observable< { mandates: Mandate[], mandateTerms: Term[], sales: Sale[], saleTerms: Term[] }>;
+  private queries$: Observable<{ mandates: Mandate[], mandateTerms: Term[], sales: Sale[], saleTerms: Term[] }>;
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -62,6 +66,8 @@ export class ListComponent implements OnDestroy, OnInit {
     private snackbar: MatSnackBar,
     private bucketService: BucketService,
     private router: Router,
+    private routerQuery: RouterQuery,
+    private http: HttpClient,
   ) {
     this.dynTitle.setPageTitle('Films On Our Market Today');
   }
@@ -79,7 +85,7 @@ export class ListComponent implements OnDestroy, OnInit {
         .where('status', '==', 'accepted')
       ),
     ]).pipe(
-      switchMap(( [mandates, sales] ) => {
+      switchMap(([mandates, sales]) => {
         const mandateTermIds = mandates.map(mandate => mandate.termIds).flat();
         return this.termService.valueChanges(mandateTermIds).pipe(map(mandateTerms => ({ mandates, mandateTerms, sales })));
       }),
@@ -178,5 +184,44 @@ export class ListComponent implements OnDestroy, OnInit {
 
   ngOnDestroy() {
     this.subs.forEach(sub => sub.unsubscribe());
+  }
+
+  async export(movies: AlgoliaMovie[]) {
+    const snackbarRef = this.snackbar.open('Please wait, your export is being generated...');
+    this.exporting = true;
+    const app = getCurrentApp(this.routerQuery);
+    const params = {
+      titlesData: movies.map(m => {
+        const storageFile = toStorageFile(m.poster, 'movies', 'poster', m.objectID);
+        const posterUrl = getImgIxResourceUrl(storageFile, { h: 240, w: 180 });
+        return {
+          id: m.objectID,
+          posterUrl
+        };
+      }),
+      app
+    };
+
+    // @dev if using emulator, use `http://localhost:5001/${projectId}/${firebaseRegion}/createPdf`
+    const url = `https://${firebaseRegion}-${projectId}.cloudfunctions.net/createPdf`;
+
+    await new Promise(resolve => {
+      this.http.post(url, params, { responseType: 'arraybuffer' })
+        .toPromise().then(response => {
+          const type = 'application/pdf';
+          const buffer = new Uint8Array(response);
+          const blob = new Blob([buffer], { type });
+          const url = URL.createObjectURL(blob);
+          const element = document.createElement('a');
+          element.setAttribute('href', url);
+          element.setAttribute('download', `titles-export-${appName[app]}.pdf`);
+          const event = new MouseEvent('click');
+          element.dispatchEvent(event);
+          resolve(true);
+        });
+    });
+
+    snackbarRef.dismiss();
+    this.exporting = false;
   }
 }

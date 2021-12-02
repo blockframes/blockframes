@@ -7,7 +7,8 @@ body {
 }
 
 h2 {
-  font: 800 36px/32px Montserrat, Helvetica Neue, sans-serif;
+  font: 800 36px Montserrat, Helvetica Neue, sans-serif;
+  margin-top: 0px;
 }
 
 section {
@@ -51,6 +52,10 @@ hr.solid {
 
 div.links div {
   text-align: center;
+}
+
+div.links a {
+  font-weight: bold;
 }
 
 .title {
