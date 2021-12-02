@@ -38,7 +38,7 @@ export class ContractItemComponent {
     }
   }
 
-  sortDuration = (a: Duration, b: Duration) => a.from.getTime() - b.from.getTime();
+  sortDuration = (a: Date, b: Date) => a.getTime() - b.getTime();
 
   constructor(
     private cdr: ChangeDetectorRef,
