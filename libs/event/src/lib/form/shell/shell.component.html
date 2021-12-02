@@ -15,9 +15,17 @@
 <ng-container *ngIf="form">
   <ng-template pageBar>
     <header fxLayout fxLayoutAlign="space-between center">
-      <a mat-icon-button routerLink="../..">
-        <mat-icon svgIcon="arrow_back"></mat-icon>
-      </a>
+      <div fxLayout fxLayoutGap="40px">
+        <a mat-icon-button routerLink="../..">
+          <mat-icon svgIcon="arrow_back"></mat-icon>
+        </a>
+        <mat-chip-list fxLayoutAlign="center center">
+          <mat-chip disableRipple *ngIf="screenerMissing">
+            <mat-icon svgIcon="warning"></mat-icon>
+            <span>Screening file missing</span>
+          </mat-chip>
+        </mat-chip-list>
+      </div>
       <div fxLayout fxLayoutAlign="end center">
         <button type="button" mat-button color="warn" (click)="remove()">Delete</button>
         <ng-container *ngIf="form.dirty else disabled">
