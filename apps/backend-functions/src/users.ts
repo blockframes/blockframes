@@ -276,7 +276,7 @@ export const verifyEmail = async (data: { uid: string }, context: CallableContex
     await admin.auth().updateUser(uid, { emailVerified: true });
 
     const { _meta } = await getDocument<PublicUser>(`users/${uid}`);
-    _meta.emailVerified = true;
+    _meta.emailVerified = true; // #7303 get rid of emailVerified in meta ?
     db.doc(`users/${uid}`).update({ _meta });
   } catch (e) {
     throw new Error(`There was an error while verifying email : ${e.message}`);
