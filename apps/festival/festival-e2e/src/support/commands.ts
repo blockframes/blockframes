@@ -14,6 +14,7 @@ import 'cypress-mailosaur';
 declare namespace Cypress {
   interface Chainable<Subject> {
     login(email: string, password: string): void;
+    logSubject(msg?: string): Cypress.Chainable<Subject>;
   }
 }
 //
@@ -32,3 +33,7 @@ Cypress.Commands.add('login', (email, password) => {
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+Cypress.Commands.add('logSubject', { prevSubject: 'optional' }, (subject, msg?: string) => {
+  if (msg) cy.log(msg);
+  if (subject) cy.log(subject);
+});

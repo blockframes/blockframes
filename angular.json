@@ -190,12 +190,12 @@
                 }
               ]
             },
-            "emulator": {
+            "e2e": {
               "optimization": true,
               "fileReplacements": [
                 {
                   "replace": "apps/backend-functions/src/environments/environment.ts",
-                  "with": "apps/backend-functions/src/environments/environment.emulator.ts"
+                  "with": "apps/backend-functions/src/environments/environment.e2e.ts"
                 }
               ]
             }
@@ -776,11 +776,18 @@
             "exit": false,
             "record": false,
             "browser": "chrome",
-            "devServerTarget": "festival:serve"
+            "devServerTarget": "festival:serve",
+            "env": {
+              "notice": "Env is being read"
+            }
           },
           "configurations": {
             "emulator": {
-              "devServerTarget": "festival:serve:emulator"
+              "devServerTarget": "festival:serve:emulator",
+              "env": {
+                "notice": "Env is being read",
+                "emulator": true
+              }
             }
           }
         },
