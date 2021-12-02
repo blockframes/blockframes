@@ -1,7 +1,7 @@
-import { Component, OnInit, ChangeDetectionStrategy, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
 import { fromOrgAndAccepted, Movie, MovieService } from '@blockframes/movie/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { EventFormShellComponent } from '../shell/shell.component';
@@ -17,6 +17,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class ScreeningComponent implements OnInit {
 
   titles$: Observable<Movie[]>;
+  screenerMissing: boolean;
 
   constructor(
     private movieService: MovieService,
@@ -24,6 +25,7 @@ export class ScreeningComponent implements OnInit {
     private dynTitle: DynamicTitleService,
     private shell: EventFormShellComponent,
     private snackBar: MatSnackBar,
+    private cdr: ChangeDetectorRef,
   ) { }
 
   get formMeta() {
@@ -42,9 +44,19 @@ export class ScreeningComponent implements OnInit {
       switchMap(org => this.movieService.valueChanges(fromOrgAndAccepted(org.id, 'festival'))),
       map(titles => titles.sort((a, b) => a.title.international.localeCompare(b.title.international)))
     );
+
+    if (this.shell.form.meta.value.titleId) {
+      this.checkTitleScreener(this.shell.form.meta.value.titleId);
+    }
   }
 
   copied() {
     this.snackBar.open('Link copied', 'CLOSE', { duration: 4000 });
+  }
+
+  async checkTitleScreener(titleId: string) {
+    const title = await this.movieService.getValue(titleId);
+    this.screenerMissing = !title.promotional.videos?.screener?.jwPlayerId;
+    this.cdr.markForCheck();
   }
 }
