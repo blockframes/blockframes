@@ -135,8 +135,8 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
       app
     };
 
-    //const url = `https://${firebaseRegion}-${projectId}.cloudfunctions.net/createPdf`;
-    const url = `http://localhost:5001/${projectId}/${firebaseRegion}/createPdf`;// @TODO #7045 remove 
+    const url = `https://${firebaseRegion}-${projectId}.cloudfunctions.net/createPdf`;
+    // const url = `http://localhost:5001/${projectId}/${firebaseRegion}/createPdf`;// @TODO #7045 remove 
 
     await new Promise(resolve => {
       this.http.post(url, params, { responseType: 'arraybuffer' })

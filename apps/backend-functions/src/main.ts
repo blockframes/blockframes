@@ -29,7 +29,7 @@ import { onOfferCreate } from './offer';
 import { onContractCreate, onContractDelete, onContractUpdate } from './contracts';
 import { onTermDelete } from './terms';
 import { downloadVideo } from './rescue';
-import { toPdf } from './pdf/pdf';
+import { createPdf as _createPdf } from './createPdf';
 
 console.log('Function instance loaded');
 
@@ -242,7 +242,7 @@ export const getMediaToken = functions().https.onCall(skipInMaintenance(logError
 export { dailyFirestoreBackup } from './pubsub/daily-firestore-backup';
 
 
-export const createPdf = functions(heavyConfig).https.onRequest(toPdf);
+export const createPdf = functions(heavyConfig).https.onRequest(_createPdf);
 
 //--------------------------------
 //          Analytics           //

@@ -2,7 +2,7 @@ import { MovieDocument, MovieLanguageSpecification } from "@blockframes/movie/+s
 import type { Language } from "@blockframes/utils/static-model/types";
 import { smartJoin, toLabel } from "@blockframes/utils/utils";
 import { Response } from "firebase-functions";
-import { db } from './../internals/firebase';
+import { db } from './internals/firebase';
 import { festival } from '@blockframes/utils/static-model';
 import { App, applicationUrl } from "@blockframes/utils/apps";
 
@@ -28,7 +28,7 @@ const appLogo: Partial<Record<App, string>> = {
   financiers: 'media_financiers.svg',
 }
 
-interface ToPdfRequest {
+interface PdfRequest {
   method: string,
   body: {
     titlesData: {
@@ -39,7 +39,7 @@ interface ToPdfRequest {
   }
 };
 
-export const toPdf = async (req: ToPdfRequest, res: Response) => {
+export const createPdf = async (req: PdfRequest, res: Response) => {
 
   res.set('Access-Control-Allow-Origin', '*');
 
@@ -91,7 +91,7 @@ export const toPdf = async (req: ToPdfRequest, res: Response) => {
     }
   });
 
-  const buffer = await createPdf('titles', req.body.app, data);
+  const buffer = await generate('titles', req.body.app, data);
   const file = { buffer, mimetype: 'application/pdf' };
 
   res.set('Content-Type', file.mimetype);
@@ -124,7 +124,7 @@ function toLanguageVersionString(languages: Partial<{ [language in Language]: Mo
 }
 
 
-async function createPdf(templateName: string, app: App, titles: PdfTitleData[]) {
+async function generate(templateName: string, app: App, titles: PdfTitleData[]) {
   const [fs, hb, path, { default: puppeteer }] = await Promise.all([
     import('fs'),
     import('handlebars'),
