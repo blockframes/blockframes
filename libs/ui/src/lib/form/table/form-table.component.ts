@@ -45,7 +45,7 @@ export class FormTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
   @Input() form: FormList<T>;
   @Input() tablePosition: 'top' | 'bottom' | 'left' | 'right' = 'top';
   @Input() set active(index: number) {
-    if (typeof index !== 'number') return;
+    if (typeof index !== 'number' || index < 0) return;
     this.edit(index);
   }
 
@@ -90,7 +90,8 @@ export class FormTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
       this.dataSource.data = values;
     });
 
-    this.add();
+    // If active has not been triggered add a default item
+    if (!this.formItem) this.add();
 
     this.cdr.markForCheck();
   }
@@ -138,6 +139,7 @@ export class FormTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
   edit(index: number) {
     this.calculateCurrentIndex(index);
     this.formItem = this.form.at(this.activeIndex);
+    console.log(this.formItem, this.formItem.value);
     this.activeValue = this.formItem.value;
     this.cdr.markForCheck();
   }

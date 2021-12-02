@@ -1,23 +1,18 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 // Services
 import { Movie, MovieService } from "@blockframes/movie/+state";
 import { Income, IncomeService } from '@blockframes/contract/income/+state';
 import { Contract, ContractService } from '@blockframes/contract/contract/+state';
-import { Term, TermService } from "@blockframes/contract/term/+state";
+import { TermService } from "@blockframes/contract/term/+state";
 import { OfferService } from '@blockframes/contract/offer/+state';
 
 // Forms
-import { FormList } from '@blockframes/utils/form';
 import { NegotiationForm } from '@blockframes/contract/negotiation/form'
 
 // Material
 import { MatSnackBar } from '@angular/material/snack-bar';
-
-function toTerm({ id, avails, versions }, contractId: string): Partial<Term> {
-  return { id, contractId, languages: versions, ...avails };
-}
 
 @Component({
   selector: 'contract-form',
@@ -29,7 +24,7 @@ export class ContractFormComponent implements OnInit {
   private contract?: Contract;
   private income?: Income;
   title?: Movie;
-  form = new NegotiationForm()
+  form: NegotiationForm;
   titles$ = this.service.valueChanges(ref => ref.where('app.catalog.status', '==', 'accepted'));
   currency?: string;
 
@@ -43,6 +38,7 @@ export class ContractFormComponent implements OnInit {
     private offerService: OfferService,
     private incomeService: IncomeService,
     private contractService: ContractService,
+    private cdr: ChangeDetectorRef,
   ) { }
 
   async ngOnInit() {
@@ -54,12 +50,15 @@ export class ContractFormComponent implements OnInit {
       this.offerService.getValue(offerId)
     ]);
     this.title = await this.titleService.getValue(contract.titleId);
-    this.form.patchValue({ price: income?.price ?? 0 });
     this.contract = contract;
     this.income = income;
     this.currency = offer?.currency;
     const terms = await this.termService.getValue(contract.termIds);
-    (this.form.get('terms') as FormList<any>).patchAllValue(terms);
+    this.form = new NegotiationForm({
+      price: income?.price ?? 0,
+      terms
+    });
+    this.cdr.markForCheck();
   }
 
   async save() {
@@ -67,7 +66,7 @@ export class ContractFormComponent implements OnInit {
       const { terms, price } = this.form.value;
       const contractId = this.route.snapshot.params.contractId;
       const write = this.contractService.batch(); // create a batch
-      const termList = (terms as any[]).map(term => toTerm(term, contractId));
+      const termList = terms.map(term => ({...term, contractId}));
       const termIds = await this.termService.upsert(termList, { write });
       const existingTermIds = this.contract?.termIds || [];
       const termIdsToDelete = existingTermIds.filter(id => !termIds.includes(id));

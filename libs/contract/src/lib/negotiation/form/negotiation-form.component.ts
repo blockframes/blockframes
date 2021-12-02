@@ -35,11 +35,10 @@ export class NegotiationFormComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    if (this.route.snapshot.queryParams.termId) {
-      const termId = this.route.snapshot.queryParams.termId;
+    const termId = this.route.snapshot.queryParams.termId;
+    if (termId) {
       const tabTerms = this.form.get('terms').value;
-      const index = tabTerms.findIndex(value => value.id === termId);
-      this.indexId = index;
+      this.indexId = tabTerms.findIndex(value => value.id === termId);
     }
   }
 

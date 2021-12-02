@@ -1,6 +1,6 @@
 import { FormControl, Validators } from "@angular/forms";
 import { EntityControl, FormEntity, FormList } from "@blockframes/utils/form";
-import { BucketTermForm, createBucketTermControl } from "../bucket/form";
+import { BucketTermForm } from "../bucket/form";
 import { BucketTerm } from "../term/+state";
 import { Negotiation } from "./+state/negotiation.firestore";
 
@@ -13,7 +13,7 @@ export class NegotiationForm extends FormEntity<EntityControl<NegotiationFormSta
   constructor(negotiation?: Partial<Negotiation>) {
     super({
       price: new FormControl(negotiation?.price || 0, Validators.min(0)),
-      terms: FormList.factory(negotiation.terms, term => BucketTermForm.factory(term, createBucketTermControl))
+      terms: FormList.factory(negotiation.terms, term => new BucketTermForm(term))
     })
   }
 }

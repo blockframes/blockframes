@@ -13,7 +13,7 @@ import {
 } from './+state/bucket.model';
 import { Subject } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { BucketTerm } from '../term/+state';
+import { BucketTerm, createTerm, Term } from '../term/+state';
 
 //////////
 // TERM //
@@ -31,12 +31,20 @@ export function createBucketTermControl(params: Partial<BucketTerm> = {}) {
     languages: MovieVersionInfoForm.factory(term.languages, createLanguageControl),
   }
 }
+function createTermControl(params: Partial<Term> = {}) {
+  const term = createTerm(params);
+  return {
+    id: new FormControl(term.id),
+    ...createBucketTermControl(term)
+  }
+}
 
 type BucketTermControl = ReturnType<typeof createBucketTermControl>
 
 export class BucketTermForm extends FormEntity<BucketTermControl, BucketTerm> {
-  constructor(term: Partial<BucketTerm> = {}) {
-    super(createBucketTermControl(term))
+  constructor(term: Partial<BucketTerm | Term> = {}) {
+    const control = ('id' in term) ? createTermControl(term) : createBucketTermControl(term);
+    super(control)
   }
 }
 
