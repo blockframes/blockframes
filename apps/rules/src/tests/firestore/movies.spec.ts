@@ -55,8 +55,13 @@ describe('Movies Rules Tests', () => {
         await assertSucceeds(movieRef.get());
       })
 
-      //TODO : Issue #4833
-      test.only('should be able to read movie with status accepted', async () => {
+      test.only('should be able to fetch movie collection for current org', async () => {
+        //const movieRef = db.doc(`movies/${existMovieFinanciers}`);
+        const movieRef = db.doc(`movies/${existMovieAccepted}`);
+        await assertSucceeds(movieRef.get());
+      })
+
+      test.only('should be able to fetch movies from collection', async () => {
         //const movieRef = db.doc(`movies/${existMovieFinanciers}`);
         const movieRef = db.doc(`movies/${existMovieAccepted}`);
         await assertSucceeds(movieRef.get());
