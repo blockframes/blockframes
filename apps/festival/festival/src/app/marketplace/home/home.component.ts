@@ -9,12 +9,13 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { AngularFirestore } from '@angular/fire/firestore';
 import { CmsPage } from '@blockframes/admin/cms/template';
 import { AuthQuery, AuthService } from '@blockframes/auth/+state';
-import { createPreferences } from '@blockframes/auth/forms/preferences/preferences.form';
+import { createPreferences } from '@blockframes/user/+state/user.model';
 
 // Material
 import { MatDialog } from '@angular/material/dialog';
 import { PreferencesComponent } from '@blockframes/auth/pages/preferences/modal/preferences.component';
 import { OrganizationService } from '@blockframes/organization/+state';
+import { canHavePreferences } from '@blockframes/user/+state/user.utils';
 
 @Component({
   selector: 'festival-marketplace-home',
@@ -42,7 +43,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private dialog: MatDialog,
     private authQuery: AuthQuery,
     private authService: AuthService,
-    private orgService: OrganizationService,
+    private orgService: OrganizationService
   ) { }
 
   async ngOnInit() {
@@ -51,18 +52,16 @@ export class HomeComponent implements OnInit, AfterViewInit {
       distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
     );
 
-    if (!this.authQuery.user.preferences) {
-      const org = await this.orgService.getValue(this.authQuery.user.orgId)
-      if (org.appAccess.festival.marketplace && !org.appAccess.festival.dashboard) {
-        const uid = this.authQuery.userId;
-        const preferences = createPreferences();
-        this.authService.update({ uid, preferences });
-        this.dialog.open(PreferencesComponent, {
-          height: '80vh',
-          width: '80vw',
-          autoFocus: false
-        });
-      }
+    if (this.authQuery.user.preferences) return;
+    const org = await this.orgService.getValue(this.authQuery.user.orgId);
+    if (canHavePreferences(org, 'festival')) {
+      const preferences = createPreferences();
+      this.authService.update({ preferences });
+      this.dialog.open(PreferencesComponent, {
+        height: '80vh',
+        width: '80vw',
+        autoFocus: false
+      });
     }
   }
 

@@ -1,18 +1,8 @@
 import { FormControl } from '@angular/forms';
-import { Preferences } from '@blockframes/user/+state/user.model';
+import { createPreferences, Preferences } from '@blockframes/user/+state/user.model';
 import { FormList, FormStaticValueArray } from '@blockframes/utils/form';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { GetKeys } from '@blockframes/utils/static-model';
-
-export function createPreferences(params: Partial<Preferences> = {}): Preferences {
-  return {
-    territories: [],
-    medias: [],
-    languages: [],
-    genres: [],
-    ...params
-  };
-}
 
 function createPreferencesControls(entity: Partial<Preferences> = {}) {
   const preferences = createPreferences(entity);

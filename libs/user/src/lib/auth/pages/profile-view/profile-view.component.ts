@@ -6,8 +6,9 @@ import { Organization } from '@blockframes/organization/+state/organization.mode
 import { TunnelService } from '@blockframes/ui/tunnel';
 import { User } from '@blockframes/auth/+state/auth.store';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { App, getCurrentApp } from '@blockframes/utils/apps';
+import { getCurrentApp } from '@blockframes/utils/apps';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { canHavePreferences } from '@blockframes/user/+state/user.utils';
 
 const navLinks = [
   {
@@ -53,19 +54,13 @@ export class ProfileViewComponent implements OnInit {
     this.user$ = this.authQuery.user$;
     this.organization$ = this.organizationQuery.selectActive();
 
-    this.organization$.subscribe(org => {
-      if (!this.navLinks.some(link => link.path === 'preferences')) {
-        const app = getCurrentApp(this.routerQuery);
-        const appsWithPreferences: App[] = ['catalog', 'festival'];
-  
-        if (appsWithPreferences.includes(app) && org.appAccess[app].marketplace && !org.appAccess[app].dashboard) {
-          this.navLinks.push({
-            path: 'preferences',
-            label: 'Buyer Preferences'
-          })
-        }
-      }
-    })
-  }
+    const hasPreferences = this.navLinks.some(link => link.path === 'preferences');
+    if (hasPreferences) return;
 
+    const org = this.organizationQuery.getActive();
+    const app = getCurrentApp(this.routerQuery);
+    if (canHavePreferences(org, app)) {
+      this.navLinks.push({ path: 'preferences', label: 'Buyer Preferences' })
+    }
+  }
 }

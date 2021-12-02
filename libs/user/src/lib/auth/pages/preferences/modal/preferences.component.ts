@@ -20,8 +20,7 @@ export class PreferencesComponent {
 
   update() {
     const preferences = this.form.value;
-    const uid = this.authQuery.userId;
-    this.authService.update({ uid, preferences });
+    this.authService.update({ preferences });
     this.close();
   }
   

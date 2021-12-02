@@ -126,7 +126,7 @@ export async function onUserUpdate(change: functions.Change<FirebaseFirestore.Do
   // Sync preferences with mailchimp
   const tags: MailchimpTag[] = []
   if (after?.preferences) {
-    for (const key in after?.preferences) {
+    for (const key in after.preferences) {
       const activeTags = getPreferenceTag(key, after.preferences[key], 'active');
       tags.push(...activeTags); 
     }
@@ -134,12 +134,10 @@ export async function onUserUpdate(change: functions.Change<FirebaseFirestore.Do
 
   if (before?.preferences) {
     for (const key in before.preferences) {
-      let removed: string[];
-      if (after.preferences && after.preferences[key]) {
-        removed = before.preferences[key].filter((value: string) => !after.preferences[key].includes(value));
-      } else {
-        removed = before.preferences[key];
-      }
+      const removed = after.preferences?.[key]
+        ? before.preferences[key].filter((value: string) => !after.preferences[key].includes(value))
+        : before.preferences[key];
+
       const removedTags = getPreferenceTag(key, removed, 'inactive');
       tags.push(...removedTags);
     }
