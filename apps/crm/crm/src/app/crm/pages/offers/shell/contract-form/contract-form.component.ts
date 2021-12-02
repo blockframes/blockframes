@@ -15,8 +15,8 @@ import { NegotiationForm } from '@blockframes/contract/negotiation/form'
 // Material
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-function toTerm({ id, avails, runs, versions }, contractId: string): Partial<Term> {
-  return { id, contractId, runs, languages: versions, ...avails };
+function toTerm({ id, avails, versions }, contractId: string): Partial<Term> {
+  return { id, contractId, languages: versions, ...avails };
 }
 
 @Component({

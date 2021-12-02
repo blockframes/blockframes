@@ -33,11 +33,6 @@
       <ng-template colRef="exclusive" label="Exclusivity" let-exclusive sort>
         {{ exclusive ? 'Yes' : 'No' }}
       </ng-template>
-      <ng-template *ngIf="actionTemplate" colAction="action" label="Actions" let-term let-termIndex="index">
-        <ng-template [ngTemplateOutlet]="actionTemplate"
-          [ngTemplateOutletContext]="{ $implicit:term, index:termIndex }">
-        </ng-template>
-      </ng-template>
       <ng-template colRef="languages" label="Versions" let-versions>
         <ng-container *ngIf="versions | keyvalue as languages">
           <ul *ngIf="languages.length else noLanguage">
@@ -48,6 +43,13 @@
           <ng-template #noLanguage>-</ng-template>
         </ng-container>
       </ng-template>
+      <ng-container *ngIf="actionTemplate">
+        <ng-template colRef="action" label="Actions" sticky let-term="item" let-index="index">
+          <ng-template [ngTemplateOutlet]="actionTemplate"
+            [ngTemplateOutletContext]="{ $implicit:term, index:index }">
+          </ng-template>
+        </ng-template>
+      </ng-container>
     </bf-table>
     <ng-content select="footer"></ng-content>
     <ng-container *ngIf="contract?.titleId| getTitleHoldbacks:orgId | async as existingHoldbacks">

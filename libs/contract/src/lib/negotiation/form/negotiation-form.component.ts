@@ -26,8 +26,7 @@ export class NegotiationFormComponent implements OnInit {
     'territories': 'Territories',
     'medias': 'Medias',
     'exclusive': 'Exclusivity',
-    'languages': 'Versions',
-    'runs': '# of broadcasts'
+    'languages': 'Versions'
   };
 
   constructor(
