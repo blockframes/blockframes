@@ -88,7 +88,6 @@ export class TableExtractedMoviesComponent implements OnInit {
     importState.movie = await this.movieService.create(importState.movie);
     importState.errors.push({
       type: 'error',
-      field: 'internalRef',
       name: 'Film Code',
       reason: 'Movie already exists',
       hint: 'Movie already saved'
