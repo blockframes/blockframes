@@ -7,17 +7,7 @@ body {
 }
 
 h2 {
-  font: 800 40px/32px Montserrat, Helvetica Neue, sans-serif;
-}
-
-header {
-  text-align: center;
-}
-
-header img {
-  height: 48px;
-  margin-top: 24px;
-  margin-bottom: 48px;
+  font: 800 36px/32px Montserrat, Helvetica Neue, sans-serif;
 }
 
 section {
@@ -65,4 +55,13 @@ div.links div {
 
 .title {
   break-inside: avoid;
+}
+
+ul.prizes {
+  list-style: none;
+  padding-left: 0;
+}
+
+ul.prizes li:not(:last-child) {
+  margin-bottom: 4px;
 }

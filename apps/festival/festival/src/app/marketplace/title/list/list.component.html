@@ -65,7 +65,7 @@
     </button>
 
     <ng-container *ngIf="movies$ | async as movies">
-      <button mat-icon-button (click)="export(movies)" matTooltip="Export to PDF">
+      <button [disabled]="exporting" mat-icon-button (click)="export(movies)" matTooltip="Export to PDF">
         <mat-icon svgIcon="pdf"></mat-icon>
       </button>
     </ng-container>

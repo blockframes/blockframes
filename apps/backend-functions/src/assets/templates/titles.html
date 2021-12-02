@@ -6,10 +6,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;800&display=swap" rel="stylesheet"> 
   </head>
   <body>
-    <header class="header">
-      <img src="{{appLogo}}">
-    </header>
-    
+
     {{#titles}}
       <section class="title">
         <div class="row">
@@ -34,6 +31,15 @@
         <div class="row">
           <p class="synopsis">{{synopsis}}</p>
         </div>
+
+        {{#if prizes.length}}
+          <ul class="prizes">
+            {{#each prizes}}
+              <li>{{name}}{{#if prize}} {{prize}}{{/if}}{{#if year}} {{year}}{{/if}}{{#if premiere}} - {{premiere}}{{/if}}</li>
+            {{/each}}
+          </ul>
+        {{/if}}
+
         <div class="row links">
           <div class="column">
             <a href="{{links.title}}">See title</a>

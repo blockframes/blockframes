@@ -19,7 +19,8 @@ import { firebaseRegion, firebase } from '@env';
 import { toStorageFile } from '@blockframes/media/pipes/storageFile.pipe';
 import { getImgIxResourceUrl } from '@blockframes/media/image/directives/imgix-helpers';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { applicationUrl, getCurrentApp } from '@blockframes/utils/apps';
+import { getCurrentApp } from '@blockframes/utils/apps';
+import { MatSnackBar } from '@angular/material/snack-bar';
 export const { projectId } = firebase();
 
 @Component({
@@ -35,7 +36,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   public movies$: Observable<Movie[]>;
   public storeStatus: StoreStatus = 'accepted';
   public searchForm = new MovieSearchForm('festival', this.storeStatus);
-
+  public exporting = false;
   public nbHits: number;
   public hitsViewed = 0;
 
@@ -49,6 +50,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
     private router: Router,
     private http: HttpClient,
     private routerQuery: RouterQuery,
+    private snackbar: MatSnackBar
   ) {
     this.dynTitle.setPageTitle('Films On Our Market Today');
   }
@@ -118,6 +120,8 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   async export(movies: AlgoliaMovie[]) {
+    const snackbarRef = this.snackbar.open('Please wait, your export is being generated...');
+    this.exporting = true;
     const app = getCurrentApp(this.routerQuery);
     const params = {
       titlesData: movies.map(m => {
@@ -128,13 +132,13 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
           posterUrl
         };
       }),
-      appUrl: applicationUrl[app]
+      app
     };
 
-    const url = `https://${firebaseRegion}-${projectId}.cloudfunctions.net/createPdf`;
-    // @TODO #7045 remove const url = `http://localhost:5001/${projectId}/${firebaseRegion}/createPdf`;
+    //const url = `https://${firebaseRegion}-${projectId}.cloudfunctions.net/createPdf`;
+    const url = `http://localhost:5001/${projectId}/${firebaseRegion}/createPdf`;// @TODO #7045 remove 
 
-    return new Promise(resolve => {
+    await new Promise(resolve => {
       this.http.post(url, params, { responseType: 'arraybuffer' })
         .toPromise().then(response => {
           const type = 'application/pdf';
@@ -150,6 +154,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
         });
     });
 
-
+    snackbarRef.dismiss();
+    this.exporting = false;
   }
 }
