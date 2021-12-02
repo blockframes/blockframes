@@ -6,12 +6,12 @@ import {
   getOrgId,
   getTitleId,
   getContract,
-  MandatoryError,
+  mandatoryError,
   checkParentTerm,
-  WrongValueError,
+  wrongValueError,
   adminOnlyWarning,
-  AlreadyExistError,
-  UnknownEntityError,
+  alreadyExistError,
+  unknownEntityError,
   ContractsImportState,
   getUser,
   sheetHeaderLine,
@@ -27,7 +27,7 @@ import { MovieLanguageSpecification } from '@blockframes/movie/+state/movie.fire
 import { Mandate, Sale } from '@blockframes/contract/contract/+state/contract.firestore';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { createMandate, createSale } from '@blockframes/contract/contract/+state/contract.model';
-import { extract, ExtractConfig, getStaticList, SheetTab, ValueWithWarning } from '@blockframes/utils/spreadsheet';
+import { extract, ExtractConfig, getStaticList, SheetTab } from '@blockframes/utils/spreadsheet';
 
 const separator = ';'
 
@@ -114,16 +114,16 @@ export async function formatContract(
   // ! The order of the property should be the same as excel columns
   const fieldsConfig: FieldsConfigType = {
     /* a */'contract.titleId': async (value: string) => {
-      if (!value) throw new MandatoryError({ field: 'contract.titleId', name: 'Title' });
+      if (!value) return mandatoryError('Title');
       const titleId = await getTitleId(value, titleService, titleNameCache, userOrgId, blockframesAdmin);
-      if (!titleId) throw new UnknownEntityError({ field: 'contract.titleId', name: 'Title' });
+      if (!titleId) return unknownEntityError('Title');
       return titleId;
     },
     /* b */'contract.type': (value: string) => {
       const lower = value.toLowerCase();
-      if (!lower) throw new MandatoryError({ field: 'contract.type', name: 'Type' });
+      if (!lower) return mandatoryError('Type');
       const type = getKeyIfExists('contractType', lower[0].toUpperCase() + lower.substr(1));
-      if (!type) throw new WrongValueError({ field: 'contract.type', name: 'Type' });
+      if (!type) return wrongValueError('Type');
       if (type === 'mandate' && !blockframesAdmin) throw new Error(JSON.stringify({
         type: 'error',
         field: 'contract.type',
@@ -134,7 +134,7 @@ export async function formatContract(
       return lower.toLowerCase() as 'mandate' | 'sale';
     },
     /* c */'contract.sellerId': async (value: string) => {
-      if (!value) throw new MandatoryError({ field: 'contract.sellerId', name: 'Licensor' });
+      if (!value) return mandatoryError('Licensor');
       if (value === 'Archipel Content') {
         if (!blockframesAdmin) throw new Error(JSON.stringify({
           type: 'error',
@@ -146,7 +146,7 @@ export async function formatContract(
         return centralOrgId.catalog;
       } else {
         const sellerId = await getOrgId(value, orgService, orgNameCache);
-        if (!sellerId) throw new UnknownEntityError({ field: 'contract.sellerId', name: 'Licensor Organization' });
+        if (!sellerId) return unknownEntityError('Licensor Organization');
         if (!blockframesAdmin && sellerId !== userOrgId) throw new Error(JSON.stringify({
           type: 'error',
           field: 'contract.sellerId',
@@ -158,7 +158,7 @@ export async function formatContract(
       }
     },
     /* d */'contract.buyerId': async (value: string, data: FieldsConfig) => {
-      if (!value) throw new MandatoryError({ field: 'contract.buyerId', name: 'Licensee' });
+      if (!value) return mandatoryError('Licensee');
       if (data.contract.type === 'mandate') {
         if (value !== 'Archipel Content') throw new Error(JSON.stringify({
           type: 'error',
@@ -171,86 +171,95 @@ export async function formatContract(
       } else {
         const isInternal = data.contract.sellerId === centralOrgId.catalog;
         const sellerId = await getOrgId(value, orgService, orgNameCache);
-        if (isInternal && !sellerId) throw new UnknownEntityError({ field: 'contract.buyerId', name: 'Licensee Organization' });
+        if (isInternal && !sellerId) return unknownEntityError('Licensee Organization');
         return sellerId;
       }
     },
-    /* e */'term.territories': (value: string) => getStaticList('territories', value, separator, { field: 'term.territories', name: 'Territories' }) as Territory[],
-    /* f */'term.medias': (value: string) =>  getStaticList('medias', value, separator, { field: 'term.medias', name: 'Medias' }) as Media[],
+    /* e */'term.territories': (value: string) => getStaticList('territories', value, separator, 'Territories') as Territory[],
+    /* f */'term.medias': (value: string) =>  getStaticList('medias', value, separator, 'Medias') as Media[],
     /* g */'term.exclusive': (value: string) => {
       const lower = value.toLowerCase();
-      if (!lower) throw new MandatoryError({ field: 'term.exclusive', name: 'Exclusive' });
-      if (lower !== 'yes' && lower !== 'no') throw new WrongValueError({ field: 'term.exclusive', name: 'Exclusive' });
+      if (!lower) return mandatoryError('Exclusive');
+      if (lower !== 'yes' && lower !== 'no') return wrongValueError('Exclusive');
       return lower === 'yes';
     },
     /* h */'term.duration.from': (value: string) => {
-      if (!value) throw new MandatoryError({ field: 'term.duration.from', name: 'Duration From'});
-      return getDate(value, { field: 'term.duration.from', name: 'Start of Contract'}) as Date
+      if (!value) return mandatoryError('Duration From');
+      return getDate(value, 'Start of Contract') as Date
     },
     /* i */'term.duration.to': (value: string) => {
-      if (!value) throw new MandatoryError({ field: 'term.duration.to', name: 'Duration To'});
-      return getDate(value, { field: 'term.duration.to', name: 'End of Contract'}) as Date
+      if (!value) return mandatoryError('Duration To');
+      return getDate(value, 'End of Contract') as Date
     },
 
     /* j */'term.licensedOriginal': (value: string) => {
       const lower = value.toLowerCase();
-      if (!lower) throw new MandatoryError({ field: 'term.licensedOriginal', name: 'Licensed Original' });
-      if (lower !== 'yes' && lower !== 'no') throw new WrongValueError({ field: 'term.licensedOriginal', name: 'Licensed Original' });
+      if (!lower) return mandatoryError('Licensed Original');
+      if (lower !== 'yes' && lower !== 'no') return wrongValueError('Licensed Original');
       return lower === 'yes';
     },
-    /* k */'term.dubbed': (value: string) => getStaticList('languages', value, separator, { field: 'term.dubbed', name: 'Dubbed' }, false) as Language[],
-    /* l */'term.subtitle': (value: string) => getStaticList('languages', value, separator, { field: 'term.subtitle', name: 'Subtitle' }, false) as Language[],
-    /* m */'term.caption': (value: string) => getStaticList('languages', value, separator, { field: 'term.caption', name: 'CC' }, false) as Language[],
+    /* k */'term.dubbed': (value: string) => getStaticList('languages', value, separator, 'Dubbed', false) as Language[],
+    /* l */'term.subtitle': (value: string) => getStaticList('languages', value, separator, 'Subtitle', false) as Language[],
+    /* m */'term.caption': (value: string) => getStaticList('languages', value, separator, 'CC', false) as Language[],
 
     /* n */'contract.id': async (value: string) => {
-      if (value && !blockframesAdmin) return new ValueWithWarning(firestore.createId(), adminOnlyWarning({ field: 'contract.id', name: 'Contract ID' }));
+      if (value && !blockframesAdmin) return adminOnlyWarning(firestore.createId(), 'Contract ID');
       if (!value) return firestore.createId();
       const exist = await getContract(value, contractService, contractCache);
-      if (exist) throw new AlreadyExistError({ field: 'contract.id', name: 'Contract ID' });
+      if (exist) return alreadyExistError('Contract ID');
       return value;
     },
     /* o */'parentTerm': async (value: string, data: FieldsConfig) => {
-      if (value && !blockframesAdmin) return new ValueWithWarning('', adminOnlyWarning({ field: 'parentTerm', name: 'Mandate ID/Row' }));
-      if (value && data.contract.type === 'mandate') return new ValueWithWarning('', {
-        type: 'warning',
-        field: 'parentTerm',
-        name: 'Unused Mandate ID/Row',
-        reason: 'Mandate ID is used only for sales contracts, here the value will be omitted because the contract is a mandate.',
-        hint: 'Remove the corresponding sheet field to silence this warning.'
-      });
-      if (!value && data.contract.type === 'sale' && data.contract.sellerId === centralOrgId.catalog) {
-        throw new MandatoryError({ field: 'parentTerm', name: 'Mandate ID/Row' });
-      }
-      if (value && data.contract.type === 'sale' && data.contract.sellerId !== centralOrgId.catalog) {
-        return new ValueWithWarning('', {
+      if (value && !blockframesAdmin) return adminOnlyWarning('', 'Mandate ID/Row');
+      if (value && data.contract.type === 'mandate') return {
+        value: '',
+        error: {
           type: 'warning',
           field: 'parentTerm',
           name: 'Unused Mandate ID/Row',
-          reason: 'Mandate ID is used only for internal sales, here the value will be omitted because the sale is external.',
+          reason: 'Mandate ID is used only for sales contracts, here the value will be omitted because the contract is a mandate.',
           hint: 'Remove the corresponding sheet field to silence this warning.'
-        });
+        }
+      };
+      if (!value && data.contract.type === 'sale' && data.contract.sellerId === centralOrgId.catalog) {
+        return mandatoryError('Mandate ID/Row');
+      }
+      if (value && data.contract.type === 'sale' && data.contract.sellerId !== centralOrgId.catalog) {
+        return {
+          value: '',
+          error: {
+            type: 'warning',
+            field: 'parentTerm',
+            name: 'Unused Mandate ID/Row',
+            reason: 'Mandate ID is used only for internal sales, here the value will be omitted because the sale is external.',
+            hint: 'Remove the corresponding sheet field to silence this warning.'
+          }
+        };
       }
       const isId = isNaN(Number(value));
       if (isId) {
         const exist = await checkParentTerm(value, contractService, contractCache);
-        if (!exist) throw new UnknownEntityError({ field: 'parentTerm', name: 'Mandate ID' });
+        if (!exist) return unknownEntityError('Mandate ID');
         return value;
       } else return Number(value);
     },
     /* p */'_titleId': (value: string) => {
-      if (value && !blockframesAdmin) return new ValueWithWarning('', adminOnlyWarning({ field: '_titleId', name: 'Import ID' }));
-      if (value) return new ValueWithWarning('', {
-        type: 'warning',
-        field: '_titleId',
-        name: 'Deprecated Import ID',
-        reason: 'This field is not used anymore and will be removed, the value will be omitted.',
-      });
+      if (value && !blockframesAdmin) return adminOnlyWarning('', 'Import ID');
+      if (value) return {
+        value: '',
+        error: {
+          type: 'warning',
+          field: '_titleId',
+          name: 'Deprecated Import ID',
+          reason: 'This field is not used anymore and will be removed, the value will be omitted.',
+        }
+      };
     },
     /* q */'contract.stakeholders': async (value: string, data: FieldsConfig) => {
       const stakeholders = value.split(separator).filter(v => !!v).map(v => v.trim());
       const exists = await Promise.all(stakeholders.map(id => getUser({ id }, userService, userCache)));
       const unknownStakeholder = exists.some(e => !e);
-      if (unknownStakeholder) throw new UnknownEntityError({ field: 'contract.stakeholders', name: 'Stakeholders' });
+      if (unknownStakeholder) return unknownEntityError('Stakeholders');
       if (data.contract.type === 'mandate') {
         return [ data.contract.buyerId, data.contract.sellerId, ...stakeholders ];
       } else {
@@ -269,7 +278,7 @@ export async function formatContract(
 
 
   for (const result of results) {
-    const { data, errors, warnings } = result;
+    const { data, errors } = result;
 
     const contract =  data.contract.type === 'sale'
       ? createSale({ ...data.contract as Sale})
@@ -285,7 +294,6 @@ export async function formatContract(
         contract.parentTermId = mandate?.terms[0]?.id;
         if (!mandate || !contract.parentTermId) errors.push({
           type: 'error',
-          field: 'parentTerm',
           name: 'Wrong Mandate Row',
           reason: 'Mandate Row point to a wrong sheet line.',
           hint: 'Please check that the line number is correct and that the line is a mandate.'
@@ -303,7 +311,7 @@ export async function formatContract(
     // remove duplicate from stakeholders
     contract.stakeholders = Array.from(new Set([...contract.stakeholders]));
 
-    contracts.push({ contract, terms: [term], errors: [ ...errors, ...warnings ], newContract: true });
+    contracts.push({ contract, terms: [term], errors, newContract: true });
   }
 
   return contracts;

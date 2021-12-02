@@ -3,7 +3,7 @@ import { Mandate, Sale } from "@blockframes/contract/contract/+state/contract.mo
 import { Organization, OrganizationService } from "@blockframes/organization/+state";
 import { User } from "@blockframes/user/+state/user.model";
 import { Term } from "@blockframes/contract/term/+state/term.model";
-import { SheetTab } from "@blockframes/utils/spreadsheet";
+import { SheetTab, ValueWithError } from "@blockframes/utils/spreadsheet";
 import { centralOrgId } from "@env";
 import { ContractService } from "@blockframes/contract/contract/+state/contract.service";
 import { UserService } from "@blockframes/user/+state";
@@ -19,7 +19,6 @@ export interface SpreadsheetImportEvent {
 }
 
 export interface SpreadsheetImportError {
-  field: string;
   name: string;
   reason: string;
   type: 'error' | 'warning';
@@ -143,7 +142,7 @@ export async function getUser(query: { email: string } | { id: string }, userSer
   return user;
 }
 
-export function getDate(value: string, errorData: { field: string, name: string }) {
+export function getDate(value: string, name: string): Date | ValueWithError<Date> {
 
   let date = new Date(value);
 
@@ -164,86 +163,98 @@ export function getDate(value: string, errorData: { field: string, name: string 
     date = new Date( (excelNumberOfDays - unixNumberOfDays) * millisecondsInOneDay );
   }
 
-  if (isNaN(date.getTime())) throw new WrongValueError(errorData);
+  if (isNaN(date.getTime())) return wrongValueError(name);
 
   // if date seems strange we throw an Error
   const year = date.getFullYear();
   if (year < 1895 || year > 2200) {
-    throw new Error(JSON.stringify({
-      type: 'error',
-      field: errorData.field,
-      name: `Invalid ${errorData.name}`,
-      reason: 'The date seems too far away in the past or in the future.',
-      hint: 'Date must be between 1895 and 2200, if the date seems to be correct please check that Excel format the cell as a Date.'
-    }));
+    return {
+      value: undefined,
+      error: {
+        type: 'error',
+        name: `Invalid ${name}`,
+        reason: 'The date seems too far away in the past or in the future.',
+        hint: 'Date must be between 1895 and 2200, if the date seems to be correct please check that Excel format the cell as a Date.'
+      }
+    };
   }
   return date;
 }
 
-export class MandatoryError extends Error {
-  constructor({ field, name }: { field: string, name: string }) {
-    super(JSON.stringify({
+
+export function mandatoryError<T = unknown>(name: string): ValueWithError<T> {
+  return {
+    value: undefined,
+    error: {
       type: 'error',
-      field,
       name: `Missing ${name}`,
       reason: 'Mandatory field is missing.',
       hint: 'Please fill in the corresponding sheet field.'
-    }));
-  }
-}
-
-export class UnknownEntityError extends Error {
-  constructor({ field, name }: { field: string, name: string }) {
-    super(JSON.stringify({
-      type: 'error',
-      field,
-      name: `Unknown ${name}`,
-      reason: `${name} should exist in the app but we couldn't find it.`,
-      hint: `Please check the corresponding sheet field for mistake, create the corresponding ${name} if you can, or contact us.`
-    }));
-  }
-}
-
-export class WrongValueError extends Error {
-  constructor({ field, name }: { field: string, name: string }) {
-    super(JSON.stringify({
-      type: 'error',
-      field,
-      name: `Wrong ${name}`,
-      reason: `${name} should be a value of the given list.`,
-      hint: `Please check the corresponding sheet field for mistakes, be sure to select a value form the list.`
-    }));
-  }
-}
-
-export class AlreadyExistError extends Error {
-  constructor({ field, name }: { field: string, name: string }) {
-    super(JSON.stringify({
-      type: 'error',
-      field,
-      name: `${name} already exist`,
-      reason: `We could not create a this ${name} because it already exist on the app.`,
-      hint: `Please edit the corresponding sheet field with a different value.`
-    }));
-  }
-}
-
-export function optionalWarning({ field, name }: { field: string, name: string }): SpreadsheetImportError {
-  return {
-    type: 'warning',
-    field,
-    name: `Missing ${name}`,
-    reason: 'Optional field is missing.',
-    hint: 'Fill in the corresponding sheet field to add a value.'
+    },
   };
 }
 
-export function adminOnlyWarning({ field, name }: { field: string, name: string }): SpreadsheetImportError {
+
+export function unknownEntityError<T = unknown>(name: string): ValueWithError<T> {
   return {
-    type: 'warning',
-    field,
-    name: `${name} is only for Admins`,
-    reason: 'This field is reserved for admins, it\'s value will be omitted.',
-    hint: 'Remove the corresponding sheet field to silence this warning.'
+    value: undefined,
+    error: {
+      type: 'error',
+      name: `Unknown ${name}`,
+      reason: `${name} should exist in the app but we couldn't find it.`,
+      hint: `Please check the corresponding sheet field for mistake, create the corresponding ${name} if you can, or contact us.`
+    },
+  };
+}
+
+
+export function wrongValueError<T = unknown>(name: string): ValueWithError<T> {
+  return {
+    value: undefined,
+    error: {
+      type: 'error',
+      name: `Wrong ${name}`,
+      reason: `${name} should be a value of the given list.`,
+      hint: `Please check the corresponding sheet field for mistakes, be sure to select a value form the list.`
+    },
+  };
+}
+
+
+export function alreadyExistError<T = unknown>(name: string): ValueWithError<T> {
+  return {
+    value: undefined,
+    error: {
+      type: 'error',
+      name: `${name} already exist`,
+      reason: `We could not create a this ${name} because it already exist on the app.`,
+      hint: `Please edit the corresponding sheet field with a different value.`
+    },
+  };
+}
+
+export function optionalWarning<T = unknown>(name: string, value?: T): ValueWithError<T> {
+  return {
+    // value is `undefined` by default because optional warning mean that the value is missing,
+    // for other warning the value should passed as a parameter
+    value,
+    error: {
+      type: 'warning',
+      name: `Missing ${name}`,
+      reason: 'Optional field is missing.',
+      hint: 'Fill in the corresponding sheet field to add a value.'
+    }
+  };
+}
+
+export function adminOnlyWarning<T = unknown>(value: T, name: string): ValueWithError<T> {
+  return {
+    value,
+    error: {
+      type: 'warning',
+      name: `${name} is only for Admins`,
+      reason: 'This field is reserved for admins, it\'s value will be omitted.',
+      hint: 'Remove the corresponding sheet field to silence this warning.'
+    }
   };
 }
