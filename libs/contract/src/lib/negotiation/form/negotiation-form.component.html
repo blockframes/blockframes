@@ -8,25 +8,25 @@
 </header>
 <bf-form-table [form]="form.get('terms')" [columns]="termColumns" tablePosition="bottom" [active]="indexId">
   <!-- Columns -->
-  <ng-template class="duration" colRef="avails.duration" let-duration>
+  <ng-template class="duration" colRef="duration" let-duration>
     {{ duration.from | date : 'M/d/yyyy' }} - {{ duration.to | date : 'M/d/yyyy' }}
   </ng-template>
-  <ng-template colRef="avails.territories" let-territories>
+  <ng-template colRef="territories" let-territories>
     <span class="group-label" (click)="openDetails(territories, 'territories')">
       {{ territories | toGroupLabel:'territories':'World' | join }}
     </span>
   </ng-template>
-  <ng-template colRef="avails.medias" let-media>
+  <ng-template colRef="medias" let-media>
     <span class="group-label" (click)="openDetails(media, 'medias')">
       {{ media | toGroupLabel:'medias':'All'| join }}
     </span>
   </ng-template>
-  <ng-template colRef="avails.exclusive" let-exclusive>
+  <ng-template colRef="exclusive" let-exclusive>
     {{ exclusive ? 'Yes' : 'No'}}
   </ng-template>
-  <ng-template colRef="versions" let-version>
+  <ng-template colRef="languages" let-languages>
     <ul>
-      <li *ngFor="let language of version.languages | keyvalue">
+      <li *ngFor="let language of languages | keyvalue">
         <strong>{{ language.key | toLabel: 'languages' }}</strong>: {{ language.value | versionPipe | join }}
       </li>
     </ul>
@@ -34,7 +34,7 @@
   <ng-template colRef="runs" let-runs>{{ runs?.broadcasts}}</ng-template>
   <!-- Local Form -->
   <ng-template formView let-termForm>
-    <form [availsFilter]="termForm.get('avails')" class="surface" vertical required></form>
-    <languages-form class="surface" [form]="termForm.get('versions')"></languages-form>
+    <form [availsFilter]="termForm" class="surface" vertical required></form>
+    <languages-form class="surface" [form]="termForm.get('languages')"></languages-form>
   </ng-template>
 </bf-form-table>

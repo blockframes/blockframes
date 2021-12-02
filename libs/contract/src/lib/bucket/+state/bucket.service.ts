@@ -1,7 +1,7 @@
 
 import { Injectable } from '@angular/core';
 
-import { CollectionConfig, CollectionService, PathParams } from 'akita-ng-fire';
+import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 
 import { centralOrgId } from '@env';
 
@@ -21,7 +21,7 @@ import { BucketStore, BucketState } from './bucket.store';
 import { createBucketTerm, createBucketContract } from './bucket.model';
 import { ContractService, convertDuration } from '../../contract/+state';
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
-import { Negotiation, NegotiationStatus } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
+import {  NegotiationStatus } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'buckets' })

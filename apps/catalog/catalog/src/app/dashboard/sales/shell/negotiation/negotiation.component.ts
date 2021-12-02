@@ -24,7 +24,7 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
   negotiation$ = this.sale$.pipe(pluck('negotiation'))
   contractStatus = this.shell.contractStatus;
   activeOrgId = this.query.getActiveId();
-  form = new NegotiationForm()
+  form = new NegotiationForm({ terms: [] });
 
   constructor(
     private snackBar: MatSnackBar,
@@ -41,8 +41,8 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
     const negotiation = await this.negotiation$.pipe(
       filter(data => !!data),
       first()
-    ).toPromise()
-    this.form.hardReset(negotiation)
+    ).toPromise();
+    this.form.hardReset(negotiation);
   }
 
   async decline() {
@@ -62,20 +62,14 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
 
   async confirm() {
     const onConfirm = async () => {
-      const sale = await this.sale$.pipe(first()).toPromise()
-      const value = this.form.value
-      const terms = value.terms.map(term => ({
-        ...term.avails,
-        languages: term.versions
-      }))
-      const price = value.price
-      this.form.markAsPristine() // usefull to be able to route in the NegotiationGuard
+      const sale = await this.sale$.pipe(first()).toPromise();
+      this.form.markAsPristine(); // usefull to be able to route in the NegotiationGuard
       await this.negotiationService.create(sale.id, {
         ...sale.negotiation,
-        price, terms
-      })
-      this.snackBar.open('Your counter offer has been sent')
-      this.router.navigate(['..', 'view'], { relativeTo: this.route })
+        ...this.form.value
+      });
+      this.snackBar.open('Your counter offer has been sent');
+      this.router.navigate(['..', 'view'], { relativeTo: this.route });
     }
 
     this.dialog.open(
@@ -88,6 +82,6 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
           confirm: 'Yes, submit',
           cancel: 'Come back & verify contract'
         }
-      })
+      });
   }
 }
