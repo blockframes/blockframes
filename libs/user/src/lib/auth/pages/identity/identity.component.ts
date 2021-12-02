@@ -283,7 +283,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
     if (this.form.get('lastName').enabled && this.form.get('firstName').enabled) {
       const privacyPolicy = await this.authService.getPrivacyPolicy();
       await this.authService.update({
-        _meta: createDocumentMeta({ createdFrom: this.app }),
+        _meta: createDocumentMeta({ createdFrom: this.app }), // @TODO #7303 emailVerified: this.query.user._meta.emailVerified but what if only this.existingUser === true ?
         firstName,
         lastName,
         privacyPolicy: privacyPolicy,
