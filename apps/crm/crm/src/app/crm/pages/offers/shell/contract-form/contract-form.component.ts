@@ -24,10 +24,10 @@ export class ContractFormComponent implements OnInit {
   private contract?: Contract;
   private income?: Income;
   title?: Movie;
-  form: NegotiationForm;
+  form = new NegotiationForm();
   titles$ = this.service.valueChanges(ref => ref.where('app.catalog.status', '==', 'accepted'));
   currency?: string;
-
+  activeTerm?: string;
 
   constructor(
     private route: ActivatedRoute,
@@ -38,7 +38,6 @@ export class ContractFormComponent implements OnInit {
     private offerService: OfferService,
     private incomeService: IncomeService,
     private contractService: ContractService,
-    private cdr: ChangeDetectorRef,
   ) { }
 
   async ngOnInit() {
@@ -54,11 +53,11 @@ export class ContractFormComponent implements OnInit {
     this.income = income;
     this.currency = offer?.currency;
     const terms = await this.termService.getValue(contract.termIds);
-    this.form = new NegotiationForm({
-      price: income?.price ?? 0,
+    this.form.hardReset({
+      price: income?.price,
       terms
     });
-    this.cdr.markForCheck();
+    this.activeTerm = this.route.snapshot.queryParams.termId;
   }
 
   async save() {

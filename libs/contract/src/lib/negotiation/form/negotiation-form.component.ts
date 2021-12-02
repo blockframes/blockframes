@@ -10,7 +10,7 @@ import { Scope } from '@blockframes/utils/static-model';
 import { NegotiationForm } from '../form';
 
 @Component({
-  selector: 'negotiation-form[form]',
+  selector: '[form]negotiation-form',
   templateUrl: 'negotiation-form.component.html',
   styleUrls: ['./negotiation-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -19,6 +19,11 @@ export class NegotiationFormComponent implements OnInit {
   @Input() form: NegotiationForm
   @Input() title?: Movie;
   @Input() currency?: string;
+  @Input() set activeTerm(termId: string) {
+    if (!termId) return;
+    const tabTerms = this.form.get('terms').value;
+    this.indexId = tabTerms.findIndex(value => value.id === termId);
+  }
 
   indexId: number;
   termColumns = {
@@ -35,11 +40,11 @@ export class NegotiationFormComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    const termId = this.route.snapshot.queryParams.termId;
-    if (termId) {
-      const tabTerms = this.form.get('terms').value;
-      this.indexId = tabTerms.findIndex(value => value.id === termId);
-    }
+    // const termId = this.route.snapshot.queryParams.termId;
+    // if (termId) {
+    //   const tabTerms = this.form.get('terms').value;
+    //   this.indexId = tabTerms.findIndex(value => value.id === termId);
+    // }
   }
 
   openDetails(terms: string, scope: Scope) {
