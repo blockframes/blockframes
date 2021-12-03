@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { RouterQuery } from "@datorama/akita-ng-router-store";
-import { firebaseRegion, firebase } from '@env';
+import { firebaseRegion, firebase, emulators } from '@env';
 import { appName, getCurrentApp } from "./../apps";
 import { PdfParams } from "./pdf.interfaces";
 export const { projectId } = firebase();
@@ -21,8 +21,9 @@ export class PdfService {
       app
     };
 
-    // @dev if using emulator, use `http://localhost:5001/${projectId}/${firebaseRegion}/createPdf`
-    const url = `https://${firebaseRegion}-${projectId}.cloudfunctions.net/createPdf`;
+    const url = emulators.functions
+      ? `http://localhost:5001/${projectId}/${firebaseRegion}/createPdf`
+      : `https://${firebaseRegion}-${projectId}.cloudfunctions.net/createPdf`
 
     await new Promise(resolve => {
       this.http.post(url, params, { responseType: 'arraybuffer' })

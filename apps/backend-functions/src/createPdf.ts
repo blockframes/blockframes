@@ -39,17 +39,13 @@ export const createPdf = async (req: PdfRequest, res: Response) => {
     res.set('Access-Control-Allow-Methods', 'POST');
     res.set('Access-Control-Allow-Headers', 'Content-Type');
     res.set('Access-Control-Max-Age', '3600');
-    res.status(204).send('');
-    return;
+    return res.status(204).send('');
   }
 
-  if (!req.body.titleIds || !req.body.app) {
-    res.status(500).send();
-    return;
-  }
+  const { titleIds, app } = req.body;
+  if (!titleIds || !app) return res.status(500).send();
 
-  const titleIds = req.body.titleIds;
-  const appUrl = applicationUrl[req.body.app];
+  const appUrl = applicationUrl[app];
   const promises = titleIds.map(id => db.collection('movies').doc(id).get());
   const docs = await Promise.all(promises);
   const titles = docs.map(r => r.data() as MovieDocument).filter(m => !!m);
@@ -82,7 +78,7 @@ export const createPdf = async (req: PdfRequest, res: Response) => {
     }
   });
 
-  const buffer = await generate('titles', req.body.app, data);
+  const buffer = await generate('titles', app, data);
 
   res.set('Content-Type', 'application/pdf');
   res.set('Content-Length', buffer.length.toString());
@@ -154,11 +150,11 @@ async function generate(templateName: string, app: App, titles: PdfTitleData[]) 
   cssHeader.push('</style>');
 
   const pageHeight = (await page.evaluate(() => document.documentElement.offsetHeight)) + 240; // 240 = 100 + 40 margins
-  const affordableMaxPageHeight = 6000;
-  const affordableHeight = pageHeight < affordableMaxPageHeight ? pageHeight : affordableMaxPageHeight;
+  const maxHeight= 6000;
+  const height = pageHeight < maxHeight ? pageHeight : maxHeight;
 
   const pdf = await page.pdf({
-    height: affordableHeight,
+    height,
     displayHeaderFooter: true,
     headerTemplate: `${cssHeader.join('')}<header class="header"><img src="data:image/svg+xml;utf8,${encodeURIComponent(logo)}"></header>`,
     footerTemplate: `<p></p>`, // If left empty, default is page number
