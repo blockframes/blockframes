@@ -11,8 +11,8 @@
     </header>
   </landing-header>
 
-  <landing-content class="max-width">
-    <section class="landing-presentation">
+  <landing-content>
+    <section class="landing-presentation max-width">
       <h1 class="mat-display-1">Deals made easy</h1>
       <p class="mat-body-1">Archipel Market is an ongoing film market platform. <br>
         It facilitates interactions between sales agents and buyers all year round. </p>
@@ -68,7 +68,7 @@
       </a>
     </section>
 
-    <section class="expertise">
+    <section class="expertise max-width">
       <h1 class="mat-display-1">Our expertise</h1>
       <img [asset]="'landing_sellers.svg'" alt="expertise img">
       <div>
@@ -78,25 +78,27 @@
       </div>
     </section>
 
-    <section class="max-width landing-detail">
-      <h1 class="mat-display-1">They're talking about us</h1>
-      <article fxLayout fxLayoutAlign="space-between center" fxLayout.lt-md="column wrap" fxLayoutAlign.lt-md="start center" fxLayoutGap="24px">
-        <ng-container *ngFor="let review of reviews">
-          <a href="{{review.link}}" target="_blank" fxLayout fxFlexAlign="stretch">
-            <mat-card fxLayout="column center" fxFlexAlign="stretch"> 
-              <img mat-card-image [asset]="review.img" alt="review image">
-              <div fxLayout="column" fxLayoutAlign="space-between" fxLayoutGap="24px" fxFlex>
-                <mat-card-title>{{review.title}}</mat-card-title>
-                <mat-card-content>{{review.text}}</mat-card-content>
-                <div fxLayout fxLayoutAlign="center center" fxFlexAlign="end" fxLayoutGap="16px">
-                  <span class="mat-caption">From</span>
-                  <img [asset]="review.logo">
+    <section class="landing-detail">
+      <div class="max-width">
+        <h1 class="mat-display-1">They're talking about us</h1>
+        <article fxLayout fxLayoutAlign="space-between center" fxLayout.lt-md="column wrap" fxLayoutAlign.lt-md="start center" fxLayoutGap="24px">
+          <ng-container *ngFor="let review of reviews">
+            <a href="{{review.link}}" target="_blank" fxLayout fxFlexAlign="stretch">
+              <mat-card fxLayout="column center" fxFlexAlign="stretch">
+                <img mat-card-image [asset]="review.img" alt="review image">
+                <div fxLayout="column" fxLayoutAlign="space-between" fxLayoutGap="24px" fxFlex>
+                  <mat-card-title>{{review.title}}</mat-card-title>
+                  <mat-card-content>{{review.text}}</mat-card-content>
+                  <div fxLayout fxLayoutAlign="center center" fxFlexAlign="end" fxLayoutGap="16px">
+                    <span class="mat-caption">From</span>
+                    <img [asset]="review.logo">
+                  </div>
                 </div>
-              </div>
-            </mat-card>
-          </a>
-        </ng-container>
-      </article>
+              </mat-card>
+            </a>
+          </ng-container>
+        </article>
+      </div>
     </section>
   </landing-content>
 </landing-shell-page>

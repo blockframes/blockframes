@@ -106,7 +106,7 @@
         fxLayoutGap="32px">
         <div fxLayout="row wrap">
           <app-logo fxLayout fxFlex></app-logo>
-          <form fxFlex [formGroup]="newslettersForm" (ngSubmit)="subscribeToNewsletters(newslettersForm)" >
+          <form fxFlex fxLayout.lt-sm="column" [formGroup]="newslettersForm" (ngSubmit)="subscribeToNewsletters(newslettersForm)" >
             <mat-form-field appearance="outline" hideRequiredMarker>
               <mat-label>Enter your email address</mat-label>
               <input test-id="email" matInput type="email" placeholder="Email address" formControlName="email" required />
