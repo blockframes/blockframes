@@ -8,7 +8,6 @@ import { DetailedTermsComponent } from '@blockframes/contract/term/components/de
 import { HoldbackModalComponent } from '../../holdback/modal/holdback-modal.component';
 import { Holdback, Sale } from '../../+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
-import { Duration } from '@blockframes/contract/term/+state';
 
 
 
@@ -37,8 +36,6 @@ export class ContractItemComponent {
       this.cdr.markForCheck();
     }
   }
-
-  sortDuration = (a: Date, b: Date) => a.getTime() - b.getTime();
 
   constructor(
     private cdr: ChangeDetectorRef,

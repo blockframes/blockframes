@@ -15,10 +15,10 @@
   </header>
   <ng-container *ngIf="contract | getTermsFromContract | async as terms">
     <bf-table [source]="terms" useFilter pagination="50">
-      <ng-template colRef="duration.from" label="Terms Start Date" let-from [sort]="sortDuration">
+      <ng-template colRef="duration.from" label="Terms Start Date" let-from>
         {{ from | date:'M/d/y' }}
       </ng-template>
-      <ng-template colRef="duration.to" label="Terms End Date" let-to [sort]="sortDuration">
+      <ng-template colRef="duration.to" label="Terms End Date" let-to>
         {{ to | date:'M/d/y' }}
       </ng-template>
       <ng-template colRef="territories" label="Territories" let-territories>
