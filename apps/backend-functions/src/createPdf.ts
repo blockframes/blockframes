@@ -39,11 +39,15 @@ export const createPdf = async (req: PdfRequest, res: Response) => {
     res.set('Access-Control-Allow-Methods', 'POST');
     res.set('Access-Control-Allow-Headers', 'Content-Type');
     res.set('Access-Control-Max-Age', '3600');
-    return res.status(204).send('');
+    res.status(204).send('')
+    return;
   }
 
   const { titleIds, app } = req.body;
-  if (!titleIds || !app) return res.status(500).send();
+  if (!titleIds || !app) {
+    res.status(500).send();
+    return;
+  }
 
   const appUrl = applicationUrl[app];
   const promises = titleIds.map(id => db.collection('movies').doc(id).get());
@@ -150,7 +154,7 @@ async function generate(templateName: string, app: App, titles: PdfTitleData[]) 
   cssHeader.push('</style>');
 
   const pageHeight = (await page.evaluate(() => document.documentElement.offsetHeight)) + 240; // 240 = 100 + 40 margins
-  const maxHeight= 6000;
+  const maxHeight = 6000;
   const height = pageHeight < maxHeight ? pageHeight : maxHeight;
 
   const pdf = await page.pdf({
