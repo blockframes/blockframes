@@ -1,0 +1,36 @@
+<ng-container *ngIf="form">
+  <form [formGroup]="form">
+
+    <h3>Rights</h3>
+    <mat-form-field appearance="outline">
+      <mat-label>Select rights</mat-label>
+      <static-group
+        [formControl]="form.get('medias')"
+        scope="medias"
+        displayAll="All Rights"
+        placeholder="Select right(s)">
+      </static-group>
+    </mat-form-field>
+    
+    <h3>Territories</h3>
+    <mat-form-field appearance="outline">
+      <mat-label>Select territories</mat-label>
+      <static-group
+        [formControl]="form.get('territories')"
+        scope="territories"
+        displayAll="World"
+        placeholder="Select territories">
+      </static-group>
+    </mat-form-field>
+
+    <h3>Languages</h3>
+    <chips-autocomplete [form]="form.get('languages')" scope="languages">
+      <mat-label>Languages</mat-label>
+    </chips-autocomplete>
+
+    <h3>Genres</h3>
+    <chips-autocomplete [form]="form.get('genres')" scope="genres">
+      <mat-label>Genres</mat-label>
+    </chips-autocomplete>
+  </form>
+</ng-container>
