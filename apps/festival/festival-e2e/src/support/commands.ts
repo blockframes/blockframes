@@ -35,5 +35,6 @@ Cypress.Commands.add('login', (email, password) => {
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 Cypress.Commands.add('logSubject', { prevSubject: 'optional' }, (subject, msg?: string) => {
   if (msg) cy.log(msg);
+  if (subject) console.dir(subject)
   if (subject) cy.log(subject);
 });

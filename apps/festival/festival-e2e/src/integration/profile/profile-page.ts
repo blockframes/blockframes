@@ -1,3 +1,4 @@
+import { loginWithRandomUser } from "../../support/app.po";
 
 describe('Profile Page', () => {
 
@@ -7,8 +8,8 @@ describe('Profile Page', () => {
   })
   it('should load', () => {
     cy.visit('/')
-    cy.task('log', 'THIS IS TEST')
-    cy.task('getRandomUID').logSubject();
+    cy.task('getRandomUser').logSubject();
+    loginWithRandomUser().logSubject();
   })
 
 })

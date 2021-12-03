@@ -17,20 +17,15 @@ export default (async (on, config) => {
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config
 
-  // Preprocess Typescript file using Nx helper
-  // on('file:preprocessor', preprocessTypescript(config));
-
   console.log('Node version:', process.version);
   console.log('Config: ', config);
-  // // A plugin example. Can modify printed configs.
-  // on('before:browser:launch', (arg1, arg2) => {
-  //   console.log('Plugin Arg1', arg1);
-  //   console.log('Plugin Arg2', arg2);
-  // });
+  // A plugin example. Can modify printed configs.
+  on('before:browser:launch', (arg1, arg2) => {
+    console.log('Plugin Arg1', arg1);
+    console.log('Plugin Arg2', arg2);
+  });
 
-  // tslint:disable-next-line: no-unused-expression
-  // apps; // TODO - try remove this! stackoverflow bug posted
-  // on('task', cypress.getCypressTasks(config));
+
   on('task', testingCypress(config));
 
   // * Returning config here (or promise) changes config.
