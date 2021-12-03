@@ -30,14 +30,13 @@ const navLinks = [
 })
 export class ProfileViewComponent implements OnInit {
   public organization$: Observable<Organization>;
-  public previousPage: string;
   public navLinks = navLinks;
   public user$: Observable<User>;
 
   constructor(
     private authQuery: AuthQuery,
     private organizationQuery: OrganizationQuery,
-    private tunnelService: TunnelService,
+    public tunnelService: TunnelService,
     private dynTitle: DynamicTitleService,
   ) {
 
@@ -50,7 +49,6 @@ export class ProfileViewComponent implements OnInit {
   ngOnInit() {
     this.user$ = this.authQuery.user$;
     this.organization$ = this.organizationQuery.selectActive();
-    this.previousPage = this.tunnelService.previousUrl || '../../..';
   }
 
 }
