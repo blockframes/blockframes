@@ -172,13 +172,7 @@ async function generate(templateName: string, app: App, titles: PdfTitleData[]) 
 
   const pageHeight = (await page.evaluate(() => document.documentElement.offsetHeight)) + 240; // 240 = 100 + 40 margins
   const affordableMaxPageHeight = 6000;
-  let affordableHeight;
-  if (pageHeight <= affordableMaxPageHeight) {
-    affordableHeight = pageHeight;
-  } else {
-    const affordablePageCount = Math.round(pageHeight / affordableMaxPageHeight);
-    affordableHeight = pageHeight / affordablePageCount;
-  }
+  const affordableHeight = pageHeight < affordableMaxPageHeight ? pageHeight : affordableMaxPageHeight;
 
   const pdf = await page.pdf({
     height: affordableHeight,
