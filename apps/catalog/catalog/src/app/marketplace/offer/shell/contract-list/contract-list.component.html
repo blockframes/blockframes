@@ -29,7 +29,9 @@
     </ng-template>
   </bf-table>
   <ng-container *ngIf="offer.declinedContracts?.length">
-    <h3>Rejected Titles</h3>
+    <h3>
+      Rejected Titles <mat-icon svgIcon="info" matTooltip="Titles that were rejected from the package"></mat-icon>
+    </h3>
     <bf-table (rowClick)="goToContract($event)" [source]="offer.declinedContracts" pagination="50" useFilter>
       <!-- Title -->
       <ng-template colRef="title.title.international" label="Title" let-title sort>

@@ -7,6 +7,7 @@ import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { TagModule } from '@blockframes/ui/tag/tag.module';
 import { MatTooltipModule } from '@angular/material/tooltip'
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { MatTooltipModule } from '@angular/material/tooltip'
     CommonModule,
     TagModule,
     TableModule,
+    MatIconModule,
     MatTooltipModule,
     MaxLengthModule,
     JoinPipeModule,
