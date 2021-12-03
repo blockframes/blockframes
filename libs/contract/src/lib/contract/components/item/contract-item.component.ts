@@ -8,7 +8,6 @@ import { DetailedTermsComponent } from '@blockframes/contract/term/components/de
 import { HoldbackModalComponent } from '../../holdback/modal/holdback-modal.component';
 import { Holdback, Sale } from '../../+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
-import { Duration } from '@blockframes/contract/term/+state';
 
 
 
@@ -31,8 +30,6 @@ export class ContractItemComponent {
 
   @ContentChild('priceTemplate') priceTemplate: TemplateRef<unknown>;
   @ContentChild('termAction') actionTemplate?: TemplateRef<unknown>;
-
-  sortDuration = (a: Duration, b: Duration) => a.from.getTime() - b.from.getTime();
 
   constructor(
     private dialog: MatDialog,
