@@ -1,4 +1,3 @@
-import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { RouterQuery } from "@datorama/akita-ng-router-store";
 import { firebaseRegion, firebase, emulators } from '@env';
@@ -10,27 +9,29 @@ export const { projectId } = firebase();
 export class PdfService {
 
   constructor(
-    private routerQuery: RouterQuery,
-    private http: HttpClient
+    private routerQuery: RouterQuery
   ) { }
 
   async download(titleIds: string[]) {
     const app = getCurrentApp(this.routerQuery);
-    const params: PdfParams = {
+    const data: PdfParams = {
       titleIds,
       app
     };
+
+    const params = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    }
 
     const url = emulators.functions
       ? `http://localhost:5001/${projectId}/${firebaseRegion}/createPdf`
       : `https://${firebaseRegion}-${projectId}.cloudfunctions.net/createPdf`
 
     await new Promise(resolve => {
-      this.http.post(url, params, { responseType: 'arraybuffer' })
-        .toPromise().then(response => {
-          const type = 'application/pdf';
-          const buffer = new Uint8Array(response);
-          const blob = new Blob([buffer], { type });
+      fetch(url, params,).then(res => res.blob())
+        .then(blob => {
           const url = URL.createObjectURL(blob);
           const element = document.createElement('a');
           element.setAttribute('href', url);
