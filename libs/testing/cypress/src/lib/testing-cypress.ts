@@ -25,8 +25,13 @@ async function getRandomUID() {
 export function testingCypress(config?: Cypress.PluginConfigOptions) : Cypress.Tasks {
   console.log(config.env);
 
-  if ('emulator' in config.env && config.env.emulator) db = connectFirestoreEmulator();
-  else db = loadAdminServices().db;
+  if ('emulator' in config.env && config.env.emulator) {
+    db = connectFirestoreEmulator();
+    console.log('Connected to emulator')
+  } else {
+    db = loadAdminServices().db;
+    console.log('Connected to live Firestore dev server')
+  }
 
   return {
     getRandomUID,
