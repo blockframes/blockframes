@@ -12,6 +12,9 @@ import { debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap } 
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { ActivatedRoute } from '@angular/router';
 import { StoreStatus } from '@blockframes/utils/static-model/types';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { PdfService } from '@blockframes/utils/pdf.service'
+import { AlgoliaMovie } from '@blockframes/utils/algolia';
 
 @Component({
   selector: 'financiers-marketplace-title-list',
@@ -26,7 +29,7 @@ export class ListComponent implements OnInit, OnDestroy {
   public movies$: Observable<Movie[]>;
   public storeStatus: StoreStatus = 'accepted';
   public searchForm = new MovieSearchForm('financiers', this.storeStatus);
-
+  public exporting = false;
   public nbHits: number;
   public hitsViewed = 0;
 
@@ -38,6 +41,8 @@ export class ListComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     private dynTitle: DynamicTitleService,
     private route: ActivatedRoute,
+    private snackbar: MatSnackBar,
+    private pdfService: PdfService
   ) {
     this.dynTitle.setPageTitle('Films On Our Market Today');
   }
@@ -95,5 +100,13 @@ export class ListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.sub.unsubscribe();
+  }
+
+  async export(movies: AlgoliaMovie[]) {
+    const snackbarRef = this.snackbar.open('Please wait, your export is being generated...');
+    this.exporting = true;
+    await this.pdfService.download(movies);
+    snackbarRef.dismiss();
+    this.exporting = false;
   }
 }

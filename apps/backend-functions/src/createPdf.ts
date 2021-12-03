@@ -170,8 +170,18 @@ async function generate(templateName: string, app: App, titles: PdfTitleData[]) 
   cssFooter.push('h1 { font-size:8px; margin-left:30px;}');
   cssFooter.push('</style>');
 
+  const pageHeight = (await page.evaluate(() => document.documentElement.offsetHeight)) + 240; // 240 = 100 + 40 margins
+  const affordableMaxPageHeight = 6000;
+  let affordableHeight;
+  if (pageHeight <= affordableMaxPageHeight) {
+    affordableHeight = pageHeight;
+  } else {
+    const affordablePageCount = Math.round(pageHeight / affordableMaxPageHeight);
+    affordableHeight = pageHeight / affordablePageCount;
+  }
+
   const pdf = await page.pdf({
-    height: (await page.evaluate(() => document.documentElement.offsetHeight)) + 240, // 240 = 100 + 40 margins
+    height: affordableHeight,
     displayHeaderFooter: true,
     headerTemplate: `${cssHeader.join('')}<header class="header"><img src="data:image/svg+xml;utf8,${encodeURIComponent(logo)}"></header>`,
     footerTemplate: `<p></p>`, // If left empty, default is page number

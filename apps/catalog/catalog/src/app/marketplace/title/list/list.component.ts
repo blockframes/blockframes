@@ -28,13 +28,7 @@ import { ContractService, Mandate, Sale } from '@blockframes/contract/contract/+
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { AvailsFilter, filterByTitleId, getMandateTerms, isMovieAvailable } from '@blockframes/contract/avails/avails';
-import { HttpClient } from '@angular/common/http';
-import { firebaseRegion, firebase } from '@env';
-import { toStorageFile } from '@blockframes/media/pipes/storageFile.pipe';
-import { getImgIxResourceUrl } from '@blockframes/media/image/directives/imgix-helpers';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { appName, getCurrentApp } from '@blockframes/utils/apps';
-export const { projectId } = firebase();
+import { PdfService } from '@blockframes/utils/pdf.service';
 
 @Component({
   selector: 'catalog-marketplace-title-list',
@@ -66,8 +60,7 @@ export class ListComponent implements OnDestroy, OnInit {
     private snackbar: MatSnackBar,
     private bucketService: BucketService,
     private router: Router,
-    private routerQuery: RouterQuery,
-    private http: HttpClient,
+    private pdfService: PdfService
   ) {
     this.dynTitle.setPageTitle('Films On Our Market Today');
   }
@@ -189,38 +182,7 @@ export class ListComponent implements OnDestroy, OnInit {
   async export(movies: AlgoliaMovie[]) {
     const snackbarRef = this.snackbar.open('Please wait, your export is being generated...');
     this.exporting = true;
-    const app = getCurrentApp(this.routerQuery);
-    const params = {
-      titlesData: movies.map(m => {
-        const storageFile = toStorageFile(m.poster, 'movies', 'poster', m.objectID);
-        const posterUrl = getImgIxResourceUrl(storageFile, { h: 240, w: 180 });
-        return {
-          id: m.objectID,
-          posterUrl
-        };
-      }),
-      app
-    };
-
-    // @dev if using emulator, use `http://localhost:5001/${projectId}/${firebaseRegion}/createPdf`
-    const url = `https://${firebaseRegion}-${projectId}.cloudfunctions.net/createPdf`;
-
-    await new Promise(resolve => {
-      this.http.post(url, params, { responseType: 'arraybuffer' })
-        .toPromise().then(response => {
-          const type = 'application/pdf';
-          const buffer = new Uint8Array(response);
-          const blob = new Blob([buffer], { type });
-          const url = URL.createObjectURL(blob);
-          const element = document.createElement('a');
-          element.setAttribute('href', url);
-          element.setAttribute('download', `titles-export-${appName[app]}.pdf`);
-          const event = new MouseEvent('click');
-          element.dispatchEvent(event);
-          resolve(true);
-        });
-    });
-
+    await this.pdfService.download(movies);
     snackbarRef.dismiss();
     this.exporting = false;
   }
