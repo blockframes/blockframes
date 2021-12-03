@@ -13,7 +13,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { ActivatedRoute } from '@angular/router';
 import { StoreStatus } from '@blockframes/utils/static-model/types';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { PdfService } from '@blockframes/utils/pdf.service'
+import { PdfService } from '@blockframes/utils/pdf/pdf.service'
 import { AlgoliaMovie } from '@blockframes/utils/algolia';
 
 @Component({
@@ -105,7 +105,7 @@ export class ListComponent implements OnInit, OnDestroy {
   async export(movies: AlgoliaMovie[]) {
     const snackbarRef = this.snackbar.open('Please wait, your export is being generated...');
     this.exporting = true;
-    await this.pdfService.download(movies);
+    await this.pdfService.download(movies.map(m => m.objectID));
     snackbarRef.dismiss();
     this.exporting = false;
   }

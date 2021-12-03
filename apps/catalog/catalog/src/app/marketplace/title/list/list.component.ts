@@ -28,7 +28,7 @@ import { ContractService, Mandate, Sale } from '@blockframes/contract/contract/+
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { AvailsFilter, filterByTitleId, getMandateTerms, isMovieAvailable } from '@blockframes/contract/avails/avails';
-import { PdfService } from '@blockframes/utils/pdf.service';
+import { PdfService } from '@blockframes/utils/pdf/pdf.service';
 
 @Component({
   selector: 'catalog-marketplace-title-list',
@@ -182,7 +182,7 @@ export class ListComponent implements OnDestroy, OnInit {
   async export(movies: AlgoliaMovie[]) {
     const snackbarRef = this.snackbar.open('Please wait, your export is being generated...');
     this.exporting = true;
-    await this.pdfService.download(movies);
+    await this.pdfService.download(movies.map(m => m.objectID));
     snackbarRef.dismiss();
     this.exporting = false;
   }

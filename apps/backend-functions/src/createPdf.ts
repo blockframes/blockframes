@@ -5,6 +5,8 @@ import { Response } from "firebase-functions";
 import { db } from './internals/firebase';
 import { festival } from '@blockframes/utils/static-model';
 import { App, applicationUrl } from "@blockframes/utils/apps";
+import { PdfRequest } from "@blockframes/utils/pdf/pdf.interfaces";
+import { getImgIxResourceUrl } from "@blockframes/media/image/directives/imgix-helpers";
 
 interface PdfTitleData {
   title: string,
@@ -28,17 +30,6 @@ const appLogo: Partial<Record<App, string>> = {
   financiers: 'media_financiers.svg',
 }
 
-interface PdfRequest {
-  method: string,
-  body: {
-    titlesData: {
-      id: string,
-      posterUrl: string
-    }[],
-    app: App
-  }
-};
-
 export const createPdf = async (req: PdfRequest, res: Response) => {
 
   res.set('Access-Control-Allow-Origin', '*');
@@ -52,14 +43,14 @@ export const createPdf = async (req: PdfRequest, res: Response) => {
     return;
   }
 
-  if (!req.body.titlesData || !req.body.app) {
+  if (!req.body.titleIds || !req.body.app) {
     res.status(500).send();
     return;
   }
 
-  const titlesData = req.body.titlesData;
+  const titleIds = req.body.titleIds;
   const appUrl = applicationUrl[req.body.app];
-  const promises = titlesData.map(data => db.collection('movies').doc(data.id).get());
+  const promises = titleIds.map(id => db.collection('movies').doc(id).get());
   const docs = await Promise.all(promises);
   const titles = docs.map(r => r.data() as MovieDocument).filter(m => !!m);
 
@@ -77,7 +68,7 @@ export const createPdf = async (req: PdfRequest, res: Response) => {
       releaseYear: m.release.year,
       runningTime: m.runningTime.time,
       synopsis: m.synopsis,
-      posterUrl: titlesData.find(data => data.id === m.id).posterUrl,
+      posterUrl: getImgIxResourceUrl(m.poster, { h: 240, w: 180 }),
       version: {
         original: toLabel(m.originalLanguages, 'languages', ', ', ' & '),
         isOriginalVersionAvailable: m.isOriginalVersionAvailable,
@@ -92,11 +83,10 @@ export const createPdf = async (req: PdfRequest, res: Response) => {
   });
 
   const buffer = await generate('titles', req.body.app, data);
-  const file = { buffer, mimetype: 'application/pdf' };
 
-  res.set('Content-Type', file.mimetype);
-  res.set('Content-Length', file.buffer.length.toString());
-  res.status(200).send(file.buffer);
+  res.set('Content-Type', 'application/pdf');
+  res.set('Content-Length', buffer.length.toString());
+  res.status(200).send(buffer);
   return;
 }
 
@@ -122,7 +112,6 @@ function toLanguageVersionString(languages: Partial<{ [language in Language]: Mo
 
   }).filter(d => d).join(', ');
 }
-
 
 async function generate(templateName: string, app: App, titles: PdfTitleData[]) {
   const [fs, hb, path, { default: puppeteer }] = await Promise.all([
@@ -158,17 +147,11 @@ async function generate(templateName: string, app: App, titles: PdfTitleData[]) 
   await page.setContent(html, { waitUntil: 'networkidle0' });
   await page.evaluateHandle('document.fonts.ready');
 
-
   const cssHeader = [];
   cssHeader.push('<style>');
   cssHeader.push('header {width: 100%; text-align: center;}');
   cssHeader.push('header img {height: 48px; width: 144px}')
   cssHeader.push('</style>');
-
-  const cssFooter = [];
-  cssFooter.push('<style>');
-  cssFooter.push('h1 { font-size:8px; margin-left:30px;}');
-  cssFooter.push('</style>');
 
   const pageHeight = (await page.evaluate(() => document.documentElement.offsetHeight)) + 240; // 240 = 100 + 40 margins
   const affordableMaxPageHeight = 6000;

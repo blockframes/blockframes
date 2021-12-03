@@ -1,11 +1,9 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { getImgIxResourceUrl } from "@blockframes/media/image/directives/imgix-helpers";
-import { toStorageFile } from "@blockframes/media/pipes/storageFile.pipe";
 import { RouterQuery } from "@datorama/akita-ng-router-store";
 import { firebaseRegion, firebase } from '@env';
-import { AlgoliaMovie } from "./algolia";
-import { appName, getCurrentApp } from "./apps";
+import { appName, getCurrentApp } from "./../apps";
+import { PdfParams } from "./pdf.interfaces";
 export const { projectId } = firebase();
 
 @Injectable({ providedIn: 'root' })
@@ -16,17 +14,10 @@ export class PdfService {
     private http: HttpClient
   ) { }
 
-  async download(movies: AlgoliaMovie[]) {
+  async download(titleIds: string[]) {
     const app = getCurrentApp(this.routerQuery);
-    const params = {
-      titlesData: movies.map(m => {
-        const storageFile = toStorageFile(m.poster, 'movies', 'poster', m.objectID);
-        const posterUrl = getImgIxResourceUrl(storageFile, { h: 240, w: 180 });
-        return {
-          id: m.objectID,
-          posterUrl
-        };
-      }),
+    const params: PdfParams = {
+      titleIds,
       app
     };
 
