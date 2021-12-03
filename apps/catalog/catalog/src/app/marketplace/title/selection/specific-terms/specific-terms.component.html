@@ -1,27 +1,38 @@
-<section fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="12px">
+<section fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="12px" >
   <h1>Specific Terms</h1>
-  <p>Please indicate any specific conditions you'd like to request for this deal.<br />
-    These terms will be applied to the whole contract</p>
+  <p>Please indicate any specific conditions you'd like to request for this deal.<br/>
+  These terms will be applied to the whole contract</p>
   <form [formGroup]="form" fxLayout="column" (ngSubmit)="createOffer()">
     <mat-form-field appearance="outline">
       <mat-label>Specific Terms</mat-label>
-      <textarea matInput
+      <textarea
+        matInput
         placeholder="eg: Licensee shall have the exclusive option to acquire additional Episodes of the Program(s) or additional Rights during the Licence Period for an additional fee equal or superior to the actual fee per Episode."
-        formControlName="specificity" cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="4"
-        maxlength="500" test-id="specific-terms">
+        formControlName="specificity"
+        cdkTextareaAutosize
+        #autosize="cdkTextareaAutosize"
+        cdkAutosizeMinRows="4"
+        maxlength="500"
+        test-id="specific-terms">
       </textarea>
     </mat-form-field>
     <mat-form-field appearance="outline">
       <mat-label>Delivery Specifications</mat-label>
-      <textarea matInput placeholder="Please indicate here the specific items you require for your delivery, if any."
-        formControlName="delivery" cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="4"
-        maxlength="500" test-id="delivery-list">
+      <textarea
+        matInput
+        placeholder="Please indicate here the specific items you require for your delivery, if any."
+        formControlName="delivery"
+        cdkTextareaAutosize
+        #autosize="cdkTextareaAutosize"
+        cdkAutosizeMinRows="4"
+        maxlength="500"
+        test-id="delivery-list">
       </textarea>
     </mat-form-field>
     <mat-checkbox class="example-margin" formControlName="acceptTerms">
-      <span>
+      <p>
         I have read and agree with the <a routerLink="/c/o/marketplace/standard-terms" target="_blank">Standard Terms</a>, that will be applied to the whole package.
-      </span>
+      </p>
     </mat-checkbox>
     <footer fxLayout="column" fxLayoutAlign="center center">
       <button mat-flat-button color="primary" [disabled]="form.disabled || !form.value.acceptTerms" type="submit"
