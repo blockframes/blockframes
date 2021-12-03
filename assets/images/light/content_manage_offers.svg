@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="300px" height="200px" viewBox="0 0 300 200" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Illustrations/Light/manage-offers</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="236" height="179" rx="4"></rect>
+        <filter x="-16.3%" y="-21.5%" width="133.5%" height="144.1%" filterUnits="objectBoundingBox" id="filter-3">
+            <feMorphology radius="3" operator="dilate" in="SourceAlpha" result="shadowSpreadOuter1"></feMorphology>
+            <feOffset dx="1" dy="1" in="shadowSpreadOuter1" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="10" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.171829757 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <path d="M0.00686829213,1.50649233 L0,10.5454463 C0,11.3740171 0.618146292,12.0519386 1.37365843,12.0519386 L12.3629258,12.0519386 C13.118438,12.0519386 13.7365843,11.3740171 13.7365843,10.5454463 L13.7365843,0 L10.9892674,0 L12.3629258,3.01298465 L10.3024382,3.01298465 L8.92877977,0 L7.55512135,0 L8.92877977,3.01298465 L6.86829213,3.01298465 L5.49463371,0 L4.12097528,0 L5.49463371,3.01298465 L3.43414607,3.01298465 L2.06048764,0 L1.37365843,0 C0.618146292,0 0.00686829213,0.677921547 0.00686829213,1.50649233 Z M1.37365843,1.86051802 L2.58247784,4.51947698 L12.3629258,4.51947698 L12.3629258,10.5454463 L1.37365843,10.5454463 L1.37365843,1.86051802 Z" id="path-4"></path>
+        <rect id="path-6" x="0" y="0" width="128.258065" height="56"></rect>
+        <filter x="-5.5%" y="-8.9%" width="110.9%" height="125.0%" filterUnits="objectBoundingBox" id="filter-7">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.127957858 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Illustrations/Light/manage-offers" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="library-page" transform="translate(0.395756, 1.123498)">
+            <rect id="Rectangle" fill="#E0E5FF" x="60.4147897" y="14.3932831" width="239" height="186"></rect>
+            <g id="feature-offers-deals">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <g id="surface-2">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-3)" xlink:href="#path-1"></use>
+                    <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+                </g>
+                <g id="Group-56" mask="url(#mask-2)">
+                    <g transform="translate(14.846439, 75.098169)">
+                        <g id="offers-and-deals" stroke-width="1" fill-rule="evenodd" transform="translate(0.000000, 15.532921)">
+                            <g id="table-celles">
+                                <rect id="Rectangle" fill="#F4F6FD" x="0" y="0" width="64.7349398" height="22.7670213"></rect>
+                                <rect id="Rectangle" fill="#F4F6FD" x="0" y="23.9196004" width="64.7349398" height="22.7670213"></rect>
+                                <rect id="Rectangle" fill="#F4F6FD" x="0" y="47.8392007" width="64.7349398" height="22.7670213"></rect>
+                                <text id="Van-Goghs" font-family="Montserrat-Regular, Montserrat" font-size="8" font-weight="normal" letter-spacing="0.222222222" fill="#53545A">
+                                    <tspan x="6.86746988" y="62.2227114">Van Goghs</tspan>
+                                </text>
+                                <rect id="Rectangle" fill="#F4F6FD" x="67.1325301" y="0" width="120" height="22.7670213"></rect>
+                                <rect id="Rectangle" fill="#F4F6FD" x="67.1325301" y="23.9196004" width="120" height="22.7670213"></rect>
+                                <rect id="Rectangle" fill="#F4F6FD" x="67.1325301" y="47.8392007" width="120" height="22.7670213"></rect>
+                            </g>
+                        </g>
+                        <text id="Titles" font-family="Montserrat-Black, Montserrat" font-size="8" font-weight="800" letter-spacing="0.222222222">
+                            <tspan x="1.44305932" y="8" fill="#53545A">Titles</tspan>
+                        </text>
+                        <text id="Sellers" font-family="Montserrat-Black, Montserrat" font-size="8" font-weight="800" letter-spacing="0.222222222">
+                            <tspan x="67.9430593" y="8" fill="#53545A">Sellers</tspan>
+                        </text>
+                        <text id="Bingo" font-family="Montserrat-Regular, Montserrat" font-size="8" font-weight="normal" letter-spacing="0.222222222">
+                            <tspan x="6.94305932" y="29.696889" fill="#53545A">Bingo</tspan>
+                        </text>
+                        <text id="Seller-1" font-family="Montserrat-Regular, Montserrat" font-size="8" font-weight="normal" letter-spacing="0.222222222">
+                            <tspan x="73.9430593" y="29.696889" fill="#53545A">Seller 1</tspan>
+                        </text>
+                        <text id="Seller-2" font-family="Montserrat-Regular, Montserrat" font-size="8" font-weight="normal" letter-spacing="0.222222222">
+                            <tspan x="72.4430593" y="52.696889" fill="#53545A">Seller 2</tspan>
+                        </text>
+                        <text id="Diamantino" font-family="Montserrat-Regular, Montserrat" font-size="8" font-weight="normal" letter-spacing="0.222222222">
+                            <tspan x="6.94305932" y="52.219276" fill="#53545A">Diamantino</tspan>
+                        </text>
+                    </g>
+                </g>
+                <g id="Group-3" mask="url(#mask-2)">
+                    <g transform="translate(17.385684, 41.436678)">
+                        <g id="Group-10">
+                            <text id="3-TITLES" font-family="Montserrat-Bold, Montserrat" font-size="12" font-weight="bold" letter-spacing="0.333333333" fill="#4268EE">
+                                <tspan x="26.0328656" y="12">3 TITLES</tspan>
+                            </text>
+                            <g id="Icons/Light/18px/film" opacity="0.609483265" transform="translate(0.000000, 1.474031)">
+                                <g id="Group">
+                                    <polygon id="Path" fill="#849CFD" opacity="0.3" points="1.37365843 1.86051802 2.58247784 4.51947698 12.3629258 4.51947698 12.3629258 10.5454463 1.37365843 10.5454463"></polygon>
+                                    <mask id="mask-5" fill="white">
+                                        <use xlink:href="#path-4"></use>
+                                    </mask>
+                                    <use id="Shape" fill="#849CFD" xlink:href="#path-4"></use>
+                                </g>
+                            </g>
+                        </g>
+                        <g id="price" transform="translate(93.518721, 0.000000)">
+                            <text id="$-40.000" font-family="Montserrat-Bold, Montserrat" font-size="12" font-weight="bold" letter-spacing="0.333333333" fill="#4268EE">
+                                <tspan x="23.0055845" y="12">$ 40.000</tspan>
+                            </text>
+                            <g id="Icons/Light/18px/film" opacity="0.508884248" transform="translate(0.000000, 1.239405)" fill="#849CFD">
+                                <g id="Group">
+                                    <polygon id="Path" opacity="0.3" points="7.58510199 12.15675 1.37910945 6.075 1.37910945 1.35 6.20599253 1.35 6.20599253 1.34325 12.4119851 7.41825 7.58510199 12.15675"></polygon>
+                                    <path d="M3.10299627,4.05 C3.67424211,4.05 4.13732836,3.59668831 4.13732836,3.0375 C4.13732836,2.47831169 3.67424211,2.025 3.10299627,2.025 C2.53175043,2.025 2.06866418,2.47831169 2.06866418,3.0375 C2.06866418,3.59668831 2.53175043,4.05 3.10299627,4.05 Z M13.3842572,6.4665 L7.1782647,0.3915 C6.930025,0.1485 6.58524763,0 6.20599253,0 L1.37910945,0 C0.620599253,0 0,0.6075 0,1.35 L0,6.075 C0,6.44625 0.15170204,6.78375 0.406837288,7.0335 L6.61282982,13.1085 C6.86106952,13.3515 7.20584689,13.5 7.58510199,13.5 C7.96435709,13.5 8.30913445,13.3515 8.55737415,13.10175 L13.3842572,8.37675 C13.6393925,8.13375 13.7910945,7.79625 13.7910945,7.425 C13.7910945,7.05375 13.6324969,6.7095 13.3842572,6.4665 Z M7.58510199,12.15675 L1.37910945,6.075 L1.37910945,1.35 L6.20599253,1.35 L6.20599253,1.34325 L12.4119851,7.41825 L7.58510199,12.15675 L7.58510199,12.15675 Z" id="Shape"></path>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+                <text id="My-Offer" mask="url(#mask-2)" font-family="Montserrat-Black, Montserrat" font-size="11" font-weight="800" letter-spacing="0.305555556" fill="#1F2A3B">
+                    <tspan x="9.28949862" y="22.3316035">My Offer</tspan>
+                </text>
+                <text id="Seller-3" mask="url(#mask-2)" font-family="Montserrat-Regular, Montserrat" font-size="8" font-weight="normal" letter-spacing="0.222222222" fill="#53545A">
+                    <tspan x="86.7894986" y="151.795058">Seller 3</tspan>
+                </text>
+            </g>
+            <g id="Component/Table-Cells/Actions-Cell/Cross-App/Main/Hover" transform="translate(252.859976, 134.289049) rotate(90.000000) translate(-252.859976, -134.289049) translate(188.730943, 106.289049)">
+                <g id="Rectangle">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-7)" xlink:href="#path-6"></use>
+                    <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-6"></use>
+                </g>
+                <circle id="Oval" stroke="#3C64F7" fill="#E6EBFF" cx="23.5179422" cy="27.4198229" r="15.305"></circle>
+                <g id="Icons/Light/24px/Check" transform="translate(17.767942, 19.741219)" fill="#3C64F7">
+                    <polygon id="Path" transform="translate(5.750000, 7.542319) rotate(-90.000000) translate(-5.750000, -7.542319) " points="3.00149142 10.865399 -0.574571216 7.28933632 -1.79231916 8.49850858 3.00149142 13.2923192 13.2923192 3.00149142 12.0831469 1.79231916"></polygon>
+                </g>
+                <circle id="Oval" fill-opacity="0.529006638" fill="#E6EBFF" cx="63.5923639" cy="27.4212745" r="15.8064516"></circle>
+                <g id="Group" transform="translate(56.818170, 20.647081)" fill="#96ACFF">
+                    <path d="M8.52870968,4.06451613 L6.77419355,5.81903226 L5.01967742,4.06451613 L4.06451613,5.01967742 L5.81903226,6.77419355 L4.06451613,8.52870968 L5.01967742,9.48387097 L6.77419355,7.72935484 L8.52870968,9.48387097 L9.48387097,8.52870968 L7.72935484,6.77419355 L9.48387097,5.01967742 L8.52870968,4.06451613 Z M6.77419355,0 C3.02806452,0 0,3.02806452 0,6.77419355 C0,10.5203226 3.02806452,13.5483871 6.77419355,13.5483871 C10.5203226,13.5483871 13.5483871,10.5203226 13.5483871,6.77419355 C13.5483871,3.02806452 10.5203226,0 6.77419355,0 Z M6.77419355,12.1935484 C3.78677419,12.1935484 1.35483871,9.7616129 1.35483871,6.77419355 C1.35483871,3.78677419 3.78677419,1.35483871 6.77419355,1.35483871 C9.7616129,1.35483871 12.1935484,3.78677419 12.1935484,6.77419355 C12.1935484,9.7616129 9.7616129,12.1935484 6.77419355,12.1935484 Z" id="Shape"></path>
+                </g>
+                <circle id="Oval" fill-opacity="0.529006638" fill="#E6EBFF" cx="104.541791" cy="27.4212745" r="15.8064516"></circle>
+                <path d="M110.201928,22.0291741 L98.8816546,22.0291741 C98.1033858,22.0291741 97.4666205,22.5505535 97.4666205,23.1877948 L97.4666205,33.615381 L100.296689,31.2981397 L110.201928,31.2981397 C110.987272,31.2981397 111.616962,30.7825535 111.616962,30.139519 L111.616962,23.1877948 C111.616962,22.5505535 110.987272,22.0291741 110.201928,22.0291741 M110.201928,30.139519 L100.296689,30.139519 L98.8816546,31.2981397 L98.8816546,23.1877948 L110.201928,23.1877948 M108.079376,27.2429673 L106.664342,27.2429673 L106.664342,26.0843466 L108.079376,26.0843466 M105.249308,27.2429673 L103.834274,27.2429673 L103.834274,26.0843466 L105.249308,26.0843466 M102.41924,27.2429673 L101.004206,27.2429673 L101.004206,26.0843466 L102.41924,26.0843466" id="Shape" fill="#A7BAFE" transform="translate(104.541791, 27.822278) rotate(-91.000000) translate(-104.541791, -27.822278) "></path>
+            </g>
+        </g>
+    </g>
+</svg>
