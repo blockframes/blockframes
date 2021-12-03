@@ -208,7 +208,7 @@ export const testFixture = {
         acceptedAt: null
       },
       financiers: {
-        status: 'draft',
+        status: 'accepted',
         access: true,
         refusedAt: null,
         acceptedAt: null

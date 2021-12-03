@@ -54,17 +54,39 @@ describe('Movies Rules Tests', () => {
         await assertSucceeds(movieRef.get());
       })
 
-      //TODO - tests here..
       test('should be able to fetch movie collection for current org', async () => {
-        const orgId = 'O007';
+        const orgId = 'O001';
+        const testMovieTitle = 'movies/MI-078';
+
         const movieRef = db.collection('movies').where('orgIds', 'array-contains', orgId);
-        await assertFails(movieRef.get());
+        const moviesSnap  = await movieRef.get();
+        const movieDocs = moviesSnap.docs;
+        let movies = [];
+        movieDocs.forEach(doc => movies.push(doc.data()));
+        expect(movies.length).toEqual(3);
+
+        // testMovieTitle doesn't belong to orgId, shouldn't be fetched
+        const unexpectedMovie = [testFixture[testMovieTitle]];
+        expect(movies).not.toEqual(expect.arrayContaining(unexpectedMovie));
       })
 
-      test.skip('should be able to fetch movies from collection', async () => {
-        //const movieRef = db.doc(`movies/${existMovieFinanciers}`);
-        const movieRef = db.doc(`movies/${existMovieAccepted}`);
-        await assertSucceeds(movieRef.get());
+      test('should be able to fetch movie collection for query condition', async () => {
+        const orgId = 'O001';
+        const testMovieTitle = 'movies/MI-0d7';
+
+        const movieRef = db.collection('movies')
+                           .where('orgIds', 'array-contains', orgId)
+                           .where('app.financiers.status', '==', 'accepted')
+                           .where('app.financiers.access', '==', true);
+        const moviesSnap  = await movieRef.get();
+        const movieDocs = moviesSnap.docs;
+        let movies = [];
+        movieDocs.forEach(doc => movies.push(doc.data()));
+        expect(movies.length).toEqual(1);
+
+        // testMovieTitle matches query criteria, should be returned
+        const expectedMovie = [testFixture[testMovieTitle]];
+        expect(movies).toEqual(expect.arrayContaining(expectedMovie));
       })
     });
 
