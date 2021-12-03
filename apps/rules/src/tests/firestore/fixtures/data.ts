@@ -244,7 +244,34 @@ export const testFixture = {
     note: '',
     orgIds: ['O001']
   },
-
+  'movies/MI-078': {
+    id: 'MI-078',
+    title: {
+      original: 'UnitTest',
+    },
+    app: {
+      catalog: {
+        status: 'draft',
+        access: false,
+        refusedAt: null,
+        acceptedAt: null
+      },
+      festival: {
+        status: 'draft',
+        access: true,
+        refusedAt: null,
+        acceptedAt: null
+      },
+      financiers: {
+        status: 'accepted',
+        access: false,
+        refusedAt: null,
+        acceptedAt: null
+      }
+    },
+    note: '',
+    orgIds: ['O003']
+  },
 
   // Events
   'events/E001': {

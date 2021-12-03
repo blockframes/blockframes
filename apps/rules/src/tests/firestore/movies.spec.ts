@@ -12,7 +12,7 @@ describe('Movies Rules Tests', () => {
   const projectId = `movrules-spec-${Date.now()}`;
   let db: Firestore;
 
-  describe.only('With User in org', () => {
+  describe('With User in org', () => {
     const newMovieId = 'MI-007';
     const existMovieInDraft = 'MI-077';
     const existMovieAccepted = 'M001';
@@ -54,13 +54,14 @@ describe('Movies Rules Tests', () => {
         await assertSucceeds(movieRef.get());
       })
 
-      test.only('should be able to fetch movie collection for current org', async () => {
+      //TODO - tests here..
+      test('should be able to fetch movie collection for current org', async () => {
         const orgId = 'O007';
         const movieRef = db.collection('movies').where('orgIds', 'array-contains', orgId);
         await assertFails(movieRef.get());
       })
 
-      test('should be able to fetch movies from collection', async () => {
+      test.skip('should be able to fetch movies from collection', async () => {
         //const movieRef = db.doc(`movies/${existMovieFinanciers}`);
         const movieRef = db.doc(`movies/${existMovieAccepted}`);
         await assertSucceeds(movieRef.get());
