@@ -23,10 +23,10 @@
         <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let index = index">
           <span class="action-buttons">
-            <button mat-icon-button (click)="edit(index)">
+            <button type="button" mat-icon-button (click)="edit(index)">
               <mat-icon svgIcon="edit"></mat-icon>
             </button>
-            <button mat-icon-button (click)="remove(index)">
+            <button type="button" mat-icon-button (click)="remove(index)">
               <mat-icon svgIcon="delete"></mat-icon>
             </button>
           </span>
@@ -54,10 +54,10 @@
     </ng-template>
     <ng-container *ngIf="form.controls.length; else empty">
       <div fxLayout="row" fxLayoutAlign="space-between start">
-        <button test-id="row-cancel" mat-stroked-button (click)="cancel()">
+        <button type="button" test-id="row-cancel" mat-stroked-button (click)="cancel()">
           <mat-icon svgIcon="close"></mat-icon><span>Cancel</span>
         </button>
-        <button test-id="row-save" mat-stroked-button [disabled]="formItem.invalid" (click)="save()">
+        <button type="button" test-id="row-save" mat-stroked-button [disabled]="formItem.invalid" (click)="save()">
           <mat-icon svgIcon="save"></mat-icon>
           <span>
             <ng-template [ngTemplateOutlet]="saveButtonText  || defaultText"></ng-template>
@@ -67,7 +67,7 @@
     </ng-container>
     <ng-template #empty>
       <div fxLayout="row" fxLayoutAlign="end start">
-        <button test-id="table-save" mat-stroked-button [disabled]="formItem.invalid" (click)="save()">
+        <button type="button" test-id="table-save" mat-stroked-button [disabled]="formItem.invalid" (click)="save()">
           <mat-icon svgIcon="save"></mat-icon>
           <span>
             <ng-template [ngTemplateOutlet]="saveButtonText  || defaultText"></ng-template>

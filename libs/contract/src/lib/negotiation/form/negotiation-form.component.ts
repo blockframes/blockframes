@@ -1,24 +1,26 @@
 
-import {
-  ChangeDetectionStrategy, Component, Input, OnInit
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute } from '@angular/router';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 import { Movie } from '@blockframes/movie/+state';
 import { Scope } from '@blockframes/utils/static-model';
 import { NegotiationForm } from '../form';
 
 @Component({
-  selector: 'negotiation-form[form]',
+  selector: '[form]negotiation-form',
   templateUrl: 'negotiation-form.component.html',
   styleUrls: ['./negotiation-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NegotiationFormComponent implements OnInit {
+export class NegotiationFormComponent {
   @Input() form: NegotiationForm
   @Input() title?: Movie;
   @Input() currency?: string;
+  @Input() set activeTerm(termId: string) {
+    if (!termId) return;
+    const tabTerms = this.form.get('terms').value;
+    this.indexId = tabTerms.findIndex(value => value.id === termId);
+  }
 
   indexId: number;
   termColumns = {
@@ -29,19 +31,7 @@ export class NegotiationFormComponent implements OnInit {
     'languages': 'Versions'
   };
 
-  constructor(
-    private dialog: MatDialog,
-    private route: ActivatedRoute,
-  ) { }
-
-  ngOnInit(): void {
-    if (this.route.snapshot.queryParams.termId) {
-      const termId = this.route.snapshot.queryParams.termId;
-      const tabTerms = this.form.get('terms').value;
-      const index = tabTerms.findIndex(value => value.id === termId);
-      this.indexId = index;
-    }
-  }
+  constructor(private dialog: MatDialog) { }
 
   openDetails(terms: string, scope: Scope) {
     this.dialog.open(DetailedTermsComponent, { data: { terms, scope }, maxHeight: '80vh', autoFocus: false });
