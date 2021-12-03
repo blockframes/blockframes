@@ -38,6 +38,10 @@ const routes: Routes = [{
     {
       path: 'notifications',
       loadChildren: () => import('../../forms/notifications-form/notifications-form.module').then(m => m.NotificationsFormModule)
+    },
+    {
+      path: 'preferences',
+      loadChildren: () => import('../preferences/page/preferences.module').then(m => m.PreferenceModule)
     }
   ]
 }]

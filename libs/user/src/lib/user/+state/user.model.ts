@@ -1,5 +1,5 @@
 import { UserRole } from "@blockframes/permissions/types";
-import { User, PublicUser, createPublicUser } from "./user.firestore";
+import { User, PublicUser, createPublicUser, Preferences } from "./user.firestore";
 export * from './user.firestore';
 
 export interface OrganizationMember extends PublicUser {
@@ -14,3 +14,12 @@ export function createOrganizationMember(user: Partial<User> = {}, role?: UserRo
   }
 }
 
+export function createPreferences(params: Partial<Preferences> = {}): Preferences {
+  return {
+    territories: [],
+    medias: [],
+    languages: [],
+    genres: [],
+    ...params
+  };
+}
