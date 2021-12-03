@@ -17,12 +17,13 @@ import { pluck, shareReplay, switchMap } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OfferShellComponent {
-  private offerId$ =  this.route.params.pipe(pluck<Record<string, string>, string>('offerId'));
+  private offerId$ = this.route.params.pipe(pluck<Record<string, string>, string>('offerId'));
 
   offer$ = this.offerId$.pipe(
     switchMap((id: string) => this.offerService.valueChanges(id)),
     joinWith({
-      contracts: offer => this.getContracts(offer.id)
+      contracts: ({ id }) => this.getContracts(id),
+      declinedContracts: ({ id }) => this.declinedContracts(id)
     }),
     shareReplay({ bufferSize: 1, refCount: true }),
   );
@@ -36,12 +37,24 @@ export class OfferShellComponent {
     @Optional() private intercom?: Intercom
   ) { }
 
+  private declinedContracts(offerId: string) {
+    const declinedContracts = (ref: CollectionReference) => ref.where('offerId', '==', offerId).where('status', '==', 'declined')
+    return this.contractService.valueChanges(declinedContracts).pipe(
+      joinWith({
+        title: contract => this.titleService.valueChanges(contract.titleId),
+        income: contract => this.incomeService.valueChanges(contract.id),
+      })
+    );
+  }
+
   private getContracts(offerId: string) {
     const queryContracts = (ref: CollectionReference) => ref.where('offerId', '==', offerId).where('status', '!=', 'declined')
+
     return this.contractService.valueChanges(queryContracts).pipe(
       joinWith({
         title: contract => this.titleService.valueChanges(contract.titleId),
         income: contract => this.incomeService.valueChanges(contract.id),
+        negotiation: contract => ['negotiating', 'pending'].includes(contract.status) ? this.contractService.lastNegotiation(contract.id) : null,
       })
     );
   }

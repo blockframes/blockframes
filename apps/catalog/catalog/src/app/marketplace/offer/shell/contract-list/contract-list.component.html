@@ -15,9 +15,42 @@
       <ng-container *ngIf="price else noPrice">
         {{ price | currency:offer.currenty }}
       </ng-container>
-      <ng-template #noPrice>
-        Asking price requested
-      </ng-template>
+      <ng-template #noPrice> - </ng-template>
+    </ng-template>
+    <ng-template colRef="status" label="Status" let-status>
+      <bf-tag> {{ status }} </bf-tag>
+    </ng-template>
+    <ng-template colRef="" label="Negotiation Stage" let-contract="item">
+      <ng-container *ngIf=" contract | negotiationStage | async  as negoStage">
+        <span [matTooltip]="negoStage">
+          {{negoStage | maxLength:50}}
+        </span>
+      </ng-container>
     </ng-template>
   </bf-table>
+  <ng-container *ngIf="offer.declinedContracts?.length">
+    <h3>Rejected Titles</h3>
+    <bf-table (rowClick)="goToContract($event)" [source]="offer.declinedContracts" pagination="50" useFilter>
+      <!-- Title -->
+      <ng-template colRef="title.title.international" label="Title" let-title sort>
+        {{ title | maxLength:50 }}
+      </ng-template>
+      <ng-template colRef="title.release.year" label="Release Year" let-year sort>
+        {{ year }}
+      </ng-template>
+      <ng-template colRef="title.directors" label="Directors" let-directors>
+        {{ directors | displayName | maxLength:50 }}
+      </ng-template>
+      <!-- Price -->
+      <ng-template colRef="income.price" label="Price" let-price sort>
+        <ng-container *ngIf="price else noPrice">
+          {{ price | currency:offer.currenty }}
+        </ng-container>
+        <ng-template #noPrice> - </ng-template>
+      </ng-template>
+      <ng-template colRef="status" label="Status" let-status>
+        <bf-tag> {{ status }} </bf-tag>
+      </ng-template>
+    </bf-table>
+  </ng-container>
 </ng-container>
