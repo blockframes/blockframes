@@ -94,6 +94,11 @@ landing-shell-page {
         app-logo {
           margin: 0 24px 24px 0;
         }
+        article {
+          span {
+            gap: 20px 20px;
+          }
+        }
         form {
           display: flex;
           gap: 16px;
@@ -101,6 +106,7 @@ landing-shell-page {
           flex-wrap: nowrap;
           mat-form-field {
             flex: 1;
+            min-width: 320px;
           }
           #newsletterButton {
             margin-top: 0.5em;
@@ -162,8 +168,13 @@ landing-shell-page {
     landing-header {
       padding: 24px 8px;
     }
+    section {
+      h1 {
+        text-align: center;
+      }
+    }
     form article {
-      width: 100%;
+      width: 90%;
     }
   }
 }

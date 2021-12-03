@@ -12,60 +12,82 @@ export class CatalogLandingComponent {
 
   public tabTitle = [
     {
-      title: 'Valorize your back catalog.',
+      title: 'For sellers',
       imgAsset: 'lp_catalog_seller_perspective.png',
-      description: 'Get extra visibility on your back catalog and maximize revenues on library sales.'
+      description: 'Monetize your full catalog at its maximum potential.',
     },
     {
-      title: 'Buy quality content from a multitude of rights holders in one single package.',
-      imgAsset: 'lp_catalog_buyer_perspective.png',
-      description: 'Access one massive library, search for avails easily and buy content in larger volumes through one single deal offer and negotiation.'
+      title: 'For Buyers ',
+      imgAsset: 'library_content.svg',
+      description: 'Search for avails easily through one curated library and buy content in larger volumes through one single deal.',
     }
   ]
 
   public sellerFeatures = [
     {
-      title: 'Import your content easily',
-      imgAsset: 'add_files.svg',
-      description: 'Upload your films’ data, promotional elements and rights availabilities directly on the platform or by uploading an Excel template.'
+      title: 'Reach a community of over 1500 buyers, free of charge. one more line here',
+      imgAsset: 'content_sellers_list.svg',
+      description: 'text missing here lorem lorem lorem lorem lorem'
     },
     {
-      title: 'Manage your offers and deals',
-      imgAsset: 'deal_management.svg',
-      description: 'Manage your current offers and sales deals, track negotiations and follow each deal’s status directly on the platform.'
+      title: 'Benefit from the experience of a dedicated sales & marketing team one more line here',
+      imgAsset: 'content_pitching_movie.png',
+      description: 'text missing here lorem lorem lorem lorem lorem'
     },
     {
-      title: 'Track your films’ activity',
-      imgAsset: 'sales_statistics.svg',
-      description: 'Get detailed stats on your films’ activity on the marketplace, and get notified for any new activity.'
+      title: 'Get extra opportunities thanks to simplified contracting. one more line here',
+      imgAsset: 'content_manage_offers.svg',
+      description: 'text missing here lorem lorem lorem lorem lorem'
     },
     {
-      title: 'Benefit from a dedicated sales person',
-      imgAsset: 'human_salesforce.svg',
-      description: 'Make the most of your library thanks to the Archipel Content salesforce, who will editorialize the platform and push the right content to the right Buyers.'
+      title: 'Monitor your activity thanks to simplified imports, tracking and deal monitoring systems.',
+      imgAsset: 'content_title_stats.svg',
+      description: 'text missing here lorem lorem lorem lorem lorem'
     }
   ];
 
   public buyerFeatures = [
     {
-      title: 'Access to line-up and library content ',
-      imgAsset: 'library_content.svg',
-      description: 'Search for quality content from a multitude of different Rights Holders in one consolidated library.'
+      title: 'License from multiple rights owners with only one contract',
+      imgAsset: 'content_multi_sellers.svg',
+      description: 'text missing here lorem lorem lorem lorem lorem',
+      mediaOrientation: 'right'
     },
     {
-      title: 'Efficient content browsing',
-      imgAsset: 'efficient_content_browsing.svg',
-      description: 'Search content in a simple and efficient way and find what you’re looking for in just a few clicks, using efficient search criteria and filters'
+      title: 'Search for avails easily on a user-friendly interface. one more line here',
+      imgAsset: 'content_movie_genres.svg',
+      description: 'text missing here lorem lorem lorem lorem lorem',
+      mediaOrientation: 'left'
     },
     {
-      title: 'Package deals',
-      imgAsset: 'package_deal.svg',
-      description: 'Group several Sellers’ titles together in one deal.'
+      title: 'Access all formats and genres (feature films, drama series, documentaries, kids content…)',
+      imgAsset: 'content_search_movies.svg',
+      description: 'text missing here lorem lorem lorem lorem lorem',
+      mediaOrientation: 'right'
+    }
+  ]
+
+  public reviews = [
+    {
+      img: "european_sellers.png",
+      title: "European sellers discuss AFM, hybrid realities and a brighter 2021",
+      text: "« In the current market, it makes more sense to give buyers as many opportunities as possible to see our films rather than focusing on a handful of exclusive screenings in set timeframes… »",
+      logo: "screendaily.png",
+      link: "https://www.screendaily.com/features/european-sellers-discuss-afm-hybrid-realities-and-a-brighter-2021/5154926.article"
     },
     {
-      title: 'Deals management',
-      imgAsset: 'deal_management.svg',
-      description: 'Keep track of your deals information and negotiations. Download related documents.Get notified of any new element or information.'
+      img: "market_article.png",
+      title: "Archipel Market To Provide Sales Agents, Buyers With Year-Round …",
+      text: "« A tool that can maximize sales, while uniting sales agents and buyers throughout the year; a dedicated, streamlined, efficient tool to replicate and digitally enhance the experience of a sales pitch to a buyer… » ",
+      logo: "variety.png",
+      link: "https://variety.com/2020/film/global/cannes-archipel-market-logical-pictures-charades-1234631297"
+    },
+    {
+      img: "screen_international.png",
+      title: "Screen International FYC Awards Screening programme…",
+      text: "Screen International has partnered with film market platform Archipel Market on an exclusive series of screenings focused on the international feature awards race… ",
+      logo: "screendaily.png",
+      link: "https://www.screendaily.com/news/screen-international-fyc-awards-screening-programme/5156125.article"
     }
   ]
 
