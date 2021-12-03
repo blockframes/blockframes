@@ -1,7 +1,9 @@
 
 <mat-list-item>
   <img matListAvatar [asset]="notification.placeholderUrl" [ref]="notification.imgRef" alt="Notification picture">
-  <p *ngIf="(xs$ | async) === false" matLine class="mat-body-1" test-id="notification-message">{{ notification.message }}</p>
+  <p *ngIf="(xs$ | async) === false" matLine class="mat-body-1" test-id="notification-message">
+    <ng-container *ngTemplateOutlet="message"></ng-container>
+  </p>
   <span matLine>
     <small class="mat-caption">{{ notification._meta.createdAt | date: 'shortTime' }}</small>
   </span>
@@ -20,5 +22,16 @@
   <a mat-menu-item [target]="targetLink" [href]="notification.url">More Details</a>
 </mat-menu>
 <ng-container *ngIf="xs$ | async">
-  <p class="mat-body-1" test-id="notification-message">{{ notification.message }}</p>
+  <p class="mat-body-1" test-id="notification-message">
+    <ng-container *ngTemplateOutlet="message"></ng-container>
+  </p>
 </ng-container>
+
+<ng-template #message>
+  <ng-container *ngFor="let message of notification.message">
+    <ng-container *ngIf="message.link; else noLink">
+      <a [routerLink]="message.link">{{ message.text }}</a>
+    </ng-container>
+    <ng-template #noLink>{{ message.text }}</ng-template>
+  </ng-container>
+</ng-template>

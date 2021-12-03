@@ -48,7 +48,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
       case 'organizationAcceptedByArchipelContent':
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `Your organization was accepted by the ${this.appName} team.`,
+          message: [{ text: `Your organization was accepted by the ${this.appName} team.` }],
           imgRef: notification.organization?.logo,
           placeholderUrl: 'empty_organization.svg',
           url: `${applicationUrl[this.app]}/c/o/organization/${notification.organization.id}/view/org`,
@@ -56,7 +56,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
       case 'requestFromUserToJoinOrgDeclined':
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `${displayUserName}'s request to join your organization was refused.`,
+          message: [{ text: `${displayUserName}'s request to join your organization was refused.` }],
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.svg',
           url: `${applicationUrl[this.app]}/c/o/organization/${notification.organization.id}/view/members`,
@@ -64,7 +64,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
       case 'invitationToJoinOrgDeclined':
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `Your invitation to ${displayUserName} to join your organization was refused.`,
+          message: [{ text: `Your invitation to ${displayUserName} to join your organization was refused.` }],
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.svg',
           url: `${applicationUrl[this.app]}/c/o/organization/${notification.organization.id}/view/members`,
@@ -78,13 +78,13 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
             return {
               ...newNotification,
               imgRef: notification.user.avatar,
-              message,
+              message: [{ text: message }],
             };
           })
         })
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `Members of your organization have been updated`,
+          message: [{ text: `Members of your organization have been updated` }],
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.svg',
           url: `${applicationUrl[this.app]}/c/o/organization/${notification.organization.id}/view/members`,
@@ -96,14 +96,17 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
             return {
               ...newNotification,
               imgRef: createStorageFile(movie?.poster),
-              message: `${movie.title.international} was successfully submitted to the ${appName[movieAppAccess[0]]} Team.`,
+              message: [
+                { text: movie.title.international, link: `/c/o/marketplace/movie/${movie.id}` },
+                { text: ` was successfully submitted to the ${appName[movieAppAccess[0]]} Team.` }
+              ],
               url: `${applicationUrl[movieAppAccess[0]]}/c/o/dashboard/title/${notification.docId}/main`,
             };
           })
         })
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `A new movie was successfully submitted`,
+          message: [{ text: `A new movie was successfully submitted` }],
           imgRef: this.getPoster(notification.docId),
           placeholderUrl: 'empty_poster.svg',
           url: `${applicationUrl[this.app]}/c/o/dashboard/title/${notification.docId}`,
@@ -115,14 +118,17 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
             return {
               ...newNotification,
               imgRef: createStorageFile(movie?.poster),
-              message: `${movie.title.international} was successfully published on the marketplace.`,
+              message: [
+                { text: movie.title.international, link: `/c/o/marketplace/movie/${movie.id}` },
+                { text: ` was successfully published on the marketplace.` }
+              ],
               url: `${applicationUrl[movieAppAccess[0]]}/c/o/dashboard/title/${notification.docId}/main`,
             };
           })
         })
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `Your project was successfully published on the marketplace.`,
+          message: [{ text: `Your project was successfully published on the marketplace.` }],
           imgRef: this.getPoster(notification.docId),
           placeholderUrl: 'empty_poster.svg',
           url: `/c/o/dashboard/title/${notification.docId}/main`,
@@ -133,7 +139,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           : 'Your organization\'s app access have changed.';
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: msg,
+          message: [{ text: msg }],
           placeholderUrl: `empty_organization.svg`,
           imgRef: notification.organization?.logo,
           url: `${applicationUrl[notification.appAccess]}`
@@ -149,7 +155,11 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
               return {
                 ...newNotification,
                 imgRef: this.getPoster(titleId),
-                message: `REMINDER - ${org.denomination.full}'s ${event.type} "${event.title}" is about to start.`
+                message: [
+                  { text: `REMINDER - ${org.denomination.full}'s ${event.type} "` },
+                  { text: event.title, link: `/event/${event.id}` },
+                  { text: `" is about to start.` }
+                ]
               };
             });
           })
@@ -157,7 +167,11 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
 
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `REMINDER - Your event "${notification.docId}" is about to start.`,
+          message: [
+            { text: `REMINDER - Your event "` },
+            { text: notification.docId, link: `/event/${notification.docId}`},
+            { text: `" is about to start.`}
+          ],
           placeholderUrl: 'empty_poster.svg',
           url: `${applicationUrl['festival']}/event/${notification.docId}/r/i`,
         };
@@ -171,7 +185,11 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
               return {
                 ...newNotification,
                 imgRef: this.getPoster(titleId),
-                message: `REMINDER - ${org.denomination.full}'s ${event.type} "${event.title}" will start tomorrow at ${format(toDate(event.start), 'h:mm a')}.`
+                message: [
+                  { text:  `REMINDER - ${org.denomination.full}'s ${event.type} "` },
+                  { text: event.title, link: `/event/${event.id}`},
+                  { text: `" will start tomorrow at ${format(toDate(event.start), 'h:mm a')}.` }
+                ]
               };
             });
           })
@@ -179,7 +197,11 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
 
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `REMINDER - Your event "${notification.docId}" is tomorrow.`,
+          message: [
+            { text: `REMINDER - Your event "` },
+            { text: notification.docId, link: `/event/${notification.docId}`},
+            { text: `" is tomorrow.`}
+          ],
           placeholderUrl: 'empty_poster.svg',
           url: `${applicationUrl['festival']}/event/${notification.docId}/r/i`,
         };
@@ -192,14 +214,18 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           await this.update(notification.id, newNotification => {
             return {
               ...newNotification,
-              message: `${subject} has ${notification.invitation.status} your ${notification.invitation.mode} to attend ${event.type} "${event.title}".`
+              message: [
+                { text: `${subject} has ${notification.invitation.status} your ${notification.invitation.mode} to attend ${event.type} "` },
+                { text: event.title, link: `/event/${event.id}` },
+                { text: `".`}
+              ]
             };
           });
         });
 
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `Someone has ${notification.invitation.status} your ${notification.invitation.mode} to attend an event.`,
+          message: [{ text: `Someone has ${notification.invitation.status} your ${notification.invitation.mode} to attend an event.` }],
           imgRef: notification.user?.avatar || notification.organization?.logo,
           placeholderUrl: 'profil_user.svg',
           url: `${applicationUrl['festival']}${module === 'marketplace' ? `/event/${notification.docId}/r/i/` : `/c/o/${module}/event/${notification.docId}`}`
@@ -211,14 +237,22 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           this.update(notification.id, newNotification => {
             return {
               ...newNotification,
-              message: `Your request to attend event ${event.type} "${event.title}" has been sent.`
+              message: [
+                { text: `Your request to attend event ${event.type} "`},
+                { text: event.title, link: `/event/${event.id}` },
+                { text: `" has been sent.` }
+              ]
             };
           });
         });
 
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `Your request to attend event "${notification.docId}" has been sent.`,
+          message: [
+            { text: `Your request to attend event "` },
+            { text: notification.docId, link: `/event/${notification.docId}` },
+            { text: `" has been sent.` }
+          ],
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.svg',
           url: `${applicationUrl['festival']}${module === 'marketplace' ? `/event/${notification.docId}/r/i/` : `/c/o/${module}/event/${notification.docId}`}`
@@ -226,19 +260,19 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
       case 'offerCreatedConfirmation':
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `Your offer was successfully sent.`,
+          message: [{ text: `Your offer was successfully sent.` }],
           placeholderUrl: 'profil_user.svg'
         }
       case 'contractCreated':
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `An offer is made on one of your titles.`,
+          message: [{ text: `An offer is made on one of your titles.` }],
           placeholderUrl: 'profil_user.svg',
           url: `${applicationUrl['catalog']}/c/o/${module}/title/${notification.docId}`
         }
       default:
         return {
-          message: 'Error while displaying notification.'
+          message: [{ text: 'Error while displaying notification.' }]
         };
     }
   }
