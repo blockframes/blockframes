@@ -1,0 +1,72 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Montserrat, Helvetica Neue, sans-serif;
+}
+
+h2 {
+  font: 800 36px Montserrat, Helvetica Neue, sans-serif;
+  margin-top: 0px;
+}
+
+section {
+  margin: auto 48px;
+}
+
+.row {
+  display: flex;
+}
+
+.left-column {
+  flex: 30%;
+  padding: 10px;
+}
+
+.right-column {
+  flex: 70%;
+  padding: 10px;
+}
+
+.right-column p{
+  font-weight: bold;
+}
+
+.column {
+  flex: 50%;
+  padding: 10px;
+}
+
+div .synopsis {
+  color: #666B81;
+  text-align: justify;
+}
+
+hr.solid {
+  border-top: 1px solid #bbb;
+  width: 50%;
+  margin-top: 24px;
+  margin-bottom: 24px;
+}
+
+div.links div {
+  text-align: center;
+}
+
+div.links a {
+  font-weight: bold;
+}
+
+.title {
+  break-inside: avoid;
+}
+
+ul.prizes {
+  list-style: none;
+  padding-left: 0;
+}
+
+ul.prizes li:not(:last-child) {
+  margin-bottom: 4px;
+}

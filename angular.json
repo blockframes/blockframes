@@ -162,7 +162,10 @@
             "outputPath": "dist/apps/backend-functions",
             "main": "apps/backend-functions/src/main.ts",
             "tsConfig": "apps/backend-functions/tsconfig.app.json",
-            "assets": ["apps/backend-functions/src/package.json"],
+            "assets": [
+              "apps/backend-functions/src/assets",
+              "apps/backend-functions/src/package.json"
+            ],
             "maxWorkers": 6,
             "buildLibsFromSource": true
           },
@@ -222,8 +225,7 @@
           "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": [
-              "apps/backend-functions/src/**/*.ts",
-              "apps/backend-functions/src/**/*.html"
+              "apps/backend-functions/src/**/*.ts"
             ]
           }
         },
