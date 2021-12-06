@@ -65,6 +65,13 @@
     </button>
   </list-filter>
 
+  <!-- EXPORT (ng-content)-->
+  <pdf-export *ngIf="movies$ | async as movies">
+    <button [disabled]="exporting" mat-flat-button (click)="export(movies)" matTooltip="Export to PDF">
+      <mat-icon svgIcon="pdf"></mat-icon>
+      <span>Export Titles</span>
+    </button>
+  </pdf-export>
 
   <!-- TITLE CARD -->
   <ng-template listPageCard let-title>
