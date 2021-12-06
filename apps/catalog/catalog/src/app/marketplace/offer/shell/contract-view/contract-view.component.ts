@@ -38,7 +38,7 @@ export class ContractViewComponent {
 
 
 
-  async confirm() {
+  async accept() {
     const onConfirm = async () => {
       const sale = await this.contract$.pipe(first()).toPromise();
       this.negotiationService.update(

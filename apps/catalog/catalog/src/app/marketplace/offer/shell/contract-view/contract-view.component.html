@@ -4,7 +4,7 @@
 <ng-container *ngIf="contract$ | async as sale">
   <ng-container *ngIf="sale.negotiation?.status === 'pending' && sale.negotiation?.createdByOrg !== activeOrgId">
     <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="24px">
-      <button mat-stroked-button color="primary" (click)="confirm()" [disabled]="sale.income?.price">
+      <button mat-stroked-button color="primary" (click)="accept()" [disabled]="sale.income?.price">
         <mat-icon svgIcon="check"></mat-icon>
         <span>Accept</span>
       </button>
