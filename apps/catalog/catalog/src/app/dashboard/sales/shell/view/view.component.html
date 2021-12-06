@@ -19,7 +19,7 @@
             </button>
           </ng-container>
           <ng-container *ngSwitchDefault>
-            <button [disabled]="sale.income?.price === 0" mat-stroked-button color="primary"
+            <button [disabled]="sale.income?.price" mat-stroked-button color="primary"
               (click)="acceptContract(sale.id, sale.movie)">
               <mat-icon svgIcon="check"></mat-icon>
               <span>Accept</span>

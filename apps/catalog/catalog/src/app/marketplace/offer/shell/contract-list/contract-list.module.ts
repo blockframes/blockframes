@@ -1,18 +1,17 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { ContractListComponent, NegotiationStagePipe } from './contract-list.component';
+import { ContractListComponent } from './contract-list.component';
 import { DisplayNameModule, JoinPipeModule, MaxLengthModule } from '@blockframes/utils/pipes';
 import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { TagModule } from '@blockframes/ui/tag/tag.module';
 import { MatTooltipModule } from '@angular/material/tooltip'
 import { MatIconModule } from '@angular/material/icon';
-
+import { NegotiationPipeModule } from '@blockframes/contract/negotiation/pipe'
 @NgModule({
   declarations: [
-    ContractListComponent,
-    NegotiationStagePipe
+    ContractListComponent
   ],
   imports: [
     CommonModule,
@@ -22,10 +21,10 @@ import { MatIconModule } from '@angular/material/icon';
     MatTooltipModule,
     MaxLengthModule,
     JoinPipeModule,
+    NegotiationPipeModule,
     DisplayNameModule,
     GetTitlePipeModule,
     RouterModule.forChild([{ path: '', component: ContractListComponent }])
   ],
-  providers: [NegotiationStagePipe]
 })
 export class ContractListModule { }

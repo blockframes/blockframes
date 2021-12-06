@@ -20,8 +20,8 @@
     <ng-template colRef="status" label="Status" let-status>
       <bf-tag> {{ status }} </bf-tag>
     </ng-template>
-    <ng-template colRef="" label="Negotiation Stage" let-contract="item">
-      <ng-container *ngIf=" contract | negotiationStage | async  as negoStage">
+    <ng-template colRef="negotiation" label="Negotiation Stage" let-negotiation>
+      <ng-container *ngIf=" negotiation | negotiationStage | async  as negoStage">
         <span [matTooltip]="negoStage">
           {{negoStage | maxLength:50}}
         </span>
