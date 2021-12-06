@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
 import { CollectionReference } from '@angular/fire/firestore';
 import { ActivatedRoute } from '@angular/router';
-import { ContractService } from '@blockframes/contract/contract/+state';
+import { ContractService, Sale } from '@blockframes/contract/contract/+state';
 import { IncomeService } from '@blockframes/contract/income/+state';
 import { OfferService } from '@blockframes/contract/offer/+state';
 import { MovieService } from '@blockframes/movie/+state';
@@ -17,12 +17,12 @@ import { pluck, shareReplay, switchMap } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OfferShellComponent {
-  private offerId$ =  this.route.params.pipe(pluck<Record<string, string>, string>('offerId'));
+  private offerId$ = this.route.params.pipe(pluck<Record<string, string>, string>('offerId'));
 
   offer$ = this.offerId$.pipe(
     switchMap((id: string) => this.offerService.valueChanges(id)),
     joinWith({
-      contracts: offer => this.getContracts(offer.id)
+      contracts: offer => this.getContracts(offer.id),
     }),
     shareReplay({ bufferSize: 1, refCount: true }),
   );
@@ -42,6 +42,7 @@ export class OfferShellComponent {
       joinWith({
         title: contract => this.titleService.valueChanges(contract.titleId),
         income: contract => this.incomeService.valueChanges(contract.id),
+        negotiation: contract => ['pending', 'negotiating'].includes(contract.status) ? this.contractService.lastNegotiation(contract.id) : null,
       })
     );
   }

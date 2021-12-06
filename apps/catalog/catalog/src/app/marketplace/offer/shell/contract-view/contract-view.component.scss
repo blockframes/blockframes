@@ -3,8 +3,12 @@
   margin: 36px 48px;
 }
 
-a {
+a [mat-icon-button] {
   margin-bottom: 16px;
+}
+
+div{
+  margin-bottom: 24px;
 }
 
 holdback-list {
