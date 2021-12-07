@@ -6,6 +6,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 // Modules
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
+import { GetLinkModule } from '@blockframes/utils/pipes';
 
 // Components
 import { ProfileViewComponent } from './profile-view.component';
@@ -37,6 +38,10 @@ const routes: Routes = [{
     {
       path: 'notifications',
       loadChildren: () => import('../../forms/notifications-form/notifications-form.module').then(m => m.NotificationsFormModule)
+    },
+    {
+      path: 'preferences',
+      loadChildren: () => import('../preferences/page/preferences.module').then(m => m.PreferenceModule)
     }
   ]
 }]
@@ -47,6 +52,7 @@ const routes: Routes = [{
     CommonModule,
     FlexLayoutModule,
     ImageModule,
+    GetLinkModule,
     // Material
     MatProgressSpinnerModule,
     MatSelectModule,

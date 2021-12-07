@@ -29,7 +29,6 @@ const navLinks = [
 })
 export class OrganizationViewComponent implements OnInit, OnDestroy {
   public organization$: Observable<Organization>;
-  public previousPage: string;
   public navLinks = navLinks;
   public organizationForm = new OrganizationForm();
   public user$: Observable<User>;
@@ -37,7 +36,7 @@ export class OrganizationViewComponent implements OnInit, OnDestroy {
 
   constructor(
     private query: OrganizationQuery,
-    private tunnelService: TunnelService,
+    public tunnelService: TunnelService,
     private authQuery: AuthQuery,
     private dynTitle: DynamicTitleService,
     private routerQuery: RouterQuery
@@ -56,7 +55,6 @@ export class OrganizationViewComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.user$ = this.authQuery.user$;
     this.organization$ = this.query.selectActive();
-    this.previousPage = this.tunnelService.previousUrl || '../../..';
   }
 
   ngOnDestroy() {

@@ -15,6 +15,7 @@ export class LoginComponent implements OnInit {
   @ViewChild('customSnackBarTemplate') customSnackBarTemplate: TemplateRef<unknown>;
 
   public buttonText = 'Log in';
+  public signinIn = false;
 
   constructor(
     private service: AuthService,
@@ -28,10 +29,12 @@ export class LoginComponent implements OnInit {
   }
 
   public async signin(signinForm: SigninForm) {
+    if (this.signinIn) return;
     if (signinForm.invalid) {
       this.snackBar.open('Information not valid', 'close', { duration: 8000 });
       return;
     }
+    this.signinIn = true;
     try {
       this.buttonText = 'Logging in...'
       const { email, password } = signinForm.value;
@@ -56,5 +59,7 @@ export class LoginComponent implements OnInit {
         this.snackBar.open(err.message, 'close', { duration: 8000 });
       }
     }
+
+    this.signinIn = false;
   }
 }

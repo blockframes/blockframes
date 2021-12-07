@@ -14,12 +14,10 @@
     "demo4": "blockframes-demo-4",
     "demo5": "blockframes-demo-5",
     "ci": "blockframes-ci",
-    "max": "blockframes-max",
     "mano": "blockframes-mano",
-    "clelia": "blockframes-clelia",
     "remco": "blockframes-remco",
     "springfield": "blockframes-yonga",
-    "samir": "blockframes-samir"
+    "antoine": "blockframes-antoine-9e16b"
   },
   "targets": {
     "blockframes": {
@@ -242,19 +240,6 @@
         ]
       }
     },
-    "blockframes-max": {
-      "hosting": {
-        "catalog": [
-          "blockframes-max"
-        ],
-        "festival": [
-          "blockframes-festival-max"
-        ],
-        "financiers": [
-          "blockframes-max-financiers"
-        ]
-      }
-    },
     "blockframes-yonga": {
       "hosting": {
         "catalog": [
@@ -271,25 +256,6 @@
         ],
         "cms": [
           "cms-blockframes-yonga"
-        ]
-      }
-    },
-    "blockframes-clelia": {
-      "hosting": {
-        "catalog": [
-          "catalog-blockframes-clelia"
-        ],
-        "festival": [
-          "festival-blockframes-clelia"
-        ],
-        "crm": [
-          "crm-blockframes-clelia"
-        ],
-        "financiers": [
-          "financiers-blockframes-clelia"
-        ],
-        "cms": [
-          "cms-blockframes-clelia"
         ]
       }
     },
@@ -344,25 +310,6 @@
         ],
         "crm": [
           "blockframes-mano-crm"
-        ]
-      }
-    },
-    "blockframes-samir": {
-      "hosting": {
-        "catalog": [
-          "catalog-blockframes-samir"
-        ],
-        "festival": [
-          "festival-blockframes-samir"
-        ],
-        "crm": [
-          "crm-blockframes-samir"
-        ],
-        "financiers": [
-          "financiers-blockframes-samir"
-        ],
-        "cms": [
-          "cms-blockframes-samir"
         ]
       }
     },

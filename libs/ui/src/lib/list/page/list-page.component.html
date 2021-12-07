@@ -41,6 +41,9 @@
 <section>
   <ng-container *ngIf="!!items; else loading">
     <ng-container *ngIf="items.length; else empty">
+      <div fxLayout fxLayoutAlign="end start">
+        <ng-content select="pdf-export"></ng-content>
+      </div>
       <div fxLayout="row" fxLayoutAlign="end start">
         <ng-content select="list-page-description"></ng-content>
       </div>
