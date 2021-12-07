@@ -1,5 +1,4 @@
 <ng-container *ngIf="offer$ | async as offer">
-  <span>text here</span>
   <bf-table (rowClick)="goToContract($event)" [source]="offer.contracts" pagination="50" useFilter>
     <!-- Title -->
     <ng-template colRef="title.title.international" label="Title" let-title sort>
