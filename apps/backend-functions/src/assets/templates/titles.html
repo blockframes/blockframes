@@ -1,0 +1,59 @@
+<html>
+  <head>
+    <style type="text/css">{{css}}</style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;800&display=swap" rel="stylesheet"> 
+  </head>
+  <body>
+
+    {{#titles}}
+      <section class="title">
+        <div class="row">
+          <div class="left-column">
+            <img src="{{posterUrl}}">
+          </div>
+          <div class="right-column">
+            <h2>{{title}}</h2>
+            {{#if runningTime}}
+              <p>{{runningTime}} min</p>
+            {{/if}}
+            <p>{{releaseYear}}</p>
+            {{#if version.isOriginalVersionAvailable}}
+              <p>{{version.original}}{{#if version.languages}} with {{version.languages}}{{/if}}</p>
+            {{else}}
+              <p>Original version is not available
+              {{#if version.languages}}<br>{{version.languages}}{{/if}}</p>
+            {{/if}}
+          </div>
+        </div>
+
+        <div class="row">
+          <p class="synopsis">{{synopsis}}</p>
+        </div>
+
+        {{#if prizes.length}}
+          <ul class="prizes">
+            {{#each prizes}}
+              <li>{{name}}{{#if prize}} {{prize}}{{/if}}{{#if year}} {{year}}{{/if}}{{#if premiere}} - {{premiere}}{{/if}}</li>
+            {{/each}}
+          </ul>
+        {{/if}}
+
+        <div class="row links">
+          <div class="column">
+            <a href="{{links.title}}">See title</a>
+          </div>
+          <div class="column">
+            <a href="{{links.trailer}}">Trailer</a>
+          </div>
+        </div>
+        
+        <hr class="solid">
+      </section>
+    {{/titles}}
+  
+   
+  </body>
+
+</html>

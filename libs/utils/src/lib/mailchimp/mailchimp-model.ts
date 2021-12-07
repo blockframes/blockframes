@@ -1,10 +1,9 @@
-export type MailchimpTag = 
-'landing' | 
-'festival' | 
-'catalog' | 
-'financiers' | 
-'crm' |
-'landing - festival' |
-'landing - catalog' |
-'landing - financiers' |
-'landing - crm';
+type MailchimpTagStatus = 'active' | 'inactive'
+export interface MailchimpTag {
+  name: string;
+  status: MailchimpTagStatus
+}
+
+export function getPreferenceTag(type: string, tags: string[] = [], status: MailchimpTagStatus): MailchimpTag[] {
+  return tags.map(tag => `${type}_${tag}`).map(name => ({ name, status }));
+}

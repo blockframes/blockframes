@@ -1,4 +1,5 @@
 import { Person } from './common-interfaces';
+import { staticModel, Scope } from '@blockframes/utils/static-model';
 
 export interface ErrorResultResponse {
   error: string;
@@ -213,4 +214,32 @@ export function getWatermark(email: string = '', firstName: string = '', lastNam
   `;
 
   return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+}
+
+export function toLabel(value: string | string[], scope: Scope, joinWith? : string, endWith?: string): string {
+  if (!value) return '';
+  try {
+    if (Array.isArray(value)) {
+      return smartJoin(value.map(val => staticModel[scope][val]), joinWith, endWith);
+    } else {
+      return staticModel[scope][value];
+    }
+  } catch (error) {
+    console.error(`Could not find label for key "${value}" in scope "${scope}"`);
+    if (typeof value === 'string') return value;
+    return '';
+  }
+}
+
+/**
+ * Example with (['A', 'B', 'C'], ', ', ' & ') 
+ * output : "A, B & C";
+ * @param str 
+ * @param joinWith 
+ * @param endWith 
+ * @returns 
+ */
+export function smartJoin(str: string[], joinWith = ', ', endWith = ', ') {
+  const last = str.pop();
+  return `${str.join(joinWith)}${str.length ? endWith : ''}${last || ''}`;
 }

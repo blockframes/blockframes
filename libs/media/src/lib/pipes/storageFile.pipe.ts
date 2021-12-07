@@ -11,13 +11,12 @@ import { Observable } from 'rxjs';
 })
 export class StorageFilePipe implements PipeTransform {
   transform(value: StorageFile | string, collection: CollectionHoldingFile, label: FileLabel, docId: string) {
-    if (typeof value === "string") {
-      const metadata = getFileMetadata(collection, label, docId)
-      return createStorageFile({
-        storagePath: value,
-        ...metadata
-      })
-    } else return value;
+    if (typeof value !== 'string') return value;
+    const metadata = getFileMetadata(collection, label, docId);
+    return createStorageFile({
+      storagePath: value,
+      ...metadata
+    });
   }
 }
 
