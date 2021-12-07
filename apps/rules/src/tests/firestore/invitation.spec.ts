@@ -31,6 +31,11 @@ describe('Invitation Rules Tests', () => {
       const inviteRef = db.doc('invitations/I012');
       await assertSucceeds(inviteRef.delete());
     });
+
+    test.only('should not allow user to accept invitation', async () => {
+      const inviteRef = db.doc('invitations/I001');
+      await assertFails(inviteRef.update({ status: 'accepted' }));
+    });
   });
 
   describe.only('With User in org', () => {
