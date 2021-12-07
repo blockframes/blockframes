@@ -63,12 +63,17 @@ export const createPdf = async (req: PdfRequest, res: Response) => {
       premiere: p.premiere ? `${toLabel(p.premiere, 'premiereType')} Premiere` : undefined
     }));
 
+    const genres = [toLabel(m.genres, 'genres'), m.customGenres ? m.customGenres.join(', ') : ''].filter(g => g);
+
     return {
       title: m.title.international,
+      contentType: toLabel(m.contentType, 'contentType'),
+      genres: genres.join(', '),
       releaseYear: m.release.year,
+      episodeCount: m.runningTime.episodeCount,
       runningTime: m.runningTime.time,
       synopsis: m.synopsis,
-      posterUrl: getImgIxResourceUrl(m.poster, { h: 240, w: 180 }),
+      posterUrl: m.poster?.storagePath ? getImgIxResourceUrl(m.poster, { h: 240, w: 180 }) : '',
       version: {
         original: toLabel(m.originalLanguages, 'languages', ', ', ' & '),
         isOriginalVersionAvailable: m.isOriginalVersionAvailable,
@@ -122,10 +127,12 @@ async function generate(templateName: string, app: App, titles: PdfTitleData[]) 
   ]);
 
   const logo = fs.readFileSync(path.resolve(`assets/logo/${appLogo[app]}`), 'utf8');
+  const posterFallback = fs.readFileSync(path.resolve(`assets/images/empty_poster.svg`), 'utf8');
   const css = fs.readFileSync(path.resolve(`assets/style/${templateName}.css`), 'utf8');
   const data = {
     css,
     appLogo: `data:image/svg+xml;utf8,${encodeURIComponent(logo)}`,
+    posterFallback: `data:image/svg+xml;utf8,${encodeURIComponent(posterFallback)}`,
     titles
   };
 
