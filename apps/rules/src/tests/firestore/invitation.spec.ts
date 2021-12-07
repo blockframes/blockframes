@@ -32,13 +32,17 @@ describe('Invitation Rules Tests', () => {
       await assertSucceeds(inviteRef.delete());
     });
 
-    test.only('should not allow user to accept invitation', async () => {
-      const inviteRef = db.doc('invitations/I001');
-      await assertFails(inviteRef.update({ status: 'accepted' }));
+    describe.only('Respond to Invitation', () => {
+      const response:string[] = ['accepted', 'declined'];
+
+      test.each(response)("should not allow user to set invitation as '%s'", async (res) => {
+        const inviteRef = db.doc('invitations/I001');
+        await assertFails(inviteRef.update({ status: res }));
+      });
     });
   });
 
-  describe.only('With User in org', () => {
+  describe('With User in org', () => {
     beforeAll(async () => {
       db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2', firebase: { sign_in_provider: 'password' } });
     });
@@ -96,7 +100,7 @@ describe('Invitation Rules Tests', () => {
         await assertFails(inviteRef.update(details));
       });
 
-      test.only('should allow user to update invitation', async () => {
+      test('should allow user to update invitation', async () => {
         const inviteRef = db.doc('invitations/I001');
         await assertSucceeds(inviteRef.update({note: 'important', status: 'accepted'}));
       });
