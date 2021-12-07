@@ -109,7 +109,9 @@
     "twilio": "3.67.1",
     "twilio-video": "^2.16.0",
     "xlsx": "^0.17.0",
-    "zone.js": "~0.11.4"
+    "zone.js": "~0.11.4",
+    "handlebars": "^4.7.7",
+    "puppeteer": "^12.0.1"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "12.0.0",

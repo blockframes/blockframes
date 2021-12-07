@@ -34,6 +34,8 @@ export class PageListItemDirective { }
 @Directive({ selector: '[listPageEmpty]' })
 export class PageEmptyDirective { }
 
+@Directive({ selector: '[pdfExport], pdf-export' })
+export class PdfExportDirective { }
 
 @Component({
   selector: '[items] list-page',

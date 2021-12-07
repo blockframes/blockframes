@@ -3,7 +3,6 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { createDemoRequestInformations, RequestDemoInformations } from '@blockframes/utils/request-demo';
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { getCurrentApp } from '@blockframes/utils/apps';
-import { MailchimpTag } from '@blockframes/utils/mailchimp/mailchimp-model';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { RequestDemoRole } from '@blockframes/utils/request-demo';
@@ -103,7 +102,7 @@ export class LandingShellComponent implements OnDestroy {
   /** Register an email to a mailchimp mailing list */
   private async registerEmailToNewsletters(email: string) {
     const f = this.functions.httpsCallable('registerToNewsletter');
-    const tags: MailchimpTag[] = [`landing - ${this.appName}`] as MailchimpTag[]
+    const tags = [`landing - ${this.appName}`];
     return f({email, tags}).toPromise();
   }
 
