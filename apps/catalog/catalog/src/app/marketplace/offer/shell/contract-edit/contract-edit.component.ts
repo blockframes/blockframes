@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OfferShellComponent } from '../shell.component';
-import { filter, first, pluck, shareReplay, switchMap } from 'rxjs/operators';
+import { filter, first, map, pluck, shareReplay, switchMap } from 'rxjs/operators';
 import { NegotiationGuardedComponent } from '@blockframes/contract/negotiation/guard';
 import { NegotiationForm } from '@blockframes/contract/negotiation';
 import { ContractService } from '@blockframes/contract/contract/+state';
@@ -12,6 +12,7 @@ import { ConfirmDeclineComponent } from '@blockframes/contract/contract/componen
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
+import { combineLatest, Observable } from 'rxjs';
 
 @Component({
   selector: 'catalog-contract-edit',
@@ -23,16 +24,14 @@ export class ContractEditComponent implements NegotiationGuardedComponent, OnIni
 
   activeOrgId = this.query.getActiveId();
   form = new NegotiationForm()
-  sale$ = this.route.params.pipe(
-    pluck('saleId'),
-    switchMap((saleId: string) => this.contractService.valueChanges(saleId).pipe(
-      joinWith({
-        negotiation: sale => this.contractService.lastNegotiation(sale.id)
-      })
-    )),
-    shareReplay({ bufferSize: 1, refCount: true })
+  contracts$ = this.shell.offer$.pipe(
+    map(offer => offer.contracts),
   )
-  negotiation$ = this.sale$.pipe(pluck('negotiation'))
+  contractId$ = this.route.params.pipe(pluck('saleId'));
+  sale$ = combineLatest([this.contracts$, this.contractId$]).pipe(
+    map(([contracts, id]) => contracts.find(contract => contract.id === id))
+  )
+  negotiation$ = this.sale$.pipe(map(contract => contract.negotiation))
 
   constructor(
     private snackBar: MatSnackBar,
