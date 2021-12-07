@@ -58,10 +58,11 @@ describe('Movies Rules Tests', () => {
         const orgId = 'O001';
         const testMovieTitle = 'movies/MI-078';
 
-        const movieRef = db.collection('movies').where('orgIds', 'array-contains', orgId);
+        const movieRef = db.collection('movies')
+                           .where('orgIds', 'array-contains', orgId);
         const moviesSnap  = await movieRef.get();
         const movieDocs = moviesSnap.docs;
-        let movies = [];
+        const movies = [];
         movieDocs.forEach(doc => movies.push(doc.data()));
         expect(movies.length).toEqual(3);
 
@@ -80,7 +81,7 @@ describe('Movies Rules Tests', () => {
                            .where('app.financiers.access', '==', true);
         const moviesSnap  = await movieRef.get();
         const movieDocs = moviesSnap.docs;
-        let movies = [];
+        const movies = [];
         movieDocs.forEach(doc => movies.push(doc.data()));
         expect(movies.length).toEqual(1);
 
