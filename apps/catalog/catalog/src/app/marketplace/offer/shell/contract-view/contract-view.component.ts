@@ -47,17 +47,14 @@ export class ContractViewComponent {
       this.snackBar.open(`You accepted contract for ${sale.title.title.international}`);
     }
 
-    this.dialog.open(
-      ConfirmComponent,
-      {
-        data: {
-          onConfirm,
-          title: 'Are you sure to accept this contract?',
-          question: 'Please verify if all the contract elements are convenient for you.',
-          confirm: 'Yes, accept contract',
-          cancel: 'Come back & verify contract'
-        }
-      });
+    const data = {
+      onConfirm,
+      title: 'Are you sure to accept this contract?',
+      question: 'Please verify if all the contract elements are convenient for you.',
+      confirm: 'Yes, accept contract',
+      cancel: 'Come back & verify contract'
+    };
+    this.dialog.open(ConfirmComponent, { data });
   }
 
 }
