@@ -67,7 +67,6 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
       await this.negotiationService.create(sale.id, {
         ...sale.negotiation,
         ...this.form.value,
-        createdByOrg: this.activeOrgId,
       });
       this.snackBar.open('Your counter offer has been sent');
       this.router.navigate(['..', 'view'], { relativeTo: this.route });

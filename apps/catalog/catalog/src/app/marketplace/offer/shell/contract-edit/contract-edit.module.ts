@@ -8,6 +8,7 @@ import { NegotiationGuard } from '@blockframes/contract/negotiation/guard';
 import { NegotiationFormModule } from '@blockframes/contract/negotiation';
 import { MatButtonModule } from '@angular/material/button';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     CommonModule,
     MatIconModule,
     FlexLayoutModule,
+    ReactiveFormsModule,
     RouterModule.forChild([
       {
         path: '', component: ContractEditComponent,
