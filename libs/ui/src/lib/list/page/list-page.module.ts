@@ -26,7 +26,8 @@ import {
   PageTitleDirective,
   PageDescriptionTemplateDirective,
   PageEmptyDirective,
-  PageAppBarSearchDirective
+  PageAppBarSearchDirective,
+  PdfExportDirective
 } from './list-page.component';
 
 @NgModule({
@@ -54,7 +55,8 @@ import {
     PageTitleDirective,
     PageDescriptionTemplateDirective,
     PageEmptyDirective,
-    PageAppBarSearchDirective
+    PageAppBarSearchDirective,
+    PdfExportDirective
   ],
   exports: [
     ListPageComponent,
@@ -65,7 +67,8 @@ import {
     PageTitleDirective,
     PageDescriptionTemplateDirective,
     PageEmptyDirective,
-    PageAppBarSearchDirective
+    PageAppBarSearchDirective,
+    PdfExportDirective
   ]
 })
 export class ListPageModule { }
