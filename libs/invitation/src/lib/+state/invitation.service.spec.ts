@@ -41,6 +41,11 @@ describe('Invitations Test Suite', () => {
     expect(service).toBeTruthy();
   })
 
+  //TODO: 
+  // test formatFromFirestore returns correct format
+  // test formatToFirestore returns correct format
+  // Create an invitation and check .
+  
   it('Formats invitation from firestore', () => {
     const is = TestBed.inject(InvitationService);
     is.formatFromFirestore = jest.fn();

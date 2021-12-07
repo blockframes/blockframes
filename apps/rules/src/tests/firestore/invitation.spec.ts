@@ -7,6 +7,10 @@ import { testFixture } from './fixtures/data';
 import { Firestore, initFirestoreApp } from '@blockframes/testing/firebase/functions';
 import { Invitation, InvitationStatus } from '@blockframes/invitation/+state';
 
+//TODO:
+// 1. test acceptInvitation
+// 2. test declineInvitation
+
 describe('Invitation Rules Tests', () => {
   const projectId = `inrules-spec-${Date.now()}`;
   let db: Firestore;
