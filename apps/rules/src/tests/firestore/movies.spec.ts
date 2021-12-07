@@ -158,6 +158,7 @@ describe('Movies Rules Tests', () => {
       test('should be able to fetch movie collection for query condition', async () => {
         const orgId = 'O001';
 
+        // Some movies of org O001 are in draft mode, but this should still success because we added filtering on the query
         const movieRef = db.collection('movies')
           .where('orgIds', 'array-contains', orgId)
           .where('app.financiers.status', '==', 'accepted')
@@ -168,18 +169,6 @@ describe('Movies Rules Tests', () => {
         const movies = [];
         movieDocs.forEach(doc => movies.push(doc.data()));
         expect(movies.length).toEqual(1);
-
-      })
-
-      test('should not be able to fetch movie collection for query condition', async () => {
-        const orgId = 'O001';
-
-        // Some movies are in draft mode, this should fail
-        const movieRef = db.collection('movies')
-          .where('orgIds', 'array-contains', orgId)
-          .where('app.financiers.access', '==', true);
-
-        await assertFails(movieRef.get());
 
       })
     });
