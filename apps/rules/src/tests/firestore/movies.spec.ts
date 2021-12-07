@@ -56,39 +56,15 @@ describe('Movies Rules Tests', () => {
 
       test('should be able to fetch movie collection for current org', async () => {
         const orgId = 'O001';
-        const testMovieTitle = 'movies/MI-078';
 
-        const movieRef = db.collection('movies')
-                           .where('orgIds', 'array-contains', orgId);
-        const moviesSnap  = await movieRef.get();
+        const movieRef = db.collection('movies').where('orgIds', 'array-contains', orgId);
+        const moviesSnap = await movieRef.get();
         const movieDocs = moviesSnap.docs;
         const movies = [];
         movieDocs.forEach(doc => movies.push(doc.data()));
         expect(movies.length).toEqual(3);
-
-        // testMovieTitle doesn't belong to orgId, shouldn't be fetched
-        const unexpectedMovie = [testFixture[testMovieTitle]];
-        expect(movies).not.toEqual(expect.arrayContaining(unexpectedMovie));
       })
 
-      test('should be able to fetch movie collection for query condition', async () => {
-        const orgId = 'O001';
-        const testMovieTitle = 'movies/MI-0d7';
-
-        const movieRef = db.collection('movies')
-                           .where('orgIds', 'array-contains', orgId)
-                           .where('app.financiers.status', '==', 'accepted')
-                           .where('app.financiers.access', '==', true);
-        const moviesSnap  = await movieRef.get();
-        const movieDocs = moviesSnap.docs;
-        const movies = [];
-        movieDocs.forEach(doc => movies.push(doc.data()));
-        expect(movies.length).toEqual(1);
-
-        // testMovieTitle matches query criteria, should be returned
-        const expectedMovie = [testFixture[testMovieTitle]];
-        expect(movies).toEqual(expect.arrayContaining(expectedMovie));
-      })
     });
 
     describe('Create Movie', () => {
@@ -160,6 +136,45 @@ describe('Movies Rules Tests', () => {
       });
     });
   });
+
+  describe('With User not in org', () => {
+
+    beforeAll(async () => {
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user3', firebase: { sign_in_provider: 'password' } });
+    });
+
+    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+
+    describe('Read Movie', () => {
+
+      test('should not be able to fetch movie collection for org where current user is not member of', async () => {
+        const orgId = 'O001';
+
+        // Some movies are in draft mode, this should fail
+        const movieRef = db.collection('movies').where('orgIds', 'array-contains', orgId);
+        await assertFails(movieRef.get());
+      })
+
+      test('should be able to fetch movie collection for query condition', async () => {
+        const orgId = 'O001';
+
+        // Some movies of org O001 are in draft mode, but this should still success because we added filtering on the query
+        const movieRef = db.collection('movies')
+          .where('orgIds', 'array-contains', orgId)
+          .where('app.financiers.status', '==', 'accepted')
+          .where('app.financiers.access', '==', true);
+
+        const moviesSnap = await movieRef.get();
+        const movieDocs = moviesSnap.docs;
+        const movies = [];
+        movieDocs.forEach(doc => movies.push(doc.data()));
+        expect(movies.length).toEqual(1);
+
+      })
+    });
+
+  });
+
 
   describe('User with admin role', () => {
     const draftMovieId = 'MI-0d7';
@@ -245,7 +260,7 @@ describe('Movies Rules Tests', () => {
       const docRef = db.doc('movies/MI-077');
       await assertFails(docRef.get());
     });
-    
+
     test('should be able to fetch an accepted movie by ID', async () => {
       const docRef = db.doc('movies/MI-0d7');
       await assertSucceeds(docRef.get());
