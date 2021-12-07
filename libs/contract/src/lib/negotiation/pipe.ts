@@ -1,6 +1,6 @@
 import { NgModule, Pipe, PipeTransform } from "@angular/core";
 import { OrganizationQuery, OrganizationService } from "@blockframes/organization/+state";
-import { of } from "rxjs";
+import { Observable, of } from "rxjs";
 import { map } from "rxjs/operators";
 import { Negotiation } from "./+state/negotiation.firestore";
 
@@ -20,12 +20,10 @@ export class NegotiationStagePipe implements PipeTransform {
     return seller;
   }
 
-  transform(negotiation: Negotiation, ...args: any[]): any {
-    if (!(negotiation?.status === 'pending')) return ''
+  transform(negotiation: Negotiation): Observable<string> {
+    if (!(negotiation?.status === 'pending')) return of('')
     if (negotiation?.createdByOrg !== this.activeOrgId) return of('To be Reviewed');
-    const seller = this.getOrgName(negotiation)
-    if (!seller) return of('');
-    return this.orgService.valueChanges(seller).pipe(
+    return this.orgService.valueChanges(negotiation.createdByOrg).pipe(
       map(org => `Waiting for ${org.denomination.public} answer`)
     )
   }
