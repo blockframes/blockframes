@@ -28,6 +28,7 @@ export class NegotiationGuard<T extends NegotiationGuardedComponent> implements 
     if (!saleId) return this.router.parseUrl(`c/o/dashboard/sales`);
 
     const negotiation = await this.contractService.lastNegotiation(saleId).pipe(first()).toPromise();
+    if (!negotiation) return this.router.parseUrl(`c/o/dashboard/sales`);
     const isPending = negotiation.status === 'pending'
     const canNegotiate = negotiation.createdByOrg !== activeOrgId;
 
@@ -40,7 +41,7 @@ export class NegotiationGuard<T extends NegotiationGuardedComponent> implements 
     const dialogRef = this.dialog.open(ConfirmComponent, {
       data: {
         title: `Leave Page?`,
-        question: `Please pay attention that unless you submit offer the changes remain not saved.`,
+        question: `Please pay attention that unless you submit an offer the changes remain not saved.`,
         cancel: 'Come back & Submit Offer',
         confirm: 'Leave anyway',
       },

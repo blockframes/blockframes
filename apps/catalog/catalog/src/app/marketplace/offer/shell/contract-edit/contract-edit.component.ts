@@ -1,36 +1,45 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { SaleShellComponent } from '../shell.component';
+import { ActivatedRoute, Router } from '@angular/router';
+import { OfferShellComponent } from '../shell.component';
+import { filter, first, pluck, shareReplay, switchMap } from 'rxjs/operators';
+import { NegotiationGuardedComponent } from '@blockframes/contract/negotiation/guard';
 import { NegotiationForm } from '@blockframes/contract/negotiation';
-import { OrganizationQuery } from '@blockframes/organization/+state';
-import { NegotiationGuardedComponent } from '@blockframes/contract/negotiation/guard'
-import { filter, first, pluck } from 'rxjs/operators'
+import { ContractService } from '@blockframes/contract/contract/+state';
+import { joinWith } from '@blockframes/utils/operators';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmDeclineComponent } from '@blockframes/contract/contract/components/confirm-decline/confirm-decline.component';
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { OrganizationQuery } from '@blockframes/organization/+state';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
-  selector: 'sale-negotiation',
-  templateUrl: './negotiation.component.html',
-  styleUrls: ['./negotiation.component.scss'],
+  selector: 'catalog-contract-edit',
+  templateUrl: './contract-edit.component.html',
+  styleUrls: ['./contract-edit.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NegotiationComponent implements NegotiationGuardedComponent, OnInit {
+export class ContractEditComponent implements NegotiationGuardedComponent, OnInit {
 
-  centralOrgId = this.shell.centralOrgId;
-  sale$ = this.shell.sale$;
-  negotiation$ = this.sale$.pipe(pluck('negotiation'))
-  contractStatus = this.shell.contractStatus;
   activeOrgId = this.query.getActiveId();
-  form = new NegotiationForm({ terms: [] });
+  form = new NegotiationForm()
+  sale$ = this.route.params.pipe(
+    pluck('saleId'),
+    switchMap((saleId: string) => this.contractService.valueChanges(saleId).pipe(
+      joinWith({
+        negotiation: sale => this.contractService.lastNegotiation(sale.id)
+      })
+    )),
+    shareReplay({ bufferSize: 1, refCount: true })
+  )
+  negotiation$ = this.sale$.pipe(pluck('negotiation'))
 
   constructor(
     private snackBar: MatSnackBar,
     private orgQuery: OrganizationQuery,
+    private shell: OfferShellComponent,
+    private contractService: ContractService,
     private negotiationService: NegotiationService,
-    private shell: SaleShellComponent,
     private query: OrganizationQuery,
     private dialog: MatDialog,
     private router: Router,
@@ -55,7 +64,7 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
         this.negotiationService.update(
           sale.negotiation.id, { declineReason, status: 'declined' }, options
         )
-        this.router.navigate(['..', 'view'], { relativeTo: this.route })
+        this.router.navigate(['..'], { relativeTo: this.route })
       }
     })
   }
@@ -70,7 +79,7 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
         createdByOrg: this.activeOrgId,
       });
       this.snackBar.open('Your counter offer has been sent');
-      this.router.navigate(['..', 'view'], { relativeTo: this.route });
+      this.router.navigate(['..'], { relativeTo: this.route });
     }
 
     this.dialog.open(
@@ -85,4 +94,5 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
         }
       });
   }
+
 }
