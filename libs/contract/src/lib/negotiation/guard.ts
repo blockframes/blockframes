@@ -46,7 +46,7 @@ export class NegotiationGuard<T extends NegotiationGuardedComponent> implements 
         confirm: 'Leave anyway',
       },
       autoFocus: false,
-    })
+    });
     return dialogRef.afterClosed();
   }
 }

@@ -23,15 +23,15 @@ import { combineLatest, Observable } from 'rxjs';
 export class ContractEditComponent implements NegotiationGuardedComponent, OnInit {
 
   activeOrgId = this.query.getActiveId();
-  form = new NegotiationForm()
+  form = new NegotiationForm();
   contracts$ = this.shell.offer$.pipe(
     map(offer => offer.contracts),
-  )
+  );
   contractId$ = this.route.params.pipe(pluck('saleId'));
   sale$ = combineLatest([this.contracts$, this.contractId$]).pipe(
     map(([contracts, id]) => contracts.find(contract => contract.id === id))
-  )
-  negotiation$ = this.sale$.pipe(map(contract => contract.negotiation))
+  );
+  negotiation$ = this.sale$.pipe(map(contract => contract.negotiation));
 
   constructor(
     private snackBar: MatSnackBar,
@@ -54,10 +54,10 @@ export class ContractEditComponent implements NegotiationGuardedComponent, OnIni
   }
 
   async decline() {
-    this.form.markAsPristine() // usefull to be able to route in the NegotiationGuard
-    const sale = await this.sale$.pipe(first()).toPromise()
-    const ref = this.dialog.open(ConfirmDeclineComponent)
-    const options = { params: { contractId: sale.id } }
+    this.form.markAsPristine(); // usefull to be able to route in the NegotiationGuard
+    const sale = await this.sale$.pipe(first()).toPromise();
+    const ref = this.dialog.open(ConfirmDeclineComponent);
+    const options = { params: { contractId: sale.id } };
     ref.afterClosed().subscribe(declineReason => {
       if (typeof declineReason === 'string') {
         this.negotiationService.update(
@@ -65,7 +65,7 @@ export class ContractEditComponent implements NegotiationGuardedComponent, OnIni
         )
         this.router.navigate(['..'], { relativeTo: this.route })
       }
-    })
+    });
   }
 
   async confirm() {
