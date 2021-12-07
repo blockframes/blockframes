@@ -14,57 +14,47 @@ export class CatalogLandingComponent {
   public tabTitle = [
     {
       title: 'For sellers',
-      imgAsset: 'lp_catalog_seller_perspective.png',
+      imgAsset: 'video_placeholder_seller.png',
       description: 'Monetize your full catalog at its maximum potential.',
     },
     {
       title: 'For Buyers ',
-      imgAsset: 'library_content.svg',
+      imgAsset: 'video_placeholder_buyer.png',
       description: 'Search for avails easily through one curated library and buy content in larger volumes through one single deal.',
     }
   ]
 
   public sellerFeatures = [
     {
-      title: 'Reach a community of over 1500 buyers, free of charge. one more line here',
-      imgAsset: 'content_sellers_list.svg',
-      description: 'text missing here lorem lorem lorem lorem lorem'
+      title: 'Reach a community <br> of over 1500 buyers,<br> free of charge.',
+      imgAsset: 'content_sellers_list.svg'
     },
     {
-      title: 'Benefit from the experience of a dedicated sales & marketing team one more line here',
-      imgAsset: 'content_pitching_movie.png',
-      description: 'text missing here lorem lorem lorem lorem lorem'
+      title: 'Benefit from the<br> experience of a dedicated<br> sales & marketing team.',
+      imgAsset: 'content_pitching_movie.svg'
     },
     {
-      title: 'Get extra opportunities thanks to simplified contracting. one more line here',
-      imgAsset: 'content_manage_offers.svg',
-      description: 'text missing here lorem lorem lorem lorem lorem'
+      title: 'Get extra opportunities<br> thanks to simplified<br> contracting.',
+      imgAsset: 'content_manage_offers.svg'
     },
     {
-      title: 'Monitor your activity thanks to simplified imports, tracking and deal monitoring systems.',
-      imgAsset: 'content_title_stats.svg',
-      description: 'text missing here lorem lorem lorem lorem lorem'
+      title: 'Monitor your activity thanks<br> to simplified imports,&lrm;<br> tracking and deal monitoring<br> systems.',
+      imgAsset: 'content_title_stats.svg'
     }
   ];
 
   public buyerFeatures = [
     {
-      title: 'License from multiple rights owners with only one contract',
-      imgAsset: 'content_multi_sellers.svg',
-      description: 'text missing here lorem lorem lorem lorem lorem',
-      mediaOrientation: 'right'
+      title: 'License from multiple rights<br> owners with only one single<br> contract.',
+      imgAsset: 'content_multi_sellers.svg'
     },
     {
-      title: 'Search for avails easily on a user-friendly interface. one more line here',
-      imgAsset: 'content_movie_genres.svg',
-      description: 'text missing here lorem lorem lorem lorem lorem',
-      mediaOrientation: 'left'
+      title: 'Search for avails easily<br> on a user-friendly interface.',
+      imgAsset: 'content_movie_genres.svg'
     },
     {
-      title: 'Access all formats and genres (feature films, drama series, documentaries, kids content…)',
-      imgAsset: 'content_search_movies.svg',
-      description: 'text missing here lorem lorem lorem lorem lorem',
-      mediaOrientation: 'right'
+      title: 'Access all formats and genres<br> (feature films, drama series,<br> documentaries, kids content…).',
+      imgAsset: 'content_search_movie.png'
     }
   ]
 
