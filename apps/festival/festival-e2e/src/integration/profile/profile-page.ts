@@ -1,15 +1,31 @@
-import { loginWithRandomUser } from "../../support/app.po";
+import { clearBrowserAuth, loginWithRandomUser } from "../../support/app.po";
 
-describe('Profile Page', () => {
+describe('Basic Landing Page, Login and Profile Page Tests', () => {
 
-  beforeEach(() => {
+  before(() => {
     cy.visit('/')
     cy.contains('Accept cookies').click();
   })
-  it('should load', () => {
+  beforeEach(() => {
     cy.visit('/')
-    cy.task('getRandomUser').logSubject();
+  })
+  it('should load user and log into profile page', () => {
     loginWithRandomUser().logSubject();
+    cy.visit('c/o/account/profile/view/settings');
+    cy.contains('Contact Information').should('exist');
+  })
+  it('should now show Accept Cookies after being accepted', () => {
+    cy.contains('Accept cookies').click();
+    cy.visit('/');
+    cy.contains('Accept cookies').should('not.exist');
+  })
+  it('should show the Accept Cookies banner', () => {
+    cy.contains('Accept cookies').should('exist');
+  })
+  afterEach(() => {
+    // clearBrowserAuth()
+    // cy.clearCookies();
+    // cy.clearLocalStorage();
   })
 
 })

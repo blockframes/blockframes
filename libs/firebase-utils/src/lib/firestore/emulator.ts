@@ -214,17 +214,21 @@ export function connectFirestoreEmulator() {
   if (db) return db;
 
   const firebaseJsonPath = resolve(process.cwd(), 'firebase.json')
-  const {
-    emulators: {
-      firestore: { port: dbPort },
-      storage: { port: storagePort },
-      auth: { port: authPort },
-    },
-  } = eval('require')(firebaseJsonPath);
+  try {
+    const {
+      emulators: {
+        firestore: { port: dbPort },
+        storage: { port: storagePort },
+        auth: { port: authPort },
+      },
+    } = eval('require')(firebaseJsonPath);
 
-  console.log('Detected - dbPort:', dbPort, 'storagePort:', storagePort, 'authPort:', authPort);
+    console.log('Detected - dbPort:', dbPort, 'storagePort:', storagePort, 'authPort:', authPort);
 
-  process.env['FIRESTORE_EMULATOR_HOST'] = `localhost:${dbPort}`
+    process.env['FIRESTORE_EMULATOR_HOST'] = `localhost:${dbPort}`
+  } catch (e) {
+    process.env['FIRESTORE_EMULATOR_HOST'] = `localhost:8080`
+  }
 
   const app = initializeApp({ projectId: firebase().projectId }, 'firestore');
   db = app.firestore() as FirestoreEmulator;
@@ -243,14 +247,17 @@ export function connectFirestoreEmulator() {
 export function connectAuthEmulator() {
   if (auth) return auth;
   const firebaseJsonPath = resolve(process.cwd(), 'firebase.json')
-  const {
-    emulators: {
-      auth: { port: authPort },
-    },
-  } = eval('require')(firebaseJsonPath);
+  try {
+    const {
+      emulators: {
+        auth: { port: authPort },
+      },
+    } = eval('require')(firebaseJsonPath);
+    process.env['FIREBASE_AUTH_EMULATOR_HOST'] = `localhost:${authPort}`;
+  } catch (e) {
+    process.env['FIREBASE_AUTH_EMULATOR_HOST'] = `localhost:9099`;
+  }
 
-
-  process.env['FIREBASE_AUTH_EMULATOR_HOST'] = `localhost:${authPort}`;
 
   const app = initializeApp({ projectId: firebase().projectId }, 'auth');
   auth = app.auth();
