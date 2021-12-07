@@ -14,7 +14,7 @@ export class NegotiationStagePipe implements PipeTransform {
   ) { }
 
   transform(negotiation: Negotiation): Observable<string> {
-    if (!(negotiation?.status === 'pending')) return of('')
+    if (!(negotiation?.status === 'pending')) return of('');
     if (negotiation?.createdByOrg !== this.activeOrgId) return of('To be Reviewed');
     return this.orgService.valueChanges(negotiation.createdByOrg).pipe(
       map(org => `Waiting for ${org.denomination.public} answer`)
