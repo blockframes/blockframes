@@ -1,6 +1,7 @@
 import { DocumentMeta } from "@blockframes/utils/models-meta";
 import { NotificationTypesBase } from '@blockframes/notification/types';
 import { createStorageFile, StorageFile } from "@blockframes/media/+state/media.firestore";
+import { Genre, Language, Media, Territory } from "@blockframes/utils/static-model";
 
 export interface User extends PublicUser {
   financing: {
@@ -13,7 +14,8 @@ export interface User extends PublicUser {
   orgId: string;
   avatar: StorageFile;
   privacyPolicy: PrivacyPolicy;
-  settings?: UserSettings
+  settings?: UserSettings;
+  preferences?: Preferences;
 }
 
 export interface PrivacyPolicy {
@@ -38,6 +40,13 @@ export interface PublicUser {
   firstName?: string;
   lastName?: string;
   orgId?: string;
+}
+
+export interface Preferences {
+  medias: Media[];
+  territories: Territory[];
+  languages: Language[];
+  genres: Genre[];
 }
 
 export function createPublicUser(user: Partial<User> = {}): PublicUser {
