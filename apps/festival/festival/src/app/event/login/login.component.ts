@@ -17,6 +17,7 @@ export class EventLoginComponent implements OnInit {
     password: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(24)])
   });
   public buttonText = 'Log in';
+  public signinIn = false;
 
   constructor(
     private service: AuthService,
@@ -31,10 +32,12 @@ export class EventLoginComponent implements OnInit {
   }
 
   async validateLogin() {
+    if (this.signinIn) return;
     if (!this.form.valid) {
       this.snackBar.open('Form invalid, please check error messages', 'close', { duration: 2000 });
       return;
     }
+    this.signinIn = true;
     try {
       this.buttonText = 'Logging in...'
       const { email, password } = this.form.value;
@@ -54,6 +57,7 @@ export class EventLoginComponent implements OnInit {
         this.snackBar.open(err.message, 'close', { duration: 8000 });
       }
     }
+    this.signinIn = false;
   }
 
   clickBack() {
