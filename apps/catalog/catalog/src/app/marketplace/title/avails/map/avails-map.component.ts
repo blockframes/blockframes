@@ -41,7 +41,7 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
   private mandateTerms$ = this.shell.mandateTerms$;
   private salesTerms$ = this.shell.salesTerms$;
 
-  /** All mandates markers by territory (they might be already sold or already selected selected (from the bucket) or already in selection) */
+  /** All mandates markers by territory (they might be already sold or already selected (from the bucket) or already in selection) */
   private territoryMarkers$ = combineLatest([
     this.mandates$,
     this.mandateTerms$,
