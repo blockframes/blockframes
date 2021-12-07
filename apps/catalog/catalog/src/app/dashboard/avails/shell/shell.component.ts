@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, } from "@angular/core";
 import { ActivatedRoute, } from "@angular/router";
 import { AvailsForm } from "@blockframes/contract/avails/form/avails.form";
-import { BucketForm } from "@blockframes/contract/bucket/form";
 import { Contract, ContractService, isMandate, isSale } from "@blockframes/contract/contract/+state";
 import { Term, TermService } from "@blockframes/contract/term/+state";
 import { Movie, MovieService } from "@blockframes/movie/+state";
@@ -20,8 +19,6 @@ export class CatalogAvailsShellComponent {
     switchMap((id: string) => this.movieService.valueChanges(id)),
     shareReplay({ bufferSize: 1, refCount: true })
   );
-
-  public bucketForm = new BucketForm();
 
   public avails = {
     mapForm: new AvailsForm({ territories: [] }, ['duration']),
