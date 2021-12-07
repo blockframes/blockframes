@@ -33,7 +33,7 @@ describe('Invitation Rules Tests', () => {
     });
   });
 
-  describe('With User in org', () => {
+  describe.only('With User in org', () => {
     beforeAll(async () => {
       db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2', firebase: { sign_in_provider: 'password' } });
     });
@@ -91,9 +91,9 @@ describe('Invitation Rules Tests', () => {
         await assertFails(inviteRef.update(details));
       });
 
-      test('should allow user to update invitation', async () => {
+      test.only('should allow user to update invitation', async () => {
         const inviteRef = db.doc('invitations/I001');
-        await assertSucceeds(inviteRef.update({note: 'important'}));
+        await assertSucceeds(inviteRef.update({note: 'important', status: 'accepted'}));
       });
     });
   });
