@@ -9,6 +9,7 @@ import { ToLabelModule, TotalPipeModule } from '@blockframes/utils/pipes';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { MatIconModule } from '@angular/material/icon';
   ],
   imports: [
     CommonModule,
+    FlexLayoutModule,
     ToLabelModule,
     TotalPipeModule,
     TagModule,
