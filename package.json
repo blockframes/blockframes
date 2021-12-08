@@ -160,7 +160,7 @@
     "commander": "^7.0.0",
     "concurrently": "^5.0.0",
     "cross-env": "^7.0.2",
-    "cypress": "^9.1.1",
+    "cypress": "^6.8.0",
     "cypress-file-upload": "^5.0.6",
     "cypress-mailosaur": "^2.3.3",
     "cypress-wait-until": "^1.7.1",
