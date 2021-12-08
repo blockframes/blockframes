@@ -30,6 +30,7 @@ import { onContractCreate, onContractDelete, onContractUpdate } from './contract
 import { onTermDelete } from './terms';
 import { downloadVideo } from './rescue';
 import { createPdf as _createPdf } from './createPdf';
+import { onNegotiationUpdate } from './negotiation';
 
 console.log('Function instance loaded');
 
@@ -265,6 +266,12 @@ export const onContractCreateEvent = onDocumentCreate('contracts/{contractId}', 
 export const onContractUpdateEvent = onDocumentUpdate('contracts/{contractId}', onContractUpdate);
 
 export const onTermDeleteEvent = onDocumentDelete('terms/{termId}', onTermDelete);
+
+//--------------------------------
+//     Negotiation Management     //
+//--------------------------------
+
+export const onNegotiationUpdateEvent = onDocumentDelete('contracts/{contractId}/negotiations/{negotiationId}', onNegotiationUpdate);
 
 //--------------------------------
 //          JWP RESCUE          //
