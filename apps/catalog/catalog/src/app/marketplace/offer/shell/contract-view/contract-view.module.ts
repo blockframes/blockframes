@@ -7,6 +7,7 @@ import { ContractItemModule } from '@blockframes/contract/contract/components/it
 import { HoldbackListModule } from '@blockframes/contract/contract/holdback/list/list.module';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,8 @@ import { MatIconModule } from '@angular/material/icon';
     ContractItemModule,
     HoldbackListModule,
     MatButtonModule,
+    MatButtonModule,
+    FlexLayoutModule,
     MatIconModule,
     RouterModule.forChild([{ path: '', component: ContractViewComponent }])
   ]
