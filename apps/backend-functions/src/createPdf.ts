@@ -64,7 +64,8 @@ export const createPdf = async (req: PdfRequest, res: Response) => {
     }));
 
     const genres = [toLabel(m.genres, 'genres'), m.customGenres ? m.customGenres.join(', ') : ''].filter(g => g);
-
+    const hasPublicVideos = m.promotional.videos.otherVideos?.some(video => video.storagePath && video.privacy === 'public');
+    const title = `${appUrl}/c/o/marketplace/title/${m.id}/main`;
     return {
       title: m.title.international,
       contentType: toLabel(m.contentType, 'contentType'),
@@ -80,8 +81,8 @@ export const createPdf = async (req: PdfRequest, res: Response) => {
         languages: toLanguageVersionString(m.languages)
       },
       links: {
-        title: `${appUrl}/c/o/marketplace/title/${m.id}/main`,
-        trailer: `${appUrl}/c/o/marketplace/title/${m.id}/main`
+        title,
+        trailer: hasPublicVideos ? `${title}#trailer` : ''
       },
       prizes
     }
@@ -143,7 +144,7 @@ async function generate(templateName: string, app: App, titles: PdfTitleData[]) 
   const html = template(data);
 
   // @dev to see html output (without header and footer), uncomment this line
-  // fs.writeFileSync(path.resolve(`assets/templates/output-${templateName}.html`), html, 'utf8');
+  fs.writeFileSync(path.resolve(`assets/templates/output-${templateName}.html`), html, 'utf8');
 
   // we are using headless mode
   const args = ['--no-sandbox', '--disable-setuid-sandbox'];
