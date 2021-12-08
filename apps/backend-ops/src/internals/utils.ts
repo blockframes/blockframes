@@ -213,42 +213,53 @@ export function auditConsistency(dbData: DatabaseData, collections: CollectionDa
     for (const document of collection.refs.docs) {
       if (dataMap[auditedCollectionName][collection.name]) {
         for (const _field of dataMap[auditedCollectionName][collection.name]) {
-          // @TODO try to factorize with isMatchingValue
-          const field = _field.split('[].')[0];
-          const fieldSuffix = _field.split('[].')[1];
-          if (field === '') {
-            if (!auditedCollectionIds.find(id => id === document.id)) {
-              consistencyErrors.push({ auditedCollection: auditedCollectionName, missingDocId: document.id, in: { collection: collection.name, docId: document.id, field } });
-            }
-          } else if (field.endsWith('{}')) {
-            const val = getValue(document.data(), field.replace('{}', ''));
-            for (const entry of Object.keys(val)) {
-              if (!auditedCollectionIds.find(id => id === entry)) {
-                consistencyErrors.push({ auditedCollection: auditedCollectionName, missingDocId: entry, in: { collection: collection.name, docId: document.id, field } });
-              }
-            }
-          } else {
-            let val = getValue(document.data(), field);
-            if (!val || ['internal', 'anonymous'].includes(val)) continue;
-            if (!Array.isArray(val)) val = [val];
-            if (!val.length) continue;
-            for (const entry of val) {
-              const idToFind = isString(entry) ? entry : getValue(entry, fieldSuffix);
-              if (!idToFind) {
-                console.log('UnHandled error..');
-                continue;
-              }
-
-              if (!auditedCollectionIds.find(id => id === idToFind)) {
-                consistencyErrors.push({ auditedCollection: auditedCollectionName, missingDocId: idToFind, in: { collection: collection.name, docId: document.id, field: _field } });
-              }
-            }
-          }
+          getConsitencyErrors(auditedCollectionIds, document, _field).forEach(c => {
+            consistencyErrors.push({
+              ...c,
+              auditedCollection: auditedCollectionName,
+              in: { ...c.in, collection: collection.name }
+            });
+          })
         }
+      }
+    }
+  }
+  return consistencyErrors;
+}
+
+function getConsitencyErrors(documentIdsToFind: string[], document: FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>, _field: string) {
+  const consistencyErrors: { missingDocId: string, in: { docId: string, field: string } }[] = [];
+  // @TODO try to factorize with isMatchingValue
+  const field = _field.split('[].')[0];
+  const fieldSuffix = _field.split('[].')[1];
+  if (field === '') {
+    if (!documentIdsToFind.find(id => id === document.id)) {
+      consistencyErrors.push({ missingDocId: document.id, in: { docId: document.id, field } });
+    }
+  } else if (field.endsWith('{}')) {
+    const val = getValue(document.data(), field.replace('{}', ''));
+    for (const entry of Object.keys(val)) {
+      if (!documentIdsToFind.find(id => id === entry)) {
+        consistencyErrors.push({ missingDocId: entry, in: { docId: document.id, field } });
+      }
+    }
+  } else {
+    let val = getValue(document.data(), field);
+    if (!val || ['internal', 'anonymous'].includes(val)) return [];
+    if (!Array.isArray(val)) val = [val];
+    if (!val.length) return [];
+    for (const entry of val) {
+      const idToFind = isString(entry) ? entry : getValue(entry, fieldSuffix);
+      if (!idToFind) {
+        console.log('UnHandled error..');
+        continue;
+      }
+
+      if (!documentIdsToFind.find(id => id === idToFind)) {
+        consistencyErrors.push({ missingDocId: idToFind, in: { docId: document.id, field: _field } });
       }
     }
   }
 
   return consistencyErrors;
-
 }
