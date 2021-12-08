@@ -21,6 +21,6 @@ export class PreferencesComponent {
   update() {
     const preferences = this.form.value;
     this.authService.update({ preferences });
-    this.snackbar.open('Preferences updated !', 'close', { duration: 5000 });
+    this.snackbar.open('Buying preferences updated.', 'close', { duration: 5000 });
   }
 }
