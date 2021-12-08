@@ -15,7 +15,7 @@ export class CatalogLandingComponent {
     {
       title: 'For sellers',
       imgAsset: 'video_placeholder_seller.png',
-      description: 'Monetize your full catalog at its maximum potential effortlessly, thanks to an innovative way of making deals',
+      description: 'Monetize your full catalog at its maximum potential effortlessly, thanks to an innovative way of making deals.',
     },
     {
       title: 'For Buyers ',
