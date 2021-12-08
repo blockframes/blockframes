@@ -22,12 +22,7 @@ export class OfferShellComponent {
   offer$ = this.offerId$.pipe(
     switchMap((id: string) => this.offerService.valueChanges(id)),
     joinWith({
-      contracts: (offer) => this.getContracts(offer.id).pipe(
-        joinWith({
-          negotiation: (sale: Sale) => ['negotiating', 'pending'].includes(sale.status) ? this.contractService.lastNegotiation(sale.id) : null
-        })
-      ),
-      declinedContracts: (offer) => this.declinedContracts(offer.id),
+      contracts: offer => this.getContracts(offer.id)
     }),
     shareReplay({ bufferSize: 1, refCount: true }),
   );
