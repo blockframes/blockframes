@@ -52,8 +52,9 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
     const options = { params: { contractId: sale.id } };
     ref.afterClosed().subscribe(declineReason => {
       if (typeof declineReason === 'string') {
+        const { id } = sale.negotiation;
         this.negotiationService.update(
-          sale.negotiation.id, { declineReason, status: 'declined' }, options
+          id, { declineReason, status: 'declined' }, options
         );
         this.router.navigate(['..', 'view'], { relativeTo: this.route });
       }
