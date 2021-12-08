@@ -26,7 +26,7 @@ landing-shell-page {
       button[app-logo] {
         margin-right: 96px;
         border: none;
-        background-color: none;
+        background-color: var(--background-card);
         cursor: pointer;
       }
 
@@ -94,6 +94,11 @@ landing-shell-page {
         app-logo {
           margin: 0 24px 24px 0;
         }
+        article {
+          span {
+            gap: 20px 20px;
+          }
+        }
         form {
           display: flex;
           gap: 16px;
@@ -101,6 +106,7 @@ landing-shell-page {
           flex-wrap: nowrap;
           mat-form-field {
             flex: 1;
+            min-width: 320px;
           }
           #newsletterButton {
             margin-top: 0.5em;
@@ -117,10 +123,12 @@ landing-shell-page {
     }
 
     landing-header {
+      header {
+        padding: 60px 80px;
+      }
       display: block;
       background: $banner-background;
       background-size: cover;
-      padding: 72px 80px;
     }
 
     landing-content {
@@ -136,9 +144,7 @@ landing-shell-page {
 
 @include layout-bp(lt-lg) {
   landing-shell-page main {
-    landing-header {
-      padding: 60px 100px;
-    }
+
     form article {
       width: 80%;
     }
@@ -147,9 +153,7 @@ landing-shell-page {
 
 @include layout-bp(lt-md) {
   landing-shell-page main {
-    landing-header {
-      padding: 60px 36px;
-    }
+  
     #email-field {
       width: 100%;
       padding: 0;
@@ -160,10 +164,17 @@ landing-shell-page {
 @include layout-bp(lt-sm) {
   landing-shell-page main {
     landing-header {
-      padding: 24px 8px;
+      header {
+        padding: 60px 16px;
+      }
+    }
+    section {
+      h1 {
+        text-align: center;
+      }
     }
     form article {
-      width: 100%;
+      width: 90%;
     }
   }
 }

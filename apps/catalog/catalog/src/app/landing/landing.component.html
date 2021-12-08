@@ -1,8 +1,8 @@
 <landing-shell-page>
   <landing-header>
-    <header class="max-width" fxLayout="column" fxLayoutAlign="start start" fxLayoutAlign.lt-sm="center center">
+    <header class="max-width" fxLayout="column" fxLayoutAlign="start start" fxLayoutAlign.lt-sm="center center" fxLayoutGap="32px">
       <h4>Welcome to Archipel Content</h4>
-      <p class="mat-display-2">The only marketplace offering multi-seller deals</p>
+      <h1 class="mat-display-2">The only marketplace offering multi-seller deals</h1>
       <h2>for TV, VOD and ancillary rights</h2>
       <a mat-flat-button color="accent" routerLink="/auth/identity">
         <span>Join now</span>
@@ -11,56 +11,93 @@
     </header>
   </landing-header>
 
-  <landing-content class="max-width">
-    <catalog-view-marketplace></catalog-view-marketplace>
-    <catalog-key-features></catalog-key-features>
-    <h1 class="mat-display-1">How it works</h1>
-    <mat-tab-group animationDuration="1000ms" selectedIndex="0">
-      <mat-tab [label]="tabNames[0]">
-        <article fxLayout="row" fxLayoutGap="24px" fxLayout.lt-lg="column" class="tab-margin">
-          <img [asset]="tabTitle[0].imgAsset" alt="seller image">
-          <div fxLayout="column">
-            <h3>{{ tabTitle[0].title }}</h3>
-            <ng-container *ngIf="tabTitle[0].description as description">
-              <p class="mat-body-1">{{ description }}</p>
-            </ng-container>
+  <landing-content>
+    <section class="landing-presentation max-width">
+      <h3 class="mat-display-1">Deals made easy</h3>
+      <p class="mat-body-1">Archipel Market is an ongoing film market platform. <br>
+        It facilitates interactions between sales agents and buyers all year round. </p>
+      <mat-tab-group animationDuration="1000ms" selectedIndex="0">
+        <mat-tab [label]="tabNames[0]">
+          <header fxLayout fxLayout.lt-lg="column" fxLayoutGap="32px">
+            <img fxHide.xs [asset]="tabTitle[0].imgAsset" alt="seller image">
+            <div>
+              <h2>{{ tabTitle[0].title }}</h2>
+              <p class="mat-body-1">{{ tabTitle[0].description }}</p>
+            </div>
+          </header>
+
+          <div class="surface" *ngFor="let feature of sellerFeatures; let i = index" [ngClass]="{ reverse: i%2 !== 0 }">
+            <div fxLayout fxLayoutAlign="center center">
+              <h3 [innerHtml]="feature.title"></h3>
+            </div>  
+            <div fxLayoutAlign="center center">
+              <img [asset]="feature.imgAsset" alt="seller feature image">
+            </div>
           </div>
-        </article>
-        <h5>Features</h5>
-        <article fxLayout="row wrap" fxLayoutAlign="space-between">
-          <mat-card *ngFor="let feature of sellerFeatures">
-            <img [asset]="feature.imgAsset" alt="seller feature image">
-            <h3>{{ feature.title }}</h3>
-            <p class="mat-body-1">{{ feature.description }}</p>
-          </mat-card>
-        </article>
-      </mat-tab>
-      <mat-tab [label]="tabNames[1]">
-        <article fxLayout="row" fxLayoutGap="24px" fxLayout.lt-lg="column" class="tab-margin">
-          <img [asset]="tabTitle[1].imgAsset" alt="buyer image">
-          <div fxLayout="column">
-            <h3>{{ tabTitle[1].title }}</h3>
-            <ng-container *ngIf="tabTitle[1].description as description">
-              <p class="mat-body-1">{{ description }}</p>
-            </ng-container>
+        </mat-tab>
+
+        <mat-tab [label]="tabNames[1]">
+           <header fxLayout fxLayoutGap="48px" fxLayout.lt-lg="column" fxLayoutGap="32px">
+            <img fxHide.xs [asset]="tabTitle[1].imgAsset" alt="buyer image">
+            <div>
+              <h2>{{ tabTitle[1].title }}</h2>
+              <p class="mat-body-1">{{ tabTitle[1].description }}</p>
+            </div>
+          </header>
+
+          <div class="surface" *ngFor="let feature of buyerFeatures; let i = index" [ngClass]="{ reverse: i%2 !== 0 }">
+            <div fxLayout fxLayoutAlign="center center">
+              <h3 [innerHtml]="feature.title"></h3>
+              <p class="mat-body-1"></p>
+            </div>  
+            <div fxLayoutAlign="center center">
+              <img [asset]="feature.imgAsset" alt="buyer feature image">
+            </div>
           </div>
-        </article>
-        <h5>Features</h5>
-        <article fxLayout="row wrap" fxLayoutAlign="space-between">
-          <mat-card *ngFor="let feature of buyerFeatures">
-            <img [asset]="feature.imgAsset" alt="buyer feature image">
-            <h3>{{ feature.title }}</h3>
-            <p class="mat-caption">{{ feature.description }}</p>
-          </mat-card>
-        </article>
-      </mat-tab>
-    </mat-tab-group>
-    <section fxLayout="column" fxLayoutAlign="start center" class="join" fxLayoutGap="40px">
-      <p class="mat-display-2">Interested? Join now!</p>
-      <a mat-flat-button color="accent" routerLink="/auth/identity">
-        <span>Sign up</span>
+        </mat-tab>
+      </mat-tab-group>
+    </section>
+    
+    <section fxLayout="column" fxLayoutAlign="start center" class="dark-contrast-theme join" fxLayoutGap="40px">
+      <p class="mat-display-2">Subscribe for free!</p>
+      <p>We take 10% commission when there is a deal</p>
+      <a mat-flat-button color="primary" routerLink="/auth/identity">
+        <span>Schedule demo</span>
         <mat-icon svgIcon="arrow_forward"></mat-icon>
       </a>
+    </section>
+
+    <section class="expertise max-width">
+      <h3 class="mat-display-1">Our expertise</h3>
+      <img [asset]="'content_our_expertise.svg'" alt="expertise img">
+      <article>
+        <p class="mat-body-1"><a href="https://cascade8.com/" target="_blank" rel="noreferrer noopener">Cascade8</a> is the tech branch of Logical Pictures Group, which designs and implements tailor-made financial, artistic and technological solutions in entertainment to foster talent.</p>
+        <p class="mat-body-1">It has made its mark internationally in the content industry by developing a unique creative environment, thanks to specialized and autonomous sister companies: </p>
+        <p class="mat-body-1">Logical Pictures (films & series financing and production), 21 Content Ventures (films & series financing), Pulsar Content (international sales), The Jokers (distribution), Loveboat (advertising) and Cascade8 (software tools). </p>
+      </article>
+    </section>
+
+    <section class="landing-detail">
+      <article class="max-width">
+        <h3 class="mat-display-1">They're talking about us</h3>
+        <div fxLayout fxLayoutAlign="space-between center" fxLayout.lt-md="column wrap" fxLayoutAlign.lt-md="start center" fxLayoutGap="24px">
+          <ng-container *ngFor="let review of reviews">
+            <a [href]="review.link" target="_blank" fxLayout fxFlexAlign="stretch">
+              <mat-card fxLayout="column center" fxFlexAlign="stretch">
+                <img mat-card-image [asset]="review.img" alt="review image">
+                <div fxLayout="column" fxLayoutAlign="space-between" fxLayoutGap="24px" fxFlex>
+                  <mat-card-title>{{review.title}}</mat-card-title>
+                  <mat-card-content>{{review.text}}</mat-card-content>
+                  <div fxLayout fxLayoutAlign="center center" fxFlexAlign="end" fxLayoutGap="16px">
+                    <span class="mat-caption">From</span>
+                    <img [asset]="review.logo">
+                  </div>
+                </div>
+              </mat-card>
+            </a>
+          </ng-container>
+        </div>
+      </article>
     </section>
   </landing-content>
 </landing-shell-page>
