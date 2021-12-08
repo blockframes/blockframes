@@ -54,7 +54,7 @@ export class OfferShellComponent {
       joinWith({
         title: contract => this.titleService.valueChanges(contract.titleId),
         income: contract => this.incomeService.valueChanges(contract.id),
-        negotiation: contract => ['negotiating', 'pending'].includes(contract.status) ? this.contractService.lastNegotiation(contract.id) : null,
+        negotiation: contract => ['negotiating', 'pending'].includes(contract.status) ? this.contractService.lastNegotiation(contract.id) : null
       })
     );
   }
