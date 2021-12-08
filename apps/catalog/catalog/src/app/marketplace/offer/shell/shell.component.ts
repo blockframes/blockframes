@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
 import { CollectionReference } from '@angular/fire/firestore';
 import { ActivatedRoute } from '@angular/router';
-import { ContractService } from '@blockframes/contract/contract/+state';
+import { ContractService, Sale } from '@blockframes/contract/contract/+state';
 import { IncomeService } from '@blockframes/contract/income/+state';
 import { OfferService } from '@blockframes/contract/offer/+state';
 import { MovieService } from '@blockframes/movie/+state';
@@ -22,7 +22,8 @@ export class OfferShellComponent {
   offer$ = this.offerId$.pipe(
     switchMap((id: string) => this.offerService.valueChanges(id)),
     joinWith({
-      contracts: offer => this.getContracts(offer.id),
+      contracts: (offer) => this.getContracts(offer.id),
+      declinedContracts: (offer) => this.declinedContracts(offer.id),
     }),
     shareReplay({ bufferSize: 1, refCount: true }),
   );
@@ -36,13 +37,24 @@ export class OfferShellComponent {
     @Optional() private intercom?: Intercom
   ) { }
 
+  private declinedContracts(offerId: string) {
+    const declinedContracts = (ref: CollectionReference) => ref.where('offerId', '==', offerId).where('status', '==', 'declined')
+    return this.contractService.valueChanges(declinedContracts).pipe(
+      joinWith({
+        title: contract => this.titleService.valueChanges(contract.titleId),
+        income: contract => this.incomeService.valueChanges(contract.id),
+      })
+    );
+  }
+
   private getContracts(offerId: string) {
     const queryContracts = (ref: CollectionReference) => ref.where('offerId', '==', offerId).where('status', '!=', 'declined')
+
     return this.contractService.valueChanges(queryContracts).pipe(
       joinWith({
         title: contract => this.titleService.valueChanges(contract.titleId),
         income: contract => this.incomeService.valueChanges(contract.id),
-        negotiation: contract => ['pending', 'negotiating'].includes(contract.status) ? this.contractService.lastNegotiation(contract.id) : null,
+        negotiation: contract => ['negotiating', 'pending'].includes(contract.status) ? this.contractService.lastNegotiation(contract.id) : null
       })
     );
   }
