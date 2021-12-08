@@ -1,11 +1,10 @@
 
 import { Movie } from '@blockframes/movie/+state';
-import { Media, territoriesISOA3, Territory, TerritoryISOA3 } from '@blockframes/utils/static-model';
+import { Media, Territory } from '@blockframes/utils/static-model';
 
-import { BucketContract, BucketService } from '../bucket/+state';
-import { BucketTerm, Term, TermService } from '../term/+state';
-import { ContractService, Mandate, Sale } from '../contract/+state';
-
+import { BucketTerm, Term } from '../term/+state';
+import { Mandate, Sale } from '../contract/+state';
+import { Bucket, BucketContract } from '../bucket/+state';
 
 interface AvailsFilter {
   medias: Media[],
@@ -14,12 +13,21 @@ interface AvailsFilter {
   exclusive: boolean
 }
 
-interface BucketContractWithId extends BucketContract {
-  id: string;
+interface FullMandate extends Mandate {
+  terms: Term[];
+}
+
+interface FullSale extends Sale {
+  terms: Term[];
 }
 
 interface BucketTermWithContractId extends BucketTerm {
   contractId: string;
+}
+
+interface BucketContractWithId extends BucketContract {
+  id: string;
+  terms: BucketTermWithContractId[]
 }
 
 function tinyId() {
@@ -27,86 +35,77 @@ function tinyId() {
 }
 
 
-// * SHOULD BE OK FOR DASHBOARD & MARKETPLACE TITLE LIST
-async function availableTitles(avails: AvailsFilter, titles: Movie[], contractService: ContractService, termService: TermService, bucketService?: BucketService): Promise<Movie[]> {
+function availableTitles(
+  avails: AvailsFilter,
+  titles: Movie[],
+  mandates: FullMandate[],
+  sales: FullSale[],
+  bucket?: Bucket,
+): Movie[] {
+  return titles.filter(title => {
+    const titleSales = sales.filter(s => s.titleId === title.id);
+    const titleMandates = mandates.filter(m => m.titleId === title.id);
 
-  const titleIds = titles.map(t => t.id);
+    return availableTitle(avails, titleMandates, titleSales, bucket);
+  });
+}
 
 
-  // --------------------------
-  // LEVEL ONE, KEEP TITLE BASED ON THEIR MANDATES
+function availableTitle(
+  avails: AvailsFilter,
+  mandates: FullMandate[],
+  sales: FullSale[],
+  bucket?: Bucket,
+): boolean {
 
-  const mandates = await Promise.all(titleIds.map(id =>
-    contractService.getValue(ref => ref.where('titleId', '==', id)
-      .where('type', '==', 'mandate')
-      .where('status', '==', 'accepted')
-    ) as Promise<Mandate[]>
-  )).then(m => m.flat());
-  const mandateTerms = await Promise.all(mandates.map(m =>
-    termService.getValue(ref => ref.where('contractId', '==', m.id))
-  )).then(t => t.flat());
+  if (!mandates.length) return false;
+
+  // check that the mandates & sales are about one single title,
+  // i.e. they must all have the same `titleId`
+  const titleId = mandates[0].titleId;
+  const invalidMandate = mandates.some(m => m.titleId !== titleId);
+  const invalidSale = sales.some(s => s.titleId !== titleId);
+
+  if (invalidMandate || invalidSale) throw new Error('Mandates & Sales must all have the same title id!');
+
 
   // get only the mandates that meets the avails filter criteria,
   // e.g. if we ask for "France" but the title is mandated in "Germany", we don't care
-  // TODO implement core logic
-  const availableMandateTerms = available(mandateTerms).basedOn(avails) as Term[];
-  const availableMandates = mandates.filter(m => availableMandateTerms.map(t => t.contractId).includes(m.id));
+  const availableMandates = getMatchingMandates(mandates, avails) as FullMandate[]; // TODO implement core logic
 
-  // keep only the titles from the available mandates
-  const titleIds_levelOne = availableMandates.map(m => m.titleId);
+  // if there is no mandates left, the title is not available
+  if (!availableMandates.length) return false;
 
-  if (!titleIds_levelOne.length) return [];
-
-
-  // --------------------------
-  // LEVEL TWO, EXCLUDE LEVEL ONE TITLES BASED ON THEIR SALES
-
-  const sales =  await Promise.all(titleIds_levelOne.map(id =>
-    contractService.getValue(ref => ref.where('type', '==', 'sale')
-      .where('titleId', '==', id)
-      .where('status', '==', 'accepted')
-    ) as Promise<Sale[]>
-  )).then(s => s.flat());
-  const saleTerms = await Promise.all(sales.map(s =>
-    termService.getValue(ref => ref.where('contractId', '==', s.id))
-  )).then(t => t.flat());
+  // else we should now check the sales
 
   // get only the sales that meets the avails filter criteria
   // e.g. if we ask for "France" but the title has been sold in "Germany", we don't care
-  // TODO implement core logic
-  const saleTermsToExclude = alreadySold(saleTerms).basedOn(avails) as Term[];
-  const salesToExclude = sales.filter(s => saleTermsToExclude.map(t => t.contractId).includes(s.id));
+  const salesToExclude = getMatchingSales(sales, avails) as FullSale[]; // TODO implement core logic
 
-  // remove the titles which are already sold
-  const titleIds_levelTwo = titleIds_levelOne.filter(id => !salesToExclude.map(s => s.titleId).includes(id));
+  // if there is at least one sale that match the avails, the title is not available
+  if (salesToExclude.length) return false;
 
-  if (!titleIds_levelTwo.length) return [];
+  // else we should check the bucket (if we have one)
 
+  // for now the title is available and we have no bucket to check
+  if (!bucket) return true;
 
-  // --------------------------
-  // LEVEL THREE, EXCLUDE LEVEL TWO TITLES BASED ON THE BUCKET
-  // i.e. we don't want a user to put the same title twice in his shopping cart
+  // we retrieve the sales from the bucket,
+  // but we also format everything, adding a fake tiny id so that we can easily find back what we need
+  // i.e. `term -(contractId)-> sale -(titleId)-> title`
+  const bucketSales = bucket.contracts.map(s => {
+    const id = tinyId();
+    const terms: BucketTermWithContractId[] = s.terms.map(t => ({ ...t, contractId: id}));
 
-  // on the dashboard side of the app there is no bucket, so we can stop here
-  if (!bucketService) return titles.filter(t => titleIds_levelTwo.includes(t.id));
-
-  const userBucket = await bucketService.getActive();
-
-  const bucketSales = userBucket.contracts.map(s => ({ ...s, id: tinyId() })) as BucketContractWithId[];
-  const bucketSaleTerms = bucketSales.map(s => s.terms.map(t => ({ ...t, contractId: s.id }))).flat() as BucketTermWithContractId[];
+    return { ...s, id, terms } as BucketContractWithId;
+  });
 
   // get only the sales that meets the avails filter criteria
   // e.g. if we ask for "France" but the title has been sold in "Germany", we don't care
-  // TODO implement core logic
-  const bucketSaleTermsToExclude = alreadySold(bucketSaleTerms).basedOn(avails) as BucketTermWithContractId[];
-  const bucketSalesToExclude = bucketSales.filter(s => bucketSaleTermsToExclude.map(t => t.contractId).includes(s.id));
+  const bucketSalesToExclude = getMatchingSales(bucketSales, avails) as BucketContractWithId[]; // TODO implement core logic
 
-  // remove the titles which are already sold
-  const titleIds_levelThree = titleIds_levelTwo.filter(id => !bucketSalesToExclude.map(s => s.titleId).includes(id));
+  // if there is at least one sale that match the avails, the title is not available
+  if (salesToExclude.length) return false;
 
-
-  // --------------------------
-
-  return titles.filter(t => titleIds_levelThree.includes(t.id));
+  return true;
 }
-
