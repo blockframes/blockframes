@@ -1,7 +1,9 @@
-﻿import { TestBed } from '@angular/core/testing';
+﻿import { Injectable } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
 import { InvitationService } from './invitation.service';
 import { InvitationStore } from './invitation.store';
 import { Invitation } from './invitation.model';
+import { AuthQuery } from '@blockframes/auth/+state';
 import { AngularFireModule } from '@angular/fire';
 import { toDate } from '@blockframes/utils/helpers';
 import { SETTINGS, AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestore';
@@ -11,6 +13,20 @@ import { createInvitation, InvitationDocument } from './invitation.firestore';
 import firebase  from 'firebase/app';
 type Timestamp = firebase.firestore.Timestamp;
 
+@Injectable()
+class InjectedAuthQuery {
+  userId: string;
+  orgId: string;
+
+  constructor() {
+    this.userId = 'userId';
+    this.orgId = 'orgId'; 
+  }
+
+  select() {
+    return {pipe: () => { }}
+  }
+}
 
 describe('Invitations Test Suite', () => {
   let service: InvitationService;
@@ -25,6 +41,7 @@ describe('Invitations Test Suite', () => {
       providers: [
         InvitationService,
         InvitationStore,
+        { provide: AuthQuery, useClass: InjectedAuthQuery },
         { provide: SETTINGS, useValue: { host: 'localhost:8080', ssl: false } }
       ],
     });
@@ -47,18 +64,15 @@ describe('Invitations Test Suite', () => {
   })
 
   //TODO: 
-  // test formatFromFirestore returns correct format
   // test formatToFirestore returns correct format
   // Create an invitation and check .
   
-  it.only('Formats invitation from firestore', () => {
+  it('Formats invitation from firestore', () => {
     const is = TestBed.inject(InvitationService);
     const today = new Date();
     const timestamp = firebase.firestore.Timestamp.fromDate(today);
-    //is.formatFromFirestore = jest.fn();
-    //is.formatFromFirestore({} as InvitationDocument);
-    //expect(is.formatFromFirestore).toHaveBeenCalled();
     const formattedDate = toDate(timestamp);
+
     //Create an Invitation Document
     const newInvite:Invitation = createInvitation();
     const invite:InvitationDocument = {...newInvite, ...{date: timestamp}}
@@ -100,5 +114,52 @@ describe('Invitations Test Suite', () => {
     expect((doc.data() as InvitationDocument).status).toBe('declined');
   });
 
-  // TODO: issue#3415 implements tests for others functions
+  describe.only('Check Invitation', () => {
+    const today = new Date();
+    const invitationParamsOrg = {
+      date: today, 
+      toOrg: {
+        id: 'orgId',
+        denomination: {full: 'MyOrg'},
+        logo: null
+      },
+    };
+    const invitationParamsUser = {
+      date: today, 
+      toUser: {
+        uid: 'userId',
+        email: 'userId@myorg.org'
+      }
+    };
+
+    it('is for my org', async () => {
+      const is = TestBed.inject(InvitationService);
+
+      //Create an Invitation Document
+      const newInvite:Invitation = createInvitation(invitationParamsOrg);
+      const isMyInvite = is.isInvitationForMe(newInvite);
+      expect(isMyInvite).toBeTruthy();
+    })
+
+    it('is for my userId', async () => {
+      const is = TestBed.inject(InvitationService);
+
+      //Create an Invitation Document
+      const newInvite:Invitation = createInvitation(invitationParamsUser);
+      const isMyInvite = is.isInvitationForMe(newInvite);
+      expect(isMyInvite).toBeTruthy();
+    })
+
+    it('is neither for my Org or userId', async () => {
+      const is = TestBed.inject(InvitationService);
+
+      //Create an Invitation Document
+      invitationParamsOrg.toOrg.id = 'otherOrgId';
+      invitationParamsUser.toUser.uid = 'otherUserId';
+      const invitationParams = {...invitationParamsOrg, ...invitationParamsUser};
+      const newInvite:Invitation = createInvitation(invitationParams);
+      const isMyInvite = is.isInvitationForMe(newInvite);
+      expect(isMyInvite).toBeFalsy();
+    })
+  })
 });
