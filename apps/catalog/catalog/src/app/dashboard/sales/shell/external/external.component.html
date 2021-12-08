@@ -1,0 +1,27 @@
+<ng-container *ngIf="sale$ | async as sale; else loading">
+
+  <header>
+    <mat-form-field appearance="fill">
+      <mat-label>Contract status</mat-label>
+      <mat-select [value]="sale.status" (selectionChange)="changeStatus($event, sale.id)">
+        <mat-option *ngFor="let status of contractStatus" [value]="status">
+          {{ status | uppercase }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </header>
+
+  <contract-item [contract]="sale">
+    <h2 *ngIf="sale.income?.price">
+      {{ sale.income?.price | currency: sale.income?.currency }}
+    </h2>
+    <footer>
+      <holdback-list [holdbacks]="sale.holdbacks"></holdback-list>
+    </footer>
+  </contract-item>
+
+</ng-container>
+
+<ng-template #loading>
+  <mat-spinner></mat-spinner>
+</ng-template>

@@ -23,6 +23,10 @@ const routes: Route[] = [
     children: [
       { path: '', redirectTo: 'view', },
       {
+        path: 'external',
+        loadChildren: () => import('./external/external.module').then(m => m.ExternalSaleModule)
+      },
+      {
         path: 'view',
         loadChildren: () => import('./view/view.module').then(m => m.CatalogSaleViewModule)
       },
