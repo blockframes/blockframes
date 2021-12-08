@@ -190,9 +190,9 @@ function isMatchingValue(documentIdToFind: string, document: FirebaseFirestore.Q
     let val = getValue(document.data(), field);
     if (!Array.isArray(val)) val = [val];
     return val.some(entry => {
-      const idToFind = isString(entry) ? entry : getValue(entry, fieldSuffix);
-      if (!idToFind) console.log('UnHandled error..');
-      return idToFind === documentIdToFind;
+      const subVal = isString(entry) ? entry : getValue(entry, fieldSuffix);
+      if (!subVal) console.log('UnHandled error..');
+      return subVal === documentIdToFind;
     });
   }
 
@@ -213,6 +213,7 @@ export function auditConsistency(dbData: DatabaseData, collections: CollectionDa
     for (const document of collection.refs.docs) {
       if (dataMap[auditedCollectionName][collection.name]) {
         for (const _field of dataMap[auditedCollectionName][collection.name]) {
+          // @TODO try to factorize with isMatchingValue
           const field = _field.split('[].')[0];
           const fieldSuffix = _field.split('[].')[1];
           if (field === '') {
@@ -227,27 +228,21 @@ export function auditConsistency(dbData: DatabaseData, collections: CollectionDa
               }
             }
           } else {
-            const val = getValue(document.data(), field);
+            let val = getValue(document.data(), field);
             if (!val || ['internal', 'anonymous'].includes(val)) continue;
-
-            if (Array.isArray(val)) {
-              if (!val.length) continue;
-              for (const entry of val) {
-                const idToFind = isString(entry) ? entry : getValue(entry, fieldSuffix);
-
-                if (!idToFind) {
-                  console.log('UnHandled error..');
-                  continue;
-                }
-
-                if (!auditedCollectionIds.find(id => id === idToFind)) {
-                  consistencyErrors.push({ auditedCollection: auditedCollectionName, missingDocId: idToFind, in: { collection: collection.name, docId: document.id, field: _field } });
-                }
+            if (!Array.isArray(val)) val = [val];
+            if (!val.length) continue;
+            for (const entry of val) {
+              const idToFind = isString(entry) ? entry : getValue(entry, fieldSuffix);
+              if (!idToFind) {
+                console.log('UnHandled error..');
+                continue;
               }
-            } else if (!auditedCollectionIds.find(id => id === val)) {
-              consistencyErrors.push({ auditedCollection: auditedCollectionName, missingDocId: val, in: { collection: collection.name, docId: document.id, field } });
-            }
 
+              if (!auditedCollectionIds.find(id => id === idToFind)) {
+                consistencyErrors.push({ auditedCollection: auditedCollectionName, missingDocId: idToFind, in: { collection: collection.name, docId: document.id, field: _field } });
+              }
+            }
           }
         }
       }
