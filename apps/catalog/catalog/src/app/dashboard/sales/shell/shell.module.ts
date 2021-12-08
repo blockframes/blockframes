@@ -16,6 +16,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { SaleShellComponent } from './shell.component';
+import { CatalogSaleGuard } from './shell.guard';
 
 const routes: Route[] = [
   {
@@ -28,6 +29,7 @@ const routes: Route[] = [
       },
       {
         path: 'view',
+        canActivate: [CatalogSaleGuard],
         loadChildren: () => import('./view/view.module').then(m => m.CatalogSaleViewModule)
       },
       {

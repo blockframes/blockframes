@@ -1,27 +1,21 @@
-header {
-  margin-bottom: 16px;
-  padding: 0 24px;
+:host {
+  display: block;
 }
 
-span,
-.surface {
-  margin-bottom: 16px;
+header, section, contract-item {
+  margin: 16px 24px;
 }
 
-section.surface {
-  margin-left: 24px;
-  margin-right: 24px;
+article {
+  margin-bottom: 16px;
 }
 
 mat-spinner {
   margin: 16px auto;
 }
 
-contract-item {
-  margin: 24px;
-  holdback-list {
-    margin-top: 16px;
-  }
+holdback-list {
+  margin-top: 16px;
 }
 
 p.mat-caption {
