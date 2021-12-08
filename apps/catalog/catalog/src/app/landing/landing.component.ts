@@ -15,7 +15,7 @@ export class CatalogLandingComponent {
     {
       title: 'For sellers',
       imgAsset: 'video_placeholder_seller.png',
-      description: 'Monetize your full catalog at its maximum potential.',
+      description: 'Monetize your full catalog at its maximum potential effortlessly, thanks to an innovative way of making deals',
     },
     {
       title: 'For Buyers ',
@@ -26,35 +26,47 @@ export class CatalogLandingComponent {
 
   public sellerFeatures = [
     {
-      title: 'Reach a community <br> of over 1500 buyers,<br> free of charge.',
+      title: 'Over 1500 international buyers',
+      description: "Expand your catalog's potential by reaching out to a large community of buyers, free of charge.",
       imgAsset: 'content_sellers_list.svg'
     },
     {
-      title: 'Benefit from the<br> experience of a dedicated<br> sales & marketing team.',
+      title: 'Tailor-made offers',
+      description: 'Benefit from the experience of a dedicated sales & marketing team, who tailor-makes offers to buyers.',
       imgAsset: 'content_pitching_movie.svg'
     },
     {
-      title: 'Get extra opportunities<br> thanks to simplified<br> contracting.',
+      title: 'Simplified contracting',
+      description: 'Negociate your deals and get extra opportunities thanks fast and simplified contracting.',
       imgAsset: 'content_manage_offers.svg'
     },
     {
-      title: 'Monitor your activity thanks<br> to simplified imports,&lrm;<br> tracking and deal monitoring<br> systems.',
+      title: 'User-friendly interface',
+      description: 'Monitor your avails and activity easily thanks to simplified imports and exports and deal monitoring systems.',
       imgAsset: 'content_title_stats.svg'
     }
   ];
 
   public buyerFeatures = [
     {
-      title: 'License from multiple rights<br> owners with only one single<br> contract.',
+      title: 'Multi-Seller Deals',
+      description: 'License from multiple rights owners through one single negotiation and contract.',
       imgAsset: 'content_multi_sellers.svg'
     },
     {
-      title: 'Search for avails easily<br> on a user-friendly interface.',
+      title: 'Simplified avails search',
+      description: 'Put away your endless avails sheets and browse content easily by filtering through avails, genres, languages, keywords... on a user-friendly interface.',
       imgAsset: 'content_movie_genres.svg'
     },
     {
-      title: 'Access all formats and genres<br> (feature films, drama series,<br> documentaries, kids content…).',
+      title: 'Curated content just for you',
+      description: 'Only receive relevant and carefully curated content, hand-picked by our professional sales & marketing team.',
       imgAsset: 'content_search_movie.png'
+    },
+    {
+      title: 'All format and genres',
+      description: 'Access content from feature films, drama series, documentaries, kids content, and many more!',
+      imgAsset: 'content_buyer_avails.svg'
     }
   ]
 
