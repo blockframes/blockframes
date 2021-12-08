@@ -102,7 +102,7 @@ const orgMap: Partial<Record<Collections, string[]>> = {
   ],
   buckets: [
     '', // document id
-    'contracts'
+    'contracts[].orgId'
   ],
   campaigns: [
     'orgId'
@@ -112,6 +112,8 @@ const orgMap: Partial<Record<Collections, string[]>> = {
   ],
   permissions: [''] // document id
 }
+
+// @TODO #6460 title map ?
 
 const dataMap = { users: userMap, orgs: orgMap };
 
@@ -155,8 +157,8 @@ export function inspectDocumentRelations(
 
   const inspectionResult: DocumentDescriptor[] = [];
   for (const collection of collections) {
-    for (const document of collection.refs.docs) {
-      if (dataMap[mapName][collection.name]) { // @TODO #6460 invert with previous line
+    if (dataMap[mapName][collection.name]) {
+      for (const document of collection.refs.docs) {
         for (const attr of dataMap[mapName][collection.name]) {
           if (isMatchingValue(inspectedDocument.id, document, attr)) {
             const docId = document.id;
@@ -174,23 +176,24 @@ export function inspectDocumentRelations(
   return inspectionResult;
 }
 
-function isMatchingValue(stringToFind: string, document: FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>, attr: string) {
-  if (!stringToFind) return;
+function isMatchingValue(documentIdToFind: string, document: FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>, _field: string) {
+  const field = _field.split('[].')[0];
+  const fieldSuffix = _field.split('[].')[1];
+  if (!documentIdToFind) return;
 
-  if (attr === '') {
-    return stringToFind === document.id;
-  }
+  if (field === '') return documentIdToFind === document.id;
 
-  if (attr.endsWith('{}')) {
-    const val = getValue(document.data(), attr.replace('{}', ''));
-    return !!val[stringToFind];
+  if (field.endsWith('{}')) {
+    const val = getValue(document.data(), field.replace('{}', ''));
+    return !!val[documentIdToFind];
   } else {
-    const val = getValue(document.data(), attr);
-    if (Array.isArray(val)) {
-      return val.some(v => isString(v) ? v === stringToFind : JSON.stringify(v).indexOf(stringToFind));  // for object or string arrays
-    } else {
-      return val === stringToFind;
-    }
+    let val = getValue(document.data(), field);
+    if (!Array.isArray(val)) val = [val];
+    return val.some(entry => {
+      const idToFind = isString(entry) ? entry : getValue(entry, fieldSuffix);
+      if (!idToFind) console.log('UnHandled error..');
+      return idToFind === documentIdToFind;
+    });
   }
 
 }
@@ -201,54 +204,50 @@ function isMatchingValue(stringToFind: string, document: FirebaseFirestore.Query
 
 export function auditConsistency(dbData: DatabaseData, collections: CollectionData[], auditedCollectionName: 'users' | 'orgs') {
   const auditedCollection = dbData[auditedCollectionName];
+  const auditedCollectionIds = auditedCollection.refs.docs.map(d => d.id);
   const collectionsToAudit = collections.filter(c => c.name !== auditedCollection.name);
 
   const consistencyErrors: { auditedCollection: Collections, missingDocId: string, in: { collection: Collections, docId: string, field: string } }[] = [];
   for (const collection of collectionsToAudit) {
-    // For this collection, let check if references of auditedCollection ids all belongs to an existing document of auditedCollection$
+    // For this collection, let check if references of auditedCollection ids all belongs to an existing document of auditedCollection
     for (const document of collection.refs.docs) {
       if (dataMap[auditedCollectionName][collection.name]) {
-        for (const field of dataMap[auditedCollectionName][collection.name]) {
+        for (const _field of dataMap[auditedCollectionName][collection.name]) {
+          const field = _field.split('[].')[0];
+          const fieldSuffix = _field.split('[].')[1];
           if (field === '') {
-            if (!auditedCollection.refs.docs.find(d => d.id === document.id)) {
+            if (!auditedCollectionIds.find(id => id === document.id)) {
               consistencyErrors.push({ auditedCollection: auditedCollectionName, missingDocId: document.id, in: { collection: collection.name, docId: document.id, field } });
             }
           } else if (field.endsWith('{}')) {
             const val = getValue(document.data(), field.replace('{}', ''));
             for (const entry of Object.keys(val)) {
-              if (!auditedCollection.refs.docs.find(d => d.id === entry)) {
+              if (!auditedCollectionIds.find(id => id === entry)) {
                 consistencyErrors.push({ auditedCollection: auditedCollectionName, missingDocId: entry, in: { collection: collection.name, docId: document.id, field } });
               }
             }
           } else {
             const val = getValue(document.data(), field);
-            if (!val && !['_meta.deletedBy', '_meta.createdBy', '_meta.updatedBy', 'user.uid', 'fromUser.uid', 'toUser.uid', 'meta.organizerUid', 'buyerUserId', 'uid',
-              'organization.id', 'fromOrg.id', 'toOrg.id'].includes(field)) { // @TODO #6460 do the same for orgs audit and remove
-              console.log(field, collection.name, document.id)
-            }
-            if (val && !['internal', 'anonymous'].includes(val)) {
-              if (Array.isArray(val)) {
-                if (!val.length) { // @TODO #6460 do the same for orgs audit and remove
-                  if (!['canRead', 'canUpdate', 'canCreate', 'canDelete'].includes(field)) {
-                    console.log(field, collection.name, document.id)
-                  }
+            if (!val || ['internal', 'anonymous'].includes(val)) continue;
 
-                } else if (val.length) {
-                  for (const entry of val) {
-                    if (isString(entry)) {
-                      if (!auditedCollection.refs.docs.find(d => d.id === entry)) {
-                        consistencyErrors.push({ auditedCollection: auditedCollectionName, missingDocId: entry, in: { collection: collection.name, docId: document.id, field } });
-                      }
-                    } else {
-                      console.log(val)
-                      //return val.some(v => isString(v) ? v === stringToFind : JSON.stringify(v).indexOf(stringToFind));  // for object or string arrays
-                    }
-                  }
+            if (Array.isArray(val)) {
+              if (!val.length) continue;
+              for (const entry of val) {
+                const idToFind = isString(entry) ? entry : getValue(entry, fieldSuffix);
+
+                if (!idToFind) {
+                  console.log('UnHandled error..');
+                  continue;
                 }
-              } else if (!auditedCollection.refs.docs.find(d => d.id === val)) {
-                consistencyErrors.push({ auditedCollection: auditedCollectionName, missingDocId: val, in: { collection: collection.name, docId: document.id, field } });
+
+                if (!auditedCollectionIds.find(id => id === idToFind)) {
+                  consistencyErrors.push({ auditedCollection: auditedCollectionName, missingDocId: idToFind, in: { collection: collection.name, docId: document.id, field: _field } });
+                }
               }
+            } else if (!auditedCollectionIds.find(id => id === val)) {
+              consistencyErrors.push({ auditedCollection: auditedCollectionName, missingDocId: val, in: { collection: collection.name, docId: document.id, field } });
             }
+
           }
         }
       }
