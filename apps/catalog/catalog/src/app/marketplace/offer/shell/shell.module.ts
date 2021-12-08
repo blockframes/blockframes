@@ -26,13 +26,20 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     RouterModule.forChild([{
       path: '',
       component: OfferShellComponent,
-      children: [{
-        path: '',
-        loadChildren: () => import('./contract-list/contract-list.module').then(m => m.ContractListModule)
-      }, {
-        path: ':contractId',
-        loadChildren: () => import('./contract-view/contract-view.module').then(m => m.ContractViewModule)
-      }]
+      children: [
+        {
+          path: '',
+          loadChildren: () => import('./contract-list/contract-list.module').then(m => m.ContractListModule)
+        },
+        {
+          path: ':contractId',
+          loadChildren: () => import('./contract-view/contract-view.module').then(m => m.ContractViewModule)
+        },
+        {
+          path: ':saleId/negotiate',
+          loadChildren: () => import('./contract-edit/contract-edit.module').then(m => m.ContractEditModule)
+        },
+      ]
     }])
   ]
 })

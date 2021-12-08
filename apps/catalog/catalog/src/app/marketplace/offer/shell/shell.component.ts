@@ -23,9 +23,9 @@ export class OfferShellComponent {
     switchMap((id: string) => this.offerService.valueChanges(id)),
     joinWith({
       contracts: (offer) => this.getContracts(offer.id),
-      declinedContracts: (offer) => this.declinedContracts(offer.id),
+      declinedContracts: (offer) => this.declinedContracts(offer.id)
     }),
-    shareReplay({ bufferSize: 1, refCount: true }),
+    shareReplay({ bufferSize: 1, refCount: true })
   );
 
   constructor(
@@ -48,12 +48,10 @@ export class OfferShellComponent {
   }
 
   private getContracts(offerId: string) {
-    const queryContracts = (ref: CollectionReference) => ref.where('offerId', '==', offerId).where('status', '!=', 'declined')
-
+    const queryContracts = (ref: CollectionReference) => ref.where('offerId', '==', offerId).where('status', '!=', 'declined');
     return this.contractService.valueChanges(queryContracts).pipe(
       joinWith({
         title: contract => this.titleService.valueChanges(contract.titleId),
-        income: contract => this.incomeService.valueChanges(contract.id),
         negotiation: contract => ['negotiating', 'pending'].includes(contract.status) ? this.contractService.lastNegotiation(contract.id) : null
       })
     );

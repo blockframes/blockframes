@@ -47,15 +47,16 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
 
   async decline() {
     this.form.markAsPristine() // usefull to be able to route in the NegotiationGuard
-    const sale = await this.sale$.pipe(first()).toPromise()
-    const ref = this.dialog.open(ConfirmDeclineComponent)
-    const options = { params: { contractId: sale.id } }
+    const sale = await this.sale$.pipe(first()).toPromise();
+    const ref = this.dialog.open(ConfirmDeclineComponent);
+    const options = { params: { contractId: sale.id } };
     ref.afterClosed().subscribe(declineReason => {
       if (typeof declineReason === 'string') {
+        const { id } = sale.negotiation;
         this.negotiationService.update(
-          sale.negotiation.id, { declineReason, status: 'declined' }, options
-        )
-        this.router.navigate(['..', 'view'], { relativeTo: this.route })
+          id, { declineReason, status: 'declined' }, options
+        );
+        this.router.navigate(['..', 'view'], { relativeTo: this.route });
       }
     })
   }
@@ -78,7 +79,7 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
         data: {
           onConfirm,
           title: 'Are you sure to submit this contract?',
-          question: 'Please verify if all the contract elements are convenient for you.Please verify if all the contract elements are convenient for you.',
+          question: 'Please verify if all the contract elements are convenient for you.',
           confirm: 'Yes, submit',
           cancel: 'Come back & verify contract'
         }

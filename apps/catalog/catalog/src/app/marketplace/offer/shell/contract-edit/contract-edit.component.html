@@ -1,0 +1,12 @@
+<form [formGroup]="form" (ngSubmit)="confirm()">
+  <negotiation-form [form]="form"></negotiation-form>
+  <footer fxLayout fxLayoutAlign="space-between center">
+    <button mat-stroked-button color="primary" type="button" (click)="decline()">
+      <mat-icon svgIcon="refuse"></mat-icon>
+      <span>Decline</span>
+    </button>
+    <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid">
+      <span>Submit</span>
+    </button>
+  </footer>
+</form>

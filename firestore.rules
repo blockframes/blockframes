@@ -368,7 +368,7 @@ service cloud.firestore {
         || userOrgId() == incomingData().sellerId)
         && notInMaintenance();
       allow update: if (userOrgId() in existingData().stakeholders)
-                    && isOnlyChangingContractStatus()
+                    && onlyChange(['status', 'declineReason'])
                     && notInMaintenance();
       allow delete: if false;
 
@@ -442,10 +442,6 @@ service cloud.firestore {
 		}
 
     /// FUNCTIONS ///
-    function isOnlyChangingContractStatus() {
-      return (request.resource.data.diff(resource.data).affectedKeys()
-        .hasOnly(['status', 'declineReason']));
-    }
 
     function isOnlyChangingAttendeeStatus() {
       return isNotUpdatingId('id', existingData().id)
