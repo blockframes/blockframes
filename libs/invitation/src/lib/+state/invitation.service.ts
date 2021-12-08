@@ -4,7 +4,7 @@ import { CollectionConfig, CollectionService, AtomicWrite } from 'akita-ng-fire'
 import { OrganizationQuery, createPublicOrganization, Organization } from '@blockframes/organization/+state';
 import { AuthQuery, AuthState, User } from '@blockframes/auth/+state';
 import { createPublicUser, PublicUser } from '@blockframes/user/+state';
-import { toDate } from '@blockframes/utils/helpers';
+import { getAppLocation, toDate } from '@blockframes/utils/helpers';
 import { InvitationState, InvitationStore } from './invitation.store';
 import { Invitation, createInvitation } from './invitation.model';
 import { InvitationDocument } from './invitation.firestore';
@@ -137,5 +137,6 @@ export class InvitationService extends CollectionService<InvitationState> {
       }
     }
   }
+
 
 }

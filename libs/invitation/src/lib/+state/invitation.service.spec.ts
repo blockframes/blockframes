@@ -1,17 +1,20 @@
 ﻿import { Injectable } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { InvitationService } from './invitation.service';
+import * as IS from './invitation.service';
 import { InvitationStore } from './invitation.store';
 import { Invitation } from './invitation.model';
-import { AuthQuery } from '@blockframes/auth/+state';
+import { AuthQuery, User } from '@blockframes/auth/+state';
 import { AngularFireModule } from '@angular/fire';
 import { toDate } from '@blockframes/utils/helpers';
 import { SETTINGS, AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestore';
 import { loadFirestoreRules, clearFirestoreData } from '@firebase/testing';
 import { readFileSync } from 'fs';
 import { createInvitation, InvitationDocument } from './invitation.firestore';
+import * as TestApp from '@blockframes/utils/apps';
 import firebase  from 'firebase/app';
 type Timestamp = firebase.firestore.Timestamp;
+
 
 @Injectable()
 class InjectedAuthQuery {
@@ -114,7 +117,42 @@ describe('Invitations Test Suite', () => {
     expect((doc.data() as InvitationDocument).status).toBe('declined');
   });
 
-  describe.only('Check Invitation', () => {
+  //TODO: Optimize the test further..
+  
+  it.only('Should create invitation request', async () => {
+    const requestBy:User = {
+      uid: 'userId',
+      financing: {
+        rank: 'first'
+      },
+      firstName: 'Unit',
+      lastName: 'Tester',
+      email: 'userId@myorg.org',
+      phoneNumber: '012345',
+      position: 'Sr.Tester',
+      orgId: 'O001',
+      avatar: null,
+      privacyPolicy: null
+    }
+
+
+    const is = TestBed.inject(InvitationService);
+    const mock = jest.spyOn(is, 'add');
+
+    const requestOutput = is.request('O002', requestBy);
+    const invite = await requestOutput.to('attendEvent', 'E001');
+    //expect(invite.id).toBeDefined();
+    console.log(invite);
+    //invite.then(x => console.log(x));
+    expect(is.add).toHaveBeenCalled();
+    //console.log(mock)
+    //expect(mock).toHaveBeenCalled();
+    const inviteParam = mock.mock.calls[0][0];
+    expect(inviteParam['type']).toBe('attendEvent');
+    expect(inviteParam['eventId']).toBe('E001');
+  });
+
+  describe('Check Invitation', () => {
     const today = new Date();
     const invitationParamsOrg = {
       date: today, 
