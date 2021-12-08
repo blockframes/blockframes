@@ -137,6 +137,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
   }
 
   public async signUp() {
+    if (this.creating) return;
     if (this.form.invalid) {
       this.snackBar.open('Please enter valid name and surname', 'close', { duration: 2000 });
       return;
