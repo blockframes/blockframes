@@ -141,13 +141,13 @@
 
 <ng-template #linkBtn let-link>
   <ng-container *ngIf="link.type === 'basic'">
-    <a mat-button [color]="link.color" [routerLink]="link.path">{{ link.text }}</a>
+    <a mat-button [color]="link.color" [routerLink]="link.path | getLink" [queryParams]="link.path | getParams">{{ link.text }}</a>
   </ng-container>
   <ng-container *ngIf="link.type === 'flat'">
-    <a mat-flat-button [color]="link.color" [routerLink]="link.path">{{ link.text }}</a>
+    <a mat-flat-button [color]="link.color" [routerLink]="link.path | getLink" [queryParams]="link.path | getParams">{{ link.text }}</a>
   </ng-container>
   <ng-container *ngIf="link.type === 'stroked'">
-    <a mat-stroked-button [color]="link.color" [routerLink]="link.path">{{ link.text }}</a>
+    <a mat-stroked-button [color]="link.color" [routerLink]="link.path | getLink" [queryParams]="link.path | getParams">{{ link.text }}</a>
   </ng-container>
 </ng-template>
 
