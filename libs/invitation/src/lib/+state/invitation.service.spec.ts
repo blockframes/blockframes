@@ -1,11 +1,16 @@
 ﻿import { TestBed } from '@angular/core/testing';
 import { InvitationService } from './invitation.service';
 import { InvitationStore } from './invitation.store';
+import { Invitation } from './invitation.model';
 import { AngularFireModule } from '@angular/fire';
+import { toDate } from '@blockframes/utils/helpers';
 import { SETTINGS, AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestore';
 import { loadFirestoreRules, clearFirestoreData } from '@firebase/testing';
 import { readFileSync } from 'fs';
 import { createInvitation, InvitationDocument } from './invitation.firestore';
+import firebase  from 'firebase/app';
+type Timestamp = firebase.firestore.Timestamp;
+
 
 describe('Invitations Test Suite', () => {
   let service: InvitationService;
@@ -46,12 +51,19 @@ describe('Invitations Test Suite', () => {
   // test formatToFirestore returns correct format
   // Create an invitation and check .
   
-  it('Formats invitation from firestore', () => {
+  it.only('Formats invitation from firestore', () => {
     const is = TestBed.inject(InvitationService);
-    is.formatFromFirestore = jest.fn();
-    is.formatFromFirestore({} as InvitationDocument);
-    expect(is.formatFromFirestore).toHaveBeenCalled();
-    // TODO: issue#3415 test the output value
+    const today = new Date();
+    const timestamp = firebase.firestore.Timestamp.fromDate(today);
+    //is.formatFromFirestore = jest.fn();
+    //is.formatFromFirestore({} as InvitationDocument);
+    //expect(is.formatFromFirestore).toHaveBeenCalled();
+    const formattedDate = toDate(timestamp);
+    //Create an Invitation Document
+    const newInvite:Invitation = createInvitation();
+    const invite:InvitationDocument = {...newInvite, ...{date: timestamp}}
+    const formattedInvite = is.formatFromFirestore(invite);
+    expect(formattedInvite.date).toEqual(formattedDate);
   });
 
   it('Formats invitation to firestore', () => {
