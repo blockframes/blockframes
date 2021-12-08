@@ -69,7 +69,7 @@ export class ContractEditComponent implements NegotiationGuardedComponent, OnIni
       const sale = await this.sale$.pipe(first()).toPromise();
       await this.negotiationService.create(sale.id, {
         ...sale.negotiation,
-        ...this.form.value,
+        ...this.form.value
       });
       this.snackBar.open('Your counter offer has been sent');
       this.form.markAsPristine(); // usefull to be able to route in the NegotiationGuard
