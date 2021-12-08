@@ -11,6 +11,7 @@ import { NegotiationService } from '@blockframes/contract/negotiation/+state/neg
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { combineLatest } from 'rxjs';
+import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
 
 @Component({
   selector: 'catalog-contract-edit',
@@ -22,15 +23,11 @@ export class ContractEditComponent implements NegotiationGuardedComponent, OnIni
 
   activeOrgId = this.query.getActiveId();
   form = new NegotiationForm();
-  contracts$ = this.shell.offer$.pipe(
-    map(offer => offer.contracts),
-  );
-  contractId$ = this.route.params.pipe(pluck('saleId'));
   sale$ = combineLatest([
-    this.contracts$,
-    this.contractId$
+    this.shell.offer$,
+    this.route.params.pipe(pluck('saleId'))
   ]).pipe(
-    map(([contracts, id]) => contracts.find(contract => contract.id === id))
+    map(([offer, id]) => offer.contracts.find(contract => contract.id === id))
   );
   negotiation$ = this.sale$.pipe(map(contract => contract.negotiation));
 
@@ -53,15 +50,15 @@ export class ContractEditComponent implements NegotiationGuardedComponent, OnIni
   }
 
   async decline() {
-    this.form.markAsPristine(); // usefull to be able to route in the NegotiationGuard
     const sale = await this.sale$.pipe(first()).toPromise();
     const ref = this.dialog.open(ConfirmDeclineComponent);
     const options = { params: { contractId: sale.id } };
     ref.afterClosed().subscribe(declineReason => {
       if (typeof declineReason === 'string') {
-        this.negotiationService.update(
-          sale.negotiation.id, { declineReason, status: 'declined' }, options
-        );
+        const id = sale.negotiation.id;
+        const partialData = { declineReason, status: 'declined' } as const;
+        this.negotiationService.update(id, partialData, options);
+        this.form.markAsPristine(); // usefull to be able to route in the NegotiationGuard
         this.router.navigate(['..'], { relativeTo: this.route });
       }
     });
@@ -70,13 +67,12 @@ export class ContractEditComponent implements NegotiationGuardedComponent, OnIni
   async confirm() {
     const onConfirm = async () => {
       const sale = await this.sale$.pipe(first()).toPromise();
-      this.form.markAsPristine(); // usefull to be able to route in the NegotiationGuard
       await this.negotiationService.create(sale.id, {
         ...sale.negotiation,
         ...this.form.value,
-        createdByOrg: this.activeOrgId,
       });
       this.snackBar.open('Your counter offer has been sent');
+      this.form.markAsPristine(); // usefull to be able to route in the NegotiationGuard
       this.router.navigate(['..'], { relativeTo: this.route });
     }
 
