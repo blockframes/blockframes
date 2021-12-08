@@ -46,11 +46,14 @@
       <ng-template colRef="status" label="Status" let-status>
         <bf-tag>{{ status | toLabel: 'contractStatus' }}</bf-tag>
       </ng-template>
-      <ng-template colRef="negotiation" label="Negotiation Stage" let-negotiation>
-        <ng-container *ngIf=" negotiation | negotiationStage | async  as negoStage">
-          <span [matTooltip]="negoStage">
-            {{negoStage | maxLength:50}}
-          </span>
+      <ng-template colRef="negotiation" label="Negotiation stage" let-negocation>
+        <ng-container *ngIf="negocation">
+          <ng-container *ngIf="negocation.createdByOrg !== orgId">
+            To be reviewed
+          </ng-container>
+          <ng-container *ngIf="negocation.createdByOrg === orgId">
+            Waiting for {{ negocation.createdByOrg | getOrg | async | orgName }} answer
+          </ng-container>
         </ng-container>
       </ng-template>
     </bf-table>
