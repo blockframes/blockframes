@@ -22,8 +22,8 @@ describe('Basic Landing Page, Login and Profile Page Tests', () => {
   it('should show the Accept Cookies banner', () => {
     cy.contains('Accept cookies').should('exist');
   })
-  afterEach(() => {
-    // clearBrowserAuth()
+  afterEach(async () => {
+    // await clearBrowserAuth()
     // cy.clearCookies();
     // cy.clearLocalStorage();
   })

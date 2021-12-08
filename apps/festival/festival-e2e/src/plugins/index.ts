@@ -25,7 +25,6 @@ export default (async (on, config) => {
     console.log('Plugin Arg2', arg2);
   });
 
-
   on('task', testingCypress(config));
 
   // * Returning config here (or promise) changes config.
