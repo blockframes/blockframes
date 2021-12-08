@@ -13,18 +13,12 @@
     <!-- Title -->
     <mat-form-field appearance="outline">
       <mat-label>Select the title to display</mat-label>
-      <mat-select formControlName="titleId">
-        <mat-option *ngFor="let title of titles" [value]="title.id" [disabled]="!title.promotional.videos?.screener?.jwPlayerId">
-          <ng-container *ngIf="title.promotional.videos?.screener?.jwPlayerId else noVideo">
-            {{ title.title.international }}
-          </ng-container>
-          <ng-template #noVideo>
-            <span class="text-disabled">{{ title.title.international }}</span>
-            <span> - </span>
-            <span class="text-warn">Upload video first.</span>
-          </ng-template>
+      <mat-select formControlName="titleId" (selectionChange)="checkTitleScreener($event.value)">
+        <mat-option *ngFor="let title of titles" [value]="title.id">
+          {{ title.title.international }}
         </mat-option>
       </mat-select>
+      <mat-hint id="missing-screener" *ngIf="screenerMissing">This Title has no Screener attached.</mat-hint>
     </mat-form-field>
 
     <!-- Description -->

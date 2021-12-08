@@ -14,6 +14,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatChipsModule } from '@angular/material/chips';
 
 @NgModule({
   declarations: [EventFormShellComponent],
@@ -33,6 +34,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatFormFieldModule,
     MatTabsModule,
     MatDialogModule,
+    MatChipsModule,
   ]
 })
 export class EventFromShellModule { }

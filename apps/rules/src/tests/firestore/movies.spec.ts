@@ -53,6 +53,18 @@ describe('Movies Rules Tests', () => {
         const movieRef = db.doc(`movies/${existMovieAccepted}`);
         await assertSucceeds(movieRef.get());
       })
+
+      test('should be able to fetch movie collection for current org', async () => {
+        const orgId = 'O001';
+
+        const movieRef = db.collection('movies').where('orgIds', 'array-contains', orgId);
+        const moviesSnap = await movieRef.get();
+        const movieDocs = moviesSnap.docs;
+        const movies = [];
+        movieDocs.forEach(doc => movies.push(doc.data()));
+        expect(movies.length).toEqual(3);
+      })
+
     });
 
     describe('Create Movie', () => {
@@ -134,7 +146,6 @@ describe('Movies Rules Tests', () => {
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
 
-    //TODO #4301
     test('should not be able to delete movie', async () => {
       const movieRef = db.doc(`movies/${draftMovieId}`);
       await assertFails(movieRef.delete());
@@ -182,6 +193,31 @@ describe('Movies Rules Tests', () => {
     });
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
+
+    test('should not be able to fetch movie collection for org where current user is not member of', async () => {
+      const orgId = 'O001';
+
+      //Some movies are in draft mode, this should fail
+      const movieRef = db.collection('movies')
+                         .where('orgIds', 'array-contains', orgId);
+      await assertFails(movieRef.get());
+    })
+
+    test('should be able to fetch movie collection for query condition', async () => {
+      const orgId = 'O001';
+
+      //Some movies of org O001 are in draft mode, but this should still success because we added filtering on the query
+      const movieRef = db.collection('movies')
+                         .where('orgIds', 'array-contains', orgId)
+                         .where('app.financiers.status', '==', 'accepted')
+                         .where('app.financiers.access', '==', true);
+
+      const moviesSnap = await movieRef.get();
+      const movieDocs = moviesSnap.docs;
+      const movies = [];
+      movieDocs.forEach(doc => movies.push(doc.data()));
+      expect(movies.length).toEqual(1);
+    })
 
     test("user without rights to edit movie shouldn't be able to read movie title when in draft", async () => {
       const movieRef = db.doc(`movies/${draftMovieId}`);

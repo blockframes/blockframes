@@ -12,6 +12,9 @@ import { production } from './environments/environment';
 import { cleanUserMedias } from './media';
 import { getUserEmailData, OrgEmailData } from '@blockframes/utils/emails/utils';
 import { groupIds } from '@blockframes/utils/emails/ids';
+import { User } from '@blockframes/user/+state/user.model';
+import { updateMemberTags } from './mailchimp';
+import { getPreferenceTag, MailchimpTag } from '@blockframes/utils/mailchimp/mailchimp-model';
 
 type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
@@ -111,13 +114,35 @@ export async function onUserCreateDocument(snap: FirebaseFirestore.DocumentSnaps
 }
 
 export async function onUserUpdate(change: functions.Change<FirebaseFirestore.DocumentSnapshot>) {
-  const before = change.before.data() as PublicUser;
-  const after = change.after.data() as PublicUser;
+  const before = change.before.data() as User;
+  const after = change.after.data() as User;
   if ((before.firstName === undefined || before.firstName === '') && !!after.firstName) {
     await initUser(after);
   }
 
   await cleanUserMedias(before, after);
+
+
+  // Sync preferences with mailchimp
+  const tags: MailchimpTag[] = []
+  if (after?.preferences) {
+    for (const key in after.preferences) {
+      const activeTags = getPreferenceTag(key, after.preferences[key], 'active');
+      tags.push(...activeTags); 
+    }
+  }
+
+  if (before?.preferences) {
+    for (const key in before.preferences) {
+      const removed = after.preferences?.[key]
+        ? before.preferences[key].filter((value: string) => !after.preferences[key].includes(value))
+        : before.preferences[key];
+
+      const removedTags = getPreferenceTag(key, removed, 'inactive');
+      tags.push(...removedTags);
+    }
+  }
+  if (tags.length) updateMemberTags(after.email, tags)
 
   // if name, email, avatar or orgId has changed : update algolia record
   if (
@@ -276,7 +301,7 @@ export const verifyEmail = async (data: { uid: string }, context: CallableContex
     await admin.auth().updateUser(uid, { emailVerified: true });
 
     const { _meta } = await getDocument<PublicUser>(`users/${uid}`);
-    _meta.emailVerified = true;
+    _meta.emailVerified = true; // #7303 get rid of emailVerified in meta ?
     db.doc(`users/${uid}`).update({ _meta });
   } catch (e) {
     throw new Error(`There was an error while verifying email : ${e.message}`);
