@@ -8,7 +8,6 @@ import { ContractItemModule } from '@blockframes/contract/contract/components/it
 import { HoldbackListModule } from '@blockframes/contract/contract/holdback/list/list.module';
 import { ConfirmDeclineComponentModule } from '@blockframes/contract/contract/components/confirm-decline/confirm-decline.module';
 
-import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -29,7 +28,6 @@ import { ExternalSaleComponent } from './external.component';
 
     //Material
     MatButtonModule,
-    MatCardModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
     MatIconModule,

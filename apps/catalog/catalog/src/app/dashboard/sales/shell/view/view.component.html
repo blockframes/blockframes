@@ -1,6 +1,6 @@
 <ng-container *ngIf="sale$ | async as sale; else loading">
-  <header fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
-    <ng-container [ngSwitch]="sale.negotiation?.status">
+  <header fxLayout fxLayoutAlign="start center" fxLayoutGap="16px" *ngIf="sale.negotiation as negotiation">
+    <ng-container [ngSwitch]="negotiation?.status">
       <ng-container *ngSwitchCase="'accepted'">
         <button mat-flat-button color="primary" disabled matTooltip="You have already accepted this offer, please connect with the AC Team">
           <span>Accepted</span>
@@ -14,11 +14,11 @@
         </button>
       </ng-container>
       <ng-container *ngSwitchCase="'pending'">
-        <button [disabled]="!sale.negotiation?.price" mat-stroked-button color="primary" (click)="accept(sale.id, sale.movie)">
+        <button [disabled]="!(negotiation | canAccept)" mat-stroked-button color="primary" (click)="accept(sale.id, sale.movie)">
           <mat-icon svgIcon="check"></mat-icon>
           <span>Accept</span>
         </button>
-        <a mat-stroked-button color="primary" routerLink="../negotiation">
+        <a [disabled]="negotiation.createdByOrg === orgId" mat-stroked-button color="primary" routerLink="../negotiation">
           <mat-icon svgIcon="negotiate"></mat-icon>
           <span>Negotiate</span>
         </a>
@@ -26,7 +26,7 @@
     </ng-container>
   </header>
 
-  <section *ngIf="sale.sellerId === centralOrgId.catalog">
+  <section>
     <article class="surface" *ngIf="sale.specificity as specificity">
       <h2>Specific Terms</h2>
       <p>{{ specificity }}</p>
@@ -39,15 +39,15 @@
   
   <ng-container *ngIf="sale.negotiation as negotiation">
     <contract-item [contract]="negotiation">
-      <ng-container *ngIf="negotiation?.price else askPrice">
-        <h2>{{ negotiation.price | currency: negotiation.income?.currency }}</h2>
-      </ng-container>
-      <ng-template #askPrice>
-        <div fxLayout="column">
+      <div class="price" price>
+        <h2 *ngIf="negotiation?.price else askPrice">
+          {{ negotiation.price | currency: sale.income?.currency }}
+        </h2>
+        <ng-template #askPrice>
           <h3>Asking Price requested</h3>
-          <p class="mat-caption">to set a price click on <a routerLink="../negotiation">negotiate</a></p>
-        </div>
-      </ng-template>
+          <p class="mat-caption">To set a price click on <a routerLink="../negotiation">negotiate</a></p>
+        </ng-template>
+      </div>
       <footer>
         <holdback-list [holdbacks]="sale.holdbacks"></holdback-list>
       </footer>

@@ -17,9 +17,7 @@ export class SaleViewComponent {
 
   centralOrgId = this.shell.centralOrgId;
   sale$ = this.shell.sale$;
-  contractStatus = this.shell.contractStatus;
-  activeOrgId = this.query.getActiveId();
-
+  orgId = this.query.getActiveId();
 
   constructor(
     private contractService: ContractService,

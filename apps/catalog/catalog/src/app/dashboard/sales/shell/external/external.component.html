@@ -12,7 +12,7 @@
   </header>
 
   <contract-item [contract]="sale">
-    <h2 *ngIf="sale.income?.price">
+    <h2 price *ngIf="sale.income?.price">
       {{ sale.income?.price | currency: sale.income?.currency }}
     </h2>
     <footer>

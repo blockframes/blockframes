@@ -22,13 +22,25 @@ export class NegotiationStagePipe implements PipeTransform {
   }
 }
 
+@Pipe({ name: 'canAccept' })
+export class CanAcceptNegotiationPipe implements PipeTransform {
+  constructor(private orgQuery: OrganizationQuery) {}
+  transform(negotiation: Negotiation) {
+    return negotiation.status === 'pending'
+      && negotiation.price
+      && negotiation.createdByOrg !== this.orgQuery.getActiveId();
+  }
+}
+
 
 @NgModule({
   declarations: [
     NegotiationStagePipe,
+    CanAcceptNegotiationPipe,
   ],
   exports: [
     NegotiationStagePipe,
+    CanAcceptNegotiationPipe,
   ]
 })
 export class NegotiationPipeModule { }
