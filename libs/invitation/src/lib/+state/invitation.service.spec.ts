@@ -26,7 +26,7 @@ const invitationParamsOrg = {
   date: today, 
   toOrg: {
     id: 'orgId',
-    denomination: {full: 'MyOrg'},
+    denomination: { full: 'MyOrg' },
     logo: undefined
   },
 };
