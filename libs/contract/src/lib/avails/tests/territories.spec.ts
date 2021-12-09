@@ -1,6 +1,6 @@
 import { createMandate } from "../../contract/+state/contract.model";
 import { availableTerritories, getMandateTerms, collidingTerms, toTerritoryMarker } from "./../avails";
-import { createTerm, Term } from "../../term/+state/term.model";
+import { createTerm } from "../../term/+state/term.model";
 import { availDetailsExclusive, availDetailsNonExclusive } from './../fixtures/availsFilters';
 
 describe('Test availableTerritories pure function', () => {
