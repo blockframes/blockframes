@@ -51,13 +51,39 @@ export function getMandateTerms(avails: AvailsFilter, terms: Term<Date>[]): Term
 }
 
 
+function mandateExclusivityCheck<T extends BucketTerm>(avails: AvailsFilter, term: T) {
+
+  //                                Avail
+  //                     | Exclusive | Non-Exclusive |
+  //                -----|-----------|---------------|
+  //           Exclusive |     ✅    |       ✅     |
+  // Mandate        -----|-----------|---------------|
+  //       Non-Exclusive |    ❌     |      ✅      |
+  //                -----|-----------|---------------|
+
+  return term.exclusive || !avails.exclusive;
+}
+
+function saleExclusivityCheck<T extends BucketTerm>(avails: AvailsFilter, term: T) {
+
+  //                                Avail
+  //                     | Exclusive | Non-Exclusive |
+  //                -----|-----------|---------------|
+  //           Exclusive |     ❌    |       ❌     |
+  // Sale           -----|-----------|---------------|
+  //       Non-Exclusive |    ❌     |      ✅      |
+  //                -----|-----------|---------------|
+
+  return !term.exclusive && !avails.exclusive;
+}
+
 export function termsCollision(avails: AvailsFilter, terms: BucketTerm<Date>[]) {
   return !!collidingTerms(avails, terms).length;
 }
 
 /** Get all the terms that overlap the avails filter */
 export function collidingTerms<T extends BucketTerm>(avails: AvailsFilter, terms: T[]) {
-  return terms.filter(term => (avails.exclusive || term.exclusive)
+  return terms.filter(term => saleExclusivityCheck(avails, term)
     && someOf(avails.territories, 'optional').in(term.territories)
     && someOf(avails.medias, 'optional').in(term.medias)
     && someOf(avails.duration, 'optional').in(term.duration)
@@ -66,7 +92,7 @@ export function collidingTerms<T extends BucketTerm>(avails: AvailsFilter, terms
 
 export function allOfAvailInTerms(avails: AvailsFilter, terms: BucketTerm[], optional?: 'optional') {
   return terms.some(term => {
-    const exclusiveCheck = optional && !avails.exclusive || term.exclusive === avails.exclusive;
+    const exclusiveCheck = mandateExclusivityCheck(avails, term);
     const territoriesCheck = allOf(avails.territories, optional).in(term.territories);
     const mediasCheck = allOf(avails.medias, optional).in(term.medias);
     const durationCheck = allOf(avails.duration, optional).in(term.duration);
