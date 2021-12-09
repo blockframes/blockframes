@@ -24,7 +24,7 @@
         Declined <span *ngIf="(salesCount$ | async) as salesCount">({{ salesCount.declined }})</span>
       </button>
       <button mat-tab-link (click)="applyFilter('negotiating')" [active]="(filter$ | async) === 'negotiating'">
-        Ongoing <span *ngIf="(salesCount$ | async) as salesCount">({{ salesCount.negotiating }})</span>
+        Ongoing <span *ngIf="(salesCount$ | async) as salesCount">({{ salesCount.negotiation }})</span>
       </button>
     </header>
 

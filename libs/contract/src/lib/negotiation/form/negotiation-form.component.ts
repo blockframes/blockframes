@@ -16,10 +16,14 @@ export class NegotiationFormComponent {
   @Input() form: NegotiationForm
   @Input() title?: Movie;
   @Input() currency?: string;
-  @Input() set activeTerm(termId: string) {
-    if (!termId) return;
-    const tabTerms = this.form.get('terms').value;
-    this.indexId = tabTerms.findIndex(value => value.id === termId);
+  @Input() set activeTerm(termId: number | string) {
+    if (termId === null || termId === undefined) return;
+    if (typeof termId === 'number') {
+      this.indexId = termId
+    } else {
+      const tabTerms = this.form.get('terms').value;
+      this.indexId = tabTerms.findIndex(value => value.id === termId);
+    }
   }
 
   indexId: number;

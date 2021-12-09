@@ -13,7 +13,7 @@ import {
 } from './+state/bucket.model';
 import { Subject } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { BucketTerm, createTerm, Term } from '../term/+state';
+import { BucketTerm } from '../term/+state';
 
 //////////
 // TERM //

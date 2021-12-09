@@ -25,10 +25,10 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
   contractStatus = this.shell.contractStatus;
   activeOrgId = this.query.getActiveId();
   form = new NegotiationForm({ terms: [] });
+  activeTerm?: number;
 
   constructor(
     private snackBar: MatSnackBar,
-    private orgQuery: OrganizationQuery,
     private negotiationService: NegotiationService,
     private shell: SaleShellComponent,
     private query: OrganizationQuery,
@@ -43,6 +43,8 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
       first()
     ).toPromise();
     this.form.hardReset(negotiation);
+    const termIndex = this.route.snapshot.queryParams.termIndex;
+    this.activeTerm = termIndex ? parseInt(termIndex) : 0;
   }
 
   async decline() {
