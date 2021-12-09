@@ -27,15 +27,6 @@ describe('Invitation Rules Tests', () => {
       const inviteRef = db.doc('invitations/I012');
       await assertSucceeds(inviteRef.delete());
     });
-
-    describe('Respond to Invitation', () => {
-      const response:string[] = ['accepted', 'declined'];
-
-      test.each(response)("should not allow user to set invitation as '%s'", async (res) => {
-        const inviteRef = db.doc('invitations/I001');
-        await assertFails(inviteRef.update({ status: res }));
-      });
-    });
   });
 
   describe('With User in org', () => {
@@ -95,14 +86,34 @@ describe('Invitation Rules Tests', () => {
         details[key] = value;
         await assertFails(inviteRef.update(details));
       });
+    });
+  });
 
-      describe('Respond to Invitation', () => {
-        const response:string[] = ['accepted', 'declined'];
-        test.each(response)("should not allow user to set invitation as '%s'", async (res) => {
-          const inviteRef = db.doc('invitations/I001');
-          await assertSucceeds(inviteRef.update({ status: res }));
-        });
-      });
+  describe('With unintended user, respond to invitation', () => {
+    beforeAll(async () => {
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-sAdmin', firebase: { sign_in_provider: 'password' } });
+    });
+
+    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+
+    const statuses = ['accepted', 'declined'];
+    test.each(statuses)("should not allow user to set invitation as '%s'", async (status) => {
+      const inviteRef = db.doc('invitations/I001');
+      await assertFails(inviteRef.update({ status }));
+    });
+  });
+
+  describe('With invited user, respond to invitation', () => {
+    beforeAll(async () => {
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2', firebase: { sign_in_provider: 'password' } });
+    });
+
+    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+
+    const statuses = ['accepted', 'declined'];
+    test.each(statuses)("should allow user to set invitation as '%s'", async (status) => {
+      const inviteRef = db.doc('invitations/I001');
+      await assertSucceeds(inviteRef.update({ status }));
     });
   });
 

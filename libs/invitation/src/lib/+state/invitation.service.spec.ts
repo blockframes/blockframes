@@ -2,8 +2,7 @@
 import { TestBed } from '@angular/core/testing';
 import { InvitationService } from './invitation.service';
 import { InvitationStore } from './invitation.store';
-import { Invitation } from './invitation.model';
-import { AuthQuery, User } from '@blockframes/auth/+state';
+import { AuthQuery, createUser } from '@blockframes/auth/+state';
 import { AngularFireModule } from '@angular/fire';
 import { toDate } from '@blockframes/utils/helpers';
 import { SETTINGS, AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestore';
@@ -86,7 +85,7 @@ describe('Invitations Test Suite', () => {
     const formattedDate = toDate(timestamp);
 
     //Create an Invitation Document
-    const newInvite:Invitation = createInvitation();
+    const newInvite = createInvitation();
     const invite:InvitationDocument = {...newInvite, ...{date: timestamp}}
     const formattedInvite = is.formatFromFirestore(invite);
     expect(formattedInvite.date).toEqual(formattedDate);
@@ -96,9 +95,9 @@ describe('Invitations Test Suite', () => {
     const is = TestBed.inject(InvitationService);
 
     //Create an Invitation Document
-    const inviteData = { ...invitationParamsOrg, ...invitationParamsUser }
-    const inviteParams = { ...inviteData, ...{ message: 'Clean it', watchTime: undefined} }
-    const newInvite:Invitation = createInvitation(inviteParams);
+    const inviteData = { ...invitationParamsOrg, ...invitationParamsUser };
+    const inviteParams = { ...inviteData, ...{ message: 'Clean it', watchTime: undefined} };
+    const newInvite = createInvitation(inviteParams);
     const formattedInvite = is.formatToFirestore(newInvite);
     expect(formattedInvite).toMatchObject(inviteData);
   });
@@ -130,7 +129,7 @@ describe('Invitations Test Suite', () => {
   });
 
   it('Should create invitation request', async () => {
-    const requestBy:User = {
+    const requestBy = createUser({
       uid: 'userId',
       financing: {
         rank: 'first'
@@ -143,7 +142,7 @@ describe('Invitations Test Suite', () => {
       orgId: 'O001',
       avatar: null,
       privacyPolicy: null
-    }
+    })
 
     const is = TestBed.inject(InvitationService);
     const mock = jest.spyOn(is, 'add');
@@ -167,7 +166,7 @@ describe('Invitations Test Suite', () => {
       const is = TestBed.inject(InvitationService);
 
       //Create an Invitation Document
-      const newInvite:Invitation = createInvitation(invitationParamsOrg);
+      const newInvite = createInvitation(invitationParamsOrg);
       const isMyInvite = is.isInvitationForMe(newInvite);
       expect(isMyInvite).toBeTruthy();
     })
@@ -176,7 +175,7 @@ describe('Invitations Test Suite', () => {
       const is = TestBed.inject(InvitationService);
 
       //Create an Invitation Document
-      const newInvite:Invitation = createInvitation(invitationParamsUser);
+      const newInvite = createInvitation(invitationParamsUser);
       const isMyInvite = is.isInvitationForMe(newInvite);
       expect(isMyInvite).toBeTruthy();
     })
@@ -190,7 +189,7 @@ describe('Invitations Test Suite', () => {
       inviteParamsOrg.toOrg.id = 'otherOrgId';
       inviteParamsUser.toUser.uid = 'otherUserId';
       const invitationParams = {...inviteParamsOrg, ...inviteParamsUser};
-      const newInvite:Invitation = createInvitation(invitationParams);
+      const newInvite = createInvitation(invitationParams);
       const isMyInvite = is.isInvitationForMe(newInvite);
       expect(isMyInvite).toBeFalsy();
     })
