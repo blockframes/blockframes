@@ -26,17 +26,19 @@
         <h1>External</h1>
       </div>
     </ng-template>
-    <div fxLayout fxLayoutAlign="space-between center" fxLayoutGap="16px">
-      <span>Ref {{ sale.offerId }} / Offer created: {{sale._meta.createdAt | date: 'MM/dd/yyyy'}}</span>
-      <button mat-button color="primary" (click)="openIntercom()">
-        <mat-icon svgIcon="comment"></mat-icon>
-        <span>Contact Archipel Content Team</span>
-      </button>
-    </div>
-
+    <ng-container *ngIf="sale.offerId">
+      <div fxLayout fxLayoutAlign="space-between center" fxLayoutGap="16px">
+        <span>Ref {{ sale.offerId }} / Offer created: {{ sale._meta.createdAt | date: 'MM/dd/yyyy' }}</span>
+        <button mat-button color="primary" (click)="openIntercom()">
+          <mat-icon svgIcon="comment"></mat-icon>
+          <span>Contact Archipel Content Team</span>
+        </button>
+      </div>
+    </ng-container>
   </header>
+  
+  <router-outlet></router-outlet>
 </ng-container>
-<router-outlet></router-outlet>
 <ng-template #loading>
   <mat-spinner></mat-spinner>
 </ng-template>

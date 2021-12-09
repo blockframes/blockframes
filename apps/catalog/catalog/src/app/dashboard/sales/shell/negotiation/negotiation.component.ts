@@ -28,7 +28,6 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
 
   constructor(
     private snackBar: MatSnackBar,
-    private orgQuery: OrganizationQuery,
     private negotiationService: NegotiationService,
     private shell: SaleShellComponent,
     private query: OrganizationQuery,
@@ -46,19 +45,17 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
   }
 
   async decline() {
-    this.form.markAsPristine() // usefull to be able to route in the NegotiationGuard
+    this.form.markAsPristine(); // usefull to be able to route in the NegotiationGuard
     const sale = await this.sale$.pipe(first()).toPromise();
     const ref = this.dialog.open(ConfirmDeclineComponent);
     const options = { params: { contractId: sale.id } };
     ref.afterClosed().subscribe(declineReason => {
+      const id = sale.negotiation.id;
       if (typeof declineReason === 'string') {
-        const { id } = sale.negotiation;
-        this.negotiationService.update(
-          id, { declineReason, status: 'declined' }, options
-        );
+        this.negotiationService.update(id, { declineReason, status: 'declined' }, options);
         this.router.navigate(['..', 'view'], { relativeTo: this.route });
       }
-    })
+    });
   }
 
   async confirm() {
@@ -71,18 +68,14 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
       });
       this.snackBar.open('Your counter offer has been sent');
       this.router.navigate(['..', 'view'], { relativeTo: this.route });
-    }
-
-    this.dialog.open(
-      ConfirmComponent,
-      {
-        data: {
-          onConfirm,
-          title: 'Are you sure to submit this contract?',
-          question: 'Please verify if all the contract elements are convenient for you.',
-          confirm: 'Yes, submit',
-          cancel: 'Come back & verify contract'
-        }
-      });
+    };
+    const data = {
+      onConfirm,
+      title: 'Are you sure to submit this contract?',
+      question: 'Please verify if all the contract elements are convenient for you.',
+      confirm: 'Yes, submit',
+      cancel: 'Come back & verify contract'
+    };
+    this.dialog.open(ConfirmComponent, { data });
   }
 }

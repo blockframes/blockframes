@@ -27,7 +27,7 @@ export class SaleShellComponent {
       movie: (sale: Sale) => this.titleService.getValue(sale.titleId),
       negotiation: (sale: Sale) => ['pending', 'negotiating'].includes(sale.status) ? this.contractService.lastNegotiation(sale.id) : null,
     }),
-    shareReplay({bufferSize:1, refCount:true})
+    shareReplay({ bufferSize:1, refCount:true })
   );
   centralOrgId = centralOrgId;
   contractStatus = contractStatus;

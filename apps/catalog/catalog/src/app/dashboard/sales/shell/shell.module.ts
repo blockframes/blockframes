@@ -16,6 +16,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { SaleShellComponent } from './shell.component';
+import { CatalogSaleGuard } from './shell.guard';
 
 const routes: Route[] = [
   {
@@ -23,7 +24,12 @@ const routes: Route[] = [
     children: [
       { path: '', redirectTo: 'view', },
       {
+        path: 'external',
+        loadChildren: () => import('./external/external.module').then(m => m.ExternalSaleModule)
+      },
+      {
         path: 'view',
+        canActivate: [CatalogSaleGuard],
         loadChildren: () => import('./view/view.module').then(m => m.CatalogSaleViewModule)
       },
       {
