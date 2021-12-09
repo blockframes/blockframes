@@ -94,20 +94,13 @@ describe('Invitations Test Suite', () => {
 
   it('Formats invitation to firestore', () => {
     const is = TestBed.inject(InvitationService);
-    const timestamp = firebase.firestore.Timestamp.fromDate(today);
-    const formattedDate = toDate(timestamp);
 
     //Create an Invitation Document
-    const inviteParams = {...invitationParamsOrg, 
-      ...invitationParamsUser,
-      ...{ message: 'Clean it', watchTime: undefined}
-    }
+    const inviteData = { ...invitationParamsOrg, ...invitationParamsUser }
+    const inviteParams = { ...inviteData, ...{ message: 'Clean it', watchTime: undefined} }
     const newInvite:Invitation = createInvitation(inviteParams);
-    //const invite:InvitationDocument = {...newInvite, ...{date: timestamp}}
-    console.log(newInvite);
     const formattedInvite = is.formatToFirestore(newInvite);
-    //expect(formattedInvite.date).toEqual(formattedDate);
-    console.log(formattedInvite);
+    expect(formattedInvite).toMatchObject(inviteData);
   });
 
   it('Should invitation status become accepted', async () => {
@@ -153,29 +146,19 @@ describe('Invitations Test Suite', () => {
     }
 
     const is = TestBed.inject(InvitationService);
-    //const mock = jest.spyOn(is, 'add');
+    const mock = jest.spyOn(is, 'add');
 
     const requestOutput = is.request('O002', requestBy);
-    const invite = await requestOutput.to('attendEvent', 'E001');
-    //expect(invite.id).toBeDefined();
-    //console.log(invite);
-    //invite.then(x => console.log(x));
-    /*
+    await requestOutput.to('attendEvent', 'E001');
     expect(is.add).toHaveBeenCalled();
-    //console.log(mock)
-    //expect(mock).toHaveBeenCalled();
     const inviteParam = mock.mock.calls[0][0];
-    //expect(inviteParam['type']).toBe('attendEvent');
-    //expect(inviteParam['eventId']).toBe('E001');
     const expectedParam = {
       type: 'attendEvent',
       eventId: 'E001',
       toOrg: { id: 'O002'},
-      fromUser: { uid: 'userId', orgId: 'O002' }
+      fromUser: { uid: 'userId', orgId: 'O001' }
     }
     expect(inviteParam).toMatchObject(expectedParam);
-    */
-
   });
 
   describe('Check Invitation', () => {
