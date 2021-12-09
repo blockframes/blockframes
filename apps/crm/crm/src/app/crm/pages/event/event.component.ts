@@ -53,10 +53,10 @@ export class EventComponent implements OnInit {
 
     this.invitations$ = this.invitationService.valueChanges(ref => ref.where('type', '==', 'attendEvent').where('eventId', '==', this.eventId))
       .pipe(switchMap(async (invitations: InvitationDetailed[]) => {
-        const orgIds = Array.from(new Set(invitations
-          .map(i => getHost(i, 'org').id)
-          .concat(invitations.map(i => getGuest(i, 'user').orgId)).filter(id => id))
-        );
+
+        const hostOrgs = invitations.map(i => getHost(i, 'org').id).filter(id => id);
+        const guestOrgs = invitations.map(i => getGuest(i, 'user').orgId).filter(id => id);
+        const orgIds = Array.from(new Set(hostOrgs.concat(guestOrgs)));
         const orgsPromises = orgIds.map(id => this.orgService.getValue(id));
         const orgs = await Promise.all(orgsPromises);
 
