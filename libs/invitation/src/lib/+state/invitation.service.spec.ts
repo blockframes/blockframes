@@ -66,10 +66,6 @@ describe('Invitations Test Suite', () => {
     expect(service).toBeTruthy();
   })
 
-  //TODO: 
-  // test formatToFirestore returns correct format
-  // Create an invitation and check .
-  
   it('Formats invitation from firestore', () => {
     const is = TestBed.inject(InvitationService);
     const today = new Date();
@@ -83,12 +79,38 @@ describe('Invitations Test Suite', () => {
     expect(formattedInvite.date).toEqual(formattedDate);
   });
 
-  it('Formats invitation to firestore', () => {
+  it.only('Formats invitation to firestore', () => {
     const is = TestBed.inject(InvitationService);
-    is.formatToFirestore = jest.fn();
-    is.formatToFirestore(createInvitation());
-    expect(is.formatToFirestore).toHaveBeenCalled();
-    // TODO: issue#3415 test the output value
+    const today = new Date();
+    const timestamp = firebase.firestore.Timestamp.fromDate(today);
+    const formattedDate = toDate(timestamp);
+    const invitationParamsOrg = {
+      date: today, 
+      toOrg: {
+        id: 'orgId',
+        denomination: {full: 'MyOrg'},
+        logo: undefined
+      },
+    };
+    const invitationParamsUser = {
+      date: today, 
+      toUser: {
+        uid: 'userId',
+        email: 'userId@myorg.org'
+      }
+    };
+    //Create an Invitation Document
+    const inviteParams = {...invitationParamsOrg, 
+      ...invitationParamsUser,
+      ...{ message: 'Clean it', watchTime: undefined}
+    }
+    const newInvite:Invitation = createInvitation(inviteParams);
+    //const invite:InvitationDocument = {...newInvite, ...{date: timestamp}}
+    console.log(newInvite);
+    const formattedInvite = is.formatToFirestore(newInvite);
+    //expect(formattedInvite.date).toEqual(formattedDate);
+    console.log(formattedInvite);
+
   });
 
   it('Should invitation status become accepted', async () => {
@@ -117,9 +139,7 @@ describe('Invitations Test Suite', () => {
     expect((doc.data() as InvitationDocument).status).toBe('declined');
   });
 
-  //TODO: Optimize the test further..
-  
-  it.only('Should create invitation request', async () => {
+  it('Should create invitation request', async () => {
     const requestBy:User = {
       uid: 'userId',
       financing: {
@@ -148,8 +168,15 @@ describe('Invitations Test Suite', () => {
     //console.log(mock)
     //expect(mock).toHaveBeenCalled();
     const inviteParam = mock.mock.calls[0][0];
-    expect(inviteParam['type']).toBe('attendEvent');
-    expect(inviteParam['eventId']).toBe('E001');
+    //expect(inviteParam['type']).toBe('attendEvent');
+    //expect(inviteParam['eventId']).toBe('E001');
+    const expectedParam = {
+      type: 'attendEvent',
+      eventId: 'E001',
+      toOrg: { id: 'O002'},
+      fromUser: { uid: 'userId', orgId: 'O002' }
+    }
+    expect(inviteParam).toMatchObject(expectedParam);
   });
 
   describe('Check Invitation', () => {

@@ -7,10 +7,6 @@ import { testFixture } from './fixtures/data';
 import { Firestore, initFirestoreApp } from '@blockframes/testing/firebase/functions';
 import { Invitation, InvitationStatus } from '@blockframes/invitation/+state';
 
-//TODO:
-// 1. test acceptInvitation
-// 2. test declineInvitation
-
 describe('Invitation Rules Tests', () => {
   const projectId = `inrules-spec-${Date.now()}`;
   let db: Firestore;
@@ -32,7 +28,7 @@ describe('Invitation Rules Tests', () => {
       await assertSucceeds(inviteRef.delete());
     });
 
-    describe.only('Respond to Invitation', () => {
+    describe('Respond to Invitation', () => {
       const response:string[] = ['accepted', 'declined'];
 
       test.each(response)("should not allow user to set invitation as '%s'", async (res) => {
@@ -100,9 +96,12 @@ describe('Invitation Rules Tests', () => {
         await assertFails(inviteRef.update(details));
       });
 
-      test('should allow user to update invitation', async () => {
-        const inviteRef = db.doc('invitations/I001');
-        await assertSucceeds(inviteRef.update({note: 'important', status: 'accepted'}));
+      describe('Respond to Invitation', () => {
+        const response:string[] = ['accepted', 'declined'];
+        test.each(response)("should not allow user to set invitation as '%s'", async (res) => {
+          const inviteRef = db.doc('invitations/I001');
+          await assertSucceeds(inviteRef.update({ status: res }));
+        });
       });
     });
   });
