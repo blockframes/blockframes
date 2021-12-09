@@ -2,7 +2,7 @@
 import { Movie } from '@blockframes/movie/+state';
 import { Media, Territory } from '@blockframes/utils/static-model';
 
-import { allOf, noneOf } from './sets';
+import { allOf, exclusivityAllOf, exclusivitySomeOf, noneOf, someOf } from './sets';
 import { BucketTerm, Term } from '../term/+state';
 import { Mandate, Sale } from '../contract/+state';
 import { Bucket, BucketContract } from '../bucket/+state';
@@ -35,22 +35,9 @@ function tinyId() {
   return Math.random().toString(16).substr(2);
 }
 
-function mandateExclusivityCheck(term: Term, avails: AvailsFilter) {
-
-  //                                Avail
-  //                     | Exclusive | Non-Exclusive |
-  //                -----|-----------|---------------|
-  //           Exclusive |     ✅    |       ✅     |
-  // Mandate        -----|-----------|---------------|
-  //       Non-Exclusive |    ❌     |      ✅      |
-  //                -----|-----------|---------------|
-
-  return term.exclusive || !avails.exclusive;
-}
-
 function getMatchingMandates(mandates: FullMandate[], avails: AvailsFilter): FullMandate[] {
   return mandates.filter(mandate => mandate.terms.some(term => {
-    const exclusivityCheck = mandateExclusivityCheck(term, avails);
+    const exclusivityCheck = exclusivityAllOf(avails.exclusive).in(term.exclusive);
     const mediaCheck = allOf(avails.medias).in(term.medias);
     const durationCheck = allOf(avails.duration).in(term.duration);
     const territoryCheck = allOf(avails.territories).in(term.territories);
@@ -59,28 +46,14 @@ function getMatchingMandates(mandates: FullMandate[], avails: AvailsFilter): Ful
   }));
 }
 
-
-function saleExclusivityCheck(term: Term, avails: AvailsFilter) {
-
-  //                                Avail
-  //                     | Exclusive | Non-Exclusive |
-  //                -----|-----------|---------------|
-  //           Exclusive |     ❌    |       ❌     |
-  // Sale           -----|-----------|---------------|
-  //       Non-Exclusive |    ❌     |      ✅      |
-  //                -----|-----------|---------------|
-
-  return !term.exclusive && !avails.exclusive;
-}
-
 function getMatchingSales<T extends (FullSale | BucketContractWithId)>(sales: T[], avails: AvailsFilter): T[] {
   return sales.filter(sale => sale.terms.some(term => {
-    const exclusivityCheck = saleExclusivityCheck(term ,avails);
-    const mediaCheck = noneOf(avails.medias).in(term.medias);
-    const durationCheck = noneOf(avails.duration).in(term.duration);
-    const territoryCheck = noneOf(avails.territories).in(term.territories);
+    const exclusivityCheck = exclusivitySomeOf(avails.exclusive).in(term.exclusive);
+    const mediaCheck = someOf(avails.medias).in(term.medias);
+    const durationCheck = someOf(avails.duration).in(term.duration);
+    const territoryCheck = someOf(avails.territories).in(term.territories);
 
-    return !(exclusivityCheck || mediaCheck || durationCheck || territoryCheck);
+    return exclusivityCheck && mediaCheck && durationCheck && territoryCheck;
   }));
 }
 
