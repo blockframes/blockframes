@@ -4,7 +4,7 @@
   assertSucceeds,
 } from '@firebase/testing';
 import { testFixture } from './fixtures/data';
-import { Firestore, initFirestoreApp } from '@blockframes/testing/firebase/functions';
+import { Firestore, initFirestoreApp } from '@blockframes/testing/unit-tests';
 import { Movie } from '@blockframes/movie/+state';
 import { StoreStatus } from '@blockframes/utils/static-model';
 
