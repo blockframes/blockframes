@@ -60,7 +60,7 @@ export class ProfileViewComponent implements OnInit {
     const org = this.organizationQuery.getActive();
     const app = getCurrentApp(this.routerQuery);
     if (canHavePreferences(org, app)) {
-      this.navLinks.push({ path: 'preferences', label: 'Buyer Preferences' })
+      this.navLinks.push({ path: 'preferences', label: 'Buying Preferences' })
     }
   }
 }

@@ -12,10 +12,7 @@ $banner-background: rgba(5, 7, 36);
 }
 
 landing-header {
-  padding: 0;
-
   header {
-    padding: 60px 80px;
     background-image: url("/assets/images/banner_landing_new.jpg");
     background-repeat: no-repeat;
     background-size: cover;
@@ -39,7 +36,26 @@ landing-content {
   }
 
   .landing-presentation {
-    padding: 80px
+    padding: 80px;
+    mat-tab-group {
+      padding-inline: 80px;
+      mat-tab-header {
+        position: sticky;
+        top: 0;
+        background-color: var(--background);
+        z-index: 1000;
+      }
+      header {
+        margin-block: 32px;
+        padding-right: 32px;
+        img {
+          width: 450px;
+        }
+      } 
+      article {
+        margin-bottom: 24px;
+      }
+    }
   }
 
   .landing-join-wrapper {
@@ -61,20 +77,6 @@ landing-content {
   h5 {
     margin-top: 48px;
     text-transform: uppercase;
-  }
-
-  mat-tab-group {
-      padding-inline: 80px;
-      header {
-        margin-block: 32px;
-        padding-right: 32px;
-        img {
-          width: 450px;
-        }
-      } 
-      article {
-        margin-bottom: 24px;
-      }
   }
   
   article {
@@ -142,6 +144,9 @@ landing-detail {
 
 @include layout-bp(lt-md) {
   landing-content {
+    mat-tab-group {
+      padding-inline: 40px;
+    }
     article .surface{
       width: 100%;
       margin-bottom: 8px;
@@ -160,6 +165,9 @@ landing-detail {
 
 @include layout-bp(lt-sm) {
   landing-content {
+    mat-tab-group {
+      padding-inline: 0;
+    }
     text-align: center;
     article .surface{
       width: 100%;
