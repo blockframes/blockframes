@@ -2,6 +2,7 @@
 import { Movie } from '@blockframes/movie/+state';
 import { Media, Territory } from '@blockframes/utils/static-model';
 
+import { allOf, noneOf } from './sets';
 import { BucketTerm, Term } from '../term/+state';
 import { Mandate, Sale } from '../contract/+state';
 import { Bucket, BucketContract } from '../bucket/+state';
@@ -34,6 +35,54 @@ function tinyId() {
   return Math.random().toString(16).substr(2);
 }
 
+function mandateExclusivityCheck(term: Term, avails: AvailsFilter) {
+
+  //                                Avail
+  //                     | Exclusive | Non-Exclusive |
+  //                -----|-----------|---------------|
+  //           Exclusive |     ✅    |       ✅     |
+  // Mandate        -----|-----------|---------------|
+  //       Non-Exclusive |    ❌     |      ✅      |
+  //                -----|-----------|---------------|
+
+  return term.exclusive || !avails.exclusive;
+}
+
+function getMatchingMandates(mandates: FullMandate[], avails: AvailsFilter): FullMandate[] {
+  return mandates.filter(mandate => mandate.terms.some(term => {
+    const exclusivityCheck = mandateExclusivityCheck(term, avails);
+    const mediaCheck = allOf(avails.medias).in(term.medias);
+    const durationCheck = allOf(avails.duration).in(term.duration);
+    const territoryCheck = allOf(avails.territories).in(term.territories);
+
+    return exclusivityCheck && mediaCheck && durationCheck && territoryCheck;
+  }));
+}
+
+
+function saleExclusivityCheck(term: Term, avails: AvailsFilter) {
+
+  //                                Avail
+  //                     | Exclusive | Non-Exclusive |
+  //                -----|-----------|---------------|
+  //           Exclusive |     ❌    |       ❌     |
+  // Sale           -----|-----------|---------------|
+  //       Non-Exclusive |    ❌     |      ✅      |
+  //                -----|-----------|---------------|
+
+  return !term.exclusive && !avails.exclusive;
+}
+
+function getMatchingSales<T extends (FullSale | BucketContractWithId)>(sales: T[], avails: AvailsFilter): T[] {
+  return sales.filter(sale => sale.terms.some(term => {
+    const exclusivityCheck = saleExclusivityCheck(term ,avails);
+    const mediaCheck = noneOf(avails.medias).in(term.medias);
+    const durationCheck = noneOf(avails.duration).in(term.duration);
+    const territoryCheck = noneOf(avails.territories).in(term.territories);
+
+    return exclusivityCheck || mediaCheck || durationCheck || territoryCheck;
+  }));
+}
 
 function availableTitles(
   avails: AvailsFilter,
@@ -71,7 +120,7 @@ function availableTitle(
 
   // get only the mandates that meets the avails filter criteria,
   // e.g. if we ask for "France" but the title is mandated in "Germany", we don't care
-  const availableMandates = getMatchingMandates(mandates, avails) as FullMandate[]; // TODO implement core logic
+  const availableMandates = getMatchingMandates(mandates, avails);
 
   // if there is no mandates left, the title is not available
   if (!availableMandates.length) return false;
@@ -80,7 +129,7 @@ function availableTitle(
 
   // get only the sales that meets the avails filter criteria
   // e.g. if we ask for "France" but the title has been sold in "Germany", we don't care
-  const salesToExclude = getMatchingSales(sales, avails) as FullSale[]; // TODO implement core logic
+  const salesToExclude = getMatchingSales(sales, avails);
 
   // if there is at least one sale that match the avails, the title is not available
   if (salesToExclude.length) return false;
@@ -102,10 +151,10 @@ function availableTitle(
 
   // get only the sales that meets the avails filter criteria
   // e.g. if we ask for "France" but the title has been sold in "Germany", we don't care
-  const bucketSalesToExclude = getMatchingSales(bucketSales, avails) as BucketContractWithId[]; // TODO implement core logic
+  const bucketSalesToExclude = getMatchingSales(bucketSales, avails);
 
   // if there is at least one sale that match the avails, the title is not available
-  if (salesToExclude.length) return false;
+  if (bucketSalesToExclude.length) return false;
 
   return true;
 }
