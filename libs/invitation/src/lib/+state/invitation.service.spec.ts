@@ -13,16 +13,11 @@ import firebase  from 'firebase/app';
 
 @Injectable()
 class InjectedAuthQuery {
-  userId: string;
-  orgId: string;
-
-  constructor() {
-    this.userId = 'userId';
-    this.orgId = 'orgId'; 
-  }
+  userId = 'userId';
+  orgId = 'orgId';
 
   select() {
-    return {pipe: () => { return null; }}
+    return { pipe: () => null };
   }
 }
 
@@ -80,25 +75,25 @@ describe('Invitations Test Suite', () => {
   })
 
   it('Formats invitation from firestore', () => {
-    const is = TestBed.inject(InvitationService);
+    const invitationService = TestBed.inject(InvitationService);
     const timestamp = firebase.firestore.Timestamp.fromDate(today);
     const formattedDate = toDate(timestamp);
 
     //Create an Invitation Document
     const newInvite = createInvitation();
     const invite:InvitationDocument = {...newInvite, ...{date: timestamp}}
-    const formattedInvite = is.formatFromFirestore(invite);
+    const formattedInvite = invitationService.formatFromFirestore(invite);
     expect(formattedInvite.date).toEqual(formattedDate);
   });
 
   it('Formats invitation to firestore', () => {
-    const is = TestBed.inject(InvitationService);
+    const invitationService = TestBed.inject(InvitationService);
 
     //Create an Invitation Document
     const inviteData = { ...invitationParamsOrg, ...invitationParamsUser };
     const inviteParams = { ...inviteData, ...{ message: 'Clean it', watchTime: undefined} };
     const newInvite = createInvitation(inviteParams);
-    const formattedInvite = is.formatToFirestore(newInvite);
+    const formattedInvite = invitationService.formatToFirestore(newInvite);
     expect(formattedInvite).toMatchObject(inviteData);
   });
 
@@ -144,12 +139,12 @@ describe('Invitations Test Suite', () => {
       privacyPolicy: null
     })
 
-    const is = TestBed.inject(InvitationService);
-    const mock = jest.spyOn(is, 'add');
+    const invitationService = TestBed.inject(InvitationService);
+    const mock = jest.spyOn(invitationService, 'add');
 
-    const requestOutput = is.request('O002', requestBy);
+    const requestOutput = invitationService.request('O002', requestBy);
     await requestOutput.to('attendEvent', 'E001');
-    expect(is.add).toHaveBeenCalled();
+    expect(invitationService.add).toHaveBeenCalled();
     const inviteParam = mock.mock.calls[0][0];
     const expectedParam = {
       type: 'attendEvent',
@@ -163,25 +158,25 @@ describe('Invitations Test Suite', () => {
   describe('Check Invitation', () => {
 
     it('is for my org', async () => {
-      const is = TestBed.inject(InvitationService);
+      const invitationService = TestBed.inject(InvitationService);
 
       //Create an Invitation Document
       const newInvite = createInvitation(invitationParamsOrg);
-      const isMyInvite = is.isInvitationForMe(newInvite);
+      const isMyInvite = invitationService.isInvitationForMe(newInvite);
       expect(isMyInvite).toBeTruthy();
     })
 
     it('is for my userId', async () => {
-      const is = TestBed.inject(InvitationService);
+      const invitationService = TestBed.inject(InvitationService);
 
       //Create an Invitation Document
       const newInvite = createInvitation(invitationParamsUser);
-      const isMyInvite = is.isInvitationForMe(newInvite);
+      const isMyInvite = invitationService.isInvitationForMe(newInvite);
       expect(isMyInvite).toBeTruthy();
     })
 
     it('is neither for my Org or userId', async () => {
-      const is = TestBed.inject(InvitationService);
+      const invitationService = TestBed.inject(InvitationService);
 
       //Create an Invitation Document
       const inviteParamsOrg = { ...invitationParamsOrg};
@@ -190,7 +185,7 @@ describe('Invitations Test Suite', () => {
       inviteParamsUser.toUser.uid = 'otherUserId';
       const invitationParams = {...inviteParamsOrg, ...inviteParamsUser};
       const newInvite = createInvitation(invitationParams);
-      const isMyInvite = is.isInvitationForMe(newInvite);
+      const isMyInvite = invitationService.isInvitationForMe(newInvite);
       expect(isMyInvite).toBeFalsy();
     })
   })
