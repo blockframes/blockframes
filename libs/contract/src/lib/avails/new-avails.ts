@@ -80,7 +80,7 @@ function getMatchingSales<T extends (FullSale | BucketContractWithId)>(sales: T[
     const durationCheck = noneOf(avails.duration).in(term.duration);
     const territoryCheck = noneOf(avails.territories).in(term.territories);
 
-    return exclusivityCheck || mediaCheck || durationCheck || territoryCheck;
+    return !(exclusivityCheck || mediaCheck || durationCheck || territoryCheck);
   }));
 }
 
