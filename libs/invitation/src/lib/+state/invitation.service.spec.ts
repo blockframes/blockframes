@@ -23,7 +23,7 @@ class InjectedAuthQuery {
   }
 
   select() {
-    return {pipe: () => { }}
+    return {pipe: () => { return null; }}
   }
 }
 
