@@ -17,7 +17,7 @@
     </ng-container>
     <contract-item [contract]="negotiation">
       <div class="price" price>
-        <h2 *ngIf="negotiation?.price else askPrice">
+        <h2 *ngIf="negotiation.price else askPrice">
           {{ negotiation.price | currency: sale.income?.currency }}
         </h2>
         <ng-template #askPrice>
