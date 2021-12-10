@@ -63,10 +63,8 @@ export class EventViewComponent implements OnInit {
 
             break;
           }
-          case 'private':
-            return invitations.find(invitation => invitation.eventId === event.id) ?? null;
           default:
-            return null;
+            return invitations.find(invitation => invitation.eventId === event.id) ?? null;
         }
       })
     );
