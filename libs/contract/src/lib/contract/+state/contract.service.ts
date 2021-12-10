@@ -2,12 +2,14 @@ import { Injectable } from '@angular/core';
 import { ContractStore, ContractState } from './contract.store';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { ContractDocument, convertDuration, createMandate, createSale, Holdback, Mandate, Sale } from './contract.model';
-import { formatDocumentMetaFromFirestore } from "@blockframes/utils/models-meta";
+import { createDocumentMeta, formatDocumentMetaFromFirestore } from "@blockframes/utils/models-meta";
 import { Timestamp } from "@blockframes/utils/common-interfaces/timestamp";
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
 import { map } from 'rxjs/operators';
 import { QueryFn } from '@angular/fire/firestore';
 import { OrganizationQuery } from '@blockframes/organization/+state';
+import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
+import { centralOrgId } from '@env';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'contracts' })
@@ -47,5 +49,30 @@ export class ContractService extends CollectionService<ContractState> {
     return this.negotiationService.valueChanges(query, options).pipe(
       map(negotiations => negotiations[0])
     );
+  }
+
+
+  async create(contractId: string, contract: Partial<Negotiation>) {
+    const activeOrgId = this.orgQuery.getActiveId();
+    const doc = this.getRef().doc(contractId).collection('negotiations').doc()
+    const write = this.batch();
+
+    write.set(doc, {
+      _meta: createDocumentMeta({ createdAt: new Date(), }),
+      status: 'pending',
+      createdByOrg: activeOrgId,
+      sellerId: centralOrgId.catalog,
+      stakeholders: contract.stakeholders,
+      buyerId: contract.orgId,
+      price: contract.price,
+      titleId: contract.titleId,
+      terms: contract.terms,
+      holdbacks: contract.holdbacks,
+      parentTermId: contract.parentTermId,
+      specificity: contract.specificity,
+      orgId: contract.orgId,
+    })
+    this.update(contractId, { status: 'negotiating' }, { write })
+    await write.commit()
   }
 }
