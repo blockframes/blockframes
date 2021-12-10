@@ -2,30 +2,34 @@
   <mat-icon svgIcon="arrow_back"></mat-icon>
 </a>
 <ng-container *ngIf="contract$ | async as sale">
-  <ng-container *ngIf="sale.negotiation?.status === 'pending' && sale.negotiation?.createdByOrg !== activeOrgId">
-    <header fxLayout fxLayoutAlign="center center" fxLayoutGap="24px">
-      <button mat-stroked-button color="primary" (click)="accept()" [disabled]="sale.income?.price">
-        <mat-icon svgIcon="check"></mat-icon>
-        <span>Accept</span>
-      </button>
-      <a mat-stroked-button color="primary" routerLink="negotiation">
-        <mat-icon svgIcon="negotiate"></mat-icon>
-        <span>Negotiate</span>
-      </a>
-    </header>
-  </ng-container>
-  <contract-item [contract]="sale">
-    <p price *ngIf="sale.income as income">
-      <ng-container *ngIf="income.price > 0; else askPrice">
-        <span>{{ income.price | currency: sale.income.currency }}</span>
-      </ng-container>
-      <ng-template #askPrice>
-        <span>Asking Price Requested</span>
-      </ng-template>
-    </p>
+  <ng-container *ngIf="sale.negotiation as negotiation">
+    <ng-container *ngIf="negotiation.status === 'pending' && negotiation.createdByOrg !== activeOrgId">
+      <header fxLayout fxLayoutAlign="center center" fxLayoutGap="24px">
+        <button mat-stroked-button color="primary" (click)="accept()" [disabled]="!sale.negotiation.price">
+          <mat-icon svgIcon="check"></mat-icon>
+          <span>Accept</span>
+        </button>
+        <a mat-stroked-button color="primary" routerLink="negotiate">
+          <mat-icon svgIcon="negotiate"></mat-icon>
+          <span>Negotiate</span>
+        </a>
+      </header>
+    </ng-container>
+    <contract-item [contract]="negotiation">
+      <div class="price" price>
+        <h2 *ngIf="negotiation.price else askPrice">
+          {{ negotiation.price | currency: sale.income?.currency }}
+        </h2>
+        <ng-template #askPrice>
+          <h3>Asking Price requested</h3>
+          <p class="mat-caption">To set a price click on <a routerLink="negotiate">negotiate</a></p>
+        </ng-template>
+      </div>
 
-    <footer>
-      <holdback-list [holdbacks]="sale.holdbacks"></holdback-list>
-    </footer>
-  </contract-item>
+      <footer>
+        <holdback-list [holdbacks]="sale.holdbacks"></holdback-list>
+      </footer>
+    </contract-item>
+
+  </ng-container>
 </ng-container>
