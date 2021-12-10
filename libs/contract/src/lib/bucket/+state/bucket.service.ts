@@ -117,7 +117,7 @@ export class BucketService extends CollectionService<BucketState> {
 
 
       //add the default negotiation.
-      await this.negotiationService.create(contractId, {
+      await this.contractService.addNegotiation(contractId, {
         ...contract,
         ...commonFields
       })

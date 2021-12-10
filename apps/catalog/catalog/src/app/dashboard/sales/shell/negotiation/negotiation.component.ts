@@ -10,6 +10,7 @@ import { NegotiationService } from '@blockframes/contract/negotiation/+state/neg
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ContractService } from '@blockframes/contract/contract/+state';
 
 @Component({
   selector: 'sale-negotiation',
@@ -29,6 +30,7 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
   constructor(
     private snackBar: MatSnackBar,
     private negotiationService: NegotiationService,
+    private contractService: ContractService,
     private shell: SaleShellComponent,
     private query: OrganizationQuery,
     private dialog: MatDialog,
@@ -62,7 +64,7 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
     const onConfirm = async () => {
       const sale = await this.sale$.pipe(first()).toPromise();
       this.form.markAsPristine(); // usefull to be able to route in the NegotiationGuard
-      await this.negotiationService.create(sale.id, {
+      await this.contractService.addNegotiation(sale.id, {
         ...sale.negotiation,
         ...this.form.value,
       });

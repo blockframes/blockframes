@@ -12,6 +12,7 @@ import { OrganizationQuery } from '@blockframes/organization/+state';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { combineLatest } from 'rxjs';
 import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
+import { ContractService } from '@blockframes/contract/contract/+state';
 
 @Component({
   selector: 'catalog-contract-edit',
@@ -35,6 +36,7 @@ export class ContractEditComponent implements NegotiationGuardedComponent, OnIni
     private snackBar: MatSnackBar,
     private shell: OfferShellComponent,
     private negotiationService: NegotiationService,
+    private contractService: ContractService,
     private query: OrganizationQuery,
     private dialog: MatDialog,
     private router: Router,
@@ -67,7 +69,7 @@ export class ContractEditComponent implements NegotiationGuardedComponent, OnIni
   async confirm() {
     const onConfirm = async () => {
       const sale = await this.sale$.pipe(first()).toPromise();
-      await this.negotiationService.create(sale.id, {
+      await this.contractService.addNegotiation(sale.id, {
         ...sale.negotiation,
         ...this.form.value
       });
