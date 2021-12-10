@@ -11,6 +11,7 @@ import { PublicUser } from '@blockframes/user/types';
 import { EventEmailData, getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
 import { logger } from 'firebase-functions';
 import { InvitationMode, InvitationStatus, InvitationType } from '@blockframes/invitation/+state/invitation.firestore';
+import { hasUserAnOrgOrIsAlreadyInvited } from '../invitation';
 
 interface UserProposal {
   uid: string;
@@ -38,8 +39,9 @@ export const getOrInviteUserByMail = async (
     const { uid } = await auth.getUserByEmail(email);
     const user = await getDocument<PublicUser>(`users/${uid}`);
 
-    //if user exists but has no orgId, we still want to send him an invitation email
-    if (invitation.type === 'attendEvent' && !user.orgId) {
+    //if user exists but has no orgId and no invitation to any org, we still want to send him an invitation email
+    const hasOrgOrOrgInvitation = await hasUserAnOrgOrIsAlreadyInvited([email]);
+    if (invitation.type === 'attendEvent' && !hasOrgOrOrgInvitation) {
       const invitationTemplateId = templateIds.user.credentials.attendEventRemindInvitationPass;
       if (invitation.mode === 'invitation' && eventData?.accessibility === 'public') {
         invitationStatus = 'accepted';

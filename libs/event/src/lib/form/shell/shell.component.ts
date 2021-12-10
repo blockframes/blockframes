@@ -102,17 +102,19 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
     this.formSub.unsubscribe();
   }
 
-  save() {
+  async save(options: { showSnackbar: boolean } = { showSnackbar: true }) {
     if (this.form.valid && this.form.dirty) {
       const value = this.form.value;
       if (this.form.value.allDay) {
         value.start.setHours(0, 0, 0);
         value.end.setHours(23, 59, 59);
       }
-      this.eventService.update(value);
+      await this.eventService.update(value);
       this.form.markAsPristine();
       this.cdr.markForCheck();
-      this.snackBar.open('Event saved', 'CLOSE', { duration: 4000 });
+      if (options.showSnackbar) {
+        this.snackBar.open('Event saved', 'CLOSE', { duration: 4000 });
+      }
     }
     return true;
   }
