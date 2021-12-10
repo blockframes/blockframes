@@ -5,7 +5,7 @@ import { ContractDocument, convertDuration, createMandate, createSale, Holdback,
 import { createDocumentMeta, formatDocumentMetaFromFirestore } from "@blockframes/utils/models-meta";
 import { Timestamp } from "@blockframes/utils/common-interfaces/timestamp";
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
-import { map } from 'rxjs/operators';
+import { first, map } from 'rxjs/operators';
 import { QueryFn } from '@angular/fire/firestore';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
@@ -52,12 +52,12 @@ export class ContractService extends CollectionService<ContractState> {
   }
 
 
-  async create(contractId: string, contract: Partial<Negotiation>) {
+  async addNegotiation(contractId: string, contract: Partial<Negotiation>) {
     const activeOrgId = this.orgQuery.getActiveId();
-    const doc = this.getRef().doc(contractId).collection('negotiations').doc()
     const write = this.batch();
+    const sale = await this.valueChanges(contractId).pipe(first()).toPromise();
 
-    write.set(doc, {
+    this.negotiationService.add({
       _meta: createDocumentMeta({ createdAt: new Date(), }),
       status: 'pending',
       createdByOrg: activeOrgId,
@@ -71,8 +71,8 @@ export class ContractService extends CollectionService<ContractState> {
       parentTermId: contract.parentTermId,
       specificity: contract.specificity,
       orgId: contract.orgId,
-    })
-    this.update(contractId, { status: 'negotiating' }, { write })
+    }, { write })
+    if (sale.status === 'pending') this.update(contractId, { status: 'negotiating' }, { write })
     await write.commit()
   }
 }

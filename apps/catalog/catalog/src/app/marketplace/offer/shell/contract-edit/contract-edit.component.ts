@@ -69,7 +69,7 @@ export class ContractEditComponent implements NegotiationGuardedComponent, OnIni
   async confirm() {
     const onConfirm = async () => {
       const sale = await this.sale$.pipe(first()).toPromise();
-      await this.contractService.create(sale.id, {
+      await this.contractService.addNegotiation(sale.id, {
         ...sale.negotiation,
         ...this.form.value
       });
