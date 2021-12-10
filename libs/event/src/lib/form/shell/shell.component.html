@@ -20,9 +20,9 @@
           <mat-icon svgIcon="arrow_back"></mat-icon>
         </a>
         <mat-chip-list fxLayoutAlign="center center">
-          <mat-chip disableRipple *ngIf="screenerMissing">
+          <mat-chip disableRipple *ngIf="screenerMissing || titleMissing">
             <mat-icon svgIcon="warning"></mat-icon>
-            <span>Screening file missing</span>
+            <span>{{titleMissing ? 'No title selected' : 'Screening file missing'}}</span>
           </mat-chip>
         </mat-chip-list>
       </div>
