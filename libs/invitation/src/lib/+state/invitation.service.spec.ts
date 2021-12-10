@@ -1,11 +1,42 @@
-﻿import { TestBed } from '@angular/core/testing';
+﻿import { Injectable } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
 import { InvitationService } from './invitation.service';
 import { InvitationStore } from './invitation.store';
+import { AuthQuery, createUser } from '@blockframes/auth/+state';
 import { AngularFireModule } from '@angular/fire';
+import { toDate } from '@blockframes/utils/helpers';
 import { SETTINGS, AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestore';
 import { loadFirestoreRules, clearFirestoreData } from '@firebase/testing';
 import { readFileSync } from 'fs';
 import { createInvitation, InvitationDocument } from './invitation.firestore';
+import firebase  from 'firebase/app';
+
+@Injectable()
+class InjectedAuthQuery {
+  userId = 'userId';
+  orgId = 'orgId';
+
+  select() {
+    return { pipe: () => null };
+  }
+}
+
+const today = new Date();
+const invitationParamsOrg = {
+  date: today, 
+  toOrg: {
+    id: 'orgId',
+    denomination: { full: 'MyOrg' },
+    logo: undefined
+  },
+};
+const invitationParamsUser = {
+  date: today, 
+  toUser: {
+    uid: 'userId',
+    email: 'userId@myorg.org'
+  }
+};
 
 describe('Invitations Test Suite', () => {
   let service: InvitationService;
@@ -20,6 +51,7 @@ describe('Invitations Test Suite', () => {
       providers: [
         InvitationService,
         InvitationStore,
+        { provide: AuthQuery, useClass: InjectedAuthQuery },
         { provide: SETTINGS, useValue: { host: 'localhost:8080', ssl: false } }
       ],
     });
@@ -30,6 +62,7 @@ describe('Invitations Test Suite', () => {
       projectId: "test",
       rules: readFileSync('./firestore.test.rules', "utf8")
     });
+
   });
 
   afterEach(() => clearFirestoreData({ projectId: 'test' }));
@@ -42,19 +75,26 @@ describe('Invitations Test Suite', () => {
   })
 
   it('Formats invitation from firestore', () => {
-    const is = TestBed.inject(InvitationService);
-    is.formatFromFirestore = jest.fn();
-    is.formatFromFirestore({} as InvitationDocument);
-    expect(is.formatFromFirestore).toHaveBeenCalled();
-    // TODO: issue#3415 test the output value
+    const invitationService = TestBed.inject(InvitationService);
+    const timestamp = firebase.firestore.Timestamp.fromDate(today);
+    const formattedDate = toDate(timestamp);
+
+    //Create an Invitation Document
+    const newInvite = createInvitation();
+    const invite:InvitationDocument = {...newInvite, ...{date: timestamp}}
+    const formattedInvite = invitationService.formatFromFirestore(invite);
+    expect(formattedInvite.date).toEqual(formattedDate);
   });
 
   it('Formats invitation to firestore', () => {
-    const is = TestBed.inject(InvitationService);
-    is.formatToFirestore = jest.fn();
-    is.formatToFirestore(createInvitation());
-    expect(is.formatToFirestore).toHaveBeenCalled();
-    // TODO: issue#3415 test the output value
+    const invitationService = TestBed.inject(InvitationService);
+
+    //Create an Invitation Document
+    const inviteData = { ...invitationParamsOrg, ...invitationParamsUser };
+    const inviteParams = { ...inviteData, ...{ message: 'Clean it', watchTime: undefined} };
+    const newInvite = createInvitation(inviteParams);
+    const formattedInvite = invitationService.formatToFirestore(newInvite);
+    expect(formattedInvite).toMatchObject(inviteData);
   });
 
   it('Should invitation status become accepted', async () => {
@@ -83,5 +123,70 @@ describe('Invitations Test Suite', () => {
     expect((doc.data() as InvitationDocument).status).toBe('declined');
   });
 
-  // TODO: issue#3415 implements tests for others functions
+  it('Should create invitation request', async () => {
+    const requestBy = createUser({
+      uid: 'userId',
+      financing: {
+        rank: 'first'
+      },
+      firstName: 'Unit',
+      lastName: 'Tester',
+      email: 'userId@myorg.org',
+      phoneNumber: '012345',
+      position: 'Sr.Tester',
+      orgId: 'O001',
+      avatar: null,
+      privacyPolicy: null
+    })
+
+    const invitationService = TestBed.inject(InvitationService);
+    const mock = jest.spyOn(invitationService, 'add');
+
+    const requestOutput = invitationService.request('O002', requestBy);
+    await requestOutput.to('attendEvent', 'E001');
+    expect(invitationService.add).toHaveBeenCalled();
+    const inviteParam = mock.mock.calls[0][0];
+    const expectedParam = {
+      type: 'attendEvent',
+      eventId: 'E001',
+      toOrg: { id: 'O002'},
+      fromUser: { uid: 'userId', orgId: 'O001' }
+    }
+    expect(inviteParam).toMatchObject(expectedParam);
+  });
+
+  describe('Check Invitation', () => {
+
+    it('is for my org', async () => {
+      const invitationService = TestBed.inject(InvitationService);
+
+      //Create an Invitation Document
+      const newInvite = createInvitation(invitationParamsOrg);
+      const isMyInvite = invitationService.isInvitationForMe(newInvite);
+      expect(isMyInvite).toBeTruthy();
+    })
+
+    it('is for my userId', async () => {
+      const invitationService = TestBed.inject(InvitationService);
+
+      //Create an Invitation Document
+      const newInvite = createInvitation(invitationParamsUser);
+      const isMyInvite = invitationService.isInvitationForMe(newInvite);
+      expect(isMyInvite).toBeTruthy();
+    })
+
+    it('is neither for my Org or userId', async () => {
+      const invitationService = TestBed.inject(InvitationService);
+
+      //Create an Invitation Document
+      const inviteParamsOrg = { ...invitationParamsOrg};
+      const inviteParamsUser = { ...invitationParamsUser};
+      inviteParamsOrg.toOrg.id = 'otherOrgId';
+      inviteParamsUser.toUser.uid = 'otherUserId';
+      const invitationParams = {...inviteParamsOrg, ...inviteParamsUser};
+      const newInvite = createInvitation(invitationParams);
+      const isMyInvite = invitationService.isInvitationForMe(newInvite);
+      expect(isMyInvite).toBeFalsy();
+    })
+  })
 });
