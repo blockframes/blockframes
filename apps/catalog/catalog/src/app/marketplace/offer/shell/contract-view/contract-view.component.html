@@ -2,19 +2,19 @@
   <mat-icon svgIcon="arrow_back"></mat-icon>
 </a>
 <ng-container *ngIf="contract$ | async as sale">
-  <ng-container *ngIf="sale.negotiation?.status === 'pending' && sale.negotiation?.createdByOrg !== activeOrgId">
-    <header fxLayout fxLayoutAlign="center center" fxLayoutGap="24px">
-      <button mat-stroked-button color="primary" (click)="accept()" [disabled]="!sale.negotiation?.price">
-        <mat-icon svgIcon="check"></mat-icon>
-        <span>Accept</span>
-      </button>
-      <a mat-stroked-button color="primary" routerLink="negotiate">
-        <mat-icon svgIcon="negotiate"></mat-icon>
-        <span>Negotiate</span>
-      </a>
-    </header>
-  </ng-container>
   <ng-container *ngIf="sale.negotiation as negotiation">
+    <ng-container *ngIf="negotiation.status === 'pending' && negotiation.createdByOrg !== activeOrgId">
+      <header fxLayout fxLayoutAlign="center center" fxLayoutGap="24px">
+        <button mat-stroked-button color="primary" (click)="accept()" [disabled]="!sale.negotiation.price">
+          <mat-icon svgIcon="check"></mat-icon>
+          <span>Accept</span>
+        </button>
+        <a mat-stroked-button color="primary" routerLink="negotiate">
+          <mat-icon svgIcon="negotiate"></mat-icon>
+          <span>Negotiate</span>
+        </a>
+      </header>
+    </ng-container>
     <contract-item [contract]="negotiation">
       <div class="price" price>
         <h2 *ngIf="negotiation?.price else askPrice">
@@ -30,5 +30,6 @@
         <holdback-list [holdbacks]="sale.holdbacks"></holdback-list>
       </footer>
     </contract-item>
+
   </ng-container>
 </ng-container>
