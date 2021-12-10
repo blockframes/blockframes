@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { EventService } from '@blockframes/event/+state';
 import { ActivatedRoute } from '@angular/router';
 import { InvitationService, Invitation } from '@blockframes/invitation/+state';
-import { combineLatest, of, Observable } from 'rxjs';
+import { combineLatest, of, Observable, BehaviorSubject } from 'rxjs';
 import { catchError, filter, switchMap, pluck, tap } from 'rxjs/operators';
 import { Location } from '@angular/common';
 import { fade } from '@blockframes/utils/animations/fade';
@@ -22,6 +22,7 @@ export class EventViewComponent implements OnInit {
   accessRoute: string;
   user$ = this.authQuery.user$;
   event$: Observable<Event>;
+  private statusChanged = new BehaviorSubject(false);
   public timerEnded = false;
 
   constructor(
@@ -46,6 +47,7 @@ export class EventViewComponent implements OnInit {
     this.invitation$ = combineLatest([
       this.event$.pipe(filter(event => !!event)),
       this.invitationService.guestInvitations$.pipe(catchError(() => of([]))),
+      this.statusChanged
     ]).pipe(
       switchMap(async ([event, invitations]) => {
         this.accessRoute = `/event/${event.id}/r/i/${event.type === 'meeting' ? 'lobby' : 'session'}`;
@@ -56,7 +58,7 @@ export class EventViewComponent implements OnInit {
             if (regularInvitation) return regularInvitation;
             const anonymousCredentials = this.authService.anonymousCredentials;
             if (anonymousCredentials?.invitationId) {
-              return this.invitationService.getValue(anonymousCredentials?.invitationId)
+              return this.invitationService.getValue(anonymousCredentials?.invitationId);
             }
 
             break;
@@ -73,6 +75,10 @@ export class EventViewComponent implements OnInit {
   goBack() {
     this.authService.updateAnonymousCredentials({ role: undefined, firstName: undefined, lastName: undefined });
     this.location.back();
+  }
+
+  reloadInvitation() {
+    this.statusChanged.next(true);
   }
 
 }
