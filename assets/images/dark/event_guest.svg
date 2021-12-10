@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="380px" height="380px" viewBox="0 0 380 380" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>Illustrations/Dark/guests</title>
+    <title>Drak-guests-outside-event</title>
     <defs>
         <polygon id="path-1" points="0 0 327.492 0 327.492 327.4919 0 327.4919"></polygon>
         <polygon id="path-3" points="19.874 144.982 78.859 157.272 94.496 144.454 117.141 1.376 92.868 17.565 0 0"></polygon>
@@ -10,14 +10,13 @@
         <polygon id="path-11" points="19.874 144.982 78.859 157.272 94.496 144.454 117.141 1.376 92.868 17.565 0 0"></polygon>
         <polygon id="path-13" points="19.874 144.982 78.859 157.272 94.496 144.454 117.141 1.376 92.868 17.565 0 0"></polygon>
     </defs>
-    <g id="Illustrations/Dark/guests" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+    <g id="Drak-guests-outside-event" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <g id="Group-212" transform="translate(26.000000, 26.000000)">
             <g id="Group-3">
                 <mask id="mask-2" fill="white">
                     <use xlink:href="#path-1"></use>
                 </mask>
                 <g id="Clip-2"></g>
-                <path d="M327.492,163.7459 C327.492,254.1809 254.18,327.4919 163.746,327.4919 C73.311,327.4919 0,254.1809 0,163.7459 C0,73.3119 73.311,-0.0001 163.746,-0.0001 C254.18,-0.0001 327.492,73.3119 327.492,163.7459" id="Fill-1" fill="#9EB1FF" opacity="0.117895217" mask="url(#mask-2)"></path>
             </g>
             <g id="Group-10" transform="translate(79.076300, 16.439400)" fill="#06081C" stroke="#6F7CBD" stroke-width="0.75">
                 <g id="Group-9">
