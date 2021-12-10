@@ -83,15 +83,26 @@
         <article fxLayout="column" fxLayoutGap="16px" class="organized-by">
           <h2>Organized by</h2>
           <div fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
-            <a matRipple [routerLink]="['/c/o/marketplace/organization', event.org.id]">
+            <ng-container *ngIf="user$ | async else anonymous">
+              <a matRipple [routerLink]="['/c/o/marketplace/organization', event.org.id]">
+                <img [ref]="event.org.logo" asset="empty_organization.svg" type="logo" alt="Organization Logo">
+              </a>
+              <div fxLayout="column" fxLayoutGap="4px">
+                <h6><a [routerLink]="['/c/o/marketplace/organization', event.org.id]">{{ event.org | orgName }}</a></h6>
+                <ng-container *ngIf="event.organizedBy as user">
+                  <span>{{ user | displayName }}{{ user | displayPosition }}</span>
+                </ng-container>
+              </div>
+            </ng-container>
+            <ng-template #anonymous>
               <img [ref]="event.org.logo" asset="empty_organization.svg" type="logo" alt="Organization Logo">
-            </a>
-            <div fxLayout="column" fxLayoutGap="4px">
-              <h6><a [routerLink]="['/c/o/marketplace/organization', event.org.id]">{{ event.org | orgName }}</a></h6>
-              <ng-container *ngIf="event.organizedBy as user">
-                <span>{{ user | displayName }}{{ user | displayPosition }}</span>
-              </ng-container>
-            </div>
+              <div fxLayout="column" fxLayoutGap="4px">
+                <h6>{{ event.org | orgName }}</h6>
+                <ng-container *ngIf="event.organizedBy as user">
+                  <span>{{ user | displayName }}{{ user | displayPosition }}</span>
+                </ng-container>
+              </div>
+            </ng-template>
           </div>
           <ng-container *ngIf="!!event.meta.description">
             <h5>Description</h5>
