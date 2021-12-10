@@ -54,14 +54,14 @@ export class EventViewComponent implements OnInit {
 
         switch (event.accessibility) {
           case 'protected': {
-            const regularInvitation = invitations.find(invitation => invitation.eventId === event.id) ?? null;
+            const regularInvitation = invitations.find(invitation => invitation.eventId === event.id);
             if (regularInvitation) return regularInvitation;
             const anonymousCredentials = this.authService.anonymousCredentials;
             if (anonymousCredentials?.invitationId) {
               return this.invitationService.getValue(anonymousCredentials?.invitationId);
             }
 
-            break;
+            return null;
           }
           default:
             return invitations.find(invitation => invitation.eventId === event.id) ?? null;
