@@ -12,6 +12,13 @@ landing-shell-page {
   flex-direction: column;
   height: 100vh;
 
+  button[app-logo] {
+    margin-right: 96px;
+    border: none;
+    background-color: var(--background-card);
+    cursor: pointer;
+  }
+  
   /* Toolbar */
 
   mat-toolbar {
@@ -21,13 +28,6 @@ landing-shell-page {
       width: 100%;
       a:nth-child(2) {
         margin-right: auto;
-      }
-
-      button[app-logo] {
-        margin-right: 96px;
-        border: none;
-        background-color: var(--background-card);
-        cursor: pointer;
       }
 
       #demo-link {
