@@ -29,6 +29,11 @@ export class InvitationService extends CollectionService<InvitationState> {
    */
   public getInvitationLinkedToEmail = this.functions.httpsCallable('getInvitationLinkedToEmail');
 
+  /**
+   * Used to accept or decline invitation if user is logged in as anonymous
+   */
+  public acceptOrDeclineInvitationAsAnonymous = this.functions.httpsCallable('acceptOrDeclineInvitationAsAnonymous');
+
   myInvitations$: Observable<Invitation[]> = this.authQuery.select().pipe(
     switchMap((user: AuthState) => {
       if (user.profile?.orgId) {

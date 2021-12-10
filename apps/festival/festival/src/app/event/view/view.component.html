@@ -19,7 +19,7 @@
               <a mat-stroked-button color="primary" [routerLink]="editEvent">Edit Event</a>
             </ng-container>
             <ng-template #notOwner>
-                <invitation-action *ngIf="(invitation$ | async) !== undefined" @fade [invitation]="(invitation$ | async)" [event]="event"></invitation-action>
+                <invitation-action *ngIf="(invitation$ | async) !== undefined" @fade [invitation]="(invitation$ | async)" [event]="event" (statusChanged)="reloadInvitation()"></invitation-action>
                 <ng-container *ngIf="(invitation$ | async)?.status === 'accepted'  || event.accessibility === 'public'">
                   <a mat-flat-button color="accent" [disabled]="!timerEnded" [routerLink]="accessRoute" matTooltip="You'll be able to join the screening when it starts.">Access {{ event.type | titlecase }} Room</a>
                 </ng-container>
@@ -39,7 +39,7 @@
             <ng-template #notOwner>
               <ng-container *ngIf="event.accessibility !== 'public' else publicEvent">
                 <div @fade *ngIf="(invitation$ | async) !== undefined" fxLayout="column" fxLayoutAlign="center center">
-                  <invitation-action [invitation]="(invitation$ | async)" [event]="event"></invitation-action>
+                  <invitation-action [invitation]="(invitation$ | async)" [event]="event" (statusChanged)="reloadInvitation()"></invitation-action>
                   <ng-container *ngIf="(invitation$ | async)?.status === 'accepted'">
                     <a test-id="event-room" mat-flat-button [routerLink]="accessRoute" color="accent">Access {{ event.type | titlecase }} Room</a>
                   </ng-container>
@@ -83,15 +83,26 @@
         <article fxLayout="column" fxLayoutGap="16px" class="organized-by">
           <h2>Organized by</h2>
           <div fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
-            <a matRipple [routerLink]="['/c/o/marketplace/organization', event.org.id]">
+            <ng-container *ngIf="user$ | async else anonymous">
+              <a matRipple [routerLink]="['/c/o/marketplace/organization', event.org.id]">
+                <img [ref]="event.org.logo" asset="empty_organization.svg" type="logo" alt="Organization Logo">
+              </a>
+              <div fxLayout="column" fxLayoutGap="4px">
+                <h6><a [routerLink]="['/c/o/marketplace/organization', event.org.id]">{{ event.org | orgName }}</a></h6>
+                <ng-container *ngIf="event.organizedBy as user">
+                  <span>{{ user | displayName }}{{ user | displayPosition }}</span>
+                </ng-container>
+              </div>
+            </ng-container>
+            <ng-template #anonymous>
               <img [ref]="event.org.logo" asset="empty_organization.svg" type="logo" alt="Organization Logo">
-            </a>
-            <div fxLayout="column" fxLayoutGap="4px">
-              <h6><a [routerLink]="['/c/o/marketplace/organization', event.org.id]">{{ event.org | orgName }}</a></h6>
-              <ng-container *ngIf="event.organizedBy as user">
-                <span>{{ user | displayName }}{{ user | displayPosition }}</span>
-              </ng-container>
-            </div>
+              <div fxLayout="column" fxLayoutGap="4px">
+                <h6>{{ event.org | orgName }}</h6>
+                <ng-container *ngIf="event.organizedBy as user">
+                  <span>{{ user | displayName }}{{ user | displayPosition }}</span>
+                </ng-container>
+              </div>
+            </ng-template>
           </div>
           <ng-container *ngIf="!!event.meta.description">
             <h5>Description</h5>

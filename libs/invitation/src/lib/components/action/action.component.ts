@@ -1,10 +1,10 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { AuthQuery } from '@blockframes/auth/+state';
+import { AuthQuery, AuthService } from '@blockframes/auth/+state';
 import { Event } from '@blockframes/event/+state';
 import { boolean } from '@blockframes/utils/decorators/decorators';
-import { Invitation, InvitationService } from '../../+state';
+import { Invitation, InvitationService, InvitationStatus } from '../../+state';
 
 @Component({
   selector: 'invitation-action',
@@ -16,6 +16,8 @@ export class ActionComponent {
 
   @Input() event: Event;
   public invit: Invitation;
+  public accepting = false;
+  public declining = false;
 
   @Input() set invitation(invit: Invitation) {
     this.invit = invit;
@@ -28,6 +30,7 @@ export class ActionComponent {
 
   @Input() @boolean small = false;
   @Input() @boolean flat = false;
+  @Output() statusChanged = new EventEmitter<InvitationStatus>();
 
   private requestPending = false;
   user$ = this.authQuery.user$;
@@ -37,14 +40,31 @@ export class ActionComponent {
     private service: InvitationService,
     private snackBar: MatSnackBar,
     private authQuery: AuthQuery,
+    private authService: AuthService,
   ) { }
 
   accept(invitation: Invitation) {
-    this.service.acceptInvitation(invitation);
+    this.accepting = true;
+    if (!this.authQuery.user) {
+      this.acceptOrDeclineAsAnonymous(invitation.id, 'accepted');
+    } else {
+      this.service.acceptInvitation(invitation);
+    }
   }
 
   decline(invitation: Invitation) {
-    this.service.declineInvitation(invitation);
+    this.declining = true;
+    if (!this.authQuery.user) {
+      this.acceptOrDeclineAsAnonymous(invitation.id, 'declined');
+    } else {
+      this.service.declineInvitation(invitation);
+    }
+  }
+
+  async acceptOrDeclineAsAnonymous(invitationId: string, status: InvitationStatus) {
+    const creds = this.authService.anonymousCredentials;
+    await this.service.acceptOrDeclineInvitationAsAnonymous({ invitationId, email: creds.email, status }).toPromise<boolean>();
+    this.statusChanged.emit(status);
   }
 
   /** Request the owner to accept invitation (automatically accepted if event is public) */
