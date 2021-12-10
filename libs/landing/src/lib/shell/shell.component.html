@@ -105,7 +105,9 @@
       <section class="max-width" fxLayout="column" fxLayoutAlign="start center" fxLayoutAlign.lt-md="center center"
         fxLayoutGap="32px">
         <div fxLayout="row wrap">
-          <app-logo fxLayout fxFlex></app-logo>
+          <div fxLayout fxFlex>
+            <button app-logo (click)="scrollToTop()"></button>
+          </div>
           <form fxFlex fxLayout.lt-sm="column" [formGroup]="newslettersForm" (ngSubmit)="subscribeToNewsletters(newslettersForm)" >
             <mat-form-field appearance="outline" hideRequiredMarker>
               <mat-label>Enter your email address</mat-label>
