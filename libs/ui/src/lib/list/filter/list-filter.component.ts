@@ -9,6 +9,7 @@ import {
   OnInit
 } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
+import { hasValue } from '@blockframes/utils/pipes';
 import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
@@ -29,7 +30,7 @@ export class FilterDirective implements OnInit {
       this.active$,
       this.form.valueChanges.pipe(startWith(this.form.value)),
     ]).pipe(
-      map(([active]) => active || this.form.dirty),
+      map(([active, value]) => active || (hasValue(value) && this.form.valid)),
       map(hasColor => hasColor ? 'primary' : '')
     );
   }
