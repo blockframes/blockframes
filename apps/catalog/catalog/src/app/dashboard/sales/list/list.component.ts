@@ -57,7 +57,7 @@ export class SaleListComponent implements OnInit {
     new: m.filter(m => m.status === 'pending').length,
     accepted: m.filter(m => m.status === 'accepted').length,
     declined: m.filter(m => m.status === 'declined').length,
-    negotiation: m.filter(m => m.status === 'negotiating').length,
+    negotiating: m.filter(m => m.status === 'negotiating').length,
   })));
 
 
