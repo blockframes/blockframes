@@ -91,17 +91,31 @@ export class ListComponent implements OnDestroy, OnInit {
     );
 
     const {
-      search,
+      search = {},
       avails = {}
     } = decodeUrl(this.route);
-    // patch everything
-    this.searchForm.patchValue(search);
 
+    this.searchForm.patchValue(search);
+    this.availsForm.patchValue(avails);
     // ensure FromList are also patched
     this.searchForm.genres.patchAllValue(search?.genres);
     this.searchForm.originCountries.patchAllValue(search?.originCountries);
 
-    this.availsForm.patchValue(avails);
+    const markDirty = (incoming: Object, form: MovieSearchForm | AvailsForm, ignore: string[] = []) => {
+      for (const [key, value] of Object.entries(incoming)) {
+        if (ignore.includes(key)) continue;
+        if (Array.isArray(value)) {
+          if (value.length) {
+            form.controls[key]?.markAsDirty();
+          }
+        } else if (value) {
+          form.controls[key]?.markAsDirty();
+        }
+      }
+    }
+
+    markDirty(search, this.searchForm);
+    markDirty(avails, this.availsForm, ['duration', 'exclusive']);
 
     const search$ = combineLatest([
       this.searchForm.valueChanges.pipe(startWith(this.searchForm.value)),

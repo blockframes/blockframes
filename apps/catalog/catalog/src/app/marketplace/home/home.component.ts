@@ -52,7 +52,6 @@ export class MarketplaceHomeComponent implements OnInit, AfterViewInit {
       this.authService.update({ preferences });
       this.dialog.open(PreferencesComponent, {
         height: '80vh',
-        width: '80vw',
         autoFocus: false
       });
     }

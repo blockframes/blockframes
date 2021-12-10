@@ -149,8 +149,13 @@ export class FormList<T, Control extends AbstractControl = any> extends FormArra
     super.patchValue(value, options)
   }
 
-  hardReset(values: GetPartial<T>[]) {
+  hardReset(values: GetPartial<T>[], markAsDirty: boolean) {
     this.clear()
-    values.forEach(value => this.add(value));
+    if (Array.isArray(values)) {
+      values.forEach(value => {
+        this.add(value)
+        if (value && markAsDirty) this.markAsDirty()
+      });
+    }
   }
 }
