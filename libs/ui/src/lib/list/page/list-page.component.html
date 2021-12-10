@@ -41,11 +41,9 @@
 <section>
   <ng-container *ngIf="!!items; else loading">
     <ng-container *ngIf="items.length; else empty">
-      <div fxLayout fxLayoutAlign="end start">
-        <ng-content select="pdf-export"></ng-content>
-      </div>
-      <div fxLayout="row" fxLayoutAlign="end start">
+      <div fxLayout="row" fxLayoutAlign="space-between center">
         <ng-content select="list-page-description"></ng-content>
+        <ng-content select="pdf-export"></ng-content>
       </div>
       <ng-container *ngIf="!listView; else displayList">
         <div grid [@fadeList]="items.length">

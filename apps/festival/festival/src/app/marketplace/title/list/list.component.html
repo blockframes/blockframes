@@ -65,6 +65,14 @@
     </button>
   </list-filter>
 
+  <!-- TITLE COUNT (ng-content)-->
+  <list-page-description *ngIf="nbHits">
+    <span i18n class="mat-body-2">
+      There {nbHits, plural, =0 {} =1 {is} other {are}} {{ nbHits }} title{nbHits, plural, =0 {} =1 {} other {s}}
+      available.
+    </span>
+  </list-page-description>
+
   <!-- EXPORT (ng-content)-->
   <pdf-export *ngIf="movies$ | async as movies">
     <button [disabled]="exporting" mat-flat-button (click)="export(movies)" matTooltip="Export to PDF">
