@@ -18,7 +18,7 @@ export class ScreeningComponent implements OnInit {
 
   titles$: Observable<Movie[]>;
   screenerMissing: boolean;
-
+  titleMissing: boolean;
   constructor(
     private movieService: MovieService,
     private orgQuery: OrganizationQuery,
@@ -45,18 +45,21 @@ export class ScreeningComponent implements OnInit {
       map(titles => titles.sort((a, b) => a.title.international.localeCompare(b.title.international)))
     );
 
-    if (this.shell.form.meta.value.titleId) {
-      this.checkTitleScreener(this.shell.form.meta.value.titleId);
-    }
+    this.checkTitleAndScreener(this.shell.form.meta.value.titleId);
   }
 
   copied() {
     this.snackBar.open('Link copied', 'CLOSE', { duration: 4000 });
   }
 
-  async checkTitleScreener(titleId: string) {
-    const title = await this.movieService.getValue(titleId);
-    this.screenerMissing = !title.promotional.videos?.screener?.jwPlayerId;
+  async checkTitleAndScreener(titleId: string) {
+    if(!titleId) {
+      this.titleMissing = true;
+    } else {
+      this.titleMissing = false;
+      const title = await this.movieService.getValue(titleId);
+      this.screenerMissing = !title.promotional.videos?.screener?.jwPlayerId;
+    }
     this.cdr.markForCheck();
   }
 }
