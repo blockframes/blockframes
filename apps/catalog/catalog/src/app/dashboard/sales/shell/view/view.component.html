@@ -1,30 +1,28 @@
 <ng-container *ngIf="sale$ | async as sale; else loading">
-  <header fxLayout fxLayoutAlign="start center" fxLayoutGap="16px" *ngIf="sale.negotiation as negotiation">
-    <ng-container [ngSwitch]="negotiation?.status">
-      <ng-container *ngSwitchCase="'accepted'">
-        <button mat-flat-button color="primary" disabled matTooltip="You have already accepted this offer, please connect with the AC Team">
-          <span>Accepted</span>
-          <mat-icon svgIcon="check"></mat-icon>
-        </button>
-      </ng-container>
-      <ng-container *ngSwitchCase="'declined'">
-        <button mat-flat-button color="primary" disabled matTooltip="You have already declined this offer, please connect with the AC Team">
-          <span>Declined</span>
-          <mat-icon svgIcon="refuse"></mat-icon>
-        </button>
-      </ng-container>
-      <ng-container *ngSwitchCase="'pending'">
-        <button [disabled]="!(negotiation | canAccept)" mat-stroked-button color="primary" (click)="accept(sale.id, sale.movie)">
-          <mat-icon svgIcon="check"></mat-icon>
-          <span>Accept</span>
-        </button>
+  <ng-container *ngIf="sale.negotiation as negotiation">
+    <ng-container *ngIf="negotiation.status === 'pending' && negotiation.createdByOrg !== orgId">
+      
+      <header fxLayout fxLayoutAlign="start center" fxLayoutGap="16px" *ngIf="sale.negotiation as negotiation">
+        <ng-container *ngIf="negotiation.price else noPrice">
+          <button mat-stroked-button color="primary" (click)="accept(sale.id, sale.movie)">
+            <mat-icon svgIcon="check"></mat-icon>
+            <span>Accept</span>
+          </button>
+        </ng-container>
+        <ng-template #noPrice>
+          <button disabled mat-stroked-button matTooltip="You cannot accept a contract without a price">
+            <mat-icon svgIcon="check"></mat-icon>
+            <span>Accept</span>
+          </button>
+        </ng-template>
         <a [disabled]="negotiation.createdByOrg === orgId" mat-stroked-button color="primary" routerLink="../negotiation">
           <mat-icon svgIcon="negotiate"></mat-icon>
           <span>Negotiate</span>
         </a>
-      </ng-container>
+      </header>
+      
     </ng-container>
-  </header>
+  </ng-container>
 
   <section>
     <article class="surface" *ngIf="sale.specificity as specificity">

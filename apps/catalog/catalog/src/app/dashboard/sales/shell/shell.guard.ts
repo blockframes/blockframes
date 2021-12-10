@@ -38,7 +38,7 @@ export class CatalogSaleGuard implements CanActivate {
     if (!saleId) this.router.parseUrl('c/o/dashboard/sales');
 
     return this.contractService.valueChanges(saleId).pipe(
-      map(sale => sale.stakeholders.includes(centralOrgId.catalog)),
+      map(sale => sale.sellerId === centralOrgId.catalog),
       map(isInternal => isInternal || this.router.parseUrl(`c/o/dashboard/sales/${saleId}/external`)),
     );
   }

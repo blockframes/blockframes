@@ -1,17 +1,18 @@
 <ng-container *ngIf="sale$ | async as sale; else loading">
   <header fxLayout="column" fxLayoutAlign="start start">
-    <div fxLayout fxlayoutAlign="space-between center">
-      <a mat-icon-button routerLink="/c/o/dashboard/sales" color="primary">
-        <mat-icon svgIcon="arrow_back"></mat-icon>
-      </a>
-
-      <a mat-button routerLink="/c/o/dashboard/standard-terms" color="primary">
-        <mat-icon svgIcon="file"></mat-icon>
-        <span>See Standard Terms</span>
-      </a>
-    </div>
-    <bf-tag>{{sale.status | toLabel: 'contractStatus'}}</bf-tag>
+    
+    <!-- Internal -->
     <ng-container *ngIf="sale.sellerId === centralOrgId.catalog; else externalSale">
+      <div fxLayout fxlayoutAlign="space-between center">
+        <a mat-icon-button routerLink="/c/o/dashboard/sales" color="primary">
+          <mat-icon svgIcon="arrow_back"></mat-icon>
+        </a>
+        <a mat-button routerLink="/c/o/dashboard/standard-terms" color="primary">
+          <mat-icon svgIcon="file"></mat-icon>
+          <span>See Standard Terms</span>
+        </a>
+      </div>
+      <bf-tag>{{sale.status | toLabel: 'contractStatus'}}</bf-tag>
       <ng-container *ngIf="sale.buyerId | getOrg | async as org">
         <div fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
           <img height="100" width="100" [ref]="org?.logo" asset="empty_organization.svg" type="logo"
@@ -19,14 +20,7 @@
           <h1>{{ org | orgName }}</h1>
         </div>
       </ng-container>
-    </ng-container>
-    <ng-template #externalSale>
-      <div fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
-        <img height="100" width="100" asset="empty_organization.svg" type="logo" alt="Organization Logo">
-        <h1>External</h1>
-      </div>
-    </ng-template>
-    <ng-container *ngIf="sale.offerId">
+
       <div fxLayout fxLayoutAlign="space-between center" fxLayoutGap="16px">
         <span>Ref {{ sale.offerId }} / Offer created: {{ sale._meta.createdAt | date: 'MM/dd/yyyy' }}</span>
         <button mat-button color="primary" (click)="openIntercom()">
@@ -35,10 +29,32 @@
         </button>
       </div>
     </ng-container>
+
+    <!-- External -->
+    <ng-template #externalSale>
+      <div fxLayout fxlayoutAlign="space-between center">
+        <a mat-icon-button routerLink="/c/o/dashboard/sales" color="primary">
+          <mat-icon svgIcon="arrow_back"></mat-icon>
+        </a>
+        <p>Sale external from Archipel Content</p>
+      </div>
+
+      <bf-tag>{{sale.status | toLabel: 'contractStatus'}}</bf-tag>
+
+      <div fxLayout fxLayoutAlign="end center" fxLayoutGap="16px">
+        <button mat-button color="primary" (click)="openIntercom()">
+          <mat-icon svgIcon="comment"></mat-icon>
+          <span>Contact Archipel Content Team</span>
+        </button>
+      </div>
+    </ng-template>
   </header>
   
   <router-outlet></router-outlet>
 </ng-container>
+
 <ng-template #loading>
   <mat-spinner></mat-spinner>
 </ng-template>
+
+

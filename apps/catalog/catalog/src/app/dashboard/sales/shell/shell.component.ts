@@ -25,7 +25,7 @@ export class SaleShellComponent {
     joinWith({
       income: (sale: Sale) => this.incomeService.valueChanges(sale.id),
       movie: (sale: Sale) => this.titleService.getValue(sale.titleId),
-      negotiation: (sale: Sale) => ['pending', 'negotiating'].includes(sale.status) ? this.contractService.lastNegotiation(sale.id) : null,
+      negotiation: (sale: Sale) => this.contractService.lastNegotiation(sale.id),
     }),
     shareReplay({ bufferSize:1, refCount:true })
   );

@@ -11,7 +11,6 @@ import { NegotiationService } from '@blockframes/contract/negotiation/+state/neg
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { combineLatest } from 'rxjs';
-import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
 import { ContractService } from '@blockframes/contract/contract/+state';
 
 @Component({
@@ -23,14 +22,17 @@ import { ContractService } from '@blockframes/contract/contract/+state';
 export class ContractEditComponent implements NegotiationGuardedComponent, OnInit {
 
   activeOrgId = this.query.getActiveId();
+  activeTerm?: number;
   form = new NegotiationForm();
   sale$ = combineLatest([
     this.shell.offer$,
     this.route.params.pipe(pluck('saleId'))
   ]).pipe(
-    map(([offer, id]) => offer.contracts.find(contract => contract.id === id))
+    map(([offer, id]) => offer.contracts?.find(contract => contract.id === id))
   );
-  negotiation$ = this.sale$.pipe(map(contract => contract.negotiation));
+  negotiation$ = this.sale$.pipe(
+    map(contract => contract?.negotiation)
+  );
 
   constructor(
     private snackBar: MatSnackBar,
@@ -49,6 +51,8 @@ export class ContractEditComponent implements NegotiationGuardedComponent, OnIni
       first()
     ).toPromise();
     this.form.hardReset(negotiation);
+    const termIndex = this.route.snapshot.queryParams.termIndex;
+    this.activeTerm = termIndex ? parseInt(termIndex) : 0;
   }
 
   async decline() {
