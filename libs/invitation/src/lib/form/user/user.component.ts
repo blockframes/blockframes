@@ -40,7 +40,7 @@ export class UserComponent implements OnInit {
    *
    * i.e. if limit = 10, we can send 10 invitations but not 11.
    */
-  @Input() limit = Infinity;
+  @Input() limit = Infinity; // @TODO #7324
 
   separators = [ENTER, COMMA, SEMICOLON];
   form = createAlgoliaUserForm(Validators.maxLength(50));
