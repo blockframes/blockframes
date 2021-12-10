@@ -33,7 +33,6 @@ export class ContractViewComponent {
     private dialog: MatDialog,
     private orgQuery: OrganizationQuery,
     private negotiationService: NegotiationService,
-    private movieService: MovieService,
   ) { }
 
 
