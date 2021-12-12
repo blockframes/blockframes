@@ -20,6 +20,7 @@ export async function onDocumentPermissionCreate(
 }
 
 export async function onPermissionDelete(snap: FirebaseFirestore.DocumentSnapshot) {
+  console.log("Permission delete");
   const batch = db.batch();
 
   // Delete sub-collections (documentPermissions)
