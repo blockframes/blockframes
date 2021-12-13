@@ -69,10 +69,13 @@ export async function initFirestoreApp(
   //Define these env vars to avoid getting console warnings
   process.env.GCLOUD_PROJECT = projectId;
   process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
-  await setData(projectId, data);
+  if (data && Object.keys(data).length) {
+    await setData(projectId, data);
+  }
   const app = initializeTestApp({ projectId, auth });
-  await loadFirestoreRules({ projectId, rules: fs.readFileSync(rulePath, 'utf8') });
-
+  if (rulePath.length) {
+    await loadFirestoreRules({ projectId, rules: fs.readFileSync(rulePath, 'utf8') });
+  }
   return app.firestore();
 }
 

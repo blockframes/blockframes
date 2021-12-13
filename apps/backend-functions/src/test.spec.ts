@@ -5,18 +5,18 @@ import { Firestore, initFirestoreApp  } from '@blockframes/testing/firebase/func
 import { apps, assertFails, assertSucceeds, initializeAdminApp } from '@firebase/rules-unit-testing';
 
 import { firebase } from '@env';
-
+const projectRealId = firebase().projectId;
 
 describe('Test unit-tests', () => {
+  //const projectId = `test-spec-${Date.now()}`;
   let db: Firestore;
 
   beforeAll(async () => {
     process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
-    //initFunctionsTestMock();
-    const projectId = firebase().projectId;
-    //db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-bfAdmin', firebase: { sign_in_provider: 'password' } });
-    const app = initializeAdminApp({ projectId });
-    db = app.firestore();
+    //const projectId = firebase().projectId;
+    db = await initFirestoreApp(projectRealId, '', {}, { uid: 'uid-c8', firebase: { sign_in_provider: 'password' } });
+    //const app = initializeAdminApp({ projectId });
+    //db = app.firestore();
   });
 
   afterEach(async () => {
