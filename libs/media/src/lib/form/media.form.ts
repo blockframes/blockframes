@@ -1,4 +1,5 @@
 import { FormControl } from '@angular/forms';
+import { Privacy } from '@blockframes/utils/file-sanitizer';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { createStorageFile, StorageFile } from '../+state/media.firestore';
 
@@ -26,4 +27,14 @@ export class StorageFileForm extends FormEntity<StorageFileControl> {
   }
 
   get storagePath() { return this.get('storagePath') };
+
+  get isPublic(): boolean {
+    return this.get('privacy').value === 'public';
+  }
+
+  togglePrivacy(isPublic: boolean) {
+    console.log('storage file toggle: ', isPublic)
+    const privacy: Privacy = isPublic ? 'public' : 'protected';
+    this.get('privacy').setValue(privacy);
+  }
 }

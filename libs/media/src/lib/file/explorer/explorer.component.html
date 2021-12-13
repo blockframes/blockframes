@@ -43,6 +43,11 @@
 
 <!-- File -->
 <ng-template #file let-dir>
+  <ng-container *ngIf="dir.togglePrivacy">
+    <mat-checkbox [checked]="dir.form.isPublic" (change)="dir.form.togglePrivacy($event.checked)" color="primary">
+      <b>Public</b> (Buyers can see video on Marketplace)
+    </mat-checkbox>
+  </ng-container>
   <file-uploader [form]="dir.form" [meta]="dir.meta" [accept]="dir.accept" (selectionChange)="change($event, dir.meta)">
     <h3 title>Upload {{ dir.name }}</h3>
   </file-uploader>
@@ -95,7 +100,7 @@
 
 <!-- File List -->
 <ng-template #fileList let-dir>
-  <file-list-uploader [form]="dir.form" [meta]="dir.meta" [accept]="dir.accept"></file-list-uploader>
+  <file-list-uploader [form]="dir.form" [meta]="dir.meta" [accept]="dir.accept" [togglePrivacy]="dir.togglePrivacy"></file-list-uploader>
 </ng-template>
 
 <!-- Image List -->

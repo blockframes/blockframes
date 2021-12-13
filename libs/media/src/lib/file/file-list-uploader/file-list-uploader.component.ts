@@ -28,6 +28,8 @@ export class FileListUploaderComponent {
 
   @Input() accept: AllowedFileType | AllowedFileType[];
 
+  @Input() togglePrivacy: boolean;
+
   constructor(
     private db: AngularFirestore,
     private uploadService: FileUploaderService,
