@@ -38,8 +38,6 @@ export class OrganizationViewComponent implements OnInit, OnDestroy {
 
   private countRouteEvents = 1;
   private subs: Subscription[] = [];
-  // private sub: Subscription;
-  // private routeSub: Subscription
 
   constructor(
     private query: OrganizationQuery,
