@@ -1,4 +1,6 @@
 import { clearBrowserAuth, loginWithRandomUser } from "../../support/app.po";
+import USERS from 'tools/fixtures/users.json';
+import { signIn } from "@blockframes/e2e/utils";
 
 describe('Basic Landing Page, Login and Profile Page Tests', () => {
 
@@ -10,7 +12,15 @@ describe('Basic Landing Page, Login and Profile Page Tests', () => {
     cy.visit('/')
   })
   it('should load user and log into profile page', () => {
-    loginWithRandomUser().logSubject();
+    // loginWithRandomUser().logSubject();
+    cy.contains('Log in').click();
+    // signIn(USERS.pop());
+    cy.window().should('have.property', 'LoginService');
+    cy.window().then(async (w) => {
+      const user = USERS.pop();
+      await w['LoginService'].signin(user.email, user.password);
+    })
+    // cy.pause()
     cy.visit('c/o/account/profile/view/settings');
     cy.contains('Contact Information').should('exist');
   })
@@ -23,9 +33,9 @@ describe('Basic Landing Page, Login and Profile Page Tests', () => {
     cy.contains('Accept cookies').should('exist');
   })
   afterEach(async () => {
-    // await clearBrowserAuth()
-    // cy.clearCookies();
-    // cy.clearLocalStorage();
+    clearBrowserAuth()
+    cy.clearCookies();
+    cy.clearLocalStorage();
   })
 
 })

@@ -9,8 +9,10 @@ let auth: firebase.auth.Auth;
 export function loginWithRandomUser() {
   return cy.task('getRandomUID').then(uid => {
     return cy.task('createUserToken', uid).then(async token => {
-      auth = firebase.initializeApp(firebaseEnv(), 'testEnv').auth();
-      auth.useEmulator('http://localhost:9099');
+      if (!auth) {
+        auth = firebase.initializeApp(firebaseEnv(), 'testEnv').auth();
+        auth.useEmulator('http://localhost:9099');
+      }
       return await auth.signInWithCustomToken(token as string)
     })
   })
@@ -18,13 +20,19 @@ export function loginWithRandomUser() {
 
 export function loginWithUID(uid: string) {
   return cy.task('createUserToken', uid).then(async token => {
-    auth = firebase.initializeApp(firebaseEnv(), 'testEnv').auth();
-    auth.useEmulator('http://localhost:9099');
+    if (!auth) {
+      auth = firebase.initializeApp(firebaseEnv(), 'testEnv').auth();
+      auth.useEmulator('http://localhost:9099');
+    }
     return await auth.signInWithCustomToken(token as string)
   })
 }
 
-export async function clearBrowserAuth() {
-  await auth.signOut();
+export function clearBrowserAuth() {
+  // await auth.signOut();
+  cy.window().should('have.property', 'LoginService');
+  cy.window().then(async (w) => {
+    await w['LoginService'].signOut();
+  })
   return indexedDB.deleteDatabase('firebaseLocalStorageDb');
 }

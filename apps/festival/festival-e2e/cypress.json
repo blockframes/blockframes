@@ -21,6 +21,7 @@
   },
   "blockHosts": [
     "*google-analytics.com",
-    "*googleapis.com"
+    "*googleapis.com",
+    "*imgix.net"
   ]
 }
