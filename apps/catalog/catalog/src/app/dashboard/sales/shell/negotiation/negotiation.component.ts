@@ -66,11 +66,11 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
   async confirm() {
     const onConfirm = async () => {
       const sale = await this.sale$.pipe(first()).toPromise();
-      this.form.markAsPristine(); // usefull to be able to route in the NegotiationGuard
       await this.contractService.addNegotiation(sale.id, {
         ...sale.negotiation,
         ...this.form.value,
       });
+      this.form.markAsPristine(); // usefull to be able to route in the NegotiationGuard
       this.snackBar.open('Your counter offer has been sent');
       this.router.navigate(['..', 'view'], { relativeTo: this.route });
     };

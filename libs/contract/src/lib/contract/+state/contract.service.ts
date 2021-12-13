@@ -57,7 +57,7 @@ export class ContractService extends CollectionService<ContractState> {
     const write = this.batch();
     const sale = await this.valueChanges(contractId).pipe(first()).toPromise();
 
-    this.negotiationService.add({
+    await this.negotiationService.add({
       _meta: createDocumentMeta({ createdAt: new Date(), }),
       status: 'pending',
       createdByOrg: activeOrgId,
@@ -71,7 +71,7 @@ export class ContractService extends CollectionService<ContractState> {
       parentTermId: contract.parentTermId,
       specificity: contract.specificity,
       orgId: contract.orgId,
-    }, { write })
+    }, { write, params: { contractId }})
     if (sale.status === 'pending') this.update(contractId, { status: 'negotiating' }, { write })
     await write.commit()
   }
