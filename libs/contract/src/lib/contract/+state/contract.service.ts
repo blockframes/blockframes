@@ -57,7 +57,7 @@ export class ContractService extends CollectionService<ContractState> {
     const write = this.batch();
     const sale = await this.valueChanges(contractId).pipe(first()).toPromise();
 
-    await this.negotiationService.add({
+    this.negotiationService.add({
       _meta: createDocumentMeta({ createdAt: new Date(), }),
       status: 'pending',
       createdByOrg: activeOrgId,
