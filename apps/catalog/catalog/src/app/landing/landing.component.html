@@ -16,12 +16,10 @@
       <h3 class="mat-display-1">Deals made easy</h3>
       <p class="mat-body-1">Archipel Market is an ongoing film market platform. <br>
         It facilitates interactions between sales agents and buyers all year round. </p>
-      <mat-tab-group animationDuration="1000ms" selectedIndex="0">
+      <mat-tab-group animationDuration="1000ms" selectedIndex="0" (selectedTabChange)="onTabChanged($event)">
         <mat-tab [label]="tabNames[0]">
           <header fxLayout fxLayout.lt-lg="column" fxLayoutGap="32px">
-            <!-- TODO issue #7369-->
-            <img [asset]="tabTitle[0].imgAsset" alt="seller image">
-            <!-- <video autoplay loop muted src="assets/videos/content_LP_sellers.mp4"></video> -->
+            <video #sellerVideo [muted]="true" autoplay="true" loop="true" src="assets/videos/sellerLP.mp4" type="video/mp4"></video>
             <div>
               <h2>{{ tabTitle[0].title }}</h2>
               <p class="mat-body-1">{{ tabTitle[0].description }}</p>
@@ -41,9 +39,7 @@
 
         <mat-tab [label]="tabNames[1]">
            <header fxLayout fxLayoutGap="48px" fxLayout.lt-lg="column" fxLayoutGap="32px">
-            <!-- TODO issue #7369-->
-            <img [asset]="tabTitle[1].imgAsset" alt="buyer image">
-            <!-- <video autoplay loop muted src="assets/videos/content_LP_buyers.mp4"></video> -->
+            <video #buyerVideo [muted]="true" autoplay="true" loop="true" src="assets/videos/buyerLP.mp4" type="video/mp4"></video>
             <div>
               <h2>{{ tabTitle[1].title }}</h2>
               <p class="mat-body-1">{{ tabTitle[1].description }}</p>
