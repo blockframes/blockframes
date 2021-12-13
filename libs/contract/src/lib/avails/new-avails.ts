@@ -2,17 +2,11 @@
 import { Movie } from '@blockframes/movie/+state';
 import { Media, territoriesISOA3, Territory, TerritoryISOA3 } from '@blockframes/utils/static-model';
 
-import { allOf, exclusivityAllOf, exclusivitySomeOf, someOf } from './sets';
 import { BucketTerm, Term } from '../term/+state';
 import { Mandate, Sale } from '../contract/+state';
 import { Bucket, BucketContract } from '../bucket/+state';
+import { allOf, exclusivityAllOf, exclusivitySomeOf, someOf } from './sets';
 
-interface AvailsFilter {
-  medias: Media[],
-  duration: { from: Date, to: Date },
-  territories: Territory[],
-  exclusive: boolean
-}
 
 interface FullMandate extends Mandate {
   terms: Term[];
@@ -33,6 +27,17 @@ interface BucketContractWithId extends BucketContract {
 
 function tinyId() {
   return Math.random().toString(16).substr(2);
+}
+
+// ----------------------------
+//          TITLE LIST
+// ----------------------------
+
+interface AvailsFilter {
+  medias: Media[],
+  duration: { from: Date, to: Date },
+  territories: Territory[],
+  exclusive: boolean
 }
 
 function getMatchingMandates(mandates: FullMandate[], avails: AvailsFilter): FullMandate[] {
@@ -132,6 +137,9 @@ function availableTitle(
   return true;
 }
 
+// ----------------------------
+//             MAP
+// ----------------------------
 
 interface MapAvailsFilter {
   medias: Media[],
@@ -225,4 +233,94 @@ function territoryAvailabilities(
   selected.forEach((t: TerritoryISOA3) => availabilities[t] = 'selected');
 
   return availabilities;
+}
+
+// ----------------------------
+//           CALENDAR
+// ----------------------------
+
+interface CalendarAvailsFilter {
+  medias: Media[],
+  territories: Territory[],
+  exclusive: boolean
+}
+
+interface DurationMarker {
+  from: Date,
+  to: Date,
+  contract?: Mandate,
+  term?: Term<Date>,
+}
+
+interface CalendarAvailabilities {
+  available: DurationMarker[];
+  sold: DurationMarker[];
+  inBucket: DurationMarker[];
+}
+
+function getMatchingCalendarMandates(mandates: FullMandate[], avails: CalendarAvailsFilter): FullMandate[] {
+  return mandates.filter(mandate => mandate.terms.some(term => {
+    const exclusivityCheck = exclusivityAllOf(avails.exclusive).in(term.exclusive);
+    const mediaCheck = allOf(avails.medias).in(term.medias);
+    const territoryCheck = allOf(avails.territories).in(term.territories);
+
+    return exclusivityCheck && mediaCheck && territoryCheck;
+  }));
+}
+
+function getMatchingCalendarSales<T extends (FullSale | BucketContractWithId)>(sales: T[], avails: CalendarAvailsFilter): T[] {
+  return sales.filter(sale => sale.terms.some(term => {
+    const exclusivityCheck = exclusivitySomeOf(avails.exclusive).in(term.exclusive);
+    const mediaCheck = someOf(avails.medias).in(term.medias);
+    const territoryCheck = someOf(avails.territories).in(term.territories);
+
+    return exclusivityCheck && mediaCheck && territoryCheck;
+  }));
+}
+
+function durationAvailabilities(
+  avails: CalendarAvailsFilter,
+  mandates: FullMandate[],
+  sales: FullSale[],
+  bucketContracts?: BucketContract[],
+): CalendarAvailabilities {
+
+  // check that the mandates & sales are about one single title,
+  // i.e. they must all have the same `titleId`
+  const titleId = mandates[0].titleId;
+  const invalidMandate = mandates.some(m => m.titleId !== titleId);
+  const invalidSale = sales.some(s => s.titleId !== titleId);
+  const invalidBucketSale = bucketContracts?.some(s => s.titleId !== titleId);
+
+  if (invalidMandate || invalidSale || invalidBucketSale) throw new Error('Mandates & Sales must all have the same title id!');
+
+  const availableMandates = getMatchingCalendarMandates(mandates, avails);
+  const available = availableMandates.map(m =>
+    m.terms.map((t): DurationMarker =>
+      ({ from: t.duration.from, to: t.duration.to, contract: m, term: t })
+    )
+  ).flat();
+
+  const salesToExclude = getMatchingCalendarSales(sales, avails);
+  const sold = salesToExclude.map(s =>
+    s.terms.map((t): DurationMarker =>
+      ({ from: t.duration.from, to: t.duration.to, term: t })
+    )
+  ).flat();
+
+  const bucketSales = bucketContracts?.map(s => {
+    const id = tinyId();
+    const terms: BucketTermWithContractId[] = s.terms.map(t => ({ ...t, contractId: id}));
+
+    return { ...s, id, terms } as BucketContractWithId;
+  });
+
+  const bucketSalesToExclude = getMatchingCalendarSales(bucketSales, avails);
+  const inBucket = bucketSalesToExclude.map(s =>
+    s.terms.map((t): DurationMarker =>
+      ({ from: t.duration.from, to: t.duration.to })
+    )
+  ).flat();
+
+  return { available, sold, inBucket };
 }
