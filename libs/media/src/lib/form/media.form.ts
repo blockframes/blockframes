@@ -33,7 +33,6 @@ export class StorageFileForm extends FormEntity<StorageFileControl> {
   }
 
   togglePrivacy(isPublic: boolean) {
-    console.log('storage file toggle: ', isPublic)
     const privacy: Privacy = isPublic ? 'public' : 'protected';
     this.get('privacy').setValue(privacy);
   }
