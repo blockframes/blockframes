@@ -106,7 +106,6 @@ const testMovies = [
 const videoParams: ReadVideoParams = { video: screener, eventId: 'eventTestPrivate', email: userA.email };
 
 describe('JwPlayer test script', () => {
-
   beforeAll(async () => {
     initFunctionsTestMock();
   });
@@ -202,7 +201,6 @@ describe('JwPlayer test script', () => {
     const output = await populateAndGetPrivateVideoUrl({ ...videoParams, eventId: undefined, email: undefined }, { uid: 'uidUserC' });
     expect(output.error).toEqual('UNAUTHORIZED');
   });
-
 })
 
 async function populateAndGetPrivateVideoUrl(videoParamsTest = null, uid = { uid: 'uidUserA' }) {
@@ -211,8 +209,6 @@ async function populateAndGetPrivateVideoUrl(videoParamsTest = null, uid = { uid
   const users = populate('users', testUsers);
   const movies = populate('movies', testMovies);
   await Promise.all([invitation, events, users, movies]);
-  const testCallbackContext: CallableContextOptions = {
-    auth: uid
-  }
+  const testCallbackContext: CallableContextOptions = { auth: uid };
   return await getPrivateVideoUrl(videoParamsTest || videoParams, testCallbackContext as CallableContext);
 }
