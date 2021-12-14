@@ -271,7 +271,7 @@ export const onTermDeleteEvent = onDocumentDelete('terms/{termId}', onTermDelete
 //     Negotiation Management     //
 //--------------------------------
 
-export const onNegotiationUpdateEvent = onDocumentDelete('contracts/{contractId}/negotiations/{negotiationId}', onNegotiationUpdate);
+export const onNegotiationUpdateEvent = onDocumentUpdate('contracts/{contractId}/negotiations/{negotiationId}', onNegotiationUpdate);
 
 //--------------------------------
 //          JWP RESCUE          //
