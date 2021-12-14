@@ -8,11 +8,11 @@ import { Mandate, Sale } from '../contract/+state';
 import { allOf, exclusivityAllOf, exclusivitySomeOf, someOf } from './sets';
 
 
-interface FullMandate extends Mandate {
+export interface FullMandate extends Mandate {
   terms: Term[];
 }
 
-interface FullSale extends Sale {
+export interface FullSale extends Sale {
   terms: Term[];
 }
 

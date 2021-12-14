@@ -1,19 +1,22 @@
+
 import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, OnInit } from "@angular/core";
+import { ActivatedRoute, Router } from "@angular/router";
 import { QueryFn } from "@angular/fire/firestore";
-import { AvailsForm } from "@blockframes/contract/avails/form/avails.form";
-import { ContractService, Sale, Mandate } from "@blockframes/contract/contract/+state";
-import { Income, IncomeService } from "@blockframes/contract/income/+state";
+
+import { combineLatest, Subscription } from "rxjs";
+import { map, throttleTime } from "rxjs/operators";
+
+import { centralOrgId } from '@env';
+import { joinWith } from "@blockframes/utils/operators";
 import { Movie, MovieService } from "@blockframes/movie/+state";
 import { OrganizationQuery } from "@blockframes/organization/+state";
-import { DynamicTitleService } from "@blockframes/utils/dynamic-title/dynamic-title.service";
-import { joinWith } from "@blockframes/utils/operators";
-import { map, throttleTime } from "rxjs/operators";
-import { centralOrgId } from '@env';
-import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
-import { ActivatedRoute, Router } from "@angular/router";
-import { AvailsFilter, filterDashboardAvails } from "@blockframes/contract/avails/avails";
-import { combineLatest, Subscription } from "rxjs";
 import { Term, TermService } from "@blockframes/contract/term/+state";
+import { AvailsForm } from "@blockframes/contract/avails/form/avails.form";
+import { Income, IncomeService } from "@blockframes/contract/income/+state";
+import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
+import { ContractService, Sale, Mandate } from "@blockframes/contract/contract/+state";
+import { DynamicTitleService } from "@blockframes/utils/dynamic-title/dynamic-title.service";
+import { AvailsFilter, availableTitle, FullSale, FullMandate } from "@blockframes/contract/avails/new-avails";
 
 interface TotalIncome { EUR: number; USD: number; }
 
@@ -60,8 +63,7 @@ const saleCountAndTotalPrice = (title: JoinSaleTitleType) => {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnInit {
-  // @todo(#7139) remove default duration value once issue is solved
-  public availsForm = new AvailsForm({ duration: { from: null, to: null } }, []);
+  public availsForm = new AvailsForm({}, ['duration', 'territories']);
   private orgId = this.orgQuery.getActiveId();
   private sub: Subscription;
 
@@ -99,10 +101,11 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
   ]).pipe(
     map(([titles, avails]) => {
       return titles.filter(title => {
-        const mandateTerms = title?.mandates?.flatMap(contract => contract.terms) ?? [];
-        const saleTerms = title.sales?.flatMap(contract => contract.terms) ?? [];
-        // @todo(#7139) use better filter
-        return filterDashboardAvails(mandateTerms, saleTerms, avails);
+        if (this.availsForm.valid) {
+          return availableTitle(avails as AvailsFilter, title.mandates as FullMandate[], title.sales as FullSale[]);
+        } else {
+          return true;
+        }
       })
     }),
   );
@@ -130,7 +133,7 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
     this.sub = this.availsForm.valueChanges.pipe(
       throttleTime(1000)
     ).subscribe(formState => {
-      encodeUrl<AvailsFilter>(this.router, this.route, formState);
+      encodeUrl<AvailsFilter>(this.router, this.route, formState as AvailsFilter);
     });
   }
 
