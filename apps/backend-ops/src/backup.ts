@@ -5,7 +5,7 @@ import { deleteAllUsers } from '@blockframes/testing/unit-tests';
 import { ensureMaintenanceMode } from './tools';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
 
-export const getFirebaseBackupDirname = (d: Date) => `firebase-backup-${d.getDate()}-${d.getMonth() + 1}-${d.getFullYear()}`
+export const getFirebaseBackupDirname = (d: Date) => `firebase-backup-${d.getDate()}-${d.getMonth() + 1}-${d.getFullYear()}`;
 
 export async function backupEnv(dirName?: string) {
   const backupDir = dirName || getFirebaseBackupDirname(new Date());
@@ -50,8 +50,8 @@ export async function restoreEnv(dirName?: string) {
 
   console.log('Clearing existing env!');
 
-  console.log('Ensuring maintenance mode stays enabled')
-  const maintenanceInsurance = await ensureMaintenanceMode(db)
+  console.log('Ensuring maintenance mode stays enabled');
+  const maintenanceInsurance = await ensureMaintenanceMode(db);
 
   console.log('Clearing Firestore...');
   await clearDb(db);
