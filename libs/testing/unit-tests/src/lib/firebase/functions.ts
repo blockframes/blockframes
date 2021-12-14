@@ -4,17 +4,13 @@ import { runChunks } from '@blockframes/firebase-utils';
 import { join, resolve } from 'path';
 import { config } from 'dotenv';
 import { firebase as firebaseEnv } from '@env';
-import {
-  initializeTestApp,
-  loadFirestoreRules,
-  initializeAdminApp,
-} from '@firebase/testing';
+import { initializeTestApp, loadFirestoreRules, initializeAdminApp } from '@firebase/testing';
 import type { FeaturesList } from 'firebase-functions-test/lib/features';
 import type { AppOptions } from 'firebase-admin'; // * Correct Import
 import fs from 'fs';
 
 export interface FirebaseTestConfig extends FeaturesList {
-  firebaseConfig?: { projectId: string; app: admin.app.App };
+  firebaseConfig?: { projectId: string, app: admin.app.App };
 }
 
 let testIndex = 0;
@@ -27,10 +23,7 @@ config();
  * @param overrideConfig allows custom configuration of test object
  * @returns firebase-functions-test mock object
  */
-export function initFunctionsTestMock(
-  emulator = true,
-  overrideConfig?: AppOptions
-): FirebaseTestConfig {
+export function initFunctionsTestMock(emulator = true, overrideConfig?: AppOptions): FirebaseTestConfig {
   let runtimeConfig: any = {};
   try {
     // tslint:disable-next-line: no-eval
@@ -38,8 +31,7 @@ export function initFunctionsTestMock(
   } catch (e) {
     console.log(e);
   }
-  if (emulator) {
-    // ** Connect to emulator
+  if (emulator) { // ** Connect to emulator
     const firebaseTest: FirebaseTestConfig = firebaseFunctionsTest();
     testIndex++;
     const projectId = getTestingProjectId();
@@ -52,14 +44,8 @@ export function initFunctionsTestMock(
     return firebaseTest;
   }
 
-  const pathToServiceAccountKey = resolve(
-    process.cwd(),
-    process.env.GOOGLE_APPLICATION_CREDENTIALS
-  );
-  const testObj: FeaturesList = firebaseFunctionsTest(
-    { ...firebaseEnv(), ...overrideConfig },
-    pathToServiceAccountKey
-  );
+  const pathToServiceAccountKey = resolve(process.cwd(), process.env.GOOGLE_APPLICATION_CREDENTIALS);
+  const testObj: FeaturesList = firebaseFunctionsTest({ ...firebaseEnv(), ...overrideConfig }, pathToServiceAccountKey);
   testObj.mockConfig(runtimeConfig);
   return testObj;
 }
@@ -103,22 +89,11 @@ function setData(projectId: string, dataDB: Record<string, unknown>) {
 
 export function populate(collection: string, set: any[]) {
   const db = admin.firestore();
-  return runChunks(
-    set,
-    async (d) => {
-      const docRef = db.collection(collection).doc(d.id || d.uid);
-      if (d.date?._seconds) {
-        d.date = new Date(d.date._seconds * 1000);
-      }
-      if (d.end?._seconds) {
-        d.end = new Date(d.end._seconds * 1000);
-      }
-      if (d._meta?.createdAt?._seconds) {
-        d._meta.createdAt = new Date(d._meta.createdAt._seconds * 1000);
-      }
-      await docRef.set(d);
-    },
-    50,
-    false
-  );
+  return runChunks(set, async (d) => {
+    const docRef = db.collection(collection).doc(d.id || d.uid);
+    if (d.date?._seconds) { d.date = new Date(d.date._seconds * 1000) };
+    if (d.end?._seconds) { d.end = new Date(d.end._seconds * 1000) };
+    if (d._meta?.createdAt?._seconds) { d._meta.createdAt = new Date(d._meta.createdAt._seconds * 1000) };
+    await docRef.set(d);
+  }, 50, false)
 }

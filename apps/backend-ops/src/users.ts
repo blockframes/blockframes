@@ -63,7 +63,7 @@ export async function removeUnexpectedUsers(expectedUsers: UserConfig[], auth: A
     const result = await auth.listUsers(1000, pageToken);
 
     // Anonymous users filtering
-    const users = result.users.filter((u) => u.providerData.length !== 0);
+    const users = result.users.filter(u => u.providerData.length !== 0);
     pageToken = result.pageToken;
 
     // users - expected users => users that we don't want in the database.
@@ -109,11 +109,7 @@ async function getUsersFromDb(db: FirebaseFirestore.Firestore) {
  * If `jsonl` param is not provided, the function will read users from local Firestore
  * @param jsonl optional Jsonl record array (usually from local db backup) to read users from
  */
-export async function syncUsers(
-  jsonl?: DbRecord[],
-  db = loadAdminServices().db,
-  auth = loadAdminServices().auth
-) {
+export async function syncUsers(jsonl?: DbRecord[], db = loadAdminServices().db, auth = loadAdminServices().auth) {
   const expectedUsers = jsonl ? readUsersFromJsonlFixture(jsonl) : await getUsersFromDb(db);
   await deleteAllUsers(auth);
   const createResult = await importAllUsers(auth, expectedUsers);

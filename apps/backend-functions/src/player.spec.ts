@@ -1,11 +1,7 @@
 import { getPrivateVideoUrl, ReadVideoParams } from './player';
 import { CallableContextOptions } from 'firebase-functions-test/lib/main';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
-import {
-  getTestingProjectId,
-  initFunctionsTestMock,
-  populate,
-} from '@blockframes/testing/unit-tests';
+import { getTestingProjectId, initFunctionsTestMock, populate } from '@blockframes/testing/unit-tests';
 import { clearFirestoreData } from '@firebase/testing';
 import { StorageVideo } from '@blockframes/media/+state/media.firestore';
 import { testVideoId } from '@env';
@@ -26,7 +22,7 @@ const testInvitations = [
     status: 'accepted',
     mode: 'invitation',
     toUser: { email: 'marc@hamill.com' },
-  },
+  }
 ];
 const testEvents = [
   {
@@ -34,34 +30,34 @@ const testEvents = [
     type: 'screening',
     start: new Date(),
     meta: {
-      titleId: 'movieA',
+      titleId: 'movieA'
     },
     end: new Date(),
     ownerOrgId: 'idOrgTest',
-    accessibility: 'private',
+    accessibility: 'private'
   },
   {
     id: 'eventTestInvitOnly',
     type: 'screening',
     start: new Date(),
     meta: {
-      titleId: 'movieA',
+      titleId: 'movieA'
     },
     end: new Date(),
     ownerOrgId: 'idOrgTest',
-    accessibility: 'protected',
+    accessibility: 'protected'
   },
   {
     id: 'eventTestPublic',
     type: 'screening',
     start: new Date(),
     meta: {
-      titleId: 'movieA',
+      titleId: 'movieA'
     },
     end: new Date(),
     ownerOrgId: 'idOrgTest',
-    accessibility: 'public',
-  },
+    accessibility: 'public'
+  }
 ];
 
 const userA = {
@@ -69,7 +65,7 @@ const userA = {
   email: 'A@fake.com',
   orgId: 'fakeOrgId',
   firstName: 'foo',
-  lastName: 'bar',
+  lastName: 'bar'
 };
 
 const userB = {
@@ -77,7 +73,7 @@ const userB = {
   email: 'B@fake.com',
   orgId: 'orgIdA',
   firstName: 'foo',
-  lastName: 'bar',
+  lastName: 'bar'
 };
 
 const userC = {
@@ -85,7 +81,7 @@ const userC = {
   email: 'B@fake.com',
   orgId: 'orgIdC',
   firstName: 'foo',
-  lastName: 'bar',
+  lastName: 'bar'
 };
 
 const testUsers = [userA, userB, userC];
@@ -103,17 +99,14 @@ const testMovies = [
   {
     id: 'movieA',
     promotional: { videos: { screener } },
-    orgIds: ['orgIdA'],
-  },
+    orgIds: ['orgIdA']
+  }
 ];
 
-const videoParams: ReadVideoParams = {
-  video: screener,
-  eventId: 'eventTestPrivate',
-  email: userA.email,
-};
+const videoParams: ReadVideoParams = { video: screener, eventId: 'eventTestPrivate', email: userA.email };
 
 describe('JwPlayer test script', () => {
+
   beforeAll(async () => {
     initFunctionsTestMock();
   });
@@ -156,10 +149,7 @@ describe('JwPlayer test script', () => {
   it('private event - should be successful when user is not invited but in good org', async () => {
     testEvents[0].end.setHours(new Date().getHours() + 4);
     // Load our test set
-    const output = await populateAndGetPrivateVideoUrl(
-      { ...videoParams, eventId: 'eventTestPrivate', email: undefined },
-      { uid: 'uidUserB' }
-    );
+    const output = await populateAndGetPrivateVideoUrl({ ...videoParams, eventId: 'eventTestPrivate', email: undefined }, { uid: 'uidUserB' });
     expect(output.error).toEqual('');
   });
 
@@ -173,30 +163,21 @@ describe('JwPlayer test script', () => {
   it('protected event - should be successful when user is invited', async () => {
     testEvents[1].end.setHours(new Date().getHours() + 4);
     // Load our test set
-    const output = await populateAndGetPrivateVideoUrl(
-      { ...videoParams, eventId: 'eventTestInvitOnly', email: 'marc@hamill.com' },
-      { uid: 'uidMarcHamill' }
-    );
+    const output = await populateAndGetPrivateVideoUrl({ ...videoParams, eventId: 'eventTestInvitOnly', email: 'marc@hamill.com' }, { uid: 'uidMarcHamill' });
     expect(output.error).toEqual('');
   });
 
   it('protected event - should be successful when user is not invited but in good org', async () => {
     testEvents[1].end.setHours(new Date().getHours() + 4);
     // Load our test set
-    const output = await populateAndGetPrivateVideoUrl(
-      { ...videoParams, eventId: 'eventTestInvitOnly', email: undefined },
-      { uid: 'uidUserB' }
-    );
+    const output = await populateAndGetPrivateVideoUrl({ ...videoParams, eventId: 'eventTestInvitOnly', email: undefined }, { uid: 'uidUserB' });
     expect(output.error).toEqual('');
   });
 
   it('public event - should be successful if user is connected (anonymous)', async () => {
     testEvents[2].end.setHours(new Date().getHours() + 4);
     // Load our test set
-    const output = await populateAndGetPrivateVideoUrl(
-      { ...videoParams, eventId: 'eventTestPublic', email: undefined },
-      { uid: 'uidNotInvited' }
-    );
+    const output = await populateAndGetPrivateVideoUrl({ ...videoParams, eventId: 'eventTestPublic', email: undefined }, { uid: 'uidNotInvited' });
     expect(output.error).toEqual('');
   });
 
@@ -204,10 +185,7 @@ describe('JwPlayer test script', () => {
     testEvents[2].end.setHours(new Date().getHours() + 4);
     // Load our test set
     try {
-      await populateAndGetPrivateVideoUrl(
-        { ...videoParams, eventId: 'eventTestPublic', email: undefined },
-        null
-      );
+      await populateAndGetPrivateVideoUrl({ ...videoParams, eventId: 'eventTestPublic', email: undefined }, null);
     } catch (e) {
       expect(e).toMatchObject(new Error('Unauthorized call !'));
     }
@@ -215,22 +193,17 @@ describe('JwPlayer test script', () => {
 
   it('should be successful if user is in good org', async () => {
     // Load our test set
-    const output = await populateAndGetPrivateVideoUrl(
-      { ...videoParams, eventId: undefined, email: undefined },
-      { uid: 'uidUserB' }
-    );
+    const output = await populateAndGetPrivateVideoUrl({ ...videoParams, eventId: undefined, email: undefined }, { uid: 'uidUserB' });
     expect(output.error).toEqual('');
   });
 
   it('should return error if user is not in good org', async () => {
     // Load our test set
-    const output = await populateAndGetPrivateVideoUrl(
-      { ...videoParams, eventId: undefined, email: undefined },
-      { uid: 'uidUserC' }
-    );
+    const output = await populateAndGetPrivateVideoUrl({ ...videoParams, eventId: undefined, email: undefined }, { uid: 'uidUserC' });
     expect(output.error).toEqual('UNAUTHORIZED');
   });
-});
+
+})
 
 async function populateAndGetPrivateVideoUrl(videoParamsTest = null, uid = { uid: 'uidUserA' }) {
   const invitation = populate('invitations', testInvitations);
@@ -239,10 +212,7 @@ async function populateAndGetPrivateVideoUrl(videoParamsTest = null, uid = { uid
   const movies = populate('movies', testMovies);
   await Promise.all([invitation, events, users, movies]);
   const testCallbackContext: CallableContextOptions = {
-    auth: uid,
-  };
-  return await getPrivateVideoUrl(
-    videoParamsTest || videoParams,
-    testCallbackContext as CallableContext
-  );
+    auth: uid
+  }
+  return await getPrivateVideoUrl(videoParamsTest || videoParams, testCallbackContext as CallableContext);
 }
