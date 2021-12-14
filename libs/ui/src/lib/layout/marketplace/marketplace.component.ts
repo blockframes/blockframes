@@ -1,6 +1,6 @@
 // Angular
 import { Component, ChangeDetectionStrategy, OnInit, ViewChild } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { MatSidenav } from '@angular/material/sidenav';
 import { CdkScrollable } from '@angular/cdk/overlay';
 
@@ -42,7 +42,8 @@ export class MarketplaceComponent implements OnInit {
     private notificationQuery: NotificationQuery,
     private authQuery: AuthQuery,
     private movieService: MovieService,
-    private routerQuery: RouterQuery
+    private routerQuery: RouterQuery,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -63,6 +64,14 @@ export class MarketplaceComponent implements OnInit {
 
   animationOutlet(outlet: RouterOutlet) {
     return outlet?.activatedRouteData?.animation;
+  }
+
+  onAppLogoClick() {
+    if (this.router.url.includes("home")) {
+     this.cdkScrollable.scrollTo({ top: 0 });
+    } else {
+      this.router.navigate(['/c/o/marketplace/home'])
+    }
   }
 }
 
