@@ -52,7 +52,7 @@ export class ContractService extends CollectionService<ContractState> {
   }
 
 
-  async addNegotiation(contractId: string, contract: Partial<Negotiation>) {
+  async addNegotiation(contractId: string, contract: Partial<Negotiation>, shouldUpdateSale = true) {
     const activeOrgId = this.orgQuery.getActiveId();
     const write = this.batch();
     const sale = await this.valueChanges(contractId).pipe(first()).toPromise();
@@ -72,7 +72,7 @@ export class ContractService extends CollectionService<ContractState> {
       specificity: contract.specificity,
       orgId: contract.orgId,
     }, { write })
-    if (sale.status === 'pending') this.update(contractId, { status: 'negotiating' }, { write })
+    if (shouldUpdateSale && sale.status === 'pending') this.update(contractId, { status: 'negotiating' }, { write })
     await write.commit()
   }
 }

@@ -120,7 +120,7 @@ export class BucketService extends CollectionService<BucketState> {
       await this.contractService.addNegotiation(contractId, {
         ...contract,
         ...commonFields
-      })
+      }, false)
       // @dev: Create income & terms after contract because rules require contract to be created first
       // Create the terms
       await this.termService.add(terms);
