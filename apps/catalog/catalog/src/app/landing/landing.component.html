@@ -19,7 +19,7 @@
       <mat-tab-group animationDuration="1000ms" selectedIndex="0" (selectedTabChange)="onTabChanged($event)">
         <mat-tab [label]="tabNames[0]">
           <header fxLayout fxLayout.lt-lg="column" fxLayoutGap="32px">
-            <video #sellerVideo [muted]="true" autoplay="true" loop="true" src="assets/videos/sellerLP.mp4" type="video/mp4"></video>
+            <video #sellerVideo [muted]="true" autoplay loop src="assets/videos/sellerLP.mp4" type="video/mp4"></video>
             <div>
               <h2>{{ tabTitle[0].title }}</h2>
               <p class="mat-body-1">{{ tabTitle[0].description }}</p>
@@ -39,7 +39,7 @@
 
         <mat-tab [label]="tabNames[1]">
            <header fxLayout fxLayoutGap="48px" fxLayout.lt-lg="column" fxLayoutGap="32px">
-            <video #buyerVideo [muted]="true" autoplay="true" loop="true" src="assets/videos/buyerLP.mp4" type="video/mp4"></video>
+            <video #buyerVideo [muted]="true" autoplay loop src="assets/videos/buyerLP.mp4" type="video/mp4"></video>
             <div>
               <h2>{{ tabTitle[1].title }}</h2>
               <p class="mat-body-1">{{ tabTitle[1].description }}</p>
