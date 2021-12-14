@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, ViewChild, TemplateRef, HostListener } from '@angular/core';
 import { AuthService } from '@blockframes/auth/+state';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -29,6 +29,11 @@ export class EventLoginComponent implements OnInit {
   ngOnInit() {
     const { email } = this.route.snapshot.queryParams;
     this.form.get('email').setValue(email);
+  }
+
+  @HostListener('window:popstate', ['$event'])
+  onPopState() {
+    this.clickBack();
   }
 
   async validateLogin() {
