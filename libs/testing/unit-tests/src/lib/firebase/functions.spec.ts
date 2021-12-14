@@ -1,4 +1,4 @@
-﻿import { firestore } from 'firebase-admin';
+﻿import { connectFirestoreEmulator } from '@blockframes/firebase-utils';
 import { initFunctionsTestMock } from './functions';
 
 describe('firebase testing library', () => {
@@ -6,7 +6,7 @@ describe('firebase testing library', () => {
     //Init Mocks and environment
     initFunctionsTestMock();
 
-    const db = firestore();
+    const db = connectFirestoreEmulator();
     const docRef = db.collection('testCollection').doc('testDoc');
     const testData = { name: 'blockframes' };
     await docRef.set(testData);
