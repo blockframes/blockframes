@@ -29,6 +29,17 @@ function tinyId() {
   return Math.random().toString(16).substr(2);
 }
 
+function assertValidTitle(mandates: FullMandate[], sales: FullSale[], bucketContracts?: BucketContract[]) {
+  // check that the mandates & sales are about one single title,
+  // i.e. they must all have the same `titleId`
+  const titleId = mandates[0].titleId;
+  const invalidMandate = mandates.some(m => m.titleId !== titleId);
+  const invalidSale = sales.some(s => s.titleId !== titleId);
+  const invalidBucketSale = bucketContracts?.some(s => s.titleId !== titleId);
+
+  if (invalidMandate || invalidSale || invalidBucketSale) throw new Error('Mandates & Sales must all have the same title id!');
+}
+
 // ----------------------------
 //          TITLE LIST
 // ----------------------------
@@ -67,13 +78,14 @@ function availableTitles(
   titles: Movie[],
   mandates: FullMandate[],
   sales: FullSale[],
-  bucket?: Bucket,
+  bucketContracts?: BucketContract[],
 ): Movie[] {
   return titles.filter(title => {
     const titleSales = sales.filter(s => s.titleId === title.id);
     const titleMandates = mandates.filter(m => m.titleId === title.id);
+    const bucketSales = bucketContracts?.filter(s => s.titleId === title.id);
 
-    return availableTitle(avails, titleMandates, titleSales, bucket);
+    return availableTitle(avails, titleMandates, titleSales, bucketSales);
   });
 }
 
@@ -82,19 +94,12 @@ function availableTitle(
   avails: AvailsFilter,
   mandates: FullMandate[],
   sales: FullSale[],
-  bucket?: Bucket,
+  bucketContracts?: BucketContract[],
 ): boolean {
 
   if (!mandates.length) return false;
 
-  // check that the mandates & sales are about one single title,
-  // i.e. they must all have the same `titleId`
-  const titleId = mandates[0].titleId;
-  const invalidMandate = mandates.some(m => m.titleId !== titleId);
-  const invalidSale = sales.some(s => s.titleId !== titleId);
-
-  if (invalidMandate || invalidSale) throw new Error('Mandates & Sales must all have the same title id!');
-
+  assertValidTitle(mandates, sales, bucketContracts);
 
   // get only the mandates that meets the avails filter criteria,
   // e.g. if we ask for "France" but the title is mandated in "Germany", we don't care
@@ -115,12 +120,12 @@ function availableTitle(
   // else we should check the bucket (if we have one)
 
   // for now the title is available and we have no bucket to check
-  if (!bucket) return true;
+  if (!bucketContracts) return true;
 
   // we retrieve the sales from the bucket,
   // but we also format everything, adding a fake tiny id so that we can easily find back what we need
   // i.e. `term -(contractId)-> sale -(titleId)-> title`
-  const bucketSales = bucket.contracts.map(s => {
+  const bucketSales = bucketContracts.map(s => {
     const id = tinyId();
     const terms: BucketTermWithContractId[] = s.terms.map(t => ({ ...t, contractId: id}));
 
@@ -190,17 +195,7 @@ function territoryAvailabilities(
   // Note: The function doesn't perform any check, form its point of view a `sold` territory can become `selected`
   // Note: The checks should be performed by the parent component to prevent a user to select a `sold` territory
 
-
-
-  // check that the mandates & sales are about one single title,
-  // i.e. they must all have the same `titleId`
-  const titleId = mandates[0].titleId;
-  const invalidMandate = mandates.some(m => m.titleId !== titleId);
-  const invalidSale = sales.some(s => s.titleId !== titleId);
-  const invalidBucketSale = bucketContracts?.some(s => s.titleId !== titleId);
-
-  if (invalidMandate || invalidSale || invalidBucketSale) throw new Error('Mandates & Sales must all have the same title id!');
-
+  assertValidTitle(mandates, sales, bucketContracts);
 
   // 0) initialize the world as `not-licensed`
   const availabilities = {} as MapAvailabilities;
@@ -209,13 +204,24 @@ function territoryAvailabilities(
 
   // 1) "paint" the `available` layer
   const availableMandates = getMatchingMapMandates(mandates, avails);
-  availableMandates.forEach(m => m.terms.forEach(t => t.territories.forEach((territory: TerritoryISOA3) => availabilities[territory] = 'available')));
+  for (const mandate of availableMandates) {
+    for (const term of mandate.terms) {
+      for (const territory of term.territories as TerritoryISOA3[]) {
+        availabilities[territory] = 'available';
+      }
+    }
+  }
 
 
   // 2) "paint" the `sold` layer on top
   const salesToExclude = getMatchingMapSales(sales, avails);
-  salesToExclude.forEach(s => s.terms.forEach(t => t.territories.forEach((territory: TerritoryISOA3) => availabilities[territory] = 'sold')));
-
+  for (const sale of salesToExclude) {
+    for (const term of sale.terms) {
+      for (const territory of term.territories as TerritoryISOA3[]) {
+        availabilities[territory] = 'sold';
+      }
+    }
+  }
 
   // 2.5) add the bucket sales territories to the `sold` layer
   const bucketSales = bucketContracts?.map(s => {
@@ -226,8 +232,13 @@ function territoryAvailabilities(
   });
 
   const bucketSalesToExclude = getMatchingMapSales(bucketSales, avails);
-  bucketSalesToExclude.forEach(s => s.terms.forEach(t => t.territories.forEach((territory: TerritoryISOA3) => availabilities[territory] = 'sold')));
-
+  for (const bucketSale of bucketSalesToExclude) {
+    for (const term of bucketSale.terms) {
+      for (const territory of term.territories as TerritoryISOA3[]) {
+        availabilities[territory] = 'sold';
+      }
+    }
+  }
 
   // 3) "paint" the `selected` layer on top
   selected.forEach((t: TerritoryISOA3) => availabilities[t] = 'selected');
@@ -285,14 +296,7 @@ function durationAvailabilities(
   bucketContracts?: BucketContract[],
 ): CalendarAvailabilities {
 
-  // check that the mandates & sales are about one single title,
-  // i.e. they must all have the same `titleId`
-  const titleId = mandates[0].titleId;
-  const invalidMandate = mandates.some(m => m.titleId !== titleId);
-  const invalidSale = sales.some(s => s.titleId !== titleId);
-  const invalidBucketSale = bucketContracts?.some(s => s.titleId !== titleId);
-
-  if (invalidMandate || invalidSale || invalidBucketSale) throw new Error('Mandates & Sales must all have the same title id!');
+  assertValidTitle(mandates, sales, bucketContracts);
 
   const availableMandates = getMatchingCalendarMandates(mandates, avails);
   const available = availableMandates.map(m =>
