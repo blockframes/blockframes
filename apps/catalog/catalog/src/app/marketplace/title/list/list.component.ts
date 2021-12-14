@@ -139,29 +139,9 @@ export class ListComponent implements OnDestroy, OnInit {
       map(([movies, availsValue, bucketValue, { mandates, mandateTerms, sales, saleTerms }]: [SearchResponse<Movie>, AvailsFilter, Bucket, { mandates: Mandate[], mandateTerms: Term[], sales: Sale[], saleTerms: Term[] }]) => {
         if (this.availsForm.valid) {
           if (!mandates.length) return [];
-          // console.log('##################################');
-          // console.log('##################################');
-          // console.log('##################################');
-          // console.log(availsValue);
           return movies.hits.filter(movie => {
-
-            // console.group(movie.objectID);
-            // console.log(movie);
-
             const { mandates: fullMandates, sales: fullSales, bucketContracts } = filterByTitle(movie.objectID, mandates, mandateTerms, sales, saleTerms, bucketValue);
-
-            // console.log({ fullMandates, fullSales, bucketContracts });
-
-            const isAvailable = availableTitle(availsValue, fullMandates, fullSales, bucketContracts);
-
-            // console.log('available', isAvailable);
-            // console.groupEnd();
-
-            return isAvailable;
-
-            // const { titleMandateTerms, titleSaleTerms } = filterByTitleId(movie.objectID, mandates, mandateTerms, sales, saleTerms);
-            // TODO issue#7139 if is in bucket return false, and remove bucket from param of isMovieAvailable
-            // return isMovieAvailable(movie.objectID, availsValue, bucketValue, titleMandateTerms, titleSaleTerms);
+            return availableTitle(availsValue, fullMandates, fullSales, bucketContracts);
           });
         } else { // if availsForm is invalid, put all the movies from algolia
           return movies.hits;
