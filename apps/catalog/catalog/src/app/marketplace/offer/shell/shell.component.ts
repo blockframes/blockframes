@@ -54,7 +54,8 @@ export class OfferShellComponent {
     return this.contractService.valueChanges(queryContracts).pipe(
       joinWith({
         title: contract => this.titleService.valueChanges(contract.titleId),
-        negotiation: contract => this.contractService.lastNegotiation(contract.id)
+        negotiation: contract => this.contractService.lastNegotiation(contract.id),
+        income: contract => this.incomeService.valueChanges(contract.id)
       })
     );
   }
