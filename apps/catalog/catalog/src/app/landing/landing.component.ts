@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, ViewEncapsulation } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewEncapsulation, ViewChild } from '@angular/core';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
@@ -10,6 +10,9 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 })
 export class CatalogLandingComponent {
   public tabNames = ['Seller', 'Buyer'];
+  @ViewChild('sellerVideo') sellerVideo;
+  @ViewChild('buyerVideo') buyerVideo;
+
 
   public tabTitle = [
     {
@@ -98,5 +101,13 @@ export class CatalogLandingComponent {
     private dynTitle: DynamicTitleService
   ) {
     this.dynTitle.setPageTitle()
+  }
+
+  onTabChanged(e) {
+    if(e.index === 0) {
+      this.sellerVideo.nativeElement.play();
+    } else {
+      this.buyerVideo.nativeElement.play();
+    }
   }
 }
