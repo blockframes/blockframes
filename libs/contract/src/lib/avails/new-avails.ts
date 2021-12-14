@@ -2,7 +2,7 @@
 import { Movie } from '@blockframes/movie/+state';
 import { Media, territoriesISOA3, Territory, TerritoryISOA3 } from '@blockframes/utils/static-model';
 
-import { BucketContract } from '../bucket/+state';
+import { Bucket, BucketContract } from '../bucket/+state';
 import { BucketTerm, Term } from '../term/+state';
 import { Mandate, Sale } from '../contract/+state';
 import { allOf, exclusivityAllOf, exclusivitySomeOf, someOf } from './sets';
@@ -29,6 +29,30 @@ function tinyId() {
   return Math.random().toString(16).substring(2);
 }
 
+export function filterByTitle(titleId: string, mandates: Mandate[], mandateTerms: Term[], sales: Sale[], saleTerms: Term[], bucket?: Bucket) {
+
+  // Gather only mandates & mandate terms related to this title
+  const titleMandates = mandates.filter(mandate => mandate.titleId === titleId);
+  const titleMandateTerms = mandateTerms.filter(mandateTerm => titleMandates.some(mandate => mandate.id === mandateTerm.contractId));
+  const fullMandates = titleMandates.map((m): FullMandate => ({
+    ...m,
+    terms: titleMandateTerms.filter(t => t.contractId === m.id),
+  }));
+
+  // Gather only sales & sale terms related to this title
+  const titleSales = sales.filter(sale => sale.titleId === titleId);
+  const titleSaleTerms = saleTerms.filter(saleTerm => titleSales.some(sale => sale.id === saleTerm.contractId));
+  const fullSales = titleSales.map((s): FullSale => ({
+    ...s,
+    terms: titleSaleTerms.filter(t => t.contractId === s.id),
+  }));
+
+  const bucketContracts = bucket?.contracts.filter(s => s.titleId === titleId);
+
+  return { mandates: fullMandates, sales: fullSales, bucketContracts };
+}
+
+
 function assertValidTitle(mandates: FullMandate[], sales: FullSale[], bucketContracts?: BucketContract[]) {
   // check that the mandates & sales are about one single title,
   // i.e. they must all have the same `titleId`
@@ -44,19 +68,21 @@ function assertValidTitle(mandates: FullMandate[], sales: FullSale[], bucketCont
 //          TITLE LIST
 // ----------------------------
 
-interface AvailsFilter {
+export interface AvailsFilter {
   medias: Media[],
   duration: { from: Date, to: Date },
   territories: Territory[],
   exclusive: boolean
 }
 
-function getMatchingMandates(mandates: FullMandate[], avails: AvailsFilter): FullMandate[] {
+function getMatchingMandates(mandates: FullMandate[], avails: AvailsFilter, debug = false): FullMandate[] {
   return mandates.filter(mandate => mandate.terms.some(term => {
     const exclusivityCheck = exclusivityAllOf(avails.exclusive).in(term.exclusive);
     const mediaCheck = allOf(avails.medias).in(term.medias);
     const durationCheck = allOf(avails.duration).in(term.duration);
     const territoryCheck = allOf(avails.territories).in(term.territories);
+
+    if (debug) console.log({ exclusivityCheck, mediaCheck, durationCheck, territoryCheck });
 
     return exclusivityCheck && mediaCheck && durationCheck && territoryCheck;
   }));
@@ -73,7 +99,7 @@ function getMatchingSales<T extends (FullSale | BucketContractWithId)>(sales: T[
   }));
 }
 
-function availableTitles(
+function availableTitles( // TODO IS THIS REALLY USED ????
   avails: AvailsFilter,
   titles: Movie[],
   mandates: FullMandate[],
@@ -90,23 +116,30 @@ function availableTitles(
 }
 
 
-function availableTitle(
+export function availableTitle(
   avails: AvailsFilter,
   mandates: FullMandate[],
   sales: FullSale[],
   bucketContracts?: BucketContract[],
+  debug = false,
 ): boolean {
 
-  if (!mandates.length) return false;
+  if (!mandates.length) {
+    if (debug) console.log('no mandate found for this movie, this movie will never be available.');
+    return false;
+  }
 
   assertValidTitle(mandates, sales, bucketContracts);
 
   // get only the mandates that meets the avails filter criteria,
   // e.g. if we ask for "France" but the title is mandated in "Germany", we don't care
-  const availableMandates = getMatchingMandates(mandates, avails);
+  const availableMandates = getMatchingMandates(mandates, avails, debug);
 
   // if there is no mandates left, the title is not available
-  if (!availableMandates.length) return false;
+  if (!availableMandates.length) {
+    if (debug) console.log('no mandate matches the avails filter, this movie could be available with other criteria.');
+    return false;
+  }
 
   // else we should now check the sales
 
@@ -115,7 +148,10 @@ function availableTitle(
   const salesToExclude = getMatchingSales(sales, avails);
 
   // if there is at least one sale that match the avails, the title is not available
-  if (salesToExclude.length) return false;
+  if (salesToExclude.length) {
+    if (debug) console.log('this movie was available but it has been sold for some of or all of the requested criteria.');
+    return false;
+  }
 
   // else we should check the bucket (if we have one)
 
@@ -137,7 +173,10 @@ function availableTitle(
   const bucketSalesToExclude = getMatchingSales(bucketSales, avails);
 
   // if there is at least one sale that match the avails, the title is not available
-  if (bucketSalesToExclude.length) return false;
+  if (bucketSalesToExclude.length) {
+    if (debug) console.log('this movie is available, but you already selected it, for this criteria, in you shopping cart');
+    return false;
+  }
 
   return true;
 }
