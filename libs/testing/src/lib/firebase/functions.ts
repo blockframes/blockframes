@@ -35,7 +35,7 @@ export function initFunctionsTestMock(emulator = true, overrideConfig?: AppOptio
   if (emulator) { // ** Connect to emulator
     const firebaseTest: FirebaseTestConfig = firebaseFunctionsTest();
     testIndex++;
-    const projectId = getTestingProjectId();
+    const projectId = (overrideConfig?.projectId) ?  overrideConfig.projectId : getTestingProjectId();
     // initialize test database
     process.env.GCLOUD_PROJECT = projectId;
     process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';

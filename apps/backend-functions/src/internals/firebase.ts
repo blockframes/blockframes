@@ -1,13 +1,22 @@
 import { region } from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import { firebaseRegion } from '@env';
+import { firebase as firebaseEnv, firebaseRegion } from '@env';
 export const functions = (config = defaultConfig) => region(firebaseRegion).runWith(config);
 import { backupBucket, storageBucket } from '../environments/environment';
 import { defaultConfig, isInMaintenance } from '@blockframes/firebase-utils';
 import { IMaintenanceDoc, META_COLLECTION_NAME, MAINTENANCE_DOCUMENT_NAME, _isInMaintenance } from '@blockframes/utils/maintenance';
+import { initFunctionsTestMock } from "@blockframes/testing/firebase/functions";
 
 if (!admin.apps.length) {
-  admin.initializeApp();
+  //TODO: Check the context of execution
+  const emulation = true;
+
+  if (emulation) {
+    const projectId = firebaseEnv().projectId;
+    initFunctionsTestMock(emulation, {projectId});
+  } else {
+    admin.initializeApp();
+  }
 }
 export const db = admin.firestore();
 export const auth = admin.auth();
