@@ -79,7 +79,7 @@ describe('Test unit-tests', () => {
     });
   });
 
-  it.only("tests a Cloud Firestore function", async () => {
+  it("tests a Cloud Firestore function", async () => {
     const wrapped = testEnv.wrap(firestoreUppercase);
 
     // Make a fake document snapshot to pass to the function
@@ -101,10 +101,12 @@ describe('Test unit-tests', () => {
   });
 
   it.only("tests an Auth function that interacts with Firestore", async () => {
+    console.log("Start");
     const wrapped = testEnv.wrap(userSaver);
 
     // Make a fake user to pass to the function
-    const uid = `${new Date().getTime()}`;
+    //const uid = `${new Date().getTime()}`;
+    const uid = 'abcd123';
     const email = `user-${uid}@example.com`;
     const user = testEnv.auth.makeUserRecord({
       uid,
@@ -116,7 +118,10 @@ describe('Test unit-tests', () => {
 
     // Check the data was written to the Firestore emulator
     const snap = await admin.firestore().collection("users").doc(uid).get();
+    console.log(snap);
+
     const data = snap.data();
+    console.log(data);
 
     expect(data.uid).toEqual(uid);
     expect(data.email).toEqual(email);
