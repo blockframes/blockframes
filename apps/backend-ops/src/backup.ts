@@ -48,23 +48,23 @@ export async function restoreEnv(dirName?: string) {
 
   let cmd: string;
 
-  console.log('Clearing existing env!')
+  console.log('Clearing existing env!');
 
   console.log('Ensuring maintenance mode stays enabled')
   const maintenanceInsurance = await ensureMaintenanceMode(db)
 
-  console.log('Clearing Firestore...')
+  console.log('Clearing Firestore...');
   await clearDb(db);
 
   console.log('Clearing auth...');
   await deleteAllUsers(auth);
 
-  console.log('Old env data is now cleared')
+  console.log('Old env data is now cleared');
 
-  console.log('Enabling maintenance in backup...')
+  console.log('Enabling maintenance in backup...');
   await importFirestoreEmulatorBackup(firestoreURL, defaultEmulatorBackupPath);
-  await enableMaintenanceInEmulator({ importFrom: 'defaultImport' })
-  await uploadDbBackupToBucket({ bucketName: backupBucket, remoteDir: `${backupDir}firestore` })
+  await enableMaintenanceInEmulator({ importFrom: 'defaultImport' });
+  await uploadDbBackupToBucket({ bucketName: backupBucket, remoteDir: `${backupDir}firestore` });
 
   console.log('Importing Firestore');
   cmd = `gcloud firestore import ${firestoreURL}`;
@@ -85,5 +85,5 @@ export async function restoreEnv(dirName?: string) {
   await upgradeAlgoliaUsers();
   console.info('Algolia ready!');
 
-  maintenanceInsurance()
+  maintenanceInsurance();
 }
