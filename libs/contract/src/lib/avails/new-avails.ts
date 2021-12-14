@@ -2,9 +2,9 @@
 import { Movie } from '@blockframes/movie/+state';
 import { Media, territoriesISOA3, Territory, TerritoryISOA3 } from '@blockframes/utils/static-model';
 
+import { BucketContract } from '../bucket/+state';
 import { BucketTerm, Term } from '../term/+state';
 import { Mandate, Sale } from '../contract/+state';
-import { Bucket, BucketContract } from '../bucket/+state';
 import { allOf, exclusivityAllOf, exclusivitySomeOf, someOf } from './sets';
 
 
@@ -26,7 +26,7 @@ interface BucketContractWithId extends BucketContract {
 }
 
 function tinyId() {
-  return Math.random().toString(16).substr(2);
+  return Math.random().toString(16).substring(2);
 }
 
 function assertValidTitle(mandates: FullMandate[], sales: FullSale[], bucketContracts?: BucketContract[]) {
