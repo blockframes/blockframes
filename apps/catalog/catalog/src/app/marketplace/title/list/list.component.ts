@@ -18,6 +18,7 @@ import { centralOrgId } from '@env';
 // Blockframes
 import { Movie } from '@blockframes/movie/+state';
 import { AlgoliaMovie } from '@blockframes/utils/algolia';
+import { PdfService } from '@blockframes/utils/pdf/pdf.service';
 import { Term } from '@blockframes/contract/term/+state/term.model';
 import { StoreStatus } from '@blockframes/utils/static-model/types';
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
@@ -27,8 +28,10 @@ import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-enc
 import { ContractService, Mandate, Sale } from '@blockframes/contract/contract/+state';
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { AvailsFilter, filterByTitleId, getMandateTerms, isMovieAvailable } from '@blockframes/contract/avails/avails';
-import { PdfService } from '@blockframes/utils/pdf/pdf.service';
+
+
+import { getMandateTerms } from '@blockframes/contract/avails/avails';
+import { AvailsFilter, filterByTitle, availableTitle } from '@blockframes/contract/avails/new-avails';
 
 @Component({
   selector: 'catalog-marketplace-title-list',
@@ -135,10 +138,30 @@ export class ListComponent implements OnDestroy, OnInit {
     ).pipe(
       map(([movies, availsValue, bucketValue, { mandates, mandateTerms, sales, saleTerms }]: [SearchResponse<Movie>, AvailsFilter, Bucket, { mandates: Mandate[], mandateTerms: Term[], sales: Sale[], saleTerms: Term[] }]) => {
         if (this.availsForm.valid) {
+          if (!mandates.length) return [];
+          // console.log('##################################');
+          // console.log('##################################');
+          // console.log('##################################');
+          // console.log(availsValue);
           return movies.hits.filter(movie => {
-            const { titleMandateTerms, titleSaleTerms } = filterByTitleId(movie.objectID, mandates, mandateTerms, sales, saleTerms);
+
+            // console.group(movie.objectID);
+            // console.log(movie);
+
+            const { mandates: fullMandates, sales: fullSales, bucketContracts } = filterByTitle(movie.objectID, mandates, mandateTerms, sales, saleTerms, bucketValue);
+
+            // console.log({ fullMandates, fullSales, bucketContracts });
+
+            const isAvailable = availableTitle(availsValue, fullMandates, fullSales, bucketContracts);
+
+            // console.log('available', isAvailable);
+            // console.groupEnd();
+
+            return isAvailable;
+
+            // const { titleMandateTerms, titleSaleTerms } = filterByTitleId(movie.objectID, mandates, mandateTerms, sales, saleTerms);
             // TODO issue#7139 if is in bucket return false, and remove bucket from param of isMovieAvailable
-            return isMovieAvailable(movie.objectID, availsValue, bucketValue, titleMandateTerms, titleSaleTerms);
+            // return isMovieAvailable(movie.objectID, availsValue, bucketValue, titleMandateTerms, titleSaleTerms);
           });
         } else { // if availsForm is invalid, put all the movies from algolia
           return movies.hits;
