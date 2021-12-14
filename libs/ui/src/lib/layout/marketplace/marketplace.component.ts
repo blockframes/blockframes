@@ -67,10 +67,10 @@ export class MarketplaceComponent implements OnInit {
   }
 
   onAppLogoClick() {
-    if (this.router.url.includes("home")) {
+    if (this.router.url === '/c/o/marketplace/home') {
      this.cdkScrollable.scrollTo({ top: 0 });
     } else {
-      this.router.navigate(['/c/o/marketplace/home'])
+      this.router.navigate(['/c/o/marketplace/home']);
     }
   }
 }
