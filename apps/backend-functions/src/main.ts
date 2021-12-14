@@ -289,6 +289,16 @@ export const downloadVideoToStorage = functions(superHeavyConfig).https.onReques
   };
 });
 
+
+/**
+ * Simple HTTP function that returns the "?text" query parameter in the response text.
+ * http://localhost:5001/blockframes-mano/europe-west1/simpleHttp?text=Hello+World
+ */
+ export const simpleHttp = functions().https.onRequest((request, response) => {
+  response.send(`text: ${request.query.text}`);
+});
+
+
 // Take the text parameter passed to this HTTP endpoint and insert it into 
 // Firestore under the path /messages/:documentId/original
 export const addMessage = functions().https.onRequest(async (req, res) => {
