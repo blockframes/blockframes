@@ -3,8 +3,9 @@
 import { join, resolve } from 'path';
 import { Firestore, initFirestoreApp  } from '@blockframes/testing/firebase/functions';
 import { apps, assertFails, assertSucceeds } from '@firebase/rules-unit-testing';
-import { addMessage, simpleCallable, simpleHttp }  from './main';
+import { addMessage, firestoreUppercase, simpleCallable, simpleHttp, userSaver }  from './main';
 import firebaseTest = require('firebase-functions-test');
+import * as admin from 'firebase-admin';
 import { firebase } from '@env';
 const projectRealId = firebase().projectId;
 const pathToServiceAccountKey = resolve(process.cwd(), process.env.GOOGLE_APPLICATION_CREDENTIALS);
@@ -35,7 +36,7 @@ describe('Test unit-tests', () => {
 
   //Test HTTP request/resp cloud function
   //http://localhost:5001/blockframes-mano/europe-west1/simpleHttp?text=Hello+World
-  it.only("tests a simple HTTP request/response function", async () => {
+  it("tests a simple HTTP request/response function", async () => {
     // A fake request object, with req.query.text set to 'input'
     const req = { query: { text: "input" } };
 
@@ -78,6 +79,47 @@ describe('Test unit-tests', () => {
     });
   });
 
+  it.only("tests a Cloud Firestore function", async () => {
+    const wrapped = testEnv.wrap(firestoreUppercase);
 
+    // Make a fake document snapshot to pass to the function
+    const after = testEnv.firestore.makeDocumentSnapshot(
+      {
+        text: "hello world",
+      },
+      "/lowercase/foo"
+    );
+
+    // Call the function
+    await wrapped(after);
+
+    // Check the data in the Firestore emulator
+    const snap = await admin.firestore().doc("/uppercase/foo").get();
+    expect(snap.data()).toEqual({
+      text: "HELLO WORLD",
+    });
+  });
+
+  it.only("tests an Auth function that interacts with Firestore", async () => {
+    const wrapped = testEnv.wrap(userSaver);
+
+    // Make a fake user to pass to the function
+    const uid = `${new Date().getTime()}`;
+    const email = `user-${uid}@example.com`;
+    const user = testEnv.auth.makeUserRecord({
+      uid,
+      email,
+    });
+
+    // Call the function
+    await wrapped(user);
+
+    // Check the data was written to the Firestore emulator
+    const snap = await admin.firestore().collection("users").doc(uid).get();
+    const data = snap.data();
+
+    expect(data.uid).toEqual(uid);
+    expect(data.email).toEqual(email);
+  });
 })
 

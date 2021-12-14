@@ -329,3 +329,32 @@ exports.makeUppercase = functions().firestore.document('/messages/{documentId}')
       // Setting an 'uppercase' field in Firestore document returns a Promise.
       return snap.ref.set({uppercase}, {merge: true});
     });
+
+/**
+ * Firestore-triggered function which uppercases a string field of a document.
+ */
+export const firestoreUppercase = functions().firestore
+ .document("/lowercase/{doc}")
+ .onCreate(async (doc, ctx) => {
+   const docId = doc.id;
+
+   const docData = doc.data();
+   const lowercase = docData.text;
+
+   const firestore = admin.firestore();
+   await firestore.collection("uppercase").doc(docId).set({
+     text: lowercase.toUpperCase(),
+   });
+ });
+
+/**
+* Auth-triggered function which writes a user document to Firestore.
+*/
+export const userSaver = functions().auth.user().onCreate(async (user, ctx) => {
+ const firestore = admin.firestore();
+ 
+ // Make a document in the user's collection with everything we know about the user
+ const userId = user.uid;
+ const userRef = firestore.collection("users").doc(userId);
+ await userRef.set(user.toJSON());
+});
