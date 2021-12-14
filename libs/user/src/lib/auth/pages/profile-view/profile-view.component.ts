@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
-import { Location } from '@angular/common'
 import { NavigationEnd, Router, Event } from '@angular/router';
+import { Location } from '@angular/common';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Observable, Subscription } from 'rxjs';
 import { distinctUntilChanged, filter } from 'rxjs/operators';
 
@@ -11,7 +12,6 @@ import { Organization } from '@blockframes/organization/+state/organization.mode
 import { User } from '@blockframes/auth/+state/auth.store';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { getCurrentApp } from '@blockframes/utils/apps';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { canHavePreferences } from '@blockframes/user/+state/user.utils';
 
 const navLinks = [
@@ -45,17 +45,22 @@ export class ProfileViewComponent implements OnInit, OnDestroy {
 
   constructor(
     private authQuery: AuthQuery,
-    private organizationQuery: OrganizationQuery,
     private dynTitle: DynamicTitleService,
     private location: Location,
-    private router: Router,
-    private routerQuery: RouterQuery
+    private organizationQuery: OrganizationQuery,
+    private routerQuery: RouterQuery,
+    router: Router
   ) {
 
     this.dynTitle.setPageTitle(`
     ${this.authQuery.getValue().profile.lastName}
     ${this.authQuery.getValue().profile.firstName}`,
       `${this.organizationQuery.getActive().denomination.full}`);
+
+    this.sub = router.events.pipe(
+      filter((evt: Event) => evt instanceof NavigationEnd),
+      distinctUntilChanged((a: NavigationEnd, b: NavigationEnd) => a.url === b.url),
+    ).subscribe(() => this.countRouteEvents++);
   }
 
   ngOnInit() {
@@ -70,11 +75,6 @@ export class ProfileViewComponent implements OnInit, OnDestroy {
     if (canHavePreferences(org, app)) {
       this.navLinks.push({ path: 'preferences', label: 'Buying Preferences' })
     }
-
-    this.sub = this.router.events.pipe(
-      filter((evt: Event) => evt instanceof NavigationEnd),
-      distinctUntilChanged((a: NavigationEnd, b: NavigationEnd) => a.url === b.url),
-    ).subscribe(() => this.countRouteEvents++);
   }
 
   ngOnDestroy() {

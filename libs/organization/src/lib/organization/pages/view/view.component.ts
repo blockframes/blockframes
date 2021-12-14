@@ -1,16 +1,17 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
-import { Location } from '@angular/common';
 import { NavigationEnd, Router, Event } from '@angular/router';
+import { Location } from '@angular/common';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Observable, Subscription } from 'rxjs';
 import { distinctUntilChanged, filter } from 'rxjs/operators';
 
 // blockframes
 import { Organization } from '@blockframes/organization/+state/organization.model';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
+import { TunnelService } from '@blockframes/ui/tunnel';
 import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
 import { User } from '@blockframes/auth/+state/auth.store';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 const navLinks = [
@@ -43,11 +44,11 @@ export class OrganizationViewComponent implements OnInit, OnDestroy {
     private query: OrganizationQuery,
     private authQuery: AuthQuery,
     private dynTitle: DynamicTitleService,
-    private routerQuery: RouterQuery,
     private location: Location,
-    private router: Router,
+    private routerQuery: RouterQuery,
+    private router: Router
   ) {
-    const sub = this.routerQuery.select('state').subscribe(data => {
+    const routerQuerySub = this.routerQuery.select('state').subscribe(data => {
       if (data.url.includes('members')) {
         this.dynTitle.setPageTitle('Members', `${this.query.getActive().denomination.full}`);
       } else if (data.url.includes('documents')) {
@@ -56,7 +57,13 @@ export class OrganizationViewComponent implements OnInit, OnDestroy {
         this.dynTitle.setPageTitle('Company details', `${this.query.getActive().denomination.full}`);
       }
     })
-    this.subs.push(sub);
+    this.subs.push(routerQuerySub);
+
+    const routerSub = this.router.events.pipe(
+      filter((evt: Event) => evt instanceof NavigationEnd),
+      distinctUntilChanged((a: NavigationEnd, b: NavigationEnd) => a.url === b.url),
+    ).subscribe(() => this.countRouteEvents++);
+    this.subs.push(routerSub);
   }
 
   ngOnInit() {
