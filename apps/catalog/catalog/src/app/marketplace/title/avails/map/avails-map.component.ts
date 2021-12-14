@@ -151,6 +151,9 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     const decodedData = decodeUrl(this.route);
+    if (decodedData.duration?.from) decodedData.duration.from = new Date(decodedData.duration.from);
+    if (decodedData.duration?.to) decodedData.duration.to = new Date(decodedData.duration.to);
+
     this.availsForm.patchValue(decodedData);
     this.availsForm.valueChanges.pipe(
       throttleTime(1000)

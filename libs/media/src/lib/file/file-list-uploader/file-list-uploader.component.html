@@ -1,3 +1,8 @@
+<ng-container *ngIf="togglePrivacy">
+  <mat-checkbox [checked]="newFileForm.isPublic" (change)="newFileForm.togglePrivacy($event.checked)" color="primary">
+    <b>Public</b> (Buyers can see video on Marketplace)
+  </mat-checkbox>
+</ng-container>
 <file-uploader [form]="newFileForm" [meta]="meta" [accept]="accept" (selectionChange)="change()"></file-uploader>
 <section fxLayout="row" fxLayoutAlign="end center">
   <button mat-stroked-button (click)="save()" [disabled]="disabled">

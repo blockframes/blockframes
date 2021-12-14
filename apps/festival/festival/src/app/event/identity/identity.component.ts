@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@blockframes/auth/+state';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -22,6 +22,11 @@ export class EventIdenityComponent {
     private route: ActivatedRoute,
     private snackBar: MatSnackBar
   ) { }
+
+  @HostListener('window:popstate', ['$event'])
+  onPopState() {
+    this.clickBack();
+  }
 
   validateIdentity() {
     if (!this.form.valid) {

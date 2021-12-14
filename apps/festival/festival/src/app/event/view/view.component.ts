@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, HostListener } from '@angular/core';
 import { EventService } from '@blockframes/event/+state';
 import { ActivatedRoute } from '@angular/router';
 import { InvitationService, Invitation } from '@blockframes/invitation/+state';
@@ -33,6 +33,11 @@ export class EventViewComponent implements OnInit {
     private authQuery: AuthQuery,
     private authService: AuthService
   ) { }
+
+  @HostListener('window:popstate', ['$event'])
+  onPopState() {
+    this.goBack();
+  }
 
   async ngOnInit() {
 
