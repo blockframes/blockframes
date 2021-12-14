@@ -88,11 +88,34 @@ describe('Invitation Rules Tests', () => {
         details[key] = value;
         await assertFails(inviteRef.update(details));
       });
+    });
+  });
 
-      test('should allow user to update invitation', async () => {
-        const inviteRef = db.doc('invitations/I001');
-        await assertSucceeds(inviteRef.update({ note: 'important' }));
-      });
+  describe('With unintended user, respond to invitation', () => {
+    beforeAll(async () => {
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-sAdmin', firebase: { sign_in_provider: 'password' } });
+    });
+
+    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+
+    const statuses = ['accepted', 'declined'];
+    test.each(statuses)("should not allow user to set invitation as '%s'", async (status) => {
+      const inviteRef = db.doc('invitations/I001');
+      await assertFails(inviteRef.update({ status }));
+    });
+  });
+
+  describe('With invited user, respond to invitation', () => {
+    beforeAll(async () => {
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2', firebase: { sign_in_provider: 'password' } });
+    });
+
+    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+
+    const statuses = ['accepted', 'declined'];
+    test.each(statuses)("should allow user to set invitation as '%s'", async (status) => {
+      const inviteRef = db.doc('invitations/I001');
+      await assertSucceeds(inviteRef.update({ status }));
     });
   });
 
