@@ -804,7 +804,11 @@
           },
           "configurations": {
             "emulator": {
-              "devServerTarget": "festival:serve:emulator"
+              "devServerTarget": "festival:serve:emulator",
+              "env": {
+                "notice": "Env is being read",
+                "emulator": true
+              }
             },
             "production": {
               "devServerTarget": "festival:serve:production"
