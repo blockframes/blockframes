@@ -1,10 +1,10 @@
 <ng-container *ngIf="sale$ | async as sale; else loading">
   <ng-container *ngIf="sale.negotiation as negotiation">
     <ng-container *ngIf="negotiation.status === 'pending' && negotiation.createdByOrg !== orgId">
-      
+
       <header fxLayout fxLayoutAlign="start center" fxLayoutGap="16px" *ngIf="sale.negotiation as negotiation">
         <ng-container *ngIf="negotiation.price else noPrice">
-          <button mat-stroked-button color="primary" (click)="accept(sale.id, sale.movie)">
+          <button mat-stroked-button color="primary" (click)="accept(sale.id, negotiation.id, sale.movie)">
             <mat-icon svgIcon="check"></mat-icon>
             <span>Accept</span>
           </button>
@@ -20,7 +20,7 @@
           <span>Negotiate</span>
         </a>
       </header>
-      
+
     </ng-container>
   </ng-container>
 
@@ -34,7 +34,7 @@
       <p>{{ delivery }}</p>
     </article>
   </section>
-  
+
   <ng-container *ngIf="sale.negotiation as negotiation">
     <contract-item [contract]="negotiation">
       <div class="price" price>
