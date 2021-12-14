@@ -278,9 +278,20 @@ export const downloadVideoToStorage = functions(superHeavyConfig).https.onReques
 //   Testing / Demos            //
 //--------------------------------
 
+/**
+ * Simple callable function that adds two numbers.
+ */
+ export const simpleCallable = functions().https.onCall((data, ctx) => {
+  // This function implements addition (a + b = c)
+  const sum = data.a + data.b;
+  return {
+    c: sum,
+  };
+});
+
 // Take the text parameter passed to this HTTP endpoint and insert it into 
 // Firestore under the path /messages/:documentId/original
-exports.addMessage = functions().https.onRequest(async (req, res) => {
+export const addMessage = functions().https.onRequest(async (req, res) => {
     // Grab the text parameter.
     const original = req.query.text;
 
