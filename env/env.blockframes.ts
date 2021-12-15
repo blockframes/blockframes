@@ -191,7 +191,7 @@ export const datastudio = {
 // ========
 
 export const centralOrgId = {
-  cascade8: 'jnbHKBP5YLvRQGcyQ8In', // @TODO #6586 cascade8 entry is unused
+  cascade8: 'jnbHKBP5YLvRQGcyQ8In',
   catalog: 'nBM8sy5EEAOtVBCX4nTJ',
 };
 
