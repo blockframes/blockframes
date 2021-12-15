@@ -24,7 +24,7 @@ export class EventViewComponent implements OnInit {
   event$: Observable<Event>;
   private statusChanged = new BehaviorSubject(false);
   public timerEnded = false;
-  private preventBrowserEvent;
+  private preventBrowserEvent = false;
 
   constructor(
     private route: ActivatedRoute,
