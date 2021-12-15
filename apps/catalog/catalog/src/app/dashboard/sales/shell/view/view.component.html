@@ -4,7 +4,7 @@
 
       <header fxLayout fxLayoutAlign="start center" fxLayoutGap="16px" *ngIf="sale.negotiation as negotiation">
         <ng-container *ngIf="negotiation.price else noPrice">
-          <button mat-stroked-button color="primary" (click)="accept(sale.id, negotiation.id, sale.movie)">
+          <button mat-stroked-button color="primary" (click)="accept(negotiation.id, sale.id, sale.movie)">
             <mat-icon svgIcon="check"></mat-icon>
             <span>Accept</span>
           </button>

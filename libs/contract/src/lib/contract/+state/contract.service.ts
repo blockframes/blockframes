@@ -72,7 +72,7 @@ export class ContractService extends CollectionService<ContractState> {
       specificity: contract.specificity,
       orgId: contract.orgId,
     }, { write, params: { contractId }})
-    if (sale.status === 'pending') this.update(contractId, { status: 'negotiating' }, { write })
+    if (shouldUpdateSale && sale.status === 'pending') this.update(contractId, { status: 'negotiating' }, { write })
     await write.commit()
   }
 }

@@ -27,7 +27,7 @@ export class SaleViewComponent {
     private query: OrganizationQuery
   ) { }
 
-  accept(contractId: string, negotiationId: string, movie: Movie) {
+  accept(negotiationId: string, contractId: string, movie: Movie) {
     const data = {
       onConfirm: () => this.negotiationService.update(negotiationId, { status: 'accepted' }, { params: { contractId } }),
       title: 'Are you sure you want to accept this Contract?',
