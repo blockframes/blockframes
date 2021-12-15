@@ -21,7 +21,7 @@ import { BucketStore, BucketState } from './bucket.store';
 import { createBucketTerm, createBucketContract } from './bucket.model';
 import { ContractService, convertDuration } from '../../contract/+state';
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
-import {  NegotiationStatus } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
+import { NegotiationStatus } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'buckets' })
@@ -119,8 +119,9 @@ export class BucketService extends CollectionService<BucketState> {
       //add the default negotiation.
       await this.contractService.addNegotiation(contractId, {
         ...contract,
-        ...commonFields
-      }, false)
+        ...commonFields,
+        initial: new Date()
+      })
       // @dev: Create income & terms after contract because rules require contract to be created first
       // Create the terms
       await this.termService.add(terms);
