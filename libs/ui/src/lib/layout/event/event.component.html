@@ -1,7 +1,7 @@
 <mat-sidenav-container>
   <mat-sidenav class="dark-theme" id="dashboard-navbar" mode="over">
     <mat-toolbar fxLayout fxLayoutAlign="space-between center">
-      <a app-logo routerLink="."></a>
+      <a app-logo routerLink="/c/o/marketplace/home"></a>
       <button mat-icon-button (click)="sidenav.close()">
         <mat-icon svgIcon="arrow_back"></mat-icon>
       </button>
@@ -16,7 +16,7 @@
         <button *ngIf="(user$ | async)" test-id="menu" mat-icon-button (click)="sidenav.toggle()">
           <mat-icon svgIcon="menu"></mat-icon>
         </button>
-        <a app-logo [routerLink]="(user$ | async) ? '.' : '/'"></a>
+        <a app-logo [routerLink]="(user$ | async) ? '/c/o/marketplace/home' : '/'"></a>
         <ng-content select="header"></ng-content>
         <ng-container *ngIf="(user$ | async)">
           <a test-id="calendar-icon" mat-icon-button routerLink="/c/o/marketplace/event/calendar">
