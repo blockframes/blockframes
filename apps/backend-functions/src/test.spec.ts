@@ -7,20 +7,20 @@ import { addMessage, firestoreUppercase, simpleCallable, simpleHttp, userSaver }
 import firebaseTest = require('firebase-functions-test');
 import * as admin from 'firebase-admin';
 import { firebase } from '@env';
+
+//We are testing against actual project with shrunk DB
 const projectRealId = firebase().projectId;
 const pathToServiceAccountKey = resolve(process.cwd(), process.env.GOOGLE_APPLICATION_CREDENTIALS);
 const testEnv = firebaseTest(firebase(), pathToServiceAccountKey);
 
 describe('Test unit-tests', () => {
-  //const projectId = `test-spec-${Date.now()}`;
   let db: Firestore;
 
   beforeAll(async () => {
     process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
-    //const projectId = firebase().projectId;
+    // We are initing firestore with client settings to
+    // test the functions effectively
     db = await initFirestoreApp(projectRealId, '', {}, { uid: 'uid-c8', firebase: { sign_in_provider: 'password' } });
-    //const app = initializeAdminApp({ projectId });
-    //db = app.firestore();
   });
 
   afterEach(async () => {
@@ -72,7 +72,6 @@ describe('Test unit-tests', () => {
 
     // Call the wrapped function with data and context
     const result = await wrapped(data);
-    console.log(result);
     // Check that the result looks like we expected.
     expect(result).toEqual({
       c: 3,
@@ -100,8 +99,7 @@ describe('Test unit-tests', () => {
     });
   });
 
-  it.only("tests an Auth function that interacts with Firestore", async () => {
-    console.log("Start");
+  it("tests an Auth function that interacts with Firestore", async () => {
     const wrapped = testEnv.wrap(userSaver);
 
     // Make a fake user to pass to the function
@@ -116,6 +114,7 @@ describe('Test unit-tests', () => {
     // Call the function
     await wrapped(user);
 
+    //TODO: Check it
     // Check the data was written to the Firestore emulator
     const snap = await admin.firestore().collection("users").doc(uid).get();
     console.log(snap);

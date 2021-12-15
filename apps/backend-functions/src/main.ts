@@ -282,6 +282,7 @@ export const downloadVideoToStorage = functions(superHeavyConfig).https.onReques
  * Simple callable function that adds two numbers.
  */
  export const simpleCallable = functions().https.onCall((data, ctx) => {
+  console.log("In simpleCallable : ", data);
   // This function implements addition (a + b = c)
   const sum = data.a + data.b;
   return {
@@ -295,7 +296,8 @@ export const downloadVideoToStorage = functions(superHeavyConfig).https.onReques
  * http://localhost:5001/blockframes-mano/europe-west1/simpleHttp?text=Hello+World
  */
  export const simpleHttp = functions().https.onRequest((request, response) => {
-  response.send(`text: ${request.query.text}`);
+   console.log("In simpleHttp - got:", request.query.text);
+   response.send(`text: ${request.query.text}`);
 });
 
 
@@ -304,6 +306,7 @@ export const downloadVideoToStorage = functions(superHeavyConfig).https.onReques
 export const addMessage = functions().https.onRequest(async (req, res) => {
     // Grab the text parameter.
     const original = req.query.text;
+    console.log("In addMessage - got:", original);
 
     // Push the new message into Firestore using the Firebase Admin SDK.
     const writeResult = await admin.firestore().collection('messages').add({original: original});
@@ -340,6 +343,7 @@ export const firestoreUppercase = functions().firestore
 
    const docData = doc.data();
    const lowercase = docData.text;
+   console.log("In firestoreUppercase : ", lowercase);
 
    const firestore = admin.firestore();
    await firestore.collection("uppercase").doc(docId).set({
