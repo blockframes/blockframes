@@ -1,10 +1,9 @@
 
-import { Movie } from '@blockframes/movie/+state';
-import { Media, territoriesISOA3, Territory, TerritoryISOA3 } from '@blockframes/utils/static-model';
+import { Media, territories, territoriesISOA3, Territory, TerritoryISOA3, TerritoryISOA3Value, TerritoryValue } from '@blockframes/utils/static-model';
 
-import { Bucket, BucketContract } from '../bucket/+state';
-import { BucketTerm, Term } from '../term/+state';
+import { Term } from '../term/+state';
 import { Mandate, Sale } from '../contract/+state';
+import { Bucket, BucketContract } from '../bucket/+state';
 import { allOf, exclusivityAllOf, exclusivitySomeOf, someOf } from './sets';
 
 
@@ -16,35 +15,33 @@ export interface FullSale extends Sale {
   terms: Term[];
 }
 
-interface BucketTermWithContractId extends BucketTerm {
-  contractId: string;
-}
-
-interface BucketContractWithId extends BucketContract {
-  id: string;
-  terms: BucketTermWithContractId[]
-}
-
-function tinyId() {
-  return Math.random().toString(16).substring(2);
-}
-
 export function filterByTitle(titleId: string, mandates: Mandate[], mandateTerms: Term[], sales: Sale[], saleTerms: Term[], bucket?: Bucket) {
 
+
   // Gather only mandates & mandate terms related to this title
+  const termsByMandate: Record<string, Term[]> = {};
+  for (const term of mandateTerms) {
+    if (!termsByMandate[term.contractId]) termsByMandate[term.contractId] = [];
+    termsByMandate[term.contractId].push(term);
+  }
+
   const titleMandates = mandates.filter(mandate => mandate.titleId === titleId);
-  const titleMandateTerms = mandateTerms.filter(mandateTerm => titleMandates.some(mandate => mandate.id === mandateTerm.contractId));
   const fullMandates = titleMandates.map((m): FullMandate => ({
     ...m,
-    terms: titleMandateTerms.filter(t => t.contractId === m.id),
+    terms: termsByMandate[m.id],
   }));
 
   // Gather only sales & sale terms related to this title
+  const termsBySale: Record<string, Term[]> = {};
+  for (const term of saleTerms) {
+    if (!termsBySale[term.contractId]) termsBySale[term.contractId] = [];
+    termsBySale[term.contractId].push(term);
+  }
+
   const titleSales = sales.filter(sale => sale.titleId === titleId);
-  const titleSaleTerms = saleTerms.filter(saleTerm => titleSales.some(sale => sale.id === saleTerm.contractId));
   const fullSales = titleSales.map((s): FullSale => ({
     ...s,
-    terms: titleSaleTerms.filter(t => t.contractId === s.id),
+    terms: termsBySale[s.id],
   }));
 
   const bucketContracts = bucket?.contracts.filter(s => s.titleId === titleId);
@@ -88,7 +85,7 @@ function getMatchingMandates(mandates: FullMandate[], avails: AvailsFilter, debu
   }));
 }
 
-function getMatchingSales<T extends (FullSale | BucketContractWithId)>(sales: T[], avails: AvailsFilter): T[] {
+function getMatchingSales<T extends (FullSale | BucketContract)>(sales: T[], avails: AvailsFilter): T[] {
   return sales.filter(sale => sale.terms.some(term => {
     const exclusivityCheck = exclusivitySomeOf(avails.exclusive).in(term.exclusive);
     const mediaCheck = someOf(avails.medias).in(term.medias);
@@ -98,23 +95,6 @@ function getMatchingSales<T extends (FullSale | BucketContractWithId)>(sales: T[
     return exclusivityCheck && mediaCheck && durationCheck && territoryCheck;
   }));
 }
-
-function availableTitles( // TODO IS THIS REALLY USED ????
-  avails: AvailsFilter,
-  titles: Movie[],
-  mandates: FullMandate[],
-  sales: FullSale[],
-  bucketContracts?: BucketContract[],
-): Movie[] {
-  return titles.filter(title => {
-    const titleSales = sales.filter(s => s.titleId === title.id);
-    const titleMandates = mandates.filter(m => m.titleId === title.id);
-    const bucketSales = bucketContracts?.filter(s => s.titleId === title.id);
-
-    return availableTitle(avails, titleMandates, titleSales, bucketSales);
-  });
-}
-
 
 export function availableTitle(
   avails: AvailsFilter,
@@ -158,19 +138,9 @@ export function availableTitle(
   // for now the title is available and we have no bucket to check
   if (!bucketContracts) return true;
 
-  // we retrieve the sales from the bucket,
-  // but we also format everything, adding a fake tiny id so that we can easily find back what we need
-  // i.e. `term -(contractId)-> sale -(titleId)-> title`
-  const bucketSales = bucketContracts.map(s => {
-    const id = tinyId();
-    const terms: BucketTermWithContractId[] = s.terms.map(t => ({ ...t, contractId: id}));
-
-    return { ...s, id, terms } as BucketContractWithId;
-  });
-
   // get only the sales that meets the avails filter criteria
   // e.g. if we ask for "France" but the title has been sold in "Germany", we don't care
-  const bucketSalesToExclude = getMatchingSales(bucketSales, avails);
+  const bucketSalesToExclude = getMatchingSales(bucketContracts ?? [], avails);
 
   // if there is at least one sale that match the avails, the title is not available
   if (bucketSalesToExclude.length) {
@@ -185,16 +155,28 @@ export function availableTitle(
 //             MAP
 // ----------------------------
 
-interface MapAvailsFilter {
+export interface MapAvailsFilter {
   medias: Media[],
   duration: { from: Date, to: Date },
   exclusive: boolean
 }
 
-type TerritoryAvailability = 'not-licensed' | 'available' | 'sold' | 'selected';
+type TerritoryAvailability = 'not-licensed' | 'available' | 'sold';
 
-type MapAvailabilities = Record<TerritoryISOA3, TerritoryAvailability>;
+interface TerritoryMarker {
+  type: TerritoryAvailability,
+  slug: Territory,
+  isoA3: TerritoryISOA3Value,
+  label: TerritoryValue,
+  contract?: Mandate,
+  term?: Term<Date>,
+}
 
+interface MapAvailabilities {
+  notLicensed: TerritoryMarker[];
+  available: TerritoryMarker[];
+  sold: TerritoryMarker[];
+}
 
 function getMatchingMapMandates(mandates: FullMandate[], avails: MapAvailsFilter): FullMandate[] {
   return mandates.filter(mandate => mandate.terms.some(term => {
@@ -206,7 +188,7 @@ function getMatchingMapMandates(mandates: FullMandate[], avails: MapAvailsFilter
   }));
 }
 
-function getMatchingMapSales<T extends (FullSale | BucketContractWithId)>(sales: T[], avails: MapAvailsFilter): T[] {
+function getMatchingMapSales<T extends (FullSale | BucketContract)>(sales: T[], avails: MapAvailsFilter): T[] {
   return sales.filter(sale => sale.terms.some(term => {
     const exclusivityCheck = exclusivitySomeOf(avails.exclusive).in(term.exclusive);
     const mediaCheck = someOf(avails.medias).in(term.medias);
@@ -217,12 +199,11 @@ function getMatchingMapSales<T extends (FullSale | BucketContractWithId)>(sales:
 }
 
 
-function territoryAvailabilities(
+export function territoryAvailabilities(
   avails: MapAvailsFilter,
   mandates: FullMandate[],
   sales: FullSale[],
   bucketContracts?: BucketContract[],
-  selected?: TerritoryISOA3[]
 ): MapAvailabilities {
 
   // This function compute the availabilities of every territories simply by applying successive layer of "color" on top of each other
@@ -237,16 +218,28 @@ function territoryAvailabilities(
   assertValidTitle(mandates, sales, bucketContracts);
 
   // 0) initialize the world as `not-licensed`
-  const availabilities = {} as MapAvailabilities;
-  Object.keys(territoriesISOA3).forEach((k: TerritoryISOA3) => availabilities[k] = 'not-licensed');
+  const availabilities = {} as Record<Territory, TerritoryMarker>;
+  Object.keys(territories).forEach((territory: Territory) => availabilities[territory] = {
+    type: 'not-licensed',
+    slug: territory,
+    isoA3: territoriesISOA3[territory],
+    label: territories[territory],
+  });
 
 
   // 1) "paint" the `available` layer
   const availableMandates = getMatchingMapMandates(mandates, avails);
   for (const mandate of availableMandates) {
     for (const term of mandate.terms) {
-      for (const territory of term.territories as TerritoryISOA3[]) {
-        availabilities[territory] = 'available';
+      for (const territory of term.territories as Territory[]) {
+        availabilities[territory] = {
+          type: 'available',
+          slug: territory,
+          isoA3: territoriesISOA3[territory],
+          label: territories[territory],
+          term,
+          contract: mandate,
+        };
       }
     }
   }
@@ -256,33 +249,37 @@ function territoryAvailabilities(
   const salesToExclude = getMatchingMapSales(sales, avails);
   for (const sale of salesToExclude) {
     for (const term of sale.terms) {
-      for (const territory of term.territories as TerritoryISOA3[]) {
-        availabilities[territory] = 'sold';
+      for (const territory of term.territories as Territory[]) {
+        availabilities[territory] = {
+          type: 'sold',
+          slug: territory,
+          isoA3: territoriesISOA3[territory],
+          label: territories[territory],
+          term,
+        };
       }
     }
   }
 
-  // 2.5) add the bucket sales territories to the `sold` layer
-  const bucketSales = bucketContracts?.map(s => {
-    const id = tinyId();
-    const terms: BucketTermWithContractId[] = s.terms.map(t => ({ ...t, contractId: id}));
-
-    return { ...s, id, terms } as BucketContractWithId;
-  });
-
-  const bucketSalesToExclude = getMatchingMapSales(bucketSales, avails);
+  const bucketSalesToExclude = getMatchingMapSales(bucketContracts ?? [], avails);
   for (const bucketSale of bucketSalesToExclude) {
     for (const term of bucketSale.terms) {
       for (const territory of term.territories as TerritoryISOA3[]) {
-        availabilities[territory] = 'sold';
+        availabilities[territory] = {
+          type: 'sold',
+          slug: territory,
+          isoA3: territoriesISOA3[territory],
+          label: territories[territory],
+        };
       }
     }
   }
 
-  // 3) "paint" the `selected` layer on top
-  selected.forEach((t: TerritoryISOA3) => availabilities[t] = 'selected');
+  const notLicensed = Object.values(availabilities).filter(a => a.type === 'not-licensed');
+  const available = Object.values(availabilities).filter(a => a.type === 'available');
+  const sold = Object.values(availabilities).filter(a => a.type === 'sold');
 
-  return availabilities;
+  return { notLicensed, available, sold };
 }
 
 // ----------------------------
@@ -318,7 +315,7 @@ function getMatchingCalendarMandates(mandates: FullMandate[], avails: CalendarAv
   }));
 }
 
-function getMatchingCalendarSales<T extends (FullSale | BucketContractWithId)>(sales: T[], avails: CalendarAvailsFilter): T[] {
+function getMatchingCalendarSales<T extends (FullSale | BucketContract)>(sales: T[], avails: CalendarAvailsFilter): T[] {
   return sales.filter(sale => sale.terms.some(term => {
     const exclusivityCheck = exclusivitySomeOf(avails.exclusive).in(term.exclusive);
     const mediaCheck = someOf(avails.medias).in(term.medias);
@@ -351,14 +348,7 @@ function durationAvailabilities(
     )
   ).flat();
 
-  const bucketSales = bucketContracts?.map(s => {
-    const id = tinyId();
-    const terms: BucketTermWithContractId[] = s.terms.map(t => ({ ...t, contractId: id}));
-
-    return { ...s, id, terms } as BucketContractWithId;
-  });
-
-  const bucketSalesToExclude = getMatchingCalendarSales(bucketSales, avails);
+  const bucketSalesToExclude = getMatchingCalendarSales(bucketContracts ?? [], avails);
   const inBucket = bucketSalesToExclude.map(s =>
     s.terms.map((t): DurationMarker =>
       ({ from: t.duration.from, to: t.duration.to })
