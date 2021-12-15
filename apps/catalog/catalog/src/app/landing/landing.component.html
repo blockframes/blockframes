@@ -84,28 +84,5 @@
         <p class="mat-body-1">To enrich web and software projects, <a href="https://cascade8.com/" target="_blank" rel="noreferrer noopener">Cascade8</a> and the <a href="http://logicalpictures.com/" target="_blank" rel="noreferrer noopener">Logical Pictures Group</a> are spearheads in the application of blockchain technology in the content industry, from rights & revenue management (Blockframes) and NFTs (<a href="https://www.filmseriesnft.com/" target="_blank" rel="noreferrer noopener">FilmSeriesNFT.com</a>) to STOs (through its tokenized investment fund <a href="https://www.logicalcontentventures.com/" target="_blank" rel="noreferrer noopener">Logical Content Ventures</a>).</p>
       </article>
     </section>
-
-    <section class="landing-detail">
-      <article class="max-width">
-        <h3 class="mat-display-1">They're talking about us</h3>
-        <div fxLayout fxLayoutAlign="space-between center" fxLayout.lt-md="column wrap" fxLayoutAlign.lt-md="start center" fxLayoutGap="24px">
-          <ng-container *ngFor="let review of reviews">
-            <a [href]="review.link" target="_blank" fxLayout fxFlexAlign="stretch">
-              <mat-card fxLayout="column center" fxFlexAlign="stretch">
-                <img mat-card-image [asset]="review.img" alt="review image">
-                <div fxLayout="column" fxLayoutAlign="space-between" fxLayoutGap="24px" fxFlex>
-                  <mat-card-title>{{review.title}}</mat-card-title>
-                  <mat-card-content>{{review.text}}</mat-card-content>
-                  <div fxLayout fxLayoutAlign="center center" fxFlexAlign="end" fxLayoutGap="16px">
-                    <span class="mat-caption">From</span>
-                    <img [asset]="review.logo">
-                  </div>
-                </div>
-              </mat-card>
-            </a>
-          </ng-container>
-        </div>
-      </article>
-    </section>
   </landing-content>
 </landing-shell-page>
