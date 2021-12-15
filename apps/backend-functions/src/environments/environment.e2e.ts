@@ -8,7 +8,7 @@ import * as functions from 'firebase-functions';
 
 export const e2eMode = true;
 if (e2eMode) {
-  console.log('e2e Mode enabled for functions');
+  console.log('Emulator Mode enabled for functions');
   console.log('These are the emulated functions.config values present in .runtimeConfig');
   console.dir(functions.config());
 }

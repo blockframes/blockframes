@@ -193,13 +193,12 @@
                 }
               ]
             },
-            "emulator": {
+            "e2e": {
               "optimization": true,
               "fileReplacements": [
                 {
                   "replace": "apps/backend-functions/src/environments/environment.ts",
-                  "with": "apps/backend-functions/src/environments/environment.emulator.ts"
-
+                  "with": "apps/backend-functions/src/environments/environment.e2e.ts"
                 }
               ]
             }
@@ -779,11 +778,18 @@
             "exit": false,
             "record": false,
             "browser": "chrome",
-            "devServerTarget": "festival:serve"
+            "devServerTarget": "festival:serve",
+            "env": {
+              "notice": "Env is being read"
+            }
           },
           "configurations": {
             "emulator": {
-              "devServerTarget": "festival:serve:emulator"
+              "devServerTarget": "festival:serve:emulator",
+              "env": {
+                "notice": "Env is being read",
+                "emulator": true
+              }
             }
           }
         },
@@ -798,13 +804,17 @@
           },
           "configurations": {
             "emulator": {
-              "devServerTarget": "festival:serve:emulator"
+              "devServerTarget": "festival:serve:emulator",
+              "env": {
+                "notice": "Env is being read",
+                "emulator": true
+              }
             },
             "production": {
               "devServerTarget": "festival:serve:production"
             },
-            "ci": { },
-            "staging": { }
+            "ci": {},
+            "staging": {}
           }
         },
         "lint": {
@@ -1167,35 +1177,14 @@
             "production": {
               "devServerTarget": "crm:serve:production"
             },
-            "ci": { },
-            "staging": { }
+            "ci": {},
+            "staging": {}
           }
         },
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["apps/crm/crm-e2e/src/**/*.ts", "apps/crm/crm-e2e/src/**/*.html"]
-          }
-        }
-      }
-    },
-    "testing": {
-      "root": "libs/testing",
-      "sourceRoot": "libs/testing/src",
-      "projectType": "library",
-      "schematics": {},
-      "architect": {
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["libs/testing/src/**/*.ts", "libs/testing/src/**/*.html"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/testing/jest.config.js",
-            "passWithNoTests": true
           }
         }
       }
@@ -1446,8 +1435,8 @@
             "production": {
               "devServerTarget": "financiers:serve:production"
             },
-            "ci": { },
-            "staging": { }
+            "ci": {},
+            "staging": {}
           }
         },
         "lint": {
@@ -1675,6 +1664,51 @@
             "jestConfig": "libs/consents/jest.config.js",
             "passWithNoTests": true,
             "setupFile": "libs/consents/src/test-setup.ts"
+          }
+        }
+      }
+    },
+    "testing-unit-tests": {
+      "root": "libs/testing/unit-tests",
+      "sourceRoot": "libs/testing/unit-tests/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/testing/unit-tests/src/**/*.ts",
+              "libs/testing/unit-tests/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/testing/unit-tests/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "testing-cypress": {
+      "root": "libs/testing/cypress",
+      "sourceRoot": "libs/testing/cypress/src",
+      "projectType": "library",
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/testing/cypress/**/*.ts"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/testing/cypress"],
+          "options": {
+            "jestConfig": "libs/testing/cypress/jest.config.js",
+            "passWithNoTests": true
           }
         }
       }
