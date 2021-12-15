@@ -53,7 +53,7 @@ export async function onContractCreate(contractSnapshot: FirebaseFirestore.Docum
   const getNotifications = (org: Organization) => org.userIds.map(userId => createNotification({
     toUserId: userId,
     type: 'contractCreated',
-    docId: contract.titleId,
+    docId: contract.id,
     _meta: createDocumentMeta({ createdFrom: 'catalog' })
   }));
 
