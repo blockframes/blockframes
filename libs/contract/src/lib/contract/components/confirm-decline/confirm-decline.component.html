@@ -2,10 +2,18 @@
 <p>This will help the Archipel Content team understand your refusal<br />
   and lead the deal negotiation accordingly.</p>
 <form fxLayout="column" (submit)="declineContract($event)">
+  <mat-form-field appearance="outline" *ngIf="data?.forSeller">
+    <mat-label>Reason of refusal</mat-label>
+    <mat-select [formControl]="reasonControl">
+      <mat-option *ngFor="let reason of reasons" [value]="reason">
+        {{reason}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
   <mat-form-field appearance="outline">
     <textarea matInput
       placeholder='"Offer price is too low", "Title is not available anymore", "Bad previous experience with buyer"'
-      [formControl]="reasonControl" cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="4"
+      [formControl]="messageControl" cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="4"
       maxlength="500" test-id="specific-terms">
       </textarea>
     <mat-hint>Please specify why you want to decline this offer.</mat-hint>
