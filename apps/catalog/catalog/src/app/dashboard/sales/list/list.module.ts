@@ -8,11 +8,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { SaleListComponent } from './list.component';
 
 // Blockframes
-import {
-  MaxLengthModule, ToLabelModule,
-} from '@blockframes/utils/pipes';
-
-import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
+import { MaxLengthModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe';
 import { IncomePipeModule } from '@blockframes/contract/income/pipe';
 import { OfferPipeModule } from '@blockframes/contract/offer/pipe';
@@ -35,7 +31,6 @@ import { FilterByModule } from '@blockframes/utils/pipes/filter-by.pipe';
     CommonModule,
     ReactiveFormsModule,
     FlexLayoutModule,
-    TableFilterModule,
     GetTitlePipeModule,
     MaxLengthModule,
     IncomePipeModule,

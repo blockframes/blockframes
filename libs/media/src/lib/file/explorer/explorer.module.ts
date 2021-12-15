@@ -5,7 +5,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { FileExplorerComponent, GetDirPipe } from './explorer.component';
 
 // Blockframes
-import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { MaxLengthModule } from '@blockframes/utils/pipes';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { FileUploaderModule } from '../file-uploader/file-uploader.module';
@@ -33,7 +32,6 @@ import { FileListUploaderModule } from '../file-list-uploader/file-list-uploader
     FlexLayoutModule,
 
     // Blockframes
-    TableFilterModule,
     MaxLengthModule,
     OrgNameModule,
     FileUploaderModule,
