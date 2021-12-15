@@ -7,7 +7,7 @@ import { differenceBy } from 'lodash';
 import { loadAdminServices, getCollectionInBatches, sleep } from '@blockframes/firebase-utils';
 import readline from 'readline';
 import { Auth, UserRecord, DbRecord } from '@blockframes/firebase-utils';
-import { deleteAllUsers, importAllUsers } from '@blockframes/testing/firebase';
+import { deleteAllUsers, importAllUsers } from '@blockframes/testing/unit-tests';
 import * as env from '@env';
 import { User } from '@blockframes/user/types';
 
@@ -99,7 +99,7 @@ async function getUsersFromDb(db: FirebaseFirestore.Firestore) {
   let output: UserConfig[] = [];
   for await (const users of usersIterator) {
     const password = USER_FIXTURES_PASSWORD;
-    const outputChunk = users.map(({ uid, email }) => ({ uid, email, password }))
+    const outputChunk = users.map(({ uid, email }) => ({ uid, email, password }));
     output = output.concat(outputChunk);
   }
   return output;

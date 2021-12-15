@@ -51,6 +51,6 @@ const invitations = [
     mode: 'request',
     status: 'accepted'
   }
-]
+];
 
 export { users, events, invitations };

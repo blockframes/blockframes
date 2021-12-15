@@ -55,10 +55,11 @@
       "@blockframes/landing/*": ["libs/landing/src/lib/*"],
       "@blockframes/import/*": ["libs/import/src/lib/*"],
       "@blockframes/media/*": ["libs/media/src/lib/*"],
-      "@blockframes/testing/*": ["libs/testing/src/lib/*"],
       "@blockframes/firebase-utils": ["libs/firebase-utils/src/index.ts"],
       "@blockframes/consents/*": ["libs/consents/src/lib/*"],
-      "@blockframes/campaign/*": ["libs/campaign/src/lib/*"]
+      "@blockframes/campaign/*": ["libs/campaign/src/lib/*"],
+      "@blockframes/testing/unit-tests": ["libs/testing/unit-tests/src/index.ts"],
+      "@blockframes/testing/cypress": ["libs/testing/cypress/src/index.ts"]
     }
   },
   "angularCompilerOptions": {
