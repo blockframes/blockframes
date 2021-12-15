@@ -24,6 +24,7 @@ export class EventViewComponent implements OnInit {
   event$: Observable<Event>;
   private statusChanged = new BehaviorSubject(false);
   public timerEnded = false;
+  private preventBrowserEvent;
 
   constructor(
     private route: ActivatedRoute,
@@ -36,7 +37,9 @@ export class EventViewComponent implements OnInit {
 
   @HostListener('window:popstate', ['$event'])
   onPopState() {
-    this.goBack();
+    if (!this.preventBrowserEvent) {
+      this.goBack();
+    }
   }
 
   async ngOnInit() {
@@ -76,6 +79,7 @@ export class EventViewComponent implements OnInit {
   }
 
   goBack() {
+    this.preventBrowserEvent = true;
     this.authService.updateAnonymousCredentials({ role: undefined, firstName: undefined, lastName: undefined });
     this.location.back();
   }
