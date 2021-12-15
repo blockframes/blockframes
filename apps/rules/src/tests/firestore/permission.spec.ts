@@ -8,10 +8,7 @@ describe('Permission Rules Tests', () => {
 
   describe('With User as Org Member', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {
-        uid: 'uid-user2',
-        firebase: { sign_in_provider: 'password' },
-      });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2', firebase: { sign_in_provider: 'password' } });
     });
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
@@ -48,10 +45,7 @@ describe('Permission Rules Tests', () => {
 
   describe('With User as or going to be Org Member', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {
-        uid: 'uid-user4',
-        firebase: { sign_in_provider: 'password' },
-      });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user4', firebase: { sign_in_provider: 'password' } });
     });
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
@@ -59,16 +53,12 @@ describe('Permission Rules Tests', () => {
     //test the scenario when org and permission is created at the same time..
     test('org not yet created, should be able to create document', async () => {
       const docName = 'permissions/O0X4';
-      const docData = {
-        id: 'O0X4',
-        roles: { 'uid-user4': 'member' },
-        note: 'Creating org and permission doc',
-      };
+      const docData = { id: 'O0X4', roles: { 'uid-user4': 'member' }, note: 'Creating org and permission doc' };
       const permissionDocRef = db.doc(docName);
       const orgDoc = 'orgs/O0X4';
       const orgUserIds = ['uid-user4'];
 
-      await db.runTransaction(async (tx) => {
+      await db.runTransaction(async tx => {
         const orgRef = db.doc(orgDoc);
         tx.set(orgRef, { status: 'pending', userIds: orgUserIds });
         tx.set(permissionDocRef, docData);
@@ -80,10 +70,7 @@ describe('Permission Rules Tests', () => {
 
   describe('With User as Org Admin', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {
-        uid: 'uid-admin',
-        firebase: { sign_in_provider: 'password' },
-      });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-admin', firebase: { sign_in_provider: 'password' } });
     });
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
@@ -106,10 +93,7 @@ describe('Permission Rules Tests', () => {
 
   describe('With User as Super Admin', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {
-        uid: 'uid-sAdmin',
-        firebase: { sign_in_provider: 'password' },
-      });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-sAdmin', firebase: { sign_in_provider: 'password' } });
     });
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
@@ -138,10 +122,7 @@ describe('Document Permission Sub Collection Rules Tests', () => {
 
   describe('With User as Org Member', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {
-        uid: 'uid-user2',
-        firebase: { sign_in_provider: 'password' },
-      });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2', firebase: { sign_in_provider: 'password' } });
     });
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
@@ -168,9 +149,7 @@ describe('Document Permission Sub Collection Rules Tests', () => {
 
     test('docIndex exists, should not be able to create document', async () => {
       const permissionDocRef = db.doc('permissions/O001/documentPermissions/DP03');
-      await assertFails(
-        permissionDocRef.set({ note: 'This is a create test for existing docIndex' })
-      );
+      await assertFails(permissionDocRef.set({ note: 'This is a create test for existing docIndex' }));
     });
 
     test('should not be able to update document', async () => {
@@ -181,10 +160,7 @@ describe('Document Permission Sub Collection Rules Tests', () => {
 
   describe('With User as Org Admin', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {
-        uid: 'uid-admin',
-        firebase: { sign_in_provider: 'password' },
-      });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-admin', firebase: { sign_in_provider: 'password' } });
     });
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
