@@ -33,9 +33,6 @@ export default (async (on, config) => {
 // const fs = require('fs');
 // const PDFDocument = require('pdfkit');
 
-// // This function is called when a project is opened or re-opened (e.g. due to
-// // the project's config changing)
-
 // const createFakeScript = (title) => {
 //   const path = `test-${title}.pdf`;
 //   const doc = new PDFDocument();

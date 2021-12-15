@@ -1,16 +1,4 @@
-// import firebase from 'firebase/app';
-// import 'firebase/auth';
-import { firebase as firebaseEnv } from '@env'
-import { emulatorConfig } from '../../../festival/src/environment/environment'
 import type { AuthService } from '@blockframes/auth/+state';
-
-// const authEmulator = emulatorConfig.find(({ provider, value }) => provider === 'USE_AUTH_EMULATOR')
-// let auth: firebase.auth.Auth;
-// if (!auth) {
-//   auth = firebase.initializeApp(firebaseEnv(), 'testEnv').auth();
-//   auth.useEmulator('http://localhost:9099');
-// }
-// return await auth.signInWithCustomToken(token as string)
 
 export function loginWithRandomUser() {
   return cy.task('getRandomUID').then(uid => {
