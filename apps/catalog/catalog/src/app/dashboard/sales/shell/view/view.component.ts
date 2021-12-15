@@ -28,8 +28,10 @@ export class SaleViewComponent {
   ) { }
 
   accept(negotiationId: string, contractId: string, movie: Movie) {
+    const status = 'accepted';
+    const options = { params: { contractId } };
     const data = {
-      onConfirm: () => this.negotiationService.update(negotiationId, { status: 'accepted' }, { params: { contractId } }),
+      onConfirm: () => this.negotiationService.update(negotiationId, { status }, options),
       title: 'Are you sure you want to accept this Contract?',
       question: 'Please verify if all the contract elements are convenient for you.',
       confirm: 'Yes, accept Contract',
