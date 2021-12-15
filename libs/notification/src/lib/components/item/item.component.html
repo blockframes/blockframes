@@ -1,7 +1,9 @@
 
 <mat-list-item>
   <img matListAvatar [asset]="notification.placeholderUrl" [ref]="notification.imgRef" alt="Notification picture">
-  <p *ngIf="(xs$ | async) === false" matLine class="mat-body-1" test-id="notification-message">{{ notification.message }}</p>
+  <p *ngIf="(xs$ | async) === false" matLine class="mat-body-1" test-id="notification-message">
+    <ng-container *ngTemplateOutlet="templates[notification.type] || default"></ng-container>
+  </p>
   <span matLine>
     <small class="mat-caption">{{ notification._meta.createdAt | date: 'shortTime' }}</small>
   </span>
@@ -20,5 +22,42 @@
   <a mat-menu-item [target]="targetLink" [href]="notification.url">More Details</a>
 </mat-menu>
 <ng-container *ngIf="xs$ | async">
-  <p class="mat-body-1" test-id="notification-message">{{ notification.message }}</p>
+  <p class="mat-body-1" test-id="notification-message">
+    <ng-container *ngTemplateOutlet="templates[notification.type] || default"></ng-container>
+  </p>
 </ng-container>
+
+<!-- Default -->
+<ng-template #default>
+  {{ notification.message }}
+</ng-template>
+
+<!-- Events related notifications -->
+<ng-template #requestToAttendEventSent>
+  {{ notification.message }}
+</ng-template>
+<ng-template #eventIsAboutToStart>
+  {{ notification.message }}
+</ng-template>
+<ng-template #oneDayReminder>
+  {{ notification.message }}
+</ng-template>
+<ng-template #invitationToAttendEventUpdated>
+  {{ notification.message }}
+</ng-template>
+<ng-template #requestToAttendEventUpdated>
+  {{ notification.message }}
+</ng-template>
+
+<!-- Notifications realted to offers -->
+<ng-template #contractCreated>
+  {{ notification.message }}
+</ng-template>
+<ng-template #offerCreatedConfirmation>
+  {{ notification.message }}
+</ng-template>
+
+<!-- Other notifications -->
+<ng-template #movieSubmitted>
+  <a [routerLink]="['/c/o/marketplace/title', notification['titleId']]">{{ notification['title'] }}</a> {{ notification.message }}
+</ng-template>

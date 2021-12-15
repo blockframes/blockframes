@@ -1,7 +1,15 @@
 import { StorageFile } from "@blockframes/media/+state/media.firestore";
 import { NotificationBase } from "./notification.firestore";
 
-export interface Notification extends NotificationBase<Date> {
+export type Notification = DefaultNotification | MovieSubmittedNotification;
+
+export interface MovieSubmittedNotification extends DefaultNotification {
+  type: 'movieSubmitted';
+  titleId: string;
+  title: string;
+}
+
+export interface DefaultNotification extends NotificationBase<Date> {
   message: string;
   imgRef?: StorageFile;
   placeholderUrl?: string;

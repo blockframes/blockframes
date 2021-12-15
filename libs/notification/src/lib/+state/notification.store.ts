@@ -96,7 +96,9 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
             return {
               ...newNotification,
               imgRef: createStorageFile(movie?.poster),
-              message: `${movie.title.international} was successfully submitted to the ${appName[movieAppAccess[0]]} Team.`,
+              message: `was successfully submitted to the ${appName[movieAppAccess[0]]} Team.`,
+              titleId: notification.docId,
+              title: movie.title.international,
               url: `${applicationUrl[movieAppAccess[0]]}/c/o/dashboard/title/${notification.docId}/main`,
             };
           })
