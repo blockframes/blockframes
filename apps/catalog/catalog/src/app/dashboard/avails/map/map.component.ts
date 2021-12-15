@@ -1,14 +1,17 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { availableTerritories, AvailsFilter, collidingTerms, toTerritoryMarker } from "@blockframes/contract/avails/avails";
-import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
-import { downloadCsvFromJson } from "@blockframes/utils/helpers";
-import { territories, territoriesISOA3, TerritoryValue } from "@blockframes/utils/static-model";
-import { combineLatest, Subscription } from "rxjs";
-import { filter, first, map, shareReplay, startWith, throttleTime } from "rxjs/operators";
-import { CatalogAvailsShellComponent } from "../shell/shell.component";
+
 import { format } from 'date-fns';
+import { combineLatest, Subscription } from "rxjs";
+import { first, map, startWith, throttleTime } from "rxjs/operators";
+
 import { medias } from '@blockframes/utils/static-model'
+import { downloadCsvFromJson } from "@blockframes/utils/helpers";
+import { TerritoryValue } from "@blockframes/utils/static-model";
+import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
+import { filterByTitle, MapAvailsFilter, territoryAvailabilities } from "@blockframes/contract/avails/new-avails";
+
+import { CatalogAvailsShellComponent } from "../shell/shell.component";
 
 function formatDate(date: Date) {
   return format(date, 'dd/MM/yyy')
@@ -30,41 +33,30 @@ export class DashboardAvailsMapComponent implements AfterViewInit, OnDestroy {
   sub: Subscription;
   public availsForm = this.shell.avails.mapForm;
 
+  public movie$ = this.shell.movie$;
   public org$ = this.shell.movieOrg$;
   public status$ = this.availsForm.statusChanges.pipe(startWith(this.availsForm.valid ? 'VALID' : 'INVALID'));
   private mandates$ = this.shell.mandates$;
   private mandateTerms$ = this.shell.mandateTerms$;
+  private sales$ = this.shell.sales$;
   private salesTerms$ = this.shell.salesTerms$;
 
-  public sold$ = combineLatest([
-    this.salesTerms$,
-    this.availsForm.value$,
-  ]).pipe(
-    filter(() => this.availsForm.valid),
-    map(([salesTerms, avails]) => {
-      const soldTerms = collidingTerms(avails, salesTerms);
-      const markers = soldTerms.map(term => term.territories
-        .filter(territory => !!territoriesISOA3[territory])
-        .map(territory => toTerritoryMarker(territory, [], term))
-      ).flat();
-      return markers;
-    }),
-  );
-
-  public available$ = combineLatest([
+  public availabilities$ = combineLatest([
+    this.movie$,
+    this.availsForm.valueChanges,
     this.mandates$,
-    this.sold$,
-    this.mandateTerms$
+    this.mandateTerms$,
+    this.sales$,
+    this.salesTerms$,
   ]).pipe(
-    map(([mandates, sold, mandateTerms,]) => {
-      if (this.availsForm.invalid) return [];
-      return availableTerritories([], sold, [], this.availsForm.value, mandates, mandateTerms);
+    map(([movie, avails, mandates, mandateTerms, sales, salesTerms]) => {
+      const { mandates: fullMandates, sales: fullSales } = filterByTitle(movie.id, mandates, mandateTerms, sales, salesTerms);
+      return territoryAvailabilities(avails, fullMandates, fullSales);
     }),
-    shareReplay({ refCount: true, bufferSize: 1 }),
   );
 
-  private hasTerritories$ = this.available$.pipe(
-    map(territoryMarker => territoryMarker.some(marker => marker.term.territories.length > 0)),
+  private hasTerritories$ = this.availabilities$.pipe(
+    map(availabilities => availabilities.available.length > 0),
   );
 
   disableCsv$ = combineLatest([
@@ -83,14 +75,13 @@ export class DashboardAvailsMapComponent implements AfterViewInit, OnDestroy {
   ) { }
 
   ngAfterViewInit() {
-    const decodedData = decodeUrl<Partial<AvailsFilter>>(this.route);
-    if (!decodedData.territories) decodedData.territories = []
+    const decodedData = decodeUrl<Partial<MapAvailsFilter>>(this.route);
     if (!decodedData.medias) decodedData.medias = []
     this.availsForm.patchValue(decodedData);
     this.sub = this.availsForm.valueChanges.pipe(
       throttleTime(1000)
     ).subscribe(formState => {
-      encodeUrl<AvailsFilter>(this.router, this.route, formState);
+      encodeUrl<MapAvailsFilter>(this.router, this.route, formState);
     });
   }
 
@@ -115,19 +106,18 @@ export class DashboardAvailsMapComponent implements AfterViewInit, OnDestroy {
 
   downloadCsv() {
     combineLatest([
-      this.available$,
+      this.availabilities$,
       this.shell.movie$
     ]).pipe(first())
-      .subscribe(([territoryMarker, movie]) => {
+      .subscribe(([availabilities, movie]) => {
         const availsFilter = this.availsForm.value;
-        const availableTerritories = territoryMarker.flatMap(marker => marker.term.territories);
-        const termTerritories = Array.from(new Set(availableTerritories))
+        const availableTerritories = availabilities.available.map(marker => marker.term.territories).flat();
         const data = [{
           "International Title": movie.title.international,
           Medias: availsFilter.medias.map(medium => medias[medium]).join(';'),
           Exclusivity: availsFilter.exclusive ? 'Exclusive' : 'Non Exclusive',
           'Start Date - End Date': `${formatDate(availsFilter.duration.from)} - ${formatDate(availsFilter.duration.to)}`,
-          "Available Territories": termTerritories.map(territory => territories[territory]).join(';'),
+          "Available Territories": availableTerritories.join(';'),
         }]
         const filename = `${movie.title.international.split(' ').join('_')}_avails`;
         downloadCsvFromJson(data, filename);
