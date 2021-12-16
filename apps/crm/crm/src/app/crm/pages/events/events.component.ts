@@ -13,7 +13,6 @@ import { toLabel } from '@blockframes/utils/pipes';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EventsComponent implements OnInit {
-
   public rows = [];
   public eventListLoaded = false;
 
