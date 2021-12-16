@@ -1,16 +1,17 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { SaleShellComponent } from '../shell.component';
-import { NegotiationForm } from '@blockframes/contract/negotiation';
-import { OrganizationQuery } from '@blockframes/organization/+state';
-import { NegotiationGuardedComponent } from '@blockframes/contract/negotiation/guard'
-import { filter, first, pluck } from 'rxjs/operators'
-import { MatDialog } from '@angular/material/dialog';
-import { ConfirmDeclineComponent, ConfirmDeclineData } from '@blockframes/contract/contract/components/confirm-decline/confirm-decline.component';
-import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { SaleShellComponent } from '../shell.component';
+import { NegotiationForm } from '@blockframes/contract/negotiation/form';
+import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
+import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
+import { NegotiationGuardedComponent } from '@blockframes/contract/negotiation/guard'
+import { ContractService } from '@blockframes/contract/contract/+state';
+import { OrganizationQuery } from '@blockframes/organization/+state';
+import { ConfirmDeclineComponent, ConfirmDeclineData } from '@blockframes/contract/contract/components/confirm-decline/confirm-decline.component';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ContractService } from '@blockframes/contract/contract/+state';
+import { MatDialog } from '@angular/material/dialog';
+import { filter, first, pluck } from 'rxjs/operators'
 
 @Component({
   selector: 'sale-negotiation',
@@ -20,9 +21,9 @@ import { ContractService } from '@blockframes/contract/contract/+state';
 })
 export class NegotiationComponent implements NegotiationGuardedComponent, OnInit {
 
+  negotiation: Negotiation;
   centralOrgId = this.shell.centralOrgId;
   sale$ = this.shell.sale$;
-  negotiation$ = this.sale$.pipe(pluck('negotiation'))
   contractStatus = this.shell.contractStatus;
   activeOrgId = this.query.getActiveId();
   form = new NegotiationForm({ terms: [] });
@@ -40,11 +41,12 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
   ) { }
 
   async ngOnInit(): Promise<void> {
-    const negotiation = await this.negotiation$.pipe(
+    this.negotiation = await this.sale$.pipe(
+      pluck('negotiation'),
       filter(data => !!data),
       first()
     ).toPromise();
-    this.form.hardReset(negotiation);
+    this.form.hardReset(this.negotiation);
     const termIndex = this.route.snapshot.queryParams.termIndex;
     this.activeTerm = termIndex ? parseInt(termIndex) : 0;
   }

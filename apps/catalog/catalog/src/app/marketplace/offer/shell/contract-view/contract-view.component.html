@@ -3,7 +3,7 @@
 </a>
 <ng-container *ngIf="contract$ | async as sale">
   <ng-container *ngIf="sale.negotiation as negotiation">
-    <ng-container *ngIf="negotiation.status === 'pending' && negotiation.createdByOrg !== activeOrgId">
+    <ng-container *ngIf="negotiation | canNegotiate:activeOrgId ">
       <header fxLayout fxLayoutAlign="center center" fxLayoutGap="24px">
         <button mat-stroked-button color="primary" (click)="accept()" [disabled]="!sale.negotiation.price">
           <mat-icon svgIcon="check"></mat-icon>
@@ -18,7 +18,7 @@
     <contract-item [contract]="negotiation">
       <div class="price" price>
         <h2 *ngIf="negotiation.price else askPrice">
-          {{ negotiation.price | currency: sale.income?.currency }}
+          {{ negotiation.price | currency: negotiation.currency }}
         </h2>
         <ng-template #askPrice>
           <h3>Asking Price requested</h3>

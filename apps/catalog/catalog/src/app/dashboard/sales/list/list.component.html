@@ -37,14 +37,21 @@
       <ng-template colRef="title" label="Title" let-title>
         {{ title | maxLength:50 }}
       </ng-template>
-      <ng-template colRef="price" label="Price" let-income>
-        <ng-container *ngIf="income?.price; else noIncome">
+      <ng-template colRef="price" label="Price" let-income let-sale="item">
+        <ng-container *ngIf="income?.price; else negotiationPrice">
           {{income.price | currency:income.currency}}
         </ng-container>
+        <ng-template #negotiationPrice>
+          <span *ngIf="sale.negotiation?.price; else noPrice">
+            {{sale.negotiation.price | currency:sale.negotiation.currency}}
+          </span>
+        </ng-template>
+        <ng-template #noPrice>-</ng-template>
       </ng-template>
-      <ng-template #noIncome>-</ng-template>
-      <ng-template colRef="status" label="Status" let-status>
-        <bf-tag>{{ status | toLabel: 'contractStatus' }}</bf-tag>
+      <ng-template colRef="status" label="Status" let-status let-sale="item">
+        <bf-tag>
+          {{ sale.negotiation | negotiationStatus | toLabel: 'contractStatus' }}
+        </bf-tag>
       </ng-template>
       <ng-template colRef="negotiation" label="Negotiation Stage" let-negotiation>
         <ng-container *ngIf=" negotiation | negotiationStage | async  as negoStage">

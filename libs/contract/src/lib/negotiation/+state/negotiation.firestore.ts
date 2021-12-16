@@ -1,5 +1,6 @@
 import { BucketContract } from "@blockframes/contract/bucket/+state";
 import { DocumentMeta } from "@blockframes/utils/models-meta";
+import { MovieCurrency } from "@blockframes/utils/static-model";
 import type firebase from 'firebase'
 
 export const negotiationStatus = ['pending', 'accepted', 'declined'] as const;
@@ -22,4 +23,5 @@ export interface Negotiation<T extends Date | firebase.firestore.Timestamp = Dat
   declineReason?: string;
   status: NegotiationStatus;
   initial: T;
+  currency: MovieCurrency
 }

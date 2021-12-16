@@ -1,5 +1,5 @@
 <form [formGroup]="form" (ngSubmit)="confirm()">
-  <negotiation-form [form]="form" [activeTerm]="activeTerm" [currency]="(sale$ | async)?.income?.currency"></negotiation-form>
+  <negotiation-form [form]="form" [activeTerm]="activeTerm" [currency]="negotiation?.currency"></negotiation-form>
   <footer fxLayout fxLayoutAlign="space-between center">
     <button mat-stroked-button color="primary" type="button" (click)="decline()">
       <mat-icon svgIcon="refuse"></mat-icon>

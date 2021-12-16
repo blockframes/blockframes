@@ -12,6 +12,7 @@ import { OrganizationQuery } from '@blockframes/organization/+state';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { combineLatest } from 'rxjs';
 import { ContractService } from '@blockframes/contract/contract/+state';
+import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
 
 @Component({
   selector: 'catalog-contract-edit',
@@ -20,7 +21,7 @@ import { ContractService } from '@blockframes/contract/contract/+state';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContractEditComponent implements NegotiationGuardedComponent, OnInit {
-
+  negotiation?: Negotiation;
   activeOrgId = this.query.getActiveId();
   activeTerm?: number;
   form = new NegotiationForm();
@@ -46,11 +47,11 @@ export class ContractEditComponent implements NegotiationGuardedComponent, OnIni
   ) { }
 
   async ngOnInit(): Promise<void> {
-    const negotiation = await this.negotiation$.pipe(
+    this.negotiation = await this.negotiation$.pipe(
       filter(data => !!data),
       first()
     ).toPromise();
-    this.form.hardReset(negotiation);
+    this.form.hardReset(this.negotiation);
     const termIndex = this.route.snapshot.queryParams.termIndex;
     this.activeTerm = termIndex ? parseInt(termIndex) : 0;
   }

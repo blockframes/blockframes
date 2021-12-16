@@ -12,7 +12,9 @@
           <span>See Standard Terms</span>
         </a>
       </div>
-      <bf-tag>{{sale.status | toLabel: 'contractStatus'}}</bf-tag>
+      <bf-tag *ngIf="sale.negotiation">
+        {{ sale.negotiation | negotiationStatus | toLabel: 'contractStatus' }}
+      </bf-tag>
       <ng-container *ngIf="sale.buyerId | getOrg | async as org">
         <div fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
           <img height="100" width="100" [ref]="org?.logo" asset="empty_organization.svg" type="logo"
