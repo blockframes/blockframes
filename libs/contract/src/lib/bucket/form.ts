@@ -14,7 +14,7 @@ import {
 import { Subject } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { BucketTerm } from '../term/+state';
-import { AvailableTerritoryMarker, BucketTerritoryMarker, isSameBucketContract, isSameBucketTerm, MapAvailsFilter } from '../avails/new-avails';
+import { AvailableTerritoryMarker, BucketTerritoryMarker, isSameBucketContract, isSameMapBucketTerm, MapAvailsFilter } from '../avails/new-avails';
 
 //////////
 // TERM //
@@ -121,7 +121,8 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
     }
 
     const contract = bucket.contracts[contractIndex];
-    const termIndex = contract.terms.findIndex(t => isSameBucketTerm(t, term));
+    const termIndex = contract.terms.findIndex(t => isSameMapBucketTerm(avails, t));
+
     // New term
     if (termIndex === -1) {
       this.get('contracts').at(contractIndex).get('terms').add(toBucketTerm({ ...avails, territories: [territory] }));
@@ -148,14 +149,14 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
    * @param marker
    * @returns
    */
-  removeTerritory(marker: BucketTerritoryMarker) {
-    const { slug: territory, term, contract: bucketContract } = marker;
+  removeTerritory(avails: MapAvailsFilter, marker: BucketTerritoryMarker) {
+    const { slug: territory, contract: bucketContract } = marker;
     const bucket = this.value;
     const contractIndex = bucket.contracts.findIndex(c => isSameBucketContract(c, bucketContract));
     if (contractIndex === -1) { return; }
 
     const contract = bucket.contracts[contractIndex];
-    const termIndex = contract.terms.findIndex(t => isSameBucketTerm(t, term));
+    const termIndex = contract.terms.findIndex(t => isSameMapBucketTerm(avails, t));
     if (termIndex === -1) { return; }
 
     const territories = contract.terms[termIndex].territories;
@@ -178,14 +179,14 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
    * @param marker
    * @returns boolean
    */
-  isAlreadyInBucket(marker: AvailableTerritoryMarker): boolean {
+  isAlreadyInBucket(avails: MapAvailsFilter, marker: AvailableTerritoryMarker): boolean {
     const { slug: territory, term } = marker;
 
     const bucket = this.value;
     const contractIndex = bucket.contracts.findIndex(c => c.parentTermId === term.id);
     if (contractIndex === -1) { return false; }
     const contract = bucket.contracts[contractIndex];
-    const termIndex = contract.terms.findIndex(t => isSameBucketTerm(t, term));
+    const termIndex = contract.terms.findIndex(t => isSameMapBucketTerm(avails, t));
     if (termIndex === -1) { return false }
     const territories = contract.terms[termIndex].territories;
     return territories.includes(territory);

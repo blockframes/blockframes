@@ -417,7 +417,15 @@ function durationAvailabilities(
 //          COMPARISON
 // ----------------------------
 
-export function isSameBucketTerm(termA: BucketTerm, termB: BucketTerm) {
+export function isSameMapBucketTerm(avails: MapAvailsFilter, termB: BucketTerm) {
+  const exclusivityCheck = avails.exclusive === termB.exclusive;
+  const durationCheck = allOf(avails.duration).equal(termB.duration);
+  const mediasCheck = allOf(avails.medias).equal(termB.medias);
+
+  return exclusivityCheck && durationCheck && mediasCheck;
+}
+
+function isSameBucketTerm(termA: BucketTerm, termB: BucketTerm) {
   const exclusivityCheck = termA.exclusive === termB.exclusive;
   const durationCheck = allOf(termA.duration).equal(termB.duration);
   const territoriesCheck = allOf(termA.territories).equal(termB.territories);
@@ -428,6 +436,7 @@ export function isSameBucketTerm(termA: BucketTerm, termB: BucketTerm) {
 }
 
 export function isSameBucketContract(contractA: BucketContract, contractB: BucketContract) {
+  console
   const titleIdCheck = contractA.titleId === contractB.titleId;
   const orgIdCheck = contractA.orgId === contractB.orgId;
   const parentTermIdCheck = contractA.parentTermId === contractB.parentTermId;
