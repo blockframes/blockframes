@@ -26,7 +26,6 @@ export class ListComponent {
     private orgQuery: OrganizationQuery,
     private service: OfferService,
     private contractService: ContractService,
-    private incomeService: IncomeService,
     private titleService: MovieService,
   ) { }
 
@@ -35,7 +34,7 @@ export class ListComponent {
     return this.contractService.valueChanges(queryContracts).pipe(
       joinWith({
         title: contract => this.titleService.valueChanges(contract.titleId),
-        income: contract => this.incomeService.valueChanges(contract.id)
+        negotiation: contract => this.contractService.lastNegotiation(contract.id)
       })
     )
   }

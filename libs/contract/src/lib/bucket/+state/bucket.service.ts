@@ -87,54 +87,38 @@ export class BucketService extends CollectionService<BucketState> {
 
     const promises = bucket.contracts.map(async (contract) => {
       const contractId = this.db.createId();
-      const terms = contract.terms
-        .map(t => ({ ...t, contractId, id: this.db.createId() }));
-      const termIds = terms.map(t => t.id);
       const parentTerms = await this.termService.getValue(contract.parentTermId);
       const parentContract = await this.contractService.getValue(parentTerms.contractId);
 
       const commonFields = {
-        status: 'pending' as NegotiationStatus,
         buyerId: orgId,
         buyerUserId: this.authQuery.userId,
         sellerId: centralOrgId.catalog,
         stakeholders: [...parentContract.stakeholders, orgId],
-        offerId,
-        specificity,
-        delivery,
-      }
+      };
+
       // Create the contract
       await this.contractService.add({
         _meta: createDocumentMeta({ createdAt: new Date(), }),
+        status: 'pending',
         id: contractId,
         type: 'sale',
         titleId: contract.titleId,
         parentTermId: contract.parentTermId,
-        termIds,
         holdbacks: contract.holdbacks,
+        offerId,
+        specificity,
+        delivery,
         ...commonFields
       });
 
-
-      //add the default negotiation.
+      // Add the default negotiation.
       await this.contractService.addNegotiation(contractId, {
         ...contract,
         ...commonFields,
-        initial: new Date()
-      })
-      // @dev: Create income & terms after contract because rules require contract to be created first
-      // Create the terms
-      await this.termService.add(terms);
-      // Create the income
-      await this.incomeService.add({
-        id: contractId,
-        status: 'pending',
-        termsId: contract.parentTermId,
-        price: contract.price,
-        currency: bucket.currency,
-        offerId
+        initial: new Date(),
+        currency,
       });
-
     });
     return Promise.all(promises);
   }

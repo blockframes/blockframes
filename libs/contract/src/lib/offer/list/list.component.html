@@ -42,7 +42,7 @@
         {{ specificity ? 'YES' : '-' }}
       </ng-template>
       <ng-template colRef="incomes" label="Total Package Price" let-incomes let-offer="item">
-        {{ offer.contracts | total: 'income.price' | currency: offer.currency }}
+        {{ offer.contracts | total: 'negotiation.price' | currency: offer.currency }}
       </ng-template>
       <ng-template colRef="status" label="Status" let-status>
         <bf-tag>{{ status | toLabel: 'offerStatus' }}</bf-tag>

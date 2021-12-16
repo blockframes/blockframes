@@ -7,16 +7,16 @@ import { FormControl } from '@angular/forms';
 import { startWith } from 'rxjs/operators';
 import { Contract } from '@blockframes/contract/contract/+state';
 import { Movie } from '@blockframes/movie/+state';
-import { Income } from '@blockframes/contract/income/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
 
 
 type AllOfferStatus = '' | 'pending' | 'on_going' | 'past_deals';
 
 interface ContractView extends Contract {
   title: Movie;
-  income: Income;
+  negotiation: Negotiation;
 }
 interface OfferView extends Offer {
   contracts: ContractView[];
@@ -41,7 +41,9 @@ export class ListComponent {
     private router:Router,
     private route:ActivatedRoute,
     private dynTitle: DynamicTitleService,
-    ) { this.dynTitle.setPageTitle('Offers & Deals')}
+  ) {
+    this.dynTitle.setPageTitle('Offers & Deals');
+  }
 
   /** Dynamic filter of offers for each tab. */
   applyFilter(filter?: AllOfferStatus) {

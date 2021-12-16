@@ -1,10 +1,8 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { CollectionReference } from '@angular/fire/firestore';
 import { ContractService } from '@blockframes/contract/contract/+state';
-import { IncomeService } from '@blockframes/contract/income/+state';
 import { OfferService } from '@blockframes/contract/offer/+state';
 import { MovieService } from '@blockframes/movie/+state';
-import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { joinWith } from '@blockframes/utils/operators';
 
 
@@ -24,8 +22,6 @@ export class OffersListComponent {
   constructor(
     private service: OfferService,
     private contractService: ContractService,
-    private incomeService: IncomeService,
-    private dynTitle: DynamicTitleService,
     private titleService: MovieService,
   ) { }
 
@@ -34,7 +30,7 @@ export class OffersListComponent {
     return this.contractService.valueChanges(queryContracts).pipe(
       joinWith({
         title: contract => this.titleService.valueChanges(contract.titleId),
-        income: contract => this.incomeService.valueChanges(contract.id)
+        negotiation: contract => this.contractService.lastNegotiation(contract.id)
       })
     )
   }
