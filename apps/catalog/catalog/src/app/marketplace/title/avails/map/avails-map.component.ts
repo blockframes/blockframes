@@ -2,25 +2,17 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { combineLatest } from 'rxjs';
-import { filter, map, pluck, shareReplay, startWith, take, throttleTime } from 'rxjs/operators';
+import { map, startWith, take, throttleTime } from 'rxjs/operators';
 
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import {
-  getSelectedTerritories,
-  TerritoryMarker,
-  toTerritoryMarker,
-  getTerritoryMarkers,
-  availableTerritories,
-  AvailsFilter,
-  collidingTerms,
-} from '@blockframes/contract/avails/avails';
-import { territoriesISOA3, TerritoryValue } from '@blockframes/utils/static-model';
+import { TerritoryValue } from '@blockframes/utils/static-model';
 
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
+import { AvailableTerritoryMarker, BucketTerritoryMarker, filterByTitle, MapAvailsFilter, territoryAvailabilities } from '@blockframes/contract/avails/new-avails';
 
 @Component({
   selector: 'catalog-movie-avails-map',
@@ -34,69 +26,27 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
     status: string;
   }
 
+  public titleId = this.shell.movie.id;
   public org$ = this.shell.movieOrg$;
   public availsForm = this.shell.avails.mapForm;
   public status$ = this.availsForm.statusChanges.pipe(startWith(this.availsForm.valid ? 'VALID' : 'INVALID'));
   private mandates$ = this.shell.mandates$;
   private mandateTerms$ = this.shell.mandateTerms$;
+  private sales$ = this.shell.sales$;
   private salesTerms$ = this.shell.salesTerms$;
 
-  /** All mandates markers by territory (they might be already sold or already selected (from the bucket) or already in selection) */
-  private territoryMarkers$ = combineLatest([
+  public availabilities$ = combineLatest([
+    this.availsForm.valueChanges,
     this.mandates$,
     this.mandateTerms$,
-  ]).pipe(
-    map(([mandates, mandateTerms]) => getTerritoryMarkers(mandates, mandateTerms)),
-  );
-
-  /** Array of selected (from the bucket) markers */
-  public selected$ = combineLatest([
-    this.availsForm.value$,
-    this.shell.bucketForm.value$,
-    this.territoryMarkers$,
-    this.route.params.pipe(pluck('movieId'))
-  ]).pipe(
-    map(([avail, bucket, markers, movieId]) => getSelectedTerritories(movieId, avail, bucket, 'exact').map(t => markers[t])),
-    startWith([]),
-  );
-
-  public inSelection$ = combineLatest([
-    this.availsForm.value$,
-    this.shell.bucketForm.value$,
-    this.territoryMarkers$,
-    this.route.params.pipe(pluck('movieId'))
-  ]).pipe(
-    map(([avail, bucket, markers, movieId]) => getSelectedTerritories(movieId, avail, bucket, 'in').map(t => markers[t])),
-    startWith([]),
-  );
-
-  public sold$ = combineLatest([
+    this.sales$,
     this.salesTerms$,
-    this.availsForm.value$,
+    this.shell.bucketForm.value$,
   ]).pipe(
-    filter(() => this.availsForm.valid),
-    map(([salesTerms, avails]) => {
-      const soldTerms = collidingTerms(avails, salesTerms);
-      const markers = soldTerms.map(term => term.territories
-        .filter(territory => !!territoriesISOA3[territory])
-        .map(territory => toTerritoryMarker(territory, [], term))
-      ).flat();
-      return markers;
+    map(([avails, mandates, mandateTerms, sales, salesTerms, bucket]) => {
+      const { mandates: fullMandates, sales: fullSales, bucketContracts } = filterByTitle(this.titleId, mandates, mandateTerms, sales, salesTerms, bucket)
+      return territoryAvailabilities(avails, fullMandates, fullSales, bucketContracts);
     }),
-  );
-
-  public available$ = combineLatest([
-    this.mandates$,
-    this.selected$,
-    this.sold$,
-    this.inSelection$,
-    this.mandateTerms$
-  ]).pipe(
-    map(([mandates, selected, sold, inSelection, mandateTerms]) => {
-      if (this.availsForm.invalid) return [];
-      return availableTerritories(selected, sold, inSelection, this.availsForm.value, mandates, mandateTerms);
-    }),
-    shareReplay({ refCount: true, bufferSize: 1 }), // Multicast with replay
   );
 
   constructor(
@@ -116,22 +66,22 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
     this.hoveredTerritory = null;
   }
 
-  public addTerritory(territory: TerritoryMarker) {
+  public addTerritory(territory: AvailableTerritoryMarker) {
     const added = this.shell.bucketForm.addTerritory(this.availsForm.value, territory);
     if (added) this.onNewRight();
   }
 
-  public removeTerritory(territory: TerritoryMarker) {
-    this.shell.bucketForm.removeTerritory(this.availsForm.value, territory);
+  public removeTerritory(territory: BucketTerritoryMarker) {
+    this.shell.bucketForm.removeTerritory(territory);
   }
 
   public async selectAll() {
     if (this.availsForm.invalid) return;
-    const available = await this.available$.pipe(take(1)).toPromise();
-    for (const term of available) {
-      const alreadyInBucket = this.shell.bucketForm.isAlreadyInBucket(this.availsForm.value, term);
+    const available = await this.availabilities$.pipe(take(1)).toPromise().then(a => a.available);
+    for (const marker of available) {
+      const alreadyInBucket = this.shell.bucketForm.isAlreadyInBucket(marker);
       if (!alreadyInBucket) {
-        this.shell.bucketForm.addTerritory(this.availsForm.value, term);
+        this.shell.bucketForm.addTerritory(this.availsForm.value, marker);
       }
     }
     this.onNewRight();
@@ -158,7 +108,7 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
     this.availsForm.valueChanges.pipe(
       throttleTime(1000)
     ).subscribe(formState => {
-      encodeUrl<AvailsFilter>(
+      encodeUrl<MapAvailsFilter>(
         this.router, this.route, formState
       );
     });

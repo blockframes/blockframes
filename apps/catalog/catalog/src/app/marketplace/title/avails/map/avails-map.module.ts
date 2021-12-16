@@ -17,6 +17,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 import { MapModule } from '@blockframes/ui/map';
@@ -48,6 +49,7 @@ import { AvailsFilterModule } from '@blockframes/contract/avails/filter/filter.m
     MatCheckboxModule,
     MatFormFieldModule,
     MatDatepickerModule,
+    MatProgressSpinnerModule,
 
     RouterModule.forChild([{ path: '', component: MarketplaceMovieAvailsMapComponent }]),
   ],
