@@ -227,14 +227,15 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `Your offer was successfully sent.`,
-          placeholderUrl: 'profil_user.svg'
+          placeholderUrl: 'profil_user.svg',
+          url: `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.docId}`
         }
       case 'contractCreated':
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `An offer is made on one of your titles.`,
           placeholderUrl: 'profil_user.svg',
-          url: `${applicationUrl['catalog']}/c/o/${module}/title/${notification.docId}`
+          url: `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}`
         }
       default:
         return {

@@ -1,13 +1,13 @@
 <ng-container *ngIf="sale$ | async as sale; else loading">
   <header fxLayout="column" fxLayoutAlign="start start">
-    
+
     <!-- Internal -->
     <ng-container *ngIf="sale.sellerId === centralOrgId.catalog; else externalSale">
       <div fxLayout fxlayoutAlign="space-between center">
         <a mat-icon-button routerLink="/c/o/dashboard/sales" color="primary">
           <mat-icon svgIcon="arrow_back"></mat-icon>
         </a>
-        <a mat-button routerLink="/c/o/dashboard/standard-terms" color="primary">
+        <a mat-button routerLink="/c/o/dashboard/standard-terms" target="_blank">
           <mat-icon svgIcon="file"></mat-icon>
           <span>See Standard Terms</span>
         </a>
@@ -49,7 +49,7 @@
       </div>
     </ng-template>
   </header>
-  
+
   <router-outlet></router-outlet>
 </ng-container>
 

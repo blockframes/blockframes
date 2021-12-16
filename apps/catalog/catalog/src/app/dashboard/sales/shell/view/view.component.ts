@@ -1,11 +1,11 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ContractService } from '@blockframes/contract/contract/+state';
 import { MatDialog } from '@angular/material/dialog';
 import { SaleShellComponent } from '../shell.component';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Movie } from '@blockframes/movie/+state';
+import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
 
 @Component({
   selector: 'sale-view',
@@ -20,16 +20,18 @@ export class SaleViewComponent {
   orgId = this.query.getActiveId();
 
   constructor(
-    private contractService: ContractService,
+    private negotiationService: NegotiationService,
     private snackbar: MatSnackBar,
     private shell: SaleShellComponent,
     private dialog: MatDialog,
     private query: OrganizationQuery
   ) { }
 
-  accept(id: string, movie: Movie) {
+  accept(negotiationId: string, contractId: string, movie: Movie) {
+    const status = 'accepted';
+    const options = { params: { contractId } };
     const data = {
-      onConfirm: () => this.contractService.update(id, { status: 'accepted' }),
+      onConfirm: () => this.negotiationService.update(negotiationId, { status }, options),
       title: 'Are you sure you want to accept this Contract?',
       question: 'Please verify if all the contract elements are convenient for you.',
       confirm: 'Yes, accept Contract',

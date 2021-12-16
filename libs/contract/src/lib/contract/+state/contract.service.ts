@@ -70,9 +70,11 @@ export class ContractService extends CollectionService<ContractState> {
       holdbacks: contract.holdbacks,
       parentTermId: contract.parentTermId,
       specificity: contract.specificity,
+      initial: contract.initial,
       orgId: contract.orgId,
     }, { write, params: { contractId }})
-    if (sale.status === 'pending') this.update(contractId, { status: 'negotiating' }, { write })
+    const isInitial = !contract._meta?.createdAt || contract._meta.createdAt.getTime() === contract.initial?.getTime();
+    if (!isInitial && sale.status === 'pending') this.update(contractId, { status: 'negotiating' }, { write })
     await write.commit()
   }
 }

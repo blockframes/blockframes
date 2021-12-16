@@ -43,6 +43,7 @@ export const icons = [
   { name: 'dashboard', url: 'assets/icons/dashboard.svg' },
   { name: 'delete', url: 'assets/icons/delete.svg' },
   { name: 'document', url: 'assets/icons/document.svg' },
+  { name: 'document_signed', url: 'assets/icons/document-signed.svg' },
   { name: 'done_all', url: 'assets/icons/done_all.svg' },
   { name: 'drafts', url: 'assets/icons/drafts.svg' },
   { name: 'drag_indicator', url: 'assets/icons/drag_indicator.svg' },
