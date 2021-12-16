@@ -22,7 +22,7 @@ import {
   firebaseEmulatorExec,
   connectAuthEmulator,
   connectFirestoreEmulator,
-} from '@blockframes/firebase-utils/emulator';
+} from '@blockframes/firebase-utils/firestore/emulator';
 import { ChildProcess } from 'child_process';
 import { join, resolve } from 'path';
 import { backupBucket as prodBackupBucket, firebase as prodFirebase } from 'env/env.blockframes';

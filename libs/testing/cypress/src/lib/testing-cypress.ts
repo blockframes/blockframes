@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type * as foo from 'cypress';
 import { loadAdminServices } from '@blockframes/firebase-utils';
-import { connectFirestoreEmulator, connectAuthEmulator } from '@blockframes/firebase-utils/emulator';
+import { connectFirestoreEmulator, connectAuthEmulator } from '@blockframes/firebase-utils/firestore/emulator';
 import type * as admin from 'firebase-admin';
 import type { User } from '@blockframes/user/types';
 

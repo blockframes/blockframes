@@ -16,7 +16,7 @@ import {
   firebaseEmulatorExec,
   importFirestoreEmulatorBackup,
   shutdownEmulator,
-} from '@blockframes/firebase-utils/emulator';
+} from '@blockframes/firebase-utils/firestore/emulator';
 import { cleanDeprecatedData } from './db-cleaning';
 import { cleanStorage } from './storage-cleaning';
 import { firebase } from '@env';
