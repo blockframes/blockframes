@@ -1,6 +1,6 @@
 
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { ConfirmPasswordForm } from '@blockframes/utils/form/controls/password.control';
+import { EditPasswordForm } from '@blockframes/utils/form/controls/password.control';
 @Component({
   selector: '[form] auth-form-password',
   templateUrl: './password.component.html',
@@ -10,5 +10,5 @@ import { ConfirmPasswordForm } from '@blockframes/utils/form/controls/password.c
 
 export class PasswordFormComponent {
 
-  @Input() form: ConfirmPasswordForm;
+  @Input() form: EditPasswordForm;
 }

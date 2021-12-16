@@ -92,7 +92,11 @@
           </div>
         </ng-container>
 
-        <password-confirm *ngIf="form.get('password').enabled" formControlName="password"></password-confirm>
+        <password-confirm 
+          *ngIf="form.get('password').enabled"
+          formControlName="password"
+          [oldPassword]="form.get('generatedPassword').value"
+        ></password-confirm>
 
         <!-- TERMS OF USE & PRIVACY POLICY -->
 

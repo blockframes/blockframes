@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, forwardRef, OnDestroy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, forwardRef, OnDestroy, OnInit, Input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ConfirmPasswordForm } from '@blockframes/utils/form/controls/password.control';
 import { RepeatPasswordStateMatcher } from '@blockframes/utils/form/matchers';
@@ -23,14 +23,35 @@ export class PasswordConfirmComponent implements OnInit, OnDestroy, ControlValue
 
   public passwordsMatcher: RepeatPasswordStateMatcher;
 
+  private _oldPassword: string | undefined;
+  @Input() set oldPassword(value: string | undefined) {
+    this._oldPassword = value;
+    this.newPasswordValidator(this.form.get('password').value)
+  };
+
   ngOnInit() {
     this.passwordsMatcher = new RepeatPasswordStateMatcher('password', 'confirm');
+    this.subscription = this.form.get('password').valueChanges.subscribe(password => {
+      this.newPasswordValidator(password)
+    });
   }
 
   ngOnDestroy() {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
+  }
+
+  /**
+   * A users' current password cannot match their new password 
+   * @param current Users' current password (e.g. invitation pass)
+   * @param next Users' new password
+   */
+  newPasswordValidator(next: string) {
+    const error = this._oldPassword && this._oldPassword === next
+      ? { oldPasswordMatch: true }
+      : null;
+    this.form.get('password').setErrors(error);
   }
 
   //////////////////////////////
