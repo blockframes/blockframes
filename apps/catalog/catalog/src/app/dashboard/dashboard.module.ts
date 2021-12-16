@@ -107,20 +107,6 @@ const routes: Routes = [
           data: { redirect: '/c/o/dashboard/title' }
         }]
       },
-      /*  {
-         path: 'deals',
-         children: [{
-           path: '',
-           canActivate: [OrganizationContractListGuard, ContractsRightListGuard, MovieListContractListGuard],
-           canDeactivate: [OrganizationContractListGuard, ContractsRightListGuard, MovieListContractListGuard],
-           loadChildren: () => import('./right/list/list.module').then(m => m.RightListModule)
-         }, {
-           path: ':contractId', // One right: different state of a right (offer, counter-offer, payment),
-           canActivate: [ActiveContractGuard],
-           canDeactivate: [ActiveContractGuard],
-           loadChildren: () => import('./right/view/view.module').then(m => m.RightViewModule)
-         }]
-       }, */
       {
         path: 'about',
         loadChildren: () => import('@blockframes/ui/static-informations/about/about.module').then(m => m.AboutModule)

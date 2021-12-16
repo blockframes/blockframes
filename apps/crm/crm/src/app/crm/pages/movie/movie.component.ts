@@ -2,7 +2,6 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieCrmForm } from '@blockframes/admin/crm/forms/movie-crm.form';
-import { getValue } from '@blockframes/utils/helpers';
 import { storeStatus, productionStatus } from '@blockframes/utils/static-model';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
@@ -32,20 +31,6 @@ export class MovieComponent implements OnInit {
   public productionStatus = productionStatus;
   public apps = getAllAppsExcept(['crm']);
   public appName = appName;
-
-  public versionColumnsTable = {
-    'id': { value: 'Id', disableSort: true },
-    'status': 'Status',
-    'contractId': 'Contract Id',
-    'terms': 'Scope',
-  };
-
-  public initialColumnsTable: string[] = [
-    'id',
-    'status',
-    'contractId',
-    'terms',
-  ];
 
   constructor(
     private movieService: MovieService,
@@ -116,17 +101,6 @@ export class MovieComponent implements OnInit {
     }
 
     return this.movie.app;
-  }
-
-  public filterPredicate(data, filter: string) {
-    const columnsToFilter = [
-      'id',
-      'status',
-      'contractId',
-      'terms',
-    ];
-    const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
-    return dataStr.toLowerCase().indexOf(filter) !== -1;
   }
 
   public async deleteMovie() {
