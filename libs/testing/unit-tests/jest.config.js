@@ -1,6 +1,6 @@
 ﻿module.exports = {
-  name: 'testing',
-  preset: '../../jest.preset.js',
+  name: 'testing-unit-tests',
+  preset: '../../../jest.preset.js',
   globals: {
     'ts-jest': { tsconfig: '<rootDir>/tsconfig.spec.json' },
   },
@@ -9,5 +9,5 @@
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'html', 'json'],
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  coverageDirectory: '../../coverage/libs/testing',
+  coverageDirectory: '../../../coverage/libs/testing/unit-tests',
 };

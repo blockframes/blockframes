@@ -1,8 +1,6 @@
-
 const bucketFiles = {};
 
 export class MockedGFile {
-
   public name: string;
   public prefix: string;
 
@@ -24,7 +22,6 @@ export class MockedGFile {
 }
 
 export class BucketMocked {
-
   public name: string;
 
   constructor(name: string) {

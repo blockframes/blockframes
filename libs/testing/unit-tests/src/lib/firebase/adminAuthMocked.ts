@@ -1,6 +1,4 @@
-
 export class AdminAuthMocked {
-
   public users: any[] = [];
 
   getUserByEmail(email: string) {
@@ -14,8 +12,8 @@ export class AdminAuthMocked {
     return new Promise((resolve) => {
       const out = {
         users: this.users,
-        pageToken
-      }
+        pageToken,
+      };
       resolve(out);
     });
   }
