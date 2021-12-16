@@ -48,7 +48,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
       case 'organizationAcceptedByArchipelContent':
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: [{ text: `Your organization was accepted by the ${this.appName} team.` }],
+          message: `Your organization was accepted by the ${this.appName} team.`,
           imgRef: notification.organization?.logo,
           placeholderUrl: 'empty_organization.svg',
           url: `${applicationUrl[this.app]}/c/o/organization/${notification.organization.id}/view/org`,
@@ -56,7 +56,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
       case 'requestFromUserToJoinOrgDeclined':
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: [{ text: `${displayUserName}'s request to join your organization was refused.` }],
+          message: `${displayUserName}'s request to join your organization was refused.`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.svg',
           url: `${applicationUrl[this.app]}/c/o/organization/${notification.organization.id}/view/members`,
@@ -64,7 +64,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
       case 'invitationToJoinOrgDeclined':
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: [{ text: `Your invitation to ${displayUserName} to join your organization was refused.` }],
+          message: `Your invitation to ${displayUserName} to join your organization was refused.`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.svg',
           url: `${applicationUrl[this.app]}/c/o/organization/${notification.organization.id}/view/members`,
@@ -78,13 +78,13 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
             return {
               ...newNotification,
               imgRef: notification.user.avatar,
-              message: [{ text: message }],
+              message,
             };
           })
         })
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: [{ text: `Members of your organization have been updated` }],
+          message: `Members of your organization have been updated.`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.svg',
           url: `${applicationUrl[this.app]}/c/o/organization/${notification.organization.id}/view/members`,
@@ -96,17 +96,14 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
             return {
               ...newNotification,
               imgRef: createStorageFile(movie?.poster),
-              message: [
-                { text: movie.title.international, link: `/c/o/marketplace/movie/${movie.id}` },
-                { text: ` was successfully submitted to the ${appName[movieAppAccess[0]]} Team.` }
-              ],
+              message: `<a href="/c/o/marketplace/movie/${movie.id}" target="_blank">${movie.title.international}</a> was successfully submitted to the ${appName[movieAppAccess[0]]} Team.`,
               url: `${applicationUrl[movieAppAccess[0]]}/c/o/dashboard/title/${notification.docId}/main`,
             };
           })
         })
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: [{ text: `A new movie was successfully submitted` }],
+          message: `A new movie was successfully submitted.`,
           imgRef: this.getPoster(notification.docId),
           placeholderUrl: 'empty_poster.svg',
           url: `${applicationUrl[this.app]}/c/o/dashboard/title/${notification.docId}`,
@@ -118,17 +115,14 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
             return {
               ...newNotification,
               imgRef: createStorageFile(movie?.poster),
-              message: [
-                { text: movie.title.international, link: `/c/o/marketplace/movie/${movie.id}` },
-                { text: ` was successfully published on the marketplace.` }
-              ],
+              message: `<a href="/c/o/marketplace/movie/${movie.id}" target="_blank">${movie.title.international}</a> was successfully published on the marketplace.`,
               url: `${applicationUrl[movieAppAccess[0]]}/c/o/dashboard/title/${notification.docId}/main`,
             };
           })
         })
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: [{ text: `Your project was successfully published on the marketplace.` }],
+          message: `Your project was successfully published on the marketplace.`,
           imgRef: this.getPoster(notification.docId),
           placeholderUrl: 'empty_poster.svg',
           url: `/c/o/dashboard/title/${notification.docId}/main`,
@@ -139,7 +133,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           : 'Your organization\'s app access have changed.';
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: [{ text: msg }],
+          message: msg,
           placeholderUrl: `empty_organization.svg`,
           imgRef: notification.organization?.logo,
           url: `${applicationUrl[notification.appAccess]}`
@@ -155,11 +149,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
               return {
                 ...newNotification,
                 imgRef: this.getPoster(titleId),
-                message: [
-                  { text: `REMINDER - ${org.denomination.full}'s ${event.type} "` },
-                  { text: event.title, link: `/event/${event.id}` },
-                  { text: `" is about to start.` }
-                ]
+                message: `REMINDER - ${org.denomination.full}'s ${event.type} "<a href="/event/${event.id}" target="_blank">${event.title}</a>" is about to start.`
               };
             });
           })
@@ -167,11 +157,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
 
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: [
-            { text: `REMINDER - Your event "` },
-            { text: notification.docId, link: `/event/${notification.docId}`},
-            { text: `" is about to start.`}
-          ],
+          message: `REMINDER - Your event "<a href="/event/${notification.docId}" target="_blank">${notification.docId}</a>" is about to start.`,
           placeholderUrl: 'empty_poster.svg',
           url: `${applicationUrl['festival']}/event/${notification.docId}/r/i`,
         };
@@ -185,23 +171,14 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
               return {
                 ...newNotification,
                 imgRef: this.getPoster(titleId),
-                message: [
-                  { text:  `REMINDER - ${org.denomination.full}'s ${event.type} "` },
-                  { text: event.title, link: `/event/${event.id}`},
-                  { text: `" will start tomorrow at ${format(toDate(event.start), 'h:mm a')}.` }
-                ]
-              };
+                message: `REMINDER - ${org.denomination.full}'s ${event.type} "<a href="/event/${event.id}" target="_blank">${event.title}</a>" will start tomorrow at ${format(toDate(event.start), 'h:mm a')}.`              };
             });
           })
         });
 
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: [
-            { text: `REMINDER - Your event "` },
-            { text: notification.docId, link: `/event/${notification.docId}`},
-            { text: `" is tomorrow.`}
-          ],
+          message: `REMINDER - Your event "<a href="/event/${notification.docId}" target="_blank">${notification.docId}</a>" is tomorrow.`,
           placeholderUrl: 'empty_poster.svg',
           url: `${applicationUrl['festival']}/event/${notification.docId}/r/i`,
         };
@@ -214,18 +191,14 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           await this.update(notification.id, newNotification => {
             return {
               ...newNotification,
-              message: [
-                { text: `${subject} has ${notification.invitation.status} your ${notification.invitation.mode} to attend ${event.type} "` },
-                { text: event.title, link: `/event/${event.id}` },
-                { text: `".`}
-              ]
+              message: `${subject} has ${notification.invitation.status} your ${notification.invitation.mode} to attend ${event.type} "<a href="/event/${event.id}" target="_blank">${event.title}</a>".`
             };
           });
         });
 
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: [{ text: `Someone has ${notification.invitation.status} your ${notification.invitation.mode} to attend an event.` }],
+          message: `Someone has ${notification.invitation.status} your ${notification.invitation.mode} to attend an event.`,
           imgRef: notification.user?.avatar || notification.organization?.logo,
           placeholderUrl: 'profil_user.svg',
           url: `${applicationUrl['festival']}${module === 'marketplace' ? `/event/${notification.docId}/r/i/` : `/c/o/${module}/event/${notification.docId}`}`
@@ -237,22 +210,14 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           this.update(notification.id, newNotification => {
             return {
               ...newNotification,
-              message: [
-                { text: `Your request to attend event ${event.type} "`},
-                { text: event.title, link: `/event/${event.id}` },
-                { text: `" has been sent.` }
-              ]
+              message: `Your request to attend event ${event.type} "<a href="/event/${event.id}" target="_blank">${event.title}</a>" has been sent.`
             };
           });
         });
 
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: [
-            { text: `Your request to attend event "` },
-            { text: notification.docId, link: `/event/${notification.docId}` },
-            { text: `" has been sent.` }
-          ],
+          message: `Your request to attend event "<a href="/event/${notification.docId}" target="_blank">${notification.docId}</a>" has been sent.`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.svg',
           url: `${applicationUrl['festival']}${module === 'marketplace' ? `/event/${notification.docId}/r/i/` : `/c/o/${module}/event/${notification.docId}`}`
@@ -260,19 +225,19 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
       case 'offerCreatedConfirmation':
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: [{ text: `Your offer was successfully sent.` }],
+          message: `Your offer was successfully sent.`,
           placeholderUrl: 'profil_user.svg'
         }
       case 'contractCreated':
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: [{ text: `An offer is made on one of your titles.` }],
+          message: `An offer is made on one of your titles.`,
           placeholderUrl: 'profil_user.svg',
           url: `${applicationUrl['catalog']}/c/o/${module}/title/${notification.docId}`
         }
       default:
         return {
-          message: [{ text: 'Error while displaying notification.' }]
+          message: 'Error while displaying notification.'
         };
     }
   }
