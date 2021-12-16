@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
-import { getValue, downloadCsvFromJson } from '@blockframes/utils/helpers';
+import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { EventService } from '@blockframes/event/+state';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { Router } from '@angular/router';
@@ -13,33 +13,6 @@ import { toLabel } from '@blockframes/utils/pipes';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EventsComponent implements OnInit {
-  public versionColumns = {
-    'id': { value: 'Id', disableSort: true },
-    'title': 'Title',
-    'type': 'Type',
-    'start': 'Start',
-    'end': 'End',
-    'hostedBy': 'Hosted by',
-    'invited': 'Number of invitations',
-    'confirmed': 'Confirmed',
-    'pending': 'Pending',
-    'accessibility': 'Accessibility',
-    'isSecret': 'Hidden on Marketplace'
-  };
-
-  public initialColumns: string[] = [
-    'id',
-    'title',
-    'type',
-    'start',
-    'end',
-    'hostedBy',
-    'invited',
-    'confirmed',
-    'pending',
-    'accessibility',
-    'isSecret'
-  ];
   public rows = [];
   public eventListLoaded = false;
 
@@ -79,19 +52,6 @@ export class EventsComponent implements OnInit {
 
   goToEdit(event) {
     this.router.navigate([`/c/o/dashboard/crm/event/${event.id}`])
-  }
-
-  public filterPredicate(data, filter: string) {
-    const columnsToFilter = [
-      'id',
-      'title',
-      'type',
-      'accessibility',
-      'isSecret',
-      'hostedBy',
-    ];
-    const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
-    return dataStr.toLowerCase().indexOf(filter) !== -1;
   }
 
   public exportTable() {

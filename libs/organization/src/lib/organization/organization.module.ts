@@ -34,11 +34,10 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { OrganizationDisplayModule } from './components/organization-display/organization-display.module';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
-// Components
-import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
-
 // Pages
 import { ActivateDaoComponent } from './pages/activate-dao/activate-dao.component';
+
+// Guards
 import { UserGuard } from '@blockframes/user/guard/user.guard';
 
 export const organizationRoutes: Routes = [
@@ -46,7 +45,7 @@ export const organizationRoutes: Routes = [
     path: ':orgId',
     children: [
       { path: '', redirectTo: 'view', pathMatch: 'full' },
-      { path: 'view', loadChildren: () => import('./pages/view/view.module').then(m => m.OrganizationViewModule)},
+      { path: 'view', loadChildren: () => import('./pages/view/view.module').then(m => m.OrganizationViewModule) },
       {
         path: 'activate',
         canActivate: [UserGuard],
@@ -71,7 +70,6 @@ export const organizationRoutes: Routes = [
     PasswordConfirmModule,
     ImageModule,
     OrganizationFormModule,
-    TableFilterModule,
     OrganizationDisplayModule,
 
     // Material
@@ -100,4 +98,4 @@ export const organizationRoutes: Routes = [
     ActivateDaoComponent
   ]
 })
-export class OrganizationModule {}
+export class OrganizationModule { }

@@ -83,6 +83,8 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
    * full screen can be exited without our button (Escape key, etc...)
    */
   @HostListener('fullscreenchange')
+  @HostListener('webkitfullscreenchange')
+  @HostListener('mozfullscreenchange')
   trackFullScreenMode() {
     this.fullScreen = !this.fullScreen;
   }

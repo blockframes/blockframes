@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Event } from '@blockframes/event/+state/event.model';
 import { Organization, OrganizationService } from '@blockframes/organization/+state';
 
@@ -13,9 +13,13 @@ export class EventInfoComponent implements OnInit {
 
   @Input() event: Event
 
-  constructor(private orgService: OrganizationService) { }
+  constructor(
+    private orgService: OrganizationService,
+    private cdr: ChangeDetectorRef,
+    ) { }
 
   async ngOnInit() {
     this.org = await this.orgService.getValue(this.event.ownerOrgId);
+    this.cdr.markForCheck();
   }
 }

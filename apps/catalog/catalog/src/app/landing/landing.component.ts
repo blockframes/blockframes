@@ -1,71 +1,75 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewEncapsulation, ViewChild } from '@angular/core';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
   selector: 'catalog-landing',
   templateUrl: './landing.component.html',
   styleUrls: ['./landing.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None
 })
 export class CatalogLandingComponent {
   public tabNames = ['Seller', 'Buyer'];
+  @ViewChild('sellerVideo') sellerVideo;
+  @ViewChild('buyerVideo') buyerVideo;
+
 
   public tabTitle = [
     {
-      title: 'Valorize your back catalog.',
-      imgAsset: 'lp_catalog_seller_perspective.png',
-      description: 'Get extra visibility on your back catalog and maximize revenues on library sales.'
+      title: 'For sellers',
+      imgAsset: 'video_placeholder_seller.png',
+      description: 'Monetize your full catalog at its maximum potential effortlessly, thanks to an innovative way of making deals.',
     },
     {
-      title: 'Buy quality content from a multitude of rights holders in one single package.',
-      imgAsset: 'lp_catalog_buyer_perspective.png',
-      description: 'Access one massive library, search for avails easily and buy content in larger volumes through one single deal offer and negotiation.'
+      title: 'For Buyers ',
+      imgAsset: 'video_placeholder_buyer.png',
+      description: 'Search for avails easily through one curated library and buy content in larger volumes through one single deal.',
     }
   ]
 
   public sellerFeatures = [
     {
-      title: 'Import your content easily',
-      imgAsset: 'add_files.svg',
-      description: 'Upload your films’ data, promotional elements and rights availabilities directly on the platform or by uploading an Excel template.'
+      title: 'Over 1500 international buyers',
+      description: "Expand your catalog's potential by reaching out to a large community of buyers, free of charge.",
+      imgAsset: 'content_sellers_list.svg'
     },
     {
-      title: 'Manage your offers and deals',
-      imgAsset: 'deal_management.svg',
-      description: 'Manage your current offers and sales deals, track negotiations and follow each deal’s status directly on the platform.'
+      title: 'Tailor-made offers',
+      description: 'Benefit from the experience of a dedicated sales & marketing team, who tailor-makes offers to buyers.',
+      imgAsset: 'content_pitching_movie.svg'
     },
     {
-      title: 'Track your films’ activity',
-      imgAsset: 'sales_statistics.svg',
-      description: 'Get detailed stats on your films’ activity on the marketplace, and get notified for any new activity.'
+      title: 'Simplified contracting',
+      description: 'Negociate your deals and get extra opportunities thanks fast and simplified contracting.',
+      imgAsset: 'content_manage_offers.svg'
     },
     {
-      title: 'Benefit from a dedicated sales person',
-      imgAsset: 'human_salesforce.svg',
-      description: 'Make the most of your library thanks to the Archipel Content salesforce, who will editorialize the platform and push the right content to the right Buyers.'
+      title: 'User-friendly interface',
+      description: 'Monitor your avails and activity easily thanks to simplified imports and exports and deal monitoring systems.',
+      imgAsset: 'content_title_stats.svg'
     }
   ];
 
   public buyerFeatures = [
     {
-      title: 'Access to line-up and library content ',
-      imgAsset: 'library_content.svg',
-      description: 'Search for quality content from a multitude of different Rights Holders in one consolidated library.'
+      title: 'Multi-Seller Deals',
+      description: 'License from multiple rights owners through one single negotiation and contract.',
+      imgAsset: 'content_multi_sellers.svg'
     },
     {
-      title: 'Efficient content browsing',
-      imgAsset: 'efficient_content_browsing.svg',
-      description: 'Search content in a simple and efficient way and find what you’re looking for in just a few clicks, using efficient search criteria and filters'
+      title: 'Simplified avails search',
+      description: 'Put away your endless avails sheets and browse content easily by filtering through avails, genres, languages, keywords... on a user-friendly interface.',
+      imgAsset: 'content_movie_genres.svg'
     },
     {
-      title: 'Package deals',
-      imgAsset: 'package_deal.svg',
-      description: 'Group several Sellers’ titles together in one deal.'
+      title: 'Curated content just for you',
+      description: 'Only receive relevant and carefully curated content, hand-picked by our professional sales & marketing team.',
+      imgAsset: 'content_search_movie.png'
     },
     {
-      title: 'Deals management',
-      imgAsset: 'deal_management.svg',
-      description: 'Keep track of your deals information and negotiations. Download related documents.Get notified of any new element or information.'
+      title: 'All format and genres',
+      description: 'Access content from feature films, drama series, documentaries, kids content, and many more!',
+      imgAsset: 'content_buyer_avails.svg'
     }
   ]
 
@@ -73,5 +77,13 @@ export class CatalogLandingComponent {
     private dynTitle: DynamicTitleService
   ) {
     this.dynTitle.setPageTitle()
+  }
+
+  onTabChanged(e) {
+    if(e.index === 0) {
+      this.sellerVideo.nativeElement.play();
+    } else {
+      this.buyerVideo.nativeElement.play();
+    }
   }
 }

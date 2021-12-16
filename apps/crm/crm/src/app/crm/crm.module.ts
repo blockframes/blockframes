@@ -17,7 +17,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 // Modules
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
-import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { OrganizationAdminModule } from './pages/organization/organization.module';
 import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module';
 import { AppPipeModule, ToLabelModule, ToDateModule } from '@blockframes/utils/pipes';

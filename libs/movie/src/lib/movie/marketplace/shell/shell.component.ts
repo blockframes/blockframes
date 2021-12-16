@@ -8,7 +8,7 @@ import { FileListPreviewComponent } from '@blockframes/media/file/preview-list/p
 import { MatDialog } from '@angular/material/dialog';
 import { StorageFile } from '@blockframes/media/+state/media.firestore';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { MovieService } from '@blockframes/movie/+state';
 
 @Component({
@@ -35,7 +35,15 @@ export class TitleMarketplaceShellComponent implements OnInit {
   ngOnInit() {
     this.movie$ = this.route.params.pipe(
       map(params => params.movieId),
-      switchMap((id: string) => this.movie.valueChanges(id))
+      switchMap((id: string) => this.movie.valueChanges(id)),
+      tap(() => {
+        if (this.route.snapshot.fragment === 'trailer') {
+          setTimeout(() => {
+            const element = document.getElementById('videoFooter');
+            if (element) scrollIntoView(element)
+          }, 400);
+        }
+      })
     )
   }
 

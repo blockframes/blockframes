@@ -14,10 +14,16 @@ mat-sidenav-content {
   header {
     width: 100%;
 
-    button {
+    button:first-of-type {
       margin-right: 24px;
     }
 
+    button[app-logo] {
+      background-color: var(--background-card);
+      border: none;
+      cursor: pointer;
+    }
+    
     /* We can't use the fxLayoutGap directive because it set the margin right
     property to the specified value. But we need to use margin-right:auto to split
     the content and we don't want to use !important */

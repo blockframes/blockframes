@@ -94,6 +94,10 @@ export class ListComponent implements OnDestroy, OnInit {
       search,
       avails = {}
     } = decodeUrl(this.route);
+
+    if (avails.duration?.from) avails.duration.from = new Date(avails.duration.from);
+    if (avails.duration?.to) avails.duration.to = new Date(avails.duration.to);
+
     // patch everything
     this.searchForm.patchValue(search);
 

@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@blockframes/auth/+state';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -25,6 +25,11 @@ export class EmailComponent implements OnInit {
     email: new FormControl('', [Validators.required, Validators.email])
   });
 
+  @HostListener('window:popstate', ['$event'])
+  onPopState() {
+    this.goBack();
+  }
+  
   ngOnInit() {
     const { email } = this.route.snapshot.queryParams;
     this.form.get('email').setValue(email);
@@ -41,7 +46,7 @@ export class EmailComponent implements OnInit {
     this.router.navigate(['../../r/i'], { relativeTo: this.route, queryParams: this.route.snapshot.queryParams });
   }
 
-  clickBack() {
+  goBack() {
     this.authService.updateAnonymousCredentials({ role: undefined });
     this.router.navigate(['../../'], { relativeTo: this.route, queryParams: this.route.snapshot.queryParams });
   }
