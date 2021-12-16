@@ -25,7 +25,7 @@ export class EventIdenityComponent {
 
   @HostListener('window:popstate', ['$event'])
   onPopState() {
-    this.clickBack();
+    this.goBack();
   }
 
   validateIdentity() {
@@ -39,7 +39,7 @@ export class EventIdenityComponent {
     this.router.navigate(['../../r/i'], { relativeTo: this.route, queryParams: this.route.snapshot.queryParams });
   }
 
-  clickBack() {
+  goBack() {
     this.authService.updateAnonymousCredentials({ role: undefined });
     this.router.navigate(['../../'], { relativeTo: this.route, queryParams: this.route.snapshot.queryParams });
   }
