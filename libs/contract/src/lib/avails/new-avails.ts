@@ -1,7 +1,7 @@
 
 import { Media, territories, territoriesISOA3, Territory, TerritoryISOA3, TerritoryISOA3Value, TerritoryValue } from '@blockframes/utils/static-model';
 
-import { Term } from '../term/+state';
+import { BucketTerm, Term } from '../term/+state';
 import { Mandate, Sale } from '../contract/+state';
 import { Bucket, BucketContract } from '../bucket/+state';
 import { allOf, exclusivityAllOf, exclusivitySomeOf, someOf } from './sets';
@@ -161,34 +161,57 @@ export interface MapAvailsFilter {
   exclusive: boolean
 }
 
-type TerritoryAvailability = 'not-licensed' | 'available' | 'sold';
-
-interface TerritoryMarker {
-  type: TerritoryAvailability,
+interface TerritoryMarkerBase {
   slug: Territory,
   isoA3: TerritoryISOA3Value,
   label: TerritoryValue,
-  contract?: Mandate,
-  term?: Term<Date>,
 }
 
+interface NotLicensedTerritoryMarker extends TerritoryMarkerBase {
+  type: 'not-licensed';
+}
+
+export interface AvailableTerritoryMarker extends TerritoryMarkerBase {
+  type: 'available',
+  contract: Mandate,
+  term: Term<Date>,
+}
+
+interface SoldTerritoryMarker extends TerritoryMarkerBase {
+  type: 'sold',
+  contract: Sale,
+  term: Term<Date>,
+}
+
+export interface BucketTerritoryMarker extends TerritoryMarkerBase {
+  type: 'selected' | 'in-bucket',
+  contract: BucketContract,
+  term: BucketTerm,
+}
+
+export type TerritoryMarker = NotLicensedTerritoryMarker | AvailableTerritoryMarker | SoldTerritoryMarker | BucketTerritoryMarker;
+
 interface MapAvailabilities {
-  notLicensed: TerritoryMarker[];
-  available: TerritoryMarker[];
-  sold: TerritoryMarker[];
+  notLicensed: NotLicensedTerritoryMarker[];
+  available: AvailableTerritoryMarker[];
+  sold: SoldTerritoryMarker[];
+  inBucket: BucketTerritoryMarker[];
+  selected: BucketTerritoryMarker[];
+}
+
+function isMapTermInAvails<T extends BucketTerm | Term>(term: T, avails: MapAvailsFilter) {
+  const exclusivityCheck = exclusivityAllOf(avails.exclusive).in(term.exclusive);
+  const mediaCheck = allOf(avails.medias).in(term.medias);
+  const durationCheck = allOf(avails.duration).in(term.duration);
+
+  return exclusivityCheck && mediaCheck && durationCheck;
 }
 
 function getMatchingMapMandates(mandates: FullMandate[], avails: MapAvailsFilter): FullMandate[] {
-  return mandates.filter(mandate => mandate.terms.some(term => {
-    const exclusivityCheck = exclusivityAllOf(avails.exclusive).in(term.exclusive);
-    const mediaCheck = allOf(avails.medias).in(term.medias);
-    const durationCheck = allOf(avails.duration).in(term.duration);
-
-    return exclusivityCheck && mediaCheck && durationCheck;
-  }));
+  return mandates.filter(mandate => mandate.terms.some(term => isMapTermInAvails(term, avails)));
 }
 
-function getMatchingMapSales<T extends (FullSale | BucketContract)>(sales: T[], avails: MapAvailsFilter): T[] {
+function getMatchingMapSales(sales: FullSale[], avails: MapAvailsFilter) {
   return sales.filter(sale => sale.terms.some(term => {
     const exclusivityCheck = exclusivitySomeOf(avails.exclusive).in(term.exclusive);
     const mediaCheck = someOf(avails.medias).in(term.medias);
@@ -196,6 +219,18 @@ function getMatchingMapSales<T extends (FullSale | BucketContract)>(sales: T[], 
 
     return exclusivityCheck && mediaCheck && durationCheck;
   }));
+}
+
+function isMapTermInBucket<T extends BucketTerm | Term>(term: T, avails: MapAvailsFilter) {
+  return isMapTermInAvails(term, avails);
+}
+
+function isMapTermSelected<T extends BucketTerm | Term>(term: T, avails: MapAvailsFilter) {
+  const exclusivityCheck =avails.exclusive === term.exclusive;
+  const mediaCheck = allOf(avails.medias).equal(term.medias);
+  const durationCheck = allOf(avails.duration).equal(term.duration);
+
+  return exclusivityCheck && mediaCheck && durationCheck;
 }
 
 
@@ -256,30 +291,49 @@ export function territoryAvailabilities(
           isoA3: territoriesISOA3[territory],
           label: territories[territory],
           term,
+          contract: sale,
         };
       }
     }
   }
 
-  const bucketSalesToExclude = getMatchingMapSales(bucketContracts ?? [], avails);
-  for (const bucketSale of bucketSalesToExclude) {
+  for (const bucketSale of bucketContracts ?? []) {
     for (const term of bucketSale.terms) {
-      for (const territory of term.territories as TerritoryISOA3[]) {
-        availabilities[territory] = {
-          type: 'sold',
-          slug: territory,
-          isoA3: territoriesISOA3[territory],
-          label: territories[territory],
-        };
+      const isInBucket = isMapTermInBucket(term, avails);
+      const isSelected = isMapTermSelected(term, avails);
+      if (isSelected) {
+        for (const territory of term.territories as TerritoryISOA3[]) {
+          availabilities[territory] = {
+            type: 'selected',
+            slug: territory,
+            isoA3: territoriesISOA3[territory],
+            label: territories[territory],
+            term,
+            contract: bucketSale,
+          };
+        }
+      } else if (isInBucket) {
+          for (const territory of term.territories as TerritoryISOA3[]) {
+            availabilities[territory] = {
+              type: 'in-bucket',
+              slug: territory,
+              isoA3: territoriesISOA3[territory],
+              label: territories[territory],
+              term,
+              contract: bucketSale,
+            };
+          }
       }
     }
   }
 
-  const notLicensed = Object.values(availabilities).filter(a => a.type === 'not-licensed');
-  const available = Object.values(availabilities).filter(a => a.type === 'available');
-  const sold = Object.values(availabilities).filter(a => a.type === 'sold');
+  const notLicensed = Object.values(availabilities).filter(a => a.type === 'not-licensed') as NotLicensedTerritoryMarker[];
+  const available = Object.values(availabilities).filter(a => a.type === 'available') as AvailableTerritoryMarker[];
+  const sold = Object.values(availabilities).filter(a => a.type === 'sold') as SoldTerritoryMarker[];
+  const inBucket = Object.values(availabilities).filter(a => a.type === 'in-bucket') as BucketTerritoryMarker[];
+  const selected = Object.values(availabilities).filter(a => a.type === 'selected') as BucketTerritoryMarker[];
 
-  return { notLicensed, available, sold };
+  return { notLicensed, available, sold, inBucket, selected };
 }
 
 // ----------------------------
@@ -356,4 +410,31 @@ function durationAvailabilities(
   ).flat();
 
   return { available, sold, inBucket };
+}
+
+
+// ----------------------------
+//          COMPARISON
+// ----------------------------
+
+export function isSameBucketTerm(termA: BucketTerm, termB: BucketTerm) {
+  const exclusivityCheck = termA.exclusive === termB.exclusive;
+  const durationCheck = allOf(termA.duration).equal(termB.duration);
+  const territoriesCheck = allOf(termA.territories).equal(termB.territories);
+  const mediasCheck = allOf(termA.medias).equal(termB.medias);
+  // we ignore the languages
+
+  return exclusivityCheck && durationCheck && territoriesCheck && mediasCheck;
+}
+
+export function isSameBucketContract(contractA: BucketContract, contractB: BucketContract) {
+  const titleIdCheck = contractA.titleId === contractB.titleId;
+  const orgIdCheck = contractA.orgId === contractB.orgId;
+  const parentTermIdCheck = contractA.parentTermId === contractB.parentTermId;
+  const priceCheck = contractA.price === contractB.price;
+  const specificityCheck = contractA.specificity === contractB.specificity;
+  const termsCheck = contractA.terms.every((term, index) => isSameBucketTerm(term, contractB.terms[index]));
+  // we ignore holdbacks
+
+  return titleIdCheck && orgIdCheck && parentTermIdCheck && priceCheck && specificityCheck && termsCheck;
 }
