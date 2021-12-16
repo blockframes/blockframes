@@ -4,6 +4,7 @@ import { staticModel, Scope } from '@blockframes/utils/static-model';
 export interface ErrorResultResponse {
   error: string;
   result: any;
+  id?: string;
 }
 
 /**
