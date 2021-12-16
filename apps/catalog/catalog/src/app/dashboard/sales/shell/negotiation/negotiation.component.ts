@@ -5,7 +5,7 @@ import { OrganizationQuery } from '@blockframes/organization/+state';
 import { NegotiationGuardedComponent } from '@blockframes/contract/negotiation/guard'
 import { filter, first, pluck } from 'rxjs/operators'
 import { MatDialog } from '@angular/material/dialog';
-import { ConfirmDeclineComponent } from '@blockframes/contract/contract/components/confirm-decline/confirm-decline.component';
+import { ConfirmDeclineComponent, ConfirmDeclineData } from '@blockframes/contract/contract/components/confirm-decline/confirm-decline.component';
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
@@ -52,12 +52,14 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
   async decline() {
     this.form.markAsPristine(); // usefull to be able to route in the NegotiationGuard
     const sale = await this.sale$.pipe(first()).toPromise();
-    const ref = this.dialog.open(ConfirmDeclineComponent);
+    const data: ConfirmDeclineData = { type: 'seller' };
+    const ref = this.dialog.open(ConfirmDeclineComponent, { data });
     const options = { params: { contractId: sale.id } };
     ref.afterClosed().subscribe(declineReason => {
       const id = sale.negotiation.id;
       if (typeof declineReason === 'string') {
-        this.negotiationService.update(id, { declineReason, status: 'declined' }, options);
+        const update = { declineReason, status: 'declined' } as const;
+        this.negotiationService.update(id, update, options);
         this.router.navigate(['..', 'view'], { relativeTo: this.route });
       }
     });

@@ -6,7 +6,7 @@ import { NegotiationGuardedComponent } from '@blockframes/contract/negotiation/g
 import { NegotiationForm } from '@blockframes/contract/negotiation';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ConfirmDeclineComponent } from '@blockframes/contract/contract/components/confirm-decline/confirm-decline.component';
+import { ConfirmDeclineComponent, ConfirmDeclineData } from '@blockframes/contract/contract/components/confirm-decline/confirm-decline.component';
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
@@ -57,7 +57,8 @@ export class ContractEditComponent implements NegotiationGuardedComponent, OnIni
 
   async decline() {
     const sale = await this.sale$.pipe(first()).toPromise();
-    const ref = this.dialog.open(ConfirmDeclineComponent);
+    const data: ConfirmDeclineData = {type:'buyer'}
+    const ref = this.dialog.open(ConfirmDeclineComponent, {data});
     const options = { params: { contractId: sale.id } };
     ref.afterClosed().subscribe(declineReason => {
       if (typeof declineReason === 'string') {

@@ -3,7 +3,7 @@ import { ContractService, ContractStatus } from '@blockframes/contract/contract/
 import { MatDialog } from '@angular/material/dialog';
 import { SaleShellComponent } from '../shell.component';
 import { OrganizationQuery } from '@blockframes/organization/+state';
-import { ConfirmDeclineComponent } from '@blockframes/contract/contract/components/confirm-decline/confirm-decline.component';
+import { ConfirmDeclineComponent, ConfirmDeclineData } from '@blockframes/contract/contract/components/confirm-decline/confirm-decline.component';
 
 
 @Component({
@@ -30,9 +30,11 @@ export class ExternalSaleComponent {
 
   changeStatus(status: ContractStatus, id: string) {
     if (status === 'declined') {
-      const ref = this.dialog.open(ConfirmDeclineComponent);
+      const data: ConfirmDeclineData = { type: 'seller' };
+      const ref = this.dialog.open(ConfirmDeclineComponent, { data });
       ref.afterClosed().subscribe(declineReason => {
-        if (typeof declineReason === 'string') this.contractService.update(id, { declineReason, status: 'declined' })
+        const update = { declineReason, status: 'declined' } as const;
+        if (typeof declineReason === 'string') this.contractService.update(id, update)
       });
     } else {
       this.contractService.update(id, { status });
