@@ -9,6 +9,7 @@ import { FileNameModule } from '@blockframes/utils/pipes';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 import { PreviewModalModule } from '@blockframes/ui/preview-modal/preview.module'
 
@@ -28,6 +29,7 @@ import { FileListUploaderComponent } from './file-list-uploader.component';
     MatButtonModule,
     MatDividerModule,
     MatTooltipModule,
+    MatCheckboxModule,
 
     FileNameModule,
     FileUploaderModule,
