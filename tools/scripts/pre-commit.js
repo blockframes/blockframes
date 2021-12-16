@@ -9,7 +9,8 @@ const output = childProcess.execSync(cmd).toString();
 const skipChecksFor = [
   'PROJECT_ID', // Common string
   'ALGOLIA_APP_ID', // Not a secret, exists in blockframes-xxx.env.ts
-  'ALGOLIA_SEARCH_KEY' // Not a secret, exists in blockframes-xxx.env.ts
+  'ALGOLIA_SEARCH_KEY', // Not a secret, exists in blockframes-xxx.env.ts
+  'MAILCHIMP_SERVER' //Really small string which causes problems when present on svg
 ];
 
 let errors = false;

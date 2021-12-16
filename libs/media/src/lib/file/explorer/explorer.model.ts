@@ -53,12 +53,14 @@ interface FileDirectory extends FileDirectoryBase {
   type: 'file';
   accept: AllowedFileType;
   form: StorageFileForm | FormList<StorageFile>;
+  togglePrivacy: boolean;
 }
 
 interface FileListDirectory extends FileDirectoryBase {
   type: 'fileList',
   form: FormList<StorageFile>;
   accept: AllowedFileType;
+  togglePrivacy: boolean;
 }
 
 interface ImgListDirectory extends FileDirectoryBase {
@@ -142,6 +144,7 @@ function titleDirectory(title: Movie): Directory {
             name: 'Screener',
             type: 'file',
             accept: 'video',
+            togglePrivacy: false,
             meta: ['movies', 'screener', title.id],
             form: getFormStorageVideo(title, 'movies', 'screener'),
           },
@@ -149,6 +152,7 @@ function titleDirectory(title: Movie): Directory {
             name: 'Sales Pitch',
             type: 'file',
             accept: 'video',
+            togglePrivacy: true,
             meta: ['movies', 'salesPitch', title.id],
             form: getFormStorageVideo(title, 'movies', 'salesPitch'),
           },
@@ -156,6 +160,7 @@ function titleDirectory(title: Movie): Directory {
             name: 'Other Videos',
             type: 'fileList',
             accept: 'video',
+            togglePrivacy: true,
             meta: ['movies', 'otherVideos', title.id],
             form: getFormListStorageVideo(title, 'movies', 'otherVideos'),
           },
@@ -169,6 +174,7 @@ function titleDirectory(title: Movie): Directory {
             name: 'Presentation Deck',
             type: 'file',
             accept: 'pdf',
+            togglePrivacy: false,
             meta: ['movies', 'presentation_deck', title.id],
             form: getFormStorage(title, 'movies', 'presentation_deck'),
           },
@@ -176,6 +182,7 @@ function titleDirectory(title: Movie): Directory {
             name: 'Moodboard / Artistic Deck',
             type: 'file',
             accept: 'pdf',
+            togglePrivacy: false,
             meta: ['movies', 'moodboard', title.id],
             form: getFormStorage(title, 'movies', 'moodboard'),
           },
@@ -183,6 +190,7 @@ function titleDirectory(title: Movie): Directory {
             name: 'Scenario',
             type: 'file',
             accept: 'pdf',
+            togglePrivacy: false,
             meta: ['movies', 'scenario', title.id],
             form: getFormStorage(title, 'movies', 'scenario'),
           },
@@ -190,6 +198,7 @@ function titleDirectory(title: Movie): Directory {
             name: 'Notes & Statements',
             type: 'fileList',
             accept: 'pdf',
+            togglePrivacy: false,
             meta: ['movies', 'notes', title.id],
             form: getFormListStorage(title, 'movies', 'notes'),
           }
@@ -209,6 +218,7 @@ function orgDirectory(org: Organization): Directory {
         name: 'Documents',
         type: 'fileList',
         accept: 'pdf',
+        togglePrivacy: false,
         meta: ['orgs', 'notes', org.id],
         form: getFormListStorage(org, 'orgs', 'notes'),
       },
@@ -216,6 +226,7 @@ function orgDirectory(org: Organization): Directory {
         name: 'Videos',
         type: 'fileList',
         accept: 'video',
+        togglePrivacy: false,
         meta: ['orgs', 'videos', org.id],
         form: getFormListStorageVideo(org, 'orgs', 'videos'),
       },

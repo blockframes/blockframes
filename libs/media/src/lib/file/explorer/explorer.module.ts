@@ -13,6 +13,8 @@ import { ImageUploaderModule } from '@blockframes/media/image/uploader/uploader.
 import { FileNameModule } from '@blockframes/utils/pipes';
 import { FormListModule } from '@blockframes/ui/form/list/form-list.module';
 import { PreviewModalModule } from '@blockframes/ui/preview-modal/preview.module'
+import { FilePreviewModule } from '../preview/preview.module';
+import { FileListUploaderModule } from '../file-list-uploader/file-list-uploader.module';
 
 // Material
 import { MatListModule } from '@angular/material/list';
@@ -20,8 +22,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatBadgeModule } from '@angular/material/badge';
-import { FilePreviewModule } from '../preview/preview.module';
-import { FileListUploaderModule } from '../file-list-uploader/file-list-uploader.module';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,8 @@ import { FileListUploaderModule } from '../file-list-uploader/file-list-uploader
     MatIconModule,
     MatButtonModule,
     MatTooltipModule,
-    MatBadgeModule
+    MatBadgeModule,
+    MatCheckboxModule
   ],
   exports: [FileExplorerComponent]
 })

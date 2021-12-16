@@ -8,6 +8,7 @@ import { ENTER, COMMA, SEMICOLON, SPACE } from '@angular/cdk/keycodes';
 import { Validators } from '@angular/forms';
 import { map, startWith } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { EventFormShellComponent } from '@blockframes/event/form/shell/shell.component';
 
 @Component({
   selector: '[eventId] invitation-form-user',
@@ -39,7 +40,7 @@ export class UserComponent implements OnInit {
    *
    * i.e. if limit = 10, we can send 10 invitations but not 11.
    */
-  @Input() limit = Infinity;
+  @Input() limit = Infinity; // @TODO #7324
 
   separators = [ENTER, COMMA, SEMICOLON];
   form = createAlgoliaUserForm(Validators.maxLength(50));
@@ -51,7 +52,8 @@ export class UserComponent implements OnInit {
     private invitationService: InvitationService,
     private invitationQuery: InvitationQuery,
     private orgService: OrganizationService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private shell: EventFormShellComponent,
   ) { }
 
   ngOnInit() {
@@ -92,6 +94,8 @@ export class UserComponent implements OnInit {
 
         this.form.reset([]);
         this.sending.next(true);
+        await this.shell.save({ showSnackbar: false });
+
         const fromOrg = this.ownerOrgId ? await this.orgService.getValue(this.ownerOrgId) : undefined;
 
         // Send invitation to emails

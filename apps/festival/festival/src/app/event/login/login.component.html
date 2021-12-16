@@ -1,7 +1,7 @@
 <a app-logo routerLink="/"></a>
 <article class="surface">
   <header>
-    <button fxFlexAlign="start" mat-icon-button (click)="clickBack()" color="black">
+    <button fxFlexAlign="start" mat-icon-button (click)="goBack()" color="black">
       <mat-icon svgIcon="arrow_back"></mat-icon>
     </button>
   </header>
@@ -36,7 +36,9 @@
 
     <footer fxLayout="column" fxLayoutGap="16px">
       <a routerLink="/auth/reset-password" color="primary">Forgot your password ?</a>
-      <button mat-flat-button color="primary" type="submit">{{ buttonText }}</button>
+      <div>
+        <button mat-flat-button color="primary" type="submit">{{ buttonText }}</button>
+      </div>
     </footer>
   </form>
 </article>
