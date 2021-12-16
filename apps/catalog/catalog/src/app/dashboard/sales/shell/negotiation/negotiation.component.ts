@@ -52,14 +52,14 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
   async decline() {
     this.form.markAsPristine(); // usefull to be able to route in the NegotiationGuard
     const sale = await this.sale$.pipe(first()).toPromise();
-    const ref = this.dialog.open<ConfirmDeclineComponent, ConfirmDeclineData>(
-      ConfirmDeclineComponent, { data: { forSeller: true } }
-    );
+    const data: ConfirmDeclineData = { type: 'seller' };
+    const ref = this.dialog.open(ConfirmDeclineComponent, { data });
     const options = { params: { contractId: sale.id } };
     ref.afterClosed().subscribe(declineReason => {
       const id = sale.negotiation.id;
       if (typeof declineReason === 'string') {
-        this.negotiationService.update(id, { declineReason, status: 'declined' }, options);
+        const update = { declineReason, status: 'declined' } as const;
+        this.negotiationService.update(id, update, options);
         this.router.navigate(['..', 'view'], { relativeTo: this.route });
       }
     });

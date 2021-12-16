@@ -1,10 +1,10 @@
 
-import { AfterViewInit, ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-export interface ConfirmDeclineData { forSeller: boolean }
+export interface ConfirmDeclineData { type: 'seller' | 'buyer' }
 
 @Component({
   selector: 'confirm-offer-decline',
@@ -12,20 +12,20 @@ export interface ConfirmDeclineData { forSeller: boolean }
   styleUrls: ['./confirm-decline.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ConfirmDeclineComponent implements AfterViewInit {
-  sellerReason = [
-    'The offer is not satisfactory',
-    'The Title is not available',
-    'Other'
-  ];
+export class ConfirmDeclineComponent {
+  reasons = {
+    seller: [
+      'The offer is not satisfactory',
+      'The Title is not available',
+      'Other'
+    ],
+    buyer: [
+      'The offer is not satisfactory',
+      'I found another Title for this timeframe',
+      'Other'
+    ]
+  };
 
-  buyerReason = [
-    'The offer is not satisfactory',
-    'I found another Title for this timeframe',
-    'Other'
-  ];
-
-  reasons = this.buyerReason;
 
 
   form = new FormGroup({
@@ -37,10 +37,6 @@ export class ConfirmDeclineComponent implements AfterViewInit {
     private dialog: MatDialogRef<ConfirmDeclineComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ConfirmDeclineData
   ) { }
-
-  ngAfterViewInit(): void {
-    if (this.data.forSeller) this.reasons = this.sellerReason;
-  }
 
   async decline() {
     event.preventDefault(); // ensures page doesn't reloads

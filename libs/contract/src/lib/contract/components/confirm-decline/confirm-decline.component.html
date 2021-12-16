@@ -5,7 +5,7 @@
   <mat-form-field appearance="outline">
     <mat-label>Reason of refusal</mat-label>
     <mat-select formControlName="reason">
-      <mat-option *ngFor="let reason of reasons" [value]="reason">
+      <mat-option *ngFor="let reason of reasons[data?.type ?? 'buyer']" [value]="reason">
         {{reason}}
       </mat-option>
     </mat-select>

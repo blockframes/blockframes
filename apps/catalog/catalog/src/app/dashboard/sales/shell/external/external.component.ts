@@ -30,11 +30,11 @@ export class ExternalSaleComponent {
 
   changeStatus(status: ContractStatus, id: string) {
     if (status === 'declined') {
-      const ref = this.dialog.open<ConfirmDeclineComponent, ConfirmDeclineData>(
-        ConfirmDeclineComponent, { data: { forSeller: true } }
-      );
+      const data: ConfirmDeclineData = { type: 'seller' };
+      const ref = this.dialog.open(ConfirmDeclineComponent, { data });
       ref.afterClosed().subscribe(declineReason => {
-        if (typeof declineReason === 'string') this.contractService.update(id, { declineReason, status: 'declined' })
+        const update = { declineReason, status: 'declined' } as const;
+        if (typeof declineReason === 'string') this.contractService.update(id, update)
       });
     } else {
       this.contractService.update(id, { status });
