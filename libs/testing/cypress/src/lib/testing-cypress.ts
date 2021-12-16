@@ -1,7 +1,8 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type * as foo from 'cypress';
-import { connectAuthEmulator, connectFirestoreEmulator, loadAdminServices } from '@blockframes/firebase-utils'
-import type * as admin from 'firebase-admin'
+import { loadAdminServices } from '@blockframes/firebase-utils';
+import { connectFirestoreEmulator, connectAuthEmulator } from '@blockframes/firebase-utils/emulator';
+import type * as admin from 'firebase-admin';
 import type { User } from '@blockframes/user/types';
 
 // type cypressOnTask = (trigger: 'task', functionsObj: { [key: string]: (...args: any) => any }) => void;

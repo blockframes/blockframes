@@ -1,6 +1,7 @@
 import { backupBucket, firebase } from '@env';
 import { enableMaintenanceInEmulator } from './emulator';
-import { clearDb, defaultEmulatorBackupPath, getLatestDirName, gsutilTransfer, importFirestoreEmulatorBackup, loadAdminServices, runShellCommandExec, uploadDbBackupToBucket } from '@blockframes/firebase-utils';
+import { clearDb, getLatestDirName, gsutilTransfer, loadAdminServices, runShellCommandExec } from '@blockframes/firebase-utils';
+import { defaultEmulatorBackupPath, importFirestoreEmulatorBackup, uploadDbBackupToBucket } from '@blockframes/firebase-utils/emulator';
 import { deleteAllUsers } from '@blockframes/testing/unit-tests';
 import { ensureMaintenanceMode } from './tools';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';

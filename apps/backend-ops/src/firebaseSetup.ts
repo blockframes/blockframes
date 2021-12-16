@@ -3,18 +3,20 @@ import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from '.
 import { migrate } from './migrations';
 import { importFirestore } from './admin';
 import {
-  connectAuthEmulator,
-  connectFirestoreEmulator,
   copyFirestoreExportFromCiBucket,
-  defaultEmulatorBackupPath,
   endMaintenance,
-  firebaseEmulatorExec,
-  importFirestoreEmulatorBackup,
   latestAnonDbDir,
   loadAdminServices,
   restoreAnonStorageFromCI,
-  shutdownEmulator,
 } from '@blockframes/firebase-utils';
+import {
+  connectAuthEmulator,
+  connectFirestoreEmulator,
+  defaultEmulatorBackupPath,
+  firebaseEmulatorExec,
+  importFirestoreEmulatorBackup,
+  shutdownEmulator,
+} from '@blockframes/firebase-utils/emulator';
 import { cleanDeprecatedData } from './db-cleaning';
 import { cleanStorage } from './storage-cleaning';
 import { firebase } from '@env';

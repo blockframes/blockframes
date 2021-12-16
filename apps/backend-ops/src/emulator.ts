@@ -1,26 +1,28 @@
 import {
-  shutdownEmulator,
-  importFirestoreEmulatorBackup,
-  defaultEmulatorBackupPath,
   runAnonymization,
   getLatestFolderURL,
   getServiceAccountObj,
-  uploadDbBackupToBucket,
   loadAdminServices,
   restoreStorageFromCi,
   startMaintenance,
   latestAnonDbDir,
-  getFirestoreExportPath,
   getBackupBucket,
   CI_STORAGE_BACKUP,
   latestAnonStorageDir,
   gsutilTransfer,
   awaitProcessExit,
+  endMaintenance
+} from '@blockframes/firebase-utils';
+import {
+  shutdownEmulator,
+  importFirestoreEmulatorBackup,
+  defaultEmulatorBackupPath,
+  uploadDbBackupToBucket,
+  getFirestoreExportPath,
   firebaseEmulatorExec,
   connectAuthEmulator,
   connectFirestoreEmulator,
-  endMaintenance
-} from '@blockframes/firebase-utils';
+} from '@blockframes/firebase-utils/emulator';
 import { ChildProcess } from 'child_process';
 import { join, resolve } from 'path';
 import { backupBucket as prodBackupBucket, firebase as prodFirebase } from 'env/env.blockframes';

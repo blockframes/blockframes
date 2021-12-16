@@ -15,7 +15,7 @@ const firestoreExportFolder = 'firestore_export'; // ! Careful - changing this m
 const emulatorMetadataFilename = 'firebase-export-metadata.json';
 
 export const getFirestoreExportPath = (emulatorPath: string) => join(emulatorPath, firestoreExportFolder);
-export const getEmulatorMetadataJsonPath = (emulatorPath: string) => join(emulatorPath, 'firebase-export-metadata.json');
+const getEmulatorMetadataJsonPath = (emulatorPath: string) => join(emulatorPath, 'firebase-export-metadata.json');
 
 /**
  * This function will get the filename of the Firestore export metadata json file.
@@ -199,7 +199,7 @@ export async function shutdownEmulator(proc: ChildProcess, exportDir = defaultEm
   }
 }
 
-export function forceEmulatorExport(exportDir = defaultEmulatorBackupPath) {
+function forceEmulatorExport(exportDir = defaultEmulatorBackupPath) {
   const cmd = `firebase emulators:export ${exportDir} --force`
   return runShellCommand(cmd);
 }
@@ -319,7 +319,7 @@ export async function uploadDbBackupToBucket({ bucketName, remoteDir, localPath 
   });
 }
 
-export function isFirestoreBackupDir(path: string) {
+function isFirestoreBackupDir(path: string) {
   const fileSearch: Dirent[] = readdirSync(resolve(path), { withFileTypes: true });
   let metadataFile: string;
   try {
@@ -330,7 +330,7 @@ export function isFirestoreBackupDir(path: string) {
   return metadataFile.split('.').pop() === 'overall_export_metadata';
 }
 
-export function emulatorBackupDirHasFirestore(backupDir: string) {
+function emulatorBackupDirHasFirestore(backupDir: string) {
   // * If not emulator dir, fail
   if (!isEmulatorBackupDir(backupDir)) return false;
 
@@ -346,7 +346,7 @@ export function emulatorBackupDirHasFirestore(backupDir: string) {
   return true;
 }
 
-export function isEmulatorBackupDir(path: string) {
+function isEmulatorBackupDir(path: string) {
   const absPath = resolve(path);
   const fileSearch: Dirent[] = existsSync(absPath) && readdirSync(absPath, { withFileTypes: true });
   let singleFileFound: string;

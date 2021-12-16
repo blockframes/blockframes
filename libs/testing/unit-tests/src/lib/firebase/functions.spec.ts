@@ -1,4 +1,4 @@
-﻿import { connectFirestoreEmulator } from '@blockframes/firebase-utils';
+﻿import { connectFirestoreEmulator } from '@blockframes/firebase-utils/emulator';
 import { initFunctionsTestMock } from './functions';
 
 describe('firebase testing library', () => {
