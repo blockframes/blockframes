@@ -20,6 +20,7 @@
     "@types/date-fns": "^2.6.0",
     "@types/sendgrid": "^4.3.0",
     "@firebase/rules-unit-testing": "^1.0.9",
+    "@firebase/testing": "^0.16.4",
     "algoliasearch": "^3.33.0",
     "core-js": "^3.3.2",
     "date-fns": "^2.11.0",
