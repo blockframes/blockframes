@@ -171,7 +171,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
               return {
                 ...newNotification,
                 imgRef: this.getPoster(titleId),
-                message: `REMINDER - ${org.denomination.full}'s ${event.type} "<a href="/event/${event.id}" target="_blank">${event.title}</a>" will start tomorrow at ${format(toDate(event.start), 'h:mm a')}.`              };
+                message: `REMINDER - ${org.denomination.full}'s ${event.type} "<a href="/event/${event.id}" target="_blank">${event.title}</a>" will start tomorrow at ${format(toDate(event.start), 'h:mm a')}.`};
             });
           })
         });
