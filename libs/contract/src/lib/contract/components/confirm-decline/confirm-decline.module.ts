@@ -20,7 +20,6 @@ import { MatSelectModule } from '@angular/material/select';
     MatButtonModule,
     MatInputModule,
     MatSelectModule,
-    ReactiveFormsModule,
     MatFormFieldModule,
   ],
   exports: [ConfirmDeclineComponent],

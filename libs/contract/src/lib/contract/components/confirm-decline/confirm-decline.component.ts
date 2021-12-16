@@ -1,5 +1,5 @@
 
-import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -12,7 +12,7 @@ export interface ConfirmDeclineData { forSeller: boolean }
   styleUrls: ['./confirm-decline.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ConfirmDeclineComponent implements OnInit {
+export class ConfirmDeclineComponent implements AfterViewInit {
   sellerReason = [
     'The offer is not satisfactory',
     'The Title is not available',
@@ -38,7 +38,7 @@ export class ConfirmDeclineComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: ConfirmDeclineData
   ) { }
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     if (this.data.forSeller) this.reasons = this.sellerReason;
   }
 

@@ -13,9 +13,9 @@
   <mat-form-field appearance="outline">
     <textarea matInput
       placeholder='"Offer price is too low", "Title is not available anymore", "Bad previous experience with buyer"'
-      formControlName="message" cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="4"
-      maxlength="500" test-id="specific-terms">
-      </textarea>
+      cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="4"
+      maxlength="500" test-id="specific-terms" formControlName="message">
+    </textarea>
     <mat-hint>Please specify why you want to decline this offer.</mat-hint>
   </mat-form-field>
   <footer fxLayout="column" fxLayoutAlign="center center">
