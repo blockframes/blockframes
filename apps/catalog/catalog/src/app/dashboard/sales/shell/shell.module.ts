@@ -7,6 +7,7 @@ import { TagModule } from '@blockframes/ui/tag/tag.module';
 import { OrgNameModule } from '@blockframes/organization/pipes';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { GetOrgPipeModule } from '@blockframes/organization/pipes/get-org.pipe';
+import { NegotiationPipeModule } from '@blockframes/contract/negotiation/pipe';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { ContractItemModule } from '@blockframes/contract/contract/components/item/contract-item.module';
 import { ConfirmDeclineComponentModule } from '@blockframes/contract/contract/components/confirm-decline/confirm-decline.module';
@@ -51,6 +52,7 @@ const routes: Route[] = [
     ToLabelModule,
     ConfirmDeclineComponentModule,
     GetOrgPipeModule,
+    NegotiationPipeModule,
     ImageModule,
     OrgNameModule,
 

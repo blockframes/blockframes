@@ -6,6 +6,7 @@ import { Negotiation } from "./+state/negotiation.firestore";
 import { ContractStatus } from '@blockframes/contract/contract/+state/contract.firestore';
 
 function isInitial(negotiation: Negotiation) {
+  if (!negotiation?.initial) return true;
   return negotiation.initial.getTime() === negotiation._meta.createdAt.getTime();
 }
 
@@ -37,7 +38,8 @@ export class IsInitialNegotiationPipe implements PipeTransform {
     return isInitial(negotiation);
   }
 }
-@Pipe({ name: 'canNegotiate '})
+
+@Pipe({ name: 'canNegotiate' })
 export class CanNegotiatePipe implements PipeTransform {
   transform(negotiation: Negotiation, activeOrgId: string): boolean {
     return canNegotiate(negotiation, activeOrgId);
@@ -47,6 +49,7 @@ export class CanNegotiatePipe implements PipeTransform {
 @Pipe({ name: 'negotiationStatus' })
 export class NegotiationStatusPipe implements PipeTransform {
   transform(negotiation: Negotiation): ContractStatus {
+    console.log(negotiation);
     if (isInitial(negotiation)) return 'pending';
     if (negotiation.status === 'pending') return 'negotiating';
     return negotiation.status;

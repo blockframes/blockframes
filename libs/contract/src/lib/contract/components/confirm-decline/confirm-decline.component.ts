@@ -26,8 +26,6 @@ export class ConfirmDeclineComponent {
     ]
   };
 
-
-
   form = new FormGroup({
     reason: new FormControl(''),
     message: new FormControl(''),
@@ -39,7 +37,6 @@ export class ConfirmDeclineComponent {
   ) { }
 
   async decline() {
-    event.preventDefault(); // ensures page doesn't reloads
     const { message, reason } = this.form.value;
     if (reason && message) return this.dialog.close(`${reason} - ${message}`);
     if (reason) return this.dialog.close(reason);

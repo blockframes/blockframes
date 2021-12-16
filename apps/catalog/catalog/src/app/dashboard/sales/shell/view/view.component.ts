@@ -27,7 +27,7 @@ export class SaleViewComponent {
     private query: OrganizationQuery
   ) { }
 
-  accept(negotiationId: string, contractId: string, movie: Movie) {
+  accept(negotiationId: string, contractId: string, title: Movie) {
     const status = 'accepted';
     const options = { params: { contractId } };
     const data = {
@@ -40,7 +40,7 @@ export class SaleViewComponent {
     const ref = this.dialog.open(ConfirmComponent, { data });
     ref.afterClosed().subscribe(acceptSuccessful => {
       if (acceptSuccessful)
-        this.snackbar.open(`You accepted contract for ${movie.title.international}`)
+        this.snackbar.open(`You accepted contract for ${title.title.international}`)
     });
   }
 }
