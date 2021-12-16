@@ -72,14 +72,14 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
   }
 
   public removeTerritory(territory: BucketTerritoryMarker) {
-    this.shell.bucketForm.removeTerritory(territory);
+    this.shell.bucketForm.removeTerritory(this.availsForm.value, territory);
   }
 
   public async selectAll() {
     if (this.availsForm.invalid) return;
     const available = await this.availabilities$.pipe(take(1)).toPromise().then(a => a.available);
     for (const marker of available) {
-      const alreadyInBucket = this.shell.bucketForm.isAlreadyInBucket(marker);
+      const alreadyInBucket = this.shell.bucketForm.isAlreadyInBucket(this.availsForm.value, marker);
       if (!alreadyInBucket) {
         this.shell.bucketForm.addTerritory(this.availsForm.value, marker);
       }
