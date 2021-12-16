@@ -22,25 +22,6 @@ export class InvitationsComponent implements OnInit {
   public events: Record<string, Event> = {};
   public movies: Record<string, Movie> = {};
 
-  public columns: string[] = [
-    'id',
-    'org',
-    'event.title',
-    'event.id',
-    'event.start',
-    'event.end',
-    'event.type',
-    'movie',
-    'event.accessibility',
-    'guest.email',
-    'guest.firstName',
-    'guest.lastName',
-    'guestOrg',
-    'date',
-    'mode',
-    'status',
-  ];
-
   constructor(
     private invitationService: InvitationService,
     private orgService: OrganizationService,

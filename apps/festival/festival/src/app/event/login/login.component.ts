@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, ViewChild, TemplateRef, HostListener } from '@angular/core';
 import { AuthService } from '@blockframes/auth/+state';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -31,6 +31,11 @@ export class EventLoginComponent implements OnInit {
     this.form.get('email').setValue(email);
   }
 
+  @HostListener('window:popstate', ['$event'])
+  onPopState() {
+    this.goBack();
+  }
+
   async validateLogin() {
     if (this.signinIn) return;
     if (!this.form.valid) {
@@ -60,7 +65,7 @@ export class EventLoginComponent implements OnInit {
     this.signinIn = false;
   }
 
-  clickBack() {
+  goBack() {
     this.service.updateAnonymousCredentials({ role: undefined });
     this.router.navigate(['../../'], { relativeTo: this.route, queryParams: this.route.snapshot.queryParams });
   }
