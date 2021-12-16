@@ -3,10 +3,16 @@
 import { join, resolve } from 'path';
 import { Firestore, initFirestoreApp  } from '@blockframes/testing/firebase/functions';
 import { apps, assertFails, assertSucceeds } from '@firebase/rules-unit-testing';
-import { addMessage, firestoreUppercase, simpleCallable, simpleHttp, userSaver }  from './main';
+import { addMessage, inviteUsers, firestoreUppercase, simpleCallable, simpleHttp, userSaver }  from './main';
 import firebaseTest = require('firebase-functions-test');
 import * as admin from 'firebase-admin';
 import { firebase } from '@env';
+import { createInvitation } from '@blockframes/invitation/+state';
+//jest.mock('./square');
+import  * as mx  from './square';
+jest.spyOn(mx, 'square').mockReturnValue(25);
+import * as userOps from './internals/users';
+
 
 //We are testing against actual project with shrunk DB
 const projectRealId = firebase().projectId;
@@ -125,5 +131,194 @@ describe('Test unit-tests', () => {
     expect(data.uid).toEqual(uid);
     expect(data.email).toEqual(email);
   });
-})
 
+
+
+  function mathOp(a: number, b: number) {
+    return mx.square(a + b);
+  }
+
+  //TODO: Test test block - TBD removed
+  describe.skip("Test external func mocking", () => {
+    it("tests a func that call another func", async () => {
+      //mxops.square = jest.fn().mockReturnValue(25);
+      expect(mathOp(3, 2)).toEqual(25);
+      expect(mathOp(3, 3)).toEqual(25);
+
+    });
+
+    it.only("Check for invite doc creation", async () => {
+      const iid = "I1234";
+      const uid = 'xyz123';
+      const email = 'xyz123@test.in';
+
+      const snap = await admin.firestore().collection("invitations").doc(iid).get();
+      console.log(snap);
+  
+      const data = snap.data();
+      console.log(data);
+  
+      expect(data.uid).toEqual(uid);
+      expect(data.email).toEqual(email);
+    });
+
+  })
+
+  //TODO: Move this to invitation spec
+  describe.only("Invitation spec", () => {
+    it('missing auth context, throws error', async () => {
+      const wrapped = testEnv.wrap(inviteUsers);
+  
+      //Compose the call to simpleCallable cf with param data
+      const data = {
+        emails: ['test@cascade8.com'],
+        invitation: {},
+        app: 'catalog'
+      };
+  
+      const context = {
+
+      };
+
+      //await wrapped(data, context).rejects.toThrow('Permission denied: missing auth context.');
+
+      // Call the wrapped function with data and context
+      //const result = await wrapped(data);
+      // Check that the result looks like we expected.
+      // expect(_inviteUsers).toThrowError(
+      //   new Error('Permission denied: missing auth context.')
+      // );
+      expect.assertions(1);
+      await expect(async ()=> {
+        await wrapped(data, context)
+      }).rejects
+        .toThrow("Permission denied: missing auth context.");
+    });
+
+    it('missing org ID, throws error', async () => {
+      const wrapped = testEnv.wrap(inviteUsers);
+  
+      //Compose the call to simpleCallable cf with param data
+      const data = {
+        emails: ['test@cascade8.com'],
+        invitation: {},
+        app: 'catalog'
+      };
+  
+      const context = {
+        auth: {
+          uid: '1M9DUDBATqayXXaXMYThZGtE9up1',
+          token: ''
+        }
+      };
+
+      expect.assertions(1);
+      await expect(async ()=> {
+        await wrapped(data, context)
+      }).rejects
+        .toThrow("Permission denied: missing org id.");
+    });
+
+    it('with proper data, does not throw error', async () => {
+      const wrapped = testEnv.wrap(inviteUsers);
+  
+      //Compose the call to simpleCallable cf with param data
+      const data = {
+        emails: [],
+        invitation: {
+          id: '',
+          type: 'Join organization',
+          mode: 'invitation',
+          date: new Date()
+        },
+        app: 'catalog'
+      };
+  
+      const context = {
+        auth: {
+          uid: '1M9DUDBATqayXXaXMYThZGtE9up1',
+          token: ''
+        }
+      };
+
+      //expect.assertions(0);
+      // (await expect(await wrapped(data, context)))
+      //             .resolves
+      //             .toEqual([]);
+
+      const result = await wrapped(data, context);
+      expect(result).toEqual("");
+    });
+
+    it.only("For 'Join organization' event, email is sent & invite doc created", async () => {
+      const wrapped = testEnv.wrap(inviteUsers);
+  
+      //Compose the call to simpleCallable cf with param data
+      const data = {
+        emails: ['test@cascade8.com'],
+        invitation: {
+          id: '',
+          type: 'Join organization',
+          mode: 'invitation',
+          date: new Date()
+        },
+        app: 'catalog'
+      };
+  
+      const context = {
+        auth: {
+          uid: '1M9DUDBATqayXXaXMYThZGtE9up1',
+          token: ''
+        }
+      };
+
+      //Mock send email function
+      jest.spyOn(userOps, 'getOrInviteUserByMail').mockImplementation(async (email: string) => {
+        return {
+          user: {
+            uid: 'User001',
+            email
+          },
+          invitationStatus: 'pending'
+        };
+      });
+
+      const result = await wrapped(data, context);
+
+      //Check if email is sent
+      expect(userOps.getOrInviteUserByMail).toHaveBeenCalled();
+
+      //Check results have correct data
+      expect(result).toEqual({});
+
+      // Check whether the Invitation Document is created in the Firestore emulator
+      const snap = await admin.firestore().doc(`/invitations/foo`).get();
+      expect(snap.data()).toEqual({
+        text: "HELLO WORLD",
+      });
+
+      //Check function returns promise correctly
+
+      expect(result).toEqual([]);
+
+
+      //TODO:
+      // const iid = "I1234";
+      // const uid = 'xyz123';
+      // const email = 'xyz123@test.in';
+
+      // const snap = await admin.firestore().collection("invitations").doc(iid).get();
+      // console.log(snap);
+  
+      // const data = snap.data();
+      // console.log(data);
+  
+      // expect(data.uid).toEqual(uid);
+      // expect(data.email).toEqual(email);
+    });
+  });
+
+
+
+
+})
