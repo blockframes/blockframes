@@ -108,7 +108,7 @@
           <div fxLayout fxFlex>
             <button app-logo (click)="scrollToTop()"></button>
           </div>
-          <form fxFlex fxLayout.lt-sm="column" [formGroup]="newslettersForm" (ngSubmit)="subscribeToNewsletters(newslettersForm)" >
+          <form fxFlex fxLayout.lt-sm="column" [formGroup]="newslettersForm" (ngSubmit)="subscibe(newslettersForm)" >
             <mat-form-field appearance="outline" hideRequiredMarker>
               <mat-label>Enter your email address</mat-label>
               <input test-id="email" matInput type="email" placeholder="Email address" formControlName="email" required />

@@ -2,7 +2,7 @@ import { Injectable, Optional } from '@angular/core';
 import { AuthStore, User, AuthState, createUser } from './auth.store';
 import { AuthQuery } from './auth.query';
 import { AngularFireFunctions } from '@angular/fire/functions';
-import firebase from 'firebase';
+import firebase from 'firebase/app';
 import { UserCredential } from '@firebase/auth-types';
 import { FireAuthService, CollectionConfig } from 'akita-ng-fire';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
@@ -12,7 +12,7 @@ import { PublicUser, PrivacyPolicy } from '@blockframes/user/types';
 import { Intercom } from 'ng-intercom';
 import { getIntercomOptions } from '@blockframes/utils/intercom/intercom.service';
 import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.service';
-import { intercomId } from '@env';
+import { intercomId, production } from '@env';
 import { createDocumentMeta, DocumentMeta } from '@blockframes/utils/models-meta';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
@@ -38,6 +38,11 @@ export class AuthService extends FireAuthService<AuthState> {
     @Optional() public ngIntercom?: Intercom,
   ) {
     super(store);
+    if (!production) { // instrument Cypress only out of PROD
+      if (window['Cypress']) {
+        window['LoginService'] = this
+      }
+    }
   }
 
   /**
@@ -190,9 +195,9 @@ export class AuthService extends FireAuthService<AuthState> {
   /**
    * Takes an anonymous user and convert it to a real one with email and password.
    * This keeps the same uid
-   * @param email 
-   * @param password 
-   * @param options 
+   * @param email
+   * @param password
+   * @param options
    * @returns Promise<firebase.auth.UserCredential>
    */
   async signupFromAnonymous(email: string, password: string, options: any = {}) {

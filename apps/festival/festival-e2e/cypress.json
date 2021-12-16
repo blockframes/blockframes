@@ -3,7 +3,7 @@
   "fixturesFolder": "./src/fixtures",
   "integrationFolder": "./src/integration",
   "modifyObstructiveCode": false,
-  "pluginsFile": "./src/plugins/index",
+  "pluginsFile": "./src/plugins/index.ts",
   "supportFile": "./src/support/index.ts",
   "video": true,
   "videosFolder": "../../../dist/cypress/apps/festival/festival-e2e/videos",
@@ -11,7 +11,17 @@
   "chromeWebSecurity": false,
   "defaultCommandTimeout": 10000,
   "reporter": "junit",
+  "videoUploadOnPasses": false,
   "reporterOptions": {
     "mochaFile": "../../../dist/test-reports/festival-[hash].xml"
-  }
+  },
+  "retries": {
+    "runMode": 2,
+    "openMode": 2
+  },
+  "blockHosts": [
+    "*google-analytics.com",
+    "*googleapis.com",
+    "*imgix.net"
+  ]
 }

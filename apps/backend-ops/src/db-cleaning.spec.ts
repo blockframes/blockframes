@@ -1,4 +1,9 @@
-import { initFunctionsTestMock, getTestingProjectId, populate } from '@blockframes/testing/firebase/functions';
+import {
+  initFunctionsTestMock,
+  getTestingProjectId,
+  populate,
+  AdminAuthMocked
+} from '@blockframes/testing/unit-tests';
 import {
   cleanMovies,
   cleanOrganizations,
@@ -9,17 +14,16 @@ import {
   numberOfDaysToKeepNotifications,
   cleanUsers,
   cleanInvitations,
-  cleanDeprecatedData
+  cleanDeprecatedData,
 } from './db-cleaning';
 import { every } from 'lodash';
-import { AdminAuthMocked } from '@blockframes/testing/firebase';
 import { loadAdminServices } from '@blockframes/firebase-utils';
 import { removeUnexpectedUsers, UserConfig } from './users';
 import { getCollectionRef } from '@blockframes/firebase-utils';
 import { clearFirestoreData } from '@firebase/testing';
 import { getAllAppsExcept } from '@blockframes/utils/apps';
 
-type Snapshot = FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>
+type Snapshot = FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>;
 let db: FirebaseFirestore.Firestore;
 let adminAuth;
 

@@ -1,6 +1,16 @@
-import { initFunctionsTestMock, populate, getTestingProjectId } from '@blockframes/testing/firebase/functions';
-import { StorageMocked } from '@blockframes/testing/firebase';
-import { cleanStorage, cleanMovieDir, cleanMoviesDir, cleanOrgsDir, cleanUsersDir } from './storage-cleaning';
+import {
+  initFunctionsTestMock,
+  populate,
+  getTestingProjectId,
+  StorageMocked,
+} from '@blockframes/testing/unit-tests';
+import {
+  cleanStorage,
+  cleanMovieDir,
+  cleanMoviesDir,
+  cleanOrgsDir,
+  cleanUsersDir,
+} from './storage-cleaning';
 import { clearFirestoreData } from '@firebase/testing';
 import { getCollectionRef } from '@blockframes/firebase-utils';
 
@@ -129,5 +139,4 @@ describe('Storage cleaning script', () => {
     const filesAfter = (await bucket.getFiles({ prefix: `${prefix}/` }))[0];
     expect(filesAfter.length).toEqual(2);
   });
-
 });

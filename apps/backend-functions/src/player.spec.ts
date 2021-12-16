@@ -1,9 +1,9 @@
-import { getPrivateVideoUrl, ReadVideoParams } from "./player";
-import { CallableContextOptions } from "firebase-functions-test/lib/main";
-import { CallableContext } from "firebase-functions/lib/providers/https";
-import { getTestingProjectId, initFunctionsTestMock, populate } from "@blockframes/testing/firebase/functions";
-import { clearFirestoreData } from "@firebase/testing";
-import { StorageVideo } from "@blockframes/media/+state/media.firestore";
+import { getPrivateVideoUrl, ReadVideoParams } from './player';
+import { CallableContextOptions } from 'firebase-functions-test/lib/main';
+import { CallableContext } from 'firebase-functions/lib/providers/https';
+import { getTestingProjectId, initFunctionsTestMock, populate } from '@blockframes/testing/unit-tests';
+import { clearFirestoreData } from '@firebase/testing';
+import { StorageVideo } from '@blockframes/media/+state/media.firestore';
 import { testVideoId } from '@env';
 
 const testInvitations = [
@@ -106,7 +106,6 @@ const testMovies = [
 const videoParams: ReadVideoParams = { video: screener, eventId: 'eventTestPrivate', email: userA.email };
 
 describe('JwPlayer test script', () => {
-
   beforeAll(async () => {
     initFunctionsTestMock();
   });
@@ -151,7 +150,7 @@ describe('JwPlayer test script', () => {
     // Load our test set
     const output = await populateAndGetPrivateVideoUrl({ ...videoParams, eventId: 'eventTestPrivate', email: undefined }, { uid: 'uidUserB' });
     expect(output.error).toEqual('');
-   });
+  });
 
   it('protected event - should return error when user is not invited', async () => {
     testEvents[1].end.setHours(new Date().getHours() + 4);
@@ -202,7 +201,6 @@ describe('JwPlayer test script', () => {
     const output = await populateAndGetPrivateVideoUrl({ ...videoParams, eventId: undefined, email: undefined }, { uid: 'uidUserC' });
     expect(output.error).toEqual('UNAUTHORIZED');
   });
-
 })
 
 async function populateAndGetPrivateVideoUrl(videoParamsTest = null, uid = { uid: 'uidUserA' }) {
@@ -211,8 +209,6 @@ async function populateAndGetPrivateVideoUrl(videoParamsTest = null, uid = { uid
   const users = populate('users', testUsers);
   const movies = populate('movies', testMovies);
   await Promise.all([invitation, events, users, movies]);
-  const testCallbackContext: CallableContextOptions = {
-    auth: uid
-  }
+  const testCallbackContext: CallableContextOptions = { auth: uid };
   return await getPrivateVideoUrl(videoParamsTest || videoParams, testCallbackContext as CallableContext);
 }

@@ -17,13 +17,13 @@ export class LandingHeaderDirective {
   @HostBinding('class') theme = 'dark-contrast-theme'
 }
 
-@Directive({selector: 'landing-content, [landingContent]'})
+@Directive({ selector: 'landing-content, [landingContent]' })
 export class LandingContentDirective { }
 
-@Directive({selector: 'landing-contact, [landingContact]'})
+@Directive({ selector: 'landing-contact, [landingContact]' })
 export class LandingContactDirective { }
 
-@Directive({selector: 'landing-detail, [landingDetail]'})
+@Directive({ selector: 'landing-detail, [landingDetail]' })
 export class LandingDetailDirective { }
 
 @Component({
@@ -81,7 +81,7 @@ export class LandingShellComponent implements OnDestroy {
     private theme: ThemeService,
     private cdr: ChangeDetectorRef
   ) {
-    theme.setTheme('light')
+    theme.setTheme('light');
   }
 
   scrollToTop() {
@@ -90,7 +90,7 @@ export class LandingShellComponent implements OnDestroy {
 
   ngOnDestroy() {
     // resetting theme to theme preference of system/browser
-    this.theme.initTheme('light')
+    this.theme.initTheme('light');
   }
 
   /** Send a mail to the admin with user's informations. */
@@ -103,7 +103,7 @@ export class LandingShellComponent implements OnDestroy {
   private async registerEmailToNewsletters(email: string) {
     const f = this.functions.httpsCallable('registerToNewsletter');
     const tags = [`landing - ${this.appName}`];
-    return f({email, tags}).toPromise();
+    return f({ email, tags }).toPromise();
   }
 
   /** Triggers when a user click on the button from LearnMoreComponent.  */
@@ -136,7 +136,7 @@ export class LandingShellComponent implements OnDestroy {
     }
   }
 
-  public async subscribeToNewsletters(form: FormGroup) {
+  public async subscibe(form: FormGroup) {
     try {
       await this.registerEmailToNewsletters(form.value.email);
       this.newslettersSubmitted = true;

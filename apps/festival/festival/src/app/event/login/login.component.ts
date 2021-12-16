@@ -33,7 +33,7 @@ export class EventLoginComponent implements OnInit {
 
   @HostListener('window:popstate', ['$event'])
   onPopState() {
-    this.clickBack();
+    this.goBack();
   }
 
   async validateLogin() {
@@ -65,7 +65,7 @@ export class EventLoginComponent implements OnInit {
     this.signinIn = false;
   }
 
-  clickBack() {
+  goBack() {
     this.service.updateAnonymousCredentials({ role: undefined });
     this.router.navigate(['../../'], { relativeTo: this.route, queryParams: this.route.snapshot.queryParams });
   }

@@ -401,7 +401,7 @@ jobs:
     executor: blockframes-ci
     steps:
       - prepare_environment
-      - run: npx nx build backend-functions --configuration=emulator
+      - run: npx nx build backend-functions --configuration=e2e
       - start_e2e_emulators
       - run: npm start upgradeEmulators
       - run: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,catalog-e2e,financiers-e2e
@@ -411,7 +411,7 @@ jobs:
     executor: blockframes-ci
     steps:
       - prepare_environment
-      - run: npx nx build backend-functions --configuration=emulator
+      - run: npx nx build backend-functions --configuration=e2e
       - start_e2e_emulators
       - run: npm start upgradeEmulators
       - run: npx nx affected:e2e --configuration=emulator --exclude=catalog-e2e,crm-e2e,financiers-e2e
@@ -421,7 +421,7 @@ jobs:
     executor: blockframes-ci
     steps:
       - prepare_environment
-      - run: npx nx build backend-functions --configuration=emulator
+      - run: npx nx build backend-functions --configuration=e2e
       - start_e2e_emulators
       - run: npm start upgradeEmulators
       - run: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,crm-e2e,catalog-e2e
@@ -431,7 +431,7 @@ jobs:
     executor: blockframes-ci
     steps:
       - prepare_environment
-      - run: npx nx build backend-functions --configuration=emulator
+      - run: npx nx build backend-functions --configuration=e2e
       - start_e2e_emulators
       - run: npm start upgradeEmulators
       - run: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,crm-e2e,financiers-e2e
@@ -442,7 +442,7 @@ jobs:
     steps:
       - prepare_environment
       - run: npm start prepareEmulators gs://ci-backups-blockframes/LATEST-ANON-SHRINKED-DB
-      - run: npx nx build backend-functions --configuration=emulator
+      - run: npx nx build backend-functions --configuration=e2e
       - save_cache:
           key: emulator-cache-v1-{{ epoch }}
           paths:

@@ -2,9 +2,9 @@
   apps,
   assertFails,
   assertSucceeds,
-} from '@firebase/rules-unit-testing';
+} from '@firebase/testing';
 import { testFixture } from './fixtures/data';
-import { Firestore, initFirestoreApp } from '@blockframes/testing/firebase/functions';
+import { Firestore, initFirestoreApp } from '@blockframes/testing/unit-tests';
 import { EventDocument, Meeting, MeetingAttendee } from '@blockframes/event/+state/event.firestore';
 
 describe('Events Rules Tests', () => {

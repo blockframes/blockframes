@@ -1,10 +1,6 @@
-﻿import {
-  apps,
-  assertFails,
-  assertSucceeds,
-} from '@firebase/rules-unit-testing';
+﻿import { apps, assertFails, assertSucceeds } from '@firebase/testing';
 import { testFixture } from './fixtures/data';
-import { Firestore, initFirestoreApp } from '@blockframes/testing/firebase/functions';
+import { Firestore, initFirestoreApp } from '@blockframes/testing/unit-tests';
 import { Invitation, InvitationStatus } from '@blockframes/invitation/+state';
 
 describe('Invitation Rules Tests', () => {
@@ -58,11 +54,11 @@ describe('Invitation Rules Tests', () => {
 
     describe('Create Invitation', () => {
       test('should allow user to create invitation status: pending, mode: request', async () => {
-        const newInviteId = 'I002'
+        const newInviteId = 'I002';
         const createInvite: Partial<Invitation> = {
           mode: 'request',
           status: <InvitationStatus>'pending',
-          fromUser: {uid: 'uid-user2', email: 'user2@O001.com'}
+          fromUser: { uid: 'uid-user2', email: 'user2@O001.com' },
         };
         const inviteDoc = db.collection('invitations').doc(newInviteId).set(createInvite);
         await assertSucceeds(inviteDoc);
@@ -74,7 +70,7 @@ describe('Invitation Rules Tests', () => {
       const fields: [string, unknown][] = [
         ['id', 'MI-0xx'],
         ['mode', { createdBy: '' }],
-        ['fromOrg', {id: 'O007'}],
+        ['fromOrg', { id: 'O007' }],
         ['fromUser', { uid: 'uid-user3' }],
         ['toOrg', { id: 'O008' }],
         ['toUser', { uid: 'uid-sAdmin' }],
@@ -86,11 +82,34 @@ describe('Invitation Rules Tests', () => {
         details[key] = value;
         await assertFails(inviteRef.update(details));
       });
+    });
+  });
 
-      test('should allow user to update invitation', async () => {
-        const inviteRef = db.doc('invitations/I001');
-        await assertSucceeds(inviteRef.update({note: 'important'}));
-      });
+  describe('With unintended user, respond to invitation', () => {
+    beforeAll(async () => {
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-sAdmin', firebase: { sign_in_provider: 'password' } });
+    });
+
+    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+
+    const statuses = ['accepted', 'declined'];
+    test.each(statuses)("should not allow user to set invitation as '%s'", async (status) => {
+      const inviteRef = db.doc('invitations/I001');
+      await assertFails(inviteRef.update({ status }));
+    });
+  });
+
+  describe('With invited user, respond to invitation', () => {
+    beforeAll(async () => {
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2', firebase: { sign_in_provider: 'password' } });
+    });
+
+    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+
+    const statuses = ['accepted', 'declined'];
+    test.each(statuses)("should allow user to set invitation as '%s'", async (status) => {
+      const inviteRef = db.doc('invitations/I001');
+      await assertSucceeds(inviteRef.update({ status }));
     });
   });
 
@@ -115,8 +134,5 @@ describe('Invitation Rules Tests', () => {
       const docRef = db.doc('invitations/I012');
       await assertFails(docRef.get());
     });
-
-    
   });
 });
-

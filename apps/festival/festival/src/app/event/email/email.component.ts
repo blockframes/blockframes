@@ -27,7 +27,7 @@ export class EmailComponent implements OnInit {
 
   @HostListener('window:popstate', ['$event'])
   onPopState() {
-    this.clickBack();
+    this.goBack();
   }
   
   ngOnInit() {
@@ -46,7 +46,7 @@ export class EmailComponent implements OnInit {
     this.router.navigate(['../../r/i'], { relativeTo: this.route, queryParams: this.route.snapshot.queryParams });
   }
 
-  clickBack() {
+  goBack() {
     this.authService.updateAnonymousCredentials({ role: undefined });
     this.router.navigate(['../../'], { relativeTo: this.route, queryParams: this.route.snapshot.queryParams });
   }
