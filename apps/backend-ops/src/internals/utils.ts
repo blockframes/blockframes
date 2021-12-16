@@ -176,38 +176,30 @@ export function inspectDocumentRelations(
   return inspectionResult;
 }
 
-function isMatchingValue(documentIdToFind: string, document: FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>, _field: string) {
-  const field = _field.split('[].')[0];
-  const fieldSuffix = _field.split('[].')[1];
-  if (!documentIdToFind) return;
-
-  if (field === '') return documentIdToFind === document.id;
-
-  if (field.endsWith('{}')) {
-    const val = getValue(document.data(), field.replace('{}', ''));
-    return !!val[documentIdToFind];
-  } else {
-    let val = getValue(document.data(), field);
-    if (!Array.isArray(val)) val = [val];
-    return val.some(entry => {
-      const subVal = isString(entry) ? entry : getValue(entry, fieldSuffix);
-      if (!subVal) console.log('UnHandled error..');
-      return subVal === documentIdToFind;
-    });
-  }
-
+function isMatchingValue(documentIdToFind: string, document: FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>, field: string) {
+  const candidates = getCandidates(document, field);
+  return candidates.includes(documentIdToFind);
 }
 
 //////////////////
 // Methods to audit db data
 //////////////////
+export interface ConsistencyError {
+  auditedCollection?: Collections,
+  missingDocId: string,
+  in: {
+    collection?: Collections,
+    docId: string,
+    field: string
+  }
+};
 
 export function auditConsistency(dbData: DatabaseData, collections: CollectionData[], auditedCollectionName: 'users' | 'orgs') {
   const auditedCollection = dbData[auditedCollectionName];
   const auditedCollectionIds = auditedCollection.refs.docs.map(d => d.id);
   const collectionsToAudit = collections.filter(c => c.name !== auditedCollection.name);
 
-  const consistencyErrors: { auditedCollection: Collections, missingDocId: string, in: { collection: Collections, docId: string, field: string } }[] = [];
+  const consistencyErrors: ConsistencyError[] = [];
   for (const collection of collectionsToAudit) {
     // For this collection, let check if references of auditedCollection ids all belongs to an existing document of auditedCollection
     for (const document of collection.refs.docs) {
@@ -227,39 +219,40 @@ export function auditConsistency(dbData: DatabaseData, collections: CollectionDa
   return consistencyErrors;
 }
 
-function getConsitencyErrors(documentIdsToFind: string[], document: FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>, _field: string) {
-  const consistencyErrors: { missingDocId: string, in: { docId: string, field: string } }[] = [];
-  // @TODO try to factorize with isMatchingValue
+function getConsitencyErrors(documentIdsToFind: string[], document: FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>, field: string) {
+  const consistencyErrors: ConsistencyError[] = [];
+
+  const candidates = getCandidates(document, field);
+
+  for(const entry of candidates){
+    if(!documentIdsToFind.find(id => id === entry)) {
+      consistencyErrors.push({ missingDocId: entry, in: { docId: document.id, field } });
+    }
+  }
+
+  return consistencyErrors;
+}
+
+
+function getCandidates(document: FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>, _field: string): string[] {
   const field = _field.split('[].')[0];
   const fieldSuffix = _field.split('[].')[1];
+
   if (field === '') {
-    if (!documentIdsToFind.find(id => id === document.id)) {
-      consistencyErrors.push({ missingDocId: document.id, in: { docId: document.id, field } });
-    }
+    return [document.id];
   } else if (field.endsWith('{}')) {
     const val = getValue(document.data(), field.replace('{}', ''));
-    for (const entry of Object.keys(val)) {
-      if (!documentIdsToFind.find(id => id === entry)) {
-        consistencyErrors.push({ missingDocId: entry, in: { docId: document.id, field } });
-      }
-    }
+    return Object.keys(val);
   } else {
     let val = getValue(document.data(), field);
     if (!val || ['internal', 'anonymous'].includes(val)) return [];
     if (!Array.isArray(val)) val = [val];
     if (!val.length) return [];
-    for (const entry of val) {
+
+    return val.map(entry => {
       const idToFind = isString(entry) ? entry : getValue(entry, fieldSuffix);
-      if (!idToFind) {
-        console.log('UnHandled error..');
-        continue;
-      }
-
-      if (!documentIdsToFind.find(id => id === idToFind)) {
-        consistencyErrors.push({ missingDocId: idToFind, in: { docId: document.id, field: _field } });
-      }
-    }
+      if (!idToFind) console.log('UnHandled error..');
+      return idToFind;
+    }).filter(d => !!d);
   }
-
-  return consistencyErrors;
 }

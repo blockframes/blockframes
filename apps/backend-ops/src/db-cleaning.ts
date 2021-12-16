@@ -8,7 +8,7 @@ import { Auth, Firestore, QueryDocumentSnapshot, getDocument, runChunks } from '
 import admin from 'firebase-admin';
 import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 import { getAllAppsExcept } from '@blockframes/utils/apps';
-import { auditConsistency, DatabaseData, loadAllCollections } from './internals/utils';
+import { auditConsistency, ConsistencyError, DatabaseData, loadAllCollections } from './internals/utils';
 
 export const numberOfDaysToKeepNotifications = 14;
 const currentTimestamp = new Date().getTime();
@@ -19,9 +19,9 @@ let verbose = false;
 // @TODO #6460 not existing users found in movies._meta.createdBy ..
 // @TODO #6460 spot database inconsistency + users without org + org.userIds = user.orgId + movie.orgIds => exists
 // @TODO #6460 check document subcollection of permissions ?
+// @TODO #6460 perform a new shrinked db to check that everything is ok
 
 /** Reusable data cleaning script that can be updated along with data model */
-
 export async function cleanDeprecatedData(db: FirebaseFirestore.Firestore, auth: admin.auth.Auth, options = { verbose: true }) {
   verbose = options.verbose;
   // Getting all collections we need to check
@@ -40,6 +40,33 @@ export async function cleanDeprecatedData(db: FirebaseFirestore.Firestore, auth:
   // @TODO #6460 Audit data after cleaning
 
   return true;
+}
+
+export async function auditDatabaseConsistency(db: FirebaseFirestore.Firestore, options = { verbose: true }) {
+  verbose = options.verbose;
+  // Getting all collections we need to check
+  const { dbData, collectionData } = await loadAllCollections(db);
+
+  const usersOutput = await auditConsistency(dbData, collectionData, 'users');
+  console.log(`found ${usersOutput.length} inconsistencies when auditing users.`);
+
+  for (const inconsistency of usersOutput) {
+    printInconsistency(inconsistency);
+  }
+
+  const orgsOutput = await auditConsistency(dbData, collectionData, 'orgs');
+  console.log(`found ${orgsOutput.length} inconsistencies when auditing orgs.`);
+
+  for (const inconsistency of orgsOutput) {
+    printInconsistency(inconsistency);
+  }
+
+  return true;
+}
+
+function printInconsistency(inconsistency: ConsistencyError) {
+  const { in: foundIn, missingDocId, auditedCollection } = inconsistency;
+  console.log(`Missing ${auditedCollection} in ${foundIn.collection}/${foundIn.docId}/${foundIn.field}.${missingDocId}`);
 }
 
 async function cleanData(dbData: DatabaseData, db: FirebaseFirestore.Firestore, auth: admin.auth.Auth) {
