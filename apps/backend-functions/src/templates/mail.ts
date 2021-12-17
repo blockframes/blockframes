@@ -379,9 +379,6 @@ export async function userFirstConnexion(user: PublicUser): Promise<EmailRequest
 }
 
 export function sendDemoRequestMail(information: RequestDemoInformations) {
-  console.log( information.testEmailTo || getSupportEmail(information.app))
-  console.log(information);
-  
   return {
     to: information.testEmailTo || getSupportEmail(information.app),
     subject: 'A demo has been requested',
