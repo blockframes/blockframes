@@ -115,9 +115,8 @@ export class LandingShellComponent implements OnDestroy {
     try {
       this.buttonText = 'Sending Request...';
       const currentApp = getCurrentApp(this.routerQuery);
-      const information: any = createDemoRequestInformations({ app: currentApp, ...form.value }); // @TODO RequestDemoInformations
+      const information: RequestDemoInformations = createDemoRequestInformations({ app: currentApp, ...form.value });
       if ('Cypress' in window) {
-        information.test = true;
         information.testEmailTo = testEmail;
       }
 
