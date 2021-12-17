@@ -201,6 +201,7 @@ export async function shrinkDb(db: FirebaseFirestore.Firestore) {
   //////////////////
 
   for (const document of documentsToDelete) {
+    // @TODO #6460 cascade delete
     const doc = dbData[document.collection].refs.docs.find(d => d.id === document.docId);
     await doc.ref.delete();
 
