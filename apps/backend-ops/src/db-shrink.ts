@@ -1,16 +1,5 @@
-import {
-  connectFirestoreEmulator,
-  defaultEmulatorBackupPath,
-  endMaintenance,
-  firebaseEmulatorExec,
-  getFirestoreExportPath,
-  importFirestoreEmulatorBackup,
-  latestAnonDbDir,
-  latestAnonShrinkedDbDir,
-  removeAllSubcollections,
-  shutdownEmulator,
-  startMaintenance
-} from "@blockframes/firebase-utils";
+import { endMaintenance, latestAnonDbDir, latestAnonShrinkedDbDir, removeAllSubcollections, startMaintenance } from "@blockframes/firebase-utils";
+import { connectFirestoreEmulator, defaultEmulatorBackupPath, firebaseEmulatorExec, getFirestoreExportPath, importFirestoreEmulatorBackup, shutdownEmulator } from "@blockframes/firebase-utils/firestore/emulator";
 import { OrganizationDocument } from "@blockframes/organization/+state";
 import { PermissionsDocument } from "@blockframes/permissions/+state/permissions.firestore";
 import { uploadBackup } from "./emulator";
