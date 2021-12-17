@@ -168,12 +168,12 @@ export async function shrinkDb(db: FirebaseFirestore.Firestore) {
 
   const _usedDocumentsForUsers = usersToKeep.map(uid => {
     const user = dbData.users.refs.docs.find(d => d.id === uid);
-    return inspectDocumentRelations(user, collectionData, 'users');
+    return inspectDocumentRelations(user, collectionData.filter(c => c.name !== 'orgs'), 'users');
   }).reduce((a: DocumentDescriptor[], b: DocumentDescriptor[]) => a.concat(b), []);
 
   const _usedDocumentsForOrgs = orgsToKeep.map(id => {
     const org = dbData.orgs.refs.docs.find(d => d.id === id);
-    return inspectDocumentRelations(org, collectionData, 'orgs');
+    return inspectDocumentRelations(org, collectionData.filter(c => c.name !== 'users'), 'orgs');
   }).reduce((a: DocumentDescriptor[], b: DocumentDescriptor[]) => a.concat(b), []);
 
   const usedDocuments: DocumentDescriptor[] = _usedDocumentsForUsers
@@ -269,7 +269,7 @@ export async function shrinkDb(db: FirebaseFirestore.Firestore) {
     errors = true;
   }
 
-  // @TODO #6460 check consistency errors
+  // @TODO #6460 check consistency errors + clean deprecated data ?
 
   return !errors;
 }

@@ -110,6 +110,9 @@ const orgMap: Partial<Record<Collections, string[]>> = {
   offers: [
     'buyerId'
   ],
+  users: [
+    'orgId'
+  ],
   permissions: [''] // document id
 }
 
@@ -149,7 +152,7 @@ export async function getAllDocumentCount(db: FirebaseFirestore.Firestore) {
 //////////////////
 
 export function inspectDocumentRelations(
-  inspectedDocument: FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>,
+  inspectedDocument: FirebaseFirestore.DocumentData,
   collections: CollectionData[],
   mapName: 'users' | 'orgs',
   verbose = false
@@ -176,7 +179,7 @@ export function inspectDocumentRelations(
   return inspectionResult;
 }
 
-function isMatchingValue(documentIdToFind: string, document: FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>, field: string) {
+function isMatchingValue(documentIdToFind: string, document: FirebaseFirestore.DocumentData, field: string) {
   const candidates = getCandidates(document, field);
   return candidates.includes(documentIdToFind);
 }
@@ -219,13 +222,13 @@ export function auditConsistency(dbData: DatabaseData, collections: CollectionDa
   return consistencyErrors;
 }
 
-function getConsitencyErrors(documentIdsToFind: string[], document: FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>, field: string) {
+function getConsitencyErrors(documentIdsToFind: string[], document: FirebaseFirestore.DocumentData, field: string) {
   const consistencyErrors: ConsistencyError[] = [];
 
   const candidates = getCandidates(document, field);
 
-  for(const entry of candidates){
-    if(!documentIdsToFind.find(id => id === entry)) {
+  for (const entry of candidates) {
+    if (!documentIdsToFind.find(id => id === entry)) {
       consistencyErrors.push({ missingDocId: entry, in: { docId: document.id, field } });
     }
   }
@@ -234,7 +237,7 @@ function getConsitencyErrors(documentIdsToFind: string[], document: FirebaseFire
 }
 
 
-function getCandidates(document: FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>, _field: string): string[] {
+function getCandidates(document: FirebaseFirestore.DocumentData, _field: string): string[] {
   const field = _field.split('[].')[0];
   const fieldSuffix = _field.split('[].')[1];
 

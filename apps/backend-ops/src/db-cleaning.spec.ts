@@ -18,10 +18,12 @@ import {
 } from './db-cleaning';
 import { every } from 'lodash';
 import { loadAdminServices } from '@blockframes/firebase-utils';
-import { removeUnexpectedUsers, UserConfig } from './users';
+import { removeUnexpectedUsers } from './users';
 import { getCollectionRef } from '@blockframes/firebase-utils';
 import { clearFirestoreData } from '@firebase/testing';
 import { getAllAppsExcept } from '@blockframes/utils/apps';
+import { PublicUser } from '@blockframes/user/+state';
+import { PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
 
 type Snapshot = FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>;
 let db: FirebaseFirestore.Firestore;
@@ -46,8 +48,8 @@ describe('DB cleaning script', () => {
   });
 
   it('should remove incorrect attributes from users', async () => {
-    // User with good org but with "name" and "surname"
-    const testUser1 = { uid: 'A', email: 'johndoe@fake.com', name: 'john', surname: 'doe', firstName: 'john', lastName: 'doe', orgId: 'org-A' };
+    // User with good org
+    const testUser1 = { uid: 'A', email: 'johndoe@fake.com', firstName: 'john', lastName: 'doe', orgId: 'org-A' };
 
     // User with fake orgId
     const testUser2 = { uid: 'B', email: 'johnmcclain@fake.com', firstName: 'john', lastName: 'mcclain', orgId: 'org-B' };
@@ -113,7 +115,7 @@ describe('DB cleaning script', () => {
     const authBefore = await adminAuth.listUsers();
     expect(authBefore.users.length).toEqual(5);
 
-    await removeUnexpectedUsers(usersBefore.docs.map(u => u.data() as UserConfig), adminAuth);
+    await removeUnexpectedUsers(usersBefore.docs.map(u => u.data() as PublicUser), adminAuth);
 
     // An user should have been removed from auth because it is not in DB.
     const authAfter = await adminAuth.listUsers();
@@ -318,8 +320,8 @@ describe('DB cleaning script', () => {
 
   it('should remove permissions not belonging to existing org', async () => {
 
-    const testPermissions = [{ id: "org-A" }, { id: "org-B" }];
-    const testOrgs = [{ id: "org-A" }];
+    const testPermissions = [{ id: 'org-A', roles: {} }, { id: 'org-B', roles: {} }];
+    const testOrgs = [{ id: 'org-A' }];
 
     // Load our test set
     await populate('permissions', testPermissions);
@@ -336,10 +338,42 @@ describe('DB cleaning script', () => {
 
     const organizationIds = organizations.docs.map(ref => ref.id);
 
-    await cleanPermissions(permissionsBefore, organizationIds);
+    await cleanPermissions(permissionsBefore, organizationIds, []);
     const permissionsAfter: Snapshot = await getCollectionRef('permissions');
     expect(permissionsAfter.docs.length).toEqual(1);
     expect(permissionsAfter.docs[0].data().id).toEqual('org-A');
+  });
+
+  it('should clean permissions documents from un-existing users', async () => {
+
+    const testPermissions = [{ id: 'org-A', roles: { A: {}, B: {} } }];
+    const testOrgs = [{ id: 'org-A' }];
+    const testUsers = [{ uid: 'A', email: 'A@fake.com' }];
+
+    // Load our test set
+    await populate('permissions', testPermissions);
+    await populate('orgs', testOrgs);
+    await populate('users', testUsers);
+
+    const [permissionsBefore, organizations, users] = await Promise.all([
+      getCollectionRef('permissions'),
+      getCollectionRef('orgs'),
+      getCollectionRef('users'),
+    ]);
+
+    // Check if data have been correctly added
+    expect(permissionsBefore.docs.length).toEqual(1);
+    expect(organizations.docs.length).toEqual(1);
+    expect(users.docs.length).toEqual(1);
+
+    const organizationIds = organizations.docs.map(ref => ref.id);
+    const userIds = users.docs.map(ref => ref.id);
+
+    await cleanPermissions(permissionsBefore, organizationIds, userIds);
+    const permissionsAfter: Snapshot = await getCollectionRef('permissions');
+    const permissionDoc = permissionsAfter.docs[0].data() as PermissionsDocument;
+    expect(Object.keys(permissionDoc.roles).length).toEqual(1);
+    expect(permissionDoc.roles.A).toEqual({});
   });
 
   it('should clean movies from unwanted attributes', async () => {
@@ -911,13 +945,6 @@ function isInvitationClean(doc: FirebaseFirestore.DocumentSnapshot) {
 
 function isUserClean(doc: FirebaseFirestore.DocumentSnapshot, organizationIds: string[]) {
   const d = doc.data();
-  if (d.surname !== undefined) { // old model
-    return false;
-  }
-
-  if (d.name !== undefined) { // old model
-    return false;
-  }
 
   if (d.orgId && !organizationIds.includes(d.orgId)) {
     return false;

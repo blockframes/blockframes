@@ -9,7 +9,7 @@ import readline from 'readline';
 import { Auth, UserRecord, DbRecord } from '@blockframes/firebase-utils';
 import { deleteAllUsers, importAllUsers } from '@blockframes/testing/unit-tests';
 import * as env from '@env';
-import { User } from '@blockframes/user/types';
+import { PublicUser, User } from '@blockframes/user/types';
 
 export const { storageBucket } = env.firebase();
 
@@ -56,7 +56,7 @@ async function createAllUsers(users: UserConfig[], auth: Auth) {
  * @param expectedUsers
  * @param auth
  */
-export async function removeUnexpectedUsers(expectedUsers: UserConfig[], auth: Auth) {
+export async function removeUnexpectedUsers(expectedUsers: PublicUser[], auth: Auth) {
   let pageToken;
 
   do {

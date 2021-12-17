@@ -3,7 +3,7 @@ import { InvitationDocument } from '@blockframes/invitation/+state/invitation.fi
 import { PublicUser } from '@blockframes/user/+state/user.firestore';
 import { OrganizationDocument, PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
 import { PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
-import { removeUnexpectedUsers, UserConfig } from './users';
+import { removeUnexpectedUsers } from './users';
 import { Auth, Firestore, QueryDocumentSnapshot, getDocument, runChunks } from '@blockframes/firebase-utils';
 import admin from 'firebase-admin';
 import { createStorageFile } from '@blockframes/media/+state/media.firestore';
@@ -21,6 +21,10 @@ let verbose = false;
 // @TODO #6460 check document subcollection of permissions ?
 // @TODO #6460 perform a new shrinked db to check that everything is ok
 
+// @TODO #6460 remove 
+// npm run backend-ops importFirestore LATEST-ANON-DB
+// npm run backend-ops syncUsers
+
 /** Reusable data cleaning script that can be updated along with data model */
 export async function cleanDeprecatedData(db: FirebaseFirestore.Firestore, auth: admin.auth.Auth, options = { verbose: true }) {
   verbose = options.verbose;
@@ -29,15 +33,22 @@ export async function cleanDeprecatedData(db: FirebaseFirestore.Firestore, auth:
 
   // Data consistency check before cleaning data
   const usersOutput = await auditConsistency(dbData, collectionData, 'users');
-  console.log(`found ${usersOutput.length} inconsistencies when auditing users.`);
+  console.log(`Before cleaning : found ${usersOutput.length} inconsistencies when auditing users.`);
 
   const orgsOutput = await auditConsistency(dbData, collectionData, 'orgs');
-  console.log(`found ${orgsOutput.length} inconsistencies when auditing orgs.`);
+  console.log(`Before cleaning : found ${orgsOutput.length} inconsistencies when auditing orgs.`);
 
   await cleanData(dbData, db, auth);
 
   // Data consistency check after cleaning data
-  // @TODO #6460 Audit data after cleaning
+  const { dbData: dbDataAfter, collectionData: collectionDataAfter } = await loadAllCollections(db);
+
+  // Data consistency check before cleaning data
+  const usersOutputAfter = await auditConsistency(dbDataAfter, collectionDataAfter, 'users');
+  console.log(`After cleaning : found ${usersOutputAfter.length} inconsistencies when auditing users.`);
+
+  const orgsOutputAfter = await auditConsistency(dbDataAfter, collectionDataAfter, 'orgs');
+  console.log(`After cleaning : found ${orgsOutputAfter.length} inconsistencies when auditing orgs.`);
 
   return true;
 }
@@ -99,7 +110,7 @@ async function cleanData(dbData: DatabaseData, db: FirebaseFirestore.Firestore, 
 
   const existingIds = movieIds.concat(organizationIds2, eventIds, userIds2);
 
-  await cleanPermissions(dbData.permissions.refs, organizationIds);
+  await cleanPermissions(dbData.permissions.refs, organizationIds, userIds2);
   if (verbose) console.log('Cleaned permissions');
   await cleanMovies(dbData.movies.refs);
   if (verbose) console.log('Cleaned movies');
@@ -189,10 +200,10 @@ export async function cleanUsers(
 ) {
 
   // Check if auth users have their record on DB
-  await removeUnexpectedUsers(users.docs.map(u => u.data() as UserConfig), auth);
+  await removeUnexpectedUsers(users.docs.map(u => u.data() as PublicUser), auth);
 
   return runChunks(users.docs, async (userDoc: FirebaseFirestore.DocumentSnapshot) => {
-    const user = userDoc.data();
+    const user = userDoc.data() as PublicUser;
 
     // Check if a DB user have a record in Auth.
     const authUserId = await auth.getUserByEmail(user.email).then(u => u.uid).catch(() => undefined);
@@ -200,28 +211,9 @@ export async function cleanUsers(
       // Check if ids are the same
       if (authUserId !== user.uid) {
         if (verbose) console.error(`uid mistmatch for ${user.email}. db: ${user.uid} - auth : ${authUserId}`);
-      } else {
-        const invalidOrganization = !existingOrganizationIds.includes(user.orgId);
-        let update = false;
-
-        if (invalidOrganization) {
-          delete user.orgId;
-          update = true;
-        }
-
-        if (user.name) {
-          delete user.name;
-          update = true;
-        }
-
-        if (user.surname) {
-          delete user.surname;
-          update = true;
-        }
-
-        if (update) {
-          await userDoc.ref.set(user);
-        }
+      } else if (!existingOrganizationIds.includes(user.orgId)) {
+        delete user.orgId;
+        await userDoc.ref.set(user);
       }
     } else {
       // User does not exists on auth, should be deleted.
@@ -286,13 +278,27 @@ export function cleanOrganizations(
 
 export function cleanPermissions(
   permissions: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
-  existingOrganizationIds: string[]
+  existingOrganizationIds: string[],
+  existingUserIds: string[]
 ) {
   return runChunks(permissions.docs, async (permissionDoc) => {
-    const { id } = permissionDoc.data() as PermissionsDocument;
-    const invalidPermission = !existingOrganizationIds.includes(id);
+    const permission = permissionDoc.data() as PermissionsDocument;
+    const invalidPermission = !existingOrganizationIds.includes(permission.id);
     if (invalidPermission) {
       await permissionDoc.ref.delete();
+    } else {
+      const userIds = Object.keys(permission.roles);
+      let updateDoc = false;
+      for (const uid of userIds) {
+        if (!existingUserIds.includes(uid)) {
+          delete permission.roles[uid];
+          updateDoc = true;
+        }
+      }
+
+      if (updateDoc) {
+        await permissionDoc.ref.set(permission);
+      }
     }
   }, undefined, verbose);
 }
