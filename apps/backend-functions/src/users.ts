@@ -216,10 +216,10 @@ export async function onUserDelete(userSnapshot: FirebaseFirestore.DocumentSnaps
   db.doc(`blockframesAdmin/${user.uid}`).delete();
 }
 
-export const sendDemoRequest = async (data: RequestDemoInformations): Promise<RequestDemoInformations> => {
+export const sendDemoRequest = async (data: RequestDemoInformations): Promise<any> => {
   const from = getMailSender(data.app);
   await sendMail(sendDemoRequestMail(data), from, groupIds.noUnsubscribeLink);
-  return data;
+  return { app: 'bruce', testEmailTo:'brucetest@foo.bar'};
 }
 
 export const sendUserMail = async (data: { subject: string, message: string, app: App }, context: CallableContext) => {
