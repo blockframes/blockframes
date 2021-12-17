@@ -117,7 +117,7 @@ export class LandingShellComponent implements OnDestroy {
       const currentApp = getCurrentApp(this.routerQuery);
       const information: any = createDemoRequestInformations({ app: currentApp, ...form.value });
       if ('Cypress' in window) {
-        information.test = true;
+        information.test = false;
         information.testEmailTo = testEmail;
       }
 
