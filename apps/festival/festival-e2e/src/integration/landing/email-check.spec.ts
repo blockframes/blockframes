@@ -46,6 +46,8 @@ describe('Demo Request Email', () => {
     //Test for arrival of email..
     cy.mailosaurGetMessage(serverId, {
       sentTo: testEmail
+    },{
+      timeout: 20 * SEC,
     }).then(email => {
       expect(email.subject).to.equal(SUBJECT_DEMO);
       cy.log(email.text.body);
