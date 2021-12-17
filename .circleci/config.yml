@@ -624,19 +624,19 @@ workflows:
       #           - ci
   e2e-tests:
     jobs:
-      - catalog-e2e:
-          filters:
-            branches:
-              ignore: *deployment_branches
+      #- catalog-e2e:
+      #    filters:
+      #      branches:
+      #        ignore: *deployment_branches
       - festival-e2e:
           filters:
             branches:
               ignore: *deployment_branches
-      - crm-e2e:
-          filters:
-            branches:
-              ignore: *deployment_branches
-      - financiers-e2e:
-          filters:
-            branches:
-              ignore: *deployment_branches
+      #- crm-e2e:
+      #    filters:
+      #      branches:
+      #        ignore: *deployment_branches
+      #- financiers-e2e:
+      #    filters:
+      #      branches:
+      #        ignore: *deployment_branches

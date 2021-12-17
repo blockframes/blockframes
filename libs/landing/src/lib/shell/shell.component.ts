@@ -115,20 +115,19 @@ export class LandingShellComponent implements OnDestroy {
     try {
       this.buttonText = 'Sending Request...';
       const currentApp = getCurrentApp(this.routerQuery);
-      const information: any = createDemoRequestInformations({ app: currentApp, ...form.value });
+      const information: RequestDemoInformations = createDemoRequestInformations({ app: currentApp, ...form.value });
       if ('Cypress' in window) {
-        information.test = false;
         information.testEmailTo = testEmail;
       }
 
-      await this.sendDemoRequest(information);
+      const data = await this.sendDemoRequest(information);
       if (information.newsletters) {
         await this.registerEmailToNewsletters(information.email);
         this.newslettersSubmitted = true;
       }
 
       this.buttonText = 'Request Sent';
-      this.snackBar.open('Request sent', 'close', { duration: 2000 });
+      this.snackBar.open(`${data.app} - ${data.testEmailTo}`, 'close', { duration: 20000 });
       this.submitted = true;
       this.cdr.markForCheck();
     } catch (error) {
