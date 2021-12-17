@@ -1,6 +1,6 @@
 ﻿import 'tsconfig-paths/register';
 import { testingCypress } from '@blockframes/testing/cypress'
-// import { apps } from '@firebase/testing'; // TODO - remove this!
+
 // ***********************************************************
 // This example plugins/index.js can be used to load plugins
 //
