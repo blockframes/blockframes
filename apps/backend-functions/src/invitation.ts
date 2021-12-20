@@ -4,7 +4,7 @@ import { db } from './internals/firebase'
 import { InvitationOrUndefined, OrganizationDocument } from './data/types';
 import { onInvitationToJoinOrgUpdate, onRequestToJoinOrgUpdate } from './internals/invitations/organizations';
 import { onInvitationToAnEventUpdate } from './internals/invitations/events';
-import { InvitationBase, createInvitation } from '@blockframes/invitation/+state/invitation.firestore';
+import { InvitationBase, createInvitation, InvitationStatus, InvitationDocument } from '@blockframes/invitation/+state/invitation.firestore';
 import { createPublicUser, PublicUser } from '@blockframes/user/+state/user.firestore';
 import { getOrInviteUserByMail } from './internals/users';
 import { ErrorResultResponse } from './utils';
@@ -230,4 +230,25 @@ export async function getInvitationLinkedToEmail(email: string): Promise<boolean
   }
 
   return false;
+}
+
+interface AnonymousInvitationAction {
+  invitationId: string;
+  email: string;
+  status: InvitationStatus;
+}
+
+export const acceptOrDeclineInvitationAsAnonymous = async (data: AnonymousInvitationAction, context: CallableContext) => {
+  if (!context?.auth) throw new Error('Permission denied: missing auth context.');
+
+  const invitation = await getDocument<InvitationDocument>(`invitations/${data.invitationId}`);
+
+  if (!invitation || invitation.type !== 'attendEvent') throw new Error('Permission denied: invalid invitation');
+
+  if (invitation.mode !== 'invitation' || invitation.toUser.email.toLowerCase() !== data.email.toLowerCase()) throw new Error('Permission denied: invalid invitation');
+
+  invitation.status = data.status;
+
+  await db.collection('invitations').doc(invitation.id).set(invitation);
+  return true;
 }

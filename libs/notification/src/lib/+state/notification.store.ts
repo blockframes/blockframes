@@ -84,7 +84,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         })
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `Members of your organization have been updated`,
+          message: `Members of your organization have been updated.`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.svg',
           url: `${applicationUrl[this.app]}/c/o/organization/${notification.organization.id}/view/members`,
@@ -96,14 +96,14 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
             return {
               ...newNotification,
               imgRef: createStorageFile(movie?.poster),
-              message: `${movie.title.international} was successfully submitted to the ${appName[movieAppAccess[0]]} Team.`,
+              message: `<a href="/c/o/marketplace/movie/${movie.id}" target="_blank">${movie.title.international}</a> was successfully submitted to the ${appName[movieAppAccess[0]]} Team.`,
               url: `${applicationUrl[movieAppAccess[0]]}/c/o/dashboard/title/${notification.docId}/main`,
             };
           })
         })
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `A new movie was successfully submitted`,
+          message: `A new movie was successfully submitted.`,
           imgRef: this.getPoster(notification.docId),
           placeholderUrl: 'empty_poster.svg',
           url: `${applicationUrl[this.app]}/c/o/dashboard/title/${notification.docId}`,
@@ -115,7 +115,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
             return {
               ...newNotification,
               imgRef: createStorageFile(movie?.poster),
-              message: `${movie.title.international} was successfully published on the marketplace.`,
+              message: `<a href="/c/o/marketplace/movie/${movie.id}" target="_blank">${movie.title.international}</a> was successfully published on the marketplace.`,
               url: `${applicationUrl[movieAppAccess[0]]}/c/o/dashboard/title/${notification.docId}/main`,
             };
           })
@@ -149,7 +149,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
               return {
                 ...newNotification,
                 imgRef: this.getPoster(titleId),
-                message: `REMINDER - ${org.denomination.full}'s ${event.type} "${event.title}" is about to start.`
+                message: `REMINDER - ${org.denomination.full}'s ${event.type} "<a href="/event/${event.id}" target="_blank">${event.title}</a>" is about to start.`
               };
             });
           })
@@ -157,7 +157,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
 
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `REMINDER - Your event "${notification.docId}" is about to start.`,
+          message: `REMINDER - Your event "<a href="/event/${notification.docId}" target="_blank">${notification.docId}</a>" is about to start.`,
           placeholderUrl: 'empty_poster.svg',
           url: `${applicationUrl['festival']}/event/${notification.docId}/r/i`,
         };
@@ -171,15 +171,14 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
               return {
                 ...newNotification,
                 imgRef: this.getPoster(titleId),
-                message: `REMINDER - ${org.denomination.full}'s ${event.type} "${event.title}" will start tomorrow at ${format(toDate(event.start), 'h:mm a')}.`
-              };
+                message: `REMINDER - ${org.denomination.full}'s ${event.type} "<a href="/event/${event.id}" target="_blank">${event.title}</a>" will start tomorrow at ${format(toDate(event.start), 'h:mm a')}.`};
             });
           })
         });
 
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `REMINDER - Your event "${notification.docId}" is tomorrow.`,
+          message: `REMINDER - Your event "<a href="/event/${notification.docId}" target="_blank">${notification.docId}</a>" is tomorrow.`,
           placeholderUrl: 'empty_poster.svg',
           url: `${applicationUrl['festival']}/event/${notification.docId}/r/i`,
         };
@@ -192,7 +191,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           await this.update(notification.id, newNotification => {
             return {
               ...newNotification,
-              message: `${subject} has ${notification.invitation.status} your ${notification.invitation.mode} to attend ${event.type} "${event.title}".`
+              message: `${subject} has ${notification.invitation.status} your ${notification.invitation.mode} to attend ${event.type} "<a href="/event/${event.id}" target="_blank">${event.title}</a>".`
             };
           });
         });
@@ -211,14 +210,14 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           this.update(notification.id, newNotification => {
             return {
               ...newNotification,
-              message: `Your request to attend event ${event.type} "${event.title}" has been sent.`
+              message: `Your request to attend event ${event.type} "<a href="/event/${event.id}" target="_blank">${event.title}</a>" has been sent.`
             };
           });
         });
 
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `Your request to attend event "${notification.docId}" has been sent.`,
+          message: `Your request to attend event "<a href="/event/${notification.docId}" target="_blank">${notification.docId}</a>" has been sent.`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.svg',
           url: `${applicationUrl['festival']}${module === 'marketplace' ? `/event/${notification.docId}/r/i/` : `/c/o/${module}/event/${notification.docId}`}`

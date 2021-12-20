@@ -117,6 +117,9 @@ export const hasUserAnOrgOrIsAlreadyInvited = functions().https.onCall(invitatio
 /** Used to get invitation linked to an email when users signup for the first time */
 export const getInvitationLinkedToEmail = functions(hotConfig).https.onCall(invitations.getInvitationLinkedToEmail);
 
+/** Used to accept or decline invitation if user is logged in as anonymous */
+export const acceptOrDeclineInvitationAsAnonymous = functions().https.onCall(invitations.acceptOrDeclineInvitationAsAnonymous);
+
 //--------------------------------
 //    Events Management          //
 //--------------------------------

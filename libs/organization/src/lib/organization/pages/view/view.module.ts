@@ -9,7 +9,6 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { OrgAddressModule } from '@blockframes/organization/pipes/org-address.pipe';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
-import { GetLinkModule } from '@blockframes/utils/pipes';
 
 // Components
 import { OrganizationViewComponent } from './view.component';
@@ -50,7 +49,6 @@ const routes = [{
     OrgAddressModule,
     ToLabelModule,
     OrgNameModule,
-    GetLinkModule,
     // Material
     MatTabsModule,
     MatButtonModule,

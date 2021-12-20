@@ -15,7 +15,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 // @blockframes
 import { AvailsFilterModule } from '@blockframes/contract/avails/filter/filter.module';
-import { TableFilterModule } from "@blockframes/ui/list/table-filter/table-filter.module";
+import { FormTableModule } from "@blockframes/ui/form/table/form-table.module";
 import { LanguagesFormModule } from "@blockframes/movie/form/languages/languages.module";
 import { NegotiationFormModule } from '@blockframes/contract/negotiation'
 // Pipes
@@ -31,7 +31,7 @@ import { ToGroupLabelPipeModule } from '@blockframes/utils/pipes/group-label.pip
     RouterModule.forChild([{ path: '', component: ContractFormComponent }]),
     ReactiveFormsModule,
     AvailsFilterModule,
-    TableFilterModule,
+    FormTableModule,
     ToLabelModule,
     VersionPipeModule,
     JoinPipeModule,

@@ -16,7 +16,7 @@
         <button test-id="menu" mat-icon-button (click)="sidenav.toggle()">
           <mat-icon svgIcon="menu"></mat-icon>
         </button>
-        <a app-logo routerLink="."></a>
+        <button app-logo (click)="onAppLogoClick()"></button>
         <ng-content select="header"></ng-content>
         <a test-id="heart-icon" mat-icon-button routerLink="wishlist">
           <mat-icon svgIcon="favorite"

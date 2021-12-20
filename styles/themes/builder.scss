@@ -7,7 +7,6 @@
 @use '../components/bf-widget' as widget;
 @use '../components/scroll' as scroll;
 @use '../components/bf-tunnel' as tunnel;
-@use '../components/bf-table' as bf-table;
 @use '../components/apex-chart' as apex-chart;
 @use '../components/surface' as surface;
 
@@ -166,7 +165,6 @@
   @include scroll.color($theme);
   @include widget.color($theme);
   @include tunnel.color($theme);
-  @include bf-table.color($theme);
   @include apex-chart.color($theme);
   @include surface.color($theme);
 

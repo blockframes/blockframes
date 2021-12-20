@@ -49,7 +49,7 @@ export class TableExtractedMoviesComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    // Mat table setup
+    // Mat table setup @TODO #7429
     this.rows.paginator = this.paginator;
     this.rows.filterPredicate = this.filterPredicate;
     this.rows.sortingDataAccessor = sortingDataAccessor;

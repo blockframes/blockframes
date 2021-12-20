@@ -1,6 +1,5 @@
 // Angular
 import { NgModule } from '@angular/core';
-import { MatDividerModule } from '@angular/material/divider';
 import { CommonModule } from '@angular/common';
 
 // Components
@@ -12,9 +11,7 @@ import { FilterByDateModule } from '@blockframes/utils/pipes/filter-by-date.pipe
 
 // Material
 import { MatListModule } from '@angular/material/list';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   declarations: [ListComponent],
@@ -26,10 +23,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 
     // Material
     MatListModule,
-    MatDividerModule,
-    MatIconModule,
-    MatButtonModule,
-    MatPaginatorModule
+    MatDividerModule
   ]
 })
 export class InvitationListModule { }

@@ -1,5 +1,9 @@
 :host {
   display: block;
+
+  button:first-of-type {
+    margin-bottom: 16px;
+  }
 }
 
 section {

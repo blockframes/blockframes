@@ -1,4 +1,4 @@
-<list-page [items]="movies$ | async">
+<list-page [items]="movies$ | async" pdfExport>
 
   <!-- App Bar Search -->
   <list-page-app-bar>
@@ -68,6 +68,14 @@
     </button>
 
   </list-filter>
+
+  <!-- TITLE COUNT (ng-content)-->
+  <list-page-description *ngIf="nbHits">
+    <span i18n class="mat-body-2">
+      There {nbHits, plural, =0 {} =1 {is} other {are}} {{ nbHits }} project{nbHits, plural, =0 {} =1 {} other {s}}
+      available.
+    </span>
+  </list-page-description>
 
   <!-- EXPORT (ng-content)-->
   <pdf-export *ngIf="movies$ | async as movies">

@@ -42,6 +42,7 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
   internalLink: string;
   link: string;
   screenerMissing: boolean;
+  titleMissing: boolean;
 
   constructor(
     private eventService: EventService,
@@ -75,8 +76,8 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
         map(e => e.start < new Date() && e.type !== 'meeting' ? navTabs[type].concat(statisticsTab) : navTabs[type])
       )
 
-      if (this.form.value.type === 'screening' && this.form.meta.value.titleId) {
-        this.checkTitleScreener(this.form.meta.value.titleId);
+      if (this.form.value.type === 'screening') {
+        this.checkTitleAndScreener(this.form.meta.value.titleId);
       }
 
       // FormArray (used in FormList) does not mark as dirty on push,
@@ -89,7 +90,7 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
       this.formSub = this.form.meta.valueChanges.subscribe((values) => {
         this.form.markAsDirty()
         if (this.form.value.type === 'screening' && values.titleId) {
-          this.checkTitleScreener(values.titleId);
+          this.checkTitleAndScreener(values.titleId);
         }
       });
 
@@ -102,17 +103,19 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
     this.formSub.unsubscribe();
   }
 
-  save() {
+  async save(options: { showSnackbar: boolean } = { showSnackbar: true }) {
     if (this.form.valid && this.form.dirty) {
       const value = this.form.value;
       if (this.form.value.allDay) {
         value.start.setHours(0, 0, 0);
         value.end.setHours(23, 59, 59);
       }
-      this.eventService.update(value);
+      await this.eventService.update(value);
       this.form.markAsPristine();
       this.cdr.markForCheck();
-      this.snackBar.open('Event saved', 'CLOSE', { duration: 4000 });
+      if (options.showSnackbar) {
+        this.snackBar.open('Event saved', 'CLOSE', { duration: 4000 });
+      }
     }
     return true;
   }
@@ -140,7 +143,8 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
 
     const dialogRef = this.dialog.open(this.confirmExitTemplate, {
       width: '80%',
-      minWidth: '50vw'
+      minWidth: '50vw',
+      autoFocus: false,
     });
     return dialogRef.afterClosed().pipe(
       switchMap(shouldSave => {
@@ -157,9 +161,14 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
     return outlet?.activatedRouteData?.animation;
   }
 
-  async checkTitleScreener(titleId: string) {
-    const title = await this.movieService.getValue(titleId);
-    this.screenerMissing = !title.promotional.videos?.screener?.jwPlayerId;
+  async checkTitleAndScreener(titleId: string) {
+    if(!titleId) {
+      this.titleMissing = true;
+    } else {
+      this.titleMissing = false;
+      const title = await this.movieService.getValue(titleId);
+      this.screenerMissing = !title.promotional.videos?.screener?.jwPlayerId;
+    }
     this.cdr.markForCheck();
   }
 }
