@@ -77,7 +77,7 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
   metadata: FileMetaData;
   fileName: string;
 
-  public maxSize: number = 5 * 1000000;
+  public maxSize: number = 20 * 1000000;
 
   /////////////
   // Inputs //
@@ -275,6 +275,17 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
       }
 
       const blob = b64toBlob(this.croppedImage);
+
+      console.log('blob size: ', blob)
+      console.log('max size: ', this.maxSize)
+
+      if (blob.size >= this.maxSize) {
+        console.log('snackbar time')
+        // b64toBlob can increase file size of image and thus cross the maxSize limit after first check (issue #7336)
+        this.snackBar.open(`Your image is too big: max allowed size is ${fileSizeToString(this.maxSize)}.`, 'close', { duration: 4000 });
+        this.delete();
+        return;
+      }
 
       this.nextStep('show');
 
