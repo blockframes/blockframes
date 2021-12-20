@@ -8,25 +8,18 @@ import { testFixture } from './fixtures/data';
 import * as admin from 'firebase-admin';
 import * as userOps from './internals/users';
 import { firebase } from '@env';
-import { metaDoc, dbVersionDoc } from '@blockframes/utils/maintenance';
 
-//We are testing against actual project with shrunk DB
 const projectRealId = firebase().projectId;
 const pathToServiceAccountKey = resolve(process.cwd(), process.env.GOOGLE_APPLICATION_CREDENTIALS);
 const testEnv = firebaseTest(firebase(), pathToServiceAccountKey);
 
 describe('Invitation backend-function unit-tests', () => {
-  //const projectId = `invitation-spec-${Date.now()}`;
-  let db: Firestore;
 
   beforeAll(async () => {
-    // testFixture[metaDoc] = {};
-    // testFixture[metaDoc].startedAt = null;
-    // testFixture[metaDoc].endedAt = new Date();
     process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
     // We are initing firestore with client settings to
     // test the functions effectively
-    db = await initFirestoreApp(projectRealId, '', testFixture, { uid: 'uid-c8', firebase: { sign_in_provider: 'password' } });
+    await initFirestoreApp(projectRealId, '', testFixture, { uid: 'uid-c8', firebase: { sign_in_provider: 'password' } });
   });
 
   afterAll(async () => {
@@ -36,7 +29,7 @@ describe('Invitation backend-function unit-tests', () => {
 
 
   describe("Invitation spec", () => {
-    it.only('missing auth context, throws error', async () => {
+    it('missing auth context, throws error', async () => {
       const wrapped = testEnv.wrap(inviteUsers);
   
       //Compose the call to simpleCallable cf with param data
@@ -45,19 +38,8 @@ describe('Invitation backend-function unit-tests', () => {
         invitation: {},
         app: 'catalog'
       };
-  
-      const context = {
+      const context = { };
 
-      };
-
-      //await wrapped(data, context).rejects.toThrow('Permission denied: missing auth context.');
-
-      // Call the wrapped function with data and context
-      //const result = await wrapped(data);
-      // Check that the result looks like we expected.
-      // expect(_inviteUsers).toThrowError(
-      //   new Error('Permission denied: missing auth context.')
-      // );
       expect.assertions(1);
       await expect(async ()=> {
         await wrapped(data, context)
@@ -65,7 +47,7 @@ describe('Invitation backend-function unit-tests', () => {
         .toThrow("Permission denied: missing auth context.");
     });
 
-    it.only('missing org ID, throws error', async () => {
+    it('missing org ID, throws error', async () => {
       const wrapped = testEnv.wrap(inviteUsers);
   
       //Compose the call to simpleCallable cf with param data
@@ -87,14 +69,6 @@ describe('Invitation backend-function unit-tests', () => {
         await wrapped(data, context)
       }).rejects
         .toThrow("Permission denied: missing org id.");
-
-      // try {
-      //   await wrapped(data, context)
-      // } catch(e) {
-      //   expect(e).toEqual({
-      //     error: "Permission denied: missing org id."
-      //   });
-      //}
     });
 
     it('with proper data, does not throw error', async () => {
@@ -119,13 +93,10 @@ describe('Invitation backend-function unit-tests', () => {
         }
       };
 
-      //expect.assertions(0);
-      // (await expect(await wrapped(data, context)))
-      //             .resolves
-      //             .toEqual([]);
-
-      const result = await wrapped(data, context);
-      expect(result).toEqual("");
+      expect.assertions(0);
+      (await expect(await wrapped(data, context)))
+                  .resolves
+                  .toEqual([]);
     });
 
     it("For 'Join organization' event, email is sent & invite doc created", async () => {
@@ -190,9 +161,5 @@ describe('Invitation backend-function unit-tests', () => {
         })
       );
     });
-
-    it.skip('Test', () => {
-      expect(true).toBeTruthy();
-    })
   });
 })
