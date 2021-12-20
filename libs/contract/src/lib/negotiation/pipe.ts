@@ -32,7 +32,7 @@ export class NegotiationStagePipe implements PipeTransform {
   }
 }
 
-@Pipe({ name: 'isInitialNegotiation '})
+@Pipe({ name: 'isInitialNegotiation ' })
 export class IsInitialNegotiationPipe implements PipeTransform {
   transform(negotiation: Negotiation): boolean {
     return isInitial(negotiation);
@@ -49,7 +49,6 @@ export class CanNegotiatePipe implements PipeTransform {
 @Pipe({ name: 'negotiationStatus' })
 export class NegotiationStatusPipe implements PipeTransform {
   transform(negotiation: Negotiation): ContractStatus {
-    console.log(negotiation);
     if (isInitial(negotiation)) return 'pending';
     if (negotiation.status === 'pending') return 'negotiating';
     return negotiation.status;
@@ -58,7 +57,7 @@ export class NegotiationStatusPipe implements PipeTransform {
 
 @Pipe({ name: 'canAccept' })
 export class CanAcceptNegotiationPipe implements PipeTransform {
-  constructor(private orgQuery: OrganizationQuery) {}
+  constructor(private orgQuery: OrganizationQuery) { }
   transform(negotiation: Negotiation) {
     return negotiation.status === 'pending'
       && negotiation.price
@@ -71,7 +70,7 @@ export class CanAcceptNegotiationPipe implements PipeTransform {
   declarations: [
     NegotiationStagePipe,
     CanAcceptNegotiationPipe,
-    IsInitialNegotiationPipe, 
+    IsInitialNegotiationPipe,
     NegotiationStatusPipe,
     CanNegotiatePipe,
   ],
