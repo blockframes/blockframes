@@ -19,7 +19,7 @@ describe('Invitation backend-function unit-tests', () => {
     process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
     // We are initing firestore with client settings to
     // test the functions effectively
-    await initFirestoreApp(projectRealId, '', testFixture, { uid: 'uid-c8', firebase: { sign_in_provider: 'password' } });
+    await initFirestoreApp(projectRealId, '', testFixture, { uid: 'uid-user2', firebase: { sign_in_provider: 'password' } });
   });
 
   afterAll(async () => {
@@ -93,10 +93,18 @@ describe('Invitation backend-function unit-tests', () => {
         }
       };
 
-      expect.assertions(0);
-      (await expect(await wrapped(data, context)))
-                  .resolves
-                  .toEqual([]);
+      //expect.assertions(0);
+      // (await expect(await wrapped(data, context)))
+      //             .resolves
+      //             .toEqual([]);
+      const result = await wrapped(data, context);
+      expect(result).toEqual([]);
+
+      // expect(async ()=> {
+      //   await wrapped(data, context)
+      // }).resolves
+      //   .toEqual([]);
+
     });
 
     it("For 'Join organization' event, email is sent & invite doc created", async () => {

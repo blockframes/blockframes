@@ -17,7 +17,7 @@ if (!admin.apps.length) {
     //Setup the maintenance document for real project
     admin.firestore().doc(`${META_COLLECTION_NAME}/${MAINTENANCE_DOCUMENT_NAME}`).set({
        startedAt: null,
-       endedAt: new Date(Date.now() - 5000 * 60 * 60)
+       endedAt: new Date(Date.now() - 60 * 60 * 1000)
     });
   } else {
     admin.initializeApp();
