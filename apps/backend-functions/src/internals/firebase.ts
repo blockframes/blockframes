@@ -6,14 +6,12 @@ import { backupBucket, storageBucket } from '../environments/environment';
 import { defaultConfig, isInMaintenance } from '@blockframes/firebase-utils';
 import { IMaintenanceDoc, META_COLLECTION_NAME, MAINTENANCE_DOCUMENT_NAME, _isInMaintenance } from '@blockframes/utils/maintenance';
 import { initFunctionsTestMock } from "@blockframes/testing/firebase/functions";
-//TODO1: Correct way to achieve this..
-const emulation = true;
-
+const emulation = (process.env.FIRESTORE_EMULATOR_HOST === 'localhost:8080')
 
 if (!admin.apps.length) {
   if (emulation) {
     const projectId = firebaseEnv().projectId;
-    initFunctionsTestMock(emulation, {projectId});
+    initFunctionsTestMock(true, {projectId});
     //Setup the maintenance document for real project
     admin.firestore().doc(`${META_COLLECTION_NAME}/${MAINTENANCE_DOCUMENT_NAME}`).set({
        startedAt: null,
@@ -60,7 +58,6 @@ db.collection(META_COLLECTION_NAME)
   .doc(MAINTENANCE_DOCUMENT_NAME)
   .onSnapshot(
     (snap) => {
-      //TODO2: Review needed
       if (!emulation) {
         const maintenanceDoc = snap.data() as IMaintenanceDoc;
         maintenanceActive = _isInMaintenance(maintenanceDoc, 0);

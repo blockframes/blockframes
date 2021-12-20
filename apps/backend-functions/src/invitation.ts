@@ -133,7 +133,6 @@ interface UserInvitation {
  * @dev this function polyfills the Promise.allSettled
  */
 export const inviteUsers = async (data: UserInvitation, context: CallableContext) => {
-  console.log("In inviteUsers : ", JSON.stringify(context));
   if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
   const user = await getDocument<PublicUser>(`users/${context.auth.uid}`);
   if (!user.orgId) { throw new Error('Permission denied: missing org id.'); }
@@ -169,7 +168,6 @@ export const inviteUsers = async (data: UserInvitation, context: CallableContext
   const eventId = invitation.type === 'attendEvent' && invitation.eventId;
   const event = eventId ? await getDocument<EventDocument<EventMeta>>(`events/${eventId}`) : undefined;
 
-  console.log(JSON.stringify(data.emails));
   for (const email of data.emails) {
     const invitationId = db.collection('invitations').doc().id;
     const { type, mode, fromOrg } = invitation;
@@ -189,7 +187,6 @@ export const inviteUsers = async (data: UserInvitation, context: CallableContext
 
     try {
       const invitationSet = await db.collection('invitations').doc(invitation.id).set(invitation);
-      console.log(invitationSet);
       promises.push({ result: invitationSet, id: invitation.id, error: '' });
     } catch (error) {
       promises.push({ result: undefined, error });

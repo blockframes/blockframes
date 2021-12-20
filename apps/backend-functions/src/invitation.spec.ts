@@ -1,5 +1,6 @@
 ﻿import { resolve } from 'path';
-import { Firestore, initFirestoreApp } from '@blockframes/testing/firebase/functions';
+process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
+import { initFirestoreApp } from '@blockframes/testing/firebase/functions';
 import { clearFirestoreData } from '@firebase/rules-unit-testing';
 import { inviteUsers }  from './main';
 import firebaseTest = require('firebase-functions-test');
@@ -148,7 +149,6 @@ describe('Invitation backend-function unit-tests', () => {
 
       //Check results have correct data
       expect(result.length).toEqual(1);
-      console.log(result);
       expect(result[0]).toEqual(
         expect.objectContaining({
           error: ''
@@ -156,12 +156,8 @@ describe('Invitation backend-function unit-tests', () => {
       );
 
       const inviteId = result[0].id;
-      console.log(inviteId);
-
       const snap = await admin.firestore().collection("invitations").doc(inviteId).get();
-      console.log(snap);
       const inviteData = snap.data();
-      console.log(inviteData);
       expect(inviteData.id).toEqual(inviteId);
       expect(inviteData.toUser).toEqual(
         expect.objectContaining({
