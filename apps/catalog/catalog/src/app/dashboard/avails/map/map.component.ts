@@ -50,8 +50,8 @@ export class DashboardAvailsMapComponent implements AfterViewInit, OnDestroy {
     this.salesTerms$,
   ]).pipe(
     map(([movie, avails, mandates, mandateTerms, sales, salesTerms]) => {
-      const { mandates: fullMandates, sales: fullSales } = filterByTitle(movie.id, mandates, mandateTerms, sales, salesTerms);
-      return territoryAvailabilities(avails, fullMandates, fullSales);
+      const res = filterByTitle(movie.id, mandates, mandateTerms, sales, salesTerms);
+      return territoryAvailabilities(avails, res.mandates, res.sales);
     }),
   );
 
