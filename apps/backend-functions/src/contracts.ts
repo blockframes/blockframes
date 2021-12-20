@@ -65,7 +65,7 @@ export async function onContractCreate(contractSnapshot: FirebaseFirestore.Docum
 }
 
 
-export async function onContractUpdate(
+export async function  onContractUpdate(
   change: Change<FirebaseFirestore.DocumentSnapshot>
 ) {
 
@@ -99,9 +99,11 @@ export async function onContractUpdate(
     const contractsStatus: ContractStatus[] = offerContractsSnap.docs.map(doc => doc.data().status);
 
     let newOfferStatus = offer.status;
-    newOfferStatus = contractsStatus.some(status => status !== 'pending') ? 'negotiating' : newOfferStatus;
+    const statuses = ['negotiating', 'accepted', 'declined'];
+    newOfferStatus = contractsStatus.some(status => statuses.includes(status )) ? 'negotiating' : newOfferStatus;
     newOfferStatus = contractsStatus.every(status => status === 'accepted') ? 'accepted' : newOfferStatus;
     newOfferStatus = contractsStatus.every(status => status === 'declined') ? 'declined' : newOfferStatus;
+    newOfferStatus = contractsStatus.every(status => status === 'pending') ? 'pending' : newOfferStatus;
 
     if (newOfferStatus === offer.status) return;
     offerRef.update({ status: newOfferStatus });
