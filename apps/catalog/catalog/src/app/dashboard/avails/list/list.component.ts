@@ -101,11 +101,8 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
   ]).pipe(
     map(([titles, avails]) => {
       return titles.filter(title => {
-        if (this.availsForm.valid) {
-          return availableTitle(avails as AvailsFilter, title.mandates as FullMandate[], title.sales as FullSale[]);
-        } else {
-          return true;
-        }
+        if (this.availsForm.invalid) return true;
+        return availableTitle(avails as AvailsFilter, title.mandates as FullMandate[], title.sales as FullSale[]);
       })
     }),
   );
