@@ -42,8 +42,9 @@ export class ContractViewComponent {
       const sale = await this.contract$.pipe(first()).toPromise();
       this.negotiationService.update(
         sale.negotiation.id, { status: 'accepted' }, { params: { contractId: sale.id } }
-      )
-      this.snackBar.open(`You accepted contract for ${sale.title.title.international}`);
+      );
+      const config = {duration:6000};
+      this.snackBar.open(`You accepted contract for ${sale.title.title.international}`, null, config);
     }
 
     const data = {

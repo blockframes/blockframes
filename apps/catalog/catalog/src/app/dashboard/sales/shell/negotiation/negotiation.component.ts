@@ -75,7 +75,8 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
         ...this.form.value,
       });
       this.form.markAsPristine(); // usefull to be able to route in the NegotiationGuard
-      this.snackBar.open('Your counter offer has been sent');
+      const config = { duration: 6000 };
+      this.snackBar.open('Your counter offer has been sent', null, config);
       this.router.navigate(['..', 'view'], { relativeTo: this.route });
     };
     const data = {
