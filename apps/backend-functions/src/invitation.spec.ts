@@ -1,11 +1,14 @@
 ﻿import { resolve } from 'path';
-import { Firestore, initFirestoreApp  } from '@blockframes/testing/firebase/functions';
+import { Firestore, initFirestoreApp } from '@blockframes/testing/firebase/functions';
+import { clearFirestoreData } from '@firebase/rules-unit-testing';
 import { inviteUsers }  from './main';
 import firebaseTest = require('firebase-functions-test');
+import { testFixture } from './fixtures/data';
+
 import * as admin from 'firebase-admin';
-import { createInvitation } from '@blockframes/invitation/+state';
 import * as userOps from './internals/users';
 import { firebase } from '@env';
+import { metaDoc, dbVersionDoc } from '@blockframes/utils/maintenance';
 
 //We are testing against actual project with shrunk DB
 const projectRealId = firebase().projectId;
@@ -13,23 +16,27 @@ const pathToServiceAccountKey = resolve(process.cwd(), process.env.GOOGLE_APPLIC
 const testEnv = firebaseTest(firebase(), pathToServiceAccountKey);
 
 describe('Invitation backend-function unit-tests', () => {
+  //const projectId = `invitation-spec-${Date.now()}`;
   let db: Firestore;
 
   beforeAll(async () => {
+    // testFixture[metaDoc] = {};
+    // testFixture[metaDoc].startedAt = null;
+    // testFixture[metaDoc].endedAt = new Date();
     process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
     // We are initing firestore with client settings to
     // test the functions effectively
-    db = await initFirestoreApp(projectRealId, '', {}, { uid: 'uid-c8', firebase: { sign_in_provider: 'password' } });
+    db = await initFirestoreApp(projectRealId, '', testFixture, { uid: 'uid-c8', firebase: { sign_in_provider: 'password' } });
   });
 
-  afterEach(async () => {
+  afterAll(async () => {
     // After each test, db is reseted
-    //await clearFirestoreData({ projectId: getTestingProjectId() });
+    await clearFirestoreData({ projectId: projectRealId });
   });
 
 
   describe("Invitation spec", () => {
-    it('missing auth context, throws error', async () => {
+    it.only('missing auth context, throws error', async () => {
       const wrapped = testEnv.wrap(inviteUsers);
   
       //Compose the call to simpleCallable cf with param data
@@ -58,7 +65,7 @@ describe('Invitation backend-function unit-tests', () => {
         .toThrow("Permission denied: missing auth context.");
     });
 
-    it('missing org ID, throws error', async () => {
+    it.only('missing org ID, throws error', async () => {
       const wrapped = testEnv.wrap(inviteUsers);
   
       //Compose the call to simpleCallable cf with param data
@@ -70,7 +77,7 @@ describe('Invitation backend-function unit-tests', () => {
   
       const context = {
         auth: {
-          uid: '1M9DUDBATqayXXaXMYThZGtE9up1',
+          uid: 'uid-c8',
           token: ''
         }
       };
@@ -80,6 +87,14 @@ describe('Invitation backend-function unit-tests', () => {
         await wrapped(data, context)
       }).rejects
         .toThrow("Permission denied: missing org id.");
+
+      // try {
+      //   await wrapped(data, context)
+      // } catch(e) {
+      //   expect(e).toEqual({
+      //     error: "Permission denied: missing org id."
+      //   });
+      //}
     });
 
     it('with proper data, does not throw error', async () => {
@@ -99,7 +114,7 @@ describe('Invitation backend-function unit-tests', () => {
   
       const context = {
         auth: {
-          uid: '1M9DUDBATqayXXaXMYThZGtE9up1',
+          uid: 'uid-user2',
           token: ''
         }
       };
@@ -130,7 +145,7 @@ describe('Invitation backend-function unit-tests', () => {
   
       const context = {
         auth: {
-          uid: '1M9DUDBATqayXXaXMYThZGtE9up1',
+          uid: 'uid-user2',
           token: ''
         }
       };
@@ -169,8 +184,15 @@ describe('Invitation backend-function unit-tests', () => {
       const inviteData = snap.data();
       console.log(inviteData);
       expect(inviteData.id).toEqual(inviteId);
-      //TODO : check more details
-      //expect(inviteData.email).toEqual(email);
+      expect(inviteData.toUser).toEqual(
+        expect.objectContaining({
+          uid: 'User001'
+        })
+      );
     });
+
+    it.skip('Test', () => {
+      expect(true).toBeTruthy();
+    })
   });
 })

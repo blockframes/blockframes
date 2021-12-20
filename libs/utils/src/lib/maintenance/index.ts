@@ -25,6 +25,7 @@ export function _isInMaintenance({ endedAt, startedAt }: IMaintenanceDoc, delay 
     const now = firebase.firestore.Timestamp.now();
 
     if (startedAt) {
+      console.log("InMaintenance started");
       return true;
     }
 
@@ -32,6 +33,8 @@ export function _isInMaintenance({ endedAt, startedAt }: IMaintenanceDoc, delay 
       // Wait `delay` minutes before allowing any operation on the db.
       // this prevents triggering firebase events.
       // NOTE: this is hack-ish but good enough for our needs! we'll revisit this later.
+      const isEnded = endedAt.toMillis() + delay > now.toMillis();
+      console.log("InMaintenance isEnded : ", isEnded);
       return endedAt.toMillis() + delay > now.toMillis();
     }
 

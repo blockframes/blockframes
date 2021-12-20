@@ -1,4 +1,4 @@
-import { functions, skipInMaintenance } from './internals/firebase';
+﻿import { functions, skipInMaintenance } from './internals/firebase';
 import * as users from './users';
 import * as consent from './consent';
 import * as invitations from './invitation';
@@ -30,7 +30,6 @@ import { onContractCreate, onContractDelete, onContractUpdate } from './contract
 import { onTermDelete } from './terms';
 import { downloadVideo } from './rescue';
 import { createPdf as _createPdf } from './createPdf';
-import * as admin from 'firebase-admin';
 
 console.log('Function instance loaded');
 
