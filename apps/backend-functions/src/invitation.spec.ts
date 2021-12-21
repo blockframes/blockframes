@@ -29,7 +29,7 @@ describe('Invitation backend-function unit-tests', () => {
   });
 
 
-  describe("Invitation spec", () => {
+  describe('Invitation spec', () => {
     it('missing auth context, throws error', async () => {
       const wrapped = testEnv.wrap(inviteUsers);
   
@@ -97,7 +97,7 @@ describe('Invitation backend-function unit-tests', () => {
       expect(result).toEqual([]);
     });
 
-    it("For 'Join organization' event, email is sent & invite doc created", async () => {
+    it('For \'Join organization\' event, email is sent & invite doc created', async () => {
       const wrapped = testEnv.wrap(inviteUsers);
   
       //Compose the call to simpleCallable cf with param data

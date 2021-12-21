@@ -7,10 +7,6 @@ export const testFixture = {
     endedAt: null
   },
 
-  '_META/_VERSION': {
-    currentVersion: 69
-  },
-
   //Orgs
   'orgs/O001': {
     id: 'O001',
