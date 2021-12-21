@@ -45,7 +45,7 @@ export class ListComponent implements OnDestroy, OnInit {
 
   public storeStatus: StoreStatus = 'accepted';
   public searchForm = new MovieSearchForm('catalog', this.storeStatus);
-  public availsForm = new AvailsForm({}, ['duration', 'territories']);
+  public availsForm = new AvailsForm();
   public exporting = false;
   public nbHits: number;
   public hitsViewed = 0;
