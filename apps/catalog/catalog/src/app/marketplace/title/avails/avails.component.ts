@@ -9,7 +9,7 @@ import { combineLatest, of, ReplaySubject, Subscription } from 'rxjs';
 import { FormList } from '@blockframes/utils/form';
 import { MovieQuery, Movie } from '@blockframes/movie/+state';
 import { BucketTerm, Term, TermService } from '@blockframes/contract/term/+state';
-import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
+import { CalendarAvailsForm, MapAvailsForm } from '@blockframes/contract/avails/form/avails.form';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { BucketForm, BucketTermForm } from '@blockframes/contract/bucket/form';
 import { OrganizationQuery, OrganizationService } from '@blockframes/organization/+state';
@@ -39,8 +39,8 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
   public bucketForm = new BucketForm();
 
   public avails = {
-    mapForm: new AvailsForm({ territories: [], medias:[] }, ['duration']),
-    calendarForm: new AvailsForm({ territories: [], medias:[] }, ['territories'])
+    mapForm: new MapAvailsForm(),
+    calendarForm: new CalendarAvailsForm()
   };
 
   public movieOrg$ = this.orgService.valueChanges(this.movie.orgIds[0]);
