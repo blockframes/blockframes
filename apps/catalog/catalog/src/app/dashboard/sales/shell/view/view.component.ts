@@ -39,8 +39,9 @@ export class SaleViewComponent {
     };
     const ref = this.dialog.open(ConfirmComponent, { data });
     ref.afterClosed().subscribe(acceptSuccessful => {
+      const config = {duration:6000};
       if (acceptSuccessful)
-        this.snackbar.open(`You accepted contract for ${title.title.international}`)
+        this.snackbar.open(`You accepted contract for ${title.title.international}`, null, config)
     });
   }
 }
