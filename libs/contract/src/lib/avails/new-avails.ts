@@ -6,6 +6,10 @@ import { Mandate, Sale } from '../contract/+state';
 import { Bucket, BucketContract } from '../bucket/+state';
 import { allOf, exclusivityAllOf, exclusivitySomeOf, someOf } from './sets';
 
+export interface BaseAvailsFilter {
+  medias: Media[],
+  exclusive: boolean
+}
 
 export interface FullMandate extends Mandate {
   terms: Term[];
@@ -65,11 +69,9 @@ function assertValidTitle(mandates: FullMandate[], sales: FullSale[], bucketCont
 //          TITLE LIST
 // ----------------------------
 
-export interface AvailsFilter {
-  medias: Media[],
+export interface AvailsFilter extends BaseAvailsFilter {
   duration: { from: Date, to: Date },
   territories: Territory[],
-  exclusive: boolean
 }
 
 function getMatchingMandates(mandates: FullMandate[], avails: AvailsFilter, debug = false): FullMandate[] {
@@ -155,10 +157,8 @@ export function availableTitle(
 //             MAP
 // ----------------------------
 
-export interface MapAvailsFilter {
-  medias: Media[],
+export interface MapAvailsFilter extends BaseAvailsFilter {
   duration: { from: Date, to: Date },
-  exclusive: boolean
 }
 
 interface TerritoryMarkerBase {
@@ -340,13 +340,11 @@ export function territoryAvailabilities(
 //           CALENDAR
 // ----------------------------
 
-interface CalendarAvailsFilter {
-  medias: Media[],
+export interface CalendarAvailsFilter extends BaseAvailsFilter {
   territories: Territory[],
-  exclusive: boolean
 }
 
-interface DurationMarker {
+export interface DurationMarker {
   from: Date,
   to: Date,
   contract?: Mandate,
@@ -357,16 +355,19 @@ interface CalendarAvailabilities {
   available: DurationMarker[];
   sold: DurationMarker[];
   inBucket: DurationMarker[];
+  selected: DurationMarker[];
+}
+
+function isCalendarTermInAvails<T extends BucketTerm | Term>(term: T, avails: CalendarAvailsFilter) {
+  const exclusivityCheck = exclusivityAllOf(avails.exclusive).in(term.exclusive);
+  const mediaCheck = allOf(avails.medias).in(term.medias);
+  const territoriesCheck = allOf(avails.territories).in(term.territories);
+
+  return exclusivityCheck && mediaCheck && territoriesCheck;
 }
 
 function getMatchingCalendarMandates(mandates: FullMandate[], avails: CalendarAvailsFilter): FullMandate[] {
-  return mandates.filter(mandate => mandate.terms.some(term => {
-    const exclusivityCheck = exclusivityAllOf(avails.exclusive).in(term.exclusive);
-    const mediaCheck = allOf(avails.medias).in(term.medias);
-    const territoryCheck = allOf(avails.territories).in(term.territories);
-
-    return exclusivityCheck && mediaCheck && territoryCheck;
-  }));
+  return mandates.filter(mandate => mandate.terms.some(term => isCalendarTermInAvails(term, avails)));
 }
 
 function getMatchingCalendarSales<T extends (FullSale | BucketContract)>(sales: T[], avails: CalendarAvailsFilter): T[] {
@@ -379,7 +380,20 @@ function getMatchingCalendarSales<T extends (FullSale | BucketContract)>(sales: 
   }));
 }
 
-function durationAvailabilities(
+function isCalendarTermInBucket<T extends BucketTerm | Term>(term: T, avails: CalendarAvailsFilter) {
+  return isCalendarTermInAvails(term, avails);
+}
+
+function isCalendarTermSelected<T extends BucketTerm | Term>(term: T, avails: CalendarAvailsFilter) {
+  const exclusivityCheck =avails.exclusive === term.exclusive;
+  const mediaCheck = allOf(avails.medias).equal(term.medias);
+  const territoryCheck = allOf(avails.territories).equal(term.territories);
+
+  return exclusivityCheck && mediaCheck && territoryCheck;
+}
+
+
+export function durationAvailabilities(
   avails: CalendarAvailsFilter,
   mandates: FullMandate[],
   sales: FullSale[],
@@ -402,14 +416,23 @@ function durationAvailabilities(
     )
   ).flat();
 
-  const bucketSalesToExclude = getMatchingCalendarSales(bucketContracts ?? [], avails);
-  const inBucket = bucketSalesToExclude.map(s =>
-    s.terms.map((t): DurationMarker =>
-      ({ from: t.duration.from, to: t.duration.to })
-    )
-  ).flat();
 
-  return { available, sold, inBucket };
+  const inBucket: DurationMarker[] = [];
+  const selected: DurationMarker[] = [];
+
+  for (const bucketSale of bucketContracts ?? []) {
+    for (const term of bucketSale.terms) {
+      const isInBucket = isCalendarTermInBucket(term, avails);
+      const isSelected = isCalendarTermSelected(term, avails);
+      if (isSelected) {
+        selected.push({ from: term.duration.from, to: term.duration.to }); // , term, contract: bucketSale });
+      } else if (isInBucket) {
+        inBucket.push({ from: term.duration.from, to: term.duration.to });
+      }
+    }
+  }
+
+  return { available, sold, inBucket, selected };
 }
 
 
