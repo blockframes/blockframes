@@ -49,6 +49,7 @@ export class DashboardAvailsCalendarComponent implements AfterViewInit, OnDestro
     this.salesTerms$,
   ]).pipe(
     map(([movie, avails, mandates, mandateTerms, sales, salesTerms]) => {
+      if (this.availsForm.invalid) return { available: [], sold: [] };
       const res = filterByTitle(movie.id, mandates, mandateTerms, sales, salesTerms)
       return durationAvailabilities(avails, res.mandates, res.sales);
     }),

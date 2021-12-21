@@ -50,6 +50,7 @@ export class MarketplaceMovieAvailsCalendarComponent implements AfterViewInit, O
     this.shell.bucketForm.value$,
   ]).pipe(
     map(([avails, mandates, mandateTerms, sales, salesTerms, bucket]) => {
+      if (this.availsForm.invalid) return { available: [], sold: [], inBucket: [], selected: undefined };
       const res = filterByTitle(this.titleId, mandates, mandateTerms, sales, salesTerms, bucket)
       return durationAvailabilities(avails, res.mandates, res.sales, res.bucketContracts);
     }),
