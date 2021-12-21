@@ -39,11 +39,10 @@ describe('Invitation backend-function unit-tests', () => {
         invitation: {},
         app: 'catalog'
       };
-      const context = { };
 
       expect.assertions(1);
       await expect(async ()=> {
-        await wrapped(data, context)
+        await wrapped(data, { })
       }).rejects
         .toThrow("Permission denied: missing auth context.");
     });
@@ -94,18 +93,8 @@ describe('Invitation backend-function unit-tests', () => {
         }
       };
 
-      //expect.assertions(0);
-      // (await expect(await wrapped(data, context)))
-      //             .resolves
-      //             .toEqual([]);
       const result = await wrapped(data, context);
       expect(result).toEqual([]);
-
-      // expect(async ()=> {
-      //   await wrapped(data, context)
-      // }).resolves
-      //   .toEqual([]);
-
     });
 
     it("For 'Join organization' event, email is sent & invite doc created", async () => {
