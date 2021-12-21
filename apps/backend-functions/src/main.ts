@@ -1,4 +1,4 @@
-﻿import { functions, skipInMaintenance } from './internals/firebase';
+import { functions, skipInMaintenance } from './internals/firebase';
 import * as users from './users';
 import * as consent from './consent';
 import * as invitations from './invitation';
@@ -271,4 +271,3 @@ export const onTermDeleteEvent = onDocumentDelete('terms/{termId}', onTermDelete
 //--------------------------------
 
 export const downloadVideoToStorage = functions(superHeavyConfig).https.onRequest(downloadVideo);
-
