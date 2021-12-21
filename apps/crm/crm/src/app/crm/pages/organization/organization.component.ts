@@ -38,20 +38,6 @@ export class OrganizationComponent implements OnInit {
   public invitationsFromOrganization$: Observable<Invitation[]>;
   public invitationsToJoinOrganization$: Observable<Invitation[]>;
 
-  public versionColumnsMovies = {
-    'poster': { value: 'Poster', disableSort: true },
-    'id': { value: 'Id', disableSort: true },
-    'title.international': 'International title',
-    'releaseYear': 'Release year',
-  };
-
-  public initialColumnsMovies: string[] = [
-    'poster',
-    'id',
-    'title.international',
-    'releaseYear',
-  ];
-
   public memberColumns = {
     uid: '',
     firstName: 'First Name',
@@ -148,17 +134,6 @@ export class OrganizationComponent implements OnInit {
     }
 
     this.snackBar.open('Informations updated !', 'close', { duration: 5000 });
-  }
-
-  filterPredicateMovies(data, filter) {
-    const columnsToFilter = [
-      'id',
-      'internalRef',
-      'title.original',
-      'releaseYear',
-    ];
-    const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
-    return dataStr.toLowerCase().indexOf(filter) !== -1;
   }
 
   public async uniqueOrgName() {

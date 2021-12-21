@@ -52,8 +52,8 @@ export class TableExtractedOrganizationsComponent implements OnInit {
     private orgService: OrganizationService
   ) { }
 
-  ngOnInit() {
-    // Mat table setup
+  ngOnInit() { 
+    // Mat table setup @TODO #7429
     this.rows.paginator = this.paginator;
     this.rows.filterPredicate = this.filterPredicate;
     this.rows.sortingDataAccessor = sortingDataAccessor;

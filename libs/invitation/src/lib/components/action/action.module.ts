@@ -9,6 +9,7 @@ import { TagModule } from '@blockframes/ui/tag/tag.module';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [ActionComponent],
@@ -23,6 +24,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatTooltipModule,
     MatButtonModule,
     MatIconModule,
+    MatProgressSpinnerModule
   ]
 })
 export class InvitationActionModule { }

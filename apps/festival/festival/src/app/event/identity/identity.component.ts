@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@blockframes/auth/+state';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -23,6 +23,11 @@ export class EventIdenityComponent {
     private snackBar: MatSnackBar
   ) { }
 
+  @HostListener('window:popstate', ['$event'])
+  onPopState() {
+    this.goBack();
+  }
+
   validateIdentity() {
     if (!this.form.valid) {
       this.snackBar.open('Form invalid, please check error messages', 'close', { duration: 2000 });
@@ -34,7 +39,7 @@ export class EventIdenityComponent {
     this.router.navigate(['../../r/i'], { relativeTo: this.route, queryParams: this.route.snapshot.queryParams });
   }
 
-  clickBack() {
+  goBack() {
     this.authService.updateAnonymousCredentials({ role: undefined });
     this.router.navigate(['../../'], { relativeTo: this.route, queryParams: this.route.snapshot.queryParams });
   }

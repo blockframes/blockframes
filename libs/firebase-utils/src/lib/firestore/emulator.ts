@@ -1,6 +1,6 @@
 import { firebase } from '@env'
 import { initializeApp } from 'firebase-admin'
-import { clearFirestoreData } from '@firebase/rules-unit-testing';
+import { clearFirestoreData } from '@firebase/testing';
 import { ChildProcess, execSync } from 'child_process';
 import { Dirent, existsSync, mkdirSync, readdirSync, rmdirSync, writeFileSync, renameSync } from 'fs';
 import { join, resolve, sep } from 'path';
@@ -15,7 +15,7 @@ const firestoreExportFolder = 'firestore_export'; // ! Careful - changing this m
 const emulatorMetadataFilename = 'firebase-export-metadata.json';
 
 export const getFirestoreExportPath = (emulatorPath: string) => join(emulatorPath, firestoreExportFolder);
-export const getEmulatorMetadataJsonPath = (emulatorPath: string) => join(emulatorPath, 'firebase-export-metadata.json');
+const getEmulatorMetadataJsonPath = (emulatorPath: string) => join(emulatorPath, 'firebase-export-metadata.json');
 
 /**
  * This function will get the filename of the Firestore export metadata json file.
@@ -124,17 +124,17 @@ export async function firebaseEmulatorExec({
 
   if (isOrHasValue(emulators, 'firestore') && isEmulatorBackupDir(importPath)) {
     if (emulatorBackupDirHasFirestore(importPath)) {
-        console.log('Firestore backup detected correctly.');
-      } else {
-        console.warn( 'Looks like we are in a emulator backup that is missing Firestore backup. This will crash the emulator, backing up and clearing dir');
-        const backupPath =
-          importPath.charAt(importPath.length - 1) === sep
-            ? `${importPath.slice(0, -1)}${new Date().getTime()}`
-            : `${importPath}${new Date().getTime()}`;
-        await rename(importPath, backupPath);
-        console.log('Dir backed up');
-      }
-   }
+      console.log('Firestore backup detected correctly.');
+    } else {
+      console.warn('Looks like we are in a emulator backup that is missing Firestore backup. This will crash the emulator, backing up and clearing dir');
+      const backupPath =
+        importPath.charAt(importPath.length - 1) === sep
+          ? `${importPath.slice(0, -1)}${new Date().getTime()}`
+          : `${importPath}${new Date().getTime()}`;
+      await rename(importPath, backupPath);
+      console.log('Dir backed up');
+    }
+  }
 
   const startType = execCommand ? 'exec' : 'start';
   const onlyParam = typeof emulators === 'string' ? emulators : emulators.join(',');
@@ -199,7 +199,7 @@ export async function shutdownEmulator(proc: ChildProcess, exportDir = defaultEm
   }
 }
 
-export function forceEmulatorExport(exportDir = defaultEmulatorBackupPath) {
+function forceEmulatorExport(exportDir = defaultEmulatorBackupPath) {
   const cmd = `firebase emulators:export ${exportDir} --force`
   return runShellCommand(cmd);
 }
@@ -213,18 +213,22 @@ export function connectFirestoreEmulator() {
   throwOnProduction();
   if (db) return db;
 
-  const firebaseJsonPath = resolve(process.cwd(), 'firebase.json')
-  const {
-    emulators: {
-      firestore: { port: dbPort },
-      storage: { port: storagePort },
-      auth: { port: authPort },
-    },
-  } = eval('require')(firebaseJsonPath);
+  const firebaseJsonPath = resolve(process.cwd(), 'firebase.json');
+  try {
+    const {
+      emulators: {
+        firestore: { port: dbPort },
+        storage: { port: storagePort },
+        auth: { port: authPort },
+      },
+    } = eval('require')(firebaseJsonPath);
 
-  console.log('Detected - dbPort:', dbPort, 'storagePort:', storagePort, 'authPort:', authPort);
+    console.log('Detected - dbPort:', dbPort, 'storagePort:', storagePort, 'authPort:', authPort);
 
-  process.env['FIRESTORE_EMULATOR_HOST'] = `localhost:${dbPort}`
+    process.env['FIRESTORE_EMULATOR_HOST'] = `localhost:${dbPort}`;
+  } catch (e) {
+    process.env['FIRESTORE_EMULATOR_HOST'] = `localhost:8080`;
+  }
 
   const app = initializeApp({ projectId: firebase().projectId }, 'firestore');
   db = app.firestore() as FirestoreEmulator;
@@ -243,14 +247,17 @@ export function connectFirestoreEmulator() {
 export function connectAuthEmulator() {
   if (auth) return auth;
   const firebaseJsonPath = resolve(process.cwd(), 'firebase.json')
-  const {
-    emulators: {
-      auth: { port: authPort },
-    },
-  } = eval('require')(firebaseJsonPath);
+  try {
+    const {
+      emulators: {
+        auth: { port: authPort },
+      },
+    } = eval('require')(firebaseJsonPath);
+    process.env['FIREBASE_AUTH_EMULATOR_HOST'] = `localhost:${authPort}`;
+  } catch (e) {
+    process.env['FIREBASE_AUTH_EMULATOR_HOST'] = `localhost:9099`;
+  }
 
-
-  process.env['FIREBASE_AUTH_EMULATOR_HOST'] = `localhost:${authPort}`;
 
   const app = initializeApp({ projectId: firebase().projectId }, 'auth');
   auth = app.auth();
@@ -312,7 +319,7 @@ export async function uploadDbBackupToBucket({ bucketName, remoteDir, localPath 
   });
 }
 
-export function isFirestoreBackupDir(path: string) {
+function isFirestoreBackupDir(path: string) {
   const fileSearch: Dirent[] = readdirSync(resolve(path), { withFileTypes: true });
   let metadataFile: string;
   try {
@@ -323,7 +330,7 @@ export function isFirestoreBackupDir(path: string) {
   return metadataFile.split('.').pop() === 'overall_export_metadata';
 }
 
-export function emulatorBackupDirHasFirestore(backupDir: string) {
+function emulatorBackupDirHasFirestore(backupDir: string) {
   // * If not emulator dir, fail
   if (!isEmulatorBackupDir(backupDir)) return false;
 
@@ -339,7 +346,7 @@ export function emulatorBackupDirHasFirestore(backupDir: string) {
   return true;
 }
 
-export function isEmulatorBackupDir(path: string) {
+function isEmulatorBackupDir(path: string) {
   const absPath = resolve(path);
   const fileSearch: Dirent[] = existsSync(absPath) && readdirSync(absPath, { withFileTypes: true });
   let singleFileFound: string;
@@ -356,18 +363,18 @@ export function isEmulatorBackupDir(path: string) {
 }
 
 async function ensureSafeEmulatorBackupPath(importPath: string) {
-    if (!isEmulatorBackupDir(importPath)) {
-      // * Is not an existing backup
-      if (!existsSync(resolve(importPath))) {
-        // * Dir doesnt exist, will be generated automatically
-        console.log('Emulator backup path does not exist (yet).')
-      } else if (readdirSync(resolve(importPath)).length !== 0) {
-        // * If dir does exist but it is not an emulator backup dir, it should be empty to prevent writing backup to bad path
-        // * Dir exists but is not empty and is not a backup dir
-        console.warn( 'WARNING! Firestore backup either corrupt, non-existent or the wrong path, please delete or clear the following dir:', importPath);
-        throw Error( 'Emulator data import path does not point to an emulator backup directory! \n' + importPath);
-      }
+  if (!isEmulatorBackupDir(importPath)) {
+    // * Is not an existing backup
+    if (!existsSync(resolve(importPath))) {
+      // * Dir doesnt exist, will be generated automatically
+      console.log('Emulator backup path does not exist (yet).')
+    } else if (readdirSync(resolve(importPath)).length !== 0) {
+      // * If dir does exist but it is not an emulator backup dir, it should be empty to prevent writing backup to bad path
+      // * Dir exists but is not empty and is not a backup dir
+      console.warn('WARNING! Firestore backup either corrupt, non-existent or the wrong path, please delete or clear the following dir:', importPath);
+      throw Error('Emulator data import path does not point to an emulator backup directory! \n' + importPath);
     }
+  }
 }
 
 

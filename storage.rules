@@ -27,8 +27,8 @@ service firebase.storage {
     }
 
     function isValidImage() {
-    	// Only allow uploads of any image file that's less than 5MB
-      return request.resource.contentType.matches('image/.*') && request.resource.size < 5 * 1024 * 1024;
+    	// Only allow uploads of any image file that's less than 20MB
+      return request.resource.contentType.matches('image/.*') && request.resource.size < 20 * 1024 * 1024;
     }
 
     function isValidPdf() {

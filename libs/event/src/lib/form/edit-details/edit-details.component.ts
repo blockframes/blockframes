@@ -53,7 +53,8 @@ export class EditDetailsComponent implements OnInit, OnDestroy {
 
         const dialogRef = this.dialog.open(this.noAccessibilityChange, {
           width: '80%',
-          minWidth: '50vw'
+          minWidth: '50vw',
+          autoFocus: false,
         });
         dialogRef.afterClosed().subscribe(contactTeam => {
           if (contactTeam) {

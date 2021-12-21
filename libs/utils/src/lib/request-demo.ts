@@ -9,7 +9,6 @@ export interface RequestDemoInformations {
   phoneNumber?: string;
   companyName: string;
   role: RequestDemoRole;
-  test?: boolean; // @TODO #6586 can be removed and we only check if !!testEmailTo
   testEmailTo?: string;
   newsletters: boolean;
 }

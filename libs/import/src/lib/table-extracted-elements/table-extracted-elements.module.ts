@@ -48,8 +48,8 @@ import { TableExtractedOrganizationsComponent } from './organizations/organizati
     MatInputModule,
     MatButtonModule,
     MatTableModule,
-    MatPaginatorModule,
-    MatSortModule,
+    MatPaginatorModule, // @TODO #7429
+    MatSortModule, // @TODO #7429
     MatDialogModule,
     MatCheckboxModule,
     MatExpansionModule,
