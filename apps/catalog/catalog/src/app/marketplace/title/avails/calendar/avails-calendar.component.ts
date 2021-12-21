@@ -1,26 +1,20 @@
 
 import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { combineLatest, Observable, Subscription } from 'rxjs';
-import { filter, map, shareReplay, startWith, throttleTime } from 'rxjs/operators';
+import { combineLatest, Subscription } from 'rxjs';
+import { map, startWith, throttleTime } from 'rxjs/operators';
 
-import {
-  getDurations,
-  DurationMarker,
-  toDurationMarker,
-  getDurationMarkers,
-  AvailsFilter,
-  collidingTerms,
-} from '@blockframes/contract/avails/avails';
 import { MovieQuery } from '@blockframes/movie/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
-import { ActivatedRoute, Router } from '@angular/router';
-import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
+
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
+import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
+import { CalendarAvailsFilter, durationAvailabilities, DurationMarker, filterByTitle } from '@blockframes/contract/avails/new-avails';
 
 
 @Component({
@@ -31,55 +25,34 @@ import { scrollIntoView } from '@blockframes/utils/browser/utils';
 })
 export class MarketplaceMovieAvailsCalendarComponent implements AfterViewInit, OnDestroy {
 
+  public titleId = this.shell.movie.id;
+
   public availsForm = this.shell.avails.calendarForm;
 
   public org$ = this.orgService.valueChanges(this.movieQuery.getActive().orgIds[0]);
 
   public status$ = this.availsForm.statusChanges.pipe(startWith(this.availsForm.status));
 
-  private mandates$ = this.shell.mandates$;
   private subs: Subscription[] = [];
 
+  private mandates$ = this.shell.mandates$;
   private mandateTerms$ = this.shell.mandateTerms$;
+
+  private sales$ = this.shell.sales$;
   private salesTerms$ = this.shell.salesTerms$;
 
-  public selected$: Observable<DurationMarker> = combineLatest([
-    this.availsForm.value$,
-    this.shell.bucketForm.value$,
-  ]).pipe(
-    map(([avails, bucket]) => getDurations(this.shell.movie.id, avails, bucket, 'exact')[0]),
-  );
-
-  public inSelection$: Observable<DurationMarker[]> = combineLatest([
-    this.availsForm.value$,
-    this.shell.bucketForm.value$,
-  ]).pipe(
-    map(([avails, bucket]) => getDurations(this.shell.movie.id, avails, bucket, 'in')),
-  );
-
-  public sold$ = combineLatest([
-    this.mandates$,
-    this.salesTerms$,
-    this.availsForm.value$,
-  ]).pipe(
-    filter(() => this.availsForm.valid),
-    map(([mandates, salesTerms, avails]) => {
-      const soldTerms = collidingTerms(avails, salesTerms);
-      return soldTerms.map(term => toDurationMarker(mandates, term)).flat();
-    })
-  );
-
-  public available$ = combineLatest([
+  public availabilities$ = combineLatest([
+    this.availsForm.valueChanges,
     this.mandates$,
     this.mandateTerms$,
-    this.availsForm.value$,
+    this.sales$,
+    this.salesTerms$,
+    this.shell.bucketForm.value$,
   ]).pipe(
-    map(([mandates, mandateTerms, avails]) => {
-      if (this.availsForm.invalid) return [];
-      const collidingMandateTerms = collidingTerms(avails, mandateTerms);
-      return getDurationMarkers(mandates, collidingMandateTerms);
+    map(([avails, mandates, mandateTerms, sales, salesTerms, bucket]) => {
+      const res = filterByTitle(this.titleId, mandates, mandateTerms, sales, salesTerms, bucket)
+      return durationAvailabilities(avails, res.mandates, res.sales, res.bucketContracts);
     }),
-    shareReplay({ refCount: true, bufferSize: 1 }),
   );
 
   constructor(
@@ -118,11 +91,12 @@ export class MarketplaceMovieAvailsCalendarComponent implements AfterViewInit, O
 
   ngAfterViewInit() {
     const decodedData = decodeUrl(this.route);
-    this.availsForm.patchValue(decodedData)
+
+    this.availsForm.patchValue(decodedData);
     const subSearchUrl = this.availsForm.valueChanges.pipe(
       throttleTime(1000)
     ).subscribe(formState => {
-      encodeUrl<AvailsFilter>(
+      encodeUrl<CalendarAvailsFilter>(
         this.router, this.route, formState
       );
     });
