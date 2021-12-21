@@ -52,23 +52,27 @@ export class ContractService extends CollectionService<ContractState> {
   }
 
 
-  addNegotiation(contractId: string, contract: Partial<Negotiation>) {
+  async addNegotiation(contractId: string, nego: Partial<Negotiation>) {
     const activeOrgId = this.orgQuery.getActiveId();
+    const write = this.batch();
 
-    return this.negotiationService.add({
+    this.negotiationService.add({
       _meta: createDocumentMeta({ createdAt: new Date(), }),
       status: 'pending',
       createdByOrg: activeOrgId,
       sellerId: centralOrgId.catalog,
-      stakeholders: contract.stakeholders,
-      buyerId: contract.orgId,
-      price: contract.price,
-      currency: contract.currency,
-      titleId: contract.titleId,
-      terms: contract.terms,
-      parentTermId: contract.parentTermId,
-      initial: contract.initial,
-      orgId: contract.orgId,
-    }, { params: { contractId }});
+      stakeholders: nego.stakeholders,
+      buyerId: nego.orgId,
+      price: nego.price,
+      currency: nego.currency,
+      titleId: nego.titleId,
+      terms: nego.terms,
+      parentTermId: nego.parentTermId,
+      initial: nego.initial,
+      orgId: nego.orgId,
+    }, { write, params: { contractId } });
+    const isInitial = !nego._meta?.createdAt || nego._meta.createdAt.getTime() === nego.initial?.getTime();
+    if (!isInitial) this.update(contractId, { status: 'negotiating' }, { write })
+    await write.commit()
   }
 }

@@ -21,7 +21,6 @@ import { BucketStore, BucketState } from './bucket.store';
 import { createBucketTerm, createBucketContract } from './bucket.model';
 import { ContractService, convertDuration } from '../../contract/+state';
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
-import { NegotiationStatus } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'buckets' })
@@ -97,9 +96,10 @@ export class BucketService extends CollectionService<BucketState> {
         stakeholders: [...parentContract.stakeholders, orgId],
       };
 
+      const createdAt = new Date();
       // Create the contract
       await this.contractService.add({
-        _meta: createDocumentMeta({ createdAt: new Date(), }),
+        _meta: createDocumentMeta({ createdAt }),
         status: 'pending',
         id: contractId,
         type: 'sale',
@@ -116,7 +116,7 @@ export class BucketService extends CollectionService<BucketState> {
       await this.contractService.addNegotiation(contractId, {
         ...contract,
         ...commonFields,
-        initial: new Date(),
+        initial: createdAt,
         currency,
       });
     });

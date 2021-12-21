@@ -79,7 +79,8 @@ export class ContractEditComponent implements NegotiationGuardedComponent, OnIni
         ...sale.negotiation,
         ...this.form.value
       });
-      this.snackBar.open('Your counter offer has been sent');
+      const config = {duration:6000};
+      this.snackBar.open('Your counter offer has been sent', null, config);
       this.form.markAsPristine(); // usefull to be able to route in the NegotiationGuard
       this.router.navigate(['..'], { relativeTo: this.route });
     }
