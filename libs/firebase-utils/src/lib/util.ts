@@ -2,7 +2,6 @@ import * as admin from 'firebase-admin';
 import { firebase } from '@env';
 import { firebase as firebaseCI } from 'env/env.blockframes-ci';
 import { config } from 'dotenv';
-import { readFileSync } from 'fs';
 import requiredVars from 'tools/mandatory-env-vars.json';
 import { OrganizationDocument } from '@blockframes/organization/+state/organization.model';
 import { resolve } from 'path';
@@ -36,14 +35,6 @@ export async function* getCollectionInBatches<K>(ref: admin.firestore.Collection
 export interface DbRecord {
   docPath: string;
   content: { [key: string]: any };
-}
-
-export function readJsonlFile(dbBackupPath: string) {
-  const file = readFileSync(dbBackupPath, 'utf-8');
-  return file
-    .split('\n')
-    .filter((str) => !!str) // remove last line
-    .map((str) => JSON.parse(str) as DbRecord);
 }
 
 let missingVarsMessageShown = false;
