@@ -80,7 +80,7 @@
         </organization-lite-form>
 
         <!-- PASSWORD FIELDS -->
-        <ng-container *ngIf="form.get('generatedPassword').enabled">
+        <ng-container *ngIf="form.get('generatedPassword').enabled else password">
           <div fxLayout fxLayoutGap="16px" fxLayoutAlign="start">
             <mat-form-field appearance="outline">
               <mat-label>Invitation Pass</mat-label>
@@ -90,9 +90,12 @@
             </mat-form-field>
             <button mat-mini-fab color="primary" matTooltip="Contact us to get help" (click)="openIntercom()">?</button>
           </div>
+          <password-update formControlName="password" [currentControl]="form.get('generatedPassword')"></password-update>
         </ng-container>
 
-        <password-confirm *ngIf="form.get('password').enabled" formControlName="password"></password-confirm>
+        <ng-template #password>
+          <password-confirm *ngIf="form.get('password').enabled" formControlName="password"></password-confirm>
+        </ng-template>
 
         <!-- TERMS OF USE & PRIVACY POLICY -->
 

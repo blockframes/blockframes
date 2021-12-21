@@ -23,6 +23,18 @@ export class RepeatPasswordStateMatcher implements ErrorStateMatcher {
   }
 }
 
+/** Check if two inputs have the same value (but inversed version of RepeatPasswordStateMatcher) */
+export class DifferentPasswordStateMatcher implements ErrorStateMatcher {
+  constructor(
+    private current: string = 'current',
+    private next: string = 'next'
+  ) {}
+
+  isErrorState(control: FormControl | null): boolean {
+    return (control?.value && control.parent.get(this.current).value === control.parent.get(this.next).value && control.dirty);
+  }
+}
+
 /** Checks if two input are not both setted */
 export class XorControlsStateMatcher implements ErrorStateMatcher {
   private first: string;

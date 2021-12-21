@@ -13,6 +13,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatIconModule } from '@angular/material/icon';
+import { MatOptionModule } from '@angular/material/core';
 
 // Component
 import { IdentityComponent } from './identity.component';
@@ -25,8 +27,7 @@ import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
 import { StorageFileModule } from '@blockframes/media/pipes/storageFile.pipe';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { PasswordConfirmModule } from '@blockframes/ui/form/password-confirm/password-confirm.module';
-import { MatOptionModule } from '@angular/material/core';
-import { MatIconModule } from '@angular/material/icon';
+import { PasswordUpdateModule } from '@blockframes/ui/form/password-update/password-update.module';
 
 @NgModule({
   declarations: [IdentityComponent],
@@ -44,6 +45,7 @@ import { MatIconModule } from '@angular/material/icon';
     StorageFileModule,
     ImageModule,
     PasswordConfirmModule,
+    PasswordUpdateModule,
 
     // Material
     MatSnackBarModule,

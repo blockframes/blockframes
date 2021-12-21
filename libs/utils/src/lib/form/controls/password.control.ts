@@ -1,6 +1,6 @@
 import { FormEntity } from '../forms'
 import { AbstractControlOptions, Validators, FormControl } from '@angular/forms';
-import { confirmPasswords } from '../validators/validators';
+import { confirmPasswords, differentPassword } from '../validators/validators';
 
 export const passwordValidators = [
   Validators.required,
@@ -63,5 +63,31 @@ type EditPasswordControl = ReturnType<typeof createEditPasswordControls>;
 export class EditPasswordForm extends FormEntity<EditPasswordControl> {
   constructor() {
     super(createEditPasswordControls());
+  }
+}
+
+// Update Password
+export interface UpdatePassword {
+  current: string;
+  next: string;
+  confirm: string;
+}
+
+function createUpdatePasswordControls(current: PasswordControl) {
+  return {
+    current,
+    next: new PasswordControl(),
+    confirm: new PasswordControl()
+  }
+}
+
+export type UpdatePasswordControl = ReturnType<typeof createUpdatePasswordControls>;
+
+export class UpdatePasswordForm extends FormEntity<UpdatePasswordControl> {
+  constructor(currentControl: PasswordControl) {
+    super(createUpdatePasswordControls(currentControl), { validators: [
+      confirmPasswords('next', 'confirm'),
+      differentPassword()
+    ]})
   }
 }
