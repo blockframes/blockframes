@@ -15,8 +15,6 @@ export async function onDocumentPermissionCreate(
   const { docID, orgID } = context.params;
 
   // if the permission let you write the document, it means that you are the first owner.
-  // @TODO used only here, update db-cleaning script & tests + rename isBrandNewDoc rule
-  // Is this collection still usefull at all ?
   return db.doc(`docsIndex/${docID}`).set({ authorOrgId: orgID }, { merge: true });
 }
 

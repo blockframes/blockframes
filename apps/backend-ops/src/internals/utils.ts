@@ -204,7 +204,7 @@ export function auditConsistency(dbData: DatabaseData, collections: CollectionDa
 
   const consistencyErrors: ConsistencyError[] = [];
   for (const collection of collectionsToAudit) {
-    // For this collection, let check if references of auditedCollection ids all belongs to an existing document of auditedCollection
+    // For this collection, let check if references of auditedCollection ids all belongs to an existing document of collectionsToAudit
     for (const document of collection.refs.docs) {
       if (dataMap[auditedCollectionName][collection.name]) {
         for (const _field of dataMap[auditedCollectionName][collection.name]) {
