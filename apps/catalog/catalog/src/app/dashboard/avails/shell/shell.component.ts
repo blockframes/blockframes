@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, } from "@angular/core";
 import { ActivatedRoute, } from "@angular/router";
-import { AvailsForm } from "@blockframes/contract/avails/form/avails.form";
+import { CalendarAvailsForm, MapAvailsForm } from "@blockframes/contract/avails/form/avails.form";
 import { Contract, ContractService, isMandate, isSale } from "@blockframes/contract/contract/+state";
 import { Term, TermService } from "@blockframes/contract/term/+state";
 import { Movie, MovieService } from "@blockframes/movie/+state";
@@ -21,8 +21,8 @@ export class CatalogAvailsShellComponent {
   );
 
   public avails = {
-    mapForm: new AvailsForm({ territories: [] }, ['duration']),
-    calendarForm: new AvailsForm({ territories: [] }, ['territories'])
+    mapForm: new MapAvailsForm(),
+    calendarForm: new CalendarAvailsForm()
   };
 
   public movieOrg$ = this.movie$.pipe(

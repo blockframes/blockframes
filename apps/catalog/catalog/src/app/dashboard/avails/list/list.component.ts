@@ -63,7 +63,7 @@ const saleCountAndTotalPrice = (title: JoinSaleTitleType) => {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnInit {
-  public availsForm = new AvailsForm({}, ['duration', 'territories']);
+  public availsForm = new AvailsForm();
   private orgId = this.orgQuery.getActiveId();
   private sub: Subscription;
 
