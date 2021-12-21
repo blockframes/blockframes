@@ -1,6 +1,6 @@
 ﻿import { resolve } from 'path';
 process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
-import { initFirestoreApp } from '@blockframes/testing/firebase/functions';
+import { initFirestoreApp } from '@blockframes/testing/unit-tests';
 import { clearFirestoreData } from '@firebase/rules-unit-testing';
 import { inviteUsers }  from './main';
 import firebaseTest = require('firebase-functions-test');
