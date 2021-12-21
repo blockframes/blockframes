@@ -355,7 +355,7 @@ interface CalendarAvailabilities {
   available: DurationMarker[];
   sold: DurationMarker[];
   inBucket: DurationMarker[];
-  selected: DurationMarker[];
+  selected: DurationMarker;
 }
 
 function isCalendarTermInAvails<T extends BucketTerm | Term>(term: T, avails: CalendarAvailsFilter) {
@@ -418,14 +418,14 @@ export function durationAvailabilities(
 
 
   const inBucket: DurationMarker[] = [];
-  const selected: DurationMarker[] = [];
+  let selected: DurationMarker = undefined;
 
   for (const bucketSale of bucketContracts ?? []) {
     for (const term of bucketSale.terms) {
       const isInBucket = isCalendarTermInBucket(term, avails);
       const isSelected = isCalendarTermSelected(term, avails);
       if (isSelected) {
-        selected.push({ from: term.duration.from, to: term.duration.to }); // , term, contract: bucketSale });
+        selected = { from: term.duration.from, to: term.duration.to }; // , term, contract: bucketSale });
       } else if (isInBucket) {
         inBucket.push({ from: term.duration.from, to: term.duration.to });
       }

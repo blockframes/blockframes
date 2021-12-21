@@ -44,6 +44,7 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
     this.shell.bucketForm.value$,
   ]).pipe(
     map(([avails, mandates, mandateTerms, sales, salesTerms, bucket]) => {
+      if (this.availsForm.invalid) return { notLicensed: [], available: [], sold: [], inBucket: [], selected: [] };
       const res = filterByTitle(this.titleId, mandates, mandateTerms, sales, salesTerms, bucket)
       return territoryAvailabilities(avails, res.mandates, res.sales, res.bucketContracts);
     }),
