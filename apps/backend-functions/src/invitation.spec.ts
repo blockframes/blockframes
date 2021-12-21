@@ -9,6 +9,7 @@ import { testFixture } from './fixtures/data';
 import * as admin from 'firebase-admin';
 import * as userOps from './internals/users';
 import { firebase } from '@env';
+import { expect } from '@jest/globals';
 
 const projectRealId = firebase().projectId;
 const pathToServiceAccountKey = resolve(process.cwd(), process.env.GOOGLE_APPLICATION_CREDENTIALS);
@@ -44,7 +45,7 @@ describe('Invitation backend-function unit-tests', () => {
       await expect(async ()=> {
         await wrapped(data, { })
       }).rejects
-        .toThrow("Permission denied: missing auth context.");
+        .toThrow('Permission denied: missing auth context.');
     });
 
     it('missing org ID, throws error', async () => {
@@ -68,7 +69,7 @@ describe('Invitation backend-function unit-tests', () => {
       await expect(async ()=> {
         await wrapped(data, context)
       }).rejects
-        .toThrow("Permission denied: missing org id.");
+        .toThrow('Permission denied: missing org id.');
     });
 
     it('with proper data, does not throw error', async () => {
@@ -145,7 +146,7 @@ describe('Invitation backend-function unit-tests', () => {
       );
 
       const inviteId = result[0].id;
-      const snap = await admin.firestore().collection("invitations").doc(inviteId).get();
+      const snap = await admin.firestore().collection('invitations').doc(inviteId).get();
       const inviteData = snap.data();
       expect(inviteData.id).toEqual(inviteId);
       expect(inviteData.toUser).toEqual(

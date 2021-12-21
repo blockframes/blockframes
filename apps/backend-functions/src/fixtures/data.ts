@@ -1,6 +1,4 @@
-import { metaDoc } from '@blockframes/utils/maintenance';
-
-export const testFixture = {
+﻿export const testFixture = {
   //Meta
   '_META/_MAINTENANCE': {
     startedAt: null,

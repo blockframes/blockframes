@@ -5,8 +5,8 @@ export const functions = (config = defaultConfig) => region(firebaseRegion).runW
 import { backupBucket, storageBucket } from '../environments/environment';
 import { defaultConfig, isInMaintenance } from '@blockframes/firebase-utils';
 import { IMaintenanceDoc, META_COLLECTION_NAME, MAINTENANCE_DOCUMENT_NAME, _isInMaintenance } from '@blockframes/utils/maintenance';
-import { initFunctionsTestMock } from "@blockframes/testing/unit-tests";
-const emulation = (process.env.FIRESTORE_EMULATOR_HOST === 'localhost:8080')
+import { initFunctionsTestMock } from '@blockframes/testing/unit-tests';
+const emulation = (process.env.FIRESTORE_EMULATOR_HOST === 'localhost:8080');
 
 if (!admin.apps.length) {
   if (emulation) {
