@@ -20,8 +20,10 @@
     </ng-container>
   </ng-container>
   <ng-template #default>
-    <mat-chip disableRipple *ngFor="let item of data.terms">
-      {{ item | toLabel: data.scope }}
-    </mat-chip>
+    <mat-chip-list>
+      <mat-chip disableRipple *ngFor="let item of data.terms">
+        {{ item | toLabel: data.scope }}
+      </mat-chip>
+    </mat-chip-list>
   </ng-template>
 </section>

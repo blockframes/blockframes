@@ -20,7 +20,7 @@ export class DetailedTermsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    const groups = JSON.parse(JSON.stringify(staticGroups[this.data.scope]));
+    const groups = JSON.parse(JSON.stringify(staticGroups[this.data.scope] ?? {}));
     if (groups) {
       for (const group of groups) {
 
