@@ -60,6 +60,7 @@ export class OfferShellComponent {
       joinWith({
         title: contract => this.titleService.valueChanges(contract.titleId),
         income: contract => this.incomeService.valueChanges(contract.id),
+        negotiation: contract => this.contractService.lastNegotiation(contract.id),
         seller: contract => {
           // Get the ID of the seller, not AC
           const sellerId = contract.stakeholders.find(id => id !== contract.sellerId && id !== contract.buyerId);

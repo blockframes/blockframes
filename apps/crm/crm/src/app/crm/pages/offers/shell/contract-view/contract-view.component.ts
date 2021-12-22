@@ -14,6 +14,7 @@ import { ContractService, contractStatus, Holdback } from '@blockframes/contract
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 
 import { OfferShellComponent } from '../shell.component';
+import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
 
 
 @Component({
@@ -48,8 +49,9 @@ export class ContractViewComponent implements OnInit, OnDestroy {
     private snackbar: MatSnackBar,
     private shell: OfferShellComponent,
     private incomeService: IncomeService,
+    private negotiationService: NegotiationService,
     private contractService: ContractService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.sub = this.contract$.subscribe(contract => {
@@ -64,10 +66,12 @@ export class ContractViewComponent implements OnInit, OnDestroy {
     this.sub.unsubscribe();
   }
 
-  async update(contractId: string) {
+  async update(contractId: string, negotiationId: string) {
     const write = this.contractService.batch();
-    const { status, price} = this.form.value;
+    const config = { write, params: { contractId } };
+    const { status, price } = this.form.value;
     this.contractService.update(contractId, { status }, { write });
+    this.negotiationService.update(negotiationId, { status, price }, config)
     this.incomeService.update(contractId, { price }, { write });
     await write.commit();
     this.snackbar.open('Offer updated!', 'ok', { duration: 1000 });
