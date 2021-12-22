@@ -1,39 +1,31 @@
-﻿import { resolve } from 'path';
-process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
-import { initFirestoreApp } from './internals/firebase-test';
+﻿process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
+import { initFirestoreApp } from '@blockframes/testing/unit-tests';
 import { clearFirestoreData } from '@firebase/rules-unit-testing';
-import { inviteUsers }  from './main';
+import { inviteUsers } from './main';
 import firebaseTest = require('firebase-functions-test');
-import { testFixture } from './fixtures/data';
-
+import { testFixture } from './fixtures/inviteUsers';
 import * as admin from 'firebase-admin';
 import * as userOps from './internals/users';
 import { firebase } from '@env';
 import { expect } from '@jest/globals';
 
-const projectRealId = firebase().projectId;
-const pathToServiceAccountKey = resolve(process.cwd(), process.env.GOOGLE_APPLICATION_CREDENTIALS);
-const testEnv = firebaseTest(firebase(), pathToServiceAccountKey);
+const testEnv = firebaseTest(firebase());
 
 describe('Invitation backend-function unit-tests', () => {
 
   beforeAll(async () => {
-    process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
-    // We are initing firestore with client settings to
-    // test the functions effectively
-    await initFirestoreApp(projectRealId, '', testFixture, { uid: 'uid-user2', firebase: { sign_in_provider: 'password' } });
+    await initFirestoreApp(firebase().projectId, 'firestore.rules', testFixture);
   });
 
   afterAll(async () => {
     // After each test, db is reseted
-    await clearFirestoreData({ projectId: projectRealId });
+    await clearFirestoreData({ projectId: firebase().projectId });
   });
-
 
   describe('Invitation spec', () => {
     it('missing auth context, throws error', async () => {
       const wrapped = testEnv.wrap(inviteUsers);
-  
+
       //Compose the call to simpleCallable cf with param data
       const data = {
         emails: ['test@cascade8.com'],
@@ -42,22 +34,22 @@ describe('Invitation backend-function unit-tests', () => {
       };
 
       expect.assertions(1);
-      await expect(async ()=> {
-        await wrapped(data, { })
+      await expect(async () => {
+        await wrapped(data, {})
       }).rejects
         .toThrow('Permission denied: missing auth context.');
     });
 
     it('missing org ID, throws error', async () => {
       const wrapped = testEnv.wrap(inviteUsers);
-  
+
       //Compose the call to simpleCallable cf with param data
       const data = {
         emails: ['test@cascade8.com'],
         invitation: {},
         app: 'catalog'
       };
-  
+
       const context = {
         auth: {
           uid: 'uid-c8',
@@ -66,7 +58,7 @@ describe('Invitation backend-function unit-tests', () => {
       };
 
       expect.assertions(1);
-      await expect(async ()=> {
+      await expect(async () => {
         await wrapped(data, context)
       }).rejects
         .toThrow('Permission denied: missing org id.');
@@ -74,7 +66,7 @@ describe('Invitation backend-function unit-tests', () => {
 
     it('with proper data, does not throw error', async () => {
       const wrapped = testEnv.wrap(inviteUsers);
-  
+
       //Compose the call to simpleCallable cf with param data
       const data = {
         emails: [],
@@ -86,7 +78,7 @@ describe('Invitation backend-function unit-tests', () => {
         },
         app: 'catalog'
       };
-  
+
       const context = {
         auth: {
           uid: 'uid-user2',
@@ -100,7 +92,7 @@ describe('Invitation backend-function unit-tests', () => {
 
     it('For \'Join organization\' event, email is sent & invite doc created', async () => {
       const wrapped = testEnv.wrap(inviteUsers);
-  
+
       //Compose the call to simpleCallable cf with param data
       const data = {
         emails: ['test@cascade8.com'],
@@ -108,11 +100,12 @@ describe('Invitation backend-function unit-tests', () => {
           id: '',
           type: 'Join organization',
           mode: 'invitation',
-          date: new Date()
+          date: new Date(),
+          toUser: { uid: 'User001' }
         },
         app: 'catalog'
       };
-  
+
       const context = {
         auth: {
           uid: 'uid-user2',
