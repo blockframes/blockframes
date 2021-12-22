@@ -246,7 +246,7 @@ export async function printDatabaseInconsistencies(
   const { dbData, collectionData } = data || await loadAllCollections(db);
 
   const usersOutput = auditConsistency(dbData, collectionData, 'users');
-  console.log(`found ${usersOutput.length} inconsistencies when auditing users (${usersOutput.filter(o => o.in.field.indexOf('_meta') ===0).length} in _meta).`);
+  console.log(`Found ${usersOutput.length} inconsistencies when auditing users (${usersOutput.filter(o => o.in.field.indexOf('_meta') ===0).length} in _meta).`);
 
   if (options.verbose) {
     for (const inconsistency of usersOutput) {
@@ -255,7 +255,7 @@ export async function printDatabaseInconsistencies(
   }
 
   const orgsOutput = auditConsistency(dbData, collectionData, 'orgs');
-  console.log(`found ${orgsOutput.length} inconsistencies when auditing orgs (${orgsOutput.filter(o => o.in.field.indexOf('_meta') ===0).length} in _meta).`);
+  console.log(`Found ${orgsOutput.length} inconsistencies when auditing orgs (${orgsOutput.filter(o => o.in.field.indexOf('_meta') ===0).length} in _meta).`);
 
   if (options.verbose) {
     for (const inconsistency of orgsOutput) {
