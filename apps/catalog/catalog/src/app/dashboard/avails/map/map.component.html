@@ -1,4 +1,4 @@
-<form [availsFilter]="availsForm" required hide='territories'></form>
+<form [availsFilter]="availsForm"></form>
 <ng-container *ngIf="availabilities$ | async as availabilities; else loading">
   <world-map>
     <ng-container *ngIf="(status$ | async) === 'INVALID'">
