@@ -176,6 +176,7 @@ export async function shrinkDb(db: FirebaseFirestore.Firestore) {
   //////////////////
   // CLEANING REMAINING DOCUMENTS
   //////////////////
+
   console.log('Cleaning remaining documents');
   await cleanDeprecatedData(db, undefined, { verbose: false });
 
