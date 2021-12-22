@@ -24,13 +24,18 @@
     </li>
   </ul>
 
-  <avails-calendar
-    fxFlexAlign="center"
-    fxFlexAlign.lt-md="start"
-    [availableMarkers]="available$ | async"
-    [soldMarkers]="sold$ | async"
-    disableSelect
+  <ng-container *ngIf="availabilities$ | async as availabilities; else loading">
+    <avails-calendar
+      fxFlexAlign="center"
+      fxFlexAlign.lt-md="start"
+      [availableMarkers]="availabilities.available"
+      [soldMarkers]="availabilities.sold"
+      disableSelect
     ></avails-calendar>
+  </ng-container>
+  <ng-template #loading>
+    <mat-spinner></mat-spinner>
+  </ng-template>
 
 
   <div *ngIf="(status$ | async) === 'INVALID'" fxLayoutAlign="center center">
