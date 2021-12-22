@@ -1,17 +1,16 @@
-﻿import * as admin from 'firebase-admin';
+import * as admin from 'firebase-admin';
 import firebaseFunctionsTest from 'firebase-functions-test';
-import { runChunks } from '@blockframes/firebase-utils';
 import { join, resolve } from 'path';
 import { config } from 'dotenv';
 import { firebase as firebaseEnv } from '@env';
-import { initializeTestApp, loadFirestoreRules, initializeAdminApp } from '@firebase/testing';
+import { initializeTestApp, loadFirestoreRules, initializeAdminApp } from '@firebase/rules-unit-testing';
 import type { FeaturesList } from 'firebase-functions-test/lib/features';
-import type { AppOptions } from 'firebase-admin'; // * Correct Import
+import type { AppOptions } from 'firebase-admin';
 import fs from 'fs';
 import { TokenOptions } from '@firebase/rules-unit-testing/dist/src/api';
 
 export interface FirebaseTestConfig extends FeaturesList {
-  firebaseConfig?: { projectId: string, app: admin.app.App };
+  firebaseConfig?: { projectId: string , app: admin.app.App}
 }
 
 let testIndex = 0;
@@ -29,7 +28,7 @@ export function initFunctionsTestMock(emulator = true, overrideConfig?: AppOptio
   try {
     // tslint:disable-next-line: no-eval
     runtimeConfig = eval('require')(join(process.cwd(), './.runtimeconfig.json'));
-  } catch (e) {
+  } catch (e) { 
     console.log(e);
   }
   if (emulator) { // ** Connect to emulator
@@ -85,19 +84,4 @@ function setData(projectId: string, dataDB: Record<string, unknown>) {
   // Write data to firestore app
   const promises = Object.entries(dataDB).map(([key, doc]) => db.doc(key).set(doc));
   return Promise.all(promises);
-}
-
-//////////////
-// DB TOOLS //
-//////////////
-
-export function populate(collection: string, set: any[]) {
-  const db = admin.firestore();
-  return runChunks(set, async (d) => {
-    const docRef = db.collection(collection).doc(d.id || d.uid);
-    if (d.date?._seconds) { d.date = new Date(d.date._seconds * 1000) };
-    if (d.end?._seconds) { d.end = new Date(d.end._seconds * 1000) };
-    if (d._meta?.createdAt?._seconds) { d._meta.createdAt = new Date(d._meta.createdAt._seconds * 1000) };
-    await docRef.set(d);
-  }, 50, false)
 }
