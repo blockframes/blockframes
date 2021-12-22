@@ -57,6 +57,29 @@
             </a>
           </li>
         </ul>
+        <h3>Buying Preferences</h3>
+        <ul>
+          <li><b>Genres : </b>
+            <span (click)="openDetails(user.preferences?.genres, 'genres')">
+              {{ user.preferences?.genres | toLabel:'genres' | maxLength: 125 }}
+            </span>
+          </li>
+          <li><b>Languages : </b>
+            <span (click)="openDetails(user.preferences?.languages, 'languages')">
+              {{ user.preferences?.languages | toLabel:'languages' | maxLength: 125 }}
+            </span>
+          </li>
+          <li><b>Territories : </b>
+            <span (click)="openDetails(user.preferences?.territories, 'territories')">
+              {{ user.preferences?.territories | toLabel:'territories' | maxLength: 125 }}
+            </span>
+          </li>
+          <li><b>Media : </b>
+            <span (click)="openDetails(user.preferences?.medias, 'medias')">
+              {{ user.preferences?.medias | toLabel:'medias' | maxLength: 125 }}
+            </span>
+          </li>
+        </ul>
       </article>
     </mat-card-content>
   </mat-card>
