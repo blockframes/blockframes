@@ -1287,7 +1287,7 @@ const movieFormFields = {
   internalRef: 'Title Reference',
   keyAssets: 'Key Assets',
   keywords: 'Keywords',
-  languages: 'Available Versions',
+  languages: 'Versions',
   logline: 'Logline',
   isOriginalVersionAvailable: 'Original Version',
   originalLanguages: 'Original Language(s)',
