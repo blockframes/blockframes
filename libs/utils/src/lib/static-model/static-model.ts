@@ -87,6 +87,7 @@ export const crewRoles = {
 } as const
 
 export const directorCategory = {
+  none: '',
   firstFeature: 'First Feature',
   risingTalent: 'Rising Talent',
   confirmed: 'Confirmed Director',
@@ -1287,7 +1288,7 @@ const movieFormFields = {
   internalRef: 'Title Reference',
   keyAssets: 'Key Assets',
   keywords: 'Keywords',
-  languages: 'Available Versions',
+  languages: 'Versions',
   logline: 'Logline',
   isOriginalVersionAvailable: 'Original Version',
   originalLanguages: 'Original Language(s)',
