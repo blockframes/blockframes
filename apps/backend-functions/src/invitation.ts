@@ -122,7 +122,7 @@ export async function onInvitationWrite(
   }
 }
 
-interface UserInvitation {
+export interface UserInvitation {
   emails: string[];
   invitation: Partial<InvitationBase<Date>>;
   app?: App;

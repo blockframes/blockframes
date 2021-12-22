@@ -9,6 +9,8 @@ import * as userOps from './internals/users';
 import { firebase } from '@env';
 import { expect } from '@jest/globals';
 import { ErrorResultResponse } from './utils';
+import { UserInvitation } from './invitation';
+import { endMaintenance } from '@blockframes/firebase-utils';
 
 const testEnv = firebaseTest(firebase());
 
@@ -16,6 +18,7 @@ describe('Invitation backend-function unit-tests', () => {
 
   beforeAll(async () => {
     await initFirestoreApp(firebase().projectId, 'firestore.rules', testFixture);
+    await endMaintenance();
   });
 
   afterAll(async () => {
@@ -69,11 +72,11 @@ describe('Invitation backend-function unit-tests', () => {
       const wrapped = testEnv.wrap(inviteUsers);
 
       //Compose the call to simpleCallable cf with param data
-      const data = {
+      const data: UserInvitation = {
         emails: [],
         invitation: {
           id: '',
-          type: 'Join organization',
+          type: 'joinOrganization',
           mode: 'invitation',
           date: new Date()
         },
@@ -95,14 +98,13 @@ describe('Invitation backend-function unit-tests', () => {
       const wrapped = testEnv.wrap(inviteUsers);
 
       //Compose the call to simpleCallable cf with param data
-      const data = {
+      const data: UserInvitation = {
         emails: ['test@cascade8.com'],
         invitation: {
           id: '',
-          type: 'Join organization',
+          type: 'joinOrganization',
           mode: 'invitation',
-          date: new Date(),
-          toUser: { uid: 'User001' }
+          date: new Date()
         },
         app: 'catalog'
       };
@@ -119,7 +121,8 @@ describe('Invitation backend-function unit-tests', () => {
         return {
           user: {
             uid: 'User001',
-            email
+            email,
+            firstName: 'User001-name'
           },
           invitationStatus: 'pending'
         };

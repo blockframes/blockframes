@@ -3,8 +3,8 @@
 export const testFixture = {
   //Meta
   [metaDoc]: {
-    startedAt: null,
-    endedAt: new Date()
+    startedAt: new Date(),
+    endedAt: null
   },
 
   //Orgs
