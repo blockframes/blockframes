@@ -3,7 +3,7 @@ import { InvitationDocument } from '@blockframes/invitation/+state/invitation.fi
 import { PublicUser } from '@blockframes/user/+state/user.firestore';
 import { OrganizationDocument, PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
 import { PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
-import { removeUnexpectedUsers, UserConfig } from './users';
+import { removeUnexpectedUsers } from './users';
 import { Auth, Firestore, QueryDocumentSnapshot, getDocument, runChunks } from '@blockframes/firebase-utils';
 import admin from 'firebase-admin';
 import { createStorageFile } from '@blockframes/media/+state/media.firestore';
@@ -162,7 +162,7 @@ export async function cleanUsers(
 ) {
 
   // Check if auth users have their record on DB
-  await removeUnexpectedUsers(users.docs.map(u => u.data() as UserConfig), auth);
+  await removeUnexpectedUsers(users.docs.map(u => u.data() as PublicUser), auth);
 
   return runChunks(users.docs, async (userDoc: FirebaseFirestore.DocumentSnapshot) => {
     const user = userDoc.data();
