@@ -473,6 +473,89 @@ describe('DB cleaning script', () => {
     expect(notificationsAfter.docs.length).toEqual(2);
   });
 
+  it('should keep notifications related to existing users, invitations, events, offers, movies and orgs ', async () => {
+    const currentTimestamp = new Date().getTime() / 1000;
+
+    const _meta = { createdAt: { _seconds: currentTimestamp } };
+
+    const testNotifications = [
+      // Valid ones
+      { id: 'notif-A', toUserId: 'A', _meta },
+      { id: 'notif-B', toUserId: 'A', _meta, user: { uid: 'A' } },
+      { id: 'notif-C', toUserId: 'A', _meta, invitation: { id: 'invit-A' } },
+      { id: 'notif-D', toUserId: 'A', _meta, docId: 'event-A' },
+      { id: 'notif-E', toUserId: 'A', _meta, docId: 'offer-A' },
+      { id: 'notif-F', toUserId: 'A', _meta, docId: 'movie-A' },
+      { id: 'notif-G', toUserId: 'A', _meta, organization: { id: 'org-A' } },
+      { id: 'notif-H', toUserId: 'A', _meta, docId: 'org-A' },
+      { id: 'notif-I', toUserId: 'A', _meta, bucket: { id: 'org-A' } }, // Bucket Ids are org Ids
+      { id: 'notif-J', toUserId: 'A', _meta, invitation: { id: 'invit-A' }, organization: { id: 'org-A' } },
+
+      // Invalids ones
+      { id: 'notif-K', toUserId: 'B', _meta },
+      { id: 'notif-L', toUserId: 'A', _meta, user: { uid: 'B' } },
+      { id: 'notif-M', toUserId: 'A', _meta, invitation: { id: 'invit-B' } },
+      { id: 'notif-N', toUserId: 'A', _meta, docId: 'event-B' },
+      { id: 'notif-O', toUserId: 'A', _meta, docId: 'offer-B' },
+      { id: 'notif-P', toUserId: 'A', _meta, docId: 'movie-B' },
+      { id: 'notif-Q', toUserId: 'A', _meta, organization: { id: 'org-B' } },
+      { id: 'notif-R', toUserId: 'A', _meta, docId: 'org-B' },
+      { id: 'notif-S', toUserId: 'A', _meta, bucket: { id: 'org-B' } },
+      { id: 'notif-T', toUserId: 'A', _meta, invitation: { id: 'invit-B' }, organization: { id: 'org-A' } },
+      { id: 'notif-U', toUserId: 'A', _meta, invitation: { id: 'invit-A' }, organization: { id: 'org-B' } },
+    ];
+
+    const testUsers = [{ uid: 'A' }];
+    const testInvitations = [{ id: 'invit-A' }];
+    const testEvents = [{ id: 'event-A' }];
+    const testOffers = [{ id: 'offer-A' }];
+    const testMovies = [{ id: 'movie-A' }];
+    const testOrgs = [{ id: 'org-A' }];
+
+    // Load our test set
+    await populate('notifications', testNotifications);
+    await populate('users', testUsers);
+    await populate('invitations', testInvitations);
+    await populate('events', testEvents);
+    await populate('offers', testOffers);
+    await populate('movies', testMovies);
+    await populate('orgs', testOrgs);
+    await populate('buckets', testOrgs);
+
+    const [notificationsBefore, users, invitations, events, offers, movies, orgs, buckets] = await Promise.all([
+      getCollectionRef('notifications'),
+      getCollectionRef('users'),
+      getCollectionRef('invitations'),
+      getCollectionRef('events'),
+      getCollectionRef('offers'),
+      getCollectionRef('movies'),
+      getCollectionRef('orgs'),
+      getCollectionRef('buckets'),
+    ]);
+
+    // Check if data have been correctly added
+    expect(notificationsBefore.docs.length).toEqual(21);
+    expect(users.docs.length).toEqual(1);
+    expect(invitations.docs.length).toEqual(1);
+    expect(events.docs.length).toEqual(1);
+    expect(offers.docs.length).toEqual(1);
+    expect(movies.docs.length).toEqual(1);
+    expect(orgs.docs.length).toEqual(1);
+    expect(buckets.docs.length).toEqual(1);
+
+    const documentIds = users.docs.map(d => d.id)
+      .concat(invitations.docs.map(d => d.id))
+      .concat(events.docs.map(d => d.id))
+      .concat(offers.docs.map(d => d.id))
+      .concat(movies.docs.map(d => d.id))
+      .concat(orgs.docs.map(d => d.id));
+
+    await cleanNotifications(notificationsBefore, documentIds);
+    const notificationsAfter: Snapshot = await getCollectionRef('notifications');
+
+    expect(notificationsAfter.docs.length).toEqual(10);
+  });
+
   it('should update notifications with related documents data', async () => {
     const currentTimestamp = new Date().getTime() / 1000;
     const testNotifications = [

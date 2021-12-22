@@ -8,7 +8,7 @@ import { Auth, Firestore, QueryDocumentSnapshot, getDocument, runChunks } from '
 import admin from 'firebase-admin';
 import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 import { getAllAppsExcept } from '@blockframes/utils/apps';
-import { auditConsistency, ConsistencyError, DatabaseData, loadAllCollections } from './internals/utils';
+import { DatabaseData, loadAllCollections, printDatabaseInconsistencies } from './internals/utils';
 
 export const numberOfDaysToKeepNotifications = 14;
 const currentTimestamp = new Date().getTime();
@@ -26,72 +26,43 @@ let verbose = false;
 // npm run backend-ops syncUsers
 
 /** Reusable data cleaning script that can be updated along with data model */
-export async function cleanDeprecatedData(db: FirebaseFirestore.Firestore, auth: admin.auth.Auth, options = { verbose: true }) {
+export async function cleanDeprecatedData(db: FirebaseFirestore.Firestore, auth?: admin.auth.Auth, options = { verbose: true }) {
   verbose = options.verbose;
   // Getting all collections we need to check
   const { dbData, collectionData } = await loadAllCollections(db);
 
   // Data consistency check before cleaning data
-  const usersOutput = await auditConsistency(dbData, collectionData, 'users');
-  console.log(`Before cleaning : found ${usersOutput.length} inconsistencies when auditing users.`);
+  await printDatabaseInconsistencies({ dbData, collectionData }, undefined, { verbose: false });
 
-  const orgsOutput = await auditConsistency(dbData, collectionData, 'orgs');
-  console.log(`Before cleaning : found ${orgsOutput.length} inconsistencies when auditing orgs.`);
-
+  // Actual cleaning
+  console.log('Cleaning data');
   await cleanData(dbData, db, auth);
 
   // Data consistency check after cleaning data
-  const { dbData: dbDataAfter, collectionData: collectionDataAfter } = await loadAllCollections(db);
-
-  // Data consistency check before cleaning data
-  const usersOutputAfter = await auditConsistency(dbDataAfter, collectionDataAfter, 'users');
-  console.log(`After cleaning : found ${usersOutputAfter.length} inconsistencies when auditing users.`);
-
-  const orgsOutputAfter = await auditConsistency(dbDataAfter, collectionDataAfter, 'orgs');
-  console.log(`After cleaning : found ${orgsOutputAfter.length} inconsistencies when auditing orgs.`);
+  await printDatabaseInconsistencies(undefined, db, { verbose: false });
 
   return true;
 }
 
 export async function auditDatabaseConsistency(db: FirebaseFirestore.Firestore, options = { verbose: true }) {
-  verbose = options.verbose;
-  // Getting all collections we need to check
-  const { dbData, collectionData } = await loadAllCollections(db);
-
-  const usersOutput = await auditConsistency(dbData, collectionData, 'users');
-  console.log(`found ${usersOutput.length} inconsistencies when auditing users.`);
-
-  for (const inconsistency of usersOutput) {
-    printInconsistency(inconsistency);
-  }
-
-  const orgsOutput = await auditConsistency(dbData, collectionData, 'orgs');
-  console.log(`found ${orgsOutput.length} inconsistencies when auditing orgs.`);
-
-  for (const inconsistency of orgsOutput) {
-    printInconsistency(inconsistency);
-  }
-
+  await printDatabaseInconsistencies(undefined, db, options);
   return true;
 }
 
-function printInconsistency(inconsistency: ConsistencyError) {
-  const { in: foundIn, missingDocId, auditedCollection } = inconsistency;
-  console.log(`Missing ${auditedCollection} in ${foundIn.collection}/${foundIn.docId}/${foundIn.field}.${missingDocId}`);
-}
-
-async function cleanData(dbData: DatabaseData, db: FirebaseFirestore.Firestore, auth: admin.auth.Auth) {
+async function cleanData(dbData: DatabaseData, db: FirebaseFirestore.Firestore, auth?: admin.auth.Auth) {
 
   // Getting existing document ids to compare
-  const [movieIds, organizationIds, eventIds, userIds] = [
+  const [movieIds, organizationIds, eventIds, userIds, invitationIds, offerIds] = [
     dbData.movies.refs.docs.map(ref => ref.id),
     dbData.orgs.refs.docs.map(ref => ref.id),
     dbData.events.refs.docs.map(ref => ref.id),
-    dbData.users.refs.docs.map(ref => ref.id)
+    dbData.users.refs.docs.map(ref => ref.id),
+    dbData.invitations.refs.docs.map(ref => ref.id),
+    dbData.offers.refs.docs.map(ref => ref.id),
   ];
 
   // Compare and update/delete documents with references to non existing documents
-  await cleanUsers(dbData.users.refs, organizationIds, auth, db);
+  if (auth) await cleanUsers(dbData.users.refs, organizationIds, auth, db);
   if (verbose) console.log('Cleaned users');
   await cleanOrganizations(dbData.orgs.refs, userIds, dbData.movies.refs);
   if (verbose) console.log('Cleaned orgs');
@@ -108,7 +79,7 @@ async function cleanData(dbData: DatabaseData, db: FirebaseFirestore.Firestore, 
     users2.docs.map(ref => ref.id)
   ];
 
-  const existingIds = movieIds.concat(organizationIds2, eventIds, userIds2);
+  const existingIds = movieIds.concat(organizationIds2, eventIds, userIds2, invitationIds, offerIds);
 
   await cleanPermissions(dbData.permissions.refs, organizationIds, userIds2);
   if (verbose) console.log('Cleaned permissions');
@@ -345,7 +316,6 @@ export function cleanDocsIndex(
  * Check each type of notification and return false if a referenced document doesn't exist
  * @param notification the notification to check
  * @param existingIds the ids to compare with notification fields
- * @TODO: #6460 & #6608: new notification type `contractCreated` created. Remember to take this into account.
  */
 function isNotificationValid(notification: NotificationDocument, existingIds: string[]): boolean {
   if (!existingIds.includes(notification.toUserId)) return false;
@@ -356,28 +326,13 @@ function isNotificationValid(notification: NotificationDocument, existingIds: st
     return false;
   }
 
-  // Since notification have fields depending on its type, we need to check those specific fields
-  switch (notification.type) {
-    case 'organizationAcceptedByArchipelContent':
-      return existingIds.includes(notification.organization?.id);
-    case 'requestFromUserToJoinOrgDeclined':
-    case 'orgMemberUpdated':
-      return (
-        existingIds.includes(notification.organization?.id) &&
-        existingIds.includes(notification.user?.uid)
-      );
-    case 'movieSubmitted':
-    case 'movieAccepted':
-    case 'invitationToAttendEventUpdated':
-    case 'requestToAttendEventUpdated':
-      return existingIds.includes(notification.docId);
-    case 'requestToAttendEventSent':
-      return (
-        existingIds.includes(notification.user?.uid) && existingIds.includes(notification.docId)
-      );
-    default:
-      return false;
-  }
+  if (notification.organization?.id && !existingIds.includes(notification.organization?.id)) return false;
+  if (notification.user?.uid && !existingIds.includes(notification.user?.uid)) return false;
+  if (notification.docId && !existingIds.includes(notification.docId)) return false; // docId can refer to : events, offers, movies, orgs
+  if (notification.invitation?.id && !existingIds.includes(notification.invitation?.id)) return false;
+  if (notification.bucket?.id && !existingIds.includes(notification.bucket?.id)) return false; // buckets Ids are orgs Ids
+
+  return true;
 }
 
 /**

@@ -187,7 +187,7 @@ function isMatchingValue(documentIdToFind: string, document: FirebaseFirestore.D
 //////////////////
 // Methods to audit db data
 //////////////////
-export interface ConsistencyError {
+interface ConsistencyError {
   auditedCollection?: Collections,
   missingDocId: string,
   in: {
@@ -197,7 +197,7 @@ export interface ConsistencyError {
   }
 };
 
-export function auditConsistency(dbData: DatabaseData, collections: CollectionData[], auditedCollectionName: 'users' | 'orgs') {
+function auditConsistency(dbData: DatabaseData, collections: CollectionData[], auditedCollectionName: 'users' | 'orgs') {
   const auditedCollection = dbData[auditedCollectionName];
   const auditedCollectionIds = auditedCollection.refs.docs.map(d => d.id);
   const collectionsToAudit = collections.filter(c => c.name !== auditedCollection.name);
@@ -234,6 +234,41 @@ function getConsitencyErrors(documentIdsToFind: string[], document: FirebaseFire
   }
 
   return consistencyErrors;
+}
+
+export async function printDatabaseInconsistencies(
+  data?: { dbData: DatabaseData, collectionData: CollectionData[] },
+  db?: FirebaseFirestore.Firestore,
+  options = { verbose: true }
+) {
+
+  // Getting all collections we need to check
+  const { dbData, collectionData } = data || await loadAllCollections(db);
+
+  const usersOutput = auditConsistency(dbData, collectionData, 'users');
+  console.log(`found ${usersOutput.length} inconsistencies when auditing users (${usersOutput.filter(o => o.in.field.indexOf('_meta') ===0).length} in _meta).`);
+
+  if (options.verbose) {
+    for (const inconsistency of usersOutput) {
+      printInconsistency(inconsistency);
+    }
+  }
+
+  const orgsOutput = auditConsistency(dbData, collectionData, 'orgs');
+  console.log(`found ${orgsOutput.length} inconsistencies when auditing orgs (${orgsOutput.filter(o => o.in.field.indexOf('_meta') ===0).length} in _meta).`);
+
+  if (options.verbose) {
+    for (const inconsistency of orgsOutput) {
+      printInconsistency(inconsistency);
+    }
+  }
+
+  return true;
+}
+
+function printInconsistency(inconsistency: ConsistencyError) {
+  const { in: foundIn, missingDocId, auditedCollection } = inconsistency;
+  console.log(`Missing ${auditedCollection} in ${foundIn.collection}/${foundIn.docId}/${foundIn.field}.${missingDocId}`);
 }
 
 

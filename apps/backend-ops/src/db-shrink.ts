@@ -10,7 +10,8 @@ import { backupBucket } from '@env'
 import staticUsers from 'tools/static-users.json';
 import { EIGHT_MINUTES_IN_MS } from "@blockframes/utils/maintenance";
 import type { ChildProcess } from "child_process";
-import { DocumentDescriptor, getAllDocumentCount, inspectDocumentRelations, loadAllCollections } from "./internals/utils";
+import { CollectionData, DatabaseData, DocumentDescriptor, getAllDocumentCount, inspectDocumentRelations, loadAllCollections, printDatabaseInconsistencies } from "./internals/utils";
+import { cleanDeprecatedData } from "./db-cleaning";
 
 /**
  * Temp this should be removed when fixtures are updated. 
@@ -40,7 +41,7 @@ export async function loadAndShrinkLatestAnonDbAndUpload() {
     });
 
     // STEP 2 shrink DB
-    const db = connectFirestoreEmulator()
+    const db = connectFirestoreEmulator();
     await startMaintenance(db);
     const status = await shrinkDb(db);
     await endMaintenance(db, EIGHT_MINUTES_IN_MS);
@@ -79,121 +80,24 @@ export async function shrinkDb(db: FirebaseFirestore.Firestore) {
 
   const { dbData, collectionData } = await loadAllCollections(db);
 
+  // Data consistency check before cleaning data
+  await printDatabaseInconsistencies({ dbData, collectionData }, undefined, { verbose: false });
+
   //////////////////
   // CHECK WHAT CAN BE DELETED
   // We want to keep only the users and orgs related to movies, contracts, events and the ones used in e2e tests (staticUsers) along with the documents in others collections they are linked to
   //////////////////
 
-  const e2eUsers = Object.values(staticUsers).concat(USERS);
-  const _usersLinked: string[] = e2eUsers;
-  const _orgsLinked: string[] = [];
-
-  for (const movie of dbData.movies.documents) {
-    if (movie._meta.createdBy) {
-      _usersLinked.push(movie._meta.createdBy);
-    }
-
-    if (movie._meta.updatedBy) {
-      _usersLinked.push(movie._meta.updatedBy);
-    }
-
-    if (movie._meta.deletedBy) {
-      _usersLinked.push(movie._meta.deletedBy);
-    }
-
-    for (const orgId of movie.orgIds) {
-      _orgsLinked.push(orgId);
-    }
-  }
-
-  for (const contract of dbData.contracts.documents) {
-    if (contract.buyerUserId) {
-      _usersLinked.push(contract.buyerUserId);
-    }
-
-    if (contract.buyerId) {
-      _orgsLinked.push(contract.buyerId);
-    }
-
-    if (contract.sellerId) {
-      _orgsLinked.push(contract.sellerId);
-    }
-
-    if (contract.stakeholders) {
-      for (const orgId of contract.stakeholders) {
-        _orgsLinked.push(orgId);
-      }
-    }
-  }
-
-  for (const event of dbData.events.documents) {
-    _orgsLinked.push(event.ownerOrgId);
-
-    if (event.meta?.organizerUid) {
-      _usersLinked.push(event.meta.organizerUid);
-    }
-  }
-
-  const getOrgSuperAdmin = (orgId: string) => {
-    const permission = dbData.permissions.documents.find(p => p.id === orgId);
-    return Object.keys(permission.roles).find(userId => permission.roles[userId] === 'superAdmin')
-  }
-
-  function getOrgIdOfUser(userId: string) {
-    const org = dbData.orgs.documents.find(o => o.userIds.includes(userId));
-    return org?.id || undefined;
-  }
-
-  const usersLinked = uniqueArray(_usersLinked).concat(uniqueArray(_orgsLinked).map(orgId => getOrgSuperAdmin(orgId)).filter(u => u));
-  const usersToKeep: string[] = uniqueArray(usersLinked).filter(uid => dbData.users.refs.docs.find(d => d.id === uid));
+  const { usersToKeep, orgsToKeep } = getOrgsAndUsersToKeep(dbData);
   console.log('Users to keep :', usersToKeep.length);
-
-  const orgsLinked = uniqueArray(_orgsLinked).concat(uniqueArray(_usersLinked).map(userId => getOrgIdOfUser(userId)).filter(o => o));
-  const orgsToKeep: string[] = uniqueArray(orgsLinked).filter(id => dbData.orgs.refs.docs.find(d => d.id === id));
   console.log('Orgs to keep :', orgsToKeep.length);
 
   //////////////////
   // FILTER DOCUMENT TO DELETE
   //////////////////
 
-  const usersDocumentsToKeep: DocumentDescriptor[] = dbData.users.refs.docs.filter(d => usersToKeep.includes(d.id)).map(d => ({
-    collection: 'users',
-    docId: d.id,
-  }));
-
-  const orgsDocumentsToKeep: DocumentDescriptor[] = dbData.orgs.refs.docs.filter(d => orgsToKeep.includes(d.id)).map(d => ({
-    collection: 'orgs',
-    docId: d.id
-  }));
-
-  const _usedDocumentsForUsers = usersToKeep.map(uid => {
-    const user = dbData.users.refs.docs.find(d => d.id === uid);
-    return inspectDocumentRelations(user, collectionData.filter(c => c.name !== 'orgs'), 'users');
-  }).reduce((a: DocumentDescriptor[], b: DocumentDescriptor[]) => a.concat(b), []);
-
-  const _usedDocumentsForOrgs = orgsToKeep.map(id => {
-    const org = dbData.orgs.refs.docs.find(d => d.id === id);
-    return inspectDocumentRelations(org, collectionData.filter(c => c.name !== 'users'), 'orgs');
-  }).reduce((a: DocumentDescriptor[], b: DocumentDescriptor[]) => a.concat(b), []);
-
-  const usedDocuments: DocumentDescriptor[] = _usedDocumentsForUsers
-    .concat(_usedDocumentsForOrgs)
-    .concat(usersDocumentsToKeep)
-    .concat(orgsDocumentsToKeep)
-    .filter((curr, index, self) => index === self.findIndex(t => t.collection === curr.collection && t.docId === curr.docId));
-
+  const { usedDocuments, documentsToDelete } = getDocumentsToKeepOrDelete(dbData, collectionData, usersToKeep, orgsToKeep);
   console.log('Overall documents to keep :', usedDocuments.length);
-
-  const documentsToDelete: DocumentDescriptor[] = [];
-  for (const collection of collectionData) {
-    for (const document of collection.refs.docs) {
-      const docId = document.id;
-      if (!usedDocuments.find(u => u.collection === collection.name && u.docId === docId)) {
-        documentsToDelete.push({ collection: collection.name, docId });
-      }
-    }
-  }
-
   console.log('Documents that can be deleted :', documentsToDelete.length);
 
   //////////////////
@@ -201,7 +105,6 @@ export async function shrinkDb(db: FirebaseFirestore.Firestore) {
   //////////////////
 
   for (const document of documentsToDelete) {
-    // @TODO #6460 cascade delete
     const doc = dbData[document.collection].refs.docs.find(d => d.id === document.docId);
     await doc.ref.delete();
 
@@ -270,11 +173,122 @@ export async function shrinkDb(db: FirebaseFirestore.Firestore) {
     errors = true;
   }
 
-  // @TODO #6460 check consistency errors + clean deprecated data ?
+  // Clean remaning docs
+  console.log('Cleaning remaining documents');
+  await cleanDeprecatedData(db, undefined, { verbose: false });
 
   return !errors;
 }
 
+function getOrgsAndUsersToKeep(dbData: DatabaseData) {
+  const e2eUsers = Object.values(staticUsers).concat(USERS);
+  const _usersLinked: string[] = e2eUsers;
+  const _orgsLinked: string[] = [];
+
+  for (const movie of dbData.movies.documents) {
+    if (movie._meta.createdBy) {
+      _usersLinked.push(movie._meta.createdBy);
+    }
+
+    if (movie._meta.updatedBy) {
+      _usersLinked.push(movie._meta.updatedBy);
+    }
+
+    if (movie._meta.deletedBy) {
+      _usersLinked.push(movie._meta.deletedBy);
+    }
+
+    for (const orgId of movie.orgIds) {
+      _orgsLinked.push(orgId);
+    }
+  }
+
+  for (const contract of dbData.contracts.documents) {
+    if (contract.buyerUserId) {
+      _usersLinked.push(contract.buyerUserId);
+    }
+
+    if (contract.buyerId) {
+      _orgsLinked.push(contract.buyerId);
+    }
+
+    if (contract.sellerId) {
+      _orgsLinked.push(contract.sellerId);
+    }
+
+    if (contract.stakeholders) {
+      for (const orgId of contract.stakeholders) {
+        _orgsLinked.push(orgId);
+      }
+    }
+  }
+
+  for (const event of dbData.events.documents) {
+    _orgsLinked.push(event.ownerOrgId);
+
+    if (event.meta?.organizerUid) {
+      _usersLinked.push(event.meta.organizerUid);
+    }
+  }
+
+  const getOrgSuperAdmin = (orgId: string) => {
+    const permission = dbData.permissions.documents.find(p => p.id === orgId);
+    return Object.keys(permission.roles).find(userId => permission.roles[userId] === 'superAdmin')
+  }
+
+  function getOrgIdOfUser(userId: string) {
+    const org = dbData.orgs.documents.find(o => o.userIds.includes(userId));
+    return org?.id || undefined;
+  }
+
+  const usersLinked = uniqueArray(_usersLinked).concat(uniqueArray(_orgsLinked).map(orgId => getOrgSuperAdmin(orgId)).filter(u => u));
+  const usersToKeep: string[] = uniqueArray(usersLinked).filter(uid => dbData.users.refs.docs.find(d => d.id === uid));
+
+  const orgsLinked = uniqueArray(_orgsLinked).concat(uniqueArray(_usersLinked).map(userId => getOrgIdOfUser(userId)).filter(o => o));
+  const orgsToKeep: string[] = uniqueArray(orgsLinked).filter(id => dbData.orgs.refs.docs.find(d => d.id === id));
+
+  return { usersToKeep, orgsToKeep };
+}
+
+function getDocumentsToKeepOrDelete(dbData: DatabaseData, collectionData: CollectionData[], usersToKeep: string[], orgsToKeep: string[]) {
+  const usersDocumentsToKeep: DocumentDescriptor[] = dbData.users.refs.docs.filter(d => usersToKeep.includes(d.id)).map(d => ({
+    collection: 'users',
+    docId: d.id,
+  }));
+
+  const orgsDocumentsToKeep: DocumentDescriptor[] = dbData.orgs.refs.docs.filter(d => orgsToKeep.includes(d.id)).map(d => ({
+    collection: 'orgs',
+    docId: d.id
+  }));
+
+  const _usedDocumentsForUsers = usersToKeep.map(uid => {
+    const user = dbData.users.refs.docs.find(d => d.id === uid);
+    return inspectDocumentRelations(user, collectionData.filter(c => c.name !== 'orgs'), 'users');
+  }).reduce((a: DocumentDescriptor[], b: DocumentDescriptor[]) => a.concat(b), []);
+
+  const _usedDocumentsForOrgs = orgsToKeep.map(id => {
+    const org = dbData.orgs.refs.docs.find(d => d.id === id);
+    return inspectDocumentRelations(org, collectionData.filter(c => c.name !== 'users'), 'orgs');
+  }).reduce((a: DocumentDescriptor[], b: DocumentDescriptor[]) => a.concat(b), []);
+
+  const usedDocuments: DocumentDescriptor[] = _usedDocumentsForUsers
+    .concat(_usedDocumentsForOrgs)
+    .concat(usersDocumentsToKeep)
+    .concat(orgsDocumentsToKeep)
+    .filter((curr, index, self) => index === self.findIndex(t => t.collection === curr.collection && t.docId === curr.docId));
+
+  const documentsToDelete: DocumentDescriptor[] = [];
+  for (const collection of collectionData) {
+    for (const document of collection.refs.docs) {
+      const docId = document.id;
+      if (!usedDocuments.find(u => u.collection === collection.name && u.docId === docId)) {
+        documentsToDelete.push({ collection: collection.name, docId });
+      }
+    }
+  }
+
+  return { usedDocuments, documentsToDelete };
+}
 
 function uniqueArray(arr: string[]) {
   return Array.from(new Set(arr))
