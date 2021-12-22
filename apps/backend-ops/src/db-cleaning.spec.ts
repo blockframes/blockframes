@@ -18,10 +18,11 @@ import {
 } from './db-cleaning';
 import { every } from 'lodash';
 import { loadAdminServices } from '@blockframes/firebase-utils';
-import { removeUnexpectedUsers, UserConfig } from './users';
+import { removeUnexpectedUsers } from './users';
 import { getCollectionRef } from '@blockframes/firebase-utils';
 import { clearFirestoreData } from '@firebase/testing';
 import { getAllAppsExcept } from '@blockframes/utils/apps';
+import { PublicUser } from '@blockframes/user/+state';
 
 type Snapshot = FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>;
 let db: FirebaseFirestore.Firestore;
@@ -113,7 +114,7 @@ describe('DB cleaning script', () => {
     const authBefore = await adminAuth.listUsers();
     expect(authBefore.users.length).toEqual(5);
 
-    await removeUnexpectedUsers(usersBefore.docs.map(u => u.data() as UserConfig), adminAuth);
+    await removeUnexpectedUsers(usersBefore.docs.map(u => u.data() as PublicUser), adminAuth);
 
     // An user should have been removed from auth because it is not in DB.
     const authAfter = await adminAuth.listUsers();

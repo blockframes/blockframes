@@ -239,12 +239,6 @@ export const onFileUpload = functions(heavyConfig).storage.object().onFinalize(s
 /** Trigger: when an user ask for a private media. */
 export const getMediaToken = functions().https.onCall(skipInMaintenance(logErrors(_getMediaToken)));
 
-/**
- * This is a scheduled function which runs daily backup if complied with production configuration
- */
-export { dailyFirestoreBackup } from './pubsub/daily-firestore-backup';
-
-
 export const createPdf = functions(heavyConfig).https.onRequest(_createPdf);
 
 //--------------------------------
