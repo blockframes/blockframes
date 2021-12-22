@@ -385,7 +385,7 @@ function isCalendarTermInBucket<T extends BucketTerm | Term>(term: T, avails: Ca
 }
 
 function isCalendarTermSelected<T extends BucketTerm | Term>(term: T, avails: CalendarAvailsFilter) {
-  const exclusivityCheck =avails.exclusive === term.exclusive;
+  const exclusivityCheck = avails.exclusive === term.exclusive;
   const mediaCheck = allOf(avails.medias).equal(term.medias);
   const territoryCheck = allOf(avails.territories).equal(term.territories);
 
@@ -425,7 +425,7 @@ export function durationAvailabilities(
       const isInBucket = isCalendarTermInBucket(term, avails);
       const isSelected = isCalendarTermSelected(term, avails);
       if (isSelected) {
-        selected = { from: term.duration.from, to: term.duration.to }; // , term, contract: bucketSale });
+        selected = { from: term.duration.from, to: term.duration.to };
       } else if (isInBucket) {
         inBucket.push({ from: term.duration.from, to: term.duration.to });
       }
