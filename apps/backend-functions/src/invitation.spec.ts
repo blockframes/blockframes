@@ -8,6 +8,7 @@ import * as admin from 'firebase-admin';
 import * as userOps from './internals/users';
 import { firebase } from '@env';
 import { expect } from '@jest/globals';
+import { ErrorResultResponse } from './utils';
 
 const testEnv = firebaseTest(firebase());
 
@@ -125,7 +126,7 @@ describe('Invitation backend-function unit-tests', () => {
       });
 
       // Should call 'inviteUsers' without any errors
-      const result = await wrapped(data, context);
+      const result: ErrorResultResponse[] = await wrapped(data, context);
 
       //Check if email is sent
       expect(userOps.getOrInviteUserByMail).toHaveBeenCalled();
@@ -138,7 +139,7 @@ describe('Invitation backend-function unit-tests', () => {
         })
       );
 
-      const inviteId = result[0].id;
+      const inviteId = result[0].result;
       const snap = await admin.firestore().collection('invitations').doc(inviteId).get();
       const inviteData = snap.data();
       expect(inviteData.id).toEqual(inviteId);

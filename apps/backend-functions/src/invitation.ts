@@ -187,8 +187,8 @@ export const inviteUsers = async (data: UserInvitation, context: CallableContext
     invitation.id = invitationId;
 
     try {
-      const invitationSet = await db.collection('invitations').doc(invitation.id).set(invitation);
-      promises.push({ result: invitationSet, id: invitation.id, error: '' });
+      await db.collection('invitations').doc(invitation.id).set(invitation);
+      promises.push({ result: invitation.id, error: '' });
     } catch (error) {
       promises.push({ result: undefined, error });
     }
