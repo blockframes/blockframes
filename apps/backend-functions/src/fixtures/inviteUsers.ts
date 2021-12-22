@@ -1,8 +1,10 @@
-﻿export const testFixture = {
+﻿import { metaDoc } from "@blockframes/utils/maintenance";
+
+export const testFixture = {
   //Meta
-  '_META/_MAINTENANCE': {
+  [metaDoc]: {
     startedAt: null,
-    endedAt: null
+    endedAt: new Date()
   },
 
   //Orgs
