@@ -425,18 +425,18 @@ export function durationAvailabilities(
 //          COMPARISON
 // ----------------------------
 
-export function isSameMapBucketTerm(avails: MapAvailsFilter, termB: BucketTerm) {
-  const exclusivityCheck = avails.exclusive === termB.exclusive;
-  const durationCheck = allOf(avails.duration).equal(termB.duration);
-  const mediasCheck = allOf(avails.medias).equal(termB.medias);
+export function isSameMapBucketTerm(avails: MapAvailsFilter, term: BucketTerm) {
+  const exclusivityCheck = avails.exclusive === term.exclusive;
+  const durationCheck = allOf(avails.duration).equal(term.duration);
+  const mediasCheck = allOf(avails.medias).equal(term.medias);
 
   return exclusivityCheck && durationCheck && mediasCheck;
 }
 
-export function isSameCalendarBucketTerm(avails: CalendarAvailsFilter, termB: BucketTerm) {
-  const exclusivityCheck = avails.exclusive === termB.exclusive;
-  const territoriesCheck = allOf(avails.territories).equal(termB.territories);
-  const mediasCheck = allOf(avails.medias).equal(termB.medias);
+export function isSameCalendarBucketTerm(avails: CalendarAvailsFilter, term: BucketTerm) {
+  const exclusivityCheck = avails.exclusive === term.exclusive;
+  const territoriesCheck = allOf(avails.territories).equal(term.territories);
+  const mediasCheck = allOf(avails.medias).equal(term.medias);
 
   return exclusivityCheck && territoriesCheck && mediasCheck;
 }
