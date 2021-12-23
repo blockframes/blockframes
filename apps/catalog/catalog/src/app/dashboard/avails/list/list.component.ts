@@ -33,7 +33,6 @@ type JoinSaleTitleType = {
 }
 
 const organizationQuery = (orgId: string): QueryFn => ref => ref.where('orgIds', 'array-contains', orgId);
-// We need the mandates to compute isMovieAvailable
 const mandateQuery = (title: Movie): QueryFn => ref => ref.where('titleId', '==', title.id)
   .where('type', '==', 'mandate')
   .where('status', '==', 'accepted');
@@ -102,8 +101,9 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
     map(([titles, avails]) => {
       return titles.filter(title => {
         if (this.availsForm.invalid) return true;
-        return availableTitle(avails as AvailsFilter, title.mandates as FullMandate[], title.sales as FullSale[]);
-      })
+        const availableMandates = availableTitle(avails as AvailsFilter, title.mandates as FullMandate[], title.sales as FullSale[]);
+        return availableMandates.length;
+      });
     }),
   );
 

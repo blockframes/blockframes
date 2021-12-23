@@ -1,7 +1,6 @@
 import { FormControl, FormGroup } from '@angular/forms';
 import { FormEntity, FormList, FormStaticValueArray } from '@blockframes/utils/form';
 import { MovieVersionInfoForm, createLanguageControl } from '@blockframes/movie/form/movie.form';
-import { AvailsFilter, DurationMarker, isSameCalendarTerm } from '../avails/avails';
 import {
   Bucket,
   BucketContract,
@@ -14,7 +13,7 @@ import {
 import { Subject } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { BucketTerm } from '../term/+state';
-import { AvailableTerritoryMarker, BucketTerritoryMarker, isSameBucketContract, isSameMapBucketTerm, MapAvailsFilter } from '../avails/new-avails';
+import { AvailableTerritoryMarker, BucketTerritoryMarker, CalendarAvailsFilter, DurationMarker, isSameBucketContract, isSameCalendarBucketTerm, isSameMapBucketTerm, MapAvailsFilter } from '../avails/new-avails';
 
 //////////
 // TERM //
@@ -195,7 +194,7 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
   /**
    * Adds a Duration from Calendar into the bucket if not already in it
    */
-  addDuration(avails: AvailsFilter, marker: DurationMarker) {
+  addDuration(avails: CalendarAvailsFilter, marker: DurationMarker) {
     const { contract: mandate, term } = marker;
     const bucket = this.value;
     const contractIndex = bucket.contracts.findIndex(c => c.parentTermId === term.id);
@@ -218,7 +217,7 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
   /**
    * This function will retrieved the `termIndex` & `contractIndex` based on the given `DurationMarker`
    */
-   getTermIndexForCalendar(avails: AvailsFilter, marker: DurationMarker): { contractIndex: number, termIndex: number } | undefined {
+   getTermIndexForCalendar(avails: CalendarAvailsFilter, marker: DurationMarker): { contractIndex: number, termIndex: number } | undefined {
     const { term } = marker;
     const bucket = this.value;
 
@@ -226,7 +225,7 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
     if (contractIndex === -1) return;
 
     const contract = bucket.contracts[contractIndex];
-    const termIndex = contract.terms.findIndex(t => isSameCalendarTerm(t, avails));
+    const termIndex = contract.terms.findIndex(t => isSameCalendarBucketTerm(avails, t));
     if (termIndex === -1) return;
 
     return { contractIndex, termIndex };

@@ -2,7 +2,7 @@
 import { Media, Territory } from '@blockframes/utils/static-model';
 import { createHoldback, Holdback } from '@blockframes/contract/contract/+state';
 
-import { collidingHoldback, getCollidingHoldbacks } from '../avails';
+import { collidingHoldback, getCollidingHoldbacks } from '../new-avails';
 import { Duration, Term, createTerm } from '../../term/+state/term.model';
 
 // Territories

@@ -1,6 +1,7 @@
-import { AvailsFilter, isInCalendarTerm, isInMapTerm, isSameCalendarTerm, isSameMapTerm } from "./../avails";
+import { isInCalendarTerm, isInMapTerm, isSameCalendarTerm, isSameMapTerm } from "./../avails";
 import { createBucketTerm } from "@blockframes/contract/bucket/+state";
 import { Media, Territory } from "@blockframes/utils/static-model";
+import { AvailsFilter } from "../new-avails";
 
 describe('BucketTerm', () => {
   describe('Test isSameMapTerm pure function', () => {

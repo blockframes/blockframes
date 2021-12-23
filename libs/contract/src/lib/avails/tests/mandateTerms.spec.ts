@@ -1,10 +1,11 @@
 import { BucketTerm, Term } from '../../term/+state/term.model';
-import { AvailsFilter, getMandateTerms, allOfAvailInTerms, termsCollision } from './../avails';
+import { getMandateTerms, allOfAvailInTerms, termsCollision } from './../avails';
 import { mandates } from './../fixtures/mandates';
 import { sales } from './../fixtures/sales';
 import { mandateTerms as acTerms } from './../fixtures/mandateTerms';
 import { saleTerms as acSaleTerms } from './../fixtures/saleTerms';
 import {  createBucketTerm } from '@blockframes/contract/bucket/+state/bucket.model';
+import { AvailsFilter } from '../new-avails';
 
 describe('Test isTermSold pure function', () => {
     const Resurrected = 'Cr3NYe9RXaMwP98LQMyD';

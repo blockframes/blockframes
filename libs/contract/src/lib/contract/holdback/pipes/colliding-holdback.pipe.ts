@@ -2,7 +2,7 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 
 import { BucketTerm } from '@blockframes/contract/term/+state';
-import { getCollidingHoldbacks } from '@blockframes/contract/avails/avails';
+import { getCollidingHoldbacks } from '@blockframes/contract/avails/new-avails';
 
 import { Holdback } from '../../+state';
 

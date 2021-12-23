@@ -1,5 +1,5 @@
 import { createMandate } from "../../contract/+state/contract.model";
-import { DurationMarker, toDurationMarker } from "./../avails";
+import { toDurationMarker } from "./../avails";
 import { createTerm } from "../../term/+state/term.model";
 import {
   calendarColumns,
@@ -15,6 +15,7 @@ import {
   reset,
   select
 } from '../calendar/calendar.model';
+import { DurationMarker } from "../new-avails";
 
 describe('Calendar', () => {
   describe('Test DurationMarker', () => {

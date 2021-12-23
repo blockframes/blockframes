@@ -1,11 +1,11 @@
 import { createMandate } from "../../contract/+state/contract.model";
-import { AvailsFilter, isSameMapTerm, getSelectedTerritories, toTerritoryMarker, toDurationMarker } from "./../avails";
+import { isSameMapTerm, getSelectedTerritories, toTerritoryMarker, toDurationMarker } from "./../avails";
 import { BucketForm } from '@blockframes/contract/bucket/form'
 import { createTerm, Duration, BucketTerm } from "../../term/+state/term.model";
 import { createBucketTerm } from "@blockframes/contract/bucket/+state";
 import { availDetailsExclusive } from './../fixtures/availsFilters';
 import { Territory } from "@blockframes/utils/static-model";
-import { AvailableTerritoryMarker } from "../new-avails";
+import { AvailsFilter, AvailableTerritoryMarker, MapAvailsFilter } from "../new-avails";
 
 
 const mandateA = createMandate({
@@ -171,7 +171,7 @@ describe('BucketForm', () => {
 
     it.skip('Should return territories selected', () => {
       const bucketForm = new BucketForm();
-      const availFilter: AvailsFilter = {
+      const availFilter: MapAvailsFilter = {
         exclusive: true,
         medias: ['theatrical'],
         duration: { from: new Date('01/01/2020'), to: new Date('01/01/2030') },
@@ -193,7 +193,7 @@ describe('BucketForm', () => {
     it.skip('Should return territories in selection', () => {
       const bucketForm = new BucketForm();
 
-      const availDetails: AvailsFilter = {
+      const availDetails: MapAvailsFilter = {
         duration: { from: new Date('01/01/2019'), to: new Date('01/01/2031') },
         exclusive: true,
         medias: ['theatrical']
@@ -202,7 +202,7 @@ describe('BucketForm', () => {
       const selected1 = toTerritoryMarker('australia', [mandateA], termA) as AvailableTerritoryMarker;
       bucketForm.addTerritory(availDetails, selected1);
 
-      const availFilter: AvailsFilter = {
+      const availFilter: MapAvailsFilter = {
         duration: { from: new Date('01/01/2020'), to: new Date('01/01/2030') },
         exclusive: true,
         medias: ['theatrical']
@@ -216,7 +216,7 @@ describe('BucketForm', () => {
     it.skip('Should return empty array if we search for another movie', () => {
       const bucketForm = new BucketForm();
 
-      const availDetails: AvailsFilter = {
+      const availDetails: MapAvailsFilter = {
         duration: { from: new Date('01/01/2019'), to: new Date('01/01/2031') },
         exclusive: true,
         medias: ['theatrical']
@@ -226,7 +226,7 @@ describe('BucketForm', () => {
       const selected1 = toTerritoryMarker('germany', [mandateA], termA) as AvailableTerritoryMarker;
       bucketForm.addTerritory(availDetails, selected1);
 
-      const availFilter: AvailsFilter = {
+      const availFilter: MapAvailsFilter = {
         duration: { from: new Date('01/01/2020'), to: new Date('01/01/2030') },
         exclusive: true,
         medias: ['theatrical']
@@ -275,7 +275,7 @@ describe('BucketForm', () => {
       expect(bucketForm.value.contracts[0].terms[0].territories.length).toBe(2);
     });
 
-    it('Add 2 durations with differents territories resulting in two terms in same contract bucket', () => {
+    it('Add 2 durations with different territories resulting in two terms in same contract bucket', () => {
       const bucketForm = new BucketForm();
 
       const marker = toDurationMarker([mandateA], termA);
@@ -298,7 +298,7 @@ describe('BucketForm', () => {
       expect(bucketForm.value.contracts[0].terms[1].territories.length).toBe(1);
     });
 
-    it('Add 2 durations with differents medias resulting in two terms in same contract bucket', () => {
+    it('Add 2 durations with different medias resulting in two terms in same contract bucket', () => {
       const bucketForm = new BucketForm();
 
       const marker = toDurationMarker([mandateA], termA);
