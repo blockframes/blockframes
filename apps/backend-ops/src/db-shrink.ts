@@ -1,5 +1,6 @@
 import { ContractDocument } from "@blockframes/contract/contract/+state";
-import { connectFirestoreEmulator, defaultEmulatorBackupPath, endMaintenance, firebaseEmulatorExec, getFirestoreExportPath, importFirestoreEmulatorBackup, latestAnonDbDir, latestAnonShrinkedDbDir, loadAdminServices, removeAllSubcollections, shutdownEmulator, startMaintenance } from "@blockframes/firebase-utils";
+import { endMaintenance, latestAnonDbDir, latestAnonShrinkedDbDir, removeAllSubcollections, startMaintenance } from "@blockframes/firebase-utils";
+import { connectFirestoreEmulator, defaultEmulatorBackupPath, firebaseEmulatorExec, getFirestoreExportPath, importFirestoreEmulatorBackup, shutdownEmulator } from "@blockframes/firebase-utils/firestore/emulator";
 import { InvitationDocument } from "@blockframes/invitation/+state/invitation.firestore";
 import { MovieDocument } from "@blockframes/movie/+state/movie.firestore";
 import { NotificationDocument } from "@blockframes/notification/types";

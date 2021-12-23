@@ -46,4 +46,3 @@ export const mailchimpAPIKey = functions.config().mailchimp.api_key;
 export const mailchimpServer = functions.config().mailchimp.server;
 export const mailchimpListId = functions.config().mailchimp.list_id;
 
-export const enableDailyFirestoreBackup = false;
