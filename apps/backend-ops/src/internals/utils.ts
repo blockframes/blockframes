@@ -7,16 +7,18 @@ const collections = {
   buckets: true,
   campaigns: true,
   cms: false,
+  consents: false,
   contracts: true,
   docsIndex: true,
   events: true,
+  incomes: false,
   invitations: true,
   movies: true,
   notifications: true,
+  offers: true,
   orgs: true,
   permissions: true,
   terms: false,
-  offers: true,
   users: true,
 };
 
@@ -52,7 +54,7 @@ const userMap: Partial<Record<Collections, string[]>> = {
     'buyerUserId'
   ],
   buckets: [
-    'uid' // @TODO #6460 is field used ?
+    'uid'
   ],
   orgs: [
     'userIds',
@@ -62,10 +64,10 @@ const userMap: Partial<Record<Collections, string[]>> = {
   ],
   permissions: [
     'roles{}',
-    'canCreate',// @TODO #6460 is field used ?
-    'canRead',// @TODO #6460 is field used ?
-    'canUpdate',// @TODO #6460 is field used ?
-    'canDelete',// @TODO #6460 is field used ?
+    'canCreate',
+    'canRead',
+    'canUpdate',
+    'canDelete',
   ],
   blockframesAdmin: [''], // document id
   events: [
