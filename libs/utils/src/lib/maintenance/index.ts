@@ -20,19 +20,23 @@ export const TEST_DOCUMENT_NAME = '_TEST';
 export const metaDoc = `${META_COLLECTION_NAME}/${MAINTENANCE_DOCUMENT_NAME}`;
 export const dbVersionDoc = `${META_COLLECTION_NAME}/${DB_DOCUMENT_NAME}`;
 
-export function _isInMaintenance({ endedAt, startedAt }: IMaintenanceDoc, delay = EIGHT_MINUTES_IN_MS): boolean {
+export function _isInMaintenance(maintenanceDoc: IMaintenanceDoc, delay = EIGHT_MINUTES_IN_MS): boolean {
   try {
-    const now = firebase.firestore.Timestamp.now();
-
-    if (startedAt) {
+    if (!maintenanceDoc) {
+      console.error(`Error while checking if app is in maintenance : missing maintenance doc`);
       return true;
     }
 
-    if (endedAt) {
+    if (maintenanceDoc.startedAt) {
+      return true;
+    }
+
+    if (maintenanceDoc.endedAt) {
       // Wait `delay` minutes before allowing any operation on the db.
       // this prevents triggering firebase events.
       // NOTE: this is hack-ish but good enough for our needs! we'll revisit this later.
-      return endedAt.toMillis() + delay > now.toMillis();
+      const now = firebase.firestore.Timestamp.now();
+      return maintenanceDoc.endedAt.toMillis() + delay > now.toMillis();
     }
 
     // We shouldn't throw here else if this happen it create cache issues

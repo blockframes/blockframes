@@ -1,4 +1,4 @@
-import { getDocument, createPublicOrganizationDocument, createPublicUserDocument } from './data/internals';
+﻿import { getDocument, createPublicOrganizationDocument, createPublicUserDocument } from './data/internals';
 import { getUser } from "./internals/utils";
 import { db } from './internals/firebase'
 import { InvitationOrUndefined, OrganizationDocument } from './data/types';
@@ -122,7 +122,7 @@ export async function onInvitationWrite(
   }
 }
 
-interface UserInvitation {
+export interface UserInvitation {
   emails: string[];
   invitation: Partial<InvitationBase<Date>>;
   app?: App;
@@ -187,8 +187,8 @@ export const inviteUsers = async (data: UserInvitation, context: CallableContext
     invitation.id = invitationId;
 
     try {
-      const invitationSet = await db.collection('invitations').doc(invitation.id).set(invitation);
-      promises.push({ result: invitationSet, error: '' });
+      await db.collection('invitations').doc(invitation.id).set(invitation);
+      promises.push({ result: invitation.id, error: '' });
     } catch (error) {
       promises.push({ result: undefined, error });
     }

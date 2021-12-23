@@ -1,4 +1,4 @@
-import { region } from 'firebase-functions';
+﻿import { region } from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import { firebaseRegion } from '@env';
 export const functions = (config = defaultConfig) => region(firebaseRegion).runWith(config);
