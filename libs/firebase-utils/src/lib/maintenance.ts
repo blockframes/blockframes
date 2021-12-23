@@ -63,21 +63,3 @@ export async function isInMaintenance(db?: FirebaseFirestore.Firestore): Promise
 
 }
 
-export async function isInTesting(db?: FirebaseFirestore.Firestore): Promise<boolean> {
-  try {
-    const ref = maintenanceRef(db);
-    const doc = await ref.get();
-
-    // if document doesn't exist, it means that there is something not normal,
-    // we force maintenance mode to true.
-    if (!doc.exists) {
-      return true;
-    }
-
-    return _isInMaintenance(doc.data() as IMaintenanceDoc, 0);
-  } catch (e) {
-    throw new Error(`Error while checking if app is in maintenance mode: ${e.message}`);
-  }
-
-}
-
