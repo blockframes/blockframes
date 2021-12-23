@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, Optional, OnInit, } from '@angular/
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { appName, getCurrentApp } from '@blockframes/utils/apps';
 import { Contract, ContractService, ContractStatus, Sale } from '@blockframes/contract/contract/+state';
-˝import { Organization, OrganizationQuery, OrganizationService } from '@blockframes/organization/+state';
+import { Organization, OrganizationQuery, OrganizationService } from '@blockframes/organization/+state';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Intercom } from 'ng-intercom';
 import { joinWith } from '@blockframes/utils/operators';

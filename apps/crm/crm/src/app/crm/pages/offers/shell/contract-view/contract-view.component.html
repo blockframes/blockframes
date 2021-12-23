@@ -18,7 +18,7 @@
         </mat-form-field>
       </form>
       <div fxLayout="row" fxLayoutAlign="center center">
-        <button mat-flat-button color="primary" (click)="update(contract.id)">Update</button>
+        <button mat-flat-button color="primary" (click)="update(contract.id, contract?.negotiation?.id)">Update</button>
       </div>
     </section>
 
@@ -31,40 +31,33 @@
         <p>Seller hasn't given any reason.</p>
       </ng-template>
     </section>
-
-    <contract-item [contract]="contract.negotiation">
-      <p price *ngIf="contract.negotiation as negotiation">
-        <ng-container *ngIf="negotiation.price > 0; else askPrice">
-          <span>{{ negotiation.price | currency: offer.currency }}</span>
-        </ng-container>
-        <ng-template #askPrice>
-          <span>Buyer requested Asking Price</span>
+    <ng-container *ngIf="contract.negotiation as negotiation">
+      <contract-item [contract]="negotiation">
+        <p price *ngIf="negotiation.price as price">
+          <ng-container *ngIf="price > 0; else askPrice">
+            <span>{{ price | currency: negotiation.currency }}</span>
+          </ng-container>
+          <ng-template #askPrice>
+            <span>Buyer requested Asking Price</span>
+          </ng-template>
+        </p>
+        <ng-template #termAction let-term>
+          <a mat-icon-button matTooltip="View"
+            [routerLink]="['/c/o/dashboard/crm/offer', offer.id, contract.id, 'form']"
+            [queryParams]="{ termId: term.id }">
+            <mat-icon svgIcon="visibility"></mat-icon>
+          </a>
+          <button mat-icon-button matTooltip="Delete" (click)="confirm(term)">
+            <mat-icon svgIcon="delete"></mat-icon>
+          </button>
         </ng-template>
-      </p>
 
-      <ng-template #termAction let-term>
-        <a
-          mat-icon-button
-          matTooltip="View"
-          [routerLink]="['/c/o/dashboard/crm/offer', offer.id, contract.id, 'form']"
-          [queryParams]="{ termId: term.id }"
-        >
-          <mat-icon svgIcon="visibility"></mat-icon>
-        </a>
-        <button mat-icon-button matTooltip="Delete" (click)="confirm(term)">
-          <mat-icon svgIcon="delete"></mat-icon>
-        </button>
-      </ng-template>
-
-      <footer *ngIf="contract.title as title">
-        <holdbacks-form
-          [holdbacks]="contract.holdbacks"
-          [title]="title"
-          (holdbacksChange)="updateHoldbacks(contract.id, $event)">
-        </holdbacks-form>
-      </footer>
-    </contract-item>
+        <footer *ngIf="negotiation.title as title">
+          <holdbacks-form [holdbacks]="contract.holdbacks" [title]="title"
+            (holdbacksChange)="updateHoldbacks(contract.id, $event)">
+          </holdbacks-form>
+        </footer>
+      </contract-item>
+    </ng-container>
   </ng-container>
 </ng-container>
-
-

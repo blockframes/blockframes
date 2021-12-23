@@ -2,14 +2,20 @@
   <ng-container *ngIf="offer.contracts as contracts">
     <form [formGroup]="form" fxLayout="column" (ngSubmit)="update(offer.id, contracts)">
       <div fxLayoutAlign="space-between center" fxLayout>
-        <mat-form-field appearance="outline">
-          <mat-label>General Contract Status</mat-label>
-          <mat-select formControlName="status">
-            <mat-option *ngFor="let status of offerStatus" [value]="status">
-              {{status | toLabel: 'offerStatus'}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+        <div fxLayoutAlign="start center" fxLayout fxLayoutGap="24px">
+          <mat-form-field appearance="outline">
+            <mat-label>General Contract Status</mat-label>
+            <mat-select formControlName="status">
+              <mat-option *ngFor="let status of offerStatus" [value]="status">
+                {{status | toLabel: 'offerStatus'}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <p>
+            <span>Pay attention! ONLY "On signature" and "Signed" can be set manually.</span> <br />
+            <span>"New", "In Negotiation", "Accepted" and "Declined" statuses are working automatically.</span>
+          </p>
+        </div>
         <button mat-flat-button color="primary" type="submit">Update</button>
       </div>
       <section class="surface">
@@ -35,8 +41,8 @@
         <ng-template colRef="negotiation.title.title.international" label="Title" let-name sort let-another="item">
           {{ name | maxLength: 50 }}
         </ng-template>
-        <ng-template colRef="status" label="Seller Approved" let-status sort>
-          <bf-tag>{{ status }}</bf-tag>
+        <ng-template colRef="status" label="Seller Approved" let-status let-contract="item" sort>
+          <bf-tag>{{ contract.negotiation?.status }}</bf-tag>
         </ng-template>
         <ng-template colRef="negotiation.seller.denomination.public" label="Seller's name" let-name sort>
           {{ name }}
