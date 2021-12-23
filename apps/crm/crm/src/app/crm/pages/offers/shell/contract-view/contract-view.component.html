@@ -16,11 +16,6 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-label>Title price suggested by seller.</mat-label>
-          <input matInput type="number" min="0" formControlName="price" />
-          <mat-icon matPrefix [svgIcon]="offer.currency"></mat-icon>
-        </mat-form-field>
       </form>
       <div fxLayout="row" fxLayoutAlign="center center">
         <button mat-flat-button color="primary" (click)="update(contract.id)">Update</button>
@@ -37,10 +32,10 @@
       </ng-template>
     </section>
 
-    <contract-item [contract]="contract">
-      <p price *ngIf="contract.income as income">
-        <ng-container *ngIf="income.price > 0; else askPrice">
-          <span>{{ income.price | currency: offer.currency }}</span>
+    <contract-item [contract]="contract.negotiation">
+      <p price *ngIf="contract.negotiation as negotiation">
+        <ng-container *ngIf="negotiation.price > 0; else askPrice">
+          <span>{{ negotiation.price | currency: offer.currency }}</span>
         </ng-container>
         <ng-template #askPrice>
           <span>Buyer requested Asking Price</span>
