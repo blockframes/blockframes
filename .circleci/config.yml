@@ -91,7 +91,7 @@ commands:
             - dependencies-
       - run: touch .env # dotenv will crash without this
       - run: cp env/env.blockframes-ci.ts env/env.ts # required for the typechecking & file rewrite to work
-      - run: npm ci
+      - run: npm install --no-save
       - run: npx cypress install
       - run:
           name: 'Verify that this PR is not introducing weird package.json changes'
