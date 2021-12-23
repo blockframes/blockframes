@@ -527,7 +527,7 @@ workflows:
           filters:
             branches:
               only: *deployment_branches
-  build-and-test: # build, lint and unit test commits that aren't release related
+  build-and-test: # lint and unit test commits that aren't release related
     jobs:
       - unit-test-commits:
           filters:
