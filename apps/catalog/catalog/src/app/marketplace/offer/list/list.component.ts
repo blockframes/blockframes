@@ -1,6 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ContractService } from '@blockframes/contract/contract/+state';
-import { IncomeService } from '@blockframes/contract/income/+state';
 import { OfferService } from '@blockframes/contract/offer/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { MovieService } from '@blockframes/movie/+state';
@@ -30,7 +29,7 @@ export class ListComponent {
   ) { }
 
   private getContracts(offerId: string) {
-    const queryContracts = (ref: CollectionReference) => ref.where('offerId', '==', offerId).where('status', '!=', 'declined')
+    const queryContracts = (ref: CollectionReference) => ref.where('offerId', '==', offerId);
     return this.contractService.valueChanges(queryContracts).pipe(
       joinWith({
         title: contract => this.titleService.valueChanges(contract.titleId),

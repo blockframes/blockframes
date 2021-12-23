@@ -7,7 +7,7 @@ import { ContractStatus } from '@blockframes/contract/contract/+state/contract.f
 
 function isInitial(negotiation: Negotiation) {
   if (!negotiation?.initial) return true;
-  return negotiation.initial.getTime() === negotiation._meta.createdAt.getTime();
+  return negotiation?.initial?.getTime() === negotiation?._meta?.createdAt?.getTime();
 }
 
 function canNegotiate(negotiation: Negotiation, activeOrgId: string) {
@@ -49,9 +49,10 @@ export class CanNegotiatePipe implements PipeTransform {
 @Pipe({ name: 'negotiationStatus' })
 export class NegotiationStatusPipe implements PipeTransform {
   transform(negotiation: Negotiation): ContractStatus {
-    if (isInitial(negotiation)) return 'pending';
-    if (negotiation.status === 'pending') return 'negotiating';
-    return negotiation.status;
+    const pending = negotiation?.status === 'pending'
+    if (isInitial(negotiation) && pending) return 'pending';
+    if (negotiation?.status === 'pending') return 'negotiating';
+    return negotiation?.status;
   }
 }
 
