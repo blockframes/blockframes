@@ -124,13 +124,6 @@ commands:
         - run: echo $FIREBASE_STAGING_SERVICE_ACCOUNT > tools/credentials/staging-sak.json
         - run: echo "${!SERVICE_ACCOUNT}" > ${GOOGLE_APPLICATION_CREDENTIALS}
         - select_environment
-  save_build_cache:
-    description: 'Saves NX build cache for faster building'
-    steps:
-      - save_cache:
-          key: build-v1-{{ .Branch }}-{{ .Revision }}
-          paths:
-            - ".cache"
   replace_prod_files:
     description: 'Replace files for production'
     steps:
@@ -146,7 +139,6 @@ commands:
             npm run deploy:storage &&
             npm run deploy:firestore &&
             npx nx run-many --target=deploy --all
-      - save_build_cache
   build_deploy_upgrade:
     description: 'Build & deploy Blockframes apps to Firebase & run upgrade if needed'
     steps:
@@ -297,14 +289,11 @@ jobs:
       - checkout_project
       - run: npm run build:all
       - run: npm run lint
-      - save_build_cache
-  build-and-lint-commits:
+  lint-commits:
     executor: blockframes-ci
     steps:
       - prepare_environment
-      - run: npm run affected:build
       - run: npm run affected:lint
-      - save_build_cache
   unit-test-commits:
     executor: blockframes-ci
     steps:
@@ -312,7 +301,6 @@ jobs:
       - run:
           command: npm run affected:test
           no_output_timeout: 15m
-      - save_build_cache
   test-e2e-ci:
     executor: blockframes-ci
     steps:
@@ -321,7 +309,6 @@ jobs:
       - prepare_environment
       - restore_fixtures_from_cache
       - test_e2e_all
-      - save_build_cache
       - run:
           name: send stability data
           command: ./.circleci/submit-stability.sh dist/test-reports
@@ -339,7 +326,6 @@ jobs:
       - prepare_environment
       - restore_fixtures_from_cache
       - test_e2e_all
-      - save_build_cache
       - slack/status
   test-e2e-staging:
     executor: blockframes-ci
@@ -352,7 +338,6 @@ jobs:
       - prepare_environment
       - restore_fixtures_from_cache
       - test_e2e_all
-      - save_build_cache
       - slack/status
   deploy-to-prod:
     executor: blockframes-ci
@@ -548,7 +533,7 @@ workflows:
           filters:
             branches:
               ignore: *deployment_branches
-      - build-and-lint-commits:
+      - lint-commits:
           filters:
             branches:
               ignore: *deployment_branches
