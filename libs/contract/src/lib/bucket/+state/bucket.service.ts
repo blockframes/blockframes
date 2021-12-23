@@ -9,7 +9,6 @@ import { switchMap, take } from 'rxjs/operators';
 import { AuthQuery } from '@blockframes/auth/+state';
 import { createOfferId } from '@blockframes/utils/utils';
 import { MovieCurrency } from '@blockframes/utils/static-model';
-import { AvailsFilter } from '@blockframes/contract/avails/avails';
 import { createDocumentMeta } from '@blockframes/utils/models-meta';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 
@@ -20,6 +19,7 @@ import { Bucket, createBucket } from './bucket.model';
 import { BucketStore, BucketState } from './bucket.store';
 import { createBucketTerm, createBucketContract} from './bucket.model';
 import { ContractService, convertDuration } from '../../contract/+state';
+import { AvailsFilter } from '@blockframes/contract/avails/new-avails';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'buckets' })

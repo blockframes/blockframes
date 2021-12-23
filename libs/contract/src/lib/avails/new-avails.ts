@@ -2,7 +2,7 @@
 import { Media, territories, territoriesISOA3, Territory, TerritoryISOA3, TerritoryISOA3Value, TerritoryValue } from '@blockframes/utils/static-model';
 
 import { BucketTerm, Term } from '../term/+state';
-import { Mandate, Sale } from '../contract/+state';
+import { Holdback, Mandate, Sale } from '../contract/+state';
 import { Bucket, BucketContract } from '../bucket/+state';
 import { allOf, exclusivityAllOf, exclusivitySomeOf, someOf } from './sets';
 
@@ -74,14 +74,12 @@ export interface AvailsFilter extends BaseAvailsFilter {
   territories: Territory[],
 }
 
-function getMatchingMandates(mandates: FullMandate[], avails: AvailsFilter, debug = false): FullMandate[] {
+export function getMatchingMandates(mandates: FullMandate[], avails: AvailsFilter): FullMandate[] {
   return mandates.filter(mandate => mandate.terms.some(term => {
     const exclusivityCheck = exclusivityAllOf(avails.exclusive).in(term.exclusive);
     const mediaCheck = allOf(avails.medias).in(term.medias);
     const durationCheck = allOf(avails.duration).in(term.duration);
     const territoryCheck = allOf(avails.territories).in(term.territories);
-
-    if (debug) console.log({ exclusivityCheck, mediaCheck, durationCheck, territoryCheck });
 
     return exclusivityCheck && mediaCheck && durationCheck && territoryCheck;
   }));
@@ -103,25 +101,18 @@ export function availableTitle(
   mandates: FullMandate[],
   sales: FullSale[],
   bucketContracts?: BucketContract[],
-  debug = false,
-): boolean {
+): FullMandate[] {
 
-  if (!mandates.length) {
-    if (debug) console.log('no mandate found for this movie, this movie will never be available.');
-    return false;
-  }
+  if (!mandates.length) return [];
 
   assertValidTitle(mandates, sales, bucketContracts);
 
   // get only the mandates that meets the avails filter criteria,
   // e.g. if we ask for "France" but the title is mandated in "Germany", we don't care
-  const availableMandates = getMatchingMandates(mandates, avails, debug);
+  const availableMandates = getMatchingMandates(mandates, avails);
 
   // if there is no mandates left, the title is not available
-  if (!availableMandates.length) {
-    if (debug) console.log('no mandate matches the avails filter, this movie could be available with other criteria.');
-    return false;
-  }
+  if (!availableMandates.length) return [];
 
   // else we should now check the sales
 
@@ -130,27 +121,21 @@ export function availableTitle(
   const salesToExclude = getMatchingSales(sales, avails);
 
   // if there is at least one sale that match the avails, the title is not available
-  if (salesToExclude.length) {
-    if (debug) console.log('this movie was available but it has been sold for some of or all of the requested criteria.');
-    return false;
-  }
+  if (salesToExclude.length) return [];
 
   // else we should check the bucket (if we have one)
 
   // for now the title is available and we have no bucket to check
-  if (!bucketContracts) return true;
+  if (!bucketContracts) return [];
 
   // get only the sales that meets the avails filter criteria
   // e.g. if we ask for "France" but the title has been sold in "Germany", we don't care
   const bucketSalesToExclude = getMatchingSales(bucketContracts ?? [], avails);
 
   // if there is at least one sale that match the avails, the title is not available
-  if (bucketSalesToExclude.length) {
-    if (debug) console.log('this movie is available, but you already selected it, for this criteria, in you shopping cart');
-    return false;
-  }
+  if (bucketSalesToExclude.length) return [];
 
-  return true;
+  return availableMandates;
 }
 
 // ----------------------------
@@ -448,6 +433,14 @@ export function isSameMapBucketTerm(avails: MapAvailsFilter, termB: BucketTerm) 
   return exclusivityCheck && durationCheck && mediasCheck;
 }
 
+export function isSameCalendarBucketTerm(avails: CalendarAvailsFilter, termB: BucketTerm) {
+  const exclusivityCheck = avails.exclusive === termB.exclusive;
+  const territoriesCheck = allOf(avails.territories).equal(termB.territories);
+  const mediasCheck = allOf(avails.medias).equal(termB.medias);
+
+  return exclusivityCheck && territoriesCheck && mediasCheck;
+}
+
 function isSameBucketTerm(termA: BucketTerm, termB: BucketTerm) {
   const exclusivityCheck = termA.exclusive === termB.exclusive;
   const durationCheck = allOf(termA.duration).equal(termB.duration);
@@ -469,4 +462,22 @@ export function isSameBucketContract(contractA: BucketContract, contractB: Bucke
   // we ignore holdbacks
 
   return titleIdCheck && orgIdCheck && parentTermIdCheck && priceCheck && specificityCheck && termsCheck;
+}
+
+// ----------------------------
+//         HOLDBACKS         //
+// ----------------------------
+
+
+export function collidingHoldback(holdback: Holdback, term: BucketTerm) {
+  return someOf(term.duration).in(holdback.duration)
+    && someOf(term.medias).in(holdback.medias)
+    && someOf(term.territories).in(holdback.territories);
+}
+
+export function getCollidingHoldbacks(holdbacks: Holdback[], terms: BucketTerm[]) {
+  const holdbackCollision = holdbacks.filter(holdback =>
+    terms.some(term => collidingHoldback(holdback, term))
+  );
+  return holdbackCollision;
 }

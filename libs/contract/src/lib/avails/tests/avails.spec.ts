@@ -1,7 +1,7 @@
 
 import { BucketTerm } from '@blockframes/contract/term/+state';
-
-import { AvailsFilter, isMovieAvailable } from './../avails';
+import { AvailsFilter } from '../new-avails';
+import { isMovieAvailable } from './../avails';
 
 
 const mandateTermA: BucketTerm = {
