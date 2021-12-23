@@ -18,6 +18,9 @@ export const createConsent = async (
   data: { consentType: ConsentType; ip: string; docId: string; filePath?: string },
   context: CallableContext
 ): Promise<boolean> => {
+  //TODO:
+  console.log("createConsent", JSON.stringify(data));
+
   const { consentType, ip, docId, filePath } = data;
 
   if (!context?.auth) {
@@ -84,7 +87,10 @@ export const createConsent = async (
 
       consent.share.push(share);
     }
-    console.log(JSON.stringify(consent))
+    console.log(JSON.stringify(consent));
+
+    //TODO: For debugging
+    throw new Error('All Good!');
     tx.set(consentSnap.ref, consent);
   });
 

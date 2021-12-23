@@ -1,5 +1,5 @@
 ﻿process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
-import { initFirestoreApp } from '@blockframes/testing/unit-tests';
+import { initFirestoreApp, initFunctionsTestMock } from '@blockframes/testing/unit-tests';
 import { clearFirestoreData } from '@firebase/rules-unit-testing';
 import { createConsent } from './main';
 import firebaseTest = require('firebase-functions-test');
@@ -16,8 +16,12 @@ const testEnv = firebaseTest(firebase());
 
 describe('Invitation backend-function unit-tests', () => {
   let db;
+
   beforeAll(async () => {
-    db = await initFirestoreApp(firebase().projectId, 'firestore.test.rules', testFixture);
+    //db = await initFirestoreApp(firebase().projectId, 'firestore.test.rules', testFixture);
+    //Using admin
+    const app = initFunctionsTestMock(true);
+    db = app.firestore;
     await endMaintenance();
   });
 
@@ -171,6 +175,7 @@ describe('Invitation backend-function unit-tests', () => {
       //Compose the call to simpleCallable cf with param data
       const data = {
         consentType: 'access',
+        filePath: '/c/o/marketplace',
         ip: '10.0.0.1',
         docId: 'D001'
       };
@@ -185,9 +190,14 @@ describe('Invitation backend-function unit-tests', () => {
       //await new Promise((r) => setTimeout(r, 5000));
 
       console.log("Check for doc creation");
+      // expect(true).toBeTruthy();
+      // return;
+
+      expect.assertions(1);
       await expect(async () => {
         await wrapped(data, context)
-      }).toBeTruthy();
+      }).rejects
+        .toThrow('All Good!');
 
     });
 
