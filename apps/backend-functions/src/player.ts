@@ -11,7 +11,7 @@ import { StorageVideo } from '@blockframes/media/+state/media.firestore';
 import { ErrorResultResponse } from './utils';
 import { getDocument } from './data/internals';
 import { isAllowedToAccessMedia } from './internals/media';
-import { jwplayerKey, jwplayerApiV2Secret, jwplayerSecret, enableDailyFirestoreBackup, playerId } from './environments/environment';
+import { jwplayerKey, jwplayerApiV2Secret, jwplayerSecret, production, playerId } from './environments/environment';
 
 export interface ReadVideoParams {
 
@@ -130,7 +130,7 @@ export const uploadToJWPlayer = async (file: GFile): Promise<{
   const expires = new Date().getTime() + 7200000; // now + 2 hours
 
   const [videoUrl] = await file.getSignedUrl({ action: 'read', expires });
-  const tag = enableDailyFirestoreBackup ? 'production' : 'test';
+  const tag = production ? 'production' : 'test';
 
   try {
     const result = await jwplayerApiV2(jwplayerKey, jwplayerApiV2Secret).createVideo(videoUrl, tag);

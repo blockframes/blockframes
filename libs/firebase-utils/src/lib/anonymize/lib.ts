@@ -177,7 +177,7 @@ export function anonymizeDocument({ docPath, content: doc }: DbRecord) {
   throw new Error([error, location, solution].join('/n'));
 }
 
-export function getPathOrder(path: string): number {
+function getPathOrder(path: string): number {
   if (path.includes('users/')) return 1;
   if (path.includes('orgs/')) return 2;
   if (path.includes('invitations/')) return 3;
@@ -195,7 +195,9 @@ export async function runAnonymization(db: FirestoreEmulator) {
   console.log('Anonymization Done!')
 }
 
-export async function loadDb(db: FirebaseFirestore.Firestore) {
+async function loadDb(db: FirebaseFirestore.Firestore) {
+  const timerLabel = 'Firestore loaded';
+  console.time(timerLabel); // eslint-disable-line no-restricted-syntax
   const output: DbRecord[] = [];
   // Note: we use a Queue to store the collections to backup instead of doing a recursion,
   // this will protect the stack. It will break when the size of keys to backup grows
@@ -204,7 +206,7 @@ export async function loadDb(db: FirebaseFirestore.Firestore) {
   const processingQueue = new Queue();
 
   // retrieve all the collections at the root.
-  const collections: CollectionReference[] = await db.listCollections()
+  const collections: CollectionReference[] = await db.listCollections();
   collections.forEach(x => processingQueue.push(x.path));
 
   while (!processingQueue.isEmpty()) {
@@ -235,7 +237,9 @@ export async function loadDb(db: FirebaseFirestore.Firestore) {
 
     // Wait for this backup to complete
     await Promise.all(promises);
+    // This console.log is here to avoid "Too long with no output (exceeded 10m0s): context deadline exceeded" error from CircleCi
+    console.log('Loading Firestore. Please wait ...');
   }
-  console.log('Firestore loaded');
+  console.timeEnd(timerLabel); // eslint-disable-line no-restricted-syntax
   return output;
 }

@@ -18,7 +18,7 @@ export class CreditCardComponent {
 
   openDialog() {
     if (this.credit.description.length >= 125) {
-      this.dialog.open(this.dialogRef, { maxWidth: 400 });
+      this.dialog.open(this.dialogRef, { maxWidth: 400, maxHeight: '80vh' });
     }
   }
 
