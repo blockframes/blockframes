@@ -162,11 +162,12 @@ export async function cleanUsers(
     const user = userDoc.data() as PublicUser;
 
     // Check if a DB user have a record in Auth.
-    const authUserId = await auth.getUserByEmail(user.email).then(u => u.uid).catch(() => undefined);
-    if (authUserId) {
+    const validUser = await isUserValid(user, auth);
+
+    if (validUser) {
       // Check if ids are the same
-      if (authUserId !== user.uid) {
-        if (verbose) console.error(`uid mistmatch for ${user.email}. db: ${user.uid} - auth : ${authUserId}`);
+      if (validUser !== user.uid) {
+        if (verbose) console.error(`uid mistmatch for ${user.email}. db: ${user.uid} - auth : ${validUser}`);
       } else if (!existingOrganizationIds.includes(user.orgId)) {
         delete user.orgId;
         await userDoc.ref.set(user);
@@ -348,4 +349,17 @@ function isInvitationValid(invitation: InvitationDocument, existingIds: string[]
     default:
       return false;
   }
+}
+
+async function isUserValid(user: PublicUser, auth: Auth) {
+  // User was not found in "Auth"
+  const authUserId = await auth.getUserByEmail(user.email).then(u => u.uid).catch(() => undefined);
+  if (!authUserId) return false;
+
+  // User has'nt accepted org join invitation in 3 months #6648
+  // @TODO #6648
+
+  // User did'nt connected during the last 3 years #6656
+  // @TODO #6656
+  return user.uid;
 }

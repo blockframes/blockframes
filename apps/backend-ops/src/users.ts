@@ -66,6 +66,9 @@ export async function removeUnexpectedUsers(expectedUsers: PublicUser[], auth: A
     const users = result.users.filter(u => u.providerData.length !== 0);
     pageToken = result.pageToken;
 
+    // Anonymous user last connexion is older than N months #6656 + unit-test
+    // @TODO #6656
+
     // users - expected users => users that we don't want in the database.
     const usersToRemove = differenceBy(users, expectedUsers, 'uid', 'email');
 
