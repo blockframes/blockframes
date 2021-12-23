@@ -19,7 +19,6 @@ let verbose = false;
 // @TODO #6460 not existing users found in movies._meta.createdBy ..
 // @TODO #6460 spot database inconsistency + users without org + org.userIds = user.orgId + movie.orgIds => exists
 // @TODO #6460 check document subcollection of permissions ?
-// @TODO #6460 perform a new shrinked db to check that everything is ok
 
 // @TODO #6460 remove 
 // npm run backend-ops importFirestore LATEST-ANON-DB
@@ -85,7 +84,7 @@ async function cleanData(dbData: DatabaseData, db: FirebaseFirestore.Firestore, 
   if (verbose) console.log('Cleaned permissions');
   await cleanMovies(dbData.movies.refs);
   if (verbose) console.log('Cleaned movies');
-  await cleanDocsIndex(dbData.docsIndex.refs, existingIds);
+  await cleanDocsIndex(dbData.docsIndex.refs, movieIds.concat(eventIds), organizationIds);
   if (verbose) console.log('Cleaned docsIndex');
   await cleanNotifications(dbData.notifications.refs, existingIds);
   if (verbose) console.log('Cleaned notifications');
@@ -301,11 +300,12 @@ export function cleanMovies(
 
 export function cleanDocsIndex(
   docsIndex: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
-  existingIds: string[]
+  moviesAndEventsIds: string[],
+  organizationIds: string[]
 ) {
 
   return runChunks(docsIndex.docs, async (doc) => {
-    if (!existingIds.includes(doc.id)) {
+    if (!moviesAndEventsIds.includes(doc.id) || !organizationIds.includes(doc.data().authorOrgId)) {
       await doc.ref.delete();
     }
   }, undefined, verbose);

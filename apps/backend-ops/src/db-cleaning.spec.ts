@@ -392,30 +392,50 @@ describe('DB cleaning script', () => {
     expect(cleanedMovies).toEqual(testMovies.length);
   });
 
-  it('should remove documents undefined or not linked to existing document from docsIndex', async () => {
+  it('should remove documents undefined or not linked to existing document from docsIndex (movies, events, orgs)', async () => {
 
-    const testDocsIndex = [{ id: 'undefined' }, { id: 'mov-A' }, { id: 'mov-C' }];
+    const testDocsIndex = [
+      // Valid ones
+      { id: 'mov-A', authorOrgId: 'org-A' },
+      { id: 'event-A', authorOrgId: 'org-A' },
 
-    const testMovies = [{ id: 'mov-A' }];
+      // Invalid ones
+      { id: 'undefined', authorOrgId: 'org-A' },
+      { id: 'mov-B', authorOrgId: 'org-B' },
+      { id: 'mov-C', authorOrgId: 'org-A' },
+      { id: 'event-B', authorOrgId: 'org-B' },
+      { id: 'event-C', authorOrgId: 'org-A' },
+    ];
+
+    const testMovies = [{ id: 'mov-A' }, { id: 'mov-B' }];
+    const testEvents = [{ id: 'event-A' }, { id: 'event-B' }];
+    const testOrgs = [{ id: 'org-A' }];
 
     // Load our test set
     await populate('movies', testMovies);
+    await populate('events', testEvents);
+    await populate('orgs', testOrgs);
     await populate('docsIndex', testDocsIndex);
 
-    const [docsIndexBefore, movies] = await Promise.all([
+    const [docsIndexBefore, movies, events, orgs] = await Promise.all([
       getCollectionRef('docsIndex'),
-      getCollectionRef('movies')
+      getCollectionRef('movies'),
+      getCollectionRef('events'),
+      getCollectionRef('orgs')
     ]);
 
     // Check if data have been correctly added
-    expect(docsIndexBefore.docs.length).toEqual(3);
-    expect(movies.docs.length).toEqual(1);
+    expect(docsIndexBefore.docs.length).toEqual(7);
+    expect(movies.docs.length).toEqual(2);
+    expect(events.docs.length).toEqual(2);
+    expect(orgs.docs.length).toEqual(1);
 
-    const movieIds = movies.docs.map(m => m.id);
+    const moviesAndEventsIds = movies.docs.map(m => m.id).concat(events.docs.map(e => e.id));
+    const organizationIds = orgs.docs.map(o => o.id);
 
-    await cleanDocsIndex(docsIndexBefore, movieIds);
+    await cleanDocsIndex(docsIndexBefore, moviesAndEventsIds, organizationIds);
     const docsIndexAfter: Snapshot = await getCollectionRef('docsIndex');
-    expect(docsIndexAfter.docs.length).toEqual(1);
+    expect(docsIndexAfter.docs.length).toEqual(2);
   });
 
   it('should delete notifications that are too old', async () => {
