@@ -117,7 +117,7 @@
       "tags": ["node", "local"]
     },
     "testing-e2e": {
-      "tags": []
+      "tags": ["shared"]
     }
   }
 }

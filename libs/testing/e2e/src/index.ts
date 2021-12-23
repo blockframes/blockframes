@@ -1,1 +1,2 @@
-export * from './lib/testing-e2e';
+export * from './lib/support';
+export * from './lib/commands';
