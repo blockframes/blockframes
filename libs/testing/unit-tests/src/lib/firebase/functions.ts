@@ -1,4 +1,4 @@
-import * as admin from 'firebase-admin';
+﻿import * as admin from 'firebase-admin';
 import firebaseFunctionsTest from 'firebase-functions-test';
 import { runChunks } from '@blockframes/firebase-utils';
 import { join, resolve } from 'path';
