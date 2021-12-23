@@ -4,11 +4,8 @@ import { Observable, of } from "rxjs";
 import { map } from "rxjs/operators";
 import { Negotiation } from "./+state/negotiation.firestore";
 import { ContractStatus } from '@blockframes/contract/contract/+state/contract.firestore';
+import { isInitial } from "./utils";
 
-function isInitial(negotiation: Negotiation) {
-  if (!negotiation?.initial) return true;
-  return negotiation.initial.getTime() === negotiation._meta.createdAt.getTime();
-}
 
 function canNegotiate(negotiation: Negotiation, activeOrgId: string) {
   return negotiation.status === 'pending' && negotiation.createdByOrg !== activeOrgId;

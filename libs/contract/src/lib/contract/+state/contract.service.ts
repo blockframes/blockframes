@@ -5,11 +5,12 @@ import { ContractDocument, convertDuration, createMandate, createSale, Holdback,
 import { createDocumentMeta, formatDocumentMetaFromFirestore } from "@blockframes/utils/models-meta";
 import { Timestamp } from "@blockframes/utils/common-interfaces/timestamp";
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
-import { first, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { QueryFn } from '@angular/fire/firestore';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
 import { centralOrgId } from '@env';
+import { isInitial } from '@blockframes/contract/negotiation/utils';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'contracts' })
@@ -71,8 +72,8 @@ export class ContractService extends CollectionService<ContractState> {
       initial: nego.initial,
       orgId: nego.orgId,
     }, { write, params: { contractId } });
-    const isInitial = !nego._meta?.createdAt || nego._meta.createdAt.getTime() === nego.initial?.getTime();
-    if (!isInitial) this.update(contractId, { status: 'negotiating' }, { write })
+    const status = "negotiating";
+    if (!isInitial(nego as Negotiation)) this.update(contractId, { status }, { write })
     await write.commit()
   }
 }

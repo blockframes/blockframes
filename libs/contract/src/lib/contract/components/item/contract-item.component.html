@@ -1,4 +1,4 @@
-<ng-container *ngIf="contract.titleId | getTitle | async as title">
+<ng-container *ngIf="contract?.titleId | getTitle | async as title">
   <header fxLayout fxLayoutAlign="space-between start" test-id="avails-section">
     <section fxLayout="column">
       <h2>{{ title?.title?.international }}</h2>

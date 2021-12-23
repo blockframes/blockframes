@@ -13,6 +13,8 @@ import { NegotiationForm } from '@blockframes/contract/negotiation/form'
 
 // Material
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { filter, first } from 'rxjs/operators';
+import { joinWith } from '@blockframes/utils/operators';
 
 @Component({
   selector: 'contract-form',
@@ -28,6 +30,15 @@ export class ContractFormComponent implements OnInit {
   titles$ = this.service.valueChanges(ref => ref.where('app.catalog.status', '==', 'accepted'));
   currency?: string;
   activeTerm?: string;
+  contractId: string = this.route.snapshot.params.contractId;
+  offerId: string = this.route.snapshot.params.offerId;
+
+  private contracts$ = this.contractService.valueChanges(this.contractId).pipe(
+    joinWith({
+      negotiation: () => this.contractService.lastNegotiation(this.contractId)
+    }),
+    filter(contract => !!contract.negotiation)
+  );
 
   constructor(
     private route: ActivatedRoute,
@@ -41,12 +52,10 @@ export class ContractFormComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    const contractId: string = this.route.snapshot.params.contractId;
-    const offerId: string = this.route.snapshot.params.offerId;
     const [contract, income, offer] = await Promise.all([
-      this.contractService.getValue(contractId),
-      this.incomeService.getValue(contractId),
-      this.offerService.getValue(offerId)
+      this.contracts$.pipe(first()).toPromise(),
+      this.incomeService.getValue(this.contractId),
+      this.offerService.getValue(this.offerId)
     ]);
     this.title = await this.titleService.getValue(contract.titleId);
     this.contract = contract;
@@ -65,7 +74,7 @@ export class ContractFormComponent implements OnInit {
       const { terms, price } = this.form.value;
       const contractId = this.route.snapshot.params.contractId;
       const write = this.contractService.batch(); // create a batch
-      const termList = terms.map(term => ({...term, contractId}));
+      const termList = terms.map(term => ({ ...term, contractId }));
       const termIds = await this.termService.upsert(termList, { write });
       const existingTermIds = this.contract?.termIds || [];
       const termIdsToDelete = existingTermIds.filter(id => !termIds.includes(id));

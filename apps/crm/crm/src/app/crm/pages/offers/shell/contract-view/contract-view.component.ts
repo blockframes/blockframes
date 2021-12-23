@@ -31,13 +31,15 @@ export class ContractViewComponent implements OnInit, OnDestroy {
     this.offer$,
     this.route.params.pipe(pluck('contractId')),
   ]).pipe(
-    map(([offer, contractId]) => offer.contracts?.find(contract => contract.id === contractId)),
-    filter(contract => !!contract)
+    map(([offer, contractId]) => {
+      const contracts = [...(offer.contracts ?? []), ...(offer.declinedContracts ?? [])];
+      return contracts.find(contract => contract.id === contractId)
+    }),
+    filter(contract => !!contract),
   );
 
   form = new FormGroup({
-    status: new FormControl('pending'),
-    price: new FormControl(0),
+    status: new FormControl('pending')
   });
 
   private sub: Subscription;
@@ -49,13 +51,12 @@ export class ContractViewComponent implements OnInit, OnDestroy {
     private shell: OfferShellComponent,
     private incomeService: IncomeService,
     private contractService: ContractService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.sub = this.contract$.subscribe(contract => {
       this.form.setValue({
-        status: contract.status,
-        price: contract.income?.price ?? 0
+        status: contract.status
       });
     });
   }
@@ -65,11 +66,8 @@ export class ContractViewComponent implements OnInit, OnDestroy {
   }
 
   async update(contractId: string) {
-    const write = this.contractService.batch();
-    const { status, price} = this.form.value;
-    this.contractService.update(contractId, { status }, { write });
-    this.incomeService.update(contractId, { price }, { write });
-    await write.commit();
+    const { status } = this.form.value;
+    await this.contractService.update(contractId, { status });
     this.snackbar.open('Offer updated!', 'ok', { duration: 1000 });
   }
 
