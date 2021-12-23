@@ -10,13 +10,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 // RxJs
-import { Observable, Subscription, combineLatest } from 'rxjs';
-import { debounceTime, switchMap, startWith, distinctUntilChanged, skip, shareReplay, map, take } from 'rxjs/operators';
 import { SearchResponse } from '@algolia/client-search';
-import { centralOrgId } from '@env';
+import { Observable, Subscription, combineLatest } from 'rxjs';
+import { debounceTime, switchMap, startWith, distinctUntilChanged, skip, shareReplay, map } from 'rxjs/operators';
 
 // Blockframes
-import { Movie } from '@blockframes/movie/+state';
+import { centralOrgId } from '@env';
 import { AlgoliaMovie } from '@blockframes/utils/algolia';
 import { PdfService } from '@blockframes/utils/pdf/pdf.service';
 import { Term } from '@blockframes/contract/term/+state/term.model';
@@ -28,10 +27,7 @@ import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-enc
 import { ContractService, Mandate, Sale } from '@blockframes/contract/contract/+state';
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-
-
-import { getMandateTerms } from '@blockframes/contract/avails/avails';
-import { AvailsFilter, filterByTitle, availableTitle } from '@blockframes/contract/avails/new-avails';
+import { AvailsFilter, filterByTitle, availableTitle, FullMandate } from '@blockframes/contract/avails/new-avails';
 
 @Component({
   selector: 'catalog-marketplace-title-list',
@@ -41,7 +37,7 @@ import { AvailsFilter, filterByTitle, availableTitle } from '@blockframes/contra
 })
 export class ListComponent implements OnDestroy, OnInit {
 
-  public movies$: Observable<Movie[]>;
+  public movies$: Observable<(AlgoliaMovie & { mandates: FullMandate[] })[]>;
 
   public storeStatus: StoreStatus = 'accepted';
   public searchForm = new MovieSearchForm('catalog', this.storeStatus);
@@ -136,15 +132,16 @@ export class ListComponent implements OnDestroy, OnInit {
       debounceTime(300),
       switchMap(async ([_, availsValue, bucketValue, queries]) => [await this.searchForm.search(true), availsValue, bucketValue, queries]),
     ).pipe(
-      map(([movies, availsValue, bucketValue, { mandates, mandateTerms, sales, saleTerms }]: [SearchResponse<Movie>, AvailsFilter, Bucket, { mandates: Mandate[], mandateTerms: Term[], sales: Sale[], saleTerms: Term[] }]) => {
+      map(([movies, availsValue, bucketValue, { mandates, mandateTerms, sales, saleTerms }]: [SearchResponse<AlgoliaMovie>, AvailsFilter, Bucket, { mandates: Mandate[], mandateTerms: Term[], sales: Sale[], saleTerms: Term[] }]) => {
         if (this.availsForm.valid) {
           if (!mandates.length) return [];
-          return movies.hits.filter(movie => {
+          return movies.hits.map(movie => {
             const res = filterByTitle(movie.objectID, mandates, mandateTerms, sales, saleTerms, bucketValue);
-            return availableTitle(availsValue, res.mandates, res.sales, res.bucketContracts);
-          });
+            const availableMandates = availableTitle(availsValue, res.mandates, res.sales, res.bucketContracts);
+            return { ...movie, mandates: availableMandates };
+          }).filter(m => !!m.mandates.length);
         } else { // if availsForm is invalid, put all the movies from algolia
-          return movies.hits;
+          return movies.hits.map(m => ({ ...m, mandates: [] as FullMandate[] }));
         }
       }),
     );
@@ -157,7 +154,7 @@ export class ListComponent implements OnDestroy, OnInit {
     this.cdr.markForCheck();
   }
 
-  async addAvail(title: AlgoliaMovie) {
+  async addAvail(title: (AlgoliaMovie & { mandates: FullMandate[] })) {
 
     if (this.availsForm.invalid) {
       this.snackbar.open('Fill in avails filter to add title to your Selection.', 'close', { duration: 5000 })
@@ -165,17 +162,13 @@ export class ListComponent implements OnDestroy, OnInit {
     }
 
     const titleId = title.objectID;
-    const avails = this.availsForm.value;
-
-    const { mandateTerms } = await this.queries$.pipe(take(1)).toPromise();
-
-    const [parentTerm] = getMandateTerms(avails, mandateTerms);
-    if (!parentTerm) {
+    const parentTermId = title.mandates[0]?.id;
+    if (!parentTermId) {
       this.snackbar.open(`This title is not available`, 'close', { duration: 5000 });
       return;
     }
 
-    this.bucketService.addTerm(titleId, parentTerm.id, this.availsForm.value);
+    this.bucketService.addTerm(titleId, parentTermId, this.availsForm.value);
 
     this.snackbar.open(`${title.title.international} was added to your Selection`, 'GO TO SELECTION', { duration: 4000 })
       .onAction()
