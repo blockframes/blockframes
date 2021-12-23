@@ -46,4 +46,3 @@ export const mailchimpAPIKey = mockConfigIfNeeded('mailchimp', 'api_key');
 export const mailchimpServer = mockConfigIfNeeded('mailchimp', 'server');
 export const mailchimpListId = mockConfigIfNeeded('mailchimp', 'list_id');
 
-export const enableDailyFirestoreBackup = false;
