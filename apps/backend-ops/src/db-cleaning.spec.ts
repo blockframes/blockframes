@@ -876,12 +876,24 @@ describe('DB cleaning script', () => {
       { id: 'mov-C', orgIds: ['org-B', 'org-B', 'org-B'] },
     ];
 
+    const testOrgs = [
+      { id: 'org-A', email: 'org-A@fake.com', userIds: [], wishlist: [] },
+      { id: 'org-B', email: 'org-B@fake.com', userIds: [], wishlist: [] },
+      { id: 'org-C', email: 'org-C@fake.com', userIds: [], wishlist: [] },
+    ];
+
     await populate('movies', testMovies);
+    await populate('orgs', testOrgs);
 
-    const moviesBefore: Snapshot = await getCollectionRef('movies');
+    const [moviesBefore, orgs] = await Promise.all([
+      getCollectionRef('movies'),
+      getCollectionRef('orgs'),
+    ]);
+
     expect(moviesBefore.docs.length).toEqual(3);
+    expect(orgs.docs.length).toEqual(3);
 
-    await cleanMovies(moviesBefore);
+    await cleanMovies(moviesBefore, orgs.docs.map(o => o.id));
     const moviesAfter: Snapshot = await getCollectionRef('movies');
 
     const movA = moviesAfter.docs.find(o => o.data().id === 'mov-A');
@@ -892,6 +904,42 @@ describe('DB cleaning script', () => {
 
     const movC = moviesAfter.docs.find(o => o.data().id === 'mov-C');
     expect(movC.data().orgIds.length).toEqual(1);
+  });
+
+  it('should remove un-existing orgs in movie.orgIds', async () => {
+    const testMovies = [
+      { id: 'mov-A', orgIds: ['org-A', 'org-B'] },
+      { id: 'mov-B', orgIds: ['org-A', 'org-B', 'org-C'] },
+      { id: 'mov-C', orgIds: ['org-C'] },
+    ];
+
+    const testOrgs = [
+      { id: 'org-A', email: 'org-A@fake.com', userIds: [], wishlist: [] },
+      { id: 'org-B', email: 'org-B@fake.com', userIds: [], wishlist: [] },
+    ];
+
+    await populate('movies', testMovies);
+    await populate('orgs', testOrgs);
+
+    const [moviesBefore, orgs] = await Promise.all([
+      getCollectionRef('movies'),
+      getCollectionRef('orgs'),
+    ]);
+
+    expect(moviesBefore.docs.length).toEqual(3);
+    expect(orgs.docs.length).toEqual(2);
+
+    await cleanMovies(moviesBefore, orgs.docs.map(o => o.id));
+    const moviesAfter: Snapshot = await getCollectionRef('movies');
+
+    const movA = moviesAfter.docs.find(o => o.data().id === 'mov-A');
+    expect(movA.data().orgIds.length).toEqual(2);
+
+    const movB = moviesAfter.docs.find(o => o.data().id === 'mov-B');
+    expect(movB.data().orgIds.length).toEqual(2);
+
+    const movC = moviesAfter.docs.find(o => o.data().id === 'mov-C');
+    expect(movC.data().orgIds.length).toEqual(0);
   });
 
 });

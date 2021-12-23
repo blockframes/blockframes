@@ -9,6 +9,7 @@ import admin from 'firebase-admin';
 import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 import { getAllAppsExcept } from '@blockframes/utils/apps';
 import { DatabaseData, loadAllCollections, printDatabaseInconsistencies } from './internals/utils';
+import { MovieDocument } from '@blockframes/movie/+state/movie.firestore';
 
 export const numberOfDaysToKeepNotifications = 14;
 const currentTimestamp = new Date().getTime();
@@ -68,7 +69,7 @@ async function cleanData(dbData: DatabaseData, db: FirebaseFirestore.Firestore, 
 
   await cleanPermissions(dbData.permissions.refs, organizationIds2, userIds, db);
   if (verbose) console.log('Cleaned permissions');
-  await cleanMovies(dbData.movies.refs);
+  await cleanMovies(dbData.movies.refs, organizationIds2);
   if (verbose) console.log('Cleaned movies');
   await cleanDocsIndex(dbData.docsIndex.refs, movieIds.concat(eventIds), organizationIds2);
   if (verbose) console.log('Cleaned docsIndex');
@@ -174,8 +175,8 @@ export async function cleanUsers(
       // User is deleted, we don't delete or update other documents as orgs, permissions, notifications etc
       // because this will be handled in the next parts of the script (cleanOrganizations, cleanPermissions, etc)
       // related storage documents will also be deleted in the cleanStorage and algolia will be updated at end of "upgrade" process
+      if (verbose) console.log(`Deleting user : ${user.uid}.`);
       await userDoc.ref.delete();
-      if (verbose) console.log(`Deleted ${user.uid}.`);
     }
   }, undefined, verbose);
 }
@@ -200,7 +201,7 @@ export function cleanOrganizations(
       // Org is deleted, we don't delete or update other documents as permissions, notifications, movies etc
       // because this will be handled in the next parts of the script (cleanPermissions, cleanInvitations etc)
       // related storage documents will also be deleted in the cleanStorage and algolia will be updated at end of "upgrade" process
-      if (verbose) console.log(`Deleting org ${org.id}.`);
+      if (verbose) console.log(`Deleting org : ${org.id}.`);
       return orgDoc.ref.delete();
     } else if (validUserIds.length !== userIds.length) {
       await orgDoc.ref.update({ userIds: validUserIds });
@@ -250,15 +251,23 @@ export function cleanPermissions(
 }
 
 export function cleanMovies(
-  movies: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>
+  movies: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
+  organizationIds: string[]
 ) {
   return runChunks(movies.docs, async (movieDoc) => {
-    const movie = movieDoc.data();
+    const movie = movieDoc.data() as MovieDocument;
 
     let updateDoc = false;
 
+    // Remove duplicates
     if (!!movie.orgIds && Array.from(new Set(movie.orgIds)).length !== movie.orgIds.length) {
       movie.orgIds = Array.from(new Set(movie.orgIds));
+      updateDoc = true;
+    }
+
+    // Removes orgs that does not exists
+    if (!!movie.orgIds && movie.orgIds.some(o => !organizationIds.includes(o))) {
+      movie.orgIds = movie.orgIds.filter(o => organizationIds.includes(o));
       updateDoc = true;
     }
 
