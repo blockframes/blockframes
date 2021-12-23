@@ -1,5 +1,6 @@
 <a mat-icon-button routerLink="..">
   <mat-icon svgIcon="arrow_back"></mat-icon>
+  <span>Come back to Contract List</span>
 </a>
 <ng-container *ngIf="contract$ | async as sale">
   <ng-container *ngIf="sale.negotiation as negotiation">

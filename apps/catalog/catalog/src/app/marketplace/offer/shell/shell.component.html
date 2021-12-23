@@ -1,8 +1,5 @@
 <ng-container *ngIf="offer$ | async as offer">
   <header>
-    <a mat-icon-button routerLink="..">
-      <mat-icon svgIcon="arrow_back"></mat-icon>
-    </a>
     <bf-tag>{{ offer.status | toLabel:'offerStatus' }}</bf-tag>
     <article>
       <div>
