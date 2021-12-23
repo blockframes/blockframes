@@ -19,8 +19,15 @@ export const testFixture = {
     uid: 'uid-c8'
   },
   'users/uid-user2': {
+    firstName: 'User',
+    lastName: 'Two',
     email: 'u2@cascade8.com',
     uid: 'uid-user2',
     orgId: 'O001',
   },
+
+  //Consents
+  'consents/O001': {
+    id: 'O001',
+  }
 };
