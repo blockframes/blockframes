@@ -1,7 +1,5 @@
 import { endMaintenance, latestAnonDbDir, latestAnonShrinkedDbDir, removeAllSubcollections, startMaintenance } from "@blockframes/firebase-utils";
 import { connectFirestoreEmulator, defaultEmulatorBackupPath, firebaseEmulatorExec, getFirestoreExportPath, importFirestoreEmulatorBackup, shutdownEmulator } from "@blockframes/firebase-utils/firestore/emulator";
-import { OrganizationDocument } from "@blockframes/organization/+state";
-import { PermissionsDocument } from "@blockframes/permissions/+state/permissions.firestore";
 import { uploadBackup } from "./emulator";
 import { backupBucket as ciBucketName } from 'env/env.blockframes-ci'
 import { backupBucket } from '@env'
@@ -123,35 +121,6 @@ export async function shrinkDb(db: FirebaseFirestore.Firestore) {
   }
 
   //////////////////
-  // CLEANING OF REMAINING DOCUMENTS
-  //////////////////
-
-  const remainingOrgs = await db.collection('orgs').get();
-  for (const _org of remainingOrgs.docs) {
-    const org = _org.data() as OrganizationDocument;
-    org.userIds = org.userIds.filter(uid => usersToKeep.includes(uid));
-    await _org.ref.set(org);
-  }
-
-  console.log(`Cleaned ${remainingOrgs.docs.length} remaining orgs`);
-
-  const remainingPermissions = await db.collection('permissions').get();
-  for (const _perm of remainingPermissions.docs) {
-    const perm = _perm.data() as PermissionsDocument;
-    const currentUsers = Object.keys(perm.roles);
-    const roles = {};
-    for (const orgUser of currentUsers) {
-      if (usersToKeep.includes(orgUser)) {
-        roles[orgUser] = perm.roles[orgUser];
-      }
-    }
-    perm.roles = roles;
-    await _perm.ref.set(perm);
-  }
-
-  console.log(`Cleaned ${remainingPermissions.docs.length} permissions`);
-
-  //////////////////
   // CHECK IF PROCESS WENT WELL
   //////////////////
 
@@ -162,6 +131,7 @@ export async function shrinkDb(db: FirebaseFirestore.Firestore) {
     errors = true;
   }
 
+  const remainingOrgs = await db.collection('orgs').get();
   if (orgsToKeep.length !== remainingOrgs.docs.length) {
     console.log(`Remaining orgs VS calculated : ${remainingOrgs.docs.length} / ${orgsToKeep.length}`);
     errors = true;

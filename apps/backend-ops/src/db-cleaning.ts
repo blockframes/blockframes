@@ -4,7 +4,7 @@ import { PublicUser } from '@blockframes/user/+state/user.firestore';
 import { OrganizationDocument, PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
 import { PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
 import { removeUnexpectedUsers } from './users';
-import { Auth, Firestore, QueryDocumentSnapshot, getDocument, runChunks } from '@blockframes/firebase-utils';
+import { Auth, QueryDocumentSnapshot, getDocument, runChunks, removeAllSubcollections } from '@blockframes/firebase-utils';
 import admin from 'firebase-admin';
 import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 import { getAllAppsExcept } from '@blockframes/utils/apps';
@@ -15,14 +15,6 @@ const currentTimestamp = new Date().getTime();
 export const dayInMillis = 1000 * 60 * 60 * 24;
 const EMPTY_MEDIA = createStorageFile();
 let verbose = false;
-
-// @TODO #6460 not existing users found in movies._meta.createdBy ..
-// @TODO #6460 spot database inconsistency + users without org + org.userIds = user.orgId + movie.orgIds => exists
-// @TODO #6460 check document subcollection of permissions ?
-
-// @TODO #6460 remove 
-// npm run backend-ops importFirestore LATEST-ANON-DB
-// npm run backend-ops syncUsers
 
 /** Reusable data cleaning script that can be updated along with data model */
 export async function cleanDeprecatedData(db: FirebaseFirestore.Firestore, auth?: admin.auth.Auth, options = { verbose: true }) {
@@ -51,40 +43,34 @@ export async function auditDatabaseConsistency(db: FirebaseFirestore.Firestore, 
 async function cleanData(dbData: DatabaseData, db: FirebaseFirestore.Firestore, auth?: admin.auth.Auth) {
 
   // Getting existing document ids to compare
-  const [movieIds, organizationIds, eventIds, userIds, invitationIds, offerIds] = [
+  const [movieIds, organizationIds, eventIds, invitationIds, offerIds] = [
     dbData.movies.refs.docs.map(ref => ref.id),
     dbData.orgs.refs.docs.map(ref => ref.id),
     dbData.events.refs.docs.map(ref => ref.id),
-    dbData.users.refs.docs.map(ref => ref.id),
     dbData.invitations.refs.docs.map(ref => ref.id),
     dbData.offers.refs.docs.map(ref => ref.id),
   ];
 
   // Compare and update/delete documents with references to non existing documents
-  if (auth) await cleanUsers(dbData.users.refs, organizationIds, auth, db);
+  if (auth) await cleanUsers(dbData.users.refs, organizationIds, auth);
   if (verbose) console.log('Cleaned users');
+
+  // Loading users list after "cleanUsers" since some may have been removed
+  const users = await db.collection('users').get();
+  const userIds = users.docs.map(ref => ref.id);
   await cleanOrganizations(dbData.orgs.refs, userIds, dbData.movies.refs);
   if (verbose) console.log('Cleaned orgs');
 
-  // Getting all collections we need to reload
-  const [organizations2, users2] = await Promise.all([
-    db.collection('orgs').get(),
-    db.collection('users').get(),
-  ]);
+  // Loading orgs list after "cleanOrganizations" since some may have been removed
+  const organizations2 = await db.collection('orgs').get();
+  const organizationIds2 = organizations2.docs.map(ref => ref.id);
+  const existingIds = movieIds.concat(organizationIds2, eventIds, userIds, invitationIds, offerIds);
 
-  // Reloading users and org list after possible deletion
-  const [organizationIds2, userIds2] = [
-    organizations2.docs.map(ref => ref.id),
-    users2.docs.map(ref => ref.id)
-  ];
-
-  const existingIds = movieIds.concat(organizationIds2, eventIds, userIds2, invitationIds, offerIds);
-
-  await cleanPermissions(dbData.permissions.refs, organizationIds, userIds2);
+  await cleanPermissions(dbData.permissions.refs, organizationIds2, userIds, db);
   if (verbose) console.log('Cleaned permissions');
   await cleanMovies(dbData.movies.refs);
   if (verbose) console.log('Cleaned movies');
-  await cleanDocsIndex(dbData.docsIndex.refs, movieIds.concat(eventIds), organizationIds);
+  await cleanDocsIndex(dbData.docsIndex.refs, movieIds.concat(eventIds), organizationIds2);
   if (verbose) console.log('Cleaned docsIndex');
   await cleanNotifications(dbData.notifications.refs, existingIds);
   if (verbose) console.log('Cleaned notifications');
@@ -165,8 +151,7 @@ async function cleanOneInvitation(doc: QueryDocumentSnapshot, invitation: Invita
 export async function cleanUsers(
   users: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
   existingOrganizationIds: string[],
-  auth: Auth,
-  db: Firestore,
+  auth: Auth
 ) {
 
   // Check if auth users have their record on DB
@@ -186,24 +171,11 @@ export async function cleanUsers(
         await userDoc.ref.set(user);
       }
     } else {
-      // User does not exists on auth, should be deleted.
-      if (!user.orgId || !existingOrganizationIds.includes(user.orgId)) {
-        await userDoc.ref.delete();  // @TODO #6460 clean org delete with cascade
-        if (verbose) console.log(`Deleted ${user.uid}.`);
-      } else {
-        const orgDoc = await db.doc(`orgs/${user.orgId}`).get();
-        const org = orgDoc.data() as OrganizationDocument;
-        const userIds = org.userIds.filter(u => u !== user.uid);
-        await orgDoc.ref.update({ userIds });
-        const permDoc = await db.doc(`permissions/${user.orgId}`).get();
-        const permission = permDoc.data() as PermissionsDocument;
-        if (permission) {
-          delete permission.roles[user.uid];
-          await permDoc.ref.update({ roles: permission.roles });
-        }
-        await userDoc.ref.delete(); // @TODO #6460 clean org delete with cascade
-        if (verbose) console.log(`Deleted ${user.uid} and cleaned org and permissions ${user.orgId}.`);
-      }
+      // User is deleted, we don't delete or update other documents as orgs, permissions, notifications etc
+      // because this will be handled in the next parts of the script (cleanOrganizations, cleanPermissions, etc)
+      // related storage documents will also be deleted in the cleanStorage and algolia will be updated at end of "upgrade" process
+      await userDoc.ref.delete();
+      if (verbose) console.log(`Deleted ${user.uid}.`);
     }
   }, undefined, verbose);
 }
@@ -224,13 +196,13 @@ export function cleanOrganizations(
     const { userIds = [], wishlist = [] } = org as OrganizationDocument;
 
     const validUserIds = Array.from(new Set(userIds.filter(userId => existingUserIds.includes(userId))));
-    /* @TODO #5371 #6460
     if (validUserIds.length === 0) {
-      // Removes permissions and orgs doc
-      const permissionRef = await getDocumentRef(`permissions/${org.id}`);
-      if (verbose) console.log(`Deleting org and permissions ${org.id}.`);
-      return Promise.all([permissionRef.ref.delete(), orgDoc.ref.delete()]); // @TODO #6460 clean org delete with cascade
-    } else */if (validUserIds.length !== userIds.length) {
+      // Org is deleted, we don't delete or update other documents as permissions, notifications, movies etc
+      // because this will be handled in the next parts of the script (cleanPermissions, cleanInvitations etc)
+      // related storage documents will also be deleted in the cleanStorage and algolia will be updated at end of "upgrade" process
+      if (verbose) console.log(`Deleting org ${org.id}.`);
+      return orgDoc.ref.delete();
+    } else if (validUserIds.length !== userIds.length) {
       await orgDoc.ref.update({ userIds: validUserIds });
     }
 
@@ -249,13 +221,17 @@ export function cleanOrganizations(
 export function cleanPermissions(
   permissions: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
   existingOrganizationIds: string[],
-  existingUserIds: string[]
+  existingUserIds: string[],
+  db: FirebaseFirestore.Firestore
 ) {
   return runChunks(permissions.docs, async (permissionDoc) => {
     const permission = permissionDoc.data() as PermissionsDocument;
     const invalidPermission = !existingOrganizationIds.includes(permission.id);
     if (invalidPermission) {
       await permissionDoc.ref.delete();
+      const batch = db.batch();
+      await removeAllSubcollections(permissionDoc, batch, db, { verbose: false });
+      await batch.commit();
     } else {
       const userIds = Object.keys(permission.roles);
       let updateDoc = false;
@@ -280,11 +256,6 @@ export function cleanMovies(
     const movie = movieDoc.data();
 
     let updateDoc = false;
-
-    if (movie.distributionRights) {
-      delete movie.distributionRights;
-      updateDoc = true;
-    }
 
     if (!!movie.orgIds && Array.from(new Set(movie.orgIds)).length !== movie.orgIds.length) {
       movie.orgIds = Array.from(new Set(movie.orgIds));

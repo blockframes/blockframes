@@ -2,7 +2,6 @@ import { db } from './internals/firebase';
 import { MovieDocument, createDocPermissions } from './data/types';
 import { triggerNotifications, createNotification } from './notification';
 import { createDocumentMeta, getOrganizationsOfMovie, Timestamp } from './data/internals';
-import { removeAllSubcollections } from './utils';
 
 import { orgName } from '@blockframes/organization/+state/organization.firestore';
 import { MovieAppConfig } from '@blockframes/movie/+state/movie.firestore';
@@ -51,9 +50,6 @@ export async function onMovieDelete(
 
   // Clean wishlists
   await removeMovieFromWishlists(movie, batch);
-
-  // Delete sub-collections (distribution rights)
-  await removeAllSubcollections(snap, batch);
 
   await batch.commit();
 

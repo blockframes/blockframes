@@ -2,7 +2,7 @@ import { getValue } from "@blockframes/utils/helpers";
 import { isString } from "lodash";
 
 const collections = {
-  analytics: false, // @TODO #6460 handle ?
+  analytics: false,
   blockframesAdmin: true,
   buckets: true,
   campaigns: true,
@@ -15,7 +15,7 @@ const collections = {
   notifications: true,
   orgs: true,
   permissions: true,
-  terms: false, // @TODO #6460 handle ?
+  terms: false,
   offers: true,
   users: true,
 };
@@ -46,7 +46,7 @@ const userMap: Partial<Record<Collections, string[]>> = {
     'fromUser.uid'
   ],
   contracts: [
-    'buyerUserId' // @TODO #6460 is field used ?
+    'buyerUserId'
   ],
   offers: [
     'buyerUserId'

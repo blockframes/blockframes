@@ -75,7 +75,7 @@ describe('DB cleaning script', () => {
 
     const organizationIds = organizations.docs.map(ref => ref.id);
 
-    await cleanUsers(usersBefore, organizationIds, adminAuth, db);
+    await cleanUsers(usersBefore, organizationIds, adminAuth);
 
     const usersAfter: Snapshot = await getCollectionRef('users');
     const cleanedUsers = usersAfter.docs.filter(u => isUserClean(u, organizationIds)).length;
@@ -144,65 +144,11 @@ describe('DB cleaning script', () => {
     const usersBefore = await getCollectionRef('users');
     expect(usersBefore.docs.length).toEqual(2);
 
-    await cleanUsers(usersBefore, [], adminAuth, db);
+    await cleanUsers(usersBefore, [], adminAuth);
 
     // Check if user have been correctly removed
     const usersAfter = await getCollectionRef('users');
     expect(usersAfter.docs.length).toEqual(0);
-
-  });
-
-  it('should update org and permissions documents when deleting user with org', async () => {
-
-    const testUser = { uid: 'A', email: 'johndoe@fake.com', orgId: 'orgA' };
-    const anotherOrgMember = 'B';
-    const testOrg = { id: testUser.orgId, userIds: [anotherOrgMember, testUser.uid] };
-    const testPermission = { id: testUser.orgId, roles: { [testUser.uid]: 'admin', [anotherOrgMember]: 'superAdmin' } };
-
-    // Set empty auth
-    adminAuth.users = [];
-
-    // Load our test set : only one user
-    await populate('users', [testUser]);
-    // Loading a fake org belonging to user
-    await populate('orgs', [testOrg]);
-    // Loading a fake permission document
-    await populate('permissions', [testPermission]);
-
-    // Check if user have been correctly added
-    const usersBefore = await getCollectionRef('users');
-    expect(usersBefore.docs.length).toEqual(1);
-
-    // Check if org have been correctly added
-    const orgsBefore = await getCollectionRef('orgs');
-    expect(orgsBefore.docs.length).toEqual(1);
-
-    // Check permission org have been correctly added
-    const permissionsBefore = await getCollectionRef('permissions');
-    expect(permissionsBefore.docs.length).toEqual(1);
-
-    await cleanUsers(usersBefore, [testOrg.id], adminAuth, db);
-
-    /**
-     * In this scenario, user should be removed from DB because it was not found in Auth (empty)
-     * Since it is linked to an existing org, org and permissions documents should be updated
-     * */
-
-    // Check if user have been correctly removed
-    const usersAfter = await getCollectionRef('users');
-    expect(usersAfter.docs.length).toEqual(0);
-
-    // Check if userId have been removed from org
-    const orgsAfter = await getCollectionRef('orgs');
-    const orgAfter = orgsAfter.docs.pop().data();
-    expect(orgAfter.userIds.length).toEqual(1);
-    expect(orgAfter.userIds[0]).toEqual(anotherOrgMember);
-
-    // Check if permissions have been updated
-    const permissionsAfter = await getCollectionRef('permissions');
-    const permisisonAfter = permissionsAfter.docs.pop().data();
-    expect(permisisonAfter.roles[anotherOrgMember]).toEqual('superAdmin');
-    expect(permisisonAfter.roles[testUser.uid]).toBe(undefined);
 
   });
 
@@ -278,8 +224,7 @@ describe('DB cleaning script', () => {
     expect(orgD.data().wishlist.length).toEqual(0);
   });
 
-  // @TODO #5371 unskip
-  it.skip('should remove orgs with no users', async () => {
+  it('should remove orgs with no users', async () => {
     const testUsers = [
       { uid: 'A', email: 'A@fake.com' },
       { uid: 'B', email: 'B@fake.com' },
@@ -338,7 +283,7 @@ describe('DB cleaning script', () => {
 
     const organizationIds = organizations.docs.map(ref => ref.id);
 
-    await cleanPermissions(permissionsBefore, organizationIds, []);
+    await cleanPermissions(permissionsBefore, organizationIds, [], db);
     const permissionsAfter: Snapshot = await getCollectionRef('permissions');
     expect(permissionsAfter.docs.length).toEqual(1);
     expect(permissionsAfter.docs[0].data().id).toEqual('org-A');
@@ -369,27 +314,11 @@ describe('DB cleaning script', () => {
     const organizationIds = organizations.docs.map(ref => ref.id);
     const userIds = users.docs.map(ref => ref.id);
 
-    await cleanPermissions(permissionsBefore, organizationIds, userIds);
+    await cleanPermissions(permissionsBefore, organizationIds, userIds, db);
     const permissionsAfter: Snapshot = await getCollectionRef('permissions');
     const permissionDoc = permissionsAfter.docs[0].data() as PermissionsDocument;
     expect(Object.keys(permissionDoc.roles).length).toEqual(1);
     expect(permissionDoc.roles.A).toEqual({});
-  });
-
-  it('should clean movies from unwanted attributes', async () => {
-    const testMovies = [{ id: 'mov-A' }, { id: 'mov-B', distributionRights: [] }, { id: 'mov-C' }];
-
-    // Load our test set
-    await populate('movies', testMovies);
-
-    const moviesBefore: Snapshot = await getCollectionRef('movies');
-    // Check if data have been correctly added
-    expect(moviesBefore.docs.length).toEqual(3);
-
-    await cleanMovies(moviesBefore);
-    const moviesAfter: Snapshot = await getCollectionRef('movies');
-    const cleanedMovies = moviesAfter.docs.filter(m => isMovieClean(m)).length;
-    expect(cleanedMovies).toEqual(testMovies.length);
   });
 
   it('should remove documents undefined or not linked to existing document from docsIndex (movies, events, orgs)', async () => {
@@ -966,10 +895,6 @@ describe('DB cleaning script', () => {
   });
 
 });
-
-function isMovieClean(d: FirebaseFirestore.DocumentSnapshot) {
-  return d.data().distributionRights === undefined;
-}
 
 function isOrgClean(
   doc: FirebaseFirestore.DocumentSnapshot,
