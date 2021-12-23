@@ -20,6 +20,7 @@ import { algolia, deleteObject, storeSearchableOrg, findOrgAppAccess, storeSearc
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { User } from '@blockframes/user/+state';
 import { groupIds } from '@blockframes/utils/emails/ids';
+import { ContractDocument } from '@blockframes/contract/contract/+state';
 
 /** Create a notification with user and org. */
 function notifyUser(toUserId: string, notificationType: NotificationTypes, org: OrganizationDocument, user: PublicUser) {
@@ -165,10 +166,10 @@ export async function onOrganizationDelete(
   for (const userId of org.userIds) {
     const userSnapshot = await db.doc(`users/${userId}`).get();
     const user = userSnapshot.data() as PublicUser;
-    await userSnapshot.ref.update({ ...user, orgId: null })
+    await userSnapshot.ref.update({ ...user, orgId: null });
   }
 
-  // Delete persmission document related to the organization
+  // Delete permission document related to the organization
   const permissionsDoc = db.doc(`permissions/${org.id}`);
   const permissionsSnap = await permissionsDoc.get();
   await permissionsSnap.ref.delete();
@@ -207,19 +208,21 @@ export async function onOrganizationDelete(
     await invit.ref.delete();
   }
 
-  // Update all contracts where the organization belongs to partyIds array
-  const contractsCollectionRef = db.collection('contracts').where('partyIds', 'array-contains', org.id);
+  // Update all contracts where the organization belongs to stakeholders array
+  const contractsCollectionRef = db.collection('contracts').where('stakeholders', 'array-contains', org.id);
   const contractsSnap = await contractsCollectionRef.get();
-
   for (const contract of contractsSnap.docs) {
-    const contractData = contract.data();
-    for (const party of contractData.parties) {
-      if (party.party.orgId === org.id) {
-        const index = contractData.parties.indexOf(party);
-        contractData.parties.splice(index, 1);
-        await contract.ref.update({ parties: contractData.parties });
-      }
-    }
+    const contractData = contract.data() as ContractDocument;
+    const stakeholders = contractData.stakeholders.filter(s => s !== org.id);
+    await contract.ref.update({ stakeholders });
+  }
+
+  const contractsBuyerCollectionRef = db.collection('contracts').where('buyerId', '==', org.id);
+  const contractsBuyerSnap = await contractsBuyerCollectionRef.get();
+  for (const contract of contractsBuyerSnap.docs) {
+    const contractData = contract.data() as ContractDocument;
+    const stakeholders = contractData.stakeholders.filter(s => s !== org.id);
+    await contract.ref.update({ stakeholders });
   }
 
   // Remove bucket belonging to org, if any

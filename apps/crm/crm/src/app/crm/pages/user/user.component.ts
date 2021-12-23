@@ -220,13 +220,15 @@ export class UserComponent implements OnInit {
     const invitTo = await this.invitationService.getValue(ref => ref.where('toUser.uid', '==', user.uid));
     const allInvit = [...invitFrom, ...invitTo];
     if (allInvit.length) {
-      output.push(`${allInvit.length} invitation(s) will be removed.`)
+      output.push(`${allInvit.length} invitation(s) will be removed.`);
     }
+    // @TODO #7477 simulation notification deleletion ?
 
     const organizerEvent = await this.eventService.getValue(ref => ref.where('meta.organizerUid', '==', user.uid));
     if (organizerEvent.length) {
       output.push(`${organizerEvent.length} meetings event(s) will have no organizer anymore.`);
     }
+    // @TODO #7477 events are not updated onUserDelete (db-cleaning will)
 
     return output;
   }

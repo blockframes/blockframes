@@ -209,6 +209,7 @@ export async function onUserDelete(userSnapshot: FirebaseFirestore.DocumentSnaps
 
   // remove all notifications related to user
   const notificationsRef = db.collection(`notifications`).where('toUserId', '==', user.uid);
+  // @TODO #7477 should remove notifications where(user.uid)
   const notificationsSnap = await notificationsRef.get();
   notificationsSnap.forEach(notification => db.doc(`notifications/${notification.id}`).delete());
 

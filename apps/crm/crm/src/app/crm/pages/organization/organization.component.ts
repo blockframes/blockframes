@@ -217,10 +217,13 @@ export class OrganizationComponent implements OnInit {
     }
 
     // Calculate how many contracts will be updated
-    const contracts = await this.contractService.getValue(ref => ref.where('partyIds', 'array-contains', organization.id))
+    const contractsStakeholders = await this.contractService.getValue(ref => ref.where('stakeholders', 'array-contains', organization.id));
+    const contractsBuyer = await this.contractService.getValue(ref => ref.where('buyerId', '==', organization.id));
+    const contracts = [...contractsStakeholders, ...contractsBuyer];
     if (contracts.length) {
       output.push(`${contracts.length} contract(s) will be updated.`);
     }
+    // @TODO #7477 what should we do with sellerId field that is mandatory ? remove contract ?
 
     // Check bucket content
     const bucket = await this.bucketService.getValue(orgId);
