@@ -1,5 +1,5 @@
 ﻿process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
-import { initFirestoreApp, initFunctionsTestMock } from '@blockframes/testing/unit-tests';
+import { initFirestoreApp } from '@blockframes/testing/unit-tests';
 import { clearFirestoreData } from '@firebase/rules-unit-testing';
 import { createConsent } from './main';
 import firebaseTest = require('firebase-functions-test');
@@ -19,15 +19,12 @@ describe('Invitation backend-function unit-tests', () => {
 
   beforeAll(async () => {
     db = await initFirestoreApp(firebase().projectId, 'firestore.test.rules', testFixture);
-    //Using admin
-    //const app = initFunctionsTestMock(true);
-    //db = app.firestore;
     await endMaintenance();
   });
 
   afterAll(async () => {
     // After each test, db is reseted
-    //await clearFirestoreData({ projectId: firebase().projectId });
+    await clearFirestoreData({ projectId: firebase().projectId });
   });
 
   describe('Consents spec', () => {
@@ -169,7 +166,6 @@ describe('Invitation backend-function unit-tests', () => {
         .toThrow('Invalid filePath');
     });
 
-    //TODO: Test 
     it('creates \'Access Type\' consents document', async () => {
       const wrapped = testEnv.wrap(createConsent);
 
@@ -187,14 +183,6 @@ describe('Invitation backend-function unit-tests', () => {
           token: ''
         }
       };
-
-      console.log("Check for doc creation");
-
-      //expect.assertions(1);
-      // await expect(async () => {
-      //   await wrapped(data, context)
-      // }).resolves
-      //   .toBeTruthy();
 
       const result = await wrapped(data, context);
       expect(result).toBeTruthy();

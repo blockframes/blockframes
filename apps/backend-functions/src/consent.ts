@@ -1,4 +1,4 @@
-import * as functions from 'firebase-functions';
+﻿import * as functions from 'firebase-functions';
 import { db } from './internals/firebase';
 import { PublicUser } from './data/types';
 import {
@@ -28,12 +28,6 @@ export const createConsent = async (
   }
 
   await db.runTransaction(async tx => {
-    //DO TEST FOR TRANSACTION
-    const consentSnap1 = await tx.get(db.doc(`consents/${docId}`));
-    tx.set(consentSnap1.ref, data, {merge: true});
-
-    return true;
-
     const userSnap = await tx.get(db.doc(`users/${context.auth.uid}`));
     const userData = userSnap.data() as PublicUser;
 
@@ -94,12 +88,7 @@ export const createConsent = async (
       consent.share.push(share);
     }
     console.log(JSON.stringify(consent));
-
-    //TODO: For debugging
-    const c = JSON.stringify(consent);
-    throw new Error(`All Good!${c}`);
     tx.set(consentSnap.ref, consent);
-
   });
 
   return true;
