@@ -18,10 +18,10 @@ describe('Invitation backend-function unit-tests', () => {
   let db;
 
   beforeAll(async () => {
-    //db = await initFirestoreApp(firebase().projectId, 'firestore.test.rules', testFixture);
+    db = await initFirestoreApp(firebase().projectId, 'firestore.test.rules', testFixture);
     //Using admin
-    const app = initFunctionsTestMock(true);
-    db = app.firestore;
+    //const app = initFunctionsTestMock(true);
+    //db = app.firestore;
     await endMaintenance();
   });
 
@@ -169,6 +169,7 @@ describe('Invitation backend-function unit-tests', () => {
         .toThrow('Invalid filePath');
     });
 
+    //TODO: Test 
     it('creates \'Access Type\' consents document', async () => {
       const wrapped = testEnv.wrap(createConsent);
 
@@ -177,7 +178,7 @@ describe('Invitation backend-function unit-tests', () => {
         consentType: 'access',
         filePath: '/c/o/marketplace',
         ip: '10.0.0.1',
-        docId: 'D001'
+        docId: 'O001'
       };
 
       const context = {
@@ -187,18 +188,19 @@ describe('Invitation backend-function unit-tests', () => {
         }
       };
 
-      //await new Promise((r) => setTimeout(r, 5000));
-
       console.log("Check for doc creation");
-      // expect(true).toBeTruthy();
-      // return;
 
-      expect.assertions(1);
-      await expect(async () => {
-        await wrapped(data, context)
-      }).rejects
-        .toThrow('All Good!');
+      //expect.assertions(1);
+      // await expect(async () => {
+      //   await wrapped(data, context)
+      // }).resolves
+      //   .toBeTruthy();
 
+      const result = await wrapped(data, context);
+      expect(result).toBeTruthy();
+
+      //Complete the operation..
+      await new Promise((r) => setTimeout(r, 5000));  
     });
 
     it.skip('with proper data, does not throw error', async () => {

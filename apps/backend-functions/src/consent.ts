@@ -28,6 +28,12 @@ export const createConsent = async (
   }
 
   await db.runTransaction(async tx => {
+    //DO TEST FOR TRANSACTION
+    const consentSnap1 = await tx.get(db.doc(`consents/${docId}`));
+    tx.set(consentSnap1.ref, data, {merge: true});
+
+    return true;
+
     const userSnap = await tx.get(db.doc(`users/${context.auth.uid}`));
     const userData = userSnap.data() as PublicUser;
 
@@ -90,8 +96,10 @@ export const createConsent = async (
     console.log(JSON.stringify(consent));
 
     //TODO: For debugging
-    throw new Error('All Good!');
+    const c = JSON.stringify(consent);
+    throw new Error(`All Good!${c}`);
     tx.set(consentSnap.ref, consent);
+
   });
 
   return true;
