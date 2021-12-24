@@ -142,6 +142,9 @@
         ],
         "festival": [
           "blockframes-pl-2"
+        ],
+        "crm": [
+          "blockframes-pl-2-crm"
         ]
       }
     },

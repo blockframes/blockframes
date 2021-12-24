@@ -77,7 +77,10 @@ export class DashboardAvailsMapComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     const decodedData = decodeUrl<Partial<MapAvailsFilter>>(this.route);
-    if (!decodedData.medias) decodedData.medias = []
+    if (!decodedData.medias) decodedData.medias = [];
+    if (decodedData.duration?.from) decodedData.duration.from = new Date(decodedData.duration.from);
+    if (decodedData.duration?.to) decodedData.duration.to = new Date(decodedData.duration.to);
+
     this.availsForm.patchValue(decodedData);
     this.sub = this.availsForm.valueChanges.pipe(
       throttleTime(1000)
