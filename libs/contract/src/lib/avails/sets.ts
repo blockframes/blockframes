@@ -173,12 +173,12 @@ export function exclusivitySomeOf(availsExclusivity: boolean) {
   //                                Avail
   //                     | Exclusive | Non-Exclusive |
   //                -----|-----------|---------------|
-  //           Exclusive |     ❌    |       ❌     |
+  //           Exclusive |     ✅    |       ✅     |
   // Sale           -----|-----------|---------------|
-  //       Non-Exclusive |    ❌     |      ✅      |
+  //       Non-Exclusive |    ✅     |      ❌      |
   //                -----|-----------|---------------|
 
   return {
-    in: (termExclusivity: boolean) => !termExclusivity && !availsExclusivity,
+    in: (termExclusivity: boolean) => termExclusivity || availsExclusivity,
   };
 }

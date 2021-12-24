@@ -126,7 +126,7 @@ export function availableTitle(
   // else we should check the bucket (if we have one)
 
   // for now the title is available and we have no bucket to check
-  if (!bucketContracts) return [];
+  if (!bucketContracts) return availableMandates;
 
   // get only the sales that meets the avails filter criteria
   // e.g. if we ask for "France" but the title has been sold in "Germany", we don't care
@@ -312,11 +312,13 @@ export function territoryAvailabilities(
     }
   }
 
-  const notLicensed = Object.values(availabilities).filter(a => a.type === 'not-licensed') as NotLicensedTerritoryMarker[];
-  const available = Object.values(availabilities).filter(a => a.type === 'available') as AvailableTerritoryMarker[];
-  const sold = Object.values(availabilities).filter(a => a.type === 'sold') as SoldTerritoryMarker[];
-  const inBucket = Object.values(availabilities).filter(a => a.type === 'in-bucket') as BucketTerritoryMarker[];
-  const selected = Object.values(availabilities).filter(a => a.type === 'selected') as BucketTerritoryMarker[];
+  const correctAvailabilities = Object.values(availabilities).filter(a => !!a.isoA3);
+
+  const notLicensed = correctAvailabilities.filter(a => a.type === 'not-licensed') as NotLicensedTerritoryMarker[];
+  const available = correctAvailabilities.filter(a => a.type === 'available') as AvailableTerritoryMarker[];
+  const sold = correctAvailabilities.filter(a => a.type === 'sold') as SoldTerritoryMarker[];
+  const inBucket = correctAvailabilities.filter(a => a.type === 'in-bucket') as BucketTerritoryMarker[];
+  const selected = correctAvailabilities.filter(a => a.type === 'selected') as BucketTerritoryMarker[];
 
   return { notLicensed, available, sold, inBucket, selected };
 }

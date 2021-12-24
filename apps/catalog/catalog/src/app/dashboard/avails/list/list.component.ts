@@ -123,9 +123,11 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
   }
 
   ngAfterViewInit() {
-    const decodedData: { territories?: string[], medias?: string[] } = decodeUrl(this.route);
+    const decodedData: Partial<AvailsFilter> = decodeUrl(this.route);
     if (!decodedData.territories) decodedData.territories = [];
     if (!decodedData.medias) decodedData.medias = [];
+    if (decodedData.duration?.from) decodedData.duration.from = new Date(decodedData.duration.from);
+    if (decodedData.duration?.to) decodedData.duration.to = new Date(decodedData.duration.to);
     this.availsForm.patchValue(decodedData);
     this.sub = this.availsForm.valueChanges.pipe(
       throttleTime(1000)
