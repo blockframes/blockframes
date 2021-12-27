@@ -29,5 +29,10 @@ export const testFixture = {
   //Consents
   'consents/O001': {
     id: 'O001',
+  },
+
+  //Invitations
+  'invitations/O001': {
+    id: 'O001',
   }
 };

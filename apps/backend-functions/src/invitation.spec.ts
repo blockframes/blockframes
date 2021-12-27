@@ -1,7 +1,7 @@
 ﻿process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
 import { initFirestoreApp } from '@blockframes/testing/unit-tests';
 import { clearFirestoreData } from '@firebase/rules-unit-testing';
-import { inviteUsers } from './main';
+import { inviteUsers, acceptOrDeclineInvitationAsAnonymous } from './main';
 import firebaseTest = require('firebase-functions-test');
 import { testFixture } from './fixtures/inviteUsers';
 import * as admin from 'firebase-admin';
@@ -9,7 +9,7 @@ import * as userOps from './internals/users';
 import { firebase } from '@env';
 import { expect } from '@jest/globals';
 import { ErrorResultResponse } from './utils';
-import { UserInvitation } from './invitation';
+import { UserInvitation, AnonymousInvitationAction } from './invitation';
 import { endMaintenance } from '@blockframes/firebase-utils';
 
 const testEnv = firebaseTest(firebase());
@@ -156,7 +156,7 @@ describe('Invitation backend-function unit-tests', () => {
 
   describe('\'acceptOrDeclineInvitationAsAnonymous\' tests', () => {
     it('missing auth context, throws error', async () => {
-      const wrapped = testEnv.wrap(inviteUsers);
+      const wrapped = testEnv.wrap(acceptOrDeclineInvitationAsAnonymous);
 
       //Compose the call to simpleCallable cf with param data
       const data = {
@@ -170,6 +170,29 @@ describe('Invitation backend-function unit-tests', () => {
         await wrapped(data, {})
       }).rejects
         .toThrow('Permission denied: missing auth context.');
+    });
+
+    it('Non-existent invitation, throws error', async () => {
+      const wrapped = testEnv.wrap(acceptOrDeclineInvitationAsAnonymous);
+
+      //Compose the call to simpleCallable cf with param data
+      const data: AnonymousInvitationAction = {
+        email: 'test@cascade8.com',
+        invitationId: 'I001',
+        status: null
+      };
+
+      const context = {
+        auth: {
+          uid: 'uid-user2',
+          token: ''
+        }
+      };
+      expect.assertions(1);
+      await expect(async () => {
+        await wrapped(data, context)
+      }).rejects
+        .toThrow('Permission denied: invalid invitation');
     });
   });
 })
