@@ -26,7 +26,7 @@ describe('Invitation backend-function unit-tests', () => {
     await clearFirestoreData({ projectId: firebase().projectId });
   });
 
-  describe('Invitation spec', () => {
+  describe.skip('\'inviteUsers\' tests', () => {
     it('missing auth context, throws error', async () => {
       const wrapped = testEnv.wrap(inviteUsers);
 
@@ -151,6 +151,25 @@ describe('Invitation backend-function unit-tests', () => {
           uid: 'User001'
         })
       );
+    });
+  });
+
+  describe('\'acceptOrDeclineInvitationAsAnonymous\' tests', () => {
+    it('missing auth context, throws error', async () => {
+      const wrapped = testEnv.wrap(inviteUsers);
+
+      //Compose the call to simpleCallable cf with param data
+      const data = {
+        emails: ['test@cascade8.com'],
+        invitation: {},
+        app: 'catalog'
+      };
+
+      expect.assertions(1);
+      await expect(async () => {
+        await wrapped(data, {})
+      }).rejects
+        .toThrow('Permission denied: missing auth context.');
     });
   });
 })
