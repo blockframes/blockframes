@@ -13,7 +13,6 @@ import { UserInvitation, AnonymousInvitationAction } from './invitation';
 import { endMaintenance } from '@blockframes/firebase-utils';
 
 const testEnv = firebaseTest(firebase());
-//jest.setTimeout(20000);
 
 describe('Invitation backend-function unit-tests', () => {
 
