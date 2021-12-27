@@ -1,8 +1,6 @@
-<ng-container *ngIf="form">
-  <form [formGroup]="form" (ngSubmit)="save()">
-    <negotiation-form [form]="form" [title]="title" [currency]="currency" [activeTerm]="activeTerm"></negotiation-form>
-    <footer>
-      <button mat-flat-button color="primary" type="submit">Confirm</button>
-    </footer>
-  </form>
-</ng-container>
+<form [formGroup]="form" (ngSubmit)="save()">
+  <negotiation-form [form]="form" [title]="title" [currency]="currency" [activeTerm]="activeTerm"></negotiation-form>
+  <footer>
+    <button mat-flat-button color="primary" type="submit">Confirm</button>
+  </footer>
+</form>
