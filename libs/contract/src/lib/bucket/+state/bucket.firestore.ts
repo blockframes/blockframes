@@ -1,6 +1,7 @@
 import { Holdback } from '@blockframes/contract/contract/+state/contract.firestore';
 import { BucketTerm } from '@blockframes/contract/term/+state/term.firestore';
 import type { MovieCurrency } from '@blockframes/utils/static-model';
+import type firebase from 'firebase'
 
 export interface Bucket {
   id: string;
@@ -13,7 +14,7 @@ export interface Bucket {
   uid?: string;
 }
 
-export interface BucketContract {
+export interface BucketContract<T extends Date | firebase.firestore.Timestamp = Date> {
   titleId: string;
   /** The orgId that own the contract (mandate in this case) that  */
   orgId: string;
@@ -22,7 +23,7 @@ export interface BucketContract {
   /** Parent terms on which the contract is create. */
   parentTermId: string;
   /** List of sub terms derived from the parent terms that the buyer want to buy */
-  terms: BucketTerm[];
+  terms: BucketTerm<T>[];
   specificity: string;
   holdbacks: Holdback<Date>[];
 }
