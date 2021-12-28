@@ -1,7 +1,7 @@
 ﻿process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
 import { initFirestoreApp } from '@blockframes/testing/unit-tests';
 import { clearFirestoreData } from '@firebase/rules-unit-testing';
-import { inviteUsers } from './main';
+import { inviteUsers, acceptOrDeclineInvitationAsAnonymous } from './main';
 import firebaseTest = require('firebase-functions-test');
 import { testFixture } from './fixtures/data';
 import * as admin from 'firebase-admin';
@@ -9,7 +9,7 @@ import * as userOps from './internals/users';
 import { firebase } from '@env';
 import { expect } from '@jest/globals';
 import { ErrorResultResponse } from './utils';
-import { UserInvitation } from './invitation';
+import { UserInvitation, AnonymousInvitationAction } from './invitation';
 import { endMaintenance } from '@blockframes/firebase-utils';
 
 const testEnv = firebaseTest(firebase());
@@ -26,7 +26,7 @@ describe('Invitation backend-function unit-tests', () => {
     await clearFirestoreData({ projectId: firebase().projectId });
   });
 
-  describe('Invitation spec', () => {
+  describe('\'inviteUsers\' tests', () => {
     it('missing auth context, throws error', async () => {
       const wrapped = testEnv.wrap(inviteUsers);
 
@@ -38,10 +38,9 @@ describe('Invitation backend-function unit-tests', () => {
       };
 
       expect.assertions(1);
-      await expect(async () => {
-        await wrapped(data, {})
-      }).rejects
-        .toThrow('Permission denied: missing auth context.');
+      await expect(wrapped(data, {}))
+            .rejects
+            .toThrow('Permission denied: missing auth context.');
     });
 
     it('missing org ID, throws error', async () => {
@@ -62,10 +61,9 @@ describe('Invitation backend-function unit-tests', () => {
       };
 
       expect.assertions(1);
-      await expect(async () => {
-        await wrapped(data, context)
-      }).rejects
-        .toThrow('Permission denied: missing org id.');
+      await expect(wrapped(data, context))
+            .rejects
+            .toThrow('Permission denied: missing org id.');
     });
 
     it('with proper data, does not throw error', async () => {
@@ -149,6 +147,141 @@ describe('Invitation backend-function unit-tests', () => {
       expect(inviteData.toUser).toEqual(
         expect.objectContaining({
           uid: 'User001'
+        })
+      );
+    });
+  });
+
+  describe('\'acceptOrDeclineInvitationAsAnonymous\' tests', () => {
+    it('missing auth context, throws error', async () => {
+      const wrapped = testEnv.wrap(acceptOrDeclineInvitationAsAnonymous);
+
+      //Compose the call to simpleCallable cf with param data
+      const data: AnonymousInvitationAction = {
+        email: 'test@cascade8.com',
+        invitationId: 'I001',
+        status: 'accepted'
+      };
+
+      expect.assertions(1);
+      await expect(wrapped(data, {}))
+            .rejects
+            .toThrow('Permission denied: missing auth context.');
+
+    });
+
+    it('Non-existent invitation, throws error', async () => {
+      const wrapped = testEnv.wrap(acceptOrDeclineInvitationAsAnonymous);
+
+      const data: AnonymousInvitationAction = {
+        email: 'test@cascade8.com',
+        invitationId: 'I004',
+        status: 'pending'
+      };
+
+      const context = {
+        auth: {
+          uid: 'uid-user2',
+          token: ''
+        }
+      };
+      expect.assertions(1);
+      await expect(wrapped(data, context))
+            .rejects
+            .toThrow('Permission denied: invalid invitation');
+    });
+
+    it('Invitation type is not \'attendEvent\', throws error', async () => {
+      const wrapped = testEnv.wrap(acceptOrDeclineInvitationAsAnonymous);
+
+      //Compose the call to simpleCallable cf with param data
+      const data: AnonymousInvitationAction = {
+        email: 'test@cascade8.com',
+        invitationId: 'I001',
+        status: 'pending'
+      };
+
+      const context = {
+        auth: {
+          uid: 'uid-user2',
+          token: ''
+        }
+      };
+      expect.assertions(1);
+      await expect(wrapped(data, context))
+            .rejects
+            .toThrow('Permission denied: invalid invitation');
+    });
+
+    it('Invitation mode is not \'invitation\', throws error', async () => {
+      const wrapped = testEnv.wrap(acceptOrDeclineInvitationAsAnonymous);
+
+      //Compose the call to simpleCallable cf with param data
+      const data: AnonymousInvitationAction = {
+        email: 'test@cascade8.com',
+        invitationId: 'I002',
+        status: 'pending'
+      };
+
+      const context = {
+        auth: {
+          uid: 'uid-user2',
+          token: ''
+        }
+      };
+      expect.assertions(1);
+      await expect(wrapped(data, context))
+            .rejects
+            .toThrow('Permission denied: invalid invitation');
+    });
+
+    it('Invitation to user email ID is not same, throws error', async () => {
+      const wrapped = testEnv.wrap(acceptOrDeclineInvitationAsAnonymous);
+
+      //Compose the call to simpleCallable cf with param data
+      const data: AnonymousInvitationAction = {
+        email: 'test1@cascade8.com',
+        invitationId: 'I003',
+        status: 'pending'
+      };
+
+      const context = {
+        auth: {
+          uid: 'uid-user2',
+          token: ''
+        }
+      };
+      expect.assertions(1);
+      await expect(wrapped(data, context))
+            .rejects
+            .toThrow('Permission denied: invalid invitation');
+    });
+
+    it('With proper Invitation, updates document status correctly', async () => {
+      const wrapped = testEnv.wrap(acceptOrDeclineInvitationAsAnonymous);
+
+      //Compose the call to simpleCallable cf with param data
+      const data: AnonymousInvitationAction = {
+        email: 'test@cascade8.com',
+        invitationId: 'I003',
+        status: 'accepted'
+      };
+
+      const context = {
+        auth: {
+          uid: 'uid-user2',
+          token: ''
+        }
+      };
+      const result = await wrapped(data, context);
+      expect(result).toBeTruthy();
+
+      const snap = await admin.firestore().collection('invitations').doc(data.invitationId).get();
+      const inviteData = snap.data();
+      expect(inviteData).toEqual(
+        expect.objectContaining({
+          id: data.invitationId,
+          status: data.status
         })
       );
     });

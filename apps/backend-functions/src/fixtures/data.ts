@@ -26,8 +26,30 @@ export const testFixture = {
     orgId: 'O001',
   },
 
-  //Consents
-  'consents/O001': {
-    id: 'O001',
+  //Invitations
+  'invitations/I001': {
+    id: 'I001',
+    type: 'joinOrganization',
+  },
+  'invitations/I002': {
+    id: 'I002',
+    type: 'attendEvent',
+    mode: 'request'
+  },
+  'invitations/I003': {
+    id: 'I003',
+    type: 'attendEvent',
+    mode: 'invitation',
+    fromOrg: {
+      denomination: {
+        full: 'Unit Test',
+        public: 'Unit Test'
+      },
+      id: 'O001'
+    },
+    toUser: {
+      email: 'test@cascade8.com'
+    },
+    status: 'pending'
   }
 };
