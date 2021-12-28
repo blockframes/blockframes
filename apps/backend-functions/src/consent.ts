@@ -1,4 +1,4 @@
-﻿import * as functions from 'firebase-functions';
+import * as functions from 'firebase-functions';
 import { db } from './internals/firebase';
 import { PublicUser } from './data/types';
 import {
@@ -48,7 +48,7 @@ export const createConsent = async (
 
     const consentSnap = await tx.get(db.doc(`consents/${consent.id}`));
     const consentData = consentSnap.data();
-    
+
     if (consentData) {
       consent = _createConsent(consentData);
     }

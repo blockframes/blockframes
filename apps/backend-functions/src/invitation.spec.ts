@@ -61,9 +61,9 @@ describe('Invitation backend-function unit-tests', () => {
       };
 
       expect.assertions(1);
-      await expect(wrapped(data, {}))
+      await expect(wrapped(data, context))
             .rejects
-            .toThrow('Permission denied: missing auth context.');
+            .toThrow('Permission denied: missing org id.');
     });
 
     it('with proper data, does not throw error', async () => {
@@ -157,10 +157,10 @@ describe('Invitation backend-function unit-tests', () => {
       const wrapped = testEnv.wrap(acceptOrDeclineInvitationAsAnonymous);
 
       //Compose the call to simpleCallable cf with param data
-      const data = {
-        emails: ['test@cascade8.com'],
-        invitation: {},
-        app: 'catalog'
+      const data: AnonymousInvitationAction = {
+        email: 'test@cascade8.com',
+        invitationId: 'I001',
+        status: 'accepted'
       };
 
       expect.assertions(1);
@@ -173,11 +173,10 @@ describe('Invitation backend-function unit-tests', () => {
     it('Non-existent invitation, throws error', async () => {
       const wrapped = testEnv.wrap(acceptOrDeclineInvitationAsAnonymous);
 
-      //Compose the call to simpleCallable cf with param data
       const data: AnonymousInvitationAction = {
         email: 'test@cascade8.com',
-        invitationId: 'I001',
-        status: null
+        invitationId: 'I004',
+        status: 'pending'
       };
 
       const context = {
@@ -199,7 +198,7 @@ describe('Invitation backend-function unit-tests', () => {
       const data: AnonymousInvitationAction = {
         email: 'test@cascade8.com',
         invitationId: 'I001',
-        status: null
+        status: 'pending'
       };
 
       const context = {
@@ -221,7 +220,7 @@ describe('Invitation backend-function unit-tests', () => {
       const data: AnonymousInvitationAction = {
         email: 'test@cascade8.com',
         invitationId: 'I002',
-        status: null
+        status: 'pending'
       };
 
       const context = {
@@ -243,7 +242,7 @@ describe('Invitation backend-function unit-tests', () => {
       const data: AnonymousInvitationAction = {
         email: 'test1@cascade8.com',
         invitationId: 'I003',
-        status: null
+        status: 'pending'
       };
 
       const context = {

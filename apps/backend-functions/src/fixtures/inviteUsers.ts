@@ -26,15 +26,7 @@ export const testFixture = {
     orgId: 'O001',
   },
 
-  //Consents
-  'consents/O001': {
-    id: 'O001',
-  },
-
   //Invitations
-  'invitations/O001': {
-    id: 'O001',
-  },
   'invitations/I001': {
     id: 'I001',
     type: 'joinOrganization',
