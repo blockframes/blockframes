@@ -18,9 +18,6 @@ export const createConsent = async (
   data: { consentType: ConsentType; ip: string; docId: string; filePath?: string },
   context: CallableContext
 ): Promise<boolean> => {
-  //TODO:
-  console.log("createConsent", JSON.stringify(data));
-
   const { consentType, ip, docId, filePath } = data;
 
   if (!context?.auth) {
@@ -51,7 +48,6 @@ export const createConsent = async (
 
     const consentSnap = await tx.get(db.doc(`consents/${consent.id}`));
     const consentData = consentSnap.data();
-    console.log(JSON.stringify(consentData));
     
     if (consentData) {
       consent = _createConsent(consentData);
@@ -87,7 +83,6 @@ export const createConsent = async (
 
       consent.share.push(share);
     }
-    console.log(JSON.stringify(consent));
     tx.set(consentSnap.ref, consent);
   });
 

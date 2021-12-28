@@ -15,20 +15,19 @@ import { endMaintenance } from '@blockframes/firebase-utils';
 const testEnv = firebaseTest(firebase());
 
 describe('Invitation backend-function unit-tests', () => {
-  let db;
 
   beforeAll(async () => {
-    db = await initFirestoreApp(firebase().projectId, 'firestore.test.rules', testFixture);
+    await initFirestoreApp(firebase().projectId, 'firestore.test.rules', testFixture);
     await endMaintenance();
   });
 
   afterAll(async () => {
-    // After each test, db is reseted
+    // After all tests, db is reseted
     await clearFirestoreData({ projectId: firebase().projectId });
   });
 
   describe('Consents spec', () => {
-    it.skip('missing auth context, throws error', async () => {
+    it('missing auth context, throws error', async () => {
       const wrapped = testEnv.wrap(createConsent);
 
       //Compose the call to simpleCallable cf with param data
@@ -39,13 +38,12 @@ describe('Invitation backend-function unit-tests', () => {
       };
 
       expect.assertions(1);
-      await expect(async () => {
-        await wrapped(data, {})
-      }).rejects
-        .toThrow('Permission denied: missing auth context.');
+      await expect(wrapped(data, {}))
+            .rejects
+            .toThrow('Permission denied: missing auth context.');
     });
 
-    it.skip('missing user data, throws error', async () => {
+    it('missing user data, throws error', async () => {
       const wrapped = testEnv.wrap(createConsent);
 
       //Compose the call to simpleCallable cf with param data
@@ -63,13 +61,12 @@ describe('Invitation backend-function unit-tests', () => {
       };
 
       expect.assertions(1);
-      await expect(async () => {
-        await wrapped(data, context)
-      }).rejects
-        .toThrow('Invalid user');
+      await expect(wrapped(data, context))
+            .rejects
+            .toThrow('Invalid user');
     });
 
-    it.skip('missing org ID, throws error', async () => {
+    it('missing org ID, throws error', async () => {
       const wrapped = testEnv.wrap(createConsent);
 
       //Compose the call to simpleCallable cf with param data
@@ -87,13 +84,12 @@ describe('Invitation backend-function unit-tests', () => {
       };
 
       expect.assertions(1);
-      await expect(async () => {
-        await wrapped(data, context)
-      }).rejects
-        .toThrow('Invalid organization');
+      await expect(wrapped(data, context))
+            .rejects
+            .toThrow('Invalid organization');
     });
 
-    it.skip('missing docID in data param, throws error', async () => {
+    it('missing docID in data param, throws error', async () => {
       const wrapped = testEnv.wrap(createConsent);
 
       //Compose the call to simpleCallable cf with param data
@@ -111,20 +107,19 @@ describe('Invitation backend-function unit-tests', () => {
       };
 
       expect.assertions(1);
-      await expect(async () => {
-        await wrapped(data, context)
-      }).rejects
-        .toThrow('Undefined docId');
+      await expect(wrapped(data, context))
+            .rejects
+            .toThrow('Undefined docId');
     });
 
-    it.skip('missing ip in data param, throws error', async () => {
+    it('missing ip in data param, throws error', async () => {
       const wrapped = testEnv.wrap(createConsent);
 
       //Compose the call to simpleCallable cf with param data
       const data = {
         consentType: 'access',
         ip: '',
-        docId: 'D001'
+        docId: 'O001'
       };
 
       const context = {
@@ -135,21 +130,19 @@ describe('Invitation backend-function unit-tests', () => {
       };
 
       expect.assertions(1);
-      await expect(async () => {
-        await wrapped(data, context)
-      }).rejects
-        .toThrow('Undefined ip');
+      await expect(wrapped(data, context))
+            .rejects
+            .toThrow('Undefined ip');
     });
 
-    it.skip('missing filePath in data param, throws error', async () => {
+    it('missing filePath in data param, throws error', async () => {
       const wrapped = testEnv.wrap(createConsent);
 
       //Compose the call to simpleCallable cf with param data
       const data = {
         consentType: 'access',
-        filePath: '/c/o/marketplace',
         ip: '10.0.0.1',
-        docId: 'D001'
+        docId: 'O001'
       };
 
       const context = {
@@ -160,13 +153,12 @@ describe('Invitation backend-function unit-tests', () => {
       };
 
       expect.assertions(1);
-      await expect(async () => {
-        await wrapped(data, context)
-      }).rejects
-        .toThrow('Invalid filePath');
+      await expect(wrapped(data, context))
+            .rejects
+            .toThrow('Invalid filePath');
     });
 
-    it.skip('creates \'Access Type\' consents document', async () => {
+    it('creates \'Access Type\' consents document', async () => {
       const wrapped = testEnv.wrap(createConsent);
 
       //Compose the call to simpleCallable cf with param data
@@ -187,8 +179,25 @@ describe('Invitation backend-function unit-tests', () => {
       const result = await wrapped(data, context);
       expect(result).toBeTruthy();
 
-      //Complete the operation..
-      await new Promise((r) => setTimeout(r, 5000));  
+      //Fetch the updated consents data and compare the result
+      const snap = await admin.firestore().collection('consents').doc(data.docId).get();
+      const consentsData = snap.data();
+      expect(consentsData).toEqual(
+        expect.objectContaining({
+          id:"O001",
+          share: []
+        })
+      );
+
+      expect(consentsData.access[0]).toEqual(
+        expect.objectContaining({
+          docId: "O001",
+          email: "u2@cascade8.com",
+          firstName: "User",
+          lastName: "Two",
+          ip: "10.0.0.1"
+        })
+      );
     });
 
     it('creates \'Share Type\' consents document', async () => {
@@ -215,47 +224,25 @@ describe('Invitation backend-function unit-tests', () => {
       //Fetch the data and compare the result
       const snap = await admin.firestore().collection('consents').doc(data.docId).get();
       const consentsData = snap.data();
-      expect(consentsData).toEqual(
+      expect(consentsData.access[0]).toEqual(
         expect.objectContaining({
-          id:"O001",
+          docId: "O001",
+          email: "u2@cascade8.com",
+          firstName: "User",
+          lastName: "Two",
+          ip: "10.0.0.1"
         })
       );
 
       expect(consentsData.share[0]).toEqual(
         expect.objectContaining({
           docId: "O001",
-          email: "u2@cascade8.com"
+          email: "u2@cascade8.com",
+          firstName: "User",
+          lastName: "Two",
+          ip: "10.0.0.1"
         })
       );
-      //Complete the operation..
-      await new Promise((r) => setTimeout(r, 5000));  
     });
-
-    it.skip('with proper data, does not throw error', async () => {
-      const wrapped = testEnv.wrap(createConsent);
-
-      //Compose the call to simpleCallable cf with param data
-      const data = {
-        emails: [],
-        invitation: {
-          id: '',
-          type: 'joinOrganization',
-          mode: 'invitation',
-          date: new Date()
-        },
-        app: 'catalog'
-      };
-
-      const context = {
-        auth: {
-          uid: 'uid-user2',
-          token: ''
-        }
-      };
-
-      const result = await wrapped(data, context);
-      expect(result).toEqual([]);
-    });
-
   });
 })
