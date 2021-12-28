@@ -1,4 +1,4 @@
-﻿import * as functions from 'firebase-functions';
+import * as functions from 'firebase-functions';
 import { db } from './internals/firebase';
 import { PublicUser } from './data/types';
 import {
@@ -10,14 +10,18 @@ import {
 
 type CallableContext = functions.https.CallableContext;
 
+export interface ConsentData {
+  consentType: ConsentType;
+  ip: string;
+  docId: string;
+  filePath?: string;
+}
+
 /**
  * @param data
  * @param context
  */
-export const createConsent = async (
-  data: { consentType: ConsentType; ip: string; docId: string; filePath?: string },
-  context: CallableContext
-): Promise<boolean> => {
+export const createConsent = async (data: ConsentData, context: CallableContext): Promise<boolean> => {
   const { consentType, ip, docId, filePath } = data;
 
   if (!context?.auth) {
@@ -48,7 +52,7 @@ export const createConsent = async (
 
     const consentSnap = await tx.get(db.doc(`consents/${consent.id}`));
     const consentData = consentSnap.data();
-    
+
     if (consentData) {
       consent = _createConsent(consentData);
     }

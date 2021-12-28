@@ -2,19 +2,17 @@
 import { initFirestoreApp } from '@blockframes/testing/unit-tests';
 import { clearFirestoreData } from '@firebase/rules-unit-testing';
 import { createConsent } from './main';
+import { ConsentData } from './consent';
 import firebaseTest = require('firebase-functions-test');
-import { testFixture } from './fixtures/inviteUsers';
+import { testFixture } from './fixtures/data';
 import * as admin from 'firebase-admin';
-import * as userOps from './internals/users';
 import { firebase } from '@env';
 import { expect } from '@jest/globals';
-import { ErrorResultResponse } from './utils';
-import { ConsentType } from '@blockframes/consents/+state/consents.firestore';
 import { endMaintenance } from '@blockframes/firebase-utils';
 
 const testEnv = firebaseTest(firebase());
 
-describe('Invitation backend-function unit-tests', () => {
+describe('Consent backend-function unit-tests', () => {
 
   beforeAll(async () => {
     await initFirestoreApp(firebase().projectId, 'firestore.test.rules', testFixture);
@@ -31,7 +29,7 @@ describe('Invitation backend-function unit-tests', () => {
       const wrapped = testEnv.wrap(createConsent);
 
       //Compose the call to simpleCallable cf with param data
-      const data = {
+      const data: ConsentData = {
         consentType: 'access',
         ip: '',
         docId: ''
@@ -47,7 +45,7 @@ describe('Invitation backend-function unit-tests', () => {
       const wrapped = testEnv.wrap(createConsent);
 
       //Compose the call to simpleCallable cf with param data
-      const data = {
+      const data: ConsentData = {
         consentType: 'access',
         ip: '',
         docId: ''
@@ -70,7 +68,7 @@ describe('Invitation backend-function unit-tests', () => {
       const wrapped = testEnv.wrap(createConsent);
 
       //Compose the call to simpleCallable cf with param data
-      const data = {
+      const data: ConsentData = {
         consentType: 'access',
         ip: '',
         docId: ''
@@ -93,7 +91,7 @@ describe('Invitation backend-function unit-tests', () => {
       const wrapped = testEnv.wrap(createConsent);
 
       //Compose the call to simpleCallable cf with param data
-      const data = {
+      const data: ConsentData = {
         consentType: 'access',
         ip: '',
         docId: ''
@@ -116,7 +114,7 @@ describe('Invitation backend-function unit-tests', () => {
       const wrapped = testEnv.wrap(createConsent);
 
       //Compose the call to simpleCallable cf with param data
-      const data = {
+      const data: ConsentData = {
         consentType: 'access',
         ip: '',
         docId: 'O001'
@@ -139,7 +137,7 @@ describe('Invitation backend-function unit-tests', () => {
       const wrapped = testEnv.wrap(createConsent);
 
       //Compose the call to simpleCallable cf with param data
-      const data = {
+      const data: ConsentData = {
         consentType: 'access',
         ip: '10.0.0.1',
         docId: 'O001'
@@ -162,7 +160,7 @@ describe('Invitation backend-function unit-tests', () => {
       const wrapped = testEnv.wrap(createConsent);
 
       //Compose the call to simpleCallable cf with param data
-      const data = {
+      const data: ConsentData = {
         consentType: 'access',
         filePath: '/c/o/marketplace',
         ip: '10.0.0.1',
@@ -184,18 +182,18 @@ describe('Invitation backend-function unit-tests', () => {
       const consentsData = snap.data();
       expect(consentsData).toEqual(
         expect.objectContaining({
-          id:"O001",
+          id:'O001',
           share: []
         })
       );
 
       expect(consentsData.access[0]).toEqual(
         expect.objectContaining({
-          docId: "O001",
-          email: "u2@cascade8.com",
-          firstName: "User",
-          lastName: "Two",
-          ip: "10.0.0.1"
+          docId: 'O001',
+          email: 'u2@cascade8.com',
+          firstName: 'User',
+          lastName: 'Two',
+          ip: '10.0.0.1'
         })
       );
     });
@@ -204,9 +202,8 @@ describe('Invitation backend-function unit-tests', () => {
       const wrapped = testEnv.wrap(createConsent);
 
       //Compose the call to simpleCallable cf with param data
-      const data = {
+      const data: ConsentData = {
         consentType: 'share',
-        filePath: '/c/o/marketplace',
         ip: '10.0.0.1',
         docId: 'O001'
       };
@@ -226,21 +223,21 @@ describe('Invitation backend-function unit-tests', () => {
       const consentsData = snap.data();
       expect(consentsData.access[0]).toEqual(
         expect.objectContaining({
-          docId: "O001",
-          email: "u2@cascade8.com",
-          firstName: "User",
-          lastName: "Two",
-          ip: "10.0.0.1"
+          docId: 'O001',
+          email: 'u2@cascade8.com',
+          firstName: 'User',
+          lastName: 'Two',
+          ip: '10.0.0.1'
         })
       );
 
       expect(consentsData.share[0]).toEqual(
         expect.objectContaining({
-          docId: "O001",
-          email: "u2@cascade8.com",
-          firstName: "User",
-          lastName: "Two",
-          ip: "10.0.0.1"
+          docId: 'O001',
+          email: 'u2@cascade8.com',
+          firstName: 'User',
+          lastName: 'Two',
+          ip: '10.0.0.1'
         })
       );
     });
