@@ -6,5 +6,6 @@
     '<rootDir>/apps/rules',
     '<rootDir>/apps/libs',
     '<rootDir>/libs/testing/cypress',
+    '<rootDir>/libs/testing/e2e',
   ],
 };

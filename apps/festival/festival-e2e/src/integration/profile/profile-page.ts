@@ -1,4 +1,4 @@
-import { clearBrowserAuth, loginWithRandomUser } from "../../support/app.po";
+import { loginWithRandomUser, clearBrowserAuth } from "@blockframes/testing/e2e";
 
 describe('Basic Landing Page, Login and Profile Page Tests', () => {
 
