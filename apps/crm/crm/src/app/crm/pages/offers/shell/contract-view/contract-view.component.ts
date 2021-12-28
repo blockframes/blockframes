@@ -26,6 +26,13 @@ import { NegotiationService } from '@blockframes/contract/negotiation/+state/neg
 export class ContractViewComponent implements OnInit, OnDestroy {
 
   status = contractStatus;
+  statuses = {
+    pending: 'New',
+    accepted: 'Accepted',
+    declined: 'Declined',
+    negotiating: 'Negotiating',
+    archived: 'Archived'
+  };
 
   offer$ = this.shell.offer$;
   contract$ = combineLatest([
@@ -68,9 +75,8 @@ export class ContractViewComponent implements OnInit, OnDestroy {
   }
 
   async update(contractId: string, negotiationId: string) {
-    const config = {  params: { contractId } };
+    const config = { params: { contractId } };
     const { status } = this.form.value;
-    console.log({contractId, negotiationId, status})
     await this.negotiationService.update(negotiationId, { status }, config)
     this.snackbar.open('Offer updated!', 'ok', { duration: 1000 });
   }

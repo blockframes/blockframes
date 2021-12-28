@@ -12,7 +12,7 @@
           <mat-label>Seller's approval for a title.</mat-label>
           <mat-select formControlName="status">
             <mat-option *ngFor="let value of status" [value]="value">
-              {{value}}
+              {{statuses[value]}}
             </mat-option>
           </mat-select>
         </mat-form-field>
