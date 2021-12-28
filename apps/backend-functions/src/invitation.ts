@@ -232,7 +232,7 @@ export async function getInvitationLinkedToEmail(email: string): Promise<boolean
   return false;
 }
 
-interface AnonymousInvitationAction {
+export interface AnonymousInvitationAction {
   invitationId: string;
   email: string;
   status: InvitationStatus;
