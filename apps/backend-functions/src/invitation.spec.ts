@@ -3,7 +3,7 @@ import { initFirestoreApp } from '@blockframes/testing/unit-tests';
 import { clearFirestoreData } from '@firebase/rules-unit-testing';
 import { inviteUsers, acceptOrDeclineInvitationAsAnonymous } from './main';
 import firebaseTest = require('firebase-functions-test');
-import { testFixture } from './fixtures/inviteUsers';
+import { testFixture } from './fixtures/data';
 import * as admin from 'firebase-admin';
 import * as userOps from './internals/users';
 import { firebase } from '@env';
