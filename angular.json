@@ -223,9 +223,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/backend-functions/src/**/*.ts"
-            ]
+            "lintFilePatterns": ["apps/backend-functions/src/**/*.ts"]
           }
         },
         "test": {
@@ -1708,6 +1706,27 @@
           "outputs": ["coverage/libs/testing/cypress"],
           "options": {
             "jestConfig": "libs/testing/cypress/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "testing-e2e": {
+      "root": "libs/testing/e2e",
+      "sourceRoot": "libs/testing/e2e/src",
+      "projectType": "library",
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/testing/e2e/**/*.ts"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/testing/e2e"],
+          "options": {
+            "jestConfig": "libs/testing/e2e/jest.config.js",
             "passWithNoTests": true
           }
         }
