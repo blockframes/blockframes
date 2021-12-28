@@ -221,13 +221,9 @@ describe('Consent backend-function unit-tests', () => {
       //Fetch the data and compare the result
       const snap = await admin.firestore().collection('consents').doc(data.docId).get();
       const consentsData = snap.data();
-      expect(consentsData.access[0]).toEqual(
+      expect(consentsData).toEqual(
         expect.objectContaining({
-          docId: 'O001',
-          email: 'u2@cascade8.com',
-          firstName: 'User',
-          lastName: 'Two',
-          ip: '10.0.0.1'
+          id:'O001'
         })
       );
 
