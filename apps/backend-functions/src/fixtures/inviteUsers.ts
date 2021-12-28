@@ -29,5 +29,8 @@ export const testFixture = {
   //Consents
   'consents/O001': {
     id: 'O001',
+  },
+  'consents/C002': {
+    id: 'C002',
   }
 };

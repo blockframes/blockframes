@@ -166,7 +166,7 @@ describe('Invitation backend-function unit-tests', () => {
         .toThrow('Invalid filePath');
     });
 
-    it('creates \'Access Type\' consents document', async () => {
+    it.skip('creates \'Access Type\' consents document', async () => {
       const wrapped = testEnv.wrap(createConsent);
 
       //Compose the call to simpleCallable cf with param data
@@ -187,6 +187,46 @@ describe('Invitation backend-function unit-tests', () => {
       const result = await wrapped(data, context);
       expect(result).toBeTruthy();
 
+      //Complete the operation..
+      await new Promise((r) => setTimeout(r, 5000));  
+    });
+
+    it('creates \'Share Type\' consents document', async () => {
+      const wrapped = testEnv.wrap(createConsent);
+
+      //Compose the call to simpleCallable cf with param data
+      const data = {
+        consentType: 'share',
+        filePath: '/c/o/marketplace',
+        ip: '10.0.0.1',
+        docId: 'O001'
+      };
+
+      const context = {
+        auth: {
+          uid: 'uid-user2',
+          token: ''
+        }
+      };
+
+      const result = await wrapped(data, context);
+      expect(result).toBeTruthy();
+
+      //Fetch the data and compare the result
+      const snap = await admin.firestore().collection('consents').doc(data.docId).get();
+      const consentsData = snap.data();
+      expect(consentsData).toEqual(
+        expect.objectContaining({
+          id:"O001",
+        })
+      );
+
+      expect(consentsData.share[0]).toEqual(
+        expect.objectContaining({
+          docId: "O001",
+          email: "u2@cascade8.com"
+        })
+      );
       //Complete the operation..
       await new Promise((r) => setTimeout(r, 5000));  
     });
