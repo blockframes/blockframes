@@ -10,7 +10,6 @@ import { QueryFn } from '@angular/fire/firestore';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
 import { centralOrgId } from '@env';
-import { isInitial } from '@blockframes/contract/negotiation/utils';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'contracts' })
@@ -52,11 +51,16 @@ export class ContractService extends CollectionService<ContractState> {
     );
   }
 
+  isInitial(negotiation: Partial<Negotiation>) {
+    const initial = negotiation.initial;
+    const createdAt = negotiation?._meta?.createdAt;
+    if (initial && createdAt) return false;
+    return true;
+  }
 
   async addNegotiation(contractId: string, nego: Partial<Negotiation>) {
     const activeOrgId = this.orgQuery.getActiveId();
     const write = this.batch();
-
     this.negotiationService.add({
       _meta: createDocumentMeta({ createdAt: new Date(), }),
       status: 'pending',
@@ -73,7 +77,7 @@ export class ContractService extends CollectionService<ContractState> {
       orgId: nego.orgId,
     }, { write, params: { contractId } });
     const status = 'negotiating';
-    if (!isInitial(nego)) this.update(contractId, { status }, { write })
+    if (!this.isInitial(nego)) this.update(contractId, { status }, { write })
     await write.commit()
   }
 }
