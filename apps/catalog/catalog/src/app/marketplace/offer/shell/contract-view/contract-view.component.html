@@ -23,7 +23,9 @@
         </h2>
         <ng-template #askPrice>
           <h3>Asking Price requested</h3>
-          <p class="mat-caption">To set a price click on <a routerLink="negotiate">negotiate</a></p>
+          <ng-container *ngIf="negotiation | canNegotiate:activeOrgId ">
+            <p class="mat-caption">To set a price click on <a routerLink="negotiate">negotiate</a></p>
+          </ng-container>
         </ng-template>
       </div>
 
