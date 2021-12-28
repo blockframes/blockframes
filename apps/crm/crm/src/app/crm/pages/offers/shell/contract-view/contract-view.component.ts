@@ -68,12 +68,10 @@ export class ContractViewComponent implements OnInit, OnDestroy {
   }
 
   async update(contractId: string, negotiationId: string) {
-    const write = this.contractService.batch();
-    const config = { write, params: { contractId } };
-    const { status, price } = this.form.value;
-    this.negotiationService.update(negotiationId, { status, price }, config)
-    this.incomeService.update(contractId, { price }, { write });
-    await write.commit();
+    const config = {  params: { contractId } };
+    const { status } = this.form.value;
+    console.log({contractId, negotiationId, status})
+    await this.negotiationService.update(negotiationId, { status }, config)
     this.snackbar.open('Offer updated!', 'ok', { duration: 1000 });
   }
 
