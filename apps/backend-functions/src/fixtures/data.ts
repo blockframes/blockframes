@@ -51,5 +51,16 @@ export const testFixture = {
       email: 'test@cascade8.com'
     },
     status: 'pending'
-  }
+  },
+
+  //Permission
+  'permissions/O001': {
+    authorOrgId: 'O001',
+    orgs: { a: 'O1', b: 'O2' }
+  },
+
+  'permissions/O001/documentPermissions/D001': {
+    id: 'D001',
+    ownerId: 'O001',
+  },
 };

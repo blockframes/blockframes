@@ -1,7 +1,7 @@
 ﻿process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
 import { initFirestoreApp } from '@blockframes/testing/unit-tests';
 import { clearFirestoreData } from '@firebase/rules-unit-testing';
-import { onDocumentPermissionCreateEvent } from './main';
+import { onDocumentPermissionCreateEvent, onPermissionDeleteEvent } from './main';
 import firebaseTest = require('firebase-functions-test');
 import { testFixture } from './fixtures/data';
 import * as admin from 'firebase-admin';
@@ -50,6 +50,49 @@ describe('Permissions backend-function unit-tests', () => {
           authorOrgId: orgID
         })
       );
+    });
+
+    it('removes all subcollections from \'permissions/{orgID}\'', async () => {
+      const wrapped = testEnv.wrap(onPermissionDeleteEvent);
+      const docID = 'D001';
+      const orgID = 'O001';
+
+      /*
+      // Make a fake document snapshot to pass to the function
+      const afterSub = testEnv.firestore.makeDocumentSnapshot(
+        {
+           a: 'U1', b: 'U2' 
+        },
+        `permissions/${orgID}/users/c8`
+      );
+
+      const after = testEnv.firestore.makeDocumentSnapshot(
+        {
+          authorOrgId: orgID,
+          orgs: { a: 'O1', b: 'O2' },
+          users: { a: 'U1', b: 'U2' },
+        },
+        `permissions/${orgID}`
+      );
+      after.user_sub = afterSub;
+      */
+
+      let snap = await admin.firestore().doc(`permissions/${orgID}`).get();
+
+      // Call the function
+      await wrapped(snap, {});
+
+      snap = await admin.firestore().doc(`permissions/${orgID}`).get();
+      expect(snap.data()).toEqual(
+        expect.objectContaining({
+          authorOrgId: orgID,
+          orgs: { a: 'O1', b: 'O2' }
+        })
+      );
+
+      snap = await admin.firestore().doc(`permissions/${orgID}/documentPermissions/${docID}`).get();
+      console.log(snap.data());
+      //TODO: Add a test to check deletion of subcollections
     });
 
   });
