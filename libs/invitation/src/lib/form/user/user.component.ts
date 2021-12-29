@@ -42,6 +42,8 @@ export class UserComponent implements OnInit {
    */
   @Input() limit = Infinity; // @TODO #7324
 
+  @Input() shell: EventFormShellComponent;
+
   separators = [ENTER, COMMA, SEMICOLON];
   form = createAlgoliaUserForm(Validators.maxLength(50));
   currentLimit$: Observable<{ canSend: boolean, total: number }>;
@@ -52,8 +54,7 @@ export class UserComponent implements OnInit {
     private invitationService: InvitationService,
     private invitationQuery: InvitationQuery,
     private orgService: OrganizationService,
-    private snackBar: MatSnackBar,
-    private shell: EventFormShellComponent,
+    private snackBar: MatSnackBar
   ) { }
 
   ngOnInit() {
@@ -94,7 +95,7 @@ export class UserComponent implements OnInit {
 
         this.form.reset([]);
         this.sending.next(true);
-        await this.shell.save({ showSnackbar: false });
+        await this.shell?.save({ showSnackbar: false });
 
         const fromOrg = this.ownerOrgId ? await this.orgService.getValue(this.ownerOrgId) : undefined;
 
