@@ -4,10 +4,11 @@ import { runChunks } from '@blockframes/firebase-utils';
 import { join, resolve } from 'path';
 import { config } from 'dotenv';
 import { firebase as firebaseEnv } from '@env';
-import { initializeTestApp, loadFirestoreRules, initializeAdminApp } from '@firebase/testing';
+import { initializeTestApp, loadFirestoreRules, initializeAdminApp } from '@firebase/rules-unit-testing';
 import type { FeaturesList } from 'firebase-functions-test/lib/features';
 import type { AppOptions } from 'firebase-admin'; // * Correct Import
 import fs from 'fs';
+import { TokenOptions } from '@firebase/rules-unit-testing/dist/src/api';
 
 export interface FirebaseTestConfig extends FeaturesList {
   firebaseConfig?: { projectId: string, app: admin.app.App };
@@ -63,7 +64,7 @@ export async function initFirestoreApp(
   projectId: string,
   rulePath: string,
   data: Record<string, unknown> = {},
-  auth?: Record<string, unknown>
+  auth?: TokenOptions
 ) {
   //Define these env vars to avoid getting console warnings
   process.env.GCLOUD_PROJECT = projectId;
