@@ -13,7 +13,7 @@
     <!-- Price -->
     <ng-template colRef="negotiation.price" label="Price" let-price sort>
       <ng-container *ngIf="price else noPrice">
-        {{ price | currency:offer.currenty }}
+        {{ price | currency:offer.currency }}
       </ng-container>
       <ng-template #noPrice> - </ng-template>
     </ng-template>

@@ -5,7 +5,7 @@ import { ContractDocument, convertDuration, createMandate, createSale, Holdback,
 import { createDocumentMeta, formatDocumentMetaFromFirestore } from "@blockframes/utils/models-meta";
 import { Timestamp } from "@blockframes/utils/common-interfaces/timestamp";
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
-import { first, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { QueryFn } from '@angular/fire/firestore';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
@@ -51,11 +51,16 @@ export class ContractService extends CollectionService<ContractState> {
     );
   }
 
+  isInitial(negotiation: Partial<Negotiation>) {
+    const initial = negotiation.initial;
+    const createdAt = negotiation?._meta?.createdAt;
+    if (initial && createdAt) return false;
+    return true;
+  }
 
   async addNegotiation(contractId: string, nego: Partial<Negotiation>) {
     const activeOrgId = this.orgQuery.getActiveId();
     const write = this.batch();
-
     this.negotiationService.add({
       _meta: createDocumentMeta({ createdAt: new Date(), }),
       status: 'pending',
@@ -71,8 +76,8 @@ export class ContractService extends CollectionService<ContractState> {
       initial: nego.initial,
       orgId: nego.orgId,
     }, { write, params: { contractId } });
-    const isInitial = !nego._meta?.createdAt || nego._meta.createdAt.getTime() === nego.initial?.getTime();
-    if (!isInitial) this.update(contractId, { status: 'negotiating' }, { write })
+    const status = 'negotiating';
+    if (!this.isInitial(nego)) this.update(contractId, { status }, { write })
     await write.commit()
   }
 }

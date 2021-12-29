@@ -4,11 +4,8 @@ import { Observable, of } from "rxjs";
 import { map } from "rxjs/operators";
 import { Negotiation } from "./+state/negotiation.firestore";
 import { ContractStatus } from '@blockframes/contract/contract/+state/contract.firestore';
-
-function isInitial(negotiation: Negotiation) {
-  if (!negotiation?.initial) return true;
-  return negotiation?.initial?.getTime() === negotiation?._meta?.createdAt?.getTime();
-}
+import { isInitial } from "./utils";
+import { centralOrgId } from "@env";
 
 function canNegotiate(negotiation: Negotiation, activeOrgId: string) {
   return negotiation.status === 'pending' && negotiation.createdByOrg !== activeOrgId;
@@ -23,10 +20,19 @@ export class NegotiationStagePipe implements PipeTransform {
     private orgService: OrganizationService,
   ) { }
 
+  getReviewer(negotiation: Negotiation) {
+    const excluded = [centralOrgId.catalog, negotiation.createdByOrg];
+    return negotiation.stakeholders.find(
+      orgId => !excluded.includes(orgId)
+    ) ?? negotiation.sellerId;
+  }
+
+
   transform(negotiation: Negotiation): Observable<string> {
     if (negotiation?.status !== 'pending') return of('');
     if (negotiation?.createdByOrg !== this.activeOrgId) return of('To be Reviewed');
-    return this.orgService.valueChanges(negotiation.createdByOrg).pipe(
+    const reviewer = this.getReviewer(negotiation);
+    return this.orgService.valueChanges(reviewer).pipe(
       map(org => `Waiting for ${org.denomination.public} answer`)
     );
   }

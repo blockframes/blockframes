@@ -9,7 +9,7 @@ export type NegotiationStatus = typeof negotiationStatus[number];
 
 
 // We extends the BucketContract with some information for rules
-export interface Negotiation<T extends Date | firebase.firestore.Timestamp = Date> extends BucketContract {
+export interface Negotiation<T extends Date | firebase.firestore.Timestamp = Date> extends BucketContract<T> {
   _meta: DocumentMeta<T>;
   id: string;
   /** Id of the org that created the negotiation */

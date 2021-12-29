@@ -18,9 +18,9 @@ import { NegotiationService } from '@blockframes/contract/negotiation/+state/neg
 export class ContractViewComponent {
   activeOrgId = this.orgQuery.getActiveId();
 
-  contracts$ = this.shell.offer$.pipe(map(
-    offer => [...offer.contracts, ...offer.declinedContracts]
-  ));
+  contracts$ = this.shell.offer$.pipe(
+    map(offer => [...(offer.contracts??[]), ...(offer.declinedContracts??[])])
+  );
 
   contract$ = combineLatest([
     this.contracts$,
@@ -46,7 +46,7 @@ export class ContractViewComponent {
       this.negotiationService.update(
         sale.negotiation.id, { status: 'accepted' }, { params: { contractId: sale.id } }
       );
-      const config = {duration:6000};
+      const config = { duration: 6000 };
       this.snackBar.open(`You accepted contract for ${sale.title.title.international}`, null, config);
     }
 

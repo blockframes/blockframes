@@ -11,7 +11,7 @@ import { Contract, ContractService } from '@blockframes/contract/contract/+state
 import { Organization, OrganizationService } from '@blockframes/organization/+state';
 import { joinWith } from '@blockframes/utils/operators';
 import { MovieService } from '@blockframes/movie/+state';
-import { CollectionReference } from '@angular/fire/firestore';
+import { CollectionReference, QueryFn } from '@angular/fire/firestore';
 
 @Component({
   selector: 'offer-shell',
@@ -27,7 +27,8 @@ export class OfferShellComponent {
     switchMap((offerId: string) => this.service.valueChanges(offerId)),
     joinWith({
       buyer: offer => this.orgService.valueChanges(offer.buyerId),
-      contracts: offer => this.getContract(offer.id)
+      contracts: offer => this.getNotDeclinedContracts(offer.id),
+      declinedContracts: offer => this.getDeclinedContracts(offer.id),
     }),
     shareReplay({ bufferSize: 1, refCount: true }),
   );
@@ -54,21 +55,32 @@ export class OfferShellComponent {
     private titleService: MovieService,
   ) { }
 
-  getContract(offerId: string) {
-    const queryContracts = (ref: CollectionReference) => ref.where('offerId', '==', offerId).where('status', '!=', 'declined')
-    return this.contractService.valueChanges(queryContracts).pipe(
+  getContracts(query: QueryFn) {
+    return this.contractService.valueChanges(query).pipe(
       joinWith({
-        title: contract => this.titleService.valueChanges(contract.titleId),
-        income: contract => this.incomeService.valueChanges(contract.id),
-        negotiation: contract => this.contractService.lastNegotiation(contract.id),
-        seller: contract => {
-          // Get the ID of the seller, not AC
-          const sellerId = contract.stakeholders.find(id => id !== contract.sellerId && id !== contract.buyerId);
-          if (!sellerId) return null;
-          return this.orgService.valueChanges(sellerId);
-        }
+        negotiation: contract => this.contractService.lastNegotiation(contract.id).pipe(
+          joinWith({
+            title: () => this.titleService.valueChanges(contract.titleId),
+            seller: () => {
+              // Get the ID of the seller, not AC
+              const sellerId = contract.stakeholders.find(id => id !== contract.sellerId && id !== contract.buyerId);
+              if (!sellerId) return null;
+              return this.orgService.valueChanges(sellerId);
+            }
+          })
+        ),
       })
     );
+  }
+
+  getNotDeclinedContracts(offerId: string) {
+    const queryContracts = (ref: CollectionReference) => ref.where('offerId', '==', offerId).where('status', '!=', 'declined');
+    return this.getContracts(queryContracts);
+  }
+
+  getDeclinedContracts(offerId: string) {
+    const queryContracts = (ref: CollectionReference) => ref.where('offerId', '==', offerId).where('status', '==', 'declined');
+    return this.getContracts(queryContracts);
   }
 
 }

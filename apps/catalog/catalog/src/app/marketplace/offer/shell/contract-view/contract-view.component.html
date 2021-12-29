@@ -1,5 +1,6 @@
 <a mat-icon-button routerLink="..">
   <mat-icon svgIcon="arrow_back"></mat-icon>
+  <span>Come back to Contract List</span>
 </a>
 <ng-container *ngIf="contract$ | async as sale">
   <ng-container *ngIf="sale.negotiation as negotiation">
@@ -22,7 +23,9 @@
         </h2>
         <ng-template #askPrice>
           <h3>Asking Price requested</h3>
-          <p class="mat-caption">To set a price click on <a routerLink="negotiate">negotiate</a></p>
+          <ng-container *ngIf="negotiation | canNegotiate:activeOrgId ">
+            <p class="mat-caption">To set a price click on <a routerLink="negotiate">negotiate</a></p>
+          </ng-container>
         </ng-template>
       </div>
 

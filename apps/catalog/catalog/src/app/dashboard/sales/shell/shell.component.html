@@ -4,17 +4,14 @@
     <!-- Internal -->
     <ng-container *ngIf="sale.sellerId === centralOrgId.catalog; else externalSale">
       <div fxLayout fxlayoutAlign="space-between center">
-        <a mat-icon-button routerLink="/c/o/dashboard/sales" color="primary">
-          <mat-icon svgIcon="arrow_back"></mat-icon>
-        </a>
+        <bf-tag *ngIf="sale.negotiation">
+          {{ sale.negotiation | negotiationStatus | toLabel: 'contractStatus' }}
+        </bf-tag>
         <a mat-button routerLink="/c/o/dashboard/standard-terms" target="_blank">
           <mat-icon svgIcon="file"></mat-icon>
           <span>See Standard Terms</span>
         </a>
       </div>
-      <bf-tag *ngIf="sale.negotiation">
-        {{ sale.negotiation | negotiationStatus | toLabel: 'contractStatus' }}
-      </bf-tag>
       <ng-container *ngIf="sale.buyerId | getOrg | async as org">
         <div fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
           <img height="100" width="100" [ref]="org?.logo" asset="empty_organization.svg" type="logo"
@@ -58,5 +55,3 @@
 <ng-template #loading>
   <mat-spinner></mat-spinner>
 </ng-template>
-
-

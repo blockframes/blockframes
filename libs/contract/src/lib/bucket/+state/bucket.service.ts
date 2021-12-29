@@ -96,10 +96,9 @@ export class BucketService extends CollectionService<BucketState> {
         stakeholders: [...parentContract.stakeholders, orgId],
       };
 
-      const createdAt = new Date();
       // Create the contract
       await this.contractService.add({
-        _meta: createDocumentMeta({ createdAt }),
+        _meta: createDocumentMeta(),
         status: 'pending',
         id: contractId,
         type: 'sale',
@@ -113,12 +112,12 @@ export class BucketService extends CollectionService<BucketState> {
       });
 
       // Add the default negotiation.
-      await this.contractService.addNegotiation(contractId, {
+       this.contractService.addNegotiation(contractId, {
         ...contract,
         ...commonFields,
-        initial: createdAt,
+        initial: new Date(),
         currency,
-      });
+      }).catch(err => console.error(err));
     });
     return Promise.all(promises);
   }
