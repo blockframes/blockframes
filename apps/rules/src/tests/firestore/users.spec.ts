@@ -2,7 +2,7 @@
   apps,
   assertFails,
   assertSucceeds,
-} from '@firebase/testing';
+} from '@firebase/rules-unit-testing';
 import { testFixture } from './fixtures/data';
 import { Firestore, initFirestoreApp } from '@blockframes/testing/unit-tests';
 
