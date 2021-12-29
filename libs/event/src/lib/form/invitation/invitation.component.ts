@@ -20,7 +20,7 @@ export class InvitationComponent implements OnInit {
   constructor(
     private invitationService: InvitationService,
     private dynTitle: DynamicTitleService,
-    private shell: EventFormShellComponent,
+    public shell: EventFormShellComponent,
   ) { }
 
   get eventId() {

@@ -10,14 +10,18 @@ import {
 
 type CallableContext = functions.https.CallableContext;
 
+export interface ConsentData {
+  consentType: ConsentType;
+  ip: string;
+  docId: string;
+  filePath?: string;
+}
+
 /**
  * @param data
  * @param context
  */
-export const createConsent = async (
-  data: { consentType: ConsentType; ip: string; docId: string; filePath?: string },
-  context: CallableContext
-): Promise<boolean> => {
+export const createConsent = async (data: ConsentData, context: CallableContext): Promise<boolean> => {
   const { consentType, ip, docId, filePath } = data;
 
   if (!context?.auth) {
