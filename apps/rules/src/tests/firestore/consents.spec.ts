@@ -1,4 +1,4 @@
-﻿import { apps, assertFails } from '@firebase/testing';
+﻿import { apps, assertFails } from '@firebase/rules-unit-testing';
 import { testFixture } from './fixtures/data';
 import { Firestore, initFirestoreApp } from '@blockframes/testing/unit-tests';
 import { Consents } from '@blockframes/consents/+state/consents.firestore';
