@@ -287,7 +287,9 @@ jobs:
       - run: echo "export PROJECT_ID=\"$(cut -d'/' -f2\<<<$CIRCLE_BRANCH)\"" >> $BASH_ENV
       - fail_on_production
       - select_environment
-      - run: npm run backend-ops prepareForTesting
+      - run:
+          command: npm run backend-ops prepareForTesting
+          no_output_timeout: 30m
       - slack/status
       - slack/notify:
           message: 'Deploy and PFT complete for << pipeline.git.branch >>'
