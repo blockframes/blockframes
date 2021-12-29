@@ -8,6 +8,8 @@ import { Observable, combineLatest } from 'rxjs';
 import { filter, switchMap, startWith, tap } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { IcsService } from '@blockframes/utils/ics/ics.service';
+import { eventTime } from '@blockframes/event/pipes/event-time.pipe';
 
 const typesLabel = {
   screening: 'Screenings',
@@ -36,6 +38,7 @@ export class EventListComponent implements OnInit {
     private orgQuery: OrganizationQuery,
     private cdr: ChangeDetectorRef,
     private dynTitle: DynamicTitleService,
+    private icsService: IcsService
   ) { }
 
   ngOnInit() {
@@ -55,6 +58,12 @@ export class EventListComponent implements OnInit {
   updateViewDate(date: Date) {
     this.viewDate = date;
     this.cdr.markForCheck();
+  }
+
+  exportToCalendar(events: Event[] = []) {
+    if (events.length === 0) return;
+    const ongoingOrIncomingEvents = events.filter(e => eventTime(e) !== 'late');
+    this.icsService.download(ongoingOrIncomingEvents);
   }
 
   /**
