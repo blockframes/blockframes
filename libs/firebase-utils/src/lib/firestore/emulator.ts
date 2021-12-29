@@ -1,6 +1,6 @@
 import { firebase } from '@env'
 import { initializeApp } from 'firebase-admin'
-import { clearFirestoreData } from '@firebase/testing';
+import { clearFirestoreData } from '@firebase/rules-unit-testing';
 import { ChildProcess, execSync } from 'child_process';
 import { Dirent, existsSync, mkdirSync, readdirSync, rmdirSync, writeFileSync, renameSync } from 'fs';
 import { join, resolve, sep } from 'path';

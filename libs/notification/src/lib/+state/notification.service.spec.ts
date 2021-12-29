@@ -5,7 +5,7 @@ import { NotificationStore } from './notification.store';
 import { Notification } from './notification.model';
 import { AngularFireModule } from '@angular/fire';
 import { SETTINGS, AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestore';
-import { loadFirestoreRules, clearFirestoreData } from '@firebase/testing';
+import { loadFirestoreRules, clearFirestoreData } from '@firebase/rules-unit-testing';
 import { readFileSync } from 'fs';
 import { AuthService } from '@blockframes/auth/+state';
 import { Subject } from 'rxjs';

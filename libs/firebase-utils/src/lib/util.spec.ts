@@ -5,7 +5,7 @@ import {
   populate,
 } from '@blockframes/testing/unit-tests';
 import { loadAdminServices } from '@blockframes/firebase-utils';
-import { apps, clearFirestoreData } from '@firebase/testing';
+import { apps, clearFirestoreData } from '@firebase/rules-unit-testing';
 
 let db: FirebaseFirestore.Firestore;
 describe('Test util.ts generator function getCollectionInBatches', () => {
