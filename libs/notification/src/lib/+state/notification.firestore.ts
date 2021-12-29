@@ -29,7 +29,12 @@ export const notificationTypesBase = [
 
   // Notifications related to offers
   'contractCreated',
-  'offerCreatedConfirmation'
+  'offerCreatedConfirmation',
+
+  //Notifications related to contract negotiation
+  'negotiationCreated',
+  'negotiationAccepted',
+  'negotiationDeclined'
 ] as const;
 
 // All the other notification types
