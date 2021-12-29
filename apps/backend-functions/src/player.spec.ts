@@ -2,7 +2,7 @@ import { getPrivateVideoUrl, ReadVideoParams } from './player';
 import { CallableContextOptions } from 'firebase-functions-test/lib/main';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { getTestingProjectId, initFunctionsTestMock, populate } from '@blockframes/testing/unit-tests';
-import { clearFirestoreData } from '@firebase/testing';
+import { clearFirestoreData } from '@firebase/rules-unit-testing';
 import { StorageVideo } from '@blockframes/media/+state/media.firestore';
 import { testVideoId } from '@env';
 

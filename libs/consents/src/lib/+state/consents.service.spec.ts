@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { ConsentsService } from './consents.service';
 import { AngularFireModule } from '@angular/fire';
 import { SETTINGS, AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestore';
-import { clearFirestoreData, loadFirestoreRules } from '@firebase/testing';
+import { clearFirestoreData, loadFirestoreRules } from '@firebase/rules-unit-testing';
 import { readFileSync } from 'fs';
 import { IpService } from '@blockframes/utils/ip';
 import { REGION, USE_EMULATOR as USE_FUNCTIONS_EMULATOR } from '@angular/fire/functions';
