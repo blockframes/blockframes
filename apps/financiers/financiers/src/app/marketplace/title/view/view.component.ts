@@ -18,7 +18,7 @@ import { AuthQuery } from '@blockframes/auth/+state';
 import { UserService } from '@blockframes/user/+state';
 import { ErrorResultResponse } from '@blockframes/utils/utils';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
+import { getUserEmailData, OrgEmailData } from '@blockframes/utils/emails/utils';
 import { testEmail } from "@blockframes/e2e/utils/env";
 
 interface EmailData {
@@ -109,7 +109,13 @@ export class MarketplaceMovieViewComponent implements OnInit {
     const templateId = templateIds.financiers.invest;
     const userSubject = getUserEmailData(this.authQuery.user);
 
-    const orgUserSubject = getOrgEmailData(this.orgQuery.getActive());
+    const org = this.orgQuery.getActive();
+    const orgUserSubject: OrgEmailData = {
+      denomination: org.denomination.full ?? org.denomination.public,
+      id: org.id || '',
+      email: org.email || ''
+    }
+
     const promises: Promise<ErrorResultResponse>[] = [];
 
     const cyCheck = 'Cypress' in window;

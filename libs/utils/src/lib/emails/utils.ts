@@ -1,10 +1,14 @@
 import { EmailJSON } from "@sendgrid/helpers/classes/email-address";
+import { AttachmentData } from '@sendgrid/helpers/classes/attachment';
 import { App } from "../apps";
 import { format } from "date-fns";
-import { EventDocument, EventMeta, EventTypes } from "@blockframes/event/+state/event.firestore";
-import { Organization, OrganizationDocument } from "@blockframes/organization/+state";
-import { User } from "@blockframes/auth/+state";
+import { EventDocument, EventMeta, EventTypes, MeetingEventDocument, ScreeningEventDocument } from "@blockframes/event/+state/event.firestore";
+import { OrganizationDocument } from "@blockframes/organization/+state/organization.firestore";
+import { User } from "@blockframes/user/+state/user.firestore";
 import { AccessibilityTypes } from "../static-model";
+import { Bucket } from '@blockframes/contract/bucket/+state/bucket.firestore';
+import { toIcsFile } from "../ics/utils";
+import { IcsEvent } from "../ics/ics.interfaces";
 
 interface EmailData {
   to: string;
@@ -16,7 +20,15 @@ export type EmailRequest = EmailData & ({ text: string } | { html: string });
 export interface EmailTemplateRequest {
   to: string;
   templateId: string;
-  data: { [key: string]: unknown };
+  data: {
+    org?: OrgEmailData | OrganizationDocument, // @TODO #7491 template d-94a20b20085842f68fb2d64fe325638a uses OrganizationDocument but it should use OrgEmailData instead
+    user?: UserEmailData,
+    event?: EventEmailData,
+    pageURL?: string,
+    bucket?: Bucket,
+    baseUrl?: string,
+    date?: string,
+  };
 }
 
 export interface EmailParameters {
@@ -37,7 +49,8 @@ export interface EventEmailData {
   type: EventTypes,
   viewUrl: string,
   sessionUrl: string,
-  accessibility: AccessibilityTypes
+  accessibility: AccessibilityTypes,
+  calendar: AttachmentData
 }
 
 export interface OrgEmailData {
@@ -110,11 +123,39 @@ export function getEventEmailData(event: EventDocument<EventMeta>, userEmail?: s
     type: event.type,
     viewUrl: `/event/${event.id}/r/i${eventUrlParams}`,
     sessionUrl: `/event/${event.id}/r/i/session${eventUrlParams}`,
-    accessibility: event.accessibility
+    accessibility: event.accessibility,
+    calendar: getEventEmailAttachment(event)
   }
 }
 
-export function getOrgEmailData(org: Partial<OrganizationDocument | Organization>): OrgEmailData {
+function getEventEmailAttachment(event: EventDocument<EventMeta>): AttachmentData {
+  const icsEvent = createIcsFromEventDocument(event);
+  return {
+    filename: 'invite.ics',
+    content: Buffer.from(toIcsFile([icsEvent])).toString('base64'),
+    disposition: 'attachment',
+    type: 'text/calendar',
+  };
+}
+
+function createIcsFromEventDocument(e: EventDocument<EventMeta>): IcsEvent {
+  if (!['meeting', 'screening'].includes(e.type)) return;
+  const event = e.type == 'meeting' ? e as MeetingEventDocument : e as ScreeningEventDocument;
+
+  return {
+    id: event.id,
+    title: event.title,
+    start: event.start.toDate(),
+    end: event.end.toDate(),
+    description: event.meta.description,
+    organizer: {
+      name: 'orgName', // @TODO #4045
+      email: 'todo@gmail.com'
+    }
+  }
+}
+
+export function getOrgEmailData(org: Partial<OrganizationDocument>): OrgEmailData {
   return {
     id: org.id,
     denomination: org.denomination.full ?? org.denomination.public,
