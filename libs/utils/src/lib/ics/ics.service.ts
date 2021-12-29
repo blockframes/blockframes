@@ -1,18 +1,29 @@
 import { Injectable } from "@angular/core";
 import { Event, isMeeting, isScreening } from '@blockframes/event/+state/event.model';
+import { OrganizationService, orgName } from "@blockframes/organization/+state";
+import { sendgridEmailsFrom } from "../apps";
 import { IcsEvent } from "./ics.interfaces";
 import { downloadIcs } from "./utils";
 
 @Injectable({ providedIn: 'root' })
 export class IcsService {
 
-  public download(events: Event[], filename = 'events.ics') {
-    const icsEvents = events.map(e => createIcsFromEvent(e));
+  constructor(
+    private orgService: OrganizationService
+  ) { }
+
+  public async download(events: Event[], filename = 'events.ics') {
+    const promises = events.map(async event => {
+      const ownerOrg = await this.orgService.getValue(event.ownerOrgId);
+      return createIcsFromEvent(event, orgName(ownerOrg, 'full'));
+    }).filter(e => !!e);
+
+    const icsEvents = await Promise.all(promises);
     downloadIcs(icsEvents, filename);
   }
 }
 
-function createIcsFromEvent(e: Event): IcsEvent {
+function createIcsFromEvent(e: Event, orgName: string): IcsEvent {
   const event = isScreening(e) || isMeeting(e) ? e : undefined;
   if (!event) return;
   return {
@@ -22,8 +33,8 @@ function createIcsFromEvent(e: Event): IcsEvent {
     end: event.end,
     description: event.meta.description,
     organizer: {
-      name: 'orgName', // @TODO #4045
-      email: 'todo@gmail.com'
+      name: orgName,
+      email: sendgridEmailsFrom.festival.email
     }
   }
 }

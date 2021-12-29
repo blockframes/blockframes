@@ -275,7 +275,7 @@ async function sendReminderEmails(recipient: User, notification: NotificationDoc
   const org = await getDocument<OrganizationDocument>(`orgs/${event.ownerOrgId}`);
   const orgData = getOrgEmailData(org);
   const toUser = getUserEmailData(recipient)
-  const eventData = getEventEmailData(event, recipient.email, notification.invitation?.id);
+  const eventData = getEventEmailData(event, orgData.denomination, recipient.email, notification.invitation?.id);
 
   const email = reminderEventToUser(toUser, orgData, eventData, template);
   return await sendMailFromTemplate(email, eventAppKey, groupIds.unsubscribeAll);
@@ -290,7 +290,7 @@ async function sendRequestToAttendEventUpdatedEmail(recipient: User, notificatio
     const organizerOrgData = getOrgEmailData(organizerOrg);
     const event = await getDocument<EventDocument<EventMeta>>(`events/${notification.docId}`);
     const toUser = getUserEmailData(recipient);
-    const eventData = getEventEmailData(event);
+    const eventData = getEventEmailData(event, organizerOrgData.denomination);
     if (notification.invitation.status === 'accepted') {
       const template = requestToAttendEventFromUserAccepted(toUser, organizerOrgData, eventData);
       await sendMailFromTemplate(template, eventAppKey, groupIds.unsubscribeAll);
@@ -312,8 +312,8 @@ async function sendInvitationToAttendEventUpdatedEmail(recipient: User, notifica
     const event = await getDocument<EventDocument<EventMeta>>(`events/${notification.docId}`);
     const user = await getDocument<User>(`users/${notification.user.uid}`);
     const userOrg = await getDocument<OrganizationDocument>(`orgs/${user.orgId}`);
-    const eventData = getEventEmailData(event, user.email, notification.invitation.id);
     const userOrgData = getOrgEmailData(userOrg);
+    const eventData = getEventEmailData(event, userOrgData.denomination, user.email, notification.invitation.id);
     const userSubject = getUserEmailData(user);
     const toAdmin = getUserEmailData(recipient);
 
@@ -356,7 +356,7 @@ async function sendRequestToAttendEventCreatedEmail(recipient: User, notificatio
   const org = await getDocument<OrganizationDocument>(`orgs/${notification.user.orgId}`);
   const userOrg = getOrgEmailData(org);
   const userSubject = getUserEmailData(notification.user);
-  const eventData: EventEmailData = getEventEmailData(eventDoc, userSubject.email, notification.invitation.id);
+  const eventData: EventEmailData = getEventEmailData(eventDoc, userOrg.denomination, userSubject.email, notification.invitation.id);
   const link = getEventLink({
     invitation: notification.invitation,
     eventData: eventData,
@@ -373,11 +373,11 @@ async function sendRequestToAttendEventCreatedEmail(recipient: User, notificatio
 
 async function sendInvitationToAttendEventCreatedEmail(recipient: User, notification: NotificationDocument) {
   const event = await getDocument<EventDocument<EventMeta>>(`events/${notification.docId}`);
-  const eventEmailData: EventEmailData = getEventEmailData(event, recipient.email, notification.invitation.id);
   const org = await getDocument<OrganizationDocument>(`orgs/${notification.organization.id}`);
+  const orgData = getOrgEmailData(org);
+  const eventEmailData: EventEmailData = getEventEmailData(event, orgData.denomination, recipient.email, notification.invitation.id);
   const toUser = getUserEmailData(recipient);
   const urlToUse = applicationUrl[eventAppKey];
-  const orgData = getOrgEmailData(org);
   const link = getEventLink({
     invitation: notification.invitation,
     eventData: eventEmailData,
@@ -419,9 +419,9 @@ async function sendMovieAcceptedEmail(recipient: User, notification: Notificatio
 /** Send an email to user when their request to attend an event has been sent */
 async function sendRequestToAttendSentEmail(recipient: User, notification: NotificationDocument) {
   const event = await getDocument<EventDocument<EventMeta>>(`events/${notification.docId}`);
-  const eventEmailData: EventEmailData = getEventEmailData(event, recipient.email, notification.invitation.id);
   const org = await getDocument<OrganizationDocument>(`orgs/${event.ownerOrgId}`);
   const organizerOrg = getOrgEmailData(org);
+  const eventEmailData: EventEmailData = getEventEmailData(event, organizerOrg.denomination, recipient.email, notification.invitation.id);
   const toUser = getUserEmailData(recipient);
 
   const app = notification._meta.createdFrom;

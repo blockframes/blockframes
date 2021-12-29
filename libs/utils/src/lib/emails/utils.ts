@@ -1,9 +1,9 @@
 import { EmailJSON } from "@sendgrid/helpers/classes/email-address";
 import { AttachmentData } from '@sendgrid/helpers/classes/attachment';
-import { App } from "../apps";
+import { App, sendgridEmailsFrom } from "../apps";
 import { format } from "date-fns";
 import { EventDocument, EventMeta, EventTypes, MeetingEventDocument, ScreeningEventDocument } from "@blockframes/event/+state/event.firestore";
-import { OrganizationDocument } from "@blockframes/organization/+state/organization.firestore";
+import { OrganizationDocument, orgName } from "@blockframes/organization/+state/organization.firestore";
 import { User } from "@blockframes/user/+state/user.firestore";
 import { AccessibilityTypes } from "../static-model";
 import { Bucket } from '@blockframes/contract/bucket/+state/bucket.firestore';
@@ -104,7 +104,7 @@ export function createEmailRequest(params: Partial<EmailRequest> = {}): EmailReq
   };
 }
 
-export function getEventEmailData(event: EventDocument<EventMeta>, userEmail?: string, invitationId?: string): EventEmailData {
+export function getEventEmailData(event: EventDocument<EventMeta>, orgName: string, userEmail?: string, invitationId?: string): EventEmailData {
 
   const eventStartDate = new Date(event.start.toDate());
   const eventEndDate = new Date(event.end.toDate());
@@ -124,12 +124,12 @@ export function getEventEmailData(event: EventDocument<EventMeta>, userEmail?: s
     viewUrl: `/event/${event.id}/r/i${eventUrlParams}`,
     sessionUrl: `/event/${event.id}/r/i/session${eventUrlParams}`,
     accessibility: event.accessibility,
-    calendar: getEventEmailAttachment(event)
+    calendar: getEventEmailAttachment(event, orgName)
   }
 }
 
-function getEventEmailAttachment(event: EventDocument<EventMeta>): AttachmentData {
-  const icsEvent = createIcsFromEventDocument(event);
+function getEventEmailAttachment(event: EventDocument<EventMeta>, orgName: string): AttachmentData {
+  const icsEvent = createIcsFromEventDocument(event, orgName);
   return {
     filename: 'invite.ics',
     content: Buffer.from(toIcsFile([icsEvent])).toString('base64'),
@@ -138,7 +138,7 @@ function getEventEmailAttachment(event: EventDocument<EventMeta>): AttachmentDat
   };
 }
 
-function createIcsFromEventDocument(e: EventDocument<EventMeta>): IcsEvent {
+function createIcsFromEventDocument(e: EventDocument<EventMeta>, orgName: string): IcsEvent {
   if (!['meeting', 'screening'].includes(e.type)) return;
   const event = e.type == 'meeting' ? e as MeetingEventDocument : e as ScreeningEventDocument;
 
@@ -149,8 +149,8 @@ function createIcsFromEventDocument(e: EventDocument<EventMeta>): IcsEvent {
     end: event.end.toDate(),
     description: event.meta.description,
     organizer: {
-      name: 'orgName', // @TODO #4045
-      email: 'todo@gmail.com'
+      name: orgName,
+      email: sendgridEmailsFrom.festival.email
     }
   }
 }
@@ -158,7 +158,7 @@ function createIcsFromEventDocument(e: EventDocument<EventMeta>): IcsEvent {
 export function getOrgEmailData(org: Partial<OrganizationDocument>): OrgEmailData {
   return {
     id: org.id,
-    denomination: org.denomination.full ?? org.denomination.public,
+    denomination: orgName(org, 'full'),
     email: org.email || ''
   }
 }
