@@ -64,7 +64,6 @@ export async function initFirestoreApp(
   projectId: string,
   rulePath: string,
   data: Record<string, unknown> = {},
-  //auth?: Record<string, unknown>
   auth?: TokenOptions
 ) {
   //Define these env vars to avoid getting console warnings
