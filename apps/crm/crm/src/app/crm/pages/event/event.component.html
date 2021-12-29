@@ -3,7 +3,7 @@
   <article fxLayout="row" fxLayoutAlign="space-around start">
 
     <crm-event-info fxFlex [event]="event"></crm-event-info>
-    <section>
+    <section fxFlex>
       <h2>Invite people</h2>
       <mat-card>
         <mat-card-content fxLayout="column">
@@ -14,16 +14,12 @@
       <ng-container *ngIf="event.type === 'screening' && movie">
         <h2>Screening information</h2>
         <mat-card>
-          <mat-card-header>
+          <mat-card-title-group>
             <mat-card-title>
-              Event for : {{ movie.title.international }} ({{ movie.internalRef }})
+              Event for : {{ movie.title.international }} {{ movie.internalRef ? '(' + movie.internalRef + ')' : '' }}
             </mat-card-title>
-            <ng-container
-              *ngIf="movie.poster as poster;">
-              <img mat-card-avatar [ref]="poster" asset="empty_poster.svg">
-            </ng-container>
-          </mat-card-header>
-
+            <img *ngIf="movie.poster as poster" mat-card-sm-image [ref]="poster" asset="empty_poster.svg">
+          </mat-card-title-group>
           <mat-card-content fxLayout="column">
             <div>
               <span>Standard view/edit </span>

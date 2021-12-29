@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -23,6 +24,7 @@ import { EventInfoComponent } from './event-info.component';
   imports: [
     CommonModule,
     RouterModule,
+    FlexLayoutModule,
     EventRangeModule,
     GuestTableModule,
     GoToModule,
