@@ -15,6 +15,9 @@ header {
   h6 {
     text-transform: uppercase;
     margin-bottom: 8px;
+    button mat-icon {
+      vertical-align: text-bottom;
+    }
   }
   
   pre {

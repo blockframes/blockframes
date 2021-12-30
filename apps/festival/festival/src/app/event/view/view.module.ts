@@ -18,6 +18,7 @@ import { InvitationActionModule } from '@blockframes/invitation/components/actio
 
 import { MatButtonModule} from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [EventViewComponent],
@@ -38,6 +39,7 @@ import { MatIconModule } from '@angular/material/icon';
     ToLabelModule,
     MatButtonModule,
     MatIconModule,
+    MatTooltipModule,
     RouterModule.forChild([{ path: '', component: EventViewComponent }])
   ]
 })

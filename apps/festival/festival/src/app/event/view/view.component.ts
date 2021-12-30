@@ -8,6 +8,7 @@ import { Location } from '@angular/common';
 import { fade } from '@blockframes/utils/animations/fade';
 import { AuthQuery, AuthService } from '@blockframes/auth/+state';
 import { Event } from '@blockframes/event/+state/event.model'
+import { IcsService } from '@blockframes/utils/ics/ics.service';
 
 @Component({
   selector: 'festival-event-view',
@@ -32,7 +33,8 @@ export class EventViewComponent implements OnInit {
     private invitationService: InvitationService,
     private location: Location,
     private authQuery: AuthQuery,
-    private authService: AuthService
+    private authService: AuthService,
+    private icsService: IcsService,
   ) { }
 
   @HostListener('window:popstate', ['$event'])
@@ -86,6 +88,10 @@ export class EventViewComponent implements OnInit {
 
   reloadInvitation() {
     this.statusChanged.next(true);
+  }
+
+  exportToCalendar(event: Event) {
+    this.icsService.download([event]);
   }
 
 }
