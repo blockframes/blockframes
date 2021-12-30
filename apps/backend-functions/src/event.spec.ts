@@ -8,8 +8,8 @@ import * as admin from 'firebase-admin';
 import { firebase } from '@env';
 import { expect } from '@jest/globals';
 import { endMaintenance } from '@blockframes/firebase-utils';
-import { EventDocument, EventMeta, Screening } from '@blockframes/event/+state/event.firestore';
-import { createEvent, createScreening, ScreeningEvent } from '@blockframes/event/+state/event.model';
+import { Screening } from '@blockframes/event/+state/event.firestore';
+import { createScreening } from '@blockframes/event/+state/event.model';
 
 const testEnv = firebaseTest(firebase());
 
@@ -65,20 +65,7 @@ describe('Movie backend-function unit-tests', () => {
         console.log(doc.data());
       }
 
-
-      // snap = await db.doc(`permissions/${orgID}`).get();
-      // expect(snap.data()).toEqual(
-      //   expect.objectContaining({
-      //     authorOrgId: orgID,
-      //     orgs: { a: 'O1', b: 'O2' }
-      //   })
-      // );
-
-      // const docRef = db.doc(`permissions/${orgID}/documentPermissions/${docID}`);
-      // snap = await docRef.get();
-      // expect(snap.data()).toBeUndefined();
-     expect(true).toBeTruthy();
-      await new Promise((r) => setTimeout(r, 5000)); 
+      expect(true).toBeTruthy();
     });
   });
 })
