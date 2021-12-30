@@ -12,6 +12,7 @@ import { endMaintenance } from '@blockframes/firebase-utils';
 const testEnv = firebaseTest(firebase());
 
 describe('Permissions backend-function unit-tests', () => {
+  const db = admin.firestore();
 
   beforeAll(async () => {
     await initFirestoreApp(firebase().projectId, 'firestore.test.rules', testFixture);
@@ -44,7 +45,7 @@ describe('Permissions backend-function unit-tests', () => {
       // Call the function
       await wrapped(after, context);
 
-      const snap = await admin.firestore().doc(`docsIndex/${docID}`).get();
+      const snap = await db.doc(`docsIndex/${docID}`).get();
       expect(snap.data()).toEqual(
         expect.objectContaining({
           authorOrgId: orgID
@@ -57,32 +58,12 @@ describe('Permissions backend-function unit-tests', () => {
       const docID = 'D001';
       const orgID = 'O001';
 
-      /*
-      // Make a fake document snapshot to pass to the function
-      const afterSub = testEnv.firestore.makeDocumentSnapshot(
-        {
-           a: 'U1', b: 'U2' 
-        },
-        `permissions/${orgID}/users/c8`
-      );
-
-      const after = testEnv.firestore.makeDocumentSnapshot(
-        {
-          authorOrgId: orgID,
-          orgs: { a: 'O1', b: 'O2' },
-          users: { a: 'U1', b: 'U2' },
-        },
-        `permissions/${orgID}`
-      );
-      after.user_sub = afterSub;
-      */
-
-      let snap = await admin.firestore().doc(`permissions/${orgID}`).get();
+      let snap = await db.doc(`permissions/${orgID}`).get();
 
       // Call the function
       await wrapped(snap, {});
 
-      snap = await admin.firestore().doc(`permissions/${orgID}`).get();
+      snap = await db.doc(`permissions/${orgID}`).get();
       expect(snap.data()).toEqual(
         expect.objectContaining({
           authorOrgId: orgID,
@@ -90,10 +71,9 @@ describe('Permissions backend-function unit-tests', () => {
         })
       );
 
-      snap = await admin.firestore().doc(`permissions/${orgID}/documentPermissions/${docID}`).get();
-      console.log(snap.data());
-      //TODO: Add a test to check deletion of subcollections
+      const docRef = db.doc(`permissions/${orgID}/documentPermissions/${docID}`);
+      snap = await docRef.get();
+      expect(snap.data()).toBeUndefined();
     });
-
   });
 })
