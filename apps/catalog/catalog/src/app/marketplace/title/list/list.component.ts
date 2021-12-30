@@ -27,7 +27,7 @@ import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-enc
 import { ContractService, Mandate, Sale } from '@blockframes/contract/contract/+state';
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { AvailsFilter, filterByTitle, availableTitle, FullMandate } from '@blockframes/contract/avails/new-avails';
+import { AvailsFilter, filterByTitle, availableTitle, FullMandate } from '@blockframes/contract/avails/avails';
 
 @Component({
   selector: 'catalog-marketplace-title-list',

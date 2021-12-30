@@ -4,15 +4,16 @@ import { AfterViewInit, ChangeDetectionStrategy, Component } from '@angular/core
 import { combineLatest } from 'rxjs';
 import { map, startWith, take, throttleTime } from 'rxjs/operators';
 
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
+
 import { TerritoryValue } from '@blockframes/utils/static-model';
+import { scrollIntoView } from '@blockframes/utils/browser/utils';
+import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
+import { AvailableTerritoryMarker, BucketTerritoryMarker, filterByTitle, MapAvailsFilter, territoryAvailabilities } from '@blockframes/contract/avails/avails';
 
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
-import { ActivatedRoute, Router } from '@angular/router';
-import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
-import { scrollIntoView } from '@blockframes/utils/browser/utils';
-import { AvailableTerritoryMarker, BucketTerritoryMarker, filterByTitle, MapAvailsFilter, territoryAvailabilities } from '@blockframes/contract/avails/new-avails';
 
 @Component({
   selector: 'catalog-movie-avails-map',

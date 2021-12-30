@@ -9,7 +9,7 @@ import { medias } from '@blockframes/utils/static-model'
 import { downloadCsvFromJson } from "@blockframes/utils/helpers";
 import { TerritoryValue } from "@blockframes/utils/static-model";
 import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
-import { filterByTitle, MapAvailsFilter, territoryAvailabilities } from "@blockframes/contract/avails/new-avails";
+import { filterByTitle, MapAvailsFilter, territoryAvailabilities } from "@blockframes/contract/avails/avails";
 
 import { CatalogAvailsShellComponent } from "../shell/shell.component";
 
