@@ -34,10 +34,12 @@ export const testFixture = {
   'invitations/I002': {
     id: 'I002',
     type: 'attendEvent',
-    mode: 'request'
+    mode: 'request',
+    eventID: 'E001'
   },
   'invitations/I003': {
     id: 'I003',
+    eventID: 'E001',
     type: 'attendEvent',
     mode: 'invitation',
     fromOrg: {

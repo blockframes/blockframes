@@ -10,10 +10,12 @@ export async function onEventDelete(
   snap: FirebaseFirestore.DocumentSnapshot
 ) {
   const event = snap.data() as EventDocument<EventMeta>;
+  console.log(event);
   const batch = db.batch();
 
   const invitsCollectionRef = await db.collection('invitations').where('eventId', '==', event.id).get();
   for (const doc of invitsCollectionRef.docs) {
+    console.log(doc);
     batch.delete(doc.ref);
   }
 
