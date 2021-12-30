@@ -246,14 +246,14 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
       case 'negotiationAccepted':
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `One of your Counter Offers have been Accepted.`,
+          message: `Your Offer was accepted.`,
           placeholderUrl: 'contract_offer.svg',
           url: `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`
         }
       case 'negotiationDeclined':
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `One of your Counter Offers have been declined.`,
+          message: `Your Offer was declined.`,
           placeholderUrl: 'contract_offer.svg',
           url: `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`
         }

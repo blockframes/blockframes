@@ -63,6 +63,11 @@ export interface NotificationBase<D> {
   /** @dev Possible subjects of the notification */
   user?: Partial<PublicUser>;
   docId?: string;
+  /**
+   * To be used for docs that are part of a subcollection
+   * eg: contracts/{contractId}/negotiations/{negotiationId}
+   */
+  docPath?:string;
   organization?: PublicOrganization;
   invitation?: PublicInvitation;
   bucket?: Bucket;

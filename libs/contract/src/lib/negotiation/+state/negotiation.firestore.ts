@@ -25,3 +25,6 @@ export interface Negotiation<T extends Date | firebase.firestore.Timestamp = Dat
   initial: T;
   currency: MovieCurrency
 }
+
+
+export type NegotiationDocument = Negotiation<firebase.firestore.Timestamp>;

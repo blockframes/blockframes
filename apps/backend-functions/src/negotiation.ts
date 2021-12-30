@@ -13,14 +13,14 @@ function createId() {
   return db.collection('_').doc().id;
 }
 
-export async function onNegotiationCreated(contractSnapshot: FirebaseFirestore.DocumentSnapshot<Negotiation<Timestamp>>) {
-  const negotiation = contractSnapshot.data();
+export async function onNegotiationCreated(negotiationSnapshot: FirebaseFirestore.DocumentSnapshot<Negotiation<Timestamp>>) {
+  const negotiation = negotiationSnapshot.data();
   const _meta = formatDocumentMetaFromFirestore(negotiation._meta);
   const initial = negotiation.initial.toDate();
 
   if (isInitial({ _meta, initial })) return;
 
-  const path = contractSnapshot.ref.path;
+  const path = negotiationSnapshot.ref.path;
   // contracts/{contractId}/negotiations/{negotiationId}
   const contractId = path.split('/')[1]
 
@@ -35,6 +35,7 @@ export async function onNegotiationCreated(contractSnapshot: FirebaseFirestore.D
     toUserId: userId,
     type: 'negotiationCreated',
     docId: contractId,
+    docPath: path,
     _meta: createDocumentMeta({ createdFrom: 'catalog' })
   }));
 
@@ -45,11 +46,11 @@ export async function onNegotiationCreated(contractSnapshot: FirebaseFirestore.D
   }
 }
 
-async function createNegotiationUpdateNotification(contractSnapshot: FirebaseFirestore.DocumentSnapshot<Negotiation<Timestamp>>) {
-  const negotiation = contractSnapshot.data();
+async function createNegotiationUpdateNotification(negotiationSnapshot: FirebaseFirestore.DocumentSnapshot<Negotiation<Timestamp>>) {
+  const negotiation = negotiationSnapshot.data();
 
-  const path = contractSnapshot.ref.path;
-  const contractId = path.split('/')[1]
+  const docPath = negotiationSnapshot.ref.path;
+  const contractId = docPath.split('/')[1]
 
   let type: 'negotiationAccepted' | 'negotiationDeclined' = 'negotiationAccepted';
   if (negotiation.status === 'declined')
@@ -62,6 +63,7 @@ async function createNegotiationUpdateNotification(contractSnapshot: FirebaseFir
     toUserId: userId,
     type,
     docId: contractId,
+    docPath,
     _meta: createDocumentMeta({ createdFrom: 'catalog' })
   }));
 
@@ -80,7 +82,9 @@ async function createTerms(contractId: string, negotiation: Negotiation<Timestam
     .map(t => ({ ...t, contractId, id: createId() }));
   const promises = terms.map(term => termsCollection.add(term));
   const savedTerms = await Promise.all(promises);
-  return savedTerms.map(datum => datum.id);
+  const ids =  savedTerms.map(datum => datum.id);
+  console.log({ids})
+  return ids;
 }
 
 async function createIncome(sale: Sale, negotiation: Negotiation<Timestamp>) {
