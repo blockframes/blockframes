@@ -454,11 +454,11 @@ describe('BucketForm', () => {
       term: termC,
     };
 
-    bucket.addDuration(calendarFilterA, markerA);
-    bucket.addDuration(calendarFilterA, markerB);
-    bucket.addDuration(calendarFilterA, markerC);
-
     it('Check index', () => {
+
+      bucket.addDuration(calendarFilterA, markerA);
+      bucket.addDuration(calendarFilterA, markerB);
+      bucket.addDuration(calendarFilterA, markerC);
 
       expect(bucket.value.contracts.length).toBe(3);
       expect(bucket.value.contracts[0].terms.length).toBe(1);
