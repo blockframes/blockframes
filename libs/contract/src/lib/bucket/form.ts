@@ -1,6 +1,11 @@
 import { FormControl, FormGroup } from '@angular/forms';
+
+import { Subject } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+
 import { FormEntity, FormList, FormStaticValueArray } from '@blockframes/utils/form';
 import { MovieVersionInfoForm, createLanguageControl } from '@blockframes/movie/form/movie.form';
+
 import {
   Bucket,
   BucketContract,
@@ -10,10 +15,8 @@ import {
   toBucketContract,
   toBucketTerm
 } from './+state/bucket.model';
-import { Subject } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
 import { BucketTerm } from '../term/+state';
-import { AvailableTerritoryMarker, BucketTerritoryMarker, CalendarAvailsFilter, DurationMarker, isSameBucketContract, isSameCalendarBucketTerm, isSameMapBucketTerm, MapAvailsFilter } from '../avails/new-avails';
+import { AvailableTerritoryMarker, BucketTerritoryMarker, CalendarAvailsFilter, DurationMarker, isSameBucketContract, isSameCalendarBucketTerm, isSameMapBucketTerm, MapAvailsFilter } from '../avails/avails';
 
 //////////
 // TERM //

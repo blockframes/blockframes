@@ -1,4 +1,4 @@
-import { AvailsFilter, CalendarAvailsFilter, MapAvailsFilter } from '@blockframes/contract/avails/new-avails';
+import { AvailsFilter, CalendarAvailsFilter, MapAvailsFilter } from '@blockframes/contract/avails/avails';
 import { createHoldback, Mandate } from '@blockframes/contract/contract/+state';
 import { createLanguageKey } from '@blockframes/movie/+state';
 import { Term, BucketTerm } from '../../term/+state/term.model';

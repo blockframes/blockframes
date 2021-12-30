@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, HostBinding, Input } from '@angular
 
 import { boolean } from '@blockframes/utils/decorators/decorators';
 
-import { AvailsFilter } from '../new-avails';
+import { AvailsFilter } from '../avails';
 import { AvailsForm, MapAvailsForm, CalendarAvailsForm } from '../form/avails.form';
 
 @Component({

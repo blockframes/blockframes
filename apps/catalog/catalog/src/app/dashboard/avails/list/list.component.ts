@@ -16,7 +16,7 @@ import { Income, IncomeService } from "@blockframes/contract/income/+state";
 import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
 import { ContractService, Sale, Mandate } from "@blockframes/contract/contract/+state";
 import { DynamicTitleService } from "@blockframes/utils/dynamic-title/dynamic-title.service";
-import { AvailsFilter, availableTitle, FullSale, FullMandate } from "@blockframes/contract/avails/new-avails";
+import { AvailsFilter, availableTitle, FullSale, FullMandate } from "@blockframes/contract/avails/avails";
 
 interface TotalIncome { EUR: number; USD: number; }
 

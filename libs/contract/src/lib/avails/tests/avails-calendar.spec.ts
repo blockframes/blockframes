@@ -13,7 +13,7 @@ import {
   reset,
   select
 } from '../calendar/calendar.model';
-import { DurationMarker } from "../new-avails";
+import { DurationMarker } from '../avails';
 
 
 

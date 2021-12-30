@@ -4,7 +4,8 @@ import { Territory } from '@blockframes/utils/static-model';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { FormStaticValueArray } from '@blockframes/utils/form/forms/static-value.form';
 import { compareDates, isDateInFuture } from '@blockframes/utils/form/validators/validators';
-import { AvailsFilter, BaseAvailsFilter, CalendarAvailsFilter, MapAvailsFilter } from '../new-avails';
+
+import { AvailsFilter, BaseAvailsFilter, CalendarAvailsFilter, MapAvailsFilter } from '../avails';
 
 
 function createDurationControl(duration: Partial<{ from: Date, to: Date }> = {}) {

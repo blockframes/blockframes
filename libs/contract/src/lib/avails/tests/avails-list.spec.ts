@@ -1,5 +1,5 @@
 
-import { AvailsFilter, availableTitle, FullMandate } from '../new-avails';
+import { AvailsFilter, availableTitle, FullMandate } from '../avails';
 
 const mandate = {
   titleId: 'titleA',
