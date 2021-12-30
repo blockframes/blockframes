@@ -66,8 +66,8 @@ describe('Permissions backend-function unit-tests', () => {
       snap = await db.doc(`permissions/${orgID}`).get();
       expect(snap.data()).toEqual(
         expect.objectContaining({
-          authorOrgId: orgID,
-          orgs: { a: 'O1', b: 'O2' }
+          id: orgID,
+          roles: { }
         })
       );
 
