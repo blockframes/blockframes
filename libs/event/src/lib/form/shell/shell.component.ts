@@ -12,6 +12,7 @@ import { Observable, of, Subscription } from 'rxjs';
 import { map, pluck, switchMap } from 'rxjs/operators';
 import { NavTabs, TabConfig } from '@blockframes/utils/event';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { IcsService } from '@blockframes/utils/ics/ics.service';
 
 const statisticsTab = { path: 'statistics', label: 'Statistics' };
 
@@ -53,6 +54,7 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
     private routerQuery: RouterQuery,
     private cdr: ChangeDetectorRef,
     private snackBar: MatSnackBar,
+    private icsService: IcsService
   ) { }
 
   ngOnInit(): void {
@@ -170,5 +172,9 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
       this.screenerMissing = !title.promotional.videos?.screener?.jwPlayerId;
     }
     this.cdr.markForCheck();
+  }
+
+  exportToCalendar() {
+    this.icsService.download([this.form.value]);
   }
 }
