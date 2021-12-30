@@ -13,10 +13,8 @@ import { createScreening } from '@blockframes/event/+state/event.model';
 
 const testEnv = firebaseTest(firebase());
 
-describe('Movie backend-function unit-tests', () => {
+describe('Event backend-function unit-tests', () => {
   const db = admin.firestore();
-  const today = new Date();
-  const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000); 
 
   beforeAll(async () => {
     await initFirestoreApp(firebase().projectId, 'firestore.test.rules', testFixture);
@@ -28,7 +26,7 @@ describe('Movie backend-function unit-tests', () => {
     await clearFirestoreData({ projectId: firebase().projectId });
   });
 
-  describe('Movie spec', () => {
+  describe('Event spec', () => {
 
     it('removes all matching eventId docs from \'invitations & notification\' collection', async () => {
       const wrapped = testEnv.wrap(onEventDeleteEvent);
@@ -55,17 +53,17 @@ describe('Movie backend-function unit-tests', () => {
       //Trigger onEventDeleteEvent event
       await wrapped(eventSnap);
 
-      const invitsCollectionRef = await db.collection(`invitations`)
-                         .where('eventId',  '==', eventID)
-                         .get();
-      const queriedDocs = invitsCollectionRef.docs;
+      let collectionRef = await db.collection('invitations')
+                                          .where('eventId',  '==', eventID)
+                                          .get();
+      let queriedDocs = collectionRef.docs;
       expect(queriedDocs).toHaveLength(0);
 
-      for (const doc of invitsCollectionRef.docs) {
-        console.log(doc.data());
-      }
-
-      expect(true).toBeTruthy();
+      collectionRef = await db.collection('notifications')
+                              .where('eventId',  '==', eventID)
+                              .get();
+      queriedDocs = collectionRef.docs;
+      expect(queriedDocs).toHaveLength(0);
     });
   });
 })

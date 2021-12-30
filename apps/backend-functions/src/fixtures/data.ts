@@ -65,4 +65,10 @@ export const testFixture = {
     id: 'D001',
     ownerId: 'O001',
   },
+
+  //Notification
+  'notifications/NOO1': {
+    id: 'NOO1',
+    docId: 'E001'
+  }
 };
