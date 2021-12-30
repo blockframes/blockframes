@@ -12,7 +12,8 @@ export class IcsService {
     private orgService: OrganizationService
   ) { }
 
-  public async download(events: Event[], filename = 'events.ics') {
+  public async download(events: Event[]) {
+    const filename = events.length > 1 ? 'events.ics' : 'event.ics';
     const promises = events.map(async event => {
       const ownerOrg = await this.orgService.getValue(event.ownerOrgId);
       return createIcsFromEvent(event, orgName(ownerOrg, 'full'));
