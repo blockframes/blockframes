@@ -1,7 +1,8 @@
 
-import { FullMandate, FullSale, territoryAvailabilities } from '../new-avails';
-import { availDetailsExclusive } from './../fixtures/availsFilters';
 import { BucketContract } from '@blockframes/contract/bucket/+state';
+
+import { availDetailsExclusive } from './../fixtures/availsFilters';
+import { FullMandate, FullSale, territoryAvailabilities } from '../avails';
 
 describe('Test territoryAvailabilities pure function', () => {
 

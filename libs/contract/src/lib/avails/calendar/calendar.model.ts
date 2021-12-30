@@ -1,5 +1,5 @@
 
-import { DurationMarker } from '../new-avails';
+import { DurationMarker } from '../avails';
 
 export type CellState = 'empty' | 'available' | 'expired' | 'sold' | 'selected';
 export type SelectionState = 'waiting' | 'started' | 'selected';

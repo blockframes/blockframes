@@ -16,7 +16,7 @@ import {
   dateToMatrixPosition,
   createAvailCalendarState,
 } from './calendar.model';
-import { DurationMarker } from '../new-avails';
+import { DurationMarker } from '../avails';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 
 /** Available [A], Today[T], Expired[E]
