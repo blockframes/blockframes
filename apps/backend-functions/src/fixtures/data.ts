@@ -35,11 +35,11 @@ export const testFixture = {
     id: 'I002',
     type: 'attendEvent',
     mode: 'request',
-    eventID: 'E001'
+    eventId: 'E001'
   },
   'invitations/I003': {
     id: 'I003',
-    eventID: 'E001',
+    eventId: 'E001',
     type: 'attendEvent',
     mode: 'invitation',
     fromOrg: {
@@ -57,8 +57,8 @@ export const testFixture = {
 
   //Permission
   'permissions/O001': {
-    authorOrgId: 'O001',
-    orgs: { a: 'O1', b: 'O2' }
+    id: 'O001',
+    roles: { }
   },
 
   'permissions/O001/documentPermissions/D001': {

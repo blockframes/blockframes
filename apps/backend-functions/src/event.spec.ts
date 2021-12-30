@@ -58,9 +58,11 @@ describe('Movie backend-function unit-tests', () => {
       const invitsCollectionRef = await db.collection(`invitations`)
                          .where('eventId',  '==', eventID)
                          .get();
-      console.log(invitsCollectionRef);
+      const queriedDocs = invitsCollectionRef.docs;
+      expect(queriedDocs).toHaveLength(0);
+
       for (const doc of invitsCollectionRef.docs) {
-        console.log(doc.data);
+        console.log(doc.data());
       }
 
 
@@ -76,7 +78,7 @@ describe('Movie backend-function unit-tests', () => {
       // snap = await docRef.get();
       // expect(snap.data()).toBeUndefined();
      expect(true).toBeTruthy();
-      await new Promise((r) => setTimeout(r, 10000)); 
+      await new Promise((r) => setTimeout(r, 5000)); 
     });
   });
 })
