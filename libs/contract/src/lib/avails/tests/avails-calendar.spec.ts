@@ -1,6 +1,4 @@
-import { createMandate } from "../../contract/+state/contract.model";
-import { toDurationMarker } from "./../avails";
-import { createTerm } from "../../term/+state/term.model";
+
 import {
   calendarColumns,
   calendarRows,
@@ -17,27 +15,9 @@ import {
 } from '../calendar/calendar.model';
 import { DurationMarker } from "../new-avails";
 
+
+
 describe('Calendar', () => {
-  describe('Test DurationMarker', () => {
-
-    it('Duration marker should contain good contract', () => {
-      const mandateA = createMandate({ id: 'MandateA', termIds: ['termA'] });
-      const mandateB = createMandate({ id: 'MandateB', termIds: ['termB'] });
-
-      const termA = createTerm({ id: 'termA', contractId: mandateA.id });
-      const termB = createTerm({ id: 'termB', contractId: mandateB.id });
-
-      const selectedA = toDurationMarker([mandateA, mandateB], termA);
-      expect(selectedA.contract.id).toEqual(mandateA.id);
-
-      const selectedB = toDurationMarker([mandateA, mandateB], termB);
-      expect(selectedB.contract.id).toEqual(mandateB.id);
-
-      const selectedC = toDurationMarker([mandateB], termA);
-      expect(selectedC.contract).toBeUndefined();
-    });
-  });
-
   describe('Test Matrix', () => {
 
     it('Test isBefore', () => {
