@@ -454,7 +454,6 @@ function isSameBucketTerm(termA: BucketTerm, termB: BucketTerm) {
 }
 
 export function isSameBucketContract(contractA: BucketContract, contractB: BucketContract) {
-  console
   const titleIdCheck = contractA.titleId === contractB.titleId;
   const orgIdCheck = contractA.orgId === contractB.orgId;
   const parentTermIdCheck = contractA.parentTermId === contractB.parentTermId;
