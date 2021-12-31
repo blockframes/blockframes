@@ -14,6 +14,7 @@ import { Bucket } from '@blockframes/contract/bucket/+state/bucket.model';
 import { format } from "date-fns";
 import { testEmail } from "@blockframes/e2e/utils/env";
 import { Offer } from '@blockframes/contract/offer/+state';
+import { ContractDocument } from '@blockframes/contract/contract/+state';
 
 const ORG_HOME = '/c/o/organization/';
 const USER_CREDENTIAL_INVITATION = '/auth/identity';
@@ -340,20 +341,15 @@ export function negotiationUpdatedEmail(
 }
 
 //Sent when all the contracts of an offer have either been accepted or declined.
-export function allNegotiationsAcceptedAndOrDeclined(
-  toUser: UserEmailData, offerId: string,
-  title: MovieDocument, contractId: string, options: { isRecipientBuyer: boolean, status: 'accepted' | 'declined' }
+export function offerAcceptedOrDeclined(
+  user: UserEmailData, offer: Offer, contracts: ContractDocument[]
 ): EmailTemplateRequest {
 
-  //implement the functionality to send email to buyer that his offer is completely repsonded to.
   const data = {
-    user: toUser, baseUrl: appUrl.content, offerId,
-    contractId, title, isRecipientBuyer: !!options.isRecipientBuyer
+    contracts, baseUrl: appUrl.content, offer, user
   };
-  let templateId = templateIds.negotiation.accepted;
-  if (options.status === 'declined')
-    templateId = templateIds.negotiation.declined
-  return { to: toUser.email, templateId, data };
+  const templateId = templateIds.offer.allContractsRespondedTo;
+  return { to: user.email, templateId, data };
 }
 
 export function negotiationDeclinedEmail(

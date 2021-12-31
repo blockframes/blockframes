@@ -1,5 +1,5 @@
 import { InvitationDocument, MovieDocument, NotificationDocument, OrganizationDocument, NotificationTypes } from './data/types';
-import { getDocument, getOrgAppKey, createDocumentMeta } from './data/internals';
+import { getDocument, getOrgAppKey, createDocumentMeta, Timestamp } from './data/internals';
 import { NotificationSettingsTemplate, User } from '@blockframes/user/types';
 import { sendMailFromTemplate } from './internals/email';
 import { emailErrorCodes, EventEmailData, getEventEmailData, getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
@@ -25,7 +25,8 @@ import {
   appAccessEmail,
   contractCreatedEmail,
   negotiationCreatedEmail,
-  negotiationUpdatedEmail
+  negotiationUpdatedEmail,
+  offerAcceptedOrDeclined
 } from './templates/mail';
 import { templateIds, groupIds } from '@blockframes/utils/emails/ids';
 import { canAccessModule } from '@blockframes/organization/+state/organization.firestore';
@@ -37,6 +38,8 @@ import { logger } from 'firebase-functions';
 import { NegotiationDocument } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
 import { Offer } from '@blockframes/contract/offer/+state';
 import { ContractDocument } from '@blockframes/contract/contract/+state';
+import { format } from 'date-fns';
+import { movieCurrencies } from '@blockframes/utils/static-model';
 
 
 // @TODO (#2848) forcing to festival since invitations to events are only on this one
@@ -224,6 +227,16 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
         break;
       case 'negotiationDeclined':
         await sendNegotiationDeclinedConfirmation(recipient, notification)
+          .then(() => notification.email.isSent = true)
+          .catch(e => notification.email.error = e.message);
+        break;
+      case 'offerAccepted':
+        await sendOfferAcceptedOrDeclinedConfirmation(recipient, notification)
+          .then(() => notification.email.isSent = true)
+          .catch(e => notification.email.error = e.message);
+        break;
+      case 'offerDeclined':
+        await sendOfferAcceptedOrDeclinedConfirmation(recipient, notification)
           .then(() => notification.email.isSent = true)
           .catch(e => notification.email.error = e.message);
         break;
@@ -508,13 +521,6 @@ async function fetchNegotiationUpdatedEmailData(recipient: User, notification: N
   const path = notification.docPath;
   const contractId = path.split('/')[1]
   const contract = await getDocument<ContractDocument>(`contracts/${contractId}`);
-  // const offer = await getDocument<Offer>(`offers/${contract.offerId}`);
-  const getCollection = admin.firestore().collection('contracts');
-  const contractsSnap = await getCollection.where('offerId', '==', contract.offerId).where('id', '!=', contract.id).get()
-  const contracts = contractsSnap.docs.map(doc => doc.data());
-  contracts.push(contract);
-  const statuses = ['accepted', 'declined'];
-  const hasAllContractsBeenRespondedTo = contracts.every(({status}) => statuses.includes(status));
   const negotiation = await getDocument<NegotiationDocument>(`${path}`);
   const title = await getDocument<MovieDocument>(`movies/${negotiation.titleId}`);
   const app: App = 'catalog';
@@ -523,16 +529,16 @@ async function fetchNegotiationUpdatedEmailData(recipient: User, notification: N
   const toUser = getUserEmailData(recipient);
   return {
     path, contractId, contract, negotiation, title, app,
-    isRecipientBuyer, toUser, contracts, hasAllContractsBeenRespondedTo
-   };
+    isRecipientBuyer, toUser
+  };
 }
 
 /** Send notification to recipient of counter offer */
 async function sendNegotiationAcceptedConfirmation(recipient: User, notification: NotificationDocument) {
   const {
-    contract, title, app, isRecipientBuyer, toUser,
+    contract, title, app, isRecipientBuyer, toUser
   } = await fetchNegotiationUpdatedEmailData(recipient, notification);
-  const config ={ isRecipientBuyer, status:'accepted' } as const;
+  const config = { isRecipientBuyer, status: 'accepted' } as const;
   const template = negotiationUpdatedEmail(toUser, contract.offerId, title, contract.id, config);
   return sendMailFromTemplate(template, app, groupIds.unsubscribeAll);
 }
@@ -540,10 +546,47 @@ async function sendNegotiationAcceptedConfirmation(recipient: User, notification
 /** Send notification to recipient of counter offer */
 async function sendNegotiationDeclinedConfirmation(recipient: User, notification: NotificationDocument) {
   const {
-    contract, title, app, isRecipientBuyer, toUser,
+    contract, title, app, isRecipientBuyer, toUser
   } = await fetchNegotiationUpdatedEmailData(recipient, notification);
-  const config ={ isRecipientBuyer, status:'declined' } as const;
+  const config = { isRecipientBuyer, status: 'declined' } as const;
   const template = negotiationUpdatedEmail(toUser, contract.offerId, title, contract.id, config);
+  return sendMailFromTemplate(template, app, groupIds.unsubscribeAll);
+}
+
+async function sendOfferAcceptedOrDeclinedConfirmation(recipient: User, notification: NotificationDocument) {
+  const offer = await getDocument<Offer>(`offers/${notification.docId}`);
+  const contractsSnap = await admin.firestore().collection('contracts').where('offerId', '==', offer.id).get();
+  const contracts = contractsSnap.docs.map(doc => doc.data() as ContractDocument);
+  const negotiationPromises = contracts.map(async contract => {
+    const ref = admin.firestore().collection(`contracts/${contract.id}/negotiations`)
+      .orderBy('_meta.createdAt', 'desc').limit(1);
+    const negoSnap = await ref.get();
+    return negoSnap.docs[0]?.data() as NegotiationDocument;
+  });
+  const titlePromises = contracts.map(async contract => {
+    return await getDocument<MovieDocument>(`movies/${contract.titleId}`);
+  });
+  const negotiations = await Promise.all(negotiationPromises);
+  const mailNegotiations = negotiations.map(nego => ({
+    ...nego,
+    terms: nego.terms.map(term => ({
+      ...term,
+      duration: {
+        from: format(term.duration.from.toDate(), 'dd MMMM, yyyy'),
+        to: format(term.duration.to.toDate(), 'dd MMMM, yyyy')
+      }
+    }))
+  }))
+  const titles = await Promise.all(titlePromises);
+
+  contracts.forEach((contract, index) => contract['negotiation'] = mailNegotiations[index]);
+  contracts.forEach((contract, index) => contract['title'] = titles[index].title.international);
+  const toUser = getUserEmailData(recipient);
+  const app: App = 'catalog';
+  offer['currency_long'] = movieCurrencies[offer.currency]
+  offer['isOfferAccepted'] = offer.status === 'accepted'
+
+  const template = offerAcceptedOrDeclined(toUser, offer, contracts);
   return sendMailFromTemplate(template, app, groupIds.unsubscribeAll);
 }
 
