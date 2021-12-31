@@ -83,7 +83,6 @@ async function createTerms(contractId: string, negotiation: Negotiation<Timestam
   const promises = terms.map(term => termsCollection.add(term));
   const savedTerms = await Promise.all(promises);
   const ids =  savedTerms.map(datum => datum.id);
-  console.log({ids})
   return ids;
 }
 
