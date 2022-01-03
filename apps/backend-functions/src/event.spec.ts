@@ -34,7 +34,6 @@ describe('Event backend-function unit-tests', () => {
       const orgID = 'O001';
 
       const localEvent: Screening = createScreening({
-        //id: eventID,
         organizerUid: orgID,
         titleId: 'UnitTest Event',
         description: 'Event organised by Jest',
@@ -50,13 +49,26 @@ describe('Event backend-function unit-tests', () => {
         `events/${eventID}`
       );
 
-      //Trigger onEventDeleteEvent event
-      await wrapped(eventSnap);
-
+      //Check documents before event delete
       let collectionRef = await db.collection('invitations')
                                           .where('eventId',  '==', eventID)
                                           .get();
       let queriedDocs = collectionRef.docs;
+      expect(queriedDocs).toHaveLength(2);
+
+      collectionRef = await db.collection('notifications')
+                              .where('docId',  '==', eventID)
+                              .get();
+      queriedDocs = collectionRef.docs;
+      expect(queriedDocs).toHaveLength(1);
+
+      //Trigger onEventDeleteEvent event
+      await wrapped(eventSnap);
+
+      collectionRef = await db.collection('invitations')
+                                          .where('eventId',  '==', eventID)
+                                          .get();
+      queriedDocs = collectionRef.docs;
       expect(queriedDocs).toHaveLength(0);
 
       collectionRef = await db.collection('notifications')

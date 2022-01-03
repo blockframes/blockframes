@@ -76,7 +76,6 @@ describe('Permissions backend-function unit-tests', () => {
         })
       );
 
-      //const docRef = db.doc(`permissions/${orgID}/documentPermissions/${docID}`);
       snap = await docRef.get();
       expect(snap.data()).toBeUndefined();
     });
