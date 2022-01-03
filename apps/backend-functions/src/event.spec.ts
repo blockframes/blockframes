@@ -60,7 +60,7 @@ describe('Event backend-function unit-tests', () => {
       expect(queriedDocs).toHaveLength(0);
 
       collectionRef = await db.collection('notifications')
-                              .where('eventId',  '==', eventID)
+                              .where('docId',  '==', eventID)
                               .get();
       queriedDocs = collectionRef.docs;
       expect(queriedDocs).toHaveLength(0);

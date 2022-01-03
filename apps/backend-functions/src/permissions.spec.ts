@@ -58,7 +58,12 @@ describe('Permissions backend-function unit-tests', () => {
       const docID = 'D001';
       const orgID = 'O001';
 
-      let snap = await db.doc(`permissions/${orgID}`).get();
+      //Check permission document exists
+      const docRef = db.doc(`permissions/${orgID}/documentPermissions/${docID}`);
+      let snap = await docRef.get();
+      expect(snap.data()).toBeDefined();
+
+      snap = await db.doc(`permissions/${orgID}`).get();
 
       // Call the function
       await wrapped(snap, {});
@@ -71,7 +76,7 @@ describe('Permissions backend-function unit-tests', () => {
         })
       );
 
-      const docRef = db.doc(`permissions/${orgID}/documentPermissions/${docID}`);
+      //const docRef = db.doc(`permissions/${orgID}/documentPermissions/${docID}`);
       snap = await docRef.get();
       expect(snap.data()).toBeUndefined();
     });
