@@ -42,7 +42,7 @@
           {{ name | maxLength: 50 }}
         </ng-template>
         <ng-template colRef="status" label="Seller Approved" let-status let-contract="item" sort>
-          <bf-tag>{{ contract.negotiation?.status }}</bf-tag>
+          <bf-tag>{{ contract.negotiation| negotiationStatus | toLabel: 'contractStatus' }}</bf-tag>
         </ng-template>
         <ng-template colRef="negotiation.seller.denomination.public" label="Seller's name" let-name sort>
           {{ name }}

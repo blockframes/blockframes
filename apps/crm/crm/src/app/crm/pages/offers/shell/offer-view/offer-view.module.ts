@@ -21,6 +21,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
+import { NegotiationPipeModule } from '@blockframes/contract/negotiation/pipe';
 
 @NgModule({
   declarations: [OfferViewComponent],
@@ -36,6 +37,7 @@ import { TableModule } from '@blockframes/ui/list/table/table.module';
     MaxLengthModule,
     TagModule,
     ToLabelModule,
+    NegotiationPipeModule,
 
     //Material
     MatSelectModule,
