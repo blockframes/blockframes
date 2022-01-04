@@ -38,7 +38,7 @@ export class ContractFormComponent implements OnInit {
 
   private contracts$ = this.contractService.valueChanges(this.contractId).pipe(
     joinWith({
-      negotiation: () => this.contractService.lastNegotiation(this.contractId)
+      negotiation: () => this.contractService.lastNegotiation(this.contractId, {ignoreStakeholders:true})
     }),
     filter(contract => !!contract.negotiation)
   );

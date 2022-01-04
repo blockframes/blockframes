@@ -30,7 +30,7 @@ export class OffersListComponent {
     return this.contractService.valueChanges(queryContracts).pipe(
       joinWith({
         title: contract => this.titleService.valueChanges(contract.titleId),
-        negotiation: contract => this.contractService.lastNegotiation(contract.id)
+        negotiation: contract => this.contractService.lastNegotiation(contract.id, {ignoreStakeholders:true})
       })
     )
   }
