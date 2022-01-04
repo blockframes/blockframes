@@ -9,23 +9,22 @@ import { map, throttleTime } from "rxjs/operators";
 import { centralOrgId } from '@env';
 import { joinWith } from "@blockframes/utils/operators";
 import { Movie, MovieService } from "@blockframes/movie/+state";
+import { TermService } from "@blockframes/contract/term/+state";
 import { OrganizationQuery } from "@blockframes/organization/+state";
-import { Term, TermService } from "@blockframes/contract/term/+state";
+import { ContractService } from "@blockframes/contract/contract/+state";
 import { AvailsForm } from "@blockframes/contract/avails/form/avails.form";
 import { Income, IncomeService } from "@blockframes/contract/income/+state";
 import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
-import { ContractService, Sale, Mandate } from "@blockframes/contract/contract/+state";
 import { DynamicTitleService } from "@blockframes/utils/dynamic-title/dynamic-title.service";
 import { AvailsFilter, availableTitle, FullSale, FullMandate } from "@blockframes/contract/avails/avails";
 
 interface TotalIncome { EUR: number; USD: number; }
 
-type SaleWithIncomeAndTerms = (Mandate<Date> | Sale<Date>) & { income?: Income; terms?: Term<Date>[]; }
-type MandateWithTerms = (Mandate<Date> | Sale<Date>) & { terms?: Term<Date>[]; }
+type FullSaleWithIncome = FullSale & { income?: Income };
 
 type JoinSaleTitleType = {
-  sales?: SaleWithIncomeAndTerms[],
-  mandates?: MandateWithTerms[],
+  sales?: FullSaleWithIncome[],
+  mandates?: FullMandate[],
   id: string,
   saleCount?: number,
   totalIncome?: TotalIncome,
@@ -41,7 +40,7 @@ const saleQuery = (title: Movie): QueryFn => ref => ref.where('titleId', '==', t
   .where('status', '==', 'accepted');
 
 
-const isCatalogSale = (contract: SaleWithIncomeAndTerms): boolean => contract.sellerId === centralOrgId.catalog && contract.status === 'accepted';
+const isCatalogSale = (sale: FullSaleWithIncome): boolean => sale.sellerId === centralOrgId.catalog && sale.status === 'accepted';
 
 const saleCountAndTotalPrice = (title: JoinSaleTitleType) => {
   const initialTotal: TotalIncome = { EUR: 0, USD: 0 };
@@ -91,7 +90,7 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
       allSaleCount: () => 0,
       totalIncome: () => ({ EUR: 0, USD: 0 }), // used for typings
     }, { shouldAwait: true, }),
-    map(titles => titles.map(saleCountAndTotalPrice)),
+    map(titles => titles.map(t => saleCountAndTotalPrice(t as JoinSaleTitleType))),
   );
 
   public results$ = combineLatest([
@@ -99,9 +98,10 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
     this.availsForm.value$
   ]).pipe(
     map(([titles, avails]) => {
+      if (this.availsForm.invalid) return titles;
+
       return titles.filter(title => {
-        if (this.availsForm.invalid) return true;
-        const availableMandates = availableTitle(avails as AvailsFilter, title.mandates as FullMandate[], title.sales as FullSale[]);
+        const availableMandates = availableTitle(avails, title.mandates, title.sales);
         return availableMandates.length;
       });
     }),

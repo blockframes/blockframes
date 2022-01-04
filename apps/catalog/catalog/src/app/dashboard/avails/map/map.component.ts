@@ -3,13 +3,13 @@ import { ActivatedRoute, Router } from "@angular/router";
 
 import { format } from 'date-fns';
 import { combineLatest, Subscription } from "rxjs";
-import { first, map, startWith, throttleTime } from "rxjs/operators";
+import { first, map, shareReplay, startWith, throttleTime } from "rxjs/operators";
 
 import { medias } from '@blockframes/utils/static-model'
 import { downloadCsvFromJson } from "@blockframes/utils/helpers";
 import { TerritoryValue } from "@blockframes/utils/static-model";
 import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
-import { filterByTitle, MapAvailsFilter, territoryAvailabilities } from "@blockframes/contract/avails/avails";
+import { filterContractsByTitle, MapAvailsFilter, territoryAvailabilities } from "@blockframes/contract/avails/avails";
 
 import { CatalogAvailsShellComponent } from "../shell/shell.component";
 
@@ -51,9 +51,10 @@ export class DashboardAvailsMapComponent implements AfterViewInit, OnDestroy {
   ]).pipe(
     map(([movie, avails, mandates, mandateTerms, sales, salesTerms]) => {
       if (this.availsForm.invalid) return { available: [], sold: [] };
-      const res = filterByTitle(movie.id, mandates, mandateTerms, sales, salesTerms);
+      const res = filterContractsByTitle(movie.id, mandates, mandateTerms, sales, salesTerms);
       return territoryAvailabilities(avails, res.mandates, res.sales);
     }),
+    shareReplay({ bufferSize: 1, refCount: true }),
   );
 
   private hasTerritories$ = this.availabilities$.pipe(

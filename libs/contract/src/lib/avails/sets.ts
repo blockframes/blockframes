@@ -153,6 +153,14 @@ export function someOf(a?: string[] | Range, optional?: 'optional') {
 // ----------------------------
 // SPECIAL EXCLUSIVITY CHECK
 
+/**
+ * Check exclusivity
+ *
+ * |⬇ Mandate \ Avail ➡|Exclusive|Non-Exclusive|
+ * |-|-|-|
+ * |Exclusive|✅|✅|
+ * |Non-Exclusive|❌|✅|
+ */
 export function exclusivityAllOf(availsExclusivity: boolean) {
 
   //                                Avail
@@ -168,6 +176,14 @@ export function exclusivityAllOf(availsExclusivity: boolean) {
   };
 }
 
+/**
+ * Check exclusivity
+ *
+ * |⬇ Sale \ Avail ➡|Exclusive|Non-Exclusive|
+ * |-|-|-|
+ * |Exclusive|✅|✅|
+ * |Non-Exclusive|✅|❌|
+ */
 export function exclusivitySomeOf(availsExclusivity: boolean) {
 
   //                                Avail

@@ -11,7 +11,7 @@ import { MovieQuery } from '@blockframes/movie/+state';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
-import { CalendarAvailsFilter, durationAvailabilities, DurationMarker, filterByTitle } from '@blockframes/contract/avails/avails';
+import { CalendarAvailsFilter, durationAvailabilities, DurationMarker, filterContractsByTitle } from '@blockframes/contract/avails/avails';
 
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
 
@@ -50,7 +50,7 @@ export class MarketplaceMovieAvailsCalendarComponent implements AfterViewInit, O
   ]).pipe(
     map(([avails, mandates, mandateTerms, sales, salesTerms, bucket]) => {
       if (this.availsForm.invalid) return { available: [], sold: [], inBucket: [], selected: undefined };
-      const res = filterByTitle(this.titleId, mandates, mandateTerms, sales, salesTerms, bucket)
+      const res = filterContractsByTitle(this.titleId, mandates, mandateTerms, sales, salesTerms, bucket)
       return durationAvailabilities(avails, res.mandates, res.sales, res.bucketContracts);
     }),
   );

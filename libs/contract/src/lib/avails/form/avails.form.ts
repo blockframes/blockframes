@@ -1,4 +1,4 @@
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormControl, Validators } from '@angular/forms';
 
 import { Territory } from '@blockframes/utils/static-model';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
@@ -6,6 +6,7 @@ import { FormStaticValueArray } from '@blockframes/utils/form/forms/static-value
 import { compareDates, isDateInFuture } from '@blockframes/utils/form/validators/validators';
 
 import { AvailsFilter, BaseAvailsFilter, CalendarAvailsFilter, MapAvailsFilter } from '../avails';
+import { Duration } from '@blockframes/contract/term/+state';
 
 
 function createDurationControl(duration: Partial<{ from: Date, to: Date }> = {}) {
@@ -21,11 +22,20 @@ function createDurationControl(duration: Partial<{ from: Date, to: Date }> = {})
   const fromValidators = [compareDates('from', 'to', 'from'), isDateInFuture, Validators.required];
   const toValidators = [compareDates('from', 'to', 'to'), isDateInFuture, Validators.required];
 
-  return new FormGroup({
+  return {
     from: new FormControl(from, fromValidators),
     to: new FormControl(to, toValidators)
-  });
+  };
 }
+
+type DurationControl = ReturnType<typeof createDurationControl>;
+
+export class DurationForm extends FormEntity<DurationControl, Duration> {
+  constructor(duration: Partial<Duration> = {}) {
+    super(createDurationControl(duration));
+  }
+}
+
 
 function createTerritoriesControl(territories: Territory[] = []) {
   return new FormStaticValueArray<'territories'>(territories, 'territories', [Validators.required]);
@@ -45,11 +55,11 @@ function createBaseAvailControl(avail: Partial<BaseAvailsFilter> = {}) {
 function createMapAvailControl(avail: Partial<MapAvailsFilter> = {}) {
   return {
     ...createBaseAvailControl(avail),
-    duration: createDurationControl(avail.duration),
+    duration: new DurationForm(avail.duration),
   }
 }
 
-export type MapAvailControl = ReturnType<typeof createMapAvailControl>
+export type MapAvailControl = ReturnType<typeof createMapAvailControl>;
 
 export class MapAvailsForm extends FormEntity<MapAvailControl, MapAvailsFilter> {
   constructor(avail: Partial<MapAvailsFilter> = {}) {
@@ -69,7 +79,7 @@ function createCalendarAvailControl(avail: Partial<CalendarAvailsFilter> = {}) {
   }
 }
 
-export type CalendarAvailControl = ReturnType<typeof createCalendarAvailControl>
+export type CalendarAvailControl = ReturnType<typeof createCalendarAvailControl>;
 
 export class CalendarAvailsForm extends FormEntity<CalendarAvailControl, CalendarAvailsFilter> {
   constructor(avail: Partial<CalendarAvailsFilter> = {}) {
@@ -85,11 +95,11 @@ function createAvailControl(avail: Partial<AvailsFilter> = {}) {
   return {
     ...createBaseAvailControl(avail),
     territories: createTerritoriesControl(avail.territories),
-    duration: createDurationControl(avail.duration),
+    duration: new DurationForm(avail.duration),
   }
 }
 
-export type AvailControl = ReturnType<typeof createAvailControl>
+export type AvailControl = ReturnType<typeof createAvailControl>;
 
 export class AvailsForm extends FormEntity<AvailControl, AvailsFilter> {
   constructor(avail: Partial<AvailsFilter> = {}) {

@@ -27,7 +27,7 @@ import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-enc
 import { ContractService, Mandate, Sale } from '@blockframes/contract/contract/+state';
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { AvailsFilter, filterByTitle, availableTitle, FullMandate } from '@blockframes/contract/avails/avails';
+import { AvailsFilter, filterContractsByTitle, availableTitle, FullMandate } from '@blockframes/contract/avails/avails';
 
 @Component({
   selector: 'catalog-marketplace-title-list',
@@ -133,16 +133,14 @@ export class ListComponent implements OnDestroy, OnInit {
       switchMap(async ([_, availsValue, bucketValue, queries]) => [await this.searchForm.search(true), availsValue, bucketValue, queries]),
     ).pipe(
       map(([movies, availsValue, bucketValue, { mandates, mandateTerms, sales, saleTerms }]: [SearchResponse<AlgoliaMovie>, AvailsFilter, Bucket, { mandates: Mandate[], mandateTerms: Term[], sales: Sale[], saleTerms: Term[] }]) => {
-        if (this.availsForm.valid) {
-          if (!mandates.length) return [];
-          return movies.hits.map(movie => {
-            const res = filterByTitle(movie.objectID, mandates, mandateTerms, sales, saleTerms, bucketValue);
-            const availableMandates = availableTitle(availsValue, res.mandates, res.sales, res.bucketContracts);
-            return { ...movie, mandates: availableMandates };
-          }).filter(m => !!m.mandates.length);
-        } else { // if availsForm is invalid, put all the movies from algolia
-          return movies.hits.map(m => ({ ...m, mandates: [] as FullMandate[] }));
-        }
+        // if availsForm is invalid, put all the movies from algolia
+        if (this.availsForm.valid) return movies.hits.map(m => ({ ...m, mandates: [] as FullMandate[] }));
+        if (!mandates.length) return [];
+        return movies.hits.map(movie => {
+          const res = filterContractsByTitle(movie.objectID, mandates, mandateTerms, sales, saleTerms, bucketValue);
+          const availableMandates = availableTitle(availsValue, res.mandates, res.sales, res.bucketContracts);
+          return { ...movie, mandates: availableMandates };
+        }).filter(m => !!m.mandates.length);
       }),
     );
   }

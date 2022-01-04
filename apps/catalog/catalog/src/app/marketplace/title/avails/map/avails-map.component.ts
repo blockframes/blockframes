@@ -2,7 +2,7 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { combineLatest } from 'rxjs';
-import { map, startWith, take, throttleTime } from 'rxjs/operators';
+import { map, shareReplay, startWith, take, throttleTime } from 'rxjs/operators';
 
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -11,7 +11,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { TerritoryValue } from '@blockframes/utils/static-model';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
 import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
-import { AvailableTerritoryMarker, BucketTerritoryMarker, filterByTitle, MapAvailsFilter, territoryAvailabilities } from '@blockframes/contract/avails/avails';
+import { AvailableTerritoryMarker, BucketTerritoryMarker, emptyAvailabilities, filterContractsByTitle, MapAvailsFilter, territoryAvailabilities } from '@blockframes/contract/avails/avails';
 
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
 
@@ -37,7 +37,7 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
   private salesTerms$ = this.shell.salesTerms$;
 
   public availabilities$ = combineLatest([
-    this.availsForm.valueChanges,
+    this.availsForm.value$,
     this.mandates$,
     this.mandateTerms$,
     this.sales$,
@@ -45,10 +45,11 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
     this.shell.bucketForm.value$,
   ]).pipe(
     map(([avails, mandates, mandateTerms, sales, salesTerms, bucket]) => {
-      if (this.availsForm.invalid) return { notLicensed: [], available: [], sold: [], inBucket: [], selected: [] };
-      const res = filterByTitle(this.titleId, mandates, mandateTerms, sales, salesTerms, bucket)
+      if (this.availsForm.invalid) return emptyAvailabilities;
+      const res = filterContractsByTitle(this.titleId, mandates, mandateTerms, sales, salesTerms, bucket)
       return territoryAvailabilities(avails, res.mandates, res.sales, res.bucketContracts);
     }),
+    shareReplay({ bufferSize: 1, refCount: true }),
   );
 
   constructor(

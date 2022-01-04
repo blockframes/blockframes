@@ -19,7 +19,7 @@ export interface FullSale extends Sale {
   terms: Term[];
 }
 
-export function filterByTitle(titleId: string, mandates: Mandate[], mandateTerms: Term[], sales: Sale[], saleTerms: Term[], bucket?: Bucket) {
+export function filterContractsByTitle(titleId: string, mandates: Mandate[], mandateTerms: Term[], sales: Sale[], saleTerms: Term[], bucket?: Bucket) {
 
 
   // Gather only mandates & mandate terms related to this title
@@ -183,6 +183,8 @@ interface MapAvailabilities {
   inBucket: BucketTerritoryMarker[];
   selected: BucketTerritoryMarker[];
 }
+
+export const emptyAvailabilities: MapAvailabilities = { notLicensed: [], available: [], sold: [], inBucket: [], selected: [] };
 
 function isMapTermInAvails<T extends BucketTerm | Term>(term: T, avails: MapAvailsFilter) {
   const exclusivityCheck = exclusivityAllOf(avails.exclusive).in(term.exclusive);
