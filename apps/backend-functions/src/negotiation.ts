@@ -75,14 +75,14 @@ async function createNegotiationUpdateNotification(negotiationSnapshot: Firebase
 async function createTerms(contractId: string, negotiation: Negotiation<Timestamp>) {
   const termsCollection = db.collection('terms');
   const currentTerms = await termsCollection.where('contractId', '==', contractId).get()
-
+  const createTerm = term => termsCollection.doc(term.id).create(term);
   const deletions = currentTerms.docs.map(term => term.ref.delete());
   await Promise.all(deletions);
   const terms = negotiation.terms
     .map(t => ({ ...t, contractId, id: createId() }));
-  const promises = terms.map(term => termsCollection.add(term));
-  const savedTerms = await Promise.all(promises);
-  const ids =  savedTerms.map(datum => datum.id);
+  const promises = terms.map(createTerm);
+  await Promise.all(promises);
+  const ids = terms.map(datum => datum.id);
   return ids;
 }
 
@@ -117,14 +117,14 @@ export async function onNegotiationUpdate(
 
   const { status, declineReason = "" } = after;
 
-  let updates: Partial<Sale> = { declineReason, status }
+  const updates: Partial<Sale> = { declineReason, status }
 
   if (status === 'accepted') {
     const contractSnapshot = await db.doc(`contracts/${contractId}`).get();
     const sale = contractSnapshot.data() as Sale;
     const termIds = await createTerms(contractId, after)
     await createIncome(sale, after)
-    updates = { termIds, status }
+    updates.termIds = termIds;
   }
 
   if (['accepted', 'declined'].includes(status))
