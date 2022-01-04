@@ -3,7 +3,7 @@ import { getDocument } from '@blockframes/firebase-utils';
 import { EmailTemplateRequest, sendMailFromTemplate } from './internals/email';
 import { App } from '@blockframes/utils/apps';
 import { Offer } from '@blockframes/contract/offer/+state/offer.model';
-import { OrganizationDocument } from '@blockframes/organization/+state';
+import { Organization, OrganizationDocument } from '@blockframes/organization/+state';
 import { Movie } from '@blockframes/movie/+state';
 import { appUrl, supportEmails } from '@env';
 import { staticModel } from '@blockframes/utils/static-model';
@@ -11,11 +11,13 @@ import { format } from "date-fns";
 import { User } from '@blockframes/user/types';
 import { createNotification, triggerNotifications } from './notification';
 import { templateIds } from '@blockframes/utils/emails/ids';
+import { Change } from 'firebase-functions';
+import { createDocumentMeta } from './data/internals';
 
 export async function onOfferCreate(snap: FirebaseFirestore.DocumentSnapshot): Promise<void> {
   const offer = snap.data() as Offer;
   const orgId = offer.buyerId;
-  const [ org, bucket ] = await Promise.all([
+  const [org, bucket] = await Promise.all([
     getDocument<OrganizationDocument>(`orgs/${orgId}`),
     getDocument<any>(`buckets/${orgId}`)
   ]);
@@ -58,3 +60,36 @@ export async function onOfferCreate(snap: FirebaseFirestore.DocumentSnapshot): P
   }
   sendMailFromTemplate(request, app);
 }
+
+
+export async function onOfferUpdate(
+  change: Change<FirebaseFirestore.DocumentSnapshot>
+) {
+
+  const before = change.before;
+  const after = change.after;
+
+  if (!before || !after) {
+    throw new Error('Parameter "change" not found');
+  }
+
+  const offerBefore = before.data() as Offer;
+  const offerAfter = after.data() as Offer;
+
+  const statusHasChanged = offerBefore.status !== offerAfter.status
+  const offerDeclinedOrAccepted = ['accepted', 'declined'].includes(offerAfter.status);
+  if (statusHasChanged && offerDeclinedOrAccepted) {
+    //Buyer Notifications.
+    const getNotifications = (org: Organization) => org.userIds.map(userId => createNotification({
+      toUserId: userId,
+      type: offerAfter.status === 'accepted' ? 'offerAccepted' : 'offerDeclined',
+      docId: offerAfter.id,
+      _meta: createDocumentMeta({ createdFrom: 'catalog' })
+    }));
+
+    getDocument<Organization>(`orgs/${offerAfter.buyerId}`)
+      .then(getNotifications)
+      .then(triggerNotifications);
+  }
+}
+

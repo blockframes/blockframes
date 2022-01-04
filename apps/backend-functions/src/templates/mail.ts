@@ -13,6 +13,8 @@ import { App, appName, Module } from '@blockframes/utils/apps';
 import { Bucket } from '@blockframes/contract/bucket/+state/bucket.model';
 import { format } from "date-fns";
 import { testEmail } from "@blockframes/e2e/utils/env";
+import { Offer } from '@blockframes/contract/offer/+state';
+import { ContractDocument } from '@blockframes/contract/contract/+state';
 
 const ORG_HOME = '/c/o/organization/';
 const USER_CREDENTIAL_INVITATION = '/auth/identity';
@@ -311,6 +313,54 @@ export function offerCreatedConfirmationEmail(toUser: UserEmailData, org: Organi
   const date = format(new Date(), 'dd MMMM, yyyy');
   const data = { org, bucket, user: toUser, baseUrl: appUrl.content, date };
   return { to: toUser.email, templateId: templateIds.offer.created, data };
+}
+
+export function negotiationCreatedEmail(
+  toUser: UserEmailData, creatorOrg: OrganizationDocument, offerId: string,
+  title: MovieDocument, contractId: string, options?: { isRecipientBuyer: boolean }
+): EmailTemplateRequest {
+  const data = {
+    user: toUser, baseUrl: appUrl.content, offerId, creatorOrg,
+    contractId, title, isRecipientBuyer: !!options?.isRecipientBuyer
+  };
+  return { to: toUser.email, templateId: templateIds.negotiation.created, data };
+}
+
+export function negotiationUpdatedEmail(
+  toUser: UserEmailData, offerId: string,
+  title: MovieDocument, contractId: string, options: { isRecipientBuyer: boolean, status: 'accepted' | 'declined' }
+): EmailTemplateRequest {
+  const data = {
+    user: toUser, baseUrl: appUrl.content, offerId,
+    contractId, title, isRecipientBuyer: !!options.isRecipientBuyer
+  };
+  let templateId = templateIds.negotiation.accepted;
+  if (options.status === 'declined')
+    templateId = templateIds.negotiation.declined
+  return { to: toUser.email, templateId, data };
+}
+
+//Sent when all the contracts of an offer have either been accepted or declined.
+export function offerAcceptedOrDeclined(
+  user: UserEmailData, offer: Offer, contracts: ContractDocument[]
+): EmailTemplateRequest {
+
+  const data = {
+    contracts, baseUrl: appUrl.content, offer, user
+  };
+  const templateId = templateIds.offer.allContractsRespondedTo;
+  return { to: user.email, templateId, data };
+}
+
+export function negotiationDeclinedEmail(
+  toUser: UserEmailData, offerId: string,
+  title: MovieDocument, contractId: string, options?: { isRecipientBuyer: boolean }
+): EmailTemplateRequest {
+  const data = {
+    user: toUser, baseUrl: appUrl.content, offerId,
+    contractId, title, isRecipientBuyer: !!options?.isRecipientBuyer
+  };
+  return { to: toUser.email, templateId: templateIds.negotiation.declined, data };
 }
 
 // ------------------------- //

@@ -67,10 +67,16 @@ export const templateIds = {
     accepted: 'd-bfcf2760bcb7484ab55f864a59331d26'
   },
   offer: {
-    created: 'd-94a20b20085842f68fb2d64fe325638a'
+    created: 'd-94a20b20085842f68fb2d64fe325638a',
+    allContractsRespondedTo:'d-4f067ef3abca42cc9d8dc25b57935ccc',
   },
   contract: {
     created: 'd-f7c2e13b7d6b427daf08bdfdf904d697'
+  },
+  negotiation: {
+    created: 'd-4a75e445693044cba38d0db73c42c042',
+    accepted:'d-5f45ee1375c04ddba84e6dd60664a689',
+    declined:'d-15f6060b1f9a42d1885aa3b4c73e9f1d',
   }
 }
 

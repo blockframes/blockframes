@@ -25,12 +25,12 @@ import { eventWebhook as sendgridEventWebhook } from './sendgrid';
 import { hotConfig, heavyConfig, superHeavyConfig } from '@blockframes/firebase-utils';
 import { onNotificationCreate } from './notification';
 import { importAnalytics } from './pubsub/daily-analytics-import';
-import { onOfferCreate } from './offer';
+import { onOfferCreate, onOfferUpdate } from './offer';
 import { onContractCreate, onContractDelete, onContractUpdate } from './contracts';
 import { onTermDelete } from './terms';
 import { downloadVideo } from './rescue';
 import { createPdf as _createPdf } from './createPdf';
-import { onNegotiationUpdate } from './negotiation';
+import { onNegotiationCreated, onNegotiationUpdate } from './negotiation';
 
 console.log('Function instance loaded');
 
@@ -212,6 +212,7 @@ export const sendNotificationEmails = onDocumentCreate('notifications/{notifID}'
 //--------------------------------
 
 export const onOfferCreateEvent = onDocumentCreate('offers/{offerId}', onOfferCreate);
+export const onOfferUpdateEvent = onDocumentUpdate('offers/{offerId}', onOfferUpdate);
 
 //--------------------------------
 //       Orgs Management        //
@@ -269,6 +270,7 @@ export const onTermDeleteEvent = onDocumentDelete('terms/{termId}', onTermDelete
 //--------------------------------
 
 export const onNegotiationUpdateEvent = onDocumentUpdate('contracts/{contractId}/negotiations/{negotiationId}', onNegotiationUpdate);
+export const onNegotiationCreateEvent = onDocumentCreate('contracts/{contractId}/negotiations/{negotiationId}', onNegotiationCreated);
 
 //--------------------------------
 //          JWP RESCUE          //
