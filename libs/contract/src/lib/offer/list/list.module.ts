@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-import { ListComponent } from './list.component';
+import { ConcatTitlePipeModule, ListComponent } from './list.component';
 
 // Blockframes
 import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe'
@@ -42,6 +42,7 @@ import { RouterModule } from '@angular/router';
     ImageModule,
     TagModule,
     RouterModule.forChild([]),
+    ConcatTitlePipeModule,
 
     // Material
     MatButtonModule,
