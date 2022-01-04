@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, ChangeDetectionStrategy, OnDestroy, AfterViewInit } from '@angular/core';
 
-import { delay, filter, map, skip, switchMap } from 'rxjs/operators';
+import { delay, filter, map, skip, startWith, switchMap, tap } from 'rxjs/operators';
 import { combineLatest, of, ReplaySubject, Subscription } from 'rxjs';
 
 import { FormList } from '@blockframes/utils/form';
@@ -65,14 +65,6 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
 
   /** Selected terms in the local bucket form, those where available terms that have been selected by the user */
   public terms$ = this.bucketForm.selectTerms(this.movie.id);
-
-  public termsInvalid$ = this.terms$.pipe(
-    switchMap(terms => {
-      return combineLatest(
-        terms.map(term => term.valueChanges.pipe(map(() => term.invalid)))
-      ).pipe(map(termInvalidStates => termInvalidStates.some(state => state)))
-    })
-  );
 
   public holdbacks: Holdback[] = [];
 

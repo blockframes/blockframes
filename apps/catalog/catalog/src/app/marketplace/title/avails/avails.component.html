@@ -111,7 +111,7 @@
     <button mat-stroked-button color="primary" class="mat-body-2" (click)="clear()">
       Search for new Terms and Rights
     </button>
-    <button mat-flat-button color="primary" class="mat-body-2" (click)="addToSelection()" [disabled]="termsInvalid$|async">
+    <button mat-flat-button color="primary" class="mat-body-2" (click)="addToSelection()" [disabled]="bucketForm.invalid">
       <span>Add to Selection</span>
       <mat-icon svgIcon="arrow_forward"></mat-icon>
     </button>
