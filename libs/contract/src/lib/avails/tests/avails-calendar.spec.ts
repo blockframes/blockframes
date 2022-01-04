@@ -34,30 +34,32 @@ describe('Calendar', () => {
     });
 
     it('Test dateToMatrixPosition', () => {
+      const currentYear = new Date().getFullYear();
+
       const dateA = new Date('01/04/2028');
       const posA = dateToMatrixPosition(dateA);
 
-      expect(posA.row).toEqual(7);
+      expect(posA.row).toEqual(dateA.getFullYear() - currentYear);
       expect(posA.column).toEqual(0);
 
       const dateB = new Date('12/30/2025');
       const posB = dateToMatrixPosition(dateB);
 
-      expect(posB.row).toEqual(4);
+      expect(posB.row).toEqual(dateB.getFullYear() - currentYear);
       expect(posB.column).toEqual(11);
 
       // One month after posB but new year, should go to next row
       const dateC = new Date('01/25/2026');
       const posC = dateToMatrixPosition(dateC);
 
-      expect(posC.row).toEqual(5);
+      expect(posC.row).toEqual(dateC.getFullYear() - currentYear);
       expect(posC.column).toEqual(0);
 
       // One month after posC but same year, should go to new column
       const dateD = new Date('02/25/2026');
       const posD = dateToMatrixPosition(dateD);
 
-      expect(posD.row).toEqual(5);
+      expect(posD.row).toEqual(dateD.getFullYear() - currentYear);
       expect(posD.column).toEqual(1);
     });
 
@@ -95,6 +97,8 @@ describe('Calendar', () => {
     });
 
     it('Test markersToMatrix', () => {
+      const offset = new Date('12/30/2025').getFullYear() - new Date().getFullYear();
+
       const markers: DurationMarker[] = [];
       markers.push({ from: new Date('12/30/2025'), to: new Date('12/30/2026') });
 
@@ -104,12 +108,12 @@ describe('Calendar', () => {
 
       stateMatrix = markersToMatrix(markers, stateMatrix, 'available');
 
-      expect(stateMatrix[4][10]).toBe('empty');
-      expect(stateMatrix[4][11]).toBe('available');
-      expect(stateMatrix[5].filter(s => s === 'available').length).toBe(12);
-      expect(stateMatrix[6].filter(s => s === 'empty').length).toBe(12);
-      expect(stateMatrix[7].filter(s => s === 'empty').length).toBe(11);
-      expect(stateMatrix[7][9]).toBe('available');
+      expect(stateMatrix[0 + offset][10]).toBe('empty');
+      expect(stateMatrix[0 + offset][11]).toBe('available');
+      expect(stateMatrix[1 + offset].filter(s => s === 'available').length).toBe(12);
+      expect(stateMatrix[2 + offset].filter(s => s === 'empty').length).toBe(12);
+      expect(stateMatrix[3 + offset].filter(s => s === 'empty').length).toBe(11);
+      expect(stateMatrix[3 + offset][9]).toBe('available');
     });
 
     it('Test select', () => {
