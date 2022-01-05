@@ -5,17 +5,17 @@ import {
   OnDestroy,
   AfterViewInit,
 } from '@angular/core';
-import { Observable, BehaviorSubject, Subscription } from 'rxjs';
-import { Movie } from '@blockframes/movie/+state';
-import { MovieSearchForm, createMovieSearch, MovieSearch } from '@blockframes/movie/form/search.form';
-import { debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap } from 'rxjs/operators';
-import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { StoreStatus } from '@blockframes/utils/static-model/types';
-import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Observable, BehaviorSubject, Subscription } from 'rxjs';
+import { debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap } from 'rxjs/operators';
+
 import { PdfService } from '@blockframes/utils/pdf/pdf.service';
+import { StoreStatus } from '@blockframes/utils/static-model/types';
 import { AlgoliaMovie } from '@blockframes/utils/algolia/algolia.interfaces';
+import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { MovieSearchForm, createMovieSearch, MovieSearch } from '@blockframes/movie/form/search.form';
 
 @Component({
   selector: 'festival-marketplace-title-list',
@@ -25,9 +25,9 @@ import { AlgoliaMovie } from '@blockframes/utils/algolia/algolia.interfaces';
 })
 export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
 
-  private movieResultsState = new BehaviorSubject<Movie[]>(null);
+  private movieResultsState = new BehaviorSubject<AlgoliaMovie[]>(null);
 
-  public movies$: Observable<Movie[]>;
+  public movies$: Observable<AlgoliaMovie[]>;
   public storeStatus: StoreStatus = 'accepted';
   public searchForm = new MovieSearchForm('festival', this.storeStatus);
   public exporting = false;

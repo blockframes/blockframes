@@ -11,7 +11,7 @@ export const appUrl = {
   content: 'https://blockframes-pl-2.web.app',
   market: 'https://blockframes-pl-2.web.app',
   financiers: 'https://blockframes-pl-2.web.app',
-  crm: 'https://blockframes-pl-2.web.app',
+  crm: 'https://blockframes-pl-2-crm.web.app',
 }
 
 const firebaseConfig = {

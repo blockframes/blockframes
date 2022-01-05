@@ -1,4 +1,4 @@
-import { AvailsFilter } from "./../avails";
+import { AvailsFilter } from "../avails";
 
 export const availDetailsExclusive: AvailsFilter = {
   duration: {
