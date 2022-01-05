@@ -1,4 +1,8 @@
 <ng-container *ngIf="offer$ | async as offer">
+  <a mat-icon-button routerLink="..">
+    <mat-icon svgIcon="arrow_back"></mat-icon>
+    <span>BACK TO CONTRACTS</span>
+  </a>
   <ng-container *ngIf="contract$ | async as contract">
     <section class="surface" fxLayout="column" fxLayoutGap="16px">
       <ng-container *ngIf="contract.seller as seller">
@@ -8,11 +12,11 @@
         </div>
       </ng-container>
       <form [formGroup]="form" fxLayout="row" fxLayoutGap="16px">
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" *ngIf="statuses$|async as statuses">
           <mat-label>Seller's approval for a title.</mat-label>
           <mat-select formControlName="status">
-            <mat-option *ngFor="let value of status" [value]="value">
-              {{statuses[value]}}
+            <mat-option *ngFor="let value of status" [value]="value" [disabled]="statuses[value].disabled">
+              {{statuses[value].label}}
             </mat-option>
           </mat-select>
         </mat-form-field>
