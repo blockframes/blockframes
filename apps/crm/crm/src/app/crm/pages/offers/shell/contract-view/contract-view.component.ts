@@ -5,8 +5,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
+import { isInitial } from '@blockframes/contract/negotiation/utils'
 import { filter, map, pluck } from 'rxjs/operators';
-import { combineLatest, Subscription } from 'rxjs';
+import { combineLatest, of, Subscription } from 'rxjs';
 
 import { IncomeService } from '@blockframes/contract/income/+state';
 import { Term } from '@blockframes/contract/term/+state';
@@ -25,14 +26,8 @@ import { NegotiationService } from '@blockframes/contract/negotiation/+state/neg
 })
 export class ContractViewComponent implements OnInit, OnDestroy {
 
-  status = contractStatus;
-  statuses = {
-    pending: 'New',
-    accepted: 'Accepted',
-    declined: 'Declined',
-    negotiating: 'Negotiating',
-    archived: 'Archived'
-  };
+  status= contractStatus;
+
 
   offer$ = this.shell.offer$;
   contract$ = combineLatest([
@@ -45,6 +40,41 @@ export class ContractViewComponent implements OnInit, OnDestroy {
     }),
     filter(contract => !!contract),
   );
+  statuses = {
+    pending: {
+      label: 'Pending ( Displayed as New )',
+      disabled: false,
+    },
+    accepted: {
+      label: 'Accepted',
+      disabled: false,
+    },
+    declined: {
+      label: 'Declined',
+      disabled: false,
+    },
+    negotiating: {
+      label: 'Negotiating',
+      disabled: false,
+    },
+  };
+  statuses$ = combineLatest([
+    of(this.statuses),
+    this.contract$
+  ])
+    .pipe(
+      map(([statuses, contract]) => {
+        if (!contract.negotiation?.price) {
+          statuses.accepted.disabled = true;
+          statuses.accepted.label = 'Accepted ( Contract has no Price )';
+        }
+        if (contract.status === 'pending')
+          statuses.negotiating.disabled = true;
+        else
+          statuses.pending.disabled = true;
+        return statuses;
+      })
+    )
 
   form = new FormGroup({
     status: new FormControl('pending')
