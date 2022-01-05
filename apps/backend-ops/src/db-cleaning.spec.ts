@@ -20,7 +20,7 @@ import { every } from 'lodash';
 import { loadAdminServices } from '@blockframes/firebase-utils';
 import { removeUnexpectedUsers } from './users';
 import { getCollectionRef } from '@blockframes/firebase-utils';
-import { clearFirestoreData } from '@firebase/testing';
+import { clearFirestoreData } from '@firebase/rules-unit-testing';
 import { getAllAppsExcept } from '@blockframes/utils/apps';
 import { PublicUser } from '@blockframes/user/+state';
 

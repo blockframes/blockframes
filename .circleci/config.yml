@@ -146,13 +146,17 @@ commands:
     description: 'Build & deploy project & prepare by loading live online test data'
     steps:
       - deploy
-      - run: npm start prepareForTesting
+      - run:
+          command: npm run backend-ops prepareForTesting
+          no_output_timeout: 30m
       - slack/status
   build_deploy_prepare_shrunkdb:
     description: 'Build & deploy project & prepare by loading live online shurnk test data'
     steps:
       - deploy
-      - run: npm start prepareForTesting gs://ci-backups-blockframes/LATEST-ANON-SHRINKED-DB
+      - run:
+          command: npm run backend-ops prepareForTesting gs://ci-backups-blockframes/LATEST-ANON-SHRINKED-DB
+          no_output_timeout: 30m
       - slack/status
   test_e2e_all:
     description: 'Run all e2e tests sequentially against non-emulated services (online)'
@@ -276,7 +280,9 @@ jobs:
       - run: echo "export PROJECT_ID=\"$(cut -d'/' -f2\<<<$CIRCLE_BRANCH)\"" >> $BASH_ENV
       - fail_on_production
       - select_environment
-      - run: npm run backend-ops prepareForTesting
+      - run:
+          command: npm run backend-ops prepareForTesting
+          no_output_timeout: 30m
       - slack/status
       - slack/notify:
           message: 'Deploy and PFT complete for << pipeline.git.branch >>'
@@ -423,7 +429,9 @@ jobs:
     executor: blockframes-ci
     steps:
       - prepare_environment
-      - run: npm start prepareEmulators gs://ci-backups-blockframes/LATEST-ANON-SHRINKED-DB
+      - run:
+          command: npm start prepareEmulators gs://ci-backups-blockframes/LATEST-ANON-SHRINKED-DB
+          no_output_timeout: 30m
       # ? - run: npx nx build backend-functions --configuration=e2e
       - save_cache:
           key: emulator-cache-v1-{{ epoch }}
