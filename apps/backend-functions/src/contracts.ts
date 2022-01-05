@@ -5,7 +5,12 @@ import { Offer } from '@blockframes/contract/offer/+state';
 import { centralOrgId } from '@env'
 import { Organization } from '@blockframes/organization/+state';
 import { createNotification, triggerNotifications } from './notification';
-import { getDocument, createDocumentMeta } from './data/internals';
+import { createDocumentMeta, getDocument, Timestamp } from './data/internals';
+import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
+
+function createId() {
+  return db.collection('_').doc().id;
+}
 
 export async function onContractDelete(contractSnapshot: FirebaseFirestore.DocumentSnapshot<Contract>) {
 
@@ -65,6 +70,38 @@ export async function onContractCreate(contractSnapshot: FirebaseFirestore.Docum
 }
 
 
+async function deleteCurrentTerms(ref: FirebaseFirestore.Query) {
+  const currentTerms = await ref.get()
+  const deletions = currentTerms.docs.map(term => term.ref.delete());
+  return Promise.all(deletions);
+}
+async function createTerms(contractId: string, negotiation: Negotiation<Timestamp>, tx: FirebaseFirestore.Transaction) {
+  const termsCollection = db.collection('terms');
+  const terms = negotiation.terms
+    .map(t => ({ ...t, contractId, id: createId() }));
+
+  const createTerm = term => tx.create(termsCollection.doc(term.id), term);
+  const promises = terms.map(createTerm);
+  await Promise.all(promises);
+  const ids = terms.map(datum => datum.id);
+  return ids;
+}
+
+async function deleteCurrentIncome(doc: FirebaseFirestore.DocumentReference) {
+  return doc.delete();
+}
+async function createIncome(sale: Sale, negotiation: Negotiation<Timestamp>, tx: FirebaseFirestore.Transaction) {
+  const doc = db.doc(`incomes/${sale.id}`);
+  return tx.set(doc, {
+    status: 'pending',
+    termsId: sale.parentTermId,
+    price: negotiation.price,
+    currency: negotiation.currency,
+    offerId: sale.offerId
+  });
+}
+
+
 export async function onContractUpdate(
   change: Change<FirebaseFirestore.DocumentSnapshot>
 ) {
@@ -82,31 +119,50 @@ export async function onContractUpdate(
   // KEEP THE OFFER STATUS IN SYNC WITH IT'S CONTRACTS
   const isSale = contractBefore.type === contractAfter.type && contractBefore.type === 'sale' // contract is of type 'sale'
   const statusHasChanged = contractBefore.status !== contractAfter.status // contract status has changed
+  const { status, id } = contractAfter;
 
   if (isSale && statusHasChanged) {
+    db.runTransaction(async tx => {
+      const offerRef = db.doc(`offers/${contractAfter.offerId}`);
+      const offer = await tx.get(offerRef).then(snap => snap.data()) as Offer;
 
-    const offerRef = db.doc(`offers/${contractAfter.offerId}`);
-    const offerSnap = await offerRef.get();
-    const offer = offerSnap.data() as Offer;
+      if (offer.status === 'signed' || offer.status === 'signing') return
 
-    if (offer.status === 'signed' || offer.status === 'signing') return
+      const offerContractsQuery = db.collection('contracts')
+        .where('offerId', '==', contractAfter.offerId)
+        .where('type', '==', 'sale');
+      const offerContractsSnap = await tx.get(offerContractsQuery);
 
-    const offerContractsQuery = db.collection('contracts')
-      .where('offerId', '==', contractAfter.offerId)
-      .where('type', '==', 'sale');
-    const offerContractsSnap = await offerContractsQuery.get();
+      const contractsStatus: ContractStatus[] = offerContractsSnap.docs.map(doc => doc.data().status);
 
-    const contractsStatus: ContractStatus[] = offerContractsSnap.docs.map(doc => doc.data().status);
+      let newOfferStatus = offer.status;
+      const negotiatingStatuses = ['negotiating', 'accepted', 'declined'];
+      const acceptedStatuses = ['accepted', 'declined'];
+      newOfferStatus = contractsStatus.some(status => negotiatingStatuses.includes(status)) ? 'negotiating' : newOfferStatus;
+      newOfferStatus = contractsStatus.every(status => acceptedStatuses.includes(status)) ? 'accepted' : newOfferStatus;
+      newOfferStatus = contractsStatus.every(status => status === 'declined') ? 'declined' : newOfferStatus;
+      newOfferStatus = contractsStatus.every(status => status === 'pending') ? 'pending' : newOfferStatus;
 
-    let newOfferStatus = offer.status;
-    const negotiatingStatuses = ['negotiating', 'accepted', 'declined'];
-    const acceptedStatuses = ['accepted', 'declined'];
-    newOfferStatus = contractsStatus.some(status => negotiatingStatuses.includes(status)) ? 'negotiating' : newOfferStatus;
-    newOfferStatus = contractsStatus.every(status => acceptedStatuses.includes(status)) ? 'accepted' : newOfferStatus;
-    newOfferStatus = contractsStatus.every(status => status === 'declined') ? 'declined' : newOfferStatus;
-    newOfferStatus = contractsStatus.every(status => status === 'pending') ? 'pending' : newOfferStatus;
+      if (newOfferStatus === offer.status) return;
+      await tx.update(offerRef, { status: newOfferStatus });
+    })
+    const saleRef = change.after.ref;
+    const negotiationRef = saleRef.collection('negotiations').orderBy('_meta.createdAt', 'desc').limit(1);
+    const incomeDoc = db.doc(`incomes/${saleRef.id}`);
+    const termsCollection = db.collection('terms').where('contractId', '==', saleRef.id);
 
-    if (newOfferStatus === offer.status) return;
-    offerRef.update({ status: newOfferStatus });
+    deleteCurrentIncome(incomeDoc);
+    await deleteCurrentTerms(termsCollection);
+
+    if (status === 'accepted') {
+      db.runTransaction(async tx => {
+        const negotiation = await tx.get(negotiationRef)
+          .then(snap => snap.docs[0].data()) as Negotiation<Timestamp>;
+
+        const termIds = await createTerms(id, negotiation, tx);
+        await createIncome(contractAfter as Sale, negotiation, tx);
+        await tx.update(saleRef, { termIds });
+      })
+    }
   }
 }
