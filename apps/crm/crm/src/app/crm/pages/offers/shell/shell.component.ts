@@ -60,7 +60,7 @@ export class OfferShellComponent {
       joinWith({
         negotiation: contract => {
           if (!contract) return null;
-          return this.contractService.lastNegotiation(contract.id, { ignoreStakeholders: true }).pipe(
+          return this.contractService.adminLastNegotiation(contract.id).pipe(
             joinWith({
               title: (nego) => this.titleService.valueChanges(nego.titleId),
               seller: (nego) => {

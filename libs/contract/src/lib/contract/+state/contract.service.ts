@@ -42,13 +42,20 @@ export class ContractService extends CollectionService<ContractState> {
   }
 
   /** Return the last negotiation of the contractId */
-  lastNegotiation(contractId: string, option: { ignoreStakeholders: boolean } = { ignoreStakeholders: false }) {
+  lastNegotiation(contractId: string) {
     const options = { params: { contractId } };
     const orgId = this.orgQuery.getActiveId();
-    let query: QueryFn = ref => ref.where('stakeholders', 'array-contains', orgId).orderBy('_meta.createdAt', 'desc').limit(1);
-    //to be used in the crm as the crm admin's org isn't part of the stakeholders
-    if (option.ignoreStakeholders)
-      query = ref => ref.orderBy('_meta.createdAt', 'desc').limit(1);
+    const query: QueryFn = ref => ref.where('stakeholders', 'array-contains', orgId).orderBy('_meta.createdAt', 'desc').limit(1);
+    return this.negotiationService.valueChanges(query, options).pipe(
+      map(negotiations => negotiations[0])
+    );
+  }
+
+
+  //used exclusively in the crm
+  adminLastNegotiation(contractId: string) {
+    const options = { params: { contractId } };
+    const query = ref => ref.orderBy('_meta.createdAt', 'desc').limit(1);
     return this.negotiationService.valueChanges(query, options).pipe(
       map(negotiations => negotiations[0])
     );

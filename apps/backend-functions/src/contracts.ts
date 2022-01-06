@@ -7,10 +7,8 @@ import { Organization } from '@blockframes/organization/+state';
 import { createNotification, triggerNotifications } from './notification';
 import { createDocumentMeta, getDocument, Timestamp } from './data/internals';
 import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
+import { createId } from './utils';
 
-function createId() {
-  return db.collection('_').doc().id;
-}
 
 export async function onContractDelete(contractSnapshot: FirebaseFirestore.DocumentSnapshot<Contract>) {
 
@@ -81,15 +79,10 @@ async function createTerms(contractId: string, negotiation: Negotiation<Timestam
     .map(t => ({ ...t, contractId, id: createId() }));
 
   const createTerm = term => tx.create(termsCollection.doc(term.id), term);
-  const promises = terms.map(createTerm);
-  await Promise.all(promises);
-  const ids = terms.map(datum => datum.id);
-  return ids;
+  await Promise.all(terms.map(createTerm));
+  return terms.map(datum => datum.id);
 }
 
-async function deleteCurrentIncome(doc: FirebaseFirestore.DocumentReference) {
-  return doc.delete();
-}
 async function createIncome(sale: Sale, negotiation: Negotiation<Timestamp>, tx: FirebaseFirestore.Transaction) {
   const doc = db.doc(`incomes/${sale.id}`);
   return tx.set(doc, {
@@ -151,8 +144,7 @@ export async function onContractUpdate(
     const incomeDoc = db.doc(`incomes/${saleRef.id}`);
     const termsCollection = db.collection('terms').where('contractId', '==', saleRef.id);
 
-    deleteCurrentIncome(incomeDoc);
-    await deleteCurrentTerms(termsCollection);
+    await Promise.all([incomeDoc.delete(), deleteCurrentTerms(termsCollection)]);
 
     if (status === 'accepted') {
       db.runTransaction(async tx => {
