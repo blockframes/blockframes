@@ -1,7 +1,5 @@
-
 import { Firestore } from '../types';
 import { runChunks } from '../firebase-utils';
-import { createBucket } from '@blockframes/contract/bucket/+state/bucket.model';
 import { createUser } from '@blockframes/auth/+state';
 import { createOrganization } from '@blockframes/organization/+state';
 
@@ -37,7 +35,7 @@ export async function upgrade(db: Firestore) {
   ]);
   
   await runChunks(buckets.docs, async (doc) => {
-    const bucket = createBucket(doc.data());
+    const bucket = doc.data();
     const original = JSON.stringify(bucket);
 
     bucket.contracts = bucket.contracts.map(contract => {
