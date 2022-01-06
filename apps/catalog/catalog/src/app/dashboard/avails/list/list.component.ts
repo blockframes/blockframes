@@ -1,28 +1,30 @@
+
 import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, OnInit } from "@angular/core";
-import { QueryFn } from "@angular/fire/firestore";
-import { AvailsForm } from "@blockframes/contract/avails/form/avails.form";
-import { ContractService, Sale, Mandate } from "@blockframes/contract/contract/+state";
-import { Income, IncomeService } from "@blockframes/contract/income/+state";
-import { Movie, MovieService } from "@blockframes/movie/+state";
-import { OrganizationQuery } from "@blockframes/organization/+state";
-import { DynamicTitleService } from "@blockframes/utils/dynamic-title/dynamic-title.service";
-import { joinWith } from "@blockframes/utils/operators";
-import { map, throttleTime } from "rxjs/operators";
-import { centralOrgId } from '@env';
-import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
 import { ActivatedRoute, Router } from "@angular/router";
-import { AvailsFilter, filterDashboardAvails } from "@blockframes/contract/avails/avails";
+import { QueryFn } from "@angular/fire/firestore";
+
 import { combineLatest, Subscription } from "rxjs";
-import { Term, TermService } from "@blockframes/contract/term/+state";
+import { map, throttleTime } from "rxjs/operators";
+
+import { centralOrgId } from '@env';
+import { joinWith } from "@blockframes/utils/operators";
+import { Movie, MovieService } from "@blockframes/movie/+state";
+import { TermService } from "@blockframes/contract/term/+state";
+import { OrganizationQuery } from "@blockframes/organization/+state";
+import { ContractService } from "@blockframes/contract/contract/+state";
+import { AvailsForm } from "@blockframes/contract/avails/form/avails.form";
+import { Income, IncomeService } from "@blockframes/contract/income/+state";
+import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
+import { DynamicTitleService } from "@blockframes/utils/dynamic-title/dynamic-title.service";
+import { AvailsFilter, availableTitle, FullSale, FullMandate } from "@blockframes/contract/avails/avails";
 
 interface TotalIncome { EUR: number; USD: number; }
 
-type SaleWithIncomeAndTerms = (Mandate<Date> | Sale<Date>) & { income?: Income; terms?: Term<Date>[]; }
-type MandateWithTerms = (Mandate<Date> | Sale<Date>) & { terms?: Term<Date>[]; }
+type FullSaleWithIncome = FullSale & { income?: Income };
 
 type JoinSaleTitleType = {
-  sales?: SaleWithIncomeAndTerms[],
-  mandates?: MandateWithTerms[],
+  sales?: FullSaleWithIncome[],
+  mandates?: FullMandate[],
   id: string,
   saleCount?: number,
   totalIncome?: TotalIncome,
@@ -30,7 +32,6 @@ type JoinSaleTitleType = {
 }
 
 const organizationQuery = (orgId: string): QueryFn => ref => ref.where('orgIds', 'array-contains', orgId);
-// We need the mandates to compute isMovieAvailable
 const mandateQuery = (title: Movie): QueryFn => ref => ref.where('titleId', '==', title.id)
   .where('type', '==', 'mandate')
   .where('status', '==', 'accepted');
@@ -39,7 +40,7 @@ const saleQuery = (title: Movie): QueryFn => ref => ref.where('titleId', '==', t
   .where('status', '==', 'accepted');
 
 
-const isCatalogSale = (contract: SaleWithIncomeAndTerms): boolean => contract.sellerId === centralOrgId.catalog && contract.status === 'accepted';
+const isCatalogSale = (sale: FullSaleWithIncome): boolean => sale.sellerId === centralOrgId.catalog && sale.status === 'accepted';
 
 const saleCountAndTotalPrice = (title: JoinSaleTitleType) => {
   const initialTotal: TotalIncome = { EUR: 0, USD: 0 };
@@ -60,8 +61,7 @@ const saleCountAndTotalPrice = (title: JoinSaleTitleType) => {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnInit {
-  // @todo(#7139) remove default duration value once issue is solved
-  public availsForm = new AvailsForm({ duration: { from: null, to: null } }, []);
+  public availsForm = new AvailsForm();
   private orgId = this.orgQuery.getActiveId();
   private sub: Subscription;
 
@@ -90,7 +90,7 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
       allSaleCount: () => 0,
       totalIncome: () => ({ EUR: 0, USD: 0 }), // used for typings
     }, { shouldAwait: true, }),
-    map(titles => titles.map(saleCountAndTotalPrice)),
+    map(titles => titles.map(t => saleCountAndTotalPrice(t as JoinSaleTitleType))),
   );
 
   public results$ = combineLatest([
@@ -98,12 +98,12 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
     this.availsForm.value$
   ]).pipe(
     map(([titles, avails]) => {
+      if (this.availsForm.invalid) return titles;
+
       return titles.filter(title => {
-        const mandateTerms = title?.mandates?.flatMap(contract => contract.terms) ?? [];
-        const saleTerms = title.sales?.flatMap(contract => contract.terms) ?? [];
-        // @todo(#7139) use better filter
-        return filterDashboardAvails(mandateTerms, saleTerms, avails);
-      })
+        const availableMandates = availableTitle(avails, title.mandates, title.sales);
+        return availableMandates.length;
+      });
     }),
   );
 
@@ -123,14 +123,16 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
   }
 
   ngAfterViewInit() {
-    const decodedData: { territories?: string[], medias?: string[] } = decodeUrl(this.route);
+    const decodedData: Partial<AvailsFilter> = decodeUrl(this.route);
     if (!decodedData.territories) decodedData.territories = [];
     if (!decodedData.medias) decodedData.medias = [];
+    if (decodedData.duration?.from) decodedData.duration.from = new Date(decodedData.duration.from);
+    if (decodedData.duration?.to) decodedData.duration.to = new Date(decodedData.duration.to);
     this.availsForm.patchValue(decodedData);
     this.sub = this.availsForm.valueChanges.pipe(
       throttleTime(1000)
     ).subscribe(formState => {
-      encodeUrl<AvailsFilter>(this.router, this.route, formState);
+      encodeUrl<AvailsFilter>(this.router, this.route, formState as AvailsFilter);
     });
   }
 
