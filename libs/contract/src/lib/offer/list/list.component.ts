@@ -70,24 +70,3 @@ export class ListComponent {
     this.router.navigate([id], { relativeTo: this.route })
   }
 }
-
-
-@Pipe({ name: 'concatTitles' })
-export class Concat implements PipeTransform {
-  transform(data: unknown[], path: string, seperator: string = ' ', maxLength = 20): string {
-    if (!data || !Array.isArray(data)) return '';
-    const validValues = data.map(element => {
-      return getDeepValue(element, path)
-    })
-      .filter(datum => datum)
-      .map(datum => `${datum}`)
-      .map((value, idx, array) => (value?.length > maxLength && array.length > 1) ? `${value.substr(0, maxLength)}...` : value);
-    return validValues.join(seperator);
-  }
-}
-
-@NgModule({
-  declarations: [Concat],
-  exports: [Concat]
-})
-export class ConcatTitlePipeModule { }
