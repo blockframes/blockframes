@@ -33,7 +33,11 @@
       </ng-template>
       <ng-template colRef="contracts.length" label="# Of Titles In Package" let-length sort>{{ length }}</ng-template>
       <ng-template colRef="contracts" label="Titles" let-contracts>
-        {{ contracts | concatTitles:'title.title.international': ', ': 20 | maxLength:50}}
+        <div>
+          <ng-container *ngFor="let contract of contracts; let last=last;">
+            {{contract.title?.title?.international | maxLength: last? 70: 20 }}{{last? '': ', '}}
+          </ng-container>
+        </div>
       </ng-template>
       <ng-template colRef="specificity" label="Specific Terms" let-specificity sort>
         {{ specificity ? 'YES' : '-' }}
