@@ -6,7 +6,7 @@ import { createUser } from '@blockframes/auth/+state';
 import { createOrganization } from '@blockframes/organization/+state';
 
 /**
- * Update all events with the right accessibility property (instead of isPrivate property)
+ * Remove territories that are not in the geojson
  * @param db
  * @returns
  */
