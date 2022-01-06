@@ -16,6 +16,8 @@ import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-inp
 import { OfferShellComponent } from '../shell.component';
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
 import { ContractStatus } from '@blockframes/contract/contract/+state/contract.firestore';
+import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
+import { isInitial } from '@blockframes/contract/negotiation/utils';
 
 
 @Component({
@@ -100,7 +102,9 @@ export class ContractViewComponent implements OnInit, OnDestroy {
 
 @Pipe({ name: 'isNew' })
 export class IsNegotiationNewPipe implements PipeTransform {
-  transform(status: ContractStatus) {
-    return status === 'pending';
+  transform(negotiation: Negotiation) {
+    const pending = negotiation?.status === 'pending'
+    if (isInitial(negotiation) && pending) return true;
+    return false;
   }
 }

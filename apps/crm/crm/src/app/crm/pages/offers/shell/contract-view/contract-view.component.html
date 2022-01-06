@@ -17,7 +17,7 @@
           <mat-select formControlName="status">
             <mat-option value="pending" [disabled]="contract.negotiation?.status !== 'pending'">
               Pending
-              <ng-container *ngIf="contract.negotiation | negotiationStatus | isNew; else negotiating">( Will be displayed as New )</ng-container>
+              <ng-container *ngIf="contract.negotiation | isNew; else negotiating">( Will be displayed as New )</ng-container>
               <ng-template #negotiating>(Will be displayed as Negotiating)</ng-template>
             </mat-option>
             <mat-option value="accepted" [disabled]="!contract.negotiation?.price">
