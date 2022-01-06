@@ -86,8 +86,7 @@ export class ContractService extends CollectionService<ContractState> {
       initial: nego.initial,
       orgId: nego.orgId,
     }, { write, params: { contractId } });
-    const status = 'negotiating';
-    if (!this.isInitial(nego)) this.update(contractId, { status }, { write });
+
     await write.commit();
   }
 }

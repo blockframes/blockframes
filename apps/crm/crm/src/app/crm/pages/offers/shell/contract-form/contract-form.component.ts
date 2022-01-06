@@ -79,7 +79,7 @@ export class ContractFormComponent implements OnInit {
       const contractId = this.route.snapshot.params.contractId;
       const write = this.contractService.batch(); // create a batch
 
-      if (this.contract.status === 'accepted') {
+      if (this.negotiation.status === 'accepted') {
         const termList = terms.map(term => ({ ...term, contractId }));
         const termIds = await this.termService.upsert(termList, { write });
         const existingTermIds = this.contract?.termIds || [];
