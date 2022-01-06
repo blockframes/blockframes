@@ -1,7 +1,7 @@
 import { Firestore } from '../types';
 import { runChunks } from '../firebase-utils';
-import { createUser } from '@blockframes/auth/+state';
-import { createOrganization } from '@blockframes/organization/+state';
+// import { createUser } from '@blockframes/auth/+state';
+// import { createOrganization } from '@blockframes/organization/+state';
 
 /**
  * Remove territories that are not in the geojson
@@ -96,7 +96,7 @@ export async function upgrade(db: Firestore) {
   }).catch(err => console.error(err));
 
   await runChunks(users.docs, async (doc) => {
-    const user = createUser(doc.data());
+    const user = doc.data();
     const original = JSON.stringify(user);
 
     if (user.preferences?.territories?.length) {
@@ -109,7 +109,7 @@ export async function upgrade(db: Firestore) {
   }).catch(err => console.error(err));
 
   await runChunks(orgs.docs, async (doc) => {
-    const org = createOrganization(doc.data());
+    const org = doc.data();
     const original = JSON.stringify(org);
 
     for (const address in org.addresses) {
