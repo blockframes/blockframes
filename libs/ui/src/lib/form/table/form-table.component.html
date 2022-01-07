@@ -1,7 +1,7 @@
 <!----------->
 <!-- TABLE -->
 <!----------->
-<section [fxLayout]="layout[tablePosition]" fxLayoutGap="16px" *ngIf="form.value$ | async as source">
+<section [fxLayout]="layout[tablePosition]" fxLayoutGap="24px" *ngIf="form.value$ | async as source">
   <ng-container *ngIf="source.length">
     <bf-table class="no-border" [source]="source" [pagination]="pageSize" (page)="updateIndex($event)">
       <ng-container *ngFor="let column of columns | keyvalue:keepOrder">
