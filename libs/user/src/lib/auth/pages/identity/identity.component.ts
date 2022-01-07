@@ -87,7 +87,6 @@ export class IdentityComponent implements OnInit, OnDestroy {
     } else {
       // Creating user
       this.form.get('generatedPassword').disable();
-      this.form.get('confirm').disable();
     }
 
     // Listen to changes on input email to check if there is an existing invitation
@@ -119,8 +118,8 @@ export class IdentityComponent implements OnInit, OnDestroy {
     this.form.get('firstName').disable();
     this.form.get('lastName').disable();
     this.form.get('password').disable();
-    this.form.get('generatedPassword').disable();
     this.form.get('confirm').disable();
+    this.form.get('generatedPassword').disable();
   }
 
   public setOrg(result: AlgoliaOrganization) {
@@ -342,7 +341,6 @@ export class IdentityComponent implements OnInit, OnDestroy {
     if (event) {
       this.existingUser = true;
       this.form.get('generatedPassword').enable();
-      this.form.get('confirm').enable();
       this.form.get('email').disable();
     }
 
@@ -351,7 +349,6 @@ export class IdentityComponent implements OnInit, OnDestroy {
       this.setOrg(event);
     } else if (!event) { // User does not have invitation
       this.form.get('generatedPassword').disable();
-      this.form.get('confirm').disable();
     }
 
     this.cdr.markForCheck();

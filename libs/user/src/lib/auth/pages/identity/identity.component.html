@@ -80,7 +80,7 @@
         </organization-lite-form>
 
         <!-- PASSWORD FIELDS -->
-        <ng-container *ngIf="form.get('generatedPassword').enabled else password">
+        <ng-container *ngIf="form.get('generatedPassword').enabled">
           <div fxLayout fxLayoutGap="16px" fxLayoutAlign="start">
             <mat-form-field appearance="outline">
               <mat-label>Invitation Pass</mat-label>
@@ -90,55 +90,52 @@
             </mat-form-field>
             <button mat-mini-fab color="primary" matTooltip="Contact us to get help" (click)="openIntercom()">?</button>
           </div>
-          <mat-form-field appearance="outline">
-            <mat-label>New Password</mat-label>
-            <input
-              test-id="password"
-              matInput
-              type="password"
-              placeholder="New Password"
-              formControlName="password"
-              [errorStateMatcher]="currentPasswordMatch"
-              required
-            />
-            <mat-hint>Between 6 and 24 characters.</mat-hint>
-            <mat-error *ngIf="form.get('password').hasError('required')">
-              New password is <strong>required</strong>.
-            </mat-error>
-            <mat-error *ngIf="form.get('password').hasError('minlength')">
-              New password with less than <strong>6</strong> characters.
-            </mat-error>
-            <mat-error *ngIf="form.get('password').hasError('maxlength')">
-              New password with more than <strong>24</strong> characters.
-            </mat-error>
-            <mat-error *ngIf="form.hasError('currentPasswordMatch')">
-              Your new password has to be <strong>different</strong> than current password.
-            </mat-error>
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>New Password Confirmation</mat-label>
-            <input
-              test-id="password-confirm"
-              matInput
-              type="password"
-              placeholder="New Password Confirmation"
-              formControlName="confirm"
-              [errorStateMatcher]="passwordsMatcher"
-              required
-            />
-            <mat-hint>Rewrite new password for confirmation.</mat-hint>
-            <mat-error *ngIf="form.get('confirm').hasError('required')">
-              New password confirmation is <strong>required</strong>.
-            </mat-error>
-            <mat-error *ngIf="form.hasError('passwordsNotMatching')">
-              New password and New password confirmation do not <strong>match</strong>.
-            </mat-error>
-          </mat-form-field>
         </ng-container>
 
-        <ng-template #password>
-          <password-confirm *ngIf="form.get('password').enabled" formControlName="password"></password-confirm>
-        </ng-template>
+        <mat-form-field appearance="outline" *ngIf="form.get('password').enabled">
+          <mat-label>New Password</mat-label>
+          <input
+            test-id="password"
+            matInput
+            type="password"
+            placeholder="New Password"
+            formControlName="password"
+            [errorStateMatcher]="currentPasswordMatch"
+            required
+          />
+          <mat-hint>Between 6 and 24 characters.</mat-hint>
+          <mat-error *ngIf="form.get('password').hasError('required')">
+            New password is <strong>required</strong>.
+          </mat-error>
+          <mat-error *ngIf="form.get('password').hasError('minlength')">
+            New password with less than <strong>6</strong> characters.
+          </mat-error>
+          <mat-error *ngIf="form.get('password').hasError('maxlength')">
+            New password with more than <strong>24</strong> characters.
+          </mat-error>
+          <mat-error *ngIf="form.hasError('currentPasswordMatch')">
+            Your new password has to be <strong>different</strong> than current password.
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline" *ngIf="form.get('confirm').enabled">
+          <mat-label>New Password Confirmation</mat-label>
+          <input
+            test-id="password-confirm"
+            matInput
+            type="password"
+            placeholder="New Password Confirmation"
+            formControlName="confirm"
+            [errorStateMatcher]="passwordsMatcher"
+            required
+          />
+          <mat-hint>Rewrite new password for confirmation.</mat-hint>
+          <mat-error *ngIf="form.get('confirm').hasError('required')">
+            New password confirmation is <strong>required</strong>.
+          </mat-error>
+          <mat-error *ngIf="form.hasError('passwordsNotMatching')">
+            New password and New password confirmation do not <strong>match</strong>.
+          </mat-error>
+        </mat-form-field>
 
         <!-- TERMS OF USE & PRIVACY POLICY -->
 

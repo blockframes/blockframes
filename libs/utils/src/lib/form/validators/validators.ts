@@ -34,7 +34,7 @@ export function confirmPasswords(
   confirm: string = 'confirm'
 ): ValidatorFn {
   return (group: FormGroup): { [key: string]: boolean } | null => {
-    return group.controls[password].value === group.controls[confirm].value || group.controls[confirm].disabled
+    return group.controls[password].value === group.controls[confirm].value
       ? null
       : { passwordsNotMatching: true };
   };
