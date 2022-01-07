@@ -2,7 +2,7 @@
 import { MediaService } from './media.service';
 import { AngularFireModule } from '@angular/fire';
 import { SETTINGS, AngularFirestoreModule } from '@angular/fire/firestore';
-import { clearFirestoreData } from '@firebase/testing';
+import { clearFirestoreData } from '@firebase/rules-unit-testing';
 import { ImageParameters, formatParameters } from '../image/directives/imgix-helpers';
 import { firebase } from '@env';
 import { UploadData } from './media.model';

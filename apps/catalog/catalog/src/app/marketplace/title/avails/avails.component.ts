@@ -9,12 +9,12 @@ import { combineLatest, of, ReplaySubject, Subscription } from 'rxjs';
 import { FormList } from '@blockframes/utils/form';
 import { MovieQuery, Movie } from '@blockframes/movie/+state';
 import { BucketTerm, Term, TermService } from '@blockframes/contract/term/+state';
-import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
+import { CalendarAvailsForm, MapAvailsForm } from '@blockframes/contract/avails/form/avails.form';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { BucketForm, BucketTermForm } from '@blockframes/contract/bucket/form';
 import { OrganizationQuery, OrganizationService } from '@blockframes/organization/+state';
 import { BucketService } from '@blockframes/contract/bucket/+state';
-import { ContractService, Holdback, isMandate, isSale, Mandate } from '@blockframes/contract/contract/+state';
+import { ContractService, Holdback, isMandate, isSale, Mandate, Sale } from '@blockframes/contract/contract/+state';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 
 import { ExplanationComponent } from './explanation/explanation.component';
@@ -39,8 +39,8 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
   public bucketForm = new BucketForm();
 
   public avails = {
-    mapForm: new AvailsForm({ territories: [], medias: [] }, ['duration']),
-    calendarForm: new AvailsForm({ territories: [], medias: [] }, ['territories'])
+    mapForm: new MapAvailsForm(),
+    calendarForm: new CalendarAvailsForm()
   };
 
   public movieOrg$ = this.orgService.valueChanges(this.movie.orgIds[0]);
@@ -56,6 +56,12 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
    * _(term = continuous subdivision of a contract, a contract is composed of one or more terms)_
   */
   public mandateTerms$ = new ReplaySubject<Term<Date>[]>();
+
+  /** Raw sales, straight from the db
+   *
+   * _(sales = contracts already sold)_
+  */
+  public sales$ = new ReplaySubject<Sale[]>();
 
   /** Raw **sold** terms, straight from the db
    *
@@ -141,6 +147,7 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
     ]);
 
     this.mandates$.next(mandates);
+    this.sales$.next(sales);
     this.mandateTerms$.next(mandateTerms);
     this.salesTerms$.next(salesTerms);
   }
