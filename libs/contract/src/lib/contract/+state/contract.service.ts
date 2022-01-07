@@ -51,6 +51,16 @@ export class ContractService extends CollectionService<ContractState> {
     );
   }
 
+
+  //used exclusively in the crm
+  adminLastNegotiation(contractId: string) {
+    const options = { params: { contractId } };
+    const query = ref => ref.orderBy('_meta.createdAt', 'desc').limit(1);
+    return this.negotiationService.valueChanges(query, options).pipe(
+      map(negotiations => negotiations[0])
+    );
+  }
+
   isInitial(negotiation: Partial<Negotiation>) {
     const initial = negotiation.initial;
     const createdAt = negotiation?._meta?.createdAt;
@@ -76,8 +86,7 @@ export class ContractService extends CollectionService<ContractState> {
       initial: nego.initial,
       orgId: nego.orgId,
     }, { write, params: { contractId } });
-    const status = 'negotiating';
-    if (!this.isInitial(nego)) this.update(contractId, { status }, { write })
-    await write.commit()
+
+    await write.commit();
   }
 }

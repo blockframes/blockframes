@@ -1,5 +1,5 @@
 
-import { Component, ChangeDetectionStrategy, Pipe, PipeTransform } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { Observable } from 'rxjs';
@@ -58,18 +58,21 @@ export class OfferShellComponent {
   getContracts(query: QueryFn) {
     return this.contractService.valueChanges(query).pipe(
       joinWith({
-        negotiation: contract => this.contractService.lastNegotiation(contract.id).pipe(
-          joinWith({
-            title: () => this.titleService.valueChanges(contract.titleId),
-            seller: () => {
-              // Get the ID of the seller, not AC
-              const sellerId = contract.stakeholders.find(id => id !== contract.sellerId && id !== contract.buyerId);
-              if (!sellerId) return null;
-              return this.orgService.valueChanges(sellerId);
-            }
-          })
-        ),
-      })
+        negotiation: contract => {
+          if (!contract) return null;
+          return this.contractService.adminLastNegotiation(contract.id).pipe(
+            joinWith({
+              title: (nego) => this.titleService.valueChanges(nego.titleId),
+              seller: (nego) => {
+                // Get the ID of the seller, not AC
+                const sellerId = contract.stakeholders.find(id => id !== nego.sellerId && id !== nego.buyerId);
+                if (!sellerId) return null;
+                return this.orgService.valueChanges(sellerId);
+              }
+            })
+          );
+        }
+      }, { shouldAwait: true })
     );
   }
 

@@ -9,10 +9,6 @@ import { createNotification, triggerNotifications } from './notification';
 import { isInitial } from '@blockframes/contract/negotiation/utils'
 import { formatDocumentMetaFromFirestore } from "@blockframes/utils/models-meta";
 
-function createId() {
-  return db.collection('_').doc().id;
-}
-
 export async function onNegotiationCreated(negotiationSnapshot: FirebaseFirestore.DocumentSnapshot<Negotiation<Timestamp>>) {
   const negotiation = negotiationSnapshot.data();
   const _meta = formatDocumentMetaFromFirestore(negotiation._meta);
@@ -72,31 +68,6 @@ async function createNegotiationUpdateNotification(negotiationSnapshot: Firebase
     .then(triggerNotifications);
 }
 
-async function createTerms(contractId: string, negotiation: Negotiation<Timestamp>) {
-  const termsCollection = db.collection('terms');
-  const currentTerms = await termsCollection.where('contractId', '==', contractId).get()
-
-  const deletions = currentTerms.docs.map(term => term.ref.delete());
-  await Promise.all(deletions);
-  const terms = negotiation.terms
-    .map(t => ({ ...t, contractId, id: createId() }));
-  const promises = terms.map(term => termsCollection.add(term));
-  const savedTerms = await Promise.all(promises);
-  const ids =  savedTerms.map(datum => datum.id);
-  return ids;
-}
-
-async function createIncome(sale: Sale, negotiation: Negotiation<Timestamp>) {
-  const doc = db.doc(`incomes/${sale.id}`);
-  await doc.delete()
-  return doc.set({
-    status: 'pending',
-    termsId: sale.parentTermId,
-    price: negotiation.price,
-    currency: negotiation.currency,
-    offerId: sale.offerId
-  });
-}
 
 
 export async function onNegotiationUpdate(
@@ -117,15 +88,7 @@ export async function onNegotiationUpdate(
 
   const { status, declineReason = "" } = after;
 
-  let updates: Partial<Sale> = { declineReason, status }
-
-  if (status === 'accepted') {
-    const contractSnapshot = await db.doc(`contracts/${contractId}`).get();
-    const sale = contractSnapshot.data() as Sale;
-    const termIds = await createTerms(contractId, after)
-    await createIncome(sale, after)
-    updates = { termIds, status }
-  }
+  const updates: Partial<Sale> = { declineReason, status }
 
   if (['accepted', 'declined'].includes(status))
     createNegotiationUpdateNotification(change.after)

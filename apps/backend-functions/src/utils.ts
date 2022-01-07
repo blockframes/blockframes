@@ -2,6 +2,7 @@ import { functions, skipInMaintenance } from './internals/firebase';
 import { logErrors } from './internals/sentry';
 export { ErrorResultResponse } from '@blockframes/utils/utils';
 export { removeAllSubcollections } from '@blockframes/firebase-utils';
+import { db } from './internals/firebase';
 
 ///////////////////////////////////
 // DOCUMENT ON-CHANGES FUNCTIONS //
@@ -37,5 +38,10 @@ export function onDocumentCreate(docPath: string, fn: FunctionType) {
   return functions().firestore
     .document(docPath)
     .onCreate(skipInMaintenance(logErrors(fn)));
+}
+
+
+export function createId() {
+  return db.collection('_').doc().id;
 }
 

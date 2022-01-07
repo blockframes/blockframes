@@ -1,4 +1,8 @@
 <ng-container *ngIf="offer$ | async as offer">
+  <a mat-icon-button routerLink="..">
+    <mat-icon svgIcon="arrow_back"></mat-icon>
+    <span>BACK TO CONTRACTS</span>
+  </a>
   <ng-container *ngIf="contract$ | async as contract">
     <section class="surface" fxLayout="column" fxLayoutGap="16px">
       <ng-container *ngIf="contract.seller as seller">
@@ -11,9 +15,16 @@
         <mat-form-field appearance="outline">
           <mat-label>Seller's approval for a title.</mat-label>
           <mat-select formControlName="status">
-            <mat-option *ngFor="let value of status" [value]="value">
-              {{statuses[value]}}
+            <mat-option value="pending" [disabled]="contract.negotiation?.status !== 'pending'">
+              Pending
+              <ng-container *ngIf="contract.negotiation | isNew; else negotiating">( Will be displayed as New )</ng-container>
+              <ng-template #negotiating>(Will be displayed as Negotiating)</ng-template>
             </mat-option>
+            <mat-option value="accepted" [disabled]="!contract.negotiation?.price">
+              <span>Accepted</span>
+              <span *ngIf="!contract.negotiation?.price">(Negotiation has no price)</span>
+            </mat-option>
+            <mat-option value="declined">Declined</mat-option>
           </mat-select>
         </mat-form-field>
       </form>
@@ -22,7 +33,7 @@
       </div>
     </section>
 
-    <section class="surface" *ngIf="contract.status === 'declined'">
+    <section class="surface" *ngIf="contract.negotiation?.status === 'declined'">
       <h3>Why it has been declined</h3>
       <ng-container *ngIf="contract.declineReason; else noReason">
         <p>{{contract.declineReason}}</p>
