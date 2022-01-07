@@ -199,7 +199,7 @@ function getMatchingMapMandates(mandates: FullMandate[], avails: MapAvailsFilter
 }
 
 function getMatchingMapSales(sales: FullSale[], avails: MapAvailsFilter) {
-  return sales.filter(sale => sale.terms.some(term => {
+  return sales.filter(sale => sale.terms?.some(term => {
     const exclusivityCheck = exclusivitySomeOf(avails.exclusive).in(term.exclusive);
     const mediaCheck = someOf(avails.medias).in(term.medias);
     const durationCheck = someOf(avails.duration).in(term.duration);

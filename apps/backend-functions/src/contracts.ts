@@ -1,7 +1,6 @@
 import { db } from './internals/firebase';
-import { Contract, ContractStatus, Mandate, Sale } from '@blockframes/contract/contract/+state/contract.model';
+import { Contract, Mandate, Sale } from '@blockframes/contract/contract/+state/contract.model';
 import { Change } from 'firebase-functions';
-import { Offer } from '@blockframes/contract/offer/+state';
 import { centralOrgId } from '@env'
 import { Organization } from '@blockframes/organization/+state';
 import { createNotification, triggerNotifications } from './notification';
@@ -115,36 +114,16 @@ export async function onContractUpdate(
   const { status, id } = contractAfter;
 
   if (isSale && statusHasChanged) {
-    db.runTransaction(async tx => {
-      const offerRef = db.doc(`offers/${contractAfter.offerId}`);
-      const offer = await tx.get(offerRef).then(snap => snap.data()) as Offer;
-
-      if (offer.status === 'signed' || offer.status === 'signing') return
-
-      const offerContractsQuery = db.collection('contracts')
-        .where('offerId', '==', contractAfter.offerId)
-        .where('type', '==', 'sale');
-      const offerContractsSnap = await tx.get(offerContractsQuery);
-
-      const contractsStatus: ContractStatus[] = offerContractsSnap.docs.map(doc => doc.data().status);
-
-      let newOfferStatus = offer.status;
-      const negotiatingStatuses = ['negotiating', 'accepted', 'declined'];
-      const acceptedStatuses = ['accepted', 'declined'];
-      newOfferStatus = contractsStatus.some(status => negotiatingStatuses.includes(status)) ? 'negotiating' : newOfferStatus;
-      newOfferStatus = contractsStatus.every(status => acceptedStatuses.includes(status)) ? 'accepted' : newOfferStatus;
-      newOfferStatus = contractsStatus.every(status => status === 'declined') ? 'declined' : newOfferStatus;
-      newOfferStatus = contractsStatus.every(status => status === 'pending') ? 'pending' : newOfferStatus;
-
-      if (newOfferStatus === offer.status) return;
-      await tx.update(offerRef, { status: newOfferStatus });
-    })
     const saleRef = change.after.ref;
     const negotiationRef = saleRef.collection('negotiations').orderBy('_meta.createdAt', 'desc').limit(1);
     const incomeDoc = db.doc(`incomes/${saleRef.id}`);
     const termsCollection = db.collection('terms').where('contractId', '==', saleRef.id);
 
-    await Promise.all([incomeDoc.delete(), deleteCurrentTerms(termsCollection)]);
+    await Promise.all([
+      incomeDoc.delete(),
+      deleteCurrentTerms(termsCollection),
+      saleRef.update({ termIds: [] })
+    ]);
 
     if (status === 'accepted') {
       db.runTransaction(async tx => {
