@@ -18,6 +18,7 @@ import { createLocation } from '@blockframes/utils/common-interfaces/utility';
 import { debounceTime } from 'rxjs/internal/operators/debounceTime';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { DifferentPasswordStateMatcher, RepeatPasswordStateMatcher } from '@blockframes/utils/form/matchers';
 
 @Component({
   selector: 'auth-identity',
@@ -38,6 +39,9 @@ export class IdentityComponent implements OnInit, OnDestroy {
   public orgForm = new OrganizationLiteForm();
   public useAlgolia = true;
   public existingUser = false;
+  public passwordsMatcher = new RepeatPasswordStateMatcher('password', 'confirm');
+  public currentPasswordMatch = new DifferentPasswordStateMatcher('generatedPassword', 'password');
+  
   private existingOrgId: string;
   private sub: Subscription;
   private isAnonymous = false;
@@ -83,6 +87,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
     } else {
       // Creating user
       this.form.get('generatedPassword').disable();
+      this.form.get('confirm').disable();
     }
 
     // Listen to changes on input email to check if there is an existing invitation
@@ -115,6 +120,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
     this.form.get('lastName').disable();
     this.form.get('password').disable();
     this.form.get('generatedPassword').disable();
+    this.form.get('confirm').disable();
   }
 
   public setOrg(result: AlgoliaOrganization) {
@@ -336,6 +342,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
     if (event) {
       this.existingUser = true;
       this.form.get('generatedPassword').enable();
+      this.form.get('confirm').enable();
       this.form.get('email').disable();
     }
 
@@ -344,6 +351,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
       this.setOrg(event);
     } else if (!event) { // User does not have invitation
       this.form.get('generatedPassword').disable();
+      this.form.get('confirm').disable();
     }
 
     this.cdr.markForCheck();

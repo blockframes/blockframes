@@ -1,5 +1,5 @@
 import { FormControl, Validators } from "@angular/forms";
-import { FormEntity, PasswordControl } from "@blockframes/utils/form";
+import { confirmPasswords, differentPassword, FormEntity, PasswordControl } from "@blockframes/utils/form";
 
 function createIdentityFormControl() {
 
@@ -9,6 +9,7 @@ function createIdentityFormControl() {
     email: new FormControl('', Validators.email),
     generatedPassword: new FormControl('', Validators.required),
     password: new PasswordControl(),
+    confirm: new PasswordControl(),
     termsOfUse: new FormControl(false, Validators.requiredTrue),
     privacyPolicy: new FormControl(false, Validators.requiredTrue),
   }
@@ -18,6 +19,9 @@ export type IdentityFormControl = ReturnType<typeof createIdentityFormControl>;
 
 export class IdentityForm extends FormEntity<IdentityFormControl> {
   constructor() {
-    super(createIdentityFormControl());
+    super(createIdentityFormControl(), { validators: [
+      confirmPasswords('password', 'confirm'),
+      differentPassword('generatedPassword', 'password')
+    ]});
   }
 }
