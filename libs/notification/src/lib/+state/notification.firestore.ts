@@ -33,8 +33,9 @@ export const notificationTypesBase = [
 
   //Notifications related to contract negotiation
   'negotiationCreated',
-  'negotiationAccepted',
-  'negotiationDeclined',
+  'contractAccepted', //send to org whose negotiation was accepted.
+  'acceptedContract', //send to org who accepted the negotiation.
+  'contractInNegotiation',
 ] as const;
 
 // All the other notification types

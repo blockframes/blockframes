@@ -326,17 +326,23 @@ export function negotiationCreatedEmail(
   return { to: toUser.email, templateId: templateIds.negotiation.created, data };
 }
 
-export function negotiationUpdatedEmail(
+type NegotiationUpdateConfig = {
+  isRecipientBuyer: boolean,
+  didRecipientAcceptContract: boolean,
+}
+
+export function negotiationAcceptedEmail(
   toUser: UserEmailData, offerId: string,
-  title: MovieDocument, contractId: string, options: { isRecipientBuyer: boolean, status: 'accepted' | 'declined' }
+  title: MovieDocument, contractId: string,
+  options: NegotiationUpdateConfig
 ): EmailTemplateRequest {
   const data = {
     user: toUser, baseUrl: appUrl.content, offerId,
     contractId, title, isRecipientBuyer: !!options.isRecipientBuyer
   };
-  let templateId = templateIds.negotiation.accepted;
-  if (options.status === 'declined')
-    templateId = templateIds.negotiation.declined
+  let templateId = templateIds.negotiation.contractAccepted;
+  if (options.didRecipientAcceptContract)
+    templateId = templateIds.negotiation.acceptedContract
   return { to: toUser.email, templateId, data };
 }
 

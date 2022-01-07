@@ -1,5 +1,5 @@
 import { InvitationDocument, MovieDocument, NotificationDocument, OrganizationDocument, NotificationTypes } from './data/types';
-import { getDocument, getOrgAppKey, createDocumentMeta, Timestamp } from './data/internals';
+import { getDocument, getOrgAppKey, createDocumentMeta } from './data/internals';
 import { NotificationSettingsTemplate, User } from '@blockframes/user/types';
 import { sendMailFromTemplate } from './internals/email';
 import { emailErrorCodes, EventEmailData, getEventEmailData, getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
@@ -25,7 +25,7 @@ import {
   appAccessEmail,
   contractCreatedEmail,
   negotiationCreatedEmail,
-  negotiationUpdatedEmail,
+  negotiationAcceptedEmail,
   offerAcceptedOrDeclined
 } from './templates/mail';
 import { templateIds, groupIds } from '@blockframes/utils/emails/ids';
@@ -219,17 +219,21 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
           .then(() => notification.email.isSent = true)
           .catch(e => notification.email.error = e.message);
         break;
-      case 'negotiationAccepted':
+      case 'acceptedContract':
+        await sendAcceptedNegotiationConfirmation(recipient, notification)
+          .then(() => notification.email.isSent = true)
+          .catch(e => notification.email.error = e.message);
+        break;
+      case 'contractAccepted':
         await sendNegotiationAcceptedConfirmation(recipient, notification)
           .then(() => notification.email.isSent = true)
           .catch(e => notification.email.error = e.message);
         break;
-        break;
-      case 'negotiationDeclined':
-        await sendNegotiationDeclinedConfirmation(recipient, notification)
-          .then(() => notification.email.isSent = true)
-          .catch(e => notification.email.error = e.message);
-        break;
+      // case 'negotiationDeclined':
+      //   await sendNegotiationDeclinedConfirmation(recipient, notification)
+      //     .then(() => notification.email.isSent = true)
+      //     .catch(e => notification.email.error = e.message);
+      //   break;
       case 'offerAccepted':
         await sendOfferAcceptedOrDeclinedConfirmation(recipient, notification)
           .then(() => notification.email.isSent = true)
@@ -538,20 +542,25 @@ async function sendNegotiationAcceptedConfirmation(recipient: User, notification
   const {
     contract, title, app, isRecipientBuyer, toUser
   } = await fetchNegotiationUpdatedEmailData(recipient, notification);
-  const config = { isRecipientBuyer, status: 'accepted' } as const;
-  const template = negotiationUpdatedEmail(toUser, contract.offerId, title, contract.id, config);
+
+  const config = { isRecipientBuyer, didRecipientAcceptContract: false } as const;
+
+  const template = negotiationAcceptedEmail(toUser, contract.offerId, title, contract.id, config);
   return sendMailFromTemplate(template, app, groupIds.unsubscribeAll);
 }
 
 /** Send notification to recipient of counter offer */
-async function sendNegotiationDeclinedConfirmation(recipient: User, notification: NotificationDocument) {
+async function sendAcceptedNegotiationConfirmation(recipient: User, notification: NotificationDocument) {
   const {
     contract, title, app, isRecipientBuyer, toUser
   } = await fetchNegotiationUpdatedEmailData(recipient, notification);
-  const config = { isRecipientBuyer, status: 'declined' } as const;
-  const template = negotiationUpdatedEmail(toUser, contract.offerId, title, contract.id, config);
+
+  const config = { isRecipientBuyer, didRecipientAcceptContract: true } as const;
+
+  const template = negotiationAcceptedEmail(toUser, contract.offerId, title, contract.id, config);
   return sendMailFromTemplate(template, app, groupIds.unsubscribeAll);
 }
+
 
 async function sendOfferAcceptedOrDeclinedConfirmation(recipient: User, notification: NotificationDocument) {
   const offer = await getDocument<Offer>(`offers/${notification.docId}`);

@@ -1,5 +1,5 @@
 import { db } from './internals/firebase';
-import { Contract, Mandate, Sale } from '@blockframes/contract/contract/+state/contract.model';
+import { Contract, Sale } from '@blockframes/contract/contract/+state/contract.model';
 import { Change } from 'firebase-functions';
 import { centralOrgId } from '@env'
 import { Organization } from '@blockframes/organization/+state';
@@ -7,6 +7,8 @@ import { createNotification, triggerNotifications } from './notification';
 import { createDocumentMeta, getDocument, Timestamp } from './data/internals';
 import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
 import { createId } from './utils';
+import { ContractStatusChange } from '@blockframes/contract/contract/+state/contract.firestore';
+import { NotificationDocument } from './data/types';
 
 
 export async function onContractDelete(contractSnapshot: FirebaseFirestore.DocumentSnapshot<Contract>) {
@@ -66,12 +68,12 @@ export async function onContractCreate(contractSnapshot: FirebaseFirestore.Docum
   }
 }
 
-
 async function deleteCurrentTerms(ref: FirebaseFirestore.Query) {
   const currentTerms = await ref.get()
   const deletions = currentTerms.docs.map(term => term.ref.delete());
   return Promise.all(deletions);
 }
+
 async function createTerms(contractId: string, negotiation: Negotiation<Timestamp>, tx: FirebaseFirestore.Transaction) {
   const termsCollection = db.collection('terms');
   const terms = negotiation.terms
@@ -93,6 +95,61 @@ async function createIncome(sale: Sale, negotiation: Negotiation<Timestamp>, tx:
   });
 }
 
+async function getContractAcceptedNotifications(contractId: string, negotiation: Negotiation<Timestamp>) {
+  //send to org who accepted the offer
+  const acceptingOrgNotifs = (org: Organization) => org.userIds.map(userId => createNotification({
+    toUserId: userId,
+    type: 'acceptedContract',
+    docId: contractId,
+    docPath: `contracts/${contractId}/negotiations/${negotiation.id}`,
+    _meta: createDocumentMeta({ createdFrom: 'catalog' })
+  }));
+
+  //for org whose offer was accepted.
+  const acceptedOrgNotifs = (org: Organization) => org.userIds.map(userId => createNotification({
+    toUserId: userId,
+    type: 'contractAccepted',
+    docId: contractId,
+    docPath: `contracts/${contractId}/negotiations/${negotiation.id}`,
+    _meta: createDocumentMeta({ createdFrom: 'catalog' })
+  }));
+
+  const excluded = [negotiation.createdByOrg, centralOrgId.catalog]
+  const acceptingOrg = negotiation.stakeholders.find(stakeholder => !excluded.includes(stakeholder));
+
+  //for org whose offer was accepted.
+  const promises = [getDocument<Organization>(`orgs/${negotiation.createdByOrg}`).then(acceptedOrgNotifs)];
+  if(acceptingOrg) promises.push(getDocument<Organization>(`orgs/${acceptingOrg}`).then(acceptingOrgNotifs))
+
+  const notifications = await Promise.all(promises);
+
+  return notifications.flat(1);
+}
+
+export type ContractActions = 'contractAccepted' | 'contractDeclined' | 'contractInNegotiation'
+
+async function sendContractUpdateNotification(before: Sale, after: Sale, negotiation: Negotiation<Timestamp>) {
+  const statusChange: ContractStatusChange = `${before.status} => ${after.status}`;
+  const types: Partial<Record<ContractStatusChange, ContractActions>> = {
+    "pending => accepted": 'contractAccepted',
+    "declined => accepted": 'contractAccepted',
+    "pending => declined": 'contractDeclined',
+    "accepted => declined": 'contractDeclined',
+    "declined => pending": 'contractInNegotiation',
+    "accepted => pending": 'contractInNegotiation',
+  };
+
+  const type = types[statusChange];
+  if (!type) return;
+
+
+  let notifications: NotificationDocument[] = [];
+  switch (type) {
+    case 'contractAccepted': notifications = await getContractAcceptedNotifications(after.id, negotiation);
+      break;
+  }
+  if (notifications.length) triggerNotifications(notifications);
+}
 
 export async function onContractUpdate(
   change: Change<FirebaseFirestore.DocumentSnapshot>
@@ -105,30 +162,31 @@ export async function onContractUpdate(
     throw new Error('Parameter "change" not found');
   }
 
-  const contractBefore = before.data() as Sale | Mandate | undefined;
-  const contractAfter = after.data() as Sale | Mandate | undefined;
+  const contractBefore = before.data() as Sale;
+  const contractAfter = after.data() as Sale;
 
   // KEEP THE OFFER STATUS IN SYNC WITH IT'S CONTRACTS
   const isSale = contractBefore.type === contractAfter.type && contractBefore.type === 'sale' // contract is of type 'sale'
   const statusHasChanged = contractBefore.status !== contractAfter.status // contract status has changed
   const { status, id } = contractAfter;
+  const saleRef = change.after.ref;
+  const negotiationRef = saleRef.collection('negotiations').orderBy('_meta.createdAt', 'desc').limit(1);
+  const negotiation = await negotiationRef.get()
+    .then(snap => snap.docs[0].data()) as Negotiation<Timestamp>;
 
   if (isSale && statusHasChanged) {
-    const saleRef = change.after.ref;
-    const negotiationRef = saleRef.collection('negotiations').orderBy('_meta.createdAt', 'desc').limit(1);
     const incomeDoc = db.doc(`incomes/${saleRef.id}`);
     const termsCollection = db.collection('terms').where('contractId', '==', saleRef.id);
 
     await Promise.all([
       incomeDoc.delete(),
       deleteCurrentTerms(termsCollection),
-      saleRef.update({ termIds: [] })
+      saleRef.update({ termIds: [] }),
+      sendContractUpdateNotification(contractBefore, contractAfter, negotiation)
     ]);
 
     if (status === 'accepted') {
       db.runTransaction(async tx => {
-        const negotiation = await tx.get(negotiationRef)
-          .then(snap => snap.docs[0].data()) as Negotiation<Timestamp>;
 
         const termIds = await createTerms(id, negotiation, tx);
         await createIncome(contractAfter as Sale, negotiation, tx);

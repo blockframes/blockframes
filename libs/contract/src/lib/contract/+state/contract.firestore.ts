@@ -7,6 +7,7 @@ import { Timestamp } from "@blockframes/utils/common-interfaces/timestamp";
 export const contractStatus = ['pending', 'accepted', 'declined', 'negotiating'] as const;
 
 export type ContractStatus = typeof contractStatus[number];
+export type ContractStatusChange = `${ContractStatus} => ${ContractStatus}`
 
 export interface Holdback<D extends Timestamp | Date = Date> {
   territories: Territory[];
@@ -39,6 +40,7 @@ export interface Contract<D extends Timestamp | Date = Date> {
 export interface Mandate<D extends Timestamp | Date = Date> extends Contract<D> {
   type: 'mandate';
 }
+
 export interface Sale<D extends Timestamp | Date = Date> extends Contract<D> {
   type: 'sale';
   /** Create the anccestors organization when you create the sale */

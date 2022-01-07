@@ -1,6 +1,6 @@
 import { db } from './internals/firebase';
 import { Change, EventContext } from 'firebase-functions';
-import { Negotiation, NegotiationStatus } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
+import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
 import { createDocumentMeta, getDocument, Timestamp } from './data/internals';
 import { centralOrgId } from 'env/env.blockframes-ci';
 import { Organization } from '@blockframes/organization/+state';
@@ -88,31 +88,6 @@ export async function onNegotiationCreated(negotiationSnapshot: FirebaseFirestor
   }
 }
 
-async function createNegotiationUpdateNotification(negotiationSnapshot: FirebaseFirestore.DocumentSnapshot<Negotiation<Timestamp>>) {
-  const negotiation = negotiationSnapshot.data();
-
-  const docPath = negotiationSnapshot.ref.path;
-  const contractId = docPath.split('/')[1]
-
-  let type: 'negotiationAccepted' | 'negotiationDeclined' = 'negotiationAccepted';
-  if (negotiation.status === 'declined')
-    type = 'negotiationDeclined';
-
-
-  const stakeholder = negotiation.createdByOrg
-
-  const getNotifications = (org: Organization) => org.userIds.map(userId => createNotification({
-    toUserId: userId,
-    type,
-    docId: contractId,
-    docPath,
-    _meta: createDocumentMeta({ createdFrom: 'catalog' })
-  }));
-
-  await getDocument<Organization>(`orgs/${stakeholder}`)
-    .then(getNotifications)
-    .then(triggerNotifications);
-}
 
 export async function onNegotiationUpdate(
   change: Change<FirebaseFirestore.DocumentSnapshot<Negotiation<Timestamp>>>, context: EventContext
@@ -136,9 +111,6 @@ export async function onNegotiationUpdate(
   const { status, declineReason = "" } = after;
 
   const updates: Partial<Sale> = { declineReason, status }
-
-  if (['accepted', 'declined'].includes(status))
-    createNegotiationUpdateNotification(change.after)
 
   db.doc(`contracts/${contractId}`).update(updates);
 }
