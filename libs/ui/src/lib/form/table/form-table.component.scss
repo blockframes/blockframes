@@ -2,37 +2,6 @@
   display: block;
 }
 
-.table-container {
-  overflow: auto;
-  min-width: 100%;
-  overflow: auto;
-  /* Firefox scrollbar */
-  scrollbar-color: var(--primary) var(--active);
-}
-
-::-webkit-scrollbar {
-  height: 5px;
-}
-
-table {
-  min-width: 100%;
-  table-layout: fixed;
-
-  th,
-  td {
-    padding: 0 16px;
-    white-space: nowrap;
-  }
-}
-
-mat-paginator {
-  width: 100%;
-}
-
-.mat-table-sticky {
-  width: 60px;
-}
-
 .action-buttons {
   display: flex;
   justify-content: flex-end;
