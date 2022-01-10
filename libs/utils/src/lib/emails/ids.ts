@@ -76,8 +76,9 @@ export const templateIds = {
   negotiation: {
     created: 'd-4a75e445693044cba38d0db73c42c042',
     acceptedContract: 'd-5f45ee1375c04ddba84e6dd60664a689',// send to org who accepted the contract
-    contractAccepted: 'd-15f6060b1f9a42d1885aa3b60664a689',// send to org whose contract was accepted
-    declined: 'd-15f6060b1f9a42d1885aa3b4c73e9f1d',
+    contractAccepted: 'd-54c26ec9b0c54039b64bc40255513fba',// send to org whose contract was accepted
+    declinedContract: 'd-8227446674064157991ffc8b00b70224',// send to org who declined the contract
+    contractDeclined: 'd-5c4a64135974424592504a5409b35ad8',// send to org whose contract was declined
   }
 }
 

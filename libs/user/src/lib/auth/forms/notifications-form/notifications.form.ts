@@ -34,8 +34,10 @@ function createNotificationsControls(settings: Partial<NotificationSettings> = {
     offerCreatedConfirmation: new NotificationSettingsForm(settings.offerCreatedConfirmation),
     contractCreated: new NotificationSettingsForm(settings.contractCreated, true),
     negotiationCreated: new NotificationSettingsForm(settings.negotiationCreated, true),
-    negotiationAccepted: new NotificationSettingsForm(settings.acceptedContract, true),
-    acceptedNegotiation: new NotificationSettingsForm(settings.contractAccepted, true),
+    acceptedContract: new NotificationSettingsForm(settings.acceptedContract, true),
+    contractAccepted: new NotificationSettingsForm(settings.contractAccepted, true),
+    declinedContract: new NotificationSettingsForm(settings.declinedContract, true),
+    contractDeclined: new NotificationSettingsForm(settings.contractDeclined, true),
   }
 }
 

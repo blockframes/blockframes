@@ -25,7 +25,7 @@ import {
   appAccessEmail,
   contractCreatedEmail,
   negotiationCreatedEmail,
-  negotiationAcceptedEmail,
+  negotiationEmail,
   offerAcceptedOrDeclined
 } from './templates/mail';
 import { templateIds, groupIds } from '@blockframes/utils/emails/ids';
@@ -220,20 +220,25 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
           .catch(e => notification.email.error = e.message);
         break;
       case 'acceptedContract':
-        await sendAcceptedNegotiationConfirmation(recipient, notification)
+        await sendAcceptedContractConfirmation(recipient, notification)
           .then(() => notification.email.isSent = true)
           .catch(e => notification.email.error = e.message);
         break;
       case 'contractAccepted':
-        await sendNegotiationAcceptedConfirmation(recipient, notification)
+        await sendContractAcceptedConfirmation(recipient, notification)
           .then(() => notification.email.isSent = true)
           .catch(e => notification.email.error = e.message);
         break;
-      // case 'negotiationDeclined':
-      //   await sendNegotiationDeclinedConfirmation(recipient, notification)
-      //     .then(() => notification.email.isSent = true)
-      //     .catch(e => notification.email.error = e.message);
-      //   break;
+      case 'declinedContract':
+        await sendDeclinedContractConfirmation(recipient, notification)
+          .then(() => notification.email.isSent = true)
+          .catch(e => notification.email.error = e.message);
+        break;
+      case 'contractDeclined':
+        await sendContractDeclinedConfirmation(recipient, notification)
+          .then(() => notification.email.isSent = true)
+          .catch(e => notification.email.error = e.message);
+        break;
       case 'offerAccepted':
         await sendOfferAcceptedOrDeclinedConfirmation(recipient, notification)
           .then(() => notification.email.isSent = true)
@@ -521,43 +526,69 @@ async function sendNegotiationCreatedConfirmation(recipient: User, notification:
   return sendMailFromTemplate(template, app, groupIds.unsubscribeAll);
 }
 
-async function fetchNegotiationUpdatedEmailData(recipient: User, notification: NotificationDocument) {
+async function fetchContractUpdatedEmailData(recipient: User, notification: NotificationDocument) {
   const path = notification.docPath;
-  const contractId = path.split('/')[1]
+  const contractId = notification.docId;
   const contract = await getDocument<ContractDocument>(`contracts/${contractId}`);
   const negotiation = await getDocument<NegotiationDocument>(`${path}`);
+  const recipientOrg = await getDocument<OrganizationDocument>(`orgs/${recipient.orgId}`);
   const title = await getDocument<MovieDocument>(`movies/${negotiation.titleId}`);
   const app: App = 'catalog';
-  //he who created the org isn't he who receives the notification.
-  const isRecipientBuyer = negotiation.sellerId === negotiation.createdByOrg;
+
+  const isRecipientBuyer = recipient.orgId === negotiation.createdByOrg && recipient.orgId !== negotiation.sellerId;
   const toUser = getUserEmailData(recipient);
   return {
     path, contractId, contract, negotiation, title, app,
-    isRecipientBuyer, toUser
+    isRecipientBuyer, toUser, recipientOrg
   };
 }
 
-/** Send notification to recipient of counter offer */
-async function sendNegotiationAcceptedConfirmation(recipient: User, notification: NotificationDocument) {
+/** Send notification to creator of counter offer */
+async function sendContractAcceptedConfirmation(recipient: User, notification: NotificationDocument) {
   const {
-    contract, title, app, isRecipientBuyer, toUser
-  } = await fetchNegotiationUpdatedEmailData(recipient, notification);
+    contract, title, app, isRecipientBuyer, toUser, recipientOrg
+  } = await fetchContractUpdatedEmailData(recipient, notification);
 
-  const config = { isRecipientBuyer, didRecipientAcceptContract: false } as const;
+  const config = { isRecipientBuyer, isActionDeclined:false, didRecipientAcceptOrDecline: false } as const;
 
-  const template = negotiationAcceptedEmail(toUser, contract.offerId, title, contract.id, config);
+  const template = negotiationEmail(toUser, contract.offerId, title, contract.id, recipientOrg, config);
   return sendMailFromTemplate(template, app, groupIds.unsubscribeAll);
 }
 
 /** Send notification to recipient of counter offer */
-async function sendAcceptedNegotiationConfirmation(recipient: User, notification: NotificationDocument) {
+async function sendAcceptedContractConfirmation(recipient: User, notification: NotificationDocument) {
   const {
-    contract, title, app, isRecipientBuyer, toUser
-  } = await fetchNegotiationUpdatedEmailData(recipient, notification);
+    contract, title, app, isRecipientBuyer, toUser, recipientOrg
+  } = await fetchContractUpdatedEmailData(recipient, notification);
 
-  const config = { isRecipientBuyer, didRecipientAcceptContract: true } as const;
+  const config = { isRecipientBuyer, isActionDeclined:false, didRecipientAcceptOrDecline: true } as const;
 
-  const template = negotiationAcceptedEmail(toUser, contract.offerId, title, contract.id, config);
+  const template = negotiationEmail(toUser, contract.offerId, title, contract.id, recipientOrg, config);
+  return sendMailFromTemplate(template, app, groupIds.unsubscribeAll);
+}
+
+
+/** Send notification to creator of counter offer */
+async function sendContractDeclinedConfirmation(recipient: User, notification: NotificationDocument) {
+  const {
+    contract, title, app, isRecipientBuyer, toUser, recipientOrg
+  } = await fetchContractUpdatedEmailData(recipient, notification);
+
+  const config = { isRecipientBuyer, isActionDeclined:true, didRecipientAcceptOrDecline: false } as const;
+
+  const template = negotiationEmail(toUser, contract.offerId, title, contract.id, recipientOrg, config);
+  return sendMailFromTemplate(template, app, groupIds.unsubscribeAll);
+}
+
+/** Send notification to recipient of counter offer */
+async function sendDeclinedContractConfirmation(recipient: User, notification: NotificationDocument) {
+  const {
+    contract, title, app, isRecipientBuyer, toUser, recipientOrg
+  } = await fetchContractUpdatedEmailData(recipient, notification);
+
+  const config = { isRecipientBuyer, isActionDeclined:true, didRecipientAcceptOrDecline: true } as const;
+
+  const template = negotiationEmail(toUser, contract.offerId, title, contract.id, recipientOrg, config);
   return sendMailFromTemplate(template, app, groupIds.unsubscribeAll);
 }
 

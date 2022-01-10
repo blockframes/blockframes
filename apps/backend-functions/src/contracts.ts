@@ -95,41 +95,56 @@ async function createIncome(sale: Sale, negotiation: Negotiation<Timestamp>, tx:
   });
 }
 
-async function getContractAcceptedNotifications(contractId: string, negotiation: Negotiation<Timestamp>) {
-  //send to org who accepted the offer
-  const acceptingOrgNotifs = (org: Organization) => org.userIds.map(userId => createNotification({
+interface ContractNotificationType{
+  actorOrg: 'acceptedContract' | 'declinedContract', //org who accepted/declined a contract
+  receptorOrg: 'contractAccepted' | 'contractDeclined', // Org whose contract was accepted/declined
+}
+
+async function getContractNotifications(contractId: string, offerId: string, negotiation: Negotiation<Timestamp>, types:ContractNotificationType ) {
+  //send to org who accepted/declined the offer
+  const actorOrgNotifs = (org: Organization) => org.userIds.map(userId => createNotification({
     toUserId: userId,
-    type: 'acceptedContract',
+    type: types.actorOrg,
     docId: contractId,
+    offerId,
     docPath: `contracts/${contractId}/negotiations/${negotiation.id}`,
     _meta: createDocumentMeta({ createdFrom: 'catalog' })
   }));
 
-  //for org whose offer was accepted.
-  const acceptedOrgNotifs = (org: Organization) => org.userIds.map(userId => createNotification({
+  //for org whose offer was accepted/declined.
+  const receptorOrgNotifs = (org: Organization) => org.userIds.map(userId => createNotification({
     toUserId: userId,
-    type: 'contractAccepted',
+    type: types.receptorOrg,
     docId: contractId,
+    offerId,
     docPath: `contracts/${contractId}/negotiations/${negotiation.id}`,
     _meta: createDocumentMeta({ createdFrom: 'catalog' })
   }));
 
   const excluded = [negotiation.createdByOrg, centralOrgId.catalog]
-  const acceptingOrg = negotiation.stakeholders.find(stakeholder => !excluded.includes(stakeholder));
+  const receptorOrg = negotiation.stakeholders.find(stakeholder => !excluded.includes(stakeholder));
 
   //for org whose offer was accepted.
-  const promises = [getDocument<Organization>(`orgs/${negotiation.createdByOrg}`).then(acceptedOrgNotifs)];
-  if(acceptingOrg) promises.push(getDocument<Organization>(`orgs/${acceptingOrg}`).then(acceptingOrgNotifs))
+  const promises = [getDocument<Organization>(`orgs/${negotiation.createdByOrg}`).then(receptorOrgNotifs)];
+  if (receptorOrg) promises.push(getDocument<Organization>(`orgs/${receptorOrg}`).then(actorOrgNotifs))
 
   const notifications = await Promise.all(promises);
 
   return notifications.flat(1);
 }
 
+async function getContractAcceptedNotifications(contractId: string, offerId: string, negotiation: Negotiation<Timestamp>) {
+  return getContractNotifications(contractId, offerId, negotiation, {actorOrg: 'acceptedContract', receptorOrg: 'contractAccepted'})
+}
+
+async function getContractDeclinedNotifications(contractId: string, offerId: string, negotiation: Negotiation<Timestamp>) {
+  return getContractNotifications(contractId, offerId, negotiation, {actorOrg: 'declinedContract', receptorOrg: 'contractDeclined'})
+}
+
 export type ContractActions = 'contractAccepted' | 'contractDeclined' | 'contractInNegotiation'
 
 async function sendContractUpdateNotification(before: Sale, after: Sale, negotiation: Negotiation<Timestamp>) {
-  const statusChange: ContractStatusChange = `${before.status} => ${after.status}`;
+  const statusChange: ContractStatusChange = `${before.status} => ${after.status}` as const;
   const types: Partial<Record<ContractStatusChange, ContractActions>> = {
     "pending => accepted": 'contractAccepted',
     "declined => accepted": 'contractAccepted',
@@ -145,7 +160,9 @@ async function sendContractUpdateNotification(before: Sale, after: Sale, negotia
 
   let notifications: NotificationDocument[] = [];
   switch (type) {
-    case 'contractAccepted': notifications = await getContractAcceptedNotifications(after.id, negotiation);
+    case 'contractAccepted': notifications = await getContractAcceptedNotifications(after.id, after.offerId, negotiation);
+      break;
+    case 'contractDeclined': notifications = await getContractDeclinedNotifications(after.id, after.offerId, negotiation);
       break;
   }
   if (notifications.length) triggerNotifications(notifications);

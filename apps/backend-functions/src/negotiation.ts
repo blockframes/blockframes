@@ -77,6 +77,7 @@ export async function onNegotiationCreated(negotiationSnapshot: FirebaseFirestor
     toUserId: userId,
     type: 'negotiationCreated',
     docId: contractId,
+    offerId:contract.offerId,
     docPath: path,
     _meta: createDocumentMeta({ createdFrom: 'catalog' })
   }));

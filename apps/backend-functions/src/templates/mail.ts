@@ -328,21 +328,27 @@ export function negotiationCreatedEmail(
 
 type NegotiationUpdateConfig = {
   isRecipientBuyer: boolean,
-  didRecipientAcceptContract: boolean,
+  didRecipientAcceptOrDecline: boolean,
+  isActionDeclined: boolean,
 }
 
-export function negotiationAcceptedEmail(
+export function negotiationEmail(
   toUser: UserEmailData, offerId: string,
   title: MovieDocument, contractId: string,
-  options: NegotiationUpdateConfig
+  org: OrganizationDocument, options: NegotiationUpdateConfig,
 ): EmailTemplateRequest {
   const data = {
-    user: toUser, baseUrl: appUrl.content, offerId,
+    user: toUser, baseUrl: appUrl.content, offerId, org,
     contractId, title, isRecipientBuyer: !!options.isRecipientBuyer
   };
   let templateId = templateIds.negotiation.contractAccepted;
-  if (options.didRecipientAcceptContract)
-    templateId = templateIds.negotiation.acceptedContract
+  if (options.didRecipientAcceptOrDecline)
+    templateId = templateIds.negotiation.acceptedContract;
+  if (options.isActionDeclined) {
+    templateId = templateIds.negotiation.contractDeclined;
+    if (options.didRecipientAcceptOrDecline)
+      templateId = templateIds.negotiation.declinedContract;
+  }
   return { to: toUser.email, templateId, data };
 }
 
@@ -358,16 +364,6 @@ export function offerAcceptedOrDeclined(
   return { to: user.email, templateId, data };
 }
 
-export function negotiationDeclinedEmail(
-  toUser: UserEmailData, offerId: string,
-  title: MovieDocument, contractId: string, options?: { isRecipientBuyer: boolean }
-): EmailTemplateRequest {
-  const data = {
-    user: toUser, baseUrl: appUrl.content, offerId,
-    contractId, title, isRecipientBuyer: !!options?.isRecipientBuyer
-  };
-  return { to: toUser.email, templateId: templateIds.negotiation.declined, data };
-}
 
 // ------------------------- //
 //      CASCADE8 ADMIN       //
