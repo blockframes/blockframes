@@ -1,10 +1,9 @@
 ﻿process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
-import { initFirestoreApp } from '@blockframes/testing/unit-tests';
+import { initFirestoreApp, consentFixtures } from '@blockframes/testing/unit-tests';
 import { clearFirestoreData } from '@firebase/rules-unit-testing';
 import { createConsent } from './main';
 import { ConsentData } from './consent';
 import firebaseTest = require('firebase-functions-test');
-import { testFixture } from './fixtures/data';
 import * as admin from 'firebase-admin';
 import { firebase } from '@env';
 import { expect } from '@jest/globals';
@@ -15,7 +14,7 @@ const testEnv = firebaseTest(firebase());
 describe('Consent backend-function unit-tests', () => {
 
   beforeAll(async () => {
-    await initFirestoreApp(firebase().projectId, 'firestore.test.rules', testFixture);
+    await initFirestoreApp(firebase().projectId, 'firestore.test.rules', consentFixtures);
     await endMaintenance();
   });
 
@@ -28,7 +27,7 @@ describe('Consent backend-function unit-tests', () => {
     it('missing auth context, throws error', async () => {
       const wrapped = testEnv.wrap(createConsent);
 
-      //Compose the call to simpleCallable cf with param data
+      // Compose the call to simpleCallable cf with param data
       const data: ConsentData = {
         consentType: 'access',
         ip: '',
@@ -37,14 +36,14 @@ describe('Consent backend-function unit-tests', () => {
 
       expect.assertions(1);
       await expect(wrapped(data, {}))
-            .rejects
-            .toThrow('Permission denied: missing auth context.');
+        .rejects
+        .toThrow('Permission denied: missing auth context.');
     });
 
     it('missing user data, throws error', async () => {
       const wrapped = testEnv.wrap(createConsent);
 
-      //Compose the call to simpleCallable cf with param data
+      // Compose the call to simpleCallable cf with param data
       const data: ConsentData = {
         consentType: 'access',
         ip: '',
@@ -60,14 +59,14 @@ describe('Consent backend-function unit-tests', () => {
 
       expect.assertions(1);
       await expect(wrapped(data, context))
-            .rejects
-            .toThrow('Invalid user');
+        .rejects
+        .toThrow('Invalid user');
     });
 
     it('missing org ID, throws error', async () => {
       const wrapped = testEnv.wrap(createConsent);
 
-      //Compose the call to simpleCallable cf with param data
+      // Compose the call to simpleCallable cf with param data
       const data: ConsentData = {
         consentType: 'access',
         ip: '',
@@ -83,14 +82,14 @@ describe('Consent backend-function unit-tests', () => {
 
       expect.assertions(1);
       await expect(wrapped(data, context))
-            .rejects
-            .toThrow('Invalid organization');
+        .rejects
+        .toThrow('Invalid organization');
     });
 
     it('missing docID in data param, throws error', async () => {
       const wrapped = testEnv.wrap(createConsent);
 
-      //Compose the call to simpleCallable cf with param data
+      // Compose the call to simpleCallable cf with param data
       const data: ConsentData = {
         consentType: 'access',
         ip: '',
@@ -106,8 +105,8 @@ describe('Consent backend-function unit-tests', () => {
 
       expect.assertions(1);
       await expect(wrapped(data, context))
-            .rejects
-            .toThrow('Undefined docId');
+        .rejects
+        .toThrow('Undefined docId');
     });
 
     it('missing ip in data param, throws error', async () => {
@@ -129,8 +128,8 @@ describe('Consent backend-function unit-tests', () => {
 
       expect.assertions(1);
       await expect(wrapped(data, context))
-            .rejects
-            .toThrow('Undefined ip');
+        .rejects
+        .toThrow('Undefined ip');
     });
 
     it('missing filePath in data param, throws error', async () => {
@@ -152,8 +151,8 @@ describe('Consent backend-function unit-tests', () => {
 
       expect.assertions(1);
       await expect(wrapped(data, context))
-            .rejects
-            .toThrow('Invalid filePath');
+        .rejects
+        .toThrow('Invalid filePath');
     });
 
     it('creates \'Access Type\' consents document', async () => {
@@ -182,7 +181,7 @@ describe('Consent backend-function unit-tests', () => {
       const consentsData = snap.data();
       expect(consentsData).toEqual(
         expect.objectContaining({
-          id:'O001',
+          id: 'O001',
           share: []
         })
       );
@@ -223,7 +222,7 @@ describe('Consent backend-function unit-tests', () => {
       const consentsData = snap.data();
       expect(consentsData).toEqual(
         expect.objectContaining({
-          id:'O001'
+          id: 'O001'
         })
       );
 

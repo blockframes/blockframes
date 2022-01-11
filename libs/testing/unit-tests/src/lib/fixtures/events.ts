@@ -1,4 +1,46 @@
-﻿const oneHour = 3600 * 1000;
+﻿import { metaDoc } from "@blockframes/utils/maintenance";
+
+const fixtures = {
+  // Meta
+  [metaDoc]: {
+    startedAt: new Date(),
+    endedAt: null
+  },
+
+  // Invitations
+  'invitations/I002': {
+    id: 'I002',
+    type: 'attendEvent',
+    mode: 'request',
+    eventId: 'E001'
+  },
+  'invitations/I003': {
+    id: 'I003',
+    eventId: 'E001',
+    type: 'attendEvent',
+    mode: 'invitation',
+    fromOrg: {
+      denomination: {
+        full: 'Unit Test',
+        public: 'Unit Test'
+      },
+      id: 'O001'
+    },
+    toUser: {
+      email: 'test@cascade8.com'
+    },
+    status: 'pending'
+  },
+
+  // Notification
+  'notifications/NOO1': {
+    id: 'NOO1',
+    docId: 'E001'
+  }
+};
+
+
+const oneHour = 3600 * 1000;
 const oneDay = 24 * oneHour;
 
 const users = [{ uid: 'U001' }, { uid: 'U002' }, { uid: 'U003' }];
@@ -53,4 +95,4 @@ const invitations = [
   }
 ];
 
-export { users, events, invitations };
+export { users, events, invitations, fixtures };
