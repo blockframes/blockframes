@@ -294,6 +294,20 @@ export function reminderEventToUser(
   return { to: toUser.email, templateId: template, data };
 }
 
+/** Generate an email to seller mentioning a screening has been requested */
+export function screeningRequestedToSeller(
+  toUser: UserEmailData,
+  buyer: PublicUser,
+  movie: MovieDocument,
+): EmailTemplateRequest {
+  const data = {
+    buyer,
+    movie,
+    pageURL: `${appUrl.market}/c/o/dashboard/event?request=${movie.id}`
+  };
+  return { to: toUser.email, templateId: templateIds.event.screeningRequested, data };
+}
+
 /** Generate an email when a movie is accepted */
 export function movieAcceptedEmail(toUser: UserEmailData, movieTitle: string, movieUrl: string): EmailTemplateRequest {
   const data = { user: toUser, movieTitle, movieUrl };

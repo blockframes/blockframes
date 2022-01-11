@@ -6,7 +6,7 @@
       <ng-container *ngFor="let org of orgs$ | async">
         <h3>There is no screening scheduled at the moment.</h3>
         <p class="mat-body-1">You can contact <a [routerLink]="['/c/o/marketplace/organization/', org.id]">{{ org.denomination?.public || 'the organization' }}</a> for any questions.</p>
-        <a mat-flat-button color="accent" [href]="'mailto:'+ org.email">Contact Sales Agent</a>
+        <event-request-screening [movieId]="movieId"></event-request-screening>
       </ng-container>
     </ng-container>
 

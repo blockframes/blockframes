@@ -101,8 +101,7 @@ async function getUsersFromDb(db: FirebaseFirestore.Firestore) {
 export async function syncUsers(db = loadAdminServices().db, auth = loadAdminServices().auth) {
   const expectedUsers = await getUsersFromDb(db);
   await deleteAllUsers(auth);
-  const createResult = await importAllUsers(auth, expectedUsers);
-  console.log(createResult);
+  await importAllUsers(auth, expectedUsers);
 }
 
 export async function printUsers() {
