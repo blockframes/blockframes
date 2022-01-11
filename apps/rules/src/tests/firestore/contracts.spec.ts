@@ -1,6 +1,5 @@
 ﻿import { apps, assertFails, assertSucceeds } from '@firebase/rules-unit-testing';
-import { testFixture } from './fixtures/data';
-import { Firestore, initFirestoreApp } from '@blockframes/testing/unit-tests';
+import { Firestore, initFirestoreApp, rulesFixtures as testFixture } from '@blockframes/testing/unit-tests';
 
 describe('Contracts Rules Tests', () => {
   const projectId = `ctrules-spec-${Date.now()}`;

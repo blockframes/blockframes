@@ -1,12 +1,12 @@
 ﻿import { metaDoc } from '@blockframes/utils/maintenance';
 
-export const testFixture = {
-  //Docs Index
+export const rulesFixtures = {
+  // Docs Index
   'docsIndex/DP03': {
 
   },
 
-  //Permissions
+  // Permissions
   'permissions/O001': {
     roles: {
       'uid-admin': 'admin',
@@ -15,11 +15,9 @@ export const testFixture = {
     },
     id: 'O001',
   },
-
   'permissions/O003': {
     id: 'O003',
   },
-
   'permissions/O004': {
     roles: {
       'uid-admin4': 'admin',
@@ -38,8 +36,6 @@ export const testFixture = {
     },
     id: 'O006',
   },
-
-
   'permissions/O001/documentPermissions/D001': {
     id: 'D001',
     ownerId: 'O001',
@@ -76,7 +72,7 @@ export const testFixture = {
     canCreate: true,
   },
 
-  //Orgs
+  // Orgs
   'orgs/O001': {
     id: 'O001',
     status: 'accepted',
@@ -104,7 +100,7 @@ export const testFixture = {
     status: 'pending'
   },
 
-  //Users Collection
+  // Users
   'users/uid-bfAdmin': {
     email: 'bfadmin@cascade8.com',
     uid: 'uid-bfAdmin',
@@ -158,10 +154,10 @@ export const testFixture = {
     orgId: 'O005'
   },
 
-  //Blockframes Admin
+  // Blockframes Admin
   'blockframesAdmin/uid-bfAdmin': {},
 
-  //Movies
+  // Movies
   'movies/M001': {
     id: 'M001',
     title: {
@@ -266,7 +262,7 @@ export const testFixture = {
     accessibility: 'private'
   },
 
-  //Notifications
+  // Notifications
   'notifications/001': {
     id: '001',
     _meta: { createdAt: Date.now() },
@@ -278,7 +274,7 @@ export const testFixture = {
     movies: [{ id: 'M001' }],
   },
 
-  //Campaigns
+  // Campaigns
   'campaigns/M001': {
     id: 'M001',
     orgId: 'O001',
@@ -288,7 +284,7 @@ export const testFixture = {
     orgId: 'MI-UK',
   },
 
-  //Invitations
+  // Invitations
   'invitations/I001': {
     type: 'attendEvent',
     toUser: { uid: 'uid-user2' },
@@ -311,7 +307,7 @@ export const testFixture = {
     eventId: 'E003-public'
   },
 
-  //Contracts
+  // Contracts
   'contracts/C001': {
     id: 'C001',
     stakeholders: ['O001'],
@@ -320,6 +316,7 @@ export const testFixture = {
     id: 'C002',
     stakeholders: []
   },
+
   // Consents
   'consents/O001': {
     id: 'O001',
@@ -330,5 +327,5 @@ export const testFixture = {
 
 
 //Meta collection, for maintenance control.
-testFixture[metaDoc] = {};
-testFixture[metaDoc].endedAt = true;
+rulesFixtures[metaDoc] = {};
+rulesFixtures[metaDoc].endedAt = true;

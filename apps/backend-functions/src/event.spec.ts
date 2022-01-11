@@ -1,15 +1,12 @@
 ﻿process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
-import { initFirestoreApp } from '@blockframes/testing/unit-tests';
+import { initFirestoreApp, eventFixtures } from '@blockframes/testing/unit-tests';
 import { clearFirestoreData } from '@firebase/rules-unit-testing';
 import { onEventDeleteEvent } from './main';
 import firebaseTest = require('firebase-functions-test');
-import { testFixture } from './fixtures/data';
 import * as admin from 'firebase-admin';
 import { firebase } from '@env';
 import { expect } from '@jest/globals';
 import { endMaintenance } from '@blockframes/firebase-utils';
-import { Screening } from '@blockframes/event/+state/event.firestore';
-import { createScreening } from '@blockframes/event/+state/event.model';
 
 const testEnv = firebaseTest(firebase());
 
@@ -17,7 +14,7 @@ describe('Event backend-function unit-tests', () => {
   const db = admin.firestore();
 
   beforeAll(async () => {
-    await initFirestoreApp(firebase().projectId, 'firestore.test.rules', testFixture);
+    await initFirestoreApp(firebase().projectId, 'firestore.test.rules', eventFixtures.fixtures);
     await endMaintenance();
   });
 
@@ -28,54 +25,41 @@ describe('Event backend-function unit-tests', () => {
 
   describe('Event spec', () => {
 
-    it('removes all matching eventId docs from \'invitations & notification\' collection', async () => {
+    it('removes all matching eventId docs from "invitations & notification" collection', async () => {
       const wrapped = testEnv.wrap(onEventDeleteEvent);
-      const eventID = 'E001';
-      const orgID = 'O001';
+      const eventId = 'E001';
 
-      const localEvent: Screening = createScreening({
-        organizerUid: orgID,
-        titleId: 'UnitTest Event',
-        description: 'Event organised by Jest',
-      });
+      const eventToDelete = { id: eventId };
 
-      const eventData = {
-        id: eventID,
-        ...localEvent
-      }
-
-      const eventSnap  = testEnv.firestore.makeDocumentSnapshot(
-        eventData,
-        `events/${eventID}`
+      const eventSnap = testEnv.firestore.makeDocumentSnapshot(
+        eventToDelete,
+        `events/${eventId}`
       );
 
-      //Check documents before event delete
-      let collectionRef = await db.collection('invitations')
-                                          .where('eventId',  '==', eventID)
-                                          .get();
-      let queriedDocs = collectionRef.docs;
-      expect(queriedDocs).toHaveLength(2);
+      // Check documents before event delete
+      const invitationsCollectionRefBefore = await db.collection('invitations')
+        .where('eventId', '==', eventId)
+        .get();
+      expect(invitationsCollectionRefBefore.docs).toHaveLength(2);
 
-      collectionRef = await db.collection('notifications')
-                              .where('docId',  '==', eventID)
-                              .get();
-      queriedDocs = collectionRef.docs;
-      expect(queriedDocs).toHaveLength(1);
+      const notificationsCollectionRefBefore = await db.collection('notifications')
+        .where('docId', '==', eventId)
+        .get();
+      expect(notificationsCollectionRefBefore.docs).toHaveLength(1);
 
-      //Trigger onEventDeleteEvent event
-      await wrapped(eventSnap);
+      // Trigger onEventDeleteEvent event
+      await wrapped(eventSnap); // Only snapshot is used in onEventDeleteEvent
 
-      collectionRef = await db.collection('invitations')
-                                          .where('eventId',  '==', eventID)
-                                          .get();
-      queriedDocs = collectionRef.docs;
-      expect(queriedDocs).toHaveLength(0);
+      // Check documents after delete
+      const invitationsCollectionRefAfter = await db.collection('invitations')
+        .where('eventId', '==', eventId)
+        .get();
+      expect(invitationsCollectionRefAfter.docs).toHaveLength(0);
 
-      collectionRef = await db.collection('notifications')
-                              .where('docId',  '==', eventID)
-                              .get();
-      queriedDocs = collectionRef.docs;
-      expect(queriedDocs).toHaveLength(0);
+      const notificationsCollectionRefAfter = await db.collection('notifications')
+        .where('docId', '==', eventId)
+        .get();
+      expect( notificationsCollectionRefAfter.docs).toHaveLength(0);
     });
   });
 })

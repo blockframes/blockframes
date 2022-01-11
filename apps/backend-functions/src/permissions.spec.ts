@@ -1,9 +1,8 @@
 ﻿process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
-import { initFirestoreApp } from '@blockframes/testing/unit-tests';
+import { initFirestoreApp, permissionsFixtures } from '@blockframes/testing/unit-tests';
 import { clearFirestoreData } from '@firebase/rules-unit-testing';
 import { onDocumentPermissionCreateEvent, onPermissionDeleteEvent } from './main';
 import firebaseTest = require('firebase-functions-test');
-import { testFixture } from './fixtures/data';
 import * as admin from 'firebase-admin';
 import { firebase } from '@env';
 import { expect } from '@jest/globals';
@@ -15,7 +14,7 @@ describe('Permissions backend-function unit-tests', () => {
   const db = admin.firestore();
 
   beforeAll(async () => {
-    await initFirestoreApp(firebase().projectId, 'firestore.test.rules', testFixture);
+    await initFirestoreApp(firebase().projectId, 'firestore.test.rules', permissionsFixtures);
     await endMaintenance();
   });
 
@@ -25,59 +24,51 @@ describe('Permissions backend-function unit-tests', () => {
   });
 
   describe('Permission spec', () => {
-    it('sets the \'authorOrgId\' of docIndex', async () => {
+    it('sets the "authorOrgId" of docIndex', async () => {
       const wrapped = testEnv.wrap(onDocumentPermissionCreateEvent);
       const docID = 'D001';
       const orgID = 'O001';
 
-      const context = {
-        params: { docID, orgID }
-      };
+      const context = { params: { docID, orgID } };
 
-      // Make a fake document snapshot to pass to the function
-      const after = testEnv.firestore.makeDocumentSnapshot(
-        {
-          id: docID,
-        },
-        `docsIndex/${docID}`
-      );
+      const snapBefore = await db.doc(`docsIndex/${docID}`).get();
+      expect(snapBefore.data()).toBeUndefined();
 
       // Call the function
-      await wrapped(after, context);
+      await wrapped(undefined, context); // Only context is used in onDocumentPermissionCreateEvent
 
-      const snap = await db.doc(`docsIndex/${docID}`).get();
-      expect(snap.data()).toEqual(
+      const snapAfter = await db.doc(`docsIndex/${docID}`).get();
+      expect(snapAfter.data()).toEqual(
         expect.objectContaining({
           authorOrgId: orgID
         })
       );
     });
 
-    it('removes all subcollections from \'permissions/{orgID}\'', async () => {
+    it('removes all subcollections from "permissions/{orgID}"', async () => {
       const wrapped = testEnv.wrap(onPermissionDeleteEvent);
       const docID = 'D001';
       const orgID = 'O001';
 
-      //Check permission document exists
+      // Check permission document exists
       const docRef = db.doc(`permissions/${orgID}/documentPermissions/${docID}`);
-      let snap = await docRef.get();
-      expect(snap.data()).toBeDefined();
+      const documentPermissionBefore = await docRef.get();
+      expect(documentPermissionBefore.data()).toBeDefined();
 
-      snap = await db.doc(`permissions/${orgID}`).get();
-
-      // Call the function
-      await wrapped(snap, {});
-
-      snap = await db.doc(`permissions/${orgID}`).get();
-      expect(snap.data()).toEqual(
+      const permissionBefore = await db.doc(`permissions/${orgID}`).get();
+      expect(permissionBefore.data()).toEqual(
         expect.objectContaining({
           id: orgID,
-          roles: { }
+          roles: {}
         })
       );
 
-      snap = await docRef.get();
-      expect(snap.data()).toBeUndefined();
+      // Call the function
+      await wrapped(permissionBefore); // Only snapshot is used in onPermissionDeleteEvent
+
+      // Check that documentPermissions have been deleted
+      const documentPermissionAfter = await db.doc(`permissions/${orgID}/documentPermissions/${docID}`).get();
+      expect(documentPermissionAfter.data()).toBeUndefined();
     });
   });
 })
