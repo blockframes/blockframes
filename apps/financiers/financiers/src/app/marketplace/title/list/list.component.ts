@@ -5,16 +5,16 @@ import {
   ChangeDetectorRef,
   OnDestroy
 } from '@angular/core';
-import { Observable, Subscription, BehaviorSubject } from 'rxjs';
-import { Movie } from '@blockframes/movie/+state';
-import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
-import { debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap } from 'rxjs/operators';
-import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { ActivatedRoute } from '@angular/router';
-import { StoreStatus } from '@blockframes/utils/static-model/types';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { PdfService } from '@blockframes/utils/pdf/pdf.service'
+import { Observable, Subscription, BehaviorSubject } from 'rxjs';
+import { debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap } from 'rxjs/operators';
+
 import { AlgoliaMovie } from '@blockframes/utils/algolia';
+import { PdfService } from '@blockframes/utils/pdf/pdf.service'
+import { StoreStatus } from '@blockframes/utils/static-model/types';
+import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
   selector: 'financiers-marketplace-title-list',
@@ -24,9 +24,9 @@ import { AlgoliaMovie } from '@blockframes/utils/algolia';
 })
 export class ListComponent implements OnInit, OnDestroy {
 
-  private movieResultsState = new BehaviorSubject<Movie[]>(null);
+  private movieResultsState = new BehaviorSubject<AlgoliaMovie[]>(null);
 
-  public movies$: Observable<Movie[]>;
+  public movies$: Observable<AlgoliaMovie[]>;
   public storeStatus: StoreStatus = 'accepted';
   public searchForm = new MovieSearchForm('financiers', this.storeStatus);
   public exporting = false;
@@ -66,7 +66,7 @@ export class ListComponent implements OnInit, OnDestroy {
         switchMap(() => this.searchForm.search(true)),
         tap(res => this.nbHits = res.nbHits),
         pluck('hits')
-      ).subscribe((movies: Movie[]) => {
+      ).subscribe(movies => {
         if (this.loadMoreToggle) {
           this.movieResultsState.next(this.movieResultsState.value.concat(movies))
           this.loadMoreToggle = false;

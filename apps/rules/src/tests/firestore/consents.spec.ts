@@ -1,6 +1,5 @@
-﻿import { apps, assertFails } from '@firebase/testing';
-import { testFixture } from './fixtures/data';
-import { Firestore, initFirestoreApp } from '@blockframes/testing/unit-tests';
+﻿import { apps, assertFails } from '@firebase/rules-unit-testing';
+import { Firestore, initFirestoreApp, rulesFixtures as testFixture } from '@blockframes/testing/unit-tests';
 import { Consents } from '@blockframes/consents/+state/consents.firestore';
 
 describe('Consents Rules Tests', () => {

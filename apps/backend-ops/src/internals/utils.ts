@@ -145,9 +145,7 @@ export async function loadAllCollections(db: FirebaseFirestore.Firestore): Promi
 
 export async function getAllDocumentCount(db: FirebaseFirestore.Firestore) {
   const { collectionData } = await loadAllCollections(db);
-  let count = 0;
-  collectionData.forEach(c => count = count + c.refs.docs.length);
-  return count;
+  return collectionData.reduce((sum, collection) => sum + collection.refs.docs.length, 0);
 }
 
 //////////////////
@@ -242,7 +240,7 @@ function getConsitencyErrors(documentIdsToFind: string[], document: FirebaseFire
 export async function printDatabaseInconsistencies(
   data?: { dbData: DatabaseData, collectionData: CollectionData[] },
   db?: FirebaseFirestore.Firestore,
-  options = { verbose: true }
+  options = { printDetail: true }
 ) {
 
   // Getting all collections we need to check
@@ -251,20 +249,12 @@ export async function printDatabaseInconsistencies(
   const usersOutput = auditConsistency(dbData, collectionData, 'users');
   console.log(`Found ${usersOutput.length} inconsistencies when auditing users (${usersOutput.filter(o => o.in.field.indexOf('_meta') === 0).length} in _meta).`);
 
-  if (options.verbose) {
-    for (const inconsistency of usersOutput) {
-      printInconsistency(inconsistency);
-    }
-  }
+  if (options.printDetail) usersOutput.forEach(printInconsistency);
 
   const orgsOutput = auditConsistency(dbData, collectionData, 'orgs');
   console.log(`Found ${orgsOutput.length} inconsistencies when auditing orgs (${orgsOutput.filter(o => o.in.field.indexOf('_meta') === 0).length} in _meta).`);
 
-  if (options.verbose) {
-    for (const inconsistency of orgsOutput) {
-      printInconsistency(inconsistency);
-    }
-  }
+  if (options.printDetail) orgsOutput.forEach(printInconsistency);
 
   return true;
 }
@@ -276,8 +266,7 @@ function printInconsistency(inconsistency: ConsistencyError) {
 
 
 function getCandidates(document: FirebaseFirestore.DocumentData, _field: string): string[] {
-  const field = _field.split('[].')[0];
-  const fieldSuffix = _field.split('[].')[1];
+  const [field, fieldSuffix] = _field.split('[].');
 
   if (field === '') {
     return [document.id];

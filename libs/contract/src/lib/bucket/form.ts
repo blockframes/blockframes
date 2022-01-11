@@ -1,7 +1,11 @@
 import { FormControl, FormGroup } from '@angular/forms';
+
+import { Subject } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+
 import { FormEntity, FormList, FormStaticValueArray } from '@blockframes/utils/form';
 import { MovieVersionInfoForm, createLanguageControl } from '@blockframes/movie/form/movie.form';
-import { AvailsFilter, DurationMarker, isSameCalendarTerm, isSameMapTerm, TerritoryMarker } from '../avails/avails';
+
 import {
   Bucket,
   BucketContract,
@@ -11,9 +15,8 @@ import {
   toBucketContract,
   toBucketTerm
 } from './+state/bucket.model';
-import { Subject } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
 import { BucketTerm } from '../term/+state';
+import { AvailableTerritoryMarker, BucketTerritoryMarker, CalendarAvailsFilter, DurationMarker, isSameBucketContract, isSameCalendarBucketTerm, isSameMapBucketTerm, MapAvailsFilter } from '../avails/avails';
 
 //////////
 // TERM //
@@ -106,10 +109,11 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
    * @param marker
    * @returns
    */
-  addTerritory(avails: AvailsFilter, marker: TerritoryMarker): boolean {
+  addTerritory(avails: MapAvailsFilter, marker: AvailableTerritoryMarker): boolean {
     const { contract: mandate, slug: territory, term } = marker;
     const bucket = this.value;
     const contractIndex = bucket.contracts.findIndex(c => c.parentTermId === term.id);
+
     // Contract is not registered
     if (contractIndex === -1) {
       this.get('contracts').add(toBucketContract(mandate, term, { ...avails, territories: [territory] }));
@@ -119,7 +123,8 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
     }
 
     const contract = bucket.contracts[contractIndex];
-    const termIndex = contract.terms.findIndex(t => isSameMapTerm(t, avails));
+    const termIndex = contract.terms.findIndex(t => isSameMapBucketTerm(avails, t));
+
     // New term
     if (termIndex === -1) {
       this.get('contracts').at(contractIndex).get('terms').add(toBucketTerm({ ...avails, territories: [territory] }));
@@ -146,21 +151,21 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
    * @param marker
    * @returns
    */
-  removeTerritory(avails: AvailsFilter, marker: TerritoryMarker) {
-    const { slug: territory, term } = marker;
+  removeTerritory(avails: MapAvailsFilter, marker: BucketTerritoryMarker) {
+    const { slug: territory, contract: bucketContract } = marker;
     const bucket = this.value;
-    const contractIndex = bucket.contracts.findIndex(c => c.parentTermId === term.id);
-    if (contractIndex === -1) { return; }
+    const contractIndex = bucket.contracts.findIndex(c => isSameBucketContract(c, bucketContract));
+    if (contractIndex === -1) return;
 
     const contract = bucket.contracts[contractIndex];
-    const termIndex = contract.terms.findIndex(t => isSameMapTerm(t, avails));
-    if (termIndex === -1) { return; }
+    const termIndex = contract.terms.findIndex(t => isSameMapBucketTerm(avails, t));
+    if (termIndex === -1) return;
 
     const territories = contract.terms[termIndex].territories;
     const control = this.get('contracts').at(contractIndex).get('terms').at(termIndex).get('territories');
     const hasTerritory = territories.includes(territory);
 
-    if (!hasTerritory) { return; }
+    if (!hasTerritory) return;
 
     if (territories.length > 1) {
       control.setValue(territories.filter(t => t !== territory));
@@ -176,15 +181,15 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
    * @param marker
    * @returns boolean
    */
-  isAlreadyInBucket(avails: AvailsFilter, marker: TerritoryMarker): boolean {
+  isAlreadyInBucket(avails: MapAvailsFilter, marker: AvailableTerritoryMarker): boolean {
     const { slug: territory, term } = marker;
 
     const bucket = this.value;
     const contractIndex = bucket.contracts.findIndex(c => c.parentTermId === term.id);
-    if (contractIndex === -1) { return false; }
+    if (contractIndex === -1) return false;
     const contract = bucket.contracts[contractIndex];
-    const termIndex = contract.terms.findIndex(t => isSameMapTerm(t, avails));
-    if (termIndex === -1) { return false }
+    const termIndex = contract.terms.findIndex(t => isSameMapBucketTerm(avails, t));
+    if (termIndex === -1) return false;
     const territories = contract.terms[termIndex].territories;
     return territories.includes(territory);
   }
@@ -192,21 +197,23 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
   /**
    * Adds a Duration from Calendar into the bucket if not already in it
    */
-  addDuration(avails: AvailsFilter, marker: DurationMarker) {
-    const { contract: mandate, term } = marker;
+  addDuration(avails: CalendarAvailsFilter, marker: DurationMarker) {
+    const { contract: mandate, term, from, to } = marker;
     const bucket = this.value;
     const contractIndex = bucket.contracts.findIndex(c => c.parentTermId === term.id);
 
+    const availsWithDuration = { ...avails, duration: { from, to } };
+
     // Contract is not registered
     if (contractIndex === -1) {
-      const bucketContract = toBucketContract(mandate, term, avails);
+      const bucketContract = toBucketContract(mandate, term, availsWithDuration);
       this.get('contracts').add(bucketContract);
       this.markAsDirty();
       this.change.next();
       return;
     }
 
-    const bucketTerm = toBucketTerm(avails);
+    const bucketTerm = toBucketTerm(availsWithDuration);
     this.get('contracts').at(contractIndex).get('terms').add(bucketTerm);
     this.markAsDirty();
     this.change.next();
@@ -215,7 +222,7 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
   /**
    * This function will retrieved the `termIndex` & `contractIndex` based on the given `DurationMarker`
    */
-   getTermIndexForCalendar(avails: AvailsFilter, marker: DurationMarker): { contractIndex: number, termIndex: number } | undefined {
+   getTermIndexForCalendar(avails: CalendarAvailsFilter, marker: DurationMarker): { contractIndex: number, termIndex: number } | undefined {
     const { term } = marker;
     const bucket = this.value;
 
@@ -223,7 +230,7 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
     if (contractIndex === -1) return;
 
     const contract = bucket.contracts[contractIndex];
-    const termIndex = contract.terms.findIndex(t => isSameCalendarTerm(t, avails));
+    const termIndex = contract.terms.findIndex(t => isSameCalendarBucketTerm(avails, t));
     if (termIndex === -1) return;
 
     return { contractIndex, termIndex };

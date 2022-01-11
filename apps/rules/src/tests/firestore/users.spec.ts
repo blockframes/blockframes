@@ -2,9 +2,8 @@
   apps,
   assertFails,
   assertSucceeds,
-} from '@firebase/testing';
-import { testFixture } from './fixtures/data';
-import { Firestore, initFirestoreApp } from '@blockframes/testing/unit-tests';
+} from '@firebase/rules-unit-testing';
+import { Firestore, initFirestoreApp, rulesFixtures as testFixture } from '@blockframes/testing/unit-tests';
 
 describe('Org Admin', () => {
   const projectId = `usrules-spec-${Date.now()}`;
