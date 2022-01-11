@@ -1,5 +1,11 @@
 import { db } from './internals/firebase';
 import { EventDocument, EventMeta } from '@blockframes/event/+state/event.firestore';
+import { CallableContext } from 'firebase-functions/lib/providers/https';
+import { createDocumentMeta, createPublicUserDocument, getDocument } from './data/internals';
+import { Organization } from '@blockframes/organization/+state';
+import { createNotification, triggerNotifications } from './notification';
+import { PublicUser } from './data/types';
+import { Movie } from '@blockframes/movie/+state';
 
 
 /**
@@ -22,4 +28,31 @@ export async function onEventDelete(
     batch.delete(doc.ref);
   }
   return batch.commit();
+}
+
+export async function createScreeningRequest(data: { uid: string, movieId: string }, context: CallableContext) {
+  const { uid, movieId } = data;
+
+  if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
+  if (!uid) { throw new Error('User id is mandatory for screening requested'); }
+  if (!movieId) { throw new Error('Movie id is mandatory for screening requested'); }
+
+  const [user, movie] = await Promise.all([
+    getDocument<PublicUser>(`users/${uid}`),
+    getDocument<Movie>(`movies/${movieId}`)
+  ]);
+
+  const getNotifications = (org: Organization) => org.userIds.map(userId => createNotification({
+    toUserId: userId,
+    type: 'screeningRequested',
+    docId: movieId,
+    user: createPublicUserDocument(user),
+    _meta: createDocumentMeta({ createdFrom: 'festival' })
+  }));
+
+  for (const orgId of movie.orgIds) {
+    getDocument<Organization>(`orgs/${orgId}`)
+      .then(getNotifications)
+      .then(triggerNotifications);
+  }
 }

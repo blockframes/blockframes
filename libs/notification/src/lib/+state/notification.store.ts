@@ -222,6 +222,24 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           placeholderUrl: 'profil_user.svg',
           url: `${applicationUrl['festival']}${module === 'marketplace' ? `/event/${notification.docId}/r/i/` : `/c/o/${module}/event/${notification.docId}`}`
         };
+      case 'screeningRequested':
+        // we perform async fetch to display more meaningful info to the user later (because we cannot do await in akitaPreAddEntity)
+        this.getDocument<Movie>(`movies/${notification.docId}`).then(movie => {
+          this.update(notification.id, newNotification => {
+            return {
+              ...newNotification,
+              message: `${displayName(notification.user)} requested a screening for ${movie.title.international}`
+            };
+          });
+        });
+        return {
+          _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
+          message: `${displayName(notification.user)} requested a screening for ${notification.docId}`,
+          imgRef: notification.user.avatar,
+          placeholderUrl: 'profile_user.svg',
+          url: `${applicationUrl['festival']}/c/o/dashboard/event?request=${notification.docId}`
+        };
+
       case 'offerCreatedConfirmation':
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },

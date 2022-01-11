@@ -18,6 +18,7 @@
 </mat-list-item>
 <mat-menu #menu="matMenu">
   <a mat-menu-item [target]="targetLink" [href]="notification.url">More Details</a>
+  <a mat-menu-item [target]="targetLink" [href]="notification.url">Answer Request</a>
 </mat-menu>
 <ng-container *ngIf="xs$ | async">
   <p class="mat-body-1" test-id="notification-message" [innerHtml]="notification.message"></p>
