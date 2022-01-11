@@ -1,6 +1,8 @@
 
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { ConfirmPasswordForm } from '@blockframes/utils/form/controls/password.control';
+import { EditPasswordForm } from '@blockframes/utils/form/controls/password.control';
+import { DifferentPasswordStateMatcher, RepeatPasswordStateMatcher } from '@blockframes/utils/form/matchers';
+
 @Component({
   selector: '[form] auth-form-password',
   templateUrl: './password.component.html',
@@ -10,5 +12,9 @@ import { ConfirmPasswordForm } from '@blockframes/utils/form/controls/password.c
 
 export class PasswordFormComponent {
 
-  @Input() form: ConfirmPasswordForm;
+  passwordsMatcher = new RepeatPasswordStateMatcher('next', 'confirm');
+  currentPasswordMatch = new DifferentPasswordStateMatcher('current', 'next');
+
+  @Input() form: EditPasswordForm;
+
 }

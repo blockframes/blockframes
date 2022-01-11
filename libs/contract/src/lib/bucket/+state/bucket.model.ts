@@ -1,15 +1,15 @@
-import { AvailsFilter } from '@blockframes/contract/avails/avails';
+import { AvailsFilter, CalendarAvailsFilter, MapAvailsFilter } from '@blockframes/contract/avails/avails';
 import { createHoldback, Mandate } from '@blockframes/contract/contract/+state';
 import { createLanguageKey } from '@blockframes/movie/+state';
 import { Term, BucketTerm } from '../../term/+state/term.model';
 import { Bucket, BucketContract } from './bucket.firestore';
 export { BucketContract, Bucket } from './bucket.firestore';
 
-export function toBucketTerm(avail: AvailsFilter): BucketTerm {
+export function toBucketTerm(avail: AvailsFilter | MapAvailsFilter | CalendarAvailsFilter): BucketTerm {
   return createBucketTerm({
     medias: avail.medias,
-    duration: avail.duration,
-    territories: avail.territories,
+    duration: 'duration' in avail ? avail.duration : undefined,
+    territories: 'territories' in avail ? avail.territories : undefined,
     exclusive: avail.exclusive,
   });
 }
@@ -38,7 +38,7 @@ export function createBucketContract(params: Partial<BucketContract> = {}): Buck
   }
 }
 
-export function toBucketContract(contract: Mandate, term: Term<Date>, avails: AvailsFilter): BucketContract {
+export function toBucketContract(contract: Mandate, term: Term<Date>, avails: AvailsFilter | MapAvailsFilter | CalendarAvailsFilter): BucketContract {
   return createBucketContract({
     titleId: contract.titleId,
     orgId: contract.sellerId,

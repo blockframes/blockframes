@@ -35,22 +35,27 @@ export class ProfileComponent implements OnInit {
   public async update() {
     try {
       // update profile
-      if (this.profileForm.invalid) {
-        throw new Error('Your profile information are not valid.')
-      } else {
-        const uid = this.authQuery.userId;
-
-        this.uploaderService.upload();
-        await this.authService.update({ uid, ...this.profileForm.value });
-
-        this.snackBar.open('Profile updated.', 'close', { duration: 2000 });
+      if (this.profileForm.dirty) {
+        if (this.profileForm.invalid) {
+          throw new Error('Your profile information are not valid.')
+        } else {
+          const uid = this.authQuery.userId;
+  
+          this.uploaderService.upload();
+          await this.authService.update({ uid, ...this.profileForm.value });
+  
+          this.snackBar.open('Profile updated.', 'close', { duration: 2000 });
+          this.profileForm.markAsPristine();
+        }
       }
+    
       // update password
       if (this.passwordForm.dirty) {
         if (this.passwordForm.invalid) throw new Error('Your information to change your password are not valid.');
         const { current, next } = this.passwordForm.value;
         await this.authService.updatePassword(current, next);
         this.snackBar.open('Password changed.', 'close', { duration: 2000 });
+        this.passwordForm.markAsPristine();
       }
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });

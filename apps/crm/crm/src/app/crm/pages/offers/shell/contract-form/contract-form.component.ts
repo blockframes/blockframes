@@ -40,7 +40,7 @@ export class ContractFormComponent implements OnInit {
     price: new FormControl(Validators.min(0)),
     terms: FormList.factory([], (term: Term) => new FormGroup({
       id: new FormControl(term.id),
-      avails: new AvailsForm(term, []),
+      avails: new AvailsForm(term),
       versions: new MovieVersionInfoForm(term.languages),
     }))
   });
