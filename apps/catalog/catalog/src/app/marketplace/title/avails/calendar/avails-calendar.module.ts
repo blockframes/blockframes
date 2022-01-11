@@ -26,6 +26,7 @@ import { OrgNameModule } from '@blockframes/organization/pipes';
 import { MarketplaceMovieAvailsCalendarComponent } from './avails-calendar.component';
 import { AvailsCalendarModule } from '@blockframes/contract/avails/calendar/calendar.module';
 import { AvailsFilterModule } from '@blockframes/contract/avails/filter/filter.module';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 @NgModule({
@@ -51,6 +52,7 @@ import { AvailsFilterModule } from '@blockframes/contract/avails/filter/filter.m
     MatCheckboxModule,
     MatFormFieldModule,
     MatDatepickerModule,
+    MatProgressSpinnerModule,
 
     RouterModule.forChild([{ path: '', component: MarketplaceMovieAvailsCalendarComponent }]),
   ],

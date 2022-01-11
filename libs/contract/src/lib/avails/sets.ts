@@ -148,3 +148,53 @@ export function someOf(a?: Range, optional?: 'optional'): ReturnType<typeof cont
 export function someOf(a?: string[] | Range, optional?: 'optional') {
   return Array.isArray(a) ? discreteSomeOf(a, optional) : continuousSomeOf(a, optional);
 }
+
+
+// ----------------------------
+// SPECIAL EXCLUSIVITY CHECK
+
+/**
+ * Check exclusivity
+ *
+ * |⬇ Mandate \ Avail ➡|Exclusive|Non-Exclusive|
+ * |-|-|-|
+ * |Exclusive|✅|✅|
+ * |Non-Exclusive|❌|✅|
+ */
+export function exclusivityAllOf(availsExclusivity: boolean) {
+
+  //                                Avail
+  //                     | Exclusive | Non-Exclusive |
+  //                -----|-----------|---------------|
+  //           Exclusive |     ✅    |       ✅     |
+  // Mandate        -----|-----------|---------------|
+  //       Non-Exclusive |    ❌     |      ✅      |
+  //                -----|-----------|---------------|
+
+  return {
+    in: (termExclusivity: boolean) => termExclusivity || !availsExclusivity,
+  };
+}
+
+/**
+ * Check exclusivity
+ *
+ * |⬇ Sale \ Avail ➡|Exclusive|Non-Exclusive|
+ * |-|-|-|
+ * |Exclusive|✅|✅|
+ * |Non-Exclusive|✅|❌|
+ */
+export function exclusivitySomeOf(availsExclusivity: boolean) {
+
+  //                                Avail
+  //                     | Exclusive | Non-Exclusive |
+  //                -----|-----------|---------------|
+  //           Exclusive |     ✅    |       ✅     |
+  // Sale           -----|-----------|---------------|
+  //       Non-Exclusive |    ✅     |      ❌      |
+  //                -----|-----------|---------------|
+
+  return {
+    in: (termExclusivity: boolean) => termExclusivity || availsExclusivity,
+  };
+}

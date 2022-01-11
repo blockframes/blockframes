@@ -18,6 +18,7 @@ import { createLocation } from '@blockframes/utils/common-interfaces/utility';
 import { debounceTime } from 'rxjs/internal/operators/debounceTime';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { DifferentPasswordStateMatcher, RepeatPasswordStateMatcher } from '@blockframes/utils/form/matchers';
 
 @Component({
   selector: 'auth-identity',
@@ -38,6 +39,9 @@ export class IdentityComponent implements OnInit, OnDestroy {
   public orgForm = new OrganizationLiteForm();
   public useAlgolia = true;
   public existingUser = false;
+  public passwordsMatcher = new RepeatPasswordStateMatcher('password', 'confirm');
+  public currentPasswordMatch = new DifferentPasswordStateMatcher('generatedPassword', 'password');
+  
   private existingOrgId: string;
   private sub: Subscription;
   private isAnonymous = false;
@@ -114,6 +118,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
     this.form.get('firstName').disable();
     this.form.get('lastName').disable();
     this.form.get('password').disable();
+    this.form.get('confirm').disable();
     this.form.get('generatedPassword').disable();
   }
 

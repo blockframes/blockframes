@@ -124,49 +124,57 @@ export async function formatContract(
       if (!lower) return mandatoryError('Type');
       const type = getKeyIfExists('contractType', lower[0].toUpperCase() + lower.substr(1));
       if (!type) return wrongValueError('Type');
-      if (type === 'mandate' && !blockframesAdmin) throw new Error(JSON.stringify({
-        type: 'error',
-        field: 'contract.type',
-        name: `Forbidden Type`,
-        reason: 'Only admin can import mandates.',
-        hint: 'Please ensure the corresponding sheet field value is "sale".'
-      }));
+      if (type === 'mandate' && !blockframesAdmin) return {
+        value: undefined,
+        error: {
+          type: 'error',
+          name: `Forbidden Type`,
+          reason: 'Only admin can import mandates.',
+          hint: 'Please ensure the corresponding sheet field value is "sale".'
+        }
+      };
       return lower.toLowerCase() as 'mandate' | 'sale';
     },
     /* c */'contract.sellerId': async (value: string) => {
       if (!value) return mandatoryError('Licensor');
       if (value === 'Archipel Content') {
-        if (!blockframesAdmin) throw new Error(JSON.stringify({
-          type: 'error',
-          field: 'contract.sellerId',
-          name: `Forbidden Licensor`,
-          reason: 'Internal sales don\'t need to be imported and will appear automatically on your dashboard.',
-          hint: 'Please ensure that the Licensor name is not "Archipel Content". Only admin can import internal sales.'
-        }));
+        if (!blockframesAdmin) return {
+          value: undefined,
+          error: {
+            type: 'error',
+            name: `Forbidden Licensor`,
+            reason: 'Internal sales don\'t need to be imported and will appear automatically on your dashboard.',
+            hint: 'Please ensure that the Licensor name is not "Archipel Content". Only admin can import internal sales.'
+          }
+        };
         return centralOrgId.catalog;
       } else {
         const sellerId = await getOrgId(value, orgService, orgNameCache);
         if (!sellerId) return unknownEntityError('Licensor Organization');
-        if (!blockframesAdmin && sellerId !== userOrgId) throw new Error(JSON.stringify({
-          type: 'error',
-          field: 'contract.sellerId',
-          name: 'Forbidden Licensor',
-          reason: 'You should be the seller of this contract. The Licensor name should be your own organization name.',
-          hint: 'Please edit the corresponding sheet field'
-        }));
+        if (!blockframesAdmin && sellerId !== userOrgId) return {
+          value: undefined,
+          error: {
+            type: 'error',
+            name: 'Forbidden Licensor',
+            reason: 'You should be the seller of this contract. The Licensor name should be your own organization name.',
+            hint: 'Please edit the corresponding sheet field'
+          }
+        };
         return sellerId;
       }
     },
     /* d */'contract.buyerId': async (value: string, data: FieldsConfig) => {
       if (!value) return mandatoryError('Licensee');
       if (data.contract.type === 'mandate') {
-        if (value !== 'Archipel Content') throw new Error(JSON.stringify({
-          type: 'error',
-          field: 'contract.buyerId',
-          name: 'Forbidden Licensee',
-          reason: 'The Licensee name of a mandate must be "Archipel Content".',
-          hint: 'Please edit the corresponding sheet field'
-        }));
+        if (value !== 'Archipel Content') return {
+          value: undefined,
+          error: {
+            type: 'error',
+            name: 'Forbidden Licensee',
+            reason: 'The Licensee name of a mandate must be "Archipel Content".',
+            hint: 'Please edit the corresponding sheet field'
+          }
+        };
         return centralOrgId.catalog;
       } else {
         const isInternal = data.contract.sellerId === centralOrgId.catalog;
