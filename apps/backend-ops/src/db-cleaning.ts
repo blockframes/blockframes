@@ -24,20 +24,15 @@ export async function cleanDeprecatedData(db: FirebaseFirestore.Firestore, auth?
   const { dbData, collectionData } = await loadAllCollections(db);
 
   // Data consistency check before cleaning data
-  await printDatabaseInconsistencies({ dbData, collectionData }, undefined, { verbose: false });
+  await printDatabaseInconsistencies({ dbData, collectionData }, undefined, { printDetail: false });
 
   // Actual cleaning
-  console.log('Cleaning data');
+  if (verbose) console.log('Cleaning data');
   await cleanData(dbData, db, auth);
 
   // Data consistency check after cleaning data
-  await printDatabaseInconsistencies(undefined, db, { verbose: false });
+  await printDatabaseInconsistencies(undefined, db, { printDetail: false });
 
-  return true;
-}
-
-export async function auditDatabaseConsistency(db: FirebaseFirestore.Firestore, options = { verbose: true }) {
-  await printDatabaseInconsistencies(undefined, db, options);
   return true;
 }
 
@@ -260,8 +255,10 @@ export function cleanMovies(
     let updateDoc = false;
 
     // Remove duplicates
-    if (!!movie.orgIds && Array.from(new Set(movie.orgIds)).length !== movie.orgIds.length) {
-      movie.orgIds = Array.from(new Set(movie.orgIds));
+    const uniqueOrgIds = Array.from(new Set(movie.orgIds));
+    const hasDuplicate = movie.orgIds && uniqueOrgIds.length !== movie.orgIds.length;
+    if (hasDuplicate) {
+      movie.orgIds = uniqueOrgIds;
       updateDoc = true;
     }
 
@@ -285,7 +282,9 @@ export function cleanDocsIndex(
 ) {
 
   return runChunks(docsIndex.docs, async (doc) => {
-    if (!moviesAndEventsIds.includes(doc.id) || !organizationIds.includes(doc.data().authorOrgId)) {
+    const isDocLinkedToMoviesOrEvents = moviesAndEventsIds.includes(doc.id);
+    const isDocLinkedToOrgs = organizationIds.includes(doc.data().authorOrgId);
+    if (!isDocLinkedToMoviesOrEvents || !isDocLinkedToOrgs) {
       await doc.ref.delete();
     }
   }, undefined, verbose);

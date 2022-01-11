@@ -79,7 +79,7 @@ export async function shrinkDb(db: FirebaseFirestore.Firestore) {
   const { dbData, collectionData } = await loadAllCollections(db);
 
   // Data consistency check before cleaning data
-  await printDatabaseInconsistencies({ dbData, collectionData }, undefined, { verbose: false });
+  await printDatabaseInconsistencies({ dbData, collectionData }, undefined, { printDetail: false });
 
   //////////////////
   // CHECK WHAT CAN BE DELETED
