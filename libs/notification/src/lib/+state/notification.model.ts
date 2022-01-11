@@ -6,4 +6,5 @@ export interface Notification extends NotificationBase<Date> {
   imgRef?: StorageFile;
   placeholderUrl?: string;
   url?: string;
+  actionText?: string;
 }

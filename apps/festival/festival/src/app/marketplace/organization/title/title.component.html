@@ -1,6 +1,8 @@
 <h2>Line-up</h2>
 <section fxLayout="row wrap" fxLayoutGap="24px grid">
   <ng-container *ngFor="let title of titles$ | async; trackBy: trackById">
-    <movie-card [movie]="title" [link]="['../../../title', title.id]" size="poster"></movie-card>
+    <movie-card [movie]="title" [link]="['../../../title', title.id]" size="poster">
+      <event-request-screening [movieId]="title.id" iconOnly></event-request-screening>
+    </movie-card>
   </ng-container>
 </section>

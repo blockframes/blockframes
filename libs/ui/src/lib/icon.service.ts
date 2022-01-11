@@ -18,6 +18,7 @@ export const icons = [
   { name: 'arrow_right', url: 'assets/icons/arrow_right.svg' },
   { name: 'arrow_upward', url: 'assets/icons/arrow_upward.svg' },
   { name: 'article', url: 'assets/icons/article.svg' },
+  { name: 'ask_screening', url: 'assets/icons/ask_screening.svg' },
   { name: 'attachment', url: 'assets/icons/attachment.svg' },
   { name: 'AUD', url: 'assets/icons/attach_money.svg' },
   { name: 'block', url: 'assets/icons/block.svg' },

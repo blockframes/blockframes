@@ -13,7 +13,7 @@ import { WishlistButtonModule } from '@blockframes/organization/components/wishl
 import { PromotionalLinksModule } from '@blockframes/movie/components/promotional-links/promotional-links.module';
 import { UpcomingScreeningsModule } from '@blockframes/movie/components/upcoming-screenings/upcoming-screenings.module';
 import { OngoingButtonModule } from '@blockframes/ui/ongoing-button/ongoing-button.module';
-
+import { RequestScreeningModule } from '@blockframes/event/components/request-screening/request-screening.module';
 // Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -69,6 +69,7 @@ const routes = [
     PromotionalLinksModule,
     UpcomingScreeningsModule,
     OngoingButtonModule,
+    RequestScreeningModule,
     // Material
     MatIconModule,
     MatButtonModule,
