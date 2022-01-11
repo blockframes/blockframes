@@ -26,7 +26,7 @@ export class UpcomingScreeningsComponent {
 
   public sessionCtrl = new FormControl(0);
 
-  public movie$ = this.query.selectActive();
+  public movieId = this.query.getActiveId();
 
   public ongoingScreenings$: Observable<Event<Screening>[]>;
   public futureScreenings$: Observable<Event<Screening>[]>;
