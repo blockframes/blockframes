@@ -55,7 +55,7 @@ export async function onOfferCreate(snap: FirebaseFirestore.DocumentSnapshot): P
   const date = format(new Date(), 'dd MMMM, yyyy');
   const request: EmailTemplateRequest = {
     to: supportEmails[app],
-    templateId: templateIds.offer.created,
+    templateId: templateIds.offer.toAdmin,
     data: { org, bucket, user, baseUrl, date }
   }
   sendMailFromTemplate(request, app);

@@ -248,7 +248,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           url: module === 'marketplace' ? marketplaceUrl : dashboardUrl
         }
       }
-      case 'contractAccepted': {
+      case 'myContractWasAccepted': {
         const marketplaceUrl = `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.offerId}/${notification.docId}`;
         const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
         return {
@@ -258,7 +258,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           url: module === 'marketplace' ? marketplaceUrl : dashboardUrl
         }
       }
-      case 'acceptedContract': {
+      case 'myOrgAcceptedAContract': {
         const marketplaceUrl = `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.offerId}/${notification.docId}`;
         const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
         return {
@@ -268,7 +268,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           url: module === 'marketplace' ? marketplaceUrl : dashboardUrl
         }
       }
-      case 'contractDeclined': {
+      case 'myContractWasDeclined': {
         const marketplaceUrl = `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.offerId}/${notification.docId}`;
         const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
         return {
@@ -278,7 +278,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           url: module === 'marketplace' ? marketplaceUrl : dashboardUrl
         }
       }
-      case 'declinedContract': {
+      case 'myOrgDeclinedAContract': {
         const marketplaceUrl = `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.offerId}/${notification.docId}`;
         const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
         return {

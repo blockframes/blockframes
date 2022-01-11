@@ -36,17 +36,17 @@ export async function updateOfferStatus(contract: Contract) {
       const initial = nego.initial.toDate();
       const pending = nego.status === 'pending';
       if (isInitial({ _meta, initial }) && pending) return 'pending';
-      else if (pending) return 'negotiating';
-      else return nego.status;
+      if (pending) return 'negotiating';
+      return nego.status;
     });
 
     let newOfferStatus = offer.status;
     const negotiatingStatuses = ['negotiating', 'accepted', 'declined'];
     const acceptedStatuses = ['accepted', 'declined'];
-    newOfferStatus = contractsStatus.some(status => negotiatingStatuses.includes(status)) ? 'negotiating' : newOfferStatus;
-    newOfferStatus = contractsStatus.every(status => acceptedStatuses.includes(status)) ? 'accepted' : newOfferStatus;
-    newOfferStatus = contractsStatus.every(status => status === 'declined') ? 'declined' : newOfferStatus;
-    newOfferStatus = contractsStatus.every(status => status === 'pending') ? 'pending' : newOfferStatus;
+    if (contractsStatus.some(status => negotiatingStatuses.includes(status))) newOfferStatus = 'negotiating';
+    if (contractsStatus.every(status => acceptedStatuses.includes(status))) newOfferStatus = 'accepted';
+    if (contractsStatus.every(status => status === 'declined')) newOfferStatus = 'declined';
+    if (contractsStatus.every(status => status === 'pending')) newOfferStatus = 'pending';
 
     if (newOfferStatus === offer.status) return;
     return tx.update(offerRef, { status: newOfferStatus });
@@ -58,13 +58,35 @@ export async function onNegotiationCreated(negotiationSnapshot: FirebaseFirestor
   const _meta = formatDocumentMetaFromFirestore(negotiation._meta);
   const initial = negotiation.initial.toDate();
 
-  if (isInitial({ _meta, initial })) return;
-
   const path = negotiationSnapshot.ref.path;
   // contracts/{contractId}/negotiations/{negotiationId}
   const contractId = path.split('/')[1]
-
   const contract = await getDocument<Sale>(`/contracts/${contractId}`);
+
+  //Send notification to seller about an offer made on his title.
+  if (isInitial({ _meta, initial })) {
+    const stakeholders = negotiation.stakeholders.filter(stakeholder => {
+      return ![contract.buyerId, centralOrgId.catalog].includes(stakeholder);
+    });
+
+    if (!stakeholders.length) return;
+
+    const getNotifications = (org: Organization) => org.userIds.map(userId => createNotification({
+      toUserId: userId,
+      type: 'contractCreated',
+      docId: contractId,
+      docPath: path,
+      _meta: createDocumentMeta({ createdFrom: 'catalog' })
+    }));
+    const promises = stakeholders.map(stakeholder =>
+      getDocument<Organization>(`orgs/${stakeholder}`)
+        .then(getNotifications)
+        .then(triggerNotifications)
+    );
+    return await Promise.all(promises);
+
+  };
+
   await updateOfferStatus(contract)
 
   const stakeholders = negotiation.stakeholders.filter(stakeholder => {
@@ -77,7 +99,7 @@ export async function onNegotiationCreated(negotiationSnapshot: FirebaseFirestor
     toUserId: userId,
     type: 'negotiationCreated',
     docId: contractId,
-    offerId:contract.offerId,
+    offerId: contract.offerId,
     docPath: path,
     _meta: createDocumentMeta({ createdFrom: 'catalog' })
   }));

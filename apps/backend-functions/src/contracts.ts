@@ -43,30 +43,6 @@ export async function onContractDelete(contractSnapshot: FirebaseFirestore.Docum
   console.log(`Contract ${contract.id} removed`);
 }
 
-export async function onContractCreate(contractSnapshot: FirebaseFirestore.DocumentSnapshot<Contract>) {
-  const contract = contractSnapshot.data() as Contract;
-
-  if (contract.type !== 'sale') return;
-
-  const stakeholders = contract.stakeholders.filter(stakeholder => {
-    return (stakeholder !== contract.buyerId) && stakeholder !== centralOrgId.catalog;
-  });
-
-  if (!stakeholders.length) return;
-
-  const getNotifications = (org: Organization) => org.userIds.map(userId => createNotification({
-    toUserId: userId,
-    type: 'contractCreated',
-    docId: contract.id,
-    _meta: createDocumentMeta({ createdFrom: 'catalog' })
-  }));
-
-  for (const stakeholder of stakeholders) {
-    getDocument<Organization>(`orgs/${stakeholder}`)
-      .then(getNotifications)
-      .then(triggerNotifications);
-  }
-}
 
 async function deleteCurrentTerms(ref: FirebaseFirestore.Query) {
   const currentTerms = await ref.get()
@@ -96,8 +72,8 @@ async function createIncome(sale: Sale, negotiation: Negotiation<Timestamp>, tx:
 }
 
 interface ContractNotificationType{
-  actorOrg: 'acceptedContract' | 'declinedContract', //org who accepted/declined a contract
-  receptorOrg: 'contractAccepted' | 'contractDeclined', // Org whose contract was accepted/declined
+  actorOrg: 'myOrgAcceptedAContract' | 'myOrgDeclinedAContract', //org who accepted/declined a contract
+  receptorOrg: 'myContractWasAccepted' | 'myContractWasDeclined', // Org whose contract was accepted/declined
 }
 
 async function getContractNotifications(contractId: string, offerId: string, negotiation: Negotiation<Timestamp>, types:ContractNotificationType ) {
@@ -134,22 +110,22 @@ async function getContractNotifications(contractId: string, offerId: string, neg
 }
 
 async function getContractAcceptedNotifications(contractId: string, offerId: string, negotiation: Negotiation<Timestamp>) {
-  return getContractNotifications(contractId, offerId, negotiation, {actorOrg: 'acceptedContract', receptorOrg: 'contractAccepted'})
+  return getContractNotifications(contractId, offerId, negotiation, {actorOrg: 'myOrgAcceptedAContract', receptorOrg: 'myContractWasAccepted'})
 }
 
 async function getContractDeclinedNotifications(contractId: string, offerId: string, negotiation: Negotiation<Timestamp>) {
-  return getContractNotifications(contractId, offerId, negotiation, {actorOrg: 'declinedContract', receptorOrg: 'contractDeclined'})
+  return getContractNotifications(contractId, offerId, negotiation, {actorOrg: 'myOrgDeclinedAContract', receptorOrg: 'myContractWasDeclined'})
 }
 
-export type ContractActions = 'contractAccepted' | 'contractDeclined' | 'contractInNegotiation'
+export type ContractActions = 'myContractWasAccepted' | 'myContractWasDeclined' | 'contractInNegotiation'
 
 async function sendContractUpdateNotification(before: Sale, after: Sale, negotiation: Negotiation<Timestamp>) {
   const statusChange: ContractStatusChange = `${before.status} => ${after.status}` as const;
   const types: Partial<Record<ContractStatusChange, ContractActions>> = {
-    "pending => accepted": 'contractAccepted',
-    "declined => accepted": 'contractAccepted',
-    "pending => declined": 'contractDeclined',
-    "accepted => declined": 'contractDeclined',
+    "pending => accepted": 'myContractWasAccepted',
+    "declined => accepted": 'myContractWasAccepted',
+    "pending => declined": 'myContractWasDeclined',
+    "accepted => declined": 'myContractWasDeclined',
     "declined => pending": 'contractInNegotiation',
     "accepted => pending": 'contractInNegotiation',
   };
@@ -160,9 +136,9 @@ async function sendContractUpdateNotification(before: Sale, after: Sale, negotia
 
   let notifications: NotificationDocument[] = [];
   switch (type) {
-    case 'contractAccepted': notifications = await getContractAcceptedNotifications(after.id, after.offerId, negotiation);
+    case 'myContractWasAccepted': notifications = await getContractAcceptedNotifications(after.id, after.offerId, negotiation);
       break;
-    case 'contractDeclined': notifications = await getContractDeclinedNotifications(after.id, after.offerId, negotiation);
+    case 'myContractWasDeclined': notifications = await getContractDeclinedNotifications(after.id, after.offerId, negotiation);
       break;
   }
   if (notifications.length) triggerNotifications(notifications);

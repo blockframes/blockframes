@@ -15,6 +15,8 @@ import { format } from "date-fns";
 import { testEmail } from "@blockframes/e2e/utils/env";
 import { Offer } from '@blockframes/contract/offer/+state';
 import { ContractDocument } from '@blockframes/contract/contract/+state';
+import { NegotiationDocument } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
+import { staticModel } from '@blockframes/utils/static-model';
 
 const ORG_HOME = '/c/o/organization/';
 const USER_CREDENTIAL_INVITATION = '/auth/identity';
@@ -303,8 +305,11 @@ export function movieAcceptedEmail(toUser: UserEmailData, movieTitle: string, mo
 }
 
 /** Inform user of org whose movie is being bought */
-export function contractCreatedEmail(toUser: UserEmailData, movieTitle: string, app: App): EmailTemplateRequest {
-  const data = { user: toUser, app: { name: app }, title: { names: movieTitle } };
+export function contractCreatedEmail(
+  toUser: UserEmailData, movieTitle: string, app: App, contract: ContractDocument,
+  negotiation: NegotiationDocument, buyerOrg: OrganizationDocument
+): EmailTemplateRequest {
+  const data = { user: toUser, app: { name: app }, title: { names: movieTitle }, contract, negotiation, buyerOrg };
   return { to: toUser.email, templateId: templateIds.contract.created, data };
 }
 
@@ -312,10 +317,17 @@ export function contractCreatedEmail(toUser: UserEmailData, movieTitle: string, 
 export function offerCreatedConfirmationEmail(toUser: UserEmailData, org: OrganizationDocument, bucket: Bucket): EmailTemplateRequest {
   const date = format(new Date(), 'dd MMMM, yyyy');
   const data = { org, bucket, user: toUser, baseUrl: appUrl.content, date };
-  return { to: toUser.email, templateId: templateIds.offer.created, data };
+  return { to: toUser.email, templateId: templateIds.offer.toAdmin, data };
 }
 
-export function negotiationCreatedEmail(
+/**To inform buyer that his offer has been successfully created. */
+export function buyerOfferCreatedConfirmationEmail(toUser: UserEmailData, org: OrganizationDocument, offerId: string, bucket: Bucket): EmailTemplateRequest {
+  const date = format(new Date(), 'dd MMMM, yyyy');
+  const data = { org, bucket, user: toUser, baseUrl: appUrl.content, date, offerId };
+  return { to: toUser.email, templateId: templateIds.offer.toBuyer, data };
+}
+
+export function counterOfferRecipientEmail(
   toUser: UserEmailData, creatorOrg: OrganizationDocument, offerId: string,
   title: MovieDocument, contractId: string, options?: { isRecipientBuyer: boolean }
 ): EmailTemplateRequest {
@@ -323,7 +335,27 @@ export function negotiationCreatedEmail(
     user: toUser, baseUrl: appUrl.content, offerId, creatorOrg,
     contractId, title, isRecipientBuyer: !!options?.isRecipientBuyer
   };
-  return { to: toUser.email, templateId: templateIds.negotiation.created, data };
+  return { to: toUser.email, templateId: templateIds.negotiation.receivedCounterOffer, data };
+}
+
+export function counterOfferCreatorEmail(
+  toUser: UserEmailData, org: OrganizationDocument, offerId: string,
+  negotiation: NegotiationDocument, contractId: string, options?: { isRecipientBuyer: boolean }
+): EmailTemplateRequest {
+  const terms = negotiation.terms.map(term => ({
+    ...term,
+    duration: {
+      from: format(term.duration.from.toDate(), 'dd MMMM, yyyy'),
+      to: format(term.duration.to.toDate(), 'dd MMMM, yyyy'),
+    },
+  }))
+  const currency = staticModel['movieCurrencies'][negotiation.currency];
+  const data = {
+    user: toUser, baseUrl: appUrl.content, offerId, org,
+    contractId, isRecipientBuyer: !!options?.isRecipientBuyer,
+    negotiation: { ...negotiation, terms, currency }
+  };
+  return { to: toUser.email, templateId: templateIds.negotiation.createdCounterOffer, data };
 }
 
 type NegotiationUpdateConfig = {
@@ -341,13 +373,13 @@ export function negotiationEmail(
     user: toUser, baseUrl: appUrl.content, offerId, org,
     contractId, title, isRecipientBuyer: !!options.isRecipientBuyer
   };
-  let templateId = templateIds.negotiation.contractAccepted;
+  let templateId = templateIds.negotiation.myContractWasAccepted;
   if (options.didRecipientAcceptOrDecline)
-    templateId = templateIds.negotiation.acceptedContract;
+    templateId = templateIds.negotiation.myOrgAcceptedAContract;
   if (options.isActionDeclined) {
-    templateId = templateIds.negotiation.contractDeclined;
+    templateId = templateIds.negotiation.myContractWasDeclined;
     if (options.didRecipientAcceptOrDecline)
-      templateId = templateIds.negotiation.declinedContract;
+      templateId = templateIds.negotiation.myOrgDeclinedAContract;
   }
   return { to: toUser.email, templateId, data };
 }
