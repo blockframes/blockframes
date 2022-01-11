@@ -3,9 +3,9 @@ import {
   getTestingProjectId,
   initFunctionsTestMock,
   populate,
-  eventData,
+  eventFixtures,
 } from '@blockframes/testing/unit-tests';
-import { clearFirestoreData } from '@firebase/testing';
+import { clearFirestoreData } from '@firebase/rules-unit-testing';
 import { createNotificationsForEventsToStart } from './events';
 
 describe('Events tests', () => {
@@ -21,9 +21,9 @@ describe('Events tests', () => {
 
   it('should create one notification to users with accepted invitation if events are about to start', async () => {
     // Load our test set
-    await populate('users', eventData.users);
-    await populate('events', eventData.events);
-    await populate('invitations', eventData.invitations);
+    await populate('users', eventFixtures.users);
+    await populate('events', eventFixtures.events);
+    await populate('invitations', eventFixtures.invitations);
 
     await createNotificationsForEventsToStart();
 

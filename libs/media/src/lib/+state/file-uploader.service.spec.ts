@@ -3,7 +3,7 @@ import { Overlay } from '@angular/cdk/overlay';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireStorage } from "@angular/fire/storage";
 import { SETTINGS, AngularFirestoreModule } from '@angular/fire/firestore';
-import { clearFirestoreData } from '@firebase/testing';
+import { clearFirestoreData } from '@firebase/rules-unit-testing';
 import { FileUploaderService } from './file-uploader.service';
 import { UploadData } from './media.model';
 

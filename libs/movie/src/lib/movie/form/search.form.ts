@@ -6,9 +6,8 @@ import { algolia } from '@env';
 import algoliasearch, { SearchIndex } from 'algoliasearch';
 import { StoreStatus, ProductionStatus, Territory, Genre, SocialGoal, ContentType } from '@blockframes/utils/static-model/types';
 import { App } from "@blockframes/utils/apps";
-import { AlgoliaOrganization, AlgoliaSearch } from '@blockframes/utils/algolia';
+import { AlgoliaMovie, AlgoliaOrganization, AlgoliaSearch } from '@blockframes/utils/algolia';
 import { max } from './filters/budget/budget.component';
-import { Movie } from '../+state';
 
 export const runningTimeFilters = {
   // 0 is all values
@@ -216,7 +215,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
     }
 
 
-    return this.movieIndex.search<Movie>(search.query, search);
+    return this.movieIndex.search<AlgoliaMovie>(search.query, search);
   }
 
   getLanguages(data: LanguageVersion) {

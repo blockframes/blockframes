@@ -10,7 +10,7 @@ const nonCollidingTerritoriesA: Territory[] = [
   'argentina', 'armenia', 'aruba', 'australia',
   'austria', 'azerbaijan', 'bahamas', 'bahrain',
   'bangladesh', 'barbados', 'belarus', 'belgium',
-  'belize', 'benin', 'bermuda', 'bhutan', 'bolivia', 'bonaire', 'botswana', 'brazil',
+  'belize', 'benin', 'bermuda', 'bhutan', 'bolivia', 'botswana', 'brazil',
 ]
 const nonCollidingTerritoriesB: Territory[] = [
   'kyrgyzstan', 'laos', 'latvia', 'lebanon',
@@ -18,7 +18,7 @@ const nonCollidingTerritoriesB: Territory[] = [
   'lithuania', 'luxembourg', 'macao', 'madagascar',
   'malawi', 'malaysia', 'maldives', 'mali', 'malta',
   'marshall', 'martinique', 'mauritania', 'mauritius',
-  'mayotte', 'mexico', 'micronesia',
+  'mexico', 'micronesia',
 ]
 const collidingTerritoriesA = nonCollidingTerritoriesA
 const collidingTerritoriesB = [...nonCollidingTerritoriesB, collidingTerritoriesA[0]]

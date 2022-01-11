@@ -19,7 +19,7 @@ import { createNotificationsForEventsToStart } from './internals/invitations/eve
 import { getPrivateVideoUrl, getPlayerUrl } from './player';
 import { sendMailAsAdmin as _sendMailAsAdmin, sendMailWithTemplate as _sendMailWithTemplate } from './internals/email';
 import { linkFile, getMediaToken as _getMediaToken } from './media';
-import { onEventDelete } from './event';
+import { onEventDelete, createScreeningRequest } from './event';
 import { getTwilioAccessToken, twilioWebhook as _twilioWebhook } from './twilio';
 import { eventWebhook as sendgridEventWebhook } from './sendgrid';
 import { hotConfig, heavyConfig, superHeavyConfig } from '@blockframes/firebase-utils';
@@ -124,6 +124,8 @@ export const acceptOrDeclineInvitationAsAnonymous = functions().https.onCall(inv
 //--------------------------------
 
 export const onEventDeleteEvent = onDocumentDelete('events/{eventID}', onEventDelete);
+
+export const requestScreening = functions().https.onCall(skipInMaintenance(logErrors(createScreeningRequest)));
 
 /** Trigger: REST call to invite a list of users by email. */
 export const inviteUsers = functions().https.onCall(skipInMaintenance(logErrors(invitations.inviteUsers)));

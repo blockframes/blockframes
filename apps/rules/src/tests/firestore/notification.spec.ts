@@ -1,6 +1,5 @@
-﻿import { apps, assertFails, assertSucceeds } from '@firebase/testing';
-import { testFixture } from './fixtures/data';
-import { Firestore, initFirestoreApp } from '@blockframes/testing/unit-tests';
+﻿import { apps, assertFails, assertSucceeds } from '@firebase/rules-unit-testing';
+import { Firestore, initFirestoreApp, rulesFixtures as testFixture } from '@blockframes/testing/unit-tests';
 
 describe('Notification Rules Tests', () => {
   const projectId = `notrules-spec-${Date.now()}`;

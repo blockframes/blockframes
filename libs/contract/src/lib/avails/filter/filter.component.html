@@ -1,12 +1,12 @@
-<mat-form-field appearance="outline" *ngIf="!hideKeys['territories']">
+<mat-form-field appearance="outline" *ngIf="safeGet('territories') as territories">
   <mat-label>Select territories</mat-label>
   <mat-icon matPrefix svgIcon="world"></mat-icon>
   <static-group
-    [formControl]="form.get('territories')"
+    [formControl]="territories"
     scope="territories"
     displayAll="World"
     placeholder="Specify territory to filter"
-    [required]="required"
+    required
     test-id="territories">
   </static-group>
   <mat-error *ngIf="form.hasError('required', 'territories')">
@@ -14,14 +14,14 @@
   </mat-error>
 </mat-form-field>
 
-<mat-form-field appearance="outline" *ngIf="!hideKeys['medias']">
+<mat-form-field appearance="outline" *ngIf="safeGet('medias') as medias">
   <mat-label>Select rights</mat-label>
   <mat-icon matPrefix svgIcon="play_arrow"></mat-icon>
   <static-group
-    [formControl]="form.get('medias')"
+    [formControl]="medias"
     scope="medias"
     displayAll="All Rights"
-    [required]="required"
+    required
     placeholder="Specify right(s) to filter"
     [withoutValues]="['theatrical']"
     test-id="medias">
@@ -31,14 +31,14 @@
   </mat-error>
 </mat-form-field>
 
-<div class="duration" [formGroup]="form.get('duration')" *ngIf="!hideKeys['duration']">
+<div class="duration" *ngIf="safeGet('duration') as duration" [formGroup]="duration" >
   <mat-form-field appearance="outline">
     <mat-label>Licence Start Date</mat-label>
     <input
       matInput
       [matDatepicker]="datepickerFrom"
       formControlName="from"
-      [required]="required"
+      required
       placeholder="MM/DD/YYYY"
     />
     <mat-datepicker-toggle matPrefix [for]="datepickerFrom" test-id="dateFrom"></mat-datepicker-toggle>
@@ -56,7 +56,7 @@
       matInput
       [matDatepicker]="datepickerTo"
       formControlName="to"
-      [required]="required"
+      required
       placeholder="MM/DD/YYYY"
     />
     <mat-datepicker-toggle matPrefix [for]="datepickerTo" test-id="dateTo"></mat-datepicker-toggle>
@@ -73,10 +73,10 @@
   </mat-form-field>
 </div>
 
-<mat-form-field appearance="outline" *ngIf="!hideKeys['exclusive']">
+<mat-form-field appearance="outline" *ngIf="safeGet('exclusive') as exclusive">
   <mat-label>Exclusivity</mat-label>
   <mat-icon matPrefix svgIcon="star"></mat-icon>
-  <mat-select [formControl]="form.get('exclusive')" [required]="required">
+  <mat-select [formControl]="exclusive" required>
     <mat-option [value]="true">Exclusive</mat-option>
     <mat-option [value]="false">Non exclusive</mat-option>
   </mat-select>
