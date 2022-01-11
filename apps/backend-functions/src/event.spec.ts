@@ -29,10 +29,8 @@ describe('Event backend-function unit-tests', () => {
       const wrapped = testEnv.wrap(onEventDeleteEvent);
       const eventId = 'E001';
 
-      const eventToDelete = { id: eventId };
-
-      const eventSnap = testEnv.firestore.makeDocumentSnapshot(
-        eventToDelete,
+      const eventToDeleteSnap = testEnv.firestore.makeDocumentSnapshot(
+        { id: eventId },
         `events/${eventId}`
       );
 
@@ -48,7 +46,7 @@ describe('Event backend-function unit-tests', () => {
       expect(notificationsCollectionRefBefore.docs).toHaveLength(1);
 
       // Trigger onEventDeleteEvent event
-      await wrapped(eventSnap); // Only snapshot is used in onEventDeleteEvent
+      await wrapped(eventToDeleteSnap); // Only snapshot is used in onEventDeleteEvent
 
       // Check documents after delete
       const invitationsCollectionRefAfter = await db.collection('invitations')

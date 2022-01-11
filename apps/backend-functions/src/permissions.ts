@@ -7,7 +7,6 @@ import { removeAllSubcollections } from './utils';
  * this is used in the firestore rules: a user cannot create a document if it already exists
  * in the index.
  *
- * This index might be used for other features, will come later.
  */
 export async function onDocumentPermissionCreate(
   _: FirebaseFirestore.DocumentSnapshot,
