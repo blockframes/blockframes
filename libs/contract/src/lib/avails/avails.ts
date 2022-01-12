@@ -38,8 +38,8 @@ export function filterContractsByTitle(titleId: string, mandates: Mandate[], man
   // Gather only sales & sale terms related to this title
   const termsBySale: Record<string, Term[]> = {};
   for (const term of saleTerms) {
-    if (!termsBySale[term?.contractId]) termsBySale[term?.contractId] = [];
-    termsBySale[term?.contractId].push(term);
+    if (!termsBySale[term.contractId]) termsBySale[term.contractId] = [];
+    termsBySale[term.contractId].push(term);
   }
 
   const titleSales = sales.filter(sale => sale.titleId === titleId);
@@ -199,7 +199,7 @@ function getMatchingMapMandates(mandates: FullMandate[], avails: MapAvailsFilter
 }
 
 function getMatchingMapSales(sales: FullSale[], avails: MapAvailsFilter) {
-  return sales.filter(sale => sale.terms?.some(term => {
+  return sales.filter(sale => sale.terms.some(term => {
     const exclusivityCheck = exclusivitySomeOf(avails.exclusive).in(term.exclusive);
     const mediaCheck = someOf(avails.medias).in(term.medias);
     const durationCheck = someOf(avails.duration).in(term.duration);
@@ -213,7 +213,7 @@ function isMapTermInBucket<T extends BucketTerm | Term>(term: T, avails: MapAvai
 }
 
 function isMapTermSelected<T extends BucketTerm | Term>(term: T, avails: MapAvailsFilter) {
-  const exclusivityCheck =avails.exclusive === term.exclusive;
+  const exclusivityCheck = avails.exclusive === term.exclusive;
   const mediaCheck = allOf(avails.medias).equal(term.medias);
   const durationCheck = allOf(avails.duration).equal(term.duration);
 
@@ -300,16 +300,16 @@ export function territoryAvailabilities(
           };
         }
       } else if (isInBucket) {
-          for (const territory of term.territories as TerritoryISOA3[]) {
-            availabilities[territory] = {
-              type: 'in-bucket',
-              slug: territory,
-              isoA3: territoriesISOA3[territory],
-              label: territories[territory],
-              term,
-              contract: bucketSale,
-            };
-          }
+        for (const territory of term.territories as TerritoryISOA3[]) {
+          availabilities[territory] = {
+            type: 'in-bucket',
+            slug: territory,
+            isoA3: territoriesISOA3[territory],
+            label: territories[territory],
+            term,
+            contract: bucketSale,
+          };
+        }
       }
     }
   }

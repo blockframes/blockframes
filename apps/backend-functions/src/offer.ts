@@ -77,8 +77,8 @@ export async function onOfferUpdate(
   const offerAfter = after.data() as Offer;
 
   const statusHasChanged = offerBefore.status !== offerAfter.status
-  const offerDeclinedOrAccepted = ['accepted', 'declined'].includes(offerAfter.status);
-  if (statusHasChanged && offerDeclinedOrAccepted) {
+  const isOfferDeclinedOrAccepted = ['accepted', 'declined'].includes(offerAfter.status);
+  if (statusHasChanged && isOfferDeclinedOrAccepted) {
     //Buyer Notifications.
     const getNotifications = (org: Organization) => org.userIds.map(userId => createNotification({
       toUserId: userId,
