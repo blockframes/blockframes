@@ -55,4 +55,14 @@ export async function createScreeningRequest(data: { uid: string, movieId: strin
       .then(getNotifications)
       .then(triggerNotifications);
   }
+
+  // notification to user who requested the screening
+  const notification = createNotification({
+    toUserId: uid,
+    type: 'screeningRequestSent',
+    docId: movieId,
+    user: createPublicUserDocument(user),
+    _meta: createDocumentMeta({ createdFrom: 'festival' })
+  });
+  triggerNotifications([notification]);
 }

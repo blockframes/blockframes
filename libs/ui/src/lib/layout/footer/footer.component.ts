@@ -19,6 +19,7 @@ import { map } from 'rxjs/operators';
 export class FooterComponent implements OnInit {
   public appName: string;
   public section$: Observable<'dashboard' | 'marketplace'>;
+  public currentYear = new Date().getFullYear();
 
   constructor(private routerQuery: RouterQuery) { }
 
