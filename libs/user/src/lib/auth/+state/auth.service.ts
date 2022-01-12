@@ -27,6 +27,9 @@ export class AuthService extends FireAuthService<AuthState> {
   signedOut = new Subject<void>();
   anonymousCredentials$ = new BehaviorSubject<AnonymousCredentials>(this.anonymousCredentials);
 
+  profile = this.query.user;
+  profile$ = this.query.user$; // this.query.select().pipe(map(s => s.profile));
+
   constructor(
     protected store: AuthStore,
     private query: AuthQuery,

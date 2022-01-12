@@ -1,18 +1,28 @@
 import { Injectable } from '@angular/core';
 import { UserRole, createDocPermissions, PermissionsDocument } from './permissions.firestore';
+import { Permissions } from './permissions.model';
 import { PermissionsState, PermissionsStore } from './permissions.store';
 import { CollectionService, CollectionConfig, AtomicWrite } from 'akita-ng-fire';
 import type firebase from 'firebase';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { UserService } from '@blockframes/user/+state';
+import { switchMap, tap } from 'rxjs/operators';
+import { AuthService } from '@blockframes/auth/+state';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'permissions' })
 export class PermissionsService extends CollectionService<PermissionsState> {
   readonly useMemorization = true;
 
+  permissions : Permissions;
+  permissions$ = this.authService.profile$.pipe(
+    switchMap(user => this.valueChanges(user.orgId)),
+    tap(permissions => this.permissions = permissions)
+  );
+
   constructor(
     private organizationQuery: OrganizationQuery,
+    private authService: AuthService,
     private userService: UserService,
     store: PermissionsStore
   ) {

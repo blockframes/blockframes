@@ -141,7 +141,7 @@ export function createAdminRoutes({ appsRoutes, appName }: RouteOptions) {
             {
               path: 'o',
               canActivate: [PermissionsGuard, OrganizationGuard],
-              canDeactivate: [PermissionsGuard, OrganizationGuard],
+              canDeactivate: [OrganizationGuard],
               children: appsRoutes
             }
           ]
