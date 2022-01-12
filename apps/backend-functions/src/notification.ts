@@ -201,6 +201,9 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
           .then(() => notification.email.isSent = true)
           .catch(e => notification.email.error = e.message);
         break;
+      case 'screeningRequestSent':
+        // No email is sent to user that requested the screening, only a notification
+        break;
       case 'contractCreated':
         await sendContractCreated(recipient, notification)
           .then(() => notification.email.isSent = true)
