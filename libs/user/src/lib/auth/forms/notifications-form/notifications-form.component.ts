@@ -27,7 +27,8 @@ const titleType: Record<NotificationTypesBase, NotificationSetting> = {
   invitationToAttendScreeningCreated: { text: 'You are invited to a screening. (RECOMMENDED)', tooltip: true },
   offerCreatedConfirmation: { text: 'Your offer is successfully sent', tooltip: false },
   contractCreated: { text: 'An offer is made on one of your titles. (RECOMMENDED)', tooltip: true },
-  negotiationCreated: { text: 'You\'ve received a counter offer. (RECOMMENDED)', tooltip: true },
+  createdCounterOffer: { text: 'You\'ve created a counter offer.', tooltip: true },
+  receivedCounterOffer: { text: 'You\'ve received a counter offer. (RECOMMENDED)', tooltip: true },
   myOrgAcceptedAContract: { text: 'You accepted a counter offer. (RECOMMENDED)', tooltip: true },
   myContractWasAccepted: { text: 'Your counter offer was accepted. (RECOMMENDED)', tooltip: true },
   myOrgDeclinedAContract: { text: 'You declined a counter offer. (RECOMMENDED)', tooltip: true },
@@ -70,11 +71,12 @@ const tables: { title: string, types: string[], appAuthorized: App[] }[] = [
   {
     title: 'Negotiation Management',
     types: [
-      'negotiationCreated',
       'myContractWasAccepted',
       'myOrgAcceptedAContract',
       'myOrgDeclinedAContract',
       'myContractWasDeclined',
+      'createdCounterOffer',
+      'receivedCounterOffer',
     ],
     appAuthorized: ['catalog']
   }
