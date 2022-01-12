@@ -560,7 +560,7 @@ async function sendReceivedCounterOfferConfirmation(recipient: User, notificatio
   return sendMailFromTemplate(recipientTemplate, app, groupIds.unsubscribeAll);
 }
 
-async function getContractUpdatedEmailData(recipient: User, notification: NotificationDocument) {
+async function getContractUpdatedEmail(recipient: User, notification: NotificationDocument) {
   const path = notification.docPath;
   const contractId = notification.docId;
   const contract = await getDocument<ContractDocument>(`contracts/${contractId}`);
@@ -581,7 +581,7 @@ async function getContractUpdatedEmailData(recipient: User, notification: Notifi
 async function sendOrgContractAcceptedConfirmation(recipient: User, notification: NotificationDocument) {
   const {
     contract, title, app, isRecipientBuyer, toUser, recipientOrg
-  } = await getContractUpdatedEmailData(recipient, notification);
+  } = await getContractUpdatedEmail(recipient, notification);
 
   const config = { isRecipientBuyer, isActionDeclined: false, didRecipientAcceptOrDecline: false } as const;
 
@@ -593,7 +593,7 @@ async function sendOrgContractAcceptedConfirmation(recipient: User, notification
 async function sendOrgAcceptedContractConfirmation(recipient: User, notification: NotificationDocument) {
   const {
     contract, title, app, isRecipientBuyer, toUser, recipientOrg
-  } = await getContractUpdatedEmailData(recipient, notification);
+  } = await getContractUpdatedEmail(recipient, notification);
 
   const config = { isRecipientBuyer, isActionDeclined: false, didRecipientAcceptOrDecline: true } as const;
 
@@ -606,7 +606,7 @@ async function sendOrgAcceptedContractConfirmation(recipient: User, notification
 async function sendOrgContractDeclinedConfirmation(recipient: User, notification: NotificationDocument) {
   const {
     contract, title, app, isRecipientBuyer, toUser, recipientOrg
-  } = await getContractUpdatedEmailData(recipient, notification);
+  } = await getContractUpdatedEmail(recipient, notification);
 
   const config = { isRecipientBuyer, isActionDeclined: true, didRecipientAcceptOrDecline: false } as const;
 
@@ -618,7 +618,7 @@ async function sendOrgContractDeclinedConfirmation(recipient: User, notification
 async function sendOrgDeclinedContractConfirmation(recipient: User, notification: NotificationDocument) {
   const {
     contract, title, app, isRecipientBuyer, toUser, recipientOrg
-  } = await getContractUpdatedEmailData(recipient, notification);
+  } = await getContractUpdatedEmail(recipient, notification);
 
   const config = { isRecipientBuyer, isActionDeclined: true, didRecipientAcceptOrDecline: true } as const;
 
