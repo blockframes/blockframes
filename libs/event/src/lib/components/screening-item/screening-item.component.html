@@ -21,7 +21,7 @@
         <org-chip @fade [org]="org"></org-chip>
       </ng-container>
     </div>
-    <footer fxLayout>
+    <footer fxLayout fxLayoutAlign="space-between start">
       <ng-container *ngIf="event.isOwner; else notOwner">
         <h3>You are the owner of this event</h3>
       </ng-container>
@@ -30,6 +30,11 @@
           <invitation-action @fade [invitation]="invitation" [event]="event"></invitation-action>
         </ng-container>
       </ng-template>
+
+      <button mat-button (click)="exportToCalendar(event)">
+        <mat-icon svgIcon="cloud_download"></mat-icon>
+        <span>Export Event</span>
+      </button>
     </footer>
   </article>
 </ng-container>

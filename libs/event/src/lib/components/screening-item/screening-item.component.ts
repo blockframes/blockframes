@@ -4,6 +4,8 @@ import { ScreeningEvent } from '../../+state';
 import { BehaviorSubject, combineLatest, Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { fade } from '@blockframes/utils/animations/fade';
+import { IcsService } from '@blockframes/utils/ics/ics.service';
+import { Event } from '@blockframes/event/+state/event.model';
 
 @Component({
   selector: 'event-screening-item',
@@ -22,13 +24,15 @@ export class ScreeningItemComponent implements OnInit, OnDestroy {
   @Input() set event(screening: ScreeningEvent) {
     this._event.next(screening);
   }
+
   get event() {
     return this._event.getValue();
   }
 
   constructor(
     private cdr: ChangeDetectorRef,
-    private invitationService: InvitationService
+    private invitationService: InvitationService,
+    private icsService: IcsService,
   ) { }
 
   ngOnInit() {
@@ -45,6 +49,10 @@ export class ScreeningItemComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.sub.unsubscribe();
+  }
+
+  exportToCalendar(event: Event) {
+    this.icsService.download([event]);
   }
 
 }

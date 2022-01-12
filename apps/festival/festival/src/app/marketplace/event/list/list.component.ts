@@ -8,6 +8,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { FormList } from '@blockframes/utils/form';
 import { AlgoliaOrganization } from '@blockframes/utils/algolia';
 import { Screening } from '@blockframes/event/+state/event.firestore';
+import { IcsService } from '@blockframes/utils/ics/ics.service';
 
 @Component({
   selector: 'festival-event-list',
@@ -26,6 +27,7 @@ export class ListComponent implements OnInit {
     private service: EventService,
     private location: Location,
     private dynTitle: DynamicTitleService,
+    private icsService: IcsService,
   ) { }
 
   ngOnInit() {
@@ -52,6 +54,11 @@ export class ListComponent implements OnInit {
 
   goBack() {
     this.location.back();
+  }
+
+  exportToCalendar(events: Event[] = []) {
+    if (events.length === 0) return;
+    this.icsService.download(events);
   }
 
 }

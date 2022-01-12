@@ -13,7 +13,7 @@ export function toIcsFile(events: IcsEvent[]) {
     eventData.push(`DTEND:${toIcsDate(event.end)}`);
     eventData.push(`LOCATION: ${appName.festival}`);
     eventData.push(`DESCRIPTION: ${event.description}${event.description ? ' - ' : ''}${applicationUrl.festival}/event/${event.id}/r/i`);
-    eventData.push(`ORGANIZER;CN=${event.organizer.name}:MAILTO:${event.organizer.email}`);
+    eventData.push(`ORGANIZER;CN="${event.organizer.name}":MAILTO:${event.organizer.email}`);
 
     return ['BEGIN:VEVENT'] // Event start tag
       .concat(eventData)

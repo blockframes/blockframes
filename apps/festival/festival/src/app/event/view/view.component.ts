@@ -7,7 +7,7 @@ import { catchError, filter, switchMap, pluck, tap } from 'rxjs/operators';
 import { Location } from '@angular/common';
 import { fade } from '@blockframes/utils/animations/fade';
 import { AuthQuery, AuthService } from '@blockframes/auth/+state';
-import { Event } from '@blockframes/event/+state/event.model'
+import { Event } from '@blockframes/event/+state/event.model';
 import { IcsService } from '@blockframes/utils/ics/ics.service';
 
 @Component({

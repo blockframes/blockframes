@@ -11,6 +11,13 @@
     </ng-template>
   </list-filter>
 
+  <events-export *ngIf="(events$ | async) || [] as events">
+    <button mat-flat-button (click)="exportToCalendar(events)">
+      <mat-icon svgIcon="cloud_download"></mat-icon>
+      <span>Export All Events</span>
+    </button>
+  </events-export>
+
   <ng-template listPageListItem let-timeFrame>
     <h2 *ngIf="!!timeFrame.events.length">
       {{ timeFrame | labelByDate }}

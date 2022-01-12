@@ -38,6 +38,9 @@ export class PageEmptyDirective { }
 @Directive({ selector: '[pdfExport], pdf-export' })
 export class PdfExportDirective { }
 
+@Directive({ selector: '[eventsExport], events-export' })
+export class EventsExportDirective { }
+
 @Component({
   selector: '[items] list-page',
   templateUrl: 'list-page.component.html',

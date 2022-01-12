@@ -44,6 +44,7 @@
       <div fxLayout="row" [fxLayoutAlign]="pdfExport ? 'space-between center': 'end start'">
         <ng-content select="list-page-description"></ng-content>
         <ng-content select="pdf-export"></ng-content>
+        <ng-content select="events-export"></ng-content>
       </div>
       <ng-container *ngIf="!listView; else displayList">
         <div grid [@fadeList]="items.length">

@@ -25,7 +25,7 @@ export class EventInfoComponent implements OnInit {
     this.cdr.markForCheck();
   }
 
-  async exportToCalendar() {
+  exportToCalendar() {
     this.icsService.download([this.event]);
   }
 
