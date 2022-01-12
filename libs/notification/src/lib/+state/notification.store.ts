@@ -236,10 +236,26 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `${displayName(notification.user)} requested a screening for ${notification.docId}`,
           imgRef: notification.user.avatar,
-          placeholderUrl: 'profile_user.svg',
+          placeholderUrl: 'profil_user.svg',
           url: `${applicationUrl['festival']}/c/o/dashboard/event?request=${notification.docId}`,
           actionText: 'Answer Request'
         };
+      case 'screeningRequestSent':
+        this.getDocument<Movie>(`movies/${notification.docId}`).then(movie => {
+          this.update(notification.id, newNotification => {
+            return {
+              ...newNotification,
+              message: `Your screening request for ${movie.title.international} was successfully sent.`
+            }
+          })
+        })
+        return {
+          _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
+          message: `Your screening request for ${notification.docId} was successfully sent.`,
+          imgRef: notification.user.avatar,
+          placeholderUrl: 'profil_user.svg',
+          url: `${applicationUrl['festival']}/c/o/marketplace/title/${notification.docId}`
+        }
 
       case 'offerCreatedConfirmation':
         return {
