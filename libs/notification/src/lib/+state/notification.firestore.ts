@@ -32,7 +32,8 @@ export const notificationTypesBase = [
   'offerCreatedConfirmation',
 
   //Notifications related to contract negotiation
-  'negotiationCreated',
+  'createdCounterOffer',
+  'receivedCounterOffer',
   'myContractWasAccepted',
   'myOrgAcceptedAContract',
   'myContractWasDeclined',

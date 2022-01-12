@@ -9,6 +9,7 @@ import { isInitial } from '@blockframes/contract/negotiation/utils'
 import { formatDocumentMetaFromFirestore } from "@blockframes/utils/models-meta";
 import { Offer } from '@blockframes/contract/offer/+state';
 import { Contract, ContractStatus, Sale } from '@blockframes/contract/contract/+state/contract.model';
+import { NotificationTypes } from './data/types';
 
 export async function updateOfferStatus(contract: Contract) {
   return db.runTransaction(async tx => {
@@ -34,9 +35,9 @@ export async function updateOfferStatus(contract: Contract) {
     const contractsStatus: ContractStatus[] = negotiationSnaps.map(nego => {
       const _meta = formatDocumentMetaFromFirestore(nego._meta);
       const initial = nego.initial.toDate();
-      const pending = nego.status === 'pending';
-      if (isInitial({ _meta, initial }) && pending) return 'pending';
-      if (pending) return 'negotiating';
+      const isPending = nego.status === 'pending';
+      if (isInitial({ _meta, initial }) && isPending) return 'pending';
+      if (isPending) return 'negotiating';
       return nego.status;
     });
 
@@ -89,26 +90,28 @@ export async function onNegotiationCreated(negotiationSnapshot: FirebaseFirestor
 
   await updateOfferStatus(contract)
 
-  const stakeholders = negotiation.stakeholders.filter(stakeholder => {
-    return ![negotiation.createdByOrg, centralOrgId.catalog].includes(stakeholder)
-  });
-
-  if (!stakeholders.length) return;
-
-  const getNotifications = (org: Organization) => org.userIds.map(userId => createNotification({
+  const getNotifications = (type: NotificationTypes) => (org: Organization) => org.userIds.map(userId => createNotification({
     toUserId: userId,
-    type: 'negotiationCreated',
+    type,
     docId: contractId,
     offerId: contract.offerId,
     docPath: path,
     _meta: createDocumentMeta({ createdFrom: 'catalog' })
   }));
 
-  for (const stakeholder of stakeholders) {
-    getDocument<Organization>(`orgs/${stakeholder}`)
-      .then(getNotifications)
-      .then(triggerNotifications);
-  }
+  const getSenderNotifications = getNotifications('createdCounterOffer');
+  const getRecepientNotifications = getNotifications('receivedCounterOffer');
+
+
+  const excluded = [negotiation.createdByOrg, centralOrgId.catalog]
+  const recipientOrg = negotiation.stakeholders.find(stakeholder => !excluded.includes(stakeholder));
+
+  //for org whose offer was accepted.
+  const promises = [getDocument<Organization>(`orgs/${negotiation.createdByOrg}`).then(getSenderNotifications)];
+  if (recipientOrg) promises.push(getDocument<Organization>(`orgs/${recipientOrg}`).then(getRecepientNotifications))
+
+  const notifications = await Promise.all(promises);
+  return triggerNotifications(notifications.flat(1));
 }
 
 

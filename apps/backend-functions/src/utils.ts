@@ -3,6 +3,8 @@ import { logErrors } from './internals/sentry';
 export { ErrorResultResponse } from '@blockframes/utils/utils';
 export { removeAllSubcollections } from '@blockframes/firebase-utils';
 import { db } from './internals/firebase';
+import { MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
+import { staticModel } from '@blockframes/utils/static-model';
 
 ///////////////////////////////////
 // DOCUMENT ON-CHANGES FUNCTIONS //
@@ -43,5 +45,18 @@ export function onDocumentCreate(docPath: string, fn: FunctionType) {
 
 export function createId() {
   return db.collection('_').doc().id;
+}
+
+
+export function hydrateLanguageForEmail(data: Record<string, MovieLanguageSpecification>){
+  const languages = Object.keys(data);
+  languages.forEach((lang, idx) => {
+    const prefix:string[]=[];
+    if(data[lang].dubbed) prefix.push(staticModel['movieLanguageTypes'].dubbed);
+    if(data[lang].subtitle) prefix.push(staticModel['movieLanguageTypes'].subtitle);
+    if(data[lang].caption) prefix.push(staticModel['movieLanguageTypes'].caption);
+    if(prefix.length) languages[idx]+= `( ${prefix.join(', ')} )`;
+  })
+  return languages.join(', ');
 }
 

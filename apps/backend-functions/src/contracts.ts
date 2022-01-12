@@ -71,12 +71,12 @@ async function createIncome(sale: Sale, negotiation: Negotiation<Timestamp>, tx:
   });
 }
 
-interface ContractNotificationType{
+interface ContractNotificationType {
   actorOrg: 'myOrgAcceptedAContract' | 'myOrgDeclinedAContract', //org who accepted/declined a contract
-  receptorOrg: 'myContractWasAccepted' | 'myContractWasDeclined', // Org whose contract was accepted/declined
+  recipientOrg: 'myContractWasAccepted' | 'myContractWasDeclined', // Org whose contract was accepted/declined
 }
 
-async function getContractNotifications(contractId: string, offerId: string, negotiation: Negotiation<Timestamp>, types:ContractNotificationType ) {
+async function getContractNotifications(contractId: string, offerId: string, negotiation: Negotiation<Timestamp>, types: ContractNotificationType) {
   //send to org who accepted/declined the offer
   const actorOrgNotifs = (org: Organization) => org.userIds.map(userId => createNotification({
     toUserId: userId,
@@ -88,9 +88,9 @@ async function getContractNotifications(contractId: string, offerId: string, neg
   }));
 
   //for org whose offer was accepted/declined.
-  const receptorOrgNotifs = (org: Organization) => org.userIds.map(userId => createNotification({
+  const recipientOrgNotifs = (org: Organization) => org.userIds.map(userId => createNotification({
     toUserId: userId,
-    type: types.receptorOrg,
+    type: types.recipientOrg,
     docId: contractId,
     offerId,
     docPath: `contracts/${contractId}/negotiations/${negotiation.id}`,
@@ -98,11 +98,11 @@ async function getContractNotifications(contractId: string, offerId: string, neg
   }));
 
   const excluded = [negotiation.createdByOrg, centralOrgId.catalog]
-  const receptorOrg = negotiation.stakeholders.find(stakeholder => !excluded.includes(stakeholder));
+  const recipientOrg = negotiation.stakeholders.find(stakeholder => !excluded.includes(stakeholder));
 
   //for org whose offer was accepted.
-  const promises = [getDocument<Organization>(`orgs/${negotiation.createdByOrg}`).then(receptorOrgNotifs)];
-  if (receptorOrg) promises.push(getDocument<Organization>(`orgs/${receptorOrg}`).then(actorOrgNotifs))
+  const promises = [getDocument<Organization>(`orgs/${negotiation.createdByOrg}`).then(recipientOrgNotifs)];
+  if (recipientOrg) promises.push(getDocument<Organization>(`orgs/${recipientOrg}`).then(actorOrgNotifs))
 
   const notifications = await Promise.all(promises);
 
@@ -110,11 +110,28 @@ async function getContractNotifications(contractId: string, offerId: string, neg
 }
 
 async function getContractAcceptedNotifications(contractId: string, offerId: string, negotiation: Negotiation<Timestamp>) {
-  return getContractNotifications(contractId, offerId, negotiation, {actorOrg: 'myOrgAcceptedAContract', receptorOrg: 'myContractWasAccepted'})
+  return getContractNotifications(contractId, offerId, negotiation, { actorOrg: 'myOrgAcceptedAContract', recipientOrg: 'myContractWasAccepted' })
 }
 
 async function getContractDeclinedNotifications(contractId: string, offerId: string, negotiation: Negotiation<Timestamp>) {
-  return getContractNotifications(contractId, offerId, negotiation, {actorOrg: 'myOrgDeclinedAContract', receptorOrg: 'myContractWasDeclined'})
+  return getContractNotifications(contractId, offerId, negotiation, { actorOrg: 'myOrgDeclinedAContract', recipientOrg: 'myContractWasDeclined' })
+}
+
+async function getContractInNegotiationNotifications(contractId: string, offerId: string, negotiation: Negotiation<Timestamp>) {
+
+  const recipientOrgNotifs = (org: Organization) => org.userIds.map(userId => createNotification({
+    toUserId: userId,
+    type: 'receivedCounterOffer',
+    docId: contractId,
+    offerId,
+    docPath: `contracts/${contractId}/negotiations/${negotiation.id}`,
+    _meta: createDocumentMeta({ createdFrom: 'catalog' })
+  }));
+
+  const excluded = [negotiation.createdByOrg, centralOrgId.catalog]
+  const recipientorg = negotiation.stakeholders.find(stakeholder => !excluded.includes(stakeholder));
+
+  return getDocument<Organization>(`orgs/${recipientorg}`).then(recipientOrgNotifs);
 }
 
 export type ContractActions = 'myContractWasAccepted' | 'myContractWasDeclined' | 'contractInNegotiation'
@@ -126,8 +143,8 @@ async function sendContractUpdateNotification(before: Sale, after: Sale, negotia
     "declined => accepted": 'myContractWasAccepted',
     "pending => declined": 'myContractWasDeclined',
     "accepted => declined": 'myContractWasDeclined',
-    "declined => pending": 'contractInNegotiation',
-    "accepted => pending": 'contractInNegotiation',
+    "declined => pending": 'contractInNegotiation', // can only be triggered through the crm.
+    "accepted => pending": 'contractInNegotiation', // can only be triggered through the crm.
   };
 
   const type = types[statusChange];
@@ -139,6 +156,8 @@ async function sendContractUpdateNotification(before: Sale, after: Sale, negotia
     case 'myContractWasAccepted': notifications = await getContractAcceptedNotifications(after.id, after.offerId, negotiation);
       break;
     case 'myContractWasDeclined': notifications = await getContractDeclinedNotifications(after.id, after.offerId, negotiation);
+      break;
+    case 'contractInNegotiation': notifications = await getContractInNegotiationNotifications(after.id, after.offerId, negotiation);
       break;
   }
   if (notifications.length) triggerNotifications(notifications);

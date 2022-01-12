@@ -17,6 +17,8 @@ import { Offer } from '@blockframes/contract/offer/+state';
 import { ContractDocument } from '@blockframes/contract/contract/+state';
 import { NegotiationDocument } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
 import { staticModel } from '@blockframes/utils/static-model';
+import { MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
+import { hydrateLanguageForEmail } from '../utils';
 
 const ORG_HOME = '/c/o/organization/';
 const USER_CREDENTIAL_INVITATION = '/auth/identity';
@@ -306,48 +308,69 @@ export function movieAcceptedEmail(toUser: UserEmailData, movieTitle: string, mo
 
 /** Inform user of org whose movie is being bought */
 export function contractCreatedEmail(
-  toUser: UserEmailData, movieTitle: string, app: App, contract: ContractDocument,
+  toUser: UserEmailData, title: MovieDocument, app: App, contract: ContractDocument,
   negotiation: NegotiationDocument, buyerOrg: OrganizationDocument
 ): EmailTemplateRequest {
-  const data = { user: toUser, app: { name: app }, title: { names: movieTitle }, contract, negotiation, buyerOrg };
+  const data = { user: toUser, app: { name: app }, title, contract, negotiation, buyerOrg , baseUrl: appUrl.content};
   return { to: toUser.email, templateId: templateIds.contract.created, data };
 }
 
 /** Template for admins. It is to inform admins of Archipel Content a new offer has been created with titles, prices, etc in the template */
 export function offerCreatedConfirmationEmail(toUser: UserEmailData, org: OrganizationDocument, bucket: Bucket): EmailTemplateRequest {
   const date = format(new Date(), 'dd MMMM, yyyy');
-  const data = { org, bucket, user: toUser, baseUrl: appUrl.content, date };
+  const contracts = bucket.contracts.map(contract => ({
+    ...contract,
+    terms: contract.terms.map(term => ({
+      ...term,
+      territories: term.territories.join(', '),
+      medias: term.medias.join(', '),
+      languages: hydrateLanguageForEmail(term.languages)
+    }))
+  }))
+  const data = { org, bucket:{...bucket, contracts}, user: toUser, baseUrl: appUrl.content, date };
   return { to: toUser.email, templateId: templateIds.offer.toAdmin, data };
 }
 
 /**To inform buyer that his offer has been successfully created. */
 export function buyerOfferCreatedConfirmationEmail(toUser: UserEmailData, org: OrganizationDocument, offerId: string, bucket: Bucket): EmailTemplateRequest {
   const date = format(new Date(), 'dd MMMM, yyyy');
-  const data = { org, bucket, user: toUser, baseUrl: appUrl.content, date, offerId };
+  const contracts = bucket.contracts.map(contract => ({
+    ...contract,
+    terms: contract.terms.map(term => ({
+      ...term,
+      territories: term.territories.join(', '),
+      medias: term.medias.join(', '),
+      languages: hydrateLanguageForEmail(term.languages)
+    }))
+  }))
+  const data = { org, bucket: { ...bucket, contracts }, user: toUser, baseUrl: appUrl.content, date, offerId };
   return { to: toUser.email, templateId: templateIds.offer.toBuyer, data };
 }
 
 export function counterOfferRecipientEmail(
-  toUser: UserEmailData, creatorOrg: OrganizationDocument, offerId: string,
+  toUser: UserEmailData, senderOrg: OrganizationDocument, offerId: string,
   title: MovieDocument, contractId: string, options?: { isRecipientBuyer: boolean }
 ): EmailTemplateRequest {
   const data = {
-    user: toUser, baseUrl: appUrl.content, offerId, creatorOrg,
+    user: toUser, baseUrl: appUrl.content, offerId, org:senderOrg,
     contractId, title, isRecipientBuyer: !!options?.isRecipientBuyer
   };
   return { to: toUser.email, templateId: templateIds.negotiation.receivedCounterOffer, data };
 }
 
-export function counterOfferCreatorEmail(
+export function counterOfferSenderEmail(
   toUser: UserEmailData, org: OrganizationDocument, offerId: string,
   negotiation: NegotiationDocument, contractId: string, options?: { isRecipientBuyer: boolean }
 ): EmailTemplateRequest {
   const terms = negotiation.terms.map(term => ({
     ...term,
+    territories: term.territories.map(territory => staticModel['territories'][territory]).join(', '),
+    medias: term.medias.map(media => staticModel['medias'][media] ?? media).join(', '),
     duration: {
       from: format(term.duration.from.toDate(), 'dd MMMM, yyyy'),
       to: format(term.duration.to.toDate(), 'dd MMMM, yyyy'),
     },
+    languages: hydrateLanguageForEmail(term.languages),
   }))
   const currency = staticModel['movieCurrencies'][negotiation.currency];
   const data = {

@@ -33,11 +33,12 @@ function createNotificationsControls(settings: Partial<NotificationSettings> = {
     invitationToAttendScreeningCreated: new NotificationSettingsForm(settings.invitationToAttendScreeningCreated, true),
     offerCreatedConfirmation: new NotificationSettingsForm(settings.offerCreatedConfirmation),
     contractCreated: new NotificationSettingsForm(settings.contractCreated, true),
-    negotiationCreated: new NotificationSettingsForm(settings.negotiationCreated, true),
-    myOrgAcceptedAContract: new NotificationSettingsForm(settings.myOrgAcceptedAContract, true),
-    myContractWasAccepted: new NotificationSettingsForm(settings.myContractWasAccepted, true),
-    myOrgDeclinedAContract: new NotificationSettingsForm(settings.myOrgDeclinedAContract, true),
-    myContractWasDeclined: new NotificationSettingsForm(settings.myContractWasDeclined, true),
+    createdCounterOffer: new NotificationSettingsForm(settings.createdCounterOffer),
+    receivedCounterOffer: new NotificationSettingsForm(settings.receivedCounterOffer),
+    myOrgAcceptedAContract: new NotificationSettingsForm(settings.myOrgAcceptedAContract),
+    myContractWasAccepted: new NotificationSettingsForm(settings.myContractWasAccepted),
+    myOrgDeclinedAContract: new NotificationSettingsForm(settings.myOrgDeclinedAContract),
+    myContractWasDeclined: new NotificationSettingsForm(settings.myContractWasDeclined),
   }
 }
 
