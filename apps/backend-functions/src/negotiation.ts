@@ -11,6 +11,7 @@ import { Offer } from '@blockframes/contract/offer/+state';
 import { Contract, ContractStatus, Sale } from '@blockframes/contract/contract/+state/contract.model';
 import { NotificationTypes } from './data/types';
 
+// KEEP THE OFFER STATUS IN SYNC WITH IT'S CONTRACTS AND NEGOTIATIONS
 export async function updateOfferStatus(contract: Contract) {
   return db.runTransaction(async tx => {
 
@@ -100,7 +101,7 @@ export async function onNegotiationCreated(negotiationSnapshot: FirebaseFirestor
   }));
 
   const getSenderNotifications = getNotifications('createdCounterOffer');
-  const getRecepientNotifications = getNotifications('receivedCounterOffer');
+  const getRecipientNotifications = getNotifications('receivedCounterOffer');
 
 
   const excluded = [negotiation.createdByOrg, centralOrgId.catalog]
@@ -108,7 +109,7 @@ export async function onNegotiationCreated(negotiationSnapshot: FirebaseFirestor
 
   //for org whose offer was accepted.
   const promises = [getDocument<Organization>(`orgs/${negotiation.createdByOrg}`).then(getSenderNotifications)];
-  if (recipientOrg) promises.push(getDocument<Organization>(`orgs/${recipientOrg}`).then(getRecepientNotifications))
+  if (recipientOrg) promises.push(getDocument<Organization>(`orgs/${recipientOrg}`).then(getRecipientNotifications))
 
   const notifications = await Promise.all(promises);
   return triggerNotifications(notifications.flat(1));

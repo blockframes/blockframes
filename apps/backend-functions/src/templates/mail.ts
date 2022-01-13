@@ -311,12 +311,12 @@ export function contractCreatedEmail(
   toUser: UserEmailData, title: MovieDocument, app: App, contract: ContractDocument,
   negotiation: NegotiationDocument, buyerOrg: OrganizationDocument
 ): EmailTemplateRequest {
-  const data = { user: toUser, app: { name: app }, title, contract, negotiation, buyerOrg , baseUrl: appUrl.content};
+  const data = { user: toUser, app: { name: app }, title, contract, negotiation, buyerOrg, baseUrl: appUrl.content };
   return { to: toUser.email, templateId: templateIds.contract.created, data };
 }
 
 /** Template for admins. It is to inform admins of Archipel Content a new offer has been created with titles, prices, etc in the template */
-export function offerCreatedConfirmationEmail(toUser: UserEmailData, org: OrganizationDocument, bucket: Bucket): EmailTemplateRequest {
+export function adminOfferCreatedConfirmationEmail(toUser: UserEmailData, org: OrganizationDocument, bucket: Bucket): EmailTemplateRequest {
   const date = format(new Date(), 'dd MMMM, yyyy');
   const contracts = bucket.contracts.map(contract => ({
     ...contract,
@@ -327,7 +327,7 @@ export function offerCreatedConfirmationEmail(toUser: UserEmailData, org: Organi
       languages: hydrateLanguageForEmail(term.languages)
     }))
   }))
-  const data = { org, bucket:{...bucket, contracts}, user: toUser, baseUrl: appUrl.content, date };
+  const data = { org, bucket: { ...bucket, contracts }, user: toUser, baseUrl: appUrl.content, date };
   return { to: toUser.email, templateId: templateIds.offer.toAdmin, data };
 }
 
@@ -349,18 +349,18 @@ export function buyerOfferCreatedConfirmationEmail(toUser: UserEmailData, org: O
 
 export function counterOfferRecipientEmail(
   toUser: UserEmailData, senderOrg: OrganizationDocument, offerId: string,
-  title: MovieDocument, contractId: string, options?: { isRecipientBuyer: boolean }
+  title: MovieDocument, contractId: string, options: { isMailRecipientBuyer: boolean }
 ): EmailTemplateRequest {
   const data = {
-    user: toUser, baseUrl: appUrl.content, offerId, org:senderOrg,
-    contractId, title, isRecipientBuyer: !!options?.isRecipientBuyer
+    user: toUser, baseUrl: appUrl.content, offerId, org: senderOrg,
+    contractId, title, isRecipientBuyer: options.isMailRecipientBuyer
   };
   return { to: toUser.email, templateId: templateIds.negotiation.receivedCounterOffer, data };
 }
 
 export function counterOfferSenderEmail(
   toUser: UserEmailData, org: OrganizationDocument, offerId: string,
-  negotiation: NegotiationDocument, contractId: string, options?: { isRecipientBuyer: boolean }
+  negotiation: NegotiationDocument, contractId: string, options: { isMailRecipientBuyer: boolean }
 ): EmailTemplateRequest {
   const terms = negotiation.terms.map(term => ({
     ...term,
@@ -375,37 +375,12 @@ export function counterOfferSenderEmail(
   const currency = staticModel['movieCurrencies'][negotiation.currency];
   const data = {
     user: toUser, baseUrl: appUrl.content, offerId, org,
-    contractId, isRecipientBuyer: !!options?.isRecipientBuyer,
+    contractId, isRecipientBuyer: options.isMailRecipientBuyer,
     negotiation: { ...negotiation, terms, currency }
   };
   return { to: toUser.email, templateId: templateIds.negotiation.createdCounterOffer, data };
 }
 
-type NegotiationUpdateConfig = {
-  isRecipientBuyer: boolean,
-  didRecipientAcceptOrDecline: boolean,
-  isActionDeclined: boolean,
-}
-
-export function negotiationEmail(
-  toUser: UserEmailData, offerId: string,
-  title: MovieDocument, contractId: string,
-  org: OrganizationDocument, options: NegotiationUpdateConfig,
-): EmailTemplateRequest {
-  const data = {
-    user: toUser, baseUrl: appUrl.content, offerId, org,
-    contractId, title, isRecipientBuyer: !!options.isRecipientBuyer
-  };
-  let templateId = templateIds.negotiation.myContractWasAccepted;
-  if (options.didRecipientAcceptOrDecline)
-    templateId = templateIds.negotiation.myOrgAcceptedAContract;
-  if (options.isActionDeclined) {
-    templateId = templateIds.negotiation.myContractWasDeclined;
-    if (options.didRecipientAcceptOrDecline)
-      templateId = templateIds.negotiation.myOrgDeclinedAContract;
-  }
-  return { to: toUser.email, templateId, data };
-}
 
 //Sent when all the contracts of an offer have either been accepted or declined.
 export function offerAcceptedOrDeclined(

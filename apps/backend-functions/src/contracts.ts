@@ -136,7 +136,7 @@ async function getContractInNegotiationNotifications(contractId: string, offerId
 
 export type ContractActions = 'myContractWasAccepted' | 'myContractWasDeclined' | 'contractInNegotiation'
 
-async function sendContractUpdateNotification(before: Sale, after: Sale, negotiation: Negotiation<Timestamp>) {
+async function sendContractUpdatedNotification(before: Sale, after: Sale, negotiation: Negotiation<Timestamp>) {
   const statusChange: ContractStatusChange = `${before.status} => ${after.status}` as const;
   const types: Partial<Record<ContractStatusChange, ContractActions>> = {
     "pending => accepted": 'myContractWasAccepted',
@@ -177,7 +177,6 @@ export async function onContractUpdate(
   const contractBefore = before.data() as Sale;
   const contractAfter = after.data() as Sale;
 
-  // KEEP THE OFFER STATUS IN SYNC WITH IT'S CONTRACTS
   const isSale = contractBefore.type === contractAfter.type && contractBefore.type === 'sale' // contract is of type 'sale'
   const statusHasChanged = contractBefore.status !== contractAfter.status // contract status has changed
   const { status, id } = contractAfter;
@@ -194,7 +193,7 @@ export async function onContractUpdate(
       incomeDoc.delete(),
       deleteCurrentTerms(termsCollection),
       saleRef.update({ termIds: [] }),
-      sendContractUpdateNotification(contractBefore, contractAfter, negotiation)
+      sendContractUpdatedNotification(contractBefore, contractAfter, negotiation)
     ]);
 
     if (status === 'accepted') {
