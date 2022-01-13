@@ -8,7 +8,7 @@ import { FormControl } from '@angular/forms';
 import { EventTypes } from '@blockframes/event/+state/event.firestore';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { eventTime } from '@blockframes/event/pipes/event-time.pipe';
-import { IcsService } from '@blockframes/utils/ics/ics.service';
+import { AgendaService } from '@blockframes/utils/agenda/agenda.service';
 
 const typesLabel = {
   screening: 'Screenings',
@@ -33,7 +33,7 @@ export class EventCalendarComponent implements OnInit {
     private invitationQuery: InvitationQuery,
     private cdr: ChangeDetectorRef,
     private dynTitle: DynamicTitleService,
-    private icsService: IcsService
+    private agendaService: AgendaService
   ) { }
 
   ngOnInit(): void {
@@ -65,7 +65,7 @@ export class EventCalendarComponent implements OnInit {
   exportToCalendar(events: Event[] = []) {
     if (events.length === 0) return;
     const ongoingOrIncomingEvents = events.filter(e => eventTime(e) !== 'late');
-    this.icsService.download(ongoingOrIncomingEvents);
+    this.agendaService.download(ongoingOrIncomingEvents);
   }
 }
 

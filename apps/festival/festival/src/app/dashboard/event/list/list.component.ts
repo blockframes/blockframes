@@ -8,7 +8,7 @@ import { Observable, combineLatest } from 'rxjs';
 import { filter, switchMap, startWith, tap } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { IcsService } from '@blockframes/utils/ics/ics.service';
+import { AgendaService } from '@blockframes/utils/agenda/agenda.service';
 import { eventTime } from '@blockframes/event/pipes/event-time.pipe';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -39,7 +39,7 @@ export class EventListComponent implements OnInit {
     private orgQuery: OrganizationQuery,
     private cdr: ChangeDetectorRef,
     private dynTitle: DynamicTitleService,
-    private icsService: IcsService,
+    private agendaService: AgendaService,
     private route: ActivatedRoute,
     private router: Router
   ) { }
@@ -83,7 +83,7 @@ export class EventListComponent implements OnInit {
   exportToCalendar(events: Event[] = []) {
     if (events.length === 0) return;
     const ongoingOrIncomingEvents = events.filter(e => eventTime(e) !== 'late');
-    this.icsService.download(ongoingOrIncomingEvents);
+    this.agendaService.download(ongoingOrIncomingEvents);
   }
 
   /**

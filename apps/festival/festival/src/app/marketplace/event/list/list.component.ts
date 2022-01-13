@@ -2,13 +2,13 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Event, EventService } from '@blockframes/event/+state';
 import { combineLatest, Observable } from 'rxjs';
 import { slideDown } from '@blockframes/utils/animations/fade';
-import { map, startWith, tap } from 'rxjs/operators';
+import { map, shareReplay, startWith, tap } from 'rxjs/operators';
 import { Location } from '@angular/common';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { FormList } from '@blockframes/utils/form';
 import { AlgoliaOrganization } from '@blockframes/utils/algolia';
 import { Screening } from '@blockframes/event/+state/event.firestore';
-import { IcsService } from '@blockframes/utils/ics/ics.service';
+import { AgendaService } from '@blockframes/utils/agenda/agenda.service';
 
 @Component({
   selector: 'festival-event-list',
@@ -27,7 +27,7 @@ export class ListComponent implements OnInit {
     private service: EventService,
     private location: Location,
     private dynTitle: DynamicTitleService,
-    private icsService: IcsService,
+    private agendaService: AgendaService,
   ) { }
 
   ngOnInit() {
@@ -36,10 +36,11 @@ export class ListComponent implements OnInit {
     const events$ = this.service.valueChanges(query) as Observable<Event<Screening>[]>;
 
     this.events$ = combineLatest([events$, orgIds$]).pipe(
-      map(([ events, orgs ]) => this.filterByOrgIds(events, orgs.map(org => org.objectID))),
-     // We can't filter by meta.titleId directly in the query because range and not equals comparisons must all filter on the same field
+      map(([events, orgs]) => this.filterByOrgIds(events, orgs.map(org => org.objectID))),
+      // We can't filter by meta.titleId directly in the query because range and not equals comparisons must all filter on the same field
       map(events => events.filter(event => !!event.meta.titleId)),
-      tap(events => this.setTitle(events.length))
+      tap(events => this.setTitle(events.length)),
+      shareReplay({ bufferSize: 1, refCount: true })
     )
   }
 
@@ -58,7 +59,7 @@ export class ListComponent implements OnInit {
 
   exportToCalendar(events: Event[] = []) {
     if (events.length === 0) return;
-    this.icsService.download(events);
+    this.agendaService.download(events);
   }
 
 }

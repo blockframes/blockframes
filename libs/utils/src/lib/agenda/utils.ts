@@ -1,5 +1,5 @@
 import { applicationUrl, appName } from './../apps';
-import { IcsEvent } from './ics.interfaces';
+import { IcsEvent } from './agenda.interfaces';
 
 const header = 'BEGIN:VCALENDAR\nVERSION:2.0\nCALSCALE:GREGORIAN';
 const footer = 'END:VCALENDAR';

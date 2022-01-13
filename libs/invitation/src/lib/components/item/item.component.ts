@@ -10,7 +10,7 @@ import { applicationUrl, getCurrentApp } from '@blockframes/utils/apps';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { isMeeting } from '@blockframes/event/+state';
 import { isSafari } from '@blockframes/utils/browser/utils';
-import { IcsService } from '@blockframes/utils/ics/ics.service';
+import { AgendaService } from '@blockframes/utils/agenda/agenda.service';
 import { Event } from '@blockframes/event/+state';
 
 @Component({
@@ -61,7 +61,7 @@ export class ItemComponent {
     private organizationService: OrganizationService,
     private userService: UserService,
     private routerQuery: RouterQuery,
-    private icsService: IcsService,
+    private agendaService: AgendaService,
   ) {
     //For cypress-environment, keep the event link same as from
     //where app is launced to remove dependency on external host.
@@ -95,6 +95,6 @@ export class ItemComponent {
   }
 
   exportToCalendar(event: Event) {
-    this.icsService.download([event]);
+    this.agendaService.download([event]);
   }
 }

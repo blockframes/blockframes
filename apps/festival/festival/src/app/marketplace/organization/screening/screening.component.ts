@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Screening } from '@blockframes/event/+state/event.firestore';
-import { IcsService } from '@blockframes/utils/ics/ics.service';
+import { AgendaService } from '@blockframes/utils/agenda/agenda.service';
 
 @Component({
   selector: 'festival-screening',
@@ -21,7 +21,7 @@ export class ScreeningComponent implements OnInit {
     private parent: ViewComponent,
     private service: EventService,
     private dynTitle: DynamicTitleService,
-    private icsService: IcsService,
+    private agendaService: AgendaService,
   ) { }
 
   ngOnInit(): void {
@@ -41,7 +41,7 @@ export class ScreeningComponent implements OnInit {
 
   exportToCalendar(events: Event[] = []) {
     if (events.length === 0) return;
-    this.icsService.download(events);
+    this.agendaService.download(events);
   }
 
 }

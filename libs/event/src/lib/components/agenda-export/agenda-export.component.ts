@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { Event } from '@blockframes/event/+state/event.model';
-import { IcsService } from '@blockframes/utils/ics/ics.service';
+import { AgendaService } from '@blockframes/utils/agenda/agenda.service';
 
 @Component({
   selector: 'event-agenda-export',
@@ -12,10 +12,10 @@ export class AgendaExportComponent {
   @Input() event: Event;
   @Input() text: string;
 
-  constructor(private icsService: IcsService) { }
+  constructor(private agendaService: AgendaService) { }
 
   exportToCalendar(event: Event) {
-    this.icsService.download([event]);
+    this.agendaService.download([event]);
   }
 
 }

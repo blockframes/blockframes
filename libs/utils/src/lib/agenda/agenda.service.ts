@@ -2,11 +2,11 @@ import { Injectable } from "@angular/core";
 import { Event, isMeeting, isScreening } from '@blockframes/event/+state/event.model';
 import { OrganizationService, orgName } from "@blockframes/organization/+state";
 import { sendgridEmailsFrom } from "../apps";
-import { IcsEvent } from "./ics.interfaces";
+import { IcsEvent } from "./agenda.interfaces";
 import { downloadIcs, toGoogleLink } from "./utils";
 
 @Injectable({ providedIn: 'root' })
-export class IcsService {
+export class AgendaService {
 
   constructor(
     private orgService: OrganizationService

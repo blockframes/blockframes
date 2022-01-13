@@ -7,8 +7,8 @@ import { OrganizationDocument, orgName } from "@blockframes/organization/+state/
 import { User } from "@blockframes/user/+state/user.firestore";
 import { AccessibilityTypes } from "../static-model";
 import { Bucket } from '@blockframes/contract/bucket/+state/bucket.firestore';
-import { toIcsFile } from "../ics/utils";
-import { IcsEvent } from "../ics/ics.interfaces";
+import { toIcsFile } from "../agenda/utils";
+import { IcsEvent } from "../agenda/agenda.interfaces";
 
 interface EmailData {
   to: string;
@@ -104,11 +104,19 @@ export function createEmailRequest(params: Partial<EmailRequest> = {}): EmailReq
   };
 }
 
-export function getEventEmailData(event: EventDocument<EventMeta>, orgName: string, attachment = true, userEmail?: string, invitationId?: string): EventEmailData {
+interface EventEmailParameters {
+  event: EventDocument<EventMeta>,
+  orgName: string,
+  attachment?: boolean,
+  email?: string,
+  invitationId?: string
+}
+
+export function getEventEmailData({ event, orgName, attachment = true, email, invitationId }: EventEmailParameters): EventEmailData {
 
   const eventStartDate = new Date(event.start.toDate());
   const eventEndDate = new Date(event.end.toDate());
-  const eventUrlParams = userEmail && invitationId ? `?email=${encodeURIComponent(userEmail)}&i=${invitationId}` : '';
+  const eventUrlParams = email && invitationId ? `?email=${encodeURIComponent(email)}&i=${invitationId}` : '';
 
   /**
    * @dev Format from date-fns lib, here the date will be 'month/day/year, hours:min:sec am/pm GMT'
