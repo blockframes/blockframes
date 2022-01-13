@@ -17,6 +17,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatRippleModule } from '@angular/material/core';
 import { ToLabelModule } from '@blockframes/utils/pipes';
+import { MatTooltipModule } from '@angular/material/tooltip';
 @NgModule({
   declarations: [ScreeningItemComponent],
   exports: [ScreeningItemComponent],
@@ -35,7 +36,8 @@ import { ToLabelModule } from '@blockframes/utils/pipes';
     MatIconModule,
     MatButtonModule,
     MatRippleModule,
-    ToLabelModule
+    ToLabelModule,
+    MatTooltipModule,
   ]
 })
 export class ScreeningItemModule { }

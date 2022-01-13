@@ -15,13 +15,18 @@
           <a ongoing-event-button [routerLink]="['/event', event.id, 'r', 'i']">Ongoing Screening</a>
         </ng-container>
       </div>
-      <h5>{{ event.accessibility | toLabel:'accessibility' }} Screening</h5>
+      <h5>
+        <span>{{ event.accessibility | toLabel:'accessibility' }} Screening</span>
+        <button mat-icon-button (click)="exportToCalendar(event)" matTooltip="Export Event">
+          <mat-icon svgIcon="cloud_download"></mat-icon>
+        </button>
+      </h5>
       <pre class="mat-body-1">{{ event | eventRange }}</pre>
       <ng-container *ngIf="event.ownerOrgId | getOrg | async as org">
         <org-chip @fade [org]="org"></org-chip>
       </ng-container>
     </div>
-    <footer fxLayout fxLayoutAlign="space-between start">
+    <footer fxLayout>
       <ng-container *ngIf="event.isOwner; else notOwner">
         <h3>You are the owner of this event</h3>
       </ng-container>
@@ -30,11 +35,6 @@
           <invitation-action @fade [invitation]="invitation" [event]="event"></invitation-action>
         </ng-container>
       </ng-template>
-
-      <button mat-button (click)="exportToCalendar(event)">
-        <mat-icon svgIcon="cloud_download"></mat-icon>
-        <span>Export Event</span>
-      </button>
     </footer>
   </article>
 </ng-container>

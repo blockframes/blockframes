@@ -10,7 +10,7 @@
   
           <ng-container *ngSwitchCase="'early'">
             <h6>
-              <span>{{ event.accessibility | toLabel:'accessibility'}} {{ event.type }}</span>
+              <span>{{ event.accessibility | toLabel:'accessibility' }} {{ event.type }}</span>
               <button mat-icon-button (click)="exportToCalendar(event)" matTooltip="Export Event">
                 <mat-icon svgIcon="cloud_download"></mat-icon>
               </button>
@@ -32,7 +32,12 @@
           </ng-container>
   
           <ng-container *ngSwitchCase="'onTime'">
-            <h6>{{ event.accessibility | toLabel:'accessibility' }} {{ event.type }}</h6>
+            <h6>
+              <span>{{ event.accessibility | toLabel:'accessibility' }} {{ event.type }}</span>
+              <button mat-icon-button (click)="exportToCalendar(event)" matTooltip="Export Event">
+                <mat-icon svgIcon="cloud_download"></mat-icon>
+              </button>
+            </h6>
             <pre class="mat-body-1">{{ event | eventRange }}</pre>
             <p class="mat-body-2">{{ event.meta.description }}</p>
             <p *ngIf="(invitation$ | async) === null">This event has already started.</p>

@@ -2,7 +2,7 @@
   <ng-container *ngIf="events.length; else empty">
     <section fxLayout fxLayoutAlign="space-between start">
       <h1>Screening Schedule</h1>
-      <button mat-flat-button (click)="exportToCalendar(events)">
+      <button mat-button (click)="exportToCalendar(events)">
         <mat-icon svgIcon="cloud_download"></mat-icon>
         <span>Export All Events</span>
       </button>

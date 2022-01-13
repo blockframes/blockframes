@@ -58,6 +58,10 @@ export class EventCalendarComponent implements OnInit {
     this.cdr.markForCheck();
   }
 
+  hasIncomingEvents(events: Event[] = []) {
+    return events.some(e => eventTime(e) !== 'late');
+  }
+
   exportToCalendar(events: Event[] = []) {
     if (events.length === 0) return;
     const ongoingOrIncomingEvents = events.filter(e => eventTime(e) !== 'late');

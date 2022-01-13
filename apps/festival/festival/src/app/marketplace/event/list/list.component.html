@@ -1,4 +1,4 @@
-<list-page [items]="events$ | async | eventsToTimeFrame">
+<list-page [items]="events$ | async | eventsToTimeFrame" exportButton>
   <list-page-title>
     <h1 class="mat-display-2 page-title">Screening List</h1>
   </list-page-title>
@@ -11,8 +11,17 @@
     </ng-template>
   </list-filter>
 
+  <!-- EVENTS COUNT (ng-content)-->
+  <list-page-description *ngIf="events$ | async as events">
+    <span i18n  class="mat-body-2">
+      There {events.length, plural, =0 {} =1 {is} other {are}} {{ events.length }} event{events.length, plural, =0 {} =1 {} other {s}}
+      available.
+    </span>
+  </list-page-description>
+
+  <!-- EXPORT (ng-content)-->
   <events-export *ngIf="(events$ | async) || [] as events">
-    <button mat-flat-button (click)="exportToCalendar(events)">
+    <button mat-button (click)="exportToCalendar(events)">
       <mat-icon svgIcon="cloud_download"></mat-icon>
       <span>Export All Events</span>
     </button>

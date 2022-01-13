@@ -23,15 +23,14 @@ article {
       white-space: nowrap;
     }
   }
-
-  footer {
-    width: 100%;
-  }
 }
 
 h5 {
   text-transform: uppercase;
   margin-bottom: 0;
+  button mat-icon {
+    vertical-align: text-bottom;
+  }
 }
 
 pre {

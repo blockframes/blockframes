@@ -16,6 +16,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 @NgModule({
@@ -34,6 +35,7 @@ import { MatIconModule } from '@angular/material/icon';
     MatBadgeModule,
     MatButtonModule,
     MatIconModule,
+    MatTooltipModule,
     // Router
     RouterModule.forChild([{ path: '', component: EventCalendarComponent }])
   ]
