@@ -63,9 +63,7 @@ export class EventCalendarComponent implements OnInit {
   }
 
   exportToCalendar(events: Event[] = []) {
-    if (events.length === 0) return;
-    const ongoingOrIncomingEvents = events.filter(e => eventTime(e) !== 'late');
-    this.agendaService.download(ongoingOrIncomingEvents);
+    this.agendaService.download(events.filter(e => eventTime(e) !== 'late'));
   }
 }
 

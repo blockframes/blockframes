@@ -13,6 +13,7 @@ export class AgendaService {
   ) { }
 
   public async download(events: Event[]) {
+    if (events.length === 0) return;
     const filename = events.length > 1 ? 'events.ics' : 'event.ics';
     const promises = events.map(async event => {
       const ownerOrg = await this.orgService.getValue(event.ownerOrgId);

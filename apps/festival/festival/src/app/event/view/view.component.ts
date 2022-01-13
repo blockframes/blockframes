@@ -51,7 +51,7 @@ export class EventViewComponent implements OnInit {
       switchMap((eventId: string) => this.service.queryDocs(eventId)),
       tap(event => {
         this.editEvent = `/c/o/dashboard/event/${event.id}/edit`;
-        this.dynTitle.setPageTitle(`${event.title}`);
+        this.dynTitle.setPageTitle(event.title);
       }),
     );
 

@@ -37,7 +37,6 @@ export class ScreeningComponent implements OnInit {
   }
 
   exportToCalendar(events: Event[] = []) {
-    if (events.length === 0) return;
     this.agendaService.download(events);
   }
 
