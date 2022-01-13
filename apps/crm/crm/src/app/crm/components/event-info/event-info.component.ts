@@ -15,12 +15,11 @@ export class EventInfoComponent implements OnInit {
 
   constructor(
     private orgService: OrganizationService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
     ) { }
 
   async ngOnInit() {
     this.org = await this.orgService.getValue(this.event.ownerOrgId);
     this.cdr.markForCheck();
   }
-
 }

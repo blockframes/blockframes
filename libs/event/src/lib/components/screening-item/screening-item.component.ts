@@ -22,7 +22,6 @@ export class ScreeningItemComponent implements OnInit, OnDestroy {
   @Input() set event(screening: ScreeningEvent) {
     this._event.next(screening);
   }
-
   get event() {
     return this._event.getValue();
   }
