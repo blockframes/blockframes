@@ -1,7 +1,6 @@
 ﻿/// <reference types="cypress" />
 
 // Utils
-import { NOW } from '../../fixtures/data'
 import { acceptCookie, clearDataAndPrepareTest, signIn } from '@blockframes/e2e/utils/functions';
 import { EVENTS } from '@blockframes/e2e/utils';
 import { User, USER } from '@blockframes/e2e/fixtures/users';
@@ -12,6 +11,7 @@ import { FestivalMarketplaceHomePage, FestivalMarketplaceEventPage, FestivalMark
 import { FestivalDashboardHomePage, EventPage, FestivalInvitationsPage } from '../../support/pages/dashboard/index';
 import { LandingPage } from '../../support/pages/landing';
 
+export const NOW = new Date();
 const TestEVENT = EVENTS[0];
 const invitedUsers = TestEVENT.invitees.map(u => u.uid);
 const userFixture = new User();
