@@ -63,6 +63,9 @@ export const templateIds = {
     oneDay: 'd-0c7bcb6e4a234ddc95ed74b9ecc433dc',
     oneHour: 'd-8a9439a404cc4b51887e9dea44f7fbd7'
   },
+  event: {
+    screeningRequested: 'd-1a4f08ee48734343bb02f5f3238a5713'
+  },
   movie: {
     accepted: 'd-bfcf2760bcb7484ab55f864a59331d26'
   },

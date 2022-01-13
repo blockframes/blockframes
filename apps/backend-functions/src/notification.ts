@@ -26,7 +26,8 @@ import {
   contractCreatedEmail,
   negotiationCreatedEmail,
   negotiationUpdatedEmail,
-  offerAcceptedOrDeclined
+  offerAcceptedOrDeclined,
+  screeningRequestedToSeller,
 } from './templates/mail';
 import { templateIds, groupIds } from '@blockframes/utils/emails/ids';
 import { canAccessModule } from '@blockframes/organization/+state/organization.firestore';
@@ -204,6 +205,14 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
           .then(() => notification.email.isSent = true)
           .catch(e => notification.email.error = e.message);
         break;
+      case 'screeningRequested':
+        await sendScreeningRequested(recipient, notification)
+          .then(() => notification.email.isSent = true)
+          .catch(e => notification.email.error = e.message);
+        break;
+      case 'screeningRequestSent':
+        // No email is sent to user that requested the screening, only a notification
+        break;
       case 'contractCreated':
         await sendContractCreated(recipient, notification)
           .then(() => notification.email.isSent = true)
@@ -366,6 +375,15 @@ async function sendInvitationToAttendEventUpdatedEmail(recipient: User, notifica
   }
 
   return;
+}
+
+/** Send an email to users of orgs of movie to request a screening */
+async function sendScreeningRequested(recipient: User, notification: NotificationDocument) {
+  const movie = await getDocument<MovieDocument>(`movies/${notification.docId}`);
+  const requestor = await getDocument<User>(`users/${notification.user.uid}`);
+  const toUser = getUserEmailData(recipient);
+  const template = screeningRequestedToSeller(toUser, requestor, movie);
+  await sendMailFromTemplate(template, 'festival', groupIds.unsubscribeAll);
 }
 
 /** Send an email to org admin when his/her org is accepted */

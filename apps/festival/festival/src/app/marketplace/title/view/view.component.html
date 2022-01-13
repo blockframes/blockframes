@@ -8,15 +8,12 @@
             <org-chip [org]="org"></org-chip>
           </ng-container>
         </section>
-        <ng-container *ngIf="(eventId$ | async) as eventId">
+        <ng-container *ngIf="(eventId$ | async) as eventId; else request">
           <a ongoing-event-button [routerLink]="['/event', eventId, 'r', 'i']">Ongoing Screening</a>
         </ng-container>
-        <ng-container *ngIf="orgs$ | async as orgs">
-          <a mat-stroked-button color="primary" [href]="'mailto:' + getEmails(orgs)">
-            <mat-icon svgIcon="mail"></mat-icon>
-            <span>{{ orgs[0].activity === 'intlSales' ? 'Contact Sales Agent' : 'Contact' }}</span>
-          </a>
-        </ng-container>
+        <ng-template #request>
+          <event-request-screening [movieId]="movie.id"></event-request-screening>
+        </ng-template>
       </movie-header-cta>
 
       <movie-header-actions fxHide.lt-sm fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="24px">

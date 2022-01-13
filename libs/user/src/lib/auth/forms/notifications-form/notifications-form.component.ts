@@ -25,6 +25,8 @@ const titleType: Record<NotificationTypesBase, NotificationSetting> = {
   requestToAttendEventCreated: { text: 'A user wants to join an event you\'re organizing. (RECOMMENDED)', tooltip: true },
   invitationToAttendMeetingCreated: { text: 'You are invited to a meeting. (RECOMMENDED)', tooltip: true },
   invitationToAttendScreeningCreated: { text: 'You are invited to a screening. (RECOMMENDED)', tooltip: true },
+  screeningRequested: { text: 'A screening has been requested. (RECOMMENDED)', tooltip: false },
+  screeningRequestSent: { text: 'Your screening request for screening was successfully sent', tooltip: false },
   offerCreatedConfirmation: { text: 'Your offer is successfully sent', tooltip: false },
   contractCreated: { text: 'An offer is made on one of your titles. (RECOMMENDED)', tooltip: true },
   negotiationCreated: { text: 'You\'ve received a counter offer. (RECOMMENDED)', tooltip: true },
@@ -54,6 +56,8 @@ const tables: { title: string, types: string[], appAuthorized: App[] }[] = [
       'requestToAttendEventUpdated',
       'oneDayReminder',
       'eventIsAboutToStart',
+      'screeningRequested',
+      'screeningRequestSent'
     ],
     appAuthorized: ['festival']
   },

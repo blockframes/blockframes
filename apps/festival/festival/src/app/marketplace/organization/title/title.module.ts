@@ -6,7 +6,7 @@ import { MovieCardModule } from '@blockframes/movie/components/card/card.module'
 import { MatRippleModule } from '@angular/material/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-
+import { RequestScreeningModule } from '@blockframes/event/components/request-screening/request-screening.module';
 
 @NgModule({
   declarations: [TitleComponent],
@@ -15,7 +15,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     FlexLayoutModule,
     MovieCardModule,
     MatRippleModule,
-    RouterModule.forChild([{ path: '', component: TitleComponent }])
+    RouterModule.forChild([{ path: '', component: TitleComponent }]),
+    RequestScreeningModule
   ]
 })
 export class OrganizationTitleModule { }

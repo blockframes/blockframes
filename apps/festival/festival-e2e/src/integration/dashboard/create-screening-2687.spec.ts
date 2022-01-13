@@ -18,13 +18,13 @@ import {
 import { LandingPage } from '../../support/pages/landing';
 // Hooks
 import { acceptCookie, clearDataAndPrepareTest, signIn } from '@blockframes/e2e/utils/functions';
-import { NOW } from '../../fixtures/data';
 import { EVENTS } from '@blockframes/e2e/utils';
 import { User, USER } from '@blockframes/e2e/fixtures/users';
 import { Orgs } from '@blockframes/e2e/fixtures/orgs';
 import { SEC } from '@blockframes/e2e/utils';
 
 let tomorrow, twodayslater;
+export const NOW = new Date();
 const userFixture = new User();
 const orgsFixture = new Orgs();
 const users  =  [
