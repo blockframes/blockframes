@@ -14,10 +14,7 @@
     <h5>Type</h5>
     <p>{{ event.type }}</p>
   </section>
-  <button mat-flat-button (click)="exportToCalendar()">
-    <mat-icon svgIcon="cloud_download"></mat-icon>
-    <span>Export to ICS</span>
-  </button>
+  <event-agenda-export [event]="event" text="Export Event"></event-agenda-export>
 </mat-card>
 
 <h2>Details</h2>

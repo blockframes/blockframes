@@ -93,9 +93,11 @@
     </span>
   </ng-container>
   <ng-container *ngIf="_invitation.type === 'attendEvent' && _invitation.mode === 'invitation' && _invitation.status !== 'declined'">
-    <span *ngIf="_invitation | eventFromInvitation | async as event" mat-menu-item (click)="exportToCalendar(event)">
-      Export event
-    </span>
+    <ng-container *ngIf="_invitation | eventFromInvitation | async as event">
+      <a *ngIf="event | googleAgendaLink as googleLink" mat-menu-item [href]="googleLink" target="_blank">Export to Google Agenda</a>
+      <span mat-menu-item (click)="exportToCalendar(event)">Export to Ical</span>
+      <span mat-menu-item (click)="exportToCalendar(event)">Export to Outlook</span>
+    </ng-container>
   </ng-container>
   <a test-id="go-to-event" mat-menu-item [target]="targetLink" [href]="eventLink">More Details</a>
 </mat-menu>

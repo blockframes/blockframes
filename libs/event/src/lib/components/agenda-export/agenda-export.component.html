@@ -1,0 +1,14 @@
+<button *ngIf="text else icon" mat-button [matMenuTriggerFor]="menu" matTooltip="Export Event">
+  <mat-icon svgIcon="cloud_download"></mat-icon>
+  <span>{{ text }}</span>
+</button>
+<ng-template #icon>
+  <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Export Event">
+    <mat-icon svgIcon="cloud_download"></mat-icon>
+  </button>
+</ng-template>
+<mat-menu #menu="matMenu">
+  <a *ngIf="event | googleAgendaLink as googleLink" mat-menu-item [href]="googleLink" target="_blank">Export to Google Agenda</a>
+  <span mat-menu-item (click)="exportToCalendar(event)">Export to Ical</span>
+  <span mat-menu-item (click)="exportToCalendar(event)">Export to Outlook</span>
+</mat-menu>

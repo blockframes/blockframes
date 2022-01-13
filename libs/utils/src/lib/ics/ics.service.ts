@@ -3,7 +3,7 @@ import { Event, isMeeting, isScreening } from '@blockframes/event/+state/event.m
 import { OrganizationService, orgName } from "@blockframes/organization/+state";
 import { sendgridEmailsFrom } from "../apps";
 import { IcsEvent } from "./ics.interfaces";
-import { downloadIcs } from "./utils";
+import { downloadIcs, toGoogleLink } from "./utils";
 
 @Injectable({ providedIn: 'root' })
 export class IcsService {
@@ -22,9 +22,14 @@ export class IcsService {
     const icsEvents = await Promise.all(promises);
     downloadIcs(icsEvents, filename);
   }
+
+  public link(event: Event) {
+    const icsEvent = createIcsFromEvent(event);
+    return toGoogleLink(icsEvent);
+  }
 }
 
-function createIcsFromEvent(e: Event, orgName: string): IcsEvent {
+function createIcsFromEvent(e: Event, orgName?: string): IcsEvent {
   const event = isScreening(e) || isMeeting(e) ? e : undefined;
   if (!event) return;
   return {

@@ -1,8 +1,9 @@
 import { applicationUrl, appName } from './../apps';
 import { IcsEvent } from './ics.interfaces';
 
-const header = `BEGIN:VCALENDAR\nVERSION:2.0\nCALSCALE:GREGORIAN`;
+const header = 'BEGIN:VCALENDAR\nVERSION:2.0\nCALSCALE:GREGORIAN';
 const footer = 'END:VCALENDAR';
+const googleCalendarLink = 'https://www.google.com/calendar/event';
 
 export function toIcsFile(events: IcsEvent[]) {
 
@@ -22,6 +23,22 @@ export function toIcsFile(events: IcsEvent[]) {
   });
 
   return `${header}\n${eventsData.join('\n')}\n${footer}`;
+}
+
+export function toGoogleLink(icsEvent: IcsEvent) {
+
+  const eventData = {
+    action: 'TEMPLATE',
+    text: icsEvent.title,
+    dates: `${toIcsDate(icsEvent.start)}/${toIcsDate(icsEvent.end)}`,
+    details: `${icsEvent.description}${icsEvent.description ? ' - ' : ''}${applicationUrl.festival}/event/${icsEvent.id}/r/i`,
+    location: appName.festival,
+    url: `${applicationUrl.festival}/event/${icsEvent.id}/r/i`,
+    trp: 'false'
+  };
+
+  const params = Object.entries(eventData).map(pair => pair.map(encodeURIComponent).join('=')).join('&');
+  return `${googleCalendarLink}?${params}`;
 }
 
 export function downloadIcs(icsEvents: IcsEvent[], filename = 'events.ics') {

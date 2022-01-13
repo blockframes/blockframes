@@ -1,5 +1,4 @@
 import { Component, ChangeDetectionStrategy, Input, OnInit, ChangeDetectorRef } from '@angular/core';
-import { IcsService } from '@blockframes/utils/ics/ics.service';
 import { Event } from '@blockframes/event/+state/event.model';
 import { Organization, OrganizationService } from '@blockframes/organization/+state';
 
@@ -16,17 +15,12 @@ export class EventInfoComponent implements OnInit {
 
   constructor(
     private orgService: OrganizationService,
-    private cdr: ChangeDetectorRef,
-    private icsService: IcsService,
+    private cdr: ChangeDetectorRef
     ) { }
 
   async ngOnInit() {
     this.org = await this.orgService.getValue(this.event.ownerOrgId);
     this.cdr.markForCheck();
-  }
-
-  exportToCalendar() {
-    this.icsService.download([this.event]);
   }
 
 }

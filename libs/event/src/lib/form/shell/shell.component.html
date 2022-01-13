@@ -45,10 +45,7 @@
     <mat-card>
       <section fxLayout fxLayoutAlign="space-between start">
         <h2>Details</h2>
-        <button mat-flat-button (click)="exportToCalendar()">
-          <mat-icon svgIcon="cloud_download"></mat-icon>
-          <span>Export Event</span>
-        </button>
+        <event-agenda-export [event]="form.value" text="Export Event"></event-agenda-export>
       </section>
       <event-details-edit [form]="form" showPrivacy></event-details-edit>
     </mat-card>

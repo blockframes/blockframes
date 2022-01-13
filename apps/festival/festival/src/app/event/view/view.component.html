@@ -11,9 +11,7 @@
           <ng-container *ngSwitchCase="'early'">
             <h6>
               <span>{{ event.accessibility | toLabel:'accessibility' }} {{ event.type }}</span>
-              <button mat-icon-button (click)="exportToCalendar(event)" matTooltip="Export Event">
-                <mat-icon svgIcon="cloud_download"></mat-icon>
-              </button>
+              <event-agenda-export [event]="event"></event-agenda-export>
             </h6>
             <pre class="mat-body-1">{{ event | eventRange }}</pre>
             <p class="mat-body-2">{{ event.meta.description }}</p>
@@ -34,9 +32,7 @@
           <ng-container *ngSwitchCase="'onTime'">
             <h6>
               <span>{{ event.accessibility | toLabel:'accessibility' }} {{ event.type }}</span>
-              <button mat-icon-button (click)="exportToCalendar(event)" matTooltip="Export Event">
-                <mat-icon svgIcon="cloud_download"></mat-icon>
-              </button>
+              <event-agenda-export [event]="event"></event-agenda-export>
             </h6>
             <pre class="mat-body-1">{{ event | eventRange }}</pre>
             <p class="mat-body-2">{{ event.meta.description }}</p>

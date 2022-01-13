@@ -17,9 +17,7 @@
       </div>
       <h5>
         <span>{{ event.accessibility | toLabel:'accessibility' }} Screening</span>
-        <button mat-icon-button (click)="exportToCalendar(event)" matTooltip="Export Event">
-          <mat-icon svgIcon="cloud_download"></mat-icon>
-        </button>
+        <event-agenda-export [event]="event"></event-agenda-export>
       </h5>
       <pre class="mat-body-1">{{ event | eventRange }}</pre>
       <ng-container *ngIf="event.ownerOrgId | getOrg | async as org">

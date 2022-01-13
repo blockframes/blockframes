@@ -8,7 +8,6 @@ import { Location } from '@angular/common';
 import { fade } from '@blockframes/utils/animations/fade';
 import { AuthQuery, AuthService } from '@blockframes/auth/+state';
 import { Event } from '@blockframes/event/+state/event.model';
-import { IcsService } from '@blockframes/utils/ics/ics.service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
@@ -35,7 +34,6 @@ export class EventViewComponent implements OnInit {
     private location: Location,
     private authQuery: AuthQuery,
     private authService: AuthService,
-    private icsService: IcsService,
     private dynTitle: DynamicTitleService,
   ) { }
 
@@ -91,10 +89,6 @@ export class EventViewComponent implements OnInit {
 
   reloadInvitation() {
     this.statusChanged.next(true);
-  }
-
-  exportToCalendar(event: Event) {
-    this.icsService.download([event]);
   }
 
 }
