@@ -104,7 +104,7 @@ export function createEmailRequest(params: Partial<EmailRequest> = {}): EmailReq
   };
 }
 
-export function getEventEmailData(event: EventDocument<EventMeta>, orgName: string, userEmail?: string, invitationId?: string): EventEmailData {
+export function getEventEmailData(event: EventDocument<EventMeta>, orgName: string, attachment = true, userEmail?: string, invitationId?: string): EventEmailData {
 
   const eventStartDate = new Date(event.start.toDate());
   const eventEndDate = new Date(event.end.toDate());
@@ -124,7 +124,7 @@ export function getEventEmailData(event: EventDocument<EventMeta>, orgName: stri
     viewUrl: `/event/${event.id}/r/i${eventUrlParams}`,
     sessionUrl: `/event/${event.id}/r/i/session${eventUrlParams}`,
     accessibility: event.accessibility,
-    calendar: getEventEmailAttachment(event, orgName)
+    calendar: attachment ? getEventEmailAttachment(event, orgName) : undefined
   }
 }
 
