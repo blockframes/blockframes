@@ -1,0 +1,12 @@
+<ng-container *ngIf="requestStatus | async as status">
+  <ng-container *ngIf="iconOnly else button">
+    <button mat-icon-button color="primary" [disabled]="status !== 'available'" (click)="requestScreening()">
+      <mat-icon svgIcon="ask_screening" [matTooltip]="screeningRequest[status]"></mat-icon>
+    </button>
+  </ng-container>
+  <ng-template #button>
+    <button mat-flat-button color="primary" [disabled]="status !== 'available'" (click)="requestScreening()">
+      {{ screeningRequest[status] }}
+    </button>
+  </ng-template>
+</ng-container>

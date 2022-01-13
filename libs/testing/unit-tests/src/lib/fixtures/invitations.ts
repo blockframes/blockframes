@@ -1,19 +1,13 @@
 ﻿import { metaDoc } from "@blockframes/utils/maintenance";
 
-export const testFixture = {
-  //Meta
+export const invitationsFixtures = {
+  // Meta
   [metaDoc]: {
     startedAt: new Date(),
     endedAt: null
   },
 
-  //Orgs
-  'orgs/O001': {
-    id: 'O001',
-    status: 'accepted',
-    userIds: ['uid-user2'],
-  },
-
+  // Users
   'users/uid-c8': {
     email: 'c8@cascade8.com',
     uid: 'uid-c8'
@@ -26,7 +20,7 @@ export const testFixture = {
     orgId: 'O001',
   },
 
-  //Invitations
+  // Invitations
   'invitations/I001': {
     id: 'I001',
     type: 'joinOrganization',
@@ -34,10 +28,12 @@ export const testFixture = {
   'invitations/I002': {
     id: 'I002',
     type: 'attendEvent',
-    mode: 'request'
+    mode: 'request',
+    eventId: 'E001'
   },
   'invitations/I003': {
     id: 'I003',
+    eventId: 'E001',
     type: 'attendEvent',
     mode: 'invitation',
     fromOrg: {
@@ -51,5 +47,6 @@ export const testFixture = {
       email: 'test@cascade8.com'
     },
     status: 'pending'
-  }
+  },
+
 };

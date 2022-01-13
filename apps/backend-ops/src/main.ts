@@ -18,6 +18,7 @@ import { backupEnv, restoreEnv } from './backup';
 import { EIGHT_MINUTES_IN_MS } from '@blockframes/utils/maintenance';
 import { rescueJWP } from './rescueJWP';
 import { loadAndShrinkLatestAnonDbAndUpload } from './db-shrink';
+import { printDatabaseInconsistencies } from './internals/utils';
 
 const args = process.argv.slice(2);
 const [cmd, ...flags] = args;
@@ -76,6 +77,9 @@ async function runCommand() {
       await startMaintenance(db);
       await upgrade();
       await endMaintenance(db);
+      break;
+    case 'auditDatabaseConsistency':
+      await printDatabaseInconsistencies(undefined, db);
       break;
     case 'upgradeEmulators':
       await upgradeEmulators();

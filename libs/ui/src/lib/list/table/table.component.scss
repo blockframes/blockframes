@@ -11,6 +11,20 @@
   }
 }
 
+:host.no-border {
+  th {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+  }
+  td:last-of-type, th:last-of-type {
+    border-right: none;
+  }
+  td:first-of-type, th:first-of-type {
+    border-left: none;
+  }
+}
+
 mat-form-field {
   display: block;
 }
@@ -146,3 +160,4 @@ tr:last-of-type {
     border-bottom-left-radius: 4px;
   }
 }
+

@@ -40,6 +40,15 @@ export function confirmPasswords(
   };
 }
 
+/** Require current and new password to be different */
+export function differentPassword(current: string = 'current', next: string = 'next'): ValidatorFn {
+  return (group: FormGroup): { [key: string]: boolean } | null => {
+    return group.controls[current].value === group.controls[next].value
+      ? { currentPasswordMatch: true }
+      : null;
+  }
+}
+
 /** Checks if the sum of all percentages controls of all FormGroups of FormArray does not exceed 100%  */
 export function validPercentageList(control: FormArray): ValidationErrors {
   let sum = 0;

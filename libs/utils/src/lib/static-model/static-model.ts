@@ -526,7 +526,7 @@ export const territories = {
   "equatorial-guinea": "Equatorial Guinea",
   eritrea: "Eritrea",
   estonia: "Estonia",
-  eswatini: "Eswatini (former Swaziland) ",
+  eswatini: "Eswatini (former Swaziland)",
   ethiopia: "Ethiopia",
   "falkland-islands": "Falkland Islands",
   "faroe-islands": "Faroe Islands",
