@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { OrganizationQuery, OrganizationService, Organization } from '../../+state';
-import { PermissionsQuery } from '@blockframes/permissions/+state';
+import { PermissionsService } from '@blockframes/permissions/+state';
 import { OrganizationForm } from '../../forms/organization.form';
 import { Observable } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -19,7 +19,7 @@ export class OrganizationEditableComponent implements OnInit {
 
   constructor(
     private query: OrganizationQuery,
-    private permissionsQuery: PermissionsQuery,
+    private permissionsService: PermissionsService,
     private service: OrganizationService,
     private snackBar: MatSnackBar,
   ) {}
@@ -28,7 +28,7 @@ export class OrganizationEditableComponent implements OnInit {
     this.organization$ = this.query
       .selectActive()
       .pipe(tap(org => this.organizationProfileForm.patchValue(org)));
-    this.isAdmin$ = this.permissionsQuery.isAdmin$;
+    this.isAdmin$ = this.permissionsService.isAdmin$;
   }
 
   public get organizationInformations$() {

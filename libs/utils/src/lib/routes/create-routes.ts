@@ -93,7 +93,7 @@ export function createRoutes({ appsRoutes, appName, landing, events }: RouteOpti
             {
               path: 'o',
               canActivate: [NotificationsGuard, InvitationGuard, PermissionsGuard, OrganizationGuard, EmailVerifiedGuard],
-              canDeactivate: [NotificationsGuard, InvitationGuard, PermissionsGuard, OrganizationGuard],
+              canDeactivate: [NotificationsGuard, InvitationGuard, OrganizationGuard],
               children
             }
           ]
