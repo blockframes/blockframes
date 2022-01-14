@@ -4,7 +4,7 @@ import { Permissions } from './permissions.model';
 import { CollectionService, CollectionConfig, AtomicWrite } from 'akita-ng-fire';
 import type firebase from 'firebase';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
-import { UserService } from '@blockframes/user/+state';
+import { UserService } from '@blockframes/user/+state/user.service';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { AuthQuery, AuthService } from '@blockframes/auth/+state';
 import { combineLatest } from 'rxjs';
