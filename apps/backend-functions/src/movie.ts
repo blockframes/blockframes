@@ -1,18 +1,21 @@
 import { db } from './internals/firebase';
-import { MovieDocument, createDocPermissions } from './data/types';
+import { MovieDocument, createDocPermissions, PublicUser } from './data/types';
 import { triggerNotifications, createNotification } from './notification';
-import { createDocumentMeta, getOrganizationsOfMovie, Timestamp } from './data/internals';
+import { createDocumentMeta, createPublicUserDocument, getOrganizationsOfMovie, Timestamp } from './data/internals';
 
 import { orgName } from '@blockframes/organization/+state/organization.firestore';
 import { MovieAppConfig } from '@blockframes/movie/+state/movie.firestore';
 import { cleanMovieMedias, moveMovieMedia } from './media';
 import { Change, EventContext } from 'firebase-functions';
-import { algolia, deleteObject, storeSearchableMovie, storeSearchableOrg } from '@blockframes/firebase-utils';
+import { algolia, deleteObject, getDocument, storeSearchableMovie, storeSearchableOrg } from '@blockframes/firebase-utils';
 import { App, getAllAppsExcept, getMovieAppAccess, getMailSender } from '@blockframes/utils/apps';
 import { Bucket } from '@blockframes/contract/bucket/+state/bucket.model';
 import { sendMovieSubmittedEmail } from './templates/mail';
 import { sendMail } from './internals/email';
 import { groupIds } from '@blockframes/utils/emails/ids';
+import { CallableContext } from 'firebase-functions/lib/providers/https';
+import { Movie } from '@blockframes/movie/+state';
+import { Organization } from '@blockframes/organization/+state';
 
 const apps: App[] = getAllAppsExcept(['crm']);
 
@@ -192,6 +195,45 @@ export async function onMovieUpdate(
       await deleteObject(algolia.indexNameMovies[app], before.id);
     }
   }
+}
+
+export async function createAskingPriceRequest(data: { uid: string, movieId: string, territories: string, message: string }, context: CallableContext) {
+  const { uid, movieId, territories, message } = data;
+
+  if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
+  if (!uid) { throw new Error('User id is mandatory for requesting asking price'); }
+  if (!movieId) { throw new Error('Movie id is mandatory for requesting asking price'); }
+
+  const [user, movie] = await Promise.all([
+    getDocument<PublicUser>(`users/${uid}`),
+    getDocument<Movie>(`movies/${movieId}`)
+  ]);
+
+  const getNotifications = (org: Organization) => org.userIds.map(userId => createNotification({
+    toUserId: userId,
+    type: 'movieAskingPriceRequested',
+    docId: movieId,
+    data: { territories, message },
+    user: createPublicUserDocument(user),
+    _meta: createDocumentMeta({ createdFrom: 'festival' })
+  }));
+
+  for (const orgId of movie.orgIds) {
+    getDocument<Organization>(`orgs/${orgId}`)
+      .then(getNotifications)
+      .then(triggerNotifications);
+  }
+
+  // Send notification to user who requested the asking price
+  const notification = createNotification({
+    toUserId: uid,
+    type: 'movieAskingPriceRequestSent',
+    docId: movieId,
+    data: { territories, message },
+    user: createPublicUserDocument(user),
+    _meta: createDocumentMeta({ createdFrom: 'festival' })
+  });
+  triggerNotifications([notification]);
 }
 
 /** Checks if the store status is going from draft to submitted. */

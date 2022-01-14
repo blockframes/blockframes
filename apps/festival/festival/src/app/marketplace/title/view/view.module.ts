@@ -14,6 +14,7 @@ import { PromotionalLinksModule } from '@blockframes/movie/components/promotiona
 import { UpcomingScreeningsModule } from '@blockframes/movie/components/upcoming-screenings/upcoming-screenings.module';
 import { OngoingButtonModule } from '@blockframes/ui/ongoing-button/ongoing-button.module';
 import { RequestScreeningModule } from '@blockframes/event/components/request-screening/request-screening.module';
+import { RequestAskingPriceModule } from '@blockframes/movie/components/request-asking-price/request-asking-price.module';
 // Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -70,6 +71,7 @@ const routes = [
     UpcomingScreeningsModule,
     OngoingButtonModule,
     RequestScreeningModule,
+    RequestAskingPriceModule,
     // Material
     MatIconModule,
     MatButtonModule,

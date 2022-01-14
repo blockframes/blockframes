@@ -4,6 +4,8 @@ import { ScreeningEvent } from '../../+state';
 import { BehaviorSubject, combineLatest, Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { fade } from '@blockframes/utils/animations/fade';
+import { MatDialog } from '@angular/material/dialog';
+import { RequestAskingPriceComponent } from '@blockframes/movie/components/request-asking-price/request-asking-price.component';
 
 @Component({
   selector: 'event-screening-item',
@@ -28,6 +30,7 @@ export class ScreeningItemComponent implements OnInit, OnDestroy {
 
   constructor(
     private cdr: ChangeDetectorRef,
+    private dialog: MatDialog,
     private invitationService: InvitationService
   ) { }
 
@@ -45,6 +48,15 @@ export class ScreeningItemComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.sub.unsubscribe();
+  }
+
+  requestAskingPrice(movieId: string) {
+    this.dialog.open(RequestAskingPriceComponent, {
+      data: { movieId },
+      maxHeight: '80vh',
+      maxWidth: '650px',
+      autoFocus: false
+    });
   }
 
 }

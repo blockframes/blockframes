@@ -24,10 +24,12 @@ import {
   offerCreatedConfirmationEmail,
   appAccessEmail,
   contractCreatedEmail,
-  screeningRequestedToSeller
+  screeningRequestedToSeller,
+  movieAskingPriceRequested,
+  movieAskingPriceRequestSent
 } from './templates/mail';
 import { templateIds, groupIds } from '@blockframes/utils/emails/ids';
-import { canAccessModule } from '@blockframes/organization/+state/organization.firestore';
+import { canAccessModule, orgName } from '@blockframes/organization/+state/organization.firestore';
 import { App, applicationUrl } from '@blockframes/utils/apps';
 import * as admin from 'firebase-admin';
 import { Movie } from '@blockframes/movie/+state';
@@ -141,7 +143,16 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
           .then(() => notification.email.isSent = true)
           .catch(e => notification.email.error = e.message);
         break;
-
+      case 'movieAskingPriceRequested':
+        await sendMovieAskingPriceRequested(recipient, notification)
+          .then(() => notification.email.isSent = true)
+          .catch(e => notification.email.error = e.message);
+        break;
+      case 'movieAskingPriceRequestSent':
+        await sendMovieAskingPriceRequestSent(recipient, notification)
+          .then(() => notification.email.isSent = true)
+          .catch(e => notification.email.error = e.message);
+        break;
       // Notifications relative to invitations
       case 'orgMemberUpdated':
         await sendOrgMemberUpdatedEmail(recipient, notification)
@@ -158,7 +169,6 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
           .then(() => notification.email.isSent = true)
           .catch(e => notification.email.error = e.message);
         break;
-
       // Events related notifications
       case 'requestToAttendEventCreated':
         await sendRequestToAttendEventCreatedEmail(recipient, notification)
@@ -431,6 +441,34 @@ async function sendMovieAcceptedEmail(recipient: User, notification: Notificatio
 
   const app = notification._meta.createdFrom;
   const template = movieAcceptedEmail(toUser, movie.title.international, movieUrl);
+  await sendMailFromTemplate(template, app, groupIds.unsubscribeAll);
+}
+
+/** Send an email to orgs of a movie about the fact that someone requested the asking price */
+async function sendMovieAskingPriceRequested(recipient: User, notification: NotificationDocument) {
+  const movie = await getDocument<MovieDocument>(`movies/${notification.docId}`);
+  const toUser = getUserEmailData(recipient);
+  const buyer = getUserEmailData(notification.user);
+  const { territories, message } = notification.data;
+
+  const app = notification._meta.createdFrom;
+  const template = movieAskingPriceRequested(toUser, buyer, movie.title.international, territories, message);
+  await sendMailFromTemplate(template, app, groupIds.unsubscribeAll);
+}
+
+/** Send an email to user when their request for the asking price has been sent */
+async function sendMovieAskingPriceRequestSent(recipient: User, notification: NotificationDocument) {
+  const movie = await getDocument<MovieDocument>(`movies/${notification.docId}`);
+  const toUser = getUserEmailData(recipient);
+  const { territories, message } = notification.data;
+
+  const orgs = await Promise.all(
+    movie.orgIds.map(orgId => getDocument<OrganizationDocument>(`orgs/${orgId}`))
+  );
+  const orgNames = orgs.map(org => orgName(org)).join(', ');
+
+  const app = notification._meta.createdFrom;
+  const template = movieAskingPriceRequestSent(toUser, movie, orgNames, territories, message);
   await sendMailFromTemplate(template, app, groupIds.unsubscribeAll);
 }
 

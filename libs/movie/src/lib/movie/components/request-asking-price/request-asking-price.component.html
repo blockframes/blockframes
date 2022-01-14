@@ -1,0 +1,47 @@
+<header fxLayout fxLayoutAlign="end">
+  <button mat-icon-button (click)="close()">
+    <mat-icon svgIcon="close"></mat-icon>
+  </button>
+</header>
+
+<form [formGroup]="form" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="12px">
+  <h1>Request Asking Price</h1>
+  <mat-form-field appearance="outline">
+    <mat-label>Select territories</mat-label>
+    <static-group
+      [formControl]="form.get('territories')"
+      scope="territories"
+      displayAll="World"
+      placeholder="Select territories"
+      required>
+    </static-group>
+    <mat-hint>Choose territories you are interested in.</mat-hint>
+    <mat-error *ngIf="form.get('territories').hasError('required')">Select at least one territory</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Your message</mat-label>
+    <textarea
+      matInput
+      placeholder=""
+      formControlName="message"
+      cdkTextareaAutosize
+      #autosize="cdkTextareaAutosize"
+      cdkAutosizeMinRows="4"
+      maxlength="500"
+    ></textarea>
+    <mat-hint>Type the text you want to send here if any.</mat-hint>
+  </mat-form-field>
+
+  <footer fxLayout="column" fxLayoutAlign="center center">
+    <button mat-flat-button color="primary" [disabled]="form.disabled || form.invalid" type="submit" (click)="send()">
+      <span>Send Asking Price Proposition</span>
+      <ng-container *ngIf="form.disabled">
+        <mat-spinner diameter="16"></mat-spinner>
+      </ng-container>
+    </button>
+    <button mat-button mat-dialog-close type="button">
+      Go back
+    </button>
+  </footer>
+</form>
