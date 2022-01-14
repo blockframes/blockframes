@@ -17,7 +17,7 @@ interface PermissionsState extends EntityState<Permissions>, ActiveState<string>
 export class PermissionsService extends CollectionService<PermissionsState> {
   readonly useMemorization = true;
 
-  // The whole permissions document for org if the current logged in user.
+  // The whole permissions document for organization of the current logged in user.
   permissions: Permissions;
   permissions$ = this.authService.profile$.pipe(
     switchMap(user => this.valueChanges(user.orgId)),
