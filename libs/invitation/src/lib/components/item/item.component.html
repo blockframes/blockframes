@@ -84,15 +84,20 @@
   </button>
 </mat-list-item>
 <mat-menu #menu="matMenu">
-  <a test-id="go-to-event" mat-menu-item [target]="targetLink" [href]="eventLink">More Details</a>
-  <ng-container [ngSwitch]="_invitation.status">
-    <ng-container *ngSwitchCase="'pending'">
-      <span test-id="accept-invitation" mat-menu-item (click)="handleInvitation(_invitation, 'acceptInvitation')">
-        Accept invitation
-      </span>
-      <span test-id="decline-invitation" mat-menu-item (click)="handleInvitation(_invitation, 'declineInvitation')">
-        Decline invitation
-      </span>
+  <ng-container *ngIf="_invitation.status === 'pending'">
+    <span test-id="accept-invitation" mat-menu-item (click)="handleInvitation(_invitation, 'acceptInvitation')">
+      Accept invitation
+    </span>
+    <span test-id="decline-invitation" mat-menu-item (click)="handleInvitation(_invitation, 'declineInvitation')">
+      Decline invitation
+    </span>
+  </ng-container>
+  <ng-container *ngIf="_invitation.type === 'attendEvent' && _invitation.mode === 'invitation' && _invitation.status !== 'declined'">
+    <ng-container *ngIf="_invitation | eventFromInvitation | async as event">
+      <a *ngIf="event | googleAgendaLink as googleLink" mat-menu-item [href]="googleLink" target="_blank">Export to Google Agenda</a>
+      <span mat-menu-item (click)="exportToCalendar(event)">Export to Ical</span>
+      <span mat-menu-item (click)="exportToCalendar(event)">Export to Outlook</span>
     </ng-container>
   </ng-container>
+  <a test-id="go-to-event" mat-menu-item [target]="targetLink" [href]="eventLink">More Details</a>
 </mat-menu>

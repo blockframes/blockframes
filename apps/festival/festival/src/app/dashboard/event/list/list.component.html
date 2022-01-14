@@ -11,6 +11,12 @@
         </ng-container>
       </mat-select>
     </mat-form-field>
+    <ng-container *ngIf="(events$ | async) || [] as events">
+      <button mat-button matTooltip="Export ongoing & upcoming Events" [disabled]="!hasIncomingEvents(events)" (click)="exportToCalendar(events)">
+        <mat-icon svgIcon="cloud_download"></mat-icon>
+        <span>Export Calendar</span>
+      </button>
+    </ng-container>
   </header>
 </ng-template>
 

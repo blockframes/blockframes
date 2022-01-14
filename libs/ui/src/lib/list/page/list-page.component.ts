@@ -38,6 +38,9 @@ export class PageEmptyDirective { }
 @Directive({ selector: '[pdfExport], pdf-export' })
 export class PdfExportDirective { }
 
+@Directive({ selector: '[eventsExport], events-export' })
+export class EventsExportDirective { }
+
 @Component({
   selector: '[items] list-page',
   templateUrl: 'list-page.component.html',
@@ -53,7 +56,7 @@ export class ListPageComponent implements AfterContentInit {
   @ContentChild(PageAppBarSearchDirective) appBar: PageAppBarSearchDirective;
 
   @Input() items: unknown[];
-  @Input() @boolean pdfExport = false;
+  @Input() @boolean exportButton = false;
 
   public listView = false;
   public canToggle = false;

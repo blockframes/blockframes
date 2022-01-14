@@ -10,6 +10,8 @@ import { applicationUrl, getCurrentApp } from '@blockframes/utils/apps';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { isMeeting } from '@blockframes/event/+state';
 import { isSafari } from '@blockframes/utils/browser/utils';
+import { AgendaService } from '@blockframes/utils/agenda/agenda.service';
+import { Event } from '@blockframes/event/+state';
 
 @Component({
   selector: 'invitation-item',
@@ -58,7 +60,8 @@ export class ItemComponent {
     private eventService: EventService,
     private organizationService: OrganizationService,
     private userService: UserService,
-    private routerQuery: RouterQuery
+    private routerQuery: RouterQuery,
+    private agendaService: AgendaService,
   ) {
     //For cypress-environment, keep the event link same as from
     //where app is launced to remove dependency on external host.
@@ -89,5 +92,9 @@ export class ItemComponent {
 
   handleInvitation(invitation: Invitation, action: 'acceptInvitation' | 'declineInvitation') {
     this.invitationService[action](invitation);
+  }
+
+  exportToCalendar(event: Event) {
+    this.agendaService.download([event]);
   }
 }

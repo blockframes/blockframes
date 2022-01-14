@@ -60,6 +60,10 @@ export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequ
     customArgs: { projectId }
   };
 
+  if(data.event?.calendar) {
+    msg.attachments = [data.event.calendar];
+  }
+
   return send(msg);
 }
 
