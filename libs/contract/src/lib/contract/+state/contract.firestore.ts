@@ -7,7 +7,6 @@ import { Timestamp } from "@blockframes/utils/common-interfaces/timestamp";
 export const contractStatus = ['pending', 'accepted', 'declined', 'negotiating'] as const;
 
 export type ContractStatus = typeof contractStatus[number];
-export type ContractStatusChange = `${ContractStatus} => ${ContractStatus}`
 
 export interface Holdback<D extends Timestamp | Date = Date> {
   territories: Territory[];

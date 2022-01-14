@@ -4,8 +4,7 @@ import { Observable, of } from "rxjs";
 import { map } from "rxjs/operators";
 import { Negotiation } from "./+state/negotiation.firestore";
 import { ContractStatus } from '@blockframes/contract/contract/+state/contract.firestore';
-import { isInitial } from "./utils";
-import { centralOrgId } from "@env";
+import { getRecipient, isInitial } from "./utils";
 
 function canNegotiate(negotiation: Negotiation, activeOrgId: string) {
   return negotiation.status === 'pending' && negotiation.createdByOrg !== activeOrgId;
@@ -21,10 +20,7 @@ export class NegotiationStagePipe implements PipeTransform {
   ) { }
 
   getReviewer(negotiation: Negotiation) {
-    const excluded = [centralOrgId.catalog, negotiation.createdByOrg];
-    return negotiation.stakeholders.find(
-      orgId => !excluded.includes(orgId)
-    ) ?? negotiation.sellerId;
+    return getRecipient(negotiation) ?? negotiation.sellerId;
   }
 
 

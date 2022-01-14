@@ -41,8 +41,9 @@ import { Offer } from '@blockframes/contract/offer/+state';
 import { ContractDocument } from '@blockframes/contract/contract/+state';
 import { format } from 'date-fns';
 import { movieCurrencies, staticModel } from '@blockframes/utils/static-model';
-import { appUrl, centralOrgId } from './environments/environment';
+import { appUrl } from './environments/environment';
 import { hydrateLanguageForEmail } from './utils';
+import { getRecipient } from '@blockframes/contract/negotiation/utils';
 
 
 // @TODO (#2848) forcing to festival since invitations to events are only on this one
@@ -566,12 +567,13 @@ async function sendCreatedCounterOfferConfirmation(recipient: User, notification
     getDocument<ContractDocument>(`contracts/${contractId}`),
     getDocument<NegotiationDocument>(`${path}`),
   ]);
-  const senderOrg = await getDocument<OrganizationDocument>(`orgs/${negotiation.createdByOrg}`);
+  const recipientOrgId = getRecipient(negotiation);
+  const recipientOrg = await getDocument<OrganizationDocument>(`orgs/${recipientOrgId}`);
   const isMailRecipientBuyer = recipient.orgId === negotiation.buyerId;
   const app: App = 'catalog';
   const toUser = getUserEmailData(recipient);
 
-  const senderTemplate = counterOfferSenderEmail(toUser, senderOrg, contract.offerId, negotiation, contract.id, { isMailRecipientBuyer });
+  const senderTemplate = counterOfferSenderEmail(toUser, recipientOrg, contract.offerId, negotiation, contract.id, { isMailRecipientBuyer });
   return sendMailFromTemplate(senderTemplate, app, groupIds.unsubscribeAll);
 }
 
@@ -582,19 +584,17 @@ async function sendReceivedCounterOfferConfirmation(recipient: User, notificatio
     getDocument<ContractDocument>(`contracts/${contractId}`),
     getDocument<NegotiationDocument>(`${path}`),
   ]);
-  const recipientOrgId = negotiation.stakeholders.find(stakeholder =>
-    ![negotiation.createdByOrg, centralOrgId.catalog].includes(stakeholder)
-  )
 
-  const [recipientOrg, title] = await Promise.all([
-    getDocument<OrganizationDocument>(`orgs/${recipientOrgId}`),
+
+  const [senderOrg, title] = await Promise.all([
+    getDocument<OrganizationDocument>(`orgs/${negotiation.createdByOrg}`),
     getDocument<MovieDocument>(`movies/${negotiation.titleId}`),
   ]);
   const isMailRecipientBuyer = recipient.orgId === negotiation.buyerId;
   const app: App = 'catalog';
   const toUser = getUserEmailData(recipient);
 
-  const recipientTemplate = counterOfferRecipientEmail(toUser, recipientOrg, contract.offerId, title, contract.id, { isMailRecipientBuyer });
+  const recipientTemplate = counterOfferRecipientEmail(toUser, senderOrg, contract.offerId, title, contract.id, { isMailRecipientBuyer });
   return sendMailFromTemplate(recipientTemplate, app, groupIds.unsubscribeAll);
 }
 

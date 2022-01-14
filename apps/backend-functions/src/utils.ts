@@ -48,15 +48,15 @@ export function createId() {
 }
 
 
-export function hydrateLanguageForEmail(data: Record<string, MovieLanguageSpecification>){
-  const languages = Object.keys(data);
-  languages.forEach((lang, idx) => {
-    const prefix:string[]=[];
-    if(data[lang].dubbed) prefix.push(staticModel['movieLanguageTypes'].dubbed);
-    if(data[lang].subtitle) prefix.push(staticModel['movieLanguageTypes'].subtitle);
-    if(data[lang].caption) prefix.push(staticModel['movieLanguageTypes'].caption);
-    if(prefix.length) languages[idx]+= `( ${prefix.join(', ')} )`;
-  })
-  return languages.join(', ');
+export function hydrateLanguageForEmail(data: Record<string, MovieLanguageSpecification>) {
+  return Object.keys(data)
+    .map(lang => {
+      const prefix: string[] = [];
+      if (data[lang].dubbed) prefix.push(staticModel['movieLanguageTypes'].dubbed);
+      if (data[lang].subtitle) prefix.push(staticModel['movieLanguageTypes'].subtitle);
+      if (data[lang].caption) prefix.push(staticModel['movieLanguageTypes'].caption);
+      if (prefix.length) return `${lang} ( ${prefix.join(', ')} )`;
+      return lang;
+    })
+    .join(', ');
 }
-
