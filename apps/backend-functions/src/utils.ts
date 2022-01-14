@@ -5,6 +5,9 @@ export { removeAllSubcollections } from '@blockframes/firebase-utils';
 import { db } from './internals/firebase';
 import { MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
 import { staticModel } from '@blockframes/utils/static-model';
+import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
+import { centralOrgId } from './environments/environment';
+import { Timestamp } from './data/internals';
 
 ///////////////////////////////////
 // DOCUMENT ON-CHANGES FUNCTIONS //
@@ -59,4 +62,9 @@ export function hydrateLanguageForEmail(data: Record<string, MovieLanguageSpecif
       return lang;
     })
     .join(', ');
+}
+
+
+export function getReviewer(negotiation: Negotiation<Timestamp | Date>) {
+  return negotiation.stakeholders.find(id => id !== negotiation.createdByOrg && id !== centralOrgId.catalog);
 }

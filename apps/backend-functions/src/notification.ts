@@ -42,8 +42,7 @@ import { ContractDocument } from '@blockframes/contract/contract/+state';
 import { format } from 'date-fns';
 import { movieCurrencies, staticModel } from '@blockframes/utils/static-model';
 import { appUrl } from './environments/environment';
-import { hydrateLanguageForEmail } from './utils';
-import { getReviewer } from '@blockframes/contract/negotiation/utils';
+import { getReviewer, hydrateLanguageForEmail } from './utils';
 
 
 // @TODO (#2848) forcing to festival since invitations to events are only on this one

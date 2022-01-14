@@ -5,8 +5,7 @@ import { Organization } from '@blockframes/organization/+state';
 import { createNotification, triggerNotifications } from './notification';
 import { createDocumentMeta, getDocument, Timestamp } from './data/internals';
 import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
-import { createId } from './utils';
-import { getReviewer } from '@blockframes/contract/negotiation/utils';
+import { createId, getReviewer } from './utils';
 import { NotificationDocument } from './data/types';
 
 
