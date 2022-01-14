@@ -64,7 +64,7 @@
             <pre class="mat-body-1">{{ event | eventRange }}</pre>
             
             <ng-container *ngIf="event.type === 'screening'">
-              <event-request-screening [movieId]="event.titleId"></event-request-screening>
+              <event-request-screening [movieId]="event.meta.titleId"></event-request-screening>
               <button mat-button (click)="requestAskingPrice(event.meta.titleId)">Request Asking Price</button>
             </ng-container>
           </ng-container>
