@@ -1,32 +1,58 @@
 import { Injectable } from '@angular/core';
 import { UserRole, createDocPermissions, PermissionsDocument } from './permissions.firestore';
 import { Permissions } from './permissions.model';
-import { PermissionsState, PermissionsStore } from './permissions.store';
 import { CollectionService, CollectionConfig, AtomicWrite } from 'akita-ng-fire';
 import type firebase from 'firebase';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { UserService } from '@blockframes/user/+state';
-import { switchMap, tap } from 'rxjs/operators';
-import { AuthService } from '@blockframes/auth/+state';
+import { map, switchMap, tap } from 'rxjs/operators';
+import { AuthQuery, AuthService } from '@blockframes/auth/+state';
+import { combineLatest } from 'rxjs';
+import { ActiveState, EntityState } from '@datorama/akita';
+
+interface PermissionsState extends EntityState<Permissions>, ActiveState<string> {}
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'permissions' })
 export class PermissionsService extends CollectionService<PermissionsState> {
   readonly useMemorization = true;
 
-  permissions : Permissions;
+  // The whole permissions document for org if the current logged in user.
+  permissions: Permissions;
   permissions$ = this.authService.profile$.pipe(
     switchMap(user => this.valueChanges(user.orgId)),
     tap(permissions => this.permissions = permissions)
   );
 
+  // Checks if the connected user is superAdmin of his organization.
+  public isSuperAdmin$ = combineLatest([
+    this.authService.profile$,
+    this.permissions$,
+  ]).pipe(
+    map(([user, p]) => p?.roles[user.uid] === 'superAdmin'),
+    tap(isSuperAdmin => this.isSuperAdmin = isSuperAdmin)
+  );
+  public isSuperAdmin: boolean;
+
+  // Checks if the connected user is admin of his organization.
+  public isAdmin$ = combineLatest([
+    this.authService.profile$,
+    this.permissions$,
+    this.isSuperAdmin$,
+  ]).pipe(
+    map(([user, p, isSuperAdmin]) => isSuperAdmin || p?.roles[user.uid] === 'admin'),
+    tap(isAdmin => this.isAdmin = isAdmin)
+  )
+  public isAdmin: boolean;
+
+
   constructor(
     private organizationQuery: OrganizationQuery,
     private authService: AuthService,
     private userService: UserService,
-    store: PermissionsStore
+    private auth: AuthQuery,
   ) {
-    super(store);
+    super();
   }
 
   /**
@@ -78,5 +104,15 @@ export class PermissionsService extends CollectionService<PermissionsState> {
     } catch (error) {
       return error.message;
     }
+  }
+
+  /** Checks if the user is admin of his organization. */
+  public isUserAdmin(userId: string = this.auth.userId): boolean {
+    return this.permissions.roles[userId] === 'admin' || this.isUserSuperAdmin(userId);
+  }
+
+  /** Checks if the user is superAdmin of his organization. */
+  private isUserSuperAdmin(userId: string): boolean {
+    return this.permissions.roles[userId] === 'superAdmin';
   }
 }
