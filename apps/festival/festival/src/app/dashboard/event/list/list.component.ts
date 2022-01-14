@@ -8,8 +8,9 @@ import { Observable, combineLatest } from 'rxjs';
 import { filter, switchMap, startWith, tap } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { AgendaService } from '@blockframes/utils/agenda/agenda.service';
+import { eventTime } from '@blockframes/event/pipes/event-time.pipe';
 import { ActivatedRoute, Router } from '@angular/router';
-import { decodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
 
 const typesLabel = {
   screening: 'Screenings',
@@ -38,6 +39,7 @@ export class EventListComponent implements OnInit {
     private orgQuery: OrganizationQuery,
     private cdr: ChangeDetectorRef,
     private dynTitle: DynamicTitleService,
+    private agendaService: AgendaService,
     private route: ActivatedRoute,
     private router: Router
   ) { }
@@ -72,6 +74,14 @@ export class EventListComponent implements OnInit {
   updateViewDate(date: Date) {
     this.viewDate = date;
     this.cdr.markForCheck();
+  }
+
+  hasIncomingEvents(events: Event[] = []) {
+    return events.some(e => eventTime(e) !== 'late');
+  }
+
+  exportToCalendar(events: Event[] = []) {
+    this.agendaService.download(events.filter(e => eventTime(e) !== 'late'));
   }
 
   /**

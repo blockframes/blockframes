@@ -1,6 +1,12 @@
 <ng-container *ngIf="events$ | async as events else loading">
   <ng-container *ngIf="events.length; else empty">
-    <h1>Screening Schedule</h1>
+    <section fxLayout fxLayoutAlign="space-between start">
+      <h1>Screening Schedule</h1>
+      <button mat-button (click)="exportToCalendar(events)">
+        <mat-icon svgIcon="cloud_download"></mat-icon>
+        <span>Export All Events</span>
+      </button>
+    </section>
     <event-list [events]="events">
       <ng-template let-event>
         <event-screening-item [event]="event"></event-screening-item>

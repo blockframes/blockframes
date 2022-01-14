@@ -11,12 +11,14 @@ import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe';
 import { GetOrgPipeModule } from '@blockframes/organization/pipes/get-org.pipe';
 import { OngoingButtonModule } from '@blockframes/ui/ongoing-button/ongoing-button.module';
 import { EventTimeModule } from '@blockframes/event/pipes/event-time.pipe';
+import { AgendaExportModule } from '../agenda-export/agenda-export.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatRippleModule } from '@angular/material/core';
 import { ToLabelModule } from '@blockframes/utils/pipes';
+
 @NgModule({
   declarations: [ScreeningItemComponent],
   exports: [ScreeningItemComponent],
@@ -35,7 +37,8 @@ import { ToLabelModule } from '@blockframes/utils/pipes';
     MatIconModule,
     MatButtonModule,
     MatRippleModule,
-    ToLabelModule
+    ToLabelModule,
+    AgendaExportModule
   ]
 })
 export class ScreeningItemModule { }

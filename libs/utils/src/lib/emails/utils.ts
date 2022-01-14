@@ -1,10 +1,14 @@
 import { EmailJSON } from "@sendgrid/helpers/classes/email-address";
-import { App } from "../apps";
+import { AttachmentData } from '@sendgrid/helpers/classes/attachment';
+import { App, sendgridEmailsFrom } from "../apps";
 import { format } from "date-fns";
-import { EventDocument, EventMeta, EventTypes } from "@blockframes/event/+state/event.firestore";
-import { Organization, OrganizationDocument } from "@blockframes/organization/+state";
-import { User } from "@blockframes/auth/+state";
+import { EventDocument, EventMeta, EventTypes, MeetingEventDocument, ScreeningEventDocument } from "@blockframes/event/+state/event.firestore";
+import { OrganizationDocument, orgName } from "@blockframes/organization/+state/organization.firestore";
+import { User } from "@blockframes/user/+state/user.firestore";
 import { AccessibilityTypes } from "../static-model";
+import { Bucket } from '@blockframes/contract/bucket/+state/bucket.firestore';
+import { toIcsFile } from "../agenda/utils";
+import { IcsEvent } from "../agenda/agenda.interfaces";
 
 interface EmailData {
   to: string;
@@ -16,7 +20,15 @@ export type EmailRequest = EmailData & ({ text: string } | { html: string });
 export interface EmailTemplateRequest {
   to: string;
   templateId: string;
-  data: { [key: string]: unknown };
+  data: {
+    org?: OrgEmailData | OrganizationDocument, // @TODO #7491 template d-94a20b20085842f68fb2d64fe325638a uses OrganizationDocument but it should use OrgEmailData instead
+    user?: UserEmailData,
+    event?: EventEmailData,
+    pageURL?: string,
+    bucket?: Bucket,
+    baseUrl?: string,
+    date?: string,
+  };
 }
 
 export interface EmailParameters {
@@ -37,7 +49,8 @@ export interface EventEmailData {
   type: EventTypes,
   viewUrl: string,
   sessionUrl: string,
-  accessibility: AccessibilityTypes
+  accessibility: AccessibilityTypes,
+  calendar: AttachmentData
 }
 
 export interface OrgEmailData {
@@ -91,11 +104,19 @@ export function createEmailRequest(params: Partial<EmailRequest> = {}): EmailReq
   };
 }
 
-export function getEventEmailData(event: EventDocument<EventMeta>, userEmail?: string, invitationId?: string): EventEmailData {
+interface EventEmailParameters {
+  event: EventDocument<EventMeta>,
+  orgName: string,
+  attachment?: boolean,
+  email?: string,
+  invitationId?: string
+}
+
+export function getEventEmailData({ event, orgName, attachment = true, email, invitationId }: EventEmailParameters): EventEmailData {
 
   const eventStartDate = new Date(event.start.toDate());
   const eventEndDate = new Date(event.end.toDate());
-  const eventUrlParams = userEmail && invitationId ? `?email=${encodeURIComponent(userEmail)}&i=${invitationId}` : '';
+  const eventUrlParams = email && invitationId ? `?email=${encodeURIComponent(email)}&i=${invitationId}` : '';
 
   /**
    * @dev Format from date-fns lib, here the date will be 'month/day/year, hours:min:sec am/pm GMT'
@@ -110,14 +131,42 @@ export function getEventEmailData(event: EventDocument<EventMeta>, userEmail?: s
     type: event.type,
     viewUrl: `/event/${event.id}/r/i${eventUrlParams}`,
     sessionUrl: `/event/${event.id}/r/i/session${eventUrlParams}`,
-    accessibility: event.accessibility
+    accessibility: event.accessibility,
+    calendar: attachment ? getEventEmailAttachment(event, orgName) : undefined
   }
 }
 
-export function getOrgEmailData(org: Partial<OrganizationDocument | Organization>): OrgEmailData {
+function getEventEmailAttachment(event: EventDocument<EventMeta>, orgName: string): AttachmentData {
+  const icsEvent = createIcsFromEventDocument(event, orgName);
+  return {
+    filename: 'invite.ics',
+    content: Buffer.from(toIcsFile([icsEvent])).toString('base64'),
+    disposition: 'attachment',
+    type: 'text/calendar',
+  };
+}
+
+function createIcsFromEventDocument(e: EventDocument<EventMeta>, orgName: string): IcsEvent {
+  if (!['meeting', 'screening'].includes(e.type)) return;
+  const event = e.type == 'meeting' ? e as MeetingEventDocument : e as ScreeningEventDocument;
+
+  return {
+    id: event.id,
+    title: event.title,
+    start: event.start.toDate(),
+    end: event.end.toDate(),
+    description: event.meta.description,
+    organizer: {
+      name: orgName,
+      email: sendgridEmailsFrom.festival.email
+    }
+  }
+}
+
+export function getOrgEmailData(org: Partial<OrganizationDocument>): OrgEmailData {
   return {
     id: org.id,
-    denomination: org.denomination.full ?? org.denomination.public,
+    denomination: orgName(org, 'full'),
     email: org.email || ''
   }
 }
