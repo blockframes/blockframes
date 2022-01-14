@@ -7,7 +7,6 @@ import { AngularFireModule } from '@angular/fire';
 import { SETTINGS, AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestore';
 import { loadFirestoreRules, clearFirestoreData } from '@firebase/rules-unit-testing';
 import { readFileSync } from 'fs';
-import { AuthService } from '@blockframes/auth/+state';
 import { HttpClient } from '@angular/common/http';
 import { HttpTestingController } from '@angular/common/http/testing';
 import { AngularFireAuth } from '@angular/fire/auth';
@@ -26,7 +25,6 @@ describe('Notifications Test Suite', () => {
       providers: [
         NotificationService,
         NotificationStore,
-        AuthService,
         { provide: HttpClient, useClass: HttpTestingController },
         { provide: AngularFireAuth, useValue: AngularFireAuth },
         { provide: SETTINGS, useValue: { host: 'localhost:8080', ssl: false } }
