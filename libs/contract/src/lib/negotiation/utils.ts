@@ -12,6 +12,6 @@ export function isInitial(negotiation: Partial<Negotiation>) {
   return initial?.getTime() === createdAt?.getTime();
 }
 
-export function getRecipient(negotiation: Negotiation<Timestamp | Date>) {
+export function getReviewer(negotiation: Negotiation<Timestamp | Date>) {
   return negotiation.stakeholders.find(id => id !== negotiation.createdByOrg && id !== centralOrgId.catalog);
 }

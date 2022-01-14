@@ -6,7 +6,8 @@ import { createNotification, triggerNotifications } from './notification';
 import { createDocumentMeta, getDocument, Timestamp } from './data/internals';
 import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
 import { createId } from './utils';
-import { getRecipient } from '@blockframes/contract/negotiation/utils';
+import { getReviewer } from '@blockframes/contract/negotiation/utils';
+import { NotificationDocument } from './data/types';
 
 
 export async function onContractDelete(contractSnapshot: FirebaseFirestore.DocumentSnapshot<Contract>) {
@@ -91,26 +92,23 @@ async function getContractNotifications(
     }));
   };
 
-  const promises = [];
+  const promises: Promise<NotificationDocument[]>[] = [];
 
   if (types.sender) {
-    const promise = getDocument<Organization>(`orgs/${negotiation.createdByOrg}`)
+    const orgId = getReviewer(negotiation);
+    const promise = getDocument<Organization>(`orgs/${orgId}`)
       .then(sendOrgNotifications(types.sender));
     promises.push(promise);
   }
 
   if (types.recipient) {
-    const orgId = getRecipient(negotiation);
-    const promise = getDocument<Organization>(`orgs/${orgId}`)
+    const promise = getDocument<Organization>(`orgs/${negotiation.createdByOrg}`)
       .then(sendOrgNotifications(types.recipient));
     promises.push(promise);
   }
-
-  return Promise.all(promises.flat());
+  const notifications = await Promise.all(promises);
+  return notifications.flat();
 }
-
-
-export type ContractActions = 'myContractWasAccepted' | 'myContractWasDeclined' | 'contractInNegotiation'
 
 async function sendContractUpdatedNotification(before: Sale, after: Sale, negotiation: Negotiation<Timestamp>) {
   if (before.status === after.status) return;
@@ -123,8 +121,8 @@ async function sendContractUpdatedNotification(before: Sale, after: Sale, negoti
     params = { recipient: 'receivedCounterOffer' };
   }
   if (!params) return;
-  const notification = await getContractNotifications(after.id, after.offerId, negotiation, params);
-  return triggerNotifications(notification);
+  const notifications = await getContractNotifications(after.id, after.offerId, negotiation, params);
+  return triggerNotifications(notifications);
 }
 
 export async function onContractUpdate(

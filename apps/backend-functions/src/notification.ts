@@ -43,7 +43,7 @@ import { format } from 'date-fns';
 import { movieCurrencies, staticModel } from '@blockframes/utils/static-model';
 import { appUrl } from './environments/environment';
 import { hydrateLanguageForEmail } from './utils';
-import { getRecipient } from '@blockframes/contract/negotiation/utils';
+import { getReviewer } from '@blockframes/contract/negotiation/utils';
 
 
 // @TODO (#2848) forcing to festival since invitations to events are only on this one
@@ -226,16 +226,19 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
           .then(() => notification.email.isSent = true)
           .catch(e => notification.email.error = e.message);
         break;
+
       case 'createdCounterOffer':
         await sendCreatedCounterOfferConfirmation(recipient, notification)
           .then(() => notification.email.isSent = true)
           .catch(e => notification.email.error = e.message);
         break;
+
       case 'receivedCounterOffer':
         await sendReceivedCounterOfferConfirmation(recipient, notification)
           .then(() => notification.email.isSent = true)
           .catch(e => notification.email.error = e.message);
         break;
+
       case 'myOrgAcceptedAContract': {
         const orgAcceptedContractConfig = { isActionDeclined: false, didRecipientAcceptOrDecline: true } as const;
         await sendContractStatusChangedConfirmation(recipient, notification, orgAcceptedContractConfig)
@@ -243,6 +246,7 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
           .catch(e => notification.email.error = e.message);
         break;
       }
+
       case 'myContractWasAccepted': {
         const orgContractWasAcceptedConfig = { isActionDeclined: false, didRecipientAcceptOrDecline: false } as const;
         await sendContractStatusChangedConfirmation(recipient, notification, orgContractWasAcceptedConfig)
@@ -567,7 +571,7 @@ async function sendCreatedCounterOfferConfirmation(recipient: User, notification
     getDocument<ContractDocument>(`contracts/${contractId}`),
     getDocument<NegotiationDocument>(`${path}`),
   ]);
-  const recipientOrgId = getRecipient(negotiation);
+  const recipientOrgId = getReviewer(negotiation);
   const recipientOrg = await getDocument<OrganizationDocument>(`orgs/${recipientOrgId}`);
   const isMailRecipientBuyer = recipient.orgId === negotiation.buyerId;
   const app: App = 'catalog';

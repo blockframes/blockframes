@@ -5,7 +5,7 @@ import { createDocumentMeta, getDocument, Timestamp } from './data/internals';
 import { centralOrgId } from 'env/env.blockframes-ci';
 import { Organization } from '@blockframes/organization/+state';
 import { createNotification, triggerNotifications } from './notification';
-import { getRecipient, isInitial } from '@blockframes/contract/negotiation/utils'
+import { getReviewer, isInitial } from '@blockframes/contract/negotiation/utils'
 import { formatDocumentMetaFromFirestore } from "@blockframes/utils/models-meta";
 import { Offer } from '@blockframes/contract/offer/+state';
 import { Contract, ContractStatus, Sale } from '@blockframes/contract/contract/+state/contract.model';
@@ -94,7 +94,7 @@ export async function onNegotiationCreated(negotiationSnapshot: FirebaseFirestor
 
   await updateOfferStatus(contract)
 
-  const recipientOrg = getRecipient(negotiation);
+  const recipientOrg = getReviewer(negotiation);
 
   //for org whose offer was accepted.
   const promises = [
