@@ -5,10 +5,13 @@ import { Organization } from '@blockframes/organization/+state';
 import { createNotification, triggerNotifications } from './notification';
 import { createDocumentMeta, getDocument, Timestamp } from './data/internals';
 import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
-import { createId } from './utils';
 import { getReviewer } from './negotiation';
 import { NotificationDocument } from './data/types';
 
+
+function createId() {
+  return db.collection('_').doc().id;
+}
 
 export async function onContractDelete(contractSnapshot: FirebaseFirestore.DocumentSnapshot<Contract>) {
 
