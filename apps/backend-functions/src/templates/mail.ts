@@ -10,7 +10,7 @@ import { RequestDemoInformations, OrganizationDocument, PublicOrganization, Movi
 import { PublicUser } from '@blockframes/user/+state/user.firestore';
 import { EventEmailData, OrgEmailData, UserEmailData } from '@blockframes/utils/emails/utils';
 import { App, appName, Module } from '@blockframes/utils/apps';
-import { Bucket } from '@blockframes/contract/bucket/+state/bucket.model';
+import { Bucket, BucketContract } from '@blockframes/contract/bucket/+state/bucket.model';
 import { format } from "date-fns";
 import { testEmail } from "@blockframes/e2e/utils/env";
 import { Offer } from '@blockframes/contract/offer/+state';
@@ -339,7 +339,7 @@ export function adminOfferCreatedConfirmationEmail(toUser: UserEmailData, org: O
       medias: term.medias.join(', '),
       languages: hydrateLanguageForEmail(term.languages)
     }))
-  }))
+  })) as unknown as BucketContract[];
   const data = { org, bucket: { ...bucket, contracts }, user: toUser, baseUrl: appUrl.content, date };
   return { to: toUser.email, templateId: templateIds.offer.toAdmin, data };
 }
@@ -355,7 +355,7 @@ export function buyerOfferCreatedConfirmationEmail(toUser: UserEmailData, org: O
       medias: term.medias.join(', '),
       languages: hydrateLanguageForEmail(term.languages)
     }))
-  }))
+  })) as unknown as BucketContract[];
   const data = { org, bucket: { ...bucket, contracts }, user: toUser, baseUrl: appUrl.content, date, offerId };
   return { to: toUser.email, templateId: templateIds.offer.toBuyer, data };
 }
