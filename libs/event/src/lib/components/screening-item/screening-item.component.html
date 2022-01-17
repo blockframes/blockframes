@@ -15,7 +15,10 @@
           <a ongoing-event-button [routerLink]="['/event', event.id, 'r', 'i']">Ongoing Screening</a>
         </ng-container>
       </div>
-      <h5>{{ event.accessibility | toLabel:'accessibility' }} Screening</h5>
+      <h5>
+        <span>{{ event.accessibility | toLabel:'accessibility' }} Screening</span>
+        <event-agenda-export [event]="event"></event-agenda-export>
+      </h5>
       <pre class="mat-body-1">{{ event | eventRange }}</pre>
       <ng-container *ngIf="event.ownerOrgId | getOrg | async as org">
         <org-chip @fade [org]="org"></org-chip>

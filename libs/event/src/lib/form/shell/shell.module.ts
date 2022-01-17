@@ -6,6 +6,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { EventFormShellComponent } from './shell.component';
 import { EditDetailsModule } from '../../form/edit-details/edit-details.module';
 import { AppBarModule } from '@blockframes/ui/app-bar';
+import { AgendaExportModule } from '@blockframes/event/components/agenda-export/agenda-export.module';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -26,6 +27,7 @@ import { MatChipsModule } from '@angular/material/chips';
     RouterModule,
     EditDetailsModule,
     AppBarModule,
+    AgendaExportModule,
 
     // Material
     MatCardModule,
