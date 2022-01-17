@@ -9,10 +9,6 @@ import { getReviewer } from './negotiation';
 import { NotificationDocument } from './data/types';
 
 
-function createId() {
-  return db.collection('_').doc().id;
-}
-
 export async function onContractDelete(contractSnapshot: FirebaseFirestore.DocumentSnapshot<Contract>) {
 
   const contract = contractSnapshot.data() as Contract;
@@ -55,7 +51,7 @@ async function deleteCurrentTerms(ref: FirebaseFirestore.Query) {
 async function createTerms(contractId: string, negotiation: Negotiation<Timestamp>, tx: FirebaseFirestore.Transaction) {
   const termsCollection = db.collection('terms');
   const terms = negotiation.terms
-    .map(t => ({ ...t, contractId, id: createId() }));
+    .map(t => ({ ...t, contractId, id: termsCollection.doc().id }));
 
   const createTerm = term => tx.create(termsCollection.doc(term.id), term);
   await Promise.all(terms.map(createTerm));

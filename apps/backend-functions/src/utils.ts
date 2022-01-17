@@ -1,4 +1,4 @@
-import { functions, skipInMaintenance, db } from './internals/firebase';
+import { functions, skipInMaintenance } from './internals/firebase';
 import { logErrors } from './internals/sentry';
 export { ErrorResultResponse } from '@blockframes/utils/utils';
 export { removeAllSubcollections } from '@blockframes/firebase-utils';
