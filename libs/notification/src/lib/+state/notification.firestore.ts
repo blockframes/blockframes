@@ -11,6 +11,8 @@ import { App } from '@blockframes/utils/apps';
 export const notificationTypesBase = [
   // Notifications relative to movies
   'movieAccepted',
+  'movieAskingPriceRequested',
+  'movieAskingPriceRequestSent',
 
   // Notifications relative to invitations
   'requestFromUserToJoinOrgCreate', // Notification sent to org admins
@@ -64,6 +66,7 @@ export interface NotificationBase<D> {
   invitation?: PublicInvitation;
   bucket?: Bucket;
   appAccess?: App;
+  data?: Record<string, string>;
   /** @dev Type of the notification */
   type: NotificationTypes;
   email?: {
