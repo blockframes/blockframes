@@ -7,7 +7,8 @@ import { catchError, filter, switchMap, pluck, tap } from 'rxjs/operators';
 import { Location } from '@angular/common';
 import { fade } from '@blockframes/utils/animations/fade';
 import { AuthQuery, AuthService } from '@blockframes/auth/+state';
-import { Event } from '@blockframes/event/+state/event.model'
+import { Event } from '@blockframes/event/+state/event.model';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
   selector: 'festival-event-view',
@@ -32,7 +33,8 @@ export class EventViewComponent implements OnInit {
     private invitationService: InvitationService,
     private location: Location,
     private authQuery: AuthQuery,
-    private authService: AuthService
+    private authService: AuthService,
+    private dynTitle: DynamicTitleService,
   ) { }
 
   @HostListener('window:popstate', ['$event'])
@@ -49,6 +51,7 @@ export class EventViewComponent implements OnInit {
       switchMap((eventId: string) => this.service.queryDocs(eventId)),
       tap(event => {
         this.editEvent = `/c/o/dashboard/event/${event.id}/edit`;
+        this.dynTitle.setPageTitle(event.title);
       }),
     );
 
