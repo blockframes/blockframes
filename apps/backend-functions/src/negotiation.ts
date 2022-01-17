@@ -10,7 +10,9 @@ import { formatDocumentMetaFromFirestore } from "@blockframes/utils/models-meta"
 import { Offer } from '@blockframes/contract/offer/+state';
 import { Contract, ContractStatus, Sale } from '@blockframes/contract/contract/+state/contract.model';
 import { NotificationTypes } from './data/types';
-import { getReviewer } from './utils';
+import { MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
+import { staticModel } from '@blockframes/utils/static-model';
+
 
 // KEEP THE OFFER STATUS IN SYNC WITH IT'S CONTRACTS AND NEGOTIATIONS
 export async function updateOfferStatus(contract: Contract) {
@@ -111,7 +113,6 @@ export async function onNegotiationCreated(negotiationSnapshot: FirebaseFirestor
   return triggerNotifications(notifications.flat());
 }
 
-
 export async function onNegotiationUpdate(
   change: Change<FirebaseFirestore.DocumentSnapshot<Negotiation<Timestamp>>>, context: EventContext
 ) {
@@ -136,5 +137,24 @@ export async function onNegotiationUpdate(
   const updates: Partial<Sale> = { declineReason, status }
 
   db.doc(`contracts/${contractId}`).update(updates);
+}
+
+
+export function hydrateLanguageForEmail(data: Record<string, MovieLanguageSpecification>) {
+  return Object.keys(data)
+    .map(lang => {
+      const prefix: string[] = [];
+      if (data[lang].dubbed) prefix.push(staticModel['movieLanguageTypes'].dubbed);
+      if (data[lang].subtitle) prefix.push(staticModel['movieLanguageTypes'].subtitle);
+      if (data[lang].caption) prefix.push(staticModel['movieLanguageTypes'].caption);
+      if (prefix.length) return `${lang} ( ${prefix.join(', ')} )`;
+      return lang;
+    })
+    .join(', ');
+}
+
+
+export function getReviewer(negotiation: Negotiation<Timestamp | Date>) {
+  return negotiation.stakeholders.find(id => id !== negotiation.createdByOrg && id !== centralOrgId.catalog);
 }
 
