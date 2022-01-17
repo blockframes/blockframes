@@ -6,7 +6,7 @@
       <ng-container *ngFor="let org of orgs$ | async">
         <h3>There is no screening scheduled at the moment.</h3>
         <p class="mat-body-1">You can contact <a [routerLink]="['/c/o/marketplace/organization/', org.id]">{{ org.denomination?.public || 'the organization' }}</a> for any questions.</p>
-        <section fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="12px">
+        <section fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="8px">
           <event-request-screening [movieId]="movieId"></event-request-screening>
           <button mat-button (click)="requestAskingPrice()">Request Asking Price</button>
         </section>
@@ -18,7 +18,7 @@
       <h3>SCREENINGS</h3>
       <a ongoing-event-button [routerLink]="['/event', ongoingScreenings[0].id, 'r', 'i']">Ongoing Screening Right Now</a>
       <mat-divider></mat-divider>
-      <section fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="12px">
+      <section fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="8px">
         <a *ngIf="!futureScreenings.length" mat-flat-button color="primary" [routerLink]="['/event', ongoingScreenings[0].id, 'r', 'i']">Access Event</a>
         <button mat-button (click)="requestAskingPrice()">Request Asking Price</button>
       </section>
@@ -45,7 +45,7 @@
         </mat-select>
       </mat-form-field>
 
-      <section fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="12px">
+      <section fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="8px">
         <ng-container *ngIf="buttonState$ | async else noInvitation">
           <button mat-flat-button disabled>Already applied for this Session</button>
         </ng-container>

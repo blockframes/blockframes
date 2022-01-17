@@ -7,7 +7,7 @@
 <form [formGroup]="form" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="12px">
   <h1>Request Asking Price</h1>
   <mat-form-field appearance="outline">
-    <mat-label>Select territories</mat-label>
+    <mat-label>Select Territories</mat-label>
     <static-group
       [formControl]="form.get('territories')"
       scope="territories"
@@ -15,7 +15,7 @@
       placeholder="Select territories"
       required>
     </static-group>
-    <mat-hint>Choose territories you are interested in.</mat-hint>
+    <mat-hint>Select the territories you are interested in.</mat-hint>
     <mat-error *ngIf="form.get('territories').hasError('required')">Select at least one territory</mat-error>
   </mat-form-field>
 
@@ -23,7 +23,7 @@
     <mat-label>Your message</mat-label>
     <textarea
       matInput
-      placeholder=""
+      placeholder="Any specific requests or questions? Let the seller know by attaching a message to your request."
       formControlName="message"
       cdkTextareaAutosize
       #autosize="cdkTextareaAutosize"
@@ -35,7 +35,7 @@
 
   <footer fxLayout="column" fxLayoutAlign="center center">
     <button mat-flat-button color="primary" [disabled]="form.disabled || form.invalid" type="submit" (click)="send()">
-      <span>Send Asking Price Proposition</span>
+      <span>Send My Request</span>
       <ng-container *ngIf="form.disabled">
         <mat-spinner diameter="16"></mat-spinner>
       </ng-container>

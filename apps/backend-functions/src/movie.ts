@@ -200,9 +200,9 @@ export async function onMovieUpdate(
 export async function createAskingPriceRequest(data: { uid: string, movieId: string, territories: string, message: string }, context: CallableContext) {
   const { uid, movieId, territories, message } = data;
 
-  if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
-  if (!uid) { throw new Error('User id is mandatory for requesting asking price'); }
-  if (!movieId) { throw new Error('Movie id is mandatory for requesting asking price'); }
+  if (!context?.auth) throw new Error('Permission denied: missing auth context.');
+  if (!uid) throw new Error('User id is mandatory for requesting asking price');
+  if (!movieId) throw new Error('Movie id is mandatory for requesting asking price');
 
   const [user, movie] = await Promise.all([
     getDocument<PublicUser>(`users/${uid}`),
