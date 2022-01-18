@@ -746,13 +746,13 @@ async function sendOfferUnderSignatureConfirmation(recipient: User, notification
   const movie = await getDocument<MovieDocument>(`movies/${contract.titleId}`);
 
 
-   const mailContract: MailContract=  createMailContract(negotiation);
+  const mailContract: MailContract = createMailContract(negotiation);
 
   const toUser = getUserEmailData(recipient);
   const app: App = 'catalog';
   mailContract['currency_long'] = movieCurrencies[negotiation.currency]
 
-  const template = offerUnderSignature(toUser, contract.offerId,contract, mailContract, movie.title.international);
+  const template = offerUnderSignature(toUser, contract.offerId, contract, mailContract, movie.title.international);
   return sendMailFromTemplate(template, app, groupIds.unsubscribeAll);
 }
 
