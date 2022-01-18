@@ -5,7 +5,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 /**
  * Trims a string without cropping the last word if keepLastWordComplete is set to true
  */
-function trimString(string: string, length: number, keepLastWordComplete: boolean) {
+export function trimString(string: string, length: number, keepLastWordComplete: boolean) {
   if (!string?.length || string.length <= length) return string;
 
   let trimmedString = string.substr(0, length);
