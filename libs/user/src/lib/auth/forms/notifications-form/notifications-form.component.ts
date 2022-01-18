@@ -14,6 +14,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 interface NotificationSetting { text: string, tooltip: boolean };
 const titleType: Record<NotificationTypesBase, NotificationSetting> = {
   movieAccepted: { text: 'A title is successfully published on the marketplace.', tooltip: false },
+  movieAskingPriceRequested: { text: `A user requests the asking price for a title.`, tooltip: false },
+  movieAskingPriceRequestSent: { text: `Your request for the asking price has been sent.`, tooltip: false },
   requestFromUserToJoinOrgCreate: { text: 'A user requests to join your organization.', tooltip: true },
   requestFromUserToJoinOrgDeclined: { text: 'A user\'s request to join your organization was declined. ', tooltip: false },
   orgMemberUpdated: { text: 'A user joins or leaves your organization.', tooltip: false },
@@ -39,7 +41,11 @@ const tables: { title: string, types: string[], appAuthorized: App[] }[] = [
   },
   {
     title: 'Content Management',
-    types: ['movieAccepted'],
+    types: [
+      'movieAccepted',
+      'movieAskingPriceRequested',
+      'movieAskingPriceRequestSent'
+    ],
     appAuthorized: ['catalog', 'festival', 'financiers']
   },
   {
