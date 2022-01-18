@@ -386,14 +386,15 @@ export function counterOfferRecipientEmail(
 
 export function counterOfferSenderEmail(
   toUser: UserEmailData, org: OrganizationDocument, offerId: string,
-  negotiation: NegotiationDocument, contractId: string, options: { isMailRecipientBuyer: boolean }
+  negotiation: NegotiationDocument, title: MovieDocument, contractId: string, options: { isMailRecipientBuyer: boolean }
 ): EmailTemplateRequest {
   const terms = createMailTerm(negotiation.terms);
   const currency = staticModel['movieCurrencies'][negotiation.currency];
   const data = {
     user: toUser, baseUrl: appUrl.content, offerId, org,
     contractId, isRecipientBuyer: options.isMailRecipientBuyer,
-    negotiation: { ...negotiation, terms, currency }
+    negotiation: { ...negotiation, terms, currency },
+    title: title.title.international
   };
   return { to: toUser.email, templateId: templateIds.negotiation.createdCounterOffer, data };
 }
@@ -407,7 +408,21 @@ export function offerAcceptedOrDeclined(
   const data = {
     contracts, baseUrl: appUrl.content, offer, user
   };
-  const templateId = templateIds.offer.allContractsRespondedTo;
+  const templateId = offer.status === 'accepted' ? templateIds.offer.allContractsAccepted : templateIds.offer.allContractsDeclined;
+  return { to: user.email, templateId, data };
+}
+
+
+export function offerUnderSignature(
+  user: UserEmailData, offerId: string, contract: ContractDocument, negotiation: NegotiationDocument,
+  title:string
+): EmailTemplateRequest {
+
+  const data = {
+    contract, baseUrl: appUrl.content, offerId, user, negotiation,
+    title
+  };
+  const templateId = templateIds.offer.underSignature;
   return { to: user.email, templateId, data };
 }
 

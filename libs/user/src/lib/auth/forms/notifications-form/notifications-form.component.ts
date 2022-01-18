@@ -37,6 +37,7 @@ const titleType: Record<NotificationTypesBase, NotificationSetting> = {
   myContractWasAccepted: { text: 'Your counter offer was accepted. (RECOMMENDED)', tooltip: true },
   myOrgDeclinedAContract: { text: 'You declined a counter offer. (RECOMMENDED)', tooltip: true },
   myContractWasDeclined: { text: 'Your counter offer was declined. (RECOMMENDED)', tooltip: true },
+  underSignature: { text: 'Your offer is now under signature. (RECOMMENDED)', tooltip: true },
 };
 
 const tables: { title: string, types: string[], appAuthorized: App[] }[] = [
@@ -75,6 +76,7 @@ const tables: { title: string, types: string[], appAuthorized: App[] }[] = [
     types: [
       'offerCreatedConfirmation',
       'contractCreated',
+      'underSignature',
     ],
     appAuthorized: ['catalog']
   },
