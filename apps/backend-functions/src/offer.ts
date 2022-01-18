@@ -85,14 +85,9 @@ export async function onOfferUpdate(
     _meta: createDocumentMeta({ createdFrom: 'catalog' })
   }));
   if (statusHasChanged && isOfferDeclinedOrAccepted) {
-
+    const type = offerAfter.status === 'accepted' ? 'offerAccepted' : 'offerDeclined';
     getDocument<Organization>(`orgs/${offerAfter.buyerId}`)
-      .then(
-        getNotifications(
-          offerAfter.status === 'accepted' ? 'offerAccepted' : 'offerDeclined',
-          offerAfter.id
-        )
-      )
+      .then(getNotifications(type, offerAfter.id))
       .then(triggerNotifications);
   }
 
@@ -103,12 +98,7 @@ export async function onOfferUpdate(
 
     acceptedContracts.forEach(contract => {
       getDocument<Organization>(`orgs/${getSeller(contract)}`)
-        .then(
-          getNotifications(
-            'underSignature',
-            contract.id
-          )
-        )
+        .then(getNotifications('underSignature', contract.id))
         .then(triggerNotifications);
     })
 

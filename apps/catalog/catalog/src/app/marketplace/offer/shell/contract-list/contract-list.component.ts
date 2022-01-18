@@ -1,6 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { tap } from 'rxjs/operators';
 import { OfferShellComponent } from '../shell.component';
 
 @Component({
@@ -10,6 +9,7 @@ import { OfferShellComponent } from '../shell.component';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContractListComponent {
+  offer$ = this.shell.offer$;
 
   constructor(
     private shell: OfferShellComponent,
