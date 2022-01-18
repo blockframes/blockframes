@@ -15,12 +15,13 @@ import { format } from "date-fns";
 import { testEmail } from "@blockframes/e2e/utils/env";
 import { Offer } from '@blockframes/contract/offer/+state';
 import type { ContractDocument } from '@blockframes/contract/contract/+state';
-import { createMailContract } from '@blockframes/contract/contract/+state/contract.model';
+import { createMailContract } from '@blockframes/contract/contract/+state/contract.firestore';
 
 import { NegotiationDocument } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
 import { staticModel } from '@blockframes/utils/static-model';
 import { Timestamp } from '../data/internals';
 import { createMailTerm } from '@blockframes/contract/term/+state/term.firestore';
+import { displayName } from '@blockframes/utils/utils';
 
 const ORG_HOME = '/c/o/organization/';
 const USER_CREDENTIAL_INVITATION = '/auth/identity';
@@ -320,6 +321,31 @@ export function screeningRequestedToSeller(
 export function movieAcceptedEmail(toUser: UserEmailData, movieTitle: string, movieUrl: string): EmailTemplateRequest {
   const data = { user: toUser, movieTitle, movieUrl };
   return { to: toUser.email, templateId: templateIds.movie.accepted, data };
+}
+
+export function movieAskingPriceRequested(toUser: UserEmailData, fromBuyer: UserEmailData, movieTitle: string, territories: string, message: string): EmailTemplateRequest {
+  const data = {
+    user: toUser,
+    buyer: displayName(fromBuyer),
+    movieTitle,
+    territories,
+    message,
+    pageURL: `mailto:${fromBuyer.email}?subject=Interest in ${movieTitle} via Archipel Market`
+  };
+  return { to: toUser.email, templateId: templateIds.movie.askingPriceRequested, data };
+}
+
+export function movieAskingPriceRequestSent(toUser: UserEmailData, movie: MovieDocument, orgNames: string, territories: string, message: string): EmailTemplateRequest {
+  const data = {
+    user: toUser,
+    movieTitle: movie.title.international,
+    orgNames,
+    territories,
+    message,
+    pageURL: `${appUrl.market}/c/o/marketplace/title/${movie.id}`
+  }
+
+  return { to: toUser.email, templateId: templateIds.movie.askingPriceRequestSent, data };
 }
 
 /** Inform user of org whose movie is being bought */

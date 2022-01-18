@@ -15,6 +15,7 @@ import { AuthService } from '@blockframes/auth/+state';
 import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 import { format } from "date-fns";
 import { EventMeta } from '@blockframes/event/+state/event.firestore';
+import { trimString } from '@blockframes/utils/pipes/max-length.pipe';
 
 export interface NotificationState extends EntityState<Notification>, ActiveState<string> { }
 
@@ -126,6 +127,39 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           imgRef: this.getPoster(notification.docId),
           placeholderUrl: 'empty_poster.svg',
           url: `/c/o/dashboard/title/${notification.docId}/main`,
+        };
+      case 'movieAskingPriceRequested':
+        this.getDocument<Movie>(`movies/${notification.docId}`).then(movie => {
+          this.update(notification.id, newNotification => {
+            return {
+              ...newNotification,
+              message: `${displayName(notification.user)} requested asking price for ${movie.title.international} in ${trimString(notification.data.territories, 50, true)}. Please check your emails for more details or contact us.`,
+              url: `mailto:${notification.user.email}?subject=Interest in ${movie.title.international} via Archipel Market`
+            };
+          });
+        });
+        return {
+          _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
+          message: `${displayName(notification.user)} requested asking price for ${notification.docId} in ${trimString(notification.data.territories, 50, true)}. Please check your emails for more details or contact us.`,
+          imgRef: notification.user.avatar,
+          placeholderUrl: 'profil_user.svg',
+          url: `mailto:${notification.user.email}?subject=Interest in ${notification.docId} via Archipel Market`
+        };
+      case 'movieAskingPriceRequestSent':
+        this.getDocument<Movie>(`movies/${notification.docId}`).then(movie => {
+          this.update(notification.id, newNotification => {
+            return {
+              ...newNotification,
+              message: `Your request for ${movie.title.international}'s asking price was successfully sent.`
+            };
+          });
+        });
+        return {
+          _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
+          message: `Your request for ${notification.docId}'s asking price was successfully sent.`,
+          imgRef: this.getPoster(notification.docId),
+          placeholderUrl: 'empty_poster.svg',
+          url: `/c/o/marketplace/title/${notification.docId}/main`
         };
       case 'orgAppAccessChanged': {
         const msg = notification.appAccess

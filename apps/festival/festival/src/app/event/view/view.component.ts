@@ -9,6 +9,8 @@ import { fade } from '@blockframes/utils/animations/fade';
 import { AuthQuery, AuthService } from '@blockframes/auth/+state';
 import { Event } from '@blockframes/event/+state/event.model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { MatDialog } from '@angular/material/dialog';
+import { RequestAskingPriceComponent } from '@blockframes/movie/components/request-asking-price/request-asking-price.component';
 
 @Component({
   selector: 'festival-event-view',
@@ -35,6 +37,7 @@ export class EventViewComponent implements OnInit {
     private authQuery: AuthQuery,
     private authService: AuthService,
     private dynTitle: DynamicTitleService,
+    private dialog: MatDialog
   ) { }
 
   @HostListener('window:popstate', ['$event'])
@@ -91,4 +94,12 @@ export class EventViewComponent implements OnInit {
     this.statusChanged.next(true);
   }
 
+  requestAskingPrice(movieId: string) {
+    this.dialog.open(RequestAskingPriceComponent, {
+      data: { movieId },
+      maxHeight: '80vh',
+      maxWidth: '650px',
+      autoFocus: false
+    })
+  }
 }
