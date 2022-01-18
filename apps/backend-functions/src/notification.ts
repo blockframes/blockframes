@@ -46,7 +46,7 @@ import { format } from 'date-fns';
 import { movieCurrencies, staticModel } from '@blockframes/utils/static-model';
 import { appUrl } from './environments/environment';
 import { getReviewer, hydrateLanguageForEmail } from '@blockframes/contract/negotiation/utils';
-import {  TermDocument } from '@blockframes/contract/term/+state/term.firestore';
+import { createMailContract, MailContract } from '@blockframes/contract/contract/+state/contract.firestore';
 
 
 // @TODO (#2848) forcing to festival since invitations to events are only on this one
@@ -742,29 +742,17 @@ async function sendOfferUnderSignatureConfirmation(recipient: User, notification
   const contract = await getDocument<ContractDocument>(`contracts/${notification.docId}`);
   const ref = admin.firestore().collection(`contracts/${contract.id}/negotiations`)
     .orderBy('_meta.createdAt', 'desc').limit(1);
-  let negotiation = await ref.get().then(snap => snap.docs[0]?.data() as NegotiationDocument);
+  const negotiation = await ref.get().then(snap => snap.docs[0]?.data() as NegotiationDocument);
   const movie = await getDocument<MovieDocument>(`movies/${contract.titleId}`);
 
 
-   negotiation=  ({
-    ...negotiation,
-    terms: negotiation.terms.map(term => ({
-      ...term,
-      territories: term.territories.map(territory => staticModel['territories'][territory]).join(', '),
-      medias: term.medias.map(media => staticModel['medias'][media] ?? media).join(', '),
-      duration: {
-        from: format(term.duration.from.toDate(), 'dd MMMM, yyyy'),
-        to: format(term.duration.to.toDate(), 'dd MMMM, yyyy'),
-      },
-      languages: hydrateLanguageForEmail(term.languages),
-    })) as unknown as TermDocument[]
-  })
+   const mailContract: MailContract=  createMailContract(negotiation);
 
   const toUser = getUserEmailData(recipient);
   const app: App = 'catalog';
-  negotiation['currency_long'] = movieCurrencies[negotiation.currency]
+  mailContract['currency_long'] = movieCurrencies[negotiation.currency]
 
-  const template = offerUnderSignature(toUser, contract.offerId,contract, negotiation, movie.title.international);
+  const template = offerUnderSignature(toUser, contract.offerId,contract, mailContract, movie.title.international);
   return sendMailFromTemplate(template, app, groupIds.unsubscribeAll);
 }
 

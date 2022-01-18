@@ -15,7 +15,7 @@ import { format } from "date-fns";
 import { testEmail } from "@blockframes/e2e/utils/env";
 import { Offer } from '@blockframes/contract/offer/+state';
 import type { ContractDocument } from '@blockframes/contract/contract/+state';
-import { createMailContract } from '@blockframes/contract/contract/+state/contract.firestore';
+import { createMailContract, MailContract } from '@blockframes/contract/contract/+state/contract.firestore';
 
 import { NegotiationDocument } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
 import { staticModel } from '@blockframes/utils/static-model';
@@ -360,7 +360,7 @@ export function contractCreatedEmail(
 /** Template for admins. It is to inform admins of Archipel Content a new offer has been created with titles, prices, etc in the template */
 export function adminOfferCreatedConfirmationEmail(toUser: UserEmailData, org: OrganizationDocument, bucket: Bucket<Timestamp>): EmailTemplateRequest {
   const date = format(new Date(), 'dd MMMM, yyyy');
-  const contracts = createMailContract(bucket.contracts);
+  const contracts = bucket.contracts.map(contract => createMailContract(contract));
   const data = { org, bucket: { ...bucket, contracts }, user: toUser, baseUrl: appUrl.content, date };
   return { to: toUser.email, templateId: templateIds.offer.toAdmin, data };
 }
@@ -368,7 +368,7 @@ export function adminOfferCreatedConfirmationEmail(toUser: UserEmailData, org: O
 /**To inform buyer that his offer has been successfully created. */
 export function buyerOfferCreatedConfirmationEmail(toUser: UserEmailData, org: OrganizationDocument, offerId: string, bucket: Bucket<Timestamp>): EmailTemplateRequest {
   const date = format(new Date(), 'dd MMMM, yyyy');
-  const contracts = createMailContract(bucket.contracts);
+  const contracts = bucket.contracts.map(contract => createMailContract(contract));
   const data = { org, bucket: { ...bucket, contracts }, user: toUser, baseUrl: appUrl.content, date, offerId };
   return { to: toUser.email, templateId: templateIds.offer.toBuyer, data };
 }
@@ -414,8 +414,8 @@ export function offerAcceptedOrDeclined(
 
 
 export function offerUnderSignature(
-  user: UserEmailData, offerId: string, contract: ContractDocument, negotiation: NegotiationDocument,
-  title:string
+  user: UserEmailData, offerId: string, contract: ContractDocument, negotiation: MailContract,
+  title: string
 ): EmailTemplateRequest {
 
   const data = {

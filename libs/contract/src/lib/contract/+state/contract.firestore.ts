@@ -7,11 +7,11 @@ import { createMailTerm, Duration } from '../../term/+state/term.firestore';
 
 
 
-export function createMailContract(contracts: BucketContract<Timestamp>[]) {
-  return contracts.map(contract => ({
+export function createMailContract(contract: BucketContract<Timestamp>) {
+  return ({
     ...contract,
     terms: createMailTerm(contract.terms)
-  }));
+  })
 }
 
 export const contractStatus = ['pending', 'accepted', 'declined', 'negotiating'] as const;
