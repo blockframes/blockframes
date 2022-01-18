@@ -33,7 +33,16 @@ export const notificationTypesBase = [
 
   // Notifications related to offers
   'contractCreated',
-  'offerCreatedConfirmation'
+  'offerCreatedConfirmation',
+  'underSignature',
+
+  //Notifications related to contract negotiation
+  'createdCounterOffer',
+  'receivedCounterOffer',
+  'myContractWasAccepted',
+  'myOrgAcceptedAContract',
+  'myContractWasDeclined',
+  'myOrgDeclinedAContract',
 ] as const;
 
 // All the other notification types
@@ -46,7 +55,11 @@ export const notificationTypesPlus = [
   'movieSubmitted', // (catalog only)
   'organizationAcceptedByArchipelContent',
   'orgAppAccessChanged',
-  'userRequestAppAccess'
+  'userRequestAppAccess',
+
+  // Offer notifications.
+  'offerAccepted',
+  'offerDeclined',
 ] as const;
 
 export type NotificationTypesBase = typeof notificationTypesBase[number];
@@ -62,9 +75,15 @@ export interface NotificationBase<D> {
   /** @dev Possible subjects of the notification */
   user?: Partial<PublicUser>;
   docId?: string;
+  /**
+   * To be used for docs that are part of a subcollection
+   * eg: contracts/{contractId}/negotiations/{negotiationId}
+   */
+  docPath?: string;
+  offerId?: string,
   organization?: PublicOrganization;
   invitation?: PublicInvitation;
-  bucket?: Bucket;
+  bucket?: Bucket<Timestamp>;
   appAccess?: App;
   data?: Record<string, string>;
   /** @dev Type of the notification */

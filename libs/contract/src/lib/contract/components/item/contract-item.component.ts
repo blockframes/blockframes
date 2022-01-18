@@ -1,5 +1,5 @@
 import {
-  Component, Input, TemplateRef, ContentChild, ChangeDetectorRef, ChangeDetectionStrategy
+  Component, Input, TemplateRef, ContentChild, ChangeDetectionStrategy
 } from '@angular/core';
 import { BucketContract } from '@blockframes/contract/bucket/+state/bucket.model';
 import { Scope, mediaGroup, territoriesGroup } from '@blockframes/utils/static-model';
@@ -8,7 +8,6 @@ import { DetailedTermsComponent } from '@blockframes/contract/term/components/de
 import { HoldbackModalComponent } from '../../holdback/modal/holdback-modal.component';
 import { Holdback, Sale } from '../../+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
-import { Duration } from '@blockframes/contract/term/+state';
 
 
 
@@ -26,22 +25,13 @@ import { Duration } from '@blockframes/contract/term/+state';
 export class ContractItemComponent {
   mediaGroup = mediaGroup;
   territoriesGroup = territoriesGroup;
-  actionTemplate?: TemplateRef<unknown>;
   orgId = this.orgQuery.getActiveId();
   @Input() contract: BucketContract | Sale;
 
   @ContentChild('priceTemplate') priceTemplate: TemplateRef<unknown>;
-  @ContentChild('termAction') set colActionsTemplate(template: TemplateRef<unknown>) {
-    if (template) {
-      this.actionTemplate = template;
-      this.cdr.markForCheck();
-    }
-  }
-
-  sortDuration = (a: Duration, b: Duration) => a.from.getTime() - b.from.getTime();
+  @ContentChild('termAction') actionTemplate?: TemplateRef<unknown>;
 
   constructor(
-    private cdr: ChangeDetectorRef,
     private dialog: MatDialog,
     private orgQuery: OrganizationQuery,
   ) { }

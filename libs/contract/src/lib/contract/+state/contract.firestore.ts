@@ -1,10 +1,20 @@
 
 import { DocumentMeta } from "@blockframes/utils/models-meta";
 import type { Media, Territory } from "@blockframes/utils/static-model";
-import { Duration } from '../../term/+state/term.firestore';
 import { Timestamp } from "@blockframes/utils/common-interfaces/timestamp";
+import { BucketContract } from "@blockframes/contract/bucket/+state";
+import { createMailTerm, Duration } from '../../term/+state/term.firestore';
 
-export const contractStatus = ['pending', 'accepted', 'declined', 'archived'] as const;
+
+
+export function createMailContract(contract: BucketContract<Timestamp>) {
+  return ({
+    ...contract,
+    terms: createMailTerm(contract.terms)
+  })
+}
+
+export const contractStatus = ['pending', 'accepted', 'declined', 'negotiating'] as const;
 
 export type ContractStatus = typeof contractStatus[number];
 
@@ -39,6 +49,7 @@ export interface Contract<D extends Timestamp | Date = Date> {
 export interface Mandate<D extends Timestamp | Date = Date> extends Contract<D> {
   type: 'mandate';
 }
+
 export interface Sale<D extends Timestamp | Date = Date> extends Contract<D> {
   type: 'sale';
   /** Create the anccestors organization when you create the sale */
@@ -47,8 +58,10 @@ export interface Sale<D extends Timestamp | Date = Date> extends Contract<D> {
   /** Free text provided by the buyer, addressed to the seller */
   specificity?: string;
   delivery?: string;
-  declineReason?:string;
+  declineReason?: string;
   holdbacks: Holdback<D>[];
 }
 
 export type ContractDocument = Mandate<Timestamp> | Sale<Timestamp>;
+
+export type MailContract = ReturnType<typeof createMailContract>

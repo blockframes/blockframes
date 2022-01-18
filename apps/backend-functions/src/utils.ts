@@ -2,7 +2,6 @@ import { functions, skipInMaintenance } from './internals/firebase';
 import { logErrors } from './internals/sentry';
 export { ErrorResultResponse } from '@blockframes/utils/utils';
 export { removeAllSubcollections } from '@blockframes/firebase-utils';
-
 ///////////////////////////////////
 // DOCUMENT ON-CHANGES FUNCTIONS //
 ///////////////////////////////////
@@ -38,4 +37,5 @@ export function onDocumentCreate(docPath: string, fn: FunctionType) {
     .document(docPath)
     .onCreate(skipInMaintenance(logErrors(fn)));
 }
+
 

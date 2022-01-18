@@ -66,7 +66,7 @@ export class FormEntity<C extends EntityControl<T>, T = any> extends FormGroup {
     }
   }
 
-  hardReset(values: Partial<T>={}){
+  hardReset(values: Partial<T> = {}){
     for (const [key, control] of Object.entries(this.controls)) {
       const value = values[key as keyof T] as any;
       if (control instanceof FormEntity || control instanceof FormList) {

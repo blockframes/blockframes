@@ -13,6 +13,9 @@
         <p *ngIf="bucket | bucketTitles | getTitle | async as titles">
           {{ (titles | deepKey:'title.international') }}
         </p>
+      <a mat-stroked-button color="primary" routerLink="/c/o/marketplace/title" test-id="create-offer">
+        Add more Titles
+      </a>
       </div>
     </header>
 

@@ -12,6 +12,7 @@ import { MaxLengthModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe';
 import { IncomePipeModule } from '@blockframes/contract/income/pipe';
 import { OfferPipeModule } from '@blockframes/contract/offer/pipe';
+import { GetOrgPipeModule, OrgNameModule } from '@blockframes/organization/pipes';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -24,6 +25,8 @@ import { IntercomModule } from 'ng-intercom';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { MatTabsModule } from '@angular/material/tabs';
 import { FilterByModule } from '@blockframes/utils/pipes/filter-by.pipe';
+import { NegotiationPipeModule } from '@blockframes/contract/negotiation/pipe';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [SaleListComponent],
@@ -41,8 +44,12 @@ import { FilterByModule } from '@blockframes/utils/pipes/filter-by.pipe';
     IntercomModule,
     TableModule,
     FilterByModule,
+    NegotiationPipeModule,
+    GetOrgPipeModule,
+    OrgNameModule,
 
     // Material
+    MatTooltipModule,
     MatButtonModule,
     MatIconModule,
     MatTabsModule,

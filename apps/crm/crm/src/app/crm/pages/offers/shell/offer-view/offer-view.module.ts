@@ -17,9 +17,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
+import { NegotiationPipeModule } from '@blockframes/contract/negotiation/pipe';
 
 @NgModule({
   declarations: [OfferViewComponent],
@@ -35,6 +37,7 @@ import { TableModule } from '@blockframes/ui/list/table/table.module';
     MaxLengthModule,
     TagModule,
     ToLabelModule,
+    NegotiationPipeModule,
 
     //Material
     MatSelectModule,
@@ -44,6 +47,7 @@ import { TableModule } from '@blockframes/ui/list/table/table.module';
     MatSnackBarModule,
     MatInputModule,
     MatIconModule,
+    MatTooltipModule,
 
     RouterModule.forChild([{ path: '', component: OfferViewComponent }]),
   ]

@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, Optional, OnInit, } from '@angular/
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { appName, getCurrentApp } from '@blockframes/utils/apps';
 import { Contract, ContractService, ContractStatus, Sale } from '@blockframes/contract/contract/+state';
-import { OrganizationQuery, OrganizationService } from '@blockframes/organization/+state';
+import { Organization, OrganizationQuery, OrganizationService } from '@blockframes/organization/+state';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Intercom } from 'ng-intercom';
 import { joinWith } from '@blockframes/utils/operators';
@@ -13,7 +13,7 @@ import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { CollectionReference } from '@angular/fire/firestore';
-
+import { centralOrgId } from '@env';
 
 function capitalize(text: string) {
   return `${text[0].toUpperCase()}${text.substring(1)}`
@@ -25,6 +25,9 @@ function queryFn(ref: CollectionReference, orgId: string) {
     .orderBy('_meta.createdAt', 'desc')
 }
 
+function getFullName(seller: Organization) {
+  return seller.denomination.full;
+}
 
 @Component({
   selector: 'catalog-sale-list',
@@ -42,10 +45,11 @@ export class SaleListComponent implements OnInit {
     ref => queryFn(ref, this.orgId)
   ).pipe(
     joinWith({
-      licensor: (sale: Sale) => this.orgService.valueChanges(sale.sellerId).pipe(map(seller => seller.denomination.full)),
-      licensee: (sale: Sale) => sale.buyerId ? this.orgService.valueChanges(sale.buyerId).pipe(map(buyer => buyer.denomination.full)) : 'External',
+      licensor: (sale: Sale) => this.orgService.valueChanges(this.getLicensorId(sale)).pipe(map(getFullName)),
+      licensee: (sale: Sale) => sale.buyerId ? this.orgService.valueChanges(sale.buyerId).pipe(map(getFullName)) : 'External',
       title: (sale: Sale) => this.titleService.valueChanges(sale.titleId).pipe(map(title => title.title.international)),
-      price: (sale: Sale) => this.incomeService.valueChanges(sale.id),//.pipe(map(income => income.price)),
+      price: (sale: Sale) => sale.sellerId === centralOrgId.catalog ? null : this.incomeService.valueChanges(sale.id),
+      negotiation: (sale: Sale) => this.contractService.lastNegotiation(sale.id)
     }),
   );
   filter = new FormControl();
@@ -56,10 +60,8 @@ export class SaleListComponent implements OnInit {
     new: m.filter(m => m.status === 'pending').length,
     accepted: m.filter(m => m.status === 'accepted').length,
     declined: m.filter(m => m.status === 'declined').length,
-    archived: m.filter(m => m.status === 'archived').length,
+    negotiating: m.filter(m => m.status === 'negotiating').length,
   })));
-
-
 
   constructor(
     private contractService: ContractService,
@@ -97,6 +99,13 @@ export class SaleListComponent implements OnInit {
     if (!status) return true;
     return sale.status === status;
   }
+
+  getLicensorId(sale: Sale) {
+    return sale.stakeholders.find(
+      orgId => ![centralOrgId.catalog, sale.buyerId].includes(orgId)
+    ) ?? sale.sellerId;
+  }
+
 
   ngOnInit() {
     this.dynTitle.setPageTitle('My Sales ( All )');

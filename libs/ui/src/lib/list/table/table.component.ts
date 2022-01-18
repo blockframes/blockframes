@@ -5,8 +5,8 @@ import { getDeepValue } from '@blockframes/utils/pipes/deep-key.pipe';
 import { FormControl } from '@angular/forms';
 import { coerceNumberProperty } from '@angular/cdk/coercion';
 import { boolean } from '@blockframes/utils/decorators/decorators';
-import { Paginator } from './paginator';
-import {  removeAccent } from '@blockframes/utils/utils';
+import { Paginator, PageState } from './paginator';
+import { removeAccent } from '@blockframes/utils/utils';
 
 /** Ascending sorting */
 function sortValue<T>(a: T, b: T) {
@@ -98,7 +98,9 @@ export class ColumnDirective<T> {
 export class TableComponent<T> {
   private dataSource = new BehaviorSubject<T[]>([]);
   search = new FormControl();
-  paginator = new Paginator();
+  paginator = new Paginator({
+    onChange: (page) => this.page.emit(page)
+  });
   data$: Observable<T[]>;
 
 
@@ -122,6 +124,7 @@ export class TableComponent<T> {
 
   /** Emits the content of the row when clicked. Requires input "clickable" to be set  */
   @Output() rowClick = new EventEmitter<T>();
+  @Output() page = new EventEmitter<PageState>();
 
   constructor() {
     this.data$ = this.dataSource.asObservable().pipe(
