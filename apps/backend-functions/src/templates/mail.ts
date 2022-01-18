@@ -17,7 +17,7 @@ import { Offer } from '@blockframes/contract/offer/+state';
 import { ContractDocument } from '@blockframes/contract/contract/+state';
 import { NegotiationDocument } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
 import { staticModel } from '@blockframes/utils/static-model';
-import { hydrateLanguageForEmail } from '../negotiation';
+import { hydrateLanguageForEmail } from '@blockframes/contract/negotiation/utils';
 
 const ORG_HOME = '/c/o/organization/';
 const USER_CREDENTIAL_INVITATION = '/auth/identity';
