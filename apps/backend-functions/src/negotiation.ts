@@ -5,17 +5,14 @@ import { createDocumentMeta, getDocument, Timestamp } from './data/internals';
 import { centralOrgId } from 'env/env.blockframes-ci';
 import { Organization } from '@blockframes/organization/+state';
 import { createNotification, triggerNotifications } from './notification';
-import { isInitial } from '@blockframes/contract/negotiation/utils'
+import { getReviewer, isInitial } from '@blockframes/contract/negotiation/utils'
 import { formatDocumentMetaFromFirestore } from "@blockframes/utils/models-meta";
 import { Offer } from '@blockframes/contract/offer/+state';
 import { Contract, ContractStatus, Sale } from '@blockframes/contract/contract/+state/contract.model';
 import { NotificationTypes } from './data/types';
-import { MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
-import { staticModel } from '@blockframes/utils/static-model';
-
 
 // KEEP THE OFFER STATUS IN SYNC WITH IT'S CONTRACTS AND NEGOTIATIONS
-export async function updateOfferStatus(contract: Contract) {
+async function updateOfferStatus(contract: Contract) {
   return db.runTransaction(async tx => {
 
     const lastNegotiation = id => {
@@ -138,23 +135,3 @@ export async function onNegotiationUpdate(
 
   db.doc(`contracts/${contractId}`).update(updates);
 }
-
-
-export function hydrateLanguageForEmail(data: Record<string, MovieLanguageSpecification>) {
-  return Object.keys(data)
-    .map(lang => {
-      const prefix: string[] = [];
-      if (data[lang].dubbed) prefix.push(staticModel['movieLanguageTypes'].dubbed);
-      if (data[lang].subtitle) prefix.push(staticModel['movieLanguageTypes'].subtitle);
-      if (data[lang].caption) prefix.push(staticModel['movieLanguageTypes'].caption);
-      if (prefix.length) return `${lang} ( ${prefix.join(', ')} )`;
-      return lang;
-    })
-    .join(', ');
-}
-
-
-export function getReviewer(negotiation: Negotiation<Timestamp | Date>) {
-  return negotiation.stakeholders.find(id => id !== negotiation.createdByOrg && id !== centralOrgId.catalog);
-}
-
