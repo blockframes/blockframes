@@ -10,7 +10,6 @@ import { OfferShellComponent } from '../shell.component';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContractListComponent {
-  offer$ = this.shell.offer$.pipe(tap(offer => console.log({ offer, contracts: offer?.contracts })));
 
   constructor(
     private shell: OfferShellComponent,
