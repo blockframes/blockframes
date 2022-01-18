@@ -13,6 +13,9 @@ import { createNotification, triggerNotifications } from './notification';
 import { templateIds } from '@blockframes/utils/emails/ids';
 import { Change } from 'firebase-functions';
 import { createDocumentMeta } from './data/internals';
+import { Sale } from '@blockframes/contract/contract/+state/contract.model';
+import { getSeller } from '@blockframes/contract/contract/+state/utils';
+import { NotificationTypes } from './data/types';
 
 export async function onOfferCreate(snap: FirebaseFirestore.DocumentSnapshot): Promise<void> {
   const offer = snap.data() as Offer;
@@ -74,18 +77,31 @@ export async function onOfferUpdate(
 
   const statusHasChanged = offerBefore.status !== offerAfter.status
   const isOfferDeclinedOrAccepted = ['accepted', 'declined'].includes(offerAfter.status);
-  if (statusHasChanged && isOfferDeclinedOrAccepted) {
-    //Buyer Notifications.
-    const getNotifications = (org: Organization) => org.userIds.map(userId => createNotification({
-      toUserId: userId,
-      type: offerAfter.status === 'accepted' ? 'offerAccepted' : 'offerDeclined',
-      docId: offerAfter.id,
-      _meta: createDocumentMeta({ createdFrom: 'catalog' })
-    }));
 
+  const getNotifications = (type: NotificationTypes, docId: string,) => (org: Organization) => org.userIds.map(userId => createNotification({
+    toUserId: userId,
+    type,
+    docId,
+    _meta: createDocumentMeta({ createdFrom: 'catalog' })
+  }));
+  if (statusHasChanged && isOfferDeclinedOrAccepted) {
+    const type = offerAfter.status === 'accepted' ? 'offerAccepted' : 'offerDeclined';
     getDocument<Organization>(`orgs/${offerAfter.buyerId}`)
-      .then(getNotifications)
+      .then(getNotifications(type, offerAfter.id))
       .then(triggerNotifications);
+  }
+
+  if (offerAfter.status === 'accepted') {
+    const contractsRef = db.collection('contracts').where('offerId', '==', offerAfter.id);
+    const contracts = await contractsRef.get().then(snaps => snaps.docs.map(doc => doc.data() as Sale));
+    const acceptedContracts = contracts.filter(contract => contract.status === 'accepted');
+
+    acceptedContracts.forEach(contract => {
+      getDocument<Organization>(`orgs/${getSeller(contract)}`)
+        .then(getNotifications('underSignature', contract.id))
+        .then(triggerNotifications);
+    })
+
   }
 }
 

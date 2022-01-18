@@ -30,7 +30,8 @@ import {
   offerAcceptedOrDeclined,
   screeningRequestedToSeller,
   movieAskingPriceRequested,
-  movieAskingPriceRequestSent
+  movieAskingPriceRequestSent,
+  offerUnderSignature,
 } from './templates/mail';
 import { templateIds, groupIds } from '@blockframes/utils/emails/ids';
 import { canAccessModule, orgName } from '@blockframes/organization/+state/organization.firestore';
@@ -45,6 +46,7 @@ import { format } from 'date-fns';
 import { movieCurrencies, staticModel } from '@blockframes/utils/static-model';
 import { appUrl } from './environments/environment';
 import { getReviewer, hydrateLanguageForEmail } from '@blockframes/contract/negotiation/utils';
+import { createMailContract, MailContract } from '@blockframes/contract/contract/+state/contract.firestore';
 
 
 // @TODO (#2848) forcing to festival since invitations to events are only on this one
@@ -284,6 +286,11 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
         break;
       case 'offerDeclined':
         await sendOfferAcceptedOrDeclinedConfirmation(recipient, notification)
+          .then(() => notification.email.isSent = true)
+          .catch(e => notification.email.error = e.message);
+        break;
+      case 'underSignature':
+        await sendOfferUnderSignatureConfirmation(recipient, notification)
           .then(() => notification.email.isSent = true)
           .catch(e => notification.email.error = e.message);
         break;
@@ -610,11 +617,12 @@ async function sendCreatedCounterOfferConfirmation(recipient: User, notification
   ]);
   const recipientOrgId = getReviewer(negotiation);
   const recipientOrg = await getDocument<OrganizationDocument>(`orgs/${recipientOrgId}`);
+  const title = await getDocument<MovieDocument>(`movies/${negotiation.titleId}`);
   const isMailRecipientBuyer = recipient.orgId === negotiation.buyerId;
   const app: App = 'catalog';
   const toUser = getUserEmailData(recipient);
 
-  const senderTemplate = counterOfferSenderEmail(toUser, recipientOrg, contract.offerId, negotiation, contract.id, { isMailRecipientBuyer });
+  const senderTemplate = counterOfferSenderEmail(toUser, recipientOrg, contract.offerId, negotiation, title, contract.id, { isMailRecipientBuyer });
   return sendMailFromTemplate(senderTemplate, app, groupIds.unsubscribeAll);
 }
 
@@ -725,9 +733,26 @@ async function sendOfferAcceptedOrDeclinedConfirmation(recipient: User, notifica
   const toUser = getUserEmailData(recipient);
   const app: App = 'catalog';
   offer['currency_long'] = movieCurrencies[offer.currency]
-  offer['isOfferAccepted'] = offer.status === 'accepted'
 
   const template = offerAcceptedOrDeclined(toUser, offer, contracts);
+  return sendMailFromTemplate(template, app, groupIds.unsubscribeAll);
+}
+
+async function sendOfferUnderSignatureConfirmation(recipient: User, notification: NotificationDocument) {
+  const contract = await getDocument<ContractDocument>(`contracts/${notification.docId}`);
+  const ref = admin.firestore().collection(`contracts/${contract.id}/negotiations`)
+    .orderBy('_meta.createdAt', 'desc').limit(1);
+  const negotiation = await ref.get().then(snap => snap.docs[0]?.data() as NegotiationDocument);
+  const movie = await getDocument<MovieDocument>(`movies/${contract.titleId}`);
+
+
+  const mailContract: MailContract = createMailContract(negotiation);
+
+  const toUser = getUserEmailData(recipient);
+  const app: App = 'catalog';
+  mailContract['currency_long'] = movieCurrencies[negotiation.currency]
+
+  const template = offerUnderSignature(toUser, contract.offerId, contract, mailContract, movie.title.international);
   return sendMailFromTemplate(template, app, groupIds.unsubscribeAll);
 }
 

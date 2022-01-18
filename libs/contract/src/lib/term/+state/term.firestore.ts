@@ -4,6 +4,7 @@ import type firebase from 'firebase'
 import { Timestamp } from "@blockframes/utils/common-interfaces/timestamp";
 import { staticModel } from "@blockframes/utils/static-model";
 import { format } from "date-fns";
+import { hydrateLanguageForEmail } from '@blockframes/contract/negotiation/utils';
 
 export function createMailTerm(terms:BucketTerm<Timestamp>[]){
   return terms.map(term => ({
@@ -48,7 +49,5 @@ export interface Term<T extends Date | firebase.firestore.Timestamp = Date> exte
   criteria: unknown[];
   licensedOriginal: boolean;
 }
-function hydrateLanguageForEmail(languages: Record<string, MovieLanguageSpecification>): any {
-  throw new Error("Function not implemented.");
-}
 
+export type TermDocument = Term<firebase.firestore.Timestamp>;

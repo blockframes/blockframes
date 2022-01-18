@@ -8,6 +8,12 @@ import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiatio
 import { getReviewer } from '@blockframes/contract/negotiation/utils';
 import { NotificationDocument } from './data/types';
 
+interface ContractNotificationType {
+  sender: 'myOrgAcceptedAContract' | 'myOrgDeclinedAContract', //org who accepted/declined a contract
+  recipient: 'myContractWasAccepted' | 'myContractWasDeclined' | 'receivedCounterOffer', // Org whose contract was accepted/declined
+}
+type ContractNotificationValues = ContractNotificationType[keyof ContractNotificationType];
+
 export async function onContractDelete(contractSnapshot: FirebaseFirestore.DocumentSnapshot<Contract>) {
 
   const contract = contractSnapshot.data() as Contract;
@@ -40,7 +46,6 @@ export async function onContractDelete(contractSnapshot: FirebaseFirestore.Docum
   console.log(`Contract ${contract.id} removed`);
 }
 
-
 async function deleteCurrentTerms(ref: FirebaseFirestore.Query) {
   const currentTerms = await ref.get()
   const deletions = currentTerms.docs.map(term => term.ref.delete());
@@ -67,13 +72,6 @@ async function createIncome(sale: Sale, negotiation: Negotiation<Timestamp>, tx:
     offerId: sale.offerId
   });
 }
-
-interface ContractNotificationType {
-  sender: 'myOrgAcceptedAContract' | 'myOrgDeclinedAContract', //org who accepted/declined a contract
-  recipient: 'myContractWasAccepted' | 'myContractWasDeclined' | 'receivedCounterOffer', // Org whose contract was accepted/declined
-}
-type ContractNotificationValues = ContractNotificationType[keyof ContractNotificationType];
-
 
 async function getContractNotifications(
   contractId: string, offerId: string, negotiation: Negotiation<Timestamp>, types: Partial<ContractNotificationType>
