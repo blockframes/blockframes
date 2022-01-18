@@ -80,7 +80,7 @@ export interface NotificationBase<D> {
   offerId?: string,
   organization?: PublicOrganization;
   invitation?: PublicInvitation;
-  bucket?: Bucket;
+  bucket?: Bucket<Timestamp>;
   appAccess?: App;
   /** @dev Type of the notification */
   type: NotificationTypes;

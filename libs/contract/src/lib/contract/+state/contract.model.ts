@@ -1,10 +1,11 @@
 
 import { createDocumentMeta } from "@blockframes/utils/models-meta";
-import { Duration } from '../../term/+state/term.model';
+import { createMailTerm, Duration } from '../../term/+state/term.model';
 import { Timestamp } from "@blockframes/utils/common-interfaces/timestamp";
 import { toDate } from "@blockframes/utils/helpers";
 import { Contract, Holdback, Mandate, Sale } from "./contract.firestore";
 export { contractStatus, ContractStatus, Holdback, Contract, Mandate, Sale, ContractDocument } from './contract.firestore';
+import { BucketContract } from "@blockframes/contract/bucket/+state";
 
 export function createHoldback(params: Partial<Holdback<Date>> = {}): Holdback {
   return {
@@ -67,3 +68,12 @@ export function convertDuration(duration: Duration<Date | Timestamp>): Duration<
     to: toDate(duration.to),
   }
 }
+
+export function createMailContract(contracts:BucketContract<Timestamp>[]){
+  return contracts.map(contract => ({
+    ...contract,
+    terms: createMailTerm(contract.terms)
+  }));
+}
+
+export type MailContract = ReturnType<typeof createMailContract>[number]

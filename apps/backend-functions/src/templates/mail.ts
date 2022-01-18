@@ -10,14 +10,17 @@ import { RequestDemoInformations, OrganizationDocument, PublicOrganization, Movi
 import { PublicUser } from '@blockframes/user/+state/user.firestore';
 import { EventEmailData, OrgEmailData, UserEmailData } from '@blockframes/utils/emails/utils';
 import { App, appName, Module } from '@blockframes/utils/apps';
-import { Bucket, BucketContract } from '@blockframes/contract/bucket/+state/bucket.model';
+import { Bucket } from '@blockframes/contract/bucket/+state/bucket.model';
 import { format } from "date-fns";
 import { testEmail } from "@blockframes/e2e/utils/env";
 import { Offer } from '@blockframes/contract/offer/+state';
-import { ContractDocument } from '@blockframes/contract/contract/+state';
+import type { ContractDocument } from '@blockframes/contract/contract/+state';
+import { createMailContract } from '@blockframes/contract/contract/+state/contract.model';
+
 import { NegotiationDocument } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
 import { staticModel } from '@blockframes/utils/static-model';
-import { hydrateLanguageForEmail } from '@blockframes/contract/negotiation/utils';
+import { Timestamp } from '../data/internals';
+import { createMailTerm } from '@blockframes/contract/term/+state';
 
 const ORG_HOME = '/c/o/organization/';
 const USER_CREDENTIAL_INVITATION = '/auth/identity';
@@ -329,33 +332,17 @@ export function contractCreatedEmail(
 }
 
 /** Template for admins. It is to inform admins of Archipel Content a new offer has been created with titles, prices, etc in the template */
-export function adminOfferCreatedConfirmationEmail(toUser: UserEmailData, org: OrganizationDocument, bucket: Bucket): EmailTemplateRequest {
+export function adminOfferCreatedConfirmationEmail(toUser: UserEmailData, org: OrganizationDocument, bucket: Bucket<Timestamp>): EmailTemplateRequest {
   const date = format(new Date(), 'dd MMMM, yyyy');
-  const contracts = bucket.contracts.map(contract => ({
-    ...contract,
-    terms: contract.terms.map(term => ({
-      ...term,
-      territories: term.territories.join(', '),
-      medias: term.medias.join(', '),
-      languages: hydrateLanguageForEmail(term.languages)
-    }))
-  })) as unknown as BucketContract[];
+  const contracts = createMailContract(bucket.contracts);
   const data = { org, bucket: { ...bucket, contracts }, user: toUser, baseUrl: appUrl.content, date };
   return { to: toUser.email, templateId: templateIds.offer.toAdmin, data };
 }
 
 /**To inform buyer that his offer has been successfully created. */
-export function buyerOfferCreatedConfirmationEmail(toUser: UserEmailData, org: OrganizationDocument, offerId: string, bucket: Bucket): EmailTemplateRequest {
+export function buyerOfferCreatedConfirmationEmail(toUser: UserEmailData, org: OrganizationDocument, offerId: string, bucket: Bucket<Timestamp>): EmailTemplateRequest {
   const date = format(new Date(), 'dd MMMM, yyyy');
-  const contracts = bucket.contracts.map(contract => ({
-    ...contract,
-    terms: contract.terms.map(term => ({
-      ...term,
-      territories: term.territories.join(', '),
-      medias: term.medias.join(', '),
-      languages: hydrateLanguageForEmail(term.languages)
-    }))
-  })) as unknown as BucketContract[];
+  const contracts = createMailContract(bucket.contracts);
   const data = { org, bucket: { ...bucket, contracts }, user: toUser, baseUrl: appUrl.content, date, offerId };
   return { to: toUser.email, templateId: templateIds.offer.toBuyer, data };
 }
@@ -375,16 +362,7 @@ export function counterOfferSenderEmail(
   toUser: UserEmailData, org: OrganizationDocument, offerId: string,
   negotiation: NegotiationDocument, contractId: string, options: { isMailRecipientBuyer: boolean }
 ): EmailTemplateRequest {
-  const terms = negotiation.terms.map(term => ({
-    ...term,
-    territories: term.territories.map(territory => staticModel['territories'][territory]).join(', '),
-    medias: term.medias.map(media => staticModel['medias'][media] ?? media).join(', '),
-    duration: {
-      from: format(term.duration.from.toDate(), 'dd MMMM, yyyy'),
-      to: format(term.duration.to.toDate(), 'dd MMMM, yyyy'),
-    },
-    languages: hydrateLanguageForEmail(term.languages),
-  }))
+  const terms = createMailTerm(negotiation.terms);
   const currency = staticModel['movieCurrencies'][negotiation.currency];
   const data = {
     user: toUser, baseUrl: appUrl.content, offerId, org,

@@ -33,10 +33,6 @@ export async function onOfferCreate(snap: FirebaseFirestore.DocumentSnapshot): P
 
     for (const term of contract.terms) {
       term.exclusive = term.exclusive ? 'Yes' : 'No';
-      term.medias = term.medias.map(media => staticModel['medias'][media]);
-      term.territories = term.territories.map(territory => staticModel['territories'][territory]);
-      term.duration.from = format(term.duration.from.toDate(), 'MM/dd/yyyy');
-      term.duration.to = format(term.duration.to.toDate(), 'MM/dd/yyyy');
     }
   }
 
