@@ -64,4 +64,4 @@ export interface Sale<D extends Timestamp | Date = Date> extends Contract<D> {
 
 export type ContractDocument = Mandate<Timestamp> | Sale<Timestamp>;
 
-export type MailContract = ReturnType<typeof createMailContract>[number]
+export type MailContract = ReturnType<typeof createMailContract>
