@@ -20,7 +20,7 @@ import { createMailContract } from '@blockframes/contract/contract/+state/contra
 import { NegotiationDocument } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
 import { staticModel } from '@blockframes/utils/static-model';
 import { Timestamp } from '../data/internals';
-import { createMailTerm } from '@blockframes/contract/term/+state';
+import { createMailTerm } from '@blockframes/contract/term/+state/term.firestore';
 
 const ORG_HOME = '/c/o/organization/';
 const USER_CREDENTIAL_INVITATION = '/auth/identity';
