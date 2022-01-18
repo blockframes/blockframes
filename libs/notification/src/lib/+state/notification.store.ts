@@ -205,7 +205,8 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
               return {
                 ...newNotification,
                 imgRef: this.getPoster(titleId),
-                message: `REMINDER - ${org.denomination.full}'s ${event.type} "<a href="/event/${event.id}" target="_blank">${event.title}</a>" will start tomorrow at ${format(toDate(event.start), 'h:mm a')}.`};
+                message: `REMINDER - ${org.denomination.full}'s ${event.type} "<a href="/event/${event.id}" target="_blank">${event.title}</a>" will start tomorrow at ${format(toDate(event.start), 'h:mm a')}.`
+              };
             });
           })
         });
@@ -305,27 +306,68 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           placeholderUrl: 'contract_offer.svg',
           url: `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}`
         }
-      case 'negotiationCreated':
+      case 'createdCounterOffer': {
+        const marketplaceUrl = `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.offerId}/${notification.docId}`;
+        const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
+
+        return {
+          _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
+          message: `You've created a counter offer.`,
+          placeholderUrl: 'contract_offer.svg',
+          url: module === 'marketplace' ? marketplaceUrl : dashboardUrl
+        }
+      }
+      case 'receivedCounterOffer': {
+        const marketplaceUrl = `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.offerId}/${notification.docId}`;
+        const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
+
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `You've received a counter offer.`,
           placeholderUrl: 'contract_offer.svg',
-          url: `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`
+          url: module === 'marketplace' ? marketplaceUrl : dashboardUrl
         }
-      case 'negotiationAccepted':
+      }
+      case 'myContractWasAccepted': {
+        const marketplaceUrl = `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.offerId}/${notification.docId}`;
+        const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `Your Offer was accepted.`,
           placeholderUrl: 'contract_offer.svg',
-          url: `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`
+          url: module === 'marketplace' ? marketplaceUrl : dashboardUrl
         }
-      case 'negotiationDeclined':
+      }
+      case 'myOrgAcceptedAContract': {
+        const marketplaceUrl = `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.offerId}/${notification.docId}`;
+        const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `Your Offer was declined.`,
+          message: `You accepted an offer.`,
           placeholderUrl: 'contract_offer.svg',
-          url: `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`
+          url: module === 'marketplace' ? marketplaceUrl : dashboardUrl
         }
+      }
+      case 'myContractWasDeclined': {
+        const marketplaceUrl = `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.offerId}/${notification.docId}`;
+        const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
+        return {
+          _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
+          message: `Your offer was declined.`,
+          placeholderUrl: 'contract_offer.svg',
+          url: module === 'marketplace' ? marketplaceUrl : dashboardUrl
+        }
+      }
+      case 'myOrgDeclinedAContract': {
+        const marketplaceUrl = `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.offerId}/${notification.docId}`;
+        const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
+        return {
+          _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
+          message: `You declined an offer.`,
+          placeholderUrl: 'contract_offer.svg',
+          url: module === 'marketplace' ? marketplaceUrl : dashboardUrl
+        }
+      }
       default:
         return {
           message: 'Error while displaying notification.'

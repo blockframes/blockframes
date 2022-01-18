@@ -31,9 +31,12 @@ const titleType: Record<NotificationTypesBase, NotificationSetting> = {
   screeningRequestSent: { text: 'Your screening request for screening was successfully sent', tooltip: false },
   offerCreatedConfirmation: { text: 'Your offer is successfully sent', tooltip: false },
   contractCreated: { text: 'An offer is made on one of your titles. (RECOMMENDED)', tooltip: true },
-  negotiationCreated: { text: 'You\'ve received a counter offer. (RECOMMENDED)', tooltip: true },
-  negotiationAccepted: { text: 'One of your Counter Offers have been accepted. (RECOMMENDED)', tooltip: true },
-  negotiationDeclined: { text: 'One of your Counter Offers have been declined. (RECOMMENDED)', tooltip: true }
+  createdCounterOffer: { text: 'You\'ve created a counter offer.', tooltip: true },
+  receivedCounterOffer: { text: 'You\'ve received a counter offer. (RECOMMENDED)', tooltip: true },
+  myOrgAcceptedAContract: { text: 'You accepted a counter offer. (RECOMMENDED)', tooltip: true },
+  myContractWasAccepted: { text: 'Your counter offer was accepted. (RECOMMENDED)', tooltip: true },
+  myOrgDeclinedAContract: { text: 'You declined a counter offer. (RECOMMENDED)', tooltip: true },
+  myContractWasDeclined: { text: 'Your counter offer was declined. (RECOMMENDED)', tooltip: true },
 };
 
 const tables: { title: string, types: string[], appAuthorized: App[] }[] = [
@@ -78,9 +81,12 @@ const tables: { title: string, types: string[], appAuthorized: App[] }[] = [
   {
     title: 'Negotiation Management',
     types: [
-      'negotiationCreated',
-      'negotiationAccepted',
-      'negotiationDeclined',
+      'myContractWasAccepted',
+      'myOrgAcceptedAContract',
+      'myOrgDeclinedAContract',
+      'myContractWasDeclined',
+      'createdCounterOffer',
+      'receivedCounterOffer',
     ],
     appAuthorized: ['catalog']
   }

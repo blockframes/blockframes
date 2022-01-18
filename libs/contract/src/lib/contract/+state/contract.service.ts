@@ -77,7 +77,7 @@ export class ContractService extends CollectionService<ContractState> {
       createdByOrg: activeOrgId,
       sellerId: centralOrgId.catalog,
       stakeholders: nego.stakeholders,
-      buyerId: nego.orgId,
+      buyerId: nego.buyerId,
       price: nego.price,
       currency: nego.currency,
       titleId: nego.titleId,

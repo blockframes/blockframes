@@ -36,9 +36,12 @@ export const notificationTypesBase = [
   'offerCreatedConfirmation',
 
   //Notifications related to contract negotiation
-  'negotiationCreated',
-  'negotiationAccepted',
-  'negotiationDeclined',
+  'createdCounterOffer',
+  'receivedCounterOffer',
+  'myContractWasAccepted',
+  'myOrgAcceptedAContract',
+  'myContractWasDeclined',
+  'myOrgDeclinedAContract',
 ] as const;
 
 // All the other notification types
@@ -76,9 +79,10 @@ export interface NotificationBase<D> {
    * eg: contracts/{contractId}/negotiations/{negotiationId}
    */
   docPath?: string;
+  offerId?: string,
   organization?: PublicOrganization;
   invitation?: PublicInvitation;
-  bucket?: Bucket;
+  bucket?: Bucket<Timestamp>;
   appAccess?: App;
   data?: Record<string, string>;
   /** @dev Type of the notification */

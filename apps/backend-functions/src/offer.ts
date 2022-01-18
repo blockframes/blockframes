@@ -33,10 +33,6 @@ export async function onOfferCreate(snap: FirebaseFirestore.DocumentSnapshot): P
 
     for (const term of contract.terms) {
       term.exclusive = term.exclusive ? 'Yes' : 'No';
-      term.medias = term.medias.map(media => staticModel['medias'][media]);
-      term.territories = term.territories.map(territory => staticModel['territories'][territory]);
-      term.duration.from = format(term.duration.from.toDate(), 'MM/dd/yyyy');
-      term.duration.to = format(term.duration.to.toDate(), 'MM/dd/yyyy');
     }
   }
 
@@ -55,7 +51,7 @@ export async function onOfferCreate(snap: FirebaseFirestore.DocumentSnapshot): P
   const date = format(new Date(), 'dd MMMM, yyyy');
   const request: EmailTemplateRequest = {
     to: supportEmails[app],
-    templateId: templateIds.offer.created,
+    templateId: templateIds.offer.toAdmin,
     data: { org, bucket, user, baseUrl, date }
   }
   sendMailFromTemplate(request, app);
@@ -77,8 +73,8 @@ export async function onOfferUpdate(
   const offerAfter = after.data() as Offer;
 
   const statusHasChanged = offerBefore.status !== offerAfter.status
-  const offerDeclinedOrAccepted = ['accepted', 'declined'].includes(offerAfter.status);
-  if (statusHasChanged && offerDeclinedOrAccepted) {
+  const isOfferDeclinedOrAccepted = ['accepted', 'declined'].includes(offerAfter.status);
+  if (statusHasChanged && isOfferDeclinedOrAccepted) {
     //Buyer Notifications.
     const getNotifications = (org: Organization) => org.userIds.map(userId => createNotification({
       toUserId: userId,
