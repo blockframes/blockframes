@@ -18,6 +18,7 @@ import { map, finalize, takeUntil, distinctUntilChanged } from 'rxjs/operators';
 
 import { ActivatedRoute, Router } from '@angular/router';
 import { OrganizationQuery } from '@blockframes/organization/+state';
+import { LoadingSpinnerService } from '@blockframes/utils/loading/loading.service';
 
 function floorToNearest(amount: number, precision: number) {
   return Math.floor(amount / precision) * precision;
@@ -79,6 +80,7 @@ export class CalendarWeekComponent {
     private router: Router,
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef,
+    private loading: LoadingSpinnerService
   ) { }
 
   startDragToCreate(
@@ -138,6 +140,7 @@ export class CalendarWeekComponent {
     this.dialog.open(EventCreateComponent, { data, width: '650px', autoFocus: false }).afterClosed()
       .subscribe(async ({ event } = {}) => {
         if (event) {
+          this.loading.setState(true, 'edit');
           await this.service.add(event);
           this.router.navigate([event.id, 'edit'], { relativeTo: this.route });
         } else {

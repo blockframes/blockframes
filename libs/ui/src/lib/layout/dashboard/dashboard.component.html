@@ -45,5 +45,8 @@
       </div>
       <bf-footer></bf-footer>
     </main>
+    <section *ngIf="loading.loading$ | async" class="overlay">
+      <mat-spinner></mat-spinner>
+    </section>
   </mat-sidenav-content>
 </mat-sidenav-container>

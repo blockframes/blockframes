@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { EventService } from '@blockframes/event/+state';
 import { AccessibilityTypes } from '@blockframes/utils/static-model';
+import { LoadingSpinnerService } from '@blockframes/utils/loading/loading.service';
 
 @Component({
   selector: '[form] event-details-edit',
@@ -29,6 +30,7 @@ export class EditDetailsComponent implements OnInit, OnDestroy {
     private invitationService: InvitationService,
     private eventService: EventService,
     private dialog: MatDialog,
+    private loading: LoadingSpinnerService,
     @Optional() private intercom: Intercom
   ) { }
 
@@ -38,6 +40,7 @@ export class EditDetailsComponent implements OnInit, OnDestroy {
         this.previouslySavedAccessibility = e.accessibility;
       });
     }
+    this.loading.setState(false, 'edit');
   }
 
   ngOnDestroy() {

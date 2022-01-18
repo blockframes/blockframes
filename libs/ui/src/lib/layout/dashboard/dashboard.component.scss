@@ -19,6 +19,7 @@ mat-sidenav-container {
 mat-sidenav-content {
   height: 100%;
   overflow: hidden;
+  position: relative;
 
   header {
     width: 100%;
@@ -34,6 +35,19 @@ mat-sidenav-content {
     .page {
       min-height: calc(100% - 140px); /** 140px : bf-footer height . This will need an update if footer height is changed **/
     }
+  }
+
+  .overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #1f1f26c0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2; // higher than header on calendar
   }
 }
 

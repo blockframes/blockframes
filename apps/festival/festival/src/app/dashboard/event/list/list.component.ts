@@ -11,6 +11,8 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { AgendaService } from '@blockframes/utils/agenda/agenda.service';
 import { eventTime } from '@blockframes/event/pipes/event-time.pipe';
 import { ActivatedRoute, Router } from '@angular/router';
+import { LoadingSpinnerService } from '@blockframes/utils/loading/loading.service';
+import { MovieService } from '@blockframes/movie/+state';
 
 const typesLabel = {
   screening: 'Screenings',
@@ -41,10 +43,13 @@ export class EventListComponent implements OnInit {
     private dynTitle: DynamicTitleService,
     private agendaService: AgendaService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private loading: LoadingSpinnerService,
+    private movie: MovieService
   ) { }
 
   async ngOnInit() {
+    this.loading.setState(true, 'events');
     this.events$ = combineLatest([
       this.orgQuery.selectActiveId(),
       this.filter.valueChanges.pipe(startWith(this.filter.value))
@@ -54,20 +59,30 @@ export class EventListComponent implements OnInit {
         events.length ?
           this.dynTitle.setPageTitle('My events') :
           this.dynTitle.setPageTitle('My events', 'Empty');
+        this.loading.setState(false, 'events');
       }),
     );
-
+    
     const params = this.route.snapshot.queryParams;
     if (params?.request) {
-      const event = createEvent({
-        type: 'screening',
-        ownerOrgId: this.orgQuery.getActiveId(),
-        meta: createScreening({
-          titleId: params.request
-        })
-      });
-      const id = await this.service.add(event);
-      this.router.navigate([id, 'edit'], { relativeTo: this.route });
+      this.loading.setState(true, 'edit');
+      const titleId = params.request as string;
+      const orgId = this.orgQuery.getActiveId();
+      const title = await this.movie.getValue(titleId);
+      if (title?.orgIds.includes(orgId)) {
+        const event = createEvent({
+          type: 'screening',
+          ownerOrgId: this.orgQuery.getActiveId(),
+          meta: createScreening({
+            titleId: params.request
+          })
+        });
+        const id = await this.service.add(event);
+        this.router.navigate([id, 'edit', 'screening'], { relativeTo: this.route });
+      } else {
+        this.loading.setState(false, 'edit');
+        console.error(`Your organisation does not have the rights to create screener for ${titleId}`);
+      }
     }
   }
 

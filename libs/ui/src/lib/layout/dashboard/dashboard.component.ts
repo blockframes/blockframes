@@ -10,6 +10,7 @@ import { SearchResult } from '@blockframes/ui/search-widget/search-widget.compon
 import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { NotificationQuery } from '@blockframes/notification/+state';
+import { LoadingSpinnerService } from '@blockframes/utils/loading/loading.service';
 
 // RxJs
 import { Observable, Subscription } from 'rxjs';
@@ -48,6 +49,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
     private invitationService: InvitationService,
     private notificationQuery: NotificationQuery,
     private router: Router,
+    public loading: LoadingSpinnerService,
   ) { }
 
   ngAfterViewInit() {

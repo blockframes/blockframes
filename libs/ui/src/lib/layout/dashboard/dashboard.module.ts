@@ -29,6 +29,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCardModule } from '@angular/material/card';
 import { MatBadgeModule } from '@angular/material/badge';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [DashboardComponent],
@@ -58,6 +59,7 @@ import { MatBadgeModule } from '@angular/material/badge';
     MatToolbarModule,
     MatCardModule,
     MatBadgeModule,
+    MatProgressSpinnerModule
   ]
 })
 export class DashboardLayoutModule { }
