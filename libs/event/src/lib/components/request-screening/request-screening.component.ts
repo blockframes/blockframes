@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthQuery } from '@blockframes/auth/+state';
+import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { BehaviorSubject } from 'rxjs';
 
@@ -28,6 +29,7 @@ export class RequestScreeningComponent {
   constructor(
     private authQuery: AuthQuery,
     private functions: AngularFireFunctions,
+    private analytics: FireAnalytics,
     private snackbar: MatSnackBar
   ) {}
 
@@ -36,7 +38,9 @@ export class RequestScreeningComponent {
     const f = this.functions.httpsCallable('requestScreening');
     await f({ movieId: this.movieId, uid: this.authQuery.userId }).toPromise();
     this.requestStatus.next('sent');
-
+    this.analytics.event('screeningRequested', {
+      movieId: this.movieId
+    });
     this.snackbar.open('Screening request successfully sent', '', { duration: 3000 });
   }
 }
