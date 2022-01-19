@@ -47,7 +47,7 @@ export class RequestAskingPriceComponent {
         territories
       });
       this.snackbar.open('Asking price request successfully sent.', '', { duration: 3000 });
-      this.close();
+      this.dialog.close(true);
     } catch (err) {
       this.form.enable();
       console.error(err);
@@ -55,6 +55,6 @@ export class RequestAskingPriceComponent {
   }
 
   close() {
-    this.dialog.close();
+    this.dialog.close(false);
   }
 }
