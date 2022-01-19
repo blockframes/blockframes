@@ -98,9 +98,7 @@ export class UpcomingScreeningsComponent {
       autoFocus: false
     });
     ref.afterClosed().subscribe(isSent => {
-      if (isSent) {
-        this.requestSent.value = true;
-      }
+      this.requestSent.value = !!isSent;
     });
   }
 }
