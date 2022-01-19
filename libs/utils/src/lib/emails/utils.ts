@@ -6,7 +6,7 @@ import { EventDocument, EventMeta, EventTypes, MeetingEventDocument, ScreeningEv
 import { OrganizationDocument, orgName } from "@blockframes/organization/+state/organization.firestore";
 import { User } from "@blockframes/user/+state/user.firestore";
 import { AccessibilityTypes } from "../static-model";
-import { Bucket } from '@blockframes/contract/bucket/+state/bucket.firestore';
+import { MailBucket } from '@blockframes/contract/bucket/+state/bucket.firestore';
 import { toIcsFile } from "../agenda/utils";
 import { IcsEvent } from "../agenda/agenda.interfaces";
 
@@ -25,7 +25,7 @@ export interface EmailTemplateRequest {
     user?: UserEmailData,
     event?: EventEmailData,
     pageURL?: string,
-    bucket?: Bucket,
+    bucket?: MailBucket,
     baseUrl?: string,
     date?: string,
   };

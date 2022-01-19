@@ -9,13 +9,13 @@
   <ng-container *ngIf="sales.length; else noSales">
     <h3>Results</h3>
     <bf-table [source]="sales" clickable useFilter pagination="50" (rowClick)="goToMap($event.id)">
-      <ng-template colRef="title.international" label="Title" let-title>
+      <ng-template colRef="title.international" label="Title" let-title sort>
         {{ title | maxLength:50 }}
       </ng-template>
-      <ng-template colRef="allSaleCount" label="All Sales" let-allSaleCount>
+      <ng-template colRef="allSaleCount" label="All Sales" let-allSaleCount sort>
         {{ allSaleCount || '-' }}
       </ng-template>
-      <ng-template colRef="saleCount" label="Archipel Sales" let-saleCount>
+      <ng-template colRef="saleCount" label="Archipel Sales" let-saleCount sort>
         {{ saleCount || '-' }}
       </ng-template>
       <ng-template colRef="totalIncome" label="total gross receipt" let-totalIncome>
@@ -30,7 +30,7 @@
             <mat-icon svgIcon="territories_avails" title="Map View"></mat-icon>
           </a>
           <a mat-icon-button [routerLink]="[id,'calendar']" [queryParams]="queryParams">
-            <mat-icon svgIcon="calendar_avails" title="Calendar Viiew"></mat-icon>
+            <mat-icon svgIcon="calendar_avails" title="Calendar View"></mat-icon>
           </a>
         </div>
       </ng-template>
