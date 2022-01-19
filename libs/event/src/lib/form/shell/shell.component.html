@@ -1,6 +1,6 @@
 ﻿<ng-template #confirmExit>
   <div class="confirm-exit" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="16px">
-    <button fxFlexAlign="end" mat-icon-button mat-dialog-close>
+    <button fxFlexAlign="end" mat-icon-button [mat-dialog-close]="undefined">
       <mat-icon svgIcon="close"></mat-icon>
     </button>
     <h1>You are about to leave the form.</h1>

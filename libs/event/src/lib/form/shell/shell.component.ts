@@ -148,11 +148,13 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
     });
     return dialogRef.afterClosed().pipe(
       switchMap(shouldSave => {
+        console.log("shouldSave", shouldSave)
+
         /* Undefined means user clicked on the backdrop, meaning just close the modal */
         if (typeof shouldSave === 'undefined') {
           return of(false);
         }
-        return shouldSave ? of(this.save()) : of(true);
+        return shouldSave ? this.save() : of(true);
       })
     );
   }
