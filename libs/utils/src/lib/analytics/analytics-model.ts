@@ -13,6 +13,8 @@ export const analyticsEvents = [
   'searchbarSearchType',
   'promoReelOpened',
   'pageView',
+  'screeningRequested',
+  'askingPriceRequested'
 ] as const;
 
 export type AnalyticsEvents = typeof analyticsEvents[number];

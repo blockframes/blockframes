@@ -20,4 +20,4 @@ export { PublicUser } from '@blockframes/user/+state/user.firestore';
 export { RequestDemoInformations } from '@blockframes/utils/request-demo';
 export { MovieAnalytics, MovieEventAnalytics } from '@blockframes/movie/+state/movie.firestore';
 export { NotificationTypes, NotificationDocument } from '@blockframes/notification/+state/notification.firestore';
-export { EventsAnalytics, EventAnalytics, ScreeningEventDocument } from '@blockframes/event/+state/event.firestore';
+export { ScreeningEventDocument } from '@blockframes/event/+state/event.firestore';
