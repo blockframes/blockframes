@@ -15,8 +15,8 @@ export class TermService extends CollectionService<TermState> {
   }
 
   formatFromFirestore(term): Term<Date> {
-    if (term.duration?.from) term.duration.from = toDate(term.duration.from);
-    if (term.duration?.to) term.duration.to = toDate(term.duration.to);
+    if (term?.duration?.from) term.duration.from = toDate(term.duration.from);
+    if (term?.duration?.to) term.duration.to = toDate(term.duration.to);
     return term;
   }
 }

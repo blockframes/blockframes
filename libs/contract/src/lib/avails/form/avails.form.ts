@@ -1,4 +1,4 @@
-import { FormArray, FormControl, Validators } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 
 import { Territory } from '@blockframes/utils/static-model';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';

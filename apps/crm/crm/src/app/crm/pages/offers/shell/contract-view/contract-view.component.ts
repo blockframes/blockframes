@@ -1,5 +1,5 @@
 
-import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, OnDestroy, Pipe, PipeTransform } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -10,10 +10,14 @@ import { combineLatest, Subscription } from 'rxjs';
 
 import { IncomeService } from '@blockframes/contract/income/+state';
 import { Term } from '@blockframes/contract/term/+state';
-import { ContractService, contractStatus, Holdback } from '@blockframes/contract/contract/+state';
+import { ContractService, Holdback } from '@blockframes/contract/contract/+state';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 
 import { OfferShellComponent } from '../shell.component';
+import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
+import { ContractStatus } from '@blockframes/contract/contract/+state/contract.firestore';
+import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
+import { isInitial } from '@blockframes/contract/negotiation/utils';
 
 
 @Component({
@@ -24,20 +28,20 @@ import { OfferShellComponent } from '../shell.component';
 })
 export class ContractViewComponent implements OnInit, OnDestroy {
 
-  status = contractStatus;
-
   offer$ = this.shell.offer$;
   contract$ = combineLatest([
     this.offer$,
     this.route.params.pipe(pluck('contractId')),
   ]).pipe(
-    map(([offer, contractId]) => offer.contracts?.find(contract => contract.id === contractId)),
-    filter(contract => !!contract)
+    map(([offer, contractId]) => {
+      const contracts = [...(offer.contracts ?? []), ...(offer.declinedContracts ?? [])];
+      return contracts.find(contract => contract.id === contractId)
+    }),
+    filter(contract => !!contract),
   );
 
   form = new FormGroup({
-    status: new FormControl('pending'),
-    price: new FormControl(0),
+    status: new FormControl('pending')
   });
 
   private sub: Subscription;
@@ -48,14 +52,14 @@ export class ContractViewComponent implements OnInit, OnDestroy {
     private snackbar: MatSnackBar,
     private shell: OfferShellComponent,
     private incomeService: IncomeService,
+    private negotiationService: NegotiationService,
     private contractService: ContractService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.sub = this.contract$.subscribe(contract => {
       this.form.setValue({
-        status: contract.status,
-        price: contract.income?.price ?? 0
+        status: contract.negotiation.status
       });
     });
   }
@@ -64,12 +68,10 @@ export class ContractViewComponent implements OnInit, OnDestroy {
     this.sub.unsubscribe();
   }
 
-  async update(contractId: string) {
-    const write = this.contractService.batch();
-    const { status, price} = this.form.value;
-    this.contractService.update(contractId, { status }, { write });
-    this.incomeService.update(contractId, { price }, { write });
-    await write.commit();
+  async update(contractId: string, negotiationId: string) {
+    const config = { params: { contractId } };
+    const { status } = this.form.value;
+    await this.negotiationService.update(negotiationId, { status }, config)
     this.snackbar.open('Offer updated!', 'ok', { duration: 1000 });
   }
 
@@ -95,5 +97,14 @@ export class ContractViewComponent implements OnInit, OnDestroy {
       this.incomeService.remove(term.id, { write });
       return { termIds: contract.termIds.filter(id => id !== term.id) };
     })
+  }
+}
+
+@Pipe({ name: 'isNew' })
+export class IsNegotiationNewPipe implements PipeTransform {
+  transform(negotiation: Negotiation) {
+    const pending = negotiation?.status === 'pending'
+    if (isInitial(negotiation) && pending) return true;
+    return false;
   }
 }

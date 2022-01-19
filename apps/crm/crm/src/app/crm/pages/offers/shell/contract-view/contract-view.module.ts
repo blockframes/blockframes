@@ -20,11 +20,10 @@ import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe';
 import { GetTitleHoldbacksPipeModule } from '@blockframes/movie/pipes/get-title-holdbacks';
 import { HoldbackFormModule } from '@blockframes/contract/contract/holdback/form/form.module';
 import { CollidingHoldbacksPipeModule } from '@blockframes/contract/contract/holdback/pipes/colliding-holdback.pipe'
-
-import { ContractViewComponent } from './contract-view.component';
+import { ContractViewComponent, IsNegotiationNewPipe } from './contract-view.component';
 
 @NgModule({
-  declarations: [ContractViewComponent],
+  declarations: [ContractViewComponent, IsNegotiationNewPipe],
   imports: [
     CommonModule,
     FlexLayoutModule,
@@ -37,7 +36,6 @@ import { ContractViewComponent } from './contract-view.component';
     GetTitlePipeModule,
     HoldbackFormModule,
     CollidingHoldbacksPipeModule,
-
     MatIconModule,
     MatCardModule,
     MatInputModule,
