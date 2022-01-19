@@ -5,7 +5,7 @@ import { db } from './internals/firebase';
 
 /** Query to get analytics of the number of views for the festival app event sessions pages
  * for an array of eventId
- * #7570 Kept for the record, if need in future 
+ * #7570 Kept for the record, if needed in future 
 const queryEventAnalytics = `
 SELECT
   event_name as event_name,
