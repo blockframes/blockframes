@@ -143,6 +143,5 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
   goToMap(id: string) {
     this.router.navigate([id, 'map'], { relativeTo: this.route })
   }
-
 }
 
