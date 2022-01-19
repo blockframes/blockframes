@@ -65,7 +65,8 @@ export class AnalyticsComponent implements OnInit {
           filterBy: invit => invit.eventId === event.id && !!invit.watchTime
         });
 
-        const orgIds = Array.from(new Set(invitations.map(i => i.fromUser?.orgId || i.toUser?.orgId).filter(orgId => !!orgId)));
+        const allOrgIds = invitations.map(i => i.fromUser?.orgId || i.toUser?.orgId).filter(orgId => !!orgId);
+        const orgIds = Array.from(new Set(allOrgIds));
         const orgs = await Promise.all(orgIds.map(orgId => this.orgService.getValue(orgId)));
 
         this.analytics = invitations.map(i => {
