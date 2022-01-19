@@ -14,7 +14,7 @@
   <!-- EVENTS COUNT (ng-content)-->
   <list-page-description *ngIf="events$ | async as events">
     <span i18n  class="mat-body-2">
-      There {events.length, plural, =0 {} =1 {is} other {are}} {{ events.length }} event{events.length, plural, =0 {} =1 {} other {s}}
+      There {events.length, plural, =0 {is} =1 {is} other {are}} {{ events.length }} event{events.length, plural, =0 {} =1 {} other {s}}
       available.
     </span>
   </list-page-description>

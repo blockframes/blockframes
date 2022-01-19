@@ -68,7 +68,7 @@
   <!-- TITLE COUNT (ng-content)-->
   <list-page-description *ngIf="movies$ | async as movies">
     <span i18n  class="mat-body-2">
-      There {movies.length, plural, =0 {} =1 {is} other {are}} {{ movies.length }} title{movies.length, plural, =0 {} =1 {} other {s}}
+      There {movies.length, plural, =0 {is} =1 {is} other {are}} {{ movies.length }} title{movies.length, plural, =0 {} =1 {} other {s}}
       available.
     </span>
   </list-page-description>
