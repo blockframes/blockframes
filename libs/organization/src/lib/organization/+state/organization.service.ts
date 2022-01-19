@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { map } from 'rxjs/operators';
-import { AuthQuery, User } from '@blockframes/auth/+state';
+import { map, switchMap, tap } from 'rxjs/operators';
+import { AuthQuery, AuthService, User } from '@blockframes/auth/+state';
 import {
   Organization,
   createOrganization,
@@ -24,7 +24,13 @@ import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 export class OrganizationService extends CollectionService<OrganizationState> {
   readonly useMemorization = true;
 
-  private app = getCurrentApp(this.routerQuery)
+  private app = getCurrentApp(this.routerQuery);
+
+  org: Organization;
+  org$ = this.authService.profile$.pipe(
+    switchMap(user => this.valueChanges(user.orgId)),
+    tap(org => this.org = org)
+  );
 
   constructor(
     private query: OrganizationQuery,
@@ -35,6 +41,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     private permissionsService: PermissionsService,
     private routerQuery: RouterQuery,
     private analytics: FireAnalytics,
+    private authService: AuthService,
   ) {
     super(store);
   }
@@ -85,11 +92,6 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     });
 
     return this.add(newOrganization);
-  }
-
-  public async setBlockchainFeature(value: boolean) {
-    const orgId = this.query.getActiveId();
-    return this.update(orgId, { isBlockchainEnabled: value });
   }
 
   public notifyAppAccessChange(orgId: string, app: App) {

@@ -11,7 +11,7 @@ import { InvitationService } from '../+state/invitation.service';
 
 // RxJs
 import { switchMap, filter } from 'rxjs/operators';
-import { PermissionsQuery } from '@blockframes/permissions/+state';
+import { PermissionsService } from '@blockframes/permissions/+state';
 import { combineLatest } from 'rxjs';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 
@@ -22,7 +22,7 @@ export class InvitationGuard extends CollectionGuard<InvitationState> {
     service: InvitationService,
     private authQuery: AuthQuery,
     private orgQuery: OrganizationQuery,
-    private permissionQuery: PermissionsQuery
+    private permissionService: PermissionsService
   ) {
     super(service);
   }
@@ -32,7 +32,7 @@ export class InvitationGuard extends CollectionGuard<InvitationState> {
     return combineLatest([
       this.authQuery.user$,
       this.orgQuery.selectActiveId(),
-      this.permissionQuery.isAdmin$
+      this.permissionService.isAdmin$
     ]).pipe(
       filter(([user]) => !!user && !!user.uid),
       switchMap(([ user, orgId, isAdmin ]) => {
