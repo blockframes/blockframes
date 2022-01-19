@@ -6,6 +6,7 @@ import { filter, map } from 'rxjs/operators';
 import { fade } from '@blockframes/utils/animations/fade';
 import { MatDialog } from '@angular/material/dialog';
 import { RequestAskingPriceComponent } from '@blockframes/movie/components/request-asking-price/request-asking-price.component';
+import { BehaviorStore } from '@blockframes/utils/observable-helpers';
 
 @Component({
   selector: 'event-screening-item',
@@ -20,6 +21,7 @@ export class ScreeningItemComponent implements OnInit, OnDestroy {
   public event$ = this._event.asObservable();
 
   public invitation: Invitation;
+  public requestSent = new BehaviorStore(false);
 
   @Input() set event(screening: ScreeningEvent) {
     this._event.next(screening);
@@ -51,11 +53,16 @@ export class ScreeningItemComponent implements OnInit, OnDestroy {
   }
 
   requestAskingPrice(movieId: string) {
-    this.dialog.open(RequestAskingPriceComponent, {
+    const ref = this.dialog.open(RequestAskingPriceComponent, {
       data: { movieId },
       maxHeight: '80vh',
       maxWidth: '650px',
       autoFocus: false
+    });
+    ref.afterClosed().subscribe(isSent => {
+      if (isSent) {
+        this.requestSent.value = true;
+      }
     });
   }
 

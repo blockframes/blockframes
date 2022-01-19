@@ -11,6 +11,7 @@ import { Event } from '@blockframes/event/+state/event.model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MatDialog } from '@angular/material/dialog';
 import { RequestAskingPriceComponent } from '@blockframes/movie/components/request-asking-price/request-asking-price.component';
+import { BehaviorStore } from '@blockframes/utils/observable-helpers';
 
 @Component({
   selector: 'festival-event-view',
@@ -25,6 +26,7 @@ export class EventViewComponent implements OnInit {
   accessRoute: string;
   user$ = this.authQuery.user$;
   event$: Observable<Event>;
+  requestSent = new BehaviorStore(false);
   private statusChanged = new BehaviorSubject(false);
   public timerEnded = false;
   private preventBrowserEvent = false;
@@ -95,11 +97,16 @@ export class EventViewComponent implements OnInit {
   }
 
   requestAskingPrice(movieId: string) {
-    this.dialog.open(RequestAskingPriceComponent, {
+    const ref = this.dialog.open(RequestAskingPriceComponent, {
       data: { movieId },
       maxHeight: '80vh',
       maxWidth: '650px',
       autoFocus: false
-    })
+    });
+    ref.afterClosed().subscribe(isSent => {
+      if (isSent) {
+        this.requestSent.value = true;
+      }
+    });
   }
 }

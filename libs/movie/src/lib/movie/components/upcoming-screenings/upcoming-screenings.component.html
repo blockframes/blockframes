@@ -8,7 +8,7 @@
         <p class="mat-body-1">You can contact <a [routerLink]="['/c/o/marketplace/organization/', org.id]">{{ org.denomination?.public || 'the organization' }}</a> for any questions.</p>
         <section fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="8px">
           <event-request-screening [movieId]="movieId"></event-request-screening>
-          <button mat-button (click)="requestAskingPrice()">Request Asking Price</button>
+          <button mat-button [disabled]="requestSent.$ | async" (click)="requestAskingPrice()">Request Asking Price</button>
         </section>
       </ng-container>
     </ng-container>
@@ -20,7 +20,7 @@
       <mat-divider></mat-divider>
       <section fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="8px">
         <a *ngIf="!futureScreenings.length" mat-flat-button color="primary" [routerLink]="['/event', ongoingScreenings[0].id, 'r', 'i']">Access Event</a>
-        <button mat-button (click)="requestAskingPrice()">Request Asking Price</button>
+        <button mat-button [disabled]="requestSent.$ | async" (click)="requestAskingPrice()">Request Asking Price</button>
       </section>
     </ng-container>
 
@@ -52,7 +52,7 @@
         <ng-template #noInvitation>
           <button mat-flat-button color="accent" (click)="askForInvitation(futureScreenings)">Register for this session</button>
         </ng-template>
-        <button mat-button (click)="requestAskingPrice()">Request Asking Price</button>
+        <button mat-button [disabled]="requestSent.$ | async" (click)="requestAskingPrice()">Request Asking Price</button>
       </section>
 
     </ng-container>

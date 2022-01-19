@@ -10,6 +10,7 @@ import { EventService } from '@blockframes/event/+state';
 import { map } from 'rxjs/operators';
 import { RequestAskingPriceComponent } from '@blockframes/movie/components/request-asking-price/request-asking-price.component';
 import { MatDialog } from '@angular/material/dialog';
+import { BehaviorStore } from '@blockframes/utils/observable-helpers';
 
 @Component({
   selector: 'festival-movie-view',
@@ -22,6 +23,7 @@ export class MarketplaceMovieViewComponent implements OnInit {
   public orgs$: Observable<Organization[]>;
   public eventId$: Observable<string | null>;
   public movieId = this.movieQuery.getActiveId();
+  public requestSent = new BehaviorStore(false);
 
   public navLinks: RouteDescription[] = [
     mainRoute,
@@ -69,11 +71,16 @@ export class MarketplaceMovieViewComponent implements OnInit {
   }
 
   requestAskingPrice() {
-    this.dialog.open(RequestAskingPriceComponent, {
+    const ref = this.dialog.open(RequestAskingPriceComponent, {
       data: { movieId: this.movieId },
       maxHeight: '80vh',
       maxWidth: '650px',
       autoFocus: false
+    });
+    ref.afterClosed().subscribe(isSent => {
+      if (isSent) {
+        this.requestSent.value = true;
+      }
     });
   }
 }
