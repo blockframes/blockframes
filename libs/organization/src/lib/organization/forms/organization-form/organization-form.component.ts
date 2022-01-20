@@ -1,7 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { OrganizationService } from './../../+state/organization.service';
 import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
-import { OrganizationQuery } from '@blockframes/organization/+state';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 
 @Component({
@@ -12,13 +11,13 @@ import { boolean } from '@blockframes/utils/decorators/decorators';
 })
 export class OrganizationFormComponent {
 
-  public orgId = this.query.getActiveId();
+  public orgId = this.service.org.id;
 
   @Input() form: OrganizationForm;
 
   @Input() @boolean disableCropper = false;
 
-  constructor(private service: OrganizationService, private query: OrganizationQuery) { }
+  constructor(private service: OrganizationService) { }
 
   /** Check if the `name` field of an Organization create form already exists as an ENS domain */
   public async uniqueOrgName() {
