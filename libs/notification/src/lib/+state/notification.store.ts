@@ -302,7 +302,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
       case 'contractCreated':
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `An offer is made on one of your titles.`,
+          message: `An offer has been made on one of your titles.`,
           placeholderUrl: 'contract_offer.svg',
           url: `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}`
         }
@@ -312,7 +312,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
 
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `You've created a counter offer.`,
+          message: `Your counter-offer was successfully sent.`,
           placeholderUrl: 'contract_offer.svg',
           url: module === 'marketplace' ? marketplaceUrl : dashboardUrl
         }
