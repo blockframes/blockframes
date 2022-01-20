@@ -25,6 +25,10 @@ const queryMovieAnalytics = `
       (event_name = 'promoReelOpened' AND key = 'movieId')
       OR
       (event_name = 'addedToWishlist' AND key = 'movieId')
+      OR
+      (event_name = 'screeningRequested' AND key = 'movieId')
+      OR
+      (event_name = 'askingPriceRequested' AND key = 'movieId')
     )
     AND (
       DATE_DIFF(CURRENT_DATE(), PARSE_DATE('%Y%m%d', event_date), DAY) < @periodSum
