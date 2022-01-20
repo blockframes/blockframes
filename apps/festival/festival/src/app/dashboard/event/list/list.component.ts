@@ -46,10 +46,10 @@ export class EventListComponent implements OnInit {
 
   async ngOnInit() {
     this.events$ = combineLatest([
-      this.orgService.org.id,
+      this.orgService.org$,
       this.filter.valueChanges.pipe(startWith(this.filter.value))
     ]).pipe(
-      switchMap(([orgId, types]) => this.service.queryByType(types, ref => ref.where('ownerOrgId', '==', orgId))),
+      switchMap(([org, types]) => this.service.queryByType(types, ref => ref.where('ownerOrgId', '==', org.id))),
       tap(events => {
         events.length ?
           this.dynTitle.setPageTitle('My events') :
