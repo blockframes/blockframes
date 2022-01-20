@@ -50,7 +50,9 @@
   </div>
 </ng-template>
 
-
+<section *ngIf="loading.$ | async" class="overlay">
+  <mat-spinner></mat-spinner>
+</section>
 
 <!-- Tooltip (Not used yet)
 <ng-template #matTooltipTemplate let-contents="contents" let-placement="placement" let-event="event">

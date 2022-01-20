@@ -18,6 +18,7 @@ import { map, finalize, takeUntil, distinctUntilChanged } from 'rxjs/operators';
 
 import { ActivatedRoute, Router } from '@angular/router';
 import { OrganizationQuery } from '@blockframes/organization/+state';
+import { BehaviorStore } from '@blockframes/utils/observable-helpers';
 
 function floorToNearest(amount: number, precision: number) {
   return Math.floor(amount / precision) * precision;
@@ -51,12 +52,17 @@ export class CalendarWeekComponent {
   private _editable: boolean;
   baseEvents: CalendarEvent[];
   localEvents: CalendarEvent[];
+  loading = new BehaviorStore(true);
   @Input() viewDate: Date = new Date();
   @Input() eventTypes: EventTypes[] = ['screening', 'meeting'];
   @Input()
   set events(events: CalendarEvent<unknown>[]) {
     this.baseEvents = events || [];
     this.refresh(events || []);
+    
+    if (events) {
+      this.loading.value = false;
+    }
   }
 
   @Input()
@@ -66,7 +72,6 @@ export class CalendarWeekComponent {
   get editable(): boolean {
     return this._editable;
   }
-
 
   @ContentChild(EventSmallDirective) smallEvent: EventSmallDirective;
   @ContentChild(EventLargeDirective) largeEvent: EventLargeDirective;
@@ -138,8 +143,10 @@ export class CalendarWeekComponent {
     this.dialog.open(EventCreateComponent, { data, width: '650px', autoFocus: false }).afterClosed()
       .subscribe(async ({ event } = {}) => {
         if (event) {
+          this.loading.value = true;
           await this.service.add(event);
-          this.router.navigate([event.id, 'edit'], { relativeTo: this.route });
+          await this.router.navigate([event.id, 'edit'], { relativeTo: this.route });
+          this.loading.value = false;
         } else {
           this.refresh(this.baseEvents);
         }
