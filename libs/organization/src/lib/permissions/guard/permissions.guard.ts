@@ -23,6 +23,7 @@ export class PermissionsGuard implements CanActivate {
       map(([user, permissions]) => {
         if (!user) return this.router.createUrlTree(['/']);
         if (!user.orgId || !permissions) return this.router.createUrlTree(['c/organization']);
+        return true;
       }));
   }
 }
