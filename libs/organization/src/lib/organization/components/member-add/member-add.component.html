@@ -24,12 +24,12 @@
     <ng-container *ngIf="(isSending$ | async) === false; else sendingInvitations">
       <button class="send" mat-flat-button color="accent" test-id="add" [disabled]="error || (isSending$ | async)" (click)="sendInvitations()">
         <mat-icon svgIcon="send"></mat-icon>
-        <span i18n>Send invitation{ form.controls.length, plural, =0 {} =1 {} other {s} }</span>
+        <span i18n>Send invitation{ form.controls.length, plural, =1 {} other {s} }</span>
       </button>
     </ng-container>
     <ng-template #sendingInvitations>
       <button @slideUp mat-flat-button disabled>
-        <span i18n>Sending the invitation{ form.controls.length, plural, =0 {} =1 {} other {s} }, please wait a few seconds</span>
+        <span i18n>Sending the invitation{ form.controls.length, plural, =1 {} other {s} }, please wait a few seconds</span>
       </button>
     </ng-template>
   </div>
