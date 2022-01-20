@@ -2,11 +2,13 @@ import { Injectable } from "@angular/core";
 import { OrganizationQuery } from "@blockframes/organization/+state";
 import { CollectionService, CollectionConfig } from 'akita-ng-fire';
 import { Campaign } from "./campaign.model";
-import { CampaignState, CampaignStore } from "./campaign.store";
 import { removeUndefined } from '@blockframes/utils/helpers';
 import { Movie, MovieService } from "@blockframes/movie/+state";
 import { combineLatest, of } from "rxjs";
 import { map } from "rxjs/operators";
+import { ActiveState, EntityState } from '@datorama/akita';
+
+export interface CampaignState extends EntityState<Campaign, string>, ActiveState<string> {}
 
 export interface MovieCampaign extends Movie {
   campaign: Campaign;
@@ -18,11 +20,10 @@ export class CampaignService extends CollectionService<CampaignState> {
   useMemorization = true;
 
   constructor(
-    protected store: CampaignStore,
     private orgQuery: OrganizationQuery,
     private movieService: MovieService
   ) {
-    super(store);
+    super();
   }
 
   // Make sure we remove all undefined values

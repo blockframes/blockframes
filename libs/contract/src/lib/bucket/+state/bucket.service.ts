@@ -1,10 +1,7 @@
 
 import { Injectable } from '@angular/core';
-
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
-
 import { centralOrgId } from '@env';
-
 import { switchMap, take } from 'rxjs/operators';
 import { AuthQuery } from '@blockframes/auth/+state';
 import { createOfferId } from '@blockframes/utils/utils';
@@ -12,15 +9,14 @@ import { MovieCurrency } from '@blockframes/utils/static-model';
 import { AvailsFilter } from '@blockframes/contract/avails/avails';
 import { createDocumentMeta } from '@blockframes/utils/models-meta';
 import { OrganizationQuery } from '@blockframes/organization/+state';
-
 import { TermService } from '../../term/+state';
 import { OfferService } from '../../offer/+state';
-import { IncomeService } from '../../income/+state';
 import { Bucket, createBucket } from './bucket.model';
-import { BucketStore, BucketState } from './bucket.store';
 import { createBucketTerm, createBucketContract } from './bucket.model';
 import { ContractService, convertDuration } from '../../contract/+state';
-import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
+import { ActiveState, EntityState } from '@datorama/akita';
+
+export interface BucketState extends EntityState<Bucket>, ActiveState<string> { }
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'buckets' })
@@ -31,16 +27,13 @@ export class BucketService extends CollectionService<BucketState> {
   );
 
   constructor(
-    store: BucketStore,
     private orgQuery: OrganizationQuery,
     private termService: TermService,
     private offerService: OfferService,
     private contractService: ContractService,
-    private incomeService: IncomeService,
     private authQuery: AuthQuery,
-    private negotiationService: NegotiationService,
   ) {
-    super(store);
+    super();
   }
 
   formatFromFirestore(document): Bucket {
