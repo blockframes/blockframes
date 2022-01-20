@@ -27,6 +27,7 @@ import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 import { MovieTunnelGuard } from '@blockframes/movie/guards/movie-tunnel.guard';
 import { TunnelGuard } from '@blockframes/ui/tunnel';
 import { EventOrganizationGuard } from "@blockframes/event/guard/event-organization.guard";
+import { EventEditGuard } from '@blockframes/event/guard/event-edit.guard';
 import { EventTypeGuard } from '@blockframes/event/guard/event-type.guard';
 
 // Material
@@ -109,6 +110,7 @@ const routes: Routes = [{
             }, {
               path: 'edit',
               component: EventFormShellComponent,
+              canActivate: [EventEditGuard],
               canDeactivate: [EventOrganizationGuard],
               children: [
                 {

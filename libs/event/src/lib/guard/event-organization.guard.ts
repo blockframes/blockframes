@@ -17,10 +17,11 @@ export class EventOrganizationGuard implements CanActivate, CanDeactivate<unknow
 
   async canActivate(next: ActivatedRouteSnapshot) {
     const eventId: string = next.params['eventId'];
+    if (eventId === 'new') return true;
     const event = await this.service.getValue(eventId);
     const orgId = this.orgQuery.getActiveId();
     const redirect = this.router.parseUrl(`/c/o/dashboard/event`);
-    return orgId === event.ownerOrgId || redirect;
+    return orgId === event?.ownerOrgId || redirect;
   }
 
    canDeactivate(
