@@ -40,6 +40,7 @@ export class AnalyticsComponent implements OnInit {
   public hasWatchTime = false;
   public exporting = new BehaviorStore(false);
   public averageWatchTime = 0; // in seconds
+  public dataMissing = '(Not Registered)';
 
   constructor(
     private dynTitle: DynamicTitleService,
@@ -71,15 +72,15 @@ export class AnalyticsComponent implements OnInit {
 
         this.analytics = invitations.map(i => {
           const user = i.fromUser || i.toUser;
-          const name = user.lastName && user.firstName ? `${user.firstName} ${user.lastName}` : 'Not Registered';
+          const name = user.lastName && user.firstName ? `${user.firstName} ${user.lastName}` : this.dataMissing;
           const org = orgs.find(o => o.id === user.orgId);
           return {
             email: user.email,
             watchTime: i.watchTime,
             name,
-            orgName: org ? orgName(org) : undefined,
-            orgActivity: org?.activity || undefined,
-            orgCountry: org?.addresses?.main.country || undefined
+            orgName: orgName(org),
+            orgActivity: org?.activity,
+            orgCountry: org?.addresses?.main.country
           };
         });
 
