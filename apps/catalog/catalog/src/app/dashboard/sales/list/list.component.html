@@ -17,14 +17,14 @@
       <button mat-tab-link (click)="applyFilter('pending')" [active]="(filter$ | async) === 'pending'">
         New <span *ngIf="(salesCount$ | async) as salesCount">({{ salesCount.new }})</span>
       </button>
+      <button mat-tab-link (click)="applyFilter('negotiating')" [active]="(filter$ | async) === 'negotiating'">
+        Ongoing <span *ngIf="(salesCount$ | async) as salesCount">({{ salesCount.negotiating }})</span>
+      </button>
       <button mat-tab-link (click)="applyFilter('accepted')" [active]="(filter$ | async) === 'accepted'">
         Accepted <span *ngIf="(salesCount$ | async) as salesCount">({{ salesCount.accepted }})</span>
       </button>
       <button mat-tab-link (click)="applyFilter('declined')" [active]="(filter$ | async) === 'declined'">
         Declined <span *ngIf="(salesCount$ | async) as salesCount">({{ salesCount.declined }})</span>
-      </button>
-      <button mat-tab-link (click)="applyFilter('negotiating')" [active]="(filter$ | async) === 'negotiating'">
-        Ongoing <span *ngIf="(salesCount$ | async) as salesCount">({{ salesCount.negotiating }})</span>
       </button>
     </header>
 
