@@ -1,5 +1,4 @@
 import type firebase from 'firebase';
-import { AnalyticsEvents } from '@blockframes/utils/analytics/analytics-model';
 import { StorageFile } from '@blockframes/media/+state/media.firestore';
 import { AccessibilityTypes } from '@blockframes/utils/static-model/types';
 import { Person } from '@blockframes/utils/common-interfaces/identity';
@@ -66,27 +65,6 @@ export interface EventBase<D extends Timestamp | Date, Meta extends EventMeta = 
 export type EventDocument<Meta> = EventBase<Timestamp, Meta>;
 export type MeetingEventDocument = EventDocument<Meeting>;
 export type ScreeningEventDocument = EventDocument<Screening>;
-
-export interface EventAnalytics {
-  event_name: AnalyticsEvents,
-  hits: number,
-  eventIdPage: string,
-  userId: string,
-  eventId: string,
-  email: string,
-  firstName: string,
-  lastName: string,
-  name?: string, // firstName + lastName
-  orgName?: string,
-  orgActivity?: string,
-  orgCountry?: string,
-  watchTime?: number, // in seconds
-}
-
-export interface EventsAnalytics {
-  eventId: string,
-  eventUsers: EventAnalytics[]
-}
 
 // This variable define the duration (in seconds) of a video link before it expires
 export const linkDuration = 60 * 60 * 5; // 5 hours in seconds = 60 seconds * 60 minutes * 5 = 18 000 seconds

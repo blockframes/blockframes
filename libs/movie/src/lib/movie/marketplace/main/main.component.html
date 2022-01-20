@@ -6,7 +6,7 @@
     <section id="sales-pitch" *ngIf="movie.promotional.videos.salesPitch as salesPitch">
       <h3>Sales Pitch</h3>
       <article fxLayout="row" fxLayoutGap="40px">
-        <video-viewer [ref]="salesPitch" *ngIf="salesPitch.jwPlayerId"></video-viewer>
+        <video-viewer [ref]="salesPitch" *ngIf="salesPitch.jwPlayerId" (stateChange)="videoStateChanged(movie.id, $event)"></video-viewer>
         <p *ngIf="salesPitch.description">{{ salesPitch.description }}</p>
       </article>
       <mat-divider></mat-divider>
