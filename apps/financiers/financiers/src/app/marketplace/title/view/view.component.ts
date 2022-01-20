@@ -98,7 +98,7 @@ export class MarketplaceMovieViewComponent implements OnInit {
       }),
       message: new FormControl(),
     });
-    this.dialogRef = this.dialog.open(this.dialogTemplate, {
+    this.dialog.open(this.dialogTemplate, {
       data: { orgs, form }
     });
   }
