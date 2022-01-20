@@ -7,7 +7,6 @@ import {
   OrganizationDocument
 } from './organization.model';
 import { OrganizationStore, OrganizationState } from './organization.store';
-import { OrganizationQuery } from './organization.query';
 import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
 import { createPermissions, UserRole } from '../../permissions/+state/permissions.model';
 import { AngularFireFunctions } from '@angular/fire/functions';
@@ -40,7 +39,6 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   );
 
   constructor(
-    private query: OrganizationQuery,
     public store: OrganizationStore,
     private authQuery: AuthQuery,
     private functions: AngularFireFunctions,
@@ -163,7 +161,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
    * @param movie
    */
   public async updateWishlist(movie: Movie) {
-    const orgState = this.query.getActive();
+    const orgState = this.org;
     let wishlist = Array.from(new Set([...orgState.wishlist])) || [];
     if (wishlist.includes(movie.id)) {
       wishlist = orgState.wishlist.filter(id => id !== movie.id);

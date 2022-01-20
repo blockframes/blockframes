@@ -4,7 +4,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { Router } from '@angular/router';
 import { getCurrentApp, getOrgModuleAccess } from '@blockframes/utils/apps';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { OrganizationQuery } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { map, startWith, tap } from 'rxjs/operators';
 import { FormControl, FormGroup } from '@angular/forms';
 import { combineLatest } from 'rxjs';
@@ -48,7 +48,7 @@ export class InvitationComponent {
     private dynTitle: DynamicTitleService,
     private router: Router,
     private routerQuery: RouterQuery,
-    private orgQuery: OrganizationQuery
+    private orgService: OrganizationService,
   ) { }
 
   acceptAll(invitations: Invitation[]) {
@@ -60,7 +60,7 @@ export class InvitationComponent {
 
   leadToHomepage() {
     const app = getCurrentApp(this.routerQuery);
-    const org = this.orgQuery.getActive();
+    const org = this.orgService.org;
     const [moduleAccess = 'dashboard'] = getOrgModuleAccess(org, app);
     return this.router.navigate([`/c/o/${moduleAccess}/home`]);
   }

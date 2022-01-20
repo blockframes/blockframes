@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, ViewEncapsulation  } from '@angular/core';
-import { OrganizationQuery } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { UserService } from '@blockframes/user/+state';
 import { User } from '@blockframes/auth/+state';
 import { Observable } from 'rxjs';
@@ -21,7 +21,7 @@ export class MeetingComponent implements OnInit {
 
   constructor(
     private userService: UserService,
-    private orgQuery: OrganizationQuery,
+    private orgService: OrganizationService,
     private dynTitle: DynamicTitleService,
     private shell: EventFormShellComponent,
     private snackBar: MatSnackBar,
@@ -38,7 +38,7 @@ export class MeetingComponent implements OnInit {
   ngOnInit(): void {
     this.dynTitle.setPageTitle('Add an event', 'Meeting info');
 
-    this.members$ = this.orgQuery.selectActive().pipe(
+    this.members$ = this.orgService.org$.pipe(
       switchMap(org => this.userService.valueChanges(org.userIds))
     )
   }

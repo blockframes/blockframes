@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { CollectionConfig, CollectionService, AtomicWrite } from 'akita-ng-fire';
-import { OrganizationQuery, createPublicOrganization, Organization } from '@blockframes/organization/+state';
+import { createPublicOrganization, Organization, OrganizationService } from '@blockframes/organization/+state';
 import { AuthQuery, AuthState, User } from '@blockframes/auth/+state';
 import { createPublicUser, PublicUser } from '@blockframes/user/+state';
 import { toDate } from '@blockframes/utils/helpers';
@@ -60,7 +60,7 @@ export class InvitationService extends CollectionService<InvitationState> {
   constructor(
     store: InvitationStore,
     private authQuery: AuthQuery,
-    private orgQuery: OrganizationQuery,
+    private orgService: OrganizationService,
     private functions: AngularFireFunctions,
     private routerQuery: RouterQuery
   ) {
@@ -122,7 +122,7 @@ export class InvitationService extends CollectionService<InvitationState> {
    * Create an invitation with mode "invitation"
    * @param idOrEmails "emails" for user, "ids" for org
    */
-  invite(idOrEmails: string | string[], fromOrg: Organization = this.orgQuery.getActive()) {
+  invite(idOrEmails: string | string[], fromOrg: Organization = this.orgService.org) {
     return {
       to: (type: 'attendEvent' | 'joinOrganization', eventId?: string) => {
         const invitation = { mode: 'invitation', type } as Partial<Invitation>;

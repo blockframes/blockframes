@@ -1,6 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs';
-import { OrganizationQuery } from '../../+state/organization.query';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserRole, PermissionsService } from '../../../permissions/+state';
 import { UserQuery } from '@blockframes/user/+state/user.query';
@@ -17,8 +16,8 @@ import { buildJoinOrgQuery } from '@blockframes/invitation/invitation-utils';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MemberComponent implements OnInit {
-  public orgName: string = this.query.getActive().denomination.full;
-  public org: Organization = this.query.getActive();
+  public orgName: string = this.orgService.org.denomination.full;
+  public org: Organization = this.orgService.org;
 
   /** Observable of all members of the organization */
   public members$: Observable<OrganizationMember[]>;
@@ -33,7 +32,6 @@ export class MemberComponent implements OnInit {
   public isSuperAdmin$: Observable<boolean>;
 
   constructor(
-    private query: OrganizationQuery,
     private snackBar: MatSnackBar,
     private invitationService: InvitationService,
     private permissionService: PermissionsService,

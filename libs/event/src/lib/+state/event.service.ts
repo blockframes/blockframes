@@ -77,7 +77,7 @@ export class EventService extends CollectionService<EventState> {
 
   /** Verify if the current user / organisation is ownr of an event */
   isOwner(event: EventBase<Date | Timestamp, unknown>) {
-    return event.ownerOrgId === this.orgService.org.id;
+    return event?.ownerOrgId === this.orgService.org.id;
   }
 
   /** Create the permission */
