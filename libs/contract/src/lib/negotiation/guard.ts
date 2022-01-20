@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { CanActivate, ActivatedRouteSnapshot, Router, CanDeactivate } from '@angular/router';
 import { ContractService } from '@blockframes/contract/contract/+state';
 import { NegotiationForm } from '@blockframes/contract/negotiation';
-import { OrganizationQuery } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { first } from 'rxjs/operators';
 
@@ -17,13 +17,13 @@ export class NegotiationGuard<T extends NegotiationGuardedComponent> implements 
   constructor(
     private router: Router,
     private contractService: ContractService,
-    private orgQuery: OrganizationQuery,
+    private orgService: OrganizationService,
     private dialog: MatDialog,
   ) { }
 
   async canActivate(route: ActivatedRouteSnapshot) {
     const saleId = route.paramMap.get('saleId');
-    const activeOrgId = this.orgQuery.getActiveId();
+    const activeOrgId = this.orgService.org.id;
 
     if (!saleId) return this.router.parseUrl(`c/o/dashboard/sales`);
 

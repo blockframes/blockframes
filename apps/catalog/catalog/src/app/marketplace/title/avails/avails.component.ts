@@ -12,7 +12,7 @@ import { BucketTerm, Term, TermService } from '@blockframes/contract/term/+state
 import { CalendarAvailsForm, MapAvailsForm } from '@blockframes/contract/avails/form/avails.form';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { BucketForm, BucketTermForm } from '@blockframes/contract/bucket/form';
-import { OrganizationQuery, OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { BucketService } from '@blockframes/contract/bucket/+state';
 import { ContractService, Holdback, isMandate, isSale, Mandate, Sale } from '@blockframes/contract/contract/+state';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
@@ -32,7 +32,7 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
 
   public movie: Movie = this.movieQuery.getActive();
 
-  public orgId = this.orgQuery.getActiveId();
+  public orgId = this.orgService.org.id;
   public periods = ['days', 'weeks', 'months', 'years'];
   public maxTerritories = 30;
 
@@ -80,7 +80,6 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
     private route: ActivatedRoute,
     private movieQuery: MovieQuery,
     private termService: TermService,
-    private orgQuery: OrganizationQuery,
     private bucketService: BucketService,
     private orgService: OrganizationService,
     private contractService: ContractService,

@@ -48,7 +48,7 @@ export class EventAuthGuard extends CollectionGuard<AuthState> {
             /**
              * If current user is not anonymous, we populate org store
              */
-            if (userAuth && !userAuth.isAnonymous) {
+            if (userAuth && !userAuth.isAnonymous) { // @TODO #7284 #7273 remove ?
               this.orgStore.upsert(org.id, org);
               this.orgStore.setActive(org.id);
               this.orgService.syncActive({ id: org.id });

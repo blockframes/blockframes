@@ -10,7 +10,7 @@ import { PermissionsService } from '@blockframes/permissions/+state';
   providedIn: 'root'
 })
 export class UserQuery extends QueryEntity<UserState, OrganizationMember> {
-  // @TODO #7285 private permissionsService: PermissionsService can cause circular dependencies but should be resolved once UserQuery will be removed 
+  // @TODO #7273 private permissionsService: PermissionsService can cause circular dependencies but should be resolved once UserQuery will be removed 
   // Example : import { UserService } from '@blockframes/user/+state'; instead of import { UserService } from '@blockframes/user/+state/user.service';
   constructor(protected store: UserStore, private permissionsService: PermissionsService) { 
     super(store);

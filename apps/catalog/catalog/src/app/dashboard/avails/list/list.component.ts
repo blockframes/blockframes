@@ -10,7 +10,6 @@ import { centralOrgId } from '@env';
 import { joinWith } from "@blockframes/utils/operators";
 import { Movie, MovieService } from "@blockframes/movie/+state";
 import { TermService } from "@blockframes/contract/term/+state";
-import { OrganizationQuery } from "@blockframes/organization/+state";
 import { ContractService } from "@blockframes/contract/contract/+state";
 import { AvailsForm } from "@blockframes/contract/avails/form/avails.form";
 import { Income, IncomeService } from "@blockframes/contract/income/+state";
@@ -62,7 +61,7 @@ const saleCountAndTotalPrice = (title: JoinSaleTitleType) => {
 })
 export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnInit {
   public availsForm = new AvailsForm();
-  private orgId = this.orgQuery.getActiveId();
+  private orgId = this.orgService.org.id;
   private sub: Subscription;
 
   public queryParams$ = this.route.queryParamMap.pipe(
@@ -112,7 +111,6 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
     private dynTitleService: DynamicTitleService,
     private contractService: ContractService,
     private incomeService: IncomeService,
-    private orgQuery: OrganizationQuery,
     private route: ActivatedRoute,
     private router: Router,
     private termsService: TermService,

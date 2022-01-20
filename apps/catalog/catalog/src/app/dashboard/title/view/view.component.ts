@@ -6,7 +6,7 @@ import { Router, NavigationEnd } from '@angular/router';
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
-import { OrganizationQuery } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 
 @Component({
   selector: 'catalog-title-view',
@@ -16,7 +16,7 @@ import { OrganizationQuery } from '@blockframes/organization/+state';
 })
 export class TitleViewComponent implements OnInit, OnDestroy {
   public movie$: Observable<Movie>;
-  public org$ = this.orgQuery.selectActive();
+  public org$ = this.orgService.org$;
   public loading$: Observable<boolean>;
   private sub: Subscription;
 
@@ -51,7 +51,7 @@ export class TitleViewComponent implements OnInit, OnDestroy {
     private movieQuery: MovieQuery,
     private dynTitle: DynamicTitleService,
     private router: Router,
-    private orgQuery: OrganizationQuery
+    private orgService: OrganizationService
   ) {
     const titleName = this.movieQuery.getActive().title.international || 'No title'
     this.sub = this.router.events.subscribe(event => {

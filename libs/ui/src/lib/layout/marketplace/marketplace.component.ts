@@ -13,7 +13,7 @@ import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { NotificationQuery } from '@blockframes/notification/+state';
-import { OrganizationQuery } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { MovieService, Movie } from '@blockframes/movie/+state'
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentApp, App } from '@blockframes/utils/apps';
@@ -37,7 +37,7 @@ export class MarketplaceComponent implements OnInit {
   @ViewChild(CdkScrollable) cdkScrollable: CdkScrollable
 
   constructor(
-    private orgQuery: OrganizationQuery,
+    private orgService: OrganizationService,
     private invitationService: InvitationService,
     private notificationQuery: NotificationQuery,
     private authQuery: AuthQuery,
@@ -47,7 +47,7 @@ export class MarketplaceComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.wishlistCount$ = this.orgQuery.selectActive().pipe(
+    this.wishlistCount$ = this.orgService.org$.pipe(
       map(org => org.wishlist),
       switchMap(movieIds => this.movieService.getValue(movieIds)),
       map((movies: Movie[]) => movies.filter(filterMovieByAppAccess(getCurrentApp(this.routerQuery))).length)

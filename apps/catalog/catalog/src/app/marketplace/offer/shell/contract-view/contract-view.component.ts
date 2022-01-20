@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { OfferShellComponent } from '../shell.component';
 import { combineLatest } from 'rxjs';
 import { first, map, pluck } from 'rxjs/operators';
-import { OrganizationQuery } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
@@ -16,7 +16,7 @@ import { NegotiationService } from '@blockframes/contract/negotiation/+state/neg
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContractViewComponent {
-  activeOrgId = this.orgQuery.getActiveId();
+  activeOrgId = this.orgService.org.id;
 
   contracts$ = this.shell.offer$.pipe(
     map(offer => [...(offer.contracts??[]), ...(offer.declinedContracts??[])])
@@ -34,7 +34,7 @@ export class ContractViewComponent {
     private shell: OfferShellComponent,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
-    private orgQuery: OrganizationQuery,
+    private orgService: OrganizationService,
     private negotiationService: NegotiationService,
   ) { }
 

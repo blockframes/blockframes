@@ -1,5 +1,5 @@
 import { NgModule, Pipe, PipeTransform } from "@angular/core";
-import { OrganizationQuery, OrganizationService } from "@blockframes/organization/+state";
+import { OrganizationService } from "@blockframes/organization/+state";
 import { Observable, of } from "rxjs";
 import { map } from "rxjs/operators";
 import { Negotiation } from "./+state/negotiation.firestore";
@@ -12,10 +12,9 @@ function canNegotiate(negotiation: Negotiation, activeOrgId: string) {
 
 @Pipe({ name: 'negotiationStage' })
 export class NegotiationStagePipe implements PipeTransform {
-  activeOrgId = this.orgQuery.getActiveId();
+  activeOrgId = this.orgService.org.id;
 
   constructor(
-    private orgQuery: OrganizationQuery,
     private orgService: OrganizationService,
   ) { }
 
@@ -55,11 +54,11 @@ export class NegotiationStatusPipe implements PipeTransform {
 
 @Pipe({ name: 'canAccept' })
 export class CanAcceptNegotiationPipe implements PipeTransform {
-  constructor(private orgQuery: OrganizationQuery) { }
+  constructor(private orgService: OrganizationService) { }
   transform(negotiation: Negotiation) {
     return negotiation.status === 'pending'
       && negotiation.price
-      && negotiation.createdByOrg !== this.orgQuery.getActiveId();
+      && negotiation.createdByOrg !== this.orgService.org.id;
   }
 }
 

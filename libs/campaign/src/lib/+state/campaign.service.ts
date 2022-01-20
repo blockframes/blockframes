@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { OrganizationQuery } from "@blockframes/organization/+state";
+import { OrganizationService } from "@blockframes/organization/+state";
 import { CollectionService, CollectionConfig } from 'akita-ng-fire';
 import { Campaign } from "./campaign.model";
 import { removeUndefined } from '@blockframes/utils/helpers';
@@ -20,7 +20,7 @@ export class CampaignService extends CollectionService<CampaignState> {
   useMemorization = true;
 
   constructor(
-    private orgQuery: OrganizationQuery,
+    private orgService: OrganizationService,
     private movieService: MovieService
   ) {
     super();
@@ -45,13 +45,13 @@ export class CampaignService extends CollectionService<CampaignState> {
   }
 
   create(movieId: string) {
-    const orgId = this.orgQuery.getActiveId();
+    const orgId = this.orgService.org.id;
     const id = movieId; // We use the movieId to index the campaign in the org
     return this.add({ id, movieId, orgId });
   }
 
   async save(id: string, updates: Partial<Campaign>) {
-    const orgId = this.orgQuery.getActiveId();
+    const orgId = this.orgService.org.id;
     return this.upsert({ id, orgId, ...updates });
   }
 }

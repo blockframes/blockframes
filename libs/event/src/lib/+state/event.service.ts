@@ -4,7 +4,7 @@ import { EventDocument, EventBase, EventTypes } from './event.firestore';
 import { Event, ScreeningEvent, createCalendarEvent, EventsAnalytics, MeetingEvent, isMeeting, isScreening } from './event.model';
 import { QueryFn } from '@angular/fire/firestore/interfaces';
 import { AngularFireFunctions } from '@angular/fire/functions';
-import { OrganizationQuery } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { PermissionsService } from '@blockframes/permissions/+state';
 import { Observable, combineLatest } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
@@ -58,7 +58,7 @@ export class EventService extends CollectionService<EventState> {
   constructor(
     private functions: AngularFireFunctions,
     private permissionsService: PermissionsService,
-    private orgQuery: OrganizationQuery,
+    private orgService: OrganizationService,
   ) {
     super();
   }
@@ -77,7 +77,7 @@ export class EventService extends CollectionService<EventState> {
 
   /** Verify if the current user / organisation is ownr of an event */
   isOwner(event: EventBase<Date | Timestamp, unknown>) {
-    return event.ownerOrgId === this.orgQuery.getActiveId();
+    return event.ownerOrgId === this.orgService.org.id;
   }
 
   /** Create the permission */

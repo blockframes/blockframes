@@ -18,6 +18,7 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentApp, App, Module, createOrgAppAccess } from '@blockframes/utils/apps';
 import { createDocumentMeta, formatDocumentMetaFromFirestore } from '@blockframes/utils/models-meta';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'orgs' })
@@ -26,10 +27,16 @@ export class OrganizationService extends CollectionService<OrganizationState> {
 
   private app = getCurrentApp(this.routerQuery);
 
+  // Organization of the current logged in user
   org: Organization;
   org$ = this.authService.profile$.pipe(
     switchMap(user => this.valueChanges(user.orgId)),
     tap(org => this.org = org)
+  );
+
+  // Users ids of the current logged in user's org
+  public userIds$ = this.org$.pipe(
+    map(org => org.userIds)
   );
 
   constructor(
@@ -173,5 +180,11 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     }
 
     this.update(orgState.id, { wishlist });
+  }
+
+  public isAddedToWishlist(movieId: string): Observable<boolean> {
+    return this.org$.pipe(
+      map(org => org.wishlist.includes(movieId))
+    );
   }
 }
