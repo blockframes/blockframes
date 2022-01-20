@@ -28,6 +28,7 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
   activeOrgId = this.query.getActiveId();
   form = new NegotiationForm({ terms: [] });
   activeTerm?: number;
+  config = { duration: 6000 };
 
   constructor(
     private snackBar: MatSnackBar,
@@ -63,6 +64,7 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
         const update = { declineReason, status: 'declined' } as const;
         this.negotiationService.update(id, update, options);
         this.router.navigate(['..', 'view'], { relativeTo: this.route });
+        this.snackBar.open(`Offer declined.`, null, this.config);
       }
     });
   }
@@ -75,8 +77,7 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
         ...this.form.value,
       });
       this.form.markAsPristine(); // usefull to be able to route in the NegotiationGuard
-      const config = { duration: 6000 };
-      this.snackBar.open('Your counter offer has been sent', null, config);
+      this.snackBar.open('Your counter offer has been sent', null, this.config);
       this.router.navigate(['..', 'view'], { relativeTo: this.route });
     };
     const data = {

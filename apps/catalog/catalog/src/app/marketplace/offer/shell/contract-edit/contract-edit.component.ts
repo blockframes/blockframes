@@ -22,6 +22,8 @@ import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiatio
 })
 export class ContractEditComponent implements NegotiationGuardedComponent, OnInit {
   negotiation?: Negotiation;
+  config = { duration: 6000 };
+
   activeOrgId = this.query.getActiveId();
   activeTerm?: number;
   form = new NegotiationForm();
@@ -58,8 +60,8 @@ export class ContractEditComponent implements NegotiationGuardedComponent, OnIni
 
   async decline() {
     const sale = await this.sale$.pipe(first()).toPromise();
-    const data: ConfirmDeclineData = {type:'buyer'}
-    const ref = this.dialog.open(ConfirmDeclineComponent, {data});
+    const data: ConfirmDeclineData = { type: 'buyer' }
+    const ref = this.dialog.open(ConfirmDeclineComponent, { data });
     const options = { params: { contractId: sale.id } };
     ref.afterClosed().subscribe(declineReason => {
       if (typeof declineReason === 'string') {
@@ -68,6 +70,7 @@ export class ContractEditComponent implements NegotiationGuardedComponent, OnIni
         this.negotiationService.update(id, partialData, options);
         this.form.markAsPristine(); // usefull to be able to route in the NegotiationGuard
         this.router.navigate(['..'], { relativeTo: this.route });
+        this.snackBar.open( `Offer declined.`, null, this.config);
       }
     });
   }
@@ -79,8 +82,7 @@ export class ContractEditComponent implements NegotiationGuardedComponent, OnIni
         ...sale.negotiation,
         ...this.form.value
       });
-      const config = {duration:6000};
-      this.snackBar.open('Your counter offer has been sent', null, config);
+      this.snackBar.open('Your counter offer has been sent', null, this.config);
       this.form.markAsPristine(); // usefull to be able to route in the NegotiationGuard
       this.router.navigate(['..'], { relativeTo: this.route });
     }
