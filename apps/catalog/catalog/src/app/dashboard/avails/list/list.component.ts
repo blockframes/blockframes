@@ -16,6 +16,7 @@ import { Income, IncomeService } from "@blockframes/contract/income/+state";
 import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
 import { DynamicTitleService } from "@blockframes/utils/dynamic-title/dynamic-title.service";
 import { AvailsFilter, availableTitle, FullSale, FullMandate } from "@blockframes/contract/avails/avails";
+import { OrganizationService } from "@blockframes/organization/+state";
 
 interface TotalIncome { EUR: number; USD: number; }
 
@@ -114,6 +115,7 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
     private route: ActivatedRoute,
     private router: Router,
     private termsService: TermService,
+    private orgService: OrganizationService,
   ) { }
 
   ngOnInit() {
