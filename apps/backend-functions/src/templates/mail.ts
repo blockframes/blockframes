@@ -404,11 +404,13 @@ export function counterOfferSenderEmail(
 export function offerAcceptedOrDeclined(
   user: UserEmailData, offer: Offer, contracts: ContractDocument[]
 ): EmailTemplateRequest {
-
+  const isOfferAccepted = offer.status === 'accepted';
+  const acceptedContracts = contracts.filter(contract => contract.status === 'accepted');
   const data = {
-    contracts, baseUrl: appUrl.content, offer, user
+    contracts: isOfferAccepted ? acceptedContracts : contracts,
+    baseUrl: appUrl.content, offer, user
   };
-  const templateId = offer.status === 'accepted' ? templateIds.offer.allContractsAccepted : templateIds.offer.allContractsDeclined;
+  const templateId = isOfferAccepted ? templateIds.offer.allContractsAccepted : templateIds.offer.allContractsDeclined;
   return { to: user.email, templateId, data };
 }
 
