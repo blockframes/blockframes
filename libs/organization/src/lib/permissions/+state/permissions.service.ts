@@ -3,14 +3,13 @@ import { UserRole, createDocPermissions, PermissionsDocument } from './permissio
 import { Permissions } from './permissions.model';
 import { CollectionService, CollectionConfig, AtomicWrite } from 'akita-ng-fire';
 import type firebase from 'firebase';
-import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { AuthQuery, AuthService } from '@blockframes/auth/+state';
 import { combineLatest } from 'rxjs';
 import { ActiveState, EntityState } from '@datorama/akita';
 
-interface PermissionsState extends EntityState<Permissions>, ActiveState<string> {}
+interface PermissionsState extends EntityState<Permissions>, ActiveState<string> { }
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'permissions' })
@@ -45,9 +44,7 @@ export class PermissionsService extends CollectionService<PermissionsState> {
   )
   public isAdmin: boolean;
 
-
   constructor(
-    private organizationQuery: OrganizationQuery,
     private authService: AuthService,
     private userService: UserService,
     private auth: AuthQuery,
@@ -60,18 +57,15 @@ export class PermissionsService extends CollectionService<PermissionsState> {
    * and add them to documentPermissions subcollection.
    * @param doc
    * @param write
+   * @param organizationId
    */
-  public addDocumentPermissions(
-    docId: string,
-    write: AtomicWrite,
-    organizationId: string = this.organizationQuery.getActiveId()
-  ) {
+  public addDocumentPermissions(docId: string, write: AtomicWrite, organizationId: string) {
     const documentPermissions = createDocPermissions({ id: docId, ownerId: organizationId });
     const documentPermissionsRef = this.db.doc(`permissions/${organizationId}/documentPermissions/${documentPermissions.id}`).ref;
     (write as firebase.firestore.WriteBatch).set(documentPermissionsRef, documentPermissions);
   }
 
-  public async getDocumentPermissions(docId: string, orgId: string = this.organizationQuery.getActiveId()) {
+  public async getDocumentPermissions(docId: string, orgId: string) {
     const permissions = await this.db.doc(`permissions/${orgId}/documentPermissions/${docId}`).ref.get();
     return createDocPermissions(permissions.data());
   }

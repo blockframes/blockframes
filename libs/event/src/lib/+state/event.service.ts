@@ -82,7 +82,7 @@ export class EventService extends CollectionService<EventState> {
 
   /** Create the permission */
   async onCreate(event: Event, { write }: WriteOptions) {
-    return this.permissionsService.addDocumentPermissions(event.id, write);
+    return this.permissionsService.addDocumentPermissions(event.id, write, this.orgService.org.id);
   }
 
   formatToFirestore(event: Event) {
