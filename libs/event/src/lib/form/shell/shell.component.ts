@@ -12,9 +12,7 @@ import { Observable, of, Subscription } from 'rxjs';
 import { map, pluck, switchMap } from 'rxjs/operators';
 import { NavTabs, TabConfig } from '@blockframes/utils/event';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { createEvent, createScreening } from '@blockframes/event/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
-import { addHours } from 'date-fns'
 
 const statisticsTab = { path: 'statistics', label: 'Statistics' };
 
@@ -55,8 +53,7 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private routerQuery: RouterQuery,
     private cdr: ChangeDetectorRef,
-    private snackBar: MatSnackBar,
-    private orgQuery: OrganizationQuery
+    private snackBar: MatSnackBar
   ) { }
 
   ngOnInit(): void {
@@ -66,26 +63,6 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
     this.sub = eventId$.pipe(
       switchMap((eventId: string) => this.eventService.valueChanges(eventId))
     ).subscribe(async event => {
-
-      const { eventId } = this.route.snapshot.params;
-      const params = this.route.snapshot.queryParams;
-      if (eventId === 'new' && params) {
-        const { titleId } = params;
-        const start = new Date();
-        const end = addHours(start, 3);
-
-        const newEvent = createEvent({
-          type: 'screening',
-          start,
-          end,
-          ownerOrgId: this.orgQuery.getActiveId(),
-          meta: createScreening({ titleId }),
-          isSecret: true
-        });
-        const id = await this.eventService.add(newEvent);
-        return this.router.navigate(['/c/o/dashboard/event', id, 'edit', 'screening']);
-      }
-
       this.form = new EventForm(event);
 
       const type = this.form.value.type;

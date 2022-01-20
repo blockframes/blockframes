@@ -2,12 +2,17 @@ import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, Router } from '@angular/router';
 import { MovieService } from '@blockframes/movie/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
+import { addHours } from 'date-fns'
+import { take } from 'rxjs/operators';
+import { EventService } from '../+state';
+import { createEvent, createScreening } from '../+state/event.model';
 
 @Injectable({ providedIn: 'root' })
 export class EventEditGuard implements CanActivate {
 
   constructor(
     private movie: MovieService,
+    private event: EventService,
     private orgQuery: OrganizationQuery,
     private router: Router,
   ) { }
@@ -18,9 +23,22 @@ export class EventEditGuard implements CanActivate {
     
     const redirect = this.router.parseUrl(`/c/o/dashboard/event`);
     const orgId = this.orgQuery.getActiveId();
-    const titleId: string = next.queryParams['titleId'];
+    const titleId = next.queryParamMap.get('titleId');
     if (!titleId) return redirect;
-    const title = await this.movie.getValue(titleId);
-    return title?.orgIds.includes(orgId) || redirect;
+    const title = await this.movie.valueChanges(titleId).pipe(take(1)).toPromise();
+    if (!title?.orgIds.includes(orgId)) return redirect;
+
+    const start = new Date();
+    const end = addHours(start, 3);
+    const event = createEvent({
+      type: 'screening',
+      start,
+      end,
+      ownerOrgId: this.orgQuery.getActiveId(),
+      meta: createScreening({ titleId }),
+      isSecret: true
+    });
+    const id = await this.event.add(event);
+    return this.router.parseUrl(`/c/o/dashboard/event/${id}/edit/screening`);
   }
 }
