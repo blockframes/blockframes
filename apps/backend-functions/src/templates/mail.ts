@@ -312,7 +312,7 @@ export function screeningRequestedToSeller(
   const data = {
     buyer,
     movie,
-    pageURL: `${appUrl.market}/c/o/dashboard/event?request=${movie.id}`
+    pageURL: `${appUrl.market}/c/o/dashboard/event/new/edit?titleId=${movie.id}`
   };
   return { to: toUser.email, templateId: templateIds.event.screeningRequested, data };
 }

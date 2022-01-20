@@ -10,6 +10,7 @@ import { StorageFile } from '@blockframes/media/+state/media.firestore';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { MovieService } from '@blockframes/movie/+state';
+import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 
 @Component({
   selector: 'title-marketplace-shell',
@@ -29,7 +30,8 @@ export class TitleMarketplaceShellComponent implements OnInit {
     private dialog: MatDialog,
     private movie: MovieService,
     private route: ActivatedRoute,
-    public router: Router
+    public router: Router,
+    private analytics: FireAnalytics,
   ) { }
 
   ngOnInit() {
@@ -64,5 +66,11 @@ export class TitleMarketplaceShellComponent implements OnInit {
 
   hasPublicVideos(movie: Movie) {
     return movie.promotional.videos.otherVideos.some(video => video.privacy === 'public');
+  }
+
+  videoStateChanged(movieId: string, event: string) {
+    if (event === 'play') {
+      this.analytics.event('promoReelOpened', { movieId });
+    }
   }
 }

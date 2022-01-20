@@ -272,7 +272,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           message: `${displayName(notification.user)} requested a screening for ${notification.docId}`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.svg',
-          url: `${applicationUrl['festival']}/c/o/dashboard/event?request=${notification.docId}`,
+          url: `${applicationUrl['festival']}/c/o/dashboard/event/new/edit?titleId=${notification.docId}`,
           actionText: 'Answer Request'
         };
       case 'screeningRequestSent':

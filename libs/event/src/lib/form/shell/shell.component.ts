@@ -12,6 +12,7 @@ import { Observable, of, Subscription } from 'rxjs';
 import { map, pluck, switchMap } from 'rxjs/operators';
 import { NavTabs, TabConfig } from '@blockframes/utils/event';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { OrganizationQuery } from '@blockframes/organization/+state';
 
 const statisticsTab = { path: 'statistics', label: 'Statistics' };
 
@@ -52,7 +53,7 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private routerQuery: RouterQuery,
     private cdr: ChangeDetectorRef,
-    private snackBar: MatSnackBar,
+    private snackBar: MatSnackBar
   ) { }
 
   ngOnInit(): void {
@@ -61,8 +62,7 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
     // @TODO #6780
     this.sub = eventId$.pipe(
       switchMap((eventId: string) => this.eventService.valueChanges(eventId))
-    ).subscribe(event => {
-
+    ).subscribe(async event => {
       this.form = new EventForm(event);
 
       const type = this.form.value.type;
@@ -137,7 +137,7 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
   }
 
   confirmExit() {
-    if (!this.form.dirty) {
+    if (!this.form?.dirty) {
       return true;
     }
 

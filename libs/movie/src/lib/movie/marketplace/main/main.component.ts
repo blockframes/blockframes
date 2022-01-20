@@ -2,6 +2,8 @@ import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { TitleMarketplaceShellComponent } from '../shell/shell.component';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
+
 @Component({
   selector: 'movie-main',
   templateUrl: './main.component.html',
@@ -22,6 +24,7 @@ export class MainComponent implements OnInit {
   constructor(
     private shell: TitleMarketplaceShellComponent,
     private dynTitle: DynamicTitleService,
+    private analytics: FireAnalytics,
   ) { }
 
   ngOnInit() {
@@ -32,6 +35,12 @@ export class MainComponent implements OnInit {
     if (!movie.promotional?.videos?.salesPitch) return false;
     const { privacy, jwPlayerId, description } = movie.promotional.videos.salesPitch;
     return privacy === 'public' && (jwPlayerId || description);
+  }
+
+  videoStateChanged(movieId: string, event: string) {
+    if (event === 'play') {
+      this.analytics.event('promoReelOpened', { movieId });
+    }
   }
 
 }

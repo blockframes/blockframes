@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, UrlTree, ActivatedRouteSnapshot, Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { EventService } from '../+state';
 
@@ -13,7 +13,9 @@ export class EventTypeGuard implements CanActivate {
   ) { }
 
   canActivate(route: ActivatedRouteSnapshot): Observable<boolean | UrlTree> {
-    return this.service.valueChanges(route.params['eventId'] as string).pipe(
+    const eventId: string = route.params['eventId'];
+    if (eventId === 'new') return of(true);
+    return this.service.valueChanges(eventId).pipe(
       map(event => {
         const path = event.end < new Date() && event.type !== 'meeting' ? 'statistics' : event.type;
         return this.router.parseUrl(`/c/o/dashboard/event/${event.id}/edit/${path}`)
