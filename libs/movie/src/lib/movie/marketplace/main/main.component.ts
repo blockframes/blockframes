@@ -39,9 +39,7 @@ export class MainComponent implements OnInit {
 
   videoStateChanged(movieId: string, event: string) {
     if (event === 'play') {
-      this.analytics.event('promoReelOpened', {
-        movieId: movieId,
-      });
+      this.analytics.event('promoReelOpened', { movieId });
     }
   }
 
