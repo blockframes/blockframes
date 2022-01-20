@@ -10,7 +10,7 @@ import { DomSanitizer } from '@angular/platform-browser';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StandardTermsComponent {
-  public localLink = '/assets/film-industry.pdf';
+  public localLink = '/assets/docs/film-industry.pdf';
 
   /**
    * Note, viewing the pdf as indicated here has certain limitations.
