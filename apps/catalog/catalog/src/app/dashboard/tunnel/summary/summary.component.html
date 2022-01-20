@@ -6,7 +6,7 @@
     </p>
 
     <div *ngIf="blockingFields.length" class="mat-body">
-      <span class="invalid-fields">You have {{ blockingFields.length }} { blockingFields.length, plural, =0 {} =1 {error} other {errors}}
+      <span class="invalid-fields">You have {{ blockingFields.length }} { blockingFields.length, plural, =1 {error} other {errors}}
         blocking the publication: {{ blockingFields | toLabel : 'movieFormFields' }}</span>
     </div>
 
