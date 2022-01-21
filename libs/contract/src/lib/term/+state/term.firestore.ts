@@ -12,8 +12,8 @@ export function createMailTerm(terms:BucketTerm<Timestamp>[]){
     territories: term.territories.map(territory => staticModel['territories'][territory]).join(', '),
     medias: term.medias.map(media => staticModel['medias'][media] ?? media).join(', '),
     duration: {
-      from: format(term.duration.from.toDate(), 'dd MMMM, yyyy'),
-      to: format(term.duration.to.toDate(), 'dd MMMM, yyyy'),
+      from: format(term.duration.from.toDate(), 'dd MMM, yyyy'),
+      to: format(term.duration.to.toDate(), 'dd MMM, yyyy'),
     },
     languages: hydrateLanguageForEmail(term.languages),
   }))

@@ -18,15 +18,19 @@ export function getReviewer(negotiation: Negotiation<Timestamp | Date>) {
   return negotiation.stakeholders.find(id => id !== negotiation.createdByOrg && id !== centralOrgId.catalog);
 }
 
-export function hydrateLanguageForEmail(data: Record<string, MovieLanguageSpecification>) {
+function capitalize(text:string){
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
+export function hydrateLanguageForEmail(data: Record<string, MovieLanguageSpecification>={}) {
   return Object.keys(data)
     .map(lang => {
       const prefix: string[] = [];
       if (data[lang].dubbed) prefix.push(staticModel['movieLanguageTypes'].dubbed);
       if (data[lang].subtitle) prefix.push(staticModel['movieLanguageTypes'].subtitle);
       if (data[lang].caption) prefix.push(staticModel['movieLanguageTypes'].caption);
-      if (prefix.length) return `${lang} ( ${prefix.join(', ')} )`;
-      return lang;
+      if (prefix.length) return `${capitalize(lang)} (${prefix.join(', ')})`;
+      return capitalize(lang);
     })
     .join(', ');
 }

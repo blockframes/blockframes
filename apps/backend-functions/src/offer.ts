@@ -51,7 +51,7 @@ export async function onOfferCreate(snap: FirebaseFirestore.DocumentSnapshot): P
   // Also send offer to admin of Cascade8
   const app: App = 'catalog';
   const baseUrl = appUrl['content'];
-  const date = format(new Date(), 'dd MMMM, yyyy');
+  const date = format(new Date(), 'dd MMM, yyyy');
   const request: EmailTemplateRequest = {
     to: supportEmails[app],
     templateId: templateIds.offer.toAdmin,
