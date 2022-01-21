@@ -1,14 +1,11 @@
 import { CallableContext } from "firebase-functions/lib/providers/https";
 import { BigQuery } from '@google-cloud/bigquery';
-import { PublicUser, OrganizationDocument, EventsAnalytics, EventAnalytics, ScreeningEventDocument } from "./data/types";
-import { getDocument } from './data/internals';
 import { bigQueryAnalyticsTable } from "./environments/environment";
 import { db } from './internals/firebase';
-import { orgName } from "@blockframes/organization/+state/organization.firestore";
 
 /** Query to get analytics of the number of views for the festival app event sessions pages
  * for an array of eventId
- */
+ * #7570 Kept for the record, if needed in future 
 const queryEventAnalytics = `
 SELECT
   event_name as event_name,
@@ -31,6 +28,7 @@ GROUP BY
 ORDER BY
   event_name
 `
+ */
 
 const queryAnalyticsActiveUsers = `
   SELECT
@@ -49,22 +47,6 @@ const queryAnalyticsActiveUsers = `
   LIMIT 1000
 `
 
-async function executeQueryEventAnalytics(query, eventIds: string[]) {
-  const bigqueryClient = new BigQuery();
-
-  const options = {
-    query,
-    timeoutMs: 100000,
-    useLegacySql: false,
-    params: {
-      eventIds,
-      pageView: 'pageView'
-    }
-  };
-
-  return bigqueryClient.query(options);
-}
-
 async function executeQuery(query) {
   const bigqueryClient = new BigQuery();
 
@@ -75,82 +57,6 @@ async function executeQuery(query) {
 
   return bigqueryClient.query(options);
 }
-
-const findByUserId = (users: PublicUser[], userId: string) => {
-  return users.find(user => user.uid === userId);
-};
-
-const findByOrgId = (orgs: OrganizationDocument[], orgId: string) => {
-  return orgs.find(org => !!org && org.id === orgId);
-};
-
-const createEventAnalytics = (result, user: PublicUser | undefined, org: OrganizationDocument | undefined): EventAnalytics => {
-  return {
-    ...result,
-    email: user?.email,
-    firstName: user?.firstName,
-    lastName: user?.lastName,
-    orgName: orgName(org),
-    orgActivity: org?.activity,
-    orgCountry: org?.addresses?.main.country,
-  }
-};
-
-/** Call bigQuery with an array of eventId to get their analytics. */
-export const requestEventAnalytics = async (
-  data: { eventIds: string[] },
-  context: CallableContext
-): Promise<EventsAnalytics[]> => {
-  const eventIds = data.eventIds;
-  if (!eventIds) {
-    return [];
-  }
-  const uid = context.auth.uid;
-  const user = await getDocument<PublicUser>(`users/${uid}`);
-  const org = await getDocument<OrganizationDocument>(`orgs/${user.orgId}`);
-
-  // Security: only events with the same ownerOrgId that orgId of user
-  const screeningEventsPromises = eventIds.map(eventId => {
-    return getDocument<ScreeningEventDocument>(`events/${eventId}`)
-  });
-  const screeningEvents = await Promise.all(screeningEventsPromises);
-  const screeningEventsOwnerOrgIds = screeningEvents.map(e => e.ownerOrgId);
-  if (!screeningEventsOwnerOrgIds.every(ownerOrgId => org.id === ownerOrgId)) {
-    throw new Error(`Insufficient permission to get events analytics.`)
-  }
-
-  // Request BigQuery
-  let [rows] = await executeQueryEventAnalytics(queryEventAnalytics, eventIds);
-  if (rows !== undefined && rows.length >= 0) {
-    // Get all users to eliminate those who are part of the same org
-    const eventsUsersPromises = rows.map(row => {
-      return getDocument<PublicUser>(`users/${row.userId}`);
-    });
-    const eventsUsers = await Promise.all(eventsUsersPromises);
-    const eventsUsersNotInOrg = eventsUsers.filter(u => !!u && !org.userIds.includes(u.uid));
-    const userIdsNotInOrg = eventsUsersNotInOrg.map(u => u.uid);
-    // Clean rows without users of the same org
-    rows = rows.filter(row => userIdsNotInOrg.includes(row.userId));
-
-    const orgsPromises = eventsUsersNotInOrg.filter(u => !!u.orgId).map(u => getDocument<OrganizationDocument>(`orgs/${u.orgId}`));
-    const eventsOrgs = await Promise.all(orgsPromises);
-
-    return eventIds.map(eventId => {
-      const rowsEvents = rows.filter(row => row.eventId === eventId);
-      const resultRows = rowsEvents.map(result => {
-        const eventUser = findByUserId(eventsUsersNotInOrg, result.userId);
-        const eventOrg = findByOrgId(eventsOrgs, eventUser.orgId);
-        return createEventAnalytics(result, eventUser, eventOrg);
-      });
-      return {
-        eventId,
-        eventUsers: resultRows
-      };
-    });
-  } else {
-    throw new Error('Unexepected error.');
-  }
-};
 
 export const getAnalyticsActiveUsers = async (
   _,
