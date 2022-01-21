@@ -22,6 +22,7 @@ import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 export class TitleMarketplaceShellComponent implements OnInit {
   public movie$: Observable<Movie>;
   public navClicked = false;
+  private alreadyPlayed = false;
 
   @Input() routes: RouteDescription[];
   @ViewChild('main') main: ElementRef<HTMLDivElement>;
@@ -69,8 +70,9 @@ export class TitleMarketplaceShellComponent implements OnInit {
   }
 
   videoStateChanged(movieId: string, event: string) {
-    if (event === 'play') {
+    if (event === 'play' && !this.alreadyPlayed) {
       this.analytics.event('promoReelOpened', { movieId });
+      this.alreadyPlayed = true;
     }
   }
 }
