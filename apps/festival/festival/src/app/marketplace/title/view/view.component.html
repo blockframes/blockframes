@@ -17,7 +17,7 @@
         <ng-template #request>
           <section fxLayout fxLayout.lt-sm="column">
             <event-request-screening [movieId]="movie.id"></event-request-screening>
-            <button mat-stroked-button [disabled]="requestSent.$ | async" (click)="requestAskingPrice()">Request Asking Price</button>
+            <button class="linear-wipe" mat-stroked-button color="contrast" [disabled]="requestSent.$ | async" (click)="requestAskingPrice()">Request Asking Price</button>
           </section>
         </ng-template>
       </movie-header-cta>
