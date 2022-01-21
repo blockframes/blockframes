@@ -21,7 +21,7 @@
       </ng-container>
 
       <div fxLayout fxLayoutAlign="space-between center" fxLayoutGap="16px">
-        <span>Ref {{ sale.offerId }} / Offer created: {{ sale._meta.createdAt | date: 'MM/dd/yyyy' }}</span>
+        <span>Ref: {{ sale.offerId }} / Offer created: {{ sale._meta.createdAt | date: 'MM/dd/yyyy' }}</span>
         <button mat-button color="primary" (click)="openIntercom()">
           <mat-icon svgIcon="comment"></mat-icon>
           <span>Contact Archipel Content Team</span>

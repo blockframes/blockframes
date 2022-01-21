@@ -30,7 +30,7 @@ const titleType: Record<NotificationTypesBase, NotificationSetting> = {
   screeningRequested: { text: 'A screening has been requested. (RECOMMENDED)', tooltip: false },
   screeningRequestSent: { text: 'Your screening request for screening was successfully sent', tooltip: false },
   offerCreatedConfirmation: { text: 'Your offer is successfully sent', tooltip: false },
-  contractCreated: { text: 'An offer is made on one of your titles. (RECOMMENDED)', tooltip: true },
+  contractCreated: { text: 'An offer has been made on one of your titles. (RECOMMENDED)', tooltip: true },
   createdCounterOffer: { text: 'You\'ve created a counter offer.', tooltip: true },
   receivedCounterOffer: { text: 'You\'ve received a counter offer. (RECOMMENDED)', tooltip: true },
   myOrgAcceptedAContract: { text: 'You accepted a counter offer. (RECOMMENDED)', tooltip: true },
