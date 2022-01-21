@@ -362,7 +362,7 @@ export function adminOfferCreatedConfirmationEmail(toUser: UserEmailData, org: O
   const date = format(new Date(), 'dd MMM, yyyy');
   const contracts = bucket.contracts.map(contract => createMailContract(contract));
   const data = { org, bucket: { ...bucket, contracts }, user: toUser, baseUrl: appUrl.content, date };
-  return { to: toUser.email, templateId: templateIds., data };
+  return { to: toUser.email, templateId: templateIds.offer.toAdmin, data };
 }
 
 /**To inform buyer that his offer has been successfully created. */

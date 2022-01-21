@@ -92,11 +92,10 @@ export async function onOfferUpdate(
   }
 
   if (offerAfter.status === 'accepted') {
-    const contractsRef = db.collection('contracts').where('offerId', '==', offerAfter.id);
+    const contractsRef = db.collection('contracts').where('offerId', '==', offerAfter.id).where('status', '==', 'accepted');
     const contracts = await contractsRef.get().then(snaps => snaps.docs.map(doc => doc.data() as Sale));
-    const acceptedContracts = contracts.filter(contract => contract.status === 'accepted');
 
-    acceptedContracts.forEach(contract => {
+    contracts.forEach(contract => {
       getDocument<Organization>(`orgs/${getSeller(contract)}`)
         .then(getNotifications('underSignature', contract.id))
         .then(triggerNotifications);

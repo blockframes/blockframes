@@ -323,7 +323,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
 
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `You've received a counter-offer.`,
+          message: `You received a counter-offer.`,
           placeholderUrl: 'contract_offer.svg',
           url: module === 'marketplace' ? marketplaceUrl : dashboardUrl
         }
@@ -344,6 +344,14 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           message: `Your offer is now under signature`,
           placeholderUrl: 'contract_offer.svg',
           url: `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`
+        }
+      }
+      case 'offerAccepted': {
+        return {
+          _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
+          message: `Your offer is now under signature`,
+          placeholderUrl: 'contract_offer.svg',
+          url: `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.docId}`
         }
       }
       case 'myOrgAcceptedAContract': {
