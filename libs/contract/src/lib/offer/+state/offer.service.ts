@@ -6,7 +6,7 @@ import { Contract } from '../../contract/+state';
 import { Income } from '../../income/+state';
 import { ActiveState, EntityState } from '@datorama/akita';
 
-export interface OfferState extends EntityState<Offer>, ActiveState<string> { }
+interface OfferState extends EntityState<Offer>, ActiveState<string> { }
 
 export type OfferWithContracts = Offer & { contracts: (Contract & { income: Income })[] };
 

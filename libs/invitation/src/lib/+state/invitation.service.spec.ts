@@ -16,7 +16,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { Observable } from 'rxjs';
 
 @Injectable()
-class InjectedAuthQuery {
+class InjectedAuthQuery { // @TODO #7273 remove
   userId = 'userId';
   orgId = 'orgId';
 

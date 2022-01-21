@@ -12,7 +12,7 @@ import { InvitationService } from '../+state/invitation.service';
 // RxJs
 import { switchMap, filter } from 'rxjs/operators';
 import { PermissionsService } from '@blockframes/permissions/+state';
-import { combineLatest } from 'rxjs';
+import { combineLatest, of } from 'rxjs';
 import { OrganizationService } from '@blockframes/organization/+state';
 
 @Injectable({ providedIn: 'root' })
@@ -35,7 +35,8 @@ export class InvitationGuard extends CollectionGuard<InvitationState> {
       this.permissionService.isAdmin$
     ]).pipe(
       filter(([user]) => !!user && !!user.uid),
-      switchMap(([ user, org, isAdmin ]) => {
+      switchMap(([user, org, isAdmin]) => {
+        if (!org) return of();
         const orgId = org.id;
         if (isAdmin) {
           return combineLatest([

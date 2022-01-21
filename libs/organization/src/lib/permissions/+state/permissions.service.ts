@@ -6,7 +6,7 @@ import type firebase from 'firebase';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { AuthQuery, AuthService } from '@blockframes/auth/+state';
-import { combineLatest } from 'rxjs';
+import { combineLatest, Observable, of } from 'rxjs';
 import { ActiveState, EntityState } from '@datorama/akita';
 
 interface PermissionsState extends EntityState<Permissions>, ActiveState<string> { }
@@ -18,8 +18,8 @@ export class PermissionsService extends CollectionService<PermissionsState> {
 
   // The whole permissions document for organization of the current logged in user.
   permissions: Permissions;
-  permissions$ = this.authService.profile$.pipe(
-    switchMap(user => this.valueChanges(user.orgId)),
+  permissions$: Observable<Permissions> = this.authService.profile$.pipe(
+    switchMap(user => user?.orgId ? this.valueChanges(user.orgId) : of(undefined)),
     tap(permissions => this.permissions = permissions)
   );
 
@@ -28,7 +28,7 @@ export class PermissionsService extends CollectionService<PermissionsState> {
     this.authService.profile$,
     this.permissions$,
   ]).pipe(
-    map(([user, p]) => p?.roles[user.uid] === 'superAdmin'),
+    map(([user, p]) => user?.uid && p?.roles[user.uid] === 'superAdmin'),
     tap(isSuperAdmin => this.isSuperAdmin = isSuperAdmin)
   );
   public isSuperAdmin: boolean;

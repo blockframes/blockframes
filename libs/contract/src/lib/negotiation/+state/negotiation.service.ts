@@ -6,7 +6,7 @@ import type firebase from 'firebase';
 import { formatDocumentMetaFromFirestore } from "@blockframes/utils/models-meta";
 import { BucketTerm } from "@blockframes/contract/term/+state";
 
-export interface NegotiationState extends EntityState<Negotiation, string>, ActiveState<string> { }
+interface NegotiationState extends EntityState<Negotiation, string>, ActiveState<string> { }
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'contracts/:contractId/negotiations' })

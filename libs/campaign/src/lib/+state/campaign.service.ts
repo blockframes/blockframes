@@ -8,7 +8,7 @@ import { combineLatest, of } from "rxjs";
 import { map } from "rxjs/operators";
 import { ActiveState, EntityState } from '@datorama/akita';
 
-export interface CampaignState extends EntityState<Campaign, string>, ActiveState<string> {}
+interface CampaignState extends EntityState<Campaign, string>, ActiveState<string> {}
 
 export interface MovieCampaign extends Movie {
   campaign: Campaign;

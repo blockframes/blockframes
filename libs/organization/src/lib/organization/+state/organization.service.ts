@@ -1,12 +1,7 @@
 import { Injectable } from '@angular/core';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { AuthQuery, AuthService, User } from '@blockframes/auth/+state';
-import {
-  Organization,
-  createOrganization,
-  OrganizationDocument
-} from './organization.model';
-import { OrganizationStore, OrganizationState } from './organization.store';
+import { Organization, createOrganization, OrganizationDocument } from './organization.model';
 import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
 import { createPermissions, UserRole } from '../../permissions/+state/permissions.model';
 import { AngularFireFunctions } from '@angular/fire/functions';
@@ -17,7 +12,10 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentApp, App, Module, createOrgAppAccess } from '@blockframes/utils/apps';
 import { createDocumentMeta, formatDocumentMetaFromFirestore } from '@blockframes/utils/models-meta';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { ActiveState, EntityState } from '@datorama/akita';
+
+interface OrganizationState extends EntityState<Organization>, ActiveState<string> { }
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'orgs' })
@@ -28,8 +26,8 @@ export class OrganizationService extends CollectionService<OrganizationState> {
 
   // Organization of the current logged in user
   org: Organization;
-  org$ = this.authService.profile$.pipe(
-    switchMap(user => this.valueChanges(user.orgId)),
+  org$: Observable<Organization> = this.authService.profile$.pipe(
+    switchMap(user => user?.orgId ? this.valueChanges(user.orgId) : of(undefined)),
     tap(org => this.org = org)
   );
 
@@ -39,7 +37,6 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   );
 
   constructor(
-    public store: OrganizationStore,
     private authQuery: AuthQuery,
     private functions: AngularFireFunctions,
     private userService: UserService,
@@ -48,7 +45,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     private analytics: FireAnalytics,
     private authService: AuthService,
   ) {
-    super(store);
+    super();
   }
 
   public async orgNameExist(orgName: string) {

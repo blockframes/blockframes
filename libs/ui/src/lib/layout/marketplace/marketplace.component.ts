@@ -48,7 +48,7 @@ export class MarketplaceComponent implements OnInit {
 
   ngOnInit() {
     this.wishlistCount$ = this.orgService.org$.pipe(
-      map(org => org.wishlist),
+      map(org => org?.wishlist || []),
       switchMap(movieIds => this.movieService.getValue(movieIds)),
       map((movies: Movie[]) => movies.filter(filterMovieByAppAccess(getCurrentApp(this.routerQuery))).length)
     );
@@ -68,7 +68,7 @@ export class MarketplaceComponent implements OnInit {
 
   onAppLogoClick() {
     if (this.router.url === '/c/o/marketplace/home') {
-     this.cdkScrollable.scrollTo({ top: 0 });
+      this.cdkScrollable.scrollTo({ top: 0 });
     } else {
       this.router.navigate(['/c/o/marketplace/home']);
     }

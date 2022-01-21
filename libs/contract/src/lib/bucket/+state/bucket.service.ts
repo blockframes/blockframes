@@ -16,7 +16,7 @@ import { createBucketTerm, createBucketContract } from './bucket.model';
 import { ContractService, convertDuration } from '../../contract/+state';
 import { ActiveState, EntityState } from '@datorama/akita';
 
-export interface BucketState extends EntityState<Bucket>, ActiveState<string> { }
+interface BucketState extends EntityState<Bucket>, ActiveState<string> { }
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'buckets' })
