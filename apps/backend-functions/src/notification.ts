@@ -679,8 +679,8 @@ async function sendContractStatusChangedConfirmation(recipient: User, notificati
   } = await getNegotiationUpdatedEmailData(recipient, notification);
 
   const data = {
-    user: toUser, baseUrl: appUrl.content, offerId: contract.offerId, org: recipientOrg,
-    contractId: contract.id, title, isRecipientBuyer
+    user: toUser, baseUrl: appUrl.content, org: recipientOrg,
+    contract, title, isRecipientBuyer
   };
 
   let templateId = templateIds.negotiation.myContractWasAccepted;
