@@ -20,6 +20,7 @@ export class MainComponent implements OnInit {
     general: ['release', 'originCountries', 'originalLanguages', 'genres', 'runningTime'],
     prizes: ['prizes', 'review']
   }
+  private alreadyPlayed = false;
 
   constructor(
     private shell: TitleMarketplaceShellComponent,
@@ -38,8 +39,9 @@ export class MainComponent implements OnInit {
   }
 
   videoStateChanged(movieId: string, event: string) {
-    if (event === 'play') {
+    if (event === 'play' && !this.alreadyPlayed) {
       this.analytics.event('promoReelOpened', { movieId });
+      this.alreadyPlayed = true;
     }
   }
 
