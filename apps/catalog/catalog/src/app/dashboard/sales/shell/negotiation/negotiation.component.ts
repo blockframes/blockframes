@@ -28,7 +28,6 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
   activeOrgId = this.query.getActiveId();
   form = new NegotiationForm({ terms: [] });
   activeTerm?: number;
-  config = { duration: 6000 };
 
   constructor(
     private snackBar: MatSnackBar,
@@ -60,11 +59,12 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
     const options = { params: { contractId: sale.id } };
     ref.afterClosed().subscribe(declineReason => {
       const id = sale.negotiation.id;
+      const config = { duration: 6000 };
       if (typeof declineReason === 'string') {
         const update = { declineReason, status: 'declined' } as const;
         this.negotiationService.update(id, update, options);
         this.router.navigate(['..', 'view'], { relativeTo: this.route });
-        this.snackBar.open(`Offer declined.`, null, this.config);
+        this.snackBar.open(`Offer declined.`, null, config);
       }
     });
   }
@@ -72,12 +72,13 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
   async submit() {
     const onConfirm = async () => {
       const sale = await this.sale$.pipe(first()).toPromise();
+      const config = { duration: 6000 };
       await this.contractService.addNegotiation(sale.id, {
         ...sale.negotiation,
         ...this.form.value,
       });
       this.form.markAsPristine(); // usefull to be able to route in the NegotiationGuard
-      this.snackBar.open('Your counter offer has been sent', null, this.config);
+      this.snackBar.open('Your counter offer has been sent', null, config);
       this.router.navigate(['..', 'view'], { relativeTo: this.route });
     };
     const data = {
