@@ -9,13 +9,13 @@
           </ng-container>
         </section>
         <ng-container *ngIf="(eventId$ | async) as eventId; else request">
-          <section fxLayout fxLayoutAlign="space-between">
+          <section fxLayout fxLayoutAlign="space-between" fxLayout.lt-sm="column">
             <button mat-stroked-button [disabled]="requestSent.$ | async" (click)="requestAskingPrice()">Request Asking Price</button>
             <a ongoing-event-button [routerLink]="['/event', eventId, 'r', 'i']">Ongoing Screening</a>
           </section>
         </ng-container>
         <ng-template #request>
-          <section fxLayout>
+          <section fxLayout fxLayout.lt-sm="column">
             <event-request-screening [movieId]="movie.id"></event-request-screening>
             <button mat-stroked-button [disabled]="requestSent.$ | async" (click)="requestAskingPrice()">Request Asking Price</button>
           </section>
