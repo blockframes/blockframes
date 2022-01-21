@@ -16,9 +16,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 // Component
 import { IdentityComponent } from './identity.component';
-import { TermsConditionsModule } from '@blockframes/auth/components/terms-conditions/terms-conditions.module';
-import { AcceptConditionsModule } from '@blockframes/auth/components/accept-conditions/accept-conditions.module';
-import { PrivacyPolicyModule } from '@blockframes/auth/components/privacy-policy/privacy-policy.module';
 import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module';
 import { OrganizationLiteFormModule } from '@blockframes/organization/forms/organization-lite-form/organization-lite-form.module';
 import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
@@ -27,6 +24,7 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { PasswordConfirmModule } from '@blockframes/ui/form/password-confirm/password-confirm.module';
 import { MatOptionModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [IdentityComponent],
@@ -35,9 +33,6 @@ import { MatIconModule } from '@angular/material/icon';
     ReactiveFormsModule,
     FlexLayoutModule,
     SigninFormModule,
-    TermsConditionsModule,
-    AcceptConditionsModule,
-    PrivacyPolicyModule,
     AlgoliaAutocompleteModule,
     OrganizationLiteFormModule,
     AppLogoModule,
@@ -54,6 +49,7 @@ import { MatIconModule } from '@angular/material/icon';
     MatOptionModule,
     MatFormFieldModule,
     MatTooltipModule,
+    MatCheckboxModule,
 
     RouterModule.forChild([{ path: '', component: IdentityComponent }]),
   ],
