@@ -4,19 +4,15 @@ import { CollectionConfig, CollectionService } from "akita-ng-fire";
 import { Negotiation } from "./negotiation.firestore";
 import type firebase from 'firebase';
 import { formatDocumentMetaFromFirestore } from "@blockframes/utils/models-meta";
-import { OrganizationQuery } from "@blockframes/organization/+state";
 import { BucketTerm } from "@blockframes/contract/term/+state";
 
-export interface NegotiationState extends EntityState<Negotiation, string>, ActiveState<string> { }
+interface NegotiationState extends EntityState<Negotiation, string>, ActiveState<string> { }
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'contracts/:contractId/negotiations' })
 export class NegotiationService extends CollectionService<NegotiationState> {
   useMemorization = true;
-  constructor(
-    store: NegotiationStore,
-    private orgQuery: OrganizationQuery,
-  ) {
+  constructor( store: NegotiationStore ) {
     super(store)
   }
 

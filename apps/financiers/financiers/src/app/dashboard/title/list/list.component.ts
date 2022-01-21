@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { fromOrg, Movie, MovieService } from '@blockframes/movie/+state';
 import { CampaignService, MovieCampaign } from '@blockframes/campaign/+state/campaign.service';
-import { OrganizationQuery } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Observable } from 'rxjs';
 import { map, startWith, switchMap, tap } from 'rxjs/operators';
@@ -39,7 +39,7 @@ export class ListComponent implements OnInit {
 
   constructor(
     private campaignService: CampaignService,
-    private orgQuery: OrganizationQuery,
+    private orgService: OrganizationService,
     private router: Router,
     private route: ActivatedRoute,
     private dynTitle: DynamicTitleService,
@@ -49,7 +49,7 @@ export class ListComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.titles$ = this.orgQuery.selectActive().pipe(
+    this.titles$ = this.orgService.org$.pipe(
       switchMap(org => this.movieService.valueChanges(fromOrg(org.id)).pipe(map(movies => movies.map(m => m.id)))),
       switchMap(movieIds => this.campaignService.queryMoviesCampaign(movieIds)),
       map(movies => movies.filter(movie => movie.app.financiers.access)),
@@ -61,7 +61,7 @@ export class ListComponent implements OnInit {
       })
     );
 
-    this.titleCount$ = this.orgQuery.selectActive().pipe(
+    this.titleCount$ = this.orgService.org$.pipe(
       switchMap(org => this.movieService.valueChanges(fromOrg(org.id)).pipe(map(movies => movies.map(m => m.id)))),
       switchMap(movieIds => this.campaignService.queryMoviesCampaign(movieIds)),
       map(movies => movies.filter(movie => movie.app.financiers.access)),

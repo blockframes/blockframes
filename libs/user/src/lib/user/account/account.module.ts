@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-// import { ActiveDaoGuard } from '@blockframes/organization/guard/active-dao.guard';
 
 export const accountRoutes: Routes = [
   { path: '',

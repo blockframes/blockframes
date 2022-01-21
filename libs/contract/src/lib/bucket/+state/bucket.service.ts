@@ -8,7 +8,7 @@ import { createOfferId } from '@blockframes/utils/utils';
 import { MovieCurrency } from '@blockframes/utils/static-model';
 import { AvailsFilter } from '@blockframes/contract/avails/avails';
 import { createDocumentMeta } from '@blockframes/utils/models-meta';
-import { OrganizationQuery } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { TermService } from '../../term/+state';
 import { OfferService } from '../../offer/+state';
 import { Bucket, createBucket } from './bucket.model';
@@ -16,18 +16,18 @@ import { createBucketTerm, createBucketContract } from './bucket.model';
 import { ContractService, convertDuration } from '../../contract/+state';
 import { ActiveState, EntityState } from '@datorama/akita';
 
-export interface BucketState extends EntityState<Bucket>, ActiveState<string> { }
+interface BucketState extends EntityState<Bucket>, ActiveState<string> { }
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'buckets' })
 export class BucketService extends CollectionService<BucketState> {
   useMemorization = true;
-  active$ = this.orgQuery.selectActiveId().pipe(
-    switchMap(orgId => this.valueChanges(orgId)),
+  active$ = this.orgService.org$.pipe(
+    switchMap(org => this.valueChanges(org.id)),
   );
 
   constructor(
-    private orgQuery: OrganizationQuery,
+    private orgService: OrganizationService,
     private termService: TermService,
     private offerService: OfferService,
     private contractService: ContractService,
@@ -55,8 +55,8 @@ export class BucketService extends CollectionService<BucketState> {
   }
 
   async createOffer(specificity: string, delivery: string, currency: MovieCurrency) {
-    const orgId = this.orgQuery.getActiveId();
-    const orgName = this.orgQuery.getActive().denomination.full;
+    const orgId = this.orgService.org.id;
+    const orgName = this.orgService.org.denomination.full;
     const bucket = await this.getActive();
     await this.update(orgId, {
       specificity,
@@ -118,7 +118,7 @@ export class BucketService extends CollectionService<BucketState> {
 
   async addTerm(titleId: string, parentTermId: string, avails: AvailsFilter) {
 
-    const orgId = this.orgQuery.getActiveId();
+    const orgId = this.orgService.org.id;
     const rawBucket = await this.getActive();
     const bucket = createBucket({ id: orgId, ...rawBucket });
 

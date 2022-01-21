@@ -7,7 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 import { HoldbackModalComponent } from '../../holdback/modal/holdback-modal.component';
 import { Holdback, Sale } from '../../+state';
-import { OrganizationQuery } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 
 
 
@@ -25,7 +25,7 @@ import { OrganizationQuery } from '@blockframes/organization/+state';
 export class ContractItemComponent {
   mediaGroup = mediaGroup;
   territoriesGroup = territoriesGroup;
-  orgId = this.orgQuery.getActiveId();
+  orgId = this.orgService.org.id;
   @Input() contract: BucketContract | Sale;
 
   @ContentChild('priceTemplate') priceTemplate: TemplateRef<unknown>;
@@ -33,7 +33,7 @@ export class ContractItemComponent {
 
   constructor(
     private dialog: MatDialog,
-    private orgQuery: OrganizationQuery,
+    private orgService: OrganizationService,
   ) { }
 
   openDetails(terms: string[], scope: Scope) {

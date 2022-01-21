@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ContractService, ContractStatus } from '@blockframes/contract/contract/+state';
 import { MatDialog } from '@angular/material/dialog';
 import { SaleShellComponent } from '../shell.component';
-import { OrganizationQuery } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { ConfirmDeclineComponent, ConfirmDeclineData } from '@blockframes/contract/contract/components/confirm-decline/confirm-decline.component';
 
 
@@ -17,14 +17,14 @@ export class ExternalSaleComponent {
   centralOrgId = this.shell.centralOrgId;
   sale$ = this.shell.sale$;
   contractStatus = this.shell.contractStatus;
-  activeOrgId = this.query.getActiveId();
+  activeOrgId = this.orgService.org.id;
 
 
   constructor(
     private contractService: ContractService,
     private shell: SaleShellComponent,
     private dialog: MatDialog,
-    private query: OrganizationQuery
+    private orgService: OrganizationService,
   ) { }
 
 

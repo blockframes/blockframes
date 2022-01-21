@@ -1,6 +1,6 @@
 ﻿// Angular
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { OrganizationQuery } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 
 @Component({
   selector: 'catalog-dashboard',
@@ -9,6 +9,6 @@ import { OrganizationQuery } from '@blockframes/organization/+state';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardComponent {
-  org$ = this.query.selectActive();
-  constructor(private query: OrganizationQuery) { }
+  org$ = this.service.org$;
+  constructor(private service: OrganizationService) { }
 }

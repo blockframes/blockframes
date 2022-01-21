@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { OrganizationQuery } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 
 @Component({
   selector: 'marketplace-aside',
@@ -8,8 +8,7 @@ import { OrganizationQuery } from '@blockframes/organization/+state';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AsideComponent {
+  public org$ = this.orgService.org$;
 
-  public org$ = this.orgQuery.selectActive();
-
-  constructor(private orgQuery: OrganizationQuery) { }
+  constructor(private orgService: OrganizationService) { }
 }

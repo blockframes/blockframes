@@ -1,13 +1,7 @@
 import { Injectable } from '@angular/core';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { AuthQuery, AuthService, User } from '@blockframes/auth/+state';
-import {
-  Organization,
-  createOrganization,
-  OrganizationDocument
-} from './organization.model';
-import { OrganizationStore, OrganizationState } from './organization.store';
-import { OrganizationQuery } from './organization.query';
+import { Organization, createOrganization, OrganizationDocument } from './organization.model';
 import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
 import { createPermissions, UserRole } from '../../permissions/+state/permissions.model';
 import { AngularFireFunctions } from '@angular/fire/functions';
@@ -18,6 +12,10 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentApp, App, Module, createOrgAppAccess } from '@blockframes/utils/apps';
 import { createDocumentMeta, formatDocumentMetaFromFirestore } from '@blockframes/utils/models-meta';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
+import { Observable, of } from 'rxjs';
+import { ActiveState, EntityState } from '@datorama/akita';
+
+interface OrganizationState extends EntityState<Organization>, ActiveState<string> { }
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'orgs' })
@@ -26,15 +24,19 @@ export class OrganizationService extends CollectionService<OrganizationState> {
 
   private app = getCurrentApp(this.routerQuery);
 
+  // Organization of the current logged in user
   org: Organization;
-  org$ = this.authService.profile$.pipe(
-    switchMap(user => this.valueChanges(user.orgId)),
+  org$: Observable<Organization> = this.authService.profile$.pipe(
+    switchMap(user => user?.orgId ? this.valueChanges(user.orgId) : of(undefined)),
     tap(org => this.org = org)
   );
 
+  // Users ids of the current logged in user's org
+  public userIds$ = this.org$.pipe(
+    map(org => org.userIds)
+  );
+
   constructor(
-    private query: OrganizationQuery,
-    public store: OrganizationStore,
     private authQuery: AuthQuery,
     private functions: AngularFireFunctions,
     private userService: UserService,
@@ -43,7 +45,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     private analytics: FireAnalytics,
     private authService: AuthService,
   ) {
-    super(store);
+    super();
   }
 
   public async orgNameExist(orgName: string) {
@@ -156,7 +158,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
    * @param movie
    */
   public async updateWishlist(movie: Movie) {
-    const orgState = this.query.getActive();
+    const orgState = this.org;
     let wishlist = Array.from(new Set([...orgState.wishlist])) || [];
     if (wishlist.includes(movie.id)) {
       wishlist = orgState.wishlist.filter(id => id !== movie.id);
@@ -173,5 +175,11 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     }
 
     this.update(orgState.id, { wishlist });
+  }
+
+  public isInWishlist(movieId: string): Observable<boolean> {
+    return this.org$.pipe(
+      map(org => org.wishlist.includes(movieId))
+    );
   }
 }

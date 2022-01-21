@@ -9,21 +9,25 @@ import { SETTINGS, AngularFirestoreModule, AngularFirestore } from '@angular/fir
 import { loadFirestoreRules, clearFirestoreData } from '@firebase/rules-unit-testing';
 import { readFileSync } from 'fs';
 import { createInvitation, InvitationDocument } from './invitation.firestore';
-import firebase  from 'firebase/app';
+import firebase from 'firebase/app';
+import { HttpClient } from '@angular/common/http';
+import { HttpTestingController } from '@angular/common/http/testing';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { Observable } from 'rxjs';
 
 @Injectable()
-class InjectedAuthQuery {
+class InjectedAuthQuery { // @TODO #7273 remove
   userId = 'userId';
   orgId = 'orgId';
 
-  select() {
-    return { pipe: () => null };
-  }
+  user$ = new Observable();
+  select() { return { pipe: () => null }; }
+  getValue() { return {} }
 }
 
 const today = new Date();
 const invitationParamsOrg = {
-  date: today, 
+  date: today,
   toOrg: {
     id: 'orgId',
     denomination: { full: 'MyOrg' },
@@ -31,7 +35,7 @@ const invitationParamsOrg = {
   },
 };
 const invitationParamsUser = {
-  date: today, 
+  date: today,
   toUser: {
     uid: 'userId',
     email: 'userId@myorg.org'
@@ -51,6 +55,8 @@ describe('Invitations Test Suite', () => {
       providers: [
         InvitationService,
         InvitationStore,
+        { provide: HttpClient, useClass: HttpTestingController },
+        { provide: AngularFireAuth, useValue: AngularFireAuth },
         { provide: AuthQuery, useClass: InjectedAuthQuery },
         { provide: SETTINGS, useValue: { host: 'localhost:8080', ssl: false } }
       ],
@@ -81,7 +87,7 @@ describe('Invitations Test Suite', () => {
 
     //Create an Invitation Document
     const newInvite = createInvitation();
-    const invite:InvitationDocument = {...newInvite, ...{date: timestamp}}
+    const invite: InvitationDocument = { ...newInvite, ...{ date: timestamp } }
     const formattedInvite = invitationService.formatFromFirestore(invite);
     expect(formattedInvite.date).toEqual(formattedDate);
   });
@@ -91,7 +97,7 @@ describe('Invitations Test Suite', () => {
 
     //Create an Invitation Document
     const inviteData = { ...invitationParamsOrg, ...invitationParamsUser };
-    const inviteParams = { ...inviteData, ...{ message: 'Clean it', watchTime: undefined} };
+    const inviteParams = { ...inviteData, ...{ message: 'Clean it', watchTime: undefined } };
     const newInvite = createInvitation(inviteParams);
     const formattedInvite = invitationService.formatToFirestore(newInvite);
     expect(formattedInvite).toMatchObject(inviteData);
@@ -149,7 +155,7 @@ describe('Invitations Test Suite', () => {
     const expectedParam = {
       type: 'attendEvent',
       eventId: 'E001',
-      toOrg: { id: 'O002'},
+      toOrg: { id: 'O002' },
       fromUser: { uid: 'userId', orgId: 'O001' }
     }
     expect(inviteParam).toMatchObject(expectedParam);
@@ -179,11 +185,11 @@ describe('Invitations Test Suite', () => {
       const invitationService = TestBed.inject(InvitationService);
 
       //Create an Invitation Document
-      const inviteParamsOrg = { ...invitationParamsOrg};
-      const inviteParamsUser = { ...invitationParamsUser};
+      const inviteParamsOrg = { ...invitationParamsOrg };
+      const inviteParamsUser = { ...invitationParamsUser };
       inviteParamsOrg.toOrg.id = 'otherOrgId';
       inviteParamsUser.toUser.uid = 'otherUserId';
-      const invitationParams = {...inviteParamsOrg, ...inviteParamsUser};
+      const invitationParams = { ...inviteParamsOrg, ...inviteParamsUser };
       const newInvite = createInvitation(invitationParams);
       const isMyInvite = invitationService.isInvitationForMe(newInvite);
       expect(isMyInvite).toBeFalsy();

@@ -3,7 +3,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { createEvent, createScreening, Event, EventService } from '@blockframes/event/+state';
 import { EventForm } from '@blockframes/event/form/event.form';
 import { EventTypes } from '@blockframes/event/+state/event.firestore';
-import { OrganizationQuery } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { Observable, combineLatest } from 'rxjs';
 import { filter, switchMap, startWith, tap } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
@@ -36,7 +36,7 @@ export class EventListComponent implements OnInit {
   constructor(
     private service: EventService,
     private dialog: MatDialog,
-    private orgQuery: OrganizationQuery,
+    private orgService: OrganizationService,
     private cdr: ChangeDetectorRef,
     private dynTitle: DynamicTitleService,
     private agendaService: AgendaService,
@@ -46,10 +46,10 @@ export class EventListComponent implements OnInit {
 
   async ngOnInit() {
     this.events$ = combineLatest([
-      this.orgQuery.selectActiveId(),
+      this.orgService.org$,
       this.filter.valueChanges.pipe(startWith(this.filter.value))
     ]).pipe(
-      switchMap(([orgId, types]) => this.service.queryByType(types, ref => ref.where('ownerOrgId', '==', orgId))),
+      switchMap(([org, types]) => this.service.queryByType(types, ref => ref.where('ownerOrgId', '==', org.id))),
       tap(events => {
         events.length ?
           this.dynTitle.setPageTitle('My events') :
@@ -61,7 +61,7 @@ export class EventListComponent implements OnInit {
     if (params?.request) {
       const event = createEvent({
         type: 'screening',
-        ownerOrgId: this.orgQuery.getActiveId(),
+        ownerOrgId: this.orgService.org.id,
         meta: createScreening({
           titleId: params.request
         })

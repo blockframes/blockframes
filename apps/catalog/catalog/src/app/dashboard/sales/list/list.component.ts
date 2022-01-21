@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, Optional, OnInit, } from '@angular/
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { appName, getCurrentApp } from '@blockframes/utils/apps';
 import { Contract, ContractService, ContractStatus, Sale } from '@blockframes/contract/contract/+state';
-import { Organization, OrganizationQuery, OrganizationService } from '@blockframes/organization/+state';
+import { Organization, OrganizationService } from '@blockframes/organization/+state';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Intercom } from 'ng-intercom';
 import { joinWith } from '@blockframes/utils/operators';
@@ -38,7 +38,7 @@ function getFullName(seller: Organization) {
 export class SaleListComponent implements OnInit {
   public app = getCurrentApp(this.routerQuery);
   public appName = appName[this.app];
-  public orgId = this.orgQuery.getActiveId();
+  public orgId = this.orgService.org.id;
 
 
   public sales$ = this.contractService.valueChanges(
@@ -65,7 +65,6 @@ export class SaleListComponent implements OnInit {
 
   constructor(
     private contractService: ContractService,
-    private orgQuery: OrganizationQuery,
     private routerQuery: RouterQuery,
     private orgService: OrganizationService,
     private titleService: MovieService,

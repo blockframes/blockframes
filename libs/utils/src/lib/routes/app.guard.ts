@@ -1,22 +1,22 @@
 import { Injectable } from '@angular/core';
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { getCurrentApp } from '@blockframes/utils/apps';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { OrganizationService } from '@blockframes/organization/+state';
 
 @Injectable({ providedIn: 'root' })
 export class AppGuard implements CanActivate {
   constructor(
     protected router: Router,
-    private query: OrganizationQuery,
+    private orgService: OrganizationService,
     private snackBar: MatSnackBar,
     private routerQuery: RouterQuery) { }
 
   canActivate(_: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     const app = getCurrentApp(this.routerQuery);
     const isMarketplace = state.url.split('/').includes('marketplace');
-    const org = this.query.getActive();
+    const org = this.orgService.org;
     if (isMarketplace) {
       if (org.appAccess[app]?.marketplace) {
         return true;

@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { SaleShellComponent } from '../shell.component';
-import { OrganizationQuery } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Movie } from '@blockframes/movie/+state';
@@ -17,14 +17,14 @@ export class SaleViewComponent {
 
   centralOrgId = this.shell.centralOrgId;
   sale$ = this.shell.sale$;
-  orgId = this.query.getActiveId();
+  orgId = this.orgService.org.id;
 
   constructor(
     private negotiationService: NegotiationService,
     private snackbar: MatSnackBar,
     private shell: SaleShellComponent,
     private dialog: MatDialog,
-    private query: OrganizationQuery
+    private orgService: OrganizationService
   ) { }
 
   accept(negotiationId: string, contractId: string, title: Movie) {

@@ -28,14 +28,14 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <legend>Organisation IDs</legend>
+          <legend>Organization IDs</legend>
           <bf-form-list [form]="movieForm.get('orgIds')">
             <ng-template itemRef let-orgId>
               {{ orgId }}
             </ng-template>
             <ng-template formView let-orgForm let-index="index">
               <mat-form-field appearance="outline">
-                <mat-label>Organisation ID</mat-label>
+                <mat-label>Organization ID</mat-label>
                 <input matInput type="text" [formControl]="orgForm">
               </mat-form-field>
             </ng-template>

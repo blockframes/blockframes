@@ -1,26 +1,18 @@
 import { Injectable } from '@angular/core';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { UserState, UserStore } from './user.store';
-import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
-import { map } from 'rxjs/operators';
 import { User, AuthQuery, AuthStore } from '@blockframes/auth/+state';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
-
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'users' })
 export class UserService extends CollectionService<UserState> {
   readonly useMemorization = true;
 
-  public userIds$ = this.organizationQuery.selectActive().pipe(
-    map(org => org.userIds)
-  );
-
   constructor(
     protected store: UserStore,
     private authStore: AuthStore,
     private authQuery: AuthQuery,
-    private organizationQuery: OrganizationQuery,
   ) {
     super(store);
     this.updateEmailVerified();

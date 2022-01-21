@@ -2,7 +2,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, Inject, OnDestroy, OnInit } from '@angular/core';
 
 import { fromOrg, Movie, MovieService } from '@blockframes/movie/+state';
-import { OrganizationQuery } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { recursivelyListFiles } from '../../+state/media.model';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
@@ -25,7 +25,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   private sub: Subscription;
 
   constructor(
-    private orgQuery: OrganizationQuery,
+    private orgService: OrganizationService,
     private movieService: MovieService,
     private dialog: MatDialog,
     private dialogRef: MatDialogRef<FilePickerComponent>,
@@ -36,7 +36,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     this.selectedFiles = this.data.selectedFiles ?? [];
 
-    const org = this.orgQuery.getActive();
+    const org = this.orgService.org;
     this.orgFiles = recursivelyListFiles(org).map(file => ({ file, isSelected: this.selectedFiles.some(selectedFile => selectedFile.storagePath === file.storagePath) }));
     this.movies = await this.movieService.getValue(fromOrg(org.id))
     this.moviesFiles = {};
