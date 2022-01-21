@@ -16,7 +16,7 @@ export class PendingOrganizationGuard implements CanActivate {
     protected router: Router,
     private authQuery: AuthQuery,
     private routerQuery: RouterQuery,
-  ) {}
+  ) { }
 
   canActivate() {
     return combineLatest([
@@ -24,17 +24,9 @@ export class PendingOrganizationGuard implements CanActivate {
       this.service.org$
     ]).pipe(
       map(([user, org]) => {
-        if (!user) {
-          return this.router.createUrlTree(['/']);
-        }
-
-        if (!user.orgId) {
-          return this.router.createUrlTree(['/auth/identity']);
-        }
-
-        if (!org) {
-          return this.router.createUrlTree(['/auth/identity']);
-        }
+        if (!user) return this.router.createUrlTree(['/']);
+        if (!user.orgId) return this.router.createUrlTree(['/auth/identity']);
+        if (!org) return this.router.createUrlTree(['/auth/identity']);
 
         if (org.status === 'accepted') {
           const app = getCurrentApp(this.routerQuery);

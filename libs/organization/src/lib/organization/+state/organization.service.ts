@@ -177,7 +177,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     this.update(orgState.id, { wishlist });
   }
 
-  public isAddedToWishlist(movieId: string): Observable<boolean> {
+  public isInWishlist(movieId: string): Observable<boolean> {
     return this.org$.pipe(
       map(org => org.wishlist.includes(movieId))
     );

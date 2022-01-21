@@ -24,26 +24,14 @@ export class RequestAccessGuard implements CanActivate {
       this.service.org$
     ]).pipe(
       map(([user, org]) => {
-        if (!user) {
-          return this.router.createUrlTree(['/']);
-        }
-
-        if (!user.orgId) {
-          return this.router.createUrlTree(['/auth/identity']);
-        }
+        if (!user) return this.router.createUrlTree(['/']);
+        if (!user.orgId) return this.router.createUrlTree(['/auth/identity']);
 
         if (org.status === 'accepted') {
           const app = getCurrentApp(this.routerQuery);
-          if (!org.appAccess[app]) {
-            return;
-          }
-          if (org.appAccess[app].marketplace) {
-            return this.router.createUrlTree(['/c/o/marketplace/home']);
-          }
-          else if (org.appAccess[app].dashboard) {
-            return this.router.createUrlTree(['/c/o/dashboard/home']);
-          }
-
+          if (!org.appAccess[app]) return;
+          if (org.appAccess[app].marketplace) return this.router.createUrlTree(['/c/o/marketplace/home']);
+          else if (org.appAccess[app].dashboard) return this.router.createUrlTree(['/c/o/dashboard/home']);
           return true;
         }
       })

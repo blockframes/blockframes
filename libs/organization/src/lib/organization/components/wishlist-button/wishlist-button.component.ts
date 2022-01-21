@@ -48,7 +48,7 @@ export class WishlistButtonComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.toggle$ = this.orgService.isAddedToWishlist(this.movieId);
+    this.toggle$ = this.orgService.isInWishlist(this.movieId);
   }
 
   public async addToWishlist(event?: Event) {

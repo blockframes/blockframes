@@ -21,22 +21,10 @@ export class OrganizationGuard implements CanActivate {
       this.service.org$
     ]).pipe(
       map(([user, org]) => {
-        if (!user) {
-          return this.router.createUrlTree(['/']);
-        }
-
-        if (!user.orgId) {
-          return this.router.createUrlTree(['/auth/identity']);
-        }
-
-        if (!org) {
-          return this.router.createUrlTree(['/auth/identity']);
-        }
-
-        if (org.status !== 'accepted') {
-          return this.router.createUrlTree(['/c/organization/create-congratulations']);
-        }
-
+        if (!user) return this.router.createUrlTree(['/']);
+        if (!user.orgId) return this.router.createUrlTree(['/auth/identity']);
+        if (!org) return this.router.createUrlTree(['/auth/identity']);
+        if (org.status !== 'accepted') return this.router.createUrlTree(['/c/organization/create-congratulations']);
         return true;
       })
     );
