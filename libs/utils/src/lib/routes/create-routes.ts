@@ -5,7 +5,6 @@ import { EmailVerifiedGuard } from '@blockframes/auth/guard/email-verified.guard
 import { PermissionsGuard } from '@blockframes/permissions/guard/permissions.guard';
 import { OrganizationGuard } from '@blockframes/organization/guard/organization.guard';
 import { NotificationsGuard } from '@blockframes/notification/notifications.guard';
-import { InvitationGuard } from '@blockframes/invitation/guard/invitations.guard';
 import { MaintenanceGuard } from '@blockframes/ui/maintenance';
 import { RequestAccessGuard } from '@blockframes/organization/guard/request-access.guard';
 
@@ -92,8 +91,8 @@ export function createRoutes({ appsRoutes, appName, landing, events }: RouteOpti
             },
             {
               path: 'o',
-              canActivate: [NotificationsGuard, InvitationGuard, PermissionsGuard, OrganizationGuard, EmailVerifiedGuard],
-              canDeactivate: [NotificationsGuard, InvitationGuard],
+              canActivate: [NotificationsGuard, PermissionsGuard, OrganizationGuard, EmailVerifiedGuard],
+              canDeactivate: [NotificationsGuard],
               children
             }
           ]

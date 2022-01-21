@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { CollectionConfig, CollectionService, AtomicWrite } from 'akita-ng-fire';
 import { createPublicOrganization, Organization, OrganizationService } from '@blockframes/organization/+state';
-import { AuthQuery, AuthState, User } from '@blockframes/auth/+state';
+import { AuthQuery, AuthService, User } from '@blockframes/auth/+state';
 import { createPublicUser, PublicUser } from '@blockframes/user/+state';
 import { toDate } from '@blockframes/utils/helpers';
 import { InvitationState, InvitationStore } from './invitation.store';
@@ -11,8 +11,9 @@ import { InvitationDocument } from './invitation.firestore';
 import { cleanInvitation } from '../invitation-utils';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentApp, getOrgAppAccess } from '@blockframes/utils/apps';
-import { combineLatest, Observable, of } from 'rxjs';
-import { map, shareReplay, switchMap } from 'rxjs/operators';
+import { combineLatest } from 'rxjs';
+import { filter, map, shareReplay, switchMap, tap } from 'rxjs/operators';
+import { PermissionsService } from '@blockframes/permissions/+state';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'invitations' })
@@ -34,33 +35,69 @@ export class InvitationService extends CollectionService<InvitationState> {
    */
   public acceptOrDeclineInvitationAsAnonymous = this.functions.httpsCallable('acceptOrDeclineInvitationAsAnonymous');
 
-  myInvitations$: Observable<Invitation[]> = this.authQuery.select().pipe(
-    switchMap((user: AuthState) => {
-      if (user.profile?.orgId) {
+  /** All Invitations related to current user or org */
+  allInvitations : Invitation[];
+  allInvitations$ = combineLatest([
+    this.authService.profile$,
+    this.permissionsService.isAdmin$
+  ]).pipe(
+    filter(([user]) => !!user && !!user.uid && !!user.orgId),
+    switchMap(([user, isAdmin]) => {
+      if(isAdmin){
         return combineLatest([
-          this.valueChanges(ref => ref.where('toOrg.id', '==', user.profile.orgId)),
-          this.valueChanges(ref => ref.where('toUser.uid', '==', user.profile.uid))
+          // Invitations linked to current user
+          this.valueChanges(ref => ref.where('fromUser.uid', '==', user.uid)),
+          this.valueChanges(ref => ref.where('toUser.uid', '==', user.uid)),
+
+          // Invitations linked to current org
+          this.valueChanges(ref => ref.where('fromOrg.id', '==', user.orgId)),
+          this.valueChanges(ref => ref.where('toOrg.id', '==', user.orgId)),
         ])
-      } else return of()
+      } else {
+        return combineLatest([
+          // Invitations linked to current user
+          this.valueChanges(ref => ref.where('fromUser.uid', '==', user.uid)),
+          this.valueChanges(ref => ref.where('toUser.uid', '==', user.uid)),
+
+          // Event invitations linked to current org
+          this.valueChanges(ref => ref.where('type', '==', 'attendEvent').where('fromOrg.id', '==', user.orgId)),
+          this.valueChanges(ref => ref.where('type', '==', 'attendEvent').where('toOrg.id', '==', user.orgId)),
+        ])
+      }
     }),
-    map(([toOrg, toUser]) => [...toOrg, ...toUser]),
+    map(i => i.flat()),
     shareReplay({ refCount: true, bufferSize: 1 }),
-  )
+    tap(i => this.allInvitations = i)
+  );
+
+  /** Invitations to current user or org */
+  myInvitations$ = combineLatest([
+    this.authService.profile$,
+    this.allInvitations$
+  ]).pipe(
+    filter(([user]) => !!user && !!user.uid && !!user.orgId),
+    map(([user, invitations]) =>  invitations.filter(i => i.toOrg?.id === user.orgId || i.toUser?.uid === user.uid))
+  );
 
   /** Invitations where current user is a guest */
-  guestInvitations$: Observable<Invitation[]> = this.authQuery.select().pipe(
-    switchMap((user: AuthState) => combineLatest([
-      this.valueChanges(ref => ref.where('fromUser.uid', '==', user.uid).where('mode', '==', 'request')),
-      this.valueChanges(ref => ref.where('toUser.uid', '==', user.uid).where('mode', '==', 'invitation'))
-    ])),
-    map(([fromUser, toUser]) => [...fromUser, ...toUser]),
-    shareReplay({ refCount: true, bufferSize: 1 }),
-  )
+  guestInvitations$ = combineLatest([
+    this.authService.profile$,
+    this.allInvitations$
+  ]).pipe(
+    filter(([user]) => !!user && !!user.uid && !!user.orgId),
+    map(([user, invitations]) => {
+      const request = (user: User, invitation : Invitation) => invitation.fromUser?.uid === user.uid && invitation.mode === 'request';
+      const invitation = (user: User, invitation : Invitation) => invitation.toUser?.uid === user.uid && invitation.mode === 'invitation';
+      return  invitations.filter(i => request(user, i) || invitation(user, i))
+    })
+  ); 
 
   constructor(
     store: InvitationStore,
     private authQuery: AuthQuery,
     private orgService: OrganizationService,
+    private authService: AuthService,
+    private permissionsService: PermissionsService,
     private functions: AngularFireFunctions,
     private routerQuery: RouterQuery
   ) {
