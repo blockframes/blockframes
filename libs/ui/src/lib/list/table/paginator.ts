@@ -14,7 +14,7 @@ export class Paginator {
   size$ = new BehaviorSubject(0);
   state = new BehaviorSubject({
     pageSize: 0,
-    pageIndex: 0, 
+    pageIndex: 0,
   });
   shouldDisplay$ = combineLatest([
     this.size$,
@@ -51,12 +51,13 @@ export class Paginator {
   }
 
   get maxIndex() {
-    if (this.pageSize < 1) return this.size - 1; // Max 1 row/page 
-    return Math.ceil(this.size / this.pageSize) - 1;
+    if (this.pageSize < 1) return this.size - 1; // Max 1 row/page
+    const pageCount = Math.ceil(this.size / this.pageSize);
+    return pageCount ? pageCount - 1 : pageCount;
   }
 
   private setState(state: Partial<PageState>) {
-    this.state.next({ ...this.state.getValue(), ...state});
+    this.state.next({ ...this.state.getValue(), ...state });
     this.onChange();
   }
 

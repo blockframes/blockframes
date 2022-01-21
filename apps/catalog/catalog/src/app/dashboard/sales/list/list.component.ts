@@ -14,6 +14,7 @@ import { Observable } from 'rxjs';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { CollectionReference } from '@angular/fire/firestore';
 import { centralOrgId } from '@env';
+import { isInitial } from '@blockframes/contract/negotiation/utils';
 
 function capitalize(text: string) {
   return `${text[0].toUpperCase()}${text.substring(1)}`
@@ -57,10 +58,10 @@ export class SaleListComponent implements OnInit {
 
   salesCount$ = this.sales$.pipe(map(m => ({
     all: m.length,
-    new: m.filter(m => m.status === 'pending').length,
-    accepted: m.filter(m => m.status === 'accepted').length,
-    declined: m.filter(m => m.status === 'declined').length,
-    negotiating: m.filter(m => m.status === 'negotiating').length,
+    new: m.filter(m => m.negotiation?.status === 'pending' && isInitial(m.negotiation)).length,
+    accepted: m.filter(m => m.negotiation?.status === 'accepted').length,
+    declined: m.filter(m => m.negotiation?.status === 'declined').length,
+    negotiating: m.filter(m => m.negotiation?.status === 'pending' && !isInitial(m.negotiation)).length,
   })));
 
   constructor(
