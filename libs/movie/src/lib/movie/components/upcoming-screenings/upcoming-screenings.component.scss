@@ -11,6 +11,14 @@
   margin-bottom: 48px;
 }
 
+:host > h2 {
+  margin-bottom: 12px;
+}
+
+:host > h2 + p {
+  margin-bottom: 32px;
+}
+
 h5 {
   text-transform: uppercase;
 }

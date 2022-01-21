@@ -37,7 +37,7 @@
   </aside>
   ​
   <header fxFlex fxLayout fxLayoutAlign="end center">
-    <a mat-icon-button routerLink="selection">
+    <a mat-icon-button routerLink="selection" matTooltip="My selection">
       <mat-icon svgIcon="shopping_basket"
         [matBadge]="contractCount$ | async"
         [matBadgeHidden]="(contractCount$ | async) === 0"

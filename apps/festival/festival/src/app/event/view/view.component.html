@@ -17,9 +17,12 @@
             <p class="mat-body-2">{{ event.meta.description }}</p>
             <countdown-timer [title]="'Event will start in :'" [date]="event.start" [timeUnits]="['days', 'hours', 'minutes']" (timerEnded)="timerEnded = $event"></countdown-timer>
             <ng-container *ngIf="event.isOwner; else notOwner">
-              <h3>You are the owner of this event.</h3>
-              <p>You can invite members and edit the event config in your dashboard.</p>
-              <a mat-stroked-button color="primary" [routerLink]="editEvent">Edit Event</a>
+              <h5>You are the owner of this event.</h5>
+              <p class="mat-caption">You can invite members and edit the event config in your dashboard.</p>
+              <a mat-button color="primary" [routerLink]="editEvent">
+                <mat-icon matListIcon svgIcon="edit"></mat-icon>
+                <span matLine>Edit Event</span>
+              </a>
             </ng-container>
             <ng-template #notOwner>
                 <invitation-action *ngIf="(invitation$ | async) !== undefined" @fade [invitation]="(invitation$ | async)" [event]="event" (statusChanged)="reloadInvitation()"></invitation-action>
