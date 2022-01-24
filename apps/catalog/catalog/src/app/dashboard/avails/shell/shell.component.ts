@@ -31,7 +31,7 @@ export class CatalogAvailsShellComponent {
 
   public contracts$ = this.movie$.pipe(
     switchMap((movie: Movie) => this.contractService.valueChanges(
-      ref => ref.where('titleId', '==', movie.id)
+      ref => ref.where('titleId', '==', movie.id).where('status', '==', 'accepted')
     )),
   );
 
@@ -68,8 +68,4 @@ export class CatalogAvailsShellComponent {
       }),
     )
   }
-
-
-
-
 }
