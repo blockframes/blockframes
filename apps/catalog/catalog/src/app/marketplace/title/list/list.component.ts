@@ -134,7 +134,7 @@ export class ListComponent implements OnDestroy, OnInit {
     ).pipe(
       map(([movies, availsValue, bucketValue, { mandates, mandateTerms, sales, saleTerms }]: [SearchResponse<AlgoliaMovie>, AvailsFilter, Bucket, { mandates: Mandate[], mandateTerms: Term[], sales: Sale[], saleTerms: Term[] }]) => {
         // if availsForm is invalid, put all the movies from algolia
-        if (this.availsForm.valid) return movies.hits.map(m => ({ ...m, mandates: [] as FullMandate[] }));
+        if (this.availsForm.invalid) return movies.hits.map(m => ({ ...m, mandates: [] as FullMandate[] }));
         if (!mandates.length) return [];
         return movies.hits.map(movie => {
           const res = filterContractsByTitle(movie.objectID, mandates, mandateTerms, sales, saleTerms, bucketValue);
