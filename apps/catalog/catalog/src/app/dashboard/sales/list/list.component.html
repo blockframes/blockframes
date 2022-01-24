@@ -49,12 +49,17 @@
         <ng-template #noPrice>-</ng-template>
       </ng-template>
       <ng-template colRef="status" label="Status" let-status let-sale="item" sort>
-        <ng-container *ngIf="sale.negotiation else noNegotiation">
-          <bf-tag>
+        <bf-tag>
+          <ng-container *ngIf="sale.negotiation?.id; else externalSaleStatus">
             {{ sale.negotiation | negotiationStatus | toLabel: 'contractStatus' }}
-          </bf-tag>
-        </ng-container>
-        <ng-template #noNegotiation>-</ng-template>
+          </ng-container>
+          <ng-template #externalSaleStatus>
+            <ng-container *ngIf="sale.status; else noStatus">
+              {{ sale.status | toLabel: 'contractStatus' }}
+            </ng-container>
+            <ng-template #noStatus>-</ng-template>
+          </ng-template>
+        </bf-tag>
       </ng-template>
       <ng-template colRef="negotiation" label="Negotiation Stage" let-negotiation>
         <ng-container *ngIf=" negotiation | negotiationStage | async  as negoStage">
