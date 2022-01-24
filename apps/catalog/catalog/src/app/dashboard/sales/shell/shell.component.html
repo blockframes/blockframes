@@ -40,10 +40,8 @@
 
 
       <bf-tag>
-        <ng-container>
-          {{sale.status | toLabel: 'contractStatus'}}
-          <ng-container *ngIf="sale.status === 'pending'">(displayed as pending)</ng-container>
-        </ng-container>
+        {{sale.status | toLabel: 'contractStatus'}}
+        <ng-container *ngIf="sale.status === 'pending'">(displayed as pending)</ng-container>
       </bf-tag>
 
       <div fxLayout fxLayoutAlign="end center" fxLayoutGap="16px">
