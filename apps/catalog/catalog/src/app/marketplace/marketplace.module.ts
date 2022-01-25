@@ -16,6 +16,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 const routes: Routes = [{
   path: '',
@@ -117,6 +118,7 @@ const routes: Routes = [{
     MatButtonModule,
     MarketplaceLayoutModule,
     MatBadgeModule,
+    MatTooltipModule,
     RouterModule.forChild(routes)
   ]
 })
