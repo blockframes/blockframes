@@ -22,7 +22,7 @@ export const contractStatus = {
    */
   submitted: 'Submitted',
   negotiating: 'In Negotiation',
-  pending: ' New',
+  pending: 'New',
 } as const
 
 export const contractType = {

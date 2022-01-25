@@ -6,15 +6,15 @@
     <bf-table class="no-border" [source]="source" [pagination]="pageSize" (page)="updateIndex($event)">
       <ng-container *ngFor="let column of columns | keyvalue:keepOrder">
         <ng-template [colRef]="column.key" [label]="column.value" let-row>
-  
+
           <ng-container *ngIf="(cols | findColRef:column.key) as col; else default">
             <ng-template *ngTemplateOutlet="col.template; context: { $implicit: row }"></ng-template>
           </ng-container>
           <ng-template #default>{{ row }}</ng-template>
-  
+
         </ng-template>
       </ng-container>
-  
+
       <ng-template colRef="action" let-index="index" sticky>
         <div class="action-buttons">
           <button type="button" mat-icon-button (click)="edit(index)">
@@ -27,13 +27,13 @@
       </ng-template>
     </bf-table>
   </ng-container>
-  
+
   <!---------->
   <!-- VIEW -->
   <!---------->
   <div *ngIf="formItem">
     <ng-template *ngTemplateOutlet="formView; context: { $implicit: formItem, index: activeIndex }"></ng-template>
-    
+
     <ng-container *ngIf="form.controls.length; else empty">
       <div fxLayout="row" fxLayoutAlign="space-between start">
         <button type="button" test-id="row-cancel" mat-stroked-button (click)="cancel()">

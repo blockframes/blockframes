@@ -50,7 +50,15 @@
       </ng-template>
       <ng-template colRef="status" label="Status" let-status let-sale="item" sort>
         <bf-tag>
-          {{ sale.negotiation | negotiationStatus | toLabel: 'contractStatus' }}
+          <ng-container *ngIf="sale.negotiation?.id; else externalSaleStatus">
+            {{ sale.negotiation | negotiationStatus | toLabel: 'contractStatus' }}
+          </ng-container>
+          <ng-template #externalSaleStatus>
+            <ng-container *ngIf="sale.status; else noStatus">
+              {{ sale.status | toLabel: 'contractStatus' }}
+            </ng-container>
+            <ng-template #noStatus>-</ng-template>
+          </ng-template>
         </bf-tag>
       </ng-template>
       <ng-template colRef="negotiation" label="Negotiation Stage" let-negotiation>
