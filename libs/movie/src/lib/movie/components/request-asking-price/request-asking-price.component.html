@@ -32,7 +32,7 @@
     ></textarea>
   </mat-form-field>
 
-  <footer fxLayout="column" fxLayoutAlign="center center">
+  <footer class="button-container" fxLayout="column" fxLayoutAlign="center center">
     <button mat-flat-button color="primary" [disabled]="form.disabled || form.invalid" type="submit" (click)="send()">
       <span>Send My Request</span>
       <ng-container *ngIf="form.disabled">

@@ -11,13 +11,22 @@
   margin-bottom: 48px;
 }
 
-:host > h2 {
-  margin-bottom: 12px;
-}
+.no-screening {
+  margin-bottom: 0;
 
-:host > h2 + p {
-  margin-bottom: 32px;
-}
+  h2 {
+    margin-bottom: 12px;
+  }
+
+  p {
+    margin-bottom: 32px;
+  }
+
+  button {
+    margin-top: 8px; 
+  }
+} 
+
 
 h5 {
   text-transform: uppercase;

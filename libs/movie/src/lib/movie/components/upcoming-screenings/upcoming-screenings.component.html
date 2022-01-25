@@ -4,9 +4,9 @@
     <!-- No ongoing and no upcoming screenings -->
     <ng-container *ngIf="!ongoingScreenings.length && !futureScreenings.length">
       <ng-container *ngFor="let org of orgs$ | async">
-        <h2>There is no screening scheduled at the moment.</h2>
-        <p class="mat-body-1">You can contact <a [routerLink]="['/c/o/marketplace/organization/', org.id]">{{ org.denomination?.public || 'the organization' }}</a> for any questions.</p>
-        <section fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="8px">
+        <section class="no-screening" fxLayout="column" fxLayoutAlign="center center">
+          <h2>There is no screening scheduled at the moment.</h2>
+          <p class="mat-body-1">You can contact <a [routerLink]="['/c/o/marketplace/organization/', org.id]">{{ org.denomination?.public || 'the organization' }}</a> for any questions.</p>
           <event-request-screening [movieId]="movieId"></event-request-screening>
           <button mat-button [disabled]="requestSent.$ | async" (click)="requestAskingPrice()">Request Asking Price</button>
         </section>
