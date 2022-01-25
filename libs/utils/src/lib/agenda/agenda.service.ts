@@ -14,7 +14,7 @@ export class AgendaService {
 
   public async download(events: Event[]) {
     if (events.length === 0) return;
-    const filename = events.length > 1 ? 'events.ics' : 'event.ics';
+    const filename = events.length > 1 ? 'events.ics' : `${events[0].title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.ics`;
     const promises = events.map(async event => {
       const ownerOrg = await this.orgService.getValue(event.ownerOrgId);
       return createIcsFromEvent(event, orgName(ownerOrg, 'full'));

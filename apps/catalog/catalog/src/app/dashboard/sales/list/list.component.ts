@@ -42,9 +42,7 @@ export class SaleListComponent implements OnInit {
   public orgId = this.orgQuery.getActiveId();
 
 
-  public sales$ = this.contractService.valueChanges(
-    ref => queryFn(ref, this.orgId)
-  ).pipe(
+  public sales$ = this.contractService.valueChanges(ref => queryFn(ref, this.orgId)).pipe(
     joinWith({
       licensor: (sale: Sale) => this.orgService.valueChanges(this.getLicensorId(sale)).pipe(map(getFullName)),
       licensee: (sale: Sale) => sale.buyerId ? this.orgService.valueChanges(sale.buyerId).pipe(map(getFullName)) : 'External',
