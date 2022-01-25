@@ -18,6 +18,7 @@ import {
   MovieVideos,
   MovieVideo,
   MovieAppConfig,
+  LanguageRecord,
 } from '../+state/movie.firestore';
 import {
   Movie,
@@ -731,7 +732,7 @@ export function createMovieOriginalRelease(
 // ------------------------------
 
 export function createLanguageControl(
-  versionInfo: Partial<{ [language in Language]: MovieLanguageSpecification }>
+  versionInfo: LanguageRecord
 ) {
   const controls = {};
   for (const language in versionInfo) {
@@ -742,7 +743,7 @@ export function createLanguageControl(
 
 export class MovieVersionInfoForm extends FormEntity<any> {
   constructor(
-    versionInfo: Partial<{ [language in Language]: MovieLanguageSpecification }> = {}
+    versionInfo: LanguageRecord = {}
   ) {
     super(createLanguageControl(versionInfo));
   }
