@@ -1,7 +1,6 @@
 ﻿import { Injectable } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { InvitationService } from './invitation.service';
-import { InvitationStore } from './invitation.store';
 import { AuthQuery, createUser } from '@blockframes/auth/+state';
 import { AngularFireModule } from '@angular/fire';
 import { toDate } from '@blockframes/utils/helpers';
@@ -54,7 +53,6 @@ describe('Invitations Test Suite', () => {
       ],
       providers: [
         InvitationService,
-        InvitationStore,
         { provide: HttpClient, useClass: HttpTestingController },
         { provide: AngularFireAuth, useValue: AngularFireAuth },
         { provide: AuthQuery, useClass: InjectedAuthQuery },
