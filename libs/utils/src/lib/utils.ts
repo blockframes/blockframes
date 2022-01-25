@@ -240,7 +240,7 @@ export function toLabel(value: string | string[], scope: Scope, joinWith?: strin
  * @param endWith 
  * @returns 
  */
-export function smartJoin(str: string[], joinWith = ', ', endWith = ', ') {
+function smartJoin(str: string[], joinWith = ', ', endWith = ', ') {
   const last = str.pop();
   return `${str.join(joinWith)}${str.length ? endWith : ''}${last || ''}`;
 }
