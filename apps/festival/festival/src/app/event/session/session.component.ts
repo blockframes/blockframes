@@ -94,7 +94,7 @@ export class SessionComponent implements OnInit, OnDestroy {
             // Try to get invitation the regular way
             const uidFilter = (invit: Invitation) => invit.toUser?.uid === this.authQuery.userId ||  invit.fromUser?.uid === this.authQuery.userId;
             const allInvitations = await this.invitationService.allInvitations$.pipe(take(1)).toPromise();
-            let invitation = allInvitations.find(invit => invit.eventId === event.id && uidFilter(invitation));
+            let invitation = allInvitations.find(invit => invit.eventId === event.id && uidFilter(invit));
 
             // If user is logged-in as anonymous
             if (!invitation && this.authService.anonymousCredentials?.invitationId) {

@@ -85,7 +85,7 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
         }
 
         // if user wasn't invited OR hasn't accepted yet
-        if (!hasRegularInvitation()) {
+        if (!(await hasRegularInvitation())) {
           return this.router.parseUrl(`/event/${this.event.id}/r/i`);
         }
 
