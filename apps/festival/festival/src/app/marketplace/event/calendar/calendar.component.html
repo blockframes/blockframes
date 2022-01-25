@@ -12,7 +12,7 @@
       </mat-select>
     </mat-form-field>
     <ng-container *ngIf="(events$ | async) || [] as events">
-      <button [matTooltip]="hasIncomingEvents(events) ? 'Export ongoing & upcoming Events' : 'No Events to export'" mat-button [disabled]="!hasIncomingEvents(events)" (click)="exportToCalendar(events)">
+      <button [matTooltip]="hasUpcomingEvents(events) ? 'Export ongoing & upcoming Events' : 'No Events to export'" mat-button [disabled]="!hasUpcomingEvents(events)" (click)="exportToCalendar(events)">
         <mat-icon svgIcon="cloud_download"></mat-icon>
         <span>Export Calendar</span>
       </button>
