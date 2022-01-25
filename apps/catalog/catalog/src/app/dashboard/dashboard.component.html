@@ -15,7 +15,7 @@
       </a>
       <a mat-list-item routerLink="sales" routerLinkActive="active">
         <mat-icon matListIcon svgIcon="document"></mat-icon>
-        <span matLine><b>My Sales</b></span>
+        <span matLine><b>My Deals</b></span>
       </a>
       <ng-container *ngIf="org$ | async | canAccess: 'marketplace':'catalog'">
         <mat-divider></mat-divider>

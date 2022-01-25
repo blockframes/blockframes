@@ -6,7 +6,7 @@ import { Organization, OrganizationQuery, OrganizationService } from '@blockfram
 import { ActivatedRoute, Router } from '@angular/router';
 import { Intercom } from 'ng-intercom';
 import { joinWith } from '@blockframes/utils/operators';
-import { map, startWith } from 'rxjs/operators';
+import { filter, map, mapTo, startWith } from 'rxjs/operators';
 import { MovieService } from '@blockframes/movie/+state';
 import { IncomeService } from '@blockframes/contract/income/+state';
 import { FormControl } from '@angular/forms';
@@ -51,6 +51,15 @@ export class SaleListComponent implements OnInit {
       negotiation: (sale: Sale) => this.contractService.lastNegotiation(sale.id)
     }),
   );
+
+  public internalSales$ = this.sales$.pipe(
+    map(sales => sales.filter(sale => sale.sellerId === centralOrgId.catalog))
+  );
+
+  public externalSales$ = this.sales$.pipe(
+    map(sales => sales.filter(sale => sale.sellerId !== centralOrgId.catalog))
+  );
+
   filter = new FormControl();
   filter$: Observable<ContractStatus | ''> = this.filter.valueChanges.pipe(startWith(this.filter.value || ''));
 
