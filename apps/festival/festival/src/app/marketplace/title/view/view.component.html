@@ -16,8 +16,10 @@
         </ng-container>
         <ng-template #request>
           <section fxLayout fxLayout.lt-sm="column">
-            <event-request-screening [movieId]="movie.id"></event-request-screening>
-            <button mat-stroked-button [disabled]="requestSent.$ | async" (click)="requestAskingPrice()">Request Asking Price</button>
+            <event-request-screening [movieId]="movie.id" animated></event-request-screening>
+            <button mat-stroked-button  [disabled]="requestSent.$ | async" (click)="requestAskingPrice()">
+              <span class="linear-wipe">Request Asking Price</span>
+            </button>
           </section>
         </ng-template>
       </movie-header-cta>
