@@ -41,7 +41,7 @@
 <section>
   <ng-container *ngIf="!!items; else loading">
     <ng-container *ngIf="items.length; else empty">
-      <div fxLayout="row" [fxLayoutAlign]="exportButton ? 'space-between center': 'end start'">
+      <div class="export-section" fxLayout="row" [fxLayoutAlign]="exportButton ? 'space-between center': 'end start'">
         <ng-content select="list-page-description"></ng-content>
         <ng-content select="pdf-export"></ng-content>
         <ng-content select="events-export"></ng-content>

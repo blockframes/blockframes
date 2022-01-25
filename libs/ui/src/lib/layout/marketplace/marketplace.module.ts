@@ -23,6 +23,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [MarketplaceComponent],
@@ -46,6 +47,7 @@ import { MatMenuModule } from '@angular/material/menu';
     MatDividerModule,
     MatBadgeModule,
     MatMenuModule,
+    MatTooltipModule,
 
     // Libraries
     ImageModule,
