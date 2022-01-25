@@ -18,7 +18,7 @@ export class ListComponent {
     switchMap(orgId => this.service.valueChanges(query(orgId))),
     joinWith({
       contracts: offer => this.getContracts(offer.id)
-    }),
+    }, {shouldAwait:true}),
   )
 
   constructor(

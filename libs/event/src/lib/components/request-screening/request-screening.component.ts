@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding, Input } from '@angular/core';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthQuery } from '@blockframes/auth/+state';
@@ -18,7 +18,8 @@ export class RequestScreeningComponent {
 
   @Input() movieId: string;
   @Input() @boolean iconOnly: boolean;
-
+  @Input() @boolean @HostBinding('class.animated') animated: boolean;
+  
   requestStatus = new BehaviorSubject<RequestStatus>('available');
   screeningRequest: Record<RequestStatus, string> = {
     available: 'Ask for a Screening',

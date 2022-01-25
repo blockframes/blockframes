@@ -3,7 +3,7 @@
   <header>
     <mat-form-field appearance="fill">
       <mat-label>Contract status</mat-label>
-      <mat-select [value]="sale.status" (selectionChange)="changeStatus($event, sale.id)">
+      <mat-select [value]="sale.status" (selectionChange)="changeStatus($event.value, sale.id)">
         <mat-option *ngFor="let status of contractStatus" [value]="status">
           {{ status | uppercase }}
         </mat-option>
