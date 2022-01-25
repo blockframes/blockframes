@@ -1,4 +1,4 @@
-import { MovieLanguageSpecification } from "@blockframes/movie/+state/movie.firestore";
+import { MovieLanguageSpecificationContainer } from "@blockframes/movie/+state/movie.firestore";
 import type { Media, Territory } from "@blockframes/utils/static-model";
 import type firebase from 'firebase'
 import { Timestamp } from "@blockframes/utils/common-interfaces/timestamp";
@@ -6,7 +6,7 @@ import { staticModel } from "@blockframes/utils/static-model";
 import { format } from "date-fns";
 import { hydrateLanguageForEmail } from '@blockframes/contract/negotiation/utils';
 
-export function createMailTerm(terms:BucketTerm<Timestamp>[]){
+export function createMailTerm(terms: BucketTerm<Timestamp>[]) {
   return terms.map(term => ({
     ...term,
     territories: term.territories.map(territory => staticModel['territories'][territory]).join(', '),
@@ -19,9 +19,7 @@ export function createMailTerm(terms:BucketTerm<Timestamp>[]){
   }))
 }
 
-export type MailTerm = ReturnType< typeof createMailTerm>[number]
-
-
+export type MailTerm = ReturnType<typeof createMailTerm>[number];
 
 export interface Duration<T extends Date | firebase.firestore.Timestamp = Date> {
   from: T,
@@ -33,7 +31,7 @@ export interface BucketTerm<T extends Date | firebase.firestore.Timestamp = Date
   duration: Duration<T>;
   territories: Territory[];
   exclusive: boolean;
-  languages: Record<string, MovieLanguageSpecification>;
+  languages: Partial<MovieLanguageSpecificationContainer>;
 }
 
 /**

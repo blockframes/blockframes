@@ -1,5 +1,6 @@
-import { MovieLanguageSpecification } from "@blockframes/movie/+state/movie.firestore";
+import { MovieLanguageSpecificationContainer } from "@blockframes/movie/+state/movie.firestore";
 import { Timestamp } from "@blockframes/utils/common-interfaces/timestamp";
+import { toLabel } from "@blockframes/utils/pipes/to-label.pipe";
 import { staticModel } from "@blockframes/utils/static-model/static-model";
 import { centralOrgId } from "@env";
 import { Negotiation } from "./+state/negotiation.firestore";
@@ -18,19 +19,15 @@ export function getReviewer(negotiation: Negotiation<Timestamp | Date>) {
   return negotiation.stakeholders.find(id => id !== negotiation.createdByOrg && id !== centralOrgId.catalog);
 }
 
-function capitalize(text:string){
-  return text.charAt(0).toUpperCase() + text.slice(1);
-}
-
-export function hydrateLanguageForEmail(data: Record<string, MovieLanguageSpecification>={}) {
+export function hydrateLanguageForEmail(data: Partial<MovieLanguageSpecificationContainer> = {}) {
   return Object.keys(data)
     .map(lang => {
       const prefix: string[] = [];
       if (data[lang].dubbed) prefix.push(staticModel['movieLanguageTypes'].dubbed);
       if (data[lang].subtitle) prefix.push(staticModel['movieLanguageTypes'].subtitle);
       if (data[lang].caption) prefix.push(staticModel['movieLanguageTypes'].caption);
-      if (prefix.length) return `${capitalize(lang)} (${prefix.join(', ')})`;
-      return capitalize(lang);
+      if (prefix.length) return `${toLabel(lang, 'languages')} (${prefix.join(', ')})`;
+      return toLabel(lang, 'languages');
     })
     .join(', ');
 }
