@@ -5,15 +5,17 @@ import { createPublicOrganization, Organization, OrganizationService } from '@bl
 import { AuthQuery, AuthService, User } from '@blockframes/auth/+state';
 import { createPublicUser, PublicUser } from '@blockframes/user/+state';
 import { toDate } from '@blockframes/utils/helpers';
-import { InvitationState, InvitationStore } from './invitation.store';
 import { Invitation, createInvitation } from './invitation.model';
 import { InvitationDocument } from './invitation.firestore';
 import { cleanInvitation } from '../invitation-utils';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentApp, getOrgAppAccess } from '@blockframes/utils/apps';
 import { combineLatest } from 'rxjs';
-import { filter, map, shareReplay, switchMap, tap } from 'rxjs/operators';
+import { filter, map, shareReplay, switchMap } from 'rxjs/operators';
 import { PermissionsService } from '@blockframes/permissions/+state';
+import { ActiveState, EntityState } from '@datorama/akita';
+
+interface InvitationState extends EntityState<Invitation>, ActiveState<string> {}
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'invitations' })
@@ -36,7 +38,6 @@ export class InvitationService extends CollectionService<InvitationState> {
   public acceptOrDeclineInvitationAsAnonymous = this.functions.httpsCallable('acceptOrDeclineInvitationAsAnonymous');
 
   /** All Invitations related to current user or org */
-  allInvitations : Invitation[];
   allInvitations$ = combineLatest([
     this.authService.profile$,
     this.permissionsService.isAdmin$
@@ -67,7 +68,6 @@ export class InvitationService extends CollectionService<InvitationState> {
     }),
     map(i => i.flat()),
     shareReplay({ refCount: true, bufferSize: 1 }),
-    tap(i => this.allInvitations = i)
   );
 
   /** Invitations to current user or org */
@@ -93,7 +93,6 @@ export class InvitationService extends CollectionService<InvitationState> {
   ); 
 
   constructor(
-    store: InvitationStore,
     private authQuery: AuthQuery,
     private orgService: OrganizationService,
     private authService: AuthService,
@@ -101,7 +100,7 @@ export class InvitationService extends CollectionService<InvitationState> {
     private functions: AngularFireFunctions,
     private routerQuery: RouterQuery
   ) {
-    super(store);
+    super();
   }
 
   formatFromFirestore(_invitation: InvitationDocument): Invitation {

@@ -4,7 +4,7 @@ import { Permissions } from './permissions.model';
 import { CollectionService, CollectionConfig, AtomicWrite } from 'akita-ng-fire';
 import type firebase from 'firebase';
 import { UserService } from '@blockframes/user/+state/user.service';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { AuthQuery, AuthService } from '@blockframes/auth/+state';
 import { combineLatest, Observable, of } from 'rxjs';
 import { ActiveState, EntityState } from '@datorama/akita';
@@ -17,10 +17,8 @@ export class PermissionsService extends CollectionService<PermissionsState> {
   readonly useMemorization = true;
 
   // The whole permissions document for organization of the current logged in user.
-  permissions: Permissions;
   permissions$: Observable<Permissions> = this.authService.profile$.pipe(
-    switchMap(user => user?.orgId ? this.valueChanges(user.orgId) : of(undefined)),
-    tap(permissions => this.permissions = permissions)
+    switchMap(user => user?.orgId ? this.valueChanges(user.orgId) : of(undefined))
   );
 
   // Checks if the connected user is superAdmin of his organization.
@@ -28,10 +26,8 @@ export class PermissionsService extends CollectionService<PermissionsState> {
     this.authService.profile$,
     this.permissions$,
   ]).pipe(
-    map(([user, p]) => user?.uid && p?.roles[user.uid] === 'superAdmin'),
-    tap(isSuperAdmin => this.isSuperAdmin = isSuperAdmin)
+    map(([user, p]) => user?.uid && p?.roles[user.uid] === 'superAdmin')
   );
-  public isSuperAdmin: boolean;
 
   // Checks if the connected user is admin of his organization.
   public isAdmin$ = combineLatest([
@@ -39,10 +35,8 @@ export class PermissionsService extends CollectionService<PermissionsState> {
     this.permissions$,
     this.isSuperAdmin$,
   ]).pipe(
-    map(([user, p, isSuperAdmin]) => isSuperAdmin || p?.roles[user.uid] === 'admin'),
-    tap(isAdmin => this.isAdmin = isAdmin)
+    map(([user, p, isSuperAdmin]) => isSuperAdmin || p?.roles[user.uid] === 'admin')
   )
-  public isAdmin: boolean;
 
   constructor(
     private authService: AuthService,

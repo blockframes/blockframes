@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router, UrlTree, CanDeactivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { InvitationQuery, Invitation, InvitationService } from '@blockframes/invitation/+state';
+import { InvitationService } from '@blockframes/invitation/+state';
 import { Observable } from 'rxjs';
 import { Event, EventService } from '../+state';
 import { eventTime } from '../pipes/event-time.pipe';
@@ -9,6 +9,7 @@ import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { AuthQuery, AuthService } from '@blockframes/auth/+state';
 import { Meeting } from '../+state/event.firestore';
 import { TwilioService } from '../components/meeting/+state/twilio.service';
+import { take } from 'rxjs/operators';
 
 
 @Injectable({ providedIn: 'root' })
@@ -19,7 +20,6 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
   constructor(
     private authQuery: AuthQuery,
     private authService: AuthService,
-    private invitationQuery: InvitationQuery,
     private invitationService: InvitationService,
     private eventService: EventService,
     private router: Router,
@@ -42,8 +42,9 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
       return this.router.parseUrl(`/event/${this.event.id}/r/i`);
     }
 
-    const hasRegularInvitation = () => {
-      return this.invitationQuery.hasEntity((invitation: Invitation) => {
+    const hasRegularInvitation = async () => {
+      const allInvitations = await this.invitationService.allInvitations$.pipe(take(1)).toPromise();
+      return allInvitations.some(invitation => {
         if (invitation.eventId !== this.event.id) return false;
         if (invitation.status !== 'accepted') return false;
         const hasRequested = invitation.mode === 'request' && invitation.fromUser.uid === this.authQuery.userId;
@@ -71,7 +72,7 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
         }
 
         // if user wasn't invited OR hasn't accepted yet
-        if (!hasRegularInvitation() && !(await hasAnonymousInvitation())) {
+        if (!(await hasRegularInvitation()) && !(await hasAnonymousInvitation())) {
           return this.router.parseUrl(`/event/${this.event.id}/r/i`);
         }
 
