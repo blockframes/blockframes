@@ -38,7 +38,7 @@ export class EventCalendarComponent implements OnInit {
 
   ngOnInit(): void {
     this.dynTitle.setPageTitle('My Calendar');
-    const allEvents$ = this.invitationService.allInvitations$.pipe(  // @TODO #7273 test
+    const allEvents$ = this.invitationService.allInvitations$.pipe(
       map(invitations => invitations.filter(i => i.type === 'attendEvent' && ['accepted', 'pending'].includes(i.status))),
       map(invitations => invitations.map(i => i.eventId)),
       map(eventIds => Array.from(new Set(eventIds))), // Remove duplicated
@@ -66,7 +66,7 @@ export class EventCalendarComponent implements OnInit {
   }
 }
 
-@Pipe({ name: 'hideBadge' }) // @TODO #7273 test
+@Pipe({ name: 'hideBadge' })
 export class HideBadgePipe implements PipeTransform {
   constructor(private invitationService: InvitationService,) { }
   transform(event: Event) {
