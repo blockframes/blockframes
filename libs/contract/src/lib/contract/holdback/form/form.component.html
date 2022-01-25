@@ -91,7 +91,7 @@
   </bf-form-table>
 
   <footer class="actions" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="16px">
-    <button mat-flat-button color="primary" (click)="save()">Add Holdbacks</button>
+    <button mat-flat-button color="primary" (click)="save()" [disabled]="!form.value.length || form.invalid">Add Holdbacks</button>
     <button mat-button (click)="cancel()">Cancel</button>
   </footer>
 </ng-template>
