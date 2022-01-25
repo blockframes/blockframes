@@ -72,7 +72,7 @@ export class HideBadgePipe implements PipeTransform {
   transform(event: Event) {
     if (eventTime(event) === 'late') return of(true);
     return this.invitationService.allInvitations$.pipe(
-      map(invitations => invitations.find(i => i.eventId === event.id && i.status !== 'pending'))
+      map(invitations => invitations.some(i => i.eventId === event.id && i.status !== 'pending'))
     )
   }
 }
