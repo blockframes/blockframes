@@ -359,7 +359,7 @@ export function contractCreatedEmail(
 
 /** Template for admins. It is to inform admins of Archipel Content a new offer has been created with titles, prices, etc in the template */
 export function adminOfferCreatedConfirmationEmail(toUser: UserEmailData, org: OrganizationDocument, bucket: Bucket<Timestamp>): EmailTemplateRequest {
-  const date = format(new Date(), 'dd MMMM, yyyy');
+  const date = format(new Date(), 'dd MMM, yyyy');
   const contracts = bucket.contracts.map(contract => createMailContract(contract));
   const data = { org, bucket: { ...bucket, contracts }, user: toUser, baseUrl: appUrl.content, date };
   return { to: toUser.email, templateId: templateIds.offer.toAdmin, data };
@@ -367,9 +367,8 @@ export function adminOfferCreatedConfirmationEmail(toUser: UserEmailData, org: O
 
 /**To inform buyer that his offer has been successfully created. */
 export function buyerOfferCreatedConfirmationEmail(toUser: UserEmailData, org: OrganizationDocument, offerId: string, bucket: Bucket<Timestamp>): EmailTemplateRequest {
-  const date = format(new Date(), 'dd MMMM, yyyy');
   const contracts = bucket.contracts.map(contract => createMailContract(contract));
-  const data = { org, bucket: { ...bucket, contracts }, user: toUser, baseUrl: appUrl.content, date, offerId };
+  const data = { org, bucket: { ...bucket, contracts }, user: toUser, baseUrl: appUrl.content, offerId };
   return { to: toUser.email, templateId: templateIds.offer.toBuyer, data };
 }
 
