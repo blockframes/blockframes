@@ -12,43 +12,25 @@ movie-header-cta {
     width: fit-content;
   }
 
-  event-request-screening {
-    display: flex;
-    border-radius: 26px;
-    animation: pulse 2s infinite cubic-bezier(0.20, 0, 0, 0.5);
-
-    @keyframes pulse { 
-      from {
-        box-shadow: 0 0 0 0 rgba(87, 95, 148, 0.64);
-      }
-      to {
-        box-shadow: 0 0 0 15px rgba(232, 76, 61, 0);
-      }
-    }
-  }
-
   .linear-wipe {
     text-align: center;
-    
-    background: linear-gradient(to right, #FFF 75%, #849fff 90%, #FFF 95%);
-    background-size: 200% auto;
-    
+    background: linear-gradient(to right, white 75%, #849fff 90%, white 95%);
+    background-size: 200% auto; 
     color: #000;
     background-clip: text;
     text-fill-color: transparent;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    
+
     animation: shine 5s linear infinite;
     @keyframes shine {
-      from {
+      0% {
         background-size: 200% auto;
       }
       20% {
         background-position: 200% center;
       }
-
-      to {
+      100% {
         background-position: 200% center;
       }
     }

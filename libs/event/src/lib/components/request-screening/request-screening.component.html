@@ -5,7 +5,7 @@
     </button>
   </ng-container>
   <ng-template #button>
-    <button class="linear-wipe" mat-flat-button color="primary" [disabled]="status !== 'available'" (click)="requestScreening()">
+    <button mat-flat-button color="primary" [disabled]="status !== 'available'" (click)="requestScreening()">
       {{ screeningRequest[status] }}
     </button>
   </ng-template>
