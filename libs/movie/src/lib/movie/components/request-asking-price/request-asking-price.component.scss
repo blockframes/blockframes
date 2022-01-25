@@ -3,7 +3,7 @@
 }
 
 form {
-  padding: 40px 80px 80px 80px;
+  padding: 24px 40px 40px 40px;
 
   mat-form-field {
     width: 100%;
@@ -13,4 +13,8 @@ form {
 mat-spinner {
   margin-left: 8px;
   display: inline-block;
+}
+
+.button-container button {
+  margin-bottom: 8px;
 }

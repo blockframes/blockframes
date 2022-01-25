@@ -38,7 +38,11 @@
         <p>Sale external from Archipel Content</p>
       </div>
 
-      <bf-tag>{{sale.status | toLabel: 'contractStatus'}}</bf-tag>
+
+      <bf-tag>
+        {{sale.status | toLabel: 'contractStatus'}}
+        <ng-container *ngIf="sale.status === 'pending'">(displayed as pending)</ng-container>
+      </bf-tag>
 
       <div fxLayout fxLayoutAlign="end center" fxLayoutGap="16px">
         <button mat-button color="primary" (click)="openIntercom()">
