@@ -4,7 +4,7 @@ import { Permissions } from './permissions.model';
 import { CollectionService, CollectionConfig, AtomicWrite } from 'akita-ng-fire';
 import type firebase from 'firebase';
 import { UserService } from '@blockframes/user/+state/user.service';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { AuthQuery, AuthService } from '@blockframes/auth/+state';
 import { combineLatest, Observable, of } from 'rxjs';
 import { ActiveState, EntityState } from '@datorama/akita';
@@ -17,8 +17,10 @@ export class PermissionsService extends CollectionService<PermissionsState> {
   readonly useMemorization = true;
 
   // The whole permissions document for organization of the current logged in user.
+  permissions: Permissions; // @TODO #7273 if this.permissions$ was not already called, this will be undefined
   permissions$: Observable<Permissions> = this.authService.profile$.pipe(
-    switchMap(user => user?.orgId ? this.valueChanges(user.orgId) : of(undefined))
+    switchMap(user => user?.orgId ? this.valueChanges(user.orgId) : of(undefined)),
+    tap(permissions => this.permissions = permissions)
   );
 
   // Checks if the connected user is superAdmin of his organization.
