@@ -350,10 +350,19 @@ export function movieAskingPriceRequestSent(toUser: UserEmailData, movie: MovieD
 
 /** Inform user of org whose movie is being bought */
 export function contractCreatedEmail(
-  toUser: UserEmailData, title: MovieDocument, app: App, contract: ContractDocument,
+  toUser: UserEmailData, title: MovieDocument, contract: ContractDocument,
   negotiation: NegotiationDocument, buyerOrg: OrganizationDocument
 ): EmailTemplateRequest {
-  const data = { user: toUser, app: { name: app }, title, contract, negotiation, buyerOrg, baseUrl: appUrl.content };
+  const pageURL = `${appUrl.content}/c/o/dashboard/sales/${contract.id}/view`;
+  const data = {
+    user: toUser,
+    app: { name: appName.catalog },
+    title,
+    contract,
+    negotiation,
+    pageURL,
+    buyerOrg,
+  };
   return { to: toUser.email, templateId: templateIds.contract.created, data };
 }
 
