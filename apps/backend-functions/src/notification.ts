@@ -35,7 +35,7 @@ import {
 } from './templates/mail';
 import { templateIds, groupIds } from '@blockframes/utils/emails/ids';
 import { canAccessModule, orgName } from '@blockframes/organization/+state/organization.firestore';
-import { App, applicationUrl } from '@blockframes/utils/apps';
+import { App, applicationUrl, appName } from '@blockframes/utils/apps';
 import * as admin from 'firebase-admin';
 import { PublicInvitation } from '@blockframes/invitation/+state/invitation.firestore';
 import { logger } from 'firebase-functions';
@@ -678,9 +678,17 @@ async function sendContractStatusChangedConfirmation(recipient: User, notificati
     contract, title, app, isRecipientBuyer, toUser, recipientOrg, counterOfferSenderOrg
   } = await getNegotiationUpdatedEmailData(recipient, notification);
 
+  const pageURL = isRecipientBuyer
+    ? `${appUrl.content}/c/o/marketplace/offer/${contract.offerId}/${contract.id}`
+    : `${appUrl.content}/c/o/dashboard/sales/${contract.id}/view`;
+
   const data = {
-    user: toUser, baseUrl: appUrl.content, org: recipientOrg,
-    contract, title, isRecipientBuyer
+    user: toUser,
+    org: recipientOrg,
+    contract,
+    title,
+    pageURL,
+    app: { name: appName.catalog }
   };
 
   let templateId = templateIds.negotiation.myContractWasAccepted;
