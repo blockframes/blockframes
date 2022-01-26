@@ -5,7 +5,7 @@ import { Event, ScreeningEvent, createCalendarEvent, MeetingEvent, isMeeting, is
 import { QueryFn } from '@angular/fire/firestore/interfaces';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { PermissionsService } from '@blockframes/permissions/+state';
-import { Observable, combineLatest } from 'rxjs';
+import { Observable, combineLatest, of } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 import type firebase from 'firebase';
 import { ActiveState, EntityState } from '@datorama/akita';
@@ -105,6 +105,8 @@ export class EventService extends CollectionService<EventState> {
   queryDocs(ids: string | string[]): Observable<Event | Event[]> {
     if (typeof ids === 'string') {
       return queryChanges.call(this, eventQuery(ids))
+    } else if (ids.length === 0) {
+      return of([]);
     } else {
       const queries = ids.map(id => queryChanges.call(this, eventQuery(id)))
       return combineLatest(queries);
