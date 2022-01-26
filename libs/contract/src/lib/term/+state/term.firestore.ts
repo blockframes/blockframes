@@ -17,7 +17,6 @@ export function createMailTerm(terms: BucketTerm<Timestamp>[]) {
     },
     languages: toLanguageVersionString(term.languages),
     exclusive: term.exclusive ? 'Exclusive' : 'Non exclusive',
-
   }))
 }
 

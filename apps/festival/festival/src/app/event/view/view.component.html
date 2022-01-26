@@ -1,4 +1,4 @@
-<ng-container *ngIf="event$ |  async as event">
+<ng-container *ngIf="event$ | async as event">
     <!-- View component Layout header -->
     <header class="dark-contrast-theme" fxLayout="column" fxLayoutGap="16px">
       <button mat-icon-button (click)="goBack()">
@@ -66,7 +66,7 @@
             <h6>{{ event.type }} session closed</h6>
             <pre class="mat-body-1">{{ event | eventRange }}</pre>
             
-            <ng-container *ngIf="event.type === 'screening'">
+            <ng-container *ngIf="event.type === 'screening' && event.accessibility === 'private'">
               <event-request-screening [movieId]="event.meta.titleId"></event-request-screening>
               <button mat-button [disabled]="requestSent.$ | async" (click)="requestAskingPrice(event.meta.titleId)">Request Asking Price</button>
             </ng-container>
