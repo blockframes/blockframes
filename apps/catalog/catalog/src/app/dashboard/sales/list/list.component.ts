@@ -66,23 +66,13 @@ export class SaleListComponent implements OnInit {
   filter = new FormControl();
   filter$: Observable<ContractStatus | ''> = this.filter.valueChanges.pipe(startWith(this.filter.value || ''));
 
-  salesCount$ = combineLatest([this.internalSales$, this.externalSales$]).pipe(map(([internalSales, externalSales]) => {
-    const internalNew = internalSales.filter(m => m.negotiation?.status === 'pending' && isInitial(m.negotiation)).length;
-    const externalNew = externalSales.filter(m => m.status === 'pending').length;
-    const internalAccepted = internalSales.filter(m => m.negotiation?.status === 'accepted').length;
-    const externalAccepted = externalSales.filter(m => m.status === 'accepted').length;
-    const internalDeclined = internalSales.filter(m => m.negotiation?.status === 'declined').length;
-    const externalDeclined = externalSales.filter(m => m.status === 'declined').length;
-    const internalNegotiating = internalSales.filter(m => m.negotiation?.status === 'pending' && !isInitial(m.negotiation)).length;
-    const externalNegotiating = externalSales.filter(m => m.status === 'negotiating').length;
-    return {
-      all: internalSales.length + externalSales.length,
-      new: internalNew + externalNew,
-      accepted: internalAccepted + externalAccepted,
-      declined: internalDeclined + externalDeclined,
-      negotiating: internalNegotiating + externalNegotiating,
-    }
-  }));
+  salesCount$ = this.internalSales$.pipe(map(m => ({
+    all: m.length,
+    new: m.filter(m => m.negotiation?.status === 'pending' && isInitial(m.negotiation)).length,
+    accepted: m.filter(m => m.negotiation?.status === 'accepted').length,
+    declined: m.filter(m => m.negotiation?.status === 'declined').length,
+    negotiating: m.filter(m => m.negotiation?.status === 'pending' && !isInitial(m.negotiation)).length,
+  })));
 
   constructor(
     private contractService: ContractService,
