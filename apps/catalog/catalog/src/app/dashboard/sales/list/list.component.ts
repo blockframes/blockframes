@@ -93,10 +93,6 @@ export class SaleListComponent implements OnInit {
     this.router.navigate([id], { relativeTo: this.route });
   }
 
-  isExternal(sale: Contract) {
-    return sale.sellerId === centralOrgId.catalog;
-  }
-
   applyFilter(filter?: ContractStatus) {
     this.filter.setValue(filter);
     const titleFilter = filter === 'pending' ? 'new' : filter;
