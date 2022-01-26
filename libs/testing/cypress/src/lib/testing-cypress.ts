@@ -34,6 +34,11 @@ async function getRandomUser() {
   return user;
 }
 
+async function getUIDFromEmail(email: string) {
+  const user = await auth.getUserByEmail(email);
+  return user.uid;
+}
+
 async function createUserToken(uid: string) {
   return await auth.createCustomToken(uid);
 }
@@ -46,6 +51,8 @@ export function testingCypress(config?: Cypress.PluginConfigOptions): Cypress.Ta
     auth = connectAuthEmulator();
     console.log('Connected to emulator')
   } else {
+    console.warn('WARNING - e2e tests no longer support running against live services and must be emulated');
+    console.warn('These tests are trying to run against a live Firestore instance. Please fix config!');
     db = loadAdminServices().db;
     auth = loadAdminServices().auth;
     console.log('Connected to live Firestore dev server')
@@ -54,6 +61,7 @@ export function testingCypress(config?: Cypress.PluginConfigOptions): Cypress.Ta
   return {
     createUserToken,
     getRandomUser,
+    getUIDFromEmail,
     getRandomUID,
     log
   }
