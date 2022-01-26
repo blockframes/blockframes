@@ -4,6 +4,9 @@ section {
 
 form {
   width: 100%;
+  p{
+    margin-bottom: 0;
+  }
 }
 
 p {
@@ -13,4 +16,8 @@ p {
 mat-spinner {
   margin-left: 8px;
   display: inline-block;
+}
+
+mat-checkbox{
+  margin-bottom: 24px;
 }

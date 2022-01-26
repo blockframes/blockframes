@@ -1,8 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ContractService } from '@blockframes/contract/contract/+state';
-import { IncomeService } from '@blockframes/contract/income/+state';
 import { OfferService } from '@blockframes/contract/offer/+state';
-import { OrganizationQuery } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { MovieService } from '@blockframes/movie/+state';
 import { joinWith } from '@blockframes/utils/operators';
 import { switchMap } from 'rxjs/operators';
@@ -15,27 +14,26 @@ import { CollectionReference, QueryFn } from '@angular/fire/firestore';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListComponent {
-  offers$ = this.orgQuery.selectActiveId().pipe(
-    switchMap(orgId => this.service.valueChanges(query(orgId))),
+  offers$ = this.orgService.org$.pipe(
+    switchMap(org => this.service.valueChanges(query(org.id))),
     joinWith({
       contracts: offer => this.getContracts(offer.id)
     }),
   )
 
   constructor(
-    private orgQuery: OrganizationQuery,
+    private orgService: OrganizationService,
     private service: OfferService,
     private contractService: ContractService,
-    private incomeService: IncomeService,
     private titleService: MovieService,
   ) { }
 
   private getContracts(offerId: string) {
-    const queryContracts = (ref: CollectionReference) => ref.where('offerId', '==', offerId).where('status', '!=', 'declined')
+    const queryContracts = (ref: CollectionReference) => ref.where('offerId', '==', offerId);
     return this.contractService.valueChanges(queryContracts).pipe(
       joinWith({
         title: contract => this.titleService.valueChanges(contract.titleId),
-        income: contract => this.incomeService.valueChanges(contract.id)
+        negotiation: contract => this.contractService.lastNegotiation(contract.id)
       })
     )
   }

@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { OrganizationQuery } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { BucketService } from '@blockframes/contract/bucket/+state';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -13,12 +13,12 @@ import { map } from 'rxjs/operators';
 
 export class MarketplaceComponent {
   public contractCount$: Observable<number>;
-  public canAccessDeals = !this.orgQuery.getActive().appAccess.catalog.dashboard;
-  public org$ = this.orgQuery.selectActive();
+  public canAccessDeals = !this.orgService.org.appAccess.catalog.dashboard;
+  public org$ = this.orgService.org$;
 
   constructor(
     private bucketService: BucketService,
-    private orgQuery: OrganizationQuery,
+    private orgService: OrganizationService,
   ) {
     this.contractCount$ = this.bucketService.active$.pipe(
       map(bucket => bucket?.contracts.length ?? 0)

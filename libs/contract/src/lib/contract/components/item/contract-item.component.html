@@ -1,4 +1,4 @@
-<ng-container *ngIf="contract.titleId | getTitle | async as title">
+<ng-container *ngIf="contract?.titleId | getTitle | async as title">
   <header fxLayout fxLayoutAlign="space-between start" test-id="avails-section">
     <section fxLayout="column">
       <h2>{{ title?.title?.international }}</h2>
@@ -15,8 +15,11 @@
   </header>
   <ng-container *ngIf="contract | getTermsFromContract | async as terms">
     <bf-table [source]="terms" useFilter pagination="50">
-      <ng-template colRef="duration" label="Terms" let-duration [sort]="sortDuration">
-        {{ duration.from | date:'M/d/y' }} - {{ duration.to | date:'M/d/y' }}
+      <ng-template colRef="duration.from" label="Terms Start Date" let-from>
+        {{ from | date:'M/d/y' }}
+      </ng-template>
+      <ng-template colRef="duration.to" label="Terms End Date" let-to>
+        {{ to | date:'M/d/y' }}
       </ng-template>
       <ng-template colRef="territories" label="Territories" let-territories>
         <span class="group-label" (click)="openDetails(territories, 'territories')">
@@ -33,11 +36,6 @@
       <ng-template colRef="exclusive" label="Exclusivity" let-exclusive sort>
         {{ exclusive ? 'Yes' : 'No' }}
       </ng-template>
-      <ng-template *ngIf="actionTemplate" colAction="action" label="Actions" let-term let-termIndex="index">
-        <ng-template [ngTemplateOutlet]="actionTemplate"
-          [ngTemplateOutletContext]="{ $implicit:term, index:termIndex }">
-        </ng-template>
-      </ng-template>
       <ng-template colRef="languages" label="Versions" let-versions>
         <ng-container *ngIf="versions | keyvalue as languages">
           <ul *ngIf="languages.length else noLanguage">
@@ -48,6 +46,13 @@
           <ng-template #noLanguage>-</ng-template>
         </ng-container>
       </ng-template>
+      <ng-container *ngIf="actionTemplate">
+        <ng-template colRef="action" label="Actions" sticky let-term="item" let-index="index">
+          <ng-template [ngTemplateOutlet]="actionTemplate"
+            [ngTemplateOutletContext]="{ $implicit:term, index:index }">
+          </ng-template>
+        </ng-template>
+      </ng-container>
     </bf-table>
     <ng-content select="footer"></ng-content>
     <ng-container *ngIf="contract?.titleId| getTitleHoldbacks:orgId | async as existingHoldbacks">

@@ -5,7 +5,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { hasDisplayName } from '@blockframes/utils/helpers';
 import { AuthQuery, AuthService, AuthState } from '@blockframes/auth/+state';
 import { of } from 'rxjs';
-import { OrganizationService, OrganizationStore } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 
 @Injectable({
   providedIn: 'root'
@@ -16,8 +16,7 @@ export class EventAuthGuard extends CollectionGuard<AuthState> {
     service: AuthService,
     private query: AuthQuery,
     private afAuth: AngularFireAuth,
-    private orgService: OrganizationService,
-    private orgStore: OrganizationStore,
+    private orgService: OrganizationService
   ) {
     super(service);
   }
@@ -43,15 +42,6 @@ export class EventAuthGuard extends CollectionGuard<AuthState> {
             const org = await this.orgService.getValue(user.orgId);
             if (org.status !== 'accepted') {
               return this.router.navigate(['/c/organization/create-congratulations']);
-            }
-
-            /**
-             * If current user is not anonymous, we populate org store
-             */
-            if (userAuth && !userAuth.isAnonymous) {
-              this.orgStore.upsert(org.id, org);
-              this.orgStore.setActive(org.id);
-              this.orgService.syncActive({ id: org.id });
             }
 
             // Everyting is ok

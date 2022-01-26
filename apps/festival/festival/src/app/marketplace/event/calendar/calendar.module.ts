@@ -9,10 +9,14 @@ import { EventModule } from '@blockframes/event/event.module';
 import { EventCardModule } from '@blockframes/event/components/card/card.module';
 import { EventLinkModule } from '@blockframes/event/pipes/event-link.pipe';
 import { AppBarModule } from '@blockframes/ui/app-bar';
+
 // Material
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatBadgeModule } from '@angular/material/badge';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 @NgModule({
@@ -29,6 +33,9 @@ import { MatBadgeModule } from '@angular/material/badge';
     MatFormFieldModule,
     MatSelectModule,
     MatBadgeModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule,
     // Router
     RouterModule.forChild([{ path: '', component: EventCalendarComponent }])
   ]

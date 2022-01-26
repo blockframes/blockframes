@@ -1,22 +1,55 @@
 import { Injectable } from '@angular/core';
 import { UserRole, createDocPermissions, PermissionsDocument } from './permissions.firestore';
-import { PermissionsState, PermissionsStore } from './permissions.store';
+import { Permissions } from './permissions.model';
 import { CollectionService, CollectionConfig, AtomicWrite } from 'akita-ng-fire';
 import type firebase from 'firebase';
-import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
-import { UserService } from '@blockframes/user/+state';
+import { UserService } from '@blockframes/user/+state/user.service';
+import { map, switchMap, tap } from 'rxjs/operators';
+import { AuthQuery, AuthService } from '@blockframes/auth/+state';
+import { combineLatest, Observable, of } from 'rxjs';
+import { ActiveState, EntityState } from '@datorama/akita';
+
+interface PermissionsState extends EntityState<Permissions>, ActiveState<string> { }
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'permissions' })
 export class PermissionsService extends CollectionService<PermissionsState> {
   readonly useMemorization = true;
 
+  // The whole permissions document for organization of the current logged in user.
+  permissions: Permissions;
+  permissions$: Observable<Permissions> = this.authService.profile$.pipe(
+    switchMap(user => user?.orgId ? this.valueChanges(user.orgId) : of(undefined)),
+    tap(permissions => this.permissions = permissions)
+  );
+
+  // Checks if the connected user is superAdmin of his organization.
+  public isSuperAdmin$ = combineLatest([
+    this.authService.profile$,
+    this.permissions$,
+  ]).pipe(
+    map(([user, p]) => user?.uid && p?.roles[user.uid] === 'superAdmin'),
+    tap(isSuperAdmin => this.isSuperAdmin = isSuperAdmin)
+  );
+  public isSuperAdmin: boolean;
+
+  // Checks if the connected user is admin of his organization.
+  public isAdmin$ = combineLatest([
+    this.authService.profile$,
+    this.permissions$,
+    this.isSuperAdmin$,
+  ]).pipe(
+    map(([user, p, isSuperAdmin]) => isSuperAdmin || p?.roles[user.uid] === 'admin'),
+    tap(isAdmin => this.isAdmin = isAdmin)
+  )
+  public isAdmin: boolean;
+
   constructor(
-    private organizationQuery: OrganizationQuery,
+    private authService: AuthService,
     private userService: UserService,
-    store: PermissionsStore
+    private auth: AuthQuery,
   ) {
-    super(store);
+    super();
   }
 
   /**
@@ -24,18 +57,15 @@ export class PermissionsService extends CollectionService<PermissionsState> {
    * and add them to documentPermissions subcollection.
    * @param doc
    * @param write
+   * @param organizationId
    */
-  public addDocumentPermissions(
-    docId: string,
-    write: AtomicWrite,
-    organizationId: string = this.organizationQuery.getActiveId()
-  ) {
+  public addDocumentPermissions(docId: string, write: AtomicWrite, organizationId: string) {
     const documentPermissions = createDocPermissions({ id: docId, ownerId: organizationId });
     const documentPermissionsRef = this.db.doc(`permissions/${organizationId}/documentPermissions/${documentPermissions.id}`).ref;
     (write as firebase.firestore.WriteBatch).set(documentPermissionsRef, documentPermissions);
   }
 
-  public async getDocumentPermissions(docId: string, orgId: string = this.organizationQuery.getActiveId()) {
+  public async getDocumentPermissions(docId: string, orgId: string) {
     const permissions = await this.db.doc(`permissions/${orgId}/documentPermissions/${docId}`).ref.get();
     return createDocPermissions(permissions.data());
   }
@@ -68,5 +98,15 @@ export class PermissionsService extends CollectionService<PermissionsState> {
     } catch (error) {
       return error.message;
     }
+  }
+
+  /** Checks if the user is admin of his organization. */
+  public isUserAdmin(userId: string = this.auth.userId): boolean {
+    return this.permissions.roles[userId] === 'admin' || this.isUserSuperAdmin(userId);
+  }
+
+  /** Checks if the user is superAdmin of his organization. */
+  private isUserSuperAdmin(userId: string): boolean {
+    return this.permissions.roles[userId] === 'superAdmin';
   }
 }

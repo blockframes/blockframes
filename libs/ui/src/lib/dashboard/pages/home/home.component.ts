@@ -3,7 +3,7 @@ import { Component, OnInit, ChangeDetectionStrategy, Optional } from '@angular/c
 
 // Blockframes
 import { MovieService, fromOrg } from '@blockframes/movie/+state';
-import { OrganizationQuery } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
@@ -34,14 +34,14 @@ export class HomeComponent implements OnInit {
 
   constructor(
     private movieService: MovieService,
-    private orgQuery: OrganizationQuery,
+    private orgService: OrganizationService,
     private dynTitle: DynamicTitleService,
     private routerQuery: RouterQuery,
     @Optional() private intercom: Intercom
   ) { }
 
   ngOnInit() {
-    const allMoviesFromOrg$ = this.orgQuery.selectActive().pipe(
+    const allMoviesFromOrg$ = this.orgService.org$.pipe(
       switchMap(({ id }) => this.movieService.valueChanges(fromOrg(id))),
       shareReplay({ refCount: true, bufferSize: 1 }),
       map(titles => titles.filter(title => title.app[this.app].access))

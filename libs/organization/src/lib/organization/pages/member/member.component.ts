@@ -1,8 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs';
-import { OrganizationQuery } from '../../+state/organization.query';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { PermissionsQuery, UserRole, PermissionsService } from '../../../permissions/+state';
+import { UserRole, PermissionsService } from '../../../permissions/+state';
 import { UserQuery } from '@blockframes/user/+state/user.query';
 import { InvitationService } from '@blockframes/invitation/+state/invitation.service';
 import { Invitation } from '@blockframes/invitation/+state/invitation.model';
@@ -17,8 +16,8 @@ import { buildJoinOrgQuery } from '@blockframes/invitation/invitation-utils';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MemberComponent implements OnInit {
-  public orgName: string = this.query.getActive().denomination.full;
-  public org: Organization = this.query.getActive();
+  public orgName: string = this.orgService.org.denomination.full;
+  public org: Organization = this.orgService.org;
 
   /** Observable of all members of the organization */
   public members$: Observable<OrganizationMember[]>;
@@ -33,10 +32,8 @@ export class MemberComponent implements OnInit {
   public isSuperAdmin$: Observable<boolean>;
 
   constructor(
-    private query: OrganizationQuery,
     private snackBar: MatSnackBar,
     private invitationService: InvitationService,
-    private permissionQuery: PermissionsQuery,
     private permissionService: PermissionsService,
     private userQuery: UserQuery,
     private orgService: OrganizationService,
@@ -45,10 +42,10 @@ export class MemberComponent implements OnInit {
   ngOnInit() {
     this.members$ = this.userQuery.membersWithRole$;
 
-    this.isAdmin$ = this.permissionQuery.isAdmin$;
-    this.isSuperAdmin$ = this.permissionQuery.isSuperAdmin$;
+    this.isAdmin$ = this.permissionService.isAdmin$;
+    this.isSuperAdmin$ = this.permissionService.isSuperAdmin$;
 
-    if (this.permissionQuery.isUserAdmin()) {
+    if (this.permissionService.isUserAdmin()) {
       const queryFn1 = buildJoinOrgQuery(this.org.id, 'invitation');
       const queryFn2 = buildJoinOrgQuery(this.org.id, 'request');
 

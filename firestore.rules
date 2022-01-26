@@ -176,7 +176,7 @@ service cloud.firestore {
         || userId() == incomingData().fromUser.uid;
     }
 
-    function isInvitationRecepient() {
+    function isInvitationRecipient() {
       return userId() == existingData().toUser.uid
         || (existingData().type == 'joinOrganization' && isOrgAdmin(existingData().toOrg.id))
         || (existingData().type == 'attendEvent' && isOrgMember(existingData().toOrg.id));
@@ -184,7 +184,7 @@ service cloud.firestore {
 
     function isOnlyChangingInvitationStatus() {
       return (
-        isInvitationRecepient()
+        isInvitationRecipient()
         && isNotUpdatingField(['watchTime'])
       );
     }
@@ -368,9 +368,22 @@ service cloud.firestore {
         || userOrgId() == incomingData().sellerId)
         && notInMaintenance();
       allow update: if (userOrgId() in existingData().stakeholders)
-                    && isOnlyChangingContractStatus()
+                    && onlyChange(['status', 'declineReason'])
                     && notInMaintenance();
       allow delete: if false;
+
+      ////////////////////////////////
+      // NEGOTIATION RULES            //
+      ////////////////////////////////
+
+      match /negotiations/{negotiationId} {
+        allow create: if (userOrgId() == incomingData().createdByOrg) && notInMaintenance();
+        allow read: if (userOrgId() in existingData().stakeholders) && notInMaintenance();
+        allow update: if (userOrgId() != existingData().createdByOrg)
+          && (userOrgId() in existingData().stakeholders)
+          && onlyChange(['status', 'declineReason']) && notInMaintenance();
+        allow delete: if false;
+      }
     }
 
     match /terms/{termId} {
@@ -429,10 +442,6 @@ service cloud.firestore {
 		}
 
     /// FUNCTIONS ///
-    function isOnlyChangingContractStatus() {
-      return (request.resource.data.diff(resource.data).affectedKeys()
-        .hasOnly(['status', 'declineReason']));
-    }
 
     function isOnlyChangingAttendeeStatus() {
       return isNotUpdatingId('id', existingData().id)
@@ -494,6 +503,7 @@ service cloud.firestore {
           || (existingData().type == 'movie' && orgCan('canUpdate', userOrgId(), docId))
         );
     }
+
 
 
     /////////////////////////////////////////////////////////////////////////////////
@@ -645,6 +655,11 @@ service cloud.firestore {
       return ( incomingData()[fieldArray[0]][fieldArray[1]].keys().hasAll([fieldArray[2]]) && (resource == null || !existingData()[fieldArray[0]][fieldArray[1]].keys().hasAll([fieldArray[2]])) )
         || ( incomingData()[fieldArray[0]].keys().hasAll([fieldArray[1]]) && (resource == null || !existingData()[fieldArray[0]].keys().hasAll([fieldArray[1]])) )
         || ( incomingData().keys().hasAll([fieldArray[0]]) && (resource == null || !existingData().keys().hasAll([fieldArray[0]])) );
+    }
+
+    //updating only the specified fields?
+    function onlyChange(fields) {
+      return incomingData().diff(existingData()).affectedKeys().hasOnly(fields);
     }
 
     // The field is removed

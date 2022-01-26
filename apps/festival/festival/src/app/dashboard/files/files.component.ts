@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { OrganizationQuery } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
@@ -9,9 +9,9 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilesViewComponent  {
-  org$ = this.orgQuery.selectActive();
+  org$ = this.orgService.org$;
 
-  constructor(private orgQuery: OrganizationQuery, private dynTitle: DynamicTitleService) {
+  constructor(private orgService: OrganizationService, private dynTitle: DynamicTitleService) {
     this.dynTitle.setPageTitle('My files')
   }
 }

@@ -21,7 +21,7 @@ import { AvailableTerritoryMarker, BucketTerritoryMarker, CalendarAvailsFilter, 
 //////////
 // TERM //
 //////////
-function createBucketTermControl(params: Partial<BucketTerm> = {}) {
+export function createBucketTermControl(params: Partial<BucketTerm> = {}) {
   const term = createBucketTerm(params);
   return {
     territories: new FormStaticValueArray<'territories'>(term.territories, 'territories'),
@@ -39,7 +39,8 @@ type BucketTermControl = ReturnType<typeof createBucketTermControl>
 
 export class BucketTermForm extends FormEntity<BucketTermControl, BucketTerm> {
   constructor(term: Partial<BucketTerm> = {}) {
-    super(createBucketTermControl(term))
+    const control = createBucketTermControl(term);
+    super(control)
   }
 }
 

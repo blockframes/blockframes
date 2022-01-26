@@ -14,7 +14,7 @@ import { map, switchMap } from 'rxjs/operators';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { NotificationQuery } from '@blockframes/notification/+state';
-import { OrganizationQuery } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { MovieService, Movie } from '@blockframes/movie/+state'
 import { getCurrentApp, App } from '@blockframes/utils/apps';
 
@@ -37,7 +37,7 @@ export class EventComponent implements OnInit {
   @ViewChild(CdkScrollable) cdkScrollable: CdkScrollable
   
   constructor(
-    private orgQuery: OrganizationQuery,
+    private orgService: OrganizationService,
     private authQuery: AuthQuery,
     private invitationService: InvitationService,
     private notificationQuery: NotificationQuery,
@@ -46,7 +46,7 @@ export class EventComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.wishlistCount$ = this.orgQuery.selectActive().pipe(
+    this.wishlistCount$ = this.orgService.org$.pipe(
       map(org => org?.wishlist ? org.wishlist : []),
       switchMap(movieIds => this.movieService.getValue(movieIds)),
       map((movies: Movie[]) => movies.filter(filterMovieByAppAccess(getCurrentApp(this.routerQuery))).length)

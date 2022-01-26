@@ -10,8 +10,8 @@ export const discussionData = {
 }
 
 
-export const strEmail = (nameRecepient, nameinvestor, orgName, emailinvestor, title, min, max, cc='$') =>  
-`Hi ${nameRecepient},*
+export const strEmail = (nameRecipient, nameinvestor, orgName, emailinvestor, title, min, max, cc='$') =>
+`Hi ${nameRecipient},*
 
 ${nameinvestor} (${orgName}) would like to know more about *${title}*.
 

@@ -11,9 +11,9 @@ import { InvitationService } from '../+state/invitation.service';
 
 // RxJs
 import { switchMap, filter } from 'rxjs/operators';
-import { PermissionsQuery } from '@blockframes/permissions/+state';
-import { combineLatest } from 'rxjs';
-import { OrganizationQuery } from '@blockframes/organization/+state';
+import { PermissionsService } from '@blockframes/permissions/+state';
+import { combineLatest, of } from 'rxjs';
+import { OrganizationService } from '@blockframes/organization/+state';
 
 @Injectable({ providedIn: 'root' })
 @CollectionGuardConfig({ awaitSync: false })
@@ -21,8 +21,8 @@ export class InvitationGuard extends CollectionGuard<InvitationState> {
   constructor(
     service: InvitationService,
     private authQuery: AuthQuery,
-    private orgQuery: OrganizationQuery,
-    private permissionQuery: PermissionsQuery
+    private orgService: OrganizationService,
+    private permissionService: PermissionsService
   ) {
     super(service);
   }
@@ -31,11 +31,13 @@ export class InvitationGuard extends CollectionGuard<InvitationState> {
   sync() {
     return combineLatest([
       this.authQuery.user$,
-      this.orgQuery.selectActiveId(),
-      this.permissionQuery.isAdmin$
+      this.orgService.org$,
+      this.permissionService.isAdmin$
     ]).pipe(
       filter(([user]) => !!user && !!user.uid),
-      switchMap(([ user, orgId, isAdmin ]) => {
+      switchMap(([user, org, isAdmin]) => {
+        if (!org) return of();
+        const orgId = org.id;
         if (isAdmin) {
           return combineLatest([
             this.service.syncCollection(ref => ref.where('fromOrg.id', '==', orgId)),

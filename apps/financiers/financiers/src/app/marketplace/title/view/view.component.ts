@@ -6,19 +6,19 @@ import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { mainRoute, additionalRoute, artisticRoute, productionRoute } from '@blockframes/movie/marketplace';
 import { Organization } from '@blockframes/organization/+state/organization.model';
-import { OrganizationService, OrganizationQuery } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { Campaign, CampaignService } from '@blockframes/campaign/+state';
 import { RouteDescription } from '@blockframes/utils/common-interfaces';
 import { SendgridService } from '@blockframes/utils/emails/sendgrid.service';
 import { templateIds } from '@blockframes/utils/emails/ids';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { shareReplay, switchMap, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { AuthQuery } from '@blockframes/auth/+state';
 import { UserService } from '@blockframes/user/+state';
 import { ErrorResultResponse } from '@blockframes/utils/utils';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
+import { getUserEmailData, OrgEmailData } from '@blockframes/utils/emails/utils';
 import { testEmail } from "@blockframes/e2e/utils/env";
 
 interface EmailData {
@@ -36,7 +36,6 @@ interface EmailData {
 })
 export class MarketplaceMovieViewComponent implements OnInit {
   @ViewChild('dialogTemplate') dialogTemplate: TemplateRef<unknown>;
-  private dialogRef: MatDialogRef<unknown, unknown>;
   public movie$: Observable<Movie>;
   public orgs$: Observable<Organization[]>;
   public campaign$: Observable<Campaign>;
@@ -68,7 +67,6 @@ export class MarketplaceMovieViewComponent implements OnInit {
   constructor(
     private movieQuery: MovieQuery,
     private authQuery: AuthQuery,
-    private orgQuery: OrganizationQuery,
     private orgService: OrganizationService,
     private userService: UserService,
     private campaignService: CampaignService,
@@ -100,7 +98,7 @@ export class MarketplaceMovieViewComponent implements OnInit {
       }),
       message: new FormControl(),
     });
-    this.dialogRef = this.dialog.open(this.dialogTemplate, {
+    this.dialog.open(this.dialogTemplate, {
       data: { orgs, form }
     });
   }
@@ -109,7 +107,13 @@ export class MarketplaceMovieViewComponent implements OnInit {
     const templateId = templateIds.financiers.invest;
     const userSubject = getUserEmailData(this.authQuery.user);
 
-    const orgUserSubject = getOrgEmailData(this.orgQuery.getActive());
+    const org = this.orgService.org;
+    const orgUserSubject: OrgEmailData = {
+      denomination: org.denomination.full ?? org.denomination.public,
+      id: org.id || '',
+      email: org.email || ''
+    }
+
     const promises: Promise<ErrorResultResponse>[] = [];
 
     const cyCheck = 'Cypress' in window;
