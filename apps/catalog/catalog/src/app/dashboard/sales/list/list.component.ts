@@ -10,7 +10,7 @@ import { filter, map, mapTo, startWith } from 'rxjs/operators';
 import { MovieService } from '@blockframes/movie/+state';
 import { IncomeService } from '@blockframes/contract/income/+state';
 import { FormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { CollectionReference } from '@angular/fire/firestore';
 import { centralOrgId } from '@env';
@@ -42,34 +42,47 @@ export class SaleListComponent implements OnInit {
   public orgId = this.orgQuery.getActiveId();
 
 
-  public sales$ = this.contractService.valueChanges(ref => queryFn(ref, this.orgId)).pipe(
+  public internalSales$ = this.contractService.valueChanges(ref => queryFn(ref, this.orgId)).pipe(
     joinWith({
       licensor: (sale: Sale) => this.orgService.valueChanges(this.getLicensorId(sale)).pipe(map(getFullName)),
-      licensee: (sale: Sale) => sale.buyerId ? this.orgService.valueChanges(sale.buyerId).pipe(map(getFullName)) : 'External',
+      licensee: (sale: Sale) => this.orgService.valueChanges(sale.buyerId).pipe(map(getFullName)),
       title: (sale: Sale) => this.titleService.valueChanges(sale.titleId).pipe(map(title => title.title.international)),
-      price: (sale: Sale) => sale.sellerId === centralOrgId.catalog ? null : this.incomeService.valueChanges(sale.id),
       negotiation: (sale: Sale) => this.contractService.lastNegotiation(sale.id)
     }),
   );
 
-  public internalSales$ = this.sales$.pipe(
-    map(sales => sales.filter(sale => sale.sellerId === centralOrgId.catalog))
+  public externalSales$ = this.contractService.valueChanges(ref => queryFn(ref, this.orgId)).pipe(
+    joinWith({
+      licensor: (sale: Sale) => this.orgService.valueChanges(this.getLicensorId(sale)).pipe(map(getFullName)),
+      licensee: () => 'External',
+      title: (sale: Sale) => this.titleService.valueChanges(sale.titleId).pipe(map(title => title.title.international)),
+      price: (sale: Sale) => this.incomeService.valueChanges(sale.id),
+    }),
   );
 
-  public externalSales$ = this.sales$.pipe(
-    map(sales => sales.filter(sale => sale.sellerId !== centralOrgId.catalog))
-  );
+
+  public sales$ = combineLatest([this.internalSales$, this.externalSales$]).pipe(map(data => data.flat(1)));
 
   filter = new FormControl();
   filter$: Observable<ContractStatus | ''> = this.filter.valueChanges.pipe(startWith(this.filter.value || ''));
 
-  salesCount$ = this.sales$.pipe(map(m => ({
-    all: m.length,
-    new: m.filter(m => m.negotiation?.status === 'pending' && isInitial(m.negotiation)).length,
-    accepted: m.filter(m => m.negotiation?.status === 'accepted').length,
-    declined: m.filter(m => m.negotiation?.status === 'declined').length,
-    negotiating: m.filter(m => m.negotiation?.status === 'pending' && !isInitial(m.negotiation)).length,
-  })));
+  salesCount$ = combineLatest([this.internalSales$, this.externalSales$]).pipe(map(([internalSales, externalSales]) => {
+    const internalNew = internalSales.filter(m => m.negotiation?.status === 'pending' && isInitial(m.negotiation)).length;
+    const externalNew = externalSales.filter(m => m.status === 'pending').length;
+    const internalAccepted = internalSales.filter(m => m.negotiation?.status === 'accepted').length;
+    const externalAccepted = externalSales.filter(m => m.status === 'accepted').length;
+    const internalDeclined = internalSales.filter(m => m.negotiation?.status === 'declined').length;
+    const externalDeclined = externalSales.filter(m => m.status === 'declined').length;
+    const internalNegotiating = internalSales.filter(m => m.negotiation?.status === 'pending' && !isInitial(m.negotiation)).length;
+    const externalNegotiating = externalSales.filter(m => m.status === 'negotiating').length;
+    return {
+      all: internalSales.length + externalSales.length,
+      new: internalNew + externalNew,
+      accepted: internalAccepted + externalAccepted,
+      declined: internalDeclined + externalDeclined,
+      negotiating: internalNegotiating + externalNegotiating,
+    }
+  }));
 
   constructor(
     private contractService: ContractService,
@@ -88,6 +101,10 @@ export class SaleListComponent implements OnInit {
 
   goToSale({ id }: Contract) {
     this.router.navigate([id], { relativeTo: this.route });
+  }
+
+  isExternal(sale: Contract) {
+    return sale.sellerId === centralOrgId.catalog;
   }
 
   applyFilter(filter?: ContractStatus) {
