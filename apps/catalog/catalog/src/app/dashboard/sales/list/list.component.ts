@@ -6,11 +6,11 @@ import { Organization, OrganizationQuery, OrganizationService } from '@blockfram
 import { ActivatedRoute, Router } from '@angular/router';
 import { Intercom } from 'ng-intercom';
 import { joinWith } from '@blockframes/utils/operators';
-import { filter, map, mapTo, startWith } from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
 import { MovieService } from '@blockframes/movie/+state';
 import { IncomeService } from '@blockframes/contract/income/+state';
 import { FormControl } from '@angular/forms';
-import { combineLatest, Observable } from 'rxjs';
+import { combineLatest, Observable, of } from 'rxjs';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { CollectionReference } from '@angular/fire/firestore';
 import { centralOrgId } from '@env';
@@ -54,7 +54,7 @@ export class SaleListComponent implements OnInit {
   public externalSales$ = this.contractService.valueChanges(ref => queryFn(ref, this.orgId)).pipe(
     joinWith({
       licensor: (sale: Sale) => this.orgService.valueChanges(this.getLicensorId(sale)).pipe(map(getFullName)),
-      licensee: () => 'External',
+      licensee: () => of('External'),
       title: (sale: Sale) => this.titleService.valueChanges(sale.titleId).pipe(map(title => title.title.international)),
       price: (sale: Sale) => this.incomeService.valueChanges(sale.id),
     }),
