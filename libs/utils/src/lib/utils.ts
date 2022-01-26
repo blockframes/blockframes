@@ -233,12 +233,12 @@ export function toLabel(value: string | string[], scope: Scope, joinWith?: strin
 }
 
 /**
- * Example with (['A', 'B', 'C'], ', ', ' & ') 
+ * Example with (['A', 'B', 'C'], ', ', ' & ')
  * output : "A, B & C";
- * @param str 
- * @param joinWith 
- * @param endWith 
- * @returns 
+ * @param str
+ * @param joinWith
+ * @param endWith
+ * @returns
  */
 function smartJoin(str: string[], joinWith = ', ', endWith = ', ') {
   const last = str.pop();
@@ -262,7 +262,7 @@ export function toLanguageVersionString(languages: LanguageRecord) {
     }
 
     if (types.length) {
-      return `${toLabel(language, 'languages')} ${smartJoin(types, ', ', ' & ')}`;
+      return `${toLabel(language, 'languages')} (${smartJoin(types, ', ', ' & ')})`;
     }
 
   }).filter(d => d).join(', ');
