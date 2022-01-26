@@ -362,7 +362,6 @@ export function contractCreatedEmail(
     negotiation,
     pageURL,
     buyerOrg,
-    baseUrl: appUrl.content
   };
   return { to: toUser.email, templateId: templateIds.contract.created, data };
 }
