@@ -35,6 +35,7 @@ export class RequestScreeningComponent {
   ) {}
 
   async requestScreening() {
+    this.animated = false;
     this.requestStatus.next('sending');
     const f = this.functions.httpsCallable('requestScreening');
     await f({ movieId: this.movieId, uid: this.authQuery.userId }).toPromise();
