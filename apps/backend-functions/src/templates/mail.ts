@@ -370,8 +370,12 @@ export function buyerOfferCreatedConfirmationEmail(toUser: UserEmailData, org: O
   const contracts = bucket.contracts.map(contract => createMailContract(contract));
   const pageURL = `${appUrl.content}/c/o/marketplace/offer/${offerId}`;
   const data = {
-    app: { name: appName.catalog }, bucket: { ...bucket, contracts },
-    user: toUser, pageURL, offerId, org
+    app: { name: appName.catalog },
+    bucket: { ...bucket, contracts },
+    user: toUser,
+    pageURL,
+    offerId,
+    org
   };
   return { to: toUser.email, templateId: templateIds.offer.toBuyer, data };
 }
@@ -380,11 +384,16 @@ export function counterOfferRecipientEmail(
   toUser: UserEmailData, senderOrg: OrganizationDocument, offerId: string,
   title: MovieDocument, contractId: string, options: { isMailRecipientBuyer: boolean }
 ): EmailTemplateRequest {
-  let pageURL = `${appUrl.content}/c/o/dashboard/sales/${contractId}/view`;
-  if (options.isMailRecipientBuyer) pageURL = `${appUrl.content}/c/o/marketplace/offer/${offerId}/${contractId}`;
+  const pageURL = options.isMailRecipientBuyer
+    ? `${appUrl.content}/c/o/marketplace/offer/${offerId}/${contractId}`
+    : `${appUrl.content}/c/o/dashboard/sales/${contractId}/view`;
   const data = {
-    user: toUser, offerId, org: senderOrg, pageURL,
-    title, app: { name: appName.catalog }
+    user: toUser,
+    offerId,
+    org: senderOrg,
+    pageURL,
+    title,
+    app: { name: appName.catalog }
   };
   return { to: toUser.email, templateId: templateIds.negotiation.receivedCounterOffer, data };
 }
@@ -395,11 +404,17 @@ export function counterOfferSenderEmail(
 ): EmailTemplateRequest {
   const terms = createMailTerm(negotiation.terms);
   const currency = staticModel['movieCurrencies'][negotiation.currency];
-  let pageURL = `${appUrl.content}/c/o/dashboard/sales/${contractId}/view`;
-  if (options.isMailRecipientBuyer) pageURL = `${appUrl.content}/c/o/marketplace/offer/${offerId}/${contractId}`;
+  const pageURL = options.isMailRecipientBuyer
+    ? `${appUrl.content}/c/o/marketplace/offer/${offerId}/${contractId}`
+    : `${appUrl.content}/c/o/dashboard/sales/${contractId}/view`;
+
   const data = {
-    user: toUser, pageURL, offerId, org,
-    contractId, app: { name: appName.catalog },
+    user: toUser,
+    pageURL,
+    offerId,
+    org,
+    contractId,
+    app: { name: appName.catalog },
     negotiation: { ...negotiation, terms, currency },
     title: title.title.international
   };
@@ -416,7 +431,10 @@ export function offerAcceptedOrDeclined(
   const pageURL = `${appUrl.content}/c/o/marketplace/offer/${offer.id}`;
   const data = {
     contracts: isOfferAccepted ? acceptedContracts : contracts,
-    offer, user, pageURL, app: { name: appName.catalog }
+    offer,
+    user,
+    pageURL,
+    app: { name: appName.catalog }
   };
   const templateId = isOfferAccepted ? templateIds.offer.allContractsAccepted : templateIds.offer.allContractsDeclined;
   return { to: user.email, templateId, data };

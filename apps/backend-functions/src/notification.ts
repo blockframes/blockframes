@@ -678,12 +678,17 @@ async function sendContractStatusChangedConfirmation(recipient: User, notificati
     contract, title, app, isRecipientBuyer, toUser, recipientOrg, counterOfferSenderOrg
   } = await getNegotiationUpdatedEmailData(recipient, notification);
 
-  let pageURL = `${appUrl.content}/c/o/dashboard/sales/${contract.id}/view`;
-  if(isRecipientBuyer) pageURL = `${appUrl.content}/c/o/marketplace/offer/${contract.offerId}/${contract.id}`;
+  const pageURL = isRecipientBuyer
+    ? `${appUrl.content}/c/o/marketplace/offer/${contract.offerId}/${contract.id}`
+    : `${appUrl.content}/c/o/dashboard/sales/${contract.id}/view`;
 
   const data = {
-    user: toUser, org: recipientOrg,
-    contract, title, pageURL, app:{name:appName.catalog}
+    user: toUser,
+    org: recipientOrg,
+    contract,
+    title,
+    pageURL,
+    app: { name: appName.catalog }
   };
 
   let templateId = templateIds.negotiation.myContractWasAccepted;
