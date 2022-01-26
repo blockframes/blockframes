@@ -1,6 +1,6 @@
 import { MovieLanguageSpecification } from "@blockframes/movie/+state/movie.firestore";
 import { Timestamp } from "@blockframes/utils/common-interfaces/timestamp";
-import { staticModel } from "@blockframes/utils/static-model/static-model";
+import { staticModel } from "@blockframes/utils/static-model";
 import { centralOrgId } from "@env";
 import { Negotiation } from "./+state/negotiation.firestore";
 

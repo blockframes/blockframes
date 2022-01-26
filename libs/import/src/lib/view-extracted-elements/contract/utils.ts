@@ -183,7 +183,7 @@ export async function formatContract(
         return sellerId;
       }
     },
-    /* e */'term.territories': (value: string) => getStaticList('territories', value, separator, 'Territories') as Territory[],
+    /* e */'term.territories': (value: string) => getStaticList('territories', value, separator, 'Territories', true, 'world') as Territory[],
     /* f */'term.medias': (value: string) =>  getStaticList('medias', value, separator, 'Medias') as Media[],
     /* g */'term.exclusive': (value: string) => {
       const lower = value.toLowerCase();

@@ -1,6 +1,5 @@
 import {
   MoviePromotionalElements,
-  MovieLanguageSpecificationContainer,
   Title,
   MovieAnalytics,
   MovieStakeholders,
@@ -113,12 +112,12 @@ export function createMoviePromotional(
   };
 }
 
-export function createLanguageKey(languages: Partial<{ [language in Language]: MovieLanguageSpecification }> = {}): LanguageRecord {
-  const languageSpecifications = {}
+export function createLanguageKey(languages: LanguageRecord = {}): LanguageRecord {
+  const languageSpecifications: LanguageRecord = {}
   for (const language in languages) {
     languageSpecifications[language] = createMovieLanguageSpecification(languages[language])
   }
-  return (languageSpecifications as Partial<{ [language in Language]: MovieLanguageSpecification }>)
+  return languageSpecifications;
 }
 
 export function createMovieLanguageSpecification(
@@ -142,7 +141,7 @@ export function createAppConfig(params: Partial<MovieAppConfig<Date>>) {
   }
 }
 
-export function createMovieAppConfig(_appAccess: Partial<{[app in App]: MovieAppConfig<Date>}> = {}): MovieAppConfigRecord {
+export function createMovieAppConfig(_appAccess: Partial<{ [app in App]: MovieAppConfig<Date> }> = {}): MovieAppConfigRecord {
   const appAccess = {};
   const apps = getAllAppsExcept(['crm']);
   for (const a of apps) {
@@ -226,7 +225,7 @@ export function createMovieStakeholders(stakeholders: Partial<MovieStakeholders>
 }
 
 export function populateMovieLanguageSpecification(
-  spec: Partial<MovieLanguageSpecificationContainer>,
+  spec: LanguageRecord,
   slug: Language,
   type: MovieLanguageType,
   value: boolean = true

@@ -29,7 +29,7 @@
           </mat-chip>
         </mat-chip-list>
       </div>
-      <div fxLayout fxLayoutAlign="end center">
+      <div fxLayout fxLayoutAlign="end center" fxLayoutGap="8px">
         <button type="button" mat-button color="warn" (click)="remove()">Delete</button>
         <ng-container *ngIf="form.dirty else disabled">
           <button type="submit" mat-stroked-button color="primary" (click)="save()" test-id="event-save">Save</button>
