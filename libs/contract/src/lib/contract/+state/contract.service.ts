@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { ContractStore, ContractState } from './contract.store';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { ContractDocument, convertDuration, createMandate, createSale, Holdback, Mandate, Sale } from './contract.model';
 import { createDocumentMeta, formatDocumentMetaFromFirestore } from "@blockframes/utils/models-meta";
@@ -10,6 +9,9 @@ import { QueryFn } from '@angular/fire/firestore';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
 import { centralOrgId } from '@env';
+import { ActiveState, EntityState } from '@datorama/akita';
+
+interface ContractState extends EntityState<Sale | Mandate>, ActiveState<string> { }
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'contracts' })
@@ -17,11 +19,10 @@ export class ContractService extends CollectionService<ContractState> {
   useMemorization = true;
 
   constructor(
-    store: ContractStore,
     private orgService: OrganizationService,
     private negotiationService: NegotiationService,
   ) {
-    super(store);
+    super();
   }
 
   /**
