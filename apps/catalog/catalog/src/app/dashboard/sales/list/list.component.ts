@@ -10,7 +10,7 @@ import { map, startWith } from 'rxjs/operators';
 import { MovieService } from '@blockframes/movie/+state';
 import { IncomeService } from '@blockframes/contract/income/+state';
 import { FormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { combineLatest, Observable, of } from 'rxjs';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { CollectionReference } from '@angular/fire/firestore';
 import { centralOrgId } from '@env';
@@ -42,19 +42,31 @@ export class SaleListComponent implements OnInit {
   public orgId = this.orgQuery.getActiveId();
 
 
-  public sales$ = this.contractService.valueChanges(ref => queryFn(ref, this.orgId)).pipe(
+  public internalSales$ = this.contractService.valueChanges(ref => queryFn(ref, this.orgId)).pipe(
     joinWith({
       licensor: (sale: Sale) => this.orgService.valueChanges(this.getLicensorId(sale)).pipe(map(getFullName)),
-      licensee: (sale: Sale) => sale.buyerId ? this.orgService.valueChanges(sale.buyerId).pipe(map(getFullName)) : 'External',
+      licensee: (sale: Sale) => this.orgService.valueChanges(sale.buyerId).pipe(map(getFullName)),
       title: (sale: Sale) => this.titleService.valueChanges(sale.titleId).pipe(map(title => title.title.international)),
-      price: (sale: Sale) => sale.sellerId === centralOrgId.catalog ? null : this.incomeService.valueChanges(sale.id),
       negotiation: (sale: Sale) => this.contractService.lastNegotiation(sale.id)
     }),
   );
+
+  public externalSales$ = this.contractService.valueChanges(ref => queryFn(ref, this.orgId)).pipe(
+    joinWith({
+      licensor: (sale: Sale) => this.orgService.valueChanges(this.getLicensorId(sale)).pipe(map(getFullName)),
+      licensee: () => of('External'),
+      title: (sale: Sale) => this.titleService.valueChanges(sale.titleId).pipe(map(title => title.title.international)),
+      price: (sale: Sale) => this.incomeService.valueChanges(sale.id),
+    }),
+  );
+
+
+  public sales$ = combineLatest([this.internalSales$, this.externalSales$]).pipe(map(data => data.flat(1)));
+
   filter = new FormControl();
   filter$: Observable<ContractStatus | ''> = this.filter.valueChanges.pipe(startWith(this.filter.value || ''));
 
-  salesCount$ = this.sales$.pipe(map(m => ({
+  salesCount$ = this.internalSales$.pipe(map(m => ({
     all: m.length,
     new: m.filter(m => m.negotiation?.status === 'pending' && isInitial(m.negotiation)).length,
     accepted: m.filter(m => m.negotiation?.status === 'accepted').length,
