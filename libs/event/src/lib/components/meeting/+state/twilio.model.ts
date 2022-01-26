@@ -13,7 +13,7 @@ export interface RemoteTracks {
 
 export type TrackKind = keyof Tracks;
 
-export type AttendeeKind = 'local' | 'remote';
+type AttendeeKind = 'local' | 'remote';
 export interface Attendee {
   id: string;
   kind: AttendeeKind,

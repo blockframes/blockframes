@@ -186,7 +186,7 @@ export class TwilioService {
         const remoteTracks: RemoteTracks = { [track.kind]: null };
         this.twilioStore.upsert(
           participant.sid,
-          (enitity: RemoteAttendee) => ({ tracks: { ...enitity.tracks, ...remoteTracks } }),
+          (entity: RemoteAttendee) => ({ tracks: { ...entity.tracks, ...remoteTracks } }),
           id => ({ id, kind: 'remote', userName: JSON.parse(participant.identity).displayName, tracks: remoteTracks })
         )
       }
