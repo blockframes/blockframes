@@ -17,7 +17,7 @@ export class PermissionsService extends CollectionService<PermissionsState> {
   readonly useMemorization = true;
 
   // The whole permissions document for organization of the current logged in user.
-  permissions: Permissions;
+  permissions: Permissions; // @TODO #7273 if this.permissions$ was not already called, this will be undefined
   permissions$: Observable<Permissions> = this.authService.profile$.pipe(
     switchMap(user => user?.orgId ? this.valueChanges(user.orgId) : of(undefined)),
     tap(permissions => this.permissions = permissions)
@@ -28,10 +28,8 @@ export class PermissionsService extends CollectionService<PermissionsState> {
     this.authService.profile$,
     this.permissions$,
   ]).pipe(
-    map(([user, p]) => user?.uid && p?.roles[user.uid] === 'superAdmin'),
-    tap(isSuperAdmin => this.isSuperAdmin = isSuperAdmin)
+    map(([user, p]) => user?.uid && p?.roles[user.uid] === 'superAdmin')
   );
-  public isSuperAdmin: boolean;
 
   // Checks if the connected user is admin of his organization.
   public isAdmin$ = combineLatest([
@@ -39,10 +37,8 @@ export class PermissionsService extends CollectionService<PermissionsState> {
     this.permissions$,
     this.isSuperAdmin$,
   ]).pipe(
-    map(([user, p, isSuperAdmin]) => isSuperAdmin || p?.roles[user.uid] === 'admin'),
-    tap(isAdmin => this.isAdmin = isAdmin)
+    map(([user, p, isSuperAdmin]) => isSuperAdmin || p?.roles[user.uid] === 'admin')
   )
-  public isAdmin: boolean;
 
   constructor(
     private authService: AuthService,
