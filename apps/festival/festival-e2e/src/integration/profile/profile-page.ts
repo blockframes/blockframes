@@ -24,8 +24,6 @@ describe('Basic Landing Page, Login and Profile Page Tests', () => {
   })
   afterEach(async () => {
     clearBrowserAuth()
-    cy.clearCookies();
-    cy.clearLocalStorage();
   })
 
 })
