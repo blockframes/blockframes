@@ -12,7 +12,7 @@
 
 <ng-container *ngIf="availabilities$ | async as availabilities; else loading">
   <world-map>
-    <ng-container *ngIf="(status$ | async) === 'INVALID'">
+    <ng-container *ngIf="this.availsForm.invalid">
       <section class="overlay" fxLayout="column" fxLayoutAlign="center center">
         <article fxLayout="column" fxLayoutAlign="center center">
           <h3>
