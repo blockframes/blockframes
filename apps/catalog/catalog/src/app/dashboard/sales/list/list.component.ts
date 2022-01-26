@@ -110,13 +110,13 @@ export class SaleListComponent implements OnInit {
   applyFilter(filter?: ContractStatus) {
     this.filter.setValue(filter);
     const titleFilter = filter === 'pending' ? 'new' : filter;
-    const pageTitle = `My Sales ( ${titleFilter ? capitalize(titleFilter) : 'All'} )`;
+    const pageTitle = `My Sales (${titleFilter ? capitalize(titleFilter) : 'All'})`;
     this.dynTitle.setPageTitle(pageTitle);
   }
 
   resetFilter() {
     this.filter.reset('');
-    this.dynTitle.setPageTitle('My Sales ( All )');
+    this.dynTitle.setPageTitle('My Sales (All)');
   }
 
   /* index paramater is unused because it is a default paramater from the filter javascript function */
@@ -133,7 +133,7 @@ export class SaleListComponent implements OnInit {
 
 
   ngOnInit() {
-    this.dynTitle.setPageTitle('My Sales ( All )');
+    this.dynTitle.setPageTitle('My Sales (All)');
   }
 
   public openIntercom() {

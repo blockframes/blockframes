@@ -42,11 +42,11 @@ import { logger } from 'firebase-functions';
 import { NegotiationDocument } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
 import { Offer } from '@blockframes/contract/offer/+state';
 import { ContractDocument } from '@blockframes/contract/contract/+state';
-import { format } from 'date-fns';
-import { movieCurrencies, staticModel } from '@blockframes/utils/static-model';
+import { movieCurrencies } from '@blockframes/utils/static-model';
 import { appUrl } from './environments/environment';
-import { getReviewer, hydrateLanguageForEmail } from '@blockframes/contract/negotiation/utils';
+import { getReviewer } from '@blockframes/contract/negotiation/utils';
 import { createMailContract, MailContract } from '@blockframes/contract/contract/+state/contract.firestore';
+import { createMailTerm } from '@blockframes/contract/term/+state/term.firestore';
 
 
 // @TODO (#2848) forcing to festival since invitations to events are only on this one
@@ -679,8 +679,8 @@ async function sendContractStatusChangedConfirmation(recipient: User, notificati
   } = await getNegotiationUpdatedEmailData(recipient, notification);
 
   const data = {
-    user: toUser, baseUrl: appUrl.content, offerId: contract.offerId, org: recipientOrg,
-    contractId: contract.id, title, isRecipientBuyer
+    user: toUser, baseUrl: appUrl.content, org: recipientOrg,
+    contract, title, isRecipientBuyer
   };
 
   let templateId = templateIds.negotiation.myContractWasAccepted;
@@ -714,19 +714,7 @@ async function sendOfferAcceptedOrDeclinedConfirmation(recipient: User, notifica
   });
   const negotiations = await Promise.all(negotiationPromises);
   const titles = await Promise.all(titlePromises);
-  const mailNegotiations = negotiations.map(nego => ({
-    ...nego,
-    terms: nego.terms.map(term => ({
-      ...term,
-      territories: term.territories.map(territory => staticModel['territories'][territory]).join(', '),
-      medias: term.medias.map(media => staticModel['medias'][media] ?? media).join(', '),
-      duration: {
-        from: format(term.duration.from.toDate(), 'dd MMMM, yyyy'),
-        to: format(term.duration.to.toDate(), 'dd MMMM, yyyy'),
-      },
-      languages: hydrateLanguageForEmail(term.languages),
-    }))
-  }))
+  const mailNegotiations = negotiations.map(createMailContract);
 
   contracts.forEach((contract, index) => contract['negotiation'] = mailNegotiations[index]);
   contracts.forEach((contract, index) => contract['title'] = titles[index].title.international);
