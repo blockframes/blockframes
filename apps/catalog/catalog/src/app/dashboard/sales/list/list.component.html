@@ -37,35 +37,20 @@
         <ng-template colRef="title" label="Title" let-title sort>
           {{ title | maxLength:50 }}
         </ng-template>
-        <ng-template colRef="price" label="Price" let-income let-sale="item">
-          <ng-container *ngIf="income?.price; else negotiationPrice">
-            {{income.price | currency:income.currency}}
-          </ng-container>
-          <ng-template #negotiationPrice>
-            <span *ngIf="sale.negotiation?.price; else noPrice">
-              {{sale.negotiation.price | currency:sale.negotiation.currency}}
-            </span>
-          </ng-template>
+        <ng-template colRef="price" label="Price" let-sale="item">
+          <span *ngIf="sale.negotiation?.price; else noPrice">
+            {{sale.negotiation.price | currency:sale.negotiation.currency}}
+          </span>
           <ng-template #noPrice>-</ng-template>
         </ng-template>
         <ng-template colRef="status" label="Status" let-status let-sale="item" sort>
           <bf-tag>
-            <ng-container *ngIf="sale.negotiation?.id; else externalSaleStatus">
-              {{ sale.negotiation | negotiationStatus | toLabel: 'contractStatus' }}
-            </ng-container>
-            <ng-template #externalSaleStatus>
-              <ng-container *ngIf="sale.status; else noStatus">
-                {{ sale.status | toLabel: 'contractStatus' }}
-              </ng-container>
-              <ng-template #noStatus>-</ng-template>
-            </ng-template>
+            {{ sale.negotiation | negotiationStatus | toLabel: 'contractStatus' }}
           </bf-tag>
         </ng-template>
         <ng-template colRef="negotiation" label="Negotiation Stage" let-negotiation>
           <ng-container *ngIf=" negotiation | negotiationStage | async  as negoStage">
-            <span [matTooltip]="negoStage">
-              {{negoStage | maxLength:50}}
-            </span>
+            <span [matTooltip]="negoStage"> {{negoStage | maxLength:50}} </span>
           </ng-container>
         </ng-template>
       </bf-table>
@@ -82,7 +67,7 @@
           <ng-template colRef="title" label="Title" let-title sort>
             {{ title | maxLength:50 }}
           </ng-template>
-          <ng-template colRef="price" label="Price" let-income let-sale="item">
+          <ng-template colRef="price" label="Price" let-income>
             <ng-container *ngIf="income?.price; else noPrice">
               {{income.price | currency:income.currency}}
             </ng-container>
