@@ -262,7 +262,7 @@ export function toLanguageVersionString(languages: LanguageRecord) {
     }
 
     if (types.length) {
-      return `${toLabel(language, 'languages')} (${smartJoin(types, ', ', ' & ')})`;
+      return `${toLabel(language, 'languages')} ${smartJoin(types, ', ', ' & ')}`;
     }
 
   }).filter(d => d).join(', ');
