@@ -587,7 +587,7 @@ async function sendContractCreated(recipient: User, notification: NotificationDo
     getDocument<MovieDocument>(`movies/${contract.titleId}`),
     getDocument<OrganizationDocument>(`orgs/${contract.buyerId}`),
   ]);
-  const template = contractCreatedEmail(toUser, title, 'catalog', contract, negotiation, buyerOrg);
+  const template = contractCreatedEmail(toUser, title, contract, negotiation, buyerOrg);
   return sendMailFromTemplate(template, app, groupIds.unsubscribeAll);
 }
 
