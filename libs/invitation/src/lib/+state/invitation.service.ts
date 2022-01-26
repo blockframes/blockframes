@@ -42,7 +42,7 @@ export class InvitationService extends CollectionService<InvitationState> {
     this.authService.profile$,
     this.permissionsService.isAdmin$
   ]).pipe(
-    filter(([user]) => !!user && !!user.uid && !!user.orgId),
+    filter(([user]) => !!user?.uid && !!user?.orgId),
     switchMap(([user, isAdmin]) => {
       if(isAdmin){
         return combineLatest([
@@ -75,7 +75,7 @@ export class InvitationService extends CollectionService<InvitationState> {
     this.authService.profile$,
     this.allInvitations$
   ]).pipe(
-    filter(([user]) => !!user && !!user.uid && !!user.orgId),
+    filter(([user]) => !!user?.uid && !!user?.orgId),
     map(([user, invitations]) =>  invitations.filter(i => i.toOrg?.id === user.orgId || i.toUser?.uid === user.uid))
   );
 
@@ -84,7 +84,7 @@ export class InvitationService extends CollectionService<InvitationState> {
     this.authService.profile$,
     this.allInvitations$
   ]).pipe(
-    filter(([user]) => !!user && !!user.uid && !!user.orgId),
+    filter(([user]) => !!user?.uid && !!user?.orgId),
     map(([user, invitations]) => {
       const request = (user: User, invitation : Invitation) => invitation.fromUser?.uid === user.uid && invitation.mode === 'request';
       const invitation = (user: User, invitation : Invitation) => invitation.toUser?.uid === user.uid && invitation.mode === 'invitation';

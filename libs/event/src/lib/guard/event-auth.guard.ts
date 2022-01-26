@@ -49,7 +49,7 @@ export class EventAuthGuard extends CollectionGuard<AuthState> {
              * @TODO #7273 remove when we switch to ngfire
              */
             if (userAuth && !userAuth.isAnonymous) {
-              this.orgService.org$.pipe(take(1)).toPromise();
+              await this.orgService.org$.pipe(take(1)).toPromise();
             }
 
             // Everyting is ok

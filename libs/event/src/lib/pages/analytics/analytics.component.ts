@@ -59,12 +59,11 @@ export class AnalyticsComponent implements OnInit {
           // add watch time to the analytic record
           if (this.eventType === 'screening') {
             // retrieve watch time from invitation
-            const invitation = allInvitations.find(invit => invit.eventId === analytic.eventId &&
-              (
-                invit.toUser?.uid === analytic.userId ||
-                invit.fromUser?.uid === analytic.userId
-              )
-            );
+            const invitation = allInvitations.find(invit => {
+              if (invit.eventId !== analytic.eventId) return false;
+              if (invit.toUser?.uid === analytic.userId) return true;
+              if (invit.fromUser?.uid === analytic.userId) return true;
+            });
 
             transformedAnalytic.watchTime = invitation?.watchTime ?? 0;
           }
