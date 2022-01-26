@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { PublicUser } from '@blockframes/user/types';
 import { ErrorResultResponse } from '@blockframes/utils/utils';
+import { BehaviorSubject } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import {
   createLocalAudioTrack,
@@ -27,7 +29,6 @@ import {
 import { TwilioQuery } from './twilio.query';
 import { TwilioStore } from './twilio.store';
 
-
 @Injectable({ providedIn: 'root' })
 export class TwilioService {
 
@@ -35,6 +36,11 @@ export class TwilioService {
   private getAccessToken = this.functions.httpsCallable('getAccessToken');
 
   private preference: { [K in TrackKind]: boolean } = { 'video': true, 'audio': true };
+
+
+  private _participants = new BehaviorSubject<Record<string, LocalAttendee | RemoteAttendee>>({});
+  participants$ = this._participants.asObservable();
+  local$ = this.participants$.pipe(map(p => p['local'] as LocalAttendee));
 
   constructor(
     private functions: AngularFireFunctions,
@@ -60,6 +66,8 @@ export class TwilioService {
     };
     this.twilioStore.upsert(local.id, local);
 
+    this.upsertParticipant(local.id, local);
+
     const [video, audio] = await Promise.all([
       createLocalVideoTrack().catch(() => null),
       createLocalAudioTrack().catch(() => null)
@@ -68,6 +76,8 @@ export class TwilioService {
     // check user preference and disable tracks accordingly
     if (!this.preference['video']) video.disable();
     if (!this.preference['audio']) audio.disable();
+
+    this.upsertParticipant(local.id, {...local, tracks: { video, audio }});
 
     this.twilioStore.update(local.id, { tracks: { video, audio } });
   }
@@ -155,10 +165,12 @@ export class TwilioService {
     // Connect to Twilio room and register event listeners
     this.room = await connect(token, { name: eventId, tracks });
 
+    // Existing participants list
     this.room.participants.forEach((participant: RemoteParticipant) => {
       this.twilioStore.upsert(participant.sid, { id: participant.sid, kind: 'remote', userName: JSON.parse(participant.identity).displayName, tracks: {} })
     })
 
+    // A new participant connected to room
     this.room.on('participantConnected', (participant: RemoteParticipant) => {
       this.twilioStore.upsert(
         participant.sid,
@@ -166,6 +178,7 @@ export class TwilioService {
       );
     });
 
+    // When other (already connected or new) participants activate audio or video
     this.room.on(
       'trackSubscribed',
       (track: RemoteTrack, publication: RemoteTrackPublication, participant: RemoteParticipant) => {
@@ -179,6 +192,7 @@ export class TwilioService {
       },
     );
 
+    // When other already connected participants deactivate audio or video or leave the room
     this.room.on(
       'trackUnsubscribed',
       (track: RemoteTrack, publication: RemoteTrackPublication, participant: RemoteParticipant) => {
@@ -192,6 +206,7 @@ export class TwilioService {
       }
     )
 
+    // A participant leaved the room
     this.room.on('participantDisconnected', (participant: RemoteParticipant) => {
       this.twilioStore.remove(participant.sid);
     });
@@ -209,4 +224,9 @@ export class TwilioService {
     this.twilioStore.remove(); // delete all entities from the store
   }
 
+  private upsertParticipant(id: string, attendee: LocalAttendee | RemoteAttendee){
+    const existingParticipants = this._participants.value;
+    existingParticipants[id] = attendee;
+    this._participants.next(existingParticipants);
+  }
 }
