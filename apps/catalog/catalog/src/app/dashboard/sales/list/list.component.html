@@ -27,48 +27,54 @@
         Declined <span *ngIf="(salesCount$ | async) as salesCount">({{ salesCount.declined }})</span>
       </button>
     </header>
-
-    <bf-table [source]="sales | filterBy: filterBySalesStatus: filter.value" clickable useFilter pagination="50"
-      (rowClick)="goToSale($event)">
-      <ng-template colRef="_meta.createdAt" label="Date" let-date>{{ date | date:'MM/dd/yyyy'}}</ng-template>
-      <ng-template colRef="licensor" label="Licensor" let-licensor sort>{{ licensor | maxLength:50 }}</ng-template>
-      <ng-template colRef="licensee" label="Licensee" let-licensee sort>{{ licensee | maxLength:50 }}</ng-template>
-      <ng-template colRef="offerId" label="Offer Reference" let-id sort>{{ id }}</ng-template>
-      <ng-template colRef="title" label="Title" let-title sort>
-        {{ title | maxLength:50 }}
-      </ng-template>
-      <ng-template colRef="price" label="Price" let-income let-sale="item">
-        <ng-container *ngIf="income?.price; else negotiationPrice">
-          {{income.price | currency:income.currency}}
-        </ng-container>
-        <ng-template #negotiationPrice>
+    <ng-container *ngIf="internalSales$ | async as internalSales">
+      <bf-table *ngIf="internalSales.length" [source]="internalSales | filterBy: filterBySalesStatus: filter.value"
+        clickable useFilter pagination="50" (rowClick)="goToSale($event)">
+        <ng-template colRef="_meta.createdAt" label="Date" let-date>{{ date | date:'MM/dd/yyyy'}}</ng-template>
+        <ng-template colRef="licensor" label="Licensor" let-licensor sort>{{ licensor | maxLength:50 }}</ng-template>
+        <ng-template colRef="licensee" label="Licensee" let-licensee sort>{{ licensee | maxLength:50 }}</ng-template>
+        <ng-template colRef="offerId" label="Offer Reference" let-id sort>{{ id }}</ng-template>
+        <ng-template colRef="title" label="Title" let-title sort>
+          {{ title | maxLength:50 }}
+        </ng-template>
+        <ng-template colRef="price" label="Price" let-sale="item">
           <span *ngIf="sale.negotiation?.price; else noPrice">
             {{sale.negotiation.price | currency:sale.negotiation.currency}}
           </span>
+          <ng-template #noPrice>-</ng-template>
         </ng-template>
-        <ng-template #noPrice>-</ng-template>
-      </ng-template>
-      <ng-template colRef="status" label="Status" let-status let-sale="item" sort>
-        <bf-tag>
-          <ng-container *ngIf="sale.negotiation?.id; else externalSaleStatus">
+        <ng-template colRef="status" label="Status" let-status let-sale="item" sort>
+          <bf-tag>
             {{ sale.negotiation | negotiationStatus | toLabel: 'contractStatus' }}
+          </bf-tag>
+        </ng-template>
+        <ng-template colRef="negotiation" label="Negotiation Stage" let-negotiation>
+          <ng-container *ngIf=" negotiation | negotiationStage | async  as negoStage">
+            <span [matTooltip]="negoStage"> {{negoStage | maxLength:50}} </span>
           </ng-container>
-          <ng-template #externalSaleStatus>
-            <ng-container *ngIf="sale.status; else noStatus">
-              {{ sale.status | toLabel: 'contractStatus' }}
-            </ng-container>
-            <ng-template #noStatus>-</ng-template>
+        </ng-template>
+      </bf-table>
+    </ng-container>
+
+    <ng-container *ngIf="externalSales$| async as externalSales">
+      <ng-container *ngIf="externalSales.length">
+        <h3>Sales external to Archipel Content</h3>
+        <bf-table [source]="externalSales" clickable useFilter pagination="50" (rowClick)="goToSale($event)">
+          <ng-template colRef="_meta.createdAt" label="Import Date" let-date>{{ date | date:'MM/dd/yyyy'}}</ng-template>
+          <ng-template colRef="licensor" label="Licensor" let-licensor sort>{{ licensor | maxLength:50 }}</ng-template>
+          <ng-template colRef="licensee" label="Licensee" let-licensee sort>{{ licensee | maxLength:50 }}</ng-template>
+          <ng-template colRef="title" label="Title" let-title sort>
+            {{ title | maxLength:50 }}
           </ng-template>
-        </bf-tag>
-      </ng-template>
-      <ng-template colRef="negotiation" label="Negotiation Stage" let-negotiation>
-        <ng-container *ngIf=" negotiation | negotiationStage | async  as negoStage">
-          <span [matTooltip]="negoStage">
-            {{negoStage | maxLength:50}}
-          </span>
-        </ng-container>
-      </ng-template>
-    </bf-table>
+          <ng-template colRef="price" label="Price" let-income>
+            <ng-container *ngIf="income?.price; else noPrice">
+              {{income.price | currency:income.currency}}
+            </ng-container>
+            <ng-template #noPrice>-</ng-template>
+          </ng-template>
+        </bf-table>
+      </ng-container>
+    </ng-container>
   </ng-container>
 </ng-container>
 
@@ -78,7 +84,7 @@
 
 <ng-template #empty>
   <section fxLayout="column" fxLayoutAlign="center center" fxFlexGap="16">
-    <h1>You have no Sales yet.</h1>
+    <h1>You have no Deals yet.</h1>
     <p>
       You will be notified as soon as a buyer makes an offer on your titles.<br />
       Or, you can import your external sales by clicking on the below button.
