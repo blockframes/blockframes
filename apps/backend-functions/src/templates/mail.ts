@@ -425,7 +425,7 @@ export function counterOfferSenderEmail(
     contractId,
     app: { name: appName.catalog },
     negotiation: { ...negotiation, terms, currency },
-    title: title.title.international
+    title
   };
   return { to: toUser.email, templateId: templateIds.negotiation.createdCounterOffer, data };
 }
