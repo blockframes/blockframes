@@ -9,7 +9,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { SpecificTermsComponent } from './specific-terms/specific-terms.component';
 import { Movie } from '@blockframes/movie/+state';
-import { OrganizationQuery } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { FormControl } from '@angular/forms';
 import { Holdback } from '@blockframes/contract/contract/+state';
 
@@ -30,7 +30,7 @@ export class MarketplaceSelectionComponent {
 
   constructor(
     @Optional() private intercom: Intercom,
-    private orgQuery: OrganizationQuery,
+    private orgService: OrganizationService,
     private bucketService: BucketService,
     private dialog: MatDialog,
     private dynTitle: DynamicTitleService,
@@ -74,7 +74,7 @@ export class MarketplaceSelectionComponent {
   trackById(i: number, doc: { id: string }) { return doc.id; }
 
   updateHoldbacks(index: number, holdbacks: Holdback[]) {
-    const id = this.orgQuery.getActiveId();
+    const id = this.orgService.org.id;
     this.bucketService.update(id, bucket => {
       const contracts = [...bucket.contracts];
       contracts[index].holdbacks = holdbacks;
@@ -83,7 +83,7 @@ export class MarketplaceSelectionComponent {
   }
 
   updatePrice(index: number, price: string) {
-    const id = this.orgQuery.getActiveId();
+    const id = this.orgService.org.id;
     const currency = this.currencyForm.value;
     return this.bucketService.update(id, bucket => {
       const contracts = [...bucket.contracts];
@@ -93,7 +93,7 @@ export class MarketplaceSelectionComponent {
   }
 
   removeContract(index: number, title: Movie) {
-    const id = this.orgQuery.getActiveId();
+    const id = this.orgService.org.id;
     delete this.prices[index];
     this.bucketService.update(id, bucket => ({
       contracts: bucket.contracts.filter((_, i) => i !== index)
@@ -103,7 +103,7 @@ export class MarketplaceSelectionComponent {
   }
 
   removeTerm(contractIndex: number, termIndex: number) {
-    const id = this.orgQuery.getActiveId();
+    const id = this.orgService.org.id;
     this.bucketService.update(id, bucket => {
       const contracts = [...bucket.contracts];
       const terms = contracts[contractIndex].terms.filter((_, i) => i !== termIndex);

@@ -2,7 +2,7 @@ import { Component, Inject, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AuthService } from '@blockframes/auth/+state';
 import { AccessibilityTypes } from '@blockframes/utils/static-model/types';
-import { OrganizationQuery } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { Event } from '../../+state/event.model';
 import { EventForm } from '../event.form';
 import { Meeting, Screening } from '@blockframes/event/+state/event.firestore';
@@ -21,7 +21,7 @@ export class EventCreateComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) data: { event: Event, types: string[] },
     public dialogRef: MatDialogRef<EventCreateComponent>,
-    private orgQuery: OrganizationQuery,
+    private orgService: OrganizationService,
     private authService: AuthService
   ) {
     this.form = new EventForm(data.event);
@@ -30,7 +30,7 @@ export class EventCreateComponent {
 
   async createAndRedirect() {
     const event = this.form.value as Event<Meeting | Screening>;
-    event.ownerOrgId = this.orgQuery.getActiveId();
+    event.ownerOrgId = this.orgService.org.id;
     event.meta.organizerUid = (await this.authService.user).uid;
     if (event.allDay) {
       event.start.setHours(0, 0, 0);

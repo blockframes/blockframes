@@ -5,14 +5,17 @@
       <div class="main-title" fxLayout="column" fxLayoutAlign="center center">
         <h1>My Selection</h1>
         <p *ngIf="bucket.contracts.length === 1">
-          There is {{ bucket.contracts.length }} Title in my Selection:
+          There is 1 Title in my Selection:
         </p>
         <p *ngIf="bucket.contracts.length > 1">
           There are {{ bucket.contracts.length }} Titles in my Selection:
         </p>
         <p *ngIf="bucket | bucketTitles | getTitle | async as titles">
-          {{ (titles | deepKey:'title.international') }}
+          {{ (titles | join:'title.international') }}
         </p>
+        <a mat-stroked-button color="primary" routerLink="/c/o/marketplace/title" test-id="create-offer">
+          Add more Titles
+        </a>
       </div>
     </header>
 
@@ -54,7 +57,8 @@
                 </a>
               </div>
               <mat-divider></mat-divider>
-              <holdbacks-form [holdbacks]="contract.holdbacks" [title]="title" (holdbacksChange)="updateHoldbacks(i, $event)">
+              <holdbacks-form [holdbacks]="contract.holdbacks" [title]="title"
+                (holdbacksChange)="updateHoldbacks(i, $event)">
               </holdbacks-form>
             </ng-container>
           </footer>

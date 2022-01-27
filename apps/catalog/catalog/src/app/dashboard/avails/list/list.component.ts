@@ -10,13 +10,13 @@ import { centralOrgId } from '@env';
 import { joinWith } from "@blockframes/utils/operators";
 import { Movie, MovieService } from "@blockframes/movie/+state";
 import { TermService } from "@blockframes/contract/term/+state";
-import { OrganizationQuery } from "@blockframes/organization/+state";
 import { ContractService } from "@blockframes/contract/contract/+state";
 import { AvailsForm } from "@blockframes/contract/avails/form/avails.form";
 import { Income, IncomeService } from "@blockframes/contract/income/+state";
 import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
 import { DynamicTitleService } from "@blockframes/utils/dynamic-title/dynamic-title.service";
 import { AvailsFilter, availableTitle, FullSale, FullMandate } from "@blockframes/contract/avails/avails";
+import { OrganizationService } from "@blockframes/organization/+state";
 
 interface TotalIncome { EUR: number; USD: number; }
 
@@ -31,7 +31,7 @@ type JoinSaleTitleType = {
   allSaleCount?: number,
 }
 
-const organizationQuery = (orgId: string): QueryFn => ref => ref.where('orgIds', 'array-contains', orgId);
+const titleQuery = (orgId: string): QueryFn => ref => ref.where('orgIds', 'array-contains', orgId).where('app.catalog.access', '==', true);
 const mandateQuery = (title: Movie): QueryFn => ref => ref.where('titleId', '==', title.id)
   .where('type', '==', 'mandate')
   .where('status', '==', 'accepted');
@@ -62,14 +62,14 @@ const saleCountAndTotalPrice = (title: JoinSaleTitleType) => {
 })
 export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnInit {
   public availsForm = new AvailsForm();
-  private orgId = this.orgQuery.getActiveId();
+  private orgId = this.orgService.org.id;
   private sub: Subscription;
 
   public queryParams$ = this.route.queryParamMap.pipe(
     map(query => ({ formValue: query.get('formValue') })),
   )
 
-  private titles$ = this.titleService.valueChanges(organizationQuery(this.orgId)).pipe(
+  private titles$ = this.titleService.valueChanges(titleQuery(this.orgId)).pipe(
     joinWith({
       sales: title => {
         return this.contractService.valueChanges(saleQuery(title)).pipe(
@@ -112,10 +112,10 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
     private dynTitleService: DynamicTitleService,
     private contractService: ContractService,
     private incomeService: IncomeService,
-    private orgQuery: OrganizationQuery,
     private route: ActivatedRoute,
     private router: Router,
     private termsService: TermService,
+    private orgService: OrganizationService,
   ) { }
 
   ngOnInit() {
@@ -143,6 +143,5 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
   goToMap(id: string) {
     this.router.navigate([id, 'map'], { relativeTo: this.route })
   }
-
 }
 

@@ -12,7 +12,7 @@ import { OrganizationService } from '@blockframes/organization/+state';
 import { AuthService } from '@blockframes/auth/+state';
 import { PublicUser } from '@blockframes/user/+state';
 import { getOrgAppAccess } from '@blockframes/utils/apps';
-import { getOrgEmailData } from '@blockframes/utils/emails/utils';
+import { OrgEmailData } from '@blockframes/utils/emails/utils';
 
 const hasImportErrors = (importState: OrganizationsImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -52,7 +52,7 @@ export class TableExtractedOrganizationsComponent implements OnInit {
     private orgService: OrganizationService
   ) { }
 
-  ngOnInit() { 
+  ngOnInit() {
     // Mat table setup @TODO #7429
     this.rows.paginator = this.paginator;
     this.rows.filterPredicate = this.filterPredicate;
@@ -112,7 +112,13 @@ export class TableExtractedOrganizationsComponent implements OnInit {
 
     const [firstApp] = getOrgAppAccess(importState.org);
     const superAdmin = importState.superAdmin;
-    const orgData = getOrgEmailData(importState.org);
+
+    const orgData: OrgEmailData = {
+      denomination: importState.org.denomination.full ?? importState.org.denomination.public,
+      id: importState.org.id || '',
+      email: importState.org.email || ''
+    }
+
     const newUser: PublicUser = await this.authService.createUser(
       importState.superAdmin.email,
       orgData,

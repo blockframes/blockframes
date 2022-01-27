@@ -1,8 +1,5 @@
 <ng-container *ngIf="offer$ | async as offer">
   <header>
-    <a mat-icon-button routerLink="..">
-      <mat-icon svgIcon="arrow_back"></mat-icon>
-    </a>
     <bf-tag>{{ offer.status | toLabel:'offerStatus' }}</bf-tag>
     <article>
       <div>
@@ -13,7 +10,7 @@
         <h2>
           {{ contracts.length}} {{contracts.length>1 ? 'Titles':'Title'}}
         </h2>
-        <h2 *ngIf="contracts | total:'income.price' as price; else noPrice">
+        <h2 *ngIf="contracts | total:'negotiation.price' as price; else noPrice">
           Total: {{ price | currency:offer.currency }}
         </h2>
         <ng-template #noPrice>
@@ -21,15 +18,26 @@
         </ng-template>
       </div>
     </article>
-    <button mat-flat-button color="primary" (click)="openIntercom()">
-      <mat-icon svgIcon="comment"></mat-icon>
-      <span>Contact Archipel Team</span>
-    </button>
+    <div fxLayout fxLayoutAlign="space-between center" fxFlexAlign="stretch">
+      <button mat-flat-button color="primary" (click)="openIntercom()">
+        <mat-icon svgIcon="comment"></mat-icon>
+        <span>Contact Archipel Team</span>
+      </button>
+      <a mat-button routerLink="/c/o/marketplace/standard-terms" color="primary" target="_blank">
+        <mat-icon svgIcon="file"></mat-icon>
+        <span>See Standard Terms</span>
+      </a>
+    </div>
   </header>
 
   <section class="surface" *ngIf="offer.specificity">
     <h2>Specific Terms</h2>
     <p>{{ offer.specificity }}</p>
+  </section>
+
+  <section class="surface" *ngIf="offer.delivery">
+    <h2>Delivery Specifications</h2>
+    <p>{{ offer.delivery }}</p>
   </section>
 
   <router-outlet></router-outlet>

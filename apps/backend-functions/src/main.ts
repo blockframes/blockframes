@@ -12,7 +12,7 @@ import {
 import { logErrors } from './internals/sentry';
 import { onInvitationWrite } from './invitation';
 import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate, accessToAppChanged, onRequestFromOrgToAccessApp } from './orgs';
-import { onMovieUpdate, onMovieCreate, onMovieDelete } from './movie';
+import { onMovieUpdate, onMovieCreate, onMovieDelete, createAskingPriceRequest } from './movie';
 import * as bigQuery from './bigQuery';
 import { onDocumentPermissionCreate, onPermissionDelete } from './permissions';
 import { createNotificationsForEventsToStart } from './internals/invitations/events';
@@ -25,11 +25,12 @@ import { eventWebhook as sendgridEventWebhook } from './sendgrid';
 import { hotConfig, heavyConfig, superHeavyConfig } from '@blockframes/firebase-utils';
 import { onNotificationCreate } from './notification';
 import { importAnalytics } from './pubsub/daily-analytics-import';
-import { onOfferCreate } from './offer';
-import { onContractCreate, onContractDelete, onContractUpdate } from './contracts';
+import { onOfferCreate, onOfferUpdate } from './offer';
+import { onContractDelete, onContractUpdate } from './contracts';
 import { onTermDelete } from './terms';
 import { downloadVideo } from './rescue';
 import { createPdf as _createPdf } from './createPdf';
+import { onNegotiationCreated, onNegotiationUpdate } from './negotiation';
 
 console.log('Function instance loaded');
 
@@ -74,9 +75,6 @@ export const sendUserContactMail = functions().https.onCall(skipInMaintenance(lo
 
 /** Trigger: REST call to send a mail to an admin for demo request. */
 export const sendDemoRequest = functions().https.onCall(skipInMaintenance(logErrors(users.sendDemoRequest)));
-
-/** Trigger: REST call bigQuery with an array of eventIds to get their analytics. */
-export const getEventAnalytics = functions().https.onCall(skipInMaintenance(logErrors(bigQuery.requestEventAnalytics)));
 
 /** Trigger: REST call bigQuery to fetch analytics active users */
 export const getAnalyticsActiveUsers = functions().https.onCall(skipInMaintenance(logErrors(bigQuery.getAnalyticsActiveUsers)));
@@ -170,6 +168,8 @@ export const onMovieUpdateEvent = functions(heavyConfig) // movie update can pot
  */
 export const onMovieDeleteEvent = onDocumentDelete('movies/{movieId}', onMovieDelete)
 
+export const requestAskingPrice = functions().https.onCall(skipInMaintenance(logErrors(createAskingPriceRequest)));
+
 //--------------------------------
 //     Consents Management      //
 //--------------------------------
@@ -213,6 +213,7 @@ export const sendNotificationEmails = onDocumentCreate('notifications/{notifID}'
 //--------------------------------
 
 export const onOfferCreateEvent = onDocumentCreate('offers/{offerId}', onOfferCreate);
+export const onOfferUpdateEvent = onDocumentUpdate('offers/{offerId}', onOfferUpdate);
 
 //--------------------------------
 //       Orgs Management        //
@@ -259,11 +260,16 @@ export const sendgridEventWebhookListener = functions().https.onRequest(sendgrid
 
 export const onContractDeleteEvent = onDocumentDelete('contracts/{contractId}', onContractDelete);
 
-export const onContractCreateEvent = onDocumentCreate('contracts/{contractId}', onContractCreate);
-
 export const onContractUpdateEvent = onDocumentUpdate('contracts/{contractId}', onContractUpdate);
 
 export const onTermDeleteEvent = onDocumentDelete('terms/{termId}', onTermDelete);
+
+//--------------------------------
+//     Negotiation Management     //
+//--------------------------------
+
+export const onNegotiationUpdateEvent = onDocumentUpdate('contracts/{contractId}/negotiations/{negotiationId}', onNegotiationUpdate);
+export const onNegotiationCreateEvent = onDocumentCreate('contracts/{contractId}/negotiations/{negotiationId}', onNegotiationCreated);
 
 //--------------------------------
 //          JWP RESCUE          //

@@ -103,6 +103,10 @@ button[app-logo] {
   font-weight: bold;
 }
 
+span {
+  white-space: normal;
+}
+
 @include layout-bp(lt-md) {
   app-logo {
     position: inherit;

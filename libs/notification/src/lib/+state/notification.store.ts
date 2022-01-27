@@ -15,6 +15,7 @@ import { AuthService } from '@blockframes/auth/+state';
 import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 import { format } from "date-fns";
 import { EventMeta } from '@blockframes/event/+state/event.firestore';
+import { trimString } from '@blockframes/utils/pipes/max-length.pipe';
 
 export interface NotificationState extends EntityState<Notification>, ActiveState<string> { }
 
@@ -127,6 +128,39 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           placeholderUrl: 'empty_poster.svg',
           url: `/c/o/dashboard/title/${notification.docId}/main`,
         };
+      case 'movieAskingPriceRequested':
+        this.getDocument<Movie>(`movies/${notification.docId}`).then(movie => {
+          this.update(notification.id, newNotification => {
+            return {
+              ...newNotification,
+              message: `${displayName(notification.user)} requested the asking price for ${movie.title.international} in ${trimString(notification.data.territories, 50, true)}. Please check your emails for more details or contact us.`,
+              url: `mailto:${notification.user.email}?subject=Interest in ${movie.title.international} via Archipel Market`
+            };
+          });
+        });
+        return {
+          _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
+          message: `${displayName(notification.user)} requested the asking price for ${notification.docId} in ${trimString(notification.data.territories, 50, true)}. Please check your emails for more details or contact us.`,
+          imgRef: notification.user.avatar,
+          placeholderUrl: 'profil_user.svg',
+          url: `mailto:${notification.user.email}?subject=Interest in ${notification.docId} via Archipel Market`
+        };
+      case 'movieAskingPriceRequestSent':
+        this.getDocument<Movie>(`movies/${notification.docId}`).then(movie => {
+          this.update(notification.id, newNotification => {
+            return {
+              ...newNotification,
+              message: `Your request for ${movie.title.international}'s asking price was successfully sent.`
+            };
+          });
+        });
+        return {
+          _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
+          message: `Your request for ${notification.docId}'s asking price was successfully sent.`,
+          imgRef: this.getPoster(notification.docId),
+          placeholderUrl: 'empty_poster.svg',
+          url: `/c/o/marketplace/title/${notification.docId}/main`
+        };
       case 'orgAppAccessChanged': {
         const msg = notification.appAccess
           ? `Your organization now has access to ${appName[notification.appAccess]}`
@@ -171,7 +205,8 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
               return {
                 ...newNotification,
                 imgRef: this.getPoster(titleId),
-                message: `REMINDER - ${org.denomination.full}'s ${event.type} "<a href="/event/${event.id}" target="_blank">${event.title}</a>" will start tomorrow at ${format(toDate(event.start), 'h:mm a')}.`};
+                message: `REMINDER - ${org.denomination.full}'s ${event.type} "<a href="/event/${event.id}" target="_blank">${event.title}</a>" will start tomorrow at ${format(toDate(event.start), 'h:mm a')}.`
+              };
             });
           })
         });
@@ -237,7 +272,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           message: `${displayName(notification.user)} requested a screening for ${notification.docId}`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.svg',
-          url: `${applicationUrl['festival']}/c/o/dashboard/event?request=${notification.docId}`,
+          url: `${applicationUrl['festival']}/c/o/dashboard/event/new/edit?titleId=${notification.docId}`,
           actionText: 'Answer Request'
         };
       case 'screeningRequestSent':
@@ -261,15 +296,94 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `Your offer was successfully sent.`,
-          placeholderUrl: 'profil_user.svg'
+          placeholderUrl: 'profil_user.svg',
+          url: `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.docId}`
         }
       case 'contractCreated':
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `An offer is made on one of your titles.`,
-          placeholderUrl: 'profil_user.svg',
-          url: `${applicationUrl['catalog']}/c/o/${module}/title/${notification.docId}`
+          message: `An offer has been made on one of your titles.`,
+          placeholderUrl: 'list_offer.svg',
+          url: `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}`
         }
+      case 'createdCounterOffer': {
+        const marketplaceUrl = `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.offerId}/${notification.docId}`;
+        const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
+
+        return {
+          _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
+          message: `Your counter-offer was successfully sent.`,
+          placeholderUrl: 'list_offer.svg',
+          url: module === 'marketplace' ? marketplaceUrl : dashboardUrl
+        }
+      }
+      case 'receivedCounterOffer': {
+        const marketplaceUrl = `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.offerId}/${notification.docId}`;
+        const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
+
+        return {
+          _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
+          message: `You received a counter-offer.`,
+          placeholderUrl: 'list_offer.svg',
+          url: module === 'marketplace' ? marketplaceUrl : dashboardUrl
+        }
+      }
+      case 'myContractWasAccepted': {
+        const marketplaceUrl = `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.offerId}/${notification.docId}`;
+        const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
+        return {
+          _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
+          message: `Your offer was accepted.`,
+          placeholderUrl: 'list_offer.svg',
+          url: module === 'marketplace' ? marketplaceUrl : dashboardUrl
+        }
+      }
+      case 'underSignature': {
+        return {
+          _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
+          message: `Your offer is now under signature`,
+          placeholderUrl: 'list_offer.svg',
+          url: `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`
+        }
+      }
+      case 'offerAccepted': {
+        return {
+          _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
+          message: `Your offer is now under signature`,
+          placeholderUrl: 'list_offer.svg',
+          url: `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.docId}`
+        }
+      }
+      case 'myOrgAcceptedAContract': {
+        const marketplaceUrl = `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.offerId}/${notification.docId}`;
+        const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
+        return {
+          _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
+          message: `You accepted an offer.`,
+          placeholderUrl: 'list_offer.svg',
+          url: module === 'marketplace' ? marketplaceUrl : dashboardUrl
+        }
+      }
+      case 'myContractWasDeclined': {
+        const marketplaceUrl = `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.offerId}/${notification.docId}`;
+        const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
+        return {
+          _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
+          message: `Your offer was declined.`,
+          placeholderUrl: 'list_offer.svg',
+          url: module === 'marketplace' ? marketplaceUrl : dashboardUrl
+        }
+      }
+      case 'myOrgDeclinedAContract': {
+        const marketplaceUrl = `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.offerId}/${notification.docId}`;
+        const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
+        return {
+          _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
+          message: `You declined an offer.`,
+          placeholderUrl: 'list_offer.svg',
+          url: module === 'marketplace' ? marketplaceUrl : dashboardUrl
+        }
+      }
       default:
         return {
           message: 'Error while displaying notification.'

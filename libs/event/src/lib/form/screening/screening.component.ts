@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
 import { fromOrgAndAccepted, Movie, MovieService } from '@blockframes/movie/+state';
-import { OrganizationQuery } from '@blockframes/organization/+state';
-import { Observable, Subscription } from 'rxjs';
+import { OrganizationService } from '@blockframes/organization/+state';
+import { Observable } from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { EventFormShellComponent } from '../shell/shell.component';
@@ -21,7 +21,7 @@ export class ScreeningComponent implements OnInit {
   titleMissing: boolean;
   constructor(
     private movieService: MovieService,
-    private orgQuery: OrganizationQuery,
+    private orgService: OrganizationService,
     private dynTitle: DynamicTitleService,
     private shell: EventFormShellComponent,
     private snackBar: MatSnackBar,
@@ -40,7 +40,7 @@ export class ScreeningComponent implements OnInit {
     this.dynTitle.setPageTitle('Add an event', 'Screening info');
 
     // will be executed only if "screening" as Observable are lazy
-    this.titles$ = this.orgQuery.selectActive().pipe(
+    this.titles$ = this.orgService.org$.pipe(
       switchMap(org => this.movieService.valueChanges(fromOrgAndAccepted(org.id, 'festival'))),
       map(titles => titles.sort((a, b) => a.title.international.localeCompare(b.title.international)))
     );

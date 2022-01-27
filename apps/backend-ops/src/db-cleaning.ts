@@ -39,12 +39,13 @@ export async function cleanDeprecatedData(db: FirebaseFirestore.Firestore, auth?
 async function cleanData(dbData: DatabaseData, db: FirebaseFirestore.Firestore, auth?: admin.auth.Auth) {
 
   // Getting existing document ids to compare
-  const [movieIds, organizationIds, eventIds, invitationIds, offerIds] = [
+  const [movieIds, organizationIds, eventIds, invitationIds, offerIds, contractIds] = [
     dbData.movies.refs.docs.map(ref => ref.id),
     dbData.orgs.refs.docs.map(ref => ref.id),
     dbData.events.refs.docs.map(ref => ref.id),
     dbData.invitations.refs.docs.map(ref => ref.id),
     dbData.offers.refs.docs.map(ref => ref.id),
+    dbData.contracts.refs.docs.map(ref => ref.id),
   ];
 
   // Compare and update/delete documents with references to non existing documents
@@ -60,7 +61,7 @@ async function cleanData(dbData: DatabaseData, db: FirebaseFirestore.Firestore, 
   // Loading orgs list after "cleanOrganizations" since some may have been removed
   const organizations2 = await db.collection('orgs').get();
   const organizationIds2 = organizations2.docs.map(ref => ref.id);
-  const existingIds = movieIds.concat(organizationIds2, eventIds, userIds, invitationIds, offerIds);
+  const existingIds = movieIds.concat(organizationIds2, eventIds, userIds, invitationIds, offerIds, contractIds);
 
   await cleanPermissions(dbData.permissions.refs, organizationIds2, userIds, db);
   if (verbose) console.log('Cleaned permissions');
@@ -308,9 +309,10 @@ function isNotificationValid(notification: NotificationDocument, existingIds: st
 
   if (notification.organization?.id && !existingIds.includes(notification.organization?.id)) return false;
   if (notification.user?.uid && !existingIds.includes(notification.user?.uid)) return false;
-  if (notification.docId && !existingIds.includes(notification.docId)) return false; // docId can refer to : events, offers, movies, orgs
+  if (notification.docId && !existingIds.includes(notification.docId)) return false; // docId can refer to : events, offers, movies, orgs, contracts
   if (notification.invitation?.id && !existingIds.includes(notification.invitation?.id)) return false;
-  if (notification.bucket?.id && !existingIds.includes(notification.bucket?.id)) return false; // buckets Ids are orgs Ids
+  if (notification.bucket?.id && !existingIds.includes(notification.bucket?.id)) return false; // buckets Ids are orgs Ids 
+  if (notification.offerId && !existingIds.includes(notification.offerId)) return false;
 
   return true;
 }

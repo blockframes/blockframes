@@ -7,12 +7,11 @@ import { distinctUntilChanged, filter } from 'rxjs/operators';
 
 // blockframes
 import { Organization } from '@blockframes/organization/+state/organization.model';
-import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
-import { TunnelService } from '@blockframes/ui/tunnel';
 import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
 import { User } from '@blockframes/auth/+state/auth.store';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { OrganizationService } from '@blockframes/organization/+state';
 
 const navLinks = [
   {
@@ -41,7 +40,7 @@ export class OrganizationViewComponent implements OnInit, OnDestroy {
   private subs: Subscription[] = [];
 
   constructor(
-    private query: OrganizationQuery,
+    private orgService: OrganizationService,
     private authQuery: AuthQuery,
     private dynTitle: DynamicTitleService,
     private location: Location,
@@ -50,11 +49,11 @@ export class OrganizationViewComponent implements OnInit, OnDestroy {
   ) {
     const routerQuerySub = this.routerQuery.select('state').subscribe(data => {
       if (data.url.includes('members')) {
-        this.dynTitle.setPageTitle('Members', `${this.query.getActive().denomination.full}`);
+        this.dynTitle.setPageTitle('Members', `${this.orgService.org.denomination.full}`);
       } else if (data.url.includes('documents')) {
-        this.dynTitle.setPageTitle('Documents', `${this.query.getActive().denomination.full}`);
+        this.dynTitle.setPageTitle('Documents', `${this.orgService.org.denomination.full}`);
       } else {
-        this.dynTitle.setPageTitle('Company details', `${this.query.getActive().denomination.full}`);
+        this.dynTitle.setPageTitle('Company details', `${this.orgService.org.denomination.full}`);
       }
     })
     this.subs.push(routerQuerySub);
@@ -68,7 +67,7 @@ export class OrganizationViewComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.user$ = this.authQuery.user$;
-    this.organization$ = this.query.selectActive();
+    this.organization$ = this.orgService.org$;
 
     const sub = this.router.events.pipe(
       filter((evt: Event) => evt instanceof NavigationEnd),

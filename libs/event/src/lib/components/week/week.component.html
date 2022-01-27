@@ -19,7 +19,7 @@
     [class.cal-hour-start]="segment.isStart"
     [class.cal-after-hour-start]="!segment.isStart"
     [ngClass]="segment.cssClass"
-    (mousedown)="startDragToCreate(segment, $event, segmentElement)"
+    (mousedown)="startDragToCreate(segment, segmentElement)"
   >
 
     <div class="cal-time" *ngIf="isTimeLabel">
@@ -50,7 +50,9 @@
   </div>
 </ng-template>
 
-
+<section *ngIf="loading" class="overlay">
+  <mat-spinner></mat-spinner>
+</section>
 
 <!-- Tooltip (Not used yet)
 <ng-template #matTooltipTemplate let-contents="contents" let-placement="placement" let-event="event">

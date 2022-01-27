@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CollectionConfig, CollectionService, Query, queryChanges, WriteOptions } from 'akita-ng-fire';
+import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
 import {
   createMovie,
   Movie,
@@ -15,7 +15,7 @@ import { UserService } from '@blockframes/user/+state/user.service';
 import type firebase from 'firebase';
 import { App } from '@blockframes/utils/apps';
 import { QueryFn } from '@angular/fire/firestore';
-import { OrganizationQuery } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { map } from 'rxjs/operators';
 import { getViews } from '../pipes/analytics.pipe';
 import { joinWith } from '@blockframes/utils/operators';
@@ -39,7 +39,7 @@ export class MovieService extends CollectionService<MovieState> {
     private permissionsService: PermissionsService,
     private analyticservice: AnalyticsService,
     private userService: UserService,
-    private orgQuery: OrganizationQuery,
+    private orgService: OrganizationService,
   ) {
     super(store);
   }
@@ -54,7 +54,7 @@ export class MovieService extends CollectionService<MovieState> {
     if (movieImported?.orgIds?.length) {
       orgIds = movieImported.orgIds;
     } else {
-      const orgId = this.orgQuery.getActiveId();
+      const orgId = this.orgService.org.id;
       orgIds.push(orgId);
     }
 
@@ -112,7 +112,7 @@ export class MovieService extends CollectionService<MovieState> {
   }
 
   queryDashboard(app: App) {
-    const orgId = this.orgQuery.getActiveId();
+    const orgId = this.orgService.org.id;
     const query: QueryFn = ref => ref.where('orgIds', 'array-contains', orgId).where(`app.${app}.access`, '==', true);
     const addViews = (movie: MovieWithAnalytics) => ({ ...movie, analytics: { ...movie.analytics, views: getViews(movie.analytics) } });
     

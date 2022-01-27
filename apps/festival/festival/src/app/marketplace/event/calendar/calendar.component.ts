@@ -2,12 +2,13 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Pipe, Pi
 import { Observable, combineLatest, of } from 'rxjs';
 import { EventService } from '@blockframes/event/+state/event.service';
 import { Event } from '@blockframes/event/+state';
-import { InvitationQuery } from '@blockframes/invitation/+state';
+import { Invitation, InvitationService } from '@blockframes/invitation/+state';
 import { map, switchMap, startWith } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 import { EventTypes } from '@blockframes/event/+state/event.firestore';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { eventTime } from '@blockframes/event/pipes/event-time.pipe';
+import { AgendaService } from '@blockframes/utils/agenda/agenda.service';
 
 const typesLabel = {
   screening: 'Screenings',
@@ -29,16 +30,18 @@ export class EventCalendarComponent implements OnInit {
 
   constructor(
     private service: EventService,
-    private invitationQuery: InvitationQuery,
+    private invitationService: InvitationService,
     private cdr: ChangeDetectorRef,
     private dynTitle: DynamicTitleService,
+    private agendaService: AgendaService
   ) { }
 
   ngOnInit(): void {
     this.dynTitle.setPageTitle('My Calendar');
-    const allEvents$ = this.invitationQuery.selectAll({
-      filterBy: ({ type, status }) => type === 'attendEvent' && ['accepted', 'pending'].includes(status)
-    }).pipe(
+
+    const isWillingToAttendEvent = (i: Invitation) =>  i.type === 'attendEvent' && ['accepted', 'pending'].includes(i.status);
+    const allEvents$ = this.invitationService.allInvitations$.pipe(
+      map(invitations => invitations.filter(isWillingToAttendEvent)),
       map(invitations => invitations.map(i => i.eventId)),
       map(eventIds => Array.from(new Set(eventIds))), // Remove duplicated
       switchMap(eventIds => this.service.queryDocs(eventIds))
@@ -55,15 +58,23 @@ export class EventCalendarComponent implements OnInit {
     this.viewDate = date;
     this.cdr.markForCheck();
   }
+
+  hasUpcomingEvents(events: Event[] = []) {
+    return events.some(e => eventTime(e) !== 'late');
+  }
+
+  exportToCalendar(events: Event[] = []) {
+    this.agendaService.download(events.filter(e => eventTime(e) !== 'late'));
+  }
 }
 
-@Pipe({ name: 'hideBadge'})
+@Pipe({ name: 'hideBadge' })
 export class HideBadgePipe implements PipeTransform {
-  constructor(private invitationQuery: InvitationQuery) {}
+  constructor(private invitationService: InvitationService) { }
   transform(event: Event) {
     if (eventTime(event) === 'late') return of(true);
-    return this.invitationQuery.selectEntity(i => i.eventId === event.id).pipe(
-      map(i => i.status !== 'pending')
-    );
+    return this.invitationService.allInvitations$.pipe(
+      map(invitations => invitations.some(i => i.eventId === event.id && i.status !== 'pending'))
+    )
   }
 }

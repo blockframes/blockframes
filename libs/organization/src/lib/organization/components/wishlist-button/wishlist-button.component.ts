@@ -6,7 +6,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { MovieService } from '@blockframes/movie/+state';
 import { Observable } from 'rxjs';
-import { OrganizationQuery, OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { Router } from '@angular/router';
 
 @Directive({
@@ -42,14 +42,13 @@ export class WishlistButtonComponent implements OnInit {
 
   constructor(
     private movieService: MovieService,
-    private orgQuery: OrganizationQuery,
     private orgService: OrganizationService,
     private router: Router,
     private snackbar: MatSnackBar
   ) { }
 
   ngOnInit() {
-    this.toggle$ = this.orgQuery.isAddedToWishlist(this.movieId);
+    this.toggle$ = this.orgService.isInWishlist(this.movieId);
   }
 
   public async addToWishlist(event?: Event) {
