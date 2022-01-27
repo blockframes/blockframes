@@ -18,7 +18,7 @@
         </button>
         <button app-logo (click)="onAppLogoClick()"></button>
         <ng-content select="header"></ng-content>
-        <a test-id="heart-icon" mat-icon-button routerLink="wishlist">
+        <a test-id="heart-icon" mat-icon-button routerLink="wishlist" matTooltip="Wishlist">
           <mat-icon svgIcon="favorite"
             [matBadge]="wishlistCount$ | async"
             [matBadgeHidden]="(wishlistCount$ | async) === 0"
@@ -29,7 +29,7 @@
         <div fxLayout="row" fxLayoutGap="24px">
           <mat-divider vertical></mat-divider>
           <!-- Invitations -->
-          <a mat-icon-button routerLink="invitations" test-id="invitations-link">
+          <a mat-icon-button routerLink="invitations" test-id="invitations-link" matTooltip="Invitations">
             <ng-container *ngIf="invitationCount$ | async as count; else noInvitation">
               <mat-icon svgIcon="invitation" [matBadge]="count" matBadgeColor="accent" matBadgeSize="small"></mat-icon>
             </ng-container>
@@ -38,7 +38,7 @@
             </ng-template>
           </a>
           <!-- Notifications -->
-          <a mat-icon-button routerLink="notifications" test-id="notifications-link">
+          <a mat-icon-button routerLink="notifications" test-id="notifications-link" matTooltip="Notifications">
             <ng-container *ngIf="notificationCount$ | async as count; else noNotification">
               <mat-icon svgIcon="notifications" [matBadge]="count" matBadgeColor="accent" matBadgeSize="small">
               </mat-icon>

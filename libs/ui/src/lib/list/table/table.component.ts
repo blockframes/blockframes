@@ -133,7 +133,7 @@ export class TableComponent<T> {
       switchMap(data => this.$paginate(data)),
     );
   }
-  
+
   private $paginate(data: T[]) {
     this.paginator.size = data.length;
     if (this.paginator.pageIndex > this.paginator.maxIndex) this.paginator.last();

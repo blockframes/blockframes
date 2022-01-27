@@ -52,7 +52,7 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private routerQuery: RouterQuery,
     private cdr: ChangeDetectorRef,
-    private snackBar: MatSnackBar,
+    private snackBar: MatSnackBar
   ) { }
 
   ngOnInit(): void {
@@ -61,8 +61,7 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
     // @TODO #6780
     this.sub = eventId$.pipe(
       switchMap((eventId: string) => this.eventService.valueChanges(eventId))
-    ).subscribe(event => {
-
+    ).subscribe(async event => {
       this.form = new EventForm(event);
 
       const type = this.form.value.type;
@@ -137,7 +136,7 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
   }
 
   confirmExit() {
-    if (!this.form.dirty) {
+    if (!this.form?.dirty) {
       return true;
     }
 
@@ -148,11 +147,13 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
     });
     return dialogRef.afterClosed().pipe(
       switchMap(shouldSave => {
+        console.log("shouldSave", shouldSave)
+
         /* Undefined means user clicked on the backdrop, meaning just close the modal */
         if (typeof shouldSave === 'undefined') {
           return of(false);
         }
-        return shouldSave ? of(this.save()) : of(true);
+        return shouldSave ? this.save() : of(true);
       })
     );
   }

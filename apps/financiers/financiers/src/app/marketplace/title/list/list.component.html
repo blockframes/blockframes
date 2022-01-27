@@ -72,7 +72,7 @@
   <!-- TITLE COUNT (ng-content)-->
   <list-page-description *ngIf="nbHits">
     <span i18n class="mat-body-2">
-      There {nbHits, plural, =0 {} =1 {is} other {are}} {{ nbHits }} project{nbHits, plural, =0 {} =1 {} other {s}}
+      There {nbHits, plural, =1 {is} other {are}} {{ nbHits }} project{nbHits, plural, =1 {} other {s}}
       available.
     </span>
   </list-page-description>

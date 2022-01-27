@@ -76,9 +76,6 @@ export const sendUserContactMail = functions().https.onCall(skipInMaintenance(lo
 /** Trigger: REST call to send a mail to an admin for demo request. */
 export const sendDemoRequest = functions().https.onCall(skipInMaintenance(logErrors(users.sendDemoRequest)));
 
-/** Trigger: REST call bigQuery with an array of eventIds to get their analytics. */
-export const getEventAnalytics = functions().https.onCall(skipInMaintenance(logErrors(bigQuery.requestEventAnalytics)));
-
 /** Trigger: REST call bigQuery to fetch analytics active users */
 export const getAnalyticsActiveUsers = functions().https.onCall(skipInMaintenance(logErrors(bigQuery.getAnalyticsActiveUsers)));
 

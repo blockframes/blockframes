@@ -31,7 +31,7 @@ type JoinSaleTitleType = {
   allSaleCount?: number,
 }
 
-const organizationQuery = (orgId: string): QueryFn => ref => ref.where('orgIds', 'array-contains', orgId);
+const titleQuery = (orgId: string): QueryFn => ref => ref.where('orgIds', 'array-contains', orgId).where('app.catalog.access', '==', true);
 const mandateQuery = (title: Movie): QueryFn => ref => ref.where('titleId', '==', title.id)
   .where('type', '==', 'mandate')
   .where('status', '==', 'accepted');
@@ -69,7 +69,7 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
     map(query => ({ formValue: query.get('formValue') })),
   )
 
-  private titles$ = this.titleService.valueChanges(organizationQuery(this.orgId)).pipe(
+  private titles$ = this.titleService.valueChanges(titleQuery(this.orgId)).pipe(
     joinWith({
       sales: title => {
         return this.contractService.valueChanges(saleQuery(title)).pipe(

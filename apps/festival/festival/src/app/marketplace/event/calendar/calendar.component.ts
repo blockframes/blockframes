@@ -59,7 +59,7 @@ export class EventCalendarComponent implements OnInit {
     this.cdr.markForCheck();
   }
 
-  hasIncomingEvents(events: Event[] = []) {
+  hasUpcomingEvents(events: Event[] = []) {
     return events.some(e => eventTime(e) !== 'late');
   }
 

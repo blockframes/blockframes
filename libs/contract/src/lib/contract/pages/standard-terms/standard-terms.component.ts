@@ -10,7 +10,7 @@ import { DomSanitizer } from '@angular/platform-browser';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StandardTermsComponent {
-  public localLink = '/assets/film-industry.pdf';
+  public localLink = 'assets/docs/standard_terms_19012022.pdf';
 
   /**
    * Note, viewing the pdf as indicated here has certain limitations.
@@ -20,7 +20,7 @@ export class StandardTermsComponent {
    */
   public get pdfLink() {
     const { protocol, hostname } = window.location;
-    const link = `${protocol}${hostname}/${this.localLink}`;
+    const link = `${protocol}//${hostname}/${this.localLink}`;
     return this.sanitizer.bypassSecurityTrustResourceUrl(link);
   }
   constructor(private sanitizer: DomSanitizer) { }

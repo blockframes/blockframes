@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, ViewChild, TemplateRef, ChangeDetectorRef } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { createEvent, createScreening, Event, EventService } from '@blockframes/event/+state';
+import { Event, EventService } from '@blockframes/event/+state';
 import { EventForm } from '@blockframes/event/form/event.form';
 import { EventTypes } from '@blockframes/event/+state/event.firestore';
 import { OrganizationService } from '@blockframes/organization/+state';
@@ -10,7 +10,6 @@ import { FormControl } from '@angular/forms';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { AgendaService } from '@blockframes/utils/agenda/agenda.service';
 import { eventTime } from '@blockframes/event/pipes/event-time.pipe';
-import { ActivatedRoute, Router } from '@angular/router';
 
 const typesLabel = {
   screening: 'Screenings',
@@ -39,12 +38,10 @@ export class EventListComponent implements OnInit {
     private orgService: OrganizationService,
     private cdr: ChangeDetectorRef,
     private dynTitle: DynamicTitleService,
-    private agendaService: AgendaService,
-    private route: ActivatedRoute,
-    private router: Router
+    private agendaService: AgendaService
   ) { }
 
-  async ngOnInit() {
+  ngOnInit() {
     this.events$ = combineLatest([
       this.orgService.org$,
       this.filter.valueChanges.pipe(startWith(this.filter.value))
@@ -56,19 +53,6 @@ export class EventListComponent implements OnInit {
           this.dynTitle.setPageTitle('My events', 'Empty');
       }),
     );
-
-    const params = this.route.snapshot.queryParams;
-    if (params?.request) {
-      const event = createEvent({
-        type: 'screening',
-        ownerOrgId: this.orgService.org.id,
-        meta: createScreening({
-          titleId: params.request
-        })
-      });
-      const id = await this.service.add(event);
-      this.router.navigate([id, 'edit'], { relativeTo: this.route });
-    }
   }
 
   updateViewDate(date: Date) {
@@ -76,7 +60,7 @@ export class EventListComponent implements OnInit {
     this.cdr.markForCheck();
   }
 
-  hasIncomingEvents(events: Event[] = []) {
+  hasUpcomingEvents(events: Event[] = []) {
     return events.some(e => eventTime(e) !== 'late');
   }
 

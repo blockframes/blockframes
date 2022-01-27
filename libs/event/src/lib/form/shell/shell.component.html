@@ -1,6 +1,6 @@
 ﻿<ng-template #confirmExit>
   <div class="confirm-exit" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="16px">
-    <button fxFlexAlign="end" mat-icon-button mat-dialog-close>
+    <button fxFlexAlign="end" mat-icon-button [mat-dialog-close]="undefined">
       <mat-icon svgIcon="close"></mat-icon>
     </button>
     <h1>You are about to leave the form.</h1>
@@ -15,7 +15,7 @@
   </div>
 </ng-template>
 
-<ng-container *ngIf="form">
+<ng-container *ngIf="form else loading">
   <ng-template pageBar>
     <header fxLayout fxLayoutAlign="space-between center">
       <div fxLayout fxLayoutGap="40px">
@@ -29,7 +29,7 @@
           </mat-chip>
         </mat-chip-list>
       </div>
-      <div fxLayout fxLayoutAlign="end center">
+      <div fxLayout fxLayoutAlign="end center" fxLayoutGap="8px">
         <button type="button" mat-button color="warn" (click)="remove()">Delete</button>
         <ng-container *ngIf="form.dirty else disabled">
           <button type="submit" mat-stroked-button color="primary" (click)="save()" test-id="event-save">Save</button>
@@ -68,3 +68,9 @@
 
   <a class="goToEvent" mat-button mat-flat-button color="primary" [routerLink]="internalLink">Go to Event Page</a>
 </ng-container>
+
+<ng-template #loading>
+  <section fxLAyout fxLayoutAlign="center center">
+    <mat-spinner></mat-spinner>
+  </section>
+</ng-template>

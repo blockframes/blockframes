@@ -1,5 +1,6 @@
 import { Person } from './common-interfaces';
 import { staticModel, Scope } from '@blockframes/utils/static-model';
+import { LanguageRecord } from '@blockframes/movie/+state/movie.firestore';
 
 export interface ErrorResultResponse {
   error: string;
@@ -216,7 +217,7 @@ export function getWatermark(email: string = '', firstName: string = '', lastNam
   return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
 }
 
-export function toLabel(value: string | string[], scope: Scope, joinWith? : string, endWith?: string): string {
+export function toLabel(value: string | string[], scope: Scope, joinWith?: string, endWith?: string): string {
   if (!value) return '';
   try {
     if (Array.isArray(value)) {
@@ -232,14 +233,37 @@ export function toLabel(value: string | string[], scope: Scope, joinWith? : stri
 }
 
 /**
- * Example with (['A', 'B', 'C'], ', ', ' & ') 
+ * Example with (['A', 'B', 'C'], ', ', ' & ')
  * output : "A, B & C";
- * @param str 
- * @param joinWith 
- * @param endWith 
- * @returns 
+ * @param str
+ * @param joinWith
+ * @param endWith
+ * @returns
  */
-export function smartJoin(str: string[], joinWith = ', ', endWith = ', ') {
+function smartJoin(str: string[], joinWith = ', ', endWith = ', ') {
   const last = str.pop();
   return `${str.join(joinWith)}${str.length ? endWith : ''}${last || ''}`;
+}
+
+export function toLanguageVersionString(languages: LanguageRecord) {
+  return Object.entries(languages).map(([language, specs]) => {
+    const types = [];
+
+    if (specs.subtitle) {
+      types.push(toLabel('subtitle', 'movieLanguageTypes'));
+    }
+
+    if (specs.dubbed) {
+      types.push(toLabel('dubbed', 'movieLanguageTypes'));
+    }
+
+    if (specs.caption) {
+      types.push(toLabel('caption', 'movieLanguageTypes'));
+    }
+
+    if (types.length) {
+      return `${toLabel(language, 'languages')} ${smartJoin(types, ', ', ' & ')}`;
+    }
+
+  }).filter(d => d).join(', ');
 }

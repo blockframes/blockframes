@@ -20,8 +20,9 @@ import { StorageFile, StorageVideo } from '@blockframes/media/+state/media.fires
 import { InvitationService } from '@blockframes/invitation/+state/invitation.service';
 import { Invitation } from '@blockframes/invitation/+state';
 import { filter, pluck, scan, switchMap, take } from 'rxjs/operators';
-import { finalizeWithValue } from '@blockframes/utils/observable-helpers';
+import { BehaviorStore, finalizeWithValue } from '@blockframes/utils/observable-helpers';
 import { AuthService } from '@blockframes/auth/+state';
+import { RequestAskingPriceComponent } from '@blockframes/movie/components/request-asking-price/request-asking-price.component';
 
 const isMeeting = (meetingEvent: Event): meetingEvent is Event<Meeting> => {
   return meetingEvent.type === 'meeting';
@@ -54,6 +55,7 @@ export class SessionComponent implements OnInit, OnDestroy {
 
   private watchTimeInterval: Subscription;
   public isPlaying = false;
+  public requestSent = new BehaviorStore(false);
 
   constructor(
     private functions: AngularFireFunctions,
@@ -302,5 +304,17 @@ export class SessionComponent implements OnInit, OnDestroy {
 
     const duration = parseFloat(result.info.duration);
     return { type: 'video', isPlaying: false, position: 0, duration };
+  }
+
+  requestAskingPrice(movieId: string) {
+    const ref = this.dialog.open(RequestAskingPriceComponent, {
+      data: { movieId },
+      maxHeight: '80vh',
+      maxWidth: '650px',
+      autoFocus: false
+    });
+    ref.afterClosed().subscribe(isSent => {
+      this.requestSent.value = !!isSent;
+    });
   }
 }

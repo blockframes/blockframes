@@ -16,6 +16,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [EventFormShellComponent],
@@ -37,6 +38,7 @@ import { MatChipsModule } from '@angular/material/chips';
     MatTabsModule,
     MatDialogModule,
     MatChipsModule,
+    MatProgressSpinnerModule
   ]
 })
 export class EventFromShellModule { }
