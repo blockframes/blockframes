@@ -31,7 +31,8 @@ function getExpiredMarkers(availableMarkers: DurationMarker[]) {
   const today = new Date();
   const previousMonthDate = new Date();
   previousMonthDate.setDate(0); // sets date to last date of previous month.
-  if (previousMonthDate.getFullYear() < new Date().getFullYear()) return []; // not on matrix
+  const isJanuary = previousMonthDate.getFullYear() < new Date().getFullYear();
+  if (isJanuary) return []; // No expired markers in January
   return availableMarkers.filter(marker => marker.from < today).map(marker => ({ ...marker, to: previousMonthDate }));
 }
 
@@ -60,17 +61,16 @@ export class AvailsCalendarComponent implements OnInit {
   /** Includes available, sold, selected, and in selection markers */
   @Input() set availableMarkers(markers: DurationMarker[] | undefined) {
     if (!markers) return;
-    const januaryDate = new Date(new Date().getFullYear(), 0);
-    const validMarkers = markers.filter(marker => marker.to > januaryDate);
-    this._availableMarkers = validMarkers;
-    this._expiredMarkers = getExpiredMarkers(validMarkers);
+    const startOfYear = new Date(new Date().getFullYear(), 0); // January of current year.
+    this._availableMarkers = markers.filter(marker => marker.to > startOfYear);
+    this._expiredMarkers = getExpiredMarkers(this._availableMarkers);
     this.updateMatrix();
   }
 
   @Input() set soldMarkers(markers: DurationMarker[] | undefined) {
     if (!markers) return;
-    const januaryDate = new Date(new Date().getFullYear(), 0);
-    this._soldMarkers = markers.filter(marker => marker.to > januaryDate);
+    const startOfYear = new Date(new Date().getFullYear(), 0);
+    this._soldMarkers = markers.filter(marker => marker.to > startOfYear);
     this.updateMatrix();
   }
 
@@ -100,8 +100,8 @@ export class AvailsCalendarComponent implements OnInit {
     // set available/sold/selected blocks into the stateMatrix (this will display the colored rectangles)
     let matrix: CellState[][] = this.rows.map(() => this.columns.map(() => 'empty'));
     if (this._availableMarkers.length) matrix = markersToMatrix(this._availableMarkers, this.stateMatrix, 'available');
-    if (this._inSelectionMarkers.length) matrix = markersToMatrix(this._inSelectionMarkers, this.stateMatrix, 'selected');
     if (this._soldMarkers.length) matrix = markersToMatrix(this._soldMarkers, this.stateMatrix, 'sold');
+    if (this._inSelectionMarkers.length) matrix = markersToMatrix(this._inSelectionMarkers, this.stateMatrix, 'selected');
     if (this._expiredMarkers.length) matrix = markersToMatrix(this._expiredMarkers, this.stateMatrix, 'expired');
     this.stateMatrix = matrix;
 
