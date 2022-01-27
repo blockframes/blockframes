@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { ContractStore, ContractState } from './contract.store';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { ContractDocument, convertDuration, createMandate, createSale, Holdback, Mandate, Sale } from './contract.model';
 import { createDocumentMeta, formatDocumentMetaFromFirestore } from "@blockframes/utils/models-meta";
@@ -7,9 +6,12 @@ import { Timestamp } from "@blockframes/utils/common-interfaces/timestamp";
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
 import { map } from 'rxjs/operators';
 import { QueryFn } from '@angular/fire/firestore';
-import { OrganizationQuery } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
 import { centralOrgId } from '@env';
+import { ActiveState, EntityState } from '@datorama/akita';
+
+interface ContractState extends EntityState<Sale | Mandate>, ActiveState<string> { }
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'contracts' })
@@ -17,11 +19,10 @@ export class ContractService extends CollectionService<ContractState> {
   useMemorization = true;
 
   constructor(
-    store: ContractStore,
-    private orgQuery: OrganizationQuery,
+    private orgService: OrganizationService,
     private negotiationService: NegotiationService,
   ) {
-    super(store);
+    super();
   }
 
   /**
@@ -44,7 +45,7 @@ export class ContractService extends CollectionService<ContractState> {
   /** Return the last negotiation of the contractId */
   lastNegotiation(contractId: string) {
     const options = { params: { contractId } };
-    const orgId = this.orgQuery.getActiveId();
+    const orgId = this.orgService.org.id;
     const query: QueryFn = ref => ref.where('stakeholders', 'array-contains', orgId).orderBy('_meta.createdAt', 'desc').limit(1);
     return this.negotiationService.valueChanges(query, options).pipe(
       map(negotiations => negotiations[0])
@@ -69,7 +70,7 @@ export class ContractService extends CollectionService<ContractState> {
   }
 
   async addNegotiation(contractId: string, nego: Partial<Negotiation>) {
-    const activeOrgId = this.orgQuery.getActiveId();
+    const activeOrgId = this.orgService.org.id;
     const write = this.batch();
     this.negotiationService.add({
       _meta: createDocumentMeta({ createdAt: new Date(), }),

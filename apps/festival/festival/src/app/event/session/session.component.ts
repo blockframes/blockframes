@@ -18,8 +18,8 @@ import { MediaService } from '@blockframes/media/+state';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { StorageFile, StorageVideo } from '@blockframes/media/+state/media.firestore';
 import { InvitationService } from '@blockframes/invitation/+state/invitation.service';
-import { InvitationQuery } from '@blockframes/invitation/+state';
-import { filter, pluck, scan, switchMap } from 'rxjs/operators';
+import { Invitation } from '@blockframes/invitation/+state';
+import { filter, pluck, scan, switchMap, take } from 'rxjs/operators';
 import { BehaviorStore, finalizeWithValue } from '@blockframes/utils/observable-helpers';
 import { AuthService } from '@blockframes/auth/+state';
 import { RequestAskingPriceComponent } from '@blockframes/movie/components/request-asking-price/request-asking-price.component';
@@ -62,7 +62,6 @@ export class SessionComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private service: EventService,
     private invitationService: InvitationService,
-    private invitationQuery: InvitationQuery,
     private movieService: MovieService,
     private mediaService: MediaService,
     private authQuery: AuthQuery,
@@ -95,13 +94,9 @@ export class SessionComponent implements OnInit, OnDestroy {
           // if user is not a screening owner we need to track the watch time
           if (event.ownerOrgId !== this.authQuery.orgId) {
             // Try to get invitation the regular way
-            let [invitation] = this.invitationQuery.getAll({
-              filterBy: invit => invit.eventId === event.id &&
-                (
-                  invit.toUser?.uid === this.authQuery.userId ||
-                  invit.fromUser?.uid === this.authQuery.userId
-                )
-            });
+            const uidFilter = (invit: Invitation) => invit.toUser?.uid === this.authQuery.userId ||  invit.fromUser?.uid === this.authQuery.userId;
+            const allInvitations = await this.invitationService.allInvitations$.pipe(take(1)).toPromise();
+            let invitation = allInvitations.find(invit => invit.eventId === event.id && uidFilter(invit));
 
             // If user is logged-in as anonymous
             if (!invitation && this.authService.anonymousCredentials?.invitationId) {

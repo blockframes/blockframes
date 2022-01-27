@@ -6,7 +6,7 @@ import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiatio
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
 import { NegotiationGuardedComponent } from '@blockframes/contract/negotiation/guard'
 import { ContractService } from '@blockframes/contract/contract/+state';
-import { OrganizationQuery } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { ConfirmDeclineComponent, ConfirmDeclineData } from '@blockframes/contract/contract/components/confirm-decline/confirm-decline.component';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -25,7 +25,7 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
   centralOrgId = this.shell.centralOrgId;
   sale$ = this.shell.sale$;
   contractStatus = this.shell.contractStatus;
-  activeOrgId = this.query.getActiveId();
+  activeOrgId = this.orgService.org.id;
   form = new NegotiationForm({ terms: [] });
   activeTerm?: number;
 
@@ -34,7 +34,7 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
     private negotiationService: NegotiationService,
     private contractService: ContractService,
     private shell: SaleShellComponent,
-    private query: OrganizationQuery,
+    private orgService: OrganizationService,
     private dialog: MatDialog,
     private router: Router,
     private route: ActivatedRoute,

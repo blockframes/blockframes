@@ -6,7 +6,6 @@ import { Movie } from '@blockframes/movie/+state/movie.model';
 import { switchMap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { MovieService } from '@blockframes/movie/+state';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
@@ -43,12 +42,12 @@ export class WishlistComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef,
     private dynTitle: DynamicTitleService,
-    private orgQuery: OrganizationQuery,
+    private orgService: OrganizationService,
     private movieService: MovieService
   ) { }
 
   ngOnInit() {
-    this.sub = this.orgQuery.selectActive().pipe(
+    this.sub = this.orgService.org$.pipe(
       switchMap(org => this.movieService.valueChanges(org?.wishlist || []))
     ).subscribe(allMovies => {
       const movies = allMovies.filter(movie => !!movie && movie.app[getCurrentApp(this.routerQuery)].access);

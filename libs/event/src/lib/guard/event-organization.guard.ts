@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, CanDeactivate, Router } from '@angular/router';
-import { OrganizationQuery } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { EventService } from '../+state';
 import { Observable } from 'rxjs';
 
@@ -12,14 +12,14 @@ export class EventOrganizationGuard implements CanActivate, CanDeactivate<unknow
   constructor(
     private service: EventService,
     private router: Router,
-    private orgQuery: OrganizationQuery
+    private orgService: OrganizationService
   ) { }
 
   async canActivate(next: ActivatedRouteSnapshot) {
     const eventId: string = next.params['eventId'];
     if (eventId === 'new') return true;
     const event = await this.service.getValue(eventId);
-    const orgId = this.orgQuery.getActiveId();
+    const orgId = this.orgService.org.id;
     const redirect = this.router.parseUrl(`/c/o/dashboard/event`);
     return orgId === event?.ownerOrgId || redirect;
   }

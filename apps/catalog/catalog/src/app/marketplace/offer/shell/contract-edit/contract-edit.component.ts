@@ -8,7 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmDeclineComponent, ConfirmDeclineData } from '@blockframes/contract/contract/components/confirm-decline/confirm-decline.component';
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
-import { OrganizationQuery } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { combineLatest } from 'rxjs';
 import { ContractService } from '@blockframes/contract/contract/+state';
@@ -22,8 +22,7 @@ import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiatio
 })
 export class ContractEditComponent implements NegotiationGuardedComponent, OnInit {
   negotiation?: Negotiation;
-
-  activeOrgId = this.query.getActiveId();
+  activeOrgId = this.orgService.org.id;
   activeTerm?: number;
   form = new NegotiationForm();
   sale$ = combineLatest([
@@ -41,7 +40,7 @@ export class ContractEditComponent implements NegotiationGuardedComponent, OnIni
     private shell: OfferShellComponent,
     private negotiationService: NegotiationService,
     private contractService: ContractService,
-    private query: OrganizationQuery,
+    private orgService: OrganizationService,
     private dialog: MatDialog,
     private router: Router,
     private route: ActivatedRoute,

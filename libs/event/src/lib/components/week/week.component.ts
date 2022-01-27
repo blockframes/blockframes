@@ -17,7 +17,7 @@ import { fromEvent } from 'rxjs';
 import { map, finalize, takeUntil, distinctUntilChanged } from 'rxjs/operators';
 
 import { ActivatedRoute, Router } from '@angular/router';
-import { OrganizationQuery } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 
 function floorToNearest(amount: number, precision: number) {
   return Math.floor(amount / precision) * precision;
@@ -74,7 +74,7 @@ export class CalendarWeekComponent {
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
-    private orgQuery: OrganizationQuery,
+    private orgService: OrganizationService,
     private service: EventService,
     private dialog: MatDialog,
     private router: Router,
@@ -84,7 +84,6 @@ export class CalendarWeekComponent {
 
   startDragToCreate(
     segment: WeekViewHourSegment,
-    mouseDownEvent: MouseEvent,
     segmentElement: HTMLElement
   ) {
     if (!this.editable) {
@@ -92,7 +91,7 @@ export class CalendarWeekComponent {
     }
     const localEvent: CalendarEvent = createEvent({
       id: this.service['db'].createId(),
-      ownerOrgId: this.orgQuery.getActiveId(),
+      ownerOrgId: this.orgService.org.id,
       title: 'New event',
       start: segment.date,
       end: addMinutes(segment.date, 30),

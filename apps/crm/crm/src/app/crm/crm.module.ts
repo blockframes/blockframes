@@ -17,6 +17,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 // Modules
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
+import { UploadWidgetModule } from '@blockframes/media/file/upload-widget/upload-widget.module';
 import { OrganizationAdminModule } from './pages/organization/organization.module';
 import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module';
 import { AppPipeModule, ToLabelModule, MaxLengthModule, ToDateModule, JoinPipeModule, ToGroupLabelPipeModule } from '@blockframes/utils/pipes';
@@ -114,6 +115,7 @@ export const panelRoutes: Routes = [
     GetEventPipeModule,
     ClipboardModule,
     DetailedTermsModule,
+    UploadWidgetModule,
 
     RouterModule.forChild(panelRoutes),
   ],

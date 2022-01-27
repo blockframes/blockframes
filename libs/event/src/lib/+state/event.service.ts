@@ -3,7 +3,7 @@ import { CollectionConfig, CollectionService, Query, WriteOptions, queryChanges 
 import { EventDocument, EventBase, EventTypes } from './event.firestore';
 import { Event, ScreeningEvent, createCalendarEvent, MeetingEvent, isMeeting, isScreening } from './event.model';
 import { QueryFn } from '@angular/fire/firestore/interfaces';
-import { OrganizationQuery } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { PermissionsService } from '@blockframes/permissions/+state';
 import { Observable, combineLatest, of } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
@@ -55,19 +55,19 @@ export class EventService extends CollectionService<EventState> {
 
   constructor(
     private permissionsService: PermissionsService,
-    private orgQuery: OrganizationQuery,
+    private orgService: OrganizationService,
   ) {
     super();
   }
 
   /** Verify if the current user / organisation is ownr of an event */
   isOwner(event: EventBase<Date | Timestamp, unknown>) {
-    return event?.ownerOrgId === this.orgQuery.getActiveId();
+    return event?.ownerOrgId === this.orgService.org?.id;
   }
 
   /** Create the permission */
   async onCreate(event: Event, { write }: WriteOptions) {
-    return this.permissionsService.addDocumentPermissions(event.id, write);
+    return this.permissionsService.addDocumentPermissions(event.id, write, this.orgService.org.id);
   }
 
   formatToFirestore(event: Event) {

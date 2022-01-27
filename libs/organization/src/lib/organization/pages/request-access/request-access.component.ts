@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentApp, appName, App, getOrgAppAccess } from '@blockframes/utils/apps';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { OrganizationQuery, organizationRoles, OrganizationService } from '@blockframes/organization/+state';
+import { organizationRoles, OrganizationService } from '@blockframes/organization/+state';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AuthService } from '@blockframes/auth/+state';
@@ -21,8 +21,8 @@ export class OrgRequestAccessComponent implements OnInit {
   public roles = organizationRoles;
   public currentApp = getCurrentApp(this.routerQuery);
   public appName = appName;
-  public org$ = this.orgQuery.selectActive();
-  public orgId = this.orgQuery.getActiveId();
+  public org$ = this.orgService.org$;
+  public orgId = this.orgService.org.id;
   public orgExistingAccess$: Observable<App[]>;
   public disabledRequest = false;
   public formControl = new FormControl();
@@ -34,7 +34,6 @@ export class OrgRequestAccessComponent implements OnInit {
     private routerQuery: RouterQuery,
     private snackBar: MatSnackBar,
     private orgService: OrganizationService,
-    private orgQuery: OrganizationQuery,
     private authService: AuthService,
     private router: Router,
     private route: ActivatedRoute,

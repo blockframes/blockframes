@@ -9,7 +9,7 @@ import { DashboardTitleShellComponent } from '@blockframes/movie/dashboard/shell
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CampaignService } from '@blockframes/campaign/+state';
 import { filter, switchMap } from 'rxjs/operators';
-import { OrganizationQuery } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 
 const links: RouteDescription[] = [
   {
@@ -52,7 +52,7 @@ export class TitleViewComponent implements OnInit, OnDestroy {
   @ViewChild('dialogTemplate') dialogTemplate: TemplateRef<unknown>;
   @ViewChild(DashboardTitleShellComponent) shell: DashboardTitleShellComponent;
   private dialogRef: MatDialogRef<unknown, unknown>;
-  public org$ = this.orgQuery.selectActive();
+  public org$ = this.orgService.org$;
   public movie$: Observable<Movie>;
   public loading$: Observable<boolean>;
   public navLinks = links;
@@ -65,7 +65,7 @@ export class TitleViewComponent implements OnInit, OnDestroy {
     private snackbar: MatSnackBar,
     private campaignService: CampaignService,
     private cdr: ChangeDetectorRef,
-    private orgQuery: OrganizationQuery
+    private orgService: OrganizationService
   ) { }
 
   ngOnInit() {

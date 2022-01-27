@@ -2,12 +2,12 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Event } from '@blockframes/event/+state';
 import { ActivatedRoute } from '@angular/router';
-import { pluck, switchMap, tap } from 'rxjs/operators';
+import { pluck, switchMap, take, tap } from 'rxjs/operators';
 import { EventService } from '@blockframes/event/+state';
 import { Observable } from 'rxjs';
 import { BehaviorStore } from '@blockframes/utils/observable-helpers';
 import { EventMeta, EventTypes } from '@blockframes/event/+state/event.firestore';
-import { InvitationQuery } from '@blockframes/invitation/+state';
+import { InvitationService } from '@blockframes/invitation/+state';
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { toLabel } from '@blockframes/utils/pipes';
 import { orgName } from '@blockframes/organization/+state/organization.firestore';
@@ -46,7 +46,7 @@ export class AnalyticsComponent implements OnInit {
     private dynTitle: DynamicTitleService,
     private route: ActivatedRoute,
     private service: EventService,
-    private invitationQuery: InvitationQuery,
+    private invitationService: InvitationService,
     private cdr: ChangeDetectorRef,
     private orgService: OrganizationService,
   ) { }
@@ -60,10 +60,12 @@ export class AnalyticsComponent implements OnInit {
       tap(async event => {
         this.eventType = event.type;
 
+        const allInvitations = await this.invitationService.allInvitations$.pipe(take(1)).toPromise();
 
-        const invitations = this.invitationQuery.getAll({
-          // we are looking for invitations related to this event
-          filterBy: invit => invit.eventId === event.id && !!invit.watchTime
+        // we are looking for invitations related to this event
+        const invitations = allInvitations.filter(invit => {
+          if (invit.eventId !== event.id) return false;
+          if (!invit.watchTime) return false;
         });
 
         const allOrgIds = invitations.map(i => i.fromUser?.orgId || i.toUser?.orgId).filter(orgId => !!orgId);

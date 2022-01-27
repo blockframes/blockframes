@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { IncomeStore, IncomeState } from './income.store';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
+import { ActiveState, EntityState } from '@datorama/akita';
+import { Income } from './income.model';
+
+interface IncomeState extends EntityState<Income>, ActiveState<string> { }
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'incomes' })
 export class IncomeService extends CollectionService<IncomeState> {
   useMemorization = true;
-  constructor(store: IncomeStore) {
-    super(store);
-  }
 }
