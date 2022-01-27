@@ -12,7 +12,6 @@ import { Observable, of, Subscription } from 'rxjs';
 import { map, pluck, switchMap } from 'rxjs/operators';
 import { NavTabs, TabConfig } from '@blockframes/utils/event';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { OrganizationQuery } from '@blockframes/organization/+state';
 
 const statisticsTab = { path: 'statistics', label: 'Statistics' };
 
