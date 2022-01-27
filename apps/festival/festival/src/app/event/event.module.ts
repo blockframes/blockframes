@@ -14,7 +14,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { EventAccessGuard } from '@blockframes/event/guard/event-access.guard';
 import { EventGuard } from '@blockframes/event/guard/event.guard';
 import { SessionGuard } from '@blockframes/event/guard/session.guard';
-import { NotificationsGuard } from '@blockframes/notification/notifications.guard';
 import { NoEventAuthGuard } from '@blockframes/event/guard/no-event-auth.guard';
 import { NoEventIdentityGuard } from '@blockframes/event/guard/no-event-identity.guard';
 import { NoEventRoleGuard } from '@blockframes/event/guard/no-event-role.guard';
@@ -63,8 +62,7 @@ const routes: Routes = [
       },
       {
         path: 'r',
-        canActivate: [IdentityGuard, NotificationsGuard],
-        canDeactivate: [NotificationsGuard],
+        canActivate: [IdentityGuard],
         children: [
           {
             path: '',
