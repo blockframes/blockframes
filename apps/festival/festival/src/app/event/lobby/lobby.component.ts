@@ -6,7 +6,6 @@ import { createMeetingAttendee, Event, EventService } from '@blockframes/event/+
 import { TwilioService } from '@blockframes/event/components/meeting/+state/twilio.service';
 import { AuthQuery, AuthService } from '@blockframes/auth/+state';
 import { LocalAttendee, TrackKind } from '@blockframes/event/components/meeting/+state/twilio.model';
-import { TwilioQuery } from '@blockframes/event/components/meeting/+state/twilio.query';
 import { displayName } from '@blockframes/utils/utils';
 import { AttendeeStatus, Meeting } from '@blockframes/event/+state/event.firestore';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
@@ -34,7 +33,6 @@ export class LobbyComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private twilioService: TwilioService,
-    private twilioQuery: TwilioQuery,
     private dynTitle: DynamicTitleService,
   ) { }
 
@@ -44,7 +42,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
       switchMap((eventId: string) => this.eventService.valueChanges(eventId)),
     );
 
-    this.local$ = this.twilioQuery.selectLocal();
+    this.local$ = this.twilioService.localAttendee$;
     const name = displayName(this.authQuery.user || this.authService.anonymousCredentials);
     this.twilioService.initLocal(name);
 

@@ -3,7 +3,7 @@ import { EventService } from '@blockframes/event/+state';
 import { ActivatedRoute } from '@angular/router';
 import { InvitationService, Invitation } from '@blockframes/invitation/+state';
 import { combineLatest, of, Observable, BehaviorSubject } from 'rxjs';
-import { catchError, filter, switchMap, pluck, tap } from 'rxjs/operators';
+import { catchError, filter, switchMap, pluck, tap, startWith } from 'rxjs/operators';
 import { Location } from '@angular/common';
 import { fade } from '@blockframes/utils/animations/fade';
 import { AuthQuery, AuthService } from '@blockframes/auth/+state';
@@ -60,7 +60,7 @@ export class EventViewComponent implements OnInit {
 
     this.invitation$ = combineLatest([
       this.event$.pipe(filter(event => !!event)),
-      this.invitationService.guestInvitations$.pipe(catchError(() => of([]))),
+      this.invitationService.guestInvitations$.pipe(startWith([]), catchError(() => of([]))),
       this.statusChanged
     ]).pipe(
       switchMap(async ([event, invitations]) => {
