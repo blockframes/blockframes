@@ -153,6 +153,11 @@
   .mat-stroked-button {
     border-radius: 26px;
     border-width: 1.5px;
+    &:hover {
+      .mat-button-focus-overlay {
+        opacity: 0.08;
+      }
+    }
   }
 
   .mat-flat-button {
