@@ -33,10 +33,6 @@ export async function onOfferCreate(snap: FirebaseFirestore.DocumentSnapshot): P
   for (const contract of bucket.contracts) {
     const movie = await getDocument<Movie>(`movies/${contract.titleId}`);
     contract['title'] = movie.title.international;
-
-    for (const term of contract.terms) {
-      term.exclusive = term.exclusive ? 'Yes' : 'No';
-    }
   }
 
   // Send copy of offer to user who created the offer

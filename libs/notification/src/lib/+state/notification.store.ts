@@ -303,7 +303,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `An offer has been made on one of your titles.`,
-          placeholderUrl: 'contract_offer.svg',
+          placeholderUrl: 'list_offer.svg',
           url: `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}`
         }
       case 'createdCounterOffer': {
@@ -313,7 +313,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `Your counter-offer was successfully sent.`,
-          placeholderUrl: 'contract_offer.svg',
+          placeholderUrl: 'list_offer.svg',
           url: module === 'marketplace' ? marketplaceUrl : dashboardUrl
         }
       }
@@ -324,7 +324,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `You received a counter-offer.`,
-          placeholderUrl: 'contract_offer.svg',
+          placeholderUrl: 'list_offer.svg',
           url: module === 'marketplace' ? marketplaceUrl : dashboardUrl
         }
       }
@@ -334,7 +334,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `Your offer was accepted.`,
-          placeholderUrl: 'contract_offer.svg',
+          placeholderUrl: 'list_offer.svg',
           url: module === 'marketplace' ? marketplaceUrl : dashboardUrl
         }
       }
@@ -342,7 +342,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `Your offer is now under signature`,
-          placeholderUrl: 'contract_offer.svg',
+          placeholderUrl: 'list_offer.svg',
           url: `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`
         }
       }
@@ -350,7 +350,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `Your offer is now under signature`,
-          placeholderUrl: 'contract_offer.svg',
+          placeholderUrl: 'list_offer.svg',
           url: `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.docId}`
         }
       }
@@ -360,7 +360,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `You accepted an offer.`,
-          placeholderUrl: 'contract_offer.svg',
+          placeholderUrl: 'list_offer.svg',
           url: module === 'marketplace' ? marketplaceUrl : dashboardUrl
         }
       }
@@ -370,7 +370,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `Your offer was declined.`,
-          placeholderUrl: 'contract_offer.svg',
+          placeholderUrl: 'list_offer.svg',
           url: module === 'marketplace' ? marketplaceUrl : dashboardUrl
         }
       }
@@ -380,7 +380,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `You declined an offer.`,
-          placeholderUrl: 'contract_offer.svg',
+          placeholderUrl: 'list_offer.svg',
           url: module === 'marketplace' ? marketplaceUrl : dashboardUrl
         }
       }
