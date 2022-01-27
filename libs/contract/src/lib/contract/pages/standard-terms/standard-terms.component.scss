@@ -1,0 +1,24 @@
+@import '~@angular/flex-layout/mq';
+
+:host {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 24px;
+  height: 100vh;
+}
+
+a,
+iframe {
+  margin-top: 24px;
+}
+
+iframe {
+  flex: 1 1 100%;
+  width: 80%;
+  @include layout-bp(lt-lg) {
+    width: 100%;
+  }
+}

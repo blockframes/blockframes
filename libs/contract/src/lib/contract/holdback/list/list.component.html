@@ -1,7 +1,7 @@
 <ng-container *ngIf="holdbacks.length">
   <h3>Holdbacks</h3>
   <bf-table [source]="holdbacks" pagination="50" useFilter>
-    <ng-template colRef="duration" label="Duration Again" let-duration sort>
+    <ng-template colRef="duration" label="Duration" let-duration sort>
       {{ duration.from | date:'M/d/y' }} - {{ duration.to | date:'M/d/y' }}
     </ng-template>
 

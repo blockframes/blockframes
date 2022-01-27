@@ -21,9 +21,9 @@ const newUsers: Partial<UserType>[] = [
 
 export class User {
 
-  get(query: QueryInferface) : Partial<UserType>[] {
-    const userSet: Partial<UserType>[]  = (query.exist) ?
-                                          userFixture : newUsers;
+  get(query: QueryInferface): Partial<UserType>[] {
+    const userSet: Partial<UserType>[] = (query.exist) ?
+      userFixture : newUsers;
 
     if (query.index && query.index !== -1) {
       return [userSet[query.index]];
@@ -40,15 +40,15 @@ export class User {
    * getByEmail : convenience method to signed up user by emailID
    * @param emailID : email-id of the user
    */
-  getByEmail(emailID: string) : Partial<UserType> {
-    return this.get({exist: true, key:'email', value: emailID})[0];
+  getByEmail(emailID: string): Partial<UserType> {
+    return this.get({ exist: true, key: 'email', value: emailID })[0];
   }
 
   /**
    * getByUID : convenience method to signed up user by UID
    * @param uid : uid of the user
    */
-  getByUID(uid: string) : Partial<UserType> {
-    return this.get({exist: true, key:'uid', value: uid})[0];
+  getByUID(uid: string): Partial<UserType> {
+    return this.get({ exist: true, key: 'uid', value: uid })[0];
   }
 }

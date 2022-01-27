@@ -140,19 +140,16 @@
         <!-- TERMS OF USE & PRIVACY POLICY -->
 
         <div class="privacy" fxLayout="column" fxLayoutAlign="start" fxLayoutGap="16px">
-          <auth-accept-conditions [control]="form.get('termsOfUse')">
-            <span conditionText>
-              I hereby accept {{ appName }}&nbsp;
-              <a target="_blank" routerLink="/auth/terms">Terms and Conditions</a>
+          <mat-checkbox test-id="checkbox" color="primary" formControlName="termsOfUse">
+            <span class="mat-caption">I hereby accept {{ appName }}&nbsp;
+              <a target="_blank" routerLink="/auth/terms">Terms and Conditions</a>.</span>
+          </mat-checkbox>
+          
+          <mat-checkbox test-id="checkbox" color="primary" formControlName="privacyPolicy">
+            <span class="mat-caption">I hereby accept the Processing of my Personal Data and declare to know&nbsp;
+              <a target="_blank" routerLink="/auth/privacy">the Conditions of such Processing and my rights under GDPR Regulation</a>.
             </span>
-          </auth-accept-conditions>
-          <auth-accept-conditions [control]="form.get('privacyPolicy')">
-            <span conditionText>
-              I hereby accept the Processing of my Personal Data and declare to know&nbsp;
-              <a target="_blank" routerLink="/auth/privacy">the Conditions of such Processing and my rights under GDPR
-                Regulation</a>
-              </span>
-          </auth-accept-conditions>
+          </mat-checkbox>
         </div>
       </form>
 

@@ -16,6 +16,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 const routes: Routes = [{
   path: '',
@@ -98,6 +99,10 @@ const routes: Routes = [{
         loadChildren: () => import('./offer/shell/shell.module').then(m => m.ShellModule),
         data: { animation: 'list' }
       }]
+    },
+    {
+      path:'standard-terms',
+      loadChildren: () => import('@blockframes/contract/contract/pages/standard-terms/standard-terms.module').then(m => m.StandardTermsModule)
     }
   ]
 }];
@@ -113,6 +118,7 @@ const routes: Routes = [{
     MatButtonModule,
     MarketplaceLayoutModule,
     MatBadgeModule,
+    MatTooltipModule,
     RouterModule.forChild(routes)
   ]
 })

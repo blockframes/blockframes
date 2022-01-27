@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import { CollectionConfig, CollectionService, Query, WriteOptions, queryChanges } from 'akita-ng-fire';
 import { EventDocument, EventBase, EventTypes } from './event.firestore';
-import { Event, ScreeningEvent, createCalendarEvent, EventsAnalytics, MeetingEvent, isMeeting, isScreening } from './event.model';
+import { Event, ScreeningEvent, createCalendarEvent, MeetingEvent, isMeeting, isScreening } from './event.model';
 import { QueryFn } from '@angular/fire/firestore/interfaces';
-import { AngularFireFunctions } from '@angular/fire/functions';
-import { OrganizationQuery } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { PermissionsService } from '@blockframes/permissions/+state';
-import { Observable, combineLatest } from 'rxjs';
+import { Observable, combineLatest, of } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 import type firebase from 'firebase';
 import { ActiveState, EntityState } from '@datorama/akita';
@@ -53,36 +52,22 @@ const eventQueries = {
 @CollectionConfig({ path: 'events' })
 export class EventService extends CollectionService<EventState> {
   readonly useMemorization = true;
-  private analytics: Record<string, EventsAnalytics> = {};
 
   constructor(
-    private functions: AngularFireFunctions,
     private permissionsService: PermissionsService,
-    private orgQuery: OrganizationQuery,
+    private orgService: OrganizationService,
   ) {
     super();
   }
 
-  public async queryAnalytics(eventId: string): Promise<EventsAnalytics> {
-    if (this.analytics[eventId]) {
-      return this.analytics[eventId];
-    } else {
-      const f = this.functions.httpsCallable('getEventAnalytics');
-      const analytics = await f({ eventIds: [eventId] }).toPromise();
-      const eventAnalytics = analytics.find(a => a.eventId === eventId);
-      this.analytics[eventId] = eventAnalytics;
-      return eventAnalytics;
-    }
-  }
-
-  /** Verify if the current user / organisation is ownr of an event */
+  /** Verify if the current user / organization is owner of an event */
   isOwner(event: EventBase<Date | Timestamp, unknown>) {
-    return event.ownerOrgId === this.orgQuery.getActiveId();
+    return event?.ownerOrgId === this.orgService.org?.id;
   }
 
   /** Create the permission */
   async onCreate(event: Event, { write }: WriteOptions) {
-    return this.permissionsService.addDocumentPermissions(event.id, write);
+    return this.permissionsService.addDocumentPermissions(event.id, write, this.orgService.org.id);
   }
 
   formatToFirestore(event: Event) {
@@ -120,16 +105,12 @@ export class EventService extends CollectionService<EventState> {
   queryDocs(ids: string | string[]): Observable<Event | Event[]> {
     if (typeof ids === 'string') {
       return queryChanges.call(this, eventQuery(ids))
+    } else if (ids.length === 0) {
+      return of([]);
     } else {
       const queries = ids.map(id => queryChanges.call(this, eventQuery(id)))
       return combineLatest(queries);
     }
-  }
-
-  /** Call a firebase function to get analytics specify to an array of eventIds.*/
-  public getEventAnalytics(eventIds: string[]): Observable<EventsAnalytics[]> {
-    const f = this.functions.httpsCallable('getEventAnalytics');
-    return f({ eventIds });
   }
 
   /** Just save local time so we will be able to compute session duration at the end */

@@ -2,14 +2,25 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Event } from '@blockframes/event/+state';
 import { ActivatedRoute } from '@angular/router';
-import { pluck, switchMap, tap } from 'rxjs/operators';
+import { pluck, switchMap, take, tap } from 'rxjs/operators';
 import { EventService } from '@blockframes/event/+state';
 import { Observable } from 'rxjs';
 import { BehaviorStore } from '@blockframes/utils/observable-helpers';
-import { EventAnalytics, EventMeta, EventTypes } from '@blockframes/event/+state/event.firestore';
-import { InvitationQuery } from '@blockframes/invitation/+state';
+import { EventMeta, EventTypes } from '@blockframes/event/+state/event.firestore';
+import { InvitationService } from '@blockframes/invitation/+state';
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { toLabel } from '@blockframes/utils/pipes';
+import { orgName } from '@blockframes/organization/+state/organization.firestore';
+import { OrganizationService } from '@blockframes/organization/+state';
+
+interface WatchTimeInfo {
+  name: string, // firstName + lastName
+  email: string,
+  orgName?: string,
+  orgActivity?: string,
+  orgCountry?: string,
+  watchTime?: number, // in seconds
+}
 
 @Component({
   selector: 'event-analytics-page',
@@ -25,19 +36,19 @@ export class AnalyticsComponent implements OnInit {
 
   event$: Observable<Event<EventMeta>>;
   private eventType: EventTypes;
-  analytics: EventAnalytics[];
+  analytics: WatchTimeInfo[];
   public hasWatchTime = false;
   public exporting = new BehaviorStore(false);
   public averageWatchTime = 0; // in seconds
-
-
+  public dataMissing = '(Not Registered)';
 
   constructor(
     private dynTitle: DynamicTitleService,
     private route: ActivatedRoute,
     private service: EventService,
-    private invitationQuery: InvitationQuery,
+    private invitationService: InvitationService,
     private cdr: ChangeDetectorRef,
+    private orgService: OrganizationService,
   ) { }
 
   ngOnInit(): void {
@@ -48,30 +59,31 @@ export class AnalyticsComponent implements OnInit {
       switchMap((eventId: string) => this.service.valueChanges(eventId)),
       tap(async event => {
         this.eventType = event.type;
-        const analytics = await this.service.queryAnalytics(event.id);
 
-        // transform the analytics records
-        this.analytics = analytics.eventUsers.map(analytic => {
-          const transformedAnalytic = {
-            ...analytic,
-            name: `${analytic.firstName} ${analytic.lastName}`,
+        const allInvitations = await this.invitationService.allInvitations$.pipe(take(1)).toPromise();
+
+        // we are looking for invitations related to this event
+        const invitations = allInvitations.filter(invit => {
+          if (invit.eventId !== event.id) return false;
+          if (!invit.watchTime) return false;
+        });
+
+        const allOrgIds = invitations.map(i => i.fromUser?.orgId || i.toUser?.orgId).filter(orgId => !!orgId);
+        const orgIds = Array.from(new Set(allOrgIds));
+        const orgs = await Promise.all(orgIds.map(orgId => this.orgService.getValue(orgId)));
+
+        this.analytics = invitations.map(i => {
+          const user = i.fromUser || i.toUser;
+          const name = user.lastName && user.firstName ? `${user.firstName} ${user.lastName}` : this.dataMissing;
+          const org = orgs.find(o => o.id === user.orgId);
+          return {
+            email: user.email,
+            watchTime: i.watchTime,
+            name,
+            orgName: orgName(org),
+            orgActivity: org?.activity,
+            orgCountry: org?.addresses?.main.country
           };
-
-          // add watch time to the analytic record
-          if (this.eventType === 'screening') {
-            // retrieve watch time from invitation
-            const [invitation] = this.invitationQuery.getAll({
-              // we are looking for invitation between this event and this user id
-              filterBy: invit => invit.eventId === analytic.eventId &&
-                (
-                  invit.toUser?.uid === analytic.userId ||
-                  invit.fromUser?.uid === analytic.userId
-                )
-            });
-            transformedAnalytic.watchTime = invitation?.watchTime ?? 0;
-          }
-
-          return transformedAnalytic;
         });
 
         // if event is a screening we add the watch time column to the table

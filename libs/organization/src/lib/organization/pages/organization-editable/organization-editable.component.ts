@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { OrganizationQuery, OrganizationService, Organization } from '../../+state';
-import { PermissionsQuery } from '@blockframes/permissions/+state';
+import { OrganizationService, Organization } from '../../+state';
+import { PermissionsService } from '@blockframes/permissions/+state';
 import { OrganizationForm } from '../../forms/organization.form';
 import { Observable } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -18,17 +18,15 @@ export class OrganizationEditableComponent implements OnInit {
   public isAdmin$: Observable<boolean>;
 
   constructor(
-    private query: OrganizationQuery,
-    private permissionsQuery: PermissionsQuery,
+    private permissionsService: PermissionsService,
     private service: OrganizationService,
     private snackBar: MatSnackBar,
   ) {}
 
   ngOnInit() {
-    this.organization$ = this.query
-      .selectActive()
+    this.organization$ = this.service.org$
       .pipe(tap(org => this.organizationProfileForm.patchValue(org)));
-    this.isAdmin$ = this.permissionsQuery.isAdmin$;
+    this.isAdmin$ = this.permissionsService.isAdmin$;
   }
 
   public get organizationInformations$() {
@@ -46,7 +44,7 @@ export class OrganizationEditableComponent implements OnInit {
       if (this.organizationProfileForm.invalid) {
         throw new Error('Your organization profile informations are not valid');
       }
-      this.service.update(this.query.getActiveId(), this.organizationProfileForm.value);
+      this.service.update(this.service.org.id, this.organizationProfileForm.value);
       this.snackBar.open('Organization profile change succesfull', 'close', { duration: 2000 });
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });

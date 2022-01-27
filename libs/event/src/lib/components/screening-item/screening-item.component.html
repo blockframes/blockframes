@@ -15,19 +15,23 @@
           <a ongoing-event-button [routerLink]="['/event', event.id, 'r', 'i']">Ongoing Screening</a>
         </ng-container>
       </div>
-      <h5>{{ event.accessibility | toLabel:'accessibility' }} Screening</h5>
+      <h5>
+        <span>{{ event.accessibility | toLabel:'accessibility' }} Screening</span>
+        <event-agenda-export [event]="event"></event-agenda-export>
+      </h5>
       <pre class="mat-body-1">{{ event | eventRange }}</pre>
       <ng-container *ngIf="event.ownerOrgId | getOrg | async as org">
         <org-chip @fade [org]="org"></org-chip>
       </ng-container>
     </div>
-    <footer fxLayout>
+    <footer fxLayout fxLayoutAlign="space-between">
       <ng-container *ngIf="event.isOwner; else notOwner">
         <h3>You are the owner of this event</h3>
       </ng-container>
       <ng-template #notOwner>
         <ng-container *ngIf="invitation !== undefined">
           <invitation-action @fade [invitation]="invitation" [event]="event"></invitation-action>
+          <button mat-button [disabled]="requestSent.$ | async" (click)="requestAskingPrice(event.meta.titleId)">Request Asking Price</button>
         </ng-container>
       </ng-template>
     </footer>

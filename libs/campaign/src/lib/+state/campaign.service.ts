@@ -1,12 +1,14 @@
 import { Injectable } from "@angular/core";
-import { OrganizationQuery } from "@blockframes/organization/+state";
+import { OrganizationService } from "@blockframes/organization/+state";
 import { CollectionService, CollectionConfig } from 'akita-ng-fire';
 import { Campaign } from "./campaign.model";
-import { CampaignState, CampaignStore } from "./campaign.store";
 import { removeUndefined } from '@blockframes/utils/helpers';
 import { Movie, MovieService } from "@blockframes/movie/+state";
 import { combineLatest, of } from "rxjs";
 import { map } from "rxjs/operators";
+import { ActiveState, EntityState } from '@datorama/akita';
+
+interface CampaignState extends EntityState<Campaign, string>, ActiveState<string> {}
 
 export interface MovieCampaign extends Movie {
   campaign: Campaign;
@@ -18,11 +20,10 @@ export class CampaignService extends CollectionService<CampaignState> {
   useMemorization = true;
 
   constructor(
-    protected store: CampaignStore,
-    private orgQuery: OrganizationQuery,
+    private orgService: OrganizationService,
     private movieService: MovieService
   ) {
-    super(store);
+    super();
   }
 
   // Make sure we remove all undefined values
@@ -44,13 +45,13 @@ export class CampaignService extends CollectionService<CampaignState> {
   }
 
   create(movieId: string) {
-    const orgId = this.orgQuery.getActiveId();
+    const orgId = this.orgService.org.id;
     const id = movieId; // We use the movieId to index the campaign in the org
     return this.add({ id, movieId, orgId });
   }
 
   async save(id: string, updates: Partial<Campaign>) {
-    const orgId = this.orgQuery.getActiveId();
+    const orgId = this.orgService.org.id;
     return this.upsert({ id, orgId, ...updates });
   }
 }

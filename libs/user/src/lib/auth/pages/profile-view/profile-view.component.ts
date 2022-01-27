@@ -7,12 +7,12 @@ import { distinctUntilChanged, filter } from 'rxjs/operators';
 
 // blockframes
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
-import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { Organization } from '@blockframes/organization/+state/organization.model';
 import { User } from '@blockframes/auth/+state/auth.store';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { getCurrentApp } from '@blockframes/utils/apps';
 import { canHavePreferences } from '@blockframes/user/+state/user.utils';
+import { OrganizationService } from '@blockframes/organization/+state';
 
 const navLinks = [
   {
@@ -47,7 +47,7 @@ export class ProfileViewComponent implements OnInit, OnDestroy {
     private authQuery: AuthQuery,
     private dynTitle: DynamicTitleService,
     private location: Location,
-    private organizationQuery: OrganizationQuery,
+    private orgService: OrganizationService,
     private routerQuery: RouterQuery,
     router: Router
   ) {
@@ -55,7 +55,7 @@ export class ProfileViewComponent implements OnInit, OnDestroy {
     this.dynTitle.setPageTitle(`
     ${this.authQuery.getValue().profile.lastName}
     ${this.authQuery.getValue().profile.firstName}`,
-      `${this.organizationQuery.getActive().denomination.full}`);
+      `${this.orgService.org.denomination.full}`);
 
     this.sub = router.events.pipe(
       filter((evt: Event) => evt instanceof NavigationEnd),
@@ -65,12 +65,12 @@ export class ProfileViewComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.user$ = this.authQuery.user$;
-    this.organization$ = this.organizationQuery.selectActive();
+    this.organization$ = this.orgService.org$;
 
     const hasPreferences = this.navLinks.some(link => link.path === 'preferences');
     if (hasPreferences) return;
 
-    const org = this.organizationQuery.getActive();
+    const org = this.orgService.org;
     const app = getCurrentApp(this.routerQuery);
     if (canHavePreferences(org, app)) {
       this.navLinks.push({ path: 'preferences', label: 'Buying Preferences' })

@@ -16,6 +16,7 @@ export class SpecificTermsComponent implements OnInit {
   form = new FormGroup({
     specificity: new FormControl(),
     delivery: new FormControl(),
+    acceptTerms: new FormControl(false)
   })
 
   constructor(
@@ -27,7 +28,7 @@ export class SpecificTermsComponent implements OnInit {
 
   async ngOnInit() {
     const { specificity = '', delivery = '' } = await this.bucketService.getActive();
-    this.form.setValue({ specificity, delivery });
+    this.form.setValue({ specificity, delivery, acceptTerms:false });
   }
 
   async createOffer() {

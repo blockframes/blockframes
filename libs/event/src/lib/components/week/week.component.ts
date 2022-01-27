@@ -17,7 +17,7 @@ import { fromEvent } from 'rxjs';
 import { map, finalize, takeUntil, distinctUntilChanged } from 'rxjs/operators';
 
 import { ActivatedRoute, Router } from '@angular/router';
-import { OrganizationQuery } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 
 function floorToNearest(amount: number, precision: number) {
   return Math.floor(amount / precision) * precision;
@@ -51,10 +51,12 @@ export class CalendarWeekComponent {
   private _editable: boolean;
   baseEvents: CalendarEvent[];
   localEvents: CalendarEvent[];
+  loading = false;
   @Input() viewDate: Date = new Date();
   @Input() eventTypes: EventTypes[] = ['screening', 'meeting'];
   @Input()
   set events(events: CalendarEvent<unknown>[]) {
+    this.loading = !events;
     this.baseEvents = events || [];
     this.refresh(events || []);
   }
@@ -67,13 +69,12 @@ export class CalendarWeekComponent {
     return this._editable;
   }
 
-
   @ContentChild(EventSmallDirective) smallEvent: EventSmallDirective;
   @ContentChild(EventLargeDirective) largeEvent: EventLargeDirective;
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
-    private orgQuery: OrganizationQuery,
+    private orgService: OrganizationService,
     private service: EventService,
     private dialog: MatDialog,
     private router: Router,
@@ -83,7 +84,6 @@ export class CalendarWeekComponent {
 
   startDragToCreate(
     segment: WeekViewHourSegment,
-    mouseDownEvent: MouseEvent,
     segmentElement: HTMLElement
   ) {
     if (!this.editable) {
@@ -91,7 +91,7 @@ export class CalendarWeekComponent {
     }
     const localEvent: CalendarEvent = createEvent({
       id: this.service['db'].createId(),
-      ownerOrgId: this.orgQuery.getActiveId(),
+      ownerOrgId: this.orgService.org.id,
       title: 'New event',
       start: segment.date,
       end: addMinutes(segment.date, 30),
@@ -138,8 +138,10 @@ export class CalendarWeekComponent {
     this.dialog.open(EventCreateComponent, { data, width: '650px', autoFocus: false }).afterClosed()
       .subscribe(async ({ event } = {}) => {
         if (event) {
+          this.loading = true;
+          this.cdr.markForCheck();
           await this.service.add(event);
-          this.router.navigate([event.id, 'edit'], { relativeTo: this.route });
+          await this.router.navigate([event.id, 'edit'], { relativeTo: this.route });
         } else {
           this.refresh(this.baseEvents);
         }

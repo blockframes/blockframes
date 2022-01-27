@@ -2,7 +2,7 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { combineLatest } from 'rxjs';
-import { map, shareReplay, startWith, take, throttleTime } from 'rxjs/operators';
+import { map, shareReplay, take, throttleTime } from 'rxjs/operators';
 
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -11,7 +11,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { TerritoryValue } from '@blockframes/utils/static-model';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
 import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
-import { AvailableTerritoryMarker, BucketTerritoryMarker, emptyAvailabilities, filterContractsByTitle, MapAvailsFilter, territoryAvailabilities } from '@blockframes/contract/avails/avails';
+import {
+  AvailableTerritoryMarker, BucketTerritoryMarker, emptyAvailabilities,
+  filterContractsByTitle, MapAvailsFilter, territoryAvailabilities,
+} from '@blockframes/contract/avails/avails';
 
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
 
@@ -30,7 +33,6 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
   public titleId = this.shell.movie.id;
   public org$ = this.shell.movieOrg$;
   public availsForm = this.shell.avails.mapForm;
-  public status$ = this.availsForm.statusChanges.pipe(startWith(this.availsForm.valid ? 'VALID' : 'INVALID'));
   private mandates$ = this.shell.mandates$;
   private mandateTerms$ = this.shell.mandateTerms$;
   private sales$ = this.shell.sales$;
@@ -57,7 +59,7 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
     private shell: MarketplaceMovieAvailsComponent,
     private router: Router,
     private route: ActivatedRoute,
-  ) { }
+  ) {}
 
   /** Display the territories information in the tooltip */
   public displayTerritoryTooltip(territory: TerritoryValue, status: string) {

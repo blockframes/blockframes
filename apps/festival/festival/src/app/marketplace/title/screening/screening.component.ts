@@ -5,6 +5,7 @@ import { Event } from '@blockframes/event/+state';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { AgendaService } from '@blockframes/utils/agenda/agenda.service';
 
 @Component({
   selector: 'festival-screening',
@@ -19,6 +20,7 @@ export class ScreeningComponent implements OnInit {
     private parent: TitleMarketplaceShellComponent,
     private service: EventService,
     private dynTitle: DynamicTitleService,
+    private agendaService: AgendaService,
   ) { }
 
   ngOnInit(): void {
@@ -32,6 +34,10 @@ export class ScreeningComponent implements OnInit {
         return this.service.queryByType(['screening'], query);
       }),
     );
+  }
+
+  exportToCalendar(events: Event[] = []) {
+    this.agendaService.download(events);
   }
 
 }

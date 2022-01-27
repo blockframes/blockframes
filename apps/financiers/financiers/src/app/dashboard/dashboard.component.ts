@@ -1,6 +1,6 @@
 // Angular
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { OrganizationQuery } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 
 @Component({
   selector: 'financiers-dashboard',
@@ -9,7 +9,7 @@ import { OrganizationQuery } from '@blockframes/organization/+state';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardComponent {
-  public org$ = this.orgQuery.selectActive();
+  public org$ = this.orgService.org$;
 
-  constructor(private orgQuery: OrganizationQuery) { }
+  constructor(private orgService: OrganizationService) { }
 }

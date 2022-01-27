@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { AuthService, AuthQuery } from '../../+state';
 import { ThemeService } from '@blockframes/ui/theme';
-import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { UserService } from '@blockframes/user/+state';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { dbVersionDoc, IVersionDoc } from '@blockframes/utils/maintenance';
 import { emulators } from '@env';
+import { OrganizationService } from '@blockframes/organization/+state';
 
 @Component({
   selector: 'auth-widget',
@@ -16,7 +16,7 @@ import { emulators } from '@env';
 })
 export class AuthWidgetComponent {
   user$ = this.query.user$;
-  organization$ = this.organizationQuery.selectActive();
+  organization$ = this.orgService.org$;
   theme$ = this.themeService.theme$;
   isBfAdmin = this.userService.isBlockframesAdmin(this.query.getValue().uid);
   appVersion$ = this.db.doc<IVersionDoc>(dbVersionDoc).valueChanges();
@@ -27,7 +27,7 @@ export class AuthWidgetComponent {
     private db: AngularFirestore,
     private service: AuthService,
     private query: AuthQuery,
-    private organizationQuery: OrganizationQuery,
+    private orgService: OrganizationService,
     private themeService: ThemeService,
     private userService: UserService
   ) { }
