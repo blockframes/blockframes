@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { map, switchMap, catchError } from 'rxjs/operators';
+import { map, switchMap, catchError, take } from 'rxjs/operators';
 import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { hasDisplayName } from '@blockframes/utils/helpers';
@@ -42,6 +42,14 @@ export class EventAuthGuard extends CollectionGuard<AuthState> {
             const org = await this.orgService.getValue(user.orgId);
             if (org.status !== 'accepted') {
               return this.router.navigate(['/c/organization/create-congratulations']);
+            }
+
+            /**
+             * If current user is not anonymous, we populate org on service 
+             * @TODO #7273 remove when we switch to ngfire
+             */
+            if (userAuth && !userAuth.isAnonymous) {
+              await this.orgService.org$.pipe(take(1)).toPromise();
             }
 
             // Everyting is ok

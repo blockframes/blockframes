@@ -25,7 +25,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   private app = getCurrentApp(this.routerQuery);
 
   // Organization of the current logged in user
-  org: Organization;
+  org: Organization; // @TODO #7273 if this.org$ was not already called, this will be undefined
   org$: Observable<Organization> = this.authService.profile$.pipe(
     switchMap(user => user?.orgId ? this.valueChanges(user.orgId) : of(undefined)),
     tap(org => this.org = org)

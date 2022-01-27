@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { createAlgoliaUserForm } from '@blockframes/utils/algolia';
 import { scaleIn } from '@blockframes/utils/animations/fade';
-import { Invitation, InvitationQuery, InvitationService } from '@blockframes/invitation/+state';
+import { Invitation, InvitationService } from '@blockframes/invitation/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { ENTER, COMMA, SEMICOLON, SPACE } from '@angular/cdk/keycodes';
 import { Validators } from '@angular/forms';
@@ -52,7 +52,6 @@ export class UserComponent implements OnInit {
 
   constructor(
     private invitationService: InvitationService,
-    private invitationQuery: InvitationQuery,
     private orgService: OrganizationService,
     private snackBar: MatSnackBar
   ) { }
@@ -61,7 +60,8 @@ export class UserComponent implements OnInit {
 
     this.hasLimit = this.limit !== Infinity;
 
-    const existingInvitationNumber$ = this.invitationQuery.selectAll({ filterBy: invitation => invitation.eventId === this.eventId }).pipe(
+    const existingInvitationNumber$ = this.invitationService.allInvitations$.pipe(
+      map(invitations => invitations.filter(invitation => invitation.eventId === this.eventId)),
       map(invitations => invitations.length)
     );
     const inFormInvitationNumber$ = this.form.valueChanges.pipe(
