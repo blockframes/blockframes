@@ -62,7 +62,7 @@ export interface MovieBase<D> {
   isOriginalVersionAvailable: boolean;
   keyAssets?: string,
   keywords?: string[],
-  languages?: Partial<{ [language in Language]: MovieLanguageSpecification }>;
+  languages?: LanguageRecord;
   logline?: string,
   originalLanguages: Language[], //! required
   originalRelease?: MovieOriginalReleaseRaw<D>[],
@@ -160,7 +160,6 @@ export interface MovieLanguageSpecification {
   caption: boolean;
 }
 
-export type MovieLanguageSpecificationContainer = Record<Language, MovieLanguageSpecification>;
 export type LanguageRecord = Partial<{ [language in Language]: MovieLanguageSpecification }>;
 
 

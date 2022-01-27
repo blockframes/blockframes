@@ -51,10 +51,12 @@ export class CalendarWeekComponent {
   private _editable: boolean;
   baseEvents: CalendarEvent[];
   localEvents: CalendarEvent[];
+  loading = false;
   @Input() viewDate: Date = new Date();
   @Input() eventTypes: EventTypes[] = ['screening', 'meeting'];
   @Input()
   set events(events: CalendarEvent<unknown>[]) {
+    this.loading = !events;
     this.baseEvents = events || [];
     this.refresh(events || []);
   }
@@ -66,7 +68,6 @@ export class CalendarWeekComponent {
   get editable(): boolean {
     return this._editable;
   }
-
 
   @ContentChild(EventSmallDirective) smallEvent: EventSmallDirective;
   @ContentChild(EventLargeDirective) largeEvent: EventLargeDirective;
@@ -137,8 +138,10 @@ export class CalendarWeekComponent {
     this.dialog.open(EventCreateComponent, { data, width: '650px', autoFocus: false }).afterClosed()
       .subscribe(async ({ event } = {}) => {
         if (event) {
+          this.loading = true;
+          this.cdr.markForCheck();
           await this.service.add(event);
-          this.router.navigate([event.id, 'edit'], { relativeTo: this.route });
+          await this.router.navigate([event.id, 'edit'], { relativeTo: this.route });
         } else {
           this.refresh(this.baseEvents);
         }

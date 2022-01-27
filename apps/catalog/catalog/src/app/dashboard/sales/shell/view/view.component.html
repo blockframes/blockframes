@@ -10,10 +10,10 @@
           </button>
         </ng-container>
         <ng-template #noPrice>
-          <button disabled mat-stroked-button matTooltip="You cannot accept a contract without a price">
-            <mat-icon svgIcon="check"></mat-icon>
-            <span>Accept</span>
-          </button>
+            <button disabled mat-stroked-button>
+              <mat-icon svgIcon="check"></mat-icon>
+              <span matTooltip="You cannot accept a contract without a price">Accept</span>
+            </button>
         </ng-template>
         <a [disabled]="negotiation.createdByOrg === orgId" mat-stroked-button color="primary" routerLink="../negotiation">
           <mat-icon svgIcon="negotiate"></mat-icon>

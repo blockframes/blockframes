@@ -5,7 +5,7 @@ import { mandatoryError, MovieImportState, wrongValueError, optionalWarning, get
 import { createMovie } from '@blockframes/movie/+state';
 import { extract, ExtractConfig, SheetTab } from '@blockframes/utils/spreadsheet';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
-import { MovieAppConfig, MovieGoalsAudience, MovieLanguageSpecification, MovieRelease, MovieRunningTime, MovieStakeholders } from '@blockframes/movie/+state/movie.firestore';
+import { LanguageRecord, MovieAppConfig, MovieGoalsAudience, MovieRelease, MovieRunningTime, MovieStakeholders } from '@blockframes/movie/+state/movie.firestore';
 import { Certification, Color, ContentType, CrewRole, Genre, Language, MediaValue, MovieFormat, MovieFormatQuality, NumberRange, PremiereType, ProducerRole, ProductionStatus, SocialGoal, SoundFormat, StakeholderRole, StoreStatus, Territory } from '@blockframes/utils/static-model';
 import { User } from '@blockframes/auth/+state';
 import { Stakeholder } from '@blockframes/utils/common-interfaces';
@@ -523,7 +523,7 @@ export async function formatTitle(
       financier:  getStakeholders('financier'),
     };
 
-    const languages: Partial<{ [language in Language]: MovieLanguageSpecification }> = {};
+    const languages: LanguageRecord = {};
     if (!data.languages) {
       errors.push(optionalWarning('Languages').error);
     } else {

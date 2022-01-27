@@ -13,10 +13,10 @@
     <div class="tab-content">
       <p class="mat-caption">{{ (org.addresses.main.country | toLabel: 'territories') || "-" }}</p>
       <p class="mat-caption" i18n *ngIf="(orgMovieCount$ | async) as count">
-        {{ count }} film{ count, plural, =0 {} =1 {} other {s} } in {{ app === 'catalog' ? 'catalog' : 'line-up' }}
+        {{ count }} film{ count, plural, =1 {} other {s} } in {{ app === 'catalog' ? 'catalog' : 'line-up' }}
       </p>
       <p class="mat-caption" i18n>
-        {{ org.userIds.length }} employee{ org.userIds.length, plural, =0 {} =1 {} other {s} }
+        {{ org.userIds.length }} employee{ org.userIds.length, plural, =1 {} other {s} }
       </p>
     </div>
   </mat-tab>

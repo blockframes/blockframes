@@ -31,6 +31,8 @@ function getExpiredMarkers(availableMarkers: DurationMarker[]) {
   const today = new Date();
   const previousMonthDate = new Date();
   previousMonthDate.setDate(0); // sets date to last date of previous month.
+  const isJanuary = previousMonthDate.getFullYear() < new Date().getFullYear();
+  if (isJanuary) return []; // No expired markers in January
   return availableMarkers.filter(marker => marker.from < today).map(marker => ({ ...marker, to: previousMonthDate }));
 }
 
@@ -59,15 +61,16 @@ export class AvailsCalendarComponent implements OnInit {
   /** Includes available, sold, selected, and in selection markers */
   @Input() set availableMarkers(markers: DurationMarker[] | undefined) {
     if (!markers) return;
-    this._availableMarkers = markers;
-
-    this._expiredMarkers = getExpiredMarkers(markers);
+    const startOfYear = new Date(new Date().getFullYear(), 0); // January of current year.
+    this._availableMarkers = markers.filter(marker => marker.to > startOfYear);
+    this._expiredMarkers = getExpiredMarkers(this._availableMarkers);
     this.updateMatrix();
   }
 
   @Input() set soldMarkers(markers: DurationMarker[] | undefined) {
     if (!markers) return;
-    this._soldMarkers = markers;
+    const startOfYear = new Date(new Date().getFullYear(), 0);
+    this._soldMarkers = markers.filter(marker => marker.to > startOfYear);
     this.updateMatrix();
   }
 

@@ -114,7 +114,7 @@
 <!-- CERTIFICATION -->
 <article fxLayout="column" fxLayoutGap="16px">
   <h6>
-    Qualification{ movie.certifications.value.length, plural, =0 {} =1 {} other {s}}
+    Qualification{ movie.certifications.value.length, plural, =1 {} other {s}}
     <a mat-icon-button [routerLink]="link" fragment="qualifications">
       <mat-icon svgIcon="edit" color="primary"></mat-icon>
     </a>
