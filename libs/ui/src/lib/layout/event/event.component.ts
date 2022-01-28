@@ -13,7 +13,7 @@ import { map, switchMap } from 'rxjs/operators';
 // Blockframes
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { InvitationService } from '@blockframes/invitation/+state';
-import { NotificationQuery } from '@blockframes/notification/+state';
+import { NotificationService } from '@blockframes/notification/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { MovieService, Movie } from '@blockframes/movie/+state'
 import { getCurrentApp, App } from '@blockframes/utils/apps';
@@ -28,7 +28,7 @@ import { getCurrentApp, App } from '@blockframes/utils/apps';
 export class EventComponent implements OnInit {
   public user$ = this.authQuery.select('profile');
   public wishlistCount$: Observable<number>;
-  public notificationCount$ = this.notificationQuery.selectCount();
+  public notificationCount$ = this.notificationService.myNotificationsCount$;
   public invitationCount$ = this.invitationService.myInvitations$.pipe(
     map(invitations => invitations.filter(invitation => invitation.status === 'pending').length),
   )
@@ -40,7 +40,7 @@ export class EventComponent implements OnInit {
     private orgService: OrganizationService,
     private authQuery: AuthQuery,
     private invitationService: InvitationService,
-    private notificationQuery: NotificationQuery,
+    private notificationService: NotificationService,
     private movieService: MovieService,
     private routerQuery: RouterQuery
   ) { }
