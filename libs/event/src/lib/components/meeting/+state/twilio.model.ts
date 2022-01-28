@@ -21,6 +21,8 @@ export interface Attendee {
   userName: string,
 }
 
+export type Attendees = { local?: LocalAttendee } & Record<string, RemoteAttendee>;
+
 export interface LocalAttendee extends Attendee {
   kind: 'local',
   tracks: LocalTracks,

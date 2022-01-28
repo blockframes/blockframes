@@ -26,7 +26,10 @@ import {
   LocalAttendee,
   RemoteAttendee,
   createRemoteAttendee,
+  Attendees,
 } from './twilio.model';
+
+type GetAttendee<Id> = Id extends 'local' ? LocalAttendee : RemoteAttendee;
 
 @Injectable({ providedIn: 'root' })
 export class TwilioService {
@@ -36,7 +39,7 @@ export class TwilioService {
 
   private preference: { [K in TrackKind]: boolean } = { 'video': true, 'audio': true };
 
-  private _attendees = new BehaviorSubject<Record<string, LocalAttendee | RemoteAttendee>>({});
+  private _attendees = new BehaviorSubject<Attendees>({});
   private _attendees$ = this._attendees.asObservable();
   attendees$ = this._attendees.asObservable().pipe(map(p => Object.values(p)));
   localAttendee$ = this._attendees$.pipe(map(p => p['local'] as LocalAttendee));
@@ -45,7 +48,7 @@ export class TwilioService {
     return this._attendees.value['local'] as LocalAttendee;
   }
 
-  constructor( private functions: AngularFireFunctions) { }
+  constructor(private functions: AngularFireFunctions) { }
 
   getToken(eventId: string, credentials: Partial<PublicUser>) {
     return this.getAccessToken({ eventId, credentials }).toPromise<ErrorResultResponse>();
@@ -218,7 +221,7 @@ export class TwilioService {
 
   private upsertAttendee(id: string, attendee: LocalAttendee | RemoteAttendee) {
     const existingAttendees = this._attendees.value;
-    existingAttendees[id] = attendee;
+    existingAttendees[id] = attendee as GetAttendee<typeof id>;
     this._attendees.next(existingAttendees);
   }
 
