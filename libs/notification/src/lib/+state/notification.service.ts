@@ -3,9 +3,7 @@ import { Notification } from './notification.model';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { AuthService } from '@blockframes/auth/+state';
 import { filter, map, switchMap } from 'rxjs/operators';
-import { AngularFirestore } from '@angular/fire/firestore';
 import { Event, isMeeting, isScreening } from '@blockframes/event/+state/event.model';
-import { PublicUser } from '@blockframes/user/+state/user.model';
 import { orgName } from '@blockframes/organization/+state/organization.firestore';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { toDate } from '@blockframes/utils/helpers';
@@ -17,6 +15,8 @@ import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 import { format } from 'date-fns';
 import { trimString } from '@blockframes/utils/pipes/max-length.pipe';
 import { ActiveState, EntityState } from '@datorama/akita';
+import { UserService } from '@blockframes/user/+state';
+import { EventService } from '@blockframes/event/+state';
 
 interface NotificationState extends EntityState<Notification>, ActiveState<string> { }
 @Injectable({ providedIn: 'root' })
@@ -40,9 +40,10 @@ export class NotificationService extends CollectionService<NotificationState> {
   constructor(
     private authService: AuthService,
     private orgService: OrganizationService,
-    private firestore: AngularFirestore,
     private routerQuery: RouterQuery,
     private movieService: MovieService,
+    private userService: UserService,
+    private eventService: EventService
   ) {
     super();
   }
@@ -102,7 +103,7 @@ export class NotificationService extends CollectionService<NotificationState> {
       }
       case 'invitationToAttendEventUpdated':
       case 'requestToAttendEventUpdated': {
-        const event = await this.getDocument<Event>(`events/${notification.docId}`);
+        const event = await this.eventService.getValue(notification.docId);
         const subject = await this.notificationSubject(notification, event);
         const message = `${subject} has ${notification.invitation.status} your ${notification.invitation.mode} to attend ${event.type} "<a href="/event/${event.id}" target="_blank">${event.title}</a>".`;
         return {
@@ -115,7 +116,7 @@ export class NotificationService extends CollectionService<NotificationState> {
         };
       }
       case 'requestToAttendEventSent': {
-        const event = await this.getDocument<Event>(`events/${notification.docId}`);
+        const event = await this.eventService.getValue(notification.docId);
         const message = `Your request to attend event ${event.type} "<a href="/event/${event.id}" target="_blank">${event.title}</a>" has been sent.`;
         return {
           ...notification,
@@ -158,7 +159,7 @@ export class NotificationService extends CollectionService<NotificationState> {
         };
       }
       case 'eventIsAboutToStart': {
-        const event = await this.getDocument<Event>(`events/${notification.docId}`);
+        const event = await this.eventService.getValue(notification.docId);
         const titleId = isScreening(event) ? event.meta.titleId : undefined;
         const movie = await this.movieService.getValue(titleId);
         const imgRef = this.getPoster(movie);
@@ -175,7 +176,7 @@ export class NotificationService extends CollectionService<NotificationState> {
         };
       }
       case 'oneDayReminder': {
-        const event = await this.getDocument<Event>(`events/${notification.docId}`);
+        const event = await this.eventService.getValue(notification.docId);
         const titleId = isScreening(event) ? event.meta.titleId : undefined;
         const movie = await this.movieService.getValue(titleId);
         const imgRef = this.getPoster(movie);
@@ -374,7 +375,7 @@ export class NotificationService extends CollectionService<NotificationState> {
 
     // Adding user data to the notification of meeting events
     if (event && isMeeting(event) && notification.organization) {
-      const user = await this.getDocument<PublicUser>(`users/${event.meta.organizerUid}`);
+      const user = await this.userService.getValue(event.meta.organizerUid);
       const organizationName = orgName(notification.organization);
       subject = `${user.firstName} ${user.lastName} (${organizationName})`;
     } else if (notification.organization) {
@@ -389,10 +390,6 @@ export class NotificationService extends CollectionService<NotificationState> {
       subject = notification.user.email;
     }
     return subject;
-  }
-
-  private getDocument<T>(path: string): Promise<T> {
-    return this.firestore.doc(path).get().toPromise().then(doc => doc.data() as T);
   }
 
   public getPoster(movie: Movie) {
