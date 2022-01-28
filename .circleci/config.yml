@@ -27,10 +27,8 @@ references:
         only:
           - /release\/.*/
   deployment_branches: &deployment_branches
-    - ci
     - develop
     - /release\/.*/
-    - master
     - production
     - staging
 
