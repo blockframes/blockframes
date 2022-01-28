@@ -7,7 +7,6 @@
     "bruce": "blockframes-bruce",
     "george": "blockframes-george",
     "vincent": "blockframes-vincent",
-    "pl": "blockframes-pl-2",
     "demo1": "blockframes-demo-1",
     "demo2": "blockframes-demo-2",
     "demo3": "blockframes-demo-3",
@@ -131,19 +130,6 @@
       "hosting": {
         "catalog": [
           "blockframes-vincent"
-        ]
-      }
-    },
-    "blockframes-pl-2": {
-      "hosting": {
-        "catalog": [
-          "blockframes-pl-2"
-        ],
-        "festival": [
-          "blockframes-pl-2"
-        ],
-        "crm": [
-          "blockframes-pl-2-crm"
         ]
       }
     },
