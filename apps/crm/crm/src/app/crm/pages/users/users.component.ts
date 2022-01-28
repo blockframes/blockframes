@@ -1,7 +1,6 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
-import { BehaviorStore } from '@blockframes/utils/observable-helpers';
 import { UserService, User } from '@blockframes/user/+state';
 import { CrmService } from '@blockframes/admin/crm/+state/crm.service';
 import { CrmQuery } from '@blockframes/admin/crm/+state/crm.query';
@@ -28,11 +27,12 @@ interface CrmUser extends User {
 })
 export class UsersComponent implements OnInit {
   public users$?: Observable<CrmUser[]>;
-  public exporting = new BehaviorStore(false);
+  public exporting = false;
   public app = getAllAppsExcept(['crm']);
 
   constructor(
     private userService: UserService,
+    private cdr: ChangeDetectorRef,
     private crmService: CrmService,
     private crmQuery: CrmQuery,
     private orgService: OrganizationService,
@@ -76,7 +76,8 @@ export class UsersComponent implements OnInit {
 
   public async exportTable(users: CrmUser[]) {
     try {
-      this.exporting.value = true;
+      this.exporting = true;
+      this.cdr.markForCheck()
       const getRows = users.map(async r => {
         const role = r.org ? await this.orgService.getMemberRole(r.org, r.uid) : '--';
         const type = r.org ? getOrgModuleAccess(r.org).includes('dashboard') ? 'seller' : 'buyer' : '--';
@@ -117,6 +118,7 @@ export class UsersComponent implements OnInit {
     } catch (err) {
       console.error(err);
     }
-    this.exporting.value = false;
+    this.exporting = false;
+    this.cdr.markForCheck();
   }
 }
