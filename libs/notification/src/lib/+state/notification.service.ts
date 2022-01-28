@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Notification } from './notification.model';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { AuthService } from '@blockframes/auth/+state';
-import { filter, map, switchMap } from 'rxjs/operators';
+import { filter, map, switchMap, take } from 'rxjs/operators';
 import { Event, isMeeting, isScreening } from '@blockframes/event/+state/event.model';
 import { orgName } from '@blockframes/organization/+state/organization.firestore';
 import { OrganizationService } from '@blockframes/organization/+state';
@@ -87,7 +87,7 @@ export class NotificationService extends CollectionService<NotificationState> {
           url: `${applicationUrl[this.app]}/c/o/organization/${notification.organization.id}/view/members`,
         };
       case 'orgMemberUpdated': {
-        const org = await this.orgService.getValue(notification.organization.id);
+        const org = await this.orgService.valueChanges(notification.organization.id).pipe(take(1)).toPromise();
         const message = org.userIds.includes(notification.user.uid) ?
           `${displayUserName} is now part of your organization.` :
           `${displayUserName} has been removed from your organization.`;
@@ -103,7 +103,7 @@ export class NotificationService extends CollectionService<NotificationState> {
       }
       case 'invitationToAttendEventUpdated':
       case 'requestToAttendEventUpdated': {
-        const event = await this.eventService.getValue(notification.docId);
+        const event = await this.eventService.valueChanges(notification.docId).pipe(take(1)).toPromise();
         const subject = await this.notificationSubject(notification, event);
         const message = `${subject} has ${notification.invitation.status} your ${notification.invitation.mode} to attend ${event.type} "<a href="/event/${event.id}" target="_blank">${event.title}</a>".`;
         return {
@@ -116,7 +116,7 @@ export class NotificationService extends CollectionService<NotificationState> {
         };
       }
       case 'requestToAttendEventSent': {
-        const event = await this.eventService.getValue(notification.docId);
+        const event = await this.eventService.valueChanges(notification.docId).pipe(take(1)).toPromise();
         const message = `Your request to attend event ${event.type} "<a href="/event/${event.id}" target="_blank">${event.title}</a>" has been sent.`;
         return {
           ...notification,
@@ -129,7 +129,7 @@ export class NotificationService extends CollectionService<NotificationState> {
       }
       case 'movieSubmitted': {
 
-        const movie = await this.movieService.getValue(notification.docId);
+        const movie = await this.movieService.valueChanges(notification.docId).pipe(take(1)).toPromise();
         const imgRef = this.getPoster(movie);
         const movieAppAccess = getMovieAppAccess(movie);
         const message = `<a href="/c/o/marketplace/movie/${movie.id}" target="_blank">${movie.title.international}</a> was successfully submitted to the ${appName[movieAppAccess[0]]} Team.`;
@@ -145,7 +145,7 @@ export class NotificationService extends CollectionService<NotificationState> {
       }
       case 'movieAskingPriceRequestSent': {
 
-        const movie = await this.movieService.getValue(notification.docId);
+        const movie = await this.movieService.valueChanges(notification.docId).pipe(take(1)).toPromise();
         const imgRef = this.getPoster(movie);
         const message = `Your request for ${movie.title.international}'s asking price was successfully sent.`;
 
@@ -159,11 +159,11 @@ export class NotificationService extends CollectionService<NotificationState> {
         };
       }
       case 'eventIsAboutToStart': {
-        const event = await this.eventService.getValue(notification.docId);
+        const event = await this.eventService.valueChanges(notification.docId).pipe(take(1)).toPromise();
         const titleId = isScreening(event) ? event.meta.titleId : undefined;
-        const movie = await this.movieService.getValue(titleId);
+        const movie = await this.movieService.valueChanges(titleId).pipe(take(1)).toPromise();
         const imgRef = this.getPoster(movie);
-        const org = await this.orgService.getValue(event.ownerOrgId);
+        const org = await this.orgService.valueChanges(event.ownerOrgId).pipe(take(1)).toPromise();
         const message = `REMINDER - ${org.denomination.full}'s ${event.type} "<a href="/event/${event.id}" target="_blank">${event.title}</a>" is about to start.`;
 
         return {
@@ -176,11 +176,11 @@ export class NotificationService extends CollectionService<NotificationState> {
         };
       }
       case 'oneDayReminder': {
-        const event = await this.eventService.getValue(notification.docId);
+        const event = await this.eventService.valueChanges(notification.docId).pipe(take(1)).toPromise();
         const titleId = isScreening(event) ? event.meta.titleId : undefined;
-        const movie = await this.movieService.getValue(titleId);
+        const movie = await this.movieService.valueChanges(titleId).pipe(take(1)).toPromise();
         const imgRef = this.getPoster(movie);
-        const org = await this.orgService.getValue(event.ownerOrgId);
+        const org = await this.orgService.valueChanges(event.ownerOrgId).pipe(take(1)).toPromise();
         const message = `REMINDER - ${org.denomination.full}'s ${event.type} "<a href="/event/${event.id}" target="_blank">${event.title}</a>" will start tomorrow at ${format(toDate(event.start), 'h:mm a')}.`;
 
         return {
@@ -193,7 +193,7 @@ export class NotificationService extends CollectionService<NotificationState> {
         };
       }
       case 'movieAccepted': {
-        const movie = await this.movieService.getValue(notification.docId);
+        const movie = await this.movieService.valueChanges(notification.docId).pipe(take(1)).toPromise();
         const movieAppAccess = getMovieAppAccess(movie);
         const imgRef = this.getPoster(movie);
         const message = `<a href="/c/o/marketplace/movie/${movie.id}" target="_blank">${movie.title.international}</a> was successfully published on the marketplace.`;
@@ -208,7 +208,7 @@ export class NotificationService extends CollectionService<NotificationState> {
         };
       }
       case 'movieAskingPriceRequested': {
-        const movie = await this.movieService.getValue(notification.docId);
+        const movie = await this.movieService.valueChanges(notification.docId).pipe(take(1)).toPromise();
         const message = `${displayName(notification.user)} requested the asking price for ${movie.title.international} in ${trimString(notification.data.territories, 50, true)}. Please check your emails for more details or contact us.`;
 
         return {
@@ -221,7 +221,7 @@ export class NotificationService extends CollectionService<NotificationState> {
         };
       }
       case 'screeningRequested': {
-        const movie = await this.movieService.getValue(notification.docId);
+        const movie = await this.movieService.valueChanges(notification.docId).pipe(take(1)).toPromise();
         const message = `${displayName(notification.user)} requested a screening for ${movie.title.international}`;
 
         return {
@@ -235,7 +235,7 @@ export class NotificationService extends CollectionService<NotificationState> {
         };
       }
       case 'screeningRequestSent': {
-        const movie = await this.movieService.getValue(notification.docId);
+        const movie = await this.movieService.valueChanges(notification.docId).pipe(take(1)).toPromise();
         const message = `Your screening request for ${movie.title.international} was successfully sent.`
 
         return {
@@ -375,14 +375,14 @@ export class NotificationService extends CollectionService<NotificationState> {
 
     // Adding user data to the notification of meeting events
     if (event && isMeeting(event) && notification.organization) {
-      const user = await this.userService.getValue(event.meta.organizerUid);
+      const user = await this.userService.valueChanges(event.meta.organizerUid).pipe(take(1)).toPromise();
       const organizationName = orgName(notification.organization);
       subject = `${user.firstName} ${user.lastName} (${organizationName})`;
     } else if (notification.organization) {
       subject = orgName(notification.organization);
     } else if (notification.user && notification.user.lastName && notification.user.firstName) {
       if (notification.user.orgId) {
-        const org = await this.orgService.getValue(notification.user.orgId);
+        const org = await this.orgService.valueChanges(notification.user.orgId).pipe(take(1)).toPromise();
         subject = `${displayName(notification.user)} (${orgName(org)})`;
       }
       else subject = displayName(notification.user);
