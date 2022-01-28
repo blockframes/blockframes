@@ -1,4 +1,4 @@
-<mat-form-field appearance="outline" *ngIf="safeGet('territories') as territories">
+<mat-form-field appearance="outline" *ngIf="getControl('territories') as territories">
   <mat-label>Select territories</mat-label>
   <mat-icon matPrefix svgIcon="world"></mat-icon>
   <static-group
@@ -14,7 +14,7 @@
   </mat-error>
 </mat-form-field>
 
-<mat-form-field appearance="outline" *ngIf="safeGet('medias') as medias">
+<mat-form-field appearance="outline" *ngIf="getControl('medias') as medias">
   <mat-label>Select rights</mat-label>
   <mat-icon matPrefix svgIcon="play_arrow"></mat-icon>
   <static-group
@@ -31,7 +31,7 @@
   </mat-error>
 </mat-form-field>
 
-<div class="duration" *ngIf="safeGet('duration') as duration" [formGroup]="duration" >
+<div class="duration" *ngIf="getControl('duration') as duration" [formGroup]="duration" >
   <mat-form-field appearance="outline">
     <mat-label>Licence Start Date</mat-label>
     <input
@@ -73,7 +73,7 @@
   </mat-form-field>
 </div>
 
-<mat-form-field appearance="outline" *ngIf="safeGet('exclusive') as exclusive">
+<mat-form-field appearance="outline" *ngIf="getControl('exclusive') as exclusive">
   <mat-label>Exclusivity</mat-label>
   <mat-icon matPrefix svgIcon="star"></mat-icon>
   <mat-select [formControl]="exclusive" required>

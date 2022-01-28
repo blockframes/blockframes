@@ -1,7 +1,5 @@
 ﻿import { TestBed } from '@angular/core/testing';
-
 import { NotificationService } from './notification.service';
-import { NotificationStore } from './notification.store';
 import { Notification } from './notification.model';
 import { AngularFireModule } from '@angular/fire';
 import { SETTINGS, AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestore';
@@ -10,7 +8,6 @@ import { readFileSync } from 'fs';
 import { HttpClient } from '@angular/common/http';
 import { HttpTestingController } from '@angular/common/http/testing';
 import { AngularFireAuth } from '@angular/fire/auth';
-
 
 describe('Notifications Test Suite', () => {
   let service: NotificationService;
@@ -24,7 +21,6 @@ describe('Notifications Test Suite', () => {
       ],
       providers: [
         NotificationService,
-        NotificationStore,
         { provide: HttpClient, useClass: HttpTestingController },
         { provide: AngularFireAuth, useValue: AngularFireAuth },
         { provide: SETTINGS, useValue: { host: 'localhost:8080', ssl: false } }
@@ -60,10 +56,4 @@ describe('Notifications Test Suite', () => {
     expect(notification.app.isRead).toBeTruthy();
   });
 
-  it('Formats notification', () => {
-    const notificationStore = TestBed.inject(NotificationStore)
-    notificationStore.formatNotification = jest.fn();
-    service.formatFromFirestore({} as Notification);
-    expect(notificationStore.formatNotification).toHaveBeenCalled();
-  });
 });

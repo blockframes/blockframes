@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { EventService, Event, isScreening, createMeetingAttendee } from '@blockframes/event/+state';
 import { BehaviorSubject, interval, Observable, Subscription } from 'rxjs';
 import { Meeting, MeetingPdfControl, MeetingVideoControl, Screening } from '@blockframes/event/+state/event.firestore';
@@ -55,7 +55,7 @@ export class SessionComponent implements OnInit, OnDestroy {
 
   private watchTimeInterval: Subscription;
   public isPlaying = false;
-  public requestSent = new BehaviorStore(false);
+  public requestSent = false;
 
   constructor(
     private functions: AngularFireFunctions,
@@ -72,6 +72,7 @@ export class SessionComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private twilioService: TwilioService,
     private snackbar: MatSnackBar,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -314,7 +315,8 @@ export class SessionComponent implements OnInit, OnDestroy {
       autoFocus: false
     });
     ref.afterClosed().subscribe(isSent => {
-      this.requestSent.value = !!isSent;
+      this.requestSent = !!isSent;
+      this.cdr.markForCheck();
     });
   }
 }

@@ -68,7 +68,7 @@
             
             <ng-container *ngIf="event.type === 'screening' && event.accessibility === 'private'">
               <event-request-screening [movieId]="event.meta.titleId"></event-request-screening>
-              <button mat-button [disabled]="requestSent.$ | async" (click)="requestAskingPrice(event.meta.titleId)">Request Asking Price</button>
+              <button mat-button [disabled]="requestSent" (click)="requestAskingPrice(event.meta.titleId)">Request Asking Price</button>
             </ng-container>
           </ng-container>
   
