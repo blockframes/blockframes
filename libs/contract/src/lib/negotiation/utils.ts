@@ -1,7 +1,7 @@
 import { LanguageRecord } from "@blockframes/movie/+state/movie.firestore";
 import { Language, Media, Territory } from "@blockframes/utils/static-model";
-import { BucketTerm, Duration } from "../term/+state";
-import { Negotiation, NegotiationStatus } from "./+state/negotiation.firestore";
+import { Duration } from "../term/+state";
+import { Negotiation } from "./+state/negotiation.firestore";
 
 interface ArrayDifferences<T = string> {
   added: T[];
@@ -14,26 +14,17 @@ interface Difference<T> {
   delta?: number;
 }
 
-interface TermDifference {
+interface TermDifferences {
   territories: ArrayDifferences<Territory>,
-  media: ArrayDifferences<Media>,
-  exclusivity: Difference<boolean>,
+  medias: ArrayDifferences<Media>,
+  exclusive: Difference<boolean>,
   duration: DurationDiff,
   languages: ArrayDifferences<LanguageRecord>,
 }
 
 interface NegotiationDifferences {
-  buyerId: Difference<string>,
   price: Difference<number>,
-  createdByOrg: Difference<string>,
-  orgId: Difference<string>,
-  parentTermId: Difference<string>,
-  sellerId: Difference<string>,
-  specificity: Difference<string>,
-  stakeholders: ArrayDifferences<string>,
-  status: Difference<NegotiationStatus>,
-  titleId: Difference<string>,
-  terms: TermDifference,
+  terms: TermDifferences[]
 }
 
 function simpleDiff(before: string, after: string): Difference<string>;
@@ -48,7 +39,7 @@ function simpleDiff<T>(before: T, after: T): Difference<T> {
   return differences
 }
 
-function stringArrayDiff(before: string[], after: string[]): ArrayDifferences {
+function stringArrayDiff<T>(before: T[], after: T[]): ArrayDifferences<T> {
   const added = after.filter(item => !before.includes(item))
   const removed = before.filter(item => !after.includes(item))
   return { added, removed }
@@ -73,38 +64,25 @@ type DurationDiff = ReturnType<typeof durationDiff>
 //@TODO: Should we check for the differences between two specific Language records?
 // like say when we simply change from [dubs, subs, cc] => [subs] on the same LanguageRecord
 function languageDiff(before: LanguageRecord, after: LanguageRecord): ArrayDifferences<LanguageRecord> {
-  const addedLanguages = Object.keys(after).filter(key => !Object.keys(before).includes(key)) as Language[];
-  const removedLanguages = Object.keys(before).filter(key => !Object.keys(after).includes(key)) as Language[];
+  const addedLanguages = Object.keys(after ?? {}).filter(key => !Object.keys(before).includes(key)) as Language[];
+  const removedLanguages = Object.keys(before).filter(key => !Object.keys(after ?? {}).includes(key)) as Language[];
   const added = addedLanguages.map(language => ({ [language]: before[language] }));
   const removed = removedLanguages.map(language => ({ [language]: after[language] }));
   return { added, removed };
 }
 
-function negotiationDiff(before: Negotiation, after: Negotiation): NegotiationDifferences;
-function negotiationDiff(before: BucketTerm, after: BucketTerm): TermDifference;
-function negotiationDiff(before: BucketTerm | Negotiation, after: BucketTerm | Negotiation): TermDifference | NegotiationDifferences {
-  const differences = {} as NegotiationDifferences;
-  const keys = Array.from(new Set([
-    ...Object.keys(before),
-    ...Object.keys(after)
-  ]))
-    // remove unwanted keys.
-    .filter(key => ['id', 'holdbacks', '_meta'].includes(key));
-  const simpleTypes = ['string', 'number', 'boolean'];
-
-  for (const key of keys) {
-    if (simpleTypes.includes(typeof before[key]) || simpleTypes.includes(typeof after[key]))
-      differences[key] = simpleDiff(before[key], after[key]);
-    else if (['stakeholders', 'medias', 'territories'].includes(key)) {
-      differences[key] = stringArrayDiff(before[key], after[key])
-    } else if (key === 'terms') {
-      differences[key] = negotiationDiff(before[key], after[key]) as unknown as TermDifference
-    } else if (key === 'duration') {
-      differences[key] = durationDiff(before[key], after[key])
-    } else if (key === 'languages') {
-      differences[key] = languageDiff(before[key], after[key])
-    }
-  }
+function negotiationDiff(before: Negotiation, after: Negotiation): NegotiationDifferences {
+  const differences = { terms: [] } as NegotiationDifferences;
+  differences.price = simpleDiff(before.price, after.price);
+  differences.terms = before.terms.map((beforeTerm, idx) => {
+    const termDifferences = {} as TermDifferences;
+    termDifferences['medias'] = stringArrayDiff(beforeTerm['medias'], after['medias']);
+    termDifferences['territorie'] = stringArrayDiff(beforeTerm['territorie'], after['territorie']);
+    termDifferences['duration'] = durationDiff(beforeTerm['duration'], after.terms?.[idx]?.['duration']);
+    termDifferences['languages'] = languageDiff(beforeTerm['languages'], after.terms?.[idx]?.['languages']);
+    termDifferences['exclusive'] = simpleDiff(beforeTerm['exclusive'], after.terms?.[idx]?.['exclusive']);
+    return termDifferences;
+  })
 
   return differences;
 }
