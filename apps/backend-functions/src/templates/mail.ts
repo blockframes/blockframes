@@ -310,6 +310,7 @@ export function screeningRequestedToSeller(
   movie: MovieDocument,
 ): EmailTemplateRequest {
   const data = {
+    user: toUser,
     buyer,
     movie,
     pageURL: `${appUrl.market}/c/o/dashboard/event/new/edit?titleId=${movie.id}`
