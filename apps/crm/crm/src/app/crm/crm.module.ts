@@ -17,10 +17,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 // Modules
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
-import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { OrganizationAdminModule } from './pages/organization/organization.module';
 import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module';
-import { AppPipeModule, ToLabelModule, ToDateModule } from '@blockframes/utils/pipes';
+import { AppPipeModule, ToLabelModule, MaxLengthModule, ToDateModule, JoinPipeModule, ToGroupLabelPipeModule } from '@blockframes/utils/pipes';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { MemberPermissionsModule } from '@blockframes/organization/components/member-permissions/member-permissions.module';
 import { MovieHeaderModule } from '@blockframes/movie/components/header/header.module';
@@ -50,6 +49,7 @@ import { StaticSelectModule } from "@blockframes/ui/static-autocomplete/select/s
 import { DashboardModule } from './components/dashboard/dashboard.module';
 import { BreadCrumbModule } from './components/bread-crumb/bread-crumb.module';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
+import { DetailedTermsModule } from '@blockframes/contract/term/components/detailed/detailed.module';
 
 export const panelRoutes: Routes = [
   { path: '', redirectTo: 'overview', pathMatch: 'full' },
@@ -91,7 +91,10 @@ export const panelRoutes: Routes = [
     AlgoliaAutocompleteModule,
     EventModule,
     OrganizationAdminModule,
+    MaxLengthModule,
     ToLabelModule,
+    ToGroupLabelPipeModule,
+    JoinPipeModule,
     OrgNameModule,
     MemberPermissionsModule,
     MovieHeaderModule,
@@ -110,6 +113,7 @@ export const panelRoutes: Routes = [
     FormListModule,
     GetEventPipeModule,
     ClipboardModule,
+    DetailedTermsModule,
 
     RouterModule.forChild(panelRoutes),
   ],

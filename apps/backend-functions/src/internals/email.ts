@@ -11,7 +11,8 @@ import { App, getMailSender, AppMailSetting, getAppName, appLogo, applicationUrl
 import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
 import { logger } from 'firebase-functions';
 
-const substitutions = { // @TODO #6586 looks like unused
+// Substitutions used in Sendgrid templates
+const substitutions = {
   groupUnsubscribe: "<%asm_group_unsubscribe_raw_url%>",
   preferenceUnsubscribe: "<%asm_preferences_raw_url%>",
   notificationPage: "/c/o/account/profile/view/notifications"
@@ -58,6 +59,10 @@ export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequ
     asm: { groupId, groupsToDisplay },
     customArgs: { projectId }
   };
+
+  if(data.event?.calendar) {
+    msg.attachments = [data.event.calendar];
+  }
 
   return send(msg);
 }

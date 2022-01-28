@@ -51,9 +51,11 @@
           <div class="column">
             <a href="{{links.title}}">See title</a>
           </div>
-          <div class="column">
-            <a href="{{links.trailer}}">Trailer</a>
-          </div>
+          {{#if links.trailer}}
+            <div class="column">
+              <a href="{{links.trailer}}">Trailer</a>
+            </div>
+          {{/if}}
         </div>
         
         <hr class="solid">

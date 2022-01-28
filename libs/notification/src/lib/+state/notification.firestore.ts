@@ -11,6 +11,8 @@ import { App } from '@blockframes/utils/apps';
 export const notificationTypesBase = [
   // Notifications relative to movies
   'movieAccepted',
+  'movieAskingPriceRequested',
+  'movieAskingPriceRequestSent',
 
   // Notifications relative to invitations
   'requestFromUserToJoinOrgCreate', // Notification sent to org admins
@@ -26,10 +28,20 @@ export const notificationTypesBase = [
   'requestToAttendEventCreated',
   'invitationToAttendMeetingCreated',
   'invitationToAttendScreeningCreated',
+  'screeningRequested',
+  'screeningRequestSent',
 
   // Notifications related to offers
   'contractCreated',
-  'offerCreatedConfirmation'
+  'offerCreatedConfirmation',
+
+  //Notifications related to contract negotiation
+  'createdCounterOffer',
+  'receivedCounterOffer',
+  'myContractWasAccepted',
+  'myOrgAcceptedAContract',
+  'myContractWasDeclined',
+  'myOrgDeclinedAContract',
 ] as const;
 
 // All the other notification types
@@ -42,7 +54,11 @@ export const notificationTypesPlus = [
   'movieSubmitted', // (catalog only)
   'organizationAcceptedByArchipelContent',
   'orgAppAccessChanged',
-  'userRequestAppAccess'
+  'userRequestAppAccess',
+
+  // Offer notifications.
+  'offerAccepted',
+  'offerDeclined',
 ] as const;
 
 export type NotificationTypesBase = typeof notificationTypesBase[number];
@@ -58,10 +74,17 @@ export interface NotificationBase<D> {
   /** @dev Possible subjects of the notification */
   user?: Partial<PublicUser>;
   docId?: string;
+  /**
+   * To be used for docs that are part of a subcollection
+   * eg: contracts/{contractId}/negotiations/{negotiationId}
+   */
+  docPath?: string;
+  offerId?: string,
   organization?: PublicOrganization;
   invitation?: PublicInvitation;
-  bucket?: Bucket;
+  bucket?: Bucket<Timestamp>;
   appAccess?: App;
+  data?: Record<string, string>;
   /** @dev Type of the notification */
   type: NotificationTypes;
   email?: {

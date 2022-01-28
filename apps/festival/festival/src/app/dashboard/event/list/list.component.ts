@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, ViewChild, TemplateRef, ChangeDetectorRef } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { Event, EventService } from '@blockframes/event/+state';
+import { createEvent, createScreening, Event, EventService } from '@blockframes/event/+state';
 import { EventForm } from '@blockframes/event/form/event.form';
 import { EventTypes } from '@blockframes/event/+state/event.firestore';
 import { OrganizationQuery } from '@blockframes/organization/+state';
@@ -8,6 +8,9 @@ import { Observable, combineLatest } from 'rxjs';
 import { filter, switchMap, startWith, tap } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { AgendaService } from '@blockframes/utils/agenda/agenda.service';
+import { eventTime } from '@blockframes/event/pipes/event-time.pipe';
+import { ActivatedRoute, Router } from '@angular/router';
 
 const typesLabel = {
   screening: 'Screenings',
@@ -36,9 +39,12 @@ export class EventListComponent implements OnInit {
     private orgQuery: OrganizationQuery,
     private cdr: ChangeDetectorRef,
     private dynTitle: DynamicTitleService,
+    private agendaService: AgendaService,
+    private route: ActivatedRoute,
+    private router: Router
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.events$ = combineLatest([
       this.orgQuery.selectActiveId(),
       this.filter.valueChanges.pipe(startWith(this.filter.value))
@@ -50,11 +56,32 @@ export class EventListComponent implements OnInit {
           this.dynTitle.setPageTitle('My events', 'Empty');
       }),
     );
+
+    const params = this.route.snapshot.queryParams;
+    if (params?.request) {
+      const event = createEvent({
+        type: 'screening',
+        ownerOrgId: this.orgQuery.getActiveId(),
+        meta: createScreening({
+          titleId: params.request
+        })
+      });
+      const id = await this.service.add(event);
+      this.router.navigate([id, 'edit'], { relativeTo: this.route });
+    }
   }
 
   updateViewDate(date: Date) {
     this.viewDate = date;
     this.cdr.markForCheck();
+  }
+
+  hasIncomingEvents(events: Event[] = []) {
+    return events.some(e => eventTime(e) !== 'late');
+  }
+
+  exportToCalendar(events: Event[] = []) {
+    this.agendaService.download(events.filter(e => eventTime(e) !== 'late'));
   }
 
   /**

@@ -9,6 +9,7 @@ import { NegotiationFormModule } from '@blockframes/contract/negotiation';
 import { MatButtonModule } from '@angular/material/button';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     MatIconModule,
     FlexLayoutModule,
     ReactiveFormsModule,
+    MatDialogModule,
     RouterModule.forChild([
       {
         path: '', component: ContractEditComponent,

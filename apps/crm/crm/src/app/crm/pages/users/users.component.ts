@@ -98,6 +98,10 @@ export class UsersComponent implements OnInit {
           'page view': r.pageView ?? '--',
           'session count': r.sessionCount ?? '--',
           'created from': r.createdFrom ?? '--',
+          'buying preferences language': r.preferences?.languages.join(', ') ?? '--',
+          'buying preferences genres': r.preferences?.genres.join(', ') ?? '--',
+          'buying preferences medias': r.preferences?.medias.join(', ') ?? '--',
+          'buying preferences territories': r.preferences?.territories.join(', ') ?? '--'
         };
 
         for (const a of this.app) {

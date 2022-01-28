@@ -8,15 +8,18 @@
             <org-chip [org]="org"></org-chip>
           </ng-container>
         </section>
-        <ng-container *ngIf="(eventId$ | async) as eventId">
-          <a ongoing-event-button [routerLink]="['/event', eventId, 'r', 'i']">Ongoing Screening</a>
+        <ng-container *ngIf="(eventId$ | async) as eventId; else request">
+          <section fxLayout fxLayoutAlign="space-between">
+            <button mat-stroked-button (click)="requestAskingPrice()">Request Asking Price</button>
+            <a ongoing-event-button [routerLink]="['/event', eventId, 'r', 'i']">Ongoing Screening</a>
+          </section>
         </ng-container>
-        <ng-container *ngIf="orgs$ | async as orgs">
-          <a mat-stroked-button color="primary" [href]="'mailto:' + getEmails(orgs)">
-            <mat-icon svgIcon="mail"></mat-icon>
-            <span>{{ orgs[0].activity === 'intlSales' ? 'Contact Sales Agent' : 'Contact' }}</span>
-          </a>
-        </ng-container>
+        <ng-template #request>
+          <section fxLayout>
+            <event-request-screening [movieId]="movie.id"></event-request-screening>
+            <button mat-stroked-button (click)="requestAskingPrice()">Request Asking Price</button>
+          </section>
+        </ng-template>
       </movie-header-cta>
 
       <movie-header-actions fxHide.lt-sm fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="24px">

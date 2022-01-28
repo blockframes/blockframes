@@ -14,7 +14,6 @@
     "demo4": "blockframes-demo-4",
     "demo5": "blockframes-demo-5",
     "ci": "blockframes-ci",
-    "mano": "blockframes-mano",
     "remco": "blockframes-remco",
     "springfield": "blockframes-yonga",
     "antoine": "blockframes-antoine-9e16b"
@@ -142,6 +141,9 @@
         ],
         "festival": [
           "blockframes-pl-2"
+        ],
+        "crm": [
+          "blockframes-pl-2-crm"
         ]
       }
     },
@@ -291,25 +293,6 @@
         ],
         "crm": [
           "blockframes-george-crm"
-        ]
-      }
-    },
-    "blockframes-mano": {
-      "hosting": {
-        "catalog": [
-          "blockframes-mano"
-        ],
-        "festival": [
-          "blockframes-mano-festival"
-        ],
-        "financiers": [
-          "blockframes-mano-financiers"
-        ],
-        "cms": [
-          "blockframes-mano-cms"
-        ],
-        "crm": [
-          "blockframes-mano-crm"
         ]
       }
     },

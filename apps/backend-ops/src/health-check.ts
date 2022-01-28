@@ -1,4 +1,4 @@
-import { CI_STORAGE_BACKUP, getBackupBucket, latestAnonDbFilename, loadAdminServices } from "@blockframes/firebase-utils";
+import { CI_STORAGE_BACKUP, getBackupBucket, latestAnonDbDir, loadAdminServices } from "@blockframes/firebase-utils";
 import { readFileSync, unlinkSync, writeFileSync } from "fs";
 import { resolve } from "path";
 import { backupBucket } from 'env/env.blockframes-ci'
@@ -46,7 +46,7 @@ async function checkFirestoreAccess(db: firestore.Firestore) {
 }
 
 async function checkCIStorageBackupBucketAccess(gcs: storage.Storage) {
-  const bucket = gcs.bucket( CI_STORAGE_BACKUP)
+  const bucket = gcs.bucket(CI_STORAGE_BACKUP);
 
   let list = false;
   let get = false;
@@ -120,12 +120,12 @@ async function checkCIBucketAccess(gcs: storage.Storage) {
   let get = false;
 
   try {
-    await bucket.file(latestAnonDbFilename).download()
+    await bucket.file(`${latestAnonDbDir}/LATEST-ANON-DB.overall_export_metadata`).download();
     get = true;
   } catch (e) { void 0 }
 
   try {
-    await bucket.getFiles()
+    await bucket.getFiles();
     list = true
   } catch (e) { void 0 }
 

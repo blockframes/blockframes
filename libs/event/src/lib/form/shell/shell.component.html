@@ -1,5 +1,8 @@
 ﻿<ng-template #confirmExit>
   <div class="confirm-exit" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="16px">
+    <button fxFlexAlign="end" mat-icon-button mat-dialog-close>
+      <mat-icon svgIcon="close"></mat-icon>
+    </button>
     <h1>You are about to leave the form.</h1>
     <p>Some changes have not been saved.<br/>If you leave now, you will lose these changes.</p>
     <div fxLayout="column" fxLayoutAlign="center">
@@ -20,9 +23,9 @@
           <mat-icon svgIcon="arrow_back"></mat-icon>
         </a>
         <mat-chip-list fxLayoutAlign="center center">
-          <mat-chip disableRipple *ngIf="screenerMissing">
+          <mat-chip disableRipple *ngIf="screenerMissing || titleMissing">
             <mat-icon svgIcon="warning"></mat-icon>
-            <span>Screening file missing</span>
+            <span>{{titleMissing ? 'No title selected' : 'Screening file missing'}}</span>
           </mat-chip>
         </mat-chip-list>
       </div>
@@ -40,7 +43,10 @@
 
   <form [formGroup]="form">
     <mat-card>
-      <h2>Details</h2>
+      <section fxLayout fxLayoutAlign="space-between start">
+        <h2>Details</h2>
+        <event-agenda-export [event]="form.value" text="Export Event"></event-agenda-export>
+      </section>
       <event-details-edit [form]="form" showPrivacy></event-details-edit>
     </mat-card>
 

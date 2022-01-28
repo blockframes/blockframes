@@ -1,6 +1,7 @@
 import { BucketContract } from "@blockframes/contract/bucket/+state";
+import { Timestamp } from "@blockframes/utils/common-interfaces/timestamp";
 import { DocumentMeta } from "@blockframes/utils/models-meta";
-import type firebase from 'firebase'
+import { MovieCurrency } from "@blockframes/utils/static-model";
 
 export const negotiationStatus = ['pending', 'accepted', 'declined'] as const;
 
@@ -8,7 +9,7 @@ export type NegotiationStatus = typeof negotiationStatus[number];
 
 
 // We extends the BucketContract with some information for rules
-export interface Negotiation<T extends Date | firebase.firestore.Timestamp = Date> extends BucketContract {
+export interface Negotiation<T extends Date | Timestamp = Date> extends BucketContract<T> {
   _meta: DocumentMeta<T>;
   id: string;
   /** Id of the org that created the negotiation */
@@ -19,6 +20,11 @@ export interface Negotiation<T extends Date | firebase.firestore.Timestamp = Dat
   sellerId: string;
   /** The org that want to buy the title */
   buyerId: string;
-  declineReason?:string;
+  declineReason?: string;
   status: NegotiationStatus;
+  initial: T;
+  currency: MovieCurrency
 }
+
+
+export type NegotiationDocument = Negotiation<Timestamp>;

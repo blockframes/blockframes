@@ -3,18 +3,20 @@ import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from '.
 import { migrate } from './migrations';
 import { importFirestore } from './admin';
 import {
-  connectAuthEmulator,
-  connectFirestoreEmulator,
   copyFirestoreExportFromCiBucket,
-  defaultEmulatorBackupPath,
   endMaintenance,
-  firebaseEmulatorExec,
-  importFirestoreEmulatorBackup,
   latestAnonDbDir,
   loadAdminServices,
   restoreAnonStorageFromCI,
-  shutdownEmulator,
 } from '@blockframes/firebase-utils';
+import {
+  connectAuthEmulator,
+  connectFirestoreEmulator,
+  defaultEmulatorBackupPath,
+  firebaseEmulatorExec,
+  importFirestoreEmulatorBackup,
+  shutdownEmulator,
+} from '@blockframes/firebase-utils/firestore/emulator';
 import { cleanDeprecatedData } from './db-cleaning';
 import { cleanStorage } from './storage-cleaning';
 import { firebase } from '@env';
@@ -43,7 +45,7 @@ export async function prepareForTesting({ dbBackupURL }: { dbBackupURL?: string 
   console.log('DB imported!');
 
   console.info('Syncing users from db...');
-  await syncUsers(null, db, auth);
+  await syncUsers(db, auth);
   console.info('Users synced!');
 
   console.info('Syncing storage with blockframes-ci...');
@@ -86,7 +88,7 @@ export async function prepareEmulators({ dbBackupURL }: { dbBackupURL?: string }
   const insurance = await ensureMaintenanceMode(db); // Enable maintenance insurance
 
   console.info('Syncing users from db...');
-  await syncUsers(null, db, auth)
+  await syncUsers(db, auth);
   console.info('Users synced!');
 
   console.info('Syncing storage with blockframes-ci...');

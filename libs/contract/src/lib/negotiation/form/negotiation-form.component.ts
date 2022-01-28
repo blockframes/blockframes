@@ -28,11 +28,11 @@ export class NegotiationFormComponent {
 
   indexId: number;
   termColumns = {
-    'duration': 'Duration',
-    'territories': 'Territories',
-    'medias': 'Medias',
-    'exclusive': 'Exclusivity',
-    'languages': 'Versions'
+    duration: 'Duration',
+    territories: 'Territories',
+    medias: 'Medias',
+    exclusive: 'Exclusivity',
+    languages: 'Versions'
   };
 
   constructor(private dialog: MatDialog) { }

@@ -3,11 +3,13 @@ import { InvitationDocument } from '@blockframes/invitation/+state/invitation.fi
 import { PublicUser } from '@blockframes/user/+state/user.firestore';
 import { OrganizationDocument, PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
 import { PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
-import { removeUnexpectedUsers, UserConfig } from './users';
-import { Auth, Firestore, QueryDocumentSnapshot, getDocument, runChunks } from '@blockframes/firebase-utils';
+import { removeUnexpectedUsers } from './users';
+import { Auth, QueryDocumentSnapshot, getDocument, runChunks, removeAllSubcollections } from '@blockframes/firebase-utils';
 import admin from 'firebase-admin';
 import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 import { getAllAppsExcept } from '@blockframes/utils/apps';
+import { DatabaseData, loadAllCollections, printDatabaseInconsistencies } from './internals/utils';
+import { MovieDocument } from '@blockframes/movie/+state/movie.firestore';
 
 export const numberOfDaysToKeepNotifications = 14;
 const currentTimestamp = new Date().getTime();
@@ -15,73 +17,61 @@ export const dayInMillis = 1000 * 60 * 60 * 24;
 const EMPTY_MEDIA = createStorageFile();
 let verbose = false;
 
-// @TODO #6460 not existing users found in movies._meta.createdBy ..
-
 /** Reusable data cleaning script that can be updated along with data model */
-
-export async function cleanDeprecatedData(db: FirebaseFirestore.Firestore, auth: admin.auth.Auth, options = { verbose: true }) {
+export async function cleanDeprecatedData(db: FirebaseFirestore.Firestore, auth?: admin.auth.Auth, options = { verbose: true }) {
   verbose = options.verbose;
   // Getting all collections we need to check
-  const [
-    notifications,
-    invitations,
-    events,
-    movies,
-    organizations,
-    users,
-    permissions,
-    docsIndex
-  ] = await Promise.all([
-    db.collection('notifications').get(),
-    db.collection('invitations').get(),
-    db.collection('events').get(),
-    db.collection('movies').get(),
-    db.collection('orgs').get(),
-    db.collection('users').get(),
-    db.collection('permissions').get(),
-    db.collection('docsIndex').get()
-  ]);
+  const { dbData, collectionData } = await loadAllCollections(db);
+
+  // Data consistency check before cleaning data
+  await printDatabaseInconsistencies({ dbData, collectionData }, undefined, { printDetail: false });
+
+  // Actual cleaning
+  if (verbose) console.log('Cleaning data');
+  await cleanData(dbData, db, auth);
+
+  // Data consistency check after cleaning data
+  await printDatabaseInconsistencies(undefined, db, { printDetail: false });
+
+  return true;
+}
+
+async function cleanData(dbData: DatabaseData, db: FirebaseFirestore.Firestore, auth?: admin.auth.Auth) {
 
   // Getting existing document ids to compare
-  const [movieIds, organizationIds, eventIds, userIds] = [
-    movies.docs.map(ref => ref.id),
-    organizations.docs.map(ref => ref.id),
-    events.docs.map(ref => ref.id),
-    users.docs.map(ref => ref.id)
+  const [movieIds, organizationIds, eventIds, invitationIds, offerIds] = [
+    dbData.movies.refs.docs.map(ref => ref.id),
+    dbData.orgs.refs.docs.map(ref => ref.id),
+    dbData.events.refs.docs.map(ref => ref.id),
+    dbData.invitations.refs.docs.map(ref => ref.id),
+    dbData.offers.refs.docs.map(ref => ref.id),
   ];
 
   // Compare and update/delete documents with references to non existing documents
-  await cleanUsers(users, organizationIds, auth, db);
-  console.log('Cleaned users');
-  await cleanOrganizations(organizations, userIds, movies);
-  console.log('Cleaned orgs');
+  if (auth) await cleanUsers(dbData.users.refs, organizationIds, auth);
+  if (verbose) console.log('Cleaned users');
 
-  // Getting all collections we need to reload
-  const [organizations2, users2] = await Promise.all([
-    db.collection('orgs').get(),
-    db.collection('users').get(),
-  ]);
+  // Loading users list after "cleanUsers" since some may have been removed
+  const users = await db.collection('users').get();
+  const userIds = users.docs.map(ref => ref.id);
+  await cleanOrganizations(dbData.orgs.refs, userIds, dbData.movies.refs);
+  if (verbose) console.log('Cleaned orgs');
 
-  // Reloading users and org list after possible deletion
-  const [organizationIds2, userIds2] = [
-    organizations2.docs.map(ref => ref.id),
-    users2.docs.map(ref => ref.id)
-  ];
+  // Loading orgs list after "cleanOrganizations" since some may have been removed
+  const organizations2 = await db.collection('orgs').get();
+  const organizationIds2 = organizations2.docs.map(ref => ref.id);
+  const existingIds = movieIds.concat(organizationIds2, eventIds, userIds, invitationIds, offerIds);
 
-  const existingIds = movieIds.concat(organizationIds2, eventIds, userIds2);
-
-  await cleanPermissions(permissions, organizationIds);
-  console.log('Cleaned permissions');
-  await cleanMovies(movies);
-  console.log('Cleaned movies');
-  await cleanDocsIndex(docsIndex, existingIds);
-  console.log('Cleaned docsIndex');
-  await cleanNotifications(notifications, existingIds);
-  console.log('Cleaned notifications');
-  await cleanInvitations(invitations, existingIds);
-  console.log('Cleaned invitations');
-
-  return true;
+  await cleanPermissions(dbData.permissions.refs, organizationIds2, userIds, db);
+  if (verbose) console.log('Cleaned permissions');
+  await cleanMovies(dbData.movies.refs, organizationIds2);
+  if (verbose) console.log('Cleaned movies');
+  await cleanDocsIndex(dbData.docsIndex.refs, movieIds.concat(eventIds), organizationIds2);
+  if (verbose) console.log('Cleaned docsIndex');
+  await cleanNotifications(dbData.notifications.refs, existingIds);
+  if (verbose) console.log('Cleaned notifications');
+  await cleanInvitations(dbData.invitations.refs, existingIds);
+  if (verbose) console.log('Cleaned invitations');
 }
 
 export function cleanNotifications(
@@ -157,15 +147,14 @@ async function cleanOneInvitation(doc: QueryDocumentSnapshot, invitation: Invita
 export async function cleanUsers(
   users: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
   existingOrganizationIds: string[],
-  auth: Auth,
-  db: Firestore,
+  auth: Auth
 ) {
 
   // Check if auth users have their record on DB
-  await removeUnexpectedUsers(users.docs.map(u => u.data() as UserConfig), auth);
+  await removeUnexpectedUsers(users.docs.map(u => u.data() as PublicUser), auth);
 
   return runChunks(users.docs, async (userDoc: FirebaseFirestore.DocumentSnapshot) => {
-    const user = userDoc.data();
+    const user = userDoc.data() as PublicUser;
 
     // Check if a DB user have a record in Auth.
     const authUserId = await auth.getUserByEmail(user.email).then(u => u.uid).catch(() => undefined);
@@ -173,48 +162,16 @@ export async function cleanUsers(
       // Check if ids are the same
       if (authUserId !== user.uid) {
         if (verbose) console.error(`uid mistmatch for ${user.email}. db: ${user.uid} - auth : ${authUserId}`);
-      } else {
-        const invalidOrganization = !existingOrganizationIds.includes(user.orgId);
-        let update = false;
-
-        if (invalidOrganization) {
-          delete user.orgId;
-          update = true;
-        }
-
-        if (user.name) {
-          delete user.name;
-          update = true;
-        }
-
-        if (user.surname) {
-          delete user.surname;
-          update = true;
-        }
-
-        if (update) {
-          await userDoc.ref.set(user);
-        }
+      } else if (!existingOrganizationIds.includes(user.orgId)) {
+        delete user.orgId;
+        await userDoc.ref.set(user);
       }
     } else {
-      // User does not exists on auth, should be deleted.
-      if (!user.orgId || !existingOrganizationIds.includes(user.orgId)) {
-        await userDoc.ref.delete();
-        if (verbose) console.log(`Deleted ${user.uid}.`);
-      } else {
-        const orgDoc = await db.doc(`orgs/${user.orgId}`).get();
-        const org = orgDoc.data() as OrganizationDocument;
-        const userIds = org.userIds.filter(u => u !== user.uid);
-        await orgDoc.ref.update({ userIds });
-        const permDoc = await db.doc(`permissions/${user.orgId}`).get();
-        const permission = permDoc.data() as PermissionsDocument;
-        if (permission) {
-          delete permission.roles[user.uid];
-          await permDoc.ref.update({ roles: permission.roles });
-        }
-        await userDoc.ref.delete();
-        if (verbose) console.log(`Deleted ${user.uid} and cleaned org and permissions ${user.orgId}.`);
-      }
+      // User is deleted, we don't delete or update other documents as orgs, permissions, notifications etc
+      // because this will be handled in the next parts of the script (cleanOrganizations, cleanPermissions, etc)
+      // related storage documents will also be deleted in the cleanStorage and algolia will be updated at end of "upgrade" process
+      if (verbose) console.log(`Deleting user : ${user.uid}.`);
+      await userDoc.ref.delete();
     }
   }, undefined, verbose);
 }
@@ -235,12 +192,13 @@ export function cleanOrganizations(
     const { userIds = [], wishlist = [] } = org as OrganizationDocument;
 
     const validUserIds = Array.from(new Set(userIds.filter(userId => existingUserIds.includes(userId))));
-    /* @TODO #5371
     if (validUserIds.length === 0) {
-      // Removes permissions and orgs doc
-      const permissionRef = await getDocumentRef(`permissions/${org.id}`);
-      return Promise.all([permissionRef.ref.delete(), orgDoc.ref.delete()]);
-    } else */if (validUserIds.length !== userIds.length) {
+      // Org is deleted, we don't delete or update other documents as permissions, notifications, movies etc
+      // because this will be handled in the next parts of the script (cleanPermissions, cleanInvitations etc)
+      // related storage documents will also be deleted in the cleanStorage and algolia will be updated at end of "upgrade" process
+      if (verbose) console.log(`Deleting org : ${org.id}.`);
+      return orgDoc.ref.delete();
+    } else if (validUserIds.length !== userIds.length) {
       await orgDoc.ref.update({ userIds: validUserIds });
     }
 
@@ -258,32 +216,55 @@ export function cleanOrganizations(
 
 export function cleanPermissions(
   permissions: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
-  existingOrganizationIds: string[]
+  existingOrganizationIds: string[],
+  existingUserIds: string[],
+  db: FirebaseFirestore.Firestore
 ) {
   return runChunks(permissions.docs, async (permissionDoc) => {
-    const { id } = permissionDoc.data() as PermissionsDocument;
-    const invalidPermission = !existingOrganizationIds.includes(id);
+    const permission = permissionDoc.data() as PermissionsDocument;
+    const invalidPermission = !existingOrganizationIds.includes(permission.id);
     if (invalidPermission) {
       await permissionDoc.ref.delete();
+      const batch = db.batch();
+      await removeAllSubcollections(permissionDoc, batch, db, { verbose: false });
+      await batch.commit();
+    } else {
+      const userIds = Object.keys(permission.roles);
+      let updateDoc = false;
+      for (const uid of userIds) {
+        if (!existingUserIds.includes(uid)) {
+          delete permission.roles[uid];
+          updateDoc = true;
+        }
+      }
+
+      if (updateDoc) {
+        await permissionDoc.ref.set(permission);
+      }
     }
   }, undefined, verbose);
 }
 
 export function cleanMovies(
-  movies: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>
+  movies: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
+  organizationIds: string[]
 ) {
   return runChunks(movies.docs, async (movieDoc) => {
-    const movie = movieDoc.data();
+    const movie = movieDoc.data() as MovieDocument;
 
     let updateDoc = false;
 
-    if (movie.distributionRights) {
-      delete movie.distributionRights;
+    // Remove duplicates
+    const uniqueOrgIds = Array.from(new Set(movie.orgIds));
+    const hasDuplicate = movie.orgIds && uniqueOrgIds.length !== movie.orgIds.length;
+    if (hasDuplicate) {
+      movie.orgIds = uniqueOrgIds;
       updateDoc = true;
     }
 
-    if (!!movie.orgIds && Array.from(new Set(movie.orgIds)).length !== movie.orgIds.length) {
-      movie.orgIds = Array.from(new Set(movie.orgIds));
+    // Removes orgs that does not exists
+    if (!!movie.orgIds && movie.orgIds.some(o => !organizationIds.includes(o))) {
+      movie.orgIds = movie.orgIds.filter(o => organizationIds.includes(o));
       updateDoc = true;
     }
 
@@ -296,11 +277,14 @@ export function cleanMovies(
 
 export function cleanDocsIndex(
   docsIndex: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
-  existingIds: string[]
+  moviesAndEventsIds: string[],
+  organizationIds: string[]
 ) {
 
   return runChunks(docsIndex.docs, async (doc) => {
-    if (!existingIds.includes(doc.id)) {
+    const isDocLinkedToMoviesOrEvents = moviesAndEventsIds.includes(doc.id);
+    const isDocLinkedToOrgs = organizationIds.includes(doc.data().authorOrgId);
+    if (!isDocLinkedToMoviesOrEvents || !isDocLinkedToOrgs) {
       await doc.ref.delete();
     }
   }, undefined, verbose);
@@ -311,7 +295,6 @@ export function cleanDocsIndex(
  * Check each type of notification and return false if a referenced document doesn't exist
  * @param notification the notification to check
  * @param existingIds the ids to compare with notification fields
- * @TODO: #6460 & #6608: new notification type `contractCreated` created. Remember to take this into account.
  */
 function isNotificationValid(notification: NotificationDocument, existingIds: string[]): boolean {
   if (!existingIds.includes(notification.toUserId)) return false;
@@ -322,28 +305,13 @@ function isNotificationValid(notification: NotificationDocument, existingIds: st
     return false;
   }
 
-  // Since notification have fields depending on its type, we need to check those specific fields
-  switch (notification.type) {
-    case 'organizationAcceptedByArchipelContent':
-      return existingIds.includes(notification.organization?.id);
-    case 'requestFromUserToJoinOrgDeclined':
-    case 'orgMemberUpdated':
-      return (
-        existingIds.includes(notification.organization?.id) &&
-        existingIds.includes(notification.user?.uid)
-      );
-    case 'movieSubmitted':
-    case 'movieAccepted':
-    case 'invitationToAttendEventUpdated':
-    case 'requestToAttendEventUpdated':
-      return existingIds.includes(notification.docId);
-    case 'requestToAttendEventSent':
-      return (
-        existingIds.includes(notification.user?.uid) && existingIds.includes(notification.docId)
-      );
-    default:
-      return false;
-  }
+  if (notification.organization?.id && !existingIds.includes(notification.organization?.id)) return false;
+  if (notification.user?.uid && !existingIds.includes(notification.user?.uid)) return false;
+  if (notification.docId && !existingIds.includes(notification.docId)) return false; // docId can refer to : events, offers, movies, orgs
+  if (notification.invitation?.id && !existingIds.includes(notification.invitation?.id)) return false;
+  if (notification.bucket?.id && !existingIds.includes(notification.bucket?.id)) return false; // buckets Ids are orgs Ids
+
+  return true;
 }
 
 /**

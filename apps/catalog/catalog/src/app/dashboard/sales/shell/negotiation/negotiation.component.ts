@@ -1,16 +1,17 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { SaleShellComponent } from '../shell.component';
-import { NegotiationForm } from '@blockframes/contract/negotiation';
-import { OrganizationQuery } from '@blockframes/organization/+state';
-import { NegotiationGuardedComponent } from '@blockframes/contract/negotiation/guard'
-import { filter, first, pluck } from 'rxjs/operators'
-import { MatDialog } from '@angular/material/dialog';
-import { ConfirmDeclineComponent } from '@blockframes/contract/contract/components/confirm-decline/confirm-decline.component';
-import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { SaleShellComponent } from '../shell.component';
+import { NegotiationForm } from '@blockframes/contract/negotiation/form';
+import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
+import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
+import { NegotiationGuardedComponent } from '@blockframes/contract/negotiation/guard'
+import { ContractService } from '@blockframes/contract/contract/+state';
+import { OrganizationQuery } from '@blockframes/organization/+state';
+import { ConfirmDeclineComponent, ConfirmDeclineData } from '@blockframes/contract/contract/components/confirm-decline/confirm-decline.component';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ContractService } from '@blockframes/contract/contract/+state';
+import { MatDialog } from '@angular/material/dialog';
+import { filter, first, pluck } from 'rxjs/operators'
 
 @Component({
   selector: 'sale-negotiation',
@@ -20,9 +21,9 @@ import { ContractService } from '@blockframes/contract/contract/+state';
 })
 export class NegotiationComponent implements NegotiationGuardedComponent, OnInit {
 
+  negotiation: Negotiation;
   centralOrgId = this.shell.centralOrgId;
   sale$ = this.shell.sale$;
-  negotiation$ = this.sale$.pipe(pluck('negotiation'))
   contractStatus = this.shell.contractStatus;
   activeOrgId = this.query.getActiveId();
   form = new NegotiationForm({ terms: [] });
@@ -40,11 +41,12 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
   ) { }
 
   async ngOnInit(): Promise<void> {
-    const negotiation = await this.negotiation$.pipe(
+    this.negotiation = await this.sale$.pipe(
+      pluck('negotiation'),
       filter(data => !!data),
       first()
     ).toPromise();
-    this.form.hardReset(negotiation);
+    this.form.hardReset(this.negotiation);
     const termIndex = this.route.snapshot.queryParams.termIndex;
     this.activeTerm = termIndex ? parseInt(termIndex) : 0;
   }
@@ -52,26 +54,29 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
   async decline() {
     this.form.markAsPristine(); // usefull to be able to route in the NegotiationGuard
     const sale = await this.sale$.pipe(first()).toPromise();
-    const ref = this.dialog.open(ConfirmDeclineComponent);
+    const data: ConfirmDeclineData = { type: 'seller' };
+    const ref = this.dialog.open(ConfirmDeclineComponent, { data });
     const options = { params: { contractId: sale.id } };
     ref.afterClosed().subscribe(declineReason => {
       const id = sale.negotiation.id;
       if (typeof declineReason === 'string') {
-        this.negotiationService.update(id, { declineReason, status: 'declined' }, options);
+        const update = { declineReason, status: 'declined' } as const;
+        this.negotiationService.update(id, update, options);
         this.router.navigate(['..', 'view'], { relativeTo: this.route });
       }
     });
   }
 
-  async confirm() {
+  async submit() {
     const onConfirm = async () => {
       const sale = await this.sale$.pipe(first()).toPromise();
-      this.form.markAsPristine(); // usefull to be able to route in the NegotiationGuard
       await this.contractService.addNegotiation(sale.id, {
         ...sale.negotiation,
         ...this.form.value,
       });
-      this.snackBar.open('Your counter offer has been sent');
+      this.form.markAsPristine(); // usefull to be able to route in the NegotiationGuard
+      const config = { duration: 6000 };
+      this.snackBar.open('Your counter offer has been sent', null, config);
       this.router.navigate(['..', 'view'], { relativeTo: this.route });
     };
     const data = {

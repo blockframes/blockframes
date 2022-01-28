@@ -3,8 +3,9 @@ import { EntityState, ActiveState, StoreConfig, EntityStore } from "@datorama/ak
 import { CollectionConfig, CollectionService } from "akita-ng-fire";
 import { Negotiation } from "./negotiation.firestore";
 import type firebase from 'firebase';
-import {  formatDocumentMetaFromFirestore } from "@blockframes/utils/models-meta";
+import { formatDocumentMetaFromFirestore } from "@blockframes/utils/models-meta";
 import { OrganizationQuery } from "@blockframes/organization/+state";
+import { BucketTerm } from "@blockframes/contract/term/+state";
 
 export interface NegotiationState extends EntityState<Negotiation, string>, ActiveState<string> { }
 
@@ -19,9 +20,21 @@ export class NegotiationService extends CollectionService<NegotiationState> {
     super(store)
   }
 
+  formatDocumentDurationFromFirestore(terms:BucketTerm<firebase.firestore.Timestamp>[]){
+    return terms.map(term => {
+      const duration = {
+        from: term.duration.from.toDate(),
+        to:term.duration.to.toDate(),
+      };
+      return {...term, duration}
+    })
+  }
+
   formatFromFirestore(_negotiation: Negotiation<firebase.firestore.Timestamp>): Negotiation<Date> {
     const _meta = formatDocumentMetaFromFirestore(_negotiation?._meta);
-    return { ..._negotiation, _meta };
+    const terms = this.formatDocumentDurationFromFirestore(_negotiation.terms)
+    const initial = _negotiation.initial?.toDate();
+    return { ..._negotiation, _meta, initial , terms};
   }
 }
 

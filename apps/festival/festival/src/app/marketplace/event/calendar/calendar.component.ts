@@ -8,6 +8,7 @@ import { FormControl } from '@angular/forms';
 import { EventTypes } from '@blockframes/event/+state/event.firestore';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { eventTime } from '@blockframes/event/pipes/event-time.pipe';
+import { AgendaService } from '@blockframes/utils/agenda/agenda.service';
 
 const typesLabel = {
   screening: 'Screenings',
@@ -32,6 +33,7 @@ export class EventCalendarComponent implements OnInit {
     private invitationQuery: InvitationQuery,
     private cdr: ChangeDetectorRef,
     private dynTitle: DynamicTitleService,
+    private agendaService: AgendaService
   ) { }
 
   ngOnInit(): void {
@@ -55,11 +57,19 @@ export class EventCalendarComponent implements OnInit {
     this.viewDate = date;
     this.cdr.markForCheck();
   }
+
+  hasIncomingEvents(events: Event[] = []) {
+    return events.some(e => eventTime(e) !== 'late');
+  }
+
+  exportToCalendar(events: Event[] = []) {
+    this.agendaService.download(events.filter(e => eventTime(e) !== 'late'));
+  }
 }
 
-@Pipe({ name: 'hideBadge'})
+@Pipe({ name: 'hideBadge' })
 export class HideBadgePipe implements PipeTransform {
-  constructor(private invitationQuery: InvitationQuery) {}
+  constructor(private invitationQuery: InvitationQuery) { }
   transform(event: Event) {
     if (eventTime(event) === 'late') return of(true);
     return this.invitationQuery.selectEntity(i => i.eventId === event.id).pipe(

@@ -6,14 +6,14 @@
 import { differenceBy } from 'lodash';
 import { loadAdminServices, getCollectionInBatches, sleep } from '@blockframes/firebase-utils';
 import readline from 'readline';
-import { Auth, UserRecord, DbRecord } from '@blockframes/firebase-utils';
-import { deleteAllUsers, importAllUsers } from '@blockframes/testing/firebase';
+import { Auth, UserRecord } from '@blockframes/firebase-utils';
+import { deleteAllUsers, importAllUsers } from '@blockframes/testing/unit-tests';
 import * as env from '@env';
-import { User } from '@blockframes/user/types';
+import { PublicUser, User } from '@blockframes/user/types';
 
 export const { storageBucket } = env.firebase();
 
-export interface UserConfig {
+interface UserConfig {
   uid: string;
   email: string;
   password: string;
@@ -56,7 +56,7 @@ async function createAllUsers(users: UserConfig[], auth: Auth) {
  * @param expectedUsers
  * @param auth
  */
-export async function removeUnexpectedUsers(expectedUsers: UserConfig[], auth: Auth) {
+export async function removeUnexpectedUsers(expectedUsers: PublicUser[], auth: Auth) {
   let pageToken;
 
   do {
@@ -83,37 +83,25 @@ export async function removeUnexpectedUsers(expectedUsers: UserConfig[], auth: A
   return;
 }
 
-function readUsersFromJsonlFixture(db: DbRecord[]): UserConfig[] {
-  return db
-    .filter((doc) => doc.docPath.includes('users/'))
-    .filter((userDoc) => 'email' in userDoc.content)
-    .map((userDoc) => ({
-      uid: userDoc.content?.uid,
-      email: userDoc.content?.email,
-      password: USER_FIXTURES_PASSWORD,
-    }));
-}
-
 async function getUsersFromDb(db: FirebaseFirestore.Firestore) {
   const usersIterator = getCollectionInBatches<User>(db.collection('users'), 'uid', 300);
   let output: UserConfig[] = [];
   for await (const users of usersIterator) {
     const password = USER_FIXTURES_PASSWORD;
-    const outputChunk = users.map(({ uid, email }) => ({ uid, email, password }))
+    const outputChunk = users.map(({ uid, email }) => ({ uid, email, password }));
     output = output.concat(outputChunk);
   }
   return output;
 }
 
 /**
- * If `jsonl` param is not provided, the function will read users from local Firestore
- * @param jsonl optional Jsonl record array (usually from local db backup) to read users from
+ * Read users from local Firestore
+ * and creates them in Auth
  */
-export async function syncUsers(jsonl?: DbRecord[], db = loadAdminServices().db, auth = loadAdminServices().auth) {
-  const expectedUsers = jsonl ? readUsersFromJsonlFixture(jsonl) : await getUsersFromDb(db);
+export async function syncUsers(db = loadAdminServices().db, auth = loadAdminServices().auth) {
+  const expectedUsers = await getUsersFromDb(db);
   await deleteAllUsers(auth);
-  const createResult = await importAllUsers(auth, expectedUsers);
-  console.log(createResult);
+  await importAllUsers(auth, expectedUsers);
 }
 
 export async function printUsers() {

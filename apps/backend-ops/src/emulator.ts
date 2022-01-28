@@ -1,26 +1,28 @@
 import {
-  shutdownEmulator,
-  importFirestoreEmulatorBackup,
-  defaultEmulatorBackupPath,
   runAnonymization,
   getLatestFolderURL,
   getServiceAccountObj,
-  uploadDbBackupToBucket,
   loadAdminServices,
   restoreStorageFromCi,
   startMaintenance,
   latestAnonDbDir,
-  getFirestoreExportPath,
   getBackupBucket,
   CI_STORAGE_BACKUP,
   latestAnonStorageDir,
   gsutilTransfer,
   awaitProcessExit,
+  endMaintenance
+} from '@blockframes/firebase-utils';
+import {
+  shutdownEmulator,
+  importFirestoreEmulatorBackup,
+  defaultEmulatorBackupPath,
+  uploadDbBackupToBucket,
+  getFirestoreExportPath,
   firebaseEmulatorExec,
   connectAuthEmulator,
   connectFirestoreEmulator,
-  endMaintenance
-} from '@blockframes/firebase-utils';
+} from '@blockframes/firebase-utils/firestore/emulator';
 import { ChildProcess } from 'child_process';
 import { join, resolve } from 'path';
 import { backupBucket as prodBackupBucket, firebase as prodFirebase } from 'env/env.blockframes';
@@ -112,7 +114,7 @@ export async function startEmulators({ importFrom = 'defaultImport' }: StartEmul
  * This will shut down the emulator but the backup will contain a working version with Auth synched
  * IF AUTH GETS TOO BIG, THINGS WILL FAIL
  */
-export async function syncAuthEmulatorWithFirestoreEmulator({ importFrom = 'defaultImport' }: StartEmulatorOptions = { importFrom :'defaultImport' }) {
+export async function syncAuthEmulatorWithFirestoreEmulator({ importFrom = 'defaultImport' }: StartEmulatorOptions = { importFrom: 'defaultImport' }) {
   const emulatorPath = importFrom === 'defaultImport' ? defaultEmulatorBackupPath : resolve(importFrom);
   let proc: ChildProcess;
   try {
@@ -123,12 +125,12 @@ export async function syncAuthEmulatorWithFirestoreEmulator({ importFrom = 'defa
     });
     const auth = connectAuthEmulator();
     const db = connectFirestoreEmulator();
-    await startMaintenance(db)
-    await syncUsers(null, db, auth)
-    await endMaintenance(db)
-    await shutdownEmulator(proc)
+    await startMaintenance(db);
+    await syncUsers(db, auth);
+    await endMaintenance(db);
+    await shutdownEmulator(proc);
   } catch (e) {
-    await shutdownEmulator(proc)
+    await shutdownEmulator(proc);
     throw e;
   }
 }
@@ -179,7 +181,7 @@ export async function anonDbProcess() {
   console.log('Anonymization complete!')
 
   console.info('Syncing users from db...');
-  const p1 = syncUsers(null, db);
+  const p1 = syncUsers(db);
 
   console.info('Syncing storage with production backup stored in blockframes-ci...');
   const p2 = restoreStorageFromCi(getCI());
@@ -207,11 +209,11 @@ export async function anonymizeLatestProdDb() {
   await downloadProdDbBackup(defaultEmulatorBackupPath);
   let proc;
   try {
-   proc = await firebaseEmulatorExec({
-     emulators: 'firestore',
-     importPath: defaultEmulatorBackupPath,
-     exportData: true,
-   });
+    proc = await firebaseEmulatorExec({
+      emulators: 'firestore',
+      importPath: defaultEmulatorBackupPath,
+      exportData: true,
+    });
     await anonDbProcess();
   } finally {
     await shutdownEmulator(proc, defaultEmulatorBackupPath, 30);

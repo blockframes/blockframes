@@ -62,7 +62,8 @@ function getItems(groups: StaticGroup[]): string[] {
   ]
 })
 export class StaticGroupComponent implements ControlValueAccessor, OnInit, OnDestroy, MatFormFieldControl<string[]> {
-  private subs: Subscription[] = [];
+  private itemsSub?: Subscription;
+  private changeSub?: Subscription;
   private onTouch: () => void;
   modes: Record<string, Observable<GroupMode>> = {};
   filteredGroups$: Observable<StaticGroup[]>;
@@ -148,7 +149,7 @@ export class StaticGroupComponent implements ControlValueAccessor, OnInit, OnDes
       this.search.valueChanges.pipe(startWith(this.search.value))
     ]).pipe(map(result => filter(result, this.scope)));
 
-    const sub = combineLatest([
+    this.itemsSub = combineLatest([
       this.filteredGroups$.pipe(map(getItems)),
       this.form.valueChanges.pipe(pairwise())
     ]).subscribe(([filteredItems, [prev, next]]) => {
@@ -162,7 +163,6 @@ export class StaticGroupComponent implements ControlValueAccessor, OnInit, OnDes
       }
       this.allItems = this.form.value;
     })
-    this.subs.push(sub);
   }
 
   ngOnInit() {
@@ -195,8 +195,8 @@ export class StaticGroupComponent implements ControlValueAccessor, OnInit, OnDes
   }
 
   registerOnChange(fn: () => void): void {
-    const sub = this.form.valueChanges.subscribe(fn);
-    this.subs.push(sub);
+    this.changeSub?.unsubscribe();  // Unsubscribe registry on change
+    this.changeSub = this.form.valueChanges.subscribe(fn);
   }
 
   registerOnTouched(fn: () => void) {
@@ -238,7 +238,8 @@ export class StaticGroupComponent implements ControlValueAccessor, OnInit, OnDes
   }
 
   ngOnDestroy() {
-    this.subs.forEach(sub => sub.unsubscribe());
+    this.changeSub?.unsubscribe();
+    this.itemsSub?.unsubscribe();
     this.stateChanges.complete();
   }
 

@@ -176,7 +176,7 @@ service cloud.firestore {
         || userId() == incomingData().fromUser.uid;
     }
 
-    function isInvitationRecepient() {
+    function isInvitationRecipient() {
       return userId() == existingData().toUser.uid
         || (existingData().type == 'joinOrganization' && isOrgAdmin(existingData().toOrg.id))
         || (existingData().type == 'attendEvent' && isOrgMember(existingData().toOrg.id));
@@ -184,7 +184,7 @@ service cloud.firestore {
 
     function isOnlyChangingInvitationStatus() {
       return (
-        isInvitationRecepient()
+        isInvitationRecipient()
         && isNotUpdatingField(['watchTime'])
       );
     }

@@ -15,9 +15,13 @@ import { DisplayNameModule, DisplayPositionModule } from '@blockframes/utils/pip
 import { CountdownModule } from '@blockframes/ui/countdown/countdown.module';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { InvitationActionModule } from '@blockframes/invitation/components/action/action.module';
+import { AgendaExportModule } from '@blockframes/event/components/agenda-export/agenda-export.module';
+import { RequestScreeningModule } from '@blockframes/event/components/request-screening/request-screening.module';
+import { RequestAskingPriceModule } from '@blockframes/movie/components/request-asking-price/request-asking-price.module';
 
 import { MatButtonModule} from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [EventViewComponent],
@@ -36,8 +40,12 @@ import { MatIconModule } from '@angular/material/icon';
     InvitationActionModule,
     CountdownModule,
     ToLabelModule,
+    RequestScreeningModule,
+    RequestAskingPriceModule,
     MatButtonModule,
     MatIconModule,
+    MatTooltipModule,
+    AgendaExportModule,
     RouterModule.forChild([{ path: '', component: EventViewComponent }])
   ]
 })

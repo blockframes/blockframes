@@ -5,7 +5,7 @@ import { ContractDocument, convertDuration, createMandate, createSale, Holdback,
 import { createDocumentMeta, formatDocumentMetaFromFirestore } from "@blockframes/utils/models-meta";
 import { Timestamp } from "@blockframes/utils/common-interfaces/timestamp";
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
-import { first, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { QueryFn } from '@angular/fire/firestore';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
@@ -52,27 +52,41 @@ export class ContractService extends CollectionService<ContractState> {
   }
 
 
-  async addNegotiation(contractId: string, contract: Partial<Negotiation>) {
+  //used exclusively in the crm
+  adminLastNegotiation(contractId: string) {
+    const options = { params: { contractId } };
+    const query = ref => ref.orderBy('_meta.createdAt', 'desc').limit(1);
+    return this.negotiationService.valueChanges(query, options).pipe(
+      map(negotiations => negotiations[0])
+    );
+  }
+
+  isInitial(negotiation: Partial<Negotiation>) {
+    const initial = negotiation.initial;
+    const createdAt = negotiation?._meta?.createdAt;
+    if (initial && createdAt) return false;
+    return true;
+  }
+
+  async addNegotiation(contractId: string, nego: Partial<Negotiation>) {
     const activeOrgId = this.orgQuery.getActiveId();
     const write = this.batch();
-    const sale = await this.valueChanges(contractId).pipe(first()).toPromise();
-
     this.negotiationService.add({
       _meta: createDocumentMeta({ createdAt: new Date(), }),
       status: 'pending',
       createdByOrg: activeOrgId,
       sellerId: centralOrgId.catalog,
-      stakeholders: contract.stakeholders,
-      buyerId: contract.orgId,
-      price: contract.price,
-      titleId: contract.titleId,
-      terms: contract.terms,
-      holdbacks: contract.holdbacks,
-      parentTermId: contract.parentTermId,
-      specificity: contract.specificity,
-      orgId: contract.orgId,
-    }, { write })
-    if (sale.status === 'pending') this.update(contractId, { status: 'negotiating' }, { write })
-    await write.commit()
+      stakeholders: nego.stakeholders,
+      buyerId: nego.buyerId,
+      price: nego.price,
+      currency: nego.currency,
+      titleId: nego.titleId,
+      terms: nego.terms,
+      parentTermId: nego.parentTermId,
+      initial: nego.initial,
+      orgId: nego.orgId,
+    }, { write, params: { contractId } });
+
+    await write.commit();
   }
 }

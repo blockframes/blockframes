@@ -1,7 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { Invitation, InvitationDetailed } from '@blockframes/invitation/+state';
 import { getGuest } from '@blockframes/invitation/pipes/guest.pipe';
-import { getValue } from '@blockframes/utils/helpers';
 
 @Component({
   selector: 'invitation-guest-table',
@@ -12,35 +11,6 @@ import { getValue } from '@blockframes/utils/helpers';
 export class GuestTableComponent {
   public _invitations: Invitation[] | InvitationDetailed[];
 
-  public headers = {
-    'id': 'Id',
-    'org': 'Org',
-    'event.id': '',
-    'event.title': 'Event title',
-    'event.start': 'Event start',
-    'event.end': 'Event end',
-    'event.type': 'Event type',
-    'event.accessibility': 'Accessibility',
-    'date': 'Invitation date',
-    'guest.firstName': 'FirstName',
-    'guest.lastName': 'LastName',
-    'guestOrg': 'Guest org',
-    'mode': 'Mode',
-    'status': 'Status',
-    'guest': 'Email',
-    'movie': 'Movie'
-  };
-
-  @Input() initialColumns: string[] = [
-    'id',
-    'date',
-    'guest.firstName',
-    'guest.lastName',
-    'guest',
-    'mode',
-    'status'
-  ];
-
   @Input() set invitations(invitations: InvitationDetailed[]) {
     if (invitations) {
       this._invitations = invitations.map((invitation: InvitationDetailed) => {
@@ -48,23 +18,5 @@ export class GuestTableComponent {
         return invitation;
       });
     }
-  }
-
-  filterPredicateMovies(data, filter) {
-    const columnsToFilter = [
-      'id',
-      'org.denomination.full',
-      'org.denomination.public',
-      'event.title',
-      'event.type',
-      'date',
-      'guest.firstName',
-      'guest.lastName',
-      'mode',
-      'status',
-      'guest.email',
-    ];
-    const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
-    return dataStr.toLowerCase().indexOf(filter) !== -1;
   }
 }

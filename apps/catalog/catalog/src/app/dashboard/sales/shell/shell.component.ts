@@ -1,6 +1,4 @@
-import {
-  Component, ChangeDetectionStrategy, Optional
-} from '@angular/core';
+import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
 import { ContractService, contractStatus, Sale } from '@blockframes/contract/contract/+state';
 import { ActivatedRoute } from '@angular/router';
 import { pluck, shareReplay, switchMap } from 'rxjs/operators';
@@ -23,8 +21,7 @@ export class SaleShellComponent {
     pluck('saleId'),
     switchMap((id: string) => this.contractService.valueChanges(id)),
     joinWith({
-      income: (sale: Sale) => this.incomeService.valueChanges(sale.id),
-      movie: (sale: Sale) => this.titleService.getValue(sale.titleId),
+      title: (sale: Sale) => this.titleService.getValue(sale.titleId),
       negotiation: (sale: Sale) => this.contractService.lastNegotiation(sale.id),
     }),
     shareReplay({ bufferSize:1, refCount:true })

@@ -1,6 +1,6 @@
 
 import { createDocumentMeta } from "@blockframes/utils/models-meta";
-import { Duration } from '../../term/+state/term.model';
+import {   Duration } from '../../term/+state/term.firestore';
 import { Timestamp } from "@blockframes/utils/common-interfaces/timestamp";
 import { toDate } from "@blockframes/utils/helpers";
 import { Contract, Holdback, Mandate, Sale } from "./contract.firestore";

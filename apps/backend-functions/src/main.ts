@@ -12,25 +12,25 @@ import {
 import { logErrors } from './internals/sentry';
 import { onInvitationWrite } from './invitation';
 import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate, accessToAppChanged, onRequestFromOrgToAccessApp } from './orgs';
-import { onMovieUpdate, onMovieCreate, onMovieDelete } from './movie';
+import { onMovieUpdate, onMovieCreate, onMovieDelete, createAskingPriceRequest } from './movie';
 import * as bigQuery from './bigQuery';
 import { onDocumentPermissionCreate, onPermissionDelete } from './permissions';
 import { createNotificationsForEventsToStart } from './internals/invitations/events';
 import { getPrivateVideoUrl, getPlayerUrl } from './player';
 import { sendMailAsAdmin as _sendMailAsAdmin, sendMailWithTemplate as _sendMailWithTemplate } from './internals/email';
 import { linkFile, getMediaToken as _getMediaToken } from './media';
-import { onEventDelete } from './event';
+import { onEventDelete, createScreeningRequest } from './event';
 import { getTwilioAccessToken, twilioWebhook as _twilioWebhook } from './twilio';
 import { eventWebhook as sendgridEventWebhook } from './sendgrid';
 import { hotConfig, heavyConfig, superHeavyConfig } from '@blockframes/firebase-utils';
 import { onNotificationCreate } from './notification';
 import { importAnalytics } from './pubsub/daily-analytics-import';
-import { onOfferCreate } from './offer';
-import { onContractCreate, onContractDelete, onContractUpdate } from './contracts';
+import { onOfferCreate, onOfferUpdate } from './offer';
+import { onContractDelete, onContractUpdate } from './contracts';
 import { onTermDelete } from './terms';
 import { downloadVideo } from './rescue';
 import { createPdf as _createPdf } from './createPdf';
-import { onNegotiationUpdate } from './negotiation';
+import { onNegotiationCreated, onNegotiationUpdate } from './negotiation';
 
 console.log('Function instance loaded');
 
@@ -117,11 +117,16 @@ export const hasUserAnOrgOrIsAlreadyInvited = functions().https.onCall(invitatio
 /** Used to get invitation linked to an email when users signup for the first time */
 export const getInvitationLinkedToEmail = functions(hotConfig).https.onCall(invitations.getInvitationLinkedToEmail);
 
+/** Used to accept or decline invitation if user is logged in as anonymous */
+export const acceptOrDeclineInvitationAsAnonymous = functions().https.onCall(invitations.acceptOrDeclineInvitationAsAnonymous);
+
 //--------------------------------
 //    Events Management          //
 //--------------------------------
 
 export const onEventDeleteEvent = onDocumentDelete('events/{eventID}', onEventDelete);
+
+export const requestScreening = functions().https.onCall(skipInMaintenance(logErrors(createScreeningRequest)));
 
 /** Trigger: REST call to invite a list of users by email. */
 export const inviteUsers = functions().https.onCall(skipInMaintenance(logErrors(invitations.inviteUsers)));
@@ -166,6 +171,8 @@ export const onMovieUpdateEvent = functions(heavyConfig) // movie update can pot
  */
 export const onMovieDeleteEvent = onDocumentDelete('movies/{movieId}', onMovieDelete)
 
+export const requestAskingPrice = functions().https.onCall(skipInMaintenance(logErrors(createAskingPriceRequest)));
+
 //--------------------------------
 //     Consents Management      //
 //--------------------------------
@@ -209,6 +216,7 @@ export const sendNotificationEmails = onDocumentCreate('notifications/{notifID}'
 //--------------------------------
 
 export const onOfferCreateEvent = onDocumentCreate('offers/{offerId}', onOfferCreate);
+export const onOfferUpdateEvent = onDocumentUpdate('offers/{offerId}', onOfferUpdate);
 
 //--------------------------------
 //       Orgs Management        //
@@ -237,12 +245,6 @@ export const onFileUpload = functions(heavyConfig).storage.object().onFinalize(s
 /** Trigger: when an user ask for a private media. */
 export const getMediaToken = functions().https.onCall(skipInMaintenance(logErrors(_getMediaToken)));
 
-/**
- * This is a scheduled function which runs daily backup if complied with production configuration
- */
-export { dailyFirestoreBackup } from './pubsub/daily-firestore-backup';
-
-
 export const createPdf = functions(heavyConfig).https.onRequest(_createPdf);
 
 //--------------------------------
@@ -261,8 +263,6 @@ export const sendgridEventWebhookListener = functions().https.onRequest(sendgrid
 
 export const onContractDeleteEvent = onDocumentDelete('contracts/{contractId}', onContractDelete);
 
-export const onContractCreateEvent = onDocumentCreate('contracts/{contractId}', onContractCreate);
-
 export const onContractUpdateEvent = onDocumentUpdate('contracts/{contractId}', onContractUpdate);
 
 export const onTermDeleteEvent = onDocumentDelete('terms/{termId}', onTermDelete);
@@ -271,7 +271,8 @@ export const onTermDeleteEvent = onDocumentDelete('terms/{termId}', onTermDelete
 //     Negotiation Management     //
 //--------------------------------
 
-export const onNegotiationUpdateEvent = onDocumentDelete('contracts/{contractId}/negotiations/{negotiationId}', onNegotiationUpdate);
+export const onNegotiationUpdateEvent = onDocumentUpdate('contracts/{contractId}/negotiations/{negotiationId}', onNegotiationUpdate);
+export const onNegotiationCreateEvent = onDocumentCreate('contracts/{contractId}/negotiations/{negotiationId}', onNegotiationCreated);
 
 //--------------------------------
 //          JWP RESCUE          //

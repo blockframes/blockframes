@@ -2,7 +2,6 @@ import * as admin from 'firebase-admin';
 import { firebase } from '@env';
 import { firebase as firebaseCI } from 'env/env.blockframes-ci';
 import { config } from 'dotenv';
-import { readFileSync } from 'fs';
 import requiredVars from 'tools/mandatory-env-vars.json';
 import { OrganizationDocument } from '@blockframes/organization/+state/organization.model';
 import { resolve } from 'path';
@@ -36,14 +35,6 @@ export async function* getCollectionInBatches<K>(ref: admin.firestore.Collection
 export interface DbRecord {
   docPath: string;
   content: { [key: string]: any };
-}
-
-export function readJsonlFile(dbBackupPath: string) {
-  const file = readFileSync(dbBackupPath, 'utf-8');
-  return file
-    .split('\n')
-    .filter((str) => !!str) // remove last line
-    .map((str) => JSON.parse(str) as DbRecord);
 }
 
 let missingVarsMessageShown = false;
@@ -152,15 +143,16 @@ export function throwOnProduction(): never | void {
  * @param snapshot
  * @param batch
  */
- export async function removeAllSubcollections(
+export async function removeAllSubcollections(
   snapshot: FirebaseFirestore.DocumentSnapshot,
   batch: FirebaseFirestore.WriteBatch,
   db = admin.firestore(),
-  ): Promise<FirebaseFirestore.WriteBatch> {
-  console.log(`starting deletion of ${snapshot.ref.path} sub-collections`);
+  options = { verbose: true }
+): Promise<FirebaseFirestore.WriteBatch> {
+  if (options.verbose) console.log(`starting deletion of ${snapshot.ref.path} sub-collections`);
   const subCollections = await snapshot.ref.listCollections();
   for (const x of subCollections) {
-    console.log(`deleting sub collection : ${x.path}`);
+    if (options.verbose) console.log(`deleting sub collection : ${x.path}`);
     const documents = await db.collection(x.path).listDocuments();
     documents.forEach(ref => batch.delete(ref))
   }

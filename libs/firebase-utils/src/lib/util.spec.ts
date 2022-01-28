@@ -1,5 +1,9 @@
 import * as util from './util';
-import { initFunctionsTestMock, getTestingProjectId, populate } from '@blockframes/testing/firebase/functions';
+import {
+  initFunctionsTestMock,
+  getTestingProjectId,
+  populate,
+} from '@blockframes/testing/unit-tests';
 import { loadAdminServices } from '@blockframes/firebase-utils';
 import { apps, clearFirestoreData } from '@firebase/rules-unit-testing';
 
@@ -28,7 +32,7 @@ describe('Test util.ts generator function getCollectionInBatches', () => {
       { uid: 'I' },
       { uid: 'J' },
       { uid: 'K' },
-      { uid: 'L' }
+      { uid: 'L' },
     ]);
 
     const usersRef = db.collection('users');
@@ -38,9 +42,9 @@ describe('Test util.ts generator function getCollectionInBatches', () => {
     expect.assertions(iterations);
     const docs = util.getCollectionInBatches(usersRef, 'uid', batchSize);
     for await (const chunk of docs) {
-      expect(chunk.length).toBe(batchSize)
+      expect(chunk.length).toBe(batchSize);
       iterations -= 1;
-      if (!iterations) break
+      if (!iterations) break;
     }
   });
 });

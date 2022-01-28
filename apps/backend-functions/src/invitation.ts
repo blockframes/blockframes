@@ -1,10 +1,10 @@
-import { getDocument, createPublicOrganizationDocument, createPublicUserDocument } from './data/internals';
+﻿import { getDocument, createPublicOrganizationDocument, createPublicUserDocument } from './data/internals';
 import { getUser } from "./internals/utils";
 import { db } from './internals/firebase'
 import { InvitationOrUndefined, OrganizationDocument } from './data/types';
 import { onInvitationToJoinOrgUpdate, onRequestToJoinOrgUpdate } from './internals/invitations/organizations';
 import { onInvitationToAnEventUpdate } from './internals/invitations/events';
-import { InvitationBase, createInvitation } from '@blockframes/invitation/+state/invitation.firestore';
+import { InvitationBase, createInvitation, InvitationStatus, InvitationDocument } from '@blockframes/invitation/+state/invitation.firestore';
 import { createPublicUser, PublicUser } from '@blockframes/user/+state/user.firestore';
 import { getOrInviteUserByMail } from './internals/users';
 import { ErrorResultResponse } from './utils';
@@ -15,6 +15,7 @@ import { getEventEmailData } from '@blockframes/utils/emails/utils';
 import { Change } from 'firebase-functions';
 import { AlgoliaOrganization } from '@blockframes/utils/algolia';
 import { createAlgoliaOrganization } from '@blockframes/firebase-utils';
+import { orgName } from '@blockframes/organization/+state/organization.firestore';
 export { hasUserAnOrgOrIsAlreadyInvited } from './internals/invitations/utils';
 
 
@@ -122,7 +123,7 @@ export async function onInvitationWrite(
   }
 }
 
-interface UserInvitation {
+export interface UserInvitation {
   emails: string[];
   invitation: Partial<InvitationBase<Date>>;
   app?: App;
@@ -172,7 +173,7 @@ export const inviteUsers = async (data: UserInvitation, context: CallableContext
   for (const email of data.emails) {
     const invitationId = db.collection('invitations').doc().id;
     const { type, mode, fromOrg } = invitation;
-    const eventData = type == 'attendEvent' ? getEventEmailData(event, email, invitationId) : undefined;
+    const eventData = type == 'attendEvent' ? getEventEmailData({ event, orgName: orgName(fromOrg, 'full'), email, invitationId }) : undefined;
     const user = await getOrInviteUserByMail(
       email,
       { id: invitationId, type, mode, fromOrg },
@@ -187,8 +188,8 @@ export const inviteUsers = async (data: UserInvitation, context: CallableContext
     invitation.id = invitationId;
 
     try {
-      const invitationSet = await db.collection('invitations').doc(invitation.id).set(invitation);
-      promises.push({ result: invitationSet, error: '' });
+      await db.collection('invitations').doc(invitation.id).set(invitation);
+      promises.push({ result: invitation.id, error: '' });
     } catch (error) {
       promises.push({ result: undefined, error });
     }
@@ -230,4 +231,25 @@ export async function getInvitationLinkedToEmail(email: string): Promise<boolean
   }
 
   return false;
+}
+
+export interface AnonymousInvitationAction {
+  invitationId: string;
+  email: string;
+  status: InvitationStatus;
+}
+
+export const acceptOrDeclineInvitationAsAnonymous = async (data: AnonymousInvitationAction, context: CallableContext) => {
+  if (!context?.auth) throw new Error('Permission denied: missing auth context.');
+
+  const invitation = await getDocument<InvitationDocument>(`invitations/${data.invitationId}`);
+
+  if (!invitation || invitation.type !== 'attendEvent') throw new Error('Permission denied: invalid invitation');
+
+  if (invitation.mode !== 'invitation' || invitation.toUser.email.toLowerCase() !== data.email.toLowerCase()) throw new Error('Permission denied: invalid invitation');
+
+  invitation.status = data.status;
+
+  await db.collection('invitations').doc(invitation.id).set(invitation);
+  return true;
 }

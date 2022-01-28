@@ -27,12 +27,22 @@ function createNotificationsControls(settings: Partial<NotificationSettings> = {
     requestFromUserToJoinOrgDeclined: new NotificationSettingsForm(settings.requestFromUserToJoinOrgDeclined),
     invitationToAttendEventUpdated: new NotificationSettingsForm(settings.invitationToAttendEventUpdated),
     requestToAttendEventUpdated: new NotificationSettingsForm(settings.requestToAttendEventUpdated),
+    screeningRequested: new NotificationSettingsForm(settings.screeningRequested),
+    screeningRequestSent: new NotificationSettingsForm(settings.screeningRequestSent),
     movieAccepted: new NotificationSettingsForm(settings.movieAccepted),
+    movieAskingPriceRequested: new NotificationSettingsForm(settings.movieAskingPriceRequested),
+    movieAskingPriceRequestSent: new NotificationSettingsForm(settings.movieAskingPriceRequestSent),
     requestToAttendEventCreated: new NotificationSettingsForm(settings.requestToAttendEventCreated, true),
     invitationToAttendMeetingCreated: new NotificationSettingsForm(settings.invitationToAttendMeetingCreated, true),
     invitationToAttendScreeningCreated: new NotificationSettingsForm(settings.invitationToAttendScreeningCreated, true),
     offerCreatedConfirmation: new NotificationSettingsForm(settings.offerCreatedConfirmation),
-    contractCreated: new NotificationSettingsForm(settings.contractCreated, true)
+    contractCreated: new NotificationSettingsForm(settings.contractCreated, true),
+    createdCounterOffer: new NotificationSettingsForm(settings.createdCounterOffer),
+    receivedCounterOffer: new NotificationSettingsForm(settings.receivedCounterOffer),
+    myOrgAcceptedAContract: new NotificationSettingsForm(settings.myOrgAcceptedAContract),
+    myContractWasAccepted: new NotificationSettingsForm(settings.myContractWasAccepted),
+    myOrgDeclinedAContract: new NotificationSettingsForm(settings.myOrgDeclinedAContract),
+    myContractWasDeclined: new NotificationSettingsForm(settings.myContractWasDeclined),
   }
 }
 

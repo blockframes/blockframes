@@ -12,6 +12,7 @@ import {
 
 // Blockframes
 import { fadeList, slideUp } from '@blockframes/utils/animations/fade';
+import { boolean } from '@blockframes/utils/decorators/decorators';
 
 @Directive({ selector: '[listPageAppBar], list-page-app-bar' })
 export class PageAppBarSearchDirective { }
@@ -37,6 +38,9 @@ export class PageEmptyDirective { }
 @Directive({ selector: '[pdfExport], pdf-export' })
 export class PdfExportDirective { }
 
+@Directive({ selector: '[eventsExport], events-export' })
+export class EventsExportDirective { }
+
 @Component({
   selector: '[items] list-page',
   templateUrl: 'list-page.component.html',
@@ -52,6 +56,7 @@ export class ListPageComponent implements AfterContentInit {
   @ContentChild(PageAppBarSearchDirective) appBar: PageAppBarSearchDirective;
 
   @Input() items: unknown[];
+  @Input() @boolean exportButton = false;
 
   public listView = false;
   public canToggle = false;

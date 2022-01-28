@@ -1,4 +1,8 @@
 <ng-container *ngIf="offer$ | async as offer">
+  <a mat-icon-button routerLink="..">
+    <mat-icon svgIcon="arrow_back"></mat-icon>
+    <span>BACK TO CONTRACTS</span>
+  </a>
   <ng-container *ngIf="contract$ | async as contract">
     <section class="surface" fxLayout="column" fxLayoutGap="16px">
       <ng-container *ngIf="contract.seller as seller">
@@ -11,23 +15,25 @@
         <mat-form-field appearance="outline">
           <mat-label>Seller's approval for a title.</mat-label>
           <mat-select formControlName="status">
-            <mat-option *ngFor="let value of status" [value]="value">
-              {{value}}
+            <mat-option value="pending">
+              Pending
+              <ng-container *ngIf="contract.negotiation | isNew; else negotiating">( Will be displayed as New )</ng-container>
+              <ng-template #negotiating>(Will be displayed as Negotiating)</ng-template>
             </mat-option>
+            <mat-option value="accepted" [disabled]="!contract.negotiation?.price">
+              <span>Accepted</span>
+              <span *ngIf="!contract.negotiation?.price">(Negotiation has no price)</span>
+            </mat-option>
+            <mat-option value="declined">Declined</mat-option>
           </mat-select>
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-label>Title price suggested by seller.</mat-label>
-          <input matInput type="number" min="0" formControlName="price" />
-          <mat-icon matPrefix [svgIcon]="offer.currency"></mat-icon>
         </mat-form-field>
       </form>
       <div fxLayout="row" fxLayoutAlign="center center">
-        <button mat-flat-button color="primary" (click)="update(contract.id)">Update</button>
+        <button mat-flat-button color="primary" (click)="update(contract.id, contract?.negotiation?.id)">Update</button>
       </div>
     </section>
 
-    <section class="surface" *ngIf="contract.status === 'declined'">
+    <section class="surface" *ngIf="contract.negotiation?.status === 'declined'">
       <h3>Why it has been declined</h3>
       <ng-container *ngIf="contract.declineReason; else noReason">
         <p>{{contract.declineReason}}</p>
@@ -36,40 +42,33 @@
         <p>Seller hasn't given any reason.</p>
       </ng-template>
     </section>
-
-    <contract-item [contract]="contract">
-      <p price *ngIf="contract.income as income">
-        <ng-container *ngIf="income.price > 0; else askPrice">
-          <span>{{ income.price | currency: offer.currency }}</span>
-        </ng-container>
-        <ng-template #askPrice>
-          <span>Buyer requested Asking Price</span>
+    <ng-container *ngIf="contract.negotiation as negotiation">
+      <contract-item [contract]="negotiation">
+        <p price *ngIf="negotiation.price as price">
+          <ng-container *ngIf="price > 0; else askPrice">
+            <span>{{ price | currency: negotiation.currency }}</span>
+          </ng-container>
+          <ng-template #askPrice>
+            <span>Buyer requested Asking Price</span>
+          </ng-template>
+        </p>
+        <ng-template #termAction let-term>
+          <a mat-icon-button matTooltip="View"
+            [routerLink]="['/c/o/dashboard/crm/offer', offer.id, contract.id, 'form']"
+            [queryParams]="{ termId: term.id }">
+            <mat-icon svgIcon="visibility"></mat-icon>
+          </a>
+          <button mat-icon-button matTooltip="Delete" (click)="confirm(term)">
+            <mat-icon svgIcon="delete"></mat-icon>
+          </button>
         </ng-template>
-      </p>
 
-      <ng-template #termAction let-term>
-        <a
-          mat-icon-button
-          matTooltip="View"
-          [routerLink]="['/c/o/dashboard/crm/offer', offer.id, contract.id, 'form']"
-          [queryParams]="{ termId: term.id }"
-        >
-          <mat-icon svgIcon="visibility"></mat-icon>
-        </a>
-        <button mat-icon-button matTooltip="Delete" (click)="confirm(term)">
-          <mat-icon svgIcon="delete"></mat-icon>
-        </button>
-      </ng-template>
-
-      <footer *ngIf="contract.title as title">
-        <holdbacks-form
-          [holdbacks]="contract.holdbacks"
-          [title]="title"
-          (holdbacksChange)="updateHoldbacks(contract.id, $event)">
-        </holdbacks-form>
-      </footer>
-    </contract-item>
+        <footer *ngIf="negotiation.title as title">
+          <holdbacks-form [holdbacks]="contract.holdbacks" [title]="title"
+            (holdbacksChange)="updateHoldbacks(contract.id, $event)">
+          </holdbacks-form>
+        </footer>
+      </contract-item>
+    </ng-container>
   </ng-container>
 </ng-container>
-
-

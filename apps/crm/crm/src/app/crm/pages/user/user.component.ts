@@ -8,6 +8,7 @@ import { UserRole, PermissionsService } from '@blockframes/permissions/+state';
 import { CrmService } from '@blockframes/admin/crm/+state';
 import { Observable, Subscription } from 'rxjs';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
+import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 
 // Material
 import { MatDialog } from '@angular/material/dialog';
@@ -17,6 +18,7 @@ import { EventService } from '@blockframes/event/+state/event.service';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { App, getOrgAppAccess } from '@blockframes/utils/apps';
+import { Scope } from '@blockframes/utils/static-model';
 
 @Component({
   selector: 'crm-user',
@@ -236,5 +238,9 @@ export class UserComponent implements OnInit {
       const id = invitation.fromOrg ? invitation.fromOrg.id : invitation.toOrg?.id;
       this.router.navigate(['/c/o/dashboard/crm/organization', id]);
     }
+  }
+
+  openDetails(terms: string[], scope: Scope) {
+    this.dialog.open(DetailedTermsComponent, { data: { terms, scope }, maxHeight: '80vh', autoFocus: false });
   }
 }

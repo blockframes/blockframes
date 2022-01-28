@@ -11,6 +11,8 @@ import { EventRangeModule } from '@blockframes/event/pipes/event-range.pipe'
 // Component
 import { UpcomingScreeningsComponent } from './upcoming-screenings.component';
 import { OngoingButtonModule } from '@blockframes/ui/ongoing-button/ongoing-button.module';
+import { RequestScreeningModule } from '@blockframes/event/components/request-screening/request-screening.module';
+import { RequestAskingPriceModule } from '@blockframes/movie/components/request-asking-price/request-asking-price.module';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -26,6 +28,8 @@ import { MatDividerModule } from '@angular/material/divider';
     EventRangeModule,
     RouterModule,
     OngoingButtonModule,
+    RequestScreeningModule,
+    RequestAskingPriceModule,
 
     // Material
     MatButtonModule,

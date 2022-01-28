@@ -8,7 +8,6 @@ import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
-import { MovieService } from '@blockframes/movie/+state';
 
 @Component({
   selector: 'catalog-contract-view',
@@ -19,11 +18,15 @@ import { MovieService } from '@blockframes/movie/+state';
 export class ContractViewComponent {
   activeOrgId = this.orgQuery.getActiveId();
 
+  contracts$ = this.shell.offer$.pipe(
+    map(offer => [...(offer.contracts??[]), ...(offer.declinedContracts??[])])
+  );
+
   contract$ = combineLatest([
-    this.shell.offer$,
+    this.contracts$,
     this.route.params.pipe(pluck('contractId'))
   ]).pipe(
-    map(([offer, id]) => offer.contracts?.find(contract => contract.id === id)),
+    map(([contracts, id]) => contracts.find(contract => contract.id === id)),
   );
 
   constructor(
@@ -42,8 +45,9 @@ export class ContractViewComponent {
       const sale = await this.contract$.pipe(first()).toPromise();
       this.negotiationService.update(
         sale.negotiation.id, { status: 'accepted' }, { params: { contractId: sale.id } }
-      )
-      this.snackBar.open(`You accepted contract for ${sale.title.title.international}`);
+      );
+      const config = { duration: 6000 };
+      this.snackBar.open(`You accepted contract for ${sale.title.title.international}`, null, config);
     }
 
     const data = {

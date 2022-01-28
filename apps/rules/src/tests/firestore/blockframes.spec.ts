@@ -1,12 +1,6 @@
-﻿import {
-  apps,
-  assertFails,
-  assertSucceeds,
-} from '@firebase/rules-unit-testing';
+﻿import { apps, assertFails, assertSucceeds } from '@firebase/rules-unit-testing';
 import { metaDoc } from '@blockframes/utils/maintenance';
-import { testFixture } from './fixtures/data';
-import { Firestore, initFirestoreApp } from '@blockframes/testing/firebase/functions';
-
+import { Firestore, initFirestoreApp, rulesFixtures as testFixture } from '@blockframes/testing/unit-tests';
 
 describe('Blockframe In Maintenance', () => {
   const projectId = `bfrules-spec-${Date.now()}`;
@@ -68,4 +62,3 @@ describe('Blockframe Not In Maintenance', () => {
     await assertSucceeds(usersRef.get());
   });
 });
-

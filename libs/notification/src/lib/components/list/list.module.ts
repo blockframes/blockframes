@@ -6,7 +6,6 @@ import { NotificationItemModule } from '../item/item.module';
 import { MatListModule } from '@angular/material/list';
 
 import { FilterByDateModule } from '@blockframes/utils/pipes/filter-by-date.pipe';
-import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   declarations: [ListComponent],
@@ -15,8 +14,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     CommonModule,
     FilterByDateModule,
     NotificationItemModule,
-    MatListModule,
-    MatPaginatorModule
+    MatListModule
   ]
 })
 export class NotificationListModule { }

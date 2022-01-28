@@ -10,6 +10,7 @@ import { AlgoliaChipsAutocompleteModule } from '@blockframes/ui/algolia/chips-au
 import { DeepKeyPipeModule } from '@blockframes/utils/pipes';
 import { DisplayUserModule } from '@blockframes/utils/pipes/display-user.pipe';
 import { StorageFileModule } from '@blockframes/media/pipes/storageFile.pipe';
+import { EventFromShellModule } from '@blockframes/event/form/shell/shell.module';
 
 // Material
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -30,6 +31,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     DeepKeyPipeModule,
     DisplayUserModule,
     StorageFileModule,
+    EventFromShellModule,
     // Material
     MatProgressBarModule,
     MatIconModule,

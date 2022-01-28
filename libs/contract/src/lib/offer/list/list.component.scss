@@ -15,14 +15,21 @@ bf-table {
   width: 100%;
 }
 
-.empty{
+.empty {
   margin: auto;
-  h1, p{
-   text-align: center;
- }
- img{
-   margin-top: 24px;
-   max-width: 200px;
-   max-height: 200px;
- }
+  h1,
+  p {
+    text-align: center;
+  }
+  img {
+    margin-top: 24px;
+    max-width: 200px;
+    max-height: 200px;
+  }
+}
+
+div {
+  text-overflow: ellipsis;
+  overflow-wrap: break-word;
+  overflow: hidden;
 }

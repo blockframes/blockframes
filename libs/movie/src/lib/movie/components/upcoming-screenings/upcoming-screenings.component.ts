@@ -12,6 +12,8 @@ import { Screening } from '@blockframes/event/+state/event.firestore';
 // RxJs
 import { map, shareReplay } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { RequestAskingPriceComponent } from '../request-asking-price/request-asking-price.component';
 
 @Component({
   selector: 'movie-screening',
@@ -26,7 +28,7 @@ export class UpcomingScreeningsComponent {
 
   public sessionCtrl = new FormControl(0);
 
-  public movie$ = this.query.selectActive();
+  public movieId = this.query.getActiveId();
 
   public ongoingScreenings$: Observable<Event<Screening>[]>;
   public futureScreenings$: Observable<Event<Screening>[]>;
@@ -37,6 +39,7 @@ export class UpcomingScreeningsComponent {
 
   constructor(
     private query: MovieQuery,
+    private dialog: MatDialog,
     private eventService: EventService,
     private invitationService: InvitationService,
     private orgService: OrganizationService,
@@ -83,5 +86,14 @@ export class UpcomingScreeningsComponent {
     ]).pipe(
       map(([screenings, invitations]) => invitations.some(invitation => invitation.eventId === screenings[index].id))
     )
+  }
+
+  requestAskingPrice() {
+    this.dialog.open(RequestAskingPriceComponent, {
+      data: { movieId: this.movieId },
+      maxHeight: '80vh',
+      maxWidth: '650px',
+      autoFocus: false
+    });
   }
 }

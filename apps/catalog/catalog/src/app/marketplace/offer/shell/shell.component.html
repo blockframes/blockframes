@@ -1,8 +1,5 @@
 <ng-container *ngIf="offer$ | async as offer">
   <header>
-    <a mat-icon-button routerLink="..">
-      <mat-icon svgIcon="arrow_back"></mat-icon>
-    </a>
     <bf-tag>{{ offer.status | toLabel:'offerStatus' }}</bf-tag>
     <article>
       <div>
@@ -13,7 +10,7 @@
         <h2>
           {{ contracts.length}} {{contracts.length>1 ? 'Titles':'Title'}}
         </h2>
-        <h2 *ngIf="contracts | total:'income.price' as price; else noPrice">
+        <h2 *ngIf="contracts | total:'negotiation.price' as price; else noPrice">
           Total: {{ price | currency:offer.currency }}
         </h2>
         <ng-template #noPrice>

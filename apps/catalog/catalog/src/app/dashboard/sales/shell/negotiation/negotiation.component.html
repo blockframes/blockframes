@@ -3,13 +3,14 @@
   <span>Come back to Contract List</span>
 </a>
 
-<negotiation-form [form]="form" [activeTerm]="activeTerm"></negotiation-form>
+<negotiation-form [form]="form" [activeTerm]="activeTerm" [currency]="negotiation?.currency"></negotiation-form>
+
 <footer fxLayout fxLayoutAlign="space-between center">
   <button mat-stroked-button color="primary" (click)="decline()">
     <mat-icon svgIcon="refuse"></mat-icon>
     <span>Decline</span>
   </button>
-  <button mat-flat-button color="primary" (click)="confirm()" [disabled]="form.invalid">
+  <button mat-flat-button color="primary" (click)="submit()" [disabled]="form.invalid">
     <span>Submit</span>
   </button>
 </footer>

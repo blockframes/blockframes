@@ -21,7 +21,6 @@ import { BucketStore, BucketState } from './bucket.store';
 import { createBucketTerm, createBucketContract } from './bucket.model';
 import { ContractService, convertDuration } from '../../contract/+state';
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
-import {  NegotiationStatus } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'buckets' })
@@ -87,53 +86,38 @@ export class BucketService extends CollectionService<BucketState> {
 
     const promises = bucket.contracts.map(async (contract) => {
       const contractId = this.db.createId();
-      const terms = contract.terms
-        .map(t => ({ ...t, contractId, id: this.db.createId() }));
-      const termIds = terms.map(t => t.id);
       const parentTerms = await this.termService.getValue(contract.parentTermId);
       const parentContract = await this.contractService.getValue(parentTerms.contractId);
 
       const commonFields = {
-        status: 'pending' as NegotiationStatus,
         buyerId: orgId,
         buyerUserId: this.authQuery.userId,
         sellerId: centralOrgId.catalog,
         stakeholders: [...parentContract.stakeholders, orgId],
-        offerId,
-        specificity,
-        delivery,
-      }
+      };
+
       // Create the contract
       await this.contractService.add({
-        _meta: createDocumentMeta({ createdAt: new Date(), }),
+        _meta: createDocumentMeta(),
+        status: 'pending',
         id: contractId,
         type: 'sale',
         titleId: contract.titleId,
         parentTermId: contract.parentTermId,
-        termIds,
         holdbacks: contract.holdbacks,
+        offerId,
+        specificity,
+        delivery,
         ...commonFields
       });
 
-
-      //add the default negotiation.
-      await this.contractService.addNegotiation(contractId, {
+      // Add the default negotiation.
+       this.contractService.addNegotiation(contractId, {
         ...contract,
-        ...commonFields
-      })
-      // @dev: Create income & terms after contract because rules require contract to be created first
-      // Create the terms
-      await this.termService.add(terms);
-      // Create the income
-      await this.incomeService.add({
-        id: contractId,
-        status: 'pending',
-        termsId: contract.parentTermId,
-        price: contract.price,
-        currency: bucket.currency,
-        offerId
-      });
-
+        ...commonFields,
+        initial: new Date(),
+        currency,
+      }).catch(err => console.error(err));
     });
     return Promise.all(promises);
   }

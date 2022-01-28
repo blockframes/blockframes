@@ -14,6 +14,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 interface NotificationSetting { text: string, tooltip: boolean };
 const titleType: Record<NotificationTypesBase, NotificationSetting> = {
   movieAccepted: { text: 'A title is successfully published on the marketplace.', tooltip: false },
+  movieAskingPriceRequested: { text: `A user requests the asking price for a title.`, tooltip: false },
+  movieAskingPriceRequestSent: { text: `Your request for the asking price has been sent.`, tooltip: false },
   requestFromUserToJoinOrgCreate: { text: 'A user requests to join your organization.', tooltip: true },
   requestFromUserToJoinOrgDeclined: { text: 'A user\'s request to join your organization was declined. ', tooltip: false },
   orgMemberUpdated: { text: 'A user joins or leaves your organization.', tooltip: false },
@@ -25,8 +27,16 @@ const titleType: Record<NotificationTypesBase, NotificationSetting> = {
   requestToAttendEventCreated: { text: 'A user wants to join an event you\'re organizing. (RECOMMENDED)', tooltip: true },
   invitationToAttendMeetingCreated: { text: 'You are invited to a meeting. (RECOMMENDED)', tooltip: true },
   invitationToAttendScreeningCreated: { text: 'You are invited to a screening. (RECOMMENDED)', tooltip: true },
+  screeningRequested: { text: 'A screening has been requested. (RECOMMENDED)', tooltip: false },
+  screeningRequestSent: { text: 'Your screening request for screening was successfully sent', tooltip: false },
   offerCreatedConfirmation: { text: 'Your offer is successfully sent', tooltip: false },
-  contractCreated: { text: 'An offer is made on one of your titles. (RECOMMENDED)', tooltip: true }
+  contractCreated: { text: 'An offer is made on one of your titles. (RECOMMENDED)', tooltip: true },
+  createdCounterOffer: { text: 'You\'ve created a counter offer.', tooltip: true },
+  receivedCounterOffer: { text: 'You\'ve received a counter offer. (RECOMMENDED)', tooltip: true },
+  myOrgAcceptedAContract: { text: 'You accepted a counter offer. (RECOMMENDED)', tooltip: true },
+  myContractWasAccepted: { text: 'Your counter offer was accepted. (RECOMMENDED)', tooltip: true },
+  myOrgDeclinedAContract: { text: 'You declined a counter offer. (RECOMMENDED)', tooltip: true },
+  myContractWasDeclined: { text: 'Your counter offer was declined. (RECOMMENDED)', tooltip: true },
 };
 
 const tables: { title: string, types: string[], appAuthorized: App[] }[] = [
@@ -37,7 +47,11 @@ const tables: { title: string, types: string[], appAuthorized: App[] }[] = [
   },
   {
     title: 'Content Management',
-    types: ['movieAccepted'],
+    types: [
+      'movieAccepted',
+      'movieAskingPriceRequested',
+      'movieAskingPriceRequestSent'
+    ],
     appAuthorized: ['catalog', 'festival', 'financiers']
   },
   {
@@ -51,6 +65,8 @@ const tables: { title: string, types: string[], appAuthorized: App[] }[] = [
       'requestToAttendEventUpdated',
       'oneDayReminder',
       'eventIsAboutToStart',
+      'screeningRequested',
+      'screeningRequestSent'
     ],
     appAuthorized: ['festival']
   },
@@ -59,6 +75,18 @@ const tables: { title: string, types: string[], appAuthorized: App[] }[] = [
     types: [
       'offerCreatedConfirmation',
       'contractCreated',
+    ],
+    appAuthorized: ['catalog']
+  },
+  {
+    title: 'Negotiation Management',
+    types: [
+      'myContractWasAccepted',
+      'myOrgAcceptedAContract',
+      'myOrgDeclinedAContract',
+      'myContractWasDeclined',
+      'createdCounterOffer',
+      'receivedCounterOffer',
     ],
     appAuthorized: ['catalog']
   }

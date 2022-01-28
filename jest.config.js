@@ -4,6 +4,8 @@
     '<rootDir>/apps/backend-ops',
     '<rootDir>/apps/festival',
     '<rootDir>/apps/rules',
-    '<rootDir>/apps/libs'
+    '<rootDir>/apps/libs',
+    '<rootDir>/libs/testing/cypress',
+    '<rootDir>/libs/testing/e2e',
   ],
 };

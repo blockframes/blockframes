@@ -21,10 +21,10 @@
   },
   "projects": {
     "ui": {
-      "tags": ["ui", "shared"]
+      "tags": ["ui"]
     },
     "utils": {
-      "tags": ["utils", "shared"]
+      "tags": ["utils"]
     },
     "contract": {
       "tags": []
@@ -39,10 +39,10 @@
       "tags": []
     },
     "backend-functions": {
-      "tags": []
+      "tags": ["node"]
     },
     "backend-ops": {
-      "tags": ["backend-ops", "ops"]
+      "tags": ["backend-ops", "ops", "node", "local"]
     },
     "notification": {
       "tags": ["notification"]
@@ -85,9 +85,6 @@
       "tags": [],
       "implicitDependencies": ["crm"]
     },
-    "testing": {
-      "tags": []
-    },
     "invitation": {
       "tags": []
     },
@@ -111,7 +108,16 @@
       "tags": []
     },
     "rules": {
-      "tags": ["shared security rules"]
+      "tags": ["security rules", "local", "node"]
+    },
+    "testing-unit-tests": {
+      "tags": ["node", "local"]
+    },
+    "testing-cypress": {
+      "tags": ["node", "local"]
+    },
+    "testing-e2e": {
+      "tags": ["shared"]
     }
   }
 }

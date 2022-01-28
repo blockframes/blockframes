@@ -20,7 +20,7 @@ export class PermissionsService extends CollectionService<PermissionsState> {
   }
 
   /**
-   * Takes a document (movie or contract), create relative permissions
+   * Takes a document (movie or event), create relative permissions
    * and add them to documentPermissions subcollection.
    * @param doc
    * @param write

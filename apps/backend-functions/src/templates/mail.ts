@@ -13,7 +13,15 @@ import { App, appName, Module } from '@blockframes/utils/apps';
 import { Bucket } from '@blockframes/contract/bucket/+state/bucket.model';
 import { format } from "date-fns";
 import { testEmail } from "@blockframes/e2e/utils/env";
-import { EventDocument, EventMeta } from '@blockframes/event/+state/event.firestore';
+import { Offer } from '@blockframes/contract/offer/+state';
+import type { ContractDocument } from '@blockframes/contract/contract/+state';
+import { createMailContract } from '@blockframes/contract/contract/+state/contract.firestore';
+
+import { NegotiationDocument } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
+import { staticModel } from '@blockframes/utils/static-model';
+import { Timestamp } from '../data/internals';
+import { createMailTerm } from '@blockframes/contract/term/+state/term.firestore';
+import { displayName } from '@blockframes/utils/utils';
 
 const ORG_HOME = '/c/o/organization/';
 const USER_CREDENTIAL_INVITATION = '/auth/identity';
@@ -295,24 +303,114 @@ export function reminderEventToUser(
   return { to: toUser.email, templateId: template, data };
 }
 
+/** Generate an email to seller mentioning a screening has been requested */
+export function screeningRequestedToSeller(
+  toUser: UserEmailData,
+  buyer: PublicUser,
+  movie: MovieDocument,
+): EmailTemplateRequest {
+  const data = {
+    buyer,
+    movie,
+    pageURL: `${appUrl.market}/c/o/dashboard/event?request=${movie.id}`
+  };
+  return { to: toUser.email, templateId: templateIds.event.screeningRequested, data };
+}
+
 /** Generate an email when a movie is accepted */
 export function movieAcceptedEmail(toUser: UserEmailData, movieTitle: string, movieUrl: string): EmailTemplateRequest {
   const data = { user: toUser, movieTitle, movieUrl };
   return { to: toUser.email, templateId: templateIds.movie.accepted, data };
 }
 
+export function movieAskingPriceRequested(toUser: UserEmailData, fromBuyer: UserEmailData, movieTitle: string, territories: string, message: string): EmailTemplateRequest {
+  const data = {
+    user: toUser,
+    buyer: displayName(fromBuyer),
+    movieTitle,
+    territories,
+    message,
+    pageURL: `mailto:${fromBuyer.email}?subject=Interest in ${movieTitle} via Archipel Market`
+  };
+  return { to: toUser.email, templateId: templateIds.movie.askingPriceRequested, data };
+}
+
+export function movieAskingPriceRequestSent(toUser: UserEmailData, movie: MovieDocument, orgNames: string, territories: string, message: string): EmailTemplateRequest {
+  const data = {
+    user: toUser,
+    movieTitle: movie.title.international,
+    orgNames,
+    territories,
+    message,
+    pageURL: `${appUrl.market}/c/o/marketplace/title/${movie.id}`
+  }
+
+  return { to: toUser.email, templateId: templateIds.movie.askingPriceRequestSent, data };
+}
+
 /** Inform user of org whose movie is being bought */
-export function contractCreatedEmail(toUser: UserEmailData, movieTitle: string, app: App): EmailTemplateRequest {
-  const data = { user: toUser, app: { name: app }, title: { names: movieTitle } };
+export function contractCreatedEmail(
+  toUser: UserEmailData, title: MovieDocument, app: App, contract: ContractDocument,
+  negotiation: NegotiationDocument, buyerOrg: OrganizationDocument
+): EmailTemplateRequest {
+  const data = { user: toUser, app: { name: app }, title, contract, negotiation, buyerOrg, baseUrl: appUrl.content };
   return { to: toUser.email, templateId: templateIds.contract.created, data };
 }
 
 /** Template for admins. It is to inform admins of Archipel Content a new offer has been created with titles, prices, etc in the template */
-export function offerCreatedConfirmationEmail(toUser: UserEmailData, org: OrganizationDocument, bucket: Bucket): EmailTemplateRequest {
+export function adminOfferCreatedConfirmationEmail(toUser: UserEmailData, org: OrganizationDocument, bucket: Bucket<Timestamp>): EmailTemplateRequest {
   const date = format(new Date(), 'dd MMMM, yyyy');
-  const data = { org, bucket, user: toUser, baseUrl: appUrl.content, date };
-  return { to: toUser.email, templateId: templateIds.offer.created, data };
+  const contracts = createMailContract(bucket.contracts);
+  const data = { org, bucket: { ...bucket, contracts }, user: toUser, baseUrl: appUrl.content, date };
+  return { to: toUser.email, templateId: templateIds.offer.toAdmin, data };
 }
+
+/**To inform buyer that his offer has been successfully created. */
+export function buyerOfferCreatedConfirmationEmail(toUser: UserEmailData, org: OrganizationDocument, offerId: string, bucket: Bucket<Timestamp>): EmailTemplateRequest {
+  const date = format(new Date(), 'dd MMMM, yyyy');
+  const contracts = createMailContract(bucket.contracts);
+  const data = { org, bucket: { ...bucket, contracts }, user: toUser, baseUrl: appUrl.content, date, offerId };
+  return { to: toUser.email, templateId: templateIds.offer.toBuyer, data };
+}
+
+export function counterOfferRecipientEmail(
+  toUser: UserEmailData, senderOrg: OrganizationDocument, offerId: string,
+  title: MovieDocument, contractId: string, options: { isMailRecipientBuyer: boolean }
+): EmailTemplateRequest {
+  const data = {
+    user: toUser, baseUrl: appUrl.content, offerId, org: senderOrg,
+    contractId, title, isRecipientBuyer: options.isMailRecipientBuyer
+  };
+  return { to: toUser.email, templateId: templateIds.negotiation.receivedCounterOffer, data };
+}
+
+export function counterOfferSenderEmail(
+  toUser: UserEmailData, org: OrganizationDocument, offerId: string,
+  negotiation: NegotiationDocument, contractId: string, options: { isMailRecipientBuyer: boolean }
+): EmailTemplateRequest {
+  const terms = createMailTerm(negotiation.terms);
+  const currency = staticModel['movieCurrencies'][negotiation.currency];
+  const data = {
+    user: toUser, baseUrl: appUrl.content, offerId, org,
+    contractId, isRecipientBuyer: options.isMailRecipientBuyer,
+    negotiation: { ...negotiation, terms, currency }
+  };
+  return { to: toUser.email, templateId: templateIds.negotiation.createdCounterOffer, data };
+}
+
+
+//Sent when all the contracts of an offer have either been accepted or declined.
+export function offerAcceptedOrDeclined(
+  user: UserEmailData, offer: Offer, contracts: ContractDocument[]
+): EmailTemplateRequest {
+
+  const data = {
+    contracts, baseUrl: appUrl.content, offer, user
+  };
+  const templateId = templateIds.offer.allContractsRespondedTo;
+  return { to: user.email, templateId, data };
+}
+
 
 // ------------------------- //
 //      CASCADE8 ADMIN       //
@@ -381,7 +479,7 @@ export async function userFirstConnexion(user: PublicUser): Promise<EmailRequest
 
 export function sendDemoRequestMail(information: RequestDemoInformations) {
   return {
-    to: information.test ? information.testEmailTo : getSupportEmail(information.app),
+    to: information.testEmailTo || getSupportEmail(information.app),
     subject: 'A demo has been requested',
     text: `A user wants to schedule a demo.
 
