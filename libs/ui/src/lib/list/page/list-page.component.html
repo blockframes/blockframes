@@ -59,7 +59,7 @@
         </div>
       </ng-container>
       <ng-template #displayList>
-        <div class="item-list" *ngFor="let item of items">
+        <div class="item" *ngFor="let item of items">
 
           <!-- INSERT LIST ITEM -->
           <ng-template [ngTemplateOutlet]="listItemTemplate" [ngTemplateOutletContext]="{$implicit: item}">
