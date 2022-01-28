@@ -104,6 +104,10 @@
     "cms": {
       "tags": []
     },
+    "cms-e2e": {
+      "tags": [],
+      "implicitDependencies": ["cms"]
+    },
     "consents": {
       "tags": []
     },
