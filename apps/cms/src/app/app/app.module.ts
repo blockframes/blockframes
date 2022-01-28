@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
+import { UploadWidgetModule } from '@blockframes/media/file/upload-widget/upload-widget.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -12,6 +13,7 @@ import { MatListModule } from '@angular/material/list';
     CommonModule,
     MatSidenavModule,
     MatListModule,
+    UploadWidgetModule,
     RouterModule.forChild([{
       path: '',
       component: AppComponent,

@@ -1,4 +1,4 @@
-import { LocalAudioTrack, LocalVideoTrack, RemoteAudioTrack, RemoteVideoTrack } from 'twilio-video';
+import { LocalAudioTrack, LocalVideoTrack, RemoteAudioTrack, RemoteParticipant, RemoteVideoTrack } from 'twilio-video';
 
 export type Tracks = LocalTracks | RemoteTracks;
 export interface LocalTracks {
@@ -13,13 +13,15 @@ export interface RemoteTracks {
 
 export type TrackKind = keyof Tracks;
 
-export type AttendeeKind = 'local' | 'remote';
+type AttendeeKind = 'local' | 'remote';
 export interface Attendee {
   id: string;
   kind: AttendeeKind,
   tracks: Tracks,
   userName: string,
 }
+
+export type Attendees = { local?: LocalAttendee } & Record<string, RemoteAttendee>;
 
 export interface LocalAttendee extends Attendee {
   kind: 'local',
@@ -29,4 +31,13 @@ export interface LocalAttendee extends Attendee {
 export interface RemoteAttendee extends Attendee {
   kind: 'remote',
   tracks: RemoteTracks,
+}
+
+export function createRemoteAttendee(participant: RemoteParticipant, tracks: RemoteTracks = {}): RemoteAttendee {
+  return {
+    id: participant.sid,
+    kind: 'remote',
+    userName: JSON.parse(participant.identity).displayName,
+    tracks
+  }
 }
