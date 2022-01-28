@@ -17,7 +17,7 @@ export class AvailsFilterComponent {
   @Input('availsFilter') form: AvailsForm | MapAvailsForm | CalendarAvailsForm;
   @HostBinding('class.vertical') @Input() @boolean vertical: boolean;
 
-  public safeGet(key: keyof AvailsFilter) {
+  public getControl(key: keyof AvailsFilter) {
     return this.form.controls[key];
   }
 }
