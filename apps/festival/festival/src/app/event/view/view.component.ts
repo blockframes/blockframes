@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, HostListener } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, HostListener, ChangeDetectorRef } from '@angular/core';
 import { EventService } from '@blockframes/event/+state';
 import { ActivatedRoute } from '@angular/router';
 import { InvitationService, Invitation } from '@blockframes/invitation/+state';
@@ -26,7 +26,7 @@ export class EventViewComponent implements OnInit {
   accessRoute: string;
   user$ = this.authQuery.user$;
   event$: Observable<Event>;
-  requestSent = new BehaviorStore(false);
+  requestSent = false;
   private statusChanged = new BehaviorSubject(false);
   public timerEnded = false;
   private preventBrowserEvent = false;
@@ -39,7 +39,8 @@ export class EventViewComponent implements OnInit {
     private authQuery: AuthQuery,
     private authService: AuthService,
     private dynTitle: DynamicTitleService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private cdr: ChangeDetectorRef
   ) { }
 
   @HostListener('window:popstate', ['$event'])
@@ -104,7 +105,8 @@ export class EventViewComponent implements OnInit {
       autoFocus: false
     });
     ref.afterClosed().subscribe(isSent => {
-      this.requestSent.value = !!isSent;
+      this.requestSent = !!isSent;
+      this.cdr.markForCheck();
     });
   }
 }

@@ -11,9 +11,9 @@
           <ng-container *ngIf="_invitation.mode === 'invitation'; else request">
             <ng-container *ngIf="event.type === 'meeting'; else inviteScreening">
 
-              <ng-container *ngIf="fromUser.$ | async as user">
+              <ng-container *ngIf="fromUser">
                 <p matLine fxLayout="row wrap" fxLayoutGap="6px">
-                  <a [href]="'mailto:' + user.email">{{ user | displayUser | async }}</a> 
+                  <a [href]="'mailto:' + fromUser.email">{{ fromUser | displayUser | async }}</a> 
                   <span>
                     invited you to {{ event.type }}
                     <a [target]="targetLink" [href]="[applicationUrl.festival + '/event/' + _invitation.eventId + '/r/i/lobby']" id="link">{{ event.title }}</a>
@@ -38,9 +38,9 @@
           <ng-template #request>
             <ng-container *ngIf="event.type === 'meeting'; else requestScreening">
 
-              <ng-container *ngIf="fromUser.$ | async as user">
+              <ng-container *ngIf="fromUser">
                 <p matLine fxLayout="row wrap" fxLayoutGap="6px">
-                  <a [href]="'mailto:' + user.email">{{ user | displayUser | async }}</a> 
+                  <a [href]="'mailto:' + fromUser.email">{{ fromUser | displayUser | async }}</a> 
                   <span>
                     would like to attend {{ event.type }}
                     <a [target]="targetLink" [href]="[applicationUrl.festival + '/event/' + _invitation.eventId + '/r/i']" id="link">{{ event.title }}</a>

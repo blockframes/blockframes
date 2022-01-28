@@ -25,7 +25,7 @@
           </article>
         </ng-template>
 
-        <button class="requestAskingPrice" *ngIf="event.accessibility === 'private'" mat-flat-button color="primary" [disabled]="requestSent.$ | async" (click)="requestAskingPrice(event.meta.titleId)">Request Asking Price</button>
+        <button class="requestAskingPrice" *ngIf="event.accessibility === 'private'" mat-flat-button color="primary" [disabled]="requestSent" (click)="requestAskingPrice(event.meta.titleId)">Request Asking Price</button>
 
         <img asset="screening_now.svg" alt="Cinema room">
       </ng-container>
