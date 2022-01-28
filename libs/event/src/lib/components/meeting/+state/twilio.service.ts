@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { PublicUser } from '@blockframes/user/types';
 import { ErrorResultResponse } from '@blockframes/utils/utils';
+import { BehaviorSubject } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import {
   createLocalAudioTrack,
@@ -23,10 +25,11 @@ import {
   RemoteTracks,
   LocalAttendee,
   RemoteAttendee,
+  createRemoteAttendee,
+  Attendees,
 } from './twilio.model';
-import { TwilioQuery } from './twilio.query';
-import { TwilioStore } from './twilio.store';
 
+type GetAttendee<Id> = Id extends 'local' ? LocalAttendee : RemoteAttendee;
 
 @Injectable({ providedIn: 'root' })
 export class TwilioService {
@@ -36,11 +39,16 @@ export class TwilioService {
 
   private preference: { [K in TrackKind]: boolean } = { 'video': true, 'audio': true };
 
-  constructor(
-    private functions: AngularFireFunctions,
-    private twilioStore: TwilioStore,
-    private twilioQuery: TwilioQuery,
-  ) { }
+  private _attendees = new BehaviorSubject<Attendees>({});
+  private _attendees$ = this._attendees.asObservable();
+  attendees$ = this._attendees.asObservable().pipe(map(p => Object.values(p)));
+  localAttendee$ = this._attendees$.pipe(map(p => p['local'] as LocalAttendee));
+
+  get localAttendee() {
+    return this._attendees.value['local'] as LocalAttendee;
+  }
+
+  constructor(private functions: AngularFireFunctions) { }
 
   getToken(eventId: string, credentials: Partial<PublicUser>) {
     return this.getAccessToken({ eventId, credentials }).toPromise<ErrorResultResponse>();
@@ -58,7 +66,7 @@ export class TwilioService {
       userName,
       tracks: {},
     };
-    this.twilioStore.upsert(local.id, local);
+    this.upsertAttendee(local.id, local);
 
     const [video, audio] = await Promise.all([
       createLocalVideoTrack().catch(() => null),
@@ -69,11 +77,11 @@ export class TwilioService {
     if (!this.preference['video']) video.disable();
     if (!this.preference['audio']) audio.disable();
 
-    this.twilioStore.update(local.id, { tracks: { video, audio } });
+    this.upsertAttendee(local.id, { ...local, tracks: { video, audio } });
   }
 
   cleanLocal() {
-    const local = this.twilioQuery.localAttendee;
+    const local = this.localAttendee;
 
     if (!local) return;
 
@@ -82,28 +90,28 @@ export class TwilioService {
       track?.removeAllListeners();
     }
 
-    cleanTrack(local?.tracks?.video);
-    cleanTrack(local?.tracks?.audio);
+    cleanTrack(local.tracks?.video);
+    cleanTrack(local.tracks?.audio);
 
-    this.twilioStore.remove(local?.id);
+    this.removeAttendee(local.id);
   }
 
   async toggleTrack(kind: TrackKind) {
-    const track = this.twilioQuery.localAttendee.tracks[kind];
+    const localAttendee = this.localAttendee;
+    const track = localAttendee.tracks[kind];
     if (!track) return;
 
-    const localAttendee = this.twilioQuery.localAttendee;
     if (track.isEnabled) {
       track.disable();
       track.stop();
 
-      this.twilioStore.upsert(localAttendee.id, {
-        id: localAttendee.id,
+      this.upsertAttendee(localAttendee.id, {
+        ...localAttendee,
         tracks: {
           video: kind === 'video' ? track as LocalVideoTrack : localAttendee.tracks.video,
           audio: kind === 'audio' ? track as LocalAudioTrack : localAttendee.tracks.audio
         }
-      })
+      });
 
       if (this.room) {
         const key = kind === 'video' ? 'videoTracks' : 'audioTracks';
@@ -118,13 +126,13 @@ export class TwilioService {
         ? await createLocalVideoTrack().catch(() => null)
         : await createLocalAudioTrack().catch(() => null);
 
-      this.twilioStore.upsert(localAttendee.id, {
-        id: localAttendee.id,
+      this.upsertAttendee(localAttendee.id, {
+        ...localAttendee,
         tracks: {
           video: kind === 'video' ? localTrack as LocalVideoTrack : localAttendee.tracks.video,
           audio: kind === 'audio' ? localTrack as LocalAudioTrack : localAttendee.tracks.audio
         }
-      })
+      });
 
       if (this.room) {
         this.room.localParticipant.publishTrack(localTrack);
@@ -142,11 +150,11 @@ export class TwilioService {
     }
     const token = response.result;
 
-    if (!this.twilioQuery.localAttendee) {
+    if (!this.localAttendee) {
       console.warn('CANNOT CONNECT WITHOUT A LOCAL ATTENDEE: call `initLocal()` first!');
       return;
     }
-    const localTracks = this.twilioQuery.localAttendee.tracks;
+    const localTracks = this.localAttendee.tracks;
 
     const tracks: (LocalVideoTrack | LocalAudioTrack)[] = [];
     if (localTracks.audio) tracks.push(localTracks.audio);
@@ -155,45 +163,41 @@ export class TwilioService {
     // Connect to Twilio room and register event listeners
     this.room = await connect(token, { name: eventId, tracks });
 
+    // Existing participants list
     this.room.participants.forEach((participant: RemoteParticipant) => {
-      this.twilioStore.upsert(participant.sid, { id: participant.sid, kind: 'remote', userName: JSON.parse(participant.identity).displayName, tracks: {} })
+      this.upsertAttendee(participant.sid, createRemoteAttendee(participant));
     })
 
+    // A new participant connected to room
     this.room.on('participantConnected', (participant: RemoteParticipant) => {
-      this.twilioStore.upsert(
-        participant.sid,
-        { id: participant.sid, kind: 'remote', userName: JSON.parse(participant.identity).displayName, tracks: {} }
-      );
+      this.upsertAttendee(participant.sid, createRemoteAttendee(participant));
     });
 
+    // When other (already connected or new) participants activate audio or video
     this.room.on(
       'trackSubscribed',
-      (track: RemoteTrack, publication: RemoteTrackPublication, participant: RemoteParticipant) => {
+      (track: RemoteTrack, _: RemoteTrackPublication, participant: RemoteParticipant) => {
         if (track.kind === 'data') return;
         const remoteTracks: RemoteTracks = { [track.kind]: track };
-        this.twilioStore.upsert(
-          participant.sid,
-          (entity: RemoteAttendee) => ({ tracks: { ...entity.tracks, ...remoteTracks } }),
-          id => ({ id, kind: 'remote', userName: JSON.parse(participant.identity).displayName, tracks: remoteTracks })
-        );
+
+        this.addTracks(participant.sid, participant, remoteTracks);
       },
     );
 
+    // When other already connected participants deactivate audio or video or leave the room
     this.room.on(
       'trackUnsubscribed',
-      (track: RemoteTrack, publication: RemoteTrackPublication, participant: RemoteParticipant) => {
+      (track: RemoteTrack, _: RemoteTrackPublication, participant: RemoteParticipant) => {
         if (track.kind === 'data') return;
         const remoteTracks: RemoteTracks = { [track.kind]: null };
-        this.twilioStore.upsert(
-          participant.sid,
-          (enitity: RemoteAttendee) => ({ tracks: { ...enitity.tracks, ...remoteTracks } }),
-          id => ({ id, kind: 'remote', userName: JSON.parse(participant.identity).displayName, tracks: remoteTracks })
-        )
+
+        this.addTracks(participant.sid, participant, remoteTracks);
       }
     )
 
+    // A participant leaved the room
     this.room.on('participantDisconnected', (participant: RemoteParticipant) => {
-      this.twilioStore.remove(participant.sid);
+      this.removeAttendee(participant.sid);
     });
   }
 
@@ -206,7 +210,32 @@ export class TwilioService {
     this.room.removeAllListeners();
     this.room = null;
 
-    this.twilioStore.remove(); // delete all entities from the store
+    this.removeAllAttendees();
   }
 
+  private addTracks(id: string, participant: RemoteParticipant, tracks: RemoteTracks) {
+    const remoteAttendee = createRemoteAttendee(participant, tracks);
+    const existingAttendee = this.getAttendee(id);
+    this.upsertAttendee(id, existingAttendee ? { ...existingAttendee, tracks: { ...existingAttendee.tracks, ...tracks } } : remoteAttendee);
+  }
+
+  private upsertAttendee(id: string, attendee: LocalAttendee | RemoteAttendee) {
+    const existingAttendees = this._attendees.value;
+    existingAttendees[id] = attendee as GetAttendee<typeof id>;
+    this._attendees.next(existingAttendees);
+  }
+
+  private removeAttendee(id: string) {
+    const existingAttendees = this._attendees.value;
+    delete existingAttendees[id];
+    this._attendees.next(existingAttendees);
+  }
+
+  private getAttendee(id: string) {
+    return this._attendees.value[id] as RemoteAttendee;
+  }
+
+  private removeAllAttendees() {
+    this._attendees.next({});
+  }
 }
