@@ -15,7 +15,10 @@ export function clearDataAndPrepareTest(path: string = '/auth') {
   cy.viewport('ipad-2', 'landscape');
 }
 
-/** Start on AuthWelcomePage, on AuthLoginPage and signin. You have to create a new page depending of the app. */
+/**
+ * Start on AuthWelcomePage, on AuthLoginPage and signin. You have to create a new page depending of the app.
+ * @deprecated Use newer signIn method - implemented in festival auth (and other apps too since auth is shared)
+ */
 export function signIn(user: Partial<User>, fillIdentity: boolean = false) {
   // ! This function will be replaced eventually. We are using the updated login method here now
   return loginWithEmail(user.email);
