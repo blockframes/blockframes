@@ -1,4 +1,4 @@
-<ng-container *ngIf="event$ |  async as event">
+<ng-container *ngIf="event$ | async as event">
     <!-- View component Layout header -->
     <header class="dark-contrast-theme" fxLayout="column" fxLayoutGap="16px">
       <button mat-icon-button (click)="goBack()">
@@ -11,15 +11,18 @@
           <ng-container *ngSwitchCase="'early'">
             <h6>
               <span>{{ event.accessibility | toLabel:'accessibility' }} {{ event.type }}</span>
-              <event-agenda-export [event]="event"></event-agenda-export>
+              <event-agenda-export [event]="event" color="primary"></event-agenda-export>
             </h6>
             <pre class="mat-body-1">{{ event | eventRange }}</pre>
             <p class="mat-body-2">{{ event.meta.description }}</p>
             <countdown-timer [title]="'Event will start in :'" [date]="event.start" [timeUnits]="['days', 'hours', 'minutes']" (timerEnded)="timerEnded = $event"></countdown-timer>
             <ng-container *ngIf="event.isOwner; else notOwner">
-              <h3>You are the owner of this event.</h3>
-              <p>You can invite members and edit the event config in your dashboard.</p>
-              <a mat-stroked-button color="primary" [routerLink]="editEvent">Edit Event</a>
+              <h5>You are the owner of this event.</h5>
+              <p class="mat-caption">You can invite members and edit the event config in your dashboard.</p>
+              <a mat-button color="primary" [routerLink]="editEvent">
+                <mat-icon svgIcon="edit"></mat-icon>
+                <span matLine>Edit Event</span>
+              </a>
             </ng-container>
             <ng-template #notOwner>
                 <invitation-action *ngIf="(invitation$ | async) !== undefined" @fade [invitation]="(invitation$ | async)" [event]="event" (statusChanged)="reloadInvitation()"></invitation-action>
@@ -63,9 +66,9 @@
             <h6>{{ event.type }} session closed</h6>
             <pre class="mat-body-1">{{ event | eventRange }}</pre>
             
-            <ng-container *ngIf="event.type === 'screening'">
+            <ng-container *ngIf="event.type === 'screening' && event.accessibility === 'private'">
               <event-request-screening [movieId]="event.meta.titleId"></event-request-screening>
-              <button mat-button (click)="requestAskingPrice(event.meta.titleId)">Request Asking Price</button>
+              <button mat-button [disabled]="requestSent" (click)="requestAskingPrice(event.meta.titleId)">Request Asking Price</button>
             </ng-container>
           </ng-container>
   

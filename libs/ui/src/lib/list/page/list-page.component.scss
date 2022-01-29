@@ -26,12 +26,19 @@ header {
 section {
   padding: 24px;
   width: 100%;
-
   img {
     width: 500px;
   }
 }
 
+.export-section {
+  margin-bottom: 24px;
+}
+
 span.mat-body-2 {
   margin-bottom: 16px;
+}
+
+.item {
+  margin-bottom: 28px;
 }

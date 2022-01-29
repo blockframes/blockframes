@@ -211,9 +211,9 @@ export async function extract<T>(rawRows: string[][], config: ExtractConfig<T> =
   return results;
 }
 
-export function getStatic(scope: Scope, value: string, separator: string, name: string) {
+export function getStatic(scope: Scope, value: string, separator: string, name: string, allKey = 'all') {
   if (!value) return [];
-  if (value.toLowerCase() === 'all') return parseToAll(scope, 'all');
+  if (value.toLowerCase() === allKey) return parseToAll(scope, allKey);
   const splitted = split(value, separator);
   const keys = splitted.map(v => getKeyIfExists(scope, v));
   const values = keys.filter(v => !!v);
@@ -230,8 +230,8 @@ export function getStatic(scope: Scope, value: string, separator: string, name: 
   return values
 }
 
-export function getStaticList(scope: Scope, value: string, separator:string, name: string, mandatory = true) {
-  const values = getStatic(scope, value, separator, name);
+export function getStaticList(scope: Scope, value: string, separator:string, name: string, mandatory = true, allKey = 'all') {
+  const values = getStatic(scope, value, separator, name, allKey);
   if (
     mandatory && (
       ('length' in values && values.length === 0) ||

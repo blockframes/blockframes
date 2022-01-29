@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { EventService, Event, isScreening, createMeetingAttendee } from '@blockframes/event/+state';
 import { BehaviorSubject, interval, Observable, Subscription } from 'rxjs';
 import { Meeting, MeetingPdfControl, MeetingVideoControl, Screening } from '@blockframes/event/+state/event.firestore';
@@ -20,8 +20,9 @@ import { StorageFile, StorageVideo } from '@blockframes/media/+state/media.fires
 import { InvitationService } from '@blockframes/invitation/+state/invitation.service';
 import { Invitation } from '@blockframes/invitation/+state';
 import { filter, pluck, scan, switchMap, take } from 'rxjs/operators';
-import { finalizeWithValue } from '@blockframes/utils/observable-helpers';
+import { BehaviorStore, finalizeWithValue } from '@blockframes/utils/observable-helpers';
 import { AuthService } from '@blockframes/auth/+state';
+import { RequestAskingPriceComponent } from '@blockframes/movie/components/request-asking-price/request-asking-price.component';
 
 const isMeeting = (meetingEvent: Event): meetingEvent is Event<Meeting> => {
   return meetingEvent.type === 'meeting';
@@ -54,6 +55,7 @@ export class SessionComponent implements OnInit, OnDestroy {
 
   private watchTimeInterval: Subscription;
   public isPlaying = false;
+  public requestSent = false;
 
   constructor(
     private functions: AngularFireFunctions,
@@ -70,6 +72,7 @@ export class SessionComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private twilioService: TwilioService,
     private snackbar: MatSnackBar,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -302,5 +305,18 @@ export class SessionComponent implements OnInit, OnDestroy {
 
     const duration = parseFloat(result.info.duration);
     return { type: 'video', isPlaying: false, position: 0, duration };
+  }
+
+  requestAskingPrice(movieId: string) {
+    const ref = this.dialog.open(RequestAskingPriceComponent, {
+      data: { movieId },
+      maxHeight: '80vh',
+      maxWidth: '650px',
+      autoFocus: false
+    });
+    ref.afterClosed().subscribe(isSent => {
+      this.requestSent = !!isSent;
+      this.cdr.markForCheck();
+    });
   }
 }

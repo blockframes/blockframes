@@ -26,7 +26,6 @@ import { PasswordConfirmModule } from '@blockframes/ui/form/password-confirm/pas
 import { ChangePasswordComponent } from './pages/change-password/change-password.component';
 import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 import { TermsConditionsModule } from './components/terms-conditions/terms-conditions.module';
-import { AcceptConditionsModule } from './components/accept-conditions/accept-conditions.module';
 import { PrivacyPolicyModule } from './components/privacy-policy/privacy-policy.module';
 import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module';
 import { OrganizationLiteFormModule } from '@blockframes/organization/forms/organization-lite-form/organization-lite-form.module';
@@ -67,7 +66,6 @@ export const AuthRoutes: Routes = [
     FlexLayoutModule,
     TermsConditionsModule,
     PrivacyPolicyModule,
-    AcceptConditionsModule,
     PasswordConfirmModule,
     ImageModule,
     AlgoliaAutocompleteModule,

@@ -22,8 +22,8 @@
         <mat-card>
           <article fxLayout="row" fxLayoutAlign="space-between start" flex>
             <h3>Attendees</h3>
-            <button [disabled]="exporting.$ | async" mat-button color="primary" (click)="exportTable()">
-              <ng-container *ngIf="exporting.$ | async else export">
+            <button [disabled]="exporting" mat-button color="primary" (click)="exportTable()">
+              <ng-container *ngIf="exporting else export">
                 <span>Generating CSV...</span>
               </ng-container>
               <ng-template #export>
@@ -35,10 +35,9 @@
           <bf-table pagination="50" useFilter [source]="analytics">
             <ng-template colRef="name" label="Name" let-name sort>{{ name | titlecase }}</ng-template>
             <ng-template colRef="email" label="Email Address" let-email sort>{{ email }}</ng-template>
-            <ng-template colRef="orgName" label="Company Name" let-orgName sort>{{ orgName }}</ng-template>
-            <ng-template colRef="orgActivity" label="Company Activity" let-orgActivity>{{ orgActivity | toLabel:
-              'orgActivity' }}</ng-template>
-            <ng-template colRef="orgCountry" label="Country" let-orgCountry>{{ orgCountry | toLabel: 'territories' }}
+            <ng-template colRef="orgName" label="Company Name" let-orgName sort>{{ orgName || dataMissing }}</ng-template>
+            <ng-template colRef="orgActivity" label="Company Activity" let-orgActivity>{{ orgActivity ? (orgActivity | toLabel: 'orgActivity') : dataMissing }}</ng-template>
+            <ng-template colRef="orgCountry" label="Country" let-orgCountry>{{ orgCountry ? (orgCountry | toLabel: 'territories') : dataMissing }}
             </ng-template>
             <ng-template *ngIf="hasWatchTime" colRef="watchTime" label="watch time" let-watchTime sort>{{ watchTime * 1000 | duration: '0min' }}
             </ng-template>

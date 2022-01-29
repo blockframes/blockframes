@@ -1,9 +1,9 @@
-import { Component, OnInit, ChangeDetectionStrategy, HostListener } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, HostListener, ChangeDetectorRef } from '@angular/core';
 import { EventService } from '@blockframes/event/+state';
 import { ActivatedRoute } from '@angular/router';
 import { InvitationService, Invitation } from '@blockframes/invitation/+state';
 import { combineLatest, of, Observable, BehaviorSubject } from 'rxjs';
-import { catchError, filter, switchMap, pluck, tap } from 'rxjs/operators';
+import { catchError, filter, switchMap, pluck, tap, startWith } from 'rxjs/operators';
 import { Location } from '@angular/common';
 import { fade } from '@blockframes/utils/animations/fade';
 import { AuthQuery, AuthService } from '@blockframes/auth/+state';
@@ -11,6 +11,7 @@ import { Event } from '@blockframes/event/+state/event.model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MatDialog } from '@angular/material/dialog';
 import { RequestAskingPriceComponent } from '@blockframes/movie/components/request-asking-price/request-asking-price.component';
+import { BehaviorStore } from '@blockframes/utils/observable-helpers';
 
 @Component({
   selector: 'festival-event-view',
@@ -25,6 +26,7 @@ export class EventViewComponent implements OnInit {
   accessRoute: string;
   user$ = this.authQuery.user$;
   event$: Observable<Event>;
+  requestSent = false;
   private statusChanged = new BehaviorSubject(false);
   public timerEnded = false;
   private preventBrowserEvent = false;
@@ -37,7 +39,8 @@ export class EventViewComponent implements OnInit {
     private authQuery: AuthQuery,
     private authService: AuthService,
     private dynTitle: DynamicTitleService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private cdr: ChangeDetectorRef
   ) { }
 
   @HostListener('window:popstate', ['$event'])
@@ -60,7 +63,7 @@ export class EventViewComponent implements OnInit {
 
     this.invitation$ = combineLatest([
       this.event$.pipe(filter(event => !!event)),
-      this.invitationService.guestInvitations$.pipe(catchError(() => of([]))),
+      this.invitationService.guestInvitations$.pipe(startWith([]), catchError(() => of([]))),
       this.statusChanged
     ]).pipe(
       switchMap(async ([event, invitations]) => {
@@ -95,11 +98,15 @@ export class EventViewComponent implements OnInit {
   }
 
   requestAskingPrice(movieId: string) {
-    this.dialog.open(RequestAskingPriceComponent, {
+    const ref = this.dialog.open(RequestAskingPriceComponent, {
       data: { movieId },
       maxHeight: '80vh',
       maxWidth: '650px',
       autoFocus: false
-    })
+    });
+    ref.afterClosed().subscribe(isSent => {
+      this.requestSent = !!isSent;
+      this.cdr.markForCheck();
+    });
   }
 }

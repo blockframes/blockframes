@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy, EventEmitter, TemplateRef, Input, Output } from '@angular/core';
+import { Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 import { Movie } from '@blockframes/movie/+state';
@@ -29,7 +30,7 @@ export class HolbackFormComponent {
   constructor(private dialog: MatDialog) { }
 
   ngOnInit() {
-    this.form = FormList.factory(this.holdbacks, holdback => new HoldbackForm(holdback));
+    this.form = FormList.factory(this.holdbacks, holdback => new HoldbackForm(holdback),[Validators.required]);
   }
 
   openHoldbacks(template: TemplateRef<any>) {

@@ -27,10 +27,8 @@ references:
         only:
           - /release\/.*/
   deployment_branches: &deployment_branches
-    - ci
     - develop
     - /release\/.*/
-    - master
     - production
     - staging
 
@@ -151,37 +149,14 @@ commands:
           command: npm run backend-ops prepareForTesting
           no_output_timeout: 30m
       - slack/status
-  build_deploy_prepare_shrunkdb:
-    description: 'Build & deploy project & prepare by loading live online shurnk test data'
+  build_deploy_prepare_shrunkdb: # keep for future if we want to use shrunk db on remote firestore
+    description: 'Build & deploy project & prepare by loading live online shrunk test data'
     steps:
       - deploy
       - run:
           command: npm run backend-ops prepareForTesting gs://ci-backups-blockframes/LATEST-ANON-SHRINKED-DB
           no_output_timeout: 30m
       - slack/status
-  test_e2e_all:
-    description: 'Run all e2e tests sequentially against non-emulated services (online)'
-    steps:
-        - run: npx cypress install
-        - run:
-            command: |
-              npx nx run catalog-e2e:e2e:ci --headless && catalog_ret_code=$? || catalog_ret_code=$?
-
-              npx nx run festival-e2e:e2e:ci --headless && festival_ret_code=$? || festival_ret_code=$?
-
-              npx nx run financiers-e2e:e2e:ci --headless && financiers_ret_code=$? || financiers_ret_code=$?
-
-              npx nx run crm-e2e:e2e:ci --headless && crm_ret_code=$? || crm_ret_code=$?
-
-              if [ $catalog_ret_code -eq 0 ] && [ $festival_ret_code -eq 0 ] && [ $financiers_ret_code -eq 0 ] && [ $crm_ret_code -eq 0 ]; then
-                exit 0;
-              else
-                exit 1;
-              fi
-            no_output_timeout: 20m
-        - store_artifacts:
-            name: Uploading screenshots
-            path: ~/repo/dist/cypress/apps
 orbs:
   cypress: cypress-io/cypress@1
   do-exclusively: miyajan/do-exclusively@0.1.0
@@ -195,59 +170,6 @@ executors:
     working_directory: ~/repo
     resource_class: large
 jobs:
-  unit-test-staging:
-    executor: blockframes-ci
-    environment:
-        NG_CONFIG: staging
-        PROJECT_ID: blockframes-staging
-    steps:
-      - prepare_environment
-      - restore_fixtures_from_cache
-      - run:
-          command: npm run test
-          no_output_timeout: 15m
-      - slack/notify:
-          message: 'Unit tests complete on STAGING << pipeline.git.branch >>'
-  unit-tests-ci:
-    executor: blockframes-ci
-    steps:
-      - prepare_environment
-      - restore_fixtures_from_cache
-      - run:
-          command: npm run test
-          no_output_timeout: 15m
-      - slack/notify:
-          message: 'Unit tests complete on CI << pipeline.git.branch >>'
-  build-deploy-prepare-staging:
-    executor: blockframes-ci
-    environment:
-        NG_CONFIG: staging
-        PROJECT_ID: blockframes-staging
-    steps:
-      - prepare_environment
-      - build_deploy_prepare
-      - save_fixtures_in_cache
-      - slack/notify:
-          message: 'Build, Deploy & PFT complete for STAGING << pipeline.git.branch >>'
-  build-deploy-prepare-shrunk-ci:
-    executor: blockframes-ci
-    environment:
-      PROJECT_ID: blockframes-demo-1
-      NG_CONFIG: ''
-    steps:
-      - prepare_environment
-      - build_deploy_prepare_shrunkdb
-      - save_fixtures_in_cache
-      - slack/notify:
-          message: 'Build, Deploy & PFT complete for CI << pipeline.git.branch >>'
-  build-deploy-prepare-ci:
-    executor: blockframes-ci
-    steps:
-      - prepare_environment
-      - build_deploy_prepare
-      - save_fixtures_in_cache
-      - slack/notify:
-          message: 'Build, Deploy & PFT complete for CI << pipeline.git.branch >>'
   build-deploy-prepare-branch-against-selected-env:
     executor: blockframes-ci
     environment:
@@ -305,44 +227,6 @@ jobs:
       - run:
           command: npm run affected:test
           no_output_timeout: 15m
-  test-e2e-ci:
-    executor: blockframes-ci
-    steps:
-      - slack/notify:
-          message: '🚲 Deploying & testing e2e (https://blockframes-ci.web.app/)'
-      - prepare_environment
-      - restore_fixtures_from_cache
-      - test_e2e_all
-      - run:
-          name: send stability data
-          command: ./.circleci/submit-stability.sh dist/test-reports
-          when: always
-          require: test_e2e_all
-      - slack/status
-  test-e2e-demo-1:
-    executor: blockframes-ci
-    environment:
-      PROJECT_ID: blockframes-demo-1
-      NG_CONFIG: ''
-    steps:
-      - slack/notify:
-          message: '🛵 🤠 Deploying & testing e2e against demo-1 (shrunk db)'
-      - prepare_environment
-      - restore_fixtures_from_cache
-      - test_e2e_all
-      - slack/status
-  test-e2e-staging:
-    executor: blockframes-ci
-    environment:
-        NG_CONFIG: staging
-        PROJECT_ID: blockframes-staging
-    steps:
-      - slack/notify:
-          message: '🛵 🤠 Deploying release to staging.. (https://staging.blockframes.io/)'
-      - prepare_environment
-      - restore_fixtures_from_cache
-      - test_e2e_all
-      - slack/status
   deploy-to-prod:
     executor: blockframes-ci
     environment:
@@ -361,7 +245,7 @@ jobs:
         NG_CONFIG: staging
     steps:
       - slack/notify:
-          message: '🛵 Deploying to staging.. (https://staging.blockframes.io/)'
+          message: '🛵 Deploying to staging...'
       - prepare_environment
       - build_deploy_upgrade
   push-anon-db-to-ci:
@@ -393,7 +277,17 @@ jobs:
       - run: npx nx build backend-functions --configuration=e2e
       - start_e2e_emulators
       - run: npm start upgradeEmulators
-      - run: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,catalog-e2e,financiers-e2e
+      - run: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,catalog-e2e,financiers-e2e,cms-e2e
+      - store_artifacts:
+          path: dist/cypress/apps
+  cms-e2e:
+    executor: blockframes-ci
+    steps:
+      - prepare_environment
+      - run: npx nx build backend-functions --configuration=e2e
+      - start_e2e_emulators
+      - run: npm start upgradeEmulators
+      - run: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,catalog-e2e,financiers-e2e,crm-e2e
       - store_artifacts:
           path: dist/cypress/apps
   festival-e2e:
@@ -403,7 +297,7 @@ jobs:
       - run: npx nx build backend-functions --configuration=e2e
       - start_e2e_emulators
       - run: npm start upgradeEmulators
-      - run: npx nx affected:e2e --configuration=emulator --exclude=catalog-e2e,crm-e2e,financiers-e2e
+      - run: npx nx affected:e2e --configuration=emulator --exclude=catalog-e2e,crm-e2e,financiers-e2e,cms-e2e
       - store_artifacts:
           path: dist/cypress/apps
   financiers-e2e:
@@ -413,7 +307,7 @@ jobs:
       - run: npx nx build backend-functions --configuration=e2e
       - start_e2e_emulators
       - run: npm start upgradeEmulators
-      - run: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,crm-e2e,catalog-e2e
+      - run: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,crm-e2e,catalog-e2e,cms-e2e
       - store_artifacts:
           path: dist/cypress/apps
   catalog-e2e:
@@ -423,7 +317,7 @@ jobs:
       - run: npx nx build backend-functions --configuration=e2e
       - start_e2e_emulators
       - run: npm start upgradeEmulators
-      - run: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,crm-e2e,financiers-e2e
+      - run: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,crm-e2e,financiers-e2e,cms-e2e
       - store_artifacts:
           path: dist/cypress/apps
   prepare-emulators:
@@ -543,76 +437,10 @@ workflows:
           filters:
             branches:
               ignore: *deployment_branches
-  run-all-tests-on-release-branches-against-staging:
+  deploy-release-branch-to-staging:
     jobs:
-      - build-deploy-prepare-staging:
+      - deploy-to-staging:
           <<: *release_only
-      - unit-test-staging:
-          requires:
-            - build-deploy-prepare-staging
-          <<: *release_only
-      - test-e2e-staging:
-          requires:
-            - build-deploy-prepare-staging
-          <<: *release_only
-  # nightly-tests:
-  #   triggers:
-  #     - schedule:
-  #         cron: '0 0 * * *'
-  #         filters:
-  #           branches:
-  #             only:
-  #               - develop
-  #   jobs:
-  #     - build-deploy-prepare-ci
-  #     - test-e2e-ci:
-  #         requires:
-  #           - build-deploy-prepare-ci
-  #     - unit-tests-ci:
-  #         requires:
-  #           - build-deploy-prepare-ci
-  run-sequential-online-e2e-tests-against-CI-branch-and-project:
-    jobs:
-      - build-deploy-prepare-ci:
-          filters:
-            branches:
-              only:
-                - ci
-      - test-e2e-ci:
-          requires:
-            - build-deploy-prepare-ci
-          filters:
-            branches:
-              only:
-                - ci
-      - unit-tests-ci:
-          requires:
-            - build-deploy-prepare-ci
-          filters:
-            branches:
-              only:
-                - ci
-  run-sequential-online-e2e-tests-against-CI-branch-and-shrunk-project:
-    jobs:
-      - build-deploy-prepare-shrunk-ci:
-          filters:
-            branches:
-              only:
-                - ci
-      - test-e2e-demo-1:
-          requires:
-            - build-deploy-prepare-shrunk-ci
-          filters:
-            branches:
-              only:
-                - ci
-      # - unit-tests-ci:
-      #     requires:
-      #       - build-deploy-prepare-shrunk-ci
-      #     filters:
-      #       branches:
-      #         only:
-      #           - ci
   e2e-tests:
     jobs:
       - catalog-e2e:
@@ -628,6 +456,10 @@ workflows:
             branches:
               ignore: *deployment_branches
       - financiers-e2e:
+          filters:
+            branches:
+              ignore: *deployment_branches
+      - cms-e2e:
           filters:
             branches:
               ignore: *deployment_branches

@@ -1,6 +1,5 @@
-import { MovieDocument, MovieLanguageSpecification } from "@blockframes/movie/+state/movie.firestore";
-import type { Language } from "@blockframes/utils/static-model/types";
-import { smartJoin, toLabel } from "@blockframes/utils/utils";
+import { MovieDocument } from "@blockframes/movie/+state/movie.firestore";
+import { toLanguageVersionString, toLabel } from "@blockframes/utils/utils";
 import { Response } from "firebase-functions";
 import { db } from './internals/firebase';
 import { festival } from '@blockframes/utils/static-model';
@@ -94,29 +93,6 @@ export const createPdf = async (req: PdfRequest, res: Response) => {
   res.set('Content-Length', buffer.length.toString());
   res.status(200).send(buffer);
   return;
-}
-
-function toLanguageVersionString(languages: Partial<{ [language in Language]: MovieLanguageSpecification }>) {
-  return Object.entries(languages).map(([language, specs]) => {
-    const types = [];
-
-    if (specs.subtitle) {
-      types.push(toLabel('subtitle', 'movieLanguageTypes'));
-    }
-
-    if (specs.dubbed) {
-      types.push(toLabel('dubbed', 'movieLanguageTypes'));
-    }
-
-    if (specs.caption) {
-      types.push(toLabel('caption', 'movieLanguageTypes'));
-    }
-
-    if (types.length) {
-      return `${toLabel(language, 'languages')} ${smartJoin(types, ', ', ' & ')}`;
-    }
-
-  }).filter(d => d).join(', ');
 }
 
 async function generate(templateName: string, app: App, titles: PdfTitleData[]) {

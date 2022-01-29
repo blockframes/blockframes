@@ -1,5 +1,5 @@
 // Angular
-import { Component, ChangeDetectionStrategy, HostBinding } from '@angular/core';
+import { Component, ChangeDetectionStrategy, HostBinding, ChangeDetectorRef } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 // Blockframes
@@ -14,6 +14,7 @@ import { map, shareReplay } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { RequestAskingPriceComponent } from '../request-asking-price/request-asking-price.component';
+import { BehaviorStore } from '@blockframes/utils/observable-helpers';
 
 @Component({
   selector: 'movie-screening',
@@ -36,6 +37,7 @@ export class UpcomingScreeningsComponent {
   public orgs$ = this.orgService.queryFromMovie(this.query.getActive());
 
   public buttonState$: Observable<boolean> = new Observable();
+  public requestSent = false;
 
   constructor(
     private query: MovieQuery,
@@ -43,6 +45,7 @@ export class UpcomingScreeningsComponent {
     private eventService: EventService,
     private invitationService: InvitationService,
     private orgService: OrganizationService,
+    private cdr: ChangeDetectorRef
   ) {
     const now = new Date();
     const q = ref => ref
@@ -89,11 +92,15 @@ export class UpcomingScreeningsComponent {
   }
 
   requestAskingPrice() {
-    this.dialog.open(RequestAskingPriceComponent, {
+    const ref = this.dialog.open(RequestAskingPriceComponent, {
       data: { movieId: this.movieId },
       maxHeight: '80vh',
       maxWidth: '650px',
       autoFocus: false
+    });
+    ref.afterClosed().subscribe(isSent => {
+      this.requestSent = !!isSent;
+      this.cdr.markForCheck();
     });
   }
 }

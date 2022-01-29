@@ -5,7 +5,6 @@ import { displayName } from '@blockframes/utils/utils'
 import { AuthQuery, AuthService } from '@blockframes/auth/+state';
 import { Attendee, LocalAttendee, TrackKind } from '../+state/twilio.model';
 import { TwilioService } from '../+state/twilio.service';
-import { TwilioQuery } from '../+state/twilio.query';
 import { ActivatedRoute, Router } from '@angular/router';
 import { toggleFullScreen } from '@blockframes/media/file/viewers/utils';
 import { DOCUMENT } from '@angular/common';
@@ -41,7 +40,6 @@ export class MeetingVideoRoomComponent implements OnInit, OnDestroy {
     private authQuery: AuthQuery,
     private authService: AuthService,
     private twilioService: TwilioService,
-    private twilioQuery: TwilioQuery,
     private router: Router,
     private route: ActivatedRoute,
     private el: ElementRef,
@@ -51,9 +49,9 @@ export class MeetingVideoRoomComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     const eventId: string = this.route.snapshot.params.eventId;
 
-    this.local$ = this.twilioQuery.selectLocal();
+    this.local$ = this.twilioService.localAttendee$;
 
-    this.attendees$ = this.twilioQuery.selectAll();
+    this.attendees$ = this.twilioService.attendees$;
 
     const name = displayName(this.authQuery.user || this.authService.anonymousCredentials);
     await this.twilioService.initLocal(name);

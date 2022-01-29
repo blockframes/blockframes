@@ -439,6 +439,8 @@ describe('DB cleaning script', () => {
       { id: 'notif-H', toUserId: 'A', _meta, docId: 'org-A' },
       { id: 'notif-I', toUserId: 'A', _meta, bucket: { id: 'org-A' } }, // Bucket Ids are org Ids
       { id: 'notif-J', toUserId: 'A', _meta, invitation: { id: 'invit-A' }, organization: { id: 'org-A' } },
+      { id: 'notif-V', toUserId: 'A', _meta, offerId: 'offer-A' },
+      { id: 'notif-X', toUserId: 'A', _meta, docId: 'contract-A' },
 
       // Invalids ones
       { id: 'notif-K', toUserId: 'B', _meta },
@@ -452,6 +454,8 @@ describe('DB cleaning script', () => {
       { id: 'notif-S', toUserId: 'A', _meta, bucket: { id: 'org-B' } },
       { id: 'notif-T', toUserId: 'A', _meta, invitation: { id: 'invit-B' }, organization: { id: 'org-A' } },
       { id: 'notif-U', toUserId: 'A', _meta, invitation: { id: 'invit-A' }, organization: { id: 'org-B' } },
+      { id: 'notif-W', toUserId: 'A', _meta, offerId: 'offer-B' },
+      { id: 'notif-Y', toUserId: 'A', _meta, docId: 'contract-B' },
     ];
 
     const testUsers = [{ uid: 'A' }];
@@ -460,6 +464,7 @@ describe('DB cleaning script', () => {
     const testOffers = [{ id: 'offer-A' }];
     const testMovies = [{ id: 'movie-A' }];
     const testOrgs = [{ id: 'org-A' }];
+    const testContracts = [{ id: 'contract-A' }];
 
     // Load our test set
     await populate('notifications', testNotifications);
@@ -470,8 +475,9 @@ describe('DB cleaning script', () => {
     await populate('movies', testMovies);
     await populate('orgs', testOrgs);
     await populate('buckets', testOrgs);
+    await populate('contracts', testContracts);
 
-    const [notificationsBefore, users, invitations, events, offers, movies, orgs, buckets] = await Promise.all([
+    const [notificationsBefore, users, invitations, events, offers, movies, orgs, buckets, contracts] = await Promise.all([
       getCollectionRef('notifications'),
       getCollectionRef('users'),
       getCollectionRef('invitations'),
@@ -480,10 +486,11 @@ describe('DB cleaning script', () => {
       getCollectionRef('movies'),
       getCollectionRef('orgs'),
       getCollectionRef('buckets'),
+      getCollectionRef('contracts'),
     ]);
 
     // Check if data have been correctly added
-    expect(notificationsBefore.docs.length).toEqual(21);
+    expect(notificationsBefore.docs.length).toEqual(25);
     expect(users.docs.length).toEqual(1);
     expect(invitations.docs.length).toEqual(1);
     expect(events.docs.length).toEqual(1);
@@ -491,18 +498,20 @@ describe('DB cleaning script', () => {
     expect(movies.docs.length).toEqual(1);
     expect(orgs.docs.length).toEqual(1);
     expect(buckets.docs.length).toEqual(1);
+    expect(contracts.docs.length).toEqual(1);
 
     const documentIds = users.docs.map(d => d.id)
       .concat(invitations.docs.map(d => d.id))
       .concat(events.docs.map(d => d.id))
       .concat(offers.docs.map(d => d.id))
       .concat(movies.docs.map(d => d.id))
-      .concat(orgs.docs.map(d => d.id));
+      .concat(orgs.docs.map(d => d.id))
+      .concat(contracts.docs.map(d => d.id));
 
     await cleanNotifications(notificationsBefore, documentIds);
     const notificationsAfter: Snapshot = await getCollectionRef('notifications');
 
-    expect(notificationsAfter.docs.length).toEqual(10);
+    expect(notificationsAfter.docs.length).toEqual(12);
   });
 
   it('should update notifications with related documents data', async () => {
