@@ -32,7 +32,7 @@ export class ContractFormComponent implements OnInit {
   form = new NegotiationForm();
   titles$ = this.service.valueChanges(ref => ref.where('app.catalog.status', '==', 'accepted'));
   currency?: string;
-  activeTerm?: string;
+  activeTerm?: number;
   contractId: string = this.route.snapshot.params.contractId;
   offerId: string = this.route.snapshot.params.offerId;
 
@@ -70,7 +70,7 @@ export class ContractFormComponent implements OnInit {
       price: contract.negotiation.price,
       terms: contract.negotiation.terms
     });
-    this.activeTerm = this.route.snapshot.queryParams.termId;
+    this.activeTerm = +this.route.snapshot.queryParams.termIndex;
   }
 
   async save() {
