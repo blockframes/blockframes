@@ -53,10 +53,10 @@
             <span>Buyer requested Asking Price</span>
           </ng-template>
         </p>
-        <ng-template #termAction let-term let-index>
+        <ng-template #termAction let-term let-index="index">
           <a mat-icon-button matTooltip="View"
             [routerLink]="['/c/o/dashboard/crm/offer', offer.id, contract.id, 'form']"
-            [queryParams]="{termIndex:negotiation.terms | findIndex:index}">
+            [queryParams]="{termIndex:index}">
             <mat-icon svgIcon="visibility"></mat-icon>
           </a>
           <button mat-icon-button matTooltip="Delete" (click)="confirm(term)">
