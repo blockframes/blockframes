@@ -2,11 +2,13 @@ import { NgModule, Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({ name: 'findIndex' })
 export class FindIndexPipe implements PipeTransform {
+  /**
+   * Returns -1 when no result found.
+   */
   transform(data: unknown[], dataAtIndex: unknown) {
-    console.log({data, dataAtIndex})
     if (Array.isArray(data))
       return data.findIndex(d => d === dataAtIndex)
-    return 0
+    return -1
   }
 }
 
