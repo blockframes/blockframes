@@ -1,6 +1,4 @@
-import { MovieLanguageSpecification } from "@blockframes/movie/+state/movie.firestore";
 import { Timestamp } from "@blockframes/utils/common-interfaces/timestamp";
-import { staticModel } from "@blockframes/utils/static-model/static-model";
 import { centralOrgId } from "@env";
 import { LanguageRecord } from "@blockframes/movie/+state/movie.firestore";
 import { Language, Media, Territory } from "@blockframes/utils/static-model";
@@ -103,17 +101,4 @@ export function isInitial(negotiation: Partial<Negotiation>) {
 
 export function getReviewer(negotiation: Negotiation<Timestamp | Date>) {
   return negotiation.stakeholders.find(id => id !== negotiation.createdByOrg && id !== centralOrgId.catalog);
-}
-
-export function hydrateLanguageForEmail(data: Record<string, MovieLanguageSpecification>) {
-  return Object.keys(data)
-    .map(lang => {
-      const prefix: string[] = [];
-      if (data[lang].dubbed) prefix.push(staticModel['movieLanguageTypes'].dubbed);
-      if (data[lang].subtitle) prefix.push(staticModel['movieLanguageTypes'].subtitle);
-      if (data[lang].caption) prefix.push(staticModel['movieLanguageTypes'].caption);
-      if (prefix.length) return `${lang} ( ${prefix.join(', ')} )`;
-      return lang;
-    })
-    .join(', ');
 }
