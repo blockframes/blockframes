@@ -36,7 +36,6 @@ const navTabs: NavTabs = {
 export class EventFormShellComponent implements OnInit, OnDestroy {
   tabs$: Observable<TabConfig[]>;
   private sub: Subscription;
-  private formSub: Subscription;
   form: EventForm;
   @ViewChild('confirmExit') confirmExitTemplate: TemplateRef<any>;
   internalLink: string;
@@ -58,7 +57,6 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const eventId$ = this.route.params.pipe(pluck('eventId'));
 
-    // @TODO #6780
     this.sub = eventId$.pipe(
       switchMap((eventId: string) => this.eventService.valueChanges(eventId))
     ).subscribe(async event => {
@@ -79,27 +77,12 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
         this.checkTitleAndScreener(this.form.meta.value.titleId);
       }
 
-      // FormArray (used in FormList) does not mark as dirty on push,
-      // so we do it manually to enable the save button
-      // more info : https://github.com/angular/angular/issues/16370
-      if (this.formSub) {
-        this.formSub.unsubscribe();
-        delete this.formSub;
-      }
-      this.formSub = this.form.meta.valueChanges.subscribe((values) => {
-        this.form.markAsDirty()
-        if (this.form.value.type === 'screening' && values.titleId) {
-          this.checkTitleAndScreener(values.titleId);
-        }
-      });
-
       this.cdr.markForCheck();
     });
   }
 
   ngOnDestroy() {
     this.sub.unsubscribe();
-    this.formSub.unsubscribe();
   }
 
   async save(options: { showSnackbar: boolean } = { showSnackbar: true }) {
