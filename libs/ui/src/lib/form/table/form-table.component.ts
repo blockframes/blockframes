@@ -44,7 +44,7 @@ export class FormViewDirective { }
 export class FormTableComponent<T> implements OnInit, OnDestroy {
   @Input() columns: Record<string, string> = {};
   @Input() form: FormList<T>;
-  @Input() @boolean disableAddTerms = false;
+  @Input() @boolean editOnly = false;
   @Input() tablePosition: 'top' | 'bottom' | 'left' | 'right' = 'top';
   @Input() set active(index: number) {
     if (typeof index !== 'number' || index < 0) return;
