@@ -63,7 +63,6 @@
 </section>
 
 <footer *ngIf="!disableAddTerms && !formItem" fxLayout fxLayoutAlign="start baseline" fxLayoutGap="16px">
-  {{disableAddTerms|json}}
   <mat-divider></mat-divider>
   <span>
     <ng-template [ngTemplateOutlet]="addButtonText || defaultText"></ng-template>
