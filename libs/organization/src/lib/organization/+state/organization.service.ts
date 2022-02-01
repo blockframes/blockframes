@@ -12,7 +12,7 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentApp, App, Module, createOrgAppAccess } from '@blockframes/utils/apps';
 import { createDocumentMeta, formatDocumentMetaFromFirestore } from '@blockframes/utils/models-meta';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
-import { Observable, of } from 'rxjs';
+import { combineLatest, Observable, of } from 'rxjs';
 import { ActiveState, EntityState } from '@datorama/akita';
 
 interface OrganizationState extends EntityState<Organization>, ActiveState<string> { }
@@ -31,9 +31,21 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     tap(org => this.org = org)
   );
 
-  // Users ids of the current logged in user's org
-  public userIds$ = this.org$.pipe(
-    map(org => org.userIds)
+  // Org's members of the current logged in user
+  public members$ = this.org$.pipe(
+    map(org => org.userIds),
+    switchMap(userIds => this.userService.valueChanges(userIds))
+  );
+
+  // Org's members of the current logged in user with permissions
+  public membersWithRole$ : Observable<OrganizationMember[]>= combineLatest([
+    this.members$,
+    this.permissionsService.permissions$
+  ]).pipe(
+    map(([members, permissions]) => {
+      // Get the role of each member in permissions.roles and add it to member.
+      return members.map(member => ({...member, role: permissions.roles[member.uid]}));
+    })
   );
 
   constructor(

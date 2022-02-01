@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
-import { UserState, UserStore } from './user.store';
 import { User, AuthQuery, AuthStore } from '@blockframes/auth/+state';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
+import { EntityState } from '@datorama/akita';
+
+type UserState = EntityState<User>;
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'users' })
@@ -10,11 +12,10 @@ export class UserService extends CollectionService<UserState> {
   readonly useMemorization = true;
 
   constructor(
-    protected store: UserStore,
     private authStore: AuthStore,
     private authQuery: AuthQuery,
   ) {
-    super(store);
+    super();
     this.updateEmailVerified();
   }
 

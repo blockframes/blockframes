@@ -1,11 +1,9 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, HostBinding } from '@angular/core';
-import { UserService } from '@blockframes/user/+state/user.service';
-import { UserQuery } from '@blockframes/user/+state/user.query';
+import { Component, OnInit, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { ViewComponent } from '../view/view.component';
-import { Subscription } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { fade, fadeList } from '@blockframes/utils/animations/fade';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 
 @Component({
   selector: 'catalog-marketplace-organization-member',
@@ -14,30 +12,22 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
   animations: [fade, fadeList('user-card')],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MemberComponent implements OnInit, OnDestroy {
+export class MemberComponent implements OnInit {
   @HostBinding('@fade') animation = true;
 
-  private sub: Subscription;
   public org$ = this.parent.org$;
-  public members$ = this.query.selectAll();
-
+  public members$ = this.org$.pipe(
+    switchMap(org => this.orgService.getMembers(org.id))
+  );
 
   constructor(
     private parent: ViewComponent,
-    private service: UserService,
-    private query: UserQuery,
+    private orgService: OrganizationService,
     private dynTitle: DynamicTitleService,
   ) { }
 
   ngOnInit(): void {
     this.dynTitle.setPageTitle('Sales Agent', 'Contact');
-    this.sub = this.org$.pipe(
-      map(org => org.userIds),
-      switchMap(userIds => this.service.syncManyDocs(userIds))
-    ).subscribe();
   }
 
-  ngOnDestroy() {
-    this.sub.unsubscribe();
-  }
 }
