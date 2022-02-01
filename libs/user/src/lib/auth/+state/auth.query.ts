@@ -22,12 +22,4 @@ export class AuthQuery extends Query<AuthState> {
   get orgId() {
     return this.user?.orgId;
   }
-
-  get requestedRoute() {
-    return this.getValue().requestedRoute;
-  }
-
-  get isBlockframesAdmin() {
-    return this.getValue().roles?.blockframesAdmin || false;
-  }
 }

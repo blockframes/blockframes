@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
-import { User, AuthQuery, AuthStore } from '@blockframes/auth/+state';
+import { User, AuthQuery } from '@blockframes/auth/+state';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
 import { EntityState } from '@datorama/akita';
 
@@ -12,18 +12,11 @@ export class UserService extends CollectionService<UserState> {
   readonly useMemorization = true;
 
   constructor(
-    private authStore: AuthStore,
     private authQuery: AuthQuery,
   ) {
     super();
     this.updateEmailVerified();
   }
-
-  //////////
-  // USER //
-  // @dev we can replace a lot of these functions by native Akita-ng-fire functions
-  // @see https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
-  //////////
 
   /**
    * Check if uid is exists in blockframesAdmin collection.
@@ -50,62 +43,26 @@ export class UserService extends CollectionService<UserState> {
   }
 
   /**
-   * Checks if an user exists
-   * @dev If in the future, we need to keep an user list in the state other than members of an org,
-   * this will be the time to create a userService and to move this method in it.
-   * @param uid
-   */
-  public async userExists(uid: string): Promise<boolean> {
-    const snap = await this.db.collection('users').doc(uid).get().toPromise();
-    return snap.exists;
-  }
-
-  /**
    * Fetch an user based on his uid
    * @dev If in the future, we need to keep an user list in the state other than members of an org,
    * this will be the time to create a userService and to move this method in it.
    * @param uid
    */
-  public async getUser(uid: string): Promise<User> {
+  public async getUser(uid: string): Promise<User> { // @TODO #7286 remove and use this.getValue(uid)
     const user = await this.db.collection('users').doc(uid).get().toPromise();
     return user.data() as User;
   }
 
   /**
-   * @dev since this.update() does not behave like other services
-   * (authService extends FireAuthService<AuthState> and others extends CollectionService<XxxState>)
-   * This method was created to easily update an user.
    * @param uid
-   * @param update
+   * @param user
    */
-  public async updateById(uid: string, update: Partial<User>) {
-    // @TODO (#2090) update org.userIds & permission document if orgId is change for the user
-    await this.db.collection('users').doc(uid).update(update);
+  public async updateById(uid: string, user: Partial<User>) { 
+    await this.update(uid, user);// @TODO #7286 test
   }
 
-  /**
-   * Fetch all users
-   * @dev If in the future, we need to keep an user list in the state other than members of an org,
-   * this will be the time to create a userService and to move this method in it.
-   */
-  public async getAllUsers(): Promise<User[]> {
-    const usersSnap = await this.db
-      .collection('users')
-      .get()
-      .toPromise();
-    return usersSnap.docs.map(c => c.data() as User);
-  }
-
-  // TODO THIS IS A QUICK FIX OF MOVIE FINANCING RANK MADE FOR TORONTO, THINK OF A BETTER WAY AFTERWARD
-  //---------------------------
-  //   MOVIE FINANCING RANK
-  //---------------------------
-  public changeRank(rank: string) {
-    this.authStore.updateProfile({ financing: { rank } });
-  }
-
-  // TODO #6113 nce we have a custom email verified page, we can update the users' meta there
-  // #7303 if user doest not interact with userService, this is not updated (ie: user goes directly to eventPage)
+  // TODO #6113 once we have a custom email verified page, we can update the users' meta there
+  // #7303 if user does not interact with userService, this is not updated (ie: user goes directly to eventPage)
   private async updateEmailVerified() {
     const auth = this.authQuery.getValue();
 

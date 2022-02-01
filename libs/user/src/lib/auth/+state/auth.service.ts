@@ -6,7 +6,7 @@ import firebase from 'firebase/app';
 import { UserCredential } from '@firebase/auth-types';
 import { FireAuthService, CollectionConfig } from 'akita-ng-fire';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { map, take } from 'rxjs/operators';
+import { map, switchMap, take } from 'rxjs/operators';
 import { getCurrentApp, App } from '@blockframes/utils/apps';
 import { PublicUser, PrivacyPolicy } from '@blockframes/user/types';
 import { Intercom } from 'ng-intercom';
@@ -29,6 +29,10 @@ export class AuthService extends FireAuthService<AuthState> {
 
   profile = this.query.user;
   profile$ = this.query.user$;
+  isBlockframesAdmin$ = this.query.user$.pipe(
+    switchMap(user => this.db.collection('blockframesAdmin').doc(user.uid).get().toPromise()),
+    map(snap => snap.exists)
+  );
 
   constructor(
     protected store: AuthStore,
@@ -48,16 +52,6 @@ export class AuthService extends FireAuthService<AuthState> {
     }
   }
 
-  /**
-   * @dev This populates the RoleState part of the AuthState.
-   * Used to check if logged in user is blockframesAdmin or not.
-   */
-  selectRoles(user: firebase.User) {
-    return this.db.collection('blockframesAdmin').doc(user.uid).valueChanges().pipe(
-      map(doc => ({ blockframesAdmin: doc !== undefined ? true : false }))
-    );
-  }
-
   //////////
   // AUTH //
   //////////
@@ -70,14 +64,6 @@ export class AuthService extends FireAuthService<AuthState> {
     const callSendReset = this.functions.httpsCallable('sendResetPasswordEmail');
     return callSendReset({ email, app }).toPromise();
   }
-
-  /** Send a new verification email to the current user */
-  // @TODO (#2821)
-  /*public async sendVerifyEmail() {
-    const callSendVerify = this.functions.httpsCallable('sendVerifyEmail');
-    const app = getCurrentApp(this.routerQuery);
-    return callSendVerify({ email: this.query.user.email, app }).toPromise();
-  }*/
 
   public checkResetCode(actionCode: string) {
     return this.auth.verifyPasswordResetCode(actionCode);

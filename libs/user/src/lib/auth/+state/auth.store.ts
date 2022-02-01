@@ -10,9 +10,7 @@ export interface Roles {
   blockframesAdmin: boolean;
 }
 
-export interface AuthState extends FireAuthState<User>, RoleState<Roles> {
-  requestedRoute?: string;
-}
+export interface AuthState extends FireAuthState<User>, RoleState<Roles> {}
 
 export function createUser(user: Partial<User> = {}) {
   return {
@@ -27,7 +25,5 @@ export class AuthStore extends Store<AuthState> {
   constructor() {
     super(initialAuthState);
   }
-  public updateProfile(profile: Partial<User>) {
-    this.update(authState => ({ profile: { ...authState.profile, profile } }))
-  }
+
 }
