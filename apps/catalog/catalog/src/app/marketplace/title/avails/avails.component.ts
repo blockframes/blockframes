@@ -201,7 +201,7 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
 
     if (mode.includes('map')) {
       this.bucketForm.patchValue({}); // Force observable to reload
-      this.avails.mapForm.setValue({ exclusive, duration, medias, territories: [] });
+      this.avails.mapForm.setValue({ exclusive, duration, medias });
     }
 
     if (mode.includes('calendar')) {
