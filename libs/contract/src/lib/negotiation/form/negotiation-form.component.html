@@ -6,7 +6,7 @@
     <mat-icon matPrefix *ngIf="currency" [svgIcon]="currency"></mat-icon>
   </mat-form-field>
 </header>
-<bf-form-table [form]="form.get('terms')" [columns]="termColumns" tablePosition="bottom" [active]="indexId">
+<bf-form-table disableAddTerms [form]="form.get('terms')" [columns]="termColumns" tablePosition="bottom" [active]="indexId">
   <!-- Columns -->
   <ng-template class="duration" colRef="duration" let-duration>
     {{ duration.from | date : 'M/d/yyyy' }} - {{ duration.to | date : 'M/d/yyyy' }}
