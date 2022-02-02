@@ -62,7 +62,7 @@
   </div>
 </section>
 
-<footer *ngIf="!formItem" fxLayout fxLayoutAlign="start baseline" fxLayoutGap="16px">
+<footer *ngIf="!editOnly && !formItem" fxLayout fxLayoutAlign="start baseline" fxLayoutGap="16px">
   <mat-divider></mat-divider>
   <span>
     <ng-template [ngTemplateOutlet]="addButtonText || defaultText"></ng-template>
