@@ -10,8 +10,8 @@ describe('Basic Landing Page, Login and Profile Page Tests', () => {
   it('should load user and log into profile page', () => {
     // loginWithRandomUser().logSubject(); => does not work because of missing sign_in_provider in token
     // loginWithUID('1QErdmriBqaQyobxftpWyK1ErB73').logSubject(); => same
-    // loginWithRandomUser('emailAndPassword').logSubject(); => do work but always fetch a blockframesAdmin user
-    loginWithEmailAndPassword('dev+scarlett-qra@blockframes.io').logSubject(); // => do work
+    loginWithRandomUser('emailAndPassword').logSubject(); // => do work but always fetch a blockframesAdmin user
+    // loginWithEmailAndPassword('dev+scarlett-qra@blockframes.io').logSubject(); // => do work
     cy.visit('c/o/account/profile/view/settings');
     cy.contains('Contact Information').should('exist');
   })
