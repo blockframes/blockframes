@@ -1,10 +1,20 @@
 
 import { BucketContract } from '@blockframes/contract/bucket/+state';
 
-import { availDetailsExclusive } from './../fixtures/availsFilters';
+import {
+  availDetailsExclusive, availSouthKorea, availAfghanistan,
+  availFrance, availsSVODArgentina, availsPayTVArgentina,
+  availsGermany, availsBerlgium,
+} from './../fixtures/availsFilters';
+import {
+  mandateMovie1, sale1Movie1, sale2Movie1, sale3Movie1, sale4Movie1,
+} from './../fixtures/mandatesAndSales';
 import { FullMandate, FullSale, territoryAvailabilities } from '../avails';
 
-describe('Test territoryAvailabilities pure function', () => {
+const sales = [sale1Movie1, sale2Movie1, sale3Movie1, sale4Movie1]
+
+
+describe.skip('Test territoryAvailabilities pure function', () => {
 
   it('territoryAvailabilities', () => {
     const mandate = {
@@ -74,3 +84,50 @@ describe('Test territoryAvailabilities pure function', () => {
   });
 });
 
+
+describe('Test terms are out of movie mandate', () => {
+  it.skip('Checks not licensed due to territory', () => {
+    const available = territoryAvailabilities(availSouthKorea, [mandateMovie1], sales, []);
+    expect(available.notLicensed.length).toBe(1);
+    expect(available.notLicensed?.[0]?.slug).toBe('south-korea');
+  })
+
+  it.skip('Check not licensed due to duration', () => {
+    const available = territoryAvailabilities(availAfghanistan, [mandateMovie1], sales, []);
+    const notLicensedTerritories = available.notLicensed.map(s => s.slug)
+    expect(notLicensedTerritories).toContain('afghanistan');
+  })
+
+  it.skip('Check not licensed due to media', () => {
+    const available = territoryAvailabilities(availFrance, [mandateMovie1], sales, []);
+    const notLicensedTerritories = available.notLicensed.map(s => s.slug)
+    expect(notLicensedTerritories).toContain('france');
+  })
+
+  it.skip('Check terms available', () => {
+    const available = territoryAvailabilities(availsSVODArgentina, [mandateMovie1], sales, []);
+    const availableTerritories = available.available.map(s => s.slug)
+    expect(availableTerritories).toContain('argentina');
+  })
+
+  it.skip('Check term sold', () => {
+    const available = territoryAvailabilities(availsPayTVArgentina, [mandateMovie1], sales, []);
+    const soldTerritories = available.sold.map(s => s.slug)
+    expect(available.sold.length).toBeGreaterThan(0);
+    expect(soldTerritories).toContain('argentina');
+  })
+
+  it.skip('Check available non exclusivity', () => {
+    const available = territoryAvailabilities(availsGermany, [mandateMovie1], sales, []);
+    const availableTerritories = available.available.map(s => s.slug)
+    expect(available.available.length).toBeGreaterThan(0);
+    expect(availableTerritories).toContain('germany');
+  })
+
+  it('Check available terms with existing future sales', () => {
+    const available = territoryAvailabilities(availsBerlgium, [mandateMovie1], sales, []);
+    const availableTerritories = available.available.map(s => s.slug)
+    expect(available.available.length).toBeGreaterThan(0);
+    expect(availableTerritories).toContain('belgium');
+  })
+})
