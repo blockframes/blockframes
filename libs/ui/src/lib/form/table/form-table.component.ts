@@ -22,6 +22,7 @@ import { AddButtonTextDirective, SaveButtonTextDirective } from '@blockframes/ut
 // Material
 import { PageState } from '@blockframes/ui/list/table/paginator';
 import { ColumnDirective } from '@blockframes/ui/list/table/table.component';
+import { boolean } from '@blockframes/utils/decorators/decorators';
 
 @Pipe({ name: 'findColRef' })
 export class QueryListFindPipe implements PipeTransform {
@@ -43,6 +44,7 @@ export class FormViewDirective { }
 export class FormTableComponent<T> implements OnInit, OnDestroy {
   @Input() columns: Record<string, string> = {};
   @Input() form: FormList<T>;
+  @Input() @boolean editOnly = false;
   @Input() tablePosition: 'top' | 'bottom' | 'left' | 'right' = 'top';
   @Input() set active(index: number) {
     if (typeof index !== 'number' || index < 0) return;
@@ -53,7 +55,7 @@ export class FormTableComponent<T> implements OnInit, OnDestroy {
   @ContentChild(FormViewDirective, { read: TemplateRef }) formView: FormViewDirective;
   @ContentChild(SaveButtonTextDirective, { read: TemplateRef }) saveButtonText: SaveButtonTextDirective;
   @ContentChild(AddButtonTextDirective, { read: TemplateRef }) addButtonText: AddButtonTextDirective;
-  
+
   layout = { top: 'column', bottom: 'column-reverse', left: 'row', right: 'row-reverse' };
   activeIndex: number;
   activeValue: T;
@@ -61,7 +63,7 @@ export class FormTableComponent<T> implements OnInit, OnDestroy {
   /* We need to keep track of the current page since it will affect the index that we are working on */
   pageConfig: PageState = { pageIndex: 0, pageSize: 5 };
   formItem: FormEntity<EntityControl<T>, T>;
-  
+
   keepOrder = () => 0;
 
   constructor(private cdr: ChangeDetectorRef) { }
