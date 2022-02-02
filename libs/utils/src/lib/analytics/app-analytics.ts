@@ -12,24 +12,18 @@ export class FireAnalytics {
     private authService: AuthService,
   ) { }
 
-  public event(name: AnalyticsEvents, params: Record<string, unknown>) {
-    const { uid, orgId } = this.authService.profile;
-    this.authService.isBlockframesAdmin$.pipe(take(1)).toPromise().then(isBlockframesAdmin => {
-      const isOperator = isBlockframesAdmin || Object.values(centralOrgId).includes(orgId);
-      if (uid && orgId && isOperator) {
-        /**
-         * @dev We do not want to log centralOrg operators nor blockframes
-         * admins actions on the platform.
-         */
-        return false;
-      }
+  public async event(name: AnalyticsEvents, params: Record<string, unknown>) {
+    const isBlockframesAdmin = await this.authService.isBlockframesAdmin$.pipe(take(1)).toPromise();
+    const auth = await this.authService.auth$.pipe(take(1)).toPromise();
+    const { uid, profile } = auth;
+    const isOperator = isBlockframesAdmin || Object.values(centralOrgId).includes(profile?.orgId);
 
-      try {
-        this.analytics.logEvent(name, { ...params, uid }); // @TODO #7286 check that this is working
-      } catch {
-        this.analytics.logEvent(name, { ...params });
-      }
-    }); // @TODO #7286 check that this is working
+    /**
+     * @dev We do not want to log centralOrg operators nor blockframes
+     * admins actions on the platform.
+     */
+    if (uid && profile?.orgId && isOperator) return false;
+    this.analytics.logEvent(name, { ...params, uid });
   }
 
   public setUserProperties(properties: Partial<AnalyticsUserProperties>) {

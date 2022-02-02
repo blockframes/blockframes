@@ -6,7 +6,7 @@ import firebase from 'firebase/app';
 import { UserCredential } from '@firebase/auth-types';
 import { FireAuthService, CollectionConfig } from 'akita-ng-fire';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { map, switchMap, take } from 'rxjs/operators';
+import { map, switchMap, take, withLatestFrom } from 'rxjs/operators';
 import { getCurrentApp, App } from '@blockframes/utils/apps';
 import { PublicUser, PrivacyPolicy } from '@blockframes/user/types';
 import { Intercom } from 'ng-intercom';
@@ -14,12 +14,13 @@ import { getIntercomOptions } from '@blockframes/utils/intercom/intercom.service
 import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.service';
 import { intercomId, production } from '@env';
 import { createDocumentMeta, DocumentMeta } from '@blockframes/utils/models-meta';
-import { BehaviorSubject, Subject } from 'rxjs';
-import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
+import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { getBrowserWithVersion } from '@blockframes/utils/browser/utils';
 import { IpService } from '@blockframes/utils/ip';
 import { OrgEmailData } from '@blockframes/utils/emails/utils';
 import { AnonymousCredentials, AnonymousRole } from './auth.model';
+import { AngularFireAnalytics } from '@angular/fire/analytics';
+import { AngularFireAuth } from '@angular/fire/auth';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'users', idKey: 'uid' })
@@ -29,9 +30,26 @@ export class AuthService extends FireAuthService<AuthState> {
 
   profile = this.query.user;
   profile$ = this.query.user$;
-  isBlockframesAdmin$ = this.query.user$.pipe(
-    switchMap(user => this.db.collection('blockframesAdmin').doc(user.uid).get().toPromise()),
-    map(snap => snap.exists)
+
+  auth$: Observable<Partial<AuthState>> = this.afAuth.authState.pipe(
+    switchMap(user => user ? this.db.collection<User>('users').doc(user.uid).get() : of(null)),
+    withLatestFrom(this.afAuth.authState),
+    map(([snap, authState]) => {
+      const user = snap?.data();
+      return {
+        uid: user?.uid,
+        emailVerified: authState?.emailVerified || false,
+        profile: user,
+      }
+    })
+  );
+
+  isBlockframesAdmin$ = this.afAuth.authState.pipe( // @TODO #7278 use this.auth$ ?
+    switchMap(async user => {
+      if (!user) return false;
+      const snap = await this.db.collection('blockframesAdmin').doc(user.uid).get().toPromise();
+      return snap.exists;
+    })
   );
 
   constructor(
@@ -40,8 +58,9 @@ export class AuthService extends FireAuthService<AuthState> {
     private functions: AngularFireFunctions,
     private routerQuery: RouterQuery,
     private gdprService: GDPRService,
-    private analytics: FireAnalytics,
+    private analytics: AngularFireAnalytics,
     private ipService: IpService,
+    private afAuth: AngularFireAuth, // @TODO #7278 not needed, use this.auth directly
     @Optional() public ngIntercom?: Intercom,
   ) {
     super(store);

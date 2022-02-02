@@ -120,17 +120,10 @@ export class AppModule {
 
     const navEnds = router.events.pipe(filter(event => event instanceof NavigationEnd));
     navEnds.subscribe((event: NavigationEnd) => {
-      try {
-        analytics.event('pageView', {
-          page_location: 'catalog',
-          page_path: event.urlAfterRedirects
-        });
-      } catch {
-        analytics.event('pageView', {
-          page_location: 'catalog',
-          page_path: event.urlAfterRedirects
-        });
-      }
+      analytics.event('pageView', {
+        page_location: 'catalog',
+        page_path: event.urlAfterRedirects
+      });
     });
   }
 }
