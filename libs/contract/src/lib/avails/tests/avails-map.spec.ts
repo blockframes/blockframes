@@ -4,20 +4,19 @@ import { BucketContract } from '@blockframes/contract/bucket/+state';
 import {
   availDetailsExclusive, availSouthKorea, availAfghanistan,
   availFrance, availsSVODArgentina, availsPayTVArgentina,
-  availsGermany, availsBerlgium, availsExistingEndedSales,
+  availsGermany, availsBelgium, availsExistingEndedSales,
   availsOngoingSales, availsTerritoryWithExclusivity, availsTerritoryWithoutExclusivity,
   availsFranceLuxembourg,availsAllButSouthKorea,
 } from './../fixtures/availsFilters';
 import {
-  mandateMovie1, sale1Movie1, sale2Movie1, sale3Movie1, sale4Movie1,
+  mandateMovie1, saleArgentinaMovie1, saleGermanyMovie1, saleCanadaMovie1, saleBelgiumFrnaceLuxembourgMovie1,
 } from './../fixtures/mandatesAndSales';
 import { FullMandate, FullSale, territoryAvailabilities } from '../avails';
 
-const sales = [sale1Movie1, sale2Movie1, sale3Movie1, sale4Movie1]
+const sales = [saleArgentinaMovie1, saleGermanyMovie1, saleCanadaMovie1, saleBelgiumFrnaceLuxembourgMovie1]
 
 
 describe('Test territoryAvailabilities pure function', () => {
-
   it('territoryAvailabilities', () => {
     const mandate = {
       titleId: 'titleA',
@@ -123,7 +122,7 @@ describe('Test terms are out of movie mandate', () => {
     expect(availableTerritories).toContain('czech');
   })
 
-  it('Check available non exclusive', () => {
+  it('Check available due to non exclusive', () => {
     const markers = territoryAvailabilities(availsTerritoryWithoutExclusivity, [mandateMovie1], sales, []);
     const availableTerritories = markers.available.map(marker => marker.slug)
     expect(availableTerritories).toContain('germany',);
@@ -161,7 +160,7 @@ describe('Test terms are out of movie mandate', () => {
   })
 
   it('Check available terms with existing future sales', () => {
-    const markers = territoryAvailabilities(availsBerlgium, [mandateMovie1], sales, []);
+    const markers = territoryAvailabilities(availsBelgium, [mandateMovie1], sales, []);
     const availableTerritories = markers.available.map(s => s.slug)
     expect(markers.available.length).toBeGreaterThan(0);
     expect(availableTerritories).toContain('belgium');
