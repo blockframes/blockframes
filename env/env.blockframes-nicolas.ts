@@ -9,9 +9,9 @@ export const persistenceSettings = {
 
 export const appUrl = {
   content: 'https://blockframes-nicolas.web.app',
-  market: 'https://festival-blockframes-bruce.web.app',
-  crm: 'https://crm-blockframes-bruce.web.app',
-  financiers: 'https://financiers-blockframes-bruce.web.app',
+  market: 'https://festival-blockframes-nicolas.web.app',
+  crm: 'https://crm-blockframes-nicolas.web.app',
+  financiers: 'https://financiers-blockframes-nicolas.web.app',
 };
 
 const firebaseConfig = {
