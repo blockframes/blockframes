@@ -10,6 +10,7 @@ import { FormControl } from '@angular/forms';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { AgendaService } from '@blockframes/utils/agenda/agenda.service';
 import { eventTime } from '@blockframes/event/pipes/event-time.pipe';
+import { ActivatedRoute } from '@angular/router';
 
 const typesLabel = {
   screening: 'Screenings',
@@ -38,10 +39,15 @@ export class EventListComponent implements OnInit {
     private orgService: OrganizationService,
     private cdr: ChangeDetectorRef,
     private dynTitle: DynamicTitleService,
-    private agendaService: AgendaService
+    private agendaService: AgendaService,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit() {
+    const params = this.route.snapshot.queryParams;
+    if (params.date) {
+      this.viewDate = new Date(params.date);
+    }
     this.events$ = combineLatest([
       this.orgService.org$,
       this.filter.valueChanges.pipe(startWith(this.filter.value))
