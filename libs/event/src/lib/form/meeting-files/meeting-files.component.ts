@@ -37,6 +37,7 @@ export class MeetingFilesComponent implements OnInit {
   removeSelectedFile(index: number, $event: Event) {
     $event.stopPropagation();
     this.files.removeAt(index);
+    this.files.markAsDirty();
   }
 
   previewFile(ref: StorageFile) {
@@ -53,6 +54,7 @@ export class MeetingFilesComponent implements OnInit {
       }
     }).afterClosed().pipe(take(1)).subscribe(result => {
       this.files.patchAllValue(result);
+      this.files.markAsDirty();
       this.cdr.markForCheck();
     });
   }
