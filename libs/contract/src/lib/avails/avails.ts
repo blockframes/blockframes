@@ -234,7 +234,7 @@ export function territoryAvailabilities(
   // 2) we repeat the process for the sales & bucket territories to color them as `sold`
   // 3) finally we apply the `selected` color
 
-  // Note: The function doesn't perform any check, form its point of view a `sold` territory can become `selected`
+  // Note: The function doesn't perform any check, from its point of view a `sold` territory can become `selected`
   // Note: The checks should be performed by the parent component to prevent a user to select a `sold` territory
 
   assertValidTitle(mandates, sales, bucketContracts);
