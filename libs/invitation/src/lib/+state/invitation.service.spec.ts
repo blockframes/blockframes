@@ -1,5 +1,4 @@
-﻿import { Injectable } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
+﻿import { TestBed } from '@angular/core/testing';
 import { InvitationService } from './invitation.service';
 import { AuthQuery, createUser } from '@blockframes/auth/+state';
 import { AngularFireModule } from '@angular/fire';
@@ -14,7 +13,6 @@ import { HttpTestingController } from '@angular/common/http/testing';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Observable } from 'rxjs';
 
-@Injectable()
 class InjectedAuthQuery { // @TODO #7273 remove
   userId = 'userId';
   orgId = 'orgId';

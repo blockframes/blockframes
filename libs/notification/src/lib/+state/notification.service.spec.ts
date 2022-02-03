@@ -8,6 +8,14 @@ import { readFileSync } from 'fs';
 import { HttpClient } from '@angular/common/http';
 import { HttpTestingController } from '@angular/common/http/testing';
 import { AngularFireAuth } from '@angular/fire/auth';
+import { Observable } from 'rxjs';
+import { AnalyticsService } from '@blockframes/utils/analytics/analytics.service';
+
+class InjectedAngularFireAuth {
+  authState = new Observable();
+}
+
+class InjectedAnalyticsService {}
 
 describe('Notifications Test Suite', () => {
   let service: NotificationService;
@@ -22,7 +30,8 @@ describe('Notifications Test Suite', () => {
       providers: [
         NotificationService,
         { provide: HttpClient, useClass: HttpTestingController },
-        { provide: AngularFireAuth, useValue: AngularFireAuth },
+        { provide: AngularFireAuth, useClass: InjectedAngularFireAuth },
+        { provide: AnalyticsService, useClass: InjectedAnalyticsService },
         { provide: SETTINGS, useValue: { host: 'localhost:8080', ssl: false } }
       ],
     });
