@@ -244,7 +244,6 @@ describe('Test terms out of movie mandates', () => {
 
   it('Check not licensed due to territory and exclusivity', () => {
     const markers = durationAvailabilities(availsTerritoryWithExclusivity, [mandateMovie1], sales, []);
-    console.log(markers)
     //Germany is sold
     expect(markers.sold.length).toBe(1);
     expect(markers.sold?.[0]?.from?.getTime()).toBe(saleGermanyFrom);
