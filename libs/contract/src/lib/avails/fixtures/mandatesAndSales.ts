@@ -1,3 +1,4 @@
+import { createMandate, createSale } from "@blockframes/contract/contract/+state";
 import { territories, Territory } from "@blockframes/utils/static-model";
 import { FullMandate, FullSale } from "../avails";
 
@@ -9,9 +10,11 @@ import { FullMandate, FullSale } from "../avails";
 export const allButSouthKorea = Object.keys(territories).filter((territory) => territory !== 'south-korea') as Territory[];
 
 export const mandateMovie1 = {
-  titleId: 'Movie1',
-  id: 'mandateMovie1',
-  termIds: ['termMandate1'],
+  ...createMandate({
+    titleId: 'Movie1',
+    id: 'mandateMovie1',
+    termIds: ['termMandate1'],
+  }),
   terms: [{
     id: 'termMandate1',
     contractId: 'mandateMovie1',
@@ -25,13 +28,13 @@ export const mandateMovie1 = {
   }],
 } as FullMandate;
 
-
 export const sale1Movie1 = {
-  type: 'sale',
-  status: 'accepted',
-  titleId: 'Movie1',
-  id: 'sale1Movie1',
-  termIds: ['termSale1Movie1'],
+  ...createSale({
+    status: 'accepted',
+    titleId: 'Movie1',
+    id: 'sale1Movie1',
+    termIds: ['termSale1Movie1'],
+  }),
   terms: [{
     id: 'termSale1Movie1',
     contractId: 'sale1Movie1',
@@ -46,11 +49,12 @@ export const sale1Movie1 = {
 } as FullSale;
 
 export const sale2Movie1 = {
-  type: 'sale',
-  status: 'accepted',
-  titleId: 'Movie1',
-  id: 'sale2Movie1',
-  termIds: ['termSale2Movie1'],
+  ...createSale({
+    status: 'accepted',
+    titleId: 'Movie1',
+    id: 'sale2Movie1',
+    termIds: ['termSale2Movie1'],
+  }),
   terms: [{
     id: 'termSale2Movie1',
     contractId: 'sale2Movie1',
@@ -65,11 +69,12 @@ export const sale2Movie1 = {
 } as FullSale;
 
 export const sale3Movie1 = {
-  type: 'sale',
-  status: 'accepted',
-  titleId: 'Movie1',
-  id: 'sale3Movie1',
-  termIds: ['termSale3Movie1'],
+  ...createSale({
+    status: 'accepted',
+    titleId: 'Movie1',
+    id: 'sale3Movie1',
+    termIds: ['termSale3Movie1'],
+  }),
   terms: [{
     id: 'termSale3Movie1',
     contractId: 'sale3Movie1',
@@ -84,11 +89,12 @@ export const sale3Movie1 = {
 } as FullSale;
 
 export const sale4Movie1 = {
-  type: 'sale',
-  status: 'accepted',
-  titleId: 'Movie1',
-  id: 'sale4Movie1',
-  termIds: ['termSale4Movie1'],
+  ...createSale({
+    status: 'accepted',
+    titleId: 'Movie1',
+    id: 'sale4Movie1',
+    termIds: ['termSale4Movie1']
+  }),
   terms: [{
     id: 'termSale4Movie1',
     contractId: 'sale4Movie1',

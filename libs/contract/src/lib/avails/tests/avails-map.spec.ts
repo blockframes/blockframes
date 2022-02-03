@@ -16,7 +16,7 @@ import { FullMandate, FullSale, territoryAvailabilities } from '../avails';
 const sales = [sale1Movie1, sale2Movie1, sale3Movie1, sale4Movie1]
 
 
-describe.skip('Test territoryAvailabilities pure function', () => {
+describe('Test territoryAvailabilities pure function', () => {
 
   it('territoryAvailabilities', () => {
     const mandate = {
