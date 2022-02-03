@@ -10,6 +10,7 @@ import { Auth, UserRecord } from '@blockframes/firebase-utils';
 import { deleteAllUsers, importAllUsers } from '@blockframes/testing/unit-tests';
 import * as env from '@env';
 import { PublicUser, User } from '@blockframes/user/types';
+import { USER_FIXTURES_PASSWORD } from '@blockframes/firebase-utils/anonymize/util';
 
 export const { storageBucket } = env.firebase();
 
@@ -20,8 +21,6 @@ interface UserConfig {
 
   [key: string]: string | number;
 }
-
-export const USER_FIXTURES_PASSWORD = 'blockframes';
 
 /**
  * @param auth  Firestore Admin Auth object

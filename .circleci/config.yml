@@ -91,6 +91,7 @@ commands:
       - run: cp env/env.blockframes-ci.ts env/env.ts # required for the typechecking & file rewrite to work
       - run: npm install --no-save
       - run: npx cypress install
+      - run: git gc
       - run:
           name: 'Verify that this PR is not introducing weird package.json changes'
           command: |

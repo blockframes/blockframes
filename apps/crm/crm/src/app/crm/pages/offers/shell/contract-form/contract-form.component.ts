@@ -70,7 +70,7 @@ export class ContractFormComponent implements OnInit {
       price: contract.negotiation.price,
       terms: contract.negotiation.terms
     });
-    this.activeTerm = this.route.snapshot.queryParams.termId;
+    this.activeTerm = this.route.snapshot.queryParams.termIndex;
   }
 
   async save() {
