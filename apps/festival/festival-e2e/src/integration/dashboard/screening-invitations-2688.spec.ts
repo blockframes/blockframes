@@ -10,6 +10,7 @@ import { Orgs } from '@blockframes/e2e/fixtures/orgs';
 import { FestivalMarketplaceHomePage, FestivalMarketplaceEventPage, FestivalMarketplaceScreeningPage, FestivalOrganizationListPage, FestivalMarketplaceOrganizationTitlePage, FestivalScreeningPage } from '../../support/pages/marketplace/index';
 import { FestivalDashboardHomePage, EventPage, FestivalInvitationsPage } from '../../support/pages/dashboard/index';
 import { LandingPage } from '../../support/pages/landing';
+import { auth, awaitElementDeletion, festival } from '@blockframes/testing/e2e';
 
 export const NOW = new Date();
 const TestEVENT = EVENTS[0];
@@ -33,25 +34,42 @@ enum UserIndex {
 }
 
 //TODO: Issue: 6757 - Fix this issue separately
-describe.skip('Organiser invites other users to private screening', () => {
+describe('Organiser invites other users to private screening', () => {
   beforeEach(() => {
-    clearDataAndPrepareTest('/');
-    const p1 = new LandingPage();
-    p1.clickLogin();
-  });
+    cy.visit('/');
+    auth.clearBrowserAuth()
+    cy.visit('/');
+  })
 
   it('Organiser creates screening & invites 2 users to the screening', () => {
-    signIn(users[UserIndex.Organiser]);
-    acceptCookie();
+    cy.task('deleteAllSellerEvents', users[UserIndex.Organiser].uid) // ! Clean up any existing events!
+    /*
+    * We need to create a seller, create an org, upload a title, create a screening event for it
+   * we need to make two buyer users
+   * we need to invite those buyers to the screening
+   * then we run the test.
+   */
+    cy.contains('Accept cookies').click();
+    cy.task('log', users[UserIndex.Organiser].uid);
+    auth.loginWithEmailAndPassword(users[UserIndex.Organiser].email);
 
-    (new FestivalMarketplaceHomePage()).goToDashboard();
-    const p1 = new FestivalDashboardHomePage();
-    const p2: EventPage = p1.goToCalendar();
+
+    // (new FestivalMarketplaceHomePage()).goToDashboard();
+    // const p1 = new FestivalDashboardHomePage();
+    // const p2: EventPage = p1.goToCalendar();
+    cy.intercept('/c/o/dashboard/event').as('calendar');
+    cy.visit('/c/o/dashboard/event')
+    cy.wait('@calendar');
+
     cy.log(`Create screening {${TestEVENT.event}}`)
-    const invitees = [users[UserIndex.InvitedUser1].email,
-                      users[UserIndex.InvitedUser2].email];
-    p2.createEvent(TestEVENT.event, NOW,
-      TestEVENT.movie.title.international, false, invitees);
+    awaitElementDeletion('mat-spinner');
+    festival.createDetailedEvent(new Date(), 'Screening', TestEVENT.event);
+
+
+    // const invitees = [users[UserIndex.InvitedUser1].email, users[UserIndex.InvitedUser2].email];
+    // p2.createEvent(TestEVENT.event, NOW, TestEVENT.movie.title.international, false, invitees);
+
+    cy.pause();
   });
 
   it(`InvitedUser1: logs in, accepts his invitations & runs the video`, () => {

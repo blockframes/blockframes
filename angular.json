@@ -612,6 +612,16 @@
           },
           "configurations": {
             "emulator": {
+              "buildOptimizer": false,
+              "optimization": {
+                "scripts": false,
+                "styles": false,
+                "fonts": false
+              },
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": false,
+              "namedChunks": true,
               "fileReplacements": [
                 {
                   "replace": "apps/festival/festival/src/environment/environment.ts",
