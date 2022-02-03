@@ -1,6 +1,7 @@
-﻿import { AuthLoginPage } from "../pages/auth";
+﻿// import { AuthLoginPage } from "../pages/auth";
 import { User } from "./type";
 import { SEC } from './env';
+import { loginWithEmail } from "@blockframes/testing/e2e";
 
 /** Clear cookies, local storage, indexedDB and navigate to the path (/auth by default). */
 export function clearDataAndPrepareTest(path: string = '/auth') {
@@ -14,24 +15,29 @@ export function clearDataAndPrepareTest(path: string = '/auth') {
   cy.viewport('ipad-2', 'landscape');
 }
 
-/** Start on AuthWelcomePage, on AuthLoginPage and signin. You have to create a new page depending of the app. */
+/**
+ * Start on AuthWelcomePage, on AuthLoginPage and signin. You have to create a new page depending of the app.
+ * @deprecated Use newer signIn method - implemented in festival auth (and other apps too since auth is shared)
+ */
 export function signIn(user: Partial<User>, fillIdentity: boolean = false) {
-  const p1: AuthLoginPage = new AuthLoginPage();
-  p1.fillSignin(user);
-  p1.clickSignIn();
-  cy.wait(10000);
-  //Submit Identity on demand
-  if (fillIdentity) {
-    // cy.url().then(afterLoginURL => {
-    //   if (afterLoginURL.includes('auth/identity')) {
-    //     const pIdentity = new AuthIdentityPage();
-    //     pIdentity.confirm(user);
-    //   }
-    // });
-    //return cy.url();
-  }
+  // ! This function will be replaced eventually. We are using the updated login method here now
+  return loginWithEmail(user.email);
+  // const p1: AuthLoginPage = new AuthLoginPage();
+  // p1.fillSignin(user);
+  // p1.clickSignIn();
+  // cy.wait(10000);
+  // //Submit Identity on demand
+  // if (fillIdentity) {
+  //   // cy.url().then(afterLoginURL => {
+  //   //   if (afterLoginURL.includes('auth/identity')) {
+  //   //     const pIdentity = new AuthIdentityPage();
+  //   //     pIdentity.confirm(user);
+  //   //   }
+  //   // });
+  //   //return cy.url();
+  // }
 
-  //return "";
+  // //return "";
 }
 
 export function uploadFile(p: string, type: string, testId: string) {

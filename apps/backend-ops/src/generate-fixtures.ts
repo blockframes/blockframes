@@ -1,6 +1,6 @@
 import { promises as fsPromises } from 'fs';
 import { join } from 'path';
-import { USER_FIXTURES_PASSWORD } from './users';
+import { USER_FIXTURES_PASSWORD } from '@blockframes/firebase-utils/anonymize/util';
 import staticUsers from 'tools/static-users.json'
 import type { Movie } from '@blockframes/movie/+state/movie.model';
 import type { Organization } from '@blockframes/organization/+state/organization.model';
@@ -44,7 +44,7 @@ async function generateMovies(db: FirebaseFirestore.Firestore) {
 
   console.time('Fetching movies from Firestore');
   const { docs } = await db.collection('movies').get();
-  const movies =  docs.map(d => d.data() as Movie);
+  const movies = docs.map(d => d.data() as Movie);
   console.timeEnd('Fetching movies from Firestore');
 
   const output: Partial<Movie>[] = movies.map((movie) => ({
@@ -65,7 +65,7 @@ async function generateOrgs(db: FirebaseFirestore.Firestore) {
 
   console.time('Fetching orgs from Firestore');
   const { docs } = await db.collection('orgs').get();
-  const orgs =  docs.map(d => d.data() as Organization);
+  const orgs = docs.map(d => d.data() as Organization);
   console.timeEnd('Fetching orgs from Firestore');
 
   const output: Partial<Organization>[] = orgs.map((org) => ({
