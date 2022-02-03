@@ -44,7 +44,7 @@ export class AuthService extends FireAuthService<AuthState> {
     })
   );
 
-  isBlockframesAdmin$ = this.afAuth.authState.pipe( // @TODO #7278 use this.auth$ ?
+  isBlockframesAdmin$ = this.afAuth.authState.pipe(
     switchMap(async user => {
       if (!user) return false;
       const snap = await this.db.collection('blockframesAdmin').doc(user.uid).get().toPromise();
@@ -60,7 +60,7 @@ export class AuthService extends FireAuthService<AuthState> {
     private gdprService: GDPRService,
     private analytics: AngularFireAnalytics,
     private ipService: IpService,
-    private afAuth: AngularFireAuth, // @TODO #7278 not needed, use this.auth directly
+    private afAuth: AngularFireAuth, // @TODO #7278 don't use this.auth directly as this belongs to akita-ng-fire
     @Optional() public ngIntercom?: Intercom,
   ) {
     super(store);

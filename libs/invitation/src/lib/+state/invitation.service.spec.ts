@@ -24,6 +24,10 @@ class InjectedAuthQuery { // @TODO #7273 remove
   getValue() { return {} }
 }
 
+class InjectedAngularFireAuth {
+  authState = new Observable();
+}
+
 const today = new Date();
 const invitationParamsOrg = {
   date: today,
@@ -54,7 +58,7 @@ describe('Invitations Test Suite', () => {
       providers: [
         InvitationService,
         { provide: HttpClient, useClass: HttpTestingController },
-        { provide: AngularFireAuth, useValue: AngularFireAuth },
+        { provide: AngularFireAuth, useClass: InjectedAngularFireAuth },
         { provide: AuthQuery, useClass: InjectedAuthQuery },
         { provide: SETTINGS, useValue: { host: 'localhost:8080', ssl: false } }
       ],
