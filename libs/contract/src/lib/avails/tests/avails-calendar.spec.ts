@@ -20,28 +20,29 @@ import {
   availsOngoingSales, availsTerritoryWithExclusivity, availsTerritoryWithoutExclusivity,
   availsFranceLuxembourg, availsAllButSouthKorea,
 } from './../fixtures/availsFilters';
-
+import { assertDate } from './utils'
 import {
   mandateMovie1, saleArgentinaMovie1, saleGermanyMovie1, saleCanadaMovie1, saleBelgiumFranceLuxembourgMovie1,
 } from './../fixtures/mandatesAndSales';
 
 const sales = [saleArgentinaMovie1, saleGermanyMovie1, saleCanadaMovie1, saleBelgiumFranceLuxembourgMovie1]
-const saleGermanyFrom = saleGermanyMovie1.terms[0].duration.from.getTime();
-const saleGermanyTo=saleGermanyMovie1.terms[0].duration.to.getTime();
+const { from: saleGermanyFrom, to: saleGermanyTo } = saleGermanyMovie1.terms[0].duration;
+// const saleGermanyFrom = saleGermanyMovie1.terms[0].duration.from;
+// const saleGermanyTo=saleGermanyMovie1.terms[0].duration.to;
 
-const saleCanadaFrom = saleCanadaMovie1.terms[0].duration.from.getTime();
-const saleCanadaTo = saleCanadaMovie1.terms[0].duration.to.getTime();
+const { from: saleCanadaFrom, to: saleCanadaTo } = saleCanadaMovie1.terms[0].duration;
+// const saleCanadaTo = saleCanadaMovie1.terms[0].duration.to;
 
-const saleArgentinaFrom = saleArgentinaMovie1.terms[0].duration.from.getTime();
-const saleArgentinaTo = saleArgentinaMovie1.terms[0].duration.to.getTime();
+const { from: saleArgentinaFrom, to: saleArgentinaTo } = saleArgentinaMovie1.terms[0].duration;
+// const saleArgentinaTo = saleArgentinaMovie1.terms[0].duration.to;
 
-const mandateFrom = mandateMovie1.terms[0].duration.from.getTime();
-const mandateTo = mandateMovie1.terms[0].duration.to.getTime();
+const { from: mandateFrom, to: mandateTo } = mandateMovie1.terms[0].duration;
+// const mandateTo = mandateMovie1.terms[0].duration.to;
 
-const saleBelgiumFranceLuxembourgFrom = saleBelgiumFranceLuxembourgMovie1.terms[0].duration.from.getTime();
-const saleBelgiumFranceLuxembourgTo = saleBelgiumFranceLuxembourgMovie1.terms[0].duration.to.getTime();
+const { from: saleBelgiumFranceLuxembourgFrom, to: saleBelgiumFranceLuxembourgTo } = saleBelgiumFranceLuxembourgMovie1.terms[0].duration;
+// const saleBelgiumFranceLuxembourgTo = saleBelgiumFranceLuxembourgMovie1.terms[0].duration.to;
 
-describe.skip('Calendar', () => {
+describe('Calendar', () => {
   describe('Test Matrix', () => {
 
     it('Test isBefore', () => {
@@ -192,8 +193,9 @@ describe('Test terms out of movie mandates', () => {
   it('Check available on mandate duration', () => {
     const markers = durationAvailabilities(availAfghanistan, [mandateMovie1], sales, []);
     expect(markers.available.length).toBe(1);
-    expect(markers.available?.[0].from.getTime()).toBe(new Date('01/01/2021').getTime());
-    expect(markers.available?.[0].to.getTime()).toBe(new Date('01/31/2035').getTime());
+    const { from, to } = markers.available?.[0]
+    assertDate(from, mandateFrom)
+    assertDate(to, mandateTo)
   })
 
   it('Check not licensed due to media', () => {
@@ -208,13 +210,15 @@ describe('Test terms out of movie mandates', () => {
 
     //Germany is sold
     expect(markers.sold.length).toBe(1);
-    expect(markers.sold?.[0]?.from?.getTime()).toBe(new Date('06/01/2019').getTime());
-    expect(markers.sold?.[0]?.to?.getTime()).toBe(new Date('12/31/2030').getTime());
+    const { from: soldFrom, to: soldTo } = markers.sold?.[0];
+    assertDate(soldFrom, saleGermanyFrom);
+    assertDate(soldTo, saleGermanyTo);
 
     //Available on mandate duration.
     expect(markers.available.length).toBe(1);
-    expect(markers.available?.[0]?.from?.getTime()).toBe(new Date('01/01/2021').getTime());
-    expect(markers.available?.[0]?.to?.getTime()).toBe(new Date('01/31/2035').getTime());
+    const { from: availableFrom, to: availableTo } = markers.available?.[0];
+    assertDate(availableFrom, mandateFrom);
+    assertDate(availableTo, mandateTo);
 
     expect(markers.inBucket.length).toBe(0);
   })
@@ -223,13 +227,15 @@ describe('Test terms out of movie mandates', () => {
     const markers = durationAvailabilities(availsOngoingSales, [mandateMovie1], sales, []);
     //Germany is sold
     expect(markers.sold.length).toBe(1);
-    expect(markers.sold?.[0]?.from?.getTime()).toBe(saleGermanyFrom);
-    expect(markers.sold?.[0]?.to?.getTime()).toBe(saleGermanyTo);
+    const { from: soldFrom, to: soldTo } = markers.sold?.[0];
+    assertDate(soldFrom, saleGermanyFrom);
+    assertDate(soldTo, saleGermanyTo);
 
     //Available on mandate duration.
     expect(markers.available.length).toBe(1);
-    expect(markers.available?.[0]?.from?.getTime()).toBe(mandateFrom);
-    expect(markers.available?.[0]?.to?.getTime()).toBe(mandateTo);
+    const { from: availableFrom, to: availableTo } = markers.available?.[0];
+    assertDate(availableFrom, mandateFrom);
+    assertDate(availableTo, mandateTo);
 
     expect(markers.inBucket.length).toBe(0);
   })
@@ -237,8 +243,9 @@ describe('Test terms out of movie mandates', () => {
   it('Check available non exclusive', () => {
     const markers = durationAvailabilities(availsTerritoryWithoutExclusivity, [mandateMovie1], sales, []);
     expect(markers.available.length).toBe(1);
-    expect(markers.available?.[0]?.from?.getTime()).toBe(mandateFrom);
-    expect(markers.available?.[0]?.to?.getTime()).toBe(mandateTo);
+    const { from, to } = markers.available?.[0];
+    assertDate(from, mandateFrom);
+    assertDate(to, mandateTo);
     expect(markers.inBucket.length).toBe(0);
   })
 
@@ -246,21 +253,25 @@ describe('Test terms out of movie mandates', () => {
     const markers = durationAvailabilities(availsTerritoryWithExclusivity, [mandateMovie1], sales, []);
     //Germany is sold
     expect(markers.sold.length).toBe(1);
-    expect(markers.sold?.[0]?.from?.getTime()).toBe(saleGermanyFrom);
-    expect(markers.sold?.[0]?.to?.getTime()).toBe(saleGermanyTo);
+    const {from:soldFrom, to:soldTo} = markers.sold?.[0];
+    assertDate(soldFrom,saleGermanyFrom);
+    assertDate(soldTo,saleGermanyTo);
 
     //Available on mandate duration
     expect(markers.available.length).toBe(1);
-    expect(markers.available?.[0]?.from?.getTime()).toBe(mandateFrom);
-    expect(markers.available?.[0]?.to?.getTime()).toBe(mandateTo);
+    const {from:availableFrom, to:availableTo} = markers.available?.[0];
+    assertDate(availableFrom,mandateFrom);
+    assertDate(availableTo,mandateTo);
+
     expect(markers.inBucket.length).toBe(0);
   })
 
   it('Check terms available', () => {
     const markers = durationAvailabilities(availsSVODArgentina, [mandateMovie1], sales, []);
     expect(markers.available.length).toBe(1);
-    expect(markers.available?.[0]?.from?.getTime()).toBe(mandateFrom);
-    expect(markers.available?.[0]?.to?.getTime()).toBe(mandateTo);
+    const {from, to} = markers.available?.[0];
+    assertDate(from,mandateFrom);
+    assertDate(to,mandateTo);
 
     expect(markers.sold.length).toBe(0);
     expect(markers.inBucket.length).toBe(0);
@@ -270,13 +281,15 @@ describe('Test terms out of movie mandates', () => {
     const markers = durationAvailabilities(availsPayTVArgentina, [mandateMovie1], sales, []);
     //Argentina is sold
     expect(markers.sold.length).toBe(1);
-    expect(markers.sold?.[0]?.from?.getTime()).toBe(saleArgentinaFrom);
-    expect(markers.sold?.[0]?.to?.getTime()).toBe(saleArgentinaTo);
+    const {from:soldFrom, to:soldTo} = markers.sold?.[0];
+    assertDate(soldFrom,saleArgentinaFrom);
+    assertDate(soldTo,saleArgentinaTo);
 
     //Available on mandate duration.
     expect(markers.available.length).toBe(1);
-    expect(markers.available?.[0]?.from?.getTime()).toBe(mandateFrom);
-    expect(markers.available?.[0]?.to?.getTime()).toBe(mandateTo);
+    const {from:availableFrom, to:availableTo} = markers.available?.[0];
+    assertDate(availableFrom,mandateFrom);
+    assertDate(availableTo,mandateTo);
 
     expect(markers.inBucket.length).toBe(0);
   })
@@ -284,8 +297,9 @@ describe('Test terms out of movie mandates', () => {
   it('Check available due to non exclusivity', () => {
     const markers = durationAvailabilities(availsGermany, [mandateMovie1], sales, []);
     expect(markers.available.length).toBe(1);
-    expect(markers.available?.[0]?.from?.getTime()).toBe(mandateFrom);
-    expect(markers.available?.[0]?.to?.getTime()).toBe(mandateTo);
+    const {from, to}=markers.available?.[0];
+    assertDate(from,mandateFrom);
+    assertDate(to,mandateTo);
 
     expect(markers.inBucket.length).toBe(0);
     expect(markers.sold.length).toBe(0);
@@ -295,14 +309,15 @@ describe('Test terms out of movie mandates', () => {
     const markers = durationAvailabilities(availsBelgium, [mandateMovie1], sales, []);
     //Belgium is sold
     expect(markers.sold.length).toBe(1);
-    expect(markers.sold?.[0]?.from?.getTime()).toBe(saleBelgiumFranceLuxembourgFrom);
-    expect(markers.sold?.[0]?.to?.getTime()).toBe(saleBelgiumFranceLuxembourgTo);
+    const {from:soldFrom, to:soldTo} = markers.sold?.[0];
+    assertDate(soldFrom,saleBelgiumFranceLuxembourgFrom);
+    assertDate(soldTo,saleBelgiumFranceLuxembourgTo);
 
     //Available on mandate duration.
     expect(markers.available.length).toBe(1);
-    expect(markers.available?.[0]?.from?.getTime()).toBe(mandateFrom);
-    expect(markers.available?.[0]?.to?.getTime()).toBe(mandateTo);
-
+    const {from:availableFrom, to:availableTo} = markers.available?.[0];
+    assertDate(availableFrom,mandateFrom);
+    assertDate(availableTo,mandateTo);
     expect(markers.inBucket.length).toBe(0);
   })
 
@@ -310,13 +325,15 @@ describe('Test terms out of movie mandates', () => {
     const markers = durationAvailabilities(availsFranceLuxembourg, [mandateMovie1], sales, []);
     //France/Luxembourg are sold
     expect(markers.sold.length).toBe(1);
-    expect(markers.sold?.[0]?.from?.getTime()).toBe(saleBelgiumFranceLuxembourgFrom);
-    expect(markers.sold?.[0]?.to?.getTime()).toBe(saleBelgiumFranceLuxembourgTo);
+    const {from:soldFrom, to:soldTo} = markers.sold?.[0];
+    assertDate(soldFrom,saleBelgiumFranceLuxembourgFrom);
+    assertDate(soldTo,saleBelgiumFranceLuxembourgTo);
 
     //Available on mandate duration.
     expect(markers.available.length).toBe(1);
-    expect(markers.available?.[0]?.from?.getTime()).toBe(mandateFrom);
-    expect(markers.available?.[0]?.to?.getTime()).toBe(mandateTo);
+    const {from:availableFrom, to:availableTo} = markers.available?.[0];
+    assertDate(availableFrom,mandateFrom);
+    assertDate(availableTo,mandateTo);
 
     expect(markers.inBucket.length).toBe(0);
   })
@@ -329,17 +346,17 @@ describe('Test terms out of movie mandates', () => {
 
     expect(markers.sold.length).toBe(3);
 
-    expect(argentinaMarker?.from?.getTime()).toBe(saleArgentinaFrom);
-    expect(argentinaMarker?.to?.getTime()).toBe(saleArgentinaTo);
+    assertDate(argentinaMarker?.from, saleArgentinaFrom);
+    assertDate(argentinaMarker?.to, saleArgentinaTo);
 
-    expect(germanyMarker?.from?.getTime()).toBe(saleGermanyFrom);
-    expect(germanyMarker?.to?.getTime()).toBe(saleGermanyTo);
+    assertDate(germanyMarker?.from, saleGermanyFrom);
+    assertDate(germanyMarker?.to, saleGermanyTo);
 
-    expect(canadaMarker?.from?.getTime()).toBe(saleCanadaFrom);
-    expect(canadaMarker?.to?.getTime()).toBe(saleCanadaTo);
-
-    expect(markers.available?.[0]?.from?.getTime()).toBe(mandateFrom);
-    expect(markers.available?.[0]?.to?.getTime()).toBe(mandateTo);
+    assertDate(canadaMarker?.from, saleCanadaFrom);
+    assertDate(canadaMarker?.to, saleCanadaTo);
+    const {from, to} = markers.available?.[0];
+    assertDate(from,mandateFrom);
+    assertDate(to,mandateTo);
   })
 
 })
