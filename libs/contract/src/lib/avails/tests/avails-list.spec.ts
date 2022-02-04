@@ -12,6 +12,7 @@ import {
   saleSouthKoreaMovie4, saleRussiaMovie4, saleGermanyMovie4,
   saleAfghanistanMovie5, saleGermanyMovie5
 } from './../fixtures/mandatesAndSales';
+import { assetArray } from './utils';
 
 const mandatesMovie2 = [mandate1Movie2, mandate2Movie2];
 const mandatesMovie3 = [mandate1Movie3, mandate2Movie3];
@@ -35,11 +36,12 @@ describe('Avails data', () => {
     const movie3Mandates = availableTitle(availsListSouthKorea, mandatesMovie3, movie3Sales);
     const movie4Mandates = availableTitle(availsListSouthKorea, [mandateMovie4], movie4Sales);
     const movie5Mandates = availableTitle(availsListSouthKorea, [mandateMovie5], movie5Sales);
-    expect(movie2Mandates.length).toBe(1);
-    expect(movie1Mandates.length).toBe(0);
-    expect(movie3Mandates.length).toBe(0);
-    expect(movie5Mandates.length).toBe(0);
-    expect(movie4Mandates.length).toBe(0);
+    const provided = [
+      movie2Mandates.length, movie1Mandates.length,
+      movie3Mandates.length, movie5Mandates.length,
+      movie4Mandates.length
+    ];
+    assetArray(provided, [1, 0, 0, 0, 0])
   });
 
   it('tests duration on Afghanistan', () => {
@@ -48,11 +50,12 @@ describe('Avails data', () => {
     const movie3Mandates = availableTitle(availsListAfghanistan, mandatesMovie3, movie3Sales);
     const movie4Mandates = availableTitle(availsListAfghanistan, [mandateMovie4], movie4Sales);
     const movie5Mandates = availableTitle(availsListAfghanistan, [mandateMovie5], movie5Sales);
-    expect(movie3Mandates.length).toBe(1);
-    expect(movie1Mandates.length).toBe(0);
-    expect(movie2Mandates.length).toBe(0);
-    expect(movie5Mandates.length).toBe(0);
-    expect(movie4Mandates.length).toBe(0);
+    const provided = [
+      movie3Mandates.length, movie1Mandates.length,
+      movie2Mandates.length, movie5Mandates.length,
+      movie4Mandates.length
+    ];
+    assetArray(provided, [1, 0, 0, 0, 0]);
   });
 
   it('tests rights on france', () => {
@@ -61,11 +64,12 @@ describe('Avails data', () => {
     const movie3Mandates = availableTitle(availsListFrance, mandatesMovie3, movie3Sales);
     const movie4Mandates = availableTitle(availsListFrance, [mandateMovie4], movie4Sales);
     const movie5Mandates = availableTitle(availsListFrance, [mandateMovie5], movie5Sales);
-    expect(movie1Mandates.length).toBe(0);
-    expect(movie2Mandates.length).toBe(0);
-    expect(movie3Mandates.length).toBe(1);
-    expect(movie4Mandates.length).toBe(1);
-    expect(movie5Mandates.length).toBe(1);
+    const provided = [
+      movie1Mandates.length, movie2Mandates.length,
+      movie3Mandates.length, movie4Mandates.length,
+      movie5Mandates.length
+    ];
+    assetArray(provided, [0, 0, 1, 1, 1]);
   });
 
   it('tests ended sales', () => {
@@ -74,11 +78,12 @@ describe('Avails data', () => {
     const movie3Mandates = availableTitle(availsListGermanyRussiaCzech, mandatesMovie3, movie3Sales);
     const movie4Mandates = availableTitle(availsListGermanyRussiaCzech, [mandateMovie4], movie4Sales);
     const movie5Mandates = availableTitle(availsListGermanyRussiaCzech, [mandateMovie5], movie5Sales);
-    expect(movie1Mandates.length).toBe(1);
-    expect(movie2Mandates.length).toBe(0);
-    expect(movie3Mandates.length).toBe(1);
-    expect(movie4Mandates.length).toBe(0);
-    expect(movie5Mandates.length).toBe(1);
+    const provided = [
+      movie1Mandates.length, movie2Mandates.length,
+      movie3Mandates.length, movie4Mandates.length,
+      movie5Mandates.length
+    ];
+    assetArray(provided, [1, 0, 1, 0, 1])
   });
 
   it('tests ongoing sales request exclusive', () => {
@@ -87,11 +92,12 @@ describe('Avails data', () => {
     const movie3Mandates = availableTitle(availsListOngoingSalesExclusive, mandatesMovie3, movie3Sales);
     const movie4Mandates = availableTitle(availsListOngoingSalesExclusive, [mandateMovie4], movie4Sales);
     const movie5Mandates = availableTitle(availsListOngoingSalesExclusive, [mandateMovie5], movie5Sales);
-    expect(movie1Mandates.length).toBe(0);
-    expect(movie2Mandates.length).toBe(1);
-    expect(movie3Mandates.length).toBe(1);
-    expect(movie4Mandates.length).toBe(1);
-    expect(movie5Mandates.length).toBe(1);
+    const provided = [
+      movie1Mandates.length, movie2Mandates.length,
+      movie3Mandates.length, movie4Mandates.length,
+      movie5Mandates.length
+    ];
+    assetArray(provided, [0, 1, 1, 1, 1]);
   });
 
   it('tests ongoing sales request non exclusive', () => {
@@ -100,11 +106,14 @@ describe('Avails data', () => {
     const movie3Mandates = availableTitle(availsListOngoingSalesNonExclusive, mandatesMovie3, movie3Sales);
     const movie4Mandates = availableTitle(availsListOngoingSalesNonExclusive, [mandateMovie4], movie4Sales);
     const movie5Mandates = availableTitle(availsListOngoingSalesNonExclusive, [mandateMovie5], movie5Sales);
-    expect(movie1Mandates.length).toBe(1);
-    expect(movie2Mandates.length).toBe(1);
-    expect(movie3Mandates.length).toBe(0);
-    expect(movie4Mandates.length).toBe(1);
-    expect(movie5Mandates.length).toBe(0);
+    const provided = [
+      movie1Mandates.length,
+      movie2Mandates.length,
+      movie3Mandates.length,
+      movie4Mandates.length,
+      movie5Mandates.length
+    ];
+    assetArray(provided, [1, 1, 0, 1, 0]);
   });
 
   it('tests territory with exclusivity', () => {
@@ -113,11 +122,12 @@ describe('Avails data', () => {
     const movie3Mandates = availableTitle(availsListGermanyRussiaCzechExclusive, mandatesMovie3, movie3Sales);
     const movie4Mandates = availableTitle(availsListGermanyRussiaCzechExclusive, [mandateMovie4], movie4Sales);
     const movie5Mandates = availableTitle(availsListGermanyRussiaCzechExclusive, [mandateMovie5], movie5Sales);
-    expect(movie1Mandates.length).toBe(0);
-    expect(movie2Mandates.length).toBe(1);
-    expect(movie3Mandates.length).toBe(0);
-    expect(movie4Mandates.length).toBe(0);
-    expect(movie5Mandates.length).toBe(0);
+    const provided = [
+      movie1Mandates.length, movie2Mandates.length,
+      movie3Mandates.length, movie4Mandates.length,
+      movie5Mandates.length
+    ];
+    assetArray(provided, [0, 1, 0, 0, 0]);
   });
 
   it('tests media (svod) on argentina ', () => {
@@ -126,11 +136,12 @@ describe('Avails data', () => {
     const movie3Mandates = availableTitle(availsListArgentinaSVod, mandatesMovie3, movie3Sales);
     const movie4Mandates = availableTitle(availsListArgentinaSVod, [mandateMovie4], movie4Sales);
     const movie5Mandates = availableTitle(availsListArgentinaSVod, [mandateMovie5], movie5Sales);
-    expect(movie1Mandates.length).toBe(1);
-    expect(movie2Mandates.length).toBe(1);
-    expect(movie3Mandates.length).toBe(0);
-    expect(movie4Mandates.length).toBe(1);
-    expect(movie5Mandates.length).toBe(1);
+    const provided = [
+      movie1Mandates.length, movie2Mandates.length,
+      movie3Mandates.length, movie4Mandates.length,
+      movie5Mandates.length
+    ];
+    assetArray(provided, [1, 1, 0, 1, 1]);
   });
 
   it('tests media(payTv) on argentina', () => {
@@ -139,11 +150,12 @@ describe('Avails data', () => {
     const movie3Mandates = availableTitle(availsListArgentinaPayTV, mandatesMovie3, movie3Sales);
     const movie4Mandates = availableTitle(availsListArgentinaPayTV, [mandateMovie4], movie4Sales);
     const movie5Mandates = availableTitle(availsListArgentinaPayTV, [mandateMovie5], movie5Sales);
-    expect(movie1Mandates.length).toBe(0);
-    expect(movie2Mandates.length).toBe(1);
-    expect(movie3Mandates.length).toBe(1);
-    expect(movie4Mandates.length).toBe(1);
-    expect(movie5Mandates.length).toBe(1);
+    const provided = [
+      movie1Mandates.length, movie2Mandates.length,
+      movie3Mandates.length, movie4Mandates.length,
+      movie5Mandates.length
+    ];
+    assetArray(provided, [0, 1, 1, 1, 1]);
   });
 
   it('tests non-exclusivity on Germany', () => {
@@ -152,11 +164,12 @@ describe('Avails data', () => {
     const movie3Mandates = availableTitle(availsListGermany, mandatesMovie3, movie3Sales);
     const movie4Mandates = availableTitle(availsListGermany, [mandateMovie4], movie4Sales);
     const movie5Mandates = availableTitle(availsListGermany, [mandateMovie5], movie5Sales);
-    expect(movie1Mandates.length).toBe(1);
-    expect(movie2Mandates.length).toBe(1);
-    expect(movie3Mandates.length).toBe(0);
-    expect(movie4Mandates.length).toBe(1);
-    expect(movie5Mandates.length).toBe(0);
+    const provided = [
+      movie1Mandates.length, movie2Mandates.length,
+      movie3Mandates.length, movie4Mandates.length,
+      movie5Mandates.length
+    ];
+    assetArray(provided, [1, 1, 0, 1, 0]);
   });
 
   it('tests exclusivity on canada', () => {
@@ -165,10 +178,11 @@ describe('Avails data', () => {
     const movie3Mandates = availableTitle(availsListCanada, mandatesMovie3, movie3Sales);
     const movie4Mandates = availableTitle(availsListCanada, [mandateMovie4], movie4Sales);
     const movie5Mandates = availableTitle(availsListCanada, [mandateMovie5], movie5Sales);
-    expect(movie1Mandates.length).toBe(0);
-    expect(movie2Mandates.length).toBe(1);
-    expect(movie3Mandates.length).toBe(1);
-    expect(movie4Mandates.length).toBe(1);
-    expect(movie5Mandates.length).toBe(1);
+    const provided = [
+      movie1Mandates.length, movie2Mandates.length,
+      movie3Mandates.length, movie4Mandates.length,
+      movie5Mandates.length
+    ];
+    assetArray(provided, [0, 1, 1, 1, 1]);
   });
 })
