@@ -9,11 +9,11 @@ import {
   availsFranceLuxembourg,availsAllButSouthKorea,
 } from './../fixtures/availsFilters';
 import {
-  mandateMovie1, saleArgentinaMovie1, saleGermanyMovie1, saleCanadaMovie1, saleBelgiumFrnaceLuxembourgMovie1,
+  mandateMovie1, saleArgentinaMovie1, saleGermanyMovie1, saleCanadaMovie1, saleBelgiumFranceLuxembourgMovie1,
 } from './../fixtures/mandatesAndSales';
 import { FullMandate, FullSale, territoryAvailabilities } from '../avails';
 
-const sales = [saleArgentinaMovie1, saleGermanyMovie1, saleCanadaMovie1, saleBelgiumFrnaceLuxembourgMovie1]
+const sales = [saleArgentinaMovie1, saleGermanyMovie1, saleCanadaMovie1, saleBelgiumFranceLuxembourgMovie1]
 
 
 describe('Test territoryAvailabilities pure function', () => {
