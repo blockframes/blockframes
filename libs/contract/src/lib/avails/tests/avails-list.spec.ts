@@ -1,5 +1,15 @@
-
 import { AvailsFilter, availableTitle, FullMandate } from '../avails';
+import {
+  availSouthKorea, availAfghanistan,
+  availFrance, availsSVODArgentina, availsPayTVArgentina,
+  availsGermany, availsBelgium, availsExistingEndedSales,
+  availsOngoingSales, availsTerritoryWithExclusivity, availsTerritoryWithoutExclusivity,
+  availsFranceLuxembourg, availsAllButSouthKorea,
+} from './../fixtures/availsFilters';
+import { assertDate } from './utils'
+import {
+  mandateMovie1, saleArgentinaMovie1, saleGermanyMovie1, saleCanadaMovie1, saleBelgiumFranceLuxembourgMovie1,
+} from './../fixtures/mandatesAndSales';
 
 const mandate = {
   titleId: 'titleA',

@@ -136,11 +136,14 @@ export class ListComponent implements OnDestroy, OnInit {
         // if availsForm is invalid, put all the movies from algolia
         if (this.availsForm.invalid) return movies.hits.map(m => ({ ...m, mandates: [] as FullMandate[] }));
         if (!mandates.length) return [];
-        return movies.hits.map(movie => {
+        const result = movies.hits.map(movie => {
           const res = filterContractsByTitle(movie.objectID, mandates, mandateTerms, sales, saleTerms, bucketValue);
           const availableMandates = availableTitle(availsValue, res.mandates, res.sales, res.bucketContracts);
+          console.log({availableMandates, res})
           return { ...movie, mandates: availableMandates };
         }).filter(m => !!m.mandates.length);
+        console.log({ result })
+        return result;
       }),
     );
   }
