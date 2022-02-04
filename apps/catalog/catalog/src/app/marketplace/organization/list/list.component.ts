@@ -47,7 +47,7 @@ export class ListComponent implements OnInit, OnDestroy {
     const decodedData = decodeUrl<OrganizationSearch>(this.route);
     this.searchForm.setValue({
       ...search,
-      country: '',
+      countries: [],
       ...decodedData
     });
     const sub = this.searchForm.valueChanges.pipe(
@@ -80,8 +80,8 @@ export class ListComponent implements OnInit, OnDestroy {
 
     const subSearchUrl = this.searchForm.valueChanges.pipe(
       throttleTime(1000)
-    ).subscribe(({ country, query }) => {
-      encodeUrl<Partial<OrganizationSearch>>(this.router, this.route, { country, query, });
+    ).subscribe(({ countries, query }) => {
+      encodeUrl<Partial<OrganizationSearch>>(this.router, this.route, { countries, query, });
     });
 
     this.subs.push(sub, subSearchUrl);
