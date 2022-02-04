@@ -28,16 +28,16 @@ export const mandateMovie1 = {
   }],
 } as FullMandate;
 
-export const sale1Movie1 = {
+export const saleArgentinaMovie1 = {
   ...createSale({
     status: 'accepted',
     titleId: 'Movie1',
-    id: 'sale1Movie1',
-    termIds: ['termSale1Movie1'],
+    id: 'saleArgentinaMovie1',
+    termIds: ['termSaleArgentinaMovie1'],
   }),
   terms: [{
-    id: 'termSale1Movie1',
-    contractId: 'sale1Movie1',
+    id: 'termSaleArgentinaMovie1',
+    contractId: 'saleArgentinaMovie1',
     duration: {
       from: new Date('06/01/2019'),
       to: new Date('12/31/2030')
@@ -48,16 +48,16 @@ export const sale1Movie1 = {
   }],
 } as FullSale;
 
-export const sale2Movie1 = {
+export const saleGermanyMovie1 = {
   ...createSale({
     status: 'accepted',
     titleId: 'Movie1',
-    id: 'sale2Movie1',
-    termIds: ['termSale2Movie1'],
+    id: 'saleGermanyMovie1',
+    termIds: ['termSaleGermanyMovie1'],
   }),
   terms: [{
-    id: 'termSale2Movie1',
-    contractId: 'sale2Movie1',
+    id: 'termSaleGermanyMovie1',
+    contractId: 'saleGermanyMovie1',
     duration: {
       from: new Date('06/01/2019'),
       to: new Date('12/31/2030')
@@ -68,16 +68,16 @@ export const sale2Movie1 = {
   }],
 } as FullSale;
 
-export const sale3Movie1 = {
+export const saleCanadaMovie1 = {
   ...createSale({
     status: 'accepted',
     titleId: 'Movie1',
-    id: 'sale3Movie1',
-    termIds: ['termSale3Movie1'],
+    id: 'saleCanadaMovie1',
+    termIds: ['termSaleCanadaMovie1'],
   }),
   terms: [{
-    id: 'termSale3Movie1',
-    contractId: 'sale3Movie1',
+    id: 'termSaleCanadaMovie1',
+    contractId: 'saleCanadaMovie1',
     duration: {
       from: new Date('06/01/2019'),
       to: new Date('12/31/2030')
@@ -88,16 +88,16 @@ export const sale3Movie1 = {
   }],
 } as FullSale;
 
-export const sale4Movie1 = {
+export const saleBelgiumFranceLuxembourgMovie1 = {
   ...createSale({
     status: 'accepted',
     titleId: 'Movie1',
-    id: 'sale4Movie1',
-    termIds: ['termSale4Movie1']
+    id: 'saleBelgiumFrnaceLuxembourgMovie1',
+    termIds: ['termSaleBelgiumFrnaceLuxembourgMovie1']
   }),
   terms: [{
-    id: 'termSale4Movie1',
-    contractId: 'sale4Movie1',
+    id: 'termSaleBelgiumFrnaceLuxembourgMovie1',
+    contractId: 'saleBelgiumFrnaceLuxembourgMovie1',
     duration: {
       from: new Date('01/01/2031'),
       to: new Date('12/31/2032')

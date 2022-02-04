@@ -131,7 +131,7 @@ export const availsGermany: AvailsFilter = {
   medias: ['freeTv']
 };
 
-export const availsBerlgium: AvailsFilter = {
+export const availsBelgium: AvailsFilter = {
   duration: {
     from: new Date('01/01/2022'),
     to: new Date('06/30/2023'),
