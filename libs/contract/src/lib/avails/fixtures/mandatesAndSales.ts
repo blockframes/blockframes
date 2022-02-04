@@ -152,10 +152,10 @@ export const saleAfghanistanMovie2 = {
   ...createSale({
     titleId: 'Movie2',
     id: 'saleAfghanistanMovie2',
-    termIds: ['termsaleAfghanistanMovie2'],
+    termIds: ['termSaleAfghanistanMovie2'],
   }),
   terms: [{
-    id: 'termsaleAfghanistanMovie2',
+    id: 'termSaleAfghanistanMovie2',
     contractId: 'saleAfghanistanMovie2',
     duration: {
       from: new Date('06/01/2022'),
@@ -171,10 +171,10 @@ export const saleWorldMovie2 = {
   ...createSale({
     titleId: 'Movie2',
     id: 'saleWorldMovie2',
-    termIds: ['termsaleWorldMovie2'],
+    termIds: ['termSaleWorldMovie2'],
   }),
   terms: [{
-    id: 'termsaleWorldMovie2',
+    id: 'termSaleWorldMovie2',
     contractId: 'saleWorldMovie2',
     duration: {
       from: new Date('06/01/2022'),
@@ -190,10 +190,10 @@ export const saleGermanyMovie2 = {
   ...createSale({
     titleId: 'Movie2',
     id: 'saleGermanyMovie2',
-    termIds: ['termsaleGermanyMovie2'],
+    termIds: ['termSaleGermanyMovie2'],
   }),
   terms: [{
-    id: 'termsaleGermanyMovie2',
+    id: 'termSaleGermanyMovie2',
     contractId: 'saleGermanyMovie2',
     duration: {
       from: new Date('06/01/2033'),
@@ -209,10 +209,10 @@ export const saleSpainPortugalAustriaMovie2 = {
   ...createSale({
     titleId: 'Movie2',
     id: 'saleGermanyMovie2',
-    termIds: ['termsaleGermanyMovie2'],
+    termIds: ['termSaleGermanyMovie2'],
   }),
   terms: [{
-    id: 'termsaleGermanyMovie2',
+    id: 'termSaleGermanyMovie2',
     contractId: 'saleGermanyMovie2',
     duration: {
       from: new Date('06/01/2033'),
@@ -225,15 +225,15 @@ export const saleSpainPortugalAustriaMovie2 = {
 } as FullSale;
 
 
-export const mandateMovie3 = {
+export const mandate1Movie3 = {
   ...createMandate({
     titleId: 'Movie3',
-    id: 'mandateMovie3',
-    termIds: ['termMandateMovie3'],
+    id: 'mandate1Movie3',
+    termIds: ['termMandate1Movie3'],
   }),
   terms: [{
-    id: 'termMandateMovie3',
-    contractId: 'mandateMovie3',
+    id: 'termMandate1Movie3',
+    contractId: 'mandate1Movie3',
     duration: {
       from: new Date('01/01/2021'),
       to: new Date('01/31/2040')
@@ -244,15 +244,15 @@ export const mandateMovie3 = {
   }],
 } as FullMandate;
 
-export const mandate1Movie3 = {
+export const mandate2Movie3 = {
   ...createMandate({
     titleId: 'Movie3',
-    id: 'mandate1Movie3',
-    termIds: ['termMandate1Movie3'],
+    id: 'mandate2Movie3',
+    termIds: ['termMandate2Movie3'],
   }),
   terms: [{
-    id: 'termMandate1Movie3',
-    contractId: 'mandate1Movie3',
+    id: 'termMandate2Movie3',
+    contractId: 'mandate2Movie3',
     duration: {
       from: new Date('12/01/2040'),
       to: new Date('01/31/2050')
@@ -267,10 +267,10 @@ export const saleGermanyMovie3 = {
   ...createSale({
     titleId: 'Movie3',
     id: 'saleGermanyMovie3',
-    termIds: ['termsaleGermanyMovie3'],
+    termIds: ['termSaleGermanyMovie3'],
   }),
   terms: [{
-    id: 'termsaleGermanyMovie3',
+    id: 'termSaleGermanyMovie3',
     contractId: 'saleGermanyMovie3',
     duration: {
       from: new Date('06/01/2021'),
@@ -286,10 +286,10 @@ export const saleArgentinaMovie3 = {
   ...createSale({
     titleId: 'Movie3',
     id: 'saleArgentinaMovie3',
-    termIds: ['termsaleArgentinaMovie3'],
+    termIds: ['termSaleArgentinaMovie3'],
   }),
   terms: [{
-    id: 'termsaleArgentinaMovie3',
+    id: 'termSaleArgentinaMovie3',
     contractId: 'saleArgentinaMovie3',
     duration: {
       from: new Date('06/01/2021'),
@@ -305,10 +305,10 @@ export const saleFranceMovie3 = {
   ...createSale({
     titleId: 'Movie3',
     id: 'saleFranceMovie3',
-    termIds: ['termsaleFranceMovie3'],
+    termIds: ['termSaleFranceMovie3'],
   }),
   terms: [{
-    id: 'termsaleFranceMovie3',
+    id: 'termSaleFranceMovie3',
     contractId: 'saleFranceMovie3',
     duration: {
       from: new Date('01/01/2049'),
@@ -344,10 +344,10 @@ export const saleSouthKoreaMovie4 = {
   ...createSale({
     titleId: 'Movie4',
     id: 'saleSouthKoreaMovie4',
-    termIds: ['termsaleSouthKoreaMovie4'],
+    termIds: ['termSaleSouthKoreaMovie4'],
   }),
   terms: [{
-    id: 'termsaleSouthKoreaMovie4',
+    id: 'termSaleSouthKoreaMovie4',
     contractId: 'saleSouthKoreaMovie4',
     duration: {
       from: new Date('06/01/2022'),
@@ -363,10 +363,10 @@ export const saleRussiaMovie4 = {
   ...createSale({
     titleId: 'Movie4',
     id: 'saleRussiaMovie4',
-    termIds: ['termsaleRussiaMovie4'],
+    termIds: ['termSaleRussiaMovie4'],
   }),
   terms: [{
-    id: 'termsaleRussiaMovie4',
+    id: 'termSaleRussiaMovie4',
     contractId: 'saleRussiaMovie4',
     duration: {
       from: new Date('06/01/2033'),
@@ -382,10 +382,10 @@ export const saleGermanyMovie4 = {
   ...createSale({
     titleId: 'Movie4',
     id: 'saleGermanyMovie4',
-    termIds: ['termsaleGermanyMovie4'],
+    termIds: ['termSaleGermanyMovie4'],
   }),
   terms: [{
-    id: 'termsaleGermanyMovie4',
+    id: 'termSaleGermanyMovie4',
     contractId: 'saleGermanyMovie4',
     duration: {
       from: new Date('06/01/2021'),
@@ -396,6 +396,7 @@ export const saleGermanyMovie4 = {
     exclusive: false
   }],
 } as FullSale;
+
 
 export const mandateMovie5 = {
   ...createMandate({
@@ -420,10 +421,10 @@ export const saleAfghanistanMovie5 = {
   ...createSale({
     titleId: 'Movie5',
     id: 'saleAfghanistanMovie5',
-    termIds: ['termsaleAfghanistanMovie5'],
+    termIds: ['termSaleAfghanistanMovie5'],
   }),
   terms: [{
-    id: 'termsaleAfghanistanMovie5',
+    id: 'termSaleAfghanistanMovie5',
     contractId: 'saleAfghanistanMovie5',
     duration: {
       from: new Date('06/01/2023'),
@@ -439,10 +440,10 @@ export const saleGermanyMovie5 = {
   ...createSale({
     titleId: 'Movie5',
     id: 'saleGermanyMovie5',
-    termIds: ['termsaleGermanyMovie5'],
+    termIds: ['termSaleGermanyMovie5'],
   }),
   terms: [{
-    id: 'termsaleGermanyMovie5',
+    id: 'termSaleGermanyMovie5',
     contractId: 'saleGermanyMovie5',
     duration: {
       from: new Date('06/01/2021'),
