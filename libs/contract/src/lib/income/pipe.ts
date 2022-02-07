@@ -27,6 +27,7 @@ export class GetIncomesFromTitlePipe implements PipeTransform {
     ).pipe(
       map(contracts => contracts.map(contract => contract.id)),
       switchMap(contractIds => this.incomeService.valueChanges(contractIds)),
+      map(incomes => incomes.filter(income => income))
     );
   }
 }
