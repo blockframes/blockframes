@@ -16,7 +16,7 @@
       <mat-icon svgIcon="close"></mat-icon>
     </button>
   </header>
-  <bf-form-table [columns]="columns" [form]="form">
+  <bf-form-table [columns]="columns" [form]="form" #formTable>
     <!-- Table -->
     <ng-template colRef="duration" let-duration>
       {{ duration.from | date:'M/d/y' }} - {{ duration.to | date:'M/d/y' }}
@@ -91,7 +91,7 @@
   </bf-form-table>
 
   <footer class="actions" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="16px">
-    <button mat-flat-button color="primary" (click)="save()" [disabled]="form.invalid">Add Holdbacks</button>
+    <button mat-flat-button color="primary" (click)="save()" [disabled]="shouldDisable()">Add Holdbacks</button>
     <button mat-button (click)="cancel()">Cancel</button>
   </footer>
 </ng-template>

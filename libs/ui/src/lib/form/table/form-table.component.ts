@@ -62,7 +62,7 @@ export class FormTableComponent<T> implements OnInit, OnDestroy {
   pageSize = 5;
   /* We need to keep track of the current page since it will affect the index that we are working on */
   pageConfig: PageState = { pageIndex: 0, pageSize: 5 };
-  formItem: FormEntity<EntityControl<T>, T>;
+  public formItem: FormEntity<EntityControl<T>, T>;
 
   keepOrder = () => 0;
 
