@@ -50,7 +50,7 @@ export class HolbackFormComponent {
   }
 
   shouldDisable() {
-    return this.formTable.formItem && this.formTable.formItem?.dirty
+    return this.formTable.formItem && this.formTable.formItem?.dirty;
   }
 
   cancel() {
