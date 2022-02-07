@@ -18,7 +18,7 @@ export class HolbackFormComponent {
   @Input() title: Movie;
   @Input() holdbacks: Holdback[] = [];
   @Output() holdbacksChange = new EventEmitter<Holdback[]>();
-  @ViewChild('formTable', { read: FormTableComponent }) formTable;
+  @ViewChild('formTable', { read: FormTableComponent }) formTable: FormTableComponent<Holdback>;
 
   ref: MatDialogRef<void, void>;
   form: FormList<Holdback, HoldbackForm>;
@@ -50,7 +50,7 @@ export class HolbackFormComponent {
   }
 
   shouldDisable() {
-    return this.formTable.formItem && this.formTable.formItem?.dirty;
+    return this.formTable.formItem?.dirty;
   }
 
   cancel() {
