@@ -50,7 +50,6 @@ export class SumPipe implements PipeTransform {
   transform(source: number[])
   transform(source: unknown[], key: string)
   transform(source: number[] | unknown[], key?: string) {
-    console.log({source, key})
     if (key) {
       return source.reduce((sum, item) => {
         const value = key.split('.').reduce((result, k) => result[k], item);
