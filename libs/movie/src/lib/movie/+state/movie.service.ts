@@ -10,7 +10,6 @@ import { createDocumentMeta } from "@blockframes/utils/models-meta";
 import { MovieState, MovieStore } from './movie.store';
 import { cleanModel } from '@blockframes/utils/helpers';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
-import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { UserService } from '@blockframes/user/+state/user.service';
 import type firebase from 'firebase';
 import { App } from '@blockframes/utils/apps';
@@ -20,6 +19,7 @@ import { map } from 'rxjs/operators';
 import { getViews } from '../pipes/analytics.pipe';
 import { joinWith } from '@blockframes/utils/operators';
 import { AnalyticsService } from '@blockframes/utils/analytics/analytics.service';
+import { AuthService } from '@blockframes/auth/+state';
 
 export const fromOrg = (orgId: string): QueryFn => ref => ref.where('orgIds', 'array-contains', orgId);
 export const fromOrgAndAccepted = (orgId: string, appli: App): QueryFn => ref => ref.where(`app.${appli}.status`, '==', 'accepted').where('orgIds', 'array-contains', orgId);
@@ -35,7 +35,7 @@ export class MovieService extends CollectionService<MovieState> {
 
   constructor(
     protected store: MovieStore,
-    private authQuery: AuthQuery,
+    private authService: AuthService,
     private permissionsService: PermissionsService,
     private analyticservice: AnalyticsService,
     private userService: UserService,
@@ -49,7 +49,7 @@ export class MovieService extends CollectionService<MovieState> {
   }
 
   async create(movieImported?: Partial<Movie>): Promise<Movie> {
-    const createdBy = this.authQuery.userId;
+    const createdBy = this.authService.profile.uid;
     let orgIds = [];
     if (movieImported?.orgIds?.length) {
       orgIds = movieImported.orgIds;
@@ -75,7 +75,7 @@ export class MovieService extends CollectionService<MovieState> {
   async onCreate(movie: Movie, { write }: WriteOptions) {
     // When a movie is created, we also create a permissions document for it.
     // Since movie can be created on behalf of another user (An admin from admin panel for example)
-    const userId = movie._meta?.createdBy ? movie._meta.createdBy : this.authQuery.userId;
+    const userId = movie._meta?.createdBy ? movie._meta.createdBy : this.authService.profile.uid;
     const user = await this.userService.getUser(userId);
     const ref = this.getRef(movie.id);
     write.update(ref, { '_meta.createdAt': new Date() });
@@ -85,14 +85,14 @@ export class MovieService extends CollectionService<MovieState> {
   onUpdate(movie: Movie, { write }: WriteOptions) {
     const movieRef = this.db.doc(`movies/${movie.id}`).ref;
     write.update(movieRef, {
-      '_meta.updatedBy': this.authQuery.userId,
+      '_meta.updatedBy': this.authService.profile.uid,
       '_meta.updatedAt': new Date()
     });
   }
 
   /** Update deletedBy (_meta field of movie) with the current user and remove the movie. */
   public async remove(movieId: string) {
-    const userId = this.authQuery.userId;
+    const userId = this.authService.profile.uid;
     // We need to update the _meta field before remove to get the userId in the backend function: onMovieDeleteEvent
     await this.db.doc(`movies/${movieId}`).update({
       '_meta.deletedBy': userId,

@@ -5,7 +5,7 @@ import { Overlay, OverlayRef } from "@angular/cdk/overlay";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { AngularFireStorage, AngularFireUploadTask } from "@angular/fire/storage";
 
-import { AuthQuery } from "@blockframes/auth/+state";
+import { AuthService } from "@blockframes/auth/+state";
 import { tempUploadDir } from "@blockframes/utils/file-sanitizer";
 import { BehaviorStore } from "@blockframes/utils/observable-helpers";
 import { delay } from '@blockframes/utils/helpers';
@@ -33,7 +33,7 @@ export class FileUploaderService {
   constructor(
     private overlay: Overlay,
     private db: AngularFirestore,
-    private userQuery: AuthQuery,
+    private authService: AuthService,
     private storage: AngularFireStorage,
   ) { }
 
@@ -109,7 +109,7 @@ export class FileUploaderService {
 
     const tasks = validQueue.map(([storagePath, uploads]) => {
       return uploads.map(upload => {
-        upload.metadata.uid = this.userQuery.userId;
+        upload.metadata.uid = this.authService.profile.uid;
 
         // upload
         const finalPath = `${tempUploadDir}/${storagePath}/${upload.fileName}`;

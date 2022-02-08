@@ -3,7 +3,7 @@ import { AngularFireFunctions } from "@angular/fire/functions";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { AuthQuery } from "@blockframes/auth/+state";
+import { AuthService } from "@blockframes/auth/+state";
 import { FireAnalytics } from "@blockframes/utils/analytics/app-analytics";
 import { FormStaticValueArray } from "@blockframes/utils/form";
 import { toLabel } from "@blockframes/utils/pipes/to-label.pipe";
@@ -22,7 +22,7 @@ export class RequestAskingPriceComponent {
   });
 
   constructor(
-    private authQuery: AuthQuery,
+    private authService: AuthService,
     private dialog: MatDialogRef<RequestAskingPriceComponent>,
     private functions: AngularFireFunctions,
     private snackbar: MatSnackBar,
@@ -38,7 +38,7 @@ export class RequestAskingPriceComponent {
       const f = this.functions.httpsCallable('requestAskingPrice');
       await f({
         movieId: this.data.movieId,
-        uid: this.authQuery.userId,
+        uid: this.authService.profile.uid,
         territories,
         message
       }).toPromise();

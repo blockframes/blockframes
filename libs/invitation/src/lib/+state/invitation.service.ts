@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { CollectionConfig, CollectionService, AtomicWrite } from 'akita-ng-fire';
 import { createPublicOrganization, Organization, OrganizationService } from '@blockframes/organization/+state';
-import { AuthQuery, AuthService, User } from '@blockframes/auth/+state';
-import { createPublicUser, PublicUser } from '@blockframes/user/+state';
+import { AuthService } from '@blockframes/auth/+state';
+import { createPublicUser, PublicUser, User } from '@blockframes/user/+state';
 import { toDate } from '@blockframes/utils/helpers';
 import { Invitation, createInvitation } from './invitation.model';
 import { InvitationDocument } from './invitation.firestore';
@@ -93,7 +93,6 @@ export class InvitationService extends CollectionService<InvitationState> {
   ); 
 
   constructor(
-    private authQuery: AuthQuery,
     private orgService: OrganizationService,
     private authService: AuthService,
     private permissionsService: PermissionsService,
@@ -130,14 +129,14 @@ export class InvitationService extends CollectionService<InvitationState> {
   }
 
   public isInvitationForMe(invitation: Invitation): boolean {
-    return invitation.toOrg?.id === this.authQuery.orgId || invitation.toUser?.uid === this.authQuery.userId
+    return invitation.toOrg?.id === this.authService.profile.orgId || invitation.toUser?.uid === this.authService.profile.uid
   }
 
   /**
    * Create an invitation with mode "request"
    * @param orgId The org the request is made to
    */
-  request(orgId: string, fromUser: User | PublicUser = this.authQuery.user) {
+  request(orgId: string, fromUser: User | PublicUser = this.authService.profile) {
     return {
       to: async (type: 'attendEvent' | 'joinOrganization', eventId?: string, write?: AtomicWrite) => {
         const request = { mode: 'request', type } as Partial<Invitation>;

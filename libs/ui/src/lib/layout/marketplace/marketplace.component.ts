@@ -9,7 +9,6 @@ import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
 // Blockframes
-import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { NotificationService } from '@blockframes/notification/+state';
@@ -17,6 +16,7 @@ import { OrganizationService } from '@blockframes/organization/+state';
 import { MovieService, Movie } from '@blockframes/movie/+state'
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentApp, App } from '@blockframes/utils/apps';
+import { AuthService } from '@blockframes/auth/+state';
 
 @Component({
   selector: 'layout-marketplace',
@@ -26,7 +26,7 @@ import { getCurrentApp, App } from '@blockframes/utils/apps';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MarketplaceComponent implements OnInit {
-  public user$ = this.authQuery.select('profile');
+  public user$ = this.authService.profile$;
   public wishlistCount$: Observable<number>;
   public notificationCount$ = this.notificationService.myNotificationsCount$;
   public invitationCount$ = this.invitationService.myInvitations$.pipe(
@@ -40,7 +40,7 @@ export class MarketplaceComponent implements OnInit {
     private orgService: OrganizationService,
     private invitationService: InvitationService,
     private notificationService: NotificationService,
-    private authQuery: AuthQuery,
+    private authService: AuthService,
     private movieService: MovieService,
     private routerQuery: RouterQuery,
     private router: Router

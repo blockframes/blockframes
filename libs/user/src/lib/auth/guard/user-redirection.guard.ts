@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Router, CanActivate } from '@angular/router';
-import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { AngularFireAuth } from '@angular/fire/auth';
 
 @Injectable({ providedIn: 'root' })
 export class UserRedirectionGuard implements CanActivate {
   constructor(
-    protected service: OrganizationService,
-    protected router: Router,
+    private router: Router,
     private afAuth: AngularFireAuth
   ) { }
 

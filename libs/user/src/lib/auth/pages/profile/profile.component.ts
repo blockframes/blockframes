@@ -4,7 +4,6 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 // Blockframes
-import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { AuthService } from '@blockframes/auth/+state/auth.service';
 import { ProfileForm } from '@blockframes/auth/forms/profile-edit.form';
 import { FileUploaderService } from '@blockframes/media/+state';
@@ -22,14 +21,13 @@ export class ProfileComponent implements OnInit {
   public passwordForm = new EditPasswordForm();
 
   constructor(
-    private authQuery: AuthQuery,
     private authService: AuthService,
     private uploaderService: FileUploaderService,
     private snackBar: MatSnackBar,
     ) { }
 
   ngOnInit() {
-    this.profileForm = new ProfileForm(this.authQuery.user);
+    this.profileForm = new ProfileForm(this.authService.profile);
   }
 
   public async update() {
@@ -39,7 +37,7 @@ export class ProfileComponent implements OnInit {
         if (this.profileForm.invalid) {
           throw new Error('Your profile information are not valid.')
         } else {
-          const uid = this.authQuery.userId;
+          const uid = this.authService.profile.uid;
   
           this.uploaderService.upload();
           await this.authService.update({ uid, ...this.profileForm.value });

@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { User } from '@blockframes/auth/+state/auth.store';
+
 import { UserCrmForm } from '@blockframes/admin/crm/forms/user-crm.form';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { OrganizationService, Organization } from '@blockframes/organization/+state';
@@ -19,6 +19,7 @@ import { SafeResourceUrl } from '@angular/platform-browser';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { App, getOrgAppAccess } from '@blockframes/utils/apps';
 import { Scope } from '@blockframes/utils/static-model';
+import { User } from '@blockframes/user/+state/user.model';
 
 @Component({
   selector: 'crm-user',

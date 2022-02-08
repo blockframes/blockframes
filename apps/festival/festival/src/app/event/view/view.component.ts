@@ -6,12 +6,11 @@ import { combineLatest, of, Observable, BehaviorSubject } from 'rxjs';
 import { catchError, filter, switchMap, pluck, tap, startWith } from 'rxjs/operators';
 import { Location } from '@angular/common';
 import { fade } from '@blockframes/utils/animations/fade';
-import { AuthQuery, AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/+state';
 import { Event } from '@blockframes/event/+state/event.model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MatDialog } from '@angular/material/dialog';
 import { RequestAskingPriceComponent } from '@blockframes/movie/components/request-asking-price/request-asking-price.component';
-import { BehaviorStore } from '@blockframes/utils/observable-helpers';
 
 @Component({
   selector: 'festival-event-view',
@@ -24,7 +23,7 @@ export class EventViewComponent implements OnInit {
   invitation$: Observable<Invitation>;
   editEvent: string;
   accessRoute: string;
-  user$ = this.authQuery.user$;
+  user$ = this.authService.profile$; // @TODO286 test with anonymous & logged in user
   event$: Observable<Event>;
   requestSent = false;
   private statusChanged = new BehaviorSubject(false);
@@ -36,7 +35,6 @@ export class EventViewComponent implements OnInit {
     private service: EventService,
     private invitationService: InvitationService,
     private location: Location,
-    private authQuery: AuthQuery,
     private authService: AuthService,
     private dynTitle: DynamicTitleService,
     private dialog: MatDialog,

@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
 import { PermissionsService } from '../+state';
 import { CanActivate, Router } from '@angular/router';
-import { CollectionGuardConfig } from 'akita-ng-fire';
 import { map } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
 import { AuthService } from '@blockframes/auth/+state';
 
 @Injectable({ providedIn: 'root' })
-@CollectionGuardConfig({ awaitSync: false })
 export class PermissionsGuard implements CanActivate {
   constructor(
     private service: PermissionsService,

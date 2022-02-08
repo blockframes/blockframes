@@ -3,7 +3,7 @@ import { DOCUMENT } from "@angular/common";
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Inject, Input, OnDestroy, Output, ViewChild, ViewEncapsulation } from "@angular/core";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { AuthQuery, AuthService } from "@blockframes/auth/+state";
+import { AuthService } from "@blockframes/auth/+state";
 import { MeetingVideoControl } from "@blockframes/event/+state/event.firestore";
 import { getWatermark, loadJWPlayerScript } from "@blockframes/utils/utils";
 import { BehaviorSubject } from "rxjs";
@@ -92,7 +92,6 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
-    private authQuery: AuthQuery,
     private authService: AuthService,
     private functions: AngularFireFunctions,
     private snackBar: MatSnackBar,
@@ -120,8 +119,8 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
         // Watermark
         let watermark;
         const event = await this.eventService.getValue(this.eventId);
-        if (this.authQuery.user) {
-          watermark = getWatermark(this.authQuery.user.email, this.authQuery.user.firstName, this.authQuery.user.lastName);
+        if (this.authService.profile) {
+          watermark = getWatermark(this.authService.profile.email, this.authService.profile.firstName, this.authService.profile.lastName);
         } else if (hasAnonymousIdentity(anonymousCredentials, event.accessibility)) {
           watermark = getWatermark(anonymousCredentials.email, anonymousCredentials.firstName, anonymousCredentials.lastName);
         }

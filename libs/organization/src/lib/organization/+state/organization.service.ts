@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { map, switchMap, tap } from 'rxjs/operators';
-import { AuthQuery, AuthService, User } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/+state';
 import { Organization, createOrganization, OrganizationDocument } from './organization.model';
 import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
 import { createPermissions, UserRole } from '../../permissions/+state/permissions.model';
 import { AngularFireFunctions } from '@angular/fire/functions';
-import { UserService, OrganizationMember, createOrganizationMember, PublicUser } from '@blockframes/user/+state';
+import { UserService, OrganizationMember, createOrganizationMember, PublicUser, User } from '@blockframes/user/+state';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
@@ -49,7 +49,6 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   );
 
   constructor(
-    private authQuery: AuthQuery,
     private functions: AngularFireFunctions,
     private userService: UserService,
     private permissionsService: PermissionsService,
@@ -98,7 +97,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   }
 
   /** Add a new organization */
-  public async addOrganization(organization: Partial<Organization>, createdFrom: App, user: User | PublicUser = this.authQuery.user): Promise<string> {
+  public async addOrganization(organization: Partial<Organization>, createdFrom: App, user: User | PublicUser = this.authService.profile): Promise<string> {
     const newOrganization = createOrganization({
       ...organization,
       _meta: createDocumentMeta({ createdBy: user.uid, createdFrom }),

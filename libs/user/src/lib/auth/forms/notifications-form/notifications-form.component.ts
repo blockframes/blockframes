@@ -4,7 +4,7 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { NotificationsForm } from './notifications.form';
 import { App, getCurrentApp } from "@blockframes/utils/apps";
 import { NotificationTypesBase, notificationTypesBase } from '@blockframes/notification/types';
-import { AuthQuery, AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/+state';
 
 // Material
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
@@ -106,10 +106,9 @@ export class NotificationsFormComponent {
   public titleType = titleType;
   public tables = tables;
 
-  public form = new NotificationsForm(this.authQuery.user.settings?.notifications);
+  public form = new NotificationsForm(this.authService.profile.settings?.notifications);
 
   constructor(
-    private authQuery: AuthQuery,
     private authService: AuthService,
     private snackBar: MatSnackBar
   ) { }
@@ -132,7 +131,7 @@ export class NotificationsFormComponent {
 
   public async update() {
     const notifications = this.form.getRawValue();
-    const uid = this.authQuery.userId;
+    const uid = this.authService.profile.uid;
     await this.authService.update({ uid, settings: { notifications } });
 
     this.snackBar.open('Notifications settings updated.', 'close', { duration: 2000 });

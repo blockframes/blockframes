@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { AuthService, AuthQuery } from '../../+state';
+import { AuthService } from '../../+state';
 import { ThemeService } from '@blockframes/ui/theme';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { UserService } from '@blockframes/user/+state';
@@ -15,10 +15,10 @@ import { OrganizationService } from '@blockframes/organization/+state';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AuthWidgetComponent {
-  user$ = this.query.user$;
+  user$ = this.service.profile$;
   organization$ = this.orgService.org$;
   theme$ = this.themeService.theme$;
-  isBfAdmin = this.userService.isBlockframesAdmin(this.query.getValue().uid);
+  isBfAdmin = this.userService.isBlockframesAdmin(this.service.profile.uid);
   appVersion$ = this.db.doc<IVersionDoc>(dbVersionDoc).valueChanges();
   emulatorList = Object.keys(emulators).filter(key => !!emulators[key]);
   emulators = this.emulatorList.length ? this.emulatorList.join(' - ') : 'none'
@@ -26,7 +26,6 @@ export class AuthWidgetComponent {
   constructor(
     private db: AngularFirestore,
     private service: AuthService,
-    private query: AuthQuery,
     private orgService: OrganizationService,
     private themeService: ThemeService,
     private userService: UserService

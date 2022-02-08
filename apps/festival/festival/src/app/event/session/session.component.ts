@@ -3,7 +3,6 @@ import { EventService, Event, isScreening, createMeetingAttendee } from '@blockf
 import { BehaviorSubject, interval, Observable, Subscription } from 'rxjs';
 import { Meeting, MeetingPdfControl, MeetingVideoControl, Screening } from '@blockframes/event/+state/event.firestore';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { MatBottomSheet } from '@angular/material/bottom-sheet'
 import { DoorbellBottomSheetComponent } from '@blockframes/event/components/doorbell/doorbell.component';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -20,7 +19,7 @@ import { StorageFile, StorageVideo } from '@blockframes/media/+state/media.fires
 import { InvitationService } from '@blockframes/invitation/+state/invitation.service';
 import { Invitation } from '@blockframes/invitation/+state';
 import { filter, pluck, scan, switchMap, take } from 'rxjs/operators';
-import { BehaviorStore, finalizeWithValue } from '@blockframes/utils/observable-helpers';
+import { finalizeWithValue } from '@blockframes/utils/observable-helpers';
 import { AuthService } from '@blockframes/auth/+state';
 import { RequestAskingPriceComponent } from '@blockframes/movie/components/request-asking-price/request-asking-price.component';
 
@@ -64,7 +63,6 @@ export class SessionComponent implements OnInit, OnDestroy {
     private invitationService: InvitationService,
     private movieService: MovieService,
     private mediaService: MediaService,
-    private authQuery: AuthQuery,
     private authService: AuthService,
     private bottomSheet: MatBottomSheet,
     private router: Router,
@@ -93,9 +91,9 @@ export class SessionComponent implements OnInit, OnDestroy {
           this.screeningFileRef = movie.promotional.videos?.screener;
 
           // if user is not a screening owner we need to track the watch time
-          if (event.ownerOrgId !== this.authQuery.orgId) {
+          if (event.ownerOrgId !== this.authService.profile.orgId) {
             // Try to get invitation the regular way
-            const uidFilter = (invit: Invitation) => invit.toUser?.uid === this.authQuery.userId ||  invit.fromUser?.uid === this.authQuery.userId;
+            const uidFilter = (invit: Invitation) => invit.toUser?.uid === this.authService.profile.uid ||  invit.fromUser?.uid === this.authService.profile.uid;
             const allInvitations = await this.invitationService.allInvitations$.pipe(take(1)).toPromise();
             let invitation = allInvitations.find(invit => invit.eventId === event.id && uidFilter(invit));
 
@@ -170,11 +168,11 @@ export class SessionComponent implements OnInit, OnDestroy {
         }
 
         // Manage redirect depending on attendees status & presence of meeting owners
-        const uid = this.authQuery.userId || this.authService.anonymousUserId;
+        const uid = this.authService.profile.uid || this.authService.anonymousUserId;
         if (event.isOwner) {
           const attendees = event.meta.attendees;
           if (attendees[uid]?.status !== 'owner') {
-            const attendee = createMeetingAttendee(this.authQuery.user || this.authService.anonymousCredentials, 'owner');
+            const attendee = createMeetingAttendee(this.authService.profile || this.authService.anonymousCredentials, 'owner');
             const meta: Meeting = { ...event.meta, attendees: { ...event.meta.attendees, [uid]: attendee } };
             this.service.update(event.id, { meta });
           }

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { centralOrgId } from '@env';
 import { switchMap, take } from 'rxjs/operators';
-import { AuthQuery } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/+state';
 import { createOfferId } from '@blockframes/utils/utils';
 import { MovieCurrency } from '@blockframes/utils/static-model';
 import { AvailsFilter } from '@blockframes/contract/avails/avails';
@@ -31,7 +31,7 @@ export class BucketService extends CollectionService<BucketState> {
     private termService: TermService,
     private offerService: OfferService,
     private contractService: ContractService,
-    private authQuery: AuthQuery,
+    private authService: AuthService,
   ) {
     super();
   }
@@ -61,14 +61,14 @@ export class BucketService extends CollectionService<BucketState> {
     await this.update(orgId, {
       specificity,
       delivery,
-      uid: this.authQuery.userId  // Specify who is updating the bucket (this is used in the backend)
+      uid: this.authService.profile.uid  // Specify who is updating the bucket (this is used in the backend)
     });
 
     // Create offer
     const offerId = createOfferId(orgName);
     await this.offerService.add({
       buyerId: orgId,
-      buyerUserId: this.authQuery.userId,
+      buyerUserId: this.authService.profile.uid,
       specificity,
       status: 'pending',
       currency,
@@ -84,7 +84,7 @@ export class BucketService extends CollectionService<BucketState> {
 
       const commonFields = {
         buyerId: orgId,
-        buyerUserId: this.authQuery.userId,
+        buyerUserId: this.authService.profile.uid, // @TODO #7286 or this.authService.uid ?
         sellerId: centralOrgId.catalog,
         stakeholders: [...parentContract.stakeholders, orgId],
       };
@@ -118,7 +118,7 @@ export class BucketService extends CollectionService<BucketState> {
 
   async addTerm(titleId: string, parentTermId: string, avails: AvailsFilter) {
 
-    const orgId = this.orgService.org.id;
+    const orgId = this.orgService.org.id; // @TODO #7286 replace all occurences by authService.profile.orgId ?
     const rawBucket = await this.getActive();
     const bucket = createBucket({ id: orgId, ...rawBucket });
 

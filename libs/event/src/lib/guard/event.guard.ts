@@ -6,7 +6,7 @@ import { Event, EventService } from '../+state';
 import { eventTime } from '../pipes/event-time.pipe';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
-import { AuthQuery, AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/+state';
 import { Meeting } from '../+state/event.firestore';
 import { TwilioService } from '../components/meeting/+state/twilio.service';
 import { take } from 'rxjs/operators';
@@ -18,7 +18,6 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
   private event: Event;
 
   constructor(
-    private authQuery: AuthQuery,
     private authService: AuthService,
     private invitationService: InvitationService,
     private eventService: EventService,
@@ -47,8 +46,8 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
       return allInvitations.some(invitation => {
         if (invitation.eventId !== this.event.id) return false;
         if (invitation.status !== 'accepted') return false;
-        const hasRequested = invitation.mode === 'request' && invitation.fromUser.uid === this.authQuery.userId;
-        const isInvited = invitation.mode === 'invitation' && invitation.toUser.uid === this.authQuery.userId;
+        const hasRequested = invitation.mode === 'request' && invitation.fromUser.uid === this.authService.profile.uid;
+        const isInvited = invitation.mode === 'invitation' && invitation.toUser.uid === this.authService.profile.uid;
         return hasRequested || isInvited;
       });
     }
@@ -112,12 +111,12 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
     }
 
     // If userId = null, that means the user has disconnected. If she/he wants to logout, we don't show the confirm message
-    if (this.authQuery.userId === null && this.authService.anonymousUserId === null) {
+    if (this.authService.profile.uid === null && this.authService.anonymousUserId === null) {
       this.twilioService.disconnect();
       return true;
     } else {
       if (this.event.type === 'meeting') {
-        if ((this.event.meta as Meeting).attendees[this.authQuery.userId || this.authService.anonymousUserId]?.status === 'ended') {
+        if ((this.event.meta as Meeting).attendees[this.authService.profile.uid || this.authService.anonymousUserId]?.status === 'ended') {
           this.twilioService.disconnect();
           return true;
         }

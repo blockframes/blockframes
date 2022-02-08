@@ -5,7 +5,7 @@ import { CollectionService, CollectionConfig, AtomicWrite } from 'akita-ng-fire'
 import type firebase from 'firebase';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { map, switchMap, tap } from 'rxjs/operators';
-import { AuthQuery, AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/+state';
 import { combineLatest, Observable, of } from 'rxjs';
 import { ActiveState, EntityState } from '@datorama/akita';
 
@@ -43,7 +43,6 @@ export class PermissionsService extends CollectionService<PermissionsState> {
   constructor(
     private authService: AuthService,
     private userService: UserService,
-    private auth: AuthQuery,
   ) {
     super();
   }
@@ -97,7 +96,7 @@ export class PermissionsService extends CollectionService<PermissionsState> {
   }
 
   /** Checks if the user is admin of his organization. */
-  public isUserAdmin(userId: string = this.auth.userId): boolean {
+  public isUserAdmin(userId: string = this.authService.profile.uid): boolean {
     return this.permissions.roles[userId] === 'admin' || this.isUserSuperAdmin(userId);
   }
 

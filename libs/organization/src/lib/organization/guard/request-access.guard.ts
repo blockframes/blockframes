@@ -1,26 +1,24 @@
 import { Injectable } from '@angular/core';
 import { OrganizationService } from '../+state';
 import { CanActivate, Router } from '@angular/router';
-import { CollectionGuardConfig } from 'akita-ng-fire';
 import { map } from 'rxjs/operators';
-import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { combineLatest } from 'rxjs';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentApp } from '@blockframes/utils/apps';
+import { AuthService } from '@blockframes/auth/+state';
 
 @Injectable({ providedIn: 'root' })
-@CollectionGuardConfig({ awaitSync: true })
 export class RequestAccessGuard implements CanActivate {
   constructor(
-    protected service: OrganizationService,
-    protected router: Router,
-    private authQuery: AuthQuery,
+    private service: OrganizationService,
+    private router: Router,
+    private authService: AuthService,
     private routerQuery: RouterQuery
   ) { }
 
   canActivate() {
     return combineLatest([
-      this.authQuery.user$,
+      this.authService.profile$,
       this.service.org$
     ]).pipe(
       map(([user, org]) => {
