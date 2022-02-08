@@ -1,4 +1,4 @@
-<form [availsFilter]="availsForm"></form>
+<form [availsFilter]="availsForm" [disabled]="!(mandates$ |async)?.length"></form>
 
 <h2>Available Territories</h2>
 
@@ -21,7 +21,15 @@
         </article>
       </section>
     </ng-container>
-
+    <ng-container *ngIf="!(mandates$|async)?.length">
+      <section class="overlay" fxLayout="column" fxLayoutAlign="center center">
+        <article fxLayout="column" fxLayoutAlign="center center">
+          <h3>
+            Avails coming soon.
+          </h3>
+        </article>
+      </section>
+    </ng-container>
     <!-- MAP LAYERS -->
     <ng-container *ngFor="let tag of availabilities.available">
       <map-feature [tag]="tag.isoA3" color="#7795ff" (click)="addTerritory(tag)"
