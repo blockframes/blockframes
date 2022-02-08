@@ -1,59 +1,53 @@
-<form [availsFilter]="availsForm" [disabled]="!(mandates$|async)?.length"></form>
+<ng-container *ngIf="mandates$|async as mandates">
+  <form [availsFilter]="availsForm" [disabled]="!mandates?.length"></form>
 
-<h2>Available Dates</h2>
-<ng-container *ngIf="org$ | async as org">
-  <p>
-    Select the time window you're interested in to add it to your Selection. For periods that are not licensed, feel
-    free to
-    <a [routerLink]="['/c/o/marketplace/organization', org.id, 'member']">contact {{ org | orgName }}</a>.
-  </p>
+  <h2>Available Dates</h2>
+  <ng-container *ngIf="org$ | async as org">
+    <p>
+      Select the time window you're interested in to add it to your Selection. For periods that are not licensed, feel
+      free to
+      <a [routerLink]="['/c/o/marketplace/organization', org.id, 'member']">contact {{ org | orgName }}</a>.
+    </p>
 
-</ng-container>
-
-<section class="surface" fxLayout="column">
-  <!-- CALENDAR LEGEND -->
-  <ul>
-    <li>
-      <svg viewBox="0 0 100 100" width="10px" height="10px">
-        <rect fill="var(--primary)" x="0" y="0" width="100" height="100" rx="10" ry="10" />
-      </svg>
-      <span class="mat-caption">Available</span>
-    </li>
-    <li>
-      <svg viewBox="0 0 100 100" width="10px" height="10px">
-        <rect fill="var(--foreground-disabled-text)" x="0" y="0" width="100" height="100" rx="10" ry="10" />
-      </svg>
-      <span class="mat-caption">Sold</span>
-    </li>
-    <li>
-      <svg viewBox="0 0 100 100" width="10px" height="10px">
-        <rect fill="var(--background-disabled-button)" x="0" y="0" width="100" height="100" rx="10" ry="10" />
-      </svg>
-      <span class="mat-caption">Expired</span>
-    </li>
-    <li>
-      <svg viewBox="0 0 100 100" width="10px" height="10px">
-        <rect fill="var(--primary-lighter)" x="0" y="0" width="100" height="100" rx="10" ry="10" />
-      </svg>
-      <span class="mat-caption">Already Selected</span>
-    </li>
-  </ul>
-
-  <ng-container *ngIf="availabilities$ | async as availabilities; else loading">
-    <avails-calendar
-      fxFlexAlign="center"
-      fxFlexAlign.lt-md="start"
-      [availableMarkers]="availabilities.available"
-      [soldMarkers]="availabilities.sold"
-      [inSelectionMarkers]="availabilities.inBucket"
-      [selectedMarker]="availabilities.selected"
-      (selected)="selected($event)"
-    ></avails-calendar>
   </ng-container>
-  <ng-template #loading>
-    <mat-spinner></mat-spinner>
-  </ng-template>
-  <ng-container *ngIf="mandates$|async as mandates">
+
+  <section class="surface" fxLayout="column">
+    <!-- CALENDAR LEGEND -->
+    <ul>
+      <li>
+        <svg viewBox="0 0 100 100" width="10px" height="10px">
+          <rect fill="var(--primary)" x="0" y="0" width="100" height="100" rx="10" ry="10" />
+        </svg>
+        <span class="mat-caption">Available</span>
+      </li>
+      <li>
+        <svg viewBox="0 0 100 100" width="10px" height="10px">
+          <rect fill="var(--foreground-disabled-text)" x="0" y="0" width="100" height="100" rx="10" ry="10" />
+        </svg>
+        <span class="mat-caption">Sold</span>
+      </li>
+      <li>
+        <svg viewBox="0 0 100 100" width="10px" height="10px">
+          <rect fill="var(--background-disabled-button)" x="0" y="0" width="100" height="100" rx="10" ry="10" />
+        </svg>
+        <span class="mat-caption">Expired</span>
+      </li>
+      <li>
+        <svg viewBox="0 0 100 100" width="10px" height="10px">
+          <rect fill="var(--primary-lighter)" x="0" y="0" width="100" height="100" rx="10" ry="10" />
+        </svg>
+        <span class="mat-caption">Already Selected</span>
+      </li>
+    </ul>
+
+    <ng-container *ngIf="availabilities$ | async as availabilities; else loading">
+      <avails-calendar fxFlexAlign="center" fxFlexAlign.lt-md="start" [availableMarkers]="availabilities.available"
+        [soldMarkers]="availabilities.sold" [inSelectionMarkers]="availabilities.inBucket"
+        [selectedMarker]="availabilities.selected" (selected)="selected($event)"></avails-calendar>
+    </ng-container>
+    <ng-template #loading>
+      <mat-spinner></mat-spinner>
+    </ng-template>
     <div *ngIf="(status$ | async) === 'INVALID' && mandates.length" class="overlay" fxLayoutAlign="center center">
       <article class="mat-body-2">
         Please fill in Avail Search Criteria section to show results on the Calendar.
@@ -65,5 +59,5 @@
         Avails coming soon.
       </article>
     </div>
-  </ng-container>
-</section>
+  </section>
+</ng-container>
