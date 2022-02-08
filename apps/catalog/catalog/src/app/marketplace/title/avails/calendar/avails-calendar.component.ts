@@ -34,7 +34,7 @@ export class MarketplaceMovieAvailsCalendarComponent implements AfterViewInit, O
 
   private subs: Subscription[] = [];
 
-  private mandates$ = this.shell.mandates$;
+  public mandates$ = this.shell.mandates$;
   private mandateTerms$ = this.shell.mandateTerms$;
 
   private sales$ = this.shell.sales$;

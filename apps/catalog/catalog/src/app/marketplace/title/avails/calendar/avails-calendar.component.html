@@ -1,9 +1,10 @@
-<form [availsFilter]="availsForm"></form>
+<form [availsFilter]="availsForm" [disabled]="!(mandates$|async)?.length"></form>
 
 <h2>Available Dates</h2>
 <ng-container *ngIf="org$ | async as org">
   <p>
-    Select the time window you're interested in to add it to your Selection. For periods that are not licensed, feel free to
+    Select the time window you're interested in to add it to your Selection. For periods that are not licensed, feel
+    free to
     <a [routerLink]="['/c/o/marketplace/organization', org.id, 'member']">contact {{ org | orgName }}</a>.
   </p>
 
@@ -52,10 +53,17 @@
   <ng-template #loading>
     <mat-spinner></mat-spinner>
   </ng-template>
+  <ng-container *ngIf="mandates$|async as mandates">
+    <div *ngIf="(status$ | async) === 'INVALID' && mandates.length" class="overlay" fxLayoutAlign="center center">
+      <article class="mat-body-2">
+        Please fill in Avail Search Criteria section to show results on the Calendar.
+      </article>
+    </div>
 
-  <div *ngIf="(status$ | async) === 'INVALID'" class="overlay" fxLayoutAlign="center center">
-    <article class="mat-body-2">
-      Please fill in Avail Search Criteria section to show results on the Calendar.
-    </article>
-  </div>
+    <div *ngIf="!mandates.length" class="overlay" fxLayoutAlign="center center">
+      <article class="mat-body-2">
+        Avails coming soon.
+      </article>
+    </div>
+  </ng-container>
 </section>
