@@ -6,6 +6,18 @@ import { SETTINGS, AngularFirestoreModule } from '@angular/fire/firestore';
 import { clearFirestoreData } from '@firebase/rules-unit-testing';
 import { FileUploaderService } from './file-uploader.service';
 import { UploadData } from './media.model';
+import { AuthService } from '@blockframes/auth/+state/auth.service';
+import { Observable } from 'rxjs';
+
+class InjectedAuthService {
+  profile = {
+    uid: 'userId',
+    orgId: 'orgId',
+  }
+
+  profile$ = new Observable();
+
+}
 
 describe('Media Service Test Suite', () => {
   let storage: AngularFireStorage;
@@ -39,6 +51,7 @@ describe('Media Service Test Suite', () => {
             create: () => ({attach: () => ({}), detach: () => ({})}),
             position: () => ({ global: () => ({ bottom: () => ({ left: () => true }) }) })
         })},
+        { provide: AuthService, useClass: InjectedAuthService },
         { provide: SETTINGS, useValue: { host: 'localhost:8080', ssl: false } }
       ],
     });

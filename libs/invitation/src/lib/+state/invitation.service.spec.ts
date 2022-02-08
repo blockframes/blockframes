@@ -8,8 +8,6 @@ import { loadFirestoreRules, clearFirestoreData } from '@firebase/rules-unit-tes
 import { readFileSync } from 'fs';
 import { createInvitation, InvitationDocument } from './invitation.firestore';
 import firebase from 'firebase/app';
-import { HttpClient } from '@angular/common/http';
-import { HttpTestingController } from '@angular/common/http/testing';
 import { Observable } from 'rxjs';
 import { UserService } from '@blockframes/user/+state/user.service';
 
@@ -54,7 +52,6 @@ describe('Invitations Test Suite', () => {
       ],
       providers: [
         InvitationService,
-        { provide: HttpClient, useClass: HttpTestingController },
         { provide: AuthService, useClass: InjectedAuthService },
         { provide: UserService, useClass: DummyService },
         { provide: SETTINGS, useValue: { host: 'localhost:8080', ssl: false } }
