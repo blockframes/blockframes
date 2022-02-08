@@ -1,7 +1,8 @@
-<mat-form-field appearance="outline" *ngIf="getControl('territories') as territories">
+<mat-form-field appearance="outline" *ngIf="getControl('territories') as territories" >
   <mat-label>Select territories</mat-label>
   <mat-icon matPrefix svgIcon="world"></mat-icon>
   <static-group
+    [disabled]="disabled"
     [formControl]="territories"
     scope="territories"
     displayAll="World"
@@ -19,6 +20,7 @@
   <mat-icon matPrefix svgIcon="play_arrow"></mat-icon>
   <static-group
     [formControl]="medias"
+    [disabled]="disabled"
     scope="medias"
     displayAll="All Rights"
     required
@@ -35,6 +37,7 @@
   <mat-form-field appearance="outline">
     <mat-label>Licence Start Date</mat-label>
     <input
+      [disabled]="disabled"
       matInput
       [matDatepicker]="datepickerFrom"
       formControlName="from"
@@ -53,6 +56,7 @@
   <mat-form-field appearance="outline">
     <mat-label>Licence End Date</mat-label>
     <input
+      [disabled]="disabled"
       matInput
       [matDatepicker]="datepickerTo"
       formControlName="to"
@@ -76,7 +80,7 @@
 <mat-form-field appearance="outline" *ngIf="getControl('exclusive') as exclusive">
   <mat-label>Exclusivity</mat-label>
   <mat-icon matPrefix svgIcon="star"></mat-icon>
-  <mat-select [formControl]="exclusive" required>
+  <mat-select [formControl]="exclusive" [disabled]="disabled" required>
     <mat-option [value]="true">Exclusive</mat-option>
     <mat-option [value]="false">Non exclusive</mat-option>
   </mat-select>
@@ -86,7 +90,7 @@
 </mat-form-field>
 
 <ng-container *ngIf="!vertical">
-  <button mat-icon-button type="reset" (click)="form.reset()" matTooltip="Clear Fields">
+  <button mat-icon-button type="reset" (click)="form.reset()" matTooltip="Clear Fields" [disabled]="disabled">
     <mat-icon svgIcon="refresh_filters"></mat-icon>
   </button>
 </ng-container>
