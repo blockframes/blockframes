@@ -47,7 +47,7 @@ export class MarketplaceComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.wishlistCount$ = this.orgService.org$.pipe(
+    this.wishlistCount$ = this.orgService.currentOrg$.pipe(
       map(org => org?.wishlist || []),
       switchMap(movieIds => this.movieService.getValue(movieIds)),
       map((movies: Movie[]) => movies.filter(filterMovieByAppAccess(getCurrentApp(this.routerQuery))).length)

@@ -22,7 +22,7 @@ interface BucketState extends EntityState<Bucket>, ActiveState<string> { }
 @CollectionConfig({ path: 'buckets' })
 export class BucketService extends CollectionService<BucketState> {
   useMemorization = true;
-  active$ = this.orgService.org$.pipe(
+  active$ = this.orgService.currentOrg$.pipe(
     switchMap(org => this.valueChanges(org.id)),
   );
 

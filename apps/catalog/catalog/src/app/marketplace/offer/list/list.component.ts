@@ -14,7 +14,7 @@ import { CollectionReference, QueryFn } from '@angular/fire/firestore';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListComponent {
-  offers$ = this.orgService.org$.pipe(
+  offers$ = this.orgService.currentOrg$.pipe(
     switchMap(org => this.service.valueChanges(query(org.id))),
     joinWith({
       contracts: offer => this.getContracts(offer.id)

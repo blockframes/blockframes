@@ -37,7 +37,7 @@ export class MeetingComponent implements OnInit {
   ngOnInit(): void {
     this.dynTitle.setPageTitle('Add an event', 'Meeting info');
 
-    this.members$ = this.orgService.org$.pipe(
+    this.members$ = this.orgService.currentOrg$.pipe(
       switchMap(org => this.userService.valueChanges(org.userIds))
     )
   }

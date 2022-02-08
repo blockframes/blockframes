@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { AuthService } from '@blockframes/auth/+state';
 import { Organization, createOrganization, OrganizationDocument } from './organization.model';
 import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
@@ -24,27 +24,34 @@ export class OrganizationService extends CollectionService<OrganizationState> {
 
   private app = getCurrentApp(this.routerQuery);
 
-  // Organization of the current logged in user
-  org: Organization; // @TODO #7273 if this.org$ was not already called, this will be undefined
+  // Organization of the current logged in user or undefined if user have no org
+  org: Organization; // For this to be defined, one of the observable above must be called before
   org$: Observable<Organization> = this.authService.profile$.pipe(
     switchMap(user => user?.orgId ? this.valueChanges(user.orgId) : of(undefined)),
     tap(org => this.org = org)
   );
 
+  // Organization of the current logged in user
+  currentOrg$: Observable<Organization> = this.authService.profile$.pipe(
+    filter(user => !!user),
+    switchMap(user => user?.orgId ? this.valueChanges(user.orgId) : of(undefined)),
+    tap(org => this.org = org)
+  );
+
   // Org's members of the current logged in user
-  public members$ = this.org$.pipe(
+  public members$ = this.currentOrg$.pipe(
     map(org => org.userIds),
     switchMap(userIds => this.userService.valueChanges(userIds))
   );
 
   // Org's members of the current logged in user with permissions
-  public membersWithRole$ : Observable<OrganizationMember[]>= combineLatest([
+  public membersWithRole$: Observable<OrganizationMember[]> = combineLatest([
     this.members$,
     this.permissionsService.permissions$
   ]).pipe(
     map(([members, permissions]) => {
       // Get the role of each member in permissions.roles and add it to member.
-      return members.map(member => ({...member, role: permissions.roles[member.uid]}));
+      return members.map(member => ({ ...member, role: permissions.roles[member.uid] }));
     })
   );
 
@@ -189,7 +196,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   }
 
   public isInWishlist(movieId: string): Observable<boolean> {
-    return this.org$.pipe(
+    return this.currentOrg$.pipe(
       map(org => org.wishlist.includes(movieId))
     );
   }

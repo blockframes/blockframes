@@ -76,6 +76,7 @@ export function createRoutes({ appsRoutes, appName, landing, events }: RouteOpti
         {
           path: 'c',
           canActivate: [AuthGuard],
+          canDeactivate: [AuthGuard],
           children: [
             {
               path: '',
@@ -122,6 +123,7 @@ export function createAdminRoutes({ appsRoutes, appName }: RouteOptions) {
         {
           path: 'c',
           canActivate: [AuthGuard],
+          canDeactivate: [AuthGuard],
           children: [
             {
               path: '',

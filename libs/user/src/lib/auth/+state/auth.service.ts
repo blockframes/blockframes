@@ -51,11 +51,17 @@ export class AuthService extends FireAuthService<AuthState> {
 
   uid: string; // @TODO #7286 use this instead of this.authService.profile.uid || this.authService.anonymousUserId ?
 
-  auth$: Observable<Partial<AuthState>> = this.afAuth.authState.pipe( // @TODO #7286 find a better typing
-    switchMap(authState => authState && !authState.isAnonymous ? this.userService.valueChanges(authState.uid) : of(undefined)), // @TODO #7286 check if change when lastname is changed
+  authState$ = this.afAuth.authState;
+
+  auth$: Observable<Partial<AuthState>> = this.afAuth.authState.pipe( // @TODO #7286 find a better typing & naming ?
+    switchMap(authState => authState && !authState.isAnonymous ? this.userService.valueChanges(authState.uid) : of(undefined)),
     withLatestFrom(this.afAuth.authState),
     switchMap(async ([user, authState]: [User, firebase.User]) => {
-      if (!authState) return undefined;
+      if (!authState) {
+        this.profile = undefined;
+        this.uid = undefined;
+        return undefined;
+      };
       const token = await authState?.getIdToken(); // @TODO 7286 useful ?
       this.profile = user;
       this.uid = authState.uid;
@@ -70,9 +76,9 @@ export class AuthService extends FireAuthService<AuthState> {
   );
 
   isBlockframesAdmin$ = this.afAuth.authState.pipe(
-    switchMap(async user => {
-      if (!user) return false;
-      const snap = await this.db.collection('blockframesAdmin').doc(user.uid).get().toPromise();
+    switchMap(async authState => {
+      if (!authState || authState.isAnonymous) return false;
+      const snap = await this.db.collection('blockframesAdmin').doc(authState.uid).get().toPromise();
       return snap.exists;
     })
   );
@@ -90,7 +96,7 @@ export class AuthService extends FireAuthService<AuthState> {
     private gdprService: GDPRService,
     private analytics: AngularFireAnalytics,
     private ipService: IpService,
-    private afAuth: AngularFireAuth, // @TODO #7278 don't use this.auth directly as this belongs to akita-ng-fire
+    private afAuth: AngularFireAuth, // @TODO #7286 don't use this.auth directly as this belongs to akita-ng-fire
     private userService: UserService,
     @Optional() public ngIntercom?: Intercom,
   ) {

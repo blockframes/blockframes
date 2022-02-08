@@ -49,7 +49,7 @@ export class EventListComponent implements OnInit {
       this.viewDate = new Date(params.date);
     }
     this.events$ = combineLatest([
-      this.orgService.org$,
+      this.orgService.currentOrg$,
       this.filter.valueChanges.pipe(startWith(this.filter.value))
     ]).pipe(
       switchMap(([org, types]) => this.service.queryByType(types, ref => ref.where('ownerOrgId', '==', org.id))),

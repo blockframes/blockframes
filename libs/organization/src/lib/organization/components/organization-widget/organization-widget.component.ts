@@ -21,6 +21,6 @@ export class OrganizationWidgetComponent implements OnInit {
 
   ngOnInit() {
     this.user$ = this.authService.profile$;
-    this.organization$ = this.orgService.org$;
+    this.organization$ = this.orgService.currentOrg$;
   }
 }

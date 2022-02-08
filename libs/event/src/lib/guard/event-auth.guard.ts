@@ -24,7 +24,7 @@ export class EventAuthGuard implements CanActivate {
         const validUser = hasDisplayName(authState.profile) && authState.emailVerified && authState.profile.orgId;
         if (!validUser) return this.router.createUrlTree(['/auth/identity']);
 
-        const org = await this.orgService.org$.pipe(take(1)).toPromise();
+        const org = await this.orgService.currentOrg$.pipe(take(1)).toPromise();
         if (org.status !== 'accepted') return this.router.createUrlTree(['/c/organization/create-congratulations']);
       }),
       catchError(() => this.router.navigate(['/']))
