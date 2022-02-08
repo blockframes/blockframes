@@ -6,3 +6,6 @@ export { festival };
 
 import * as auth from './lib/auth'
 export { auth };
+
+import * as events from './lib/events'
+export { events };

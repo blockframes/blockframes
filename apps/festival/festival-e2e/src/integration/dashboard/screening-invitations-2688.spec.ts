@@ -10,7 +10,7 @@ import { Orgs } from '@blockframes/e2e/fixtures/orgs';
 import { FestivalMarketplaceHomePage, FestivalMarketplaceEventPage, FestivalMarketplaceScreeningPage, FestivalOrganizationListPage, FestivalMarketplaceOrganizationTitlePage, FestivalScreeningPage } from '../../support/pages/marketplace/index';
 import { FestivalDashboardHomePage, EventPage, FestivalInvitationsPage } from '../../support/pages/dashboard/index';
 import { LandingPage } from '../../support/pages/landing';
-import { auth, awaitElementDeletion, festival } from '@blockframes/testing/e2e';
+import { auth, awaitElementDeletion, events, festival } from '@blockframes/testing/e2e';
 
 export const NOW = new Date();
 const TestEVENT = EVENTS[0];
@@ -42,15 +42,16 @@ describe('Organiser invites other users to private screening', () => {
   })
 
   it('Organiser creates screening & invites 2 users to the screening', () => {
-    cy.task('deleteAllSellerEvents', users[UserIndex.Organiser].uid) // ! Clean up any existing events!
+    // cy.task('deleteAllSellerEvents', users[UserIndex.Organiser].uid) // ! Clean up any existing events!
     /*
     * We need to create a seller, create an org, upload a title, create a screening event for it
-   * we need to make two buyer users
-   * we need to invite those buyers to the screening
-   * then we run the test.
-   */
-    cy.contains('Accept cookies').click();
-    cy.task('log', users[UserIndex.Organiser].uid);
+    * we need to make two buyer users
+    * we need to invite those buyers to the screening
+    * then we run the test.
+    */
+   cy.clearLocalStorage(); // ! If event is deleted manually, it will be stuck in localStorage cache
+   cy.contains('Accept cookies').click();
+   cy.task('log', users[UserIndex.Organiser].uid);
     auth.loginWithEmailAndPassword(users[UserIndex.Organiser].email);
 
 
@@ -61,8 +62,10 @@ describe('Organiser invites other users to private screening', () => {
     cy.visit('/c/o/dashboard/event')
     cy.wait('@calendar');
 
+
     cy.log(`Create screening {${TestEVENT.event}}`)
     awaitElementDeletion('mat-spinner');
+    events.deleteAllSellerEvents(users[UserIndex.Organiser].uid); // ! must stay here so eventsService is instantiated
     festival.createDetailedEvent(new Date(), 'Screening', TestEVENT.event);
 
 
@@ -72,7 +75,7 @@ describe('Organiser invites other users to private screening', () => {
     cy.pause();
   });
 
-  it(`InvitedUser1: logs in, accepts his invitations & runs the video`, () => {
+  it(`InvitedUser1: logs in, accepts his invitations & runs the video`, () => { // ! This is a smell - tests should not rely on order
     signIn(users[UserIndex.InvitedUser1]);
     acceptCookie();
 
