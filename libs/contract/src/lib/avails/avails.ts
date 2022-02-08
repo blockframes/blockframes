@@ -59,7 +59,7 @@ function assertValidTitle(mandates: FullMandate[], sales: FullSale[], bucketCont
   // i.e. they must all have the same `titleId`
   const mandateIds = mandates.map(m=> m.titleId);
   const saleIds = sales.map(s => s.titleId);
-  const bucketTitleIds = bucketContracts.map(b => b.titleId);
+  const bucketTitleIds = (bucketContracts??[]).map(b => b.titleId);
   const uniqueIds = Array.from(new Set([...mandateIds, ...saleIds, ...bucketTitleIds]));
   const differentTitleIds = uniqueIds.length > 1;
   if (differentTitleIds) throw new Error('Mandates & Sales must all have the same title id!');
