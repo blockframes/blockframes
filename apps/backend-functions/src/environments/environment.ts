@@ -29,8 +29,6 @@ export const { projectId, storageBucket } = firebase();
 export const sendgridAPIKey = mockConfigIfNeeded('sendgrid', 'api_key');
 export const mnemonic = mockConfigIfNeeded('relayer', 'mnemonic');
 
-export const adminPassword = mockConfigIfNeeded('admin', 'password');
-
 export const jwplayerSecret = mockConfigIfNeeded('jwplayer', 'secret');
 export const jwplayerKey = mockConfigIfNeeded('jwplayer', 'key');
 export const jwplayerApiV2Secret = mockConfigIfNeeded('jwplayer', 'apiv2secret');

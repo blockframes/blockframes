@@ -1,8 +1,8 @@
-import { Component, ChangeDetectionStrategy, EventEmitter, TemplateRef, Input, Output } from '@angular/core';
-import { Validators } from '@angular/forms';
+import { Component, ChangeDetectionStrategy, EventEmitter, TemplateRef, Input, Output, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 import { Movie } from '@blockframes/movie/+state';
+import { FormTableComponent } from '@blockframes/ui/form/table/form-table.component';
 import { FormList } from '@blockframes/utils/form';
 import { Scope } from '@blockframes/utils/static-model';
 import { Holdback } from '../../+state/contract.model';
@@ -18,6 +18,7 @@ export class HolbackFormComponent {
   @Input() title: Movie;
   @Input() holdbacks: Holdback[] = [];
   @Output() holdbacksChange = new EventEmitter<Holdback[]>();
+  @ViewChild('formTable', { read: FormTableComponent }) formTable: FormTableComponent<Holdback>;
 
   ref: MatDialogRef<void, void>;
   form: FormList<Holdback, HoldbackForm>;
@@ -30,7 +31,7 @@ export class HolbackFormComponent {
   constructor(private dialog: MatDialog) { }
 
   ngOnInit() {
-    this.form = FormList.factory(this.holdbacks, holdback => new HoldbackForm(holdback),[Validators.required]);
+    this.form = FormList.factory(this.holdbacks, holdback => new HoldbackForm(holdback), []);
   }
 
   openHoldbacks(template: TemplateRef<any>) {
@@ -43,9 +44,13 @@ export class HolbackFormComponent {
 
   save() {
     if (this.form.valid) {
+      this.ref.close(); //The position of the close before the emit is important.
       this.holdbacksChange.emit(this.form.value);
-      this.ref.close();
     }
+  }
+
+  shouldDisable() {
+    return this.formTable.formItem?.dirty;
   }
 
   cancel() {

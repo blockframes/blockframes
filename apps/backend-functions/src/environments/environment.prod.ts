@@ -29,8 +29,6 @@ export const { projectId, storageBucket } = firebase();
 export const sendgridAPIKey = functions.config().sendgrid.api_key;
 export const mnemonic = functions.config().relayer.mnemonic;
 
-export const adminPassword = functions.config().admin.password;
-
 export const jwplayerSecret = functions.config().jwplayer.secret;
 export const jwplayerKey = functions.config().jwplayer.key;
 export const jwplayerApiV2Secret = functions.config().jwplayer.apiv2secret;

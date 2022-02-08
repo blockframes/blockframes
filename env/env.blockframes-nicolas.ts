@@ -63,10 +63,10 @@ export const algolia = {
 // =======
 
 export const supportEmails = {
-  default: 'bdelorme@cascade8.com',
-  catalog: 'bdelorme+catalog@cascade8.com',
-  festival: 'bdelorme+festival@cascade8.com',
-  financiers: 'bdelorme+financiers@cascade8.com'
+  default: 'ngermain@cascade8.com',
+  catalog: 'ngermain+catalog@cascade8.com',
+  festival: 'ngermain+festival@cascade8.com',
+  financiers: 'ngermain+financiers@cascade8.com'
 }
 
 // Yandex
