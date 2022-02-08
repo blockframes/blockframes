@@ -808,6 +808,14 @@
                 "emulator": true
               }
             },
+            "emulator-incognito": {
+              "devServerTarget": "festival:serve:emulator",
+              "env": {
+                "notice": "Env is being read",
+                "emulator": true,
+                "incognito": true
+              }
+            },
             "production": {
               "devServerTarget": "festival:serve:production"
             },

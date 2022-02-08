@@ -20,9 +20,14 @@ export default (async (on, config) => {
   console.log('Node version:', process.version);
   console.log('Config: ', config);
   // A plugin example. Can modify printed configs.
-  on('before:browser:launch', (arg1, arg2) => {
-    console.log('Plugin Arg1', arg1);
-    console.log('Plugin Arg2', arg2);
+
+  // works by calling : nx run festival-e2e:e2e:emulator-incognito
+  // see angular.json at the root of the project
+  on("before:browser:launch", (browser, launchOptions) => {
+    if (browser.name === "chrome" && config.env.incognito) {
+      launchOptions.args.push("--incognito");
+    }
+    return launchOptions;
   });
 
   on('task', testingCypress(config));
