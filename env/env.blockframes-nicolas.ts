@@ -143,7 +143,7 @@ export const quorum = {
 // BigQuery
 // ========
 
-export const bigQueryAnalyticsTable = 'blockframes-bruce.analytics_194443494.events_';
+export const bigQueryAnalyticsTable = 'blockframes-nicolas.analytics_301960050.events_';
 
 // Data Studio
 // ========
