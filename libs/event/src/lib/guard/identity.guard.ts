@@ -17,7 +17,7 @@ export class IdentityGuard implements CanActivate {
 
   canActivate(next: ActivatedRouteSnapshot) {
     return combineLatest([
-      this.authService.auth$, // @TODO #7286
+      this.authService.authState$,
       this.authService.anonymousCredentials$,
       this.service.valueChanges(next.params.eventId as string)
     ]).pipe(

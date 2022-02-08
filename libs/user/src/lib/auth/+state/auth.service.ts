@@ -49,13 +49,14 @@ export class AuthService extends FireAuthService<AuthState> {
   signedOut = new Subject<void>();
   anonymousCredentials$ = new BehaviorSubject<AnonymousCredentials>(this.anonymousCredentials);
 
-  uid: string; // @TODO #7286 use this instead of this.authService.profile.uid || this.authService.anonymousUserId ?
+  profile: User; // For this to be defined, one of the observable above must be called before // @TODO #7273 if auth$ was not already called, this will be undefined &&  rename to user$ ?
+  uid: string; // For this to be defined, one of the observable above must be called before // @TODO #7286 use this instead of this.authService.profile.uid || this.authService.anonymousUserId ? && this will be undefined if auth$ w
 
-  authState$ = this.afAuth.authState;
+  authState$ = this.afAuth.authState; // @TODO #7286 find where this can be used instead of auth$
 
-  auth$: Observable<Partial<AuthState>> = this.afAuth.authState.pipe( // @TODO #7286 find a better typing & naming ?
+  auth$: Observable<Partial<AuthState>> = this.authState$.pipe( // @TODO #7286 find a better typing & naming?
     switchMap(authState => authState && !authState.isAnonymous ? this.userService.valueChanges(authState.uid) : of(undefined)),
-    withLatestFrom(this.afAuth.authState),
+    withLatestFrom(this.authState$),
     switchMap(async ([user, authState]: [User, firebase.User]) => {
       if (!authState) {
         this.profile = undefined;
@@ -75,7 +76,7 @@ export class AuthService extends FireAuthService<AuthState> {
     })
   );
 
-  isBlockframesAdmin$ = this.afAuth.authState.pipe(
+  isBlockframesAdmin$ = this.authState$.pipe(
     switchMap(async authState => {
       if (!authState || authState.isAnonymous) return false;
       const snap = await this.db.collection('blockframesAdmin').doc(authState.uid).get().toPromise();
@@ -83,11 +84,9 @@ export class AuthService extends FireAuthService<AuthState> {
     })
   );
 
-  profile$ = this.auth$.pipe(
+  profile$ = this.auth$.pipe(  // @TODO #7273 rename to user$ ?
     map(authState => authState?.profile)
   );
-
-  profile: User; // @TODO #7273 if auth$ was not already called, this will be undefined
 
   constructor(
     protected store: AuthStore,
@@ -96,7 +95,7 @@ export class AuthService extends FireAuthService<AuthState> {
     private gdprService: GDPRService,
     private analytics: AngularFireAnalytics,
     private ipService: IpService,
-    private afAuth: AngularFireAuth, // @TODO #7286 don't use this.auth directly as this belongs to akita-ng-fire
+    private afAuth: AngularFireAuth,
     private userService: UserService,
     @Optional() public ngIntercom?: Intercom,
   ) {
@@ -124,7 +123,7 @@ export class AuthService extends FireAuthService<AuthState> {
   }
 
   public checkResetCode(actionCode: string) {
-    return this.auth.verifyPasswordResetCode(actionCode);
+    return this.afAuth.verifyPasswordResetCode(actionCode);
   }
 
   onSignin(userCredential: UserCredential) {
@@ -172,7 +171,7 @@ export class AuthService extends FireAuthService<AuthState> {
    * @param newPassword new password set by the owned of email
    */
   public handleResetPassword(actionCode: string, newPassword: string) {
-    this.auth.confirmPasswordReset(actionCode, newPassword)
+    this.afAuth.confirmPasswordReset(actionCode, newPassword);
   }
 
   /** Create the user in users collection on firestore. */
@@ -255,7 +254,7 @@ export class AuthService extends FireAuthService<AuthState> {
       return this.updateAnonymousCredentials({ uid: currentUser.uid });
     }
 
-    const creds = await this.auth.signInAnonymously();
+    const creds = await this.afAuth.signInAnonymously();
     return this.updateAnonymousCredentials({ uid: creds.user.uid }, { reset: true });
   }
 

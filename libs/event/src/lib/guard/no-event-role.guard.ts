@@ -3,7 +3,6 @@ import { EventService } from "../+state/event.service";
 import { ActivatedRouteSnapshot, CanActivate, Router } from "@angular/router";
 import { map } from "rxjs/operators";
 import { AuthService } from "@blockframes/auth/+state";
-import { AngularFireAuth } from "@angular/fire/auth";
 import { combineLatest } from "rxjs";
 
 @Injectable({ providedIn: 'root' })
@@ -12,13 +11,12 @@ export class NoEventRoleGuard implements CanActivate {
   constructor(
     private service: EventService,
     private authService: AuthService,
-    private afAuth: AngularFireAuth,
     private router: Router,
   ) { }
 
   canActivate(next: ActivatedRouteSnapshot) {
     return combineLatest([
-      this.authService.auth$,  // @TODO #7286
+      this.authService.authState$,
       this.authService.anonymousCredentials$,
       this.service.valueChanges(next.params.eventId as string)
     ]).pipe(

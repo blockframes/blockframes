@@ -36,8 +36,6 @@ export class UserService extends CollectionService<UserState> {
 
   /**
    * Fetch an user based on his uid
-   * @dev If in the future, we need to keep an user list in the state other than members of an org,
-   * this will be the time to create a userService and to move this method in it.
    * @param uid
    */
   public async getUser(uid: string): Promise<User> { // @TODO #7286 remove and use this.getValue(uid)

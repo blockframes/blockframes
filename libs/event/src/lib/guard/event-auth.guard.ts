@@ -26,6 +26,8 @@ export class EventAuthGuard implements CanActivate {
 
         const org = await this.orgService.currentOrg$.pipe(take(1)).toPromise();
         if (org.status !== 'accepted') return this.router.createUrlTree(['/c/organization/create-congratulations']);
+
+        return true;
       }),
       catchError(() => this.router.navigate(['/']))
     )
