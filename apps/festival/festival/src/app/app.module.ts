@@ -46,7 +46,9 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { CookieBannerModule } from '@blockframes/utils/gdpr-cookie/cookie-banner/cookie-banner.module';
 import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.service';
 import { getBrowserWithVersion } from '@blockframes/utils/browser/utils';
+
 import { emulatorConfig } from '../environment/environment';
+import { AuthService } from '@blockframes/auth/+state';
 
 @NgModule({
   declarations: [AppComponent],
@@ -96,10 +98,11 @@ export class AppModule {
     intercomService: IntercomService,
     yandexService: YandexMetricaService,
     gdprService: GDPRService,
+    authService: AuthService,
   ) {
     const { intercom, yandex } = gdprService.cookieConsent;
     if (yandex) yandexService.insertMetrika('festival');
-    intercom && intercomId ? intercomService.enable() : intercomService.disable();
+    intercom && intercomId ? intercomService.enable(authService.profile) : intercomService.disable();
 
     analytics.setUserProperties(getBrowserWithVersion());
 

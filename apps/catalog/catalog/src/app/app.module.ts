@@ -49,6 +49,7 @@ import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.se
 import { getBrowserWithVersion } from '@blockframes/utils/browser/utils';
 
 import { emulatorConfig } from '../environment/environment';
+import { AuthService } from '@blockframes/auth/+state';
 
 @NgModule({
   declarations: [AppComponent],
@@ -109,12 +110,13 @@ export class AppModule {
     analytics: FireAnalytics,
     intercomService: IntercomService,
     yandexService: YandexMetricaService,
-    gdprService: GDPRService
+    gdprService: GDPRService,
+    authService: AuthService,
   ) {
 
     const { intercom, yandex } = gdprService.cookieConsent;
     if (yandex) yandexService.insertMetrika('catalog');
-    intercom && intercomId ? intercomService.enable() : intercomService.disable();
+    intercom && intercomId ? intercomService.enable(authService.profile) : intercomService.disable();
 
     analytics.setUserProperties(getBrowserWithVersion());
 

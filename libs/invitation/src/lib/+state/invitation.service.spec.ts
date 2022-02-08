@@ -1,6 +1,6 @@
 ﻿import { TestBed } from '@angular/core/testing';
 import { InvitationService } from './invitation.service';
-import { AuthQuery, createUser } from '@blockframes/auth/+state';
+import { AuthService, createUser } from '@blockframes/auth/+state';
 import { AngularFireModule } from '@angular/fire';
 import { toDate } from '@blockframes/utils/helpers';
 import { SETTINGS, AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestore';
@@ -10,21 +10,20 @@ import { createInvitation, InvitationDocument } from './invitation.firestore';
 import firebase from 'firebase/app';
 import { HttpClient } from '@angular/common/http';
 import { HttpTestingController } from '@angular/common/http/testing';
-import { AngularFireAuth } from '@angular/fire/auth';
 import { Observable } from 'rxjs';
+import { UserService } from '@blockframes/user/+state/user.service';
 
-class InjectedAuthQuery { // @TODO #7273 remove
-  userId = 'userId';
-  orgId = 'orgId';
+class InjectedAuthService {
+  profile = {
+    uid: 'userId',
+    orgId: 'orgId',
+  }
 
-  user$ = new Observable();
-  select() { return { pipe: () => null }; }
-  getValue() { return {} }
+  profile$ = new Observable();
+
 }
 
-class InjectedAngularFireAuth {
-  authState = new Observable();
-}
+class DummyService { }
 
 const today = new Date();
 const invitationParamsOrg = {
@@ -56,8 +55,8 @@ describe('Invitations Test Suite', () => {
       providers: [
         InvitationService,
         { provide: HttpClient, useClass: HttpTestingController },
-        { provide: AngularFireAuth, useClass: InjectedAngularFireAuth },
-        { provide: AuthQuery, useClass: InjectedAuthQuery },
+        { provide: AuthService, useClass: InjectedAuthService },
+        { provide: UserService, useClass: DummyService },
         { provide: SETTINGS, useValue: { host: 'localhost:8080', ssl: false } }
       ],
     });

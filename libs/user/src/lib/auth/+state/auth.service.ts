@@ -78,7 +78,7 @@ export class AuthService extends FireAuthService<AuthState> {
   );
 
   profile$ = this.auth$.pipe(
-    map(authState => authState.profile)
+    map(authState => authState?.profile)
   );
 
   profile: User; // @TODO #7273 if auth$ was not already called, this will be undefined
@@ -222,7 +222,7 @@ export class AuthService extends FireAuthService<AuthState> {
   private async updateEmailVerified() {
     const auth = await this.auth$.pipe(take(1)).toPromise();
 
-    if (auth.emailVerified) {
+    if (auth?.emailVerified) {
       const user = await this.userService.getValue(auth.uid);
       if (!user._meta?.emailVerified) { // attribute does not exists or is set to false
         const _meta: DocumentMeta<Date | FirebaseFirestore.Timestamp> = {
