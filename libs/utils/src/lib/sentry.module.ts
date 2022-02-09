@@ -7,7 +7,7 @@ import { AuthService } from '@blockframes/auth/+state';
 @Injectable()
 export class SentryErrorHandler implements ErrorHandler {
   constructor(private authService: AuthService) {
-    this.authService.user$.subscribe(user => {
+    this.authService.profile$.subscribe(user => {
       if (!user) {
         return;
       }

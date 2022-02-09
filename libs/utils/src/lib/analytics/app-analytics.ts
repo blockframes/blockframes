@@ -14,7 +14,7 @@ export class FireAnalytics {
 
   public async event(name: AnalyticsEvents, params: Record<string, unknown>) {
     const isBlockframesAdmin = await this.authService.isBlockframesAdmin$.pipe(take(1)).toPromise();
-    const profile = await this.authService.user$.pipe(take(1)).toPromise();
+    const profile = await this.authService.profile$.pipe(take(1)).toPromise();
     const isOperator = isBlockframesAdmin || Object.values(centralOrgId).includes(profile?.orgId);
 
     /**

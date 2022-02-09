@@ -26,13 +26,13 @@ export class OrganizationService extends CollectionService<OrganizationState> {
 
   // Organization of the current logged in user or undefined if user have no org
   org: Organization; // For this to be defined, one of the observable below must be called before
-  org$: Observable<Organization> = this.authService.user$.pipe(
+  org$: Observable<Organization> = this.authService.profile$.pipe(
     switchMap(user => user?.orgId ? this.valueChanges(user.orgId) : of(undefined)),
     tap(org => this.org = org)
   );
 
   // Organization of the current logged in user
-  currentOrg$: Observable<Organization> = this.authService.user$.pipe(
+  currentOrg$: Observable<Organization> = this.authService.profile$.pipe(
     filter(user => !!user),
     switchMap(user => user?.orgId ? this.valueChanges(user.orgId) : of(undefined)),
     tap(org => this.org = org)

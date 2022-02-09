@@ -171,7 +171,7 @@ export class SessionComponent implements OnInit, OnDestroy {
         if (event.isOwner) {
           const attendees = event.meta.attendees;
           if (attendees[this.authService.uid]?.status !== 'owner') {
-            const attendee = createMeetingAttendee(this.authService.profile || this.authService.anonymousCredentials, 'owner');
+            const attendee = createMeetingAttendee(this.authService.anonymouseOrRegularProfile, 'owner');
             const meta: Meeting = { ...event.meta, attendees: { ...event.meta.attendees, [this.authService.uid]: attendee } };
             this.service.update(event.id, { meta });
           }

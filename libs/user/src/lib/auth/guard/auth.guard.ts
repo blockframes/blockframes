@@ -25,10 +25,10 @@ export class AuthGuard implements CanActivate, CanDeactivate<unknown>{
         }
 
         if (!this.sub) {
-          this.sub = this.service.authState$.pipe(filter(a => !a)).subscribe(() => this.router.navigate(['/']));
+          this.sub = this.service.user$.pipe(filter(a => !a)).subscribe(() => this.router.navigate(['/']));
         }
 
-        return hasDisplayName(authState.user) ? true : this.router.createUrlTree(['auth/identity']);
+        return hasDisplayName(authState.profile) ? true : this.router.createUrlTree(['auth/identity']);
       }),
       catchError(() => this.router.navigate(['/']))
     );

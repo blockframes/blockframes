@@ -14,7 +14,7 @@ export class NoEventAuthGuard implements CanActivate {
 
   canActivate(next: ActivatedRouteSnapshot) {
     return combineLatest([
-      this.authService.authState$,
+      this.authService.user$,
       this.authService.anonymousCredentials$,
     ]).pipe(
       map(([userAuth, creds]) => {

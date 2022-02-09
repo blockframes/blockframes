@@ -18,7 +18,7 @@ export class NoEventIdentityGuard implements CanActivate {
   canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     const currentPage = state.url.split('/').pop().split('?')[0];
     return combineLatest([
-      this.authService.authState$,
+      this.authService.user$,
       this.authService.anonymousCredentials$,
       this.service.valueChanges(next.params.eventId as string)
     ]).pipe(

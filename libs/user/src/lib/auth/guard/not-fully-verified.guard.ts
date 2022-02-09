@@ -21,10 +21,10 @@ export class NotFullyVerifiedGuard implements CanActivate {
       switchMap(async ([authState, org]) => {
         if (!authState.emailVerified) return true;
 
-        if (!authState.user.orgId) {
+        if (!authState.profile.orgId) {
           const invitations = await this.orgService.getValue(ref => ref.where('mode', '==', 'invitation')
             .where('type', '==', 'joinOrganization')
-            .where('toUser.uid', '==', authState.user.uid));
+            .where('toUser.uid', '==', authState.profile.uid));
 
           if (invitations.find(invitation => invitation.status === 'pending')) return this.router.createUrlTree(['c/organization/join-congratulations']);
 

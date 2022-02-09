@@ -26,7 +26,7 @@ import { AuthService } from '@blockframes/auth/+state';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MarketplaceComponent implements OnInit {
-  public user$ = this.authService.user$;
+  public user$ = this.authService.profile$;
   public wishlistCount$: Observable<number>;
   public notificationCount$ = this.notificationService.myNotificationsCount$;
   public invitationCount$ = this.invitationService.myInvitations$.pipe(

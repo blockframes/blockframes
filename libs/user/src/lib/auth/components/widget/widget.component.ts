@@ -15,7 +15,7 @@ import { OrganizationService } from '@blockframes/organization/+state';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AuthWidgetComponent {
-  user$ = this.authService.user$;
+  user$ = this.authService.profile$;
   organization$ = this.orgService.currentOrg$;
   theme$ = this.themeService.theme$;
   isBfAdmin = this.userService.isBlockframesAdmin(this.authService.uid);

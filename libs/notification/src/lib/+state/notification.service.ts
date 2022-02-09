@@ -26,7 +26,7 @@ export class NotificationService extends CollectionService<NotificationState> {
   private app = getCurrentApp(this.routerQuery);
   private appName = appName[this.app];
 
-  myNotifications$ = this.authService.user$.pipe(
+  myNotifications$ = this.authService.profile$.pipe(
     filter(user => !!user?.uid),
     switchMap(user => this.valueChanges(ref => ref.where('toUserId', '==', user.uid).where('app.isRead', '==', false))),
     switchMap(notifications => {

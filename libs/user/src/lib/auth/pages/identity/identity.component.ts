@@ -29,7 +29,7 @@ import { DifferentPasswordStateMatcher, RepeatPasswordStateMatcher } from '@bloc
 })
 export class IdentityComponent implements OnInit, OnDestroy {
   @ViewChild('customSnackBarTemplate') customSnackBarTemplate: TemplateRef<unknown>;
-  public user$ = this.authService.user$;
+  public user$ = this.authService.profile$;
   public creating = false;
   public app: App;
   public appName: string;

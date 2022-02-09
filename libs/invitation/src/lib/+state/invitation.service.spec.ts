@@ -18,7 +18,7 @@ class InjectedAuthService {
     orgId: 'orgId',
   }
 
-  user$ = new Observable();
+  profile$ = new Observable();
 }
 
 class DummyService { }

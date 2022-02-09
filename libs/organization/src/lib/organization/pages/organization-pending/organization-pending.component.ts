@@ -25,7 +25,7 @@ export class OrganizationPendingComponent {
   public org$: Observable<Organization>;
   public app = getCurrentApp(this.routerQuery);
   public appName = appName[this.app];
-  public orgActive$ = this.authService.user$.pipe(
+  public orgActive$ = this.authService.profile$.pipe(
     filter(user => !!user),
     switchMap(user => this.getOrgId(user)),
     filter(orgId => !!orgId),

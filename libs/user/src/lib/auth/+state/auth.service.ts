@@ -50,39 +50,42 @@ export class AuthService extends FireAuthService<AuthState> {
   anonymousCredentials$ = new BehaviorSubject<AnonymousCredentials>(this.anonymousCredentials);
 
   // For these to be defined, one of the observable below must be called before
-  profile: User; // @TODO #7273 #7273 rename to user (& InjectedAuthService) once AuthService does not extends FireAuthService anymore
+  profile: User; // User object in Firestore DB
   uid: string; // Will be defined for regular and anonymous users
 
-  authState$ = this.afAuth.authState;
+  user$ = this.afAuth.authState; // Firebase Auth User Object
 
-  auth$: Observable<{ isAnonymous: boolean, emailVerified: boolean, user?: User }> = this.authState$.pipe(
-    switchMap(authState => authState && !authState.isAnonymous ? this.userService.valueChanges(authState.uid) : of(undefined)),
-    withLatestFrom(this.authState$),
-    map(([user, authState]: [User, firebase.User]) => {
-      if (!authState) {
+  auth$: Observable<{ isAnonymous: boolean, emailVerified: boolean, profile?: User }> = this.user$.pipe(
+    switchMap(userAuth => userAuth && !userAuth.isAnonymous ? this.userService.valueChanges(userAuth.uid) : of(undefined)),
+    withLatestFrom(this.user$),
+    map(([profile, userAuth]: [User, firebase.User]) => {
+      if (!userAuth) {
         this.profile = undefined;
         this.uid = undefined;
         return undefined;
       };
-      this.profile = user;
-      this.uid = authState.uid;
+      this.profile = profile;
+      this.uid = userAuth.uid;
       return {
-        isAnonymous: authState.isAnonymous || false,
-        emailVerified: authState.emailVerified || false,
-        user
+        isAnonymous: userAuth.isAnonymous || false,
+        emailVerified: userAuth.emailVerified || false,
+        profile
       }
     })
   );
 
-  isBlockframesAdmin$ = this.authState$.pipe(
-    switchMap(async authState => {
-      if (!authState || authState.isAnonymous) return false;
-      const snap = await this.db.collection('blockframesAdmin').doc(authState.uid).get().toPromise();
+  isBlockframesAdmin$ = this.user$.pipe(
+    switchMap(async user => {
+      if (!user || user.isAnonymous) return false;
+      const snap = await this.db.collection('blockframesAdmin').doc(user.uid).get().toPromise();
       return snap.exists;
     })
   );
+  
+  // User object in Firestore DB
+  profile$ = this.auth$.pipe(map(auth => auth?.profile));
 
-  user$ = this.auth$.pipe(map(auth => auth?.user));
+  get anonymouseOrRegularProfile () { return this.profile || this.anonymousCredentials };
 
   constructor(
     protected store: AuthStore,
@@ -221,7 +224,7 @@ export class AuthService extends FireAuthService<AuthState> {
   // #7303 if user does not interact with authService, this is not updated (ie: user goes directly to eventPage ?)
   // @TODO #7286 #7273 rework this
   private async updateEmailVerified() {
-    const auth = await this.authState$.pipe(take(1)).toPromise();
+    const auth = await this.user$.pipe(take(1)).toPromise();
 
     if (auth?.emailVerified) {
       const user = await this.userService.getValue(auth.uid);
