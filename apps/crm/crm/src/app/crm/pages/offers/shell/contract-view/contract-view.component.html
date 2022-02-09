@@ -17,7 +17,8 @@
           <mat-select formControlName="status">
             <mat-option value="pending">
               Pending
-              <ng-container *ngIf="contract.negotiation | isNew; else negotiating">( Will be displayed as New )</ng-container>
+              <ng-container *ngIf="contract.negotiation | isNew; else negotiating">( Will be displayed as New )
+              </ng-container>
               <ng-template #negotiating>(Will be displayed as Negotiating)</ng-template>
             </mat-option>
             <mat-option value="accepted" [disabled]="!contract.negotiation?.price">
@@ -52,10 +53,10 @@
             <span>Buyer requested Asking Price</span>
           </ng-template>
         </p>
-        <ng-template #termAction let-term>
+        <ng-template #termAction let-term let-index="index">
           <a mat-icon-button matTooltip="View"
             [routerLink]="['/c/o/dashboard/crm/offer', offer.id, contract.id, 'form']"
-            [queryParams]="{ termId: term.id }">
+            [queryParams]="{termIndex:index}">
             <mat-icon svgIcon="visibility"></mat-icon>
           </a>
           <button mat-icon-button matTooltip="Delete" (click)="confirm(term)">

@@ -40,7 +40,7 @@ export class ScreeningComponent implements OnInit {
     this.dynTitle.setPageTitle('Add an event', 'Screening info');
 
     // will be executed only if "screening" as Observable are lazy
-    this.titles$ = this.orgService.org$.pipe(
+    this.titles$ = this.orgService.currentOrg$.pipe(
       switchMap(org => this.movieService.valueChanges(fromOrgAndAccepted(org.id, 'festival'))),
       map(titles => titles.sort((a, b) => a.title.international.localeCompare(b.title.international)))
     );

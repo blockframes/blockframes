@@ -28,10 +28,10 @@
   </list-page-description>
 
   <list-filter>
-    <ng-template filter [form]="searchForm.country" label="Company's Nationality">
-      <static-select [control]="searchForm.country" [withoutValues]="['world']" scope="territories">
-        <mat-label>Country</mat-label>
-      </static-select>
+    <ng-template filter [form]="searchForm.countries" label="Company's Nationality">
+      <chips-autocomplete [form]="searchForm.countries" placeholder="Country of Origin" scope="territories">
+        <mat-label>Type and select Country</mat-label>
+      </chips-autocomplete>
     </ng-template>
   </list-filter>
 

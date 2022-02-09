@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef } from '@angular/core';
 import { Invitation, InvitationService } from '../../+state';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { EventService } from '@blockframes/event/+state/event.service';
@@ -26,22 +26,26 @@ export class ItemComponent {
   @Input() set invitation(invitation: Invitation) {
     this._invitation = invitation;
     if (invitation.fromUser) {
-      this.fromUser.value = invitation.fromUser;
+      this.fromUser = invitation.fromUser;
+      this.cdr.markForCheck();
 
       if (!invitation.fromUser.orgId) return;
-      this.organizationService.getValue(this.fromUser.value.orgId).then(org => {
-        this.fromOrg.value = org
+      this.organizationService.getValue(this.fromUser.orgId).then(org => {
+        this.fromOrg = org
+        this.cdr.markForCheck();
       })
 
     } else if (invitation.fromOrg) {
-      this.fromOrg.value = invitation.fromOrg
+      this.fromOrg = invitation.fromOrg
+      this.cdr.markForCheck();
 
       if (invitation.type === 'attendEvent') {
         this.eventService.getValue(invitation.eventId).then(event => {
           if (isMeeting(event)) {
             this.eventType = 'meeting';
             this.userService.getValue(event.meta.organizerUid as string).then(user => {
-              this.fromUser.value = user;
+              this.fromUser = user;
+              this.cdr.markForCheck();
             })
           }
         })
@@ -51,8 +55,8 @@ export class ItemComponent {
 
   _invitation: Invitation;
 
-  fromOrg = new BehaviorStore<PublicOrganization>(undefined);
-  fromUser = new BehaviorStore<PublicUser>(undefined);
+  fromOrg: PublicOrganization;
+  fromUser: PublicUser;
   eventType = 'screening';
 
   constructor(
@@ -62,6 +66,7 @@ export class ItemComponent {
     private userService: UserService,
     private routerQuery: RouterQuery,
     private agendaService: AgendaService,
+    private cdr: ChangeDetectorRef
   ) {
     //For cypress-environment, keep the event link same as from
     //where app is launced to remove dependency on external host.

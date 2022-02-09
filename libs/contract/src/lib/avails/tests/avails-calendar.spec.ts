@@ -1,4 +1,3 @@
-
 import {
   calendarColumns,
   calendarRows,
@@ -13,9 +12,29 @@ import {
   reset,
   select
 } from '../calendar/calendar.model';
-import { DurationMarker } from '../avails';
+import { durationAvailabilities, DurationMarker } from '../avails';
+import {
+  availSouthKorea, availAfghanistan,
+  availFrance, availsSVODArgentina, availsPayTVArgentina,
+  availsGermany, availsBelgium, availsExistingEndedSales,
+  availsOngoingSales, availsTerritoryWithExclusivity, availsTerritoryWithoutExclusivity,
+  availsFranceLuxembourg, availsAllButSouthKorea,
+} from './../fixtures/availsFilters';
+import { assertDate } from './utils'
+import {
+  mandateMovie1, saleArgentinaMovie1, saleGermanyMovie1, saleCanadaMovie1, saleBelgiumFranceLuxembourgMovie1,
+} from './../fixtures/mandatesAndSales';
 
+const sales = [saleArgentinaMovie1, saleGermanyMovie1, saleCanadaMovie1, saleBelgiumFranceLuxembourgMovie1]
+const { from: saleGermanyFrom, to: saleGermanyTo } = saleGermanyMovie1.terms[0].duration;
 
+const { from: saleCanadaFrom, to: saleCanadaTo } = saleCanadaMovie1.terms[0].duration;
+
+const { from: saleArgentinaFrom, to: saleArgentinaTo } = saleArgentinaMovie1.terms[0].duration;
+
+const { from: mandateFrom, to: mandateTo } = mandateMovie1.terms[0].duration;
+
+const { from: saleBelgiumFranceLuxembourgFrom, to: saleBelgiumFranceLuxembourgTo } = saleBelgiumFranceLuxembourgMovie1.terms[0].duration;
 
 describe('Calendar', () => {
   describe('Test Matrix', () => {
@@ -156,3 +175,182 @@ describe('Calendar', () => {
     });
   });
 });
+
+describe('Test terms out of movie mandates', () => {
+  it('Checks not licensed due to territory', () => {
+    const markers = durationAvailabilities(availSouthKorea, [mandateMovie1], sales, []);
+    expect(markers.available.length).toBe(0);
+    expect(markers.sold.length).toBe(0);
+    expect(markers.inBucket.length).toBe(0);
+  })
+
+  it('Check available on mandate duration', () => {
+    const markers = durationAvailabilities(availAfghanistan, [mandateMovie1], sales, []);
+    expect(markers.available.length).toBe(1);
+    const [{ from, to }] = markers.available;
+    assertDate(from, mandateFrom)
+    assertDate(to, mandateTo)
+  })
+
+  it('Check not licensed due to media', () => {
+    const markers = durationAvailabilities(availFrance, [mandateMovie1], sales, []);
+    expect(markers.available.length).toBe(0)
+    expect(markers.sold.length).toBe(0)
+    expect(markers.inBucket.length).toBe(0)
+  })
+
+  it('Check available  on terms with existing ended sales', () => {
+    const markers = durationAvailabilities(availsExistingEndedSales, [mandateMovie1], sales, []);
+
+    //Germany is sold
+    expect(markers.sold.length).toBe(1);
+    const [{ from: soldFrom, to: soldTo }] = markers.sold;
+    assertDate(soldFrom, saleGermanyFrom);
+    assertDate(soldTo, saleGermanyTo);
+
+    //Available on mandate duration.
+    expect(markers.available.length).toBe(1);
+    const [{ from: availableFrom, to: availableTo }] = markers.available;
+    assertDate(availableFrom, mandateFrom);
+    assertDate(availableTo, mandateTo);
+
+    expect(markers.inBucket.length).toBe(0);
+  })
+
+  it('Check sold on Germany and available on avail territories', () => {
+    const markers = durationAvailabilities(availsOngoingSales, [mandateMovie1], sales, []);
+    //Germany is sold
+    expect(markers.sold.length).toBe(1);
+    const [{ from: soldFrom, to: soldTo }] = markers.sold;
+    assertDate(soldFrom, saleGermanyFrom);
+    assertDate(soldTo, saleGermanyTo);
+
+    //Available on mandate duration.
+    expect(markers.available.length).toBe(1);
+    const [{ from: availableFrom, to: availableTo }] = markers.available;
+    assertDate(availableFrom, mandateFrom);
+    assertDate(availableTo, mandateTo);
+
+    expect(markers.inBucket.length).toBe(0);
+  })
+
+  it('Check available non exclusive', () => {
+    const markers = durationAvailabilities(availsTerritoryWithoutExclusivity, [mandateMovie1], sales, []);
+    expect(markers.available.length).toBe(1);
+    const [{ from, to }] = markers.available;
+    assertDate(from, mandateFrom);
+    assertDate(to, mandateTo);
+    expect(markers.inBucket.length).toBe(0);
+  })
+
+  it('Check not licensed due to territory and exclusivity', () => {
+    const markers = durationAvailabilities(availsTerritoryWithExclusivity, [mandateMovie1], sales, []);
+    //Germany is sold
+    expect(markers.sold.length).toBe(1);
+    const [{ from: soldFrom, to: soldTo }] = markers.sold;
+    assertDate(soldFrom, saleGermanyFrom);
+    assertDate(soldTo, saleGermanyTo);
+
+    //Available on mandate duration
+    expect(markers.available.length).toBe(1);
+    const [{ from: availableFrom, to: availableTo }] = markers.available;
+    assertDate(availableFrom, mandateFrom);
+    assertDate(availableTo, mandateTo);
+
+    expect(markers.inBucket.length).toBe(0);
+  })
+
+  it('Check terms available', () => {
+    const markers = durationAvailabilities(availsSVODArgentina, [mandateMovie1], sales, []);
+    expect(markers.available.length).toBe(1);
+    const [{ from, to }] = markers.available;
+    assertDate(from, mandateFrom);
+    assertDate(to, mandateTo);
+
+    expect(markers.sold.length).toBe(0);
+    expect(markers.inBucket.length).toBe(0);
+  })
+
+  it('Check term sold', () => {
+    const markers = durationAvailabilities(availsPayTVArgentina, [mandateMovie1], sales, []);
+    //Argentina is sold
+    expect(markers.sold.length).toBe(1);
+    const [{ from: soldFrom, to: soldTo }] = markers.sold;
+    assertDate(soldFrom, saleArgentinaFrom);
+    assertDate(soldTo, saleArgentinaTo);
+
+    //Available on mandate duration.
+    expect(markers.available.length).toBe(1);
+    const [{ from: availableFrom, to: availableTo }] = markers.available;
+    assertDate(availableFrom, mandateFrom);
+    assertDate(availableTo, mandateTo);
+
+    expect(markers.inBucket.length).toBe(0);
+  })
+
+  it('Check available due to non exclusivity', () => {
+    const markers = durationAvailabilities(availsGermany, [mandateMovie1], sales, []);
+    expect(markers.available.length).toBe(1);
+    const [{ from, to }] = markers.available;
+    assertDate(from, mandateFrom);
+    assertDate(to, mandateTo);
+
+    expect(markers.inBucket.length).toBe(0);
+    expect(markers.sold.length).toBe(0);
+  })
+
+  it('Check available terms with existing future sales', () => {
+    const markers = durationAvailabilities(availsBelgium, [mandateMovie1], sales, []);
+    //Belgium is sold
+    expect(markers.sold.length).toBe(1);
+    const [{ from: soldFrom, to: soldTo }] = markers.sold;
+    assertDate(soldFrom, saleBelgiumFranceLuxembourgFrom);
+    assertDate(soldTo, saleBelgiumFranceLuxembourgTo);
+
+    //Available on mandate duration.
+    expect(markers.available.length).toBe(1);
+    const [{ from: availableFrom, to: availableTo }] = markers.available;
+    assertDate(availableFrom, mandateFrom);
+    assertDate(availableTo, mandateTo);
+    expect(markers.inBucket.length).toBe(0);
+  })
+
+  it('Check not available due to terms with existing future sales', () => {
+    const markers = durationAvailabilities(availsFranceLuxembourg, [mandateMovie1], sales, []);
+    //France/Luxembourg are sold
+    expect(markers.sold.length).toBe(1);
+    const [{ from: soldFrom, to: soldTo }] = markers.sold;
+    assertDate(soldFrom, saleBelgiumFranceLuxembourgFrom);
+    assertDate(soldTo, saleBelgiumFranceLuxembourgTo);
+
+    //Available on mandate duration.
+    expect(markers.available.length).toBe(1);
+    const [{ from: availableFrom, to: availableTo }] = markers.available;
+    assertDate(availableFrom, mandateFrom);
+    assertDate(availableTo, mandateTo);
+
+    expect(markers.inBucket.length).toBe(0);
+  })
+
+  it('Check available on several Media + Last day of mandate', () => {
+    const markers = durationAvailabilities(availsAllButSouthKorea, [mandateMovie1], sales, []);
+    const argentinaMarker = markers.sold.find(marker => marker.term.contractId === saleArgentinaMovie1.id)
+    const germanyMarker = markers.sold.find(marker => marker.term.contractId === saleGermanyMovie1.id)
+    const canadaMarker = markers.sold.find(marker => marker.term.contractId === saleCanadaMovie1.id)
+
+    expect(markers.sold.length).toBe(3);
+
+    assertDate(argentinaMarker?.from, saleArgentinaFrom);
+    assertDate(argentinaMarker?.to, saleArgentinaTo);
+
+    assertDate(germanyMarker?.from, saleGermanyFrom);
+    assertDate(germanyMarker?.to, saleGermanyTo);
+
+    assertDate(canadaMarker?.from, saleCanadaFrom);
+    assertDate(canadaMarker?.to, saleCanadaTo);
+    const [{ from, to }] = markers.available;
+    assertDate(from, mandateFrom);
+    assertDate(to, mandateTo);
+  })
+
+})

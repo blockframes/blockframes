@@ -2,8 +2,8 @@
   <crm-bread-crumb></crm-bread-crumb>
   <ng-container *ngIf="movies$ | async as movies; else loading">
     <article fxLayout="column" fxLayoutAlign="center center">
-      <button [disabled]="exporting.$ | async" mat-flat-button color="primary" (click)="exportTable(movies)">
-        <ng-container *ngIf="exporting.$ | async else export">
+      <button [disabled]="exporting" mat-flat-button color="primary" (click)="exportTable(movies)">
+        <ng-container *ngIf="exporting else export">
           <span>Generating CSV...</span>
         </ng-container>
         <ng-template #export>

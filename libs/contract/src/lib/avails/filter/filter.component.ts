@@ -15,11 +15,10 @@ import { AvailsForm, MapAvailsForm, CalendarAvailsForm } from '../form/avails.fo
 export class AvailsFilterComponent {
   // eslint-disable-next-line @angular-eslint/no-input-rename
   @Input('availsFilter') form: AvailsForm | MapAvailsForm | CalendarAvailsForm;
+  @Input() disabled = false;
   @HostBinding('class.vertical') @Input() @boolean vertical: boolean;
 
-  public safeGet(key: keyof AvailsFilter) {
-    // if we don't cast the type, we get a type error
-    // this is probably caused by the way the FormEntity is typed
-    return (this.form as AvailsForm).get(key);
+  public getControl(key: keyof AvailsFilter) {
+    return this.form.controls[key];
   }
 }

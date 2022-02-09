@@ -5,7 +5,6 @@ import { ActivatedRoute } from '@angular/router';
 import { pluck, switchMap, take, tap } from 'rxjs/operators';
 import { EventService } from '@blockframes/event/+state';
 import { Observable } from 'rxjs';
-import { BehaviorStore } from '@blockframes/utils/observable-helpers';
 import { EventMeta, EventTypes } from '@blockframes/event/+state/event.firestore';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
@@ -38,7 +37,7 @@ export class AnalyticsComponent implements OnInit {
   private eventType: EventTypes;
   analytics: WatchTimeInfo[];
   public hasWatchTime = false;
-  public exporting = new BehaviorStore(false);
+  public exporting = false
   public averageWatchTime = 0; // in seconds
   public dataMissing = '(Not Registered)';
 
@@ -101,7 +100,8 @@ export class AnalyticsComponent implements OnInit {
 
   public async exportTable() {
     try {
-      this.exporting.value = true;
+      this.exporting = true;
+      this.cdr.markForCheck();
 
       const exportedRows = this.analytics.map(analytic => {
         const row: any = {
@@ -120,11 +120,11 @@ export class AnalyticsComponent implements OnInit {
 
       downloadCsvFromJson(exportedRows, 'attendees-list');
 
-      this.exporting.value = false;
+      this.exporting = false;
     } catch (err) {
-      this.exporting.value = false;
+      this.exporting = false;
     }
-
+    this.cdr.markForCheck();
   }
 
   // Will be used to show event statistics only if event started

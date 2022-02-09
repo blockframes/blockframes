@@ -2,8 +2,8 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
 // Interface
-import { User } from '@blockframes/auth/+state';
 import { createStorageFile } from '@blockframes/media/+state/media.firestore';
+import { User } from '@blockframes/user/+state/user.model';
 import { displayName } from '@blockframes/utils/utils';
 
 function createUserView(user: Partial<User>) {

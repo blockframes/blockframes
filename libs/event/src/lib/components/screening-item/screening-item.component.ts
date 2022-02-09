@@ -21,7 +21,7 @@ export class ScreeningItemComponent implements OnInit, OnDestroy {
   public event$ = this._event.asObservable();
 
   public invitation: Invitation;
-  public requestSent = new BehaviorStore(false);
+  public requestSent = false;
 
   @Input() set event(screening: ScreeningEvent) {
     this._event.next(screening);
@@ -60,7 +60,8 @@ export class ScreeningItemComponent implements OnInit, OnDestroy {
       autoFocus: false
     });
     ref.afterClosed().subscribe(isSent => {
-      this.requestSent.value = !!isSent;
+      this.requestSent = !!isSent;
+      this.cdr.markForCheck();
     });
   }
 

@@ -28,10 +28,8 @@ export class EventOrganizationGuard implements CanActivate, CanDeactivate<unknow
     component: FormRoot
   ) {
     const navObject = this.router.getCurrentNavigation()
-    //skip the popup opening if the event is deleted
-    if (navObject.extras?.state?.eventDeleted) {
-      return true;
-    }
+    // skip the popup opening if the event is deleted
+    if (navObject.extras?.state?.eventDeleted) return true;
 
     return component.confirmExit();
   }

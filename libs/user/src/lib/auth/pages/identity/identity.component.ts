@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, OnInit, TemplateRef, ViewChild, ChangeDetectorRef, Optional, OnDestroy } from '@angular/core';
-import { AuthService, AuthQuery } from '../../+state';
+import { AuthService } from '../../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { InvitationService } from '@blockframes/invitation/+state';
@@ -29,7 +29,7 @@ import { DifferentPasswordStateMatcher, RepeatPasswordStateMatcher } from '@bloc
 })
 export class IdentityComponent implements OnInit, OnDestroy {
   @ViewChild('customSnackBarTemplate') customSnackBarTemplate: TemplateRef<unknown>;
-  public user$ = this.query.user$;
+  public user$ = this.authService.profile$;
   public creating = false;
   public app: App;
   public appName: string;
@@ -49,7 +49,6 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
   constructor(
     private authService: AuthService,
-    private query: AuthQuery,
     private snackBar: MatSnackBar,
     private router: Router,
     private invitationService: InvitationService,
@@ -65,14 +64,14 @@ export class IdentityComponent implements OnInit, OnDestroy {
     this.app = getCurrentApp(this.routerQuery);
     this.appName = getAppName(this.app).label;
 
-    const existingUserWithDisplayName = !!this.query.user && !!hasDisplayName(this.query.user);
-    const existingUserWithoutDisplayName = !!this.query.user && !hasDisplayName(this.query.user);
+    const existingUserWithDisplayName = !!this.authService.profile && !!hasDisplayName(this.authService.profile);
+    const existingUserWithoutDisplayName = !!this.authService.profile && !hasDisplayName(this.authService.profile);
 
     // Try to set update form from query params or from existing user query (already logged in but without display name setted)
     const { code, email } = this.route.snapshot.queryParams;
     const identity = {} as IdentityFormControl;
     if (code) identity.generatedPassword = code;
-    if (email || existingUserWithoutDisplayName) identity.email = email || this.query.user.email;
+    if (email || existingUserWithoutDisplayName) identity.email = email || this.authService.profile.email;
 
     this.form.patchValue(identity);
 
@@ -83,7 +82,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
     if (existingUserWithDisplayName) {
       // Updating user (already logged in and with display name setted) : user will only choose or create an org
-      this.updateFormForExistingIdentity(this.query.user);
+      this.updateFormForExistingIdentity(this.authService.profile);
     } else {
       // Creating user
       this.form.get('generatedPassword').disable();
@@ -151,7 +150,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
     this.creating = true;
 
     try {
-      if (!!this.query.user || !!this.existingUser) {
+      if (!!this.authService.profile || !!this.existingUser) {
         await this.update();
       } else {
         await this.create();
@@ -298,18 +297,18 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
     const invitations = await this.invitationService.getValue(ref => ref.where('mode', '==', 'invitation')
       .where('type', '==', 'joinOrganization')
-      .where('toUser.uid', '==', this.query.userId));
+      .where('toUser.uid', '==', this.authService.uid));
     const pendingInvitation = invitations.find(invitation => invitation.status === 'pending');
     if (pendingInvitation) {
       // Accept the invitation from the organization.
       await this.invitationService.update(pendingInvitation.id, { status: 'accepted' });
       this.router.navigate(['/c/o']);
-    } else if (this.query.user.orgId) {
+    } else if (this.authService.profile.orgId) {
       // User already have an orgId (created from CRM)
       this.router.navigate(['/c/o']);
     } else if (this.existingOrgId) {
       // User selected an existing org, make a request to be accepted and is redirected to waiting room
-      await this.invitationService.request(this.existingOrgId, this.query.user).to('joinOrganization');
+      await this.invitationService.request(this.existingOrgId, this.authService.profile).to('joinOrganization');
       this.snackBar.open('Your account have been created and request to join org sent ! ', 'close', { duration: 8000 });
       return this.router.navigate(['c/organization/join-congratulations']);
     } else {
@@ -329,7 +328,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
       const org = createOrganization({ denomination, addresses, activity });
 
       org.appAccess[this.app][appAccess] = true;
-      await this.orgService.addOrganization(org, this.app, this.query.user);
+      await this.orgService.addOrganization(org, this.app, this.authService.profile);
 
       this.snackBar.open('Your User Account was successfully created. Please wait for our team to check your Company Information.', 'close', { duration: 8000 });
       return this.router.navigate(['c/organization/create-congratulations']);

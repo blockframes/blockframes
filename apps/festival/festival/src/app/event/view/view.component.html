@@ -11,7 +11,7 @@
           <ng-container *ngSwitchCase="'early'">
             <h6>
               <span>{{ event.accessibility | toLabel:'accessibility' }} {{ event.type }}</span>
-              <event-agenda-export [event]="event"></event-agenda-export>
+              <event-agenda-export [event]="event" color="primary"></event-agenda-export>
             </h6>
             <pre class="mat-body-1">{{ event | eventRange }}</pre>
             <p class="mat-body-2">{{ event.meta.description }}</p>
@@ -68,7 +68,7 @@
             
             <ng-container *ngIf="event.type === 'screening' && event.accessibility === 'private'">
               <event-request-screening [movieId]="event.meta.titleId"></event-request-screening>
-              <button mat-button [disabled]="requestSent.$ | async" (click)="requestAskingPrice(event.meta.titleId)">Request Asking Price</button>
+              <button mat-button [disabled]="requestSent" (click)="requestAskingPrice(event.meta.titleId)">Request Asking Price</button>
             </ng-container>
           </ng-container>
   

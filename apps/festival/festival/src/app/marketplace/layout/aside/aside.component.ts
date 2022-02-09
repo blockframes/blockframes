@@ -8,7 +8,7 @@ import { OrganizationService } from '@blockframes/organization/+state';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AsideComponent {
-  public org$ = this.orgService.org$;
+  public org$ = this.orgService.currentOrg$;
 
   constructor(private orgService: OrganizationService) { }
 }

@@ -1,61 +1,85 @@
+import { availableTitle, AvailsFilter, FullMandate, FullSale } from '../avails';
+import {
+  availsListSouthKorea, availsListAfghanistan, availsListFrance, availsListGermanyRussiaCzech,
+  availsListOngoingSalesExclusive, availsListOngoingSalesNonExclusive, availsListGermanyRussiaCzechExclusive,
+  availsListArgentinaSVod, availsListArgentinaPayTV, availsListGermany, availsListCanada
+} from './../fixtures/availsFilters';
+import {
+  mandate1Movie2, mandate1Movie3, mandate2Movie2, mandateMovie1, mandate2Movie3, mandateMovie4, mandateMovie5,
+  saleArgentinaMovie1, saleGermanyMovie1, saleCanadaMovie1, saleBelgiumFranceLuxembourgMovie1,
+  saleAfghanistanMovie2, saleWorldMovie2, saleGermanyMovie2, saleSpainPortugalAustriaMovie2,
+  saleGermanyMovie3, saleArgentinaMovie3, saleFranceMovie3,
+  saleSouthKoreaMovie4, saleRussiaMovie4, saleGermanyMovie4,
+  saleAfghanistanMovie5, saleGermanyMovie5
+} from './../fixtures/mandatesAndSales';
+import { assertArray } from './utils';
 
-import { AvailsFilter, availableTitle, FullMandate } from '../avails';
+type LengthResult = [number, number, number, number, number];
 
-const mandate = {
-  titleId: 'titleA',
-  id: 'mandateA',
-  termIds: ['termA'],
-  terms: [{
-    id: 'termA',
-    contractId: 'mandateA',
-    medias: [ 'payTv', 'boats' ],
-    duration: {
-      from: new Date(2),
-      to: new Date(42)
-    },
-    territories: [ 'france', 'united-kingdom' ],
-    exclusive: true,
-  }],
-} as FullMandate;
-
-const availsOK: AvailsFilter[] = [
-
-  { territories: [ 'france' ], medias: [ 'payTv'], duration: { from: new Date(2), to: new Date(42) }, exclusive: true },
-  { territories: [ 'united-kingdom' ], medias: [ 'boats'], duration: { from: new Date(15), to: new Date(24) }, exclusive: true },
-  { territories: [ 'france', 'united-kingdom' ], medias: [ 'boats'], duration: { from: new Date(5), to: new Date(41) }, exclusive: true },
-  { territories: [ 'united-kingdom' ], medias: [ 'payTv', 'boats'], duration: { from: new Date(2), to: new Date(42) }, exclusive: true },
-  { territories: [ 'france', 'united-kingdom' ], medias: [ 'payTv', 'boats'], duration: { from: new Date(41), to: new Date(42) }, exclusive: true },
-
+//The rows of mandates and sales should correspond to the same movie.
+const movieMandates = [
+  [mandateMovie1],
+  [mandate1Movie2, mandate2Movie2],
+  [mandate1Movie3, mandate2Movie3],
+  [mandateMovie4],
+  [mandateMovie5],
+];
+const movieSales = [
+  [saleArgentinaMovie1, saleGermanyMovie1, saleCanadaMovie1, saleBelgiumFranceLuxembourgMovie1],
+  [saleAfghanistanMovie2, saleWorldMovie2, saleGermanyMovie2, saleSpainPortugalAustriaMovie2],
+  [saleGermanyMovie3, saleArgentinaMovie3, saleFranceMovie3],
+  [saleSouthKoreaMovie4, saleRussiaMovie4, saleGermanyMovie4],
+  [saleAfghanistanMovie5, saleGermanyMovie5]
 ];
 
-const availsNotOK: AvailsFilter[] = [
+function assertTitleAvailability(avail: AvailsFilter, mandates: FullMandate[][], sales: FullSale[][], result: LengthResult) {
+  const availableMandates = mandates.map((mandate, index) => availableTitle(avail, mandate, sales[index]));
+  const availabilitiesLength = availableMandates.map(mandate => mandate.length);
+  assertArray(availabilitiesLength, result);
+}
 
-  { territories: [ 'germany' ], medias: [ 'payTv'], duration: { from: new Date(2), to: new Date(42) }, exclusive: true },
-  { territories: [ 'france', 'germany' ], medias: [ 'payTv'], duration: { from: new Date(2), to: new Date(42) }, exclusive: true },
+describe('Avails data', () => {
+  it('tests availability on south-korea', () => {
+    assertTitleAvailability(availsListSouthKorea, movieMandates, movieSales, [0, 1, 0, 0, 0])
+  });
 
-  { territories: [ 'france' ], medias: [ 'planes'], duration: { from: new Date(2), to: new Date(42) }, exclusive: true },
-  { territories: [ 'france' ], medias: [ 'planes', 'boats'], duration: { from: new Date(2), to: new Date(42) }, exclusive: true },
+  it('tests duration on Afghanistan', () => {
+    assertTitleAvailability(availsListAfghanistan, movieMandates, movieSales, [0, 0, 1, 0, 0]);
+  });
 
-  { territories: [ 'france' ], medias: [ 'payTv'], duration: { from: new Date(2), to: new Date(62) }, exclusive: true },
-  { territories: [ 'france' ], medias: [ 'payTv'], duration: { from: new Date(0), to: new Date(24) }, exclusive: true },
+  it('tests rights on france', () => {
+    assertTitleAvailability(availsListFrance, movieMandates, movieSales, [0, 0, 1, 1, 1]);
+  });
 
-  { territories: [ 'germany' ], medias: [ 'planes'], duration: { from: new Date(0), to: new Date(24) }, exclusive: true },
+  it('tests ended sales', () => {
+    assertTitleAvailability(availsListGermanyRussiaCzech, movieMandates, movieSales, [1, 0, 1, 0, 1]);
+  });
 
-];
+  it('tests ongoing sales request exclusive', () => {
+    assertTitleAvailability(availsListOngoingSalesExclusive, movieMandates, movieSales, [0, 1, 1, 1, 1]);
+  });
 
-describe('Avails', () => {
-  describe('Test avails collision', () => {
-    it('should work', () => {
-      for (const avail of availsOK) {
-        const availableMandates = availableTitle(avail, [mandate], []);
-        expect(availableMandates.length).toBe(1);
-      }
-    });
-    it('should not work', () => {
-      for (const avail of availsNotOK) {
-        const availableMandates = availableTitle(avail, [mandate], []);
-        expect(availableMandates.length).toBe(0);
-      }
-    });
-  })
-});
+  it('tests ongoing sales request non exclusive', () => {
+    assertTitleAvailability(availsListOngoingSalesNonExclusive, movieMandates, movieSales, [1, 1, 0, 1, 0]);
+  });
+
+  it('tests territory with exclusivity', () => {
+    assertTitleAvailability(availsListGermanyRussiaCzechExclusive, movieMandates, movieSales, [0, 1, 0, 0, 0]);
+  });
+
+  it('tests media (svod) on argentina ', () => {
+    assertTitleAvailability(availsListArgentinaSVod, movieMandates, movieSales, [1, 1, 0, 1, 1]);
+  });
+
+  it('tests media(payTv) on argentina', () => {
+    assertTitleAvailability(availsListArgentinaPayTV, movieMandates, movieSales, [0, 1, 1, 1, 1]);
+  });
+
+  it('tests non-exclusivity on Germany', () => {
+    assertTitleAvailability(availsListGermany, movieMandates, movieSales, [1, 1, 0, 1, 0,]);
+  });
+
+  it('tests exclusivity on canada', () => {
+    assertTitleAvailability(availsListCanada, movieMandates, movieSales, [0, 1, 1, 1, 1]);
+  });
+})

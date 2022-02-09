@@ -3,8 +3,8 @@
   <ng-container *ngIf="users$ | async as users; else loading">
 
     <article fxLayout="column" fxLayoutAlign="center center">
-      <button [disabled]="exporting.$ | async" mat-flat-button color="primary" (click)="exportTable(users)">
-        <ng-container *ngIf="exporting.$ | async else export">
+      <button [disabled]="exporting" mat-flat-button color="primary" (click)="exportTable(users)">
+        <ng-container *ngIf="exporting else export">
           <span>Generating CSV...</span>
         </ng-container>
         <ng-template #export>

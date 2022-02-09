@@ -52,7 +52,7 @@ export class TitleViewComponent implements OnInit, OnDestroy {
   @ViewChild('dialogTemplate') dialogTemplate: TemplateRef<unknown>;
   @ViewChild(DashboardTitleShellComponent) shell: DashboardTitleShellComponent;
   private dialogRef: MatDialogRef<unknown, unknown>;
-  public org$ = this.orgService.org$;
+  public org$ = this.orgService.currentOrg$;
   public movie$: Observable<Movie>;
   public loading$: Observable<boolean>;
   public navLinks = links;

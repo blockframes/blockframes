@@ -26,11 +26,17 @@ world-map {
     right: 0;
     z-index: 3;
     background-color: rgba(62, 62, 93, 0.72);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     article {
       padding: 48px;
       border-radius: 8px;
       background-color: var(--background-tooltip);
+      display: flex;
+      align-items: center;
+      justify-content: center;
       width: 80%;
       height: 80%;
       text-align: center;

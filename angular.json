@@ -547,7 +547,19 @@
           },
           "configurations": {
             "emulator": {
-              "devServerTarget": "catalog:serve:emulator"
+              "devServerTarget": "catalog:serve:emulator",
+              "env": {
+                "notice": "Env is being read",
+                "emulator": true
+              }
+            },
+            "emulator-incognito": {
+              "devServerTarget": "catalog:serve:emulator",
+              "env": {
+                "notice": "Env is being read",
+                "emulator": true,
+                "incognito": true
+              }
             },
             "production": {
               "devServerTarget": "catalog:serve:production"
@@ -806,6 +818,14 @@
               "env": {
                 "notice": "Env is being read",
                 "emulator": true
+              }
+            },
+            "emulator-incognito": {
+              "devServerTarget": "festival:serve:emulator",
+              "env": {
+                "notice": "Env is being read",
+                "emulator": true,
+                "incognito": true
               }
             },
             "production": {
@@ -1170,7 +1190,19 @@
           },
           "configurations": {
             "emulator": {
-              "devServerTarget": "crm:serve:emulator"
+              "devServerTarget": "crm:serve:emulator",
+              "env": {
+                "notice": "Env is being read",
+                "emulator": true
+              }
+            },
+            "emulator-incognito": {
+              "devServerTarget": "crm:serve:emulator",
+              "env": {
+                "notice": "Env is being read",
+                "emulator": true,
+                "incognito": true
+              }
             },
             "production": {
               "devServerTarget": "crm:serve:production"
@@ -1428,7 +1460,19 @@
           },
           "configurations": {
             "emulator": {
-              "devServerTarget": "financiers:serve:emulator"
+              "devServerTarget": "financiers:serve:emulator",
+              "env": {
+                "notice": "Env is being read",
+                "emulator": true
+              }
+            },
+            "emulator-incognito": {
+              "devServerTarget": "financiers:serve:emulator",
+              "env": {
+                "notice": "Env is being read",
+                "emulator": true,
+                "incognito": true
+              }
             },
             "production": {
               "devServerTarget": "financiers:serve:production"
@@ -1611,6 +1655,70 @@
           "configurations": {
             "production": {},
             "staging": {}
+          }
+        }
+      }
+    },
+    "cms-e2e": {
+      "root": "apps/cms/cms-e2e",
+      "sourceRoot": "apps/cms/cms-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "serve": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/cms/cms-e2e/cypress.json",
+            "tsConfig": "apps/cms/cms-e2e/tsconfig.e2e.json",
+            "baseUrl": "http://localhost:4200",
+            "watch": true,
+            "headless": false,
+            "exit": false,
+            "record": false,
+            "browser": "chrome",
+            "devServerTarget": "cms:serve"
+          },
+          "configurations": {
+            "emulator": {
+              "devServerTarget": "cms:serve:emulator"
+            }
+          }
+        },
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/cms/cms-e2e/cypress.json",
+            "tsConfig": "apps/cms/cms-e2e/tsconfig.e2e.json",
+            "baseUrl": "http://localhost:4200",
+            "browser": "chrome",
+            "devServerTarget": "cms:serve"
+          },
+          "configurations": {
+            "emulator": {
+              "devServerTarget": "cms:serve:emulator",
+              "env": {
+                "notice": "Env is being read",
+                "emulator": true
+              }
+            },
+            "emulator-incognito": {
+              "devServerTarget": "cms:serve:emulator",
+              "env": {
+                "notice": "Env is being read",
+                "emulator": true,
+                "incognito": true
+              }
+            },
+            "production": {
+              "devServerTarget": "cms:serve:production"
+            },
+            "ci": {},
+            "staging": {}
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/cms/cms-e2e/src/**/*.ts", "apps/cms/cms-e2e/src/**/*.html"]
           }
         }
       }

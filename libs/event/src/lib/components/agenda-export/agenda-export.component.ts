@@ -11,6 +11,7 @@ import { AgendaService } from '@blockframes/utils/agenda/agenda.service';
 export class AgendaExportComponent {
   @Input() event: Event;
   @Input() text: string;
+  @Input() color: string;
 
   constructor(private agendaService: AgendaService) { }
 
