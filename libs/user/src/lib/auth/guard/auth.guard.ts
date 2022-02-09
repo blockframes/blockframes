@@ -8,15 +8,15 @@ import { Subscription } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthGuard implements CanActivate, CanDeactivate<unknown>{
+export class AuthGuard implements CanActivate, CanDeactivate<unknown> {
   private sub: Subscription;
   constructor(
-    private service: AuthService,
+    private authService: AuthService,
     private router: Router,
   ) { }
 
   canActivate(_: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    return this.service.auth$.pipe(
+    return this.authService.auth$.pipe(
       map((authState) => {
         if (!authState) {
           // Set the value of redirectTo
@@ -25,7 +25,7 @@ export class AuthGuard implements CanActivate, CanDeactivate<unknown>{
         }
 
         if (!this.sub) {
-          this.sub = this.service.user$.pipe(filter(a => !a)).subscribe(() => this.router.navigate(['/']));
+          this.sub = this.authService.user$.pipe(filter(u => !u)).subscribe(() => this.router.navigate(['/']));
         }
 
         return hasDisplayName(authState.profile) ? true : this.router.createUrlTree(['auth/identity']);
