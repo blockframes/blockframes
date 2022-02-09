@@ -42,7 +42,8 @@ describe('Organiser invites other users to private screening', () => {
   })
 
   it('Organiser creates screening & invites 2 users to the screening', () => {
-    cy.task('deleteAllSellerEvents', users[UserIndex.Organiser].uid) // ! Clean up any existing events!
+    cy.task('deleteAllSellerEvents', users[UserIndex.Organiser].uid); // ! Clean up any existing events!
+    console.log('laa bruce')
     /*
     * We need to create a seller, create an org, upload a title, create a screening event for it
    * we need to make two buyer users
@@ -58,10 +59,10 @@ describe('Organiser invites other users to private screening', () => {
     // const p1 = new FestivalDashboardHomePage();
     // const p2: EventPage = p1.goToCalendar();
     cy.intercept('/c/o/dashboard/event').as('calendar');
-    cy.visit('/c/o/dashboard/event')
+    cy.visit('/c/o/dashboard/event');
     cy.wait('@calendar');
 
-    cy.log(`Create screening {${TestEVENT.event}}`)
+    cy.log(`Create screening {${TestEVENT.event}}`);
     awaitElementDeletion('mat-spinner');
     festival.createDetailedEvent(new Date(), 'Screening', TestEVENT.event);
 
@@ -73,7 +74,7 @@ describe('Organiser invites other users to private screening', () => {
   });
 
   it(`InvitedUser1: logs in, accepts his invitations & runs the video`, () => {
-    signIn(users[UserIndex.InvitedUser1]);
+    auth.loginWithEmailAndPassword(users[UserIndex.InvitedUser1]);
     acceptCookie();
 
     const p1 = new FestivalMarketplaceHomePage();
@@ -94,7 +95,7 @@ describe('Organiser invites other users to private screening', () => {
   });
 
   it(`InvitedUser2 logs in and refuses screening invitations`, () => {
-    signIn(users[UserIndex.InvitedUser2]);
+    auth.loginWithEmailAndPassword(users[UserIndex.InvitedUser2]);
     acceptCookie();
 
     const p1 = new FestivalMarketplaceHomePage();
@@ -106,7 +107,7 @@ describe('Organiser invites other users to private screening', () => {
   // Member organiser do not get notification
   // Admin / Super Admin gets notification about invitation acceptance.
   it('Org admin logs in and verifies the accepted invitations', () => {
-    signIn(users[UserIndex.Admin]);
+    auth.loginWithEmailAndPassword(users[UserIndex.Admin]);
     acceptCookie();
 
     (new FestivalMarketplaceHomePage()).goToDashboard();
@@ -117,7 +118,7 @@ describe('Organiser invites other users to private screening', () => {
   });
 
   it('UninvitedGuest logs in, go on event page, asserts no access to the video', () => {
-    signIn(users[UserIndex.UninvitedGuest]);
+    auth.loginWithEmailAndPassword(users[UserIndex.UninvitedGuest]);
     acceptCookie();
 
     cy.log("Reach Market Home.")
