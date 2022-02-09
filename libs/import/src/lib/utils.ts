@@ -9,7 +9,7 @@ import { ContractService } from "@blockframes/contract/contract/+state/contract.
 import { UserService } from "@blockframes/user/+state";
 
 
-export const spreadsheetImportTypes = [ 'titles', 'organizations', 'contracts' ] as const;
+export const spreadsheetImportTypes = ['titles', 'organizations', 'contracts'] as const;
 
 export type SpreadsheetImportType = typeof spreadsheetImportTypes[number];
 
@@ -87,7 +87,7 @@ export async function getTitleId(name: string, titleService: MovieService, cache
         .where('orgIds', 'array-contains', userOrgId);
     }
   });
-  const result =  titles.length === 1 ? titles[0].id : '';
+  const result = titles.length === 1 ? titles[0].id : '';
   cache[name] = result;
   return result;
 }
@@ -111,7 +111,7 @@ export async function checkParentTerm(id: string, contractService: ContractServi
     if (isMandate && containTerm) return cache[id] as Mandate;
   }
 
-  const [ contract ] = await contractService.getValue(ref =>
+  const [contract] = await contractService.getValue(ref =>
     ref.where('type', '==', 'mandate').where('termIds', 'array-contains', id)
   );
   cache[contract.id] = contract;
@@ -133,7 +133,7 @@ export async function getUser(query: { email: string } | { id: string }, userSer
     user = await userService.getValue(ref => ref.where('email', '==', query.email)).then(u => u[0]);
   }
 
-  if  ('id' in query) {
+  if ('id' in query) {
     if (cache[query.id]) return cache[query.id];
 
     user = await userService.getValue(query.id);
@@ -160,7 +160,7 @@ export function getDate(value: string, name: string): Date | ValueWithError<Date
     const excelNumberOfDays = Number(value);
     const unixNumberOfDays = 25_569;
     const millisecondsInOneDay = 24 * 60 * 60 * 1000;
-    date = new Date( (excelNumberOfDays - unixNumberOfDays) * millisecondsInOneDay );
+    date = new Date((excelNumberOfDays - unixNumberOfDays) * millisecondsInOneDay);
   }
 
   if (isNaN(date.getTime())) return wrongValueError(name);
@@ -178,6 +178,9 @@ export function getDate(value: string, name: string): Date | ValueWithError<Date
       }
     };
   }
+
+  // https://github.com/blockframes/blockframes/issues/7310#issuecomment-1033572680
+  date.setHours(2, 0, 0, 0);
   return date;
 }
 
