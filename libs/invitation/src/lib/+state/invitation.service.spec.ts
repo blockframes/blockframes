@@ -12,15 +12,13 @@ import { Observable } from 'rxjs';
 import { UserService } from '@blockframes/user/+state/user.service';
 
 class InjectedAuthService {
-  uid: 'userId';
+  uid = 'userId';
   
   profile = {
-    uid: 'userId',
     orgId: 'orgId',
   }
 
   user$ = new Observable();
-
 }
 
 class DummyService { }

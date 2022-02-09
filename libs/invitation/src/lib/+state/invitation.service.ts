@@ -129,7 +129,7 @@ export class InvitationService extends CollectionService<InvitationState> {
   }
 
   public isInvitationForMe(invitation: Invitation): boolean {
-    return invitation.toOrg?.id === this.authService.profile.orgId || invitation.toUser?.uid === this.authService.uid
+    return invitation.toOrg?.id === this.authService.profile.orgId || invitation.toUser?.uid === this.authService.uid;
   }
 
   /**
