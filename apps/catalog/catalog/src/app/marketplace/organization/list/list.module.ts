@@ -12,7 +12,9 @@ import { OrganizationCardModule } from '@blockframes/organization/components/car
 import { ListPageModule } from '@blockframes/ui/list/page/list-page.module'
 import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 import { ListFilterModule } from '@blockframes/ui/list/filter/list-filter.module';
-
+import { ChipsAutocompleteModule } from "@blockframes/ui/static-autocomplete/chips/chips-autocomplete.module";
+import { AlgoliaAutocompleteModule } from "@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module";
+import { AlgoliaChipsAutocompleteModule } from "@blockframes/ui/algolia/chips-autocomplete/algolia-chips-autocomplete.module";
 // Material
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
@@ -30,7 +32,9 @@ import { MatInputModule } from '@angular/material/input';
     ListPageModule,
     StaticSelectModule,
     ListFilterModule,
-
+    ChipsAutocompleteModule,
+    AlgoliaAutocompleteModule,
+    AlgoliaChipsAutocompleteModule,
     // Material
     MatProgressSpinnerModule,
     MatIconModule,
