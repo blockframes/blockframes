@@ -40,7 +40,7 @@ export class NoEventIdentityGuard implements CanActivate {
 
         if (event.accessibility === 'private') return this.router.createUrlTree([`/event/${eventId}/auth/login`], { queryParams });
 
-        return false;
+        return true;
       })
     );
   }

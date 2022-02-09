@@ -120,9 +120,11 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
         let watermark;
         const event = await this.eventService.getValue(this.eventId);
         if (this.authService.profile) {
-          watermark = getWatermark(this.authService.profile.email, this.authService.profile.firstName, this.authService.profile.lastName);
+          const { email, firstName, lastName } = this.authService.profile;
+          watermark = getWatermark(email, firstName, lastName);
         } else if (hasAnonymousIdentity(anonymousCredentials, event.accessibility)) {
-          watermark = getWatermark(anonymousCredentials.email, anonymousCredentials.firstName, anonymousCredentials.lastName);
+          const { email, firstName, lastName } = anonymousCredentials;
+          watermark = getWatermark(email, firstName, lastName);
         }
 
         if (!watermark) {

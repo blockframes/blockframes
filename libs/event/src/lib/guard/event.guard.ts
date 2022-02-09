@@ -33,13 +33,9 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
     // if the event is not a meeting the lobby page is not accessible
     // redirect directly to the session page,
     // the guard will then be re-evaluated for invitation etc... on the session page
-    if (this.event.type !== 'meeting' && next.routeConfig.path === 'lobby') {
-      return this.router.parseUrl(`/event/${this.event.id}/r/i/session`);
-    }
+    if (this.event.type !== 'meeting' && next.routeConfig.path === 'lobby') return this.router.parseUrl(`/event/${this.event.id}/r/i/session`);
 
-    if (eventTime(this.event) !== 'onTime') {
-      return this.router.parseUrl(`/event/${this.event.id}/r/i`);
-    }
+    if (eventTime(this.event) !== 'onTime') return this.router.parseUrl(`/event/${this.event.id}/r/i`);
 
     const hasRegularInvitation = async () => {
       const allInvitations = await this.invitationService.allInvitations$.pipe(take(1)).toPromise();
@@ -79,14 +75,10 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
       }
       case 'private': {
 
-        if (this.event.isOwner) {
-          return true;
-        }
+        if (this.event.isOwner) return true;
 
         // if user wasn't invited OR hasn't accepted yet
-        if (!(await hasRegularInvitation())) {
-          return this.router.parseUrl(`/event/${this.event.id}/r/i`);
-        }
+        if (!(await hasRegularInvitation())) return this.router.parseUrl(`/event/${this.event.id}/r/i`);
 
         return true;
       }

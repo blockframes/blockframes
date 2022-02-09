@@ -22,16 +22,14 @@ export class IdentityGuard implements CanActivate {
       this.service.valueChanges(next.params.eventId as string)
     ]).pipe(
       map(([userAuth, creds, event]) => {
-        if (userAuth?.isAnonymous) {
-          if (!creds?.role) {
-            return this.router.createUrlTree([`/event/${event.id}/auth/role`], { queryParams: next.queryParams });
-          } else if (creds.role === 'organizer' || event.accessibility === 'private') {
-            return this.router.createUrlTree([`/event/${event.id}/auth/login`], { queryParams: next.queryParams });
-          } else if (creds.role && !hasAnonymousIdentity(creds, event.accessibility)) {
-            const page = event.accessibility === 'protected' ? 'email' : 'identity';
-            return this.router.createUrlTree([`/event/${event.id}/auth/${page}`], { queryParams: next.queryParams });
-          }
-        }
+        if (userAuth && !userAuth.isAnonymous) return true;
+
+        if (!creds?.role) return this.router.createUrlTree([`/event/${event.id}/auth/role`], { queryParams: next.queryParams });
+
+        if (creds.role === 'organizer' || event.accessibility === 'private') return this.router.createUrlTree([`/event/${event.id}/auth/login`], { queryParams: next.queryParams });
+
+        const page = event.accessibility === 'protected' ? 'email' : 'identity';
+        if (creds.role && !hasAnonymousIdentity(creds, event.accessibility)) return this.router.createUrlTree([`/event/${event.id}/auth/${page}`], { queryParams: next.queryParams });
 
         return true;
       })

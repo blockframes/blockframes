@@ -24,9 +24,8 @@ export class SessionGuard implements CanActivate {
     if (event.type === 'meeting') {
       const attendee = (event.meta as Meeting).attendees[this.authService.uid];
 
-      if (attendee?.status === 'accepted' || attendee?.status === 'owner') {
-        return true;
-      }
+      if (attendee?.status === 'accepted' || attendee?.status === 'owner') return true;
+
       return this.router.parseUrl(`/event/${event.id}/r/i/lobby`);
     }
 

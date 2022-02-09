@@ -21,14 +21,12 @@ export class NoEventRoleGuard implements CanActivate {
       this.service.valueChanges(next.params.eventId as string)
     ]).pipe(
       map(([userAuth, creds, event]) => {
-        if (userAuth?.isAnonymous) {
-          if (creds?.role === 'organizer') {
-            return this.router.createUrlTree([`/event/${event.id}/auth/login`], { queryParams: next.queryParams });
-          } else if (creds?.role === 'guest') {
-            const page = event.accessibility === 'protected' ? 'email' : 'identity';
-            return this.router.createUrlTree([`/event/${event.id}/auth/${page}`], { queryParams: next.queryParams });
-          }
-        }
+        if (userAuth && !userAuth.isAnonymous) return true;
+
+        if (creds?.role === 'organizer') return this.router.createUrlTree([`/event/${event.id}/auth/login`], { queryParams: next.queryParams });
+
+        const page = event.accessibility === 'protected' ? 'email' : 'identity';
+        if (creds?.role === 'guest') return this.router.createUrlTree([`/event/${event.id}/auth/${page}`], { queryParams: next.queryParams });
 
         return true;
       })
