@@ -1,25 +1,47 @@
 import { Injectable, Optional } from '@angular/core';
-import { AuthStore, User, AuthState, createUser } from './auth.store';
-import { AuthQuery } from './auth.query';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import firebase from 'firebase/app';
 import { UserCredential } from '@firebase/auth-types';
-import { FireAuthService, CollectionConfig } from 'akita-ng-fire';
+import { FireAuthService, CollectionConfig, FireAuthState, RoleState, initialAuthState } from 'akita-ng-fire';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { map, take } from 'rxjs/operators';
+import { map, switchMap, take, tap } from 'rxjs/operators';
 import { getCurrentApp, App } from '@blockframes/utils/apps';
-import { PublicUser, PrivacyPolicy } from '@blockframes/user/types';
+import { PublicUser, User, PrivacyPolicy } from '@blockframes/user/types';
 import { Intercom } from 'ng-intercom';
 import { getIntercomOptions } from '@blockframes/utils/intercom/intercom.service';
 import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.service';
 import { intercomId, production } from '@env';
 import { createDocumentMeta, DocumentMeta } from '@blockframes/utils/models-meta';
-import { BehaviorSubject, Subject } from 'rxjs';
-import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
+import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { getBrowserWithVersion } from '@blockframes/utils/browser/utils';
 import { IpService } from '@blockframes/utils/ip';
 import { OrgEmailData } from '@blockframes/utils/emails/utils';
 import { AnonymousCredentials, AnonymousRole } from './auth.model';
+import { AngularFireAnalytics } from '@angular/fire/analytics';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { UserService } from '@blockframes/user/+state';
+import { createStorageFile } from '@blockframes/media/+state/media.firestore';
+import { Store, StoreConfig } from '@datorama/akita';
+
+@Injectable({ providedIn: 'root' })
+@StoreConfig({ name: 'auth' })
+class AuthStore extends Store<AuthState> { // @TODO #7273 remove when we get rid of akita
+  constructor() {
+    super(initialAuthState);
+  }
+
+}
+
+export function createUser(user: Partial<User> = {}) { // @TODO #7286 #7273 move to model ? or userModel ?
+  return {
+    ...user,
+    avatar: createStorageFile(user.avatar)
+  } as User;
+}
+
+interface Roles { blockframesAdmin: boolean }
+
+interface AuthState extends FireAuthState<User>, RoleState<Roles> { }
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'users', idKey: 'uid' })
@@ -27,17 +49,55 @@ export class AuthService extends FireAuthService<AuthState> {
   signedOut = new Subject<void>();
   anonymousCredentials$ = new BehaviorSubject<AnonymousCredentials>(this.anonymousCredentials);
 
-  profile = this.query.user;
-  profile$ = this.query.user$;
+  // For these to be defined, one of the observable below must be called before
+  profile: User; // User object in Firestore DB
+  uid: string; // Will be defined for regular and anonymous users
+
+  user$ = this.afAuth.authState; // Firebase Auth User Object
+
+  auth$: Observable<{ uid: string, isAnonymous: boolean, emailVerified: boolean, profile?: User }> = this.user$.pipe(
+    switchMap(authState => {
+      if (!authState || authState.isAnonymous) return of(undefined).pipe(map(() => [undefined, authState]));
+      return this.userService.valueChanges(authState.uid).pipe(map(profile => [profile, authState]));
+    }),
+    map(([profile, userAuth]: [User, firebase.User]) => {
+      if (!userAuth) return;
+
+      const { isAnonymous, emailVerified } = userAuth;
+      return {
+        uid: userAuth.uid,
+        isAnonymous,
+        emailVerified,
+        profile
+      }
+    }),
+    tap(auth => {
+      this.uid = auth?.uid;
+      this.profile = auth?.profile;
+    })
+  );
+
+  isBlockframesAdmin$ = this.user$.pipe(
+    map(user => {
+      if (!user || user.isAnonymous) return false;
+      return this.db.collection('blockframesAdmin').doc(user.uid).ref.get().then(snap => snap.exists);
+    })
+  );
+
+  // User object in Firestore DB
+  profile$ = this.auth$.pipe(map(auth => auth?.profile));
+
+  get anonymouseOrRegularProfile() { return this.profile || this.anonymousCredentials };
 
   constructor(
     protected store: AuthStore,
-    private query: AuthQuery,
     private functions: AngularFireFunctions,
     private routerQuery: RouterQuery,
     private gdprService: GDPRService,
-    private analytics: FireAnalytics,
+    private analytics: AngularFireAnalytics,
     private ipService: IpService,
+    private afAuth: AngularFireAuth,
+    private userService: UserService,
     @Optional() public ngIntercom?: Intercom,
   ) {
     super(store);
@@ -46,16 +106,8 @@ export class AuthService extends FireAuthService<AuthState> {
         window['LoginService'] = this
       }
     }
-  }
 
-  /**
-   * @dev This populates the RoleState part of the AuthState.
-   * Used to check if logged in user is blockframesAdmin or not.
-   */
-  selectRoles(user: firebase.User) {
-    return this.db.collection('blockframesAdmin').doc(user.uid).valueChanges().pipe(
-      map(doc => ({ blockframesAdmin: doc !== undefined ? true : false }))
-    );
+    this.updateEmailVerified();
   }
 
   //////////
@@ -71,16 +123,8 @@ export class AuthService extends FireAuthService<AuthState> {
     return callSendReset({ email, app }).toPromise();
   }
 
-  /** Send a new verification email to the current user */
-  // @TODO (#2821)
-  /*public async sendVerifyEmail() {
-    const callSendVerify = this.functions.httpsCallable('sendVerifyEmail');
-    const app = getCurrentApp(this.routerQuery);
-    return callSendVerify({ email: this.query.user.email, app }).toPromise();
-  }*/
-
   public checkResetCode(actionCode: string) {
-    return this.auth.verifyPasswordResetCode(actionCode);
+    return this.afAuth.verifyPasswordResetCode(actionCode);
   }
 
   onSignin(userCredential: UserCredential) {
@@ -116,9 +160,9 @@ export class AuthService extends FireAuthService<AuthState> {
    * @param currentPassword current password of the user
    * @param newPassword new password set by the user
    */
-  public async updatePassword(currentPassword: string, newPassword: string, email = this.query.user.email) {
+  public async updatePassword(currentPassword: string, newPassword: string, email = this.profile.email) {
     await this.signin(email, currentPassword);
-    const user = await this.user;
+    const user = await this.afAuth.currentUser;
     return user.updatePassword(newPassword);
   }
 
@@ -128,7 +172,7 @@ export class AuthService extends FireAuthService<AuthState> {
    * @param newPassword new password set by the owned of email
    */
   public handleResetPassword(actionCode: string, newPassword: string) {
-    this.auth.confirmPasswordReset(actionCode, newPassword)
+    this.afAuth.confirmPasswordReset(actionCode, newPassword);
   }
 
   /** Create the user in users collection on firestore. */
@@ -178,6 +222,24 @@ export class AuthService extends FireAuthService<AuthState> {
     });
   }
 
+  // TODO #6113 once we have a custom email verified page, we can update the users' meta there
+  // #7303 if user does not interact with authService, this is not updated (ie: user goes directly to eventPage ?)
+  // @TODO #7286 #7273 rework this
+  private async updateEmailVerified() {
+    const auth = await this.user$.pipe(take(1)).toPromise();
+
+    if (auth?.emailVerified) {
+      const user = await this.userService.getValue(auth.uid);
+      if (!user._meta?.emailVerified) { // attribute does not exists or is set to false
+        const _meta: DocumentMeta<Date | FirebaseFirestore.Timestamp> = {
+          ...user._meta,
+          emailVerified: true
+        }
+        this.userService.update(auth.uid, { _meta });
+      }
+    }
+  }
+
   ////////////////////
   // ANONYMOUS AUTH //
   ////////////////////
@@ -188,12 +250,12 @@ export class AuthService extends FireAuthService<AuthState> {
    * @returns Promise<AnonymousCredentials>
    */
   async signInAnonymously() {
-    const currentUser = await this.user;
+    const currentUser = await this.afAuth.currentUser;
     if (currentUser) {
       return this.updateAnonymousCredentials({ uid: currentUser.uid });
     }
 
-    const creds = await this.auth.signInAnonymously();
+    const creds = await this.afAuth.signInAnonymously();
     return this.updateAnonymousCredentials({ uid: creds.user.uid }, { reset: true });
   }
 
@@ -283,19 +345,15 @@ export class AuthService extends FireAuthService<AuthState> {
     return this.anonymousCredentials;
   }
 
-  get anonymousCredentials(): AnonymousCredentials {
+  get anonymousCredentials(): AnonymousCredentials { // @TODO #7286 #7273  rename to anonymousProfile or anonymousUser ?
     return {
-      uid: sessionStorage.getItem('anonymousCredentials.uid'),
+      uid: sessionStorage.getItem('anonymousCredentials.uid'), // @TODO #7286 #7273 this attribute is needed ?
       lastName: sessionStorage.getItem('anonymousCredentials.lastName'),
       firstName: sessionStorage.getItem('anonymousCredentials.firstName'),
       role: sessionStorage.getItem('anonymousCredentials.role') as AnonymousRole,
       email: sessionStorage.getItem('anonymousCredentials.email'),
       invitationId: sessionStorage.getItem('anonymousCredentials.invitationId'),
     };
-  }
-
-  get anonymousUserId() {
-    return this.anonymousCredentials.uid;
   }
 }
 

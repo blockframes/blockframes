@@ -4,6 +4,7 @@ import { IntercomService } from '@blockframes/utils/intercom/intercom.service';
 import { YandexMetricaService } from '@blockframes/utils/yandex-metrica/yandex-metrica.service';
 import { getCurrentApp } from "@blockframes/utils/apps";
 import { RouterQuery } from "@datorama/akita-ng-router-store";
+import { User } from "@blockframes/user/types";
 
 @Injectable({ providedIn: 'root' })
 export class GDPRService {
@@ -12,7 +13,7 @@ export class GDPRService {
     private intercom: IntercomService,
     private yandex: YandexMetricaService,
     private routerQuery: RouterQuery
-  ) {}
+  ) { }
 
   get cookieConsent(): CookiesConsent {
     return JSON.parse(localStorage.getItem('gdpr')) ?? {};
@@ -24,9 +25,9 @@ export class GDPRService {
     localStorage.setItem('gdpr', JSON.stringify(cookieConsent));
   }
 
-  enableIntercom(enable: boolean) {
+  enableIntercom(user: User, enable: boolean) {
     this.enable('intercom', enable);
-    enable ? this.intercom.enable() : this.intercom.disable();
+    enable ? this.intercom.enable(user) : this.intercom.disable();
   }
 
   enableYandex(enable: boolean) {

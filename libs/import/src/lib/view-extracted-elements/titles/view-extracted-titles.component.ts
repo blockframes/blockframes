@@ -9,10 +9,11 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { UserService } from '@blockframes/user/+state';
 import { getCurrentApp } from '@blockframes/utils/apps';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
-import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 
 import { formatTitle } from './utils';
 import { MovieImportState } from '../../utils';
+import { AuthService } from '@blockframes/auth/+state';
+import { take } from 'rxjs/operators';
 
 
 @Component({
@@ -29,18 +30,19 @@ export class ViewExtractedTitlesComponent implements OnInit {
   public moviesToUpdate$ = new BehaviorSubject<MatTableDataSource<MovieImportState>>(null);
 
   constructor(
-    private authQuery: AuthQuery,
+    private authService: AuthService,
     private routerQuery: RouterQuery,
     private userService: UserService,
   ) { }
 
   async ngOnInit() {
+    const isBlockframesAdmin = await this.authService.isBlockframesAdmin$.pipe(take(1)).toPromise();
     const app = getCurrentApp(this.routerQuery);
     const titles = await formatTitle(
       this.sheetTab,
       this.userService,
-      this.authQuery.isBlockframesAdmin,
-      this.authQuery.user.orgId,
+      isBlockframesAdmin,
+      this.authService.profile.orgId,
       app
     );
     this.moviesToCreate$.next(new MatTableDataSource(titles));

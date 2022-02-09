@@ -39,8 +39,7 @@ import { PendingOrganizationGuard } from './guard/pending-organization.guard';
 export const noOrganizationRoutes: Routes = [
   {
     path: '',
-    canActivate: [NotFullyVerifiedGuard],
-    pathMatch: 'full'
+    loadChildren: () => import('@blockframes/ui/error/error-not-found.module').then(m => m.ErrorNotFoundModule)
   },
   {
     path: 'join-congratulations',

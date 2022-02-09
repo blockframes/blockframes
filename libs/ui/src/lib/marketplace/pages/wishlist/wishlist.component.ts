@@ -47,7 +47,7 @@ export class WishlistComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.sub = this.orgService.org$.pipe(
+    this.sub = this.orgService.currentOrg$.pipe(
       switchMap(org => this.movieService.valueChanges(org?.wishlist || []))
     ).subscribe(allMovies => {
       const movies = allMovies.filter(movie => !!movie && movie.app[getCurrentApp(this.routerQuery)].access);

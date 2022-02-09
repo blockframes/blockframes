@@ -24,6 +24,7 @@ const routes: Routes = [
   {
     path: ':eventId',
     canActivate: [EventAuthGuard],
+    canDeactivate: [EventAuthGuard],
     children: [
       {
         path: '',

@@ -1,5 +1,4 @@
 import { Injectable, Optional } from '@angular/core';
-import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { Intercom } from 'ng-intercom';
 import { User } from '@blockframes/user/types';
 
@@ -7,12 +6,10 @@ import { User } from '@blockframes/user/types';
 export class IntercomService {
 
   constructor(
-    private query: AuthQuery,
     @Optional() public ngIntercom?: Intercom
-  ) {}
+  ) { }
 
-  enable() {
-    const user = this.query.user;
+  enable(user: User) {
     this.ngIntercom?.boot(getIntercomOptions(user));
   }
 

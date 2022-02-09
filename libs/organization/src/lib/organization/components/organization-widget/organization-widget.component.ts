@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { Organization, OrganizationService } from '../../+state';
 import { Observable } from 'rxjs';
-import { User } from '@blockframes/auth/+state/auth.store';
+import { AuthService } from '@blockframes/auth/+state';
+import { User } from '@blockframes/user/+state/user.model';
 
 @Component({
   selector: 'organization-widget',
@@ -16,11 +16,11 @@ export class OrganizationWidgetComponent implements OnInit {
 
   constructor(
     private orgService: OrganizationService,
-    private auth: AuthQuery,
+    private authService: AuthService,
   ) { }
 
   ngOnInit() {
-    this.user$ = this.auth.user$;
-    this.organization$ = this.orgService.org$;
+    this.user$ = this.authService.profile$;
+    this.organization$ = this.orgService.currentOrg$;
   }
 }
