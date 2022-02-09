@@ -1,6 +1,4 @@
 import { ChangeDetectionStrategy, Component, HostBinding, Input } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 
 import { boolean } from '@blockframes/utils/decorators/decorators';
 
@@ -22,12 +20,5 @@ export class AvailsFilterComponent {
 
   public getControl(key: keyof AvailsFilter) {
     return this.form.controls[key];
-  }
-
-  public setTimeOfDate(controlName: 'from' | 'to', event: MatDatepickerInputEvent<Date>) {
-    const control = this.getControl('duration').controls[controlName] as FormControl;
-    const date = new Date(event.value);
-    date.setHours(0,0,0,0);
-    control.setValue(date);
   }
 }

@@ -178,7 +178,6 @@ export function getDate(value: string, name: string): Date | ValueWithError<Date
       }
     };
   }
-
   date.setHours(0, 0, 0, 0);
   return date;
 }
