@@ -1,13 +1,13 @@
 import { ErrorHandler, Injectable, NgModule } from '@angular/core';
 import { sentryDsn, sentryEnv } from '@env';
 import * as Sentry from '@sentry/browser';
-import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { AuthService } from '@blockframes/auth/+state';
 
 @Injectable()
 export class SentryErrorHandler implements ErrorHandler {
-  constructor(private authQuery: AuthQuery) {
-    this.authQuery.user$.subscribe(user => {
+  constructor(private authService: AuthService) {
+    this.authService.profile$.subscribe(user => {
       if (!user) {
         return;
       }

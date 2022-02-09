@@ -21,7 +21,7 @@ export class OrgRequestAccessComponent implements OnInit {
   public roles = organizationRoles;
   public currentApp = getCurrentApp(this.routerQuery);
   public appName = appName;
-  public org$ = this.orgService.org$;
+  public org$ = this.orgService.currentOrg$;
   public orgId = this.orgService.org.id;
   public orgExistingAccess$: Observable<App[]>;
   public disabledRequest = false;

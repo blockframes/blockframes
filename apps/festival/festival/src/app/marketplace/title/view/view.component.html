@@ -10,7 +10,7 @@
         </section>
         <ng-container *ngIf="(eventId$ | async) as eventId; else request">
           <section fxLayout fxLayoutAlign="space-between" fxLayout.lt-sm="column">
-            <button mat-stroked-button [disabled]="requestSent.$ | async" (click)="requestAskingPrice()">
+            <button mat-stroked-button [disabled]="requestSent" (click)="requestAskingPrice()">
               <span class="linear-wipe">Request Asking Price</span>
             </button>
             <a ongoing-event-button [routerLink]="['/event', eventId, 'r', 'i']">Ongoing Screening</a>
@@ -19,7 +19,7 @@
         <ng-template #request>
           <section fxLayout fxLayout.lt-sm="column">
             <event-request-screening [movieId]="movie.id" animated></event-request-screening>
-            <button mat-stroked-button  [disabled]="requestSent.$ | async" (click)="requestAskingPrice()">
+            <button mat-stroked-button  [disabled]="requestSent" (click)="requestAskingPrice()">
               <span class="linear-wipe">Request Asking Price</span>
             </button>
           </section>

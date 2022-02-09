@@ -1,7 +1,6 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { MovieService, Movie } from '@blockframes/movie/+state';
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
-import { BehaviorStore } from '@blockframes/utils/observable-helpers';
 import { Organization, OrganizationService, orgName } from '@blockframes/organization/+state';
 import { Router } from '@angular/router';
 import { EventService, isScreening } from '@blockframes/event/+state';
@@ -21,12 +20,13 @@ interface CrmMovie extends Movie {
 })
 export class MoviesComponent implements OnInit {
   public movies$?: Observable<CrmMovie[]>;
-  public exporting = new BehaviorStore(false);
+  public exporting = false;
 
   constructor(
     private movieService: MovieService,
     private orgService: OrganizationService,
     private eventService: EventService,
+    private cdr: ChangeDetectorRef,
     private router: Router
   ) { }
 
@@ -60,7 +60,8 @@ export class MoviesComponent implements OnInit {
 
   public exportTable(movies: CrmMovie[]) {
     try {
-      this.exporting.value = true;
+      this.exporting = true;
+      this.cdr.markForCheck();
 
       const exportedRows = movies.map(m => ({
         'movie id': m.id,
@@ -79,10 +80,11 @@ export class MoviesComponent implements OnInit {
 
       downloadCsvFromJson(exportedRows, 'movies-list');
 
-      this.exporting.value = false;
+      this.exporting = false;
     } catch (err) {
-      this.exporting.value = false;
+      this.exporting = false;
     }
+    this.cdr.markForCheck();
 
   }
 }

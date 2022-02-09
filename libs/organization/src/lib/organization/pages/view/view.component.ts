@@ -8,10 +8,10 @@ import { distinctUntilChanged, filter } from 'rxjs/operators';
 // blockframes
 import { Organization } from '@blockframes/organization/+state/organization.model';
 import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
-import { User } from '@blockframes/auth/+state/auth.store';
-import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { OrganizationService } from '@blockframes/organization/+state';
+import { AuthService } from '@blockframes/auth/+state';
+import { User } from '@blockframes/user/+state/user.model';
 
 const navLinks = [
   {
@@ -41,7 +41,7 @@ export class OrganizationViewComponent implements OnInit, OnDestroy {
 
   constructor(
     private orgService: OrganizationService,
-    private authQuery: AuthQuery,
+    private authService: AuthService,
     private dynTitle: DynamicTitleService,
     private location: Location,
     private routerQuery: RouterQuery,
@@ -66,8 +66,8 @@ export class OrganizationViewComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.user$ = this.authQuery.user$;
-    this.organization$ = this.orgService.org$;
+    this.user$ = this.authService.profile$;
+    this.organization$ = this.orgService.currentOrg$;
 
     const sub = this.router.events.pipe(
       filter((evt: Event) => evt instanceof NavigationEnd),

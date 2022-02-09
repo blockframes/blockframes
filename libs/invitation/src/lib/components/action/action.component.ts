@@ -1,7 +1,7 @@
 import { Component, Input, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { AuthQuery, AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/+state';
 import { Event } from '@blockframes/event/+state';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { Invitation, InvitationService, InvitationStatus } from '../../+state';
@@ -33,19 +33,18 @@ export class ActionComponent {
   @Output() statusChanged = new EventEmitter<InvitationStatus>();
 
   private requestPending = false;
-  user$ = this.authQuery.user$;
+  user$ = this.authService.profile$;
 
   constructor(
     private router: Router,
     private service: InvitationService,
     private snackBar: MatSnackBar,
-    private authQuery: AuthQuery,
     private authService: AuthService,
   ) { }
 
   accept(invitation: Invitation) {
     this.accepting = true;
-    if (!this.authQuery.user) {
+    if (!this.authService.profile) {
       this.acceptOrDeclineAsAnonymous(invitation.id, 'accepted');
     } else {
       this.service.acceptInvitation(invitation);
@@ -54,7 +53,7 @@ export class ActionComponent {
 
   decline(invitation: Invitation) {
     this.declining = true;
-    if (!this.authQuery.user) {
+    if (!this.authService.profile) {
       this.acceptOrDeclineAsAnonymous(invitation.id, 'declined');
     } else {
       this.service.declineInvitation(invitation);

@@ -1,5 +1,5 @@
 // Angular
-import { Component, ChangeDetectionStrategy, HostBinding } from '@angular/core';
+import { Component, ChangeDetectionStrategy, HostBinding, ChangeDetectorRef } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 // Blockframes
@@ -37,7 +37,7 @@ export class UpcomingScreeningsComponent {
   public orgs$ = this.orgService.queryFromMovie(this.query.getActive());
 
   public buttonState$: Observable<boolean> = new Observable();
-  public requestSent = new BehaviorStore(false);
+  public requestSent = false;
 
   constructor(
     private query: MovieQuery,
@@ -45,6 +45,7 @@ export class UpcomingScreeningsComponent {
     private eventService: EventService,
     private invitationService: InvitationService,
     private orgService: OrganizationService,
+    private cdr: ChangeDetectorRef
   ) {
     const now = new Date();
     const q = ref => ref
@@ -98,7 +99,8 @@ export class UpcomingScreeningsComponent {
       autoFocus: false
     });
     ref.afterClosed().subscribe(isSent => {
-      this.requestSent.value = !!isSent;
+      this.requestSent = !!isSent;
+      this.cdr.markForCheck();
     });
   }
 }

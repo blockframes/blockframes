@@ -1,0 +1,17 @@
+﻿{
+  "fileServerFolder": ".",
+  "fixturesFolder": "./src/fixtures",
+  "integrationFolder": "./src/integration",
+  "modifyObstructiveCode": false,
+  "pluginsFile": "./src/plugins/index",
+  "supportFile": "./src/support/index.ts",
+  "video": true,
+  "videosFolder": "../../../dist/cypress/apps/cms/cms-e2e/videos",
+  "screenshotsFolder": "../../../dist/cypress/apps/cms/cms-e2e/screenshots",
+  "chromeWebSecurity": false,
+  "defaultCommandTimeout": 10000,
+  "reporter": "junit",
+  "reporterOptions": {
+    "mochaFile": "../../../dist/test-reports/festival-[hash].xml"
+  }
+}

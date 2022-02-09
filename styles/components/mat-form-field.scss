@@ -9,7 +9,7 @@
 
 
   .mat-form-field {
-    &.ng-valid, &.ng-invalid {
+    &.ng-valid, &.ng-invalid, &.mat-form-field-type-mat-chip-list {
       .mat-form-field-wrapper {
         padding-bottom: 0.6em;
       } 

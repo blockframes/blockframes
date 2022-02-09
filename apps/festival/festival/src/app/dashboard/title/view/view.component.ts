@@ -14,7 +14,7 @@ import { OrganizationService } from '@blockframes/organization/+state';
 
 export class TitleViewComponent implements OnInit {
   public movie$: Observable<Movie>;
-  public org$ = this.orgService.org$;
+  public org$ = this.orgService.currentOrg$;
   public loading$: Observable<boolean>;
 
   navLinks: RouteDescription[] = [

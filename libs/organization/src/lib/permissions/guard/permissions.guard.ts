@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
 import { PermissionsService } from '../+state';
 import { CanActivate, Router } from '@angular/router';
-import { CollectionGuardConfig } from 'akita-ng-fire';
 import { map } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
 import { AuthService } from '@blockframes/auth/+state';
 
 @Injectable({ providedIn: 'root' })
-@CollectionGuardConfig({ awaitSync: false })
 export class PermissionsGuard implements CanActivate {
   constructor(
     private service: PermissionsService,
@@ -22,7 +20,7 @@ export class PermissionsGuard implements CanActivate {
     ]).pipe(
       map(([user, permissions]) => {
         if (!user) return this.router.createUrlTree(['/']);
-        if (!user.orgId || !permissions) return this.router.createUrlTree(['c/organization']);
+        if (!user.orgId || !permissions) return this.router.createUrlTree(['/auth/identity']);
         return true;
       }));
   }

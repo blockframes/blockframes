@@ -22,8 +22,8 @@
         <mat-card>
           <article fxLayout="row" fxLayoutAlign="space-between start" flex>
             <h3>Attendees</h3>
-            <button [disabled]="exporting.$ | async" mat-button color="primary" (click)="exportTable()">
-              <ng-container *ngIf="exporting.$ | async else export">
+            <button [disabled]="exporting" mat-button color="primary" (click)="exportTable()">
+              <ng-container *ngIf="exporting else export">
                 <span>Generating CSV...</span>
               </ng-container>
               <ng-template #export>
