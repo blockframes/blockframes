@@ -96,6 +96,9 @@
   <!-- Festival landing page - They're talking about us -->
   <ng-content select="landing-detail"></ng-content>
 
+  <!-- Festival and catalog landing pages - Link to other app -->
+  <ng-content select="landing-app-link"></ng-content>
+
   <!-- Footer -->
   <ng-container *ngIf="landingFooterComponent; else footer">
     <ng-content select="landing-footer"></ng-content>

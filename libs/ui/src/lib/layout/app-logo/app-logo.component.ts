@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { App } from '@blockframes/utils/apps';
 import { ThemeService } from '@blockframes/ui/theme/theme.service';
@@ -17,6 +17,7 @@ const appLogos: Record<App | 'crm', string> = {
   styleUrls: ['./app-logo.component.scss']
 })
 export class AppLogoComponent implements OnInit {
+  @Input() app?: string;
   public imageLogo: string;
 
   constructor(
@@ -25,7 +26,7 @@ export class AppLogoComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    const appName = this.routerQuery.getData<string>('app');
+    const appName = this.app ? this.app : this.routerQuery.getData<string>('app');
     this.imageLogo = appLogos[appName];
   }
 }

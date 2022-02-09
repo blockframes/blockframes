@@ -26,6 +26,9 @@ export class LandingContactDirective { }
 @Directive({ selector: 'landing-detail, [landingDetail]' })
 export class LandingDetailDirective { }
 
+@Directive({ selector: 'landing-app-link, [landingAppLink]' })
+export class LandingAppLinkDirective { }
+
 @Component({
   selector: 'landing-footer',
   template: `<ng-content></ng-content>`,
@@ -72,6 +75,7 @@ export class LandingShellComponent implements OnDestroy {
 
   @ContentChild(LandingContactDirective) landingContactDirective: LandingContactDirective
   @ContentChild(LandingDetailDirective) landingDetailDirective: LandingDetailDirective
+  @ContentChild(LandingAppLinkDirective) landingAppLinkDirective: LandingAppLinkDirective
   @ContentChild(LandingFooterComponent) landingFooterComponent: LandingFooterComponent
 
   constructor(

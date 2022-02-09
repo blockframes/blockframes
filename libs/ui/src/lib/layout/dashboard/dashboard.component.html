@@ -14,6 +14,12 @@
           <mat-icon svgIcon="menu"></mat-icon>
         </button>
         <div fxLayout="row" fxLayoutGap="24px">
+          <ng-container *ngIf="appName === 'festival' || appName === 'catalog'">
+            <a mat-button class="link-to-app" color="primary" href={{appBridgeButtonLink}} target="_blank">        
+              <mat-icon svgIcon="mini_logo"></mat-icon>
+              <span>{{appBridgeButtonText}}</span>
+            </a>
+        </ng-container> 
           <mat-divider vertical></mat-divider>
           <!-- Invitations -->
           <a mat-icon-button routerLink="invitations" test-id="invitations-link">

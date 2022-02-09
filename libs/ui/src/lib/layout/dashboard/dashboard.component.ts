@@ -1,9 +1,10 @@
 // Angular
-import { Component, ChangeDetectionStrategy, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewChild, AfterViewInit, OnDestroy, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { FormControl } from '@angular/forms';
 import { MatSidenav } from '@angular/material/sidenav';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 // Blockframes
 import { SearchResult } from '@blockframes/ui/search-widget/search-widget.component';
@@ -21,10 +22,13 @@ import { filter, map, shareReplay } from 'rxjs/operators';
   styleUrls: ['./dashboard.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DashboardComponent implements AfterViewInit, OnDestroy {
+export class DashboardComponent implements AfterViewInit, OnDestroy, OnInit {
   private sub: Subscription;
   public searchCtrl: FormControl = new FormControl('');
   public notificationCount$ = this.notificationService.myNotificationsCount$;
+  public appName: string;
+  public appBridgeButtonText: string;
+  public appBridgeButtonLink: string;
 
   public invitationCount$ = this.invitationService.myInvitations$.pipe(
     map(invitations => invitations.filter(invitation => invitation.status === 'pending').length)
@@ -48,7 +52,12 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
     private invitationService: InvitationService,
     private notificationService: NotificationService,
     private router: Router,
+    private routerQuery: RouterQuery,
   ) { }
+
+  ngOnInit() {
+    this.appBridgeButtonSetup()
+  }
 
   ngAfterViewInit() {
     // https://github.com/angular/components/issues/4280
@@ -59,5 +68,17 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     if (this.sub) { this.sub.unsubscribe(); }
+  }
+
+  appBridgeButtonSetup() {
+    this.appName = this.routerQuery.getData<string>('app');
+
+    if (this.appName === 'festival') {
+      this.appBridgeButtonText = 'Sell Content';
+      this.appBridgeButtonLink = 'https://www.archipelcontent.com/';
+    } else if (this.appName === 'catalog') {
+      this.appBridgeButtonText = 'Promote Your Line-up';
+      this.appBridgeButtonLink = 'https://www.archipelmarket.com/';
+    }
   }
 }
