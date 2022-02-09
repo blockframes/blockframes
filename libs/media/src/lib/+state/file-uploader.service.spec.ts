@@ -10,6 +10,8 @@ import { AuthService } from '@blockframes/auth/+state/auth.service';
 import { Observable } from 'rxjs';
 
 class InjectedAuthService {
+  uid: 'userId';
+  
   profile = {
     uid: 'userId',
     orgId: 'orgId',
