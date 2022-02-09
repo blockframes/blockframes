@@ -4,7 +4,7 @@ import firebase from 'firebase/app';
 import { UserCredential } from '@firebase/auth-types';
 import { FireAuthService, CollectionConfig, FireAuthState, RoleState, initialAuthState } from 'akita-ng-fire';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { map, switchMap, take, withLatestFrom } from 'rxjs/operators';
+import { map, switchMap, take, tap } from 'rxjs/operators';
 import { getCurrentApp, App } from '@blockframes/utils/apps';
 import { PublicUser, User, PrivacyPolicy } from '@blockframes/user/types';
 import { Intercom } from 'ng-intercom';
@@ -25,7 +25,7 @@ import { Store, StoreConfig } from '@datorama/akita';
 
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'auth' })
-class AuthStore extends Store<AuthState> {
+class AuthStore extends Store<AuthState> { // @TODO #7273 remove when we get rid of akita
   constructor() {
     super(initialAuthState);
   }
@@ -55,37 +55,39 @@ export class AuthService extends FireAuthService<AuthState> {
 
   user$ = this.afAuth.authState; // Firebase Auth User Object
 
-  auth$: Observable<{ isAnonymous: boolean, emailVerified: boolean, profile?: User }> = this.user$.pipe(
-    switchMap(userAuth => userAuth && !userAuth.isAnonymous ? this.userService.valueChanges(userAuth.uid) : of(undefined)),
-    withLatestFrom(this.user$),
+  auth$: Observable<{ uid: string, isAnonymous: boolean, emailVerified: boolean, profile?: User }> = this.user$.pipe(
+    switchMap(authState => {
+      if (!authState || authState.isAnonymous) return of(undefined).pipe(map(() => [undefined, authState]));
+      return this.userService.valueChanges(authState.uid).pipe(map(profile => [profile, authState]));
+    }),
     map(([profile, userAuth]: [User, firebase.User]) => {
-      if (!userAuth) {
-        this.profile = undefined;
-        this.uid = undefined;
-        return undefined;
-      };
-      this.profile = profile;
-      this.uid = userAuth.uid;
+      if (!userAuth) return;
+
+      const { isAnonymous, emailVerified } = userAuth;
       return {
-        isAnonymous: userAuth.isAnonymous || false,
-        emailVerified: userAuth.emailVerified || false,
+        uid: userAuth.uid,
+        isAnonymous,
+        emailVerified,
         profile
       }
+    }),
+    tap(auth => {
+      this.uid = auth?.uid;
+      this.profile = auth?.profile;
     })
   );
 
   isBlockframesAdmin$ = this.user$.pipe(
-    switchMap(async user => {
+    map(user => {
       if (!user || user.isAnonymous) return false;
-      const snap = await this.db.collection('blockframesAdmin').doc(user.uid).get().toPromise();
-      return snap.exists;
+      return this.db.collection('blockframesAdmin').doc(user.uid).ref.get().then(snap => snap.exists);
     })
   );
-  
+
   // User object in Firestore DB
   profile$ = this.auth$.pipe(map(auth => auth?.profile));
 
-  get anonymouseOrRegularProfile () { return this.profile || this.anonymousCredentials };
+  get anonymouseOrRegularProfile() { return this.profile || this.anonymousCredentials };
 
   constructor(
     protected store: AuthStore,
