@@ -33,7 +33,7 @@ export class ActionComponent {
   @Output() statusChanged = new EventEmitter<InvitationStatus>();
 
   private requestPending = false;
-  user$ = this.authService.profile$;
+  user$ = this.authService.user$;
 
   constructor(
     private router: Router,

@@ -26,9 +26,9 @@ export class IdentityGuard implements CanActivate {
 
         if (!authState.emailVerified) return this.router.createUrlTree(['c/organization/join-congratulations']);
 
-        if (!hasDisplayName(authState.profile)) return true;
+        if (!hasDisplayName(authState.user)) return true;
 
-        if (authState.profile.orgId) {
+        if (authState.user.orgId) {
           if (!org) return true;
 
           if (org.status === 'accepted') return this.router.createUrlTree(['c/o']);
@@ -37,7 +37,7 @@ export class IdentityGuard implements CanActivate {
         } else {
           const requests = await this.invitationService.getValue(ref => ref.where('mode', '==', 'request')
             .where('type', '==', 'joinOrganization')
-            .where('fromUser.uid', '==', authState.profile.uid));
+            .where('fromUser.uid', '==', authState.user.uid));
 
           if (requests.find(request => request.status === 'pending')) return this.router.createUrlTree(['c/organization/join-congratulations']);
 
@@ -45,7 +45,7 @@ export class IdentityGuard implements CanActivate {
 
           const invitations = await this.invitationService.getValue(ref => ref.where('mode', '==', 'invitation')
             .where('type', '==', 'joinOrganization')
-            .where('toUser.uid', '==', authState.profile.uid));
+            .where('toUser.uid', '==', authState.user.uid));
 
           if (invitations.find(invitation => invitation.status === 'accepted')) return this.router.createUrlTree(['c/o']);
 

@@ -32,7 +32,7 @@ class AuthStore extends Store<AuthState> {
 
 }
 
-export function createUser(user: Partial<User> = {}) { // @TODO #7286 move to model ? or userModel ?
+export function createUser(user: Partial<User> = {}) { // @TODO #7286 #7273 move to model ? or userModel ?
   return {
     ...user,
     avatar: createStorageFile(user.avatar)
@@ -50,12 +50,12 @@ export class AuthService extends FireAuthService<AuthState> {
   anonymousCredentials$ = new BehaviorSubject<AnonymousCredentials>(this.anonymousCredentials);
 
   // For these to be defined, one of the observable below must be called before
-  profile: User;  // @TODO #7273   rename to user$ ?
+  profile: User; // @TODO #7273 #7273 rename to user (& InjectedAuthService) once AuthService does not extends FireAuthService anymore
   uid: string; // Will be defined for regular and anonymous users
 
   authState$ = this.afAuth.authState;
 
-  auth$: Observable<Partial<AuthState>> = this.authState$.pipe( // @TODO #7286 find a better typing & naming?
+  auth$: Observable<{ isAnonymous: boolean, emailVerified: boolean, user?: User }> = this.authState$.pipe(
     switchMap(authState => authState && !authState.isAnonymous ? this.userService.valueChanges(authState.uid) : of(undefined)),
     withLatestFrom(this.authState$),
     map(([user, authState]: [User, firebase.User]) => {
@@ -69,7 +69,7 @@ export class AuthService extends FireAuthService<AuthState> {
       return {
         isAnonymous: authState.isAnonymous || false,
         emailVerified: authState.emailVerified || false,
-        profile: user,// @TODO #7273 rename to user$ ?
+        user
       }
     })
   );
@@ -82,9 +82,7 @@ export class AuthService extends FireAuthService<AuthState> {
     })
   );
 
-  profile$ = this.auth$.pipe(  // @TODO #7273 rename to user$ ?
-    map(authState => authState?.profile)
-  );
+  user$ = this.auth$.pipe(map(auth => auth?.user));
 
   constructor(
     protected store: AuthStore,
@@ -221,7 +219,7 @@ export class AuthService extends FireAuthService<AuthState> {
 
   // TODO #6113 once we have a custom email verified page, we can update the users' meta there
   // #7303 if user does not interact with authService, this is not updated (ie: user goes directly to eventPage ?)
-  // @TODO #7286 rework this
+  // @TODO #7286 #7273 rework this
   private async updateEmailVerified() {
     const auth = await this.authState$.pipe(take(1)).toPromise();
 
@@ -342,9 +340,9 @@ export class AuthService extends FireAuthService<AuthState> {
     return this.anonymousCredentials;
   }
 
-  get anonymousCredentials(): AnonymousCredentials { // @TODO #7286 rename to anonymousProfile or anonymousUser ?
+  get anonymousCredentials(): AnonymousCredentials { // @TODO #7286 #7273  rename to anonymousProfile or anonymousUser ?
     return {
-      uid: sessionStorage.getItem('anonymousCredentials.uid'), // @TODO #7286 this attribute is needed ?
+      uid: sessionStorage.getItem('anonymousCredentials.uid'), // @TODO #7286 #7273 this attribute is needed ?
       lastName: sessionStorage.getItem('anonymousCredentials.lastName'),
       firstName: sessionStorage.getItem('anonymousCredentials.firstName'),
       role: sessionStorage.getItem('anonymousCredentials.role') as AnonymousRole,

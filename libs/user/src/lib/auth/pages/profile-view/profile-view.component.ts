@@ -64,7 +64,7 @@ export class ProfileViewComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.user$ = this.authService.profile$;
+    this.user$ = this.authService.user$;
     this.organization$ = this.orgService.currentOrg$;
 
     const hasPreferences = this.navLinks.some(link => link.path === 'preferences');

@@ -38,7 +38,7 @@ export class RequestScreeningComponent {
     this.animated = false;
     this.requestStatus.next('sending');
     const f = this.functions.httpsCallable('requestScreening');
-    await f({ movieId: this.movieId, uid: this.authService.profile.uid }).toPromise();
+    await f({ movieId: this.movieId, uid: this.authService.uid }).toPromise();
     this.requestStatus.next('sent');
     this.analytics.event('screeningRequested', {
       movieId: this.movieId

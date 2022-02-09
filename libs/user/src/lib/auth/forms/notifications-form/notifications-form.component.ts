@@ -131,7 +131,7 @@ export class NotificationsFormComponent {
 
   public async update() {
     const notifications = this.form.getRawValue();
-    const uid = this.authService.profile.uid;
+    const uid = this.authService.uid;
     await this.authService.update({ uid, settings: { notifications } });
 
     this.snackBar.open('Notifications settings updated.', 'close', { duration: 2000 });

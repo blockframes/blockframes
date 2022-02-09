@@ -38,7 +38,7 @@ export class RequestAskingPriceComponent {
       const f = this.functions.httpsCallable('requestAskingPrice');
       await f({
         movieId: this.data.movieId,
-        uid: this.authService.profile.uid,
+        uid: this.authService.uid,
         territories,
         message
       }).toPromise();

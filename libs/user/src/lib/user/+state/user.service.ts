@@ -33,21 +33,4 @@ export class UserService extends CollectionService<UserState> {
       await this.db.collection('blockframesAdmin').doc(uid).delete();
     }
   }
-
-  /**
-   * Fetch an user based on his uid
-   * @param uid
-   */
-  public async getUser(uid: string): Promise<User> { // @TODO #7286 remove and use this.getValue(uid)
-    const user = await this.db.collection('users').doc(uid).get().toPromise();
-    return user.data() as User;
-  }
-
-  /**
-   * @param uid
-   * @param user
-   */
-  public async updateById(uid: string, user: Partial<User>) {
-    await this.update(uid, user);// @TODO #7286 test
-  }
 }

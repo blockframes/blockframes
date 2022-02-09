@@ -18,7 +18,7 @@ export class RequestAccessGuard implements CanActivate {
 
   canActivate() {
     return combineLatest([
-      this.authService.profile$,
+      this.authService.user$,
       this.service.org$
     ]).pipe(
       map(([user, org]) => {

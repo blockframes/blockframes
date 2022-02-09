@@ -46,8 +46,8 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
       return allInvitations.some(invitation => {
         if (invitation.eventId !== this.event.id) return false;
         if (invitation.status !== 'accepted') return false;
-        const hasRequested = invitation.mode === 'request' && invitation.fromUser.uid === this.authService.profile.uid;
-        const isInvited = invitation.mode === 'invitation' && invitation.toUser.uid === this.authService.profile.uid;
+        const hasRequested = invitation.mode === 'request' && invitation.fromUser.uid === this.authService.uid;
+        const isInvited = invitation.mode === 'invitation' && invitation.toUser.uid === this.authService.uid;
         return hasRequested || isInvited;
       });
     }

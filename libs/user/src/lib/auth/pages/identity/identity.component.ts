@@ -29,7 +29,7 @@ import { DifferentPasswordStateMatcher, RepeatPasswordStateMatcher } from '@bloc
 })
 export class IdentityComponent implements OnInit, OnDestroy {
   @ViewChild('customSnackBarTemplate') customSnackBarTemplate: TemplateRef<unknown>;
-  public user$ = this.authService.profile$;
+  public user$ = this.authService.user$;
   public creating = false;
   public app: App;
   public appName: string;
@@ -297,7 +297,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
     const invitations = await this.invitationService.getValue(ref => ref.where('mode', '==', 'invitation')
       .where('type', '==', 'joinOrganization')
-      .where('toUser.uid', '==', this.authService.profile.uid));
+      .where('toUser.uid', '==', this.authService.uid));
     const pendingInvitation = invitations.find(invitation => invitation.status === 'pending');
     if (pendingInvitation) {
       // Accept the invitation from the organization.

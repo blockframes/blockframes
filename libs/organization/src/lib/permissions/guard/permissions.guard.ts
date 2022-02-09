@@ -15,7 +15,7 @@ export class PermissionsGuard implements CanActivate {
 
   canActivate() {
     return combineLatest([
-      this.authService.profile$,
+      this.authService.user$,
       this.service.permissions$
     ]).pipe(
       map(([user, permissions]) => {

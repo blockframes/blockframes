@@ -9,7 +9,7 @@ import { AuthService } from '@blockframes/auth/+state';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProfileFormComponent {
-  public uid = this.authService.profile.uid;
+  public uid = this.authService.uid;
 
   @Input() form: ProfileForm;
 

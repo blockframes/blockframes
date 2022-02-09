@@ -93,7 +93,7 @@ export class SessionComponent implements OnInit, OnDestroy {
           // if user is not a screening owner we need to track the watch time
           if (event.ownerOrgId !== this.authService.profile.orgId) {
             // Try to get invitation the regular way
-            const uidFilter = (invit: Invitation) => invit.toUser?.uid === this.authService.profile.uid ||  invit.fromUser?.uid === this.authService.profile.uid;
+            const uidFilter = (invit: Invitation) => invit.toUser?.uid === this.authService.uid ||  invit.fromUser?.uid === this.authService.uid;
             const allInvitations = await this.invitationService.allInvitations$.pipe(take(1)).toPromise();
             let invitation = allInvitations.find(invit => invit.eventId === event.id && uidFilter(invit));
 

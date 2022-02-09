@@ -58,7 +58,7 @@ export class UserComponent implements OnInit {
   async ngOnInit() {
     this.route.params.subscribe(async params => {
       this.userId = params.userId;
-      this.user = await this.userService.getUser(this.userId);
+      this.user = await this.userService.getValue(this.userId);
       this.user$ = this.userService.valueChanges(this.userId);
       if (this.user.orgId) {
         this.originalOrgValue = this.user.orgId;
@@ -129,10 +129,10 @@ export class UserComponent implements OnInit {
       position
     };
 
-    await this.userService.updateById(this.user.uid, update);
+    await this.userService.update(this.user.uid, update);
     this.originalOrgValue = orgId;
 
-    this.user = await this.userService.getUser(this.userId);
+    this.user = await this.userService.getValue(this.userId);
     this.cdRef.markForCheck();
 
     this.snackBar.open('Informations updated !', 'close', { duration: 5000 });

@@ -66,7 +66,7 @@ export class OrganizationViewComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.user$ = this.authService.profile$;
+    this.user$ = this.authService.user$;
     this.organization$ = this.orgService.currentOrg$;
 
     const sub = this.router.events.pipe(

@@ -37,7 +37,7 @@ export class ProfileComponent implements OnInit {
         if (this.profileForm.invalid) {
           throw new Error('Your profile information are not valid.')
         } else {
-          const uid = this.authService.profile.uid;
+          const uid = this.authService.uid;
   
           this.uploaderService.upload();
           await this.authService.update({ uid, ...this.profileForm.value });

@@ -39,7 +39,7 @@ export class InvitationService extends CollectionService<InvitationState> {
 
   /** All Invitations related to current user or org */
   allInvitations$ = combineLatest([
-    this.authService.profile$,
+    this.authService.user$,
     this.permissionsService.isAdmin$
   ]).pipe(
     filter(([user]) => !!user?.uid && !!user?.orgId),
@@ -72,7 +72,7 @@ export class InvitationService extends CollectionService<InvitationState> {
 
   /** Invitations to current user or org */
   myInvitations$ = combineLatest([
-    this.authService.profile$,
+    this.authService.user$,
     this.allInvitations$
   ]).pipe(
     filter(([user]) => !!user?.uid && !!user?.orgId),
@@ -81,7 +81,7 @@ export class InvitationService extends CollectionService<InvitationState> {
 
   /** Invitations where current user is a guest */
   guestInvitations$ = combineLatest([
-    this.authService.profile$,
+    this.authService.user$,
     this.allInvitations$
   ]).pipe(
     filter(([user]) => !!user?.uid && !!user?.orgId),
@@ -129,7 +129,7 @@ export class InvitationService extends CollectionService<InvitationState> {
   }
 
   public isInvitationForMe(invitation: Invitation): boolean {
-    return invitation.toOrg?.id === this.authService.profile.orgId || invitation.toUser?.uid === this.authService.profile.uid
+    return invitation.toOrg?.id === this.authService.profile.orgId || invitation.toUser?.uid === this.authService.uid
   }
 
   /**

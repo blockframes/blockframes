@@ -61,14 +61,14 @@ export class BucketService extends CollectionService<BucketState> {
     await this.update(orgId, {
       specificity,
       delivery,
-      uid: this.authService.profile.uid  // Specify who is updating the bucket (this is used in the backend)
+      uid: this.authService.uid  // Specify who is updating the bucket (this is used in the backend)
     });
 
     // Create offer
     const offerId = createOfferId(orgName);
     await this.offerService.add({
       buyerId: orgId,
-      buyerUserId: this.authService.profile.uid,
+      buyerUserId: this.authService.uid,
       specificity,
       status: 'pending',
       currency,
@@ -84,7 +84,7 @@ export class BucketService extends CollectionService<BucketState> {
 
       const commonFields = {
         buyerId: orgId,
-        buyerUserId: this.authService.profile.uid, // @TODO #7286 or this.authService.uid ?
+        buyerUserId: this.authService.uid,
         sellerId: centralOrgId.catalog,
         stakeholders: [...parentContract.stakeholders, orgId],
       };
@@ -118,7 +118,7 @@ export class BucketService extends CollectionService<BucketState> {
 
   async addTerm(titleId: string, parentTermId: string, avails: AvailsFilter) {
 
-    const orgId = this.orgService.org.id; // @TODO #7286 replace all occurences by authService.profile.orgId ?
+    const orgId = this.orgService.org.id;
     const rawBucket = await this.getActive();
     const bucket = createBucket({ id: orgId, ...rawBucket });
 

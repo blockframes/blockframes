@@ -18,14 +18,14 @@ export class PermissionsService extends CollectionService<PermissionsState> {
 
   // The whole permissions document for organization of the current logged in user.
   permissions: Permissions; // @TODO #7273 if this.permissions$ was not already called, this will be undefined
-  permissions$: Observable<Permissions> = this.authService.profile$.pipe(
+  permissions$: Observable<Permissions> = this.authService.user$.pipe(
     switchMap(user => user?.orgId ? this.valueChanges(user.orgId) : of(undefined)),
     tap(permissions => this.permissions = permissions)
   );
 
   // Checks if the connected user is superAdmin of his organization.
   public isSuperAdmin$ = combineLatest([
-    this.authService.profile$,
+    this.authService.user$,
     this.permissions$,
   ]).pipe(
     map(([user, p]) => user?.uid && p?.roles[user.uid] === 'superAdmin')
@@ -33,7 +33,7 @@ export class PermissionsService extends CollectionService<PermissionsState> {
 
   // Checks if the connected user is admin of his organization.
   public isAdmin$ = combineLatest([
-    this.authService.profile$,
+    this.authService.user$,
     this.permissions$,
     this.isSuperAdmin$,
   ]).pipe(
@@ -96,7 +96,7 @@ export class PermissionsService extends CollectionService<PermissionsState> {
   }
 
   /** Checks if the user is admin of his organization. */
-  public isUserAdmin(userId: string = this.authService.profile.uid): boolean {
+  public isUserAdmin(userId: string = this.authService.uid): boolean {
     return this.permissions.roles[userId] === 'admin' || this.isUserSuperAdmin(userId);
   }
 

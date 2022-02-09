@@ -109,7 +109,7 @@ export class FileUploaderService {
 
     const tasks = validQueue.map(([storagePath, uploads]) => {
       return uploads.map(upload => {
-        upload.metadata.uid = this.authService.profile.uid;
+        upload.metadata.uid = this.authService.uid;
 
         // upload
         const finalPath = `${tempUploadDir}/${storagePath}/${upload.fileName}`;

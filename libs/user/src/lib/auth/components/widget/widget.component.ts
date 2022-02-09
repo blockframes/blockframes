@@ -15,10 +15,10 @@ import { OrganizationService } from '@blockframes/organization/+state';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AuthWidgetComponent {
-  user$ = this.authService.profile$;
+  user$ = this.authService.user$;
   organization$ = this.orgService.currentOrg$;
   theme$ = this.themeService.theme$;
-  isBfAdmin = this.userService.isBlockframesAdmin(this.authService.profile.uid);
+  isBfAdmin = this.userService.isBlockframesAdmin(this.authService.uid);
   appVersion$ = this.db.doc<IVersionDoc>(dbVersionDoc).valueChanges();
   emulatorList = Object.keys(emulators).filter(key => !!emulators[key]);
   emulators = this.emulatorList.length ? this.emulatorList.join(' - ') : 'none'

@@ -7,9 +7,9 @@ import { Invitation } from "@blockframes/invitation/+state/invitation.model";
 export class InvitationHasActionPipe implements PipeTransform {
   constructor(private authService: AuthService) {}
   transform(invitation: Invitation) {
-    const userId = this.authService.profile.uid;
+    const userId = this.authService.uid;
     const isNotFromUser = !(invitation.fromUser?.uid === userId);
-    const isToOrg = invitation.toOrg?.id === this.authService.profile.uid;
+    const isToOrg = invitation.toOrg?.id === this.authService.uid;
     const isToUser = invitation.toUser?.uid === userId;
     return invitation.status === 'pending' && ((isNotFromUser && isToOrg) || isToUser);
   }

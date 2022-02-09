@@ -49,7 +49,7 @@ export class MovieService extends CollectionService<MovieState> {
   }
 
   async create(movieImported?: Partial<Movie>): Promise<Movie> {
-    const createdBy = this.authService.profile.uid;
+    const createdBy = this.authService.uid;
     let orgIds = [];
     if (movieImported?.orgIds?.length) {
       orgIds = movieImported.orgIds;
@@ -75,8 +75,8 @@ export class MovieService extends CollectionService<MovieState> {
   async onCreate(movie: Movie, { write }: WriteOptions) {
     // When a movie is created, we also create a permissions document for it.
     // Since movie can be created on behalf of another user (An admin from admin panel for example)
-    const userId = movie._meta?.createdBy ? movie._meta.createdBy : this.authService.profile.uid;
-    const user = await this.userService.getUser(userId);
+    const userId = movie._meta?.createdBy ? movie._meta.createdBy : this.authService.uid;
+    const user = await this.userService.getValue(userId);
     const ref = this.getRef(movie.id);
     write.update(ref, { '_meta.createdAt': new Date() });
     return this.permissionsService.addDocumentPermissions(movie.id, write as firebase.firestore.Transaction, user.orgId);
@@ -85,14 +85,14 @@ export class MovieService extends CollectionService<MovieState> {
   onUpdate(movie: Movie, { write }: WriteOptions) {
     const movieRef = this.db.doc(`movies/${movie.id}`).ref;
     write.update(movieRef, {
-      '_meta.updatedBy': this.authService.profile.uid,
+      '_meta.updatedBy': this.authService.uid,
       '_meta.updatedAt': new Date()
     });
   }
 
   /** Update deletedBy (_meta field of movie) with the current user and remove the movie. */
   public async remove(movieId: string) {
-    const userId = this.authService.profile.uid;
+    const userId = this.authService.uid;
     // We need to update the _meta field before remove to get the userId in the backend function: onMovieDeleteEvent
     await this.db.doc(`movies/${movieId}`).update({
       '_meta.deletedBy': userId,
