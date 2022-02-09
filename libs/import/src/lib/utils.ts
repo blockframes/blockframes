@@ -179,8 +179,7 @@ export function getDate(value: string, name: string): Date | ValueWithError<Date
     };
   }
 
-  // https://github.com/blockframes/blockframes/issues/7310#issuecomment-1033572680
-  date.setHours(2, 0, 0, 0);
+  date.setHours(0, 0, 0, 0);
   return date;
 }
 

@@ -13,9 +13,8 @@ function createDurationControl(duration: Partial<{ from: Date, to: Date }> = {})
 
   const date = new Date(); //--/--/--:--:--:--
 
-  // https://github.com/blockframes/blockframes/issues/7310#issuecomment-1033572680
-  const from = duration.from ?? new Date(date.getFullYear(), date.getMonth(), date.getDate(),3,0,0,0); //--/--/--:3:0:0:0,
-  const to = duration.to ?? new Date(date.getFullYear() + 1, date.getMonth(), date.getDate(),1,0,0,0); // --/--/--:1:0:0:0,
+  const from = duration.from ?? new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);
+  const to = duration.to ?? new Date(date.getFullYear() + 1, date.getMonth(), date.getDate(), 0, 0, 0, 0);
 
 
   const fromValidators = [compareDates('from', 'to', 'from'), isDateInFuture, Validators.required];
