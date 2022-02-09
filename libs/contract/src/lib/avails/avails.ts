@@ -54,15 +54,15 @@ export function filterContractsByTitle(titleId: string, mandates: Mandate[], man
 }
 
 
-function assertValidTitle(mandates: FullMandate[], sales: FullSale[], bucketContracts?: BucketContract[]) {
+function assertValidTitle(mandates: FullMandate[], sales: FullSale[], bucketContracts: BucketContract[]=[]) {
   // check that the mandates & sales are about one single title,
   // i.e. they must all have the same `titleId`
-  const titleId = mandates[0].titleId;
-  const invalidMandate = mandates.some(m => m.titleId !== titleId);
-  const invalidSale = sales.some(s => s.titleId !== titleId);
-  const invalidBucketSale = bucketContracts?.some(s => s.titleId !== titleId);
-
-  if (invalidMandate || invalidSale || invalidBucketSale) throw new Error('Mandates & Sales must all have the same title id!');
+  const mandateIds = mandates.map(m=> m.titleId);
+  const saleIds = sales.map(s => s.titleId);
+  const bucketTitleIds = (bucketContracts).map(b => b.titleId);
+  const uniqueIds = new Set([...mandateIds, ...saleIds, ...bucketTitleIds]);
+  const differentTitleIds = uniqueIds.size > 1;
+  if (differentTitleIds) throw new Error('Mandates & Sales must all have the same title id!');
 }
 
 // ----------------------------
