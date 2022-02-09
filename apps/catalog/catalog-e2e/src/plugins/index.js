@@ -39,7 +39,7 @@ module.exports = (on, config) => {
 
   on('before:browser:launch', (browser, launchOptions) => {
     if (browser.name === 'chrome' && config.env.incognito) {
-      launchOptions.args.push("--incognito");
+      launchOptions.args.push('--incognito');
     }
     return launchOptions;
   });

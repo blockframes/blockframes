@@ -24,7 +24,7 @@ export default (async (on, config) => {
   // see angular.json at the root of the project
   on('before:browser:launch', (browser, launchOptions) => {
     if (browser.name === 'chrome' && config.env.incognito) {
-      launchOptions.args.push("--incognito");
+      launchOptions.args.push('--incognito');
     }
     return launchOptions;
   });
