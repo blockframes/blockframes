@@ -39,6 +39,7 @@
     <input
       [disabled]="disabled"
       matInput
+      (dateChange)="setTimeOfDate('from', $event)"
       [matDatepicker]="datepickerFrom"
       formControlName="from"
       required
@@ -60,6 +61,7 @@
       matInput
       [matDatepicker]="datepickerTo"
       formControlName="to"
+      (dateChange)="setTimeOfDate('to', $event)"
       required
       placeholder="MM/DD/YYYY"
     />
