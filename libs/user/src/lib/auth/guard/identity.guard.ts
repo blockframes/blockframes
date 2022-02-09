@@ -37,7 +37,7 @@ export class IdentityGuard implements CanActivate {
         } else {
           const requests = await this.invitationService.getValue(ref => ref.where('mode', '==', 'request')
             .where('type', '==', 'joinOrganization')
-            .where('fromUser.uid', '==', authState.uid));
+            .where('fromUser.uid', '==', authState.profile.uid));
 
           if (requests.find(request => request.status === 'pending')) return this.router.createUrlTree(['c/organization/join-congratulations']);
 
@@ -45,7 +45,7 @@ export class IdentityGuard implements CanActivate {
 
           const invitations = await this.invitationService.getValue(ref => ref.where('mode', '==', 'invitation')
             .where('type', '==', 'joinOrganization')
-            .where('toUser.uid', '==', authState.uid));
+            .where('toUser.uid', '==', authState.profile.uid));
 
           if (invitations.find(invitation => invitation.status === 'accepted')) return this.router.createUrlTree(['c/o']);
 

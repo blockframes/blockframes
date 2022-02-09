@@ -168,12 +168,11 @@ export class SessionComponent implements OnInit, OnDestroy {
         }
 
         // Manage redirect depending on attendees status & presence of meeting owners
-        const uid = this.authService.profile.uid || this.authService.anonymousUserId;
         if (event.isOwner) {
           const attendees = event.meta.attendees;
-          if (attendees[uid]?.status !== 'owner') {
+          if (attendees[this.authService.uid]?.status !== 'owner') {
             const attendee = createMeetingAttendee(this.authService.profile || this.authService.anonymousCredentials, 'owner');
-            const meta: Meeting = { ...event.meta, attendees: { ...event.meta.attendees, [uid]: attendee } };
+            const meta: Meeting = { ...event.meta, attendees: { ...event.meta.attendees, [this.authService.uid]: attendee } };
             this.service.update(event.id, { meta });
           }
 
@@ -217,7 +216,7 @@ export class SessionComponent implements OnInit, OnDestroy {
             }
           }
         } else {
-          const userStatus = event.meta.attendees[uid];
+          const userStatus = event.meta.attendees[this.authService.uid];
 
           if (!userStatus || userStatus?.status === 'ended') { // meeting session is over
             this.router.navigateByUrl(`/event/${event.id}/r/i/ended`);

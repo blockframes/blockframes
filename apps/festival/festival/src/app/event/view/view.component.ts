@@ -23,7 +23,7 @@ export class EventViewComponent implements OnInit {
   invitation$: Observable<Invitation>;
   editEvent: string;
   accessRoute: string;
-  user$ = this.authService.profile$; // @TODO286 test with anonymous & logged in user
+  user$ = this.authService.profile$;
   event$: Observable<Event>;
   requestSent = false;
   private statusChanged = new BehaviorSubject(false);

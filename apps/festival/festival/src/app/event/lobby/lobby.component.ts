@@ -51,8 +51,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
         this.dynTitle.setPageTitle(this.event.title, 'Lobby');
         const attendees = (this.event.meta as Meeting).attendees;
         this.ownerIsPresent = Object.values(attendees).some(value => value.status === 'owner');
-        const uid = this.authService.profile.uid || this.authService.anonymousUserId;
-        this.attendeeStatus = this.event.isOwner ? 'owner' : attendees[uid]?.status;
+        this.attendeeStatus = this.event.isOwner ? 'owner' : attendees[this.authService.uid]?.status;
         if (this.attendeeStatus === 'accepted') {
           this.router.navigate(['../', 'session'], { relativeTo: this.route });
         }
@@ -71,9 +70,8 @@ export class LobbyComponent implements OnInit, OnDestroy {
   }
 
   requestAccess() {
-    const uid = this.authService.profile.uid || this.authService.anonymousUserId;
     const attendee = createMeetingAttendee(this.authService.profile || this.authService.anonymousCredentials, 'requesting');
-    const meta: Meeting = { ...this.event.meta, attendees: { ...this.event.meta.attendees, [uid]: attendee } };
+    const meta: Meeting = { ...this.event.meta, attendees: { ...this.event.meta.attendees, [this.authService.uid]: attendee } };
     this.eventService.update(this.event.id, { meta });
   }
 }

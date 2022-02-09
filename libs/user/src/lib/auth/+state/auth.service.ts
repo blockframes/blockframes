@@ -49,29 +49,27 @@ export class AuthService extends FireAuthService<AuthState> {
   signedOut = new Subject<void>();
   anonymousCredentials$ = new BehaviorSubject<AnonymousCredentials>(this.anonymousCredentials);
 
-  profile: User; // For this to be defined, one of the observable above must be called before // @TODO #7273 if auth$ was not already called, this will be undefined &&  rename to user$ ?
-  uid: string; // For this to be defined, one of the observable above must be called before // @TODO #7286 use this instead of this.authService.profile.uid || this.authService.anonymousUserId ? && this will be undefined if auth$ w
+  // For these to be defined, one of the observable below must be called before
+  profile: User;  // @TODO #7273   rename to user$ ?
+  uid: string; // Will be defined for regular and anonymous users
 
-  authState$ = this.afAuth.authState; // @TODO #7286 find where this can be used instead of auth$
+  authState$ = this.afAuth.authState;
 
   auth$: Observable<Partial<AuthState>> = this.authState$.pipe( // @TODO #7286 find a better typing & naming?
     switchMap(authState => authState && !authState.isAnonymous ? this.userService.valueChanges(authState.uid) : of(undefined)),
     withLatestFrom(this.authState$),
-    switchMap(async ([user, authState]: [User, firebase.User]) => {
+    map(([user, authState]: [User, firebase.User]) => {
       if (!authState) {
         this.profile = undefined;
         this.uid = undefined;
         return undefined;
       };
-      const token = await authState?.getIdToken(); // @TODO 7286 useful ?
       this.profile = user;
       this.uid = authState.uid;
       return {
-        uid: authState.uid, // Will be populated even if user is anonymous
-        token,
         isAnonymous: authState.isAnonymous || false,
         emailVerified: authState.emailVerified || false,
-        profile: user,
+        profile: user,// @TODO #7273 rename to user$ ?
       }
     })
   );
@@ -161,7 +159,7 @@ export class AuthService extends FireAuthService<AuthState> {
    */
   public async updatePassword(currentPassword: string, newPassword: string, email = this.profile.email) {
     await this.signin(email, currentPassword);
-    const user = await this.user;
+    const user = await this.afAuth.currentUser;
     return user.updatePassword(newPassword);
   }
 
@@ -225,7 +223,7 @@ export class AuthService extends FireAuthService<AuthState> {
   // #7303 if user does not interact with authService, this is not updated (ie: user goes directly to eventPage ?)
   // @TODO #7286 rework this
   private async updateEmailVerified() {
-    const auth = await this.auth$.pipe(take(1)).toPromise();
+    const auth = await this.authState$.pipe(take(1)).toPromise();
 
     if (auth?.emailVerified) {
       const user = await this.userService.getValue(auth.uid);
@@ -249,7 +247,7 @@ export class AuthService extends FireAuthService<AuthState> {
    * @returns Promise<AnonymousCredentials>
    */
   async signInAnonymously() {
-    const currentUser = await this.user;
+    const currentUser = await this.afAuth.currentUser;
     if (currentUser) {
       return this.updateAnonymousCredentials({ uid: currentUser.uid });
     }
@@ -344,19 +342,15 @@ export class AuthService extends FireAuthService<AuthState> {
     return this.anonymousCredentials;
   }
 
-  get anonymousCredentials(): AnonymousCredentials { // @7286 rename to anonymousProfile
+  get anonymousCredentials(): AnonymousCredentials { // @TODO #7286 rename to anonymousProfile or anonymousUser ?
     return {
-      uid: sessionStorage.getItem('anonymousCredentials.uid'),
+      uid: sessionStorage.getItem('anonymousCredentials.uid'), // @TODO #7286 this attribute is needed ?
       lastName: sessionStorage.getItem('anonymousCredentials.lastName'),
       firstName: sessionStorage.getItem('anonymousCredentials.firstName'),
       role: sessionStorage.getItem('anonymousCredentials.role') as AnonymousRole,
       email: sessionStorage.getItem('anonymousCredentials.email'),
       invitationId: sessionStorage.getItem('anonymousCredentials.invitationId'),
     };
-  }
-
-  get anonymousUserId() { // @7286 rename to anonymousProfileUid ?
-    return this.anonymousCredentials.uid;
   }
 }
 

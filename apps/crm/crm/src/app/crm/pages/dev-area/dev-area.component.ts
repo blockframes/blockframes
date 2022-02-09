@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/auth';
 import { first } from 'rxjs/operators';
 import { firebase } from '@env';
+import { AuthService } from '@blockframes/auth/+state';
 
 @Component({
   selector: 'crm-dev-area',
@@ -15,12 +15,12 @@ export class DevAreaComponent implements OnInit {
   public firebaseConsoleLink = `https://console.firebase.google.com/project/${this.projectId}/database/`;
 
   constructor(
-    private afAuth: AngularFireAuth,
+    private authService: AuthService,
     private cdRef: ChangeDetectorRef
   ) { }
 
   async ngOnInit() {
-    this.token = await this.afAuth.authState.pipe(first()) // @TODO #7286 ?
+    this.token = await this.authService.authState$.pipe(first())
       .toPromise()
       .then(auth => auth.getIdToken());
     this.cdRef.markForCheck();
