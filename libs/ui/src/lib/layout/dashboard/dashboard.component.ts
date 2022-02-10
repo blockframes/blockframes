@@ -4,6 +4,7 @@ import { Router, NavigationEnd } from '@angular/router';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { FormControl } from '@angular/forms';
 import { MatSidenav } from '@angular/material/sidenav';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 // Blockframes
 import { SearchResult } from '@blockframes/ui/search-widget/search-widget.component';
@@ -14,7 +15,13 @@ import { NotificationService } from '@blockframes/notification/+state';
 // RxJs
 import { Observable, Subscription } from 'rxjs';
 import { filter, map, shareReplay } from 'rxjs/operators';
+import { App, applicationUrl, getCurrentApp } from '@blockframes/utils/apps';
 
+interface AppBridge {
+  text: string;
+  link: string;
+}
+type BridgeRecord = Partial<Record<App, AppBridge>>;
 @Component({
   selector: 'layout-dashboard',
   templateUrl: './dashboard.component.html',
@@ -25,6 +32,17 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
   private sub: Subscription;
   public searchCtrl: FormControl = new FormControl('');
   public notificationCount$ = this.notificationService.myNotificationsCount$;
+  public currentApp = getCurrentApp(this.routerQuery);
+  public appBridge: BridgeRecord = {
+    catalog: {
+      text: 'Promote Your Line-up',
+      link: applicationUrl.festival,
+    },
+    festival: {
+      text: 'Sell Content',
+      link: applicationUrl.catalog,
+    }
+  }
 
   public invitationCount$ = this.invitationService.myInvitations$.pipe(
     map(invitations => invitations.filter(invitation => invitation.status === 'pending').length)
@@ -48,6 +66,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
     private invitationService: InvitationService,
     private notificationService: NotificationService,
     private router: Router,
+    private routerQuery: RouterQuery,
   ) { }
 
   ngAfterViewInit() {

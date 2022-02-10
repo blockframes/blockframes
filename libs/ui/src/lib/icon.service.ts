@@ -86,6 +86,7 @@ export const icons = [
   { name: 'menu', url: 'assets/icons/menu.svg' },
   { name: 'mic', url: 'assets/icons/mic.svg' },
   { name: 'mic_off', url: 'assets/icons/mic_off.svg' },
+  { name: 'mini_logo', url: 'assets/icons/mini_logo.svg' },
   { name: 'monetization', url: 'assets/icons/monetization.svg' },
   { name: 'more_horiz', url: 'assets/icons/more_horiz.svg' },
   { name: 'more_vert', url: 'assets/icons/more_vert.svg' },
