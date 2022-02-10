@@ -79,7 +79,6 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   /**
    * This converts the OrganizationDocument into an Organization
    * @param org
-   * @dev If this method is implemented, remove akitaPreAddEntity and akitaPreUpdateEntity on store
    */
   formatFromFirestore(org: OrganizationDocument): Organization {
     return {

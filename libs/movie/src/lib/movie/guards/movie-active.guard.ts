@@ -1,36 +1,30 @@
 import { Injectable } from "@angular/core";
-import { CollectionGuard, CollectionGuardConfig } from "akita-ng-fire";
-import { MovieState } from "../+state/movie.store";
+import { CollectionGuardConfig } from "akita-ng-fire";
 import { MovieService } from "../+state/movie.service";
-import { ActivatedRouteSnapshot } from "@angular/router";
-import { map } from "rxjs/operators";
+import { ActivatedRouteSnapshot, CanActivate, Router } from "@angular/router";
 import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { getCurrentApp } from "@blockframes/utils/apps";
 
 @Injectable({ providedIn: 'root' })
 @CollectionGuardConfig({ awaitSync: true })
-export class MovieActiveGuard extends CollectionGuard<MovieState> {
+export class MovieActiveGuard implements CanActivate {
 
-  constructor(service: MovieService, private routerQuery: RouterQuery) {
-    super(service);
+  constructor(
+    private movieService: MovieService,
+    private routerQuery: RouterQuery,
+    private router: Router,
+  ) { }
+
+  async canActivate(route: ActivatedRouteSnapshot) {
+    this.movieService.syncActive({ id: route.params.movieId }).subscribe() // @TODO #7282 remove
+    const movie = await this.movieService.getValue(route.params.movieId as string);
+    if (movie) {
+      const currentApp = getCurrentApp(this.routerQuery);
+      return movie.app[currentApp].access || this.router.createUrlTree([route.data.redirect]);
+    } else {
+      return this.router.createUrlTree([route.data.redirect]);
+    }
   }
 
-  // Sync and set active
-  sync(next: ActivatedRouteSnapshot) {
-    return this.service.syncActive({ id: next.params.movieId }).pipe(
-      map(movie => {
-        if (movie) {
-          const appName = this.routerQuery.getValue().state.root.data.app;
-          const hasAccess = movie.app[appName].access;
-          if (hasAccess) {
-            return true;
-          } else {
-            return this.redirect || next.data.redirect;
-          }
-        } else {
-          return this.redirect || next.data.redirect;
-        }
-      })
-    )
-  }
 }
 
