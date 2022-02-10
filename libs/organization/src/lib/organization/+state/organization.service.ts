@@ -1,18 +1,18 @@
 import { Injectable } from '@angular/core';
-import { map, switchMap, tap } from 'rxjs/operators';
-import { AuthQuery, AuthService, User } from '@blockframes/auth/+state';
+import { filter, map, switchMap, tap } from 'rxjs/operators';
+import { AuthService } from '@blockframes/auth/+state';
 import { Organization, createOrganization, OrganizationDocument } from './organization.model';
 import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
 import { createPermissions, UserRole } from '../../permissions/+state/permissions.model';
 import { AngularFireFunctions } from '@angular/fire/functions';
-import { UserService, OrganizationMember, createOrganizationMember, PublicUser } from '@blockframes/user/+state';
+import { UserService, OrganizationMember, createOrganizationMember, PublicUser, User } from '@blockframes/user/+state';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentApp, App, Module, createOrgAppAccess } from '@blockframes/utils/apps';
 import { createDocumentMeta, formatDocumentMetaFromFirestore } from '@blockframes/utils/models-meta';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
-import { Observable, of } from 'rxjs';
+import { combineLatest, Observable, of } from 'rxjs';
 import { ActiveState, EntityState } from '@datorama/akita';
 
 interface OrganizationState extends EntityState<Organization>, ActiveState<string> { }
@@ -24,20 +24,41 @@ export class OrganizationService extends CollectionService<OrganizationState> {
 
   private app = getCurrentApp(this.routerQuery);
 
-  // Organization of the current logged in user
-  org: Organization; // @TODO #7273 if this.org$ was not already called, this will be undefined
+  // Organization of the current logged in user or undefined if user have no org
+  org: Organization; // For this to be defined, one of the observable below must be called before
   org$: Observable<Organization> = this.authService.profile$.pipe(
     switchMap(user => user?.orgId ? this.valueChanges(user.orgId) : of(undefined)),
     tap(org => this.org = org)
   );
 
-  // Users ids of the current logged in user's org
-  public userIds$ = this.org$.pipe(
-    map(org => org.userIds)
+  // Organization of the current logged in user
+  currentOrg$: Observable<Organization> = this.authService.profile$.pipe(
+    filter(user => !!user),
+    switchMap(user => user.orgId ? this.valueChanges(user.orgId) : of(undefined)),
+    filter(org => {
+      this.org = org;
+      return !!org;
+    })
+  );
+
+  // Org's members of the current logged in user
+  public members$ = this.currentOrg$.pipe(
+    map(org => org.userIds),
+    switchMap(userIds => this.userService.valueChanges(userIds))
+  );
+
+  // Org's members of the current logged in user with permissions
+  public membersWithRole$: Observable<OrganizationMember[]> = combineLatest([
+    this.members$,
+    this.permissionsService.permissions$
+  ]).pipe(
+    map(([members, permissions]) => {
+      // Get the role of each member in permissions.roles and add it to member.
+      return members.map(member => ({ ...member, role: permissions.roles[member.uid] }));
+    })
   );
 
   constructor(
-    private authQuery: AuthQuery,
     private functions: AngularFireFunctions,
     private userService: UserService,
     private permissionsService: PermissionsService,
@@ -86,7 +107,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   }
 
   /** Add a new organization */
-  public async addOrganization(organization: Partial<Organization>, createdFrom: App, user: User | PublicUser = this.authQuery.user): Promise<string> {
+  public async addOrganization(organization: Partial<Organization>, createdFrom: App, user: User | PublicUser = this.authService.profile): Promise<string> {
     const newOrganization = createOrganization({
       ...organization,
       _meta: createDocumentMeta({ createdBy: user.uid, createdFrom }),
@@ -127,7 +148,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
 
   public async getMembers(orgId: string): Promise<OrganizationMember[]> {
     const org = await this.getValue(orgId);
-    const promises = org.userIds.map(uid => this.userService.getUser(uid));
+    const promises = org.userIds.map(uid => this.userService.getValue(uid));
     const users = await Promise.all(promises);
     const role = await this.permissionsService.getValue(orgId);
     return users.map(u => createOrganizationMember(u, role.roles[u.uid] ? role.roles[u.uid] : undefined));
@@ -178,7 +199,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   }
 
   public isInWishlist(movieId: string): Observable<boolean> {
-    return this.org$.pipe(
+    return this.currentOrg$.pipe(
       map(org => org.wishlist.includes(movieId))
     );
   }

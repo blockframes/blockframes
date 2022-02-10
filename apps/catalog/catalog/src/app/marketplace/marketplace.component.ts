@@ -15,8 +15,9 @@ import { applicationUrl } from '@blockframes/utils/apps';
 export class MarketplaceComponent {
   public contractCount$: Observable<number>;
   public canAccessDeals = !this.orgService.org.appAccess.catalog.dashboard;
-  public org$ = this.orgService.org$;
+  public org$ = this.orgService.currentOrg$;
   public applicationUrl = applicationUrl;
+
   constructor(
     private bucketService: BucketService,
     private orgService: OrganizationService,

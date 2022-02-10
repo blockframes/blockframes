@@ -8,7 +8,7 @@ import { distinctUntilChanged } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { CmsPage } from '@blockframes/admin/cms/template';
-import { AuthQuery, AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/+state';
 import { createPreferences } from '@blockframes/user/+state/user.model';
 
 // Material
@@ -41,7 +41,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private dynTitle: DynamicTitleService,
     private db: AngularFirestore,
     private dialog: MatDialog,
-    private authQuery: AuthQuery,
     private authService: AuthService,
     private orgService: OrganizationService
   ) { }
@@ -52,8 +51,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
       distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
     );
 
-    if (this.authQuery.user.preferences) return;
-    const org = await this.orgService.getValue(this.authQuery.user.orgId);
+    if (this.authService.profile.preferences) return;
+    const org = await this.orgService.getValue(this.authService.profile.orgId);
     if (canHavePreferences(org, 'festival')) {
       const preferences = createPreferences();
       this.authService.update({ preferences });

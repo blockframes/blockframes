@@ -41,7 +41,7 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    const allMoviesFromOrg$ = this.orgService.org$.pipe(
+    const allMoviesFromOrg$ = this.orgService.currentOrg$.pipe(
       switchMap(({ id }) => this.movieService.valueChanges(fromOrg(id))),
       shareReplay({ refCount: true, bufferSize: 1 }),
       map(titles => titles.filter(title => title.app[this.app].access))

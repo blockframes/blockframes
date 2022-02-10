@@ -2,7 +2,6 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserRole, PermissionsService } from '../../../permissions/+state';
-import { UserQuery } from '@blockframes/user/+state/user.query';
 import { InvitationService } from '@blockframes/invitation/+state/invitation.service';
 import { Invitation } from '@blockframes/invitation/+state/invitation.model';
 import { OrganizationMember } from '@blockframes/user/+state/user.model';
@@ -35,12 +34,11 @@ export class MemberComponent implements OnInit {
     private snackBar: MatSnackBar,
     private invitationService: InvitationService,
     private permissionService: PermissionsService,
-    private userQuery: UserQuery,
     private orgService: OrganizationService,
   ) { }
 
   ngOnInit() {
-    this.members$ = this.userQuery.membersWithRole$;
+    this.members$ = this.orgService.membersWithRole$;
 
     this.isAdmin$ = this.permissionService.isAdmin$;
     this.isSuperAdmin$ = this.permissionService.isSuperAdmin$;

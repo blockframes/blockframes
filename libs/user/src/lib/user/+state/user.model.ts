@@ -1,3 +1,4 @@
+import { createStorageFile } from "@blockframes/media/+state/media.firestore";
 import { UserRole } from "@blockframes/permissions/types";
 import { User, PublicUser, createPublicUser, Preferences } from "./user.firestore";
 export * from './user.firestore';
@@ -22,4 +23,11 @@ export function createPreferences(params: Partial<Preferences> = {}): Preference
     genres: [],
     ...params
   };
+}
+
+export function createUser(user: Partial<User> = {}) {
+  return {
+    ...user,
+    avatar: createStorageFile(user.avatar)
+  } as User;
 }

@@ -3,9 +3,9 @@ import { Meeting, EventBase, Screening, EventMeta, MeetingAttendee, AttendeeStat
 import { toDate } from '@blockframes/utils/helpers';
 import { Movie } from '@blockframes/movie/+state';
 import { Organization } from '@blockframes/organization/+state';
-import { User } from '@blockframes/auth/+state';
 import type firebase from 'firebase';
 import { AnonymousCredentials } from '@blockframes/auth/+state/auth.model';
+import { User } from '@blockframes/user/+state/user.model';
 type Timestamp = firebase.firestore.Timestamp;
 
 // Event

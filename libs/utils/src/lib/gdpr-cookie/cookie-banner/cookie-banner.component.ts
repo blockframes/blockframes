@@ -6,7 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { PrivacyPolicyComponent } from '@blockframes/auth/components/privacy-policy/privacy-policy.component';
 import { CookieDialogComponent } from '../cookie-dialog/cookie-dialog.component';
 import { GDPRService } from '../gdpr-service/gdpr.service'
-import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { AuthService } from '@blockframes/auth/+state';
 
 @Component({
   selector: 'cookie-banner',
@@ -22,9 +22,9 @@ export class CookieBannerComponent implements OnInit {
     private dialog: MatDialog,
     private cdr: ChangeDetectorRef,
     private gdpr: GDPRService,
-    private routerQuery: RouterQuery,
+    private authService: AuthService,
     @Inject(DOCUMENT) private document: Document
-  ) {}
+  ) { }
 
   ngOnInit() {
     const cookieString = this.document.cookie;
@@ -40,7 +40,7 @@ export class CookieBannerComponent implements OnInit {
 
   public acceptCookies() {
     this.confirmCookies();
-    this.gdpr.enableIntercom(true);
+    this.gdpr.enableIntercom(this.authService.profile, true);
     this.gdpr.enableYandex(true);
   }
 
@@ -49,7 +49,7 @@ export class CookieBannerComponent implements OnInit {
     dialogRef.afterClosed().subscribe(settings => {
       if (settings) {
         this.confirmCookies();
-        this.gdpr.enableIntercom(settings.intercom);
+        this.gdpr.enableIntercom(this.authService.profile, settings.intercom);
         this.gdpr.enableYandex(settings.yandex);
       }
     })
