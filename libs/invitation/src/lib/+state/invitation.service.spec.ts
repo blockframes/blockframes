@@ -1,6 +1,6 @@
 ﻿import { TestBed } from '@angular/core/testing';
 import { InvitationService } from './invitation.service';
-import { AuthService, createUser } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/+state';
 import { AngularFireModule } from '@angular/fire';
 import { toDate } from '@blockframes/utils/helpers';
 import { SETTINGS, AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestore';
@@ -10,6 +10,7 @@ import { createInvitation, InvitationDocument } from './invitation.firestore';
 import firebase from 'firebase/app';
 import { Observable } from 'rxjs';
 import { UserService } from '@blockframes/user/+state/user.service';
+import { createUser } from '@blockframes/user/+state/user.model';
 
 class InjectedAuthService {
   uid = 'userId';
