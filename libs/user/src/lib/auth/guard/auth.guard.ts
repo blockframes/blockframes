@@ -41,7 +41,6 @@ export class AuthGuard implements CanActivate, CanDeactivate<unknown> {
 
   canDeactivate() {
     this.sub?.unsubscribe();
-    delete this.sub;
     return true;
   }
 }
