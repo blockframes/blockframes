@@ -1,6 +1,6 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { App } from '@blockframes/utils/apps';
+import { App, getCurrentApp } from '@blockframes/utils/apps';
 import { ThemeService } from '@blockframes/ui/theme/theme.service';
 
 const appLogos: Record<App | 'crm', string> = {
@@ -16,17 +16,12 @@ const appLogos: Record<App | 'crm', string> = {
   templateUrl: './app-logo.component.html',
   styleUrls: ['./app-logo.component.scss']
 })
-export class AppLogoComponent implements OnInit {
-  @Input() app?: string;
-  public imageLogo: string;
+export class AppLogoComponent {
+  @Input() app = getCurrentApp(this.routerQuery);
+  public appLogos = appLogos;
 
   constructor(
     private routerQuery: RouterQuery,
     public theme: ThemeService
   ) {}
-
-  ngOnInit() {
-    const appName = this.app ? this.app : this.routerQuery.getData<string>('app');
-    this.imageLogo = appLogos[appName];
-  }
 }

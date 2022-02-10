@@ -1,5 +1,5 @@
 // Angular
-import { Component, ChangeDetectionStrategy, ViewChild, AfterViewInit, OnDestroy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { FormControl } from '@angular/forms';
@@ -15,20 +15,34 @@ import { NotificationService } from '@blockframes/notification/+state';
 // RxJs
 import { Observable, Subscription } from 'rxjs';
 import { filter, map, shareReplay } from 'rxjs/operators';
+import { App, applicationUrl, getCurrentApp } from '@blockframes/utils/apps';
 
+interface AppBridge {
+  text: string;
+  link: string;
+}
+type BridgeRecord = Partial<Record<App, AppBridge>>;
 @Component({
   selector: 'layout-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DashboardComponent implements AfterViewInit, OnDestroy, OnInit {
+export class DashboardComponent implements AfterViewInit, OnDestroy {
   private sub: Subscription;
   public searchCtrl: FormControl = new FormControl('');
   public notificationCount$ = this.notificationService.myNotificationsCount$;
-  public appName: string;
-  public appBridgeButtonText: string;
-  public appBridgeButtonLink: string;
+  public currentApp = getCurrentApp(this.routerQuery);
+  public appBridge: BridgeRecord = {
+    catalog: {
+      text: 'Promote Your Line-up',
+      link: applicationUrl.festival,
+    },
+    festival: {
+      text: 'Sell Content',
+      link: applicationUrl.catalog,
+    }
+  }
 
   public invitationCount$ = this.invitationService.myInvitations$.pipe(
     map(invitations => invitations.filter(invitation => invitation.status === 'pending').length)
@@ -55,10 +69,6 @@ export class DashboardComponent implements AfterViewInit, OnDestroy, OnInit {
     private routerQuery: RouterQuery,
   ) { }
 
-  ngOnInit() {
-    this.appBridgeButtonSetup()
-  }
-
   ngAfterViewInit() {
     // https://github.com/angular/components/issues/4280
     this.sub = this.router.events.pipe(
@@ -68,17 +78,5 @@ export class DashboardComponent implements AfterViewInit, OnDestroy, OnInit {
 
   ngOnDestroy() {
     if (this.sub) { this.sub.unsubscribe(); }
-  }
-
-  appBridgeButtonSetup() {
-    this.appName = this.routerQuery.getData<string>('app');
-
-    if (this.appName === 'festival') {
-      this.appBridgeButtonText = 'Sell Content';
-      this.appBridgeButtonLink = 'https://www.archipelcontent.com/';
-    } else if (this.appName === 'catalog') {
-      this.appBridgeButtonText = 'Promote Your Line-up';
-      this.appBridgeButtonLink = 'https://www.archipelmarket.com/';
-    }
   }
 }
