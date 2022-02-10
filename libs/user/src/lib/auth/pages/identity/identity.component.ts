@@ -19,6 +19,7 @@ import { debounceTime } from 'rxjs/internal/operators/debounceTime';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { DifferentPasswordStateMatcher, RepeatPasswordStateMatcher } from '@blockframes/utils/form/matchers';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'auth-identity',
@@ -302,7 +303,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
     if (pendingInvitation) {
       // Accept the invitation from the organization.
       await this.invitationService.update(pendingInvitation.id, { status: 'accepted' });
-      this.subs.push(this.authService.profile$.subscribe(profile => { if (profile.orgId) this.router.navigate(['/c/o']); }));
+      this.subs.push(this.authService.profile$.pipe(filter(profile => !!profile.orgId)).subscribe(() => this.router.navigate(['/c/o'])));
     } else if (this.authService.profile.orgId) {
       // User already have an orgId (created from CRM)
       this.router.navigate(['/c/o']);
