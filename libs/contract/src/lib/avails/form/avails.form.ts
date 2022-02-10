@@ -13,10 +13,8 @@ function createDurationControl(duration: Partial<{ from: Date, to: Date }> = {})
 
   const date = new Date(); //--/--/--:--:--:--
 
-  // only the year, month and date are useful.
-  const from = duration.from ?? new Date(date.getFullYear(), date.getMonth(), date.getDate()); //--/--/--:0:0:0:0,
-  // only the year, month and date are useful.
-  const to = duration.to ?? new Date(date.getFullYear() + 1, date.getMonth(), date.getDate()); // --/--/--:0:0:0:0,
+  const from = duration.from ?? new Date(date.getFullYear(), date.getMonth(), date.getDate());//--/--/--:0:0:0:0
+  const to = duration.to ?? new Date(date.getFullYear() + 1, date.getMonth(), date.getDate());//--/--/--:0:0:0:0
 
 
   const fromValidators = [compareDates('from', 'to', 'from'), isDateInFuture, Validators.required];
