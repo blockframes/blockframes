@@ -1,7 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, ViewEncapsulation  } from '@angular/core';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { UserService } from '@blockframes/user/+state';
-import { User } from '@blockframes/auth/+state';
+import { User, UserService } from '@blockframes/user/+state';
 import { Observable } from 'rxjs';
 import { switchMap, } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
@@ -38,7 +37,7 @@ export class MeetingComponent implements OnInit {
   ngOnInit(): void {
     this.dynTitle.setPageTitle('Add an event', 'Meeting info');
 
-    this.members$ = this.orgService.org$.pipe(
+    this.members$ = this.orgService.currentOrg$.pipe(
       switchMap(org => this.userService.valueChanges(org.userIds))
     )
   }

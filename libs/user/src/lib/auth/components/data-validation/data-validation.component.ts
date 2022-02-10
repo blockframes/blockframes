@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, OnInit, Input, Optional } from '@angular/core';
-import { AuthQuery } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/+state';
 import { Organization } from '@blockframes/organization/+state';
 import { getCurrentApp, appName, getOrgModuleAccess } from '@blockframes/utils/apps';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
@@ -8,6 +8,7 @@ import { Intercom } from 'ng-intercom';
 import { hasDenomination, hasDisplayName } from '@blockframes/utils/helpers';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'auth-data-validation',
@@ -30,10 +31,10 @@ export class AuthDataValidationComponent implements OnInit {
   public emailValidate$: Observable<boolean>;
   public orgApproval = false;
 
-  public user = this.query.user;
+  public user = this.authService.profile;
 
   constructor(
-    private query: AuthQuery,
+    private authService: AuthService,
     private routerQuery: RouterQuery,
     private functions: AngularFireFunctions,
     private snackbar: MatSnackBar,
@@ -46,7 +47,7 @@ export class AuthDataValidationComponent implements OnInit {
       this.profileData = true;
     }
 
-    this.emailValidate$ = this.query.hasVerifiedEmail$;
+    this.emailValidate$ = this.authService.user$.pipe(map(auth => auth.emailVerified));
   }
 
   openIntercom(): void {
@@ -59,7 +60,7 @@ export class AuthDataValidationComponent implements OnInit {
 
   async resendEmailVerification() {
     const snack = this.snackbar.open('Sending verification email...');
-    const publicUser = this.query.user;
+    const publicUser = this.authService.profile;
     const app = getCurrentApp(this.routerQuery);
 
     try {

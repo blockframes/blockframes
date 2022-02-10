@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, Router } from '@angular/router';
-import { AuthQuery } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/+state';
 import { ContractService } from '@blockframes/contract/contract/+state';
 import { map } from 'rxjs/operators';
 import { centralOrgId } from '@env';
@@ -9,7 +9,7 @@ import { centralOrgId } from '@env';
 export class CatalogSaleShellGuard implements CanActivate {
   constructor(
     private router: Router,
-    private authQuery: AuthQuery,
+    private authService: AuthService,
     private contractService: ContractService,
   ) { }
 
@@ -19,7 +19,7 @@ export class CatalogSaleShellGuard implements CanActivate {
     if (!saleId) this.router.parseUrl('c/o/dashboard/sales');
 
     return this.contractService.valueChanges(saleId).pipe(
-      map(sale => sale.stakeholders.includes(this.authQuery.orgId)),
+      map(sale => sale.stakeholders.includes(this.authService.profile.orgId)),
       map(isStakeholder => isStakeholder || this.router.parseUrl('c/o/dashboard/sales')),
     );
   }

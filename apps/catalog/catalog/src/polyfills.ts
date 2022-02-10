@@ -71,30 +71,25 @@ import 'zone.js'; // Included with Angular CLI.
  * ALGOLIA CONFIG
  */
 (window as any).process = {
-    env: { DEBUG: undefined },
+  env: { DEBUG: undefined },
 };
-
-/***************************************************************************************************
- * ETHERS
- */
-(window as any).global = window;
 
 /***************************************************************************************************
 * allSettled
 */
 if (!(Promise as any).allSettled) {
-    (Promise as any).allSettled = (promises: Promise<any>[]) =>
-      Promise.all(
-        promises.map(promise =>
-          promise
-            .then(value => ({
-              status: 'fulfilled',
-              value,
-            }))
-            .catch(reason => ({
-              status: 'rejected',
-              reason,
-            }))
-        )
+  (Promise as any).allSettled = (promises: Promise<any>[]) =>
+    Promise.all(
+      promises.map(promise =>
+        promise
+          .then(value => ({
+            status: 'fulfilled',
+            value,
+          }))
+          .catch(reason => ({
+            status: 'rejected',
+            reason,
+          }))
+      )
     );
-  }
+}

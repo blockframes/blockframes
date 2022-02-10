@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { User } from '@blockframes/auth/+state/auth.store';
+import { User } from '@blockframes/user/+state/user.model';
 import { UserCrmForm } from '@blockframes/admin/crm/forms/user-crm.form';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { OrganizationService, Organization } from '@blockframes/organization/+state';
@@ -57,7 +57,7 @@ export class UserComponent implements OnInit {
   async ngOnInit() {
     this.route.params.subscribe(async params => {
       this.userId = params.userId;
-      this.user = await this.userService.getUser(this.userId);
+      this.user = await this.userService.getValue(this.userId);
       this.user$ = this.userService.valueChanges(this.userId);
       if (this.user.orgId) {
         this.originalOrgValue = this.user.orgId;
@@ -128,10 +128,10 @@ export class UserComponent implements OnInit {
       position
     };
 
-    await this.userService.updateById(this.user.uid, update);
+    await this.userService.update(this.user.uid, update);
     this.originalOrgValue = orgId;
 
-    this.user = await this.userService.getUser(this.userId);
+    this.user = await this.userService.getValue(this.userId);
     this.cdRef.markForCheck();
 
     this.snackBar.open('Informations updated !', 'close', { duration: 5000 });

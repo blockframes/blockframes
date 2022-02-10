@@ -10,9 +10,7 @@ export const e2eMode = false;
 
 export {
   production,
-  factoryContract,
   backupBucket,
-  relayer,
   appUrl,
   sentryEnv,
   sentryDsn,
@@ -27,7 +25,6 @@ import { mockConfigIfNeeded } from '@blockframes/firebase-utils';
 export const { projectId, storageBucket } = firebase();
 
 export const sendgridAPIKey = mockConfigIfNeeded('sendgrid', 'api_key');
-export const mnemonic = mockConfigIfNeeded('relayer', 'mnemonic');
 
 export const jwplayerSecret = mockConfigIfNeeded('jwplayer', 'secret');
 export const jwplayerKey = mockConfigIfNeeded('jwplayer', 'key');

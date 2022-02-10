@@ -6,13 +6,13 @@ import { Observable, Subscription } from 'rxjs';
 import { distinctUntilChanged, filter } from 'rxjs/operators';
 
 // blockframes
-import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { Organization } from '@blockframes/organization/+state/organization.model';
-import { User } from '@blockframes/auth/+state/auth.store';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { getCurrentApp } from '@blockframes/utils/apps';
 import { canHavePreferences } from '@blockframes/user/+state/user.utils';
 import { OrganizationService } from '@blockframes/organization/+state';
+import { AuthService } from '@blockframes/auth/+state';
+import { User } from '@blockframes/user/+state/user.model';
 
 const navLinks = [
   {
@@ -44,17 +44,17 @@ export class ProfileViewComponent implements OnInit, OnDestroy {
   private sub: Subscription;
 
   constructor(
-    private authQuery: AuthQuery,
     private dynTitle: DynamicTitleService,
     private location: Location,
     private orgService: OrganizationService,
     private routerQuery: RouterQuery,
+    private authService: AuthService,
     router: Router
   ) {
 
     this.dynTitle.setPageTitle(`
-    ${this.authQuery.getValue().profile.lastName}
-    ${this.authQuery.getValue().profile.firstName}`,
+    ${this.authService.profile.lastName}
+    ${this.authService.profile.firstName}`,
       `${this.orgService.org.denomination.full}`);
 
     this.sub = router.events.pipe(
@@ -64,8 +64,8 @@ export class ProfileViewComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.user$ = this.authQuery.user$;
-    this.organization$ = this.orgService.org$;
+    this.user$ = this.authService.profile$;
+    this.organization$ = this.orgService.currentOrg$;
 
     const hasPreferences = this.navLinks.some(link => link.path === 'preferences');
     if (hasPreferences) return;

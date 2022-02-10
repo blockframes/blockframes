@@ -49,7 +49,7 @@ export class ListComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.titles$ = this.orgService.org$.pipe(
+    this.titles$ = this.orgService.currentOrg$.pipe(
       switchMap(org => this.movieService.valueChanges(fromOrg(org.id)).pipe(map(movies => movies.map(m => m.id)))),
       switchMap(movieIds => this.campaignService.queryMoviesCampaign(movieIds)),
       map(movies => movies.filter(movie => movie.app.financiers.access)),
@@ -61,7 +61,7 @@ export class ListComponent implements OnInit {
       })
     );
 
-    this.titleCount$ = this.orgService.org$.pipe(
+    this.titleCount$ = this.orgService.currentOrg$.pipe(
       switchMap(org => this.movieService.valueChanges(fromOrg(org.id)).pipe(map(movies => movies.map(m => m.id)))),
       switchMap(movieIds => this.campaignService.queryMoviesCampaign(movieIds)),
       map(movies => movies.filter(movie => movie.app.financiers.access)),

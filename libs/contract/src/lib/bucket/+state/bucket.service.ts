@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { centralOrgId } from '@env';
 import { switchMap, take } from 'rxjs/operators';
-import { AuthQuery } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/+state';
 import { createOfferId } from '@blockframes/utils/utils';
 import { MovieCurrency } from '@blockframes/utils/static-model';
 import { AvailsFilter } from '@blockframes/contract/avails/avails';
@@ -22,7 +22,7 @@ interface BucketState extends EntityState<Bucket>, ActiveState<string> { }
 @CollectionConfig({ path: 'buckets' })
 export class BucketService extends CollectionService<BucketState> {
   useMemorization = true;
-  active$ = this.orgService.org$.pipe(
+  active$ = this.orgService.currentOrg$.pipe(
     switchMap(org => this.valueChanges(org.id)),
   );
 
@@ -31,7 +31,7 @@ export class BucketService extends CollectionService<BucketState> {
     private termService: TermService,
     private offerService: OfferService,
     private contractService: ContractService,
-    private authQuery: AuthQuery,
+    private authService: AuthService,
   ) {
     super();
   }
@@ -61,14 +61,14 @@ export class BucketService extends CollectionService<BucketState> {
     await this.update(orgId, {
       specificity,
       delivery,
-      uid: this.authQuery.userId  // Specify who is updating the bucket (this is used in the backend)
+      uid: this.authService.uid  // Specify who is updating the bucket (this is used in the backend)
     });
 
     // Create offer
     const offerId = createOfferId(orgName);
     await this.offerService.add({
       buyerId: orgId,
-      buyerUserId: this.authQuery.userId,
+      buyerUserId: this.authService.uid,
       specificity,
       status: 'pending',
       currency,
@@ -84,7 +84,7 @@ export class BucketService extends CollectionService<BucketState> {
 
       const commonFields = {
         buyerId: orgId,
-        buyerUserId: this.authQuery.userId,
+        buyerUserId: this.authService.uid,
         sellerId: centralOrgId.catalog,
         stakeholders: [...parentContract.stakeholders, orgId],
       };

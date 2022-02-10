@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { AuthQuery, AuthService } from "@blockframes/auth/+state";
+import { AuthService } from "@blockframes/auth/+state";
 import { PreferencesForm } from "@blockframes/auth/forms/preferences/preferences.form";
 
 @Component({
@@ -10,10 +10,9 @@ import { PreferencesForm } from "@blockframes/auth/forms/preferences/preferences
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PreferencesComponent {
-  form = new PreferencesForm(this.authQuery.user.preferences);
+  form = new PreferencesForm(this.authService.profile.preferences);
 
   constructor(
-    private authQuery: AuthQuery,
     private authService: AuthService,
     private snackbar: MatSnackBar
   ) { }

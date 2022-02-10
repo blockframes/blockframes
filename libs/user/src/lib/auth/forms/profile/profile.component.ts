@@ -1,9 +1,6 @@
-import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { ProfileForm } from '@blockframes/auth/forms/profile-edit.form';
-import { AuthQuery } from '@blockframes/auth/+state';
-import { AngularFireFunctions } from '@angular/fire/functions';
-import { getCurrentApp } from '@blockframes/utils/apps';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { AuthService } from '@blockframes/auth/+state';
 
 @Component({
   selector: '[form] auth-form-profile',
@@ -12,10 +9,10 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProfileFormComponent {
-  public uid = this.authQuery.userId;
+  public uid = this.authService.uid;
 
   @Input() form: ProfileForm;
 
-  constructor(public authQuery: AuthQuery) {}
+  constructor(public authService: AuthService) {}
 
 }
