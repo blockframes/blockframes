@@ -41,9 +41,9 @@ export class IdentityComponent implements OnInit, OnDestroy {
   public existingUser = false;
   public passwordsMatcher = new RepeatPasswordStateMatcher('password', 'confirm');
   public currentPasswordMatch = new DifferentPasswordStateMatcher('generatedPassword', 'password');
-  
+
   private existingOrgId: string;
-  private sub: Subscription;
+  private subs: Subscription[] = [];
   private isAnonymous = false;
   private publicUser: PublicUser;
 
@@ -75,10 +75,10 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
     this.form.patchValue(identity);
 
-    this.sub = this.orgControl.valueChanges.subscribe(value => {
+    this.subs.push(this.orgControl.valueChanges.subscribe(value => {
       const error = value && this.existingOrgId === undefined ? {} : undefined
       this.orgControl.setErrors(error);
-    });
+    }));
 
     if (existingUserWithDisplayName) {
       // Updating user (already logged in and with display name setted) : user will only choose or create an org
@@ -97,7 +97,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
   }
 
   async ngOnDestroy() {
-    this.sub.unsubscribe();
+    this.subs.forEach(sub => sub.unsubscribe());
     // We created anonymous user but it was not transformed into real one
     if (this.isAnonymous && !this.publicUser) {
       await this.authService.deleteAnonymousUser();
@@ -288,7 +288,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
     if (this.form.get('lastName').enabled && this.form.get('firstName').enabled) {
       const privacyPolicy = await this.authService.getPrivacyPolicy();
       await this.authService.update({
-        _meta: createDocumentMeta({ createdFrom: this.app }), // @TODO #7303 emailVerified: this.query.user._meta.emailVerified but what if only this.existingUser === true ?
+        _meta: createDocumentMeta({ createdFrom: this.app }),
         firstName,
         lastName,
         privacyPolicy: privacyPolicy,
@@ -302,7 +302,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
     if (pendingInvitation) {
       // Accept the invitation from the organization.
       await this.invitationService.update(pendingInvitation.id, { status: 'accepted' });
-      this.router.navigate(['/c/o']);
+      this.subs.push(this.authService.profile$.subscribe(profile => { if (profile.orgId) this.router.navigate(['/c/o']); }));
     } else if (this.authService.profile.orgId) {
       // User already have an orgId (created from CRM)
       this.router.navigate(['/c/o']);

@@ -102,8 +102,8 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
       return true;
     }
 
-    // If userId = null, that means the user has disconnected. If she/he wants to logout, we don't show the confirm message
-    if (this.authService.uid === null) {
+    // If userId is undefined, that means the user has disconnected. If she/he wants to logout, we don't show the confirm message
+    if (this.authService.uid === undefined) {
       this.twilioService.disconnect();
       return true;
     } else {

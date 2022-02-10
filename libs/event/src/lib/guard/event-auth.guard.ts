@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { switchMap, catchError, take, filter } from 'rxjs/operators';
+import { switchMap, catchError, take, filter, tap } from 'rxjs/operators';
 import { hasDisplayName } from '@blockframes/utils/helpers';
 import { AuthService } from '@blockframes/auth/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
@@ -24,10 +24,6 @@ export class EventAuthGuard implements CanActivate, CanDeactivate<unknown> {
 
         if (authState.isAnonymous) return true;
 
-        if (!this.sub) {
-          this.sub = this.authService.user$.pipe(filter(u => !u)).subscribe(() => this.router.navigate(['/']));
-        }
-
         const validUser = hasDisplayName(authState.profile) && authState.emailVerified && authState.profile.orgId;
         if (!validUser) return this.router.createUrlTree(['/auth/identity']);
 
@@ -36,31 +32,23 @@ export class EventAuthGuard implements CanActivate, CanDeactivate<unknown> {
 
         return true;
       }),
-      catchError(() => this.router.navigate(['/']))
+      catchError(() => this.router.navigate(['/'])),
+      tap(canActivate => {
+        if (canActivate === true) this.redirectOnSignout();
+      })
     )
+  }
+
+  redirectOnSignout() {
+    this.sub = this.authService.user$.pipe(
+      filter(user => !user)
+    ).subscribe(() => this.router.navigate(['/']));
   }
 
   canDeactivate() {
     this.sub?.unsubscribe();
     delete this.sub;
     return true;
-
-    // @TODO #7286 #7273 test :
-    /**
-     * return this.service.auth$.pipe(
-      map(),
-      catchError(),
-      tap(canActivate => {
-        if (canActivate === true) this.redirectOnSignout();
-      })
-    )
-
-    redirectOnSignout() }
-      this.sub = this.service.authState.pipe(
-        filter(user => !user)
-      ).subscribe(() => this.router.naviguate(['/']));
-    }
-     */
   }
 
 }
