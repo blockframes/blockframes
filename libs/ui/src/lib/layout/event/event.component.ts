@@ -11,12 +11,12 @@ import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
 // Blockframes
-import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { NotificationService } from '@blockframes/notification/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { MovieService, Movie } from '@blockframes/movie/+state'
 import { getCurrentApp, App } from '@blockframes/utils/apps';
+import { AuthService } from '@blockframes/auth/+state';
 
 @Component({
   selector: 'layout-event',
@@ -26,7 +26,7 @@ import { getCurrentApp, App } from '@blockframes/utils/apps';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EventComponent implements OnInit {
-  public user$ = this.authQuery.select('profile');
+  public user$ = this.authService.profile$;
   public wishlistCount$: Observable<number>;
   public notificationCount$ = this.notificationService.myNotificationsCount$;
   public invitationCount$ = this.invitationService.myInvitations$.pipe(
@@ -38,7 +38,7 @@ export class EventComponent implements OnInit {
   
   constructor(
     private orgService: OrganizationService,
-    private authQuery: AuthQuery,
+    private authService: AuthService,
     private invitationService: InvitationService,
     private notificationService: NotificationService,
     private movieService: MovieService,
@@ -46,7 +46,7 @@ export class EventComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.wishlistCount$ = this.orgService.org$.pipe(
+    this.wishlistCount$ = this.orgService.currentOrg$.pipe(
       map(org => org?.wishlist ? org.wishlist : []),
       switchMap(movieIds => this.movieService.getValue(movieIds)),
       map((movies: Movie[]) => movies.filter(filterMovieByAppAccess(getCurrentApp(this.routerQuery))).length)

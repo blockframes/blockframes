@@ -1,44 +1,37 @@
 import { Injectable } from '@angular/core';
-import { AuthQuery, AuthService, AuthState } from '../+state';
-import { switchMap, map, catchError } from 'rxjs/operators';
-import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
-import { AngularFireAuth } from '@angular/fire/auth';
+import { AuthService } from '../+state';
+import { map, } from 'rxjs/operators';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { getOrgModuleAccess, getCurrentApp, App } from '@blockframes/utils/apps';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { combineLatest } from 'rxjs';
+import { CanActivate, Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
-@CollectionGuardConfig({ awaitSync: true })
-export class NoAuthGuard extends CollectionGuard<AuthState> {
+export class NoAuthGuard implements CanActivate {
   constructor(
-    service: AuthService,
+    private authService: AuthService,
     private orgService: OrganizationService,
-    private query: AuthQuery,
-    private afAuth: AngularFireAuth,
     private routerQuery: RouterQuery,
-  ) {
-    super(service);
-  }
+    private router: Router,
+  ) {}
 
-  sync() {
-    return this.afAuth.authState.pipe(
-      switchMap(userAuth => {
-        if (!userAuth || userAuth.isAnonymous) { return Promise.resolve(true); }
-        return this.service.sync().pipe(
-          catchError(() => Promise.resolve(true)),
-          map(() => this.query.orgId),
-          switchMap(orgId => orgId ? this.orgService.getValue(orgId) : new Promise<false>(r => r(false))),
-          map(org => {
-            if (!org) { return '/auth/identity'; }
-            const app = getCurrentApp(this.routerQuery) as App | 'crm';
-            if (app === 'crm') {
-              return '/c/o/dashboard/crm';
-            } else {
-              const [moduleAccess = 'dashboard'] = getOrgModuleAccess(org, app);
-              return `/c/o/${moduleAccess}/home`;
-            }
-          })
-        );
+  canActivate() {
+    return combineLatest([
+      this.authService.auth$,
+      this.orgService.org$
+    ]).pipe(
+      map(([authState, org]) => {
+        if (!authState || authState.isAnonymous) return true;
+
+        if (!org) return this.router.createUrlTree(['/auth/identity']);
+
+        const app = getCurrentApp(this.routerQuery) as App | 'crm';
+        if (app === 'crm') return this.router.createUrlTree(['/c/o/dashboard/crm']);
+
+        const [moduleAccess = 'dashboard'] = getOrgModuleAccess(org, app);
+        return this.router.createUrlTree([`/c/o/${moduleAccess}/home`]);
+
       })
     );
   }

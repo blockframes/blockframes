@@ -547,7 +547,19 @@
           },
           "configurations": {
             "emulator": {
-              "devServerTarget": "catalog:serve:emulator"
+              "devServerTarget": "catalog:serve:emulator",
+              "env": {
+                "notice": "Env is being read",
+                "emulator": true
+              }
+            },
+            "emulator-incognito": {
+              "devServerTarget": "catalog:serve:emulator",
+              "env": {
+                "notice": "Env is being read",
+                "emulator": true,
+                "incognito": true
+              }
             },
             "production": {
               "devServerTarget": "catalog:serve:production"
@@ -816,6 +828,14 @@
               "env": {
                 "notice": "Env is being read",
                 "emulator": true
+              }
+            },
+            "emulator-incognito": {
+              "devServerTarget": "festival:serve:emulator",
+              "env": {
+                "notice": "Env is being read",
+                "emulator": true,
+                "incognito": true
               }
             },
             "production": {
@@ -1180,7 +1200,19 @@
           },
           "configurations": {
             "emulator": {
-              "devServerTarget": "crm:serve:emulator"
+              "devServerTarget": "crm:serve:emulator",
+              "env": {
+                "notice": "Env is being read",
+                "emulator": true
+              }
+            },
+            "emulator-incognito": {
+              "devServerTarget": "crm:serve:emulator",
+              "env": {
+                "notice": "Env is being read",
+                "emulator": true,
+                "incognito": true
+              }
             },
             "production": {
               "devServerTarget": "crm:serve:production"
@@ -1438,7 +1470,19 @@
           },
           "configurations": {
             "emulator": {
-              "devServerTarget": "financiers:serve:emulator"
+              "devServerTarget": "financiers:serve:emulator",
+              "env": {
+                "notice": "Env is being read",
+                "emulator": true
+              }
+            },
+            "emulator-incognito": {
+              "devServerTarget": "financiers:serve:emulator",
+              "env": {
+                "notice": "Env is being read",
+                "emulator": true,
+                "incognito": true
+              }
             },
             "production": {
               "devServerTarget": "financiers:serve:production"
@@ -1660,7 +1704,19 @@
           },
           "configurations": {
             "emulator": {
-              "devServerTarget": "cms:serve:emulator"
+              "devServerTarget": "cms:serve:emulator",
+              "env": {
+                "notice": "Env is being read",
+                "emulator": true
+              }
+            },
+            "emulator-incognito": {
+              "devServerTarget": "cms:serve:emulator",
+              "env": {
+                "notice": "Env is being read",
+                "emulator": true,
+                "incognito": true
+              }
             },
             "production": {
               "devServerTarget": "cms:serve:production"

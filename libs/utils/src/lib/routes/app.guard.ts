@@ -8,7 +8,7 @@ import { OrganizationService } from '@blockframes/organization/+state';
 @Injectable({ providedIn: 'root' })
 export class AppGuard implements CanActivate {
   constructor(
-    protected router: Router,
+    private router: Router,
     private orgService: OrganizationService,
     private snackBar: MatSnackBar,
     private routerQuery: RouterQuery) { }

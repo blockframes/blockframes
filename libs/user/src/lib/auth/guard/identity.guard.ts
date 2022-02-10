@@ -1,74 +1,58 @@
 import { Injectable } from '@angular/core';
-import { AuthQuery, AuthService, AuthState } from '../+state';
-import { catchError, map, switchMap } from 'rxjs/operators';
-import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
-import { AngularFireAuth } from '@angular/fire/auth';
-import { of } from 'rxjs';
+import { AuthService } from '../+state';
+import { switchMap } from 'rxjs/operators';
+import { combineLatest } from 'rxjs';
 import { hasDisplayName } from '@blockframes/utils/helpers';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { InvitationService } from '@blockframes/invitation/+state';
+import { CanActivate, Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
-@CollectionGuardConfig({ awaitSync: true })
-export class IdentityGuard extends CollectionGuard<AuthState> {
+export class IdentityGuard implements CanActivate {
   constructor(
-    service: AuthService,
+    private authService: AuthService,
     private orgService: OrganizationService,
     private invitationService: InvitationService,
-    private afAuth: AngularFireAuth,
-    private query: AuthQuery,
-  ) {
-    super(service);
-  }
+    private router: Router,
+  ) { }
 
-  sync() {
-    return this.afAuth.authState.pipe(
-      switchMap(userAuth => {
-        if (!userAuth || userAuth.isAnonymous) {
-          return of(true);
+  canActivate() {
+    return combineLatest([
+      this.authService.auth$,
+      this.orgService.org$
+    ]).pipe(
+      switchMap(async ([authState, org]) => {
+        if (!authState || authState.isAnonymous) return true;
+
+        if (!authState.emailVerified) return this.router.createUrlTree(['c/organization/join-congratulations']);
+
+        if (!hasDisplayName(authState.profile)) return true;
+
+        if (authState.profile.orgId) {
+          if (!org) return true;
+
+          if (org.status === 'accepted') return this.router.createUrlTree(['c/o']);
+
+          return this.router.createUrlTree(['c/organization/create-congratulations']);
+        } else {
+          const requests = await this.invitationService.getValue(ref => ref.where('mode', '==', 'request')
+            .where('type', '==', 'joinOrganization')
+            .where('fromUser.uid', '==', authState.profile.uid));
+
+          if (requests.find(request => request.status === 'pending')) return this.router.createUrlTree(['c/organization/join-congratulations']);
+
+          if (requests.find(invitation => invitation.status === 'accepted')) return this.router.createUrlTree(['c/o']);
+
+          const invitations = await this.invitationService.getValue(ref => ref.where('mode', '==', 'invitation')
+            .where('type', '==', 'joinOrganization')
+            .where('toUser.uid', '==', authState.profile.uid));
+
+          if (invitations.find(invitation => invitation.status === 'accepted')) return this.router.createUrlTree(['c/o']);
+
+          return true;
         }
-        if (!userAuth.emailVerified) {
-          return of(this.router.navigate(['c/organization/join-congratulations']));
-        }
-        return this.service.sync().pipe(
-          catchError(() => Promise.resolve(true)),
-          map(() => this.query.user),
-          map(async user => {
-            if (!hasDisplayName(user)) { return true; }
-            if (user.orgId) {
-              const org = await this.orgService.getValue(user.orgId);
-              if (!org) {
-                return true;
-              }
-
-              if (org.status === 'accepted') {
-                return this.router.navigate(['c/o']);
-              } else {
-                return this.router.navigate(['c/organization/create-congratulations']);
-              }
-            } else {
-              const requests = await this.invitationService.getValue(ref => ref.where('mode', '==', 'request')
-                .where('type', '==', 'joinOrganization')
-                .where('fromUser.uid', '==', user.uid));
-              if (requests.find(request => request.status === 'pending')) {
-                return this.router.navigate(['c/organization/join-congratulations']);
-              } else if (requests.find(invitation => invitation.status === 'accepted')) {
-                return 'c/o';
-              } else {
-                const invitations = await this.invitationService.getValue(ref => ref.where('mode', '==', 'invitation')
-                  .where('type', '==', 'joinOrganization')
-                  .where('toUser.uid', '==', user.uid));
-
-                if (invitations.find(invitation => invitation.status === 'accepted')) {
-                  return 'c/o';
-                } else {
-                  return true;
-                }
-              }
-            }
-          }),
-        );
       })
-    );
+    )
   }
+
 }

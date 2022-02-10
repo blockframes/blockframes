@@ -1,63 +1,66 @@
 import { Injectable } from '@angular/core';
-import { map, switchMap, catchError, take } from 'rxjs/operators';
-import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
-import { AngularFireAuth } from '@angular/fire/auth';
+import { switchMap, catchError, take, filter } from 'rxjs/operators';
 import { hasDisplayName } from '@blockframes/utils/helpers';
-import { AuthQuery, AuthService, AuthState } from '@blockframes/auth/+state';
-import { of } from 'rxjs';
+import { AuthService } from '@blockframes/auth/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
+import { CanActivate, CanDeactivate, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-@CollectionGuardConfig({ awaitSync: true })
-export class EventAuthGuard extends CollectionGuard<AuthState> {
+export class EventAuthGuard implements CanActivate, CanDeactivate<unknown> {
+  private sub: Subscription;
   constructor(
-    service: AuthService,
-    private query: AuthQuery,
-    private afAuth: AngularFireAuth,
-    private orgService: OrganizationService
-  ) {
-    super(service);
+    private authService: AuthService,
+    private orgService: OrganizationService,
+    private router: Router,
+  ) { }
+
+  canActivate() {
+    return this.authService.auth$.pipe(
+      switchMap(async authState => {
+        if (!authState) return this.router.createUrlTree(['/']);
+
+        if (authState.isAnonymous) return true;
+
+        if (!this.sub) {
+          this.sub = this.authService.user$.pipe(filter(u => !u)).subscribe(() => this.router.navigate(['/']));
+        }
+
+        const validUser = hasDisplayName(authState.profile) && authState.emailVerified && authState.profile.orgId;
+        if (!validUser) return this.router.createUrlTree(['/auth/identity']);
+
+        const org = await this.orgService.currentOrg$.pipe(take(1)).toPromise();
+        if (org.status !== 'accepted') return this.router.createUrlTree(['/c/organization/create-congratulations']);
+
+        return true;
+      }),
+      catchError(() => this.router.navigate(['/']))
+    )
   }
 
-  sync() {
-    return this.afAuth.authState.pipe(
-      switchMap(userAuth => {
+  canDeactivate() {
+    this.sub?.unsubscribe();
+    delete this.sub;
+    return true;
 
-        if (!userAuth) return this.router.navigate(['/']);
-        if (userAuth.isAnonymous) return of(true);
-
-        return this.service.sync().pipe(
-          catchError(() => of('/')),
-          map(() => this.query.user),
-          switchMap(async user => {
-            // Check that onboarding is complete
-            const validUser = hasDisplayName(user) && userAuth.emailVerified && user.orgId;
-            if (!validUser) {
-              return this.router.navigate(['/auth/identity']);
-            }
-
-            // Check that org is valid
-            const org = await this.orgService.getValue(user.orgId);
-            if (org.status !== 'accepted') {
-              return this.router.navigate(['/c/organization/create-congratulations']);
-            }
-
-            /**
-             * If current user is not anonymous, we populate org on service 
-             * @TODO #7273 remove when we switch to ngfire
-             */
-            if (userAuth && !userAuth.isAnonymous) {
-              await this.orgService.org$.pipe(take(1)).toPromise();
-            }
-
-            // Everyting is ok
-            return true;
-          }),
-        );
+    // @TODO #7286 #7273 test :
+    /**
+     * return this.service.auth$.pipe(
+      map(),
+      catchError(),
+      tap(canActivate => {
+        if (canActivate === true) this.redirectOnSignout();
       })
-    );
+    )
+
+    redirectOnSignout() }
+      this.sub = this.service.authState.pipe(
+        filter(user => !user)
+      ).subscribe(() => this.router.naviguate(['/']));
+    }
+     */
   }
 
 }

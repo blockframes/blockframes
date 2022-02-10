@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AuthService } from '@blockframes/auth/+state';
 import { CookiesConsentForm } from '@blockframes/utils/gdpr-cookie/cookie-form/cookie.form';
 import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.service';
 
@@ -17,18 +18,19 @@ export class ProfileCookieComponent {
 
   constructor(
     private gdpr: GDPRService,
-    private snackbar: MatSnackBar
+    private snackbar: MatSnackBar,
+    private authService: AuthService
   ) {
     this.form = new CookiesConsentForm(gdpr.cookieConsent)
   }
-  
+
   update() {
     const settings = this.form.value;
 
     this.snackbar.open('Cookies updated.', 'close', { duration: 5000 });
 
     if (settings) {
-      this.gdpr.enableIntercom(settings.intercom);
+      this.gdpr.enableIntercom(this.authService.profile, settings.intercom);
       this.gdpr.enableYandex(settings.yandex);
     }
   }

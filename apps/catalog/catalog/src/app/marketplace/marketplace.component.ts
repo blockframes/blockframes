@@ -14,7 +14,7 @@ import { map } from 'rxjs/operators';
 export class MarketplaceComponent {
   public contractCount$: Observable<number>;
   public canAccessDeals = !this.orgService.org.appAccess.catalog.dashboard;
-  public org$ = this.orgService.org$;
+  public org$ = this.orgService.currentOrg$;
 
   constructor(
     private bucketService: BucketService,

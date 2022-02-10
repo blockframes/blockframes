@@ -1,29 +1,26 @@
 import { Injectable } from '@angular/core';
 import { OrganizationService } from '../+state';
 import { CanActivate, Router } from '@angular/router';
-import { CollectionGuardConfig } from 'akita-ng-fire';
 import { map } from 'rxjs/operators';
-import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { combineLatest } from 'rxjs';
+import { AuthService } from '@blockframes/auth/+state';
 
 @Injectable({ providedIn: 'root' })
-@CollectionGuardConfig({ awaitSync: true })
 export class OrganizationGuard implements CanActivate {
   constructor(
-    protected service: OrganizationService,
-    protected router: Router,
-    private authQuery: AuthQuery
+    private service: OrganizationService,
+    private router: Router,
+    private authService: AuthService
   ) { }
 
   canActivate() {
     return combineLatest([
-      this.authQuery.user$,
+      this.authService.profile$,
       this.service.org$
     ]).pipe(
       map(([user, org]) => {
         if (!user) return this.router.createUrlTree(['/']);
-        if (!user.orgId) return this.router.createUrlTree(['/auth/identity']);
-        if (!org) return this.router.createUrlTree(['/auth/identity']);
+        if (!user.orgId || !org) return this.router.createUrlTree(['/auth/identity']);
         if (org.status !== 'accepted') return this.router.createUrlTree(['/c/organization/create-congratulations']);
         return true;
       })

@@ -10,7 +10,7 @@ import { execSync } from 'child_process'
 import camelcase from 'camelcase'
 
 const args = process.argv.slice(2);
-const [arg, ...flags] = args;
+const [arg] = args;
 
 if (arg) console.log('The following args were detected:', args)
 
@@ -19,7 +19,6 @@ if (arg) console.log('The following args were detected:', args)
  */
 const functionsConfigMap: Record<string, string> = {
   'sendgrid.api_key': 'SENDGRID_API_KEY',// @see https://www.notion.so/cascade8/Setup-SendGrid-c8c6011ad88447169cebe1f65044abf0
-  'relayer.mnemonic': 'ETHEREUM_MNEMONIC',
   'jwplayer.key': 'JWPLAYER_KEY',// @see https://www.notion.so/cascade8/Setup-JWPlayer-2276fce57b464b329f0b6d2e7c6d9f1d
   'jwplayer.secret': 'JWPLAYER_SECRET',
   'jwplayer.apiv2secret': 'JWPLAYER_APIV2SECRET',
