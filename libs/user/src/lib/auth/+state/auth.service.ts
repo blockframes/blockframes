@@ -19,8 +19,7 @@ import { OrgEmailData } from '@blockframes/utils/emails/utils';
 import { AnonymousCredentials, AnonymousRole } from './auth.model';
 import { AngularFireAnalytics } from '@angular/fire/analytics';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { UserService } from '@blockframes/user/+state';
-import { createStorageFile } from '@blockframes/media/+state/media.firestore';
+import { createUser, UserService } from '@blockframes/user/+state';
 import { Store, StoreConfig } from '@datorama/akita';
 
 @Injectable({ providedIn: 'root' })
@@ -30,13 +29,6 @@ class AuthStore extends Store<AuthState> { // @TODO #7273 remove when we get rid
     super(initialAuthState);
   }
 
-}
-
-export function createUser(user: Partial<User> = {}) { // @TODO #7286 #7273 move to model ? or userModel ?
-  return {
-    ...user,
-    avatar: createStorageFile(user.avatar)
-  } as User;
 }
 
 interface Roles { blockframesAdmin: boolean }
@@ -53,8 +45,13 @@ export class AuthService extends FireAuthService<AuthState> {
   profile: User; // User object in Firestore DB
   uid: string; // Will be defined for regular and anonymous users
 
-  user$ = this.afAuth.authState; // Firebase Auth User Object
+  // Firebase Auth User Object
+  user$ = this.afAuth.authState.pipe(tap(auth => {
+    this.uid = auth?.uid;
+    if (!auth?.uid) this.profile = undefined;
+  }));
 
+  // Firebase Auth User Object and User object in Firestore DB (profile)
   auth$: Observable<{ uid: string, isAnonymous: boolean, emailVerified: boolean, profile?: User }> = this.user$.pipe(
     switchMap(authState => {
       if (!authState || authState.isAnonymous) return of(undefined).pipe(map(() => [undefined, authState]));
@@ -62,6 +59,15 @@ export class AuthService extends FireAuthService<AuthState> {
     }),
     map(([profile, userAuth]: [User, firebase.User]) => {
       if (!userAuth) return;
+
+      // TODO #6113 once we have a custom email verified page, we can update the users' meta there
+      if (userAuth?.emailVerified && profile && !profile._meta?.emailVerified) {
+        const _meta: DocumentMeta<Date | FirebaseFirestore.Timestamp> = {
+          ...profile._meta,
+          emailVerified: true
+        }
+        this.userService.update(userAuth.uid, { _meta });
+      }
 
       const { isAnonymous, emailVerified } = userAuth;
       return {
@@ -106,8 +112,6 @@ export class AuthService extends FireAuthService<AuthState> {
         window['LoginService'] = this
       }
     }
-
-    this.updateEmailVerified();
   }
 
   //////////
@@ -222,24 +226,6 @@ export class AuthService extends FireAuthService<AuthState> {
     });
   }
 
-  // TODO #6113 once we have a custom email verified page, we can update the users' meta there
-  // #7303 if user does not interact with authService, this is not updated (ie: user goes directly to eventPage ?)
-  // @TODO #7286 #7273 rework this
-  private async updateEmailVerified() {
-    const auth = await this.user$.pipe(take(1)).toPromise();
-
-    if (auth?.emailVerified) {
-      const user = await this.userService.getValue(auth.uid);
-      if (!user._meta?.emailVerified) { // attribute does not exists or is set to false
-        const _meta: DocumentMeta<Date | FirebaseFirestore.Timestamp> = {
-          ...user._meta,
-          emailVerified: true
-        }
-        this.userService.update(auth.uid, { _meta });
-      }
-    }
-  }
-
   ////////////////////
   // ANONYMOUS AUTH //
   ////////////////////
@@ -345,9 +331,9 @@ export class AuthService extends FireAuthService<AuthState> {
     return this.anonymousCredentials;
   }
 
-  get anonymousCredentials(): AnonymousCredentials { // @TODO #7286 #7273  rename to anonymousProfile or anonymousUser ?
+  get anonymousCredentials(): AnonymousCredentials {
     return {
-      uid: sessionStorage.getItem('anonymousCredentials.uid'), // @TODO #7286 #7273 this attribute is needed ?
+      uid: sessionStorage.getItem('anonymousCredentials.uid'),
       lastName: sessionStorage.getItem('anonymousCredentials.lastName'),
       firstName: sessionStorage.getItem('anonymousCredentials.firstName'),
       role: sessionStorage.getItem('anonymousCredentials.role') as AnonymousRole,
