@@ -1,60 +1,107 @@
+export function createEvent(eventDate: Date, eventType = 'Screening', eventTitle = '') {
+  cy.log(`createEvent : {${eventTitle}}`);
+  cy.log(
+    `#Creating event type: [${eventType}] on <${eventDate.toLocaleDateString()}> :> ${eventTitle}`
+  );
 
-const SEC = 1000;
+  const day = eventDate.getDay();
+  if (day === 0) cy.get('button[test-id=arrow_forward]').click();
 
-export function createDetailedEvent(date: Date, eventType = 'Screening', title = '') {
-    cy.log(`#Creating event type: [${eventType}] on <${date.toLocaleDateString()}> :> ${title}`)
-    const day = date.getDay();
-    if (day === 0) {
-      cy.get('button[test-id=arrow_forward]', {timeout: 3 * SEC})
-        .click();
-      cy.wait(1 * SEC);
-    }
-    cy.get('div [class=cal-day-columns]').children().eq(day)
-      .find('mwl-calendar-week-view-hour-segment').first()
-      .click();
-    cy.get('mat-select[test-id="event-type"]', {timeout: 3 * SEC})
-      .first()
-      .click({force: true});
-    cy.get('mat-option', {timeout: 3 * SEC})
-      .contains(eventType).click({force: true});
+  cy.get('div [class=cal-day-columns]')
+    .children()
+    .eq(day)
+    .find('mwl-calendar-week-view-hour-segment')
+    .first()
+    .click();
 
-    //Input the title string
-    cy.get('input[test-id="event-title-modal"]', {timeout: 1 * SEC})
-      .click({force: true})
-      .clear()
-      .type(title);
+  cy.get('mat-select[test-id="event-type"]').first().click();
 
-    cy.get('button[test-id=more-details]', {timeout: 1 * SEC})
-      .click();
-    cy.wait(0.5 * SEC);
+  cy.get('mat-option').contains(eventType).click();
+
+  //Input the title string
+  cy.get('input[test-id="event-title-modal"]').click().clear().type(eventTitle);
+
+  cy.get('button[test-id=more-details]').click();
+
+  cy.get('event-details-edit'); // * Waits for event details page to open
 }
 
-// export function createEvent(eventTitle: string, eventDate: Date, screeningName: string, isPublic = false, inviteeList:string[] = []) {
-// cy.log(`createEvent : {${eventTitle}}`);
-// const event: EventDetailsEditPage = this.createDetailedEvent(eventDate, 'Screening', eventTitle);
+export function fillEventDetails(screeningName: string, isPublic = false, inviteeEmailList: string[] = []) {
+  if (inviteeEmailList.length > 0) {
+    inviteUser(inviteeEmailList);
+    // We need to wait to fetch the invited user
+    copyGuests(inviteeEmailList.length);
+  }
 
-// if (inviteeList.length !== 0) {
-// event.inviteUser(inviteeList);
-// // We need to wait to fetch the invited user
-// event.copyGuests();
-// cy.wait(8000);
-// }
+  inputDescription(`Screening: ${screeningName}`);
 
-// event.inputDescription(`Screening: ${screeningName}`);
-// cy.wait(1000);
+  checkAllDay();
+  uncheckPrivate(isPublic);
 
-// event.checkAllDay();
-// cy.wait(1000);
-// event.uncheckPrivate(isPublic);
-// cy.wait(1000);
+  selectMovie(screeningName);
 
-// event.selectMovie(screeningName);
-// cy.wait(2000);
+  inputDescription(`Screening: ${screeningName}`);
 
-// event.inputDescription(`Screening: ${screeningName}`);
-// cy.wait(2000);
+  cy.log('Save event and navigate to calendar');
+  saveEvent();
+  cy.get('[svgicon="arrow_back"]').click();
+}
 
-// cy.log('Save event and navigate to calendar');
-// event.saveEvent();
-// cy.get('[svgicon="arrow_back"]').click();
-// }
+export function inviteUser(email: string | string[]) {
+  cy.contains('Invitations').click();
+  if (Array.isArray(email)) {
+    let index = 0;
+    while (index < email.length) {
+      cy.get('input#mat-chip-list-input-0').type(email[index]).type('{enter}');
+      index++;
+    }
+  } else {
+    cy.get('input#mat-chip-list-input-0').type(email).type('{enter}');
+  }
+  cy.wait(1000); // * I hate to do this, but this one's unavoidable as we cannot detect when the send invite button is ready
+  cy.get('.invitations button[test-id=event-invite]').click();
+}
+
+export function copyGuests(expectedNumGuests: number) {
+  cy.contains(`${expectedNumGuests} Guests`);
+  cy.get('button[test-id=invitation-copy]').click();
+}
+
+export function inputDescription(description: string) {
+  cy.get('[ng-reflect-router-link="screening"]').click();
+  //Input description
+  cy.get('textarea[formControlName="description"]').click().clear().type(description);
+}
+
+/**
+ * Sets if event is full day.
+ */
+export function checkAllDay(fullDay = true) {
+  if (fullDay) {
+    cy.get('[test-id=all-day] input').check({ force: true }); // * We force these because the input isn't visible in Material checkboxes
+  } else {
+    cy.get('[test-id=all-day] input').uncheck({ force: true });
+  }
+}
+
+/**
+ * set event access
+ */
+export function uncheckPrivate(isPublic = false) {
+  if (!isPublic) {
+    //last radio button correspond to "private" privacy status
+    cy.get('event-shell [type="radio"]').eq(2).check({ force: true });
+  } else {
+    //first radio button correspond to "public" privacy status
+    cy.get('event-shell [type="radio"]').first().check({ force: true });
+  }
+}
+
+export function selectMovie(movieName: string) {
+  cy.get('event-shell mat-select[formControlName=titleId]').click();
+  cy.get('mat-option').contains(movieName).click();
+}
+
+export function saveEvent() {
+  cy.get('button[test-id=event-save]').click();
+}

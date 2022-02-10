@@ -42,40 +42,36 @@ describe('Organiser invites other users to private screening', () => {
   })
 
   it('Organiser creates screening & invites 2 users to the screening', () => {
-    // cy.task('deleteAllSellerEvents', users[UserIndex.Organiser].uid) // ! Clean up any existing events!
+
     /*
-    * We need to create a seller, create an org, upload a title, create a screening event for it
+    //* This test isn't great, ideally we generate data and do the following
+    * We need to create a seller, create an org
+    * create a sceening/upload a title, create a screening event for it
     * we need to make two buyer users
     * we need to invite those buyers to the screening
-    * then we run the test.
+    * then make sure invites were sent out, check notifs, check things.
+    * NOTE - there should also be smaller tests that test sub components of this whole process.
     */
+
+   // cy.task('deleteAllSellerEvents', users[UserIndex.Organiser].uid) // ! Clean up any existing events! - DELETE THIS PLUGIN
    cy.clearLocalStorage(); // ! If event is deleted manually, it will be stuck in localStorage cache
    cy.contains('Accept cookies').click();
    cy.task('log', users[UserIndex.Organiser].uid);
-    auth.loginWithEmailAndPassword(users[UserIndex.Organiser].email);
+   auth.loginWithEmailAndPassword(users[UserIndex.Organiser].email);
+   cy.visit('/c/o/dashboard/event')
+   cy.log(`Create screening {${TestEVENT.event}}`)
+   awaitElementDeletion('mat-spinner');
+   // * We would not need to do this if various user types were generated at the start of the test
+   // * in order to generate user types, we either need to create a lot of data manually or use the app's built in methods
+   events.deleteAllSellerEvents(users[UserIndex.Organiser].uid); // ! must stay here so eventsService is instantiated
+   festival.createEvent(new Date(), 'Screening', TestEVENT.event);
 
+   const invitees = [users[UserIndex.InvitedUser1].email, users[UserIndex.InvitedUser2].email]; // ! This is some terrible Mano coding. Redo fixtures.
+   festival.fillEventDetails(TestEVENT.movie.title.international, !TestEVENT.private, invitees);
 
-    // (new FestivalMarketplaceHomePage()).goToDashboard();
-    // const p1 = new FestivalDashboardHomePage();
-    // const p2: EventPage = p1.goToCalendar();
-    cy.intercept('/c/o/dashboard/event').as('calendar');
-    cy.visit('/c/o/dashboard/event')
-    cy.wait('@calendar');
-
-
-    cy.log(`Create screening {${TestEVENT.event}}`)
-    awaitElementDeletion('mat-spinner');
-    events.deleteAllSellerEvents(users[UserIndex.Organiser].uid); // ! must stay here so eventsService is instantiated
-    festival.createDetailedEvent(new Date(), 'Screening', TestEVENT.event);
-
-
-    // const invitees = [users[UserIndex.InvitedUser1].email, users[UserIndex.InvitedUser2].email];
-    // p2.createEvent(TestEVENT.event, NOW, TestEVENT.movie.title.international, false, invitees);
-
-    cy.pause();
   });
 
-  it(`InvitedUser1: logs in, accepts his invitations & runs the video`, () => { // ! This is a smell - tests should not rely on order
+  it.skip(`InvitedUser1: logs in, accepts his invitations & runs the video`, () => { // ! This is a smell - tests should not rely on order
     signIn(users[UserIndex.InvitedUser1]);
     acceptCookie();
 
@@ -96,7 +92,7 @@ describe('Organiser invites other users to private screening', () => {
     // TODO: Assert video is running
   });
 
-  it(`InvitedUser2 logs in and refuses screening invitations`, () => {
+  it.skip(`InvitedUser2 logs in and refuses screening invitations`, () => {
     signIn(users[UserIndex.InvitedUser2]);
     acceptCookie();
 
@@ -108,7 +104,7 @@ describe('Organiser invites other users to private screening', () => {
 
   // Member organiser do not get notification
   // Admin / Super Admin gets notification about invitation acceptance.
-  it('Org admin logs in and verifies the accepted invitations', () => {
+  it.skip('Org admin logs in and verifies the accepted invitations', () => {
     signIn(users[UserIndex.Admin]);
     acceptCookie();
 
@@ -119,7 +115,7 @@ describe('Organiser invites other users to private screening', () => {
     p2.verifyNotification(users[UserIndex.InvitedUser2].firstName, false);
   });
 
-  it('UninvitedGuest logs in, go on event page, asserts no access to the video', () => {
+  it.skip('UninvitedGuest logs in, go on event page, asserts no access to the video', () => {
     signIn(users[UserIndex.UninvitedGuest]);
     acceptCookie();
 
