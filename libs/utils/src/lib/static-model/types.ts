@@ -84,6 +84,7 @@ export type ProducerRole = keyof typeof producerRoles;
 export type ProducerRoleValue = typeof producerRoles[ProducerRole];
 
 export type ProductionStatus = keyof typeof productionStatus;
+export type ProductionStatusValue = typeof productionStatus[ProductionStatus];
 
 export type Rating = keyof typeof rating;
 
