@@ -127,6 +127,11 @@ catalog-landing {
   }
 }
 
+landing-app-link {
+  section {
+    padding-block: 72px;
+  }
+}
 
 @include layout-bp(lt-lg) {
   catalog-landing {
