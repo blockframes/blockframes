@@ -3,6 +3,7 @@ import { OrganizationService } from '@blockframes/organization/+state';
 import { BucketService } from '@blockframes/contract/bucket/+state';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { applicationUrl } from '@blockframes/utils/apps';
 
 @Component({
   selector: 'catalog-marketplace',
@@ -15,6 +16,7 @@ export class MarketplaceComponent {
   public contractCount$: Observable<number>;
   public canAccessDeals = !this.orgService.org.appAccess.catalog.dashboard;
   public org$ = this.orgService.currentOrg$;
+  public applicationUrl = applicationUrl;
 
   constructor(
     private bucketService: BucketService,

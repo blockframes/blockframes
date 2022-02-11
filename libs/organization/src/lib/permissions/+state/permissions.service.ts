@@ -28,7 +28,7 @@ export class PermissionsService extends CollectionService<PermissionsState> {
     this.authService.profile$,
     this.permissions$,
   ]).pipe(
-    map(([user, p]) => user?.uid && p?.roles[user.uid] === 'superAdmin')
+    map(([user, p]) => user?.uid && p?.roles[user?.uid] === 'superAdmin')
   );
 
   // Checks if the connected user is admin of his organization.
@@ -37,7 +37,7 @@ export class PermissionsService extends CollectionService<PermissionsState> {
     this.permissions$,
     this.isSuperAdmin$,
   ]).pipe(
-    map(([user, p, isSuperAdmin]) => isSuperAdmin || p?.roles[user.uid] === 'admin')
+    map(([user, p, isSuperAdmin]) => isSuperAdmin || p?.roles[user?.uid] === 'admin')
   )
 
   constructor(
