@@ -1,3 +1,5 @@
+@use '@angular/material' as mat;
+
 :host {
   display: block;
   height: 100%;
@@ -39,4 +41,9 @@ mat-sidenav-content {
 
 .algolia-result {
   color: var(--primary);
+}
+
+.link-to-app {
+  padding: 4px 12px;
+  @include mat.elevation(2);
 }

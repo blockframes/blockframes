@@ -47,7 +47,7 @@ export class AuthDataValidationComponent implements OnInit {
       this.profileData = true;
     }
 
-    this.emailValidate$ = this.authService.user$.pipe(map(auth => auth.emailVerified));
+    this.emailValidate$ = this.authService.user$.pipe(map(auth => auth?.emailVerified)); // TODO #7273 since authState is only triggered via sign-in/out data is not updated when emailVerified state change
   }
 
   openIntercom(): void {

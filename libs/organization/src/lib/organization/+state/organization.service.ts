@@ -34,8 +34,11 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   // Organization of the current logged in user
   currentOrg$: Observable<Organization> = this.authService.profile$.pipe(
     filter(user => !!user),
-    switchMap(user => user?.orgId ? this.valueChanges(user.orgId) : of(undefined)),
-    tap(org => this.org = org)
+    switchMap(user => user.orgId ? this.valueChanges(user.orgId) : of(undefined)),
+    filter(org => {
+      this.org = org;
+      return !!org;
+    })
   );
 
   // Org's members of the current logged in user
