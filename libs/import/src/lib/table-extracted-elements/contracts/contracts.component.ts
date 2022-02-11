@@ -11,7 +11,11 @@ import { sortingDataAccessor } from '@blockframes/utils/table';
 import { ContractsImportState, SpreadsheetImportError } from '../../utils';
 import { TermService } from '@blockframes/contract/term/+state/term.service';
 import { createDocumentMeta } from '@blockframes/utils/models-meta';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFirestore, Query } from '@angular/fire/firestore';
+import { FullMandate, territoryAvailabilities } from '@blockframes/contract/avails/avails';
+import { first } from 'rxjs/operators';
+import { Mandate } from '@blockframes/contract/contract/+state';
+import { joinWith } from '@blockframes/utils/operators';
 
 const hasImportErrors = (importState: ContractsImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -59,8 +63,9 @@ export class TableExtractedContractsComponent implements OnInit {
   }
 
   async createContract(importState: ContractsImportState): Promise<boolean> {
-    await this.addContract(importState);
-    this.snackBar.open('Contract added!', 'close', { duration: 3000 });
+    const success = await this.addContract(importState, 'create');
+    const message = success ? 'Contract added!' : `Contract terms overlaps with existing mandate terms. Please update your template file and try again.`
+    this.snackBar.open(message, 'close', { duration: 9000 });
     return true;
   }
 
@@ -74,10 +79,11 @@ export class TableExtractedContractsComponent implements OnInit {
     try {
       const creations = this.selection.selected.filter(importState => importState.newContract && !hasImportErrors(importState));
       for (const contract of creations) {
-        this.processedContracts++;
-        await this.addContract(contract);
+        const success = this.addContract(contract, 'create');
+        if (success)
+          this.processedContracts++;
       }
-      this.snackBar.open(`${this.processedContracts} contracts created!`, 'close', { duration: 3000 });
+      this.snackBar.open(`${this.processedContracts}/${creations.length} contracts created!`, 'close', { duration: 3000 });
       this.processedContracts = 0;
       return true;
     } catch (err) {
@@ -103,18 +109,50 @@ export class TableExtractedContractsComponent implements OnInit {
     }
   }
 
+  /**Verifies if terms overlap with existing mandate terms in the Db */
+  private async verifyTermOverlap(importState: ContractsImportState) {
+    const getTitleMandates = (ref: Query) => ref.where('type', '==', 'mandate')
+      .where('titleId', '==', importState.contract.titleId)
+      .where('status', '==', 'accepted');
+
+    const mandates = await this.contractService.valueChanges(getTitleMandates).pipe(
+      joinWith({
+        terms: (mandate: Mandate) => this.termService.valueChanges(mandate.termIds)
+      }, { shouldAwait: true }),
+      first()
+    ).toPromise() as FullMandate[];
+
+    return importState.terms.map(term => {
+      const availabilities = territoryAvailabilities(term, mandates, [])
+      //available territories indicates that there is an overlap with existing mandates in db.
+      return !!availabilities.available.length
+    }).some(isOverlapping => isOverlapping)
+  }
+
   /**
    * Adds a contract to database and prevents multi-insert by refreshing mat-table
    * @param importState
    */
-  private async addContract(importState: ContractsImportState): Promise<boolean> {
+  private async addContract(importState: ContractsImportState, mode: 'create' | 'update' = 'update'): Promise<boolean> {
 
     importState.terms.forEach(t => t.id = this.db.createId());
     importState.contract.termIds = importState.terms.map(t => t.id);
 
+    if (mode === 'create' && importState.contract.type === 'mandate') {
+      const doTermsOverlap = await this.verifyTermOverlap(importState);
+      if (doTermsOverlap) {
+        importState.errors.push({
+          type: 'error',
+          name: 'Contract',
+          reason: 'The Terms of a Contract overlap with that of an already existing Mandate.',
+          hint: 'The Terms of a Contract overlap with that of an already existing Mandate.'
+        });
+        return false;
+      }
+    }
     await this.contractService.add({
       ...importState.contract,
-      _meta: createDocumentMeta({createdAt: new Date()})
+      _meta: createDocumentMeta({ createdAt: new Date() })
     });
 
     // @dev: Create terms after contract because rules require contract to be created first
