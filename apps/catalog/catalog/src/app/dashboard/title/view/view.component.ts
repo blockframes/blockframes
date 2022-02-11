@@ -1,12 +1,11 @@
-import { Observable } from 'rxjs';
-import { MovieQuery } from '@blockframes/movie/+state/movie.query';
-import { Movie } from '@blockframes/movie/+state/movie.model';
-import { Subscription } from 'rxjs';
-import { Router, NavigationEnd } from '@angular/router';
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { combineLatest } from 'rxjs';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
 import { OrganizationService } from '@blockframes/organization/+state';
+import { map, pluck, startWith, switchMap, tap } from 'rxjs/operators';
+import { MovieService } from '@blockframes/movie/+state';
 
 @Component({
   selector: 'catalog-title-view',
@@ -14,11 +13,22 @@ import { OrganizationService } from '@blockframes/organization/+state';
   styleUrls: ['./view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TitleViewComponent implements OnInit, OnDestroy {
-  public movie$: Observable<Movie>;
+export class TitleViewComponent {
+  public movie$ = combineLatest([
+    this.route.params.pipe(
+      pluck('movieId'),
+      switchMap((movieId: string) => this.movieService.valueChanges(movieId))
+    ),
+    this.router.events.pipe(startWith(false))
+  ]).pipe(
+    map(([movie]) => movie),
+    tap(movie => {
+      const titleName = movie?.title?.international || 'No title';
+      this.dynTitle.setPageTitle(`${titleName}`, 'Marketplace Activity');
+    })
+  );
+
   public org$ = this.orgService.currentOrg$;
-  public loading$: Observable<boolean>;
-  private sub: Subscription;
 
   navLinks: RouteDescription[] = [
     {
@@ -48,31 +58,11 @@ export class TitleViewComponent implements OnInit, OnDestroy {
   ];
 
   constructor(
-    private movieQuery: MovieQuery,
+    private movieService: MovieService,
     private dynTitle: DynamicTitleService,
     private router: Router,
-    private orgService: OrganizationService
-  ) {
-    const titleName = this.movieQuery.getActive().title.international || 'No title'
-    this.sub = this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        event.url.includes('details')
-          ? this.dynTitle.setPageTitle(`${titleName}`, 'Film Details')
-          : this.dynTitle.setPageTitle(`${titleName}`, 'Marketplace Activity')
-      }
-    })
-  }
+    private orgService: OrganizationService,
+    private route: ActivatedRoute
+  ) { }
 
-  ngOnInit() {
-    this.getMovie();
-  }
-
-  private getMovie() {
-    this.loading$ = this.movieQuery.selectLoading();
-    this.movie$ = this.movieQuery.selectActive();
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
-  }
 }
