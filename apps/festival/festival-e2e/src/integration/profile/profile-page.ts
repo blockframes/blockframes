@@ -1,16 +1,19 @@
-import { loginWithRandomUser, clearBrowserAuth, loginWithUID, loginWithEmailAndPassword } from "@blockframes/testing/e2e";
+import { auth } from "@blockframes/testing/e2e";
 
 describe('Basic Landing Page, Login and Profile Page Tests', () => {
 
   beforeEach(() => {
     cy.visit('/')
-    clearBrowserAuth()
+    auth.clearBrowserAuth()
     cy.visit('/')
   })
   it('should load user and log into profile page', () => {
     // loginWithRandomUser().logSubject(); => does not work because of missing sign_in_provider in token
     // loginWithUID('1QErdmriBqaQyobxftpWyK1ErB73').logSubject(); => same
-    loginWithRandomUser('emailAndPassword').logSubject(); // => do work but always fetch a blockframesAdmin user
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    auth.loginWithRandomUser('emailAndPassword').logSubject(); // => do work but always fetch a blockframesAdmin user
     // loginWithEmailAndPassword('dev+scarlett-qra@blockframes.io').logSubject(); // => do work
     cy.visit('c/o/account/profile/view/settings');
     cy.contains('Contact Information').should('exist');
