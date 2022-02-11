@@ -59,11 +59,7 @@ export class EventService extends CollectionService<EventState> {
     private orgService: OrganizationService,
   ) {
     super();
-    if (!production) { // instrument Cypress only out of PROD
-      if (window['Cypress']) {
-        window['eventService'] = this
-      }
-    }
+    if (!production && window['Cypress']) window['eventService'] = this; // instrument Cypress only out of PROD
   }
 
   /** Verify if the current user / organization is owner of an event */

@@ -1,7 +1,7 @@
 ﻿// import { AuthLoginPage } from "../pages/auth";
 import { User } from "./type";
 import { SEC } from './env';
-import { auth } from "@blockframes/testing/e2e";
+import { auth } from '@blockframes/testing/e2e';
 
 /** Clear cookies, local storage, indexedDB and navigate to the path (/auth by default). */
 export function clearDataAndPrepareTest(path: string = '/auth') {
