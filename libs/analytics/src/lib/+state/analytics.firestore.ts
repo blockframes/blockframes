@@ -6,23 +6,23 @@ type Timestamp = firebase.firestore.Timestamp;
 export type EventName = 'page_view' | 'screening_requested' | 'promo_video_started' | 'added_to_wishlist' | 'promo_element_opened' | 'asking_price_requested';
 export type EventType = 'title' | 'event';
 
-export type AnalyticsEventMeta = TitleAnalyticsEventMeta | EventAnalyticsEventMeta | unknown;
+export type DataEventMeta = Title | Event | unknown;
 
-export interface TitleAnalyticsEventMeta {
+export interface Title {
   titleId: string;
   orgId: string;
   userId: string;
   ownerOrgIds: string[];
 }
 
-export interface EventAnalyticsEventMeta {
+export interface Event {
   eventId: string;
   userId: string;
   orgId?: string;
   ownerOrgId: string;
 }
 
-export interface AnalyticsEventBase<D extends Timestamp | Date, Meta extends AnalyticsEventMeta = Record<string, unknown>> {
+export interface DataEventBase<D extends Timestamp | Date, Meta extends DataEventMeta = Record<string, unknown>> {
   id: string;
   name: EventName;
   type: EventType;
@@ -31,6 +31,6 @@ export interface AnalyticsEventBase<D extends Timestamp | Date, Meta extends Ana
 }
 
 // firestore documents
-export type AnalyticsEventDocument<Meta> = AnalyticsEventBase<Timestamp, Meta>;
-export type TitleAnalyticsEventDocument = AnalyticsEventDocument<TitleAnalyticsEventMeta>;
-export type EventAnalyticsEventDocument = AnalyticsEventDocument<EventAnalyticsEventMeta>;
+export type DataEventDocument<Meta> = DataEventBase<Timestamp, Meta>;
+export type TitleAnalyticsEventDocument = DataEventDocument<Title>;
+export type EventAnalyticsEventDocument = DataEventDocument<Event>;
