@@ -107,11 +107,7 @@ export class AuthService extends FireAuthService<AuthState> {
     @Optional() public ngIntercom?: Intercom,
   ) {
     super(store);
-    if (!production) { // instrument Cypress only out of PROD
-      if (window['Cypress']) {
-        window['LoginService'] = this
-      }
-    }
+    if (!production && window['Cypress']) window['LoginService'] = this;    // instrument Cypress only out of PROD
   }
 
   //////////
