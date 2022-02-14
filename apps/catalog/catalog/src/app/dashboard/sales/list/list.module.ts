@@ -27,6 +27,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { FilterByModule } from '@blockframes/utils/pipes/filter-by.pipe';
 import { NegotiationPipeModule } from '@blockframes/contract/negotiation/pipe';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import {SaleListModule} from '@blockframes/contract/contract/list/list.module'
 
 @NgModule({
   declarations: [SaleListComponent],
@@ -47,6 +48,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     NegotiationPipeModule,
     GetOrgPipeModule,
     OrgNameModule,
+    SaleListModule,
 
     // Material
     MatTooltipModule,
@@ -59,4 +61,4 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     RouterModule.forChild([{ path: '', component: SaleListComponent }])
   ],
 })
-export class SaleListModule { }
+export class CatalogSaleListModule { }

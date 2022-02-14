@@ -67,6 +67,7 @@ export const panelRoutes: Routes = [
   { path: 'mails', component: MailsComponent },
   { path: 'dev-area', component: DevAreaComponent },
   { path: 'offer', loadChildren:() => import('./pages/offers/list/offer-list.module').then(s => s.CrmOfferListModule) },
+  { path: 'contracts', loadChildren:() => import('./pages/contracts/list/contracts-list.module').then(s => s.CrmContractsListModule) },
   { path: 'offer/:offerId', loadChildren: () => import('./pages/offers/shell/shell.module').then(m => m.OfferShellModule) },
   { path: 'import', loadChildren: () => import('./pages/import/import.module').then(m => m.CrmImportModule)},
 ];
