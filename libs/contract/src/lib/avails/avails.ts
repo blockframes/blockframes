@@ -4,20 +4,22 @@ import { Media, territories, territoriesISOA3, Territory, TerritoryISOA3, Territ
 import { BucketTerm, Term } from '../term/+state';
 import { Holdback, Mandate, Sale } from '../contract/+state';
 import { Bucket, BucketContract } from '../bucket/+state';
-import { allOf, exclusivityAllOf, exclusivitySomeOf, someOf } from './sets';
+import { allOf, exclusivityAllOf, exclusivitySomeOf, isExclusivityOf, someOf } from './sets';
 
 export interface BaseAvailsFilter {
   medias: Media[],
   exclusive: boolean
 }
 
-export interface FullMandate extends Mandate {
+export interface FullMandate extends Mandate<Date> {
   terms: Term[];
 }
 
-export interface FullSale extends Sale {
+export interface FullSale extends Sale<Date> {
   terms: Term[];
 }
+
+export type FullContract<T> = T extends Sale ? FullMandate : FullSale;
 
 export function filterContractsByTitle(titleId: string, mandates: Mandate[], mandateTerms: Term[], sales: Sale[], saleTerms: Term[], bucket?: Bucket) {
 
@@ -54,10 +56,10 @@ export function filterContractsByTitle(titleId: string, mandates: Mandate[], man
 }
 
 
-function assertValidTitle(mandates: FullMandate[], sales: FullSale[], bucketContracts: BucketContract[]=[]) {
+function assertValidTitle(mandates: FullMandate[], sales: FullSale[], bucketContracts: BucketContract[] = []) {
   // check that the mandates & sales are about one single title,
   // i.e. they must all have the same `titleId`
-  const mandateIds = mandates.map(m=> m.titleId);
+  const mandateIds = mandates.map(m => m.titleId);
   const saleIds = sales.map(s => s.titleId);
   const bucketTitleIds = (bucketContracts).map(b => b.titleId);
   const uniqueIds = new Set([...mandateIds, ...saleIds, ...bucketTitleIds]);
@@ -184,23 +186,35 @@ interface MapAvailabilities {
   selected: BucketTerritoryMarker[];
 }
 
+
+const defaultMatchingType = {
+  compatibleExclusivityCheck: false
+}
+type MatchingType = typeof defaultMatchingType;
+
 export const emptyAvailabilities: MapAvailabilities = { notLicensed: [], available: [], sold: [], inBucket: [], selected: [] };
 
-function isMapTermInAvails<T extends BucketTerm | Term>(term: T, avails: MapAvailsFilter) {
-  const exclusivityCheck = exclusivityAllOf(avails.exclusive).in(term.exclusive);
+function isMapTermInAvails<T extends BucketTerm | Term>(term: T, avails: MapAvailsFilter, options = defaultMatchingType) {
+  const exclusivityCheck = options.compatibleExclusivityCheck
+    ? isExclusivityOf(avails.exclusive).compatibleWith(term.exclusive)
+    : exclusivityAllOf(avails.exclusive).in(term.exclusive);
+
   const mediaCheck = allOf(avails.medias).in(term.medias);
   const durationCheck = allOf(avails.duration).in(term.duration);
 
   return exclusivityCheck && mediaCheck && durationCheck;
 }
 
-function getMatchingMapMandates(mandates: FullMandate[], avails: MapAvailsFilter): FullMandate[] {
-  return mandates.filter(mandate => mandate.terms.some(term => isMapTermInAvails(term, avails)));
+function getMatchingMapMandates(mandates: FullMandate[], avails: MapAvailsFilter, options?: MatchingType): FullMandate[] {
+  return mandates.filter(mandate => mandate.terms.some(term => isMapTermInAvails(term, avails, options)));
 }
 
-function getMatchingMapSales(sales: FullSale[], avails: MapAvailsFilter) {
+function getMatchingMapSales(sales: FullSale[], avails: MapAvailsFilter, options=defaultMatchingType) {
   return sales.filter(sale => sale.terms?.some(term => {
-    const exclusivityCheck = exclusivitySomeOf(avails.exclusive).in(term.exclusive);
+    const exclusivityCheck = options.compatibleExclusivityCheck
+      ? isExclusivityOf(avails.exclusive).compatibleWith(term.exclusive)
+      : exclusivitySomeOf(avails.exclusive).in(term.exclusive);
+
     const mediaCheck = someOf(avails.medias).in(term.medias);
     const durationCheck = someOf(avails.duration).in(term.duration);
 
@@ -226,6 +240,7 @@ export function territoryAvailabilities(
   mandates: FullMandate[],
   sales: FullSale[],
   bucketContracts?: BucketContract[],
+  options?: MatchingType
 ): MapAvailabilities {
 
   // This function compute the availabilities of every territories simply by applying successive layer of "color" on top of each other
@@ -250,7 +265,7 @@ export function territoryAvailabilities(
 
 
   // 1) "paint" the `available` layer
-  const availableMandates = getMatchingMapMandates(mandates, avails);
+  const availableMandates = getMatchingMapMandates(mandates, avails, options);
   for (const mandate of availableMandates) {
     for (const term of mandate.terms) {
       for (const territory of term.territories as Territory[]) {
@@ -268,7 +283,7 @@ export function territoryAvailabilities(
 
 
   // 2) "paint" the `sold` layer on top
-  const salesToExclude = getMatchingMapSales(sales, avails);
+  const salesToExclude = getMatchingMapSales(sales, avails, options);
   for (const sale of salesToExclude) {
     for (const term of sale.terms) {
       for (const territory of term.territories as Territory[]) {
