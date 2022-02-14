@@ -4,9 +4,21 @@ import { DocumentMeta } from "@blockframes/utils/models-meta";
 type Timestamp = firebase.firestore.Timestamp;
 
 export type EventName = 'page_view' | 'screening_requested' | 'promo_video_started' | 'added_to_wishlist' | 'promo_element_opened' | 'asking_price_requested';
-export type EventType = 'title' | 'event';
+export type EventType = 'title' | 'event' | 'unknown';
 
-export type DataEventMeta = Title | Event | unknown;
+export interface DataRecord {
+  title: Title;
+  event: Event;
+  unknown: unknown;
+}
+
+export interface DataEventBase<key extends keyof DataRecord, Date> {
+  id: string;
+  name: EventName;
+  type: key;
+  meta: DataRecord[key];
+  _meta?: DocumentMeta<Date>;
+}
 
 export interface Title {
   titleId: string;
@@ -22,15 +34,8 @@ export interface Event {
   ownerOrgId: string;
 }
 
-export interface DataEventBase<D extends Timestamp | Date, Meta extends DataEventMeta = Record<string, unknown>> {
-  id: string;
-  name: EventName;
-  type: EventType;
-  meta: Meta;
-  _meta?: DocumentMeta<D>;
-}
 
 // firestore documents
-export type DataEventDocument<Meta> = DataEventBase<Timestamp, Meta>;
-export type TitleAnalyticsEventDocument = DataEventDocument<Title>;
-export type EventAnalyticsEventDocument = DataEventDocument<Event>;
+export type DataEventDocument = DataEventBase<'unknown', Timestamp>;
+export type TitleAnalyticsEventDocument = DataEventBase<'title', Timestamp>;
+export type EventAnalyticsEventDocument = DataEventBase< 'event', Timestamp>;

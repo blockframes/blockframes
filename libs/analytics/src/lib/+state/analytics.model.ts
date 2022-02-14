@@ -1,27 +1,34 @@
-import { DataEventBase, DataEventMeta, Event, Title } from "./analytics.firestore";
+import { DataEventBase, DataRecord, EventType, Title, Event } from "./analytics.firestore";
 
 
-export interface DataEvent<Meta extends DataEventMeta = unknown> extends DataEventBase<Date, Meta> {}
+export interface DataEvent<key extends keyof DataRecord> extends DataEventBase<key, Date>{}
 
-export function createAnalyticsEvent<Meta extends DataEventMeta>(params: Partial<DataEvent<Meta>>): DataEvent {
-  const meta: DataEventMeta = 
-    isTitleAnalyticsEvent(params as DataEvent) ? createTitleMeta(params.meta)
-    : isEventAnalyticsEvent(params as DataEvent) ? createEventMeta(params.meta)
-    : {};
-
-  return {
-    id: '',
-    name: 'page_view',
-    type: 'title',
-    ...params,
-    meta
-  };
+export function createDataEvent<key extends keyof DataRecord>(params: Partial<DataEvent<key>>): DataEvent<EventType>  {
+  if (isTitleDataEvent(params)) {
+    const meta = createTitleMeta(params.meta);
+    const res: DataEvent<'title'> = {
+      id: '',
+      name: 'page_view',
+      type: 'title',
+      ...params,
+      meta
+    }
+    return res
+  } else if (isEventDataEvent(params )) {
+    const meta = createEventMeta(params.meta);
+    const res: DataEvent<'event'> = {
+      id: '',
+      name: 'page_view',
+      type: 'event',
+      ...params,
+      meta
+    }
+    return res
+  }
 }
 
-export interface TitleDataEvent extends DataEvent<Title> {
-  type: 'title';
-}
-export const isTitleAnalyticsEvent = (event: Partial<DataEvent>): event is TitleDataEvent => event.type === 'title';
+
+export const isTitleDataEvent = (event: Partial<DataEvent<EventType>>): event is DataEvent<'title'> => event.type === 'title';
 export function createTitleMeta(meta: Partial<Title>): Title {
   return {
     titleId: '',
@@ -32,11 +39,7 @@ export function createTitleMeta(meta: Partial<Title>): Title {
   };
 }
 
-
-export interface EventDataEvent extends DataEvent<Event> {
-  type: 'event';
-}
-export const isEventAnalyticsEvent = (event: Partial<DataEvent>): event is EventDataEvent => event.type === 'event';
+export const isEventDataEvent = (event: Partial<DataEvent<EventType>>): event is DataEvent<'event'> => event.type === 'event';
 export function createEventMeta(meta: Partial<Event>): Event {
   return {
     eventId: '',
