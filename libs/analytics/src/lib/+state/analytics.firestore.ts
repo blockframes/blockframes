@@ -9,7 +9,7 @@ interface AnalyticsTypeRecord {
 
 export type AnalyticsTypes = keyof AnalyticsTypeRecord;
 
-export interface Analytics<type extends AnalyticsTypes> {
+export interface Analytics<type extends AnalyticsTypes = AnalyticsTypes> {
   id: string;
   name: EventName;
   type: type;

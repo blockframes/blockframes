@@ -1,7 +1,6 @@
-import { Analytics, AnalyticsTypes, MetaTitle } from "./analytics.firestore";
+import { Analytics, MetaTitle } from "./analytics.firestore";
 
-
-export const isTitleDataEvent = (event: Partial<Analytics<AnalyticsTypes>>): event is Analytics<'title'> => event.type === 'title';
+export const isTitleDataEvent = (event: Partial<Analytics>): event is Analytics<'title'> => event.type === 'title';
 export function createTitleMeta(meta: Partial<MetaTitle>): MetaTitle {
   return {
     titleId: '',
@@ -10,4 +9,4 @@ export function createTitleMeta(meta: Partial<MetaTitle>): MetaTitle {
     ownerOrgIds: [],
     ...meta
   };
-}
+};
