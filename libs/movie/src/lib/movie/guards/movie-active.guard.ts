@@ -4,10 +4,13 @@ import { MovieService } from "../+state/movie.service";
 import { ActivatedRouteSnapshot, CanActivate, Router } from "@angular/router";
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentApp } from "@blockframes/utils/apps";
+import { Movie } from "../+state";
 
 @Injectable({ providedIn: 'root' })
 @CollectionGuardConfig({ awaitSync: true })
 export class MovieActiveGuard implements CanActivate {
+
+  public movie: Movie;
 
   constructor(
     private movieService: MovieService,
@@ -17,10 +20,10 @@ export class MovieActiveGuard implements CanActivate {
 
   async canActivate(route: ActivatedRouteSnapshot) {
     this.movieService.syncActive({ id: route.params.movieId }).subscribe() // @TODO #7282 remove
-    const movie = await this.movieService.getValue(route.params.movieId as string);
-    if (movie) {
+    this.movie = await this.movieService.getValue(route.params.movieId as string);
+    if (this.movie) {
       const currentApp = getCurrentApp(this.routerQuery);
-      return movie.app[currentApp].access || this.router.createUrlTree([route.data.redirect]);
+      return this.movie.app[currentApp].access || this.router.createUrlTree([route.data.redirect]);
     } else {
       return this.router.createUrlTree([route.data.redirect]);
     }

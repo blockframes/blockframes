@@ -10,7 +10,8 @@ import { App, getCurrentApp, getMoviePublishStatus } from "@blockframes/utils/ap
 import { FormSaveOptions } from '@blockframes/utils/common-interfaces';
 import { MovieControl, MovieForm } from "./movie.form";
 import type { FormShellConfig } from './movie.shell.interfaces'
-import { Movie, MoviePromotionalElements, MovieQuery, MovieService } from "../+state";
+import { Movie, MoviePromotionalElements, MovieService } from "../+state";
+import { MovieActiveGuard } from '../guards/movie-active.guard';
 
 const valueByProdStatus: Record<ProductionStatus, Record<string, string>> = {
   development: {
@@ -49,15 +50,15 @@ function cleanPromotionalMedia(promotional: MoviePromotionalElements): MovieProm
 
 @Injectable({ providedIn: 'root' })
 export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
-  form = new MovieForm(this.query.getActive()); // TODO #7282 check #7255
+  form = new MovieForm(this.movieActiveGuard.movie); // TODO #7282 check #7255
   name = 'Title';
   private currentApp = getCurrentApp(this.route);
 
   constructor(
-    private query: MovieQuery,
     private route: RouterQuery,
     private service: MovieService,
     private uploaderService: FileUploaderService,
+    private movieActiveGuard: MovieActiveGuard,
   ) { }
 
   onInit(): Observable<unknown>[] {
@@ -95,7 +96,7 @@ export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
   // TODO issue#4002
   async onSave(options: FormSaveOptions): Promise<void> {
 
-    const base = this.query.getActive();
+    const base = this.movieActiveGuard.movie;
     const movie = mergeDeep(base, this.form.value);
 
     // -- Post merge operations -- //

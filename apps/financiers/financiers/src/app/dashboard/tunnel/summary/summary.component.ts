@@ -37,7 +37,6 @@ export class TunnelSummaryComponent implements OnInit {
     private snackBar: MatSnackBar,
     private dynTitle: DynamicTitleService,
     private consentsService: ConsentsService,
-    private movieQuery: MovieQuery,
     private dialog: MatDialog
   ) {
     this.dynTitle.setPageTitle('Summary and Submit a new title')
@@ -51,7 +50,7 @@ export class TunnelSummaryComponent implements OnInit {
   }
 
   public async submit() {
-    const movieId = this.movieQuery.getActiveId();
+    const movieId = this.query.getActiveId();
     this.dialog.open(ConfirmInputComponent, {
       data: {
         title: 'Confidentiality Reminder',
