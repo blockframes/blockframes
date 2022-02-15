@@ -198,26 +198,3 @@ export function exclusivitySomeOf(availsExclusivity: boolean) {
     in: (termExclusivity: boolean) => termExclusivity || availsExclusivity,
   };
 }
-
-/**
- * Check exclusivity
- *
- * |⬇ Mandate \ Avail ➡|Exclusive|Non-Exclusive|
- * |-|-|-|
- * |Exclusive|❌|❌|
- * |Non-Exclusive|❌|✅|
- */
-export function isExclusivityOf(availsExclusivity: boolean) {
-
-  //                                Avail
-  //                     | Exclusive | Non-Exclusive |
-  //                -----|-----------|---------------|
-  //           Exclusive |     ❌    |       ❌       |
-  // Mandate        -----|-----------|---------------|
-  //       Non-Exclusive |     ❌    |       ✅       |
-  //                -----|-----------|---------------|
-
-  return {
-    compatibleWith: (termExclusivity: boolean) => !termExclusivity || !availsExclusivity,
-  };
-}

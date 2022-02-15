@@ -4,7 +4,7 @@ import { Media, territories, territoriesISOA3, Territory, TerritoryISOA3, Territ
 import { BucketTerm, Term } from '../term/+state';
 import { Holdback, Mandate, Sale } from '../contract/+state';
 import { Bucket, BucketContract } from '../bucket/+state';
-import { allOf, exclusivityAllOf, exclusivitySomeOf, isExclusivityOf, someOf } from './sets';
+import { allOf, exclusivityAllOf, exclusivitySomeOf, someOf } from './sets';
 
 export interface BaseAvailsFilter {
   medias: Media[],
@@ -184,12 +184,6 @@ interface MapAvailabilities {
   selected: BucketTerritoryMarker[];
 }
 
-
-const defaultMatchingType = {
-  compatibleExclusivityCheck: false
-}
-type MatchingType = typeof defaultMatchingType;
-
 export const emptyAvailabilities: MapAvailabilities = { notLicensed: [], available: [], sold: [], inBucket: [], selected: [] };
 
 function isMapTermInAvails<T extends BucketTerm | Term>(term: T, avails: MapAvailsFilter) {
@@ -204,10 +198,9 @@ function isMapTermInAvails<T extends BucketTerm | Term>(term: T, avails: MapAvai
 function isTerm<T extends BucketTerm | Term>(termA: T) {
   return {
     in: (termB: T) => {
-      const exclusivityCheck = isExclusivityOf(termA.exclusive).compatibleWith(termB.exclusive)
+      const exclusivityCheck = exclusivitySomeOf(termA.exclusive).in(termB.exclusive)
       const mediaCheck = allOf(termA.medias).in(termB.medias);
       const durationCheck = allOf(termA.duration).in(termB.duration);
-      console.log({ exclusivityCheck, mediaCheck, durationCheck, termA, termB })
       return exclusivityCheck && mediaCheck && durationCheck;
     }
   }
@@ -219,7 +212,7 @@ function getMatchingMapMandates(mandates: FullMandate[], avails: MapAvailsFilter
 
 function getMatchingMapSales(sales: FullSale[], avails: MapAvailsFilter) {
   return sales.filter(sale => sale.terms?.some(term => {
-    const exclusivityCheck =  exclusivitySomeOf(avails.exclusive).in(term.exclusive);
+    const exclusivityCheck = exclusivitySomeOf(avails.exclusive).in(term.exclusive);
 
     const mediaCheck = someOf(avails.medias).in(term.medias);
     const durationCheck = someOf(avails.duration).in(term.duration);
@@ -554,7 +547,6 @@ export function getOverlappingTerritoryAvailabilities(
 
   // 1) "paint" the `available` layer
   const availableMandates = getOverlappingMapMandates(mandates, term);
-  console.log({ availableMandates })
   for (const mandate of availableMandates) {
     for (const term of mandate.terms) {
       for (const territory of term.territories as Territory[]) {
