@@ -1,15 +1,5 @@
 <ng-container *ngIf="sales$ | async as sales; else loading">
   <ng-container *ngIf="sales.length; else empty">
-    <header class="import-header" fxLayout="row" fxLayoutAlign="space-between center">
-      <h1>My Deals</h1>
-      <div fxLayoutGap="24px">
-        <a test-id="import-contracts" mat-stroked-button color="primary" routerLink="import">
-          <mat-icon svgIcon="excel"></mat-icon>
-          <span>Import Deals</span>
-        </a>
-      </div>
-    </header>
-
     <header mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
       <button mat-tab-link (click)="resetFilter()" [active]="(filter$|async) === ''">
         All <span *ngIf="(salesCount$ | async) as salesCount">({{ salesCount.all }})</span>
@@ -83,17 +73,5 @@
 </ng-template>
 
 <ng-template #empty>
-  <section fxLayout="column" fxLayoutAlign="center center" fxFlexGap="16">
-    <h1>You have no Deals yet.</h1>
-    <p>
-      You will be notified as soon as a buyer makes an offer on your titles.<br />
-      Or, you can import your external sales by clicking on the below button.
-    </p>
-    <a test-id="import-contracts" mat-stroked-button color="primary" routerLink="./import">
-      <mat-icon svgIcon="excel"></mat-icon>
-      <span>Import external Sales</span>
-    </a>
-    <button (click)="openIntercom()" mat-button>Contact the Archipel Team</button>
-    <img asset="empty_contract.svg" alt="Image, you have no sales yet">
-  </section>
+  <ng-content select="[empty]"></ng-content>
 </ng-template>

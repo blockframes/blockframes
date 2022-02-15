@@ -1,10 +1,9 @@
-import { Component, ChangeDetectionStrategy, Optional, OnInit, Input, } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, Input, } from '@angular/core';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { appName, getCurrentApp } from '@blockframes/utils/apps';
 import { Contract, ContractStatus, Mandate, Sale } from '@blockframes/contract/contract/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Intercom } from 'ng-intercom';
 import { joinWith } from '@blockframes/utils/operators';
 import { map, startWith } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
@@ -67,8 +66,6 @@ export class SaleListComponent implements OnInit {
     private router: Router,
     private dynTitle: DynamicTitleService,
     private route: ActivatedRoute,
-    @Optional() private intercom: Intercom,
-
   ) { }
 
 
@@ -112,9 +109,4 @@ export class SaleListComponent implements OnInit {
     })));
     this.dynTitle.setPageTitle(`${this.title} (All)`);
   }
-
-  public openIntercom() {
-    return this.intercom.show();
-  }
-
 }
