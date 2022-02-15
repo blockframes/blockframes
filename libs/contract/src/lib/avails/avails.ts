@@ -19,8 +19,6 @@ export interface FullSale extends Sale<Date> {
   terms: Term[];
 }
 
-export type FullContract<T> = T extends Sale ? FullMandate : FullSale;
-
 export function filterContractsByTitle(titleId: string, mandates: Mandate[], mandateTerms: Term[], sales: Sale[], saleTerms: Term[], bucket?: Bucket) {
 
 

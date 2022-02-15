@@ -167,7 +167,7 @@ export class TableExtractedContractsComponent implements OnInit {
       _meta: createDocumentMeta({ createdAt: new Date() })
     });
 
-    // // @dev: Create terms after contract because rules require contract to be created first
+    // @dev: Create terms after contract because rules require contract to be created first
     await this.termService.add(importState.terms);
 
     importState.errors.push({
