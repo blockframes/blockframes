@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Optional, OnInit, } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { appName, getCurrentApp } from '@blockframes/utils/apps';
 import { Contract, ContractService, ContractStatus, Sale } from '@blockframes/contract/contract/+state';
@@ -6,7 +6,7 @@ import { Organization, OrganizationService } from '@blockframes/organization/+st
 import { ActivatedRoute, Router } from '@angular/router';
 import { Intercom } from 'ng-intercom';
 import { joinWith } from '@blockframes/utils/operators';
-import { map, startWith, tap } from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
 import { MovieService } from '@blockframes/movie/+state';
 import { IncomeService } from '@blockframes/contract/income/+state';
 import { FormControl } from '@angular/forms';
@@ -21,11 +21,15 @@ function capitalize(text: string) {
 }
 
 function queryFn(ref: CollectionReference, options: { internal?: boolean }) {
-  const operator = options.internal ? '!=' : "==";
+  if (options.internal)
+    return ref
+      .where('buyerId', '!=', '')
+      .where('type', '==', 'sale')
+      .orderBy('buyerId', 'desc')
+      .orderBy('_meta.createdAt', 'desc')
   return ref
-    .where('buyerId', operator, '')
+    .where('buyerId', '==', '')
     .where('type', '==', 'sale')
-    .orderBy('buyerId', 'desc')
     .orderBy('_meta.createdAt', 'desc')
 }
 
@@ -44,9 +48,7 @@ export class ContractsListComponent {
   public appName = appName[this.app];
   public orgId = this.orgService.org.id;
 
-
   public internalSales$ = this.contractService.valueChanges(ref => queryFn(ref, { internal: true })).pipe(
-    tap(internalSales => console.log({ internalSales })),
     joinWith({
       licensor: (sale: Sale) => this.orgService.valueChanges(this.getLicensorId(sale)).pipe(map(getFullName)),
       licensee: (sale: Sale) => this.orgService.valueChanges(sale.buyerId).pipe(map(getFullName)),
@@ -58,7 +60,6 @@ export class ContractsListComponent {
   public externalSales$ = this.contractService.valueChanges(ref => queryFn(ref, { internal: false })).pipe(
     joinWith({
       licensor: (sale: Sale) => {
-        console.log({ sale })
         return this.orgService.valueChanges(this.getLicensorId(sale)).pipe(map(getFullName))
       },
       licensee: () => of('External'),

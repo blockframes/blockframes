@@ -1,1 +1,7 @@
-<sale-list [internalSales$]="internalSales$" [externalSales$]="externalSales$" title="All Sales" ></sale-list>
+<sale-list [internalSales$]="internalSales$" [externalSales$]="externalSales$" title="All Sales">
+  <section fxLayout="column" fxLayoutAlign="center center" fxFlexGap="16" empty>
+    <h1>There are no Deals yet.</h1>
+    <button (click)="openIntercom()" mat-button>Contact the Archipel Team</button>
+    <img asset="empty_contract.svg" alt="Image, you have no sales yet">
+  </section>
+</sale-list>
