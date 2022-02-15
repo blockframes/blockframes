@@ -1,9 +1,8 @@
 import { Component, ChangeDetectionStrategy, Optional, OnInit, } from '@angular/core';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { appName, getCurrentApp } from '@blockframes/utils/apps';
-import { Contract, ContractService, ContractStatus, Sale } from '@blockframes/contract/contract/+state';
+import {  ContractService, ContractStatus, Sale } from '@blockframes/contract/contract/+state';
 import { Organization, OrganizationService } from '@blockframes/organization/+state';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Intercom } from 'ng-intercom';
 import { joinWith } from '@blockframes/utils/operators';
 import { map, startWith } from 'rxjs/operators';
@@ -15,10 +14,6 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { CollectionReference } from '@angular/fire/firestore';
 import { centralOrgId } from '@env';
 import { isInitial } from '@blockframes/contract/negotiation/utils';
-
-function capitalize(text: string) {
-  return `${text[0].toUpperCase()}${text.substring(1)}`
-}
 
 function queryFn(ref: CollectionReference, orgId: string, options: { internal?: boolean }) {
   const operator = options.internal ? '!=' : "==";
@@ -81,35 +76,10 @@ export class SaleListComponent implements OnInit {
     private orgService: OrganizationService,
     private titleService: MovieService,
     private incomeService: IncomeService,
-    private router: Router,
     private dynTitle: DynamicTitleService,
-    private route: ActivatedRoute,
     @Optional() private intercom: Intercom,
 
   ) { }
-
-
-  goToSale({ id }: Contract) {
-    this.router.navigate([id], { relativeTo: this.route });
-  }
-
-  applyFilter(filter?: ContractStatus) {
-    this.filter.setValue(filter);
-    const titleFilter = filter === 'pending' ? 'new' : filter;
-    const pageTitle = `My Sales (${titleFilter ? capitalize(titleFilter) : 'All'})`;
-    this.dynTitle.setPageTitle(pageTitle);
-  }
-
-  resetFilter() {
-    this.filter.reset('');
-    this.dynTitle.setPageTitle('My Sales (All)');
-  }
-
-  /* index paramater is unused because it is a default paramater from the filter javascript function */
-  filterBySalesStatus(sale: Sale, index: number, status: ContractStatus): boolean {
-    if (!status) return true;
-    return sale.status === status;
-  }
 
   getLicensorId(sale: Sale) {
     return sale.stakeholders.find(
