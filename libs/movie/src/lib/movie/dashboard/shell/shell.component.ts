@@ -4,11 +4,11 @@ import { Location } from '@angular/common';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { combineLatest, Subscription } from 'rxjs';
 import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
-import { MovieService } from '@blockframes/movie/+state';
+import { Movie, MovieService } from '@blockframes/movie/+state';
 import { FORMS_CONFIG, ShellConfig } from '../../form/movie.shell.interfaces';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentApp } from '@blockframes/utils/apps';
-import { filter, pluck, switchMap } from 'rxjs/operators';
+import { filter, pluck, switchMap, tap } from 'rxjs/operators';
 
 @Directive({ selector: 'movie-cta, [movieCta]' })
 export class MovieCtaDirective { }
@@ -25,8 +25,11 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
   private countRouteEvents = 1;
   movie$ = this.route.params.pipe(
     pluck('movieId'),
-    switchMap((movieId: string) => this.movieService.valueChanges(movieId))
+    switchMap((movieId: string) => this.movieService.valueChanges(movieId)),
+    tap(movie => this._movie = movie)
   );
+
+  private _movie: Movie;
 
   public appName = getCurrentApp(this.routerQuery);
 
@@ -63,6 +66,10 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
 
   getConfig<K extends keyof ShellConfig>(name: K): ShellConfig[K] {
     return this.configs[name];
+  }
+
+  get movie() {
+    return this._movie;
   }
 
   animationOutlet(outlet: RouterOutlet) {
