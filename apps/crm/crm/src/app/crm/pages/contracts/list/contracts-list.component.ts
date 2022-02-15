@@ -1,39 +1,19 @@
-import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { appName, getCurrentApp } from '@blockframes/utils/apps';
-import { Contract, ContractService, ContractStatus, Sale } from '@blockframes/contract/contract/+state';
-import { Organization, OrganizationService } from '@blockframes/organization/+state';
+import { Contract, ContractStatus, Sale } from '@blockframes/contract/contract/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { ActivatedRoute, Router } from '@angular/router';
-import { joinWith } from '@blockframes/utils/operators';
 import { map, startWith } from 'rxjs/operators';
-import { MovieService } from '@blockframes/movie/+state';
-import { IncomeService } from '@blockframes/contract/income/+state';
 import { FormControl } from '@angular/forms';
 import { Observable, of } from 'rxjs';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { CollectionReference } from '@angular/fire/firestore';
 import { centralOrgId } from '@env';
 import { isInitial } from '@blockframes/contract/negotiation/utils';
+import { ContractsShellComponent } from '../shell/contracts-shell.component';
 
 function capitalize(text: string) {
   return `${text[0].toUpperCase()}${text.substring(1)}`
-}
-
-function queryFn(ref: CollectionReference, options: { internal?: boolean }) {
-  if (options.internal)
-    return ref
-      .where('buyerId', '!=', '')
-      .where('type', '==', 'sale')
-      .orderBy('buyerId', 'desc')
-      .orderBy('_meta.createdAt', 'desc')
-  return ref
-    .where('buyerId', '==', '')
-    .where('type', '==', 'sale')
-    .orderBy('_meta.createdAt', 'desc')
-}
-
-function getFullName(seller: Organization) {
-  return seller.denomination.full;
 }
 
 @Component({
@@ -47,25 +27,8 @@ export class ContractsListComponent {
   public appName = appName[this.app];
   public orgId = this.orgService.org.id;
 
-  public internalSales$ = this.contractService.valueChanges(ref => queryFn(ref, { internal: true })).pipe(
-    joinWith({
-      licensor: (sale: Sale) => this.orgService.valueChanges(this.getLicensorId(sale)).pipe(map(getFullName)),
-      licensee: (sale: Sale) => this.orgService.valueChanges(sale.buyerId).pipe(map(getFullName)),
-      title: (sale: Sale) => this.titleService.valueChanges(sale.titleId).pipe(map(title => title.title.international)),
-      negotiation: (sale: Sale) => this.contractService.lastNegotiation(sale.id)
-    }),
-  );
-
-  public externalSales$ = this.contractService.valueChanges(ref => queryFn(ref, { internal: false })).pipe(
-    joinWith({
-      licensor: (sale: Sale) => {
-        return this.orgService.valueChanges(this.getLicensorId(sale)).pipe(map(getFullName))
-      },
-      licensee: () => of('External'),
-      title: (sale: Sale) => this.titleService.valueChanges(sale.titleId).pipe(map(title => title.title.international)),
-      price: (sale: Sale) => this.incomeService.valueChanges(sale.id),
-    }),
-  );
+  public internalSales$ = this.shell.internalSales$;
+  public externalSales$ = this.shell.externalSales$;
 
   filter = new FormControl();
   filter$: Observable<ContractStatus | ''> = this.filter.valueChanges.pipe(startWith(this.filter.value || ''));
@@ -79,15 +42,12 @@ export class ContractsListComponent {
   })));
 
   constructor(
-    private contractService: ContractService,
     private routerQuery: RouterQuery,
     private orgService: OrganizationService,
-    private titleService: MovieService,
-    private incomeService: IncomeService,
+    private shell:ContractsShellComponent,
     private router: Router,
     private dynTitle: DynamicTitleService,
     private route: ActivatedRoute,
-
   ) { }
 
 
