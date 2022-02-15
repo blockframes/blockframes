@@ -4,7 +4,6 @@ import { appName, getCurrentApp } from '@blockframes/utils/apps';
 import { Contract, ContractService, ContractStatus, Sale } from '@blockframes/contract/contract/+state';
 import { Organization, OrganizationService } from '@blockframes/organization/+state';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Intercom } from 'ng-intercom';
 import { joinWith } from '@blockframes/utils/operators';
 import { map, startWith } from 'rxjs/operators';
 import { MovieService } from '@blockframes/movie/+state';
@@ -88,7 +87,6 @@ export class ContractsListComponent {
     private router: Router,
     private dynTitle: DynamicTitleService,
     private route: ActivatedRoute,
-    @Optional() private intercom: Intercom,
 
   ) { }
 
@@ -125,9 +123,4 @@ export class ContractsListComponent {
   ngOnInit() {
     this.dynTitle.setPageTitle('My Sales (All)');
   }
-
-  public openIntercom() {
-    return this.intercom.show();
-  }
-
 }
