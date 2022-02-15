@@ -66,7 +66,8 @@ export const supportEmails = {
   default: 'ngermain@cascade8.com',
   catalog: 'ngermain+catalog@cascade8.com',
   festival: 'ngermain+festival@cascade8.com',
-  financiers: 'ngermain+financiers@cascade8.com'
+  financiers: 'ngermain+financiers@cascade8.com',
+  mailosaur: 'support@fteeksuu.mailosaur.net'
 }
 
 // Yandex

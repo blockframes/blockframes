@@ -33,6 +33,7 @@ const ADMIN_REVIEW_MOVIE_PATH = '/c/o/dashboard/crm/movie';
  * @param app
  */
 function getSupportEmail(app?: App) {
+  if (e2eMode) return supportEmails.mailosaur
   if (app && !!supportEmails[app]) {
     return supportEmails[app]
   }
