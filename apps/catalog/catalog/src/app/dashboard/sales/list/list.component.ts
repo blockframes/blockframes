@@ -1,19 +1,17 @@
 import { Component, ChangeDetectionStrategy, Optional, OnInit, } from '@angular/core';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { appName, getCurrentApp } from '@blockframes/utils/apps';
-import {  ContractService, ContractStatus, Sale } from '@blockframes/contract/contract/+state';
+import {  ContractService, Sale } from '@blockframes/contract/contract/+state';
 import { Organization, OrganizationService } from '@blockframes/organization/+state';
 import { Intercom } from 'ng-intercom';
 import { joinWith } from '@blockframes/utils/operators';
-import { map, startWith } from 'rxjs/operators';
+import { map} from 'rxjs/operators';
+import { combineLatest, merge, of} from 'rxjs';
 import { MovieService } from '@blockframes/movie/+state';
 import { IncomeService } from '@blockframes/contract/income/+state';
-import { FormControl } from '@angular/forms';
-import { Observable, of } from 'rxjs';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { CollectionReference } from '@angular/fire/firestore';
 import { centralOrgId } from '@env';
-import { isInitial } from '@blockframes/contract/negotiation/utils';
 
 function queryFn(ref: CollectionReference, orgId: string, options: { internal?: boolean }) {
   const operator = options.internal ? '!=' : "==";
@@ -59,16 +57,7 @@ export class SaleListComponent implements OnInit {
     }),
   );
 
-  filter = new FormControl();
-  filter$: Observable<ContractStatus | ''> = this.filter.valueChanges.pipe(startWith(this.filter.value || ''));
-
-  salesCount$ = this.internalSales$.pipe(map(m => ({
-    all: m.length,
-    new: m.filter(m => m.negotiation?.status === 'pending' && isInitial(m.negotiation)).length,
-    accepted: m.filter(m => m.negotiation?.status === 'accepted').length,
-    declined: m.filter(m => m.negotiation?.status === 'declined').length,
-    negotiating: m.filter(m => m.negotiation?.status === 'pending' && !isInitial(m.negotiation)).length,
-  })));
+  public sales$ = combineLatest([this.internalSales$, this.externalSales$]);
 
   constructor(
     private contractService: ContractService,

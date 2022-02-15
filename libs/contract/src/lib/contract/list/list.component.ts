@@ -1,13 +1,12 @@
 import { Component, ChangeDetectionStrategy, OnInit, Input, } from '@angular/core';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { appName, getCurrentApp } from '@blockframes/utils/apps';
-import { Contract, ContractStatus, Mandate, Sale } from '@blockframes/contract/contract/+state';
+import { Contract, ContractStatus, Sale } from '@blockframes/contract/contract/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { ActivatedRoute, Router } from '@angular/router';
-import { joinWith } from '@blockframes/utils/operators';
-import { map, startWith } from 'rxjs/operators';
+import { filter, map, startWith } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
-import { combineLatest, NEVER, Observable, of } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { centralOrgId } from '@env';
 import { isInitial } from '@blockframes/contract/negotiation/utils';
@@ -17,16 +16,12 @@ function capitalize(text: string) {
   return `${text[0].toUpperCase()}${text.substring(1)}`
 }
 
-const forSaleType$ = of<(Sale<Date> | Mandate<Date>)[]>().pipe(
-  joinWith({
-    licensor: (sale: Sale) => of(''),
-    licensee: (sale: Sale) => of(''),
-    title: (sale: Sale) => of(''),
-    negotiation: (sale: Sale) => of<Negotiation>(null)
-  }),
-);
-
-type HydratedSale = typeof forSaleType$;
+interface HydratedSale extends Sale<Date> {
+  licensor: string;
+  licensee: string;
+  title: string;
+  negotiation: Negotiation<Date>
+}
 
 @Component({
   selector: 'sale-list',
@@ -41,24 +36,25 @@ export class SaleListComponent implements OnInit {
 
   @Input() private title = 'My Sale';
 
+  private _internalSales = new BehaviorSubject<HydratedSale[]>([]);
+  private _externalSales = new BehaviorSubject<HydratedSale[]>([]);
 
-  @Input() internalSales$: HydratedSale = NEVER;
-
-  @Input() externalSales$: HydratedSale = NEVER;
-
-
-  public sales$: HydratedSale = NEVER;
 
   filter = new FormControl();
   filter$: Observable<ContractStatus | ''> = this.filter.valueChanges.pipe(startWith(this.filter.value || ''));
 
-  public salesCount$: Observable<{
-    all: any;
-    new: any;
-    accepted: any;
-    declined: any;
-    negotiating: any;
-  }> = NEVER;
+  public sales$ = combineLatest([this._internalSales, this._externalSales]).pipe(map(sales => sales.flat()));
+
+  public salesCount$ = this._internalSales.pipe(
+    filter(data => !!data),
+    map(m => ({
+    all: m.length,
+    new: m.filter(m => m.negotiation?.status === 'pending' && isInitial(m.negotiation)).length,
+    accepted: m.filter(m => m.negotiation?.status === 'accepted').length,
+    declined: m.filter(m => m.negotiation?.status === 'declined').length,
+    negotiating: m.filter(m => m.negotiation?.status === 'pending' && !isInitial(m.negotiation)).length,
+  }))
+  );
 
   constructor(
     private routerQuery: RouterQuery,
@@ -67,6 +63,22 @@ export class SaleListComponent implements OnInit {
     private dynTitle: DynamicTitleService,
     private route: ActivatedRoute,
   ) { }
+
+  @Input() set internalSales(sale: HydratedSale[]) {
+    this._internalSales.next(sale);
+  }
+
+  get internalSales() {
+    return this._internalSales.value;
+  }
+
+  @Input() set externalSales(sale: HydratedSale[]) {
+    this._externalSales.next(sale);
+  }
+
+  get externalSales() {
+    return this._externalSales.value;
+  }
 
 
   goToSale({ id }: Contract) {
@@ -97,16 +109,7 @@ export class SaleListComponent implements OnInit {
     ) ?? sale.sellerId;
   }
 
-
   ngOnInit() {
-    this.sales$ = combineLatest([this.internalSales$, this.externalSales$]).pipe(map(data => data.flat(1)))
-    this.salesCount$ = this.internalSales$.pipe(map(m => ({
-      all: m.length,
-      new: m.filter(m => m.negotiation?.status === 'pending' && isInitial(m.negotiation)).length,
-      accepted: m.filter(m => m.negotiation?.status === 'accepted').length,
-      declined: m.filter(m => m.negotiation?.status === 'declined').length,
-      negotiating: m.filter(m => m.negotiation?.status === 'pending' && !isInitial(m.negotiation)).length,
-    })));
     this.dynTitle.setPageTitle(`${this.title} (All)`);
   }
 }

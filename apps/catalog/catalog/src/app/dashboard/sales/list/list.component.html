@@ -7,7 +7,8 @@
     </a>
   </div>
 </header>
-<sale-list [internalSales$]="internalSales$" [externalSales$]="externalSales$" >
+<ng-container *ngIf="sales$| async; else loading">
+  <sale-list [internalSales]="internalSales$ | async" [externalSales]="externalSales$ | async">
     <section fxLayout="column" fxLayoutAlign="center center" fxFlexGap="16" empty>
       <h1>You have no Deals yet.</h1>
       <p>
@@ -21,4 +22,10 @@
       <button (click)="openIntercom()" mat-button>Contact the Archipel Team</button>
       <img asset="empty_contract.svg" alt="Image, you have no sales yet">
     </section>
-</sale-list>
+  </sale-list>
+</ng-container>
+
+
+<ng-template #loading>
+  <mat-spinner></mat-spinner>
+</ng-template>

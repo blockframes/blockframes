@@ -1,4 +1,4 @@
-<ng-container *ngIf="sales$ | async as sales; else loading">
+<ng-container *ngIf="sales$ | async as sales">
   <ng-container *ngIf="sales.length; else empty">
     <header mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
       <button mat-tab-link (click)="resetFilter()" [active]="(filter$|async) === ''">
@@ -17,7 +17,7 @@
         Declined <span *ngIf="(salesCount$ | async) as salesCount">({{ salesCount.declined }})</span>
       </button>
     </header>
-    <ng-container *ngIf="internalSales$ | async as internalSales">
+    <ng-container *ngIf="internalSales as internalSales">
       <bf-table *ngIf="internalSales.length" [source]="internalSales | filterBy: filterBySalesStatus: filter.value"
         clickable useFilter pagination="50" (rowClick)="goToSale($event)">
         <ng-template colRef="_meta.createdAt" label="Date" let-date>{{ date | date:'MM/dd/yyyy'}}</ng-template>
@@ -46,7 +46,7 @@
       </bf-table>
     </ng-container>
 
-    <ng-container *ngIf="externalSales$| async as externalSales">
+    <ng-container *ngIf="externalSales as externalSales">
       <ng-container *ngIf="externalSales.length">
         <h3>Sales external to Archipel Content</h3>
         <bf-table [source]="externalSales" clickable useFilter pagination="50" (rowClick)="goToSale($event)">
@@ -68,9 +68,6 @@
   </ng-container>
 </ng-container>
 
-<ng-template #loading>
-  <mat-spinner></mat-spinner>
-</ng-template>
 
 <ng-template #empty>
   <ng-content select="[empty]"></ng-content>

@@ -3,6 +3,7 @@ import { ContractsListComponent } from './contracts-list.component';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import {SaleListModule} from '@blockframes/contract/contract/list/list.module'
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -11,6 +12,7 @@ import {SaleListModule} from '@blockframes/contract/contract/list/list.module'
   imports: [
     CommonModule,
     SaleListModule,
+    MatProgressSpinnerModule,
     //Router
     RouterModule.forChild([{ path: '', component: ContractsListComponent }])
   ],
