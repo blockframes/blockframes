@@ -1,5 +1,5 @@
 // Angular
-import { Component, ChangeDetectionStrategy, OnInit, Optional } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
 
 // Component
 import { MovieFormShellComponent } from '../shell/shell.component';
@@ -27,7 +27,7 @@ type AllowedPoductionStatuses = {
   styleUrls: ['./title-status.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TitleStatusComponent implements OnInit {
+export class TitleStatusComponent {
   public form = this.shell.getForm('movie');
 
   public currentApp = getCurrentApp(this.routerQuery);
@@ -48,12 +48,8 @@ export class TitleStatusComponent implements OnInit {
     private routerQuery: RouterQuery,
     private dynTitle: DynamicTitleService,
     @Optional() private intercom: Intercom,
-  ) { }
-
-  ngOnInit() {
+  ) {
     this.dynTitle.setPageTitle('Title Status');
-
-    if (this.currentApp === 'catalog') this.form.productionStatus.setValue('released'); // TODO #7282 this will be set if we display this component, but if productionStatus is null and we go directly to lastStep to save, it will stay null 
   }
 
   setValue(value: string, disabled: boolean) {
