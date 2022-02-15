@@ -1,7 +1,10 @@
+import { DocumentMeta } from '@blockframes/utils/models-meta';
 import { DataEventBase, DataRecord, EventType, Title, Event } from "./analytics.firestore";
 
 
-export interface DataEvent<key extends keyof DataRecord> extends DataEventBase<key, Date>{}
+export interface DataEvent<key extends keyof DataRecord> extends DataEventBase<key, Date>{
+  _meta: DocumentMeta<Date>
+}
 
 export function createDataEvent<key extends keyof DataRecord>(params: Partial<DataEvent<key>>): DataEvent<EventType>  {
   if (isTitleDataEvent(params)) {
