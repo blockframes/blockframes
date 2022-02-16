@@ -5,12 +5,12 @@ import { Invitation } from "@blockframes/invitation/+state/invitation.model";
 
 @Pipe({ name: 'hasAction', pure: true })
 export class InvitationHasActionPipe implements PipeTransform {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) { }
   transform(invitation: Invitation) {
     const userId = this.authService.uid;
     const isNotFromUser = !(invitation.fromUser?.uid === userId);
-    const isToOrg = invitation.toOrg?.id === this.authService.uid;
-    const isToUser = invitation.toUser?.uid === userId;
+    const isToOrg = invitation.toOrg?.id && invitation.toOrg.id === this.authService.profile?.orgId;
+    const isToUser = invitation.toUser && (invitation.toUser?.uid === userId || invitation.toUser.email === this.authService.anonymousCredentials?.email);
     return invitation.status === 'pending' && ((isNotFromUser && isToOrg) || isToUser);
   }
 }
