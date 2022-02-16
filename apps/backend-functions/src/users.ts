@@ -15,6 +15,7 @@ import { groupIds } from '@blockframes/utils/emails/ids';
 import { User } from '@blockframes/user/+state/user.model';
 import { updateMemberTags } from './mailchimp';
 import { getPreferenceTag, MailchimpTag } from '@blockframes/utils/mailchimp/mailchimp-model';
+import { ErrorResultResponse } from './utils';
 
 type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
@@ -57,7 +58,7 @@ export const startAccountCreationEmailFlow = async (data: EmailFlowData) => {
 
 };
 
-export const startResetPasswordEmail = async (data: EmailFlowData) => {
+export const startResetPasswordEmail = async (data: EmailFlowData): Promise<ErrorResultResponse> => {
   const { email, app } = data;
 
   if (!email) {
@@ -68,8 +69,15 @@ export const startResetPasswordEmail = async (data: EmailFlowData) => {
     const resetLink = await admin.auth().generatePasswordResetLink(email);
     const template = userResetPassword(email, resetLink, app);
     await sendMailFromTemplate(template, app);
+    return {
+      error: '',
+      result: 'OK'
+    }
   } catch (e) {
-    throw new Error(`There was an error while sending reset password email : ${e.message}`);
+    return {
+      error: e?.code ? e.code : 'ERROR',
+      result: e?.message
+    }
   }
 
 };
