@@ -75,7 +75,7 @@ export const startResetPasswordEmail = async (data: EmailFlowData): Promise<Erro
     }
   } catch (e) {
     return {
-      error: e?.code ? e.code : 'ERROR',
+      error: e?.code || 'ERROR',
       result: e?.message
     }
   }

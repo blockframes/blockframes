@@ -32,18 +32,17 @@ export class ResetPasswordComponent implements OnInit {
       if (this.emailForm.invalid) {
         throw new Error('Invalid format of email');
       }
-      const res: ErrorResultResponse = await this.service.resetPasswordInit(this.emailForm.value.email)
+      const res: ErrorResultResponse = await this.service.resetPasswordInit(this.emailForm.value.email);
       if (res.error === 'auth/email-not-found') {
         this.snackBar.openFromTemplate(this.noAccountTemplate, { duration: 8000 });
       } else if (res.error) {
-        this.snackBar.open(res.result, 'close', {duration: 5000})
+        this.snackBar.open(res.result, 'close', { duration: 5000 });
       } else {
-        this.snackBar.open('A password reset link has been sent to your email address', 'close', {duration: 5000})
+        this.snackBar.open('A password reset link has been sent to your email address', 'close', { duration: 5000 });
         this.submitted = true;
       }
-    }
-    catch (error) {
-      this.snackBar.open(error.message, 'close', {duration: 5000})
+    } catch (error) {
+      this.snackBar.open(error.message, 'close', { duration: 5000 });
     }
   }
 }
