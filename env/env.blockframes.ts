@@ -155,6 +155,7 @@ export const quorum = {
 // ========
 
 export const bigQueryAnalyticsTable = 'blockframes.analytics_193045559.events_';
+export const bigQueryFirestoreExportTable = 'blockframes.firestore_export';
 
 // Data Studio
 // ========
