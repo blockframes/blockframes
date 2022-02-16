@@ -121,7 +121,6 @@ export const quorum = {
 // BigQuery
 // ========
 export const bigQueryAnalyticsTable = 'blockframes-remco.analytics_234801912.events_';
-export const bigQueryFirestoreExportTable = 'blockframes-remco.firestore_export';
 
 // Data Studio
 // ========

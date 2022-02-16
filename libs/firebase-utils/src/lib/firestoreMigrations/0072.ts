@@ -6,7 +6,7 @@ import { createDocumentMeta } from '@blockframes/utils/models-meta';
 import { getCollection } from '../firebase-utils';
 import { MovieAnalytics, MovieDocument } from '@blockframes/movie/+state/movie.firestore';
 import { getCollectionInBatches } from '../util';
-import { bigQueryAnalyticsTable, bigQueryFirestoreExportTable } from '@env';
+import { bigQueryAnalyticsTable, firebase } from '@env';
 
 const events_query = `
   SELECT *
@@ -34,7 +34,7 @@ const events_query = `
       WHERE event_name IN ('addedToWishlist', 'promoReelOpened', 'screeningRequested', 'askingPriceRequested')
       GROUP BY user_pseudo_id, event_timestamp
     ) as ga
-    LEFT JOIN \`${bigQueryFirestoreExportTable}.users\` AS users
+    LEFT JOIN \`${firebase().projectId}.firestore_export.users\` AS users
     ON GA.userId = users.uid
     WHERE users.email NOT LIKE '%concierge%'
   )
@@ -74,7 +74,7 @@ const page_view_query = `
       WHERE event_name = 'pageView'
       GROUP BY user_pseudo_id, event_timestamp
     ) as GA
-    LEFT JOIN \`${bigQueryFirestoreExportTable}.users\` AS users
+    LEFT JOIN \`${firebase().projectId}.users\` AS users
     ON GA.userId = users.uid
     WHERE page_path LIKE '%marketplace/title%'
       AND page_path LIKE '%main%'
@@ -112,7 +112,7 @@ export async function upgrade(db: Firestore) {
   }
   await deleteBatch.commit();
 
-  if (!bigQueryFirestoreExportTable || !bigQueryAnalyticsTable) {
+  if (!bigQueryAnalyticsTable) {
     // BigQuery is not set up in project so nothing to import'
     return;
   }
