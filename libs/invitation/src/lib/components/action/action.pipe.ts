@@ -9,7 +9,7 @@ export class InvitationHasActionPipe implements PipeTransform {
   transform(invitation: Invitation) {
     const userId = this.authService.uid;
     const isNotFromUser = !(invitation.fromUser?.uid === userId);
-    const isToOrg = invitation.toOrg && invitation.toOrg.id === this.authService.profile?.orgId;
+    const isToOrg = invitation.toOrg?.id && invitation.toOrg.id === this.authService.profile?.orgId;
     const isToUser = invitation.toUser && (invitation.toUser?.uid === userId || invitation.toUser.email === this.authService.anonymousCredentials?.email);
     return invitation.status === 'pending' && ((isNotFromUser && isToOrg) || isToUser);
   }
