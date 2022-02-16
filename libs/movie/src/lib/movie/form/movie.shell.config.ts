@@ -50,7 +50,7 @@ function cleanPromotionalMedia(promotional: MoviePromotionalElements): MovieProm
 
 @Injectable({ providedIn: 'root' })
 export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
-  form = new MovieForm(this.movieActiveGuard.movie); // TODO #7282 check #7255
+  form = new MovieForm(this.movieActiveGuard.movie); // TODO #7255
   name = 'Title';
   private currentApp = getCurrentApp(this.route);
 

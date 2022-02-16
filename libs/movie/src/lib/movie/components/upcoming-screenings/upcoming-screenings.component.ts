@@ -14,7 +14,6 @@ import { map, shareReplay } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { RequestAskingPriceComponent } from '../request-asking-price/request-asking-price.component';
-import { BehaviorStore } from '@blockframes/utils/observable-helpers';
 
 @Component({
   selector: 'movie-screening',

@@ -1,22 +1,25 @@
 
 import { AfterViewInit, ChangeDetectionStrategy, Component } from '@angular/core';
-
 import { combineLatest } from 'rxjs';
 import { map, shareReplay, take, throttleTime } from 'rxjs/operators';
-
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
-
 import { TerritoryValue } from '@blockframes/utils/static-model';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
 import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
 import {
-  AvailableTerritoryMarker, BucketTerritoryMarker, emptyAvailabilities,
-  filterContractsByTitle, MapAvailsFilter, territoryAvailabilities,
+  AvailableTerritoryMarker,
+  BucketTerritoryMarker,
+  emptyAvailabilities,
+  filterContractsByTitle,
+  MapAvailsFilter,
+  territoryAvailabilities,
 } from '@blockframes/contract/avails/avails';
-
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
+import { Mandate, Sale } from '@blockframes/contract/contract/+state/contract.firestore';
+import { Term } from '@blockframes/contract/term/+state/term.firestore';
+import { Bucket } from '@blockframes/contract/bucket/+state/bucket.firestore';
+import { Movie } from '@blockframes/movie/+state/movie.model';
 
 @Component({
   selector: 'catalog-movie-avails-map',
@@ -30,7 +33,6 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
     status: string;
   }
 
-  public titleId = this.shell.movie.id;
   public org$ = this.shell.movieOrg$;
   public availsForm = this.shell.avails.mapForm;
   public mandates$ = this.shell.mandates$;
@@ -45,10 +47,18 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
     this.sales$,
     this.salesTerms$,
     this.shell.bucketForm.value$,
+    this.shell.movie$
   ]).pipe(
-    map(([avails, mandates, mandateTerms, sales, salesTerms, bucket]) => {
+    map(([avails, mandates, mandateTerms, sales, salesTerms, bucket, movie]: [
+      MapAvailsFilter, Mandate<Date>[],
+      Term<Date>[],
+      Sale<Date>[],
+      Term<Date>[],
+      Bucket<Date>,
+      Movie
+    ]) => {
       if (this.availsForm.invalid) return emptyAvailabilities;
-      const res = filterContractsByTitle(this.titleId, mandates, mandateTerms, sales, salesTerms, bucket)
+      const res = filterContractsByTitle(movie.id, mandates, mandateTerms, sales, salesTerms, bucket)
       return territoryAvailabilities(avails, res.mandates, res.sales, res.bucketContracts);
     }),
     shareReplay({ bufferSize: 1, refCount: true }),

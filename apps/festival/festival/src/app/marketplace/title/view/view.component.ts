@@ -10,7 +10,6 @@ import { EventService } from '@blockframes/event/+state';
 import { map } from 'rxjs/operators';
 import { RequestAskingPriceComponent } from '@blockframes/movie/components/request-asking-price/request-asking-price.component';
 import { MatDialog } from '@angular/material/dialog';
-import { BehaviorStore } from '@blockframes/utils/observable-helpers';
 
 @Component({
   selector: 'festival-movie-view',
