@@ -74,7 +74,7 @@ const page_view_query = `
       WHERE event_name = 'pageView'
       GROUP BY user_pseudo_id, event_timestamp
     ) as GA
-    LEFT JOIN \`${firebase().projectId}.users\` AS users
+    LEFT JOIN \`${firebase().projectId}.firestore_export.users\` AS users
     ON GA.userId = users.uid
     WHERE page_path LIKE '%marketplace/title%'
       AND page_path LIKE '%main%'
@@ -122,7 +122,17 @@ export async function upgrade(db: Firestore) {
     executeQuery(page_view_query),
     executeQuery(events_query),
     getCollection<MovieDocument>(`movies`)
-  ]);
+  ]).catch(error => {
+    if (error.errors?.length) {
+      if (error.errors.some(error => error.reason === 'notFound')) {
+        return [[], []];
+      }
+    }
+    throw new Error(error);
+  });
+  if (!pageViews && !otherEvents) {
+    return;
+  }
   const rows = pageViews.concat(otherEvents);
 
   const events = rows.map(row => {
