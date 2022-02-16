@@ -24,7 +24,6 @@ import { getTwilioAccessToken, twilioWebhook as _twilioWebhook } from './twilio'
 import { eventWebhook as sendgridEventWebhook } from './sendgrid';
 import { hotConfig, heavyConfig, superHeavyConfig } from '@blockframes/firebase-utils';
 import { onNotificationCreate } from './notification';
-import { importAnalytics } from './pubsub/daily-analytics-import';
 import { onOfferCreate, onOfferUpdate } from './offer';
 import { onContractDelete, onContractUpdate } from './contracts';
 import { onTermDelete } from './terms';
@@ -243,14 +242,6 @@ export const onFileUpload = functions(heavyConfig).storage.object().onFinalize(s
 export const getMediaToken = functions().https.onCall(skipInMaintenance(logErrors(_getMediaToken)));
 
 export const createPdf = functions(heavyConfig).https.onRequest(_createPdf);
-
-//--------------------------------
-//          Analytics           //
-//--------------------------------
-/**
- * Imports analytics data from BigQuery
- */
-export const dailyAnalyticsImport = functions(heavyConfig).pubsub.schedule('0 1 * * *').onRun(importAnalytics); // every day
 
 export const sendgridEventWebhookListener = functions().https.onRequest(sendgridEventWebhook);
 
