@@ -44,7 +44,7 @@ export class LoginComponent implements OnInit {
       const redirectTo = localStorage.getItem('redirectTo');
       if (redirectTo) {
         localStorage.removeItem('redirectTo');
-        this.router.navigate([redirectTo]);
+        this.router.navigateByUrl(redirectTo);
       } else {
         this.router.navigate(['c']);
       }
