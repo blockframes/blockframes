@@ -3,17 +3,21 @@ import { Component, ChangeDetectionStrategy, HostBinding, ChangeDetectorRef } fr
 import { FormControl } from '@angular/forms';
 
 // Blockframes
-import { MovieQuery } from '@blockframes/movie/+state';
+import { MovieService } from '@blockframes/movie/+state';
 import { EventService, Event } from '@blockframes/event/+state';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { Screening } from '@blockframes/event/+state/event.firestore';
+import { getCurrentApp } from '@blockframes/utils/apps';
 
 // RxJs
-import { map, shareReplay } from 'rxjs/operators';
+import { map, pluck, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { RequestAskingPriceComponent } from '../request-asking-price/request-asking-price.component';
+import { ActivatedRoute } from '@angular/router';
+
+import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 @Component({
   selector: 'movie-screening',
@@ -24,36 +28,51 @@ import { RequestAskingPriceComponent } from '../request-asking-price/request-ask
 export class UpcomingScreeningsComponent {
   @HostBinding('class') class = 'dark-contrast-theme';
 
+  private app = getCurrentApp(this.routerQuery);
+
   public sessions = ['first', 'second', 'third', 'fourth', 'fifth'];
 
   public sessionCtrl = new FormControl(0);
 
-  public movieId = this.query.getActiveId();
+  private movie$ = this.route.params.pipe(
+    pluck('movieId'),
+    switchMap((movieId: string) => this.movieService.getValue(movieId)),
+    tap(movie => this.movieId = movie.id)
+  );
+
+  public movieId: string;
 
   public ongoingScreenings$: Observable<Event<Screening>[]>;
   public futureScreenings$: Observable<Event<Screening>[]>;
 
-  public orgs$ = this.orgService.queryFromMovie(this.query.getActive());
+  public orgs$ = this.movie$.pipe(
+    switchMap(movie => this.orgService.valueChanges(movie.orgIds)),
+    map(orgs => orgs.filter(org => org.appAccess[this.app]))
+  );
 
   public buttonState$: Observable<boolean> = new Observable();
   public requestSent = false;
 
   constructor(
-    private query: MovieQuery,
     private dialog: MatDialog,
     private eventService: EventService,
     private invitationService: InvitationService,
     private orgService: OrganizationService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private route: ActivatedRoute,
+    private movieService: MovieService,
+    private routerQuery: RouterQuery,
   ) {
-    const now = new Date();
-    const q = ref => ref
-      .where('isSecret', '==', false)
-      .where('meta.titleId', '==', this.query.getActiveId())
-      .orderBy('end')
-      .startAt(now)
 
-    const screenings$ = this.eventService.queryByType(['screening'], q).pipe(
+    const now = new Date();
+    const screenings$ = this.movie$.pipe(
+      map(movie => ref => ref
+        .where('isSecret', '==', false)
+        .where('meta.titleId', '==', movie.id)
+        .orderBy('end')
+        .startAt(now)
+      ),
+      switchMap(q => this.eventService.queryByType(['screening'], q)),
       map((screenings: Event<Screening>[]) => screenings.sort(this.sortByDate).slice(0, 5)),
       shareReplay({ refCount: true, bufferSize: 1 })
     );
@@ -63,7 +82,7 @@ export class UpcomingScreeningsComponent {
     );
 
     this.futureScreenings$ = screenings$.pipe(
-      map(screenings => screenings.filter(screening => screening.start > now ))
+      map(screenings => screenings.filter(screening => screening.start > now))
     );
 
     this.checkInvitationStatus();

@@ -4,7 +4,6 @@ import { CalendarAvailsForm, MapAvailsForm } from "@blockframes/contract/avails/
 import { Contract, ContractService, isMandate, isSale } from "@blockframes/contract/contract/+state";
 import { Term, TermService } from "@blockframes/contract/term/+state";
 import { Movie, MovieService } from "@blockframes/movie/+state";
-import { OrganizationService } from "@blockframes/organization/+state";
 import { combineLatest, Observable, of } from "rxjs";
 import { map, pluck, shareReplay, switchMap, } from "rxjs/operators";
 
@@ -25,43 +24,38 @@ export class CatalogAvailsShellComponent {
     calendarForm: new CalendarAvailsForm()
   };
 
-  public movieOrg$ = this.movie$.pipe(
-    switchMap((movie: Movie) => this.orgService.valueChanges(movie.orgIds))
-  );
-
-  public contracts$ = this.movie$.pipe(
+  private contracts$ = this.movie$.pipe(
     switchMap((movie: Movie) => this.contractService.valueChanges(
       ref => ref.where('titleId', '==', movie.id).where('status', '==', 'accepted')
-    )),
+    ))
   );
 
-  public mandates$ = this.contracts$.pipe(
+  private mandates$ = this.contracts$.pipe(
     map(contracts => contracts.filter(isMandate))
   );
 
-  public sales$ = this.contracts$.pipe(
+  private sales$ = this.contracts$.pipe(
     map(contracts => contracts.filter(isSale))
   );
 
-  public mandateTerms$ = this.getTerms(this.mandates$);
+  private mandateTerms$ = this.getTerms(this.mandates$);
 
-  public salesTerms$ = this.getTerms(this.sales$);
+  private salesTerms$ = this.getTerms(this.sales$);
 
-  public terms$ = combineLatest(this.mandateTerms$, this.salesTerms$).pipe(
+  public terms$ = combineLatest([this.mandateTerms$, this.salesTerms$]).pipe(
     map(terms => terms.flat())
-  )
+  );
 
   constructor(
     private route: ActivatedRoute,
     private termsService: TermService,
     private movieService: MovieService,
-    private orgService: OrganizationService,
     private contractService: ContractService,
   ) { }
 
   private getTerms(contracts$: Observable<Contract[]>) {
     return contracts$.pipe(
-      switchMap((contract) => {
+      switchMap(contract => {
         const list = contract.flatMap(movie => movie.termIds);
         if (list.length === 0) return (of([]) as Observable<Term<Date>[]>);
         return this.termsService.valueChanges(list);

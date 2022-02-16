@@ -8,8 +8,7 @@ import { AngularFireFunctions } from '@angular/fire/functions';
 import { UserService, OrganizationMember, createOrganizationMember, PublicUser, User } from '@blockframes/user/+state';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
 import { Movie } from '@blockframes/movie/+state/movie.model';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { getCurrentApp, App, Module, createOrgAppAccess } from '@blockframes/utils/apps';
+import { App, Module, createOrgAppAccess } from '@blockframes/utils/apps';
 import { createDocumentMeta, formatDocumentMetaFromFirestore } from '@blockframes/utils/models-meta';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { combineLatest, Observable, of } from 'rxjs';
@@ -21,8 +20,6 @@ interface OrganizationState extends EntityState<Organization>, ActiveState<strin
 @CollectionConfig({ path: 'orgs' })
 export class OrganizationService extends CollectionService<OrganizationState> {
   readonly useMemorization = true;
-
-  private app = getCurrentApp(this.routerQuery);
 
   // Organization of the current logged in user or undefined if user have no org
   org: Organization; // For this to be defined, one of the observable below must be called before
@@ -62,7 +59,6 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     private functions: AngularFireFunctions,
     private userService: UserService,
     private permissionsService: PermissionsService,
-    private routerQuery: RouterQuery,
     private analytics: FireAnalytics,
     private authService: AuthService,
   ) {
@@ -161,12 +157,6 @@ export class OrganizationService extends CollectionService<OrganizationState> {
 
   public async uniqueOrgName(orgName: string): Promise<boolean> {
     return this.orgNameExist(orgName).then(exist => !exist);
-  }
-
-  public queryFromMovie(movie: Movie) {
-    return this.valueChanges(movie.orgIds).pipe(
-      map(orgs => orgs.filter(org => org.appAccess[this.app]))
-    );
   }
 
   //////////////////
