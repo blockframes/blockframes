@@ -122,6 +122,9 @@
     },
     "testing-e2e": {
       "tags": ["shared"]
+    },
+    "analytics": {
+      "tags": []
     }
   }
 }
