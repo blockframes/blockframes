@@ -9,6 +9,7 @@ import { getFirestoreExportDirname } from './export';
 import { sleep, throwOnProduction } from '../util';
 import type * as firebaseTools from 'firebase-tools';
 import { promises } from 'fs';
+import _ from 'lodash';
 const { writeFile, rename } = promises;
 
 const firestoreExportFolder = 'firestore_export'; // ! Careful - changing this may cause a bug
@@ -100,20 +101,23 @@ export async function firebaseEmulatorExec({
   if (isOrHasValue(emulators, 'functions')) {
     // * If functions has been selected, write project config to .runtimeConfig file in root of repo dir
 
-    console.log('Writing Firebase Functions config secrets to .runtimeConfig');
-    try {
-      const FIREBASE_CONFIG: firebaseTools.FirebaseConfig = { project: projectId };
-      if (process.env.FIREBASE_CI_TOKEN) FIREBASE_CONFIG.token = process.env.FIREBASE_CI_TOKEN; // * Check if we are in CI
-      const firebaseTools = eval('require')('firebase-tools') as firebaseTools; // * Lazy load not to bundle dep in functions compilation
-      const configObj = await firebaseTools.functions.config.get(undefined, FIREBASE_CONFIG);
-      await writeFile(
-        join(process.cwd(), './.runtimeconfig.json'),
-        JSON.stringify(configObj, null, 4),
-        'utf-8'
-      );
-    } catch (e) {
-      console.error(e);
-    }
+    await writeRuntimeConfig(functionsConfigMap, join(process.cwd(), './.runtimeconfig.json'));
+    await writeRuntimeConfig(functionsConfigMap, join(process.cwd(), './dist/apps/backend-functions/.runtimeconfig.json'));
+    // * Keep the below until we know we don't need to programmatically access firebase tools
+    // console.log('Writing Firebase Functions config secrets to .runtimeConfig');
+    // try {
+    //   const FIREBASE_CONFIG: firebaseTools.FirebaseConfig = { project: projectId };
+    //   if (process.env.FIREBASE_CI_TOKEN) FIREBASE_CONFIG.token = process.env.FIREBASE_CI_TOKEN; // * Check if we are in CI
+    //   const firebaseTools = eval('require')('firebase-tools') as firebaseTools; // * Lazy load not to bundle dep in functions compilation
+    //   const configObj = await firebaseTools.functions.config.get(undefined, FIREBASE_CONFIG);
+    //   await writeFile(
+    //     join(process.cwd(), './.runtimeconfig.json'),
+    //     JSON.stringify(configObj, null, 4),
+    //     'utf-8'
+    //   );
+    // } catch (e) {
+    //   console.error(e);
+    // }
 
   }
 
@@ -377,4 +381,35 @@ async function ensureSafeEmulatorBackupPath(importPath: string) {
   }
 }
 
+/**
+ * This function will write a runtimeconfig.json file to the given path
+ * based on provided values
+ * @param values object with key value pairs representing values to be written
+ * @param path path to write file
+ * @returns a promise that resolves when runtimeconfig.json is written
+ */
+export function writeRuntimeConfig(values: { [key: string]: string }, path: string) {
+  const runtimeObj = {};
+  Object.entries(values).forEach(([key, value]) => _.set(runtimeObj, key, process.env[value] || 'missing-env-value'));
+  return writeFile(path, JSON.stringify(runtimeObj, null, 4));
+}
 
+/**
+ * This tuple array maps field names to the environment variable key to set them to for runtimeconfig.json and
+ * firebase secrets
+ */
+export const functionsConfigMap: Record<string, string> = {
+  'sendgrid.api_key': 'SENDGRID_API_KEY',// @see https://www.notion.so/cascade8/Setup-SendGrid-c8c6011ad88447169cebe1f65044abf0
+  'jwplayer.key': 'JWPLAYER_KEY',// @see https://www.notion.so/cascade8/Setup-JWPlayer-2276fce57b464b329f0b6d2e7c6d9f1d
+  'jwplayer.secret': 'JWPLAYER_SECRET',
+  'jwplayer.apiv2secret': 'JWPLAYER_APIV2SECRET',
+  'algolia.api_key': 'ALGOLIA_API_KEY',
+  'imgix.token': 'IMGIX_TOKEN',// @see https://www.notion.so/cascade8/Setup-ImgIx-c73142c04f8349b4a6e17e74a9f2209a
+  'twilio.account.sid': 'TWILIO_ACCOUNT_SID',
+  'twilio.account.secret': 'TWILIO_ACCOUNT_SECRET',
+  'twilio.api.key.secret': 'TWILIO_API_KEY_SECRET',
+  'twilio.api.key.sid': 'TWILIO_API_KEY_SID',
+  'mailchimp.api_key': 'MAILCHIMP_API_KEY',
+  'mailchimp.server': 'MAILCHIMP_SERVER',
+  'mailchimp.list_id': 'MAILCHIMP_LIST_ID'
+}
