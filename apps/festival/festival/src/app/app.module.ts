@@ -8,7 +8,7 @@ import { Router, NavigationEnd } from '@angular/router';
 
 // Akita
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
-import { firebase, persistenceSettings, firebaseRegion } from '@env';
+import { firebase, firebaseRegion } from '@env';
 
 // Components
 import { AppComponent } from './app.component';
@@ -65,7 +65,7 @@ import { AuthService } from '@blockframes/auth/+state';
 
     // Firebase
     AngularFireModule.initializeApp(firebase('festival')),
-    AngularFirestoreModule.enablePersistence(persistenceSettings),
+    AngularFirestoreModule,
     AngularFireFunctionsModule,
     AngularFirePerformanceModule,
     AngularFireAuthModule,
