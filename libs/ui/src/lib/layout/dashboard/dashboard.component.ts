@@ -20,6 +20,7 @@ import { App, applicationUrl, getCurrentApp } from '@blockframes/utils/apps';
 interface AppBridge {
   text: string;
   link: string;
+  logo: string;
 }
 type BridgeRecord = Partial<Record<App, AppBridge>>;
 @Component({
@@ -37,10 +38,12 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
     catalog: {
       text: 'Promote Your Line-up',
       link: applicationUrl.festival,
+      logo: 'mini_logo_festival'
     },
     festival: {
       text: 'Sell Content',
       link: applicationUrl.catalog,
+      logo: 'mini_logo_catalog'
     }
   }
 
