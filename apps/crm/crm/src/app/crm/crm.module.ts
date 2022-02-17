@@ -67,10 +67,12 @@ export const panelRoutes: Routes = [
   { path: 'mails', component: MailsComponent },
   { path: 'dev-area', component: DevAreaComponent },
   { path: 'offer', loadChildren:() => import('./pages/offers/list/offer-list.module').then(s => s.CrmOfferListModule) },
-  { path: 'contracts', loadChildren:() => import('./pages/contracts/shell/contracts-shell.module').then(s => s.CrmContractsShellModule) },
+  { path: 'external-sales', loadChildren:() => import('./pages/external-sales/list/contracts-list.module').then(s => s.CrmContractsListModule) },
+  { path: 'external-sales/:saleId', loadChildren:() => import('./pages/external-sales/view/contract-view.module').then(s => s.ContractViewModule) },
   { path: 'offer/:offerId', loadChildren: () => import('./pages/offers/shell/shell.module').then(m => m.OfferShellModule) },
   { path: 'import', loadChildren: () => import('./pages/import/import.module').then(m => m.CrmImportModule)},
 ];
+
 @NgModule({
   imports: [
     CommonModule,
