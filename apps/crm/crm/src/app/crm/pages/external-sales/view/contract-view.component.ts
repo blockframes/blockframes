@@ -43,10 +43,9 @@ export class ContractViewComponent implements OnInit, OnDestroy {
         return this.contractService.valueChanges(saleId).pipe(
           joinWith({
             licensor: (sale: Sale) => {
-              return this.orgService.valueChanges(this.getLicensorId(sale))//.pipe(map(getFullName))
+              return this.orgService.valueChanges(this.getLicensorId(sale))
             },
             licensee: () => of('External'),
-            //resolve this type issue
             title: (sale: Sale) => this.titleService.valueChanges(sale.titleId).pipe(map(title => title.title.international)),
             price: (sale: Sale) => this.incomeService.valueChanges(sale.id),
           }),
