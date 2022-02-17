@@ -1,22 +1,18 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-
 import { format } from 'date-fns';
 import { combineLatest, Subscription } from "rxjs";
 import { first, map, shareReplay, startWith, throttleTime } from "rxjs/operators";
-
 import { medias } from '@blockframes/utils/static-model'
 import { downloadCsvFromJson } from "@blockframes/utils/helpers";
 import { TerritoryValue } from "@blockframes/utils/static-model";
 import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
 import { filterContractsByTitle, MapAvailsFilter, territoryAvailabilities } from "@blockframes/contract/avails/avails";
-
 import { CatalogAvailsShellComponent } from "../shell/shell.component";
 
 function formatDate(date: Date) {
-  return format(date, 'dd/MM/yyy')
+  return format(date, 'dd/MM/yyy');
 }
-
 
 @Component({
   selector: 'catalog-dashboard-avails-map',
@@ -33,21 +29,15 @@ export class DashboardAvailsMapComponent implements AfterViewInit, OnDestroy {
   sub: Subscription;
   public availsForm = this.shell.avails.mapForm;
 
-  public movie$ = this.shell.movie$;
-  public org$ = this.shell.movieOrg$;
   public status$ = this.availsForm.statusChanges.pipe(startWith(this.availsForm.valid ? 'VALID' : 'INVALID'));
-  private mandates$ = this.shell.mandates$;
-  private mandateTerms$ = this.shell.mandateTerms$;
-  private sales$ = this.shell.sales$;
-  private salesTerms$ = this.shell.salesTerms$;
 
   public availabilities$ = combineLatest([
-    this.movie$,
+    this.shell.movie$,
     this.availsForm.valueChanges,
-    this.mandates$,
-    this.mandateTerms$,
-    this.sales$,
-    this.salesTerms$,
+    this.shell.mandates$,
+    this.shell.mandateTerms$,
+    this.shell.sales$,
+    this.shell.salesTerms$,
   ]).pipe(
     map(([movie, avails, mandates, mandateTerms, sales, salesTerms]) => {
       if (this.availsForm.invalid) return { available: [], sold: [] };

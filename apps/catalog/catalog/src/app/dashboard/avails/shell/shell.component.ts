@@ -30,17 +30,17 @@ export class CatalogAvailsShellComponent {
     ))
   );
 
-  private mandates$ = this.contracts$.pipe(
+  public mandates$ = this.contracts$.pipe(
     map(contracts => contracts.filter(isMandate))
   );
 
-  private sales$ = this.contracts$.pipe(
+  public sales$ = this.contracts$.pipe(
     map(contracts => contracts.filter(isSale))
   );
 
-  private mandateTerms$ = this.getTerms(this.mandates$);
+  public mandateTerms$ = this.getTerms(this.mandates$);
 
-  private salesTerms$ = this.getTerms(this.sales$);
+  public salesTerms$ = this.getTerms(this.sales$);
 
   public terms$ = combineLatest([this.mandateTerms$, this.salesTerms$]).pipe(
     map(terms => terms.flat())
