@@ -12,7 +12,7 @@ import { ContractsImportState, SpreadsheetImportError } from '../../utils';
 import { TermService } from '@blockframes/contract/term/+state/term.service';
 import { createDocumentMeta } from '@blockframes/utils/models-meta';
 import { AngularFirestore, Query } from '@angular/fire/firestore';
-import { FullMandate, FullSale, getOverlappingTerritoryAvailabilities } from '@blockframes/contract/avails/avails';
+import { FullMandate, FullSale, territoryAvailabilities } from '@blockframes/contract/avails/avails';
 
 const hasImportErrors = (importState: ContractsImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -125,11 +125,10 @@ export class TableExtractedContractsComponent implements OnInit {
   private async verifyOverlappingMandatesAndSales(importState: ContractsImportState) {
     const mandates = await this.getExistingContracts('mandate', importState.contract.titleId);
     const sales = await this.getExistingContracts('sale', importState.contract.titleId);
-    const availabilities = importState.terms.map(term =>
-      getOverlappingTerritoryAvailabilities(term, mandates, sales, [])
-      );
-      console.log({mandates, sales, availabilities})
-
+    const availabilities = importState.terms.map(term => {
+      const data = { avails: term, mandates: [], sales, bucketContracts: [], availableMandates: mandates };
+      return territoryAvailabilities(data);
+    });
     const isOverlappingSale = importState.contract.type === 'sale' && availabilities.some(availability => !availability.sold.length);
     const isOverlappingMandate = importState.contract.type === 'mandate' && availabilities.some(availability => availability.available.length);
     return { isOverlappingSale, isOverlappingMandate };

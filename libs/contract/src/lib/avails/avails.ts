@@ -195,15 +195,11 @@ function isMapTermInAvails<T extends BucketTerm | Term>(term: T, avails: MapAvai
   return exclusivityCheck && mediaCheck && durationCheck;
 }
 
-function isTerm<T extends BucketTerm | Term>(termA: T) {
-  return {
-    in: (termB: T) => {
-      const exclusivityCheck = exclusivitySomeOf(termA.exclusive).in(termB.exclusive)
-      const mediaCheck = allOf(termA.medias).in(termB.medias);
-      const durationCheck = allOf(termA.duration).in(termB.duration);
-      return exclusivityCheck && mediaCheck && durationCheck;
-    }
-  }
+function isAvailInTerm<T extends BucketTerm | Term>(avail: MapAvailsFilter, termB: T) {
+  const exclusivityCheck = exclusivitySomeOf(avail.exclusive).in(termB.exclusive)
+  const mediaCheck = allOf(avail.medias).in(termB.medias);
+  const durationCheck = allOf(avail.duration).in(termB.duration);
+  return exclusivityCheck && mediaCheck && durationCheck;
 }
 
 function getMatchingMapMandates(mandates: FullMandate[], avails: MapAvailsFilter): FullMandate[] {
@@ -221,19 +217,8 @@ function getMatchingMapSales(sales: FullSale[], avails: MapAvailsFilter) {
   }));
 }
 
-function getOverlappingMapSales(sales: FullSale[], avails: MapAvailsFilter) {
-  return sales.filter(sale => sale.terms?.some(term => {
-    const exclusivityCheck = exclusivitySomeOf(avails.exclusive).in(term.exclusive)
-
-    const mediaCheck = someOf(avails.medias).in(term.medias);
-    const durationCheck = someOf(avails.duration).in(term.duration);
-
-    return exclusivityCheck && mediaCheck && durationCheck;
-  }));
-}
-
-function getOverlappingMapMandates(mandates: FullMandate[], newTerm: Term<Date>): FullMandate[] {
-  return mandates.filter(mandate => mandate.terms.some(term => isTerm(newTerm).in(term)));
+function getOverlappingMapMandates(mandates: FullMandate[], newTerm: MapAvailsFilter): FullMandate[] {
+  return mandates.filter(mandate => mandate.terms.some(term => isAvailInTerm(newTerm, term)));
 }
 
 function isMapTermInBucket<T extends BucketTerm | Term>(term: T, avails: MapAvailsFilter) {
@@ -248,24 +233,33 @@ function isMapTermSelected<T extends BucketTerm | Term>(term: T, avails: MapAvai
   return exclusivityCheck && mediaCheck && durationCheck;
 }
 
-
-export function territoryAvailabilities(
+interface TerritoryAvailabilityOptions {
   avails: MapAvailsFilter,
   mandates: FullMandate[],
   sales: FullSale[],
   bucketContracts?: BucketContract[],
-): MapAvailabilities {
+  availableMandates?: FullMandate[]
+}
 
+export function territoryAvailabilities({
+  avails,
+  mandates,
+  sales,
+  bucketContracts,
+  availableMandates: existingMandates = [],
+}: TerritoryAvailabilityOptions): MapAvailabilities {
   // This function compute the availabilities of every territories simply by applying successive layer of "color" on top of each other
   // 0) we start by coloring everything in the `not-licensed` color
   // 1) we then color the available territories on top of the previous layer, overwriting the color of some territories
   // 2) we repeat the process for the sales & bucket territories to color them as `sold`
   // 3) finally we apply the `selected` color
+  // 4) when provided with availableMandates, we are rather searching for an overlap between the avails and the availableMandates.
 
   // Note: The function doesn't perform any check, from its point of view a `sold` territory can become `selected`
   // Note: The checks should be performed by the parent component to prevent a user to select a `sold` territory
+  const isOverlapping = !!existingMandates.length
 
-  assertValidTitle(mandates, sales, bucketContracts);
+  assertValidTitle(isOverlapping ? existingMandates : mandates, sales, bucketContracts);
 
   // 0) initialize the world as `not-licensed`
   const availabilities = {} as Record<Territory, TerritoryMarker>;
@@ -278,7 +272,9 @@ export function territoryAvailabilities(
 
 
   // 1) "paint" the `available` layer
-  const availableMandates = getMatchingMapMandates(mandates, avails);
+  const availableMandates = isOverlapping
+    ? getOverlappingMapMandates(existingMandates, avails)
+    : getMatchingMapMandates(mandates, avails);
   for (const mandate of availableMandates) {
     for (const term of mandate.terms) {
       for (const territory of term.territories as Territory[]) {
@@ -511,114 +507,6 @@ export function getCollidingHoldbacks(holdbacks: Holdback[], terms: BucketTerm[]
     terms.some(term => collidingHoldback(holdback, term))
   );
   return holdbackCollision;
-}
-
-
-// --------------------------------------------------
-//         IMPORT OVERLAPPING VERIFICATION         //
-// --------------------------------------------------
-export function getOverlappingTerritoryAvailabilities(
-  term: Term<Date>,
-  mandates: FullMandate[],
-  sales: FullSale[],
-  bucketContracts?: BucketContract[],
-): MapAvailabilities {
-
-  // This function compute the availabilities of every territories simply by applying successive layer of "color" on top of each other
-  // 0) we start by coloring everything in the `not-licensed` color
-  // 1) we then color the available territories on top of the previous layer, overwriting the color of some territories
-  // 2) we repeat the process for the sales & bucket territories to color them as `sold`
-  // 3) finally we apply the `selected` color
-
-  // Note: The function doesn't perform any check, from its point of view a `sold` territory can become `selected`
-  // Note: The checks should be performed by the parent component to prevent a user to select a `sold` territory
-
-  assertValidTitle(mandates, sales, bucketContracts);
-
-  // 0) initialize the world as `not-licensed`
-  const availabilities = {} as Record<Territory, TerritoryMarker>;
-  Object.keys(territories).forEach((territory: Territory) => availabilities[territory] = {
-    type: 'not-licensed',
-    slug: territory,
-    isoA3: territoriesISOA3[territory],
-    label: territories[territory],
-  });
-
-
-  // 1) "paint" the `available` layer
-  const availableMandates = getOverlappingMapMandates(mandates, term);
-  for (const mandate of availableMandates) {
-    for (const term of mandate.terms) {
-      for (const territory of term.territories as Territory[]) {
-        availabilities[territory] = {
-          type: 'available',
-          slug: territory,
-          isoA3: territoriesISOA3[territory],
-          label: territories[territory],
-          term,
-          contract: mandate,
-        };
-      }
-    }
-  }
-
-
-  // 2) "paint" the `sold` layer on top
-  const salesToExclude = getOverlappingMapSales(sales, term);
-  for (const sale of salesToExclude) {
-    for (const term of sale.terms) {
-      for (const territory of term.territories as Territory[]) {
-        availabilities[territory] = {
-          type: 'sold',
-          slug: territory,
-          isoA3: territoriesISOA3[territory],
-          label: territories[territory],
-          term,
-          contract: sale,
-        };
-      }
-    }
-  }
-
-  for (const bucketSale of bucketContracts ?? []) {
-    for (const term of bucketSale.terms) {
-      const isInBucket = isMapTermInBucket(term, term);
-      const isSelected = isMapTermSelected(term, term);
-      if (isSelected) {
-        for (const territory of term.territories as TerritoryISOA3[]) {
-          availabilities[territory] = {
-            type: 'selected',
-            slug: territory,
-            isoA3: territoriesISOA3[territory],
-            label: territories[territory],
-            term,
-            contract: bucketSale,
-          };
-        }
-      } else if (isInBucket) {
-        for (const territory of term.territories as TerritoryISOA3[]) {
-          availabilities[territory] = {
-            type: 'in-bucket',
-            slug: territory,
-            isoA3: territoriesISOA3[territory],
-            label: territories[territory],
-            term,
-            contract: bucketSale,
-          };
-        }
-      }
-    }
-  }
-
-  const correctAvailabilities = Object.values(availabilities).filter(a => !!a.isoA3);
-
-  const notLicensed = correctAvailabilities.filter(a => a.type === 'not-licensed') as NotLicensedTerritoryMarker[];
-  const available = correctAvailabilities.filter(a => a.type === 'available') as AvailableTerritoryMarker[];
-  const sold = correctAvailabilities.filter(a => a.type === 'sold') as SoldTerritoryMarker[];
-  const inBucket = correctAvailabilities.filter(a => a.type === 'in-bucket') as BucketTerritoryMarker[];
-  const selected = correctAvailabilities.filter(a => a.type === 'selected') as BucketTerritoryMarker[];
-
-  return { notLicensed, available, sold, inBucket, selected };
 }
 
 
