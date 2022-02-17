@@ -238,7 +238,7 @@ interface TerritoryAvailabilityOptions {
   mandates: FullMandate[],
   sales: FullSale[],
   bucketContracts?: BucketContract[],
-  availableMandates?: FullMandate[]
+  existingMandates?: FullMandate[]
 }
 
 export function territoryAvailabilities({
@@ -246,7 +246,7 @@ export function territoryAvailabilities({
   mandates,
   sales,
   bucketContracts,
-  availableMandates: existingMandates = [],
+  existingMandates = [],
 }: TerritoryAvailabilityOptions): MapAvailabilities {
   // This function compute the availabilities of every territories simply by applying successive layer of "color" on top of each other
   // 0) we start by coloring everything in the `not-licensed` color

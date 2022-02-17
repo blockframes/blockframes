@@ -126,7 +126,7 @@ export class TableExtractedContractsComponent implements OnInit {
     const mandates = await this.getExistingContracts('mandate', importState.contract.titleId);
     const sales = await this.getExistingContracts('sale', importState.contract.titleId);
     const availabilities = importState.terms.map(term => {
-      const data = { avails: term, mandates: [], sales, bucketContracts: [], availableMandates: mandates };
+      const data = { avails: term, mandates: [], sales, bucketContracts: [], existingMandates: mandates };
       return territoryAvailabilities(data);
     });
     const isOverlappingSale = importState.contract.type === 'sale' && availabilities.some(availability => !availability.sold.length);
