@@ -52,7 +52,8 @@ export class DashboardAvailsMapComponent implements AfterViewInit, OnDestroy {
     map(([movie, avails, mandates, mandateTerms, sales, salesTerms]) => {
       if (this.availsForm.invalid) return { available: [], sold: [] };
       const res = filterContractsByTitle(movie.id, mandates, mandateTerms, sales, salesTerms);
-      return territoryAvailabilities(avails, res.mandates, res.sales);
+      const data= { avails, mandates: res.mandates, sales: res.sales };
+      return territoryAvailabilities(data);
     }),
     shareReplay({ bufferSize: 1, refCount: true }),
   );

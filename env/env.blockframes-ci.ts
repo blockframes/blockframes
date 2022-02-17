@@ -1,9 +1,5 @@
 ﻿export const production = false;
 
-export const persistenceSettings = {
-  synchronizeTabs: true
-};
-
 // Firebase
 // ========
 

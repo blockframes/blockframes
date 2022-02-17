@@ -91,7 +91,7 @@ export class SessionComponent implements OnInit, OnDestroy {
           this.screeningFileRef = movie.promotional.videos?.screener;
 
           // if user is not a screening owner we need to track the watch time
-          if (event.ownerOrgId !== this.authService.profile.orgId) {
+          if (event.ownerOrgId !== this.authService.profile?.orgId) {
             // Try to get invitation the regular way
             const uidFilter = (invit: Invitation) => invit.toUser?.uid === this.authService.uid ||  invit.fromUser?.uid === this.authService.uid;
             const allInvitations = await this.invitationService.allInvitations$.pipe(take(1)).toPromise();
