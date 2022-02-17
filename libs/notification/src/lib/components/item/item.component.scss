@@ -2,3 +2,7 @@
 button {
   margin-right: 16px;
 }
+
+a[href^="mailto"] {
+  font-weight: inherit;
+}
