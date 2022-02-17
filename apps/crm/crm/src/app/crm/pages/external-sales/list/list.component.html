@@ -1,0 +1,12 @@
+<ng-container *ngIf="externalSales$ | async as externalSales; else loading">
+  <sale-list [internalSales]="[]" [externalSales]="externalSales" title="All Sales">
+    <section fxLayout="column" fxLayoutAlign="center center" fxFlexGap="16" empty>
+      <h1>There are no Deals yet.</h1>
+      <img asset="empty_contract.svg" alt="Image, you have no sales yet">
+    </section>
+  </sale-list>
+</ng-container>
+
+<ng-template #loading>
+  <mat-spinner></mat-spinner>
+</ng-template>
