@@ -19,7 +19,6 @@ export class MovieActiveGuard implements CanActivate {
   ) { }
 
   async canActivate(route: ActivatedRouteSnapshot) {
-    this.movieService.syncActive({ id: route.params.movieId }).subscribe() // @TODO #7282 remove
     this.movie = await this.movieService.getValue(route.params.movieId as string);
     if (this.movie) {
       const currentApp = getCurrentApp(this.routerQuery);
