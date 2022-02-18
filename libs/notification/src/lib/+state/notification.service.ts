@@ -217,7 +217,8 @@ export class NotificationService extends CollectionService<NotificationState> {
           message,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.svg',
-          url: `mailto:${notification.user.email}?subject=Interest in ${movie.title.international} via Archipel Market`
+          url: `mailto:${notification.user.email}?subject=Interest in ${movie.title.international} via Archipel Market`,
+          actionText: 'Start Discussions'
         };
       }
       case 'screeningRequested': {
