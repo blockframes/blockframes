@@ -114,13 +114,14 @@ export class IdentityComponent implements OnInit, OnDestroy {
     // Fill fields
     this.form.patchValue(user);
 
-    // Disable/hide what is not needed
-    this.form.get('email').disable();
-    this.form.get('firstName').disable();
-    this.form.get('lastName').disable();
-    this.form.get('password').disable();
-    this.form.get('confirm').disable();
-    this.form.get('generatedPassword').disable();
+    this.disableControls(['email', 'firstName', 'lastName', 'confirm', 'generatedPassword']);
+  }  
+
+  private disableControls(keys: (keyof IdentityFormControl)[]) {
+    for (const key of keys) {
+      this.form.get(key).disable();
+      this.form.get(key).clearValidators();
+    }
   }
 
   public setOrg(result: AlgoliaOrganization) {
