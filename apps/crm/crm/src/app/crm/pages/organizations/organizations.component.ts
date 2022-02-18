@@ -15,7 +15,7 @@ import { take } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationsComponent {
-  public orgs$ = this.service.valueChanges().pipe(take(1));
+  public orgs$ = this.service.valueChanges().pipe(take(2));
   public app = getAllAppsExcept(['crm']);
 
   constructor(

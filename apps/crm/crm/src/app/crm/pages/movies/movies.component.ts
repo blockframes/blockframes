@@ -32,9 +32,9 @@ export class MoviesComponent implements OnInit {
 
   async ngOnInit() {
     this.movies$ = combineLatest([
-      this.movieService.valueChanges().pipe(take(1)),
-      this.orgService.valueChanges().pipe(take(1)),
-      this.eventService.valueChanges(ref => ref.where('type', '==', 'screening')).pipe(take(1)),
+      this.movieService.valueChanges().pipe(take(2)),
+      this.orgService.valueChanges().pipe(take(2)),
+      this.eventService.valueChanges(ref => ref.where('type', '==', 'screening')).pipe(take(2)),
     ]).pipe(
       map(([movies, orgs, events]) => {
         const screenings = events.filter(isScreening);

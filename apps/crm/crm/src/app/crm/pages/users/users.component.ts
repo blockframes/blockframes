@@ -42,8 +42,8 @@ export class UsersComponent implements OnInit {
   async ngOnInit() {
     // Use valueChanges to take advantage of caching.
     this.users$ = combineLatest([
-      this.userService.valueChanges().pipe(take(1)),
-      this.orgService.valueChanges().pipe(take(1)),
+      this.userService.valueChanges().pipe(take(2)),
+      this.orgService.valueChanges().pipe(take(2)),
       this.crmService.loadAnalyticsData()
     ]).pipe(
       map(([users, orgs]) => {
