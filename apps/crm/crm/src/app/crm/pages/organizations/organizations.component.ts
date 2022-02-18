@@ -6,7 +6,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { OrganizationCreateComponent } from '../../components/organization/create-organization/create.component';
 import { Organization } from '@blockframes/organization/+state';
 import { getAllAppsExcept, appName, modules } from '@blockframes/utils/apps';
-import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'crm-organizations',
@@ -15,7 +14,7 @@ import { take } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationsComponent {
-  public orgs$ = this.service.valueChanges().pipe(take(2));
+  public orgs$ = this.service.valueChanges();
   public app = getAllAppsExcept(['crm']);
 
   constructor(

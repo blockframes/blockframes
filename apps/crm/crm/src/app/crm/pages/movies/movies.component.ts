@@ -4,7 +4,7 @@ import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { Organization, OrganizationService, orgName } from '@blockframes/organization/+state';
 import { Router } from '@angular/router';
 import { EventService, isScreening } from '@blockframes/event/+state';
-import { take, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { Observable, combineLatest } from 'rxjs';
 
 interface CrmMovie extends Movie {
@@ -32,19 +32,19 @@ export class MoviesComponent implements OnInit {
 
   async ngOnInit() {
     this.movies$ = combineLatest([
-      this.movieService.valueChanges().pipe(take(2)),
-      this.orgService.valueChanges().pipe(take(2)),
-      this.eventService.valueChanges(ref => ref.where('type', '==', 'screening')).pipe(take(2)),
+      this.movieService.valueChanges(),
+      this.orgService.valueChanges(),
+      this.eventService.valueChanges(ref => ref.where('type', '==', 'screening'))),
     ]).pipe(
-      map(([movies, orgs, events]) => {
-        const screenings = events.filter(isScreening);
-        return movies.map(movie => {
-          const org = orgs.find(o => o.id === movie.orgIds[0]);
-          const screeningCount = screenings.filter(e => e.meta?.titleId === movie.id).length;
-          return { ...movie, org, screeningCount } as CrmMovie;
-        })
-      }),
-    )
+        map(([movies, orgs, events]) => {
+          const screenings = events.filter(isScreening);
+          return movies.map(movie => {
+            const org = orgs.find(o => o.id === movie.orgIds[0]);
+            const screeningCount = screenings.filter(e => e.meta?.titleId === movie.id).length;
+            return { ...movie, org, screeningCount } as CrmMovie;
+          })
+        }),
+      )
   }
 
   goToEditNewTab(id: string, $event: Event) {
