@@ -114,7 +114,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
     // Fill fields
     this.form.patchValue(user);
 
-    this.disableControls(['email', 'firstName', 'lastName', 'confirm', 'generatedPassword']);
+    this.disableControls(['email', 'firstName', 'lastName', 'password', 'confirm', 'generatedPassword']);
   }  
 
   private disableControls(keys: (keyof IdentityFormControl)[]) {
