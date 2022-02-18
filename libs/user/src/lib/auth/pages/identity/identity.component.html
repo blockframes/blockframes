@@ -155,7 +155,7 @@
 
       <ng-container *ngIf="!creating else creatingAccount">
         <button @slideDown (click)="signUp()" type="submit" mat-flat-button color="accent"
-          [disabled]="form.invalid || orgForm.invalid">
+          [disabled]="!form.isFormValid() || orgForm.invalid">
           Sign up
         </button>
       </ng-container>

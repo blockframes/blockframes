@@ -76,4 +76,23 @@ export class FormEntity<C extends EntityControl<T>, T = any> extends FormGroup {
       }
     }
   }
+
+  /**
+   * Checks whether the form is disabled or valid
+   * The valid property on form returns false if the form is disabled despite passing all validators
+   * @returns {boolean} true if valid or disabled
+   */
+  isFormValid(): boolean {
+    let valid = this.disabled ? true : this.valid;
+    if (!valid) return false;
+    for (const name in this.controls) {
+      if (this.controls[name]['isFormValid']) {
+        valid = this.controls[name]['isFormValid']();
+      } else {
+        valid = this.controls[name].disabled ? true : this.controls[name].valid
+      }
+      if (!valid) break;
+    }
+    return valid
+  }
 }
