@@ -34,7 +34,7 @@ export class MoviesComponent implements OnInit {
     this.movies$ = combineLatest([
       this.movieService.valueChanges(),
       this.orgService.valueChanges(),
-      this.eventService.valueChanges(ref => ref.where('type', '==', 'screening'))),
+      this.eventService.valueChanges(ref => ref.where('type', '==', 'screening')),
     ]).pipe(
         map(([movies, orgs, events]) => {
           const screenings = events.filter(isScreening);
