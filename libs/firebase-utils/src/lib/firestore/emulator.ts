@@ -103,7 +103,7 @@ export async function firebaseEmulatorExec({
 
     await writeRuntimeConfig(functionsConfigMap, join(process.cwd(), './.runtimeconfig.json'));
     await writeRuntimeConfig(functionsConfigMap, join(process.cwd(), './dist/apps/backend-functions/.runtimeconfig.json'));
-    // * Keep the below until we know we don't need to programmatically access firebase tools
+    // * #7723 Keep the below until we know we don't need to programmatically access firebase tools
     // console.log('Writing Firebase Functions config secrets to .runtimeConfig');
     // try {
     //   const FIREBASE_CONFIG: firebaseTools.FirebaseConfig = { project: projectId };
