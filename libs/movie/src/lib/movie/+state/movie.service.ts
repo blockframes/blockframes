@@ -72,14 +72,10 @@ export class MovieService extends CollectionService<MovieState> {
     return movie;
   }
 
-  async onCreate(movie: Movie, { write }: WriteOptions) {
-    // When a movie is created, we also create a permissions document for it.
-    // Since movie can be created on behalf of another user (An admin from admin panel for example)
-    const userId = movie._meta?.createdBy ? movie._meta.createdBy : this.authService.uid;
-    const user = await this.userService.getValue(userId);
+  onCreate(movie: Movie, { write }: WriteOptions) {
     const ref = this.getRef(movie.id);
     write.update(ref, { '_meta.createdAt': new Date() });
-    return this.permissionsService.addDocumentPermissions(movie.id, write as firebase.firestore.Transaction, user.orgId);
+    return Promise.all(movie.orgIds.map(orgId => this.permissionsService.addDocumentPermissions(movie.id, write as firebase.firestore.Transaction, orgId)));
   }
 
   onUpdate(movie: Movie, { write }: WriteOptions) {
