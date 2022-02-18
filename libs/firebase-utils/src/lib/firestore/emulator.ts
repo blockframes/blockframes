@@ -9,7 +9,7 @@ import { getFirestoreExportDirname } from './export';
 import { sleep, throwOnProduction } from '../util';
 import type * as firebaseTools from 'firebase-tools';
 import { promises } from 'fs';
-import _ from 'lodash';
+import _, { camelCase } from 'lodash';
 const { writeFile, rename } = promises;
 
 const firestoreExportFolder = 'firestore_export'; // ! Careful - changing this may cause a bug
@@ -390,7 +390,16 @@ async function ensureSafeEmulatorBackupPath(importPath: string) {
  */
 export function writeRuntimeConfig(values: { [key: string]: string }, path: string) {
   const runtimeObj = {};
-  Object.entries(values).forEach(([key, value]) => _.set(runtimeObj, key, process.env[value] || 'missing-env-value'));
+
+  const env = process.env['PROJECT_ID'];
+  function getKeyName(key: string) {
+    if (process.env.hasOwnProperty(`${camelCase(env)}_${key}`)) {
+      return process.env[`${camelCase(env)}_${key}`];
+    }
+    return key;
+  }
+
+  Object.entries(values).forEach(([key, value]) => _.set(runtimeObj, key, process.env[getKeyName(value)] || 'missing-env-value'));
   return writeFile(path, JSON.stringify(runtimeObj, null, 4));
 }
 
