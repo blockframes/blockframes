@@ -33,12 +33,13 @@
           </mat-select>
         </mat-form-field>
       </form>
-      <button mat-flat-button color="primary" (click)="update(contract.id, contract?.negotiation?.id)" class="center-button">Update</button>
+      <button mat-flat-button color="primary" (click)="update(contract.id, contract?.negotiation?.id)"
+        class="center-button">Update</button>
     </section>
 
     <section class="surface" *ngIf="contract.negotiation?.status === 'declined'">
       <h3>Why it has been declined</h3>
-      <p>{{contract.declineReason?? "Seller hasn't given any reason."}}</p>
+      <p>{{contract.declineReason ?? "Seller hasn't given any reason."}}</p>
     </section>
     <ng-container *ngIf="contract.negotiation as negotiation">
       <contract-item [contract]="negotiation">
