@@ -33,7 +33,7 @@ export class ContractViewComponent {
 
   contract$ = this.route.params.pipe(map(r => r.saleId as string))
     .pipe(
-      switchMap(this.getSale),
+      switchMap(saleId => this.getSale(saleId)),
       filter(contract => !!contract),
       tap(contract => {
         this.statusForm.setValue(contract.status);
