@@ -7,12 +7,12 @@ import { combineLatest, Subscription } from "rxjs";
 import { first, map, shareReplay, startWith, throttleTime } from "rxjs/operators";
 
 import { medias } from '@blockframes/utils/static-model'
-import { territories } from "@blockframes/utils/static-model";
 import { downloadCsvFromJson } from "@blockframes/utils/helpers";
 import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
 import { DurationMarker, CalendarAvailsFilter, durationAvailabilities, filterContractsByTitle } from "@blockframes/contract/avails/avails";
 
 import { CatalogAvailsShellComponent } from "../shell/shell.component";
+import { toGroupLabel } from "@blockframes/utils/utils";
 
 function formatDate(date: Date) {
   return format(date, 'dd/MM/yyy')
@@ -42,7 +42,7 @@ export class DashboardAvailsCalendarComponent implements AfterViewInit, OnDestro
 
   public availabilities$ = combineLatest([
     this.movie$,
-    this.availsForm.valueChanges,
+    this.availsForm.valueChanges.pipe(startWith(this.availsForm.value)),
     this.mandates$,
     this.mandateTerms$,
     this.sales$,
@@ -100,13 +100,13 @@ export class DashboardAvailsCalendarComponent implements AfterViewInit, OnDestro
     ]).pipe(first())
       .subscribe(([availabilities, movie]) => {
         const availsFilter = this.availsForm.value;
-        const formTerritories = availsFilter.territories;
+        const territories = toGroupLabel(availsFilter.territories, 'territories', 'World');
         const data = [{
           "International Title": movie.title.international,
           Medias: availsFilter.medias.map(medium => medias[medium]).join(';'),
           Exclusivity: availsFilter.exclusive ? 'Exclusive' : 'Non Exclusive',
           'Start Date - End Date': getDuration(availabilities.available).join(';'),
-          "Available Territories": formTerritories.map(territory => territories[territory]).join(';'),
+          "Available Territories": territories,
         }]
         const filename = `${movie.title.international.split(' ').join('_')}_avails`;
         downloadCsvFromJson(data, filename);
