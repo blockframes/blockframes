@@ -12,7 +12,6 @@ import { joinWith } from '@blockframes/utils/operators';
 import { getSeller } from '@blockframes/contract/contract/+state/utils'
 import { of } from 'rxjs';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
 import { IncomeService } from '@blockframes/contract/income/+state';
 import { Term } from '@blockframes/contract/term/+state';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
@@ -93,14 +92,5 @@ export class ContractViewComponent {
       this.incomeService.remove(term.id, { write });
       return { termIds: contract.termIds.filter(id => id !== term.id) };
     })
-  }
-}
-
-@Pipe({ name: 'isNew' })
-export class IsNegotiationNewPipe implements PipeTransform {
-  transform(negotiation: Negotiation) {
-    const pending = negotiation?.status === 'pending'
-    if (isInitial(negotiation) && pending) return true;
-    return false;
   }
 }
