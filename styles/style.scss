@@ -27,7 +27,7 @@ p, span {
   }
 }
 
-a:not(.mat-button-base) {
+a:not(.mat-button-base):not(.mat-menu-item) {
   &[href^="assets"], &[href^="mailto"] {
     font-weight: bold;
   }
