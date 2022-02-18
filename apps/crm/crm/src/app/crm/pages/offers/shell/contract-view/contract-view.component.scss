@@ -20,6 +20,10 @@ contract-item {
   }
 }
 
-a[mat-icon-button]{
+a[mat-icon-button] {
   margin-bottom: 24px;
+}
+
+.center-button {
+  align-self: center;
 }

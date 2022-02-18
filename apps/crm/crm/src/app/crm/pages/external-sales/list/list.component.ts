@@ -8,9 +8,9 @@ import { Sale, ContractService } from '@blockframes/contract/contract/+state';
 import { IncomeService } from '@blockframes/contract/income/+state';
 import { MovieService } from '@blockframes/movie/+state';
 import { joinWith } from '@blockframes/utils/operators';
-import { centralOrgId } from '@env';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
+import {getSeller} from '@blockframes/contract/contract/+state/utils'
 
 function queryFn(ref: CollectionReference, options: { internal?: boolean }) {
   if (options.internal)
@@ -29,6 +29,7 @@ function getFullName(seller: Organization) {
   return seller.denomination.full;
 }
 
+
 @Component({
   selector: 'contracts-list',
   templateUrl: './list.component.html',
@@ -44,7 +45,7 @@ export class ContractsListComponent {
   public externalSales$ = this.contractService.valueChanges(ref => queryFn(ref, { internal: false })).pipe(
     joinWith({
       licensor: (sale: Sale) => {
-        return this.orgService.valueChanges(this.getLicensorId(sale)).pipe(map(getFullName))
+        return this.orgService.valueChanges(getSeller(sale)).pipe(map(getFullName))
       },
       licensee: () => of('External'),
       title: (sale: Sale) => this.titleService.valueChanges(sale.titleId).pipe(map(title => title.title.international)),
@@ -63,11 +64,5 @@ export class ContractsListComponent {
 
   ngOnInit() {
     this.dynTitle.setPageTitle('My Sales (All)');
-  }
-
-  getLicensorId(sale: Sale) {
-    return sale.stakeholders.find(
-      orgId => ![centralOrgId.catalog, sale.buyerId].includes(orgId)
-    ) ?? sale.sellerId;
   }
 }

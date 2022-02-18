@@ -1,5 +1,5 @@
-<ng-container *ngIf="sales$ | async as sales">
-  <ng-container *ngIf="sales.length; else empty">
+<ng-container *ngIf="sales as internalSales">
+  <ng-container *ngIf="internalSales.length; else empty">
     <header mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
       <button mat-tab-link (click)="resetFilter()" [active]="(filter$|async) === ''">
         All <span *ngIf="(salesCount$ | async) as salesCount">({{ salesCount.all }})</span>
@@ -17,7 +17,6 @@
         Declined <span *ngIf="(salesCount$ | async) as salesCount">({{ salesCount.declined }})</span>
       </button>
     </header>
-    <ng-container *ngIf="internalSales as internalSales">
       <bf-table *ngIf="internalSales.length" [source]="internalSales | filterBy: filterBySalesStatus: filter.value"
         clickable useFilter pagination="50" (rowClick)="goToSale($event)">
         <ng-template colRef="_meta.createdAt" label="Date" let-date>{{ date | date:'MM/dd/yyyy'}}</ng-template>
@@ -44,27 +43,6 @@
           </ng-container>
         </ng-template>
       </bf-table>
-    </ng-container>
-
-    <ng-container *ngIf="externalSales as externalSales">
-      <ng-container *ngIf="externalSales.length">
-        <h3>Sales external to Archipel Content</h3>
-        <bf-table [source]="externalSales" clickable useFilter pagination="50" (rowClick)="goToSale($event)">
-          <ng-template colRef="_meta.createdAt" label="Import Date" let-date>{{ date | date:'MM/dd/yyyy'}}</ng-template>
-          <ng-template colRef="licensor" label="Licensor" let-licensor sort>{{ licensor | maxLength:50 }}</ng-template>
-          <ng-template colRef="licensee" label="Licensee" let-licensee sort>{{ licensee | maxLength:50 }}</ng-template>
-          <ng-template colRef="title" label="Title" let-title sort>
-            {{ title | maxLength:50 }}
-          </ng-template>
-          <ng-template colRef="price" label="Price" let-income>
-            <ng-container *ngIf="income?.price; else noPrice">
-              {{income.price | currency:income.currency}}
-            </ng-container>
-            <ng-template #noPrice>-</ng-template>
-          </ng-template>
-        </bf-table>
-      </ng-container>
-    </ng-container>
   </ng-container>
 </ng-container>
 

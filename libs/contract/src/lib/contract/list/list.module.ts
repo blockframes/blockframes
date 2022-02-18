@@ -5,7 +5,8 @@ import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-import { SaleListComponent } from './list.component';
+import { ExternalSaleListComponent } from './external-sales/external-sales.component';
+import { InternalSaleListComponent } from './internal-sales/internal-sales.component';
 
 // Blockframes
 import { MaxLengthModule, ToLabelModule } from '@blockframes/utils/pipes';
@@ -28,7 +29,10 @@ import { NegotiationPipeModule } from '@blockframes/contract/negotiation/pipe';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
-  declarations: [SaleListComponent],
+  declarations: [
+    InternalSaleListComponent,
+    ExternalSaleListComponent
+  ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -56,6 +60,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     // Router
     RouterModule.forChild([])
   ],
-  exports: [SaleListComponent]
+  exports: [
+    InternalSaleListComponent,
+    ExternalSaleListComponent
+  ]
 })
 export class SaleListModule { }

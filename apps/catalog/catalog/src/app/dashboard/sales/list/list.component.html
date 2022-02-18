@@ -8,7 +8,7 @@
   </div>
 </header>
 <ng-container *ngIf="sales$| async; else loading">
-  <sale-list [internalSales]="internalSales$ | async" [externalSales]="externalSales$ | async">
+  <internal-sales-list [sales]="internalSales$ | async" title="All Sales">
     <section fxLayout="column" fxLayoutAlign="center center" fxFlexGap="16" empty>
       <h1>You have no Deals yet.</h1>
       <p>
@@ -22,7 +22,9 @@
       <button (click)="openIntercom()" mat-button>Contact the Archipel Team</button>
       <img asset="empty_contract.svg" alt="Image, you have no sales yet">
     </section>
-  </sale-list>
+  </internal-sales-list>
+  <external-sales-list [sales]="externalSales$ | async">
+  </external-sales-list>
 </ng-container>
 
 

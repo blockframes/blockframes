@@ -1,17 +1,17 @@
 import { Component, ChangeDetectionStrategy, Optional, OnInit, } from '@angular/core';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { appName, getCurrentApp } from '@blockframes/utils/apps';
-import {  ContractService, Sale } from '@blockframes/contract/contract/+state';
+import { ContractService, Sale } from '@blockframes/contract/contract/+state';
 import { Organization, OrganizationService } from '@blockframes/organization/+state';
 import { Intercom } from 'ng-intercom';
 import { joinWith } from '@blockframes/utils/operators';
-import { map} from 'rxjs/operators';
-import { combineLatest, merge, of} from 'rxjs';
+import { map } from 'rxjs/operators';
+import { combineLatest, of } from 'rxjs';
 import { MovieService } from '@blockframes/movie/+state';
 import { IncomeService } from '@blockframes/contract/income/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { CollectionReference } from '@angular/fire/firestore';
-import { centralOrgId } from '@env';
+import { getSeller } from '@blockframes/contract/contract/+state/utils'
 
 function queryFn(ref: CollectionReference, orgId: string, options: { internal?: boolean }) {
   const operator = options.internal ? '!=' : "==";
@@ -41,7 +41,7 @@ export class SaleListComponent implements OnInit {
 
   public internalSales$ = this.contractService.valueChanges(ref => queryFn(ref, this.orgId, { internal: true })).pipe(
     joinWith({
-      licensor: (sale: Sale) => this.orgService.valueChanges(this.getLicensorId(sale)).pipe(map(getFullName)),
+      licensor: (sale: Sale) => this.orgService.valueChanges(getSeller(sale)).pipe(map(getFullName)),
       licensee: (sale: Sale) => this.orgService.valueChanges(sale.buyerId).pipe(map(getFullName)),
       title: (sale: Sale) => this.titleService.valueChanges(sale.titleId).pipe(map(title => title.title.international)),
       negotiation: (sale: Sale) => this.contractService.lastNegotiation(sale.id)
@@ -50,7 +50,7 @@ export class SaleListComponent implements OnInit {
 
   public externalSales$ = this.contractService.valueChanges(ref => queryFn(ref, this.orgId, { internal: true })).pipe(
     joinWith({
-      licensor: (sale: Sale) => this.orgService.valueChanges(this.getLicensorId(sale)).pipe(map(getFullName)),
+      licensor: (sale: Sale) => this.orgService.valueChanges(getSeller(sale)).pipe(map(getFullName)),
       licensee: () => of('External'),
       title: (sale: Sale) => this.titleService.valueChanges(sale.titleId).pipe(map(title => title.title.international)),
       price: (sale: Sale) => this.incomeService.valueChanges(sale.id),
@@ -69,13 +69,6 @@ export class SaleListComponent implements OnInit {
     @Optional() private intercom: Intercom,
 
   ) { }
-
-  getLicensorId(sale: Sale) {
-    return sale.stakeholders.find(
-      orgId => ![centralOrgId.catalog, sale.buyerId].includes(orgId)
-    ) ?? sale.sellerId;
-  }
-
 
   ngOnInit() {
     this.dynTitle.setPageTitle('My Sales (All)');
