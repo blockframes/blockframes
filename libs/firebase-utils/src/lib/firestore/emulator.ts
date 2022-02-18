@@ -393,7 +393,7 @@ export function writeRuntimeConfig(values: { [key: string]: string }, path: stri
 
   const env = process.env['PROJECT_ID'];
   function getKeyName(key: string) {
-    if (process.env.hasOwnProperty(`${camelCase(env)}_${key}`)) {
+    if (Object.prototype.hasOwnProperty.call(process.env, `${camelCase(env)}_${key}`)) {
       return process.env[`${camelCase(env)}_${key}`];
     }
     return key;
