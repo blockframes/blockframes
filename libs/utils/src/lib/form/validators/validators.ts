@@ -43,9 +43,11 @@ export function confirmPasswords(
 /** Require current and new password to be different */
 export function differentPassword(current: string = 'current', next: string = 'next'): ValidatorFn {
   return (group: FormGroup): { [key: string]: boolean } | null => {
-    return group.controls[current].value === group.controls[next].value && !group.controls[current].disabled && !group.controls[next].disabled
-      ? { currentPasswordMatch: true }
-      : null;
+    const currentControl = group.controls[current];
+    const nextControl = group.controls[next];
+    if (currentControl.value !== nextControl.value) return null;
+    if (currentControl.disabled && nextControl.disabled) return null;
+    return { currentPasswordMatch: true };
   }
 }
 
