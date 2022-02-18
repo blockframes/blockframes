@@ -8,7 +8,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
 
 // Akita
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
-import { firebase, firebaseRegion, intercomId, persistenceSettings } from '@env';
+import { firebase, firebaseRegion, intercomId } from '@env';
 
 // Components
 import { AppComponent } from './app.component';
@@ -50,7 +50,7 @@ import { emulatorConfig } from '../environment/environment';
 
     // Firebase
     AngularFireModule.initializeApp(firebase('crm')),
-    AngularFirestoreModule.enablePersistence(persistenceSettings),
+    AngularFirestoreModule,
     AngularFireFunctionsModule,
     AngularFirePerformanceModule,
     AngularFireAuthModule,
