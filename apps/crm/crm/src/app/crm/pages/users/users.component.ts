@@ -7,7 +7,7 @@ import { CrmQuery } from '@blockframes/admin/crm/+state/crm.query';
 import { OrganizationService, Organization } from '@blockframes/organization/+state';
 import { orgName } from '@blockframes/organization/+state';
 import { getAllAppsExcept, appName, getOrgModuleAccess, modules } from '@blockframes/utils/apps';
-import { take, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
 
 interface CrmUser extends User {
@@ -37,13 +37,13 @@ export class UsersComponent implements OnInit {
     private crmQuery: CrmQuery,
     private orgService: OrganizationService,
     private router: Router,
-  ) {}
+  ) { }
 
   async ngOnInit() {
     // Use valueChanges to take advantage of caching.
     this.users$ = combineLatest([
-      this.userService.valueChanges().pipe(take(1)),
-      this.orgService.valueChanges().pipe(take(1)),
+      this.userService.valueChanges(),
+      this.orgService.valueChanges(),
       this.crmService.loadAnalyticsData()
     ]).pipe(
       map(([users, orgs]) => {
