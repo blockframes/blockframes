@@ -12,7 +12,7 @@ import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-enc
 import { filterContractsByTitle, MapAvailsFilter, territoryAvailabilities } from "@blockframes/contract/avails/avails";
 
 import { CatalogAvailsShellComponent } from "../shell/shell.component";
-import { toGroupLabel } from "@blockframes/utils/utils";
+import { toGroupLabel } from "@blockframes/utils/pipes/group-label.pipe";
 
 function formatDate(date: Date) {
   return format(date, 'dd/MM/yyy')

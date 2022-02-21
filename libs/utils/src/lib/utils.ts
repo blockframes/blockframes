@@ -1,5 +1,5 @@
 import { Person } from './common-interfaces';
-import { staticModel, Scope, GroupScope, StaticGroup, staticGroups } from '@blockframes/utils/static-model';
+import { staticModel, Scope } from '@blockframes/utils/static-model';
 import { LanguageRecord } from '@blockframes/movie/+state/movie.firestore';
 
 export interface ErrorResultResponse {
@@ -230,28 +230,6 @@ export function toLabel(value: string | string[], scope: Scope, joinWith?: strin
     if (typeof value === 'string') return value;
     return '';
   }
-}
-
-export function toGroupLabel(value: string[], scope: GroupScope, all?: string) {
-
-  const groups: StaticGroup[] = staticGroups[scope];
-
-  const allItems = groups.reduce((items, group) => items.concat(group.items), []);
-
-  if (allItems.length === value.length) return [all];
-
-  return groups.map(group => {
-    const items = [];
-    for (const item of group.items) {
-      if (value.includes(item)) items.push(staticModel[scope][item]);
-    }
-    return items.length === group.items.length
-      ? group.label
-      : items;
-  })
-    .sort((a) => typeof a === 'string' ? -1 : 1)
-    .flat()
-    .filter(v => !!v);
 }
 
 /**

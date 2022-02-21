@@ -1,18 +1,14 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy } from "@angular/core";
-
 import { ActivatedRoute, Router } from "@angular/router";
-
 import { format } from 'date-fns';
 import { combineLatest, Subscription } from "rxjs";
 import { first, map, shareReplay, startWith, throttleTime } from "rxjs/operators";
-
 import { medias } from '@blockframes/utils/static-model'
 import { downloadCsvFromJson } from "@blockframes/utils/helpers";
 import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
 import { DurationMarker, CalendarAvailsFilter, durationAvailabilities, filterContractsByTitle } from "@blockframes/contract/avails/avails";
-
 import { CatalogAvailsShellComponent } from "../shell/shell.component";
-import { toGroupLabel } from "@blockframes/utils/utils";
+import { toGroupLabel } from "@blockframes/utils/pipes/group-label.pipe";
 
 function formatDate(date: Date) {
   return format(date, 'dd/MM/yyy')
