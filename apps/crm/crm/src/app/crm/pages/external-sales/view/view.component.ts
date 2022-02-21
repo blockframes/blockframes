@@ -34,9 +34,7 @@ export class ContractViewComponent {
     .pipe(
       switchMap(saleId => this.getSale(saleId)),
       filter(contract => !!contract),
-      tap(contract => {
-        this.statusForm.setValue(contract.status);
-      })
+      tap(contract => this.statusForm.setValue(contract.status))
     );
 
   statusForm = new FormControl('pending')

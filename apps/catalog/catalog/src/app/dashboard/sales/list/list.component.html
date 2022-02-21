@@ -9,7 +9,7 @@
 </header>
 <ng-container *ngIf="sales$| async; else loading">
   <internal-sales-list [sales]="internalSales$ | async" title="All Sales">
-    <section fxLayout="column" fxLayoutAlign="center center" fxFlexGap="16" empty>
+    <section fxLayout="column" fxLayoutAlign="center center" fxFlexGap="16">
       <h1>You have no Deals yet.</h1>
       <p>
         You will be notified as soon as a buyer makes an offer on your titles.<br />
