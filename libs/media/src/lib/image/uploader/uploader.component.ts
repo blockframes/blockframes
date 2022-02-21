@@ -152,6 +152,7 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
   @ViewChild('fileUploader') fileUploader: ElementRef<HTMLInputElement>;
 
   private docSub: Subscription;
+  private dropEnabledSteps: CropStep[] = ['drop', 'hovering'];
 
   constructor(
     private db: AngularFirestore,
@@ -181,6 +182,7 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
   @HostListener('drop', ['$event'])
   onDrop($event: DragEvent) {
     $event.preventDefault();
+    if (!this.dropEnabledSteps.includes(this.step.value)) return;
     if ($event.dataTransfer.files.length) {
       this.filesSelected($event.dataTransfer.files);
     } else {
@@ -191,12 +193,14 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
   @HostListener('dragover', ['$event'])
   onDragOver($event: DragEvent) {
     $event.preventDefault();
+    if (!this.dropEnabledSteps.includes(this.step.value)) return;
     this.nextStep('hovering');
   }
 
   @HostListener('dragleave', ['$event'])
   onDragLeave($event: DragEvent) {
     $event.preventDefault();
+    if (!this.dropEnabledSteps.includes(this.step.value)) return;
     this.resetState();
   }
 

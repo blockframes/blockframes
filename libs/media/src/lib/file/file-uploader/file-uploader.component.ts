@@ -44,7 +44,6 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
   get form() { return this._form; }
   @Input() set form(value: StorageFileForm) {
     this._form = value;
-    this.computeState();
     this.sub?.unsubscribe();
     this.sub = this.form.valueChanges.subscribe(storageFile => {
       if (storageFile.storagePath) this.computeState();
@@ -67,6 +66,7 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
     const [collection, label, docId] = value;
     this.storagePath = getFileStoragePath(collection, label, docId);
     this.metadata = { ...getFileMetadata(collection, label, docId), ...this.getExtra() };
+    this.computeState();
   }
   @Input() set accept(fileType: AllowedFileType | AllowedFileType[]) {
     const types = Array.isArray(fileType) ? fileType : [fileType]
@@ -95,6 +95,8 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
   public state$ = new BehaviorSubject<UploadState>('waiting');
   public file: File;
   public fileName: string;
+
+  private dropEnabledSteps: UploadState[] = ['waiting', 'hovering'];
 
   private sub: Subscription;
   private docSub: Subscription;
@@ -126,18 +128,21 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
   @HostListener('drop', ['$event'])
   onDrop($event: DragEvent) {
     $event.preventDefault();
+    if (!this.dropEnabledSteps.includes(this.state$.value)) return;
     this.selected($event.dataTransfer.files);
   }
 
   @HostListener('dragover', ['$event'])
   onDragOver($event: DragEvent) {
     $event.preventDefault();
+    if (!this.dropEnabledSteps.includes(this.state$.value)) return;
     this.state$.next('hovering');
   }
 
   @HostListener('dragleave', ['$event'])
   onDragLeave($event: DragEvent) {
     $event.preventDefault();
+    if (!this.dropEnabledSteps.includes(this.state$.value)) return;
     this.computeState();
   }
 
