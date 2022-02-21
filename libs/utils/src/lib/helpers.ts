@@ -140,7 +140,7 @@ export function downloadCsvFromJson(data: unknown[], fileName = 'my-file') {
   const replacer = (_: unknown, value: unknown) => value === null ? '' : value;
   const header = Object.keys(data[0]);
   const csv = data.map((row: unknown) => header.map(fieldName => JSON.stringify(row[fieldName], replacer)).join(','));
-  csv.unshift(header.join(','));
+  csv.unshift(header.map(h => `"${h}"`).join(','));
   const csvArray = csv.join('\r\n');
 
   const a = document.createElement('a');
