@@ -12,7 +12,6 @@ import { scrollIntoView } from '@blockframes/utils/browser/utils';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
 import { CalendarAvailsFilter, durationAvailabilities, DurationMarker, filterContractsByTitle } from '@blockframes/contract/avails/avails';
-
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
 
 
@@ -41,7 +40,7 @@ export class MarketplaceMovieAvailsCalendarComponent implements AfterViewInit, O
   private salesTerms$ = this.shell.salesTerms$;
 
   public availabilities$ = combineLatest([
-    this.availsForm.valueChanges,
+    this.availsForm.valueChanges.pipe(startWith(this.availsForm.value)),
     this.mandates$,
     this.mandateTerms$,
     this.sales$,
