@@ -12,6 +12,7 @@ import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-enc
 import { filterContractsByTitle, MapAvailsFilter, territoryAvailabilities } from "@blockframes/contract/avails/avails";
 
 import { CatalogAvailsShellComponent } from "../shell/shell.component";
+import { toGroupLabel } from "@blockframes/utils/pipes/group-label.pipe";
 
 function formatDate(date: Date) {
   return format(date, 'dd/MM/yyy')
@@ -43,7 +44,7 @@ export class DashboardAvailsMapComponent implements AfterViewInit, OnDestroy {
 
   public availabilities$ = combineLatest([
     this.movie$,
-    this.availsForm.valueChanges,
+    this.availsForm.valueChanges.pipe(startWith(this.availsForm.value)),
     this.mandates$,
     this.mandateTerms$,
     this.sales$,
@@ -118,12 +119,13 @@ export class DashboardAvailsMapComponent implements AfterViewInit, OnDestroy {
       .subscribe(([availabilities, movie]) => {
         const availsFilter = this.availsForm.value;
         const availableTerritories = availabilities.available.map(marker => marker.term.territories).flat();
+        const territories = toGroupLabel(availableTerritories, 'territories', 'World');
         const data = [{
           "International Title": movie.title.international,
           Medias: availsFilter.medias.map(medium => medias[medium]).join(';'),
           Exclusivity: availsFilter.exclusive ? 'Exclusive' : 'Non Exclusive',
           'Start Date - End Date': `${formatDate(availsFilter.duration.from)} - ${formatDate(availsFilter.duration.to)}`,
-          "Available Territories": availableTerritories.join(';'),
+          "Available Territories": territories,
         }]
         const filename = `${movie.title.international.split(' ').join('_')}_avails`;
         downloadCsvFromJson(data, filename);
