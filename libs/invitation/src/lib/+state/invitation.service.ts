@@ -75,7 +75,10 @@ export class InvitationService extends CollectionService<InvitationState> {
     this.authService.profile$,
     this.allInvitations$
   ]).pipe(
-    map(([user, invitations]) => invitations.filter(i => i.toOrg?.id === user.orgId || i.toUser?.uid === user.uid))
+    map(([user, invitations]) => {
+      if (!user?.uid || !user?.orgId) return [];
+      return invitations.filter(i => i.toOrg?.id === user.orgId || i.toUser?.uid === user.uid)
+    })
   );
 
   /** Invitations where current user is a guest */
@@ -84,6 +87,7 @@ export class InvitationService extends CollectionService<InvitationState> {
     this.allInvitations$
   ]).pipe(
     map(([user, invitations]) => {
+      if (!user?.uid || !user?.orgId) return [];
       const request = (user: User, invitation: Invitation) => invitation.fromUser?.uid === user.uid && invitation.mode === 'request';
       const invitation = (user: User, invitation: Invitation) => invitation.toUser?.uid === user.uid && invitation.mode === 'invitation';
       return invitations.filter(i => request(user, i) || invitation(user, i))

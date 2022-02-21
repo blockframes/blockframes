@@ -84,8 +84,8 @@ export class AuthService extends FireAuthService<AuthState> {
   );
 
   isBlockframesAdmin$ = this.user$.pipe(
-    map(user => {
-      if (!user || user.isAnonymous) return false;
+    switchMap(user => {
+      if (!user || user.isAnonymous) return of(false);
       return this.db.collection('blockframesAdmin').doc(user.uid).ref.get().then(snap => snap.exists);
     })
   );
