@@ -36,7 +36,6 @@ export class RequestScreeningComponent {
 
   async requestScreening() {
     this.animated = false;
-    const snackbarRef = this.snackbar.open('Sending your screening request...');
     this.requestStatus.next('sending');
     const f = this.functions.httpsCallable('requestScreening');
     await f({ movieId: this.movieId, uid: this.authService.uid }).toPromise();
@@ -44,7 +43,6 @@ export class RequestScreeningComponent {
     this.analytics.event('screeningRequested', {
       movieId: this.movieId
     });
-    snackbarRef.dismiss();
     this.snackbar.open('Screening request successfully sent', '', { duration: 3000 });
   }
 }
