@@ -58,7 +58,7 @@ function createBucketContractControl(params: Partial<BucketContract> = {}) {
     parentTermId: new FormControl(contract.parentTermId),
     terms: FormList.factory(contract.terms, term => BucketTermForm.factory(term, createBucketTermControl)),
     specificity: new FormControl(contract.price),
-    holdbacks:FormList.factory(contract.holdbacks, holdback => new HoldbackForm(holdback), [])
+    holdbacks: FormList.factory(contract.holdbacks, holdback => new HoldbackForm(holdback), [])
   }
 }
 type BucketContractControls = ReturnType<typeof createBucketContractControl>;
@@ -225,7 +225,7 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
   /**
    * This function will retrieved the `termIndex` & `contractIndex` based on the given `DurationMarker`
    */
-   getTermIndexForCalendar(avails: CalendarAvailsFilter, marker: DurationMarker): { contractIndex: number, termIndex: number } | undefined {
+  getTermIndexForCalendar(avails: CalendarAvailsFilter, marker: DurationMarker): { contractIndex: number, termIndex: number } | undefined {
     const { term } = marker;
     const bucket = this.value;
 
