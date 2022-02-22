@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy, ViewEncapsulation, ViewChild } from '@angular/core';
+import { applicationUrl } from '@blockframes/utils/apps';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
@@ -13,7 +14,7 @@ export class CatalogLandingComponent {
   @ViewChild('sellerVideo') sellerVideo;
   @ViewChild('buyerVideo') buyerVideo;
 
-
+  public applicationUrl = applicationUrl;
   public tabTitle = [
     {
       title: 'For sellers',

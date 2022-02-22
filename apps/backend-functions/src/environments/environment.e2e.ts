@@ -7,16 +7,11 @@
 import * as functions from 'firebase-functions';
 
 export const e2eMode = true;
-if (e2eMode) {
-  console.log('Emulator Mode enabled for functions');
-  console.dir(functions.config());
-}
+console.log('Emulator Mode enabled for functions');
 
 export {
   production,
-  factoryContract,
   backupBucket,
-  relayer,
   appUrl,
   sentryEnv,
   sentryDsn,
@@ -30,9 +25,6 @@ import { firebase } from '@env';
 export const { projectId, storageBucket } = firebase();
 
 export const sendgridAPIKey = functions.config().sendgrid.api_key;
-export const mnemonic = functions.config().relayer.mnemonic;
-
-export const adminPassword = functions.config().admin.password;
 
 export const jwplayerSecret = functions.config().jwplayer.secret;
 export const jwplayerKey = functions.config().jwplayer.key;
