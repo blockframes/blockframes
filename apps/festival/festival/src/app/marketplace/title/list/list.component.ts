@@ -50,6 +50,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit() {
     this.movies$ = this.movieResultsState.asObservable();
+    this.searchForm.languages.get('versions').get('original').setValue(true); // pb highlite filter
     const params = this.route.snapshot.queryParams;
     for (const key in params) {
       try {
