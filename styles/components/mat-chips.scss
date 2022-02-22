@@ -7,6 +7,7 @@
 
   mat-chip.mat-standard-chip {
     color: mat.get-color-from-palette($foreground, icon);
+    margin: -2px 4px;
     // Disabled the over animation when the mat chip is only informative
     // that means when we deativate the ripple effect
     &[disableRipple] {
