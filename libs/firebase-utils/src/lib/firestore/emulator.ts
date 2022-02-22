@@ -7,7 +7,6 @@ import { join, resolve, sep } from 'path';
 import { runShellCommand, runShellCommandUntil, awaitProcOutput, gsutilTransfer } from '../commands';
 import { getFirestoreExportDirname } from './export';
 import { sleep, throwOnProduction } from '../util';
-import type * as firebaseTools from 'firebase-tools';
 import { promises } from 'fs';
 import _, { camelCase } from 'lodash';
 const { writeFile, rename } = promises;
@@ -394,7 +393,7 @@ export function writeRuntimeConfig(values: { [key: string]: string }, path: stri
   const env = process.env['PROJECT_ID'];
   function getKeyName(key: string) {
     if (Object.prototype.hasOwnProperty.call(process.env, `${camelCase(env)}_${key}`)) {
-      return process.env[`${camelCase(env)}_${key}`];
+      return `${camelCase(env)}_${key}`;
     }
     return key;
   }
