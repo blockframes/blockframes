@@ -1,4 +1,4 @@
-import { auth } from "@blockframes/testing/e2e";
+import { acceptCookies, auth } from "@blockframes/testing/e2e";
 
 describe('Basic Landing Page, Login and Profile Page Tests', () => {
 
@@ -19,7 +19,7 @@ describe('Basic Landing Page, Login and Profile Page Tests', () => {
     cy.contains('Contact Information').should('exist');
   })
   it('should now show Accept Cookies after being accepted', () => {
-    cy.contains('Accept cookies').click();
+    acceptCookies();
     cy.visit('/');
     cy.contains('Accept cookies').should('not.exist');
   })
