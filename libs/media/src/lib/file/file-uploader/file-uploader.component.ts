@@ -26,7 +26,7 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { getDeepValue } from '@blockframes/utils/pipes';
 import { boolean } from '@blockframes/utils/decorators/decorators';
-import { StorageFile } from '@blockframes/media/+state/media.firestore';
+import { createStorageFile, StorageFile } from '@blockframes/media/+state/media.firestore';
 
 type UploadState = 'waiting' | 'hovering' | 'ready' | 'file';
 
@@ -115,7 +115,10 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
           ? getDeepValue(data, this.metadata.field)[this.formIndex]
           : getDeepValue(data, this.metadata.field);
         if (media) {
-          this.form.get('storagePath').setValue(media.storagePath);
+          const extra = this.getExtra()
+          // Once jwPlayerId is added in the db, it should also be added to the form too.
+          delete extra?.['jwPlayerId'];
+          this.form.patchValue({ ...media, ...extra });
         }
       })
     }
