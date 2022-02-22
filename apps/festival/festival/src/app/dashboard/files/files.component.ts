@@ -9,7 +9,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilesViewComponent  {
-  org$ = this.orgService.org$;
+  org$ = this.orgService.currentOrg$;
 
   constructor(private orgService: OrganizationService, private dynTitle: DynamicTitleService) {
     this.dynTitle.setPageTitle('My files')

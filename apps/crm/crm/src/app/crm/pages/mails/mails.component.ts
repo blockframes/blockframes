@@ -4,7 +4,7 @@ import { TestEmailForm } from '@blockframes/admin/crm/forms/test-email.form';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SendgridService } from '@blockframes/utils/emails/sendgrid.service'
 import { sendgridEmailsFrom } from '@blockframes/utils/apps';
-import { AuthQuery } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/+state';
 
 @Component({
   selector: 'crm-mails',
@@ -21,14 +21,14 @@ export class MailsComponent implements OnInit {
     private snackBar: MatSnackBar,
     private cdRef: ChangeDetectorRef,
     private sendgrid: SendgridService,
-    private authQuery: AuthQuery,
+    private authService: AuthService,
   ) {
   }
 
   ngOnInit() {
     this.form = new TestEmailForm();
     this.form.get('from').setValue(sendgridEmailsFrom.default);
-    this.form.get('to').setValue(this.authQuery.user.email);
+    this.form.get('to').setValue(this.authService.profile.email);
   }
 
   async sendTestEmail() {
