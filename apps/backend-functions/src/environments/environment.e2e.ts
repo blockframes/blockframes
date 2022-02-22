@@ -8,6 +8,7 @@ import * as functions from 'firebase-functions';
 
 export const e2eMode = true;
 console.log('Emulator Mode enabled for functions');
+functions.config();
 
 export {
   production,
