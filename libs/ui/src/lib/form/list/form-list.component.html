@@ -36,13 +36,13 @@
     </ng-template>
 
     <!-- If we keep the form open, there is no point to have a cancel button -->
-    <div fxLayout="row" [fxLayoutAlign]="keepFormOpen ? 'end center' : 'space-between center'">
-      <ng-container *ngIf="!keepFormOpen">
-        <button test-id="row-cancel" mat-stroked-button [disabled]="form.controls.length < 1" (click)="cancel()">
+    <div fxLayout="row" [fxLayoutAlign]="keepFormOpen || !form.controls.length ? 'end center' : 'space-between center'">
+      <ng-container *ngIf="!keepFormOpen && form.controls.length">
+        <button test-id="row-cancel" mat-stroked-button (click)="cancel()">
           <mat-icon svgIcon="close"></mat-icon><span>Cancel</span>
         </button>
       </ng-container>
-      <button test-id="row-save" mat-stroked-button [disabled]="formItem.invalid" (click)="save()">
+      <button test-id="row-save" mat-stroked-button [disabled]="formItem.invalid || formItem.pristine" (click)="save()">
         <mat-icon svgIcon="save"></mat-icon>
         <span>
           <ng-template [ngTemplateOutlet]="saveButtonText  || defaultText"></ng-template>
