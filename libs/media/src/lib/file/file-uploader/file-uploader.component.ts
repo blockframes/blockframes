@@ -115,7 +115,7 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
           : getDeepValue(data, this.metadata.field);
         if (media) {
           const extra = this.getExtra()
-          // Once jwPlayerId is added in the db, it should also be added to the form too.
+          // jwPlayer comes from the doc, not from the form.
           delete extra?.['jwPlayerId'];
           this.form.patchValue({ ...media, ...extra });
         }
