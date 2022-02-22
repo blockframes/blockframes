@@ -1,14 +1,14 @@
-import { loginWithRandomUser, clearBrowserAuth } from "@blockframes/testing/e2e";
+import { auth } from "@blockframes/testing/e2e";
 
 describe('Basic Landing Page, Login and Profile Page Tests', () => {
 
   beforeEach(() => {
     cy.visit('/')
-    clearBrowserAuth()
+    auth.clearBrowserAuth()
     cy.visit('/')
   })
   it('should load user and log into profile page', () => {
-    loginWithRandomUser().logSubject();
+    auth.loginWithRandomUser().logSubject();
     cy.visit('c/o/account/profile/view/settings');
     cy.contains('Contact Information').should('exist');
   })

@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy, ViewEncapsulation } from '@angular/core';
+import { applicationUrl } from '@blockframes/utils/apps';
 
 @Component({
   selector: 'festival-landing',
@@ -9,6 +10,8 @@ import { Component, ChangeDetectionStrategy, ViewEncapsulation } from '@angular/
 })
 export class LandingComponent {
 
+  public applicationUrl = applicationUrl;
+  
   public partnerLogoList = [
     'partner_alibaba.png',
     'partner_amazon.png',

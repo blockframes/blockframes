@@ -14,7 +14,7 @@ import { templateIds } from '@blockframes/utils/emails/ids';
 import { MatDialog } from '@angular/material/dialog';
 import { shareReplay, switchMap, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { AuthQuery } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/+state';
 import { UserService } from '@blockframes/user/+state';
 import { ErrorResultResponse } from '@blockframes/utils/utils';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -66,7 +66,7 @@ export class MarketplaceMovieViewComponent implements OnInit {
 
   constructor(
     private movieQuery: MovieQuery,
-    private authQuery: AuthQuery,
+    private authService: AuthService,
     private orgService: OrganizationService,
     private userService: UserService,
     private campaignService: CampaignService,
@@ -105,7 +105,7 @@ export class MarketplaceMovieViewComponent implements OnInit {
 
   async sendEmail(emailData: EmailData, title: string, orgs: Organization[]) {
     const templateId = templateIds.financiers.invest;
-    const userSubject = getUserEmailData(this.authQuery.user);
+    const userSubject = getUserEmailData(this.authService.profile);
 
     const org = this.orgService.org;
     const orgUserSubject: OrgEmailData = {

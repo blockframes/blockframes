@@ -6,10 +6,17 @@
   <header fxFlex fxLayout fxLayoutAlign="space-between center" class="marketplace-header">
     <a class="festival-logo" href="https://www.screendaily.com/" target="_blank">
       <img asset="screen-logo.png" />
-    </a>
-    <a test-id="calendar-icon" mat-icon-button routerLink="event/calendar" matTooltip="My Calendar">
-      <mat-icon svgIcon="calendar_today"></mat-icon>
-    </a>
+    </a> 
+
+    <div fxLayoutAlign="center center" fxLayoutGap="24px">
+      <a mat-button class="link-to-app" color="primary" [href]="applicationUrl.catalog" target="_blank">        
+        <mat-icon svgIcon="mini_logo_catalog"></mat-icon>
+        <span>Buy Content</span>
+      </a>
+      <a test-id="calendar-icon" mat-icon-button routerLink="event/calendar" matTooltip="My Calendar">
+        <mat-icon svgIcon="calendar_today"></mat-icon>
+      </a>
+    </div>
   </header>
 
 </layout-marketplace>

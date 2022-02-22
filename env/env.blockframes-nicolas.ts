@@ -8,21 +8,21 @@ export const persistenceSettings = {
 // ========
 
 export const appUrl = {
-  content: 'https://blockframes-george.web.app',
-  market: 'https://blockframes-george-festival.web.app',
-  financiers: 'https://blockframes-george-financiers.web.app',
-  crm: 'https://blockframes-george-crm.web.app',
+  content: 'https://blockframes-nicolas.web.app',
+  market: 'https://festival-blockframes-nicolas.web.app',
+  crm: 'https://crm-blockframes-nicolas.web.app',
+  financiers: 'https://financiers-blockframes-nicolas.web.app',
 };
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyBKe0IWd_NQql1cHmcnMJP58ZiTvZyikO0',
-  authDomain: 'blockframes-george.firebaseapp.com',
-  databaseURL: 'https://blockframes-george.firebaseio.com',
-  projectId: 'blockframes-george',
-  storageBucket: 'blockframes-george.appspot.com',
-  messagingSenderId: '782756549621',
-  appId: '1:782756549621:web:e3ae8b3914fd8acc3546bc',
-  measurementId: 'G-1ERX03HP3B',
+  apiKey: "AIzaSyC228JFWuVx4-XMPlxZbP5v7fyC8WRjD0E",
+  authDomain: "blockframes-nicolas.firebaseapp.com",
+  databaseURL: 'https://blockframes-nicolas.firebaseio.com',
+  projectId: "blockframes-nicolas",
+  storageBucket: "blockframes-nicolas.appspot.com",
+  messagingSenderId: "595561197746",
+  appId: "1:595561197746:web:155ea27417feaeafa419ab",
+  measurementId: "G-L0ELW3HRWZ"
 };
 
 export const firebaseRegion = 'europe-west1';
@@ -47,26 +47,26 @@ export const algolia = {
   appId: '8E9YO1I9HB',
   searchKey: '4a2990a293c0ee0bfde9ebd66270a47f',
   indexNameOrganizations: {
-    festival: 'george_festival_org',
-    financiers: 'george_financiers_org',
-    catalog: 'george_catalog_org'
+    festival: 'nicolas_festival_org',
+    financiers: 'nicolas_financiers_org',
+    catalog: 'nicolas_catalog_org'
   },
   indexNameMovies: {
-    festival: 'george_festival_movies',
-    financiers: 'george_financiers_movies',
-    catalog: 'george_catalog_movies',
+    festival: 'nicolas_festival_movies',
+    financiers: 'nicolas_financiers_movies',
+    catalog: 'nicolas_catalog_movies',
   },
-  indexNameUsers: 'george_users',
+  indexNameUsers: 'nicolas_users',
 };
 
 // Support emails
 // =======
 
 export const supportEmails = {
-  default: 'ggrigorian@cascade8.com',
-  catalog: 'ggrigorian+catalog@cascade8.com',
-  festival: 'ggrigorian+festival@cascade8.com',
-  financiers: 'ggrigorian+financiers@cascade8.com'
+  default: 'ngermain@cascade8.com',
+  catalog: 'ngermain+catalog@cascade8.com',
+  festival: 'ngermain+festival@cascade8.com',
+  financiers: 'ngermain+financiers@cascade8.com'
 }
 
 // Yandex
@@ -121,7 +121,7 @@ export const quorum = {
 // BigQuery
 // ========
 
-export const bigQueryAnalyticsTable = 'blockframes-george.analytics_235781207.events_';
+export const bigQueryAnalyticsTable = 'blockframes-nicolas.analytics_301960050.events_';
 
 // Data Studio
 // ========
@@ -141,9 +141,9 @@ export const centralOrgId = {
 // Import / Export parameters
 // =======
 
-export const backupBucket = 'blockframes-george-backup';
-export const heavyChunkSize = 10;
-export const chunkSize = 25;
+export const backupBucket = 'nicolas-backups';
+export const heavyChunkSize = 7;
+export const chunkSize = 15;
 
 // JwPlayer
 // @see https://dashboard.jwplayer.com/#/content/detail?key=7R9ttesP&property=75507f12-83b6-11ea-ab11-3e60acbe08db&spotlight=default&tab=metadata&view=list
