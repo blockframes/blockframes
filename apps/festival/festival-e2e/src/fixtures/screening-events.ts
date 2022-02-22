@@ -54,8 +54,7 @@ export default [
     invitees: [
       {
         uid: 'MDnN2GlVUeadIVJbzTToQQNAMWZ2',
-      },
-      {},
+      }
     ],
     private: true,
   },
