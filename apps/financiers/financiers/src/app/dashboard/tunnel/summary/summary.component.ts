@@ -5,7 +5,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { ConsentsService } from '@blockframes/consents/+state/consents.service';
 import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
 import { findInvalidControls } from '@blockframes/ui/tunnel/layout/layout.component';
-import { map, pluck, switchMap, tap } from 'rxjs/operators';
+import { map, pluck, switchMap } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { MovieService } from '@blockframes/movie/+state';
@@ -29,12 +29,9 @@ export class TunnelSummaryComponent implements OnInit {
   isPublished$ = this.route.params.pipe(
     pluck('movieId'),
     switchMap((movieId: string) => this.movieService.valueChanges(movieId)),
-    tap(movie => this.movieId = movie.id),
     map(movie => movie.app.catalog.status),
     map(status => status === 'accepted' || status === 'submitted')
   );
-
-  movieId: string
 
   constructor(
     private shell: MovieFormShellComponent,
@@ -67,7 +64,8 @@ export class TunnelSummaryComponent implements OnInit {
         onConfirm: async () => {
           try {
             await this.shell.layout.update({ publishing: true });
-            await this.consentsService.createConsent('share', this.movieId);
+            const movieId = this.route.snapshot.paramMap.get('movieId');
+            await this.consentsService.createConsent('share', movieId);
             const text = `${this.form.get('title').get('international').value} was successfully submitted.`;
             const ref = this.snackBar.open(text, '', { duration: 1000 });
             ref.afterDismissed().subscribe(() => this.router.navigate(['../end'], { relativeTo: this.route }))

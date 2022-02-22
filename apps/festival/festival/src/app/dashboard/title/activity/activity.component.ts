@@ -14,7 +14,8 @@ import { DashboardTitleShellComponent } from '@blockframes/movie/dashboard/shell
 export class TitleActivityComponent implements OnInit {
   public movieAnalytics$ = this.route.params.pipe(
     pluck('movieId'),
-    switchMap((movieId: string) => this.analyticsService.valueChanges([movieId])));
+    switchMap((movieId: string) => this.analyticsService.valueChanges([movieId]))
+  );
 
   constructor(
     private route: ActivatedRoute,

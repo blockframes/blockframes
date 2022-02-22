@@ -140,7 +140,8 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
 
   private async init() {
 
-    const contracts = await this.contractService.getValue(ref => ref.where('titleId', '==', this.route.snapshot.params.movieId).where('status', '==', 'accepted'));
+    const movieId = this.route.snapshot.params.movieId;
+    const contracts = await this.contractService.getValue(ref => ref.where('titleId', '==', movieId).where('status', '==', 'accepted'));
 
     const mandates = contracts.filter(isMandate);
     const sales = contracts.filter(isSale);

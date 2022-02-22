@@ -4,7 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
 import { findInvalidControls } from '@blockframes/ui/tunnel/layout/layout.component';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { map, pluck, switchMap, tap } from 'rxjs/operators';
+import { map, pluck, switchMap } from 'rxjs/operators';
 import { MovieService } from '@blockframes/movie/+state';
 
 @Component({
@@ -25,12 +25,9 @@ export class TunnelSummaryComponent implements OnInit {
   isPublished$ = this.route.params.pipe(
     pluck('movieId'),
     switchMap((movieId: string) => this.movieService.valueChanges(movieId)),
-    tap(movie => this.movieId = movie.id),
     map(movie => movie.app.catalog.status),
     map(status => status === 'accepted' || status === 'submitted')
   );
-
-  movieId: string
 
   constructor(
     private shell: MovieFormShellComponent,
@@ -56,7 +53,8 @@ export class TunnelSummaryComponent implements OnInit {
       const text = `${this.form.get('title').get('international').value} successfully published.`;
       const ref = this.snackBar.open(text, '', { duration: 1000 });
       ref.afterDismissed().subscribe(() => {
-        this.router.navigate(['c/o/dashboard/title', this.movieId])
+        const movieId = this.route.snapshot.paramMap.get('movieId');
+        this.router.navigate(['c/o/dashboard/title', movieId]);
       })
     } else {
       // Log the invalid forms

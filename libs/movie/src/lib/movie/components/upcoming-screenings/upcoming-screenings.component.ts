@@ -11,7 +11,7 @@ import { Screening } from '@blockframes/event/+state/event.firestore';
 import { getCurrentApp } from '@blockframes/utils/apps';
 
 // RxJs
-import { map, pluck, shareReplay, switchMap, tap } from 'rxjs/operators';
+import { map, pluck, shareReplay, switchMap } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { RequestAskingPriceComponent } from '../request-asking-price/request-asking-price.component';
@@ -36,11 +36,10 @@ export class UpcomingScreeningsComponent {
 
   private movie$ = this.route.params.pipe(
     pluck('movieId'),
-    switchMap((movieId: string) => this.movieService.getValue(movieId)),
-    tap(movie => this.movieId = movie.id)
+    switchMap((movieId: string) => this.movieService.getValue(movieId))
   );
 
-  public movieId: string;
+  public movieId: string = this.route.snapshot.paramMap.get('movieId');
 
   public ongoingScreenings$: Observable<Event<Screening>[]>;
   public futureScreenings$: Observable<Event<Screening>[]>;
