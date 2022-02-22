@@ -63,7 +63,7 @@ export function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearc
     languages: {
       languages: [],
       versions: {
-        original: false,
+        original: true,
         dubbed: false,
         subtitle: false,
         caption: false,

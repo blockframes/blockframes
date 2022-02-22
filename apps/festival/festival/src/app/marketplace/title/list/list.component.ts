@@ -50,6 +50,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit() {
     this.movies$ = this.movieResultsState.asObservable();
+
     const params = this.route.snapshot.queryParams;
     for (const key in params) {
       try {
