@@ -114,7 +114,7 @@ describe('Organiser invites other users to private screening', () => {
     auth.loginWithEmailAndPassword(userAdmin.email);
     acceptCookies();
 
-    cy.visit('/c/o/dashboard/event');
+    // cy.visit('/c/o/dashboard/event');
     cy.visit('/c/o/dashboard/invitations')
 
     festival.verifyNotification(userInvited1.firstName, true);
