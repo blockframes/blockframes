@@ -1,39 +1,25 @@
 ﻿/// <reference types="cypress" />
 
-// Utils
-import ScreeningEvents from '../../fixtures/screening-events';
-import { User, USER } from '@blockframes/e2e/fixtures/users';
-import { Orgs } from '@blockframes/e2e/fixtures/orgs';
-
-// Pages
+import screeningEvents from '../../fixtures/screening-events';
+import USERS from 'tools/fixtures/users.json'
+import ORGS from 'tools/fixtures/orgs.json'
 import { acceptCookies, auth, awaitElementDeletion, events, festival } from '@blockframes/testing/e2e';
 
-const ScreeningEvent = ScreeningEvents[0];
-const invitedUserUIDs = ScreeningEvent.invitees.map((u) => u.uid);
-const userObj = new User();
-const orgObj = new Orgs();
-const OrgName = orgObj.getByID(ScreeningEvent.org.id).denomination.public;
-const users = [userObj.getByUID(ScreeningEvent.by.uid)];
-users.push(...invitedUserUIDs.map((uid) => userObj.getByUID(uid)));
-users.push(userObj.getByUID(USER.Ivo));
-//Super Admin
-users.push(userObj.getByUID(USER.Daphney));
+const screeningEvent = screeningEvents[0];
+const org = ORGS.find((org) => org.id === screeningEvent.org.id);
+const userOrganiser = USERS.find((user) => user.uid === screeningEvent.by.uid);
+const userInvited1 = USERS.find((user) => user.uid === screeningEvent.invitees[0].uid);
+const userInvited2 = USERS.find((user) => user.uid === screeningEvent.invitees[1].uid);
+const userUninvited = USERS.find((user) => user.uid === 'K0ZCSd8bhwcNd9Bh9xJER9eP2DQ2');
+const userAdmin = USERS.find((user) => user.uid === 'B8UsXliuxwY6ztjtLuh6f7UD1GV2');
 
 
-enum UserIndex {
-  Organiser = 0,
-  InvitedUser1,
-  InvitedUser2,
-  UninvitedGuest,
-  Admin,
-}
-
-let SCREENING_URL: string;
 
 //TODO: Issue: 6757 - Fix this issue separately
 describe('Organiser invites other users to private screening', () => {
 
   it('Organiser creates screening & invites 2 users to the screening', () => {
+    let SCREENING_URL: string;
     /*
     //* This test isn't great, ideally we generate data and do the following
     * We need to create a seller, create an org
@@ -51,18 +37,17 @@ describe('Organiser invites other users to private screening', () => {
     // cy.task('deleteAllSellerEvents', users[UserIndex.Organiser].uid) // ! Clean up any existing events! - DELETE THIS PLUGIN
     cy.clearLocalStorage(); // ! If event is deleted manually, it will be stuck in localStorage cache
     cy.contains('Accept cookies').click();
-    cy.task('log', users[UserIndex.Organiser].uid);
-    auth.loginWithEmailAndPassword(users[UserIndex.Organiser].email);
+    cy.task('log', userOrganiser.uid);
+    auth.loginWithEmailAndPassword(userOrganiser.email);
     cy.visit('/c/o/dashboard/event');
-    cy.log(`Create screening {${ScreeningEvent.event}}`);
+    cy.log(`Create screening {${screeningEvent.event}}`);
     awaitElementDeletion('mat-spinner');
     // * We would not need to do this if various user types were generated at the start of the test
     // * in order to generate user types, we either need to create a lot of data manually or use the app's built in methods
-    events.deleteAllSellerEvents(users[UserIndex.Organiser].uid); // ! must stay here so eventsService is instantiated
-    festival.createEvent(new Date(), 'Screening', ScreeningEvent.event);
+    events.deleteAllSellerEvents(userOrganiser.uid); // ! must stay here so eventsService is instantiated
+    festival.createEvent(new Date(), 'Screening', screeningEvent.event);
 
-    const invitees = [users[UserIndex.InvitedUser1].email, users[UserIndex.InvitedUser2].email]; // ! This is some terrible Mano coding. Redo fixtures.
-    festival.fillEventDetails(ScreeningEvent.movie.title.international, !ScreeningEvent.private, invitees);
+    festival.fillEventDetails(screeningEvent.movie.title.international, !screeningEvent.private, [userInvited1.email, userInvited2.email]);
     // cy.contains('Save & Exit').click();
     // awaitElementDeletion('mat-spinner');
 
@@ -71,7 +56,7 @@ describe('Organiser invites other users to private screening', () => {
     auth.clearBrowserAuth();
     cy.visit('/');
 
-    auth.loginWithEmailAndPassword(users[UserIndex.InvitedUser1].email);
+    auth.loginWithEmailAndPassword(userInvited1.email);
 
 
     cy.visit('/c/o/marketplace/home');
@@ -110,7 +95,7 @@ describe('Organiser invites other users to private screening', () => {
     cy.log('InvitedUser2 logs in and refuses screening invitations');
     auth.clearBrowserAuth();
     cy.visit('/');
-    auth.loginWithEmailAndPassword(users[UserIndex.InvitedUser2].email);
+    auth.loginWithEmailAndPassword(userInvited2.email);
     acceptCookies();
 
     // const pp1 = new FestivalMarketplaceHomePage();
@@ -126,20 +111,20 @@ describe('Organiser invites other users to private screening', () => {
     cy.log('Org admin logs in and verifies the accepted invitations')
     auth.clearBrowserAuth();
     cy.visit('/');
-    auth.loginWithEmailAndPassword(users[UserIndex.Admin].email);
+    auth.loginWithEmailAndPassword(userAdmin.email);
     acceptCookies();
 
     cy.visit('/c/o/dashboard/event');
     cy.visit('/c/o/dashboard/invitations')
 
-    festival.verifyNotification(users[UserIndex.InvitedUser1].firstName, true);
-    festival.verifyNotification(users[UserIndex.InvitedUser2].firstName, false);
+    festival.verifyNotification(userInvited1.firstName, true);
+    festival.verifyNotification(userInvited2.firstName, false);
 
     // * STEP
     cy.log('UninvitedGuest logs in, go on event page, asserts no access to the video')
     auth.clearBrowserAuth();
     cy.visit('/');
-    auth.loginWithEmailAndPassword(users[UserIndex.UninvitedGuest].email);
+    auth.loginWithEmailAndPassword(userUninvited.email);
     acceptCookies();
 
     cy.log('Reach Market Home.');
@@ -152,7 +137,7 @@ describe('Organiser invites other users to private screening', () => {
     // const p2: FestivalOrganizationListPage = p1.selectSalesAgents();
     festival.selectSalesAgents();
     // const p3: FestivalMarketplaceOrganizationTitlePage = p2.clickOnOrganization(OrgName);
-    festival.clickOnOrganization(OrgName);
+    festival.clickOnOrganization(org.denomination.public);
     // const p4: FestivalScreeningPage = p3.clickOnScreeningSchedule();
     festival.clickOnScreeningSchedule();
 
