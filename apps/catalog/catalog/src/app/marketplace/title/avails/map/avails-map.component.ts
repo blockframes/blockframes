@@ -21,6 +21,9 @@ import { Term } from '@blockframes/contract/term/+state/term.firestore';
 import { Bucket } from '@blockframes/contract/bucket/+state/bucket.firestore';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 
+// TODO(#7820): remove with rxjs 7 
+type AvailabilitiesInputs = [MapAvailsFilter, Mandate<Date>[], Term<Date>[], Sale<Date>[], Term<Date>[], Bucket<Date>, Movie];
+
 @Component({
   selector: 'catalog-movie-avails-map',
   templateUrl: './avails-map.component.html',
@@ -49,14 +52,7 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
     this.shell.bucketForm.value$,
     this.shell.movie$
   ]).pipe(
-    map(([avails, mandates, mandateTerms, sales, salesTerms, bucket, movie]: [
-      MapAvailsFilter, Mandate<Date>[],
-      Term<Date>[],
-      Sale<Date>[],
-      Term<Date>[],
-      Bucket<Date>,
-      Movie
-    ]) => {
+    map(([avails, mandates, mandateTerms, sales, salesTerms, bucket, movie]: AvailabilitiesInputs) => {
       if (this.availsForm.invalid) return emptyAvailabilities;
       const res = filterContractsByTitle(movie.id, mandates, mandateTerms, sales, salesTerms, bucket)
       return territoryAvailabilities(avails, res.mandates, res.sales, res.bucketContracts);
@@ -69,7 +65,7 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
     private shell: MarketplaceMovieAvailsComponent,
     private router: Router,
     private route: ActivatedRoute,
-  ) {}
+  ) { }
 
   /** Display the territories information in the tooltip */
   public displayTerritoryTooltip(territory: TerritoryValue, status: string) {
@@ -116,7 +112,7 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     const decodedData = decodeUrl<MapAvailsFilter>(this.route);
-    if(!decodedData.medias) decodedData.medias = [];
+    if (!decodedData.medias) decodedData.medias = [];
     if (decodedData.duration?.from) decodedData.duration.from = new Date(decodedData.duration.from);
     if (decodedData.duration?.to) decodedData.duration.to = new Date(decodedData.duration.to);
 

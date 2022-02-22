@@ -12,6 +12,9 @@ import { Term } from '@blockframes/contract/term/+state/term.firestore';
 import { Bucket } from '@blockframes/contract/bucket/+state/bucket.firestore';
 import { Movie } from '@blockframes/movie/+state';
 
+// TODO(#7820): remove with rxjs 7 
+type AvailabilitiesInputs = [CalendarAvailsFilter, Mandate<Date>[], Term<Date>[], Sale<Date>[], Term<Date>[], Bucket<Date>, Movie];
+
 @Component({
   selector: 'catalog-movie-avails-calendar',
   templateUrl: './avails-calendar.component.html',
@@ -43,14 +46,7 @@ export class MarketplaceMovieAvailsCalendarComponent implements AfterViewInit, O
     this.shell.bucketForm.value$,
     this.shell.movie$
   ]).pipe(
-    map(([avails, mandates, mandateTerms, sales, salesTerms, bucket, movie]: [
-      CalendarAvailsFilter, Mandate<Date>[],
-      Term<Date>[],
-      Sale<Date>[],
-      Term<Date>[],
-      Bucket<Date>,
-      Movie
-    ]) => {
+    map(([avails, mandates, mandateTerms, sales, salesTerms, bucket, movie]: AvailabilitiesInputs) => {
       if (this.availsForm.invalid) return { available: [], sold: [], inBucket: [], selected: undefined };
       const res = filterContractsByTitle(movie.id, mandates, mandateTerms, sales, salesTerms, bucket)
       return durationAvailabilities(avails, res.mandates, res.sales, res.bucketContracts);

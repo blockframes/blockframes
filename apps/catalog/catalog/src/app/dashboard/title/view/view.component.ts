@@ -1,10 +1,8 @@
-import { combineLatest } from 'rxjs';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { map, pluck, startWith, switchMap, tap } from 'rxjs/operators';
+import { pluck, switchMap } from 'rxjs/operators';
 import { MovieService } from '@blockframes/movie/+state';
 
 @Component({
@@ -14,19 +12,9 @@ import { MovieService } from '@blockframes/movie/+state';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TitleViewComponent {
-  public movie$ = combineLatest([
-    this.route.params.pipe(
-      pluck('movieId'),
-      switchMap((movieId: string) => this.movieService.valueChanges(movieId))
-    ),
-    this.router.events.pipe(startWith(false))
-  ]).pipe(
-    map(([movie]) => movie),
-    tap(movie => {
-      const titleName = movie?.title?.international || 'No title';
-      this.dynTitle.setPageTitle(`${titleName}`, 'Marketplace Activity');
-    })
-  );
+  public movie$ = this.route.params.pipe(
+    pluck('movieId'),
+    switchMap((movieId: string) => this.movieService.valueChanges(movieId)));
 
   public org$ = this.orgService.currentOrg$;
 
@@ -59,8 +47,6 @@ export class TitleViewComponent {
 
   constructor(
     private movieService: MovieService,
-    private dynTitle: DynamicTitleService,
-    private router: Router,
     private orgService: OrganizationService,
     private route: ActivatedRoute
   ) { }
