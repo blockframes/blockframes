@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { UserGuard } from '@blockframes/user/guard/user.guard';
 
 // Modules
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
@@ -33,8 +32,6 @@ const routes = [{
     },
     {
       path: 'members',
-      canActivate: [UserGuard],
-      canDeactivate: [UserGuard],
       loadChildren: () => import('@blockframes/organization/pages/member/member.module').then(m => m.MemberModule)
     }
   ]

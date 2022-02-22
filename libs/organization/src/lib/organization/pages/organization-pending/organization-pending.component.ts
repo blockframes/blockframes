@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, Optional } from '@angular/core';
-import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { InvitationService } from '@blockframes/invitation/+state/invitation.service';
 import { Invitation } from '@blockframes/invitation/+state/invitation.model';
 import { getCurrentApp, appName } from '@blockframes/utils/apps';
@@ -26,7 +25,7 @@ export class OrganizationPendingComponent {
   public org$: Observable<Organization>;
   public app = getCurrentApp(this.routerQuery);
   public appName = appName[this.app];
-  public orgActive$ = this.authQuery.user$.pipe(
+  public orgActive$ = this.authService.profile$.pipe(
     filter(user => !!user),
     switchMap(user => this.getOrgId(user)),
     filter(orgId => !!orgId),
@@ -36,7 +35,6 @@ export class OrganizationPendingComponent {
   constructor(
     private service: OrganizationService,
     private invitationService: InvitationService,
-    private authQuery: AuthQuery,
     private authService: AuthService,
     private routerQuery: RouterQuery,
     @Optional() private intercom: Intercom

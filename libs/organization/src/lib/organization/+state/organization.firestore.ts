@@ -114,7 +114,7 @@ export function orgName(org: Partial<PublicOrganization>, type: 'public' | 'full
  */
 export function canAccessModule(module: Module, org: OrganizationBase<unknown>, _app?: App): boolean {
   if (_app) {
-    return org.appAccess[_app]?.[module];
+    return org?.appAccess[_app]?.[module];
   } else {
     return getAllAppsExcept(['crm']).some(a => org.appAccess[a]?.[module]);
   }

@@ -24,7 +24,7 @@ export class OrganizationEditableComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.organization$ = this.service.org$
+    this.organization$ = this.service.currentOrg$
       .pipe(tap(org => this.organizationProfileForm.patchValue(org)));
     this.isAdmin$ = this.permissionsService.isAdmin$;
   }
