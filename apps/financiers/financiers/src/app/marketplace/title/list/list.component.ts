@@ -49,6 +49,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.movies$ = this.movieResultsState.asObservable();
+    this.searchForm.languages.get('versions').get('original').setValue(true);
 
     const params = this.route.snapshot.queryParams;
     for (const key in params) {
