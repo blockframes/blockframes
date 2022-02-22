@@ -6,6 +6,7 @@
   </ng-container>
   <ng-template #button>
     <button mat-flat-button color="primary" [disabled]="status !== 'available'" (click)="requestScreening()">
+      <mat-spinner diameter="24" *ngIf="status === 'sending'"></mat-spinner>
       {{ screeningRequest[status] }}
     </button>
   </ng-template>
