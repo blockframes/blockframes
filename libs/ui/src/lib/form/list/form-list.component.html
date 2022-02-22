@@ -42,7 +42,7 @@
           <mat-icon svgIcon="close"></mat-icon><span>Cancel</span>
         </button>
       </ng-container>
-      <button test-id="row-save" mat-stroked-button [disabled]="formItem.invalid" (click)="save()">
+      <button test-id="row-save" mat-stroked-button [disabled]="formItem.invalid || formItem.pristine" (click)="save()">
         <mat-icon svgIcon="save"></mat-icon>
         <span>
           <ng-template [ngTemplateOutlet]="saveButtonText  || defaultText"></ng-template>
