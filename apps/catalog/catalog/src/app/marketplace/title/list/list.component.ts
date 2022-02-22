@@ -67,7 +67,6 @@ export class ListComponent implements OnDestroy, OnInit {
 
   async ngOnInit() {
     this.searchForm.hitsPerPage.setValue(1000);
-    this.searchForm.languages.get('versions').get('original').setValue(true);
 
     this.queries$ = combineLatest([
       this.contractService.valueChanges(ref => ref.where('type', '==', 'mandate')
