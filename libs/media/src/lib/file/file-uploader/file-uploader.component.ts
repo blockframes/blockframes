@@ -114,7 +114,10 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
           ? getDeepValue(data, this.metadata.field)[this.formIndex]
           : getDeepValue(data, this.metadata.field);
         if (media) {
-          this.form.patchValue(media);
+          const extra = this.getExtra();
+          // jwPlayer comes from the doc, not from the form.
+          delete extra?.['jwPlayerId'];
+          this.form.patchValue({ ...media, ...extra });
         }
       })
     }
