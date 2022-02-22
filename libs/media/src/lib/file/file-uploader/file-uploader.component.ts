@@ -26,7 +26,6 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { getDeepValue } from '@blockframes/utils/pipes';
 import { boolean } from '@blockframes/utils/decorators/decorators';
-import { createStorageFile, StorageFile } from '@blockframes/media/+state/media.firestore';
 
 type UploadState = 'waiting' | 'hovering' | 'ready' | 'file';
 
@@ -111,7 +110,7 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
   ngOnInit() {
     if (this.listenToChanges) {
       this.docSub = this.db.doc(`${this.metadata.collection}/${this.metadata.docId}`).valueChanges().subscribe(data => {
-        const media: StorageFile = this.formIndex !== undefined
+        const media = this.formIndex !== undefined
           ? getDeepValue(data, this.metadata.field)[this.formIndex]
           : getDeepValue(data, this.metadata.field);
         if (media) {
