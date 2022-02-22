@@ -14,7 +14,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { ProductionStatus, productionStatus, ProductionStatusValue } from '@blockframes/utils/static-model';
 import { getAllowedproductionStatuses } from '@blockframes/movie/+state/movie.model';
 
-type AllowedPoductionStatuses = {
+interface AllowedPoductionStatuses {
   value: ProductionStatusValue,
   key: ProductionStatus,
   image: string,

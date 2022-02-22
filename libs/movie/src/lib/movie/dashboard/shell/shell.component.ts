@@ -26,10 +26,10 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
   movie$ = this.route.params.pipe(
     pluck('movieId'),
     switchMap((movieId: string) => this.movieService.valueChanges(movieId)),
-    tap(movie => this._movie = movie)
+    tap(movie => this.movie = movie)
   );
 
-  private _movie: Movie;
+  public movie: Movie;
 
   public appName = getCurrentApp(this.routerQuery);
 
@@ -66,10 +66,6 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
 
   getConfig<K extends keyof ShellConfig>(name: K): ShellConfig[K] {
     return this.configs[name];
-  }
-
-  get movie() {
-    return this._movie;
   }
 
   animationOutlet(outlet: RouterOutlet) {
