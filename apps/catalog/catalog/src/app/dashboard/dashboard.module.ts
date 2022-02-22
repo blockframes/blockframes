@@ -64,7 +64,7 @@ const routes: Routes = [
           {
             path: '',
             pathMatch: 'full',
-            loadChildren: () => import('./sales/list/list.module').then(m => m.SaleListModule)
+            loadChildren: () => import('./sales/list/list.module').then(m => m.CatalogSaleListModule)
           },
           {
             path: 'import',
