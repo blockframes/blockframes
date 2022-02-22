@@ -19,7 +19,7 @@
   <ng-template pageBar>
     <header fxLayout fxLayoutAlign="space-between center">
       <div fxLayout fxLayoutGap="40px">
-        <a mat-icon-button routerLink="../..">
+        <a mat-icon-button routerLink="../.." [queryParams]="{date: form.value.start.toISOString()}">
           <mat-icon svgIcon="arrow_back"></mat-icon>
         </a>
         <mat-chip-list fxLayoutAlign="center center">

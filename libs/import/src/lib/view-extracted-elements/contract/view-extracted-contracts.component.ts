@@ -6,7 +6,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { MatTableDataSource } from '@angular/material/table';
 
 
-import { AuthQuery } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/+state';
 import { UserService } from '@blockframes/user/+state';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
@@ -16,6 +16,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 
 import { formatContract } from './utils';
 import { ContractsImportState } from '../../utils';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'import-view-extracted-contracts[sheetTab]',
@@ -30,8 +31,8 @@ export class ViewExtractedContractsComponent implements OnInit {
   public contractsToCreate$ = new BehaviorSubject<MatTableDataSource<ContractsImportState>>(null);
 
   constructor(
-    private authQuery: AuthQuery,
     private userService: UserService,
+    private authService: AuthService,
     private titleService: MovieService,
     private firestore: AngularFirestore,
     private dynTitle: DynamicTitleService,
@@ -42,6 +43,7 @@ export class ViewExtractedContractsComponent implements OnInit {
   }
 
   async ngOnInit() {
+    const isBlockframesAdmin = await this.authService.isBlockframesAdmin$.pipe(take(1)).toPromise();
     const contractsToCreate = await formatContract(
       this.sheetTab,
       this.orgService,
@@ -49,8 +51,8 @@ export class ViewExtractedContractsComponent implements OnInit {
       this.contractService,
       this.userService,
       this.firestore,
-      this.authQuery.isBlockframesAdmin,
-      this.authQuery.orgId,
+      isBlockframesAdmin,
+      this.authService.profile.orgId,
     );
     this.contractsToCreate$.next(new MatTableDataSource(contractsToCreate));
   }

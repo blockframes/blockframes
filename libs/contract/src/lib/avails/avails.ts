@@ -54,15 +54,15 @@ export function filterContractsByTitle(titleId: string, mandates: Mandate[], man
 }
 
 
-function assertValidTitle(mandates: FullMandate[], sales: FullSale[], bucketContracts?: BucketContract[]) {
+function assertValidTitle(mandates: FullMandate[], sales: FullSale[], bucketContracts: BucketContract[]=[]) {
   // check that the mandates & sales are about one single title,
   // i.e. they must all have the same `titleId`
-  const titleId = mandates[0].titleId;
-  const invalidMandate = mandates.some(m => m.titleId !== titleId);
-  const invalidSale = sales.some(s => s.titleId !== titleId);
-  const invalidBucketSale = bucketContracts?.some(s => s.titleId !== titleId);
-
-  if (invalidMandate || invalidSale || invalidBucketSale) throw new Error('Mandates & Sales must all have the same title id!');
+  const mandateIds = mandates.map(m=> m.titleId);
+  const saleIds = sales.map(s => s.titleId);
+  const bucketTitleIds = (bucketContracts).map(b => b.titleId);
+  const uniqueIds = new Set([...mandateIds, ...saleIds, ...bucketTitleIds]);
+  const differentTitleIds = uniqueIds.size > 1;
+  if (differentTitleIds) throw new Error('Mandates & Sales must all have the same title id!');
 }
 
 // ----------------------------
@@ -234,7 +234,7 @@ export function territoryAvailabilities(
   // 2) we repeat the process for the sales & bucket territories to color them as `sold`
   // 3) finally we apply the `selected` color
 
-  // Note: The function doesn't perform any check, form its point of view a `sold` territory can become `selected`
+  // Note: The function doesn't perform any check, from its point of view a `sold` territory can become `selected`
   // Note: The checks should be performed by the parent component to prevent a user to select a `sold` territory
 
   assertValidTitle(mandates, sales, bucketContracts);

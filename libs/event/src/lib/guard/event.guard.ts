@@ -6,7 +6,7 @@ import { Event, EventService } from '../+state';
 import { eventTime } from '../pipes/event-time.pipe';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
-import { AuthQuery, AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/+state';
 import { Meeting } from '../+state/event.firestore';
 import { TwilioService } from '../components/meeting/+state/twilio.service';
 import { take } from 'rxjs/operators';
@@ -18,7 +18,6 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
   private event: Event;
 
   constructor(
-    private authQuery: AuthQuery,
     private authService: AuthService,
     private invitationService: InvitationService,
     private eventService: EventService,
@@ -34,21 +33,17 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
     // if the event is not a meeting the lobby page is not accessible
     // redirect directly to the session page,
     // the guard will then be re-evaluated for invitation etc... on the session page
-    if (this.event.type !== 'meeting' && next.routeConfig.path === 'lobby') {
-      return this.router.parseUrl(`/event/${this.event.id}/r/i/session`);
-    }
+    if (this.event.type !== 'meeting' && next.routeConfig.path === 'lobby') return this.router.parseUrl(`/event/${this.event.id}/r/i/session`);
 
-    if (eventTime(this.event) !== 'onTime') {
-      return this.router.parseUrl(`/event/${this.event.id}/r/i`);
-    }
+    if (eventTime(this.event) !== 'onTime') return this.router.parseUrl(`/event/${this.event.id}/r/i`);
 
     const hasRegularInvitation = async () => {
       const allInvitations = await this.invitationService.allInvitations$.pipe(take(1)).toPromise();
       return allInvitations.some(invitation => {
         if (invitation.eventId !== this.event.id) return false;
         if (invitation.status !== 'accepted') return false;
-        const hasRequested = invitation.mode === 'request' && invitation.fromUser.uid === this.authQuery.userId;
-        const isInvited = invitation.mode === 'invitation' && invitation.toUser.uid === this.authQuery.userId;
+        const hasRequested = invitation.mode === 'request' && invitation.fromUser.uid === this.authService.uid;
+        const isInvited = invitation.mode === 'invitation' && invitation.toUser.uid === this.authService.uid;
         return hasRequested || isInvited;
       });
     }
@@ -80,14 +75,10 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
       }
       case 'private': {
 
-        if (this.event.isOwner) {
-          return true;
-        }
+        if (this.event.isOwner) return true;
 
         // if user wasn't invited OR hasn't accepted yet
-        if (!(await hasRegularInvitation())) {
-          return this.router.parseUrl(`/event/${this.event.id}/r/i`);
-        }
+        if (!(await hasRegularInvitation())) return this.router.parseUrl(`/event/${this.event.id}/r/i`);
 
         return true;
       }
@@ -111,13 +102,13 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
       return true;
     }
 
-    // If userId = null, that means the user has disconnected. If she/he wants to logout, we don't show the confirm message
-    if (this.authQuery.userId === null && this.authService.anonymousUserId === null) {
+    // If userId is undefined, that means the user has disconnected. If she/he wants to logout, we don't show the confirm message
+    if (this.authService.uid === undefined) {
       this.twilioService.disconnect();
       return true;
     } else {
       if (this.event.type === 'meeting') {
-        if ((this.event.meta as Meeting).attendees[this.authQuery.userId || this.authService.anonymousUserId]?.status === 'ended') {
+        if ((this.event.meta as Meeting).attendees[this.authService.uid]?.status === 'ended') {
           this.twilioService.disconnect();
           return true;
         }

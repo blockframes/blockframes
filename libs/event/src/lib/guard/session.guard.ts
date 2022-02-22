@@ -1,7 +1,7 @@
 
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, UrlTree } from '@angular/router';
-import { AuthQuery, AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/+state';
 import { EventService } from '../+state';
 import { Meeting } from '../+state/event.firestore';
 
@@ -9,7 +9,6 @@ import { Meeting } from '../+state/event.firestore';
 export class SessionGuard implements CanActivate {
 
   constructor(
-    private authQuery: AuthQuery,
     private authService: AuthService,
     private eventService: EventService,
     private router: Router,
@@ -23,11 +22,10 @@ export class SessionGuard implements CanActivate {
 
     // for meeting event we also nee to check "Request Access"
     if (event.type === 'meeting') {
-      const attendee = (event.meta as Meeting).attendees[this.authQuery.userId || this.authService.anonymousUserId];
+      const attendee = (event.meta as Meeting).attendees[this.authService.uid];
 
-      if (attendee?.status === 'accepted' || attendee?.status === 'owner') {
-        return true;
-      }
+      if (attendee?.status === 'accepted' || attendee?.status === 'owner') return true;
+
       return this.router.parseUrl(`/event/${event.id}/r/i/lobby`);
     }
 
