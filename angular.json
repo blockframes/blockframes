@@ -547,7 +547,19 @@
           },
           "configurations": {
             "emulator": {
-              "devServerTarget": "catalog:serve:emulator"
+              "devServerTarget": "catalog:serve:emulator",
+              "env": {
+                "notice": "Env is being read",
+                "emulator": true
+              }
+            },
+            "emulator-incognito": {
+              "devServerTarget": "catalog:serve:emulator",
+              "env": {
+                "notice": "Env is being read",
+                "emulator": true,
+                "incognito": true
+              }
             },
             "production": {
               "devServerTarget": "catalog:serve:production"
@@ -612,6 +624,16 @@
           },
           "configurations": {
             "emulator": {
+              "buildOptimizer": false,
+              "optimization": {
+                "scripts": false,
+                "styles": false,
+                "fonts": false
+              },
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": false,
+              "namedChunks": true,
               "fileReplacements": [
                 {
                   "replace": "apps/festival/festival/src/environment/environment.ts",
@@ -806,6 +828,14 @@
               "env": {
                 "notice": "Env is being read",
                 "emulator": true
+              }
+            },
+            "emulator-incognito": {
+              "devServerTarget": "festival:serve:emulator",
+              "env": {
+                "notice": "Env is being read",
+                "emulator": true,
+                "incognito": true
               }
             },
             "production": {
@@ -1170,7 +1200,19 @@
           },
           "configurations": {
             "emulator": {
-              "devServerTarget": "crm:serve:emulator"
+              "devServerTarget": "crm:serve:emulator",
+              "env": {
+                "notice": "Env is being read",
+                "emulator": true
+              }
+            },
+            "emulator-incognito": {
+              "devServerTarget": "crm:serve:emulator",
+              "env": {
+                "notice": "Env is being read",
+                "emulator": true,
+                "incognito": true
+              }
             },
             "production": {
               "devServerTarget": "crm:serve:production"
@@ -1428,7 +1470,19 @@
           },
           "configurations": {
             "emulator": {
-              "devServerTarget": "financiers:serve:emulator"
+              "devServerTarget": "financiers:serve:emulator",
+              "env": {
+                "notice": "Env is being read",
+                "emulator": true
+              }
+            },
+            "emulator-incognito": {
+              "devServerTarget": "financiers:serve:emulator",
+              "env": {
+                "notice": "Env is being read",
+                "emulator": true,
+                "incognito": true
+              }
             },
             "production": {
               "devServerTarget": "financiers:serve:production"
@@ -1650,7 +1704,19 @@
           },
           "configurations": {
             "emulator": {
-              "devServerTarget": "cms:serve:emulator"
+              "devServerTarget": "cms:serve:emulator",
+              "env": {
+                "notice": "Env is being read",
+                "emulator": true
+              }
+            },
+            "emulator-incognito": {
+              "devServerTarget": "cms:serve:emulator",
+              "env": {
+                "notice": "Env is being read",
+                "emulator": true,
+                "incognito": true
+              }
             },
             "production": {
               "devServerTarget": "cms:serve:production"
@@ -1780,6 +1846,28 @@
           "options": {
             "jestConfig": "libs/testing/e2e/jest.config.js",
             "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "analytics": {
+      "projectType": "library",
+      "root": "libs/analytics",
+      "sourceRoot": "libs/analytics/src",
+      "prefix": "analytics",
+      "architect": {
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/analytics"],
+          "options": {
+            "jestConfig": "libs/analytics/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/analytics/src/**/*.ts", "libs/analytics/src/**/*.html"]
           }
         }
       }
