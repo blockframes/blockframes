@@ -75,7 +75,9 @@ export class MovieService extends CollectionService<MovieState> {
   onCreate(movie: Movie, { write }: WriteOptions) {
     const ref = this.getRef(movie.id);
     write.update(ref, { '_meta.createdAt': new Date() });
-    return Promise.all(movie.orgIds.map(orgId => this.permissionsService.addDocumentPermissions(movie.id, write as firebase.firestore.Transaction, orgId)));
+    for (const orgId of movie.orgIds) {
+      this.permissionsService.addDocumentPermissions(movie.id, write as firebase.firestore.Transaction, orgId);
+    }
   }
 
   onUpdate(movie: Movie, { write }: WriteOptions) {
@@ -111,7 +113,7 @@ export class MovieService extends CollectionService<MovieState> {
     const orgId = this.orgService.org.id;
     const query: QueryFn = ref => ref.where('orgIds', 'array-contains', orgId).where(`app.${app}.access`, '==', true);
     const addViews = (movie: MovieWithAnalytics) => ({ ...movie, analytics: { ...movie.analytics, views: getViews(movie.analytics) } });
-    
+
     return this.valueChanges(query).pipe(
       joinWith({
         analytics: movie => this.analyticservice.valueChanges(movie.id),
