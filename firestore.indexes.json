@@ -359,6 +359,46 @@
       ]
     },
     {
+      "collectionGroup": "contracts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "stakeholders",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "type",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "buyerId",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "_meta.createdAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "contracts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "type",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "buyerId",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "_meta.createdAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
       "collectionGroup": "negotiations",
       "queryScope": "COLLECTION",
       "fields": [

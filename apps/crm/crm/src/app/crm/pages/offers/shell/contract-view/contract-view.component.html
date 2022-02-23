@@ -16,32 +16,30 @@
           <mat-label>Seller's approval for a title.</mat-label>
           <mat-select formControlName="status">
             <mat-option value="pending">
-              Pending
-              <ng-container *ngIf="contract.negotiation | isNew; else negotiating">( Will be displayed as New )
-              </ng-container>
-              <ng-template #negotiating>(Will be displayed as Negotiating)</ng-template>
+              <span>
+                Pending
+                <ng-container *ngIf="contract.negotiation | isNew; else negotiating">( Will be displayed as New )
+                </ng-container>
+                <ng-template #negotiating>(Will be displayed as Negotiating)</ng-template>
+              </span>
             </mat-option>
             <mat-option value="accepted" [disabled]="!contract.negotiation?.price">
               <span>Accepted</span>
               <span *ngIf="!contract.negotiation?.price">(Negotiation has no price)</span>
             </mat-option>
-            <mat-option value="declined">Declined</mat-option>
+            <mat-option value="declined">
+              <span>Declined</span>
+            </mat-option>
           </mat-select>
         </mat-form-field>
       </form>
-      <div fxLayout="row" fxLayoutAlign="center center">
-        <button mat-flat-button color="primary" (click)="update(contract.id, contract?.negotiation?.id)">Update</button>
-      </div>
+      <button mat-flat-button color="primary" (click)="update(contract.id, contract?.negotiation?.id)"
+        class="center-button">Update</button>
     </section>
 
     <section class="surface" *ngIf="contract.negotiation?.status === 'declined'">
       <h3>Why it has been declined</h3>
-      <ng-container *ngIf="contract.declineReason; else noReason">
-        <p>{{contract.declineReason}}</p>
-      </ng-container>
-      <ng-template #noReason>
-        <p>Seller hasn't given any reason.</p>
-      </ng-template>
+      <p>{{contract.declineReason ?? "Seller hasn't given any reason."}}</p>
     </section>
     <ng-container *ngIf="contract.negotiation as negotiation">
       <contract-item [contract]="negotiation">
