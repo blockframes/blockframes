@@ -39,9 +39,14 @@ interface FieldsConfig {
     buyerId: string;
     id?: string;
     stakeholders: string[];
+    status: string,
   };
+  income: {
+    price: number;
+  },
   term: {
-    territories: Territory[];
+    territories_included: Territory[];
+    territories_excluded: Territory[];
     medias: Media[];
     exclusive: boolean;
     duration: {
@@ -52,7 +57,7 @@ interface FieldsConfig {
     dubbed: Language[];
     subtitle: Language[];
     caption: Language[];
-  };
+  }[];
   parentTerm: string | number;
   _titleId?: string;
 }
@@ -60,13 +65,14 @@ interface FieldsConfig {
 type FieldsConfigType = ExtractConfig<FieldsConfig>;
 
 
-function toTerm(rawTerm: FieldsConfig['term'], contractId: string, firestore: AngularFirestore): Term {
+function toTerm(rawTerm: FieldsConfig['term'][number], contractId: string, firestore: AngularFirestore): Term {
 
-  const { medias, duration, territories, exclusive, licensedOriginal } = rawTerm;
+  const { medias, duration, territories_excluded, territories_included, exclusive, licensedOriginal } = rawTerm;
 
   const languages: Term['languages'] = {};
 
   const updateLanguage = (key: keyof MovieLanguageSpecification, rawLanguages: Language[]) => {
+    console.log({ key, rawLanguages, rawTerm })
     for (const language of rawLanguages) {
       if (!languages[language]) languages[language] = { caption: false, dubbed: false, subtitle: false };
       languages[language][key] = true;
@@ -85,7 +91,7 @@ function toTerm(rawTerm: FieldsConfig['term'], contractId: string, firestore: An
     contractId,
     medias,
     duration,
-    territories,
+    territories: territories_included,
     exclusive,
     licensedOriginal,
     criteria: [],
@@ -149,6 +155,7 @@ export async function formatContract(
         };
         return centralOrgId.catalog;
       } else {
+        //@todo: implement check to verify the movie who's mandate it is, belongs to the licensor org.
         const sellerId = await getOrgId(value, orgService, orgNameCache);
         if (!sellerId) return unknownEntityError('Licensor Organization');
         if (!blockframesAdmin && sellerId !== userOrgId) return {
@@ -183,41 +190,48 @@ export async function formatContract(
         return sellerId;
       }
     },
-    /* e */'term.territories': (value: string) => getStaticList('territories', value, separator, 'Territories', true, 'world') as Territory[],
-    /* f */'term.medias': (value: string) =>  getStaticList('medias', value, separator, 'Medias') as Media[],
-    /* g */'term.exclusive': (value: string) => {
+    /* e */'term[].territories_included': (value: string) => {
+      const result = getStaticList('territories', value, separator, 'Territories', true, 'world') as Territory[];
+      console.log({ results, value, })
+      return result;
+    },
+    /* f */'term[].territories_excluded': (value: string) => getStaticList('territories', value, separator, 'Territories', true, 'world') as Territory[],
+    /* g */'term[].medias': (value: string) => getStaticList('medias', value, separator, 'Medias') as Media[],
+    /* h */'term[].exclusive': (value: string) => {
       const lower = value.toLowerCase();
       if (!lower) return mandatoryError('Exclusive');
       if (lower !== 'yes' && lower !== 'no') return wrongValueError('Exclusive');
       return lower === 'yes';
     },
-    /* h */'term.duration.from': (value: string) => {
+    /* i */'term[].duration.from': (value: string) => {
       if (!value) return mandatoryError('Duration From');
       return getDate(value, 'Start of Contract') as Date
     },
-    /* i */'term.duration.to': (value: string) => {
+    /* j */'term[].duration.to': (value: string) => {
       if (!value) return mandatoryError('Duration To');
       return getDate(value, 'End of Contract') as Date
     },
 
-    /* j */'term.licensedOriginal': (value: string) => {
+    /* k */'term[].licensedOriginal': (value: string) => {
       const lower = value.toLowerCase();
       if (!lower) return mandatoryError('Licensed Original');
       if (lower !== 'yes' && lower !== 'no') return wrongValueError('Licensed Original');
       return lower === 'yes';
     },
-    /* k */'term.dubbed': (value: string) => getStaticList('languages', value, separator, 'Dubbed', false) as Language[],
-    /* l */'term.subtitle': (value: string) => getStaticList('languages', value, separator, 'Subtitle', false) as Language[],
-    /* m */'term.caption': (value: string) => getStaticList('languages', value, separator, 'CC', false) as Language[],
+    /* l */'contract.status': (value: string) => value,
+    /* m */'income.price': (value: string) => +value,
+    /* n */'term[].dubbed': (value: string) => getStaticList('languages', value, separator, 'Dubbed', false) as Language[],
+    /* o */'term[].subtitle': (value: string) => getStaticList('languages', value, separator, 'Subtitle', false) as Language[],
+    /* p */'term[].caption': (value: string) => getStaticList('languages', value, separator, 'CC', false) as Language[],
 
-    /* n */'contract.id': async (value: string) => {
+    /* q */'contract.id': async (value: string) => {
       if (value && !blockframesAdmin) return adminOnlyWarning(firestore.createId(), 'Contract ID');
       if (!value) return firestore.createId();
       const exist = await getContract(value, contractService, contractCache);
       if (exist) return alreadyExistError('Contract ID');
       return value;
     },
-    /* o */'parentTerm': async (value: string, data: FieldsConfig) => {
+    /* r */'parentTerm': async (value: string, data: FieldsConfig) => {
       if (value && !blockframesAdmin) return adminOnlyWarning('', 'Mandate ID/Row');
       if (value && data.contract.type === 'mandate') return {
         value: '',
@@ -251,7 +265,7 @@ export async function formatContract(
         return value;
       } else return Number(value);
     },
-    /* p */'_titleId': (value: string) => {
+    /* s */'_titleId': (value: string) => {
       if (value && !blockframesAdmin) return adminOnlyWarning('', 'Import ID');
       if (value) return {
         value: '',
@@ -263,36 +277,34 @@ export async function formatContract(
         }
       };
     },
-    /* q */'contract.stakeholders': async (value: string, data: FieldsConfig) => {
+    /* t */'contract.stakeholders': async (value: string, data: FieldsConfig) => {
       const stakeholders = value.split(separator).filter(v => !!v).map(v => v.trim());
       const exists = await Promise.all(stakeholders.map(id => getUser({ id }, userService, userCache)));
       const unknownStakeholder = exists.some(e => !e);
       if (unknownStakeholder) return unknownEntityError('Stakeholders');
       if (data.contract.type === 'mandate') {
-        return [ data.contract.buyerId, data.contract.sellerId, ...stakeholders ];
+        return [data.contract.buyerId, data.contract.sellerId, ...stakeholders];
       } else {
         if (data.contract.sellerId === centralOrgId.catalog) { // internal sale
           // seller ID is archipel, we don't need to add it, as mandate stakeholders will be copied here (copy is done bellow ~line 290)
-          return [ data.contract.buyerId, ...stakeholders ];
+          return [data.contract.buyerId, ...stakeholders];
         } else { // external sale
           // if the sale is external the seller is not archipel (it's the owner org), and the buyer is unknown by definition
-          return [ data.contract.sellerId, ...stakeholders ]
+          return [data.contract.sellerId, ...stakeholders]
         }
       }
     },
   };
 
-  const results = await extract<FieldsConfig>(sheetTab.rows, fieldsConfig);
-
-
+  const results = await extract<FieldsConfig>(sheetTab.rows, fieldsConfig, 11);
   for (const result of results) {
     const { data, errors } = result;
 
-    const contract =  data.contract.type === 'sale'
-      ? createSale({ ...data.contract as Sale})
+    const contract = data.contract.type === 'sale'
+      ? createSale({ ...data.contract as Sale })
       : createMandate({ ...data.contract as Mandate });
 
-    const term = toTerm(data.term, contract.id, firestore);
+    const terms = data.term.map(term => toTerm(term, contract.id, firestore));
 
     // for **internal** sales we should check the parentTerm
     const isInternalSale = contract.type === 'sale' && contract.sellerId === centralOrgId.catalog;
@@ -319,8 +331,8 @@ export async function formatContract(
     // remove duplicate from stakeholders
     contract.stakeholders = Array.from(new Set([...contract.stakeholders]));
 
-    contracts.push({ contract, terms: [term], errors, newContract: true });
+    contracts.push({ contract, terms, errors, newContract: true });
   }
-
+  console.log({ contracts })
   return contracts;
 }

@@ -12,13 +12,7 @@ import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {getSeller} from '@blockframes/contract/contract/+state/utils'
 
-function queryFn(ref: CollectionReference, options: { internal?: boolean }) {
-  if (options.internal)
-    return ref
-      .where('buyerId', '!=', '')
-      .where('type', '==', 'sale')
-      .orderBy('buyerId', 'desc')
-      .orderBy('_meta.createdAt', 'desc')
+function queryFn(ref: CollectionReference) {
   return ref
     .where('buyerId', '==', '')
     .where('type', '==', 'sale')
@@ -42,7 +36,7 @@ export class ContractsListComponent {
   public orgId = this.orgService.org.id;
 
 
-  public externalSales$ = this.contractService.valueChanges(ref => queryFn(ref, { internal: false })).pipe(
+  public externalSales$ = this.contractService.valueChanges(queryFn).pipe(
     joinWith({
       licensor: (sale: Sale) => {
         return this.orgService.valueChanges(getSeller(sale)).pipe(map(getFullName))
