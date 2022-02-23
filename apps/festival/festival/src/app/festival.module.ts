@@ -16,7 +16,7 @@ const routes: Routes = createRoutes({
   appsRoutes: [
     {
       path: '',
-      redirectTo: 'marketplace',
+      redirectTo: 'dashboard',
       pathMatch: 'full'
     },
     {

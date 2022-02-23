@@ -65,6 +65,7 @@ export class AnalyticsComponent implements OnInit {
         const invitations = allInvitations.filter(invit => {
           if (invit.eventId !== event.id) return false;
           if (!invit.watchTime) return false;
+          return true;
         });
 
         const allOrgIds = invitations.map(i => i.fromUser?.orgId || i.toUser?.orgId).filter(orgId => !!orgId);

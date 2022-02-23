@@ -38,7 +38,7 @@ export class MarketplaceMovieAvailsCalendarComponent implements AfterViewInit, O
   private salesTerms$ = this.shell.salesTerms$;
 
   public availabilities$ = combineLatest([
-    this.availsForm.valueChanges,
+    this.availsForm.value$,
     this.mandates$,
     this.mandateTerms$,
     this.sales$,

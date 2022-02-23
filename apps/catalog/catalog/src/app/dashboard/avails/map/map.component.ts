@@ -9,6 +9,7 @@ import { TerritoryValue } from "@blockframes/utils/static-model";
 import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
 import { filterContractsByTitle, MapAvailsFilter, territoryAvailabilities } from "@blockframes/contract/avails/avails";
 import { CatalogAvailsShellComponent } from "../shell/shell.component";
+import { toGroupLabel } from "@blockframes/utils/pipes/group-label.pipe";
 
 function formatDate(date: Date) {
   return format(date, 'dd/MM/yyy');
@@ -33,7 +34,7 @@ export class DashboardAvailsMapComponent implements AfterViewInit, OnDestroy {
 
   public availabilities$ = combineLatest([
     this.shell.movie$,
-    this.availsForm.valueChanges,
+    this.availsForm.value$,
     this.shell.mandates$,
     this.shell.mandateTerms$,
     this.shell.sales$,
@@ -42,7 +43,8 @@ export class DashboardAvailsMapComponent implements AfterViewInit, OnDestroy {
     map(([movie, avails, mandates, mandateTerms, sales, salesTerms]) => {
       if (this.availsForm.invalid) return { available: [], sold: [] };
       const res = filterContractsByTitle(movie.id, mandates, mandateTerms, sales, salesTerms);
-      return territoryAvailabilities(avails, res.mandates, res.sales);
+      const data = { avails, mandates: res.mandates, sales: res.sales };
+      return territoryAvailabilities(data);
     }),
     shareReplay({ bufferSize: 1, refCount: true }),
   );
@@ -107,12 +109,13 @@ export class DashboardAvailsMapComponent implements AfterViewInit, OnDestroy {
       .subscribe(([availabilities, movie]) => {
         const availsFilter = this.availsForm.value;
         const availableTerritories = availabilities.available.map(marker => marker.term.territories).flat();
+        const territories = toGroupLabel(availableTerritories, 'territories', 'World');
         const data = [{
           "International Title": movie.title.international,
           Medias: availsFilter.medias.map(medium => medias[medium]).join(';'),
           Exclusivity: availsFilter.exclusive ? 'Exclusive' : 'Non Exclusive',
           'Start Date - End Date': `${formatDate(availsFilter.duration.from)} - ${formatDate(availsFilter.duration.to)}`,
-          "Available Territories": availableTerritories.join(';'),
+          "Available Territories": territories,
         }]
         const filename = `${movie.title.international.split(' ').join('_')}_avails`;
         downloadCsvFromJson(data, filename);
