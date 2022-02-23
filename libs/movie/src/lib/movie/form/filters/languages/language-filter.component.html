@@ -1,4 +1,4 @@
-<chips-autocomplete scope="languages" [form]="form.get('languages')" [withoutValues]="['all']">
+<chips-autocomplete scope="languages" placeholder="Language" [form]="form.get('languages')" [withoutValues]="['all']">
   <mat-label>Enter Languages</mat-label>
 </chips-autocomplete>
 <ng-container *ngFor="let item of items | keyvalue: keepOrder">
