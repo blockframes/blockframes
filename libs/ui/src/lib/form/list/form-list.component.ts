@@ -82,7 +82,11 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
   }
 
   get isFormEmpty() {
-    return !this.form.length
+    return !this.form.length;
+  }
+
+  get displayCancelButton() {
+    return !this.keepFormOpen && this.form.controls.length;
   }
 
   /** Add a clean form */

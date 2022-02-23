@@ -1,10 +1,10 @@
-<ng-template pageBar>
-  <a mat-icon-button routerLink="..">
-    <mat-icon svgIcon="arrow_back"></mat-icon>
-  </a>
-</ng-template>
-
 <ng-container *ngIf="event$ | async as event">
+  <ng-template pageBar>
+    <a mat-icon-button routerLink=".." [queryParams]="{date: event.start.toISOString()}">
+      <mat-icon svgIcon="arrow_back"></mat-icon>
+    </a>
+  </ng-template>
+
   <section class="surface">
     <h2>Details</h2>
     <h5>Event Title</h5>

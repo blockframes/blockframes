@@ -1,7 +1,7 @@
 import { applicationUrl, appName } from './../apps';
 import { IcsEvent } from './agenda.interfaces';
 
-const header = 'BEGIN:VCALENDAR\nVERSION:2.0\nCALSCALE:GREGORIAN';
+const header = `BEGIN:VCALENDAR\nVERSION:2.0\nCALSCALE:GREGORIAN\nX-WR-CALNAME:${appName.festival}`;
 const footer = 'END:VCALENDAR';
 const googleCalendarLink = 'https://www.google.com/calendar/event';
 

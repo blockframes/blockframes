@@ -139,7 +139,11 @@ export class LandingShellComponent implements OnDestroy {
     }
   }
 
-  public async subscibe(form: FormGroup) {
+  public async subscribe(form: FormGroup) {
+    if (form.invalid) {
+      this.snackBar.open('Please enter a valid email address.', 'close', { duration: 2000 });
+      return;
+    }
     try {
       await this.registerEmailToNewsletters(form.value.email);
       this.newslettersSubmitted = true;
@@ -147,8 +151,7 @@ export class LandingShellComponent implements OnDestroy {
       this.cdr.markForCheck();
 
     } catch (error) {
-      console.log("error", error)
-      this.snackBar.open(error.message, 'close', { duration: 5000 });
+      this.snackBar.open('Please enter a valid email address.', 'close', { duration: 2000 });
     }
   }
 }

@@ -46,13 +46,14 @@
     <mat-divider></mat-divider>
 
     <!-- SELECTION AND REVIEWS -->
+    <ng-container *ngIf="form | hasStatus: ['post_production', 'finished', 'released']">
+      <section id="reviews">
+        <h3>Selections & Reviews</h3>
+        <movie-summary-review [movie]="form" [link]="('reviews' | getPath)"></movie-summary-review>
+      </section>
 
-    <section id="reviews">
-      <h3>Selections & Reviews</h3>
-      <movie-summary-review [movie]="form" [link]="('reviews' | getPath)"></movie-summary-review>
-    </section>
-
-    <mat-divider></mat-divider>
+      <mat-divider></mat-divider>
+    </ng-container>
 
     <!-- ADDITIONAL INFORMATION -->
 
@@ -86,13 +87,15 @@
     <mat-divider></mat-divider>
 
     <!-- AVAILABLE VERSIONS -->
-    <section id="available-versions">
-      <h3>Versions</h3>
-      <movie-summary-available-versions [movie]="form" [link]="('available-versions' | getPath)">
-      </movie-summary-available-versions>
-    </section>
+    <ng-container *ngIf="form | hasStatus: ['shooting', 'post_production', 'finished', 'released']">
+      <section id="available-versions">
+        <h3>Versions</h3>
+        <movie-summary-available-versions [movie]="form" [link]="('available-versions' | getPath)">
+        </movie-summary-available-versions>
+      </section>
 
-    <mat-divider></mat-divider>
+      <mat-divider></mat-divider>
+    </ng-container>
 
     <!-- PROMOTIONAL ELEMENTS -->
 

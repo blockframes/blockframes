@@ -26,7 +26,7 @@ import { emulatorConfig } from '../environment/environment';
     OverlayModule,
     HttpClientModule,
     AngularFireModule.initializeApp(firebase('cms')),
-    AngularFirestoreModule.enablePersistence(),
+    AngularFirestoreModule,
     AngularFireAuthModule,
     AngularFireStorageModule,
     AngularFirePerformanceModule,
