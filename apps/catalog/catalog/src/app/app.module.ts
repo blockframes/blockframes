@@ -11,7 +11,7 @@ import { IdlePreload, IdlePreloadModule } from 'angular-idle-preload';
 
 // Akita
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
-import { production, firebase, persistenceSettings, firebaseRegion } from '@env';
+import { production, firebase, firebaseRegion } from '@env';
 
 // Components
 import { AppComponent } from './app.component';
@@ -65,7 +65,7 @@ import { AuthService } from '@blockframes/auth/+state';
 
     // Firebase
     AngularFireModule.initializeApp(firebase('catalog')),
-    AngularFirestoreModule.enablePersistence(persistenceSettings),
+    AngularFirestoreModule,
     AngularFireFunctionsModule,
     AngularFirePerformanceModule,
     AngularFireAuthModule,

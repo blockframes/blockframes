@@ -1,9 +1,9 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Movie } from '@blockframes/movie/+state/movie.model';
-import { MovieQuery } from '@blockframes/movie/+state/movie.query';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
 import { OrganizationService } from '@blockframes/organization/+state';
+import { ActivatedRoute } from '@angular/router';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { pluck, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'festival-dashboard-title-view',
@@ -12,10 +12,12 @@ import { OrganizationService } from '@blockframes/organization/+state';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class TitleViewComponent implements OnInit {
-  public movie$: Observable<Movie>;
+export class TitleViewComponent {
+  public movie$ = this.route.params.pipe(
+    pluck('movieId'),
+    switchMap((movieId: string) => this.movieService.valueChanges(movieId)));
+
   public org$ = this.orgService.currentOrg$;
-  public loading$: Observable<boolean>;
 
   navLinks: RouteDescription[] = [
     {
@@ -41,16 +43,9 @@ export class TitleViewComponent implements OnInit {
   ];
 
   constructor(
-    private movieQuery: MovieQuery,
-    private orgService: OrganizationService
-  ) {}
+    private movieService: MovieService,
+    private route: ActivatedRoute,
+    private orgService: OrganizationService,
+  ) { }
 
-  ngOnInit() {
-    this.getMovie();
-  }
-
-  private getMovie() {
-    this.loading$ = this.movieQuery.selectLoading();
-    this.movie$ = this.movieQuery.selectActive();
-  }
 }

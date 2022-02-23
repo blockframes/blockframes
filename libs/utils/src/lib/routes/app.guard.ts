@@ -27,7 +27,9 @@ export class AppGuard implements CanActivate {
         return this.router.parseUrl('c/o/request-access');
       }
     } else {
-      if (!org.appAccess[app]?.dashboard && !org.appAccess[app]?.marketplace) {
+      if (!org.appAccess[app]?.dashboard && org.appAccess[app]?.marketplace) {
+        return this.router.parseUrl('c/o/marketplace');
+      } else if (!org.appAccess[app]?.dashboard && !org.appAccess[app]?.marketplace) {
         this.snackBar.open('You don\'t have access to this application.', '', { duration: 5000 });
         return this.router.parseUrl('c/o/request-access');
       }

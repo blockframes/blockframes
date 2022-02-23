@@ -34,7 +34,7 @@
   </div>
 
   <!-- Too many invitations -->
-  <p class="mat-body-1 warning" *ngIf="!currentLimit.canSend">
+  <p class="mat-body-1 warning" *ngIf="currentLimit && !currentLimit.canSend">
     You have reached the invitation limit. You must remove
     {{ currentLimit.total - limit }}
     invitation(s) to be able to send.

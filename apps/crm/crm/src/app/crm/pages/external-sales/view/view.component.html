@@ -1,0 +1,55 @@
+<a mat-icon-button routerLink="..">
+  <mat-icon svgIcon="arrow_back"></mat-icon>
+  <span>BACK TO CONTRACTS</span>
+</a>
+<ng-container *ngIf="contract$ | async as contract">
+  <section class="surface" fxLayout="column" fxLayoutGap="16px">
+    <ng-container *ngIf="contract.licensor as seller">
+      <div fxLayout="row" fxLayoutAlign="space-between center">
+        <org-chip [org]="seller" baseUrl="/c/o/dashboard/crm/organization/"></org-chip>
+        <p>{{ seller.email }}</p>
+      </div>
+    </ng-container>
+    <div fxLayout="row" fxLayoutGap="16px">
+      <mat-form-field appearance="outline">
+        <mat-label>Seller's approval for a title.</mat-label>
+        <mat-select [formControl]="statusForm">
+          <mat-option value="pending">
+            <span>Pending</span>
+          </mat-option>
+          <mat-option value="accepted">
+            <span>Accepted</span>
+          </mat-option>
+          <mat-option value="declined">
+            <span>Declined</span>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <button mat-flat-button color="primary" (click)="update(contract.id)" class="center-button">Update</button>
+  </section>
+
+  <section class="surface" *ngIf="contract?.status === 'declined'">
+    <h3>Why it has been declined</h3>
+    <p>{{contract.declineReason ?? "Seller hasn't given any reason."}}</p>
+  </section>
+  <contract-item [contract]="contract">
+    <p price *ngIf="contract.price as price">
+      <ng-container *ngIf="price > 0; else askPrice">
+        <span>{{ price | currency: contract.currency }}</span>
+      </ng-container>
+      <ng-template #askPrice>
+        <span>Buyer requested Asking Price</span>
+      </ng-template>
+    </p>
+    <ng-template #termAction let-term let-index="index">
+      <a mat-icon-button matTooltip="View" [routerLink]="['/c/o/dashboard/crm/contracts', contract.id, 'form']"
+        [queryParams]="{termIndex:index}">
+        <mat-icon svgIcon="visibility"></mat-icon>
+      </a>
+      <button mat-icon-button matTooltip="Delete" (click)="confirm(term)">
+        <mat-icon svgIcon="delete"></mat-icon>
+      </button>
+    </ng-template>
+  </contract-item>
+</ng-container>

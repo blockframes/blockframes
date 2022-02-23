@@ -54,7 +54,7 @@ export function warnMissingVars(): void | never {
   };
   // Use '||' instead of '??' to detect empty string
   if (!missingVarsMessageShown) requiredVars.map(
-    ({ key, msg }: { key: string; msg: string }) => process.env?.[key] || warn(key, msg)
+    ({ key, msg }: { key: string; msg: string }) => process.env?.[key] || warn(key, msg) // Should check prefix blockframesCi_
   );
   missingVarsMessageShown = true;
 }
