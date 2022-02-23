@@ -10,9 +10,9 @@ import { MovieService } from '@blockframes/movie/+state';
 import { joinWith } from '@blockframes/utils/operators';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import {getSeller} from '@blockframes/contract/contract/+state/utils'
+import { getSeller } from '@blockframes/contract/contract/+state/utils'
 
-function queryFn(ref: CollectionReference) {
+const queryFn = (ref: CollectionReference) => {
   return ref
     .where('buyerId', '==', '')
     .where('type', '==', 'sale')
