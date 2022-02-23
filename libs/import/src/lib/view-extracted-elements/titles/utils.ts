@@ -513,13 +513,13 @@ export async function formatTitle(
 
     const stakeholders: MovieStakeholders = {
       productionCompany: getStakeholders('executiveProducer'),
-      coProductionCompany:  getStakeholders('coProducer'),
-      broadcasterCoproducer:  getStakeholders('broadcasterCoproducer'),
-      lineProducer:  getStakeholders('lineProducer'),
-      distributor:  getStakeholders('distributor'),
-      salesAgent:  getStakeholders('salesAgent'),
-      laboratory:  getStakeholders('laboratory'),
-      financier:  getStakeholders('financier'),
+      coProductionCompany: getStakeholders('coProducer'),
+      broadcasterCoproducer: getStakeholders('broadcasterCoproducer'),
+      lineProducer: getStakeholders('lineProducer'),
+      distributor: getStakeholders('distributor'),
+      salesAgent: getStakeholders('salesAgent'),
+      laboratory: getStakeholders('laboratory'),
+      financier: getStakeholders('financier'),
     };
 
     const languages: LanguageRecord = {};
@@ -540,7 +540,7 @@ export async function formatTitle(
       hint: 'Please edit the corresponding sheets field'
     });
 
-    titles.push({ errors,  movie: title });
+    titles.push({ errors, movie: title });
   }
 
   return titles;

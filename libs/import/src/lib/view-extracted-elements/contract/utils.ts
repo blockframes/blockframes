@@ -82,6 +82,8 @@ function toTerm(rawTerm: FieldsConfig['term'][number], contractId: string, fires
   updateLanguage('dubbed', rawTerm.dubbed);
   updateLanguage('subtitle', rawTerm.subtitle);
 
+  const territories = territories_included.filter(territory => !territories_excluded.includes(territory));
+
   const id = firestore.createId();
 
   return {
@@ -90,7 +92,7 @@ function toTerm(rawTerm: FieldsConfig['term'][number], contractId: string, fires
     contractId,
     medias,
     duration,
-    territories: territories_included,
+    territories,
     exclusive,
     licensedOriginal,
     criteria: [],
@@ -331,5 +333,6 @@ export async function formatContract(
 
     contracts.push({ contract, terms, errors, newContract: true });
   }
+  console.log({ contracts })
   return contracts;
 }
