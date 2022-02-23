@@ -1,18 +1,14 @@
 import { Component, ChangeDetectionStrategy, Input, OnInit, OnDestroy, Inject, Directive } from '@angular/core';
-import { NavigationEnd, Router, RouterOutlet, Event } from '@angular/router';
+import { NavigationEnd, Router, RouterOutlet, Event, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { combineLatest, Subscription } from 'rxjs';
 import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
-import { MovieQuery, MovieService } from '@blockframes/movie/+state';
+import { Movie, MovieService } from '@blockframes/movie/+state';
 import { FORMS_CONFIG, ShellConfig } from '../../form/movie.shell.interfaces';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { getAppName, getCurrentApp, getMovieAppAccess } from '@blockframes/utils/apps';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
-import { storeStatus, StoreStatus } from '@blockframes/utils/static-model';
-import { filter } from 'rxjs/operators';
+import { getCurrentApp } from '@blockframes/utils/apps';
+import { filter, pluck, switchMap, tap } from 'rxjs/operators';
 
 @Directive({ selector: 'movie-cta, [movieCta]' })
 export class MovieCtaDirective { }
@@ -25,10 +21,15 @@ export class MovieCtaDirective { }
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardTitleShellComponent implements OnInit, OnDestroy {
-  private sub: Subscription;
-  private routeSub: Subscription;
+  private subs: Subscription[] = [];
   private countRouteEvents = 1;
-  movie$ = this.query.selectActive();
+  movie$ = this.route.params.pipe(
+    pluck('movieId'),
+    switchMap((movieId: string) => this.movieService.valueChanges(movieId)),
+    tap(movie => this.movie = movie)
+  );
+
+  public movie: Movie;
 
   public appName = getCurrentApp(this.routerQuery);
 
@@ -36,26 +37,23 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
 
   constructor(
     @Inject(FORMS_CONFIG) private configs: ShellConfig,
-    private query: MovieQuery,
     private routerQuery: RouterQuery,
-    private dialog: MatDialog,
-    private snackBar: MatSnackBar,
     private movieService: MovieService,
     private router: Router,
-    private location: Location
+    private location: Location,
+    private route: ActivatedRoute,
   ) { }
 
   ngOnInit() {
     const obs = Object.keys(this.configs).map(name => this.configs[name].onInit()).flat();
-    this.sub = combineLatest(obs).subscribe();
-    this.routeSub = this.router.events
+    this.subs.push(combineLatest(obs).subscribe());
+    this.subs.push(this.router.events
       .pipe(filter((event: Event) => event instanceof NavigationEnd))
-      .subscribe(() => this.countRouteEvents++)
+      .subscribe(() => this.countRouteEvents++));
   }
 
   ngOnDestroy() {
-    this.sub?.unsubscribe();
-    this.routeSub?.unsubscribe();
+    this.subs.forEach(sub => sub.unsubscribe());
   }
 
   goBack() {
@@ -74,54 +72,6 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
     return outlet?.activatedRouteData?.animation;
   }
 
-  removeAppAccess() {
-    const movie = this.query.getActive();
-    const appsName = getMovieAppAccess(movie).map(a => getAppName(a).label);
-    this.dialog.open(ConfirmInputComponent, {
-      data: {
-        title: `You are about to delete ${movie.title.international} permanently.`,
-        subtitle: `This Title will still be available on <i>${appsName.join(', ')}</i>.<br/> If you wish to proceed, please type "DELETE" in the field below.`,
-        confirmationWord: 'delete',
-        confirmButtonText: 'delete title',
-        cancelButtonText: 'keep title',
-        onConfirm: async () => {
-          await this.movieService.update(movie.id, movie => ({
-            ...movie,
-            app: {
-              ...movie.app,
-              [this.appName]: {
-                ...movie.app[this.appName],
-                access: false
-              }
-            }
-          }));
-
-          const ref = this.snackBar.open('Title deleted.', '', { duration: 4000 });
-          ref.afterDismissed().subscribe(() => this.router.navigate(['/c/o/dashboard/title']));
-        }
-      }
-    })
-  }
-
-  async updateStatus(status: StoreStatus, message?: string) {
-    const movie = this.query.getActive();
-    await this.movieService.update(movie.id, movie => ({
-      ...movie,
-      app: {
-        ...movie.app,
-        [this.appName]: {
-          ...movie.app[this.appName],
-          status: status
-        }
-      }
-    }));
-
-    if (message) {
-      this.snackBar.open(message, '', { duration: 4000 });
-    } else {
-      this.snackBar.open(`Title ${storeStatus[status]}.`, '', { duration: 4000 });
-    }
-  }
 }
 
 

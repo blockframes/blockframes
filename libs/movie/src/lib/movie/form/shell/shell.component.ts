@@ -1,14 +1,14 @@
 // Angular
 import { Component, ChangeDetectionStrategy, OnInit, Inject, OnDestroy, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 
 // Blockframes
-import { MovieQuery } from '@blockframes/movie/+state';
 import { TunnelRoot, TunnelStep, TunnelLayoutComponent } from '@blockframes/ui/tunnel';
 import { FORMS_CONFIG, ShellConfig } from '../movie.shell.interfaces';
 
 // RxJs
-import { map, startWith } from 'rxjs/operators';
+import { map, pluck, startWith } from 'rxjs/operators';
 import { Observable, Subscription, combineLatest } from 'rxjs';
 import { ProductionStatus } from '@blockframes/utils/static-model';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
@@ -110,28 +110,30 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, OnDestroy {
   @ViewChild(TunnelLayoutComponent) layout: TunnelLayoutComponent;
   private sub: Subscription;
   steps$: Observable<TunnelStep[]>;
-  exitRoute: string;
+  exitRoute$: Observable<string> = this.route.params.pipe(
+    pluck('movieId'),
+    map((movieId: string) => `/c/o/dashboard/title/${movieId}`)
+  );
 
   constructor(
     @Inject(DOCUMENT) private doc: Document,
     @Inject(FORMS_CONFIG) private configs: ShellConfig,
-    private query: MovieQuery,
-    private route: RouterQuery,
+    private routerQuery: RouterQuery,
+    private route: ActivatedRoute,
     private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
     const subs: Observable<any>[] = Object.values(this.configs).map((config: any) => config.onInit()).flat();
     this.sub = combineLatest(subs).subscribe(() => this.cdr.markForCheck());
-    this.exitRoute = `/c/o/dashboard/title/${this.query.getActiveId()}`;
 
-    const appSteps = this.route.getData<TunnelStep[]>('appSteps');
+    const appSteps = this.routerQuery.getData<TunnelStep[]>('appSteps');
     const movieForm = this.getForm('movie');
     this.steps$ = movieForm.productionStatus.valueChanges.pipe(
       startWith(movieForm.get('productionStatus').value),
       map((productionStatus: ProductionStatus) => getSteps(productionStatus, appSteps))
     );
-    const routerSub = this.route.selectFragment().subscribe(async (fragment: string) => {
+    const routerSub = this.routerQuery.selectFragment().subscribe(async (fragment: string) => {
       const el: HTMLElement = await this.checkIfElementIsReady(fragment);
 
       el?.scrollIntoView({

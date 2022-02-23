@@ -38,14 +38,13 @@ import {
   createMovieNote,
 } from '../+state/movie.model';
 import { FormArray, FormControl, Validators, ValidatorFn } from '@angular/forms';
-import { Filmography, createFilmography } from '@blockframes/utils/common-interfaces/identity';
+import { Filmography, createFilmography, createDirector, createCredit, Stakeholder, createStakeholder, Director } from '@blockframes/utils/common-interfaces/identity';
 import { FormStaticValue, FormStaticValueArray } from '@blockframes/utils/form/forms/static-value.form';
 import { FormEntity, EntityControl } from '@blockframes/utils/form/forms/entity.form';
 import { FormList } from '@blockframes/utils/form/forms/list.form';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
 import { yearValidators, urlValidators } from '@blockframes/utils/form/validators/validators';
 import { FormValue } from '@blockframes/utils/form';
-import { createCredit, Stakeholder, createStakeholder, Director } from '@blockframes/utils/common-interfaces/identity';
 import { toDate } from '@blockframes/utils/helpers';
 import { Language } from '@blockframes/utils/static-model';
 import { createStorageFile } from '@blockframes/media/+state/media.firestore';
@@ -397,7 +396,7 @@ export class DirectorForm extends FormEntity<DirectorFormControl> {
 }
 
 function createDirectorFormControl(director?: Partial<Director>) {
-  const { firstName, lastName, filmography, status, description, category } = createCredit(director);
+  const { firstName, lastName, filmography, status, description, category } = createDirector(director);
   return {
     firstName: new FormControl(firstName, Validators.required),
     lastName: new FormControl(lastName, Validators.required),

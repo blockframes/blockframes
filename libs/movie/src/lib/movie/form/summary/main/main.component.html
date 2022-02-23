@@ -9,7 +9,7 @@
   <ul>
     <li>
       <strong>Production Status </strong>
-      <missing-control [control]="movie.get('productionStatus')" [link]="productionLink">
+      <missing-control [control]="movie.get('productionStatus')" [link]="productionLink$ | async">
         <ng-template let-status>
           {{ status | toLabel: 'productionStatus' }}
         </ng-template>

@@ -9,10 +9,8 @@ import { ThemeService } from '@blockframes/ui/theme';
 import { ConsentsService } from '@blockframes/consents/+state/consents.service';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { MatDialog } from '@angular/material/dialog';
-import { MediaService } from '@blockframes/media/+state/media.service';
 import { StorageFile } from '@blockframes/media/+state/media.firestore';
 import { Access } from '@blockframes/consents/+state/consents.firestore';
-import { MovieQuery } from '@blockframes/movie/+state';
 
 const budgetData: { serie: keyof Budget, label: string }[] = [{
   serie: 'development',
@@ -58,10 +56,8 @@ export class MarketplaceFinancingComponent implements OnInit {
     @Inject(LOCALE_ID) private locale,
     private service: CampaignService,
     private route: RouterQuery,
-    private mediaService: MediaService,
     private consentsService: ConsentsService,
-    private dialog: MatDialog,
-    private movieQuery: MovieQuery
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -71,9 +67,7 @@ export class MarketplaceFinancingComponent implements OnInit {
     );
   }
 
-  consentBeforeDownload(file: string) {
-    const movieId = this.movieQuery.getActiveId();
-
+  consentBeforeDownload(campaignId: string, file: string) {
     this.dialog.open(ConfirmInputComponent, {
       data: {
         title: 'Confidentiality Reminder',
@@ -82,7 +76,7 @@ export class MarketplaceFinancingComponent implements OnInit {
         confirmationWord: 'i agree',
         confirmButtonText: 'confirm and download',
         onConfirm: async () => {
-          await this.consentsService.createConsent('access', movieId, file);
+          await this.consentsService.createConsent('access', campaignId, file);
           window.open(file, '_blank');
         }
       }
