@@ -72,7 +72,6 @@ function toTerm(rawTerm: FieldsConfig['term'][number], contractId: string, fires
   const languages: Term['languages'] = {};
 
   const updateLanguage = (key: keyof MovieLanguageSpecification, rawLanguages: Language[]) => {
-    console.log({ key, rawLanguages, rawTerm })
     for (const language of rawLanguages) {
       if (!languages[language]) languages[language] = { caption: false, dubbed: false, subtitle: false };
       languages[language][key] = true;

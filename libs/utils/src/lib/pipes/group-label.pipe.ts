@@ -26,7 +26,7 @@ export function toGroupLabel(value: string[], scope: GroupScope, all?: string) {
 @Pipe({ name: 'toGroupLabel' })
 export class GroupLabel implements PipeTransform {
   transform(value: string[], scope: GroupScope, all?: string) {
-    toGroupLabel(value, scope, all);
+    return toGroupLabel(value, scope, all);
   }
 }
 
