@@ -27,7 +27,7 @@ import { MovieLanguageSpecification } from '@blockframes/movie/+state/movie.fire
 import { Mandate, Sale } from '@blockframes/contract/contract/+state/contract.firestore';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { createMandate, createSale } from '@blockframes/contract/contract/+state/contract.model';
-import { extract, ExtractConfig, getStaticList, SheetTab } from '@blockframes/utils/spreadsheet';
+import { extract, ExtractConfig, getStaticList, SheetTab, getTerritoryList } from '@blockframes/utils/spreadsheet';
 
 const separator = ';'
 
@@ -191,11 +191,10 @@ export async function formatContract(
       }
     },
     /* e */'term[].territories_included': (value: string) => {
-      const result = getStaticList('territories', value, separator, 'Territories', true, 'world') as Territory[];
-      console.log({ results, value, })
+      const result = getTerritoryList(value, separator) as Territory[];
       return result;
     },
-    /* f */'term[].territories_excluded': (value: string) => getStaticList('territories', value, separator, 'Territories', true, 'world') as Territory[],
+    /* f */'term[].territories_excluded': (value: string) => getTerritoryList(value, separator) as Territory[],
     /* g */'term[].medias': (value: string) => getStaticList('medias', value, separator, 'Medias') as Media[],
     /* h */'term[].exclusive': (value: string) => {
       const lower = value.toLowerCase();
@@ -333,6 +332,5 @@ export async function formatContract(
 
     contracts.push({ contract, terms, errors, newContract: true });
   }
-  console.log({ contracts })
   return contracts;
 }

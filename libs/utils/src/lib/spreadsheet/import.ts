@@ -2,7 +2,7 @@
 import { WorkBook, WorkSheet, utils, read } from 'xlsx';
 
 import { mandatoryError, SpreadsheetImportError } from 'libs/import/src/lib/utils';
-
+import {toGroupLabel} from '@blockframes/utils/pipes/group-label.pipe'
 import { getKeyIfExists } from '../helpers';
 import { parseToAll, Scope } from '../static-model';
 
@@ -239,6 +239,11 @@ export function getStaticList(scope: Scope, value: string, separator:string, nam
     )
   ) return mandatoryError(name);
   return values;
+}
+
+export function getTerritoryList(value:string, separator:string){
+  const territories = split(value, separator);
+  return toGroupLabel(territories,'territories', 'world')
 }
 
 export function split(cell: string, separator:string) {
