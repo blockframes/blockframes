@@ -119,7 +119,6 @@ export function createCredit(params: Partial<Credit> = {}): Credit {
 export function createDirector(params: Partial<Director> = {}): Director {
   return {
     ...createCredit(params),
-    category: 'none',
     ...params
   }
 }

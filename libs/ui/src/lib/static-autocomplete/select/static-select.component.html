@@ -3,6 +3,7 @@
     <ng-content select="mat-label"></ng-content>
   </mat-label>
   <mat-select [formControl]="control" [placeholder]="placeholder" [required]="required" [multiple]="multiple">
+    <mat-option [value]="null" *ngIf="showEmptyOption"></mat-option>
     <ng-container *ngFor="let value of staticValue">
       <mat-option [value]="value">
         {{ value | toLabel: scope }}
