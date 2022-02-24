@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { appName, getCurrentApp } from '@blockframes/utils/apps';
 import { Organization, OrganizationService } from '@blockframes/organization/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
@@ -9,7 +9,7 @@ import { MovieService } from '@blockframes/movie/+state';
 import { joinWith } from '@blockframes/utils/operators';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import {getSeller} from '@blockframes/contract/contract/+state/utils'
+import { getSeller } from '@blockframes/contract/contract/+state/utils'
 import { ActivatedRoute } from '@angular/router';
 
 function queryFn(ref: CollectionReference, options: { internal?: boolean }) {
@@ -35,7 +35,7 @@ function getFullName(seller: Organization) {
   styleUrls: ['./list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ContractsListComponent implements OnInit{
+export class ContractsListComponent {
   public app = getCurrentApp(this.route);
   public appName = appName[this.app];
   public orgId = this.orgService.org.id;
@@ -59,9 +59,8 @@ export class ContractsListComponent implements OnInit{
     private titleService: MovieService,
     private incomeService: IncomeService,
     private dynTitle: DynamicTitleService,
-  ) { }
-
-  ngOnInit() {
+  ) {
     this.dynTitle.setPageTitle('My Sales (All)');
   }
+
 }
