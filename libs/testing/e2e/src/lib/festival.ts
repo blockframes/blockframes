@@ -61,7 +61,7 @@ export function inviteUser(email: string | string[]) {
   } else {
     cy.get('input#mat-chip-list-input-0').type(email).type('{enter}');
   }
-  cy.wait(1000); // * I hate to do this, but this one's unavoidable as we cannot detect when the send invite button is ready
+  cy.wait(8000); // * I hate to do this, but this one's unavoidable as we cannot detect when the send invite button is ready
   cy.get('.invitations button[test-id=event-invite]').click();
 }
 
