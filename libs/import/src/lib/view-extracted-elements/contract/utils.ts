@@ -102,6 +102,13 @@ function toTerm(rawTerm: FieldsConfig['term'][number], contractId: string, fires
   };
 }
 
+async function verifyMovieBelongsToLicensor(contract: Sale<Date> | Mandate<Date>, titleService: MovieService) {
+  const { titleId, sellerId } = contract;
+  const title = await titleService.getValue(titleId);
+  if (title.orgIds.includes(sellerId)) return true;
+  return false;
+}
+
 export async function formatContract(
   sheetTab: SheetTab,
   orgService: OrganizationService,
@@ -218,7 +225,7 @@ export async function formatContract(
       if (lower !== 'yes' && lower !== 'no') return wrongValueError('Licensed Original');
       return lower === 'yes';
     },
-    /* l */'contract.status': (value: string) => value,
+    /* l */'contract.status': (value: string = 'pending') => value.toLowerCase(),
     /* m */'income.price': (value: string) => +value,
     /* n */'term[].dubbed': (value: string) => getStaticList('languages', value, separator, 'Dubbed', false) as Language[],
     /* o */'term[].subtitle': (value: string) => getStaticList('languages', value, separator, 'Subtitle', false) as Language[],
@@ -303,6 +310,15 @@ export async function formatContract(
     const contract = data.contract.type === 'sale'
       ? createSale({ ...data.contract as Sale })
       : createMandate({ ...data.contract as Mandate });
+
+    const movieBelongsToLicensor = await verifyMovieBelongsToLicensor(contract, titleService)
+    if (!movieBelongsToLicensor)
+      errors.push({
+        type: 'error',
+        name: 'Wrong Licensor.',
+        reason: `The movie does not belong to the licensor.`,
+        hint: `Please ensure the movie is a movie owned by the licensor.`
+      })
 
     const terms = data.term.map(term => toTerm(term, contract.id, firestore));
 
