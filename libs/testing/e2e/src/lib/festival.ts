@@ -1,4 +1,3 @@
-import { awaitElementDeletion } from "..";
 
 // * SELLER
 export function createEvent(eventDate: Date, eventType = 'Screening', eventTitle = '') {
