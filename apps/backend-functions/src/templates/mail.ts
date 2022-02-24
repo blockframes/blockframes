@@ -22,6 +22,7 @@ import { staticModel } from '@blockframes/utils/static-model';
 import { Timestamp } from '../data/internals';
 import { createMailTerm } from '@blockframes/contract/term/+state/term.firestore';
 import { displayName } from '@blockframes/utils/utils';
+import { supportMailosaur } from '@blockframes/e2e/utils';
 
 const ORG_HOME = '/c/o/organization/';
 const USER_CREDENTIAL_INVITATION = '/auth/identity';
@@ -33,7 +34,7 @@ const ADMIN_REVIEW_MOVIE_PATH = '/c/o/dashboard/crm/movie';
  * @param app
  */
 function getSupportEmail(app?: App) {
-  if (e2eMode) return supportEmails.mailosaur
+  if (e2eMode) return supportMailosaur;
   if (app && !!supportEmails[app]) {
     return supportEmails[app]
   }

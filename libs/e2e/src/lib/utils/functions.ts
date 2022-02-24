@@ -1,7 +1,8 @@
 ﻿// import { AuthLoginPage } from "../pages/auth";
-import { User } from "./type";
+import { User, InterceptOptions } from "./type";
 import { SEC } from './env';
 import { auth } from '@blockframes/testing/e2e';
+import { serverId } from '@blockframes/e2e/utils';
 
 /** Clear cookies, local storage, indexedDB and navigate to the path (/auth by default). */
 export function clearDataAndPrepareTest(path: string = '/auth') {
@@ -237,5 +238,78 @@ export function setForm(selector: string, formOpt: FormOptions) {
 export function assertMoveTo(path: string) {
   cy.location().should(loc => {
     expect(loc.pathname).to.eq(path);
+  });
+}
+
+
+export function get(selector: string) {
+  return cy.get(`[test-id="${selector}"]`);
+}
+
+export function getAllStartingWith(selector: string) {
+  return cy.get(`[test-id^="${selector}"]`);
+}
+
+export function getInList(selectorStart: string, option: string) {
+  getAllStartingWith(selectorStart).each(($el) => {
+    // loops between all activity options
+    if ($el[0].innerText === option) $el.trigger('click');
+  });
+}
+
+export function check(selector: string) {
+  get(selector).find('[type="checkbox"]').check({ force: true });
+}
+
+export function createEmail(username: string = 'test-user', domain: string = serverId + '.mailosaur.net') {
+  return username + Date.now() + '@' + domain;
+}
+
+export function createOrgName(orgName: string = 'testOrg') {
+  return orgName + Date.now();
+}
+
+export function assertUrl(url: string) {
+  cy.url().should('eq',`http://localhost:4200/${url}`)
+}
+
+export function assertUrlIncludes(partialUrl: string) {
+  cy.url().should('include', partialUrl)
+}
+
+// below function accepts only one argument, choose depending your need
+export function interceptMail(option: InterceptOptions) {
+
+  let timeout = 0;
+  const Authorization = `Basic ${btoa(Cypress.env().MAILOSAUR_API_KEY)}`;
+
+  return new Promise((resolve, reject) => {
+
+    if (!option.recipient && !option.partialSubject && !option.partialBody)
+      return reject('No option provided to interceptMail() function');
+
+    if (Object.entries(option).length !== 1)
+      return reject('Only one option is to be provided to interceptMail() function');
+
+    const getEmails = async () => {
+      timeout += 1000;
+      if (timeout > 5000) reject('No mail after 15 seconds');
+      const response = await fetch(`https://mailosaur.com/api/messages?server=${serverId}`, { headers: { Authorization } });
+      const result = await response.text();
+      const mails = JSON.parse(result).items;
+      if (mails.length === 0) return setTimeout(getEmails, timeout);
+      for (let i = 0; i < mails.length; i++) {
+        if (
+          mails[i].to[0].email === option.recipient ||
+          mails[i].subject.includes(option.partialSubject) ||
+          mails[i].summary.includes(option.partialBody)
+        ) {
+          return resolve(mails[i]);
+        }
+        if (i === mails.length - 1) return setTimeout(getEmails, timeout);
+      }
+    };
+
+    getEmails();
   });
 }

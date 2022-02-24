@@ -67,3 +67,9 @@ export interface Currency {
   label: string,
   value: string
 }
+
+export interface InterceptOptions {
+  recipient?: string;
+  partialSubject?: string;
+  partialBody?: string;
+}
