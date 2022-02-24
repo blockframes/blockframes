@@ -61,97 +61,105 @@ describe('Organiser invites other users to private screening', () => {
 
     cy.visit('/c/o/marketplace/home');
     cy.visit('/c/o/marketplace/invitations');
-    awaitElementDeletion('mat-spinner');
+    //awaitElementDeletion('mat-spinner');
     festival.acceptInvitationScreening()
 
     festival.openMoreMenu();
     festival.clickGoToEvent();
 
     // Save the current url for the next test
-    cy.url().then((url) => (SCREENING_URL = url));
+    cy.url().then((url) => {
 
-    awaitElementDeletion('mat-spinner');
-    festival.clickPlay()
-    festival.runVideo()
-    awaitElementDeletion('mat-spinner');
-    cy.get('.jw-video');
-    cy.get('video.jw-video').should('have.prop', 'paused', true)
-    .and('have.prop', 'ended', false)
-    cy.get('.jw-display-icon-display > .jw-icon').click()
-    awaitElementDeletion('[aria-label=Loading]')
-    cy.get('video.jw-video').should('have.prop', 'paused', false)
-    .then(($video) => {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore // * This only ignores the next line
-      $video[0].pause()
-    })
-    cy.get('video.jw-video').should('have.prop', 'paused', true)
-    cy.get('video').should(($video) => {
-      expect($video[0].duration).to.be.gt(0);
+      SCREENING_URL = url;
+
+      cy.log(`SCREENING_URL ${SCREENING_URL}`);
+
+      //awaitElementDeletion('mat-spinner');
+      festival.clickPlay()
+      festival.runVideo()
+      //awaitElementDeletion('mat-spinner');
+      cy.get('.jw-video');
+      cy.get('video.jw-video').should('have.prop', 'paused', true)
+        .and('have.prop', 'ended', false)
+      cy.get('.jw-display-icon-display > .jw-icon').click()
+      awaitElementDeletion('[aria-label=Loading]')
+      cy.get('video.jw-video').should('have.prop', 'paused', false)
+        .then(($video) => {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore // * This only ignores the next line
+          $video[0].pause()
+        })
+      cy.get('video.jw-video').should('have.prop', 'paused', true)
+      cy.get('video').should(($video) => {
+        expect($video[0].duration).to.be.gt(0);
+      });
+
+
+      // * STEP
+      cy.log('InvitedUser2 logs in and refuses screening invitations');
+      auth.clearBrowserAuth();
+      cy.visit('/');
+      auth.loginWithEmailAndPassword(userInvited2.email);
+      // acceptCookies();
+
+      // const pp1 = new FestivalMarketplaceHomePage();
+      // const pp2 = pp1.goToInvitations();
+      cy.visit('/c/o/marketplace/invitations');
+      // cy.wait(2000);
+      awaitElementDeletion('mat-spinner');
+      festival.refuseInvitationScreening();
+
+      // * STEP
+      // Member organiser do not get notification
+      // Admin / Super Admin gets notification about invitation acceptance.
+      cy.log('Org admin logs in and verifies the accepted invitations')
+      auth.clearBrowserAuth();
+      cy.visit('/');
+      auth.loginWithEmailAndPassword(userAdmin.email);
+      //acceptCookies();
+
+      // cy.visit('/c/o/dashboard/event');
+      cy.visit('/c/o/dashboard/notifications')
+
+      festival.verifyNotification(userInvited1.firstName, true);
+      //festival.verifyNotification(userInvited2.firstName, false);
+
+      // * STEP
+      cy.log('UninvitedGuest logs in, go on event page, asserts no access to the video')
+      auth.clearBrowserAuth();
+      cy.visit('/');
+      auth.loginWithEmailAndPassword(userUninvited.email);
+      //acceptCookies();
+
+      cy.log('Reach Market Home.');
+      // const p1 = new FestivalMarketplaceHomePage();
+
+      cy.log('Navigate to Screening Page from Screening Schedule');
+
+      cy.visit('/c/o/marketplace/home');
+      cy.get('festival-marketplace button[test-id=menu]', { timeout: 3000 })
+        .first().click();
+      // const p2: FestivalOrganizationListPage = p1.selectSalesAgents();
+      festival.selectSalesAgents();
+      // const p3: FestivalMarketplaceOrganizationTitlePage = p2.clickOnOrganization(OrgName);
+      festival.clickOnOrganization(org.denomination.public);
+      // const p4: FestivalScreeningPage = p3.clickOnScreeningSchedule();
+      festival.clickOnScreeningSchedule();
+
+      cy.log('Navigate to Marketplace Event Page');
+      // const p5: FestivalMarketplaceEventPage = p4.clickPrivateEvent();
+      festival.clickPrivateEvent();
+      // p5.assertJoinScreeningNotExists();
+      festival.assertJoinScreeningNotExists();
+
+      // Navigate with url
+      cy.log(`Should not access {${SCREENING_URL}}`);
+      cy.visit(SCREENING_URL);
+      // Assert the user is redirect to event page
+      // new FestivalMarketplaceEventPage();
+      cy.get('festival-event-view')
     });
 
 
-    // * STEP
-    cy.log('InvitedUser2 logs in and refuses screening invitations');
-    auth.clearBrowserAuth();
-    cy.visit('/');
-    auth.loginWithEmailAndPassword(userInvited2.email);
-    acceptCookies();
-
-    // const pp1 = new FestivalMarketplaceHomePage();
-    // const pp2 = pp1.goToInvitations();
-    cy.visit('/c/o/marketplace/invitations');
-    // cy.wait(2000);
-    awaitElementDeletion('mat-spinner');
-    festival.refuseInvitationScreening();
-
-    // * STEP
-    // Member organiser do not get notification
-    // Admin / Super Admin gets notification about invitation acceptance.
-    cy.log('Org admin logs in and verifies the accepted invitations')
-    auth.clearBrowserAuth();
-    cy.visit('/');
-    auth.loginWithEmailAndPassword(userAdmin.email);
-    acceptCookies();
-
-    // cy.visit('/c/o/dashboard/event');
-    cy.visit('/c/o/dashboard/invitations')
-
-    festival.verifyNotification(userInvited1.firstName, true);
-    festival.verifyNotification(userInvited2.firstName, false);
-
-    // * STEP
-    cy.log('UninvitedGuest logs in, go on event page, asserts no access to the video')
-    auth.clearBrowserAuth();
-    cy.visit('/');
-    auth.loginWithEmailAndPassword(userUninvited.email);
-    acceptCookies();
-
-    cy.log('Reach Market Home.');
-    // const p1 = new FestivalMarketplaceHomePage();
-
-    cy.log('Navigate to Screening Page from Screening Schedule');
-    // p1.clickOnMenu();
-    cy.visit('/c/o/marketplace/home');
-
-    // const p2: FestivalOrganizationListPage = p1.selectSalesAgents();
-    festival.selectSalesAgents();
-    // const p3: FestivalMarketplaceOrganizationTitlePage = p2.clickOnOrganization(OrgName);
-    festival.clickOnOrganization(org.denomination.public);
-    // const p4: FestivalScreeningPage = p3.clickOnScreeningSchedule();
-    festival.clickOnScreeningSchedule();
-
-    cy.log('Navigate to Marketplace Event Page');
-    // const p5: FestivalMarketplaceEventPage = p4.clickPrivateEvent();
-    festival.clickPrivateEvent();
-    // p5.assertJoinScreeningNotExists();
-    festival.assertJoinScreeningNotExists();
-
-    // Navigate with url
-    cy.log(`Should not access {${SCREENING_URL}}`);
-    cy.visit(SCREENING_URL);
-    // Assert the user is redirect to event page
-    // new FestivalMarketplaceEventPage();
-    cy.get('festival-event-view')
   });
 });
