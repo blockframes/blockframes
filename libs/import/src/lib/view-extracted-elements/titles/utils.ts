@@ -6,7 +6,7 @@ import { createMovie } from '@blockframes/movie/+state';
 import { extract, ExtractConfig, SheetTab } from '@blockframes/utils/spreadsheet';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { LanguageRecord, MovieAppConfig, MovieGoalsAudience, MovieRelease, MovieRunningTime, MovieStakeholders } from '@blockframes/movie/+state/movie.firestore';
-import { Certification, Color, ContentType, CrewRole, Genre, Language, MediaValue, MovieFormat, MovieFormatQuality, NumberRange, PremiereType, ProducerRole, ProductionStatus, SocialGoal, SoundFormat, StakeholderRole, StoreStatus, Territory } from '@blockframes/utils/static-model';
+import { Certification, Color, ContentType, CrewRole, Genre, Language, MediaValue, MemberStatus, MovieFormat, MovieFormatQuality, NumberRange, PremiereType, ProducerRole, ProductionStatus, ScreeningStatus, SocialGoal, SoundFormat, StakeholderRole, StoreStatus, Territory } from '@blockframes/utils/static-model';
 import { Stakeholder } from '@blockframes/utils/common-interfaces';
 
 interface FieldsConfig {
@@ -42,7 +42,7 @@ interface FieldsConfig {
   cast: {
     firstName: string;
     lastName: string;
-    status: string;
+    status: MemberStatus;
   }[];
   prizes: {
     name: string;
@@ -161,7 +161,7 @@ export async function formatTitle(
     },
     /* i */ 'release.status': (value: string) => { // ! required
       if (!value) return mandatoryError('Release Status');
-      const status = getKeyIfExists('screeningStatus', value);
+      const status = getKeyIfExists('screeningStatus', value) as ScreeningStatus;
       if (!status) return wrongValueError('Release Year');
       return status;
     },
@@ -239,7 +239,7 @@ export async function formatTitle(
     },
     /* x */ 'runningTime.status': (value: string) => {
       if (!value) return optionalWarning('Running Time Status');
-      const status = getKeyIfExists('screeningStatus', value);
+      const status = getKeyIfExists('screeningStatus', value) as ScreeningStatus;
       if (!status) return wrongValueError('Running Time Status');
       return status;
     },
@@ -253,7 +253,7 @@ export async function formatTitle(
     },
     /* aa */ 'cast[].status': (value: string) => {
       if (!value) return optionalWarning('Principal Cast Status');
-      const status = getKeyIfExists('memberStatus', value);
+      const status = getKeyIfExists('memberStatus', value) as MemberStatus;
       if (!status) return wrongValueError('Principal Cast Status');
       return status;
     },

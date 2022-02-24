@@ -3,11 +3,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, ChangeDetectionStrategy, OnDestroy, AfterViewInit } from '@angular/core';
 
-import { delay, filter, skip, switchMap } from 'rxjs/operators';
+import { delay, filter, pluck, skip, switchMap } from 'rxjs/operators';
 import { combineLatest, of, ReplaySubject, Subscription } from 'rxjs';
 
 import { FormList } from '@blockframes/utils/form';
-import { MovieQuery, Movie } from '@blockframes/movie/+state';
+import { MovieService } from '@blockframes/movie/+state';
 import { BucketTerm, Term, TermService } from '@blockframes/contract/term/+state';
 import { CalendarAvailsForm, MapAvailsForm } from '@blockframes/contract/avails/form/avails.form';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
@@ -30,7 +30,10 @@ import { scrollIntoView } from '../../../../../../../../libs/utils/src/lib/brows
 export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy {
   private subs: Subscription[] = [];
 
-  public movie: Movie = this.movieQuery.getActive();
+  public movie$ = this.route.params.pipe(
+    pluck('movieId'),
+    switchMap((movieId: string) => this.movieService.valueChanges(movieId))
+  );
 
   public orgId = this.orgService.org.id;
   public periods = ['days', 'weeks', 'months', 'years'];
@@ -43,7 +46,9 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
     calendarForm: new CalendarAvailsForm()
   };
 
-  public movieOrg$ = this.orgService.valueChanges(this.movie.orgIds[0]);
+  public movieOrg$ = this.movie$.pipe(
+    switchMap(movie => this.orgService.valueChanges(movie.orgIds[0]))
+  );
 
   /** Raw mandates, straight from the db
    *
@@ -70,7 +75,9 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
   public salesTerms$ = new ReplaySubject<Term<Date>[]>();
 
   /** Selected terms in the local bucket form, those where available terms that have been selected by the user */
-  public terms$ = this.bucketForm.selectTerms(this.movie.id);
+  public terms$ = this.movie$.pipe(
+    switchMap(movie => this.bucketForm.selectTerms(movie.id))
+  );
 
   public holdbacks: Holdback[] = [];
 
@@ -78,7 +85,7 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
     private router: Router,
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private movieQuery: MovieQuery,
+    private movieService: MovieService,
     private termService: TermService,
     private bucketService: BucketService,
     private orgService: OrganizationService,
@@ -133,7 +140,8 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
 
   private async init() {
 
-    const contracts = await this.contractService.getValue(ref => ref.where('titleId', '==', this.movie.id).where('status', '==', 'accepted'));
+    const movieId = this.route.snapshot.params.movieId;
+    const contracts = await this.contractService.getValue(ref => ref.where('titleId', '==', movieId).where('status', '==', 'accepted'));
 
     const mandates = contracts.filter(isMandate);
     const sales = contracts.filter(isSale);

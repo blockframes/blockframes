@@ -9,7 +9,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 
 // Akita
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
-import { firebaseRegion, persistenceSettings } from '@env';
+import { firebaseRegion } from '@env';
 
 // Components
 import { AppComponent } from './app.component';
@@ -68,7 +68,7 @@ import { AuthService } from '@blockframes/auth/+state/auth.service';
 
     // Firebase
     AngularFireModule.initializeApp(firebase('financiers')),
-    AngularFirestoreModule.enablePersistence(persistenceSettings),
+    AngularFirestoreModule,
     AngularFireFunctionsModule,
     AngularFirePerformanceModule,
     AngularFireAuthModule,

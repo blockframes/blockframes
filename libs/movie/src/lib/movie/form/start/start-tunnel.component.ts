@@ -3,7 +3,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 
 // Blockframes
-import { MovieService } from '@blockframes/movie/+state';
+import { createReleaseYear, Movie, MovieService } from '@blockframes/movie/+state';
 import { App, getCurrentApp } from '@blockframes/utils/apps';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 
@@ -11,8 +11,12 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { BehaviorSubject } from 'rxjs';
 
 
-const predefinedTitleConfig: Record<App, any> = {
-  catalog: { productionStatus: 'released' },
+const predefinedTitleConfig: Record<App, Partial<Movie>> = {
+  catalog: {
+    productionStatus: 'released',
+    runningTime: { status: 'confirmed' },
+    release: createReleaseYear({ status: 'confirmed' })
+  },
   festival: {},
   financiers: {},
   crm: {}
@@ -37,8 +41,8 @@ export class MovieFormStartTunnelComponent {
   async navigateToTunnel() {
     this.loadingTunnel.next(true);
     try {
-      const app = { [this.currentApp]: { access: true} };
-      const { id } = await this.movieService.create({...predefinedTitleConfig[this.currentApp], app });
+      const app = { [this.currentApp]: { access: true } };
+      const { id } = await this.movieService.create({ ...predefinedTitleConfig[this.currentApp], app });
 
       this.router.navigate(['/c/o/dashboard/tunnel/movie/', id]);
     } catch (err) {

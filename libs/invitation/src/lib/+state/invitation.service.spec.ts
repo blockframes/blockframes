@@ -62,7 +62,7 @@ describe('Invitations Test Suite', () => {
     service = TestBed.inject(InvitationService);
 
     await loadFirestoreRules({
-      projectId: "test",
+      projectId: 'test',
       rules: readFileSync('./firestore.test.rules', "utf8")
     });
 
@@ -157,39 +157,4 @@ describe('Invitations Test Suite', () => {
     }
     expect(inviteParam).toMatchObject(expectedParam);
   });
-
-  describe('Check Invitation', () => {
-
-    it('is for my org', async () => {
-      const invitationService = TestBed.inject(InvitationService);
-
-      //Create an Invitation Document
-      const newInvite = createInvitation(invitationParamsOrg);
-      const isMyInvite = invitationService.isInvitationForMe(newInvite);
-      expect(isMyInvite).toBeTruthy();
-    })
-
-    it('is for my userId', async () => {
-      const invitationService = TestBed.inject(InvitationService);
-
-      //Create an Invitation Document
-      const newInvite = createInvitation(invitationParamsUser);
-      const isMyInvite = invitationService.isInvitationForMe(newInvite);
-      expect(isMyInvite).toBeTruthy();
-    })
-
-    it('is neither for my Org or userId', async () => {
-      const invitationService = TestBed.inject(InvitationService);
-
-      //Create an Invitation Document
-      const inviteParamsOrg = { ...invitationParamsOrg };
-      const inviteParamsUser = { ...invitationParamsUser };
-      inviteParamsOrg.toOrg.id = 'otherOrgId';
-      inviteParamsUser.toUser.uid = 'otherUserId';
-      const invitationParams = { ...inviteParamsOrg, ...inviteParamsUser };
-      const newInvite = createInvitation(invitationParams);
-      const isMyInvite = invitationService.isInvitationForMe(newInvite);
-      expect(isMyInvite).toBeFalsy();
-    })
-  })
 });

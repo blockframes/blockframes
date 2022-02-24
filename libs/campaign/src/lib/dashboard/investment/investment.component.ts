@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { CampaignService } from '../../+state';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Campaign, CampaignService } from '../../+state';
 import { CampaignForm } from '../../form/form';
-import { switchMap } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
+import { map, pluck, switchMap, tap } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { Movie, MovieService } from '@blockframes/movie/+state';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'campaign-dashboard-investment',
@@ -12,25 +12,27 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
   styleUrls: ['./investment.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InvestmentComponent implements OnInit, OnDestroy {
-  private sub: Subscription;
-  movieId$ = this.route.selectParams('movieId');
+export class InvestmentComponent {
+
+  public movieId$ = this.route.params.pipe(
+    pluck('movieId'),
+    switchMap((movieId: string) => this.movieService.valueChanges(movieId)),
+    switchMap(movie => this.service.valueChanges(movie.id).pipe(map(campaign => [movie, campaign]))),
+    tap(([movie, campaign]: [Movie, Campaign]) => {
+      this.form.setAllValue(campaign);
+      const titleName = movie?.title?.international || 'No title';
+      this.dynTitle.setPageTitle(`${titleName}`, 'Investment Information');
+    }),
+    map(([movie]: [Movie, Campaign]) => movie.id)
+  );
+
   form = new CampaignForm();
 
   constructor(
     private service: CampaignService,
-    private route: RouterQuery,
+    private movieService: MovieService,
+    private route: ActivatedRoute,
     private dynTitle: DynamicTitleService
   ) { }
 
-  ngOnInit(): void {
-    this.dynTitle.setPageTitle('Title page', 'Investment Information');
-    this.sub = this.movieId$.pipe(
-      switchMap((id: string) => this.service.valueChanges(id))
-    ).subscribe(campaign => this.form.setAllValue(campaign));
-  }
-
-  ngOnDestroy() {
-    this.sub?.unsubscribe();
-  }
 }

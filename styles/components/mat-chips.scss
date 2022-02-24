@@ -5,6 +5,10 @@
   $config: mat.get-color-config($theme);
   $foreground: map.get($config, 'foreground');
 
+  chips-autocomplete mat-chip.mat-standard-chip {
+    margin: -2px 4px;
+  }
+
   mat-chip.mat-standard-chip {
     color: mat.get-color-from-palette($foreground, icon);
     // Disabled the over animation when the mat chip is only informative

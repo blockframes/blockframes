@@ -70,7 +70,6 @@ const routes: Routes = [{
       }, {
         path: ':movieId',
         canActivate: [MovieActiveGuard],
-        canDeactivate: [MovieActiveGuard],
         loadChildren: () => import('./title/view/view.module').then(m => m.MovieViewModule),
         data: { redirect: '/c/o/marketplace/home' }
       }]

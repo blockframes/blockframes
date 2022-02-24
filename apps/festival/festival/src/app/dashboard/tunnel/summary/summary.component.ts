@@ -1,11 +1,11 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
 import { findInvalidControls } from '@blockframes/ui/tunnel/layout/layout.component';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { map } from 'rxjs/operators';
+import { map, pluck, switchMap } from 'rxjs/operators';
+import { MovieService } from '@blockframes/movie/+state';
 
 @Component({
   selector: 'festival-summary-tunnel',
@@ -21,14 +21,19 @@ export class TunnelSummaryComponent implements OnInit {
   private missingFields: string[] = [];
   // Fields in error
   private invalidFields: string[] = [];
-  isPublished$ = this.query.selectActive(movie => movie.app.festival.status).pipe(
+
+  isPublished$ = this.route.params.pipe(
+    pluck('movieId'),
+    switchMap((movieId: string) => this.movieService.valueChanges(movieId)),
+    map(movie => movie.app.catalog.status),
     map(status => status === 'accepted' || status === 'submitted')
   );
 
   constructor(
     private shell: MovieFormShellComponent,
     private router: Router,
-    private query: MovieQuery,
+    private route: ActivatedRoute,
+    private movieService: MovieService,
     private snackBar: MatSnackBar,
     private dynTitle: DynamicTitleService
   ) {
@@ -48,7 +53,8 @@ export class TunnelSummaryComponent implements OnInit {
       const text = `${this.form.get('title').get('international').value} successfully published.`;
       const ref = this.snackBar.open(text, '', { duration: 1000 });
       ref.afterDismissed().subscribe(() => {
-        this.router.navigate(['c/o/dashboard/title', this.query.getActiveId()])
+        const movieId = this.route.snapshot.paramMap.get('movieId');
+        this.router.navigate(['c/o/dashboard/title', movieId]);
       })
     } else {
       // Log the invalid forms

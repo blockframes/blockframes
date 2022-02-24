@@ -1,72 +1,67 @@
-<ng-template *ngIf="loading$ | async">
-  <mat-spinner color="accent" #loading></mat-spinner>
+<title-dashboard-shell *ngIf="movie$ | async as movie" [routes]="navLinks">
+  <movie-cta fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="space-between end" fxFlex>
+    <button *ngIf="movie.app.financiers.status === 'accepted'" mat-button color="primary" (click)="openDialog()">
+      <mat-icon svgIcon="update" color="primary"></mat-icon>
+      Update Funding Status
+    </button>
+    <a *ngIf="movie.app.financiers.status === 'draft'" [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id, 'summary']" mat-button color="primary" fragment="submit">
+      <mat-icon svgIcon="cloud_upload"></mat-icon><span>Submit Title</span>
+    </a>
+    <a *ngIf="movie.app.financiers.status === 'submitted'" [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]" mat-button color="primary">
+      <mat-icon svgIcon="edit"></mat-icon><span>Edit Title</span>
+    </a>
+    <actions-dashboard-shell [movie]="movie" fxFlex #actions="actionsDashboardShell">
+      <movie-action-menu>
+        <a *ngIf="movie.app.financiers.status !== 'submitted'" mat-menu-item [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]">
+          <mat-icon svgIcon="edit"></mat-icon><span>Edit Title</span>
+        </a>
+        <button mat-menu-item (click)="actions.updateStatus('archived', 'Title archived.')">
+          <mat-icon svgIcon="archive"></mat-icon><span>Archive Title</span>
+        </button>
+        <button *ngIf="movie.app.financiers.status === 'submitted'" mat-menu-item
+          (click)="actions.updateStatus('draft', 'Title back to Draft.')">
+          <mat-icon svgIcon="drafts"></mat-icon><span>Switch back to Draft</span>
+        </button>
+        <button *ngIf="movie.app.financiers.status === 'accepted'" mat-menu-item
+          (click)="actions.updateStatus('draft', 'Title removed from Marketplace.')">
+          <mat-icon svgIcon="cancel"></mat-icon><span>Remove from Marketplace</span>
+        </button>
+        <a mat-menu-item *ngIf="(org$ | async | canAccess: 'marketplace': 'financiers')"  [routerLink]="['/c/o/marketplace/title', movie.id, 'main']">
+          <mat-icon svgIcon="visibility"></mat-icon>
+          <span>Marketplace Preview</span>
+        </a>
+      </movie-action-menu>
+    </actions-dashboard-shell>
+  </movie-cta>
+</title-dashboard-shell>
+
+<ng-template #dialogTemplate let-data>
+  <ng-container *ngIf="data.form as form">
+    <header>
+      <h2>Update Funding Status</h2>
+      <p class="mat-caption">
+        Please update regulary your funding status to provide your investors<br />
+        with up to date information. The currency is the same as you’ve chosen for your project.
+      </p>
+    </header>
+    <form fxLayout="column" fxLayoutGap="8px" [formGroup]="form" (ngSubmit)="save()">
+      <!-- Received -->
+      <mat-form-field appearance="outline">
+        <mat-label>Funding Status</mat-label>
+        <input type="number" matInput formControlName="received" [errorStateMatcher]="data.errorMatcher" min="0"
+          required />
+        <mat-icon matSuffix [svgIcon]="form.getCurrency()"></mat-icon>
+        <mat-error *ngIf="form.hasError('receivedOverflow')">
+          Your funding status should be lower than your needed investment
+          ({{ form.get('cap').value ? form.get('cap').value: 0 | currency: form.getCurrency() : 'symbol' : '1.0-0' }}).
+        </mat-error>
+      </mat-form-field>
+
+      <footer fxLayout fxLayoutAlign="space-between center">
+        <button mat-stroked-button mat-dialog-close type="reset" color="primary">Cancel</button>
+        <button mat-flat-button type="submit" color="primary"
+          [disabled]="form.invalid || form.get('received').value < 0">Save</button>
+      </footer>
+    </form>
+  </ng-container>
 </ng-template>
-<ng-container *ngIf="(movie$ | async) as movie;">
-  <title-dashboard-shell [routes]="navLinks">
-    <movie-cta fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="space-between end" fxFlex>
-      <button *ngIf="movie.app.financiers.status === 'accepted'" mat-button color="primary" (click)="openDialog()">
-        <mat-icon svgIcon="update" color="primary"></mat-icon>
-        Update Funding Status
-      </button>
-      <a *ngIf="movie.app.financiers.status === 'draft'" [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id, 'summary']" mat-button color="primary" fragment="submit">
-        <mat-icon svgIcon="cloud_upload"></mat-icon><span>Submit Title</span>
-      </a>
-      <a *ngIf="movie.app.financiers.status === 'submitted'" [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]" mat-button color="primary">
-        <mat-icon svgIcon="edit"></mat-icon><span>Edit Title</span>
-      </a>
-      <actions-dashboard-shell fxFlex #actions="actionsDashboardShell">
-        <movie-action-menu>
-          <a *ngIf="movie.app.financiers.status !== 'submitted'" mat-menu-item [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]">
-            <mat-icon svgIcon="edit"></mat-icon><span>Edit Title</span>
-          </a>
-          <button mat-menu-item (click)="actions.updateStatus('archived', 'Title archived.')">
-            <mat-icon svgIcon="archive"></mat-icon><span>Archive Title</span>
-          </button>
-          <button *ngIf="movie.app.financiers.status === 'submitted'" mat-menu-item
-            (click)="actions.updateStatus('draft', 'Title back to Draft.')">
-            <mat-icon svgIcon="drafts"></mat-icon><span>Switch back to Draft</span>
-          </button>
-          <button *ngIf="movie.app.financiers.status === 'accepted'" mat-menu-item
-            (click)="actions.updateStatus('draft', 'Title removed from Marketplace.')">
-            <mat-icon svgIcon="cancel"></mat-icon><span>Remove from Marketplace</span>
-          </button>
-          <a mat-menu-item *ngIf="(org$ | async | canAccess: 'marketplace': 'financiers')"  [routerLink]="['/c/o/marketplace/title', movie.id, 'main']">
-            <mat-icon svgIcon="visibility"></mat-icon>
-            <span>Marketplace Preview</span>
-          </a>
-        </movie-action-menu>
-      </actions-dashboard-shell>
-    </movie-cta>
-  </title-dashboard-shell>
-
-  <ng-template #dialogTemplate let-data>
-    <ng-container *ngIf="data.form as form">
-      <header>
-        <h2>Update Funding Status</h2>
-        <p class="mat-caption">
-          Please update regulary your funding status to provide your investors<br />
-          with up to date information. The currency is the same as you’ve chosen for your project.
-        </p>
-      </header>
-      <form fxLayout="column" fxLayoutGap="8px" [formGroup]="form" (ngSubmit)="save()">
-        <!-- Received -->
-        <mat-form-field appearance="outline">
-          <mat-label>Funding Status</mat-label>
-          <input type="number" matInput formControlName="received" [errorStateMatcher]="data.errorMatcher" min="0"
-            required />
-          <mat-icon matSuffix [svgIcon]="form.getCurrency()"></mat-icon>
-          <mat-error *ngIf="form.hasError('receivedOverflow')">
-            Your funding status should be lower than your needed investment
-            ({{ form.get('cap').value ? form.get('cap').value: 0 | currency: form.getCurrency() : 'symbol' : '1.0-0' }}).
-          </mat-error>
-        </mat-form-field>
-
-        <footer fxLayout fxLayoutAlign="space-between center">
-          <button mat-stroked-button mat-dialog-close type="reset" color="primary">Cancel</button>
-          <button mat-flat-button type="submit" color="primary"
-            [disabled]="form.invalid || form.get('received').value < 0">Save</button>
-        </footer>
-      </form>
-    </ng-container>
-  </ng-template>
-</ng-container>

@@ -10,6 +10,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 // Blockframes UI
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
@@ -91,6 +92,7 @@ import { StorageFileModule } from '@blockframes/media/pipes/storageFile.pipe';
     MatButtonModule,
     MatSnackBarModule,
     MatDividerModule,
+    MatTooltipModule,
 
     RouterModule.forChild([])
   ],

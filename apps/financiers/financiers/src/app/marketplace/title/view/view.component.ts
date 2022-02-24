@@ -1,25 +1,23 @@
-﻿import { Component, OnInit, ChangeDetectionStrategy, ViewChild, TemplateRef } from '@angular/core';
+﻿import { Component, ChangeDetectionStrategy, ViewChild, TemplateRef } from '@angular/core';
 import { getCurrencySymbol } from '@angular/common';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { Movie } from '@blockframes/movie/+state/movie.model';
-import { MovieQuery } from '@blockframes/movie/+state/movie.query';
+import { ActivatedRoute, Router } from '@angular/router';
 import { mainRoute, additionalRoute, artisticRoute, productionRoute } from '@blockframes/movie/marketplace';
 import { Organization } from '@blockframes/organization/+state/organization.model';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { Campaign, CampaignService } from '@blockframes/campaign/+state';
+import { CampaignService } from '@blockframes/campaign/+state';
 import { RouteDescription } from '@blockframes/utils/common-interfaces';
 import { SendgridService } from '@blockframes/utils/emails/sendgrid.service';
 import { templateIds } from '@blockframes/utils/emails/ids';
 import { MatDialog } from '@angular/material/dialog';
-import { shareReplay, switchMap, tap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { pluck, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { AuthService } from '@blockframes/auth/+state';
 import { UserService } from '@blockframes/user/+state';
 import { ErrorResultResponse } from '@blockframes/utils/utils';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { getUserEmailData, OrgEmailData } from '@blockframes/utils/emails/utils';
 import { testEmail } from "@blockframes/e2e/utils/env";
+import { MovieService } from '@blockframes/movie/+state';
 
 interface EmailData {
   subject: string;
@@ -34,11 +32,24 @@ interface EmailData {
   styleUrls: ['./view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceMovieViewComponent implements OnInit {
+export class MarketplaceMovieViewComponent {
   @ViewChild('dialogTemplate') dialogTemplate: TemplateRef<unknown>;
-  public movie$: Observable<Movie>;
-  public orgs$: Observable<Organization[]>;
-  public campaign$: Observable<Campaign>;
+
+  public movie$ = this.route.params.pipe(
+    pluck('movieId'),
+    switchMap((movieId: string) => this.movieService.getValue(movieId))
+  );
+
+  public orgs$ = this.movie$.pipe(
+    switchMap(movie => this.orgService.valueChanges(movie.orgIds)),
+    shareReplay({ refCount: true, bufferSize: 1 }),
+  );
+  
+  public campaign$ = this.movie$.pipe(
+    switchMap(movie => this.campaignService.valueChanges(movie.id)),
+    tap(campaign => this.currency = campaign.currency)
+  );
+
   public currency: string;
 
   public navLinks: RouteDescription[] = [
@@ -65,7 +76,8 @@ export class MarketplaceMovieViewComponent implements OnInit {
   ];
 
   constructor(
-    private movieQuery: MovieQuery,
+    private route: ActivatedRoute,
+    private movieService: MovieService,
     private authService: AuthService,
     private orgService: OrganizationService,
     private userService: UserService,
@@ -75,19 +87,6 @@ export class MarketplaceMovieViewComponent implements OnInit {
     private sendgrid: SendgridService,
     public router: Router
   ) { }
-
-  ngOnInit() {
-
-    this.movie$ = this.movieQuery.selectActive();
-    this.orgs$ = this.movieQuery.selectActive().pipe(
-      switchMap(movie => this.orgService.valueChanges(movie.orgIds)),
-      shareReplay({ refCount: true, bufferSize: 1 }),
-    );
-    this.campaign$ = this.movieQuery.selectActiveId().pipe(
-      switchMap(id => this.campaignService.valueChanges(id)),
-      tap(campaign => this.currency = campaign.currency)
-    );
-  }
 
   openForm(orgs: Organization[]) {
     const form = new FormGroup({
