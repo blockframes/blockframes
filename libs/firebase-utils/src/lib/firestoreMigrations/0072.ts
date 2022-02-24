@@ -15,7 +15,7 @@ const events_query = `
       ga.createdAt,
       ga.name,
       ga.titleId,
-      ga.userId,
+      ga.uid,
       CASE
           WHEN REGEXP_CONTAINS(ga.page_location, 'archipelmarket') THEN 'festival'
           WHEN REGEXP_CONTAINS(ga.page_location, 'archipelcontent') THEN 'catalog'
@@ -27,7 +27,7 @@ const events_query = `
         event_timestamp as createdAt,
         MAX(event_name) as name,
         MAX(if(params.key = "movieId", params.value.string_value, NULL)) as titleId,
-        MAX(if(params.key = "uid", params.value.string_value, NULL)) as userId,
+        MAX(if(params.key = "uid", params.value.string_value, NULL)) as uid,
         MAX(if(params.key = "page_location", params.value.string_value, NULL)) as page_location
       FROM \`${bigQueryAnalyticsTable}*\`,
       UNNEST(event_params) AS params
@@ -35,13 +35,13 @@ const events_query = `
       GROUP BY user_pseudo_id, event_timestamp
     ) as ga
     LEFT JOIN \`${firebase().projectId}.firestore_export.users\` AS users
-    ON GA.userId = users.uid
+    ON GA.uid = users.uid
     WHERE users.email NOT LIKE '%concierge%'
   )
   WHERE name IS NOT NULL
     AND createdAt IS NOT NULL
     AND createdFrom IS NOT NULL
-    AND userId IS NOT NULL
+    AND uid IS NOT NULL
     AND titleId IS NOT NULL
     AND orgId IS NOT NULL
 `
@@ -57,7 +57,7 @@ const page_view_query = `
         WHEN REGEXP_CONTAINS(LOWER(MAX(page_title)), 'archipel content') THEN 'catalog'
         WHEN REGEXP_CONTAINS(LOWER(MAX(page_title)), 'media financiers') THEN 'financiers'
       END as createdFrom,
-      userId,
+      users.uid,
       REGEXP_EXTRACT(MAX(page_path), '(?:.*)?/title/([^/]+)/(?:r/i/)?main') as titleId,
       MAX(users.orgId) as orgId
     FROM (
@@ -65,7 +65,7 @@ const page_view_query = `
         event_timestamp as createdAt,
         DATE(TIMESTAMP_MICROS(event_timestamp)) as day,
         MAX(event_name) as name,
-        MAX(if(params.key = "uid", params.value.string_value, NULL)) as userId,
+        MAX(if(params.key = "uid", params.value.string_value, NULL)) as uid,
         MAX(if(params.key = "page_location", params.value.string_value, NULL)) as page_location,
         MAX(if(params.key = "page_title", params.value.string_value, NULL)) as page_title,
         MAX(if(params.key = "page_path", params.value.string_value, NULL)) as page_path
@@ -75,7 +75,7 @@ const page_view_query = `
       GROUP BY user_pseudo_id, event_timestamp
     ) as GA
     LEFT JOIN \`${firebase().projectId}.firestore_export.users\` AS users
-    ON GA.userId = users.uid
+    ON GA.uid = users.uid
     WHERE page_path LIKE '%marketplace/title%'
       AND page_path LIKE '%main%'
       AND (
@@ -84,12 +84,12 @@ const page_view_query = `
         OR LOWER(page_title) NOT LIKE '%media financiers%'
       )
       AND users.email NOT LIKE '%concierge%'
-    GROUP BY day, userId
+    GROUP BY day, users.uid
   )
   WHERE name IS NOT NULL
     AND createdAt IS NOT NULL
     AND createdFrom IS NOT NULL
-    AND userId IS NOT NULL
+    AND uid IS NOT NULL
     AND titleId IS NOT NULL
     AND orgId IS NOT NULL
 `
@@ -150,7 +150,7 @@ export async function upgrade(db: Firestore) {
       meta: createTitleMeta({
         orgId: row.orgId,
         titleId: row.titleId,
-        userId: row.userId,
+        uid: row.uid,
         ownerOrgIds: title.orgIds
       })
     };
@@ -166,7 +166,7 @@ export async function upgrade(db: Firestore) {
 
     batch.create(ref, event);
 
-    if (i === rows.length) {
+    if (i === events.length) {
       await batch.commit();
       break;
     } else if (i % 500 === 0) {

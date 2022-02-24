@@ -5,7 +5,7 @@ export function createTitleMeta(meta: Partial<MetaTitle>): MetaTitle {
   return {
     titleId: '',
     orgId: '',
-    userId: '',
+    uid: '',
     ownerOrgIds: [],
     ...meta
   };
