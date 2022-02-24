@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { RouterQuery } from "@datorama/akita-ng-router-store";
+import { ActivatedRoute } from "@angular/router";
 import { algolia } from '@env';
 import algoliasearch, { SearchIndex } from 'algoliasearch';
 import { App, getCurrentApp } from "../apps";
@@ -13,8 +13,8 @@ export class AlgoliaService {
 
   private appName: App;
 
-  constructor(private routerQuery: RouterQuery) {
-    this.appName = getCurrentApp(this.routerQuery);
+  constructor(private route: ActivatedRoute) {
+    this.appName = getCurrentApp(this.route);
   }
 
   getIndex(name: 'movie' | 'org' | 'user'): SearchIndex {

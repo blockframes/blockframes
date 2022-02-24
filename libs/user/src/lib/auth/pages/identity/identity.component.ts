@@ -4,7 +4,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { slideUp, slideDown } from '@blockframes/utils/animations/fade';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentApp, getAppName, App } from '@blockframes/utils/apps';
 import { createDocumentMeta } from '@blockframes/utils/models-meta';
 import { AlgoliaOrganization } from '@blockframes/utils/algolia';
@@ -54,7 +53,6 @@ export class IdentityComponent implements OnInit, OnDestroy {
     private router: Router,
     private invitationService: InvitationService,
     private orgService: OrganizationService,
-    private routerQuery: RouterQuery,
     private cdr: ChangeDetectorRef,
     private route: ActivatedRoute,
     @Optional() private intercom: Intercom
@@ -62,7 +60,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
 
   async ngOnInit() {
-    this.app = getCurrentApp(this.routerQuery);
+    this.app = getCurrentApp(this.route);
     this.appName = getAppName(this.app).label;
 
     const existingUserWithDisplayName = !!this.authService.profile && !!hasDisplayName(this.authService.profile);

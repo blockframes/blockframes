@@ -1,7 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
-import { NavigationEnd, Router, Event } from '@angular/router';
+import { NavigationEnd, Router, Event, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Observable, Subscription } from 'rxjs';
 import { distinctUntilChanged, filter } from 'rxjs/operators';
 
@@ -47,8 +46,8 @@ export class ProfileViewComponent implements OnInit, OnDestroy {
     private dynTitle: DynamicTitleService,
     private location: Location,
     private orgService: OrganizationService,
-    private routerQuery: RouterQuery,
     private authService: AuthService,
+    private route: ActivatedRoute,
     router: Router
   ) {
 
@@ -71,7 +70,7 @@ export class ProfileViewComponent implements OnInit, OnDestroy {
     if (hasPreferences) return;
 
     const org = this.orgService.org;
-    const app = getCurrentApp(this.routerQuery);
+    const app = getCurrentApp(this.route);
     if (canHavePreferences(org, app)) {
       this.navLinks.push({ path: 'preferences', label: 'Buying Preferences' })
     }

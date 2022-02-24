@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { Location } from '@angular/common';
 import { getCurrentApp } from "@blockframes/utils/apps";
-import { RouterQuery } from "@datorama/akita-ng-router-store";
+import { ActivatedRoute } from "@angular/router";
 
 @Component({
   selector: 'auth-privacy-policy',
@@ -11,11 +11,11 @@ import { RouterQuery } from "@datorama/akita-ng-router-store";
 })
 
 export class PrivacyPolicyComponent {
-  appName = getCurrentApp(this.routerQuery);
+  appName = getCurrentApp(this.route);
   canGoBack = window.history.length > 1;
   constructor(
-    private routerQuery: RouterQuery,
     private location: Location,
+    private route: ActivatedRoute
   ) { }
 
   goBack() {

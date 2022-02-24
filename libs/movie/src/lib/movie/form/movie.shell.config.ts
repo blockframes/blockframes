@@ -6,12 +6,13 @@ import { filter, startWith, switchMap, tap } from "rxjs/operators";
 import { mergeDeep } from "@blockframes/utils/helpers";
 import { FileUploaderService } from '@blockframes/media/+state';
 import { ProductionStatus } from "@blockframes/utils/static-model";
-import { App, getCurrentApp, getMoviePublishStatus } from "@blockframes/utils/apps";
+import { getCurrentApp, getMoviePublishStatus } from "@blockframes/utils/apps";
 import { FormSaveOptions } from '@blockframes/utils/common-interfaces';
 import { MovieControl, MovieForm } from "./movie.form";
 import type { FormShellConfig } from './movie.shell.interfaces'
 import { Movie, MoviePromotionalElements, MovieService } from "../+state";
 import { MovieActiveGuard } from '../guards/movie-active.guard';
+import { ActivatedRoute } from '@angular/router';
 
 const valueByProdStatus: Record<ProductionStatus, Record<string, string>> = {
   development: {
@@ -55,7 +56,8 @@ export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
   private currentApp = getCurrentApp(this.route);
 
   constructor(
-    private route: RouterQuery,
+    private route: ActivatedRoute,
+    private routerQuery: RouterQuery,
     private service: MovieService,
     private uploaderService: FileUploaderService,
     private movieActiveGuard: MovieActiveGuard,
@@ -63,7 +65,7 @@ export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
 
   onInit(): Observable<unknown>[] {
     // Update form on change
-    const onMovieChanges = this.route.selectParams('movieId').pipe(
+    const onMovieChanges = this.routerQuery.selectParams('movieId').pipe(
       switchMap((id: string) => this.service.getValue(id)),
       tap(movie => {
         if (this.currentApp === 'catalog') movie.productionStatus = 'released';
@@ -118,9 +120,8 @@ export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
 
     // Specific update if publishing
     if (options.publishing) {
-      const currentApp: App = this.route.getData('app');
-      movie.app[currentApp].status = getMoviePublishStatus(currentApp);
-      if (currentApp === 'festival') movie.app[currentApp].acceptedAt = new Date();
+      movie.app[this.currentApp].status = getMoviePublishStatus(this.currentApp);
+      if (this.currentApp === 'festival') movie.app[this.currentApp].acceptedAt = new Date();
     }
 
     // -- Update movie & media -- //

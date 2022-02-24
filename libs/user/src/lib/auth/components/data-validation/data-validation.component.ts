@@ -2,13 +2,13 @@ import { Component, ChangeDetectionStrategy, OnInit, Input, Optional } from '@an
 import { AuthService } from '@blockframes/auth/+state';
 import { Organization } from '@blockframes/organization/+state';
 import { getCurrentApp, appName, getOrgModuleAccess } from '@blockframes/utils/apps';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Observable } from 'rxjs';
 import { Intercom } from 'ng-intercom';
 import { hasDenomination, hasDisplayName } from '@blockframes/utils/helpers';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { map } from 'rxjs/operators';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'auth-data-validation',
@@ -24,7 +24,7 @@ export class AuthDataValidationComponent implements OnInit {
     const orgHaveAccesToAtLeastOneModule = !!getOrgModuleAccess(org, this.app).length;
     this.orgApproval = isOrgAccepted && orgHaveAccesToAtLeastOneModule && isUserInOrg;
   };
-  public app = getCurrentApp(this.routerQuery);
+  private app = getCurrentApp(this.route);
   public appName = appName[this.app];
   public profileData = false;
   public orgData = false;
@@ -35,7 +35,7 @@ export class AuthDataValidationComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private routerQuery: RouterQuery,
+    private route: ActivatedRoute,
     private functions: AngularFireFunctions,
     private snackbar: MatSnackBar,
     @Optional() private intercom: Intercom) { }
@@ -61,11 +61,10 @@ export class AuthDataValidationComponent implements OnInit {
   async resendEmailVerification() {
     const snack = this.snackbar.open('Sending verification email...');
     const publicUser = this.authService.profile;
-    const app = getCurrentApp(this.routerQuery);
 
     try {
       const sendVerifyEmail = this.functions.httpsCallable('sendVerifyEmailAddress');
-      await sendVerifyEmail({ email: publicUser.email, publicUser, app }).toPromise();
+      await sendVerifyEmail({ email: publicUser.email, publicUser, app: this.app }).toPromise();
       snack.dismiss();
       this.snackbar.open('Verification email sent.', '', { duration: 3000 });
     } catch (err) {

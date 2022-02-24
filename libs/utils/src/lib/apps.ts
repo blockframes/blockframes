@@ -6,7 +6,6 @@ import { StoreStatus } from "./static-model";
 import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
 import { appUrl } from "@env";
 import { MovieBase, MovieDocument } from "@blockframes/movie/+state/movie.firestore";
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 import type { ActivatedRoute } from '@angular/router';
 
 export interface AppMailSetting {
@@ -74,8 +73,7 @@ export const applicationUrl: Record<App, string> = {
   crm: appUrl.crm
 }
 
-export function getCurrentApp(route: RouterQuery | ActivatedRoute): App {
-  if (route instanceof RouterQuery) return route.getValue().state?.root.data.app;
+export function getCurrentApp(route: ActivatedRoute): App {
   return route.snapshot.data.app;
 }
 

@@ -3,17 +3,16 @@ import { AuthService } from '../+state';
 import { map, } from 'rxjs/operators';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { getOrgModuleAccess, getCurrentApp, App } from '@blockframes/utils/apps';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { combineLatest } from 'rxjs';
-import { CanActivate, Router } from '@angular/router';
+import { ActivatedRoute, CanActivate, Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class NoAuthGuard implements CanActivate {
   constructor(
     private authService: AuthService,
     private orgService: OrganizationService,
-    private routerQuery: RouterQuery,
     private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   canActivate() {
@@ -26,7 +25,7 @@ export class NoAuthGuard implements CanActivate {
 
         if (!org) return this.router.createUrlTree(['/auth/identity']);
 
-        const app = getCurrentApp(this.routerQuery) as App | 'crm';
+        const app = getCurrentApp(this.route) as App | 'crm';
         if (app === 'crm') return this.router.createUrlTree(['/c/o/dashboard/crm']);
 
         const [moduleAccess = 'dashboard'] = getOrgModuleAccess(org, app);

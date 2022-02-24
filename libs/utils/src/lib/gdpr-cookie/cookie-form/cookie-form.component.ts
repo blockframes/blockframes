@@ -8,7 +8,7 @@ import { MatRadioChange } from '@angular/material/radio';
 import { Subscription } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 
-import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: '[form] cookie-form',
@@ -24,7 +24,7 @@ export class CookieFormComponent implements OnInit, OnDestroy {
   private sub: Subscription;
   public appName;
 
-  constructor(private routerQuery: RouterQuery) { }
+  constructor(private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.sub = this.form.valueChanges.pipe(startWith(this.form.value)).subscribe(data => {
@@ -32,7 +32,7 @@ export class CookieFormComponent implements OnInit, OnDestroy {
       const allRejected = Object.keys(data).every(key => !data[key]);
       this.masterToggleStatus = allAccepted ? 'accept' : allRejected ? 'reject' : 'other';
     })
-    this.appName = appName[getCurrentApp(this.routerQuery)]
+    this.appName = appName[getCurrentApp(this.route)];
   }
 
   ngOnDestroy() {

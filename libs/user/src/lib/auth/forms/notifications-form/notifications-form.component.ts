@@ -1,5 +1,4 @@
 import { Component, ChangeDetectionStrategy, Pipe, PipeTransform } from '@angular/core';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 // Blockframes
 import { NotificationsForm } from './notifications.form';
 import { App, getCurrentApp } from "@blockframes/utils/apps";
@@ -10,6 +9,7 @@ import { AuthService } from '@blockframes/auth/+state';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ActivatedRoute } from '@angular/router';
 
 interface NotificationSetting { text: string, tooltip: boolean };
 const titleType: Record<NotificationTypesBase, NotificationSetting> = {
@@ -158,9 +158,9 @@ export class EveryCheckedPipe implements PipeTransform {
 
 @Pipe({ name: 'showNotification' })
 export class ShowNotificationPipe implements PipeTransform {
-  currentApp = getCurrentApp(this.routerQuery);
+  currentApp = getCurrentApp(this.route);
   public tables = tables;
-  constructor(private routerQuery: RouterQuery) { }
+  constructor(private route: ActivatedRoute) { }
 
   transform(index: number) {
     return this.tables[index].appAuthorized.includes(this.currentApp);

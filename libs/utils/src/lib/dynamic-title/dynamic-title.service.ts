@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { ActivatedRoute } from '@angular/router';
 import { appName, getCurrentApp } from '../apps';
 
 function displaySection(section: string, showAppName: boolean, _appName: string) {
@@ -15,7 +15,7 @@ function displayEntityWithSection(section: string, titleName: string, showAppNam
 
 @Injectable({ providedIn: 'root' })
 export class DynamicTitleService {
-  private app = getCurrentApp(this.routerQuery);
+  private app = getCurrentApp(this.route);
 
   /**
    * This variable holds the value that this service gets when
@@ -23,7 +23,7 @@ export class DynamicTitleService {
    */
   private initTitle = '';
 
-  constructor(private title: Title, private routerQuery: RouterQuery) {}
+  constructor(private title: Title, private route: ActivatedRoute) {}
 
 
   /**

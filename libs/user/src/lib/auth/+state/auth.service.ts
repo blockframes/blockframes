@@ -3,7 +3,6 @@ import { AngularFireFunctions } from '@angular/fire/functions';
 import firebase from 'firebase/app';
 import { UserCredential } from '@firebase/auth-types';
 import { FireAuthService, CollectionConfig, FireAuthState, RoleState, initialAuthState } from 'akita-ng-fire';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { map, switchMap, take, tap } from 'rxjs/operators';
 import { getCurrentApp, App } from '@blockframes/utils/apps';
 import { PublicUser, User, PrivacyPolicy } from '@blockframes/user/types';
@@ -21,6 +20,7 @@ import { AngularFireAnalytics } from '@angular/fire/analytics';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { createUser, UserService } from '@blockframes/user/+state';
 import { Store, StoreConfig } from '@datorama/akita';
+import { ActivatedRoute } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'auth' })
@@ -98,7 +98,7 @@ export class AuthService extends FireAuthService<AuthState> {
   constructor(
     protected store: AuthStore,
     private functions: AngularFireFunctions,
-    private routerQuery: RouterQuery,
+    private route: ActivatedRoute,
     private gdprService: GDPRService,
     private analytics: AngularFireAnalytics,
     private ipService: IpService,
@@ -118,7 +118,7 @@ export class AuthService extends FireAuthService<AuthState> {
    * Initiate the password reset process for this user.
    * @param email email of the user
   */
-  public resetPasswordInit(email: string, app: App = getCurrentApp(this.routerQuery)) {
+  public resetPasswordInit(email: string, app: App = getCurrentApp(this.route)) {
     const callSendReset = this.functions.httpsCallable('sendResetPasswordEmail');
     return callSendReset({ email, app }).toPromise();
   }
@@ -199,7 +199,7 @@ export class AuthService extends FireAuthService<AuthState> {
    * @param orgName
    * @param app
    */
-  public async createUser(email: string, orgEmailData: OrgEmailData, app: App = getCurrentApp(this.routerQuery)): Promise<PublicUser> {
+  public async createUser(email: string, orgEmailData: OrgEmailData, app: App = getCurrentApp(this.route)): Promise<PublicUser> {
     const f = this.functions.httpsCallable('createUser');
     const user: PublicUser = await f({ email, orgEmailData, app }).toPromise();
 
