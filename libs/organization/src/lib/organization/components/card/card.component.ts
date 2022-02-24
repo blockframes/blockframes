@@ -4,7 +4,7 @@ import { Organization } from '@blockframes/organization/+state';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { getCurrentApp } from '@blockframes/utils/apps';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'org-card',
@@ -17,9 +17,9 @@ export class OrganizationCardComponent implements OnInit {
   @Input() org: Organization;
 
   public orgMovieCount$: Observable<number>
-  public app = getCurrentApp(this.routerQuery)
+  public app = getCurrentApp(this.route)
 
-  constructor(private movieService: MovieService, private routerQuery: RouterQuery) { }
+  constructor(private movieService: MovieService, private route: ActivatedRoute,) { }
 
   ngOnInit() {
     this.orgMovieCount$ = this.movieService.valueChanges(fromOrgAndAccepted(this.org.id, this.app)).pipe(

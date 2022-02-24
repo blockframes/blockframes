@@ -8,12 +8,12 @@ import { toDate } from '@blockframes/utils/helpers';
 import { Invitation, createInvitation } from './invitation.model';
 import { InvitationDocument } from './invitation.firestore';
 import { cleanInvitation } from '../invitation-utils';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentApp, getOrgAppAccess } from '@blockframes/utils/apps';
 import { combineLatest, Observable, of } from 'rxjs';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
 import { PermissionsService } from '@blockframes/permissions/+state';
 import { ActiveState, EntityState } from '@datorama/akita';
+import { ActivatedRoute } from '@angular/router';
 
 interface InvitationState extends EntityState<Invitation>, ActiveState<string> { }
 
@@ -99,7 +99,7 @@ export class InvitationService extends CollectionService<InvitationState> {
     private authService: AuthService,
     private permissionsService: PermissionsService,
     private functions: AngularFireFunctions,
-    private routerQuery: RouterQuery
+    private route: ActivatedRoute,
   ) {
     super();
   }
@@ -166,7 +166,7 @@ export class InvitationService extends CollectionService<InvitationState> {
         const recipients = Array.isArray(idOrEmails) ? idOrEmails : [idOrEmails];
 
         const f = this.functions.httpsCallable('inviteUsers');
-        let app = getCurrentApp(this.routerQuery);
+        let app = getCurrentApp(this.route);
         if (app === 'crm') {
           // Instead use first found app where org has access to
           app = getOrgAppAccess(fromOrg)[0];

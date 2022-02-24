@@ -17,8 +17,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { RequestAskingPriceComponent } from '../request-asking-price/request-asking-price.component';
 import { ActivatedRoute } from '@angular/router';
 
-import { RouterQuery } from '@datorama/akita-ng-router-store';
-
 @Component({
   selector: 'movie-screening',
   templateUrl: 'upcoming-screenings.component.html',
@@ -28,7 +26,7 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 export class UpcomingScreeningsComponent {
   @HostBinding('class') class = 'dark-contrast-theme';
 
-  private app = getCurrentApp(this.routerQuery);
+  private app = getCurrentApp(this.route);
 
   public sessions = ['first', 'second', 'third', 'fourth', 'fifth'];
 
@@ -60,7 +58,6 @@ export class UpcomingScreeningsComponent {
     private cdr: ChangeDetectorRef,
     private route: ActivatedRoute,
     private movieService: MovieService,
-    private routerQuery: RouterQuery,
   ) {
 
     const now = new Date();

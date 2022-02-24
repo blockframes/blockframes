@@ -6,7 +6,6 @@ import { EventService } from '../../+state/event.service';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentApp, applicationUrl } from '@blockframes/utils/apps';
 import { Observable, of, Subscription } from 'rxjs';
 import { map, pluck, switchMap } from 'rxjs/operators';
@@ -49,7 +48,6 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     private dialog: MatDialog,
-    private routerQuery: RouterQuery,
     private cdr: ChangeDetectorRef,
     private snackBar: MatSnackBar
   ) { }
@@ -65,7 +63,7 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
       const type = this.form.value.type;
       const path = type === 'meeting' ? 'lobby' : 'session';
       this.internalLink = `/event/${this.form.value.id}/r/i/${path}`;
-      const app = getCurrentApp(this.routerQuery);
+      const app = getCurrentApp(this.route);
       const url = applicationUrl[app];
       this.link = `${url}${this.internalLink}`;
 

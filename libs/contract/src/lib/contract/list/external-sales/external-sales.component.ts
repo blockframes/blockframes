@@ -1,5 +1,4 @@
 import { Component, ChangeDetectionStrategy, Input, } from '@angular/core';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { appName, getCurrentApp } from '@blockframes/utils/apps';
 import { Contract, Sale } from '@blockframes/contract/contract/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
@@ -19,7 +18,7 @@ interface ExternalSale extends Sale<Date> {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExternalSaleListComponent {
-  public app = getCurrentApp(this.routerQuery);
+  public app = getCurrentApp(this.route);
   public appName = appName[this.app];
   public orgId = this.orgService.org.id;
 
@@ -28,7 +27,6 @@ export class ExternalSaleListComponent {
   private _sales = new BehaviorSubject<ExternalSale[]>([]);
 
   constructor(
-    private routerQuery: RouterQuery,
     private orgService: OrganizationService,
     private router: Router,
     private route: ActivatedRoute,

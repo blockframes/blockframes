@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentApp, appName, App, getOrgAppAccess } from '@blockframes/utils/apps';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { organizationRoles, OrganizationService } from '@blockframes/organization/+state';
@@ -19,7 +18,7 @@ type Steps = 'initial' | 'request';
 })
 export class OrgRequestAccessComponent implements OnInit {
   public roles = organizationRoles;
-  public currentApp = getCurrentApp(this.routerQuery);
+  public currentApp = getCurrentApp(this.route);
   public appName = appName;
   private org$ = this.orgService.currentOrg$;
   private orgId = this.orgService.org.id;
@@ -31,7 +30,6 @@ export class OrgRequestAccessComponent implements OnInit {
   private step = new BehaviorSubject<Steps>('initial');
 
   constructor(
-    private routerQuery: RouterQuery,
     private snackBar: MatSnackBar,
     private orgService: OrganizationService,
     private authService: AuthService,

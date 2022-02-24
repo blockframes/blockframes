@@ -1,10 +1,9 @@
 // Angular
 import { Component, ChangeDetectionStrategy, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { FormControl } from '@angular/forms';
 import { MatSidenav } from '@angular/material/sidenav';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 // Blockframes
 import { SearchResult } from '@blockframes/ui/search-widget/search-widget.component';
@@ -33,7 +32,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
   private sub: Subscription;
   public searchCtrl: FormControl = new FormControl('');
   public notificationCount$ = this.notificationService.myNotificationsCount$;
-  public currentApp = getCurrentApp(this.routerQuery);
+  public currentApp = getCurrentApp(this.route);
   public appBridge: BridgeRecord = {
     catalog: {
       text: 'Promote Your Line-up',
@@ -69,7 +68,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
     private invitationService: InvitationService,
     private notificationService: NotificationService,
     private router: Router,
-    private routerQuery: RouterQuery,
+    private route: ActivatedRoute,
   ) { }
 
   ngAfterViewInit() {

@@ -5,7 +5,6 @@ import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
 import { MovieFormShellComponent } from '../shell/shell.component';
 
 // Utils
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Intercom } from 'ng-intercom';
 
 // Blockframes
@@ -13,6 +12,7 @@ import { getCurrentApp } from '@blockframes/utils/apps';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { ProductionStatus, productionStatus, ProductionStatusValue } from '@blockframes/utils/static-model';
 import { getAllowedproductionStatuses } from '@blockframes/movie/+state/movie.model';
+import { ActivatedRoute } from '@angular/router';
 
 interface AllowedPoductionStatuses {
   value: ProductionStatusValue,
@@ -30,7 +30,7 @@ interface AllowedPoductionStatuses {
 export class TitleStatusComponent {
   public form = this.shell.getForm('movie');
 
-  public currentApp = getCurrentApp(this.routerQuery);
+  public currentApp = getCurrentApp(this.route);
 
   private allowedProductionStatuses = getAllowedproductionStatuses(this.currentApp);
 
@@ -45,7 +45,7 @@ export class TitleStatusComponent {
 
   constructor(
     private shell: MovieFormShellComponent,
-    private routerQuery: RouterQuery,
+    private route: ActivatedRoute,
     private dynTitle: DynamicTitleService,
     @Optional() private intercom: Intercom,
   ) {

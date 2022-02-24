@@ -9,7 +9,6 @@ import { Observable } from 'rxjs';
 import { map, startWith, switchMap, tap } from 'rxjs/operators';
 import { Intercom } from 'ng-intercom';
 import { appName, getCurrentApp } from '@blockframes/utils/apps';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 type Filters = 'all' | 'draft' | 'ongoing' | 'achieved' | 'archived';
 
@@ -30,7 +29,7 @@ function filterMovieCampaign(movies: MovieCampaign[], filter: Filters) {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListComponent implements OnInit {
-  public app = getCurrentApp(this.routerQuery);
+  public app = getCurrentApp(this.route);
   public appName = appName[this.app];
   titles$: Observable<MovieCampaign[]>;
   titleCount$: Observable<Record<string, number>>;
@@ -44,7 +43,6 @@ export class ListComponent implements OnInit {
     private route: ActivatedRoute,
     private dynTitle: DynamicTitleService,
     private movieService: MovieService,
-    private routerQuery: RouterQuery,
     @Optional() private intercom: Intercom
   ) { }
 

@@ -8,9 +8,7 @@ import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Intercom } from 'ng-intercom';
 import { appName, getCurrentApp } from '@blockframes/utils/apps';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { StoreStatus } from '@blockframes/utils/static-model/types';
-
 
 @Component({
   selector: 'festival-dashboard-title-list',
@@ -19,7 +17,7 @@ import { StoreStatus } from '@blockframes/utils/static-model/types';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListComponent {
-  public app = getCurrentApp(this.routerQuery);
+  public app = getCurrentApp(this.route);
   public appName = appName[this.app];
   filter = new FormControl();
   filter$ = this.filter.valueChanges.pipe(startWith(this.filter.value));
@@ -45,7 +43,6 @@ export class ListComponent {
     private router: Router,
     private route: ActivatedRoute,
     private dynTitle: DynamicTitleService,
-    private routerQuery: RouterQuery,
     @Optional() private intercom: Intercom
   ) { }
 

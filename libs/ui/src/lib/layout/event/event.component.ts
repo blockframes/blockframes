@@ -1,10 +1,9 @@
 // Angular
 import { Component, ChangeDetectionStrategy, OnInit, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
-import { RouterOutlet } from '@angular/router';
+import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { CdkScrollable } from '@angular/cdk/scrolling';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 // RxJs
 import { Observable } from 'rxjs';
@@ -42,14 +41,14 @@ export class EventComponent implements OnInit {
     private invitationService: InvitationService,
     private notificationService: NotificationService,
     private movieService: MovieService,
-    private routerQuery: RouterQuery
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit() {
     this.wishlistCount$ = this.orgService.currentOrg$.pipe(
       map(org => org?.wishlist ? org.wishlist : []),
       switchMap(movieIds => this.movieService.getValue(movieIds)),
-      map((movies: Movie[]) => movies.filter(filterMovieByAppAccess(getCurrentApp(this.routerQuery))).length)
+      map((movies: Movie[]) => movies.filter(filterMovieByAppAccess(getCurrentApp(this.route))).length)
     );
   }
 

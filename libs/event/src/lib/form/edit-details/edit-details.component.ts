@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
 import { EventForm } from '../event.form';
 import { appName, getCurrentApp } from '@blockframes/utils/apps';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { Intercom } from 'ng-intercom';
@@ -9,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { EventService } from '@blockframes/event/+state';
 import { AccessibilityTypes } from '@blockframes/utils/static-model';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: '[form] event-details-edit',
@@ -21,11 +21,11 @@ export class EditDetailsComponent implements OnInit, OnDestroy {
   @Input() @boolean showPrivacy = false;
   @ViewChild('noAccessibilityChange') noAccessibilityChange: TemplateRef<any>;
   private sub: Subscription;
-  appName: string = appName[getCurrentApp(this.routerQuery)];
+  appName: string = appName[getCurrentApp(this.route)];
   private previouslySavedAccessibility: AccessibilityTypes;
 
   constructor(
-    private routerQuery: RouterQuery,
+    private route: ActivatedRoute,
     private invitationService: InvitationService,
     private eventService: EventService,
     private dialog: MatDialog,

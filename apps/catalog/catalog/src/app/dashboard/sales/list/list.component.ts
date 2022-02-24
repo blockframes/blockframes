@@ -1,5 +1,4 @@
 import { Component, ChangeDetectionStrategy, Optional, OnInit, } from '@angular/core';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { appName, getCurrentApp } from '@blockframes/utils/apps';
 import { ContractService, Sale } from '@blockframes/contract/contract/+state';
 import { Organization, OrganizationService } from '@blockframes/organization/+state';
@@ -12,6 +11,7 @@ import { IncomeService } from '@blockframes/contract/income/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { CollectionReference } from '@angular/fire/firestore';
 import { getSeller } from '@blockframes/contract/contract/+state/utils'
+import { ActivatedRoute } from '@angular/router';
 
 function queryFn(ref: CollectionReference, orgId: string, options: { internal?: boolean }) {
   const operator = options.internal ? '!=' : "==";
@@ -34,7 +34,7 @@ function getFullName(seller: Organization) {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SaleListComponent implements OnInit {
-  public app = getCurrentApp(this.routerQuery);
+  public app = getCurrentApp(this.route);
   public appName = appName[this.app];
   public orgId = this.orgService.org.id;
 
@@ -61,7 +61,7 @@ export class SaleListComponent implements OnInit {
 
   constructor(
     private contractService: ContractService,
-    private routerQuery: RouterQuery,
+    private route: ActivatedRoute,
     private orgService: OrganizationService,
     private titleService: MovieService,
     private incomeService: IncomeService,

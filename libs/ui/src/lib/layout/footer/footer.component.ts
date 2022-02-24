@@ -1,14 +1,10 @@
 // Angular
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { getAppName, getCurrentApp } from '@blockframes/utils/apps';
-
-// Blockframes
-import { getAppLocation } from '@blockframes/utils/helpers';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { getAppName, getCurrentApp, getCurrentModule } from '@blockframes/utils/apps';
 
 // Libs
-import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
 
 @Component({
   selector: 'bf-footer',
@@ -16,16 +12,18 @@ import { map } from 'rxjs/operators';
   styleUrls: ['./footer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FooterComponent implements OnInit {
-  public appName: string;
-  public section$: Observable<'dashboard' | 'marketplace'>;
+export class FooterComponent {
+  private app = getCurrentApp(this.route);
+  public appName = getAppName(this.app).label;
+  private urlSnapshot = this.router.routerState.snapshot.url;
+  public section$ = this.router.events.pipe(
+    startWith(this.urlSnapshot),
+    map(event => event instanceof NavigationEnd ? event.url : this.urlSnapshot),
+    map(url => getCurrentModule(url))
+  );
+
   public currentYear = new Date().getFullYear();
 
-  constructor(private routerQuery: RouterQuery) { }
+  constructor(private route: ActivatedRoute, private router: Router) { }
 
-  ngOnInit() {
-    const app = getCurrentApp(this.routerQuery);
-    this.appName = getAppName(app).label;
-    this.section$ = this.routerQuery.select('state').pipe(map(data => getAppLocation(data.url)));
-  }
 }

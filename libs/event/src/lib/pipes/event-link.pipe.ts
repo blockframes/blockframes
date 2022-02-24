@@ -1,13 +1,13 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { getCurrentModule } from '@blockframes/utils/apps';
 import { Event } from '../+state/event.model';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { Router } from '@angular/router';
 
 @Pipe({ name: 'eventLink', pure: false })
 export class EventLinkPipe implements PipeTransform {
-  constructor(private routeQuery: RouterQuery) { }
+  constructor(private router: Router) { }
   transform(event: Event): string[] {
-    const { url } = this.routeQuery.getValue().state;
+    const { url } = this.router;
     const module = getCurrentModule(url);
     const eventStarted = event.start.getTime() < Date.now();
     const eventEnded = event.end.getTime() < Date.now();

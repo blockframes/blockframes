@@ -6,7 +6,6 @@ import { MovieService, fromOrg } from '@blockframes/movie/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Movie } from '@blockframes/movie/+state/movie.model';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { appName, getCurrentApp } from '@blockframes/utils/apps';
 
 // RxJs
@@ -15,6 +14,7 @@ import { Observable } from 'rxjs';
 
 // Intercom
 import { Intercom } from 'ng-intercom';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'dashboard-home',
@@ -24,7 +24,7 @@ import { Intercom } from 'ng-intercom';
 })
 export class HomeComponent implements OnInit {
 
-  public app = getCurrentApp(this.routerQuery);
+  public app = getCurrentApp(this.route);
   public appName = appName[this.app];
   // accepted and submitted movies only
   public titles$: Observable<Movie[]>;
@@ -36,7 +36,7 @@ export class HomeComponent implements OnInit {
     private movieService: MovieService,
     private orgService: OrganizationService,
     private dynTitle: DynamicTitleService,
-    private routerQuery: RouterQuery,
+    private route: ActivatedRoute,
     @Optional() private intercom: Intercom
   ) { }
 

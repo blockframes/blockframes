@@ -9,7 +9,6 @@ import { OrganizationService } from '@blockframes/organization/+state';
 import { toDate } from '@blockframes/utils/helpers';
 import { displayName } from '@blockframes/utils/utils';
 import { applicationUrl, appName, getCurrentApp, getCurrentModule, getMovieAppAccess } from '@blockframes/utils/apps';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Movie, MovieService } from '@blockframes/movie/+state';
 import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 import { format } from 'date-fns';
@@ -17,13 +16,14 @@ import { trimString } from '@blockframes/utils/pipes/max-length.pipe';
 import { ActiveState, EntityState } from '@datorama/akita';
 import { UserService } from '@blockframes/user/+state';
 import { EventService } from '@blockframes/event/+state';
+import { ActivatedRoute, Router } from '@angular/router';
 
 interface NotificationState extends EntityState<Notification>, ActiveState<string> { }
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'notifications' })
 export class NotificationService extends CollectionService<NotificationState> {
   readonly useMemorization = true;
-  private app = getCurrentApp(this.routerQuery);
+  private app = getCurrentApp(this.route);
   private appName = appName[this.app];
 
   myNotifications$ = this.authService.profile$.pipe(
@@ -40,7 +40,8 @@ export class NotificationService extends CollectionService<NotificationState> {
   constructor(
     private authService: AuthService,
     private orgService: OrganizationService,
-    private routerQuery: RouterQuery,
+    private route: ActivatedRoute,
+    private router: Router,
     private movieService: MovieService,
     private userService: UserService,
     private eventService: EventService
@@ -57,7 +58,7 @@ export class NotificationService extends CollectionService<NotificationState> {
 
   private async appendNotificationData(notification: Notification): Promise<Notification> {
     const displayUserName = notification.user ? displayName(notification.user) : 'Someone';
-    const module = getCurrentModule(this.routerQuery.getValue().state.url);
+    const module = getCurrentModule(this.router.url);
     switch (notification.type) {
       case 'organizationAcceptedByArchipelContent':
         return {

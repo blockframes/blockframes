@@ -3,12 +3,12 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { createDemoRequestInformations, RequestDemoInformations } from '@blockframes/utils/request-demo';
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { getCurrentApp } from '@blockframes/utils/apps';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { RequestDemoRole } from '@blockframes/utils/request-demo';
 import { ThemeService } from '@blockframes/ui/theme';
 import { testEmail } from "@blockframes/e2e/utils/env";
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
+import { ActivatedRoute } from '@angular/router';
 
 @Directive({
   selector: 'landing-header, [landingHeader]',
@@ -50,7 +50,7 @@ export class LandingFooterComponent { }
 export class LandingShellComponent implements OnDestroy {
   public submitted = false;
   public newslettersSubmitted = false;
-  public appName = getCurrentApp(this.routerQuery);
+  public app = getCurrentApp(this.route);
   public buttonText = 'Submit Demo Request';
 
   @Input() roles: RequestDemoRole[] = [
@@ -80,7 +80,7 @@ export class LandingShellComponent implements OnDestroy {
 
   constructor(
     private snackBar: MatSnackBar,
-    private routerQuery: RouterQuery,
+    private route: ActivatedRoute,
     private functions: AngularFireFunctions,
     private theme: ThemeService,
     private cdr: ChangeDetectorRef
@@ -106,7 +106,7 @@ export class LandingShellComponent implements OnDestroy {
   /** Register an email to a mailchimp mailing list */
   private async registerEmailToNewsletters(email: string) {
     const f = this.functions.httpsCallable('registerToNewsletter');
-    const tags = [`landing - ${this.appName}`];
+    const tags = [`landing - ${this.app}`];
     return f({ email, tags }).toPromise();
   }
 
@@ -118,8 +118,7 @@ export class LandingShellComponent implements OnDestroy {
     }
     try {
       this.buttonText = 'Sending Request...';
-      const currentApp = getCurrentApp(this.routerQuery);
-      const information: RequestDemoInformations = createDemoRequestInformations({ app: currentApp, ...form.value });
+      const information: RequestDemoInformations = createDemoRequestInformations({ app: this.app, ...form.value });
       if ('Cypress' in window) {
         information.testEmailTo = testEmail;
       }

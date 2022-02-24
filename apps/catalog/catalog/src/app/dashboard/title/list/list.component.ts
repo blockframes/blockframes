@@ -9,7 +9,6 @@ import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { storeStatus } from '@blockframes/utils/static-model';
 import { Intercom } from 'ng-intercom';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { appName, getCurrentApp } from '@blockframes/utils/apps';
 
 @Component({
@@ -19,7 +18,7 @@ import { appName, getCurrentApp } from '@blockframes/utils/apps';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TitleListComponent {
-  public app = getCurrentApp(this.routerQuery);
+  public app = getCurrentApp(this.route);
   public appName = appName[this.app];
   filter = new FormControl();
   filter$: Observable<StoreStatus | ''> = this.filter.valueChanges.pipe(startWith(this.filter.value || ''));
@@ -45,7 +44,6 @@ export class TitleListComponent {
     private router: Router,
     private route: ActivatedRoute,
     private dynTitle: DynamicTitleService,
-    private routerQuery: RouterQuery,
     @Optional() private intercom: Intercom
   ) { }
 

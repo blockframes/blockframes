@@ -1,5 +1,4 @@
 import { Component, ChangeDetectionStrategy, OnInit, Input, } from '@angular/core';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { appName, getCurrentApp } from '@blockframes/utils/apps';
 import { Contract, ContractStatus, Sale } from '@blockframes/contract/contract/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
@@ -29,7 +28,7 @@ interface InternalSale extends Sale<Date> {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InternalSaleListComponent implements OnInit {
-  public app = getCurrentApp(this.routerQuery);
+  public app = getCurrentApp(this.route);
   public appName = appName[this.app];
   public orgId = this.orgService.org.id;
 
@@ -54,7 +53,6 @@ export class InternalSaleListComponent implements OnInit {
   );
 
   constructor(
-    private routerQuery: RouterQuery,
     private orgService: OrganizationService,
     private router: Router,
     private dynTitle: DynamicTitleService,
