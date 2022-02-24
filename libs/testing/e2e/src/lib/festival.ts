@@ -116,7 +116,6 @@ export function saveEvent() {
 
 export function acceptInvitationScreening() {
   cy.get('[test-id="invitation-accept"]').click();
-  //awaitElementDeletion('mat-spinner');
   cy.wait(5000);
 }
 
