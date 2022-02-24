@@ -10,6 +10,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatInputModule } from '@angular/material/input';
+import { MaxLengthModule } from "@blockframes/utils/pipes";
 
 
 @NgModule({
@@ -26,6 +27,7 @@ import { MatInputModule } from '@angular/material/input';
     JoinPipeModule,
     LanguagesFormModule,
     ToGroupLabelPipeModule,
+    MaxLengthModule,
 
     MatInputModule,
   ],
