@@ -1,6 +1,15 @@
 import { DocumentMeta } from "@blockframes/utils/models-meta";
 
-export type EventName = 'page_view' | 'screening_requested' | 'promo_video_started' | 'added_to_wishlist' | 'promo_element_opened' | 'asking_price_requested';
+const analyticsEvents = [
+  'pageView',
+  'promoVideoStarted',
+  'addedToWishlist',
+  'removedFromWishlist',
+  'promoElementOpened',
+  'screeningRequested',
+  'askingPriceRequested'
+] as const;
+export type EventName = typeof analyticsEvents[number];
 
 interface AnalyticsTypeRecord {
   title: MetaTitle;
@@ -20,13 +29,19 @@ export interface Analytics<type extends AnalyticsTypes = AnalyticsTypes> {
 export interface MetaTitle {
   titleId: string;
   orgId: string;
-  userId: string;
+  uid: string;
   ownerOrgIds: string[];
 }
 
 export interface MetaEvent {
   eventId: string;
-  userId: string;
+  uid: string;
   orgId?: string;
   ownerOrgId: string;
+}
+
+// FireAnalytics
+export interface AnalyticsUserProperties {
+  browser_name: string;
+  browser_version: string;
 }
