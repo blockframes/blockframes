@@ -1,6 +1,6 @@
 
 import { WorkBook, WorkSheet, utils, read } from 'xlsx';
-import { staticGroups } from '@blockframes/utils/static-model';
+import { GroupScope, StaticGroup, staticGroups } from '@blockframes/utils/static-model';
 import { mandatoryError, SpreadsheetImportError } from 'libs/import/src/lib/utils';
 import { getKeyIfExists } from '../helpers';
 import { parseToAll, Scope } from '../static-model';
@@ -242,15 +242,20 @@ export function getStaticList(scope: Scope, value: string, separator: string, na
   return values;
 }
 
-export function getTerritoryList(value: string, separator: string) {
-  const territories = split(value, separator);
-  const groupLabels = staticGroups.territories.map(group => group.label);
-  const allTerritories = territories.map(territory => {
-    if (groupLabels.includes(territory))
-      return staticGroups.territories.find(group => group.label === territory).items;
-    return [territory];
+export function getGroupedList(value: string, groupScope: GroupScope, separator: string) {
+  const elements = split(value, separator);
+  const groupLabels = staticGroups[groupScope].map(group => group.label);
+  const allElements = elements.map(element => {
+    if (groupLabels.includes(element)) {
+      const groups: { label: string, items: unknown[] }[] = staticGroups[groupScope]
+      return groups.find(group => group.label === element).items;
+    }
+    return [element];
   }).flat().join(separator);
-  return getStaticList('territories', allTerritories, separator, 'Territories', true, 'world');
+
+  return groupScope === 'territories'
+    ? getStaticList('territories', allElements, separator, 'Territories', true, 'world')
+    : getStaticList('medias', allElements, separator, 'Medias');
 }
 
 export function split(cell: string, separator: string) {

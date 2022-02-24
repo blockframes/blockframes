@@ -27,7 +27,10 @@ import { MovieLanguageSpecification } from '@blockframes/movie/+state/movie.fire
 import { Mandate, Sale } from '@blockframes/contract/contract/+state/contract.firestore';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { createMandate, createSale } from '@blockframes/contract/contract/+state/contract.model';
-import { extract, ExtractConfig, getStaticList, SheetTab, getTerritoryList } from '@blockframes/utils/spreadsheet';
+import {
+  extract, ExtractConfig,
+  getStaticList, SheetTab, getGroupedList,
+} from '@blockframes/utils/spreadsheet';
 
 const separator = ';'
 
@@ -191,9 +194,9 @@ export async function formatContract(
         return sellerId;
       }
     },
-    /* e */'term[].territories_included': (value: string) => getTerritoryList(value, separator) as Territory[],
-    /* f */'term[].territories_excluded': (value: string) => getTerritoryList(value, separator) as Territory[],
-    /* g */'term[].medias': (value: string) => getStaticList('medias', value, separator, 'Medias') as Media[],
+    /* e */'term[].territories_included': (value: string) => getGroupedList(value, 'territories', separator) as Territory[],
+    /* f */'term[].territories_excluded': (value: string) => getGroupedList(value, 'territories', separator) as Territory[],
+    /* g */'term[].medias': (value: string) => getGroupedList(value, 'medias', separator) as Media[],
     /* h */'term[].exclusive': (value: string) => {
       const lower = value.toLowerCase();
       if (!lower) return mandatoryError('Exclusive');
