@@ -1,3 +1,5 @@
+
+// * SELLER
 export function createEvent(eventDate: Date, eventType = 'Screening', eventTitle = '') {
   cy.log(`createEvent : {${eventTitle}}`);
   cy.log(
@@ -5,7 +7,7 @@ export function createEvent(eventDate: Date, eventType = 'Screening', eventTitle
   );
 
   const day = eventDate.getDay();
-  if (day === 0) cy.get('button[test-id=arrow_forward]').click();
+  // if (day === 0) cy.get('button[test-id=arrow_forward]').click();
 
   cy.get('div [class=cal-day-columns]')
     .children()
@@ -58,7 +60,7 @@ export function inviteUser(email: string | string[]) {
   } else {
     cy.get('input#mat-chip-list-input-0').type(email).type('{enter}');
   }
-  cy.wait(1000); // * I hate to do this, but this one's unavoidable as we cannot detect when the send invite button is ready
+  cy.wait(8000); // * I hate to do this, but this one's unavoidable as we cannot detect when the send invite button is ready
   cy.get('.invitations button[test-id=event-invite]').click();
 }
 
@@ -104,4 +106,79 @@ export function selectMovie(movieName: string) {
 
 export function saveEvent() {
   cy.get('button[test-id=event-save]').click();
+}
+
+// Org admin
+
+
+// * BUYER
+
+export function acceptInvitationScreening() {
+  cy.get('[test-id="invitation-accept"]').click();
+  cy.wait(5000);
+}
+
+export function openMoreMenu() {
+  cy.get('invitation-view [test-id=more]').first().click();
+}
+
+export function clickGoToEvent() {
+  cy.get('[test-id=go-to-event]').click({ force: true });
+}
+
+// * Marketplace screening page
+
+export function clickPlay() {
+  cy.log('>FestivalMarketplaceScreeningPage: Start Play [test-id=play]');
+  cy.get('[test-id=play]').click();
+}
+
+export function runVideo() {
+  cy.log('>FestivalMarketplaceScreeningPage: Play video');
+  cy.get('festival-event-session video').click({ force: true });
+}
+
+export function goToInvitations() {
+  cy.get('app-bar a[test-id=invitations-link]').click();
+}
+
+export function refuseInvitationScreening() {
+  cy.get('invitation-view [test-id=more]').first().click();
+  cy.get('[test-id=decline-invitation]').click();
+}
+
+export function verifyNotification(message: string, accepted: boolean) {
+  const notification = accepted ? 'accepted' : 'declined';
+  cy.get('notification-item p[test-id=notification-message]')
+    .contains(message)
+    .contains(notification);
+}
+
+export function selectSalesAgents() {
+  cy.get('layout-marketplace a').contains('Sales Agents').click();
+}
+export function clickOnOrganization(orgName: string) {
+  cy.get('festival-organization-list org-card')
+    .contains(orgName)
+    .parent()
+    .parent()
+    .find('a')
+    .click();
+}
+
+const NAV_SCREENING = 'Screening Schedule';
+
+export function clickOnScreeningSchedule() {
+  cy.get('festival-marketplace-organization-view a').contains(NAV_SCREENING).click();
+}
+
+export function clickPrivateEvent() {
+  cy.log('Wait for events to load');
+  cy.get('[test-id="screening-spinner"]').should('not.exist');
+
+  cy.get('festival-screening event-screening-item h3').first().click();
+}
+export function assertJoinScreeningNotExists() {
+  cy.log(`assertJoinScreeningNotExists : join screen should not exist!`);
+  cy.get('festival-event-view a[test-id=event-room]').should('have.length', 0);
 }

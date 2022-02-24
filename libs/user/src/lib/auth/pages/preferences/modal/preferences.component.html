@@ -8,5 +8,5 @@
 <auth-preferences-form [form]="form"></auth-preferences-form>
 <footer fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="24px">
   <button mat-flat-button color="accent" (click)="update()">Save Preferences</button>
-  <button mat-button (click)="close()">Maybe Later</button>
+  <button mat-button test-id="skip-preferences" (click)="close()">Maybe Later</button>
 </footer>
