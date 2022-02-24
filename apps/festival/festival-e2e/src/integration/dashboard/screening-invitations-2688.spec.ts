@@ -3,7 +3,7 @@
 import screeningEvents from '../../fixtures/screening-events';
 import USERS from 'tools/fixtures/users.json'
 import ORGS from 'tools/fixtures/orgs.json'
-import { acceptCookies, auth, awaitElementDeletion, events, festival } from '@blockframes/testing/e2e';
+import { auth, awaitElementDeletion, events, festival } from '@blockframes/testing/e2e';
 
 const screeningEvent = screeningEvents[0];
 const org = ORGS.find((org) => org.id === screeningEvent.org.id);
@@ -19,7 +19,6 @@ const userAdmin = USERS.find((user) => user.uid === 'B8UsXliuxwY6ztjtLuh6f7UD1GV
 describe('Organiser invites other users to private screening', () => {
 
   it('Organiser creates screening & invites 2 users to the screening', () => {
-    let SCREENING_URL: string;
     /*
     //* This test isn't great, ideally we generate data and do the following
     * We need to create a seller, create an org
@@ -61,23 +60,18 @@ describe('Organiser invites other users to private screening', () => {
 
     cy.visit('/c/o/marketplace/home');
     cy.visit('/c/o/marketplace/invitations');
-    //awaitElementDeletion('mat-spinner');
-    festival.acceptInvitationScreening()
+    awaitElementDeletion('mat-spinner');
+    festival.acceptInvitationScreening();
 
     festival.openMoreMenu();
     festival.clickGoToEvent();
 
     // Save the current url for the next test
-    cy.url().then((url) => {
-
-      SCREENING_URL = url;
-
-      cy.log(`SCREENING_URL ${SCREENING_URL}`);
-
-      //awaitElementDeletion('mat-spinner');
-      festival.clickPlay()
-      festival.runVideo()
-      //awaitElementDeletion('mat-spinner');
+    cy.url().then(screeningUrl => {
+      awaitElementDeletion('mat-spinner');
+      festival.clickPlay();
+      festival.runVideo();
+      awaitElementDeletion('mat-spinner');
       cy.get('.jw-video');
       cy.get('video.jw-video').should('have.prop', 'paused', true)
         .and('have.prop', 'ended', false)
@@ -87,7 +81,7 @@ describe('Organiser invites other users to private screening', () => {
         .then(($video) => {
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore // * This only ignores the next line
-          $video[0].pause()
+          $video[0].pause();
         })
       cy.get('video.jw-video').should('have.prop', 'paused', true)
       cy.get('video').should(($video) => {
@@ -100,7 +94,6 @@ describe('Organiser invites other users to private screening', () => {
       auth.clearBrowserAuth();
       cy.visit('/');
       auth.loginWithEmailAndPassword(userInvited2.email);
-      // acceptCookies();
 
       // const pp1 = new FestivalMarketplaceHomePage();
       // const pp2 = pp1.goToInvitations();
@@ -116,7 +109,6 @@ describe('Organiser invites other users to private screening', () => {
       auth.clearBrowserAuth();
       cy.visit('/');
       auth.loginWithEmailAndPassword(userAdmin.email);
-      //acceptCookies();
 
       // cy.visit('/c/o/dashboard/event');
       cy.visit('/c/o/dashboard/notifications')
@@ -129,7 +121,6 @@ describe('Organiser invites other users to private screening', () => {
       auth.clearBrowserAuth();
       cy.visit('/');
       auth.loginWithEmailAndPassword(userUninvited.email);
-      //acceptCookies();
 
       cy.log('Reach Market Home.');
       // const p1 = new FestivalMarketplaceHomePage();
@@ -137,6 +128,9 @@ describe('Organiser invites other users to private screening', () => {
       cy.log('Navigate to Screening Page from Screening Schedule');
 
       cy.visit('/c/o/marketplace/home');
+      cy.get('button[test-id=skip-preferences]', { timeout: 3000 })
+        .first().click();
+      
       cy.get('festival-marketplace button[test-id=menu]', { timeout: 3000 })
         .first().click();
       // const p2: FestivalOrganizationListPage = p1.selectSalesAgents();
@@ -153,8 +147,8 @@ describe('Organiser invites other users to private screening', () => {
       festival.assertJoinScreeningNotExists();
 
       // Navigate with url
-      cy.log(`Should not access {${SCREENING_URL}}`);
-      cy.visit(SCREENING_URL);
+      cy.log(`Should not access {${screeningUrl}}`);
+      cy.visit(screeningUrl);
       // Assert the user is redirect to event page
       // new FestivalMarketplaceEventPage();
       cy.get('festival-event-view')
