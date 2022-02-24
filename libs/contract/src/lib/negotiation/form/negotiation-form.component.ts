@@ -30,7 +30,8 @@ export class NegotiationFormComponent {
 
   indexId: number;
   termColumns = {
-    duration: 'Duration',
+    'duration.from': 'Terms Start Date',
+    'duration.to': 'Terms End Date',
     territories: 'Territories',
     medias: 'Medias',
     exclusive: 'Exclusivity',
