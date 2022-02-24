@@ -1,7 +1,5 @@
 import { db } from '../testing-cypress';
 
-
-
 export async function getAllSellerEvents(sellerUid: string) {
   const sellerOrgSnap = await db.collection('users').doc(sellerUid).get()
   const sellerOrgUid = sellerOrgSnap.get('orgId') as string;
