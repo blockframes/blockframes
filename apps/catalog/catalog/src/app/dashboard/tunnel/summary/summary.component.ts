@@ -1,11 +1,11 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { map } from 'rxjs/operators';
+import { map, pluck, switchMap } from 'rxjs/operators';
 import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
 import { findInvalidControls } from '@blockframes/ui/tunnel/layout/layout.component'
+import { MovieService } from '@blockframes/movie/+state';
 
 @Component({
   selector: 'catalog-summary-tunnel',
@@ -21,15 +21,19 @@ export class TunnelSummaryComponent implements OnInit {
   private missingFields: string[] = [];
   // Fields in error
   private invalidFields: string[] = [];
-  isPublished$ = this.query.selectActive(movie => movie.app.catalog.status).pipe(
+
+  isPublished$ = this.route.params.pipe(
+    pluck('movieId'),
+    switchMap((movieId: string) => this.movieService.valueChanges(movieId)),
+    map(movie => movie.app.catalog.status),
     map(status => status === 'accepted' || status === 'submitted')
-  )
+  );
 
   constructor(
     private shell: MovieFormShellComponent,
     private router: Router,
     private route: ActivatedRoute,
-    private query: MovieQuery,
+    private movieService: MovieService,
     private snackBar: MatSnackBar,
     private dynTitle: DynamicTitleService
   ) {

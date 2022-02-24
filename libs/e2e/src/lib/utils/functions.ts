@@ -1,7 +1,7 @@
 ﻿// import { AuthLoginPage } from "../pages/auth";
 import { User } from "./type";
 import { SEC } from './env';
-import { auth } from '@blockframes/testing/e2e';
+import { loginWithEmailAndPassword } from "libs/testing/e2e/src/lib/auth";
 
 /** Clear cookies, local storage, indexedDB and navigate to the path (/auth by default). */
 export function clearDataAndPrepareTest(path: string = '/auth') {
@@ -21,7 +21,7 @@ export function clearDataAndPrepareTest(path: string = '/auth') {
  */
 export function signIn(user: Partial<User>, fillIdentity: boolean = false) {
   // ! This function will be replaced eventually. We are using the updated login method here now
-  return auth.loginWithEmail(user.email);
+  return loginWithEmailAndPassword(user.email);
   // const p1: AuthLoginPage = new AuthLoginPage();
   // p1.fillSignin(user);
   // p1.clickSignIn();
@@ -63,6 +63,7 @@ export const acceptCookie = () => selectAction('button[test-id="accept-cookies"]
  * selectAction : Clicks the element & waits if needed.
  * @param element : string for selecting button on the page
  * @param Option : timeouts for button, wait & logging message
+ * @deprecated - this is quite useless
  */
 export function selectAction(element: string,
   Option: { waitTime?: number, timeout?: number, message?: string } =

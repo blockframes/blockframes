@@ -196,7 +196,7 @@ function isMapTermInAvails<T extends BucketTerm | Term>(term: T, avails: MapAvai
 }
 
 function isAvailInTerm<T extends BucketTerm | Term>(avail: MapAvailsFilter, termB: T) {
-  const exclusivityCheck = exclusivitySomeOf(avail.exclusive).in(termB.exclusive)
+  const exclusivityCheck = exclusivitySomeOf(avail.exclusive).in(termB.exclusive);
   const mediaCheck = allOf(avail.medias).in(termB.medias);
   const durationCheck = allOf(avail.duration).in(termB.duration);
   return exclusivityCheck && mediaCheck && durationCheck;

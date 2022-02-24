@@ -32,7 +32,7 @@ const users  =  [
   (userFixture.getByUID(USER.Vincent))
 ];
 
-//TODO: Issue: 6757 - Fix this issue separately
+//TODO: Issue: #6953 - Fix this issue separately
 describe.skip('User create a screening', () => {
   beforeEach(() => {
     clearDataAndPrepareTest('/');

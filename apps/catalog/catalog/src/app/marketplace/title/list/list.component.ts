@@ -108,7 +108,7 @@ export class ListComponent implements OnDestroy, OnInit {
 
     const search$ = combineLatest([
       this.searchForm.valueChanges.pipe(startWith(this.searchForm.value)),
-      this.availsForm.valueChanges.pipe(startWith(this.availsForm.value)),
+      this.availsForm.value$,
       this.bucketService.active$.pipe(startWith(undefined)),
       this.queries$,
     ]).pipe(shareReplay({ refCount: true, bufferSize: 1 }));

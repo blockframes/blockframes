@@ -18,7 +18,8 @@ import type {
   HostedVideoType,
   Territory,
   SocialGoal,
-  NumberRange
+  NumberRange,
+  ScreeningStatus
 } from "@blockframes/utils/static-model/types";
 import { Producer, Crew, Cast, Stakeholder, Director } from "@blockframes/utils/common-interfaces/identity";
 import type firebase from 'firebase';
@@ -198,12 +199,12 @@ export interface MovieStakeholders {
 
 export interface MovieRelease {
   year?: number,
-  status: string,
+  status: ScreeningStatus
 }
 
 export interface MovieRunningTime {
   time?: number,
-  status?: string,
+  status?: ScreeningStatus,
   episodeCount?: number
 }
 

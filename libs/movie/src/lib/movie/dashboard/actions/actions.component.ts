@@ -1,7 +1,7 @@
-import { Component, ChangeDetectionStrategy, Directive } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Directive, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
-import { MovieQuery, MovieService } from '@blockframes/movie/+state';
+import { Movie, MovieService } from '@blockframes/movie/+state';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getAppName, getCurrentApp, getMovieAppAccess } from '@blockframes/utils/apps';
 import { MatDialog } from '@angular/material/dialog';
@@ -21,12 +21,11 @@ export class MovieActionMenuDirective { }
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardActionsShellComponent {
-  movie$ = this.query.selectActive();
+  @Input() movie: Movie;
 
   public appName = getCurrentApp(this.routerQuery);
 
   constructor(
-    private query: MovieQuery,
     private routerQuery: RouterQuery,
     private dialog: MatDialog,
     private snackbar: MatSnackBar,
@@ -35,19 +34,18 @@ export class DashboardActionsShellComponent {
   ) { }
 
   removeAppAccess() {
-    const movie = this.query.getActive();
-    const appsName = getMovieAppAccess(movie).filter(value => value !== this.appName).map(a => getAppName(a).label);
+    const appsName = getMovieAppAccess(this.movie).filter(value => value !== this.appName).map(a => getAppName(a).label);
     const subtitle = appsName.length ? `This Title will still be available on <i>${appsName.join(', ')}</i>.<br/>` : '';
 
     this.dialog.open(ConfirmInputComponent, {
       data: {
-        title: `You are about to delete ${movie.title.international} permanently.`,
+        title: `You are about to delete ${this.movie.title.international} permanently.`,
         subtitle: `${subtitle}If you wish to proceed, please type "DELETE" in the field below.`,
         confirmationWord: 'delete',
         confirmButtonText: 'delete Title',
         cancelButtonText: 'keep Title',
         onConfirm: async () => {
-          await this.movieService.update(movie.id, movie => ({
+          await this.movieService.update(this.movie.id, movie => ({
             ...movie,
             app: {
               ...movie.app,
@@ -66,8 +64,7 @@ export class DashboardActionsShellComponent {
   }
 
   async updateStatus(status: StoreStatus, message?: string) {
-    const movie = this.query.getActive();
-    await this.movieService.update(movie.id, movie => ({
+    await this.movieService.update(this.movie.id, movie => ({
       ...movie,
       app: {
         ...movie.app,

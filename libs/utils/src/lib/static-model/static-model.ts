@@ -83,7 +83,6 @@ export const crewRoles = {
 } as const
 
 export const directorCategory = {
-  none: '',
   firstFeature: 'First Feature',
   risingTalent: 'Rising Talent',
   confirmed: 'Confirmed Director',

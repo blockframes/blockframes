@@ -38,7 +38,7 @@ export class DashboardAvailsCalendarComponent implements AfterViewInit, OnDestro
 
   public availabilities$ = combineLatest([
     this.movie$,
-    this.availsForm.valueChanges.pipe(startWith(this.availsForm.value)),
+    this.availsForm.value$,
     this.mandates$,
     this.mandateTerms$,
     this.sales$,
