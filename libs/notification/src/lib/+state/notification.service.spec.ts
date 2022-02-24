@@ -11,7 +11,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { Observable } from 'rxjs';
 import { AnalyticsService } from '@blockframes/utils/analytics/analytics.service';
 import { UserService } from '@blockframes/user/+state/user.service';
-
+import { RouterTestingModule } from "@angular/router/testing";
 
 class InjectedAngularFireAuth {
   authState = new Observable();
@@ -27,7 +27,8 @@ describe('Notifications Test Suite', () => {
     TestBed.configureTestingModule({
       imports: [
         AngularFireModule.initializeApp({ projectId: 'test' }),
-        AngularFirestoreModule
+        AngularFirestoreModule,
+        RouterTestingModule,
       ],
       providers: [
         NotificationService,
