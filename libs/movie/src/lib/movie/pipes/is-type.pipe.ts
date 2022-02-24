@@ -15,7 +15,7 @@ export class IsTypePipe implements PipeTransform {
 })
 export class TypeDictionaryPipe implements PipeTransform {
   transform(formValue: ContentType) {
-    return formValue === 'series' ? typeDictionary.series : typeDictionary.default
+    return formValue === 'tv' ? typeDictionary.tv : typeDictionary.default
   }
 }
 
@@ -26,7 +26,7 @@ export class TypeDictionaryPipe implements PipeTransform {
 export class IsTypePipeModule { }
 
 const typeDictionary = {
-  series: {
+  tv: {
     runningTime: 'Average Episode Running Time',
     runningTimeError: 'Please fill in a valid runtime.',
     runningTimeHint: 'Please specify the average duration of an episode.'
