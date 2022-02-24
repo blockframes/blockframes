@@ -107,7 +107,8 @@ describe('Organiser invites other users to private screening', () => {
       cy.log('Reach Market Home & navigate to Screening Page from Screening Schedule');
       cy.visit('/c/o/marketplace/home');
 
-      // Discard the preferences modale, 
+      // Discard the preferences modale
+      cy.wait(5000);
       cy.get('button[test-id=skip-preferences]', { timeout: 3000 }).first().click();
       
       // Click on left menu 
