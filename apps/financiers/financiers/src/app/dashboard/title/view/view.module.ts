@@ -14,7 +14,6 @@ import { DashboardActionsShellModule } from '@blockframes/movie/dashboard/action
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTabsModule } from '@angular/material/tabs';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -85,7 +84,6 @@ const routes = [{
     MatButtonModule,
     MatIconModule,
     MatTabsModule,
-    MatProgressSpinnerModule,
     MatDividerModule,
     MatDialogModule,
     MatSelectModule,

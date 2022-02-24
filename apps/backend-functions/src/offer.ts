@@ -43,17 +43,6 @@ export async function onOfferCreate(snap: FirebaseFirestore.DocumentSnapshot): P
     bucket
   })
   triggerNotifications([notification])
-
-  // Also send offer to admin of Cascade8
-  const app: App = 'catalog';
-  const baseUrl = appUrl['content'];
-  const date = format(new Date(), 'dd MMM, yyyy');
-  const request: EmailTemplateRequest = {
-    to: supportEmails[app],
-    templateId: templateIds.offer.toAdmin,
-    data: { org, bucket, user, baseUrl, date }
-  }
-  sendMailFromTemplate(request, app);
 }
 
 

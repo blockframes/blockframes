@@ -1,6 +1,3 @@
-<ng-template *ngIf="loading$ | async">
-  <mat-spinner color="accent" #loading></mat-spinner>
-</ng-template>
 <ng-container *ngIf="(movie$ | async) as movie;" test-id="content">
 
   <mat-card *ngIf="hasBudget(movie)">

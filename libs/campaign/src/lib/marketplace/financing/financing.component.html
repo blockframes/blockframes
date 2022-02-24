@@ -7,7 +7,7 @@
       <header fxLayout fxLayoutAlign="space-between center">
         <h3>Budget</h3>
         <ng-container *ngIf="(campaign.files.budget) | getUrl | async as file">
-          <a *ngIf="campaign.files.budget.storagePath" mat-button target="_blank" (click)="consentBeforeDownload(file)">
+          <a *ngIf="campaign.files.budget.storagePath" mat-button target="_blank" (click)="consentBeforeDownload(campaign.id, file)">
             <mat-icon svgIcon="arrow_downward"></mat-icon>
             <span>Download Budget</span>
           </a>
@@ -62,7 +62,7 @@
       <header fxLayout fxLayoutAlign="space-between center">
         <h3>Financing Plan</h3>
         <ng-container *ngIf="campaign.files.financingPlan | getUrl | async as file">
-          <a *ngIf="campaign.files.financingPlan.storagePath" mat-button target="_blank" (click)="consentBeforeDownload(file)">
+          <a *ngIf="campaign.files.financingPlan.storagePath" mat-button target="_blank" (click)="consentBeforeDownload(campaign.id, file)">
             <mat-icon svgIcon="arrow_downward"></mat-icon>
             <span>Download Financing Plan</span>
           </a>
@@ -119,7 +119,7 @@
       <header fxLayout fxLayoutAlign="space-between center">
         <h3>Return on Investment</h3>
         <ng-container *ngIf="campaign.files.waterfall | getUrl | async as file">
-          <a *ngIf="campaign.files.waterfall.storagePath" mat-button (click)="consentBeforeDownload(file)">
+          <a *ngIf="campaign.files.waterfall.storagePath" mat-button (click)="consentBeforeDownload(campaign.id, file)">
             <mat-icon svgIcon="arrow_downward"></mat-icon>
             <span>Download distributed Waterfall</span>
           </a>

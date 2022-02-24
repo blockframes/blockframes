@@ -13,9 +13,10 @@ export class MovieViewArtisticComponent implements OnInit {
 
   public form = this.shell.getForm('movie');
 
-  constructor(private dynTitle: DynamicTitleService, private shell: DashboardTitleShellComponent) {}
+  constructor(private dynTitle: DynamicTitleService, private shell: DashboardTitleShellComponent) { }
 
   ngOnInit() {
-    this.dynTitle.setPageTitle('Title page', 'Artistic Information');
+    const titleName = this.shell.movie?.title?.international || 'No title';
+    this.dynTitle.setPageTitle(titleName, 'Artistic Information');
   }
 }

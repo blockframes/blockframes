@@ -31,7 +31,10 @@ import {
   territories,
   territoriesISOA3,
   budgetRange,
-  accessibility
+  accessibility,
+  screeningStatus,
+  memberStatus,
+  directorCategory
 } from './static-model';
 
 export type NumberRange = keyof typeof budgetRange;
@@ -84,12 +87,19 @@ export type ProducerRole = keyof typeof producerRoles;
 export type ProducerRoleValue = typeof producerRoles[ProducerRole];
 
 export type ProductionStatus = keyof typeof productionStatus;
+export type ProductionStatusValue = typeof productionStatus[ProductionStatus];
 
 export type Rating = keyof typeof rating;
 
 export type Scoring = keyof typeof scoring;
 
 export type ShootingPeriod = keyof typeof shootingPeriod;
+
+export type ScreeningStatus = keyof typeof screeningStatus;
+
+export type MemberStatus = keyof typeof memberStatus;
+
+export type DirectorCategory = keyof typeof directorCategory;
 
 export type SocialGoal = keyof typeof socialGoals;
 

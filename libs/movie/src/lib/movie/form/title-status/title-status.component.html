@@ -2,7 +2,7 @@
   <ng-container tunnel-form>
     <section id="title-status">
       <h3>Select your project's production status</h3>
-      <ng-container *ngIf="appInformation.disabledStatus.length <= 3; else oneStatus">
+      <ng-container *ngIf="currentApp !== 'catalog'; else onlyReleasedStatus">
         <p class="mat-body-2">Your project's production status will define the form that will follow.
           <br>
           - If you are creating a new project, please select the right production status to start filling the form.
@@ -11,9 +11,9 @@
           require you to specify some new information.
         </p>
       </ng-container>
-      <ng-template #oneStatus>
+      <ng-template #onlyReleasedStatus>
         <p class="mat-body-2">
-          {{appInformation.appName.label}} only accepts released projects.<br/>
+          {{ currentApp | appName }} only accepts released projects.<br/>
           Please make sure that your project is released before filling the following form.
         </p>
       </ng-template>
@@ -22,10 +22,10 @@
 
         <ng-container *ngFor="let status of status; index as i">
           <mat-card [ngClass]="{ disabled: status.disabled }">
-            <img (click)="setValue(status.value)" [asset]="status.image" />
-            <mat-radio-button [attr.test-id]="'status' + (i + 1)" [value]="status.value" color="primary"
+            <img (click)="setValue(status.key, status.disabled)" [asset]="status.image" />
+            <mat-radio-button [attr.test-id]="'status' + (i + 1)" [value]="status.key" color="primary"
               [disabled]="status.disabled">
-              {{status.name}}
+              {{status.value}}
             </mat-radio-button>
           </mat-card>
         </ng-container>
