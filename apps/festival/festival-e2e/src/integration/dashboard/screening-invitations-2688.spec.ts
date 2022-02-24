@@ -13,7 +13,6 @@ const userInvited2 = USERS.find((user) => user.uid === screeningEvent.invitees[1
 const userUninvited = USERS.find((user) => user.uid === 'K0ZCSd8bhwcNd9Bh9xJER9eP2DQ2');
 const userAdmin = USERS.find((user) => user.uid === 'B8UsXliuxwY6ztjtLuh6f7UD1GV2');
 
-//TODO: Issue: 6757 - Fix this issue separately
 describe('Organiser invites other users to private screening', () => {
 
   it('Organiser creates screening & invites 2 users to the screening', () => {
@@ -25,7 +24,7 @@ describe('Organiser invites other users to private screening', () => {
     * we need to invite those buyers to the screening
     * then make sure invites were sent out, check notifs, check things.
     * NOTE - there should also be smaller tests that test sub components of this whole process.
-    * TODO: Refactor page objects into page modules
+    * TODO #7868 Refactor page objects into page modules
     */
 
     cy.visit('/');
@@ -68,7 +67,7 @@ describe('Organiser invites other users to private screening', () => {
       awaitElementDeletion('mat-spinner');
 
       cy.get('.jw-video');
-      cy.get('video.jw-video').should('have.prop', 'paused', true).and('have.prop', 'ended', false)
+      cy.get('video.jw-video').should('have.prop', 'paused', true).and('have.prop', 'ended', false);
       cy.get('.jw-display-icon-display > .jw-icon').click();
       awaitElementDeletion('[aria-label=Loading]');
 
@@ -83,7 +82,6 @@ describe('Organiser invites other users to private screening', () => {
       auth.loginWithEmailAndPassword(userInvited2.email);
 
       cy.visit('/c/o/marketplace/invitations');
-      // cy.wait(2000);
       awaitElementDeletion('mat-spinner');
       festival.refuseInvitationScreening();
 
@@ -95,13 +93,13 @@ describe('Organiser invites other users to private screening', () => {
       cy.visit('/');
       auth.loginWithEmailAndPassword(userAdmin.email);
 
-      cy.visit('/c/o/dashboard/notifications')
+      cy.visit('/c/o/dashboard/notifications');
 
       festival.verifyNotification(userInvited1.firstName, true);
       festival.verifyNotification(userInvited2.firstName, false);
 
       // * STEP
-      cy.log('UninvitedGuest logs in, go on event page, asserts no access to the video')
+      cy.log('UninvitedGuest logs in, go on event page, asserts no access to the video');
       auth.clearBrowserAuth();
       cy.visit('/');
       auth.loginWithEmailAndPassword(userUninvited.email);
