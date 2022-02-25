@@ -10,7 +10,7 @@ const org = ORGS.find((org) => org.id === screeningEvent.org.id);
 const userOrganiser = USERS.find((user) => user.uid === screeningEvent.by.uid);
 const userInvited1 = USERS.find((user) => user.uid === screeningEvent.invitees[0].uid);
 const userInvited2 = USERS.find((user) => user.uid === screeningEvent.invitees[1].uid);
-const userUninvited = USERS.find((user) => user.uid === 'K0ZCSd8bhwcNd9Bh9xJER9eP2DQ2');
+const userUninvited = USERS.find((user) => user.uid === 'EA9wRJgQ18McSyTPG6BKyPZUYxW2');
 const userAdmin = USERS.find((user) => user.uid === 'B8UsXliuxwY6ztjtLuh6f7UD1GV2');
 
 describe('Organiser invites other users to private screening', () => {
@@ -107,10 +107,6 @@ describe('Organiser invites other users to private screening', () => {
       cy.log('Reach Market Home & navigate to Screening Page from Screening Schedule');
       cy.visit('/c/o/marketplace/home');
 
-      // Discard the preferences modale
-      cy.wait(5000);
-      cy.get('button[test-id=skip-preferences]', { timeout: 3000 }).first().click();
-      
       // Click on left menu 
       cy.get('festival-marketplace button[test-id=menu]', { timeout: 3000 }).first().click();
 
