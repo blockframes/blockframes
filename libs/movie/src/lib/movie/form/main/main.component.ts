@@ -25,7 +25,6 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 export class MovieFormMainComponent implements OnInit, OnDestroy {
   form = this.shell.getForm('movie');
   public movieId = this.route.snapshot.params.movieId;
-  contentType = this.form.contentType.valueChanges.pipe(startWith(this.form.contentType.value))
   valuesCustomGenres$: Observable<string[]>;
   customGenreCtrl = new FormControl();
   public separatorKeysCodes: number[] = [ENTER, COMMA];
@@ -37,8 +36,18 @@ export class MovieFormMainComponent implements OnInit, OnDestroy {
     category: 'Category',
     description: 'Description',
     filmography: 'Filmography'
-  }
+  };
 
+  public runningTime = {
+    tv: {
+      label: 'Average Episode Running Time',
+      error: 'Please fill in a valid runtime.'
+    },
+    movie: {
+      label: 'Running Time',
+      error: 'Please specify your project\'s runtime.'
+    }
+  };
 
   private sub: Subscription;
   constructor(private shell: MovieFormShellComponent, private route: ActivatedRoute, private dynTitle: DynamicTitleService) { }
