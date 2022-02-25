@@ -5,13 +5,12 @@ import { MatTableDataSource } from '@angular/material/table';
 
 import { BehaviorSubject } from 'rxjs';
 import { UserService } from '@blockframes/user/+state';
-import { getCurrentApp } from '@blockframes/utils/apps';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { formatTitle } from './utils';
 import { MovieImportState } from '../../utils';
 import { AuthService } from '@blockframes/auth/+state';
 import { take } from 'rxjs/operators';
-import { ActivatedRoute } from '@angular/router';
+import { AppGuard } from '@blockframes/utils/routes/app.guard';
 
 @Component({
   selector: 'import-view-extracted-titles[sheetTab]',
@@ -29,12 +28,12 @@ export class ViewExtractedTitlesComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private userService: UserService,
-    private route: ActivatedRoute,
+    private appGuard: AppGuard,
   ) { }
 
   async ngOnInit() {
     const isBlockframesAdmin = await this.authService.isBlockframesAdmin$.pipe(take(1)).toPromise();
-    const app = getCurrentApp(this.route);
+    const app = this.appGuard.currentApp;
     const titles = await formatTitle(
       this.sheetTab,
       this.userService,

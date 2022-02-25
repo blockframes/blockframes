@@ -1,9 +1,9 @@
-import { Injectable } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { Injectable } from '@angular/core';
 import { algolia } from '@env';
 import algoliasearch, { SearchIndex } from 'algoliasearch';
-import { App, getCurrentApp } from "../apps";
-import { algoliaIndex, AlgoliaObject, AlgoliaQueries, SearchResponse } from "./algolia.interfaces";
+import { App } from '../apps';
+import { AppGuard } from '../routes/app.guard';
+import { algoliaIndex, AlgoliaObject, AlgoliaQueries, SearchResponse } from './algolia.interfaces';
 import { parseFilters, parseFacets } from './helper.utils';
 
 @Injectable({ providedIn: 'root' })
@@ -13,8 +13,8 @@ export class AlgoliaService {
 
   private appName: App;
 
-  constructor(private route: ActivatedRoute) {
-    this.appName = getCurrentApp(this.route);
+  constructor(private appGuard: AppGuard) {
+    this.appName = this.appGuard.currentApp;
   }
 
   getIndex(name: 'movie' | 'org' | 'user'): SearchIndex {

@@ -6,7 +6,8 @@ import { MovieService, fromOrg } from '@blockframes/movie/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Movie } from '@blockframes/movie/+state/movie.model';
-import { appName, getCurrentApp } from '@blockframes/utils/apps';
+import { appName } from '@blockframes/utils/apps';
+import { AppGuard } from '@blockframes/utils/routes/app.guard';
 
 // RxJs
 import { map, switchMap, shareReplay, tap } from 'rxjs/operators';
@@ -14,7 +15,6 @@ import { Observable } from 'rxjs';
 
 // Intercom
 import { Intercom } from 'ng-intercom';
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'dashboard-home',
@@ -24,7 +24,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class HomeComponent implements OnInit {
 
-  public app = getCurrentApp(this.route);
+  public app = this.appGuard.currentApp;
   public appName = appName[this.app];
   // accepted and submitted movies only
   public titles$: Observable<Movie[]>;
@@ -36,7 +36,7 @@ export class HomeComponent implements OnInit {
     private movieService: MovieService,
     private orgService: OrganizationService,
     private dynTitle: DynamicTitleService,
-    private route: ActivatedRoute,
+    private appGuard: AppGuard,
     @Optional() private intercom: Intercom
   ) { }
 

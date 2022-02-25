@@ -1,9 +1,10 @@
 import { Component, ChangeDetectionStrategy, Input, } from '@angular/core';
-import { appName, getCurrentApp } from '@blockframes/utils/apps';
+import { appName } from '@blockframes/utils/apps';
 import { Contract, Sale } from '@blockframes/contract/contract/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
+import { AppGuard } from '@blockframes/utils/routes/app.guard';
 
 interface ExternalSale extends Sale<Date> {
   licensor: string;
@@ -18,7 +19,7 @@ interface ExternalSale extends Sale<Date> {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExternalSaleListComponent {
-  public app = getCurrentApp(this.route);
+  public app = this.appGuard.currentApp;
   public appName = appName[this.app];
   public orgId = this.orgService.org.id;
 
@@ -30,6 +31,7 @@ export class ExternalSaleListComponent {
     private orgService: OrganizationService,
     private router: Router,
     private route: ActivatedRoute,
+    private appGuard: AppGuard,
   ) { }
 
   @Input() set sales(sale: ExternalSale[]) {

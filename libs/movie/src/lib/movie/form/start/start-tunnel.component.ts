@@ -1,10 +1,11 @@
 // Angular
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 // Blockframes
 import { createReleaseYear, Movie, MovieService } from '@blockframes/movie/+state';
-import { App, getCurrentApp } from '@blockframes/utils/apps';
+import { App } from '@blockframes/utils/apps';
+import { AppGuard } from '@blockframes/utils/routes/app.guard';
 
 // RxJs
 import { BehaviorSubject } from 'rxjs';
@@ -29,12 +30,12 @@ const predefinedTitleConfig: Record<App, Partial<Movie>> = {
 })
 export class MovieFormStartTunnelComponent {
   public loadingTunnel = new BehaviorSubject(false);
-  public currentApp = getCurrentApp(this.route);
+  public currentApp = this.appGuard.currentApp;
 
   constructor(
     private movieService: MovieService,
     private router: Router,
-    private route: ActivatedRoute,
+    private appGuard: AppGuard,
   ) { }
 
   async navigateToTunnel() {

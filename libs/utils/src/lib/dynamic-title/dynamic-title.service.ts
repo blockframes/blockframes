@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { MaintenanceGuard } from '@blockframes/ui/maintenance';
 import { appName } from '../apps';
+import { AppGuard } from '../routes/app.guard';
 
 function displaySection(section: string, showAppName: boolean, _appName: string) {
   const suffix = showAppName ? `- ${_appName}` : '';
@@ -15,7 +15,7 @@ function displayEntityWithSection(section: string, titleName: string, showAppNam
 
 @Injectable({ providedIn: 'root' })
 export class DynamicTitleService {
-  private app = this.maintenanceGuard.currentApp;
+  private app = this.appGuard.currentApp;
 
   /**
    * This variable holds the value that this service gets when
@@ -23,7 +23,7 @@ export class DynamicTitleService {
    */
   private initTitle = '';
 
-  constructor(private title: Title, private maintenanceGuard: MaintenanceGuard) { }
+  constructor(private title: Title, private appGuard: AppGuard) { }
 
   /**
    * @description

@@ -1,19 +1,17 @@
 import { Injectable } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
 import { firebaseRegion, firebase, emulators } from '@env';
-import { appName, getCurrentApp } from "./../apps";
+import { AppGuard } from '../routes/app.guard';
+import { appName } from "./../apps";
 import { PdfParams } from "./pdf.interfaces";
 export const { projectId } = firebase();
 
 @Injectable({ providedIn: 'root' })
 export class PdfService {
 
-  constructor(
-    private route: ActivatedRoute
-  ) { }
+  constructor(private appGuard: AppGuard ) { }
 
   async download(titleIds: string[]) {
-    const app = getCurrentApp(this.route);
+    const app = this.appGuard.currentApp;
     const data: PdfParams = {
       titleIds,
       app

@@ -8,7 +8,6 @@ import { EventService, Event } from '@blockframes/event/+state';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { Screening } from '@blockframes/event/+state/event.firestore';
-import { getCurrentApp } from '@blockframes/utils/apps';
 
 // RxJs
 import { map, pluck, shareReplay, switchMap } from 'rxjs/operators';
@@ -16,6 +15,7 @@ import { combineLatest, Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { RequestAskingPriceComponent } from '../request-asking-price/request-asking-price.component';
 import { ActivatedRoute } from '@angular/router';
+import { AppGuard } from '@blockframes/utils/routes/app.guard';
 
 @Component({
   selector: 'movie-screening',
@@ -26,7 +26,7 @@ import { ActivatedRoute } from '@angular/router';
 export class UpcomingScreeningsComponent {
   @HostBinding('class') class = 'dark-contrast-theme';
 
-  private app = getCurrentApp(this.route);
+  private app = this.appGuard.currentApp;
 
   public sessions = ['first', 'second', 'third', 'fourth', 'fifth'];
 
@@ -58,6 +58,7 @@ export class UpcomingScreeningsComponent {
     private cdr: ChangeDetectorRef,
     private route: ActivatedRoute,
     private movieService: MovieService,
+    private appGuard: AppGuard,
   ) {
 
     const now = new Date();

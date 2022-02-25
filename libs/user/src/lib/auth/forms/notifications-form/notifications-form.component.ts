@@ -1,15 +1,16 @@
 import { Component, ChangeDetectionStrategy, Pipe, PipeTransform } from '@angular/core';
+
 // Blockframes
 import { NotificationsForm } from './notifications.form';
-import { App, getCurrentApp } from "@blockframes/utils/apps";
+import { App } from "@blockframes/utils/apps";
 import { NotificationTypesBase, notificationTypesBase } from '@blockframes/notification/types';
 import { AuthService } from '@blockframes/auth/+state';
+import { AppGuard } from '@blockframes/utils/routes/app.guard';
 
 // Material
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute } from '@angular/router';
 
 interface NotificationSetting { text: string, tooltip: boolean };
 const titleType: Record<NotificationTypesBase, NotificationSetting> = {
@@ -158,9 +159,9 @@ export class EveryCheckedPipe implements PipeTransform {
 
 @Pipe({ name: 'showNotification' })
 export class ShowNotificationPipe implements PipeTransform {
-  currentApp = getCurrentApp(this.route);
+  currentApp = this.appGuard.currentApp;
   public tables = tables;
-  constructor(private route: ActivatedRoute) { }
+  constructor(private appGuard: AppGuard) { }
 
   transform(index: number) {
     return this.tables[index].appAuthorized.includes(this.currentApp);

@@ -1,7 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { organizationRoles } from '@blockframes/organization/+state';
-import { getCurrentApp } from '@blockframes/utils/apps';
+import { AppGuard } from '@blockframes/utils/routes/app.guard';
 import { orgActivity } from '@blockframes/utils/static-model/static-model';
 import { OrganizationLiteForm } from '../organization-lite.form';
 
@@ -12,12 +11,12 @@ import { OrganizationLiteForm } from '../organization-lite.form';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationLiteFormComponent {
-  public app = getCurrentApp(this.route)
+  public app = this.appGuard.currentApp
   public roles = organizationRoles;
   public activities = orgActivity;
 
   @Input() form: OrganizationLiteForm;
 
-  constructor(private route: ActivatedRoute) { }
+  constructor(private appGuard: AppGuard) { }
 
 }

@@ -2,13 +2,12 @@ import { ChangeDetectionStrategy, Component, ContentChild, Directive, HostBindin
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { createDemoRequestInformations, RequestDemoInformations } from '@blockframes/utils/request-demo';
 import { MatSnackBar } from '@angular/material/snack-bar'
-import { getCurrentApp } from '@blockframes/utils/apps';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { RequestDemoRole } from '@blockframes/utils/request-demo';
 import { ThemeService } from '@blockframes/ui/theme';
 import { testEmail } from "@blockframes/e2e/utils/env";
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
-import { ActivatedRoute } from '@angular/router';
+import { AppGuard } from '@blockframes/utils/routes/app.guard';
 
 @Directive({
   selector: 'landing-header, [landingHeader]',
@@ -50,7 +49,7 @@ export class LandingFooterComponent { }
 export class LandingShellComponent implements OnDestroy {
   public submitted = false;
   public newslettersSubmitted = false;
-  public app = getCurrentApp(this.route);
+  public app = this.appGuard.currentApp;
   public buttonText = 'Submit Demo Request';
 
   @Input() roles: RequestDemoRole[] = [
@@ -80,7 +79,7 @@ export class LandingShellComponent implements OnDestroy {
 
   constructor(
     private snackBar: MatSnackBar,
-    private route: ActivatedRoute,
+    private appGuard: AppGuard,
     private functions: AngularFireFunctions,
     private theme: ThemeService,
     private cdr: ChangeDetectorRef

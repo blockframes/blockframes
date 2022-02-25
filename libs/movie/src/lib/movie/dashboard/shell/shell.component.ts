@@ -6,8 +6,8 @@ import { combineLatest, Subscription } from 'rxjs';
 import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
 import { Movie, MovieService } from '@blockframes/movie/+state';
 import { FORMS_CONFIG, ShellConfig } from '../../form/movie.shell.interfaces';
-import { getCurrentApp } from '@blockframes/utils/apps';
 import { filter, pluck, switchMap, tap } from 'rxjs/operators';
+import { AppGuard } from '@blockframes/utils/routes/app.guard';
 
 @Directive({ selector: 'movie-cta, [movieCta]' })
 export class MovieCtaDirective { }
@@ -30,7 +30,7 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
 
   public movie: Movie;
 
-  public appName = getCurrentApp(this.route);
+  public appName = this.appGuard.currentApp;
 
   @Input() routes: RouteDescription[];
 
@@ -40,6 +40,7 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
     private router: Router,
     private location: Location,
     private route: ActivatedRoute,
+    private appGuard: AppGuard,
   ) { }
 
   ngOnInit() {

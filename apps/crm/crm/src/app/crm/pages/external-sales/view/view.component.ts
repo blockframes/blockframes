@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { FormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { appName, getCurrentApp } from '@blockframes/utils/apps';
+import { appName } from '@blockframes/utils/apps';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { Sale, ContractService, Holdback } from '@blockframes/contract/contract/+state';
 import { MovieService } from '@blockframes/movie/+state';
@@ -14,6 +14,7 @@ import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { IncomeService } from '@blockframes/contract/income/+state';
 import { Term } from '@blockframes/contract/term/+state';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
+import { AppGuard } from '@blockframes/utils/routes/app.guard';
 
 @Component({
   selector: 'contract-view',
@@ -22,7 +23,7 @@ import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-inp
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContractViewComponent {
-  public app = getCurrentApp(this.route);
+  public app = this.appGuard.currentApp;
   public appName = appName[this.app];
   public orgId = this.orgService.org.id;
 
@@ -44,7 +45,7 @@ export class ContractViewComponent {
     private contractService: ContractService,
     private orgService: OrganizationService,
     private titleService: MovieService,
-
+    private appGuard: AppGuard,
   ) { }
 
   async update(contractId: string) {

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { getCurrentApp, applicationUrl } from '@blockframes/utils/apps';
+import { applicationUrl } from '@blockframes/utils/apps';
 import { Location } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { AppGuard } from '@blockframes/utils/routes/app.guard';
 
 @Component({
   selector: 'auth-terms-conditions',
@@ -10,12 +10,12 @@ import { ActivatedRoute } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TermsConditionsComponent {
-  app = getCurrentApp(this.route);
+  app = this.appGuard.currentApp;
   appUrl = applicationUrl[this.app];
   canGoBack = window.history.length > 1;
 
   constructor(
-    private route: ActivatedRoute,
+    private appGuard: AppGuard,
     private location: Location,
   ) { }
 

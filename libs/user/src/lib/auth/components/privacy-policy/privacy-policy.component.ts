@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { Location } from '@angular/common';
-import { getCurrentApp } from "@blockframes/utils/apps";
-import { ActivatedRoute } from "@angular/router";
+import { AppGuard } from '@blockframes/utils/routes/app.guard';
 
 @Component({
   selector: 'auth-privacy-policy',
@@ -11,11 +10,11 @@ import { ActivatedRoute } from "@angular/router";
 })
 
 export class PrivacyPolicyComponent {
-  appName = getCurrentApp(this.route);
+  appName = this.appGuard.currentApp;
   canGoBack = window.history.length > 1;
   constructor(
     private location: Location,
-    private route: ActivatedRoute
+    private appGuard: AppGuard,
   ) { }
 
   goBack() {

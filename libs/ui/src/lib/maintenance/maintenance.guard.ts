@@ -2,15 +2,12 @@ import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
 import { MaintenanceService } from './maintenance.service';
 import { map, tap } from 'rxjs/operators';
-import { App } from '@blockframes/utils/apps';
 
 @Injectable({ providedIn: 'root' })
 export class MaintenanceGuard implements CanActivate {
-  currentApp : App;
   constructor(private service: MaintenanceService, private router: Router) {}
 
-  canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    this.currentApp = next.data.app;
+  canActivate(_: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     if (state.url === '/maintenance') {
       return this.service.isInMaintenance$.pipe(
         map(isInMaintenance => isInMaintenance ? true : this.router.parseUrl('/'))

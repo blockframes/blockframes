@@ -6,13 +6,13 @@ import { filter, startWith, switchMap, tap } from "rxjs/operators";
 import { mergeDeep } from "@blockframes/utils/helpers";
 import { FileUploaderService } from '@blockframes/media/+state';
 import { ProductionStatus } from "@blockframes/utils/static-model";
-import { getCurrentApp, getMoviePublishStatus } from "@blockframes/utils/apps";
+import { getMoviePublishStatus } from "@blockframes/utils/apps";
 import { FormSaveOptions } from '@blockframes/utils/common-interfaces';
 import { MovieControl, MovieForm } from "./movie.form";
 import type { FormShellConfig } from './movie.shell.interfaces'
 import { Movie, MoviePromotionalElements, MovieService } from "../+state";
 import { MovieActiveGuard } from '../guards/movie-active.guard';
-import { ActivatedRoute } from '@angular/router';
+import { AppGuard } from '@blockframes/utils/routes/app.guard';
 
 const valueByProdStatus: Record<ProductionStatus, Record<string, string>> = {
   development: {
@@ -53,10 +53,10 @@ function cleanPromotionalMedia(promotional: MoviePromotionalElements): MovieProm
 export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
   form = new MovieForm(this.movieActiveGuard.movie); // TODO #7255
   name = 'Title';
-  private currentApp = getCurrentApp(this.route);
+  private currentApp = this.appGuard.currentApp;
 
   constructor(
-    private route: ActivatedRoute,
+    private appGuard: AppGuard,
     private routerQuery: RouterQuery,
     private service: MovieService,
     private uploaderService: FileUploaderService,

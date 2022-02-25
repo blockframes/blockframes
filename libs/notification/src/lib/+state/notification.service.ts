@@ -8,7 +8,7 @@ import { orgName } from '@blockframes/organization/+state/organization.firestore
 import { OrganizationService } from '@blockframes/organization/+state';
 import { toDate } from '@blockframes/utils/helpers';
 import { displayName } from '@blockframes/utils/utils';
-import { applicationUrl, appName, getCurrentApp, getCurrentModule, getMovieAppAccess } from '@blockframes/utils/apps';
+import { applicationUrl, appName, getCurrentModule, getMovieAppAccess } from '@blockframes/utils/apps';
 import { Movie, MovieService } from '@blockframes/movie/+state';
 import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 import { format } from 'date-fns';
@@ -16,14 +16,15 @@ import { trimString } from '@blockframes/utils/pipes/max-length.pipe';
 import { ActiveState, EntityState } from '@datorama/akita';
 import { UserService } from '@blockframes/user/+state';
 import { EventService } from '@blockframes/event/+state';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
+import { AppGuard } from '@blockframes/utils/routes/app.guard';
 
 interface NotificationState extends EntityState<Notification>, ActiveState<string> { }
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'notifications' })
 export class NotificationService extends CollectionService<NotificationState> {
   readonly useMemorization = true;
-  private app = getCurrentApp(this.route);
+  private app = this.appGuard.currentApp;
   private appName = appName[this.app];
 
   myNotifications$ = this.authService.profile$.pipe(
@@ -40,7 +41,7 @@ export class NotificationService extends CollectionService<NotificationState> {
   constructor(
     private authService: AuthService,
     private orgService: OrganizationService,
-    private route: ActivatedRoute,
+    private appGuard: AppGuard,
     private router: Router,
     private movieService: MovieService,
     private userService: UserService,

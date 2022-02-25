@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { getCurrentApp, appName, App, getOrgAppAccess } from '@blockframes/utils/apps';
+import { appName, App, getOrgAppAccess } from '@blockframes/utils/apps';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { organizationRoles, OrganizationService } from '@blockframes/organization/+state';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -7,6 +7,7 @@ import { map } from 'rxjs/operators';
 import { AuthService } from '@blockframes/auth/+state';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AppGuard } from '@blockframes/utils/routes/app.guard';
 
 type Steps = 'initial' | 'request';
 
@@ -18,7 +19,7 @@ type Steps = 'initial' | 'request';
 })
 export class OrgRequestAccessComponent implements OnInit {
   public roles = organizationRoles;
-  public currentApp = getCurrentApp(this.route);
+  public currentApp = this.appGuard.currentApp;
   public appName = appName;
   private org$ = this.orgService.currentOrg$;
   private orgId = this.orgService.org.id;
@@ -35,6 +36,7 @@ export class OrgRequestAccessComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private route: ActivatedRoute,
+    private appGuard: AppGuard,
   ) { }
 
   ngOnInit() {

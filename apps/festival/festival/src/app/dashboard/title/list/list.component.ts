@@ -7,8 +7,9 @@ import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Intercom } from 'ng-intercom';
-import { appName, getCurrentApp } from '@blockframes/utils/apps';
+import { appName } from '@blockframes/utils/apps';
 import { StoreStatus } from '@blockframes/utils/static-model/types';
+import { AppGuard } from '@blockframes/utils/routes/app.guard';
 
 @Component({
   selector: 'festival-dashboard-title-list',
@@ -17,7 +18,7 @@ import { StoreStatus } from '@blockframes/utils/static-model/types';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListComponent {
-  public app = getCurrentApp(this.route);
+  public app = this.appGuard.currentApp;
   public appName = appName[this.app];
   filter = new FormControl();
   filter$ = this.filter.valueChanges.pipe(startWith(this.filter.value));
@@ -43,6 +44,7 @@ export class ListComponent {
     private router: Router,
     private route: ActivatedRoute,
     private dynTitle: DynamicTitleService,
+    private appGuard: AppGuard,
     @Optional() private intercom: Intercom
   ) { }
 

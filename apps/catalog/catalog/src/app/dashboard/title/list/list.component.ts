@@ -9,7 +9,8 @@ import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { storeStatus } from '@blockframes/utils/static-model';
 import { Intercom } from 'ng-intercom';
-import { appName, getCurrentApp } from '@blockframes/utils/apps';
+import { appName } from '@blockframes/utils/apps';
+import { AppGuard } from '@blockframes/utils/routes/app.guard';
 
 @Component({
   selector: 'catalog-title-list',
@@ -18,7 +19,7 @@ import { appName, getCurrentApp } from '@blockframes/utils/apps';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TitleListComponent {
-  public app = getCurrentApp(this.route);
+  public app = this.appGuard.currentApp;
   public appName = appName[this.app];
   filter = new FormControl();
   filter$: Observable<StoreStatus | ''> = this.filter.valueChanges.pipe(startWith(this.filter.value || ''));
@@ -44,6 +45,7 @@ export class TitleListComponent {
     private router: Router,
     private route: ActivatedRoute,
     private dynTitle: DynamicTitleService,
+    private appGuard: AppGuard,
     @Optional() private intercom: Intercom
   ) { }
 

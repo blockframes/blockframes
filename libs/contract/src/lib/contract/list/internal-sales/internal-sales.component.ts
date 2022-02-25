@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, OnInit, Input, } from '@angular/core';
-import { appName, getCurrentApp } from '@blockframes/utils/apps';
+import { appName } from '@blockframes/utils/apps';
 import { Contract, ContractStatus, Sale } from '@blockframes/contract/contract/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -9,6 +9,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { isInitial } from '@blockframes/contract/negotiation/utils';
 import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
+import { AppGuard } from '@blockframes/utils/routes/app.guard';
 
 function capitalize(text: string) {
   return `${text[0].toUpperCase()}${text.substring(1)}`
@@ -28,7 +29,7 @@ interface InternalSale extends Sale<Date> {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InternalSaleListComponent implements OnInit {
-  public app = getCurrentApp(this.route);
+  public app = this.appGuard.currentApp;
   public appName = appName[this.app];
   public orgId = this.orgService.org.id;
 
@@ -57,6 +58,7 @@ export class InternalSaleListComponent implements OnInit {
     private router: Router,
     private dynTitle: DynamicTitleService,
     private route: ActivatedRoute,
+    private appGuard: AppGuard,
   ) { }
 
   @Input() set sales(sale: InternalSale[]) {

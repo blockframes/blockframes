@@ -1,14 +1,15 @@
 import { Component, ChangeDetectionStrategy, Input, OnInit, OnDestroy } from '@angular/core';
+
 // Blockframes
 import { CookiesConsent, CookiesConsentForm } from './cookie.form';
-import { appName, getCurrentApp } from '../../apps';
+import { appName } from '../../apps';
+import { AppGuard } from '@blockframes/utils/routes/app.guard';
+
 // Material
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatRadioChange } from '@angular/material/radio';
 import { Subscription } from 'rxjs';
 import { startWith } from 'rxjs/operators';
-
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: '[form] cookie-form',
@@ -24,7 +25,7 @@ export class CookieFormComponent implements OnInit, OnDestroy {
   private sub: Subscription;
   public appName;
 
-  constructor(private route: ActivatedRoute) { }
+  constructor(private appGuard: AppGuard) { }
 
   ngOnInit() {
     this.sub = this.form.valueChanges.pipe(startWith(this.form.value)).subscribe(data => {
@@ -32,7 +33,7 @@ export class CookieFormComponent implements OnInit, OnDestroy {
       const allRejected = Object.keys(data).every(key => !data[key]);
       this.masterToggleStatus = allAccepted ? 'accept' : allRejected ? 'reject' : 'other';
     })
-    this.appName = appName[getCurrentApp(this.route)];
+    this.appName = appName[this.appGuard.currentApp];
   }
 
   ngOnDestroy() {

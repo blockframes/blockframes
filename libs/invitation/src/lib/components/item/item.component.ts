@@ -5,12 +5,12 @@ import { EventService } from '@blockframes/event/+state/event.service';
 import { PublicUser } from '@blockframes/user/types';
 import { PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
-import { applicationUrl, getCurrentApp } from '@blockframes/utils/apps';
+import { applicationUrl } from '@blockframes/utils/apps';
 import { isMeeting } from '@blockframes/event/+state';
 import { isSafari } from '@blockframes/utils/browser/utils';
 import { AgendaService } from '@blockframes/utils/agenda/agenda.service';
 import { Event } from '@blockframes/event/+state';
-import { ActivatedRoute } from '@angular/router';
+import { AppGuard } from '@blockframes/utils/routes/app.guard';
 
 @Component({
   selector: 'invitation-item',
@@ -20,7 +20,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class ItemComponent {
   public applicationUrl = applicationUrl;
-  public app = getCurrentApp(this.route);
+  public app = this.appGuard.currentApp;
 
   @Input() set invitation(invitation: Invitation) {
     this._invitation = invitation;
@@ -64,7 +64,7 @@ export class ItemComponent {
     private organizationService: OrganizationService,
     private userService: UserService,
     private agendaService: AgendaService,
-    private route: ActivatedRoute,
+    private appGuard: AppGuard,
     private cdr: ChangeDetectorRef
   ) {
     //For cypress-environment, keep the event link same as from

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
 import { EventForm } from '../event.form';
-import { appName, getCurrentApp } from '@blockframes/utils/apps';
+import { appName } from '@blockframes/utils/apps';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { Intercom } from 'ng-intercom';
@@ -8,7 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { EventService } from '@blockframes/event/+state';
 import { AccessibilityTypes } from '@blockframes/utils/static-model';
-import { ActivatedRoute } from '@angular/router';
+import { AppGuard } from '@blockframes/utils/routes/app.guard';
 
 @Component({
   selector: '[form] event-details-edit',
@@ -21,11 +21,11 @@ export class EditDetailsComponent implements OnInit, OnDestroy {
   @Input() @boolean showPrivacy = false;
   @ViewChild('noAccessibilityChange') noAccessibilityChange: TemplateRef<any>;
   private sub: Subscription;
-  appName: string = appName[getCurrentApp(this.route)];
+  appName: string = appName[this.appGuard.currentApp];
   private previouslySavedAccessibility: AccessibilityTypes;
 
   constructor(
-    private route: ActivatedRoute,
+    private appGuard: AppGuard,
     private invitationService: InvitationService,
     private eventService: EventService,
     private dialog: MatDialog,

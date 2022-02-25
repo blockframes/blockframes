@@ -3,8 +3,7 @@ import { fromOrgAndAccepted, MovieService } from '@blockframes/movie/+state';
 import { Organization } from '@blockframes/organization/+state';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { getCurrentApp } from '@blockframes/utils/apps';
-import { ActivatedRoute } from '@angular/router';
+import { AppGuard } from '@blockframes/utils/routes/app.guard';
 
 @Component({
   selector: 'org-card',
@@ -17,9 +16,9 @@ export class OrganizationCardComponent implements OnInit {
   @Input() org: Organization;
 
   public orgMovieCount$: Observable<number>
-  public app = getCurrentApp(this.route)
+  public app = this.appGuard.currentApp
 
-  constructor(private movieService: MovieService, private route: ActivatedRoute,) { }
+  constructor(private movieService: MovieService, private appGuard: AppGuard) { }
 
   ngOnInit() {
     this.orgMovieCount$ = this.movieService.valueChanges(fromOrgAndAccepted(this.org.id, this.app)).pipe(

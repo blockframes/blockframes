@@ -6,7 +6,6 @@ import { StoreStatus } from "./static-model";
 import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
 import { appUrl } from "@env";
 import { MovieBase, MovieDocument } from "@blockframes/movie/+state/movie.firestore";
-import type { ActivatedRoute } from '@angular/router';
 
 export interface AppMailSetting {
   description: string,
@@ -71,10 +70,6 @@ export const applicationUrl: Record<App, string> = {
   catalog: appUrl.content,
   financiers: appUrl.financiers,
   crm: appUrl.crm
-}
-
-export function getCurrentApp(route: ActivatedRoute): App {
-  return route.snapshot.data.app;
 }
 
 /** Return an array of app without the value passing in argument */

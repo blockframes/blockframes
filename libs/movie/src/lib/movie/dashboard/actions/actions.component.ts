@@ -1,12 +1,13 @@
 import { Component, ChangeDetectionStrategy, Directive, Input } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { Movie, MovieService } from '@blockframes/movie/+state';
-import { getAppName, getCurrentApp, getMovieAppAccess } from '@blockframes/utils/apps';
+import { getAppName, getMovieAppAccess } from '@blockframes/utils/apps';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { storeStatus, StoreStatus } from '@blockframes/utils/static-model';
+import { AppGuard } from '@blockframes/utils/routes/app.guard';
 
 @Directive({ selector: 'movie-action-menu, [movieActionMenu]' })
 export class MovieActionMenuDirective { }
@@ -22,14 +23,14 @@ export class MovieActionMenuDirective { }
 export class DashboardActionsShellComponent {
   @Input() movie: Movie;
 
-  public app = getCurrentApp(this.route);
+  public app = this.appGuard.currentApp;
 
   constructor(
     private dialog: MatDialog,
     private snackbar: MatSnackBar,
     private movieService: MovieService,
     private router: Router,
-    private route: ActivatedRoute,
+    private appGuard: AppGuard,
   ) { }
 
   removeAppAccess() {

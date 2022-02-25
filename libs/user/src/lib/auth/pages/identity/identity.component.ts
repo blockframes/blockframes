@@ -4,7 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { slideUp, slideDown } from '@blockframes/utils/animations/fade';
-import { getCurrentApp, getAppName, App } from '@blockframes/utils/apps';
+import { getAppName, App } from '@blockframes/utils/apps';
 import { createDocumentMeta } from '@blockframes/utils/models-meta';
 import { AlgoliaOrganization } from '@blockframes/utils/algolia';
 import { OrganizationLiteForm } from '@blockframes/organization/forms/organization-lite.form';
@@ -19,6 +19,7 @@ import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { DifferentPasswordStateMatcher, RepeatPasswordStateMatcher } from '@blockframes/utils/form/matchers';
 import { filter } from 'rxjs/operators';
+import { AppGuard } from '@blockframes/utils/routes/app.guard';
 
 @Component({
   selector: 'auth-identity',
@@ -55,12 +56,13 @@ export class IdentityComponent implements OnInit, OnDestroy {
     private orgService: OrganizationService,
     private cdr: ChangeDetectorRef,
     private route: ActivatedRoute,
+    private appGuard: AppGuard,
     @Optional() private intercom: Intercom
   ) { }
 
 
   async ngOnInit() {
-    this.app = getCurrentApp(this.route);
+    this.app = this.appGuard.currentApp;
     this.appName = getAppName(this.app).label;
 
     const existingUserWithDisplayName = !!this.authService.profile && !!hasDisplayName(this.authService.profile);

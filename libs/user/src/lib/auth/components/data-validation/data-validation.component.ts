@@ -1,14 +1,14 @@
 import { Component, ChangeDetectionStrategy, OnInit, Input, Optional } from '@angular/core';
 import { AuthService } from '@blockframes/auth/+state';
 import { Organization } from '@blockframes/organization/+state';
-import { getCurrentApp, appName, getOrgModuleAccess } from '@blockframes/utils/apps';
+import { appName, getOrgModuleAccess } from '@blockframes/utils/apps';
 import { Observable } from 'rxjs';
 import { Intercom } from 'ng-intercom';
 import { hasDenomination, hasDisplayName } from '@blockframes/utils/helpers';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { map } from 'rxjs/operators';
-import { ActivatedRoute } from '@angular/router';
+import { AppGuard } from '@blockframes/utils/routes/app.guard';
 
 @Component({
   selector: 'auth-data-validation',
@@ -24,7 +24,7 @@ export class AuthDataValidationComponent implements OnInit {
     const orgHaveAccesToAtLeastOneModule = !!getOrgModuleAccess(org, this.app).length;
     this.orgApproval = isOrgAccepted && orgHaveAccesToAtLeastOneModule && isUserInOrg;
   };
-  private app = getCurrentApp(this.route);
+  private app = this.appGuard.currentApp;
   public appName = appName[this.app];
   public profileData = false;
   public orgData = false;
@@ -35,7 +35,7 @@ export class AuthDataValidationComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private route: ActivatedRoute,
+    private appGuard: AppGuard,
     private functions: AngularFireFunctions,
     private snackbar: MatSnackBar,
     @Optional() private intercom: Intercom) { }
