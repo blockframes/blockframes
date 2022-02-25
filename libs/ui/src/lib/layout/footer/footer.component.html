@@ -1,17 +1,17 @@
 <mat-divider></mat-divider>
 <section>
-  <div *ngIf="(section$ | async) as section" fxLayout=" row wrap" fxLayoutAlign="start center">
-    <a app-logo [routerLink]="['/c/o', section]"></a>
+  <div *ngIf="module" fxLayout=" row wrap" fxLayoutAlign="start center">
+    <a app-logo [routerLink]="['/c/o', module]"></a>
     <!-- ATM there is no about page for festival and financiers -->
-    <ng-container *ngIf="'catalog' | app">
-      <a mat-button [routerLink]="['/c/o/'+section+'/about']">About Us</a>
+    <ng-container *ngIf="app === 'catalog'">
+      <a mat-button [routerLink]="['/c/o/'+module+'/about']">About Us</a>
     </ng-container>
 
-    <a mat-button [routerLink]="['/c/o', section, 'contact']">Contact Us</a>
-    <a mat-button [routerLink]="['/c/o', section, 'terms']">Legal Terms</a>
-    <a mat-button [routerLink]="['/c/o', section, 'privacy']">Privacy Policy</a>
+    <a mat-button [routerLink]="['/c/o', module, 'contact']">Contact Us</a>
+    <a mat-button [routerLink]="['/c/o', module, 'terms']">Legal Terms</a>
+    <a mat-button [routerLink]="['/c/o', module, 'privacy']">Privacy Policy</a>
   </div>
   <span class="mat-body-2">
-    © {{ currentYear }} {{ appName }}, Paris
+    © {{ currentYear }} {{ app | appName }}, Paris
   </span>
 </section>

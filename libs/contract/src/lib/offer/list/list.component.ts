@@ -1,8 +1,7 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { Offer } from '@blockframes/contract/offer/+state';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Observable } from 'rxjs';
-import { appName, getCurrentApp } from '@blockframes/utils/apps';
+import { appName } from '@blockframes/utils/apps';
 import { FormControl } from '@angular/forms';
 import { startWith } from 'rxjs/operators';
 import { Contract } from '@blockframes/contract/contract/+state';
@@ -10,9 +9,7 @@ import { Movie } from '@blockframes/movie/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
-import { NgModule, Pipe, PipeTransform } from '@angular/core';
-import { getDeepValue } from '@blockframes/utils/pipes';
-
+import { AppGuard } from '@blockframes/utils/routes/app.guard';
 
 type AllOfferStatus = '' | 'pending' | 'on_going' | 'past_deals';
 
@@ -33,16 +30,16 @@ interface OfferView extends Offer {
 export class ListComponent {
 
   @Input() offers?: null | OfferView[];
-  app = getCurrentApp(this.routerQuery);
+  app = this.appGuard.currentApp;
   appName = appName[this.app];
   filter = new FormControl('');
   filter$: Observable<AllOfferStatus> = this.filter.valueChanges.pipe(startWith(this.filter.value ?? ''));
 
   constructor(
-    private routerQuery: RouterQuery,
     private router: Router,
     private route: ActivatedRoute,
     private dynTitle: DynamicTitleService,
+    private appGuard: AppGuard,
   ) {
     this.dynTitle.setPageTitle('Offers & Deals');
   }

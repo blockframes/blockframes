@@ -5,13 +5,12 @@ import { EventService } from '@blockframes/event/+state/event.service';
 import { PublicUser } from '@blockframes/user/types';
 import { PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
-import { BehaviorStore } from '@blockframes/utils/observable-helpers';
-import { applicationUrl, getCurrentApp } from '@blockframes/utils/apps';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { applicationUrl } from '@blockframes/utils/apps';
 import { isMeeting } from '@blockframes/event/+state';
 import { isSafari } from '@blockframes/utils/browser/utils';
 import { AgendaService } from '@blockframes/utils/agenda/agenda.service';
 import { Event } from '@blockframes/event/+state';
+import { AppGuard } from '@blockframes/utils/routes/app.guard';
 
 @Component({
   selector: 'invitation-item',
@@ -21,7 +20,7 @@ import { Event } from '@blockframes/event/+state';
 })
 export class ItemComponent {
   public applicationUrl = applicationUrl;
-  public app = getCurrentApp(this.routerQuery);
+  public app = this.appGuard.currentApp;
 
   @Input() set invitation(invitation: Invitation) {
     this._invitation = invitation;
@@ -64,8 +63,8 @@ export class ItemComponent {
     private eventService: EventService,
     private organizationService: OrganizationService,
     private userService: UserService,
-    private routerQuery: RouterQuery,
     private agendaService: AgendaService,
+    private appGuard: AppGuard,
     private cdr: ChangeDetectorRef
   ) {
     //For cypress-environment, keep the event link same as from

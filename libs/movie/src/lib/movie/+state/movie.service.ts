@@ -9,7 +9,6 @@ import {
 import { createDocumentMeta } from "@blockframes/utils/models-meta";
 import { cleanModel } from '@blockframes/utils/helpers';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
-import { UserService } from '@blockframes/user/+state/user.service';
 import type firebase from 'firebase';
 import { App } from '@blockframes/utils/apps';
 import { QueryFn } from '@angular/fire/firestore';
@@ -39,7 +38,6 @@ export class MovieService extends CollectionService<MovieState> {
     private authService: AuthService,
     private permissionsService: PermissionsService,
     private analyticservice: AnalyticsService,
-    private userService: UserService,
     private orgService: OrganizationService,
   ) {
     super();

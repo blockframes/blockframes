@@ -3,8 +3,7 @@ import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { RouterQuery } from "@datorama/akita-ng-router-store";
-import { getCurrentApp } from "@blockframes/utils/apps";
+import { AppGuard } from '@blockframes/utils/routes/app.guard';
 
 @Component({
   selector: 'bf-contact',
@@ -24,7 +23,7 @@ export class ContactComponent implements OnInit {
     private functions: AngularFireFunctions,
     private snackBar: MatSnackBar,
     private dynTitle: DynamicTitleService,
-    private routerQuery: RouterQuery
+    private appGuard: AppGuard,
   ) {
     this.dynTitle.setPageTitle('Contact us')
   }
@@ -48,7 +47,7 @@ export class ContactComponent implements OnInit {
       const callSendUserMail = this.functions.httpsCallable('sendUserContactMail');
       this.snackBar.open('Message sent.', 'close', { duration: 2000 });
       this.form.reset();
-      const app = getCurrentApp(this.routerQuery);
+      const app = this.appGuard.currentApp;
       return callSendUserMail({ subject: userSubject, message: userMessage, app }).toPromise();
     } else {
       this.snackBar.open('Subject and message are mandatory.', 'close', { duration: 2000 });
