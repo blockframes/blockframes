@@ -71,7 +71,7 @@ describe('Organiser invites other users to private screening', () => {
       cy.get('.jw-display-icon-display > .jw-icon').click();
       awaitElementDeletion('[aria-label=Loading]');
 
-      cy.get('video.jw-video').should('have.prop', 'paused', false).then(($video : any) => $video[0].pause())
+      cy.get('video.jw-video').should('have.prop', 'paused', false).then(($video: any) => $video[0].pause())
       cy.get('video.jw-video').should('have.prop', 'paused', true);
       cy.get('video').should(($video) => expect($video[0].duration).to.be.gt(0));
 
@@ -108,10 +108,10 @@ describe('Organiser invites other users to private screening', () => {
       cy.visit('/c/o/marketplace/home');
 
       // Click on left menu 
-      cy.get('festival-marketplace button[test-id=menu]', { timeout: 30000 }).first().click();
+      cy.get('festival-marketplace button[test-id=menu]').first().click();
 
       festival.selectSalesAgents();
-      
+
       festival.clickOnOrganization(org.denomination.public);
 
       festival.clickOnScreeningSchedule();
