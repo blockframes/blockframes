@@ -1,5 +1,6 @@
 import { Firestore } from '../types';
 import { runChunks } from '../firebase-utils';
+import { Movie } from '@blockframes/movie/+state';
 
 /**
  * Update movies content type
@@ -7,33 +8,21 @@ import { runChunks } from '../firebase-utils';
  * @returns
  */
 export async function upgrade(db: Firestore) {
-  const contentTypesToMovie = [
-    'animation', 
-    'feature_film',
-    'short',
-    'tv_film'
-  ]
-  const contentTypesToTV = [
-    'flow',
-    'series',
-    'performing_arts'
-  ]
+  const transform = {
+    'animation': () => 'movie',
+    'feature_film': () => 'movie',
+    'short': () => 'movie',
+    'tv_film': () => 'movie',
+    'flow': () => 'tv',
+    'series': () => 'tv',
+    'performing_arts': () => 'tv',
+    'documentary': (movie: Movie) => movie.runningTime.time < 60 ? 'tv' : 'movie'
+  };
   const movies = await db.collection('movies').get();
 
-  return runChunks( 
-    movies.docs,
-    async (doc) => {
-      const movie = doc.data();
-
-      if (movie.contentType === 'documentary') {
-        //According to Camille, documentary content type become tv or movie depending of their duration
-        movie.contentType = movie.runningTime.time < 60 ? 'tv' : 'movie';
-      } else if (contentTypesToMovie.includes(movie.contentType)) {
-        movie.contentType = 'movie';
-      } else if (contentTypesToTV.includes(movie.contentType)) {
-        movie.contentType = 'tv';
-      }
-      await doc.ref.set(movie);
-    }
-  ).catch(err => console.error(err));
+  return runChunks(movies.docs, async (doc) => {
+    const movie = doc.data();
+    movie.contentType = transform[movie.contentType](movie);
+    await doc.ref.set(movie);
+  }).catch(err => console.error(err));
 }

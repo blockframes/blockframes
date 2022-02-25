@@ -38,6 +38,16 @@ export class MovieFormMainComponent implements OnInit, OnDestroy {
     filmography: 'Filmography'
   }
 
+  public runningTime = {
+    tv: {
+      label: 'Average Episode Running Time',
+      error: 'Please fill in a valid runtime.'
+    },
+    movie: {
+      label: 'Running Time',
+      error: 'Please specify your project\'s runtime.'
+    }
+  }
 
   private sub: Subscription;
   constructor(private shell: MovieFormShellComponent, private route: ActivatedRoute, private dynTitle: DynamicTitleService) { }
