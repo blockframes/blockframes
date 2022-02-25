@@ -2,7 +2,7 @@ import { Firestore } from '../types';
 import { runChunks } from '../firebase-utils';
 
 /**
- * Update all events with the right accessibility property (instead of isPrivate property)
+ * Update movies content type
  * @param db
  * @returns
  */

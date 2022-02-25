@@ -1,5 +1,6 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { FormStaticValue } from '@blockframes/utils/form';
+import { contentType, ContentType } from '@blockframes/utils/static-model';
 
 @Component({
   selector: '[form] form-content-type',
@@ -9,4 +10,6 @@ import { FormStaticValue } from '@blockframes/utils/form';
 })
 export class FormContentTypeComponent {
   @Input() form: FormStaticValue<'contentType'>;
+  contentType = contentType;
+  contentTypes = Object.keys(contentType) as ContentType[];
 }
