@@ -108,7 +108,7 @@ describe('Organiser invites other users to private screening', () => {
       cy.visit('/c/o/marketplace/home');
 
       // Click on left menu 
-      cy.get('festival-marketplace button[test-id=menu]', { timeout: 3000 }).first().click();
+      cy.get('festival-marketplace button[test-id=menu]', { timeout: 30000 }).first().click();
 
       festival.selectSalesAgents();
       
