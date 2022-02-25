@@ -21,33 +21,33 @@ export class EventAccessGuard implements CanActivate {
     private snackBar: MatSnackBar
   ) { }
 
-  canActivate(route: ActivatedRouteSnapshot) {
+  canActivate(next: ActivatedRouteSnapshot) {
     return combineLatest([
       this.authService.user,
-      this.service.getValue(route.params.eventId as string),
+      this.service.getValue(next.params.eventId as string),
       this.authService.anonymousCredentials$
     ]).pipe(
-      switchMap(([user, event, credentials]) => this.guard(route, user, event, credentials))
+      switchMap(([user, event, credentials]) => this.guard(next, user, event, credentials))
     );
   }
 
-  private async guard(route: ActivatedRouteSnapshot, user: firebase.User, event: Event<unknown>, credentials: AnonymousCredentials) {
+  private async guard(next: ActivatedRouteSnapshot, user: firebase.User, event: Event<unknown>, credentials: AnonymousCredentials) {
     if (!user.isAnonymous) return true;
     switch (event.accessibility) {
       case 'protected': {
-        const credentialsUpdateNeeded = !credentials.invitationId || credentials.invitationId !== route.queryParams?.i;
-        if (route.queryParams?.i && credentialsUpdateNeeded) {
-          this.authService.updateAnonymousCredentials({ invitationId: route.queryParams?.i });
+        const credentialsUpdateNeeded = !credentials.invitationId || credentials.invitationId !== next.queryParams?.i;
+        if (next.queryParams?.i && credentialsUpdateNeeded) {
+          this.authService.updateAnonymousCredentials({ invitationId: next.queryParams?.i });
         }
 
-        const invitationId = route.queryParams?.i as string || credentials?.invitationId;
+        const invitationId = next.queryParams?.i as string || credentials?.invitationId;
         if (invitationId) {
           const invitation = await this.invitationService.getValue(invitationId).catch(() => createInvitation());
           const isEmailMatchingInvitation = invitation?.toUser?.email === credentials?.email;
           if (!isEmailMatchingInvitation) {
             this.snackBar.open('Provided email does not match invitation', 'close', { duration: 5000 });
             this.authService.updateAnonymousCredentials({ email: undefined });
-            this.router.navigate([`/event/${event.id}`], { queryParams: route.queryParams });
+            this.router.navigate([`/event/${event.id}`], { queryParams: next.queryParams });
             return false;
           }
 

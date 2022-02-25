@@ -1,11 +1,7 @@
 // Angular
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
-import { getAppName, getCurrentModule } from '@blockframes/utils/apps';
 import { AppGuard } from '@blockframes/utils/routes/app.guard';
-
-// Libs
-import { map, startWith } from 'rxjs/operators';
+import { ModuleGuard } from '@blockframes/utils/routes/module.guard';
 
 @Component({
   selector: 'bf-footer',
@@ -14,17 +10,13 @@ import { map, startWith } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FooterComponent {
-  private app = this.appGuard.currentApp;
-  public appName = getAppName(this.app).label;
-  private urlSnapshot = this.router.routerState.snapshot.url;
-  public section$ = this.router.events.pipe(
-    startWith(this.urlSnapshot),
-    map(event => event instanceof NavigationEnd ? event.url : this.urlSnapshot),
-    map(url => getCurrentModule(url))
-  );
-
+  public app = this.appGuard.currentApp;
+  public module = this.moduleGuard.currentModule || 'marketplace';
   public currentYear = new Date().getFullYear();
 
-  constructor(private appGuard: AppGuard, private router: Router) { }
+  constructor(
+    private appGuard: AppGuard, 
+    private moduleGuard: ModuleGuard
+  ) { }
 
 }

@@ -6,8 +6,8 @@ import { App } from '../apps';
 export class AppGuard implements CanActivate {
   currentApp: App;
 
-  canActivate(activatedRoute: ActivatedRouteSnapshot) {
-    this.currentApp = activatedRoute.data.app;
+  canActivate(next: ActivatedRouteSnapshot) {
+    this.currentApp = next.data.app;
 
     return true;
   }

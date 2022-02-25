@@ -77,17 +77,6 @@ export function getAllAppsExcept(applications: App[]) {
   return app.filter(a => !applications.includes(a));
 }
 
-export function getCurrentModule(path: string): Module | 'landing' {
-  const fragments = path.split('/');
-  if (fragments.includes('marketplace')) {
-    return 'marketplace'
-  } else if (fragments.includes('dashboard')) {
-    return 'dashboard';
-  } else {
-    return 'landing';
-  }
-}
-
 export function createOrgAppAccess(_appAccess: Partial<OrgAppAccess> = {}): OrgAppAccess {
   const appAccess = {} as OrgAppAccess;
   for (const a of app) {

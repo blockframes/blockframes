@@ -3,7 +3,7 @@ import { App } from '@blockframes/utils/apps';
 import { ThemeService } from '@blockframes/ui/theme/theme.service';
 import { AppGuard } from '@blockframes/utils/routes/app.guard';
 
-const appLogos: Record<App | 'crm', string> = {
+const appLogos: Record<App, string> = {
   catalog: 'archipel_content.svg',
   festival: 'archipel_market.svg',
   financiers: 'media_financiers.svg',

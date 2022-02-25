@@ -15,8 +15,8 @@ export class OrganizationCardComponent implements OnInit {
 
   @Input() org: Organization;
 
-  public orgMovieCount$: Observable<number>
-  public app = this.appGuard.currentApp
+  public orgMovieCount$: Observable<number>;
+  public app = this.appGuard.currentApp;
 
   constructor(private movieService: MovieService, private appGuard: AppGuard) { }
 

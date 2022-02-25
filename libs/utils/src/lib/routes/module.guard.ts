@@ -2,20 +2,31 @@ import { Injectable } from '@angular/core';
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { OrganizationService } from '@blockframes/organization/+state';
+import { AppGuard } from './app.guard';
+import { Module } from '../apps';
+
+function currentModule(path: string): Module {
+  const fragments = path.split('/');
+  return fragments.includes('dashboard') ? 'dashboard' : 'marketplace';
+}
 
 @Injectable({ providedIn: 'root' })
 export class ModuleGuard implements CanActivate {
+
+  currentModule: Module;
+
   constructor(
     private router: Router,
     private orgService: OrganizationService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private appGuard: AppGuard
   ) { }
 
-  canActivate(activatedRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    const app = activatedRoute.data.app;
-    const isMarketplace = state.url.split('/').includes('marketplace');
+  canActivate(_: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+    const app = this.appGuard.currentApp;
+    this.currentModule = currentModule(state.url);
     const org = this.orgService.org;
-    if (isMarketplace) {
+    if (this.currentModule === 'marketplace') {
       if (org.appAccess[app]?.marketplace) {
         return true;
       } else if (org.appAccess[app]?.dashboard) {

@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import { AuthService } from '../+state';
 import { map, } from 'rxjs/operators';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
-import { getOrgModuleAccess, App } from '@blockframes/utils/apps';
+import { getOrgModuleAccess } from '@blockframes/utils/apps';
 import { combineLatest } from 'rxjs';
-import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
+import { CanActivate, Router } from '@angular/router';
+import { AppGuard } from '@blockframes/utils/routes/app.guard';
 
 @Injectable({ providedIn: 'root' })
 export class NoAuthGuard implements CanActivate {
@@ -12,9 +13,10 @@ export class NoAuthGuard implements CanActivate {
     private authService: AuthService,
     private orgService: OrganizationService,
     private router: Router,
+    private appGuard: AppGuard,
   ) { }
 
-  canActivate(activatedRoute: ActivatedRouteSnapshot) {
+  canActivate() {
     return combineLatest([
       this.authService.auth$,
       this.orgService.org$
@@ -24,7 +26,7 @@ export class NoAuthGuard implements CanActivate {
 
         if (!org) return this.router.createUrlTree(['/auth/identity']);
 
-        const app = activatedRoute.data.app as App | 'crm';
+        const app = this.appGuard.currentApp;
         if (app === 'crm') return this.router.createUrlTree(['/c/o/dashboard/crm']);
 
         const [moduleAccess = 'dashboard'] = getOrgModuleAccess(org, app);

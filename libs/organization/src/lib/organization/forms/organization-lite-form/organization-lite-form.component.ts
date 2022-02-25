@@ -11,7 +11,7 @@ import { OrganizationLiteForm } from '../organization-lite.form';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationLiteFormComponent {
-  public app = this.appGuard.currentApp
+  public app = this.appGuard.currentApp;
   public roles = organizationRoles;
   public activities = orgActivity;
 
