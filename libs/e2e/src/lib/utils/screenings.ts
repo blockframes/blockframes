@@ -15,7 +15,8 @@ export const EVENTS: Partial<Screening>[] = [
     org : {
       id: 'sLchj1Ib4Cxhwr0ZBW4m',
     },
-    invitees: [{
+    invitees: [
+      {
         uid: 'MDnN2GlVUeadIVJbzTToQQNAMWZ2'
       }, {
         uid: 'mVUZ097xoAeubsPiQlqrzgUF8y83'
@@ -37,10 +38,9 @@ export const EVENTS: Partial<Screening>[] = [
     org : {
       id: 'sLchj1Ib4Cxhwr0ZBW4m',
     },
-    invitees: [{
+    invitees: [
+      {
         uid: 'MDnN2GlVUeadIVJbzTToQQNAMWZ2'
-      }, {
-        
       }
     ],
     private: true
