@@ -36,7 +36,7 @@ export class MovieFormMainComponent implements OnInit, OnDestroy {
     category: 'Category',
     description: 'Description',
     filmography: 'Filmography'
-  }
+  };
 
   public runningTime = {
     tv: {
@@ -47,7 +47,7 @@ export class MovieFormMainComponent implements OnInit, OnDestroy {
       label: 'Running Time',
       error: 'Please specify your project\'s runtime.'
     }
-  }
+  };
 
   private sub: Subscription;
   constructor(private shell: MovieFormShellComponent, private route: ActivatedRoute, private dynTitle: DynamicTitleService) { }
