@@ -13,12 +13,13 @@ import { createDocumentMeta, formatDocumentMetaFromFirestore } from '@blockframe
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { combineLatest, Observable, of } from 'rxjs';
 import { ActiveState, EntityState } from '@datorama/akita';
+import { CheckDocExists } from '@blockframes/import/utils';
 
 interface OrganizationState extends EntityState<Organization>, ActiveState<string> { }
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'orgs' })
-export class OrganizationService extends CollectionService<OrganizationState> {
+export class OrganizationService extends CollectionService<OrganizationState> implements CheckDocExists {
   readonly useMemorization = true;
 
   // Organization of the current logged in user or undefined if user have no org
@@ -191,5 +192,11 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     return this.currentOrg$.pipe(
       map(org => org.wishlist.includes(movieId))
     );
+  }
+
+
+  async docExists(docId: string) {
+    const docRef = await this.db.collection("orgs").ref.where("id", "==", docId).get();
+    return !docRef.empty;
   }
 }

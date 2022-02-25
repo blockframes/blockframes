@@ -20,6 +20,7 @@ import { joinWith } from '@blockframes/utils/operators';
 import { AnalyticsService } from '@blockframes/utils/analytics/analytics.service';
 import { AuthService } from '@blockframes/auth/+state';
 import { ActiveState, EntityState } from '@datorama/akita';
+import { CheckDocExists } from '@blockframes/import/utils';
 
 export const fromOrg = (orgId: string): QueryFn => ref => ref.where('orgIds', 'array-contains', orgId);
 export const fromOrgAndAccepted = (orgId: string, appli: App): QueryFn => ref => ref.where(`app.${appli}.status`, '==', 'accepted').where('orgIds', 'array-contains', orgId);
@@ -28,11 +29,11 @@ export const fromInternalRef = (internalRef: string): QueryFn => ref => ref.wher
 
 type MovieWithAnalytics = Movie & { analytics: MovieAnalytics };
 
-interface MovieState extends EntityState<Movie, string>, ActiveState<string> {}
+interface MovieState extends EntityState<Movie, string>, ActiveState<string> { }
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies' })
-export class MovieService extends CollectionService<MovieState> {
+export class MovieService extends CollectionService<MovieState> implements CheckDocExists {
   readonly useMemorization = true;
 
   constructor(
@@ -42,7 +43,7 @@ export class MovieService extends CollectionService<MovieState> {
     private userService: UserService,
     private orgService: OrganizationService,
   ) {
-    super();
+    super(); this.db
   }
 
   formatFromFirestore(movie) {
@@ -122,6 +123,11 @@ export class MovieService extends CollectionService<MovieState> {
       map(movies => movies.map(addViews)),
       map(movies => movies.sort((a, b) => a.title.international < b.title.international ? -1 : 1))
     );
+  }
+
+  async docExists(docId: string) {
+    const docRef = await this.db.collection("movies").ref.where("id", "==", docId).get();
+    return !docRef.empty;
   }
 }
 

@@ -245,19 +245,22 @@ export function getStaticList(scope: Scope, value: string, separator: string, na
 export function getGroupedList<GS extends GroupScope>(value: string, groupScope: GS, separator: string) {
   const elements = split(value, separator);
   const groupLabels = staticGroups[groupScope].map(group => group.label);
-  const allElements = elements.map(element => {
+  let allElements = elements.map(element => {
     if (groupLabels.includes(element)) {
       const groups = staticGroups[groupScope] as StaticGroup<GS>[]
       return groups.find(group => group.label === element).items;
     }
     return [element];
-  }).flat().join(separator);
+  }).flat()
+
+  allElements = Array.from(new Set(allElements));
+  const elementList = allElements.join(separator);
 
   const values = {
     territories: (territories, separator) => getStaticList('territories', territories, separator, 'Territories', true, 'world'),
-    medias: (medias, separator) => getStaticList('medias', medias, separator, 'Medias'),
+    medias: (medias, separator) => getStaticList('medias', medias, separator, 'Medias', true, 'all'),
   }
-  return values[groupScope](allElements, separator);
+  return values[groupScope](elementList, separator);
 }
 
 export function split(cell: string, separator: string) {

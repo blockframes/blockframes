@@ -15,6 +15,7 @@ import {
   ContractsImportState,
   getUser,
   sheetHeaderLine,
+  verifyIdExists,
 } from '@blockframes/import/utils';
 import { centralOrgId } from '@env';
 import { MovieService } from '@blockframes/movie/+state';
@@ -133,6 +134,7 @@ export async function formatContract(
     /* a */'contract.titleId': async (value: string) => {
       if (!value) return mandatoryError('Title');
       const titleId = await getTitleId(value, titleService, titleNameCache, userOrgId, blockframesAdmin);
+      if (await verifyIdExists(value, titleService)) return value;
       if (!titleId) return unknownEntityError('Title');
       return titleId;
     },
@@ -154,7 +156,7 @@ export async function formatContract(
     },
     /* c */'contract.sellerId': async (value: string) => {
       if (!value) return mandatoryError('Licensor');
-      if (value === 'Archipel Content') {
+      if (value === 'Archipel Content' || value === centralOrgId.catalog) {
         if (!blockframesAdmin) return {
           value: undefined,
           error: {
@@ -166,15 +168,17 @@ export async function formatContract(
         };
         return centralOrgId.catalog;
       } else {
-        //@todo: implement check to verify the movie who's mandate it is, belongs to the licensor org.
-        const sellerId = await getOrgId(value, orgService, orgNameCache);
-        if (!sellerId) return unknownEntityError('Licensor Organization');
+        let sellerId = await getOrgId(value, orgService, orgNameCache);
+        if (!sellerId) {
+          if (await verifyIdExists(value, orgService)) sellerId = value;
+          else return unknownEntityError('Licensor Organization');
+        }
         if (!blockframesAdmin && sellerId !== userOrgId) return {
           value: undefined,
           error: {
             type: 'error',
             name: 'Forbidden Licensor',
-            reason: 'You should be the seller of this contract. The Licensor name should be your own organization name.',
+            reason: 'You should be the seller of this contract. The Licensor name should be your organization name.',
             hint: 'Please edit the corresponding sheet field'
           }
         };
@@ -182,9 +186,9 @@ export async function formatContract(
       }
     },
     /* d */'contract.buyerId': async (value: string, data: FieldsConfig) => {
-      if (!value) return mandatoryError('Licensee');
       if (data.contract.type === 'mandate') {
-        if (value !== 'Archipel Content') return {
+        if (!value) return mandatoryError('Licensee');
+        if (value !== 'Archipel Content' && value !== centralOrgId.catalog) return {
           value: undefined,
           error: {
             type: 'error',
@@ -195,10 +199,12 @@ export async function formatContract(
         };
         return centralOrgId.catalog;
       } else {
+        if (!value) return '';
         const isInternal = data.contract.sellerId === centralOrgId.catalog;
-        const sellerId = await getOrgId(value, orgService, orgNameCache);
-        if (isInternal && !sellerId) return unknownEntityError('Licensee Organization');
-        return sellerId;
+        let buyerId = await getOrgId(value, orgService, orgNameCache);
+        if (!buyerId && await verifyIdExists(value, titleService)) buyerId = value;
+        if (isInternal && !buyerId) return unknownEntityError('Licensee Organization');
+        return buyerId;
       }
     },
     /* e */'term[].territories_included': (value: string) => getGroupedList(value, 'territories', separator) as Territory[],
@@ -226,19 +232,18 @@ export async function formatContract(
       return lower === 'yes';
     },
     /* l */'contract.status': (value: string = 'pending') => value.toLowerCase(),
-    /* m */'income.price': (value: string) => +value,
-    /* n */'term[].dubbed': (value: string) => getStaticList('languages', value, separator, 'Dubbed', false) as Language[],
-    /* o */'term[].subtitle': (value: string) => getStaticList('languages', value, separator, 'Subtitle', false) as Language[],
-    /* p */'term[].caption': (value: string) => getStaticList('languages', value, separator, 'CC', false) as Language[],
+    /* m */'term[].dubbed': (value: string) => getStaticList('languages', value, separator, 'Dubbed', false) as Language[],
+    /* n */'term[].subtitle': (value: string) => getStaticList('languages', value, separator, 'Subtitle', false) as Language[],
+    /* o */'term[].caption': (value: string) => getStaticList('languages', value, separator, 'CC', false) as Language[],
 
-    /* q */'contract.id': async (value: string) => {
+    /* p */'contract.id': async (value: string) => {
       if (value && !blockframesAdmin) return adminOnlyWarning(firestore.createId(), 'Contract ID');
       if (!value) return firestore.createId();
       const exist = await getContract(value, contractService, contractCache);
       if (exist) return alreadyExistError('Contract ID');
       return value;
     },
-    /* r */'parentTerm': async (value: string, data: FieldsConfig) => {
+    /* q */'parentTerm': async (value: string, data: FieldsConfig) => {
       if (value && !blockframesAdmin) return adminOnlyWarning('', 'Mandate ID/Row');
       if (value && data.contract.type === 'mandate') return {
         value: '',
@@ -272,19 +277,7 @@ export async function formatContract(
         return value;
       } else return Number(value);
     },
-    /* s */'_titleId': (value: string) => {
-      if (value && !blockframesAdmin) return adminOnlyWarning('', 'Import ID');
-      if (value) return {
-        value: '',
-        error: {
-          type: 'warning',
-          field: '_titleId',
-          name: 'Deprecated Import ID',
-          reason: 'This field is not used anymore and will be removed, the value will be omitted.',
-        }
-      };
-    },
-    /* t */'contract.stakeholders': async (value: string, data: FieldsConfig) => {
+    /* r */'contract.stakeholders': async (value: string, data: FieldsConfig) => {
       const stakeholders = value.split(separator).filter(v => !!v).map(v => v.trim());
       const exists = await Promise.all(stakeholders.map(id => getUser({ id }, userService, userCache)));
       const unknownStakeholder = exists.some(e => !e);
@@ -311,14 +304,14 @@ export async function formatContract(
       ? createSale({ ...data.contract as Sale })
       : createMandate({ ...data.contract as Mandate });
 
-    const movieBelongsToLicensor = await verifyMovieBelongsToLicensor(contract, titleService)
+    const movieBelongsToLicensor = await verifyMovieBelongsToLicensor(contract, titleService);
     if (!movieBelongsToLicensor)
       errors.push({
         type: 'error',
         name: 'Wrong Licensor.',
         reason: `The movie does not belong to the licensor.`,
         hint: `Please ensure the movie is a movie owned by the licensor.`
-      })
+      });
 
     const terms = data.term.map(term => toTerm(term, contract.id, firestore));
 

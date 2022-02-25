@@ -21,7 +21,7 @@ import { Term } from '@blockframes/contract/term/+state/term.firestore';
 import { Bucket } from '@blockframes/contract/bucket/+state/bucket.firestore';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 
-// TODO(#7820): remove with rxjs 7 
+// TODO(#7820): remove with rxjs 7
 type AvailabilitiesInputs = [MapAvailsFilter, Mandate<Date>[], Term<Date>[], Sale<Date>[], Term<Date>[], Bucket<Date>, Movie];
 
 @Component({
