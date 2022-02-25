@@ -1,20 +1,19 @@
-
 import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
-
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
 import { combineLatest, Subscription } from 'rxjs';
 import { map, startWith, throttleTime } from 'rxjs/operators';
-
-import { MovieQuery } from '@blockframes/movie/+state';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
-import { OrganizationService } from '@blockframes/organization/+state';
 import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
 import { CalendarAvailsFilter, durationAvailabilities, DurationMarker, filterContractsByTitle } from '@blockframes/contract/avails/avails';
-
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
+import { Mandate, Sale } from '@blockframes/contract/contract/+state/contract.firestore';
+import { Term } from '@blockframes/contract/term/+state/term.firestore';
+import { Bucket } from '@blockframes/contract/bucket/+state/bucket.firestore';
+import { Movie } from '@blockframes/movie/+state';
 
+// TODO(#7820): remove with rxjs 7 
+type AvailabilitiesInputs = [CalendarAvailsFilter, Mandate<Date>[], Term<Date>[], Sale<Date>[], Term<Date>[], Bucket<Date>, Movie];
 
 @Component({
   selector: 'catalog-movie-avails-calendar',
@@ -24,11 +23,9 @@ import { MarketplaceMovieAvailsComponent } from '../avails.component';
 })
 export class MarketplaceMovieAvailsCalendarComponent implements AfterViewInit, OnDestroy {
 
-  public titleId = this.shell.movie.id;
-
   public availsForm = this.shell.avails.calendarForm;
 
-  public org$ = this.orgService.valueChanges(this.movieQuery.getActive().orgIds[0]);
+  public org$ = this.shell.movieOrg$;
 
   public status$ = this.availsForm.statusChanges.pipe(startWith(this.availsForm.status));
 
@@ -41,24 +38,23 @@ export class MarketplaceMovieAvailsCalendarComponent implements AfterViewInit, O
   private salesTerms$ = this.shell.salesTerms$;
 
   public availabilities$ = combineLatest([
-    this.availsForm.valueChanges,
+    this.availsForm.value$,
     this.mandates$,
     this.mandateTerms$,
     this.sales$,
     this.salesTerms$,
     this.shell.bucketForm.value$,
+    this.shell.movie$
   ]).pipe(
-    map(([avails, mandates, mandateTerms, sales, salesTerms, bucket]) => {
+    map(([avails, mandates, mandateTerms, sales, salesTerms, bucket, movie]: AvailabilitiesInputs) => {
       if (this.availsForm.invalid) return { available: [], sold: [], inBucket: [], selected: undefined };
-      const res = filterContractsByTitle(this.titleId, mandates, mandateTerms, sales, salesTerms, bucket)
+      const res = filterContractsByTitle(movie.id, mandates, mandateTerms, sales, salesTerms, bucket)
       return durationAvailabilities(avails, res.mandates, res.sales, res.bucketContracts);
     }),
   );
 
   constructor(
     private snackbar: MatSnackBar,
-    private movieQuery: MovieQuery,
-    private orgService: OrganizationService,
     private shell: MarketplaceMovieAvailsComponent,
     private router: Router,
     private route: ActivatedRoute

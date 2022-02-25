@@ -3,7 +3,6 @@ import { Routes } from '@angular/router';
 
 // Blockframes
 import { TunnelGuard, TunnelStep } from '@blockframes/ui/tunnel';
-import { productionStatus } from '@blockframes/utils/static-model/static-model'
 import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
 
 const appSteps: TunnelStep[] = [{
@@ -31,7 +30,7 @@ export const tunnelRoutes: Routes = [
       },
       {
         path: 'title-status',
-        data: { disabled: Object.keys(productionStatus).filter(status => status !== 'released'), animation: 0 },
+        data: { animation: 0 },
         loadChildren: () => import('@blockframes/movie/form/title-status/title-status.module').then(m => m.TitleStatusModule)
       },
       {

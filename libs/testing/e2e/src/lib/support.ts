@@ -8,3 +8,11 @@ export function awaitElementDeletion(selector: string, timeout?: number) {
     cy.get(selector).should('not.exist');
   }
 }
+
+export function acceptCookies() {
+  cy.get('body').then(($body) => {
+    if ($body.children('cookie-banner')) {
+      cy.contains('Accept cookies').click();
+    }
+  });
+}

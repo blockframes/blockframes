@@ -6,7 +6,6 @@ import { ToLabelModule } from '@blockframes/utils/pipes';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [MarketplaceMovieFinanceComponent],
@@ -14,7 +13,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     CommonModule,
     ToLabelModule,
     // Material
-    MatProgressSpinnerModule,
     MatCardModule,
     RouterModule.forChild([{ path: '', component: MarketplaceMovieFinanceComponent }])
   ]

@@ -1,14 +1,14 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { ConsentsService } from '@blockframes/consents/+state/consents.service';
 import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
 import { findInvalidControls } from '@blockframes/ui/tunnel/layout/layout.component';
-import { map } from 'rxjs/operators';
+import { map, pluck, switchMap } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
+import { MovieService } from '@blockframes/movie/+state';
 
 @Component({
   selector: 'financiers-summary-tunnel',
@@ -25,19 +25,22 @@ export class TunnelSummaryComponent implements OnInit {
   private missingFields: string[] = [];
   // Fields in error
   private invalidFields: string[] = [];
-  isPublished$ = this.query.selectActive(movie => movie.app.financiers.status).pipe(
+
+  isPublished$ = this.route.params.pipe(
+    pluck('movieId'),
+    switchMap((movieId: string) => this.movieService.valueChanges(movieId)),
+    map(movie => movie.app.catalog.status),
     map(status => status === 'accepted' || status === 'submitted')
-  )
+  );
 
   constructor(
     private shell: MovieFormShellComponent,
     private router: Router,
     private route: ActivatedRoute,
-    private query: MovieQuery,
+    private movieService: MovieService,
     private snackBar: MatSnackBar,
     private dynTitle: DynamicTitleService,
     private consentsService: ConsentsService,
-    private movieQuery: MovieQuery,
     private dialog: MatDialog
   ) {
     this.dynTitle.setPageTitle('Summary and Submit a new title')
@@ -51,7 +54,6 @@ export class TunnelSummaryComponent implements OnInit {
   }
 
   public async submit() {
-    const movieId = this.movieQuery.getActiveId();
     this.dialog.open(ConfirmInputComponent, {
       data: {
         title: 'Confidentiality Reminder',
@@ -62,6 +64,7 @@ export class TunnelSummaryComponent implements OnInit {
         onConfirm: async () => {
           try {
             await this.shell.layout.update({ publishing: true });
+            const movieId = this.route.snapshot.paramMap.get('movieId');
             await this.consentsService.createConsent('share', movieId);
             const text = `${this.form.get('title').get('international').value} was successfully submitted.`;
             const ref = this.snackBar.open(text, '', { duration: 1000 });

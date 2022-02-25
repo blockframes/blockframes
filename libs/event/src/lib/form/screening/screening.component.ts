@@ -56,8 +56,9 @@ export class ScreeningComponent implements OnInit {
     if(!titleId) {
       this.titleMissing = true;
     } else {
-      this.titleMissing = false;
       const title = await this.movieService.getValue(titleId);
+      // Titles in draft are not allowed for screenings
+      this.titleMissing = title.app.festival.status === 'draft';
       this.screenerMissing = !title.promotional.videos?.screener?.jwPlayerId;
     }
     this.cdr.markForCheck();

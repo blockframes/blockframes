@@ -1,8 +1,9 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { MovieAnalytics } from '@blockframes/movie/+state/movie.firestore';
-import { MovieQuery } from '@blockframes/movie/+state/movie.query';
-import { Observable } from 'rxjs';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { AnalyticsService } from '@blockframes/utils/analytics/analytics.service';
+import { pluck, switchMap } from 'rxjs/operators';
+import { ActivatedRoute } from '@angular/router';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { DashboardTitleShellComponent } from '@blockframes/movie/dashboard/shell/shell.component';
 
 @Component({
   selector: 'catalog-title-activity',
@@ -11,15 +12,20 @@ import { AnalyticsService } from '@blockframes/utils/analytics/analytics.service
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TitleActivityComponent implements OnInit {
-  public movieAnalytics$: Observable<MovieAnalytics[]>;
+  public movieAnalytics$ = this.route.params.pipe(
+    pluck('movieId'),
+    switchMap((movieId: string) => this.analyticsService.valueChanges([movieId]))
+  );
 
   constructor(
+    private route: ActivatedRoute,
     private analyticsService: AnalyticsService,
-    private movieQuery: MovieQuery,
+    private dynTitle: DynamicTitleService,
+    private shell: DashboardTitleShellComponent
   ) { }
 
   ngOnInit() {
-    const movieId = this.movieQuery.getActiveId();
-    this.movieAnalytics$ = this.analyticsService.valueChanges([movieId])
+    const titleName = this.shell.movie?.title?.international || 'No title';
+    this.dynTitle.setPageTitle(titleName, 'Marketplace Activity');
   }
 }

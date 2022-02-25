@@ -1,8 +1,9 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { Router } from '@angular/router';
-import { MovieQuery } from '@blockframes/movie/+state';
-import { App } from '@blockframes/utils/apps';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MovieService } from '@blockframes/movie/+state';
+import { App, getCurrentApp } from '@blockframes/utils/apps';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { pluck, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'movie-form-end',
@@ -11,15 +12,21 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MovieFormEndComponent {
-  app: App = this.route.getData('app');
+  app: App = getCurrentApp(this.routerQuery);
+
+  public movie$ = this.route.params.pipe(
+    pluck('movieId'),
+    switchMap((movieId: string) => this.movieService.valueChanges(movieId))
+  );
+
   constructor(
     private router: Router,
-    private movieQuery: MovieQuery,
-    private route: RouterQuery
+    private movieService: MovieService,
+    private routerQuery: RouterQuery,
+    private route: ActivatedRoute
   ) { }
 
-  navigate() {
-    const movieId = this.movieQuery.getActiveId();
-    this.router.navigate(['/c/o/dashboard/title/', movieId, 'main'])
+  navigate(movieId: string) {
+    this.router.navigate(['/c/o/dashboard/title/', movieId, 'main']);
   }
 }

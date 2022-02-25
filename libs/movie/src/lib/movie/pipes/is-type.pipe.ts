@@ -28,12 +28,12 @@ export class IsTypePipeModule { }
 const typeDictionary = {
   series: {
     runningTime: 'Average Episode Running Time',
-    runningTimeError: 'Total number of episodes in a season.',
+    runningTimeError: 'Please fill in a valid runtime.',
     runningTimeHint: 'Please specify the average duration of an episode.'
   },
   default: {
     runningTime: 'Running Time',
-    runningTimeError: "Please specify your project's runtime.",
+    runningTimeError: 'Please specify your project\'s runtime.',
     runningTimeHint: 'In minutes.'
   }
 }
