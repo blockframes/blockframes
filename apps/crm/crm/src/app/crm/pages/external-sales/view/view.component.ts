@@ -1,10 +1,9 @@
-import { Component, ChangeDetectionStrategy, Pipe, PipeTransform } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { FormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { appName, getCurrentApp } from '@blockframes/utils/apps';
+import { appName } from '@blockframes/utils/apps';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { Sale, ContractService, Holdback } from '@blockframes/contract/contract/+state';
 import { MovieService } from '@blockframes/movie/+state';
@@ -15,8 +14,7 @@ import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { IncomeService } from '@blockframes/contract/income/+state';
 import { Term } from '@blockframes/contract/term/+state';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
-import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
-import { isInitial } from '@blockframes/contract/negotiation/utils';
+import { AppGuard } from '@blockframes/utils/routes/app.guard';
 
 @Component({
   selector: 'contract-view',
@@ -25,7 +23,7 @@ import { isInitial } from '@blockframes/contract/negotiation/utils';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContractViewComponent {
-  public app = getCurrentApp(this.routerQuery);
+  public app = this.appGuard.currentApp;
   public appName = appName[this.app];
   public orgId = this.orgService.org.id;
 
@@ -45,10 +43,9 @@ export class ContractViewComponent {
     private snackbar: MatSnackBar,
     private incomeService: IncomeService,
     private contractService: ContractService,
-    private routerQuery: RouterQuery,
     private orgService: OrganizationService,
     private titleService: MovieService,
-
+    private appGuard: AppGuard,
   ) { }
 
   async update(contractId: string) {

@@ -8,8 +8,7 @@ import { Subscription } from 'rxjs';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { MovieService } from '@blockframes/movie/+state';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { getCurrentApp } from '@blockframes/utils/apps';
+import { AppGuard } from '@blockframes/utils/routes/app.guard';
 
 @Component({
   selector: 'marketplace-wishlist',
@@ -38,19 +37,19 @@ export class WishlistComponent implements OnInit, OnDestroy {
     private router: Router,
     private service: OrganizationService,
     private snackbar: MatSnackBar,
-    private routerQuery: RouterQuery,
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef,
     private dynTitle: DynamicTitleService,
     private orgService: OrganizationService,
-    private movieService: MovieService
+    private movieService: MovieService,
+    private appGuard: AppGuard,
   ) { }
 
   ngOnInit() {
     this.sub = this.orgService.currentOrg$.pipe(
       switchMap(org => this.movieService.valueChanges(org?.wishlist || []))
     ).subscribe(allMovies => {
-      const movies = allMovies.filter(movie => !!movie && movie.app[getCurrentApp(this.routerQuery)].access);
+      const movies = allMovies.filter(movie => !!movie && movie.app[this.appGuard.currentApp].access);
       this.hasWishlist = !!movies.length;
       this.hasWishlist ?
         this.dynTitle.setPageTitle('Wishlist') :

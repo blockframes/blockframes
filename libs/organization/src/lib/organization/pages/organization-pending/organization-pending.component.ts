@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, Component, Optional } from '@angular/core';
 import { InvitationService } from '@blockframes/invitation/+state/invitation.service';
 import { Invitation } from '@blockframes/invitation/+state/invitation.model';
-import { getCurrentApp, appName } from '@blockframes/utils/apps';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { appName } from '@blockframes/utils/apps';
 import { Organization, OrganizationService } from '@blockframes/organization/+state';
 import { filter, switchMap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { Intercom } from 'ng-intercom';
 import { User } from '@blockframes/user/+state';
 import { AuthService } from '@blockframes/auth/+state';
+import { AppGuard } from '@blockframes/utils/routes/app.guard';
 
 const queryFn = (uid: string) => ref => ref.where('mode', '==', 'request')
   .where('type', '==', 'joinOrganization')
@@ -23,7 +23,7 @@ const queryFn = (uid: string) => ref => ref.where('mode', '==', 'request')
 export class OrganizationPendingComponent {
   public invitations: Invitation[];
   public org$: Observable<Organization>;
-  public app = getCurrentApp(this.routerQuery);
+  public app = this.appGuard.currentApp;
   public appName = appName[this.app];
   public orgActive$ = this.authService.profile$.pipe(
     filter(user => !!user),
@@ -36,7 +36,7 @@ export class OrganizationPendingComponent {
     private service: OrganizationService,
     private invitationService: InvitationService,
     private authService: AuthService,
-    private routerQuery: RouterQuery,
+    private appGuard: AppGuard,
     @Optional() private intercom: Intercom
   ) { }
 

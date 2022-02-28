@@ -3,9 +3,9 @@ import { OrganizationService } from '../+state';
 import { CanActivate, Router } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
-import { getOrgModuleAccess, getCurrentApp } from '@blockframes/utils/apps';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { getOrgModuleAccess } from '@blockframes/utils/apps';
 import { AuthService } from '@blockframes/auth/+state';
+import { AppGuard } from '@blockframes/utils/routes/app.guard';
 
 @Injectable({ providedIn: 'root' })
 export class PendingOrganizationGuard implements CanActivate {
@@ -13,7 +13,7 @@ export class PendingOrganizationGuard implements CanActivate {
     private service: OrganizationService,
     private router: Router,
     private authService: AuthService,
-    private routerQuery: RouterQuery,
+    private appGuard: AppGuard,
   ) { }
 
   canActivate() {
@@ -27,7 +27,7 @@ export class PendingOrganizationGuard implements CanActivate {
         if (!org) return this.router.createUrlTree(['/auth/identity']);
 
         if (org.status === 'accepted') {
-          const app = getCurrentApp(this.routerQuery);
+          const app = this.appGuard.currentApp;
           const [moduleAccess = 'dashboard'] = getOrgModuleAccess(org, app);
           return this.router.createUrlTree([`/c/o/${moduleAccess}/home`]);
         }

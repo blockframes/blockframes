@@ -117,15 +117,6 @@ export function getKeyIfExists(base: Scope, code: string){
   return candidate ? candidate.shift() : undefined;
 }
 
-/**
- * @description put the current route in this function
- * and it returns you the current location of your route
- * @param route
- */
-export function getAppLocation(route: string) {
-  return route.includes('marketplace') ? 'marketplace' : 'dashboard';
-}
-
 /** Basic function to create a delay in a function when called
  * @param ms milleseconds to wait for
  */

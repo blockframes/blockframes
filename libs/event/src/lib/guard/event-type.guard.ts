@@ -12,8 +12,8 @@ export class EventTypeGuard implements CanActivate {
     private router: Router,
   ) { }
 
-  canActivate(route: ActivatedRouteSnapshot): Observable<boolean | UrlTree> {
-    const eventId: string = route.params['eventId'];
+  canActivate(next: ActivatedRouteSnapshot): Observable<boolean | UrlTree> {
+    const eventId: string = next.params['eventId'];
     if (eventId === 'new') return of(true);
     return this.service.valueChanges(eventId).pipe(
       map(event => {

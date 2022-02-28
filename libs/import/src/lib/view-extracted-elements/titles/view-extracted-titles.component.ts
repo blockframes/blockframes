@@ -4,17 +4,13 @@ import { Component, ChangeDetectionStrategy, OnInit, Input } from '@angular/core
 import { MatTableDataSource } from '@angular/material/table';
 
 import { BehaviorSubject } from 'rxjs';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
-
 import { UserService } from '@blockframes/user/+state';
-import { getCurrentApp } from '@blockframes/utils/apps';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
-
 import { formatTitle } from './utils';
 import { MovieImportState } from '../../utils';
 import { AuthService } from '@blockframes/auth/+state';
 import { take } from 'rxjs/operators';
-
+import { AppGuard } from '@blockframes/utils/routes/app.guard';
 
 @Component({
   selector: 'import-view-extracted-titles[sheetTab]',
@@ -31,13 +27,13 @@ export class ViewExtractedTitlesComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private routerQuery: RouterQuery,
     private userService: UserService,
+    private appGuard: AppGuard,
   ) { }
 
   async ngOnInit() {
     const isBlockframesAdmin = await this.authService.isBlockframesAdmin$.pipe(take(1)).toPromise();
-    const app = getCurrentApp(this.routerQuery);
+    const app = this.appGuard.currentApp;
     const titles = await formatTitle(
       this.sheetTab,
       this.userService,

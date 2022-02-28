@@ -2,10 +2,10 @@
 import { NotificationService } from './+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Router } from '@angular/router';
-import { getCurrentApp, getOrgModuleAccess } from '@blockframes/utils/apps';
+import { getOrgModuleAccess } from '@blockframes/utils/apps';
 import { take } from 'rxjs/operators';
+import { AppGuard } from '@blockframes/utils/routes/app.guard';
 
 @Component({
   selector: 'notification-view',
@@ -21,7 +21,7 @@ export class NotificationComponent implements OnInit {
     private service: NotificationService,
     private dynTitle: DynamicTitleService,
     private router: Router,
-    private routerQuery: RouterQuery,
+    private appGuard: AppGuard,
     private orgService: OrganizationService,
   ) { }
 
@@ -37,7 +37,7 @@ export class NotificationComponent implements OnInit {
   }
 
   leadToHomepage() {
-    const app = getCurrentApp(this.routerQuery);
+    const app = this.appGuard.currentApp;
     const org = this.orgService.org;
     const [moduleAccess = 'dashboard'] = getOrgModuleAccess(org, app);
     return this.router.navigate([`/c/o/${moduleAccess}/home`]);

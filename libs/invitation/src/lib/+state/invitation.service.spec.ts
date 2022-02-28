@@ -8,13 +8,14 @@ import { loadFirestoreRules, clearFirestoreData } from '@firebase/rules-unit-tes
 import { readFileSync } from 'fs';
 import { createInvitation, InvitationDocument } from './invitation.firestore';
 import firebase from 'firebase/app';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { createUser } from '@blockframes/user/+state/user.model';
+import { ActivatedRoute } from '@angular/router';
 
 class InjectedAuthService {
   uid = 'userId';
-  
+
   profile = {
     orgId: 'orgId',
   }
@@ -55,6 +56,7 @@ describe('Invitations Test Suite', () => {
         InvitationService,
         { provide: AuthService, useClass: InjectedAuthService },
         { provide: UserService, useClass: DummyService },
+        { provide: ActivatedRoute, useValue: { params: of({}) } },
         { provide: SETTINGS, useValue: { host: 'localhost:8080', ssl: false } }
       ],
     });
