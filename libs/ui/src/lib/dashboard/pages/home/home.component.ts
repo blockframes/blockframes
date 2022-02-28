@@ -52,13 +52,13 @@ export class HomeComponent implements OnInit {
       map(titles => titles.filter(title => title.app[this.app].access))
     );
 
-      this.titleAnalytics$ = this.orgService.currentOrg$.pipe(
-        switchMap(({ id }) => this.analytics.valueChanges(ref => ref
-          .where('type', '==', 'title')
-          .where('meta.ownerOrgIds', 'array-contains', id)
-        )),
-        map(toMovieAnalytics)
-      );
+    this.titleAnalytics$ = this.orgService.currentOrg$.pipe(
+      switchMap(({ id }) => this.analytics.valueChanges(ref => ref
+        .where('type', '==', 'title')
+        .where('meta.ownerOrgIds', 'array-contains', id)
+      )),
+      map(toMovieAnalytics)
+    );
 
     this.hasAcceptedMovies$ = allMoviesFromOrg$.pipe(
       map(movies => movies.some(movie => movie.app[this.app].status === 'accepted'))

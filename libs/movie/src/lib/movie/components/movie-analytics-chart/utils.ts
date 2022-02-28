@@ -30,12 +30,12 @@ export function toMovieAnalytics(events: Analytics<'title'>[]): MovieAnalytics[]
     },
     type: 'movie',
     id: ''
-  }
+  };
 
-  return [movieAnalytics]
+  return [movieAnalytics];
 }
 
-export function toMovieEventAnalytics(events: Analytics<'title'>[]): MovieEventAnalytics[] {
+function toMovieEventAnalytics(events: Analytics<'title'>[]): MovieEventAnalytics[] {
   const counter: Record<AnalyticsEvents, Record<string, MovieEventAnalytics>> = {
     addedToWishlist: {},
     askingPriceRequested: {},
@@ -43,7 +43,7 @@ export function toMovieEventAnalytics(events: Analytics<'title'>[]): MovieEventA
     promoReelOpened: {},
     removedFromWishlist: {},
     screeningRequested: {}
-  }
+  };
 
   events.forEach(event => {
     const date = toYMD(event._meta.createdAt);
@@ -64,8 +64,8 @@ export function toMovieEventAnalytics(events: Analytics<'title'>[]): MovieEventA
   for (const data of Object.values(counter)) {
     for (const analytics of Object.values(data)) {
       eventAnalytics.push(analytics);
-    }
-  }
+    };
+  };
 
   return eventAnalytics;
 }
