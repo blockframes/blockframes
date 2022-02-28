@@ -14,7 +14,7 @@
     </header>
     <section>
       <h3>My Marketplace Activity</h3>
-      <ng-container *ngIf="(titles | getTitlesAnalytics | async) as titlesAnalytics; else loading">
+      <ng-container *ngIf="titleAnalytics$ | async as titlesAnalytics; else loading">
         <movie-analytics-chart [analyticsData]="titlesAnalytics"></movie-analytics-chart>
       </ng-container>
     </section>

@@ -499,9 +499,14 @@ service cloud.firestore {
     match /analytics/{docId} {
       allow read: if userHasValidOrg()
         && notInMaintenance()
-        && ( resource == null
-          || (existingData().type == 'movie' && orgCan('canUpdate', userOrgId(), docId))
+        && (resource == null
+          || ( existingData().type == 'title' && (userOrgId() in existingData().meta.ownerOrgIds ))
         );
+       allow create: if userHasValidOrg()
+        && notInMaintenance()
+        && isRequestFieldValueEqualToOrNotSetted(['id'], docId)
+        && isRequestFieldValueEqualTo(['meta', 'orgId'], userOrgId())
+        && isRequestFieldValueEqualTo(['meta', 'uid'], userId());
     }
 
 

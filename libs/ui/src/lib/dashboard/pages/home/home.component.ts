@@ -5,7 +5,7 @@ import { Component, OnInit, ChangeDetectionStrategy, Optional } from '@angular/c
 import { MovieService, fromOrg } from '@blockframes/movie/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { Movie } from '@blockframes/movie/+state/movie.model';
+import { Movie, MovieAnalytics } from '@blockframes/movie/+state/movie.model';
 import { appName } from '@blockframes/utils/apps';
 import { AppGuard } from '@blockframes/utils/routes/app.guard';
 
@@ -15,6 +15,8 @@ import { Observable } from 'rxjs';
 
 // Intercom
 import { Intercom } from 'ng-intercom';
+import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
+import { toMovieAnalytics } from '@blockframes/movie/components/movie-analytics-chart/utils';
 
 @Component({
   selector: 'dashboard-home',
@@ -32,7 +34,10 @@ export class HomeComponent implements OnInit {
   public hasAcceptedMovies$: Observable<boolean>;
   public hasDraftMovies$: Observable<boolean>;
 
+  public titleAnalytics$: Observable<MovieAnalytics[]>;
+
   constructor(
+    private analytics: AnalyticsService,
     private movieService: MovieService,
     private orgService: OrganizationService,
     private dynTitle: DynamicTitleService,
@@ -46,6 +51,14 @@ export class HomeComponent implements OnInit {
       shareReplay({ refCount: true, bufferSize: 1 }),
       map(titles => titles.filter(title => title.app[this.app].access))
     );
+
+      this.titleAnalytics$ = this.orgService.currentOrg$.pipe(
+        switchMap(({ id }) => this.analytics.valueChanges(ref => ref
+          .where('type', '==', 'title')
+          .where('meta.ownerOrgIds', 'array-contains', id)
+        )),
+        map(toMovieAnalytics)
+      );
 
     this.hasAcceptedMovies$ = allMoviesFromOrg$.pipe(
       map(movies => movies.some(movie => movie.app[this.app].status === 'accepted'))
