@@ -63,6 +63,7 @@ export const acceptCookie = () => selectAction('button[test-id="accept-cookies"]
  * selectAction : Clicks the element & waits if needed.
  * @param element : string for selecting button on the page
  * @param Option : timeouts for button, wait & logging message
+ * @deprecated - this is quite useless
  */
 export function selectAction(element: string,
   Option: { waitTime?: number, timeout?: number, message?: string } =

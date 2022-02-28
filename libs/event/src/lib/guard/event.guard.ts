@@ -88,9 +88,9 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
   }
 
   canDeactivate(
-    component: unknown,
-    currentRoute: ActivatedRouteSnapshot,
-    currentState: RouterStateSnapshot,
+    _: unknown,
+    __: ActivatedRouteSnapshot,
+    ___: RouterStateSnapshot,
     nextState: RouterStateSnapshot
   ): (boolean | Observable<boolean>) {
 

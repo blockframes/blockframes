@@ -55,14 +55,8 @@ export const colors = {
 
 // @dev sort the value alphabetically, not the keys
 export const contentType = {
-  animation: 'Animation',
-  documentary: 'Documentary',
-  feature_film: 'Feature Film',
-  flow: 'Flow',
-  short: 'Short Film',
-  tv_film: 'TV Film',
-  series: 'TV Series',
-  performing_arts: 'Performing Arts'
+  movie: 'Movie',
+  tv: 'TV'
 }
 
 export const crewRoles = {
@@ -83,7 +77,6 @@ export const crewRoles = {
 } as const
 
 export const directorCategory = {
-  none: '',
   firstFeature: 'First Feature',
   risingTalent: 'Rising Talent',
   confirmed: 'Confirmed Director',

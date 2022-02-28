@@ -33,4 +33,8 @@ export class StaticSelectComponent implements OnInit {
       this.staticValue = Object.keys(staticModel[this.scope]);
     }
   }
+
+  get showEmptyOption() {
+    return !this.required && !this.multiple;
+  }
 }

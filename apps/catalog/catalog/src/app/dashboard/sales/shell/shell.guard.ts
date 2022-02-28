@@ -13,8 +13,8 @@ export class CatalogSaleShellGuard implements CanActivate {
     private contractService: ContractService,
   ) { }
 
-  canActivate(route: ActivatedRouteSnapshot) {
-    const saleId = route.paramMap.get('saleId');
+  canActivate(next: ActivatedRouteSnapshot) {
+    const saleId = next.paramMap.get('saleId');
 
     if (!saleId) this.router.parseUrl('c/o/dashboard/sales');
 
@@ -32,8 +32,8 @@ export class CatalogSaleGuard implements CanActivate {
     private contractService: ContractService,
   ) { }
 
-  canActivate(route: ActivatedRouteSnapshot) {
-    const saleId = route.paramMap.get('saleId');
+  canActivate(next: ActivatedRouteSnapshot) {
+    const saleId = next.paramMap.get('saleId');
 
     if (!saleId) this.router.parseUrl('c/o/dashboard/sales');
 
