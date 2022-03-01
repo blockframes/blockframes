@@ -1,58 +1,73 @@
 /// <reference types="cypress" />
 
-import { clearDataAndPrepareTest, setForm, serverId, testEmail, SEC } from "@blockframes/e2e/utils";
+import {
+  clearDataAndPrepareTest,
+  serverId,
+  testEmail,
+  SEC,
+  get,
+  getInList,
+  check,
+  assertUrl,
+  interceptMail,
+  createEmail,
+  createOrgName
+} from '@blockframes/e2e/utils';
+
+const user = {
+  firstName: 'John',
+  lastName: 'Doe',
+  email: createEmail(),
+  company: createOrgName(),
+  role: 'Buyer',
+  indicator: '+33',
+  phone: '123456789'
+}
 
 //Test if email is sent correctly.
 const SUBJECT_DEMO = 'A demo has been requested';
 
 describe('Demo Request Email', () => {
-  const demo_contact = {
-    'first-name': 'Reed',
-    'last-name': 'Hastings',
-    'comp-name': 'Netflicks',
-    'role': 'Buyer',
-    'email': 'reed@netflicks.zz',
-    'country': '+33',
-    'tel': '123456789'
-  }
+
   beforeEach(() => {
     clearDataAndPrepareTest('/');
-
+    //TODO : Clearing message to be changed for a retrieval from a starting time
     //Clear all messages on server before the test
     cy.mailosaurDeleteAllMessages(serverId).then(() => {
       cy.log('Inbox empty. Ready to roll..');
-    })
+    });
   });
-  
-  it('Request Demo and verify request email', () => {
-    //Wait long enough for page to load
-    cy.get('a[href="/auth/identity"]', {timeout: 60 * SEC});
 
-    cy.get('h1', {timeout: 10 * SEC})
-      .contains("Want to learn more?");
+  it('Request demo email', () => {
+    get('first-name').type(user.firstName);
+    get('last-name').type(user.lastName);
+    get('company').type(user.company);
+    get('role').click();
+    getInList('role_', user.role);
+    get('demo-email').type(user.email);
+    get('phone').children().children().as('phoneInputs');
+    cy.get('@phoneInputs').first().type(user.indicator);
+    cy.get('@phoneInputs').last().type(user.phone);
+    check('checkbox-newsletters');
+    get('submit-demo-request').click()
 
-    cy.log('Trigger send demo request email..');
-
-    setForm('festival-landing #demo input, mat-select', {inputValue: demo_contact});
-    cy.get('[test-id="phone-no"] .first', {timeout: 1 * SEC}).type(demo_contact.country)
-    cy.get('[test-id="phone-no"] .last', {timeout: 1 * SEC}).type(demo_contact.tel)
-
-    cy.get('button[test-id="send-request"]', {timeout: 10 * SEC})
-      .click()
-      .then(() => cy.log("Form clicked!"));
+    //TODO : old code below, to be updated
 
     cy.wait(15 * SEC);
 
     //Test for arrival of email..
-    cy.mailosaurGetMessage(serverId, {
-      sentTo: testEmail
-    },{
-      timeout: 20 * SEC,
-    }).then(email => {
+    cy.mailosaurGetMessage(
+      serverId,
+      {
+        sentTo: testEmail,
+      },
+      {
+        timeout: 20 * SEC,
+      }
+    ).then((email) => {
       expect(email.subject).to.equal(SUBJECT_DEMO);
       cy.log(email.text.body);
       cy.mailosaurDeleteMessage(email.id);
-    })
-
+    });
   });
 });
