@@ -7,7 +7,7 @@ export default class OrganizationLiteFormPage {
   // SINGLE FIELD
   public createNewOrg(org: Partial<Organization> = ORGANIZATION) {
     cy.get('algolia-autocomplete').type(org.denomination.full);
-    cy.get('mat-option[test-id="createNewOrgOption"]').click();
+    cy.get('mat-option[test-id="new-org"]').click();
   }
 
   public joinExistingOrg(org: Partial<Organization> = ORGANIZATION) {
