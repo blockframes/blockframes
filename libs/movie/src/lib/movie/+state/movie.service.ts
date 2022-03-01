@@ -41,7 +41,7 @@ export class MovieService extends CollectionService<MovieState> implements Check
     private analyticservice: AnalyticsService,
     private orgService: OrganizationService,
   ) {
-    super(); this.db
+    super();
   }
 
   formatFromFirestore(movie) {

@@ -15,7 +15,6 @@ import {
   ContractsImportState,
   getUser,
   sheetHeaderLine,
-  verifyIdExists,
 } from '@blockframes/import/utils';
 import { centralOrgId } from '@env';
 import { MovieService } from '@blockframes/movie/+state';
@@ -134,7 +133,7 @@ export async function formatContract(
     /* a */'contract.titleId': async (value: string) => {
       if (!value) return mandatoryError('Title');
       const titleId = await getTitleId(value, titleService, titleNameCache, userOrgId, blockframesAdmin);
-      if (await verifyIdExists(value, titleService)) return value;
+      if (await titleService.docExists(value)) return value;
       if (!titleId) return unknownEntityError('Title');
       return titleId;
     },
@@ -170,7 +169,7 @@ export async function formatContract(
       } else {
         let sellerId = await getOrgId(value, orgService, orgNameCache);
         if (!sellerId) {
-          if (await verifyIdExists(value, orgService)) sellerId = value;
+          if (await orgService.docExists(value)) sellerId = value;
           else return unknownEntityError('Licensor Organization');
         }
         if (!blockframesAdmin && sellerId !== userOrgId) return {
@@ -202,9 +201,10 @@ export async function formatContract(
         if (!value) return '';
         const isInternal = data.contract.sellerId === centralOrgId.catalog;
         let buyerId = await getOrgId(value, orgService, orgNameCache);
-        if (!buyerId && await verifyIdExists(value, titleService)) buyerId = value;
+        if(buyerId) return buyerId;
+        if (!buyerId && await titleService.docExists(value)) buyerId = value;
         if (isInternal && !buyerId) return unknownEntityError('Licensee Organization');
-        return buyerId;
+        return '';
       }
     },
     /* e */'term[].territories_included': (value: string) => getGroupedList(value, 'territories', separator) as Territory[],

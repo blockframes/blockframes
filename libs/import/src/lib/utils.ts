@@ -7,10 +7,9 @@ import { SheetTab, ValueWithError } from "@blockframes/utils/spreadsheet";
 import { centralOrgId } from "@env";
 import { ContractService } from "@blockframes/contract/contract/+state/contract.service";
 import { UserService } from "@blockframes/user/+state";
-import { CollectionService } from "akita-ng-fire";
 
-export abstract class CheckDocExists {
-  abstract docExists(docId: string);
+export interface CheckDocExists {
+  docExists(docId: string): Promise<boolean>;
 }
 
 export const spreadsheetImportTypes = ['titles', 'organizations', 'contracts'] as const;
@@ -94,10 +93,6 @@ export async function getTitleId(name: string, titleService: MovieService, cache
   const result = titles.length === 1 ? titles[0].id : '';
   cache[name] = result;
   return result;
-}
-
-export async function verifyIdExists(id: string, service: CheckDocExists) {
-  return service.docExists(id);
 }
 
 export async function getContract(id: string, contractService: ContractService, cache: Record<string, (Mandate | Sale)>) {
