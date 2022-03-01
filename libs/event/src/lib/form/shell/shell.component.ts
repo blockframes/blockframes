@@ -6,12 +6,12 @@ import { EventService } from '../../+state/event.service';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { getCurrentApp, applicationUrl } from '@blockframes/utils/apps';
+import { applicationUrl } from '@blockframes/utils/apps';
 import { Observable, of, Subscription } from 'rxjs';
 import { map, pluck, switchMap } from 'rxjs/operators';
 import { NavTabs, TabConfig } from '@blockframes/utils/event';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AppGuard } from '@blockframes/utils/routes/app.guard';
 
 const statisticsTab = { path: 'statistics', label: 'Statistics' };
 
@@ -49,9 +49,9 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     private dialog: MatDialog,
-    private routerQuery: RouterQuery,
     private cdr: ChangeDetectorRef,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private appGuard: AppGuard,
   ) { }
 
   ngOnInit(): void {
@@ -65,7 +65,7 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
       const type = this.form.value.type;
       const path = type === 'meeting' ? 'lobby' : 'session';
       this.internalLink = `/event/${this.form.value.id}/r/i/${path}`;
-      const app = getCurrentApp(this.routerQuery);
+      const app = this.appGuard.currentApp;
       const url = applicationUrl[app];
       this.link = `${url}${this.internalLink}`;
 

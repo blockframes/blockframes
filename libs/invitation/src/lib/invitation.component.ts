@@ -2,12 +2,12 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Invitation, InvitationService } from './+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Router } from '@angular/router';
-import { getCurrentApp, getOrgModuleAccess } from '@blockframes/utils/apps';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { getOrgModuleAccess } from '@blockframes/utils/apps';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { map, startWith, tap } from 'rxjs/operators';
 import { FormControl, FormGroup } from '@angular/forms';
 import { combineLatest } from 'rxjs';
+import { AppGuard } from '@blockframes/utils/routes/app.guard';
 
 const applyFilters = (invitations: Invitation[], filters: { type: string[], status: string[] }) => {
   const inv = filters.type?.length ? invitations.filter(inv => filters.type.includes(inv.type)) : invitations;
@@ -47,7 +47,7 @@ export class InvitationComponent {
     private service: InvitationService,
     private dynTitle: DynamicTitleService,
     private router: Router,
-    private routerQuery: RouterQuery,
+    private appGuard: AppGuard,
     private orgService: OrganizationService,
   ) { }
 
@@ -59,7 +59,7 @@ export class InvitationComponent {
   }
 
   leadToHomepage() {
-    const app = getCurrentApp(this.routerQuery);
+    const app = this.appGuard.currentApp;
     const org = this.orgService.org;
     const [moduleAccess = 'dashboard'] = getOrgModuleAccess(org, app);
     return this.router.navigate([`/c/o/${moduleAccess}/home`]);

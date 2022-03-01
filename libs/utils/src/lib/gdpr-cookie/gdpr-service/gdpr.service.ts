@@ -2,9 +2,8 @@ import { Injectable } from "@angular/core";
 import { CookiesConsent } from "../cookie-form/cookie.form";
 import { IntercomService } from '@blockframes/utils/intercom/intercom.service';
 import { YandexMetricaService } from '@blockframes/utils/yandex-metrica/yandex-metrica.service';
-import { getCurrentApp } from "@blockframes/utils/apps";
-import { RouterQuery } from "@datorama/akita-ng-router-store";
 import { User } from "@blockframes/user/types";
+import { AppGuard } from '@blockframes/utils/routes/app.guard';
 
 @Injectable({ providedIn: 'root' })
 export class GDPRService {
@@ -12,7 +11,7 @@ export class GDPRService {
   constructor(
     private intercom: IntercomService,
     private yandex: YandexMetricaService,
-    private routerQuery: RouterQuery
+    private appGuard: AppGuard,
   ) { }
 
   get cookieConsent(): CookiesConsent {
@@ -32,7 +31,7 @@ export class GDPRService {
 
   enableYandex(enable: boolean) {
     this.enable('yandex', enable);
-    const app = getCurrentApp(this.routerQuery);
+    const app = this.appGuard.currentApp;
     if (enable) this.yandex.insertMetrika(app);
   }
 }

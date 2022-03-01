@@ -9,8 +9,8 @@ import { ViewImportErrorsComponent } from '../view-import-errors/view-import-err
 import { sortingDataAccessor } from '@blockframes/utils/table';
 import { MovieImportState, SpreadsheetImportError } from '../../utils';
 import { MovieService } from '@blockframes/movie/+state';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { getCurrentApp, App } from '@blockframes/utils/apps';
+import { AppGuard } from '@blockframes/utils/routes/app.guard';
+import { App } from '@blockframes/utils/apps';
 
 const hasImportErrors = (importState: MovieImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -45,7 +45,7 @@ export class TableExtractedMoviesComponent implements OnInit {
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
     private movieService: MovieService,
-    private routerQuery: RouterQuery
+    private appGuard: AppGuard,
   ) { }
 
   ngOnInit() {
@@ -54,7 +54,7 @@ export class TableExtractedMoviesComponent implements OnInit {
     this.rows.filterPredicate = this.filterPredicate;
     this.rows.sortingDataAccessor = sortingDataAccessor;
     this.rows.sort = this.sort;
-    this.currentApp = getCurrentApp(this.routerQuery);
+    this.currentApp = this.appGuard.currentApp;
   }
 
   async createMovie(importState: MovieImportState): Promise<boolean> {

@@ -50,7 +50,7 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     id: params.id,
     _type: 'movies',
     // Mandatory fields
-    contentType: 'feature_film',
+    contentType: 'movie',
     directors: [],
     genres: [],
     originalLanguages: [],

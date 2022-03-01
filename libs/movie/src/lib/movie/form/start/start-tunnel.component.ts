@@ -4,8 +4,8 @@ import { Router } from '@angular/router';
 
 // Blockframes
 import { createReleaseYear, Movie, MovieService } from '@blockframes/movie/+state';
-import { App, getCurrentApp } from '@blockframes/utils/apps';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { App } from '@blockframes/utils/apps';
+import { AppGuard } from '@blockframes/utils/routes/app.guard';
 
 // RxJs
 import { BehaviorSubject } from 'rxjs';
@@ -30,12 +30,12 @@ const predefinedTitleConfig: Record<App, Partial<Movie>> = {
 })
 export class MovieFormStartTunnelComponent {
   public loadingTunnel = new BehaviorSubject(false);
-  public currentApp = getCurrentApp(this.routerQuery);
+  public currentApp = this.appGuard.currentApp;
 
   constructor(
     private movieService: MovieService,
     private router: Router,
-    private routerQuery: RouterQuery,
+    private appGuard: AppGuard,
   ) { }
 
   async navigateToTunnel() {

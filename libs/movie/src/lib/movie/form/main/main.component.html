@@ -40,7 +40,7 @@
         </static-select>
       </article>
 
-      <ng-container *ngIf="contentType | async | isType: 'series'">
+      <ng-container *ngIf="form.contentType.value === 'tv'">
         <article flxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
 
           <mat-form-field appearance="outline" fxFlex>
@@ -64,11 +64,11 @@
 
         <ng-container *ngIf="form.get('runningTime').get('status').value !== 'tobedetermined' as timeRequired">
           <mat-form-field appearance="outline" fxFlex>
-            <mat-label>{{ (form.contentType.value | typeDictionary).runningTime }}</mat-label>
+            <mat-label>{{ runningTime[form.contentType.value].label }}</mat-label>
             <input test-id="run-time" matInput type="number" name="runningTime"
               [formControl]="form.runningTime.get('time')" [required]="timeRequired" />
             <mat-hint>In minutes.</mat-hint>
-            <mat-error>{{ (form.contentType.value | typeDictionary).runningTimeError }}</mat-error>
+            <mat-error>{{ runningTime[form.contentType.value].error }}</mat-error>
           </mat-form-field>
         </ng-container>
 

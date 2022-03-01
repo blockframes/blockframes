@@ -8,8 +8,8 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { Observable } from 'rxjs';
 import { map, startWith, switchMap, tap } from 'rxjs/operators';
 import { Intercom } from 'ng-intercom';
-import { appName, getCurrentApp } from '@blockframes/utils/apps';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { appName } from '@blockframes/utils/apps';
+import { AppGuard } from '@blockframes/utils/routes/app.guard';
 
 type Filters = 'all' | 'draft' | 'ongoing' | 'achieved' | 'archived';
 
@@ -30,7 +30,7 @@ function filterMovieCampaign(movies: MovieCampaign[], filter: Filters) {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListComponent implements OnInit {
-  public app = getCurrentApp(this.routerQuery);
+  public app = this.appGuard.currentApp;
   public appName = appName[this.app];
   titles$: Observable<MovieCampaign[]>;
   titleCount$: Observable<Record<string, number>>;
@@ -44,7 +44,7 @@ export class ListComponent implements OnInit {
     private route: ActivatedRoute,
     private dynTitle: DynamicTitleService,
     private movieService: MovieService,
-    private routerQuery: RouterQuery,
+    private appGuard: AppGuard,
     @Optional() private intercom: Intercom
   ) { }
 

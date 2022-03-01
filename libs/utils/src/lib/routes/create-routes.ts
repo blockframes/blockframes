@@ -6,6 +6,7 @@ import { PermissionsGuard } from '@blockframes/permissions/guard/permissions.gua
 import { OrganizationGuard } from '@blockframes/organization/guard/organization.guard';
 import { MaintenanceGuard } from '@blockframes/ui/maintenance';
 import { RequestAccessGuard } from '@blockframes/organization/guard/request-access.guard';
+import { AppGuard } from './app.guard';
 
 interface RouteOptions {
   /** The routes of the apps */
@@ -60,12 +61,12 @@ export function createRoutes({ appsRoutes, appName, landing, events }: RouteOpti
   return [
     {
       path: 'maintenance',
-      canActivate: [MaintenanceGuard],
+      canActivate: [AppGuard, MaintenanceGuard],
       loadChildren: () => import('@blockframes/ui/maintenance/maintenance.module').then(m => m.MaintenanceModule)
     },
     {
       path: '',
-      canActivate: [MaintenanceGuard],
+      canActivate: [AppGuard, MaintenanceGuard],
       data: { app: appName },
       children: [
         landing,
