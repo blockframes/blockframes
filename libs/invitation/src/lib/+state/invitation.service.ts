@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { CollectionConfig, CollectionService, AtomicWrite } from 'akita-ng-fire';
 import { createPublicOrganization, Organization, OrganizationService } from '@blockframes/organization/+state';
@@ -8,12 +8,12 @@ import { toDate } from '@blockframes/utils/helpers';
 import { Invitation, createInvitation } from './invitation.model';
 import { InvitationDocument } from './invitation.firestore';
 import { cleanInvitation } from '../invitation-utils';
-import { getOrgAppAccess } from '@blockframes/utils/apps';
+import { App, getOrgAppAccess } from '@blockframes/utils/apps';
 import { combineLatest, Observable, of } from 'rxjs';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
 import { PermissionsService } from '@blockframes/permissions/+state';
 import { ActiveState, EntityState } from '@datorama/akita';
-import { AppGuard } from '@blockframes/utils/routes/app.guard';
+import { APP } from '@blockframes/utils/routes/create-routes';
 
 interface InvitationState extends EntityState<Invitation>, ActiveState<string> { }
 
@@ -99,7 +99,7 @@ export class InvitationService extends CollectionService<InvitationState> {
     private authService: AuthService,
     private permissionsService: PermissionsService,
     private functions: AngularFireFunctions,
-    private appGuard: AppGuard,
+    @Inject(APP) private app: App
   ) {
     super();
   }
@@ -166,7 +166,7 @@ export class InvitationService extends CollectionService<InvitationState> {
         const recipients = Array.isArray(idOrEmails) ? idOrEmails : [idOrEmails];
 
         const f = this.functions.httpsCallable('inviteUsers');
-        let app = this.appGuard.currentApp;
+        let app = this.app;
         if (app === 'crm') {
           // Instead use first found app where org has access to
           app = getOrgAppAccess(fromOrg)[0];

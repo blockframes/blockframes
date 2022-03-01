@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, ViewChild, TemplateRef, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, ViewChild, TemplateRef, ChangeDetectorRef, OnDestroy, Inject } from '@angular/core';
 import { Router, ActivatedRoute, RouterOutlet } from '@angular/router';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { EventForm } from '../../form/event.form';
@@ -6,12 +6,12 @@ import { EventService } from '../../+state/event.service';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
-import { applicationUrl } from '@blockframes/utils/apps';
+import { App, applicationUrl } from '@blockframes/utils/apps';
 import { Observable, of, Subscription } from 'rxjs';
 import { map, pluck, switchMap } from 'rxjs/operators';
 import { NavTabs, TabConfig } from '@blockframes/utils/event';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AppGuard } from '@blockframes/utils/routes/app.guard';
+import { APP } from '@blockframes/utils/routes/create-routes';
 
 const statisticsTab = { path: 'statistics', label: 'Statistics' };
 
@@ -51,7 +51,7 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private cdr: ChangeDetectorRef,
     private snackBar: MatSnackBar,
-    private appGuard: AppGuard,
+    @Inject(APP) private app: App
   ) { }
 
   ngOnInit(): void {
@@ -65,8 +65,7 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
       const type = this.form.value.type;
       const path = type === 'meeting' ? 'lobby' : 'session';
       this.internalLink = `/event/${this.form.value.id}/r/i/${path}`;
-      const app = this.appGuard.currentApp;
-      const url = applicationUrl[app];
+      const url = applicationUrl[this.app];
       this.link = `${url}${this.internalLink}`;
 
       this.tabs$ = this.eventService.valueChanges(this.form.value.id).pipe(

@@ -1,13 +1,13 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
 import { Invitation, InvitationService } from './+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Router } from '@angular/router';
-import { getOrgModuleAccess } from '@blockframes/utils/apps';
+import { App, getOrgModuleAccess } from '@blockframes/utils/apps';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { map, startWith, tap } from 'rxjs/operators';
 import { FormControl, FormGroup } from '@angular/forms';
 import { combineLatest } from 'rxjs';
-import { AppGuard } from '@blockframes/utils/routes/app.guard';
+import { APP } from '@blockframes/utils/routes/create-routes';
 
 const applyFilters = (invitations: Invitation[], filters: { type: string[], status: string[] }) => {
   const inv = filters.type?.length ? invitations.filter(inv => filters.type.includes(inv.type)) : invitations;
@@ -47,8 +47,8 @@ export class InvitationComponent {
     private service: InvitationService,
     private dynTitle: DynamicTitleService,
     private router: Router,
-    private appGuard: AppGuard,
     private orgService: OrganizationService,
+    @Inject(APP) private app: App
   ) { }
 
   acceptAll(invitations: Invitation[]) {
@@ -59,9 +59,8 @@ export class InvitationComponent {
   }
 
   leadToHomepage() {
-    const app = this.appGuard.currentApp;
     const org = this.orgService.org;
-    const [moduleAccess = 'dashboard'] = getOrgModuleAccess(org, app);
+    const [moduleAccess = 'dashboard'] = getOrgModuleAccess(org, this.app);
     return this.router.navigate([`/c/o/${moduleAccess}/home`]);
   }
 }
