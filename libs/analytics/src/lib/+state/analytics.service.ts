@@ -25,7 +25,7 @@ export class AnalyticsService extends CollectionService<AnalyticsState> {
     };
   }
 
-  getTitleAnalytics$(titleId: string) {
+  getTitleAnalytics(titleId: string) {
     return this.valueChanges(ref => ref
       .where('type', '==', 'title')
       .where('meta.titleId', '==', titleId)

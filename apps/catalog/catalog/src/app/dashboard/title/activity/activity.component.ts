@@ -15,7 +15,7 @@ import { toMovieAnalytics } from '@blockframes/analytics/components/movie-analyt
 export class TitleActivityComponent implements OnInit {
   public movieAnalytics$ = this.route.params.pipe(
     pluck('movieId'),
-    switchMap((titleId: string) => this.analyticsService.getTitleAnalytics$(titleId)),
+    switchMap((titleId: string) => this.analyticsService.getTitleAnalytics(titleId)),
     map(toMovieAnalytics)
   );
 

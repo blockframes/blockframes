@@ -510,7 +510,8 @@ service cloud.firestore {
     }
 
   function isAllowedToReadTitleAnalytics() {
-    return existingData().type == 'title' && (userOrgId() in existingData().meta.ownerOrgIds )
+    let data = existingData();
+    return data.type == 'title' && (userOrgId() in data.meta.ownerOrgIds );
   }
 
 
