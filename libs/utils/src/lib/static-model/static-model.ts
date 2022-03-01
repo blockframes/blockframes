@@ -88,30 +88,19 @@ export const genres = {
   drama: 'Drama',
   action: 'Action',
   horror: 'Horror',
-  scienceFiction: 'Science Fiction', // science-fiction
+  scienceFiction: 'Science Fiction',
   thriller: 'Thriller',
-  youngAdult: 'Young Adult', // coming-of-age
   fantasy: 'Fantasy',
   romance: 'Romance',
-  western: 'Western',
-  periodPiece: 'Period Piece', // period-piece
   adventure: 'Adventure',
   biography: 'Biography',
-  war: 'War',
-  police: 'Police',
   animation: 'Animation',
-  documentary: 'Documentary',
   erotic: 'Erotic',
-  tvShow: 'TV Show', //tv-show
-  webSeries: 'Web Series', //web-series
-  virtualReality: 'Virtual Reality', // virtual-reality
   family: 'Family',
-  wildlife: 'Wildlife',
-  natureEnvironment: 'Nature & Environment',
-  huntingFishing: 'Hunting & Fishing',
-  archeologyHistory: 'Archeology & History',
-  travelDiscovery: 'Travel & Discovery',
-  fashion: 'Fashion'
+  documentary: 'Documentary',
+  periodDrama: 'Period Drama',
+  crime: 'Crime',
+  kidsAndTeen: 'Kids and teen',
 } as const
 
 export const hostedVideoTypes = {
