@@ -141,7 +141,7 @@ export async function upgrade(db: Firestore) {
 
     const event: Analytics = {
       id: undefined, // id is added later
-      name: row.name,
+      name: row.name === 'promoReelOpened' ? 'promoVideoStarted' : row.name,
       type: 'title',
       _meta: createDocumentMeta({
         createdAt: new Date(row.createdAt / 1000),
