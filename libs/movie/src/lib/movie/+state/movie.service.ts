@@ -7,10 +7,8 @@ import {
   MovieAnalytics,
 } from './movie.model';
 import { createDocumentMeta } from "@blockframes/utils/models-meta";
-import { MovieState, MovieStore } from './movie.store';
 import { cleanModel } from '@blockframes/utils/helpers';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
-import { UserService } from '@blockframes/user/+state/user.service';
 import type firebase from 'firebase';
 import { App } from '@blockframes/utils/apps';
 import { QueryFn } from '@angular/fire/firestore';
@@ -20,6 +18,7 @@ import { getViews } from '../pipes/analytics.pipe';
 import { joinWith } from '@blockframes/utils/operators';
 import { AnalyticsService } from '@blockframes/utils/analytics/analytics.service';
 import { AuthService } from '@blockframes/auth/+state';
+import { ActiveState, EntityState } from '@datorama/akita';
 
 export const fromOrg = (orgId: string): QueryFn => ref => ref.where('orgIds', 'array-contains', orgId);
 export const fromOrgAndAccepted = (orgId: string, appli: App): QueryFn => ref => ref.where(`app.${appli}.status`, '==', 'accepted').where('orgIds', 'array-contains', orgId);
@@ -28,20 +27,20 @@ export const fromInternalRef = (internalRef: string): QueryFn => ref => ref.wher
 
 type MovieWithAnalytics = Movie & { analytics: MovieAnalytics };
 
+interface MovieState extends EntityState<Movie, string>, ActiveState<string> {}
+
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies' })
 export class MovieService extends CollectionService<MovieState> {
   readonly useMemorization = true;
 
   constructor(
-    protected store: MovieStore,
     private authService: AuthService,
     private permissionsService: PermissionsService,
     private analyticservice: AnalyticsService,
-    private userService: UserService,
     private orgService: OrganizationService,
   ) {
-    super(store);
+    super();
   }
 
   formatFromFirestore(movie) {
@@ -75,7 +74,9 @@ export class MovieService extends CollectionService<MovieState> {
   onCreate(movie: Movie, { write }: WriteOptions) {
     const ref = this.getRef(movie.id);
     write.update(ref, { '_meta.createdAt': new Date() });
-    return Promise.all(movie.orgIds.map(orgId => this.permissionsService.addDocumentPermissions(movie.id, write as firebase.firestore.Transaction, orgId)));
+    for (const orgId of movie.orgIds) {
+      this.permissionsService.addDocumentPermissions(movie.id, write as firebase.firestore.Transaction, orgId);
+    }
   }
 
   onUpdate(movie: Movie, { write }: WriteOptions) {
@@ -111,7 +112,7 @@ export class MovieService extends CollectionService<MovieState> {
     const orgId = this.orgService.org.id;
     const query: QueryFn = ref => ref.where('orgIds', 'array-contains', orgId).where(`app.${app}.access`, '==', true);
     const addViews = (movie: MovieWithAnalytics) => ({ ...movie, analytics: { ...movie.analytics, views: getViews(movie.analytics) } });
-    
+
     return this.valueChanges(query).pipe(
       joinWith({
         analytics: movie => this.analyticservice.valueChanges(movie.id),

@@ -21,8 +21,8 @@ export class NegotiationGuard<T extends NegotiationGuardedComponent> implements 
     private dialog: MatDialog,
   ) { }
 
-  async canActivate(route: ActivatedRouteSnapshot) {
-    const saleId = route.paramMap.get('saleId');
+  async canActivate(next: ActivatedRouteSnapshot) {
+    const saleId = next.paramMap.get('saleId');
     const activeOrgId = this.orgService.org.id;
 
     if (!saleId) return this.router.parseUrl(`c/o/dashboard/sales`);

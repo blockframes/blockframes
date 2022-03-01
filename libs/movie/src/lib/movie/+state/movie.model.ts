@@ -23,7 +23,7 @@ import {
   MovieAppConfig,
   MovieAppConfigRecord
 } from './movie.firestore';
-import { Language, MovieLanguageType } from '@blockframes/utils/static-model';
+import { Language, MovieLanguageType, ProductionStatus, productionStatus } from '@blockframes/utils/static-model';
 import { toDate } from '@blockframes/utils/helpers';
 import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 import { App, getAllAppsExcept } from '@blockframes/utils/apps';
@@ -50,7 +50,7 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     id: params.id,
     _type: 'movies',
     // Mandatory fields
-    contentType: 'feature_film',
+    contentType: 'movie',
     directors: [],
     genres: [],
     originalLanguages: [],
@@ -197,7 +197,7 @@ export function createTitle(title: Partial<Title> = {}): Title {
 
 export function createReleaseYear(release: Partial<MovieRelease> = {}): MovieRelease {
   return {
-    status: '',
+    status: null,
     ...release
   };
 }
@@ -328,4 +328,10 @@ export function createMovieVideo(params: Partial<MovieVideo>): MovieVideo {
     ...params,
     ...createStorageFile(params),
   }
+}
+
+export function getAllowedproductionStatuses(app: App): ProductionStatus[] {
+  return Object.keys(productionStatus)
+    .filter(status => app === 'catalog' ? status === 'released' : true)
+    .map(s => s as ProductionStatus);
 }

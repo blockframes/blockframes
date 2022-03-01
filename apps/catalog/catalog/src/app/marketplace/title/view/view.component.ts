@@ -1,11 +1,10 @@
-import { Component, ChangeDetectionStrategy, OnInit, Optional } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Movie } from '@blockframes/movie/+state/movie.model';
-import { MovieQuery } from '@blockframes/movie/+state/movie.query';
+import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
 import { mainRoute, additionalRoute, artisticRoute, productionRoute } from '@blockframes/movie/marketplace';
-import { Organization, OrganizationService } from '@blockframes/organization/+state';
-import { Router } from '@angular/router';
+import { OrganizationService } from '@blockframes/organization/+state';
+import { ActivatedRoute } from '@angular/router';
 import { Intercom } from 'ng-intercom';
+import { MovieService } from '@blockframes/movie/+state';
+import { pluck, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'catalog-movie-view',
@@ -13,9 +12,15 @@ import { Intercom } from 'ng-intercom';
   styleUrls: ['./view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceMovieViewComponent implements OnInit {
-  public movie$: Observable<Movie>;
-  public orgs$: Observable<Organization[]>;
+export class MarketplaceMovieViewComponent {
+  public movie$ = this.route.params.pipe(
+    pluck('movieId'),
+    switchMap((movieId: string) => this.movieService.valueChanges(movieId))
+  );
+
+  public orgs$ = this.movie$.pipe(
+    switchMap(movie => this.orgService.valueChanges(movie.orgIds))
+  );
 
   public navLinks = [
     mainRoute,
@@ -34,16 +39,11 @@ export class MarketplaceMovieViewComponent implements OnInit {
   ];
 
   constructor(
-    private movieQuery: MovieQuery,
+    private route: ActivatedRoute,
+    private movieService: MovieService,
     private orgService: OrganizationService,
-    private router: Router,
     @Optional() private intercom: Intercom
   ) { }
-
-  ngOnInit() {
-    this.movie$ = this.movieQuery.selectActive();
-    this.orgs$ = this.orgService.valueChanges(this.movieQuery.getActive().orgIds);
-  }
 
   public openIntercom(): void {
     return this.intercom.show();

@@ -1,36 +1,20 @@
 import { auth, db } from '../testing-cypress';
 import type { User } from '@blockframes/user/types';
 
-export async function getRandomUID() {
-  const user = await getRandomUser();
-  const uid = user.uid;
-  console.log(uid);
-  return uid;
-}
-
 export async function getRandomEmail() {
-  const user = await getRandomUser();
-  const email = user.email;
+  const { email } = await getRandomUser();
   console.log(email);
   return email;
 }
 
 export async function getRandomUser() {
-  /**
-   * Look like is not random and options should be added to be able to get a random user for festival or catalog app for example
-   * and right now you will always get 1M9DUDBATqayXXaXMYThZGtE9up1 that is blockframes admin.. Not a good practice
-   */
+  // TODO #7701 Improve getRandomUser method
   const userQuery = await db.collection('users').limit(1).get();
   const userSnap = userQuery.docs.pop();
   const user = userSnap.data() as User;
   console.log('Got random user:\n');
   console.dir(user);
   return user;
-}
-
-export async function getUIDFromEmail(email: string) {
-  const user = await auth.getUserByEmail(email);
-  return user.uid;
 }
 
 export async function createUserToken(uid: string) {

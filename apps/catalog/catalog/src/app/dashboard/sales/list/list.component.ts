@@ -1,28 +1,25 @@
 import { Component, ChangeDetectionStrategy, Optional, OnInit, } from '@angular/core';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { appName, getCurrentApp } from '@blockframes/utils/apps';
-import { Contract, ContractService, ContractStatus, Sale } from '@blockframes/contract/contract/+state';
+import { appName } from '@blockframes/utils/apps';
+import { ContractService, Sale } from '@blockframes/contract/contract/+state';
 import { Organization, OrganizationService } from '@blockframes/organization/+state';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Intercom } from 'ng-intercom';
 import { joinWith } from '@blockframes/utils/operators';
-import { map, startWith } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
+import { combineLatest, of } from 'rxjs';
 import { MovieService } from '@blockframes/movie/+state';
 import { IncomeService } from '@blockframes/contract/income/+state';
-import { FormControl } from '@angular/forms';
-import { combineLatest, Observable, of } from 'rxjs';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { CollectionReference } from '@angular/fire/firestore';
-import { centralOrgId } from '@env';
-import { isInitial } from '@blockframes/contract/negotiation/utils';
+import { getSeller } from '@blockframes/contract/contract/+state/utils'
+import { AppGuard } from '@blockframes/utils/routes/app.guard';
 
-function capitalize(text: string) {
-  return `${text[0].toUpperCase()}${text.substring(1)}`
-}
-
-function queryFn(ref: CollectionReference, orgId: string) {
-  return ref.where('stakeholders', 'array-contains', orgId)
+function queryFn(ref: CollectionReference, orgId: string, options: { internal?: boolean }) {
+  const operator = options.internal ? '!=' : "==";
+  return ref
+    .where('buyerId', operator, '')
     .where('type', '==', 'sale')
+    .orderBy('buyerId', 'desc')
+    .where('stakeholders', 'array-contains', orgId)
     .orderBy('_meta.createdAt', 'desc')
 }
 
@@ -37,85 +34,41 @@ function getFullName(seller: Organization) {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SaleListComponent implements OnInit {
-  public app = getCurrentApp(this.routerQuery);
+  public app = this.appGuard.currentApp;
   public appName = appName[this.app];
   public orgId = this.orgService.org.id;
 
 
-  public internalSales$ = this.contractService.valueChanges(ref => queryFn(ref, this.orgId)).pipe(
+  public internalSales$ = this.contractService.valueChanges(ref => queryFn(ref, this.orgId, { internal: true })).pipe(
     joinWith({
-      licensor: (sale: Sale) => this.orgService.valueChanges(this.getLicensorId(sale)).pipe(map(getFullName)),
+      licensor: (sale: Sale) => this.orgService.valueChanges(getSeller(sale)).pipe(map(getFullName)),
       licensee: (sale: Sale) => this.orgService.valueChanges(sale.buyerId).pipe(map(getFullName)),
       title: (sale: Sale) => this.titleService.valueChanges(sale.titleId).pipe(map(title => title.title.international)),
       negotiation: (sale: Sale) => this.contractService.lastNegotiation(sale.id)
     }),
   );
 
-  public externalSales$ = this.contractService.valueChanges(ref => queryFn(ref, this.orgId)).pipe(
+  public externalSales$ = this.contractService.valueChanges(ref => queryFn(ref, this.orgId, { internal: true })).pipe(
     joinWith({
-      licensor: (sale: Sale) => this.orgService.valueChanges(this.getLicensorId(sale)).pipe(map(getFullName)),
+      licensor: (sale: Sale) => this.orgService.valueChanges(getSeller(sale)).pipe(map(getFullName)),
       licensee: () => of('External'),
       title: (sale: Sale) => this.titleService.valueChanges(sale.titleId).pipe(map(title => title.title.international)),
       price: (sale: Sale) => this.incomeService.valueChanges(sale.id),
     }),
   );
 
-
-  public sales$ = combineLatest([this.internalSales$, this.externalSales$]).pipe(map(data => data.flat(1)));
-
-  filter = new FormControl();
-  filter$: Observable<ContractStatus | ''> = this.filter.valueChanges.pipe(startWith(this.filter.value || ''));
-
-  salesCount$ = this.internalSales$.pipe(map(m => ({
-    all: m.length,
-    new: m.filter(m => m.negotiation?.status === 'pending' && isInitial(m.negotiation)).length,
-    accepted: m.filter(m => m.negotiation?.status === 'accepted').length,
-    declined: m.filter(m => m.negotiation?.status === 'declined').length,
-    negotiating: m.filter(m => m.negotiation?.status === 'pending' && !isInitial(m.negotiation)).length,
-  })));
+  public sales$ = combineLatest([this.internalSales$, this.externalSales$]);
 
   constructor(
     private contractService: ContractService,
-    private routerQuery: RouterQuery,
     private orgService: OrganizationService,
     private titleService: MovieService,
     private incomeService: IncomeService,
-    private router: Router,
     private dynTitle: DynamicTitleService,
-    private route: ActivatedRoute,
+    private appGuard: AppGuard,
     @Optional() private intercom: Intercom,
 
   ) { }
-
-
-  goToSale({ id }: Contract) {
-    this.router.navigate([id], { relativeTo: this.route });
-  }
-
-  applyFilter(filter?: ContractStatus) {
-    this.filter.setValue(filter);
-    const titleFilter = filter === 'pending' ? 'new' : filter;
-    const pageTitle = `My Sales (${titleFilter ? capitalize(titleFilter) : 'All'})`;
-    this.dynTitle.setPageTitle(pageTitle);
-  }
-
-  resetFilter() {
-    this.filter.reset('');
-    this.dynTitle.setPageTitle('My Sales (All)');
-  }
-
-  /* index paramater is unused because it is a default paramater from the filter javascript function */
-  filterBySalesStatus(sale: Sale, index: number, status: ContractStatus): boolean {
-    if (!status) return true;
-    return sale.status === status;
-  }
-
-  getLicensorId(sale: Sale) {
-    return sale.stakeholders.find(
-      orgId => ![centralOrgId.catalog, sale.buyerId].includes(orgId)
-    ) ?? sale.sellerId;
-  }
-
 
   ngOnInit() {
     this.dynTitle.setPageTitle('My Sales (All)');

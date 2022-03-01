@@ -1,17 +1,24 @@
 // Angular
-import { Component, ChangeDetectionStrategy, OnInit, Optional } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
 
 // Component
 import { MovieFormShellComponent } from '../shell/shell.component';
 
 // Utils
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Intercom } from 'ng-intercom';
 
 // Blockframes
-import { productionStatus } from '@blockframes/utils/static-model'
-import { getAppName } from '@blockframes/utils/apps';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { ProductionStatus, productionStatus, ProductionStatusValue } from '@blockframes/utils/static-model';
+import { getAllowedproductionStatuses } from '@blockframes/movie/+state/movie.model';
+import { AppGuard } from '@blockframes/utils/routes/app.guard';
+
+interface AllowedPoductionStatuses {
+  value: ProductionStatusValue,
+  key: ProductionStatus,
+  image: string,
+  disabled: boolean
+}
 
 @Component({
   selector: 'movie-form-title-status',
@@ -19,62 +26,33 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
   styleUrls: ['./title-status.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TitleStatusComponent implements OnInit {
+export class TitleStatusComponent {
   public form = this.shell.getForm('movie');
 
-  public appInformation = { disabledStatus: [], appName: { slug: '', label: '' } }
+  public currentApp = this.appGuard.currentApp;
 
-  public status = [{
-    name: 'In Development',
-    value: 'development',
-    image: 'development.svg',
-    disabled: false
-  }, {
-    name: 'In Production',
-    value: 'shooting',
-    image: 'production.svg',
-    disabled: false
-  }, {
-    name: 'In Post-Production',
-    value: 'post_production',
-    image: 'post_production.svg',
-    disabled: false
-  }, {
-    name: 'Completed',
-    value: 'finished',
-    image: 'completed.svg',
-    disabled: false
-  }, {
-    name: 'Released',
-    value: 'released',
-    image: 'released.svg',
-    disabled: false
-  }]
+  private allowedProductionStatuses = getAllowedproductionStatuses(this.currentApp);
+
+  public status: AllowedPoductionStatuses[] = Object.entries(productionStatus).map(([key, value]: [ProductionStatus, ProductionStatusValue]) => {
+    return {
+      value,
+      key,
+      image: `${key}.svg`,
+      disabled: !this.allowedProductionStatuses.some(k => k === key)
+    }
+  });
 
   constructor(
     private shell: MovieFormShellComponent,
-    private routerQuery: RouterQuery,
+    private appGuard: AppGuard,
     private dynTitle: DynamicTitleService,
     @Optional() private intercom: Intercom,
-  ) { }
-
-  ngOnInit() {
-    this.dynTitle.setPageTitle('Title Status')
-    this.appInformation.disabledStatus = this.routerQuery.getData()?.disabled || [];
-    this.status = this.status.map(s => ({ ...s, disabled: this.appInformation.disabledStatus.includes(s.value) }))
-    if (this.appInformation.disabledStatus.length) {
-      const value = Object.keys(productionStatus).filter(status => status === 'released')
-      this.form.productionStatus.setValue(value[0])
-    }
-    this.appInformation.appName = getAppName(this.routerQuery.getData().app)
+  ) {
+    this.dynTitle.setPageTitle('Title Status');
   }
 
-  setValue(value: string) {
-    /* If status is defined via the router data object, we don't want to change
-    the status via the click event from the image */
-    if (!this.routerQuery.getData()?.disabled?.includes(value)) {
-      this.form.productionStatus.setValue(value);
-    }
+  setValue(value: string, disabled: boolean) {
+    if (!disabled) this.form.productionStatus.setValue(value);
   }
 
   openIntercom(): void {

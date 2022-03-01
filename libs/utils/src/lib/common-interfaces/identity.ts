@@ -2,7 +2,9 @@ import { createStorageFile, StorageFile } from "@blockframes/media/+state/media.
 import {
   CrewRole,
   Territory,
-  ProducerRole
+  ProducerRole,
+  MemberStatus,
+  DirectorCategory
 } from "../static-model/types";
 
 
@@ -54,7 +56,7 @@ export interface Stakeholder extends StakeholderRaw {
 export interface Credit extends Person {
   description?: string,
   filmography?: Filmography[],
-  status?: string,
+  status?: MemberStatus,
 };
 
 export interface Filmography {
@@ -73,7 +75,7 @@ export interface Producer extends Credit {
  * @dev interface to represent a director credit
  */
 export interface Director extends Credit {
-  category?: string,
+  category?: DirectorCategory,
 };
 
 /**
@@ -101,16 +103,22 @@ export function createStakeholder(params: Partial<Stakeholder> = {}): Stakeholde
   }
 }
 
-export function createCredit(params: Partial<Credit> = {}) {
+export function createCredit(params: Partial<Credit> = {}): Credit {
   return {
     firstName: '',
     lastName: '',
     role: '',
     filmography: [],
     description: '',
-    status: '',
-    category: '',
+    status: null,
     avatar: createStorageFile(params?.avatar),
+    ...params
+  }
+}
+
+export function createDirector(params: Partial<Director> = {}): Director {
+  return {
+    ...createCredit(params),
     ...params
   }
 }

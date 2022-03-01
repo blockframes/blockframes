@@ -1,6 +1,8 @@
 import { Component, Input } from '@angular/core';
-import { MovieQuery } from '@blockframes/movie/+state';
+import { ActivatedRoute } from '@angular/router';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
+import { Observable } from 'rxjs';
+import { map, pluck } from 'rxjs/operators';
 
 @Component({
   selector: '[movie][link] movie-summary-main',
@@ -11,10 +13,13 @@ export class SummaryMainComponent {
 
   @Input() movie: MovieForm;
   @Input() link: string;
-  public movieId = this.query.getActiveId();
-  public productionLink = `/c/o/dashboard/tunnel/movie/${this.movieId}/title-status`;
 
-  constructor(private query: MovieQuery) {}
+  productionLink$: Observable<string> = this.route.params.pipe(
+    pluck('movieId'),
+    map((movieId: string) => `/c/o/dashboard/tunnel/movie/${movieId}/title-status`)
+  );
+
+  constructor(private route: ActivatedRoute,) {}
 
   get title() {
     return this.movie.get('title');

@@ -88,7 +88,7 @@
           </mat-expansion-panel>
 
           <!-- VERSIONS -->
-          <mat-expansion-panel>
+          <mat-expansion-panel *ngIf="movie$ | async as movie">
             <mat-expansion-panel-header>
               <mat-panel-title>
                 Versions
