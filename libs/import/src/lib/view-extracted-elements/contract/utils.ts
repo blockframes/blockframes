@@ -342,6 +342,5 @@ export async function formatContract(
 
     contracts.push({ contract, terms, errors, newContract: true });
   }
-  console.log({ contracts })
   return contracts;
 }
