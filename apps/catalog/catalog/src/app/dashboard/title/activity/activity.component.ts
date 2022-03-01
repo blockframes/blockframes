@@ -4,8 +4,7 @@ import { map, pluck, switchMap } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { DashboardTitleShellComponent } from '@blockframes/movie/dashboard/shell/shell.component';
-import { toMovieAnalytics } from '@blockframes/movie/components/movie-analytics-chart/utils';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { toMovieAnalytics } from '@blockframes/analytics/components/movie-analytics-chart/utils';
 
 @Component({
   selector: 'catalog-title-activity',
@@ -16,11 +15,7 @@ import { OrganizationService } from '@blockframes/organization/+state';
 export class TitleActivityComponent implements OnInit {
   public movieAnalytics$ = this.route.params.pipe(
     pluck('movieId'),
-    switchMap((movieId: string) => this.analyticsService.valueChanges(ref => ref
-      .where('type', '==', 'title')
-      .where('meta.titleId', '==', movieId)
-      .where('meta.ownerOrgIds', 'array-contains', this.orgService.org?.id)
-      )),
+    switchMap((titleId: string) => this.analyticsService.getTitleAnalytics$(titleId)),
     map(toMovieAnalytics)
   );
 
@@ -28,8 +23,7 @@ export class TitleActivityComponent implements OnInit {
     private route: ActivatedRoute,
     private analyticsService: AnalyticsService,
     private dynTitle: DynamicTitleService,
-    private shell: DashboardTitleShellComponent,
-    private orgService: OrganizationService
+    private shell: DashboardTitleShellComponent
   ) { }
 
   ngOnInit() {

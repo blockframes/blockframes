@@ -3,6 +3,9 @@ import { ActiveState, EntityState } from '@datorama/akita';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { Analytics, AnalyticsTypes } from './analytics.firestore';
 import { toDate } from '@blockframes/utils/helpers';
+import { OrganizationService } from '@blockframes/organization/+state';
+import { QueryFn } from '@angular/fire/firestore';
+import { formatDocumentMetaFromFirestore } from '@blockframes/utils/models-meta';
 
 interface AnalyticsState extends EntityState<Analytics>, ActiveState<string> {};
 
@@ -11,12 +14,22 @@ interface AnalyticsState extends EntityState<Analytics>, ActiveState<string> {};
 export class AnalyticsService extends CollectionService<AnalyticsState> {
   readonly useMemorization = true;
 
-  constructor() {
+  constructor(private orgService: OrganizationService) {
     super();
   }
 
   formatFromFirestore(analytic): Analytics<AnalyticsTypes> {
-    analytic._meta.createdAt = toDate(analytic._meta.createdAt);
-    return analytic;
+    return {
+      ...analytic,
+      _meta: formatDocumentMetaFromFirestore(analytic._meta)
+    };
+  }
+
+  getTitleAnalytics$(titleId: string) {
+    return this.valueChanges(ref => ref
+      .where('type', '==', 'title')
+      .where('meta.titleId', '==', titleId)
+      .where('meta.ownerOrgIds', 'array-contains', this.orgService.org.id)
+    );
   }
 }

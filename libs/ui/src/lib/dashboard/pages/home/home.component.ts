@@ -16,7 +16,7 @@ import { Observable } from 'rxjs';
 // Intercom
 import { Intercom } from 'ng-intercom';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
-import { toMovieAnalytics } from '@blockframes/movie/components/movie-analytics-chart/utils';
+import { toMovieAnalytics } from '@blockframes/analytics/components/movie-analytics-chart/utils';
 
 @Component({
   selector: 'dashboard-home',
@@ -34,7 +34,13 @@ export class HomeComponent implements OnInit {
   public hasAcceptedMovies$: Observable<boolean>;
   public hasDraftMovies$: Observable<boolean>;
 
-  public titleAnalytics$: Observable<MovieAnalytics[]>;
+  public titleAnalytics$: Observable<MovieAnalytics[]> = this.orgService.currentOrg$.pipe(
+    switchMap(({ id }) => this.analytics.valueChanges(ref => ref
+      .where('type', '==', 'title')
+      .where('meta.ownerOrgIds', 'array-contains', id)
+    )),
+    map(toMovieAnalytics)
+  );
 
   constructor(
     private analytics: AnalyticsService,
@@ -50,14 +56,6 @@ export class HomeComponent implements OnInit {
       switchMap(({ id }) => this.movieService.valueChanges(fromOrg(id))),
       shareReplay({ refCount: true, bufferSize: 1 }),
       map(titles => titles.filter(title => title.app[this.app].access))
-    );
-
-    this.titleAnalytics$ = this.orgService.currentOrg$.pipe(
-      switchMap(({ id }) => this.analytics.valueChanges(ref => ref
-        .where('type', '==', 'title')
-        .where('meta.ownerOrgIds', 'array-contains', id)
-      )),
-      map(toMovieAnalytics)
     );
 
     this.hasAcceptedMovies$ = allMoviesFromOrg$.pipe(

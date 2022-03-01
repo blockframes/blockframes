@@ -44,7 +44,7 @@ function getLastDays(from: number, to: number = 0) {
 }
 
 /** Format date: Date -> YYYYMMDD */
-export function toYMD(date: Date) {
+function toYMD(date: Date) {
   const m = date.getMonth()
   const d = date.getDate()
   return `${date.getFullYear()}${m < 10 ? `0${m + 1}` : m + 1}${d < 10 ? `0${d}` : d}`;

@@ -500,15 +500,18 @@ service cloud.firestore {
       allow read: if userHasValidOrg()
         && notInMaintenance()
         && (resource == null
-          || ( existingData().type == 'title' && (userOrgId() in existingData().meta.ownerOrgIds ))
+          || isAllowedToReadTitleAnalytics()
         );
        allow create: if userHasValidOrg()
         && notInMaintenance()
-        && isRequestFieldValueEqualToOrNotSetted(['id'], docId)
+        && isRequestFieldValueEqualTo(['id'], docId)
         && isRequestFieldValueEqualTo(['meta', 'orgId'], userOrgId())
         && isRequestFieldValueEqualTo(['meta', 'uid'], userId());
     }
 
+  function isAllowedToReadTitleAnalytics() {
+    return existingData().type == 'title' && (userOrgId() in existingData().meta.ownerOrgIds )
+  }
 
 
     /////////////////////////////////////////////////////////////////////////////////
