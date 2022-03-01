@@ -1,0 +1,43 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding-block: 32px 48px;
+  background-image: url("/assets/images/banner_empty.png");
+}
+
+.button-container {
+  margin-top: 16px;
+
+  button {
+    background-color: rgba(30, 27, 66, 1);
+  }
+  
+  a {
+    background-color: rgba(50, 53, 104, 1);
+  }
+  
+  > * {
+    cursor: pointer;
+    border: none;
+    padding: 16px 32px;
+    border-radius: 4px;
+  
+    div {
+      :first-child {
+        font-weight: bold;
+      }
+      p {
+        margin: 0;
+      }
+    }
+  
+    mat-icon {
+      width: 40px;
+      height: 40px;
+      align-self: center;
+    }
+  }
+}
