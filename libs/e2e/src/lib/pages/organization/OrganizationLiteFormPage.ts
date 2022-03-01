@@ -16,12 +16,12 @@ export default class OrganizationLiteFormPage {
   }
 
   public chooseDashboardAccess() {
-    cy.get('organization-lite-form mat-button-toggle-group[test-id="appAccessToggleGroup"]')
+    cy.get('organization-lite-form mat-button-toggle-group[test-id="role"]')
       .get('mat-button-toggle[value="dashboard"]').click();
   }
 
   public chooseMarketplaceAccess() {
-    cy.get('organization-lite-form mat-button-toggle-group[test-id="appAccessToggleGroup"]')
+    cy.get('organization-lite-form mat-button-toggle-group[test-id="role"]')
       .get('mat-button-toggle[value="marketplace"]').click();
   }
 
@@ -50,7 +50,7 @@ export default class OrganizationLiteFormPage {
       case 'denomination' :
         cy.get('static-select[test-id="country"]').should('not.exist');
         cy.get('organization-lite-form mat-select[test-id="activity"]').should('not.exist');
-        cy.get('organization-lite-form mat-button-toggle-group[test-id="appAccessToggleGroup"]').should('not.exist');
+        cy.get('organization-lite-form mat-button-toggle-group[test-id="role"]').should('not.exist');
         break;
       case 'activity' :
         this.createNewOrg(org);
@@ -84,12 +84,12 @@ export default class OrganizationLiteFormPage {
     cy.get('static-select[test-id="country"]').should('contain.value', org.address.country);
     cy.get('static-select[test-id="country"]').should('be.disabled');
     if (role === "seller") {
-      cy.get('organization-lite-form mat-button-toggle-group[test-id="appAccessToggleGroup"]')
+      cy.get('organization-lite-form mat-button-toggle-group[test-id="role"]')
         .get('mat-button-toggle[value="dashboard"]').should('be.selected');
       cy.get('mat-button-toggle[value="dashboard"]').should('be.disabled');
     }
     else {
-      cy.get('organization-lite-form mat-button-toggle-group[test-id="appAccessToggleGroup"]')
+      cy.get('organization-lite-form mat-button-toggle-group[test-id="role"]')
         .get('mat-button-toggle[value="marketplace"]').should('be.selected');
       cy.get('mat-button-toggle[value="marketplace"]').should('be.disabled');
     }
