@@ -7,7 +7,7 @@ import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Intercom } from 'ng-intercom';
-import { App, appName } from '@blockframes/utils/apps';
+import { App } from '@blockframes/utils/apps';
 import { StoreStatus } from '@blockframes/utils/static-model/types';
 import { APP } from '@blockframes/utils/routes/create-routes';
 
@@ -18,7 +18,6 @@ import { APP } from '@blockframes/utils/routes/create-routes';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListComponent {
-  public appName = appName[this.app];
   filter = new FormControl();
   filter$ = this.filter.valueChanges.pipe(startWith(this.filter.value));
 
@@ -44,7 +43,7 @@ export class ListComponent {
     private route: ActivatedRoute,
     private dynTitle: DynamicTitleService,
     @Optional() private intercom: Intercom,
-    @Inject(APP) private app: App
+    @Inject(APP) public app: App
   ) { }
 
   /** Navigate to tunnel if status is draft, else go to page */

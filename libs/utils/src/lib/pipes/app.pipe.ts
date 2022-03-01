@@ -1,10 +1,10 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
-import { getAppName, App } from '../apps';
+import { App, appName, appShortName } from '../apps';
 
 @Pipe({ name: 'appName' })
 export class AppNamePipe implements PipeTransform {
   transform(app: App, short = false): string {
-    return getAppName(app, short).label;
+    return short ? appShortName[app] : appName[app];
   }
 }
 

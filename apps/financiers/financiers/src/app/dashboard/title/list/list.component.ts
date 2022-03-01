@@ -8,7 +8,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { Observable } from 'rxjs';
 import { map, startWith, switchMap, tap } from 'rxjs/operators';
 import { Intercom } from 'ng-intercom';
-import { App, appName } from '@blockframes/utils/apps';
+import { App } from '@blockframes/utils/apps';
 import { APP } from '@blockframes/utils/routes/create-routes';
 
 type Filters = 'all' | 'draft' | 'ongoing' | 'achieved' | 'archived';
@@ -30,7 +30,6 @@ function filterMovieCampaign(movies: MovieCampaign[], filter: Filters) {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListComponent implements OnInit {
-  public appName = appName[this.app];
   titles$: Observable<MovieCampaign[]>;
   titleCount$: Observable<Record<string, number>>;
   filter = new FormControl('all');
@@ -44,7 +43,7 @@ export class ListComponent implements OnInit {
     private dynTitle: DynamicTitleService,
     private movieService: MovieService,
     @Optional() private intercom: Intercom,
-    @Inject(APP) private app: App
+    @Inject(APP) public app: App
   ) { }
 
   ngOnInit() {

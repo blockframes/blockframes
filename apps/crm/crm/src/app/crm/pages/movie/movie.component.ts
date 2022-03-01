@@ -5,7 +5,7 @@ import { MovieCrmForm } from '@blockframes/admin/crm/forms/movie-crm.form';
 import { storeStatus, productionStatus } from '@blockframes/utils/static-model';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { getAllAppsExcept, appName } from '@blockframes/utils/apps';
+import { getAllAppsExcept } from '@blockframes/utils/apps';
 import { MatDialog } from '@angular/material/dialog';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
@@ -30,7 +30,6 @@ export class MovieComponent implements OnInit {
   public storeStatus = storeStatus;
   public productionStatus = productionStatus;
   public apps = getAllAppsExcept(['crm']);
-  public appName = appName;
 
   constructor(
     private movieService: MovieService,

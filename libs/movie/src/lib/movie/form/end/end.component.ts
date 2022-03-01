@@ -1,8 +1,8 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MovieService } from '@blockframes/movie/+state';
 import { App } from '@blockframes/utils/apps';
-import { AppGuard } from '@blockframes/utils/routes/app.guard';
+import { APP } from '@blockframes/utils/routes/create-routes';
 import { pluck, switchMap } from 'rxjs/operators';
 
 @Component({
@@ -12,7 +12,6 @@ import { pluck, switchMap } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MovieFormEndComponent {
-  app: App = this.appGuard.currentApp;
 
   public movie$ = this.route.params.pipe(
     pluck('movieId'),
@@ -23,7 +22,7 @@ export class MovieFormEndComponent {
     private router: Router,
     private movieService: MovieService,
     private route: ActivatedRoute,
-    private appGuard: AppGuard,
+    @Inject(APP) public app: App
   ) { }
 
   navigate(movieId: string) {

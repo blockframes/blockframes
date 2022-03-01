@@ -1,16 +1,16 @@
-import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, Inject } from '@angular/core';
 import { Invitation, InvitationService } from '../../+state';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { EventService } from '@blockframes/event/+state/event.service';
 import { PublicUser } from '@blockframes/user/types';
 import { PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
-import { applicationUrl } from '@blockframes/utils/apps';
+import { App, applicationUrl } from '@blockframes/utils/apps';
 import { isMeeting } from '@blockframes/event/+state';
 import { isSafari } from '@blockframes/utils/browser/utils';
 import { AgendaService } from '@blockframes/utils/agenda/agenda.service';
 import { Event } from '@blockframes/event/+state';
-import { AppGuard } from '@blockframes/utils/routes/app.guard';
+import { APP } from '@blockframes/utils/routes/create-routes';
 
 @Component({
   selector: 'invitation-item',
@@ -20,7 +20,6 @@ import { AppGuard } from '@blockframes/utils/routes/app.guard';
 })
 export class ItemComponent {
   public applicationUrl = applicationUrl;
-  public app = this.appGuard.currentApp;
 
   @Input() set invitation(invitation: Invitation) {
     this._invitation = invitation;
@@ -64,8 +63,8 @@ export class ItemComponent {
     private organizationService: OrganizationService,
     private userService: UserService,
     private agendaService: AgendaService,
-    private appGuard: AppGuard,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    @Inject(APP) private app: App
   ) {
     //For cypress-environment, keep the event link same as from
     //where app is launced to remove dependency on external host.

@@ -7,7 +7,8 @@ import { RouteDescription } from '@blockframes/utils/common-interfaces/navigatio
 import { Movie, MovieService } from '@blockframes/movie/+state';
 import { FORMS_CONFIG, ShellConfig } from '../../form/movie.shell.interfaces';
 import { filter, pluck, switchMap, tap } from 'rxjs/operators';
-import { AppGuard } from '@blockframes/utils/routes/app.guard';
+import { APP } from '@blockframes/utils/routes/create-routes';
+import { App } from '@blockframes/utils/apps';
 
 @Directive({ selector: 'movie-cta, [movieCta]' })
 export class MovieCtaDirective { }
@@ -30,17 +31,15 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
 
   public movie: Movie;
 
-  public appName = this.appGuard.currentApp;
-
   @Input() routes: RouteDescription[];
 
   constructor(
     @Inject(FORMS_CONFIG) private configs: ShellConfig,
+    @Inject(APP) public app: App,
     private movieService: MovieService,
     private router: Router,
     private location: Location,
-    private route: ActivatedRoute,
-    private appGuard: AppGuard,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit() {

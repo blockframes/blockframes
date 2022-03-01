@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ChangeDetectorRef, Inject } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -8,7 +8,8 @@ import { Subscription } from 'rxjs';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { MovieService } from '@blockframes/movie/+state';
-import { AppGuard } from '@blockframes/utils/routes/app.guard';
+import { App } from '@blockframes/utils/apps';
+import { APP } from '@blockframes/utils/routes/create-routes';
 
 @Component({
   selector: 'marketplace-wishlist',
@@ -42,14 +43,14 @@ export class WishlistComponent implements OnInit, OnDestroy {
     private dynTitle: DynamicTitleService,
     private orgService: OrganizationService,
     private movieService: MovieService,
-    private appGuard: AppGuard,
+    @Inject(APP) private app: App
   ) { }
 
   ngOnInit() {
     this.sub = this.orgService.currentOrg$.pipe(
       switchMap(org => this.movieService.valueChanges(org?.wishlist || []))
     ).subscribe(allMovies => {
-      const movies = allMovies.filter(movie => !!movie && movie.app[this.appGuard.currentApp].access);
+      const movies = allMovies.filter(movie => !!movie && movie.app[this.app].access);
       this.hasWishlist = !!movies.length;
       this.hasWishlist ?
         this.dynTitle.setPageTitle('Wishlist') :

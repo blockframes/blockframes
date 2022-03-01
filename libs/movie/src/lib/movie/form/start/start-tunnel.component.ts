@@ -1,15 +1,14 @@
 // Angular
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 
 // Blockframes
 import { createReleaseYear, Movie, MovieService } from '@blockframes/movie/+state';
 import { App } from '@blockframes/utils/apps';
-import { AppGuard } from '@blockframes/utils/routes/app.guard';
+import { APP } from '@blockframes/utils/routes/create-routes';
 
 // RxJs
 import { BehaviorSubject } from 'rxjs';
-
 
 const predefinedTitleConfig: Record<App, Partial<Movie>> = {
   catalog: {
@@ -30,19 +29,18 @@ const predefinedTitleConfig: Record<App, Partial<Movie>> = {
 })
 export class MovieFormStartTunnelComponent {
   public loadingTunnel = new BehaviorSubject(false);
-  public currentApp = this.appGuard.currentApp;
 
   constructor(
     private movieService: MovieService,
     private router: Router,
-    private appGuard: AppGuard,
+    @Inject(APP) private app: App
   ) { }
 
   async navigateToTunnel() {
     this.loadingTunnel.next(true);
     try {
-      const app = { [this.currentApp]: { access: true } };
-      const { id } = await this.movieService.create({ ...predefinedTitleConfig[this.currentApp], app });
+      const app = { [this.app]: { access: true } };
+      const { id } = await this.movieService.create({ ...predefinedTitleConfig[this.app], app });
 
       this.router.navigate(['/c/o/dashboard/tunnel/movie/', id]);
     } catch (err) {

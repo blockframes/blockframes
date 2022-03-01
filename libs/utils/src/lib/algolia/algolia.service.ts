@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { algolia } from '@env';
 import algoliasearch, { SearchIndex } from 'algoliasearch';
 import { App } from '../apps';
-import { AppGuard } from '../routes/app.guard';
+import { APP } from '../routes/create-routes';
 import { algoliaIndex, AlgoliaObject, AlgoliaQueries, SearchResponse } from './algolia.interfaces';
 import { parseFilters, parseFacets } from './helper.utils';
 
@@ -11,18 +11,14 @@ export class AlgoliaService {
 
   private indices: Record<string, SearchIndex> = {};
 
-  private appName: App;
-
-  constructor(private appGuard: AppGuard) {
-    this.appName = this.appGuard.currentApp;
-  }
+  constructor(@Inject(APP) private app: App) {}
 
   getIndex(name: 'movie' | 'org' | 'user'): SearchIndex {
     if (!this.indices[name]) {
       if (name === 'user') {
         this.indices[name] = algoliasearch(algolia.appId, algolia.searchKey).initIndex(algoliaIndex[name]);
       } else {
-        this.indices[name] = algoliasearch(algolia.appId, algolia.searchKey).initIndex(algoliaIndex[name][this.appName]);
+        this.indices[name] = algoliasearch(algolia.appId, algolia.searchKey).initIndex(algoliaIndex[name][this.app]);
       }
     }
     return this.indices[name];

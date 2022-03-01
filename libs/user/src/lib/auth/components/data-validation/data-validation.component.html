@@ -58,7 +58,7 @@
 </section>
 
 <article fxLayout="column">
-  <button mat-flat-button color="primary" (click)="openIntercom()" fxHide.lt-sm="true">Contact {{ appName }}
+  <button mat-flat-button color="primary" (click)="openIntercom()" fxHide.lt-sm="true">Contact {{ app | appName }}
     Team</button>
   <button mat-flat-button color="primary" (click)="openIntercom()" fxHide.gt-xs="true">Contact Us</button>
   <button mat-button color="primary" (click)="refresh()">Refresh Page</button>

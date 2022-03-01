@@ -1,5 +1,5 @@
 // Angular
-import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Optional, Inject } from '@angular/core';
 
 // Component
 import { MovieFormShellComponent } from '../shell/shell.component';
@@ -11,7 +11,8 @@ import { Intercom } from 'ng-intercom';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { ProductionStatus, productionStatus, ProductionStatusValue } from '@blockframes/utils/static-model';
 import { getAllowedproductionStatuses } from '@blockframes/movie/+state/movie.model';
-import { AppGuard } from '@blockframes/utils/routes/app.guard';
+import { App } from '@blockframes/utils/apps';
+import { APP } from '@blockframes/utils/routes/create-routes';
 
 interface AllowedPoductionStatuses {
   value: ProductionStatusValue,
@@ -29,8 +30,6 @@ interface AllowedPoductionStatuses {
 export class TitleStatusComponent {
   public form = this.shell.getForm('movie');
 
-  public currentApp = this.appGuard.currentApp;
-
   private allowedProductionStatuses = getAllowedproductionStatuses(this.currentApp);
 
   public status: AllowedPoductionStatuses[] = Object.entries(productionStatus).map(([key, value]: [ProductionStatus, ProductionStatusValue]) => {
@@ -44,9 +43,9 @@ export class TitleStatusComponent {
 
   constructor(
     private shell: MovieFormShellComponent,
-    private appGuard: AppGuard,
     private dynTitle: DynamicTitleService,
     @Optional() private intercom: Intercom,
+    @Inject(APP) public currentApp: App
   ) {
     this.dynTitle.setPageTitle('Title Status');
   }

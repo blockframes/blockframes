@@ -1,6 +1,9 @@
-// Angular
-import { Component, ChangeDetectionStrategy, HostBinding, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, HostBinding, ChangeDetectorRef, Inject } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { map, pluck, shareReplay, switchMap } from 'rxjs/operators';
+import { combineLatest, Observable } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
 
 // Blockframes
 import { MovieService } from '@blockframes/movie/+state';
@@ -8,14 +11,9 @@ import { EventService, Event } from '@blockframes/event/+state';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { Screening } from '@blockframes/event/+state/event.firestore';
-
-// RxJs
-import { map, pluck, shareReplay, switchMap } from 'rxjs/operators';
-import { combineLatest, Observable } from 'rxjs';
-import { MatDialog } from '@angular/material/dialog';
+import { APP } from '@blockframes/utils/routes/create-routes';
+import { App } from '@blockframes/utils/apps';
 import { RequestAskingPriceComponent } from '../request-asking-price/request-asking-price.component';
-import { ActivatedRoute } from '@angular/router';
-import { AppGuard } from '@blockframes/utils/routes/app.guard';
 
 @Component({
   selector: 'movie-screening',
@@ -25,8 +23,6 @@ import { AppGuard } from '@blockframes/utils/routes/app.guard';
 })
 export class UpcomingScreeningsComponent {
   @HostBinding('class') class = 'dark-contrast-theme';
-
-  private app = this.appGuard.currentApp;
 
   public sessions = ['first', 'second', 'third', 'fourth', 'fifth'];
 
@@ -58,7 +54,7 @@ export class UpcomingScreeningsComponent {
     private cdr: ChangeDetectorRef,
     private route: ActivatedRoute,
     private movieService: MovieService,
-    private appGuard: AppGuard,
+    @Inject(APP) private app: App
   ) {
 
     const now = new Date();

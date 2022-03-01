@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Notification } from './notification.model';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { AuthService } from '@blockframes/auth/+state';
@@ -8,7 +8,7 @@ import { orgName } from '@blockframes/organization/+state/organization.firestore
 import { OrganizationService } from '@blockframes/organization/+state';
 import { toDate } from '@blockframes/utils/helpers';
 import { displayName } from '@blockframes/utils/utils';
-import { applicationUrl, appName, getMovieAppAccess } from '@blockframes/utils/apps';
+import { App, applicationUrl, appName, getMovieAppAccess } from '@blockframes/utils/apps';
 import { Movie, MovieService } from '@blockframes/movie/+state';
 import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 import { format } from 'date-fns';
@@ -16,15 +16,14 @@ import { trimString } from '@blockframes/utils/pipes/max-length.pipe';
 import { ActiveState, EntityState } from '@datorama/akita';
 import { UserService } from '@blockframes/user/+state';
 import { EventService } from '@blockframes/event/+state';
-import { AppGuard } from '@blockframes/utils/routes/app.guard';
 import { ModuleGuard } from '@blockframes/utils/routes/module.guard';
+import { APP } from '@blockframes/utils/routes/create-routes';
 
 interface NotificationState extends EntityState<Notification>, ActiveState<string> { }
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'notifications' })
 export class NotificationService extends CollectionService<NotificationState> {
   readonly useMemorization = true;
-  private app = this.appGuard.currentApp;
   private appName = appName[this.app];
 
   myNotifications$ = this.authService.profile$.pipe(
@@ -41,11 +40,11 @@ export class NotificationService extends CollectionService<NotificationState> {
   constructor(
     private authService: AuthService,
     private orgService: OrganizationService,
-    private appGuard: AppGuard,
     private moduleGuard: ModuleGuard,
     private movieService: MovieService,
     private userService: UserService,
-    private eventService: EventService
+    private eventService: EventService,
+    @Inject(APP) private app: App
   ) {
     super();
   }
