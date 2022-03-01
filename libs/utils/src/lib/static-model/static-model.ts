@@ -84,23 +84,23 @@ export const directorCategory = {
 } as const
 
 export const genres = {
-  comedy: 'Comedy',
-  drama: 'Drama',
   action: 'Action',
-  horror: 'Horror',
-  scienceFiction: 'Science Fiction',
-  thriller: 'Thriller',
-  fantasy: 'Fantasy',
-  romance: 'Romance',
   adventure: 'Adventure',
-  biography: 'Biography',
   animation: 'Animation',
+  biography: 'Biography',
+  comedy: 'Comedy',
+  crime: 'Crime',
+  documentary: 'Documentary',
+  drama: 'Drama',
   erotic: 'Erotic',
   family: 'Family',
-  documentary: 'Documentary',
-  periodDrama: 'Period Drama',
-  crime: 'Crime',
+  fantasy: 'Fantasy',
+  horror: 'Horror',
   kidsAndTeen: 'Kids and teen',
+  periodDrama: 'Period Drama',
+  romance: 'Romance',
+  scienceFiction: 'Science Fiction',
+  thriller: 'Thriller',
 } as const
 
 export const hostedVideoTypes = {
