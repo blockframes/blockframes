@@ -11,7 +11,7 @@ import { EventService, Event } from '@blockframes/event/+state';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { Screening } from '@blockframes/event/+state/event.firestore';
-import { APP } from '@blockframes/utils/routes/create-routes';
+import { APP } from '@blockframes/utils/routes/utils';
 import { App } from '@blockframes/utils/apps';
 import { RequestAskingPriceComponent } from '../request-asking-price/request-asking-price.component';
 

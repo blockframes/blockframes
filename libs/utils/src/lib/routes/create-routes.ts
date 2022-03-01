@@ -6,10 +6,6 @@ import { PermissionsGuard } from '@blockframes/permissions/guard/permissions.gua
 import { OrganizationGuard } from '@blockframes/organization/guard/organization.guard';
 import { MaintenanceGuard } from '@blockframes/ui/maintenance';
 import { RequestAccessGuard } from '@blockframes/organization/guard/request-access.guard';
-import { InjectionToken } from '@angular/core';
-import { App } from '../apps';
-
-export const APP = new InjectionToken<App>('Name of the app');
 
 interface RouteOptions {
   /** The routes of the apps */

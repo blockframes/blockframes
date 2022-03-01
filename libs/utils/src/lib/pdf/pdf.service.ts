@@ -1,8 +1,8 @@
-import { Inject, Injectable } from "@angular/core";
+import { Inject, Injectable } from '@angular/core';
 import { firebaseRegion, firebase, emulators } from '@env';
-import { APP } from "../routes/create-routes";
-import { App, appName } from "./../apps";
-import { PdfParams } from "./pdf.interfaces";
+import { APP } from '../routes/utils';
+import { App, appName } from './../apps';
+import { PdfParams } from './pdf.interfaces';
 export const { projectId } = firebase();
 
 @Injectable({ providedIn: 'root' })

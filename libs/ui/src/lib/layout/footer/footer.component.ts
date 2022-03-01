@@ -1,7 +1,6 @@
-// Angular
 import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
 import { App } from '@blockframes/utils/apps';
-import { APP } from '@blockframes/utils/routes/create-routes';
+import { APP } from '@blockframes/utils/routes/utils';
 import { ModuleGuard } from '@blockframes/utils/routes/module.guard';
 
 @Component({

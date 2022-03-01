@@ -11,7 +11,7 @@ import { canHavePreferences } from '@blockframes/user/+state/user.utils';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { AuthService } from '@blockframes/auth/+state';
 import { User } from '@blockframes/user/+state/user.model';
-import { APP } from '@blockframes/utils/routes/create-routes';
+import { APP } from '@blockframes/utils/routes/utils';
 import { App } from '@blockframes/utils/apps';
 
 const navLinks = [

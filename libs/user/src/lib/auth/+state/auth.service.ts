@@ -20,7 +20,7 @@ import { AngularFireAnalytics } from '@angular/fire/analytics';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { createUser, UserService } from '@blockframes/user/+state';
 import { Store, StoreConfig } from '@datorama/akita';
-import { APP } from '@blockframes/utils/routes/create-routes';
+import { APP } from '@blockframes/utils/routes/utils';
 
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'auth' })

@@ -8,7 +8,7 @@ import { hasDenomination, hasDisplayName } from '@blockframes/utils/helpers';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { map } from 'rxjs/operators';
-import { APP } from '@blockframes/utils/routes/create-routes';
+import { APP } from '@blockframes/utils/routes/utils';
 
 @Component({
   selector: 'auth-data-validation',

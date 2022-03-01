@@ -10,7 +10,7 @@ import { isMeeting } from '@blockframes/event/+state';
 import { isSafari } from '@blockframes/utils/browser/utils';
 import { AgendaService } from '@blockframes/utils/agenda/agenda.service';
 import { Event } from '@blockframes/event/+state';
-import { APP } from '@blockframes/utils/routes/create-routes';
+import { APP } from '@blockframes/utils/routes/utils';
 
 @Component({
   selector: 'invitation-item',

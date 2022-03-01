@@ -3,7 +3,7 @@ import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { App, Module } from '../apps';
-import { APP } from './create-routes';
+import { APP } from './utils';
 
 function currentModule(path: string): Module {
   const fragments = path.split('/');

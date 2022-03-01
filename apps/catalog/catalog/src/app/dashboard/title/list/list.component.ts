@@ -10,7 +10,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { storeStatus } from '@blockframes/utils/static-model';
 import { Intercom } from 'ng-intercom';
 import { App } from '@blockframes/utils/apps';
-import { APP } from '@blockframes/utils/routes/create-routes';
+import { APP } from '@blockframes/utils/routes/utils';
 
 @Component({
   selector: 'catalog-title-list',

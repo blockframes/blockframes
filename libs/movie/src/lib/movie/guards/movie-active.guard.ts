@@ -4,7 +4,7 @@ import { MovieService } from "../+state/movie.service";
 import { ActivatedRouteSnapshot, CanActivate, Router } from "@angular/router";
 import { Movie } from "../+state";
 import { App } from "@blockframes/utils/apps";
-import { APP } from "@blockframes/utils/routes/create-routes";
+import { APP } from '@blockframes/utils/routes/utils';
 
 @Injectable({ providedIn: 'root' })
 @CollectionGuardConfig({ awaitSync: true })

@@ -7,7 +7,7 @@ import { RequestDemoRole } from '@blockframes/utils/request-demo';
 import { ThemeService } from '@blockframes/ui/theme';
 import { testEmail } from "@blockframes/e2e/utils/env";
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
-import { APP } from '@blockframes/utils/routes/create-routes';
+import { APP } from '@blockframes/utils/routes/utils';
 import { App } from '@blockframes/utils/apps';
 
 @Directive({

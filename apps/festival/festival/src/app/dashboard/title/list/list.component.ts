@@ -9,7 +9,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { Intercom } from 'ng-intercom';
 import { App } from '@blockframes/utils/apps';
 import { StoreStatus } from '@blockframes/utils/static-model/types';
-import { APP } from '@blockframes/utils/routes/create-routes';
+import { APP } from '@blockframes/utils/routes/utils';
 
 @Component({
   selector: 'festival-dashboard-title-list',

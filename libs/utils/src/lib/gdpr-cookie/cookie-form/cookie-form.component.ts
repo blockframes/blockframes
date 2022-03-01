@@ -1,15 +1,15 @@
 import { Component, ChangeDetectionStrategy, Input, OnInit, OnDestroy, Inject } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { startWith } from 'rxjs/operators';
 
 // Blockframes
 import { CookiesConsent, CookiesConsentForm } from './cookie.form';
 import { App } from '../../apps';
+import { APP } from '@blockframes/utils/routes/utils';
 
 // Material
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatRadioChange } from '@angular/material/radio';
-import { Subscription } from 'rxjs';
-import { startWith } from 'rxjs/operators';
-import { APP } from '@blockframes/utils/routes/create-routes';
 
 @Component({
   selector: '[form] cookie-form',

@@ -33,7 +33,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { SentryModule } from '@blockframes/utils/sentry.module';
 import { ErrorLoggerModule } from '@blockframes/utils/error-logger.module';
 import { CrmModule } from './crm.module';
-import { APP } from '@blockframes/utils/routes/create-routes';
+import { APP } from '@blockframes/utils/routes/utils';
 
 @NgModule({
   declarations: [AppComponent],

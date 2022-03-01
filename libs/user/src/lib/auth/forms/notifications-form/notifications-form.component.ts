@@ -10,7 +10,7 @@ import { AuthService } from '@blockframes/auth/+state';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { APP } from '@blockframes/utils/routes/create-routes';
+import { APP } from '@blockframes/utils/routes/utils';
 
 interface NotificationSetting { text: string, tooltip: boolean };
 const titleType: Record<NotificationTypesBase, NotificationSetting> = {

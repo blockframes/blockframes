@@ -3,7 +3,7 @@ import { fromOrgAndAccepted, MovieService } from '@blockframes/movie/+state';
 import { Organization } from '@blockframes/organization/+state';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { APP } from '@blockframes/utils/routes/create-routes';
+import { APP } from '@blockframes/utils/routes/utils';
 import { App } from '@blockframes/utils/apps';
 
 @Component({

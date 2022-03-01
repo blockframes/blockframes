@@ -16,7 +16,7 @@ import { OrganizationService } from '@blockframes/organization/+state';
 import { MovieService, Movie } from '@blockframes/movie/+state'
 import { App } from '@blockframes/utils/apps';
 import { AuthService } from '@blockframes/auth/+state';
-import { APP } from '@blockframes/utils/routes/create-routes';
+import { APP } from '@blockframes/utils/routes/utils';
 
 @Component({
   selector: 'layout-marketplace',

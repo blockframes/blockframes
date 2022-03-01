@@ -12,7 +12,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { ProductionStatus, productionStatus, ProductionStatusValue } from '@blockframes/utils/static-model';
 import { getAllowedproductionStatuses } from '@blockframes/movie/+state/movie.model';
 import { App } from '@blockframes/utils/apps';
-import { APP } from '@blockframes/utils/routes/create-routes';
+import { APP } from '@blockframes/utils/routes/utils';
 
 interface AllowedPoductionStatuses {
   value: ProductionStatusValue,

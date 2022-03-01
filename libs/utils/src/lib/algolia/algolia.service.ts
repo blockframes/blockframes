@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { algolia } from '@env';
 import algoliasearch, { SearchIndex } from 'algoliasearch';
 import { App } from '../apps';
-import { APP } from '../routes/create-routes';
+import { APP } from '../routes/utils';
 import { algoliaIndex, AlgoliaObject, AlgoliaQueries, SearchResponse } from './algolia.interfaces';
 import { parseFilters, parseFacets } from './helper.utils';
 

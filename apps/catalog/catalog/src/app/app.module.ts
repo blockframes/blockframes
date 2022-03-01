@@ -41,7 +41,7 @@ import { CookieBannerModule } from '@blockframes/utils/gdpr-cookie/cookie-banner
 import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.service';
 import { getBrowserWithVersion } from '@blockframes/utils/browser/utils';
 import { AuthService } from '@blockframes/auth/+state';
-import { APP } from '@blockframes/utils/routes/create-routes';
+import { APP } from '@blockframes/utils/routes/utils';
 
 @NgModule({
   declarations: [AppComponent],

@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform, NgModule, Inject } from '@angular/core';
 import { MovieService } from '@blockframes/movie/+state';
 import { QueryFn } from '@angular/fire/firestore';
-import { APP } from '@blockframes/utils/routes/create-routes';
+import { APP } from '@blockframes/utils/routes/utils';
 import { App } from '@blockframes/utils/apps';
 
 @Pipe({ name: 'orgMovies', pure: true })

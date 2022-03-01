@@ -23,6 +23,7 @@ import { AngularFirePerformanceModule } from '@angular/fire/performance';
 
 // Blockframes
 import { CmsModule } from './cms.module';
+import { APP } from '@blockframes/utils/routes/utils';
 
 @NgModule({
   declarations: [AppComponent],
@@ -41,6 +42,7 @@ import { CmsModule } from './cms.module';
   ],
   providers: [
     { provide: REGION, useValue: firebaseRegion },
+    { provide: APP, useValue: 'cms' },
     ...emulatorConfig
   ],
   bootstrap: [AppComponent],

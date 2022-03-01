@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MovieService } from '@blockframes/movie/+state';
 import { App } from '@blockframes/utils/apps';
-import { APP } from '@blockframes/utils/routes/create-routes';
+import { APP } from '@blockframes/utils/routes/utils';
 import { pluck, switchMap } from 'rxjs/operators';
 
 @Component({

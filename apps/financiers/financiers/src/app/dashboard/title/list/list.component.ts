@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 import { map, startWith, switchMap, tap } from 'rxjs/operators';
 import { Intercom } from 'ng-intercom';
 import { App } from '@blockframes/utils/apps';
-import { APP } from '@blockframes/utils/routes/create-routes';
+import { APP } from '@blockframes/utils/routes/utils';
 
 type Filters = 'all' | 'draft' | 'ongoing' | 'achieved' | 'archived';
 

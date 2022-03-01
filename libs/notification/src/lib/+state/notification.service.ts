@@ -17,7 +17,7 @@ import { ActiveState, EntityState } from '@datorama/akita';
 import { UserService } from '@blockframes/user/+state';
 import { EventService } from '@blockframes/event/+state';
 import { ModuleGuard } from '@blockframes/utils/routes/module.guard';
-import { APP } from '@blockframes/utils/routes/create-routes';
+import { APP } from '@blockframes/utils/routes/utils';
 
 interface NotificationState extends EntityState<Notification>, ActiveState<string> { }
 @Injectable({ providedIn: 'root' })

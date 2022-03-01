@@ -9,7 +9,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { MovieService } from '@blockframes/movie/+state';
 import { App } from '@blockframes/utils/apps';
-import { APP } from '@blockframes/utils/routes/create-routes';
+import { APP } from '@blockframes/utils/routes/utils';
 
 @Component({
   selector: 'marketplace-wishlist',

@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { App, appName } from '../apps';
-import { APP } from '../routes/create-routes';
+import { APP } from '../routes/utils';
 
 function displaySection(section: string, showAppName: boolean, _appName: string) {
   const suffix = showAppName ? `- ${_appName}` : '';

@@ -5,7 +5,7 @@ import { OrganizationService } from '@blockframes/organization/+state';
 import { Router } from '@angular/router';
 import { App, getOrgModuleAccess } from '@blockframes/utils/apps';
 import { take } from 'rxjs/operators';
-import { APP } from '@blockframes/utils/routes/create-routes';
+import { APP } from '@blockframes/utils/routes/utils';
 
 @Component({
   selector: 'notification-view',

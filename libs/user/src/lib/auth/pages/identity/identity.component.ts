@@ -19,7 +19,7 @@ import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { DifferentPasswordStateMatcher, RepeatPasswordStateMatcher } from '@blockframes/utils/form/matchers';
 import { filter } from 'rxjs/operators';
-import { APP } from '@blockframes/utils/routes/create-routes';
+import { APP } from '@blockframes/utils/routes/utils';
 
 @Component({
   selector: 'auth-identity',

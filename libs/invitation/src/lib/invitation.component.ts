@@ -7,7 +7,7 @@ import { OrganizationService } from '@blockframes/organization/+state';
 import { map, startWith, tap } from 'rxjs/operators';
 import { FormControl, FormGroup } from '@angular/forms';
 import { combineLatest } from 'rxjs';
-import { APP } from '@blockframes/utils/routes/create-routes';
+import { APP } from '@blockframes/utils/routes/utils';
 
 const applyFilters = (invitations: Invitation[], filters: { type: string[], status: string[] }) => {
   const inv = filters.type?.length ? invitations.filter(inv => filters.type.includes(inv.type)) : invitations;

@@ -7,7 +7,7 @@ import { RouteDescription } from '@blockframes/utils/common-interfaces/navigatio
 import { Movie, MovieService } from '@blockframes/movie/+state';
 import { FORMS_CONFIG, ShellConfig } from '../../form/movie.shell.interfaces';
 import { filter, pluck, switchMap, tap } from 'rxjs/operators';
-import { APP } from '@blockframes/utils/routes/create-routes';
+import { APP } from '@blockframes/utils/routes/utils';
 import { App } from '@blockframes/utils/apps';
 
 @Directive({ selector: 'movie-cta, [movieCta]' })

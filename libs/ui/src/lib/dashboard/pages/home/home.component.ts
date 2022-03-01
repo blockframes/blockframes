@@ -14,7 +14,7 @@ import { Observable } from 'rxjs';
 
 // Intercom
 import { Intercom } from 'ng-intercom';
-import { APP } from '@blockframes/utils/routes/create-routes';
+import { APP } from '@blockframes/utils/routes/utils';
 
 @Component({
   selector: 'dashboard-home',

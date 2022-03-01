@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 import { Intercom } from 'ng-intercom';
 import { User } from '@blockframes/user/+state';
 import { AuthService } from '@blockframes/auth/+state';
-import { APP } from '@blockframes/utils/routes/create-routes';
+import { APP } from '@blockframes/utils/routes/utils';
 
 const queryFn = (uid: string) => ref => ref.where('mode', '==', 'request')
   .where('type', '==', 'joinOrganization')

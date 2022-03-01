@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, Input, Inject } from '@angular/core';
 import { App } from '@blockframes/utils/apps';
 import { ThemeService } from '@blockframes/ui/theme/theme.service';
-import { APP } from '@blockframes/utils/routes/create-routes';
+import { APP } from '@blockframes/utils/routes/utils';
 
 const appLogos: Record<App, string> = {
   catalog: 'archipel_content.svg',

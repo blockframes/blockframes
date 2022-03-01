@@ -4,7 +4,7 @@ import { AngularFireFunctions } from "@angular/fire/functions";
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { App } from "@blockframes/utils/apps";
-import { APP } from "@blockframes/utils/routes/create-routes";
+import { APP } from '@blockframes/utils/routes/utils';
 
 @Component({
   selector: 'bf-contact',

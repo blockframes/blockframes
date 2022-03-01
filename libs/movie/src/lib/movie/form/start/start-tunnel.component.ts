@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 // Blockframes
 import { createReleaseYear, Movie, MovieService } from '@blockframes/movie/+state';
 import { App } from '@blockframes/utils/apps';
-import { APP } from '@blockframes/utils/routes/create-routes';
+import { APP } from '@blockframes/utils/routes/utils';
 
 // RxJs
 import { BehaviorSubject } from 'rxjs';

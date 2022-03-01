@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
 import { App, getOrgModuleAccess } from '@blockframes/utils/apps';
 import { AuthService } from '@blockframes/auth/+state';
-import { APP } from '@blockframes/utils/routes/create-routes';
+import { APP } from '@blockframes/utils/routes/utils';
 
 @Injectable({ providedIn: 'root' })
 export class PendingOrganizationGuard implements CanActivate {

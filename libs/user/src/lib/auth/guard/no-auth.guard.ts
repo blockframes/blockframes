@@ -5,7 +5,7 @@ import { OrganizationService } from '@blockframes/organization/+state/organizati
 import { App, getOrgModuleAccess } from '@blockframes/utils/apps';
 import { combineLatest } from 'rxjs';
 import { CanActivate, Router } from '@angular/router';
-import { APP } from '@blockframes/utils/routes/create-routes';
+import { APP } from '@blockframes/utils/routes/utils';
 
 @Injectable({ providedIn: 'root' })
 export class NoAuthGuard implements CanActivate {

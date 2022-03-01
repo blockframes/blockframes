@@ -10,7 +10,7 @@ import { formatTitle } from './utils';
 import { MovieImportState } from '../../utils';
 import { AuthService } from '@blockframes/auth/+state';
 import { take } from 'rxjs/operators';
-import { APP } from '@blockframes/utils/routes/create-routes';
+import { APP } from '@blockframes/utils/routes/utils';
 import { App } from '@blockframes/utils/apps';
 
 @Component({

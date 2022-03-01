@@ -10,12 +10,12 @@ import { SearchResult } from '@blockframes/ui/search-widget/search-widget.compon
 import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { NotificationService } from '@blockframes/notification/+state';
+import { App, applicationUrl } from '@blockframes/utils/apps';
+import { APP } from '@blockframes/utils/routes/utils';
 
 // RxJs
 import { Observable, Subscription } from 'rxjs';
 import { filter, map, shareReplay } from 'rxjs/operators';
-import { App, applicationUrl } from '@blockframes/utils/apps';
-import { APP } from '@blockframes/utils/routes/create-routes';
 
 interface AppBridge {
   text: string;

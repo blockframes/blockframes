@@ -4,7 +4,7 @@ import { IntercomService } from '@blockframes/utils/intercom/intercom.service';
 import { YandexMetricaService } from '@blockframes/utils/yandex-metrica/yandex-metrica.service';
 import { User } from "@blockframes/user/types";
 import { App } from "@blockframes/utils/apps";
-import { APP } from "@blockframes/utils/routes/create-routes";
+import { APP } from '@blockframes/utils/routes/utils';
 
 @Injectable({ providedIn: 'root' })
 export class GDPRService {

@@ -12,7 +12,7 @@ import { MovieControl, MovieForm } from "./movie.form";
 import type { FormShellConfig } from './movie.shell.interfaces'
 import { Movie, MoviePromotionalElements, MovieService } from "../+state";
 import { MovieActiveGuard } from '../guards/movie-active.guard';
-import { APP } from '@blockframes/utils/routes/create-routes';
+import { APP } from '@blockframes/utils/routes/utils';
 
 const valueByProdStatus: Record<ProductionStatus, Record<string, string>> = {
   development: {
