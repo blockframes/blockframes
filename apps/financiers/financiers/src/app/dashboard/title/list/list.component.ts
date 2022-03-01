@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, Optional } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, Optional, Inject } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { fromOrg, Movie, MovieService } from '@blockframes/movie/+state';
@@ -8,8 +8,8 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { Observable } from 'rxjs';
 import { map, startWith, switchMap, tap } from 'rxjs/operators';
 import { Intercom } from 'ng-intercom';
-import { appName } from '@blockframes/utils/apps';
-import { AppGuard } from '@blockframes/utils/routes/app.guard';
+import { App, appName } from '@blockframes/utils/apps';
+import { APP } from '@blockframes/utils/routes/create-routes';
 
 type Filters = 'all' | 'draft' | 'ongoing' | 'achieved' | 'archived';
 
@@ -30,7 +30,6 @@ function filterMovieCampaign(movies: MovieCampaign[], filter: Filters) {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListComponent implements OnInit {
-  public app = this.appGuard.currentApp;
   public appName = appName[this.app];
   titles$: Observable<MovieCampaign[]>;
   titleCount$: Observable<Record<string, number>>;
@@ -44,8 +43,8 @@ export class ListComponent implements OnInit {
     private route: ActivatedRoute,
     private dynTitle: DynamicTitleService,
     private movieService: MovieService,
-    private appGuard: AppGuard,
-    @Optional() private intercom: Intercom
+    @Optional() private intercom: Intercom,
+    @Inject(APP) private app: App
   ) { }
 
   ngOnInit() {
