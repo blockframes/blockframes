@@ -29,7 +29,7 @@ export default class OrganizationLiteFormPage {
   public fillOrganizationInformation(org: Partial<Organization> = ORGANIZATION) {
     cy.get('organization-lite-form mat-select[test-id="activity"]').click();
     cy.get('mat-option').contains(org.activity).click({force: true});
-    cy.get('static-select[test-id="address-country"]').click();
+    cy.get('static-select[test-id="country"]').click();
     cy.get('mat-option').contains(org.address.country).click({force: true});
   }
 
@@ -48,13 +48,13 @@ export default class OrganizationLiteFormPage {
   public fillAllExceptOne(org: Partial<Organization>, key) {
     switch (key) {
       case 'denomination' :
-        cy.get('static-select[test-id="address-country"]').should('not.exist');
+        cy.get('static-select[test-id="country"]').should('not.exist');
         cy.get('organization-lite-form mat-select[test-id="activity"]').should('not.exist');
         cy.get('organization-lite-form mat-button-toggle-group[test-id="appAccessToggleGroup"]').should('not.exist');
         break;
       case 'activity' :
         this.createNewOrg(org);
-        cy.get('static-select[test-id="address-country"]').click();
+        cy.get('static-select[test-id="country"]').click();
         cy.get('mat-option').contains(org.address.country).click({force: true});
         this.chooseDashboardAccess();
         break;
@@ -68,7 +68,7 @@ export default class OrganizationLiteFormPage {
         this.createNewOrg(org);
         cy.get('organization-lite-form mat-select[test-id="activity"]').click();
         cy.get('mat-option').contains(org.activity).click({force: true});
-        cy.get('static-select[test-id="address-country"]').click();
+        cy.get('static-select[test-id="country"]').click();
         cy.get('mat-option').contains(org.address.country).click({force: true});
         break;
     }
@@ -81,8 +81,8 @@ export default class OrganizationLiteFormPage {
   public verifyInformation(org: Partial<Organization>, role: string) {
     cy.get('organization-lite-form mat-select[test-id="activity"]').should('contain.value', org.activity);
     cy.get('organization-lite-form mat-select[test-id="activity"]').should('be.disabled');
-    cy.get('static-select[test-id="address-country"]').should('contain.value', org.address.country);
-    cy.get('static-select[test-id="address-country"]').should('be.disabled');
+    cy.get('static-select[test-id="country"]').should('contain.value', org.address.country);
+    cy.get('static-select[test-id="country"]').should('be.disabled');
     if (role === "seller") {
       cy.get('organization-lite-form mat-button-toggle-group[test-id="appAccessToggleGroup"]')
         .get('mat-button-toggle[value="dashboard"]').should('be.selected');
