@@ -203,11 +203,12 @@ function isAvailInTerm<T extends BucketTerm | Term>(avail: MapAvailsFilter, term
 }
 
 function getMatchingMapMandates(mandates: FullMandate[], avails: MapAvailsFilter): FullMandate[] {
-  const filteredMandates= mandates.filter(mandate => mandate.terms.some(term => isMapTermInAvails(term, avails)));
-  return filteredMandates.map(({terms, ...rest}) => ({
-    ...rest,
-    terms:terms.filter(term => isMapTermInAvails(term, avails))
-  }));
+  return mandates
+    .map(mandate => {
+      mandate.terms = mandate.terms.filter(term => isMapTermInAvails(term, avails));
+      return mandate;
+    })
+    .filter(mandate => mandate.terms.length);
 }
 
 function getMatchingMapSales(sales: FullSale[], avails: MapAvailsFilter) {
