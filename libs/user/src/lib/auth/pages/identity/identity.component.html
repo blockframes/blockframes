@@ -126,7 +126,7 @@
             formControlName="confirm"
             [errorStateMatcher]="passwordsMatcher"
             required
-            test-id="confirm"
+            test-id="password-confirm"
           />
           <mat-hint>Rewrite new password for confirmation.</mat-hint>
           <mat-error *ngIf="form.get('confirm').hasError('required')">
@@ -144,7 +144,7 @@
             <span class="mat-caption">I hereby accept {{ appName }}&nbsp;
               <a target="_blank" routerLink="/auth/terms">Terms and Conditions</a>.</span>
           </mat-checkbox>
-          
+
           <mat-checkbox test-id="gdpr" color="primary" formControlName="privacyPolicy">
             <span class="mat-caption">I hereby accept the Processing of my Personal Data and declare to know&nbsp;
               <a target="_blank" routerLink="/auth/privacy">the Conditions of such Processing and my rights under GDPR Regulation</a>.

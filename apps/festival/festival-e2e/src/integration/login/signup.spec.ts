@@ -31,7 +31,7 @@ describe('Signup', () => {
     get('country').should('contain', user.company.country);
     get('role').contains(user.role).click();
     get('password').type(user.password);
-    get('confirm').type(user.password);
+    get('password-confirm').type(user.password);
     check('terms');
     check('gdpr');
     get('submit').click()
