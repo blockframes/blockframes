@@ -272,4 +272,24 @@ export const availsListCanada: AvailsFilter = {
   medias: ['freeTv']
 };
 
+export const availsPayTV: AvailsFilter = {
+  duration: {
+    from: new Date('02/28/2022'),
+    to: new Date('02/23/2023'),
+  },
+  exclusive: true,
+  territories: [],
+  medias: ['payTv']
+};
+
+export const availsPlanes: AvailsFilter = {
+  duration: {
+    from: new Date('02/28/2022'),
+    to: new Date('02/23/2023'),
+  },
+  exclusive: true,
+  territories: [],
+  medias: ['planes']
+};
+
 
