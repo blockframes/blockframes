@@ -201,15 +201,15 @@ export async function formatContract(
         if (!value) return '';
         const isInternal = data.contract.sellerId === centralOrgId.catalog;
         let buyerId = await getOrgId(value, orgService, orgNameCache);
-        if(buyerId) return buyerId;
+        if (buyerId) return buyerId;
         if (!buyerId && await titleService.docExists(value)) buyerId = value;
         if (isInternal && !buyerId) return unknownEntityError('Licensee Organization');
         return '';
       }
     },
-    /* e */'term[].territories_included': (value: string) => getGroupedList(value, 'territories', separator) as Territory[],
-    /* f */'term[].territories_excluded': (value: string) => getGroupedList(value, 'territories', separator) as Territory[],
-    /* g */'term[].medias': (value: string) => getGroupedList(value, 'medias', separator) as Media[],
+    /* e */'term[].territories_included': (value: string) => getGroupedList(value, 'territories', separator),
+    /* f */'term[].territories_excluded': (value: string) => getGroupedList(value, 'territories', separator),
+    /* g */'term[].medias': (value: string) => getGroupedList(value, 'medias', separator),
     /* h */'term[].exclusive': (value: string) => {
       const lower = value.toLowerCase();
       if (!lower) return mandatoryError('Exclusive');

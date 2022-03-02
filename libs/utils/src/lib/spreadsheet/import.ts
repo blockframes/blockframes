@@ -1,12 +1,22 @@
 
 import { WorkBook, WorkSheet, utils, read } from 'xlsx';
-import { GroupScope, StaticGroup, staticGroups } from '@blockframes/utils/static-model';
+import { GetKeys, GroupScope, StaticGroup, staticGroups } from '@blockframes/utils/static-model';
 import { mandatoryError, SpreadsheetImportError } from 'libs/import/src/lib/utils';
 import { getKeyIfExists } from '../helpers';
 import { parseToAll, Scope } from '../static-model';
 
 type Matrix = any[][]; // @todo find better type
+interface ImportError<S extends Scope> {
+  value: GetKeys<S>[],
+  error: {
+    type: 'warning',
+    name: string,
+    reason: string,
+    hint: string
+  }
+}
 
+type FromStatic<S extends Scope> = GetKeys<S>[] | ImportError<S>;
 export interface SheetTab {
   name: string;
   index: number;
@@ -210,15 +220,15 @@ export async function extract<T>(rawRows: string[][], config: ExtractConfig<T> =
   return results;
 }
 
-export function getStatic(scope: Scope, value: string, separator: string, name: string, allKey = 'all') {
-  if (!value) return [];
+export function getStatic<S extends Scope>(scope: S, value: string, separator: string, name: string, allKey = 'all'): FromStatic<S> {
+  if (!value) return [] as GetKeys<S>[];
   if (value.toLowerCase() === allKey) return parseToAll(scope, allKey);
   const splitted = split(value, separator);
-  const keys = splitted.map(v => getKeyIfExists(scope, v));
+  const keys = splitted.map(v => getKeyIfExists(scope, `${v}`));
   const values = keys.filter(v => !!v);
   const wrongData: string[] = [];
   keys.forEach((k, i) => {
-    if (!k) wrongData.push(splitted[i]);
+    if (!k) wrongData.push(`${splitted[i]}`);
   });
   if (wrongData.length) return {
     value: values, error: {
@@ -228,20 +238,22 @@ export function getStatic(scope: Scope, value: string, separator: string, name: 
       hint: `${wrongData.slice(0, 3).join(', ')}...`
     }
   };
-  return values
+  return values as GetKeys<S>[];
 }
 
-export function getStaticList(scope: Scope, value: string, separator: string, name: string, mandatory = true, allKey = 'all') {
+const isValueError = <S extends Scope>(values: FromStatic<S>): values is ImportError<S> => {
+  return ('length' in values && values.length === 0)
+    || ('value' in values && values.value.length === 0)
+}
+
+export function getStaticList<S extends Scope>(scope: S, value: string, separator: string, name: string, mandatory = true, allKey = 'all') {
   const values = getStatic(scope, value, separator, name, allKey);
-  if (
-    mandatory && (
-      ('length' in values && values.length === 0) ||
-      ('value' in values && values.value.length === 0)
-    )
-  ) return mandatoryError(name);
+  if (mandatory && isValueError(values)) return mandatoryError<GetKeys<S>>(name);
   return values;
 }
 
+export function getGroupedList(value: string, groupScope: 'territories', separator: string): GetKeys<'territories'>[];
+export function getGroupedList(value: string, groupScope: 'medias', separator: string): GetKeys<'medias'>[];
 export function getGroupedList<GS extends GroupScope>(value: string, groupScope: GS, separator: string) {
   const elements = split(value, separator);
   const groupLabels = staticGroups[groupScope].map(group => group.label);
