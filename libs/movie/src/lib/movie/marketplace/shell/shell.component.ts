@@ -10,7 +10,7 @@ import { StorageFile } from '@blockframes/media/+state/media.firestore';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { MovieService } from '@blockframes/movie/+state';
-import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
+import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 
 @Component({
   selector: 'title-marketplace-shell',
@@ -32,7 +32,7 @@ export class TitleMarketplaceShellComponent implements OnInit {
     private movie: MovieService,
     private route: ActivatedRoute,
     public router: Router,
-    private analytics: FireAnalytics,
+    private analytics: AnalyticsService,
   ) { }
 
   ngOnInit() {
@@ -71,7 +71,7 @@ export class TitleMarketplaceShellComponent implements OnInit {
 
   videoStateChanged(movieId: string, event: string) {
     if (event === 'play' && !this.alreadyPlayed) {
-      this.analytics.event('promoReelOpened', { movieId });
+      this.analytics.addTitleEvent('promoVideoStarted', movieId);
       this.alreadyPlayed = true;
     }
   }

@@ -4,11 +4,12 @@ import { OrganizationService } from '@blockframes/organization/+state/organizati
 import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
 import { mainRoute, additionalRoute, artisticRoute, productionRoute } from '@blockframes/movie/marketplace';
 import { EventService } from '@blockframes/event/+state';
-import { map, pluck, switchMap } from 'rxjs/operators';
+import { distinctUntilChanged, map, pluck, switchMap, tap } from 'rxjs/operators';
 import { RequestAskingPriceComponent } from '@blockframes/movie/components/request-asking-price/request-asking-price.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MovieService } from '@blockframes/movie/+state';
 import { ActivatedRoute } from '@angular/router';
+import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 
 @Component({
   selector: 'festival-movie-view',
@@ -19,6 +20,8 @@ import { ActivatedRoute } from '@angular/router';
 export class MarketplaceMovieViewComponent  {
   public movie$ = this.route.params.pipe(
     pluck('movieId'),
+    distinctUntilChanged(),
+    tap((movieId: string) => this.analytics.addPageViewEvent('title', movieId)),
     switchMap((movieId: string) => this.movieService.getValue(movieId))
   );
 
@@ -64,7 +67,8 @@ export class MarketplaceMovieViewComponent  {
     private orgService: OrganizationService,
     private eventService: EventService,
     private dialog: MatDialog,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private analytics: AnalyticsService
   ) { }
 
   getEmails(orgs: Organization[]) {

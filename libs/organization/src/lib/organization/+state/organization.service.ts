@@ -10,7 +10,7 @@ import { PermissionsService } from '@blockframes/permissions/+state/permissions.
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { App, Module, createOrgAppAccess } from '@blockframes/utils/apps';
 import { createDocumentMeta, formatDocumentMetaFromFirestore } from '@blockframes/utils/models-meta';
-import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
+import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 import { combineLatest, Observable, of } from 'rxjs';
 import { ActiveState, EntityState } from '@datorama/akita';
 
@@ -59,7 +59,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     private functions: AngularFireFunctions,
     private userService: UserService,
     private permissionsService: PermissionsService,
-    private analytics: FireAnalytics,
+    private analytics: AnalyticsService,
     private authService: AuthService,
   ) {
     super();
@@ -172,16 +172,10 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     let wishlist = Array.from(new Set([...orgState.wishlist])) || [];
     if (wishlist.includes(movie.id)) {
       wishlist = orgState.wishlist.filter(id => id !== movie.id);
-      this.analytics.event('removedFromWishlist', {
-        movieId: movie.id,
-        movieTitle: movie.title.original
-      });
+      this.analytics.addTitleEvent('removedFromWishlist', movie.id);
     } else {
       wishlist.push(movie.id);
-      this.analytics.event('addedToWishlist', {
-        movieId: movie.id,
-        movieTitle: movie.title.original
-      });
+      this.analytics.addTitleEvent('addedToWishlist', movie.id);
     }
 
     this.update(orgState.id, { wishlist });
