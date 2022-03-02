@@ -32,7 +32,7 @@ catalog-landing {
       }
       mat-tab-group {
         max-width: 970px;
-        margin-left: 80px;   
+        margin-left: 80px;
         mat-tab-header {
           position: sticky;
           top: 0;
@@ -182,12 +182,21 @@ landing-app-link {
             width: 100%;
             margin-bottom: 8px;
           }
-          .expertise {
-            padding: 48px;
+          .benefits {
+            > div {
+              text-align: center;
+              img {
+                margin-bottom: 16px;
+              }
+            }
           }
         }
       }
+      .expertise {
+        padding: 48px;
+      }
     }
+    
     .landing-detail {
       a {
         width: 75%

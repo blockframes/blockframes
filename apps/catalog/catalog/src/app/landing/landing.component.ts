@@ -26,7 +26,7 @@ export class CatalogLandingComponent {
       imgAsset: 'video_placeholder_buyer.png',
       description: 'Search for avails easily through one curated library and buy content in larger volumes through one single deal.',
     }
-  ]
+  ];
 
   public sellerFeatures = [
     {
@@ -59,7 +59,7 @@ export class CatalogLandingComponent {
     }
   ];
 
-  public buyerFeatures = [ 
+  public buyerFeatures = [
     {
       title: 'Simplified avails search',
       description: 'Select your search criteria (territory, media, time window) and get the list of matching contents in just as few clicks. Export and share your customized list of titles.',
@@ -93,7 +93,7 @@ export class CatalogLandingComponent {
   constructor(
     private dynTitle: DynamicTitleService
   ) {
-    this.dynTitle.setPageTitle()
+    this.dynTitle.setPageTitle();
   }
 
   onTabChanged(e) {
