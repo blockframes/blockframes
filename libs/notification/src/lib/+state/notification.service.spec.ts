@@ -9,34 +9,19 @@ import { HttpClient } from '@angular/common/http';
 import { HttpTestingController } from '@angular/common/http/testing';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Observable } from 'rxjs';
-import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { RouterTestingModule } from "@angular/router/testing";
 import { ModuleGuard } from '@blockframes/utils/routes/module.guard';
 import { APP } from '@blockframes/utils/routes/utils';
 import { AuthService } from '@blockframes/auth/+state';
-import { AngularFireAnalytics } from '@angular/fire/analytics';
+import { MovieService } from '@blockframes/movie/+state';
 
 class InjectedAngularFireAuth {
   authState = new Observable();
 }
 
-class InjectedAngularFireAnalytics {
-  logEvent() {}
-}
-
 class InjectedModuleGuard {
   currentModule = 'dashboard'
-}
-
-class InjectedAuthService {
-  uid = 'userId';
-
-  profile = {
-    orgId: 'orgId',
-  }
-
-  profile$ = new Observable();
 }
 
 class DummyService { }
@@ -56,10 +41,8 @@ describe('Notifications Test Suite', () => {
         NotificationService,
         { provide: HttpClient, useClass: HttpTestingController },
         { provide: AngularFireAuth, useClass: InjectedAngularFireAuth },
-        { provide: AngularFireAnalytics, useClass: InjectedAngularFireAnalytics },
-        { provide: AnalyticsService, useClass: DummyService },
-        { provide: AuthService, useClass: InjectedAuthService },
         { provide: UserService, useClass: DummyService },
+        { provide: MovieService, useClass: DummyService },
         { provide: ModuleGuard, useClass: InjectedModuleGuard },
         { provide: APP, useValue: 'festival' },
         { provide: SETTINGS, useValue: { host: 'localhost:8080', ssl: false } }
