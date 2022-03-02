@@ -13,7 +13,6 @@ import { UserService } from '@blockframes/user/+state/user.service';
 import { RouterTestingModule } from "@angular/router/testing";
 import { ModuleGuard } from '@blockframes/utils/routes/module.guard';
 import { APP } from '@blockframes/utils/routes/utils';
-import { AuthService } from '@blockframes/auth/+state';
 import { MovieService } from '@blockframes/movie/+state';
 
 class InjectedAngularFireAuth {
