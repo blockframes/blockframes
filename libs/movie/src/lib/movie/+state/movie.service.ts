@@ -3,8 +3,7 @@ import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire
 import {
   createMovie,
   Movie,
-  createMovieAppConfig,
-  MovieAnalytics,
+  createMovieAppConfig
 } from './movie.model';
 import { createDocumentMeta } from "@blockframes/utils/models-meta";
 import { cleanModel } from '@blockframes/utils/helpers';
@@ -14,9 +13,8 @@ import { App } from '@blockframes/utils/apps';
 import { QueryFn } from '@angular/fire/firestore';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { map } from 'rxjs/operators';
-import { getViews } from '../pipes/analytics.pipe';
 import { joinWith } from '@blockframes/utils/operators';
-import { AnalyticsService } from '@blockframes/utils/analytics/analytics.service';
+import { AnalyticsService, Analytics } from '@blockframes/analytics/+state';
 import { AuthService } from '@blockframes/auth/+state';
 import { ActiveState, EntityState } from '@datorama/akita';
 
@@ -24,8 +22,6 @@ export const fromOrg = (orgId: string): QueryFn => ref => ref.where('orgIds', 'a
 export const fromOrgAndAccepted = (orgId: string, appli: App): QueryFn => ref => ref.where(`app.${appli}.status`, '==', 'accepted').where('orgIds', 'array-contains', orgId);
 export const fromOrgAndInternalRef = (orgId: string, internalRef: string): QueryFn => ref => ref.where('orgIds', 'array-contains', orgId).where('internalRef', '==', internalRef);
 export const fromInternalRef = (internalRef: string): QueryFn => ref => ref.where('internalRef', '==', internalRef);
-
-type MovieWithAnalytics = Movie & { analytics: MovieAnalytics };
 
 interface MovieState extends EntityState<Movie, string>, ActiveState<string> {}
 
@@ -37,7 +33,7 @@ export class MovieService extends CollectionService<MovieState> {
   constructor(
     private authService: AuthService,
     private permissionsService: PermissionsService,
-    private analyticservice: AnalyticsService,
+    private analyticService: AnalyticsService,
     private orgService: OrganizationService,
   ) {
     super();
@@ -111,13 +107,16 @@ export class MovieService extends CollectionService<MovieState> {
   queryDashboard(app: App) {
     const orgId = this.orgService.org.id;
     const query: QueryFn = ref => ref.where('orgIds', 'array-contains', orgId).where(`app.${app}.access`, '==', true);
-    const addViews = (movie: MovieWithAnalytics) => ({ ...movie, analytics: { ...movie.analytics, views: getViews(movie.analytics) } });
 
     return this.valueChanges(query).pipe(
       joinWith({
-        analytics: movie => this.analyticservice.valueChanges(movie.id),
+        analytics: movie => this.analyticService.valueChanges(ref => ref
+          .where('type', '==', 'title')
+          .where('name', '==', 'pageView')
+          .where('meta.titleId', '==', movie.id)
+          .where('meta.ownerOrgIds', 'array-contains', orgId),
+        ),
       }),
-      map(movies => movies.map(addViews)),
       map(movies => movies.sort((a, b) => a.title.international < b.title.international ? -1 : 1))
     );
   }

@@ -9,7 +9,7 @@ import { HttpClient } from '@angular/common/http';
 import { HttpTestingController } from '@angular/common/http/testing';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Observable } from 'rxjs';
-import { AnalyticsService } from '@blockframes/utils/analytics/analytics.service';
+import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { RouterTestingModule } from "@angular/router/testing";
 import { ModuleGuard } from '@blockframes/utils/routes/module.guard';

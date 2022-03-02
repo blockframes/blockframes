@@ -17,10 +17,9 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { HomeComponent } from './home.component';
 
 // Modules
-import { MovieAnalyticsChartModule } from '@blockframes/movie/components/movie-analytics-chart/movie-analytics-chart.module';
+import { MovieAnalyticsChartModule } from '@blockframes/analytics/components/movie-analytics-chart/movie-analytics-chart.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { NoTitleModule } from '@blockframes/ui/dashboard/components/no-title/no-title.module';
-import { AnalyticsPipeModule } from '@blockframes/movie/pipes/analytics.pipe';
 
 @NgModule({
   declarations: [HomeComponent],
@@ -30,7 +29,6 @@ import { AnalyticsPipeModule } from '@blockframes/movie/pipes/analytics.pipe';
     MovieAnalyticsChartModule,
     ImageModule,
     NoTitleModule,
-    AnalyticsPipeModule,
 
     // Material
     MatButtonModule,

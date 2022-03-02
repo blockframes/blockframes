@@ -5,7 +5,7 @@ import { Component, OnInit, ChangeDetectionStrategy, Optional } from '@angular/c
 import { MovieService, fromOrg } from '@blockframes/movie/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { Movie } from '@blockframes/movie/+state/movie.model';
+import { Movie, MovieAnalytics } from '@blockframes/movie/+state/movie.model';
 import { appName } from '@blockframes/utils/apps';
 import { AppGuard } from '@blockframes/utils/routes/app.guard';
 
@@ -15,6 +15,8 @@ import { Observable } from 'rxjs';
 
 // Intercom
 import { Intercom } from 'ng-intercom';
+import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
+import { toMovieAnalytics } from '@blockframes/analytics/components/movie-analytics-chart/utils';
 
 @Component({
   selector: 'dashboard-home',
@@ -32,7 +34,16 @@ export class HomeComponent implements OnInit {
   public hasAcceptedMovies$: Observable<boolean>;
   public hasDraftMovies$: Observable<boolean>;
 
+  public titleAnalytics$: Observable<MovieAnalytics[]> = this.orgService.currentOrg$.pipe(
+    switchMap(({ id }) => this.analytics.valueChanges(ref => ref
+      .where('type', '==', 'title')
+      .where('meta.ownerOrgIds', 'array-contains', id)
+    )),
+    map(toMovieAnalytics)
+  );
+
   constructor(
+    private analytics: AnalyticsService,
     private movieService: MovieService,
     private orgService: OrganizationService,
     private dynTitle: DynamicTitleService,
