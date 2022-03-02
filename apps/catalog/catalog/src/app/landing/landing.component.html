@@ -2,8 +2,8 @@
   <landing-header>
     <header class="max-width" fxLayout="column" fxLayoutAlign="start start" fxLayoutAlign.lt-sm="center center" fxLayoutGap="32px">
       <h4>Welcome to Archipel Content</h4>
-      <h1 class="mat-display-2">The first marketplace offering <br> multi-seller deals</h1>
-      <h2>for TV, VOD and ancillary rights</h2>
+      <h1 class="mat-display-2">THE MATCHMAKER FOR CONTENT LICENSING</h1>
+      <h2>Specialized in TV, VOD and ancillary rights</h2>
       <a mat-flat-button color="accent" routerLink="/auth/identity">
         <span>Join now</span>
         <mat-icon svgIcon="arrow_forward"></mat-icon>
@@ -24,15 +24,26 @@
             </div>
           </header>
 
-          <div class="surface" *ngFor="let feature of sellerFeatures; let i = index" [ngClass]="{ reverse: i%2 !== 0 }">
-            <div fxLayout="column" fxLayoutAlign="center start" fxLayoutAlign.lt-md="center center">
-              <h3>{{ feature.title }}</h3>
-              <p>{{ feature.description }}</p>
-            </div>  
-            <div fxLayoutAlign="center center">
+          <h2>Features</h2>
+          <article fxLayout="row wrap" fxLayoutAlign="space-between" fxLayoutGap.lt-lg="8px" fxLayoutAlign.lt-lg="center">
+            <div class="surface" *ngFor="let feature of sellerFeatures">
               <img [asset]="feature.imgAsset" alt="seller feature image">
+              <h3>{{ feature.title }}</h3>
+              <p class="mat-body-1">{{ feature.description }}</p>
             </div>
-          </div>
+          </article>
+          <h2>User Benefits</h2>
+          <article class="benefits">
+            <ng-container *ngFor="let benefit of sellerBenefits; let i = index">
+              <div [fxLayout]="i%2 !== 0 ? 'row-reverse' : 'row'" fxLayoutAlign="space-between start" fxLayout.lt-md="column" fxLayoutAlign.lt-md="space-between center">
+                <img [asset]="benefit.imgAsset" alt="seller benefit image">
+                <div fxLayout="column">
+                  <h3>{{ benefit.title }}</h3>
+                  <p class="mat-body-1">{{ benefit.description }}</p>
+                </div>
+              </div>
+            </ng-container>
+          </article>
         </mat-tab>
 
         <mat-tab [label]="tabNames[1]">
@@ -44,15 +55,26 @@
             </div>
           </header>
 
-          <div class="surface" *ngFor="let feature of buyerFeatures; let i = index" [ngClass]="{ reverse: i%2 !== 0 }">
-            <div fxLayout="column" fxLayoutAlign="center start" fxLayoutAlign.lt-md="center center">
+          <h2>Features</h2>
+          <article fxLayout="row wrap" fxLayoutAlign="space-between" fxLayoutGap.lt-lg="8px" fxLayoutAlign.lt-lg="center">
+            <div class="surface" *ngFor="let feature of buyerFeatures">
+              <img [asset]="feature.imgAsset" alt="seller feature image">
               <h3>{{ feature.title }}</h3>
-              <p>{{ feature.description }}</p>
-            </div>  
-            <div fxLayoutAlign="center center">
-              <img [asset]="feature.imgAsset" alt="buyer feature image">
+              <p class="mat-body-1">{{ feature.description }}</p>
             </div>
-          </div>
+          </article>
+          <h2>User Benefits</h2>
+          <article class="benefits">
+            <ng-container *ngFor="let benefit of buyerBenefits; let i = index" >
+              <div [fxLayout]="i%2 !== 0 ? 'row-reverse' : 'row'" fxLayoutAlign="start start" fxLayoutGap="32px" fxLayout.lt-md="column" fxLayoutAlign.lt-md="space-between center">
+                <img [asset]="benefit.imgAsset" alt="seller benefit image">
+                <div fxLayout="column">
+                  <h3>{{ benefit.title }}</h3>
+                  <p class="mat-body-1">{{ benefit.description }}</p>
+                </div>
+              </div>
+            </ng-container>
+          </article>
         </mat-tab>
       </mat-tab-group>
     </section>

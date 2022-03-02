@@ -32,7 +32,7 @@ catalog-landing {
       }
       mat-tab-group {
         max-width: 970px;
-        margin-left: 80px;
+        margin-left: 80px;   
         mat-tab-header {
           position: sticky;
           top: 0;
@@ -42,32 +42,28 @@ catalog-landing {
         header {
           margin-block: 32px;
           video {
-            width: 550px;
+            max-width: 550px;
+          }
+        }
+
+        article {
+          margin-bottom: 24px;
+          .surface {
+            width: 32%;
+            text-align: center;
+            }
+        }
+      
+        .benefits {
+          > div {
+            padding: 32px;
+            background-color: var(--background-card);
+            white-space: pre-wrap;
           }
         }
       }
-
-      .surface {
-        min-height: 295px;
-        display: flex;
-        justify-content: space-between;
-        gap: 32px;
-        margin-bottom: 32px;
-        
-        &.reverse {
-          flex-direction: row-reverse;
-        }
-        img {
-          width: 300px;
-          height: 200px;
-        }
-        div {
-          padding-inline: 40px;
-          flex: 1 1 0;
-        }
-      }
     }
-    
+
     .join {
       background-color: $banner-background;
       background: linear-gradient(to right, $banner-background 0%, #2a1d34 50%, $banner-background 100%);
@@ -138,6 +134,9 @@ landing-app-link {
     landing-content {
       .landing-presentation {
         mat-tab-group {
+          article .surface {
+            padding: 32px;
+          }
           margin: 0;
         }
       }
@@ -178,13 +177,15 @@ landing-app-link {
     landing-content {
       .landing-presentation {
         mat-tab-group {
-          .surface, .surface.reverse  {
-            flex-direction: column;
+          padding-inline: 40px;
+          article .surface{
+            width: 100%;
+            margin-bottom: 8px;
+          }
+          .expertise {
+            padding: 48px;
           }
         }
-      }
-      .expertise {
-        padding: 48px;
       }
     }
     .landing-detail {
