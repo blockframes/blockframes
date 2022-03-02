@@ -6,10 +6,11 @@ import {
   availFrance, availsSVODArgentina, availsPayTVArgentina,
   availsGermany, availsBelgium, availsExistingEndedSales,
   availsOngoingSales, availsTerritoryWithExclusivity, availsTerritoryWithoutExclusivity,
-  availsFranceLuxembourg, availsAllButSouthKorea,
+  availsFranceLuxembourg, availsAllButSouthKorea, availsPayTV, availsPlanes,
 } from './../fixtures/availsFilters';
 import {
   mandateMovie1, saleArgentinaMovie1, saleGermanyMovie1, saleCanadaMovie1, saleBelgiumFranceLuxembourgMovie1,
+  mandateMovie6
 } from './../fixtures/mandatesAndSales';
 import { FullMandate, FullSale, territoryAvailabilities } from '../avails';
 
@@ -194,6 +195,22 @@ describe('Test terms are out of movie mandate', () => {
     expect(markers.selected.length).toBe(0);
     expect(markers.notLicensed.length).toBe(1);
     expect(markers.notLicensed?.[0]?.slug).toBe('south-korea');
+  })
+
+  it('Check non availability on china with payTv media', () => {
+    const data = { avails: availsPayTV, mandates: [mandateMovie6], sales:[], bucketContracts: [] };
+    const markers = territoryAvailabilities(data);
+    expect(markers.available.find(m => m.slug === 'china')).toBe(undefined)
+    expect(markers.available.find(m => m.slug === 'brazil')).toBe(undefined)
+    expect(markers.available.find(m => m.slug === 'angola')).not.toBe(undefined)
+  })
+
+  it('Check availability on china with planes media', () => {
+    const data = { avails: availsPlanes, mandates: [mandateMovie6], sales:[], bucketContracts: [] };
+    const markers = territoryAvailabilities(data);
+    expect(markers.available.find(m => m.slug === 'china')).not.toBe(undefined)
+    expect(markers.available.find(m => m.slug === 'brazil')).not.toBe(undefined)
+    expect(markers.available.find(m => m.slug === 'angola')).not.toBe(undefined)
   })
 
 })
