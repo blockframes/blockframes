@@ -21,7 +21,7 @@ export class MarketplaceMovieViewComponent  {
   public movie$ = this.route.params.pipe(
     pluck('movieId'),
     distinctUntilChanged(),
-    tap((movieId: string) => this.analytics.addPageViewEvent('title', movieId)),
+    tap((movieId: string) => this.analytics.addPageView('title', movieId)),
     switchMap((movieId: string) => this.movieService.getValue(movieId))
   );
 

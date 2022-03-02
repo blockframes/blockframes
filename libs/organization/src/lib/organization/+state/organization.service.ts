@@ -172,10 +172,10 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     let wishlist = Array.from(new Set([...orgState.wishlist])) || [];
     if (wishlist.includes(movie.id)) {
       wishlist = orgState.wishlist.filter(id => id !== movie.id);
-      this.analytics.addTitleEvent('removedFromWishlist', movie.id);
+      this.analytics.addTitle('removedFromWishlist', movie.id);
     } else {
       wishlist.push(movie.id);
-      this.analytics.addTitleEvent('addedToWishlist', movie.id);
+      this.analytics.addTitle('addedToWishlist', movie.id);
     }
 
     this.update(orgState.id, { wishlist });

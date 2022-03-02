@@ -3,7 +3,6 @@ import { AngularFireAnalytics } from '@angular/fire/analytics';
 import { ActiveState, EntityState } from '@datorama/akita';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { take } from 'rxjs/operators';
-import { format } from 'date-fns';
 import { centralOrgId } from '@env';
 import { Analytics, AnalyticsTypeRecord, AnalyticsTypes, EventName } from './analytics.firestore';
 import { createTitleMeta } from './analytics.model';
@@ -12,6 +11,7 @@ import { createMovie } from '@blockframes/movie/+state';
 import { createDocumentMeta } from '@blockframes/utils/models-meta';
 import { AppGuard } from '@blockframes/utils/routes/app.guard';
 import { formatDocumentMetaFromFirestore } from '@blockframes/utils/models-meta';
+import { startOfDay } from 'date-fns';
 
 interface AnalyticsState extends EntityState<Analytics>, ActiveState<string> {};
 
@@ -35,6 +35,17 @@ export class AnalyticsService extends CollectionService<AnalyticsState> {
     };
   }
 
+  formatToFirestore(analytic: Partial<Analytics<AnalyticsTypes>>) {
+    const profile = this.authService.profile;
+    return {
+      ...analytic,
+      _meta: createDocumentMeta({
+        createdFrom: this.appGuard.currentApp,
+        createdBy: profile.uid
+      })
+    }
+  }
+
   getTitleAnalytics(titleId: string) {
     const { orgId } = this.authService.profile;
     return this.valueChanges(ref => ref
@@ -44,12 +55,12 @@ export class AnalyticsService extends CollectionService<AnalyticsState> {
     );
   }
 
-  async addTitleEvent(name: EventName, titleId: string) {
+  async addTitle(name: EventName, titleId: string) {
     if (await this.isOperator()) return;
 
     const profile = this.authService.profile;
 
-    // // TODO use MovieService instead once Akita has been replaced by ng-fire (currently using MovieService results in error) 
+    // TODO #7273 use MovieService instead once Akita has been replaced by ng-fire (currently using MovieService results in error) 
     const doc = await this.db.doc(`movies/${titleId}`).ref.get();
     const title = createMovie(doc.data());
 
@@ -61,31 +72,26 @@ export class AnalyticsService extends CollectionService<AnalyticsState> {
     });
 
     this.analytics.logEvent(name, meta);
-    return this.add({
-      type: 'title',
-      name,
-      meta,
-      _meta: createDocumentMeta({ createdFrom: this.appGuard.currentApp, createdBy: profile.uid })
-    });
+    return this.add({ type: 'title', name, meta });
   }
 
-  async addPageViewEvent(type: AnalyticsTypes, id: string) {
+  async addPageView(type: AnalyticsTypes, id: string) {
     if (await this.isOperator()) return;
 
-    // unique per day
-    const date = format(new Date(), 'yyyyMMdd');
-    const key = `${date}${type}${id}`;
-
-    const pageVisits: Record<string, boolean> = JSON.parse(localStorage.getItem('pageVisits')) || {};
-    if (pageVisits[key]) return;
-    pageVisits[key] = true;
-    localStorage.setItem('pageVisits', JSON.stringify(pageVisits));
-
     const profile = this.authService.profile;
+    if (!profile) return;
 
     let meta: AnalyticsTypeRecord[AnalyticsTypes];
     if (type === 'title') {
-      // TODO use MovieService instead once Akita has been replaced by ng-fire (currently using MovieService results in error) 
+      const start = startOfDay(new Date());
+      const analytics = await this.getValue(ref => ref
+        .where('_meta.createdBy', '==', profile.uid)
+        .where('meta.titleId', '==', id)
+        .where('name', '==', 'pageView')
+      );
+      if (analytics.some(analytic => analytic._meta.createdAt > start)) return;
+
+      // TODO #7273 use MovieService instead once Akita has been replaced by ng-fire (currently using MovieService results in error) 
       const doc = await this.db.doc(`movies/${id}`).ref.get();
       const title = createMovie(doc.data());
 
@@ -98,13 +104,7 @@ export class AnalyticsService extends CollectionService<AnalyticsState> {
     }
     if (!meta) return;
 
-    return this.add({
-      id: key,
-      type,
-      name: 'pageView',
-      meta,
-      _meta: createDocumentMeta({ createdFrom: this.appGuard.currentApp, createdBy: profile.uid })
-    });
+    return this.add({ name: 'pageView', type, meta });
   }
 
   /**
@@ -115,7 +115,6 @@ export class AnalyticsService extends CollectionService<AnalyticsState> {
     const isBlockframesAdmin = await this.authService.isBlockframesAdmin$.pipe(take(1)).toPromise();
     const profile = this.authService.profile;
     const isConcierge = profile?.email.includes('concierge');
-    const isOperator = isBlockframesAdmin || isConcierge || Object.values(centralOrgId).includes(profile?.orgId);
-    return isOperator;
+    return isBlockframesAdmin || isConcierge || Object.values(centralOrgId).includes(profile?.orgId);
   }
 }

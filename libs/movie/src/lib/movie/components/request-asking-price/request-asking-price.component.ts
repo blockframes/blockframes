@@ -42,7 +42,7 @@ export class RequestAskingPriceComponent {
         territories,
         message
       }).toPromise();
-      this.analytics.addTitleEvent('askingPriceRequested', this.data.movieId);
+      this.analytics.addTitle('askingPriceRequested', this.data.movieId);
       this.snackbar.open('Asking price request successfully sent.', '', { duration: 3000 });
       this.dialog.close(true);
     } catch (err) {

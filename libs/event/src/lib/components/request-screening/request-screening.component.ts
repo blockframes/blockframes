@@ -40,7 +40,7 @@ export class RequestScreeningComponent {
     const f = this.functions.httpsCallable('requestScreening');
     await f({ movieId: this.movieId, uid: this.authService.uid }).toPromise();
     this.requestStatus.next('sent');
-    this.analytics.addTitleEvent('screeningRequested', this.movieId);
+    this.analytics.addTitle('screeningRequested', this.movieId);
     this.snackbar.open('Screening request successfully sent', '', { duration: 3000 });
   }
 }
