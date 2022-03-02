@@ -17,15 +17,11 @@ export class CampaignShellConfig implements FormShellConfig<CampaignControls, Ca
     private uploaderService: FileUploaderService,
   ) { }
 
-  onInit(): Observable<unknown>[] {
-    const sub = this.route.selectParams('movieId').pipe(
-      switchMap((id: string) => this.service.getValue(id)),
-      tap(campaign => {
-        this.form.reset();
-        this.form.setAllValue(campaign);
-      })
-    );
-    return [sub];
+  async onInit(movieId: string) {
+    // Fill Form
+    const campaign = await this.service.getValue(movieId);
+    this.form.reset();
+    this.form.setAllValue(campaign);
   }
 
   async onSave(): Promise<unknown> {

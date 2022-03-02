@@ -62,29 +62,18 @@ export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
     @Inject(APP) private currentApp: App
   ) { }
 
-  onInit(): Observable<unknown>[] {
-    // Update form on change
-    const onMovieChanges = this.routerQuery.selectParams('movieId').pipe(
-      switchMap((id: string) => this.service.getValue(id)),
-      tap(movie => {
-        if (this.currentApp === 'catalog') movie.productionStatus = 'released';
-        this.form.reset();
-        this.form.setAllValue(movie);
-        if (movie.productionStatus) this.fillHiddenMovieInputs(movie.productionStatus);
-      })
-    );
-
-    // Update form on status change
-    const onStatusChanges = this.form.productionStatus.valueChanges.pipe(
-      startWith(this.form.productionStatus.value),
-      filter(status => !!status),
-      tap((status: ProductionStatus) => this.fillHiddenMovieInputs(status))
-    );
-    return [onMovieChanges, onStatusChanges];
+  async onInit(movieId: string) {
+    // Fill Form
+    const movie = await this.service.getValue(movieId);
+    if (this.currentApp === 'catalog') movie.productionStatus = 'released';
+    this.form.reset();
+    this.form.setAllValue(movie);
+    this.fillHiddenMovieInputs(movie.productionStatus);
   }
 
   // Update form to fill inputs that might be hidden but that are mandatory to submit the movie
-  private fillHiddenMovieInputs(status: ProductionStatus) {
+  public fillHiddenMovieInputs(status: ProductionStatus) {
+    if(!status) return;
     for (const path in valueByProdStatus[status]) {
       const formHasValue = this.form.get(path as any).value;
       const configHasValue = valueByProdStatus[status][path];

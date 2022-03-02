@@ -43,8 +43,14 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    const obs = Object.keys(this.configs).map(name => this.configs[name].onInit()).flat();
-    this.subs.push(combineLatest(obs).subscribe());
+    console.log('shell onInit()')
+
+    const obs = this.route.params.pipe(
+      pluck('movieId'),
+      switchMap(movieId => Object.keys(this.configs).map(name => this.configs[name].onInit(movieId)).flat())
+    ).subscribe();
+
+    this.subs.push(obs);
     this.subs.push(this.router.events
       .pipe(filter((event: Event) => event instanceof NavigationEnd))
       .subscribe(() => this.countRouteEvents++));

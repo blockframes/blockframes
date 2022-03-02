@@ -110,6 +110,7 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    console.log('la')
     this.routeBeforeTunnel = this.exitRedirect || '/c/o/';
     this.urlBynav$ = combineLatest([this.url$, new BehaviorSubject(this.steps).asObservable()]).pipe(shareReplay({ refCount: true, bufferSize: 1 }));
     this.getRoute();
@@ -176,7 +177,7 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
       }
     }
     const keys = Object.keys(this.configs);
-    await Promise.all(keys.map(key => this.configs[key].onSave(options)))
+    await Promise.all(keys.map(key => this.configs[key].onSave(options)));
   }
 
   animationOutlet(outlet: RouterOutlet) {
