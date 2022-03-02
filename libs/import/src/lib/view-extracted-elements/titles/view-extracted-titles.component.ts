@@ -1,5 +1,5 @@
 
-import { Component, ChangeDetectionStrategy, OnInit, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, Input, Inject } from '@angular/core';
 
 import { MatTableDataSource } from '@angular/material/table';
 
@@ -10,7 +10,8 @@ import { formatTitle } from './utils';
 import { MovieImportState } from '../../utils';
 import { AuthService } from '@blockframes/auth/+state';
 import { take } from 'rxjs/operators';
-import { AppGuard } from '@blockframes/utils/routes/app.guard';
+import { APP } from '@blockframes/utils/routes/utils';
+import { App } from '@blockframes/utils/apps';
 
 @Component({
   selector: 'import-view-extracted-titles[sheetTab]',
@@ -28,18 +29,17 @@ export class ViewExtractedTitlesComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private userService: UserService,
-    private appGuard: AppGuard,
+    @Inject(APP) private app: App
   ) { }
 
   async ngOnInit() {
     const isBlockframesAdmin = await this.authService.isBlockframesAdmin$.pipe(take(1)).toPromise();
-    const app = this.appGuard.currentApp;
     const titles = await formatTitle(
       this.sheetTab,
       this.userService,
       isBlockframesAdmin,
       this.authService.profile.orgId,
-      app
+      this.app
     );
     this.moviesToCreate$.next(new MatTableDataSource(titles));
   }

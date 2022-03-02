@@ -6,20 +6,17 @@ import { PermissionsGuard } from '@blockframes/permissions/guard/permissions.gua
 import { OrganizationGuard } from '@blockframes/organization/guard/organization.guard';
 import { MaintenanceGuard } from '@blockframes/ui/maintenance';
 import { RequestAccessGuard } from '@blockframes/organization/guard/request-access.guard';
-import { AppGuard } from './app.guard';
 
 interface RouteOptions {
   /** The routes of the apps */
   appsRoutes: Routes,
-  /** Name of the app to put in data of the route */
-  appName: string,
   /** The route to the landing page if any */
   landing?: Route,
   /** Event routes if any */
   events?: Route,
 }
 
-export function createRoutes({ appsRoutes, appName, landing, events }: RouteOptions) {
+export function createRoutes({ appsRoutes, landing, events }: RouteOptions) {
   // Used for internal app
   landing = landing || { path: '', redirectTo: 'auth', pathMatch: 'full' };
   landing.canActivate = landing.canActivate
@@ -61,13 +58,12 @@ export function createRoutes({ appsRoutes, appName, landing, events }: RouteOpti
   return [
     {
       path: 'maintenance',
-      canActivate: [AppGuard, MaintenanceGuard],
+      canActivate: [MaintenanceGuard],
       loadChildren: () => import('@blockframes/ui/maintenance/maintenance.module').then(m => m.MaintenanceModule)
     },
     {
       path: '',
-      canActivate: [AppGuard, MaintenanceGuard],
-      data: { app: appName },
+      canActivate: [MaintenanceGuard],
       children: [
         landing,
         {
@@ -101,10 +97,9 @@ export function createRoutes({ appsRoutes, appName, landing, events }: RouteOpti
     }]
 }
 
-
-// Used for CMS & CMR
+// Used for CMS & CRM
 // Strip out the notifications / invitations
-export function createAdminRoutes({ appsRoutes, appName }: RouteOptions) {
+export function createAdminRoutes({ appsRoutes }: RouteOptions) {
   return [
     {
       path: 'maintenance',
@@ -114,7 +109,6 @@ export function createAdminRoutes({ appsRoutes, appName }: RouteOptions) {
     {
       path: '',
       canActivate: [MaintenanceGuard],
-      data: { app: appName },
       children: [
         { path: '', redirectTo: 'auth', pathMatch: 'full' },
         {

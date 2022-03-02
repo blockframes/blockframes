@@ -21,6 +21,7 @@ import { MovieAnalyticsChartModule } from '@blockframes/movie/components/movie-a
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { NoTitleModule } from '@blockframes/ui/dashboard/components/no-title/no-title.module';
 import { AnalyticsPipeModule } from '@blockframes/movie/pipes/analytics.pipe';
+import { AppPipeModule } from '@blockframes/utils/pipes/app.pipe';
 
 @NgModule({
   declarations: [HomeComponent],
@@ -31,6 +32,7 @@ import { AnalyticsPipeModule } from '@blockframes/movie/pipes/analytics.pipe';
     ImageModule,
     NoTitleModule,
     AnalyticsPipeModule,
+    AppPipeModule,
 
     // Material
     MatButtonModule,

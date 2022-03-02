@@ -1,10 +1,11 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { OrganizationService } from '../+state';
 import { CanActivate, Router } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
 import { AuthService } from '@blockframes/auth/+state';
-import { AppGuard } from '@blockframes/utils/routes/app.guard';
+import { App } from '@blockframes/utils/apps';
+import { APP } from '@blockframes/utils/routes/utils';
 
 @Injectable({ providedIn: 'root' })
 export class RequestAccessGuard implements CanActivate {
@@ -12,7 +13,7 @@ export class RequestAccessGuard implements CanActivate {
     private service: OrganizationService,
     private router: Router,
     private authService: AuthService,
-    private appGuard: AppGuard,
+    @Inject(APP) private app: App
   ) { }
 
   canActivate() {
@@ -25,7 +26,7 @@ export class RequestAccessGuard implements CanActivate {
         if (!user.orgId) return this.router.createUrlTree(['/auth/identity']);
 
         if (org.status === 'accepted') {
-          const app = this.appGuard.currentApp;
+          const app = this.app;
           if (!org.appAccess[app]) return;
           if (org.appAccess[app].marketplace) return this.router.createUrlTree(['/c/o/marketplace/home']);
           else if (org.appAccess[app].dashboard) return this.router.createUrlTree(['/c/o/dashboard/home']);
