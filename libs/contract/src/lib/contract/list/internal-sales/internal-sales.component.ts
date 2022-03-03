@@ -1,7 +1,5 @@
-import { Component, ChangeDetectionStrategy, OnInit, Input, } from '@angular/core';
-import { appName } from '@blockframes/utils/apps';
+import { Component, ChangeDetectionStrategy, OnInit, Input } from '@angular/core';
 import { Contract, ContractStatus, Sale } from '@blockframes/contract/contract/+state';
-import { OrganizationService } from '@blockframes/organization/+state';
 import { ActivatedRoute, Router } from '@angular/router';
 import { filter, map, startWith } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
@@ -9,10 +7,9 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { isInitial } from '@blockframes/contract/negotiation/utils';
 import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
-import { AppGuard } from '@blockframes/utils/routes/app.guard';
 
 function capitalize(text: string) {
-  return `${text[0].toUpperCase()}${text.substring(1)}`
+  return `${text[0].toUpperCase()}${text.substring(1)}`;
 }
 
 interface InternalSale extends Sale<Date> {
@@ -29,36 +26,29 @@ interface InternalSale extends Sale<Date> {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InternalSaleListComponent implements OnInit {
-  public app = this.appGuard.currentApp;
-  public appName = appName[this.app];
-  public orgId = this.orgService.org.id;
 
-  @Input() private title = 'My Sale';
+  private title = 'All Sales';
 
   private _sales = new BehaviorSubject<InternalSale[]>([]);
-
 
   filter = new FormControl();
   filter$: Observable<ContractStatus | ''> = this.filter.valueChanges.pipe(startWith(this.filter.value || ''));
 
-
   public salesCount$ = this._sales.pipe(
     filter(data => !!data),
     map(m => ({
-    all: m.length,
-    new: m.filter(m => m.negotiation?.status === 'pending' && isInitial(m.negotiation)).length,
-    accepted: m.filter(m => m.negotiation?.status === 'accepted').length,
-    declined: m.filter(m => m.negotiation?.status === 'declined').length,
-    negotiating: m.filter(m => m.negotiation?.status === 'pending' && !isInitial(m.negotiation)).length,
-  }))
+      all: m.length,
+      new: m.filter(m => m.negotiation?.status === 'pending' && isInitial(m.negotiation)).length,
+      accepted: m.filter(m => m.negotiation?.status === 'accepted').length,
+      declined: m.filter(m => m.negotiation?.status === 'declined').length,
+      negotiating: m.filter(m => m.negotiation?.status === 'pending' && !isInitial(m.negotiation)).length,
+    }))
   );
 
   constructor(
-    private orgService: OrganizationService,
     private router: Router,
     private dynTitle: DynamicTitleService,
-    private route: ActivatedRoute,
-    private appGuard: AppGuard,
+    private route: ActivatedRoute
   ) { }
 
   @Input() set sales(sale: InternalSale[]) {
@@ -68,7 +58,6 @@ export class InternalSaleListComponent implements OnInit {
   get sales() {
     return this._sales.value;
   }
-
 
   goToSale({ id }: Contract) {
     this.router.navigate([id], { relativeTo: this.route });

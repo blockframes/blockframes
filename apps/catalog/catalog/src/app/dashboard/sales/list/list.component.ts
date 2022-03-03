@@ -1,5 +1,4 @@
-import { Component, ChangeDetectionStrategy, Optional, OnInit, } from '@angular/core';
-import { appName } from '@blockframes/utils/apps';
+import { Component, ChangeDetectionStrategy, Optional, OnInit } from '@angular/core';
 import { ContractService, Sale } from '@blockframes/contract/contract/+state';
 import { Organization, OrganizationService } from '@blockframes/organization/+state';
 import { Intercom } from 'ng-intercom';
@@ -11,7 +10,6 @@ import { IncomeService } from '@blockframes/contract/income/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { CollectionReference } from '@angular/fire/firestore';
 import { getSeller } from '@blockframes/contract/contract/+state/utils'
-import { AppGuard } from '@blockframes/utils/routes/app.guard';
 
 function queryFn(ref: CollectionReference, orgId: string, options: { internal?: boolean }) {
   const operator = options.internal ? '!=' : "==";
@@ -34,9 +32,7 @@ function getFullName(seller: Organization) {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SaleListComponent implements OnInit {
-  public app = this.appGuard.currentApp;
-  public appName = appName[this.app];
-  public orgId = this.orgService.org.id;
+  private orgId = this.orgService.org.id;
 
 
   public internalSales$ = this.contractService.valueChanges(ref => queryFn(ref, this.orgId, { internal: true })).pipe(
@@ -65,9 +61,7 @@ export class SaleListComponent implements OnInit {
     private titleService: MovieService,
     private incomeService: IncomeService,
     private dynTitle: DynamicTitleService,
-    private appGuard: AppGuard,
     @Optional() private intercom: Intercom,
-
   ) { }
 
   ngOnInit() {
