@@ -94,8 +94,8 @@ export async function asyncFilter<T>(items: T[], filterFunction: (item: T) => Pr
   return y.filter(w => w !== _null) as T[];
 }
 
-function findCorrespondence<S extends Scope>(sanitizedCode: string) {
-  return ([key, value]: [string, string]) => [key.toLowerCase(), value.toLowerCase()].includes(sanitizedCode)
+function findCorrespondence(code: string) {
+  return ([key, value]: [string, string]) => key.toLowerCase() === code || value.toLowerCase() === code
 }
 
 /**

@@ -164,8 +164,8 @@ export async function formatContract(
         let sellerId = await getOrgId(value, orgService, orgNameCache);
         if (!sellerId) {
           const seller = await orgService.getValue(value);
-          if (seller) sellerId = value;
-          else return unknownEntityError('Licensor Organization');
+          if (!seller) return unknownEntityError('Licensor Organization');
+          return sellerId = value;
         }
         if (!blockframesAdmin && sellerId !== userOrgId) return {
           value: undefined,
@@ -297,8 +297,8 @@ export async function formatContract(
     const { data, errors } = result;
 
     const contract = data.contract.type === 'sale'
-      ? createSale({ ...data.contract as Sale })
-      : createMandate({ ...data.contract as Mandate });
+      ? createSale(data.contract as Sale)
+      : createMandate(data.contract as Mandate );
 
     const { id, sellerId } = contract;
 

@@ -226,10 +226,8 @@ export function getStatic<S extends Scope>(scope: S, value: string, separator: s
   const splitted = split(value, separator);
   const keys = splitted.map(v => getKeyIfExists(scope, `${v}`));
   const values = keys.filter(v => !!v);
-  const wrongData: string[] = [];
-  keys.forEach((k, i) => {
-    if (!k) wrongData.push(`${splitted[i]}`);
-  });
+  if (values.length === keys.length) return values;
+  const wrongData = splitted.filter(v => !v);
   if (wrongData.length) return {
     value: values, error: {
       type: 'warning',
@@ -252,13 +250,13 @@ export function getStaticList<S extends Scope>(scope: S, value: string, separato
   return values;
 }
 
-const groupedTerritoriesOrMedias = {
+const fromGroup = {
   territories: (territories, separator) => getStaticList('territories', territories, separator, 'Territories', true, 'world'),
   medias: (medias, separator) => getStaticList('medias', medias, separator, 'Medias', true, 'all'),
 }
 
-export function getGroupedList(value: string, groupScope: 'territories', separator: string): GetKeys<'territories'>[];
-export function getGroupedList(value: string, groupScope: 'medias', separator: string): GetKeys<'medias'>[];
+export function getGroupedList(value: string, groupScope: 'territories', separator: string): ValueWithError<GetKeys<'territories'>> | FromStatic<'territories'>;
+export function getGroupedList(value: string, groupScope: 'medias', separator: string): ValueWithError<GetKeys<'medias'>> | FromStatic<'medias'>;
 export function getGroupedList<GS extends GroupScope>(value: string, groupScope: GS, separator: string) {
   const elements = split(value, separator);
   const groupLabels = staticGroups[groupScope].map(group => group.label);
@@ -270,7 +268,7 @@ export function getGroupedList<GS extends GroupScope>(value: string, groupScope:
 
   const elementList = Array.from(new Set(allElements)).join(separator);
 
-  return groupedTerritoriesOrMedias[groupScope](elementList, separator);
+  return fromGroup[groupScope](elementList, separator);
 }
 
 export function split(cell: string, separator: string) {
