@@ -46,12 +46,15 @@ catalog-landing {
           }
         }
 
-        article {
+        .features {
           margin-bottom: 24px;
-          .surface {
-            width: 32%;
-            text-align: center;
-            }
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          grid-template-rows: 1fr;
+          gap: 8px;
+        }
+        .surface {
+          text-align: center;
         }
       
         .benefits {
@@ -134,7 +137,7 @@ landing-app-link {
     landing-content {
       .landing-presentation {
         mat-tab-group {
-          article .surface {
+          .surface {
             padding: 32px;
           }
           margin: 0;
@@ -177,13 +180,12 @@ landing-app-link {
     landing-content {
       .landing-presentation {
         mat-tab-group {
-          padding-inline: 40px;
-          article .surface{
-            width: 100%;
-            margin-bottom: 8px;
+          .features {
+            grid-template-columns: 1fr;
+            grid-template-rows: repeat(3, 1fr);
           }
           .benefits {
-            > div {
+            div {
               text-align: center;
               img {
                 margin-bottom: 16px;
@@ -215,9 +217,6 @@ landing-app-link {
         padding: 72px 32px;
       }
       text-align: center;
-      article .surface {
-        width: 100%;
-      }
 
       .expertise {
         div {
