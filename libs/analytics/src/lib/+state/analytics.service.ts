@@ -64,6 +64,7 @@ export class AnalyticsService extends CollectionService<AnalyticsState> {
     // TODO #7273 use MovieService instead once Akita has been replaced by ng-fire (currently using MovieService results in error) 
     const doc = await this.db.doc(`movies/${titleId}`).ref.get();
     const title = createMovie(doc.data());
+    // const title = doc.data() as any;
 
     const meta = createTitleMeta({
       titleId,
@@ -94,7 +95,7 @@ export class AnalyticsService extends CollectionService<AnalyticsState> {
 
       // TODO #7273 use MovieService instead once Akita has been replaced by ng-fire (currently using MovieService results in error) 
       const doc = await this.db.doc(`movies/${id}`).ref.get();
-      const title = createMovie(doc.data());
+      const title = doc.data() as any;
 
       meta = createTitleMeta({
         titleId: id,

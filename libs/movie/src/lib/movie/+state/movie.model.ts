@@ -1,7 +1,6 @@
 import {
   MoviePromotionalElements,
   Title,
-  MovieAnalytics,
   MovieStakeholders,
   MovieLanguageSpecification,
   LanguageRecord,
@@ -34,7 +33,6 @@ export {
   MoviePromotionalElements,
   MovieStakeholders,
   Prize,
-  MovieAnalytics,
   MovieReview
 } from './movie.firestore';
 
@@ -298,19 +296,6 @@ export function getMovieTitleList(movies: Movie[]): string[] {
     : movie.title.original
   )
   return movieTitles;
-}
-
-/**
- * Returns the number of views of a movie page.
- * @param analytics
- * @param movieId
- */
-export function getMovieTotalViews(analytics: MovieAnalytics[], movieId: string): number {
-  const movieAnalytic = analytics.find(analytic => analytic.id === movieId);
-  if (movieAnalytic) {
-    const movieHits = movieAnalytic.movieViews.current.map(event => event.hits);
-    return movieHits.reduce((sum, val) => sum + val, 0);
-  }
 }
 
 export function createMovieVideos(params: Partial<MovieVideos>): MovieVideos {
