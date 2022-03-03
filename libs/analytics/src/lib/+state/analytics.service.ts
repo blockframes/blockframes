@@ -2,8 +2,12 @@ import { Inject, Injectable } from '@angular/core';
 import { AngularFireAnalytics } from '@angular/fire/analytics';
 import { ActiveState, EntityState } from '@datorama/akita';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
+
 import { take } from 'rxjs/operators';
 import { centralOrgId } from '@env';
+import { startOfDay } from 'date-fns';
+
+// Blockframes
 import { Analytics, AnalyticsTypeRecord, AnalyticsTypes, EventName } from './analytics.firestore';
 import { createTitleMeta } from './analytics.model';
 import { AuthService } from '@blockframes/auth/+state';
@@ -11,7 +15,6 @@ import { createMovie } from '@blockframes/movie/+state/movie.model';
 import { createDocumentMeta } from '@blockframes/utils/models-meta';
 import { APP } from '@blockframes/utils/routes/utils';
 import { formatDocumentMetaFromFirestore } from '@blockframes/utils/models-meta';
-import { startOfDay } from 'date-fns';
 import { App } from '@blockframes/utils/apps';
 
 interface AnalyticsState extends EntityState<Analytics>, ActiveState<string> {};
