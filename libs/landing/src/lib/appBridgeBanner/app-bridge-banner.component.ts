@@ -1,6 +1,6 @@
-import { Component, ChangeDetectionStrategy, HostBinding } from '@angular/core';
+import { Component, ChangeDetectionStrategy, HostBinding, Inject } from '@angular/core';
 import { App, applicationUrl } from '@blockframes/utils/apps';
-import { AppGuard } from '@blockframes/utils/routes/app.guard';
+import { APP } from '@blockframes/utils/routes/utils';
 
 interface AppBridge {
   name: string;
@@ -20,7 +20,7 @@ type BridgeRecord = Partial<Record<App, AppBridge>>;
 export class AppBridgeBannerComponent {
   @HostBinding('class') class = 'dark-contrast-theme';
 
-  public currentApp = this.appGuard.currentApp;
+  public currentApp = this.app;
   public bridgeApp = this.currentApp === 'festival' ? 'catalog' : 'festival';
   public buttonsData: BridgeRecord = {
     festival: {
@@ -38,7 +38,7 @@ export class AppBridgeBannerComponent {
   };
 
   constructor(
-    private appGuard: AppGuard
+    @Inject(APP) private app: App,
   ) {}
 
   scrollToHeader() {
