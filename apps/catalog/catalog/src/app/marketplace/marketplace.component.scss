@@ -1,3 +1,5 @@
+@use '@angular/material' as mat;
+
 :host {
   display: block;
   height: 100%;
@@ -5,4 +7,9 @@
 
 header {
   margin: 0 24px;
+}
+
+.link-to-app {
+  padding: 4px 12px;
+  @include mat.elevation(2);
 }

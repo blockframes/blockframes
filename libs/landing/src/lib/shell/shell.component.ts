@@ -1,14 +1,14 @@
-import { ChangeDetectionStrategy, Component, ContentChild, Directive, HostBinding, Input, OnDestroy, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ContentChild, Directive, HostBinding, Input, OnDestroy, ViewEncapsulation, ChangeDetectorRef, Inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { createDemoRequestInformations, RequestDemoInformations } from '@blockframes/utils/request-demo';
 import { MatSnackBar } from '@angular/material/snack-bar'
-import { getCurrentApp } from '@blockframes/utils/apps';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { RequestDemoRole } from '@blockframes/utils/request-demo';
 import { ThemeService } from '@blockframes/ui/theme';
 import { testEmail } from "@blockframes/e2e/utils/env";
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
+import { APP } from '@blockframes/utils/routes/utils';
+import { App } from '@blockframes/utils/apps';
 
 @Directive({
   selector: 'landing-header, [landingHeader]',
@@ -25,6 +25,9 @@ export class LandingContactDirective { }
 
 @Directive({ selector: 'landing-detail, [landingDetail]' })
 export class LandingDetailDirective { }
+
+@Directive({ selector: 'landing-app-link, [landingAppLink]' })
+export class LandingAppLinkDirective { }
 
 @Component({
   selector: 'landing-footer',
@@ -47,7 +50,6 @@ export class LandingFooterComponent { }
 export class LandingShellComponent implements OnDestroy {
   public submitted = false;
   public newslettersSubmitted = false;
-  public appName = getCurrentApp(this.routerQuery);
   public buttonText = 'Submit Demo Request';
 
   @Input() roles: RequestDemoRole[] = [
@@ -72,14 +74,15 @@ export class LandingShellComponent implements OnDestroy {
 
   @ContentChild(LandingContactDirective) landingContactDirective: LandingContactDirective
   @ContentChild(LandingDetailDirective) landingDetailDirective: LandingDetailDirective
+  @ContentChild(LandingAppLinkDirective) landingAppLinkDirective: LandingAppLinkDirective
   @ContentChild(LandingFooterComponent) landingFooterComponent: LandingFooterComponent
 
   constructor(
     private snackBar: MatSnackBar,
-    private routerQuery: RouterQuery,
     private functions: AngularFireFunctions,
     private theme: ThemeService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    @Inject(APP) private app: App
   ) {
     theme.setTheme('light');
   }
@@ -102,7 +105,7 @@ export class LandingShellComponent implements OnDestroy {
   /** Register an email to a mailchimp mailing list */
   private async registerEmailToNewsletters(email: string) {
     const f = this.functions.httpsCallable('registerToNewsletter');
-    const tags = [`landing - ${this.appName}`];
+    const tags = [`landing - ${this.app}`];
     return f({ email, tags }).toPromise();
   }
 
@@ -114,8 +117,7 @@ export class LandingShellComponent implements OnDestroy {
     }
     try {
       this.buttonText = 'Sending Request...';
-      const currentApp = getCurrentApp(this.routerQuery);
-      const information: RequestDemoInformations = createDemoRequestInformations({ app: currentApp, ...form.value });
+      const information: RequestDemoInformations = createDemoRequestInformations({ app: this.app, ...form.value });
       if ('Cypress' in window) {
         information.testEmailTo = testEmail;
       }
@@ -135,7 +137,11 @@ export class LandingShellComponent implements OnDestroy {
     }
   }
 
-  public async subscibe(form: FormGroup) {
+  public async subscribe(form: FormGroup) {
+    if (form.invalid) {
+      this.snackBar.open('Please enter a valid email address.', 'close', { duration: 2000 });
+      return;
+    }
     try {
       await this.registerEmailToNewsletters(form.value.email);
       this.newslettersSubmitted = true;
@@ -143,8 +149,7 @@ export class LandingShellComponent implements OnDestroy {
       this.cdr.markForCheck();
 
     } catch (error) {
-      console.log("error", error)
-      this.snackBar.open(error.message, 'close', { duration: 5000 });
+      this.snackBar.open('Please enter a valid email address.', 'close', { duration: 2000 });
     }
   }
 }

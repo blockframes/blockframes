@@ -9,6 +9,7 @@ import { Observable, combineLatest, of } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 import type firebase from 'firebase';
 import { ActiveState, EntityState } from '@datorama/akita';
+import { production } from '@env';
 
 interface EventState extends EntityState<Event>, ActiveState<string> {};
 type Timestamp = firebase.firestore.Timestamp;
@@ -58,6 +59,7 @@ export class EventService extends CollectionService<EventState> {
     private orgService: OrganizationService,
   ) {
     super();
+    if (!production && window['Cypress']) window['eventService'] = this; // instrument Cypress only out of PROD
   }
 
   /** Verify if the current user / organization is owner of an event */

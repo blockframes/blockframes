@@ -1,14 +1,14 @@
-import { ChangeDetectionStrategy, Component, Optional } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, Optional } from '@angular/core';
 import { InvitationService } from '@blockframes/invitation/+state/invitation.service';
 import { Invitation } from '@blockframes/invitation/+state/invitation.model';
-import { getCurrentApp, appName } from '@blockframes/utils/apps';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { App } from '@blockframes/utils/apps';
 import { Organization, OrganizationService } from '@blockframes/organization/+state';
 import { filter, switchMap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { Intercom } from 'ng-intercom';
 import { User } from '@blockframes/user/+state';
 import { AuthService } from '@blockframes/auth/+state';
+import { APP } from '@blockframes/utils/routes/utils';
 
 const queryFn = (uid: string) => ref => ref.where('mode', '==', 'request')
   .where('type', '==', 'joinOrganization')
@@ -23,8 +23,6 @@ const queryFn = (uid: string) => ref => ref.where('mode', '==', 'request')
 export class OrganizationPendingComponent {
   public invitations: Invitation[];
   public org$: Observable<Organization>;
-  public app = getCurrentApp(this.routerQuery);
-  public appName = appName[this.app];
   public orgActive$ = this.authService.profile$.pipe(
     filter(user => !!user),
     switchMap(user => this.getOrgId(user)),
@@ -36,8 +34,8 @@ export class OrganizationPendingComponent {
     private service: OrganizationService,
     private invitationService: InvitationService,
     private authService: AuthService,
-    private routerQuery: RouterQuery,
-    @Optional() private intercom: Intercom
+    @Optional() private intercom: Intercom,
+    @Inject(APP) public app: App
   ) { }
 
   private async getOrgId(user: User) {

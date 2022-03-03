@@ -16,7 +16,8 @@ export class MovieViewDeliveryComponent implements OnInit {
   constructor(private dynTitle: DynamicTitleService, private shell: DashboardTitleShellComponent) { }
 
   ngOnInit() {
-    this.dynTitle.setPageTitle('Title page', 'Delivery Information');
+    const titleName = this.shell.movie?.title?.international || 'No title';
+    this.dynTitle.setPageTitle(titleName, 'Delivery Information');
   }
 
   get file() {

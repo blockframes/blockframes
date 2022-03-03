@@ -1,7 +1,9 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { MovieService } from '@blockframes/movie/+state';
 import { Movie } from '@blockframes/movie/+state/movie.model';
-import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { pluck, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'catalog-movie-finance',
@@ -11,11 +13,14 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 })
 export class MarketplaceMovieFinanceComponent implements OnInit {
 
-  public movie$ = this.movieQuery.selectActive();
-  public loading$ = this.movieQuery.selectLoading();
+  public movie$ = this.route.params.pipe(
+    pluck('movieId'),
+    switchMap((movieId: string) => this.movieService.valueChanges(movieId))
+  );
 
   constructor(
-    private movieQuery: MovieQuery,
+    private route: ActivatedRoute,
+    private movieService: MovieService,
     private dynTitle: DynamicTitleService,
   ) { }
 
@@ -27,7 +32,7 @@ export class MarketplaceMovieFinanceComponent implements OnInit {
     return (from && to) ? `$ ${from} - ${to}` : '';
   }
 
-  public hasBudget({ boxOffice, rating, certifications, review}: Movie): boolean {
+  public hasBudget({ boxOffice, rating, certifications, review }: Movie): boolean {
     return !!(
       boxOffice.length ||
       certifications.length ||

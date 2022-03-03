@@ -48,3 +48,5 @@ Cypress.Server.defaults({
     return true;
   }
 })
+
+Cypress.config('defaultCommandTimeout', 60000);

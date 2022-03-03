@@ -7,17 +7,11 @@
 import * as functions from 'firebase-functions';
 
 export const e2eMode = true;
-if (e2eMode) {
-  console.log('Emulator Mode enabled for functions');
-  console.log('These are the emulated functions.config values present in .runtimeConfig'); // Not a good pracice. If a env_var is removed from circleCi, it will be displayed in plain text in jobs
-  console.dir(functions.config());
-}
+console.log('Emulator Mode enabled for functions');
 
 export {
   production,
-  factoryContract,
   backupBucket,
-  relayer,
   appUrl,
   sentryEnv,
   sentryDsn,
@@ -31,7 +25,6 @@ import { firebase } from '@env';
 export const { projectId, storageBucket } = firebase();
 
 export const sendgridAPIKey = functions.config().sendgrid.api_key;
-export const mnemonic = functions.config().relayer.mnemonic;
 
 export const jwplayerSecret = functions.config().jwplayer.secret;
 export const jwplayerKey = functions.config().jwplayer.key;

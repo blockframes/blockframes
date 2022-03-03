@@ -624,6 +624,16 @@
           },
           "configurations": {
             "emulator": {
+              "buildOptimizer": false,
+              "optimization": {
+                "scripts": false,
+                "styles": false,
+                "fonts": false
+              },
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": false,
+              "namedChunks": true,
               "fileReplacements": [
                 {
                   "replace": "apps/festival/festival/src/environment/environment.ts",
@@ -1836,6 +1846,28 @@
           "options": {
             "jestConfig": "libs/testing/e2e/jest.config.js",
             "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "analytics": {
+      "projectType": "library",
+      "root": "libs/analytics",
+      "sourceRoot": "libs/analytics/src",
+      "prefix": "analytics",
+      "architect": {
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/analytics"],
+          "options": {
+            "jestConfig": "libs/analytics/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/analytics/src/**/*.ts", "libs/analytics/src/**/*.html"]
           }
         }
       }

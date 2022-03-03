@@ -6,10 +6,11 @@ import {
   availFrance, availsSVODArgentina, availsPayTVArgentina,
   availsGermany, availsBelgium, availsExistingEndedSales,
   availsOngoingSales, availsTerritoryWithExclusivity, availsTerritoryWithoutExclusivity,
-  availsFranceLuxembourg,availsAllButSouthKorea,
+  availsFranceLuxembourg, availsAllButSouthKorea, availsPayTV, availsPlanes,
 } from './../fixtures/availsFilters';
 import {
   mandateMovie1, saleArgentinaMovie1, saleGermanyMovie1, saleCanadaMovie1, saleBelgiumFranceLuxembourgMovie1,
+  mandateMovie6
 } from './../fixtures/mandatesAndSales';
 import { FullMandate, FullSale, territoryAvailabilities } from '../avails';
 
@@ -70,7 +71,8 @@ describe('Test territoryAvailabilities pure function', () => {
       }],
     } as BucketContract;
 
-    const available = territoryAvailabilities(availDetailsExclusive, [mandate], [sale], [bucket]);
+    const data = { avails: availDetailsExclusive, mandates: [mandate], sales: [sale], bucketContracts: [bucket] };
+    const available = territoryAvailabilities(data);
 
     expect(available.available.length).toBe(1);
     expect(available.available[0].slug).toBe('france');
@@ -88,25 +90,29 @@ describe('Test territoryAvailabilities pure function', () => {
 
 describe('Test terms are out of movie mandate', () => {
   it('Checks not licensed due to territory', () => {
-    const markers = territoryAvailabilities(availSouthKorea, [mandateMovie1], sales, []);
+    const data = { avails: availSouthKorea, mandates: [mandateMovie1], sales, bucketContracts: [] };
+    const markers = territoryAvailabilities(data);
     expect(markers.notLicensed.length).toBe(1);
     expect(markers.notLicensed?.[0]?.slug).toBe('south-korea');
   })
 
   it('Check not licensed due to duration', () => {
-    const markers = territoryAvailabilities(availAfghanistan, [mandateMovie1], sales, []);
+    const data = { avails: availAfghanistan, mandates: [mandateMovie1], sales, bucketContracts: [] };
+    const markers = territoryAvailabilities(data);
     const notLicensedTerritories = markers.notLicensed.map(s => s.slug)
     expect(notLicensedTerritories).toContain('afghanistan');
   })
 
   it('Check not licensed due to media', () => {
-    const markers = territoryAvailabilities(availFrance, [mandateMovie1], sales, []);
+    const data = { avails: availFrance, mandates: [mandateMovie1], sales, bucketContracts: [] };
+    const markers = territoryAvailabilities(data);
     const notLicensedTerritories = markers.notLicensed.map(s => s.slug)
     expect(notLicensedTerritories).toContain('france');
   })
 
   it('Check available  on terms with existing ended sales', () => {
-    const markers = territoryAvailabilities(availsExistingEndedSales, [mandateMovie1], sales, []);
+    const data = { avails: availsExistingEndedSales, mandates: [mandateMovie1], sales, bucketContracts: [] };
+    const markers = territoryAvailabilities(data);
     const availableTerritories = markers.available.map(marker => marker.slug)
     expect(availableTerritories).toContain('germany',);
     expect(availableTerritories).toContain('russia');
@@ -114,7 +120,8 @@ describe('Test terms are out of movie mandate', () => {
   })
 
   it('Check not licensed due to terms with ongoing sales.', () => {
-    const markers = territoryAvailabilities(availsOngoingSales, [mandateMovie1], sales, []);
+    const data = { avails: availsOngoingSales, mandates: [mandateMovie1], sales, bucketContracts: [] };
+    const markers = territoryAvailabilities(data);
     const availableTerritories = markers.available.map(marker => marker.slug)
     const soldTerritories = markers.sold.map(marker => marker.slug)
     expect(soldTerritories).toContain('germany',);
@@ -123,7 +130,8 @@ describe('Test terms are out of movie mandate', () => {
   })
 
   it('Check available due to non exclusive', () => {
-    const markers = territoryAvailabilities(availsTerritoryWithoutExclusivity, [mandateMovie1], sales, []);
+    const data = { avails: availsTerritoryWithoutExclusivity, mandates: [mandateMovie1], sales, bucketContracts: [] };
+    const markers = territoryAvailabilities(data);
     const availableTerritories = markers.available.map(marker => marker.slug)
     expect(availableTerritories).toContain('germany',);
     expect(availableTerritories).toContain('russia');
@@ -131,7 +139,8 @@ describe('Test terms are out of movie mandate', () => {
   })
 
   it('Check not licensed due to territory and exclusivity', () => {
-    const markers = territoryAvailabilities(availsTerritoryWithExclusivity, [mandateMovie1], sales, []);
+    const data = { avails: availsTerritoryWithExclusivity, mandates: [mandateMovie1], sales, bucketContracts: [] };
+    const markers = territoryAvailabilities(data);
     const soldTerritories = markers.sold.map(marker => marker.slug)
     const availableTerritories = markers.available.map(marker => marker.slug)
     expect(soldTerritories).toContain('germany',);
@@ -140,46 +149,68 @@ describe('Test terms are out of movie mandate', () => {
   })
 
   it('Check terms available', () => {
-    const markers = territoryAvailabilities(availsSVODArgentina, [mandateMovie1], sales, []);
+    const data = { avails: availsSVODArgentina, mandates: [mandateMovie1], sales, bucketContracts: [] };
+    const markers = territoryAvailabilities(data);
     const availableTerritories = markers.available.map(s => s.slug)
     expect(availableTerritories).toContain('argentina');
   })
 
   it('Check term sold', () => {
-    const markers = territoryAvailabilities(availsPayTVArgentina, [mandateMovie1], sales, []);
+    const data = { avails: availsPayTVArgentina, mandates: [mandateMovie1], sales, bucketContracts: [] };
+    const markers = territoryAvailabilities(data);
     const soldTerritories = markers.sold.map(s => s.slug)
     expect(markers.sold.length).toBeGreaterThan(0);
     expect(soldTerritories).toContain('argentina');
   })
 
   it('Check available non exclusivity', () => {
-    const markers = territoryAvailabilities(availsGermany, [mandateMovie1], sales, []);
+    const data = { avails: availsGermany, mandates: [mandateMovie1], sales, bucketContracts: [] };
+    const markers = territoryAvailabilities(data);
     const availableTerritories = markers.available.map(s => s.slug)
     expect(markers.available.length).toBeGreaterThan(0);
     expect(availableTerritories).toContain('germany');
   })
 
   it('Check available terms with existing future sales', () => {
-    const markers = territoryAvailabilities(availsBelgium, [mandateMovie1], sales, []);
+    const data = { avails: availsBelgium, mandates: [mandateMovie1], sales, bucketContracts: [] };
+    const markers = territoryAvailabilities(data);
     const availableTerritories = markers.available.map(s => s.slug)
     expect(markers.available.length).toBeGreaterThan(0);
     expect(availableTerritories).toContain('belgium');
   })
 
   it('Check not available due to terms with existing future sales', () => {
-    const markers = territoryAvailabilities(availsFranceLuxembourg, [mandateMovie1], sales, []);
+    const data = { avails: availsFranceLuxembourg, mandates: [mandateMovie1], sales, bucketContracts: [] };
+    const markers = territoryAvailabilities(data);
     const soldTerritories = markers.sold.map(s => s.slug)
     expect(soldTerritories).toContain('france');
     expect(soldTerritories).toContain('luxembourg');
   })
 
   it('Check available on several Media + Last day of mandate', () => {
-    const markers = territoryAvailabilities(availsAllButSouthKorea, [mandateMovie1], sales, []);
+    const data = { avails: availsAllButSouthKorea, mandates: [mandateMovie1], sales, bucketContracts: [] };
+    const markers = territoryAvailabilities(data);
     expect(markers.sold.length).toBe(0);
     expect(markers.inBucket.length).toBe(0);
     expect(markers.selected.length).toBe(0);
     expect(markers.notLicensed.length).toBe(1);
     expect(markers.notLicensed?.[0]?.slug).toBe('south-korea');
+  })
+
+  it('Check non availability on china with payTv media', () => {
+    const data = { avails: availsPayTV, mandates: [mandateMovie6], sales:[], bucketContracts: [] };
+    const markers = territoryAvailabilities(data);
+    expect(markers.available.find(m => m.slug === 'china')).toBe(undefined)
+    expect(markers.available.find(m => m.slug === 'brazil')).toBe(undefined)
+    expect(markers.available.find(m => m.slug === 'angola')).not.toBe(undefined)
+  })
+
+  it('Check availability on china with planes media', () => {
+    const data = { avails: availsPlanes, mandates: [mandateMovie6], sales:[], bucketContracts: [] };
+    const markers = territoryAvailabilities(data);
+    expect(markers.available.find(m => m.slug === 'china')).not.toBe(undefined)
+    expect(markers.available.find(m => m.slug === 'brazil')).not.toBe(undefined)
+    expect(markers.available.find(m => m.slug === 'angola')).not.toBe(undefined)
   })
 
 })

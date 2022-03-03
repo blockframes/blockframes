@@ -1,6 +1,5 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { getCurrentApp, appName, App, getOrgAppAccess } from '@blockframes/utils/apps';
+import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
+import { App, getOrgAppAccess } from '@blockframes/utils/apps';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { organizationRoles, OrganizationService } from '@blockframes/organization/+state';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -8,6 +7,7 @@ import { map } from 'rxjs/operators';
 import { AuthService } from '@blockframes/auth/+state';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { APP } from '@blockframes/utils/routes/utils';
 
 type Steps = 'initial' | 'request';
 
@@ -19,24 +19,22 @@ type Steps = 'initial' | 'request';
 })
 export class OrgRequestAccessComponent implements OnInit {
   public roles = organizationRoles;
-  public currentApp = getCurrentApp(this.routerQuery);
-  public appName = appName;
-  public org$ = this.orgService.currentOrg$;
-  public orgId = this.orgService.org.id;
+  private org$ = this.orgService.currentOrg$;
+  private orgId = this.orgService.org.id;
   public orgExistingAccess$: Observable<App[]>;
   public disabledRequest = false;
   public formControl = new FormControl();
 
-  public step$: Observable<Steps>
+  public step$: Observable<Steps>;
   private step = new BehaviorSubject<Steps>('initial');
 
   constructor(
-    private routerQuery: RouterQuery,
     private snackBar: MatSnackBar,
     private orgService: OrganizationService,
     private authService: AuthService,
     private router: Router,
     private route: ActivatedRoute,
+    @Inject(APP) public currentApp: App
   ) { }
 
   ngOnInit() {

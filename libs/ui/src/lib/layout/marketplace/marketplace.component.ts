@@ -1,5 +1,5 @@
 // Angular
-import { Component, ChangeDetectionStrategy, OnInit, ViewChild } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, ViewChild, Inject } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { MatSidenav } from '@angular/material/sidenav';
 import { CdkScrollable } from '@angular/cdk/overlay';
@@ -14,9 +14,9 @@ import { InvitationService } from '@blockframes/invitation/+state';
 import { NotificationService } from '@blockframes/notification/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { MovieService, Movie } from '@blockframes/movie/+state'
-import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { getCurrentApp, App } from '@blockframes/utils/apps';
+import { App } from '@blockframes/utils/apps';
 import { AuthService } from '@blockframes/auth/+state';
+import { APP } from '@blockframes/utils/routes/utils';
 
 @Component({
   selector: 'layout-marketplace',
@@ -42,15 +42,15 @@ export class MarketplaceComponent implements OnInit {
     private notificationService: NotificationService,
     private authService: AuthService,
     private movieService: MovieService,
-    private routerQuery: RouterQuery,
-    private router: Router
+    private router: Router,
+    @Inject(APP) private app: App
   ) { }
 
   ngOnInit() {
     this.wishlistCount$ = this.orgService.currentOrg$.pipe(
       map(org => org?.wishlist || []),
       switchMap(movieIds => this.movieService.getValue(movieIds)),
-      map((movies: Movie[]) => movies.filter(filterMovieByAppAccess(getCurrentApp(this.routerQuery))).length)
+      map((movies: Movie[]) => movies.filter(filterMovieByAppAccess(this.app)).length)
     );
   }
 

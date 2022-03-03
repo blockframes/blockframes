@@ -1,23 +1,15 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { getAppName, App } from '../apps';
+import { App, appName, appShortName } from '../apps';
 
-@Pipe({ name: 'app' })
-export class AppPipe implements PipeTransform {
-  constructor(private routerQuery: RouterQuery) { }
-  transform(app: string): boolean {
-    return this.routerQuery.getData('app') === app;
-  }
-}
 @Pipe({ name: 'appName' })
 export class AppNamePipe implements PipeTransform {
-  transform(app: App, short = false): string {
-    return getAppName(app, short).label;
+  transform(app: App, mode: 'short' | 'long' = 'long'): string {
+    return mode === 'short' ? appShortName[app] : appName[app];
   }
 }
 
 @NgModule({
-  exports: [AppPipe, AppNamePipe],
-  declarations: [AppPipe, AppNamePipe]
+  exports: [AppNamePipe],
+  declarations: [AppNamePipe]
 })
 export class AppPipeModule { }

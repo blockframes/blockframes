@@ -3,11 +3,10 @@ import { RouterModule, Routes } from '@angular/router';
 import { createRoutes } from '@blockframes/utils/routes/create-routes';
 
 // Guards
-import { AppGuard } from '@blockframes/utils/routes/app.guard';
+import { ModuleGuard } from '@blockframes/utils/routes/module.guard';
 import { NoAuthGuard } from '@blockframes/auth/guard/no-auth.guard';
 
 const routes: Routes = createRoutes({
-  appName: 'catalog',
   landing: {
     path: '',
     canActivate: [NoAuthGuard],
@@ -20,12 +19,12 @@ const routes: Routes = createRoutes({
   },
   {
     path: 'marketplace',
-    canActivate: [AppGuard],
+    canActivate: [ModuleGuard],
     loadChildren: () => import('./marketplace/marketplace.module').then(m => m.MarketplaceModule)
   },
   {
     path: 'dashboard',
-    canActivate: [AppGuard],
+    canActivate: [ModuleGuard],
     loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule)
   }
 ]

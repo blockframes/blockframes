@@ -9,7 +9,7 @@ import { TableModule } from "@blockframes/ui/list/table/table.module";
 import { TitleListComponent } from './list.component';
 
 // Blockframes
-import { DisplayNameModule, MaxLengthModule, NumberPipeModule, ToLabelModule } from '@blockframes/utils/pipes';
+import { AppPipeModule, DisplayNameModule, MaxLengthModule, NumberPipeModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { FilterByModule } from '@blockframes/utils/pipes/filter-by.pipe';
 import { NoTitleModule } from '@blockframes/ui/dashboard/components/no-title/no-title.module';
@@ -40,6 +40,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     TagModule,
     NumberPipeModule,
     IncomePipeModule,
+    AppPipeModule,
 
     // Material
     MatButtonModule,

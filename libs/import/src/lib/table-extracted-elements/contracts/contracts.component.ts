@@ -11,11 +11,17 @@ import { sortingDataAccessor } from '@blockframes/utils/table';
 import { ContractsImportState, SpreadsheetImportError } from '../../utils';
 import { TermService } from '@blockframes/contract/term/+state/term.service';
 import { createDocumentMeta } from '@blockframes/utils/models-meta';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFirestore, Query } from '@angular/fire/firestore';
+import { FullMandate, FullSale, territoryAvailabilities } from '@blockframes/contract/avails/avails';
 
 const hasImportErrors = (importState: ContractsImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
 };
+
+const getTitleContracts = (type: 'mandate' | 'sale', titleId: string) => (ref: Query) => ref.where('type', '==', type)
+  .where('titleId', '==', titleId)
+  .where('status', '==', 'accepted');
+
 
 @Component({
   selector: 'import-table-extracted-contracts',
@@ -59,8 +65,9 @@ export class TableExtractedContractsComponent implements OnInit {
   }
 
   async createContract(importState: ContractsImportState): Promise<boolean> {
-    await this.addContract(importState);
-    this.snackBar.open('Contract added!', 'close', { duration: 3000 });
+    const success = await this.addContract(importState, 'create');
+    const message = success ? 'Contract added!' : `Contract terms overlaps with existing mandate terms. Please update your template file and try again.`
+    this.snackBar.open(message, 'close', { duration: 9000 });
     return true;
   }
 
@@ -74,10 +81,11 @@ export class TableExtractedContractsComponent implements OnInit {
     try {
       const creations = this.selection.selected.filter(importState => importState.newContract && !hasImportErrors(importState));
       for (const contract of creations) {
-        this.processedContracts++;
-        await this.addContract(contract);
+        const success = this.addContract(contract, 'create');
+        if (success)
+          this.processedContracts++;
       }
-      this.snackBar.open(`${this.processedContracts} contracts created!`, 'close', { duration: 3000 });
+      this.snackBar.open(`${this.processedContracts}/${creations.length} contracts created!`, 'close', { duration: 3000 });
       this.processedContracts = 0;
       return true;
     } catch (err) {
@@ -103,18 +111,60 @@ export class TableExtractedContractsComponent implements OnInit {
     }
   }
 
+  async getExistingContracts(type: 'sale', titleId: string): Promise<FullSale[]>;
+  async getExistingContracts(type: 'mandate', titleId: string): Promise<FullMandate[]>;
+  async getExistingContracts(type: 'sale' | 'mandate', titleId: string): Promise<(FullSale | FullMandate)[]> {
+    const query = getTitleContracts(type, titleId);
+    const contracts = await this.contractService.getValue(query);
+    const promises = contracts.map(contract => this.termService.getValue(contract.termIds))
+    const terms = await Promise.all(promises);
+    return contracts.map((contract, idx) => ({ ...contract, terms: terms[idx] }) as FullSale | FullMandate)
+  }
+
+  /**Verifies if terms overlap with existing mandate terms in the Db */
+  private async verifyOverlappingMandatesAndSales(importState: ContractsImportState) {
+    const mandates = await this.getExistingContracts('mandate', importState.contract.titleId);
+    const sales = await this.getExistingContracts('sale', importState.contract.titleId);
+    const availabilities = importState.terms.map(term => {
+      const data = { avails: term, mandates: [], sales, bucketContracts: [], existingMandates: mandates };
+      return territoryAvailabilities(data);
+    });
+    const isOverlappingSale = importState.contract.type === 'sale' && availabilities.some(availability => !availability.sold.length);
+    const isOverlappingMandate = importState.contract.type === 'mandate' && availabilities.some(availability => availability.available.length);
+    return { isOverlappingSale, isOverlappingMandate };
+  }
+
   /**
    * Adds a contract to database and prevents multi-insert by refreshing mat-table
    * @param importState
    */
-  private async addContract(importState: ContractsImportState): Promise<boolean> {
-
+  private async addContract(importState: ContractsImportState, mode: 'create' | 'update' = 'update'): Promise<boolean> {
     importState.terms.forEach(t => t.id = this.db.createId());
     importState.contract.termIds = importState.terms.map(t => t.id);
-
+    if (mode === 'create') {
+      const overlapConditions = await this.verifyOverlappingMandatesAndSales(importState);
+      if (overlapConditions.isOverlappingMandate) {
+        importState.errors.push({
+          type: 'error',
+          name: 'Contract',
+          reason: 'The Terms of a Contract overlap with that of an already existing Mandate.',
+          hint: 'The Terms of a Contract overlap with that of an already existing Mandate.'
+        });
+        return false;
+      }
+      if (overlapConditions.isOverlappingSale) {
+        importState.errors.push({
+          type: 'error',
+          name: 'Contract',
+          reason: 'The terms of the imported sale have been sold already.',
+          hint: 'The terms of the imported sale have been sold already.'
+        });
+        return false;
+      }
+    }
     await this.contractService.add({
       ...importState.contract,
-      _meta: createDocumentMeta({createdAt: new Date()})
+      _meta: createDocumentMeta({ createdAt: new Date() })
     });
 
     // @dev: Create terms after contract because rules require contract to be created first

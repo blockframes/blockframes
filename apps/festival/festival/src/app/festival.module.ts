@@ -1,13 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { createRoutes } from '@blockframes/utils/routes/create-routes';
-import { AppGuard } from '@blockframes/utils/routes/app.guard';
+import { ModuleGuard } from '@blockframes/utils/routes/module.guard';
 import { NoAuthGuard } from '@blockframes/auth/guard/no-auth.guard';
 import { IdlePreload, IdlePreloadModule } from 'angular-idle-preload';
 import { AnonymousAuthGuard } from '@blockframes/auth/guard/anonymous-auth-guard';
 
 const routes: Routes = createRoutes({
-  appName: 'festival',
   landing: {
     path: '',
     canActivate: [NoAuthGuard],
@@ -16,17 +15,17 @@ const routes: Routes = createRoutes({
   appsRoutes: [
     {
       path: '',
-      redirectTo: 'marketplace',
+      redirectTo: 'dashboard',
       pathMatch: 'full'
     },
     {
       path: 'marketplace',
-      canActivate: [AppGuard],
+      canActivate: [ModuleGuard],
       loadChildren: () => import('./marketplace/marketplace.module').then(m => m.MarketplaceModule)
     },
     {
       path: 'dashboard',
-      canActivate: [AppGuard],
+      canActivate: [ModuleGuard],
       loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule)
     }
   ],

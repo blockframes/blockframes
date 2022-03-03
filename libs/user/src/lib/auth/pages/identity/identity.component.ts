@@ -1,16 +1,15 @@
-import { Component, ChangeDetectionStrategy, OnInit, TemplateRef, ViewChild, ChangeDetectorRef, Optional, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, TemplateRef, ViewChild, ChangeDetectorRef, Optional, OnDestroy, Inject } from '@angular/core';
 import { AuthService } from '../../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { slideUp, slideDown } from '@blockframes/utils/animations/fade';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { getCurrentApp, getAppName, App } from '@blockframes/utils/apps';
+import { App } from '@blockframes/utils/apps';
 import { createDocumentMeta } from '@blockframes/utils/models-meta';
 import { AlgoliaOrganization } from '@blockframes/utils/algolia';
 import { OrganizationLiteForm } from '@blockframes/organization/forms/organization-lite.form';
 import { IdentityForm, IdentityFormControl } from '@blockframes/auth/forms/identity.form';
-import { createPublicUser, PublicUser } from '@blockframes/user/types';
+import { createPublicUser, PublicUser, User } from '@blockframes/user/types';
 import { createOrganization, OrganizationService } from '@blockframes/organization/+state';
 import { hasDisplayName } from '@blockframes/utils/helpers';
 import { Intercom } from 'ng-intercom';
@@ -19,6 +18,8 @@ import { debounceTime } from 'rxjs/internal/operators/debounceTime';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { DifferentPasswordStateMatcher, RepeatPasswordStateMatcher } from '@blockframes/utils/form/matchers';
+import { filter } from 'rxjs/operators';
+import { APP } from '@blockframes/utils/routes/utils';
 
 @Component({
   selector: 'auth-identity',
@@ -31,8 +32,6 @@ export class IdentityComponent implements OnInit, OnDestroy {
   @ViewChild('customSnackBarTemplate') customSnackBarTemplate: TemplateRef<unknown>;
   public user$ = this.authService.profile$;
   public creating = false;
-  public app: App;
-  public appName: string;
   public indexGroup = 'indexNameOrganizations';
   public form = new IdentityForm();
   public orgControl = new FormControl();
@@ -41,9 +40,9 @@ export class IdentityComponent implements OnInit, OnDestroy {
   public existingUser = false;
   public passwordsMatcher = new RepeatPasswordStateMatcher('password', 'confirm');
   public currentPasswordMatch = new DifferentPasswordStateMatcher('generatedPassword', 'password');
-  
+
   private existingOrgId: string;
-  private sub: Subscription;
+  private subs: Subscription[] = [];
   private isAnonymous = false;
   private publicUser: PublicUser;
 
@@ -53,16 +52,14 @@ export class IdentityComponent implements OnInit, OnDestroy {
     private router: Router,
     private invitationService: InvitationService,
     private orgService: OrganizationService,
-    private routerQuery: RouterQuery,
     private cdr: ChangeDetectorRef,
     private route: ActivatedRoute,
-    @Optional() private intercom: Intercom
+    @Optional() private intercom: Intercom,
+    @Inject(APP) public app: App,
   ) { }
 
 
   async ngOnInit() {
-    this.app = getCurrentApp(this.routerQuery);
-    this.appName = getAppName(this.app).label;
 
     const existingUserWithDisplayName = !!this.authService.profile && !!hasDisplayName(this.authService.profile);
     const existingUserWithoutDisplayName = !!this.authService.profile && !hasDisplayName(this.authService.profile);
@@ -75,10 +72,10 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
     this.form.patchValue(identity);
 
-    this.sub = this.orgControl.valueChanges.subscribe(value => {
+    this.subs.push(this.orgControl.valueChanges.subscribe(value => {
       const error = value && this.existingOrgId === undefined ? {} : undefined
       this.orgControl.setErrors(error);
-    });
+    }));
 
     if (existingUserWithDisplayName) {
       // Updating user (already logged in and with display name setted) : user will only choose or create an org
@@ -97,7 +94,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
   }
 
   async ngOnDestroy() {
-    this.sub.unsubscribe();
+    this.subs.forEach(sub => sub.unsubscribe());
     // We created anonymous user but it was not transformed into real one
     if (this.isAnonymous && !this.publicUser) {
       await this.authService.deleteAnonymousUser();
@@ -108,17 +105,19 @@ export class IdentityComponent implements OnInit, OnDestroy {
     return this.intercom.show();
   }
 
-  private updateFormForExistingIdentity(user: Partial<PublicUser>) {
+  private updateFormForExistingIdentity(profile: Partial<User>) {
+    const user = createPublicUser(profile);
     // Fill fields
     this.form.patchValue(user);
 
-    // Disable/hide what is not needed
-    this.form.get('email').disable();
-    this.form.get('firstName').disable();
-    this.form.get('lastName').disable();
-    this.form.get('password').disable();
-    this.form.get('confirm').disable();
-    this.form.get('generatedPassword').disable();
+    this.disableControls(['email', 'firstName', 'lastName', 'password', 'confirm', 'generatedPassword']);
+  }  
+
+  private disableControls(keys: (keyof IdentityFormControl)[]) {
+    for (const key of keys) {
+      this.form.get(key).disable();
+      this.form.get(key).clearValidators();
+    }
   }
 
   public setOrg(result: AlgoliaOrganization) {
@@ -288,7 +287,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
     if (this.form.get('lastName').enabled && this.form.get('firstName').enabled) {
       const privacyPolicy = await this.authService.getPrivacyPolicy();
       await this.authService.update({
-        _meta: createDocumentMeta({ createdFrom: this.app }), // @TODO #7303 emailVerified: this.query.user._meta.emailVerified but what if only this.existingUser === true ?
+        _meta: createDocumentMeta({ createdFrom: this.app }),
         firstName,
         lastName,
         privacyPolicy: privacyPolicy,
@@ -302,7 +301,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
     if (pendingInvitation) {
       // Accept the invitation from the organization.
       await this.invitationService.update(pendingInvitation.id, { status: 'accepted' });
-      this.router.navigate(['/c/o']);
+      this.subs.push(this.authService.profile$.pipe(filter(profile => !!profile.orgId)).subscribe(() => this.router.navigate(['/c/o'])));
     } else if (this.authService.profile.orgId) {
       // User already have an orgId (created from CRM)
       this.router.navigate(['/c/o']);

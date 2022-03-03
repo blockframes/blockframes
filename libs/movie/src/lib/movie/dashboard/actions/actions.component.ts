@@ -1,13 +1,13 @@
-import { Component, ChangeDetectionStrategy, Directive } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Directive, Input, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
-import { MovieQuery, MovieService } from '@blockframes/movie/+state';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { getAppName, getCurrentApp, getMovieAppAccess } from '@blockframes/utils/apps';
+import { Movie, MovieService } from '@blockframes/movie/+state';
+import { App, appName, getMovieAppAccess } from '@blockframes/utils/apps';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { storeStatus, StoreStatus } from '@blockframes/utils/static-model';
+import { APP } from '@blockframes/utils/routes/utils';
 
 @Directive({ selector: 'movie-action-menu, [movieActionMenu]' })
 export class MovieActionMenuDirective { }
@@ -21,38 +21,34 @@ export class MovieActionMenuDirective { }
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardActionsShellComponent {
-  movie$ = this.query.selectActive();
-
-  public appName = getCurrentApp(this.routerQuery);
+  @Input() movie: Movie;
 
   constructor(
-    private query: MovieQuery,
-    private routerQuery: RouterQuery,
     private dialog: MatDialog,
     private snackbar: MatSnackBar,
     private movieService: MovieService,
-    private router: Router
+    private router: Router,
+    @Inject(APP) public app: App
   ) { }
 
   removeAppAccess() {
-    const movie = this.query.getActive();
-    const appsName = getMovieAppAccess(movie).filter(value => value !== this.appName).map(a => getAppName(a).label);
+    const appsName = getMovieAppAccess(this.movie).filter(value => value !== this.app).map(a => appName[a]);
     const subtitle = appsName.length ? `This Title will still be available on <i>${appsName.join(', ')}</i>.<br/>` : '';
 
     this.dialog.open(ConfirmInputComponent, {
       data: {
-        title: `You are about to delete ${movie.title.international} permanently.`,
+        title: `You are about to delete ${this.movie.title.international} permanently.`,
         subtitle: `${subtitle}If you wish to proceed, please type "DELETE" in the field below.`,
         confirmationWord: 'delete',
         confirmButtonText: 'delete Title',
         cancelButtonText: 'keep Title',
         onConfirm: async () => {
-          await this.movieService.update(movie.id, movie => ({
+          await this.movieService.update(this.movie.id, movie => ({
             ...movie,
             app: {
               ...movie.app,
-              [this.appName]: {
-                ...movie.app[this.appName],
+              [this.app]: {
+                ...movie.app[this.app],
                 access: false
               }
             }
@@ -66,13 +62,12 @@ export class DashboardActionsShellComponent {
   }
 
   async updateStatus(status: StoreStatus, message?: string) {
-    const movie = this.query.getActive();
-    await this.movieService.update(movie.id, movie => ({
+    await this.movieService.update(this.movie.id, movie => ({
       ...movie,
       app: {
         ...movie.app,
-        [this.appName]: {
-          ...movie.app[this.appName],
+        [this.app]: {
+          ...movie.app[this.app],
           status: status
         }
       }

@@ -1,8 +1,8 @@
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, Inject } from '@angular/core';
 import { organizationRoles } from '@blockframes/organization/+state';
-import { getCurrentApp } from '@blockframes/utils/apps';
+import { App } from '@blockframes/utils/apps';
+import { APP } from '@blockframes/utils/routes/utils';
 import { orgActivity } from '@blockframes/utils/static-model/static-model';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { OrganizationLiteForm } from '../organization-lite.form';
 
 @Component({
@@ -12,12 +12,11 @@ import { OrganizationLiteForm } from '../organization-lite.form';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationLiteFormComponent {
-  public app = getCurrentApp(this.routerQuery)
   public roles = organizationRoles;
   public activities = orgActivity;
 
   @Input() form: OrganizationLiteForm;
 
-  constructor(private routerQuery: RouterQuery) { }
+  constructor(@Inject(APP) public app: App) { }
 
 }

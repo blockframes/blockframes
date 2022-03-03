@@ -1,6 +1,6 @@
 ﻿import { TestBed } from '@angular/core/testing';
 import { InvitationService } from './invitation.service';
-import { AuthService, createUser } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/+state';
 import { AngularFireModule } from '@angular/fire';
 import { toDate } from '@blockframes/utils/helpers';
 import { SETTINGS, AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestore';
@@ -8,12 +8,15 @@ import { loadFirestoreRules, clearFirestoreData } from '@firebase/rules-unit-tes
 import { readFileSync } from 'fs';
 import { createInvitation, InvitationDocument } from './invitation.firestore';
 import firebase from 'firebase/app';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { UserService } from '@blockframes/user/+state/user.service';
+import { createUser } from '@blockframes/user/+state/user.model';
+import { ActivatedRoute } from '@angular/router';
+import { APP } from '@blockframes/utils/routes/utils';
 
 class InjectedAuthService {
   uid = 'userId';
-  
+
   profile = {
     orgId: 'orgId',
   }
@@ -54,6 +57,8 @@ describe('Invitations Test Suite', () => {
         InvitationService,
         { provide: AuthService, useClass: InjectedAuthService },
         { provide: UserService, useClass: DummyService },
+        { provide: ActivatedRoute, useValue: { params: of({}) } },
+        { provide: APP, useValue: 'festival' },
         { provide: SETTINGS, useValue: { host: 'localhost:8080', ssl: false } }
       ],
     });
@@ -61,7 +66,7 @@ describe('Invitations Test Suite', () => {
     service = TestBed.inject(InvitationService);
 
     await loadFirestoreRules({
-      projectId: "test",
+      projectId: 'test',
       rules: readFileSync('./firestore.test.rules', "utf8")
     });
 
@@ -156,39 +161,4 @@ describe('Invitations Test Suite', () => {
     }
     expect(inviteParam).toMatchObject(expectedParam);
   });
-
-  describe('Check Invitation', () => {
-
-    it('is for my org', async () => {
-      const invitationService = TestBed.inject(InvitationService);
-
-      //Create an Invitation Document
-      const newInvite = createInvitation(invitationParamsOrg);
-      const isMyInvite = invitationService.isInvitationForMe(newInvite);
-      expect(isMyInvite).toBeTruthy();
-    })
-
-    it('is for my userId', async () => {
-      const invitationService = TestBed.inject(InvitationService);
-
-      //Create an Invitation Document
-      const newInvite = createInvitation(invitationParamsUser);
-      const isMyInvite = invitationService.isInvitationForMe(newInvite);
-      expect(isMyInvite).toBeTruthy();
-    })
-
-    it('is neither for my Org or userId', async () => {
-      const invitationService = TestBed.inject(InvitationService);
-
-      //Create an Invitation Document
-      const inviteParamsOrg = { ...invitationParamsOrg };
-      const inviteParamsUser = { ...invitationParamsUser };
-      inviteParamsOrg.toOrg.id = 'otherOrgId';
-      inviteParamsUser.toUser.uid = 'otherUserId';
-      const invitationParams = { ...inviteParamsOrg, ...inviteParamsUser };
-      const newInvite = createInvitation(invitationParams);
-      const isMyInvite = invitationService.isInvitationForMe(newInvite);
-      expect(isMyInvite).toBeFalsy();
-    })
-  })
 });

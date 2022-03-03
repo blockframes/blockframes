@@ -96,6 +96,9 @@
   <!-- Festival landing page - They're talking about us -->
   <ng-content select="landing-detail"></ng-content>
 
+  <!-- Festival and catalog landing pages - Link to other app -->
+  <ng-content select="landing-app-link"></ng-content>
+
   <!-- Footer -->
   <ng-container *ngIf="landingFooterComponent; else footer">
     <ng-content select="landing-footer"></ng-content>
@@ -108,7 +111,7 @@
           <div fxLayout fxFlex>
             <button app-logo (click)="scrollToTop()"></button>
           </div>
-          <form fxFlex fxLayout.lt-sm="column" [formGroup]="newslettersForm" (ngSubmit)="subscibe(newslettersForm)" >
+          <form fxFlex fxLayout.lt-sm="column" [formGroup]="newslettersForm" (ngSubmit)="subscribe(newslettersForm)" >
             <mat-form-field appearance="outline" hideRequiredMarker>
               <mat-label>Enter your email address</mat-label>
               <input test-id="email" matInput type="email" placeholder="Email address" formControlName="email" required />

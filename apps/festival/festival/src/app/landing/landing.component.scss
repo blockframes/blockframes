@@ -133,6 +133,12 @@ landing-detail {
   }
 }
 
+landing-app-link {
+  text-align: center;
+  section {
+    padding-block: 72px;
+  }
+}
 
 @include layout-bp(lt-lg) {
   landing-content {

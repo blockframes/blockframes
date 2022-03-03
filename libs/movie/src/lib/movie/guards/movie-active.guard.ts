@@ -1,36 +1,31 @@
-import { Injectable } from "@angular/core";
-import { CollectionGuard, CollectionGuardConfig } from "akita-ng-fire";
-import { MovieState } from "../+state/movie.store";
+import { Inject, Injectable } from "@angular/core";
+import { CollectionGuardConfig } from "akita-ng-fire";
 import { MovieService } from "../+state/movie.service";
-import { ActivatedRouteSnapshot } from "@angular/router";
-import { map } from "rxjs/operators";
-import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { ActivatedRouteSnapshot, CanActivate, Router } from "@angular/router";
+import { Movie } from "../+state";
+import { App } from "@blockframes/utils/apps";
+import { APP } from '@blockframes/utils/routes/utils';
 
 @Injectable({ providedIn: 'root' })
 @CollectionGuardConfig({ awaitSync: true })
-export class MovieActiveGuard extends CollectionGuard<MovieState> {
+export class MovieActiveGuard implements CanActivate {
 
-  constructor(service: MovieService, private routerQuery: RouterQuery) {
-    super(service);
+  public movie: Movie;
+
+  constructor(
+    private movieService: MovieService,
+    private router: Router,
+    @Inject(APP) private app: App
+  ) { }
+
+  async canActivate(next: ActivatedRouteSnapshot) {
+    this.movie = await this.movieService.getValue(next.params.movieId as string);
+    if (this.movie) {
+      return this.movie.app[this.app].access || this.router.createUrlTree([next.data.redirect]);
+    } else {
+      return this.router.createUrlTree([next.data.redirect]);
+    }
   }
 
-  // Sync and set active
-  sync(next: ActivatedRouteSnapshot) {
-    return this.service.syncActive({ id: next.params.movieId }).pipe(
-      map(movie => {
-        if (movie) {
-          const appName = this.routerQuery.getValue().state.root.data.app;
-          const hasAccess = movie.app[appName].access;
-          if (hasAccess) {
-            return true;
-          } else {
-            return this.redirect || next.data.redirect;
-          }
-        } else {
-          return this.redirect || next.data.redirect;
-        }
-      })
-    )
-  }
 }
 

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { CollectionConfig, CollectionService, AtomicWrite } from 'akita-ng-fire';
 import { createPublicOrganization, Organization, OrganizationService } from '@blockframes/organization/+state';
@@ -8,14 +8,14 @@ import { toDate } from '@blockframes/utils/helpers';
 import { Invitation, createInvitation } from './invitation.model';
 import { InvitationDocument } from './invitation.firestore';
 import { cleanInvitation } from '../invitation-utils';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { getCurrentApp, getOrgAppAccess } from '@blockframes/utils/apps';
-import { combineLatest } from 'rxjs';
-import { filter, map, shareReplay, switchMap } from 'rxjs/operators';
+import { App, getOrgAppAccess } from '@blockframes/utils/apps';
+import { combineLatest, Observable, of } from 'rxjs';
+import { map, shareReplay, switchMap } from 'rxjs/operators';
 import { PermissionsService } from '@blockframes/permissions/+state';
 import { ActiveState, EntityState } from '@datorama/akita';
+import { APP } from '@blockframes/utils/routes/utils';
 
-interface InvitationState extends EntityState<Invitation>, ActiveState<string> {}
+interface InvitationState extends EntityState<Invitation>, ActiveState<string> { }
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'invitations' })
@@ -38,13 +38,13 @@ export class InvitationService extends CollectionService<InvitationState> {
   public acceptOrDeclineInvitationAsAnonymous = this.functions.httpsCallable('acceptOrDeclineInvitationAsAnonymous');
 
   /** All Invitations related to current user or org */
-  allInvitations$ = combineLatest([
+  allInvitations$: Observable<Invitation[]> = combineLatest([
     this.authService.profile$,
     this.permissionsService.isAdmin$
   ]).pipe(
-    filter(([user]) => !!user?.uid && !!user?.orgId),
     switchMap(([user, isAdmin]) => {
-      if(isAdmin){
+      if (!user?.uid || !user?.orgId) return of([]);
+      if (isAdmin) {
         return combineLatest([
           // Invitations linked to current user
           this.valueChanges(ref => ref.where('fromUser.uid', '==', user.uid)),
@@ -75,8 +75,10 @@ export class InvitationService extends CollectionService<InvitationState> {
     this.authService.profile$,
     this.allInvitations$
   ]).pipe(
-    filter(([user]) => !!user?.uid && !!user?.orgId),
-    map(([user, invitations]) =>  invitations.filter(i => i.toOrg?.id === user.orgId || i.toUser?.uid === user.uid))
+    map(([user, invitations]) => {
+      if (!user?.uid || !user?.orgId) return [];
+      return invitations.filter(i => i.toOrg?.id === user.orgId || i.toUser?.uid === user.uid)
+    })
   );
 
   /** Invitations where current user is a guest */
@@ -84,20 +86,20 @@ export class InvitationService extends CollectionService<InvitationState> {
     this.authService.profile$,
     this.allInvitations$
   ]).pipe(
-    filter(([user]) => !!user?.uid && !!user?.orgId),
     map(([user, invitations]) => {
-      const request = (user: User, invitation : Invitation) => invitation.fromUser?.uid === user.uid && invitation.mode === 'request';
-      const invitation = (user: User, invitation : Invitation) => invitation.toUser?.uid === user.uid && invitation.mode === 'invitation';
-      return  invitations.filter(i => request(user, i) || invitation(user, i))
+      if (!user?.uid || !user?.orgId) return [];
+      const request = (user: User, invitation: Invitation) => invitation.fromUser?.uid === user.uid && invitation.mode === 'request';
+      const invitation = (user: User, invitation: Invitation) => invitation.toUser?.uid === user.uid && invitation.mode === 'invitation';
+      return invitations.filter(i => request(user, i) || invitation(user, i))
     })
-  ); 
+  );
 
   constructor(
     private orgService: OrganizationService,
     private authService: AuthService,
     private permissionsService: PermissionsService,
     private functions: AngularFireFunctions,
-    private routerQuery: RouterQuery
+    @Inject(APP) private app: App
   ) {
     super();
   }
@@ -126,10 +128,6 @@ export class InvitationService extends CollectionService<InvitationState> {
   /** Decline an Invitation and change its status to declined. */
   public declineInvitation(invitation: Invitation) {
     return this.update({ ...invitation, status: 'declined' });
-  }
-
-  public isInvitationForMe(invitation: Invitation): boolean {
-    return invitation.toOrg?.id === this.authService.profile.orgId || invitation.toUser?.uid === this.authService.uid;
   }
 
   /**
@@ -168,7 +166,7 @@ export class InvitationService extends CollectionService<InvitationState> {
         const recipients = Array.isArray(idOrEmails) ? idOrEmails : [idOrEmails];
 
         const f = this.functions.httpsCallable('inviteUsers');
-        let app = getCurrentApp(this.routerQuery);
+        let app = this.app;
         if (app === 'crm') {
           // Instead use first found app where org has access to
           app = getOrgAppAccess(fromOrg)[0];

@@ -1,10 +1,9 @@
 // Angular
-import { Component, ChangeDetectionStrategy, OnInit, ViewChild } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, ViewChild, Inject } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { RouterOutlet } from '@angular/router';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { CdkScrollable } from '@angular/cdk/scrolling';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 // RxJs
 import { Observable } from 'rxjs';
@@ -15,8 +14,9 @@ import { InvitationService } from '@blockframes/invitation/+state';
 import { NotificationService } from '@blockframes/notification/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { MovieService, Movie } from '@blockframes/movie/+state'
-import { getCurrentApp, App } from '@blockframes/utils/apps';
 import { AuthService } from '@blockframes/auth/+state';
+import { App } from '@blockframes/utils/apps';
+import { APP } from '@blockframes/utils/routes/utils';
 
 @Component({
   selector: 'layout-event',
@@ -42,14 +42,14 @@ export class EventComponent implements OnInit {
     private invitationService: InvitationService,
     private notificationService: NotificationService,
     private movieService: MovieService,
-    private routerQuery: RouterQuery
+    @Inject(APP) private app: App
   ) { }
 
   ngOnInit() {
     this.wishlistCount$ = this.orgService.currentOrg$.pipe(
       map(org => org?.wishlist ? org.wishlist : []),
       switchMap(movieIds => this.movieService.getValue(movieIds)),
-      map((movies: Movie[]) => movies.filter(filterMovieByAppAccess(getCurrentApp(this.routerQuery))).length)
+      map((movies: Movie[]) => movies.filter(filterMovieByAppAccess(this.app)).length)
     );
   }
 

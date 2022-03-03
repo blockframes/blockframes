@@ -12,6 +12,7 @@ import {
   LandingContentDirective,
   LandingContactDirective,
   LandingDetailDirective,
+  LandingAppLinkDirective,
   LandingFooterComponent
 } from './shell.component';
 
@@ -61,6 +62,7 @@ import { MatDividerModule } from '@angular/material/divider';
     LandingContentDirective,
     LandingContactDirective,
     LandingDetailDirective,
+    LandingAppLinkDirective,
     LandingFooterComponent],
   declarations: [
     LandingShellComponent,
@@ -68,6 +70,7 @@ import { MatDividerModule } from '@angular/material/divider';
     LandingContentDirective,
     LandingContactDirective,
     LandingDetailDirective,
+    LandingAppLinkDirective,
     LandingFooterComponent
   ],
 })

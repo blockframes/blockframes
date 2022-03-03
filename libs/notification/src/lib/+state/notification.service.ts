@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Notification } from './notification.model';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { AuthService } from '@blockframes/auth/+state';
@@ -8,8 +8,7 @@ import { orgName } from '@blockframes/organization/+state/organization.firestore
 import { OrganizationService } from '@blockframes/organization/+state';
 import { toDate } from '@blockframes/utils/helpers';
 import { displayName } from '@blockframes/utils/utils';
-import { applicationUrl, appName, getCurrentApp, getCurrentModule, getMovieAppAccess } from '@blockframes/utils/apps';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { App, applicationUrl, appName, getMovieAppAccess } from '@blockframes/utils/apps';
 import { Movie, MovieService } from '@blockframes/movie/+state';
 import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 import { format } from 'date-fns';
@@ -17,13 +16,14 @@ import { trimString } from '@blockframes/utils/pipes/max-length.pipe';
 import { ActiveState, EntityState } from '@datorama/akita';
 import { UserService } from '@blockframes/user/+state';
 import { EventService } from '@blockframes/event/+state';
+import { ModuleGuard } from '@blockframes/utils/routes/module.guard';
+import { APP } from '@blockframes/utils/routes/utils';
 
 interface NotificationState extends EntityState<Notification>, ActiveState<string> { }
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'notifications' })
 export class NotificationService extends CollectionService<NotificationState> {
   readonly useMemorization = true;
-  private app = getCurrentApp(this.routerQuery);
   private appName = appName[this.app];
 
   myNotifications$ = this.authService.profile$.pipe(
@@ -40,10 +40,11 @@ export class NotificationService extends CollectionService<NotificationState> {
   constructor(
     private authService: AuthService,
     private orgService: OrganizationService,
-    private routerQuery: RouterQuery,
+    private moduleGuard: ModuleGuard,
     private movieService: MovieService,
     private userService: UserService,
-    private eventService: EventService
+    private eventService: EventService,
+    @Inject(APP) private app: App
   ) {
     super();
   }
@@ -57,7 +58,7 @@ export class NotificationService extends CollectionService<NotificationState> {
 
   private async appendNotificationData(notification: Notification): Promise<Notification> {
     const displayUserName = notification.user ? displayName(notification.user) : 'Someone';
-    const module = getCurrentModule(this.routerQuery.getValue().state.url);
+    const module = this.moduleGuard.currentModule;
     switch (notification.type) {
       case 'organizationAcceptedByArchipelContent':
         return {
@@ -217,7 +218,8 @@ export class NotificationService extends CollectionService<NotificationState> {
           message,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.svg',
-          url: `mailto:${notification.user.email}?subject=Interest in ${movie.title.international} via Archipel Market`
+          url: `mailto:${notification.user.email}?subject=Interest in ${movie.title.international} via Archipel Market`,
+          actionText: 'Start Discussions'
         };
       }
       case 'screeningRequested': {

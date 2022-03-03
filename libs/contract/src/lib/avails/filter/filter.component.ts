@@ -1,10 +1,10 @@
-
 import { ChangeDetectionStrategy, Component, HostBinding, Input } from '@angular/core';
 
 import { boolean } from '@blockframes/utils/decorators/decorators';
 
 import { AvailsFilter } from '../avails';
 import { AvailsForm, MapAvailsForm, CalendarAvailsForm } from '../form/avails.form';
+
 
 @Component({
   selector: 'form[availsFilter]',

@@ -6,7 +6,6 @@ import { StoreStatus } from "./static-model";
 import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
 import { appUrl } from "@env";
 import { MovieBase, MovieDocument } from "@blockframes/movie/+state/movie.firestore";
-import type { RouterQuery } from '@datorama/akita-ng-router-store';
 
 export interface AppMailSetting {
   description: string,
@@ -73,24 +72,9 @@ export const applicationUrl: Record<App, string> = {
   crm: appUrl.crm
 }
 
-export function getCurrentApp(routerQuery: RouterQuery): App {
-  return routerQuery.getValue().state?.root.data.app;
-}
-
 /** Return an array of app without the value passing in argument */
 export function getAllAppsExcept(applications: App[]) {
   return app.filter(a => !applications.includes(a));
-}
-
-export function getCurrentModule(path: string): Module | 'landing' {
-  const fragments = path.split('/');
-  if (fragments.includes('marketplace')) {
-    return 'marketplace'
-  } else if (fragments.includes('dashboard')) {
-    return 'dashboard';
-  } else {
-    return 'landing';
-  }
 }
 
 export function createOrgAppAccess(_appAccess: Partial<OrgAppAccess> = {}): OrgAppAccess {
@@ -107,11 +91,6 @@ export function createModuleAccess(moduleAccess: Partial<ModuleAccess> = {}): Mo
     marketplace: false,
     ...moduleAccess
   }
-}
-
-export function getAppName(slug: App, short = false) {
-  const label = short ? appShortName[slug] : appName[slug];
-  return { slug, label };
 }
 
 /**

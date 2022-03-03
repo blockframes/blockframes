@@ -117,15 +117,6 @@ export function getKeyIfExists(base: Scope, code: string){
   return candidate ? candidate.shift() : undefined;
 }
 
-/**
- * @description put the current route in this function
- * and it returns you the current location of your route
- * @param route
- */
-export function getAppLocation(route: string) {
-  return route.includes('marketplace') ? 'marketplace' : 'dashboard';
-}
-
 /** Basic function to create a delay in a function when called
  * @param ms milleseconds to wait for
  */
@@ -140,7 +131,7 @@ export function downloadCsvFromJson(data: unknown[], fileName = 'my-file') {
   const replacer = (_: unknown, value: unknown) => value === null ? '' : value;
   const header = Object.keys(data[0]);
   const csv = data.map((row: unknown) => header.map(fieldName => JSON.stringify(row[fieldName], replacer)).join(','));
-  csv.unshift(header.join(','));
+  csv.unshift(header.map(h => `"${h}"`).join(','));
   const csvArray = csv.join('\r\n');
 
   const a = document.createElement('a');

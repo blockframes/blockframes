@@ -90,10 +90,11 @@
     <mat-spinner></mat-spinner>
   </ng-template>
 
-  <article fxLayout fxLayoutAlign="end">
+  <article fxLayout fxLayoutAlign="end" *ngIf="!availsForm.invalid">
     <button mat-button color="primary" (click)="selectAll()">
       <mat-icon svgIcon="add"></mat-icon>
       <span>Select all available territories</span>
     </button>
   </article>
+
 </ng-container>

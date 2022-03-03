@@ -55,14 +55,8 @@ export const colors = {
 
 // @dev sort the value alphabetically, not the keys
 export const contentType = {
-  animation: 'Animation',
-  documentary: 'Documentary',
-  feature_film: 'Feature Film',
-  flow: 'Flow',
-  short: 'Short Film',
-  tv_film: 'TV Film',
-  series: 'TV Series',
-  performing_arts: 'Performing Arts'
+  movie: 'Movie',
+  tv: 'TV'
 }
 
 export const crewRoles = {
@@ -83,7 +77,6 @@ export const crewRoles = {
 } as const
 
 export const directorCategory = {
-  none: '',
   firstFeature: 'First Feature',
   risingTalent: 'Rising Talent',
   confirmed: 'Confirmed Director',
@@ -91,34 +84,23 @@ export const directorCategory = {
 } as const
 
 export const genres = {
-  comedy: 'Comedy',
-  drama: 'Drama',
   action: 'Action',
-  horror: 'Horror',
-  scienceFiction: 'Science Fiction', // science-fiction
-  thriller: 'Thriller',
-  youngAdult: 'Young Adult', // coming-of-age
-  fantasy: 'Fantasy',
-  romance: 'Romance',
-  western: 'Western',
-  periodPiece: 'Period Piece', // period-piece
   adventure: 'Adventure',
-  biography: 'Biography',
-  war: 'War',
-  police: 'Police',
   animation: 'Animation',
+  biography: 'Biography',
+  comedy: 'Comedy',
+  crime: 'Crime',
   documentary: 'Documentary',
+  drama: 'Drama',
   erotic: 'Erotic',
-  tvShow: 'TV Show', //tv-show
-  webSeries: 'Web Series', //web-series
-  virtualReality: 'Virtual Reality', // virtual-reality
   family: 'Family',
-  wildlife: 'Wildlife',
-  natureEnvironment: 'Nature & Environment',
-  huntingFishing: 'Hunting & Fishing',
-  archeologyHistory: 'Archeology & History',
-  travelDiscovery: 'Travel & Discovery',
-  fashion: 'Fashion'
+  fantasy: 'Fantasy',
+  horror: 'Horror',
+  kidsAndTeen: 'Kids and teen',
+  periodDrama: 'Period Drama',
+  romance: 'Romance',
+  scienceFiction: 'Science Fiction',
+  thriller: 'Thriller',
 } as const
 
 export const hostedVideoTypes = {
