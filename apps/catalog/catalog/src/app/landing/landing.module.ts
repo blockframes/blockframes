@@ -8,6 +8,7 @@ import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
 import { TelInputModule } from '@blockframes/ui/tel-input/tel-input.module';
 import { LandingShellModule } from '@blockframes/landing/shell/shell.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
+import { AppBridgeBannerModule } from '@blockframes/landing/appBridgeBanner/app-bridge-banner.module';
 
 // Pages
 import { CatalogLandingComponent } from './landing.component';
@@ -37,6 +38,7 @@ import { MatButtonModule } from '@angular/material/button';
     TelInputModule,
     LandingShellModule,
     ImageModule,
+    AppBridgeBannerModule,
 
     // Material
     MatIconModule,
