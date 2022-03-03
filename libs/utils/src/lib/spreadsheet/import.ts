@@ -240,8 +240,8 @@ export function getStatic<S extends Scope>(scope: S, value: string, separator: s
 }
 
 const isValueError = <S extends Scope>(values: FromStatic<S>): values is ImportError<S> => {
-  return ('length' in values && values.length === 0)
-    || ('value' in values && values.value.length === 0)
+  return (Array.isArray(values) && values.length === 0)
+    || (values as ImportError<S>).value?.length === 0
 }
 
 export function getStaticList<S extends Scope>(scope: S, value: string, separator: string, name: string, mandatory = true, allKey = 'all') {
