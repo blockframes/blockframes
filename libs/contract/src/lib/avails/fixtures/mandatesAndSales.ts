@@ -9,6 +9,18 @@ import { FullMandate, FullSale } from "../avails";
 
 export const allButSouthKorea = Object.keys(territories).filter((territory) => territory !== 'south-korea') as Territory[];
 export const world = Object.keys(territories) as Territory[];
+const territories1: Territory[] = [
+  'china', 'india', 'indonesia', 'pakistan', 'bangladesh', 'japan', 'philippines', 'vietnam', 'turkey', 'iran', 'thailand',
+  'myanmar', 'south-korea', 'iraq', 'afghanistan', 'saudi-arabia', 'uzbekistan', 'malaysia', 'yemen', 'nepal', 'north-korea',
+  'sri-lanka', 'kazakhstan', 'syria', 'cambodia', 'jordan', 'azerbaijan', 'united-arab-emirates', 'tajikistan', 'israel', 'laos',
+  'lebanon', 'kyrgyzstan', 'turkmenistan', 'singapore', 'oman', 'palestine', 'kuwait', 'georgia', 'mongolia', 'armenia', 'qatar',
+  'bahrain', 'timor-leste', 'cyprus', 'bhutan', 'maldives', 'brunei', 'taiwan', 'hong-kong', 'macao', 'mexico', 'guatemala',
+  'honduras', 'el-salvador', 'nicaragua', 'costa-rica', 'panama', 'colombia', 'venezuela', 'ecuador', 'peru', 'bolivia', 'brazil',
+  'paraguay', 'chile', 'argentina', 'uruguay', 'cuba', 'haiti', 'dominican-republic', 'puerto-rico', 'algeria', 'djibouti', 'egypt',
+  'libya', 'morocco', 'sudan', 'tunisia'
+];
+
+const territories2 = Object.keys(territories).filter((territory) => !territories1.includes(territory as Territory)) as Territory[];
 
 export const mandateMovie1 = {
   ...createMandate({
@@ -454,3 +466,36 @@ export const saleGermanyMovie5 = {
     exclusive: true
   }],
 } as FullSale;
+
+
+export const mandateMovie6 = {
+  ...createMandate({
+    titleId: 'Movie6',
+    id: 'mandate1Movie6',
+    termIds: ['termMandate1'],
+  }),
+  terms: [
+    {
+      id: 'termMandate1',
+      contractId: 'mandate1Movie6',
+      duration: {
+        from: new Date('02/21/2022'),
+        to: new Date('02/21/2032')
+      },
+      medias: ['sVod', 'aVod', 'est', 'nVod', 'fVod', 'payTv', 'freeTv', 'payPerView', 'video', 'planes', 'boats', 'educational', 'rental', 'through', 'hotel'],
+      territories: territories2,
+      exclusive: true
+    },
+    {
+      id: 'termMandate2',
+      contractId: 'mandate2Movie6',
+      duration: {
+        from: new Date('02/21/2022'),
+        to: new Date('02/21/2032')
+      },
+      medias: ['planes', 'boats', 'educational', 'hotels'],
+      territories: territories1,
+      exclusive: true
+    },
+  ],
+} as FullMandate;

@@ -9,7 +9,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ListComponent } from './list.component';
 
 // Blockframes
-import { ToLabelModule } from '@blockframes/utils/pipes';
+import { AppPipeModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { DisplayNameModule } from '@blockframes/utils/pipes';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { NoTitleModule } from '@blockframes/ui/dashboard/components/no-title/no-title.module';
@@ -40,6 +40,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     FilterByModule,
     TagModule,
     MaxLengthModule,
+    AppPipeModule,
     // Material
     MatButtonModule,
     MatTabsModule,

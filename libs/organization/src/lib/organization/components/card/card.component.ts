@@ -1,9 +1,10 @@
-import { Component, Input, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, OnInit, Inject } from '@angular/core';
 import { fromOrgAndAccepted, MovieService } from '@blockframes/movie/+state';
 import { Organization } from '@blockframes/organization/+state';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { AppGuard } from '@blockframes/utils/routes/app.guard';
+import { APP } from '@blockframes/utils/routes/utils';
+import { App } from '@blockframes/utils/apps';
 
 @Component({
   selector: 'org-card',
@@ -16,9 +17,8 @@ export class OrganizationCardComponent implements OnInit {
   @Input() org: Organization;
 
   public orgMovieCount$: Observable<number>;
-  public app = this.appGuard.currentApp;
 
-  constructor(private movieService: MovieService, private appGuard: AppGuard) { }
+  constructor(private movieService: MovieService, @Inject(APP) public app: App) { }
 
   ngOnInit() {
     this.orgMovieCount$ = this.movieService.valueChanges(fromOrgAndAccepted(this.org.id, this.app)).pipe(
