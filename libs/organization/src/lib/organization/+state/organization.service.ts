@@ -196,7 +196,7 @@ export class OrganizationService extends CollectionService<OrganizationState> im
 
 
   async docExists(docId: string) {
-    const docRef = await this.db.collection("orgs").ref.where("id", "==", docId).get();
-    return !docRef.empty;
+    const org = await this.getValue(docId);
+    return !!org;
   }
 }

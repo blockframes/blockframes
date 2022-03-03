@@ -102,13 +102,6 @@ function toTerm(rawTerm: FieldsConfig['term'][number], contractId: string, fires
   };
 }
 
-async function verifyMovieBelongsToLicensor(contract: Sale<Date> | Mandate<Date>, titleService: MovieService) {
-  const { titleId, sellerId } = contract;
-  const title = await titleService.getValue(titleId);
-  if (title.orgIds.includes(sellerId)) return true;
-  return false;
-}
-
 export async function formatContract(
   sheetTab: SheetTab,
   orgService: OrganizationService,
@@ -304,7 +297,9 @@ export async function formatContract(
       ? createSale({ ...data.contract as Sale })
       : createMandate({ ...data.contract as Mandate });
 
-    const movieBelongsToLicensor = await verifyMovieBelongsToLicensor(contract, titleService);
+    const { id, sellerId } = contract;
+
+    const movieBelongsToLicensor = await titleService.getValue(id).then(title => title.orgIds.includes(sellerId));
     if (!movieBelongsToLicensor)
       errors.push({
         type: 'error',

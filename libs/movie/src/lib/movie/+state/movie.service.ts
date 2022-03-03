@@ -124,8 +124,8 @@ export class MovieService extends CollectionService<MovieState> implements Check
   }
 
   async docExists(docId: string) {
-    const docRef = await this.db.collection("movies").ref.where("id", "==", docId).get();
-    return !docRef.empty;
+    const movie = await this.getValue(docId);
+    return !!movie;
   }
 }
 

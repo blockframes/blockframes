@@ -252,27 +252,25 @@ export function getStaticList<S extends Scope>(scope: S, value: string, separato
   return values;
 }
 
+const groupedTerritoriesOrMedias = {
+  territories: (territories, separator) => getStaticList('territories', territories, separator, 'Territories', true, 'world'),
+  medias: (medias, separator) => getStaticList('medias', medias, separator, 'Medias', true, 'all'),
+}
+
 export function getGroupedList(value: string, groupScope: 'territories', separator: string): GetKeys<'territories'>[];
 export function getGroupedList(value: string, groupScope: 'medias', separator: string): GetKeys<'medias'>[];
 export function getGroupedList<GS extends GroupScope>(value: string, groupScope: GS, separator: string) {
   const elements = split(value, separator);
   const groupLabels = staticGroups[groupScope].map(group => group.label);
-  let allElements = elements.map(element => {
-    if (groupLabels.includes(element)) {
-      const groups = staticGroups[groupScope] as StaticGroup<GS>[]
-      return groups.find(group => group.label === element).items;
-    }
-    return [element];
-  }).flat()
+  const allElements = elements.map(element => {
+    return groupLabels.includes(element)
+      ? (staticGroups[groupScope] as StaticGroup<GS>[]).find(group => group.label === element).items
+      : element
+  }).flat();
 
-  allElements = Array.from(new Set(allElements));
-  const elementList = allElements.join(separator);
+  const elementList = Array.from(new Set(allElements)).join(separator);
 
-  const values = {
-    territories: (territories, separator) => getStaticList('territories', territories, separator, 'Territories', true, 'world'),
-    medias: (medias, separator) => getStaticList('medias', medias, separator, 'Medias', true, 'all'),
-  }
-  return values[groupScope](elementList, separator);
+  return groupedTerritoriesOrMedias[groupScope](elementList, separator);
 }
 
 export function split(cell: string, separator: string) {
