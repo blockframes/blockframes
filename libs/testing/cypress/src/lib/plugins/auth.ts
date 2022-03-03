@@ -1,4 +1,4 @@
-import { auth, db } from '../testing-cypress';
+import { db } from '../testing-cypress';
 import type { User } from '@blockframes/user/types';
 
 export async function getRandomEmail() {
@@ -15,19 +15,4 @@ export async function getRandomUser() {
   console.log('Got random user:\n');
   console.dir(user);
   return user;
-}
-
-export async function createUserToken(uid: string) {
-  /**
-   * This is what is missing in token to be able to pass the rules
-   * but this does not work..
-   * @see isSignedIn() in firestore.rules
-   **/
-  const tokenPayLoad = {
-    firebase: {
-      sign_in_provider: 'password',
-      identities: {},
-    },
-  };
-  return await auth.createCustomToken(uid, tokenPayLoad);
 }
