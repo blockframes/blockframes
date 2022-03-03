@@ -7,7 +7,7 @@ import { centralOrgId } from '@env';
 import { Analytics, AnalyticsTypeRecord, AnalyticsTypes, EventName } from './analytics.firestore';
 import { createTitleMeta } from './analytics.model';
 import { AuthService } from '@blockframes/auth/+state';
-import { createMovie } from '@blockframes/movie/+state';
+import { createMovie } from '@blockframes/movie/+state/movie.model';
 import { createDocumentMeta } from '@blockframes/utils/models-meta';
 import { APP } from '@blockframes/utils/routes/utils';
 import { formatDocumentMetaFromFirestore } from '@blockframes/utils/models-meta';
@@ -64,7 +64,6 @@ export class AnalyticsService extends CollectionService<AnalyticsState> {
     // TODO #7273 use MovieService instead once Akita has been replaced by ng-fire (currently using MovieService results in error) 
     const doc = await this.db.doc(`movies/${titleId}`).ref.get();
     const title = createMovie(doc.data());
-    // const title = doc.data() as any;
 
     const meta = createTitleMeta({
       titleId,
@@ -95,7 +94,7 @@ export class AnalyticsService extends CollectionService<AnalyticsState> {
 
       // TODO #7273 use MovieService instead once Akita has been replaced by ng-fire (currently using MovieService results in error) 
       const doc = await this.db.doc(`movies/${id}`).ref.get();
-      const title = doc.data() as any;
+      const title = createMovie(doc.data());
 
       meta = createTitleMeta({
         titleId: id,
