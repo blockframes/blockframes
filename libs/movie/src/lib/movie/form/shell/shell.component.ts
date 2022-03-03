@@ -110,7 +110,7 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, OnDestroy {
   @ViewChild(TunnelLayoutComponent) layout: TunnelLayoutComponent;
   private sub: Subscription;
 
-  public loaded$ = new BehaviorSubject<void>(this.initForms());
+  private loaded$ = new BehaviorSubject<void>(this.initForms());
 
   private productionStatus$: Observable<ProductionStatus> = this.loaded$.pipe(
     switchMap(() => this.getForm('movie').productionStatus.valueChanges),
