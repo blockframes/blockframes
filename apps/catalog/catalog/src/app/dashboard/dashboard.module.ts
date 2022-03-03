@@ -14,6 +14,8 @@ import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { MovieFormShellModule } from '@blockframes/movie/form/shell/shell.module';
 import { OrgAccessModule } from '@blockframes/organization/pipes'
+import { FORMS_CONFIG } from '@blockframes/movie/form/movie.shell.interfaces';
+import { MovieShellConfig } from '@blockframes/movie/form/movie.shell.config';
 
 // Guards
 import { TunnelGuard } from '@blockframes/ui/tunnel/tunnel.guard';
@@ -138,7 +140,7 @@ const routes: Routes = [
     }]
   },
   {
-    path:'standard-terms',
+    path: 'standard-terms',
     loadChildren: () => import('@blockframes/contract/contract/pages/standard-terms/standard-terms.module').then(m => m.StandardTermsModule)
   }
 ];
@@ -159,6 +161,11 @@ const routes: Routes = [
     // Material
     MatListModule,
     MatIconModule
-  ]
+  ],
+  providers: [{
+    provide: FORMS_CONFIG,
+    useFactory: (movie) => ({ movie }),
+    deps: [MovieShellConfig]
+  }]
 })
 export class DashboardModule { }

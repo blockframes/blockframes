@@ -11,8 +11,8 @@ import { ProductionStatus } from '@blockframes/utils/static-model';
 import { isChrome } from '@blockframes/utils/browser/utils';
 
 // RxJs
-import { map, pluck, startWith, tap } from 'rxjs/operators';
-import { Observable, Subscription } from 'rxjs';
+import { map, pluck, startWith, switchMap, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
 function isStatus(prodStatus: ProductionStatus, acceptableStatus: ProductionStatus[]) {
   return acceptableStatus.includes(prodStatus)
@@ -110,7 +110,10 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, OnDestroy {
   @ViewChild(TunnelLayoutComponent) layout: TunnelLayoutComponent;
   private sub: Subscription;
 
-  private productionStatus$: Observable<ProductionStatus> = this.getForm('movie').productionStatus.valueChanges.pipe(
+  public loaded$ = new BehaviorSubject<void>(this.initForms());
+
+  private productionStatus$: Observable<ProductionStatus> = this.loaded$.pipe(
+    switchMap(() => this.getForm('movie').productionStatus.valueChanges),
     startWith(this.getForm('movie').productionStatus.value),
     tap((productionStatus: ProductionStatus) => this.configs.movie.fillHiddenMovieInputs(productionStatus)),
   );
@@ -131,7 +134,7 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, OnDestroy {
     private route: ActivatedRoute,
   ) { }
 
-  async ngOnInit() {
+  ngOnInit() {
     this.sub = this.routerQuery.selectFragment().subscribe(async (fragment: string) => {
       const el: HTMLElement = await this.checkIfElementIsReady(fragment);
 
@@ -147,6 +150,11 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, OnDestroy {
     this.sub?.unsubscribe();
     this.getForm('movie').reset();
     this.getForm('campaign')?.reset();
+  }
+
+  initForms() {
+    this.configs.movie.onInit();
+    this.configs.campaign?.onInit();
   }
 
   getForm<K extends keyof ShellConfig>(name: K): ShellConfig[K]['form'] {

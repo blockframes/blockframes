@@ -9,7 +9,7 @@ export const FORMS_CONFIG = new InjectionToken<ShellConfig>('List of form manage
 export interface FormShellConfig<Control extends EntityControl<Entity>, Entity> {
   form: FormEntity<Control, Entity>;
   name: string
-  onInit(): Promise<unknown> | void;
+  onInit(): void;
   onSave(options: FormSaveOptions): Promise<unknown>
 }
 

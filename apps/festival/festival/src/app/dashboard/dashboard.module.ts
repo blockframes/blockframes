@@ -16,6 +16,8 @@ import { EventFormShellComponent } from '@blockframes/event/form/shell/shell.com
 import { EventFromShellModule } from '@blockframes/event/form/shell/shell.module';
 import { ReviewComponent } from '@blockframes/event/layout/review/review.component';
 import { LayoutEventReviewModule } from '@blockframes/event/layout/review/review.module';
+import { FORMS_CONFIG } from '@blockframes/movie/form/movie.shell.interfaces';
+import { MovieShellConfig } from '@blockframes/movie/form/movie.shell.config';
 
 // Tunnel routes
 import { tunnelRoutes } from './tunnel/movie-tunnel.routes';
@@ -200,6 +202,11 @@ const routes: Routes = [{
     MatIconModule,
     MatToolbarModule,
     RouterModule.forChild(routes)
-  ]
+  ],
+  providers: [{
+    provide: FORMS_CONFIG,
+    useFactory: (movie) => ({ movie }),
+    deps: [MovieShellConfig]
+  }]
 })
 export class DashboardModule { }

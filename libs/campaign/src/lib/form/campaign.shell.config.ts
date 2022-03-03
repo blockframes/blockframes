@@ -3,7 +3,7 @@ import type { FormShellConfig } from '@blockframes/movie/form/movie.shell.interf
 import { CampaignControls, CampaignForm } from './form';
 import { Campaign, CampaignService } from '../+state';
 import { FileUploaderService } from "@blockframes/media/+state";
-import { MovieActiveGuard } from "@blockframes/movie/guards/movie-active.guard";
+import { CampaignActiveGuard } from "../guards/campaign-active.guard";
 
 @Injectable({ providedIn: 'root' })
 export class CampaignShellConfig implements FormShellConfig<CampaignControls, Campaign>{
@@ -13,21 +13,20 @@ export class CampaignShellConfig implements FormShellConfig<CampaignControls, Ca
   constructor(
     private service: CampaignService,
     private uploaderService: FileUploaderService,
-    private movieActiveGuard: MovieActiveGuard,
+    private campaignActiveGuard: CampaignActiveGuard,
   ) { }
 
-  async onInit() {
+  onInit() {
     // Fill Form
-    const campaign = await this.service.getValue(this.movieActiveGuard.movie.id);
-    this.form = new CampaignForm(campaign);
+    this.form = new CampaignForm(this.campaignActiveGuard.campaign);
   }
 
   async onSave(): Promise<unknown> {
     this.uploaderService.upload();
-    await this.service.save(this.movieActiveGuard.movie.id, this.form.value);
+    await this.service.save(this.campaignActiveGuard.campaign.id, this.form.value);
 
     this.form.markAsPristine();
-    return this.movieActiveGuard.movie.id;
+    return this.campaignActiveGuard.campaign.id;
   }
 
 }

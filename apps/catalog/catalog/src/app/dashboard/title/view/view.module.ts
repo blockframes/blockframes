@@ -16,12 +16,10 @@ import { MatMenuModule } from '@angular/material/menu';
 
 // Blockframes
 import { OrgAccessModule } from '@blockframes/organization/pipes';
-import { MovieShellGuard } from '@blockframes/movie/guards/movie-shell.guard';
 
 const routes = [{
   path: '',
   component: TitleViewComponent,
-  canActivate: [MovieShellGuard],
   children: [
     {
       path: '',

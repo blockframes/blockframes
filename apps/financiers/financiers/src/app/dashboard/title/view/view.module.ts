@@ -7,8 +7,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Components
 import { TitleViewComponent } from './view.component';
-import { DashboardTitleShellModule } from '@blockframes/movie/dashboard/shell/shell.module';
-import { DashboardActionsShellModule } from '@blockframes/movie/dashboard/actions/actions.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -23,13 +21,13 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatMenuModule } from '@angular/material/menu';
 
 // Blockframes
+import { DashboardTitleShellModule } from '@blockframes/movie/dashboard/shell/shell.module';
+import { DashboardActionsShellModule } from '@blockframes/movie/dashboard/actions/actions.module';
 import { OrgAccessModule } from '@blockframes/organization/pipes';
-import { MovieShellGuard } from '@blockframes/movie/guards/movie-shell.guard';
 
 const routes = [{
   path: '',
   component: TitleViewComponent,
-  canActivate: [MovieShellGuard],
   children: [
     {
       path: '',

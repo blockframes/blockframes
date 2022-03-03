@@ -139,7 +139,6 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
     return true;
   }
 
-
   private getForm<K extends keyof ShellConfig>(name: K): ShellConfig[K]['form'] {
     return this.configs[name]?.form;
   }

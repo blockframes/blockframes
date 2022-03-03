@@ -94,11 +94,6 @@ import { MovieShellConfig } from '@blockframes/movie/form/movie.shell.config';
     ScreenTrackingService, UserTrackingService, PerformanceMonitoringService,
     { provide: REGION, useValue: firebaseRegion },
     { provide: APP, useValue: 'catalog' },
-    {
-      provide: FORMS_CONFIG,
-      useFactory: (movie) => ({ movie }),
-      deps: [MovieShellConfig]
-    },
     ...emulatorConfig
   ],
   bootstrap: [AppComponent]
