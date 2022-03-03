@@ -1,18 +1,18 @@
 // Angular
-import { Component, ChangeDetectionStrategy, OnInit, Inject, OnDestroy, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, Inject, OnDestroy, ViewChild } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 // Blockframes
 import { TunnelRoot, TunnelStep, TunnelLayoutComponent } from '@blockframes/ui/tunnel';
 import { FORMS_CONFIG, ShellConfig } from '../movie.shell.interfaces';
+import { ProductionStatus } from '@blockframes/utils/static-model';
+import { isChrome } from '@blockframes/utils/browser/utils';
 
 // RxJs
-import { map, pluck, startWith, switchMap, tap } from 'rxjs/operators';
-import { Observable, Subscription, combineLatest } from 'rxjs';
-import { ProductionStatus } from '@blockframes/utils/static-model';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { isChrome } from '@blockframes/utils/browser/utils';
+import { map, pluck, startWith, tap } from 'rxjs/operators';
+import { Observable, Subscription } from 'rxjs';
 
 function isStatus(prodStatus: ProductionStatus, acceptableStatus: ProductionStatus[]) {
   return acceptableStatus.includes(prodStatus)
@@ -109,7 +109,16 @@ function getSteps(status: ProductionStatus, appSteps: TunnelStep[] = []): Tunnel
 export class MovieFormShellComponent implements TunnelRoot, OnInit, OnDestroy {
   @ViewChild(TunnelLayoutComponent) layout: TunnelLayoutComponent;
   private sub: Subscription;
-  steps$: Observable<TunnelStep[]>;
+
+  private productionStatus$: Observable<ProductionStatus> = this.getForm('movie').productionStatus.valueChanges.pipe(
+    startWith(this.getForm('movie').productionStatus.value),
+    tap((productionStatus: ProductionStatus) => this.configs.movie.fillHiddenMovieInputs(productionStatus)),
+  );
+
+  steps$: Observable<TunnelStep[]> = this.productionStatus$.pipe(
+    map((productionStatus: ProductionStatus) => getSteps(productionStatus, this.routerQuery.getData<TunnelStep[]>('appSteps'))),
+  );
+
   exitRoute$: Observable<string> = this.route.params.pipe(
     pluck('movieId'),
     map((movieId: string) => `/c/o/dashboard/title/${movieId}`)
@@ -120,25 +129,10 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, OnDestroy {
     @Inject(FORMS_CONFIG) private configs: ShellConfig,
     private routerQuery: RouterQuery,
     private route: ActivatedRoute,
-    private cdr: ChangeDetectorRef
   ) { }
 
-  ngOnInit() {
-    console.log('config.onInit()')
-
-    this.sub = this.route.params.pipe(
-      pluck('movieId'),
-      switchMap(movieId => Object.values(this.configs).map((config: any) => config.onInit(movieId)).flat())
-    ).subscribe(() => this.cdr.markForCheck());
-
-    const appSteps = this.routerQuery.getData<TunnelStep[]>('appSteps');
-    const movieForm = this.getForm('movie');
-    this.steps$ = movieForm.productionStatus.valueChanges.pipe(
-      startWith(movieForm.productionStatus.value),
-      tap((productionStatus: ProductionStatus) => this.configs.movie.fillHiddenMovieInputs(productionStatus)),
-      map((productionStatus: ProductionStatus) => getSteps(productionStatus, appSteps)),
-    );
-    const routerSub = this.routerQuery.selectFragment().subscribe(async (fragment: string) => {
+  async ngOnInit() {
+    this.sub = this.routerQuery.selectFragment().subscribe(async (fragment: string) => {
       const el: HTMLElement = await this.checkIfElementIsReady(fragment);
 
       el?.scrollIntoView({
@@ -147,7 +141,6 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, OnDestroy {
         inline: 'start',
       });
     });
-    this.sub.add(routerSub);
   }
 
   ngOnDestroy() {

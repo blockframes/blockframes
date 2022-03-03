@@ -1,8 +1,5 @@
 
 import { Inject, Injectable } from '@angular/core';
-import { Observable } from "rxjs";
-import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { filter, startWith, switchMap, tap } from "rxjs/operators";
 import { mergeDeep } from "@blockframes/utils/helpers";
 import { FileUploaderService } from '@blockframes/media/+state';
 import { ProductionStatus } from "@blockframes/utils/static-model";
@@ -51,29 +48,27 @@ function cleanPromotionalMedia(promotional: MoviePromotionalElements): MovieProm
 
 @Injectable({ providedIn: 'root' })
 export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
-  form = new MovieForm(this.movieActiveGuard.movie); // TODO #7255
+  form: MovieForm;
   name = 'Title';
 
   constructor(
-    private routerQuery: RouterQuery,
     private service: MovieService,
     private uploaderService: FileUploaderService,
     private movieActiveGuard: MovieActiveGuard,
     @Inject(APP) private currentApp: App
   ) { }
 
-  async onInit(movieId: string) {
+  onInit() {
     // Fill Form
-    const movie = await this.service.getValue(movieId);
+    const movie = this.movieActiveGuard.movie;
     if (this.currentApp === 'catalog') movie.productionStatus = 'released';
-    this.form.reset();
-    this.form.setAllValue(movie);
+    this.form = new MovieForm(movie);
     this.fillHiddenMovieInputs(movie.productionStatus);
   }
 
   // Update form to fill inputs that might be hidden but that are mandatory to submit the movie
   public fillHiddenMovieInputs(status: ProductionStatus) {
-    if(!status) return;
+    if (!status) return;
     for (const path in valueByProdStatus[status]) {
       const formHasValue = this.form.get(path as any).value;
       const configHasValue = valueByProdStatus[status][path];
@@ -83,7 +78,6 @@ export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
     }
   }
 
-  // TODO issue#4002
   async onSave(options: FormSaveOptions): Promise<void> {
 
     const base = this.movieActiveGuard.movie;
