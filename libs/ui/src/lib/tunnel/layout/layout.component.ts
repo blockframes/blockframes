@@ -5,19 +5,17 @@ import {
   ChangeDetectionStrategy,
   ViewEncapsulation,
   ViewChild,
-  OnDestroy,
   ContentChild,
   Inject,
   TemplateRef
 } from '@angular/core';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { fade } from '@blockframes/utils/animations/fade';
 import { TunnelStep, TunnelStepSnapshot } from '../tunnel.model';
-import { BehaviorSubject, combineLatest, Observable, of, Subscription } from 'rxjs';
-import { filter, map, shareReplay, switchMap } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
+import { filter, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
 import { MatSidenavContent, MatSidenav } from '@angular/material/sidenav';
-import { Router, NavigationEnd, RouterOutlet, ActivatedRoute } from '@angular/router';
+import { Router, NavigationEnd, RouterOutlet, ActivatedRoute, Event, NavigationStart } from '@angular/router';
 import { RouteDescription } from '@blockframes/utils/common-interfaces';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { MatDialog } from '@angular/material/dialog';
@@ -70,13 +68,30 @@ function getStepSnapshot(steps: TunnelStep[], url: string): TunnelStepSnapshot {
     '[@fade]': 'fade'
   }
 })
-export class TunnelLayoutComponent implements OnInit, OnDestroy {
+export class TunnelLayoutComponent implements OnInit {
 
-  private url$ = this.routerQuery.select('state').pipe(map(({ url }) => url))
+  private url$ = this.router.events.pipe(
+    filter((event: Event) => event instanceof NavigationEnd),
+    tap(() => this.sidenavContent.scrollTo({ top: 0 })),
+    map((event: NavigationStart) => event.url),
+    startWith(this.router.url)
+  );
+
   public urlBynav$: Observable<[string, TunnelStep[]]>;
+  public currentStep$ = this.url$.pipe(
+    map(url => getStepSnapshot(this.steps, url)),
+    tap(currentStep => this.currentStep = currentStep)
+  );
   public currentStep: TunnelStepSnapshot;
-  public next: RouteDescription;
-  public previous: RouteDescription;
+
+  public next$ = this.url$.pipe(
+    map(url => getPage(this.steps, url, 1))
+  );
+
+  public previous$ = this.url$.pipe(
+    map(url => getPage(this.steps, url, -1))
+  );
+
   public mode$ = this.breakpointsService.ltMd.pipe(
     map(ltMd => ltMd ? 'over' : 'side'),
     shareReplay({ refCount: true, bufferSize: 1 }),
@@ -93,14 +108,12 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
   @Input() exitRedirect: string;
 
   private routeBeforeTunnel: string;
-  private sub: Subscription;
 
   redirect() {
     this.router.navigate([this.routeBeforeTunnel], { relativeTo: this.route });
   }
 
   constructor(
-    private routerQuery: RouterQuery,
     private breakpointsService: BreakpointsService,
     private dialog: MatDialog,
     private router: Router,
@@ -111,23 +124,9 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.routeBeforeTunnel = this.exitRedirect || '/c/o/';
-    this.urlBynav$ = combineLatest([this.url$, new BehaviorSubject(this.steps).asObservable()]).pipe(shareReplay({ refCount: true, bufferSize: 1 }));
-    this.getRoute();
-
-    // https://github.com/angular/components/issues/4280
-    this.sub = this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd))
-      .subscribe(() => {
-        this.sidenavContent.scrollTo({ top: 0 })
-        this.getRoute();
-      })
-  }
-
-  private getRoute() {
-    const url = this.routerQuery.getValue().state.url;
-    this.currentStep = getStepSnapshot(this.steps, url);
-    this.next = getPage(this.steps, url, 1);
-    this.previous = getPage(this.steps, url, -1);
+    const steps$ = new BehaviorSubject(this.steps).asObservable();
+    this.urlBynav$ = combineLatest([this.url$, steps$])
+      .pipe(shareReplay({ refCount: true, bufferSize: 1 }));
   }
 
   /** Save the form and display feedback to user */
@@ -138,7 +137,6 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
       } saved`, '', { duration: 1000 }).afterDismissed().toPromise();
     return true;
   }
-
 
   private getForm<K extends keyof ShellConfig>(name: K): ShellConfig[K]['form'] {
     return this.configs[name]?.form;
@@ -186,9 +184,6 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
     return outlet?.activatedRouteData?.animation;
   }
 
-  ngOnDestroy() {
-    this.sub.unsubscribe();
-  }
 }
 
 /* Utils function to get the list of invalid form. */

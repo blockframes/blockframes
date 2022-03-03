@@ -1,9 +1,8 @@
-import { ChangeDetectionStrategy, Component, Inject, LOCALE_ID, OnInit, Pipe, PipeTransform } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, LOCALE_ID, Pipe, PipeTransform } from '@angular/core';
 import { formatCurrency, formatPercent } from '@angular/common';
 import { Budget, Campaign, CampaignService, Funding } from '../../+state';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Observable } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
+import { pluck, switchMap, tap } from 'rxjs/operators';
 import { getTotalFundings } from '@blockframes/campaign/pipes/fundings.pipe';
 import { ThemeService } from '@blockframes/ui/theme';
 import { ConsentsService } from '@blockframes/consents/+state/consents.service';
@@ -11,6 +10,7 @@ import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-inp
 import { MatDialog } from '@angular/material/dialog';
 import { StorageFile } from '@blockframes/media/+state/media.firestore';
 import { Access } from '@blockframes/consents/+state/consents.firestore';
+import { ActivatedRoute } from '@angular/router';
 
 const budgetData: { serie: keyof Budget, label: string }[] = [{
   serie: 'development',
@@ -35,11 +35,15 @@ const budgetData: { serie: keyof Budget, label: string }[] = [{
   styleUrls: ['./financing.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceFinancingComponent implements OnInit {
+export class MarketplaceFinancingComponent {
   public totalFundings: number;
   campaign: Campaign;
   public storagePath: StorageFile;
-  campaign$: Observable<Campaign>;
+  campaign$ = this.route.params.pipe(
+    pluck('movieId'),
+    switchMap((id: string) => this.service.valueChanges(id)),
+    tap(campaign => this.totalFundings = getTotalFundings(campaign.fundings))
+  );
   public access: Access<Date>;
   accessConsent: Observable<Access<Date>>;
   budgetData = budgetData;
@@ -55,17 +59,10 @@ export class MarketplaceFinancingComponent implements OnInit {
   constructor(
     @Inject(LOCALE_ID) private locale,
     private service: CampaignService,
-    private route: RouterQuery,
+    private route: ActivatedRoute,
     private consentsService: ConsentsService,
     private dialog: MatDialog
-  ) {}
-
-  ngOnInit(): void {
-    this.campaign$ = this.route.selectParams<string>('movieId').pipe(
-      switchMap(id => this.service.valueChanges(id)),
-      tap(campaign => this.totalFundings = getTotalFundings(campaign.fundings))
-    );
-  }
+  ) { }
 
   consentBeforeDownload(campaignId: string, file: string) {
     this.dialog.open(ConfirmInputComponent, {
@@ -87,7 +84,7 @@ export class MarketplaceFinancingComponent implements OnInit {
 @Pipe({ name: 'apexBudget' })
 export class ApexBudgetPipe implements PipeTransform {
 
-  constructor(private themeService: ThemeService) {}
+  constructor(private themeService: ThemeService) { }
 
   transform(budget: Budget) {
     const data = budgetData.filter(b => !!budget[b.serie]);
@@ -104,7 +101,7 @@ export class ApexBudgetPipe implements PipeTransform {
 
 @Pipe({ name: 'apexFunding' })
 export class ApexFundingPipe implements PipeTransform {
-  constructor(private themeService: ThemeService) {}
+  constructor(private themeService: ThemeService) { }
 
   transform(fundings: Funding[]) {
     if (!fundings.length) return;

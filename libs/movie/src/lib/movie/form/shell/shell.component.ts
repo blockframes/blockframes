@@ -1,8 +1,7 @@
 // Angular
 import { Component, ChangeDetectionStrategy, OnInit, Inject, OnDestroy, ViewChild } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { ActivatedRoute, Data } from '@angular/router';
 
 // Blockframes
 import { TunnelRoot, TunnelStep, TunnelLayoutComponent } from '@blockframes/ui/tunnel';
@@ -12,7 +11,7 @@ import { isChrome } from '@blockframes/utils/browser/utils';
 
 // RxJs
 import { map, pluck, startWith, tap } from 'rxjs/operators';
-import { Observable, Subscription } from 'rxjs';
+import { combineLatest, Observable, Subscription } from 'rxjs';
 
 function isStatus(prodStatus: ProductionStatus, acceptableStatus: ProductionStatus[]) {
   return acceptableStatus.includes(prodStatus)
@@ -115,8 +114,8 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, OnDestroy {
     tap((productionStatus: ProductionStatus) => this.configs.movie.fillHiddenMovieInputs(productionStatus)),
   );
 
-  steps$: Observable<TunnelStep[]> = this.productionStatus$.pipe(
-    map((productionStatus: ProductionStatus) => getSteps(productionStatus, this.routerQuery.getData<TunnelStep[]>('appSteps'))),
+  steps$: Observable<TunnelStep[]> = combineLatest([this.productionStatus$, this.route.data]).pipe(
+    map(([productionStatus, data]: [ProductionStatus, Data]) => getSteps(productionStatus, data.appSteps as TunnelStep[])),
   );
 
   exitRoute$: Observable<string> = this.route.params.pipe(
@@ -127,12 +126,11 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, OnDestroy {
   constructor(
     @Inject(DOCUMENT) private doc: Document,
     @Inject(FORMS_CONFIG) private configs: ShellConfig,
-    private routerQuery: RouterQuery,
     private route: ActivatedRoute,
   ) { }
 
   async ngOnInit() {
-    this.sub = this.routerQuery.selectFragment().subscribe(async (fragment: string) => {
+    this.sub = this.route.fragment.subscribe(async (fragment: string) => {
       const el: HTMLElement = await this.checkIfElementIsReady(fragment);
 
       el?.scrollIntoView({
