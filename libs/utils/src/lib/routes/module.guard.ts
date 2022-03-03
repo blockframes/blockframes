@@ -1,23 +1,32 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { getCurrentApp } from '@blockframes/utils/apps';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { OrganizationService } from '@blockframes/organization/+state';
+import { App, Module } from '../apps';
+import { APP } from './utils';
+
+function currentModule(path: string): Module {
+  const fragments = path.split('/');
+  return fragments.includes('dashboard') ? 'dashboard' : 'marketplace';
+}
 
 @Injectable({ providedIn: 'root' })
-export class AppGuard implements CanActivate {
+export class ModuleGuard implements CanActivate {
+
+  currentModule: Module;
+
   constructor(
     private router: Router,
     private orgService: OrganizationService,
     private snackBar: MatSnackBar,
-    private routerQuery: RouterQuery) { }
+    @Inject(APP) private app: App
+  ) { }
 
   canActivate(_: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    const app = getCurrentApp(this.routerQuery);
-    const isMarketplace = state.url.split('/').includes('marketplace');
+    const app = this.app;
+    this.currentModule = currentModule(state.url);
     const org = this.orgService.org;
-    if (isMarketplace) {
+    if (this.currentModule === 'marketplace') {
       if (org.appAccess[app]?.marketplace) {
         return true;
       } else if (org.appAccess[app]?.dashboard) {

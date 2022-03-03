@@ -1,6 +1,4 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { appName, getCurrentApp } from '@blockframes/utils/apps';
 import { Organization, OrganizationService } from '@blockframes/organization/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { CollectionReference } from '@angular/fire/firestore';
@@ -10,7 +8,7 @@ import { MovieService } from '@blockframes/movie/+state';
 import { joinWith } from '@blockframes/utils/operators';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import {getSeller} from '@blockframes/contract/contract/+state/utils'
+import { getSeller } from '@blockframes/contract/contract/+state/utils'
 
 function queryFn(ref: CollectionReference, options: { internal?: boolean }) {
   if (options.internal)
@@ -29,7 +27,6 @@ function getFullName(seller: Organization) {
   return seller.denomination.full;
 }
 
-
 @Component({
   selector: 'contracts-list',
   templateUrl: './list.component.html',
@@ -37,8 +34,6 @@ function getFullName(seller: Organization) {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContractsListComponent {
-  public app = getCurrentApp(this.routerQuery);
-  public appName = appName[this.app];
   public orgId = this.orgService.org.id;
 
 
@@ -55,14 +50,12 @@ export class ContractsListComponent {
 
   constructor(
     private contractService: ContractService,
-    private routerQuery: RouterQuery,
     private orgService: OrganizationService,
     private titleService: MovieService,
     private incomeService: IncomeService,
-    private dynTitle: DynamicTitleService,
-  ) { }
-
-  ngOnInit() {
+    private dynTitle: DynamicTitleService
+  ) {
     this.dynTitle.setPageTitle('My Sales (All)');
   }
+
 }

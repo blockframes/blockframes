@@ -1,8 +1,8 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MovieService } from '@blockframes/movie/+state';
-import { App, getCurrentApp } from '@blockframes/utils/apps';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { App } from '@blockframes/utils/apps';
+import { APP } from '@blockframes/utils/routes/utils';
 import { pluck, switchMap } from 'rxjs/operators';
 
 @Component({
@@ -12,7 +12,6 @@ import { pluck, switchMap } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MovieFormEndComponent {
-  app: App = getCurrentApp(this.routerQuery);
 
   public movie$ = this.route.params.pipe(
     pluck('movieId'),
@@ -22,8 +21,8 @@ export class MovieFormEndComponent {
   constructor(
     private router: Router,
     private movieService: MovieService,
-    private routerQuery: RouterQuery,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    @Inject(APP) public app: App
   ) { }
 
   navigate(movieId: string) {

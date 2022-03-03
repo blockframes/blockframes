@@ -6,7 +6,10 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Component
 import { AuthDataValidationComponent } from './data-validation.component';
+
+// Modules
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
+import { AppPipeModule } from '@blockframes/utils/pipes/app.pipe';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -23,6 +26,7 @@ import { MatDividerModule } from '@angular/material/divider';
     RouterModule,
     FlexLayoutModule,
     ImageModule,
+    AppPipeModule,
     MatIconModule,
     MatInputModule,
     MatCheckboxModule,

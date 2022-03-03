@@ -1,6 +1,4 @@
-import { Component, ChangeDetectionStrategy, Optional, OnInit, } from '@angular/core';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { appName, getCurrentApp } from '@blockframes/utils/apps';
+import { Component, ChangeDetectionStrategy, Optional, OnInit } from '@angular/core';
 import { ContractService, Sale } from '@blockframes/contract/contract/+state';
 import { Organization, OrganizationService } from '@blockframes/organization/+state';
 import { Intercom } from 'ng-intercom';
@@ -34,9 +32,7 @@ function getFullName(seller: Organization) {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SaleListComponent implements OnInit {
-  public app = getCurrentApp(this.routerQuery);
-  public appName = appName[this.app];
-  public orgId = this.orgService.org.id;
+  private orgId = this.orgService.org.id;
 
 
   public internalSales$ = this.contractService.valueChanges(ref => queryFn(ref, this.orgId, { internal: true })).pipe(
@@ -61,13 +57,11 @@ export class SaleListComponent implements OnInit {
 
   constructor(
     private contractService: ContractService,
-    private routerQuery: RouterQuery,
     private orgService: OrganizationService,
     private titleService: MovieService,
     private incomeService: IncomeService,
     private dynTitle: DynamicTitleService,
     @Optional() private intercom: Intercom,
-
   ) { }
 
   ngOnInit() {

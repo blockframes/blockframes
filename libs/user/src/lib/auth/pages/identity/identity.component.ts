@@ -1,11 +1,10 @@
-import { Component, ChangeDetectionStrategy, OnInit, TemplateRef, ViewChild, ChangeDetectorRef, Optional, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, TemplateRef, ViewChild, ChangeDetectorRef, Optional, OnDestroy, Inject } from '@angular/core';
 import { AuthService } from '../../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { slideUp, slideDown } from '@blockframes/utils/animations/fade';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { getCurrentApp, getAppName, App } from '@blockframes/utils/apps';
+import { App } from '@blockframes/utils/apps';
 import { createDocumentMeta } from '@blockframes/utils/models-meta';
 import { AlgoliaOrganization } from '@blockframes/utils/algolia';
 import { OrganizationLiteForm } from '@blockframes/organization/forms/organization-lite.form';
@@ -20,6 +19,7 @@ import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { DifferentPasswordStateMatcher, RepeatPasswordStateMatcher } from '@blockframes/utils/form/matchers';
 import { filter } from 'rxjs/operators';
+import { APP } from '@blockframes/utils/routes/utils';
 
 @Component({
   selector: 'auth-identity',
@@ -32,8 +32,6 @@ export class IdentityComponent implements OnInit, OnDestroy {
   @ViewChild('customSnackBarTemplate') customSnackBarTemplate: TemplateRef<unknown>;
   public user$ = this.authService.profile$;
   public creating = false;
-  public app: App;
-  public appName: string;
   public indexGroup = 'indexNameOrganizations';
   public form = new IdentityForm();
   public orgControl = new FormControl();
@@ -54,16 +52,14 @@ export class IdentityComponent implements OnInit, OnDestroy {
     private router: Router,
     private invitationService: InvitationService,
     private orgService: OrganizationService,
-    private routerQuery: RouterQuery,
     private cdr: ChangeDetectorRef,
     private route: ActivatedRoute,
-    @Optional() private intercom: Intercom
+    @Optional() private intercom: Intercom,
+    @Inject(APP) public app: App,
   ) { }
 
 
   async ngOnInit() {
-    this.app = getCurrentApp(this.routerQuery);
-    this.appName = getAppName(this.app).label;
 
     const existingUserWithDisplayName = !!this.authService.profile && !!hasDisplayName(this.authService.profile);
     const existingUserWithoutDisplayName = !!this.authService.profile && !hasDisplayName(this.authService.profile);

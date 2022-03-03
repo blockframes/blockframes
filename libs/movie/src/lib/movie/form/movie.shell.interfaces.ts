@@ -8,13 +8,13 @@ import { FormSaveOptions } from "@blockframes/utils/common-interfaces";
 export const FORMS_CONFIG = new InjectionToken<ShellConfig>('List of form managed by the shell');
 
 export interface FormShellConfig<Control extends EntityControl<Entity>, Entity> {
-    form: FormEntity<Control, Entity>;
-    name: string
-    onInit(): Observable<unknown>[];
-    onSave(options: FormSaveOptions): Promise<unknown>
+  form: FormEntity<Control, Entity>;
+  name: string
+  onInit(): Observable<unknown>[];
+  onSave(options: FormSaveOptions): Promise<unknown>
 }
 
 export interface ShellConfig {
-    movie: MovieShellConfig;
-    campaign?: CampaignShellConfig
+  movie: MovieShellConfig;
+  campaign?: CampaignShellConfig
 }

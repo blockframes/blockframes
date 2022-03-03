@@ -11,10 +11,16 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { Observable } from 'rxjs';
 import { AnalyticsService } from '@blockframes/utils/analytics/analytics.service';
 import { UserService } from '@blockframes/user/+state/user.service';
-
+import { RouterTestingModule } from "@angular/router/testing";
+import { ModuleGuard } from '@blockframes/utils/routes/module.guard';
+import { APP } from '@blockframes/utils/routes/utils';
 
 class InjectedAngularFireAuth {
   authState = new Observable();
+}
+
+class InjectedModuleGuard {
+  currentModule = 'dashboard'
 }
 
 class DummyService { }
@@ -27,7 +33,8 @@ describe('Notifications Test Suite', () => {
     TestBed.configureTestingModule({
       imports: [
         AngularFireModule.initializeApp({ projectId: 'test' }),
-        AngularFirestoreModule
+        AngularFirestoreModule,
+        RouterTestingModule,
       ],
       providers: [
         NotificationService,
@@ -35,6 +42,8 @@ describe('Notifications Test Suite', () => {
         { provide: AngularFireAuth, useClass: InjectedAngularFireAuth },
         { provide: AnalyticsService, useClass: DummyService },
         { provide: UserService, useClass: DummyService },
+        { provide: ModuleGuard, useClass: InjectedModuleGuard },
+        { provide: APP, useValue: 'festival' },
         { provide: SETTINGS, useValue: { host: 'localhost:8080', ssl: false } }
       ],
     });

@@ -1,12 +1,10 @@
-import { Component, ChangeDetectionStrategy, Pipe, PipeTransform } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { FormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { appName, getCurrentApp } from '@blockframes/utils/apps';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { Sale, ContractService, Holdback } from '@blockframes/contract/contract/+state';
+import { Sale, ContractService } from '@blockframes/contract/contract/+state';
 import { MovieService } from '@blockframes/movie/+state';
 import { joinWith } from '@blockframes/utils/operators';
 import { getSeller } from '@blockframes/contract/contract/+state/utils'
@@ -15,8 +13,6 @@ import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { IncomeService } from '@blockframes/contract/income/+state';
 import { Term } from '@blockframes/contract/term/+state';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
-import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
-import { isInitial } from '@blockframes/contract/negotiation/utils';
 
 @Component({
   selector: 'contract-view',
@@ -25,10 +21,6 @@ import { isInitial } from '@blockframes/contract/negotiation/utils';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContractViewComponent {
-  public app = getCurrentApp(this.routerQuery);
-  public appName = appName[this.app];
-  public orgId = this.orgService.org.id;
-
 
   contract$ = this.route.params.pipe(map(r => r.saleId as string))
     .pipe(
@@ -37,7 +29,7 @@ export class ContractViewComponent {
       tap(contract => this.statusForm.setValue(contract.status))
     );
 
-  statusForm = new FormControl('pending')
+  statusForm = new FormControl('pending');
 
   constructor(
     private dialog: MatDialog,
@@ -45,10 +37,8 @@ export class ContractViewComponent {
     private snackbar: MatSnackBar,
     private incomeService: IncomeService,
     private contractService: ContractService,
-    private routerQuery: RouterQuery,
     private orgService: OrganizationService,
-    private titleService: MovieService,
-
+    private titleService: MovieService
   ) { }
 
   async update(contractId: string) {
@@ -57,11 +47,7 @@ export class ContractViewComponent {
     this.snackbar.open('Offer updated!', 'ok', { duration: 1000 });
   }
 
-  updateHoldbacks(contractId: string, holdbacks: Holdback[]) {
-    this.contractService.update(contractId, { holdbacks });
-  }
-
-  getSale(saleId: string) {
+  private getSale(saleId: string) {
     return this.contractService.valueChanges(saleId).pipe(
       joinWith({
         licensor: (sale: Sale) => this.orgService.valueChanges(getSeller(sale)),
@@ -85,7 +71,7 @@ export class ContractViewComponent {
     });
   }
 
-  delete(term: Term) {
+  private delete(term: Term) {
     this.contractService.update(term.contractId, (contract, write) => {
       this.incomeService.remove(term.id, { write });
       return { termIds: contract.termIds.filter(id => id !== term.id) };

@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Inject, OnInit } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { RouterQuery } from "@datorama/akita-ng-router-store";
-import { getCurrentApp } from "@blockframes/utils/apps";
+import { App } from "@blockframes/utils/apps";
+import { APP } from '@blockframes/utils/routes/utils';
 
 @Component({
   selector: 'bf-contact',
@@ -24,7 +24,7 @@ export class ContactComponent implements OnInit {
     private functions: AngularFireFunctions,
     private snackBar: MatSnackBar,
     private dynTitle: DynamicTitleService,
-    private routerQuery: RouterQuery
+    @Inject(APP) private app: App
   ) {
     this.dynTitle.setPageTitle('Contact us')
   }
@@ -48,8 +48,7 @@ export class ContactComponent implements OnInit {
       const callSendUserMail = this.functions.httpsCallable('sendUserContactMail');
       this.snackBar.open('Message sent.', 'close', { duration: 2000 });
       this.form.reset();
-      const app = getCurrentApp(this.routerQuery);
-      return callSendUserMail({ subject: userSubject, message: userMessage, app }).toPromise();
+      return callSendUserMail({ subject: userSubject, message: userMessage, app: this.app }).toPromise();
     } else {
       this.snackBar.open('Subject and message are mandatory.', 'close', { duration: 2000 });
     }

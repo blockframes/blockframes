@@ -6,9 +6,9 @@ import { combineLatest, Subscription } from 'rxjs';
 import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
 import { Movie, MovieService } from '@blockframes/movie/+state';
 import { FORMS_CONFIG, ShellConfig } from '../../form/movie.shell.interfaces';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { getCurrentApp } from '@blockframes/utils/apps';
 import { filter, pluck, switchMap, tap } from 'rxjs/operators';
+import { APP } from '@blockframes/utils/routes/utils';
+import { App } from '@blockframes/utils/apps';
 
 @Directive({ selector: 'movie-cta, [movieCta]' })
 export class MovieCtaDirective { }
@@ -31,17 +31,15 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
 
   public movie: Movie;
 
-  public appName = getCurrentApp(this.routerQuery);
-
   @Input() routes: RouteDescription[];
 
   constructor(
     @Inject(FORMS_CONFIG) private configs: ShellConfig,
-    private routerQuery: RouterQuery,
+    @Inject(APP) public app: App,
     private movieService: MovieService,
     private router: Router,
     private location: Location,
-    private route: ActivatedRoute,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit() {
