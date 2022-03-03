@@ -126,7 +126,8 @@ export async function formatContract(
     /* a */'contract.titleId': async (value: string) => {
       if (!value) return mandatoryError('Title');
       const titleId = await getTitleId(value, titleService, titleNameCache, userOrgId, blockframesAdmin);
-      if (await titleService.docExists(value)) return value;
+      const title = await titleService.getValue(value);
+      if (title) return value;
       if (!titleId) return unknownEntityError('Title');
       return titleId;
     },
@@ -162,7 +163,8 @@ export async function formatContract(
       } else {
         let sellerId = await getOrgId(value, orgService, orgNameCache);
         if (!sellerId) {
-          if (await orgService.docExists(value)) sellerId = value;
+          const seller = await orgService.getValue(value);
+          if (seller) sellerId = value;
           else return unknownEntityError('Licensor Organization');
         }
         if (!blockframesAdmin && sellerId !== userOrgId) return {
@@ -195,7 +197,8 @@ export async function formatContract(
         const isInternal = data.contract.sellerId === centralOrgId.catalog;
         let buyerId = await getOrgId(value, orgService, orgNameCache);
         if (buyerId) return buyerId;
-        if (!buyerId && await titleService.docExists(value)) buyerId = value;
+        const title = await titleService.getValue(value);
+        if (!buyerId && title) buyerId = value;
         if (isInternal && !buyerId) return unknownEntityError('Licensee Organization');
         return '';
       }
