@@ -14,12 +14,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 
-// Modules
+// Blockframes
 import { OrgAccessModule } from '@blockframes/organization/pipes';
+import { MovieShellGuard } from '@blockframes/movie/guards/movie-shell.guard';
 
 const routes = [{
   path: '',
   component: TitleViewComponent,
+  canActivate: [MovieShellGuard],
   children: [
     {
       path: '',

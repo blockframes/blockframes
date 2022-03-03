@@ -42,6 +42,8 @@ import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.se
 import { getBrowserWithVersion } from '@blockframes/utils/browser/utils';
 import { AuthService } from '@blockframes/auth/+state';
 import { APP } from '@blockframes/utils/routes/utils';
+import { FORMS_CONFIG } from '@blockframes/movie/form/movie.shell.interfaces';
+import { MovieShellConfig } from '@blockframes/movie/form/movie.shell.config';
 
 @NgModule({
   declarations: [AppComponent],
@@ -92,6 +94,11 @@ import { APP } from '@blockframes/utils/routes/utils';
     ScreenTrackingService, UserTrackingService, PerformanceMonitoringService,
     { provide: REGION, useValue: firebaseRegion },
     { provide: APP, useValue: 'catalog' },
+    {
+      provide: FORMS_CONFIG,
+      useFactory: (movie) => ({ movie }),
+      deps: [MovieShellConfig]
+    },
     ...emulatorConfig
   ],
   bootstrap: [AppComponent]

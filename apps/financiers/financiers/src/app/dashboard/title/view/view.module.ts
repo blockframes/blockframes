@@ -20,12 +20,16 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { OrgAccessModule } from '@blockframes/organization/pipes';
 import { MatMenuModule } from '@angular/material/menu';
+
+// Blockframes
+import { OrgAccessModule } from '@blockframes/organization/pipes';
+import { MovieShellGuard } from '@blockframes/movie/guards/movie-shell.guard';
 
 const routes = [{
   path: '',
   component: TitleViewComponent,
+  canActivate: [MovieShellGuard],
   children: [
     {
       path: '',
