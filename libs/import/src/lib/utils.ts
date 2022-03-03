@@ -8,9 +8,6 @@ import { centralOrgId } from "@env";
 import { ContractService } from "@blockframes/contract/contract/+state/contract.service";
 import { UserService } from "@blockframes/user/+state";
 
-export interface CheckDocExists {
-  docExists(docId: string): Promise<boolean>;
-}
 
 export const spreadsheetImportTypes = ['titles', 'organizations', 'contracts'] as const;
 

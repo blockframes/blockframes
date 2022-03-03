@@ -19,7 +19,6 @@ import { joinWith } from '@blockframes/utils/operators';
 import { AnalyticsService } from '@blockframes/utils/analytics/analytics.service';
 import { AuthService } from '@blockframes/auth/+state';
 import { ActiveState, EntityState } from '@datorama/akita';
-import { CheckDocExists } from '@blockframes/import/utils';
 
 export const fromOrg = (orgId: string): QueryFn => ref => ref.where('orgIds', 'array-contains', orgId);
 export const fromOrgAndAccepted = (orgId: string, appli: App): QueryFn => ref => ref.where(`app.${appli}.status`, '==', 'accepted').where('orgIds', 'array-contains', orgId);
@@ -32,7 +31,7 @@ interface MovieState extends EntityState<Movie, string>, ActiveState<string> { }
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies' })
-export class MovieService extends CollectionService<MovieState> implements CheckDocExists {
+export class MovieService extends CollectionService<MovieState> {
   readonly useMemorization = true;
 
   constructor(
@@ -121,11 +120,6 @@ export class MovieService extends CollectionService<MovieState> implements Check
       map(movies => movies.map(addViews)),
       map(movies => movies.sort((a, b) => a.title.international < b.title.international ? -1 : 1))
     );
-  }
-
-  async docExists(docId: string) {
-    const movie = await this.getValue(docId);
-    return !!movie;
   }
 }
 
