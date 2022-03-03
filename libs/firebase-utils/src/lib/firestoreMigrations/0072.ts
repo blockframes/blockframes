@@ -22,7 +22,9 @@ export async function upgrade(db: Firestore) {
 
   return runChunks(movies.docs, async (doc) => {
     const movie = doc.data();
-    movie.contentType = transform[movie.contentType](movie);
+    if (Object.keys(transform).includes(movie.contentType)) {
+      movie.contentType = transform[movie.contentType](movie);
+    }
     await doc.ref.set(movie);
   }).catch(err => console.error(err));
 }
