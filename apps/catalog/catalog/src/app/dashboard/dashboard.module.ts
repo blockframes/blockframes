@@ -13,9 +13,9 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { MovieFormShellModule } from '@blockframes/movie/form/shell/shell.module';
-import { OrgAccessModule } from '@blockframes/organization/pipes'
 import { FORMS_CONFIG } from '@blockframes/movie/form/movie.shell.interfaces';
 import { MovieShellConfig } from '@blockframes/movie/form/movie.shell.config';
+import { OrgAccessModule } from '@blockframes/organization/pipes';
 
 // Guards
 import { TunnelGuard } from '@blockframes/ui/tunnel/tunnel.guard';
@@ -24,7 +24,7 @@ import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 
 // Material
 import { MatListModule } from '@angular/material/list';
-import { MatIconModule } from '@angular/material/icon'
+import { MatIconModule } from '@angular/material/icon';
 
 // Tunnel routes
 import { tunnelRoutes } from './tunnel/movie-tunnel.routes';
