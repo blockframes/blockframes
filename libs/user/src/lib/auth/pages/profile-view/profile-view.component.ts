@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, Inject } from '@angular/core';
 import { NavigationEnd, Router, Event } from '@angular/router';
 import { Location } from '@angular/common';
 import { Observable, Subscription } from 'rxjs';
@@ -11,7 +11,8 @@ import { canHavePreferences } from '@blockframes/user/+state/user.utils';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { AuthService } from '@blockframes/auth/+state';
 import { User } from '@blockframes/user/+state/user.model';
-import { AppGuard } from '@blockframes/utils/routes/app.guard';
+import { APP } from '@blockframes/utils/routes/utils';
+import { App } from '@blockframes/utils/apps';
 
 const navLinks = [
   {
@@ -47,7 +48,7 @@ export class ProfileViewComponent implements OnInit, OnDestroy {
     private location: Location,
     private orgService: OrganizationService,
     private authService: AuthService,
-    private appGuard: AppGuard,
+    @Inject(APP) private app: App,
     router: Router
   ) {
 
@@ -70,8 +71,7 @@ export class ProfileViewComponent implements OnInit, OnDestroy {
     if (hasPreferences) return;
 
     const org = this.orgService.org;
-    const app = this.appGuard.currentApp;
-    if (canHavePreferences(org, app)) {
+    if (canHavePreferences(org, this.app)) {
       this.navLinks.push({ path: 'preferences', label: 'Buying Preferences' })
     }
   }
