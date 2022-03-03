@@ -93,11 +93,6 @@ export function createModuleAccess(moduleAccess: Partial<ModuleAccess> = {}): Mo
   }
 }
 
-export function getAppName(slug: App, short = false) {
-  const label = short ? appShortName[slug] : appName[slug];
-  return { slug, label };
-}
-
 /**
  * Returns the apps that the org have access to
  * @param org The org to query

@@ -9,8 +9,6 @@ import { ViewImportErrorsComponent } from '../view-import-errors/view-import-err
 import { sortingDataAccessor } from '@blockframes/utils/table';
 import { MovieImportState, SpreadsheetImportError } from '../../utils';
 import { MovieService } from '@blockframes/movie/+state';
-import { AppGuard } from '@blockframes/utils/routes/app.guard';
-import { App } from '@blockframes/utils/apps';
 
 const hasImportErrors = (importState: MovieImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -30,7 +28,6 @@ export class TableExtractedMoviesComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   public processedTitles = 0;
   public publishedTitles = 0;
-  public currentApp: App;
   public selection = new SelectionModel<MovieImportState>(true, []);
   public displayedColumns: string[] = [
     'movie.internalRef',
@@ -44,8 +41,7 @@ export class TableExtractedMoviesComponent implements OnInit {
   constructor(
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
-    private movieService: MovieService,
-    private appGuard: AppGuard,
+    private movieService: MovieService
   ) { }
 
   ngOnInit() {
@@ -54,7 +50,6 @@ export class TableExtractedMoviesComponent implements OnInit {
     this.rows.filterPredicate = this.filterPredicate;
     this.rows.sortingDataAccessor = sortingDataAccessor;
     this.rows.sort = this.sort;
-    this.currentApp = this.appGuard.currentApp;
   }
 
   async createMovie(importState: MovieImportState): Promise<boolean> {

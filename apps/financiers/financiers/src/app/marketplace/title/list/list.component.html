@@ -34,8 +34,7 @@
     </ng-template>
 
     <ng-template filter label="Genre" [form]="searchForm.genres">
-      <chips-autocomplete [form]="searchForm.genres" scope="genres"
-        [withoutValues]="['wildlife','natureEnvironment','huntingFishing', 'archeologyHistory' ,'travelDiscovery', 'fashion' ]">
+      <chips-autocomplete [form]="searchForm.genres" scope="genres">
         <mat-label>Genres</mat-label>
       </chips-autocomplete>
     </ng-template>

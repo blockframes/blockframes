@@ -1,16 +1,16 @@
-import { Component, ChangeDetectionStrategy, Pipe, PipeTransform } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Pipe, PipeTransform, Inject } from '@angular/core';
 
 // Blockframes
 import { NotificationsForm } from './notifications.form';
 import { App } from "@blockframes/utils/apps";
 import { NotificationTypesBase, notificationTypesBase } from '@blockframes/notification/types';
 import { AuthService } from '@blockframes/auth/+state';
-import { AppGuard } from '@blockframes/utils/routes/app.guard';
 
 // Material
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { APP } from '@blockframes/utils/routes/utils';
 
 interface NotificationSetting { text: string, tooltip: boolean };
 const titleType: Record<NotificationTypesBase, NotificationSetting> = {
@@ -159,11 +159,9 @@ export class EveryCheckedPipe implements PipeTransform {
 
 @Pipe({ name: 'showNotification' })
 export class ShowNotificationPipe implements PipeTransform {
-  currentApp = this.appGuard.currentApp;
-  public tables = tables;
-  constructor(private appGuard: AppGuard) { }
+  constructor(@Inject(APP) private app: App) { }
 
   transform(index: number) {
-    return this.tables[index].appAuthorized.includes(this.currentApp);
+    return tables[index].appAuthorized.includes(this.app);
   }
 }

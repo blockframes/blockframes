@@ -1,4 +1,7 @@
 import { filter } from 'rxjs/operators';
+import { emulatorConfig } from '../environment/environment';
+import { production, firebase, firebaseRegion, sentryDsn, intercomId } from '@env';
+import { IntercomModule } from 'ng-intercom';
 
 // Angular
 import { BrowserModule } from '@angular/platform-browser';
@@ -11,7 +14,6 @@ import { IdlePreload, IdlePreloadModule } from 'angular-idle-preload';
 
 // Akita
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
-import { production, firebase, firebaseRegion } from '@env';
 
 // Components
 import { AppComponent } from './app.component';
@@ -26,30 +28,20 @@ import { AngularFireStorageModule } from '@angular/fire/storage';
 import { AngularFireAnalyticsModule, ScreenTrackingService, UserTrackingService } from '@angular/fire/analytics';
 import 'firebase/storage';
 
-// Sentry
-import { SentryModule } from '@blockframes/utils/sentry.module';
-import { sentryDsn } from '@env';
-
-// Yandex Metrika
-import { YandexMetricaService } from '@blockframes/utils/yandex-metrica/yandex-metrica.service';
-
-// Intercom
-import { IntercomModule } from 'ng-intercom';
-import { IntercomService } from '@blockframes/utils/intercom/intercom.service';
-import { intercomId } from '@env';
-
-// Analytics
-import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
-import { ErrorLoggerModule } from '@blockframes/utils/error-logger.module';
-
+// Material
 import { MatNativeDateModule } from '@angular/material/core';
 
+// Blockframes
+import { IntercomService } from '@blockframes/utils/intercom/intercom.service';
+import { SentryModule } from '@blockframes/utils/sentry.module';
+import { YandexMetricaService } from '@blockframes/utils/yandex-metrica/yandex-metrica.service';
+import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
+import { ErrorLoggerModule } from '@blockframes/utils/error-logger.module';
 import { CookieBannerModule } from '@blockframes/utils/gdpr-cookie/cookie-banner/cookie-banner.module';
 import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.service';
 import { getBrowserWithVersion } from '@blockframes/utils/browser/utils';
-
-import { emulatorConfig } from '../environment/environment';
 import { AuthService } from '@blockframes/auth/+state';
+import { APP } from '@blockframes/utils/routes/utils';
 
 @NgModule({
   declarations: [AppComponent],
@@ -99,6 +91,7 @@ import { AuthService } from '@blockframes/auth/+state';
   providers: [
     ScreenTrackingService, UserTrackingService, PerformanceMonitoringService,
     { provide: REGION, useValue: firebaseRegion },
+    { provide: APP, useValue: 'catalog' },
     ...emulatorConfig
   ],
   bootstrap: [AppComponent]

@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Optional, Inject } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { startWith, map, tap, shareReplay } from 'rxjs/operators';
@@ -7,9 +7,9 @@ import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Intercom } from 'ng-intercom';
-import { appName } from '@blockframes/utils/apps';
+import { App } from '@blockframes/utils/apps';
 import { StoreStatus } from '@blockframes/utils/static-model/types';
-import { AppGuard } from '@blockframes/utils/routes/app.guard';
+import { APP } from '@blockframes/utils/routes/utils';
 
 @Component({
   selector: 'festival-dashboard-title-list',
@@ -18,8 +18,6 @@ import { AppGuard } from '@blockframes/utils/routes/app.guard';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListComponent {
-  public app = this.appGuard.currentApp;
-  public appName = appName[this.app];
   filter = new FormControl();
   filter$ = this.filter.valueChanges.pipe(startWith(this.filter.value));
 
@@ -44,8 +42,8 @@ export class ListComponent {
     private router: Router,
     private route: ActivatedRoute,
     private dynTitle: DynamicTitleService,
-    private appGuard: AppGuard,
-    @Optional() private intercom: Intercom
+    @Optional() private intercom: Intercom,
+    @Inject(APP) public app: App
   ) { }
 
   /** Navigate to tunnel if status is draft, else go to page */
