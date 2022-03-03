@@ -10,9 +10,9 @@ interface TitleFeature {
 
 function createTitleFeatureView(movie: Movie): TitleFeature[] {
   const { genres, runningTime, originalLanguages, originCountries } = movie;
-  const isSeriesOrDocumentary = ['series', 'documentary'].includes(movie.contentType)
+  const isTv = movie.contentType === 'tv';
   const convertedGenres = genres.map(genre => staticGenres[genre]);
-  const convertedRunTime = isSeriesOrDocumentary ? [formatRunningTime(runningTime), 'Per Episode'] : formatRunningTime(runningTime);
+  const convertedRunTime = isTv ? [formatRunningTime(runningTime), 'Per Episode'] : formatRunningTime(runningTime);
   const convertedOriginalLanguages = originalLanguages.map(language => languages[language]);
   const convertedOriginCountries = originCountries.map(country => getISO3166TerritoryFromSlug(country)).map(country => country.iso_a2);
   const statusLabel = productionStatus[movie.productionStatus];
