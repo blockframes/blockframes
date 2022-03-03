@@ -42,8 +42,6 @@ import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.se
 import { getBrowserWithVersion } from '@blockframes/utils/browser/utils';
 import { AuthService } from '@blockframes/auth/+state';
 import { APP } from '@blockframes/utils/routes/utils';
-import { FORMS_CONFIG } from '@blockframes/movie/form/movie.shell.interfaces';
-import { MovieShellConfig } from '@blockframes/movie/form/movie.shell.config';
 
 @NgModule({
   declarations: [AppComponent],
