@@ -1871,6 +1871,27 @@
           }
         }
       }
+    },
+    "data-model": {
+      "root": "libs/data-model",
+      "sourceRoot": "libs/data-model/src",
+      "projectType": "library",
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/data-model/**/*.ts"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/data-model"],
+          "options": {
+            "jestConfig": "libs/data-model/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   }
 }

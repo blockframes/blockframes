@@ -125,6 +125,9 @@
     },
     "analytics": {
       "tags": []
+    },
+    "data-model": {
+      "tags": []
     }
   }
 }

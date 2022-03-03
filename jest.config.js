@@ -7,5 +7,6 @@
     '<rootDir>/apps/libs',
     '<rootDir>/libs/testing/cypress',
     '<rootDir>/libs/testing/e2e',
+    '<rootDir>/libs/data-model',
   ],
 };
