@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { AngularFireAnalytics } from '@angular/fire/analytics';
 import { ActiveState, EntityState } from '@datorama/akita';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
@@ -9,9 +9,10 @@ import { createTitleMeta } from './analytics.model';
 import { AuthService } from '@blockframes/auth/+state';
 import { createMovie } from '@blockframes/movie/+state';
 import { createDocumentMeta } from '@blockframes/utils/models-meta';
-import { AppGuard } from '@blockframes/utils/routes/app.guard';
+import { APP } from '@blockframes/utils/routes/utils';
 import { formatDocumentMetaFromFirestore } from '@blockframes/utils/models-meta';
 import { startOfDay } from 'date-fns';
+import { App } from '@blockframes/utils/apps';
 
 interface AnalyticsState extends EntityState<Analytics>, ActiveState<string> {};
 
@@ -23,7 +24,7 @@ export class AnalyticsService extends CollectionService<AnalyticsState> {
   constructor(
     private analytics: AngularFireAnalytics,
     private authService: AuthService,
-    private appGuard: AppGuard
+    @Inject(APP) private app: App
   ) {
     super();
   }
@@ -40,7 +41,7 @@ export class AnalyticsService extends CollectionService<AnalyticsState> {
     return {
       ...analytic,
       _meta: createDocumentMeta({
-        createdFrom: this.appGuard.currentApp,
+        createdFrom: this.app,
         createdBy: profile.uid
       })
     }
