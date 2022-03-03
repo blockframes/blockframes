@@ -93,6 +93,7 @@ export class AnalyticsService extends CollectionService<AnalyticsState> {
         .where('meta.titleId', '==', id)
         .where('name', '==', 'pageView')
       );
+      // only one pageView event per day per title per user is recorded.
       if (analytics.some(analytic => analytic._meta.createdAt > start)) return;
 
       // TODO #7273 use MovieService instead once Akita has been replaced by ng-fire (currently using MovieService results in error) 

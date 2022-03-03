@@ -4,7 +4,7 @@ import { OrganizationService } from '@blockframes/organization/+state/organizati
 import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
 import { mainRoute, additionalRoute, artisticRoute, productionRoute } from '@blockframes/movie/marketplace';
 import { EventService } from '@blockframes/event/+state';
-import { distinctUntilChanged, map, pluck, switchMap, tap } from 'rxjs/operators';
+import { map, pluck, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { RequestAskingPriceComponent } from '@blockframes/movie/components/request-asking-price/request-asking-price.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MovieService } from '@blockframes/movie/+state';
@@ -20,9 +20,9 @@ import { AnalyticsService } from '@blockframes/analytics/+state/analytics.servic
 export class MarketplaceMovieViewComponent  {
   public movie$ = this.route.params.pipe(
     pluck('movieId'),
-    distinctUntilChanged(),
     tap((movieId: string) => this.analytics.addPageView('title', movieId)),
-    switchMap((movieId: string) => this.movieService.getValue(movieId))
+    switchMap((movieId: string) => this.movieService.getValue(movieId)),
+    shareReplay({ refCount: true, bufferSize: 1 })
   );
 
   public orgs$ = this.movie$.pipe(
