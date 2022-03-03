@@ -50,12 +50,12 @@ export class CatalogLandingComponent {
     {
       title: 'More deals, less efforts',
       description: `Get assistance from content import \nto deal finalization. Never lose the \nhuman touch.`,
-      imgAsset: 'content_seller_benef1.svg'
+      imgAsset: 'content_seller_benefit1.svg'
     },
     {
       title: 'Over 1500 international buyers',
       description: 'Expand your catalog\'s potential by reaching \nout to a large community of buyers, even in \nhard-to-reach territories.',
-      imgAsset: 'content_seller_benef2.svg'
+      imgAsset: 'content_seller_benefit2.svg'
     }
   ];
 
@@ -81,12 +81,12 @@ export class CatalogLandingComponent {
     {
       title: 'Save time, get results',
       description: 'Always receive a timely reply to your \nenquiries and offers. Guaranteed by \nour professional team.',
-      imgAsset: 'content_buyer_benef1.svg'
+      imgAsset: 'content_buyer_benefit1.svg'
     },
     {
       title: 'Curated content just for you',
       description: 'Find the content you’re looking for, and only \nreceive carefully curated content, hand-\npicked according to your needs.',
-      imgAsset: 'content_buyer_benef2.png'
+      imgAsset: 'content_buyer_benefit2.png'
     }
   ];
 
