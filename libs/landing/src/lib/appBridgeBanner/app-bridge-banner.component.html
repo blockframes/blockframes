@@ -1,18 +1,14 @@
 <h2>Welcome to the Archipel Ecosystem</h2>
 <p class="mat-subheading">The online playground for global sellers and buyers</p>
-<div class="button-container" fxLayoutAlign="center" fxLayoutGap="32px">
-  <button mat-ripple fxLayout fxLayoutGap="16px" (click)="scrollToHeader()">
-    <mat-icon svgIcon={{buttonsData[currentApp].logo}}></mat-icon>
-    <div fxLayout="column" fxLayoutAlign="center start">
-      <p class="mat-body-1">{{buttonsData[currentApp].name}}</p>
-      <p class="mat-caption">{{buttonsData[currentApp].subtitle}}</p>
-    </div> 
+<section fxLayoutAlign="center" fxLayoutGap="32px">
+  <button mat-ripple (click)="scrollToHeader()">
+    <mat-icon [svgIcon]=buttonsData[currentApp].logo></mat-icon>
+    <h6>{{buttonsData[currentApp].name}}</h6>
+    <p class="mat-caption">{{buttonsData[currentApp].subtitle}}</p>
   </button>
-  <a mat-ripple fxLayout fxLayoutGap="16px" href={{buttonsData[bridgeApp].link}}>
-    <mat-icon svgIcon={{buttonsData[bridgeApp].logo}}></mat-icon>
-    <div fxLayout="column" fxLayoutAlign="center start">
-      <p class="mat-body-2">{{buttonsData[bridgeApp].name}}</p>
-      <p class="mat-caption">{{buttonsData[bridgeApp].subtitle}}</p>
-    </div>
+  <a mat-ripple [href]="buttonsData[bridgeApp].link">
+    <mat-icon [svgIcon]="buttonsData[bridgeApp].logo"></mat-icon>
+    <h6>{{buttonsData[bridgeApp].name}}</h6>
+    <p class="mat-caption">{{buttonsData[bridgeApp].subtitle}}</p>
   </a>
-</div>
+</section>
