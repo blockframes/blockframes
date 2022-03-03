@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { AppGuard } from './app.guard';
-import { Module } from '../apps';
+import { App, Module } from '../apps';
+import { APP } from './utils';
 
 function currentModule(path: string): Module {
   const fragments = path.split('/');
@@ -19,11 +19,11 @@ export class ModuleGuard implements CanActivate {
     private router: Router,
     private orgService: OrganizationService,
     private snackBar: MatSnackBar,
-    private appGuard: AppGuard
+    @Inject(APP) private app: App
   ) { }
 
   canActivate(_: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    const app = this.appGuard.currentApp;
+    const app = this.app;
     this.currentModule = currentModule(state.url);
     const org = this.orgService.org;
     if (this.currentModule === 'marketplace') {

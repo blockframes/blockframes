@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ContentChild, Directive, HostBinding, Input, OnDestroy, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ContentChild, Directive, HostBinding, Input, OnDestroy, ViewEncapsulation, ChangeDetectorRef, Inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { createDemoRequestInformations, RequestDemoInformations } from '@blockframes/utils/request-demo';
 import { MatSnackBar } from '@angular/material/snack-bar'
@@ -7,7 +7,8 @@ import { RequestDemoRole } from '@blockframes/utils/request-demo';
 import { ThemeService } from '@blockframes/ui/theme';
 import { testEmail } from "@blockframes/e2e/utils/env";
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
-import { AppGuard } from '@blockframes/utils/routes/app.guard';
+import { APP } from '@blockframes/utils/routes/utils';
+import { App } from '@blockframes/utils/apps';
 
 @Directive({
   selector: 'landing-header, [landingHeader]',
@@ -49,7 +50,6 @@ export class LandingFooterComponent { }
 export class LandingShellComponent implements OnDestroy {
   public submitted = false;
   public newslettersSubmitted = false;
-  public app = this.appGuard.currentApp;
   public buttonText = 'Submit Demo Request';
 
   @Input() roles: RequestDemoRole[] = [
@@ -79,10 +79,10 @@ export class LandingShellComponent implements OnDestroy {
 
   constructor(
     private snackBar: MatSnackBar,
-    private appGuard: AppGuard,
     private functions: AngularFireFunctions,
     private theme: ThemeService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    @Inject(APP) private app: App
   ) {
     theme.setTheme('light');
   }

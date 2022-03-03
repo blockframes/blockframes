@@ -48,7 +48,7 @@
       <h2>Application Access</h2>
       <form [formGroup]="movieAppConfigForm" fxLayout="column">
         <fieldset *ngFor="let app of apps" fxFlex>
-          <legend>{{ appName[app] }}</legend>
+          <legend>{{ app | appName }}</legend>
           <div [formGroupName]="app" fxLayoutAlign="start center" fxLayoutGap="16px">
             <mat-form-field appearance="outline">
               <mat-label>Status</mat-label>

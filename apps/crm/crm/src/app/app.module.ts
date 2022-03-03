@@ -1,3 +1,7 @@
+import { emulatorConfig } from '../environment/environment';
+import { firebase, firebaseRegion, intercomId, sentryDsn } from '@env';
+import { IntercomModule } from 'ng-intercom';
+
 // Angular
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -8,7 +12,6 @@ import { OverlayModule } from '@angular/cdk/overlay';
 
 // Akita
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
-import { firebase, firebaseRegion, intercomId } from '@env';
 
 // Components
 import { AppComponent } from './app.component';
@@ -23,18 +26,14 @@ import { AngularFireStorageModule } from '@angular/fire/storage';
 import { AngularFireAnalyticsModule, ScreenTrackingService, UserTrackingService } from '@angular/fire/analytics';
 import 'firebase/storage';
 
-// Sentry
+// Material
+import { MatNativeDateModule } from '@angular/material/core';
+
+// Blockframes
 import { SentryModule } from '@blockframes/utils/sentry.module';
-import { sentryDsn } from '@env';
-
-// Intercom
-import { IntercomModule } from 'ng-intercom';
-
 import { ErrorLoggerModule } from '@blockframes/utils/error-logger.module';
 import { CrmModule } from './crm.module';
-
-import { MatNativeDateModule } from '@angular/material/core';
-import { emulatorConfig } from '../environment/environment';
+import { APP } from '@blockframes/utils/routes/utils';
 
 @NgModule({
   declarations: [AppComponent],
@@ -73,6 +72,7 @@ import { emulatorConfig } from '../environment/environment';
   providers: [
     ScreenTrackingService, UserTrackingService,
     { provide: REGION, useValue: firebaseRegion },
+    { provide: APP, useValue: 'crm' },
     ...emulatorConfig
   ],
   bootstrap: [AppComponent]

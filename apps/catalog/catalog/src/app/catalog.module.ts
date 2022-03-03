@@ -7,7 +7,6 @@ import { ModuleGuard } from '@blockframes/utils/routes/module.guard';
 import { NoAuthGuard } from '@blockframes/auth/guard/no-auth.guard';
 
 const routes: Routes = createRoutes({
-  appName: 'catalog',
   landing: {
     path: '',
     canActivate: [NoAuthGuard],
