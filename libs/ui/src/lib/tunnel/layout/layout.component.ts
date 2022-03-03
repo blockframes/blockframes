@@ -175,8 +175,11 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
         }
       }
     }
-    const keys = Object.keys(this.configs);
-    await Promise.all(keys.map(key => this.configs[key].onSave(options)));
+
+    const promises = [];
+    promises.push(this.configs.movie.onSave(options));
+    if (this.configs.campaign) { promises.push(this.configs.campaign.onSave()) }
+    await Promise.all(promises);
   }
 
   animationOutlet(outlet: RouterOutlet) {
