@@ -203,7 +203,12 @@ function isAvailInTerm<T extends BucketTerm | Term>(avail: MapAvailsFilter, term
 }
 
 function getMatchingMapMandates(mandates: FullMandate[], avails: MapAvailsFilter): FullMandate[] {
-  return mandates.filter(mandate => mandate.terms.some(term => isMapTermInAvails(term, avails)));
+  return mandates
+    .map(({ terms, ...rest }) => ({
+      terms: terms.filter(term => isMapTermInAvails(term, avails)),
+      ...rest
+    }))
+    .filter(mandate => mandate.terms.length);
 }
 
 function getMatchingMapSales(sales: FullSale[], avails: MapAvailsFilter) {
@@ -375,12 +380,30 @@ function isCalendarTermInAvails<T extends BucketTerm | Term>(term: T, avails: Ca
   const exclusivityCheck = exclusivityAllOf(avails.exclusive).in(term.exclusive);
   const mediaCheck = allOf(avails.medias).in(term.medias);
   const territoriesCheck = allOf(avails.territories).in(term.territories);
-
+  console.log({ exclusivityCheck, mediaCheck, territoriesCheck, term, avails })
   return exclusivityCheck && mediaCheck && territoriesCheck;
 }
 
+function checkTerritoryMediaMatches(terms: Term<Date>[], { territories, medias, ...rest }: CalendarAvailsFilter) {
+  const _terms: Term<Date>[] = [];
+  territories.forEach(
+    territory => {
+      const found = terms.find(term => isCalendarTermInAvails(term, { ...rest, medias, territories: [territory] }))
+      _terms.push(found)
+    }
+  );
+  if (_terms.length === territories.length)
+    return _terms;
+}
+
 function getMatchingCalendarMandates(mandates: FullMandate[], avails: CalendarAvailsFilter): FullMandate[] {
-  return mandates.filter(mandate => mandate.terms.some(term => isCalendarTermInAvails(term, avails)));
+  console.log('here')
+  return mandates
+    .map(({ terms, ...rest }) => ({
+      ...rest,
+      terms: checkTerritoryMediaMatches(terms, avails)
+    }))
+    .filter(mandate => mandate.terms.length);
 }
 
 function getMatchingCalendarSales<T extends (FullSale | BucketContract)>(sales: T[], avails: CalendarAvailsFilter): T[] {
@@ -416,6 +439,7 @@ export function durationAvailabilities(
   assertValidTitle(mandates, sales, bucketContracts);
 
   const availableMandates = getMatchingCalendarMandates(mandates, avails);
+  console.log({ availableMandates })
   const available = availableMandates.map(m =>
     m.terms.map((t): DurationMarker =>
       ({ from: t.duration.from, to: t.duration.to, contract: m, term: t })
