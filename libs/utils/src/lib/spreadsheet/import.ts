@@ -263,7 +263,7 @@ export function getGroupedList<GS extends GroupScope>(value: string, groupScope:
   const allElements = elements.map(element => {
     return groupLabels.includes(element)
       ? (staticGroups[groupScope] as StaticGroup<GS>[]).find(group => group.label === element).items
-      : element
+      : element;
   }).flat();
 
   const elementList = Array.from(new Set(allElements)).join(separator);
