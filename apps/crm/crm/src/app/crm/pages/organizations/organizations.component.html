@@ -36,7 +36,7 @@
     <ng-template colRef="appAccess" label="App Access" let-appAccess>
       <ul>
         <ng-container *ngFor="let a of app">
-          <li>{{ a | appName:true }} : {{ appAccess[a]?.dashboard ? 'yes': 'no' }} : {{ appAccess[a]?.marketplace ? 'yes': 'no' }} </li>
+          <li>{{ a | appName:'short' }} : {{ appAccess[a]?.dashboard ? 'yes': 'no' }} : {{ appAccess[a]?.marketplace ? 'yes': 'no' }} </li>
         </ng-container>
       </ul>
     </ng-template>

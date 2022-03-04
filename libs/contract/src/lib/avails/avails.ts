@@ -204,10 +204,17 @@ function isAvailInTerm<T extends BucketTerm | Term>(avail: MapAvailsFilter, term
 
 function getMatchingMapMandates(mandates: FullMandate[], avails: MapAvailsFilter): FullMandate[] {
   return mandates
+<<<<<<< HEAD
     .map(({ terms, ...rest }) => ({
       terms: terms.filter(term => isMapTermInAvails(term, avails)),
       ...rest
     }))
+=======
+    .map(({terms, ...rest}) => ({
+      terms: terms.filter(term => isMapTermInAvails(term, avails)), 
+      ...rest
+    })) 
+>>>>>>> develop
     .filter(mandate => mandate.terms.length);
 }
 

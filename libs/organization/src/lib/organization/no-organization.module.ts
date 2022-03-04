@@ -8,7 +8,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { OrganizationFormModule } from './forms/organization-form/organization-form.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module';
-import { WorkspacePipeModule } from '@blockframes/utils/pipes';
+import { AppPipeModule, WorkspacePipeModule } from '@blockframes/utils/pipes';
 import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
 import { AuthDataValidationModule } from '@blockframes/auth/components/data-validation/data-validation.module';
 
@@ -65,6 +65,7 @@ export const noOrganizationRoutes: Routes = [
     WorkspacePipeModule,
     AppLogoModule,
     AuthDataValidationModule,
+    AppPipeModule,
 
     // Material
     MatFormFieldModule,

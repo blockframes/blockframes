@@ -1,14 +1,14 @@
-import { Component, ChangeDetectionStrategy, OnInit, Input, Optional } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, Input, Optional, Inject } from '@angular/core';
 import { AuthService } from '@blockframes/auth/+state';
 import { Organization } from '@blockframes/organization/+state';
-import { appName, getOrgModuleAccess } from '@blockframes/utils/apps';
+import { App, getOrgModuleAccess } from '@blockframes/utils/apps';
 import { Observable } from 'rxjs';
 import { Intercom } from 'ng-intercom';
 import { hasDenomination, hasDisplayName } from '@blockframes/utils/helpers';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { map } from 'rxjs/operators';
-import { AppGuard } from '@blockframes/utils/routes/app.guard';
+import { APP } from '@blockframes/utils/routes/utils';
 
 @Component({
   selector: 'auth-data-validation',
@@ -24,21 +24,20 @@ export class AuthDataValidationComponent implements OnInit {
     const orgHaveAccesToAtLeastOneModule = !!getOrgModuleAccess(org, this.app).length;
     this.orgApproval = isOrgAccepted && orgHaveAccesToAtLeastOneModule && isUserInOrg;
   };
-  private app = this.appGuard.currentApp;
-  public appName = appName[this.app];
+
   public profileData = false;
   public orgData = false;
   public emailValidate$: Observable<boolean>;
   public orgApproval = false;
-
   public user = this.authService.profile;
 
   constructor(
     private authService: AuthService,
-    private appGuard: AppGuard,
     private functions: AngularFireFunctions,
     private snackbar: MatSnackBar,
-    @Optional() private intercom: Intercom) { }
+    @Optional() private intercom: Intercom,
+    @Inject(APP) public app: App,
+  ) { }
 
   ngOnInit() {
     // Filled checkbox

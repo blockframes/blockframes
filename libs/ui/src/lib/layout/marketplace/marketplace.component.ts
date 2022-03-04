@@ -1,5 +1,5 @@
 // Angular
-import { Component, ChangeDetectionStrategy, OnInit, ViewChild } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, ViewChild, Inject } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { MatSidenav } from '@angular/material/sidenav';
 import { CdkScrollable } from '@angular/cdk/overlay';
@@ -16,7 +16,7 @@ import { OrganizationService } from '@blockframes/organization/+state';
 import { MovieService, Movie } from '@blockframes/movie/+state'
 import { App } from '@blockframes/utils/apps';
 import { AuthService } from '@blockframes/auth/+state';
-import { AppGuard } from '@blockframes/utils/routes/app.guard';
+import { APP } from '@blockframes/utils/routes/utils';
 
 @Component({
   selector: 'layout-marketplace',
@@ -43,14 +43,14 @@ export class MarketplaceComponent implements OnInit {
     private authService: AuthService,
     private movieService: MovieService,
     private router: Router,
-    private appGuard: AppGuard,
+    @Inject(APP) private app: App
   ) { }
 
   ngOnInit() {
     this.wishlistCount$ = this.orgService.currentOrg$.pipe(
       map(org => org?.wishlist || []),
       switchMap(movieIds => this.movieService.getValue(movieIds)),
-      map((movies: Movie[]) => movies.filter(filterMovieByAppAccess(this.appGuard.currentApp)).length)
+      map((movies: Movie[]) => movies.filter(filterMovieByAppAccess(this.app)).length)
     );
   }
 
