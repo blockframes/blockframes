@@ -43,7 +43,7 @@ describe('Signup', () => {
       //.then(mail => deleteEmail(mail.id))
     interceptEmail({subject: `Archipel Market - ${user.company.name} was created and needs a review`})
       .then(mail => deleteEmail(mail.id));
-    interceptEmail({body: `${user.firstName} ${user.lastName}`})
+    interceptEmail({body: `${user.firstName}`})
       .then(mail => deleteEmail(mail.id))
     cy.log('all mails received');
     assertUrl('c/organization/create-congratulations');
@@ -57,7 +57,9 @@ describe('Signup', () => {
     cy.task('validateUser', user.email)
       .then(async (x) => {
         console.log(x)
-        login(user.email, user.password)
+        get('email-ok').should('exist');
+        get('refresh').click();
+        get('skip-preferences').click();
       })
     
   });
