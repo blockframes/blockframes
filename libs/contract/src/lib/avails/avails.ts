@@ -386,7 +386,7 @@ function isCalendarTermInAvails<T extends BucketTerm | Term>(term: T, avails: Ca
 
 function getMatchingCalendarMandates(mandates: FullMandate[], avails: CalendarAvailsFilter): FullMandate[] {
   const availableMandates: FullMandate[] = [];
-  const foundTerritory: Territory[] = [];
+  const foundTerritories: Territory[] = [];
   avails.territories.forEach(territory => {
     const foundMandate = mandates.find(
       mandate => mandate.terms.some(
@@ -397,11 +397,11 @@ function getMatchingCalendarMandates(mandates: FullMandate[], avails: CalendarAv
       const duplicate = availableMandates.find(m => m.id === foundMandate.id)
       if (!duplicate)
         availableMandates.push(foundMandate)
-      foundTerritory.push(territory)
+      foundTerritories.push(territory)
     }
   })
 
-  if (foundTerritory.length === avails.territories.length) return availableMandates;
+  if (foundTerritories.length === avails.territories.length) return availableMandates;
   return [];
 }
 
