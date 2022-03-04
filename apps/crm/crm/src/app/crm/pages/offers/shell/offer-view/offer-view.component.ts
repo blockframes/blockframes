@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { OfferShellComponent } from '../shell.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
@@ -21,7 +21,6 @@ import { NegotiationService } from '@blockframes/contract/negotiation/+state/neg
 export class OfferViewComponent implements OnDestroy, OnInit {
 
   public offer$ = this.shell.offer$;
-  public loading$ = new BehaviorSubject<boolean>(false);
   public offerStatus = Object.keys(staticModel['offerStatus']);
   public form = new FormGroup({
     status: new FormControl('pending'),
