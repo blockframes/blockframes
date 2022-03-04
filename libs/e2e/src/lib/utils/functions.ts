@@ -1,5 +1,5 @@
 ﻿// import { AuthLoginPage } from "../pages/auth";
-import { User, InterceptOptions } from "./type";
+import { User, InterceptOption } from "./type";
 import { SEC } from './env';
 import { auth } from '@blockframes/testing/e2e';
 import { serverId } from '@blockframes/e2e/utils';
@@ -214,39 +214,11 @@ export function assertUrlIncludes(partialUrl: string) {
   cy.url().should('include', partialUrl)
 }
 
-// below function accepts only one argument, choose depending your need
-export function interceptMail(option: InterceptOptions) {
+export function interceptEmail(option: InterceptOption) {
+  const now = new Date();
+  return cy.mailosaurGetMessage(serverId, option, {receivedAfter: now})
+}
 
-  let timeout = 0;
-  const Authorization = `Basic ${btoa(Cypress.env().MAILOSAUR_API_KEY)}`;
-
-  return new Promise((resolve, reject) => {
-
-    if (!option.recipient && !option.partialSubject && !option.partialBody)
-      return reject('No option provided to interceptMail() function');
-
-    if (Object.entries(option).length !== 1)
-      return reject('Only one option is to be provided to interceptMail() function');
-
-    const getEmails = async () => {
-      timeout += 1000;
-      if (timeout > 5000) reject('No mail after 15 seconds');
-      const response = await fetch(`https://mailosaur.com/api/messages?server=${serverId}`, { headers: { Authorization } });
-      const result = await response.text();
-      const mails = JSON.parse(result).items;
-      if (mails.length === 0) return setTimeout(getEmails, timeout);
-      for (let i = 0; i < mails.length; i++) {
-        if (
-          mails[i].to[0].email === option.recipient ||
-          mails[i].subject.includes(option.partialSubject) ||
-          mails[i].summary.includes(option.partialBody)
-        ) {
-          return resolve(mails[i]);
-        }
-        if (i === mails.length - 1) return setTimeout(getEmails, timeout);
-      }
-    };
-
-    getEmails();
-  });
+export function deleteEmail(id: string) {
+  return cy.mailosaurDeleteMessage(id)
 }

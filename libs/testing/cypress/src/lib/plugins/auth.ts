@@ -31,3 +31,19 @@ export async function createUserToken(uid: string) {
   };
   return await auth.createCustomToken(uid, tokenPayLoad);
 }
+
+export async function validateOrg(orgName: string) {
+  const userQuery = await db.collection('orgs').where('denomination.full', '==', orgName).get()
+  const org = userQuery.docs as unknown;
+  const orgId = org[0]._fieldsProto.id.stringValue
+  const docRef = db.collection('orgs').doc(orgId)
+  return docRef.update({ status: 'accepted' })
+}
+
+export async function validateUser(email: string) {
+  const user = await auth.getUserByEmail(email)
+  const docRef = db.collection('users').doc(user.uid)
+  await docRef.update({'_meta.emailVerified': true})
+  await auth.updateUser(user.uid, {emailVerified: true})
+  return 'reload ok'
+}

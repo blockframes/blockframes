@@ -1,8 +1,13 @@
 /// <reference types="cypress" />
 
-import { get, getInList, check, assertUrl, interceptMail } from '@blockframes/e2e/utils';
+import { get, getInList, check, assertUrl, interceptEmail, deleteEmail, assertUrlIncludes } from '@blockframes/e2e/utils';
 import { newUserWithNewOrg } from '@blockframes/e2e/fixtures/login';
-import { serverId } from '@blockframes/e2e/utils';
+import { login } from 'libs/e2e/src/lib/utils/commands'
+import { firebase as config} from '@env'
+import firebase from 'firebase/app'
+import 'firebase/auth'
+import 'firebase/firestore';
+
 
 describe('Signup', () => {
 
@@ -12,7 +17,6 @@ describe('Signup', () => {
     cy.clearCookies();
     cy.clearLocalStorage();
     indexedDB.deleteDatabase('firebaseLocalStorageDb');
-    cy.mailosaurDeleteAllMessages(serverId);
     cy.visit('auth/identity');
   });
 
@@ -34,20 +38,28 @@ describe('Signup', () => {
     get('password-confirm').type(user.password);
     check('terms');
     check('gdpr');
-    get('submit').click()
-      .then(() => interceptMail({ recipient: user.email }).then((res) => console.log('userVerifMail :', res)))
-      .then(() => interceptMail({ partialSubject: user.company.name }).then((res) => console.log('orgVerifMail :', res)))
-      // below intercept is not useful here, but is kept to serve as an example
-      .then(() => interceptMail({ partialBody: `${user.firstName} ${user.lastName}` }).then((res) => console.log('supportMail :', res))
-      )
-      .then(() => console.log('all mails arrived'));
-    cy.log('all mails ok');
+    get('submit').click();
+    interceptEmail({sentTo: user.email})
+      //.then(mail => deleteEmail(mail.id))
+    interceptEmail({subject: `Archipel Market - ${user.company.name} was created and needs a review`})
+      .then(mail => deleteEmail(mail.id));
+    interceptEmail({body: `${user.firstName} ${user.lastName}`})
+      .then(mail => deleteEmail(mail.id))
+    cy.log('all mails received');
     assertUrl('c/organization/create-congratulations');
     get('profile-data-ok').should('exist');
     get('org-data-ok').should('exist');
     get('email-pending').should('exist');
     get('org-approval-pending').should('exist');
     cy.log('waiting for user confirmation and organisation approval');
+    cy.task('validateOrg', user.company.name)
+      .then(x => console.log(x))
+    cy.task('validateUser', user.email)
+      .then(async (x) => {
+        console.log(x)
+        login(user.email, user.password)
+      })
+    
   });
 
   //TODO : code other possibilities - issue #7751

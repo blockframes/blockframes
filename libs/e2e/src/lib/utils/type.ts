@@ -68,8 +68,8 @@ export interface Currency {
   value: string
 }
 
-export interface InterceptOptions {
-  recipient?: string;
-  partialSubject?: string;
-  partialBody?: string;
+export interface InterceptOption {
+  sentTo?: string;
+  subject?: string;
+  body?: string;
 }

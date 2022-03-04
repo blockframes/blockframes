@@ -7,9 +7,10 @@ import { firebase as firebaseConfig } from '@env';
 // Only code required for custom commands go in here.
 
 //Init the app
-const app = firebase.initializeApp(firebaseConfig('catalog'));
+const app = firebase.initializeApp(firebaseConfig());
 
 export const login = (email: string, password: string) => {
+  app.auth().useEmulator('http://localhost:9099')
   return app.auth().signInWithEmailAndPassword(email, password);
 }
 

@@ -2,14 +2,12 @@
 
 import {
   clearDataAndPrepareTest,
-  serverId,
   testEmail,
-  SEC,
   get,
   getInList,
   check,
-  assertUrl,
-  interceptMail,
+  interceptEmail,
+  deleteEmail,
   createEmail,
   createOrgName
 } from '@blockframes/e2e/utils';
@@ -24,18 +22,10 @@ const user = {
   phone: '123456789'
 }
 
-//Test if email is sent correctly.
-const SUBJECT_DEMO = 'A demo has been requested';
-
 describe('Demo Request Email', () => {
 
   beforeEach(() => {
     clearDataAndPrepareTest('/');
-    //TODO : Clearing message to be changed for a retrieval from a starting time
-    //Clear all messages on server before the test
-    cy.mailosaurDeleteAllMessages(serverId).then(() => {
-      cy.log('Inbox empty. Ready to roll..');
-    });
   });
 
   it('Request demo email', () => {
@@ -50,24 +40,7 @@ describe('Demo Request Email', () => {
     cy.get('@phoneInputs').last().type(user.phone);
     check('checkbox-newsletters');
     get('submit-demo-request').click()
-
-    //TODO : old code below, to be updated
-
-    cy.wait(15 * SEC);
-
-    //Test for arrival of email..
-    cy.mailosaurGetMessage(
-      serverId,
-      {
-        sentTo: testEmail,
-      },
-      {
-        timeout: 20 * SEC,
-      }
-    ).then((email) => {
-      expect(email.subject).to.equal(SUBJECT_DEMO);
-      cy.log(email.text.body);
-      cy.mailosaurDeleteMessage(email.id);
-    });
+    interceptEmail({ sentTo: testEmail })
+      .then((mail) => deleteEmail(mail.id));
   });
 });
