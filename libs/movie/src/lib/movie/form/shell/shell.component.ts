@@ -1,8 +1,7 @@
 // Angular
 import { Component, ChangeDetectionStrategy, OnInit, Inject, OnDestroy, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { ActivatedRoute, Data } from '@angular/router';
 
 // Blockframes
 import { TunnelRoot, TunnelStep, TunnelLayoutComponent } from '@blockframes/ui/tunnel';
@@ -12,7 +11,7 @@ import { isChrome } from '@blockframes/utils/browser/utils';
 
 // RxJs
 import { map, pluck, startWith, tap } from 'rxjs/operators';
-import { Observable, Subscription } from 'rxjs';
+import { combineLatest, Observable, Subscription } from 'rxjs';
 
 function isStatus(prodStatus: ProductionStatus, acceptableStatus: ProductionStatus[]) {
   return acceptableStatus.includes(prodStatus)
@@ -120,7 +119,6 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, OnDestroy {
   constructor(
     @Inject(DOCUMENT) private doc: Document,
     @Inject(FORMS_CONFIG) private configs: ShellConfig,
-    private routerQuery: RouterQuery,
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef
   ) { }
@@ -131,13 +129,16 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, OnDestroy {
     this.cdr.markForCheck();
 
     const productionStatusControl = this.getForm('movie').productionStatus;
-    this.steps$ = productionStatusControl.valueChanges.pipe(
+    const productionStatus$ = productionStatusControl.valueChanges.pipe(
       startWith(productionStatusControl.value),
-      tap((productionStatus: ProductionStatus) => this.configs.movie.fillHiddenMovieInputs(productionStatus)),
-      map((productionStatus: ProductionStatus) => getSteps(productionStatus, this.routerQuery.getData<TunnelStep[]>('appSteps'))),
+      tap((productionStatus: ProductionStatus) => this.configs.movie.fillHiddenMovieInputs(productionStatus))
     );
 
-    this.sub = this.routerQuery.selectFragment().subscribe(async (fragment: string) => {
+    this.steps$ = combineLatest([productionStatus$, this.route.data]).pipe(
+      map(([productionStatus, data]: [ProductionStatus, Data]) => getSteps(productionStatus, data.appSteps))
+    );
+
+    this.sub = this.route.fragment.subscribe(async (fragment: string) => {
       const el: HTMLElement = await this.checkIfElementIsReady(fragment);
 
       el?.scrollIntoView({

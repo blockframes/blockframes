@@ -6,7 +6,6 @@ import { FormControl } from '@angular/forms';
 import { MatSidenav } from '@angular/material/sidenav';
 
 // Blockframes
-import { SearchResult } from '@blockframes/ui/search-widget/search-widget.component';
 import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { NotificationService } from '@blockframes/notification/+state';
@@ -16,6 +15,14 @@ import { APP } from '@blockframes/utils/routes/utils';
 // RxJs
 import { Observable, Subscription } from 'rxjs';
 import { filter, map, shareReplay } from 'rxjs/operators';
+
+interface SearchResult {
+  title: string;
+  icon: string;
+  /** path between current route and item */
+  path: string;
+  items: Record<string, string>[];
+}
 
 interface AppBridge {
   text: string;
