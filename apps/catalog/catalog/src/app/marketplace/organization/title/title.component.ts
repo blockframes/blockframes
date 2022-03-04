@@ -1,7 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { ViewComponent } from '../view/view.component';
-import { MovieService, Movie } from '@blockframes/movie/+state';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { Movie } from '@blockframes/data-model';
 import { scaleIn } from '@blockframes/utils/animations/fade';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Observable } from 'rxjs';

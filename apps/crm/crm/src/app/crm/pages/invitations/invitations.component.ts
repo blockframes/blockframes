@@ -5,7 +5,8 @@ import { EventService, Event, isScreening } from '@blockframes/event/+state/';
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { getHost } from '@blockframes/invitation/pipes/host.pipe';
 import { getGuest } from '@blockframes/invitation/pipes/guest.pipe';
-import { MovieService, Movie } from '@blockframes/movie/+state';
+import { Movie } from '@blockframes/data-model';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 
 
 @Component({
@@ -35,7 +36,7 @@ export class InvitationsComponent implements OnInit {
       this.invitationService.getValue(ref => ref.where('type', '==', 'attendEvent')),
       this.eventService.getValue()
     ])
-    
+
     const orgIds = Array.from(new Set([
       ...invitations.map(invitation => getHost(invitation, 'org').id),
       ...invitations.map(invitation => getGuest(invitation, 'user').orgId).filter(id => !!id)

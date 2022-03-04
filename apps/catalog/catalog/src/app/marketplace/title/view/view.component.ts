@@ -3,7 +3,7 @@ import { mainRoute, additionalRoute, artisticRoute, productionRoute } from '@blo
 import { OrganizationService } from '@blockframes/organization/+state';
 import { ActivatedRoute } from '@angular/router';
 import { Intercom } from 'ng-intercom';
-import { MovieService } from '@blockframes/movie/+state';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { pluck, switchMap } from 'rxjs/operators';
 
 @Component({

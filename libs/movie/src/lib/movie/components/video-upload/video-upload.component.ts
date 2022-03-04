@@ -1,7 +1,8 @@
 import { Component, ChangeDetectionStrategy, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Privacy } from '@blockframes/utils/file-sanitizer';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Movie, MovieService } from '@blockframes/movie/+state';
+import { Movie } from '@blockframes/data-model';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { hostedVideoTypes } from '@blockframes/utils/static-model';
 import { MovieVideosForm } from '@blockframes/movie/form/movie.form';
 import { MovieVideos } from '@blockframes/data-model';

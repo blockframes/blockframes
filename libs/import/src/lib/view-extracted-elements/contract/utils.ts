@@ -17,7 +17,7 @@ import {
   sheetHeaderLine,
 } from '@blockframes/import/utils';
 import { centralOrgId } from '@env';
-import { MovieService } from '@blockframes/movie/+state';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { User, UserService } from '@blockframes/user/+state';
 import { OrganizationService } from '@blockframes/organization/+state';

@@ -2,7 +2,8 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@
 import { ActivatedRoute } from '@angular/router';
 import { EventService } from '@blockframes/event/+state/event.service';
 import { Event, isScreening } from '@blockframes/event/+state/event.model';
-import { MovieService, Movie } from '@blockframes/movie/+state';
+import { Movie } from '@blockframes/data-model';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
 import { InvitationDetailed, InvitationService } from '@blockframes/invitation/+state';

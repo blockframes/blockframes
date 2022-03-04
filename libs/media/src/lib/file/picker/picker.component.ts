@@ -1,7 +1,8 @@
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, Inject, OnDestroy, OnInit } from '@angular/core';
 
-import { fromOrg, Movie, MovieService } from '@blockframes/movie/+state';
+import { fromOrg, MovieService } from '@blockframes/movie/+state/movie.service';
+import { Movie } from '@blockframes/data-model';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { recursivelyListFiles } from '../../+state/media.model';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';

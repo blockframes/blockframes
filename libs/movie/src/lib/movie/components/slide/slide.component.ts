@@ -2,8 +2,7 @@
 import { Component, ChangeDetectionStrategy, Input, Directive, HostBinding } from '@angular/core';
 
 // Blockframes
-import { Movie, Credit } from '@blockframes/movie/+state';
-import { Title } from '@blockframes/data-model';
+import { Movie, Credit, Title } from '@blockframes/data-model';
 
 interface MovieSliderView {
   directors: Credit[],

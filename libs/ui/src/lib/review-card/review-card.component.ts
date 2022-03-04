@@ -1,5 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import { MovieReview } from '@blockframes/movie/+state';
+import { MovieReview } from '@blockframes/data-model';
 
 function createMovieReviewView(review: Partial<MovieReview>) {
   return {

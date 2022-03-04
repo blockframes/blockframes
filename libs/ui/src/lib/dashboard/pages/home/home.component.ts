@@ -2,7 +2,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, Optional, Inject } from '@angular/core';
 
 // Blockframes
-import { MovieService, fromOrg } from '@blockframes/movie/+state';
+import { MovieService, fromOrg } from '@blockframes/movie/+state/movie.service';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Movie } from '@blockframes/data-model';

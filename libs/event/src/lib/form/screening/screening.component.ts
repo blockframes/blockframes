@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
-import { fromOrgAndAccepted, Movie, MovieService } from '@blockframes/movie/+state';
+import { fromOrgAndAccepted, MovieService } from '@blockframes/movie/+state/movie.service';
+import { Movie } from '@blockframes/data-model';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { Observable } from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';

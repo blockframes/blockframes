@@ -9,7 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { StorageFile } from '@blockframes/media/+state/media.firestore';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
 import { map, switchMap, tap } from 'rxjs/operators';
-import { MovieService } from '@blockframes/movie/+state';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 
 @Component({

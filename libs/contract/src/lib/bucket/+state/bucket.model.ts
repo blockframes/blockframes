@@ -1,6 +1,6 @@
 import { AvailsFilter, CalendarAvailsFilter, MapAvailsFilter } from '@blockframes/contract/avails/avails';
 import { createHoldback, Mandate } from '@blockframes/contract/contract/+state';
-import { createLanguageKey } from '@blockframes/movie/+state';
+import { createLanguageKey } from '@blockframes/data-model';
 import { Term, BucketTerm } from '../../term/+state/term.model';
 import { Bucket, BucketContract } from './bucket.firestore';
 export { BucketContract, Bucket } from './bucket.firestore';

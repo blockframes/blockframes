@@ -11,7 +11,8 @@ import { FormChipsAutocompleteModule } from '../../forms/chips-autocomplete';
 import { SelectFormModule } from '../../forms/select';
 import { getTitlesQueryFn, toMap } from '../pipes';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
-import { Movie, MovieService } from '@blockframes/movie/+state';
+import { Movie } from '@blockframes/data-model';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 
 @Component({
   selector: 'form-slider',

@@ -3,7 +3,8 @@ import { Campaign, CampaignService } from '../../+state';
 import { CampaignForm } from '../../form/form';
 import { map, pluck, switchMap, tap } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { Movie, MovieService } from '@blockframes/movie/+state';
+import { Movie } from '@blockframes/data-model';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({

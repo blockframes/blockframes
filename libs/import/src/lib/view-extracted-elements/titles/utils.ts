@@ -2,7 +2,7 @@
 import { App } from '@blockframes/utils/apps';
 import { User, UserService } from '@blockframes/user/+state';
 import { mandatoryError, MovieImportState, wrongValueError, optionalWarning, getDate, adminOnlyWarning, getUser, unknownEntityError } from '@blockframes/import/utils';
-import { createMovie } from '@blockframes/movie/+state';
+import { createMovie } from '@blockframes/data-model';
 import { extract, ExtractConfig, SheetTab } from '@blockframes/utils/spreadsheet';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { LanguageRecord, MovieAppConfig, MovieGoalsAudience, MovieRelease, MovieRunningTime, MovieStakeholders } from '@blockframes/data-model';

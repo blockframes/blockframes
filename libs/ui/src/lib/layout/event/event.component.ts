@@ -13,7 +13,8 @@ import { map, switchMap } from 'rxjs/operators';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { NotificationService } from '@blockframes/notification/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { MovieService, Movie } from '@blockframes/movie/+state'
+import { Movie } from '@blockframes/data-model';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { AuthService } from '@blockframes/auth/+state';
 import { App } from '@blockframes/utils/apps';
 import { APP } from '@blockframes/utils/routes/utils';
@@ -35,7 +36,7 @@ export class EventComponent implements OnInit {
 
   @ViewChild(MatSidenav) sidenav: MatSidenav;
   @ViewChild(CdkScrollable) cdkScrollable: CdkScrollable
-  
+
   constructor(
     private orgService: OrganizationService,
     private authService: AuthService,
