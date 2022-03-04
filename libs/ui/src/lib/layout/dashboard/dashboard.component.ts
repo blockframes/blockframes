@@ -1,21 +1,28 @@
 // Angular
-import { Component, ChangeDetectionStrategy, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewChild, AfterViewInit, OnDestroy, Inject } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { FormControl } from '@angular/forms';
 import { MatSidenav } from '@angular/material/sidenav';
 
 // Blockframes
-import { SearchResult } from '@blockframes/ui/search-widget/search-widget.component';
 import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { NotificationService } from '@blockframes/notification/+state';
-import { AppGuard } from '@blockframes/utils/routes/app.guard';
+import { App, applicationUrl } from '@blockframes/utils/apps';
+import { APP } from '@blockframes/utils/routes/utils';
 
 // RxJs
 import { Observable, Subscription } from 'rxjs';
 import { filter, map, shareReplay } from 'rxjs/operators';
-import { App, applicationUrl } from '@blockframes/utils/apps';
+
+interface SearchResult {
+  title: string;
+  icon: string;
+  /** path between current route and item */
+  path: string;
+  items: Record<string, string>[];
+}
 
 interface AppBridge {
   text: string;
@@ -33,7 +40,6 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
   private sub: Subscription;
   public searchCtrl: FormControl = new FormControl('');
   public notificationCount$ = this.notificationService.myNotificationsCount$;
-  public currentApp = this.appGuard.currentApp;
   public appBridge: BridgeRecord = {
     catalog: {
       text: 'Promote Your Line-up',
@@ -69,7 +75,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
     private invitationService: InvitationService,
     private notificationService: NotificationService,
     private router: Router,
-    private appGuard: AppGuard,
+    @Inject(APP) public currentApp: App
   ) { }
 
   ngAfterViewInit() {

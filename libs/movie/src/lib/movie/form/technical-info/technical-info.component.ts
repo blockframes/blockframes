@@ -3,31 +3,31 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { MovieFormShellComponent } from '../shell/shell.component';
 
 @Component({
-    selector: 'movie-form-technical-info',
-    templateUrl: './technical-info.component.html',
-    styleUrls: ['./technical-info.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'movie-form-technical-info',
+  templateUrl: './technical-info.component.html',
+  styleUrls: ['./technical-info.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieFormTechnicalInfoComponent {
-    form = this.shell.getForm('movie');
+  form = this.shell.getForm('movie');
 
-    constructor(private shell: MovieFormShellComponent, private dynTitle: DynamicTitleService) {
-        this.dynTitle.setPageTitle('Technical Specifications')
-    }
+  constructor(private shell: MovieFormShellComponent, private dynTitle: DynamicTitleService) {
+    this.dynTitle.setPageTitle('Technical Specifications')
+  }
 
-    get soundFormat() {
-        return this.form.get('soundFormat');
-    }
+  get soundFormat() {
+    return this.form.get('soundFormat');
+  }
 
-    get quality() {
-        return this.form.get('formatQuality');
-    }
+  get quality() {
+    return this.form.get('formatQuality');
+  }
 
-    get color() {
-        return this.form.get('color');
-    }
+  get color() {
+    return this.form.get('color');
+  }
 
-    get format() {
-        return this.form.get('format');
-    }
+  get format() {
+    return this.form.get('format');
+  }
 }

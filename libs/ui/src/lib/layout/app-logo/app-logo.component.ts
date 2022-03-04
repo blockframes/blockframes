@@ -1,7 +1,7 @@
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, Inject } from '@angular/core';
 import { App } from '@blockframes/utils/apps';
 import { ThemeService } from '@blockframes/ui/theme/theme.service';
-import { AppGuard } from '@blockframes/utils/routes/app.guard';
+import { APP } from '@blockframes/utils/routes/utils';
 
 const appLogos: Record<App, string> = {
   catalog: 'archipel_content.svg',
@@ -17,11 +17,11 @@ const appLogos: Record<App, string> = {
   styleUrls: ['./app-logo.component.scss']
 })
 export class AppLogoComponent {
-  @Input() app = this.appGuard.currentApp;
+  @Input() app = this.currentApp;
   public appLogos = appLogos;
 
   constructor(
-    private appGuard: AppGuard,
-    public theme: ThemeService
-  ) {}
+    public theme: ThemeService,
+    @Inject(APP) private currentApp: App
+  ) { }
 }

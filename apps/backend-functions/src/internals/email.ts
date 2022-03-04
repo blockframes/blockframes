@@ -7,7 +7,7 @@ import { MailDataRequired } from '@sendgrid/helpers/classes/mail';
 import { ErrorResultResponse } from '../utils';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import * as admin from 'firebase-admin';
-import { App, getMailSender, AppMailSetting, getAppName, appLogo, applicationUrl, appDescription } from '@blockframes/utils/apps';
+import { App, getMailSender, AppMailSetting, appLogo, applicationUrl, appDescription, appName } from '@blockframes/utils/apps';
 import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
 import { logger } from 'firebase-functions';
 
@@ -45,11 +45,11 @@ export async function sendMail(email: EmailRequest, from: EmailJSON = getMailSen
 
 export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequest, app: App, groupId: number = groupIds.criticalsEmails) {
   const from: EmailJSON = getMailSender(app);
-  const { label } = getAppName(app);
+  const name = appName[app];
   const appText = appDescription[app];
   const appLogoLink = appLogo[app];
   const appLink = applicationUrl[app];
-  const appMailSettings: AppMailSetting = { description: appText, logo: appLogoLink, name: label, url: appLink }
+  const appMailSettings: AppMailSetting = { description: appText, logo: appLogoLink, name, url: appLink }
 
   const msg: MailDataRequired = {
     from,

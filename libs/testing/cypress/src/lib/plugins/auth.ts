@@ -1,4 +1,4 @@
-import { auth, db } from '../testing-cypress';
+import { db } from '../testing-cypress';
 import type { User } from '@blockframes/user/types';
 
 export async function getRandomEmail() {
@@ -47,3 +47,4 @@ export async function validateUser(email: string) {
   await auth.updateUser(user.uid, {emailVerified: true})
   return 'reload ok'
 }
+

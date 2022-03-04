@@ -1,4 +1,4 @@
-import { Injectable, Optional } from '@angular/core';
+import { Inject, Injectable, Optional } from '@angular/core';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import firebase from 'firebase/app';
 import { UserCredential } from '@firebase/auth-types';
@@ -20,7 +20,7 @@ import { AngularFireAnalytics } from '@angular/fire/analytics';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { createUser, UserService } from '@blockframes/user/+state';
 import { Store, StoreConfig } from '@datorama/akita';
-import { AppGuard } from '@blockframes/utils/routes/app.guard';
+import { APP } from '@blockframes/utils/routes/utils';
 
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'auth' })
@@ -98,12 +98,12 @@ export class AuthService extends FireAuthService<AuthState> {
   constructor(
     protected store: AuthStore,
     private functions: AngularFireFunctions,
-    private appGuard: AppGuard,
     private gdprService: GDPRService,
     private analytics: AngularFireAnalytics,
     private ipService: IpService,
     private afAuth: AngularFireAuth,
     private userService: UserService,
+    @Inject(APP) private app: App,
     @Optional() public ngIntercom?: Intercom,
   ) {
     super(store);
@@ -118,7 +118,7 @@ export class AuthService extends FireAuthService<AuthState> {
    * Initiate the password reset process for this user.
    * @param email email of the user
   */
-  public resetPasswordInit(email: string, app: App = this.appGuard.currentApp) {
+  public resetPasswordInit(email: string, app: App = this.app) {
     const callSendReset = this.functions.httpsCallable('sendResetPasswordEmail');
     return callSendReset({ email, app }).toPromise();
   }
@@ -199,7 +199,7 @@ export class AuthService extends FireAuthService<AuthState> {
    * @param orgName
    * @param app
    */
-  public async createUser(email: string, orgEmailData: OrgEmailData, app: App = this.appGuard.currentApp): Promise<PublicUser> {
+  public async createUser(email: string, orgEmailData: OrgEmailData, app: App = this.app): Promise<PublicUser> {
     const f = this.functions.httpsCallable('createUser');
     const user: PublicUser = await f({ email, orgEmailData, app }).toPromise();
 
