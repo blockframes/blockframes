@@ -135,7 +135,7 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, OnDestroy {
     );
 
     this.steps$ = combineLatest([productionStatus$, this.route.data]).pipe(
-      map(([productionStatus, data]: [ProductionStatus, Data]) => getSteps(productionStatus, data.appSteps as TunnelStep[]))
+      map(([productionStatus, data]: [ProductionStatus, Data]) => getSteps(productionStatus, data.appSteps))
     );
 
     this.sub = this.route.fragment.subscribe(async (fragment: string) => {

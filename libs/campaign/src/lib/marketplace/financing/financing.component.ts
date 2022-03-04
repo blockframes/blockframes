@@ -37,7 +37,6 @@ const budgetData: { serie: keyof Budget, label: string }[] = [{
 })
 export class MarketplaceFinancingComponent {
   public totalFundings: number;
-  campaign: Campaign;
   public storagePath: StorageFile;
   campaign$ = this.route.params.pipe(
     pluck('movieId'),
