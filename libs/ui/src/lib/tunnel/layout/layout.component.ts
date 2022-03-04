@@ -15,7 +15,7 @@ import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
 import { filter, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
 import { MatSidenavContent, MatSidenav } from '@angular/material/sidenav';
-import { Router, NavigationEnd, RouterOutlet, ActivatedRoute, Event, NavigationStart } from '@angular/router';
+import { Router, NavigationEnd, RouterOutlet, ActivatedRoute, Event } from '@angular/router';
 import { RouteDescription } from '@blockframes/utils/common-interfaces';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { MatDialog } from '@angular/material/dialog';
@@ -73,8 +73,8 @@ export class TunnelLayoutComponent implements OnInit {
   private url$ = this.router.events.pipe(
     filter((event: Event) => event instanceof NavigationEnd),
     tap(() => this.sidenavContent.scrollTo({ top: 0 })),
-    map((event: NavigationStart) => event.url),
-    startWith(this.router.url)
+    startWith(this.router),
+    map((event: NavigationEnd) => event.url)
   );
 
   public urlBynav$: Observable<[string, TunnelStep[]]>;
