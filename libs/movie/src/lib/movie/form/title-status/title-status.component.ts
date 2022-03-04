@@ -10,7 +10,7 @@ import { Intercom } from 'ng-intercom';
 // Blockframes
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { ProductionStatus, productionStatus, ProductionStatusValue } from '@blockframes/utils/static-model';
-import { getAllowedproductionStatuses } from '@blockframes/movie/+state/movie.model';
+import { getAllowedproductionStatuses } from '@blockframes/data-model';
 import { App } from '@blockframes/utils/apps';
 import { APP } from '@blockframes/utils/routes/utils';
 

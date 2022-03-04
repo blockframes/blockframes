@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, OnInit, Pipe, PipeTransform } from '@angular/core';
-import { MovieNote } from '@blockframes/movie/+state/movie.firestore';
+import { MovieNote } from '@blockframes/data-model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { TitleMarketplaceShellComponent } from '../shell/shell.component';
 

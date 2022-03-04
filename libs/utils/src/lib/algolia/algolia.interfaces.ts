@@ -8,7 +8,7 @@ import {
   OrgActivity,
   ContentType
 } from '../static-model';
-import { MovieRunningTime, MovieRelease, MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
+import { MovieRunningTime, MovieRelease, MovieLanguageSpecification } from '@blockframes/data-model';
 import { Module, ModuleAccess } from '../apps';
 export { SearchResponse } from '@algolia/client-search';
 

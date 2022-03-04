@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { startWith, map, tap, shareReplay } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
-import { Movie } from '@blockframes/movie/+state/movie.model';
+import { Movie } from '@blockframes/data-model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Intercom } from 'ng-intercom';

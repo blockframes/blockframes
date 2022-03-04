@@ -7,7 +7,7 @@ import { MovieService } from '../../+state';
 import { getFileMetadata } from '@blockframes/media/+state/static-files';
 import { getDeepValue } from '@blockframes/utils/pipes';
 import { Subscription } from 'rxjs';
-import { MovieVideo } from '@blockframes/movie/+state/movie.firestore';
+import { MovieVideo } from '@blockframes/data-model';
 
 @Component({
   selector: 'movie-form-media-videos',

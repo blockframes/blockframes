@@ -1,7 +1,7 @@
 import { BigQuery, Query } from '@google-cloud/bigquery';
 import * as admin from 'firebase-admin';
 import { bigQueryAnalyticsTable } from "./../environments/environment";
-import { MovieAnalytics, MovieEventAnalytics } from '@blockframes/movie/+state/movie.firestore';
+import { MovieAnalytics, MovieEventAnalytics } from '@blockframes/data-model';
 import { isAfter, isBefore, parse, subDays } from 'date-fns';
 import { getCollectionInBatches } from '@blockframes/firebase-utils';
 

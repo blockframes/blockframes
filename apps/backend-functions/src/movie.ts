@@ -4,7 +4,7 @@ import { triggerNotifications, createNotification } from './notification';
 import { createDocumentMeta, createPublicUserDocument, getOrganizationsOfMovie, Timestamp } from './data/internals';
 
 import { orgName } from '@blockframes/organization/+state/organization.firestore';
-import { MovieAppConfig } from '@blockframes/movie/+state/movie.firestore';
+import { MovieAppConfig } from '@blockframes/data-model';
 import { cleanMovieMedias, moveMovieMedia } from './media';
 import { Change, EventContext } from 'firebase-functions';
 import { algolia, deleteObject, getDocument, storeSearchableMovie, storeSearchableOrg } from '@blockframes/firebase-utils';
@@ -74,7 +74,7 @@ export async function onMovieDelete(
     // Read contracts
     const contractsCollectionRef = await tx.get(db.collection('contracts').where('titleId', '==', movie.id));
 
-    // Read buckets 
+    // Read buckets
     const bucketsCollectionRef = await tx.get(db.collection('buckets'));
 
     // Delete events
@@ -181,7 +181,7 @@ export async function onMovieUpdate(
     return db.doc(`permissions/${orgId}/documentPermissions/${after.id}`).set(permissions);
   });
   const removedPromises = removedOrgIds.map(orgId => db.doc(`permissions/${orgId}/documentPermissions/${after.id}`).delete());
-  await Promise.all([...addedPromises, ...removedPromises]); 
+  await Promise.all([...addedPromises, ...removedPromises]);
 
   // insert orgName & orgID to the algolia movie index (this is needed in order to filter on the frontend)
   for (const org of organizations) {

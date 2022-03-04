@@ -10,7 +10,7 @@ import { CollectionHoldingFile, FileLabel, getFileMetadata } from '../../+state/
 import { StorageFileForm } from "@blockframes/media/form/media.form";
 import { FormList } from "@blockframes/utils/form";
 import { StorageFile, StorageVideo } from "@blockframes/media/+state/media.firestore";
-import { MovieVideo } from '@blockframes/movie/+state/movie.firestore';
+import { MovieVideo } from '@blockframes/data-model';
 
 interface DirectoryBase {
   type: 'directory' | 'file' | 'image' | 'fileList' | 'imageList';

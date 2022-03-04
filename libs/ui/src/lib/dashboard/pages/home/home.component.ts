@@ -5,7 +5,7 @@ import { Component, OnInit, ChangeDetectionStrategy, Optional, Inject } from '@a
 import { MovieService, fromOrg } from '@blockframes/movie/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { Movie } from '@blockframes/movie/+state/movie.model';
+import { Movie } from '@blockframes/data-model';
 import { App } from '@blockframes/utils/apps';
 
 // RxJs

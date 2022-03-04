@@ -1,4 +1,4 @@
-import { MovieDocument } from '@blockframes/movie/+state/movie.firestore';
+import { MovieDocument } from '@blockframes/data-model';
 import { OrganizationDocument } from '@blockframes/organization/+state/organization.firestore';
 import { PublicUser } from '@blockframes/user/types';
 import { getDocument, runChunks } from '@blockframes/firebase-utils';

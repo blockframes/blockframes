@@ -5,7 +5,7 @@ import { mandatoryError, MovieImportState, wrongValueError, optionalWarning, get
 import { createMovie } from '@blockframes/movie/+state';
 import { extract, ExtractConfig, SheetTab } from '@blockframes/utils/spreadsheet';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
-import { LanguageRecord, MovieAppConfig, MovieGoalsAudience, MovieRelease, MovieRunningTime, MovieStakeholders } from '@blockframes/movie/+state/movie.firestore';
+import { LanguageRecord, MovieAppConfig, MovieGoalsAudience, MovieRelease, MovieRunningTime, MovieStakeholders } from '@blockframes/data-model';
 import { Certification, Color, ContentType, CrewRole, Genre, Language, MediaValue, MemberStatus, MovieFormat, MovieFormatQuality, NumberRange, PremiereType, ProducerRole, ProductionStatus, ScreeningStatus, SocialGoal, SoundFormat, StakeholderRole, StoreStatus, Territory } from '@blockframes/utils/static-model';
 import { Stakeholder } from '@blockframes/utils/common-interfaces';
 

@@ -4,7 +4,7 @@ import { map, shareReplay, startWith, tap } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
 import { StoreStatus } from '@blockframes/utils/static-model/types';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Movie } from '@blockframes/movie/+state/movie.model';
+import { Movie } from '@blockframes/data-model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { storeStatus } from '@blockframes/utils/static-model';

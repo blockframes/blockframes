@@ -5,7 +5,7 @@ import { Invitation } from '@blockframes/invitation/+state';
 import { DbRecord, throwOnProduction } from '../util';
 import { CollectionReference, QueryDocumentSnapshot, QuerySnapshot } from '../types';
 import { Queue } from '../queue';
-import { Movie } from '@blockframes/movie/+state/movie.model';
+import { Movie } from '@blockframes/data-model';
 import { createPublicOrganization, Organization } from '@blockframes/organization/+state/organization.model';
 import { PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
 import { FirestoreEmulator } from '../firestore/emulator';
@@ -13,7 +13,7 @@ import { firebase, testVideoId } from '@env'
 import { runChunks } from '../firebase-utils';
 import { IMaintenanceDoc } from '@blockframes/utils/maintenance';
 import { firestore } from 'firebase-admin';
-import { MovieVideo } from '@blockframes/movie/+state/movie.firestore';
+import { MovieVideo } from '@blockframes/data-model';
 
 const userCache: { [uid: string]: User | PublicUser } = {};
 const orgCache: { [id: string]: Organization | PublicOrganization } = {};

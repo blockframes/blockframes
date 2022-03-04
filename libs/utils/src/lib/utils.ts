@@ -1,6 +1,6 @@
 import { Person } from './common-interfaces';
 import { staticModel, Scope } from '@blockframes/utils/static-model';
-import { LanguageRecord } from '@blockframes/movie/+state/movie.firestore';
+import { LanguageRecord } from '@blockframes/data-model';
 
 export interface ErrorResultResponse {
   error: string;

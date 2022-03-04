@@ -1,5 +1,5 @@
 
-import { MovieNote, MovieVideo } from '@blockframes/movie/+state/movie.firestore';
+import { MovieNote, MovieVideo } from '@blockframes/data-model';
 import { Privacy } from '@blockframes/utils/file-sanitizer';
 
 /**

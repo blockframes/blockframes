@@ -19,9 +19,9 @@ import { MarketplaceMovieAvailsComponent } from '../avails.component';
 import { Mandate, Sale } from '@blockframes/contract/contract/+state/contract.firestore';
 import { Term } from '@blockframes/contract/term/+state/term.firestore';
 import { Bucket } from '@blockframes/contract/bucket/+state/bucket.firestore';
-import { Movie } from '@blockframes/movie/+state/movie.model';
+import { Movie } from '@blockframes/data-model';
 
-// TODO(#7820): remove with rxjs 7 
+// TODO(#7820): remove with rxjs 7
 type AvailabilitiesInputs = [MapAvailsFilter, Mandate<Date>[], Term<Date>[], Sale<Date>[], Term<Date>[], Bucket<Date>, Movie];
 
 @Component({

@@ -6,7 +6,7 @@ import { App, app, getOrgModuleAccess, modules } from "@blockframes/utils/apps";
 import { AlgoliaOrganization, AlgoliaMovie, AlgoliaUser, AlgoliaConfig } from '@blockframes/utils/algolia';
 import { OrganizationDocument, orgName } from '@blockframes/organization/+state/organization.firestore';
 import { PublicUser } from '@blockframes/user/types';
-import { MovieDocument } from '@blockframes/movie/+state/movie.firestore';
+import { MovieDocument } from '@blockframes/data-model';
 import * as admin from 'firebase-admin';
 import { hasAcceptedMovies } from '../util';
 import { getMovieAppAccess } from '@blockframes/utils/apps';

@@ -23,7 +23,7 @@ import { User, UserService } from '@blockframes/user/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { Term } from '@blockframes/contract/term/+state/term.firestore';
 import { Language, Media, Territory } from '@blockframes/utils/static-model';
-import { MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
+import { MovieLanguageSpecification } from '@blockframes/data-model';
 import { Mandate, Sale } from '@blockframes/contract/contract/+state/contract.firestore';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { createMandate, createSale } from '@blockframes/contract/contract/+state/contract.model';

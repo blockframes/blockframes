@@ -1,7 +1,7 @@
 import { InvitationBase } from './invitation.firestore';
 import { Organization } from '@blockframes/organization/+state/organization.model';
 import { PublicUser } from '@blockframes/user/+state/user.model';
-import { Movie } from '@blockframes/movie/+state/movie.model';
+import { Movie } from '@blockframes/data-model';
 import { Event } from '@blockframes/event/+state/event.model';
 
 export { InvitationStatus, createInvitation } from './invitation.firestore';

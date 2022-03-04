@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { movieLanguageTypes } from '../static-model/static-model';
-import { MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
+import { MovieLanguageSpecification } from '@blockframes/data-model';
 
 @Pipe({ name: 'versionPipe' })
 export class VersionPipe implements PipeTransform {

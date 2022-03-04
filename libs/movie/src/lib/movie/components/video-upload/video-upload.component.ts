@@ -4,7 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Movie, MovieService } from '@blockframes/movie/+state';
 import { hostedVideoTypes } from '@blockframes/utils/static-model';
 import { MovieVideosForm } from '@blockframes/movie/form/movie.form';
-import { MovieVideos } from '@blockframes/movie/+state/movie.firestore';
+import { MovieVideos } from '@blockframes/data-model';
 import { FileUploaderService } from '@blockframes/media/+state/file-uploader.service';
 
 @Component({
@@ -16,7 +16,7 @@ import { FileUploaderService } from '@blockframes/media/+state/file-uploader.ser
 export class MovieVideoUploadComponent implements OnInit {
 
   public form: MovieVideosForm;
-  
+
   public filePrivacy: Privacy = 'protected';
   @Input() movie: Movie;
   public hostedVideoTypes = Object.keys(hostedVideoTypes);

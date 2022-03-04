@@ -7,7 +7,7 @@ import { createPermissions, UserRole } from '../../permissions/+state/permission
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { UserService, OrganizationMember, createOrganizationMember, PublicUser, User } from '@blockframes/user/+state';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
-import { Movie } from '@blockframes/movie/+state/movie.model';
+import { Movie } from '@blockframes/data-model';
 import { App, Module, createOrgAppAccess } from '@blockframes/utils/apps';
 import { createDocumentMeta, formatDocumentMetaFromFirestore } from '@blockframes/utils/models-meta';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';

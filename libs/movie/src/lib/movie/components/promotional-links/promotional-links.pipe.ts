@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { MediaService } from '@blockframes/media/+state/media.service';
-import { Movie } from '@blockframes/movie/+state/movie.model';
+import { Movie } from '@blockframes/data-model';
 import { promotionalElementTypes } from '@blockframes/utils/static-model/static-model';
 
 const documents = ['presentation_deck', 'scenario', 'moodboard'];

@@ -9,7 +9,7 @@ import admin from 'firebase-admin';
 import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 import { getAllAppsExcept } from '@blockframes/utils/apps';
 import { DatabaseData, loadAllCollections, printDatabaseInconsistencies } from './internals/utils';
-import { MovieDocument } from '@blockframes/movie/+state/movie.firestore';
+import { MovieDocument } from '@blockframes/data-model';
 
 export const numberOfDaysToKeepNotifications = 14;
 const currentTimestamp = new Date().getTime();
@@ -310,7 +310,7 @@ function isNotificationValid(notification: NotificationDocument, existingIds: st
   if (notification.user?.uid && !existingIds.includes(notification.user?.uid)) return false;
   if (notification.docId && !existingIds.includes(notification.docId)) return false; // docId can refer to : events, offers, movies, orgs, contracts
   if (notification.invitation?.id && !existingIds.includes(notification.invitation?.id)) return false;
-  if (notification.bucket?.id && !existingIds.includes(notification.bucket?.id)) return false; // buckets Ids are orgs Ids 
+  if (notification.bucket?.id && !existingIds.includes(notification.bucket?.id)) return false; // buckets Ids are orgs Ids
   if (notification.offerId && !existingIds.includes(notification.offerId)) return false;
 
   return true;

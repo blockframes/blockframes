@@ -14,7 +14,7 @@ import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-inp
 import { MatDialog } from '@angular/material/dialog';
 import { EventService } from '@blockframes/event/+state';
 import { ContractService } from '@blockframes/contract/contract/+state';
-import { Movie } from '@blockframes/movie/+state/movie.model';
+import { Movie } from '@blockframes/data-model';
 import { FileUploaderService } from '@blockframes/media/+state/file-uploader.service';
 import { App, OrgAppAccess } from '@blockframes/utils/apps';
 import { BucketService } from '@blockframes/contract/bucket/+state/bucket.service';

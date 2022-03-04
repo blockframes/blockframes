@@ -11,7 +11,7 @@ import { MovieService } from '../../+state';
 import { getDeepValue } from '@blockframes/utils/pipes';
 import { getFileMetadata } from '@blockframes/media/+state/static-files';
 import { Subscription } from 'rxjs';
-import { MovieNote } from '@blockframes/movie/+state/movie.firestore';
+import { MovieNote } from '@blockframes/data-model';
 
 @Component({
   selector: 'movie-form-media-notes',

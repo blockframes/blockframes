@@ -1,7 +1,7 @@
 import { NgModule, Pipe, PipeTransform } from "@angular/core";
 import { AnalyticsService } from "@blockframes/utils/analytics/analytics.service";
 import { MovieAnalytics } from "../+state/movie.firestore";
-import { Movie } from '@blockframes/movie/+state/movie.model';
+import { Movie } from '@blockframes/data-model';
 
 export const getViews = (analytics?: MovieAnalytics) => {
   return analytics?.movieViews.current.reduce((sum, event) => sum + event.hits, 0) || 0;

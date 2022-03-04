@@ -1,6 +1,6 @@
 import firebase from 'firebase';
 import { staticModel, Scope } from './static-model';
-import { Movie } from '@blockframes/movie/+state/movie.model';
+import { Movie } from '@blockframes/data-model';
 import { User } from '@blockframes/user/types';
 import { Organization } from '@blockframes/organization/+state/organization.model';
 

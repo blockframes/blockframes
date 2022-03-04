@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, Input, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { Observable, } from 'rxjs';
-import { Movie } from '@blockframes/movie/+state/movie.model';
+import { Movie } from '@blockframes/data-model';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
 import { FileListPreviewComponent } from '@blockframes/media/file/preview-list/preview-list.component';

@@ -2,7 +2,7 @@ import { promises as fsPromises } from 'fs';
 import { join } from 'path';
 import { USER_FIXTURES_PASSWORD } from '@blockframes/firebase-utils/anonymize/util';
 import staticUsers from 'tools/static-users.json'
-import type { Movie } from '@blockframes/movie/+state/movie.model';
+import type { Movie } from '@blockframes/data-model';
 import type { Organization } from '@blockframes/organization/+state/organization.model';
 import type { User } from '@blockframes/user/types';
 

@@ -3,7 +3,7 @@ import { Component, ChangeDetectionStrategy, Input, Directive, HostBinding } fro
 
 // Blockframes
 import { Movie, Credit } from '@blockframes/movie/+state';
-import { Title } from '@blockframes/movie/+state/movie.firestore';
+import { Title } from '@blockframes/data-model';
 
 interface MovieSliderView {
   directors: Credit[],
