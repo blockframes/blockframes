@@ -36,10 +36,10 @@ const { from: mandateFrom, to: mandateTo } = mandateMovie1.terms[0].duration;
 
 const { from: saleBelgiumFranceLuxembourgFrom, to: saleBelgiumFranceLuxembourgTo } = saleBelgiumFranceLuxembourgMovie1.terms[0].duration;
 
-describe.skip('Calendar', () => {
+describe('Calendar', () => {
   describe('Test Matrix', () => {
 
-    it.skip('Test isBefore', () => {
+    it('Test isBefore', () => {
       const posA = { row: 1, column: 1 } as MatrixPosition;
       const posB = { row: 1, column: 2 } as MatrixPosition;
       const posC = { row: 1, column: 1 } as MatrixPosition;
@@ -52,7 +52,7 @@ describe.skip('Calendar', () => {
       expect(isBefore(posA, posE)).toBeTruthy();
     });
 
-    it.skip('Test dateToMatrixPosition', () => {
+    it('Test dateToMatrixPosition', () => {
       const currentYear = new Date().getFullYear();
 
       const dateA = new Date('01/04/2028');
@@ -82,7 +82,7 @@ describe.skip('Calendar', () => {
       expect(posD.column).toEqual(1);
     });
 
-    it.skip('Test isContinuous', () => {
+    it('Test isContinuous', () => {
       const posA = { row: 0, column: 1 } as MatrixPosition;
       const posB = { row: 0, column: 2 } as MatrixPosition;
       const posC = { row: 0, column: 3 } as MatrixPosition;
@@ -115,7 +115,7 @@ describe.skip('Calendar', () => {
       expect(isContinuous(posH, posI, stateMatrix)).toBeFalsy();
     });
 
-    it.skip('Test markersToMatrix', () => {
+    it('Test markersToMatrix', () => {
       const offset = new Date('12/30/2025').getFullYear() - new Date().getFullYear();
 
       const markers: DurationMarker[] = [];
@@ -135,7 +135,7 @@ describe.skip('Calendar', () => {
       expect(stateMatrix[3 + offset][9]).toBe('available');
     });
 
-    it.skip('Test select', () => {
+    it('Test select', () => {
       const stateMatrix: CellState[][] = calendarRows.map(() => calendarColumns.map(() => 'available'));
 
       const newState = select(1, 11, stateMatrix, createAvailCalendarState());
@@ -143,7 +143,7 @@ describe.skip('Calendar', () => {
       expect(newState.start.column).toEqual(11);
     });
 
-    it.skip('Test hover', () => {
+    it('Test hover', () => {
       const markers: DurationMarker[] = [];
       markers.push({ from: new Date('12/30/2025'), to: new Date('12/30/2026') });
 
@@ -159,7 +159,7 @@ describe.skip('Calendar', () => {
       expect(hoveredState.hoverStart.column).toEqual(10);
     });
 
-    it.skip('Test reset', () => {
+    it('Test reset', () => {
       const dirtyState = createAvailCalendarState({
         hoverColumn: 10,
         hoverRow: 1,
