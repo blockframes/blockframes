@@ -1,5 +1,5 @@
 // Angular
-import { Component, ChangeDetectionStrategy, OnInit, Inject, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, Inject, OnDestroy, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { ActivatedRoute, Data } from '@angular/router';
 
@@ -109,14 +109,7 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, OnDestroy {
   @ViewChild(TunnelLayoutComponent) layout: TunnelLayoutComponent;
   private sub: Subscription;
 
-  private productionStatus$: Observable<ProductionStatus> = this.getForm('movie').productionStatus.valueChanges.pipe(
-    startWith(this.getForm('movie').productionStatus.value),
-    tap((productionStatus: ProductionStatus) => this.configs.movie.fillHiddenMovieInputs(productionStatus)),
-  );
-
-  steps$: Observable<TunnelStep[]> = combineLatest([this.productionStatus$, this.route.data]).pipe(
-    map(([productionStatus, data]: [ProductionStatus, Data]) => getSteps(productionStatus, data.appSteps as TunnelStep[])),
-  );
+  steps$: Observable<TunnelStep[]>;
 
   exitRoute$: Observable<string> = this.route.params.pipe(
     pluck('movieId'),
@@ -127,9 +120,24 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, OnDestroy {
     @Inject(DOCUMENT) private doc: Document,
     @Inject(FORMS_CONFIG) private configs: ShellConfig,
     private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef
   ) { }
 
   async ngOnInit() {
+    this.configs.movie.onInit();
+    await this.configs.campaign?.onInit();
+    this.cdr.markForCheck();
+
+    const productionStatusControl = this.getForm('movie').productionStatus;
+    const productionStatus$ = productionStatusControl.valueChanges.pipe(
+      startWith(productionStatusControl.value),
+      tap((productionStatus: ProductionStatus) => this.configs.movie.fillHiddenMovieInputs(productionStatus))
+    );
+
+    this.steps$ = combineLatest([productionStatus$, this.route.data]).pipe(
+      map(([productionStatus, data]: [ProductionStatus, Data]) => getSteps(productionStatus, data.appSteps as TunnelStep[]))
+    );
+
     this.sub = this.route.fragment.subscribe(async (fragment: string) => {
       const el: HTMLElement = await this.checkIfElementIsReady(fragment);
 

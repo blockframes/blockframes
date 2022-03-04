@@ -8,7 +8,7 @@ import { MovieActiveGuard } from "@blockframes/movie/guards/movie-active.guard";
 @Injectable({ providedIn: 'root' })
 export class CampaignShellConfig implements FormShellConfig<CampaignControls, Campaign>{
   form: CampaignForm;
-  name = 'Campaign'
+  name = 'Campaign';
 
   constructor(
     private service: CampaignService,

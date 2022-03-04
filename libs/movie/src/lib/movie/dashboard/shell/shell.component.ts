@@ -42,7 +42,9 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    this.configs.movie.onInit();
+    await this.configs.campaign?.onInit();
 
     this.sub = this.router.events
       .pipe(filter((event: Event) => event instanceof NavigationEnd))
