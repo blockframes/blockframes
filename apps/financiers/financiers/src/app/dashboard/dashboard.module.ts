@@ -34,66 +34,66 @@ const routes: Routes = [{
   path: '',
   component: DashboardComponent,
   children: [{
-    path: '',
-    pathMatch: 'full',
-    redirectTo: 'home'
-  },
-  {
-    path: 'home',   // Home (dashboard if film, welcome if not)
-    loadChildren: () => import('@blockframes/ui/dashboard/pages/home/home.module').then(m => m.HomeModule),
-  },
-  {
-    path: 'notifications',
-    loadChildren: () => import('@blockframes/notification/notification.module').then(m => m.NotificationModule)
-  },
-  {
-    path: 'invitations',
-    loadChildren: () => import('@blockframes/invitation/invitation.module').then(m => m.InvitationModule)
-  },
-  {
-    path: 'import', // Import bulk of movies
-    loadChildren: () => import('@blockframes/movie/import/import.module').then(m => m.TitleImportModule),
-  },
-  {
-    path: 'title',
-    children: [{
       path: '',
-      loadChildren: () => import('./title/list/list.module').then(m => m.TitleListModule)
-    }, {
-      path: 'lobby',
-      loadChildren: () => import('@blockframes/movie/form/start/start-tunnel.module').then(m => m.StartTunnelModule)
-    }, {
-      path: ':movieId',
-      canActivate: [MovieActiveGuard, MovieTunnelGuard],
-      loadChildren: () => import('./title/view/view.module').then(m => m.TitleViewModule),
-      data: { redirect: '/c/o/dashboard/title' }
+      pathMatch: 'full',
+      redirectTo: 'home'
+    },
+    {
+      path: 'home',   // Home (dashboard if film, welcome if not)
+      loadChildren: () => import('@blockframes/ui/dashboard/pages/home/home.module').then(m => m.HomeModule),
+    },
+    {
+      path: 'notifications',
+      loadChildren: () => import('@blockframes/notification/notification.module').then(m => m.NotificationModule)
+    },
+    {
+      path: 'invitations',
+      loadChildren: () => import('@blockframes/invitation/invitation.module').then(m => m.InvitationModule)
+    },
+    {
+      path: 'import', // Import bulk of movies
+      loadChildren: () => import('@blockframes/movie/import/import.module').then(m => m.TitleImportModule),
+    },
+    {
+      path: 'title',
+      children: [{
+        path: '',
+        loadChildren: () => import('./title/list/list.module').then(m => m.TitleListModule)
+      }, {
+        path: 'lobby',
+        loadChildren: () => import('@blockframes/movie/form/start/start-tunnel.module').then(m => m.StartTunnelModule)
+      }, {
+        path: ':movieId',
+        canActivate: [MovieActiveGuard, MovieTunnelGuard],
+        loadChildren: () => import('./title/view/view.module').then(m => m.TitleViewModule),
+        data: { redirect: '/c/o/dashboard/title' }
+      }]
+    },
+    {
+      path: 'contact',
+      loadChildren: () => import('@blockframes/ui/static-informations/contact/contact.module').then(m => m.ContactModule)
+    },
+    {
+      path: 'terms',
+      loadChildren: () => import('@blockframes/ui/static-informations/terms/terms.module').then(m => m.TermsModule)
+    },
+    {
+      path: 'privacy',
+      loadChildren: () => import('@blockframes/ui/static-informations/privacy/privacy.module').then(m => m.PrivacyModule)
     }]
   },
   {
-    path: 'contact',
-    loadChildren: () => import('@blockframes/ui/static-informations/contact/contact.module').then(m => m.ContactModule)
+    path: 'tunnel',
+    canActivate: [TunnelGuard],
+    children: [{
+      path: 'movie/:movieId',
+      canActivate: [MovieActiveGuard, MovieTunnelGuard],
+      children: titleTunnelRoutes,
+      data: {
+        redirect: '/c/o/dashboard/tunnel/movie',
+      },
+    }]
   },
-  {
-    path: 'terms',
-    loadChildren: () => import('@blockframes/ui/static-informations/terms/terms.module').then(m => m.TermsModule)
-  },
-  {
-    path: 'privacy',
-    loadChildren: () => import('@blockframes/ui/static-informations/privacy/privacy.module').then(m => m.PrivacyModule)
-  }]
-},
-{
-  path: 'tunnel',
-  canActivate: [TunnelGuard],
-  children: [{
-    path: 'movie/:movieId',
-    canActivate: [MovieActiveGuard, MovieTunnelGuard],
-    children: titleTunnelRoutes,
-    data: {
-      redirect: '/c/o/dashboard/tunnel/movie',
-    },
-  }]
-},
 ];
 
 @NgModule({
