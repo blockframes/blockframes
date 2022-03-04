@@ -23,10 +23,10 @@ export class CampaignShellConfig implements FormShellConfig<CampaignControls, Ca
 
   async onSave(): Promise<unknown> {
     this.uploaderService.upload();
-    await this.service.save(this.campaignActiveGuard.campaign.id, this.form.value);
+    await this.service.save(this.campaignActiveGuard.campaignId, this.form.value);
 
     this.form.markAsPristine();
-    return this.campaignActiveGuard.campaign.id;
+    return this.campaignActiveGuard.campaignId;
   }
 
 }

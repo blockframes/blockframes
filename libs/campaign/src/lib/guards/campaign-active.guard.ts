@@ -8,12 +8,14 @@ import { Campaign, CampaignService } from "../+state";
 export class CampaignActiveGuard implements CanActivate {
 
   public campaign: Campaign;
+  public campaignId: string;
 
   constructor(
     private campaignService: CampaignService,
   ) { }
 
   async canActivate(next: ActivatedRouteSnapshot) {
+    this.campaignId = next.params.movieId;
     this.campaign = await this.campaignService.getValue(next.params.movieId as string);
     return true;
   }
