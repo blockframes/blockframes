@@ -28,7 +28,6 @@ import { OrgAccessModule } from '@blockframes/organization/pipes';
 const routes = [{
   path: '',
   component: TitleViewComponent,
-  canActivate: [],
   children: [
     {
       path: '',

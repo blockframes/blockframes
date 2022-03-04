@@ -2,7 +2,6 @@ import { Routes } from '@angular/router';
 import { TunnelGuard } from '@blockframes/ui/tunnel';
 import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
 import { TunnelStep } from '@blockframes/ui/tunnel';
-import { MovieShellGuard } from '@blockframes/movie/guards/movie-shell.guard';
 
 const disclaimer = `We kindly remind you that all the following elements will appear on the marketplace once you submit your project.
 Please make sure that you have the right to share this information with potential future investors.`
@@ -31,7 +30,6 @@ export const titleTunnelRoutes: Routes = [
   {
     path: '',
     component: MovieFormShellComponent,
-    canActivate: [MovieShellGuard],
     canDeactivate: [TunnelGuard],
     data: { appSteps },
     children: [

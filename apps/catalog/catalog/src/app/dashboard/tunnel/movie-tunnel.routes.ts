@@ -4,7 +4,6 @@ import { Routes } from '@angular/router';
 // Blockframes
 import { TunnelGuard, TunnelStep } from '@blockframes/ui/tunnel';
 import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
-import { MovieShellGuard } from '@blockframes/movie/guards/movie-shell.guard';
 
 const appSteps: TunnelStep[] = [{
   title: 'Delivery List',
@@ -21,7 +20,6 @@ export const tunnelRoutes: Routes = [
   {
     path: '',
     component: MovieFormShellComponent,
-    canActivate: [MovieShellGuard],
     canDeactivate: [TunnelGuard],
     data: { appSteps },
     children: [

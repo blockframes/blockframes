@@ -42,9 +42,6 @@ import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.se
 import { getBrowserWithVersion } from '@blockframes/utils/browser/utils';
 import { AuthService } from '@blockframes/auth/+state/auth.service';
 import { APP } from '@blockframes/utils/routes/utils';
-import { FORMS_CONFIG } from '@blockframes/movie/form/movie.shell.interfaces';
-import { MovieShellConfig } from '@blockframes/movie/form/movie.shell.config';
-import { CampaignShellConfig } from '@blockframes/campaign/form/campaign.shell.config';
 
 @NgModule({
   declarations: [AppComponent],
@@ -84,11 +81,6 @@ import { CampaignShellConfig } from '@blockframes/campaign/form/campaign.shell.c
     ScreenTrackingService, UserTrackingService, PerformanceMonitoringService,
     { provide: REGION, useValue: firebaseRegion },
     { provide: APP, useValue: 'financiers' },
-    {
-      provide: FORMS_CONFIG,
-      useFactory: (movie, campaign) => ({ movie, campaign }),
-      deps: [MovieShellConfig, CampaignShellConfig]
-    },
     ...emulatorConfig
   ],
   bootstrap: [AppComponent]

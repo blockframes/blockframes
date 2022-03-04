@@ -11,6 +11,8 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { MovieFormShellModule } from '@blockframes/movie/form/shell/shell.module';
+import { MovieShellConfig } from '@blockframes/movie/form/movie.shell.config';
+import { FORMS_CONFIG } from '@blockframes/movie/form/movie.shell.interfaces';
 import { OrgAccessModule } from '@blockframes/organization/pipes/org-access.pipe';
 import { EventFormShellComponent } from '@blockframes/event/form/shell/shell.component';
 import { EventFromShellModule } from '@blockframes/event/form/shell/shell.module';
@@ -200,6 +202,11 @@ const routes: Routes = [{
     MatIconModule,
     MatToolbarModule,
     RouterModule.forChild(routes)
-  ]
+  ],
+  providers: [{
+    provide: FORMS_CONFIG,
+    useFactory: (movie) => ({ movie }),
+    deps: [MovieShellConfig]
+  }]
 })
 export class DashboardModule { }
