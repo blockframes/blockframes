@@ -384,26 +384,9 @@ function isCalendarTermInAvails<T extends BucketTerm | Term>(term: T, avails: Ca
   return exclusivityCheck && mediaCheck && territoriesCheck;
 }
 
-function checkTerritoryMediaMatches(terms: Term<Date>[], { territories, medias, ...rest }: CalendarAvailsFilter) {
-  const _terms: Term<Date>[] = [];
-  territories.forEach(
-    territory => {
-      const found = terms.find(term => isCalendarTermInAvails(term, { ...rest, medias, territories: [territory] }))
-      _terms.push(found)
-    }
-  );
-  if (_terms.length === territories.length)
-    return _terms;
-}
 
 function getMatchingCalendarMandates(mandates: FullMandate[], avails: CalendarAvailsFilter): FullMandate[] {
-  console.log('here')
-  return mandates
-    .map(({ terms, ...rest }) => ({
-      ...rest,
-      terms: checkTerritoryMediaMatches(terms, avails)
-    }))
-    .filter(mandate => mandate.terms.length);
+  return mandates.filter(mandate => mandate.terms.some(term => isCalendarTermInAvails(term, avails)));
 }
 
 function getMatchingCalendarSales<T extends (FullSale | BucketContract)>(sales: T[], avails: CalendarAvailsFilter): T[] {
