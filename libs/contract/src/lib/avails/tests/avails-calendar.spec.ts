@@ -357,11 +357,16 @@ describe('Test terms out of movie mandates', () => {
   it('Check available on several Media + Last day of mandate', () => {
     const markers = durationAvailabilities(availsPayTV, [mandateMovie6], [], []);
     expect(markers.available.length).toBe(0);
+    console.log(markers.available)
   })
 
   it('Check available on several Media + Last day of mandate', () => {
     const markers = durationAvailabilities(availsPlanes, [mandateMovie6], [], []);
     expect(markers.available.length).toBeGreaterThan(0);
+    // console.log(markers.available)
+    // const argentinaMarker = markers.sold.find(marker => marker.term.contractId === saleArgentinaMovie1.id)
+    // const germanyMarker = markers.sold.find(marker => marker.term.contractId === saleGermanyMovie1.id)
+    // const canadaMarker = markers.sold.find(marker => marker.term.contractId === saleCanadaMovie1.id)
   })
 
 })

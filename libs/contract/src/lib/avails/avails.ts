@@ -204,7 +204,7 @@ function isAvailInTerm<T extends BucketTerm | Term>(avail: MapAvailsFilter, term
 
 function getMatchingMapMandates(mandates: FullMandate[], avails: MapAvailsFilter): FullMandate[] {
   return mandates
-    .map(({terms, ...rest}) => ({
+    .map(({ terms, ...rest }) => ({
       terms: terms.filter(term => isMapTermInAvails(term, avails)),
       ...rest
     }))
@@ -385,7 +385,22 @@ function isCalendarTermInAvails<T extends BucketTerm | Term>(term: T, avails: Ca
 
 
 function getMatchingCalendarMandates(mandates: FullMandate[], avails: CalendarAvailsFilter): FullMandate[] {
-  return mandates.filter(mandate => mandate.terms.some(term => isCalendarTermInAvails(term, avails)));
+  const availableMandates: FullMandate[] = [];
+  const foundTerritory: Territory[] = [];
+  avails.territories.forEach(territory => {
+    const foundMandate = mandates.find(
+      mandate => mandate.terms.some(
+        term => isCalendarTermInAvails(term, { ...avails, territories: [territory] })
+      )
+    );
+    if (foundMandate) {
+      availableMandates.push(foundMandate)
+      foundTerritory.push(territory)
+    }
+  })
+
+  if (foundTerritory.length === avails.territories.length) return availableMandates;
+  return [];
 }
 
 function getMatchingCalendarSales<T extends (FullSale | BucketContract)>(sales: T[], avails: CalendarAvailsFilter): T[] {
