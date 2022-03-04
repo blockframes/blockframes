@@ -1,4 +1,4 @@
-import { LanguageRecord } from "@blockframes/movie/+state/movie.firestore";
+import { LanguageRecord } from '@blockframes/data-model';
 import type { Media, Territory } from "@blockframes/utils/static-model";
 import type firebase from 'firebase'
 import { Timestamp } from "@blockframes/utils/common-interfaces/timestamp";

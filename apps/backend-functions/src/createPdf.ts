@@ -1,4 +1,4 @@
-import { MovieDocument } from "@blockframes/movie/+state/movie.firestore";
+import { MovieDocument } from '@blockframes/data-model';
 import { toLanguageVersionString, toLabel } from "@blockframes/utils/utils";
 import { Response } from "firebase-functions";
 import { db } from './internals/firebase';

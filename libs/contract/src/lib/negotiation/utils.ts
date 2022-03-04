@@ -1,6 +1,6 @@
 import { Timestamp } from "@blockframes/utils/common-interfaces/timestamp";
 import { centralOrgId } from "@env";
-import { LanguageRecord } from "@blockframes/movie/+state/movie.firestore";
+import { LanguageRecord } from '@blockframes/data-model';
 import { Language, Media, Territory } from "@blockframes/utils/static-model";
 import { Duration } from "../term/+state";
 import { Negotiation } from "./+state/negotiation.firestore";

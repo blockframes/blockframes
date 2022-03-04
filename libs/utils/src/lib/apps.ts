@@ -5,7 +5,7 @@ import { OrganizationBase, OrganizationDocument } from "@blockframes/organizatio
 import { StoreStatus } from "./static-model";
 import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
 import { appUrl } from "@env";
-import { MovieBase, MovieDocument } from "@blockframes/movie/+state/movie.firestore";
+import { MovieBase, MovieDocument } from '@blockframes/data-model';
 
 export interface AppMailSetting {
   description: string,
