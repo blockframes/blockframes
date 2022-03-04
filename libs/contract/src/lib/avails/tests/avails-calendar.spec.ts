@@ -36,7 +36,7 @@ const { from: mandateFrom, to: mandateTo } = mandateMovie1.terms[0].duration;
 
 const { from: saleBelgiumFranceLuxembourgFrom, to: saleBelgiumFranceLuxembourgTo } = saleBelgiumFranceLuxembourgMovie1.terms[0].duration;
 
-describe.skip('Calendar', () => {
+describe('Calendar', () => {
   describe('Test Matrix', () => {
 
     it('Test isBefore', () => {
