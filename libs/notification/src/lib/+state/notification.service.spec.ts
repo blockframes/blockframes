@@ -13,6 +13,7 @@ import { AnalyticsService } from '@blockframes/utils/analytics/analytics.service
 import { UserService } from '@blockframes/user/+state/user.service';
 import { RouterTestingModule } from "@angular/router/testing";
 import { ModuleGuard } from '@blockframes/utils/routes/module.guard';
+import { APP } from '@blockframes/utils/routes/utils';
 
 class InjectedAngularFireAuth {
   authState = new Observable();
@@ -42,6 +43,7 @@ describe('Notifications Test Suite', () => {
         { provide: AnalyticsService, useClass: DummyService },
         { provide: UserService, useClass: DummyService },
         { provide: ModuleGuard, useClass: InjectedModuleGuard },
+        { provide: APP, useValue: 'festival' },
         { provide: SETTINGS, useValue: { host: 'localhost:8080', ssl: false } }
       ],
     });

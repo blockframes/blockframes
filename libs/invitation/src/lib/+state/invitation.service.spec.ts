@@ -12,6 +12,7 @@ import { Observable, of } from 'rxjs';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { createUser } from '@blockframes/user/+state/user.model';
 import { ActivatedRoute } from '@angular/router';
+import { APP } from '@blockframes/utils/routes/utils';
 
 class InjectedAuthService {
   uid = 'userId';
@@ -57,6 +58,7 @@ describe('Invitations Test Suite', () => {
         { provide: AuthService, useClass: InjectedAuthService },
         { provide: UserService, useClass: DummyService },
         { provide: ActivatedRoute, useValue: { params: of({}) } },
+        { provide: APP, useValue: 'festival' },
         { provide: SETTINGS, useValue: { host: 'localhost:8080', ssl: false } }
       ],
     });

@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { appName, App, getOrgAppAccess } from '@blockframes/utils/apps';
+import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
+import { App, getOrgAppAccess } from '@blockframes/utils/apps';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { organizationRoles, OrganizationService } from '@blockframes/organization/+state';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -7,7 +7,7 @@ import { map } from 'rxjs/operators';
 import { AuthService } from '@blockframes/auth/+state';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AppGuard } from '@blockframes/utils/routes/app.guard';
+import { APP } from '@blockframes/utils/routes/utils';
 
 type Steps = 'initial' | 'request';
 
@@ -19,15 +19,13 @@ type Steps = 'initial' | 'request';
 })
 export class OrgRequestAccessComponent implements OnInit {
   public roles = organizationRoles;
-  public currentApp = this.appGuard.currentApp;
-  public appName = appName;
   private org$ = this.orgService.currentOrg$;
   private orgId = this.orgService.org.id;
   public orgExistingAccess$: Observable<App[]>;
   public disabledRequest = false;
   public formControl = new FormControl();
 
-  public step$: Observable<Steps>
+  public step$: Observable<Steps>;
   private step = new BehaviorSubject<Steps>('initial');
 
   constructor(
@@ -36,7 +34,7 @@ export class OrgRequestAccessComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private route: ActivatedRoute,
-    private appGuard: AppGuard,
+    @Inject(APP) public currentApp: App
   ) { }
 
   ngOnInit() {

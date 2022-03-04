@@ -7,7 +7,6 @@ import { IdlePreload, IdlePreloadModule } from 'angular-idle-preload';
 import { AnonymousAuthGuard } from '@blockframes/auth/guard/anonymous-auth-guard';
 
 const routes: Routes = createRoutes({
-  appName: 'festival',
   landing: {
     path: '',
     canActivate: [NoAuthGuard],

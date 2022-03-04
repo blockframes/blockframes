@@ -4,18 +4,22 @@
   <ng-container [ngSwitch]="step$ | async">
     <ng-container *ngSwitchCase="'initial'">
       <img asset="wait.svg"/>
-      <h1>Looks like you don't have access to {{ appName[currentApp] }}... yet!</h1>
+      <h1>Looks like you don't have access to {{ currentApp | appName }}... yet!</h1>
       <p class="mat-body-2">
-        Your email address is already associated with an existing user account of <ng-container *ngFor="let app of (orgExistingAccess$ | async); let isLast = last">{{ appName[app]}}{{ !isLast ? ' and ': ''}}</ng-container>. To access {{appName[currentApp]}}, please request access and wait for our team's approval.
+        Your email address is already associated with an existing user account of 
+        <ng-container *ngFor="let app of (orgExistingAccess$ | async); let isLast = last">
+          {{ app | appName }}{{ !isLast ? ' and ': ''}}
+        </ng-container>. 
+        To access {{ currentApp | appName }}, please request access and wait for our team's approval.
       </p>
-      <button mat-flat-button color="primary" (click)="joinOptions()" [disabled]="disabledRequest">Join {{ appName[currentApp] }}</button>
+      <button mat-flat-button color="primary" (click)="joinOptions()" [disabled]="disabledRequest">Join {{ currentApp | appName }}</button>
       <button mat-button color="primary" (click)="logout()">Sign up with another email</button>
     </ng-container>
 
     <ng-container *ngSwitchCase="'request'">
       <h1>What access are your looking for ?</h1>
       <p class="mat-body-1">
-        To access {{ appName[currentApp] }}, please select a "role". It will determine the features you can acccess once you've joined the platform.
+        To access {{ currentApp | appName }}, please select a "role". It will determine the features you can acccess once you've joined the platform.
       </p>
       <p class="mat-body-2">N.B.: All members from your company will be granted the same access.</p>
 
