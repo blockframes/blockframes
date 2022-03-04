@@ -1,4 +1,4 @@
-<tunnel-layout [steps]="steps$ | async" [exitRedirect]="exitRoute$ | async">
+<tunnel-layout *ngIf="steps$ | async" [steps]="steps$ | async" [exitRedirect]="exitRoute$ | async">
   <header fxLayout="row" fxLayoutAlign="space-between center">
     <tunnel-step-stat></tunnel-step-stat>
     <app-logo></app-logo>

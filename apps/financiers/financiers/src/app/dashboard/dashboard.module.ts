@@ -21,7 +21,6 @@ import { titleTunnelRoutes } from './tunnel/routes';
 
 // Guards
 import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
-import { CampaignActiveGuard } from '@blockframes/campaign/guards/campaign-active.guard';
 import { MovieTunnelGuard } from '@blockframes/movie/guards/movie-tunnel.guard';
 import { TunnelGuard } from '@blockframes/ui/tunnel';
 
@@ -88,7 +87,7 @@ const routes: Routes = [{
     canActivate: [TunnelGuard],
     children: [{
       path: 'movie/:movieId',
-      canActivate: [MovieActiveGuard, CampaignActiveGuard, MovieTunnelGuard],
+      canActivate: [MovieActiveGuard, MovieTunnelGuard],
       children: titleTunnelRoutes,
       data: {
         redirect: '/c/o/dashboard/tunnel/movie',
