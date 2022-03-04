@@ -130,8 +130,9 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, OnDestroy {
     await this.configs.campaign?.onInit();
     this.cdr.markForCheck();
 
-    this.steps$ = this.getForm('movie').productionStatus.valueChanges.pipe(
-      startWith(this.getForm('movie').productionStatus.value),
+    const productionStatusControl = this.getForm('movie').productionStatus;
+    this.steps$ = productionStatusControl.valueChanges.pipe(
+      startWith(productionStatusControl.value),
       tap((productionStatus: ProductionStatus) => this.configs.movie.fillHiddenMovieInputs(productionStatus)),
       map((productionStatus: ProductionStatus) => getSteps(productionStatus, this.routerQuery.getData<TunnelStep[]>('appSteps'))),
     );

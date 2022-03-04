@@ -177,7 +177,7 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
 
     const promises = [];
     promises.push(this.configs.movie.onSave(options));
-    if (this.configs.campaign) { promises.push(this.configs.campaign.onSave()) }
+    if (this.configs.campaign) promises.push(this.configs.campaign.onSave());
     await Promise.all(promises);
   }
 
