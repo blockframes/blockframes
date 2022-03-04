@@ -278,7 +278,7 @@ export const availsPayTV: AvailsFilter = {
     to: new Date('02/23/2023'),
   },
   exclusive: true,
-  territories: [],
+  territories: ['china', 'france'],
   medias: ['payTv']
 };
 
@@ -288,7 +288,7 @@ export const availsPlanes: AvailsFilter = {
     to: new Date('02/23/2023'),
   },
   exclusive: true,
-  territories: [],
+  territories: ['china', 'france'],
   medias: ['planes']
 };
 

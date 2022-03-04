@@ -471,15 +471,15 @@ export const saleGermanyMovie5 = {
 export const mandateMovie6 = {
   ...createMandate({
     titleId: 'Movie6',
-    id: 'mandate1Movie6',
-    termIds: ['termMandate1'],
+    id: 'mandateMovie6',
+    termIds: ['term1MandateMovie6', 'term2MandateMovie6'],
   }),
   terms: [
     {
-      id: 'termMandate1',
-      contractId: 'mandate1Movie6',
+      id: 'term1MandateMovie6',
+      contractId: 'mandateMovie6',
       duration: {
-        from: new Date('02/21/2022'),
+        from: new Date('02/21/2021'),
         to: new Date('02/21/2032')
       },
       medias: ['sVod', 'aVod', 'est', 'nVod', 'fVod', 'payTv', 'freeTv', 'payPerView', 'video', 'planes', 'boats', 'educational', 'rental', 'through', 'hotel'],
@@ -487,10 +487,10 @@ export const mandateMovie6 = {
       exclusive: true
     },
     {
-      id: 'termMandate2',
-      contractId: 'mandate2Movie6',
+      id: 'term2MandateMovie6',
+      contractId: 'mandateMovie6',
       duration: {
-        from: new Date('02/21/2022'),
+        from: new Date('02/21/2021'),
         to: new Date('02/21/2032')
       },
       medias: ['planes', 'boats', 'educational', 'hotels'],

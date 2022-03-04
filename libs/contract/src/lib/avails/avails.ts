@@ -204,17 +204,10 @@ function isAvailInTerm<T extends BucketTerm | Term>(avail: MapAvailsFilter, term
 
 function getMatchingMapMandates(mandates: FullMandate[], avails: MapAvailsFilter): FullMandate[] {
   return mandates
-<<<<<<< HEAD
-    .map(({ terms, ...rest }) => ({
+    .map(({terms, ...rest}) => ({
       terms: terms.filter(term => isMapTermInAvails(term, avails)),
       ...rest
     }))
-=======
-    .map(({terms, ...rest}) => ({
-      terms: terms.filter(term => isMapTermInAvails(term, avails)), 
-      ...rest
-    })) 
->>>>>>> develop
     .filter(mandate => mandate.terms.length);
 }
 
@@ -387,7 +380,6 @@ function isCalendarTermInAvails<T extends BucketTerm | Term>(term: T, avails: Ca
   const exclusivityCheck = exclusivityAllOf(avails.exclusive).in(term.exclusive);
   const mediaCheck = allOf(avails.medias).in(term.medias);
   const territoriesCheck = allOf(avails.territories).in(term.territories);
-  console.log({ exclusivityCheck, mediaCheck, territoriesCheck, term, avails })
   return exclusivityCheck && mediaCheck && territoriesCheck;
 }
 
@@ -429,7 +421,6 @@ export function durationAvailabilities(
   assertValidTitle(mandates, sales, bucketContracts);
 
   const availableMandates = getMatchingCalendarMandates(mandates, avails);
-  console.log({ availableMandates })
   const available = availableMandates.map(m =>
     m.terms.map((t): DurationMarker =>
       ({ from: t.duration.from, to: t.duration.to, contract: m, term: t })
