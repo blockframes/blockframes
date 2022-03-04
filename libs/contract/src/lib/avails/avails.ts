@@ -384,25 +384,30 @@ function isCalendarTermInAvails<T extends BucketTerm | Term>(term: T, avails: Ca
 }
 
 
-function getMatchingCalendarMandates(mandates: FullMandate[], avails: CalendarAvailsFilter): FullMandate[] {
+function getMatchingTerritoriesOrMediasMandates(mandates: FullMandate[], avails: CalendarAvailsFilter, field: 'territories' | 'medias'): FullMandate[] {
   const availableMandates: FullMandate[] = [];
-  const foundTerritories: Territory[] = [];
-  avails.territories.forEach(territory => {
+  const foundFields: unknown[] = [];
+  avails[field].forEach(value => {
     const foundMandate = mandates.find(
       mandate => mandate.terms.some(
-        term => isCalendarTermInAvails(term, { ...avails, territories: [territory] })
+        term => isCalendarTermInAvails(term, { ...avails, [field]: [value] })
       )
     );
     if (foundMandate) {
       const duplicate = availableMandates.find(m => m.id === foundMandate.id)
       if (!duplicate)
         availableMandates.push(foundMandate)
-      foundTerritories.push(territory)
+      foundFields.push(value)
     }
   })
+  return foundFields.length === avails[field].length ? availableMandates : [];
+}
 
-  if (foundTerritories.length === avails.territories.length) return availableMandates;
-  return [];
+function getMatchingCalendarMandates(mandates: FullMandate[], avails: CalendarAvailsFilter): FullMandate[] {
+  const territoryMandates = getMatchingTerritoriesOrMediasMandates(mandates, avails, 'territories')
+  const mediaMandates = getMatchingTerritoriesOrMediasMandates(mandates, avails, 'medias')
+  if (territoryMandates.length) return territoryMandates;
+  return mediaMandates;
 }
 
 function getMatchingCalendarSales<T extends (FullSale | BucketContract)>(sales: T[], avails: CalendarAvailsFilter): T[] {
