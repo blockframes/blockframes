@@ -177,14 +177,14 @@ describe.skip('Calendar', () => {
 });
 
 describe('Test terms out of movie mandates', () => {
-  it.skip('Checks not licensed due to territory', () => {
+  it('Checks not licensed due to territory', () => {
     const markers = durationAvailabilities(availSouthKorea, [mandateMovie1], sales, []);
     expect(markers.available.length).toBe(0);
     expect(markers.sold.length).toBe(0);
     expect(markers.inBucket.length).toBe(0);
   })
 
-  it.skip('Check available on mandate duration', () => {
+  it('Check available on mandate duration', () => {
     const markers = durationAvailabilities(availAfghanistan, [mandateMovie1], sales, []);
     expect(markers.available.length).toBe(1);
     const [{ from, to }] = markers.available;
@@ -192,14 +192,14 @@ describe('Test terms out of movie mandates', () => {
     assertDate(to, mandateTo)
   })
 
-  it.skip('Check not licensed due to media', () => {
+  it('Check not licensed due to media', () => {
     const markers = durationAvailabilities(availFrance, [mandateMovie1], sales, []);
     expect(markers.available.length).toBe(0)
     expect(markers.sold.length).toBe(0)
     expect(markers.inBucket.length).toBe(0)
   })
 
-  it.skip('Check available  on terms with existing ended sales', () => {
+  it('Check available  on terms with existing ended sales', () => {
     const markers = durationAvailabilities(availsExistingEndedSales, [mandateMovie1], sales, []);
 
     //Germany is sold
@@ -217,7 +217,7 @@ describe('Test terms out of movie mandates', () => {
     expect(markers.inBucket.length).toBe(0);
   })
 
-  it.skip('Check sold on Germany and available on avail territories', () => {
+  it('Check sold on Germany and available on avail territories', () => {
     const markers = durationAvailabilities(availsOngoingSales, [mandateMovie1], sales, []);
     //Germany is sold
     expect(markers.sold.length).toBe(1);
@@ -234,7 +234,7 @@ describe('Test terms out of movie mandates', () => {
     expect(markers.inBucket.length).toBe(0);
   })
 
-  it.skip('Check available non exclusive', () => {
+  it('Check available non exclusive', () => {
     const markers = durationAvailabilities(availsTerritoryWithoutExclusivity, [mandateMovie1], sales, []);
     expect(markers.available.length).toBe(1);
     const [{ from, to }] = markers.available;
@@ -243,7 +243,7 @@ describe('Test terms out of movie mandates', () => {
     expect(markers.inBucket.length).toBe(0);
   })
 
-  it.skip('Check not licensed due to territory and exclusivity', () => {
+  it('Check not licensed due to territory and exclusivity', () => {
     const markers = durationAvailabilities(availsTerritoryWithExclusivity, [mandateMovie1], sales, []);
     //Germany is sold
     expect(markers.sold.length).toBe(1);
@@ -260,7 +260,7 @@ describe('Test terms out of movie mandates', () => {
     expect(markers.inBucket.length).toBe(0);
   })
 
-  it.skip('Check terms available', () => {
+  it('Check terms available', () => {
     const markers = durationAvailabilities(availsSVODArgentina, [mandateMovie1], sales, []);
     expect(markers.available.length).toBe(1);
     const [{ from, to }] = markers.available;
@@ -271,7 +271,7 @@ describe('Test terms out of movie mandates', () => {
     expect(markers.inBucket.length).toBe(0);
   })
 
-  it.skip('Check term sold', () => {
+  it('Check term sold', () => {
     const markers = durationAvailabilities(availsPayTVArgentina, [mandateMovie1], sales, []);
     //Argentina is sold
     expect(markers.sold.length).toBe(1);
@@ -288,7 +288,7 @@ describe('Test terms out of movie mandates', () => {
     expect(markers.inBucket.length).toBe(0);
   })
 
-  it.skip('Check available due to non exclusivity', () => {
+  it('Check available due to non exclusivity', () => {
     const markers = durationAvailabilities(availsGermany, [mandateMovie1], sales, []);
     expect(markers.available.length).toBe(1);
     const [{ from, to }] = markers.available;
@@ -299,7 +299,7 @@ describe('Test terms out of movie mandates', () => {
     expect(markers.sold.length).toBe(0);
   })
 
-  it.skip('Check available terms with existing future sales', () => {
+  it('Check available terms with existing future sales', () => {
     const markers = durationAvailabilities(availsBelgium, [mandateMovie1], sales, []);
     //Belgium is sold
     expect(markers.sold.length).toBe(1);
@@ -315,7 +315,7 @@ describe('Test terms out of movie mandates', () => {
     expect(markers.inBucket.length).toBe(0);
   })
 
-  it.skip('Check not available due to terms with existing future sales', () => {
+  it('Check not available due to terms with existing future sales', () => {
     const markers = durationAvailabilities(availsFranceLuxembourg, [mandateMovie1], sales, []);
     //France/Luxembourg are sold
     expect(markers.sold.length).toBe(1);
@@ -332,7 +332,7 @@ describe('Test terms out of movie mandates', () => {
     expect(markers.inBucket.length).toBe(0);
   })
 
-  it.skip('Check available on several Media + Last day of mandate', () => {
+  it('Check available on several Media + Last day of mandate', () => {
     const markers = durationAvailabilities(availsAllButSouthKorea, [mandateMovie1], sales, []);
     const argentinaMarker = markers.sold.find(marker => marker.term.contractId === saleArgentinaMovie1.id)
     const germanyMarker = markers.sold.find(marker => marker.term.contractId === saleGermanyMovie1.id)

@@ -394,7 +394,9 @@ function getMatchingCalendarMandates(mandates: FullMandate[], avails: CalendarAv
       )
     );
     if (foundMandate) {
-      availableMandates.push(foundMandate)
+      const duplicate = availableMandates.find(m => m.id === foundMandate.id)
+      if (!duplicate)
+        availableMandates.push(foundMandate)
       foundTerritory.push(territory)
     }
   })
