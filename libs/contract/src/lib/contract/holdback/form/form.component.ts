@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, EventEmitter, TemplateRef, Input, Output, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
-import { Movie } from '@blockframes/movie/+state';
+import { Movie } from '@blockframes/data-model';
 import { FormTableComponent } from '@blockframes/ui/form/table/form-table.component';
 import { FormList } from '@blockframes/utils/form';
 import { Scope } from '@blockframes/utils/static-model';

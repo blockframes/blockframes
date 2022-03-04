@@ -4,7 +4,7 @@ import { EmailTemplateRequest, sendMailFromTemplate } from './internals/email';
 import { App } from '@blockframes/utils/apps';
 import { Offer } from '@blockframes/contract/offer/+state/offer.model';
 import { Organization, OrganizationDocument } from '@blockframes/organization/+state';
-import { Movie } from '@blockframes/movie/+state';
+import { Movie } from '@blockframes/data-model';
 import { appUrl, supportEmails } from '@env';
 import { staticModel } from '@blockframes/utils/static-model';
 import { format } from "date-fns";

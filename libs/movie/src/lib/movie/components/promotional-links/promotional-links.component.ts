@@ -1,5 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { Movie } from '@blockframes/movie/+state';
+import { Movie } from '@blockframes/data-model';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
 
 @Component({

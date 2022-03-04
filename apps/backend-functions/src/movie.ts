@@ -14,7 +14,7 @@ import { sendMovieSubmittedEmail } from './templates/mail';
 import { sendMail } from './internals/email';
 import { groupIds } from '@blockframes/utils/emails/ids';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
-import { Movie } from '@blockframes/movie/+state';
+import { Movie } from '@blockframes/data-model';
 import { Organization } from '@blockframes/organization/+state';
 
 const apps: App[] = getAllAppsExcept(['crm']);

@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { startWith } from 'rxjs/operators';
 import { Contract } from '@blockframes/contract/contract/+state';
-import { Movie } from '@blockframes/movie/+state';
+import { Movie } from '@blockframes/data-model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';

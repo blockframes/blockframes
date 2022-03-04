@@ -1,5 +1,5 @@
 import { Firestore } from '@blockframes/firebase-utils';
-import { Movie } from '@blockframes/movie/+state';
+import { Movie } from '@blockframes/data-model';
 import { Organization } from '@blockframes/organization/+state';
 import { Stakeholder } from '@blockframes/utils/common-interfaces';
 import { Territory } from '@blockframes/utils/static-model';
@@ -89,7 +89,7 @@ export async function upgrade(db: Firestore) {
         }
       }
     }
- 
+
     if (update) await movieDoc.ref.set(data);
   })
 

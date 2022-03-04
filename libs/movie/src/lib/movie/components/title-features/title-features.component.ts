@@ -1,5 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import { Movie } from '@blockframes/movie/+state';
+import { Movie } from '@blockframes/data-model';
 import { productionStatus, contentType, getISO3166TerritoryFromSlug, languages, genres as staticGenres } from '@blockframes/utils/static-model';
 import { formatRunningTime } from "@blockframes/movie/pipes/running-time.pipe";
 

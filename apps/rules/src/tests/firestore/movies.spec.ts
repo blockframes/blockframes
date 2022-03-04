@@ -4,7 +4,7 @@
   assertSucceeds,
 } from '@firebase/rules-unit-testing';
 import { Firestore, initFirestoreApp, rulesFixtures as testFixture } from '@blockframes/testing/unit-tests';
-import { Movie } from '@blockframes/movie/+state';
+import { Movie } from '@blockframes/data-model';
 import { StoreStatus } from '@blockframes/utils/static-model';
 
 describe('Movies Rules Tests', () => {

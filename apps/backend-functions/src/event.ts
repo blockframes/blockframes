@@ -5,12 +5,12 @@ import { createDocumentMeta, createPublicUserDocument, getDocument } from './dat
 import { Organization } from '@blockframes/organization/+state';
 import { createNotification, triggerNotifications } from './notification';
 import { PublicUser } from './data/types';
-import { Movie } from '@blockframes/movie/+state';
+import { Movie } from '@blockframes/data-model';
 
 
 /**
  * Removes invitations and notifications related to an event when event is deleted
- * @param snap 
+ * @param snap
  */
 export async function onEventDelete(
   snap: FirebaseFirestore.DocumentSnapshot

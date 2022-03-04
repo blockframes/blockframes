@@ -1,7 +1,7 @@
 import { CalendarEvent } from 'angular-calendar';
 import { Meeting, EventBase, Screening, EventMeta, MeetingAttendee, AttendeeStatus } from './event.firestore';
 import { toDate } from '@blockframes/utils/helpers';
-import { Movie } from '@blockframes/movie/+state';
+import { Movie } from '@blockframes/data-model';
 import { Organization } from '@blockframes/organization/+state';
 import type firebase from 'firebase';
 import { AnonymousCredentials } from '@blockframes/auth/+state/auth.model';

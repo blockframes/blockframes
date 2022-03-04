@@ -1,7 +1,7 @@
 
 import { centralOrgId } from '@env';
 
-import { Movie } from '@blockframes/movie/+state';
+import { Movie } from '@blockframes/data-model';
 import { Mandate } from '@blockframes/contract/contract/+state';
 import { Timestamp } from '@blockframes/utils/common-interfaces/timestamp';
 

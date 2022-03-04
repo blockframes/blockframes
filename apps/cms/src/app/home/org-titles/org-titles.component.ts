@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { FormEntity, FormGroupSchema } from 'ng-form-factory';
 import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
 import { Organization, orgName } from '@blockframes/organization/+state';
-import { Movie } from '@blockframes/movie/+state';
+import { Movie } from '@blockframes/data-model';
 import { OrgTitlesSection } from '@blockframes/admin/cms';
 import { FormAutocompleteModule } from '../../forms/autocomplete';
 import { FormChipsAutocompleteModule } from '../../forms/chips-autocomplete';
@@ -44,9 +44,9 @@ export class OrgsComponent {
   @Input() form: OrgTitleForm;
 
   params$ = this.route.paramMap;
-  
-  displayOrgLabel = (org?: Organization) => orgName(org); 
-  getOrgValue = (org?: Organization) => org?.id; 
+
+  displayOrgLabel = (org?: Organization) => orgName(org);
+  getOrgValue = (org?: Organization) => org?.id;
   displayTitleLabel = (title?: Movie) => title?.title.international;
   getTitleValue = (title?: Movie) => title?.id;
 

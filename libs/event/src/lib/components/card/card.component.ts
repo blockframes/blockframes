@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input, Pipe, PipeTransform, HostBinding } from '@angular/core';
-import { Movie } from '@blockframes/movie/+state';
+import { Movie } from '@blockframes/data-model';
 import { ScreeningEvent, MeetingEvent } from '../../+state';
 
 @Component({

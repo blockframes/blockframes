@@ -1,5 +1,5 @@
 
-import { Movie } from '@blockframes/movie/+state';
+import { Movie } from '@blockframes/data-model';
 import { getCollection, jwplayerApiV2 } from '@blockframes/firebase-utils';
 import { MovieVideo } from '@blockframes/data-model';
 import { StorageVideo } from '@blockframes/media/+state/media.firestore';
