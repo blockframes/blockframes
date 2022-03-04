@@ -2,12 +2,11 @@ import { Component, ChangeDetectionStrategy, OnInit, Input, Optional, Inject } f
 import { AuthService } from '@blockframes/auth/+state';
 import { Organization } from '@blockframes/organization/+state';
 import { App, getOrgModuleAccess } from '@blockframes/utils/apps';
-import { Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { Intercom } from 'ng-intercom';
-import { hasDenomination, hasDisplayName } from '@blockframes/utils/helpers';
+import { delay, hasDenomination, hasDisplayName } from '@blockframes/utils/helpers';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { map } from 'rxjs/operators';
 import { APP } from '@blockframes/utils/routes/utils';
 
 @Component({
@@ -27,7 +26,7 @@ export class AuthDataValidationComponent implements OnInit {
 
   public profileData = false;
   public orgData = false;
-  public emailValidate$: Observable<boolean>;
+  public emailValidate$ = new BehaviorSubject(false);
   public orgApproval = false;
   public user = this.authService.profile;
 
@@ -46,11 +45,21 @@ export class AuthDataValidationComponent implements OnInit {
       this.profileData = true;
     }
 
-    this.emailValidate$ = this.authService.user$.pipe(map(auth => auth?.emailVerified)); // TODO #7273 since authState is only triggered via sign-in/out data is not updated when emailVerified state change
+    this.listenOnEmailVerified();
   }
 
   openIntercom(): void {
     return this.intercom.show();
+  }
+
+  private async listenOnEmailVerified() {
+    let emailVerified = false;
+    while (emailVerified === false) {
+      const firebaseUser = await this.authService.reloadUser();
+      emailVerified = firebaseUser.emailVerified;
+      if (!emailVerified) await delay(3000);
+    }
+    this.emailValidate$.next(emailVerified);
   }
 
   refresh() {
