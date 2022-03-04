@@ -60,8 +60,18 @@ describe('DB cleaning script', () => {
     await populate('orgs', [testOrg1]);
 
     adminAuth.users = [
-      { uid: 'A', email: 'johndoe@fake.com', providerData: [{ uid: 'A', email: 'johndoe@fake.com', providerId: 'password' }] },
-      { uid: 'B', email: 'johnmcclain@fake.com', providerData: [{ uid: 'B', email: 'johnmcclain@fake.com', providerId: 'password' }] }
+      {
+        uid: 'A',
+        email: 'johndoe@fake.com',
+        providerData: [{ uid: 'A', email: 'johndoe@fake.com', providerId: 'password' }],
+        metadata: { creationTime: new Date().toUTCString() }
+      },
+      {
+        uid: 'B',
+        email: 'johnmcclain@fake.com',
+        providerData: [{ uid: 'B', email: 'johnmcclain@fake.com', providerId: 'password' }],
+        metadata: { creationTime: new Date().toUTCString() }
+      }
     ];
 
     const [organizations, usersBefore] = await Promise.all([
@@ -71,6 +81,59 @@ describe('DB cleaning script', () => {
 
     // Check if data have been correctly added
     expect(usersBefore.docs.length).toEqual(2);
+    expect(organizations.docs.length).toEqual(1);
+
+    const organizationIds = organizations.docs.map(ref => ref.id);
+
+    await cleanUsers(usersBefore, organizationIds, adminAuth);
+
+    const usersAfter: Snapshot = await getCollectionRef('users');
+    const cleanedUsers = usersAfter.docs.filter(u => isUserClean(u, organizationIds)).length;
+
+    expect(cleanedUsers).toEqual(2);
+  });
+
+  it.skip('should remove inactive users', async () => {
+    // Users with good org
+    const testUser1 = { uid: 'A', email: 'johndoe@fake.com', firstName: 'john', lastName: 'doe', orgId: 'org-A' };
+    const testUser2 = { uid: 'B', email: 'johndoe@fake2.com', firstName: 'mickey', lastName: 'mouse', orgId: 'org-A' };
+
+    // User with fake orgId
+    const testUser3 = { uid: 'Z', email: 'johnmcclain@fake.com', firstName: 'john', lastName: 'mcclain', orgId: 'org-B' };
+
+    const testOrg1 = { id: 'org-A' };
+
+    await populate('users', [testUser1, testUser2, testUser3]);
+    await populate('orgs', [testOrg1]);
+
+    adminAuth.users = [
+      {
+        uid: 'A',
+        email: 'johndoe@fake.com',
+        providerData: [{ uid: 'A', email: 'johndoe@fake.com', providerId: 'password' }],
+        metadata: { creationTime: new Date().toUTCString() }
+      },
+      {
+        uid: 'B',
+        email: 'johndoe@fake2.com',
+        providerData: [{ uid: 'B', email: 'johndoe@fake2.com', providerId: 'password' }],
+        metadata: { creationTime: new Date().toUTCString() }
+      },
+      {
+        uid: 'Z',
+        email: 'johnmcclain@fake.com',
+        providerData: [{ uid: 'Z', email: 'johnmcclain@fake.com', providerId: 'password' }],
+        metadata: { creationTime: new Date().toUTCString() }
+      }
+    ];
+
+    const [organizations, usersBefore] = await Promise.all([
+      getCollectionRef('orgs'),
+      getCollectionRef('users')
+    ]);
+
+    // Check if data have been correctly added
+    expect(usersBefore.docs.length).toEqual(3);
     expect(organizations.docs.length).toEqual(1);
 
     const organizationIds = organizations.docs.map(ref => ref.id);

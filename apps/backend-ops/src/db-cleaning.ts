@@ -4,7 +4,7 @@ import { PublicUser } from '@blockframes/user/+state/user.firestore';
 import { OrganizationDocument, PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
 import { PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
 import { removeUnexpectedUsers } from './users';
-import { Auth, QueryDocumentSnapshot, getDocument, runChunks, removeAllSubcollections } from '@blockframes/firebase-utils';
+import { Auth, QueryDocumentSnapshot, getDocument, runChunks, removeAllSubcollections, UserRecord } from '@blockframes/firebase-utils';
 import admin from 'firebase-admin';
 import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 import { getAllAppsExcept } from '@blockframes/utils/apps';
@@ -24,14 +24,14 @@ export async function cleanDeprecatedData(db: FirebaseFirestore.Firestore, auth?
   const { dbData, collectionData } = await loadAllCollections(db);
 
   // Data consistency check before cleaning data
-  await printDatabaseInconsistencies({ dbData, collectionData }, undefined, { printDetail: false });
+  //await printDatabaseInconsistencies({ dbData, collectionData }, undefined, { printDetail: false });
 
   // Actual cleaning
   if (verbose) console.log('Cleaning data');
   await cleanData(dbData, db, auth);
 
   // Data consistency check after cleaning data
-  await printDatabaseInconsistencies(undefined, db, { printDetail: false });
+  //await printDatabaseInconsistencies(undefined, db, { printDetail: false });
 
   return true;
 }
@@ -51,6 +51,8 @@ async function cleanData(dbData: DatabaseData, db: FirebaseFirestore.Firestore, 
   // Compare and update/delete documents with references to non existing documents
   if (auth) await cleanUsers(dbData.users.refs, organizationIds, auth);
   if (verbose) console.log('Cleaned users');
+
+  return;
 
   // Loading users list after "cleanUsers" since some may have been removed
   const users = await db.collection('users').get();
@@ -353,14 +355,29 @@ function isInvitationValid(invitation: InvitationDocument, existingIds: string[]
 }
 
 async function isUserValid(user: PublicUser, auth: Auth) {
+  const authUser: UserRecord = await auth.getUserByEmail(user.email).catch(() => undefined);
+
   // User was not found in "Auth"
-  const authUserId = await auth.getUserByEmail(user.email).then(u => u.uid).catch(() => undefined);
-  if (!authUserId) return false;
+  if (!authUser) return false;
 
-  // User has'nt accepted org join invitation in 3 months #6648
-  // @TODO #6648
+  // TODO #6648
+  // User does not have orgId and was created more than 90 days ago
+  const creationTimeTimestamp = Date.parse(authUser.metadata.creationTime);
+  if (!user.orgId && creationTimeTimestamp < currentTimestamp - (dayInMillis * 90)) {
+    return false;
+  }
 
-  // User did'nt connected during the last 3 years #6656
-  // @TODO #6656
+  // TODO #6656
+  // If account is older than 3 years
+  const threeYearsAgo = currentTimestamp - (dayInMillis * 365 * 3);
+  if (creationTimeTimestamp < threeYearsAgo) {
+    // User never connected
+    if (!authUser.metadata.lastSignInTime) return false;
+
+    // User have not signed in within the last 3 years
+    const lastSignInTime = Date.parse(authUser.metadata.lastSignInTime)
+    if (lastSignInTime < threeYearsAgo) return false;
+  }
+
   return user.uid;
 }

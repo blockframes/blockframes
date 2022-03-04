@@ -119,7 +119,7 @@ export async function upgrade() {
   const { db, auth, storage } = loadAdminServices();
 
   console.info('Preparing the database...');
-  await migrate({ withBackup: true, db, storage });
+  //await migrate({ withBackup: true, db, storage });
   console.info('Database ready for deploy!');
 
   console.info('Cleaning unused db data...');
@@ -127,14 +127,14 @@ export async function upgrade() {
   console.info('DB data clean and fresh!');
 
   console.info('Cleaning unused storage data...');
-  await cleanStorage(storage.bucket(storageBucket));
+  /*await cleanStorage(storage.bucket(storageBucket));
   console.info('Storage data clean and fresh!');
 
   console.info('Preparing Algolia...');
   await upgradeAlgoliaOrgs(null, db);
   await upgradeAlgoliaMovies(null, db);
   await upgradeAlgoliaUsers(db);
-  console.info('Algolia ready for testing!');
+  console.info('Algolia ready for testing!');*/
 
 }
 
