@@ -6,14 +6,20 @@
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
       "rules": {
-        // "@nrwl/nx/enforce-module-boundaries": [
-        //   "error",
-        //   {
-        //     "enforceBuildableLibDependency": true,
-        //     "allow": [],
-        //     "depConstraints": [{ "sourceTag": "*", "onlyDependOnLibsWithTags": ["*"] }]
-        //   }
-        // ]
+        "@nrwl/nx/enforce-module-boundaries": [
+          "warn",
+          {
+            "enforceBuildableLibDependency": true,
+            "allow": [],
+            "depConstraints": [
+              { "sourceTag": "shared", "onlyDependOnLibsWithTags": ["shared"] },
+              { "sourceTag": "node", "onlyDependOnLibsWithTags": ["node", "shared"] },
+              { "sourceTag": "browser", "onlyDependOnLibsWithTags": ["browser", "shared"] },
+              { "sourceTag": "local", "onlyDependOnLibsWithTags": ["local", "shared"] },
+              { "sourceTag": "*", "onlyDependOnLibsWithTags": ["*"] }
+            ]
+          }
+        ]
       }
     },
     { "files": ["*.ts", "*.tsx"], "extends": ["plugin:@nrwl/nx/typescript"], "rules": {} },
