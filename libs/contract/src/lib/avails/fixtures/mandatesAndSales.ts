@@ -467,6 +467,7 @@ export const saleGermanyMovie5 = {
   }],
 } as FullSale;
 
+//multiple term mandates.
 
 export const mandateMovie6 = {
   ...createMandate({
@@ -482,7 +483,7 @@ export const mandateMovie6 = {
         from: new Date('02/21/2021'),
         to: new Date('02/21/2032')
       },
-      medias: ['sVod', 'aVod', 'est', 'nVod', 'fVod', 'payTv', 'freeTv', 'payPerView', 'video', 'planes', 'boats', 'educational', 'rental', 'through', 'hotel'],
+      medias: [ 'payTv', 'planes', 'boats', 'educational'],
       territories: territories2,
       exclusive: true
     },
@@ -495,6 +496,38 @@ export const mandateMovie6 = {
       },
       medias: ['planes', 'boats', 'educational', 'hotels'],
       territories: territories1,
+      exclusive: true
+    },
+  ],
+} as FullMandate;
+
+export const mandateMovie7 = {
+  ...createMandate({
+    titleId: 'Movie7',
+    id: 'mandateMovie7',
+    termIds: ['term1MandateMovie7', 'term2MandateMovie7'],
+  }),
+  terms: [
+    {
+      id: 'term1MandateMovie7',
+      contractId: 'mandateMovie7',
+      duration: {
+        from: new Date('02/21/2021'),
+        to: new Date('02/21/2032')
+      },
+      medias: ['payTv', 'freeTv'],
+      territories: ['france', 'brazil'],
+      exclusive: true
+    },
+    {
+      id: 'term2MandateMovie7',
+      contractId: 'mandateMovie7',
+      duration: {
+        from: new Date('02/21/2021'),
+        to: new Date('02/21/2032')
+      },
+      medias: ['planes', 'sVod'],
+      territories: ['cameroon', 'brazil'],
       exclusive: true
     },
   ],

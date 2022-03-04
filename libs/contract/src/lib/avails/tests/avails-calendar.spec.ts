@@ -18,11 +18,11 @@ import {
   availFrance, availsSVODArgentina, availsPayTVArgentina,
   availsGermany, availsBelgium, availsExistingEndedSales,
   availsOngoingSales, availsTerritoryWithExclusivity, availsTerritoryWithoutExclusivity,
-  availsFranceLuxembourg, availsAllButSouthKorea, availsPayTV, availsPlanes,
+  availsFranceLuxembourg, availsAllButSouthKorea, availsPayTV, availsPlanes, availsPlanesPayTv,
 } from './../fixtures/availsFilters';
 import { assertDate } from './utils'
 import {
-  mandateMovie1, saleArgentinaMovie1, saleGermanyMovie1, saleCanadaMovie1, saleBelgiumFranceLuxembourgMovie1, mandateMovie6,
+  mandateMovie1, saleArgentinaMovie1, saleGermanyMovie1, saleCanadaMovie1, saleBelgiumFranceLuxembourgMovie1, mandateMovie6, mandateMovie7,
 } from './../fixtures/mandatesAndSales';
 
 const sales = [saleArgentinaMovie1, saleGermanyMovie1, saleCanadaMovie1, saleBelgiumFranceLuxembourgMovie1]
@@ -36,7 +36,7 @@ const { from: mandateFrom, to: mandateTo } = mandateMovie1.terms[0].duration;
 
 const { from: saleBelgiumFranceLuxembourgFrom, to: saleBelgiumFranceLuxembourgTo } = saleBelgiumFranceLuxembourgMovie1.terms[0].duration;
 
-describe('Calendar', () => {
+describe.skip('Calendar', () => {
   describe('Test Matrix', () => {
 
     it('Test isBefore', () => {
@@ -361,6 +361,11 @@ describe('Test terms out of movie mandates', () => {
 
   it('Check available of china/france on planes media', () => {
     const markers = durationAvailabilities(availsPlanes, [mandateMovie6], [], []);
+    expect(markers.available.length).toBeGreaterThan(0);
+  })
+
+  it('Check available of brazil medias in different terms', () => {
+    const markers = durationAvailabilities(availsPlanesPayTv, [mandateMovie7], [], []);
     expect(markers.available.length).toBeGreaterThan(0);
   })
 

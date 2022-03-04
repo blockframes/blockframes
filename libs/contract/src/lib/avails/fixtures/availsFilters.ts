@@ -293,3 +293,14 @@ export const availsPlanes: AvailsFilter = {
 };
 
 
+export const availsPlanesPayTv: AvailsFilter = {
+  duration: {
+    from: new Date('02/28/2022'),
+    to: new Date('02/23/2023'),
+  },
+  exclusive: true,
+  territories: ['brazil'],
+  medias: ['payTv', 'planes']
+};
+
+
