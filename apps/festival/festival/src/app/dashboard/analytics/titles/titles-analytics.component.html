@@ -1,0 +1,7 @@
+<h1>Titles' Activity</h1>
+
+<bf-table [source]="titles$ | async" pagination="50" useFilter  clickable (rowClick)="goToTitle($event)">
+  <ng-template colRef="title.international" label="Title" let-title sort>
+    <b>{{ title }}</b>
+  </ng-template>
+</bf-table>

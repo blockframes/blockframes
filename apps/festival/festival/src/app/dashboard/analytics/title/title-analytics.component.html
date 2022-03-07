@@ -1,0 +1,31 @@
+<ng-container *ngIf="title$ | async as title">
+  <header
+    class="dark-contrast-theme"
+    fxLayout="column"
+    fxLayoutGap="20px"
+    bgAsset="empty_banner.png"
+    bgTheme="dark"
+  >
+    <a mat-icon-button (click)="goBack()">
+      <mat-icon svgIcon="arrow_back"></mat-icon>
+    </a>
+
+    <section fxLayout fxLayoutGap="24px">
+      <a [routerLink]="['/c/o/marketplace/title/', title.id]">
+        <img fxHide.lt-md [ref]="title.poster" asset="empty_poster.svg" alt="Movie Poster" class="poster">
+      </a>
+
+      <article fxFlex fxLayout="column">
+        <p class="mat-body-1">{{ title.directors | displayName }}</p>
+        <div fxLayout fxLayoutAlign="space-between">
+          <h1 class="mat-display-1">{{ title.title.international }}</h1>
+          <a mat-button [routerLink]="['/c/o/marketplace/title/', title.id]" color="primary" class="film-page-button">
+            <span>See Film Page</span>
+          </a>
+        </div>
+        <h6>{{ title.genres | toLabel: 'genres' }}</h6>
+      </article>
+    </section>
+
+  </header>
+</ng-container>

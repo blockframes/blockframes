@@ -148,6 +148,19 @@ const routes: Routes = [{
       ],
     },
     {
+      path: 'analytics',
+      children: [
+        {
+          path: '',
+          loadChildren: () => import('./analytics/titles/titles-analytics.module').then(m => m.TitlesAnalyticsModule)
+        },
+        {
+          path: ':titleId',
+          loadChildren: () => import('./analytics/title/title-analytics.module').then(m => m.TitleAnalyticsModule)
+        }
+      ]
+    },
+    {
       path: 'files',
       loadChildren: () => import('./files/files.module').then(m => m.FilesViewModule)
     },
