@@ -24,14 +24,14 @@ export async function cleanDeprecatedData(db: FirebaseFirestore.Firestore, auth?
   const { dbData, collectionData } = await loadAllCollections(db);
 
   // Data consistency check before cleaning data
-  //await printDatabaseInconsistencies({ dbData, collectionData }, undefined, { printDetail: false });
+  await printDatabaseInconsistencies({ dbData, collectionData }, undefined, { printDetail: false });
 
   // Actual cleaning
   if (verbose) console.log('Cleaning data');
   await cleanData(dbData, db, auth);
 
   // Data consistency check after cleaning data
-  //await printDatabaseInconsistencies(undefined, db, { printDetail: false });
+  await printDatabaseInconsistencies(undefined, db, { printDetail: false });
 
   return true;
 }
@@ -51,8 +51,6 @@ async function cleanData(dbData: DatabaseData, db: FirebaseFirestore.Firestore, 
   // Compare and update/delete documents with references to non existing documents
   if (auth) await cleanUsers(dbData.users.refs, organizationIds, auth);
   if (verbose) console.log('Cleaned users');
-
-  return;
 
   // Loading users list after "cleanUsers" since some may have been removed
   const users = await db.collection('users').get();
