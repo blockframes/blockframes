@@ -4,12 +4,13 @@ import { PublicUser } from '@blockframes/user/+state/user.firestore';
 import { OrganizationDocument, PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
 import { PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
 import { removeUnexpectedUsers } from './users';
-import { Auth, QueryDocumentSnapshot, getDocument, runChunks, removeAllSubcollections, UserRecord } from '@blockframes/firebase-utils';
+import { Auth, QueryDocumentSnapshot, getDocument, runChunks, removeAllSubcollections, UserRecord, loadAdminServices } from '@blockframes/firebase-utils';
 import admin from 'firebase-admin';
 import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 import { getAllAppsExcept } from '@blockframes/utils/apps';
 import { DatabaseData, loadAllCollections, printDatabaseInconsistencies } from './internals/utils';
 import { MovieDocument } from '@blockframes/movie/+state/movie.firestore';
+import { deleteUsers } from 'libs/testing/unit-tests/src/lib/firebase';
 
 export const numberOfDaysToKeepNotifications = 14;
 const currentTimestamp = new Date().getTime();
@@ -32,6 +33,23 @@ export async function cleanDeprecatedData(db: FirebaseFirestore.Firestore, auth?
 
   // Data consistency check after cleaning data
   await printDatabaseInconsistencies(undefined, db, { printDetail: false });
+
+  return true;
+}
+
+export async function auditUsers(db: FirebaseFirestore.Firestore, auth?: admin.auth.Auth) {
+  if (!auth) {
+    const services = loadAdminServices();
+    auth = services.auth;
+  }
+
+  const { dbData } = await loadAllCollections(db);
+
+  const organizationIds = dbData.orgs.refs.docs.map(ref => ref.id);
+
+  console.log('Auditing users...');
+  await cleanUsers(dbData.users.refs, organizationIds, auth, { dryRun: true });
+  console.log('Audit ended.')
 
   return true;
 }
@@ -148,34 +166,50 @@ async function cleanOneInvitation(doc: QueryDocumentSnapshot, invitation: Invita
 export async function cleanUsers(
   users: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
   existingOrganizationIds: string[],
-  auth: Auth
+  auth: Auth,
+  options = { dryRun: false }
 ) {
-
   // Check if auth users have their record on DB
-  await removeUnexpectedUsers(users.docs.map(u => u.data() as PublicUser), auth);
+  await removeUnexpectedUsers(users.docs.map(u => u.data() as PublicUser), auth, options);
 
-  return runChunks(users.docs, async (userDoc: FirebaseFirestore.DocumentSnapshot) => {
+  const authUsersToDelete: string[] = [];
+
+  await runChunks(users.docs, async (userDoc: FirebaseFirestore.DocumentSnapshot) => {
     const user = userDoc.data() as PublicUser;
 
     // Check if a DB user have a record in Auth.
-    const validUser = await isUserValid(user, auth);
+    const authUser: UserRecord = await auth.getUserByEmail(user.email).catch(() => undefined);
 
-    if (validUser) {
+    if (authUser) {
+      const validUser = await isUserValid(user, authUser);
       // Check if ids are the same
-      if (validUser !== user.uid) {
-        if (verbose) console.error(`uid mistmatch for ${user.email}. db: ${user.uid} - auth : ${validUser}`);
-      } else if (!existingOrganizationIds.includes(user.orgId)) {
+      if (authUser.uid !== user.uid) {
+        if (verbose || options.dryRun) console.error(`ERR - uid missmatch for ${user.email}. db: ${user.uid} - auth : ${authUser.uid}`);
+      } else if (!validUser) {
+        if (verbose || options.dryRun) {
+          console.log(`DB - Too old user "${user.uid}" will be deleted`);
+          console.log(`AUTH - Too old user "${user.uid}" will be deleted`);
+        }
+
+        if (!options.dryRun) {
+          authUsersToDelete.push(authUser.uid);
+          await userDoc.ref.delete();
+        }
+      } else if (user.orgId && !existingOrganizationIds.includes(user.orgId)) {
+        if (verbose || options.dryRun) console.error(`DB - invalid orgId "${user.orgId}" for user ${user.uid}`);
         delete user.orgId;
-        await userDoc.ref.set(user);
+        if (!options.dryRun) await userDoc.ref.set(user);
       }
     } else {
       // User is deleted, we don't delete or update other documents as orgs, permissions, notifications etc
       // because this will be handled in the next parts of the script (cleanOrganizations, cleanPermissions, etc)
       // related storage documents will also be deleted in the cleanStorage and algolia will be updated at end of "upgrade" process
-      if (verbose) console.log(`Deleting user : ${user.uid}.`);
-      await userDoc.ref.delete();
+      if (verbose || options.dryRun) console.log(`DB - Deleting user not found in AUTH : ${user.uid}.`);
+      if (!options.dryRun) await userDoc.ref.delete();
     }
   }, undefined, verbose);
+
+  return deleteUsers(auth, authUsersToDelete);
 }
 
 export function cleanOrganizations(
@@ -352,12 +386,7 @@ function isInvitationValid(invitation: InvitationDocument, existingIds: string[]
   }
 }
 
-async function isUserValid(user: PublicUser, auth: Auth) {
-  const authUser: UserRecord = await auth.getUserByEmail(user.email).catch(() => undefined);
-
-  // User was not found in "Auth"
-  if (!authUser) return false;
-
+function isUserValid(user: PublicUser, authUser: UserRecord) {
   // User does not have orgId and was created more than 90 days ago
   const creationTimeTimestamp = Date.parse(authUser.metadata.creationTime);
   if (!user.orgId && creationTimeTimestamp < currentTimestamp - (dayInMillis * 90)) {
@@ -375,5 +404,5 @@ async function isUserValid(user: PublicUser, auth: Auth) {
     if (lastSignInTime < threeYearsAndAMonthAgo) return false;
   }
 
-  return user.uid;
+  return true;
 }

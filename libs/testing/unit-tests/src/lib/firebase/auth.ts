@@ -16,6 +16,22 @@ export async function deleteAllUsers(auth: admin.auth.Auth) {
   console.timeEnd(timeMsg); // eslint-disable-line no-restricted-syntax
 }
 
+export async function deleteUsers(auth: admin.auth.Auth, uidToDelete: string[] = []) {
+  if (!uidToDelete.length) return;
+  let result: Partial<admin.auth.ListUsersResult> = { pageToken: undefined };
+
+  console.log(`Deleting ${uidToDelete.length} users now...`);
+  const timeMsg = `Deleting ${uidToDelete.length} users took`;
+  console.time(timeMsg); // eslint-disable-line no-restricted-syntax
+  do {
+    result = await auth.listUsers(100, result.pageToken);
+    const users = result.users.filter(record => uidToDelete.includes(record.uid));
+    await auth.deleteUsers(users.map((record) => record.uid));
+    await sleep(1000); // @see https://groups.google.com/u/1/g/firebase-talk/c/4VkOBKIsBxU
+  } while (result.pageToken);
+  console.timeEnd(timeMsg); // eslint-disable-line no-restricted-syntax
+}
+
 export async function importAllUsers(auth: admin.auth.Auth, users: admin.auth.UserImportRecord[]) {
   const timeMsg = `Creating ${users.length} users took`;
   console.time(timeMsg); // eslint-disable-line no-restricted-syntax

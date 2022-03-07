@@ -55,7 +55,7 @@ async function createAllUsers(users: UserConfig[], auth: Auth) {
  * @param expectedUsers
  * @param auth
  */
-export async function removeUnexpectedUsers(expectedUsers: PublicUser[], auth: Auth) {
+export async function removeUnexpectedUsers(expectedUsers: PublicUser[], auth: Auth, options = { dryRun: false }) {
   let pageToken;
   const currentTimestamp = new Date().getTime();
   const dayInMillis = 1000 * 60 * 60 * 24;
@@ -93,9 +93,9 @@ export async function removeUnexpectedUsers(expectedUsers: PublicUser[], auth: A
     // and wait for some time to avoid exceeding Google's quotas.
     // This is "good enough", but do not reproduce in frontend / backend code.
     for (const user of usersToRemove) {
-      console.log('removing user:', user.email, user.uid);
+      console.log(`removing ${user.providerData.length ? 'regular' : 'anonymous'} user ${user.email} (${user.uid})`);
     }
-    await auth.deleteUsers(usersToRemove.map((user) => user.uid));
+    if (!options.dryRun) await auth.deleteUsers(usersToRemove.map((user) => user.uid));
     await sleep(100);
   } while (pageToken);
 

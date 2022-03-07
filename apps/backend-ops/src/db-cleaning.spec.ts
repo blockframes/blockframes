@@ -15,6 +15,7 @@ import {
   cleanUsers,
   cleanInvitations,
   cleanDeprecatedData,
+  auditUsers,
 } from './db-cleaning';
 import { every } from 'lodash';
 import { loadAdminServices } from '@blockframes/firebase-utils';
@@ -174,13 +175,20 @@ describe('DB cleaning script', () => {
     await cleanUsers(usersBefore, organizationIds, adminAuth);
 
     const usersAfter: Snapshot = await getCollectionRef('users');
-    const cleanedUsers = usersAfter.docs.filter(u => isUserClean(u, organizationIds));
+    const cleanedDbUsers = usersAfter.docs.filter(u => isUserClean(u, organizationIds));
+    const cleanedAuthUsers = await adminAuth.listUsers();
 
-    expect(cleanedUsers.length).toEqual(2);
+    expect(cleanedDbUsers.length).toEqual(2);
+
+    // Auth should have same size
+    expect(cleanedAuthUsers.users.length).toEqual(cleanedDbUsers.length);
 
     // Users A & D should be kept
-    expect(cleanedUsers.find(o => o.data().uid === 'A')).toBeTruthy();
-    expect(cleanedUsers.find(o => o.data().uid === 'D')).toBeTruthy();
+    expect(cleanedDbUsers.find(o => o.data().uid === 'A')).toBeTruthy();
+    expect(cleanedDbUsers.find(o => o.data().uid === 'D')).toBeTruthy();
+
+    expect(cleanedAuthUsers.users.find(o => o.uid === 'A')).toBeTruthy();
+    expect(cleanedAuthUsers.users.find(o => o.uid === 'D')).toBeTruthy();
 
   });
 
@@ -1082,6 +1090,100 @@ describe('DB cleaning script', () => {
 
     const movC = moviesAfter.docs.find(o => o.data().id === 'mov-C');
     expect(movC.data().orgIds.length).toEqual(0);
+  });
+
+  it('should return true when auditUsers is called', async () => {
+    const output = await auditUsers(db, adminAuth);
+    expect(output).toBeTruthy();
+  });
+
+  it('Auditing users should not update AUTH nor DB', async () => {
+    const currentTimestamp = new Date().getTime();
+
+    const oneMonthsAgo = currentTimestamp - (dayInMillis * 30);
+    const testUser1 = { uid: 'A', email: 'johndoe@fake.com', firstName: 'john', lastName: 'doe' };
+
+    const fourMonthsAgo = currentTimestamp - (dayInMillis * 30 * 4);
+    const testUser2 = { uid: 'B', email: 'johndoe@fake2.com', firstName: 'mickey', lastName: 'mouse' };
+
+    const threeYearsAgoAndTwoMonths = currentTimestamp - (dayInMillis * 365 * 3) - (dayInMillis * 60);
+    const testUser3 = { uid: 'C', email: 'johnmcclain@fake.com', firstName: 'john', lastName: 'mcclain', orgId: 'org-A' };
+
+    const threeYearsAgoAnd29Days = currentTimestamp - (dayInMillis * 365 * 3) - (dayInMillis * 29);
+    const testUser4 = { uid: 'D', email: 'marchammil@fake.com', firstName: 'marc', lastName: 'hammil', orgId: 'org-fake' };
+
+    const fiveYearsAgo = currentTimestamp - (dayInMillis * 365 * 5);
+    const threeYearsAgoAnd31Days = currentTimestamp - (dayInMillis * 365 * 3) - (dayInMillis * 31);
+    const testUser5 = { uid: 'E', email: 'indianajhones@fake.com', firstName: 'indiana', lastName: 'jhones', orgId: 'org-A' };
+
+    await populate('users', [testUser1, testUser2, testUser3, testUser4, testUser5]);
+
+    const testOrg1 = { id: 'org-A' };
+    await populate('orgs', [testOrg1]);
+
+    adminAuth.users = [
+      {
+        uid: 'A',
+        email: 'johndoe@fake.com',
+        providerData: [{ uid: 'A', email: 'johndoe@fake.com', providerId: 'password' }],
+        metadata: { creationTime: new Date(oneMonthsAgo).toUTCString() }
+      },
+      {
+        uid: 'B',
+        email: 'johndoe@fake2.com',
+        providerData: [{ uid: 'B', email: 'johndoe@fake2.com', providerId: 'password' }],
+        metadata: { creationTime: new Date(fourMonthsAgo).toUTCString() }
+      },
+      {
+        uid: 'C',
+        email: 'johnmcclain@fake.com',
+        providerData: [{ uid: 'C', email: 'johnmcclain@fake.com', providerId: 'password' }],
+        metadata: { creationTime: new Date(threeYearsAgoAndTwoMonths).toUTCString() }
+      },
+      {
+        uid: 'D',
+        email: 'marchammil@fake.com',
+        providerData: [{ uid: 'D', email: 'marchammil@fake.com', providerId: 'password' }],
+        metadata: {
+          creationTime: new Date(threeYearsAgoAndTwoMonths).toUTCString(),
+          lastSignInTime: new Date(threeYearsAgoAnd29Days).toUTCString(),
+        }
+      },
+      {
+        uid: 'E',
+        email: 'indianajhones@fake.com',
+        providerData: [{ uid: 'E', email: 'indianajhones@fake.com', providerId: 'password' }],
+        metadata: {
+          creationTime: new Date(fiveYearsAgo).toUTCString(),
+          lastSignInTime: new Date(threeYearsAgoAnd31Days).toUTCString(),
+        }
+      }
+    ];
+
+    const [organizations, usersBefore] = await Promise.all([
+      getCollectionRef('orgs'),
+      getCollectionRef('users')
+    ]);
+
+    // Check if data have been correctly added
+    expect(usersBefore.docs.length).toEqual(5);
+    expect(organizations.docs.length).toEqual(1);
+
+    // Check if data have been correctly added
+    expect(usersBefore.docs.length).toEqual(5);
+
+    await auditUsers(db, adminAuth);
+
+    const usersAfter: Snapshot = await getCollectionRef('users');
+    const authUsersAfter = await adminAuth.listUsers();
+
+    expect(usersAfter.docs.length).toEqual(5);
+
+    // Auth should have same size
+    expect(authUsersAfter.users.length).toEqual(usersAfter.docs.length);
+
+    // OrgId should not have been removed
+    expect(usersAfter.docs.filter(u => u.data().orgId).length).toEqual(3);
   });
 
 });
