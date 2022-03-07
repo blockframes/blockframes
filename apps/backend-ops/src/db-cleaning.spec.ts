@@ -1169,9 +1169,6 @@ describe('DB cleaning script', () => {
     expect(usersBefore.docs.length).toEqual(5);
     expect(organizations.docs.length).toEqual(1);
 
-    // Check if data have been correctly added
-    expect(usersBefore.docs.length).toEqual(5);
-
     await auditUsers(db, adminAuth);
 
     const usersAfter: Snapshot = await getCollectionRef('users');
