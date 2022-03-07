@@ -93,17 +93,32 @@ describe('DB cleaning script', () => {
     expect(cleanedUsers).toEqual(2);
   });
 
-  it.skip('should remove inactive users', async () => {
-    // Users with good org
-    const testUser1 = { uid: 'A', email: 'johndoe@fake.com', firstName: 'john', lastName: 'doe', orgId: 'org-A' };
-    const testUser2 = { uid: 'B', email: 'johndoe@fake2.com', firstName: 'mickey', lastName: 'mouse', orgId: 'org-A' };
+  it('should remove inactive users', async () => {
+    const currentTimestamp = new Date().getTime();
+    // User without org created 1 month ago, should be kept
+    const oneMonthsAgo = currentTimestamp - (dayInMillis * 30);
+    const testUser1 = { uid: 'A', email: 'johndoe@fake.com', firstName: 'john', lastName: 'doe' };
 
-    // User with fake orgId
-    const testUser3 = { uid: 'Z', email: 'johnmcclain@fake.com', firstName: 'john', lastName: 'mcclain', orgId: 'org-B' };
+    // User wihtout org created 4 months ago, should be deleted
+    const fourMonthsAgo = currentTimestamp - (dayInMillis * 30 * 4);
+    const testUser2 = { uid: 'B', email: 'johndoe@fake2.com', firstName: 'mickey', lastName: 'mouse' };
+
+    // User that was created more than 3 years ago (3 years and two months) and that never connected wihtin 3 years, should be deleted
+    const threeYearsAgoAndTwoMonths = currentTimestamp - (dayInMillis * 365 * 3) - (dayInMillis * 60);
+    const testUser3 = { uid: 'C', email: 'johnmcclain@fake.com', firstName: 'john', lastName: 'mcclain', orgId: 'org-A' };
+
+    // User that was created more than 3 years ago (3 years and two months) but connected 3 years ago and 29 days, should be kept
+    const threeYearsAgoAnd29Days = currentTimestamp - (dayInMillis * 365 * 3) - (dayInMillis * 29);
+    const testUser4 = { uid: 'D', email: 'marchammil@fake.com', firstName: 'marc', lastName: 'hammil', orgId: 'org-A' };
+
+    // User that was created more than 5 years ago and connected 3 years ago and 31 days, should be removed
+    const fiveYearsAgo = currentTimestamp - (dayInMillis * 365 * 5);
+    const threeYearsAgoAnd31Days = currentTimestamp - (dayInMillis * 365 * 3) - (dayInMillis * 31);
+    const testUser5 = { uid: 'E', email: 'indianajhones@fake.com', firstName: 'indiana', lastName: 'jhones', orgId: 'org-A' };
 
     const testOrg1 = { id: 'org-A' };
 
-    await populate('users', [testUser1, testUser2, testUser3]);
+    await populate('users', [testUser1, testUser2, testUser3, testUser4, testUser5]);
     await populate('orgs', [testOrg1]);
 
     adminAuth.users = [
@@ -111,19 +126,37 @@ describe('DB cleaning script', () => {
         uid: 'A',
         email: 'johndoe@fake.com',
         providerData: [{ uid: 'A', email: 'johndoe@fake.com', providerId: 'password' }],
-        metadata: { creationTime: new Date().toUTCString() }
+        metadata: { creationTime: new Date(oneMonthsAgo).toUTCString() }
       },
       {
         uid: 'B',
         email: 'johndoe@fake2.com',
         providerData: [{ uid: 'B', email: 'johndoe@fake2.com', providerId: 'password' }],
-        metadata: { creationTime: new Date().toUTCString() }
+        metadata: { creationTime: new Date(fourMonthsAgo).toUTCString() }
       },
       {
-        uid: 'Z',
+        uid: 'C',
         email: 'johnmcclain@fake.com',
-        providerData: [{ uid: 'Z', email: 'johnmcclain@fake.com', providerId: 'password' }],
-        metadata: { creationTime: new Date().toUTCString() }
+        providerData: [{ uid: 'C', email: 'johnmcclain@fake.com', providerId: 'password' }],
+        metadata: { creationTime: new Date(threeYearsAgoAndTwoMonths).toUTCString() }
+      },
+      {
+        uid: 'D',
+        email: 'marchammil@fake.com',
+        providerData: [{ uid: 'D', email: 'marchammil@fake.com', providerId: 'password' }],
+        metadata: {
+          creationTime: new Date(threeYearsAgoAndTwoMonths).toUTCString(),
+          lastSignInTime: new Date(threeYearsAgoAnd29Days).toUTCString(),
+        }
+      },
+      {
+        uid: 'E',
+        email: 'indianajhones@fake.com',
+        providerData: [{ uid: 'E', email: 'indianajhones@fake.com', providerId: 'password' }],
+        metadata: {
+          creationTime: new Date(fiveYearsAgo).toUTCString(),
+          lastSignInTime: new Date(threeYearsAgoAnd31Days).toUTCString(),
+        }
       }
     ];
 
@@ -133,7 +166,7 @@ describe('DB cleaning script', () => {
     ]);
 
     // Check if data have been correctly added
-    expect(usersBefore.docs.length).toEqual(3);
+    expect(usersBefore.docs.length).toEqual(5);
     expect(organizations.docs.length).toEqual(1);
 
     const organizationIds = organizations.docs.map(ref => ref.id);
@@ -141,12 +174,19 @@ describe('DB cleaning script', () => {
     await cleanUsers(usersBefore, organizationIds, adminAuth);
 
     const usersAfter: Snapshot = await getCollectionRef('users');
-    const cleanedUsers = usersAfter.docs.filter(u => isUserClean(u, organizationIds)).length;
+    const cleanedUsers = usersAfter.docs.filter(u => isUserClean(u, organizationIds));
 
-    expect(cleanedUsers).toEqual(2);
+    expect(cleanedUsers.length).toEqual(2);
+
+    // Users A & D should be kept
+    expect(cleanedUsers.find(o => o.data().uid === 'A')).toBeTruthy();
+    expect(cleanedUsers.find(o => o.data().uid === 'D')).toBeTruthy();
+
   });
 
   it('should remove unexpected users from auth', async () => {
+    const currentTimestamp = new Date().getTime();
+
     const users = [
       { uid: 'A', email: 'A@fake.com' },
       { uid: 'B', email: 'B@fake.com' },
@@ -171,22 +211,52 @@ describe('DB cleaning script', () => {
     const fakeAuthUser = { uid: 'D', email: 'D@fake.com', providerData: [{ uid: 'D', email: 'D@fake.com', providerId: 'password' }] };
     adminAuth.users.push(fakeAuthUser);
 
-    // Add an anonymous user that should not be deleted even if not on DB
-    const anonymousUser = { uid: 'anonymous', providerData: [] };
+    // Add an anonymous user that should not be deleted even if not on DB (created 3 months ago minus a day)
+    const threeMonthsAgoMinusADay = currentTimestamp - (dayInMillis * 30 * 3) + dayInMillis;
+    const anonymousUser = { uid: 'anonymous', providerData: [], metadata: { creationTime: new Date(threeMonthsAgoMinusADay).toUTCString() } };
     adminAuth.users.push(anonymousUser);
 
+    // Add an anonymous user that should not be deleted because account was created 5 months ago and last connexion is 2 months ago
+    const fiveMonthsAgo = currentTimestamp - (dayInMillis * 30 * 5);
+    const twoMonthsAgo = currentTimestamp - (dayInMillis * 30 * 2);
+    const anonymousUser2 = {
+      uid: 'anonymous2',
+      providerData: [],
+      metadata: {
+        creationTime: new Date(fiveMonthsAgo).toUTCString(),
+        lastSignInTime: new Date(twoMonthsAgo).toUTCString(),
+      }
+    };
+    adminAuth.users.push(anonymousUser2);
+
+    // Add an anonymous user that should be deleted because account was created 5 months ago and last connexion is 3 months and a day ago
+    const threeMonthsAgoAndADay = currentTimestamp - (dayInMillis * 30 * 3) - dayInMillis;
+    const anonymousUser3 = {
+      uid: 'anonymous3',
+      providerData: [],
+      metadata: {
+        creationTime: new Date(fiveMonthsAgo).toUTCString(),
+        lastSignInTime: new Date(threeMonthsAgoAndADay).toUTCString(),
+      }
+    };
+    adminAuth.users.push(anonymousUser3);
+
     const authBefore = await adminAuth.listUsers();
-    expect(authBefore.users.length).toEqual(5);
+    expect(authBefore.users.length).toEqual(7);
 
     await removeUnexpectedUsers(usersBefore.docs.map(u => u.data() as PublicUser), adminAuth);
 
     // An user should have been removed from auth because it is not in DB.
     const authAfter = await adminAuth.listUsers();
-    expect(authAfter.users.length).toEqual(4);
+    expect(authAfter.users.length).toEqual(5);
 
-    // We check if the good user (uid: 'D') have been removed.
-    const user = await adminAuth.getUserByEmail(fakeAuthUser.email);
-    expect(user).toEqual(undefined);
+    // Check if the good user (uid: 'D') have been removed.
+    const deletedUser1 = await adminAuth.getUserByEmail(fakeAuthUser.email);
+    expect(deletedUser1).toEqual(undefined);
+
+    // Check if the good user (uid: 'anonymousUser3') have been removed.
+    const deletedUser2 = await adminAuth.getUser(anonymousUser3.uid);
+    expect(deletedUser2).toEqual(undefined);
 
   });
 

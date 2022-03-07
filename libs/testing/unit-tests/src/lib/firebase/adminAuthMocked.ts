@@ -8,6 +8,13 @@ export class AdminAuthMocked {
     });
   }
 
+  getUser(uid: string) {
+    return new Promise((resolve) => {
+      const user = this.users.find(u => u.uid === uid);
+      resolve(user);
+    });
+  }
+
   listUsers(_: number, pageToken: any) {
     return new Promise((resolve) => {
       const out = {

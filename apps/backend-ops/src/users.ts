@@ -57,6 +57,9 @@ async function createAllUsers(users: UserConfig[], auth: Auth) {
  */
 export async function removeUnexpectedUsers(expectedUsers: PublicUser[], auth: Auth) {
   let pageToken;
+  const currentTimestamp = new Date().getTime();
+  const dayInMillis = 1000 * 60 * 60 * 24;
+  const threeMonthsAgo = currentTimestamp - (dayInMillis * 30 * 3);
 
   do {
     const result = await auth.listUsers(1000, pageToken);
@@ -65,11 +68,25 @@ export async function removeUnexpectedUsers(expectedUsers: PublicUser[], auth: A
     const users = result.users.filter(u => u.providerData.length !== 0);
     pageToken = result.pageToken;
 
-    // Anonymous user last connexion is older than N months #6656 + unit-test
-    // @TODO #6656
+    // Anonymous user creation time is older than 3 months and did not connected since
+    const anonymousUsers = result.users.filter(u => u.providerData.length === 0);
+    const anonymousUsersToRemove = anonymousUsers.filter(authUser => {
+      const creationTimeTimestamp = Date.parse(authUser.metadata.creationTime);
+      // Anonymous user was created more than 3 months ago
+      if (creationTimeTimestamp < threeMonthsAgo) {
+        // User never connected, this case should never occur
+        if (!authUser.metadata.lastSignInTime) return true;
+
+        // User have not signed in within the last 3 months
+        const lastSignInTime = Date.parse(authUser.metadata.lastSignInTime)
+        if (lastSignInTime < threeMonthsAgo) return true;
+      }
+
+      return false;
+    });
 
     // users - expected users => users that we don't want in the database.
-    const usersToRemove = differenceBy(users, expectedUsers, 'uid', 'email');
+    const usersToRemove = differenceBy(users, expectedUsers, 'uid', 'email').concat(anonymousUsersToRemove);
 
     // Note: this is usually bad practice to await in a loop.
     // In this VERY SPECIFIC case we just want to remove the user

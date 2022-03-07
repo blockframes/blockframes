@@ -360,23 +360,21 @@ async function isUserValid(user: PublicUser, auth: Auth) {
   // User was not found in "Auth"
   if (!authUser) return false;
 
-  // TODO #6648
   // User does not have orgId and was created more than 90 days ago
   const creationTimeTimestamp = Date.parse(authUser.metadata.creationTime);
   if (!user.orgId && creationTimeTimestamp < currentTimestamp - (dayInMillis * 90)) {
     return false;
   }
 
-  // TODO #6656
-  // If account is older than 3 years
-  const threeYearsAgo = currentTimestamp - (dayInMillis * 365 * 3);
-  if (creationTimeTimestamp < threeYearsAgo) {
+  // If account is older than 3 years and a month
+  const threeYearsAndAMonthAgo = currentTimestamp - (dayInMillis * 365 * 3) - (dayInMillis * 30);
+  if (creationTimeTimestamp < threeYearsAndAMonthAgo) {
     // User never connected
     if (!authUser.metadata.lastSignInTime) return false;
 
     // User have not signed in within the last 3 years
-    const lastSignInTime = Date.parse(authUser.metadata.lastSignInTime)
-    if (lastSignInTime < threeYearsAgo) return false;
+    const lastSignInTime = Date.parse(authUser.metadata.lastSignInTime);
+    if (lastSignInTime < threeYearsAndAMonthAgo) return false;
   }
 
   return user.uid;
