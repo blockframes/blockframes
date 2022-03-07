@@ -53,11 +53,13 @@ export class AuthDataValidationComponent implements OnInit {
   }
 
   private async listenOnEmailVerified() {
+    let ms = 1000;
     let emailVerified = false;
     while (emailVerified === false) {
       const firebaseUser = await this.authService.reloadUser();
       emailVerified = firebaseUser.emailVerified;
-      if (!emailVerified) await delay(3000);
+      if (!emailVerified) await delay(ms);
+      ms = ms * 2;
     }
     this.emailValidate$.next(emailVerified);
   }
