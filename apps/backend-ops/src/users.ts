@@ -78,7 +78,7 @@ export async function removeUnexpectedUsers(expectedUsers: PublicUser[], auth: A
         if (!authUser.metadata.lastSignInTime) return true;
 
         // User have not signed in within the last 3 months
-        const lastSignInTime = Date.parse(authUser.metadata.lastSignInTime)
+        const lastSignInTime = Date.parse(authUser.metadata.lastSignInTime);
         if (lastSignInTime < threeMonthsAgo) return true;
       }
 
