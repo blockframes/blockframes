@@ -49,7 +49,7 @@ export async function auditUsers(db: FirebaseFirestore.Firestore, auth?: admin.a
 
   console.log('Auditing users...');
   await cleanUsers(dbData.users.refs, organizationIds, auth, { dryRun: true });
-  console.log('Audit ended.')
+  console.log('Audit ended.');
 
   return true;
 }
