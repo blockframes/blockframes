@@ -500,6 +500,7 @@ service cloud.firestore {
       allow read: if userHasValidOrg()
         && notInMaintenance()
         && (resource == null
+          || isMyAnalytics()
           || isAllowedToReadTitleAnalytics()
         );
        allow create: if userHasValidOrg()
@@ -509,11 +510,14 @@ service cloud.firestore {
         && isRequestFieldValueEqualTo(['meta', 'uid'], userId());
     }
 
-  function isAllowedToReadTitleAnalytics() {
-    let data = existingData();
-    return data.type == 'title' && (userOrgId() in data.meta.ownerOrgIds );
-  }
+    function isAllowedToReadTitleAnalytics() {
+      let data = existingData();
+      return data.type == 'title' && (userOrgId() in data.meta.ownerOrgIds );
+    }
 
+    function isMyAnalytics() {
+      return existingData()._meta.createdBy == userId();
+    }
 
     /////////////////////////////////////////////////////////////////////////////////
     ///                                  FUNCTIONS                                ///

@@ -5,18 +5,18 @@ import { Component, OnInit, ChangeDetectionStrategy, Optional, Inject } from '@a
 import { MovieService, fromOrg } from '@blockframes/movie/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { Movie, MovieAnalytics } from '@blockframes/movie/+state/movie.model';
+import { Movie } from '@blockframes/movie/+state/movie.model';
 import { App } from '@blockframes/utils/apps';
-
+import { APP } from '@blockframes/utils/routes/utils';
+import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
+import { toMovieAnalytics } from '@blockframes/analytics/components/movie-analytics-chart/utils';
+import { MovieAnalytics } from '@blockframes/analytics/components/movie-analytics-chart/movie-analytics.model';
 // RxJs
 import { map, switchMap, shareReplay, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
 // Intercom
 import { Intercom } from 'ng-intercom';
-import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
-import { toMovieAnalytics } from '@blockframes/analytics/components/movie-analytics-chart/utils';
-import { APP } from '@blockframes/utils/routes/utils';
 
 @Component({
   selector: 'dashboard-home',

@@ -1,6 +1,6 @@
 import { Analytics } from "@blockframes/analytics/+state/analytics.firestore";
-import { MovieAnalytics, MovieEventAnalytics } from "@blockframes/movie/+state/movie.firestore";
-import { AnalyticsEvents } from "@blockframes/utils/analytics/analytics-model";
+import { MovieAnalytics, MovieEventAnalytics, AnalyticsEvents } from '@blockframes/analytics/components/movie-analytics-chart/movie-analytics.model';
+
 import { subDays, format } from 'date-fns'
 
 export function toMovieAnalytics(analytics: Analytics<'title'>[]): MovieAnalytics[] {
@@ -23,7 +23,6 @@ export function toMovieAnalytics(analytics: Analytics<'title'>[]): MovieAnalytic
     addedToWishlist: analyticsFilter('addedToWishlist'),
     movieViews: analyticsFilter('pageView'),
     promoReelOpened: analyticsFilter('promoReelOpened'),
-    type: 'movie',
     id: ''
   };
 

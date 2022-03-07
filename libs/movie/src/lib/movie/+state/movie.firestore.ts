@@ -23,7 +23,6 @@ import type {
 } from "@blockframes/utils/static-model/types";
 import { Producer, Crew, Cast, Stakeholder, Director } from "@blockframes/utils/common-interfaces/identity";
 import type firebase from 'firebase';
-import { AnalyticsEvents, AnalyticsBase } from '@blockframes/utils/analytics/analytics-model';
 import { App } from "@blockframes/utils/apps";
 import { DocumentMeta } from "@blockframes/utils/models-meta";
 import { StorageFile, StorageVideo } from "@blockframes/media/+state/media.firestore";
@@ -251,31 +250,4 @@ export type MovieExpectedPremiere = MovieExpectedPremiereRaw<Date>
 export interface MovieGoalsAudience {
   targets: string[],
   goals: SocialGoal[]
-}
-
-
-/////////////////////
-// MOVIE ANALYTICS //
-/////////////////////
-
-export interface MovieEventAnalytics {
-  event_date: string,
-  event_name: AnalyticsEvents,
-  hits: number,
-  movieId: string
-}
-
-export interface MovieAnalytics extends AnalyticsBase {
-  addedToWishlist: {
-    current: MovieEventAnalytics[],
-    past: MovieEventAnalytics[]
-  },
-  movieViews: {
-    current: MovieEventAnalytics[],
-    past: MovieEventAnalytics[]
-  },
-  promoReelOpened: {
-    current: MovieEventAnalytics[],
-    past: MovieEventAnalytics[]
-  }
 }

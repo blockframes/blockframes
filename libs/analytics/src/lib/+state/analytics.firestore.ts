@@ -11,7 +11,7 @@ const analyticsEvents = [
 ] as const;
 export type EventName = typeof analyticsEvents[number];
 
-interface AnalyticsTypeRecord {
+export interface AnalyticsTypeRecord {
   title: MetaTitle;
   event: MetaEvent;
 }

@@ -14,7 +14,7 @@ import { QueryFn } from '@angular/fire/firestore';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { map } from 'rxjs/operators';
 import { joinWith } from '@blockframes/utils/operators';
-import { AnalyticsService, Analytics } from '@blockframes/analytics/+state';
+import { AnalyticsService } from '@blockframes/analytics/+state';
 import { AuthService } from '@blockframes/auth/+state';
 import { ActiveState, EntityState } from '@datorama/akita';
 
