@@ -1,0 +1,14 @@
+<h2>Welcome to the Archipel Ecosystem</h2>
+<p class="mat-subheading">The online playground for global sellers and buyers</p>
+<section fxLayoutAlign="center" fxLayoutGap="32px">
+  <button mat-ripple (click)="scrollToHeader()">
+    <mat-icon [svgIcon]="buttonsData[currentApp].logo"></mat-icon>
+    <h6>{{buttonsData[currentApp].name}}</h6>
+    <p class="mat-caption">{{buttonsData[currentApp].subtitle}}</p>
+  </button>
+  <a mat-ripple [href]="buttonsData[bridgeApp].link">
+    <mat-icon [svgIcon]="buttonsData[bridgeApp].logo"></mat-icon>
+    <h6>{{buttonsData[bridgeApp].name}}</h6>
+    <p class="mat-caption">{{buttonsData[bridgeApp].subtitle}}</p>
+  </a>
+</section>

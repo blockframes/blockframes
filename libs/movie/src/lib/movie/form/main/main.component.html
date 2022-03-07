@@ -31,8 +31,7 @@
           </mat-error>
         </mat-form-field>
 
-        <static-select test-id="content-type" scope="contentType" [control]="form.contentType" fxFlex
-          [withoutValues]="['volume', 'episode', 'collection']">
+        <static-select test-id="content-type" required scope="contentType" [control]="form.contentType" fxFlex>
           <mat-label>Format</mat-label>
           <mat-error *ngIf="form.contentType.hasError('required')">
             Please specify your project’s format.
