@@ -1,5 +1,5 @@
-import { Analytics } from "@blockframes/analytics/+state/analytics.firestore";
-import { MovieAnalytics, MovieEventAnalytics, AnalyticsEvents } from '@blockframes/analytics/components/movie-analytics-chart/movie-analytics.model';
+import { Analytics, EventName } from "@blockframes/analytics/+state/analytics.firestore";
+import { MovieAnalytics, MovieEventAnalytics } from '@blockframes/analytics/components/movie-analytics-chart/movie-analytics.model';
 
 import { subDays, format } from 'date-fns'
 
@@ -30,7 +30,7 @@ export function toMovieAnalytics(analytics: Analytics<'title'>[]): MovieAnalytic
 }
 
 function toMovieEventAnalytics(events: Analytics<'title'>[]): MovieEventAnalytics[] {
-  const counter: Record<AnalyticsEvents, Record<string, MovieEventAnalytics>> = {
+  const counter: Record<EventName, Record<string, MovieEventAnalytics>> = {
     addedToWishlist: {},
     askingPriceRequested: {},
     pageView: {},
@@ -47,7 +47,7 @@ function toMovieEventAnalytics(events: Analytics<'title'>[]): MovieEventAnalytic
     }
     const movieEvent: MovieEventAnalytics = {
       event_date: date,
-      event_name: event.name as AnalyticsEvents,
+      event_name: event.name as EventName,
       hits: 1,
       movieId: event.meta.titleId
     };

@@ -40,7 +40,7 @@ export class MainComponent implements OnInit {
 
   videoStateChanged(movieId: string, event: string) {
     if (event === 'play' && !this.alreadyPlayed) {
-      this.analytics.addTitle('promoVideoStarted', movieId);
+      this.analytics.addTitle('promoReelOpened', movieId);
       this.alreadyPlayed = true;
     }
   }

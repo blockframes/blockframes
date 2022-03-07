@@ -1,16 +1,8 @@
-const analyticsEvents = [
-  'removedFromWishlist',
-  'addedToWishlist',
-  'promoReelOpened',
-  'pageView',
-  'screeningRequested',
-  'askingPriceRequested'
-] as const;
-export type AnalyticsEvents = typeof analyticsEvents[number];
+import { EventName } from "@blockframes/analytics/+state";
 
 export interface MovieEventAnalytics {
   event_date: string,
-  event_name: AnalyticsEvents,
+  event_name: EventName,
   hits: number,
   movieId: string
 }

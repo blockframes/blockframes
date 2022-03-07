@@ -2,10 +2,9 @@ import { DocumentMeta } from "@blockframes/utils/models-meta";
 
 const analyticsEvents = [
   'pageView',
-  'promoVideoStarted',
+  'promoReelOpened',
   'addedToWishlist',
   'removedFromWishlist',
-  'promoElementOpened',
   'screeningRequested',
   'askingPriceRequested'
 ] as const;
