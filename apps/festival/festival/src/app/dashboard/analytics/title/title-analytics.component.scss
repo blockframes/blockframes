@@ -8,12 +8,19 @@ header {
   img {
     height: 200px;
   }
-
-  .film-page-button {
-    height: fit-content;
-  }
 }
 
 section {
   padding: 24px;
+}
+
+.mat-button {
+  height: fit-content;
+  width: fit-content;
+}
+
+.graphs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  grid-gap: 16px;
 }

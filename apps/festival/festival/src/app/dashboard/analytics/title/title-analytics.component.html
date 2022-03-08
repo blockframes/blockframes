@@ -26,11 +26,15 @@
     <h2>Interested Users</h2>
     <p class="mat-body-1">See how many users interacted with your movie (viewed your title, added to wishlist, requested a screening, etc).</p>
 
-    <article class="surface">
+    <article class="surface" fxLayout="column" fxLayoutGap="16px">
       <a mat-button [routerLink]="['/c/o/dashboard']">
         <mat-icon svgIcon="arrow_back"></mat-icon>
         <span>Come back to Dashboard</span>
       </a>
+
+      <div class="graphs">
+        <analytics-pie-chart class="surface" [data]="orgActivity$ | async"></analytics-pie-chart>
+      </div>
     </article>
   </section>
 </ng-container>

@@ -1,0 +1,14 @@
+
+<header fxLayout fxLayoutGap="8px">
+  <mat-icon matListIcon svgIcon="business"></mat-icon>
+  <h5>Split by Company Activity</h5>
+</header>
+<apx-chart
+  #chart
+  [series]="pieChartOptions.series"
+  [chart]="pieChartOptions.chart"
+  [labels]="pieChartOptions.labels"
+  [dataLabels]="pieChartOptions.dataLabels"
+  [theme]="pieChartOptions.theme"
+  [stroke]="pieChartOptions.stroke"
+></apx-chart>
