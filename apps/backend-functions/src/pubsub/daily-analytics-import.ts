@@ -1,7 +1,7 @@
 import { BigQuery, Query } from '@google-cloud/bigquery';
 import * as admin from 'firebase-admin';
-import { bigQueryAnalyticsTable } from "./../environments/environment";
-import { MovieAnalytics, MovieEventAnalytics } from '@blockframes/data-model';
+import { bigQueryAnalyticsTable } from './../environments/environment';
+import { MovieAnalytics, MovieEventAnalytics } from '@blockframes/model';
 import { isAfter, isBefore, parse, subDays } from 'date-fns';
 import { getCollectionInBatches } from '@blockframes/firebase-utils';
 
@@ -33,7 +33,7 @@ const queryMovieAnalytics = `
     event_name, event_date, movieId
   ORDER BY
     event_name, event_date
-`
+`;
 
 /** Sorts events into two periods. */
 const groupEventsPerDayRange = (events: MovieEventAnalytics[], daysPerRange: number) => {
@@ -41,8 +41,8 @@ const groupEventsPerDayRange = (events: MovieEventAnalytics[], daysPerRange: num
   const startCurrentRange = subDays(now, daysPerRange);
   const parseDate = (event: MovieEventAnalytics) => parse(event.event_date, 'yyyyMMdd', new Date());
   return {
-    current: events.filter(event => isAfter(parseDate(event), startCurrentRange)),
-    past: events.filter(event => isBefore(parseDate(event), startCurrentRange))
+    current: events.filter((event) => isAfter(parseDate(event), startCurrentRange)),
+    past: events.filter((event) => isBefore(parseDate(event), startCurrentRange)),
   };
 };
 
@@ -54,11 +54,11 @@ async function executeQueryMovieAnalytics(daysPerRange: number): Promise<MovieEv
     timeoutMs: 100000,
     useLegacySql: false,
     params: {
-      periodSum: daysPerRange * 2
-    }
+      periodSum: daysPerRange * 2,
+    },
   };
 
-  const analytics = await bigQueryClient.query(query) as MovieEventAnalytics[][];
+  const analytics = (await bigQueryClient.query(query)) as MovieEventAnalytics[][];
   return analytics;
 }
 
@@ -73,25 +73,36 @@ export async function importAnalytics() {
 
   const [rows] = await executeQueryMovieAnalytics(daysPerRange);
 
-  const movieAnalytics: Record<string, MovieAnalytics> = {}
-  rows.forEach(row => {
+  const movieAnalytics: Record<string, MovieAnalytics> = {};
+  rows.forEach((row) => {
     if (!movieAnalytics[row.movieId]) {
-
-      const movieRows = rows.filter(r => r.movieId === row.movieId)
+      const movieRows = rows.filter((r) => r.movieId === row.movieId);
       movieAnalytics[row.movieId] = {
         id: row.movieId,
         type: 'movie',
-        addedToWishlist: groupEventsPerDayRange(movieRows.filter(r => r.event_name === 'addedToWishlist'), daysPerRange),
-        promoReelOpened: groupEventsPerDayRange(movieRows.filter(r => r.event_name === 'promoReelOpened'), daysPerRange),
-        movieViews: groupEventsPerDayRange(movieRows.filter(r => r.event_name === 'pageView'), daysPerRange)
-      }
+        addedToWishlist: groupEventsPerDayRange(
+          movieRows.filter((r) => r.event_name === 'addedToWishlist'),
+          daysPerRange
+        ),
+        promoReelOpened: groupEventsPerDayRange(
+          movieRows.filter((r) => r.event_name === 'promoReelOpened'),
+          daysPerRange
+        ),
+        movieViews: groupEventsPerDayRange(
+          movieRows.filter((r) => r.event_name === 'pageView'),
+          daysPerRange
+        ),
+      };
     }
   });
 
-  const analyticsIterator = getCollectionInBatches<MovieAnalytics>(db.collection('analytics'), 'type')
+  const analyticsIterator = getCollectionInBatches<MovieAnalytics>(
+    db.collection('analytics'),
+    'type'
+  );
   for await (const analytics of analyticsIterator) {
     for (const analytic of analytics) {
-      const ref = db.doc(`analytics/${analytic.id}`)
+      const ref = db.doc(`analytics/${analytic.id}`);
       deleteBatch.delete(ref);
     }
   }

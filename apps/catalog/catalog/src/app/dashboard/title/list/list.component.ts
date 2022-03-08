@@ -4,7 +4,7 @@ import { map, shareReplay, startWith, tap } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
 import { StoreStatus } from '@blockframes/utils/static-model/types';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Movie } from '@blockframes/data-model';
+import { Movie } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { storeStatus } from '@blockframes/utils/static-model';
@@ -16,27 +16,33 @@ import { APP } from '@blockframes/utils/routes/utils';
   selector: 'catalog-title-list',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TitleListComponent {
   filter = new FormControl();
-  filter$: Observable<StoreStatus | ''> = this.filter.valueChanges.pipe(startWith(this.filter.value || ''));
+  filter$: Observable<StoreStatus | ''> = this.filter.valueChanges.pipe(
+    startWith(this.filter.value || '')
+  );
 
   movies$ = this.service.queryDashboard(this.app).pipe(
-    tap(movies => this.dynTitle.setPageTitle('My titles', movies.length ? '' : 'Empty')),
+    tap((movies) => this.dynTitle.setPageTitle('My titles', movies.length ? '' : 'Empty')),
     shareReplay({ refCount: true, bufferSize: 1 })
   );
-  result$ = combineLatest([ this.filter$, this.movies$ ]).pipe(
-    map(([status, movies]) => movies.filter(movie => status ? movie.app.catalog.status === status : movies))
+  result$ = combineLatest([this.filter$, this.movies$]).pipe(
+    map(([status, movies]) =>
+      movies.filter((movie) => (status ? movie.app.catalog.status === status : movies))
+    )
   );
 
-  movieCount$ = this.movies$.pipe(map(m => ({
-    all: m.length,
-    draft: m.filter(m => m.app.catalog.status === 'draft').length,
-    submitted: m.filter(m => m.app.catalog.status === 'submitted').length,
-    accepted: m.filter(m => m.app.catalog.status === 'accepted').length,
-    archived: m.filter(m => m.app.catalog.status === 'archived').length,
-  })));
+  movieCount$ = this.movies$.pipe(
+    map((m) => ({
+      all: m.length,
+      draft: m.filter((m) => m.app.catalog.status === 'draft').length,
+      submitted: m.filter((m) => m.app.catalog.status === 'submitted').length,
+      accepted: m.filter((m) => m.app.catalog.status === 'accepted').length,
+      archived: m.filter((m) => m.app.catalog.status === 'archived').length,
+    }))
+  );
 
   constructor(
     private service: MovieService,
@@ -45,7 +51,7 @@ export class TitleListComponent {
     private dynTitle: DynamicTitleService,
     @Optional() private intercom: Intercom,
     @Inject(APP) public app: App
-  ) { }
+  ) {}
 
   /** Dynamic filter of movies for each tab. */
   applyFilter(filter?: StoreStatus) {

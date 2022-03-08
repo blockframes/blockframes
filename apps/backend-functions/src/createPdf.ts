@@ -1,36 +1,35 @@
-import { MovieDocument } from '@blockframes/data-model';
-import { toLanguageVersionString, toLabel } from "@blockframes/utils/utils";
-import { Response } from "firebase-functions";
+import { MovieDocument } from '@blockframes/model';
+import { toLanguageVersionString, toLabel } from '@blockframes/utils/utils';
+import { Response } from 'firebase-functions';
 import { db } from './internals/firebase';
 import { festival } from '@blockframes/utils/static-model';
-import { App, applicationUrl } from "@blockframes/utils/apps";
-import { PdfRequest } from "@blockframes/utils/pdf/pdf.interfaces";
-import { getImgIxResourceUrl } from "@blockframes/media/image/directives/imgix-helpers";
+import { App, applicationUrl } from '@blockframes/utils/apps';
+import { PdfRequest } from '@blockframes/utils/pdf/pdf.interfaces';
+import { getImgIxResourceUrl } from '@blockframes/media/image/directives/imgix-helpers';
 
 interface PdfTitleData {
-  title: string,
-  synopsis: string,
-  posterUrl: string,
+  title: string;
+  synopsis: string;
+  posterUrl: string;
   version: {
-    original: string,
-    isOriginalVersionAvailable: boolean,
-    languages: string,
-  },
+    original: string;
+    isOriginalVersionAvailable: boolean;
+    languages: string;
+  };
   links: {
-    title: string,
-    trailer: string,
-  },
-  prizes: { name: string, prize: string, year: number, premiere: string }[]
+    title: string;
+    trailer: string;
+  };
+  prizes: { name: string; prize: string; year: number; premiere: string }[];
 }
 
 const appLogo: Partial<Record<App, string>> = {
   catalog: 'archipel_content.svg',
   festival: 'archipel_market.svg',
   financiers: 'media_financiers.svg',
-}
+};
 
 export const createPdf = async (req: PdfRequest, res: Response) => {
-
   res.set('Access-Control-Allow-Origin', '*');
 
   if (req.method === 'OPTIONS') {
@@ -49,21 +48,25 @@ export const createPdf = async (req: PdfRequest, res: Response) => {
   }
 
   const appUrl = applicationUrl[app];
-  const promises = titleIds.map(id => db.collection('movies').doc(id).get());
+  const promises = titleIds.map((id) => db.collection('movies').doc(id).get());
   const docs = await Promise.all(promises);
-  const titles = docs.map(r => r.data() as MovieDocument).filter(m => !!m);
+  const titles = docs.map((r) => r.data() as MovieDocument).filter((m) => !!m);
 
-  const data: PdfTitleData[] = titles.map(m => {
-
-    const prizes = m.prizes.concat(m.customPrizes).map(p => ({
+  const data: PdfTitleData[] = titles.map((m) => {
+    const prizes = m.prizes.concat(m.customPrizes).map((p) => ({
       name: (festival[p.name] ? festival[p.name] : p.name).toUpperCase(),
       prize: p.prize ? `${p.prize.charAt(0).toUpperCase()}${p.prize.slice(1)}` : undefined,
       year: p.year,
-      premiere: p.premiere ? `${toLabel(p.premiere, 'premiereType')} Premiere` : undefined
+      premiere: p.premiere ? `${toLabel(p.premiere, 'premiereType')} Premiere` : undefined,
     }));
 
-    const genres = [toLabel(m.genres, 'genres'), m.customGenres ? m.customGenres.join(', ') : ''].filter(g => g);
-    const hasPublicVideos = m.promotional.videos.otherVideos?.some(video => video.storagePath && video.privacy === 'public');
+    const genres = [
+      toLabel(m.genres, 'genres'),
+      m.customGenres ? m.customGenres.join(', ') : '',
+    ].filter((g) => g);
+    const hasPublicVideos = m.promotional.videos.otherVideos?.some(
+      (video) => video.storagePath && video.privacy === 'public'
+    );
     const title = `${appUrl}/c/o/marketplace/title/${m.id}/main`;
     return {
       title: m.title.international,
@@ -77,14 +80,14 @@ export const createPdf = async (req: PdfRequest, res: Response) => {
       version: {
         original: toLabel(m.originalLanguages, 'languages', ', ', ' & '),
         isOriginalVersionAvailable: m.isOriginalVersionAvailable,
-        languages: toLanguageVersionString(m.languages)
+        languages: toLanguageVersionString(m.languages),
       },
       links: {
         title,
-        trailer: hasPublicVideos ? `${title}#trailer` : ''
+        trailer: hasPublicVideos ? `${title}#trailer` : '',
       },
-      prizes
-    }
+      prizes,
+    };
   });
 
   const buffer = await generate('titles', app, data);
@@ -93,14 +96,14 @@ export const createPdf = async (req: PdfRequest, res: Response) => {
   res.set('Content-Length', buffer.length.toString());
   res.status(200).send(buffer);
   return;
-}
+};
 
 async function generate(templateName: string, app: App, titles: PdfTitleData[]) {
   const [fs, hb, path, { default: puppeteer }] = await Promise.all([
     import('fs'),
     import('handlebars'),
     import('path'),
-    import('puppeteer')
+    import('puppeteer'),
   ]);
 
   const logo = fs.readFileSync(path.resolve(`assets/logo/${appLogo[app]}`), 'utf8');
@@ -110,7 +113,7 @@ async function generate(templateName: string, app: App, titles: PdfTitleData[]) 
     css,
     appLogo: `data:image/svg+xml;utf8,${encodeURIComponent(logo)}`,
     posterFallback: `data:image/svg+xml;utf8,${encodeURIComponent(posterFallback)}`,
-    titles
+    titles,
   };
 
   // compile template with data into html
@@ -134,7 +137,7 @@ async function generate(templateName: string, app: App, titles: PdfTitleData[]) 
   const cssHeader = [];
   cssHeader.push('<style>');
   cssHeader.push('header {width: 100%; text-align: center;}');
-  cssHeader.push('header img {height: 48px; width: 144px}')
+  cssHeader.push('header img {height: 48px; width: 144px}');
   cssHeader.push('</style>');
 
   const pageHeight = (await page.evaluate(() => document.documentElement.offsetHeight)) + 240; // 240 = 100 + 40 margins
@@ -144,12 +147,16 @@ async function generate(templateName: string, app: App, titles: PdfTitleData[]) 
   const pdf = await page.pdf({
     height,
     displayHeaderFooter: true,
-    headerTemplate: `${cssHeader.join('')}<header class="header"><img src="data:image/svg+xml;utf8,${encodeURIComponent(logo)}"></header>`,
+    headerTemplate: `${cssHeader.join(
+      ''
+    )}<header class="header"><img src="data:image/svg+xml;utf8,${encodeURIComponent(
+      logo
+    )}"></header>`,
     footerTemplate: `<p></p>`, // If left empty, default is page number
     margin: {
       top: '100px',
       bottom: '40px',
-    }
+    },
   });
   await browser.close();
   return pdf;

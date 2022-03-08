@@ -14,7 +14,7 @@ import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-inp
 import { MatDialog } from '@angular/material/dialog';
 import { EventService } from '@blockframes/event/+state';
 import { ContractService } from '@blockframes/contract/contract/+state';
-import { Movie } from '@blockframes/data-model';
+import { Movie } from '@blockframes/model';
 import { FileUploaderService } from '@blockframes/media/+state/file-uploader.service';
 import { App, OrgAppAccess } from '@blockframes/utils/apps';
 import { BucketService } from '@blockframes/contract/bucket/+state/bucket.service';
@@ -23,7 +23,7 @@ import { BucketService } from '@blockframes/contract/bucket/+state/bucket.servic
   selector: 'crm-organization',
   templateUrl: './organization.component.html',
   styleUrls: ['./organization.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrganizationComponent implements OnInit {
   public orgId = '';
@@ -62,8 +62,8 @@ export class OrganizationComponent implements OnInit {
     private contractService: ContractService,
     private dialog: MatDialog,
     private router: Router,
-    private bucketService: BucketService,
-  ) { }
+    private bucketService: BucketService
+  ) {}
 
   async ngOnInit() {
     this.orgId = this.route.snapshot.paramMap.get('orgId');
@@ -72,8 +72,8 @@ export class OrganizationComponent implements OnInit {
     this.orgForm = new OrganizationCrmForm();
     this.orgForm.reset(this.org);
 
-    const movies = await this.movieService.getValue(fromOrg(this.orgId))
-    this.movies = movies.filter(m => !!m);
+    const movies = await this.movieService.getValue(fromOrg(this.orgId));
+    this.movies = movies.filter((m) => !!m);
 
     this.members = await this.getMembers();
     this.cdRef.markForCheck();
@@ -83,7 +83,6 @@ export class OrganizationComponent implements OnInit {
 
     this.invitationsFromOrganization$ = this.invitationService.valueChanges(queryFn1);
     this.invitationsToJoinOrganization$ = this.invitationService.valueChanges(queryFn2);
-
   }
 
   public acceptInvitation(invitation: Invitation) {
@@ -100,13 +99,13 @@ export class OrganizationComponent implements OnInit {
 
   private async getMembers() {
     const members = await this.organizationService.getMembers(this.orgId);
-    return members.map(m => ({
+    return members.map((m) => ({
       ...m,
       userId: m.uid,
       edit: {
         id: m.uid,
         link: `/c/o/dashboard/crm/user/${m.uid}`,
-      }
+      },
     }));
   }
 
@@ -125,9 +124,11 @@ export class OrganizationComponent implements OnInit {
       const after = this.orgForm.value.appAccess as OrgAppAccess;
 
       for (const app in after) {
-        if (Object.keys(after[app]).every(module => before[app][module] === false)
-          && Object.keys(after[app]).some(module => after[app][module] === true)) {
-          this.organizationService.notifyAppAccessChange(this.orgId, app as App)
+        if (
+          Object.keys(after[app]).every((module) => before[app][module] === false) &&
+          Object.keys(after[app]).some((module) => after[app][module] === true)
+        ) {
+          this.organizationService.notifyAppAccessChange(this.orgId, app as App);
         }
       }
     }
@@ -136,7 +137,7 @@ export class OrganizationComponent implements OnInit {
   }
 
   public async uniqueOrgName() {
-    const orgName = this.orgForm.get('denomination').get('full').value
+    const orgName = this.orgForm.get('denomination').get('full').value;
     const unique = await this.organizationService.uniqueOrgName(orgName);
     if (!unique) {
       this.orgForm.get('denomination').get('full').setErrors({ notUnique: true });
@@ -167,7 +168,7 @@ export class OrganizationComponent implements OnInit {
     this.dialog.open(ConfirmInputComponent, {
       data: {
         title: 'You are currently deleting this organization from Archipel, are you sure?',
-        text: 'If yes, please write \'HARD DELETE\' inside the form below.',
+        text: "If yes, please write 'HARD DELETE' inside the form below.",
         warning: 'You will also delete everything regarding this organization',
         simulation,
         confirmationWord: 'hard delete',
@@ -176,8 +177,8 @@ export class OrganizationComponent implements OnInit {
           await this.organizationService.remove(this.orgId);
           this.snackBar.open('Organization deleted!', 'close', { duration: 5000 });
           this.router.navigate(['c/o/dashboard/crm/organizations']);
-        }
-      }
+        },
+      },
     });
   }
 
@@ -196,27 +197,37 @@ export class OrganizationComponent implements OnInit {
     }
 
     // Calculate how many movie will be removed
-    const movies = await this.movieService.getValue(ref => ref.where('orgIds', 'array-contains', organization.id));
+    const movies = await this.movieService.getValue((ref) =>
+      ref.where('orgIds', 'array-contains', organization.id)
+    );
     if (movies.length) {
       output.push(`${movies.length} movie(s) will be deleted.`);
     }
 
     // Calculate how many events will be removed
-    const ownerEvent = await this.eventService.getValue(ref => ref.where('ownerOrgId', '==', organization.id));
+    const ownerEvent = await this.eventService.getValue((ref) =>
+      ref.where('ownerOrgId', '==', organization.id)
+    );
     if (ownerEvent.length) {
-      output.push(`${ownerEvent.length} event(s) will be cancelled or deleted.`)
+      output.push(`${ownerEvent.length} event(s) will be cancelled or deleted.`);
     }
 
     // Calculate how many invitation will be removed
-    const invitFrom = await this.invitationService.getValue(ref => ref.where('fromOrg.id', '==', organization.id));
-    const invitTo = await this.invitationService.getValue(ref => ref.where('toOrg.id', '==', organization.id));
+    const invitFrom = await this.invitationService.getValue((ref) =>
+      ref.where('fromOrg.id', '==', organization.id)
+    );
+    const invitTo = await this.invitationService.getValue((ref) =>
+      ref.where('toOrg.id', '==', organization.id)
+    );
     const allInvit = [...invitFrom, ...invitTo];
     if (allInvit.length) {
       output.push(`${allInvit.length} invitation(s) will be removed.`);
     }
 
     // Calculate how many contracts will be updated
-    const contracts = await this.contractService.getValue(ref => ref.where('partyIds', 'array-contains', organization.id))
+    const contracts = await this.contractService.getValue((ref) =>
+      ref.where('partyIds', 'array-contains', organization.id)
+    );
     if (contracts.length) {
       output.push(`${contracts.length} contract(s) will be updated.`);
     }

@@ -13,7 +13,7 @@ import { map, switchMap } from 'rxjs/operators';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { NotificationService } from '@blockframes/notification/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { Movie } from '@blockframes/data-model';
+import { Movie } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { AuthService } from '@blockframes/auth/+state';
 import { App } from '@blockframes/utils/apps';
@@ -24,18 +24,18 @@ import { APP } from '@blockframes/utils/routes/utils';
   templateUrl: './event.component.html',
   styleUrls: ['./event.component.scss'],
   animations: [routeAnimation],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EventComponent implements OnInit {
   public user$ = this.authService.profile$;
   public wishlistCount$: Observable<number>;
   public notificationCount$ = this.notificationService.myNotificationsCount$;
   public invitationCount$ = this.invitationService.myInvitations$.pipe(
-    map(invitations => invitations.filter(invitation => invitation.status === 'pending').length),
-  )
+    map((invitations) => invitations.filter((invitation) => invitation.status === 'pending').length)
+  );
 
   @ViewChild(MatSidenav) sidenav: MatSidenav;
-  @ViewChild(CdkScrollable) cdkScrollable: CdkScrollable
+  @ViewChild(CdkScrollable) cdkScrollable: CdkScrollable;
 
   constructor(
     private orgService: OrganizationService,
@@ -44,12 +44,12 @@ export class EventComponent implements OnInit {
     private notificationService: NotificationService,
     private movieService: MovieService,
     @Inject(APP) private app: App
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.wishlistCount$ = this.orgService.currentOrg$.pipe(
-      map(org => org?.wishlist ? org.wishlist : []),
-      switchMap(movieIds => this.movieService.getValue(movieIds)),
+      map((org) => (org?.wishlist ? org.wishlist : [])),
+      switchMap((movieIds) => this.movieService.getValue(movieIds)),
       map((movies: Movie[]) => movies.filter(filterMovieByAppAccess(this.app)).length)
     );
   }
@@ -65,9 +65,8 @@ export class EventComponent implements OnInit {
   animationOutlet(outlet: RouterOutlet) {
     return outlet?.activatedRouteData?.animation;
   }
-
 }
 
 const filterMovieByAppAccess = (currentApp: App) => (movie: Movie) => {
   return movie.app[currentApp].access;
-}
+};

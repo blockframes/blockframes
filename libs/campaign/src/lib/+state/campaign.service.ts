@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { CollectionService, CollectionConfig } from 'akita-ng-fire';
-import { Campaign } from "./campaign.model";
+import { Campaign } from './campaign.model';
 import { removeUndefined } from '@blockframes/utils/helpers';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { Movie } from '@blockframes/data-model';
+import { Movie } from '@blockframes/model';
 import { combineLatest, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ActiveState, EntityState } from '@datorama/akita';
@@ -20,10 +20,7 @@ export interface MovieCampaign extends Movie {
 export class CampaignService extends CollectionService<CampaignState> {
   useMemorization = true;
 
-  constructor(
-    private orgService: OrganizationService,
-    private movieService: MovieService
-  ) {
+  constructor(private orgService: OrganizationService, private movieService: MovieService) {
     super();
   }
 
@@ -35,11 +32,11 @@ export class CampaignService extends CollectionService<CampaignState> {
   /** Query movies with their campaign */
   queryMoviesCampaign(ids: string[]) {
     if (ids.length) {
-      const query = (id: string) => combineLatest([
-        this.movieService.valueChanges(id),
-        this.valueChanges(id),
-      ]).pipe(map(([movie, campaign]) => ({ ...movie, campaign })));
-      return combineLatest(ids.map(query))
+      const query = (id: string) =>
+        combineLatest([this.movieService.valueChanges(id), this.valueChanges(id)]).pipe(
+          map(([movie, campaign]) => ({ ...movie, campaign }))
+        );
+      return combineLatest(ids.map(query));
     } else {
       return of([]);
     }

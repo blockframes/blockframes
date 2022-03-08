@@ -1,5 +1,5 @@
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { Movie } from '@blockframes/data-model';
+import { Movie } from '@blockframes/model';
 import { Mandate, Sale } from '@blockframes/contract/contract/+state/contract.model';
 import { Organization, OrganizationService } from '@blockframes/organization/+state';
 import { User } from '@blockframes/user/+state/user.model';

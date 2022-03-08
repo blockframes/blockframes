@@ -59,7 +59,7 @@
       "@blockframes/testing/cypress": ["libs/testing/cypress/src/index.ts"],
       "@blockframes/testing/e2e": ["libs/testing/e2e/src/index.ts"],
       "@blockframes/analytics/*": ["libs/analytics/src/lib/*"],
-      "@blockframes/data-model": ["libs/data-model/src/index.ts"]
+      "@blockframes/model": ["libs/model/src/index.ts"]
     }
   },
   "angularCompilerOptions": {

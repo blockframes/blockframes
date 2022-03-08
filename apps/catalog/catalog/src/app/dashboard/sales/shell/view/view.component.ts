@@ -4,17 +4,16 @@ import { SaleShellComponent } from '../shell.component';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Movie } from '@blockframes/data-model';
+import { Movie } from '@blockframes/model';
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
 
 @Component({
   selector: 'sale-view',
   templateUrl: './view.component.html',
   styleUrls: ['./view.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SaleViewComponent {
-
   centralOrgId = this.shell.centralOrgId;
   sale$ = this.shell.sale$;
   orgId = this.orgService.org.id;
@@ -25,7 +24,7 @@ export class SaleViewComponent {
     private shell: SaleShellComponent,
     private dialog: MatDialog,
     private orgService: OrganizationService
-  ) { }
+  ) {}
 
   accept(negotiationId: string, contractId: string, title: Movie) {
     const status = 'accepted';
@@ -38,10 +37,10 @@ export class SaleViewComponent {
       cancel: 'Come back & verify Contract',
     };
     const ref = this.dialog.open(ConfirmComponent, { data });
-    ref.afterClosed().subscribe(acceptSuccessful => {
-      const config = {duration:6000};
+    ref.afterClosed().subscribe((acceptSuccessful) => {
+      const config = { duration: 6000 };
       if (acceptSuccessful)
-        this.snackbar.open(`You accepted contract for ${title.title.international}`, null, config)
+        this.snackbar.open(`You accepted contract for ${title.title.international}`, null, config);
     });
   }
 }

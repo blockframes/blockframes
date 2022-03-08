@@ -1,5 +1,5 @@
 module.exports = {
-  displayName: 'data-model',
+  displayName: 'model',
   preset: '../../jest.preset.js',
   globals: {
     'ts-jest': {
@@ -10,5 +10,5 @@ module.exports = {
     '^.+\\.[tj]sx?$': 'ts-jest',
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  coverageDirectory: '../../coverage/libs/data-model',
+  coverageDirectory: '../../coverage/libs/model',
 };

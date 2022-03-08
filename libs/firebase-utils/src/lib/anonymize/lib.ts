@@ -5,21 +5,27 @@ import { Invitation } from '@blockframes/invitation/+state';
 import { DbRecord, throwOnProduction } from '../util';
 import { CollectionReference, QueryDocumentSnapshot, QuerySnapshot } from '../types';
 import { Queue } from '../queue';
-import { Movie } from '@blockframes/data-model';
-import { createPublicOrganization, Organization } from '@blockframes/organization/+state/organization.model';
+import { Movie } from '@blockframes/model';
+import {
+  createPublicOrganization,
+  Organization,
+} from '@blockframes/organization/+state/organization.model';
 import { PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
 import { FirestoreEmulator } from '../firestore/emulator';
-import { firebase, testVideoId } from '@env'
+import { firebase, testVideoId } from '@env';
 import { runChunks } from '../firebase-utils';
 import { IMaintenanceDoc } from '@blockframes/utils/maintenance';
 import { firestore } from 'firebase-admin';
-import { MovieVideo } from '@blockframes/data-model';
+import { MovieVideo } from '@blockframes/model';
 
 const userCache: { [uid: string]: User | PublicUser } = {};
 const orgCache: { [id: string]: Organization | PublicOrganization } = {};
 
 export function fakeEmail(name: string) {
-  const random = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 3);
+  const random = Math.random()
+    .toString(36)
+    .replace(/[^a-z]+/g, '')
+    .substr(0, 3);
   const suffix = name.replace(/\W/g, '').toLowerCase();
   return `dev+${suffix}-${random}@blockframes.io`;
 }
@@ -29,16 +35,29 @@ function randomNumber() {
 }
 
 function fakeIp() {
-  return (randomNumber() + 1) + "." + randomNumber() + "." + randomNumber() + "." + randomNumber();
+  return randomNumber() + 1 + '.' + randomNumber() + '.' + randomNumber() + '.' + randomNumber();
 }
 
 function fakeFiscalNumber() {
   const fakeValues = ['FR', 'EN', 'PL', 'GB', 'AL'];
   const start = fakeValues[Math.floor(Math.random() * fakeValues.length)];
-  return start + " " + randomNumber() + "-" + randomNumber() + "-" + randomNumber() + "-" + randomNumber();
+  return (
+    start +
+    ' ' +
+    randomNumber() +
+    '-' +
+    randomNumber() +
+    '-' +
+    randomNumber() +
+    '-' +
+    randomNumber()
+  );
 }
 
-function hasKeys<T extends Record<string, any>>(doc: Record<string, any>, ...keys: (keyof T)[]): doc is T {
+function hasKeys<T extends Record<string, any>>(
+  doc: Record<string, any>,
+  ...keys: (keyof T)[]
+): doc is T {
   return keys.every((key) => key in doc);
 }
 
@@ -57,7 +76,7 @@ function processOrg<T extends Organization | PublicOrganization>(o: T): T {
   const org = { ...o, denomination, email } as any;
   if (org.fiscalNumber) {
     org.fiscalNumber = fakeFiscalNumber();
-  };
+  }
   return org;
 }
 
@@ -86,7 +105,7 @@ function updateUser(user: User | PublicUser | Partial<User>, toPublicUser = fals
     return toPublicUser ? createPublicUser(processedUser) : processedUser;
   }
   if (!hasKeys<User>(user, 'uid')) {
-    console.warn('WARNING - user does not have UID!', user)
+    console.warn('WARNING - user does not have UID!', user);
     return processUser(user as User);
   }
   throw Error(`Unable to process user: ${JSON.stringify(user, null, 4)}`);
@@ -94,7 +113,8 @@ function updateUser(user: User | PublicUser | Partial<User>, toPublicUser = fals
 
 function updateOrg(org: Organization | PublicOrganization) {
   if (!org) return;
-  if (hasKeys<PublicOrganization>(org, 'denomination') && !hasKeys<Organization>(org, 'email')) { // Is public
+  if (hasKeys<PublicOrganization>(org, 'denomination') && !hasKeys<Organization>(org, 'email')) {
+    // Is public
     const newOrg = orgCache?.[org.id] || (orgCache[org.id] = processOrg(org));
     return createPublicOrganization(newOrg);
   }
@@ -108,8 +128,8 @@ function updateHostedVideo(screener: MovieVideo): MovieVideo {
   const jwPlayerId = testVideoId;
   return {
     ...screener,
-    jwPlayerId
-  }
+    jwPlayerId,
+  };
 }
 
 function processMovie(movie: Movie): Movie {
@@ -117,7 +137,9 @@ function processMovie(movie: Movie): Movie {
     movie.promotional.videos.screener = updateHostedVideo(movie.promotional.videos.screener);
   }
   if (movie.promotional?.videos?.otherVideos) {
-    movie.promotional.videos.otherVideos = movie.promotional.videos.otherVideos.map(updateHostedVideo);
+    movie.promotional.videos.otherVideos = movie.promotional.videos.otherVideos.map(
+      updateHostedVideo
+    );
   }
   if (movie.promotional?.videos?.salesPitch?.jwPlayerId) {
     movie.promotional.videos.salesPitch = updateHostedVideo(movie.promotional.videos.salesPitch);
@@ -127,7 +149,7 @@ function processMovie(movie: Movie): Movie {
 
 function processMaintenanceDoc(doc: IMaintenanceDoc): IMaintenanceDoc {
   if (doc.startedAt && !doc.endedAt) return doc;
-  return { endedAt: null, startedAt: firestore.Timestamp.now() }
+  return { endedAt: null, startedAt: firestore.Timestamp.now() };
 }
 
 export function anonymizeDocument({ docPath, content: doc }: DbRecord) {
@@ -143,29 +165,35 @@ export function anonymizeDocument({ docPath, content: doc }: DbRecord) {
     'buckets',
     'terms/',
     'incomes/',
-    'offers/'
+    'offers/',
   ];
   if (!doc || ignorePaths.some((path) => docPath.includes(path))) return { docPath, content: doc };
 
   try {
-    if (docPath.includes('users/') && hasKeys<User>(doc, 'uid') && doc?.email) { // USERS
+    if (docPath.includes('users/') && hasKeys<User>(doc, 'uid') && doc?.email) {
+      // USERS
       return { docPath, content: updateUser(doc) };
     }
-    if (docPath.includes('orgs/') && hasKeys<Organization>(doc, 'id', 'denomination')) { // ORGS
+    if (docPath.includes('orgs/') && hasKeys<Organization>(doc, 'id', 'denomination')) {
+      // ORGS
       return { docPath, content: updateOrg(doc) };
     }
-    if (docPath.includes('invitations/') && hasKeys<Invitation>(doc, 'type', 'status', 'mode')) { // INVITATIONS
+    if (docPath.includes('invitations/') && hasKeys<Invitation>(doc, 'type', 'status', 'mode')) {
+      // INVITATIONS
       return { docPath, content: processInvitation(doc) };
     }
-    if (docPath.includes('notifications/') && hasKeys<NotificationDocument>(doc, 'toUserId')) { // NOTIFICATIONS
+    if (docPath.includes('notifications/') && hasKeys<NotificationDocument>(doc, 'toUserId')) {
+      // NOTIFICATIONS
       return { docPath, content: processNotification(doc) };
     }
     if (docPath.includes('movies/')) {
       if (hasKeys<Movie>(doc, 'title')) return { docPath, content: processMovie(doc) };
       return { docPath, content: doc };
     }
-    if (docPath.includes('_META')) { // Always set maintenance
-      if (hasKeys<IMaintenanceDoc>(doc, 'endedAt')) return { docPath, content: processMaintenanceDoc(doc) }
+    if (docPath.includes('_META')) {
+      // Always set maintenance
+      if (hasKeys<IMaintenanceDoc>(doc, 'endedAt'))
+        return { docPath, content: processMaintenanceDoc(doc) };
       return { docPath, content: doc };
     }
   } catch (e) {
@@ -173,7 +201,8 @@ export function anonymizeDocument({ docPath, content: doc }: DbRecord) {
   }
   const error = 'CRITICAL: could not clean a document, docPath not handled';
   const location = `Document path: ${docPath}`;
-  const solution = 'The collection name might be missing in the anonymisation script. Update file tools/scripts/anonymize-db.ts';
+  const solution =
+    'The collection name might be missing in the anonymisation script. Update file tools/scripts/anonymize-db.ts';
   throw new Error([error, location, solution].join('/n'));
 }
 
@@ -188,11 +217,17 @@ function getPathOrder(path: string): number {
 export async function runAnonymization(db: FirestoreEmulator) {
   throwOnProduction();
   const dbArray = await loadDb(db);
-  const orderedDbArray = dbArray.sort((a, b) => getPathOrder(a.docPath) - getPathOrder(b.docPath))
+  const orderedDbArray = dbArray.sort((a, b) => getPathOrder(a.docPath) - getPathOrder(b.docPath));
   await db.clearFirestoreData({ projectId: firebase().projectId });
-  const anonDb = orderedDbArray.map(anonymizeDocument)
-  await runChunks(anonDb, async ({ content, docPath }) => { await db.doc(docPath).set(content) }, 1000)
-  console.log('Anonymization Done!')
+  const anonDb = orderedDbArray.map(anonymizeDocument);
+  await runChunks(
+    anonDb,
+    async ({ content, docPath }) => {
+      await db.doc(docPath).set(content);
+    },
+    1000
+  );
+  console.log('Anonymization Done!');
 }
 
 async function loadDb(db: FirebaseFirestore.Firestore) {
@@ -207,7 +242,7 @@ async function loadDb(db: FirebaseFirestore.Firestore) {
 
   // retrieve all the collections at the root.
   const collections: CollectionReference[] = await db.listCollections();
-  collections.forEach(x => processingQueue.push(x.path));
+  collections.forEach((x) => processingQueue.push(x.path));
 
   while (!processingQueue.isEmpty()) {
     // Note: we could speed up the code by processing multiple collections at once,
@@ -232,7 +267,7 @@ async function loadDb(db: FirebaseFirestore.Firestore) {
 
       // Adding the current path to the subcollections to backup
       const subCollections = await doc.ref.listCollections();
-      subCollections.forEach(x => processingQueue.push(x.path));
+      subCollections.forEach((x) => processingQueue.push(x.path));
     });
 
     // Wait for this backup to complete

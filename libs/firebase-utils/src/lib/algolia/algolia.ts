@@ -2,18 +2,26 @@ import algoliasearch from 'algoliasearch';
 import { algolia as algoliaClient, centralOrgId } from '@env';
 import * as functions from 'firebase-functions';
 import { festival, Language } from '@blockframes/utils/static-model';
-import { App, app, getOrgModuleAccess, modules } from "@blockframes/utils/apps";
-import { AlgoliaOrganization, AlgoliaMovie, AlgoliaUser, AlgoliaConfig } from '@blockframes/utils/algolia';
-import { OrganizationDocument, orgName } from '@blockframes/organization/+state/organization.firestore';
+import { App, app, getOrgModuleAccess, modules } from '@blockframes/utils/apps';
+import {
+  AlgoliaOrganization,
+  AlgoliaMovie,
+  AlgoliaUser,
+  AlgoliaConfig,
+} from '@blockframes/utils/algolia';
+import {
+  OrganizationDocument,
+  orgName,
+} from '@blockframes/organization/+state/organization.firestore';
 import { PublicUser } from '@blockframes/user/types';
-import { MovieDocument } from '@blockframes/data-model';
+import { MovieDocument } from '@blockframes/model';
 import * as admin from 'firebase-admin';
 import { hasAcceptedMovies } from '../util';
 import { getMovieAppAccess } from '@blockframes/utils/apps';
 
 export const algolia = {
   ...algoliaClient,
-  adminKey: functions.config().algolia?.api_key
+  adminKey: functions.config().algolia?.api_key,
 };
 
 const indexBuilder = (indexName: string, adminKey?: string) => {
@@ -48,7 +56,7 @@ export function setIndexConfiguration(indexName: string, config: AlgoliaConfig, 
   return indexBuilder(indexName, adminKey).setSettings({
     attributesForFaceting: config.attributesForFaceting,
     searchableAttributes: config.searchableAttributes,
-    customRanking: config.customRanking
+    customRanking: config.customRanking,
   });
 }
 
@@ -68,17 +76,16 @@ export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string)
   const orgAppAccess = findOrgAppAccess(org);
 
   // Update algolia's index
-  const promises = orgAppAccess.map(async appName => {
+  const promises = orgAppAccess.map(async (appName) => {
     org['hasAcceptedMovies'] = await hasAcceptedMovies(org, appName);
     const orgRecord = createAlgoliaOrganization(org);
     if (orgRecord.name) {
       return indexBuilder(algolia.indexNameOrganizations[appName], adminKey).saveObject(orgRecord);
-    };
+    }
   });
 
-  return Promise.all(promises)
+  return Promise.all(promises);
 }
-
 
 export function createAlgoliaOrganization(org: OrganizationDocument): AlgoliaOrganization {
   return {
@@ -89,7 +96,7 @@ export function createAlgoliaOrganization(org: OrganizationDocument): AlgoliaOrg
     isAccepted: org.status === 'accepted',
     hasAcceptedMovies: org['hasAcceptedMovies'] ?? false,
     logo: org.logo.storagePath,
-    activity: org.activity
+    activity: org.activity,
   };
 }
 
@@ -108,7 +115,6 @@ export function storeSearchableMovie(
   }
 
   try {
-
     const movieRecord: AlgoliaMovie = {
       objectID: movie.id,
 
@@ -117,29 +123,36 @@ export function storeSearchableMovie(
         international: movie.title.international || '',
         original: movie.title.original,
       },
-      directors: movie.directors ?
-        movie.directors.map((director) => `${director.firstName} ${director.lastName}`) :
-        [],
+      directors: movie.directors
+        ? movie.directors.map((director) => `${director.firstName} ${director.lastName}`)
+        : [],
       keywords: movie.keywords ? movie.keywords : [],
       // Register the entire festival name because it will be used for research by users
-      festivals: movie.prizes.map(prize => festival[prize.name]) || [],
-      productionCompany: movie.stakeholders.productionCompany.map(company => company.displayName) || [],
-      salesAgent: movie.stakeholders.salesAgent.map(agent => agent.displayName) || [],
+      festivals: movie.prizes.map((prize) => festival[prize.name]) || [],
+      productionCompany:
+        movie.stakeholders.productionCompany.map((company) => company.displayName) || [],
+      salesAgent: movie.stakeholders.salesAgent.map((agent) => agent.displayName) || [],
 
       // facets
       genres: movie.genres ? movie.genres : [],
       originCountries: movie.originCountries ? movie.originCountries : [],
       languages: {
         original: movie.originalLanguages ? movie.originalLanguages : [],
-        dubbed: movie.languages ?
-          Object.keys(movie.languages).filter(lang => movie.languages[lang]?.dubbed) as Language[] :
-          [],
-        subtitle: movie.languages ?
-          Object.keys(movie.languages).filter(lang => movie.languages[lang]?.subtitle) as Language[] :
-          [],
-        caption: movie.languages ?
-          Object.keys(movie.languages).filter(lang => movie.languages[lang]?.caption) as Language[] :
-          [],
+        dubbed: movie.languages
+          ? (Object.keys(movie.languages).filter(
+              (lang) => movie.languages[lang]?.dubbed
+            ) as Language[])
+          : [],
+        subtitle: movie.languages
+          ? (Object.keys(movie.languages).filter(
+              (lang) => movie.languages[lang]?.subtitle
+            ) as Language[])
+          : [],
+        caption: movie.languages
+          ? (Object.keys(movie.languages).filter(
+              (lang) => movie.languages[lang]?.caption
+            ) as Language[])
+          : [],
       },
       status: movie.productionStatus ? movie.productionStatus : '',
       storeStatus: '',
@@ -148,15 +161,15 @@ export function storeSearchableMovie(
       originalLanguages: movie.originalLanguages,
       runningTime: {
         status: movie.runningTime.status,
-        time: movie.runningTime.time
+        time: movie.runningTime.time,
       },
       release: {
         status: movie.release.status,
-        year: movie.release.year
+        year: movie.release.year,
       },
       banner: movie.banner.storagePath,
       poster: movie.poster.storagePath,
-      contentType: movie.contentType
+      contentType: movie.contentType,
     };
 
     /* App specific properties */
@@ -167,19 +180,20 @@ export function storeSearchableMovie(
 
     const movieAppAccess = getMovieAppAccess(movie);
 
-    const promises = movieAppAccess.map(appName => indexBuilder(algolia.indexNameMovies[appName], adminKey).saveObject(
-      {
+    const promises = movieAppAccess.map((appName) =>
+      indexBuilder(algolia.indexNameMovies[appName], adminKey).saveObject({
         ...movieRecord,
         storeStatus: movie.app[appName]?.status || '',
-      }
-    ));
+      })
+    );
 
-    return Promise.all(promises)
-
+    return Promise.all(promises);
   } catch (error) {
-    console.error(`\n\n\tFailed to format the movie ${movie.id} into an algolia record : skipping\n\n`);
+    console.error(
+      `\n\n\tFailed to format the movie ${movie.id} into an algolia record : skipping\n\n`
+    );
     console.error(error);
-    return new Promise(res => res(true));
+    return new Promise((res) => res(true));
   }
 }
 
@@ -207,17 +221,19 @@ export async function storeSearchableUser(user: PublicUser, adminKey?: string): 
       firstName: user.firstName ?? '',
       lastName: user.lastName ?? '',
       avatar: user.avatar?.storagePath ?? '',
-      orgName: orgData ? orgName(orgData) : ''
+      orgName: orgData ? orgName(orgData) : '',
     };
 
     return indexBuilder(algolia.indexNameUsers, adminKey).saveObject(userRecord);
   } catch (error) {
-    console.error(`\n\n\tFailed to format the user ${user.uid} into an algolia record : skipping\n\n`);
+    console.error(
+      `\n\n\tFailed to format the user ${user.uid} into an algolia record : skipping\n\n`
+    );
     console.error(error);
-    return new Promise(res => res(true));
+    return new Promise((res) => res(true));
   }
 }
 
 export function findOrgAppAccess(org: OrganizationDocument): App[] {
-  return app.filter(a => modules.some(m => org.appAccess[a]?.[m]));
+  return app.filter((a) => modules.some((m) => org.appAccess[a]?.[m]));
 }

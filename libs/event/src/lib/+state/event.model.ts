@@ -1,7 +1,14 @@
 import { CalendarEvent } from 'angular-calendar';
-import { Meeting, EventBase, Screening, EventMeta, MeetingAttendee, AttendeeStatus } from './event.firestore';
+import {
+  Meeting,
+  EventBase,
+  Screening,
+  EventMeta,
+  MeetingAttendee,
+  AttendeeStatus,
+} from './event.firestore';
 import { toDate } from '@blockframes/utils/helpers';
-import { Movie } from '@blockframes/data-model';
+import { Movie } from '@blockframes/model';
 import { Organization } from '@blockframes/organization/+state';
 import type firebase from 'firebase';
 import { AnonymousCredentials } from '@blockframes/auth/+state/auth.model';
@@ -9,7 +16,9 @@ import { User } from '@blockframes/user/+state/user.model';
 type Timestamp = firebase.firestore.Timestamp;
 
 // Event
-export interface Event<Meta extends EventMeta = unknown> extends EventBase<Date, Meta>, CalendarEvent<Meta> {
+export interface Event<Meta extends EventMeta = unknown>
+  extends EventBase<Date, Meta>,
+    CalendarEvent<Meta> {
   id: string;
   isOwner: boolean;
   allDay: boolean;
@@ -19,12 +28,15 @@ export interface Event<Meta extends EventMeta = unknown> extends EventBase<Date,
   // We need that to avoid type error in template
   org?: Organization;
   movie?: Movie;
-  organizedBy?: User,
+  organizedBy?: User;
 }
-export function createEvent<Meta extends EventMeta>(params: Partial<EventBase<Date | Timestamp, Meta>> = {}): Event<Meta> {
-  const meta: EventMeta =
-    isMeeting(params as Event) ? createMeeting(params.meta)
-    : isScreening(params as Event) ? createScreening(params.meta)
+export function createEvent<Meta extends EventMeta>(
+  params: Partial<EventBase<Date | Timestamp, Meta>> = {}
+): Event<Meta> {
+  const meta: EventMeta = isMeeting(params as Event)
+    ? createMeeting(params.meta)
+    : isScreening(params as Event)
+    ? createScreening(params.meta)
     : {};
 
   return {
@@ -39,7 +51,7 @@ export function createEvent<Meta extends EventMeta>(params: Partial<EventBase<Da
     ...params,
     start: toDate(params.start || new Date()),
     end: toDate(params.end || new Date()),
-    meta: meta as Meta
+    meta: meta as Meta,
   };
 }
 
@@ -55,7 +67,8 @@ export interface MeetingEvent extends Event<Meeting> {
   org: Organization;
   organizedBy: User;
 }
-export const isMeeting = (event: Partial<Event>): event is MeetingEvent => event?.type === 'meeting';
+export const isMeeting = (event: Partial<Event>): event is MeetingEvent =>
+  event?.type === 'meeting';
 export function createMeeting(meeting: Partial<Meeting>): Meeting {
   return {
     organizerUid: '',
@@ -65,8 +78,8 @@ export function createMeeting(meeting: Partial<Meeting>): Meeting {
     selectedFile: '',
     controls: {},
 
-    ...meeting
-  }
+    ...meeting,
+  };
 }
 
 // Screening
@@ -75,31 +88,38 @@ export interface ScreeningEvent extends Event<Screening> {
   movie: Movie;
   org: Organization;
 }
-export const isScreening = (event: Partial<Event>): event is ScreeningEvent => event?.type === 'screening';
+export const isScreening = (event: Partial<Event>): event is ScreeningEvent =>
+  event?.type === 'screening';
 export function createScreening(screening: Partial<Screening>): Screening {
   return {
     titleId: '',
     description: '',
     organizerUid: '',
-    ...screening
-  }
+    ...screening,
+  };
 }
 
 // Calendar Event
-export function createCalendarEvent<M>(event: Partial<EventBase<Date | Timestamp, M>>, isOwner: boolean): Event<M> {
+export function createCalendarEvent<M>(
+  event: Partial<EventBase<Date | Timestamp, M>>,
+  isOwner: boolean
+): Event<M> {
   return {
     ...createEvent(event),
     isOwner,
     draggable: isOwner,
     resizable: { beforeStart: isOwner, afterEnd: isOwner },
-  }
+  };
 }
 
-export function createMeetingAttendee(user: User | AnonymousCredentials, status: AttendeeStatus = 'requesting'): MeetingAttendee {
+export function createMeetingAttendee(
+  user: User | AnonymousCredentials,
+  status: AttendeeStatus = 'requesting'
+): MeetingAttendee {
   return {
     uid: user.uid,
     firstName: user.firstName,
     lastName: user.lastName,
-    status
-  }
+    status,
+  };
 }

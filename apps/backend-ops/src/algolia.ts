@@ -6,23 +6,24 @@ import {
   storeSearchableMovie,
   storeSearchableOrg,
   storeSearchableUser,
-  getDocument
+  getDocument,
 } from '@blockframes/firebase-utils';
 import { algolia } from '@env';
-import { OrganizationDocument, orgName } from "@blockframes/organization/+state/organization.firestore";
-import { MovieDocument } from '@blockframes/data-model';
-import { PublicUser } from "@blockframes/user/types";
+import {
+  OrganizationDocument,
+  orgName,
+} from '@blockframes/organization/+state/organization.firestore';
+import { MovieDocument } from '@blockframes/model';
+import { PublicUser } from '@blockframes/user/types';
 import { App, getAllAppsExcept } from '@blockframes/utils/apps';
 import { Campaign } from '@blockframes/campaign/+state/campaign.model';
 import { AlgoliaConfig } from '@blockframes/utils/algolia';
 
-
 export async function upgradeAlgoliaOrgs(appConfig?: App, db = loadAdminServices().db) {
   if (!appConfig) {
-    const promises = getAllAppsExcept(['crm']).map(app => upgradeAlgoliaOrgs(app, db));
+    const promises = getAllAppsExcept(['crm']).map((app) => upgradeAlgoliaOrgs(app, db));
     await Promise.all(promises);
   } else {
-
     // reset config, clear index and fill it up from the db (which is the only source of truth)
     const config: AlgoliaConfig = {
       searchableAttributes: ['name'],
@@ -32,18 +33,24 @@ export async function upgradeAlgoliaOrgs(appConfig?: App, db = loadAdminServices
         'name',
         'country',
         'isAccepted',
-        'hasAcceptedMovies'
+        'hasAcceptedMovies',
       ],
-      customRanking: [
-        'asc(name)'
-      ]
+      customRanking: ['asc(name)'],
     };
     await clearIndex(algolia.indexNameOrganizations[appConfig], process.env['ALGOLIA_API_KEY']);
-    await setIndexConfiguration(algolia.indexNameOrganizations[appConfig], config, process.env['ALGOLIA_API_KEY']);
+    await setIndexConfiguration(
+      algolia.indexNameOrganizations[appConfig],
+      config,
+      process.env['ALGOLIA_API_KEY']
+    );
 
-    const orgsIterator = getCollectionInBatches<OrganizationDocument>(db.collection('orgs'), 'id', 300)
+    const orgsIterator = getCollectionInBatches<OrganizationDocument>(
+      db.collection('orgs'),
+      'id',
+      300
+    );
     for await (const orgs of orgsIterator) {
-      const promises = orgs.map(org => storeSearchableOrg(org, process.env['ALGOLIA_API_KEY']));
+      const promises = orgs.map((org) => storeSearchableOrg(org, process.env['ALGOLIA_API_KEY']));
 
       await Promise.all(promises);
       console.log(`chunk of ${orgs.length} orgs processed...`);
@@ -54,32 +61,37 @@ export async function upgradeAlgoliaOrgs(appConfig?: App, db = loadAdminServices
 }
 
 export async function upgradeAlgoliaMovies(appConfig?: App, db = loadAdminServices().db) {
-
   if (!appConfig) {
-    const promises = getAllAppsExcept(['crm']).map(app => upgradeAlgoliaMovies(app, db));
+    const promises = getAllAppsExcept(['crm']).map((app) => upgradeAlgoliaMovies(app, db));
     await Promise.all(promises);
   } else {
-
     // reset config, clear index and fill it up from the db (which is the only source of truth)
-    const config = movieConfig(appConfig)
+    const config = movieConfig(appConfig);
 
     await clearIndex(algolia.indexNameMovies[appConfig], process.env['ALGOLIA_API_KEY']);
-    await setIndexConfiguration(algolia.indexNameMovies[appConfig], config, process.env['ALGOLIA_API_KEY']);
+    await setIndexConfiguration(
+      algolia.indexNameMovies[appConfig],
+      config,
+      process.env['ALGOLIA_API_KEY']
+    );
 
-    const moviesIterator = getCollectionInBatches<MovieDocument>(db.collection('movies'), 'id', 300);
+    const moviesIterator = getCollectionInBatches<MovieDocument>(
+      db.collection('movies'),
+      'id',
+      300
+    );
 
     for await (const movies of moviesIterator) {
-      const promises = movies.map(async movie => {
+      const promises = movies.map(async (movie) => {
         try {
-
-          const orgsDocs = await Promise.all(movie.orgIds.map(id => db.doc(`orgs/${id}`).get()));
-          const orgs = orgsDocs.map(doc => doc.data() as OrganizationDocument);
+          const orgsDocs = await Promise.all(movie.orgIds.map((id) => db.doc(`orgs/${id}`).get()));
+          const orgs = orgsDocs.map((doc) => doc.data() as OrganizationDocument);
 
           if (!orgs.length) {
             console.error(`Movie ${movie.id} is not part of any orgs`);
           }
 
-          const organizationNames = orgs.map(org => orgName(org));
+          const organizationNames = orgs.map((org) => orgName(org));
 
           if (appConfig === 'financiers') {
             const campaign = await getDocument<Campaign>(`campaign/${movie.id}`);
@@ -104,26 +116,18 @@ export async function upgradeAlgoliaMovies(appConfig?: App, db = loadAdminServic
 }
 
 export async function upgradeAlgoliaUsers(db = loadAdminServices().db) {
-
   // reset config, clear index and fill it up from the db (which is the only source of truth)
   const config: AlgoliaConfig = {
-    searchableAttributes: [
-      'email',
-      'firstName',
-      'lastName',
-      'orgNames'
-    ],
-    attributesForFaceting: [
-      'email'
-    ],
+    searchableAttributes: ['email', 'firstName', 'lastName', 'orgNames'],
+    attributesForFaceting: ['email'],
   };
 
   await clearIndex(algolia.indexNameUsers, process.env['ALGOLIA_API_KEY']);
   await setIndexConfiguration(algolia.indexNameUsers, config, process.env['ALGOLIA_API_KEY']);
 
-  const usersIterator = getCollectionInBatches<PublicUser>(db.collection('users'), 'uid', 300)
+  const usersIterator = getCollectionInBatches<PublicUser>(db.collection('users'), 'uid', 300);
   for await (const users of usersIterator) {
-    const promises = users.map(async user => {
+    const promises = users.map(async (user) => {
       try {
         await storeSearchableUser(user, process.env['ALGOLIA_API_KEY']);
       } catch (error) {
@@ -132,7 +136,7 @@ export async function upgradeAlgoliaUsers(db = loadAdminServices().db) {
       }
     });
     await Promise.all(promises);
-    console.log(`chunk of ${users.length} users processed...`)
+    console.log(`chunk of ${users.length} users processed...`);
   }
   console.log('Algolia Users index updated with success !');
 }
@@ -149,7 +153,7 @@ const baseConfig: AlgoliaConfig = {
     'orgNames',
     'festivals',
     'productionCompany',
-    'salesAgent'
+    'salesAgent',
   ],
   attributesForFaceting: [
     // filters
@@ -167,21 +171,23 @@ const baseConfig: AlgoliaConfig = {
     'originCountries',
     'status',
     'storeStatus',
-    'contentType'
+    'contentType',
   ],
-  customRanking: ['asc(title.international)', 'asc(title.original)']
+  customRanking: ['asc(title.international)', 'asc(title.original)'],
 };
 
 function movieConfig(appConfig: App): AlgoliaConfig {
   switch (appConfig) {
-    case 'financiers': return {
-      searchableAttributes: baseConfig.searchableAttributes,
-      attributesForFaceting: [
-        ...baseConfig.attributesForFaceting,
-        'socialGoals',
-        'filterOnly(minPledge)'
-      ]
-    }
-    default: return baseConfig;
+    case 'financiers':
+      return {
+        searchableAttributes: baseConfig.searchableAttributes,
+        attributesForFaceting: [
+          ...baseConfig.attributesForFaceting,
+          'socialGoals',
+          'filterOnly(minPledge)',
+        ],
+      };
+    default:
+      return baseConfig;
   }
 }

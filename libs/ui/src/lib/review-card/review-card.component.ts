@@ -1,14 +1,14 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import { MovieReview } from '@blockframes/data-model';
+import { MovieReview } from '@blockframes/model';
 
 function createMovieReviewView(review: Partial<MovieReview>) {
   return {
-    journalName: review.journalName || 'Journale name couldn\'t be loaded',
-    criticQuote: review.criticQuote || 'Quote couldn\'t be loaded',
+    journalName: review.journalName || "Journale name couldn't be loaded",
+    criticQuote: review.criticQuote || "Quote couldn't be loaded",
     link: review.revueLink,
     criticName: review.criticName || 'Unknow author',
-    publicationDate: review.publicationDate || ''
-  }
+    publicationDate: review.publicationDate || '',
+  };
 }
 
 type MovieReviewView = ReturnType<typeof createMovieReviewView>;
@@ -17,9 +17,8 @@ type MovieReviewView = ReturnType<typeof createMovieReviewView>;
   selector: '[review] review-card',
   templateUrl: 'review-card.component.html',
   styleUrls: ['./review-card.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-
 export class ReviewCardComponent {
   public movieReview: MovieReviewView;
   @Input()

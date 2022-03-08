@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { Movie } from '@blockframes/data-model';
+import { Movie } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { Organization, OrganizationService, orgName } from '@blockframes/organization/+state';
@@ -17,7 +17,7 @@ interface CrmMovie extends Movie {
   selector: 'crm-movies',
   templateUrl: './movies.component.html',
   styleUrls: ['./movies.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MoviesComponent implements OnInit {
   public movies$?: Observable<CrmMovie[]>;
@@ -29,34 +29,34 @@ export class MoviesComponent implements OnInit {
     private eventService: EventService,
     private cdr: ChangeDetectorRef,
     private router: Router
-  ) { }
+  ) {}
 
   async ngOnInit() {
     this.movies$ = combineLatest([
       this.movieService.valueChanges(),
       this.orgService.valueChanges(),
-      this.eventService.valueChanges(ref => ref.where('type', '==', 'screening')),
+      this.eventService.valueChanges((ref) => ref.where('type', '==', 'screening')),
     ]).pipe(
-        map(([movies, orgs, events]) => {
-          const screenings = events.filter(isScreening);
-          return movies.map(movie => {
-            const org = orgs.find(o => o.id === movie.orgIds[0]);
-            const screeningCount = screenings.filter(e => e.meta?.titleId === movie.id).length;
-            return { ...movie, org, screeningCount } as CrmMovie;
-          })
-        }),
-      )
+      map(([movies, orgs, events]) => {
+        const screenings = events.filter(isScreening);
+        return movies.map((movie) => {
+          const org = orgs.find((o) => o.id === movie.orgIds[0]);
+          const screeningCount = screenings.filter((e) => e.meta?.titleId === movie.id).length;
+          return { ...movie, org, screeningCount } as CrmMovie;
+        });
+      })
+    );
   }
 
   goToEditNewTab(id: string, $event: Event) {
-    $event.stopPropagation()
-    const urlTree = this.router.createUrlTree([`c/o/dashboard/crm/movie/${id}`])
+    $event.stopPropagation();
+    const urlTree = this.router.createUrlTree([`c/o/dashboard/crm/movie/${id}`]);
     const url = this.router.serializeUrl(urlTree);
     window.open(url, '_blank', 'noreferrer');
   }
 
   goToEdit(movie: Movie) {
-    this.router.navigate([`/c/o/dashboard/crm/movie/${movie.id}`])
+    this.router.navigate([`/c/o/dashboard/crm/movie/${movie.id}`]);
   }
 
   public exportTable(movies: CrmMovie[]) {
@@ -64,19 +64,19 @@ export class MoviesComponent implements OnInit {
       this.exporting = true;
       this.cdr.markForCheck();
 
-      const exportedRows = movies.map(m => ({
+      const exportedRows = movies.map((m) => ({
         'movie id': m.id,
-        'title': m.title.international,
+        title: m.title.international,
         'internal ref': m.internalRef ?? '--',
-        'org': m.org ? orgName(m.org) : '--',
-        'orgId': m.org?.id ?? '--',
+        org: m.org ? orgName(m.org) : '--',
+        orgId: m.org?.id ?? '--',
         'catalog status': m.app.catalog.status,
         'catalog access': m.app.catalog.access ? 'yes' : 'no',
         'festival status': m.app.festival.status,
         'festival access': m.app.festival.access ? 'yes' : 'no',
         'financiers status': m.app.financiers.status,
         'financiers access': m.app.financiers.access ? 'yes' : 'no',
-        'screeningCount': `${m.screeningCount}`,
+        screeningCount: `${m.screeningCount}`,
       }));
 
       downloadCsvFromJson(exportedRows, 'movies-list');
@@ -86,6 +86,5 @@ export class MoviesComponent implements OnInit {
       this.exporting = false;
     }
     this.cdr.markForCheck();
-
   }
 }

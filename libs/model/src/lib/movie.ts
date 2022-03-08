@@ -19,16 +19,22 @@ import type {
   Territory,
   SocialGoal,
   NumberRange,
-  ScreeningStatus
-} from "@blockframes/utils/static-model/types";
+  ScreeningStatus,
+} from '@blockframes/utils/static-model/types';
 import { MovieLanguageType, productionStatus } from '@blockframes/utils/static-model';
 import { toDate } from '@blockframes/utils/helpers';
 import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 import { App, getAllAppsExcept } from '@blockframes/utils/apps';
-import { Producer, Crew, Cast, Stakeholder, Director } from "@blockframes/utils/common-interfaces/identity";
+import {
+  Producer,
+  Crew,
+  Cast,
+  Stakeholder,
+  Director,
+} from '@blockframes/utils/common-interfaces/identity';
 import { AnalyticsEvents, AnalyticsBase } from '@blockframes/utils/analytics/analytics-model';
-import { DocumentMeta } from "@blockframes/utils/models-meta";
-import { StorageFile, StorageVideo } from "@blockframes/media/+state/media.firestore";
+import { DocumentMeta } from '@blockframes/utils/models-meta';
+import { StorageFile, StorageVideo } from '@blockframes/media/+state/media.firestore';
 import type firebase from 'firebase';
 
 //////////////////
@@ -46,57 +52,57 @@ export interface MovieBase<D> {
   promotional: MoviePromotionalElements;
 
   // Every field concerning the movie
-  app: Partial<{ [app in App]: MovieAppConfig<D> }>, //! required
-  audience?: MovieGoalsAudience,
+  app: Partial<{ [app in App]: MovieAppConfig<D> }>; //! required
+  audience?: MovieGoalsAudience;
   banner?: StorageFile;
-  boxOffice?: BoxOffice[],
-  cast?: Cast[],
-  certifications?: Certification[],
-  color?: Color,
+  boxOffice?: BoxOffice[];
+  cast?: Cast[];
+  certifications?: Certification[];
+  color?: Color;
   contentType: ContentType; //! required
-  crew?: Crew[],
-  directors: Director[], //! required
-  estimatedBudget?: NumberRange,
-  expectedPremiere?: MovieExpectedPremiereRaw<D>,
-  format?: MovieFormat,
-  formatQuality?: MovieFormatQuality,
-  genres: Genre[], //! required
-  customGenres?: string[],
-  internalRef?: string,
+  crew?: Crew[];
+  directors: Director[]; //! required
+  estimatedBudget?: NumberRange;
+  expectedPremiere?: MovieExpectedPremiereRaw<D>;
+  format?: MovieFormat;
+  formatQuality?: MovieFormatQuality;
+  genres: Genre[]; //! required
+  customGenres?: string[];
+  internalRef?: string;
   isOriginalVersionAvailable: boolean;
-  keyAssets?: string,
-  keywords?: string[],
+  keyAssets?: string;
+  keywords?: string[];
   languages?: LanguageRecord;
-  logline?: string,
-  originalLanguages: Language[], //! required
-  originalRelease?: MovieOriginalReleaseRaw<D>[],
-  originCountries: Territory[], //! required
+  logline?: string;
+  originalLanguages: Language[]; //! required
+  originalRelease?: MovieOriginalReleaseRaw<D>[];
+  originCountries: Territory[]; //! required
   poster?: StorageFile;
-  prizes?: Prize[],
-  customPrizes?: Prize[],
-  producers?: Producer[],
-  productionStatus?: ProductionStatus,
-  rating?: MovieRating[],
-  release: MovieRelease, //! required
-  review?: MovieReview[],
+  prizes?: Prize[];
+  customPrizes?: Prize[];
+  producers?: Producer[];
+  productionStatus?: ProductionStatus;
+  rating?: MovieRating[];
+  release: MovieRelease; //! required
+  review?: MovieReview[];
   runningTime?: MovieRunningTime;
-  scoring?: Scoring,
-  shooting?: MovieShooting,
-  soundFormat?: SoundFormat,
-  stakeholders?: MovieStakeholders,
-  synopsis: string, //! required
-  title: Title, //! required
-  orgIds: string[] //! required
-  campaignStarted: D,
+  scoring?: Scoring;
+  shooting?: MovieShooting;
+  soundFormat?: SoundFormat;
+  stakeholders?: MovieStakeholders;
+  synopsis: string; //! required
+  title: Title; //! required
+  orgIds: string[]; //! required
+  campaignStarted: D;
 
   //CATALOG specific
   delivery?: {
-    file: StorageFile,
-  }
+    file: StorageFile;
+  };
 }
 
 /** Document model of a Movie */
-export type MovieDocument = MovieBase<Timestamp>
+export type MovieDocument = MovieBase<Timestamp>;
 
 export interface MovieVideos {
   screener?: MovieVideo; // Main screener
@@ -105,9 +111,9 @@ export interface MovieVideos {
 }
 
 export interface MovieVideo extends StorageVideo {
-  title?: string,
-  description?: string,
-  type?: HostedVideoType
+  title?: string;
+  description?: string;
+  type?: HostedVideoType;
 }
 
 ////////////////////
@@ -115,12 +121,12 @@ export interface MovieVideo extends StorageVideo {
 ////////////////////
 
 export interface MoviePromotionalElements {
-  moodboard: StorageFile,
-  notes: MovieNote[],
-  presentation_deck: StorageFile,
-  scenario: StorageFile,
-  still_photo: StorageFile[],
-  videos?: MovieVideos,
+  moodboard: StorageFile;
+  notes: MovieNote[];
+  presentation_deck: StorageFile;
+  scenario: StorageFile;
+  still_photo: StorageFile[];
+  videos?: MovieVideos;
 }
 
 ////////////////////
@@ -130,20 +136,20 @@ export interface MoviePromotionalElements {
 type Timestamp = firebase.firestore.Timestamp;
 
 export interface MovieAppConfig<D> {
-  acceptedAt: D,
-  access: boolean,
-  refusedAt: D,
-  status: StoreStatus
+  acceptedAt: D;
+  access: boolean;
+  refusedAt: D;
+  status: StoreStatus;
 }
 
 export type MovieAppConfigRecord = Record<App, MovieAppConfig<Date>>;
 
 export interface Prize {
-  name: string,
-  year?: number,
-  prize?: string,
-  logo?: string,
-  premiere?: PremiereType,
+  name: string;
+  year?: number;
+  prize?: string;
+  logo?: string;
+  premiere?: PremiereType;
 }
 
 export interface Title {
@@ -153,9 +159,9 @@ export interface Title {
 }
 
 export interface BoxOffice {
-  unit: UnitBox,
-  value?: number,
-  territory: Territory,
+  unit: UnitBox;
+  value?: number;
+  territory: Territory;
 }
 
 export interface MovieLanguageSpecification {
@@ -166,27 +172,26 @@ export interface MovieLanguageSpecification {
 
 export type LanguageRecord = Partial<{ [language in Language]: MovieLanguageSpecification }>;
 
-
 export interface MovieOriginalReleaseRaw<D> {
   date: D;
   country: Territory;
-  media?: MediaValue
+  media?: MediaValue;
 }
 
-export type MovieOriginalRelease = MovieOriginalReleaseRaw<Date>
+export type MovieOriginalRelease = MovieOriginalReleaseRaw<Date>;
 
 export interface MovieRating {
   country: Territory;
-  reason?: string,
-  system?: Rating,
-  value: string,
+  reason?: string;
+  system?: Rating;
+  value: string;
 }
 
 export interface MovieReview {
-  criticName?: string,
-  journalName?: string,
-  criticQuote?: string,
-  revueLink?: string,
+  criticName?: string;
+  journalName?: string;
+  criticQuote?: string;
+  revueLink?: string;
 }
 
 export interface MovieStakeholders {
@@ -201,96 +206,94 @@ export interface MovieStakeholders {
 }
 
 export interface MovieRelease {
-  year?: number,
-  status: ScreeningStatus
+  year?: number;
+  status: ScreeningStatus;
 }
 
 export interface MovieRunningTime {
-  time?: number,
-  status?: ScreeningStatus,
-  episodeCount?: number
+  time?: number;
+  status?: ScreeningStatus;
+  episodeCount?: number;
 }
 
 export interface MovieShootingRaw<D> {
-  dates?: MovieShootingDateRaw<D>,
-  locations?: MovieShootingLocations[]
+  dates?: MovieShootingDateRaw<D>;
+  locations?: MovieShootingLocations[];
 }
 
-export type MovieShooting = MovieShootingRaw<Date>
+export type MovieShooting = MovieShootingRaw<Date>;
 
 export interface MovieShootingLocations {
-  cities?: string[],
-  country?: Territory,
+  cities?: string[];
+  country?: Territory;
 }
 
 export interface MovieShootingDateRaw<D> {
-  completed?: D
-  progress?: D,
-  planned?: MoviePlannedShootingDateRange
+  completed?: D;
+  progress?: D;
+  planned?: MoviePlannedShootingDateRange;
 }
 
-export type MovieShootingDate = MovieShootingDateRaw<Date>
+export type MovieShootingDate = MovieShootingDateRaw<Date>;
 
-export type MovieNote = { firstName: string, lastName: string, role: string } & StorageFile;
+export type MovieNote = { firstName: string; lastName: string; role: string } & StorageFile;
 
 export interface MoviePlannedShootingDateRange {
-  from?: MoviePlannedShooting,
-  to?: MoviePlannedShooting
+  from?: MoviePlannedShooting;
+  to?: MoviePlannedShooting;
 }
 
 export interface MoviePlannedShooting {
-  period?: ShootingPeriod,
-  month?: string,
-  year?: number
+  period?: ShootingPeriod;
+  month?: string;
+  year?: number;
 }
 
 export interface MovieExpectedPremiereRaw<D> {
-  date?: D,
-  event?: string
+  date?: D;
+  event?: string;
 }
 
-export type MovieExpectedPremiere = MovieExpectedPremiereRaw<Date>
+export type MovieExpectedPremiere = MovieExpectedPremiereRaw<Date>;
 
 export interface MovieGoalsAudience {
-  targets: string[],
-  goals: SocialGoal[]
+  targets: string[];
+  goals: SocialGoal[];
 }
-
 
 /////////////////////
 // MOVIE ANALYTICS //
 /////////////////////
 
 export interface MovieEventAnalytics {
-  event_date: string,
-  event_name: AnalyticsEvents,
-  hits: number,
-  movieId: string
+  event_date: string;
+  event_name: AnalyticsEvents;
+  hits: number;
+  movieId: string;
 }
 
 export interface MovieAnalytics extends AnalyticsBase {
   addedToWishlist: {
-    current: MovieEventAnalytics[],
-    past: MovieEventAnalytics[]
-  },
+    current: MovieEventAnalytics[];
+    past: MovieEventAnalytics[];
+  };
   movieViews: {
-    current: MovieEventAnalytics[],
-    past: MovieEventAnalytics[]
-  },
+    current: MovieEventAnalytics[];
+    past: MovieEventAnalytics[];
+  };
   promoReelOpened: {
-    current: MovieEventAnalytics[],
-    past: MovieEventAnalytics[]
-  }
+    current: MovieEventAnalytics[];
+    past: MovieEventAnalytics[];
+  };
 }
-
 
 // Export for other files
 export { Credit } from '@blockframes/utils/common-interfaces/identity';
 
-export type Movie = MovieBase<Date>
+export type Movie = MovieBase<Date>;
 
 export interface SyncMovieAnalyticsOptions {
-  filterBy: (movie: Movie) => boolean
+  filterBy: (movie: Movie) => boolean;
 }
 
 /** A factory function that creates Movie */
@@ -353,8 +356,8 @@ export function createMoviePromotional(
   return {
     ...params,
     moodboard: createStorageFile(params?.moodboard),
-    notes: params?.notes?.map(note => createMovieNote(note)) ?? [],
-    still_photo: params?.still_photo?.map(still => createStorageFile(still)) ?? [],
+    notes: params?.notes?.map((note) => createMovieNote(note)) ?? [],
+    still_photo: params?.still_photo?.map((still) => createStorageFile(still)) ?? [],
     presentation_deck: createStorageFile(params?.presentation_deck),
     scenario: createStorageFile(params?.scenario),
     videos: createMovieVideos(params?.videos),
@@ -362,9 +365,9 @@ export function createMoviePromotional(
 }
 
 export function createLanguageKey(languages: LanguageRecord = {}): LanguageRecord {
-  const languageSpecifications: LanguageRecord = {}
+  const languageSpecifications: LanguageRecord = {};
   for (const language in languages) {
-    languageSpecifications[language] = createMovieLanguageSpecification(languages[language])
+    languageSpecifications[language] = createMovieLanguageSpecification(languages[language]);
   }
   return languageSpecifications;
 }
@@ -376,7 +379,7 @@ export function createMovieLanguageSpecification(
     dubbed: false,
     subtitle: false,
     caption: false,
-    ...params
+    ...params,
   };
 }
 
@@ -387,23 +390,25 @@ export function createAppConfig(params: Partial<MovieAppConfig<Date>>) {
     ...params,
     acceptedAt: toDate(params?.acceptedAt),
     refusedAt: toDate(params?.refusedAt),
-  }
+  };
 }
 
-export function createMovieAppConfig(_appAccess: Partial<{ [app in App]: MovieAppConfig<Date> }> = {}): MovieAppConfigRecord {
+export function createMovieAppConfig(
+  _appAccess: Partial<{ [app in App]: MovieAppConfig<Date> }> = {}
+): MovieAppConfigRecord {
   const appAccess = {};
   const apps = getAllAppsExcept(['crm']);
   for (const a of apps) {
     appAccess[a] = createAppConfig(_appAccess[a]);
   }
-  return (appAccess as MovieAppConfigRecord);
+  return appAccess as MovieAppConfigRecord;
 }
 
 export function createMovieRating(params: Partial<MovieRating> = {}): MovieRating {
   return {
     country: null,
     value: '',
-    ...params
+    ...params,
   };
 }
 
@@ -432,7 +437,7 @@ export function createPrize(prize: Partial<Prize> = {}): Prize {
     name: '',
     prize: '',
     logo: '',
-    ...prize
+    ...prize,
   };
 }
 
@@ -440,14 +445,14 @@ export function createTitle(title: Partial<Title> = {}): Title {
   return {
     original: '',
     international: '',
-    ...title
+    ...title,
   };
 }
 
 export function createReleaseYear(release: Partial<MovieRelease> = {}): MovieRelease {
   return {
     status: null,
-    ...release
+    ...release,
   };
 }
 
@@ -456,10 +461,12 @@ export function createBoxOffice(params: Partial<BoxOffice> = {}): BoxOffice {
     unit: 'usd',
     territory: null,
     ...params,
-  }
+  };
 }
 
-export function createMovieStakeholders(stakeholders: Partial<MovieStakeholders> = {}): MovieStakeholders {
+export function createMovieStakeholders(
+  stakeholders: Partial<MovieStakeholders> = {}
+): MovieStakeholders {
   return {
     productionCompany: [],
     coProductionCompany: [],
@@ -469,8 +476,8 @@ export function createMovieStakeholders(stakeholders: Partial<MovieStakeholders>
     salesAgent: [],
     laboratory: [],
     financier: [],
-    ...stakeholders
-  }
+    ...stakeholders,
+  };
 }
 
 export function populateMovieLanguageSpecification(
@@ -491,31 +498,33 @@ export function createShooting(params: Partial<MovieShooting> = {}): MovieShooti
   return {
     locations: [],
     ...params,
-    dates: createShootingDate(params.dates)
-  }
+    dates: createShootingDate(params.dates),
+  };
 }
 
 export function createShootingDate(params: Partial<MovieShootingDate> = {}): MovieShootingDate {
   return {
     planned: {},
-    ...params
-  }
+    ...params,
+  };
 }
 
 export function createShootingPlannedObject(params: Partial<MoviePlannedShooting> = {}) {
   return {
     period: '',
     month: '',
-    ...params
-  }
+    ...params,
+  };
 }
 
-export function createExpectedPremiere(params: Partial<MovieExpectedPremiere> = {}): MovieExpectedPremiere {
+export function createExpectedPremiere(
+  params: Partial<MovieExpectedPremiere> = {}
+): MovieExpectedPremiere {
   return {
     event: '',
     ...params,
-    date: toDate(params.date)
-  }
+    date: toDate(params.date),
+  };
 }
 
 export function createAudienceGoals(params: Partial<MovieGoalsAudience> = {}): MovieGoalsAudience {
@@ -523,7 +532,7 @@ export function createAudienceGoals(params: Partial<MovieGoalsAudience> = {}): M
     targets: [],
     goals: [],
     ...params,
-  }
+  };
 }
 
 export function createMovieNote(params: Partial<MovieNote> = {}): MovieNote {
@@ -534,7 +543,7 @@ export function createMovieNote(params: Partial<MovieNote> = {}): MovieNote {
     role: '',
     ...file,
     ...params,
-  }
+  };
 }
 
 /**
@@ -542,10 +551,9 @@ export function createMovieNote(params: Partial<MovieNote> = {}): MovieNote {
  * @param movies
  */
 export function getMovieTitleList(movies: Movie[]): string[] {
-  const movieTitles = movies.map(movie => movie.title.international
-    ? movie.title.international
-    : movie.title.original
-  )
+  const movieTitles = movies.map((movie) =>
+    movie.title.international ? movie.title.international : movie.title.original
+  );
   return movieTitles;
 }
 
@@ -555,9 +563,9 @@ export function getMovieTitleList(movies: Movie[]): string[] {
  * @param movieId
  */
 export function getMovieTotalViews(analytics: MovieAnalytics[], movieId: string): number {
-  const movieAnalytic = analytics.find(analytic => analytic.id === movieId);
+  const movieAnalytic = analytics.find((analytic) => analytic.id === movieId);
   if (movieAnalytic) {
-    const movieHits = movieAnalytic.movieViews.current.map(event => event.hits);
+    const movieHits = movieAnalytic.movieViews.current.map((event) => event.hits);
     return movieHits.reduce((sum, val) => sum + val, 0);
   }
 }
@@ -567,8 +575,8 @@ export function createMovieVideos(params: Partial<MovieVideos>): MovieVideos {
     ...params,
     screener: createMovieVideo(params?.screener),
     salesPitch: createMovieVideo(params?.salesPitch),
-    otherVideos: params?.otherVideos?.map(video => createMovieVideo(video)) || [],
-  }
+    otherVideos: params?.otherVideos?.map((video) => createMovieVideo(video)) || [],
+  };
 }
 
 export function createMovieVideo(params: Partial<MovieVideo>): MovieVideo {
@@ -576,11 +584,11 @@ export function createMovieVideo(params: Partial<MovieVideo>): MovieVideo {
     jwPlayerId: '',
     ...params,
     ...createStorageFile(params),
-  }
+  };
 }
 
 export function getAllowedproductionStatuses(app: App): ProductionStatus[] {
   return Object.keys(productionStatus)
-    .filter(status => app === 'catalog' ? status === 'released' : true)
-    .map(s => s as ProductionStatus);
+    .filter((status) => (app === 'catalog' ? status === 'released' : true))
+    .map((s) => s as ProductionStatus);
 }

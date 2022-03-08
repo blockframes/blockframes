@@ -1,4 +1,3 @@
-
 import { AfterViewInit, ChangeDetectionStrategy, Component } from '@angular/core';
 import { combineLatest } from 'rxjs';
 import { map, shareReplay, take, throttleTime } from 'rxjs/operators';
@@ -19,10 +18,18 @@ import { MarketplaceMovieAvailsComponent } from '../avails.component';
 import { Mandate, Sale } from '@blockframes/contract/contract/+state/contract.firestore';
 import { Term } from '@blockframes/contract/term/+state/term.firestore';
 import { Bucket } from '@blockframes/contract/bucket/+state/bucket.firestore';
-import { Movie } from '@blockframes/data-model';
+import { Movie } from '@blockframes/model';
 
 // TODO(#7820): remove with rxjs 7
-type AvailabilitiesInputs = [MapAvailsFilter, Mandate<Date>[], Term<Date>[], Sale<Date>[], Term<Date>[], Bucket<Date>, Movie];
+type AvailabilitiesInputs = [
+  MapAvailsFilter,
+  Mandate<Date>[],
+  Term<Date>[],
+  Sale<Date>[],
+  Term<Date>[],
+  Bucket<Date>,
+  Movie
+];
 
 @Component({
   selector: 'catalog-movie-avails-map',
@@ -34,7 +41,7 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
   public hoveredTerritory: {
     name: string;
     status: string;
-  }
+  };
 
   public org$ = this.shell.movieOrg$;
   public availsForm = this.shell.avails.mapForm;
@@ -50,27 +57,49 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
     this.sales$,
     this.salesTerms$,
     this.shell.bucketForm.value$,
-    this.shell.movie$
+    this.shell.movie$,
   ]).pipe(
-    map(([avails, mandates, mandateTerms, sales, salesTerms, bucket, movie]: AvailabilitiesInputs) => {
-      if (this.availsForm.invalid) return emptyAvailabilities;
-      const res = filterContractsByTitle(movie.id, mandates, mandateTerms, sales, salesTerms, bucket);
-      const data = { avails, mandates: res.mandates, sales: res.sales, bucketContracts: res.bucketContracts };
-      return territoryAvailabilities(data);
-    }),
-    shareReplay({ bufferSize: 1, refCount: true }),
+    map(
+      ([
+        avails,
+        mandates,
+        mandateTerms,
+        sales,
+        salesTerms,
+        bucket,
+        movie,
+      ]: AvailabilitiesInputs) => {
+        if (this.availsForm.invalid) return emptyAvailabilities;
+        const res = filterContractsByTitle(
+          movie.id,
+          mandates,
+          mandateTerms,
+          sales,
+          salesTerms,
+          bucket
+        );
+        const data = {
+          avails,
+          mandates: res.mandates,
+          sales: res.sales,
+          bucketContracts: res.bucketContracts,
+        };
+        return territoryAvailabilities(data);
+      }
+    ),
+    shareReplay({ bufferSize: 1, refCount: true })
   );
 
   constructor(
     private snackbar: MatSnackBar,
     private shell: MarketplaceMovieAvailsComponent,
     private router: Router,
-    private route: ActivatedRoute,
-  ) { }
+    private route: ActivatedRoute
+  ) {}
 
   /** Display the territories information in the tooltip */
   public displayTerritoryTooltip(territory: TerritoryValue, status: string) {
-    this.hoveredTerritory = { name: territory, status }
+    this.hoveredTerritory = { name: territory, status };
   }
 
   /** Clear the territories information */
@@ -89,9 +118,15 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
 
   public async selectAll() {
     if (this.availsForm.invalid) return;
-    const available = await this.availabilities$.pipe(take(1)).toPromise().then(a => a.available);
+    const available = await this.availabilities$
+      .pipe(take(1))
+      .toPromise()
+      .then((a) => a.available);
     for (const marker of available) {
-      const alreadyInBucket = this.shell.bucketForm.isAlreadyInBucket(this.availsForm.value, marker);
+      const alreadyInBucket = this.shell.bucketForm.isAlreadyInBucket(
+        this.availsForm.value,
+        marker
+      );
       if (!alreadyInBucket) {
         this.shell.bucketForm.addTerritory(this.availsForm.value, marker);
       }
@@ -104,7 +139,8 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
   }
 
   onNewRight() {
-    this.snackbar.open(`Rights added`, 'Show ⇩', { duration: 5000 })
+    this.snackbar
+      .open(`Rights added`, 'Show ⇩', { duration: 5000 })
       .onAction()
       .subscribe(() => {
         scrollIntoView(document.querySelector('#rights'));
@@ -118,12 +154,8 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
     if (decodedData.duration?.to) decodedData.duration.to = new Date(decodedData.duration.to);
 
     this.availsForm.patchValue(decodedData);
-    this.availsForm.valueChanges.pipe(
-      throttleTime(1000),
-    ).subscribe(formState => {
-      encodeUrl<MapAvailsFilter>(
-        this.router, this.route, formState
-      );
+    this.availsForm.valueChanges.pipe(throttleTime(1000)).subscribe((formState) => {
+      encodeUrl<MapAvailsFilter>(this.router, this.route, formState);
     });
   }
 }

@@ -1872,22 +1872,22 @@
         }
       }
     },
-    "data-model": {
-      "root": "libs/data-model",
-      "sourceRoot": "libs/data-model/src",
+    "model": {
+      "root": "libs/model",
+      "sourceRoot": "libs/model/src",
       "projectType": "library",
       "architect": {
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["libs/data-model/**/*.ts"]
+            "lintFilePatterns": ["libs/model/**/*.ts"]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/data-model"],
+          "outputs": ["coverage/libs/model"],
           "options": {
-            "jestConfig": "libs/data-model/jest.config.js",
+            "jestConfig": "libs/model/jest.config.js",
             "passWithNoTests": true
           }
         }

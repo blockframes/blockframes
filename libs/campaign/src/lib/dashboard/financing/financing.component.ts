@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Campaign, CampaignService } from '@blockframes/campaign/+state';
 import { CampaignForm } from '@blockframes/campaign/form/form';
-import { Movie } from '@blockframes/data-model';
+import { Movie } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { map, pluck, switchMap, tap } from 'rxjs/operators';
@@ -11,14 +11,15 @@ import { map, pluck, switchMap, tap } from 'rxjs/operators';
   selector: 'campaign-financing',
   templateUrl: './financing.component.html',
   styleUrls: ['./financing.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FinancingComponent {
-
   public movieId$ = this.route.params.pipe(
     pluck('movieId'),
     switchMap((movieId: string) => this.movieService.valueChanges(movieId)),
-    switchMap(movie => this.service.valueChanges(movie.id).pipe(map(campaign => [movie, campaign]))),
+    switchMap((movie) =>
+      this.service.valueChanges(movie.id).pipe(map((campaign) => [movie, campaign]))
+    ),
     tap(([movie, campaign]: [Movie, Campaign]) => {
       this.form.setAllValue(campaign);
       const titleName = movie?.title?.international || 'No title';
@@ -34,6 +35,5 @@ export class FinancingComponent {
     private movieService: MovieService,
     private route: ActivatedRoute,
     private dynTitle: DynamicTitleService
-  ) { }
-
+  ) {}
 }

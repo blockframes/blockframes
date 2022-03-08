@@ -1,6 +1,12 @@
-import { Component, OnInit, ChangeDetectionStrategy, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  ViewEncapsulation,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { fromOrgAndAccepted, MovieService } from '@blockframes/movie/+state/movie.service';
-import { Movie } from '@blockframes/data-model';
+import { Movie } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { Observable } from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
@@ -13,10 +19,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   templateUrl: './screening.component.html',
   styleUrls: ['./screening.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ScreeningComponent implements OnInit {
-
   titles$: Observable<Movie[]>;
   screenerMissing: boolean;
   titleMissing: boolean;
@@ -26,8 +31,8 @@ export class ScreeningComponent implements OnInit {
     private dynTitle: DynamicTitleService,
     private shell: EventFormShellComponent,
     private snackBar: MatSnackBar,
-    private cdr: ChangeDetectorRef,
-  ) { }
+    private cdr: ChangeDetectorRef
+  ) {}
 
   get formMeta() {
     return this.shell.form.get('meta');
@@ -42,8 +47,10 @@ export class ScreeningComponent implements OnInit {
 
     // will be executed only if "screening" as Observable are lazy
     this.titles$ = this.orgService.currentOrg$.pipe(
-      switchMap(org => this.movieService.valueChanges(fromOrgAndAccepted(org.id, 'festival'))),
-      map(titles => titles.sort((a, b) => a.title.international.localeCompare(b.title.international)))
+      switchMap((org) => this.movieService.valueChanges(fromOrgAndAccepted(org.id, 'festival'))),
+      map((titles) =>
+        titles.sort((a, b) => a.title.international.localeCompare(b.title.international))
+      )
     );
 
     this.checkTitleAndScreener(this.shell.form.meta.value.titleId);
@@ -54,7 +61,7 @@ export class ScreeningComponent implements OnInit {
   }
 
   async checkTitleAndScreener(titleId: string) {
-    if(!titleId) {
+    if (!titleId) {
       this.titleMissing = true;
     } else {
       const title = await this.movieService.getValue(titleId);

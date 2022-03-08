@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 
 // Blockframes
-import { Movie } from '@blockframes/data-model';
+import { Movie } from '@blockframes/model';
 import { Location } from '@angular/common';
 import { Router, NavigationEnd, Event } from '@angular/router';
 import { filter } from 'rxjs/operators';
@@ -23,33 +23,29 @@ function createMovieView(movie: Movie) {
     directors: movie.directors,
     title: {
       original: movie.title.original,
-      international: movie.title.international
+      international: movie.title.international,
     },
     banner: movie.banner,
     poster: movie.poster,
-  }
+  };
 }
 
-type MovieHeaderView = ReturnType<typeof createMovieView>
+type MovieHeaderView = ReturnType<typeof createMovieView>;
 
 @Component({
   selector: '[movie] movie-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-
   public movieView: MovieHeaderView;
   private _movie: Movie;
   private countRouteEvents = 1;
   private sub: Subscription;
 
-  constructor(
-    private location: Location,
-    private router: Router,
-  ) { }
+  constructor(private location: Location, private router: Router) {}
 
   @Input() showBackArrow = true;
   @Input() set movie(movie: Movie) {
@@ -59,7 +55,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
   }
 
-  get movie() { return this._movie }
+  get movie() {
+    return this._movie;
+  }
 
   ngOnInit() {
     this.sub = this.router.events
@@ -77,25 +75,25 @@ export class HeaderComponent implements OnInit, OnDestroy {
 }
 
 @Directive({
-  selector: 'movie-header-actions, [movieHeaderActions]'
+  selector: 'movie-header-actions, [movieHeaderActions]',
 })
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class MovieHeaderActions {
-  @HostBinding('class') class = 'movie-header-actions'
+  @HostBinding('class') class = 'movie-header-actions';
 }
 
 @Directive({
-  selector: 'movie-header-cta, [movieHeaderCTA]'
+  selector: 'movie-header-cta, [movieHeaderCTA]',
 })
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class MovieHeaderCTA {
-  @HostBinding('class') class = 'movie-header-cta'
+  @HostBinding('class') class = 'movie-header-cta';
 }
 
 @Directive({
-  selector: 'movie-header-preferences, [movieHeaderPreferences]'
+  selector: 'movie-header-preferences, [movieHeaderPreferences]',
 })
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class MovieHeaderPreferences {
-  @HostBinding('class') class = 'movie-header-preferences'
+  @HostBinding('class') class = 'movie-header-preferences';
 }
