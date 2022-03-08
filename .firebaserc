@@ -16,7 +16,8 @@
     "remco": "blockframes-remco",
     "springfield": "blockframes-yonga",
     "antoine": "blockframes-antoine-9e16b",
-    "nicolas": "blockframes-nicolas"
+    "nicolas": "blockframes-nicolas",
+    "kevin-d": "blockframes-kevin-d"
   },
   "targets": {
     "blockframes": {
@@ -131,6 +132,13 @@
       "hosting": {
         "catalog": [
           "blockframes-nicolas"
+        ]
+      }
+    },
+    "blockframes-kevin-d": {
+      "hosting": {
+        "catalog": [
+          "blockframes-kevin-d"
         ]
       }
     },
