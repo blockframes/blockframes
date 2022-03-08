@@ -17,6 +17,7 @@
       <ng-container *ngIf="titleAnalytics$ | async as titlesAnalytics; else loading">
         <movie-analytics-chart [analyticsData]="titlesAnalytics"></movie-analytics-chart>
       </ng-container>
+      <a mat-button routerLink="../analytics" color="primary">More analytics</a>
     </section>
   </ng-container>
 
