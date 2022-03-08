@@ -1,9 +1,14 @@
-import { ChangeDetectionStrategy, Component, ViewChild, TemplateRef, Pipe, PipeTransform, Input, AfterViewInit, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild, TemplateRef, Pipe, PipeTransform, Input, AfterViewInit, OnInit, Inject } from '@angular/core';
+import { AngularFirestore, QueryFn } from '@angular/fire/firestore';
 
 // Blockframes
 import { MovieService } from '@blockframes/movie/+state';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { App } from '@blockframes/utils/apps';
+import { Organization } from '@blockframes/organization/+state';
+import { FileUploaderService, MediaService } from '@blockframes/media/+state';
+import { createStorageFile, StorageFile } from '@blockframes/media/+state/media.firestore';
+import { getFileMetadata } from '@blockframes/media/+state/static-files';
+import { APP } from '@blockframes/utils/routes/utils';
 
 // File Explorer
 import { getDirectories, Directory, FileDirectoryBase } from './explorer.model';
@@ -12,11 +17,6 @@ import { getDirectories, Directory, FileDirectoryBase } from './explorer.model';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
-import { AngularFirestore, QueryFn } from '@angular/fire/firestore';
-import { Organization } from '@blockframes/organization/+state';
-import { FileUploaderService, MediaService } from '@blockframes/media/+state';
-import { createStorageFile, StorageFile } from '@blockframes/media/+state/media.firestore';
-import { getFileMetadata } from '@blockframes/media/+state/static-files';
 
 function getDir(root: Directory, path: string) {
   return path.split('/').reduce((parent, segment) => parent?.children[segment] ?? parent, root);
@@ -26,7 +26,7 @@ function getDir(root: Directory, path: string) {
  * Create crumbs path based on the current path
  * "titles/:id/poster" -> ["tiles", "titles/:id", "titles/:id/poster"]
  */
-export function getCrumbs(path: string) {
+function getCrumbs(path: string) {
   const crumbs = [];
   path.split('/').filter(v => !!v).forEach((segment, i) => {
     const previous = crumbs[i - 1] ? `${crumbs[i - 1]}/` : '';
@@ -34,8 +34,6 @@ export function getCrumbs(path: string) {
   });
   return crumbs;
 }
-
-
 
 @Component({
   selector: 'file-explorer',
@@ -58,7 +56,6 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
     return this.org$.getValue();
   }
 
-
   @ViewChild('image') image?: TemplateRef<unknown>;
   @ViewChild('file') file?: TemplateRef<unknown>;
   @ViewChild('fileList') fileList?: TemplateRef<unknown>;
@@ -70,15 +67,13 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
     private movieService: MovieService,
     private mediaService: MediaService,
     private service: FileUploaderService,
-    private routerQuery: RouterQuery
-  ) {}
+    @Inject(APP) private app: App
+  ) { }
 
   ngOnInit() {
-    const app: App = this.routerQuery.getData('app');
     const query: QueryFn = ref => ref
       .where('orgIds', 'array-contains', this.org.id)
-      .where(`app.${app}.access`, '==', true);
-
+      .where(`app.${this.app}.access`, '==', true);
 
     const titles$ = this.movieService.valueChanges(query).pipe(
       map(titles => titles.sort((movieA, movieB) => movieA.title.international < movieB.title.international ? -1 : 1)),
@@ -117,7 +112,7 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
   }
 
   getMeta(dir: FileDirectoryBase, index: number) {
-    return [ ...dir.meta, index ];
+    return [...dir.meta, index];
   }
 
   async downloadFile(item: StorageFile, event: Event) {
@@ -145,7 +140,6 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
     }
   }
 }
-
 
 @Pipe({ name: 'getDir' })
 export class GetDirPipe implements PipeTransform {
