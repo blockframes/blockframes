@@ -6,17 +6,8 @@ import { getKeyIfExists } from '../helpers';
 import { parseToAll, Scope } from '../static-model';
 
 type Matrix = any[][]; // @todo find better type
-interface ImportError<S extends Scope> {
-  value: GetKeys<S>[],
-  error: {
-    type: 'warning',
-    name: string,
-    reason: string,
-    hint: string
-  }
-}
 
-type FromStatic<S extends Scope> = GetKeys<S>[] | ImportError<S>;
+export type FromStatic<S extends Scope> = GetKeys<S>[] | ValueWithError<GetKeys<S>[]>;
 export interface SheetTab {
   name: string;
   index: number;
@@ -239,14 +230,14 @@ export function getStatic<S extends Scope>(scope: S, value: string, separator: s
   return values as GetKeys<S>[];
 }
 
-const isValueError = <S extends Scope>(values: FromStatic<S>): values is ImportError<S> => {
+const isValueError = <S extends Scope>(values: FromStatic<S>): values is ValueWithError<GetKeys<S>[]> => {
   return (Array.isArray(values) && values.length === 0)
-    || (values as ImportError<S>).value?.length === 0
+    || (values as ValueWithError<GetKeys<S>[]>).value?.length === 0
 }
 
-export function getStaticList<S extends Scope>(scope: S, value: string, separator: string, name: string, mandatory = true, allKey = 'all') {
+export function getStaticList<S extends Scope>(scope: S, value: string, separator: string, name: string, mandatory = true, allKey = 'all'): FromStatic<S> {
   const values = getStatic(scope, value, separator, name, allKey);
-  if (mandatory && isValueError(values)) return mandatoryError<GetKeys<S>>(name);
+  if (mandatory && isValueError(values)) return mandatoryError<GetKeys<S>[]>(name);
   return values;
 }
 
@@ -255,8 +246,8 @@ const fromGroup = {
   medias: (medias, separator) => getStaticList('medias', medias, separator, 'Medias', true, 'all'),
 }
 
-export function getGroupedList(value: string, groupScope: 'territories', separator: string): ValueWithError<GetKeys<'territories'>> | FromStatic<'territories'>;
-export function getGroupedList(value: string, groupScope: 'medias', separator: string): ValueWithError<GetKeys<'medias'>> | FromStatic<'medias'>;
+export function getGroupedList(value: string, groupScope: 'territories', separator: string): FromStatic<'territories'>;
+export function getGroupedList(value: string, groupScope: 'medias', separator: string): FromStatic<'medias'>;
 export function getGroupedList<GS extends GroupScope>(value: string, groupScope: GS, separator: string) {
   const elements = split(value, separator);
   const groupLabels = staticGroups[groupScope].map(group => group.label);

@@ -29,7 +29,7 @@ import { ContractService } from '@blockframes/contract/contract/+state/contract.
 import { createMandate, createSale } from '@blockframes/contract/contract/+state/contract.model';
 import {
   extract, ExtractConfig,
-  getStaticList, SheetTab, getGroupedList,
+  getStaticList, SheetTab, getGroupedList, FromStatic,
 } from '@blockframes/utils/spreadsheet';
 
 const separator = ';'
@@ -228,9 +228,9 @@ export async function formatContract(
       return lower === 'yes';
     },
     /* l */'contract.status': (value: string = 'pending') => value.toLowerCase(),
-    /* m */'term[].dubbed': (value: string) => getStaticList('languages', value, separator, 'Dubbed', false) as Language[],
-    /* n */'term[].subtitle': (value: string) => getStaticList('languages', value, separator, 'Subtitle', false) as Language[],
-    /* o */'term[].caption': (value: string) => getStaticList('languages', value, separator, 'CC', false) as Language[],
+    /* m */'term[].dubbed': (value: string) => getStaticList('languages', value, separator, 'Dubbed', false),
+    /* n */'term[].subtitle': (value: string) => getStaticList('languages', value, separator, 'Subtitle', false),
+    /* o */'term[].caption': (value: string) => getStaticList('languages', value, separator, 'CC', false),
 
     /* p */'contract.id': async (value: string) => {
       if (value && !blockframesAdmin) return adminOnlyWarning(firestore.createId(), 'Contract ID');
