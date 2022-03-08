@@ -8,7 +8,7 @@ import { FormSaveOptions } from '@blockframes/utils/common-interfaces';
 import { MovieControl, MovieForm } from './movie.form';
 import type { FormShellConfig } from './movie.shell.interfaces'
 import { MovieService } from '../+state/movie.service';
-import { Movie, MoviePromotionalElements } from '@blockframes/data-model';
+import { Movie, MoviePromotionalElements } from '@blockframes/model';
 import { MovieActiveGuard } from '../guards/movie-active.guard';
 import { APP } from '@blockframes/utils/routes/utils';
 
