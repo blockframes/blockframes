@@ -1,7 +1,5 @@
 import { ChangeDetectionStrategy, Component, Inject } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-// Rxjs
-import { shareReplay } from "rxjs/operators";
 // Blockframes
 import { Movie } from "@blockframes/movie/+state/movie.model";
 import { MovieService } from "@blockframes/movie/+state/movie.service";
@@ -16,9 +14,7 @@ import { APP } from "@blockframes/utils/routes/utils";
 })
 export class TitlesAnalyticsComponent {
 
-  titles$ = this.service.queryDashboard(this.app).pipe(
-    shareReplay({ refCount: true, bufferSize: 1 })
-  );
+  titles$ = this.service.queryDashboard(this.app);
 
   constructor(
     private route: ActivatedRoute,

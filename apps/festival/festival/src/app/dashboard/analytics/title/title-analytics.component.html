@@ -1,14 +1,8 @@
 <ng-container *ngIf="title$ | async as title">
-  <header
-    class="dark-contrast-theme"
-    fxLayout="column"
-    fxLayoutGap="20px"
-    bgAsset="empty_banner.png"
-    bgTheme="dark"
-  >
-    <a mat-icon-button (click)="goBack()">
+  <header fxLayout="column" fxLayoutGap="20px" bgAsset="empty_banner.png" bgTheme="dark">
+    <button mat-icon-button (click)="goBack()">
       <mat-icon svgIcon="arrow_back"></mat-icon>
-    </a>
+    </button>
 
     <article fxLayout fxLayoutGap="24px">
       <a [routerLink]="['/c/o/marketplace/title/', title.id]">
