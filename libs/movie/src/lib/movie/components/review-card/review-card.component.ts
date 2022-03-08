@@ -1,6 +1,6 @@
 import { Component, Input, ChangeDetectionStrategy, ViewChild, TemplateRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MovieReview } from '../../+state/movie.model';
+import { MovieReview } from '@blockframes/data-model';
 
 @Component({
   selector: 'title-review-card',

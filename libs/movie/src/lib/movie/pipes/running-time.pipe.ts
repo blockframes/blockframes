@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
-import { MovieRunningTime } from '../+state/movie.firestore';
+import { MovieRunningTime } from '@blockframes/data-model';
 import { screeningStatus } from '@blockframes/utils/static-model/static-model';
 
 /**

@@ -2,7 +2,7 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 
 // Movie
-import { Movie } from '../+state/movie.model';
+import { Movie } from '@blockframes/data-model';
 import { MovieForm } from '../form/movie.form';
 
 @Pipe({

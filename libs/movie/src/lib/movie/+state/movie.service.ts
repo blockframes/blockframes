@@ -5,7 +5,7 @@ import {
   Movie,
   createMovieAppConfig,
   MovieAnalytics,
-} from './movie.model';
+} from '@blockframes/data-model';
 import { createDocumentMeta } from "@blockframes/utils/models-meta";
 import { cleanModel } from '@blockframes/utils/helpers';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';

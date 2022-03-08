@@ -1,15 +1,15 @@
 import { MediaRatioType } from '../../image/uploader/uploader.component';
-import { MovieForm, MovieVideoForm } from "@blockframes/movie/form/movie.form";
-import { OrganizationForm } from "@blockframes/organization/forms/organization.form";
-import { AllowedFileType } from "@blockframes/utils/utils";
-import { Movie } from "@blockframes/movie/+state";
-import { Organization } from "@blockframes/organization/+state/organization.model";
+import { MovieForm, MovieVideoForm } from '@blockframes/movie/form/movie.form';
+import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
+import { AllowedFileType } from '@blockframes/utils/utils';
+import { Movie } from '@blockframes/data-model';
+import { Organization } from '@blockframes/organization/+state/organization.model';
 import { getDeepValue } from '@blockframes/utils/pipes/deep-key.pipe';
 
 import { CollectionHoldingFile, FileLabel, getFileMetadata } from '../../+state/static-files';
-import { StorageFileForm } from "@blockframes/media/form/media.form";
-import { FormList } from "@blockframes/utils/form";
-import { StorageFile, StorageVideo } from "@blockframes/media/+state/media.firestore";
+import { StorageFileForm } from '@blockframes/media/form/media.form';
+import { FormList } from '@blockframes/utils/form';
+import { StorageFile, StorageVideo } from '@blockframes/media/+state/media.firestore';
 import { MovieVideo } from '@blockframes/data-model';
 
 interface DirectoryBase {

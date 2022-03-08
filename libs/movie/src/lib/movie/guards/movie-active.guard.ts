@@ -2,7 +2,7 @@ import { Inject, Injectable } from "@angular/core";
 import { CollectionGuardConfig } from "akita-ng-fire";
 import { MovieService } from "../+state/movie.service";
 import { ActivatedRouteSnapshot, CanActivate, Router } from "@angular/router";
-import { Movie } from "../+state";
+import { Movie } from "@blockframes/data-model";
 import { App } from "@blockframes/utils/apps";
 import { APP } from '@blockframes/utils/routes/utils';
 

@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { MovieService } from '../+state/movie.service';
-import { Movie } from '../+state/movie.model';
+import { Movie } from '@blockframes/data-model';
 import { Observable, of } from 'rxjs';
 
 @Pipe({ name: 'getTitle' })

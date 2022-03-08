@@ -19,8 +19,6 @@ import {
   MovieVideo,
   MovieAppConfig,
   LanguageRecord,
-} from '../+state/movie.firestore';
-import {
   Movie,
   Credit,
   createMovie,
@@ -36,7 +34,7 @@ import {
   createShooting,
   createMovieVideos,
   createMovieNote,
-} from '../+state/movie.model';
+} from '@blockframes/data-model';
 import { FormArray, FormControl, Validators, ValidatorFn } from '@angular/forms';
 import { Filmography, createFilmography, createDirector, createCredit, Stakeholder, createStakeholder, Director } from '@blockframes/utils/common-interfaces/identity';
 import { FormStaticValue, FormStaticValueArray } from '@blockframes/utils/form/forms/static-value.form';

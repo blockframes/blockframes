@@ -3,7 +3,7 @@ import { ActivatedRoute, } from "@angular/router";
 import { CalendarAvailsForm, MapAvailsForm } from "@blockframes/contract/avails/form/avails.form";
 import { Contract, ContractService, isMandate, isSale } from "@blockframes/contract/contract/+state";
 import { Term, TermService } from "@blockframes/contract/term/+state";
-import { Movie, MovieService } from "@blockframes/movie/+state";
+import { Movie, MovieService } from "@blockframes/movie/+state/movie.service";
 import { combineLatest, Observable, of } from "rxjs";
 import { map, pluck, shareReplay, switchMap, } from "rxjs/operators";
 

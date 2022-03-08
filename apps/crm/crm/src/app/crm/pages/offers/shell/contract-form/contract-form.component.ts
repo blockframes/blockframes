@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 // Services
-import { Movie, MovieService } from "@blockframes/movie/+state";
+import { Movie, MovieService } from "@blockframes/movie/+state/movie.service";
 import { Income, IncomeService } from '@blockframes/contract/income/+state';
 import { Contract, ContractService } from '@blockframes/contract/contract/+state';
 import { TermService } from "@blockframes/contract/term/+state";

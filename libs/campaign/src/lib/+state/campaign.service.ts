@@ -1,11 +1,12 @@
-import { Injectable } from "@angular/core";
-import { OrganizationService } from "@blockframes/organization/+state";
+import { Injectable } from '@angular/core';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { CollectionService, CollectionConfig } from 'akita-ng-fire';
 import { Campaign } from "./campaign.model";
 import { removeUndefined } from '@blockframes/utils/helpers';
-import { Movie, MovieService } from "@blockframes/movie/+state";
-import { combineLatest, of } from "rxjs";
-import { map } from "rxjs/operators";
+import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { Movie } from '@blockframes/data-model';
+import { combineLatest, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { ActiveState, EntityState } from '@datorama/akita';
 
 interface CampaignState extends EntityState<Campaign, string>, ActiveState<string> {}

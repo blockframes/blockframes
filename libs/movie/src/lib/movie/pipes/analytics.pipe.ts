@@ -1,6 +1,6 @@
-import { NgModule, Pipe, PipeTransform } from "@angular/core";
-import { AnalyticsService } from "@blockframes/utils/analytics/analytics.service";
-import { MovieAnalytics } from "../+state/movie.firestore";
+import { NgModule, Pipe, PipeTransform } from '@angular/core';
+import { AnalyticsService } from '@blockframes/utils/analytics/analytics.service';
+import { MovieAnalytics } from '@blockframes/data-model';
 import { Movie } from '@blockframes/data-model';
 
 export const getViews = (analytics?: MovieAnalytics) => {

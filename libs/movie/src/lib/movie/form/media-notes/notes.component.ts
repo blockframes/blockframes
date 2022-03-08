@@ -7,7 +7,7 @@ import { MovieFormShellComponent } from '../shell/shell.component';
 
 // Blockframes
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { MovieService } from '../../+state';
+import { MovieService } from '../../+state/movie.service';
 import { getDeepValue } from '@blockframes/utils/pipes';
 import { getFileMetadata } from '@blockframes/media/+state/static-files';
 import { Subscription } from 'rxjs';

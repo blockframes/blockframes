@@ -1,4 +1,3 @@
-export { MovieDocument } from '@blockframes/data-model';
 export {
   OrganizationDocument,
   PublicOrganization
@@ -18,6 +17,6 @@ export {
 } from '@blockframes/permissions/+state/permissions.firestore';
 export { PublicUser } from '@blockframes/user/+state/user.firestore';
 export { RequestDemoInformations } from '@blockframes/utils/request-demo';
-export { MovieAnalytics, MovieEventAnalytics } from '@blockframes/data-model';
+export { MovieDocument, MovieAnalytics, MovieEventAnalytics } from '@blockframes/data-model';
 export { NotificationTypes, NotificationDocument } from '@blockframes/notification/+state/notification.firestore';
 export { ScreeningEventDocument } from '@blockframes/event/+state/event.firestore';

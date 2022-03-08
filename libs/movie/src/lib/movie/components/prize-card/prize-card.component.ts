@@ -2,7 +2,7 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 
 // Blockframes
-import { Prize } from '../../+state/movie.model'
+import { Prize } from '@blockframes/data-model'
 import { festival } from '@blockframes/utils/static-model';
 
 @Component({

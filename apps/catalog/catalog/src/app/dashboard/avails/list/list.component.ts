@@ -8,7 +8,7 @@ import { map, throttleTime } from "rxjs/operators";
 
 import { centralOrgId } from '@env';
 import { joinWith } from "@blockframes/utils/operators";
-import { Movie, MovieService } from "@blockframes/movie/+state";
+import { Movie, MovieService } from "@blockframes/movie/+state/movie.service";
 import { TermService } from "@blockframes/contract/term/+state";
 import { ContractService } from "@blockframes/contract/contract/+state";
 import { AvailsForm } from "@blockframes/contract/avails/form/avails.form";
