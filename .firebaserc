@@ -17,6 +17,7 @@
     "springfield": "blockframes-yonga",
     "antoine": "blockframes-antoine-9e16b",
     "nicolas": "blockframes-nicolas",
+    "kevin-m": "blockframes-kevin-m",
     "kevin-d": "blockframes-kevin-d"
   },
   "targets": {
@@ -132,6 +133,13 @@
       "hosting": {
         "catalog": [
           "blockframes-nicolas"
+        ]
+      }
+    },
+    "blockframes-kevin-m": {
+      "hosting": {
+        "catalog": [
+          "blockframes-kevin-m"
         ]
       }
     },
