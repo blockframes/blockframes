@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, Input, OnInit, OnDestroy, Inject, D
 import { NavigationEnd, Router, RouterOutlet, Event, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
-import { combineLatest, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
 import { Movie } from '@blockframes/data-model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
@@ -22,7 +22,7 @@ export class MovieCtaDirective { }
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardTitleShellComponent implements OnInit, OnDestroy {
-  private subs: Subscription[] = [];
+  private sub: Subscription;
   private countRouteEvents = 1;
   movie$ = this.route.params.pipe(
     pluck('movieId'),
@@ -43,16 +43,17 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute
   ) { }
 
-  ngOnInit() {
-    const obs = Object.keys(this.configs).map(name => this.configs[name].onInit()).flat();
-    this.subs.push(combineLatest(obs).subscribe());
-    this.subs.push(this.router.events
+  async ngOnInit() {
+    this.configs.movie.onInit();
+    await this.configs.campaign?.onInit();
+
+    this.sub = this.router.events
       .pipe(filter((event: Event) => event instanceof NavigationEnd))
-      .subscribe(() => this.countRouteEvents++));
+      .subscribe(() => this.countRouteEvents++);
   }
 
   ngOnDestroy() {
-    this.subs.forEach(sub => sub.unsubscribe());
+    this.sub?.unsubscribe();
   }
 
   goBack() {

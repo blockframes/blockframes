@@ -57,7 +57,7 @@ export class WishlistButtonComponent implements OnInit {
     const movie = await this.movieService.getValue(this.movieId);
     const title = movie.title?.international ?? movie.title.original;
     this.orgService.updateWishlist(movie);
-    this.snackbar.open(`${title} was successfully to your Wishlist.`, 'GO TO WISHLIST', { duration: 4000 })
+    this.snackbar.open(`${title} was successfully added to your Wishlist.`, 'GO TO WISHLIST', { duration: 4000 })
       .onAction()
       .subscribe(() => this.router.navigate(['/c/o/marketplace/wishlist']));
     this.added.emit(this.movieId)
