@@ -42,32 +42,31 @@ catalog-landing {
         header {
           margin-block: 32px;
           video {
-            width: 550px;
+            max-width: 550px;
+          }
+        }
+
+        .features {
+          margin-bottom: 24px;
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          grid-template-rows: 1fr;
+          gap: 8px;
+        }
+        .surface {
+          text-align: center;
+        }
+      
+        .benefits {
+          .benefits-container {
+            padding: 32px;
+            background-color: var(--background-card);
+            white-space: pre-wrap;
           }
         }
       }
-
-      .surface {
-        min-height: 295px;
-        display: flex;
-        justify-content: space-between;
-        gap: 32px;
-        margin-bottom: 32px;
-        
-        &.reverse {
-          flex-direction: row-reverse;
-        }
-        img {
-          width: 300px;
-          height: 200px;
-        }
-        div {
-          padding-inline: 40px;
-          flex: 1 1 0;
-        }
-      }
     }
-    
+
     .join {
       background-color: $banner-background;
       background: linear-gradient(to right, $banner-background 0%, #2a1d34 50%, $banner-background 100%);
@@ -138,6 +137,9 @@ landing-app-link {
     landing-content {
       .landing-presentation {
         mat-tab-group {
+          .surface {
+            padding: 32px;
+          }
           margin: 0;
         }
       }
@@ -178,8 +180,17 @@ landing-app-link {
     landing-content {
       .landing-presentation {
         mat-tab-group {
-          .surface, .surface.reverse  {
-            flex-direction: column;
+          .features {
+            grid-template-columns: 1fr;
+            grid-template-rows: repeat(3, 1fr);
+          }
+          .benefits {
+            div {
+              text-align: center;
+              img {
+                margin-bottom: 16px;
+              }
+            }
           }
         }
       }
@@ -187,6 +198,7 @@ landing-app-link {
         padding: 48px;
       }
     }
+    
     .landing-detail {
       a {
         width: 75%
@@ -205,9 +217,6 @@ landing-app-link {
         padding: 72px 32px;
       }
       text-align: center;
-      article .surface {
-        width: 100%;
-      }
 
       .expertise {
         div {
