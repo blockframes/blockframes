@@ -10,12 +10,12 @@
       <mat-icon svgIcon="arrow_back"></mat-icon>
     </a>
 
-    <section fxLayout fxLayoutGap="24px">
+    <article fxLayout fxLayoutGap="24px">
       <a [routerLink]="['/c/o/marketplace/title/', title.id]">
         <img fxHide.lt-md [ref]="title.poster" asset="empty_poster.svg" alt="Movie Poster" class="poster">
       </a>
 
-      <article fxFlex fxLayout="column">
+      <div fxFlex fxLayout="column">
         <p class="mat-body-1">{{ title.directors | displayName }}</p>
         <div fxLayout fxLayoutAlign="space-between">
           <h1 class="mat-display-1">{{ title.title.international }}</h1>
@@ -24,8 +24,19 @@
           </a>
         </div>
         <h6>{{ title.genres | toLabel: 'genres' }}</h6>
-      </article>
-    </section>
-
+      </div>
+    </article>
   </header>
+
+  <section>
+    <h2>Interested Users</h2>
+    <p class="mat-body-1">See how many users interacted with your movie (viewed your title, added to wishlist, requested a screening, etc).</p>
+
+    <article class="surface">
+      <a mat-button [routerLink]="['/c/o/dashboard']">
+        <mat-icon svgIcon="arrow_back"></mat-icon>
+        <span>Come back to Dashboard</span>
+      </a>
+    </article>
+  </section>
 </ng-container>
