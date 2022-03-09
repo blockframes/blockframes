@@ -15,7 +15,7 @@ import { getEventEmailData } from '@blockframes/utils/emails/utils';
 import { Change } from 'firebase-functions';
 import { AlgoliaOrganization } from '@blockframes/utils/algolia';
 import { createAlgoliaOrganization } from '@blockframes/firebase-utils';
-import { orgName } from '@blockframes/organization/+state/organization.firestore';
+import { orgName } from '@blockframes/model';
 export { hasUserAnOrgOrIsAlreadyInvited } from './internals/invitations/utils';
 
 
