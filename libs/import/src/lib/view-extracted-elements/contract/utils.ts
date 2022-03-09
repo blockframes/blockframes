@@ -18,7 +18,8 @@ import {
 import { centralOrgId } from '@env';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
-import { User, UserService } from '@blockframes/user/+state';
+import { UserService } from '@blockframes/user/+state';
+import { User } from '@blockframes/model'
 import { OrganizationService } from '@blockframes/organization/+state';
 import { Term } from '@blockframes/contract/term/+state/term.firestore';
 import { Language, Media, Territory } from '@blockframes/utils/static-model';

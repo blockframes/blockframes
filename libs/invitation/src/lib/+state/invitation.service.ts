@@ -3,7 +3,7 @@ import { AngularFireFunctions } from '@angular/fire/functions';
 import { CollectionConfig, CollectionService, AtomicWrite } from 'akita-ng-fire';
 import { createPublicOrganization, Organization, OrganizationService } from '@blockframes/organization/+state';
 import { AuthService } from '@blockframes/auth/+state';
-import { createPublicUser, PublicUser, User } from '@blockframes/user/+state';
+import { createPublicUser, PublicUser, User } from '@blockframes/model';
 import { toDate } from '@blockframes/utils/helpers';
 import { Invitation, createInvitation } from './invitation.model';
 import { InvitationDocument } from './invitation.firestore';
