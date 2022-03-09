@@ -2,7 +2,7 @@ import firebase from 'firebase';
 import { staticModel, Scope } from './static-model';
 import { Movie } from '@blockframes/model';
 import { User } from '@blockframes/user/types';
-import { Organization } from '@blockframes/organization/+state/organization.model';
+import { Organization } from '@blockframes/model';
 
 /**
  * This method is used before pushing data on db
