@@ -1,30 +1,32 @@
-import { LanguageRecord } from "@blockframes/movie/+state/movie.firestore";
-import type { Media, Territory } from "@blockframes/utils/static-model";
-import type firebase from 'firebase'
-import { Timestamp } from "@blockframes/utils/common-interfaces/timestamp";
-import { staticModel } from "@blockframes/utils/static-model";
-import { format } from "date-fns";
-import { toLanguageVersionString } from "@blockframes/utils/utils";
+import { LanguageRecord } from '@blockframes/model';
+import type { Media, Territory } from '@blockframes/utils/static-model';
+import type firebase from 'firebase';
+import { Timestamp } from '@blockframes/utils/common-interfaces/timestamp';
+import { staticModel } from '@blockframes/utils/static-model';
+import { format } from 'date-fns';
+import { toLanguageVersionString } from '@blockframes/utils/utils';
 
 export function createMailTerm(terms: BucketTerm<Timestamp>[]) {
-  return terms.map(term => ({
+  return terms.map((term) => ({
     ...term,
-    territories: term.territories.map(territory => staticModel['territories'][territory]).join(', '),
-    medias: term.medias.map(media => staticModel['medias'][media] ?? media).join(', '),
+    territories: term.territories
+      .map((territory) => staticModel['territories'][territory])
+      .join(', '),
+    medias: term.medias.map((media) => staticModel['medias'][media] ?? media).join(', '),
     duration: {
       from: format(term.duration.from.toDate(), 'dd MMM, yyyy'),
       to: format(term.duration.to.toDate(), 'dd MMM, yyyy'),
     },
     languages: toLanguageVersionString(term.languages),
     exclusive: term.exclusive ? 'Exclusive' : 'Non exclusive',
-  }))
+  }));
 }
 
 export type MailTerm = ReturnType<typeof createMailTerm>[number];
 
 export interface Duration<T extends Date | firebase.firestore.Timestamp = Date> {
-  from: T,
-  to: T,
+  from: T;
+  to: T;
 }
 
 export interface BucketTerm<T extends Date | firebase.firestore.Timestamp = Date> {

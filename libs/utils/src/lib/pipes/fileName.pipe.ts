@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Pipe, PipeTransform } from '@angular/core';
 import { StorageFile } from '@blockframes/media/+state/media.firestore';
-import { MovieService } from '@blockframes/movie/+state';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { UserService } from '@blockframes/user/+state';
 import { getFileExtension } from '../file-sanitizer';

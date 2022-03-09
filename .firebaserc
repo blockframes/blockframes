@@ -140,6 +140,15 @@
       "hosting": {
         "catalog": [
           "blockframes-kevin-m"
+        ],
+        "crm": [
+          "crm-blockframes-kevin-m"
+        ],
+        "festival": [
+          "festival-blockframes-kevin-m"
+        ],
+        "financiers": [
+          "financiers-blockframes-kevin-m"
         ]
       }
     },

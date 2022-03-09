@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ContractService } from '@blockframes/contract/contract/+state';
 import { OfferService } from '@blockframes/contract/offer/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { MovieService } from '@blockframes/movie/+state';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { joinWith } from '@blockframes/utils/operators';
 import { switchMap } from 'rxjs/operators';
 import { CollectionReference, QueryFn } from '@angular/fire/firestore';

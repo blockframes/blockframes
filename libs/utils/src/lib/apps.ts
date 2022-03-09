@@ -1,17 +1,20 @@
 /**
  * Apps definition
  */
-import { OrganizationBase, OrganizationDocument } from "@blockframes/organization/+state/organization.firestore";
-import { StoreStatus } from "./static-model";
+import {
+  OrganizationBase,
+  OrganizationDocument,
+} from '@blockframes/organization/+state/organization.firestore';
+import { StoreStatus } from './static-model';
 import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
-import { appUrl } from "@env";
-import { MovieBase, MovieDocument } from "@blockframes/movie/+state/movie.firestore";
+import { appUrl } from '@env';
+import { MovieBase, MovieDocument } from '@blockframes/model';
 
 export interface AppMailSetting {
-  description: string,
-  logo: AppLogoValue,
-  name: AppNameValue,
-  url?: string,
+  description: string;
+  logo: AppLogoValue;
+  name: AppNameValue;
+  url?: string;
 }
 
 export const app = ['catalog', 'festival', 'financiers', 'crm'] as const;
@@ -26,7 +29,7 @@ export const appName = {
   financiers: 'Media Financiers',
   blockframes: 'Blockframes',
   crm: 'Blockframes CRM',
-  cms: 'Blockframes CMS'
+  cms: 'Blockframes CMS',
 };
 type AppNameValue = typeof appName[App];
 
@@ -36,7 +39,7 @@ export const appShortName = {
   financiers: 'MF',
   blockframes: 'BF',
   crm: 'CRM',
-  cms: 'CMS'
+  cms: 'CMS',
 };
 
 export const sendgridEmailsFrom: Record<App | 'default', EmailJSON> = {
@@ -44,7 +47,7 @@ export const sendgridEmailsFrom: Record<App | 'default', EmailJSON> = {
   festival: { email: 'team@archipelmarket.com', name: 'Archipel Market' },
   financiers: { email: 'team@mediafinanciers.com', name: 'Media Financiers' },
   crm: { email: 'team@cascade8.com', name: 'Cascade 8' },
-  default: { email: 'team@cascade8.com', name: 'Cascade 8' }
+  default: { email: 'team@cascade8.com', name: 'Cascade 8' },
 } as const;
 
 // Those logos have to be in PNG because Gmail doesn't support SVG images
@@ -52,14 +55,17 @@ export const appLogo = {
   catalog: `${appUrl.content}/assets/email/archipel-content.png`,
   festival: `${appUrl.market}/assets/email/archipel-market.png`,
   financiers: `${appUrl.financiers}/assets/email/media-financiers.png`,
-  crm: ''
+  crm: '',
 };
 type AppLogoValue = typeof appLogo[App];
 
 export const appDescription = {
-  catalog: 'Archipel Content is an ongoing digital marketplace for TV, VOD and ancillary rights. Let’s make content buying simple : One massive library, One package offer, One negotiation, One contract.',
-  festival: 'Archipel Market is an ongoing film market platform, one tool for your year-round promotion and acquisitions.',
-  financiers: 'Media Financiers enables private investors to co-produce exclusive films and TV series on the same conditions as top professional content financiers.',
+  catalog:
+    'Archipel Content is an ongoing digital marketplace for TV, VOD and ancillary rights. Let’s make content buying simple : One massive library, One package offer, One negotiation, One contract.',
+  festival:
+    'Archipel Market is an ongoing film market platform, one tool for your year-round promotion and acquisitions.',
+  financiers:
+    'Media Financiers enables private investors to co-produce exclusive films and TV series on the same conditions as top professional content financiers.',
 };
 
 export type ModuleAccess = Record<Module, boolean>;
@@ -69,12 +75,12 @@ export const applicationUrl: Record<App, string> = {
   festival: appUrl.market,
   catalog: appUrl.content,
   financiers: appUrl.financiers,
-  crm: appUrl.crm
-}
+  crm: appUrl.crm,
+};
 
 /** Return an array of app without the value passing in argument */
 export function getAllAppsExcept(applications: App[]) {
-  return app.filter(a => !applications.includes(a));
+  return app.filter((a) => !applications.includes(a));
 }
 
 export function createOrgAppAccess(_appAccess: Partial<OrgAppAccess> = {}): OrgAppAccess {
@@ -89,8 +95,8 @@ export function createModuleAccess(moduleAccess: Partial<ModuleAccess> = {}): Mo
   return {
     dashboard: false,
     marketplace: false,
-    ...moduleAccess
-  }
+    ...moduleAccess,
+  };
 }
 
 /**
@@ -101,10 +107,13 @@ export function createModuleAccess(moduleAccess: Partial<ModuleAccess> = {}): Mo
  * getOrgAppAccess(orgA); // ['catalog', 'festival']
  * getOrgAppAccess(orgA, 'festival'); // ['festival', 'catalog']
  */
-export function getOrgAppAccess(org: OrganizationDocument | OrganizationBase<Date>, first: App = 'festival'): App[] {
+export function getOrgAppAccess(
+  org: OrganizationDocument | OrganizationBase<Date>,
+  first: App = 'festival'
+): App[] {
   const apps: App[] = [];
   for (const a of app) {
-    const hasAccess = modules.some(m => !!org.appAccess[a]?.[m]);
+    const hasAccess = modules.some((m) => !!org.appAccess[a]?.[m]);
     if (hasAccess) {
       apps.push(a);
     }
@@ -113,7 +122,7 @@ export function getOrgAppAccess(org: OrganizationDocument | OrganizationBase<Dat
   // If org have access to several app, including "first",
   // we put it in first place of the response array
   if (apps.length > 1 && apps.includes(first)) {
-    return [first, ...apps.filter(a => a !== first)];
+    return [first, ...apps.filter((a) => a !== first)];
   } else {
     return apps;
   }
@@ -121,12 +130,12 @@ export function getOrgAppAccess(org: OrganizationDocument | OrganizationBase<Dat
 
 /** Return an array of the app access of the movie */
 export function getMovieAppAccess(movie: MovieDocument | MovieBase<Date>): App[] {
-  return app.filter(a => !['crm'].includes(a) && movie.app[a].access);
+  return app.filter((a) => !['crm'].includes(a) && movie.app[a].access);
 }
 
 /** Return true if the movie has the status passed in parameter for at least one application */
 export function checkMovieStatus(movie: MovieDocument | MovieBase<Date>, status: StoreStatus) {
-  return (Object.keys(movie.app).some(a => movie.app[a].status === status))
+  return Object.keys(movie.app).some((a) => movie.app[a].status === status);
 }
 
 /**
@@ -138,7 +147,10 @@ export function checkMovieStatus(movie: MovieDocument | MovieBase<Date>, status:
  * getOrgModuleAccess(orgA); // ['dashboard', 'marketplace']
  * getOrgModuleAccess(orgB); // ['marketplace']
  */
-export function getOrgModuleAccess(org: OrganizationDocument | OrganizationBase<Date>, _a?: App): Module[] {
+export function getOrgModuleAccess(
+  org: OrganizationDocument | OrganizationBase<Date>,
+  _a?: App
+): Module[] {
   const allowedModules = {} as Record<Module, boolean>;
 
   if (_a) {
@@ -156,7 +168,7 @@ export function getOrgModuleAccess(org: OrganizationDocument | OrganizationBase<
       }
     }
   }
-  return Object.keys(allowedModules).map(k => k as Module);
+  return Object.keys(allowedModules).map((k) => k as Module);
 }
 
 /**

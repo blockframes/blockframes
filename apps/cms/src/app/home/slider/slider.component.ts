@@ -11,34 +11,31 @@ import { FormChipsAutocompleteModule } from '../../forms/chips-autocomplete';
 import { SelectFormModule } from '../../forms/select';
 import { getTitlesQueryFn, toMap } from '../pipes';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
-import { Movie, MovieService } from '@blockframes/movie/+state';
+import { Movie } from '@blockframes/model';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 
 @Component({
   selector: 'form-slider',
   templateUrl: './slider.component.html',
   styleUrls: ['./slider.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SliderComponent implements OnInit {
   private mode?: 'query' | 'titleIds';
   @Input() form?: FormEntity<SliderSchema>;
 
-
-  app$ = this.route.paramMap.pipe(map( p => p.get('app')));
+  app$ = this.route.paramMap.pipe(map((p) => p.get('app')));
   titles$ = this.app$.pipe(
-    map(app => getTitlesQueryFn(app)),
-    switchMap(queryFn => this.service.valueChanges(queryFn)),
+    map((app) => getTitlesQueryFn(app)),
+    switchMap((queryFn) => this.service.valueChanges(queryFn)),
     map(toMap),
-    shareReplay({ refCount: true, bufferSize: 1 }),
+    shareReplay({ refCount: true, bufferSize: 1 })
   );
 
   displayLabel = (title?: Movie) => title?.title.international;
   getValue = (title?: Movie) => title?.id;
 
-  constructor(
-    private route: ActivatedRoute,
-    private service: MovieService,
-  ) {}
+  constructor(private route: ActivatedRoute, private service: MovieService) {}
 
   get queryMode() {
     return this.mode || (this.form?.get('titleIds').length ? 'titleIds' : 'query');
@@ -46,9 +43,7 @@ export class SliderComponent implements OnInit {
 
   private selectForm() {
     for (const key of ['titleIds', 'query'] as const) {
-      this.queryMode === key
-        ? this.form?.get(key).enable()
-        : this.form?.get(key).disable();
+      this.queryMode === key ? this.form?.get(key).enable() : this.form?.get(key).disable();
     }
   }
 
@@ -62,7 +57,6 @@ export class SliderComponent implements OnInit {
   }
 }
 
-
 @NgModule({
   declarations: [SliderComponent],
   exports: [SliderComponent],
@@ -73,7 +67,7 @@ export class SliderComponent implements OnInit {
     FormChipsAutocompleteModule,
     SelectFormModule,
     FirestoreFormModule,
-    MatRadioModule
-  ]
+    MatRadioModule,
+  ],
 })
-export class SliderModule { }
+export class SliderModule {}
