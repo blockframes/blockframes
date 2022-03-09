@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { CollectionConfig, CollectionService, AtomicWrite } from 'akita-ng-fire';
-import { createPublicOrganization, Organization, OrganizationService } from '@blockframes/organization/+state';
+import {OrganizationService } from '@blockframes/organization/+state';
 import { AuthService } from '@blockframes/auth/+state';
 import { createPublicUser, PublicUser, User } from '@blockframes/user/+state';
 import { toDate } from '@blockframes/utils/helpers';
@@ -14,6 +14,7 @@ import { map, shareReplay, switchMap } from 'rxjs/operators';
 import { PermissionsService } from '@blockframes/permissions/+state';
 import { ActiveState, EntityState } from '@datorama/akita';
 import { APP } from '@blockframes/utils/routes/utils';
+import { createPublicOrganization, Organization } from '@blockframes/model';
 
 interface InvitationState extends EntityState<Invitation>, ActiveState<string> { }
 

@@ -5,8 +5,9 @@ import { UserRole, PermissionsService } from '../../../permissions/+state';
 import { InvitationService } from '@blockframes/invitation/+state/invitation.service';
 import { Invitation } from '@blockframes/invitation/+state/invitation.model';
 import { OrganizationMember } from '@blockframes/user/+state/user.model';
-import { OrganizationService, Organization } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { buildJoinOrgQuery } from '@blockframes/invitation/invitation-utils';
+import { Organization } from '@blockframes/model';
 
 @Component({
   selector: 'member-edit',
