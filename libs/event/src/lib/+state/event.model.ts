@@ -8,7 +8,6 @@ import {
   AttendeeStatus,
 } from './event.firestore';
 import { toDate } from '@blockframes/utils/helpers';
-import { Movie } from '@blockframes/model';
 import { Movie, Organization } from '@blockframes/model';
 import type firebase from 'firebase';
 import { AnonymousCredentials } from '@blockframes/auth/+state/auth.model';
