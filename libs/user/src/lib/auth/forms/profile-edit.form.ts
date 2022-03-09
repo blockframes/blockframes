@@ -2,7 +2,7 @@ import { FormControl } from '@angular/forms';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
 import { createStorageFile, StorageFile } from '@blockframes/media/+state/media.firestore';
-import { User } from '@blockframes/user/+state/user.model';
+import { User } from '@blockframes/model';
 
 export interface Profile {
   firstName: string;

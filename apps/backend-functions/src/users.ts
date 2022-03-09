@@ -12,7 +12,7 @@ import { production } from './environments/environment';
 import { cleanUserMedias } from './media';
 import { getUserEmailData, OrgEmailData } from '@blockframes/utils/emails/utils';
 import { groupIds } from '@blockframes/utils/emails/ids';
-import { User } from '@blockframes/user/+state/user.model';
+import { User } from '@blockframes/model';
 import { updateMemberTags } from './mailchimp';
 import { getPreferenceTag, MailchimpTag } from '@blockframes/utils/mailchimp/mailchimp-model';
 import { ErrorResultResponse } from './utils';
