@@ -21,98 +21,99 @@
   },
   "projects": {
     "ui": {
-      "tags": ["ui"]
+      "tags": ["browser"]
     },
     "utils": {
-      "tags": ["utils"]
+      "tags": ["browser"]
     },
     "contract": {
-      "tags": []
+      "tags": ["browser"]
     },
     "admin": {
-      "tags": []
+      "tags": ["browser"]
     },
     "movie": {
-      "tags": ["movie"]
+      "tags": ["browser"]
     },
     "organization": {
-      "tags": []
+      "tags": ["browser"]
     },
     "backend-functions": {
       "tags": ["node"]
     },
     "backend-ops": {
-      "tags": ["backend-ops", "ops", "node", "local"]
+      "tags": ["node", "local"]
     },
     "notification": {
-      "tags": ["notification"]
+      "tags": ["browser"]
     },
     "catalog": {
-      "tags": ["catalog"]
+      "tags": ["browser"]
     },
     "catalog-e2e": {
-      "tags": []
+      "tags": ["browser"],
+      "implicitDependencies": ["catalog"]
     },
     "festival": {
-      "tags": ["festival"]
+      "tags": ["browser"]
     },
     "festival-e2e": {
-      "tags": [],
+      "tags": ["browser"],
       "implicitDependencies": ["festival"]
     },
     "user": {
-      "tags": ["user"]
+      "tags": ["browser"]
     },
     "event": {
-      "tags": ["event"]
+      "tags": ["browser"]
     },
     "e2e": {
-      "tags": []
+      "tags": ["browser"]
     },
     "landing": {
-      "tags": []
+      "tags": ["browser"]
     },
     "import": {
-      "tags": []
+      "tags": ["browser"]
     },
     "media": {
-      "tags": []
+      "tags": ["browser"]
     },
     "crm": {
-      "tags": ["crm"]
+      "tags": ["browser"]
     },
     "crm-e2e": {
-      "tags": [],
+      "tags": ["browser"],
       "implicitDependencies": ["crm"]
     },
     "invitation": {
-      "tags": []
+      "tags": ["browser"]
     },
     "firebase-utils": {
-      "tags": []
+      "tags": ["node", "local"]
     },
     "financiers": {
-      "tags": []
+      "tags": ["browser"]
     },
     "financiers-e2e": {
-      "tags": [],
+      "tags": ["browser"],
       "implicitDependencies": ["financiers"]
     },
     "campaign": {
-      "tags": []
+      "tags": ["browser"]
     },
     "cms": {
-      "tags": []
+      "tags": ["browser"]
     },
     "cms-e2e": {
-      "tags": [],
+      "tags": ["browser"],
       "implicitDependencies": ["cms"]
     },
     "consents": {
-      "tags": []
+      "tags": ["browser"]
     },
     "rules": {
-      "tags": ["security rules", "local", "node"]
+      "tags": ["local", "node"]
     },
     "testing-unit-tests": {
       "tags": ["node", "local"]
@@ -124,7 +125,10 @@
       "tags": ["shared"]
     },
     "analytics": {
-      "tags": []
+      "tags": ["browser"]
+    },
+    "model": {
+      "tags": ["shared"]
     }
   }
 }

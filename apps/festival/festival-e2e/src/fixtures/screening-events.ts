@@ -1,5 +1,5 @@
 import type { Screening } from '@blockframes/event/+state/event.firestore';
-import type { Movie } from '@blockframes/movie/+state/movie.model';
+import type { Movie } from '@blockframes/model';
 import type { Organization } from '@blockframes/organization/+state/organization.model';
 import type { User } from '@blockframes/user/+state/user.model';
 
@@ -54,7 +54,7 @@ export default [
     invitees: [
       {
         uid: 'MDnN2GlVUeadIVJbzTToQQNAMWZ2',
-      }
+      },
     ],
     private: true,
   },

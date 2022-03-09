@@ -1,6 +1,6 @@
 import { Firestore } from '../types';
 import { runChunks } from '../firebase-utils';
-import { Movie } from '@blockframes/movie/+state';
+import { Movie } from '@blockframes/model';
 
 /**
  * Update movies content type
@@ -9,14 +9,14 @@ import { Movie } from '@blockframes/movie/+state';
  */
 export async function upgrade(db: Firestore) {
   const transform = {
-    'animation': () => 'movie',
-    'feature_film': () => 'movie',
-    'short': () => 'movie',
-    'tv_film': () => 'movie',
-    'flow': () => 'tv',
-    'series': () => 'tv',
-    'performing_arts': () => 'tv',
-    'documentary': (movie: Movie) => movie.runningTime.time < 60 ? 'tv' : 'movie'
+    animation: () => 'movie',
+    feature_film: () => 'movie',
+    short: () => 'movie',
+    tv_film: () => 'movie',
+    flow: () => 'tv',
+    series: () => 'tv',
+    performing_arts: () => 'tv',
+    documentary: (movie: Movie) => (movie.runningTime.time < 60 ? 'tv' : 'movie'),
   };
   const movies = await db.collection('movies').get();
 
@@ -26,5 +26,5 @@ export async function upgrade(db: Firestore) {
       movie.contentType = transform[movie.contentType](movie);
     }
     await doc.ref.set(movie);
-  }).catch(err => console.error(err));
+  }).catch((err) => console.error(err));
 }

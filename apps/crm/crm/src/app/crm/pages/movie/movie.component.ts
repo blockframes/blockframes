@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieCrmForm } from '@blockframes/admin/crm/forms/movie-crm.form';
 import { storeStatus, productionStatus } from '@blockframes/utils/static-model';
-import { Movie } from '@blockframes/movie/+state/movie.model';
+import { Movie } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { getAllAppsExcept } from '@blockframes/utils/apps';
 import { MatDialog } from '@angular/material/dialog';
@@ -20,7 +20,7 @@ import { MovieAppConfigForm } from '@blockframes/movie/form/movie.form';
   selector: 'crm-movie',
   templateUrl: './movie.component.html',
   styleUrls: ['./movie.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MovieComponent implements OnInit {
   public movieId = '';
@@ -43,8 +43,8 @@ export class MovieComponent implements OnInit {
     private cdRef: ChangeDetectorRef,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
-    private router: Router,
-  ) { }
+    private router: Router
+  ) {}
 
   async ngOnInit() {
     this.movieId = this.route.snapshot.paramMap.get('movieId');
@@ -66,12 +66,16 @@ export class MovieComponent implements OnInit {
       app: this.updateAppAccess(),
       productionStatus: this.movieForm.get('productionStatus').value,
       internalRef: this.movieForm.get('internalRef').value,
-      orgIds: this.movieForm.get('orgIds').value
-    }
+      orgIds: this.movieForm.get('orgIds').value,
+    };
 
     const hasCampaign = await this.campaignService.getValue(this.movieId);
 
-    if (hasCampaign && !this.movie?.campaignStarted && this.movie.app.financiers.status === 'accepted') {
+    if (
+      hasCampaign &&
+      !this.movie?.campaignStarted &&
+      this.movie.app.financiers.status === 'accepted'
+    ) {
       this.movie.campaignStarted = new Date();
     }
 
@@ -88,13 +92,17 @@ export class MovieComponent implements OnInit {
     for (const application of this.apps) {
       this.movie.app[application].refusedAt = null;
       this.movie.app[application].acceptedAt = null;
-      this.movie.app[application].access = this.movieAppConfigForm.controls[application].get('access').value;
-      this.movie.app[application].status = this.movieAppConfigForm.controls[application].get('status').value;
+      this.movie.app[application].access = this.movieAppConfigForm.controls[application].get(
+        'access'
+      ).value;
+      this.movie.app[application].status = this.movieAppConfigForm.controls[application].get(
+        'status'
+      ).value;
 
-      if(this.movieAppConfigForm.controls[application].get('status').value === "accepted") {
+      if (this.movieAppConfigForm.controls[application].get('status').value === 'accepted') {
         this.movie.app[application].acceptedAt = new Date();
       }
-      if(this.movieAppConfigForm.controls[application].get('status').value === "refused") {
+      if (this.movieAppConfigForm.controls[application].get('status').value === 'refused') {
         this.movie.app[application].refusedAt = new Date();
       }
     }
@@ -107,7 +115,7 @@ export class MovieComponent implements OnInit {
     this.dialog.open(ConfirmInputComponent, {
       data: {
         title: 'You are about to delete this movie from Archipel, are you sure ?',
-        text: 'If yes, please write \'HARD DELETE\' inside the form below.',
+        text: "If yes, please write 'HARD DELETE' inside the form below.",
         warning: 'Doing this will also delete everything regarding this movie',
         simulation,
         confirmationWord: 'hard delete',
@@ -116,8 +124,8 @@ export class MovieComponent implements OnInit {
           await this.movieService.remove(this.movie.id);
           this.snackBar.open('Movie deleted !', 'close', { duration: 5000 });
           this.router.navigate(['c/o/dashboard/crm/movies']);
-        }
-      }
+        },
+      },
     });
   }
 
@@ -129,19 +137,25 @@ export class MovieComponent implements OnInit {
     const output: string[] = [];
     output.push('1 movie will be removed.');
 
-    const whislists = await this.organizationService.getValue(ref => ref.where('wishlist', 'array-contains', movie.id));
+    const whislists = await this.organizationService.getValue((ref) =>
+      ref.where('wishlist', 'array-contains', movie.id)
+    );
     if (whislists.length) {
       output.push(`${whislists.length} items from org's wishlist will be removed.`);
     }
 
-    const events = await this.eventService.getValue(ref => ref.where('meta.titleId', '==', movie.id));
+    const events = await this.eventService.getValue((ref) =>
+      ref.where('meta.titleId', '==', movie.id)
+    );
     if (events.length) {
       output.push(`${events.length} event(s) will be removed.`);
     }
 
-    const eventIds = events.map(e => e.id);
+    const eventIds = events.map((e) => e.id);
 
-    const invitationsPromises = eventIds.map(e => this.invitationService.getValue(ref => ref.where('eventId', '==', e)));
+    const invitationsPromises = eventIds.map((e) =>
+      this.invitationService.getValue((ref) => ref.where('eventId', '==', e))
+    );
     const invitations = await Promise.all(invitationsPromises);
     const invitationsCount = invitations.flat().length;
 
@@ -149,15 +163,21 @@ export class MovieComponent implements OnInit {
       output.push(`${invitationsCount} invitations to events will be removed.`);
     }
 
-    const orgPromises = movie.orgIds.map(o => this.organizationService.getValue(ref => ref.where('id', '==', o)));
+    const orgPromises = movie.orgIds.map((o) =>
+      this.organizationService.getValue((ref) => ref.where('id', '==', o))
+    );
     const orgs = await Promise.all(orgPromises);
-    const promises = orgs.flat().map(o => this.permissionsService.getDocumentPermissions(movie.id, o.id));
+    const promises = orgs
+      .flat()
+      .map((o) => this.permissionsService.getDocumentPermissions(movie.id, o.id));
     const documentPermissions = await Promise.all(promises);
     if (documentPermissions.length) {
       output.push(`${documentPermissions.length} permission document will be removed.`);
     }
 
-    const contracts = await this.contractService.getValue(ref => ref.where('titleId', '==', movie.id));
+    const contracts = await this.contractService.getValue((ref) =>
+      ref.where('titleId', '==', movie.id)
+    );
     if (contracts.length) {
       output.push(`${contracts.length} contract will be deleted.`);
     }
@@ -171,5 +191,4 @@ export class MovieComponent implements OnInit {
 
     return output;
   }
-
 }

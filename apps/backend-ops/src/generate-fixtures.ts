@@ -1,8 +1,8 @@
 import { promises as fsPromises } from 'fs';
 import { join } from 'path';
 import { USER_FIXTURES_PASSWORD } from '@blockframes/firebase-utils/anonymize/util';
-import staticUsers from 'tools/static-users.json'
-import type { Movie } from '@blockframes/movie/+state/movie.model';
+import staticUsers from 'tools/static-users.json';
+import type { Movie } from '@blockframes/model';
 import type { Organization } from '@blockframes/organization/+state/organization.model';
 import type { User } from '@blockframes/user/types';
 
@@ -21,7 +21,7 @@ async function generateUsers(db: FirebaseFirestore.Firestore) {
 
   console.time('Fetching users from Firestore');
   const { docs } = await db.collection('users').get();
-  const users = docs.map(d => d.data() as User);
+  const users = docs.map((d) => d.data() as User);
   console.timeEnd('Fetching users from Firestore');
 
   const output = users.map((user) => ({
@@ -44,13 +44,13 @@ async function generateMovies(db: FirebaseFirestore.Firestore) {
 
   console.time('Fetching movies from Firestore');
   const { docs } = await db.collection('movies').get();
-  const movies = docs.map(d => d.data() as Movie);
+  const movies = docs.map((d) => d.data() as Movie);
   console.timeEnd('Fetching movies from Firestore');
 
   const output: Partial<Movie>[] = movies.map((movie) => ({
     id: movie.id,
     title: movie.title,
-    app: movie.app
+    app: movie.app,
   }));
   const dest = join(process.cwd(), 'tools', 'fixtures', 'movies.json');
   await fsPromises.writeFile(dest, JSON.stringify(output));
@@ -65,7 +65,7 @@ async function generateOrgs(db: FirebaseFirestore.Firestore) {
 
   console.time('Fetching orgs from Firestore');
   const { docs } = await db.collection('orgs').get();
-  const orgs = docs.map(d => d.data() as Organization);
+  const orgs = docs.map((d) => d.data() as Organization);
   console.timeEnd('Fetching orgs from Firestore');
 
   const output: Partial<Organization>[] = orgs.map((org) => ({
@@ -88,10 +88,10 @@ async function generateStaticUsers(db: FirebaseFirestore.Firestore) {
     try {
       const doc = await db.doc(`users/${staticUsers[userType]}`).get();
       const { email, uid } = doc.data() as User;
-      console.log(`User type: ${userType} found! UID: ${uid}`)
-      staticUsers[userType] = { uid, email, password: USER_FIXTURES_PASSWORD }
+      console.log(`User type: ${userType} found! UID: ${uid}`);
+      staticUsers[userType] = { uid, email, password: USER_FIXTURES_PASSWORD };
     } catch (e) {
-      console.log(`Failed to find: ${userType} : ${staticUsers[userType]}`)
+      console.log(`Failed to find: ${userType} : ${staticUsers[userType]}`);
     }
   }
 
