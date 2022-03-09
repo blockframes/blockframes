@@ -2,7 +2,7 @@
 import { Territory } from '@blockframes/utils/static-model';
 import { FormEntity, FormList } from '@blockframes/utils/form';
 import { AlgoliaSearch } from '@blockframes/utils/algolia';
-import { Organization } from '../+state';
+import { Organization } from '@blockframes/model';
 import { App, Module } from '@blockframes/utils/apps';
 
 // Utils

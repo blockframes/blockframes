@@ -1,6 +1,6 @@
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { FormEntity, FormStaticValueArray } from "@blockframes/utils/form";
-import { createHoldback, Holdback } from "../+state";
+import { createHoldback, Holdback } "@blockframes/model";
 import { compareDates, isDateInFuture } from '@blockframes/utils/form/validators/validators';
 
 function createHoldbackControl(params: Partial<Holdback> = {}) {

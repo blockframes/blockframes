@@ -1,6 +1,6 @@
 import { NgModule, Pipe, PipeTransform } from "@angular/core";
 import { formatCurrency } from '@angular/common';
-import { Perk } from "../+state";
+import { Perk } "@blockframes/model";
 
 @Pipe({ name: 'isUnlimited' })
 export class IsUnlimitedPipe implements PipeTransform {
