@@ -1,4 +1,4 @@
-import { PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
+import { PublicOrganization } from '@blockframes/model';
 import { PublicUser } from '@blockframes/user/+state/user.firestore';
 import { PublicInvitation } from '@blockframes/invitation/+state/invitation.firestore';
 import { firestore } from 'firebase-admin';

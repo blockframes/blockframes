@@ -3,7 +3,7 @@ import { AttachmentData } from '@sendgrid/helpers/classes/attachment';
 import { App, sendgridEmailsFrom } from "../apps";
 import { format } from "date-fns";
 import { EventDocument, EventMeta, EventTypes, MeetingEventDocument, ScreeningEventDocument } from "@blockframes/event/+state/event.firestore";
-import { OrganizationDocument, orgName } from "@blockframes/organization/+state/organization.firestore";
+import { OrganizationDocument, orgName } from "@blockframes/model";
 import { User } from "@blockframes/user/+state/user.firestore";
 import { AccessibilityTypes } from "../static-model";
 import { MailBucket } from '@blockframes/contract/bucket/+state/bucket.firestore';
