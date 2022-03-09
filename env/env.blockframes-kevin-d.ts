@@ -4,10 +4,10 @@ export const production = false;
 // ========
 
 export const appUrl = {
-  content: 'https://blockframes-kevin-m.web.app',
-  market: 'https://festival-blockframes-kevin-m.web.app',
-  crm: 'https://crm-blockframes-kevin-m.web.app',
-  financiers: 'https://financiers-blockframes-kevin-m.web.app',
+  content: 'https://blockframes-kevin-d.web.app',
+  market: 'https://festival-blockframes-kevin-d.web.app',
+  crm: 'https://crm-blockframes-kevin-d.web.app',
+  financiers: 'https://financiers-blockframes-kevin-d.web.app',
 };
 
 const firebaseConfig = {
