@@ -1,6 +1,6 @@
 import { Person } from './common-interfaces';
 import { staticModel, Scope } from '@blockframes/utils/static-model';
-import { LanguageRecord } from '@blockframes/movie/+state/movie.firestore';
+import { LanguageRecord } from '@blockframes/model';
 
 export interface ErrorResultResponse {
   error: string;
@@ -13,7 +13,7 @@ export interface ErrorResultResponse {
  * @link https://stackoverflow.com/a/37511463/6441976
  */
 export function removeAccent<T>(str: T) {
-  if (typeof str === 'string') return str.normalize("NFD").replace(/\p{Diacritic}/gu, "");
+  if (typeof str === 'string') return str.normalize('NFD').replace(/\p{Diacritic}/gu, '');
   return str;
 }
 
@@ -21,9 +21,13 @@ export function jsonDateReviver(key: unknown, value: any) {
   if (!value) return value;
 
   const dateFormat = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,}|)Z$/;
-  if (typeof value === "string" && dateFormat.test(value)) return new Date(value);
-  if (typeof value === 'object' && Object.keys(value).length === 2 && ['nanoseconds', 'seconds'].every(k => k in value))
-    return new Date((value.nanoseconds * 1 ^ -6) + (value.seconds * 1000));
+  if (typeof value === 'string' && dateFormat.test(value)) return new Date(value);
+  if (
+    typeof value === 'object' &&
+    Object.keys(value).length === 2 &&
+    ['nanoseconds', 'seconds'].every((k) => k in value)
+  )
+    return new Date(((value.nanoseconds * 1) ^ -6) + value.seconds * 1000);
 
   return value;
 }
@@ -47,12 +51,15 @@ export const clamp = (value: number, clamps: number[]): number => {
   return clamps.reduce((prev, curr) =>
     Math.abs(curr - value) < Math.abs(prev - value) ? curr : prev
   );
-}
+};
 
 export const allowedFileType = ['pdf', 'image', 'video', 'docx', 'xls', 'json', 'csv'] as const;
 export type AllowedFileType = typeof allowedFileType[number];
 
-export interface FileDefinition { mime: string[], extension: string[] };
+export interface FileDefinition {
+  mime: string[];
+  extension: string[];
+}
 export const allowedFiles: Record<AllowedFileType, FileDefinition> = {
   pdf: {
     mime: ['application/pdf'],
@@ -63,26 +70,40 @@ export const allowedFiles: Record<AllowedFileType, FileDefinition> = {
     extension: ['.jpg', '.jpeg', '.png', '.webp'],
   },
   video: {
-    mime: ['video/x-msvideo', 'video/x-matroska', 'video/mp4', 'video/3gpp', 'video/quicktime', 'video/x-ms-wmv'],
+    mime: [
+      'video/x-msvideo',
+      'video/x-matroska',
+      'video/mp4',
+      'video/3gpp',
+      'video/quicktime',
+      'video/x-ms-wmv',
+    ],
     extension: ['.avi', '.mkv', '.mp4', '.3gp', '.mov', '.wmv'],
   },
   docx: {
-    mime: ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
+    mime: [
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    ],
     extension: ['.doc', '.docx'],
   },
   xls: {
-    mime: ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.oasis.opendocument.spreadsheet'],
+    mime: [
+      'application/vnd.ms-excel',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'application/vnd.oasis.opendocument.spreadsheet',
+    ],
     extension: ['.xls', '.xlsx', '.ods'],
   },
   json: {
     mime: ['application/json'],
-    extension: ['.json']
+    extension: ['.json'],
   },
   csv: {
     mime: ['text/csv'],
-    extension: ['.csv']
-  }
-}
+    extension: ['.csv'],
+  },
+};
 
 /**
  * Convert a file extension into the corresponding file type.
@@ -93,13 +114,14 @@ export const allowedFiles: Record<AllowedFileType, FileDefinition> = {
  * @note if the function doesn't find any matching file type it will return `'unknown'`
  */
 export function extensionToType(extension: string): AllowedFileType | 'unknown' {
-
   const dotExtension = extension.startsWith('.') ? extension : '.' + extension;
 
   // we use a for in loop so we can directly return when a match is found
   // (returning in a forEach just end the current iteration)
   for (const type in allowedFiles) {
-    const match = allowedFiles[type].extension.some(fileExtension => fileExtension === dotExtension);
+    const match = allowedFiles[type].extension.some(
+      (fileExtension) => fileExtension === dotExtension
+    );
     if (match) return type as AllowedFileType;
   }
 
@@ -107,7 +129,7 @@ export function extensionToType(extension: string): AllowedFileType | 'unknown' 
 }
 
 export async function loadJWPlayerScript(document: Document, playerUrl: string) {
-  return new Promise<void>(res => {
+  return new Promise<void>((res) => {
     const id = 'jwplayer-script';
 
     // check if the script tag already exists
@@ -121,17 +143,21 @@ export async function loadJWPlayerScript(document: Document, playerUrl: string) 
       script.onload = () => {
         script.setAttribute('data-loaded', 'true');
         res();
-      }
-    } else { // script tag exists
+      };
+    } else {
+      // script tag exists
       const script = document.getElementById(id) as HTMLScriptElement;
       const loaded = script.getAttribute('data-loaded');
 
-      if (loaded === 'true') { // already loaded
+      if (loaded === 'true') {
+        // already loaded
         res();
-      } else { // script tag exist but hasn't finished to load yet: check every 0,1s if it has finished
+      } else {
+        // script tag exist but hasn't finished to load yet: check every 0,1s if it has finished
         let ttl = 50; // 50 x 0,1s = 5s
         const intervalId = window.setInterval(() => {
-          if (ttl <= 0) { // abort after 5s
+          if (ttl <= 0) {
+            // abort after 5s
             window.clearInterval(intervalId);
             res();
           }
@@ -217,11 +243,20 @@ export function getWatermark(email: string = '', firstName: string = '', lastNam
   return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
 }
 
-export function toLabel(value: string | string[], scope: Scope, joinWith?: string, endWith?: string): string {
+export function toLabel(
+  value: string | string[],
+  scope: Scope,
+  joinWith?: string,
+  endWith?: string
+): string {
   if (!value) return '';
   try {
     if (Array.isArray(value)) {
-      return smartJoin(value.map(val => staticModel[scope][val]), joinWith, endWith);
+      return smartJoin(
+        value.map((val) => staticModel[scope][val]),
+        joinWith,
+        endWith
+      );
     } else {
       return staticModel[scope][value];
     }
@@ -246,24 +281,26 @@ function smartJoin(str: string[], joinWith = ', ', endWith = ', ') {
 }
 
 export function toLanguageVersionString(languages: LanguageRecord) {
-  return Object.entries(languages).map(([language, specs]) => {
-    const types = [];
+  return Object.entries(languages)
+    .map(([language, specs]) => {
+      const types = [];
 
-    if (specs.subtitle) {
-      types.push(toLabel('subtitle', 'movieLanguageTypes'));
-    }
+      if (specs.subtitle) {
+        types.push(toLabel('subtitle', 'movieLanguageTypes'));
+      }
 
-    if (specs.dubbed) {
-      types.push(toLabel('dubbed', 'movieLanguageTypes'));
-    }
+      if (specs.dubbed) {
+        types.push(toLabel('dubbed', 'movieLanguageTypes'));
+      }
 
-    if (specs.caption) {
-      types.push(toLabel('caption', 'movieLanguageTypes'));
-    }
+      if (specs.caption) {
+        types.push(toLabel('caption', 'movieLanguageTypes'));
+      }
 
-    if (types.length) {
-      return `${toLabel(language, 'languages')} ${smartJoin(types, ', ', ' & ')}`;
-    }
-
-  }).filter(d => d).join(', ');
+      if (types.length) {
+        return `${toLabel(language, 'languages')} ${smartJoin(types, ', ', ' & ')}`;
+      }
+    })
+    .filter((d) => d)
+    .join(', ');
 }

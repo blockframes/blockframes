@@ -7,7 +7,7 @@ import { EventService } from '@blockframes/event/+state';
 import { map, pluck, switchMap } from 'rxjs/operators';
 import { RequestAskingPriceComponent } from '@blockframes/movie/components/request-asking-price/request-asking-price.component';
 import { MatDialog } from '@angular/material/dialog';
-import { MovieService } from '@blockframes/movie/+state';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({

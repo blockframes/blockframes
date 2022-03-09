@@ -1,6 +1,6 @@
 import { Firestore } from '../types';
 import { runChunks } from '../firebase-utils';
-import { Movie } from '@blockframes/movie/+state';
+import { Movie } from '@blockframes/model';
 
 /**
  * Update all movies genre (old genres becomes keywords)
@@ -9,11 +9,11 @@ import { Movie } from '@blockframes/movie/+state';
  */
 export async function upgrade(db: Firestore) {
   const genresToKeyword = {
-    periodDrama: 'Period Drama', 
+    periodDrama: 'Period Drama',
     youngAdult: 'Young Adult',
-    war: 'War', 
+    war: 'War',
     police: 'Police',
-    webSeries: 'Web Series', 
+    webSeries: 'Web Series',
     wildlife: 'Wildlife',
     huntingFishing: 'Hunting & Fishing',
     archeologyHistory: 'Archeology & History',
@@ -21,8 +21,8 @@ export async function upgrade(db: Firestore) {
     natureEnvironment: 'Nature & Environment',
     fashion: 'Fashion',
     western: 'Western',
-    tvShow: 'TV Show', 
-    virtualReality: 'Virtual Reality' 
+    tvShow: 'TV Show',
+    virtualReality: 'Virtual Reality'
   };
   const removedGenres = Object.keys(genresToKeyword);
   const movies = await db.collection('movies').get();

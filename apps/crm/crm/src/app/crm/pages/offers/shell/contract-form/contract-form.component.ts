@@ -2,14 +2,15 @@ import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 // Services
-import { Movie, MovieService } from "@blockframes/movie/+state";
+import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { Movie } from '@blockframes/model';
 import { Income, IncomeService } from '@blockframes/contract/income/+state';
 import { Contract, ContractService } from '@blockframes/contract/contract/+state';
-import { TermService } from "@blockframes/contract/term/+state";
+import { TermService } from '@blockframes/contract/term/+state';
 import { OfferService } from '@blockframes/contract/offer/+state';
 
 // Forms
-import { NegotiationForm } from '@blockframes/contract/negotiation/form'
+import { NegotiationForm } from '@blockframes/contract/negotiation/form';
 
 // Material
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -22,7 +23,7 @@ import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiatio
   selector: 'contract-form',
   templateUrl: './contract-form.component.html',
   styleUrls: ['./contract-form.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContractFormComponent implements OnInit {
   private contract?: Contract;
@@ -30,7 +31,7 @@ export class ContractFormComponent implements OnInit {
   private income?: Income;
   title?: Movie;
   form = new NegotiationForm();
-  titles$ = this.service.valueChanges(ref => ref.where('app.catalog.status', '==', 'accepted'));
+  titles$ = this.service.valueChanges((ref) => ref.where('app.catalog.status', '==', 'accepted'));
   currency?: string;
   activeTerm?: string;
   contractId: string = this.route.snapshot.params.contractId;
@@ -38,9 +39,9 @@ export class ContractFormComponent implements OnInit {
 
   private contracts$ = this.contractService.valueChanges(this.contractId).pipe(
     joinWith({
-      negotiation: () => this.contractService.adminLastNegotiation(this.contractId)
+      negotiation: () => this.contractService.adminLastNegotiation(this.contractId),
     }),
-    filter(contract => !!contract.negotiation)
+    filter((contract) => !!contract.negotiation)
   );
 
   constructor(
@@ -52,14 +53,14 @@ export class ContractFormComponent implements OnInit {
     private offerService: OfferService,
     private incomeService: IncomeService,
     private contractService: ContractService,
-    private negotiationService: NegotiationService,
-  ) { }
+    private negotiationService: NegotiationService
+  ) {}
 
   async ngOnInit() {
     const [contract, income, offer] = await Promise.all([
       this.contracts$.pipe(first()).toPromise(),
       this.incomeService.getValue(this.contractId),
-      this.offerService.getValue(this.offerId)
+      this.offerService.getValue(this.offerId),
     ]);
     this.title = await this.titleService.getValue(contract.titleId);
     this.contract = contract;
@@ -68,7 +69,7 @@ export class ContractFormComponent implements OnInit {
     this.currency = offer?.currency;
     this.form.hardReset({
       price: contract.negotiation.price,
-      terms: contract.negotiation.terms
+      terms: contract.negotiation.terms,
     });
     this.activeTerm = this.route.snapshot.queryParams.termIndex;
   }
@@ -80,10 +81,10 @@ export class ContractFormComponent implements OnInit {
       const write = this.contractService.batch(); // create a batch
 
       if (this.negotiation.status === 'accepted') {
-        const termList = terms.map(term => ({ ...term, contractId }));
+        const termList = terms.map((term) => ({ ...term, contractId }));
         const termIds = await this.termService.upsert(termList, { write });
         const existingTermIds = this.contract?.termIds || [];
-        const termIdsToDelete = existingTermIds.filter(id => !termIds.includes(id));
+        const termIdsToDelete = existingTermIds.filter((id) => !termIds.includes(id));
         await this.termService.remove(termIdsToDelete, { write });
         await this.contractService.update(contractId, { termIds }, { write });
         if (price !== this.income?.price) {
@@ -93,7 +94,7 @@ export class ContractFormComponent implements OnInit {
 
       const data: Partial<Negotiation> = { terms, price };
       const config = { write, params: { contractId } };
-      this.negotiationService.update(this.negotiation.id, data, config)
+      this.negotiationService.update(this.negotiation.id, data, config);
 
       await write.commit();
       this.snackbar.open('Contract updated!', 'ok', { duration: 1000 });

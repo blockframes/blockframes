@@ -1,13 +1,20 @@
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ChangeDetectorRef, Inject } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  OnDestroy,
+  ChangeDetectorRef,
+  Inject,
+} from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Movie } from '@blockframes/movie/+state/movie.model';
+import { Movie } from '@blockframes/model';
 import { switchMap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
-import { MovieService } from '@blockframes/movie/+state';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { App } from '@blockframes/utils/apps';
 import { APP } from '@blockframes/utils/routes/utils';
 
@@ -16,10 +23,9 @@ import { APP } from '@blockframes/utils/routes/utils';
   templateUrl: './wishlist.component.html',
   styleUrls: ['./wishlist.component.scss'],
   // The table needs to be updated when user deletes a movie
-  changeDetection: ChangeDetectionStrategy.Default
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 export class WishlistComponent implements OnInit, OnDestroy {
-
   public dataSource: MatTableDataSource<Movie>;
   public hasWishlist: boolean;
   public columnsToDisplay = [
@@ -28,7 +34,7 @@ export class WishlistComponent implements OnInit, OnDestroy {
     'productionStatus',
     'originCountry',
     'runningTime',
-    'delete'
+    'delete',
   ];
 
   private sub: Subscription;
@@ -44,21 +50,21 @@ export class WishlistComponent implements OnInit, OnDestroy {
     private orgService: OrganizationService,
     private movieService: MovieService,
     @Inject(APP) private app: App
-  ) { }
+  ) {}
 
   ngOnInit() {
-    this.sub = this.orgService.currentOrg$.pipe(
-      switchMap(org => this.movieService.valueChanges(org?.wishlist || []))
-    ).subscribe(allMovies => {
-      const movies = allMovies.filter(movie => !!movie && movie.app[this.app].access);
-      this.hasWishlist = !!movies.length;
-      this.hasWishlist ?
-        this.dynTitle.setPageTitle('Wishlist') :
-        this.dynTitle.setPageTitle('Wishlist', 'Empty');
-      this.dataSource = new MatTableDataSource(movies);
-      this.isDataLoaded = true;
-      this.cdr.markForCheck();
-    });
+    this.sub = this.orgService.currentOrg$
+      .pipe(switchMap((org) => this.movieService.valueChanges(org?.wishlist || [])))
+      .subscribe((allMovies) => {
+        const movies = allMovies.filter((movie) => !!movie && movie.app[this.app].access);
+        this.hasWishlist = !!movies.length;
+        this.hasWishlist
+          ? this.dynTitle.setPageTitle('Wishlist')
+          : this.dynTitle.setPageTitle('Wishlist', 'Empty');
+        this.dataSource = new MatTableDataSource(movies);
+        this.isDataLoaded = true;
+        this.cdr.markForCheck();
+      });
   }
 
   public async redirectToMovie(movieId: string) {
@@ -69,7 +75,9 @@ export class WishlistComponent implements OnInit, OnDestroy {
     event.stopPropagation();
     this.service.updateWishlist(movie);
     const title = movie.title.international;
-    this.snackbar.open(`${title} has been removed from your selection.`, 'close', { duration: 2000 });
+    this.snackbar.open(`${title} has been removed from your selection.`, 'close', {
+      duration: 2000,
+    });
   }
 
   ngOnDestroy() {

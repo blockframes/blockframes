@@ -1,11 +1,10 @@
-
-import { MovieNote, MovieVideo } from '@blockframes/movie/+state/movie.firestore';
+import { MovieNote, MovieVideo } from '@blockframes/model';
 import { Privacy } from '@blockframes/utils/file-sanitizer';
 
 /**
-* Representation of a storage file in our Firestore db.
-* @note this is not the same as the data needed to upload into the storage: `UploadData`
-*/
+ * Representation of a storage file in our Firestore db.
+ * @note this is not the same as the data needed to upload into the storage: `UploadData`
+ */
 export interface StorageFile {
   privacy: Privacy;
   collection: 'movies' | 'users' | 'orgs' | 'campaigns' | 'cms/festival/home';

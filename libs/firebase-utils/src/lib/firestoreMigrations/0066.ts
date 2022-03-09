@@ -1,14 +1,11 @@
-
 import { centralOrgId } from '@env';
 
-import { Movie } from '@blockframes/movie/+state';
+import { Movie } from '@blockframes/model';
 import { Mandate } from '@blockframes/contract/contract/+state';
 import { Timestamp } from '@blockframes/utils/common-interfaces/timestamp';
 
 import { Firestore } from '../types';
 import { runChunks } from '../firebase-utils';
-
-
 
 /**
  * Fill Mandate Contracts with missing values
@@ -16,7 +13,6 @@ import { runChunks } from '../firebase-utils';
  * @returns
  */
 export async function upgrade(db: Firestore) {
-
   const mandates = await db.collection('contracts').where('type', '==', 'mandate').get();
   await runChunks(mandates.docs, async (doc) => {
     const mandate = doc.data() as Mandate<Timestamp>;
@@ -40,7 +36,7 @@ export async function upgrade(db: Firestore) {
       const movieSnap = await db.collection('movies').doc(mandate.titleId).get();
       const movie = movieSnap.data() as Movie;
       const sellerId = movie.orgIds[0];
-      mandate.stakeholders = [ sellerId, centralOrgId.catalog ];
+      mandate.stakeholders = [sellerId, centralOrgId.catalog];
     }
 
     if (update) {

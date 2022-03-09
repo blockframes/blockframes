@@ -2,13 +2,12 @@
 import { Component, ChangeDetectionStrategy, Input, Directive, HostBinding } from '@angular/core';
 
 // Blockframes
-import { Movie, Credit } from '@blockframes/movie/+state';
-import { Title } from '@blockframes/movie/+state/movie.firestore';
+import { Movie, Credit, Title } from '@blockframes/model';
 
 interface MovieSliderView {
-  directors: Credit[],
-  titles: Title,
-  synopsis: string
+  directors: Credit[];
+  titles: Title;
+  synopsis: string;
 }
 
 function createMovieSliderView(movie: Movie): MovieSliderView {
@@ -16,17 +15,17 @@ function createMovieSliderView(movie: Movie): MovieSliderView {
     directors: movie.directors || [],
     titles: {
       international: movie.title.international || '',
-      original: movie.title.original || ''
+      original: movie.title.original || '',
     },
-    synopsis: movie.synopsis || ''
-  }
+    synopsis: movie.synopsis || '',
+  };
 }
 
 @Component({
   selector: '[movie] movie-slide',
   templateUrl: './slide.component.html',
   styleUrls: ['./slide.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MovieSlideComponent {
   title: Movie;
@@ -42,7 +41,7 @@ export class MovieSlideComponent {
 })
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class MovieSlideCTA {
-  @HostBinding('class') class = 'movie-slide-cta'
+  @HostBinding('class') class = 'movie-slide-cta';
 }
 
 @Directive({
@@ -50,5 +49,5 @@ export class MovieSlideCTA {
 })
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class MovieSlideActions {
-  @HostBinding('class') class = 'movie-slide-actions'
+  @HostBinding('class') class = 'movie-slide-actions';
 }

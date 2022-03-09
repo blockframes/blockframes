@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MovieAnalytics } from '@blockframes/movie/+state/movie.firestore';
+import { MovieAnalytics } from '@blockframes/model';
 import { ActiveState, EntityState } from '@datorama/akita';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 
