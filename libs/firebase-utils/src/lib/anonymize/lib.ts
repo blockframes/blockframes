@@ -1,5 +1,5 @@
 import * as faker from 'faker';
-import { User, PublicUser, createPublicUser } from '@blockframes/user/types';
+import { User, PublicUser, createPublicUser } from '@blockframes/model';
 import { NotificationDocument } from '@blockframes/notification/types';
 import { Invitation } from '@blockframes/invitation/+state';
 import { DbRecord, throwOnProduction } from '../util';
