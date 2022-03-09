@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, Router } from '@angular/router';
-import { MovieService } from '@blockframes/movie/+state';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { addHours } from 'date-fns'
 import { take } from 'rxjs/operators';

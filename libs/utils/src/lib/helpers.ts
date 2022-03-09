@@ -1,6 +1,6 @@
 import firebase from 'firebase';
 import { staticModel, Scope } from './static-model';
-import { Movie } from '@blockframes/movie/+state/movie.model';
+import { Movie } from '@blockframes/model';
 import { User } from '@blockframes/user/types';
 import { Organization } from '@blockframes/organization/+state/organization.model';
 
@@ -16,7 +16,7 @@ export function cleanModel<T>(data: T): T {
 }
 
 export function isObject(item: unknown) {
-  return (item && typeof item === 'object' && !Array.isArray(item) && item !== null);
+  return item && typeof item === 'object' && !Array.isArray(item) && item !== null;
 }
 
 /**
@@ -28,14 +28,11 @@ export function isObject(item: unknown) {
 export function mergeDeep<T>(target: T, source: Partial<T>): T {
   const output = Object.assign({}, target);
   if (isObject(target) && isObject(source)) {
-    Object.keys(source).forEach(key => {
+    Object.keys(source).forEach((key) => {
       if (isObject(source[key])) {
-        if (!(key in target))
-          Object.assign(output, { [key]: source[key] });
-        else if (source[key] instanceof Date)
-          Object.assign(output, { [key]: source[key] })
-        else
-          output[key] = mergeDeep(target[key], source[key]);
+        if (!(key in target)) Object.assign(output, { [key]: source[key] });
+        else if (source[key] instanceof Date) Object.assign(output, { [key]: source[key] });
+        else output[key] = mergeDeep(target[key], source[key]);
       } else {
         Object.assign(output, { [key]: source[key] });
       }
@@ -50,8 +47,10 @@ export interface DateGroup<T> {
 }
 
 /** Checks if the date is a firestore Timestamp. */
-function isTimeStamp(date: firebase.firestore.Timestamp | Date): date is firebase.firestore.Timestamp {
-  return date && date instanceof firebase.firestore.Timestamp
+function isTimeStamp(
+  date: firebase.firestore.Timestamp | Date
+): date is firebase.firestore.Timestamp {
+  return date && date instanceof firebase.firestore.Timestamp;
 }
 
 /** Takes a Date, a string or a Timestamp and returns it as a Date. */
@@ -89,9 +88,9 @@ export function getValue(item: any, key: string) {
  */
 export async function asyncFilter<T>(items: T[], filterFunction: (item: T) => Promise<boolean>) {
   const _null = Symbol();
-  const x = items.map(async item => (await filterFunction(item)) ? item : _null);
+  const x = items.map(async (item) => ((await filterFunction(item)) ? item : _null));
   const y = await Promise.all(x);
-  return y.filter(w => w !== _null) as T[];
+  return y.filter((w) => w !== _null) as T[];
 }
 
 /**
@@ -110,10 +109,12 @@ export async function asyncFilter<T>(items: T[], filterFunction: (item: T) => Pr
  * getKeyIfExist('storeType', 'Line-Up'); // 'line-up'
  * getKeyIfExist('storeType', 'Test'); // undefined
  */
-export function getKeyIfExists(base: Scope, code: string){
+export function getKeyIfExists(base: Scope, code: string) {
   // Sanitized input to properly compare with base data
   const sanitizedCode = code.trim().toLowerCase();
-  const candidate = Object.entries(staticModel[base]).find(([key, value]) => [key.toLowerCase(), value.toLowerCase()].includes(sanitizedCode));
+  const candidate = Object.entries(staticModel[base]).find(([key, value]) =>
+    [key.toLowerCase(), value.toLowerCase()].includes(sanitizedCode)
+  );
   return candidate ? candidate.shift() : undefined;
 }
 
@@ -121,17 +122,18 @@ export function getKeyIfExists(base: Scope, code: string){
  * @param ms milleseconds to wait for
  */
 export async function delay(ms: number) {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     setTimeout(resolve, ms);
   });
 }
 
-
 export function downloadCsvFromJson(data: unknown[], fileName = 'my-file') {
-  const replacer = (_: unknown, value: unknown) => value === null ? '' : value;
+  const replacer = (_: unknown, value: unknown) => (value === null ? '' : value);
   const header = Object.keys(data[0]);
-  const csv = data.map((row: unknown) => header.map(fieldName => JSON.stringify(row[fieldName], replacer)).join(','));
-  csv.unshift(header.map(h => `"${h}"`).join(','));
+  const csv = data.map((row: unknown) =>
+    header.map((fieldName) => JSON.stringify(row[fieldName], replacer)).join(',')
+  );
+  csv.unshift(header.map((h) => `"${h}"`).join(','));
   const csvArray = csv.join('\r\n');
 
   const a = document.createElement('a');
@@ -144,8 +146,6 @@ export function downloadCsvFromJson(data: unknown[], fileName = 'my-file') {
   window.URL.revokeObjectURL(url);
   a.remove();
 }
-
-
 
 /**
  * This high-order function create debounced functions, that can be continuously called,
@@ -166,7 +166,7 @@ export function debounceFactory(func: (...params) => unknown, wait: number) {
     window.clearTimeout(timeout);
     timeout = window.setTimeout(later, wait);
   };
-};
+}
 
 /**
  * Remove all undefined fields
@@ -218,4 +218,3 @@ export function hasDisplayName(user: User): boolean {
 export function hasDenomination(organization: Organization): boolean {
   return !!organization && !!organization.denomination.full;
 }
-

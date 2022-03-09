@@ -10,7 +10,7 @@ import { Income, IncomeService } from '@blockframes/contract/income/+state';
 import { Contract, ContractService } from '@blockframes/contract/contract/+state';
 import { Organization, OrganizationService } from '@blockframes/organization/+state';
 import { joinWith } from '@blockframes/utils/operators';
-import { MovieService } from '@blockframes/movie/+state';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { CollectionReference, QueryFn } from '@angular/fire/firestore';
 
 @Component({

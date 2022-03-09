@@ -4,10 +4,10 @@ import { EmailTemplateRequest, sendMailFromTemplate } from './internals/email';
 import { App } from '@blockframes/utils/apps';
 import { Offer } from '@blockframes/contract/offer/+state/offer.model';
 import { Organization, OrganizationDocument } from '@blockframes/organization/+state';
-import { Movie } from '@blockframes/movie/+state';
+import { Movie } from '@blockframes/model';
 import { appUrl, supportEmails } from '@env';
 import { staticModel } from '@blockframes/utils/static-model';
-import { format } from "date-fns";
+import { format } from 'date-fns';
 import { User } from '@blockframes/user/types';
 import { createNotification, triggerNotifications } from './notification';
 import { templateIds } from '@blockframes/utils/emails/ids';
@@ -22,7 +22,7 @@ export async function onOfferCreate(snap: FirebaseFirestore.DocumentSnapshot): P
   const orgId = offer.buyerId;
   const [org, bucket] = await Promise.all([
     getDocument<OrganizationDocument>(`orgs/${orgId}`),
-    getDocument<any>(`buckets/${orgId}`)
+    getDocument<any>(`buckets/${orgId}`),
   ]);
   const user = await getDocument<User>(`users/${bucket.uid}`);
 
@@ -40,16 +40,12 @@ export async function onOfferCreate(snap: FirebaseFirestore.DocumentSnapshot): P
     toUserId: user.uid,
     type: 'offerCreatedConfirmation',
     docId: snap.id,
-    bucket
-  })
-  triggerNotifications([notification])
+    bucket,
+  });
+  triggerNotifications([notification]);
 }
 
-
-export async function onOfferUpdate(
-  change: Change<FirebaseFirestore.DocumentSnapshot>
-) {
-
+export async function onOfferUpdate(change: Change<FirebaseFirestore.DocumentSnapshot>) {
   const before = change.before;
   const after = change.after;
 
@@ -60,15 +56,18 @@ export async function onOfferUpdate(
   const offerBefore = before.data() as Offer;
   const offerAfter = after.data() as Offer;
 
-  const statusHasChanged = offerBefore.status !== offerAfter.status
+  const statusHasChanged = offerBefore.status !== offerAfter.status;
   const isOfferDeclinedOrAccepted = ['accepted', 'declined'].includes(offerAfter.status);
 
-  const getNotifications = (type: NotificationTypes, docId: string,) => (org: Organization) => org.userIds.map(userId => createNotification({
-    toUserId: userId,
-    type,
-    docId,
-    _meta: createDocumentMeta({ createdFrom: 'catalog' })
-  }));
+  const getNotifications = (type: NotificationTypes, docId: string) => (org: Organization) =>
+    org.userIds.map((userId) =>
+      createNotification({
+        toUserId: userId,
+        type,
+        docId,
+        _meta: createDocumentMeta({ createdFrom: 'catalog' }),
+      })
+    );
   if (statusHasChanged && isOfferDeclinedOrAccepted) {
     const type = offerAfter.status === 'accepted' ? 'offerAccepted' : 'offerDeclined';
     getDocument<Organization>(`orgs/${offerAfter.buyerId}`)
@@ -77,15 +76,18 @@ export async function onOfferUpdate(
   }
 
   if (offerAfter.status === 'accepted') {
-    const contractsRef = db.collection('contracts').where('offerId', '==', offerAfter.id).where('status', '==', 'accepted');
-    const contracts = await contractsRef.get().then(snaps => snaps.docs.map(doc => doc.data() as Sale));
+    const contractsRef = db
+      .collection('contracts')
+      .where('offerId', '==', offerAfter.id)
+      .where('status', '==', 'accepted');
+    const contracts = await contractsRef
+      .get()
+      .then((snaps) => snaps.docs.map((doc) => doc.data() as Sale));
 
-    contracts.forEach(contract => {
+    contracts.forEach((contract) => {
       getDocument<Organization>(`orgs/${getSeller(contract)}`)
         .then(getNotifications('underSignature', contract.id))
         .then(triggerNotifications);
-    })
-
+    });
   }
 }
-

@@ -1,11 +1,17 @@
-import { AvailsFilter, CalendarAvailsFilter, MapAvailsFilter } from '@blockframes/contract/avails/avails';
+import {
+  AvailsFilter,
+  CalendarAvailsFilter,
+  MapAvailsFilter,
+} from '@blockframes/contract/avails/avails';
 import { createHoldback, Mandate } from '@blockframes/contract/contract/+state';
-import { createLanguageKey } from '@blockframes/movie/+state';
+import { createLanguageKey } from '@blockframes/model';
 import { Term, BucketTerm } from '../../term/+state/term.model';
 import { Bucket, BucketContract } from './bucket.firestore';
 export { BucketContract, Bucket } from './bucket.firestore';
 
-export function toBucketTerm(avail: AvailsFilter | MapAvailsFilter | CalendarAvailsFilter): BucketTerm {
+export function toBucketTerm(
+  avail: AvailsFilter | MapAvailsFilter | CalendarAvailsFilter
+): BucketTerm {
   return createBucketTerm({
     medias: avail.medias,
     duration: 'duration' in avail ? avail.duration : undefined,
@@ -22,7 +28,7 @@ export function createBucketTerm(params: Partial<BucketTerm> = {}): BucketTerm {
     duration: { from: new Date(), to: new Date() },
     ...params,
     languages: createLanguageKey(params.languages),
-  }
+  };
 }
 
 export function createBucketContract(params: Partial<BucketContract> = {}): BucketContract {
@@ -35,15 +41,19 @@ export function createBucketContract(params: Partial<BucketContract> = {}): Buck
     ...params,
     terms: params.terms?.map(createBucketTerm) ?? [],
     holdbacks: params.holdbacks?.map(createHoldback) ?? [],
-  }
+  };
 }
 
-export function toBucketContract(contract: Mandate, term: Term<Date>, avails: AvailsFilter | MapAvailsFilter | CalendarAvailsFilter): BucketContract {
+export function toBucketContract(
+  contract: Mandate,
+  term: Term<Date>,
+  avails: AvailsFilter | MapAvailsFilter | CalendarAvailsFilter
+): BucketContract {
   return createBucketContract({
     titleId: contract.titleId,
     orgId: contract.sellerId,
     parentTermId: term.id,
-    terms: [toBucketTerm(avails)]
+    terms: [toBucketTerm(avails)],
   });
 }
 
@@ -54,7 +64,6 @@ export function createBucket(params: Partial<Bucket> = {}): Bucket {
     specificity: '',
     delivery: '',
     ...params,
-    contracts: params.contracts?.map(createBucketContract) ?? []
-  }
+    contracts: params.contracts?.map(createBucketContract) ?? [],
+  };
 }
-
