@@ -4,7 +4,6 @@ import { OrgAppAccess, createOrgAppAccess, Module, App, getAllAppsExcept } from 
 import type { OrgActivity, OrganizationStatus } from '@blockframes/utils/static-model/types';
 import { createStorageFile, StorageFile, StorageVideo } from '@blockframes/media/+state/media.firestore';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
-/** Gives information about an application */
 
 type Timestamp = firebase.firestore.Timestamp;
 
