@@ -7,7 +7,7 @@ import { logger, storage } from 'firebase-functions';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 
 // Blockframes dependencies
-import { PublicUser, User } from '@blockframes/user/types';
+import { PublicUser, User } from '@blockframes/model'; // TODO #7932 example
 import { StorageFile, StorageVideo } from '@blockframes/media/+state/media.firestore';
 import { FileMetaData, isValidMetadata } from '@blockframes/media/+state/media.model';
 import { tempUploadDir } from '@blockframes/utils/file-sanitizer';

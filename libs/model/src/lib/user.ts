@@ -2,6 +2,7 @@ import { DocumentMeta } from "@blockframes/utils/models-meta";
 import { NotificationTypesBase } from '@blockframes/notification/types';
 import { createStorageFile, StorageFile } from "@blockframes/media/+state/media.firestore";
 import { Genre, Language, Media, Territory } from "@blockframes/utils/static-model";
+import { UserRole } from "@blockframes/permissions/types";
 
 export interface User extends PublicUser {
   financing: {
@@ -58,4 +59,33 @@ export function createPublicUser(user: Partial<User> = {}): PublicUser {
     lastName: user.lastName ?? '',
     orgId: user.orgId ?? ''
   }
+}
+
+export interface OrganizationMember extends PublicUser {
+  role?: UserRole; // Role of the user in his organization
+}
+
+/** A factory function that creates an OrganizationMember */
+export function createOrganizationMember(user: Partial<User> = {}, role?: UserRole): OrganizationMember {
+  return {
+    ...createPublicUser(user),
+    role,
+  }
+}
+
+export function createPreferences(params: Partial<Preferences> = {}): Preferences {
+  return {
+    territories: [],
+    medias: [],
+    languages: [],
+    genres: [],
+    ...params
+  };
+}
+
+export function createUser(user: Partial<User> = {}) {
+  return {
+    ...user,
+    avatar: createStorageFile(user.avatar)
+  } as User;
 }
