@@ -7,7 +7,7 @@ export async function deleteAllUsers(auth: admin.auth.Auth) {
 }
 
 export async function deleteSelectedUsers(auth: admin.auth.Auth, uidToDelete: string[]) {
-  if (!uidToDelete.length) return;
+  if (!uidToDelete?.length) return;
   await deletedUsers(auth, uidToDelete);
 }
 
@@ -19,7 +19,7 @@ export async function deletedUsers(auth: admin.auth.Auth, uidToDelete: string[] 
   console.time(timeMsg); // eslint-disable-line no-restricted-syntax
   do {
     result = await auth.listUsers(100, result.pageToken);
-    const users = result.users.filter(record => uidToDelete ? uidToDelete.includes(record.uid) : true);
+    const users = result.users.filter(record => uidToDelete?.length ? uidToDelete.includes(record.uid) : true);
     await auth.deleteUsers(users.map((record) => record.uid))
       .catch(e => console.log(`An error occured : ${e.message || 'unknown error'}`));
     await sleep(1000); // @see https://groups.google.com/u/1/g/firebase-talk/c/4VkOBKIsBxU

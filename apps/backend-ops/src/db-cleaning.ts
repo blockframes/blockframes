@@ -10,7 +10,7 @@ import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 import { getAllAppsExcept } from '@blockframes/utils/apps';
 import { DatabaseData, loadAllCollections, printDatabaseInconsistencies } from './internals/utils';
 import { MovieDocument } from '@blockframes/movie/+state/movie.firestore';
-import { deleteUsers } from 'libs/testing/unit-tests/src/lib/firebase';
+import { deleteSelectedUsers } from 'libs/testing/unit-tests/src/lib/firebase';
 
 export const numberOfDaysToKeepNotifications = 14;
 const currentTimestamp = new Date().getTime();
@@ -209,7 +209,7 @@ export async function cleanUsers(
     }
   }, undefined, verbose);
 
-  return deleteUsers(auth, authUsersToDelete);
+  return deleteSelectedUsers(auth, authUsersToDelete);
 }
 
 export function cleanOrganizations(
