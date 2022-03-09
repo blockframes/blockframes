@@ -367,6 +367,7 @@ export interface DurationMarker {
   to: Date,
   contract?: Mandate,
   term?: Term<Date>,
+  avail?:CalendarAvailsFilter,
 }
 
 interface CalendarAvailabilities {
@@ -376,7 +377,7 @@ interface CalendarAvailabilities {
   selected: DurationMarker;
 }
 
-function isCalendarTermInAvails<T extends BucketTerm | Term>(term: T, avails: CalendarAvailsFilter) {
+export function isCalendarTermInAvails<T extends BucketTerm | Term>(term: T, avails: CalendarAvailsFilter) {
   const exclusivityCheck = exclusivityAllOf(avails.exclusive).in(term.exclusive);
   const mediaCheck = allOf(avails.medias).in(term.medias);
   const territoriesCheck = allOf(avails.territories).in(term.territories);

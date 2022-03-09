@@ -16,7 +16,7 @@ import {
   dateToMatrixPosition,
   createAvailCalendarState,
 } from './calendar.model';
-import { DurationMarker } from '../avails';
+import { isCalendarTermInAvails, DurationMarker, CalendarAvailsFilter } from '../avails';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 
 /** Available [A], Today[T], Expired[E]
@@ -86,6 +86,7 @@ export class AvailsCalendarComponent implements OnInit {
   }
 
   @Input() @boolean disableSelect = false;
+  @Input() avails: CalendarAvailsFilter;
 
   @Output() selected = new EventEmitter<DurationMarker>();
 
@@ -161,18 +162,28 @@ export class AvailsCalendarComponent implements OnInit {
       const from = new Date(year + newState.start.row, newState.start.column);
       const to = new Date(year + newState.end.row, newState.end.column);
 
-      const parentMarker = this._availableMarkers.find(marker => {
-        // From the calendar pov range starts at the first day of the month
-        // but the avail term might not start at the first day of the month
-        const markerFromYear = marker.from.getFullYear();
-        const markerFromMonth = marker.from.getMonth();
-        const startDate = new Date(markerFromYear, markerFromMonth, 1).getTime();
-        return startDate <= from.getTime() && marker.to >= to;
-      });
+      const termsDifferByMediaOrDuration = this.avails.territories.some(territory => {
+        return this._availableMarkers.every(marker => marker.term.territories.includes(territory));
+      }); //otherwise terms differ by territory and or duration.
 
-      if (!parentMarker) throw new Error(`Calendar Invalid Selection: a selection must be included in a marker!`);
+      const fields = termsDifferByMediaOrDuration ? 'medias' : 'territories';
+      const cache: { territories?: string[][], medias?: string[][] } = { [fields]: this._availableMarkers.map(() => []) };
+      for (const field of this.avails[fields]) {
+        const index = this._availableMarkers.findIndex(({ term }) => {
+          return isCalendarTermInAvails(term, { ...this.avails, [fields]: [field] })
+        });
+        cache[fields][index].push(field);
+      }
 
-      this.selected.emit({ from, to, term: parentMarker.term, contract: parentMarker.contract });
+      cache[fields].forEach((list, index) => {
+        if (!list.length) return;
+        const parentMarker = this._availableMarkers[index]
+        if (!parentMarker) throw new Error(`Calendar Invalid Selection: a selection must be included in a marker!`);
+
+        const avail = { ...this.avails, [fields]: list };
+        this.selected.emit({ from, to, term: parentMarker.term, contract: parentMarker.contract, avail });
+      })
     }
   }
 }
+
