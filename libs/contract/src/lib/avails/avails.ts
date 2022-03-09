@@ -390,7 +390,6 @@ export function isCalendarTermInAvails<T extends BucketTerm | Term>(term: T, ava
   return territoriesCheck;
 }
 
-
 function getMatchingMandates(mandates: FullMandate[], avails: CalendarAvailsFilter, field: 'territories' | 'medias'): FullMandate[] {
   const availableMandates: FullMandate[] = [];
   const foundFields: unknown[] = [];
@@ -401,10 +400,9 @@ function getMatchingMandates(mandates: FullMandate[], avails: CalendarAvailsFilt
       });
     });
     if (foundMandate) {
-      const duplicate = availableMandates.find(m => m.id === foundMandate.id)
-      if (!duplicate)
-        availableMandates.push(foundMandate)
-      foundFields.push(value)
+      const duplicate = availableMandates.find(m => m.id === foundMandate.id);
+      if (!duplicate) availableMandates.push(foundMandate);
+      foundFields.push(value);
     }
   }
   return foundFields.length === avails[field].length ? availableMandates : [];
