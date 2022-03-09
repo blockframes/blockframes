@@ -2,13 +2,7 @@ import { syncUsers } from './users';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
 import { migrate } from './migrations';
 import { importFirestore } from './admin';
-import {
-  copyFirestoreExportFromCiBucket,
-  endMaintenance,
-  latestAnonDbDir,
-  loadAdminServices,
-  restoreAnonStorageFromCI,
-} from '@blockframes/firebase-utils';
+import { copyFirestoreExportFromCiBucket, endMaintenance, latestAnonDbDir, loadAdminServices, restoreAnonStorageFromCI } from '@blockframes/firebase-utils';
 import {
   connectAuthEmulator,
   connectFirestoreEmulator,
@@ -22,7 +16,7 @@ import { cleanStorage } from './storage-cleaning';
 import { firebase } from '@env';
 import { generateFixtures } from './generate-fixtures';
 import { ensureMaintenanceMode, isMigrationRequired } from './tools';
-import { backupBucket as ciBucketName } from 'env/env.blockframes-ci'
+import { backupBucket as ciBucketName } from 'env/env.blockframes-ci';
 import { EIGHT_MINUTES_IN_MS } from '@blockframes/utils/maintenance';
 const { storageBucket } = firebase();
 
@@ -76,9 +70,7 @@ export async function prepareEmulators({ dbBackupURL }: { dbBackupURL?: string }
   console.log('Done!');
 
   const proc = await firebaseEmulatorExec({
-    emulators: [
-      'auth',
-      'firestore'],
+    emulators: ['auth', 'firestore'],
     importPath: defaultEmulatorBackupPath,
     exportData: true,
   });
@@ -114,7 +106,6 @@ export async function prepareEmulators({ dbBackupURL }: { dbBackupURL?: string }
   await shutdownEmulator(proc);
 }
 
-
 export async function upgrade() {
   const { db, auth, storage } = loadAdminServices();
 
@@ -135,12 +126,11 @@ export async function upgrade() {
   await upgradeAlgoliaMovies(null, db);
   await upgradeAlgoliaUsers(db);
   console.info('Algolia ready for testing!');
-
 }
 
 export async function upgradeEmulators() {
   const db = connectFirestoreEmulator();
-  if (!await isMigrationRequired(db)) {
+  if (!(await isMigrationRequired(db))) {
     console.log('Skipping upgrade because migration is not required...');
     return;
   }
