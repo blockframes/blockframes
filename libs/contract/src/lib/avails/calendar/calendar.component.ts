@@ -182,7 +182,7 @@ export class AvailsCalendarComponent implements OnInit {
 
         const avail = { ...this.avails, [fields]: list };
         this.selected.emit({ from, to, term: parentMarker.term, contract: parentMarker.contract, avail });
-      })
+      });
     }
   }
 }

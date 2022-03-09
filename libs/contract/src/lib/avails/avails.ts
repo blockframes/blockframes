@@ -367,7 +367,7 @@ export interface DurationMarker {
   to: Date,
   contract?: Mandate,
   term?: Term<Date>,
-  avail?:CalendarAvailsFilter,
+  avail?: CalendarAvailsFilter,
 }
 
 interface CalendarAvailabilities {
@@ -377,11 +377,17 @@ interface CalendarAvailabilities {
   selected: DurationMarker;
 }
 
+/**
+ * as soon as we have a false value, we return.
+ * This is to optimize as this method is called in several loops.
+*/
 export function isCalendarTermInAvails<T extends BucketTerm | Term>(term: T, avails: CalendarAvailsFilter) {
   const exclusivityCheck = exclusivityAllOf(avails.exclusive).in(term.exclusive);
+  if (!exclusivityCheck) return false;
   const mediaCheck = allOf(avails.medias).in(term.medias);
+  if (!mediaCheck) return false;
   const territoriesCheck = allOf(avails.territories).in(term.territories);
-  return exclusivityCheck && mediaCheck && territoriesCheck;
+  return territoriesCheck;
 }
 
 
