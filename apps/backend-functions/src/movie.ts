@@ -12,13 +12,7 @@ import { orgName } from '@blockframes/organization/+state/organization.firestore
 import { MovieAppConfig } from '@blockframes/model';
 import { cleanMovieMedias, moveMovieMedia } from './media';
 import { Change, EventContext } from 'firebase-functions';
-import {
-  algolia,
-  deleteObject,
-  getDocument,
-  storeSearchableMovie,
-  storeSearchableOrg,
-} from '@blockframes/firebase-utils';
+import { algolia, deleteObject, getDocument, storeSearchableMovie, storeSearchableOrg } from '@blockframes/firebase-utils';
 import { App, getAllAppsExcept, getMovieAppAccess, getMailSender } from '@blockframes/utils/apps';
 import { Bucket } from '@blockframes/contract/bucket/+state/bucket.model';
 import { sendMovieSubmittedEmail } from './templates/mail';
@@ -126,8 +120,7 @@ export async function onMovieDelete(
   // Update algolia's index
   const movieAppAccess = getMovieAppAccess(movie);
   const promises = movieAppAccess.map(
-    (appName) =>
-      deleteObject(algolia.indexNameMovies[appName], context.params.movieId) as Promise<boolean>
+    (appName) => deleteObject(algolia.indexNameMovies[appName], context.params.movieId) as Promise<boolean>
   );
 
   await Promise.all(promises);
@@ -195,11 +188,7 @@ export async function onMovieUpdate(change: Change<FirebaseFirestore.DocumentSna
   }
 
   // If movie was accepted but is not anymore, clean wishlists
-  if (
-    Object.keys(after.app).map(
-      (a) => before.app[a].status === 'accepted' && after.app[a].status !== before.app[a].status
-    )
-  ) {
+  if (Object.keys(after.app).map((a) => before.app[a].status === 'accepted' && after.app[a].status !== before.app[a].status)) {
     await removeMovieFromWishlists(after);
   }
 
@@ -240,10 +229,7 @@ export async function createAskingPriceRequest(
   if (!uid) throw new Error('User id is mandatory for requesting asking price');
   if (!movieId) throw new Error('Movie id is mandatory for requesting asking price');
 
-  const [user, movie] = await Promise.all([
-    getDocument<PublicUser>(`users/${uid}`),
-    getDocument<Movie>(`movies/${movieId}`),
-  ]);
+  const [user, movie] = await Promise.all([getDocument<PublicUser>(`users/${uid}`), getDocument<Movie>(`movies/${movieId}`)]);
 
   const getNotifications = (org: Organization) =>
     org.userIds.map((userId) =>
@@ -317,10 +303,7 @@ function isAccepted(previousAppConfig: AppConfigMap, currentAppConfig: AppConfig
   });
 }
 
-async function removeMovieFromWishlists(
-  movie: MovieDocument,
-  batch?: FirebaseFirestore.WriteBatch
-) {
+async function removeMovieFromWishlists(movie: MovieDocument, batch?: FirebaseFirestore.WriteBatch) {
   const collection = db.collection('orgs');
   const orgsWithWishlists = await collection.where('wishlist', 'array-contains', movie.id).get();
   const updates: Promise<FirebaseFirestore.WriteResult>[] = [];

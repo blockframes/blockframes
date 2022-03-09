@@ -147,11 +147,7 @@ async function generate(templateName: string, app: App, titles: PdfTitleData[]) 
   const pdf = await page.pdf({
     height,
     displayHeaderFooter: true,
-    headerTemplate: `${cssHeader.join(
-      ''
-    )}<header class="header"><img src="data:image/svg+xml;utf8,${encodeURIComponent(
-      logo
-    )}"></header>`,
+    headerTemplate: `${cssHeader.join('')}<header class="header"><img src="data:image/svg+xml;utf8,${encodeURIComponent(logo)}"></header>`,
     footerTemplate: `<p></p>`, // If left empty, default is page number
     margin: {
       top: '100px',
