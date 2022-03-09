@@ -4,6 +4,7 @@ import { OrgAppAccess, createOrgAppAccess, Module, App, getAllAppsExcept } from 
 import type { OrgActivity, OrganizationStatus } from '@blockframes/utils/static-model/types';
 import { createStorageFile, StorageFile, StorageVideo } from '@blockframes/media/+state/media.firestore';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
+/** Gives information about an application */
 
 type Timestamp = firebase.firestore.Timestamp;
 
@@ -117,5 +118,35 @@ export function canAccessModule(module: Module, org: OrganizationBase<unknown>, 
     return org?.appAccess[_app]?.[module];
   } else {
     return getAllAppsExcept(['crm']).some(a => org.appAccess[a]?.[module]);
+  }
+}
+export { OrganizationStatus } from '@blockframes/utils/static-model/types';
+
+export type AppStatus = 'none' | 'requested' | 'accepted';
+
+export type Organization = OrganizationBase<Date>;
+
+export const organizationRoles = {
+  catalog: { dashboard: 'Seller', marketplace: 'Buyer'},
+  festival: { dashboard: 'Sales Agent', marketplace: 'Buyer'},
+  financiers: { dashboard: 'Partners', marketplace: 'Investor'}
+};
+
+export interface OrganizationForm {
+  name: string;
+}
+
+/** A factory function that creates an Organization. */
+export function createOrganization(
+  params: Partial<Organization> = {}
+): Organization {
+  return createOrganizationBase(params) as Organization;
+}
+/** Convert an organization object into a public organization */
+export function createPublicOrganization(org: Partial<Organization>): PublicOrganization {
+  return {
+    id: org.id ?? '',
+    denomination: createDenomination(org.denomination),
+    logo: createStorageFile(org.logo),
   }
 }
