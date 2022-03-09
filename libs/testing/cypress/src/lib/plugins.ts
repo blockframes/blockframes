@@ -1,4 +1,5 @@
 export * from './plugins/auth';
+export * from './plugins/db';
 export * from './plugins/festival';
 
 export function log(message: any) {

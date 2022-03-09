@@ -198,14 +198,6 @@ export function check(selector: string) {
   get(selector).find('[type="checkbox"]').check({ force: true });
 }
 
-export function createEmail(username: string = 'test-user', domain: string = serverId + '.mailosaur.net') {
-  return username + Date.now() + '@' + domain;
-}
-
-export function createOrgName(orgName: string = 'testOrg') {
-  return orgName + Date.now();
-}
-
 export function assertUrl(url: string) {
   cy.url().should('eq',`http://localhost:4200/${url}`)
 }
@@ -221,4 +213,29 @@ export function interceptEmail(option: InterceptOption) {
 
 export function deleteEmail(id: string) {
   return cy.mailosaurDeleteMessage(id)
+}
+
+export async function createUserArray(number: number, params: string = 'name, email') {
+  const response = await fetch(`https://randomuser.me/api/?results=${number}&inc=${params}`);
+  const data = await response.json();
+  const results = data.results;
+  const users = results.map((user) => {
+    return {
+      country: 'France',
+      password: 'Blockframes',
+      company: {
+        name: `${user.name.first} ${user.name.last} corporation`,
+        activity: 'Organization',
+        country: 'France',
+      },
+      role: 'Buyer',
+      ...user,
+      email: user.email.replace('example.com', `${serverId}.mailosaur.net`),
+    };
+  });
+  return users;
+}
+
+export function capitalize(text: string) {
+  return `${text[0].toUpperCase()}${text.substring(1)}`;
 }

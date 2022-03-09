@@ -1,21 +1,4 @@
-import { auth, db } from '../testing-cypress';
-import type { User } from '@blockframes/user/types';
-
-export async function getRandomEmail() {
-  const { email } = await getRandomUser();
-  console.log(email);
-  return email;
-}
-
-export async function getRandomUser() {
-  // TODO #7701 Improve getRandomUser method
-  const userQuery = await db.collection('users').limit(1).get();
-  const userSnap = userQuery.docs.pop();
-  const user = userSnap.data() as User;
-  console.log('Got random user:\n');
-  console.dir(user);
-  return user;
-}
+import { auth } from '../testing-cypress';
 
 export async function createUserToken(uid: string) {
   /**
@@ -32,19 +15,8 @@ export async function createUserToken(uid: string) {
   return await auth.createCustomToken(uid, tokenPayLoad);
 }
 
-export async function validateOrg(orgName: string) {
-  const userQuery = await db.collection('orgs').where('denomination.full', '==', orgName).get()
-  const org = userQuery.docs as unknown;
-  const orgId = org[0]._fieldsProto.id.stringValue
-  const docRef = db.collection('orgs').doc(orgId)
-  return docRef.update({ status: 'accepted' })
-}
-
-export async function validateUser(email: string) {
+export async function validateAuthUser(email: string) {
   const user = await auth.getUserByEmail(email)
-  const docRef = db.collection('users').doc(user.uid)
-  await docRef.update({'_meta.emailVerified': true})
-  await auth.updateUser(user.uid, {emailVerified: true})
-  return 'reload ok'
+  return await auth.updateUser(user.uid, {emailVerified: true})
 }
 
