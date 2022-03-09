@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { PublicUser } from '@blockframes/user/types';
 import { displayName } from '../utils';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
-import { orgName } from '@blockframes/organization/+state/organization.firestore';
-import { Organization } from '@blockframes/organization/+state';
+import { orgName } from '@blockframes/model';
+import { Movie, Organization } from '@blockframes/model';
 
 /**
  * This pipe is used to display the firstname and lastname of the user but also the organization in parenthesis.

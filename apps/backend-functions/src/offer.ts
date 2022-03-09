@@ -3,8 +3,7 @@ import { getDocument } from '@blockframes/firebase-utils';
 import { EmailTemplateRequest, sendMailFromTemplate } from './internals/email';
 import { App } from '@blockframes/utils/apps';
 import { Offer } from '@blockframes/contract/offer/+state/offer.model';
-import { Organization, OrganizationDocument } from '@blockframes/organization/+state';
-import { Movie } from '@blockframes/model';
+import { Movie, Organization } from '@blockframes/model';
 import { appUrl, supportEmails } from '@env';
 import { staticModel } from '@blockframes/utils/static-model';
 import { format } from 'date-fns';
@@ -15,7 +14,7 @@ import { Change } from 'firebase-functions';
 import { createDocumentMeta } from './data/internals';
 import { Sale } from '@blockframes/contract/contract/+state/contract.model';
 import { getSeller } from '@blockframes/contract/contract/+state/utils';
-import { NotificationTypes } from './data/types';
+import { NotificationTypes, OrganizationDocument } from './data/types';
 
 export async function onOfferCreate(snap: FirebaseFirestore.DocumentSnapshot): Promise<void> {
   const offer = snap.data() as Offer;
