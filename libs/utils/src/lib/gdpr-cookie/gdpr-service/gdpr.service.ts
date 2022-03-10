@@ -2,7 +2,7 @@ import { Inject, Injectable } from "@angular/core";
 import { CookiesConsent } from "../cookie-form/cookie.form";
 import { IntercomService } from '@blockframes/utils/intercom/intercom.service';
 import { YandexMetricaService } from '@blockframes/utils/yandex-metrica/yandex-metrica.service';
-import { User } from "@blockframes/user/types";
+import { User } from "@blockframes/model";
 import { App } from "@blockframes/utils/apps";
 import { APP } from '@blockframes/utils/routes/utils';
 
