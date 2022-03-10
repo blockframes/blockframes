@@ -4,7 +4,8 @@ import { PublicUser } from '@blockframes/user/+state/user.firestore';
 import {
   OrganizationDocument,
   PublicOrganization,
-} from '@blockframes/organization/+state/organization.firestore';
+  MovieDocument
+} from '@blockframes/model';
 import { PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
 import { removeUnexpectedUsers } from './users';
 import {
@@ -18,7 +19,6 @@ import admin from 'firebase-admin';
 import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 import { getAllAppsExcept } from '@blockframes/utils/apps';
 import { DatabaseData, loadAllCollections, printDatabaseInconsistencies } from './internals/utils';
-import { MovieDocument } from '@blockframes/model';
 
 export const numberOfDaysToKeepNotifications = 14;
 const currentTimestamp = new Date().getTime();

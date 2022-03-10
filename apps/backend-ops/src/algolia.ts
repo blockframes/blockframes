@@ -9,11 +9,7 @@ import {
   getDocument,
 } from '@blockframes/firebase-utils';
 import { algolia } from '@env';
-import {
-  OrganizationDocument,
-  orgName,
-} from '@blockframes/organization/+state/organization.firestore';
-import { MovieDocument } from '@blockframes/model';
+import { MovieDocument,  OrganizationDocument,  orgName,} from '@blockframes/model';
 import { PublicUser } from '@blockframes/user/types';
 import { App, getAllAppsExcept } from '@blockframes/utils/apps';
 import { Campaign } from '@blockframes/campaign/+state/campaign.model';
