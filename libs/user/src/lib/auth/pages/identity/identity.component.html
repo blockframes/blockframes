@@ -142,9 +142,7 @@
         <div class="privacy" fxLayout="column" fxLayoutAlign="start" fxLayoutGap="16px">
           <mat-checkbox test-id="checkbox" color="primary" formControlName="termsOfUse">
             <span class="mat-caption">I hereby accept {{ app | appName }}&nbsp;
-              <a target="_blank" routerLink="/auth/terms">
-                {{app === 'catalog' ? 'General Conditions of Sales' : 'Terms and Conditions'}}         
-              </a>.
+              <a target="_blank" routerLink="/auth/terms">Terms and Conditions</a>.
             </span>
           </mat-checkbox>
           

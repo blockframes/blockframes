@@ -351,14 +351,14 @@ export function movieAskingPriceRequestSent(toUser: UserEmailData, movie: MovieD
 
 /** Inform user of org whose movie is being bought */
 export function contractCreatedEmail(
-  toUser: UserEmailData, movie: MovieDocument, contract: ContractDocument,
+  toUser: UserEmailData, title: MovieDocument, contract: ContractDocument,
   negotiation: NegotiationDocument, buyerOrg: OrganizationDocument
 ): EmailTemplateRequest {
   const pageURL = `${appUrl.content}/c/o/dashboard/sales/${contract.id}/view`;
   const data = {
     user: toUser,
     app: { name: appName.catalog },
-    movie,
+    movie: title,
     contract,
     negotiation,
     pageURL,
@@ -392,7 +392,7 @@ export function buyerOfferCreatedConfirmationEmail(toUser: UserEmailData, org: O
 
 export function counterOfferRecipientEmail(
   toUser: UserEmailData, senderOrg: OrganizationDocument, offerId: string,
-  movie: MovieDocument, contractId: string, options: { isMailRecipientBuyer: boolean }
+  title: MovieDocument, contractId: string, options: { isMailRecipientBuyer: boolean }
 ): EmailTemplateRequest {
   const pageURL = options.isMailRecipientBuyer
     ? `${appUrl.content}/c/o/marketplace/offer/${offerId}/${contractId}`
@@ -401,7 +401,7 @@ export function counterOfferRecipientEmail(
     user: toUser,
     org: senderOrg,
     pageURL,
-    movie,
+    movie: title,
     app: { name: appName.catalog }
   };
   return { to: toUser.email, templateId: templateIds.negotiation.receivedCounterOffer, data };
@@ -409,7 +409,7 @@ export function counterOfferRecipientEmail(
 
 export function counterOfferSenderEmail(
   toUser: UserEmailData, org: OrganizationDocument, offerId: string,
-  negotiation: NegotiationDocument, movie: MovieDocument, contractId: string, options: { isMailRecipientBuyer: boolean }
+  negotiation: NegotiationDocument, title: MovieDocument, contractId: string, options: { isMailRecipientBuyer: boolean }
 ): EmailTemplateRequest {
   const terms = createMailTerm(negotiation.terms);
   const currency = staticModel['movieCurrencies'][negotiation.currency];
@@ -425,21 +425,21 @@ export function counterOfferSenderEmail(
     contractId,
     app: { name: appName.catalog },
     negotiation: { ...negotiation, terms, currency },
-    movie
+    movie: title
   };
   return { to: toUser.email, templateId: templateIds.negotiation.createdCounterOffer, data };
 }
 
-export function toAdminCounterOfferEmail( movie: MovieDocument): EmailTemplateRequest {
+export function toAdminCounterOfferEmail( title: MovieDocument): EmailTemplateRequest {
   const data = {
-    movie
+    movie: title
   };
   return { to: supportEmails.catalog, templateId: templateIds.negotiation.toAdminCounterOffer, data };
 }
 
 // #7946 this may be reactivated later
 // Sent when all the contracts of an offer have either been accepted or declined.
-// export function offerAcceptedOrDeclined( //to remove
+// export function offerAcceptedOrDeclined(
 //   user: UserEmailData, offer: Offer, contracts: ContractDocument[]
 // ): EmailTemplateRequest {
 //   const isOfferAccepted = offer.status === 'accepted';
@@ -456,7 +456,7 @@ export function toAdminCounterOfferEmail( movie: MovieDocument): EmailTemplateRe
 //   return { to: user.email, templateId, data };
 // }
 
-// export function offerUnderSignature( //to remove
+// export function offerUnderSignature(
 //   user: UserEmailData, offerId: string, contract: ContractDocument, negotiation: MailContract,
 //   title: string
 // ): EmailTemplateRequest {
