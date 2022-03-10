@@ -1,6 +1,6 @@
-import { MovieDocument, NotificationDocument, OrganizationDocument, NotificationTypes } from './data/types';
+import { NotificationDocument, NotificationTypes } from './data/types';
 import { getDocument, getOrgAppKey, createDocumentMeta } from './data/internals';
-import { NotificationSettingsTemplate, User, InvitationDocument, PublicInvitation } from '@blockframes/model';
+import { NotificationSettingsTemplate, User, OrganizationDocument, canAccessModule, orgName, MovieDocument, InvitationDocument, PublicInvitation } from '@blockframes/model';
 import { sendMailFromTemplate } from './internals/email';
 import { emailErrorCodes, EventEmailData, getEventEmailData, getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
 import { EventDocument, EventMeta, Screening } from '@blockframes/event/+state/event.firestore';
@@ -34,7 +34,6 @@ import {
   offerUnderSignature,
 } from './templates/mail';
 import { templateIds, groupIds } from '@blockframes/utils/emails/ids';
-import { canAccessModule, orgName } from '@blockframes/organization/+state/organization.firestore';
 import { App, applicationUrl, appName } from '@blockframes/utils/apps';
 import * as admin from 'firebase-admin';
 import { logger } from 'firebase-functions';

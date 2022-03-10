@@ -1,10 +1,9 @@
 ﻿import { getDocument, createPublicOrganizationDocument, createPublicUserDocument } from './data/internals';
 import { getUser } from "./internals/utils";
 import { db } from './internals/firebase'
-import {  OrganizationDocument } from './data/types';
 import { onInvitationToJoinOrgUpdate, onRequestToJoinOrgUpdate } from './internals/invitations/organizations';
 import { onInvitationToAnEventUpdate } from './internals/invitations/events';
-import { createPublicUser, PublicUser, InvitationDocument, InvitationOrUndefined, InvitationBase, createInvitation, InvitationStatus } from '@blockframes/model';
+import { createPublicUser, PublicUser, OrganizationDocument, orgName, InvitationDocument, InvitationOrUndefined, createInvitation, InvitationStatus, InvitationBase } from '@blockframes/model';
 import { getOrInviteUserByMail } from './internals/users';
 import { ErrorResultResponse } from './utils';
 import { CallableContext } from "firebase-functions/lib/providers/https";
@@ -14,7 +13,6 @@ import { getEventEmailData } from '@blockframes/utils/emails/utils';
 import { Change } from 'firebase-functions';
 import { AlgoliaOrganization } from '@blockframes/utils/algolia';
 import { createAlgoliaOrganization } from '@blockframes/firebase-utils';
-import { orgName } from '@blockframes/organization/+state/organization.firestore';
 export { hasUserAnOrgOrIsAlreadyInvited } from './internals/invitations/utils';
 
 

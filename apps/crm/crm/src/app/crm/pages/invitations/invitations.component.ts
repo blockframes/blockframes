@@ -1,11 +1,11 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { InvitationService } from '@blockframes/invitation/+state';
-import { OrganizationService, Organization, orgName } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { EventService, Event, isScreening } from '@blockframes/event/+state/';
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { getHost } from '@blockframes/invitation/pipes/host.pipe';
 import { getGuest } from '@blockframes/invitation/pipes/guest.pipe';
-import { InvitationDetailed, Movie } from '@blockframes/model';
+import { Movie, Organization, orgName, InvitationDetailed } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 
 @Component({
@@ -27,7 +27,7 @@ export class InvitationsComponent implements OnInit {
     private eventService: EventService,
     private movieService: MovieService,
     private cdRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   async ngOnInit() {
     const [invitations, events] = await Promise.all([

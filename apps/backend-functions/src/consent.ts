@@ -1,12 +1,12 @@
 import * as functions from 'firebase-functions';
 import { db } from './internals/firebase';
-import { PublicUser } from './data/types';
 import {
   createAccess,
   createShare,
   ConsentType,
   createConsent as _createConsent,
 } from '@blockframes/consents/+state/consents.firestore';
+import { PublicUser } from '@blockframes/model';
 
 type CallableContext = functions.https.CallableContext;
 

@@ -1,6 +1,5 @@
 import * as admin from 'firebase-admin';
 import { getUser } from "./../utils";
-import { OrganizationDocument } from './../../data/types';
 import { triggerNotifications, createNotification } from './../../notification';
 import { sendMailFromTemplate } from './../email';
 import { userJoinedAnOrganization } from '../../templates/mail';
@@ -9,7 +8,7 @@ import { wasAccepted, wasDeclined, wasCreated } from './utils';
 import { applicationUrl } from '@blockframes/utils/apps';
 import { getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
 import { groupIds } from '@blockframes/utils/emails/ids';
-import { InvitationDocument, InvitationOrUndefined } from '@blockframes/model';
+import { InvitationDocument, InvitationOrUndefined, OrganizationDocument } from '@blockframes/model';
 
 async function addUserToOrg(userId: string, organizationId: string) {
   const db = admin.firestore();
@@ -154,7 +153,7 @@ async function onRequestFromUserToJoinOrgAccept({
   const org = getOrgEmailData(toOrg);
   const toUser = getUserEmailData(fromUser);
   const template = userJoinedAnOrganization(toUser, urlToUse, org);
-  return sendMailFromTemplate(template, app, groupIds.unsubscribeAll); 
+  return sendMailFromTemplate(template, app, groupIds.unsubscribeAll);
 }
 
 /** Send a notification to admins of organization to notify them that the request is declined. */

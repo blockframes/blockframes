@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Output, Input } from '@angular/core';
-import { Organization } from '../../+state';
 import { OrganizationForm } from '../../forms/organization.form';
-import { PLACEHOLDER_LOGO } from '../../+state/organization.model'
+import { Organization, PLACEHOLDER_LOGO } from '@blockframes/model';
 
 @Component({
   selector: 'organization-display',

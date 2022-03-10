@@ -1,16 +1,9 @@
 import { db } from './internals/firebase';
 import { getDocument } from '@blockframes/firebase-utils';
-import { EmailTemplateRequest, sendMailFromTemplate } from './internals/email';
-import { App } from '@blockframes/utils/apps';
 import { Offer } from '@blockframes/contract/offer/+state/offer.model';
-import { Organization, OrganizationDocument } from '@blockframes/organization/+state';
-import { Movie } from '@blockframes/model';
-import { appUrl, supportEmails } from '@env';
+import { Movie, Organization, User } from '@blockframes/model';
 import { staticModel } from '@blockframes/utils/static-model';
-import { format } from 'date-fns';
-import { User } from '@blockframes/model';
 import { createNotification, triggerNotifications } from './notification';
-import { templateIds } from '@blockframes/utils/emails/ids';
 import { Change } from 'firebase-functions';
 import { createDocumentMeta } from './data/internals';
 import { Sale } from '@blockframes/contract/contract/+state/contract.model';
@@ -20,10 +13,8 @@ import { NotificationTypes } from './data/types';
 export async function onOfferCreate(snap: FirebaseFirestore.DocumentSnapshot): Promise<void> {
   const offer = snap.data() as Offer;
   const orgId = offer.buyerId;
-  const [org, bucket] = await Promise.all([
-    getDocument<OrganizationDocument>(`orgs/${orgId}`),
-    getDocument<any>(`buckets/${orgId}`),
-  ]);
+  const bucket = await getDocument<any>(`buckets/${orgId}`);
+  
   const user = await getDocument<User>(`users/${bucket.uid}`);
 
   // Empty bucket

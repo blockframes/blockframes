@@ -1,10 +1,10 @@
 import { wasCreated, wasAccepted, wasDeclined, hasUserAnOrgOrIsAlreadyInvited } from "./utils";
-import { NotificationDocument, NotificationTypes, OrganizationDocument } from "../../data/types";
+import { NotificationDocument, NotificationTypes } from "../../data/types";
 import { createNotification, triggerNotifications } from "../../notification";
 import { createDocumentMeta, createPublicInvitationDocument, getAdminIds, getDocument } from "../../data/internals";
 import { EventDocument, EventMeta, Meeting, Screening } from "@blockframes/event/+state/event.firestore";
 import * as admin from 'firebase-admin';
-import { InvitationDocument, InvitationOrUndefined } from "@blockframes/model";
+import { OrganizationDocument, InvitationDocument, InvitationOrUndefined } from "@blockframes/model";
 
 /**
  * Handles notifications and emails when an invitation to an event is created.
@@ -47,7 +47,7 @@ async function onInvitationToAnEventCreate(invitation: InvitationDocument) {
       ids.push(event.meta?.organizerUid);
     }
     Array.from(new Set(ids)).forEach(uid => recipients.push(uid));
-    
+
   } else {
     throw new Error('Who is this invitation for ?');
   }

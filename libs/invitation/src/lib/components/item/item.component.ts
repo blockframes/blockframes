@@ -2,8 +2,7 @@ import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, Inject } 
 import { InvitationService } from '../../+state';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { EventService } from '@blockframes/event/+state/event.service';
-import { Invitation, PublicUser } from '@blockframes/model';
-import { PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
+import { PublicOrganization, PublicUser, Invitation } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { App, applicationUrl } from '@blockframes/utils/apps';
 import { isMeeting } from '@blockframes/event/+state';
