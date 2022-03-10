@@ -1,6 +1,7 @@
 import { InvitationOrUndefined, InvitationDocument } from "@blockframes/invitation/+state/invitation.firestore";
 import { wasCreated, wasAccepted, wasDeclined, hasUserAnOrgOrIsAlreadyInvited } from "./utils";
-import { NotificationDocument, NotificationTypes, OrganizationDocument } from "../../data/types";
+import { OrganizationDocument } from "../../data/types";
+import { NotificationDocument, NotificationTypes } from '@blockframes/model'
 import { createNotification, triggerNotifications } from "../../notification";
 import { createDocumentMeta, createPublicInvitationDocument, getAdminIds, getDocument } from "../../data/internals";
 import { EventDocument, EventMeta, Meeting, Screening } from "@blockframes/event/+state/event.firestore";

@@ -9,7 +9,7 @@ import { getReviewer, isInitial } from '@blockframes/contract/negotiation/utils'
 import { formatDocumentMetaFromFirestore } from "@blockframes/utils/models-meta";
 import { Offer } from '@blockframes/contract/offer/+state';
 import { Contract, ContractStatus, Sale } from '@blockframes/contract/contract/+state/contract.model';
-import { NotificationTypes } from './data/types';
+import { NotificationTypes } from '@blockframes/model';
 
 // KEEP THE OFFER STATUS IN SYNC WITH IT'S CONTRACTS AND NEGOTIATIONS
 async function updateOfferStatus(contract: Contract) {
