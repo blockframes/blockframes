@@ -324,26 +324,32 @@ export class NotificationService extends CollectionService<NotificationState> {
         return {
           ...notification,
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `Your offer was successfully sent.`,
+          message: `Your offer ${notification.offerId} was successfully sent.`,
           placeholderUrl: 'profil_user.svg',
-          url: `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.docId}`,
-        };
-      case 'contractCreated':
+          url: `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.docId}`
+        }
+      case 'contractCreated': {
+        const movie = await this.movieService.valueChanges(notification.docId).pipe(take(1)).toPromise();
+        const message = `${displayName(notification.user)} sent an offer for ${movie.title.international}.`;
+      
         return {
           ...notification,
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `An offer has been made on one of your titles.`,
+          message,
           placeholderUrl: 'list_offer.svg',
-          url: `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}`,
-        };
+          url: `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}`
+        }
+      }  
       case 'createdCounterOffer': {
         const marketplaceUrl = `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.offerId}/${notification.docId}`;
         const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
-
+        const movie = await this.movieService.valueChanges(notification.docId).pipe(take(1)).toPromise();
+        const message = `Your counter-offer for ${movie.title.international} was successfully sent to ${displayName(notification.user)}.`;
+       
         return {
           ...notification,
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `Your counter-offer was successfully sent.`,
+          message,
           placeholderUrl: 'list_offer.svg',
           url: module === 'marketplace' ? marketplaceUrl : dashboardUrl,
         };
@@ -351,11 +357,12 @@ export class NotificationService extends CollectionService<NotificationState> {
       case 'receivedCounterOffer': {
         const marketplaceUrl = `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.offerId}/${notification.docId}`;
         const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
-
+        const movie = await this.movieService.valueChanges(notification.docId).pipe(take(1)).toPromise();
+        const message = `${displayName(notification.user)} sent a counter-offer for ${movie.title.international}.`;
         return {
           ...notification,
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `You received a counter-offer.`,
+          message,
           placeholderUrl: 'list_offer.svg',
           url: module === 'marketplace' ? marketplaceUrl : dashboardUrl,
         };
@@ -363,39 +370,45 @@ export class NotificationService extends CollectionService<NotificationState> {
       case 'myContractWasAccepted': {
         const marketplaceUrl = `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.offerId}/${notification.docId}`;
         const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
+        const movie = await this.movieService.valueChanges(notification.docId).pipe(take(1)).toPromise();
+        
         return {
           ...notification,
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `Your offer was accepted.`,
+          message: `Your offer for ${movie.title.international} was accepted. The agreement will now be drafted offline.`,
           placeholderUrl: 'list_offer.svg',
           url: module === 'marketplace' ? marketplaceUrl : dashboardUrl,
         };
       }
-      case 'underSignature': {
-        return {
-          ...notification,
-          _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `Your offer is now under signature`,
-          placeholderUrl: 'list_offer.svg',
-          url: `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`,
-        };
-      }
-      case 'offerAccepted': {
-        return {
-          ...notification,
-          _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `Your offer is now under signature`,
-          placeholderUrl: 'list_offer.svg',
-          url: `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.docId}`,
-        };
-      }
+      // #7946 this may be reactivated later
+      // case 'underSignature': {
+      //   return {
+      //     ...notification,
+      //     _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
+      //     message: `Your offer is now under signature`,
+      //     placeholderUrl: 'list_offer.svg',
+      //     url: `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`
+      //   }
+      // }
+      // case 'offerAccepted': {
+      //   return {
+      //     ...notification,
+      //     _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
+      //     message: `Your offer is now under signature`,
+      //     placeholderUrl: 'list_offer.svg',
+      //     url: `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.docId}`
+      //   }
+      // }
       case 'myOrgAcceptedAContract': {
         const marketplaceUrl = `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.offerId}/${notification.docId}`;
         const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
+        const movie = await this.movieService.valueChanges(notification.docId).pipe(take(1)).toPromise();
+        const message = `Congrats for accepting the offer ${notification.offerId} for ${movie.title.international}! The agreement will now be drafted offline.`;
+        
         return {
           ...notification,
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `You accepted an offer.`,
+          message,
           placeholderUrl: 'list_offer.svg',
           url: module === 'marketplace' ? marketplaceUrl : dashboardUrl,
         };
@@ -403,10 +416,12 @@ export class NotificationService extends CollectionService<NotificationState> {
       case 'myContractWasDeclined': {
         const marketplaceUrl = `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.offerId}/${notification.docId}`;
         const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
+        const movie = await this.movieService.valueChanges(notification.docId).pipe(take(1)).toPromise();
+        
         return {
           ...notification,
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `Your offer was declined.`,
+          message: `Your offer for ${movie.title.international} was declined.`,
           placeholderUrl: 'list_offer.svg',
           url: module === 'marketplace' ? marketplaceUrl : dashboardUrl,
         };
@@ -414,10 +429,12 @@ export class NotificationService extends CollectionService<NotificationState> {
       case 'myOrgDeclinedAContract': {
         const marketplaceUrl = `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.offerId}/${notification.docId}`;
         const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
+        const movie = await this.movieService.valueChanges(notification.docId).pipe(take(1)).toPromise();
+        
         return {
           ...notification,
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `You declined an offer.`,
+          message: `The offer for ${movie.title.international} was successfully declined.`,
           placeholderUrl: 'list_offer.svg',
           url: module === 'marketplace' ? marketplaceUrl : dashboardUrl,
         };

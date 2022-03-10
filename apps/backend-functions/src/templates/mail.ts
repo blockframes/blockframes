@@ -351,14 +351,14 @@ export function movieAskingPriceRequestSent(toUser: UserEmailData, movie: MovieD
 
 /** Inform user of org whose movie is being bought */
 export function contractCreatedEmail(
-  toUser: UserEmailData, title: MovieDocument, contract: ContractDocument,
+  toUser: UserEmailData, movie: MovieDocument, contract: ContractDocument,
   negotiation: NegotiationDocument, buyerOrg: OrganizationDocument
 ): EmailTemplateRequest {
   const pageURL = `${appUrl.content}/c/o/dashboard/sales/${contract.id}/view`;
   const data = {
     user: toUser,
     app: { name: appName.catalog },
-    title,
+    movie,
     contract,
     negotiation,
     pageURL,
@@ -376,15 +376,15 @@ export function adminOfferCreatedConfirmationEmail(toUser: UserEmailData, org: O
 }
 
 /**To inform buyer that his offer has been successfully created. */
-export function buyerOfferCreatedConfirmationEmail(toUser: UserEmailData, org: OrganizationDocument, offerId: string, bucket: Bucket<Timestamp>): EmailTemplateRequest {
+export function buyerOfferCreatedConfirmationEmail(toUser: UserEmailData, org: OrganizationDocument, offer: Offer, bucket: Bucket<Timestamp>): EmailTemplateRequest {
   const contracts = bucket.contracts.map(contract => createMailContract(contract));
-  const pageURL = `${appUrl.content}/c/o/marketplace/offer/${offerId}`;
+  const pageURL = `${appUrl.content}/c/o/marketplace/offer/${offer.id}`;
   const data = {
     app: { name: appName.catalog },
     bucket: { ...bucket, contracts },
     user: toUser,
     pageURL,
-    offerId,
+    offer,
     org
   };
   return { to: toUser.email, templateId: templateIds.offer.toBuyer, data };
@@ -392,17 +392,16 @@ export function buyerOfferCreatedConfirmationEmail(toUser: UserEmailData, org: O
 
 export function counterOfferRecipientEmail(
   toUser: UserEmailData, senderOrg: OrganizationDocument, offerId: string,
-  title: MovieDocument, contractId: string, options: { isMailRecipientBuyer: boolean }
+  movie: MovieDocument, contractId: string, options: { isMailRecipientBuyer: boolean }
 ): EmailTemplateRequest {
   const pageURL = options.isMailRecipientBuyer
     ? `${appUrl.content}/c/o/marketplace/offer/${offerId}/${contractId}`
     : `${appUrl.content}/c/o/dashboard/sales/${contractId}/view`;
   const data = {
     user: toUser,
-    offerId,
     org: senderOrg,
     pageURL,
-    title,
+    movie,
     app: { name: appName.catalog }
   };
   return { to: toUser.email, templateId: templateIds.negotiation.receivedCounterOffer, data };
@@ -410,7 +409,7 @@ export function counterOfferRecipientEmail(
 
 export function counterOfferSenderEmail(
   toUser: UserEmailData, org: OrganizationDocument, offerId: string,
-  negotiation: NegotiationDocument, title: MovieDocument, contractId: string, options: { isMailRecipientBuyer: boolean }
+  negotiation: NegotiationDocument, movie: MovieDocument, contractId: string, options: { isMailRecipientBuyer: boolean }
 ): EmailTemplateRequest {
   const terms = createMailTerm(negotiation.terms);
   const currency = staticModel['movieCurrencies'][negotiation.currency];
@@ -426,43 +425,49 @@ export function counterOfferSenderEmail(
     contractId,
     app: { name: appName.catalog },
     negotiation: { ...negotiation, terms, currency },
-    title
+    movie
   };
   return { to: toUser.email, templateId: templateIds.negotiation.createdCounterOffer, data };
 }
 
-
-//Sent when all the contracts of an offer have either been accepted or declined.
-export function offerAcceptedOrDeclined(
-  user: UserEmailData, offer: Offer, contracts: ContractDocument[]
-): EmailTemplateRequest {
-  const isOfferAccepted = offer.status === 'accepted';
-  const acceptedContracts = contracts.filter(contract => contract.status === 'accepted');
-  const pageURL = `${appUrl.content}/c/o/marketplace/offer/${offer.id}`;
+export function toAdminCounterOfferEmail( movie: MovieDocument): EmailTemplateRequest {
   const data = {
-    contracts: isOfferAccepted ? acceptedContracts : contracts,
-    offer,
-    user,
-    pageURL,
-    app: { name: appName.catalog }
+    movie
   };
-  const templateId = isOfferAccepted ? templateIds.offer.allContractsAccepted : templateIds.offer.allContractsDeclined;
-  return { to: user.email, templateId, data };
+  return { to: supportEmails.catalog, templateId: templateIds.negotiation.toAdminCounterOffer, data };
 }
 
+// #7946 this may be reactivated later
+// Sent when all the contracts of an offer have either been accepted or declined.
+// export function offerAcceptedOrDeclined( //to remove
+//   user: UserEmailData, offer: Offer, contracts: ContractDocument[]
+// ): EmailTemplateRequest {
+//   const isOfferAccepted = offer.status === 'accepted';
+//   const acceptedContracts = contracts.filter(contract => contract.status === 'accepted');
+//   const pageURL = `${appUrl.content}/c/o/marketplace/offer/${offer.id}`;
+//   const data = {
+//     contracts: isOfferAccepted ? acceptedContracts : contracts,
+//     offer,
+//     user,
+//     pageURL,
+//     app: { name: appName.catalog }
+//   };
+//   // const templateId = isOfferAccepted ? templateIds.offer.allContractsAccepted : templateIds.offer.allContractsDeclined;
+//   return { to: user.email, templateId, data };
+// }
 
-export function offerUnderSignature(
-  user: UserEmailData, offerId: string, contract: ContractDocument, negotiation: MailContract,
-  title: string
-): EmailTemplateRequest {
-  const pageURL = `${appUrl.content}/c/o/dashboard/sales/${contract.id}/view`;
-  const data = {
-    contract, offerId, user, negotiation,
-    title, pageURL, app: { name: appName.catalog }
-  };
-  const templateId = templateIds.offer.underSignature;
-  return { to: user.email, templateId, data };
-}
+// export function offerUnderSignature( //to remove
+//   user: UserEmailData, offerId: string, contract: ContractDocument, negotiation: MailContract,
+//   title: string
+// ): EmailTemplateRequest {
+//   const pageURL = `${appUrl.content}/c/o/dashboard/sales/${contract.id}/view`;
+//   const data = {
+//     contract, offerId, user, negotiation,
+//     title, pageURL, app: { name: appName.catalog }
+//   };
+//   const templateId = templateIds.offer.underSignature;
+//   return { to: user.email, templateId, data };
+// }
 
 
 // ------------------------- //

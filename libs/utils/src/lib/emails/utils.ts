@@ -9,6 +9,7 @@ import { AccessibilityTypes } from "../static-model";
 import { MailBucket } from '@blockframes/contract/bucket/+state/bucket.firestore';
 import { toIcsFile } from "../agenda/utils";
 import { IcsEvent } from "../agenda/agenda.interfaces";
+import { MovieDocument } from '@blockframes/model';
 
 interface EmailData {
   to: string;
@@ -28,6 +29,7 @@ export interface EmailTemplateRequest {
     bucket?: MailBucket,
     baseUrl?: string,
     date?: string,
+    movie?: MovieDocument
   };
 }
 
