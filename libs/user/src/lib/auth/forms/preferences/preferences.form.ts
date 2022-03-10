@@ -1,5 +1,5 @@
 import { FormControl } from '@angular/forms';
-import { createPreferences, Preferences } from '@blockframes/user/+state/user.model';
+import { createPreferences, Preferences } from '@blockframes/model';
 import { FormList, FormStaticValueArray } from '@blockframes/utils/form';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { GetKeys } from '@blockframes/utils/static-model';

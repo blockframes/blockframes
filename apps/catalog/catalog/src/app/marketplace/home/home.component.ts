@@ -8,7 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AuthService } from '@blockframes/auth/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { canHavePreferences } from '@blockframes/user/+state/user.utils';
-import { createPreferences } from '@blockframes/user/+state';
+import { createPreferences } from '@blockframes/model';
 import { PreferencesComponent } from '@blockframes/auth/pages/preferences/modal/preferences.component';
 
 @Component({

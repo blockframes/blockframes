@@ -10,7 +10,7 @@ import { createInvitation, InvitationDocument } from './invitation.firestore';
 import firebase from 'firebase/app';
 import { Observable, of } from 'rxjs';
 import { UserService } from '@blockframes/user/+state/user.service';
-import { createUser } from '@blockframes/user/+state/user.model';
+import { createUser } from '@blockframes/model';
 import { ActivatedRoute } from '@angular/router';
 import { APP } from '@blockframes/utils/routes/utils';
 

@@ -12,7 +12,7 @@ import { Movie } from '@blockframes/model';
 import { Organization } from '@blockframes/organization/+state';
 import type firebase from 'firebase';
 import { AnonymousCredentials } from '@blockframes/auth/+state/auth.model';
-import { User } from '@blockframes/user/+state/user.model';
+import { User } from '@blockframes/model';
 type Timestamp = firebase.firestore.Timestamp;
 
 // Event

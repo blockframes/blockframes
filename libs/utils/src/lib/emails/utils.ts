@@ -4,7 +4,7 @@ import { App, sendgridEmailsFrom } from "../apps";
 import { format } from "date-fns";
 import { EventDocument, EventMeta, EventTypes, MeetingEventDocument, ScreeningEventDocument } from "@blockframes/event/+state/event.firestore";
 import { OrganizationDocument, orgName } from "@blockframes/organization/+state/organization.firestore";
-import { User } from "@blockframes/user/+state/user.firestore";
+import { User } from "@blockframes/model";
 import { AccessibilityTypes } from "../static-model";
 import { MailBucket } from '@blockframes/contract/bucket/+state/bucket.firestore';
 import { toIcsFile } from "../agenda/utils";

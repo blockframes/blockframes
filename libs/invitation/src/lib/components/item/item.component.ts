@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, Inject } 
 import { Invitation, InvitationService } from '../../+state';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { EventService } from '@blockframes/event/+state/event.service';
-import { PublicUser } from '@blockframes/user/types';
+import { PublicUser } from '@blockframes/model';
 import { PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { App, applicationUrl } from '@blockframes/utils/apps';
