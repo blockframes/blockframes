@@ -520,7 +520,7 @@ export function organizationRequestedAccessToApp(org: OrganizationDocument, app:
   };
 }
 
-export function userFirstConnexion(user: PublicUser):EmailRequest {
+export function userFirstConnexion(user: PublicUser): EmailRequest {
   const supportEmail = e2eMode ? testEmail : getSupportEmail(user._meta.createdFrom);
   return {
     to: supportEmail,
