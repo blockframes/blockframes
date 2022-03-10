@@ -9,7 +9,7 @@ import { createDocumentMeta } from '@blockframes/utils/models-meta';
 import { AlgoliaOrganization } from '@blockframes/utils/algolia';
 import { OrganizationLiteForm } from '@blockframes/organization/forms/organization-lite.form';
 import { IdentityForm, IdentityFormControl } from '@blockframes/auth/forms/identity.form';
-import { createPublicUser, PublicUser, User } from '@blockframes/user/types';
+import { createPublicUser, PublicUser, User, createOrganization} from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { hasDisplayName } from '@blockframes/utils/helpers';
 import { Intercom } from 'ng-intercom';
@@ -20,7 +20,6 @@ import { Subscription } from 'rxjs';
 import { DifferentPasswordStateMatcher, RepeatPasswordStateMatcher } from '@blockframes/utils/form/matchers';
 import { filter } from 'rxjs/operators';
 import { APP } from '@blockframes/utils/routes/utils';
-import { createOrganization } from '@blockframes/model';
 
 @Component({
   selector: 'auth-identity',

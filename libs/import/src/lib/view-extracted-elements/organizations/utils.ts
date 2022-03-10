@@ -1,6 +1,7 @@
 import { Territory } from '@blockframes/utils/static-model';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
-import { createUser, User, UserService } from '@blockframes/user/+state';
+import { UserService } from '@blockframes/user/+state';
+import { createUser, User } from '@blockframes/model';
 import { Module, ModuleAccess, modules } from '@blockframes/utils/apps';
 import { extract, ExtractConfig, SheetTab } from '@blockframes/utils/spreadsheet';
 import { OrganizationService } from '@blockframes/organization/+state';

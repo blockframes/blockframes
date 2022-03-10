@@ -15,7 +15,7 @@ export {
   createDocPermissions,
   UserRole
 } from '@blockframes/permissions/+state/permissions.firestore';
-export { PublicUser } from '@blockframes/user/+state/user.firestore';
+export { PublicUser } from '@blockframes/model';
 export { RequestDemoInformations } from '@blockframes/utils/request-demo';
 export { MovieDocument, MovieAnalytics, MovieEventAnalytics } from '@blockframes/model';
 export { NotificationTypes, NotificationDocument } from '@blockframes/notification/+state/notification.firestore';

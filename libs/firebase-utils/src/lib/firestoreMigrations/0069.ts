@@ -1,7 +1,7 @@
 import * as env from '@env';
 import { Firestore, Storage } from '../types';
 import { runChunks } from '../firebase-utils';
-import { User } from '@blockframes/user/types';
+import { User } from '@blockframes/model';
 import { privacies } from '@blockframes/utils/file-sanitizer';
 import { StorageFile } from '@blockframes/media/+state/media.firestore';
 
