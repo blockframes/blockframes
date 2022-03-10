@@ -1,5 +1,4 @@
 import { Inject, Injectable } from '@angular/core';
-import { Notification } from './notification.model';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { AuthService } from '@blockframes/auth/+state';
 import { filter, map, switchMap, take } from 'rxjs/operators';
@@ -9,7 +8,7 @@ import { OrganizationService } from '@blockframes/organization/+state';
 import { toDate } from '@blockframes/utils/helpers';
 import { displayName } from '@blockframes/utils/utils';
 import { App, applicationUrl, appName, getMovieAppAccess } from '@blockframes/utils/apps';
-import { Movie } from '@blockframes/model';
+import { Movie, Notification } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 import { format } from 'date-fns';
