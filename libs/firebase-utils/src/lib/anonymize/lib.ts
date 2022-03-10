@@ -1,11 +1,10 @@
 import * as faker from 'faker';
 import { User, PublicUser, createPublicUser } from '@blockframes/model';
 import { NotificationDocument } from '@blockframes/notification/types';
-import { Invitation } from '@blockframes/invitation/+state';
 import { DbRecord, throwOnProduction } from '../util';
 import { CollectionReference, QueryDocumentSnapshot, QuerySnapshot } from '../types';
 import { Queue } from '../queue';
-import { Movie } from '@blockframes/model';
+import { Movie, Invitation } from '@blockframes/model';
 import {
   createPublicOrganization,
   Organization,
