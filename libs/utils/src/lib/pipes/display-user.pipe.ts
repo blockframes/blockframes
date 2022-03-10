@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PublicUser } from '@blockframes/user/types';
+import { PublicUser } from '@blockframes/model';
 import { displayName } from '../utils';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { orgName } from '@blockframes/model';

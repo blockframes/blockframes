@@ -1,8 +1,7 @@
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { Movie, Organization } from '@blockframes/model';
+import { Movie, Organization, User } from '@blockframes/model';
 import { Mandate, Sale } from '@blockframes/contract/contract/+state/contract.model';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { User } from '@blockframes/user/+state/user.model';
 import { Term } from '@blockframes/contract/term/+state/term.model';
 import { SheetTab, ValueWithError } from '@blockframes/utils/spreadsheet';
 import { centralOrgId } from '@env';

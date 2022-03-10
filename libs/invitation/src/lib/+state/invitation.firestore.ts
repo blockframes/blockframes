@@ -1,5 +1,5 @@
 import type firebase from 'firebase';
-import { PublicUser } from "@blockframes/user/+state/user.firestore";
+import { PublicUser } from "@blockframes/model";
 import type { InvitationStatus, InvitationType } from "@blockframes/utils/static-model";
 import { PublicOrganization } from '@blockframes/model';
 export { InvitationType, InvitationStatus, invitationStatus } from "@blockframes/utils/static-model";

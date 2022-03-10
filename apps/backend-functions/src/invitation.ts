@@ -5,7 +5,7 @@ import { InvitationOrUndefined, OrganizationDocument } from './data/types';
 import { onInvitationToJoinOrgUpdate, onRequestToJoinOrgUpdate } from './internals/invitations/organizations';
 import { onInvitationToAnEventUpdate } from './internals/invitations/events';
 import { InvitationBase, createInvitation, InvitationStatus, InvitationDocument } from '@blockframes/invitation/+state/invitation.firestore';
-import { createPublicUser, PublicUser } from '@blockframes/user/+state/user.firestore';
+import { createPublicUser, PublicUser } from '@blockframes/model';
 import { getOrInviteUserByMail } from './internals/users';
 import { ErrorResultResponse } from './utils';
 import { CallableContext } from "firebase-functions/lib/providers/https";

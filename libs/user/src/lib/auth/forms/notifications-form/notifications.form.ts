@@ -1,5 +1,5 @@
 import { FormControl, Validators } from '@angular/forms';
-import { NotificationSettings, NotificationSettingsTemplate } from '@blockframes/user/+state/user.model';
+import { NotificationSettings, NotificationSettingsTemplate } from '@blockframes/model';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 
 function createNotificationSettingsControls(settings: Partial<NotificationSettingsTemplate> = {}, disabled = false) {

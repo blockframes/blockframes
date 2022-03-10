@@ -1,5 +1,4 @@
-import { MovieDocument, OrganizationDocument } from '@blockframes/model';
-import { PublicUser } from '@blockframes/user/types';
+import { PublicUser, MovieDocument, OrganizationDocument } from '@blockframes/model';
 import { getDocument, runChunks } from '@blockframes/firebase-utils';
 import type { Bucket, File as GFile } from '@google-cloud/storage';
 

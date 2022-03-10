@@ -7,7 +7,7 @@ import { Movie, Organization } from '@blockframes/model';
 import { appUrl, supportEmails } from '@env';
 import { staticModel } from '@blockframes/utils/static-model';
 import { format } from 'date-fns';
-import { User } from '@blockframes/user/types';
+import { User } from '@blockframes/model';
 import { createNotification, triggerNotifications } from './notification';
 import { templateIds } from '@blockframes/utils/emails/ids';
 import { Change } from 'firebase-functions';

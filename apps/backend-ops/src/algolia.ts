@@ -9,8 +9,12 @@ import {
   getDocument,
 } from '@blockframes/firebase-utils';
 import { algolia } from '@env';
-import { MovieDocument,  OrganizationDocument,  orgName,} from '@blockframes/model';
-import { PublicUser } from '@blockframes/user/types';
+import {
+  OrganizationDocument,
+  orgName,
+  MovieDocument,
+  PublicUser
+} from '@blockframes/model';
 import { App, getAllAppsExcept } from '@blockframes/utils/apps';
 import { Campaign } from '@blockframes/campaign/+state/campaign.model';
 import { AlgoliaConfig } from '@blockframes/utils/algolia';

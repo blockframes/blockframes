@@ -1,13 +1,13 @@
 
 import { WorkBook, WorkSheet, utils, read } from 'xlsx';
-
+import { GetKeys, GroupScope, StaticGroup, staticGroups } from '@blockframes/utils/static-model';
 import { mandatoryError, SpreadsheetImportError } from 'libs/import/src/lib/utils';
-
 import { getKeyIfExists } from '../helpers';
 import { parseToAll, Scope } from '../static-model';
 
 type Matrix = any[][]; // @todo find better type
 
+export type FromStatic<S extends Scope> = GetKeys<S>[] | ValueWithError<GetKeys<S>[]>;
 export interface SheetTab {
   name: string;
   index: number;
@@ -37,7 +37,7 @@ type ValueOrError<T, K> = DeepValue<T, K> | ValueWithError<DeepValue<T, K>>;
 export type ParseFieldFn<T, K> = (value: string | string[], entity: any, state: any[], rowIndex?: number) =>
   ValueOrError<T, K> |
   Promise<ValueOrError<T, K>>
-;
+  ;
 export type ExtractConfig<T> = Partial<{
   [key in DeepKeys<T>]: (value: string | string[], entity: any, state: any[], rowIndex?: number) =>
     ValueOrError<T, key> |
@@ -95,7 +95,7 @@ export async function parse<T>(
     // Array field
     if (segment.endsWith('[]')) {
       const field = segment.replace('[]', '');
-      const value = Array.isArray(values) ? values : [ values ];
+      const value = Array.isArray(values) ? values : [values];
       if (last) {
         const promises = value.map(v => transform(v, entity, state, rowIndex));
         const results = await Promise.all(promises);
@@ -110,7 +110,7 @@ export async function parse<T>(
       } else {
         // Creating array at this field to which will be pushed the other sub fields
         if (!item[field]) item[field] = new Array(value.length).fill(null).map(() => ({}));
-        for (let index = 0 ; index < value.length ; index++) {
+        for (let index = 0; index < value.length; index++) {
           // Filling in objects into above created array
           await parse(state, entity, item[field][index], value[index], segments.join('.'), transform, rowIndex, errors);
         }
@@ -195,12 +195,12 @@ export async function extract<T>(rawRows: string[][], config: ExtractConfig<T> =
 
   const flatRows = flattenConcurrentRows(rawRows, concurrentRow);
 
-  for (let rowIndex = 0 ; rowIndex < flatRows.length ; rowIndex++) {
+  for (let rowIndex = 0; rowIndex < flatRows.length; rowIndex++) {
     const item = {};
     const errors: SpreadsheetImportError[] = [];
     const entries = Object.entries(config);
-    for (let columnIndex = 0 ; columnIndex < entries.length ; columnIndex++) {
-      const [ key, transform ] = entries[columnIndex];
+    for (let columnIndex = 0; columnIndex < entries.length; columnIndex++) {
+      const [key, transform] = entries[columnIndex];
       const value = flatRows[rowIndex][columnIndex];
       await parse<T>(state, item, item, value, key, transform as ParseFieldFn<T, typeof key>, rowIndex, errors)
     }
@@ -211,37 +211,58 @@ export async function extract<T>(rawRows: string[][], config: ExtractConfig<T> =
   return results;
 }
 
-export function getStatic(scope: Scope, value: string, separator: string, name: string, allKey = 'all') {
-  if (!value) return [];
+export function getStatic<S extends Scope>(scope: S, value: string, separator: string, name: string, allKey = 'all'): FromStatic<S> {
+  if (!value) return [] as GetKeys<S>[];
   if (value.toLowerCase() === allKey) return parseToAll(scope, allKey);
   const splitted = split(value, separator);
-  const keys = splitted.map(v => getKeyIfExists(scope, v));
+  const keys = splitted.map(v => getKeyIfExists(scope, `${v}`));
   const values = keys.filter(v => !!v);
-  const wrongData: string[] = [];
-  keys.forEach((k, i) => {
-    if (!k) wrongData.push(splitted[i]);
-  });
-  if (wrongData.length) return { value: values, error: {
-    type: 'warning',
-    name: `Wrong ${name}`,
-    reason: `Be careful, ${wrongData.length} values were wrong and will be omitted.`,
-    hint: `${wrongData.slice(0, 3).join(', ')}...`
-  }};
-  return values
+  if (values.length === keys.length) return values;
+  const wrongData = splitted.filter(v => !v);
+  if (wrongData.length) return {
+    value: values, error: {
+      type: 'warning',
+      name: `Wrong ${name}`,
+      reason: `Be careful, ${wrongData.length} values were wrong and will be omitted.`,
+      hint: `${wrongData.slice(0, 3).join(', ')}...`
+    }
+  };
+  return values as GetKeys<S>[];
 }
 
-export function getStaticList(scope: Scope, value: string, separator:string, name: string, mandatory = true, allKey = 'all') {
+const isValueError = <S extends Scope>(values: FromStatic<S>): values is ValueWithError<GetKeys<S>[]> => {
+  return (Array.isArray(values) && values.length === 0)
+    || (values as ValueWithError<GetKeys<S>[]>).value?.length === 0
+}
+
+export function getStaticList<S extends Scope>(scope: S, value: string, separator: string, name: string, mandatory = true, allKey = 'all'): FromStatic<S> {
   const values = getStatic(scope, value, separator, name, allKey);
-  if (
-    mandatory && (
-      ('length' in values && values.length === 0) ||
-      ('value' in values && values.value.length === 0)
-    )
-  ) return mandatoryError(name);
+  if (mandatory && isValueError(values)) return mandatoryError<GetKeys<S>[]>(name);
   return values;
 }
 
-export function split(cell: string, separator:string) {
+const fromGroup = {
+  territories: (territories, separator) => getStaticList('territories', territories, separator, 'Territories', true, 'world'),
+  medias: (medias, separator) => getStaticList('medias', medias, separator, 'Medias', true, 'all'),
+}
+
+export function getGroupedList(value: string, groupScope: 'territories', separator: string): FromStatic<'territories'>;
+export function getGroupedList(value: string, groupScope: 'medias', separator: string): FromStatic<'medias'>;
+export function getGroupedList<GS extends GroupScope>(value: string, groupScope: GS, separator: string) {
+  const elements = split(value, separator);
+  const groupLabels = staticGroups[groupScope].map(group => group.label);
+  const allElements = elements.map(element => {
+    return groupLabels.includes(element)
+      ? (staticGroups[groupScope] as StaticGroup<GS>[]).find(group => group.label === element).items
+      : element;
+  }).flat();
+
+  const elementList = Array.from(new Set(allElements)).join(separator);
+
+  return fromGroup[groupScope](elementList, separator);
+}
+
+export function split(cell: string, separator: string) {
   return cell.split(separator).filter(v => !!v).map(v => v.trim());
 }
 
@@ -272,10 +293,10 @@ function flattenConcurrentRows(rawRows: string[][], concurrent: number) {
 
   // copy the raw (source) array into the flattened (destination) array,
   // every concurrent row of the source is merged into a single row of the destination
-  for (let row = 0 ; row < rawRows.length ; row++) {
+  for (let row = 0; row < rawRows.length; row++) {
     const flattenRow = Math.floor(row / concurrent);
     if (!flattened[flattenRow]) flattened[flattenRow] = [];
-    for (let column = 0 ; column < rawRows[row].length ; column++) {
+    for (let column = 0; column < rawRows[row].length; column++) {
       if (!flattened[flattenRow][column]) flattened[flattenRow].push([]);
       flattened[flattenRow][column].push(rawRows[row][column]);
     }

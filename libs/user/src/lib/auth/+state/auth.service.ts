@@ -5,7 +5,7 @@ import { UserCredential } from '@firebase/auth-types';
 import { FireAuthService, CollectionConfig, FireAuthState, RoleState, initialAuthState } from 'akita-ng-fire';
 import { map, switchMap, take, tap } from 'rxjs/operators';
 import { App } from '@blockframes/utils/apps';
-import { PublicUser, User, PrivacyPolicy } from '@blockframes/user/types';
+import { createUser, PublicUser, User, PrivacyPolicy } from '@blockframes/model';
 import { Intercom } from 'ng-intercom';
 import { getIntercomOptions } from '@blockframes/utils/intercom/intercom.service';
 import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.service';
@@ -18,7 +18,7 @@ import { OrgEmailData } from '@blockframes/utils/emails/utils';
 import { AnonymousCredentials, AnonymousRole } from './auth.model';
 import { AngularFireAnalytics } from '@angular/fire/analytics';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { createUser, UserService } from '@blockframes/user/+state';
+import { UserService } from '@blockframes/user/+state';
 import { Store, StoreConfig } from '@datorama/akita';
 import { APP } from '@blockframes/utils/routes/utils';
 

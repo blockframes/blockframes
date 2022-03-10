@@ -1,5 +1,4 @@
-import { PublicOrganization } from '@blockframes/model';
-import { PublicUser } from '@blockframes/user/+state/user.firestore';
+import { PublicOrganization, PublicUser} from '@blockframes/model';
 import { PublicInvitation } from '@blockframes/invitation/+state/invitation.firestore';
 import { firestore } from 'firebase-admin';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
