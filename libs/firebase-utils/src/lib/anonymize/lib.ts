@@ -1,11 +1,9 @@
 import * as faker from 'faker';
-import { User, PublicUser, createPublicUser } from '@blockframes/model';
-import { NotificationDocument } from '@blockframes/notification/types';
+import { Movie, MovieVideo, User, PublicUser, createPublicUser, NotificationDocument } from '@blockframes/model';
 import { Invitation } from '@blockframes/invitation/+state';
 import { DbRecord, throwOnProduction } from '../util';
 import { CollectionReference, QueryDocumentSnapshot, QuerySnapshot } from '../types';
 import { Queue } from '../queue';
-import { Movie } from '@blockframes/model';
 import {
   createPublicOrganization,
   Organization,
@@ -16,7 +14,6 @@ import { firebase, testVideoId } from '@env';
 import { runChunks } from '../firebase-utils';
 import { IMaintenanceDoc } from '@blockframes/utils/maintenance';
 import { firestore } from 'firebase-admin';
-import { MovieVideo } from '@blockframes/model';
 
 const userCache: { [uid: string]: User | PublicUser } = {};
 const orgCache: { [id: string]: Organization | PublicOrganization } = {};
