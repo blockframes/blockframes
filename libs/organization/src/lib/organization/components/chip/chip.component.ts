@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { Organization } from '@blockframes/organization/+state';
+import { Movie, Organization } from '@blockframes/model';
 
 @Component({
   selector: 'org-chip',

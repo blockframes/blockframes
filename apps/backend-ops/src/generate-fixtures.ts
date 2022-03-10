@@ -2,9 +2,7 @@ import { promises as fsPromises } from 'fs';
 import { join } from 'path';
 import { USER_FIXTURES_PASSWORD } from '@blockframes/firebase-utils/anonymize/util';
 import staticUsers from 'tools/static-users.json';
-import type { Movie } from '@blockframes/model';
-import type { Organization } from '@blockframes/organization/+state/organization.model';
-import type { User } from '@blockframes/model';
+import type { Movie, Organization, User } from '@blockframes/model';
 
 export async function generateFixtures(db: FirebaseFirestore.Firestore) {
   await generateUsers(db);

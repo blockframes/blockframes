@@ -24,7 +24,7 @@
       "tags": ["browser"]
     },
     "utils": {
-      "tags": ["browser"]
+      "tags": ["shared"]
     },
     "contract": {
       "tags": ["browser"]

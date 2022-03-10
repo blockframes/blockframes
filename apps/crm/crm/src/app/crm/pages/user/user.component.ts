@@ -1,9 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { User } from '@blockframes/model';
+import { User, Organization } from '@blockframes/model';
 import { UserCrmForm } from '@blockframes/admin/crm/forms/user-crm.form';
 import { UserService } from '@blockframes/user/+state/user.service';
-import { OrganizationService, Organization } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { UserRole, PermissionsService } from '@blockframes/permissions/+state';
 import { CrmService } from '@blockframes/admin/crm/+state';
 import { Observable, Subscription } from 'rxjs';

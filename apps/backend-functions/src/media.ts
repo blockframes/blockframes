@@ -11,7 +11,7 @@ import { PublicUser, User } from '@blockframes/model';
 import { StorageFile, StorageVideo } from '@blockframes/media/+state/media.firestore';
 import { FileMetaData, isValidMetadata } from '@blockframes/media/+state/media.model';
 import { tempUploadDir } from '@blockframes/utils/file-sanitizer';
-import { OrganizationDocument } from '@blockframes/organization/+state/organization.firestore';
+import { OrganizationDocument } from '@blockframes/model';
 import { ImageParameters, formatParameters } from '@blockframes/media/image/directives/imgix-helpers';
 
 // Internal dependencies
