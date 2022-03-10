@@ -1,5 +1,5 @@
 import { db } from '../testing-cypress';
-import type { User } from '@blockframes/user/types';
+import type { User } from '@blockframes/model';
 
 export async function getRandomEmail() {
   const { email } = await getRandomUser();

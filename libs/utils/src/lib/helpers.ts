@@ -1,7 +1,7 @@
 import firebase from 'firebase';
 import { staticModel, Scope, GetKeys } from './static-model';
 import { Movie } from '@blockframes/model';
-import { User } from '@blockframes/user/types';
+import { User } from '@blockframes/model';
 import { Organization } from '@blockframes/organization/+state/organization.model';
 
 /**
