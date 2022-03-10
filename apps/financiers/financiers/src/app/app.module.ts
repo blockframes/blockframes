@@ -92,13 +92,13 @@ export class AppModule {
     router: Router,
     analytics: FireAnalytics,
     intercomService: IntercomService,
-    // yandexService: YandexMetricaService, #7936 this may be reactivated lateryandexService: YandexMetricaService,
+    // yandexService: YandexMetricaService, #7936 this may be reactivated later
     gdprService: GDPRService,
     authService: AuthService,
   ) {
 
     const { intercom, yandex } = gdprService.cookieConsent;
-    // if (yandex) yandexService.insertMetrika('catalog'); #7936 this may be reactivated later
+    // if (yandex) yandexService.insertMetrika('financiers'); #7936 this may be reactivated later
     intercom && intercomId ? intercomService.enable(authService.profile) : intercomService.disable();
 
     analytics.setUserProperties(getBrowserWithVersion());

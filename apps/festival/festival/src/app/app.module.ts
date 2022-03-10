@@ -96,7 +96,7 @@ export class AppModule {
     authService: AuthService,
   ) {
     const { intercom, yandex } = gdprService.cookieConsent;
-    // if (yandex) yandexService.insertMetrika('catalog'); #7936 this may be reactivated later
+    // if (yandex) yandexService.insertMetrika('festival'); #7936 this may be reactivated later
     intercom && intercomId ? intercomService.enable(authService.profile) : intercomService.disable();
 
     analytics.setUserProperties(getBrowserWithVersion());
