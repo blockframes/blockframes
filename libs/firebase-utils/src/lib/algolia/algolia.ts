@@ -9,12 +9,8 @@ import {
   AlgoliaUser,
   AlgoliaConfig,
 } from '@blockframes/utils/algolia';
-import {
-  OrganizationDocument,
-  orgName,
-} from '@blockframes/organization/+state/organization.firestore';
 import { PublicUser } from '@blockframes/user/types';
-import { MovieDocument } from '@blockframes/model';
+import { MovieDocument, OrganizationDocument, orgName } from '@blockframes/model';
 import * as admin from 'firebase-admin';
 import { hasAcceptedMovies } from '../util';
 import { getMovieAppAccess } from '@blockframes/utils/apps';
