@@ -162,27 +162,32 @@ export class AvailsCalendarComponent implements OnInit {
       const from = new Date(year + newState.start.row, newState.start.column);
       const to = new Date(year + newState.end.row, newState.end.column);
 
-      const termsDifferByMediaOrDuration = this.avails.territories.some(territory => {
+      /**
+       * If terms differ by media, then there is at least a territory
+       * that is common to all terms.
+       */
+      const termsDifferByMedia = this.avails.territories.some(territory => {
         return this._availableMarkers.every(marker => marker.term.territories.includes(territory));
-      }); //otherwise terms differ by territory and or duration.
+      }); //otherwise terms differ by territory
 
-      const fields = termsDifferByMediaOrDuration ? 'medias' : 'territories';
-      const cache: { territories?: string[][], medias?: string[][] } = { [fields]: this._availableMarkers.map(() => []) };
+      const fields = termsDifferByMedia ? 'medias' : 'territories';
+      const cache: Record<string, { parentMarker: DurationMarker, list: string[] }> = {}
       for (const field of this.avails[fields]) {
-        const index = this._availableMarkers.findIndex(({ term }) => {
-          return isCalendarTermInAvails(term, { ...this.avails, [fields]: [field] })
+        const marker = this._availableMarkers.find(({ term }) => {
+          return isCalendarTermInAvails(term, { ...this.avails, [fields]: [field] });
         });
-        cache[fields][index].push(field);
+        if (cache[marker.term.id]) cache[marker.term.id].list.push(field);
+        else {
+          cache[marker.term.id] = { list: [field], parentMarker: marker };
+        }
       }
 
-      cache[fields].forEach((list, index) => {
-        if (!list.length) return;
-        const parentMarker = this._availableMarkers[index]
+      for (const { parentMarker, list } of Object.values(cache)) {
         if (!parentMarker) throw new Error(`Calendar Invalid Selection: a selection must be included in a marker!`);
 
         const avail = { ...this.avails, [fields]: list };
         this.selected.emit({ from, to, term: parentMarker.term, contract: parentMarker.contract, avail });
-      });
+      }
     }
   }
 }
