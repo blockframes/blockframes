@@ -407,7 +407,7 @@ function getMatchingMandates(mandates: FullMandate[], avails: CalendarAvailsFilt
   return foundFields.length === avails[field].length ? Object.values(availableMandates) : [];
 }
 
-function getMatchingCalendarMandates(mandates: FullMandate[], avails: CalendarAvailsFilter): FullMandate[] {
+export function getMatchingCalendarMandates(mandates: FullMandate[], avails: CalendarAvailsFilter): FullMandate[] {
   const territoryMandates = getMatchingMandates(mandates, avails, 'territories');
   if (territoryMandates.length) return territoryMandates;
   return getMatchingMandates(mandates, avails, 'medias');

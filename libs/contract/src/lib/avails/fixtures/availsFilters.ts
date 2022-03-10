@@ -304,3 +304,14 @@ export const availsPlanesPayTv: AvailsFilter = {
 };
 
 
+export const availsFranceBrazil: AvailsFilter = {
+  duration: {
+    from: new Date('02/21/2022'),
+    to: new Date('02/21/2030')
+  },
+  exclusive: true,
+  territories: ['brazil', 'france'],
+  medias: ['planes']
+};
+
+
