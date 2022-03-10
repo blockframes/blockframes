@@ -1,5 +1,4 @@
 export {
-  OrganizationDocument,
   PublicOrganization
 } from '@blockframes/model';
 export { OrganizationStatus } from '@blockframes/utils/static-model/types';

@@ -6,8 +6,8 @@
 import { supportEmails, appUrl, e2eMode } from '../environments/environment';
 import { EmailRequest, EmailTemplateRequest } from '../internals/email';
 import { templateIds } from '@blockframes/utils/emails/ids';
-import { RequestDemoInformations, OrganizationDocument, PublicOrganization, MovieDocument } from '../data/types';
-import { PublicUser } from '@blockframes/model';
+import { RequestDemoInformations, PublicOrganization, MovieDocument } from '../data/types';
+import { PublicUser, OrganizationDocument } from '@blockframes/model';
 import { EventEmailData, OrgEmailData, UserEmailData } from '@blockframes/utils/emails/utils';
 import { App, appName, Module } from '@blockframes/utils/apps';
 import { Bucket } from '@blockframes/contract/bucket/+state/bucket.model';
