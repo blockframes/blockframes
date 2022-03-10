@@ -4,7 +4,7 @@ import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { createDocumentMeta, createPublicUserDocument, getDocument } from './data/internals';
 import { Organization } from '@blockframes/organization/+state';
 import { createNotification, triggerNotifications } from './notification';
-import { PublicUser } from './data/types';
+import { PublicUser } from '@blockframes/model';
 import { Movie } from '@blockframes/model';
 
 /**

@@ -1,6 +1,6 @@
 import * as functions from 'firebase-functions';
 import { db } from './internals/firebase';
-import { PublicUser } from './data/types';
+import { PublicUser } from '@blockframes/model';
 import {
   createAccess,
   createShare,

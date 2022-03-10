@@ -1,6 +1,6 @@
-import { InvitationDocument, MovieDocument, NotificationDocument, OrganizationDocument, NotificationTypes } from './data/types';
+import { InvitationDocument, NotificationDocument, OrganizationDocument, NotificationTypes } from './data/types';
 import { getDocument, getOrgAppKey, createDocumentMeta } from './data/internals';
-import { NotificationSettingsTemplate, User } from '@blockframes/model';
+import { NotificationSettingsTemplate, User, MovieDocument } from '@blockframes/model';
 import { sendMailFromTemplate } from './internals/email';
 import { emailErrorCodes, EventEmailData, getEventEmailData, getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
 import { EventDocument, EventMeta, Screening } from '@blockframes/event/+state/event.firestore';

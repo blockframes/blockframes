@@ -6,8 +6,8 @@
 import { supportEmails, appUrl, e2eMode } from '../environments/environment';
 import { EmailRequest, EmailTemplateRequest } from '../internals/email';
 import { templateIds } from '@blockframes/utils/emails/ids';
-import { RequestDemoInformations, OrganizationDocument, PublicOrganization, MovieDocument } from '../data/types';
-import { PublicUser } from '@blockframes/model';
+import { RequestDemoInformations, OrganizationDocument, PublicOrganization } from '../data/types';
+import { PublicUser, MovieDocument } from '@blockframes/model';
 import { EventEmailData, OrgEmailData, UserEmailData } from '@blockframes/utils/emails/utils';
 import { App, appName, Module } from '@blockframes/utils/apps';
 import { Bucket } from '@blockframes/contract/bucket/+state/bucket.model';
@@ -16,7 +16,6 @@ import { testEmail } from "@blockframes/e2e/utils/env";
 import { Offer } from '@blockframes/contract/offer/+state';
 import type { ContractDocument } from '@blockframes/contract/contract/+state';
 import { createMailContract, MailContract } from '@blockframes/contract/contract/+state/contract.firestore';
-
 import { NegotiationDocument } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
 import { staticModel } from '@blockframes/utils/static-model';
 import { Timestamp } from '../data/internals';
@@ -499,7 +498,7 @@ const userFirstConnexionTemplate = (user: PublicUser) =>
   `;
 
 /** Generates a transactional email request to let cascade8 admin know that a new org have been created. */
-export async function organizationCreated(org: OrganizationDocument): Promise<EmailRequest> {
+export function organizationCreated(org: OrganizationDocument): EmailRequest {
   const supportEmail = getSupportEmail(org._meta.createdFrom);
 
   return {
@@ -513,7 +512,7 @@ export async function organizationCreated(org: OrganizationDocument): Promise<Em
  * Generates a transactional email request to let cascade8 admin know that a new org is waiting for app access.
  * It sends an email to admin to accept or reject the request
  */
-export async function organizationRequestedAccessToApp(org: OrganizationDocument, app: App, module: Module): Promise<EmailRequest> {
+export function organizationRequestedAccessToApp(org: OrganizationDocument, app: App, module: Module): EmailRequest {
   return {
     to: getSupportEmail(org._meta.createdFrom),
     subject: 'An organization requested access to an app',
@@ -521,7 +520,7 @@ export async function organizationRequestedAccessToApp(org: OrganizationDocument
   };
 }
 
-export async function userFirstConnexion(user: PublicUser): Promise<EmailRequest> {
+export function userFirstConnexion(user: PublicUser):EmailRequest {
   const supportEmail = e2eMode ? testEmail : getSupportEmail(user._meta.createdFrom);
   return {
     to: supportEmail,

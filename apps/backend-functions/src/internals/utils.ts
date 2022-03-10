@@ -1,5 +1,5 @@
 import * as admin from 'firebase-admin';
-import { PublicUser } from '../data/types';
+import { PublicUser } from '@blockframes/model';
 export { firebaseRegion } from '@env';
 
 /**
