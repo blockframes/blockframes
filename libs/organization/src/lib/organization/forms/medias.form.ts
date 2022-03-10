@@ -1,7 +1,7 @@
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
-import { createOrgMedias, OrgMedias } from '@blockframes/organization/+state/organization.firestore';
 import { FormList } from '@blockframes/utils/form';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
+import { createOrgMedias, OrgMedias } from '@blockframes/model';
 
 function createOrgMediasControl(orgDocs: OrgMedias) {
   const entity = createOrgMedias(orgDocs);

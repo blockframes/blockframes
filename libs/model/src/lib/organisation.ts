@@ -54,7 +54,7 @@ export const PLACEHOLDER_LOGO = '/assets/logo/empty_organization.svg';
 
 
 /** A factory function that creates an OrganizationDocument. */
-export function createOrganizationBase(
+function createOrganizationBase(
   params: Partial<OrganizationBase<Timestamp | Date>> = {}
 ): OrganizationBase<Timestamp | Date> {
   return {
@@ -117,5 +117,35 @@ export function canAccessModule(module: Module, org: OrganizationBase<unknown>, 
     return org?.appAccess[_app]?.[module];
   } else {
     return getAllAppsExcept(['crm']).some(a => org.appAccess[a]?.[module]);
+  }
+}
+
+export type AppStatus = 'none' | 'requested' | 'accepted';
+
+export type Organization = OrganizationBase<Date>;
+
+export const organizationRoles = {
+  catalog: { dashboard: 'Seller', marketplace: 'Buyer'},
+  festival: { dashboard: 'Sales Agent', marketplace: 'Buyer'},
+  financiers: { dashboard: 'Partners', marketplace: 'Investor'}
+};
+
+export interface OrganizationForm {
+  name: string;
+}
+
+/** A factory function that creates an Organization. */
+export function createOrganization(
+  params: Partial<Organization> = {}
+): Organization {
+  return createOrganizationBase(params) as Organization;
+}
+
+/** Convert an organization object into a public organization */
+export function createPublicOrganization(org: Partial<Organization>): PublicOrganization {
+  return {
+    id: org.id ?? '',
+    denomination: createDenomination(org.denomination),
+    logo: createStorageFile(org.logo),
   }
 }

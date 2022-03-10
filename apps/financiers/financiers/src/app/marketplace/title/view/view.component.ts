@@ -3,7 +3,7 @@ import { getCurrencySymbol } from '@angular/common';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { mainRoute, additionalRoute, artisticRoute, productionRoute } from '@blockframes/movie/marketplace';
-import { Organization } from '@blockframes/organization/+state/organization.model';
+import { Organization } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { CampaignService } from '@blockframes/campaign/+state';
 import { RouteDescription } from '@blockframes/utils/common-interfaces';

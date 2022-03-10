@@ -1,10 +1,8 @@
 import { db } from './internals/firebase';
 import { getDocument } from '@blockframes/firebase-utils';
 import { Offer } from '@blockframes/contract/offer/+state/offer.model';
-import { Organization } from '@blockframes/organization/+state';
-import { Movie } from '@blockframes/model';
+import { Movie, Organization, User } from '@blockframes/model';
 import { staticModel } from '@blockframes/utils/static-model';
-import { User } from '@blockframes/model';
 import { createNotification, triggerNotifications } from './notification';
 import { Change } from 'firebase-functions';
 import { createDocumentMeta } from './data/internals';
@@ -16,6 +14,7 @@ export async function onOfferCreate(snap: FirebaseFirestore.DocumentSnapshot): P
   const offer = snap.data() as Offer;
   const orgId = offer.buyerId;
   const bucket = await getDocument<any>(`buckets/${orgId}`);
+  
   const user = await getDocument<User>(`users/${bucket.uid}`);
 
   // Empty bucket

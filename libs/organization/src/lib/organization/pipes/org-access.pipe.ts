@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
+import { canAccessModule, Organization } from '@blockframes/model';
 import { App } from '@blockframes/utils/apps';
-import { canAccessModule, Organization } from '../+state';
 
 @Pipe({
   name: 'canAccess',

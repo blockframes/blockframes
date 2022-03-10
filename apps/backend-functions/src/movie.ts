@@ -5,10 +5,8 @@ import {
   createDocumentMeta,
   createPublicUserDocument,
   getOrganizationsOfMovie,
-  Timestamp,
+  Timestamp
 } from './data/internals';
-import { orgName } from '@blockframes/organization/+state/organization.firestore';
-import { MovieAppConfig, MovieDocument, Movie, PublicUser } from '@blockframes/model';
 import { cleanMovieMedias, moveMovieMedia } from './media';
 import { Change, EventContext } from 'firebase-functions';
 import { algolia, deleteObject, getDocument, storeSearchableMovie, storeSearchableOrg } from '@blockframes/firebase-utils';
@@ -18,7 +16,7 @@ import { sendMovieSubmittedEmail } from './templates/mail';
 import { sendMail } from './internals/email';
 import { groupIds } from '@blockframes/utils/emails/ids';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
-import { Organization } from '@blockframes/organization/+state';
+import { Movie, Organization, orgName, MovieAppConfig, PublicUser, MovieDocument } from '@blockframes/model';
 
 const apps: App[] = getAllAppsExcept(['crm']);
 
