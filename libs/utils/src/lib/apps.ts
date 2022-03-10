@@ -1,14 +1,10 @@
 /**
  * Apps definition
  */
-import {
-  OrganizationBase,
-  OrganizationDocument,
-} from '@blockframes/organization/+state/organization.firestore';
 import { StoreStatus } from './static-model';
 import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
 import { appUrl } from '@env';
-import { MovieBase, MovieDocument } from '@blockframes/model';
+import { MovieBase, MovieDocument, OrganizationBase, OrganizationDocument } from '@blockframes/model';
 
 export interface AppMailSetting {
   description: string;

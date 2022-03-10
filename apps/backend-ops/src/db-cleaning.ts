@@ -3,7 +3,8 @@ import { InvitationDocument } from '@blockframes/invitation/+state/invitation.fi
 import {
   OrganizationDocument,
   PublicOrganization,
-} from '@blockframes/organization/+state/organization.firestore';
+  MovieDocument
+} from '@blockframes/model';
 import { PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
 import { removeUnexpectedUsers } from './users';
 import {

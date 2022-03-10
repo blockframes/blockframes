@@ -3,7 +3,7 @@ import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { AuthService } from '@blockframes/auth/+state';
 import { filter, map, switchMap, take } from 'rxjs/operators';
 import { Event, isMeeting, isScreening } from '@blockframes/event/+state/event.model';
-import { orgName } from '@blockframes/organization/+state/organization.firestore';
+import { orgName } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { toDate } from '@blockframes/utils/helpers';
 import { displayName } from '@blockframes/utils/utils';

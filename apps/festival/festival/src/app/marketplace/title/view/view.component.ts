@@ -1,5 +1,4 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { Organization } from '@blockframes/organization/+state/organization.model';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
 import { mainRoute, additionalRoute, artisticRoute, productionRoute } from '@blockframes/movie/marketplace';
@@ -9,6 +8,7 @@ import { RequestAskingPriceComponent } from '@blockframes/movie/components/reque
 import { MatDialog } from '@angular/material/dialog';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { ActivatedRoute } from '@angular/router';
+import { Organization } from '@blockframes/model';
 
 @Component({
   selector: 'festival-movie-view',

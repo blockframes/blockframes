@@ -3,7 +3,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { InvitationService } from '@blockframes/invitation/+state/invitation.service';
 import { BehaviorSubject } from 'rxjs';
 import { slideUp, slideDown } from '@blockframes/utils/animations/fade';
-import { Organization } from '@blockframes/organization/+state';
+import { Movie, Organization } from '@blockframes/model';
 import { AbstractControl, FormControl, Validators } from '@angular/forms';
 import { FormList } from '@blockframes/utils/form';
 import { ENTER, COMMA, SEMICOLON, SPACE } from '@angular/cdk/keycodes';
