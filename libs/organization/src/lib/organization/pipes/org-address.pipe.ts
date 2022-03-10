@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
-import { Organization, AddressSet } from '../+state';
+import { AddressSet, Organization } from '@blockframes/model';
 import { territories } from '@blockframes/utils/static-model';
 
 @Pipe({ name: 'orgAddress' })

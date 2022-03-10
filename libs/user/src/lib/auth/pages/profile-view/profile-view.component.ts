@@ -5,7 +5,7 @@ import { Observable, Subscription } from 'rxjs';
 import { distinctUntilChanged, filter } from 'rxjs/operators';
 
 // blockframes
-import { Organization } from '@blockframes/organization/+state/organization.model';
+import { Organization } from '@blockframes/model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { canHavePreferences } from '@blockframes/user/+state/user.utils';
 import { OrganizationService } from '@blockframes/organization/+state';

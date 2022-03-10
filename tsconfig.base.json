@@ -25,9 +25,6 @@
         "libs/movie/src/lib/movie/components/import/import-movie.module.ts"
       ],
       "@blockframes/organization/*": ["libs/organization/src/lib/organization/*"],
-      "@blockframes/organization/types": [
-        "libs/organization/src/lib/organization/+state/organization.firestore.ts"
-      ],
       "@blockframes/permissions/*": ["libs/organization/src/lib/permissions/*"],
       "@blockframes/permissions/types": [
         "libs/organization/src/lib/permissions/+state/permissions.firestore.ts"

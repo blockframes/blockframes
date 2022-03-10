@@ -4,7 +4,7 @@ import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { MatDialog } from '@angular/material/dialog';
 import { OrganizationCreateComponent } from '../../components/organization/create-organization/create.component';
-import { Organization } from '@blockframes/organization/+state';
+import { Movie, Organization } from '@blockframes/model';
 import { getAllAppsExcept, appName, modules } from '@blockframes/utils/apps';
 
 @Component({

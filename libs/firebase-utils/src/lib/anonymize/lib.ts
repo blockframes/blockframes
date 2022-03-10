@@ -5,12 +5,7 @@ import { Invitation } from '@blockframes/invitation/+state';
 import { DbRecord, throwOnProduction } from '../util';
 import { CollectionReference, QueryDocumentSnapshot, QuerySnapshot } from '../types';
 import { Queue } from '../queue';
-import { Movie } from '@blockframes/model';
-import {
-  createPublicOrganization,
-  Organization,
-} from '@blockframes/organization/+state/organization.model';
-import { PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
+import { createPublicOrganization, Movie, Organization, PublicOrganization } from '@blockframes/model';
 import { FirestoreEmulator } from '../firestore/emulator';
 import { firebase, testVideoId } from '@env';
 import { runChunks } from '../firebase-utils';
