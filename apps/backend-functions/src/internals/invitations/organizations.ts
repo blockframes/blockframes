@@ -1,10 +1,6 @@
 import * as admin from 'firebase-admin';
 import { getUser } from "./../utils";
-import {
-  InvitationDocument,
-  InvitationOrUndefined,
-  OrganizationDocument,
-} from './../../data/types';
+import { OrganizationDocument } from './../../data/types';
 import { triggerNotifications, createNotification } from './../../notification';
 import { sendMailFromTemplate } from './../email';
 import { userJoinedAnOrganization } from '../../templates/mail';
@@ -13,6 +9,7 @@ import { wasAccepted, wasDeclined, wasCreated } from './utils';
 import { applicationUrl } from '@blockframes/utils/apps';
 import { getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
 import { groupIds } from '@blockframes/utils/emails/ids';
+import { InvitationDocument, InvitationOrUndefined } from '@blockframes/model';
 
 async function addUserToOrg(userId: string, organizationId: string) {
   const db = admin.firestore();
