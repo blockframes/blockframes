@@ -3,6 +3,8 @@ import type firebase from 'firebase';
 import { Movie, PublicUser } from '@blockframes/model';
 import type { InvitationStatus, InvitationType } from '@blockframes/utils/static-model';
 import { Organization } from '@blockframes/organization/+state/organization.model';
+import { Event } from '@blockframes/event/+state';
+
 export { InvitationType, InvitationStatus, invitationStatus } from '@blockframes/utils/static-model';
 type Timestamp = firebase.firestore.Timestamp;
 
