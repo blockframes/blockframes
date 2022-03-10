@@ -1,5 +1,4 @@
 import { Firestore } from '@blockframes/firebase-utils';
-import { Movie } from '@blockframes/model';
 import { Movie, Organization } from '@blockframes/model';
 import { Stakeholder } from '@blockframes/utils/common-interfaces';
 import { Territory } from '@blockframes/utils/static-model';
