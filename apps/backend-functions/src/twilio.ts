@@ -1,10 +1,8 @@
 
 import { CallableContext } from "firebase-functions/lib/providers/https";
-
 import { getDocument } from "@blockframes/firebase-utils";
 import { EventDocument, Meeting } from "@blockframes/event/+state/event.firestore";
 import { ErrorResultResponse, displayName } from "@blockframes/utils/utils";
-
 import { projectId, twilioAccountSid, twilioAccountSecret, twilioApiKeySecret, twilioApiKeySid } from './environments/environment';
 import Twilio from "twilio/lib/rest/Twilio";
 import AccessToken, { VideoGrant } from "twilio/lib/jwt/AccessToken";
