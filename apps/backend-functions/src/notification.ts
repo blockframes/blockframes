@@ -1,4 +1,4 @@
-import { InvitationDocument, NotificationDocument,  NotificationTypes } from './data/types';
+import { InvitationDocument, NotificationDocument, NotificationTypes } from './data/types';
 import { getDocument, getOrgAppKey, createDocumentMeta } from './data/internals';
 import { NotificationSettingsTemplate, User, OrganizationDocument, canAccessModule, orgName, MovieDocument } from '@blockframes/model';
 import { sendMailFromTemplate } from './internals/email';
