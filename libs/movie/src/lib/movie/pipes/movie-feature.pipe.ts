@@ -1,11 +1,15 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
-import { Movie } from '@blockframes/movie/+state/movie.model';
-import { genres as staticGenres, languages, territoriesISOA2 } from '@blockframes/utils/static-model/static-model';
-import { formatRunningTime } from "@blockframes/movie/pipes/running-time.pipe";
+import { Movie } from '@blockframes/model';
+import {
+  genres as staticGenres,
+  languages,
+  territoriesISOA2,
+} from '@blockframes/utils/static-model/static-model';
+import { formatRunningTime } from '@blockframes/movie/pipes/running-time.pipe';
 
 @Pipe({
   name: 'movieFeature',
-  pure: true
+  pure: true,
 })
 export class MovieFeaturePipe implements PipeTransform {
   transform(value: Movie): string {
@@ -21,7 +25,8 @@ export class MovieFeaturePipe implements PipeTransform {
 
     let displayedCountries = '';
     if (originCountries.length > 0) displayedCountries += territoriesISOA2[originCountries[0]];
-    if (originCountries.length > 1) displayedCountries += `, ${territoriesISOA2[originCountries[1]]}`;
+    if (originCountries.length > 1)
+      displayedCountries += `, ${territoriesISOA2[originCountries[1]]}`;
     if (originCountries.length > 2) displayedCountries += ', ...';
 
     return [
@@ -30,13 +35,15 @@ export class MovieFeaturePipe implements PipeTransform {
       displayedCountries,
       displayedLanguages,
       release.year,
-      formatRunningTime(runningTime, false)
-    ].filter(v => !!v).join(' | ');
+      formatRunningTime(runningTime, false),
+    ]
+      .filter((v) => !!v)
+      .join(' | ');
   }
 }
 
 @NgModule({
   declarations: [MovieFeaturePipe],
-  exports: [MovieFeaturePipe]
+  exports: [MovieFeaturePipe],
 })
-export class MovieFeatureModule { }
+export class MovieFeatureModule {}

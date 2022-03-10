@@ -1,13 +1,13 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
-import { Movie } from '@blockframes/movie/+state/movie.model';
+import { Movie } from '@blockframes/model';
 import { CommonModule } from '@angular/common';
 
 @Pipe({
   name: 'movieImage',
-  pure: true
+  pure: true,
 })
 export class MovieImagePipe implements PipeTransform {
-  transform(movie: Movie, size: 'poster' | 'banner' | 'avatar' ) {
+  transform(movie: Movie, size: 'poster' | 'banner' | 'avatar') {
     switch (size) {
       case 'poster':
         return movie.poster;

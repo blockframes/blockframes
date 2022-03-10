@@ -6,7 +6,7 @@ import { Organization, OrganizationService } from '@blockframes/organization/+st
 import { filter, switchMap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { Intercom } from 'ng-intercom';
-import { User } from '@blockframes/user/+state';
+import { User } from '@blockframes/model';
 import { AuthService } from '@blockframes/auth/+state';
 import { APP } from '@blockframes/utils/routes/utils';
 

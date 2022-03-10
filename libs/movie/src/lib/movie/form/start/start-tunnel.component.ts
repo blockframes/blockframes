@@ -3,7 +3,8 @@ import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 
 // Blockframes
-import { createReleaseYear, Movie, MovieService } from '@blockframes/movie/+state';
+import { createReleaseYear, Movie } from '@blockframes/model';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { App } from '@blockframes/utils/apps';
 import { APP } from '@blockframes/utils/routes/utils';
 
@@ -14,12 +15,12 @@ const predefinedTitleConfig: Record<App, Partial<Movie>> = {
   catalog: {
     productionStatus: 'released',
     runningTime: { status: 'confirmed' },
-    release: createReleaseYear({ status: 'confirmed' })
+    release: createReleaseYear({ status: 'confirmed' }),
   },
   festival: {},
   financiers: {},
-  crm: {}
-}
+  crm: {},
+};
 
 @Component({
   selector: 'movie-form-start-tunnel',
@@ -34,7 +35,7 @@ export class MovieFormStartTunnelComponent {
     private movieService: MovieService,
     private router: Router,
     @Inject(APP) private app: App
-  ) { }
+  ) {}
 
   async navigateToTunnel() {
     this.loadingTunnel.next(true);

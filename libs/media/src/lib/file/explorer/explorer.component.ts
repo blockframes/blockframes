@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, ViewChild, TemplateRef, Pipe, PipeT
 import { AngularFirestore, QueryFn } from '@angular/fire/firestore';
 
 // Blockframes
-import { MovieService } from '@blockframes/movie/+state';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { App } from '@blockframes/utils/apps';
 import { Organization } from '@blockframes/organization/+state';
 import { FileUploaderService, MediaService } from '@blockframes/media/+state';
