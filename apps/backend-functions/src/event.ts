@@ -3,8 +3,7 @@ import { EventDocument, EventMeta } from '@blockframes/event/+state/event.firest
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { createDocumentMeta, createPublicUserDocument, getDocument } from './data/internals';
 import { createNotification, triggerNotifications } from './notification';
-import { PublicUser } from '@blockframes/model';
-import { Movie, Organization } from '@blockframes/model';
+import { Movie, Organization, PublicUser } from '@blockframes/model';
 
 /**
  * Removes invitations and notifications related to an event when event is deleted

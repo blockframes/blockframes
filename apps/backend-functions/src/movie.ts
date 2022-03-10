@@ -1,11 +1,11 @@
 import { db } from './internals/firebase';
-import { MovieDocument, createDocPermissions,  } from './data/types';
+import { MovieDocument, createDocPermissions } from './data/types';
 import { triggerNotifications, createNotification } from './notification';
 import {
   createDocumentMeta,
   createPublicUserDocument,
   getOrganizationsOfMovie,
-  Timestamp,
+  Timestamp
 } from './data/internals';
 import { cleanMovieMedias, moveMovieMedia } from './media';
 import { Change, EventContext } from 'firebase-functions';
