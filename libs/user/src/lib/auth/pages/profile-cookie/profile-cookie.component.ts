@@ -31,7 +31,7 @@ export class ProfileCookieComponent {
 
     if (settings) {
       this.gdpr.enableIntercom(this.authService.profile, settings.intercom);
-      this.gdpr.enableYandex(settings.yandex);
+      // this.gdpr.enableYandex(settings.yandex); #7936 this may be reactivated later
     }
   }
 }
