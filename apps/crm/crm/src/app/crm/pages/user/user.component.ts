@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '@blockframes/user/+state/user.model';
 import { UserCrmForm } from '@blockframes/admin/crm/forms/user-crm.form';
 import { UserService } from '@blockframes/user/+state/user.service';
-import { OrganizationService, Organization } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { UserRole, PermissionsService } from '@blockframes/permissions/+state';
 import { CrmService } from '@blockframes/admin/crm/+state';
 import { Observable, Subscription } from 'rxjs';
@@ -19,6 +19,7 @@ import { SafeResourceUrl } from '@angular/platform-browser';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { App, getOrgAppAccess } from '@blockframes/utils/apps';
 import { Scope } from '@blockframes/utils/static-model';
+import { Organization } from '@blockframes/model';
 
 @Component({
   selector: 'crm-user',

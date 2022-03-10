@@ -3,8 +3,9 @@ import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { EventService } from '@blockframes/event/+state';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { Router } from '@angular/router';
-import { OrganizationService, orgName } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { toLabel } from '@blockframes/utils/pipes';
+import { orgName } from '@blockframes/model';
 
 @Component({
   selector: 'crm-events',
