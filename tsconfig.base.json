@@ -33,7 +33,6 @@
         "libs/organization/src/lib/permissions/+state/permissions.firestore.ts"
       ],
       "@blockframes/invitation/*": ["libs/invitation/src/lib/*"],
-      "@blockframes/invitation/types": ["libs/invitation/src/lib/+state/invitation.firestore.ts"],
       "@blockframes/notification/types": [
         "libs/notification/src/lib/+state/notification.firestore.ts"
       ],
