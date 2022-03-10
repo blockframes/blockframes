@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { OrganizationCrmForm } from '@blockframes/admin/crm/forms/organization-crm.form';
 import { fromOrg, MovieService } from '@blockframes/movie/+state/movie.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Organization } from '@blockframes/model';
+import { Organization, Movie } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { FormControl } from '@angular/forms';
 import { UserRole, PermissionsService } from '@blockframes/permissions/+state';
@@ -14,7 +14,6 @@ import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-inp
 import { MatDialog } from '@angular/material/dialog';
 import { EventService } from '@blockframes/event/+state';
 import { ContractService } from '@blockframes/contract/contract/+state';
-import { Movie } from '@blockframes/model';
 import { FileUploaderService } from '@blockframes/media/+state/file-uploader.service';
 import { App, OrgAppAccess } from '@blockframes/utils/apps';
 import { BucketService } from '@blockframes/contract/bucket/+state/bucket.service';
