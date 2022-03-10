@@ -6,16 +6,16 @@ import {
   StoreStatus,
   ProductionStatus,
   OrgActivity,
-  ContentType
+  ContentType,
 } from '../static-model';
-import { MovieRunningTime, MovieRelease, MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
+import { MovieRunningTime, MovieRelease, MovieLanguageSpecification } from '@blockframes/model';
 import { Module, ModuleAccess } from '../apps';
 export { SearchResponse } from '@algolia/client-search';
 
 export interface AlgoliaConfig {
   searchableAttributes: string[];
   attributesForFaceting: string[];
-  customRanking?: string[]
+  customRanking?: string[];
 }
 
 export interface AlgoliaQueries {
@@ -33,25 +33,25 @@ export interface AlgoliaQuery<T, C = unknown> {
   text?: string;
   limitResultsTo: number;
   activePage: number;
-  facets?: Partial<T>,
-  filters?: Partial<C>
+  facets?: Partial<T>;
+  filters?: Partial<C>;
 }
 
 interface MovieIndexConfig {
-  genres: Genre,
-  languages: Partial<Record<keyof MovieLanguageSpecification, Language>>,
-  originCountries: Territory,
-  status: ProductionStatus,
-  storeStatus: StoreStatus,
+  genres: Genre;
+  languages: Partial<Record<keyof MovieLanguageSpecification, Language>>;
+  originCountries: Territory;
+  status: ProductionStatus;
+  storeStatus: StoreStatus;
 }
 
 interface OrganizationIndexConfig {
-  appModule: ModuleAccess,
-  name: string,
-  country: Territory,
-  isAccepted: boolean,
-  hasAcceptedMovies: boolean,
-  activity: OrgActivity
+  appModule: ModuleAccess;
+  name: string;
+  country: Territory;
+  isAccepted: boolean;
+  hasAcceptedMovies: boolean;
+  activity: OrgActivity;
 }
 
 interface UserIndexConfig {
@@ -60,8 +60,8 @@ interface UserIndexConfig {
   lastName: string;
 }
 export interface MovieIndexFilters {
-  budget?: number,
-  minPledge?: number
+  budget?: number;
+  minPledge?: number;
 }
 
 /** A simple map to access the index name */
@@ -70,14 +70,14 @@ export const algoliaIndex = {
   org: {
     financiers: algolia.indexNameOrganizations.financiers,
     festival: algolia.indexNameOrganizations.festival,
-    catalog: algolia.indexNameOrganizations.catalog
+    catalog: algolia.indexNameOrganizations.catalog,
   },
   movie: {
     financiers: algolia.indexNameMovies.financiers,
     catalog: algolia.indexNameMovies.catalog,
-    festival: algolia.indexNameMovies.festival
-  }
-}
+    festival: algolia.indexNameMovies.festival,
+  },
+};
 
 export type AlgoliaIndex = keyof typeof algoliaIndex;
 
@@ -97,52 +97,52 @@ interface AlgoliaDefaultProperty {
 
 export interface AlgoliaMovie extends AlgoliaDefaultProperty {
   title: {
-    international: string,
-    original: string
-  },
-  directors: string[],
-  keywords: string[],
-  genres: Genre[],
-  originCountries: Territory[],
+    international: string;
+    original: string;
+  };
+  directors: string[];
+  keywords: string[];
+  genres: Genre[];
+  originCountries: Territory[];
   languages: {
-    original: Language[],
-    dubbed: Language[],
-    subtitle: Language[],
-    caption: Language[]
-  },
-  status: ProductionStatus | string,
-  storeStatus: StoreStatus | string,
-  budget: number,
-  orgNames: string[],
-  poster: string,
-  banner: string,
-  originalLanguages: Language[],
-  runningTime: MovieRunningTime,
-  release: MovieRelease,
-  contentType: ContentType,
-  festivals: string[],
-  productionCompany: string[],
-  salesAgent: string[]
+    original: Language[];
+    dubbed: Language[];
+    subtitle: Language[];
+    caption: Language[];
+  };
+  status: ProductionStatus | string;
+  storeStatus: StoreStatus | string;
+  budget: number;
+  orgNames: string[];
+  poster: string;
+  banner: string;
+  originalLanguages: Language[];
+  runningTime: MovieRunningTime;
+  release: MovieRelease;
+  contentType: ContentType;
+  festivals: string[];
+  productionCompany: string[];
+  salesAgent: string[];
 }
 
 /* ORGANIZATION */
 
 export interface AlgoliaOrganization extends AlgoliaDefaultProperty {
-  name: string,
-  appModule: Module[],
-  country: Territory,
-  isAccepted: boolean,
-  hasAcceptedMovies: boolean,
-  logo: string,
-  activity: OrgActivity
+  name: string;
+  appModule: Module[];
+  country: Territory;
+  isAccepted: boolean;
+  hasAcceptedMovies: boolean;
+  logo: string;
+  activity: OrgActivity;
 }
 
 /* USER */
 
 export interface AlgoliaUser extends AlgoliaDefaultProperty {
-  email: string,
-  firstName: string,
-  lastName: string,
-  avatar: string,
-  orgName: string
+  email: string;
+  firstName: string;
+  lastName: string;
+  avatar: string;
+  orgName: string;
 }

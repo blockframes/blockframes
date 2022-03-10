@@ -7,7 +7,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
 
 import { FormEntity, FormGroupSchema } from 'ng-form-factory';
-import { Movie, MovieService } from '@blockframes/movie/+state';
+import { Movie } from '@blockframes/model';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { TitlesSection, TemplateParams } from '@blockframes/admin/cms';
 import { TextFormModule, matText } from '../../forms/text';
 import { FormChipsAutocompleteModule } from '../../forms/chips-autocomplete';
@@ -17,54 +18,49 @@ import { getTitlesQueryFn, toMap } from '../pipes';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
 import { sortingOptions } from '@blockframes/utils/pipes/sort-array.pipe';
 
-
 export type TitlesSchema = FormGroupSchema<TitlesSection>;
 
 export const titlesSchema = (params: TemplateParams): TitlesSchema => ({
   form: 'group',
-  load: async () => import('./titles.component').then(m => m.TitlesComponent),
+  load: async () => import('./titles.component').then((m) => m.TitlesComponent),
   controls: {
     _type: { form: 'control' },
     title: matText({ label: 'Title' }),
     link: matText({ label: 'See all Link', placeholder: '../title' }),
     mode: matSelect({ label: 'Mode', options: ['poster', 'banner'], value: 'banner' }),
-    sorting: matSelect({ label: 'Sorting', options: sortingOptions, value: 'default'}),
+    sorting: matSelect({ label: 'Sorting', options: sortingOptions, value: 'default' }),
     titleIds: matMultiSelect<string>({ label: 'Titles ID' }),
     query: firestoreQuery({ collection: 'movies' }),
   },
   value: (value: TitlesSection) => ({
     _type: 'titles',
     query: titlesFromApp(params.app),
-    ...value
-  })
-})
+    ...value,
+  }),
+});
 
 @Component({
   selector: 'form-titles',
   templateUrl: './titles.component.html',
   styleUrls: ['./titles.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TitlesComponent implements OnInit {
   private mode?: 'query' | 'titleIds';
   @Input() form?: FormEntity<TitlesSchema>;
 
-
-  app$ = this.route.paramMap.pipe(map( p => p.get('app')));
+  app$ = this.route.paramMap.pipe(map((p) => p.get('app')));
   titles$ = this.app$.pipe(
-    map(app => getTitlesQueryFn(app)),
-    switchMap(queryFn => this.service.valueChanges(queryFn)),
+    map((app) => getTitlesQueryFn(app)),
+    switchMap((queryFn) => this.service.valueChanges(queryFn)),
     map(toMap),
-    shareReplay({ refCount: true, bufferSize: 1 }),
+    shareReplay({ refCount: true, bufferSize: 1 })
   );
 
   displayLabel = (title?: Movie) => title?.title.international;
   getValue = (title?: Movie) => title?.id;
 
-  constructor(
-    private route: ActivatedRoute,
-    private service: MovieService,
-  ) {}
+  constructor(private route: ActivatedRoute, private service: MovieService) {}
 
   get queryMode() {
     return this.mode || (this.form?.get('titleIds').length ? 'titleIds' : 'query');
@@ -72,9 +68,7 @@ export class TitlesComponent implements OnInit {
 
   private selectForm() {
     for (const key of ['titleIds', 'query'] as const) {
-      this.queryMode === key
-        ? this.form?.get(key).enable()
-        : this.form?.get(key).disable();
+      this.queryMode === key ? this.form?.get(key).enable() : this.form?.get(key).disable();
     }
   }
 
@@ -88,7 +82,6 @@ export class TitlesComponent implements OnInit {
   }
 }
 
-
 @NgModule({
   declarations: [TitlesComponent],
   imports: [
@@ -101,6 +94,6 @@ export class TitlesComponent implements OnInit {
     FormChipsAutocompleteModule,
     TextFormModule,
     FirestoreFormModule,
-  ]
+  ],
 })
-export class TitlesModule { }
+export class TitlesModule {}

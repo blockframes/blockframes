@@ -6,7 +6,7 @@ import { combineLatest, Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 
 // Blockframes
-import { MovieService } from '@blockframes/movie/+state';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { EventService, Event } from '@blockframes/event/+state';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { OrganizationService } from '@blockframes/organization/+state';

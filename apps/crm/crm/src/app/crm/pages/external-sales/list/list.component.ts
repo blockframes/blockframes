@@ -4,7 +4,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { CollectionReference } from '@angular/fire/firestore';
 import { Sale, ContractService } from '@blockframes/contract/contract/+state';
 import { IncomeService } from '@blockframes/contract/income/+state';
-import { MovieService } from '@blockframes/movie/+state';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { joinWith } from '@blockframes/utils/operators';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
