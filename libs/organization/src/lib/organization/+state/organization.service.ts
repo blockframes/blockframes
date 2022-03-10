@@ -5,16 +5,20 @@ import { Organization, createOrganization, OrganizationDocument } from './organi
 import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
 import { createPermissions, UserRole } from '../../permissions/+state/permissions.model';
 import { AngularFireFunctions } from '@angular/fire/functions';
-import { UserService, OrganizationMember, createOrganizationMember, PublicUser, User } from '@blockframes/user/+state';
+import { UserService } from '@blockframes/user/+state';
+import { OrganizationMember, createOrganizationMember, PublicUser, User } from '@blockframes/model';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
-import { Movie } from '@blockframes/movie/+state/movie.model';
+import { Movie } from '@blockframes/model';
 import { App, Module, createOrgAppAccess } from '@blockframes/utils/apps';
-import { createDocumentMeta, formatDocumentMetaFromFirestore } from '@blockframes/utils/models-meta';
+import {
+  createDocumentMeta,
+  formatDocumentMetaFromFirestore,
+} from '@blockframes/utils/models-meta';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { combineLatest, Observable, of } from 'rxjs';
 import { ActiveState, EntityState } from '@datorama/akita';
 
-interface OrganizationState extends EntityState<Organization>, ActiveState<string> { }
+interface OrganizationState extends EntityState<Organization>, ActiveState<string> {}
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'orgs' })
@@ -24,15 +28,15 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   // Organization of the current logged in user or undefined if user have no org
   org: Organization; // For this to be defined, one of the observable below must be called before
   org$: Observable<Organization> = this.authService.profile$.pipe(
-    switchMap(user => user?.orgId ? this.valueChanges(user.orgId) : of(undefined)),
-    tap(org => this.org = org)
+    switchMap((user) => (user?.orgId ? this.valueChanges(user.orgId) : of(undefined))),
+    tap((org) => (this.org = org))
   );
 
   // Organization of the current logged in user
   currentOrg$: Observable<Organization> = this.authService.profile$.pipe(
-    filter(user => !!user),
-    switchMap(user => user.orgId ? this.valueChanges(user.orgId) : of(undefined)),
-    filter(org => {
+    filter((user) => !!user),
+    switchMap((user) => (user.orgId ? this.valueChanges(user.orgId) : of(undefined))),
+    filter((org) => {
       this.org = org;
       return !!org;
     })
@@ -40,18 +44,18 @@ export class OrganizationService extends CollectionService<OrganizationState> {
 
   // Org's members of the current logged in user
   public members$ = this.currentOrg$.pipe(
-    map(org => org.userIds),
-    switchMap(userIds => this.userService.valueChanges(userIds))
+    map((org) => org.userIds),
+    switchMap((userIds) => this.userService.valueChanges(userIds))
   );
 
   // Org's members of the current logged in user with permissions
   public membersWithRole$: Observable<OrganizationMember[]> = combineLatest([
     this.members$,
-    this.permissionsService.permissions$
+    this.permissionsService.permissions$,
   ]).pipe(
     map(([members, permissions]) => {
       // Get the role of each member in permissions.roles and add it to member.
-      return members.map(member => ({ ...member, role: permissions.roles[member.uid] }));
+      return members.map((member) => ({ ...member, role: permissions.roles[member.uid] }));
     })
   );
 
@@ -60,17 +64,16 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     private userService: UserService,
     private permissionsService: PermissionsService,
     private analytics: FireAnalytics,
-    private authService: AuthService,
+    private authService: AuthService
   ) {
     super();
   }
 
   public async orgNameExist(orgName: string) {
     // @TODO #6908 a better solution for this should be found.
-    const orgs = await this.getValue(ref => ref.where('denomination.full', '==', orgName));
+    const orgs = await this.getValue((ref) => ref.where('denomination.full', '==', orgName));
     return orgs.length !== 0;
   }
-
 
   /**
    * This converts the OrganizationDocument into an Organization
@@ -80,19 +83,19 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     return {
       ...org,
       appAccess: createOrgAppAccess(org.appAccess),
-      _meta: formatDocumentMetaFromFirestore(org?._meta)
+      _meta: formatDocumentMetaFromFirestore(org?._meta),
     };
   }
 
   /**
    * Triggered when we add a new organization
    * create related documents (permissions, apps permissions, user...).
-  */
+   */
   async onCreate(org: Organization, { write }: WriteOptions) {
     const orgId: string = org.id;
     const permissions = createPermissions({
       id: orgId,
-      roles: { [org.userIds[0]]: 'superAdmin' }
+      roles: { [org.userIds[0]]: 'superAdmin' },
     });
 
     return Promise.all([
@@ -102,7 +105,11 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   }
 
   /** Add a new organization */
-  public async addOrganization(organization: Partial<Organization>, createdFrom: App, user: User | PublicUser = this.authService.profile): Promise<string> {
+  public async addOrganization(
+    organization: Partial<Organization>,
+    createdFrom: App,
+    user: User | PublicUser = this.authService.profile
+  ): Promise<string> {
     const newOrganization = createOrganization({
       ...organization,
       _meta: createDocumentMeta({ createdBy: user.uid, createdFrom }),
@@ -128,25 +135,29 @@ export class OrganizationService extends CollectionService<OrganizationState> {
 
   /** Remove a member from the organization. */
   public async removeMember(uid: string) {
-    const orgId = (await this.userService.getValue(uid)).orgId
+    const orgId = (await this.userService.getValue(uid)).orgId;
     const permissions = await this.permissionsService.getValue(orgId);
-    const superAdminNumber = Object.values(permissions.roles).filter(value => value === 'superAdmin').length;
+    const superAdminNumber = Object.values(permissions.roles).filter(
+      (value) => value === 'superAdmin'
+    ).length;
     const role = permissions.roles[uid];
     if (role === 'superAdmin' && superAdminNumber <= 1) {
-      throw new Error('You can\'t remove the last Super Admin.');
+      throw new Error("You can't remove the last Super Admin.");
     }
 
     const org = await this.getValue(orgId);
-    const userIds = org.userIds.filter(userId => userId !== uid);
+    const userIds = org.userIds.filter((userId) => userId !== uid);
     return this.update(orgId, { userIds });
   }
 
   public async getMembers(orgId: string): Promise<OrganizationMember[]> {
     const org = await this.getValue(orgId);
-    const promises = org.userIds.map(uid => this.userService.getValue(uid));
+    const promises = org.userIds.map((uid) => this.userService.getValue(uid));
     const users = await Promise.all(promises);
     const role = await this.permissionsService.getValue(orgId);
-    return users.map(u => createOrganizationMember(u, role.roles[u.uid] ? role.roles[u.uid] : undefined));
+    return users.map((u) =>
+      createOrganizationMember(u, role.roles[u.uid] ? role.roles[u.uid] : undefined)
+    );
   }
 
   public async getMemberRole(_org: Organization | string, uid): Promise<UserRole> {
@@ -156,7 +167,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   }
 
   public async uniqueOrgName(orgName: string): Promise<boolean> {
-    return this.orgNameExist(orgName).then(exist => !exist);
+    return this.orgNameExist(orgName).then((exist) => !exist);
   }
 
   //////////////////
@@ -171,16 +182,16 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     const orgState = this.org;
     let wishlist = Array.from(new Set([...orgState.wishlist])) || [];
     if (wishlist.includes(movie.id)) {
-      wishlist = orgState.wishlist.filter(id => id !== movie.id);
+      wishlist = orgState.wishlist.filter((id) => id !== movie.id);
       this.analytics.event('removedFromWishlist', {
         movieId: movie.id,
-        movieTitle: movie.title.original
+        movieTitle: movie.title.original,
       });
     } else {
       wishlist.push(movie.id);
       this.analytics.event('addedToWishlist', {
         movieId: movie.id,
-        movieTitle: movie.title.original
+        movieTitle: movie.title.original,
       });
     }
 
@@ -188,8 +199,6 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   }
 
   public isInWishlist(movieId: string): Observable<boolean> {
-    return this.currentOrg$.pipe(
-      map(org => org.wishlist.includes(movieId))
-    );
+    return this.currentOrg$.pipe(map((org) => org.wishlist.includes(movieId)));
   }
 }

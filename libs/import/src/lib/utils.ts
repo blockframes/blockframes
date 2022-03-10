@@ -1,21 +1,21 @@
-import { Movie, MovieService } from "@blockframes/movie/+state";
-import { Mandate, Sale } from "@blockframes/contract/contract/+state/contract.model";
-import { Organization, OrganizationService } from "@blockframes/organization/+state";
-import { User } from "@blockframes/user/+state/user.model";
-import { Term } from "@blockframes/contract/term/+state/term.model";
-import { SheetTab, ValueWithError } from "@blockframes/utils/spreadsheet";
-import { centralOrgId } from "@env";
-import { ContractService } from "@blockframes/contract/contract/+state/contract.service";
-import { UserService } from "@blockframes/user/+state";
-
+import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { Movie } from '@blockframes/model';
+import { Mandate, Sale } from '@blockframes/contract/contract/+state/contract.model';
+import { Organization, OrganizationService } from '@blockframes/organization/+state';
+import { User } from '@blockframes/model';
+import { Term } from '@blockframes/contract/term/+state/term.model';
+import { SheetTab, ValueWithError } from '@blockframes/utils/spreadsheet';
+import { centralOrgId } from '@env';
+import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
+import { UserService } from '@blockframes/user/+state';
 
 export const spreadsheetImportTypes = ['titles', 'organizations', 'contracts'] as const;
 
 export type SpreadsheetImportType = typeof spreadsheetImportTypes[number];
 
 export interface SpreadsheetImportEvent {
-  sheet: SheetTab,
-  importType: SpreadsheetImportType,
+  sheet: SheetTab;
+  importType: SpreadsheetImportType;
 }
 
 export interface SpreadsheetImportError {
@@ -34,7 +34,7 @@ export interface ContractsImportState {
   errors?: SpreadsheetImportError[];
   newContract: boolean;
   contract: Sale | Mandate;
-  terms: Term<Date>[]
+  terms: Term<Date>[];
 }
 
 export interface OrganizationsImportState {
@@ -43,7 +43,6 @@ export interface OrganizationsImportState {
   superAdmin: User;
   newOrg: boolean;
 }
-
 
 /**
  * This hold the excel line number where the data start.
@@ -62,28 +61,38 @@ export const sheetRanges: Record<SpreadsheetImportType, string> = {
   organizations: `A${sheetHeaderLine.organizations}:Z100`,
 };
 
-
-export async function getOrgId(name: string, orgService: OrganizationService, cache: Record<string, string>) {
+export async function getOrgId(
+  name: string,
+  orgService: OrganizationService,
+  cache: Record<string, string>
+) {
   if (!name) return '';
   if (name === 'Archipel Content') return centralOrgId.catalog;
 
   if (cache[name]) return cache[name];
 
-  const orgs = await orgService.getValue(ref => ref.where('denomination.full', '==', name));
+  const orgs = await orgService.getValue((ref) => ref.where('denomination.full', '==', name));
   const result = orgs.length === 1 ? orgs[0].id : '';
   cache[name] = result;
   return result;
 }
 
-export async function getTitleId(name: string, titleService: MovieService, cache: Record<string, string>, userOrgId: string, blockframesAdmin: boolean) {
+export async function getTitleId(
+  name: string,
+  titleService: MovieService,
+  cache: Record<string, string>,
+  userOrgId: string,
+  blockframesAdmin: boolean
+) {
   if (!name) return '';
   if (cache[name]) return cache[name];
 
-  const titles = await titleService.getValue(ref => {
+  const titles = await titleService.getValue((ref) => {
     if (blockframesAdmin) {
       return ref.where('title.international', '==', name);
     } else {
-      return ref.where('title.international', '==', name)
+      return ref
+        .where('title.international', '==', name)
         .where('orgIds', 'array-contains', userOrgId);
     }
   });
@@ -92,7 +101,11 @@ export async function getTitleId(name: string, titleService: MovieService, cache
   return result;
 }
 
-export async function getContract(id: string, contractService: ContractService, cache: Record<string, (Mandate | Sale)>) {
+export async function getContract(
+  id: string,
+  contractService: ContractService,
+  cache: Record<string, Mandate | Sale>
+) {
   if (!id) return;
 
   if (cache[id]) return cache[id];
@@ -102,7 +115,11 @@ export async function getContract(id: string, contractService: ContractService, 
   return contract;
 }
 
-export async function checkParentTerm(id: string, contractService: ContractService, cache: Record<string, (Mandate | Sale)>) {
+export async function checkParentTerm(
+  id: string,
+  contractService: ContractService,
+  cache: Record<string, Mandate | Sale>
+) {
   if (!id) return undefined;
 
   for (const contractId in cache) {
@@ -111,17 +128,28 @@ export async function checkParentTerm(id: string, contractService: ContractServi
     if (isMandate && containTerm) return cache[id] as Mandate;
   }
 
-  const [contract] = await contractService.getValue(ref =>
+  const [contract] = await contractService.getValue((ref) =>
     ref.where('type', '==', 'mandate').where('termIds', 'array-contains', id)
   );
   cache[contract.id] = contract;
   return contract as Mandate;
 }
 
-
-export async function getUser({ email }: { email: string }, userService: UserService, cache: Record<string, User>): Promise<User>;
-export async function getUser({ id }: { id: string }, userService: UserService, cache: Record<string, User>): Promise<User>;
-export async function getUser(query: { email: string } | { id: string }, userService: UserService, cache: Record<string, User>) {
+export async function getUser(
+  { email }: { email: string },
+  userService: UserService,
+  cache: Record<string, User>
+): Promise<User>;
+export async function getUser(
+  { id }: { id: string },
+  userService: UserService,
+  cache: Record<string, User>
+): Promise<User>;
+export async function getUser(
+  query: { email: string } | { id: string },
+  userService: UserService,
+  cache: Record<string, User>
+) {
   if (!query) return undefined;
 
   let user: User;
@@ -130,7 +158,9 @@ export async function getUser(query: { email: string } | { id: string }, userSer
       if (cache[id].email === query.email) return cache[id];
     }
 
-    user = await userService.getValue(ref => ref.where('email', '==', query.email)).then(u => u[0]);
+    user = await userService
+      .getValue((ref) => ref.where('email', '==', query.email))
+      .then((u) => u[0]);
   }
 
   if ('id' in query) {
@@ -143,7 +173,6 @@ export async function getUser(query: { email: string } | { id: string }, userSer
 }
 
 export function getDate(value: string, name: string): Date | ValueWithError<Date> {
-
   let date = new Date(value);
 
   // some time excel might store the date as a the number of DAYS since 1900/1/1
@@ -174,14 +203,14 @@ export function getDate(value: string, name: string): Date | ValueWithError<Date
         type: 'error',
         name: `Invalid ${name}`,
         reason: 'The date seems too far away in the past or in the future.',
-        hint: 'Date must be between 1895 and 2200, if the date seems to be correct please check that Excel format the cell as a Date.'
-      }
+        hint:
+          'Date must be between 1895 and 2200, if the date seems to be correct please check that Excel format the cell as a Date.',
+      },
     };
   }
   date.setHours(0, 0, 0, 0);
   return date;
 }
-
 
 export function mandatoryError<T = unknown>(name: string): ValueWithError<T> {
   return {
@@ -190,11 +219,10 @@ export function mandatoryError<T = unknown>(name: string): ValueWithError<T> {
       type: 'error',
       name: `Missing ${name}`,
       reason: 'Mandatory field is missing.',
-      hint: 'Please fill in the corresponding sheet field.'
+      hint: 'Please fill in the corresponding sheet field.',
     },
   };
 }
-
 
 export function unknownEntityError<T = unknown>(name: string): ValueWithError<T> {
   return {
@@ -203,11 +231,10 @@ export function unknownEntityError<T = unknown>(name: string): ValueWithError<T>
       type: 'error',
       name: `Unknown ${name}`,
       reason: `${name} should exist in the app but we couldn't find it.`,
-      hint: `Please check the corresponding sheet field for mistake, create the corresponding ${name} if you can, or contact us.`
+      hint: `Please check the corresponding sheet field for mistake, create the corresponding ${name} if you can, or contact us.`,
     },
   };
 }
-
 
 export function wrongValueError<T = unknown>(name: string): ValueWithError<T> {
   return {
@@ -216,11 +243,10 @@ export function wrongValueError<T = unknown>(name: string): ValueWithError<T> {
       type: 'error',
       name: `Wrong ${name}`,
       reason: `${name} should be a value of the given list.`,
-      hint: `Please check the corresponding sheet field for mistakes, be sure to select a value form the list.`
+      hint: `Please check the corresponding sheet field for mistakes, be sure to select a value form the list.`,
     },
   };
 }
-
 
 export function alreadyExistError<T = unknown>(name: string): ValueWithError<T> {
   return {
@@ -229,7 +255,7 @@ export function alreadyExistError<T = unknown>(name: string): ValueWithError<T> 
       type: 'error',
       name: `${name} already exist`,
       reason: `We could not create a this ${name} because it already exist on the app.`,
-      hint: `Please edit the corresponding sheet field with a different value.`
+      hint: `Please edit the corresponding sheet field with a different value.`,
     },
   };
 }
@@ -243,8 +269,8 @@ export function optionalWarning<T = unknown>(name: string, value?: T): ValueWith
       type: 'warning',
       name: `Missing ${name}`,
       reason: 'Optional field is missing.',
-      hint: 'Fill in the corresponding sheet field to add a value.'
-    }
+      hint: 'Fill in the corresponding sheet field to add a value.',
+    },
   };
 }
 
@@ -254,8 +280,8 @@ export function adminOnlyWarning<T = unknown>(value: T, name: string): ValueWith
     error: {
       type: 'warning',
       name: `${name} is only for Admins`,
-      reason: 'This field is reserved for admins, it\'s value will be omitted.',
-      hint: 'Remove the corresponding sheet field to silence this warning.'
-    }
+      reason: "This field is reserved for admins, it's value will be omitted.",
+      hint: 'Remove the corresponding sheet field to silence this warning.',
+    },
   };
 }

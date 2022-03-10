@@ -1,7 +1,15 @@
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  HostListener,
+  Inject,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, Inject, OnDestroy, OnInit } from '@angular/core';
-
-import { fromOrg, Movie, MovieService } from '@blockframes/movie/+state';
+import { fromOrg, MovieService } from '@blockframes/movie/+state/movie.service';
+import { Movie } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { recursivelyListFiles } from '../../+state/media.model';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -16,10 +24,9 @@ import { StorageFile } from '@blockframes/media/+state/media.firestore';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FilePickerComponent implements OnInit, OnDestroy {
-
-  orgFiles: { file: StorageFile, isSelected: boolean }[];
+  orgFiles: { file: StorageFile; isSelected: boolean }[];
   movies: Movie[];
-  moviesFiles: Record<string, { file: StorageFile, isSelected: boolean }[]>;
+  moviesFiles: Record<string, { file: StorageFile; isSelected: boolean }[]>;
   selectedFiles: StorageFile[];
 
   private sub: Subscription;
@@ -31,19 +38,31 @@ export class FilePickerComponent implements OnInit, OnDestroy {
     private dialogRef: MatDialogRef<FilePickerComponent>,
     private cdr: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) private data: { selectedFiles: StorageFile[] }
-  ) { }
+  ) {}
 
   async ngOnInit() {
     this.selectedFiles = this.data.selectedFiles ?? [];
 
     const org = this.orgService.org;
-    this.orgFiles = recursivelyListFiles(org).map(file => ({ file, isSelected: this.selectedFiles.some(selectedFile => selectedFile.storagePath === file.storagePath) }));
-    this.movies = await this.movieService.getValue(fromOrg(org.id))
+    this.orgFiles = recursivelyListFiles(org).map((file) => ({
+      file,
+      isSelected: this.selectedFiles.some(
+        (selectedFile) => selectedFile.storagePath === file.storagePath
+      ),
+    }));
+    this.movies = await this.movieService.getValue(fromOrg(org.id));
     this.moviesFiles = {};
-    this.movies.forEach(movie =>
-      this.moviesFiles[movie.id] = recursivelyListFiles(movie)
-        .filter(file => !!file.storagePath)
-        .map(file => ({ file, isSelected: this.selectedFiles.some(selectedFile => selectedFile.storagePath === file.storagePath) })));
+    this.movies.forEach(
+      (movie) =>
+        (this.moviesFiles[movie.id] = recursivelyListFiles(movie)
+          .filter((file) => !!file.storagePath)
+          .map((file) => ({
+            file,
+            isSelected: this.selectedFiles.some(
+              (selectedFile) => selectedFile.storagePath === file.storagePath
+            ),
+          })))
+    );
 
     this.cdr.markForCheck();
 
@@ -68,47 +87,50 @@ export class FilePickerComponent implements OnInit, OnDestroy {
     event.stopPropagation();
     for (const orgFile of this.orgFiles) {
       if (orgFile.file.storagePath === file.storagePath) {
-
         orgFile.isSelected = !orgFile.isSelected;
 
         if (orgFile.isSelected) {
           this.selectedFiles.push(file);
         } else {
-          const newSelectedFiles = this.selectedFiles.filter(selected => selected.storagePath !== file.storagePath);
+          const newSelectedFiles = this.selectedFiles.filter(
+            (selected) => selected.storagePath !== file.storagePath
+          );
           this.selectedFiles = newSelectedFiles;
         }
         return; // avoid further iterations
-
       }
     }
 
     for (const movieId in this.moviesFiles) {
       for (const movieFile of this.moviesFiles[movieId]) {
-
         if (movieFile.file.storagePath === file.storagePath) {
-
           movieFile.isSelected = !movieFile.isSelected;
 
           if (movieFile.isSelected) {
             this.selectedFiles.push(file);
           } else {
-            const newSelectedFiles = this.selectedFiles.filter(selected => selected.storagePath !== file.storagePath);
+            const newSelectedFiles = this.selectedFiles.filter(
+              (selected) => selected.storagePath !== file.storagePath
+            );
             this.selectedFiles = newSelectedFiles;
           }
           return; // avoid further iterations
         }
-
       }
     }
   }
 
   previewFile(ref: StorageFile) {
-    this.dialog.open(FilePreviewComponent, { data: { ref }, width: '70vw', height: '70vh', autoFocus: false })
+    this.dialog.open(FilePreviewComponent, {
+      data: { ref },
+      width: '70vw',
+      height: '70vh',
+      autoFocus: false,
+    });
   }
 
   closeDialog() {
     // remove the event handler to avoid having it triggered elsewhere in the app
     this.dialogRef.close(this.selectedFiles);
   }
-
 }

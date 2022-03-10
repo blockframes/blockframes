@@ -1,12 +1,49 @@
-
 import { App } from '@blockframes/utils/apps';
-import { User, UserService } from '@blockframes/user/+state';
-import { mandatoryError, MovieImportState, wrongValueError, optionalWarning, getDate, adminOnlyWarning, getUser, unknownEntityError } from '@blockframes/import/utils';
-import { createMovie } from '@blockframes/movie/+state';
+import { UserService } from '@blockframes/user/+state';
+import { User } from '@blockframes/model';
+import {
+  mandatoryError,
+  MovieImportState,
+  wrongValueError,
+  optionalWarning,
+  getDate,
+  adminOnlyWarning,
+  getUser,
+  unknownEntityError,
+} from '@blockframes/import/utils';
+import { createMovie } from '@blockframes/model';
 import { extract, ExtractConfig, SheetTab } from '@blockframes/utils/spreadsheet';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
-import { LanguageRecord, MovieAppConfig, MovieGoalsAudience, MovieRelease, MovieRunningTime, MovieStakeholders } from '@blockframes/movie/+state/movie.firestore';
-import { Certification, Color, ContentType, CrewRole, Genre, Language, MediaValue, MemberStatus, MovieFormat, MovieFormatQuality, NumberRange, PremiereType, ProducerRole, ProductionStatus, ScreeningStatus, SocialGoal, SoundFormat, StakeholderRole, StoreStatus, Territory } from '@blockframes/utils/static-model';
+import {
+  LanguageRecord,
+  MovieAppConfig,
+  MovieGoalsAudience,
+  MovieRelease,
+  MovieRunningTime,
+  MovieStakeholders,
+} from '@blockframes/model';
+import {
+  Certification,
+  Color,
+  ContentType,
+  CrewRole,
+  Genre,
+  Language,
+  MediaValue,
+  MemberStatus,
+  MovieFormat,
+  MovieFormatQuality,
+  NumberRange,
+  PremiereType,
+  ProducerRole,
+  ProductionStatus,
+  ScreeningStatus,
+  SocialGoal,
+  SoundFormat,
+  StakeholderRole,
+  StoreStatus,
+  Territory,
+} from '@blockframes/utils/static-model';
 import { Stakeholder } from '@blockframes/utils/common-interfaces';
 
 interface FieldsConfig {
@@ -94,23 +131,20 @@ interface FieldsConfig {
     caption: boolean;
   }[];
   salesPitch: string;
-  app: Partial<{ [app in App]: MovieAppConfig<Date> }>
+  app: Partial<{ [app in App]: MovieAppConfig<Date> }>;
 
   orgIds: string[];
 }
 
 type FieldsConfigType = ExtractConfig<FieldsConfig>;
 
-
-
 export async function formatTitle(
   sheetTab: SheetTab,
   userService: UserService,
   blockframesAdmin: boolean,
   userOrgId: string,
-  currentApp: App,
+  currentApp: App
 ) {
-
   const titles: MovieImportState[] = [];
 
   const userCache: Record<string, User> = {};
@@ -121,19 +155,21 @@ export async function formatTitle(
       if (!value) return optionalWarning('International Title');
       return value;
     },
-    /* b */ 'title.original': (value: string) => { // ! required
+    /* b */ 'title.original': (value: string) => {
+      // ! required
       if (!value) return mandatoryError('Original Title');
       return value;
     },
-    /* c */ 'internalRef': (value: string) => {
+    /* c */ internalRef: (value: string) => {
       if (!value) return optionalWarning('Internal Ref');
       return value;
     },
-    /* d */ 'contentType': (value: string) => { // ! required
+    /* d */ contentType: (value: string) => {
+      // ! required
       if (!value) return mandatoryError('Content Type');
       const key = getKeyIfExists('contentType', value) as ContentType;
       if (!key) return wrongValueError('Content Type');
-      return key
+      return key;
     },
     /* e */ 'title.series': (value: string) => {
       if (!value) return optionalWarning('Season Number');
@@ -147,37 +183,40 @@ export async function formatTitle(
       if (isNaN(count)) return wrongValueError('Number of Episodes');
       return count;
     },
-    /* g */ 'productionStatus': (value: string) => {
+    /* g */ productionStatus: (value: string) => {
       if (!value) return optionalWarning('Production Status');
       const status = getKeyIfExists('productionStatus', value) as ProductionStatus;
       if (!status) return wrongValueError('Production Status');
       return status;
     },
-    /* h */ 'release.year': (value: string) => { // ! required
+    /* h */ 'release.year': (value: string) => {
+      // ! required
       if (!value) return mandatoryError('Release Year');
       const year = Number(value);
       if (isNaN(year)) return wrongValueError('Release Year');
       return year;
     },
-    /* i */ 'release.status': (value: string) => { // ! required
+    /* i */ 'release.status': (value: string) => {
+      // ! required
       if (!value) return mandatoryError('Release Status');
       const status = getKeyIfExists('screeningStatus', value) as ScreeningStatus;
       if (!status) return wrongValueError('Release Year');
       return status;
     },
     /* j */ 'directors[].firstName': (value: string) => {
-      if (!value) return mandatoryError('Director\'s first name');
+      if (!value) return mandatoryError("Director's first name");
       return value;
     },
     /* k */ 'directors[].lastName': (value: string) => {
-      if (!value) return mandatoryError('Director\'s last name');
+      if (!value) return mandatoryError("Director's last name");
       return value;
     },
     /* l */ 'directors[].description': (value: string) => {
       if (!value) return optionalWarning('Director(s) Description');
       return value;
     },
-    /* m */ 'originCountries[]': (value: string) => { // ! required
+    /* m */ 'originCountries[]': (value: string) => {
+      // ! required
       if (!value) return mandatoryError('Origin Countries');
       const territories = getKeyIfExists('territories', value) as Territory;
       if (!territories) return wrongValueError('Origin Countries');
@@ -215,13 +254,15 @@ export async function formatTitle(
       if (!value) return optionalWarning('Original release Date');
       return getDate(value, 'Original release Date') as Date;
     },
-    /* t */ 'originalLanguages[]': (value: string) => { // ! required
+    /* t */ 'originalLanguages[]': (value: string) => {
+      // ! required
       if (!value || !value.length) return mandatoryError('Original Languages');
       const languages = getKeyIfExists('languages', value) as Language;
       if (!languages) return wrongValueError('Original Languages');
       return languages;
     },
-    /* u */ 'genres[]': (value: string) => { // ! required
+    /* u */ 'genres[]': (value: string) => {
+      // ! required
       if (!value || !value.length) return mandatoryError('Genres');
       const genres = getKeyIfExists('genres', value) as Genre;
       if (!genres) return wrongValueError('Genres');
@@ -279,15 +320,16 @@ export async function formatTitle(
       if (!premiere) return wrongValueError('Festival Prizes Premiere');
       return premiere;
     },
-    /* af */ 'logline': (value: string) => {
+    /* af */ logline: (value: string) => {
       if (!value) return optionalWarning('Logline');
       return value;
     },
-    /* ag */ 'synopsis': (value: string) => { // ! required
+    /* ag */ synopsis: (value: string) => {
+      // ! required
       if (!value) return mandatoryError('Synopsis');
       return value;
     },
-    /* ah */ 'keyAssets': (value: string) => {
+    /* ah */ keyAssets: (value: string) => {
       if (!value) return optionalWarning('Key Assets');
       return value;
     },
@@ -323,7 +365,7 @@ export async function formatTitle(
       if (!role) return wrongValueError('Crew Member(s) Role');
       return role;
     },
-    /* ap */ 'budgetRange': (value: string) => {
+    /* ap */ budgetRange: (value: string) => {
       if (!value) return optionalWarning('Budget Range');
       const budget = getKeyIfExists('budgetRange', value);
       if (!budget) return wrongValueError('Budget Range');
@@ -389,31 +431,31 @@ export async function formatTitle(
       if (!value) return optionalWarning('Film Reviews Quote');
       return value;
     },
-    /* bc */ 'color': (value: string) => {
+    /* bc */ color: (value: string) => {
       if (!value) return optionalWarning('Color / Black & White');
       const color = getKeyIfExists('colors', value) as Color;
       if (!color) return wrongValueError('Color / Black & White');
       return color;
     },
-    /* bd */ 'format': (value: string) => {
+    /* bd */ format: (value: string) => {
       if (!value) return optionalWarning('Shooting Format');
       const format = getKeyIfExists('movieFormat', value) as MovieFormat;
       if (!format) return wrongValueError('Shooting Format');
       return format;
     },
-    /* be */ 'formatQuality': (value: string) => {
+    /* be */ formatQuality: (value: string) => {
       if (!value) return optionalWarning('Available Format Quality');
       const quality = getKeyIfExists('movieFormatQuality', value) as MovieFormatQuality;
       if (!quality) return wrongValueError('Available Format Quality');
       return quality;
     },
-    /* bf */ 'soundFormat': (value: string) => {
+    /* bf */ soundFormat: (value: string) => {
       if (!value) return optionalWarning('Sound Format');
       const sound = getKeyIfExists('soundFormat', value) as SoundFormat;
       if (!sound) return wrongValueError('Sound Format');
       return sound;
     },
-    /* bg */ 'isOriginalVersionAvailable': (value: string) => {
+    /* bg */ isOriginalVersionAvailable: (value: string) => {
       if (!value) return optionalWarning('Original Version Authorized');
       const lower = value.toLowerCase();
       const valid = lower === 'yes' || lower === 'no';
@@ -447,14 +489,19 @@ export async function formatTitle(
       if (!valid) return wrongValueError('Available Version(s) Caption');
       return lower === 'yes';
     },
-    /* bl */ 'salesPitch': (value: string) => {
+    /* bl */ salesPitch: (value: string) => {
       if (!value) return optionalWarning('Sales Pitch');
       return value;
     },
 
     // ! ADMIN
     /* bm */ 'app.catalog': (value: string) => {
-      const defaultAccess: MovieAppConfig<Date> = { status: 'draft', access: 'catalog' === currentApp, acceptedAt: null, refusedAt: null };
+      const defaultAccess: MovieAppConfig<Date> = {
+        status: 'draft',
+        access: 'catalog' === currentApp,
+        acceptedAt: null,
+        refusedAt: null,
+      };
 
       if (!value && blockframesAdmin) return optionalWarning('Catalog Status', defaultAccess);
       if (value && !blockframesAdmin) return adminOnlyWarning(defaultAccess, 'Catalog Status');
@@ -467,7 +514,12 @@ export async function formatTitle(
       return { status, access: true, acceptedAt: null, refusedAt: null };
     },
     /* bn */ 'app.festival': (value: string) => {
-      const defaultAccess: MovieAppConfig<Date> = { status: 'draft', access: 'festival' === currentApp, acceptedAt: null, refusedAt: null };
+      const defaultAccess: MovieAppConfig<Date> = {
+        status: 'draft',
+        access: 'festival' === currentApp,
+        acceptedAt: null,
+        refusedAt: null,
+      };
 
       if (!value && blockframesAdmin) return optionalWarning('Festival Status', defaultAccess);
       if (value && !blockframesAdmin) return adminOnlyWarning(defaultAccess, 'Festival Status');
@@ -479,7 +531,12 @@ export async function formatTitle(
       return { status, access: true, acceptedAt: null, refusedAt: null };
     },
     /* bo */ 'app.financiers': (value: string) => {
-      const defaultAccess: MovieAppConfig<Date> = { status: 'draft', access: 'financiers' === currentApp, acceptedAt: null, refusedAt: null };
+      const defaultAccess: MovieAppConfig<Date> = {
+        status: 'draft',
+        access: 'financiers' === currentApp,
+        acceptedAt: null,
+        refusedAt: null,
+      };
 
       if (!value && blockframesAdmin) return optionalWarning('Financiers Status', defaultAccess);
       if (value && !blockframesAdmin) return adminOnlyWarning(defaultAccess, 'Financiers Status');
@@ -490,7 +547,8 @@ export async function formatTitle(
 
       return { status, access: true, acceptedAt: null, refusedAt: null };
     },
-    /* bp */ 'orgIds': async (value: string) => { // ! required
+    /* bp */ orgIds: async (value: string) => {
+      // ! required
       if (!value && blockframesAdmin) return mandatoryError('Owner Id');
       if (value && !blockframesAdmin) return adminOnlyWarning([userOrgId], 'Owner Id');
       if (!value) return [userOrgId];
@@ -509,7 +567,8 @@ export async function formatTitle(
       errors.push(optionalWarning('Stakeholders').error);
     }
 
-    const getStakeholders = (role: StakeholderRole): Stakeholder[] => data.stakeholders?.filter(s => s.role === role) ?? [];
+    const getStakeholders = (role: StakeholderRole): Stakeholder[] =>
+      data.stakeholders?.filter((s) => s.role === role) ?? [];
 
     const stakeholders: MovieStakeholders = {
       productionCompany: getStakeholders('executiveProducer'),
@@ -533,12 +592,13 @@ export async function formatTitle(
 
     const title = createMovie({ ...data, languages, stakeholders });
 
-    if (!title.directors || !title.directors.length) errors.push({
-      type: 'error',
-      name: 'Missing Director(s)',
-      reason: 'You need to fill at least one Director',
-      hint: 'Please edit the corresponding sheets field'
-    });
+    if (!title.directors || !title.directors.length)
+      errors.push({
+        type: 'error',
+        name: 'Missing Director(s)',
+        reason: 'You need to fill at least one Director',
+        hint: 'Please edit the corresponding sheets field',
+      });
 
     titles.push({ errors, movie: title });
   }

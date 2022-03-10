@@ -6,7 +6,7 @@ import { DashboardTitleShellComponent } from '@blockframes/movie/dashboard/shell
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { pluck, switchMap } from 'rxjs/operators';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { MovieService } from '@blockframes/movie/+state';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({

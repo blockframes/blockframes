@@ -9,7 +9,7 @@ import { createDocumentMeta } from '@blockframes/utils/models-meta';
 import { AlgoliaOrganization } from '@blockframes/utils/algolia';
 import { OrganizationLiteForm } from '@blockframes/organization/forms/organization-lite.form';
 import { IdentityForm, IdentityFormControl } from '@blockframes/auth/forms/identity.form';
-import { createPublicUser, PublicUser, User } from '@blockframes/user/types';
+import { createPublicUser, PublicUser, User } from '@blockframes/model';
 import { createOrganization, OrganizationService } from '@blockframes/organization/+state';
 import { hasDisplayName } from '@blockframes/utils/helpers';
 import { Intercom } from 'ng-intercom';
