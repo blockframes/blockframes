@@ -2,7 +2,7 @@ import { NotificationDocument } from '@blockframes/notification/+state/notificat
 import { InvitationDocument } from '@blockframes/invitation/+state/invitation.firestore';
 import { PublicUser } from '@blockframes/model';
 import { OrganizationDocument, PublicOrganization, MovieDocument } from '@blockframes/model';
-import { PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
+import { createPermissions, PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
 import { removeUnexpectedUsers } from './users';
 import { Auth, QueryDocumentSnapshot, getDocument, runChunks, removeAllSubcollections, UserRecord, loadAdminServices } from '@blockframes/firebase-utils';
 import admin from 'firebase-admin';
@@ -51,7 +51,7 @@ export async function auditUsers(db: FirebaseFirestore.Firestore, auth?: admin.a
   const organizationIds = dbData.orgs.refs.docs.map(ref => ref.id);
 
   console.log('Auditing users...');
-  await cleanUsers(dbData.users.refs, organizationIds, auth, { dryRun: true });
+  await cleanUsers(dbData.users.refs, organizationIds, dbData.permissions.refs, auth, { dryRun: true });
   console.log('Audit ended.');
 
   return true;
@@ -70,7 +70,7 @@ async function cleanData(dbData: DatabaseData, db: FirebaseFirestore.Firestore, 
   ];
 
   // Compare and update/delete documents with references to non existing documents
-  if (auth) await cleanUsers(dbData.users.refs, organizationIds, auth);
+  if (auth) await cleanUsers(dbData.users.refs, organizationIds, dbData.permissions.refs, auth);
   if (verbose) console.log('Cleaned users');
 
   // Loading users list after "cleanUsers" since some may have been removed
@@ -189,6 +189,7 @@ async function cleanOneInvitation(doc: QueryDocumentSnapshot, invitation: Invita
 export async function cleanUsers(
   users: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
   existingOrganizationIds: string[],
+  permissions: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
   auth: Auth,
   options = { dryRun: false }
 ) {
@@ -204,7 +205,7 @@ export async function cleanUsers(
     const authUser: UserRecord = await auth.getUserByEmail(user.email).catch(() => undefined);
 
     if (authUser) {
-      const validUser = await isUserValid(user, authUser);
+      const validUser = await isUserValid(user, authUser, permissions.docs.map(p => p.data() as PermissionsDocument));
       // Check if ids are the same
       if (authUser.uid !== user.uid) {
         if (verbose || options.dryRun) console.error(`ERR - uid missmatch for ${user.email}. db: ${user.uid} - auth : ${authUser.uid}`);
@@ -436,7 +437,11 @@ function isInvitationValid(invitation: InvitationDocument, existingIds: string[]
   }
 }
 
-function isUserValid(user: PublicUser, authUser: UserRecord) {
+function isUserValid(
+  user: PublicUser,
+  authUser: UserRecord,
+  permissions: PermissionsDocument[]
+) {
   // User does not have orgId and was created more than 90 days ago
   const creationTimeTimestamp = Date.parse(authUser.metadata.creationTime);
   if (!user.orgId && creationTimeTimestamp < currentTimestamp - (dayInMillis * 90)) {
@@ -451,7 +456,22 @@ function isUserValid(user: PublicUser, authUser: UserRecord) {
 
     // User have not signed in within the last 3 years
     const lastSignInTime = Date.parse(authUser.metadata.lastSignInTime);
-    if (lastSignInTime < threeYearsAndAMonthAgo) return false;
+    if (lastSignInTime < threeYearsAndAMonthAgo) {
+      if (!user.orgId) return false;
+      // Check if not superAdmin
+      const permission = permissions.find(p => p.id === user.orgId);
+      if (!permission) {
+        if (verbose) console.log(`Permission document not found for user ${user.uid}, orgId: ${user.orgId}`);
+        return false;
+      }
+
+      if (permission.roles[user.uid] === 'superAdmin') {
+        if (verbose) console.log(`USer ${user.uid} was not removed because he is superAdmin of orgId: ${user.orgId}`);
+        return true;
+      } else {
+        return false;
+      }
+    };
   }
 
   return true;

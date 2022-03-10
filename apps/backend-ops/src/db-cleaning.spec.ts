@@ -24,7 +24,7 @@ import { getCollectionRef } from '@blockframes/firebase-utils';
 import { clearFirestoreData } from '@firebase/rules-unit-testing';
 import { getAllAppsExcept } from '@blockframes/utils/apps';
 import { PublicUser } from '@blockframes/model';
-import { PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
+import { createPermissions, PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
 
 type Snapshot = FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>;
 let db: FirebaseFirestore.Firestore;
@@ -75,18 +75,20 @@ describe('DB cleaning script', () => {
       }
     ];
 
-    const [organizations, usersBefore] = await Promise.all([
+    const [organizations, usersBefore, permissions] = await Promise.all([
       getCollectionRef('orgs'),
-      getCollectionRef('users')
+      getCollectionRef('users'),
+      getCollectionRef('permissions'),
     ]);
 
     // Check if data have been correctly added
     expect(usersBefore.docs.length).toEqual(2);
     expect(organizations.docs.length).toEqual(1);
+    expect(permissions.docs.length).toEqual(0);
 
     const organizationIds = organizations.docs.map(ref => ref.id);
 
-    await cleanUsers(usersBefore, organizationIds, adminAuth);
+    await cleanUsers(usersBefore, organizationIds, permissions, adminAuth);
 
     const usersAfter: Snapshot = await getCollectionRef('users');
     const cleanedUsers = usersAfter.docs.filter(u => isUserClean(u, organizationIds)).length;
@@ -161,18 +163,20 @@ describe('DB cleaning script', () => {
       }
     ];
 
-    const [organizations, usersBefore] = await Promise.all([
+    const [organizations, usersBefore, permissions] = await Promise.all([
       getCollectionRef('orgs'),
-      getCollectionRef('users')
+      getCollectionRef('users'),
+      getCollectionRef('permissions')
     ]);
 
     // Check if data have been correctly added
     expect(usersBefore.docs.length).toEqual(5);
     expect(organizations.docs.length).toEqual(1);
+    expect(permissions.docs.length).toEqual(0);
 
     const organizationIds = organizations.docs.map(ref => ref.id);
 
-    await cleanUsers(usersBefore, organizationIds, adminAuth);
+    await cleanUsers(usersBefore, organizationIds, permissions, adminAuth);
 
     const usersAfter: Snapshot = await getCollectionRef('users');
     const cleanedDbUsers = usersAfter.docs.filter(u => isUserClean(u, organizationIds));
@@ -192,8 +196,75 @@ describe('DB cleaning script', () => {
 
   });
 
-  it('should note remove inactive users if last member of is org ? ', async () => {
-   // @TODO orgAdmin ?
+  it('should not remove inactive user if superAdmin of his org', async () => {
+    const currentTimestamp = new Date().getTime();
+    const fiveYearsAgo = currentTimestamp - (dayInMillis * 365 * 5);
+    const threeYearsAgoAnd31Days = currentTimestamp - (dayInMillis * 365 * 3) - (dayInMillis * 31);
+
+    // User that was created more than 5 years ago and connected 3 years ago and 31 days
+    // should be kept because he is superAdmin of his org
+    const testUser1 = { uid: 'A', email: 'indianajhones@fake.com', firstName: 'indiana', lastName: 'jhones', orgId: 'org-A' };
+
+    // User that was created more than 5 years ago and connected 3 years ago and 31 days
+    // should be removed because he is not superAdmin of his org
+    const testUser2 = { uid: 'B', email: 'marchammil@fake.com', firstName: 'marc', lastName: 'hammil', orgId: 'org-A' };
+
+    const testOrg1 = { id: 'org-A' };
+
+    const testPermissions1 = createPermissions({ ...testOrg1, roles: { A: 'superAdmin', B: 'member' } });
+
+    adminAuth.users = [
+      {
+        uid: 'A',
+        email: 'indianajhones@fake.com',
+        providerData: [{ uid: 'A', email: 'indianajhones@fake.com', providerId: 'password' }],
+        metadata: {
+          creationTime: new Date(fiveYearsAgo).toUTCString(),
+          lastSignInTime: new Date(threeYearsAgoAnd31Days).toUTCString(),
+        }
+      },
+      {
+        uid: 'B',
+        email: 'marchammil@fake.com',
+        providerData: [{ uid: 'B', email: 'marchammil@fake.com', providerId: 'password' }],
+        metadata: {
+          creationTime: new Date(fiveYearsAgo).toUTCString(),
+          lastSignInTime: new Date(threeYearsAgoAnd31Days).toUTCString(),
+        }
+      }
+    ];
+
+    await populate('users', [testUser1, testUser2]);
+    await populate('orgs', [testOrg1]);
+    await populate('permissions', [testPermissions1]);
+
+    const [organizations, usersBefore, permissions] = await Promise.all([
+      getCollectionRef('orgs'),
+      getCollectionRef('users'),
+      getCollectionRef('permissions'),
+    ]);
+
+    // Check if data have been correctly added
+    expect(usersBefore.docs.length).toEqual(2);
+    expect(organizations.docs.length).toEqual(1);
+    expect(permissions.docs.length).toEqual(1);
+
+    const organizationIds = organizations.docs.map(ref => ref.id);
+
+    await cleanUsers(usersBefore, organizationIds, permissions, adminAuth);
+
+    const usersAfter: Snapshot = await getCollectionRef('users');
+    const cleanedDbUsers = usersAfter.docs.filter(u => isUserClean(u, organizationIds));
+    const cleanedAuthUsers = await adminAuth.listUsers();
+
+    expect(cleanedDbUsers.length).toEqual(1);
+
+    // Auth should have same size
+    expect(cleanedAuthUsers.users.length).toEqual(cleanedDbUsers.length);
+
+    // Users A should be kept
+    expect(cleanedDbUsers.find(o => o.data().uid === 'A')).toBeTruthy();
+    expect(cleanedAuthUsers.users.find(o => o.uid === 'A')).toBeTruthy();
   });
 
   it('should remove unexpected users from auth', async () => {
@@ -286,10 +357,15 @@ describe('DB cleaning script', () => {
     await populate('users', [testUser1, testUser2]);
 
     // Check if users have been correctly added
-    const usersBefore = await getCollectionRef('users');
-    expect(usersBefore.docs.length).toEqual(2);
+    const [usersBefore, permissions] = await Promise.all([
+      getCollectionRef('users'),
+      getCollectionRef('permissions')
+    ]);
 
-    await cleanUsers(usersBefore, [], adminAuth);
+    expect(usersBefore.docs.length).toEqual(2);
+    expect(permissions.docs.length).toEqual(0);
+
+    await cleanUsers(usersBefore, [], permissions, adminAuth);
 
     // Check if user have been correctly removed
     const usersAfter = await getCollectionRef('users');
