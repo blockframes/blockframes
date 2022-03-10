@@ -472,7 +472,7 @@ export const mandateMovie6 = {
         to: new Date('02/21/2032')
       },
       medias: [ 'payTv', 'planes', 'boats', 'educational'],
-      territories: ['france','belgium'],
+      territories: ['france','belgium', 'angola'],
       exclusive: true
     },
     {
