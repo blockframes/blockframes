@@ -18,7 +18,7 @@ import { cleanOrgMedias } from './media';
 import { Change, EventContext } from 'firebase-functions';
 import { algolia, deleteObject, storeSearchableOrg, findOrgAppAccess, storeSearchableUser } from '@blockframes/firebase-utils';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
-import { User } from '@blockframes/user/+state';
+import { User } from '@blockframes/model';
 import { groupIds } from '@blockframes/utils/emails/ids';
 
 /** Create a notification with user and org. */

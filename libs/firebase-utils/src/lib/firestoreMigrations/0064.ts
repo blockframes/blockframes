@@ -2,7 +2,7 @@ import { runChunks } from '../firebase-utils';
 import { loadAdminServices } from '../util';
 import { Firestore, UserIdentifier, UserRecord } from '../types';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
-import { PublicUser } from '@blockframes/user/+state';
+import { PublicUser } from '@blockframes/model';
 
 
 /**

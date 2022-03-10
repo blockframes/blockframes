@@ -3,7 +3,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { Router } from '@angular/router';
-import { createPublicUser } from '@blockframes/user/types';
+import { createPublicUser } from '@blockframes/model';
 import { AuthService } from '@blockframes/auth/+state';
 import { FormControl, Validators, AbstractControl } from '@angular/forms';
 import { UserService } from '@blockframes/user/+state';
