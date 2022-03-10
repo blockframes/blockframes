@@ -1,6 +1,7 @@
-import { NotificationDocument, PublicUser, MovieDocument } from '@blockframes/model';
 import { InvitationDocument } from '@blockframes/invitation/+state/invitation.firestore';
 import {
+  NotificationDocument,
+  PublicUser,
   OrganizationDocument,
   PublicOrganization,
   MovieDocument
