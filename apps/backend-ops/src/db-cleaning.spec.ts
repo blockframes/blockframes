@@ -192,6 +192,10 @@ describe('DB cleaning script', () => {
 
   });
 
+  it('should note remove inactive users if last member of is org ? ', async () => {
+   // @TODO orgAdmin ?
+  });
+
   it('should remove unexpected users from auth', async () => {
     const currentTimestamp = new Date().getTime();
 
