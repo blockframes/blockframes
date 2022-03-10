@@ -1,6 +1,5 @@
 import { App } from '@blockframes/utils/apps';
 import { UserService } from '@blockframes/user/+state';
-import { User } from '@blockframes/model';
 import {
   mandatoryError,
   MovieImportState,
@@ -11,7 +10,6 @@ import {
   getUser,
   unknownEntityError,
 } from '@blockframes/import/utils';
-import { createMovie } from '@blockframes/model';
 import { extract, ExtractConfig, SheetTab } from '@blockframes/utils/spreadsheet';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
 import {
@@ -21,6 +19,8 @@ import {
   MovieRelease,
   MovieRunningTime,
   MovieStakeholders,
+  User,
+  createMovie
 } from '@blockframes/model';
 import {
   Certification,

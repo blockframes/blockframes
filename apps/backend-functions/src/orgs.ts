@@ -81,14 +81,14 @@ async function notifyOnOrgMemberChanges(before: OrganizationDocument, after: Org
   }
 }
 
-export async function onOrganizationCreate(snap: FirebaseFirestore.DocumentSnapshot) {
+export function onOrganizationCreate(snap: FirebaseFirestore.DocumentSnapshot) {
   const org = snap.data() as OrganizationDocument;
 
   if (!org?.denomination?.full) {
     console.error('Invalid org data:', org);
     throw new Error('organization update function got invalid org data');
   }
-  const emailRequest = await organizationCreated(org);
+  const emailRequest = organizationCreated(org);
   const from = getMailSender(org._meta.createdFrom);
 
   return Promise.all([
@@ -269,7 +269,7 @@ export const accessToAppChanged = async (
 export const onRequestFromOrgToAccessApp = async (data: { app: App, module: Module, orgId: string }, context?: CallableContext) => {
   if (!!context.auth.uid && !!data.app && !!data.orgId && !!data.module) {
     const organization = await getDocument<OrganizationDocument>(`orgs/${data.orgId}`);
-    const mailRequest = await organizationRequestedAccessToApp(organization, data.app, data.module);
+    const mailRequest = organizationRequestedAccessToApp(organization, data.app, data.module);
     const from = getMailSender(data.app);
     const userDocument = await getDocument<User>(`users/${context.auth.uid}`);
 
