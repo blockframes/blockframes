@@ -1,5 +1,5 @@
 import { db } from './internals/firebase';
-import { MovieDocument, createDocPermissions, PublicUser } from './data/types';
+import { MovieDocument, createDocPermissions,  } from './data/types';
 import { triggerNotifications, createNotification } from './notification';
 import {
   createDocumentMeta,
@@ -16,7 +16,7 @@ import { sendMovieSubmittedEmail } from './templates/mail';
 import { sendMail } from './internals/email';
 import { groupIds } from '@blockframes/utils/emails/ids';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
-import { Movie, Organization, orgName, MovieAppConfig} from '@blockframes/model';
+import { Movie, Organization, orgName, MovieAppConfig, PublicUser } from '@blockframes/model';
 
 const apps: App[] = getAllAppsExcept(['crm']);
 

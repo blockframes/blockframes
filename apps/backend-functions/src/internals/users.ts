@@ -1,7 +1,7 @@
 
 import { App, getMailSender, applicationUrl } from '@blockframes/utils/apps';
 import { generate as passwordGenerator } from 'generate-password';
-import { PublicOrganization } from '../data/types';
+import { PublicOrganization } from '@blockframes/model';
 import { createDocumentMeta, createPublicUserDocument, getDocument } from '../data/internals';
 import { userInvite, userFirstConnexion } from '../templates/mail';
 import { groupIds, templateIds } from '@blockframes/utils/emails/ids';

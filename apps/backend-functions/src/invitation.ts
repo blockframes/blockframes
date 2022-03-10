@@ -5,7 +5,7 @@ import { InvitationOrUndefined } from './data/types';
 import { onInvitationToJoinOrgUpdate, onRequestToJoinOrgUpdate } from './internals/invitations/organizations';
 import { onInvitationToAnEventUpdate } from './internals/invitations/events';
 import { InvitationBase, createInvitation, InvitationStatus, InvitationDocument } from '@blockframes/invitation/+state/invitation.firestore';
-import { createPublicUser, PublicUser, OrganizationDocument } from '@blockframes/model';
+import { createPublicUser, PublicUser, OrganizationDocument, orgName } from '@blockframes/model';
 import { getOrInviteUserByMail } from './internals/users';
 import { ErrorResultResponse } from './utils';
 import { CallableContext } from "firebase-functions/lib/providers/https";
@@ -15,7 +15,6 @@ import { getEventEmailData } from '@blockframes/utils/emails/utils';
 import { Change } from 'firebase-functions';
 import { AlgoliaOrganization } from '@blockframes/utils/algolia';
 import { createAlgoliaOrganization } from '@blockframes/firebase-utils';
-import { orgName } from '@blockframes/model';
 export { hasUserAnOrgOrIsAlreadyInvited } from './internals/invitations/utils';
 
 
