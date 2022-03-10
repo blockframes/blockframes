@@ -7,8 +7,6 @@ import {
   getOrganizationsOfMovie,
   Timestamp,
 } from './data/internals';
-
-import { orgName } from '@blockframes/model';
 import { MovieAppConfig } from '@blockframes/model';
 import { cleanMovieMedias, moveMovieMedia } from './media';
 import { Change, EventContext } from 'firebase-functions';
@@ -19,7 +17,7 @@ import { sendMovieSubmittedEmail } from './templates/mail';
 import { sendMail } from './internals/email';
 import { groupIds } from '@blockframes/utils/emails/ids';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
-import { Movie, Organization } from '@blockframes/model';
+import { Movie, Organization, orgName} from '@blockframes/model';
 
 const apps: App[] = getAllAppsExcept(['crm']);
 
