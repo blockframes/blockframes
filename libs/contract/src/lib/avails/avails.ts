@@ -391,7 +391,7 @@ export function isCalendarTermInAvails<T extends BucketTerm | Term>(term: T, ava
 }
 
 function getMatchingMandates(mandates: FullMandate[], avails: CalendarAvailsFilter, field: 'territories' | 'medias'): FullMandate[] {
-  const availableMandates: Record<string,FullMandate> = {};
+  const availableMandates: Record<string, FullMandate> = {};
   const foundFields: unknown[] = [];
   for (const value of avails[field]) {
     const foundMandate = mandates.find(mandate => {
@@ -400,7 +400,7 @@ function getMatchingMandates(mandates: FullMandate[], avails: CalendarAvailsFilt
       });
     });
     if (foundMandate) {
-      availableMandates[foundMandate.id]=foundMandate;
+      availableMandates[foundMandate.id] = foundMandate;
       foundFields.push(value);
     }
   }
@@ -414,13 +414,14 @@ export function getMatchingCalendarMandates(mandates: FullMandate[], avails: Cal
 }
 
 function getMatchingCalendarSales<T extends (FullSale | BucketContract)>(sales: T[], avails: CalendarAvailsFilter): T[] {
-  return sales.filter(sale => sale.terms.some(term => {
-    const exclusivityCheck = exclusivitySomeOf(avails.exclusive).in(term.exclusive);
-    const mediaCheck = someOf(avails.medias).in(term.medias);
-    const territoryCheck = someOf(avails.territories).in(term.territories);
-
-    return exclusivityCheck && mediaCheck && territoryCheck;
-  }));
+  return sales.filter(sale => {
+    return sale.terms.some(term => {
+      const exclusivityCheck = exclusivitySomeOf(avails.exclusive).in(term.exclusive);
+      const mediaCheck = someOf(avails.medias).in(term.medias);
+      const territoryCheck = someOf(avails.territories).in(term.territories);
+      return exclusivityCheck && mediaCheck && territoryCheck;
+    })
+  });
 }
 
 function isCalendarTermInBucket<T extends BucketTerm | Term>(term: T, avails: CalendarAvailsFilter) {

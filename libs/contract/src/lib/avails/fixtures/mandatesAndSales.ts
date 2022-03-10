@@ -520,35 +520,3 @@ export const mandateMovie7 = {
     },
   ],
 } as FullMandate;
-
-export const mandateMovie8 = {
-  ...createMandate({
-    titleId: 'Movie8',
-    id: 'mandateMovie8',
-    termIds: ['term1MandateMovie8', 'term2MandateMovie8'],
-  }),
-  terms: [
-    {
-      id: 'term1MandateMovie8',
-      contractId: 'mandateMovie8',
-      duration: {
-        from: new Date('02/21/2021'),
-        to: new Date('02/21/2032')
-      },
-      medias: ['payTv', 'planes'],
-      territories: ['france', 'belgium'],
-      exclusive: true
-    },
-    {
-      id: 'term2MandateMovie8',
-      contractId: 'mandateMovie8',
-      duration: {
-        from: new Date('02/21/2021'),
-        to: new Date('02/21/2032')
-      },
-      medias: ['planes', 'sVod'],
-      territories: ['cameroon', 'brazil'],
-      exclusive: true
-    },
-  ],
-} as FullMandate;
