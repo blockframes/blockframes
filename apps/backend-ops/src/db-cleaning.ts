@@ -1,6 +1,6 @@
 import { NotificationDocument } from '@blockframes/notification/+state/notification.firestore';
 import { InvitationDocument } from '@blockframes/invitation/+state/invitation.firestore';
-import { PublicUser } from '@blockframes/user/+state/user.firestore';
+import { PublicUser } from '@blockframes/model';
 import {
   OrganizationDocument,
   PublicOrganization,

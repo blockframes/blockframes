@@ -18,7 +18,6 @@
     "paths": {
       "@env": ["env/env.ts"],
       "@blockframes/auth/*": ["libs/user/src/lib/auth/*"],
-      "@blockframes/user/types": ["libs/user/src/lib/user/+state/user.firestore.ts"],
       "@blockframes/ui/*": ["libs/ui/src/lib/*"],
       "@blockframes/utils/*": ["libs/utils/src/lib/*"],
       "@blockframes/movie/*": ["libs/movie/src/lib/movie/*"],

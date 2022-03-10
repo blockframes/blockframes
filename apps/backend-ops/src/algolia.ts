@@ -14,7 +14,7 @@ import {
   orgName,
 } from '@blockframes/organization/+state/organization.firestore';
 import { MovieDocument } from '@blockframes/model';
-import { PublicUser } from '@blockframes/user/types';
+import { PublicUser } from '@blockframes/model';
 import { App, getAllAppsExcept } from '@blockframes/utils/apps';
 import { Campaign } from '@blockframes/campaign/+state/campaign.model';
 import { AlgoliaConfig } from '@blockframes/utils/algolia';

@@ -13,7 +13,7 @@ import * as admin from 'firebase-admin';
 import { getUser } from "./internals/utils";
 import { Request, Response } from "firebase-functions";
 import { isUserInvitedToEvent } from "./internals/invitations/events";
-import { PublicUser } from "@blockframes/user/types";
+import { PublicUser } from "@blockframes/model";
 
 export interface RequestAccessToken {
   eventId: string,

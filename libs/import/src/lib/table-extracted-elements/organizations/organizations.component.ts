@@ -10,7 +10,7 @@ import { sortingDataAccessor } from '@blockframes/utils/table';
 import { OrganizationsImportState, SpreadsheetImportError } from '../../utils';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { AuthService } from '@blockframes/auth/+state';
-import { PublicUser } from '@blockframes/user/+state';
+import { PublicUser } from '@blockframes/model';
 import { getOrgAppAccess } from '@blockframes/utils/apps';
 import { OrgEmailData } from '@blockframes/utils/emails/utils';
 

@@ -34,7 +34,8 @@ import { MatNativeDateModule } from '@angular/material/core';
 // Blockframes
 import { IntercomService } from '@blockframes/utils/intercom/intercom.service';
 import { SentryModule } from '@blockframes/utils/sentry.module';
-import { YandexMetricaService } from '@blockframes/utils/yandex-metrica/yandex-metrica.service';
+// #7936 this may be reactivated later
+// import { YandexMetricaService } from '@blockframes/utils/yandex-metrica/yandex-metrica.service';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { ErrorLoggerModule } from '@blockframes/utils/error-logger.module';
 import { CookieBannerModule } from '@blockframes/utils/gdpr-cookie/cookie-banner/cookie-banner.module';
@@ -102,13 +103,13 @@ export class AppModule {
     router: Router,
     analytics: FireAnalytics,
     intercomService: IntercomService,
-    yandexService: YandexMetricaService,
+    // yandexService: YandexMetricaService, #7936 this may be reactivated later
     gdprService: GDPRService,
     authService: AuthService,
   ) {
 
     const { intercom, yandex } = gdprService.cookieConsent;
-    if (yandex) yandexService.insertMetrika('catalog');
+    // if (yandex) yandexService.insertMetrika('catalog'); #7936 this may be reactivated later
     intercom && intercomId ? intercomService.enable(authService.profile) : intercomService.disable();
 
     analytics.setUserProperties(getBrowserWithVersion());

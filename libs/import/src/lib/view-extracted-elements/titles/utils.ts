@@ -1,5 +1,6 @@
 import { App } from '@blockframes/utils/apps';
-import { User, UserService } from '@blockframes/user/+state';
+import { UserService } from '@blockframes/user/+state';
+import { User } from '@blockframes/model';
 import {
   mandatoryError,
   MovieImportState,

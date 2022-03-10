@@ -9,7 +9,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { AngularFirestore } from '@angular/fire/firestore';
 import { CmsPage } from '@blockframes/admin/cms/template';
 import { AuthService } from '@blockframes/auth/+state';
-import { createPreferences } from '@blockframes/user/+state/user.model';
+import { createPreferences } from '@blockframes/model';
 
 // Material
 import { MatDialog } from '@angular/material/dialog';
