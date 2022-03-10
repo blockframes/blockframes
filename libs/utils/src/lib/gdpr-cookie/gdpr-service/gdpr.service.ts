@@ -1,18 +1,19 @@
-import { Inject, Injectable } from "@angular/core";
+import { Injectable } from "@angular/core";
 import { CookiesConsent } from "../cookie-form/cookie.form";
 import { IntercomService } from '@blockframes/utils/intercom/intercom.service';
-import { YandexMetricaService } from '@blockframes/utils/yandex-metrica/yandex-metrica.service';
 import { User } from "@blockframes/model";
-import { App } from "@blockframes/utils/apps";
-import { APP } from '@blockframes/utils/routes/utils';
+// #7936 this may be reactivated later
+// import { YandexMetricaService } from '@blockframes/utils/yandex-metrica/yandex-metrica.service';
+// import { App } from "@blockframes/utils/apps";
+// import { APP } from '@blockframes/utils/routes/utils';
 
 @Injectable({ providedIn: 'root' })
 export class GDPRService {
 
   constructor(
     private intercom: IntercomService,
-    private yandex: YandexMetricaService,
-    @Inject(APP) private app: App
+    // private yandex: YandexMetricaService,
+    // @Inject(APP) private app: App
   ) { }
 
   get cookieConsent(): CookiesConsent {
@@ -30,8 +31,10 @@ export class GDPRService {
     enable ? this.intercom.enable(user) : this.intercom.disable();
   }
 
+  /*
+  #7936 this may be reactivated later
   enableYandex(enable: boolean) {
     this.enable('yandex', enable);
     if (enable) this.yandex.insertMetrika(this.app);
-  }
+  } */
 }

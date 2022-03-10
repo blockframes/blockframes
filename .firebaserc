@@ -140,6 +140,15 @@
       "hosting": {
         "catalog": [
           "blockframes-kevin-m"
+        ],
+        "crm": [
+          "crm-blockframes-kevin-m"
+        ],
+        "festival": [
+          "festival-blockframes-kevin-m"
+        ],
+        "financiers": [
+          "financiers-blockframes-kevin-m"
         ]
       }
     },
@@ -147,6 +156,15 @@
       "hosting": {
         "catalog": [
           "blockframes-kevin-d"
+        ],
+        "crm": [
+          "crm-blockframes-kevin-d"
+        ],
+        "festival": [
+          "festival-blockframes-kevin-d"
+        ],
+        "financiers": [
+          "financiers-blockframes-kevin-d"
         ]
       }
     },

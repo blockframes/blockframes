@@ -38,12 +38,14 @@
   <h2>Optional cookies</h2>
   <p class="mat-body-1">These are optional but very useful for us to provide you with optimal services.</p>
 
+  <!-- 
+  #7936 this may be reactivated later  
   <h3>THIRD PARTY PARTNERS</h3>
 
   <mat-radio-group (change)="masterToggle($event)">
     <mat-radio-button [value]="false" [checked]="masterToggleStatus === 'reject'">Reject All</mat-radio-button>
     <mat-radio-button [value]="true" [checked]="masterToggleStatus === 'accept'">Accept All</mat-radio-button>
-  </mat-radio-group>
+  </mat-radio-group> -->
 
   <h3>INTERCOM</h3>
   <div fxLayout fxLayoutAlign="space-between">
@@ -52,11 +54,13 @@
     </mat-slide-toggle>
   </div>
 
-  <h3>YANDEX</h3>
+  <!-- 
+  #7936 this may be reactivated later  
+  <h3>YANDEX</h3> 
   <div fxLayout fxLayoutAlign="space-between">
     <p class="mat-body-1">Yandex is used to monitor users’ behavior on our services. It enables us to understand how our services are used
       and craft better experiences.</p>
     <mat-slide-toggle [checked]="form.get('yandex').value" name="yandex" (change)="toggleCookie($event)">
     </mat-slide-toggle>
-  </div>
+  </div> -->
 </section>
