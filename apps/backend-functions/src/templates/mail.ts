@@ -8,7 +8,7 @@ import { EmailRequest, EmailTemplateRequest } from '../internals/email';
 import { templateIds } from '@blockframes/utils/emails/ids';
 import { RequestDemoInformations, OrganizationDocument, PublicOrganization, MovieDocument } from '../data/types';
 import { PublicUser } from '@blockframes/model';
-import { EventEmailData, OrgEmailData, UserEmailData } from '@blockframes/utils/emails/utils';
+import { EventEmailData, getMovieEmailData, getOfferEmailData, MovieEmailData, OrgEmailData, UserEmailData } from '@blockframes/utils/emails/utils';
 import { App, appName, Module } from '@blockframes/utils/apps';
 import { Bucket } from '@blockframes/contract/bucket/+state/bucket.model';
 import { format } from "date-fns";
@@ -358,7 +358,7 @@ export function contractCreatedEmail(
   const data = {
     user: toUser,
     app: { name: appName.catalog },
-    movie: title,
+    movie: getMovieEmailData(title),
     contract,
     negotiation,
     pageURL,
@@ -384,7 +384,7 @@ export function buyerOfferCreatedConfirmationEmail(toUser: UserEmailData, org: O
     bucket: { ...bucket, contracts },
     user: toUser,
     pageURL,
-    offer,
+    offer: getOfferEmailData(offer),
     org
   };
   return { to: toUser.email, templateId: templateIds.offer.toBuyer, data };
@@ -401,7 +401,7 @@ export function counterOfferRecipientEmail(
     user: toUser,
     org: senderOrg,
     pageURL,
-    movie: title,
+    movie: getMovieEmailData(title),
     app: { name: appName.catalog }
   };
   return { to: toUser.email, templateId: templateIds.negotiation.receivedCounterOffer, data };
@@ -425,14 +425,14 @@ export function counterOfferSenderEmail(
     contractId,
     app: { name: appName.catalog },
     negotiation: { ...negotiation, terms, currency },
-    movie: title
+    movie: getMovieEmailData(title)
   };
   return { to: toUser.email, templateId: templateIds.negotiation.createdCounterOffer, data };
 }
 
 export function toAdminCounterOfferEmail( title: MovieDocument): EmailTemplateRequest {
   const data = {
-    movie: title
+    movie: getMovieEmailData(title)
   };
   return { to: supportEmails.catalog, templateId: templateIds.negotiation.toAdminCounterOffer, data };
 }

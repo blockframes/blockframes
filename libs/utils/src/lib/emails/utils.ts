@@ -5,13 +5,14 @@ import { format } from "date-fns";
 import { EventDocument, EventMeta, EventTypes, MeetingEventDocument, ScreeningEventDocument } from "@blockframes/event/+state/event.firestore";
 import { OrganizationDocument, orgName } from "@blockframes/organization/+state/organization.firestore";
 import { User, PublicUser } from "@blockframes/model";
-import { AccessibilityTypes } from "../static-model";
+import { AccessibilityTypes, movieCurrencies } from "../static-model";
 import { MailBucket } from '@blockframes/contract/bucket/+state/bucket.firestore';
 import { toIcsFile } from "../agenda/utils";
 import { IcsEvent } from "../agenda/agenda.interfaces";
 import { MovieDocument } from '@blockframes/model';
 import type { ContractDocument } from '@blockframes/contract/contract/+state';
 import { NegotiationDocument } from "@blockframes/contract/negotiation/+state/negotiation.firestore";
+import { Offer } from "@blockframes/contract/offer/+state";
 
 interface EmailData {
   to: string;
@@ -33,7 +34,8 @@ export interface EmailTemplateRequest {
     bucket?: MailBucket,
     baseUrl?: string,
     date?: string,
-    movie?: MovieDocument,
+    movie?: MovieEmailData | MovieDocument,
+    offer?: OfferEmailData,
     buyer?: PublicUser | string,
     contract?: ContractDocument,
     territories?: string,
@@ -82,6 +84,16 @@ export interface UserEmailData {
   email: string,
   password?: string,
   isRegistered?: boolean
+}
+
+export interface OfferEmailData {
+  id: string
+}
+
+export interface MovieEmailData {
+  title : {
+    international: string
+  }
 }
 
 export type EmailErrorCodes = 'E01-unauthorized' | 'E02-general-error' | 'E03-missing-api-key' | 'E04-no-template-available';
@@ -188,5 +200,19 @@ export function getUserEmailData(user: Partial<User>, password?: string): UserEm
     email: user.email || '',
     password,
     isRegistered: !!user.orgId
+  }
+}
+
+export function getOfferEmailData(offer: Partial<Offer>): OfferEmailData {
+  return {
+    id: offer.id
+  }
+}
+
+export function getMovieEmailData(movie: Partial<MovieDocument>): MovieEmailData {
+  return {
+    title: {
+      international: movie.title.international
+    }
   }
 }
