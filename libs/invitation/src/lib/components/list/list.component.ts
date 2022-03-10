@@ -3,8 +3,7 @@ import { Component, ChangeDetectionStrategy, TemplateRef, ContentChild, Input } 
 
 // Blockframes
 import { descTimeFrames } from '@blockframes/utils/pipes/filter-by-date.pipe';
-
-import { Invitation } from '../../+state';
+import { Invitation } from '@blockframes/model';
 
 @Component({
   selector: 'invitation-list',

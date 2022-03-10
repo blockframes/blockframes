@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { PublicUser } from '@blockframes/model';
-import { Invitation } from '@blockframes/invitation/+state/invitation.model';
+import { Invitation } from '@blockframes/model';
 
 @Component({
   selector: 'member-request',
