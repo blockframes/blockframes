@@ -5,7 +5,7 @@ import { Invitation } from '@blockframes/invitation/+state';
 import { DbRecord, throwOnProduction } from '../util';
 import { CollectionReference, QueryDocumentSnapshot, QuerySnapshot } from '../types';
 import { Queue } from '../queue';
-import { createPublicOrganization, Movie, Organization, PublicOrganization } from '@blockframes/model'; // TODO #7931 example
+import { createPublicOrganization, Movie, Organization, PublicOrganization } from '@blockframes/model';
 import { FirestoreEmulator } from '../firestore/emulator';
 import { firebase, testVideoId } from '@env';
 import { runChunks } from '../firebase-utils';

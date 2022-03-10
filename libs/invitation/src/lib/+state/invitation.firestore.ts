@@ -1,7 +1,6 @@
 import type firebase from 'firebase';
-import { PublicUser } from "@blockframes/model";
+import { PublicUser, PublicOrganization} from "@blockframes/model";
 import type { InvitationStatus, InvitationType } from "@blockframes/utils/static-model";
-import { PublicOrganization } from '@blockframes/model';
 export { InvitationType, InvitationStatus, invitationStatus } from "@blockframes/utils/static-model";
 type Timestamp = firebase.firestore.Timestamp;
 
