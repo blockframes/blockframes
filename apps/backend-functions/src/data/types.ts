@@ -1,7 +1,7 @@
 export {
   OrganizationDocument,
   PublicOrganization
-} from '@blockframes/organization/+state/organization.firestore';
+} from '@blockframes/model';
 export { OrganizationStatus } from '@blockframes/utils/static-model/types';
 export {
   InvitationDocument,

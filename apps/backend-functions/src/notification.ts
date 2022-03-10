@@ -34,7 +34,7 @@ import {
   offerUnderSignature,
 } from './templates/mail';
 import { templateIds, groupIds } from '@blockframes/utils/emails/ids';
-import { canAccessModule, orgName } from '@blockframes/organization/+state/organization.firestore';
+import { canAccessModule, orgName } from '@blockframes/model';
 import { App, applicationUrl, appName } from '@blockframes/utils/apps';
 import * as admin from 'firebase-admin';
 import { PublicInvitation } from '@blockframes/invitation/+state/invitation.firestore';
