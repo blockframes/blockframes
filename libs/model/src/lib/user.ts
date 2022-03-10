@@ -24,7 +24,7 @@ export interface PrivacyPolicy {
   ip: string;
 }
 
-export interface UserSettings {
+interface UserSettings {
   notifications?: NotificationSettings,
 }
 
