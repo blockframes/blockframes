@@ -1,0 +1,14 @@
+@use '~@angular/material' as mat;
+
+:host {
+  display: block;
+}
+
+world-map {
+  height: 300px;
+  border-radius: 4px;
+}
+
+section {
+  width: 100%;
+}

@@ -134,7 +134,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   private addFeature(feature: GeoJSON.Feature, layer: Path): void {
     const getFeature = () => this.features.find(({ tag }) => {
-      return tag.toLowerCase() === feature.properties[this.featureTag].toLowerCase();
+      return tag?.toLowerCase() === feature.properties[this.featureTag].toLowerCase();
     })
     this.layers[feature.properties[this.featureTag]] = layer;
     layer.on({

@@ -1,5 +1,5 @@
 <ng-container *ngIf="title$ | async as title">
-  <header fxLayout="column" fxLayoutGap="20px" bgAsset="empty_banner.png" bgTheme="dark">
+  <header fxLayout="column" fxLayoutGap="20px" class="dark-contrast-theme" bgAsset="background_header.png" bgTheme="dark">
     <button mat-icon-button (click)="goBack()">
       <mat-icon svgIcon="arrow_back"></mat-icon>
     </button>
@@ -32,8 +32,9 @@
         <span>Come back to Dashboard</span>
       </a>
 
-      <div class="graphs">
-        <analytics-pie-chart class="surface" [data]="orgActivity$ | async"></analytics-pie-chart>
+      <div fxLayout fxLayout.lt-sm="column" fxLayoutGap="16px">
+        <analytics-pie-chart fxFlex class="surface" [data]="orgActivity$ | async"></analytics-pie-chart>
+        <analytics-map fxFlex class="surface" [data]="territoryActivity$ | async"></analytics-map>
       </div>
     </article>
   </section>

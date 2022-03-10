@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, Component, Input, ViewChild } from "@angular/core";
+import { AnalyticData } from "@blockframes/analytics/+state/utils";
 import {
   ApexChart,
   ApexDataLabels,
+  ApexLegend,
   ApexNonAxisChartSeries,
   ApexStroke,
   ApexTheme,
@@ -15,6 +17,7 @@ interface PieChartOptions {
   theme: ApexTheme;
   stroke: ApexStroke;
   dataLabels: ApexDataLabels;
+  legend: ApexLegend
 };
 
 @Component({
@@ -41,18 +44,22 @@ export class PieChartComponent {
     theme: {
       monochrome: {
         enabled: true,
-        color: '#2a3052'
+        color: '#001ec7'
       },
     },
     stroke: {
       show: false
+    },
+    legend: {
+      show: false
     }
   };
 
-  @Input() set data(data: Record<string, number>) {
+  @Input() set data(data: AnalyticData[]) {
     if (!data) return;
-    this.pieChartOptions.labels = Object.keys(data);
-    this.pieChartOptions.series = Object.values(data);
+
+    this.pieChartOptions.labels = Object.values(data).map(d => d.label);
+    this.pieChartOptions.series = Object.values(data).map(d => d.count);
 
     this.chart?.updateOptions(this.pieChartOptions);
   }

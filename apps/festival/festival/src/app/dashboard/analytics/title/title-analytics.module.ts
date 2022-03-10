@@ -9,6 +9,7 @@ import { TitleAnalyticsComponent } from './title-analytics.component';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { DisplayNameModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { PieChartModule } from '@blockframes/analytics/components/pie-chart/pie-chart.module';
+import { AnalyticsMapModule } from '@blockframes/analytics/components/map/map.module';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -23,6 +24,7 @@ import { MatIconModule } from '@angular/material/icon';
     DisplayNameModule,
     ToLabelModule,
     PieChartModule,
+    AnalyticsMapModule,
     // Material
     MatButtonModule,
     MatIconModule,
