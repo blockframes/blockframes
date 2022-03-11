@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { Notification } from './notification.model';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { AuthService } from '@blockframes/auth/+state';
-import { filter, map, switchMap, take, tap } from 'rxjs/operators';
+import { filter, map, switchMap, take } from 'rxjs/operators';
 import { Event, isMeeting, isScreening } from '@blockframes/event/+state/event.model';
 import { OrganizationDocument, orgName } from '@blockframes/organization/+state/organization.firestore';
 import { Organization, OrganizationService } from '@blockframes/organization/+state';
@@ -352,7 +352,7 @@ export class NotificationService extends CollectionService<NotificationState> {
         const movie = await this.movieService.valueChanges(contract.titleId).pipe(take(1)).toPromise();
         const name = await this.nameToDisplay(notification, contract);
         const message = `Your counter-offer for ${movie.title.international} was successfully sent to ${name}.`;
-      
+        
         return {
           ...notification,
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
@@ -514,11 +514,13 @@ export class NotificationService extends CollectionService<NotificationState> {
     );
   }
 
-  // The goal of this method is to return a user name or an org name depending on who is receiving a counter offer
+  /**
+  * @returns A username or org name depending on who is receiving a counter offer
+  */
   public async nameToDisplay(notification: Notification, contract: Contract) {
     if (contract.buyerUserId === notification.toUserId) {
-      const org = await this.orgService.valueChanges(contract.sellerId).pipe(take(1)).toPromise() as Organization;
-      return org.denomination.public;
+      const org = await this.orgService.valueChanges(contract.sellerId).pipe(take(1)).toPromise();
+      return orgName(org);
     } else {
       const user = await this.userService.valueChanges(contract.buyerUserId).pipe(take(1)).toPromise();
       return displayName(user);

@@ -2,7 +2,7 @@ import { InvitationDocument, MovieDocument, NotificationDocument, OrganizationDo
 import { getDocument, getOrgAppKey, createDocumentMeta } from './data/internals';
 import { NotificationSettingsTemplate, User } from '@blockframes/model';
 import { sendMailFromTemplate } from './internals/email';
-import { emailErrorCodes, EventEmailData, getEventEmailData, getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
+import { emailErrorCodes, EventEmailData, getEventEmailData, getMovieEmailData, getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
 import { EventDocument, EventMeta, Screening } from '@blockframes/event/+state/event.firestore';
 import {
   reminderEventToUser,
@@ -693,7 +693,7 @@ async function sendContractStatusChangedConfirmation(recipient: User, notificati
     user: toUser,
     org: recipientOrg,
     contract,
-    movie: title,
+    movie: getMovieEmailData(title),
     pageURL,
     app: { name: appName.catalog }
   };
@@ -716,7 +716,7 @@ async function sendContractStatusChangedConfirmation(recipient: User, notificati
   const template = { to: toUser.email, templateId, data };
   const mailToSend = [sendMailFromTemplate(template, app, groupIds.unsubscribeAll)];
 
-  if(adminTemplateId) {
+  if (adminTemplateId) {
     const adminTemplate = { to: supportEmails.catalog, templateId: adminTemplateId, data };
     mailToSend.push(sendMailFromTemplate(adminTemplate, app, groupIds.unsubscribeAll))
   }
