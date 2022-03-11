@@ -1,16 +1,15 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { Event } from '@blockframes/event/+state';
 import { ActivatedRoute } from '@angular/router';
 import { pluck, switchMap, take, tap } from 'rxjs/operators';
 import { EventService } from '@blockframes/event/+state';
 import { Observable } from 'rxjs';
-import { EventMeta, EventTypes } from '@blockframes/event/+state/event.firestore';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { toLabel } from '@blockframes/utils/pipes';
 import { orgName } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state';
+import { Event, EventMeta, EventTypes } from '@blockframes/model';
 
 interface WatchTimeInfo {
   name: string, // firstName + lastName

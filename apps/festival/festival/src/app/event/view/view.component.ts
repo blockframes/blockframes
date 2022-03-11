@@ -7,10 +7,10 @@ import { catchError, filter, switchMap, pluck, tap, startWith } from 'rxjs/opera
 import { Location } from '@angular/common';
 import { fade } from '@blockframes/utils/animations/fade';
 import { AuthService } from '@blockframes/auth/+state';
-import { Event } from '@blockframes/event/+state/event.model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MatDialog } from '@angular/material/dialog';
 import { RequestAskingPriceComponent } from '@blockframes/movie/components/request-asking-price/request-asking-price.component';
+import { Event } from '@blockframes/model';
 
 @Component({
   selector: 'festival-event-view',

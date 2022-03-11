@@ -2,7 +2,7 @@ import { Component, Input, ChangeDetectionStrategy, Output, EventEmitter } from 
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AuthService } from '@blockframes/auth/+state';
-import { Event } from '@blockframes/event/+state';
+import { Event } from '@blockframes/model';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { Invitation, InvitationService, InvitationStatus } from '../../+state';
 

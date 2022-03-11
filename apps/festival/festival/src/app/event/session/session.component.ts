@@ -1,7 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
-import { EventService, Event, isScreening, createMeetingAttendee } from '@blockframes/event/+state';
+import { EventService } from '@blockframes/event/+state';
 import { BehaviorSubject, interval, Observable, Subscription } from 'rxjs';
-import { Meeting, MeetingPdfControl, MeetingVideoControl, Screening } from '@blockframes/event/+state/event.firestore';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { MatBottomSheet } from '@angular/material/bottom-sheet'
 import { DoorbellBottomSheetComponent } from '@blockframes/event/components/doorbell/doorbell.component';
@@ -22,6 +21,15 @@ import { filter, pluck, scan, switchMap, take } from 'rxjs/operators';
 import { finalizeWithValue } from '@blockframes/utils/observable-helpers';
 import { AuthService } from '@blockframes/auth/+state';
 import { RequestAskingPriceComponent } from '@blockframes/movie/components/request-asking-price/request-asking-price.component';
+import {
+  Event,
+  isScreening,
+  createMeetingAttendee,
+  Meeting,
+  MeetingPdfControl,
+  MeetingVideoControl,
+  Screening
+} from '@blockframes/model';
 
 const isMeeting = (meetingEvent: Event): meetingEvent is Event<Meeting> => {
   return meetingEvent.type === 'meeting';

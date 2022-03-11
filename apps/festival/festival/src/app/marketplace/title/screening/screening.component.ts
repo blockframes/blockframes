@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { EventService } from '@blockframes/event/+state/event.service';
 import { TitleMarketplaceShellComponent } from '@blockframes/movie/marketplace/shell/shell.component';
-import { Event } from '@blockframes/event/+state';
+import { Event } from '@blockframes/model';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
