@@ -3,7 +3,7 @@ import { Component, ChangeDetectionStrategy, Pipe, PipeTransform, Inject } from 
 // Blockframes
 import { NotificationsForm } from './notifications.form';
 import { App } from "@blockframes/utils/apps";
-import { NotificationTypesBase, notificationTypesBase } from '@blockframes/notification/types';
+import { NotificationTypesBase, notificationTypesBase } from '@blockframes/model';
 import { AuthService } from '@blockframes/auth/+state';
 
 // Material

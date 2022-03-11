@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { Notification, NotificationService } from '../../+state';
+import { NotificationService } from '../../+state';
+import { Notification } from '@blockframes/model';
 import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
 import { isSafari } from '@blockframes/utils/browser/utils';
 

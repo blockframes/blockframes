@@ -1,11 +1,8 @@
 import { db } from './internals/firebase';
 import { getDocument } from '@blockframes/firebase-utils';
 import { Offer } from '@blockframes/contract/offer/+state/offer.model';
-import { Organization, OrganizationDocument } from '@blockframes/organization/+state';
-import { Movie } from '@blockframes/model';
+import { Movie, Organization, OrganizationDocument, User, NotificationTypes } from '@blockframes/model';
 import { staticModel } from '@blockframes/utils/static-model';
-import { format } from 'date-fns';
-import { User } from '@blockframes/model';
 import { createNotification, triggerNotifications } from './notification';
 // #7946 this may be reactivated later
 // import { templateIds } from '@blockframes/utils/emails/ids';
@@ -19,14 +16,11 @@ import { createNotification, triggerNotifications } from './notification';
 // import { appUrl, supportEmails } from '@env';
 
 
-
 export async function onOfferCreate(snap: FirebaseFirestore.DocumentSnapshot): Promise<void> {
   const offer = snap.data() as Offer;
   const orgId = offer.buyerId;
-  const [org, bucket] = await Promise.all([
-    getDocument<OrganizationDocument>(`orgs/${orgId}`),
-    getDocument<any>(`buckets/${orgId}`),
-  ]);
+  const bucket = await getDocument<any>(`buckets/${orgId}`);
+  
   const user = await getDocument<User>(`users/${bucket.uid}`);
 
   // Empty bucket

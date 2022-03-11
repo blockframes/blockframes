@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
 import { AuthService } from '@blockframes/auth/+state';
-import { createInvitation, InvitationService } from '@blockframes/invitation/+state';
+import { InvitationService } from '@blockframes/invitation/+state';
 import { combineLatest } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { EventService } from '../+state';
 import type firebase from 'firebase';
 import { Event } from '@blockframes/event/+state/event.model';
 import { AnonymousCredentials } from '@blockframes/auth/+state/auth.model';
+import { createInvitation } from '@blockframes/model';
 
 @Injectable({ providedIn: 'root' })
 export class EventAccessGuard implements CanActivate {

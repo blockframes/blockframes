@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Event } from '@blockframes/event/+state/event.model';
-import { Organization, OrganizationService } from '@blockframes/organization/+state';
+import { Organization } from '@blockframes/model';
+import { OrganizationService } from '@blockframes/organization/+state';
 
 @Component({
   selector: 'crm-event-info',

@@ -1,9 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { User } from '@blockframes/model';
+import { User, Organization, Invitation } from '@blockframes/model';
 import { UserCrmForm } from '@blockframes/admin/crm/forms/user-crm.form';
 import { UserService } from '@blockframes/user/+state/user.service';
-import { OrganizationService, Organization } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { UserRole, PermissionsService } from '@blockframes/permissions/+state';
 import { CrmService } from '@blockframes/admin/crm/+state';
 import { Observable, Subscription } from 'rxjs';
@@ -13,7 +13,7 @@ import { DetailedTermsComponent } from '@blockframes/contract/term/components/de
 // Material
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Invitation, InvitationService } from '@blockframes/invitation/+state';
+import { InvitationService } from '@blockframes/invitation/+state';
 import { EventService } from '@blockframes/event/+state/event.service';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import { AngularFireFunctions } from '@angular/fire/functions';

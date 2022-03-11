@@ -8,10 +8,11 @@ import { pluck, shareReplay, switchMap } from 'rxjs/operators';
 import { Offer, OfferService } from '@blockframes/contract/offer/+state';
 import { Income, IncomeService } from '@blockframes/contract/income/+state';
 import { Contract, ContractService } from '@blockframes/contract/contract/+state';
-import { Organization, OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { joinWith } from '@blockframes/utils/operators';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { CollectionReference, QueryFn } from '@angular/fire/firestore';
+import { Organization } from '@blockframes/model';
 
 @Component({
   selector: 'offer-shell',

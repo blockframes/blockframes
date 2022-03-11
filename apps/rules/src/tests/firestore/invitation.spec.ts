@@ -1,6 +1,6 @@
 ﻿import { apps, assertFails, assertSucceeds } from '@firebase/rules-unit-testing';
 import { Firestore, initFirestoreApp, rulesFixtures as testFixture } from '@blockframes/testing/unit-tests';
-import { Invitation, InvitationStatus } from '@blockframes/invitation/+state';
+import { Invitation, InvitationStatus } from '@blockframes/model';
 
 describe('Invitation Rules Tests', () => {
   const projectId = `inrules-spec-${Date.now()}`;
