@@ -52,3 +52,7 @@ export function createDocPermissions(params: Partial<DocPermissionsDocument> = {
     ...params
   };
 }
+
+export interface Permissions extends PermissionsDocument {
+  docPermissions?: DocPermissionsDocument[];
+}

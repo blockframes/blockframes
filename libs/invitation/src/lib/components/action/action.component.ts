@@ -3,8 +3,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AuthService } from '@blockframes/auth/+state';
 import { Event } from '@blockframes/event/+state';
+import { Invitation, InvitationStatus } from '@blockframes/model';
 import { boolean } from '@blockframes/utils/decorators/decorators';
-import { Invitation, InvitationService, InvitationStatus } from '../../+state';
+import { InvitationService } from '../../+state';
 
 @Component({
   selector: 'invitation-action',

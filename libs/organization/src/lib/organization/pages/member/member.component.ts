@@ -1,12 +1,11 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { UserRole, PermissionsService } from '../../../permissions/+state';
 import { InvitationService } from '@blockframes/invitation/+state/invitation.service';
-import { Invitation } from '@blockframes/invitation/+state/invitation.model';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { OrganizationMember, Organization} from '@blockframes/model';
+import { OrganizationMember, Organization, Invitation, UserRole } from '@blockframes/model';
 import { buildJoinOrgQuery } from '@blockframes/invitation/invitation-utils';
+import { PermissionsService } from '@blockframes/permissions/+state';
 
 @Component({
   selector: 'member-edit',

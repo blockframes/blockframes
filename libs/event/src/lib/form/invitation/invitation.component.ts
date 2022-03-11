@@ -1,8 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { InvitationService, Invitation } from '@blockframes/invitation/+state';
+import { InvitationService } from '@blockframes/invitation/+state';
 import { Observable } from 'rxjs';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { EventFormShellComponent } from '../shell/shell.component';
+import { Invitation } from '@blockframes/model';
 
 @Component({
   selector: 'event-invitation',

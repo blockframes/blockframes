@@ -23,8 +23,7 @@ import { removeUnexpectedUsers } from './users';
 import { getCollectionRef } from '@blockframes/firebase-utils';
 import { clearFirestoreData } from '@firebase/rules-unit-testing';
 import { getAllAppsExcept } from '@blockframes/utils/apps';
-import { PublicUser } from '@blockframes/model';
-import { createPermissions, PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
+import { createPermissions, PermissionsDocument, PublicUser } from '@blockframes/model';
 
 type Snapshot = FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>;
 let db: FirebaseFirestore.Firestore;

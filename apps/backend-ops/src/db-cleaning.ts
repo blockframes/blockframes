@@ -1,12 +1,12 @@
-import { InvitationDocument } from '@blockframes/invitation/+state/invitation.firestore';
 import {
   NotificationDocument,
   PublicUser,
   OrganizationDocument,
   PublicOrganization,
-  MovieDocument
+  MovieDocument,
+  PermissionsDocument,
+  InvitationDocument
 } from '@blockframes/model';
-import { PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
 import { removeUnexpectedUsers } from './users';
 import { Auth, QueryDocumentSnapshot, getDocument, runChunks, removeAllSubcollections, UserRecord, loadAdminServices } from '@blockframes/firebase-utils';
 import admin from 'firebase-admin';
