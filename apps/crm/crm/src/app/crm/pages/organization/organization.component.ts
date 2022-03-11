@@ -17,6 +17,7 @@ import { ContractService } from '@blockframes/contract/contract/+state';
 import { FileUploaderService } from '@blockframes/media/+state/file-uploader.service';
 import { App, OrgAppAccess } from '@blockframes/utils/apps';
 import { BucketService } from '@blockframes/contract/bucket/+state/bucket.service';
+import { where } from 'firebase/firestore';
 
 @Component({
   selector: 'crm-organization',
@@ -196,37 +197,27 @@ export class OrganizationComponent implements OnInit {
     }
 
     // Calculate how many movie will be removed
-    const movies = await this.movieService.getValue((ref) =>
-      ref.where('orgIds', 'array-contains', organization.id)
-    );
+    const movies = await this.movieService.getValue([where('orgIds', 'array-contains', organization.id)]);
     if (movies.length) {
       output.push(`${movies.length} movie(s) will be deleted.`);
     }
 
     // Calculate how many events will be removed
-    const ownerEvent = await this.eventService.getValue((ref) =>
-      ref.where('ownerOrgId', '==', organization.id)
-    );
+    const ownerEvent = await this.eventService.getValue([where('ownerOrgId', '==', organization.id)]);
     if (ownerEvent.length) {
       output.push(`${ownerEvent.length} event(s) will be cancelled or deleted.`);
     }
 
     // Calculate how many invitation will be removed
-    const invitFrom = await this.invitationService.getValue((ref) =>
-      ref.where('fromOrg.id', '==', organization.id)
-    );
-    const invitTo = await this.invitationService.getValue((ref) =>
-      ref.where('toOrg.id', '==', organization.id)
-    );
+    const invitFrom = await this.invitationService.getValue([where('fromOrg.id', '==', organization.id)]);
+    const invitTo = await this.invitationService.getValue([where('toOrg.id', '==', organization.id)]);
     const allInvit = [...invitFrom, ...invitTo];
     if (allInvit.length) {
       output.push(`${allInvit.length} invitation(s) will be removed.`);
     }
 
     // Calculate how many contracts will be updated
-    const contracts = await this.contractService.getValue((ref) =>
-      ref.where('partyIds', 'array-contains', organization.id)
-    );
+    const contracts = await this.contractService.getValue([where('partyIds', 'array-contains', organization.id)]);
     if (contracts.length) {
       output.push(`${contracts.length} contract(s) will be updated.`);
     }

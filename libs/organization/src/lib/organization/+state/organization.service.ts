@@ -3,9 +3,9 @@ import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { AuthService } from '@blockframes/auth/+state';
 import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
 import { createPermissions, UserRole } from '../../permissions/+state/permissions.model';
-import { AngularFireFunctions } from '@angular/fire/functions';
+import { Functions } from '@angular/fire/functions';
 import { UserService } from '@blockframes/user/+state';
-import { 
+import {
   OrganizationMember,
   createOrganizationMember,
   PublicUser,
@@ -24,8 +24,10 @@ import {
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { combineLatest, Observable, of } from 'rxjs';
 import { ActiveState, EntityState } from '@datorama/akita';
+import { httpsCallable } from 'firebase/functions';
+import { where } from 'firebase/firestore';
 
-interface OrganizationState extends EntityState<Organization>, ActiveState<string> {}
+interface OrganizationState extends EntityState<Organization>, ActiveState<string> { }
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'orgs' })
@@ -67,7 +69,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   );
 
   constructor(
-    private functions: AngularFireFunctions,
+    private functions: Functions,
     private userService: UserService,
     private permissionsService: PermissionsService,
     private analytics: FireAnalytics,
@@ -78,7 +80,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
 
   public async orgNameExist(orgName: string) {
     // @TODO #6908 a better solution for this should be found.
-    const orgs = await this.getValue((ref) => ref.where('denomination.full', '==', orgName));
+    const orgs = await this.getValue([where('denomination.full', '==', orgName)]);
     return orgs.length !== 0;
   }
 
@@ -127,13 +129,13 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   }
 
   public notifyAppAccessChange(orgId: string, app: App) {
-    const callOnAccessToAppChanged = this.functions.httpsCallable('onAccessToAppChanged');
-    return callOnAccessToAppChanged({ orgId, app }).toPromise();
+    const callOnAccessToAppChanged = httpsCallable(this.functions, 'onAccessToAppChanged');
+    return callOnAccessToAppChanged({ orgId, app });
   }
 
   public requestAppAccess(app: App, module: Module, orgId: string) {
-    const f = this.functions.httpsCallable('requestFromOrgToAccessApp');
-    return f({ app, module, orgId }).toPromise();
+    const f = httpsCallable(this.functions, 'requestFromOrgToAccessApp');
+    return f({ app, module, orgId });
   }
 
   ////////////

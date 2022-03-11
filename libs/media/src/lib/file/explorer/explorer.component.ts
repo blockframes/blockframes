@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, ViewChild, TemplateRef, Pipe, PipeTransform, Input, AfterViewInit, OnInit, Inject } from '@angular/core';
-import { AngularFirestore, QueryFn } from '@angular/fire/firestore';
+import { doc, Firestore, updateDoc } from '@angular/fire/firestore';
 
 // Blockframes
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { App } from '@blockframes/utils/apps';
-import { Movie, Organization } from '@blockframes/model';
+import { Organization } from '@blockframes/model';
 import { FileUploaderService, MediaService } from '@blockframes/media/+state';
 import { createStorageFile, StorageFile } from '@blockframes/media/+state/media.firestore';
 import { getFileMetadata } from '@blockframes/media/+state/static-files';
@@ -17,6 +17,7 @@ import { getDirectories, Directory, FileDirectoryBase } from './explorer.model';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
+import { where } from 'firebase/firestore';
 
 function getDir(root: Directory, path: string) {
   return path.split('/').reduce((parent, segment) => parent?.children[segment] ?? parent, root);
@@ -63,7 +64,7 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
   @ViewChild('directory') directory?: TemplateRef<unknown>;
 
   constructor(
-    private db: AngularFirestore,
+    private db: Firestore,
     private movieService: MovieService,
     private mediaService: MediaService,
     private service: FileUploaderService,
@@ -71,9 +72,10 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
   ) { }
 
   ngOnInit() {
-    const query: QueryFn = ref => ref
-      .where('orgIds', 'array-contains', this.org.id)
-      .where(`app.${this.app}.access`, '==', true);
+    const query = [
+      where('orgIds', 'array-contains', this.org.id),
+      where(`app.${this.app}.access`, '==', true)
+    ]
 
     const titles$ = this.movieService.valueChanges(query).pipe(
       map(titles => titles.sort((movieA, movieB) => movieA.title.international < movieB.title.international ? -1 : 1)),
@@ -136,7 +138,8 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
         privacy: null,
         storagePath: null
       })
-      this.db.doc(`${metadata.collection}/${metadata.docId}`).update(emptyStorageFile)
+      const ref = doc(this.db, `${metadata.collection}/${metadata.docId}`);
+      updateDoc(ref, emptyStorageFile);
     }
   }
 }

@@ -11,6 +11,7 @@ import { switchMap } from 'rxjs/operators';
 import { getHost } from '@blockframes/invitation/pipes/host.pipe';
 import { getGuest } from '@blockframes/invitation/pipes/guest.pipe';
 import { OrganizationService } from '@blockframes/organization/+state';
+import { where } from 'firebase/firestore';
 
 @Component({
   selector: 'crm-event',
@@ -32,7 +33,7 @@ export class EventComponent implements OnInit {
     private snackBar: MatSnackBar,
     private invitationService: InvitationService,
     private orgService: OrganizationService
-  ) {}
+  ) { }
 
   async ngOnInit() {
     this.eventId = this.route.snapshot.paramMap.get('eventId');
@@ -54,9 +55,7 @@ export class EventComponent implements OnInit {
     }
 
     this.invitations$ = this.invitationService
-      .valueChanges((ref) =>
-        ref.where('type', '==', 'attendEvent').where('eventId', '==', this.eventId)
-      )
+      .valueChanges([where('type', '==', 'attendEvent'), where('eventId', '==', this.eventId)])
       .pipe(
         switchMap(async (invitations: InvitationDetailed[]) => {
           const hostOrgs = invitations.map((i) => getHost(i, 'org').id).filter((id) => id);
