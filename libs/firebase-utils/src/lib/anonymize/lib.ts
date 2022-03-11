@@ -1,19 +1,19 @@
 import * as faker from 'faker';
-import { NotificationDocument } from '@blockframes/notification/types';
+import {
+  Movie,
+  MovieVideo,
+  User,
+  PublicUser,
+  createPublicUser,
+  NotificationDocument,
+  createPublicOrganization,
+  Organization,
+  PublicOrganization
+} from '@blockframes/model';
 import { Invitation } from '@blockframes/invitation/+state';
 import { DbRecord, throwOnProduction } from '../util';
 import { CollectionReference, QueryDocumentSnapshot, QuerySnapshot } from '../types';
 import { Queue } from '../queue';
-import { 
-  createPublicOrganization,
-  Movie,
-  Organization,
-  PublicOrganization,
-  User,
-  PublicUser,
-  createPublicUser,
-  MovieVideo
-} from '@blockframes/model';
 import { FirestoreEmulator } from '../firestore/emulator';
 import { firebase, testVideoId } from '@env';
 import { runChunks } from '../firebase-utils';
