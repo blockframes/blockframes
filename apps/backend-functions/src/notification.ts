@@ -46,7 +46,6 @@ import { appUrl } from './environments/environment';
 import { getReviewer } from '@blockframes/contract/negotiation/utils';
 import { createMailContract, MailContract } from '@blockframes/contract/contract/+state/contract.firestore';
 
-
 // @TODO (#2848) forcing to festival since invitations to events are only on this one
 const eventAppKey: App = 'festival';
 
