@@ -8,8 +8,7 @@ import { App, getOrgAppAccess } from '@blockframes/utils/apps';
 import { getDocument } from '@blockframes/firebase-utils';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
 import { createStorageFile } from '@blockframes/media/+state/media.firestore';
-import { createDenomination, OrganizationDocument, PublicUser, InvitationDocument, PublicInvitation } from '@blockframes/model';
-import { PermissionsDocument } from 'libs/model/src/lib/permissions';
+import { createDenomination, OrganizationDocument, PublicUser, InvitationDocument, PublicInvitation, PermissionsDocument } from '@blockframes/model';
 
 export { getDocument };
 

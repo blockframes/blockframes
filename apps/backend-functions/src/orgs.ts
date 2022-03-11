@@ -17,9 +17,8 @@ import { cleanOrgMedias } from './media';
 import { Change, EventContext } from 'firebase-functions';
 import { algolia, deleteObject, storeSearchableOrg, findOrgAppAccess, storeSearchableUser } from '@blockframes/firebase-utils';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
-import { User, NotificationDocument, NotificationTypes, OrganizationDocument, PublicUser } from '@blockframes/model';
+import { User, NotificationDocument, NotificationTypes, OrganizationDocument, PublicUser, PermissionsDocument } from '@blockframes/model';
 import { groupIds } from '@blockframes/utils/emails/ids';
-import { PermissionsDocument } from 'libs/model/src/lib/permissions';
 
 /** Create a notification with user and org. */
 function notifyUser(toUserId: string, notificationType: NotificationTypes, org: OrganizationDocument, user: PublicUser) {

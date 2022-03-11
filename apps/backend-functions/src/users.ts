@@ -12,11 +12,10 @@ import { production } from './environments/environment';
 import { cleanUserMedias } from './media';
 import { getUserEmailData, OrgEmailData } from '@blockframes/utils/emails/utils';
 import { groupIds } from '@blockframes/utils/emails/ids';
-import { User, OrganizationDocument, PublicUser, InvitationDocument } from '@blockframes/model';
+import { User, OrganizationDocument, PublicUser, InvitationDocument, PermissionsDocument } from '@blockframes/model';
 import { updateMemberTags } from './mailchimp';
 import { getPreferenceTag, MailchimpTag } from '@blockframes/utils/mailchimp/mailchimp-model';
 import { ErrorResultResponse } from './utils';
-import { PermissionsDocument } from 'libs/model/src/lib/permissions';
 
 type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;

@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { User, Organization, Invitation } from '@blockframes/model';
+import { User, Organization, Invitation, UserRole } from '@blockframes/model';
 import { UserCrmForm } from '@blockframes/admin/crm/forms/user-crm.form';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { OrganizationService } from '@blockframes/organization/+state';
@@ -8,7 +8,6 @@ import { CrmService } from '@blockframes/admin/crm/+state';
 import { Observable, Subscription } from 'rxjs';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
-import { UserRole } from 'libs/model/src/lib/permissions';
 import { PermissionsService } from '@blockframes/permissions/+state';
 
 // Material

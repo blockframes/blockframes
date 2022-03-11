@@ -1,7 +1,6 @@
 import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
-import { OrganizationMember } from '@blockframes/model';
+import { OrganizationMember, UserRole } from '@blockframes/model';
 import { boolean } from '@blockframes/utils/decorators/decorators';
-import { UserRole } from 'libs/model/src/lib/permissions';
 
 @Component({
   selector: 'member-repertory',

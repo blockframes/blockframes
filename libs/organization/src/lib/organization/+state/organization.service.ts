@@ -12,7 +12,9 @@ import {
   Movie,
   Organization,
   createOrganization,
-  OrganizationDocument
+  OrganizationDocument,
+  createPermissions,
+  UserRole
 } from '@blockframes/model';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
 import { App, Module, createOrgAppAccess } from '@blockframes/utils/apps';
@@ -23,7 +25,6 @@ import {
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { combineLatest, Observable, of } from 'rxjs';
 import { ActiveState, EntityState } from '@datorama/akita';
-import { createPermissions, UserRole } from 'libs/model/src/lib/permissions';
 
 interface OrganizationState extends EntityState<Organization>, ActiveState<string> {}
 
