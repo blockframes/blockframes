@@ -9,7 +9,7 @@ import { db } from './internals/firebase';
 import { getUser } from "./internals/utils";
 import { sendMail } from './internals/email';
 import { organizationCreated, organizationRequestedAccessToApp } from './templates/mail';
-import { PermissionsDocument, NotificationDocument, NotificationTypes } from './data/types';
+import { NotificationDocument, NotificationTypes } from './data/types';
 import { triggerNotifications, createNotification } from './notification';
 import { app, App, getOrgAppAccess, getMailSender, Module } from '@blockframes/utils/apps';
 import { getAdminIds, createPublicOrganizationDocument, createPublicUserDocument, getDocument, createDocumentMeta } from './data/internals';
@@ -20,6 +20,7 @@ import { algolia, deleteObject, storeSearchableOrg, findOrgAppAccess, storeSearc
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { User, OrganizationDocument, PublicUser } from '@blockframes/model';
 import { groupIds } from '@blockframes/utils/emails/ids';
+import { PermissionsDocument } from 'libs/model/src/lib/permissions';
 
 /** Create a notification with user and org. */
 function notifyUser(toUserId: string, notificationType: NotificationTypes, org: OrganizationDocument, user: PublicUser) {

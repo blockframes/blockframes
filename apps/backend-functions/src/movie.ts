@@ -1,5 +1,4 @@
 import { db } from './internals/firebase';
-import { createDocPermissions } from './data/types';
 import { triggerNotifications, createNotification } from './notification';
 import {
   createDocumentMeta,
@@ -17,6 +16,7 @@ import { sendMail } from './internals/email';
 import { groupIds } from '@blockframes/utils/emails/ids';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { Movie, Organization, orgName, MovieAppConfig, PublicUser, MovieDocument } from '@blockframes/model';
+import { createDocPermissions } from 'libs/model/src/lib/permissions';
 
 const apps: App[] = getAllAppsExcept(['crm']);
 

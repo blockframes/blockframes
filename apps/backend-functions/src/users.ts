@@ -3,7 +3,7 @@ import * as functions from 'firebase-functions';
 import { db } from './internals/firebase';
 import { userResetPassword, sendDemoRequestMail, sendContactEmail, accountCreationEmail, userInvite, userVerifyEmail } from './templates/mail';
 import { sendMailFromTemplate, sendMail } from './internals/email';
-import { RequestDemoInformations, PermissionsDocument, InvitationDocument } from './data/types';
+import { RequestDemoInformations, InvitationDocument } from './data/types';
 import { getCollection, storeSearchableUser, deleteObject, algolia } from '@blockframes/firebase-utils';
 import { getDocument } from './data/internals';
 import { getMailSender, applicationUrl, App } from '@blockframes/utils/apps';
@@ -16,6 +16,7 @@ import { User, OrganizationDocument, PublicUser } from '@blockframes/model';
 import { updateMemberTags } from './mailchimp';
 import { getPreferenceTag, MailchimpTag } from '@blockframes/utils/mailchimp/mailchimp-model';
 import { ErrorResultResponse } from './utils';
+import { PermissionsDocument } from 'libs/model/src/lib/permissions';
 
 type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
