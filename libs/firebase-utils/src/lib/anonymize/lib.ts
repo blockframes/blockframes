@@ -8,9 +8,9 @@ import {
   NotificationDocument,
   createPublicOrganization,
   Organization,
-  PublicOrganization
+  PublicOrganization,
+  Invitation
 } from '@blockframes/model';
-import { Invitation } from '@blockframes/invitation/+state';
 import { DbRecord, throwOnProduction } from '../util';
 import { CollectionReference, QueryDocumentSnapshot, QuerySnapshot } from '../types';
 import { Queue } from '../queue';

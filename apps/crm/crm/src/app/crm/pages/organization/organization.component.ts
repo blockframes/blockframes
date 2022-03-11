@@ -3,12 +3,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { OrganizationCrmForm } from '@blockframes/admin/crm/forms/organization-crm.form';
 import { fromOrg, MovieService } from '@blockframes/movie/+state/movie.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Organization, Movie } from '@blockframes/model';
+import { Organization, Movie, Invitation } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { FormControl } from '@angular/forms';
 import { UserRole, PermissionsService } from '@blockframes/permissions/+state';
 import { Observable } from 'rxjs';
-import { Invitation, InvitationService } from '@blockframes/invitation/+state';
+import { InvitationService } from '@blockframes/invitation/+state';
 import { buildJoinOrgQuery } from '@blockframes/invitation/invitation-utils';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -62,7 +62,7 @@ export class OrganizationComponent implements OnInit {
     private dialog: MatDialog,
     private router: Router,
     private bucketService: BucketService
-  ) {}
+  ) { }
 
   async ngOnInit() {
     this.orgId = this.route.snapshot.paramMap.get('orgId');

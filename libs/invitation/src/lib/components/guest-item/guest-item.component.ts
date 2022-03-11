@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { Invitation } from '@blockframes/invitation/+state';
+import { Invitation } from '@blockframes/model';
 
 @Component({
   selector: 'invitation-guest-item',

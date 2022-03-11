@@ -1,5 +1,4 @@
 
-import { InvitationDocument } from './data/types';
 import { getDocument, getOrgAppKey, createDocumentMeta } from './data/internals';
 import {
   NotificationSettingsTemplate,
@@ -9,7 +8,9 @@ import {
   orgName,
   NotificationTypes,
   NotificationDocument,
-  MovieDocument
+  MovieDocument,
+  InvitationDocument,
+  PublicInvitation
 } from '@blockframes/model';
 import { sendMailFromTemplate } from './internals/email';
 import { emailErrorCodes, EventEmailData, getEventEmailData, getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
@@ -46,7 +47,6 @@ import {
 import { templateIds, groupIds } from '@blockframes/utils/emails/ids';
 import { App, applicationUrl, appName } from '@blockframes/utils/apps';
 import * as admin from 'firebase-admin';
-import { PublicInvitation } from '@blockframes/invitation/+state/invitation.firestore';
 import { logger } from 'firebase-functions';
 import { NegotiationDocument } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
 import { Offer } from '@blockframes/contract/offer/+state';
