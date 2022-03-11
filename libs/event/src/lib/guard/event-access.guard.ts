@@ -7,7 +7,7 @@ import { combineLatest } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { EventService } from '../+state';
 import type firebase from 'firebase';
-import { Event } from '@blockframes/event/+state/event.model';
+import { Event } from '@blockframes/model';
 import { AnonymousCredentials } from '@blockframes/auth/+state/auth.model';
 
 @Injectable({ providedIn: 'root' })
