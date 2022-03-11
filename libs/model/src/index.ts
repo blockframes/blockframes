@@ -4,3 +4,4 @@ export * from './lib/invitation';
 export * from './lib/notification';
 export * from './lib/organisation';
 export * from './lib/permissions';
+export * from './lib/contract';
