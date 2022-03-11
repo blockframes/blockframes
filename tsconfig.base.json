@@ -26,9 +26,6 @@
       ],
       "@blockframes/organization/*": ["libs/organization/src/lib/organization/*"],
       "@blockframes/permissions/*": ["libs/organization/src/lib/permissions/*"],
-      "@blockframes/permissions/types": [
-        "libs/organization/src/lib/permissions/+state/permissions.firestore.ts"
-      ],
       "@blockframes/invitation/*": ["libs/invitation/src/lib/*"],
       "@blockframes/invitation/types": ["libs/invitation/src/lib/+state/invitation.firestore.ts"],
       "@blockframes/notification/types": [
