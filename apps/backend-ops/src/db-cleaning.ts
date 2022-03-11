@@ -197,6 +197,7 @@ export async function cleanUsers(
   auth: Auth,
   options = { dryRun: false }
 ) {
+  if (options.dryRun) verbose = true;
   // Check if auth users have their record on DB
   await removeUnexpectedUsers(users.docs.map(u => u.data() as PublicUser), auth, options);
 
@@ -212,9 +213,9 @@ export async function cleanUsers(
       const validUser = await isUserValid(user, authUser, permissions.docs.map(p => p.data() as PermissionsDocument));
       // Check if ids are the same
       if (authUser.uid !== user.uid) {
-        if (verbose || options.dryRun) console.error(`ERR - uid missmatch for ${user.email}. db: ${user.uid} - auth : ${authUser.uid}`);
+        if (verbose) console.error(`ERR - uid missmatch for ${user.email}. db: ${user.uid} - auth : ${authUser.uid}`);
       } else if (!validUser) {
-        if (verbose || options.dryRun) {
+        if (verbose) {
           console.log(`DB - Too old user "${user.uid}" will be deleted`);
           console.log(`AUTH - Too old user "${user.uid}" will be deleted`);
         }
@@ -224,7 +225,7 @@ export async function cleanUsers(
           await userDoc.ref.delete();
         }
       } else if (user.orgId && !existingOrganizationIds.includes(user.orgId)) {
-        if (verbose || options.dryRun) console.error(`DB - invalid orgId "${user.orgId}" for user ${user.uid}`);
+        if (verbose) console.error(`DB - invalid orgId "${user.orgId}" for user ${user.uid}`);
         delete user.orgId;
         if (!options.dryRun) await userDoc.ref.set(user);
       }
@@ -232,7 +233,7 @@ export async function cleanUsers(
       // User is deleted, we don't delete or update other documents as orgs, permissions, notifications etc
       // because this will be handled in the next parts of the script (cleanOrganizations, cleanPermissions, etc)
       // related storage documents will also be deleted in the cleanStorage and algolia will be updated at end of "upgrade" process
-      if (verbose || options.dryRun) console.log(`DB - Deleting user not found in AUTH : ${user.uid}.`);
+      if (verbose) console.log(`DB - Deleting user not found in AUTH : ${user.uid}.`);
       if (!options.dryRun) await userDoc.ref.delete();
     }
   }, undefined, verbose);
