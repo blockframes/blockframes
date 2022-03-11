@@ -3,7 +3,17 @@ import { getUser } from "./internals/utils";
 import { db } from './internals/firebase'
 import { onInvitationToJoinOrgUpdate, onRequestToJoinOrgUpdate } from './internals/invitations/organizations';
 import { onInvitationToAnEventUpdate } from './internals/invitations/events';
-import { createPublicUser, PublicUser, OrganizationDocument, orgName, InvitationDocument, InvitationOrUndefined, createInvitation, InvitationStatus, InvitationBase } from '@blockframes/model';
+import { 
+  createPublicUser,
+  PublicUser,
+  OrganizationDocument,
+  orgName,
+  InvitationDocument,
+  InvitationOrUndefined,
+  createInvitation,
+  InvitationStatus,
+  InvitationBase
+} from '@blockframes/model';
 import { getOrInviteUserByMail } from './internals/users';
 import { ErrorResultResponse } from './utils';
 import { CallableContext } from "firebase-functions/lib/providers/https";
