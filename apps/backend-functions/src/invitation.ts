@@ -1,23 +1,21 @@
 ﻿import { getDocument, createPublicOrganizationDocument, createPublicUserDocument } from './data/internals';
-import { getUser } from './internals/utils';
-import { db } from './internals/firebase';
-import { InvitationOrUndefined } from './data/types';
+import { getUser } from "./internals/utils";
+import { db } from './internals/firebase'
 import { onInvitationToJoinOrgUpdate, onRequestToJoinOrgUpdate } from './internals/invitations/organizations';
 import { onInvitationToAnEventUpdate } from './internals/invitations/events';
-import {
-  InvitationBase,
-  createInvitation,
-  InvitationStatus,
-  InvitationDocument
-} from '@blockframes/invitation/+state/invitation.firestore';
-import {
+import { 
   createPublicUser,
   PublicUser,
   OrganizationDocument,
   orgName,
   EventDocument,
   EventMeta,
-  MEETING_MAX_INVITATIONS_NUMBER
+  MEETING_MAX_INVITATIONS_NUMBER,
+  InvitationDocument,
+  InvitationOrUndefined,
+  createInvitation,
+  InvitationStatus,
+  InvitationBase
 } from '@blockframes/model';
 import { getOrInviteUserByMail } from './internals/users';
 import { ErrorResultResponse } from './utils';

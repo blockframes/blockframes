@@ -1,8 +1,8 @@
 import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, Inject } from '@angular/core';
-import { Invitation, InvitationService } from '../../+state';
+import { InvitationService } from '../../+state';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { EventService } from '@blockframes/event/+state/event.service';
-import { PublicOrganization, PublicUser, isMeeting, Event } from '@blockframes/model';
+import { PublicOrganization, PublicUser, isMeeting, Event, Invitation } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { App, applicationUrl } from '@blockframes/utils/apps';
 import { isSafari } from '@blockframes/utils/browser/utils';

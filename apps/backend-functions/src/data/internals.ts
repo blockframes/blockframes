@@ -4,14 +4,12 @@
  * This code deals directly with the low level parts of firebase,
  */
 import * as admin from 'firebase-admin';
-import { InvitationDocument } from './types';
 import { PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
 import { App, getOrgAppAccess } from '@blockframes/utils/apps';
 import { getDocument } from '@blockframes/firebase-utils';
-import { PublicInvitation } from '@blockframes/invitation/+state/invitation.firestore';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
 import { createStorageFile } from '@blockframes/media/+state/media.firestore';
-import { createDenomination, OrganizationDocument, PublicUser } from '@blockframes/model';
+import { createDenomination, OrganizationDocument, PublicUser, InvitationDocument, PublicInvitation } from '@blockframes/model';
 
 export { getDocument };
 

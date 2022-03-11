@@ -2,13 +2,14 @@ import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { createAlgoliaUserForm } from '@blockframes/utils/algolia';
 import { scaleIn } from '@blockframes/utils/animations/fade';
-import { Invitation, InvitationService } from '@blockframes/invitation/+state';
+import { InvitationService } from '@blockframes/invitation/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { ENTER, COMMA, SEMICOLON, SPACE } from '@angular/cdk/keycodes';
 import { Validators } from '@angular/forms';
 import { map, startWith } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EventFormShellComponent } from '@blockframes/event/form/shell/shell.component';
+import { Invitation } from '@blockframes/model';
 
 @Component({
   selector: '[eventId] invitation-form-user',

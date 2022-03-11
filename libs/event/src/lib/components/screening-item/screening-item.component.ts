@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input, OnDestroy, ChangeDetectorRef, OnInit } from '@angular/core';
-import { Invitation, InvitationService } from '@blockframes/invitation/+state';
-import { ScreeningEvent } from '@blockframes/model';
+import { InvitationService } from '@blockframes/invitation/+state';
+import { Invitation, ScreeningEvent } from '@blockframes/model';
 import { BehaviorSubject, combineLatest, Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { fade } from '@blockframes/utils/animations/fade';

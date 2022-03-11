@@ -6,11 +6,10 @@ import { toDate } from '@blockframes/utils/helpers';
 import { SETTINGS, AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestore';
 import { loadFirestoreRules, clearFirestoreData } from '@firebase/rules-unit-testing';
 import { readFileSync } from 'fs';
-import { createInvitation, InvitationDocument } from './invitation.firestore';
 import firebase from 'firebase/app';
 import { Observable, of } from 'rxjs';
 import { UserService } from '@blockframes/user/+state/user.service';
-import { createUser } from '@blockframes/model';
+import { createInvitation, createUser, InvitationDocument } from '@blockframes/model';
 import { ActivatedRoute } from '@angular/router';
 import { APP } from '@blockframes/utils/routes/utils';
 

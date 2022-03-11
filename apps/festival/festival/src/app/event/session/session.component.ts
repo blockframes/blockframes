@@ -16,7 +16,6 @@ import { MediaService } from '@blockframes/media/+state';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { StorageFile, StorageVideo } from '@blockframes/media/+state/media.firestore';
 import { InvitationService } from '@blockframes/invitation/+state/invitation.service';
-import { Invitation } from '@blockframes/invitation/+state';
 import { filter, pluck, scan, switchMap, take } from 'rxjs/operators';
 import { finalizeWithValue } from '@blockframes/utils/observable-helpers';
 import { AuthService } from '@blockframes/auth/+state';
@@ -28,7 +27,8 @@ import {
   Meeting,
   MeetingPdfControl,
   MeetingVideoControl,
-  Screening
+  Screening,
+  Invitation
 } from '@blockframes/model';
 
 const isMeeting = (meetingEvent: Event): meetingEvent is Event<Meeting> => {
