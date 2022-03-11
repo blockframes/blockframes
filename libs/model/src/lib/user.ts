@@ -1,5 +1,5 @@
 import { DocumentMeta } from "@blockframes/utils/models-meta";
-import { NotificationTypesBase } from '@blockframes/notification/types';
+import { NotificationTypesBase } from '@blockframes/model';
 import { createStorageFile, StorageFile } from "@blockframes/media/+state/media.firestore";
 import { Genre, Language, Media, Territory } from "@blockframes/utils/static-model";
 import { UserRole } from "@blockframes/permissions/types";

@@ -30,9 +30,6 @@
         "libs/organization/src/lib/permissions/+state/permissions.firestore.ts"
       ],
       "@blockframes/invitation/*": ["libs/invitation/src/lib/*"],
-      "@blockframes/notification/types": [
-        "libs/notification/src/lib/+state/notification.firestore.ts"
-      ],
       "@blockframes/notification/*": ["libs/notification/src/lib/*"],
       "@blockframes/contract/*": ["libs/contract/src/lib/*"],
       "@blockframes/financial-report/*": ["libs/financial-report/src/lib/*"],
