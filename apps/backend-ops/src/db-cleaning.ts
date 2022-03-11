@@ -1,4 +1,3 @@
-import { InvitationDocument } from '@blockframes/invitation/+state/invitation.firestore';
 import {
   NotificationDocument,
   PublicUser,
@@ -6,6 +5,7 @@ import {
   PublicOrganization,
   MovieDocument,
   PermissionsDocument,
+  InvitationDocument
 } from '@blockframes/model';
 import { removeUnexpectedUsers } from './users';
 import {
