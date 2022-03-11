@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { SafeResourceUrl } from '@angular/platform-browser';
 import { User, Organization } from '@blockframes/model';
 import { UserCrmForm } from '@blockframes/admin/crm/forms/user-crm.form';
 import { UserService } from '@blockframes/user/+state/user.service';
@@ -9,16 +10,16 @@ import { CrmService } from '@blockframes/admin/crm/+state';
 import { Observable, Subscription } from 'rxjs';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
+import { where } from 'firebase/firestore';
+import { Scope } from '@blockframes/utils/static-model';
+import { Invitation, InvitationService } from '@blockframes/invitation/+state';
+import { EventService } from '@blockframes/event/+state/event.service';
+import { Functions, httpsCallable } from '@angular/fire/functions';
+import { App, getOrgAppAccess } from '@blockframes/utils/apps';
 
 // Material
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Invitation, InvitationService } from '@blockframes/invitation/+state';
-import { EventService } from '@blockframes/event/+state/event.service';
-import { SafeResourceUrl } from '@angular/platform-browser';
-import { AngularFireFunctions } from '@angular/fire/functions';
-import { App, getOrgAppAccess } from '@blockframes/utils/apps';
-import { Scope } from '@blockframes/utils/static-model';
 
 @Component({
   selector: 'crm-user',
@@ -51,7 +52,7 @@ export class UserComponent implements OnInit {
     private invitationService: InvitationService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
-    private functions: AngularFireFunctions
+    private functions: Functions
   ) { }
 
   async ngOnInit() {
@@ -71,8 +72,8 @@ export class UserComponent implements OnInit {
       this.cdRef.markForCheck();
     });
 
-    const invitationTo = await this.invitationService.getValue(ref => ref.where('toUser.uid', '==', this.userId));
-    const invitationFrom = await this.invitationService.getValue(ref => ref.where('fromUser.uid', '==', this.userId));
+    const invitationTo = await this.invitationService.getValue([where('toUser.uid', '==', this.userId)]);
+    const invitationFrom = await this.invitationService.getValue([where('fromUser.uid', '==', this.userId)]);
     this.invitations = [...invitationFrom, ...invitationTo];
   }
 
@@ -201,8 +202,8 @@ export class UserComponent implements OnInit {
 
   async verifyEmail() {
     this.snackBar.open('Verifying email...', 'close', { duration: 2000 });
-    const f = this.functions.httpsCallable('verifyEmail');
-    await f({ uid: this.userId }).toPromise();
+    const f = httpsCallable<{ uid: string }>(this.functions, 'verifyEmail');
+    await f({ uid: this.userId });
     this.snackBar.open('Email verified', 'close', { duration: 2000 });
   }
 
@@ -216,14 +217,14 @@ export class UserComponent implements OnInit {
     }
 
     // Calculate how many invitation will be deleted
-    const invitFrom = await this.invitationService.getValue(ref => ref.where('fromUser.uid', '==', user.uid));
-    const invitTo = await this.invitationService.getValue(ref => ref.where('toUser.uid', '==', user.uid));
+    const invitFrom = await this.invitationService.getValue([where('fromUser.uid', '==', user.uid)]);
+    const invitTo = await this.invitationService.getValue([where('toUser.uid', '==', user.uid)]);
     const allInvit = [...invitFrom, ...invitTo];
     if (allInvit.length) {
       output.push(`${allInvit.length} invitation(s) will be removed.`)
     }
 
-    const organizerEvent = await this.eventService.getValue(ref => ref.where('meta.organizerUid', '==', user.uid));
+    const organizerEvent = await this.eventService.getValue([where('meta.organizerUid', '==', user.uid)]);
     if (organizerEvent.length) {
       output.push(`${organizerEvent.length} meetings event(s) will have no organizer anymore.`);
     }

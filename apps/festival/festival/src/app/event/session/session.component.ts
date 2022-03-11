@@ -12,9 +12,9 @@ import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { TwilioService } from '@blockframes/event/components/meeting/+state/twilio.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { getFileExtension } from '@blockframes/utils/file-sanitizer';
-import { extensionToType } from '@blockframes/utils/utils';
+import { ErrorResultResponse, extensionToType } from '@blockframes/utils/utils';
 import { MediaService } from '@blockframes/media/+state';
-import { AngularFireFunctions } from '@angular/fire/functions';
+import { Functions, httpsCallable } from '@angular/fire/functions';
 import { StorageFile, StorageVideo } from '@blockframes/media/+state/media.firestore';
 import { InvitationService } from '@blockframes/invitation/+state/invitation.service';
 import { Invitation } from '@blockframes/invitation/+state';
@@ -57,7 +57,7 @@ export class SessionComponent implements OnInit, OnDestroy {
   public requestSent = false;
 
   constructor(
-    private functions: AngularFireFunctions,
+    private functions: Functions,
     private route: ActivatedRoute,
     private service: EventService,
     private invitationService: InvitationService,
@@ -93,7 +93,7 @@ export class SessionComponent implements OnInit, OnDestroy {
           // if user is not a screening owner we need to track the watch time
           if (event.ownerOrgId !== this.authService.profile?.orgId) {
             // Try to get invitation the regular way
-            const uidFilter = (invit: Invitation) => invit.toUser?.uid === this.authService.uid ||  invit.fromUser?.uid === this.authService.uid;
+            const uidFilter = (invit: Invitation) => invit.toUser?.uid === this.authService.uid || invit.fromUser?.uid === this.authService.uid;
             const allInvitations = await this.invitationService.allInvitations$.pipe(take(1)).toPromise();
             let invitation = allInvitations.find(invit => invit.eventId === event.id && uidFilter(invit));
 
@@ -292,9 +292,9 @@ export class SessionComponent implements OnInit, OnDestroy {
   }
 
   async createVideoControl(video: StorageVideo, eventId: string): Promise<MeetingVideoControl> {
-    const getVideoInfo = this.functions.httpsCallable('privateVideo');
+    const getVideoInfo = httpsCallable<{ video: StorageVideo, eventId: string }, ErrorResultResponse>(this.functions, 'privateVideo');
 
-    const { error, result } = await getVideoInfo({ video, eventId }).toPromise();
+    const { error, result } = (await getVideoInfo({ video, eventId })).data;
     if (error) {
       // if error is set, result will contain the error message
       throw new Error(result);
