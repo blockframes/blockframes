@@ -6,7 +6,6 @@ import {
   PublicOrganization,
   MovieDocument,
   PermissionsDocument,
-  PublicUser
 } from '@blockframes/model';
 import { removeUnexpectedUsers } from './users';
 import {
