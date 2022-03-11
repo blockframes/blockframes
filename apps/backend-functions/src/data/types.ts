@@ -11,6 +11,5 @@ export {
   createDocPermissions,
   UserRole
 } from '@blockframes/permissions/+state/permissions.firestore';
-export { MovieDocument, MovieAnalytics, MovieEventAnalytics } from '@blockframes/model';
 export { RequestDemoInformations } from '@blockframes/utils/request-demo';
 export { ScreeningEventDocument } from '@blockframes/event/+state/event.firestore';
