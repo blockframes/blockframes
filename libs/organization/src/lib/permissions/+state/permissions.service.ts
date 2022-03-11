@@ -6,7 +6,7 @@ import { map, switchMap, tap } from 'rxjs/operators';
 import { AuthService } from '@blockframes/auth/+state';
 import { combineLatest, Observable, of } from 'rxjs';
 import { ActiveState, EntityState } from '@datorama/akita';
-import { createDocPermissions, PermissionsDocument, UserRole, Permissions} from 'libs/model/src/lib/permissions';
+import { createDocPermissions, PermissionsDocument, UserRole, Permissions } from 'libs/model/src/lib/permissions';
 
 interface PermissionsState extends EntityState<Permissions>, ActiveState<string> { }
 
