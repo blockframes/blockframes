@@ -2,7 +2,7 @@ import { DocumentMeta } from "@blockframes/utils/models-meta";
 import { NotificationTypesBase } from '@blockframes/notification/types';
 import { createStorageFile, StorageFile } from "@blockframes/media/+state/media.firestore";
 import { Genre, Language, Media, Territory } from "@blockframes/utils/static-model";
-import { UserRole } from "@blockframes/permissions/types";
+import { UserRole } from "./permissions";
 
 export interface User extends PublicUser {
   financing: {

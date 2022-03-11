@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { AuthService } from '@blockframes/auth/+state';
 import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
-import { createPermissions, UserRole } from '../../permissions/+state/permissions.model';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { UserService } from '@blockframes/user/+state';
 import { 
@@ -24,6 +23,7 @@ import {
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { combineLatest, Observable, of } from 'rxjs';
 import { ActiveState, EntityState } from '@datorama/akita';
+import { createPermissions, UserRole } from 'libs/model/src/lib/permissions';
 
 interface OrganizationState extends EntityState<Organization>, ActiveState<string> {}
 

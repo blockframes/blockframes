@@ -6,7 +6,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Organization, Movie } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { FormControl } from '@angular/forms';
-import { UserRole, PermissionsService } from '@blockframes/permissions/+state';
 import { Observable } from 'rxjs';
 import { Invitation, InvitationService } from '@blockframes/invitation/+state';
 import { buildJoinOrgQuery } from '@blockframes/invitation/invitation-utils';
@@ -17,6 +16,8 @@ import { ContractService } from '@blockframes/contract/contract/+state';
 import { FileUploaderService } from '@blockframes/media/+state/file-uploader.service';
 import { App, OrgAppAccess } from '@blockframes/utils/apps';
 import { BucketService } from '@blockframes/contract/bucket/+state/bucket.service';
+import { PermissionsService } from '@blockframes/permissions/+state';
+import { UserRole } from 'libs/model/src/lib/permissions';
 
 @Component({
   selector: 'crm-organization',

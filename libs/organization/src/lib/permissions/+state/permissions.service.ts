@@ -1,6 +1,4 @@
 import { Injectable } from '@angular/core';
-import { UserRole, createDocPermissions, PermissionsDocument } from './permissions.firestore';
-import { Permissions } from './permissions.model';
 import { CollectionService, CollectionConfig, AtomicWrite } from 'akita-ng-fire';
 import type firebase from 'firebase';
 import { UserService } from '@blockframes/user/+state/user.service';
@@ -8,6 +6,7 @@ import { map, switchMap, tap } from 'rxjs/operators';
 import { AuthService } from '@blockframes/auth/+state';
 import { combineLatest, Observable, of } from 'rxjs';
 import { ActiveState, EntityState } from '@datorama/akita';
+import { createDocPermissions, PermissionsDocument, UserRole, Permissions} from 'libs/model/src/lib/permissions';
 
 interface PermissionsState extends EntityState<Permissions>, ActiveState<string> { }
 
