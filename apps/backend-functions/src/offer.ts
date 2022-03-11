@@ -1,13 +1,20 @@
 import { db } from './internals/firebase';
 import { getDocument } from '@blockframes/firebase-utils';
 import { Offer } from '@blockframes/contract/offer/+state/offer.model';
-import { Movie, Organization, User, NotificationTypes } from '@blockframes/model';
+import { Movie, Organization, OrganizationDocument, User, NotificationTypes } from '@blockframes/model';
 import { staticModel } from '@blockframes/utils/static-model';
 import { createNotification, triggerNotifications } from './notification';
-import { Change } from 'firebase-functions';
-import { createDocumentMeta } from './data/internals';
-import { Sale } from '@blockframes/contract/contract/+state/contract.model';
-import { getSeller } from '@blockframes/contract/contract/+state/utils';
+// #7946 this may be reactivated later
+// import { templateIds } from '@blockframes/utils/emails/ids';
+// import { Change } from 'firebase-functions';
+// import { createDocumentMeta } from './data/internals';
+// import { Sale } from '@blockframes/contract/contract/+state/contract.model';
+// import { getSeller } from '@blockframes/contract/contract/+state/utils';
+// import { NotificationTypes } from './data/types';
+// import { EmailTemplateRequest, sendMailFromTemplate } from './internals/email';
+// import { App } from '@blockframes/utils/apps';
+// import { appUrl, supportEmails } from '@env';
+
 
 export async function onOfferCreate(snap: FirebaseFirestore.DocumentSnapshot): Promise<void> {
   const offer = snap.data() as Offer;
@@ -35,49 +42,50 @@ export async function onOfferCreate(snap: FirebaseFirestore.DocumentSnapshot): P
   triggerNotifications([notification]);
 }
 
-export async function onOfferUpdate(change: Change<FirebaseFirestore.DocumentSnapshot>) {
-  const before = change.before;
-  const after = change.after;
+// #7946 this may be reactivated later
+// export async function onOfferUpdate(change: Change<FirebaseFirestore.DocumentSnapshot>) {
+//   const before = change.before;
+//   const after = change.after;
 
-  if (!before || !after) {
-    throw new Error('Parameter "change" not found');
-  }
+//   if (!before || !after) {
+//     throw new Error('Parameter "change" not found');
+//   }
 
-  const offerBefore = before.data() as Offer;
-  const offerAfter = after.data() as Offer;
+//   const offerBefore = before.data() as Offer;
+//   const offerAfter = after.data() as Offer;
 
-  const statusHasChanged = offerBefore.status !== offerAfter.status;
-  const isOfferDeclinedOrAccepted = ['accepted', 'declined'].includes(offerAfter.status);
+//   const statusHasChanged = offerBefore.status !== offerAfter.status;
+//   const isOfferDeclinedOrAccepted = ['accepted', 'declined'].includes(offerAfter.status);
 
-  const getNotifications = (type: NotificationTypes, docId: string) => (org: Organization) =>
-    org.userIds.map((userId) =>
-      createNotification({
-        toUserId: userId,
-        type,
-        docId,
-        _meta: createDocumentMeta({ createdFrom: 'catalog' }),
-      })
-    );
-  if (statusHasChanged && isOfferDeclinedOrAccepted) {
-    const type = offerAfter.status === 'accepted' ? 'offerAccepted' : 'offerDeclined';
-    getDocument<Organization>(`orgs/${offerAfter.buyerId}`)
-      .then(getNotifications(type, offerAfter.id))
-      .then(triggerNotifications);
-  }
+//   const getNotifications = (type: NotificationTypes, docId: string) => (org: Organization) =>
+//     org.userIds.map((userId) =>
+//       createNotification({
+//         toUserId: userId,
+//         type,
+//         docId,
+//         _meta: createDocumentMeta({ createdFrom: 'catalog' }),
+//       })
+//     );
+//   if (statusHasChanged && isOfferDeclinedOrAccepted) {
+//     const type = offerAfter.status === 'accepted' ? 'offerAccepted' : 'offerDeclined';
+//     getDocument<Organization>(`orgs/${offerAfter.buyerId}`)
+//       .then(getNotifications(type, offerAfter.id))
+//       .then(triggerNotifications);
+//   }
 
-  if (offerAfter.status === 'accepted') {
-    const contractsRef = db
-      .collection('contracts')
-      .where('offerId', '==', offerAfter.id)
-      .where('status', '==', 'accepted');
-    const contracts = await contractsRef
-      .get()
-      .then((snaps) => snaps.docs.map((doc) => doc.data() as Sale));
+//   if (offerAfter.status === 'accepted') {
+//     const contractsRef = db
+//       .collection('contracts')
+//       .where('offerId', '==', offerAfter.id)
+//       .where('status', '==', 'accepted');
+//     const contracts = await contractsRef
+//       .get()
+//       .then((snaps) => snaps.docs.map((doc) => doc.data() as Sale));
 
-    contracts.forEach((contract) => {
-      getDocument<Organization>(`orgs/${getSeller(contract)}`)
-        .then(getNotifications('underSignature', contract.id))
-        .then(triggerNotifications);
-    });
-  }
-}
+//     contracts.forEach((contract) => {
+//       getDocument<Organization>(`orgs/${getSeller(contract)}`)
+//         .then(getNotifications('underSignature', contract.id))
+//         .then(triggerNotifications);
+//     });
+//   }
+// }
