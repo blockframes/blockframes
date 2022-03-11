@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
+import { where } from 'firebase/firestore';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { CollectionConfig, CollectionService, AtomicWrite } from 'akita-ng-fire';
 import { OrganizationService } from '@blockframes/organization/+state';
@@ -47,22 +48,22 @@ export class InvitationService extends CollectionService<InvitationState> {
       if (isAdmin) {
         return combineLatest([
           // Invitations linked to current user
-          this.valueChanges(ref => ref.where('fromUser.uid', '==', user.uid)),
-          this.valueChanges(ref => ref.where('toUser.uid', '==', user.uid)),
+          this.valueChanges([where('fromUser.uid', '==', user.uid)]),
+          this.valueChanges([where('toUser.uid', '==', user.uid)]),
 
           // Invitations linked to current org
-          this.valueChanges(ref => ref.where('fromOrg.id', '==', user.orgId)),
-          this.valueChanges(ref => ref.where('toOrg.id', '==', user.orgId)),
+          this.valueChanges([where('fromOrg.id', '==', user.orgId)]),
+          this.valueChanges([where('toOrg.id', '==', user.orgId)]),
         ])
       } else {
         return combineLatest([
           // Invitations linked to current user
-          this.valueChanges(ref => ref.where('fromUser.uid', '==', user.uid)),
-          this.valueChanges(ref => ref.where('toUser.uid', '==', user.uid)),
+          this.valueChanges([where('fromUser.uid', '==', user.uid)]),
+          this.valueChanges([where('toUser.uid', '==', user.uid)]),
 
           // Event invitations linked to current org
-          this.valueChanges(ref => ref.where('type', '==', 'attendEvent').where('fromOrg.id', '==', user.orgId)),
-          this.valueChanges(ref => ref.where('type', '==', 'attendEvent').where('toOrg.id', '==', user.orgId)),
+          this.valueChanges([where('type', '==', 'attendEvent'), where('fromOrg.id', '==', user.orgId)]),
+          this.valueChanges([where('type', '==', 'attendEvent'), where('toOrg.id', '==', user.orgId)]),
         ])
       }
     }),

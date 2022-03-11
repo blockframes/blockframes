@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { where } from 'firebase/firestore';
 
 // Services
 import { MovieService } from '@blockframes/movie/+state/movie.service';
@@ -31,7 +32,7 @@ export class ContractFormComponent implements OnInit {
   private income?: Income;
   title?: Movie;
   form = new NegotiationForm();
-  titles$ = this.service.valueChanges((ref) => ref.where('app.catalog.status', '==', 'accepted'));
+  titles$ = this.service.valueChanges([where('app.catalog.status', '==', 'accepted')]);
   currency?: string;
   activeTerm?: string;
   contractId: string = this.route.snapshot.params.contractId;

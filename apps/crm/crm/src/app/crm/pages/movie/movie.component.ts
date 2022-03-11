@@ -15,6 +15,7 @@ import { PermissionsService } from '@blockframes/permissions/+state/permissions.
 import { ContractService } from '@blockframes/contract/contract/+state';
 import { CampaignService } from '@blockframes/campaign/+state';
 import { MovieAppConfigForm } from '@blockframes/movie/form/movie.form';
+import { where } from 'firebase/firestore';
 
 @Component({
   selector: 'crm-movie',
@@ -137,16 +138,12 @@ export class MovieComponent implements OnInit {
     const output: string[] = [];
     output.push('1 movie will be removed.');
 
-    const whislists = await this.organizationService.getValue((ref) =>
-      ref.where('wishlist', 'array-contains', movie.id)
-    );
+    const whislists = await this.organizationService.getValue([where('wishlist', 'array-contains', movie.id)]);
     if (whislists.length) {
       output.push(`${whislists.length} items from org's wishlist will be removed.`);
     }
 
-    const events = await this.eventService.getValue((ref) =>
-      ref.where('meta.titleId', '==', movie.id)
-    );
+    const events = await this.eventService.getValue([where('meta.titleId', '==', movie.id)]);
     if (events.length) {
       output.push(`${events.length} event(s) will be removed.`);
     }
@@ -154,7 +151,7 @@ export class MovieComponent implements OnInit {
     const eventIds = events.map((e) => e.id);
 
     const invitationsPromises = eventIds.map((e) =>
-      this.invitationService.getValue((ref) => ref.where('eventId', '==', e))
+      this.invitationService.getValue([where('eventId', '==', e)])
     );
     const invitations = await Promise.all(invitationsPromises);
     const invitationsCount = invitations.flat().length;
@@ -164,7 +161,7 @@ export class MovieComponent implements OnInit {
     }
 
     const orgPromises = movie.orgIds.map((o) =>
-      this.organizationService.getValue((ref) => ref.where('id', '==', o))
+      this.organizationService.getValue([where('id', '==', o)])
     );
     const orgs = await Promise.all(orgPromises);
     const promises = orgs
@@ -175,9 +172,7 @@ export class MovieComponent implements OnInit {
       output.push(`${documentPermissions.length} permission document will be removed.`);
     }
 
-    const contracts = await this.contractService.getValue((ref) =>
-      ref.where('titleId', '==', movie.id)
-    );
+    const contracts = await this.contractService.getValue([where('titleId', '==', movie.id)]);
     if (contracts.length) {
       output.push(`${contracts.length} contract will be deleted.`);
     }

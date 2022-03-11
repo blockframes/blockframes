@@ -7,6 +7,7 @@ import { getHost } from '@blockframes/invitation/pipes/host.pipe';
 import { getGuest } from '@blockframes/invitation/pipes/guest.pipe';
 import { Movie, Organization, orgName } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { where } from 'firebase/firestore';
 
 @Component({
   selector: 'crm-invitations',
@@ -31,7 +32,7 @@ export class InvitationsComponent implements OnInit {
 
   async ngOnInit() {
     const [invitations, events] = await Promise.all([
-      this.invitationService.getValue((ref) => ref.where('type', '==', 'attendEvent')),
+      this.invitationService.getValue([where('type', '==', 'attendEvent')]),
       this.eventService.getValue(),
     ]);
 
