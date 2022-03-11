@@ -22,11 +22,8 @@ export function counter(analytics: AnalyticsWithOrg[], path: string, scope: Scop
   for (const analytic of analytics) {
     const key = getDeepValue(analytic, path) as string | number;
     if (!key) continue;
-    if (counter[key]) {
-      counter[key]++;
-    } else {
-      counter[key] = 1;
-    }
+    if (!counter[key]) counter[key] = 0;
+    counter[key]++;
   }
 
   return Object.entries(counter).map(([key, count]) => ({

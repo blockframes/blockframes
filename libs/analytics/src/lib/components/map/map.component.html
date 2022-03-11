@@ -24,10 +24,8 @@
 
 <mat-list>
   <mat-list-item *ngFor="let top of top3">
-    <section fxLayout fxLayoutAlign="space-between">
-      <span>{{ top.label }}</span>
-      <span>{{ top.count }}</span>
-    </section>
+    <span matLine>{{ top.label }}</span>
+    <span>{{ top.count }}</span>
     
     <mat-divider></mat-divider>
   </mat-list-item>

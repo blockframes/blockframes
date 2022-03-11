@@ -18,8 +18,7 @@ import { counter } from '@blockframes/analytics/+state/utils';
 export class TitleAnalyticsComponent {
 
   titleId$ = this.route.params.pipe(
-    pluck('titleId'),
-    shareReplay({ bufferSize: 1, refCount: true })
+    pluck('titleId')
   );
 
   title$ = this.titleId$.pipe(
