@@ -1,6 +1,6 @@
 ﻿import { TestBed } from '@angular/core/testing';
 import { NotificationService } from './notification.service';
-import { Notification } from './notification.model';
+import { Notification } from '@blockframes/model';
 import { AngularFireModule } from '@angular/fire';
 import { SETTINGS, AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestore';
 import { loadFirestoreRules, clearFirestoreData } from '@firebase/rules-unit-testing';

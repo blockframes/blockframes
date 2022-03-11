@@ -1,6 +1,16 @@
-import { InvitationDocument, NotificationDocument, NotificationTypes } from './data/types';
+
+import { InvitationDocument } from './data/types';
 import { getDocument, getOrgAppKey, createDocumentMeta } from './data/internals';
-import { NotificationSettingsTemplate, User, OrganizationDocument, canAccessModule, orgName, MovieDocument } from '@blockframes/model';
+import {
+  NotificationSettingsTemplate,
+  User,
+  OrganizationDocument,
+  canAccessModule,
+  orgName,
+  NotificationTypes,
+  NotificationDocument,
+  MovieDocument
+} from '@blockframes/model';
 import { sendMailFromTemplate } from './internals/email';
 import { emailErrorCodes, EventEmailData, getEventEmailData, getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
 import { EventDocument, EventMeta, Screening } from '@blockframes/event/+state/event.firestore';
@@ -45,7 +55,6 @@ import { movieCurrencies } from '@blockframes/utils/static-model';
 import { appUrl } from './environments/environment';
 import { getReviewer } from '@blockframes/contract/negotiation/utils';
 import { createMailContract, MailContract } from '@blockframes/contract/contract/+state/contract.firestore';
-
 
 // @TODO (#2848) forcing to festival since invitations to events are only on this one
 const eventAppKey: App = 'festival';

@@ -9,7 +9,6 @@ import { db } from './internals/firebase';
 import { getUser } from "./internals/utils";
 import { sendMail } from './internals/email';
 import { organizationCreated, organizationRequestedAccessToApp } from './templates/mail';
-import { NotificationDocument, NotificationTypes } from './data/types';
 import { triggerNotifications, createNotification } from './notification';
 import { app, App, getOrgAppAccess, getMailSender, Module } from '@blockframes/utils/apps';
 import { getAdminIds, createPublicOrganizationDocument, createPublicUserDocument, getDocument, createDocumentMeta } from './data/internals';
@@ -18,7 +17,7 @@ import { cleanOrgMedias } from './media';
 import { Change, EventContext } from 'firebase-functions';
 import { algolia, deleteObject, storeSearchableOrg, findOrgAppAccess, storeSearchableUser } from '@blockframes/firebase-utils';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
-import { User, OrganizationDocument, PublicUser } from '@blockframes/model';
+import { User, NotificationDocument, NotificationTypes, OrganizationDocument, PublicUser } from '@blockframes/model';
 import { groupIds } from '@blockframes/utils/emails/ids';
 import { PermissionsDocument } from 'libs/model/src/lib/permissions';
 
