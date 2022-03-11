@@ -1,5 +1,5 @@
 <ng-container *ngIf="title$ | async as title">
-  <header fxLayout="column" fxLayoutGap="20px" bgAsset="empty_banner.png" bgTheme="dark">
+  <header fxLayout="column" fxLayoutGap="20px" class="dark-contrast-theme" bgAsset="background_header.png" bgTheme="dark">
     <button mat-icon-button (click)="goBack()">
       <mat-icon svgIcon="arrow_back"></mat-icon>
     </button>
@@ -13,7 +13,7 @@
         <p class="mat-body-1">{{ title.directors | displayName }}</p>
         <div fxLayout fxLayoutAlign="space-between">
           <h1 class="mat-display-1">{{ title.title.international }}</h1>
-          <a mat-button [routerLink]="['/c/o/marketplace/title/', title.id]" color="primary" class="film-page-button">
+          <a mat-button [routerLink]="['/c/o/marketplace/title/', title.id]" class="film-page-button">
             <span>See Film Page</span>
           </a>
         </div>
@@ -26,11 +26,16 @@
     <h2>Interested Users</h2>
     <p class="mat-body-1">See how many users interacted with your movie (viewed your title, added to wishlist, requested a screening, etc).</p>
 
-    <article class="surface">
+    <article class="surface" fxLayout="column" fxLayoutGap="16px">
       <a mat-button [routerLink]="['/c/o/dashboard']">
         <mat-icon svgIcon="arrow_back"></mat-icon>
         <span>Come back to Dashboard</span>
       </a>
+
+      <div fxLayout fxLayout.lt-sm="column" fxLayoutGap="16px">
+        <analytics-pie-chart fxFlex class="surface" [data]="orgActivity$ | async"></analytics-pie-chart>
+        <analytics-map fxFlex class="surface" [data]="territoryActivity$ | async"></analytics-map>
+      </div>
     </article>
   </section>
 </ng-container>

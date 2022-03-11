@@ -1,0 +1,32 @@
+<header fxLayout fxLayoutGap="8px">
+  <mat-icon matListIcon svgIcon="landscape"></mat-icon>
+  <h5>Split by Company Territory</h5>
+</header>
+
+<world-map>
+  <!-- MAP LAYERS -->
+  <ng-container *ngFor="let isoA3 of zero">
+    <map-feature [tag]="isoA3" color="#ebeef3"></map-feature>
+  </ng-container>
+
+  <ng-container *ngFor="let isoA3 of lessThanFive">
+    <map-feature [tag]="isoA3" color="#dee5ff"></map-feature>
+  </ng-container>
+
+  <ng-container *ngFor="let isoA3 of lessThanFifty">
+    <map-feature [tag]="isoA3" color="#8da4fa"></map-feature>
+  </ng-container>
+
+  <ng-container *ngFor="let isoA3 of moreThanFifty">
+    <map-feature [tag]="isoA3" color="#001ec7"></map-feature>
+  </ng-container>
+</world-map>
+
+<mat-list>
+  <mat-list-item *ngFor="let top of top3">
+    <span matLine>{{ top.label }}</span>
+    <span>{{ top.count }}</span>
+    
+    <mat-divider></mat-divider>
+  </mat-list-item>
+</mat-list>
