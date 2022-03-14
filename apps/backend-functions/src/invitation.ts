@@ -139,13 +139,9 @@ export interface UserInvitation {
  * @dev this function polyfills the Promise.allSettled
  */
 export const inviteUsers = async (data: UserInvitation, context: CallableContext) => {
-  if (!context?.auth) {
-    throw new Error('Permission denied: missing auth context.');
-  }
+  if (!context?.auth) throw new Error('Permission denied: missing auth context.');
   const user = await getDocument<PublicUser>(`users/${context.auth.uid}`);
-  if (!user.orgId) {
-    throw new Error('Permission denied: missing org id.');
-  }
+  if (!user.orgId) throw new Error('Permission denied: missing org id.');
 
   const promises: ErrorResultResponse[] = [];
   const invitation = createInvitation(data.invitation);
@@ -180,8 +176,7 @@ export const inviteUsers = async (data: UserInvitation, context: CallableContext
   for (const email of data.emails) {
     const invitationId = db.collection('invitations').doc().id;
     const { type, mode, fromOrg } = invitation;
-    const eventData =
-      type == 'attendEvent' ? getEventEmailData({ event, orgName: orgName(fromOrg, 'full'), email, invitationId }) : undefined;
+    const eventData = type == 'attendEvent' ? getEventEmailData({ event, orgName: orgName(fromOrg, 'full'), email, invitationId }) : undefined;
     const user = await getOrInviteUserByMail(email, { id: invitationId, type, mode, fromOrg }, data.app, eventData);
 
     if (user.invitationStatus) invitation.status = user.invitationStatus;
@@ -250,8 +245,7 @@ export const acceptOrDeclineInvitationAsAnonymous = async (data: AnonymousInvita
 
   if (!invitation || invitation.type !== 'attendEvent') throw new Error('Permission denied: invalid invitation');
 
-  if (invitation.mode !== 'invitation' || invitation.toUser.email.toLowerCase() !== data.email.toLowerCase())
-    throw new Error('Permission denied: invalid invitation');
+  if (invitation.mode !== 'invitation' || invitation.toUser.email.toLowerCase() !== data.email.toLowerCase()) throw new Error('Permission denied: invalid invitation');
 
   invitation.status = data.status;
 
