@@ -7,7 +7,6 @@ export const negotiationStatus = ['pending', 'accepted', 'declined'] as const;
 
 export type NegotiationStatus = typeof negotiationStatus[number];
 
-
 // We extends the BucketContract with some information for rules
 export interface Negotiation<T extends Date | Timestamp = Date> extends BucketContract<T> {
   _meta: DocumentMeta<T>;
@@ -25,6 +24,5 @@ export interface Negotiation<T extends Date | Timestamp = Date> extends BucketCo
   initial: T;
   currency: MovieCurrency
 }
-
 
 export type NegotiationDocument = Negotiation<Timestamp>;
