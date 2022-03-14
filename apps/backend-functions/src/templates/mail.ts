@@ -8,7 +8,7 @@ import { EmailRequest, EmailTemplateRequest } from '../internals/email';
 import { templateIds } from '@blockframes/utils/emails/ids';
 import { EventEmailData, getMovieEmailData, getOfferEmailData, MovieEmailData, OrgEmailData, UserEmailData } from '@blockframes/utils/emails/utils';
 import { RequestDemoInformations } from '../data/types';
-import { PublicUser, OrganizationDocument, PublicOrganization, MovieDocument } from '@blockframes/model';
+import { PublicUser, OrganizationDocument, PublicOrganization, MovieDocument, createMailTerm } from '@blockframes/model';
 import { App, appName, Module } from '@blockframes/utils/apps';
 import { Bucket } from '@blockframes/contract/bucket/+state/bucket.model';
 import { format } from "date-fns";
@@ -19,7 +19,6 @@ import { createMailContract, MailContract } from '@blockframes/contract/contract
 import { NegotiationDocument } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
 import { staticModel } from '@blockframes/utils/static-model';
 import { Timestamp } from '../data/internals';
-import { createMailTerm } from '@blockframes/contract/term/+state/term.firestore';
 import { displayName } from '@blockframes/utils/utils';
 
 const ORG_HOME = '/c/o/organization/';
