@@ -3,7 +3,7 @@ import { Component, ChangeDetectionStrategy, Pipe, PipeTransform, Inject } from 
 // Blockframes
 import { NotificationsForm } from './notifications.form';
 import { App } from "@blockframes/utils/apps";
-import { NotificationTypesBase, notificationTypesBase } from '@blockframes/notification/types';
+import { NotificationTypesBase, notificationTypesBase } from '@blockframes/model';
 import { AuthService } from '@blockframes/auth/+state';
 
 // Material
@@ -38,7 +38,8 @@ const titleType: Record<NotificationTypesBase, NotificationSetting> = {
   myContractWasAccepted: { text: 'Your counter offer was accepted. (RECOMMENDED)', tooltip: true },
   myOrgDeclinedAContract: { text: 'You declined a counter offer. (RECOMMENDED)', tooltip: true },
   myContractWasDeclined: { text: 'Your counter offer was declined. (RECOMMENDED)', tooltip: true },
-  underSignature: { text: 'Your offer is now under signature. (RECOMMENDED)', tooltip: true },
+  // #7946 this may be reactivated later
+  // underSignature: { text: 'Your offer is now under signature. (RECOMMENDED)', tooltip: true },
 };
 
 const tables: { title: string, types: string[], appAuthorized: App[] }[] = [
@@ -77,7 +78,8 @@ const tables: { title: string, types: string[], appAuthorized: App[] }[] = [
     types: [
       'offerCreatedConfirmation',
       'contractCreated',
-      'underSignature',
+      // #7946 this may be reactivated later
+      // 'underSignature',
     ],
     appAuthorized: ['catalog']
   },

@@ -1,15 +1,13 @@
 import { Inject, Injectable } from '@angular/core';
-import { Notification } from './notification.model';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { AuthService } from '@blockframes/auth/+state';
 import { filter, map, switchMap, take } from 'rxjs/operators';
 import { Event, isMeeting, isScreening } from '@blockframes/event/+state/event.model';
-import { orgName } from '@blockframes/organization/+state/organization.firestore';
+import { orgName, Movie, Organization, OrganizationDocument, Notification } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { toDate } from '@blockframes/utils/helpers';
 import { displayName } from '@blockframes/utils/utils';
 import { App, applicationUrl, appName, getMovieAppAccess } from '@blockframes/utils/apps';
-import { Movie } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 import { format } from 'date-fns';
@@ -19,6 +17,8 @@ import { UserService } from '@blockframes/user/+state';
 import { EventService } from '@blockframes/event/+state';
 import { ModuleGuard } from '@blockframes/utils/routes/module.guard';
 import { APP } from '@blockframes/utils/routes/utils';
+import { OfferService } from '@blockframes/contract/offer/+state';
+import { Contract, ContractService } from '@blockframes/contract/contract/+state';
 
 interface NotificationState extends EntityState<Notification>, ActiveState<string> {}
 @Injectable({ providedIn: 'root' })
@@ -47,6 +47,7 @@ export class NotificationService extends CollectionService<NotificationState> {
     private orgService: OrganizationService,
     private moduleGuard: ModuleGuard,
     private movieService: MovieService,
+    private contractService: ContractService,
     private userService: UserService,
     private eventService: EventService,
     @Inject(APP) private app: App
@@ -324,26 +325,36 @@ export class NotificationService extends CollectionService<NotificationState> {
         return {
           ...notification,
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `Your offer was successfully sent.`,
+          message: `Your offer ${notification.docId} was successfully sent.`,
           placeholderUrl: 'profil_user.svg',
-          url: `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.docId}`,
-        };
-      case 'contractCreated':
-        return {
-          ...notification,
-          _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `An offer has been made on one of your titles.`,
-          placeholderUrl: 'list_offer.svg',
-          url: `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}`,
-        };
-      case 'createdCounterOffer': {
-        const marketplaceUrl = `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.offerId}/${notification.docId}`;
-        const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
+          url: `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.docId}`
+        }
+      case 'contractCreated': {
+        const contract = await this.contractService.valueChanges(notification.docId).pipe(take(1)).toPromise();
+        const movie = await this.movieService.valueChanges(contract.titleId).pipe(take(1)).toPromise();
+        const user = await this.userService.valueChanges(contract.buyerUserId).pipe(take(1)).toPromise();
+        const message = `${displayName(user)} sent an offer for ${movie.title.international}.`;
 
         return {
           ...notification,
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `Your counter-offer was successfully sent.`,
+          message,
+          placeholderUrl: 'list_offer.svg',
+          url: `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}`
+        }
+      }  
+      case 'createdCounterOffer': {
+        const marketplaceUrl = `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.offerId}/${notification.docId}`;
+        const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
+        const contract = await this.contractService.valueChanges(notification.docId).pipe(take(1)).toPromise();
+        const movie = await this.movieService.valueChanges(contract.titleId).pipe(take(1)).toPromise();
+        const name = await this.nameToDisplay(notification, contract);
+        const message = `Your counter-offer for ${movie.title.international} was successfully sent to ${name}.`;
+        
+        return {
+          ...notification,
+          _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
+          message,
           placeholderUrl: 'list_offer.svg',
           url: module === 'marketplace' ? marketplaceUrl : dashboardUrl,
         };
@@ -351,11 +362,15 @@ export class NotificationService extends CollectionService<NotificationState> {
       case 'receivedCounterOffer': {
         const marketplaceUrl = `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.offerId}/${notification.docId}`;
         const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
+        const contract = await this.contractService.valueChanges(notification.docId).pipe(take(1)).toPromise();
+        const movie = await this.movieService.valueChanges(contract.titleId).pipe(take(1)).toPromise();
+        const name = await this.nameToDisplay(notification, contract);
+        const message = `${name} sent a counter-offer for ${movie.title.international}.`;
 
         return {
           ...notification,
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `You received a counter-offer.`,
+          message,
           placeholderUrl: 'list_offer.svg',
           url: module === 'marketplace' ? marketplaceUrl : dashboardUrl,
         };
@@ -363,39 +378,47 @@ export class NotificationService extends CollectionService<NotificationState> {
       case 'myContractWasAccepted': {
         const marketplaceUrl = `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.offerId}/${notification.docId}`;
         const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
+        const contract = await this.contractService.valueChanges(notification.docId).pipe(take(1)).toPromise();
+        const movie = await this.movieService.valueChanges(contract.titleId).pipe(take(1)).toPromise();
+        
         return {
           ...notification,
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `Your offer was accepted.`,
+          message: `Your offer for ${movie.title.international} was accepted. The agreement will now be drafted offline.`,
           placeholderUrl: 'list_offer.svg',
           url: module === 'marketplace' ? marketplaceUrl : dashboardUrl,
         };
       }
-      case 'underSignature': {
-        return {
-          ...notification,
-          _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `Your offer is now under signature`,
-          placeholderUrl: 'list_offer.svg',
-          url: `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`,
-        };
-      }
-      case 'offerAccepted': {
-        return {
-          ...notification,
-          _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `Your offer is now under signature`,
-          placeholderUrl: 'list_offer.svg',
-          url: `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.docId}`,
-        };
-      }
+      // #7946 this may be reactivated later
+      // case 'underSignature': {
+      //   return {
+      //     ...notification,
+      //     _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
+      //     message: `Your offer is now under signature`,
+      //     placeholderUrl: 'list_offer.svg',
+      //     url: `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`
+      //   }
+      // }
+      // case 'offerAccepted': {
+      //   return {
+      //     ...notification,
+      //     _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
+      //     message: `Your offer is now under signature`,
+      //     placeholderUrl: 'list_offer.svg',
+      //     url: `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.docId}`
+      //   }
+      // }
       case 'myOrgAcceptedAContract': {
         const marketplaceUrl = `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.offerId}/${notification.docId}`;
         const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
+        const contract = await this.contractService.valueChanges(notification.docId).pipe(take(1)).toPromise();
+        const movie = await this.movieService.valueChanges(contract.titleId).pipe(take(1)).toPromise();
+        const message = `Congrats for accepting the offer ${notification.offerId} for ${movie.title.international}! The agreement will now be drafted offline.`;
+        
         return {
           ...notification,
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `You accepted an offer.`,
+          message,
           placeholderUrl: 'list_offer.svg',
           url: module === 'marketplace' ? marketplaceUrl : dashboardUrl,
         };
@@ -403,10 +426,13 @@ export class NotificationService extends CollectionService<NotificationState> {
       case 'myContractWasDeclined': {
         const marketplaceUrl = `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.offerId}/${notification.docId}`;
         const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
+        const contract = await this.contractService.valueChanges(notification.docId).pipe(take(1)).toPromise();
+        const movie = await this.movieService.valueChanges(contract.titleId).pipe(take(1)).toPromise();
+        
         return {
           ...notification,
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `Your offer was declined.`,
+          message: `Your offer for ${movie.title.international} was declined.`,
           placeholderUrl: 'list_offer.svg',
           url: module === 'marketplace' ? marketplaceUrl : dashboardUrl,
         };
@@ -414,10 +440,13 @@ export class NotificationService extends CollectionService<NotificationState> {
       case 'myOrgDeclinedAContract': {
         const marketplaceUrl = `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.offerId}/${notification.docId}`;
         const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
+        const contract = await this.contractService.valueChanges(notification.docId).pipe(take(1)).toPromise();
+        const movie = await this.movieService.valueChanges(contract.titleId).pipe(take(1)).toPromise();
+        
         return {
           ...notification,
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `You declined an offer.`,
+          message: `The offer for ${movie.title.international} was successfully declined.`,
           placeholderUrl: 'list_offer.svg',
           url: module === 'marketplace' ? marketplaceUrl : dashboardUrl,
         };
@@ -481,5 +510,18 @@ export class NotificationService extends CollectionService<NotificationState> {
         storagePath: 'poster',
       })
     );
+  }
+
+  /**
+  * @returns A username or org name depending on who is receiving a counter offer
+  */
+  public async nameToDisplay(notification: Notification, contract: Contract) {
+    if (contract.buyerUserId === notification.toUserId) {
+      const org = await this.orgService.valueChanges(contract.sellerId).pipe(take(1)).toPromise();
+      return orgName(org);
+    } else {
+      const user = await this.userService.valueChanges(contract.buyerUserId).pipe(take(1)).toPromise();
+      return displayName(user);
+    } 
   }
 }

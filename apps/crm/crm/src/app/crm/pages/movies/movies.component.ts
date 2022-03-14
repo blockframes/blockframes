@@ -1,8 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { Movie } from '@blockframes/model';
+import { Movie, Organization, orgName } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
-import { Organization, OrganizationService, orgName } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { Router } from '@angular/router';
 import { EventService, isScreening } from '@blockframes/event/+state';
 import { map } from 'rxjs/operators';

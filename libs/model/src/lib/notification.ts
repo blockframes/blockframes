@@ -1,11 +1,10 @@
-import { PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
-import { PublicUser } from '@blockframes/model';
-import { PublicInvitation } from '@blockframes/invitation/+state/invitation.firestore';
+import { PublicOrganization, PublicUser, PublicInvitation } from '@blockframes/model';
 import { firestore } from 'firebase-admin';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
 import { EmailErrorCodes } from '@blockframes/utils/emails/utils';
 import { Bucket } from '@blockframes/contract/bucket/+state/bucket.firestore';
 import { App } from '@blockframes/utils/apps';
+import { StorageFile } from '@blockframes/media/+state/media.firestore';
 
 // Type of notification used in front
 export const notificationTypesBase = [
@@ -34,7 +33,8 @@ export const notificationTypesBase = [
   // Notifications related to offers
   'contractCreated',
   'offerCreatedConfirmation',
-  'underSignature',
+  // #7946 this may be reactivated later
+  // 'underSignature',
 
   //Notifications related to contract negotiation
   'createdCounterOffer',
@@ -46,7 +46,7 @@ export const notificationTypesBase = [
 ] as const;
 
 // All the other notification types
-export const notificationTypesPlus = [
+const notificationTypesPlus = [
   // Notifications relative to invitations
   'requestFromUserToJoinOrgPending', // Notification sent to the user that made the request
   'invitationToJoinOrgDeclined',
@@ -58,16 +58,17 @@ export const notificationTypesPlus = [
   'userRequestAppAccess',
 
   // Offer notifications.
-  'offerAccepted',
-  'offerDeclined',
+  // #7946 this may be reactivated later
+  // 'offerAccepted',
+  // 'offerDeclined',
 ] as const;
 
 export type NotificationTypesBase = typeof notificationTypesBase[number];
-export type NotificationTypesPlus = typeof notificationTypesPlus[number];
+type NotificationTypesPlus = typeof notificationTypesPlus[number];
 export type NotificationTypes = NotificationTypesBase | NotificationTypesPlus;
 
 /** Generic informations for a Notification. */
-export interface NotificationBase<D> {
+interface NotificationBase<D> {
   _meta: DocumentMeta<D>;
   id: string;
   /** @dev Recipient of the notification */
@@ -99,4 +100,12 @@ export interface NotificationBase<D> {
 
 type Timestamp = firestore.Timestamp;
 
-export type NotificationDocument = NotificationBase<Timestamp>
+export type NotificationDocument = NotificationBase<Timestamp>;
+
+export interface Notification extends NotificationBase<Date> {
+  message: string;
+  imgRef?: StorageFile;
+  placeholderUrl?: string;
+  url?: string;
+  actionText?: string;
+}

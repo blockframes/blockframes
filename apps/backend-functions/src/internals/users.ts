@@ -1,16 +1,14 @@
 
 import { App, getMailSender, applicationUrl } from '@blockframes/utils/apps';
 import { generate as passwordGenerator } from 'generate-password';
-import { OrganizationDocument, PublicOrganization } from '../data/types';
 import { createDocumentMeta, createPublicUserDocument, getDocument } from '../data/internals';
 import { userInvite, userFirstConnexion } from '../templates/mail';
 import { groupIds, templateIds } from '@blockframes/utils/emails/ids';
 import { auth, db } from './firebase';
 import { sendMailFromTemplate, sendMail } from './email';
-import { PublicUser } from '@blockframes/model';
+import { OrganizationDocument, PublicOrganization, InvitationMode, InvitationStatus, InvitationType, PublicUser } from '@blockframes/model';
 import { EventEmailData, getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
 import { logger } from 'firebase-functions';
-import { InvitationMode, InvitationStatus, InvitationType } from '@blockframes/invitation/+state/invitation.firestore';
 import { hasUserAnOrgOrIsAlreadyInvited } from '../invitation';
 
 interface UserProposal {
@@ -128,8 +126,8 @@ export const createUserFromEmail = async (email: string, createdFrom: App = 'fes
  * Send an informative email to c8 admin
  * @param user
  */
-export const sendFirstConnexionEmail = async (user: PublicUser) => {
-  const mailRequest = await userFirstConnexion(user);
+export const sendFirstConnexionEmail = (user: PublicUser) => {
+  const mailRequest = userFirstConnexion(user);
   const from = getMailSender(user._meta.createdFrom);
   return sendMail(mailRequest, from, groupIds.noUnsubscribeLink).catch(e => console.warn(e.message));
 };

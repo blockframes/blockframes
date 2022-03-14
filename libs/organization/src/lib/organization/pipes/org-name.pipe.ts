@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
-import { PublicOrganization, orgName } from '../+state';
+import { orgName, PublicOrganization } from '@blockframes/model';
 
 @Pipe({ name: 'orgName', pure: true })
 export class OrgNamePipe implements PipeTransform {

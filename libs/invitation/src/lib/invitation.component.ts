@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
-import { Invitation, InvitationService } from './+state';
+import { InvitationService } from './+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Router } from '@angular/router';
 import { App, getOrgModuleAccess } from '@blockframes/utils/apps';
@@ -8,6 +8,7 @@ import { map, startWith, tap } from 'rxjs/operators';
 import { FormControl, FormGroup } from '@angular/forms';
 import { combineLatest } from 'rxjs';
 import { APP } from '@blockframes/utils/routes/utils';
+import { Invitation } from '@blockframes/model';
 
 const applyFilters = (invitations: Invitation[], filters: { type: string[], status: string[] }) => {
   const inv = filters.type?.length ? invitations.filter(inv => filters.type.includes(inv.type)) : invitations;

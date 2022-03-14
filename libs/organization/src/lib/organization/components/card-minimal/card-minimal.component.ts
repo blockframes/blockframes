@@ -1,5 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import { createDenomination } from '@blockframes/organization/+state';
+import { createDenomination } from '@blockframes/model';
 import { AlgoliaOrganization } from '@blockframes/utils/algolia';
 
 function parseOrg(org) {
