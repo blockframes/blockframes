@@ -1,6 +1,6 @@
 import { NgModule, Pipe, PipeTransform } from "@angular/core";
 import { of } from "rxjs";
-import { BucketContract } from "../bucket/+state";
+import { BucketContract } from "@blockframes/model";
 import { TermService } from "../term/+state";
 import { Contract } from "../contract/+state";
 
