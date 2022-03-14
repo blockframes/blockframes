@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
-import { ContractDocument, convertDuration, createMandate, createSale, Holdback, Mandate, Sale } from './contract.model';
 import { createDocumentMeta, formatDocumentMetaFromFirestore } from "@blockframes/utils/models-meta";
 import { Timestamp } from "@blockframes/utils/common-interfaces/timestamp";
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
@@ -10,6 +9,7 @@ import { OrganizationService } from '@blockframes/organization/+state';
 import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
 import { centralOrgId } from '@env';
 import { ActiveState, EntityState } from '@datorama/akita';
+import { ContractDocument, convertDuration, Holdback, Mandate, Sale, createMandate, createSale } from '@blockframes/model';
 
 interface ContractState extends EntityState<Sale | Mandate>, ActiveState<string> { }
 

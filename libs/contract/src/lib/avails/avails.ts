@@ -8,7 +8,7 @@ import {
   TerritoryValue
 } from '@blockframes/utils/static-model';
 import { BucketTerm, Term } from '../term/+state';
-import { Holdback, Mandate, Sale } from '../contract/+state';
+import { Holdback, Mandate, Sale } from '@blockframes/model';
 import { Bucket, BucketContract } from '@blockframes/model';
 import { allOf, exclusivityAllOf, exclusivitySomeOf, someOf } from './sets';
 
