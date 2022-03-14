@@ -11,14 +11,14 @@ import {
   User,
   PublicUser,
   OrganizationDocument,
-  orgName
+  orgName,
+  MailBucket,
+  MovieDocument
 } from '@blockframes/model';
-import type {  ContractDocument } from '@blockframes/model';
+import type { ContractDocument } from '@blockframes/model';
 import { AccessibilityTypes } from "../static-model";
-import { MailBucket } from '@blockframes/contract/bucket/+state/bucket.firestore';
 import { toIcsFile } from "../agenda/utils";
 import { IcsEvent } from "../agenda/agenda.interfaces";
-import { MovieDocument } from '@blockframes/model';
 import { Offer } from "@blockframes/contract/offer/+state";
 
 interface EmailData {
@@ -98,7 +98,7 @@ export interface OfferEmailData {
 }
 
 export interface MovieEmailData {
-  title : {
+  title: {
     international: string
   }
 }

@@ -7,17 +7,14 @@ import { supportEmails, appUrl, e2eMode } from '../environments/environment';
 import { EmailRequest, EmailTemplateRequest } from '../internals/email';
 import { templateIds } from '@blockframes/utils/emails/ids';
 import { RequestDemoInformations } from '../data/types';
-import { PublicUser, OrganizationDocument, PublicOrganization, MovieDocument, createMailContract, NegotiationDocument } from '@blockframes/model';
-import type {  ContractDocument } from '@blockframes/model';
+import { PublicUser, OrganizationDocument, PublicOrganization, MovieDocument, createMailContract, Bucket, createMailTerm, ContractDocument, NegotiationDocument } from '@blockframes/model';
 import { EventEmailData, OrgEmailData, UserEmailData, getMovieEmailData, getOfferEmailData } from '@blockframes/utils/emails/utils';
 import { App, appName, Module } from '@blockframes/utils/apps';
-import { Bucket } from '@blockframes/contract/bucket/+state/bucket.model';
 import { format } from "date-fns";
 import { testEmail } from "@blockframes/e2e/utils/env";
 import { Offer } from '@blockframes/contract/offer/+state';
 import { staticModel } from '@blockframes/utils/static-model';
 import { Timestamp } from '../data/internals';
-import { createMailTerm } from '@blockframes/contract/term/+state/term.firestore';
 import { displayName } from '@blockframes/utils/utils';
 
 const ORG_HOME = '/c/o/organization/';
@@ -427,7 +424,7 @@ export function counterOfferSenderEmail(
   return { to: toUser.email, templateId: templateIds.negotiation.createdCounterOffer, data };
 }
 
-export function toAdminCounterOfferEmail( title: MovieDocument): EmailTemplateRequest {
+export function toAdminCounterOfferEmail(title: MovieDocument): EmailTemplateRequest {
   const data = {
     movie: getMovieEmailData(title)
   };
