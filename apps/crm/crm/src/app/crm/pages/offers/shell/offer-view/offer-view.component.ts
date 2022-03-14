@@ -4,13 +4,14 @@ import { Subscription } from 'rxjs';
 import { OfferShellComponent } from '../shell.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
-import { Contract, ContractService } from '@blockframes/contract/contract/+state';
+import { ContractService } from '@blockframes/contract/contract/+state';
 import { OfferService } from '@blockframes/contract/offer/+state';
 import { staticModel } from '@blockframes/utils/static-model';
 import { IncomeService } from '@blockframes/contract/income/+state';
 import { TermService } from '@blockframes/contract/term/+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
+import { Contract } from '@blockframes/model';
 
 @Component({
   selector: 'offer-view',

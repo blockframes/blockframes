@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
-import { ContractService, contractStatus, Sale } from '@blockframes/contract/contract/+state';
+import { ContractService } from '@blockframes/contract/contract/+state';
 import { ActivatedRoute } from '@angular/router';
 import { pluck, shareReplay, switchMap } from 'rxjs/operators';
 import { centralOrgId } from '@env';
@@ -7,7 +7,7 @@ import { joinWith } from '@blockframes/utils/operators';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { IncomeService } from '@blockframes/contract/income/+state';
 import { Intercom } from 'ng-intercom';
-
+import { Sale, contractStatus } from '@blockframes/model';
 
 @Component({
   selector: 'sale-shell',

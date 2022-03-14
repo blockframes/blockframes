@@ -15,9 +15,8 @@ import {
   territoryAvailabilities,
 } from '@blockframes/contract/avails/avails';
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
-import { Mandate, Sale } from '@blockframes/contract/contract/+state/contract.firestore';
 import { Term } from '@blockframes/contract/term/+state/term.firestore';
-import { Bucket, Movie } from '@blockframes/model';
+import { Bucket, Movie, Mandate, Sale } from '@blockframes/model';
 
 // TODO(#7820): remove with rxjs 7
 type AvailabilitiesInputs = [

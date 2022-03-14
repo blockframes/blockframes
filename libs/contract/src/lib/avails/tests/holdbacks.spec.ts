@@ -1,9 +1,7 @@
-
 import { Media, Territory } from '@blockframes/utils/static-model';
-import { createHoldback, Holdback } from '@blockframes/contract/contract/+state';
-
 import { collidingHoldback, getCollidingHoldbacks } from '../avails';
 import { Duration, Term, createTerm } from '../../term/+state/term.model';
+import { createHoldback, Holdback } from '@blockframes/model';
 
 // Territories
 const nonCollidingTerritoriesA: Territory[] = [

@@ -15,10 +15,10 @@ import {
   MailBucket,
   MovieDocument
 } from '@blockframes/model';
+import type { ContractDocument } from '@blockframes/model';
 import { AccessibilityTypes } from "../static-model";
 import { toIcsFile } from "../agenda/utils";
 import { IcsEvent } from "../agenda/agenda.interfaces";
-import type { ContractDocument } from '@blockframes/contract/contract/+state';
 import { Offer } from "@blockframes/contract/offer/+state";
 
 interface EmailData {
@@ -98,7 +98,7 @@ export interface OfferEmailData {
 }
 
 export interface MovieEmailData {
-  title : {
+  title: {
     international: string
   }
 }

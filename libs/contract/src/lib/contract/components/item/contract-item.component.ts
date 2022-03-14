@@ -6,8 +6,8 @@ import { Scope, mediaGroup, territoriesGroup } from '@blockframes/utils/static-m
 import { MatDialog } from '@angular/material/dialog';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 import { HoldbackModalComponent } from '../../holdback/modal/holdback-modal.component';
-import { Holdback, Sale } from '../../+state';
 import { OrganizationService } from '@blockframes/organization/+state';
+import { Holdback, Sale } from '@blockframes/model';
 
 
 
