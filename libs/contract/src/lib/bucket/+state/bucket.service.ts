@@ -15,6 +15,7 @@ import { Bucket, createBucket } from './bucket.model';
 import { createBucketTerm, createBucketContract } from './bucket.model';
 import { ContractService, convertDuration } from '../../contract/+state';
 import { ActiveState, EntityState } from '@datorama/akita';
+import { doc } from '@angular/fire/firestore';
 
 interface BucketState extends EntityState<Bucket>, ActiveState<string> { }
 
@@ -78,7 +79,7 @@ export class BucketService extends CollectionService<BucketState> {
     });
 
     const promises = bucket.contracts.map(async (contract) => {
-      const contractId = this.db.createId();
+      const contractId = doc(this.db, '').id; // TODO #7273 '' ok ?
       const parentTerms = await this.termService.getValue(contract.parentTermId);
       const parentContract = await this.contractService.getValue(parentTerms.contractId);
 
