@@ -1,7 +1,7 @@
 import { Location } from "@angular/common";
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { AggregatedAnalytics, AnalyticsService } from "@blockframes/analytics/+state";
+import { AggregatedAnalytic, AnalyticsService, createAggregatedAnalytic } from "@blockframes/analytics/+state";
 import { MovieService } from "@blockframes/movie/+state/movie.service";
 import { OrganizationService } from "@blockframes/organization/+state";
 import { joinWith } from "@blockframes/utils/operators";
@@ -45,20 +45,14 @@ export class TitleAnalyticsComponent {
 
   buyerAnalytics$ = this.titleAnalytics$.pipe(
     map(analytics => {
-      const aggregator: Record<string, AggregatedAnalytics> = {};
+      const aggregator: Record<string, AggregatedAnalytic> = {};
       for (const analytic of analytics) {
         if (!analytic.user?.uid) continue;
         if (!aggregator[analytic.user.uid]) {
-          aggregator[analytic.user.uid] = {
+          aggregator[analytic.user.uid] = createAggregatedAnalytic({
             user: analytic.user,
-            org: analytic.org,
-            addedToWishlist: 0,
-            askingPriceRequested: 0,
-            pageView: 0,
-            promoReelOpened: 0,
-            removedFromWishlist: 0,
-            screeningRequested: 0
-          };
+            org: analytic.org
+          });
         };
         aggregator[analytic.user.uid][analytic.name]++;
       }
@@ -79,7 +73,7 @@ export class TitleAnalyticsComponent {
     this.location.back();
   }
 
-  inWishlist(data: AggregatedAnalytics) {
+  inWishlist(data: AggregatedAnalytic) {
     return data.addedToWishlist > data.removedFromWishlist;
   }
 }

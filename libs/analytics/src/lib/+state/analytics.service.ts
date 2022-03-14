@@ -51,7 +51,7 @@ export class AnalyticsService extends CollectionService<AnalyticsState> {
     }
   }
 
-  getTitleAnalytics(titleId: string): Observable<Analytics<'title'>[]> {
+  getTitleAnalytics(titleId: string) {
     const { orgId } = this.authService.profile;
     return this.valueChanges(ref => ref
       .where('type', '==', 'title')

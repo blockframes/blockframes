@@ -1,5 +1,4 @@
-import { Organization } from "@blockframes/organization/+state";
-import { User } from "@blockframes/user/+state/user.model";
+import { User, Organization } from "@blockframes/model";
 import { DocumentMeta } from "@blockframes/utils/models-meta";
 
 const analyticsEvents = [
@@ -41,7 +40,7 @@ export interface MetaEvent {
   ownerOrgId: string;
 }
 
-export interface AggregatedAnalytics extends Record<EventName, number> {
+export interface AggregatedAnalytic extends Record<EventName, number> {
   user: User;
   org: Organization;
 }
