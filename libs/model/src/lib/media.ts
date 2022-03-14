@@ -1,7 +1,36 @@
 
 import { privacies, Privacy } from '@blockframes/utils/file-sanitizer';
-import { StorageFile } from './media.firestore';
+import { MovieNote, MovieVideo } from '@blockframes/model';
 
+/**
+ * Representation of a storage file in our Firestore db.
+ * @note this is not the same as the data needed to upload into the storage: `UploadData`
+ */
+export interface StorageFile {
+  privacy: Privacy;
+  collection: 'movies' | 'users' | 'orgs' | 'campaigns' | 'cms/festival/home';
+  docId: string;
+  field: string;
+  storagePath: string;
+  [K: string]: string; // extra-data
+}
+
+export function createStorageFile(file: Partial<StorageFile> = {}): StorageFile {
+  return {
+    privacy: 'public',
+    collection: 'movies',
+    docId: '',
+    field: '',
+    storagePath: '',
+    ...file,
+  };
+}
+
+export interface StorageVideo extends StorageFile {
+  jwPlayerId: string;
+}
+
+export type MediaOutput = StorageFile[] | MovieVideo[] | MovieNote[] | string | MovieVideo;
 
 /**
  * Data needed by the `FileUploaderService` to actually upload into the storage.
@@ -71,7 +100,6 @@ export function recursivelyListFiles(document: any): StorageFile[] {
 }
 
 // TODO issue#4002 MOVE THE 2 FUNCTIONS BELLOW ELSEWHERE
-
 export function getFileNameFromPath(path: string) {
   if (typeof path !== 'string') {
     console.warn('UNEXPECTED PATH', path);
