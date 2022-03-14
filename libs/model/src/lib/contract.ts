@@ -1,4 +1,3 @@
-
 import { DocumentMeta } from "@blockframes/utils/models-meta";
 import type { Media, Territory } from "@blockframes/utils/static-model";
 import { Timestamp } from "@blockframes/utils/common-interfaces/timestamp";

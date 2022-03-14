@@ -1,4 +1,3 @@
-
 import { Injectable } from '@angular/core';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { centralOrgId } from '@env';
