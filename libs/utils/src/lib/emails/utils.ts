@@ -11,9 +11,9 @@ import {
   User,
   PublicUser,
   OrganizationDocument,
-  orgName,
-  ContractDocument
+  orgName
 } from '@blockframes/model';
+import type {  ContractDocument } from '@blockframes/model';
 import { AccessibilityTypes } from "../static-model";
 import { MailBucket } from '@blockframes/contract/bucket/+state/bucket.firestore';
 import { toIcsFile } from "../agenda/utils";
