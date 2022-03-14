@@ -1,6 +1,6 @@
 ﻿import { TestBed } from '@angular/core/testing';
 import { NotificationService } from './notification.service';
-import { Notification } from './notification.model';
+import { Notification } from '@blockframes/model';
 import { AngularFireModule } from '@angular/fire';
 import { SETTINGS, AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestore';
 import { loadFirestoreRules, clearFirestoreData } from '@firebase/rules-unit-testing';
@@ -14,6 +14,7 @@ import { UserService } from '@blockframes/user/+state/user.service';
 import { RouterTestingModule } from "@angular/router/testing";
 import { ModuleGuard } from '@blockframes/utils/routes/module.guard';
 import { APP } from '@blockframes/utils/routes/utils';
+import { ContractService } from '@blockframes/contract/contract/+state';
 
 class InjectedAngularFireAuth {
   authState = new Observable();
@@ -42,6 +43,7 @@ describe('Notifications Test Suite', () => {
         { provide: AngularFireAuth, useClass: InjectedAngularFireAuth },
         { provide: AnalyticsService, useClass: DummyService },
         { provide: UserService, useClass: DummyService },
+        { provide: ContractService, useClass: DummyService },
         { provide: ModuleGuard, useClass: InjectedModuleGuard },
         { provide: APP, useValue: 'festival' },
         { provide: SETTINGS, useValue: { host: 'localhost:8080', ssl: false } }

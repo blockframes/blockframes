@@ -25,18 +25,8 @@
         "libs/movie/src/lib/movie/components/import/import-movie.module.ts"
       ],
       "@blockframes/organization/*": ["libs/organization/src/lib/organization/*"],
-      "@blockframes/organization/types": [
-        "libs/organization/src/lib/organization/+state/organization.firestore.ts"
-      ],
       "@blockframes/permissions/*": ["libs/organization/src/lib/permissions/*"],
-      "@blockframes/permissions/types": [
-        "libs/organization/src/lib/permissions/+state/permissions.firestore.ts"
-      ],
       "@blockframes/invitation/*": ["libs/invitation/src/lib/*"],
-      "@blockframes/invitation/types": ["libs/invitation/src/lib/+state/invitation.firestore.ts"],
-      "@blockframes/notification/types": [
-        "libs/notification/src/lib/+state/notification.firestore.ts"
-      ],
       "@blockframes/notification/*": ["libs/notification/src/lib/*"],
       "@blockframes/contract/*": ["libs/contract/src/lib/*"],
       "@blockframes/financial-report/*": ["libs/financial-report/src/lib/*"],

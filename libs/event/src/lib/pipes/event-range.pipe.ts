@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { formatDate } from '@angular/common';
-import { Event } from '../+state/event.model';
+import { Event } from '@blockframes/model';
 import { isSameMonth, isSameDay, isSameYear } from 'date-fns';
 
 @Pipe({ name: 'eventRange', pure: true })

@@ -6,8 +6,7 @@ import {
   PipeTransform,
   HostBinding,
 } from '@angular/core';
-import { Movie } from '@blockframes/model';
-import { ScreeningEvent, MeetingEvent } from '../../+state';
+import { Movie, ScreeningEvent, MeetingEvent } from '@blockframes/model';
 
 @Component({
   selector: 'event-card',

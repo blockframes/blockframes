@@ -3,9 +3,8 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AuthService } from '@blockframes/auth/+state';
 import { AccessibilityTypes } from '@blockframes/utils/static-model/types';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { Event } from '../../+state/event.model';
 import { EventForm } from '../event.form';
-import { Meeting, Screening } from '@blockframes/event/+state/event.firestore';
+import { Event, Meeting, Screening } from '@blockframes/model';
 
 @Component({
   selector: 'event-create',
