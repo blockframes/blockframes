@@ -5,3 +5,4 @@ export * from './lib/notification';
 export * from './lib/organisation';
 export * from './lib/event';
 export * from './lib/permissions';
+export * from './lib/bucket';
