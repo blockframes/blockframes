@@ -1,12 +1,10 @@
 import { AvailsFilter, CalendarAvailsFilter, MapAvailsFilter } from '@blockframes/contract/avails/avails';
-import { Holdback, MailContract } from '@blockframes/contract/contract/+state/contract.firestore';
 import { BucketTerm, Term } from '@blockframes/contract/term/+state/term.firestore';
-import { createHoldback, Mandate } from '@blockframes/contract/contract/+state';
-import { createLanguageKey } from '@blockframes/model';
+import { createLanguageKey, createHoldback, Mandate, Holdback, MailContract } from '@blockframes/model';
 import type { MovieCurrency } from '@blockframes/utils/static-model';
 import type firebase from 'firebase';
 
-export interface Bucket<T extends Date | firebase.firestore.Timestamp = Date>  {
+export interface Bucket<T extends Date | firebase.firestore.Timestamp = Date> {
   id: string;
   currency: MovieCurrency;
   /** One contract per orgId / titleId / parent terms Id */
