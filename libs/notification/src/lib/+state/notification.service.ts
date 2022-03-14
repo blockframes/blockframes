@@ -8,7 +8,8 @@ import {
   Event,
   isMeeting,
   isScreening,
-  Notification
+  Notification,
+  Contract
 } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { toDate } from '@blockframes/utils/helpers';
@@ -23,8 +24,8 @@ import { UserService } from '@blockframes/user/+state';
 import { EventService } from '@blockframes/event/+state';
 import { ModuleGuard } from '@blockframes/utils/routes/module.guard';
 import { APP } from '@blockframes/utils/routes/utils';
+import { ContractService } from '@blockframes/contract/contract/+state';
 import { where } from 'firebase/firestore';
-import { Contract, ContractService } from '@blockframes/contract/contract/+state';
 
 interface NotificationState extends EntityState<Notification>, ActiveState<string> { }
 @Injectable({ providedIn: 'root' })

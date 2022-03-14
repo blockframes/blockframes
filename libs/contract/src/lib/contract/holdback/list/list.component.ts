@@ -1,8 +1,8 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
+import { Holdback } from '@blockframes/model';
 import { Scope } from '@blockframes/utils/static-model';
-import { Holdback } from '../../+state';
 
 @Component({
   selector: 'holdback-list',

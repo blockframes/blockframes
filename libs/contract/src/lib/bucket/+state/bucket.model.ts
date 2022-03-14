@@ -3,8 +3,7 @@ import {
   CalendarAvailsFilter,
   MapAvailsFilter,
 } from '@blockframes/contract/avails/avails';
-import { createHoldback, Mandate } from '@blockframes/contract/contract/+state';
-import { createLanguageKey } from '@blockframes/model';
+import { createLanguageKey, createHoldback, Mandate } from '@blockframes/model';
 import { Term, BucketTerm } from '../../term/+state/term.model';
 import { Bucket, BucketContract } from './bucket.firestore';
 export { BucketContract, Bucket } from './bucket.firestore';

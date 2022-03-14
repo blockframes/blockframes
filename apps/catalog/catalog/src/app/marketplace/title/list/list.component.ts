@@ -24,10 +24,11 @@ import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
 import { Bucket, BucketService } from '@blockframes/contract/bucket/+state';
 import { TermService } from '@blockframes/contract/term/+state/term.service';
 import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
-import { ContractService, Mandate, Sale } from '@blockframes/contract/contract/+state';
+import { ContractService } from '@blockframes/contract/contract/+state';
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { AvailsFilter, filterContractsByTitle, availableTitle, FullMandate } from '@blockframes/contract/avails/avails';
+import { Mandate, Sale } from '@blockframes/model';
 
 @Component({
   selector: 'catalog-marketplace-title-list',

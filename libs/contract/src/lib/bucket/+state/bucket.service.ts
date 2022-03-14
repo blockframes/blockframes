@@ -13,9 +13,10 @@ import { TermService } from '../../term/+state';
 import { OfferService } from '../../offer/+state';
 import { Bucket, createBucket } from './bucket.model';
 import { createBucketTerm, createBucketContract } from './bucket.model';
-import { ContractService, convertDuration } from '../../contract/+state';
+import { ContractService } from '../../contract/+state';
 import { ActiveState, EntityState } from '@datorama/akita';
 import { doc } from '@angular/fire/firestore';
+import { convertDuration } from '@blockframes/model';
 
 interface BucketState extends EntityState<Bucket>, ActiveState<string> { }
 
