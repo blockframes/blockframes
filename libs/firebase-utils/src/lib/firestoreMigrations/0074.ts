@@ -4,7 +4,7 @@ import { createTitleMeta } from '@blockframes/analytics/+state/analytics.model';
 import { Analytics } from '@blockframes/analytics/+state/analytics.firestore';
 import { createDocumentMeta } from '@blockframes/utils/models-meta';
 import { getCollection } from '../firebase-utils';
-import { MovieDocument } from '@blockframes/movie/+state/movie.firestore';
+import { MovieDocument } from '@blockframes/model';
 import { MovieAnalytics } from '@blockframes/analytics/components/movie-analytics-chart/movie-analytics.model';
 import { getCollectionInBatches } from '../util';
 import { bigQueryAnalyticsTable, firebase } from '@env';

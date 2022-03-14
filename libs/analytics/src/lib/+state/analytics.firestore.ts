@@ -1,3 +1,4 @@
+import { User, Organization } from "@blockframes/model";
 import { DocumentMeta } from "@blockframes/utils/models-meta";
 
 const analyticsEvents = [
@@ -37,6 +38,11 @@ export interface MetaEvent {
   uid: string;
   orgId?: string;
   ownerOrgId: string;
+}
+
+export interface AggregatedAnalytic extends Record<EventName, number> {
+  user: User;
+  org: Organization;
 }
 
 // FireAnalytics

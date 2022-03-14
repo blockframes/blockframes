@@ -16,6 +16,7 @@ import { createDocumentMeta } from '@blockframes/utils/models-meta';
 import { APP } from '@blockframes/utils/routes/utils';
 import { formatDocumentMetaFromFirestore } from '@blockframes/utils/models-meta';
 import { App } from '@blockframes/utils/apps';
+import { Observable } from 'rxjs';
 
 interface AnalyticsState extends EntityState<Analytics>, ActiveState<string> {};
 
@@ -56,7 +57,7 @@ export class AnalyticsService extends CollectionService<AnalyticsState> {
       .where('type', '==', 'title')
       .where('meta.titleId', '==', titleId)
       .where('meta.ownerOrgIds', 'array-contains', orgId)
-    );
+    ) as Observable<Analytics<'title'>[]>;
   }
 
   async addTitle(name: EventName, titleId: string) {
