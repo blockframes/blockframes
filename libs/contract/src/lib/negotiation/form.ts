@@ -1,7 +1,7 @@
 import { FormControl, Validators } from "@angular/forms";
 import { EntityControl, FormEntity, FormList } from "@blockframes/utils/form";
 import { BucketTermForm, createBucketTermControl } from "../bucket/form";
-import { BucketTerm, Term } from "../term/+state";
+import { BucketTerm, Term } from "@blockframes/model";
 import { Negotiation } from "./+state/negotiation.firestore";
 
 type NegotiationFormState = {

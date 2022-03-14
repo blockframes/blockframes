@@ -7,8 +7,7 @@ import { supportEmails, appUrl, e2eMode } from '../environments/environment';
 import { EmailRequest, EmailTemplateRequest } from '../internals/email';
 import { templateIds } from '@blockframes/utils/emails/ids';
 import { RequestDemoInformations } from '../data/types';
-import { PublicUser, OrganizationDocument, PublicOrganization, MovieDocument, createMailContract, Bucket } from '@blockframes/model';
-import type { ContractDocument } from '@blockframes/model';
+import { PublicUser, OrganizationDocument, PublicOrganization, MovieDocument, createMailContract, Bucket, createMailTerm, ContractDocument } from '@blockframes/model';
 import { EventEmailData, OrgEmailData, UserEmailData, getMovieEmailData, getOfferEmailData } from '@blockframes/utils/emails/utils';
 import { App, appName, Module } from '@blockframes/utils/apps';
 import { format } from "date-fns";
@@ -17,7 +16,6 @@ import { Offer } from '@blockframes/contract/offer/+state';
 import { NegotiationDocument } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
 import { staticModel } from '@blockframes/utils/static-model';
 import { Timestamp } from '../data/internals';
-import { createMailTerm } from '@blockframes/contract/term/+state/term.firestore';
 import { displayName } from '@blockframes/utils/utils';
 
 const ORG_HOME = '/c/o/organization/';

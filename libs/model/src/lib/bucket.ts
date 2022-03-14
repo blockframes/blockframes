@@ -1,5 +1,4 @@
-import { BucketTerm } from '@blockframes/contract/term/+state/term.firestore';
-import { createLanguageKey, createHoldback, Holdback, MailContract } from '@blockframes/model';
+import { createLanguageKey, createHoldback, Holdback, MailContract, BucketTerm } from '@blockframes/model';
 import type { MovieCurrency } from '@blockframes/utils/static-model';
 import type firebase from 'firebase';
 
