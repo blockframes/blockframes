@@ -1,8 +1,5 @@
-
-import { Term } from '@blockframes/model';
-import { Mandate } from '@blockframes/contract/contract/+state';
 import { AvailableTerritoryMarker, BucketTerritoryMarker, CalendarAvailsFilter, DurationMarker, MapAvailsFilter } from '@blockframes/contract/avails/avails';
-
+import { Mandate, Term } from '@blockframes/model';
 import { BucketForm } from '../form';
 
 

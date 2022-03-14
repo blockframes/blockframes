@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { FormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { Sale, ContractService } from '@blockframes/contract/contract/+state';
+import { ContractService } from '@blockframes/contract/contract/+state';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { joinWith } from '@blockframes/utils/operators';
 import { getSeller } from '@blockframes/contract/contract/+state/utils'
@@ -12,7 +12,7 @@ import { of } from 'rxjs';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { IncomeService } from '@blockframes/contract/income/+state';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
-import { Term } from '@blockframes/model';
+import { Sale, Term  } from '@blockframes/model';
 
 @Component({
   selector: 'contract-view',

@@ -8,10 +8,9 @@ import { map, mapTo, tap } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { SpecificTermsComponent } from './specific-terms/specific-terms.component';
-import { Movie } from '@blockframes/model';
+import { Holdback, Movie } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { FormControl } from '@angular/forms';
-import { Holdback } from '@blockframes/contract/contract/+state';
 
 @Component({
   selector: 'catalog-selection',
