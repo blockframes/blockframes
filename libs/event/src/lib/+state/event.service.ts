@@ -1,7 +1,16 @@
 import { Injectable } from '@angular/core';
 import { CollectionConfig, CollectionService, Query, WriteOptions, queryChanges } from 'akita-ng-fire';
-import { EventDocument, EventBase, EventTypes } from './event.firestore';
-import { Event, ScreeningEvent, createCalendarEvent, MeetingEvent, isMeeting, isScreening } from './event.model';
+import {
+  EventDocument,
+  EventBase,
+  EventTypes,
+  Event,
+  ScreeningEvent,
+  createCalendarEvent,
+  MeetingEvent,
+  isMeeting,
+  isScreening
+} from '@blockframes/model';
 import { QueryFn } from '@angular/fire/firestore/interfaces';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { PermissionsService } from '@blockframes/permissions/+state';

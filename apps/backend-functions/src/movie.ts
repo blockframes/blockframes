@@ -1,11 +1,6 @@
 import { db } from './internals/firebase';
 import { triggerNotifications, createNotification } from './notification';
-import {
-  createDocumentMeta,
-  createPublicUserDocument,
-  getOrganizationsOfMovie,
-  Timestamp
-} from './data/internals';
+import { createDocumentMeta, createPublicUserDocument, getOrganizationsOfMovie, Timestamp } from './data/internals';
 import { cleanMovieMedias, moveMovieMedia } from './media';
 import { Change, EventContext } from 'firebase-functions';
 import { algolia, deleteObject, getDocument, storeSearchableMovie, storeSearchableOrg } from '@blockframes/firebase-utils';
@@ -40,10 +35,7 @@ export async function onMovieCreate(snap: FirebaseFirestore.DocumentSnapshot) {
 }
 
 /** Remove a movie and send notifications to all users of concerned organizations. */
-export async function onMovieDelete(
-  snap: FirebaseFirestore.DocumentSnapshot,
-  context: EventContext
-) {
+export async function onMovieDelete(snap: FirebaseFirestore.DocumentSnapshot, context: EventContext) {
   const movie = snap.data() as MovieDocument;
 
   await cleanMovieMedias(movie);
@@ -60,28 +52,20 @@ export async function onMovieDelete(
     const events = await tx.get(db.collection('events').where('meta.titleId', '==', movie.id));
 
     // Read permissions
-    const orgsPromises = movie.orgIds.map((o) =>
-      tx.get(db.collection('orgs').where('id', '==', o))
-    );
+    const orgsPromises = movie.orgIds.map((o) => tx.get(db.collection('orgs').where('id', '==', o)));
     const _orgs = await Promise.all(orgsPromises);
     const orgIds: string[] = [];
     _orgs.forEach((s) => {
       s.docs.forEach((d) => orgIds.push(d.id));
     });
-    const permissionsPromises = orgIds.map((orgId) =>
-      tx.get(db.doc(`permissions/${orgId}/documentPermissions/${movie.id}`))
-    );
+    const permissionsPromises = orgIds.map((orgId) => tx.get(db.doc(`permissions/${orgId}/documentPermissions/${movie.id}`)));
     const permissions = await Promise.all(permissionsPromises);
 
     // Read notifications
-    const notifsCollectionRef = await tx.get(
-      db.collection('notifications').where('docId', '==', movie.id)
-    );
+    const notifsCollectionRef = await tx.get(db.collection('notifications').where('docId', '==', movie.id));
 
     // Read contracts
-    const contractsCollectionRef = await tx.get(
-      db.collection('contracts').where('titleId', '==', movie.id)
-    );
+    const contractsCollectionRef = await tx.get(db.collection('contracts').where('titleId', '==', movie.id));
 
     // Read buckets
     const bucketsCollectionRef = await tx.get(db.collection('buckets'));
@@ -144,11 +128,7 @@ export async function onMovieUpdate(change: Change<FirebaseFirestore.DocumentSna
     const movieWasSubmittedOn = wasSubmittedOn(before.app, after.app)[0];
     // Mail to supportEmails.[app]
     const from = getMailSender(movieWasSubmittedOn);
-    await sendMail(
-      sendMovieSubmittedEmail(movieWasSubmittedOn, after),
-      from,
-      groupIds.noUnsubscribeLink
-    );
+    await sendMail(sendMovieSubmittedEmail(movieWasSubmittedOn, after), from, groupIds.noUnsubscribeLink);
 
     // Notification to users related to current movie
     const notifications = organizations
@@ -196,9 +176,7 @@ export async function onMovieUpdate(change: Change<FirebaseFirestore.DocumentSna
     const permissions = createDocPermissions({ id: after.id, ownerId: orgId });
     return db.doc(`permissions/${orgId}/documentPermissions/${after.id}`).set(permissions);
   });
-  const removedPromises = removedOrgIds.map((orgId) =>
-    db.doc(`permissions/${orgId}/documentPermissions/${after.id}`).delete()
-  );
+  const removedPromises = removedOrgIds.map((orgId) => db.doc(`permissions/${orgId}/documentPermissions/${after.id}`).delete());
   await Promise.all([...addedPromises, ...removedPromises]);
 
   // insert orgName & orgID to the algolia movie index (this is needed in order to filter on the frontend)
