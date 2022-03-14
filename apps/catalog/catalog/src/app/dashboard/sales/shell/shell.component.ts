@@ -9,8 +9,6 @@ import { IncomeService } from '@blockframes/contract/income/+state';
 import { Intercom } from 'ng-intercom';
 import { Sale, contractStatus } from '@blockframes/model';
 
-
-
 @Component({
   selector: 'sale-shell',
   templateUrl: './shell.component.html',
