@@ -116,6 +116,8 @@
     "puppeteer": "^12.0.1"
   },
   "devDependencies": {
+    "@commitlint/cli": "^16.2.1",
+    "@commitlint/config-conventional": "^16.2.1",
     "@angular-devkit/build-angular": "12.0.0",
     "@angular-devkit/build-ng-packagr": "0.1001.7",
     "@angular-eslint/eslint-plugin": "~12.0.0",
@@ -165,6 +167,8 @@
     "commander": "^7.0.0",
     "concurrently": "^5.0.0",
     "cross-env": "^7.0.2",
+    "commitizen": "^4.2.4",
+    "cz-conventional-changelog": "^3.3.0",
     "cypress": "^9.1.1",
     "cypress-file-upload": "^5.0.6",
     "cypress-mailosaur": "^2.3.3",
@@ -207,8 +211,20 @@
       "compression": "none"
     }
   ],
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
   "husky": {
     "hooks": {
+      "prepare-commit-msg": "exec < /dev/tty && git cz --hook || true",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
       "pre-commit": "node tools/scripts/pre-commit.js"
     }
   }
