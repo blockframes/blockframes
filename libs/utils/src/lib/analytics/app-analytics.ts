@@ -1,4 +1,4 @@
-import { AngularFireAnalytics } from '@angular/fire/analytics';
+import { AngularFireAnalytics } from '@angular/fire/compat/analytics';
 import { Injectable } from '@angular/core';
 import { AnalyticsEvents, AnalyticsUserProperties } from './analytics-model';
 import { centralOrgId } from '@env';

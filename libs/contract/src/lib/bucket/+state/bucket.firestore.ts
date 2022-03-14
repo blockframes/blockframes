@@ -2,9 +2,9 @@ import { MailContract } from '@blockframes/contract/contract/+state/contract.fir
 import { Holdback } from '@blockframes/contract/contract/+state/contract.firestore';
 import { BucketTerm } from '@blockframes/contract/term/+state/term.firestore';
 import type { MovieCurrency } from '@blockframes/utils/static-model';
-import type firebase from 'firebase'
+import type firestore from 'firebase/firestore';
 
-export interface Bucket<T extends Date | firebase.firestore.Timestamp = Date>  {
+export interface Bucket<T extends Date | firestore.Timestamp = Date>  {
   id: string;
   currency: MovieCurrency;
   /** One contract per orgId / titleId / parent terms Id */
@@ -15,7 +15,7 @@ export interface Bucket<T extends Date | firebase.firestore.Timestamp = Date>  {
   uid?: string;
 }
 
-export interface BucketContract<T extends Date | firebase.firestore.Timestamp = Date> {
+export interface BucketContract<T extends Date | firestore.Timestamp = Date> {
   titleId: string;
   /** The orgId that own the contract (mandate in this case) that  */
   orgId: string;

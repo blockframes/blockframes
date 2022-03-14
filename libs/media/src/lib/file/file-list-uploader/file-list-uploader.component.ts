@@ -1,6 +1,6 @@
 
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { Firestore, doc } from '@angular/fire/firestore';
 import { FileUploaderService } from '@blockframes/media/+state';
 import { StorageFile } from '@blockframes/media/+state/media.firestore';
 import { CollectionHoldingFile, FileLabel } from '@blockframes/media/+state/static-files';
@@ -8,8 +8,7 @@ import { StorageFileForm } from '@blockframes/media/form/media.form';
 import { FormList } from '@blockframes/utils/form';
 import { AllowedFileType } from '@blockframes/utils/utils';
 import { getDeepValue } from '@blockframes/utils/pipes/deep-key.pipe';
-
-
+import { getDoc, updateDoc } from 'firebase/firestore';
 
 @Component({
   selector: '[form] [meta] [accept] file-list-uploader',
@@ -31,26 +30,26 @@ export class FileListUploaderComponent {
   @Input() togglePrivacy: boolean;
 
   constructor(
-    private db: AngularFirestore,
+    private db: Firestore,
     private uploadService: FileUploaderService,
-  ) {}
+  ) { }
 
   save() {
     this.uploadService.upload();
   }
 
   async delete(file: StorageFile, index: number) {
-    const docRef = this.db.collection(file.collection).doc(file.docId);
-    const docSnap = await docRef.get().toPromise();
-    if (!docSnap.exists) {
+    const docRef = doc(this.db, `${file.collection}/${file.docId}`);
+    const docSnap = await getDoc(docRef);
+    if (!docSnap.exists()) {
       console.warn(`Document ${file.collection}/${file.docId} doesn't exists!`);
       return;
     }
-    const doc = docSnap.data();
-    const files: StorageFile[] = getDeepValue(doc, file.field);
+    const document = docSnap.data();
+    const files: StorageFile[] = getDeepValue(document, file.field);
 
     files.splice(index, 1); // remove element at index
-    docRef.update({ [file.field]: files });
+    updateDoc(docRef, { [file.field]: files });
   }
 
   change() {

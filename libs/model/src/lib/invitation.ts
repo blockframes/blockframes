@@ -1,9 +1,9 @@
-import type firebase from 'firebase';
+import type firestore from 'firebase/firestore';
 import { Event, Movie, PublicUser, PublicOrganization, Organization } from "@blockframes/model";
 import type { InvitationStatus, InvitationType } from "@blockframes/utils/static-model";
 
 export { InvitationType, InvitationStatus, invitationStatus } from "@blockframes/utils/static-model";
-type Timestamp = firebase.firestore.Timestamp;
+type Timestamp = firestore.Timestamp;
 
 /**
  * Raw type for Invitation.

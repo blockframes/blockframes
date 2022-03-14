@@ -11,7 +11,7 @@ import { sortingDataAccessor } from '@blockframes/utils/table';
 import { ContractsImportState, SpreadsheetImportError } from '../../utils';
 import { TermService } from '@blockframes/contract/term/+state/term.service';
 import { createDocumentMeta } from '@blockframes/utils/models-meta';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { doc, Firestore } from '@angular/fire/firestore';
 import { FullMandate, FullSale, territoryAvailabilities } from '@blockframes/contract/avails/avails';
 import { where } from 'firebase/firestore';
 
@@ -55,7 +55,7 @@ export class TableExtractedContractsComponent implements OnInit {
     private dialog: MatDialog,
     private contractService: ContractService,
     private termService: TermService,
-    private db: AngularFirestore,
+    private db: Firestore,
   ) { }
 
   ngOnInit() {
@@ -143,7 +143,7 @@ export class TableExtractedContractsComponent implements OnInit {
    * @param importState
    */
   private async addContract(importState: ContractsImportState, mode: 'create' | 'update' = 'update'): Promise<boolean> {
-    importState.terms.forEach(t => t.id = this.db.createId());
+    importState.terms.forEach(t => t.id = doc(this.db, '').id); // TODO #7273 '' ok ?
     importState.contract.termIds = importState.terms.map(t => t.id);
     if (mode === 'create') {
       const overlapConditions = await this.verifyOverlappingMandatesAndSales(importState);

@@ -4,7 +4,7 @@ import { createMovie, Movie, createMovieAppConfig, MovieAnalytics } from '@block
 import { createDocumentMeta } from '@blockframes/utils/models-meta';
 import { cleanModel } from '@blockframes/utils/helpers';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
-import type firebase from 'firebase';
+import type firestore from 'firebase/firestore';
 import { App } from '@blockframes/utils/apps';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { map } from 'rxjs/operators';
@@ -14,6 +14,7 @@ import { AnalyticsService } from '@blockframes/utils/analytics/analytics.service
 import { AuthService } from '@blockframes/auth/+state';
 import { ActiveState, EntityState } from '@datorama/akita';
 import { where } from 'firebase/firestore';
+import { doc, updateDoc } from '@angular/fire/firestore';
 
 export const fromOrg = (orgId: string) =>
   [where('orgIds', 'array-contains', orgId)];
@@ -72,29 +73,30 @@ export class MovieService extends CollectionService<MovieState> {
 
   onCreate(movie: Movie, { write }: WriteOptions) {
     const ref = this.getRef(movie.id);
-    write.update(ref, { '_meta.createdAt': new Date() });
+    write.update(ref, '_meta.createdAt', new Date());
     for (const orgId of movie.orgIds) {
       this.permissionsService.addDocumentPermissions(
         movie.id,
-        write as firebase.firestore.Transaction,
+        write as firestore.Transaction,
         orgId
       );
     }
   }
 
   onUpdate(movie: Movie, { write }: WriteOptions) {
-    const movieRef = this.db.doc(`movies/${movie.id}`).ref;
-    write.update(movieRef, {
-      '_meta.updatedBy': this.authService.uid,
-      '_meta.updatedAt': new Date(),
-    });
+    const movieRef = doc(this.db, `movies/${movie.id}`);
+    write.update(movieRef,
+      '_meta.updatedBy', this.authService.uid,
+      '_meta.updatedAt', new Date(), // TODO #7273 check
+    );
   }
 
   /** Update deletedBy (_meta field of movie) with the current user and remove the movie. */
   public async remove(movieId: string) {
     const userId = this.authService.uid;
     // We need to update the _meta field before remove to get the userId in the backend function: onMovieDeleteEvent
-    await this.db.doc(`movies/${movieId}`).update({
+    const movieRef = doc(this.db, `movies/${movieId}`);
+    await updateDoc(movieRef, {
       '_meta.deletedBy': userId,
       '_meta.deletedAt': new Date(),
     });

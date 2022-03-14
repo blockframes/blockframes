@@ -2,8 +2,8 @@
 import { Injectable, Injector } from "@angular/core";
 import { ComponentPortal } from "@angular/cdk/portal";
 import { Overlay, OverlayRef } from "@angular/cdk/overlay";
-import { AngularFirestore } from "@angular/fire/firestore";
-import { AngularFireStorage, AngularFireUploadTask } from "@angular/fire/storage";
+import { Firestore } from "@angular/fire/firestore";
+import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/compat/storage';
 
 import { AuthService } from "@blockframes/auth/+state";
 import { tempUploadDir } from "@blockframes/utils/file-sanitizer";
@@ -32,7 +32,7 @@ export class FileUploaderService {
 
   constructor(
     private overlay: Overlay,
-    private db: AngularFirestore,
+    private db: Firestore,
     private authService: AuthService,
     private storage: AngularFireStorage,
   ) { }

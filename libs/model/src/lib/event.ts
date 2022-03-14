@@ -1,4 +1,4 @@
-import type firebase from 'firebase';
+import type firestore from 'firebase/firestore';
 import { StorageFile } from '@blockframes/media/+state/media.firestore';
 import { AccessibilityTypes } from '@blockframes/utils/static-model/types';
 import { Person } from '@blockframes/utils/common-interfaces/identity';
@@ -7,7 +7,7 @@ import { Movie, Organization, User } from '@blockframes/model';
 import { CalendarEvent } from 'angular-calendar';
 import { AnonymousCredentials } from '@blockframes/auth/+state/auth.model';
 
-type Timestamp = firebase.firestore.Timestamp;
+type Timestamp = firestore.Timestamp;
 
 // Event types
 export type EventTypes = 'standard' | 'meeting' | 'screening' | 'local';

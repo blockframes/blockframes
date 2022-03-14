@@ -1,7 +1,7 @@
 // Angular
 import { Component, ChangeDetectionStrategy, Inject, HostBinding, HostListener } from '@angular/core';
-import { AngularFireUploadTask } from '@angular/fire/storage';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFireUploadTask } from '@angular/fire/compat/storage';
+import { Firestore } from '@angular/fire/firestore';
 
 // Blockframes
 import { BehaviorStore } from '@blockframes/utils/observable-helpers';
@@ -31,7 +31,7 @@ export class UploadWidgetComponent {
 
   constructor(
     @Inject('tasks') public tasks: BehaviorStore<AngularFireUploadTask[]>,
-    @Inject('db') public db: AngularFirestore
+    @Inject('db') public db: Firestore
   ) {}
 
   cancel(task: AngularFireUploadTask) {

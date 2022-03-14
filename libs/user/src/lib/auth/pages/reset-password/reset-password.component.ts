@@ -2,7 +2,6 @@ import { Component, ChangeDetectionStrategy, OnInit, ViewChild, TemplateRef } fr
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { AuthService } from '../../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ErrorResultResponse } from '@blockframes/utils/utils';
 
 @Component({
   selector: 'auth-reset-password',
@@ -19,7 +18,7 @@ export class ResetPasswordComponent implements OnInit {
     private builder: FormBuilder,
     private service: AuthService,
     private snackBar: MatSnackBar
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.emailForm = this.builder.group({
@@ -32,7 +31,7 @@ export class ResetPasswordComponent implements OnInit {
       if (this.emailForm.invalid) {
         throw new Error('Invalid format of email');
       }
-      const res: ErrorResultResponse = await this.service.resetPasswordInit(this.emailForm.value.email);
+      const { data: res } = await this.service.resetPasswordInit(this.emailForm.value.email);
       if (res.error === 'auth/email-not-found') {
         this.snackBar.openFromTemplate(this.noAccountTemplate, { duration: 8000 });
       } else if (res.error) {

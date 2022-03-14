@@ -1,6 +1,6 @@
 import { LanguageRecord } from '@blockframes/model';
 import type { Media, Territory } from '@blockframes/utils/static-model';
-import type firebase from 'firebase';
+import type firestore from 'firebase/firestore';
 import { Timestamp } from '@blockframes/utils/common-interfaces/timestamp';
 import { staticModel } from '@blockframes/utils/static-model';
 import { format } from 'date-fns';
@@ -24,12 +24,12 @@ export function createMailTerm(terms: BucketTerm<Timestamp>[]) {
 
 export type MailTerm = ReturnType<typeof createMailTerm>[number];
 
-export interface Duration<T extends Date | firebase.firestore.Timestamp = Date> {
+export interface Duration<T extends Date | firestore.Timestamp = Date> {
   from: T;
   to: T;
 }
 
-export interface BucketTerm<T extends Date | firebase.firestore.Timestamp = Date> {
+export interface BucketTerm<T extends Date | firestore.Timestamp = Date> {
   medias: Media[];
   duration: Duration<T>;
   territories: Territory[];
@@ -44,11 +44,11 @@ export interface BucketTerm<T extends Date | firebase.firestore.Timestamp = Date
  * - exclusivity should be the same
  * - duration cannot be splitted
  */
-export interface Term<T extends Date | firebase.firestore.Timestamp = Date> extends BucketTerm<T> {
+export interface Term<T extends Date | firestore.Timestamp = Date> extends BucketTerm<T> {
   id: string;
   contractId: string;
   criteria: unknown[];
   licensedOriginal: boolean;
 }
 
-export type TermDocument = Term<firebase.firestore.Timestamp>;
+export type TermDocument = Term<firestore.Timestamp>;

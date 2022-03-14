@@ -3,11 +3,10 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule, Routes } from '@angular/router';
-import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
 // Angular Fire
-import { AngularFireAuthModule } from '@angular/fire/auth';
-import { AngularFirePerformanceModule } from '@angular/fire/performance';
+import { AngularFireAuthModule } from '@angular/fire/compat/auth';
+import { AngularFirePerformanceModule } from '@angular/fire/compat/performance';
 
 // Material
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -21,7 +20,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatCardModule } from '@angular/material/card';
 
-// Component
+// Blockframes
 import { PasswordConfirmModule } from '@blockframes/ui/form/password-confirm/password-confirm.module';
 import { ChangePasswordComponent } from './pages/change-password/change-password.component';
 import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
@@ -30,6 +29,7 @@ import { PrivacyPolicyModule } from './components/privacy-policy/privacy-policy.
 import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module';
 import { OrganizationLiteFormModule } from '@blockframes/organization/forms/organization-lite-form/organization-lite-form.module';
 import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
 // Guards
 import { IdentityGuard } from './guard/identity.guard';

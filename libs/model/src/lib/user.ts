@@ -2,6 +2,7 @@ import { DocumentMeta } from "@blockframes/utils/models-meta";
 import { NotificationTypesBase, UserRole } from '@blockframes/model';
 import { createStorageFile, StorageFile } from "@blockframes/media/+state/media.firestore";
 import { Genre, Language, Media, Territory } from "@blockframes/utils/static-model";
+import { Timestamp } from "@blockframes/utils/common-interfaces/timestamp";
 
 export interface User extends PublicUser {
   financing: {
@@ -33,7 +34,7 @@ export type NotificationSettings = Record<NotificationTypesBase, NotificationSet
 
 /** A user interface with public information */
 export interface PublicUser {
-  _meta?: DocumentMeta<Date | FirebaseFirestore.Timestamp>;
+  _meta?: DocumentMeta<Date | Timestamp>;
   uid: string;
   email: string;
   avatar?: StorageFile;

@@ -3,7 +3,7 @@ import { AuthService } from '../../+state';
 import { ThemeService } from '@blockframes/ui/theme';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { UserService } from '@blockframes/user/+state';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { doc, docData, DocumentReference, Firestore } from '@angular/fire/firestore';
 import { dbVersionDoc, IVersionDoc } from '@blockframes/utils/maintenance';
 import { emulators } from '@env';
 import { OrganizationService } from '@blockframes/organization/+state';
@@ -19,12 +19,12 @@ export class AuthWidgetComponent {
   organization$ = this.orgService.currentOrg$;
   theme$ = this.themeService.theme$;
   isBfAdmin = this.userService.isBlockframesAdmin(this.authService.uid);
-  appVersion$ = this.db.doc<IVersionDoc>(dbVersionDoc).valueChanges();
+  appVersion$ = docData<IVersionDoc>(doc(this.db, dbVersionDoc) as DocumentReference<IVersionDoc>);
   emulatorList = Object.keys(emulators).filter(key => !!emulators[key]);
   emulators = this.emulatorList.length ? this.emulatorList.join(' - ') : 'none'
 
   constructor(
-    private db: AngularFirestore,
+    private db: Firestore,
     private authService: AuthService,
     private orgService: OrganizationService,
     private themeService: ThemeService,

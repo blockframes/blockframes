@@ -15,13 +15,13 @@ import { OrganizationService } from '@blockframes/organization/+state';
 import { PermissionsService } from '@blockframes/permissions/+state';
 import { Observable, combineLatest, of } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
-import type firebase from 'firebase';
+import type firestore from 'firebase/firestore';
 import { ActiveState, EntityState } from '@datorama/akita';
 import { production } from '@env';
 import { QueryConstraint, where } from 'firebase/firestore';
 
 interface EventState extends EntityState<Event>, ActiveState<string> { };
-type Timestamp = firebase.firestore.Timestamp;
+type Timestamp = firestore.Timestamp;
 
 const eventQuery = (id: string) => ({
   path: `events/${id}`,

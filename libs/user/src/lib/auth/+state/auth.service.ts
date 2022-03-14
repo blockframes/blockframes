@@ -1,6 +1,6 @@
 import { Inject, Injectable, Optional } from '@angular/core';
 import { Functions, httpsCallable } from '@angular/fire/functions';
-
+import type firestore from 'firebase/firestore';
 import { FireAuthService, CollectionConfig, FireAuthState, RoleState, initialAuthState } from 'akita-ng-fire';
 import { map, switchMap, take, tap } from 'rxjs/operators';
 import { App } from '@blockframes/utils/apps';
@@ -33,6 +33,7 @@ import { UserService } from '@blockframes/user/+state';
 import { Store, StoreConfig } from '@datorama/akita';
 import { APP } from '@blockframes/utils/routes/utils';
 import { doc, docData, getDoc, DocumentReference, writeBatch } from '@angular/fire/firestore';
+import { ErrorResultResponse } from '@blockframes/utils/utils';
 
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'auth' })
@@ -74,7 +75,7 @@ export class AuthService extends FireAuthService<AuthState> {
 
       // TODO #6113 once we have a custom email verified page, we can update the users' meta there
       if (userAuth?.emailVerified && profile && !profile._meta?.emailVerified) {
-        const _meta: DocumentMeta<Date | FirebaseFirestore.Timestamp> = {
+        const _meta: DocumentMeta<Date | firestore.Timestamp> = {
           ...profile._meta,
           emailVerified: true
         }
@@ -132,7 +133,7 @@ export class AuthService extends FireAuthService<AuthState> {
    * @param email email of the user
   */
   public resetPasswordInit(email: string, app: App = this.app) {
-    const callSendReset = httpsCallable(this.functions, 'sendResetPasswordEmail');
+    const callSendReset = httpsCallable<{ email: string, app: App }, ErrorResultResponse>(this.functions, 'sendResetPasswordEmail');
     return callSendReset({ email, app });
   }
 

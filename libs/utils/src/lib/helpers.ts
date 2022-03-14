@@ -1,4 +1,4 @@
-import firebase from 'firebase';
+import firestore from 'firebase/firestore';
 import { staticModel, Scope, GetKeys } from './static-model';
 import { Movie, User, Organization } from '@blockframes/model';
 
@@ -46,13 +46,13 @@ export interface DateGroup<T> {
 
 /** Checks if the date is a firestore Timestamp. */
 function isTimeStamp(
-  date: firebase.firestore.Timestamp | Date
-): date is firebase.firestore.Timestamp {
-  return date && date instanceof firebase.firestore.Timestamp;
+  date: firestore.Timestamp | Date
+): date is firestore.Timestamp {
+  return date && date instanceof firestore.Timestamp;
 }
 
 /** Takes a Date, a string or a Timestamp and returns it as a Date. */
-export function toDate(date: firebase.firestore.Timestamp | Date): Date {
+export function toDate(date: firestore.Timestamp | Date): Date {
   if (isTimeStamp(date)) {
     return date.toDate();
   }

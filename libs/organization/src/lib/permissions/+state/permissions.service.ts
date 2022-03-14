@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { CollectionService, CollectionConfig, AtomicWrite } from 'akita-ng-fire';
-import type firebase from 'firebase';
+import type firestore from 'firebase/firestore';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { AuthService } from '@blockframes/auth/+state';
 import { combineLatest, Observable, of } from 'rxjs';
 import { ActiveState, EntityState } from '@datorama/akita';
 import { createDocPermissions, PermissionsDocument, UserRole, Permissions } from '@blockframes/model';
+import { doc, getDoc } from '@angular/fire/firestore';
 
 interface PermissionsState extends EntityState<Permissions>, ActiveState<string> { }
 
@@ -55,12 +56,13 @@ export class PermissionsService extends CollectionService<PermissionsState> {
    */
   public addDocumentPermissions(docId: string, write: AtomicWrite, organizationId: string) {
     const documentPermissions = createDocPermissions({ id: docId, ownerId: organizationId });
-    const documentPermissionsRef = this.db.doc(`permissions/${organizationId}/documentPermissions/${documentPermissions.id}`).ref;
-    (write as firebase.firestore.WriteBatch).set(documentPermissionsRef, documentPermissions);
+    const documentPermissionsRef = doc(this.db, `permissions/${organizationId}/documentPermissions/${documentPermissions.id}`);
+    (write as firestore.WriteBatch).set(documentPermissionsRef, documentPermissions);
   }
 
   public async getDocumentPermissions(docId: string, orgId: string) {
-    const permissions = await this.db.doc(`permissions/${orgId}/documentPermissions/${docId}`).ref.get();
+    const ref = doc(this.db, `permissions/${orgId}/documentPermissions/${docId}`);
+    const permissions = await getDoc(ref);
     return createDocPermissions(permissions.data());
   }
 
