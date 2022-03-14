@@ -1,4 +1,4 @@
-import { Organization } from "@blockframes/organization/+state/organization.model";
+import { Organization } from "@blockframes/model";
 import { Analytics, AnalyticsTypes } from "./analytics.firestore";
 import { getDeepValue, toLabel } from "@blockframes/utils/pipes";
 import { Scope } from "@blockframes/utils/static-model";

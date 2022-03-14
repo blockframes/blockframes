@@ -32,7 +32,6 @@ import {
   Stakeholder,
   Director,
 } from '@blockframes/utils/common-interfaces/identity';
-import { AnalyticsEvents, AnalyticsBase } from '@blockframes/utils/analytics/analytics-model';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
 import { StorageFile, StorageVideo } from '@blockframes/media/+state/media.firestore';
 import type firebase from 'firebase';
@@ -259,32 +258,6 @@ export type MovieExpectedPremiere = MovieExpectedPremiereRaw<Date>;
 export interface MovieGoalsAudience {
   targets: string[];
   goals: SocialGoal[];
-}
-
-/////////////////////
-// MOVIE ANALYTICS //
-/////////////////////
-
-export interface MovieEventAnalytics {
-  event_date: string;
-  event_name: AnalyticsEvents;
-  hits: number;
-  movieId: string;
-}
-
-export interface MovieAnalytics extends AnalyticsBase {
-  addedToWishlist: {
-    current: MovieEventAnalytics[];
-    past: MovieEventAnalytics[];
-  };
-  movieViews: {
-    current: MovieEventAnalytics[];
-    past: MovieEventAnalytics[];
-  };
-  promoReelOpened: {
-    current: MovieEventAnalytics[];
-    past: MovieEventAnalytics[];
-  };
 }
 
 // Export for other files
@@ -555,19 +528,6 @@ export function getMovieTitleList(movies: Movie[]): string[] {
     movie.title.international ? movie.title.international : movie.title.original
   );
   return movieTitles;
-}
-
-/**
- * Returns the number of views of a movie page.
- * @param analytics
- * @param movieId
- */
-export function getMovieTotalViews(analytics: MovieAnalytics[], movieId: string): number {
-  const movieAnalytic = analytics.find((analytic) => analytic.id === movieId);
-  if (movieAnalytic) {
-    const movieHits = movieAnalytic.movieViews.current.map((event) => event.hits);
-    return movieHits.reduce((sum, val) => sum + val, 0);
-  }
 }
 
 export function createMovieVideos(params: Partial<MovieVideos>): MovieVideos {
