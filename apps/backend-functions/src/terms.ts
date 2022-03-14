@@ -1,6 +1,6 @@
 import { db } from './internals/firebase';
 import { Term } from '@blockframes/contract/term/+state';
-import { Bucket } from '@blockframes/contract/bucket/+state';
+import { Bucket } from '@blockframes/model';
 
 export async function onTermDelete(termSnapshot: FirebaseFirestore.DocumentSnapshot<Term>) {
 

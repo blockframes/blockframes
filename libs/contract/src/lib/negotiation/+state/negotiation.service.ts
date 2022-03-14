@@ -12,17 +12,17 @@ interface NegotiationState extends EntityState<Negotiation, string>, ActiveState
 @CollectionConfig({ path: 'contracts/:contractId/negotiations' })
 export class NegotiationService extends CollectionService<NegotiationState> {
   useMemorization = true;
-  constructor( store: NegotiationStore ) {
+  constructor(store: NegotiationStore) {
     super(store)
   }
 
-  formatDocumentDurationFromFirestore(terms:BucketTerm<firebase.firestore.Timestamp>[]){
+  formatDocumentDurationFromFirestore(terms: BucketTerm<firebase.firestore.Timestamp>[]) {
     return terms.map(term => {
       const duration = {
         from: term.duration.from.toDate(),
-        to:term.duration.to.toDate(),
+        to: term.duration.to.toDate(),
       };
-      return {...term, duration}
+      return { ...term, duration }
     })
   }
 
@@ -30,14 +30,14 @@ export class NegotiationService extends CollectionService<NegotiationState> {
     const _meta = formatDocumentMetaFromFirestore(_negotiation?._meta);
     const terms = this.formatDocumentDurationFromFirestore(_negotiation.terms)
     const initial = _negotiation.initial?.toDate();
-    return { ..._negotiation, _meta, initial , terms};
+    return { ..._negotiation, _meta, initial, terms };
   }
 }
 
 // BOILETPLATE
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'negotiation' })
-export class NegotiationStore extends EntityStore<NegotiationState> {
+class NegotiationStore extends EntityStore<NegotiationState> {
   constructor() {
     super();
   }
