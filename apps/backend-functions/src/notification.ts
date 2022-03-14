@@ -10,7 +10,10 @@ import {
   NotificationDocument,
   MovieDocument,
   InvitationDocument,
-  PublicInvitation
+  PublicInvitation,
+  ContractDocument,
+  createMailContract,
+  MailContract
 } from '@blockframes/model';
 import { sendMailFromTemplate } from './internals/email';
 import { emailErrorCodes, EventEmailData, getEventEmailData, getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
@@ -50,11 +53,9 @@ import * as admin from 'firebase-admin';
 import { logger } from 'firebase-functions';
 import { NegotiationDocument } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
 import { Offer } from '@blockframes/contract/offer/+state';
-import { ContractDocument } from '@blockframes/contract/contract/+state';
 import { movieCurrencies } from '@blockframes/utils/static-model';
 import { appUrl } from './environments/environment';
 import { getReviewer } from '@blockframes/contract/negotiation/utils';
-import { createMailContract, MailContract } from '@blockframes/contract/contract/+state/contract.firestore';
 
 // @TODO (#2848) forcing to festival since invitations to events are only on this one
 const eventAppKey: App = 'festival';

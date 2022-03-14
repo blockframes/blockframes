@@ -1,12 +1,11 @@
 import { db } from './internals/firebase';
 import { getDocument } from '@blockframes/firebase-utils';
 import { Offer } from '@blockframes/contract/offer/+state/offer.model';
-import { Movie, Organization, User, NotificationTypes } from '@blockframes/model';
+import { Movie, Organization, User, NotificationTypes, Sale } from '@blockframes/model';
 import { staticModel } from '@blockframes/utils/static-model';
 import { createNotification, triggerNotifications } from './notification';
 import { Change } from 'firebase-functions';
 import { createDocumentMeta } from './data/internals';
-import { Sale } from '@blockframes/contract/contract/+state/contract.model';
 import { getSeller } from '@blockframes/contract/contract/+state/utils';
 
 export async function onOfferCreate(snap: FirebaseFirestore.DocumentSnapshot): Promise<void> {
