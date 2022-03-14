@@ -1,8 +1,7 @@
-
 import { DocumentMeta } from "@blockframes/utils/models-meta";
 import type { Media, Territory } from "@blockframes/utils/static-model";
 import { Timestamp } from "@blockframes/utils/common-interfaces/timestamp";
-import { BucketContract } from "@blockframes/contract/bucket/+state";
+import { BucketContract } from "@blockframes/model";
 import { createMailTerm, Duration } from "@blockframes/contract/term/+state/term.firestore";
 import { createDocumentMeta } from "@blockframes/utils/models-meta";
 import { toDate } from "@blockframes/utils/helpers";
