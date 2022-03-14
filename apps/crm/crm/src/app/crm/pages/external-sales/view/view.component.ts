@@ -11,8 +11,8 @@ import { getSeller } from '@blockframes/contract/contract/+state/utils'
 import { of } from 'rxjs';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { IncomeService } from '@blockframes/contract/income/+state';
-import { Term } from '@blockframes/contract/term/+state';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
+import { Term } from '@blockframes/model';
 
 @Component({
   selector: 'contract-view',
