@@ -5,7 +5,7 @@ import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.com
 import { findInvalidControls } from '@blockframes/ui/tunnel/layout/layout.component';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { map, pluck, switchMap } from 'rxjs/operators';
-import { MovieService } from '@blockframes/movie/+state';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 
 @Component({
   selector: 'festival-summary-tunnel',

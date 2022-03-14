@@ -1,7 +1,7 @@
 
 import { Injectable } from '@angular/core';
 import { AngularFireFunctions } from '@angular/fire/functions';
-import { PublicUser } from '@blockframes/user/types';
+import { PublicUser } from '@blockframes/model';
 import { ErrorResultResponse } from '@blockframes/utils/utils';
 import { BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';

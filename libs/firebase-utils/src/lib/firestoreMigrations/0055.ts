@@ -1,29 +1,27 @@
 import { Firestore } from '@blockframes/firebase-utils';
-import { Movie } from '@blockframes/movie/+state';
-import { Organization } from '@blockframes/organization/+state';
+import { Movie, Organization } from '@blockframes/model';
 import { Stakeholder } from '@blockframes/utils/common-interfaces';
 import { Territory } from '@blockframes/utils/static-model';
 import { runChunks } from '../firebase-utils';
 
 const replaced = {
   'christmas- island': 'christmas-island',
-}
+};
 
 const isReplaced = (territory: Territory) => {
-  return Object.keys(replaced).some(key => key === territory)
-}
+  return Object.keys(replaced).some((key) => key === territory);
+};
 
 export async function upgrade(db: Firestore) {
-
   // MOVIE
-  const movies = await db.collection('movies').get()
+  const movies = await db.collection('movies').get();
   await runChunks(movies.docs, async (movieDoc) => {
     const data = movieDoc.data() as Movie;
     let update = false;
 
     // boxOffice[].territory
     if (data.boxOffice) {
-      data.boxOffice = data.boxOffice.map(office => {
+      data.boxOffice = data.boxOffice.map((office) => {
         if (isReplaced(office.territory)) {
           office.territory = replaced[office.territory];
           update = true;
@@ -34,7 +32,7 @@ export async function upgrade(db: Firestore) {
 
     // rating[].country
     if (data.rating) {
-      data.rating = data.rating.map(rating => {
+      data.rating = data.rating.map((rating) => {
         if (isReplaced(rating.country)) {
           rating.country = replaced[rating.country];
           update = true;
@@ -44,7 +42,7 @@ export async function upgrade(db: Firestore) {
     }
 
     // originCountries
-    data.originCountries = data.originCountries.map(country => {
+    data.originCountries = data.originCountries.map((country) => {
       if (isReplaced(country)) {
         update = true;
         return replaced[country];
@@ -53,7 +51,7 @@ export async function upgrade(db: Firestore) {
 
     // originalRelease[].country
     if (data.originalRelease) {
-      data.originalRelease = data.originalRelease.map(release => {
+      data.originalRelease = data.originalRelease.map((release) => {
         if (isReplaced(release.country)) {
           release.country = replaced[release.country];
           update = true;
@@ -65,10 +63,10 @@ export async function upgrade(db: Firestore) {
     // stakeholders => stakeholder[] => countries
     if (data.stakeholders) {
       for (const key in data.stakeholders) {
-        const stakeholders = data.stakeholders[key] as Stakeholder[]
-        data.stakeholders[key] = stakeholders.map(stakeholder => {
+        const stakeholders = data.stakeholders[key] as Stakeholder[];
+        data.stakeholders[key] = stakeholders.map((stakeholder) => {
           if (stakeholder.countries) {
-            stakeholder.countries = stakeholder.countries.map(country => {
+            stakeholder.countries = stakeholder.countries.map((country) => {
               if (isReplaced(country)) {
                 update = true;
                 return replaced[country];
@@ -89,9 +87,9 @@ export async function upgrade(db: Firestore) {
         }
       }
     }
- 
+
     if (update) await movieDoc.ref.set(data);
-  })
+  });
 
   // ORG
   const orgs = await db.collection('orgs').get();
@@ -109,6 +107,5 @@ export async function upgrade(db: Firestore) {
     }
 
     if (update) await orgDoc.ref.set(data);
-  })
-
+  });
 }

@@ -18,27 +18,15 @@
     "paths": {
       "@env": ["env/env.ts"],
       "@blockframes/auth/*": ["libs/user/src/lib/auth/*"],
-      "@blockframes/user/types": ["libs/user/src/lib/user/+state/user.firestore.ts"],
       "@blockframes/ui/*": ["libs/ui/src/lib/*"],
       "@blockframes/utils/*": ["libs/utils/src/lib/*"],
       "@blockframes/movie/*": ["libs/movie/src/lib/movie/*"],
       "@blockframes/movie/import": [
         "libs/movie/src/lib/movie/components/import/import-movie.module.ts"
       ],
-      "@blockframes/movie/types": ["libs/movie/src/lib/movie/+state/movie.firestore.ts"],
       "@blockframes/organization/*": ["libs/organization/src/lib/organization/*"],
-      "@blockframes/organization/types": [
-        "libs/organization/src/lib/organization/+state/organization.firestore.ts"
-      ],
       "@blockframes/permissions/*": ["libs/organization/src/lib/permissions/*"],
-      "@blockframes/permissions/types": [
-        "libs/organization/src/lib/permissions/+state/permissions.firestore.ts"
-      ],
       "@blockframes/invitation/*": ["libs/invitation/src/lib/*"],
-      "@blockframes/invitation/types": ["libs/invitation/src/lib/+state/invitation.firestore.ts"],
-      "@blockframes/notification/types": [
-        "libs/notification/src/lib/+state/notification.firestore.ts"
-      ],
       "@blockframes/notification/*": ["libs/notification/src/lib/*"],
       "@blockframes/contract/*": ["libs/contract/src/lib/*"],
       "@blockframes/financial-report/*": ["libs/financial-report/src/lib/*"],
@@ -59,7 +47,8 @@
       "@blockframes/testing/unit-tests": ["libs/testing/unit-tests/src/index.ts"],
       "@blockframes/testing/cypress": ["libs/testing/cypress/src/index.ts"],
       "@blockframes/testing/e2e": ["libs/testing/e2e/src/index.ts"],
-      "@blockframes/analytics/*": ["libs/analytics/src/lib/*"]
+      "@blockframes/analytics/*": ["libs/analytics/src/lib/*"],
+      "@blockframes/model": ["libs/model/src/index.ts"]
     }
   },
   "angularCompilerOptions": {

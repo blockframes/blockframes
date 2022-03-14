@@ -1,3 +1,4 @@
+/* #7936 this may be reactivated later
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 
@@ -47,3 +48,4 @@ export class YandexMetricaService {
     }
   }
 }
+*/

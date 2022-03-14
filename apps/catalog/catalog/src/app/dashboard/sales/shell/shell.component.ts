@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { pluck, shareReplay, switchMap } from 'rxjs/operators';
 import { centralOrgId } from '@env';
 import { joinWith } from '@blockframes/utils/operators';
-import { MovieService } from '@blockframes/movie/+state';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { IncomeService } from '@blockframes/contract/income/+state';
 import { Intercom } from 'ng-intercom';
 

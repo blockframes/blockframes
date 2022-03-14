@@ -24,7 +24,7 @@ import { getTwilioAccessToken, twilioWebhook as _twilioWebhook } from './twilio'
 import { eventWebhook as sendgridEventWebhook } from './sendgrid';
 import { hotConfig, heavyConfig, superHeavyConfig } from '@blockframes/firebase-utils';
 import { onNotificationCreate } from './notification';
-import { onOfferCreate, onOfferUpdate } from './offer';
+import { onOfferCreate } from './offer';
 import { onContractDelete, onContractUpdate } from './contracts';
 import { onTermDelete } from './terms';
 import { downloadVideo } from './rescue';
@@ -212,7 +212,8 @@ export const sendNotificationEmails = onDocumentCreate('notifications/{notifID}'
 //--------------------------------
 
 export const onOfferCreateEvent = onDocumentCreate('offers/{offerId}', onOfferCreate);
-export const onOfferUpdateEvent = onDocumentUpdate('offers/{offerId}', onOfferUpdate);
+// #7946 this may be reactivated later
+// export const onOfferUpdateEvent = onDocumentUpdate('offers/{offerId}', onOfferUpdate); 
 
 //--------------------------------
 //       Orgs Management        //

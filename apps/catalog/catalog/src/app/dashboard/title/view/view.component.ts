@@ -3,7 +3,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { pluck, switchMap } from 'rxjs/operators';
-import { MovieService } from '@blockframes/movie/+state';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 
 @Component({
   selector: 'catalog-title-view',

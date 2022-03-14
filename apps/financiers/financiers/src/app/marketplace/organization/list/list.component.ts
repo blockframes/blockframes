@@ -4,7 +4,7 @@ import { Component, ChangeDetectionStrategy, HostBinding, OnInit, OnDestroy } fr
 // Blockframes
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { scaleOut } from '@blockframes/utils/animations/fade';
-import { Organization } from '@blockframes/organization/+state';
+import { Movie, Organization } from '@blockframes/model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { OrganizationSearchForm, createOrganizationSearch } from '@blockframes/organization/forms/search.form';
 

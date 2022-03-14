@@ -3,7 +3,7 @@ import { getCurrencySymbol } from '@angular/common';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { mainRoute, additionalRoute, artisticRoute, productionRoute } from '@blockframes/movie/marketplace';
-import { Organization } from '@blockframes/organization/+state/organization.model';
+import { Organization } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { CampaignService } from '@blockframes/campaign/+state';
 import { RouteDescription } from '@blockframes/utils/common-interfaces';
@@ -17,7 +17,7 @@ import { ErrorResultResponse } from '@blockframes/utils/utils';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { getUserEmailData, OrgEmailData } from '@blockframes/utils/emails/utils';
 import { testEmail } from "@blockframes/e2e/utils/env";
-import { MovieService } from '@blockframes/movie/+state';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 
 interface EmailData {
   subject: string;
@@ -44,7 +44,7 @@ export class MarketplaceMovieViewComponent {
     switchMap(movie => this.orgService.valueChanges(movie.orgIds)),
     shareReplay({ refCount: true, bufferSize: 1 }),
   );
-  
+
   public campaign$ = this.movie$.pipe(
     switchMap(movie => this.campaignService.valueChanges(movie.id)),
     tap(campaign => this.currency = campaign.currency)
@@ -139,9 +139,9 @@ export class MarketplaceMovieViewComponent {
         };
 
         /*
-         * If running E2E, for user other than sender, 
+         * If running E2E, for user other than sender,
          * store it for access in E2E test.
-         * A single email is sufficient to check the email template 
+         * A single email is sufficient to check the email template
          */
         if (cyCheck && (userEmail !== userSubject.email)) {
           emailReady = true;

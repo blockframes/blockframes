@@ -1,16 +1,13 @@
 import { MediaRatioType } from '../../image/uploader/uploader.component';
-import { MovieForm, MovieVideoForm } from "@blockframes/movie/form/movie.form";
-import { OrganizationForm } from "@blockframes/organization/forms/organization.form";
-import { AllowedFileType } from "@blockframes/utils/utils";
-import { Movie } from "@blockframes/movie/+state";
-import { Organization } from "@blockframes/organization/+state/organization.model";
+import { MovieForm, MovieVideoForm } from '@blockframes/movie/form/movie.form';
+import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
+import { AllowedFileType } from '@blockframes/utils/utils';
+import { Movie, MovieVideo, Organization } from '@blockframes/model';
 import { getDeepValue } from '@blockframes/utils/pipes/deep-key.pipe';
-
 import { CollectionHoldingFile, FileLabel, getFileMetadata } from '../../+state/static-files';
-import { StorageFileForm } from "@blockframes/media/form/media.form";
-import { FormList } from "@blockframes/utils/form";
-import { StorageFile, StorageVideo } from "@blockframes/media/+state/media.firestore";
-import { MovieVideo } from '@blockframes/movie/+state/movie.firestore';
+import { StorageFileForm } from '@blockframes/media/form/media.form';
+import { FormList } from '@blockframes/utils/form';
+import { StorageFile, StorageVideo } from '@blockframes/media/+state/media.firestore';
 
 interface DirectoryBase {
   type: 'directory' | 'file' | 'image' | 'fileList' | 'imageList';
@@ -22,7 +19,10 @@ export interface Directory extends DirectoryBase {
   type: 'directory';
   icon?: string;
   /** Array of sub-folders */
-  children: Record<string, (Directory | FileDirectory | ImgDirectory | FileListDirectory | ImgListDirectory)>;
+  children: Record<
+    string,
+    Directory | FileDirectory | ImgDirectory | FileListDirectory | ImgListDirectory
+  >;
 }
 
 export interface FileDirectoryBase extends DirectoryBase {
@@ -57,14 +57,14 @@ interface FileDirectory extends FileDirectoryBase {
 }
 
 interface FileListDirectory extends FileDirectoryBase {
-  type: 'fileList',
+  type: 'fileList';
   form: FormList<StorageFile>;
   accept: AllowedFileType;
   togglePrivacy: boolean;
 }
 
 interface ImgListDirectory extends FileDirectoryBase {
-  type: 'imageList',
+  type: 'imageList';
   form: FormList<StorageFile>;
   ratio: MediaRatioType;
   accept: AllowedFileType;
@@ -82,24 +82,52 @@ function titlesDirectory(titles: Movie[]) {
   return documents;
 }
 
-function getFormStorage(object: { id: string }, collection: CollectionHoldingFile, label: FileLabel) {
-  const value: Partial<StorageFile> = getDeepValue(object, getFileMetadata(collection, label, object.id).field);
+function getFormStorage(
+  object: { id: string },
+  collection: CollectionHoldingFile,
+  label: FileLabel
+) {
+  const value: Partial<StorageFile> = getDeepValue(
+    object,
+    getFileMetadata(collection, label, object.id).field
+  );
   return new StorageFileForm(value);
 }
 
-function getFormListStorage(object: { id: string }, collection: CollectionHoldingFile, label: FileLabel) {
-  const value: StorageFile[] = getDeepValue(object, getFileMetadata(collection, label, object.id).field);
-  return FormList.factory<StorageFile>(value, file => new StorageFileForm(file));
+function getFormListStorage(
+  object: { id: string },
+  collection: CollectionHoldingFile,
+  label: FileLabel
+) {
+  const value: StorageFile[] = getDeepValue(
+    object,
+    getFileMetadata(collection, label, object.id).field
+  );
+  return FormList.factory<StorageFile>(value, (file) => new StorageFileForm(file));
 }
 
-function getFormStorageVideo(object: { id: string }, collection: CollectionHoldingFile, label: FileLabel) {
-  const value: Partial<MovieVideo> = getDeepValue(object, getFileMetadata(collection, label, object.id).field);
+function getFormStorageVideo(
+  object: { id: string },
+  collection: CollectionHoldingFile,
+  label: FileLabel
+) {
+  const value: Partial<MovieVideo> = getDeepValue(
+    object,
+    getFileMetadata(collection, label, object.id).field
+  );
   return new MovieVideoForm(value);
 }
 
-function getFormListStorageVideo(object: { id: string }, collection: CollectionHoldingFile, label: FileLabel) {
-  const value: StorageVideo[] = getDeepValue(object, getFileMetadata(collection, label, object.id).field);
-  return FormList.factory<StorageVideo>(value, file => new MovieVideoForm(file));
+function getFormListStorageVideo(
+  object: { id: string },
+  collection: CollectionHoldingFile,
+  label: FileLabel
+) {
+  const value: StorageVideo[] = getDeepValue(
+    object,
+    getFileMetadata(collection, label, object.id).field
+  );
+  return FormList.factory<StorageVideo>(value, (file) => new MovieVideoForm(file));
 }
 
 function titleDirectory(title: Movie): Directory {
@@ -107,7 +135,6 @@ function titleDirectory(title: Movie): Directory {
     name: title.title.international,
     type: 'directory',
     children: {
-
       images: {
         name: 'Images',
         type: 'directory',
@@ -126,7 +153,7 @@ function titleDirectory(title: Movie): Directory {
             meta: ['movies', 'banner', title.id],
             form: getFormStorage(title, 'movies', 'banner'),
           },
-          'still_photo': {
+          still_photo: {
             name: 'Other Images',
             type: 'imageList',
             accept: 'image',
@@ -170,7 +197,7 @@ function titleDirectory(title: Movie): Directory {
         name: 'Other Documents',
         type: 'directory',
         children: {
-          'presentation_deck': {
+          presentation_deck: {
             name: 'Presentation Deck',
             type: 'file',
             accept: 'pdf',
@@ -201,11 +228,11 @@ function titleDirectory(title: Movie): Directory {
             togglePrivacy: false,
             meta: ['movies', 'notes', title.id],
             form: getFormListStorage(title, 'movies', 'notes'),
-          }
+          },
         },
       },
-    }
-  }
+    },
+  };
 }
 
 function orgDirectory(org: Organization): Directory {
@@ -236,9 +263,9 @@ function orgDirectory(org: Organization): Directory {
         ratio: 'square',
         meta: ['orgs', 'logo', org.id],
         form: getFormStorage(org, 'orgs', 'logo'),
-      }
-    }
-  }
+      },
+    },
+  };
 }
 
 export interface RootDirectory {
@@ -257,8 +284,7 @@ export function getDirectories(org: Organization, titles: Movie[]): Directory {
         name: 'Titles',
         icon: 'movie',
         children: titlesDirectory(titles),
-      }
+      },
     },
-  }
+  };
 }
-

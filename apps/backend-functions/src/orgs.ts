@@ -9,7 +9,6 @@ import { db } from './internals/firebase';
 import { getUser } from "./internals/utils";
 import { sendMail } from './internals/email';
 import { organizationCreated, organizationRequestedAccessToApp } from './templates/mail';
-import { OrganizationDocument, PublicUser, PermissionsDocument, NotificationDocument, NotificationTypes } from './data/types';
 import { triggerNotifications, createNotification } from './notification';
 import { app, App, getOrgAppAccess, getMailSender, Module } from '@blockframes/utils/apps';
 import { getAdminIds, createPublicOrganizationDocument, createPublicUserDocument, getDocument, createDocumentMeta } from './data/internals';
@@ -18,7 +17,7 @@ import { cleanOrgMedias } from './media';
 import { Change, EventContext } from 'firebase-functions';
 import { algolia, deleteObject, storeSearchableOrg, findOrgAppAccess, storeSearchableUser } from '@blockframes/firebase-utils';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
-import { User } from '@blockframes/user/+state';
+import { User, NotificationDocument, NotificationTypes, OrganizationDocument, PublicUser, PermissionsDocument } from '@blockframes/model';
 import { groupIds } from '@blockframes/utils/emails/ids';
 
 /** Create a notification with user and org. */
@@ -81,14 +80,14 @@ async function notifyOnOrgMemberChanges(before: OrganizationDocument, after: Org
   }
 }
 
-export async function onOrganizationCreate(snap: FirebaseFirestore.DocumentSnapshot) {
+export function onOrganizationCreate(snap: FirebaseFirestore.DocumentSnapshot) {
   const org = snap.data() as OrganizationDocument;
 
   if (!org?.denomination?.full) {
     console.error('Invalid org data:', org);
     throw new Error('organization update function got invalid org data');
   }
-  const emailRequest = await organizationCreated(org);
+  const emailRequest = organizationCreated(org);
   const from = getMailSender(org._meta.createdFrom);
 
   return Promise.all([
@@ -269,7 +268,7 @@ export const accessToAppChanged = async (
 export const onRequestFromOrgToAccessApp = async (data: { app: App, module: Module, orgId: string }, context?: CallableContext) => {
   if (!!context.auth.uid && !!data.app && !!data.orgId && !!data.module) {
     const organization = await getDocument<OrganizationDocument>(`orgs/${data.orgId}`);
-    const mailRequest = await organizationRequestedAccessToApp(organization, data.app, data.module);
+    const mailRequest = organizationRequestedAccessToApp(organization, data.app, data.module);
     const from = getMailSender(data.app);
     const userDocument = await getDocument<User>(`users/${context.auth.uid}`);
 

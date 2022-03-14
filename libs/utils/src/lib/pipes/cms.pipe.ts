@@ -1,7 +1,7 @@
 import { NgModule, Pipe, PipeTransform } from '@angular/core';
 import { Query, QueryFn } from '@angular/fire/firestore';
 import { EventService } from '@blockframes/event/+state';
-import { MovieService } from '@blockframes/movie/+state';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { distinctUntilChanged } from 'rxjs/operators';
 

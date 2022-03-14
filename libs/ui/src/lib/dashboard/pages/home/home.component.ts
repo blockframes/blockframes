@@ -2,10 +2,10 @@
 import { Component, OnInit, ChangeDetectionStrategy, Optional, Inject } from '@angular/core';
 
 // Blockframes
-import { MovieService, fromOrg } from '@blockframes/movie/+state';
+import { MovieService, fromOrg } from '@blockframes/movie/+state/movie.service';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { Movie } from '@blockframes/movie/+state/movie.model';
+import { Movie } from '@blockframes/model';
 import { App } from '@blockframes/utils/apps';
 import { APP } from '@blockframes/utils/routes/utils';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
@@ -22,10 +22,9 @@ import { Intercom } from 'ng-intercom';
   selector: 'dashboard-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent implements OnInit {
-
   // accepted and submitted movies only
   public titles$: Observable<Movie[]>;
   public hasMovies$: Observable<boolean>;
@@ -47,34 +46,34 @@ export class HomeComponent implements OnInit {
     private dynTitle: DynamicTitleService,
     @Optional() private intercom: Intercom,
     @Inject(APP) public app: App
-  ) { }
+  ) {}
 
   ngOnInit() {
     const allMoviesFromOrg$ = this.orgService.currentOrg$.pipe(
       switchMap(({ id }) => this.movieService.valueChanges(fromOrg(id))),
       shareReplay({ refCount: true, bufferSize: 1 }),
-      map(titles => titles.filter(title => title.app[this.app].access))
+      map((titles) => titles.filter((title) => title.app[this.app].access))
     );
 
     this.hasAcceptedMovies$ = allMoviesFromOrg$.pipe(
-      map(movies => movies.some(movie => movie.app[this.app].status === 'accepted'))
+      map((movies) => movies.some((movie) => movie.app[this.app].status === 'accepted'))
     );
 
-    this.hasMovies$ = allMoviesFromOrg$.pipe(
-      map(movies => !!movies.length)
-    );
+    this.hasMovies$ = allMoviesFromOrg$.pipe(map((movies) => !!movies.length));
 
     this.hasDraftMovies$ = allMoviesFromOrg$.pipe(
-      map(movies => movies.some(movie => movie.app[this.app].status === 'draft'))
-    )
+      map((movies) => movies.some((movie) => movie.app[this.app].status === 'draft'))
+    );
 
     this.titles$ = allMoviesFromOrg$.pipe(
-      map(movies => movies.filter(movie => ['accepted', 'submitted'].includes(movie.app[this.app].status))),
-      tap(movies => {
-        movies.length ?
-          this.dynTitle.setPageTitle('Dashboard') :
-          this.dynTitle.setPageTitle('Dashboard', 'Empty');
-      }),
+      map((movies) =>
+        movies.filter((movie) => ['accepted', 'submitted'].includes(movie.app[this.app].status))
+      ),
+      tap((movies) => {
+        movies.length
+          ? this.dynTitle.setPageTitle('Dashboard')
+          : this.dynTitle.setPageTitle('Dashboard', 'Empty');
+      })
     );
   }
 

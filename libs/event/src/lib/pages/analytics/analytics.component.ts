@@ -9,7 +9,7 @@ import { EventMeta, EventTypes } from '@blockframes/event/+state/event.firestore
 import { InvitationService } from '@blockframes/invitation/+state';
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { toLabel } from '@blockframes/utils/pipes';
-import { orgName } from '@blockframes/organization/+state/organization.firestore';
+import { orgName } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state';
 
 interface WatchTimeInfo {

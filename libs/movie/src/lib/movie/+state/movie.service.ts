@@ -1,11 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
-import {
-  createMovie,
-  Movie,
-  createMovieAppConfig
-} from './movie.model';
-import { createDocumentMeta } from "@blockframes/utils/models-meta";
+import { createMovie, Movie, createMovieAppConfig } from '@blockframes/model';
+import { createDocumentMeta } from '@blockframes/utils/models-meta';
 import { cleanModel } from '@blockframes/utils/helpers';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
 import type firebase from 'firebase';
@@ -18,12 +14,16 @@ import { AnalyticsService } from '@blockframes/analytics/+state';
 import { AuthService } from '@blockframes/auth/+state';
 import { ActiveState, EntityState } from '@datorama/akita';
 
-export const fromOrg = (orgId: string): QueryFn => ref => ref.where('orgIds', 'array-contains', orgId);
-export const fromOrgAndAccepted = (orgId: string, appli: App): QueryFn => ref => ref.where(`app.${appli}.status`, '==', 'accepted').where('orgIds', 'array-contains', orgId);
-export const fromOrgAndInternalRef = (orgId: string, internalRef: string): QueryFn => ref => ref.where('orgIds', 'array-contains', orgId).where('internalRef', '==', internalRef);
-export const fromInternalRef = (internalRef: string): QueryFn => ref => ref.where('internalRef', '==', internalRef);
+export const fromOrg = (orgId: string): QueryFn => (ref) =>
+  ref.where('orgIds', 'array-contains', orgId);
+export const fromOrgAndAccepted = (orgId: string, appli: App): QueryFn => (ref) =>
+  ref.where(`app.${appli}.status`, '==', 'accepted').where('orgIds', 'array-contains', orgId);
+export const fromOrgAndInternalRef = (orgId: string, internalRef: string): QueryFn => (ref) =>
+  ref.where('orgIds', 'array-contains', orgId).where('internalRef', '==', internalRef);
+export const fromInternalRef = (internalRef: string): QueryFn => (ref) =>
+  ref.where('internalRef', '==', internalRef);
 
-interface MovieState extends EntityState<Movie, string>, ActiveState<string> {}
+interface MovieState extends EntityState<Movie, string>, ActiveState<string> { }
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies' })
@@ -34,7 +34,7 @@ export class MovieService extends CollectionService<MovieState> {
     private authService: AuthService,
     private permissionsService: PermissionsService,
     private analyticService: AnalyticsService,
-    private orgService: OrganizationService,
+    private orgService: OrganizationService
   ) {
     super();
   }
@@ -56,10 +56,10 @@ export class MovieService extends CollectionService<MovieState> {
     const movie = createMovie({
       _meta: createDocumentMeta({ createdBy }),
       ...movieImported,
-      orgIds
+      orgIds,
     });
     movie.app = {
-      ...createMovieAppConfig(movieImported?.app)
+      ...createMovieAppConfig(movieImported?.app),
     };
     await this.runTransaction(async (tx) => {
       movie.id = await this.add(cleanModel(movie), { write: tx });
@@ -71,7 +71,11 @@ export class MovieService extends CollectionService<MovieState> {
     const ref = this.getRef(movie.id);
     write.update(ref, { '_meta.createdAt': new Date() });
     for (const orgId of movie.orgIds) {
-      this.permissionsService.addDocumentPermissions(movie.id, write as firebase.firestore.Transaction, orgId);
+      this.permissionsService.addDocumentPermissions(
+        movie.id,
+        write as firebase.firestore.Transaction,
+        orgId
+      );
     }
   }
 
@@ -79,7 +83,7 @@ export class MovieService extends CollectionService<MovieState> {
     const movieRef = this.db.doc(`movies/${movie.id}`).ref;
     write.update(movieRef, {
       '_meta.updatedBy': this.authService.uid,
-      '_meta.updatedAt': new Date()
+      '_meta.updatedAt': new Date(),
     });
   }
 
@@ -89,7 +93,7 @@ export class MovieService extends CollectionService<MovieState> {
     // We need to update the _meta field before remove to get the userId in the backend function: onMovieDeleteEvent
     await this.db.doc(`movies/${movieId}`).update({
       '_meta.deletedBy': userId,
-      '_meta.deletedAt': new Date()
+      '_meta.deletedAt': new Date(),
     });
     return super.remove(movieId);
   }
@@ -99,7 +103,7 @@ export class MovieService extends CollectionService<MovieState> {
    * @param internalRef
    */
   public async getFromInternalRef(internalRef: string, orgId?: string): Promise<Movie> {
-    const query = orgId ? fromOrgAndInternalRef(orgId, internalRef) : fromInternalRef(internalRef)
+    const query = orgId ? fromOrgAndInternalRef(orgId, internalRef) : fromInternalRef(internalRef);
     const movies = await this.getValue(query);
     return movies.length ? createMovie(movies[0]) : undefined;
   }
@@ -121,4 +125,3 @@ export class MovieService extends CollectionService<MovieState> {
     );
   }
 }
-

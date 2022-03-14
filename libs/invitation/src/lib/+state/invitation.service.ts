@@ -1,14 +1,24 @@
 import { Inject, Injectable } from '@angular/core';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { CollectionConfig, CollectionService, AtomicWrite } from 'akita-ng-fire';
-import { createPublicOrganization, Organization, OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { AuthService } from '@blockframes/auth/+state';
-import { createPublicUser, PublicUser, User } from '@blockframes/user/+state';
+import {
+  createPublicUser,
+  PublicUser,
+  User,
+  createPublicOrganization,
+  Organization,
+  createInvitation,
+  Invitation,
+  InvitationDocument
+} from '@blockframes/model';
 import { toDate } from '@blockframes/utils/helpers';
-import { Invitation, createInvitation } from './invitation.model';
-import { InvitationDocument } from './invitation.firestore';
 import { cleanInvitation } from '../invitation-utils';
-import { App, getOrgAppAccess } from '@blockframes/utils/apps';
+import {
+  App,
+  getOrgAppAccess
+} from '@blockframes/utils/apps';
 import { combineLatest, Observable, of } from 'rxjs';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
 import { PermissionsService } from '@blockframes/permissions/+state';
