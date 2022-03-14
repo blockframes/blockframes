@@ -16,7 +16,7 @@ import {
   dateToMatrixPosition,
   createAvailCalendarState,
 } from './calendar.model';
-import { isCalendarTermInAvails, DurationMarker, CalendarAvailsFilter } from '../avails';
+import { isCalendarTermInAvails, DurationMarker, CalendarAvailsFilter, getMatchingMarkers } from '../avails';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 
 /** Available [A], Today[T], Expired[E]
@@ -171,18 +171,9 @@ export class AvailsCalendarComponent implements OnInit {
       }); //otherwise terms differ by territory
 
       const fields = termsDifferByMedia ? 'medias' : 'territories';
-      const cache: Record<string, { parentMarker: DurationMarker, list: string[] }> = {}
-      for (const field of this.avails[fields]) {
-        const marker = this._availableMarkers.find(({ term }) => {
-          return isCalendarTermInAvails(term, { ...this.avails, [fields]: [field] });
-        });
-        if (cache[marker.term.id]) cache[marker.term.id].list.push(field);
-        else {
-          cache[marker.term.id] = { list: [field], parentMarker: marker };
-        }
-      }
+      const cache = getMatchingMarkers(this._availableMarkers, this.avails, fields);
 
-      for (const { parentMarker, list } of Object.values(cache)) {
+      for (const { parentMarker, list } of cache) {
         if (!parentMarker) throw new Error(`Calendar Invalid Selection: a selection must be included in a marker!`);
 
         const avail = { ...this.avails, [fields]: list };

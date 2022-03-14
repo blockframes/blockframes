@@ -188,11 +188,10 @@ export const emptyAvailabilities: MapAvailabilities = { notLicensed: [], availab
 
 function isMapTermInAvails<T extends BucketTerm | Term>(term: T, avails: MapAvailsFilter) {
   const exclusivityCheck = exclusivityAllOf(avails.exclusive).in(term.exclusive);
-
+  if (!exclusivityCheck) return false;
   const mediaCheck = allOf(avails.medias).in(term.medias);
-  const durationCheck = allOf(avails.duration).in(term.duration);
-
-  return exclusivityCheck && mediaCheck && durationCheck;
+  if (!mediaCheck) return false;
+  return allOf(avails.duration).in(term.duration);
 }
 
 function isAvailInTerm<T extends BucketTerm | Term>(avail: MapAvailsFilter, termB: T) {
@@ -379,28 +378,49 @@ interface CalendarAvailabilities {
 
 /**
  * as soon as we have a false value, we return.
- * This is to optimize as this method is called in several loops.
+ * This is a small optimization as this method is called in several loops.
 */
 export function isCalendarTermInAvails<T extends BucketTerm | Term>(term: T, avails: CalendarAvailsFilter) {
   const exclusivityCheck = exclusivityAllOf(avails.exclusive).in(term.exclusive);
   if (!exclusivityCheck) return false;
   const mediaCheck = allOf(avails.medias).in(term.medias);
   if (!mediaCheck) return false;
-  const territoriesCheck = allOf(avails.territories).in(term.territories);
-  return territoriesCheck;
+  return allOf(avails.territories).in(term.territories);
 }
 
+
+/**
+ * Verify all markers whose terms are available for said avail.
+ * return these markers.
+ */
+export function getMatchingMarkers(markers: DurationMarker[], avails: CalendarAvailsFilter, fields: 'medias' | 'territories') {
+  const cache: Record<string, { parentMarker: DurationMarker; list: string[]; }> = {};
+  for (const field of avails[fields]) {
+    const localAvail = { ...avails, [fields]: [field] };
+    const marker = markers.find(({ term }) => isCalendarTermInAvails(term, localAvail));
+    if(!marker) continue;
+    if (!cache[marker.term.id]) cache[marker.term.id] = { list: [], parentMarker: marker };
+    cache[marker.term.id].list.push(field);
+  }
+  return Object.values(cache);
+}
+
+
+/**
+ * Verify that on a per field [each territories or medias ] basis,
+ * each locally created avail is covered by at least one mandate term
+ * return these mandates otherwise, return no mandate.
+ */
 function getMatchingMandates(mandates: FullMandate[], avails: CalendarAvailsFilter, field: 'territories' | 'medias'): FullMandate[] {
   const availableMandates: Record<string, FullMandate> = {};
   const foundFields: unknown[] = [];
   for (const value of avails[field]) {
-    const foundMandate = mandates.find(mandate => {
-      return mandate.terms.some(term => {
-        return isCalendarTermInAvails(term, { ...avails, [field]: [value] });
-      });
+    const mandate = mandates.find(mandate => {
+      const localAvails = { ...avails, [field]: [value] }; // Creates a local avail with one item [ media or territory ]
+      return mandate.terms.some(term => isCalendarTermInAvails(term, localAvails));
     });
-    if (foundMandate) {
-      availableMandates[foundMandate.id] = foundMandate;
+    if (mandate) {
+      availableMandates[mandate.id] = mandate;
       foundFields.push(value);
     }
   }
