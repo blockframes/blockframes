@@ -1,14 +1,6 @@
-import {
-  Media,
-  territories,
-  territoriesISOA3,
-  Territory,
-  TerritoryISOA3,
-  TerritoryISOA3Value,
-  TerritoryValue
-} from '@blockframes/utils/static-model';
+import { Media, territories, territoriesISOA3, Territory, TerritoryISOA3, TerritoryISOA3Value, TerritoryValue } from '@blockframes/utils/static-model';
 import { BucketTerm, Term } from '../term/+state';
-import { Holdback, Mandate, Sale, Bucket, BucketContract } from '@blockframes/model';
+import { Bucket, BucketContract, Holdback, Mandate, Sale } from '@blockframes/model';
 import { allOf, exclusivityAllOf, exclusivitySomeOf, someOf } from './sets';
 
 export interface BaseAvailsFilter {
@@ -25,6 +17,7 @@ export interface FullSale extends Sale<Date> {
 }
 
 export function filterContractsByTitle(titleId: string, mandates: Mandate[], mandateTerms: Term[], sales: Sale[], saleTerms: Term[], bucket?: Bucket) {
+
   // Gather only mandates & mandate terms related to this title
   const termsByMandate: Record<string, Term[]> = {};
   for (const term of mandateTerms) {
@@ -32,7 +25,7 @@ export function filterContractsByTitle(titleId: string, mandates: Mandate[], man
     termsByMandate[term.contractId].push(term);
   }
 
-  const titleMandates = mandates.filter((mandate) => mandate.titleId === titleId);
+  const titleMandates = mandates.filter(mandate => mandate.titleId === titleId);
   const fullMandates = titleMandates.map((m): FullMandate => ({
     ...m,
     terms: termsByMandate[m.id],
@@ -45,13 +38,13 @@ export function filterContractsByTitle(titleId: string, mandates: Mandate[], man
     termsBySale[term?.contractId]?.push(term);
   }
 
-  const titleSales = sales.filter((sale) => sale.titleId === titleId);
+  const titleSales = sales.filter(sale => sale.titleId === titleId);
   const fullSales = titleSales.map((s): FullSale => ({
     ...s,
     terms: termsBySale[s.id],
   }));
 
-  const bucketContracts = bucket?.contracts.filter((s) => s.titleId === titleId);
+  const bucketContracts = bucket?.contracts.filter(s => s.titleId === titleId);
 
   return { mandates: fullMandates, sales: fullSales, bucketContracts };
 }
@@ -61,7 +54,7 @@ function assertValidTitle(mandates: FullMandate[], sales: FullSale[], bucketCont
   // i.e. they must all have the same `titleId`
   const mandateIds = mandates.map(m => m.titleId);
   const saleIds = sales.map(s => s.titleId);
-  const bucketTitleIds = bucketContracts.map(b => b.titleId);
+  const bucketTitleIds = (bucketContracts).map(b => b.titleId);
   const uniqueIds = new Set([...mandateIds, ...saleIds, ...bucketTitleIds]);
   const differentTitleIds = uniqueIds.size > 1;
   if (differentTitleIds) throw new Error('Mandates & Sales must all have the same title id!');
@@ -77,7 +70,7 @@ export interface AvailsFilter extends BaseAvailsFilter {
 }
 
 export function getMatchingMandates(mandates: FullMandate[], avails: AvailsFilter): FullMandate[] {
-  return mandates.filter((mandate) => mandate.terms.some((term) => {
+  return mandates.filter(mandate => mandate.terms.some(term => {
     const exclusivityCheck = exclusivityAllOf(avails.exclusive).in(term.exclusive);
     const mediaCheck = allOf(avails.medias).in(term.medias);
     const durationCheck = allOf(avails.duration).in(term.duration);
@@ -87,8 +80,8 @@ export function getMatchingMandates(mandates: FullMandate[], avails: AvailsFilte
   }));
 }
 
-function getMatchingSales<T extends FullSale | BucketContract>(sales: T[], avails: AvailsFilter): T[] {
-  return sales.filter((sale) => sale.terms.some((term) => {
+function getMatchingSales<T extends (FullSale | BucketContract)>(sales: T[], avails: AvailsFilter): T[] {
+  return sales.filter(sale => sale.terms.some(term => {
     const exclusivityCheck = exclusivitySomeOf(avails.exclusive).in(term.exclusive);
     const mediaCheck = someOf(avails.medias).in(term.medias);
     const durationCheck = someOf(avails.duration).in(term.duration);
@@ -104,6 +97,7 @@ export function availableTitle(
   sales: FullSale[],
   bucketContracts?: BucketContract[],
 ): FullMandate[] {
+
   if (!mandates.length) return [];
 
   assertValidTitle(mandates, sales, bucketContracts);
@@ -206,14 +200,14 @@ function isAvailInTerm<T extends BucketTerm | Term>(avail: MapAvailsFilter, term
 function getMatchingMapMandates(mandates: FullMandate[], avails: MapAvailsFilter): FullMandate[] {
   return mandates
     .map(({terms, ...rest}) => ({
-      terms: terms.filter((term) => isMapTermInAvails(term, avails)),
+      terms: terms.filter(term => isMapTermInAvails(term, avails)), 
       ...rest
-    }))
+    })) 
     .filter(mandate => mandate.terms.length);
 }
 
 function getMatchingMapSales(sales: FullSale[], avails: MapAvailsFilter) {
-  return sales.filter((sale) => sale.terms?.some((term) => {
+  return sales.filter(sale => sale.terms?.some(term => {
     const exclusivityCheck = exclusivitySomeOf(avails.exclusive).in(term.exclusive);
 
     const mediaCheck = someOf(avails.medias).in(term.medias);
@@ -276,6 +270,7 @@ export function territoryAvailabilities({
     label: territories[territory],
   });
 
+
   // 1) "paint" the `available` layer
   const availableMandates = isOverlapping
     ? getOverlappingMapMandates(existingMandates, avails)
@@ -294,6 +289,7 @@ export function territoryAvailabilities({
       }
     }
   }
+
 
   // 2) "paint" the `sold` layer on top
   const salesToExclude = getMatchingMapSales(sales, avails);
@@ -387,8 +383,8 @@ function getMatchingCalendarMandates(mandates: FullMandate[], avails: CalendarAv
   return mandates.filter(mandate => mandate.terms.some(term => isCalendarTermInAvails(term, avails)));
 }
 
-function getMatchingCalendarSales<T extends FullSale | BucketContract>(sales: T[], avails: CalendarAvailsFilter): T[] {
-  return sales.filter((sale) => sale.terms.some((term) => {
+function getMatchingCalendarSales<T extends (FullSale | BucketContract)>(sales: T[], avails: CalendarAvailsFilter): T[] {
+  return sales.filter(sale => sale.terms.some(term => {
     const exclusivityCheck = exclusivitySomeOf(avails.exclusive).in(term.exclusive);
     const mediaCheck = someOf(avails.medias).in(term.medias);
     const territoryCheck = someOf(avails.territories).in(term.territories);
@@ -409,27 +405,30 @@ function isCalendarTermSelected<T extends BucketTerm | Term>(term: T, avails: Ca
   return exclusivityCheck && mediaCheck && territoryCheck;
 }
 
+
 export function durationAvailabilities(
   avails: CalendarAvailsFilter,
   mandates: FullMandate[],
   sales: FullSale[],
   bucketContracts?: BucketContract[],
 ): CalendarAvailabilities {
+
   assertValidTitle(mandates, sales, bucketContracts);
 
   const availableMandates = getMatchingCalendarMandates(mandates, avails);
   const available = availableMandates.map(m =>
     m.terms.map((t): DurationMarker =>
-      ({ from: t.duration.from, to: t.duration.to, contract: m, term: t }))
+      ({ from: t.duration.from, to: t.duration.to, contract: m, term: t })
     )
-    .flat();
+  ).flat();
 
   const salesToExclude = getMatchingCalendarSales(sales, avails);
-  const sold = salesToExclude.map((s) =>
+  const sold = salesToExclude.map(s =>
     s.terms.map((t): DurationMarker =>
-      ({ from: t.duration.from, to: t.duration.to, term: t }))
+      ({ from: t.duration.from, to: t.duration.to, term: t })
     )
-    .flat();
+  ).flat();
+
 
   const inBucket: DurationMarker[] = [];
   let selected: DurationMarker = undefined;
@@ -448,6 +447,7 @@ export function durationAvailabilities(
 
   return { available, sold, inBucket, selected };
 }
+
 
 // ----------------------------
 //          COMPARISON
@@ -495,15 +495,17 @@ export function isSameBucketContract(contractA: BucketContract, contractB: Bucke
 //         HOLDBACKS         //
 // ----------------------------
 
+
 export function collidingHoldback(holdback: Holdback, term: BucketTerm) {
-  return someOf(term.duration).in(holdback.duration) &&
-    someOf(term.medias).in(holdback.medias) &&
-    someOf(term.territories).in(holdback.territories);
+  return someOf(term.duration).in(holdback.duration)
+    && someOf(term.medias).in(holdback.medias)
+    && someOf(term.territories).in(holdback.territories);
 }
 
 export function getCollidingHoldbacks(holdbacks: Holdback[], terms: BucketTerm[]) {
-  const holdbackCollision = holdbacks.filter((holdback) =>
-    terms.some((term) => collidingHoldback(holdback, term))
+  const holdbackCollision = holdbacks.filter(holdback =>
+    terms.some(term => collidingHoldback(holdback, term))
   );
   return holdbackCollision;
 }
+
