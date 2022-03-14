@@ -6,10 +6,9 @@ import { NegotiationService } from '@blockframes/contract/negotiation/+state/neg
 import { map } from 'rxjs/operators';
 import { QueryFn } from '@angular/fire/firestore';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
 import { centralOrgId } from '@env';
 import { ActiveState, EntityState } from '@datorama/akita';
-import { ContractDocument, convertDuration, Holdback, Mandate, Sale, createMandate, createSale } from '@blockframes/model';
+import { ContractDocument, convertDuration, Holdback, Mandate, Sale, createMandate, createSale, Negotiation} from '@blockframes/model';
 
 interface ContractState extends EntityState<Sale | Mandate>, ActiveState<string> { }
 
