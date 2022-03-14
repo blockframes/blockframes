@@ -1,6 +1,6 @@
 import { MailContract } from '@blockframes/contract/contract/+state/contract.firestore';
 import { Holdback } from '@blockframes/contract/contract/+state/contract.firestore';
-import { BucketTerm } from '@blockframes/contract/term/+state/term.firestore';
+import { BucketTerm } from '@blockframes/model';
 import type { MovieCurrency } from '@blockframes/utils/static-model';
 import type firebase from 'firebase'
 

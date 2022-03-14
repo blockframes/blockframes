@@ -5,7 +5,7 @@ import {
 } from '@blockframes/contract/avails/avails';
 import { createHoldback, Mandate } from '@blockframes/contract/contract/+state';
 import { createLanguageKey } from '@blockframes/model';
-import { Term, BucketTerm } from '../../term/+state/term.model';
+import { Term, BucketTerm } from '@blockframes/model';
 import { Bucket, BucketContract } from './bucket.firestore';
 export { BucketContract, Bucket } from './bucket.firestore';
 

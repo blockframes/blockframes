@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core'
 import { CollectionService, CollectionConfig } from 'akita-ng-fire';
-import { Term } from './term.model';
 import { TermState, TermStore } from './term.store'
 import { toDate } from '@blockframes/utils/helpers';
-
+import { Term } from '@blockframes/model';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'terms' })

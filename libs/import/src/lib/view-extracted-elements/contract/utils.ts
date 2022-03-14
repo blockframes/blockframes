@@ -20,7 +20,7 @@ import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { UserService } from '@blockframes/user/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { Term } from '@blockframes/contract/term/+state/term.firestore';
+import { Term } from '@blockframes/model';
 import { Language, Media, Territory } from '@blockframes/utils/static-model';
 import { MovieLanguageSpecification, User } from '@blockframes/model';
 import { Mandate, Sale } from '@blockframes/contract/contract/+state/contract.firestore';
