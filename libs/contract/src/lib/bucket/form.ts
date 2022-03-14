@@ -14,9 +14,18 @@ import {
   createBucketTerm,
   toBucketContract,
   toBucketTerm
-} from './+state/bucket.model';
+} from '@blockframes/model';
 import { BucketTerm } from '../term/+state';
-import { AvailableTerritoryMarker, BucketTerritoryMarker, CalendarAvailsFilter, DurationMarker, isSameBucketContract, isSameCalendarBucketTerm, isSameMapBucketTerm, MapAvailsFilter } from '../avails/avails';
+import {
+  AvailableTerritoryMarker,
+  BucketTerritoryMarker,
+  CalendarAvailsFilter,
+  DurationMarker,
+  isSameBucketContract,
+  isSameCalendarBucketTerm,
+  isSameMapBucketTerm,
+  MapAvailsFilter
+} from '../avails/avails';
 import { HoldbackForm } from '../contract/holdback/form';
 
 //////////
