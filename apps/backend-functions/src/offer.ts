@@ -1,7 +1,7 @@
 import { db } from './internals/firebase';
 import { getDocument } from '@blockframes/firebase-utils';
 import { Offer } from '@blockframes/contract/offer/+state/offer.model';
-import { Movie, Organization, OrganizationDocument, User, NotificationTypes } from '@blockframes/model';
+import { Movie, User } from '@blockframes/model';
 import { staticModel } from '@blockframes/utils/static-model';
 import { createNotification, triggerNotifications } from './notification';
 // #7946 this may be reactivated later

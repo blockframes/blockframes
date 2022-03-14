@@ -1,15 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CalendarAvailsForm, MapAvailsForm } from '@blockframes/contract/avails/form/avails.form';
-import {
-  Contract,
-  ContractService,
-  isMandate,
-  isSale,
-} from '@blockframes/contract/contract/+state';
+import { ContractService } from '@blockframes/contract/contract/+state';
 import { Term, TermService } from '@blockframes/contract/term/+state';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { Movie } from '@blockframes/model';
+import { Contract, isMandate, isSale, Movie } from '@blockframes/model';
 import { combineLatest, Observable, of } from 'rxjs';
 import { map, pluck, shareReplay, switchMap } from 'rxjs/operators';
 
