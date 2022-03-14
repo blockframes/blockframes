@@ -16,7 +16,8 @@ export class ConsentsService {
     filePath?: string
   ): Promise<boolean> {
     const ip = await this.ipService.get();
-    const c = httpsCallable<{ consentType: ConsentType, ip: string, docId: string, filePath?: string }, boolean>(this.functions, 'createConsent');
-    return (await c({ consentType, ip, docId, filePath })).data;
+    const f = httpsCallable<{ consentType: ConsentType, ip: string, docId: string, filePath?: string }, boolean>(this.functions, 'createConsent');
+    const r = await f({ consentType, ip, docId, filePath });
+    return r.data;
   }
 }

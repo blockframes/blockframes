@@ -42,7 +42,8 @@ export class CrmService {
 
   private async getAnalyticsActiveUsers(): Promise<AnalyticsActiveUser[]> {
     const f = httpsCallable<unknown, AnalyticsActiveUser[]>(this.functions, 'getAnalyticsActiveUsers');
-    return (await f({})).data;
+    const r = await f({});
+    return r.data;
   }
 
   public sendPasswordResetEmail(email: string, app: App): Promise<HttpsCallableResult<unknown>> {

@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { where } from 'firebase/firestore';
-import { AngularFireFunctions } from '@angular/fire/functions';
+import { Functions, httpsCallable } from '@angular/fire/functions';
 import { CollectionConfig, CollectionService, AtomicWrite } from 'akita-ng-fire';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { AuthService } from '@blockframes/auth/+state';
@@ -12,7 +12,8 @@ import {
   Organization,
   createInvitation,
   Invitation,
-  InvitationDocument
+  InvitationDocument,
+  InvitationStatus
 } from '@blockframes/model';
 import { toDate } from '@blockframes/utils/helpers';
 import { cleanInvitation } from '../invitation-utils';
@@ -25,6 +26,7 @@ import { map, shareReplay, switchMap } from 'rxjs/operators';
 import { PermissionsService } from '@blockframes/permissions/+state';
 import { ActiveState, EntityState } from '@datorama/akita';
 import { APP } from '@blockframes/utils/routes/utils';
+import { AlgoliaOrganization } from '@blockframes/utils/algolia/algolia.interfaces';
 
 interface InvitationState extends EntityState<Invitation>, ActiveState<string> { }
 
@@ -35,18 +37,18 @@ export class InvitationService extends CollectionService<InvitationState> {
   /**
    * Return true if there is already a pending invitation for a list of users
    */
-  public hasUserAnOrgOrIsAlreadyInvited = this.functions.httpsCallable('hasUserAnOrgOrIsAlreadyInvited');
+  public hasUserAnOrgOrIsAlreadyInvited = httpsCallable<string[], boolean>(this.functions, 'hasUserAnOrgOrIsAlreadyInvited');
 
   /**
    * Return a boolean or a PublicOrganization doc if there is an invitation linked to the email.
    * Return false if there is no invitation at all.
    */
-  public getInvitationLinkedToEmail = this.functions.httpsCallable('getInvitationLinkedToEmail');
+  public getInvitationLinkedToEmail = httpsCallable<string, boolean | AlgoliaOrganization> (this.functions, 'getInvitationLinkedToEmail'); 
 
   /**
    * Used to accept or decline invitation if user is logged in as anonymous
    */
-  public acceptOrDeclineInvitationAsAnonymous = this.functions.httpsCallable('acceptOrDeclineInvitationAsAnonymous');
+  public acceptOrDeclineInvitationAsAnonymous = httpsCallable<{ invitationId: string, email: string, status: InvitationStatus }>(this.functions, 'acceptOrDeclineInvitationAsAnonymous');
 
   /** All Invitations related to current user or org */
   allInvitations$: Observable<Invitation[]> = combineLatest([
@@ -109,7 +111,7 @@ export class InvitationService extends CollectionService<InvitationState> {
     private orgService: OrganizationService,
     private authService: AuthService,
     private permissionsService: PermissionsService,
-    private functions: AngularFireFunctions,
+    private functions: Functions,
     @Inject(APP) private app: App
   ) {
     super();
@@ -176,13 +178,13 @@ export class InvitationService extends CollectionService<InvitationState> {
         invitation.fromOrg = createPublicOrganization(fromOrg);
         const recipients = Array.isArray(idOrEmails) ? idOrEmails : [idOrEmails];
 
-        const f = this.functions.httpsCallable('inviteUsers');
+        const f = httpsCallable(this.functions, 'inviteUsers');
         let app = this.app;
         if (app === 'crm') {
           // Instead use first found app where org has access to
           app = getOrgAppAccess(fromOrg)[0];
         }
-        return f({ emails: recipients, invitation, app }).toPromise();
+        return f({ emails: recipients, invitation, app });
       }
     }
   }

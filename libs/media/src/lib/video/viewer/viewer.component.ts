@@ -1,10 +1,10 @@
 import { DOCUMENT } from "@angular/common";
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Inject, Input, OnDestroy, Output, ViewChild, ViewEncapsulation } from "@angular/core";
-import { AngularFireFunctions } from "@angular/fire/functions";
+import { Functions, httpsCallable } from "@angular/fire/functions";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { AuthService } from "@blockframes/auth/+state";
 import { MeetingVideoControl } from '@blockframes/model';
-import { getWatermark, loadJWPlayerScript } from "@blockframes/utils/utils";
+import { ErrorResultResponse, getWatermark, loadJWPlayerScript } from "@blockframes/utils/utils";
 import { BehaviorSubject } from "rxjs";
 import { toggleFullScreen } from '../../file/viewers/utils';
 import { StorageVideo } from "@blockframes/media/+state/media.firestore";
@@ -92,7 +92,7 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private authService: AuthService,
-    private functions: AngularFireFunctions,
+    private functions: Functions,
     private snackBar: MatSnackBar,
     private eventService: EventService,
   ) { }
@@ -101,14 +101,15 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
     try {
       await this.waitForViewReady; // we need the container div to exists, so we wait for the ngAfterViewInit
 
-      const playerUrl = this.functions.httpsCallable('playerUrl');
-      const url = await playerUrl({}).toPromise<string>();
+      const playerUrl = httpsCallable<unknown, string>(this.functions, 'playerUrl');
+      const { data: url } = await playerUrl({});
       await loadJWPlayerScript(this.document, url);
 
       const anonymousCredentials = this.authService.anonymousCredentials;
 
-      const privateVideo = this.functions.httpsCallable('privateVideo');
-      const { error, result } = await privateVideo({ eventId: this.eventId, video: this.ref, email: anonymousCredentials?.email }).toPromise();
+      const privateVideo = httpsCallable<{ eventId: string, video: StorageVideo, email?: string }, ErrorResultResponse>(this.functions, 'privateVideo');
+      const r = await privateVideo({ eventId: this.eventId, video: this.ref, email: anonymousCredentials?.email });
+      const { error, result } = r.data;
 
       if (error) {
         // if error is set, result will contain the error message

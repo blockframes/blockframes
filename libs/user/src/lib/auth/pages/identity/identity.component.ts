@@ -339,7 +339,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
   }
 
   public async searchForInvitation() {
-    const event = await this.invitationService.getInvitationLinkedToEmail(this.form.get('email').value).toPromise<AlgoliaOrganization | boolean>();
+    const { data: event } = await this.invitationService.getInvitationLinkedToEmail(this.form.get('email').value);
     if (event) {
       this.existingUser = true;
       this.form.get('generatedPassword').enable();

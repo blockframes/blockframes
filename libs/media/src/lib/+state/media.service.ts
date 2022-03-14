@@ -1,6 +1,6 @@
 // Angular
 import { Injectable } from "@angular/core";
-import { AngularFireFunctions } from "@angular/fire/functions";
+import { Functions, httpsCallable } from "@angular/fire/functions";
 
 // State
 import { StorageFile } from "./media.firestore";
@@ -13,10 +13,10 @@ export class MediaService {
 
   private breakpoints = [600, 1024, 1440, 1920];
 
-  private getMediaToken = this.functions.httpsCallable('getMediaToken');
+  private getMediaToken = httpsCallable<{file: StorageFile, parametersSet: ImageParameters[], eventId?: string},string[]>(this.functions, 'getMediaToken');
 
   constructor(
-    private functions: AngularFireFunctions,
+    private functions: Functions,
   ) { }
 
   /**
@@ -28,7 +28,8 @@ export class MediaService {
    * @param parametersSet ImageParameters[]
    */
   private async getProtectedMediaToken(file: StorageFile, parametersSet: ImageParameters[], eventId?: string): Promise<string[]> {
-    return this.getMediaToken({ file, parametersSet, eventId }).toPromise();
+    const r = await this.getMediaToken({ file, parametersSet, eventId });
+    return r.data;
   }
 
   async generateImageSrcset(file: StorageFile, _parameters: ImageParameters): Promise<string> {

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, ContentChild, Directive, HostBindin
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { createDemoRequestInformations, RequestDemoInformations } from '@blockframes/utils/request-demo';
 import { MatSnackBar } from '@angular/material/snack-bar'
-import { AngularFireFunctions } from '@angular/fire/functions';
+import { Functions, httpsCallable } from '@angular/fire/functions';
 import { RequestDemoRole } from '@blockframes/utils/request-demo';
 import { ThemeService } from '@blockframes/ui/theme';
 import { testEmail } from "@blockframes/e2e/utils/env";
@@ -79,7 +79,7 @@ export class LandingShellComponent implements OnDestroy {
 
   constructor(
     private snackBar: MatSnackBar,
-    private functions: AngularFireFunctions,
+    private functions: Functions,
     private theme: ThemeService,
     private cdr: ChangeDetectorRef,
     @Inject(APP) private app: App
@@ -98,15 +98,15 @@ export class LandingShellComponent implements OnDestroy {
 
   /** Send a mail to the admin with user's informations. */
   private async sendDemoRequest(information: RequestDemoInformations) {
-    const f = this.functions.httpsCallable('sendDemoRequest');
-    return f(information).toPromise();
+    const f = httpsCallable(this.functions,'sendDemoRequest');
+    return f(information);
   }
 
   /** Register an email to a mailchimp mailing list */
   private async registerEmailToNewsletters(email: string) {
-    const f = this.functions.httpsCallable('registerToNewsletter');
+    const f = httpsCallable(this.functions,'registerToNewsletter');
     const tags = [`landing - ${this.app}`];
-    return f({ email, tags }).toPromise();
+    return f({ email, tags });
   }
 
   /** Triggers when a user click on the button from LearnMoreComponent.  */

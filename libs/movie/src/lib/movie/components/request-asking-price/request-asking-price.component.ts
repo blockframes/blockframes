@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Inject } from "@angular/core";
-import { AngularFireFunctions } from "@angular/fire/functions";
+import { Functions, httpsCallable } from "@angular/fire/functions";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
@@ -24,24 +24,24 @@ export class RequestAskingPriceComponent {
   constructor(
     private authService: AuthService,
     private dialog: MatDialogRef<RequestAskingPriceComponent>,
-    private functions: AngularFireFunctions,
+    private functions: Functions,
     private snackbar: MatSnackBar,
     private analytics: FireAnalytics,
     @Inject(MAT_DIALOG_DATA) public data: { movieId: string }
-  ) {}
+  ) { }
 
   async send() {
     try {
       this.form.disable();
       const territories = toLabel(this.form.get('territories').value, 'territories', ', ', ' and ');
       const message = this.form.get('message').value ?? 'No message provided.';
-      const f = this.functions.httpsCallable('requestAskingPrice');
+      const f = httpsCallable<{ movieId: string, uid: string, territories: string, message: string }>(this.functions, 'requestAskingPrice');
       await f({
         movieId: this.data.movieId,
         uid: this.authService.uid,
         territories,
         message
-      }).toPromise();
+      });
       this.analytics.event('askingPriceRequested', {
         movieId: this.data.movieId,
         territories

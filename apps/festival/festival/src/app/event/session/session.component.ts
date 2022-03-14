@@ -302,7 +302,8 @@ export class SessionComponent implements OnInit, OnDestroy {
   async createVideoControl(video: StorageVideo, eventId: string): Promise<MeetingVideoControl> {
     const getVideoInfo = httpsCallable<{ video: StorageVideo, eventId: string }, ErrorResultResponse>(this.functions, 'privateVideo');
 
-    const { error, result } = (await getVideoInfo({ video, eventId })).data;
+    const r = await getVideoInfo({ video, eventId });
+    const { error, result } = r.data;
     if (error) {
       // if error is set, result will contain the error message
       throw new Error(result);

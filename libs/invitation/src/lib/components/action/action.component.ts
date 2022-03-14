@@ -62,7 +62,7 @@ export class ActionComponent {
 
   async acceptOrDeclineAsAnonymous(invitationId: string, status: InvitationStatus) {
     const creds = this.authService.anonymousCredentials;
-    await this.service.acceptOrDeclineInvitationAsAnonymous({ invitationId, email: creds.email, status }).toPromise<boolean>();
+    await this.service.acceptOrDeclineInvitationAsAnonymous({ invitationId, email: creds.email, status });
     this.statusChanged.emit(status);
   }
 
