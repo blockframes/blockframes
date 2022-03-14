@@ -12,8 +12,7 @@ import {
   filterContractsByTitle,
 } from '@blockframes/contract/avails/avails';
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
-import { Bucket } from '@blockframes/contract/bucket/+state/bucket.firestore';
-import { Mandate, Movie, Sale, Term } from '@blockframes/model';
+import { Bucket, Movie, Mandate, Sale, Term } from '@blockframes/model';
 
 // TODO(#7820): remove with rxjs 7
 type AvailabilitiesInputs = [

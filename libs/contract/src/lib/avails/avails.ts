@@ -1,7 +1,6 @@
 import { Media, territories, territoriesISOA3, Territory, TerritoryISOA3, TerritoryISOA3Value, TerritoryValue } from '@blockframes/utils/static-model';
-import { Bucket, BucketContract } from '../bucket/+state';
+import { Bucket, BucketContract, Holdback, Mandate, Sale, BucketTerm, Term } from '@blockframes/model';
 import { allOf, exclusivityAllOf, exclusivitySomeOf, someOf } from './sets';
-import { Holdback, Mandate, Sale, BucketTerm, Term } from '@blockframes/model';
 
 export interface BaseAvailsFilter {
   medias: Media[],
@@ -17,7 +16,6 @@ export interface FullSale extends Sale<Date> {
 }
 
 export function filterContractsByTitle(titleId: string, mandates: Mandate[], mandateTerms: Term[], sales: Sale[], saleTerms: Term[], bucket?: Bucket) {
-
 
   // Gather only mandates & mandate terms related to this title
   const termsByMandate: Record<string, Term[]> = {};
@@ -49,7 +47,6 @@ export function filterContractsByTitle(titleId: string, mandates: Mandate[], man
 
   return { mandates: fullMandates, sales: fullSales, bucketContracts };
 }
-
 
 function assertValidTitle(mandates: FullMandate[], sales: FullSale[], bucketContracts: BucketContract[] = []) {
   // check that the mandates & sales are about one single title,
@@ -510,5 +507,4 @@ export function getCollidingHoldbacks(holdbacks: Holdback[], terms: BucketTerm[]
   );
   return holdbackCollision;
 }
-
 

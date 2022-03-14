@@ -5,5 +5,6 @@ export * from './lib/notification';
 export * from './lib/organisation';
 export * from './lib/permissions';
 export * from './lib/terms';
+export * from './lib/bucket';
 export * from './lib/contract';
 export * from './lib/event';
