@@ -4,6 +4,7 @@ import { Invitation, InvitationService } from '@blockframes/invitation/+state';
 import { Observable } from 'rxjs';
 import { ReviewComponent } from '@blockframes/event/layout/review/review.component';
 import { switchMap } from 'rxjs/operators';
+import { where } from 'firebase/firestore';
 
 @Component({
   selector: 'event-guest-list',
@@ -28,8 +29,11 @@ export class GuestListComponent implements OnInit {
   ngOnInit(): void {
     this.dynTitle.setPageTitle('Event', 'Event invitations');
     this.invitations$ = this.event$.pipe(
-      switchMap(event => this.invitationService.valueChanges(ref => ref.where('type', '==', 'attendEvent').where('eventId', '==', event.id))
-      ));
+      switchMap(event => this.invitationService.valueChanges([
+        where('type', '==', 'attendEvent'),
+        where('eventId', '==', event.id)
+      ]))
+    );
   }
 
 }

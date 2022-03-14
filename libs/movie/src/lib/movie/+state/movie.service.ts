@@ -6,7 +6,6 @@ import { cleanModel } from '@blockframes/utils/helpers';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
 import type firebase from 'firebase';
 import { App } from '@blockframes/utils/apps';
-import { QueryFn } from '@angular/fire/firestore';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { map } from 'rxjs/operators';
 import { getViews } from '../pipes/analytics.pipe';
@@ -14,15 +13,16 @@ import { joinWith } from '@blockframes/utils/operators';
 import { AnalyticsService } from '@blockframes/utils/analytics/analytics.service';
 import { AuthService } from '@blockframes/auth/+state';
 import { ActiveState, EntityState } from '@datorama/akita';
+import { where } from 'firebase/firestore';
 
-export const fromOrg = (orgId: string): QueryFn => (ref) =>
-  ref.where('orgIds', 'array-contains', orgId);
-export const fromOrgAndAccepted = (orgId: string, appli: App): QueryFn => (ref) =>
-  ref.where(`app.${appli}.status`, '==', 'accepted').where('orgIds', 'array-contains', orgId);
-export const fromOrgAndInternalRef = (orgId: string, internalRef: string): QueryFn => (ref) =>
-  ref.where('orgIds', 'array-contains', orgId).where('internalRef', '==', internalRef);
-export const fromInternalRef = (internalRef: string): QueryFn => (ref) =>
-  ref.where('internalRef', '==', internalRef);
+export const fromOrg = (orgId: string) =>
+  [where('orgIds', 'array-contains', orgId)];
+export const fromOrgAndAccepted = (orgId: string, appli: App) =>
+  [where(`app.${appli}.status`, '==', 'accepted'), where('orgIds', 'array-contains', orgId)];
+export const fromOrgAndInternalRef = (orgId: string, internalRef: string) =>
+  [where('orgIds', 'array-contains', orgId), where('internalRef', '==', internalRef)];
+export const fromInternalRef = (internalRef: string) =>
+  [where('internalRef', '==', internalRef)];
 
 type MovieWithAnalytics = Movie & { analytics: MovieAnalytics };
 
@@ -113,8 +113,10 @@ export class MovieService extends CollectionService<MovieState> {
 
   queryDashboard(app: App) {
     const orgId = this.orgService.org.id;
-    const query: QueryFn = (ref) =>
-      ref.where('orgIds', 'array-contains', orgId).where(`app.${app}.access`, '==', true);
+    const query = [
+      where('orgIds', 'array-contains', orgId),
+      where(`app.${app}.access`, '==', true)
+    ];
     const addViews = (movie: MovieWithAnalytics) => ({
       ...movie,
       analytics: { ...movie.analytics, views: getViews(movie.analytics) },

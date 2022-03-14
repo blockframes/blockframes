@@ -5,7 +5,7 @@ import { UserRole, PermissionsService } from '../../../permissions/+state';
 import { InvitationService } from '@blockframes/invitation/+state/invitation.service';
 import { Invitation } from '@blockframes/invitation/+state/invitation.model';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { OrganizationMember, Organization} from '@blockframes/model';
+import { OrganizationMember, Organization } from '@blockframes/model';
 import { buildJoinOrgQuery } from '@blockframes/invitation/invitation-utils';
 
 @Component({
@@ -44,11 +44,11 @@ export class MemberComponent implements OnInit {
     this.isSuperAdmin$ = this.permissionService.isSuperAdmin$;
 
     if (this.permissionService.isUserAdmin()) {
-      const queryFn1 = buildJoinOrgQuery(this.org.id, 'invitation');
-      const queryFn2 = buildJoinOrgQuery(this.org.id, 'request');
+      const queryConstraints1 = buildJoinOrgQuery(this.org.id, 'invitation');
+      const queryConstraints2 = buildJoinOrgQuery(this.org.id, 'request');
 
-      this.invitationsFromOrganization$ = this.invitationService.valueChanges(queryFn1);
-      this.invitationsToJoinOrganization$ = this.invitationService.valueChanges(queryFn2);
+      this.invitationsFromOrganization$ = this.invitationService.valueChanges(queryConstraints1);
+      this.invitationsToJoinOrganization$ = this.invitationService.valueChanges(queryConstraints2);
     }
   }
 

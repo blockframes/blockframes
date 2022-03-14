@@ -17,8 +17,9 @@ import { UserService } from '@blockframes/user/+state';
 import { EventService } from '@blockframes/event/+state';
 import { ModuleGuard } from '@blockframes/utils/routes/module.guard';
 import { APP } from '@blockframes/utils/routes/utils';
+import { where } from 'firebase/firestore';
 
-interface NotificationState extends EntityState<Notification>, ActiveState<string> {}
+interface NotificationState extends EntityState<Notification>, ActiveState<string> { }
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'notifications' })
 export class NotificationService extends CollectionService<NotificationState> {
@@ -28,9 +29,7 @@ export class NotificationService extends CollectionService<NotificationState> {
   myNotifications$ = this.authService.profile$.pipe(
     filter((user) => !!user?.uid),
     switchMap((user) =>
-      this.valueChanges((ref) =>
-        ref.where('toUserId', '==', user.uid).where('app.isRead', '==', false)
-      )
+      this.valueChanges([where('toUserId', '==', user.uid), where('app.isRead', '==', false)])
     ),
     switchMap((notifications) => {
       const promises = notifications.map((n) => this.appendNotificationData(n));

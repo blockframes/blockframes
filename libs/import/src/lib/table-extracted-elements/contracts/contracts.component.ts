@@ -11,17 +11,19 @@ import { sortingDataAccessor } from '@blockframes/utils/table';
 import { ContractsImportState, SpreadsheetImportError } from '../../utils';
 import { TermService } from '@blockframes/contract/term/+state/term.service';
 import { createDocumentMeta } from '@blockframes/utils/models-meta';
-import { AngularFirestore, Query } from '@angular/fire/firestore';
+import { AngularFirestore } from '@angular/fire/firestore';
 import { FullMandate, FullSale, territoryAvailabilities } from '@blockframes/contract/avails/avails';
+import { where } from 'firebase/firestore';
 
 const hasImportErrors = (importState: ContractsImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
 };
 
-const getTitleContracts = (type: 'mandate' | 'sale', titleId: string) => (ref: Query) => ref.where('type', '==', type)
-  .where('titleId', '==', titleId)
-  .where('status', '==', 'accepted');
-
+const getTitleContracts = (type: 'mandate' | 'sale', titleId: string) => [
+  where('type', '==', type),
+  where('titleId', '==', titleId),
+  where('status', '==', 'accepted')
+];
 
 @Component({
   selector: 'import-table-extracted-contracts',

@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { AgendaService } from '@blockframes/utils/agenda/agenda.service';
+import { orderBy, startAt, where } from 'firebase/firestore';
 
 @Component({
   selector: 'festival-screening',
@@ -27,10 +28,12 @@ export class ScreeningComponent implements OnInit {
     this.dynTitle.setPageTitle('Film Page', 'Screening Schedule');
     this.events$ = this.parent.movie$.pipe(
       switchMap(movie => {
-        const query = ref => ref
-          .where('isSecret', '==', false)
-          .where('meta.titleId', '==', movie.id)
-          .orderBy('end').startAt(new Date());
+        const query = [
+          where('isSecret', '==', false),
+          where('meta.titleId', '==', movie.id),
+          orderBy('end'),
+          startAt(new Date())
+        ];
         return this.service.queryByType(['screening'], query);
       }),
     );

@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { EventService } from '@blockframes/event/+state';
 import { AccessibilityTypes } from '@blockframes/utils/static-model';
+import { where } from 'firebase/firestore';
 
 @Component({
   selector: '[form] event-details-edit',
@@ -42,7 +43,11 @@ export class EditDetailsComponent implements OnInit, OnDestroy {
 
   async accessibilityChanged(e) {
     if (this.previouslySavedAccessibility !== 'private' && e.value === 'private') {
-      const invitations = await this.invitationService.getValue(ref => ref.where('type', '==', 'attendEvent').where('eventId', '==', this.form.value.id));
+      const query = [
+        where('type', '==', 'attendEvent'),
+        where('eventId', '==', this.form.value.id)
+      ];
+      const invitations = await this.invitationService.getValue(query);
 
       if (invitations.length) {
         this.form.patchValue({ accessibility: this.previouslySavedAccessibility });

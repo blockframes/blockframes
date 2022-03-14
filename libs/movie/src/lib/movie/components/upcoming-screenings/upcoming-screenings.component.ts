@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { map, pluck, shareReplay, switchMap } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
+import { orderBy, startAt, where } from 'firebase/firestore';
 
 // Blockframes
 import { MovieService } from '@blockframes/movie/+state/movie.service';
@@ -59,12 +60,12 @@ export class UpcomingScreeningsComponent {
 
     const now = new Date();
     const screenings$ = this.movie$.pipe(
-      map(movie => ref => ref
-        .where('isSecret', '==', false)
-        .where('meta.titleId', '==', movie.id)
-        .orderBy('end')
-        .startAt(now)
-      ),
+      map(movie => [
+        where('isSecret', '==', false),
+        where('meta.titleId', '==', movie.id),
+        orderBy('end'),
+        startAt(now)
+      ]),
       switchMap(q => this.eventService.queryByType(['screening'], q)),
       map((screenings: Event<Screening>[]) => screenings.sort(this.sortByDate).slice(0, 5)),
       shareReplay({ refCount: true, bufferSize: 1 })

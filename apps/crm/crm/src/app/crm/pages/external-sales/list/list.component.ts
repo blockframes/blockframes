@@ -1,7 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { CollectionReference } from '@angular/fire/firestore';
 import { Sale, ContractService } from '@blockframes/contract/contract/+state';
 import { IncomeService } from '@blockframes/contract/income/+state';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
@@ -10,13 +9,13 @@ import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { getSeller } from '@blockframes/contract/contract/+state/utils'
 import { Organization } from '@blockframes/model';
+import { orderBy, where } from 'firebase/firestore';
 
-const queryFn = (ref: CollectionReference) => {
-  return ref
-    .where('buyerId', '==', '')
-    .where('type', '==', 'sale')
-    .orderBy('_meta.createdAt', 'desc')
-}
+const query = [
+  where('buyerId', '==', ''),
+  where('type', '==', 'sale'),
+  orderBy('_meta.createdAt', 'desc')
+];
 
 function getFullName(seller: Organization) {
   return seller.denomination.full;
@@ -31,8 +30,7 @@ function getFullName(seller: Organization) {
 export class ContractsListComponent {
   public orgId = this.orgService.org.id;
 
-
-  public externalSales$ = this.contractService.valueChanges(queryFn).pipe(
+  public externalSales$ = this.contractService.valueChanges(query).pipe(
     joinWith({
       licensor: (sale: Sale) => {
         return this.orgService.valueChanges(getSeller(sale)).pipe(map(getFullName))

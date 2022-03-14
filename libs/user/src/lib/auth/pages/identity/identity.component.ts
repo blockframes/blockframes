@@ -9,7 +9,7 @@ import { createDocumentMeta } from '@blockframes/utils/models-meta';
 import { AlgoliaOrganization } from '@blockframes/utils/algolia';
 import { OrganizationLiteForm } from '@blockframes/organization/forms/organization-lite.form';
 import { IdentityForm, IdentityFormControl } from '@blockframes/auth/forms/identity.form';
-import { createPublicUser, PublicUser, User, createOrganization} from '@blockframes/model';
+import { createPublicUser, PublicUser, User, createOrganization } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { hasDisplayName } from '@blockframes/utils/helpers';
 import { Intercom } from 'ng-intercom';
@@ -20,6 +20,7 @@ import { Subscription } from 'rxjs';
 import { DifferentPasswordStateMatcher, RepeatPasswordStateMatcher } from '@blockframes/utils/form/matchers';
 import { filter } from 'rxjs/operators';
 import { APP } from '@blockframes/utils/routes/utils';
+import { where } from 'firebase/firestore';
 
 @Component({
   selector: 'auth-identity',
@@ -111,7 +112,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
     this.form.patchValue(user);
 
     this.disableControls(['email', 'firstName', 'lastName', 'password', 'confirm', 'generatedPassword']);
-  }  
+  }
 
   private disableControls(keys: (keyof IdentityFormControl)[]) {
     for (const key of keys) {
@@ -294,9 +295,12 @@ export class IdentityComponent implements OnInit, OnDestroy {
       });
     }
 
-    const invitations = await this.invitationService.getValue(ref => ref.where('mode', '==', 'invitation')
-      .where('type', '==', 'joinOrganization')
-      .where('toUser.uid', '==', this.authService.uid));
+    const query = [
+      where('mode', '==', 'invitation'),
+      where('type', '==', 'joinOrganization'),
+      where('toUser.uid', '==', this.authService.uid)
+    ];
+    const invitations = await this.invitationService.getValue(query);
     const pendingInvitation = invitations.find(invitation => invitation.status === 'pending');
     if (pendingInvitation) {
       // Accept the invitation from the organization.

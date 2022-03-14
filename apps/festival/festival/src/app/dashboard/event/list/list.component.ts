@@ -11,6 +11,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { AgendaService } from '@blockframes/utils/agenda/agenda.service';
 import { eventTime } from '@blockframes/event/pipes/event-time.pipe';
 import { ActivatedRoute } from '@angular/router';
+import { where } from 'firebase/firestore';
 
 const typesLabel = {
   screening: 'Screenings',
@@ -52,7 +53,7 @@ export class EventListComponent implements OnInit {
       this.orgService.currentOrg$,
       this.filter.valueChanges.pipe(startWith(this.filter.value))
     ]).pipe(
-      switchMap(([org, types]) => this.service.queryByType(types, ref => ref.where('ownerOrgId', '==', org.id))),
+      switchMap(([org, types]) => this.service.queryByType(types, [where('ownerOrgId', '==', org.id)])),
       tap(events => {
         events.length ?
           this.dynTitle.setPageTitle('My events') :

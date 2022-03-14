@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
-import { QueryFn } from '@angular/fire/firestore';
 import { ContractService, Holdback, Sale } from '@blockframes/contract/contract/+state';
+import { where } from 'firebase/firestore';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -12,10 +12,12 @@ export class GetTitleHoldbacksPipe implements PipeTransform {
 
   transform(titleId: string, excludedOrg: string,): Observable<Holdback[]> {
     if (!titleId) return of(undefined);
-    const query: QueryFn = ref => ref.where('titleId', '==', titleId)
-      .where('status', '==', 'accepted')
-      .where('type', '==', 'sale')
-      .where('buyerId', '!=', excludedOrg);
+    const query = [
+      where('titleId', '==', titleId),
+      where('status', '==', 'accepted'),
+      where('type', '==', 'sale'),
+      where('buyerId', '!=', excludedOrg)
+    ];
     return this.service.valueChanges(query).pipe(
       map((sales: Sale[]) => sales.map(sale => sale.holdbacks).flat())
     );

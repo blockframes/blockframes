@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { ActivatedRoute } from '@angular/router';
 import { Organization } from '@blockframes/model';
+import { orderBy, startAt, where } from 'firebase/firestore';
 
 @Component({
   selector: 'festival-movie-view',
@@ -16,7 +17,7 @@ import { Organization } from '@blockframes/model';
   styleUrls: ['./view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceMovieViewComponent  {
+export class MarketplaceMovieViewComponent {
   public movie$ = this.route.params.pipe(
     pluck('movieId'),
     switchMap((movieId: string) => this.movieService.getValue(movieId))
@@ -27,14 +28,14 @@ export class MarketplaceMovieViewComponent  {
   );
 
   public eventId$ = this.movie$.pipe(
-    map(movie => ref => ref
-      .where('isSecret', '==', false)
-      .where('meta.titleId', '==', movie.id)
-      .where('type', '==', 'screening')
-      .orderBy('end', 'asc')
-      .startAt(new Date())
-    ),
-    switchMap(q =>  this.eventService.valueChanges(q)),
+    map(movie => [
+      where('isSecret', '==', false),
+      where('meta.titleId', '==', movie.id),
+      where('type', '==', 'screening'),
+      orderBy('end', 'asc'),
+      startAt(new Date())
+    ]),
+    switchMap(q => this.eventService.valueChanges(q)),
     map(events => events.filter(e => e.start < new Date())),
     map(events => events.length ? events[events.length - 1].id : null)
   )

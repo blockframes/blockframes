@@ -5,11 +5,11 @@ import { createDocumentMeta, formatDocumentMetaFromFirestore } from "@blockframe
 import { Timestamp } from "@blockframes/utils/common-interfaces/timestamp";
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
 import { map } from 'rxjs/operators';
-import { QueryFn } from '@angular/fire/firestore';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
 import { centralOrgId } from '@env';
 import { ActiveState, EntityState } from '@datorama/akita';
+import { limit, orderBy, where } from 'firebase/firestore';
 
 interface ContractState extends EntityState<Sale | Mandate>, ActiveState<string> { }
 
@@ -46,7 +46,7 @@ export class ContractService extends CollectionService<ContractState> {
   lastNegotiation(contractId: string) {
     const options = { params: { contractId } };
     const orgId = this.orgService.org.id;
-    const query: QueryFn = ref => ref.where('stakeholders', 'array-contains', orgId).orderBy('_meta.createdAt', 'desc').limit(1);
+    const query = [where('stakeholders', 'array-contains', orgId), orderBy('_meta.createdAt', 'desc'), limit(1)];
     return this.negotiationService.valueChanges(query, options).pipe(
       map(negotiations => negotiations[0])
     );
@@ -56,7 +56,7 @@ export class ContractService extends CollectionService<ContractState> {
   //used exclusively in the crm
   adminLastNegotiation(contractId: string) {
     const options = { params: { contractId } };
-    const query = ref => ref.orderBy('_meta.createdAt', 'desc').limit(1);
+    const query = [orderBy('_meta.createdAt', 'desc'), limit(1)];
     return this.negotiationService.valueChanges(query, options).pipe(
       map(negotiations => negotiations[0])
     );

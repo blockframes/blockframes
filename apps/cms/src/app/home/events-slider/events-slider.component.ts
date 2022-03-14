@@ -8,7 +8,7 @@ import { TextFormModule } from '../../forms/text';
 import { FirestoreFormModule } from '../../forms/firestore';
 import { FormChipsAutocompleteModule } from '../../forms/chips-autocomplete';
 import { SelectFormModule } from '../../forms/select';
-import { getEventsQueryFn, toMap } from '../pipes';
+import { getEventsQueryConstraints, toMap } from '../pipes';
 import { map } from 'rxjs/operators';
 import { EventService } from '@blockframes/event/+state/event.service';
 import { Event } from '@blockframes/event/+state';
@@ -24,7 +24,7 @@ export class EventsSliderComponent implements OnInit {
   private mode?: 'query' | 'eventIds';
   @Input() form?: FormEntity<EventsSliderSchema>;
 
-  events$ = this.service.valueChanges(getEventsQueryFn()).pipe(
+  events$ = this.service.valueChanges(getEventsQueryConstraints()).pipe(
     map(toMap)
   );
 
@@ -33,7 +33,7 @@ export class EventsSliderComponent implements OnInit {
 
   constructor(
     private service: EventService
-  ) {}
+  ) { }
 
   get queryMode() {
     return this.mode || (this.form?.get('eventIds').length ? 'eventIds' : 'query');

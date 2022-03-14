@@ -63,7 +63,7 @@ export class OrganizationComponent implements OnInit {
     private dialog: MatDialog,
     private router: Router,
     private bucketService: BucketService
-  ) {}
+  ) { }
 
   async ngOnInit() {
     this.orgId = this.route.snapshot.paramMap.get('orgId');
@@ -78,11 +78,11 @@ export class OrganizationComponent implements OnInit {
     this.members = await this.getMembers();
     this.cdRef.markForCheck();
 
-    const queryFn1 = buildJoinOrgQuery(this.orgId, 'invitation');
-    const queryFn2 = buildJoinOrgQuery(this.orgId, 'request');
+    const queryConstraints1 = buildJoinOrgQuery(this.orgId, 'invitation');
+    const queryConstraints2 = buildJoinOrgQuery(this.orgId, 'request');
 
-    this.invitationsFromOrganization$ = this.invitationService.valueChanges(queryFn1);
-    this.invitationsToJoinOrganization$ = this.invitationService.valueChanges(queryFn2);
+    this.invitationsFromOrganization$ = this.invitationService.valueChanges(queryConstraints1);
+    this.invitationsToJoinOrganization$ = this.invitationService.valueChanges(queryConstraints2);
   }
 
   public acceptInvitation(invitation: Invitation) {

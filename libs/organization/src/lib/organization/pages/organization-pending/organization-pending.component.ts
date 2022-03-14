@@ -6,13 +6,16 @@ import { OrganizationService } from '@blockframes/organization/+state';
 import { filter, switchMap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { Intercom } from 'ng-intercom';
-import { User, Organization  } from '@blockframes/model';
+import { User, Organization } from '@blockframes/model';
 import { AuthService } from '@blockframes/auth/+state';
 import { APP } from '@blockframes/utils/routes/utils';
+import { where } from 'firebase/firestore';
 
-const queryFn = (uid: string) => ref => ref.where('mode', '==', 'request')
-  .where('type', '==', 'joinOrganization')
-  .where('fromUser.uid', '==', uid);
+const queryConstraints = (uid: string) => [
+  where('mode', '==', 'request'),
+  where('type', '==', 'joinOrganization'),
+  where('fromUser.uid', '==', uid)
+];
 
 @Component({
   selector: 'organization-pending',
@@ -40,7 +43,7 @@ export class OrganizationPendingComponent {
 
   private async getOrgId(user: User) {
     if (user.orgId) return user.orgId;
-    const invitations = await this.invitationService.getValue(queryFn(user.uid));
+    const invitations = await this.invitationService.getValue(queryConstraints(user.uid));
     return invitations[0]?.toOrg.id;
   }
 
