@@ -33,7 +33,8 @@ export const notificationTypesBase = [
   // Notifications related to offers
   'contractCreated',
   'offerCreatedConfirmation',
-  'underSignature',
+  // #7946 this may be reactivated later
+  // 'underSignature',
 
   //Notifications related to contract negotiation
   'createdCounterOffer',
@@ -57,8 +58,9 @@ const notificationTypesPlus = [
   'userRequestAppAccess',
 
   // Offer notifications.
-  'offerAccepted',
-  'offerDeclined',
+  // #7946 this may be reactivated later
+  // 'offerAccepted',
+  // 'offerDeclined',
 ] as const;
 
 export type NotificationTypesBase = typeof notificationTypesBase[number];

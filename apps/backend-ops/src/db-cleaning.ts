@@ -4,9 +4,9 @@ import {
   OrganizationDocument,
   PublicOrganization,
   MovieDocument,
+  PermissionsDocument,
   InvitationDocument
 } from '@blockframes/model';
-import { PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
 import { removeUnexpectedUsers } from './users';
 import {
   Auth,

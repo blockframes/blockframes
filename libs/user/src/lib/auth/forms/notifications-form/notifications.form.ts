@@ -43,7 +43,8 @@ function createNotificationsControls(settings: Partial<NotificationSettings> = {
     myContractWasAccepted: new NotificationSettingsForm(settings.myContractWasAccepted),
     myOrgDeclinedAContract: new NotificationSettingsForm(settings.myOrgDeclinedAContract),
     myContractWasDeclined: new NotificationSettingsForm(settings.myContractWasDeclined),
-    underSignature: new NotificationSettingsForm(settings.underSignature, true),
+    // #7946 this may be reactivated later
+    // underSignature: new NotificationSettingsForm(settings.underSignature, true),
   }
 }
 
