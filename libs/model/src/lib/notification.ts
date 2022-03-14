@@ -1,5 +1,4 @@
-import { PublicOrganization, PublicUser} from '@blockframes/model';
-import { PublicInvitation } from '@blockframes/invitation/+state/invitation.firestore';
+import { PublicOrganization, PublicUser, PublicInvitation } from '@blockframes/model';
 import { firestore } from 'firebase-admin';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
 import { EmailErrorCodes } from '@blockframes/utils/emails/utils';
@@ -34,7 +33,8 @@ export const notificationTypesBase = [
   // Notifications related to offers
   'contractCreated',
   'offerCreatedConfirmation',
-  'underSignature',
+  // #7946 this may be reactivated later
+  // 'underSignature',
 
   //Notifications related to contract negotiation
   'createdCounterOffer',
@@ -58,8 +58,9 @@ const notificationTypesPlus = [
   'userRequestAppAccess',
 
   // Offer notifications.
-  'offerAccepted',
-  'offerDeclined',
+  // #7946 this may be reactivated later
+  // 'offerAccepted',
+  // 'offerDeclined',
 ] as const;
 
 export type NotificationTypesBase = typeof notificationTypesBase[number];

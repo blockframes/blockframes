@@ -1,5 +1,4 @@
-import type { Screening } from '@blockframes/event/+state/event.firestore';
-import type { Movie, Organization, User} from '@blockframes/model';
+import type { Screening, Movie, Organization, User } from '@blockframes/model';
 
 interface TestScreeningFixture {
   event: string;

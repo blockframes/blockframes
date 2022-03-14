@@ -1,25 +1,25 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SafeResourceUrl } from '@angular/platform-browser';
-import { User, Organization } from '@blockframes/model';
+import { Functions, httpsCallable } from '@angular/fire/functions';
+import { User, Organization, Invitation, UserRole } from '@blockframes/model';
 import { UserCrmForm } from '@blockframes/admin/crm/forms/user-crm.form';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { UserRole, PermissionsService } from '@blockframes/permissions/+state';
 import { CrmService } from '@blockframes/admin/crm/+state';
 import { Observable, Subscription } from 'rxjs';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
-import { where } from 'firebase/firestore';
-import { Scope } from '@blockframes/utils/static-model';
-import { Invitation, InvitationService } from '@blockframes/invitation/+state';
-import { EventService } from '@blockframes/event/+state/event.service';
-import { Functions, httpsCallable } from '@angular/fire/functions';
+import { PermissionsService } from '@blockframes/permissions/+state';
 import { App, getOrgAppAccess } from '@blockframes/utils/apps';
+import { EventService } from '@blockframes/event/+state/event.service';
+import { Scope } from '@blockframes/utils/static-model';
+import { InvitationService } from '@blockframes/invitation/+state';
 
 // Material
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { where } from 'firebase/firestore';
 
 @Component({
   selector: 'crm-user',

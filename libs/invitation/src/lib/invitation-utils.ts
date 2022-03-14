@@ -1,5 +1,4 @@
-import { Invitation } from "./+state/invitation.model";
-import { InvitationMode } from "./+state/invitation.firestore";
+import { Invitation, InvitationMode } from "@blockframes/model";
 import { where } from "firebase/firestore";
 
 /**

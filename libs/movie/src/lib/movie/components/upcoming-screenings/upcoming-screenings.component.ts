@@ -8,10 +8,10 @@ import { orderBy, startAt, where } from 'firebase/firestore';
 
 // Blockframes
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { EventService, Event } from '@blockframes/event/+state';
+import { EventService } from '@blockframes/event/+state';
+import { Screening, Event } from '@blockframes/model';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { Screening } from '@blockframes/event/+state/event.firestore';
 import { APP } from '@blockframes/utils/routes/utils';
 import { App } from '@blockframes/utils/apps';
 import { RequestAskingPriceComponent } from '../request-asking-price/request-asking-price.component';

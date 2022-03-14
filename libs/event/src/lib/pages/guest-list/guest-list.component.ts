@@ -1,10 +1,11 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { Invitation, InvitationService } from '@blockframes/invitation/+state';
+import { InvitationService } from '@blockframes/invitation/+state';
 import { Observable } from 'rxjs';
 import { ReviewComponent } from '@blockframes/event/layout/review/review.component';
 import { switchMap } from 'rxjs/operators';
 import { where } from 'firebase/firestore';
+import { Invitation } from '@blockframes/model';
 
 @Component({
   selector: 'event-guest-list',

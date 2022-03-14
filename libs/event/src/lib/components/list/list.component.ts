@@ -1,7 +1,7 @@
 import { Component, Input, TemplateRef, ContentChild, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { ascTimeFrames } from '@blockframes/utils/pipes/filter-by-date.pipe';
 import { slideUpList } from '@blockframes/utils/animations/fade';
-import { EventBase } from '@blockframes/event/+state/event.firestore';
+import { EventBase } from '@blockframes/model';
 
 @Component({
   selector: 'event-list',

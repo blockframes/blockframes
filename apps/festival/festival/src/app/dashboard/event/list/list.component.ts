@@ -1,8 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, ViewChild, TemplateRef, ChangeDetectorRef } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { Event, EventService } from '@blockframes/event/+state';
+import { EventService } from '@blockframes/event/+state';
 import { EventForm } from '@blockframes/event/form/event.form';
-import { EventTypes } from '@blockframes/event/+state/event.firestore';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { Observable, combineLatest } from 'rxjs';
 import { filter, switchMap, startWith, tap } from 'rxjs/operators';
@@ -12,6 +11,7 @@ import { AgendaService } from '@blockframes/utils/agenda/agenda.service';
 import { eventTime } from '@blockframes/event/pipes/event-time.pipe';
 import { ActivatedRoute } from '@angular/router';
 import { where } from 'firebase/firestore';
+import { Event, EventTypes } from '@blockframes/model';
 
 const typesLabel = {
   screening: 'Screenings',

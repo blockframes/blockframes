@@ -1,22 +1,31 @@
 ﻿import { getDocument, createPublicOrganizationDocument, createPublicUserDocument } from './data/internals';
 import { getUser } from "./internals/utils";
 import { db } from './internals/firebase'
-import { InvitationOrUndefined } from './data/types';
 import { onInvitationToJoinOrgUpdate, onRequestToJoinOrgUpdate } from './internals/invitations/organizations';
 import { onInvitationToAnEventUpdate } from './internals/invitations/events';
-import { InvitationBase, createInvitation, InvitationStatus, InvitationDocument } from '@blockframes/invitation/+state/invitation.firestore';
-import { createPublicUser, PublicUser, OrganizationDocument, orgName } from '@blockframes/model';
+import { 
+  createPublicUser,
+  PublicUser,
+  OrganizationDocument,
+  orgName,
+  EventDocument,
+  EventMeta,
+  MEETING_MAX_INVITATIONS_NUMBER,
+  InvitationDocument,
+  InvitationOrUndefined,
+  createInvitation,
+  InvitationStatus,
+  InvitationBase
+} from '@blockframes/model';
 import { getOrInviteUserByMail } from './internals/users';
 import { ErrorResultResponse } from './utils';
-import { CallableContext } from "firebase-functions/lib/providers/https";
+import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { App } from '@blockframes/utils/apps';
-import { EventDocument, EventMeta, MEETING_MAX_INVITATIONS_NUMBER } from '@blockframes/event/+state/event.firestore';
 import { getEventEmailData } from '@blockframes/utils/emails/utils';
 import { Change } from 'firebase-functions';
 import { AlgoliaOrganization } from '@blockframes/utils/algolia';
 import { createAlgoliaOrganization } from '@blockframes/firebase-utils';
 export { hasUserAnOrgOrIsAlreadyInvited } from './internals/invitations/utils';
-
 
 /**
  * Handles firestore updates on an invitation object,
@@ -24,9 +33,7 @@ export { hasUserAnOrgOrIsAlreadyInvited } from './internals/invitations/utils';
  * Check the data, manage processed ids (to prevent duplicates events in functions),
  * and dispatch to the correct piece of code depending on the invitation type.
  */
-export async function onInvitationWrite(
-  change: Change<FirebaseFirestore.DocumentSnapshot>
-) {
+export async function onInvitationWrite(change: Change<FirebaseFirestore.DocumentSnapshot>) {
   const before = change.before;
   const after = change.after;
 
@@ -39,15 +46,14 @@ export async function onInvitationWrite(
 
   // Doc was deleted
   if (!invitationDoc) {
-
     if (!!invitationDocBefore.toUser && invitationDocBefore.type === 'joinOrganization') {
       const user = await getUser(invitationDocBefore.toUser.uid);
 
       // Remove user in users collection
-      if (invitationDocBefore.mode === "invitation" && !!user && invitationDocBefore.status === "pending") {
-
+      if (invitationDocBefore.mode === 'invitation' && !!user && invitationDocBefore.status === 'pending') {
         // Fetch potential other invitations to this user
-        const invitationCollectionRef = db.collection('invitations')
+        const invitationCollectionRef = db
+          .collection('invitations')
           .where('toUser.uid', '==', user.uid)
           .where('mode', '==', 'invitation')
           .where('status', '==', 'pending');
@@ -133,10 +139,9 @@ export interface UserInvitation {
  * @dev this function polyfills the Promise.allSettled
  */
 export const inviteUsers = async (data: UserInvitation, context: CallableContext) => {
-
-  if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
+  if (!context?.auth) throw new Error('Permission denied: missing auth context.');
   const user = await getDocument<PublicUser>(`users/${context.auth.uid}`);
-  if (!user.orgId) { throw new Error('Permission denied: missing org id.'); }
+  if (!user.orgId) throw new Error('Permission denied: missing org id.');
 
   const promises: ErrorResultResponse[] = [];
   const invitation = createInvitation(data.invitation);
@@ -145,12 +150,10 @@ export const inviteUsers = async (data: UserInvitation, context: CallableContext
   if (invitation.type === 'attendEvent') {
     const eventId = invitation.eventId;
     if (eventId) {
-
       const event = await getDocument<EventDocument<EventMeta>>(`events/${eventId}`);
 
       // for now only meetings have a limitation
       if (event.type === 'meeting') {
-
         // count the number of already existing invitations
         const query = db.collection('invitations').where('eventId', '==', eventId);
         const querySnap = await query.get();
@@ -160,7 +163,8 @@ export const inviteUsers = async (data: UserInvitation, context: CallableContext
           throw new Error(
             `MEETING MAX INVITATIONS EXCEEDED : Meeting ${eventId} has already ${querySnap.size} invitations
             and user ${user.uid} tried to add ${data.emails.length} new invitations.
-            That would have exceeded the current limit which is ${MEETING_MAX_INVITATIONS_NUMBER} invitations.`)
+            That would have exceeded the current limit which is ${MEETING_MAX_INVITATIONS_NUMBER} invitations.`
+          );
         }
       }
     }
@@ -173,12 +177,7 @@ export const inviteUsers = async (data: UserInvitation, context: CallableContext
     const invitationId = db.collection('invitations').doc().id;
     const { type, mode, fromOrg } = invitation;
     const eventData = type == 'attendEvent' ? getEventEmailData({ event, orgName: orgName(fromOrg, 'full'), email, invitationId }) : undefined;
-    const user = await getOrInviteUserByMail(
-      email,
-      { id: invitationId, type, mode, fromOrg },
-      data.app,
-      eventData
-    )
+    const user = await getOrInviteUserByMail(email, { id: invitationId, type, mode, fromOrg }, data.app, eventData);
 
     if (user.invitationStatus) invitation.status = user.invitationStatus;
 
@@ -195,10 +194,11 @@ export const inviteUsers = async (data: UserInvitation, context: CallableContext
   }
 
   return promises;
-}
+};
 
 export async function getInvitationLinkedToEmail(email: string): Promise<boolean | AlgoliaOrganization> {
-  const invitationRef = await db.collection('invitations')
+  const invitationRef = await db
+    .collection('invitations')
     .where('toUser.email', '==', email)
     .where('status', '==', 'pending')
     .where('mode', '==', 'invitation')
@@ -251,4 +251,4 @@ export const acceptOrDeclineInvitationAsAnonymous = async (data: AnonymousInvita
 
   await db.collection('invitations').doc(invitation.id).set(invitation);
   return true;
-}
+};

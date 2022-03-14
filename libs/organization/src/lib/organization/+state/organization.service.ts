@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { AuthService } from '@blockframes/auth/+state';
 import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
-import { createPermissions, UserRole } from '../../permissions/+state/permissions.model';
 import { Functions } from '@angular/fire/functions';
 import { UserService } from '@blockframes/user/+state';
 import {
@@ -13,7 +12,9 @@ import {
   Movie,
   Organization,
   createOrganization,
-  OrganizationDocument
+  OrganizationDocument,
+  createPermissions,
+  UserRole
 } from '@blockframes/model';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
 import { App, Module, createOrgAppAccess } from '@blockframes/utils/apps';

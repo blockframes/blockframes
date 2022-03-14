@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { Event } from '../../+state/event.model';
+import { Event } from '@blockframes/model';
 import { Observable } from 'rxjs';
 import { NavTabs, TabConfig } from '@blockframes/utils/event';
 import { ActivatedRoute, RouterOutlet } from '@angular/router';
