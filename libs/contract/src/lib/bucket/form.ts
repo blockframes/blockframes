@@ -12,12 +12,12 @@ import {
   createBucket,
   createBucketContract,
   createBucketTerm,
-  toBucketContract,
-  toBucketTerm
+  Mandate
 } from '@blockframes/model';
-import { BucketTerm } from '../term/+state';
+import { BucketTerm, Term } from '../term/+state';
 import {
   AvailableTerritoryMarker,
+  AvailsFilter,
   BucketTerritoryMarker,
   CalendarAvailsFilter,
   DurationMarker,
@@ -84,6 +84,30 @@ class BucketContractForm extends FormEntity<BucketContractControls, BucketContra
 ////////////
 // BUCKET //
 ////////////
+
+function toBucketTerm(
+  avail: AvailsFilter | MapAvailsFilter | CalendarAvailsFilter
+): BucketTerm {
+  return createBucketTerm({
+    medias: avail.medias,
+    duration: 'duration' in avail ? avail.duration : undefined,
+    territories: 'territories' in avail ? avail.territories : undefined,
+    exclusive: avail.exclusive,
+  });
+}
+
+function toBucketContract(
+  contract: Mandate,
+  term: Term<Date>,
+  avails: AvailsFilter | MapAvailsFilter | CalendarAvailsFilter
+): BucketContract {
+  return createBucketContract({
+    titleId: contract.titleId,
+    orgId: contract.sellerId,
+    parentTermId: term.id,
+    terms: [toBucketTerm(avails)],
+  });
+}
 
 function createBucketControl(params: Partial<Bucket> = {}) {
   const bucket = createBucket(params);

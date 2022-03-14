@@ -1,6 +1,5 @@
-import { AvailsFilter, CalendarAvailsFilter, MapAvailsFilter } from '@blockframes/contract/avails/avails';
-import { BucketTerm, Term } from '@blockframes/contract/term/+state/term.firestore';
-import { createLanguageKey, createHoldback, Mandate, Holdback, MailContract } from '@blockframes/model';
+import { BucketTerm } from '@blockframes/contract/term/+state/term.firestore';
+import { createLanguageKey, createHoldback, Holdback, MailContract } from '@blockframes/model';
 import type { MovieCurrency } from '@blockframes/utils/static-model';
 import type firebase from 'firebase';
 
@@ -41,17 +40,6 @@ export interface MailBucket {
   uid?: string;
 }
 
-export function toBucketTerm(
-  avail: AvailsFilter | MapAvailsFilter | CalendarAvailsFilter
-): BucketTerm {
-  return createBucketTerm({
-    medias: avail.medias,
-    duration: 'duration' in avail ? avail.duration : undefined,
-    territories: 'territories' in avail ? avail.territories : undefined,
-    exclusive: avail.exclusive,
-  });
-}
-
 export function createBucketTerm(params: Partial<BucketTerm> = {}): BucketTerm {
   return {
     territories: [],
@@ -74,19 +62,6 @@ export function createBucketContract(params: Partial<BucketContract> = {}): Buck
     terms: params.terms?.map(createBucketTerm) ?? [],
     holdbacks: params.holdbacks?.map(createHoldback) ?? [],
   };
-}
-
-export function toBucketContract(
-  contract: Mandate,
-  term: Term<Date>,
-  avails: AvailsFilter | MapAvailsFilter | CalendarAvailsFilter
-): BucketContract {
-  return createBucketContract({
-    titleId: contract.titleId,
-    orgId: contract.sellerId,
-    parentTermId: term.id,
-    terms: [toBucketTerm(avails)],
-  });
 }
 
 export function createBucket(params: Partial<Bucket> = {}): Bucket {
