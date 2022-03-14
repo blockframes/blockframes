@@ -8,7 +8,7 @@ import { combineLatest, of, ReplaySubject, Subscription } from 'rxjs';
 
 import { FormList } from '@blockframes/utils/form';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { BucketTerm, Term, TermService } from '@blockframes/contract/term/+state';
+import { TermService } from '@blockframes/contract/term/+state';
 import { CalendarAvailsForm, MapAvailsForm } from '@blockframes/contract/avails/form/avails.form';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { BucketForm, BucketTermForm } from '@blockframes/contract/bucket/form';
@@ -16,6 +16,7 @@ import { OrganizationService } from '@blockframes/organization/+state';
 import { BucketService } from '@blockframes/contract/bucket/+state';
 import { ContractService, Holdback, isMandate, isSale, Mandate, Sale } from '@blockframes/contract/contract/+state';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
+import { BucketTerm, Term } from '@blockframes/model';
 
 import { ExplanationComponent } from './explanation/explanation.component';
 import { HoldbackModalComponent } from '@blockframes/contract/contract/holdback/modal/holdback-modal.component';

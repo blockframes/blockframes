@@ -7,9 +7,9 @@ import {
   isMandate,
   isSale,
 } from '@blockframes/contract/contract/+state';
-import { Term, TermService } from '@blockframes/contract/term/+state';
+import { TermService } from '@blockframes/contract/term/+state';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { Movie } from '@blockframes/model';
+import { Movie, Term } from '@blockframes/model';
 import { combineLatest, Observable, of } from 'rxjs';
 import { map, pluck, shareReplay, switchMap } from 'rxjs/operators';
 
