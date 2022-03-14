@@ -1,9 +1,6 @@
-
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-
-import { MeetingPdfControl } from '@blockframes/event/+state/event.firestore';
-
+import { MeetingPdfControl } from '@blockframes/model';
 
 @Component({
   selector: '[control] pdf-control',

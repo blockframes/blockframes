@@ -5,7 +5,7 @@ import { OrganizationService } from '@blockframes/organization/+state';
 import { addHours } from 'date-fns'
 import { take } from 'rxjs/operators';
 import { EventService } from '../+state';
-import { createEvent, createScreening } from '../+state/event.model';
+import { createEvent, createScreening } from '@blockframes/model';
 
 @Injectable({ providedIn: 'root' })
 export class EventEditGuard implements CanActivate {

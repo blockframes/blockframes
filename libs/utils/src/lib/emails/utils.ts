@@ -2,8 +2,17 @@ import { EmailJSON } from "@sendgrid/helpers/classes/email-address";
 import { AttachmentData } from '@sendgrid/helpers/classes/attachment';
 import { App, sendgridEmailsFrom } from "../apps";
 import { format } from "date-fns";
-import { EventDocument, EventMeta, EventTypes, MeetingEventDocument, ScreeningEventDocument } from "@blockframes/event/+state/event.firestore";
-import { User, PublicUser, OrganizationDocument, orgName } from "@blockframes/model";
+import {
+  EventDocument,
+  EventMeta,
+  EventTypes,
+  MeetingEventDocument,
+  ScreeningEventDocument,
+  User,
+  PublicUser,
+  OrganizationDocument,
+  orgName
+} from '@blockframes/model';
 import { AccessibilityTypes } from "../static-model";
 import { MailBucket } from '@blockframes/contract/bucket/+state/bucket.firestore';
 import { toIcsFile } from "../agenda/utils";

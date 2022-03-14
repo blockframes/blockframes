@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, Component, ElementRef, HostListener, Inject, I
 import { BehaviorSubject } from 'rxjs';
 
 import { MediaService } from '../../+state/media.service';
-import { MeetingPdfControl } from '@blockframes/event/+state/event.firestore';
+import { MeetingPdfControl } from '@blockframes/model';
 import { ImageParameters } from '../../image/directives/imgix-helpers';
 
 import { toggleFullScreen } from '../../file/viewers/utils';

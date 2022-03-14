@@ -1,9 +1,18 @@
 import { wasCreated, wasAccepted, wasDeclined, hasUserAnOrgOrIsAlreadyInvited } from "./utils";
 import { createNotification, triggerNotifications } from "../../notification";
 import { createDocumentMeta, createPublicInvitationDocument, getAdminIds, getDocument } from "../../data/internals";
-import { EventDocument, EventMeta, Meeting, Screening } from "@blockframes/event/+state/event.firestore";
 import * as admin from 'firebase-admin';
-import { OrganizationDocument, NotificationDocument, NotificationTypes, InvitationDocument, InvitationOrUndefined } from "@blockframes/model";
+import {
+  OrganizationDocument,
+  EventDocument,
+  EventMeta,
+  Meeting,
+  Screening,
+  NotificationDocument,
+  NotificationTypes,
+  InvitationDocument,
+  InvitationOrUndefined,
+} from '@blockframes/model';
 
 /**
  * Handles notifications and emails when an invitation to an event is created.

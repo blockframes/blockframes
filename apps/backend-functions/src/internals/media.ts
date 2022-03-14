@@ -5,8 +5,7 @@ import * as admin from 'firebase-admin';
 
 // Blockframes dependencies
 import { getDocument } from '@blockframes/firebase-utils';
-import { EventDocument, EventMeta, Meeting, Screening } from '@blockframes/event/+state/event.firestore';
-import { createPublicUser, MovieDocument } from '@blockframes/model';
+import { createPublicUser, MovieDocument, EventDocument, EventMeta, Meeting, Screening } from '@blockframes/model';
 import { StorageFile } from '@blockframes/media/+state/media.firestore';
 
 // Internal dependencies

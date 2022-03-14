@@ -1,6 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input, OnInit, ChangeDetectorRef } from '@angular/core';
-import { Event } from '@blockframes/event/+state/event.model';
-import { Organization } from '@blockframes/model';
+import { Event, Organization } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state';
 
 @Component({

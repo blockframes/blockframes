@@ -1,7 +1,15 @@
 import { compareDates, FormEntity, FormList } from '@blockframes/utils/form';
-import { Event, createEvent, isMeeting, createMeeting, createScreening, isScreening } from '../+state/event.model';
+import {
+  Event,
+  createEvent,
+  isMeeting,
+  createMeeting,
+  createScreening,
+  isScreening,
+  Meeting,
+  Screening
+} from '@blockframes/model';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Meeting, Screening } from '../+state/event.firestore';
 
 
 // Event
