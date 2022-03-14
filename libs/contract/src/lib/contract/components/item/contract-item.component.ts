@@ -1,7 +1,7 @@
 import {
   Component, Input, TemplateRef, ContentChild, ChangeDetectionStrategy
 } from '@angular/core';
-import { BucketContract } from '@blockframes/contract/bucket/+state/bucket.model';
+import { BucketContract } from '@blockframes/model';
 import { Scope, mediaGroup, territoriesGroup } from '@blockframes/utils/static-model';
 import { MatDialog } from '@angular/material/dialog';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
