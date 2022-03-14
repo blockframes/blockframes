@@ -1,9 +1,8 @@
 import { Timestamp } from '@blockframes/utils/common-interfaces/timestamp';
 import { centralOrgId } from '@env';
-import { LanguageRecord } from '@blockframes/model';
+import { LanguageRecord, Negotiation } from '@blockframes/model';
 import { Language, Media, Territory } from '@blockframes/utils/static-model';
 import { Duration } from '../term/+state';
-import { Negotiation } from './+state/negotiation.firestore';
 
 interface ArrayDifferences<T = string> {
   added: T[];

@@ -1,9 +1,8 @@
 import { NgModule, Pipe, PipeTransform } from "@angular/core";
-import { ContractStatus } from "@blockframes/model";
+import { ContractStatus, Negotiation } from "@blockframes/model";
 import { OrganizationService } from "@blockframes/organization/+state";
 import { Observable, of } from "rxjs";
 import { map } from "rxjs/operators";
-import { Negotiation } from "./+state/negotiation.firestore";
 import { getReviewer, isInitial } from "./utils";
 
 function canNegotiate(negotiation: Negotiation, activeOrgId: string) {
