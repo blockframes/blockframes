@@ -2,9 +2,9 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { filter, map, pluck, switchMap } from 'rxjs/operators';
-import { Event, EventService } from '@blockframes/event/+state';
-import { Meeting, MeetingAttendee } from '@blockframes/event/+state/event.firestore';
+import { EventService } from '@blockframes/event/+state';
 import { ActivatedRoute } from '@angular/router';
+import { Event, Meeting, MeetingAttendee } from '@blockframes/model';
 
 @Component({
   selector: 'festival-event-meeting-session-ended',

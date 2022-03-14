@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
-import { Event } from '../+state/event.model';
+import { Event } from '@blockframes/model';
 
 export type EventTime = 'early' | 'onTime' | 'late';
 

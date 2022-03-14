@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Event } from '../+state/event.model';
+import { Event } from '@blockframes/model';
 
 function minute(amount: number) {
   return 1000 * 60 * amount;

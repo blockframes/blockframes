@@ -1,4 +1,4 @@
-import { Event, MeetingEvent } from '@blockframes/event/+state/event.model';
+import { Event, MeetingEvent } from '@blockframes/model';
 import { Firestore } from '@blockframes/firebase-utils';
 import { StorageFile } from '@blockframes/media/+state/media.firestore';
 import { get } from 'lodash';

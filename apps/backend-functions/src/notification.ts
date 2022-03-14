@@ -6,15 +6,17 @@ import {
   OrganizationDocument,
   canAccessModule,
   orgName,
+  MovieDocument,
+  EventDocument,
+  EventMeta,
   NotificationTypes,
   NotificationDocument,
-  MovieDocument,
   InvitationDocument,
-  PublicInvitation
+  PublicInvitation,
+  Screening
 } from '@blockframes/model';
 import { sendMailFromTemplate } from './internals/email';
 import { emailErrorCodes, EventEmailData, getEventEmailData, getMovieEmailData, getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
-import { EventDocument, EventMeta, Screening } from '@blockframes/event/+state/event.firestore';
 import {
   reminderEventToUser,
   userJoinedYourOrganization,

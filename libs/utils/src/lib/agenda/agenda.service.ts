@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Event, isMeeting, isScreening } from '@blockframes/event/+state/event.model';
-import { orgName } from "@blockframes/model";
+import { orgName, Event, isMeeting, isScreening } from "@blockframes/model";
 import { OrganizationService } from "@blockframes/organization/+state";
 import { sendgridEmailsFrom } from "../apps";
 import { IcsEvent } from "./agenda.interfaces";
