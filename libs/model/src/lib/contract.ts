@@ -1,9 +1,9 @@
-import { DocumentMeta, createDocumentMeta } from "@blockframes/utils/models-meta";
-import type { Media, Territory } from "@blockframes/utils/static-model";
-import { Timestamp } from "@blockframes/utils/common-interfaces/timestamp";
-import { toDate } from "@blockframes/utils/helpers";
-import { createMailTerm, Duration } from "./terms";
-import { BucketContract } from "./bucket";
+import { DocumentMeta, createDocumentMeta } from '@blockframes/utils/models-meta';
+import type { Media, Territory } from '@blockframes/utils/static-model';
+import { Timestamp } from '@blockframes/utils/common-interfaces/timestamp';
+import { toDate } from '@blockframes/utils/helpers';
+import { createMailTerm, Duration } from './terms';
+import { BucketContract } from './bucket';
 
 export function createMailContract(contract: BucketContract<Timestamp>) {
   return ({
