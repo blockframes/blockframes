@@ -1,10 +1,8 @@
-import { MailContract } from '@blockframes/contract/contract/+state/contract.firestore';
-import { Holdback } from '@blockframes/contract/contract/+state/contract.firestore';
-import { BucketTerm } from '@blockframes/contract/term/+state/term.firestore';
+import { createLanguageKey, createHoldback, Holdback, MailContract, BucketTerm } from '@blockframes/model';
 import type { MovieCurrency } from '@blockframes/utils/static-model';
-import type firebase from 'firebase'
+import type firebase from 'firebase';
 
-export interface Bucket<T extends Date | firebase.firestore.Timestamp = Date>  {
+export interface Bucket<T extends Date | firebase.firestore.Timestamp = Date> {
   id: string;
   currency: MovieCurrency;
   /** One contract per orgId / titleId / parent terms Id */
@@ -39,4 +37,39 @@ export interface MailBucket {
   delivery: string;
   /** Needed to show user in email to business team */
   uid?: string;
+}
+
+export function createBucketTerm(params: Partial<BucketTerm> = {}): BucketTerm {
+  return {
+    territories: [],
+    medias: [],
+    exclusive: false,
+    duration: { from: new Date(), to: new Date() },
+    ...params,
+    languages: createLanguageKey(params.languages),
+  };
+}
+
+export function createBucketContract(params: Partial<BucketContract> = {}): BucketContract {
+  return {
+    titleId: '',
+    orgId: '',
+    price: null,
+    parentTermId: '',
+    specificity: '',
+    ...params,
+    terms: params.terms?.map(createBucketTerm) ?? [],
+    holdbacks: params.holdbacks?.map(createHoldback) ?? [],
+  };
+}
+
+export function createBucket(params: Partial<Bucket> = {}): Bucket {
+  return {
+    id: '',
+    currency: 'EUR',
+    specificity: '',
+    delivery: '',
+    ...params,
+    contracts: params.contracts?.map(createBucketContract) ?? [],
+  };
 }

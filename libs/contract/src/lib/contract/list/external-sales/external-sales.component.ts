@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input, } from '@angular/core';
-import { Contract, Sale } from '@blockframes/contract/contract/+state';
+import { Contract, Sale } from '@blockframes/model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 

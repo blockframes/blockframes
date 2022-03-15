@@ -1,4 +1,4 @@
-import { Term } from '@blockframes/contract/term/+state';
+import { Term } from '@blockframes/model';
 import { Timestamp } from '@blockframes/utils/common-interfaces/timestamp';
 import * as admin from 'firebase-admin';
 import { runChunks } from '../firebase-utils';

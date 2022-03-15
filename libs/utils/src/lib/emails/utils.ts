@@ -2,15 +2,23 @@ import { EmailJSON } from "@sendgrid/helpers/classes/email-address";
 import { AttachmentData } from '@sendgrid/helpers/classes/attachment';
 import { App, sendgridEmailsFrom } from "../apps";
 import { format } from "date-fns";
-import { EventDocument, EventMeta, EventTypes, MeetingEventDocument, ScreeningEventDocument } from "@blockframes/event/+state/event.firestore";
-import { User, PublicUser, OrganizationDocument, orgName } from "@blockframes/model";
+import {
+  EventDocument,
+  EventMeta,
+  EventTypes,
+  MeetingEventDocument,
+  ScreeningEventDocument,
+  User,
+  PublicUser,
+  OrganizationDocument,
+  orgName,
+  MailBucket,
+  MovieDocument
+} from '@blockframes/model';
+import type { ContractDocument } from '@blockframes/model';
 import { AccessibilityTypes } from "../static-model";
-import { MailBucket } from '@blockframes/contract/bucket/+state/bucket.firestore';
 import { toIcsFile } from "../agenda/utils";
 import { IcsEvent } from "../agenda/agenda.interfaces";
-import { MovieDocument } from '@blockframes/model';
-import type { ContractDocument } from '@blockframes/contract/contract/+state';
-import { NegotiationDocument } from "@blockframes/contract/negotiation/+state/negotiation.firestore";
 import { Offer } from "@blockframes/contract/offer/+state";
 
 interface EmailData {
@@ -90,7 +98,7 @@ export interface OfferEmailData {
 }
 
 export interface MovieEmailData {
-  title : {
+  title: {
     international: string
   }
 }

@@ -1,15 +1,13 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Pipe, PipeTransform } from '@angular/core';
 import { Observable, combineLatest, of } from 'rxjs';
 import { EventService } from '@blockframes/event/+state/event.service';
-import { Event } from '@blockframes/event/+state';
+import { Event, EventTypes, Invitation } from '@blockframes/model';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { map, switchMap, startWith } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
-import { EventTypes } from '@blockframes/event/+state/event.firestore';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { eventTime } from '@blockframes/event/pipes/event-time.pipe';
 import { AgendaService } from '@blockframes/utils/agenda/agenda.service';
-import { Invitation } from '@blockframes/model';
 
 const typesLabel = {
   screening: 'Screenings',

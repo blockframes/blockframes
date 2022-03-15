@@ -11,7 +11,7 @@ import { SelectFormModule } from '../../forms/select';
 import { getEventsQueryFn, toMap } from '../pipes';
 import { map } from 'rxjs/operators';
 import { EventService } from '@blockframes/event/+state/event.service';
-import { Event } from '@blockframes/event/+state';
+import { Event } from '@blockframes/model';
 
 
 @Component({

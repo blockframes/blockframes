@@ -2,8 +2,17 @@ import { Inject, Injectable } from '@angular/core';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { AuthService } from '@blockframes/auth/+state';
 import { filter, map, switchMap, take } from 'rxjs/operators';
-import { Event, isMeeting, isScreening } from '@blockframes/event/+state/event.model';
-import { orgName, Movie, Organization, OrganizationDocument, Notification } from '@blockframes/model';
+import {
+  orgName,
+  Movie,
+  Event,
+  isMeeting,
+  isScreening,
+  Notification,
+  Organization,
+  OrganizationDocument,
+  Contract
+} from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { toDate } from '@blockframes/utils/helpers';
 import { displayName } from '@blockframes/utils/utils';
@@ -17,8 +26,7 @@ import { UserService } from '@blockframes/user/+state';
 import { EventService } from '@blockframes/event/+state';
 import { ModuleGuard } from '@blockframes/utils/routes/module.guard';
 import { APP } from '@blockframes/utils/routes/utils';
-import { OfferService } from '@blockframes/contract/offer/+state';
-import { Contract, ContractService } from '@blockframes/contract/contract/+state';
+import { ContractService } from '@blockframes/contract/contract/+state';
 
 interface NotificationState extends EntityState<Notification>, ActiveState<string> {}
 @Injectable({ providedIn: 'root' })
