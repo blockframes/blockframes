@@ -1,14 +1,10 @@
-
 import { DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ElementRef, HostListener, Inject, Input, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-
 import { MediaService } from '../../+state/media.service';
-import { MeetingPdfControl } from '@blockframes/model';
+import { StorageFile, MeetingPdfControl } from '@blockframes/model';
 import { ImageParameters } from '../../image/directives/imgix-helpers';
-
 import { toggleFullScreen } from '../../file/viewers/utils';
-import { StorageFile } from '@blockframes/media/+state/media.firestore';
 
 @Component({
   selector: '[ref] pdf-viewer',

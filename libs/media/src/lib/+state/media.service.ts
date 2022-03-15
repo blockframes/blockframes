@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { AngularFireFunctions } from "@angular/fire/functions";
 
 // State
-import { StorageFile } from "./media.firestore";
+import { StorageFile } from '@blockframes/model';
 import { ImageParameters, getImgSize, getImgIxResourceUrl } from '../image/directives/imgix-helpers';
 
 // Blockframes

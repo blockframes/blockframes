@@ -1,7 +1,32 @@
-
 import { privacies, Privacy } from '@blockframes/utils/file-sanitizer';
-import { StorageFile } from './media.firestore';
 
+/**
+ * Representation of a storage file in our Firestore db.
+ * @note this is not the same as the data needed to upload into the storage: `UploadData`
+ */
+export interface StorageFile {
+  privacy: Privacy;
+  collection: 'movies' | 'users' | 'orgs' | 'campaigns' | 'cms/festival/home';
+  docId: string;
+  field: string;
+  storagePath: string;
+  [K: string]: string; // extra-data
+}
+
+export function createStorageFile(file: Partial<StorageFile> = {}): StorageFile {
+  return {
+    privacy: 'public',
+    collection: 'movies',
+    docId: '',
+    field: '',
+    storagePath: '',
+    ...file,
+  };
+}
+
+export interface StorageVideo extends StorageFile {
+  jwPlayerId: string;
+}
 
 /**
  * Data needed by the `FileUploaderService` to actually upload into the storage.
@@ -68,18 +93,4 @@ export function recursivelyListFiles(document: any): StorageFile[] {
   } else {
     return [];
   }
-}
-
-// TODO issue#4002 MOVE THE 2 FUNCTIONS BELLOW ELSEWHERE
-
-export function getFileNameFromPath(path: string) {
-  if (typeof path !== 'string') {
-    console.warn('UNEXPECTED PATH', path);
-  }
-  return (!!path && typeof path === 'string') ? path.split('/').pop() : '';
-}
-
-/** Used this only for background to let the browser deal with that with picture */
-export function getAssetPath(asset: string, theme: 'dark' | 'light', type: 'images' | 'logo' = 'images') {
-  return `assets/${type}/${theme}/${asset}`;
 }
