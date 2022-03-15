@@ -7,12 +7,12 @@ import { getCollection } from '../firebase-utils';
 import { MovieDocument } from '@blockframes/model';
 import { MovieAnalytics } from '@blockframes/analytics/components/movie-analytics-chart/movie-analytics.model';
 import { getCollectionInBatches } from '../util';
-import { bigQueryAnalyticsTable, firebase } from '@env';
+import { bigQueryAnalyticsTable, firebase } from 'env/env.blockframes';
 
 const events_query = `
   SELECT *
   FROM (
-    SELECT 
+    SELECT
       ga.createdAt,
       ga.name,
       ga.titleId,
@@ -24,7 +24,7 @@ const events_query = `
       END as createdFrom,
       users.orgId
     FROM (
-      SELECT 
+      SELECT
         event_timestamp as createdAt,
         MAX(event_name) as name,
         MAX(if(params.key = "movieId", params.value.string_value, NULL)) as titleId,
@@ -62,7 +62,7 @@ const page_view_query = `
       REGEXP_EXTRACT(MAX(page_path), '(?:.*)?/title/([^/]+)/(?:r/i/)?main') as titleId,
       MAX(users.orgId) as orgId
     FROM (
-      SELECT 
+      SELECT
         event_timestamp as createdAt,
         DATE(TIMESTAMP_MICROS(event_timestamp)) as day,
         MAX(event_name) as name,
@@ -98,7 +98,7 @@ const page_view_query = `
 
 /**
  * Import data from Google Analytics into Firestore
- * @param {Firestore} db 
+ * @param {Firestore} db
  * @returns
  */
 export async function upgrade(db: Firestore) {
