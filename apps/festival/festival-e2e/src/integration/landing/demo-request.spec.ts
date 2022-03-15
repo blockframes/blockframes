@@ -1,7 +1,6 @@
 /// <reference types="cypress" />
 
-import { get, getInList, check, interceptEmail, deleteEmail, createFakeUserData } from 'libs/testing/e2e/src';
-import { testEmail } from "@blockframes/e2e/utils";
+import { get, getInList, check, interceptEmail, deleteEmail, createFakeUserData, supportMailosaur } from 'libs/testing/e2e/src';
 import { auth } from '@blockframes/testing/e2e';
 
 const user = createFakeUserData();
@@ -24,6 +23,6 @@ describe('Demo Request Email', () => {
     cy.get('@phoneInputs').last().type(user.phone);
     check('checkbox-newsletters');
     get('submit-demo-request').click();
-    interceptEmail({ sentTo: testEmail }).then((mail) => deleteEmail(mail.id));
+    interceptEmail({ sentTo: supportMailosaur }).then((mail) => deleteEmail(mail.id));
   });
 });

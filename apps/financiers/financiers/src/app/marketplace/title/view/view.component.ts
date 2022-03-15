@@ -16,8 +16,8 @@ import { UserService } from '@blockframes/user/+state';
 import { ErrorResultResponse } from '@blockframes/utils/utils';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { getUserEmailData, OrgEmailData } from '@blockframes/utils/emails/utils';
-import { testEmail } from "@blockframes/e2e/utils/env";
 import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { supportMailosaur } from 'libs/testing/e2e/src';
 
 interface EmailData {
   subject: string;
@@ -126,7 +126,7 @@ export class MarketplaceMovieViewComponent {
         const userEmail = toUser.email;
         // For e2e test purpose
         if (cyCheck) {
-          toUser = { ...toUser, email: testEmail };
+          toUser = { ...toUser, email: supportMailosaur };
         }
 
         const data = {

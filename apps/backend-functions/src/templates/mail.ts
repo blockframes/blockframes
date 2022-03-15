@@ -12,7 +12,6 @@ import { EventEmailData, OrgEmailData, UserEmailData } from '@blockframes/utils/
 import { App, appName, Module } from '@blockframes/utils/apps';
 import { Bucket } from '@blockframes/contract/bucket/+state/bucket.model';
 import { format } from "date-fns";
-import { testEmail } from "@blockframes/e2e/utils/env";
 import { Offer } from '@blockframes/contract/offer/+state';
 import type { ContractDocument } from '@blockframes/contract/contract/+state';
 import { createMailContract, MailContract } from '@blockframes/contract/contract/+state/contract.firestore';
@@ -524,7 +523,7 @@ export async function organizationRequestedAccessToApp(org: OrganizationDocument
 }
 
 export async function userFirstConnexion(user: PublicUser): Promise<EmailRequest> {
-  const supportEmail = e2eMode ? testEmail : getSupportEmail(user._meta.createdFrom);
+  const supportEmail = e2eMode ? supportMailosaur : getSupportEmail(user._meta.createdFrom);
   return {
     to: supportEmail,
     subject: 'New user connexion',

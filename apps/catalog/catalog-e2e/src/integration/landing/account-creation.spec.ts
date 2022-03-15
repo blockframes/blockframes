@@ -1,13 +1,14 @@
 ﻿/// <reference types="cypress" />
 
 import { LandingPage } from '../../support/pages/landing';
-import { User, serverId, testEmail } from "@blockframes/e2e/utils";
+import { User } from "@blockframes/e2e/utils";
 import { clearDataAndPrepareTest } from "@blockframes/e2e/utils/functions";
 import { AuthIdentityPage } from "@blockframes/e2e/pages/auth";
 import { OrganizationLiteFormPage } from "@blockframes/e2e/pages/organization";
 import { ORGANIZATION } from '@blockframes/e2e/fixtures/orgs';
 import { MessageListResult } from "cypress-mailosaur";
 import { assertUrlIncludes } from 'libs/testing/e2e/src';
+import { supportMailosaur, serverId } from 'libs/testing/e2e/src';
 
 const subjects = [
   "A new organization has been created",
@@ -49,8 +50,8 @@ describe('User can create new account and create a new organization', () => {
   });
 
   it('Fill all the fields', () => {
-    const newOrg = {...ORGANIZATION, ...{email: testEmail}};
-    const newOrgUSer = {...USER, ...{email: testEmail}};
+    const newOrg = {...ORGANIZATION, ...{email: supportMailosaur}};
+    const newOrgUSer = {...USER, ...{email: supportMailosaur}};
     const p1 = new AuthIdentityPage();
     p1.fillUserInformations(newOrgUSer);
 
@@ -66,7 +67,7 @@ describe('User can create new account and create a new organization', () => {
 
   it('Check emails are sent properly', () => {
     cy.mailosaurSearchMessages(serverId, {
-      sentTo: testEmail
+      sentTo: supportMailosaur
     }).then((result: MessageListResult) => {
       cy.log(`You've Got ${result.items.length} Mails! 💓`);
       const messages = result.items;

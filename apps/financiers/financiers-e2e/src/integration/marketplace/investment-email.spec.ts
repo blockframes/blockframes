@@ -1,11 +1,11 @@
 ﻿import { acceptCookie, clickOnMenu } from '@blockframes/e2e/utils/functions';
-import { SEC, serverId, testEmail } from '@blockframes/e2e/utils';
+import { SEC } from '@blockframes/e2e/utils';
 import { User, USER } from '@blockframes/e2e/fixtures/users';
 import SearchPage from '../../support/pages/marketplace/SearchPage';
 import ViewPage from '../../support/pages/marketplace/ViewPage';
 import { titleInvest, discussionData, strEmail } from '../../fixtures/investment';
 import { MessageListResult } from 'cypress-mailosaur';
-import { assertUrlIncludes } from 'libs/testing/e2e/src';
+import { assertUrlIncludes, supportMailosaur, serverId } from 'libs/testing/e2e/src';
 
 const userFixture = new User();
 const users  =  [ userFixture.getByUID(USER.Vincent) ];
@@ -74,7 +74,7 @@ describe.skip('Invest Interest Email Test', () => {
       // Check if emails are well sent.
       cy.log('Checking emails...');
       cy.mailosaurSearchMessages(serverId, {
-        sentTo: testEmail,
+        sentTo: supportMailosaur,
       },{
         timeout: 20 * SEC,
         page: 0,
