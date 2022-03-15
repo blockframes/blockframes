@@ -1,5 +1,5 @@
 import { createStorageFile, StorageFile } from "@blockframes/media/+state/media.firestore";
-import { CrewRole, DirectorCategory, MemberStatus, ProducerRole, Territory } from "@blockframes/utils/static-model";
+import { CrewRole, DirectorCategory, MemberStatus, ProducerRole, Territory } from "@blockframes/utils/static-model/types";
 
 //////////////////////////
 // VARIOUS IDENTITY OBJECTS

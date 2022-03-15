@@ -1,4 +1,5 @@
-import { Timestamp, BucketContract } from '@blockframes/model';
+import { BucketContract } from '@blockframes/model';
+import { Timestamp } from './timestamp';
 import { DocumentMeta } from './meta';
 import { MovieCurrency } from "@blockframes/utils/static-model";
 

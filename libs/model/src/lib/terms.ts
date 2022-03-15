@@ -1,4 +1,5 @@
-import { Timestamp, LanguageRecord } from '@blockframes/model';
+import { LanguageRecord } from '@blockframes/model';
+import { Timestamp } from './timestamp';
 import type { Media, Territory } from '@blockframes/utils/static-model';
 import type firebase from 'firebase';
 import { staticModel } from '@blockframes/utils/static-model';
