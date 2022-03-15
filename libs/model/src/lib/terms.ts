@@ -1,7 +1,6 @@
-import { LanguageRecord } from '@blockframes/model';
+import { Timestamp, LanguageRecord } from '@blockframes/model';
 import type { Media, Territory } from '@blockframes/utils/static-model';
 import type firebase from 'firebase';
-import { Timestamp } from '@blockframes/utils/common-interfaces/timestamp';
 import { staticModel } from '@blockframes/utils/static-model';
 import { format } from 'date-fns';
 import { toLanguageVersionString } from '@blockframes/utils/utils';
