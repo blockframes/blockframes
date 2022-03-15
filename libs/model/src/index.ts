@@ -8,3 +8,4 @@ export * from './lib/terms';
 export * from './lib/bucket';
 export * from './lib/contract';
 export * from './lib/event';
+export * from './lib/negociation';
