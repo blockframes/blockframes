@@ -23,7 +23,7 @@ import type {
 } from '@blockframes/utils/static-model/types';
 import { MovieLanguageType, productionStatus } from '@blockframes/utils/static-model';
 import { toDate } from '@blockframes/utils/helpers';
-import { createStorageFile } from '@blockframes/media/+state/media.firestore';
+import { StorageFile, StorageVideo, createStorageFile } from '@blockframes/model';
 import { App, getAllAppsExcept } from '@blockframes/utils/apps';
 import {
   Producer,
@@ -34,7 +34,6 @@ import {
 } from './identity';
 import { AnalyticsEvents, AnalyticsBase } from '@blockframes/utils/analytics/analytics-model';
 import { DocumentMeta } from './meta';
-import { StorageFile, StorageVideo } from '@blockframes/media/+state/media.firestore';
 import type firebase from 'firebase';
 
 //////////////////

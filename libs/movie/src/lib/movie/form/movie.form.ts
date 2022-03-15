@@ -40,7 +40,8 @@ import {
   createCredit,
   Stakeholder,
   createStakeholder,
-  Director
+  Director,
+  createStorageFile
 } from '@blockframes/model';
 import { FormArray, FormControl, Validators, ValidatorFn } from '@angular/forms';
 import {
@@ -54,7 +55,6 @@ import { yearValidators, urlValidators } from '@blockframes/utils/form/validator
 import { FormValue } from '@blockframes/utils/form';
 import { toDate } from '@blockframes/utils/helpers';
 import { Language } from '@blockframes/utils/static-model';
-import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 import { App } from '@blockframes/utils/apps';
 import { Privacy } from '@blockframes/utils/file-sanitizer';
 
