@@ -61,7 +61,6 @@ export class CanAcceptNegotiationPipe implements PipeTransform {
   }
 }
 
-
 @NgModule({
   declarations: [
     NegotiationStagePipe,

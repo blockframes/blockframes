@@ -8,7 +8,7 @@ import { QueryFn } from '@angular/fire/firestore';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { centralOrgId } from '@env';
 import { ActiveState, EntityState } from '@datorama/akita';
-import { ContractDocument, convertDuration, Holdback, Mandate, Sale, createMandate, createSale, Negotiation} from '@blockframes/model';
+import { ContractDocument, convertDuration, Holdback, Mandate, Sale, createMandate, createSale, Negotiation } from '@blockframes/model';
 
 interface ContractState extends EntityState<Sale | Mandate>, ActiveState<string> { }
 
@@ -50,7 +50,6 @@ export class ContractService extends CollectionService<ContractState> {
       map(negotiations => negotiations[0])
     );
   }
-
 
   //used exclusively in the crm
   adminLastNegotiation(contractId: string) {

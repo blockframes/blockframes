@@ -8,7 +8,6 @@ type NegotiationFormState = {
   terms: BucketTerm<Date>[]
 }
 
-
 // We want the NegotiationFrom to manage Term & BucketTerm
 const createControl = (term: Partial<BucketTerm | Term> = {}) => {
   return ('id' in term)
