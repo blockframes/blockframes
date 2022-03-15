@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { map } from "rxjs/operators";
 // Blockframes
 import { AggregatedAnalytic, createAggregatedAnalytic } from "@blockframes/analytics/+state";
-import { Movie } from "@blockframes/model";
 import { MovieService } from "@blockframes/movie/+state/movie.service";
 import { App } from "@blockframes/utils/apps";
 import { APP } from "@blockframes/utils/routes/utils";
