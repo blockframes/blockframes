@@ -12,17 +12,17 @@ import {
   reset,
   select
 } from '../calendar/calendar.model';
-import { durationAvailabilities, DurationMarker } from '../avails';
+import { durationAvailabilities, DurationMarker, getMatchingCalendarMandates } from '../avails';
 import {
   availSouthKorea, availAfghanistan,
   availFrance, availsSVODArgentina, availsPayTVArgentina,
   availsGermany, availsBelgium, availsExistingEndedSales,
   availsOngoingSales, availsTerritoryWithExclusivity, availsTerritoryWithoutExclusivity,
-  availsFranceLuxembourg, availsAllButSouthKorea,
+  availsFranceLuxembourg, availsAllButSouthKorea, availsPayTV, availsPlanes, availsPlanesPayTv, availsFranceBrazil, availsListFrance,
 } from './../fixtures/availsFilters';
 import { assertDate } from './utils'
 import {
-  mandateMovie1, saleArgentinaMovie1, saleGermanyMovie1, saleCanadaMovie1, saleBelgiumFranceLuxembourgMovie1,
+  mandateMovie1, saleArgentinaMovie1, saleGermanyMovie1, saleCanadaMovie1, saleBelgiumFranceLuxembourgMovie1, mandateMovie6, mandateMovie7,
 } from './../fixtures/mandatesAndSales';
 
 const sales = [saleArgentinaMovie1, saleGermanyMovie1, saleCanadaMovie1, saleBelgiumFranceLuxembourgMovie1]
@@ -353,4 +353,36 @@ describe('Test terms out of movie mandates', () => {
     assertDate(to, mandateTo);
   })
 
+
+  it('Check unavailability of china/france on payTV media', () => {
+    const markers = durationAvailabilities(availsPayTV, [mandateMovie6], [], []);
+    expect(markers.available.length).toBe(0);
+  })
+
+  it('Check available of china/france on planes media', () => {
+    const markers = durationAvailabilities(availsPlanes, [mandateMovie6], [], []);
+    expect(markers.available.length).toBeGreaterThan(0);
+  })
+
+  it('Check available of brazil medias in different terms', () => {
+    const markers = durationAvailabilities(availsPlanesPayTv, [mandateMovie7], [], []);
+    expect(markers.available.length).toBeGreaterThan(0);
+  })
+
+})
+
+
+describe('test getMatchingCalendarMandates method', () => {
+  it('test avails on mandate with multiple terms that satisfy avail as a whole', () => {
+    const mandates = getMatchingCalendarMandates([mandateMovie6, mandateMovie7], availsFranceBrazil)
+    expect(mandates.length).toBe(1);
+  })
+  it('test available on france and planes.', () => {
+    const mandates = getMatchingCalendarMandates([mandateMovie6, mandateMovie7], availsListFrance)
+    expect(mandates.length).toBe(1);
+  })
+  it('test not available on brazil payTv and planes.', () => {
+    const mandates = getMatchingCalendarMandates([mandateMovie6], availsPayTV)
+    expect(mandates.length).toBe(0);
+  })
 })
