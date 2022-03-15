@@ -1,7 +1,6 @@
 import { centralOrgId } from '@env';
 
-import { Movie } from '@blockframes/model';
-import { Mandate } from '@blockframes/contract/contract/+state';
+import { Mandate, Movie } from '@blockframes/model';
 import { Timestamp } from '@blockframes/utils/common-interfaces/timestamp';
 
 import { Firestore } from '../types';

@@ -12,10 +12,7 @@ import {
   filterContractsByTitle,
 } from '@blockframes/contract/avails/avails';
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
-import { Mandate, Sale } from '@blockframes/contract/contract/+state/contract.firestore';
-import { Term } from '@blockframes/contract/term/+state/term.firestore';
-import { Bucket } from '@blockframes/contract/bucket/+state/bucket.firestore';
-import { Movie } from '@blockframes/model';
+import { Bucket, Movie, Mandate, Sale, Term } from '@blockframes/model';
 
 // TODO(#7820): remove with rxjs 7
 type AvailabilitiesInputs = [
@@ -96,7 +93,7 @@ export class MarketplaceMovieAvailsCalendarComponent implements AfterViewInit, O
 
   async selected(marker: DurationMarker) {
     const duration = { from: marker.from, to: marker.to };
-    const avails = { ...this.availsForm.value, duration };
+    const avails = { ...marker.avail, duration };
 
     const result = this.shell.bucketForm.getTermIndexForCalendar(avails, marker);
     if (result) {

@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Optional, OnInit } from '@angular/core';
-import { ContractService, Sale } from '@blockframes/contract/contract/+state';
+import { ContractService } from '@blockframes/contract/contract/+state';
 import { Intercom } from 'ng-intercom';
 import { joinWith } from '@blockframes/utils/operators';
 import { map } from 'rxjs/operators';
@@ -9,7 +9,7 @@ import { IncomeService } from '@blockframes/contract/income/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { CollectionReference } from '@angular/fire/firestore';
 import { getSeller } from '@blockframes/contract/contract/+state/utils'
-import { Organization } from '@blockframes/model';
+import { Organization, Sale } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state';
 
 function queryFn(ref: CollectionReference, orgId: string, options: { internal?: boolean }) {

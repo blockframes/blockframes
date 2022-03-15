@@ -13,7 +13,9 @@ import {
   NotificationDocument,
   InvitationDocument,
   PublicInvitation,
-  Screening
+  ContractDocument,
+  Screening,
+  NegotiationDocument
 } from '@blockframes/model';
 import { sendMailFromTemplate } from './internals/email';
 import { emailErrorCodes, EventEmailData, getEventEmailData, getMovieEmailData, getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
@@ -52,9 +54,7 @@ import { templateIds, groupIds } from '@blockframes/utils/emails/ids';
 import { App, applicationUrl, appName } from '@blockframes/utils/apps';
 import * as admin from 'firebase-admin';
 import { logger } from 'firebase-functions';
-import { NegotiationDocument } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
 import { Offer } from '@blockframes/contract/offer/+state';
-import { ContractDocument } from '@blockframes/contract/contract/+state';
 import { appUrl, supportEmails } from './environments/environment';
 import { getReviewer } from '@blockframes/contract/negotiation/utils';
 // #7946 this may be reactivated later
