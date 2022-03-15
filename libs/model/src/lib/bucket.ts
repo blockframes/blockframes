@@ -1,6 +1,8 @@
-import { createLanguageKey, createHoldback, Holdback, MailContract, BucketTerm } from '@blockframes/model';
 import type { MovieCurrency } from '@blockframes/utils/static-model';
 import type firebase from 'firebase';
+import { createHoldback, Holdback, MailContract } from './contract';
+import { BucketTerm } from './terms';
+import { createLanguageKey } from './movie';
 
 export interface Bucket<T extends Date | firebase.firestore.Timestamp = Date> {
   id: string;
