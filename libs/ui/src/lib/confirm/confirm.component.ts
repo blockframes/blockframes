@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
@@ -9,26 +10,31 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 })
 export class ConfirmComponent {
 
-    constructor(
-      @Inject(MAT_DIALOG_DATA)
-      public data: {
-        title: string,
-        question: string,
-        confirm: string,
-        cancel: string,
-        onConfirm?: () => void
-      },
-      public dialogRef: MatDialogRef<ConfirmComponent>,
-    ) { }
+  form = new FormGroup({
+    acceptTerms: new FormControl(false)
+  });
 
-    public confirm() {
-      if (this.data.onConfirm) {
-        this.data.onConfirm();
-      }
-      this.dialogRef.close(true);
-    }
+  constructor(
+    @Inject(MAT_DIALOG_DATA)
+    public data: {
+      title: string,
+      question: string,
+      confirm: string,
+      cancel: string,
+      validationCheckbox?: boolean,
+      onConfirm?: () => void
+    },
+    public dialogRef: MatDialogRef<ConfirmComponent>,
+  ) { }
 
-    public close(): void {
-      this.dialogRef.close(false);
+  public confirm() {
+    if (this.data.onConfirm) {
+      this.data.onConfirm();
     }
+    this.dialogRef.close(true);
+  }
+
+  public close(): void {
+    this.dialogRef.close(false);
+  }
 }

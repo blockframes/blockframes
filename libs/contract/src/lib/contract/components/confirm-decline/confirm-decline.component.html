@@ -18,8 +18,14 @@
     </textarea>
     <mat-hint>Please specify why you want to decline this offer.</mat-hint>
   </mat-form-field>
+  <div *ngIf="data.validationCheckbox" class="validation-checkbox" fxLayout="column" fxLayoutAlign="center center">
+    <p><strong>Before you accept this contract, please agree on the following:</strong></p>
+    <mat-checkbox formControlName="acceptTerms">
+      I hereby accept the policy regarding accepted offers, as mentioned in the <a routerLink="toDefine" target="_blank">Terms and Conditions.</a>
+    </mat-checkbox>
+  </div>
   <footer fxLayout="column" fxLayoutAlign="center center">
-    <button mat-flat-button color="primary" type="submit">
+    <button mat-flat-button color="primary" [disabled]="data.validationCheckbox && !form.get('acceptTerms').value" type="submit">
       Confirm refusal
     </button>
     <button mat-button (click)="cancel()" type="button">

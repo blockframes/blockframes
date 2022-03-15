@@ -4,7 +4,10 @@ import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-export interface ConfirmDeclineData { type: 'seller' | 'buyer' }
+export interface ConfirmDeclineData { 
+  type: 'seller' | 'buyer', 
+  validationCheckbox?: boolean 
+}
 
 @Component({
   selector: 'confirm-offer-decline',
@@ -29,6 +32,7 @@ export class ConfirmDeclineComponent {
   form = new FormGroup({
     reason: new FormControl(''),
     message: new FormControl(''),
+    acceptTerms: new FormControl(false)
   });
 
   constructor(
@@ -44,6 +48,6 @@ export class ConfirmDeclineComponent {
   }
 
   async cancel() {
-    this.dialog.close()
+    this.dialog.close();
   }
 }

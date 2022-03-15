@@ -6,6 +6,7 @@ import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Movie } from '@blockframes/model';
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
+import { AuthService } from '@blockframes/auth/+state';
 
 @Component({
   selector: 'sale-view',
@@ -17,13 +18,15 @@ export class SaleViewComponent {
   centralOrgId = this.shell.centralOrgId;
   sale$ = this.shell.sale$;
   orgId = this.orgService.org.id;
+  user$ = this.authService.profile$;
 
   constructor(
     private negotiationService: NegotiationService,
     private snackbar: MatSnackBar,
     private shell: SaleShellComponent,
     private dialog: MatDialog,
-    private orgService: OrganizationService
+    private orgService: OrganizationService,
+    private authService: AuthService,
   ) {}
 
   accept(negotiationId: string, contractId: string, title: Movie) {
@@ -35,6 +38,7 @@ export class SaleViewComponent {
       question: 'Please verify if all the contract elements are convenient for you.',
       confirm: 'Yes, accept Contract',
       cancel: 'Come back & verify Contract',
+      validationCheckbox: true
     };
     const ref = this.dialog.open(ConfirmComponent, { data });
     ref.afterClosed().subscribe((acceptSuccessful) => {
