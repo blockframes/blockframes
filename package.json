@@ -132,7 +132,7 @@
     "@datorama/akita-ngdevtools": "^3.0.2",
     "@firebase/rules-unit-testing": "^1.1.6",
     "@nrwl/angular": "12.3.3",
-    "@nrwl/cli": "13.8.8",
+    "@nrwl/cli": "12.3.3",
     "@nrwl/cypress": "12.3.3",
     "@nrwl/eslint-plugin-nx": "12.3.3",
     "@nrwl/express": "12.3.3",
