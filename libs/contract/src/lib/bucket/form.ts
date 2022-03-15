@@ -12,9 +12,10 @@ import {
   createBucket,
   createBucketContract,
   createBucketTerm,
-  Mandate
+  Mandate,
+  BucketTerm,
+  Term
 } from '@blockframes/model';
-import { BucketTerm, Term } from '../term/+state';
 import {
   AvailableTerritoryMarker,
   AvailsFilter,
