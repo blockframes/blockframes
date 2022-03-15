@@ -1,4 +1,4 @@
-import { createStorageFile, StorageFile } from "@blockframes/media/+state/media.firestore";
+import { createStorageFile, StorageFile } from '@blockframes/model';
 import {
   CrewRole,
   Territory,

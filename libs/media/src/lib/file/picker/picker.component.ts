@@ -7,15 +7,12 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-
 import { fromOrg, MovieService } from '@blockframes/movie/+state/movie.service';
-import { Movie } from '@blockframes/model';
+import { StorageFile, recursivelyListFiles, Movie } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { recursivelyListFiles } from '../../+state/media.model';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { FilePreviewComponent } from '../preview/preview.component';
-import { StorageFile } from '@blockframes/media/+state/media.firestore';
 
 @Component({
   selector: 'file-picker',

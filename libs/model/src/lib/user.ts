@@ -1,6 +1,6 @@
-import { DocumentMeta } from '@blockframes/utils/models-meta';
-import { createStorageFile, StorageFile } from '@blockframes/media/+state/media.firestore';
-import { Genre, Language, Media, Territory } from '@blockframes/utils/static-model';
+import { DocumentMeta } from "@blockframes/utils/models-meta";
+import { Genre, Language, Media, Territory } from "@blockframes/utils/static-model";
+import { createStorageFile, StorageFile } from "./media";
 import { NotificationTypesBase } from './notification';
 import { UserRole } from './permissions';
 
