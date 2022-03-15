@@ -7,8 +7,7 @@ import * as admin from 'firebase-admin';
 import { App, getOrgAppAccess } from '@blockframes/utils/apps';
 import { getDocument } from '@blockframes/firebase-utils';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
-import { createStorageFile } from '@blockframes/media/+state/media.firestore';
-import { createDenomination, OrganizationDocument, PublicUser, InvitationDocument, PublicInvitation, PermissionsDocument } from '@blockframes/model';
+import { createStorageFile, createDenomination, OrganizationDocument, PublicUser, InvitationDocument, PublicInvitation, PermissionsDocument } from '@blockframes/model';
 
 export { getDocument };
 

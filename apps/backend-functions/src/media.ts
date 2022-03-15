@@ -7,9 +7,16 @@ import { logger, storage } from 'firebase-functions';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 
 // Blockframes dependencies
-import { PublicUser, User, OrganizationDocument, MovieDocument } from '@blockframes/model';
-import { StorageFile, StorageVideo } from '@blockframes/media/+state/media.firestore';
-import { FileMetaData, isValidMetadata } from '@blockframes/media/+state/media.model';
+import {
+  FileMetaData,
+  isValidMetadata,
+  StorageFile,
+  StorageVideo,
+  PublicUser,
+  User,
+  OrganizationDocument,
+  MovieDocument
+} from '@blockframes/model';
 import { tempUploadDir } from '@blockframes/utils/file-sanitizer';
 import { ImageParameters, formatParameters } from '@blockframes/media/image/directives/imgix-helpers';
 

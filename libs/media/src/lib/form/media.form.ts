@@ -1,7 +1,7 @@
 import { FormControl } from '@angular/forms';
 import { Privacy } from '@blockframes/utils/file-sanitizer';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
-import { createStorageFile, StorageFile } from '../+state/media.firestore';
+import { createStorageFile, StorageFile } from '@blockframes/model';
 
 // ------------------------------
 //          File Meta Data
