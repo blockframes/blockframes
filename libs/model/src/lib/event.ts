@@ -1,9 +1,8 @@
 import type firebase from 'firebase';
 import { StorageFile } from '@blockframes/media/+state/media.firestore';
 import { AccessibilityTypes } from '@blockframes/utils/static-model/types';
-import { Person } from '@blockframes/utils/common-interfaces/identity';
 import { toDate } from '@blockframes/utils/helpers';
-import { Movie, Organization, User } from '@blockframes/model';
+import { Movie, Organization, Person, User } from '@blockframes/model';
 import { CalendarEvent } from 'angular-calendar';
 import { AnonymousCredentials } from '@blockframes/auth/+state/auth.model';
 

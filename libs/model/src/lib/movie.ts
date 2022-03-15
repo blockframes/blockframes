@@ -31,7 +31,7 @@ import {
   Cast,
   Stakeholder,
   Director,
-} from '@blockframes/utils/common-interfaces/identity';
+} from './identity';
 import { AnalyticsEvents, AnalyticsBase } from '@blockframes/utils/analytics/analytics-model';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
 import { StorageFile, StorageVideo } from '@blockframes/media/+state/media.firestore';
@@ -288,8 +288,6 @@ export interface MovieAnalytics extends AnalyticsBase {
 }
 
 // Export for other files
-export { Credit } from '@blockframes/utils/common-interfaces/identity';
-
 export type Movie = MovieBase<Date>;
 
 export interface SyncMovieAnalyticsOptions {
