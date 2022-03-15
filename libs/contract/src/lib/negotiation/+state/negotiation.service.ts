@@ -1,10 +1,9 @@
 import { Injectable } from "@angular/core";
 import { EntityState, ActiveState, StoreConfig, EntityStore } from "@datorama/akita";
 import { CollectionConfig, CollectionService } from "akita-ng-fire";
-import { Negotiation } from "./negotiation.firestore";
 import type firestore from 'firebase/firestore';
 import { formatDocumentMetaFromFirestore } from "@blockframes/utils/models-meta";
-import { BucketTerm } from "@blockframes/contract/term/+state";
+import { BucketTerm, Negotiation } from "@blockframes/model";
 
 interface NegotiationState extends EntityState<Negotiation, string>, ActiveState<string> { }
 
@@ -12,7 +11,7 @@ interface NegotiationState extends EntityState<Negotiation, string>, ActiveState
 @CollectionConfig({ path: 'contracts/:contractId/negotiations' })
 export class NegotiationService extends CollectionService<NegotiationState> {
   useMemorization = true;
-  constructor( store: NegotiationStore ) {
+  constructor(store: NegotiationStore) {
     super(store)
   }
 
@@ -20,9 +19,9 @@ export class NegotiationService extends CollectionService<NegotiationState> {
     return terms.map(term => {
       const duration = {
         from: term.duration.from.toDate(),
-        to:term.duration.to.toDate(),
+        to: term.duration.to.toDate(),
       };
-      return {...term, duration}
+      return { ...term, duration }
     })
   }
 
@@ -30,14 +29,14 @@ export class NegotiationService extends CollectionService<NegotiationState> {
     const _meta = formatDocumentMetaFromFirestore(_negotiation?._meta);
     const terms = this.formatDocumentDurationFromFirestore(_negotiation.terms)
     const initial = _negotiation.initial?.toDate();
-    return { ..._negotiation, _meta, initial , terms};
+    return { ..._negotiation, _meta, initial, terms };
   }
 }
 
 // BOILETPLATE
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'negotiation' })
-export class NegotiationStore extends EntityStore<NegotiationState> {
+class NegotiationStore extends EntityStore<NegotiationState> {
   constructor() {
     super();
   }

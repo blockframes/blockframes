@@ -1,6 +1,4 @@
-
-import { BucketContract } from '@blockframes/contract/bucket/+state';
-
+import { BucketContract } from '@blockframes/model';
 import {
   availDetailsExclusive, availSouthKorea, availAfghanistan,
   availFrance, availsSVODArgentina, availsPayTVArgentina,
@@ -9,13 +7,16 @@ import {
   availsFranceLuxembourg, availsAllButSouthKorea, availsPayTV, availsPlanes,
 } from './../fixtures/availsFilters';
 import {
-  mandateMovie1, saleArgentinaMovie1, saleGermanyMovie1, saleCanadaMovie1, saleBelgiumFranceLuxembourgMovie1,
+  mandateMovie1,
+  saleArgentinaMovie1,
+  saleGermanyMovie1,
+  saleCanadaMovie1,
+  saleBelgiumFranceLuxembourgMovie1,
   mandateMovie6
 } from './../fixtures/mandatesAndSales';
 import { FullMandate, FullSale, territoryAvailabilities } from '../avails';
 
 const sales = [saleArgentinaMovie1, saleGermanyMovie1, saleCanadaMovie1, saleBelgiumFranceLuxembourgMovie1]
-
 
 describe('Test territoryAvailabilities pure function', () => {
   it('territoryAvailabilities', () => {

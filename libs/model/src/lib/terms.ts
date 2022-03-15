@@ -52,3 +52,18 @@ export interface Term<T extends Date | firestore.Timestamp = Date> extends Bucke
 }
 
 export type TermDocument = Term<firestore.Timestamp>;
+
+export function createTerm(params: Partial<Term<Date>> = {}): Term<Date> {
+  return {
+    id: '',
+    contractId: '',
+    territories: [],
+    medias: [],
+    exclusive: false,
+    duration: { from: new Date(), to: new Date() },
+    licensedOriginal: null,
+    languages: {},
+    criteria: [],
+    ...params
+  }
+}

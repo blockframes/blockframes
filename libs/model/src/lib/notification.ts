@@ -1,8 +1,7 @@
-import { PublicOrganization, PublicUser, PublicInvitation } from '@blockframes/model';
+import { Bucket, PublicOrganization, PublicUser, PublicInvitation } from '@blockframes/model';
 import type firestore from 'firebase/firestore';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
 import { EmailErrorCodes } from '@blockframes/utils/emails/utils';
-import { Bucket } from '@blockframes/contract/bucket/+state/bucket.firestore';
 import { App } from '@blockframes/utils/apps';
 import { StorageFile } from '@blockframes/media/+state/media.firestore';
 

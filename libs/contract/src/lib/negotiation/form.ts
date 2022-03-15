@@ -1,14 +1,12 @@
 import { FormControl, Validators } from "@angular/forms";
 import { EntityControl, FormEntity, FormList } from "@blockframes/utils/form";
 import { BucketTermForm, createBucketTermControl } from "../bucket/form";
-import { BucketTerm, Term } from "../term/+state";
-import { Negotiation } from "./+state/negotiation.firestore";
+import { BucketTerm, Term, Negotiation } from "@blockframes/model";
 
 type NegotiationFormState = {
   price: number,
   terms: BucketTerm<Date>[]
 }
-
 
 // We want the NegotiationFrom to manage Term & BucketTerm
 const createControl = (term: Partial<BucketTerm | Term> = {}) => {

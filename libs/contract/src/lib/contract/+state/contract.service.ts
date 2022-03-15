@@ -5,11 +5,10 @@ import { Timestamp } from "@blockframes/utils/common-interfaces/timestamp";
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
 import { map } from 'rxjs/operators';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
 import { centralOrgId } from '@env';
 import { ActiveState, EntityState } from '@datorama/akita';
+import { ContractDocument, convertDuration, Holdback, Mandate, Sale, createMandate, createSale, Negotiation } from '@blockframes/model';
 import { limit, orderBy, where } from 'firebase/firestore';
-import { ContractDocument, convertDuration, Holdback, Mandate, Sale, createMandate, createSale } from '@blockframes/model';
 
 interface ContractState extends EntityState<Sale | Mandate>, ActiveState<string> { }
 
@@ -51,7 +50,6 @@ export class ContractService extends CollectionService<ContractState> {
       map(negotiations => negotiations[0])
     );
   }
-
 
   //used exclusively in the crm
   adminLastNegotiation(contractId: string) {

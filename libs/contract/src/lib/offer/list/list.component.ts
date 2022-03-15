@@ -3,10 +3,9 @@ import { Offer } from '@blockframes/contract/offer/+state';
 import { Observable } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { startWith } from 'rxjs/operators';
-import { Contract, Movie } from '@blockframes/model';
+import { Contract, Movie, Negotiation } from '@blockframes/model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
 
 type AllOfferStatus = '' | 'pending' | 'on_going' | 'past_deals';
 
