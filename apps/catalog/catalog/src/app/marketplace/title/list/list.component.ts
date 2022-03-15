@@ -18,10 +18,11 @@ import { debounceTime, switchMap, startWith, distinctUntilChanged, skip, shareRe
 import { centralOrgId } from '@env';
 import { AlgoliaMovie } from '@blockframes/utils/algolia';
 import { PdfService } from '@blockframes/utils/pdf/pdf.service';
-import { Term } from '@blockframes/contract/term/+state/term.model';
+import { Term } from '@blockframes/model';
 import { StoreStatus } from '@blockframes/utils/static-model/types';
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
-import { Bucket, BucketService } from '@blockframes/contract/bucket/+state';
+import { BucketService } from '@blockframes/contract/bucket/+state';
+import { Bucket } from '@blockframes/model';
 import { TermService } from '@blockframes/contract/term/+state/term.service';
 import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
 import { ContractService } from '@blockframes/contract/contract/+state';
