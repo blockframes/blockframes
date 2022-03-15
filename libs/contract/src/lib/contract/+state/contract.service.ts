@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
-import { createDocumentMeta, formatDocumentMetaFromFirestore } from "@blockframes/utils/models-meta";
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
 import { map } from 'rxjs/operators';
 import { QueryFn } from '@angular/fire/firestore';
@@ -16,7 +15,9 @@ import {
   Sale,
   createMandate,
   createSale,
-  Negotiation
+  Negotiation,
+  createDocumentMeta,
+  formatDocumentMetaFromFirestore
 } from '@blockframes/model';
 
 interface ContractState extends EntityState<Sale | Mandate>, ActiveState<string> { }
