@@ -22,7 +22,7 @@ import { staticModel } from '@blockframes/utils/static-model';
 import { Timestamp } from '../data/internals';
 import { createMailTerm } from '@blockframes/contract/term/+state/term.firestore';
 import { displayName } from '@blockframes/utils/utils';
-import { supportMailosaur } from '@blockframes/e2e/utils';
+import { supportMailosaur } from 'libs/testing/e2e/src';
 
 const ORG_HOME = '/c/o/organization/';
 const USER_CREDENTIAL_INVITATION = '/auth/identity';
