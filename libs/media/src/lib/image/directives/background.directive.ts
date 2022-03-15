@@ -3,10 +3,9 @@ import { BehaviorSubject, combineLatest, Subscription, Observable } from 'rxjs';
 import { ThemeService } from '@blockframes/ui/theme';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { map } from 'rxjs/operators';
-import { getAssetPath } from '../../+state/media.model';
+import { StorageFile, getAssetPath } from '@blockframes/model';
 import { ImageParameters } from './imgix-helpers';
 import { MediaService } from '../../+state/media.service';
-import { StorageFile } from '../../+state/media.firestore';
 
 @Directive({
   selector: '[bgRef] [bgAsset], [bgAsset]'

@@ -1,15 +1,10 @@
 import { Directive, Input, OnInit, HostBinding, ChangeDetectorRef, OnDestroy, HostListener } from '@angular/core';
-
 import { map } from 'rxjs/operators';
 import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
-
 import { ThemeService } from '@blockframes/ui/theme';
-
 import { ImageParameters } from './imgix-helpers';
-import { getAssetPath } from '../../+state/media.model';
+import { StorageFile, getAssetPath } from '@blockframes/model';
 import { MediaService } from '../../+state/media.service';
-import { StorageFile } from '../../+state/media.firestore';
-
 
 const aspectRatios = {
   poster: { w: 3, h: 4 },
