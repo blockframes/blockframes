@@ -1,4 +1,4 @@
-import { createMandate, createSale } from "@blockframes/contract/contract/+state";
+import { createMandate, createSale } from "@blockframes/model";
 import { territories, Territory } from "@blockframes/utils/static-model";
 import { FullMandate, FullSale } from "../avails";
 

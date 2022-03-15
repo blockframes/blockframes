@@ -5,7 +5,7 @@ import { File as GFile } from '@google-cloud/storage';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 
 import { jwplayerApiV2 } from '@blockframes/firebase-utils';
-import { linkDuration } from '@blockframes/event/+state/event.firestore';
+import { linkDuration } from '@blockframes/model';
 import { StorageVideo } from '@blockframes/media/+state/media.firestore';
 
 import { ErrorResultResponse } from './utils';

@@ -1,10 +1,6 @@
-﻿import {
-  apps,
-  assertFails,
-  assertSucceeds,
-} from '@firebase/rules-unit-testing';
+﻿import { apps, assertFails, assertSucceeds } from '@firebase/rules-unit-testing';
 import { Firestore, initFirestoreApp, rulesFixtures as testFixture } from '@blockframes/testing/unit-tests';
-import { EventDocument, Meeting, MeetingAttendee } from '@blockframes/event/+state/event.firestore';
+import { EventDocument, Meeting, MeetingAttendee } from '@blockframes/model';
 
 describe('Events Rules Tests', () => {
   const projectId = `evrules-spec-${Date.now()}`;

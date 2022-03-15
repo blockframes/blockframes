@@ -10,8 +10,7 @@ import { addDays, addMinutes, endOfWeek, startOfWeek } from 'date-fns';
 
 import { EventSmallDirective, EventLargeDirective } from '../event.directive';
 import { EventService } from '../../+state/event.service';
-import { createEvent } from '../../+state/event.model';
-import { EventTypes } from '../../+state/event.firestore';
+import { EventTypes, createEvent } from '@blockframes/model';
 import { EventCreateComponent } from '../../form/create/create.component';
 import { fromEvent } from 'rxjs';
 import { map, finalize, takeUntil, distinctUntilChanged } from 'rxjs/operators';

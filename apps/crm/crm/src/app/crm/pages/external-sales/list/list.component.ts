@@ -2,14 +2,14 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { CollectionReference } from '@angular/fire/firestore';
-import { Sale, ContractService } from '@blockframes/contract/contract/+state';
+import { ContractService } from '@blockframes/contract/contract/+state';
 import { IncomeService } from '@blockframes/contract/income/+state';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { joinWith } from '@blockframes/utils/operators';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { getSeller } from '@blockframes/contract/contract/+state/utils'
-import { Organization } from '@blockframes/model';
+import { Organization, Sale } from '@blockframes/model';
 
 const queryFn = (ref: CollectionReference) => {
   return ref
