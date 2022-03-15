@@ -10,3 +10,4 @@ export * from './lib/contract';
 export * from './lib/event';
 export * from './lib/negociation';
 export * from './lib/identity';
+export * from './lib/timestamp';

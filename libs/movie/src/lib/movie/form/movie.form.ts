@@ -34,17 +34,15 @@ import {
   createShooting,
   createMovieVideos,
   createMovieNote,
-} from '@blockframes/model';
-import { FormArray, FormControl, Validators, ValidatorFn } from '@angular/forms';
-import {
   Filmography,
   createFilmography,
   createDirector,
   createCredit,
   Stakeholder,
   createStakeholder,
-  Director,
-} from '@blockframes/utils/common-interfaces/identity';
+  Director
+} from '@blockframes/model';
+import { FormArray, FormControl, Validators, ValidatorFn } from '@angular/forms';
 import {
   FormStaticValue,
   FormStaticValueArray,
