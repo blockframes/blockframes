@@ -1,10 +1,9 @@
 import { Injectable } from "@angular/core";
 import { EntityState, ActiveState, StoreConfig, EntityStore } from "@datorama/akita";
 import { CollectionConfig, CollectionService } from "akita-ng-fire";
-import { Negotiation } from "./negotiation.firestore";
 import type firebase from 'firebase';
 import { formatDocumentMetaFromFirestore } from "@blockframes/utils/models-meta";
-import { BucketTerm } from "@blockframes/model";
+import { BucketTerm, Negotiation } from "@blockframes/model";
 
 interface NegotiationState extends EntityState<Negotiation, string>, ActiveState<string> { }
 
