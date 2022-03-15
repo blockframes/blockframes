@@ -9,14 +9,16 @@ import { Movie } from '@blockframes/model';
 import { App } from '@blockframes/utils/apps';
 import { APP } from '@blockframes/utils/routes/utils';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
-import { toMovieAnalytics } from '@blockframes/analytics/components/movie-analytics-chart/utils';
-import { MovieAnalytics } from '@blockframes/analytics/components/movie-analytics-chart/movie-analytics.model';
+import { counter } from '@blockframes/analytics/+state/utils';
+
 // RxJs
 import { map, switchMap, shareReplay, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
 // Intercom
 import { Intercom } from 'ng-intercom';
+import { LineChartData } from '@blockframes/analytics/components/line-chart/line-chart.component';
+import { joinWith } from '@blockframes/utils/operators';
 
 @Component({
   selector: 'dashboard-home',
@@ -31,22 +33,71 @@ export class HomeComponent implements OnInit {
   public hasAcceptedMovies$: Observable<boolean>;
   public hasDraftMovies$: Observable<boolean>;
 
-  public titleAnalytics$: Observable<MovieAnalytics[]> = this.orgService.currentOrg$.pipe(
-    switchMap(({ id }) => this.analytics.valueChanges(ref => ref
-      .where('type', '==', 'title')
-      .where('meta.ownerOrgIds', 'array-contains', id)
-    )),
-    map(toMovieAnalytics)
+  public lineChartData: LineChartData[] = [
+    {
+
+      name: 'the first one',
+      data: [
+        { x: new Date('02-01-2022').getTime(), y: 10 },
+        { x: new Date('03-01-2022').getTime(), y: 41 },
+        { x: new Date('04-01-2022').getTime(), y: 35 },
+        { x: new Date('05-01-2022').getTime(), y: 51 },
+        { x: new Date('06-01-2022').getTime(), y: 49 },
+        { x: new Date('07-01-2022').getTime(), y: 62 },
+        { x: new Date('08-01-2022').getTime(), y: 69 },
+        { x: new Date('09-01-2022').getTime(), y: 91 },
+        { x: new Date('10-01-2022').getTime(), y: 148 },
+      ]
+    },
+    {
+      name: 'anoter one',
+      data: [
+        { x: new Date('02-01-2022').getTime(), y: 148 },
+        { x: new Date('03-01-2022').getTime(), y: 91 },
+        { x: new Date('04-01-2022').getTime(), y: 69 },
+        { x: new Date('05-01-2022').getTime(), y: 62 },
+        { x: new Date('06-01-2022').getTime(), y: 51 },
+        { x: new Date('07-01-2022').getTime(), y: 49 },
+        { x: new Date('08-01-2022').getTime(), y: 35 },
+        { x: new Date('09-01-2022').getTime(), y: 41 },
+        { x: new Date('10-01-2022').getTime(), y: 10 },
+      ]
+    }
+  ]
+
+
+  titleAnalytics$ = this.analyticsService.getGlobalAnalytics().pipe(
+    joinWith({
+      org: analytic => this.orgService.valueChanges(analytic.meta.orgId)
+    }),
+    shareReplay({ bufferSize: 1, refCount: true })
+  );
+
+  orgActivity$ = this.titleAnalytics$.pipe(
+    map(analytics => counter(analytics, 'org.activity', 'orgActivity')),
+    map(analytics => analytics.sort((a, b) => a.count - b.count).splice(0, 2))
+  );
+
+  territoryActivity$ = this.titleAnalytics$.pipe(
+    map(analytics => counter(analytics, 'org.addresses.main.country', 'territories')),
+    map(analytics => analytics.sort((a, b) => a.count - b.count).splice(0, 2))
+  );
+
+  interactions$ = this.titleAnalytics$.pipe(
+    map(analytics => analytics.reduce((acc, curr) => {
+      if (!acc[curr.name]) acc[curr.name] = { list: [], name: curr.name }
+      acc[curr.name].list.push(curr)
+    }, {} as any))
   );
 
   constructor(
-    private analytics: AnalyticsService,
+    private analyticsService: AnalyticsService,
     private movieService: MovieService,
     private orgService: OrganizationService,
     private dynTitle: DynamicTitleService,
     @Optional() private intercom: Intercom,
     @Inject(APP) public app: App
-  ) {}
+  ) { }
 
   ngOnInit() {
     const allMoviesFromOrg$ = this.orgService.currentOrg$.pipe(

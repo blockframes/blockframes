@@ -1,4 +1,48 @@
-<ng-container *ngIf="titles$ | async as titles; else loading">
+<div fxFlex fxLayoutAlign="space-between center">
+  <h3>Dashboard</h3>
+  <div fxFlex fxLayoutGap="24px" fxLayoutAlign="end center">
+    <button mat-icon-button>
+      <mat-icon svgIcon="plus_circle"></mat-icon>
+    </button>
+    <button mat-icon-button>
+      <mat-icon svgIcon="video_recorder"></mat-icon>
+    </button>
+    <button mat-icon-button>
+      <mat-icon svgIcon="excel_export"></mat-icon>
+    </button>
+  </div>
+</div>
+<section class="surface carrousel-container">
+  <div fxFlex fxLayoutAlign="space-between center">
+    <h5>Lobster Film</h5>
+    <button mat-flat-button>
+      <span>See Analytics details</span>
+      <mat-icon svgIcon="arrow_forward"></mat-icon>
+    </button>
+  </div>
+  <span class="indicative-message">Some insights about your most popular title.</span>
+  <span class="indicative-message">Published on Archipel Market: 01/25/2022</span>
+  <bf-carousel flex layout>
+    <analytics-pie-chart fxFlex [col]="2" class="surface" carouselItem [data]="orgActivity$ | async"></analytics-pie-chart>
+    <analytics-map fxFlex [col]="2" class="surface" carouselItem [data]="territoryActivity$ | async"></analytics-map>
+    <analytics-line-chart [col]="2" fxFlex class="surface" carouselItem [data]="lineChartData">
+      <mat-icon svgIcon="analytics_interactions"></mat-icon>
+      <h5>Interactions</h5>
+    </analytics-line-chart>
+    <analytics-line-chart [col]="2" [filmView]="true" fxFlex class="surface" carouselItem [data]="lineChartData">
+      <mat-icon svgIcon="view_module"></mat-icon>
+      <h5>Film Page View</h5>
+    </analytics-line-chart>
+  </bf-carousel>
+  <button mat-flat-button class="see_titles">
+    <span>View all Titles Activity</span>
+    <mat-icon svgIcon="arrow_forward"></mat-icon>
+  </button>
+</section>
+
+
+
+<!-- <ng-container *ngIf="titles$ | async as titles; else loading">
   <ng-container *ngIf="(hasAcceptedMovies$ | async) else noAcceptedMovies">
     <header fxLayout="row" fxLayoutAlign="space-between center">
       <h1>Dashboard</h1>
@@ -6,9 +50,6 @@
         <a mat-stroked-button color="primary" routerLink="../title">
           <mat-icon svgIcon="video_library"></mat-icon>
           <span>View My Titles</span>
-        </a>
-        <a mat-mini-fab color="primary" routerLink="../title/lobby" matTooltip="Add a new Title">
-          <mat-icon svgIcon="add"></mat-icon>
         </a>
       </div>
     </header>
@@ -39,7 +80,7 @@
         <dashboard-no-title></dashboard-no-title>
       </ng-template>
       <article fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center" fxLayoutGap="24px">
-        <!-- Should only be shown for noAcceptedMovies && !noMovies -->
+        //Should only be shown for noAcceptedMovies && !noMovies
         <ng-container *ngIf="hasDraftMovies$ | async">
           <mat-card fxLayout="column" fxLayoutalign="center center">
             <img asset="add_draft.svg" alt="Manage Drafts">
@@ -61,7 +102,7 @@
       </button>
     </section>
   </ng-template>
-</ng-container>
+</ng-container> -->
 <ng-template #loading>
   <article fxLayout="column" fxLayoutAlign="center center">
     <mat-spinner color="primary"></mat-spinner>

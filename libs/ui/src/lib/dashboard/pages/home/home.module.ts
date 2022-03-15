@@ -21,6 +21,11 @@ import { MovieAnalyticsChartModule } from '@blockframes/analytics/components/mov
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { NoTitleModule } from '@blockframes/ui/dashboard/components/no-title/no-title.module';
 import { AppPipeModule } from '@blockframes/utils/pipes/app.pipe';
+import { CarouselModule } from '@blockframes/ui/carousel/carousel.module';
+import { PieChartModule } from '@blockframes/analytics/components/pie-chart/pie-chart.module';
+import { AnalyticsMapModule } from '@blockframes/analytics/components/map/map.module';
+import { LineChartModule } from '@blockframes/analytics/components/line-chart/line-chart.module';
+import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
 
 @NgModule({
   declarations: [HomeComponent],
@@ -31,6 +36,11 @@ import { AppPipeModule } from '@blockframes/utils/pipes/app.pipe';
     ImageModule,
     NoTitleModule,
     AppPipeModule,
+    CarouselModule,
+    PieChartModule,
+    AnalyticsMapModule,
+    MatLayoutModule,
+    LineChartModule,
 
     // Material
     MatButtonModule,

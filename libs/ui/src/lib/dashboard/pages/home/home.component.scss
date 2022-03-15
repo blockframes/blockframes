@@ -1,5 +1,6 @@
 :host {
-  display: block;
+  display: flex;
+  flex-direction: column;
   padding: 24px;
 
   & > * {
@@ -7,21 +8,29 @@
   }
 }
 
-header h1 {
-  margin: 0;
+.indicative-message {
+  font-family: 'Campton';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 14px;
+  display: flex;
+  align-items: center;
+  color: var(--active);
+}
+bf-carousel {
+  margin-top: 24px;
 }
 
-
-// No Movie
-mat-card {
-  width: 330px;
-  height: 220px;
-  img {
-    width: 100px;
-    align-self: center;
+.carrousel-container {
+  display: flex;
+  flex-direction: column;
+  h5 {
+    text-decoration: underline;
   }
 }
 
-h3 {
+.see_titles {
+  justify-self: center;
   margin-top: 24px;
 }
