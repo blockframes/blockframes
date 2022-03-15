@@ -1,6 +1,6 @@
 import { Bucket, PublicOrganization, PublicUser, PublicInvitation } from '@blockframes/model';
 import { firestore } from 'firebase-admin';
-import { DocumentMeta } from '@blockframes/utils/models-meta';
+import { DocumentMeta } from './meta';
 import { EmailErrorCodes } from '@blockframes/utils/emails/utils';
 import { App } from '@blockframes/utils/apps';
 import { StorageFile } from '@blockframes/media/+state/media.firestore';

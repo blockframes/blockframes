@@ -12,3 +12,4 @@ export * from './lib/negociation';
 export * from './lib/identity';
 export * from './lib/timestamp';
 export * from './lib/analytics';
+export * from './lib/meta';

@@ -33,7 +33,7 @@ import {
   Director,
 } from './identity';
 import { AnalyticsEvents, AnalyticsBase } from '@blockframes/utils/analytics/analytics-model';
-import { DocumentMeta } from '@blockframes/utils/models-meta';
+import { DocumentMeta } from './meta';
 import { StorageFile, StorageVideo } from '@blockframes/media/+state/media.firestore';
 import type firebase from 'firebase';
 
