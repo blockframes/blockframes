@@ -1,6 +1,4 @@
-
 import { privacies, Privacy } from '@blockframes/utils/file-sanitizer';
-import { MovieNote, MovieVideo } from '@blockframes/model';
 
 /**
  * Representation of a storage file in our Firestore db.
@@ -29,8 +27,6 @@ export function createStorageFile(file: Partial<StorageFile> = {}): StorageFile 
 export interface StorageVideo extends StorageFile {
   jwPlayerId: string;
 }
-
-export type MediaOutput = StorageFile[] | MovieVideo[] | MovieNote[] | string | MovieVideo;
 
 /**
  * Data needed by the `FileUploaderService` to actually upload into the storage.
@@ -97,17 +93,4 @@ export function recursivelyListFiles(document: any): StorageFile[] {
   } else {
     return [];
   }
-}
-
-// TODO issue#4002 MOVE THE 2 FUNCTIONS BELLOW ELSEWHERE
-export function getFileNameFromPath(path: string) {
-  if (typeof path !== 'string') {
-    console.warn('UNEXPECTED PATH', path);
-  }
-  return (!!path && typeof path === 'string') ? path.split('/').pop() : '';
-}
-
-/** Used this only for background to let the browser deal with that with picture */
-export function getAssetPath(asset: string, theme: 'dark' | 'light', type: 'images' | 'logo' = 'images') {
-  return `assets/${type}/${theme}/${asset}`;
 }
