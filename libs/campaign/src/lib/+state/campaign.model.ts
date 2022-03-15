@@ -1,5 +1,5 @@
-import { StorageFile } from "@blockframes/media/+state/media.firestore"
-import { MovieCurrency } from "@blockframes/utils/static-model"
+import { StorageFile } from '@blockframes/model';
+import { MovieCurrency } from '@blockframes/utils/static-model';
 
 export interface Campaign {
   id: string;
