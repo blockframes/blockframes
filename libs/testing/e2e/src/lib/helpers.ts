@@ -1,4 +1,4 @@
-import { serverId } from '@blockframes/e2e/utils';
+import { serverId } from './env';
 import * as faker from 'faker';
 
 export function createFakeUserData() {
