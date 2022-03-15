@@ -4,7 +4,6 @@ import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
 import { filter, map, pluck } from 'rxjs/operators';
 import { combineLatest, Subscription } from 'rxjs';
 import { IncomeService } from '@blockframes/contract/income/+state';
@@ -12,9 +11,8 @@ import { ContractService } from '@blockframes/contract/contract/+state';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { OfferShellComponent } from '../shell.component';
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
-import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
 import { isInitial } from '@blockframes/contract/negotiation/utils';
-import { Holdback, Term } from '@blockframes/model';
+import { Holdback, Negotiation, Term } from '@blockframes/model';
 
 
 @Component({

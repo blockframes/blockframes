@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 
 // Services
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { Contract, Movie } from '@blockframes/model';
+import { Contract, Movie, Negotiation } from '@blockframes/model';
 import { Income, IncomeService } from '@blockframes/contract/income/+state';
 import { ContractService } from '@blockframes/contract/contract/+state';
 import { TermService } from '@blockframes/contract/term/+state';
@@ -17,7 +17,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { filter, first } from 'rxjs/operators';
 import { joinWith } from '@blockframes/utils/operators';
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
-import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
 
 @Component({
   selector: 'contract-form',
