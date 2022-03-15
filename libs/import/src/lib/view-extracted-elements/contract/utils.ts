@@ -20,12 +20,10 @@ import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { UserService } from '@blockframes/user/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { Term } from '@blockframes/contract/term/+state/term.firestore';
+import { Term } from '@blockframes/model';
 import { Language, Media, Territory } from '@blockframes/utils/static-model';
-import { MovieLanguageSpecification, User } from '@blockframes/model';
-import { Mandate, Sale } from '@blockframes/contract/contract/+state/contract.firestore';
+import { createMandate, createSale, Mandate, MovieLanguageSpecification, Sale, User } from '@blockframes/model';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
-import { createMandate, createSale } from '@blockframes/contract/contract/+state/contract.model';
 import {
   extract, ExtractConfig, getStaticList, SheetTab, getGroupedList
 } from '@blockframes/utils/spreadsheet';

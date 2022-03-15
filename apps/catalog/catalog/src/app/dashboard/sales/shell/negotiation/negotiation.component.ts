@@ -2,7 +2,6 @@ import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SaleShellComponent } from '../shell.component';
 import { NegotiationForm } from '@blockframes/contract/negotiation/form';
-import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
 import { NegotiationGuardedComponent } from '@blockframes/contract/negotiation/guard'
 import { ContractService } from '@blockframes/contract/contract/+state';
@@ -12,6 +11,7 @@ import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { filter, first, pluck } from 'rxjs/operators'
+import { Negotiation } from '@blockframes/model';
 
 @Component({
   selector: 'sale-negotiation',
