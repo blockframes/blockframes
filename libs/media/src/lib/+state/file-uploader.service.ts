@@ -4,13 +4,11 @@ import { ComponentPortal } from "@angular/cdk/portal";
 import { Overlay, OverlayRef } from "@angular/cdk/overlay";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { AngularFireStorage, AngularFireUploadTask } from "@angular/fire/storage";
-
 import { AuthService } from "@blockframes/auth/+state";
 import { tempUploadDir } from "@blockframes/utils/file-sanitizer";
 import { BehaviorStore } from "@blockframes/utils/observable-helpers";
 import { delay } from '@blockframes/utils/helpers';
-
-import { UploadData, isValidMetadata } from "./media.model";
+import { UploadData, isValidMetadata } from '@blockframes/model';
 import { UploadWidgetComponent } from "../file/upload-widget/upload-widget.component";
 import { getTaskStateObservable } from "../file/upload-widget/task.pipe";
 
@@ -21,7 +19,6 @@ export class FileUploaderService {
   private tasksState = new BehaviorStore<unknown[]>([]);
 
   private queue: Record<string, UploadData[] | null> = {};
-
 
   public overlayRef: OverlayRef;
   private overlayOptions = {
