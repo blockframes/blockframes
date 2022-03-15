@@ -6,7 +6,7 @@ import { FormStaticValueArray } from '@blockframes/utils/form/forms/static-value
 import { compareDates, isDateInFuture } from '@blockframes/utils/form/validators/validators';
 
 import { AvailsFilter, BaseAvailsFilter, CalendarAvailsFilter, MapAvailsFilter } from '../avails';
-import { Duration } from '@blockframes/contract/term/+state';
+import { Duration } from '@blockframes/model';
 
 
 function createDurationControl(duration: Partial<{ from: Date, to: Date }> = {}) {
