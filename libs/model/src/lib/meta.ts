@@ -1,5 +1,6 @@
-import { App } from "./apps";
+import { App } from '@blockframes/utils/apps';
 import type firebase from 'firebase';
+
 type Timestamp = firebase.firestore.Timestamp;
 
 export interface DocumentMeta<D> {
