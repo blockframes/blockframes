@@ -278,7 +278,7 @@ export const availsPayTV: AvailsFilter = {
     to: new Date('02/23/2023'),
   },
   exclusive: true,
-  territories: [],
+  territories: ['china', 'france'],
   medias: ['payTv']
 };
 
@@ -288,7 +288,29 @@ export const availsPlanes: AvailsFilter = {
     to: new Date('02/23/2023'),
   },
   exclusive: true,
-  territories: [],
+  territories: ['china', 'france'],
+  medias: ['planes']
+};
+
+
+export const availsPlanesPayTv: AvailsFilter = {
+  duration: {
+    from: new Date('02/28/2022'),
+    to: new Date('02/23/2023'),
+  },
+  exclusive: true,
+  territories: ['brazil'],
+  medias: ['payTv', 'planes']
+};
+
+
+export const availsFranceBrazil: AvailsFilter = {
+  duration: {
+    from: new Date('02/21/2022'),
+    to: new Date('02/21/2030')
+  },
+  exclusive: true,
+  territories: ['brazil', 'france'],
   medias: ['planes']
 };
 
