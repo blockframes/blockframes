@@ -1,10 +1,11 @@
-﻿import { acceptCookie, assertMoveTo, clickOnMenu } from '@blockframes/e2e/utils/functions';
+﻿import { acceptCookie, clickOnMenu } from '@blockframes/e2e/utils/functions';
 import { SEC, serverId, testEmail } from '@blockframes/e2e/utils';
 import { User, USER } from '@blockframes/e2e/fixtures/users';
 import SearchPage from '../../support/pages/marketplace/SearchPage';
 import ViewPage from '../../support/pages/marketplace/ViewPage';
 import { titleInvest, discussionData, strEmail } from '../../fixtures/investment';
 import { MessageListResult } from 'cypress-mailosaur';
+import { assertUrlIncludes } from 'libs/testing/e2e/src';
 
 const userFixture = new User();
 const users  =  [ userFixture.getByUID(USER.Vincent) ];
@@ -39,7 +40,7 @@ describe.skip('Invest Interest Email Test', () => {
     cy.get('financiers-marketplace h1', { timeout: 90 * SEC });
 
     clickOnMenu(['financiers-marketplace'], 'menu', 'title', false);
-    assertMoveTo(MOVIE_LIST_PATH);
+    assertUrlIncludes(MOVIE_LIST_PATH);
 
     const p3 = new SearchPage();
     cy.wait(2 * SEC);

@@ -1,37 +1,21 @@
 /// <reference types="cypress" />
 
-import {
-  clearDataAndPrepareTest,
-  testEmail,
-  get,
-  getInList,
-  check,
-  interceptEmail,
-  deleteEmail,
-  createEmail,
-  createOrgName
-} from '@blockframes/e2e/utils';
+import { get, getInList, check, interceptEmail, deleteEmail, createFakeUserData } from 'libs/testing/e2e/src';
+import { testEmail } from "@blockframes/e2e/utils";
+import { auth } from '@blockframes/testing/e2e';
 
-const user = {
-  firstName: 'John',
-  lastName: 'Doe',
-  email: createEmail(),
-  company: createOrgName(),
-  role: 'Buyer',
-  indicator: '+33',
-  phone: '123456789'
-}
+const user = createFakeUserData();
 
 describe('Demo Request Email', () => {
-
   beforeEach(() => {
-    clearDataAndPrepareTest('/');
+    cy.visit('');
+    auth.clearBrowserAuth();
   });
 
   it('Request demo email', () => {
-    get('first-name').type(user.firstName);
-    get('last-name').type(user.lastName);
-    get('company').type(user.company);
+    get('first-name').type(user.firstname);
+    get('last-name').type(user.lastname);
+    get('company').type(user.company.name);
     get('role').click();
     getInList('role_', user.role);
     get('demo-email').type(user.email);
@@ -39,8 +23,7 @@ describe('Demo Request Email', () => {
     cy.get('@phoneInputs').first().type(user.indicator);
     cy.get('@phoneInputs').last().type(user.phone);
     check('checkbox-newsletters');
-    get('submit-demo-request').click()
-    interceptEmail({ sentTo: testEmail })
-      .then((mail) => deleteEmail(mail.id));
+    get('submit-demo-request').click();
+    interceptEmail({ sentTo: testEmail }).then((mail) => deleteEmail(mail.id));
   });
 });

@@ -7,10 +7,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { isInitial } from '@blockframes/contract/negotiation/utils';
 import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
-
-function capitalize(text: string) {
-  return `${text[0].toUpperCase()}${text.substring(1)}`;
-}
+import { capitalize } from '@blockframes/utils/helpers';
 
 interface InternalSale extends Sale<Date> {
   licensor: string;

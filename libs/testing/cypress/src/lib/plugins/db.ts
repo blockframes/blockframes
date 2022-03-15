@@ -1,4 +1,6 @@
 import { db, auth } from '../testing-cypress';
+import { User, Organization } from '../../../../e2e/src'
+import { App, ModuleAccess  } from '@blockframes/utils/apps';
 
 export async function getRandomEmail() {
   const { email } = await getRandomUser();
@@ -8,22 +10,28 @@ export async function getRandomEmail() {
 
 export async function getRandomUser() {
   const userQuery = await db.collection('users').get();
-  const users = userQuery.docs.map((doc) => doc.data());
-  const randomUser = users[Math.floor(Math.random() * users.length)];
-  return randomUser;
+  return userQuery.docs[Math.floor(Math.random() * userQuery.docs.length)].data() as User;
 }
 
-export async function getRandomOrg(data: { application: string; access: 'marketplace' | 'dashboard' }) {
-  const { application, access } = data;
-  const userQuery = await db
-    .collection('orgs')
+function getMarketplaceOrgs(app: App) {
+  return db.collection('orgs')
     .where('status', '==', 'accepted')
-    .where(`appAccess.${application}.marketplace`, '==', true)
-    .where(`appAccess.${application}.dashboard`, '==', access === 'dashboard')
+    .where(`appAccess.${app}.marketplace`, '==', true)
+    .where(`appAccess.${app}.dashboard`, '==', false)
     .get();
-  const orgs = userQuery.docs.map((doc) => doc.data());
-  const randomOrg = orgs[Math.floor(Math.random() * orgs.length)];
-  return randomOrg;
+}
+
+function getDashboardOrgs(app: App) {
+  return db.collection('orgs')
+    .where('status', '==', 'accepted')
+    .where(`appAccess.${app}.dashboard`, '==', true)
+    .get();
+}
+
+export async function getRandomOrg(data: { app: App; access: ModuleAccess }) {
+  const { app, access } = data;
+  const userQuery = access.dashboard ? await getDashboardOrgs(app) : await getMarketplaceOrgs(app);
+  return userQuery.docs[Math.floor(Math.random() * userQuery.docs.length)].data() as Organization;
 }
 
 export async function validateOrg(orgName: string) {
@@ -38,6 +46,5 @@ export async function acceptUserInOrg(userEmail: string) {
   const user = await auth.getUserByEmail(userEmail);
   const userQuery = await db.collection('invitations').where('fromUser.uid', '==', user.uid).get();
   const invitation = userQuery.docs.pop().data();
-  console.log(invitation);
   return db.collection('invitations').doc(invitation.id).update({ status: 'accepted' });
 }

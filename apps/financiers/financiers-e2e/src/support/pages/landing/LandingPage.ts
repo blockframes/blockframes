@@ -4,8 +4,7 @@ import { SEC } from '@blockframes/e2e/utils';
 export default class LandingPage {
   constructor() {
     cy.get('financiers-landing', {timeout: 60 * SEC});
-    cy.get('button[test-id="cookies"]', {timeout: 3 * SEC})
-    .click();
+    cy.get('button[test-id="cookies"]', { timeout: 3 * SEC }).click();
     cy.wait(1 * SEC);
   }
 

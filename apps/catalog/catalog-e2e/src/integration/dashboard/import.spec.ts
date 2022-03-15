@@ -2,7 +2,7 @@
 
 import { User as UserType } from '@blockframes/e2e/utils/type';
 import { User, USER } from '@blockframes/e2e/fixtures/users';
-import { assertMoveTo } from '@blockframes/e2e/utils/functions';
+import { assertUrlIncludes } from 'libs/testing/e2e/src';
 
 import { SEC } from '@blockframes/e2e/utils/env';
 
@@ -51,7 +51,7 @@ describe('User can import objects with Excel', () => {
     cy.get('aside a[routerlink="title"]', {timeout: 5 * SEC})
       .click();
 
-    assertMoveTo(MY_TITLES_PAGE);
+    assertUrlIncludes(MY_TITLES_PAGE);
 
     cy.log('Navigated to import title page');
     cy.get('a[test-id="import-titles"]', {timeout: 30 * SEC})
@@ -100,7 +100,7 @@ describe('User can import objects with Excel', () => {
     cy.get('aside a[routerlink="sales"]', {timeout: 5 * SEC})
       .click();
 
-    assertMoveTo(MY_SALES_PAGE);
+    assertUrlIncludes(MY_SALES_PAGE);
 
     cy.log('Navigated to import contracts page');
     cy.get('a[test-id="import-contracts"]', {timeout: 30 * SEC})

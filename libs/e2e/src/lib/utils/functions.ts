@@ -1,9 +1,8 @@
 ﻿// import { AuthLoginPage } from "../pages/auth";
-import { User, InterceptOption } from "./type";
+import { User } from "./type";
 import { SEC } from './env';
-import { auth } from '@blockframes/testing/e2e';
-import { serverId } from '@blockframes/e2e/utils';
 import { loginWithEmailAndPassword } from "libs/testing/e2e/src/lib/auth";
+import { assertUrlIncludes } from 'libs/testing/e2e/src';
 
 /** Clear cookies, local storage, indexedDB and navigate to the path (/auth by default). */
 export function clearDataAndPrepareTest(path: string = '/auth') {
@@ -172,70 +171,3 @@ function handleFormElement(el, id: string, value: string) {
     .contains(value).click({ force: true });
 }
 
-/** Used to test the path we should go */
-export function assertMoveTo(path: string) {
-  // Quick fix to solve CI issue
-  assertUrlIncludes(path)
-}
-
-
-export function get(selector: string) {
-  return cy.get(`[test-id="${selector}"]`);
-}
-
-export function getAllStartingWith(selector: string) {
-  return cy.get(`[test-id^="${selector}"]`);
-}
-
-export function getInList(selectorStart: string, option: string) {
-  getAllStartingWith(selectorStart).each(($el) => {
-    // loops between all activity options
-    if ($el[0].innerText === option) $el.trigger('click');
-  });
-}
-
-export function check(selector: string) {
-  get(selector).find('[type="checkbox"]').check({ force: true });
-}
-
-export function assertUrl(url: string) {
-  cy.url().should('eq',`http://localhost:4200/${url}`)
-}
-
-export function assertUrlIncludes(partialUrl: string) {
-  cy.url().should('include', partialUrl)
-}
-
-export function interceptEmail(option: InterceptOption) {
-  const now = new Date();
-  return cy.mailosaurGetMessage(serverId, option, {receivedAfter: now})
-}
-
-export function deleteEmail(id: string) {
-  return cy.mailosaurDeleteMessage(id)
-}
-
-export async function createUserArray(number: number, params: string = 'name, email') {
-  const response = await fetch(`https://randomuser.me/api/?results=${number}&inc=${params}`);
-  const data = await response.json();
-  const results = data.results;
-  const users = results.map((user) => {
-    return {
-      country: 'France',
-      password: 'Blockframes',
-      company: {
-        name: `${user.name.first} ${user.name.last} corporation`,
-        activity: 'Organization',
-        country: 'France',
-      },
-      role: 'Buyer',
-      ...user,
-      email: user.email.replace('example.com', `${serverId}.mailosaur.net`),
-    };
-  });
-  return users;
-}
-
-export function capitalize(text: string) {
-  return `${text[0].toUpperCase()}${text.substring(1)}`;
-}

@@ -1,5 +1,3 @@
-/// <reference types="cypress" />
-
 import {
   get,
   getInList,
@@ -8,33 +6,29 @@ import {
   interceptEmail,
   deleteEmail,
   assertUrlIncludes,
-} from '@blockframes/e2e/utils';
-import { createUserArray, capitalize } from '@blockframes/e2e/utils';
+  createFakeUserDataArray
+} from 'libs/testing/e2e/src';
+import { capitalize } from '@blockframes/utils/helpers';
 import { Organization } from '@blockframes/organization/+state';
-import { orgActivity } from '@blockframes/utils/static-model/static-model';
-import { territories } from '@blockframes/utils/static-model';
+import { orgActivity, territories } from '@blockframes/utils/static-model/static-model';
+import { auth } from '@blockframes/testing/e2e';
 
-let users = [];
+const [newOrgUser, knownMarketplaceOrgUser, knownDashboardOrgUser] = createFakeUserDataArray(3);
 
 describe('Signup', () => {
 
-  before('Define users', async () => {
-    users = await createUserArray(3);
-  })
-  
   beforeEach(() => {
-    cy.clearCookies();
-    cy.clearLocalStorage();
-    indexedDB.deleteDatabase('firebaseLocalStorageDb');
+    cy.visit('');
+    auth.clearBrowserAuth();
     cy.visit('auth/identity');
   });
 
   it('User from new company can signup', () => {
-    const user = users[0];
+    const user = newOrgUser;
     get('cookies').click();
     get('email').type(user.email);
-    get('first-name').type(user.name.first);
-    get('last-name').type(user.name.last);
+    get('first-name').type(user.firstname);
+    get('last-name').type(user.lastname);
     get('org').type(user.company.name);
     get('new-org').click();
     get('activity').click();
@@ -74,13 +68,13 @@ describe('Signup', () => {
   });
 
   it('User from a known organization with access to festival marketplace can signup', () => {
-    const user = users[1];
-    cy.task('getRandomOrg', { application: 'festival', access: 'marketplace' }).then(
-      (org: Organization) => {
+    const user = knownMarketplaceOrgUser;
+    cy.task('getRandomOrg', { app: 'festival', access: { marketplace: true, dashboard: false } })
+      .then((org: Organization) => {
         get('cookies').click();
         get('email').type(user.email);
-        get('first-name').type(user.name.first);
-        get('last-name').type(user.name.last);
+        get('first-name').type(user.firstname);
+        get('last-name').type(user.lastname);
         get('org').type(org.denomination.full);
         getInList('org_', org.denomination.full);
         get('activity').should('contain', orgActivity[org.activity]);
@@ -110,18 +104,20 @@ describe('Signup', () => {
         get('refresh').click();
         assertUrlIncludes('c/o/marketplace/home');
         get('skip-preferences').click();
+
+        //TODO: connect with an admin of this org to check if the notification has been received
       }
     );
   });
 
   it('User from a known organization with access to festival dashboard can signup', () => {
-    const user = users[2];
-    cy.task('getRandomOrg', { application: 'festival', access: 'dashboard' }).then(
-      (org: Organization) => {
+    const user = knownDashboardOrgUser;
+    cy.task('getRandomOrg', { app: 'festival', access: { marketplace: true, dashboard: true } })
+      .then((org: Organization) => {
         get('cookies').click();
         get('email').type(user.email);
-        get('first-name').type(user.name.first);
-        get('last-name').type(user.name.last);
+        get('first-name').type(user.firstname);
+        get('last-name').type(user.lastname);
         get('org').type(org.denomination.full);
         getInList('org_', org.denomination.full);
         get('activity').should('contain', orgActivity[org.activity]);
@@ -150,6 +146,8 @@ describe('Signup', () => {
         get('org-approval-ok').should('exist');
         get('refresh').click();
         assertUrlIncludes('c/o/dashboard/home');
+
+        //TODO: connect with an admin of this org to check if the notification has been received
       }
     );
   });

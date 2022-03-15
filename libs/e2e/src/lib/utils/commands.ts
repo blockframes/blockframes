@@ -10,7 +10,6 @@ import { firebase as firebaseConfig } from '@env';
 const app = firebase.initializeApp(firebaseConfig());
 
 export const login = (email: string, password: string) => {
-  app.auth().useEmulator('http://localhost:9099')
   return app.auth().signInWithEmailAndPassword(email, password);
 }
 
