@@ -1,6 +1,6 @@
 import { DocumentMeta } from "@blockframes/utils/models-meta";
 import type { Media, Territory } from "@blockframes/utils/static-model";
-import { Timestamp } from "@blockframes/utils/common-interfaces/timestamp";
+import { Timestamp } from '@blockframes/model';
 import { createMailTerm, Duration, BucketContract } from "@blockframes/model";
 import { createDocumentMeta } from "@blockframes/utils/models-meta";
 import { toDate } from "@blockframes/utils/helpers";
