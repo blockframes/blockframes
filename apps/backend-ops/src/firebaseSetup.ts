@@ -2,7 +2,13 @@ import { syncUsers } from './users';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
 import { migrate } from './migrations';
 import { importFirestore } from './admin';
-import { copyFirestoreExportFromCiBucket, endMaintenance, latestAnonDbDir, loadAdminServices, restoreAnonStorageFromCI } from '@blockframes/firebase-utils';
+import {
+  copyFirestoreExportFromCiBucket,
+  endMaintenance,
+  latestAnonDbDir,
+  loadAdminServices,
+  restoreAnonStorageFromCI,
+} from '@blockframes/firebase-utils';
 import {
   connectAuthEmulator,
   connectFirestoreEmulator,
