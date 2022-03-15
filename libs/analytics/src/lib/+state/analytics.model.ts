@@ -1,4 +1,4 @@
-import { createOrganization, createUser } from "@blockframes/model";
+import { createMovie, createOrganization, createUser } from "@blockframes/model";
 import { AggregatedAnalytic, Analytics, MetaTitle } from "./analytics.firestore";
 
 export const isTitleDataEvent = (event: Partial<Analytics>): event is Analytics<'title'> => event.type === 'title';
@@ -15,8 +15,6 @@ export function createTitleMeta(meta: Partial<MetaTitle>): MetaTitle {
 
 export function createAggregatedAnalytic(analytic: Partial<AggregatedAnalytic>): AggregatedAnalytic {
   return {
-    user: createUser(),
-    org: createOrganization(),
     addedToWishlist: 0,
     askingPriceRequested: 0,
     pageView: 0,

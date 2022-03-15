@@ -40,7 +40,7 @@
       </div>
     </article>
 
-    <bf-table [source]="buyerAnalytics$ | async" pagination="5">
+    <bf-table [source]="buyerAnalytics$ | async" pagination="5" useFilter>
       <ng-template colRef="user" label="Name" let-user sort>
         <a [href]="'mailto:' + user?.email">{{ user | displayName }}</a>
       </ng-template>
