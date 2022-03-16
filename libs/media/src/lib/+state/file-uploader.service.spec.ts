@@ -5,7 +5,7 @@ import { AngularFireStorage } from "@angular/fire/storage";
 import { SETTINGS, AngularFirestoreModule } from '@angular/fire/firestore';
 import { clearFirestoreData } from '@firebase/rules-unit-testing';
 import { FileUploaderService } from './file-uploader.service';
-import { UploadData } from './media.model';
+import { UploadData } from '@blockframes/model';
 import { AuthService } from '@blockframes/auth/+state/auth.service';
 
 class DummyService { }

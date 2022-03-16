@@ -9,14 +9,14 @@ import {
   isMeeting,
   isScreening,
   Notification,
-  Contract
+  Contract,
+  createStorageFile
 } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { toDate } from '@blockframes/utils/helpers';
 import { displayName } from '@blockframes/utils/utils';
 import { App, applicationUrl, appName, getMovieAppAccess } from '@blockframes/utils/apps';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 import { format } from 'date-fns';
 import { trimString } from '@blockframes/utils/pipes/max-length.pipe';
 import { ActiveState, EntityState } from '@datorama/akita';

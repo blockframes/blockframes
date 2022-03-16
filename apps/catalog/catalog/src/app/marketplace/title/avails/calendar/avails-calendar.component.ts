@@ -93,7 +93,7 @@ export class MarketplaceMovieAvailsCalendarComponent implements AfterViewInit, O
 
   async selected(marker: DurationMarker) {
     const duration = { from: marker.from, to: marker.to };
-    const avails = { ...this.availsForm.value, duration };
+    const avails = { ...marker.avail, duration };
 
     const result = this.shell.bucketForm.getTermIndexForCalendar(avails, marker);
     if (result) {

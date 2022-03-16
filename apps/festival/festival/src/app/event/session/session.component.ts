@@ -14,7 +14,7 @@ import { getFileExtension } from '@blockframes/utils/file-sanitizer';
 import { ErrorResultResponse, extensionToType } from '@blockframes/utils/utils';
 import { MediaService } from '@blockframes/media/+state';
 import { Functions, httpsCallable } from '@angular/fire/functions';
-import { StorageFile, StorageVideo } from '@blockframes/media/+state/media.firestore';
+import { StorageFile, StorageVideo } from '@blockframes/model';
 import { InvitationService } from '@blockframes/invitation/+state/invitation.service';
 import { filter, pluck, scan, switchMap, take } from 'rxjs/operators';
 import { finalizeWithValue } from '@blockframes/utils/observable-helpers';

@@ -1,6 +1,6 @@
 // Angular
 import { Component, ChangeDetectionStrategy, Inject, HostBinding, HostListener } from '@angular/core';
-import { AngularFireUploadTask } from '@angular/fire/compat/storage';
+import { UploadTask } from '@angular/fire/storage';
 import { Firestore } from '@angular/fire/firestore';
 
 // Blockframes
@@ -20,7 +20,7 @@ export class UploadWidgetComponent {
   @HostListener('window:beforeunload', [ '$event' ])
   beforeUnloadHandler(event: Event) {
     const uploading = this.tasks.value.some(task => {
-      const state = task.task.snapshot.state as 'success' | 'paused' | 'running' | 'canceled';
+      const state = task.snapshot.state as 'success' | 'paused' | 'running' | 'canceled';
       return state === 'running';
     });
     if (uploading) {
@@ -30,11 +30,11 @@ export class UploadWidgetComponent {
   }
 
   constructor(
-    @Inject('tasks') public tasks: BehaviorStore<AngularFireUploadTask[]>,
+    @Inject('tasks') public tasks: BehaviorStore<UploadTask[]>,
     @Inject('db') public db: Firestore
   ) {}
 
-  cancel(task: AngularFireUploadTask) {
+  cancel(task: UploadTask) {
     task.resume();
     task.cancel();
   }

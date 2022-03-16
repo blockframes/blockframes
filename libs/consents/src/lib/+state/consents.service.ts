@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Functions, httpsCallable } from '@angular/fire/functions';
 import { IpService } from '@blockframes/utils/ip';
-import { ConsentType } from './consents.firestore'
+import { ConsentType } from '@blockframes/model';
 
 @Injectable({ providedIn: 'root' })
 export class ConsentsService {

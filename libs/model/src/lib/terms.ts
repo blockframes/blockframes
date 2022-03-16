@@ -1,10 +1,9 @@
-import { LanguageRecord } from '@blockframes/model';
-import type { Media, Territory } from '@blockframes/utils/static-model';
+import { Media, Territory, staticModel } from '@blockframes/utils/static-model';
 import type firestore from 'firebase/firestore';
 import { Timestamp } from '@blockframes/utils/common-interfaces/timestamp';
-import { staticModel } from '@blockframes/utils/static-model';
 import { format } from 'date-fns';
 import { toLanguageVersionString } from '@blockframes/utils/utils';
+import { LanguageRecord } from './movie';
 
 export function createMailTerm(terms: BucketTerm<Timestamp>[]) {
   return terms.map((term) => ({

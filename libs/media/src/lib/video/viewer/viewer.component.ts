@@ -3,11 +3,10 @@ import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmi
 import { Functions, httpsCallable } from "@angular/fire/functions";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { AuthService } from "@blockframes/auth/+state";
-import { MeetingVideoControl } from '@blockframes/model';
+import { StorageVideo, MeetingVideoControl } from '@blockframes/model';
 import { ErrorResultResponse, getWatermark, loadJWPlayerScript } from "@blockframes/utils/utils";
 import { BehaviorSubject } from "rxjs";
 import { toggleFullScreen } from '../../file/viewers/utils';
-import { StorageVideo } from "@blockframes/media/+state/media.firestore";
 import { EventService } from "@blockframes/event/+state";
 import { hasAnonymousIdentity } from "@blockframes/auth/+state/auth.model";
 
