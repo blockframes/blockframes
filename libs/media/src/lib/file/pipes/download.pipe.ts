@@ -2,9 +2,8 @@ import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { MediaService } from '../../+state/media.service';
-import { StorageFile } from '@blockframes/media/+state/media.firestore';
+import { StorageFile } from '@blockframes/model';
 import { fileSizeToString } from '@blockframes/utils/utils';
-
 
 @Pipe({ name: 'getUrl' })
 export class GetUrlPipe implements PipeTransform {

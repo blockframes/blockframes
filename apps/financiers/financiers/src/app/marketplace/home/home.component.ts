@@ -1,6 +1,6 @@
 // Angular
 import { Component, OnInit, ChangeDetectionStrategy, HostBinding } from '@angular/core';
-import { createStorageFile } from '@blockframes/media/+state/media.firestore';
+import { createStorageFile } from '@blockframes/model';
 
 // Blockframes
 import { AlgoliaMovie, AlgoliaOrganization, AlgoliaService, SearchResponse } from '@blockframes/utils/algolia';

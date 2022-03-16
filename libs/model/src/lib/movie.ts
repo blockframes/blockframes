@@ -23,7 +23,7 @@ import type {
 } from '@blockframes/utils/static-model/types';
 import { MovieLanguageType, productionStatus } from '@blockframes/utils/static-model';
 import { toDate } from '@blockframes/utils/helpers';
-import { createStorageFile } from '@blockframes/media/+state/media.firestore';
+import { createStorageFile, StorageFile, StorageVideo } from './media';
 import { App, getAllAppsExcept } from '@blockframes/utils/apps';
 import {
   Producer,
@@ -31,11 +31,10 @@ import {
   Cast,
   Stakeholder,
   Director,
-} from '@blockframes/utils/common-interfaces/identity';
+} from './identity';
 import { AnalyticsEvents, AnalyticsBase } from '@blockframes/utils/analytics/analytics-model';
-import { DocumentMeta } from '@blockframes/utils/models-meta';
-import { StorageFile, StorageVideo } from '@blockframes/media/+state/media.firestore';
-import type firebase from 'firebase';
+import { DocumentMeta } from './meta';
+import { Timestamp } from './timestamp';
 
 //////////////////
 // MOVIE OBJECT //
@@ -132,9 +131,6 @@ export interface MoviePromotionalElements {
 ////////////////////
 // MOVIE DETAILS //
 ////////////////////
-
-type Timestamp = firebase.firestore.Timestamp;
-
 export interface MovieAppConfig<D> {
   acceptedAt: D;
   access: boolean;
@@ -288,8 +284,6 @@ export interface MovieAnalytics extends AnalyticsBase {
 }
 
 // Export for other files
-export { Credit } from '@blockframes/utils/common-interfaces/identity';
-
 export type Movie = MovieBase<Date>;
 
 export interface SyncMovieAnalyticsOptions {
