@@ -5,8 +5,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule, Routes } from '@angular/router';
 
 // Angular Fire
-import { AngularFireAuthModule } from '@angular/fire/compat/auth';
-import { AngularFirePerformanceModule } from '@angular/fire/compat/performance';
+import { getAuth, provideAuth } from '@angular/fire/auth';
+import { getPerformance, providePerformance } from '@angular/fire/performance';
 
 // Material
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -85,8 +85,8 @@ export const AuthRoutes: Routes = [
     MatCardModule,
 
     // Fire
-    AngularFireAuthModule,
-    AngularFirePerformanceModule,
+    provideAuth(() => getAuth()),
+    providePerformance(() => getPerformance()),
     RouterModule.forChild(AuthRoutes),
   ],
   declarations: [

@@ -1,12 +1,11 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { AngularFireUploadTask } from '@angular/fire/storage';
-import { UploadTaskSnapshot } from '@angular/fire/storage/interfaces';
+import { UploadTask, UploadTaskSnapshot, percentage } from '@angular/fire/storage';
 
 // Rxjs
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-export function getTaskStateObservable(task: AngularFireUploadTask): Observable<string> {
+export function getTaskStateObservable(task: UploadTask): Observable<string> {
 
   return new Observable(subscriber => {
     let state = '';
@@ -28,7 +27,7 @@ export function getTaskStateObservable(task: AngularFireUploadTask): Observable<
       }
       subscriber.complete();
     }
-    task.task.on('state_changed', progress, error);
+    task.on('state_changed', progress, error);
   })
 }
 
@@ -36,9 +35,9 @@ export function getTaskStateObservable(task: AngularFireUploadTask): Observable<
   name: 'progress'
 })
 export class TaskProgressPipe implements PipeTransform {
-  transform(task: AngularFireUploadTask): Observable<number> {
-    return task.percentageChanges().pipe(
-      catchError(() => of(0))
+  transform(task: UploadTask) {
+    return percentage(task).pipe(
+      catchError(() => of())
     );
   }
 }
@@ -47,7 +46,7 @@ export class TaskProgressPipe implements PipeTransform {
   name: 'state'
 })
 export class TaskStatePipe implements PipeTransform {
-  transform(task: AngularFireUploadTask): Observable<string> {
+  transform(task: UploadTask): Observable<string> {
     return getTaskStateObservable(task);
   }
 }

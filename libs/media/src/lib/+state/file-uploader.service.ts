@@ -3,7 +3,7 @@ import { Injectable, Injector } from "@angular/core";
 import { ComponentPortal } from "@angular/cdk/portal";
 import { Overlay, OverlayRef } from "@angular/cdk/overlay";
 import { Firestore } from "@angular/fire/firestore";
-import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/compat/storage';
+import { Storage, UploadTask, uploadBytesResumable, ref } from '@angular/fire/storage';
 
 import { AuthService } from "@blockframes/auth/+state";
 import { tempUploadDir } from "@blockframes/utils/file-sanitizer";
@@ -17,7 +17,7 @@ import { getTaskStateObservable } from "../file/upload-widget/task.pipe";
 @Injectable({ providedIn: 'root' })
 export class FileUploaderService {
 
-  private tasks = new BehaviorStore<AngularFireUploadTask[]>([]);
+  private tasks = new BehaviorStore<UploadTask[]>([]);
   private tasksState = new BehaviorStore<unknown[]>([]);
 
   private queue: Record<string, UploadData[] | null> = {};
@@ -34,7 +34,7 @@ export class FileUploaderService {
     private overlay: Overlay,
     private db: Firestore,
     private authService: AuthService,
-    private storage: AngularFireStorage,
+    private storage: Storage,
   ) { }
 
   /**
@@ -115,14 +115,15 @@ export class FileUploaderService {
         const finalPath = `${tempUploadDir}/${storagePath}/${upload.fileName}`;
 
         // avoid double uploading
-        const alreadyUploading = (fullPath: string) => this.tasks.value.some(task => task.task.snapshot.ref.fullPath === fullPath);
+        const alreadyUploading = (fullPath: string) => this.tasks.value.some(task => task.snapshot.ref.fullPath === fullPath);
         if (alreadyUploading(finalPath)) return undefined;
 
-        const afTask = this.storage.upload(finalPath, upload.file, { customMetadata: upload.metadata });
+        const reference = ref(this.storage, finalPath);
+        const afTask = uploadBytesResumable(reference, upload.file, { customMetadata: upload.metadata });
 
         // clean on success
         if (afTask) {
-          afTask.task.then(() => {
+          afTask.then(() => {
             this.removeFromQueue(storagePath, upload.fileName);
           });
         }
