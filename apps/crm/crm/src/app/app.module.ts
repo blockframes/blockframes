@@ -17,13 +17,13 @@ import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 import { AppComponent } from './app.component';
 
 // Angular Fire
-import { AngularFireModule } from '@angular/fire';
-import { AngularFireFunctionsModule, REGION } from '@angular/fire/functions';
-import { AngularFirestoreModule } from '@angular/fire/firestore';
-import { AngularFirePerformanceModule } from '@angular/fire/performance';
-import { AngularFireAuthModule } from '@angular/fire/auth';
-import { AngularFireStorageModule } from '@angular/fire/storage';
-import { AngularFireAnalyticsModule, ScreenTrackingService, UserTrackingService } from '@angular/fire/analytics';
+import { provideFirebaseApp, initializeApp, getApp } from '@angular/fire/app';
+import { provideFunctions, getFunctions } from '@angular/fire/functions';
+import { getFirestore, provideFirestore } from '@angular/fire/firestore';
+import { providePerformance, getPerformance } from '@angular/fire/performance';
+import { provideAuth, getAuth } from '@angular/fire/auth';
+import { provideStorage, getStorage } from '@angular/fire/storage';
+import { provideAnalytics, getAnalytics, ScreenTrackingService, UserTrackingService } from '@angular/fire/analytics';
 import 'firebase/storage';
 
 // Material
@@ -48,13 +48,13 @@ import { APP } from '@blockframes/utils/routes/utils';
     OverlayModule,
 
     // Firebase
-    AngularFireModule.initializeApp(firebase('crm')),
-    AngularFirestoreModule,
-    AngularFireFunctionsModule,
-    AngularFirePerformanceModule,
-    AngularFireAuthModule,
-    AngularFireStorageModule,
-    AngularFireAnalyticsModule,
+    provideFirebaseApp(() => initializeApp(firebase('crm'))),
+    provideFirestore(() => getFirestore()),
+    provideFunctions(() => getFunctions(getApp(), firebaseRegion)),
+    providePerformance(() => getPerformance()),
+    provideAuth(() => getAuth()),
+    provideStorage(() => getStorage()),
+    provideAnalytics(() => getAnalytics()),
 
     // Sentry
     sentryDsn ? SentryModule : ErrorLoggerModule,
@@ -71,10 +71,9 @@ import { APP } from '@blockframes/utils/routes/utils';
   ],
   providers: [
     ScreenTrackingService, UserTrackingService,
-    { provide: REGION, useValue: firebaseRegion },
     { provide: APP, useValue: 'crm' },
     ...emulatorConfig
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }
