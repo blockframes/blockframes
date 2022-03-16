@@ -2,7 +2,7 @@ import type firebase from 'firebase';
 import { Location, createLocation } from '@blockframes/utils/common-interfaces/utility';
 import { OrgAppAccess, createOrgAppAccess, Module, App, getAllAppsExcept } from '@blockframes/utils/apps';
 import type { OrgActivity, OrganizationStatus } from '@blockframes/utils/static-model/types';
-import { createStorageFile, StorageFile, StorageVideo } from '@blockframes/model';
+import { createStorageFile, StorageFile, StorageVideo } from './media';
 import { DocumentMeta } from './meta';
 
 type Timestamp = firebase.firestore.Timestamp;

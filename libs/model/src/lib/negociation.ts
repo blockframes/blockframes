@@ -1,7 +1,7 @@
 import { BucketContract } from './bucket';
 import { Timestamp } from './timestamp';
 import { DocumentMeta } from './meta';
-import { MovieCurrency } from "@blockframes/utils/static-model";
+import { MovieCurrency } from '@blockframes/utils/static-model';
 
 export const negotiationStatus = ['pending', 'accepted', 'declined'] as const;
 

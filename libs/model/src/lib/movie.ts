@@ -23,7 +23,7 @@ import type {
 } from '@blockframes/utils/static-model/types';
 import { MovieLanguageType, productionStatus } from '@blockframes/utils/static-model';
 import { toDate } from '@blockframes/utils/helpers';
-import { StorageFile, StorageVideo, createStorageFile } from '@blockframes/model';
+import { createStorageFile, StorageFile, StorageVideo } from './media';
 import { App, getAllAppsExcept } from '@blockframes/utils/apps';
 import {
   Producer,

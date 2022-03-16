@@ -1,4 +1,4 @@
-import { createStorageFile, StorageFile } from '@blockframes/model';
+import { createStorageFile, StorageFile } from './media';
 import {
   CrewRole,
   Territory,
