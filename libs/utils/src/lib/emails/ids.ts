@@ -80,7 +80,7 @@ export const templateIds = {
     // underSignature: 'd-38ee6949f4724b1c8796b8df9229f21d'
   },
   contract: {
-    created: 'd-f7c2e13b7d6b427daf08bdfdf904d697'
+    created: 'd-268b02ed0eb9452ba3acb2a97457d172'
   },
   negotiation: {
     receivedCounterOffer: 'd-516fc0e2d4094fa9a2afa55e89f0f5a3',

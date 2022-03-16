@@ -12,7 +12,7 @@ import { OrganizationService } from '@blockframes/organization/+state';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { combineLatest } from 'rxjs';
 import { ContractService } from '@blockframes/contract/contract/+state';
-import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
+import { Negotiation } from '@blockframes/model';
 
 @Component({
   selector: 'catalog-contract-edit',

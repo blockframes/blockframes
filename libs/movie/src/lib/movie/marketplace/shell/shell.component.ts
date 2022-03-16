@@ -8,12 +8,11 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { Observable } from 'rxjs';
-import { Movie } from '@blockframes/model';
+import { StorageFile, Movie } from '@blockframes/model';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
 import { FileListPreviewComponent } from '@blockframes/media/file/preview-list/preview-list.component';
 import { MatDialog } from '@angular/material/dialog';
-import { StorageFile } from '@blockframes/media/+state/media.firestore';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
