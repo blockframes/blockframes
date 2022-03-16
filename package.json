@@ -177,7 +177,7 @@
     "firebase-tools": "^10.2.2",
     "husky": "^7.0.4",
     "inquirer": "^8.2.1",
-    "jest": "27.5.1",
+    "jest": "26.2.2",
     "jest-environment-jsdom-thirteen": "^1.0.1",
     "jest-preset-angular": "11.1.1",
     "ng-packagr": "13.2.1",
