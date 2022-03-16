@@ -32,7 +32,7 @@ export class HomeComponent implements OnInit {
   public hasAcceptedMovies$: Observable<boolean>;
   public hasDraftMovies$: Observable<boolean>;
 
-  titleAnalytics$ = this.analyticsService.getGlobalAnalytics().pipe(
+  titleAnalytics$ = this.analyticsService.getAnalytics().pipe(
     joinWith({
       org: analytic => this.orgService.valueChanges(analytic.meta.orgId)
     }),
@@ -41,12 +41,12 @@ export class HomeComponent implements OnInit {
 
   orgActivity$ = this.titleAnalytics$.pipe(
     map(analytics => counter(analytics, 'org.activity', 'orgActivity')),
-    map(analytics => analytics.sort((a, b) => a.count - b.count).splice(0, 2))
+    map(analytics => analytics.sort((a, b) => a.count - b.count))
   );
 
   territoryActivity$ = this.titleAnalytics$.pipe(
     map(analytics => counter(analytics, 'org.addresses.main.country', 'territories')),
-    map(analytics => analytics.sort((a, b) => a.count - b.count).splice(0, 2))
+    map(analytics => analytics.sort((a, b) => a.count - b.count))
   );
 
 

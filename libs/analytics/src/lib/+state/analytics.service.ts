@@ -60,7 +60,7 @@ export class AnalyticsService extends CollectionService<AnalyticsState> {
     ) as Observable<Analytics<'title'>[]>;
   }
 
-  getGlobalAnalytics() {
+  getAnalytics() {
     const { orgId } = this.authService.profile;
     return this.valueChanges(ref => ref
       .where('type', '==', 'title')

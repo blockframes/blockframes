@@ -7,7 +7,7 @@ import { getCollection } from '../firebase-utils';
 import { MovieDocument } from '@blockframes/model';
 import { MovieAnalytics } from '@blockframes/analytics/components/movie-analytics-chart/movie-analytics.model';
 import { getCollectionInBatches } from '../util';
-import { bigQueryAnalyticsTable, firebase } from 'env/env.blockframes';
+import { bigQueryAnalyticsTable, firebase } from '@env';
 
 const events_query = `
   SELECT *
