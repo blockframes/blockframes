@@ -6,7 +6,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 export interface ConfirmDeclineData { 
   type: 'seller' | 'buyer', 
-  validationCheckbox?: boolean 
+  showAcceptTermsCheckbox?: boolean 
 }
 
 @Component({

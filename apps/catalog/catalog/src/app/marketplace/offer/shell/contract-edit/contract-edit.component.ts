@@ -60,7 +60,7 @@ export class ContractEditComponent implements NegotiationGuardedComponent, OnIni
     const sale = await this.sale$.pipe(first()).toPromise();
     const data: ConfirmDeclineData = { 
       type: 'buyer',
-      validationCheckbox: true
+      showAcceptTermsCheckbox: true
     };
     const ref = this.dialog.open(ConfirmDeclineComponent, { data });
     const options = { params: { contractId: sale.id } };

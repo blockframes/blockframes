@@ -56,7 +56,7 @@ export class ContractViewComponent {
       question: 'Please verify if all the contract elements are convenient for you.',
       confirm: 'Yes, accept contract',
       cancel: 'Come back & verify contract',
-      validationCheckbox: true
+      showAcceptTermsCheckbox: true
     };
     this.dialog.open(ConfirmComponent, { data });
   }

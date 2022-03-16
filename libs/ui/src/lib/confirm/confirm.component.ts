@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
@@ -10,9 +10,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 })
 export class ConfirmComponent {
 
-  form = new FormGroup({
-    acceptTerms: new FormControl(false)
-  });
+  acceptTerms = new FormControl(false);
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
@@ -21,7 +19,7 @@ export class ConfirmComponent {
       question: string,
       confirm: string,
       cancel: string,
-      validationCheckbox?: boolean,
+      showAcceptTermsCheckbox?: boolean,
       onConfirm?: () => void
     },
     public dialogRef: MatDialogRef<ConfirmComponent>,

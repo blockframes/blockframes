@@ -10,14 +10,14 @@
     <h2>{{ data.title || "Confirm" }}</h2>
     <p>{{ data.question || "Do you confirm ?" }}</p>
   </div>
-  <form *ngIf="data.validationCheckbox" [formGroup]="form" fxLayout="column" fxLayoutAlign="center center">
+  <div *ngIf="data.showAcceptTermsCheckbox" fxLayout="column" fxLayoutAlign="center center">
     <p><strong>Before you accept this contract, please agree on the following:</strong></p>
-    <mat-checkbox formControlName="acceptTerms">
-      I hereby accept the policy regarding accepted offers, as mentioned in the <a routerLink="toDefine" target="_blank">Terms and Conditions.</a>
+    <mat-checkbox [formControl]="acceptTerms">
+      I hereby accept the policy regarding accepted offers, as mentioned in the <a routerLink="toDefine" target="_blank">Terms and Conditions.</a> <!-- TODO 7743 - add link -->
     </mat-checkbox>
-  </form>
+  </div>
   <div mat-dialog-actions fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="16px">
-    <button test-id="confirm" mat-flat-button color="primary" [disabled]="data.validationCheckbox && !form.get('acceptTerms').value" (click)="confirm()">
+    <button test-id="confirm" mat-flat-button color="primary" [disabled]="data.showAcceptTermsCheckbox && !acceptTerms.value" (click)="confirm()">
       {{ data.confirm || "Confirm" }}
     </button>
     <button mat-button color="primary" (click)="close()">
