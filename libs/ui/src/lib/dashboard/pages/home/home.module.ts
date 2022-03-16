@@ -24,7 +24,6 @@ import { AppPipeModule } from '@blockframes/utils/pipes/app.pipe';
 import { CarouselModule } from '@blockframes/ui/carousel/carousel.module';
 import { PieChartModule } from '@blockframes/analytics/components/pie-chart/pie-chart.module';
 import { AnalyticsMapModule } from '@blockframes/analytics/components/map/map.module';
-import { LineChartModule } from '@blockframes/analytics/components/line-chart/line-chart.module';
 import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
 
 @NgModule({
@@ -40,7 +39,6 @@ import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
     PieChartModule,
     AnalyticsMapModule,
     MatLayoutModule,
-    LineChartModule,
 
     // Material
     MatButtonModule,

@@ -23,16 +23,8 @@
   <span class="indicative-message">Some insights about your most popular title.</span>
   <span class="indicative-message">Published on Archipel Market: 01/25/2022</span>
   <bf-carousel flex layout>
-    <analytics-pie-chart fxFlex [col]="2" class="surface" carouselItem [data]="orgActivity$ | async"></analytics-pie-chart>
-    <analytics-map fxFlex [col]="2" class="surface" carouselItem [data]="territoryActivity$ | async"></analytics-map>
-    <analytics-line-chart [col]="2" fxFlex class="surface" carouselItem [data]="lineChartData">
-      <mat-icon svgIcon="analytics_interactions"></mat-icon>
-      <h5>Interactions</h5>
-    </analytics-line-chart>
-    <analytics-line-chart [col]="2" [filmView]="true" fxFlex class="surface" carouselItem [data]="lineChartData">
-      <mat-icon svgIcon="view_module"></mat-icon>
-      <h5>Film Page View</h5>
-    </analytics-line-chart>
+    <analytics-pie-chart fxFlex class="surface" carouselItem [data]="orgActivity$ | async"></analytics-pie-chart>
+    <analytics-map fxFlex class="surface" carouselItem [data]="territoryActivity$ | async"></analytics-map>
   </bf-carousel>
   <button mat-flat-button class="see_titles">
     <span>View all Titles Activity</span>
