@@ -1,4 +1,4 @@
-import { EventName } from "@blockframes/analytics/+state";
+import { EventName } from "@blockframes/model";
 
 export interface MovieEventAnalytics {
   event_date: string,

@@ -1,7 +1,8 @@
 import { Location } from "@angular/common";
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { AggregatedAnalytic, AnalyticsService, createAggregatedAnalytic } from "@blockframes/analytics/+state";
+import { AggregatedAnalytic, createAggregatedAnalytic } from '@blockframes/model';
+import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 import { MovieService } from "@blockframes/movie/+state/movie.service";
 import { OrganizationService } from "@blockframes/organization/+state";
 import { joinWith } from "@blockframes/utils/operators";

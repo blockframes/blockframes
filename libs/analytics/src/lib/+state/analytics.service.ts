@@ -8,8 +8,7 @@ import { centralOrgId } from '@env';
 import { startOfDay } from 'date-fns';
 
 // Blockframes
-import { Analytics, AnalyticsTypeRecord, AnalyticsTypes, EventName } from './analytics.firestore';
-import { createTitleMeta } from './analytics.model';
+import { Analytics, AnalyticsTypeRecord, AnalyticsTypes, EventName, createTitleMeta} from '@blockframes/model';
 import { AuthService } from '@blockframes/auth/+state';
 import { createMovie } from '@blockframes/model';
 import { createDocumentMeta } from '@blockframes/utils/models-meta';
