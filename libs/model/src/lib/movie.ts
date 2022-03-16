@@ -34,7 +34,7 @@ import {
 } from './identity';
 import { AnalyticsEvents, AnalyticsBase } from '@blockframes/utils/analytics/analytics-model';
 import { DocumentMeta } from './meta';
-import type firebase from 'firebase';
+import { Timestamp } from './timestamp';
 
 //////////////////
 // MOVIE OBJECT //
@@ -131,9 +131,6 @@ export interface MoviePromotionalElements {
 ////////////////////
 // MOVIE DETAILS //
 ////////////////////
-
-type Timestamp = firebase.firestore.Timestamp;
-
 export interface MovieAppConfig<D> {
   acceptedAt: D;
   access: boolean;
