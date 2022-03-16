@@ -1,4 +1,3 @@
-import type firebase from 'firebase';
 import { AccessibilityTypes } from '@blockframes/utils/static-model/types';
 import { toDate } from '@blockframes/utils/helpers';
 import { CalendarEvent } from 'angular-calendar';
@@ -8,8 +7,7 @@ import { Movie } from './movie';
 import { User } from './user';
 import { StorageFile } from './media';
 import { Person } from './identity';
-
-type Timestamp = firebase.firestore.Timestamp;
+import { Timestamp } from './timestamp';
 
 // Event types
 export type EventTypes = 'standard' | 'meeting' | 'screening' | 'local';
