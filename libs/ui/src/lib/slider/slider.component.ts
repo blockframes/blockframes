@@ -103,13 +103,13 @@ export class SliderComponent implements OnDestroy, AfterContentInit, AfterViewIn
 
   // Tracks the time for interval$
   private timer$: Observable<number>;
-  private timerStop$ = new Subject<never>();
+  private timerStop$ = new Subject<void>(); // TODO #7273 check
 
   private _slideDirection: Slider['slideDirection'] = 'ltr';
   private slideDirection$ = new Subject<Slider['slideDirection']>();
 
   // Cancels all the subscription
-  private destroy$ = new Subject<never>();
+  private destroy$ = new Subject<void>(); // TODO #7273 check
 
   // Flag to indicate if animation is playing
   private playing = false;

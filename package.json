@@ -52,7 +52,7 @@
     "affected": "nx affected",
     "pwm": "pwmetrics --config",
     "bundlesize": "bundlesize",
-    "postinstall": "ngcc --properties es2015 browser module main && node ./decorate-angular-cli.js",
+    "postinstall": "ngcc --properties es2015 browser module main && node ./decorate-angular-cli.js && node patch.js",
     "prerender:festival": "nx build festival --prod && nx run festival:server --configuration production && angular-prerender --browser-target festival:build --server-target festival:server",
     "backend-ops": "ts-node -P tools/tsconfig.tools.json apps/backend-ops/src/main.ts"
   },

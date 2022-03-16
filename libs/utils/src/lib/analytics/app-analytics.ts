@@ -1,4 +1,4 @@
-import { Analytics, logEvent, setUserProperties } from '@angular/fire/analytics';
+import { getAnalytics, logEvent, setUserProperties } from '@angular/fire/analytics';
 import { Injectable } from '@angular/core';
 import { AnalyticsEvents, AnalyticsUserProperties } from './analytics-model';
 import { centralOrgId } from '@env';
@@ -7,8 +7,8 @@ import { take } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class FireAnalytics {
+  private analytics = getAnalytics();
   constructor(
-    public analytics: Analytics,
     private authService: AuthService,
   ) { }
 

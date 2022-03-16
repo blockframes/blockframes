@@ -3,7 +3,7 @@ import { Genre, Language, Media, Territory } from '@blockframes/utils/static-mod
 import { createStorageFile, StorageFile } from './media';
 import { NotificationTypesBase } from './notification';
 import { UserRole } from './permissions';
-import { Timestamp } from "@blockframes/utils/common-interfaces/timestamp";
+import { Timestamp } from './timestamp';
 export interface User extends PublicUser {
   financing: {
     rank: string

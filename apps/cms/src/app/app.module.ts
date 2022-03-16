@@ -1,10 +1,9 @@
 
 import { emulatorConfig } from '../environment/environment';
-import { firebase, firebaseRegion } from '@env';
+import { firebase } from '@env';
 import { FormFactoryModule } from 'ng-form-factory';
 
 // Angular
-import { REGION } from '@angular/fire/functions';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
@@ -15,11 +14,11 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 
 // Angular Fire
-import { AngularFireModule } from '@angular/fire';
-import { AngularFirestoreModule } from '@angular/fire/firestore';
-import { AngularFireAuthModule } from '@angular/fire/auth';
-import { AngularFireStorageModule } from '@angular/fire/storage';
-import { AngularFirePerformanceModule } from '@angular/fire/performance';
+import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
+import { getFirestore, provideFirestore } from '@angular/fire/firestore';
+import { providePerformance, getPerformance } from '@angular/fire/performance';
+import { provideAuth, getAuth } from '@angular/fire/auth';
+import { provideStorage, getStorage } from '@angular/fire/storage';
 
 // Blockframes
 import { CmsModule } from './cms.module';
@@ -33,15 +32,15 @@ import { APP } from '@blockframes/utils/routes/utils';
     BrowserAnimationsModule,
     OverlayModule,
     HttpClientModule,
-    AngularFireModule.initializeApp(firebase('cms')),
-    AngularFirestoreModule,
-    AngularFireAuthModule,
-    AngularFireStorageModule,
-    AngularFirePerformanceModule,
+    provideFirebaseApp(() => initializeApp(firebase('cms'))),
+    provideFirestore(() => getFirestore()),
+    providePerformance(() => getPerformance()),
+    provideAuth(() => getAuth()),
+    provideStorage(() => getStorage()),
+
     FormFactoryModule,
   ],
   providers: [
-    { provide: REGION, useValue: firebaseRegion },
     { provide: APP, useValue: 'cms' },
     ...emulatorConfig
   ],

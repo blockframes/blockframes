@@ -1,10 +1,9 @@
 import { Inject, Injectable, Optional } from '@angular/core';
 import { Functions, httpsCallable } from '@angular/fire/functions';
-import type firestore from 'firebase/firestore';
 import { FireAuthService, CollectionConfig, FireAuthState, RoleState, initialAuthState } from 'akita-ng-fire';
 import { map, switchMap, take, tap } from 'rxjs/operators';
 import { App } from '@blockframes/utils/apps';
-import { createUser, PublicUser, User, PrivacyPolicy, createDocumentMeta, DocumentMeta } from '@blockframes/model';
+import { createUser, PublicUser, User, PrivacyPolicy, createDocumentMeta, DocumentMeta, Timestamp } from '@blockframes/model';
 import { Intercom } from 'ng-intercom';
 import { getIntercomOptions } from '@blockframes/utils/intercom/intercom.service';
 import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.service';
@@ -14,7 +13,7 @@ import { getBrowserWithVersion } from '@blockframes/utils/browser/utils';
 import { IpService } from '@blockframes/utils/ip';
 import { OrgEmailData } from '@blockframes/utils/emails/utils';
 import { AnonymousCredentials, AnonymousRole } from './auth.model';
-import { Analytics, setUserProperties } from '@angular/fire/analytics';
+import { getAnalytics, setUserProperties } from '@angular/fire/analytics';
 import {
   Auth,
   confirmPasswordReset,
@@ -74,7 +73,7 @@ export class AuthService extends FireAuthService<AuthState> {
 
       // TODO #6113 once we have a custom email verified page, we can update the users' meta there
       if (userAuth?.emailVerified && profile && !profile._meta?.emailVerified) {
-        const _meta: DocumentMeta<Date | firestore.Timestamp> = {
+        const _meta: DocumentMeta<Date | Timestamp> = {
           ...profile._meta,
           emailVerified: true
         }
@@ -112,7 +111,6 @@ export class AuthService extends FireAuthService<AuthState> {
     protected store: AuthStore,
     private functions: Functions,
     private gdprService: GDPRService,
-    private analytics: Analytics,
     private ipService: IpService,
     private afAuth: Auth,
     private userService: UserService,
@@ -142,8 +140,8 @@ export class AuthService extends FireAuthService<AuthState> {
 
   onSignin(userCredential: UserCredential) {
     this.updateIntercom(userCredential);
-
-    setUserProperties(this.analytics, getBrowserWithVersion());
+    const analytics = getAnalytics();
+    setUserProperties(analytics, getBrowserWithVersion());
   }
 
   onSignup(userCredential: UserCredential) {
