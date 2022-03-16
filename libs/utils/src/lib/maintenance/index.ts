@@ -1,5 +1,5 @@
 //import 'firebase/firestore'; // TODO #7273 useful ?
-import { Timestamp } from 'firebase/firestore'; // TODO #7273 ok with backend-functions ?
+import { Timestamp } from 'firebase/firestore'; // TODO #7273 #8006 ok with backend-functions ?
 
 export interface IMaintenanceDoc {
   endedAt: Timestamp

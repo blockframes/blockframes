@@ -1,4 +1,4 @@
-import { DocumentMeta } from '@blockframes/utils/models-meta';
+import { DocumentMeta } from './meta';
 import { Genre, Language, Media, Territory } from '@blockframes/utils/static-model';
 import { createStorageFile, StorageFile } from './media';
 import { NotificationTypesBase } from './notification';

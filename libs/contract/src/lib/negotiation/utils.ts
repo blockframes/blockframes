@@ -1,6 +1,5 @@
-import { Timestamp } from '@blockframes/utils/common-interfaces/timestamp';
 import { centralOrgId } from '@env';
-import { LanguageRecord, Duration, Negotiation } from '@blockframes/model';
+import { Timestamp, LanguageRecord, Duration, Negotiation } from '@blockframes/model';
 import { Language, Media, Territory } from '@blockframes/utils/static-model';
 
 interface ArrayDifferences<T = string> {

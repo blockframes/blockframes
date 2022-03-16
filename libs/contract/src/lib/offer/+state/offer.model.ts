@@ -1,4 +1,4 @@
-import { DocumentMeta } from '@blockframes/utils/models-meta';
+import { DocumentMeta } from '@blockframes/model';
 import { MovieCurrency, StaticModel } from '@blockframes/utils/static-model';
 
 export type OfferStatus = keyof StaticModel['offerStatus'];

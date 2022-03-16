@@ -1,5 +1,5 @@
-import type firestore from 'firebase/firestore';
-import { DocumentMeta } from '@blockframes/utils/models-meta';
+import { firestore } from 'firebase-admin';
+import { DocumentMeta } from './meta';
 import { EmailErrorCodes } from '@blockframes/utils/emails/utils';
 import { App } from '@blockframes/utils/apps';
 import { PublicUser } from './user';
