@@ -67,10 +67,6 @@ function getSteps(status: ProductionStatus, appSteps: TunnelStep[] = []): Tunnel
       {
         path: 'media-files',
         label: 'Files'
-      }, {
-        path: 'media-notes',
-        label: 'Notes & Statements',
-        shouldHide: isStatus(status, ['post_production', 'finished', 'released'])
       },
       {
         path: 'media-images',
@@ -78,6 +74,10 @@ function getSteps(status: ProductionStatus, appSteps: TunnelStep[] = []): Tunnel
       }, {
         path: 'media-videos',
         label: 'Videos'
+      }, {
+        path: 'media-notes',
+        label: 'Notes & Statements',
+        shouldHide: isStatus(status, ['post_production', 'finished', 'released'])
       }
     ]
   },
