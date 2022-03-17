@@ -83,17 +83,16 @@ export async function getTitleId(
 ) {
   if (!name) return '';
   if (cache[name]) return cache[name];
-
-  const titles = await titleService.getValue((ref) => {
-    if (blockframesAdmin) {
-      return ref.where('title.international', '==', name);
-    } else {
-      return ref
-        .where('title.international', '==', name)
-        .where('orgIds', 'array-contains', userOrgId);
-    }
-  });
-  const result = titles.length === 1 ? titles[0].id : '';
+  const options = { path: 'title.international', blockframesAdmin, userOrgId, name };
+  let titles = await titleService.getImportTitle(options);
+  if (!titles?.length) {
+    options.path = "id";
+    titles = await titleService.getImportTitle(options);
+  }
+  if (titles.length > 1) {
+    throw new Error('multiple movies with same international name')
+  }
+  const result = titles[0].id;
   cache[name] = result;
   return result;
 }
