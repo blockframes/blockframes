@@ -1,7 +1,6 @@
 import { Firestore } from '../types';
 import { BigQuery } from '@google-cloud/bigquery';
-import { createTitleMeta } from '@blockframes/analytics/+state/analytics.model';
-import { Analytics } from '@blockframes/analytics/+state/analytics.firestore';
+import { Analytics, createTitleMeta } from '@blockframes/model';
 import { createDocumentMeta } from '@blockframes/utils/models-meta';
 import { getCollection } from '../firebase-utils';
 import { MovieDocument } from '@blockframes/model';
@@ -12,7 +11,7 @@ import { bigQueryAnalyticsTable, firebase } from '@env';
 const events_query = `
   SELECT *
   FROM (
-    SELECT 
+    SELECT
       ga.createdAt,
       ga.name,
       ga.titleId,
@@ -24,7 +23,7 @@ const events_query = `
       END as createdFrom,
       users.orgId
     FROM (
-      SELECT 
+      SELECT
         event_timestamp as createdAt,
         MAX(event_name) as name,
         MAX(if(params.key = "movieId", params.value.string_value, NULL)) as titleId,
@@ -62,7 +61,7 @@ const page_view_query = `
       REGEXP_EXTRACT(MAX(page_path), '(?:.*)?/title/([^/]+)/(?:r/i/)?main') as titleId,
       MAX(users.orgId) as orgId
     FROM (
-      SELECT 
+      SELECT
         event_timestamp as createdAt,
         DATE(TIMESTAMP_MICROS(event_timestamp)) as day,
         MAX(event_name) as name,
@@ -98,7 +97,7 @@ const page_view_query = `
 
 /**
  * Import data from Google Analytics into Firestore
- * @param {Firestore} db 
+ * @param {Firestore} db
  * @returns
  */
 export async function upgrade(db: Firestore) {
@@ -118,7 +117,7 @@ export async function upgrade(db: Firestore) {
     return;
   }
 
- // query bigquery and create new analytics collection
+  // query bigquery and create new analytics collection
   const [[pageViews], [otherEvents], titles] = await Promise.all([
     executeQuery(page_view_query),
     executeQuery(events_query),
@@ -161,7 +160,7 @@ export async function upgrade(db: Firestore) {
 
   let i = 1;
   let batch = db.batch();
-  while(i <= events.length) {
+  while (i <= events.length) {
     const ref = db.collection(`analytics`).doc();
     const event: Analytics = { ...events[i - 1], id: ref.id }; // adding doc id
 
