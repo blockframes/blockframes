@@ -66,7 +66,8 @@ type FieldsConfigType = ExtractConfig<FieldsConfig>;
 
 function toTerm(rawTerm: FieldsConfig['term'][number], contractId: string, firestore: AngularFirestore): Term {
 
-  const { medias, duration, territories_excluded, territories_included, exclusive, licensedOriginal } = rawTerm;
+  const { medias, duration, territories_excluded = [], territories_included = [], exclusive, licensedOriginal } = rawTerm;
+
 
   const languages: Term['languages'] = {};
 
@@ -121,11 +122,23 @@ export async function formatContract(
   const fieldsConfig: FieldsConfigType = {
     /* a */ 'contract.titleId': async (value: string) => {
       if (!value) return mandatoryError('Title');
-      const titleId = await getTitleId(value, titleService, titleNameCache, userOrgId, blockframesAdmin);
-      const title = await titleService.getValue(value);
-      if (title) return value;
-      if (!titleId) return unknownEntityError('Title');
-      return titleId;
+      try {
+        const titleId = await getTitleId(value, titleService, titleNameCache, userOrgId, blockframesAdmin);
+
+        if (!titleId) return unknownEntityError('Title');
+        return titleId;
+      } catch (err) {
+        return {
+          value: undefined,
+          error: {
+            type: 'error',
+            name: `Multiple movies with same name.`,
+            reason: ``,
+            hint: `Due to the fact that multiple movies have as name "${value}", please use the movie Id instead.`
+          }
+        };
+      }
+
     },
     /* b */ 'contract.type': (value: string) => {
       const lower = value.toLowerCase();
@@ -203,7 +216,7 @@ export async function formatContract(
       }
     },
     /* e */'term[].territories_included': (value: string) => getGroupedList(value, 'territories', separator),
-    /* f */'term[].territories_excluded': (value: string) => getGroupedList(value, 'territories', separator),
+    /* f */'term[].territories_excluded': (value: string) => getGroupedList(value, 'territories', separator, {mandatory:false}),
     /* g */'term[].medias': (value: string) => getGroupedList(value, 'medias', separator),
     /* h */'term[].exclusive': (value: string) => {
       const lower = value.toLowerCase();
@@ -312,16 +325,16 @@ export async function formatContract(
       : createMandate(data.contract as Mandate);
 
     const { titleId, sellerId } = contract;
-
-    const movieBelongsToLicensor = await titleService.getValue(titleId).then(title => title.orgIds.includes(sellerId));
-    if (!movieBelongsToLicensor)
-      errors.push({
-        type: 'error',
-        name: 'Wrong Licensor.',
-        reason: `The movie does not belong to the licensor.`,
-        hint: `Please ensure the movie is a movie owned by the licensor.`
-      });
-
+    if (titleId) {
+      const movieBelongsToLicensor = await titleService.getValue(titleId).then(title => title.orgIds.includes(sellerId));
+      if (!movieBelongsToLicensor)
+        errors.push({
+          type: 'error',
+          name: 'Wrong Licensor.',
+          reason: `The movie does not belong to the licensor.`,
+          hint: `Please ensure the movie is a movie owned by the licensor.`
+        });
+    }
     const terms = data.term.map(term => toTerm(term, contract.id, firestore));
 
     // for **internal** sales we should check the parentTerm
