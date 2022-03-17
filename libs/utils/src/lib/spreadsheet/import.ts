@@ -14,8 +14,8 @@ export interface SheetTab {
   headers: any[];
   rows: any[][];
 }
-interface GroupedListOptions{
-  mandatory:boolean;
+interface GroupedListOptions {
+  mandatory: boolean;
 }
 
 type Join<K extends string, P extends string> = '' extends P ? K : `${K}.${P}`;
@@ -245,13 +245,13 @@ export function getStaticList<S extends Scope>(scope: S, value: string, separato
 }
 
 const fromGroup = {
-  territories: (territories, separator, required:boolean) => getStaticList('territories', territories, separator, 'Territories', required, 'world'),
-  medias: (medias, separator, required:boolean) => getStaticList('medias', medias, separator, 'Medias', required, 'all'),
+  territories: (territories, separator, required: boolean) => getStaticList('territories', territories, separator, 'Territories', required, 'world'),
+  medias: (medias, separator, required: boolean) => getStaticList('medias', medias, separator, 'Medias', required, 'all'),
 }
 
-export function getGroupedList(value: string, groupScope: 'territories', separator: string, options?:GroupedListOptions): FromStatic<'territories'>;
-export function getGroupedList(value: string, groupScope: 'medias', separator: string, options?:GroupedListOptions): FromStatic<'medias'>;
-export function getGroupedList<GS extends GroupScope>(value: string, groupScope: GS, separator: string, options={mandatory:true}) {
+export function getGroupedList(value: string, groupScope: 'territories', separator: string, options?: GroupedListOptions): FromStatic<'territories'>;
+export function getGroupedList(value: string, groupScope: 'medias', separator: string, options?: GroupedListOptions): FromStatic<'medias'>;
+export function getGroupedList<GS extends GroupScope>(value: string, groupScope: GS, separator: string, options = { mandatory: true }) {
   const elements = split(value, separator);
   const groupLabels = staticGroups[groupScope].map(group => group.label);
   const allElements = elements.map(element => {

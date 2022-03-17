@@ -20,7 +20,7 @@ import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { UserService } from '@blockframes/user/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { ContractStatus, ImportContractStatus, Term } from '@blockframes/model';
+import { ContractStatus, ImportContractStatus, Movie, Term } from '@blockframes/model';
 import { Language, Media, Territory } from '@blockframes/utils/static-model';
 import { createMandate, createSale, Mandate, MovieLanguageSpecification, Sale, User } from '@blockframes/model';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
@@ -112,9 +112,13 @@ export async function formatContract(
 ) {
   // Cache to avoid  querying db every time
   const orgNameCache: Record<string, string> = {};
-  const titleNameCache: Record<string, string> = {};
+  const titleNameCache: Record<string, Movie> = {};
   const userCache: Record<string, User> = {};
   const contractCache: Record<string, Mandate | Sale> = {};
+  const memo = (key: string, value: Movie) => {
+    titleNameCache[key] = value;
+    return value.id
+  }
 
   const contracts: ContractsImportState[] = [];
 
@@ -123,7 +127,7 @@ export async function formatContract(
     /* a */ 'contract.titleId': async (value: string) => {
       if (!value) return mandatoryError('Title');
       try {
-        const titleId = await getTitleId(value, titleService, titleNameCache, userOrgId, blockframesAdmin);
+        const titleId = await getTitleId(value, titleService, titleNameCache, memo, userOrgId, blockframesAdmin);
 
         if (!titleId) return unknownEntityError('Title');
         return titleId;

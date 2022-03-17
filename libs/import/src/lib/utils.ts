@@ -1,4 +1,4 @@
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { ImportTitleOptions, MovieService } from '@blockframes/movie/+state/movie.service';
 import { Movie, Organization, User, Mandate, Sale, Term } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { SheetTab, ValueWithError } from '@blockframes/utils/spreadsheet';
@@ -74,27 +74,43 @@ export async function getOrgId(
   return result;
 }
 
+function getImportTitle(service: MovieService, { name, userOrgId, blockframesAdmin, path }: ImportTitleOptions) {
+  return service.getValue((ref) => {
+    if (blockframesAdmin) {
+      return ref.where(path, '==', name);
+    } else {
+      return ref
+        .where(path, '==', name)
+        .where('orgIds', 'array-contains', userOrgId);
+    }
+  });
+}
+
+
 export async function getTitleId(
   name: string,
   titleService: MovieService,
-  cache: Record<string, string>,
+  cache: Record<string, Movie>,
+  memo: (name: string, value: Movie) => string,
   userOrgId: string,
-  blockframesAdmin: boolean
+  isBlockframesAdmin: boolean
 ) {
-  if (!name) return '';
-  if (cache[name]) return cache[name];
-  const options = { path: 'title.international', blockframesAdmin, userOrgId, name };
-  let titles = await titleService.getImportTitle(options);
-  if (!titles?.length) {
-    options.path = "id";
-    titles = await titleService.getImportTitle(options);
+  if (cache[name]) return cache[name].id;
+  const title = await titleService.getValue(name);
+  // Try if name is an id
+  if (title) {
+    if (isBlockframesAdmin) return memo(name, title);
+    if (title.orgIds.includes(userOrgId)) return memo(name, title);
+    throw new Error(`You don't have access to title with id ' + name`);
   }
-  if (titles.length > 1) {
-    throw new Error('multiple movies with same international name')
-  }
-  const result = titles[0].id;
-  cache[name] = result;
-  return result;
+  // name is the international title name
+  const queryFn = isBlockframesAdmin
+    ? ref => ref.where('title.international', '==', name)
+    : ref => ref.where('title.international', '==', name).where('orgIds', 'array-contains', userOrgId);
+  const titles = await titleService.getValue(queryFn);
+  if (!titles.length) throw new Error('No title found');
+  if (titles.length !== 1) throw new Error('Multiple title found');
+  return memo(title.id, title[0]);
 }
 
 export async function getContract(

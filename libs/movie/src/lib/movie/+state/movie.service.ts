@@ -27,7 +27,7 @@ export const fromInternalRef = (internalRef: string): QueryFn => (ref) =>
 type MovieWithAnalytics = Movie & { analytics: MovieAnalytics };
 
 interface MovieState extends EntityState<Movie, string>, ActiveState<string> { }
-interface ImportTitleOptions {
+export interface ImportTitleOptions {
   path: string,
   name: string,
   userOrgId: string,
@@ -94,18 +94,6 @@ export class MovieService extends CollectionService<MovieState> {
       '_meta.updatedBy': this.authService.uid,
       '_meta.updatedAt': new Date(),
     });
-  }
-
-  getImportTitle({ name, userOrgId, blockframesAdmin, path}: ImportTitleOptions) {
-    return this.getValue((ref) => {
-      if (blockframesAdmin) {
-        return ref.where(path, '==', name);
-      } else {
-        return ref
-          .where(path, '==', name)
-          .where('orgIds', 'array-contains', userOrgId);
-      }
-    })
   }
 
   /** Update deletedBy (_meta field of movie) with the current user and remove the movie. */
