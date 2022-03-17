@@ -14,7 +14,9 @@ export interface SheetTab {
   headers: any[];
   rows: any[][];
 }
-interface GroupedListOptions{mandatory:boolean}
+interface GroupedListOptions{
+  mandatory:boolean;
+}
 
 type Join<K extends string, P extends string> = '' extends P ? K : `${K}.${P}`;
 type GetKey<T, K extends Extract<keyof T, string>> =

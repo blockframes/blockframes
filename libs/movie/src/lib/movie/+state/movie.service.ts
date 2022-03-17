@@ -33,6 +33,7 @@ interface ImportTitleOptions {
   userOrgId: string,
   blockframesAdmin: boolean
 }
+
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies' })
 export class MovieService extends CollectionService<MovieState> {
