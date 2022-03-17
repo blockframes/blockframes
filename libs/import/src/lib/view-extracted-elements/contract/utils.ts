@@ -20,7 +20,7 @@ import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { UserService } from '@blockframes/user/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { Term } from '@blockframes/model';
+import { ContractStatus, ImportContractStatus, Term } from '@blockframes/model';
 import { Language, Media, Territory } from '@blockframes/utils/static-model';
 import { createMandate, createSale, Mandate, MovieLanguageSpecification, Sale, User } from '@blockframes/model';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
@@ -216,7 +216,7 @@ export async function formatContract(
       }
     },
     /* e */'term[].territories_included': (value: string) => getGroupedList(value, 'territories', separator),
-    /* f */'term[].territories_excluded': (value: string) => getGroupedList(value, 'territories', separator, {mandatory:false}),
+    /* f */'term[].territories_excluded': (value: string) => getGroupedList(value, 'territories', separator, { mandatory: false }),
     /* g */'term[].medias': (value: string) => getGroupedList(value, 'medias', separator),
     /* h */'term[].exclusive': (value: string) => {
       const lower = value.toLowerCase();
@@ -239,7 +239,16 @@ export async function formatContract(
       if (lower !== 'yes' && lower !== 'no') return wrongValueError('Licensed Original');
       return lower === 'yes';
     },
-    /* l */'contract.status': (value: string = 'pending') => value.toLowerCase(),
+    /* l */'contract.status': (value: string = 'In Negotiation') => {
+      const statusCorrespondences: Record<ImportContractStatus, ContractStatus> = {
+        'In Negotiation': 'negotiating',
+        'Accepted': 'accepted',
+        'Declined': 'declined',
+        'On signature': 'accepted',
+        'Signed': 'accepted',
+      };
+      return statusCorrespondences[value]
+    },
     /* m */'term[].dubbed': (value: string) => getStaticList('languages', value, separator, 'Dubbed', false),
     /* n */'term[].subtitle': (value: string) => getStaticList('languages', value, separator, 'Subtitle', false),
     /* o */'term[].caption': (value: string) => getStaticList('languages', value, separator, 'CC', false),
