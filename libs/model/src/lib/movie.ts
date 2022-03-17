@@ -1,3 +1,7 @@
+import { MovieLanguageType, productionStatus } from '@blockframes/utils/static-model';
+import { toDate } from '@blockframes/utils/helpers';
+import { createStorageFile, StorageFile, StorageVideo } from './media';
+import { App, getAllAppsExcept } from '@blockframes/utils/apps';
 import type {
   Language,
   MediaValue,
@@ -21,16 +25,16 @@ import type {
   NumberRange,
   ScreeningStatus,
 } from '@blockframes/utils/static-model/types';
-import type { Producer, Crew, Cast, Stakeholder, Director } from '@blockframes/utils/common-interfaces/identity';
+import type {
+  Producer,
+  Crew,
+  Cast,
+  Stakeholder,
+  Director,
+} from './identity';
 import type { AnalyticsEvents, AnalyticsBase } from '@blockframes/utils/analytics/analytics-model';
-import type { DocumentMeta } from '@blockframes/utils/models-meta';
-import type { StorageFile, StorageVideo } from '@blockframes/media/+state/media.firestore';
-import type firebase from 'firebase';
-
-import { MovieLanguageType, productionStatus } from '@blockframes/utils/static-model';
-import { App, getAllAppsExcept } from '@blockframes/utils/apps';
-import { createStorageFile } from '@blockframes/media/+state/media.firestore';
-import { toDate } from '@blockframes/utils/helpers'; // ! TODO: Remove
+import type { DocumentMeta } from './meta';
+import type { Timestamp } from './timestamp';
 
 //////////////////
 // MOVIE OBJECT //
@@ -127,9 +131,6 @@ export interface MoviePromotionalElements {
 ////////////////////
 // MOVIE DETAILS //
 ////////////////////
-
-type Timestamp = firebase.firestore.Timestamp;
-
 export interface MovieAppConfig<D> {
   acceptedAt: D;
   access: boolean;
@@ -283,8 +284,6 @@ export interface MovieAnalytics extends AnalyticsBase {
 }
 
 // Export for other files
-export { Credit } from '@blockframes/utils/common-interfaces/identity';
-
 export type Movie = MovieBase<Date>;
 
 export interface SyncMovieAnalyticsOptions {

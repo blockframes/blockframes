@@ -1,7 +1,8 @@
-import type { DocumentMeta } from '@blockframes/utils/models-meta';
-import type { NotificationTypesBase, UserRole } from '@blockframes/model';
+import { createStorageFile, StorageFile } from './media';
+import type { DocumentMeta } from './meta';
 import type { Genre, Language, Media, Territory } from '@blockframes/utils/static-model';
-import { createStorageFile, StorageFile } from '@blockframes/media/+state/media.firestore';
+import type { NotificationTypesBase } from './notification';
+import type { UserRole } from './permissions';
 
 export interface User extends PublicUser {
   financing: {

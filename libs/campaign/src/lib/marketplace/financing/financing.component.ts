@@ -8,8 +8,7 @@ import { ThemeService } from '@blockframes/ui/theme';
 import { ConsentsService } from '@blockframes/consents/+state/consents.service';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { MatDialog } from '@angular/material/dialog';
-import { StorageFile } from '@blockframes/media/+state/media.firestore';
-import { Access } from '@blockframes/consents/+state/consents.firestore';
+import { Access, StorageFile } from '@blockframes/model';
 import { ActivatedRoute } from '@angular/router';
 
 const budgetData: { serie: keyof Budget, label: string }[] = [{
