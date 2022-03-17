@@ -220,7 +220,7 @@ export async function formatContract(
       }
     },
     /* e */'term[].territories_included': (value: string) => getGroupedList(value, 'territories', separator),
-    /* f */'term[].territories_excluded': (value: string) => getGroupedList(value, 'territories', separator, { mandatory: false }),
+    /* f */'term[].territories_excluded': (value: string) => getGroupedList(value, 'territories', separator, { required: false }),
     /* g */'term[].medias': (value: string) => getGroupedList(value, 'medias', separator),
     /* h */'term[].exclusive': (value: string) => {
       const lower = value.toLowerCase();

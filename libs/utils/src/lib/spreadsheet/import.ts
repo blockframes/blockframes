@@ -15,7 +15,7 @@ export interface SheetTab {
   rows: any[][];
 }
 interface GroupedListOptions {
-  mandatory: boolean;
+  required: boolean;
 }
 
 type Join<K extends string, P extends string> = '' extends P ? K : `${K}.${P}`;
@@ -251,7 +251,7 @@ const fromGroup = {
 
 export function getGroupedList(value: string, groupScope: 'territories', separator: string, options?: GroupedListOptions): FromStatic<'territories'>;
 export function getGroupedList(value: string, groupScope: 'medias', separator: string, options?: GroupedListOptions): FromStatic<'medias'>;
-export function getGroupedList<GS extends GroupScope>(value: string, groupScope: GS, separator: string, options = { mandatory: true }) {
+export function getGroupedList<GS extends GroupScope>(value: string, groupScope: GS, separator: string, options = { required: true }) {
   const elements = split(value, separator);
   const groupLabels = staticGroups[groupScope].map(group => group.label);
   const allElements = elements.map(element => {
@@ -261,7 +261,7 @@ export function getGroupedList<GS extends GroupScope>(value: string, groupScope:
   }).flat();
 
   const elementList = Array.from(new Set(allElements)).join(separator);
-  return fromGroup[groupScope](elementList, separator, options.mandatory);
+  return fromGroup[groupScope](elementList, separator, options.required);
 }
 
 export function split(cell: string, separator: string) {
