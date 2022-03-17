@@ -141,9 +141,9 @@
           <static-select test-id="status" scope="screeningStatus" [control]="form.release.get('status')"
             [withoutValues]="['tobedetermined']" required fxFlex>
             <mat-label>Status</mat-label>
-            <mat-hint>
+            <mat-error>
               Please specify if the release date is estimated or confirmed.
-            </mat-hint>
+            </mat-error>
           </static-select>
         </ng-container>
 
@@ -196,7 +196,7 @@
     <mat-divider></mat-divider>
 
     <section id="directors">
-      <h3>Director(s)*</h3>
+      <h3>Director(s)</h3>
 
       <bf-form-table [columns]="displayedColumns" [form]="form.directors">
         <ng-template colRef="description" let-description>{{ description | maxLength: 80 }}</ng-template>
