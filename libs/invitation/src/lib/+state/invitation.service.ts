@@ -87,7 +87,9 @@ export class InvitationService extends CollectionService<InvitationState> {
   ]).pipe(
     map(([user, invitations]) => {
       if (!user?.uid || !user?.orgId) return [];
-      return invitations.filter(i => i.toOrg?.id === user.orgId || i.toUser?.uid === user.uid)
+      const inv = invitations.filter(i => i.toOrg?.id === user.orgId || i.toUser?.uid === user.uid);
+      const removeDuplicate = inv.filter((i, index) => inv.findIndex(elm => elm.id === i.id) === index)
+      return removeDuplicate;
     })
   );
 
