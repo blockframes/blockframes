@@ -112,7 +112,7 @@
 </article>
 
 <!-- CERTIFICATION -->
-<article fxLayout="column" fxLayoutGap="16px">
+<article *ngIf="movie | hasStatus: ['shooting', 'post_production', 'finished', 'released']" fxLayout="column" fxLayoutGap="16px">
   <h6>
     Qualification{ movie.certifications.value.length, plural, =1 {} other {s}}
     <a mat-icon-button [routerLink]="link" fragment="qualifications">
@@ -123,7 +123,6 @@
     <ng-template let-certs>{{ certs | toLabel: 'certifications' }}</ng-template>
   </missing-control>
 </article>
-
 
 <!-- AUDIENCE AND GOALS -->
 <article>
