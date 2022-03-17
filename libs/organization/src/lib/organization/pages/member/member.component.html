@@ -1,4 +1,4 @@
-<div fxLayoutGap="24px">
+<div fxLayout="column" fxLayoutGap="24px">
   <ng-container *ngIf="(invitationsToJoinOrganization$ | async) as invitations">
     <member-request *ngIf="invitations.length > 0"
       (declined)="declineInvitation($event)"
