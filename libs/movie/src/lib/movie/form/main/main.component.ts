@@ -15,6 +15,7 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { maxYear } from '@blockframes/utils/form/validators/validators';
 
 @Component({
   selector: 'movie-form-main',
@@ -28,7 +29,7 @@ export class MovieFormMainComponent implements OnInit, OnDestroy {
   valuesCustomGenres$: Observable<string[]>;
   customGenreCtrl = new FormControl();
   public separatorKeysCodes: number[] = [ENTER, COMMA];
-  public maxReleaseYear = new Date().getFullYear() + 20;
+  public maxReleaseYear = maxYear;
 
   public displayedColumns = {
     firstName: 'First Name',
