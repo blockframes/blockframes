@@ -9,9 +9,6 @@
           <mat-label>International Title</mat-label>
           <input test-id="international-title" matInput type="text" placeholder="International title"
             [formControl]="international" required />
-            <mat-hint *ngIf="international.hasError('required')">
-              Please specify your project's international title.
-            </mat-hint>
           <mat-error *ngIf="international.hasError('required')">
             Please specify your project's international title.
           </mat-error>
