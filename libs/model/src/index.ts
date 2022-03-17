@@ -10,5 +10,8 @@ export * from './lib/contract';
 export * from './lib/event';
 export * from './lib/media';
 export * from './lib/negociation';
+export * from './lib/identity';
+export * from './lib/timestamp';
 export * from './lib/consents';
 export * from './lib/analytics';
+export * from './lib/meta';

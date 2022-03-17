@@ -1,4 +1,4 @@
-import { DocumentMeta } from "@blockframes/utils/models-meta";
+import { DocumentMeta } from './meta';
 
 export type EventName = 'page_view' | 'screening_requested' | 'promo_video_started' | 'added_to_wishlist' | 'promo_element_opened' | 'asking_price_requested';
 

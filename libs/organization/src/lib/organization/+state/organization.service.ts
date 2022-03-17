@@ -14,14 +14,12 @@ import {
   createOrganization,
   OrganizationDocument,
   createPermissions,
-  UserRole
+  UserRole,
+  createDocumentMeta,
+  formatDocumentMetaFromFirestore,
 } from '@blockframes/model';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
 import { App, Module, createOrgAppAccess } from '@blockframes/utils/apps';
-import {
-  createDocumentMeta,
-  formatDocumentMetaFromFirestore,
-} from '@blockframes/utils/models-meta';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { combineLatest, Observable, of } from 'rxjs';
 import { ActiveState, EntityState } from '@datorama/akita';

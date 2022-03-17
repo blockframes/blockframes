@@ -3,7 +3,7 @@ import * as functions from 'firebase-functions';
 import { db } from './internals/firebase';
 import { userResetPassword, sendDemoRequestMail, sendContactEmail, accountCreationEmail, userInvite, userVerifyEmail } from './templates/mail';
 import { sendMailFromTemplate, sendMail } from './internals/email';
-import { RequestDemoInformations } from './data/types';
+import { RequestDemoInformations } from '@blockframes/utils/request-demo';
 import { getCollection, storeSearchableUser, deleteObject, algolia } from '@blockframes/firebase-utils';
 import { getDocument } from './data/internals';
 import { getMailSender, applicationUrl, App } from '@blockframes/utils/apps';

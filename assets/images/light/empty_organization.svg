@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="250px" height="250px" viewBox="0 0 250 250" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Illustrations/Light/250px/empty_organization</title>
     <g id="Illustrations/Light/250px/empty_organization" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <circle id="Oval" fill="#9EB1FF" cx="125" cy="125" r="117.5"></circle>
         <g id="Group-2" transform="translate(37.000000, 38.000000)">
             <path d="M2.7826087,147.276009 C2.7826087,142.709045 6.49767092,138.993983 11.064635,138.993983 C15.6315991,138.993983 19.3466613,142.709045 19.3466613,147.276009 C19.3466613,151.842973 15.6315991,155.558036 11.064635,155.558036 C6.49767092,155.558036 2.7826087,151.842974 2.7826087,147.276009 Z" id="Path" fill="#FF6E61" fill-rule="nonzero"></path>
             <path d="M152.248447,125.01514 C152.248447,120.448175 155.963509,116.733113 160.530474,116.733113 C165.097438,116.733113 168.8125,120.448176 168.8125,125.01514 C168.8125,129.582104 165.097438,133.297166 160.530474,133.297166 C155.963509,133.297166 152.248447,129.582104 152.248447,125.01514 Z" id="Path" fill="#FF6E61" fill-rule="nonzero"></path>

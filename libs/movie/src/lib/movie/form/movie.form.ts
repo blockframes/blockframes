@@ -34,10 +34,6 @@ import {
   createShooting,
   createMovieVideos,
   createMovieNote,
-  createStorageFile
-} from '@blockframes/model';
-import { FormArray, FormControl, Validators, ValidatorFn } from '@angular/forms';
-import {
   Filmography,
   createFilmography,
   createDirector,
@@ -45,7 +41,9 @@ import {
   Stakeholder,
   createStakeholder,
   Director,
-} from '@blockframes/utils/common-interfaces/identity';
+  createStorageFile
+} from '@blockframes/model';
+import { FormArray, FormControl, Validators, ValidatorFn } from '@angular/forms';
 import {
   FormStaticValue,
   FormStaticValueArray,
