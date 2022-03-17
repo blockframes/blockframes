@@ -12,7 +12,7 @@ import { createDenomination, OrganizationDocument, PublicUser, InvitationDocumen
 
 export { getDocument };
 
-export function createPublicOrganizationDocument(org: OrganizationDocument) {
+export function createPublicOrganizationDocument(org: Partial<OrganizationDocument>) {
   return {
     id: org.id ?? '',
     denomination: createDenomination(org.denomination),
@@ -37,7 +37,8 @@ export function createPublicUserDocument(user: Partial<PublicUser> = {}) {
     avatar: createStorageFile(user.avatar),
     firstName: user.firstName ?? '',
     lastName: user.lastName ?? '',
-    orgId: user.orgId ?? ''
+    orgId: user.orgId ?? '',
+    _meta: createDocumentMeta(user._meta as DocumentMeta<Timestamp>)
   }
 }
 

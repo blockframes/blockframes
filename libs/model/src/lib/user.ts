@@ -1,4 +1,4 @@
-import { DocumentMeta } from "@blockframes/utils/models-meta";
+import { DocumentMeta, createDocumentMeta } from "@blockframes/utils/models-meta";
 import { NotificationTypesBase, UserRole } from '@blockframes/model';
 import { createStorageFile, StorageFile } from "@blockframes/media/+state/media.firestore";
 import { Genre, Language, Media, Territory } from "@blockframes/utils/static-model";
@@ -56,7 +56,8 @@ export function createPublicUser(user: Partial<User> = {}): PublicUser {
     avatar: createStorageFile(user?.avatar),
     firstName: user.firstName ?? '',
     lastName: user.lastName ?? '',
-    orgId: user.orgId ?? ''
+    orgId: user.orgId ?? '',
+    _meta: createDocumentMeta(user?._meta as DocumentMeta<Date>)
   }
 }
 

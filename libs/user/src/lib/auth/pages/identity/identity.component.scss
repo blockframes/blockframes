@@ -88,6 +88,12 @@ section {
     height: 40px;
     border-radius: 50%;
   }
+
+  span {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
 }
 
 button[app-logo] {

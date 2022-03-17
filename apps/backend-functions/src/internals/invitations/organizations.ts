@@ -85,6 +85,7 @@ async function onInvitationToOrgDecline(invitation: InvitationDocument) {
     createNotification({
       toUserId: toAdminId,
       user: createPublicUserDocument(invitation.toUser),
+      organization: createPublicOrganizationDocument(invitation.fromOrg),
       type: 'invitationToJoinOrgDeclined',
       _meta: createDocumentMeta({ createdFrom: appAccess })
     })
@@ -170,6 +171,7 @@ async function onRequestFromUserToJoinOrgDecline(invitation: InvitationDocument)
     createNotification({
       toUserId,
       user: createPublicUserDocument(invitation.fromUser),
+      organization: createPublicOrganizationDocument(invitation.toOrg),
       type: 'requestFromUserToJoinOrgDeclined',
       _meta: createDocumentMeta({ createdFrom: invitation.fromUser._meta.createdFrom })
     })
