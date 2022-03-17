@@ -140,23 +140,24 @@
       <mat-divider></mat-divider>
     </ng-container>
 
-    <h3>Qualifications</h3>
-    <section id="qualifications">
-      <article>
-        <mat-button-toggle-group [formControl]="form.certifications" multiple name="certifications"
-          aria-label="Certifications">
-          <ng-container *ngFor="let certification of certifications; index as i">
-            <mat-button-toggle [attr.test-id]="'certification' + (i + 1)" [value]="certification">
-              {{ certification | toLabel: 'certifications' }}
-            </mat-button-toggle>
-          </ng-container>
-        </mat-button-toggle-group>
-      </article>
-      <span class="mat-caption">Select all that apply</span>
+    <ng-container *ngIf="form | hasStatus: ['shooting', 'post_production', 'finished', 'released']">
+      <h3>Qualifications</h3>
+      <section id="qualifications">
+        <article>
+          <mat-button-toggle-group [formControl]="form.certifications" multiple name="certifications"
+            aria-label="Certifications">
+            <ng-container *ngFor="let certification of certifications; index as i">
+              <mat-button-toggle [attr.test-id]="'certification' + (i + 1)" [value]="certification">
+                {{ certification | toLabel: 'certifications' }}
+              </mat-button-toggle>
+            </ng-container>
+          </mat-button-toggle-group>
+        </article>
+        <span class="mat-caption">Select all that apply</span>
 
-      <mat-divider></mat-divider>
-    </section>
-
+        <mat-divider></mat-divider>
+      </section>
+    </ng-container>
 
     <section id="audience-goals" fxLayout="column">
       <h3>Positioning</h3>
