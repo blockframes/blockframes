@@ -311,9 +311,9 @@ export async function formatContract(
       ? createSale(data.contract as Sale)
       : createMandate(data.contract as Mandate);
 
-    const { id, sellerId } = contract;
+    const { titleId, sellerId } = contract;
 
-    const movieBelongsToLicensor = await titleService.getValue(id).then(title => title.orgIds.includes(sellerId));
+    const movieBelongsToLicensor = await titleService.getValue(titleId).then(title => title.orgIds.includes(sellerId));
     if (!movieBelongsToLicensor)
       errors.push({
         type: 'error',
