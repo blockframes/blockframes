@@ -130,7 +130,8 @@
           <mat-label>Release Year</mat-label>
           <input test-id="release-year" matInput [formControl]="form.release.get('year')" required type="number"
             placeholder="YYYY" />
-          <mat-error *ngIf="form.hasError('invalidYear', 'release.year')">Please enter a 4 digit date (e.g. 2020)
+          <mat-error *ngIf="form.hasError('invalidYear', 'release.year') && form.release.get('year').value > (maxReleaseYear - 1)">Release date should not exceed {{ (maxReleaseYear - 1) }}</mat-error>
+          <mat-error *ngIf="form.hasError('invalidYear', 'release.year') && form.release.get('year').value < maxReleaseYear">Please enter a 4 digit date (e.g. 2020)
           </mat-error>
           <mat-error *ngIf="form.hasError('required', 'release.year')">
             Please specify your project's release year.

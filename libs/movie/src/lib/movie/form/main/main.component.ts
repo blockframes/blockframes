@@ -28,6 +28,7 @@ export class MovieFormMainComponent implements OnInit, OnDestroy {
   valuesCustomGenres$: Observable<string[]>;
   customGenreCtrl = new FormControl();
   public separatorKeysCodes: number[] = [ENTER, COMMA];
+  public maxReleaseYear = new Date().getFullYear() + 20;
 
   public displayedColumns = {
     firstName: 'First Name',
