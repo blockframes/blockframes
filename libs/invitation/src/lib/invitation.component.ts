@@ -9,7 +9,6 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { combineLatest } from 'rxjs';
 import { APP } from '@blockframes/utils/routes/utils';
 import { Invitation } from '@blockframes/model';
-
 const applyFilters = (invitations: Invitation[], filters: { type: string[], status: string[] }) => {
   const inv = filters.type?.length ? invitations.filter(inv => filters.type.includes(inv.type)) : invitations;
   return filters.status?.length ? inv.filter(inv => filters.status.includes(inv.status)) : inv;
@@ -28,7 +27,10 @@ export class InvitationComponent {
   });
 
   // Invitation count for conditions
-  invitationCount$ = this.service.myInvitations$.pipe(map(inv => inv.length));
+  invitationCount$ = this.service.myInvitations$.pipe(
+    map(inv => this.checkInvitationDate(inv)),
+    map(inv => inv.length)
+  );
 
   // Invitation that require an action
   invitations$ = combineLatest([
@@ -63,5 +65,14 @@ export class InvitationComponent {
     const org = this.orgService.org;
     const [moduleAccess = 'dashboard'] = getOrgModuleAccess(org, this.app);
     return this.router.navigate([`/c/o/${moduleAccess}/home`]);
+  }
+
+  /*
+    Here we are filtering invitations older than 4 months to avoid passing them to invitation-list component
+  */ 
+  checkInvitationDate(invitations) {
+    const now = Date.now();
+    const limitDate = 4 * 30 * 24 * 60 * 60 * 1000;
+    return invitations.filter(invitation => invitation.date > now - limitDate);
   }
 }
