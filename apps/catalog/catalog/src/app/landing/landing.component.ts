@@ -24,7 +24,7 @@ export class CatalogLandingComponent {
     {
       title: 'For Buyers ',
       imgAsset: 'video_placeholder_buyer.png',
-      description: 'Search for avails easily through one curated library and buy content in larger volumes through one single deal.',
+      description: 'Find the content you’re looking for thanks to simplified avails search & customized recommendations. Buy it in just a few clicks.',
     }
   ];
 
