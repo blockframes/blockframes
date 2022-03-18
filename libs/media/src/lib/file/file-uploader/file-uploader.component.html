@@ -39,7 +39,7 @@
   <img [asset]="fileName | fileTypeImage" alt="file image" class="file-uploaded">
   <h3>{{ fileName | fileName }}</h3>
   <span *ngIf="!!file" class="mat-body-2">{{ file.size | fileSize }}</span>
-  <button mat-mini-fab color="divider">
-    <mat-icon (click)="delete()" svgIcon="close" matTooltip="Delete File"></mat-icon>
+  <button mat-mini-fab color="divider" (click)="delete()">
+    <mat-icon svgIcon="close" matTooltip="Delete File"></mat-icon>
   </button>
 </ng-template>
