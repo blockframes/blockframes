@@ -33,7 +33,6 @@ import {
   userLeftYourOrganization,
   requestToAttendEventFromUserRefused,
   invitationToJoinOrgDeclined,
-  requestToJoinOrgDeclined,
   invitationToEventFromOrgUpdated,
   userJoinOrgPendingRequest,
   adminOfferCreatedConfirmationEmail,
@@ -145,11 +144,6 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
         break;
       case 'orgAppAccessChanged':
         await sendOrgAppAccessChangedEmail(recipient, notification)
-          .then(() => notification.email.isSent = true)
-          .catch(e => notification.email.error = e.message)
-        break;
-      case 'requestFromUserToJoinOrgDeclined':
-        await sendRequestToJoinOrgDeclined(recipient, notification)
           .then(() => notification.email.isSent = true)
           .catch(e => notification.email.error = e.message)
         break;
@@ -575,16 +569,6 @@ async function sendInvitationDeclinedToJoinOrgEmail(recipient: User, notificatio
 
   const app = notification._meta.createdFrom;
   const template = invitationToJoinOrgDeclined(toAdmin, userSubject);
-  await sendMailFromTemplate(template, app, groupIds.unsubscribeAll);
-}
-
-/** Let user knows that his request to join an org has been declined */
-async function sendRequestToJoinOrgDeclined(recipient: User, notification: NotificationDocument) {
-  const org = await getDocument<OrganizationDocument>(`orgs/${recipient.orgId}`);
-  const orgData = getOrgEmailData(org);
-  const toUser = getUserEmailData(notification.user);
-  const app = notification._meta.createdFrom;
-  const template = requestToJoinOrgDeclined(toUser, orgData);
   await sendMailFromTemplate(template, app, groupIds.unsubscribeAll);
 }
 
