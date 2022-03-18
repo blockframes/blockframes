@@ -21,7 +21,7 @@
   <div *ngIf="data.showAcceptTermsCheckbox" class="validation-checkbox" fxLayout="column" fxLayoutAlign="center center">
     <p><strong>Before you accept this contract, please agree on the following:</strong></p>
     <mat-checkbox formControlName="acceptTerms">
-      I hereby accept the policy regarding accepted offers, as mentioned in the <a routerLink="toDefine" target="_blank">Terms and Conditions.</a> <!-- TODO 7743 - add link -->
+      I hereby accept the policy regarding accepted offers, as mentioned in the <a [routerLink]="termsPath" target="_blank">Terms and Conditions.</a>
     </mat-checkbox>
   </div>
   <footer fxLayout="column" fxLayoutAlign="center center">

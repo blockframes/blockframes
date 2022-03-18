@@ -4,7 +4,7 @@ import { OfferShellComponent } from '../shell.component';
 import { combineLatest } from 'rxjs';
 import { first, map, pluck } from 'rxjs/operators';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
+import { ConfirmWithValidationComponent } from '@blockframes/ui/confirm-with-validation/confirm-with-validation.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
@@ -55,10 +55,9 @@ export class ContractViewComponent {
       title: 'Are you sure to accept this contract?',
       question: 'Please verify if all the contract elements are convenient for you.',
       confirm: 'Yes, accept contract',
-      cancel: 'Come back & verify contract',
-      showAcceptTermsCheckbox: true
+      cancel: 'Come back & verify contract'
     };
-    this.dialog.open(ConfirmComponent, { data });
+    this.dialog.open(ConfirmWithValidationComponent, { data });
   }
 
 }

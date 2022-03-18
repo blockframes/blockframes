@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { SaleShellComponent } from '../shell.component';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
+import { ConfirmWithValidationComponent } from '@blockframes/ui/confirm-with-validation/confirm-with-validation.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Movie } from '@blockframes/model';
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
@@ -38,9 +38,8 @@ export class SaleViewComponent {
       question: 'Please verify if all the contract elements are convenient for you.',
       confirm: 'Yes, accept Contract',
       cancel: 'Come back & verify Contract',
-      showAcceptTermsCheckbox: true
     };
-    const ref = this.dialog.open(ConfirmComponent, { data });
+    const ref = this.dialog.open(ConfirmWithValidationComponent, { data });
     ref.afterClosed().subscribe((acceptSuccessful) => {
       const config = { duration: 6000 };
       if (acceptSuccessful)

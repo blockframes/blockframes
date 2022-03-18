@@ -1,13 +1,18 @@
 import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: 'blockframes-confirm',
-  templateUrl: './confirm.component.html',
-  styleUrls: ['./confirm.component.scss'],
+  selector: 'blockframes-confirm-validate',
+  templateUrl: './confirm-with-validation.component.html',
+  styleUrls: ['./confirm-with-validation.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ConfirmComponent {
+export class ConfirmWithValidationComponent {
+
+  acceptTerms = new FormControl(false);
+  termsPath = `/c/o/${this.router.url.includes('marketplace') ? 'marketplace' : 'dashboard'}/terms`;
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
@@ -18,7 +23,8 @@ export class ConfirmComponent {
       cancel: string,
       onConfirm?: () => void
     },
-    public dialogRef: MatDialogRef<ConfirmComponent>,
+    public router: Router,
+    public dialogRef: MatDialogRef<ConfirmWithValidationComponent>,
   ) { }
 
   public confirm() {

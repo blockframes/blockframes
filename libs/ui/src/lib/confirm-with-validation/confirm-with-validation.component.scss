@@ -1,0 +1,30 @@
+:host {
+  display: block;
+}
+
+section {
+  padding: 40px 80px 80px 80px;
+}
+
+div[mat-dialog-content] {
+  text-align: center;
+  h3, p {
+    padding: 0;
+  }
+}
+
+p {
+  max-width: 70%;
+}
+
+button {
+  width: fit-content;
+}
+
+button.close {
+  aspect-ratio: 1;
+}
+
+mat-checkbox {
+  margin-bottom: 12px;
+}

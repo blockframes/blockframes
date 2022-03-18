@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 
 export interface ConfirmDeclineData { 
   type: 'seller' | 'buyer', 
@@ -35,8 +36,11 @@ export class ConfirmDeclineComponent {
     acceptTerms: new FormControl(false)
   });
 
+  termsPath = `/c/o/${this.router.url.includes('marketplace') ? 'marketplace' : 'dashboard'}/terms`;
+
   constructor(
     private dialog: MatDialogRef<ConfirmDeclineComponent>,
+    private router: Router,
     @Inject(MAT_DIALOG_DATA) public data: ConfirmDeclineData
   ) { }
 
