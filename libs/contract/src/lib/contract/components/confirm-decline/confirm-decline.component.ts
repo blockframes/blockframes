@@ -4,6 +4,7 @@ import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { ModuleGuard } from '@blockframes/utils/routes/module.guard';
 
 export interface ConfirmDeclineData { 
   type: 'seller' | 'buyer', 
@@ -36,11 +37,11 @@ export class ConfirmDeclineComponent {
     acceptTerms: new FormControl(false)
   });
 
-  termsPath = `/c/o/${this.router.url.includes('marketplace') ? 'marketplace' : 'dashboard'}/terms`;
+  termsPath = `/c/o/${this.moduleGuard.currentModule}/terms`;
 
   constructor(
     private dialog: MatDialogRef<ConfirmDeclineComponent>,
-    private router: Router,
+    private moduleGuard: ModuleGuard,
     @Inject(MAT_DIALOG_DATA) public data: ConfirmDeclineData
   ) { }
 

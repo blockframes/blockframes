@@ -1,22 +1,23 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ConfirmWithValidationComponent } from './confirm-with-validation.component';
-import { MatButtonModule } from '@angular/material/button';
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { MatIconModule } from '@angular/material/icon';
-import { MatCheckboxModule } from '@angular/material/checkbox';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
+import { ConfirmWithValidationComponent } from './confirm-with-validation.component';
+
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 @NgModule({
   imports: [
     CommonModule,
     RouterModule,
-    MatIconModule,
-    MatButtonModule, 
+    ReactiveFormsModule,
     FlexLayoutModule,
+    MatButtonModule, 
+    MatIconModule,
     MatCheckboxModule,
-    ReactiveFormsModule
   ],
   declarations: [ConfirmWithValidationComponent],
   exports: [ConfirmWithValidationComponent]

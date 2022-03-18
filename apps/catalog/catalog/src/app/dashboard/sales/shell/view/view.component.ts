@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { SaleShellComponent } from '../shell.component';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { ConfirmWithValidationComponent } from '@blockframes/ui/confirm-with-validation/confirm-with-validation.component';
+import { ConfirmWithValidationComponent } from '@blockframes/contract/contract/components/confirm-with-validation/confirm-with-validation.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Movie } from '@blockframes/model';
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';

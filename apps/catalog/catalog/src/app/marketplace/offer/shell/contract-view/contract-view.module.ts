@@ -4,8 +4,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule } from '@angular/router';
 import { ContractViewComponent } from './contract-view.component';
 
-import { ConfirmWithValidationModule } from '@blockframes/ui/confirm-with-validation/confirm-with-validation.module'
-import { NegotiationPipeModule } from '@blockframes/contract/negotiation/pipe'
+import { ConfirmWithValidationModule } from '@blockframes/contract/contract/components/confirm-with-validation/confirm-with-validation.module';
+import { NegotiationPipeModule } from '@blockframes/contract/negotiation/pipe';
 import { ContractItemModule } from '@blockframes/contract/contract/components/item/contract-item.module';
 import { HoldbackListModule } from '@blockframes/contract/contract/holdback/list/list.module';
 

@@ -4,7 +4,7 @@ import { OfferShellComponent } from '../shell.component';
 import { combineLatest } from 'rxjs';
 import { first, map, pluck } from 'rxjs/operators';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { ConfirmWithValidationComponent } from '@blockframes/ui/confirm-with-validation/confirm-with-validation.component';
+import { ConfirmWithValidationComponent } from '@blockframes/contract/contract/components/confirm-with-validation/confirm-with-validation.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
