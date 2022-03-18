@@ -21,6 +21,14 @@ export class CampaignFormBudgetComponent {
     this.dynTitle.setPageTitle('Estimated budget')
   }
 
+  getCharcode(event: any) {
+    const charCode: number = event.keyCode;
+    if (charCode == 101 || charCode == 69 || charCode == 45 || charCode == 43) {
+      return false;
+    }
+    return true;
+  }
+  
   get budget() {
     return this.form.get('budget');
   }

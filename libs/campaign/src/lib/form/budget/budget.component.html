@@ -19,20 +19,20 @@
     <mat-divider></mat-divider>
 
     <section id="budget" fxLayout="column">
-      <h3>Budget</h3>
-
+      <h3>Budget {{budget.get('development').value}}</h3>
+      
       <mat-form-field appearance="outline">
         <mat-label>Development costs (underlying rights, script, pre-production etc)</mat-label>
-        <input matInput type="number" [formControl]="budget.get('development')" required min="0"/>
+        <input matInput type="number" (keypress)='getCharcode($event)' [formControl]="budget.get('development')" required min="0"/>
         <mat-icon matSuffix [svgIcon]="form.getCurrency()"></mat-icon>
         <mat-error *ngIf="budget.hasError('min', 'development')">Only positive numbers are allowed.</mat-error>
         <mat-error *ngIf="budget.hasError('required', 'development')">Please provide the producer's fees.</mat-error>
-
+        <mat-error *ngIf="budget.get('development').value =='e' ">hello world</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>Shooting costs (director, cast, location, make-up, costume, cameras etc)</mat-label>
-        <input matInput type="number" [formControl]="budget.get('shooting')" required min="0"/>
+        <input matInput type="number" (keypress)='getCharcode($event)' [formControl]="budget.get('shooting')" required min="0"/>
         <mat-icon matSuffix [svgIcon]="form.getCurrency()"></mat-icon>
         <mat-error *ngIf="budget.hasError('min', 'shooting')">Only positive numbers are allowed.</mat-error>
         <mat-error *ngIf="budget.hasError('required', 'shooting')">Please provide the Cast cost.</mat-error>
@@ -40,7 +40,7 @@
 
       <mat-form-field appearance="outline">
         <mat-label>Post production (music, sound, editing, vfx etc)</mat-label>
-        <input matInput type="number" [formControl]="budget.get('postProduction')" required min="0"/>
+        <input matInput type="number" (keypress)='getCharcode($event)' [formControl]="budget.get('postProduction')" required min="0"/>
         <mat-icon matSuffix [svgIcon]="form.getCurrency()"></mat-icon>
         <mat-error *ngIf="budget.hasError('min', 'postProduction')">Only positive numbers are allowed.</mat-error>
         <mat-error *ngIf="budget.hasError('required', 'postProduction')">Please provide the Shoot cost.</mat-error>
@@ -48,7 +48,7 @@
 
       <mat-form-field appearance="outline">
         <mat-label>Administration (legal fees, insurance fees, banking fees)</mat-label>
-        <input matInput type="number" [formControl]="budget.get('administration')" required min="0"/>
+        <input matInput type="number" (keypress)='getCharcode($event)' [formControl]="budget.get('administration')" required min="0"/>
         <mat-icon matSuffix [svgIcon]="form.getCurrency()"></mat-icon>
         <mat-error *ngIf="budget.hasError('min', 'administration')">Only positive numbers are allowed.</mat-error>
         <mat-error *ngIf="budget.hasError('required', 'administration')">Please provide the Post-Production cost.
@@ -57,7 +57,7 @@
 
       <mat-form-field appearance="outline">
         <mat-label>Other (Contingency, producer fees, overheads fees)</mat-label>
-        <input matInput type="number" [formControl]="budget.get('contingency')" min="0"/>
+        <input matInput type="number" (keypress)='getCharcode($event)' [formControl]="budget.get('contingency')" min="0"/>
         <mat-icon matSuffix [svgIcon]="form.getCurrency()"></mat-icon>
         <mat-error *ngIf="budget.hasError('min', 'contingency')">Only positive numbers are allowed.</mat-error>
       </mat-form-field>
