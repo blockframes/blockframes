@@ -75,7 +75,7 @@ export async function getOrgId(
 }
 
 export async function getTitleId(
-  name: string,
+  nameOrId: string,
   titleService: MovieService,
   cache: Record<string, Movie>,
   userOrgId: string,
@@ -87,21 +87,21 @@ export async function getTitleId(
     return value.id
   }
 
-  if (cache[name]) return cache[name].id;
-  const title = await titleService.getValue(name);
-  // Try if name is an id
+  if (cache[nameOrId]) return cache[nameOrId].id;
+  const title = await titleService.getValue(nameOrId);
+  // Try if nameOrId is an id
   if (title) {
-    if (isBlockframesAdmin) return memo(name, title);
-    if (title.orgIds.includes(userOrgId)) return memo(name, title);
-    throw new Error(`You don't have access to title with id ' + name`);
+    if (isBlockframesAdmin) return memo(nameOrId, title);
+    if (title.orgIds.includes(userOrgId)) return memo(nameOrId, title);
+    throw new Error(`You don't have access to title with id: ${nameOrId}`);
   }
-  // name is the international title name
+  // nameOrId is the international title name
   const queryFn = isBlockframesAdmin
-    ? ref => ref.where('title.international', '==', name)
-    : ref => ref.where('title.international', '==', name).where('orgIds', 'array-contains', userOrgId);
+    ? ref => ref.where('title.international', '==', nameOrId)
+    : ref => ref.where('title.international', '==', nameOrId).where('orgIds', 'array-contains', userOrgId);
   const titles = await titleService.getValue(queryFn);
-  if (!titles.length) throw new Error('No title found');
-  if (titles.length !== 1) throw new Error('Multiple title found');
+  if (!titles.length) throw new Error(`No title found with name "${nameOrId}".`);
+  if (titles.length !== 1) throw new Error(`Multiple titles with name "${nameOrId}" found.`);
   return memo(title.id, title[0]);
 }
 

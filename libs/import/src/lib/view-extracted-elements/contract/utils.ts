@@ -131,9 +131,9 @@ export async function formatContract(
           value: undefined,
           error: {
             type: 'error',
-            name: `Multiple movies with same name.`,
+            name: 'Error on title name or ID',
             reason: ``,
-            hint: `Due to the fact that multiple movies have as name "${value}", please use the movie Id instead.`
+            hint: err.message,
           }
         };
       }
