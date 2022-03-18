@@ -10,7 +10,7 @@
     <ng-template colRef="email" label="Email Address" let-email sort>
       {{ email }}
     </ng-template>
-    <ng-template *ngIf="this.isAdmin" colRef="uid" label="Actions" let-uid>
+    <ng-template *ngIf="isAdmin" colRef="uid" label="Actions" let-uid>
       <div fxLayout="row" fxLayoutAlign="end">
         <button class="mat-elevation-z0" mat-mini-fab color="primary" (click)="accepted.emit(findRequest(uid))">
           <mat-icon svgIcon="how_to_reg"></mat-icon>
