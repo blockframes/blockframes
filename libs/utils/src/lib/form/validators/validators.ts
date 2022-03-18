@@ -11,14 +11,15 @@ import { languages, isInKeys, Scope, staticModel } from '@blockframes/utils/stat
 
 export const urlValidators = Validators.pattern(/^(http(s)?:\/\/www\.|http(s)?:\/\/)[a-z0-9]+([-.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/);
 
+export const maxYear = new Date().getFullYear() + 20;
+
 export function yearValidators(): ValidatorFn {
   return (control: AbstractControl): { [key: string]: boolean } | null => {
     if (control.dirty) {
       if (typeof control.value === 'string') {
         return /^[1-2][0-9]{3}$/.test(control.value) ? null : { invalidYear: true };
       } else if (typeof control.value === 'number') {
-        const max = new Date().getFullYear() + 20;
-        return control.value > 1900 && control.value < max ? null : { invalidYear: true };
+        return control.value > 1900 && control.value < maxYear ? null : { invalidYear: true };
       } else {
         return null;
       }
