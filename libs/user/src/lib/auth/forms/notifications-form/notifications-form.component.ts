@@ -45,7 +45,7 @@ const titleType: Record<NotificationTypesBase, NotificationSetting> = {
 const tables: { title: string, types: string[], appAuthorized: App[] }[] = [
   {
     title: 'Company Management',
-    types: ['requestFromUserToJoinOrgCreate', 'orgMemberUpdated', 'requestFromUserToJoinOrgDeclined'],
+    types: ['requestFromUserToJoinOrgCreate', 'orgMemberUpdated'],
     appAuthorized: ['catalog', 'festival', 'financiers']
   },
   {
