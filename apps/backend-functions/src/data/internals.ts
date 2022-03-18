@@ -12,7 +12,7 @@ import { createDenomination, OrganizationDocument, PublicUser, InvitationDocumen
 
 export { getDocument };
 
-export function createPublicOrganizationDocument(org: Partial<OrganizationDocument>) {
+export function createPublicOrganizationDocument(org: OrganizationDocument) {
   return {
     id: org.id ?? '',
     denomination: createDenomination(org.denomination),
