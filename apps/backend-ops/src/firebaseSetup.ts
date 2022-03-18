@@ -136,7 +136,7 @@ export async function upgrade() {
 
 export async function upgradeEmulators() {
   const db = connectFirestoreEmulator();
-  if (!(await isMigrationRequired(db))) {
+  if (!await isMigrationRequired(db)) {
     console.log('Skipping upgrade because migration is not required...');
     return;
   }
