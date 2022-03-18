@@ -97,20 +97,18 @@ export class OrganizationComponent implements OnInit {
   }
 
   private async getMembers() {
-    const [ members, role ] = await Promise.all([
+    const [members, role] = await Promise.all([
       this.organizationService.getMembers(this.orgId),
       this.permissionService.getValue(this.orgId)
     ]);
-    return members.map((m) => {
-      return {
-        ...createOrganizationMember(m, role.roles[m.uid] ? role.roles[m.uid] : undefined),
-        userId: m.uid,
-        edit: {
-          id: m.uid,
-          link: `/c/o/dashboard/crm/user/${m.uid}`,
-        },
-      };
-    });
+    return members.map((m) => ({
+      ...createOrganizationMember(m, role.roles[m.uid] ? role.roles[m.uid] : undefined),
+      userId: m.uid,
+      edit: {
+        id: m.uid,
+        link: `/c/o/dashboard/crm/user/${m.uid}`,
+      },
+    }));
   }
 
   public async update() {
