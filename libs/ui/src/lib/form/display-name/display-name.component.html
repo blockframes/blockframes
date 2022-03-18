@@ -2,9 +2,15 @@
   <mat-form-field appearance="outline">
     <mat-label>{{ labelSuffix }}&nbsp;First Name</mat-label>
     <input test-id="first-name" matInput formControlName="firstName" [required]="required" />
+    <mat-error>
+      Please specify {{ labelSuffix }} First Name.
+    </mat-error>
   </mat-form-field>
   <mat-form-field appearance="outline">
     <mat-label>{{ labelSuffix }}&nbsp;Last Name</mat-label>
     <input test-id="last-name" matInput formControlName="lastName" [required]="required" />
+    <mat-error>
+      Please specify {{ labelSuffix }} Last Name.
+    </mat-error>
   </mat-form-field>
 </form>
