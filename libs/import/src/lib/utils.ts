@@ -102,7 +102,7 @@ export async function getTitleId(
   const titles = await titleService.getValue(queryFn);
   if (!titles.length) throw new Error(`No title found with name "${nameOrId}".`);
   if (titles.length !== 1) throw new Error(`Multiple titles with name "${nameOrId}" found.`);
-  return memo(title.id, title[0]);
+  return memo(nameOrId, title[0]);
 }
 
 export async function getContract(
