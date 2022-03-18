@@ -53,6 +53,7 @@ export class ProfileComponent implements OnInit {
         const { current, next } = this.passwordForm.value;
         await this.authService.updatePassword(current, next);
         this.snackBar.open('Password changed.', 'close', { duration: 2000 });
+        this.passwordForm.reset();
         this.passwordForm.markAsPristine();
       }
     } catch (error) {

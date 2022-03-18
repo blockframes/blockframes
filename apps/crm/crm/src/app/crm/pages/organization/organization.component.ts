@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { OrganizationCrmForm } from '@blockframes/admin/crm/forms/organization-crm.form';
 import { fromOrg, MovieService } from '@blockframes/movie/+state/movie.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Organization, Movie, Invitation, UserRole } from '@blockframes/model';
+import { Organization, Movie, Invitation, UserRole, createOrganizationMember } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
@@ -97,9 +97,12 @@ export class OrganizationComponent implements OnInit {
   }
 
   private async getMembers() {
-    const members = await this.organizationService.getMembers(this.orgId);
+    const [members, role] = await Promise.all([
+      this.organizationService.getMembers(this.orgId),
+      this.permissionService.getValue(this.orgId)
+    ]);
     return members.map((m) => ({
-      ...m,
+      ...createOrganizationMember(m, role.roles[m.uid] ? role.roles[m.uid] : undefined),
       userId: m.uid,
       edit: {
         id: m.uid,

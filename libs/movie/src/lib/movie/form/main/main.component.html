@@ -17,7 +17,7 @@
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Original Title</mat-label>
           <input test-id="original-title" matInput type="text" placeholder="Original title" [formControl]="original" />
-          <mat-hint>If different from International Title</mat-hint>
+          <mat-hint>If different from International Title.</mat-hint>
         </mat-form-field>
       </article>
 
@@ -130,7 +130,8 @@
           <mat-label>Release Year</mat-label>
           <input test-id="release-year" matInput [formControl]="form.release.get('year')" required type="number"
             placeholder="YYYY" />
-          <mat-error *ngIf="form.hasError('invalidYear', 'release.year')">Please enter a 4 digit date (e.g. 2020)
+          <mat-error *ngIf="form.hasError('invalidYear', 'release.year') && form.release.get('year').value > (maxReleaseYear - 1)">Release date should not exceed {{ (maxReleaseYear - 1) }}</mat-error>
+          <mat-error *ngIf="form.hasError('invalidYear', 'release.year') && form.release.get('year').value < maxReleaseYear">Please enter a 4 digit date (e.g. 2020)
           </mat-error>
           <mat-error *ngIf="form.hasError('required', 'release.year')">
             Please specify your project's release year.
@@ -144,6 +145,9 @@
             <mat-hint>
               Please specify if the release date is estimated or confirmed.
             </mat-hint>
+            <mat-error>
+              Please specify if the release date is estimated or confirmed.
+            </mat-error>
           </static-select>
         </ng-container>
 
@@ -196,7 +200,7 @@
     <mat-divider></mat-divider>
 
     <section id="directors">
-      <h3>Director(s)*</h3>
+      <h3>Director(s)</h3>
 
       <bf-form-table [columns]="displayedColumns" [form]="form.directors">
         <ng-template colRef="description" let-description>{{ description | maxLength: 80 }}</ng-template>

@@ -39,7 +39,7 @@ export class ProfileViewComponent implements OnInit, OnDestroy {
   public navLinks = navLinks;
   public user$: Observable<User>;
 
-  private countRouteEvents = 1;
+  private countRouteEvents = 0;
   private sub: Subscription;
 
   constructor(
