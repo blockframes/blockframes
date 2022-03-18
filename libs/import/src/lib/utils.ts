@@ -1,4 +1,4 @@
-import { ImportTitleOptions, MovieService } from '@blockframes/movie/+state/movie.service';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { Movie, Organization, User, Mandate, Sale, Term } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { SheetTab, ValueWithError } from '@blockframes/utils/spreadsheet';
@@ -74,27 +74,19 @@ export async function getOrgId(
   return result;
 }
 
-function getImportTitle(service: MovieService, { name, userOrgId, blockframesAdmin, path }: ImportTitleOptions) {
-  return service.getValue((ref) => {
-    if (blockframesAdmin) {
-      return ref.where(path, '==', name);
-    } else {
-      return ref
-        .where(path, '==', name)
-        .where('orgIds', 'array-contains', userOrgId);
-    }
-  });
-}
-
-
 export async function getTitleId(
   name: string,
   titleService: MovieService,
   cache: Record<string, Movie>,
-  memo: (name: string, value: Movie) => string,
   userOrgId: string,
   isBlockframesAdmin: boolean
 ) {
+
+  const memo = (key: string, value: Movie) => {
+    cache[key] = value;
+    return value.id
+  }
+
   if (cache[name]) return cache[name].id;
   const title = await titleService.getValue(name);
   // Try if name is an id

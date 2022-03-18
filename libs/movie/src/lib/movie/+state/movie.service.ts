@@ -27,12 +27,6 @@ export const fromInternalRef = (internalRef: string): QueryFn => (ref) =>
 type MovieWithAnalytics = Movie & { analytics: MovieAnalytics };
 
 interface MovieState extends EntityState<Movie, string>, ActiveState<string> { }
-export interface ImportTitleOptions {
-  path: string,
-  name: string,
-  userOrgId: string,
-  blockframesAdmin: boolean
-}
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies' })

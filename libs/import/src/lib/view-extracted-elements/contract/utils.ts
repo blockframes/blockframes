@@ -112,14 +112,9 @@ export async function formatContract(
 ) {
   // Cache to avoid  querying db every time
   const orgNameCache: Record<string, string> = {};
-  const titleNameCache: Record<string, Movie> = {};
+  const titleCache: Record<string, Movie> = {};
   const userCache: Record<string, User> = {};
   const contractCache: Record<string, Mandate | Sale> = {};
-  const memo = (key: string, value: Movie) => {
-    titleNameCache[key] = value;
-    return value.id
-  }
-
   const contracts: ContractsImportState[] = [];
 
   // ! The order of the property should be the same as excel columns
@@ -127,7 +122,7 @@ export async function formatContract(
     /* a */ 'contract.titleId': async (value: string) => {
       if (!value) return mandatoryError('Title');
       try {
-        const titleId = await getTitleId(value, titleService, titleNameCache, memo, userOrgId, blockframesAdmin);
+        const titleId = await getTitleId(value, titleService, titleCache, userOrgId, blockframesAdmin);
 
         if (!titleId) return unknownEntityError('Title');
         return titleId;
