@@ -28,7 +28,7 @@ export class OrganizationViewComponent implements OnDestroy {
   public organization$ = this.orgService.currentOrg$;
   public navLinks = navLinks;
 
-  private countRouteEvents = 1;
+  private countRouteEvents = 0;
   private sub = this.router.events.pipe(
     filter((evt: Event) => evt instanceof NavigationEnd),
     distinctUntilChanged((a: NavigationEnd, b: NavigationEnd) => a.url === b.url),
