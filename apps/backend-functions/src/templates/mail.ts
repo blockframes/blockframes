@@ -151,15 +151,6 @@ export function invitationToJoinOrgDeclined(toAdmin: UserEmailData, userSubject:
   return { to: toAdmin.email, templateId: templateIds.invitation.organization.declined, data };
 }
 
-/** Send email to users to inform them that organization has declined their request to join it */
-export function requestToJoinOrgDeclined(toUser: UserEmailData, org: OrgEmailData): EmailTemplateRequest {
-  const data = {
-    user: toUser,
-    org
-  };
-  return { to: toUser.email, templateId: templateIds.request.joinOrganization.declined, data };
-}
-
 /** Send email to org admin to inform him that an user has left his org */
 export function userLeftYourOrganization(toAdmin: UserEmailData, userSubject: UserEmailData, org: OrgEmailData): EmailTemplateRequest {
   const data = {

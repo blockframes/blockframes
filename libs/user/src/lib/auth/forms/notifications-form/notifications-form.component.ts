@@ -18,7 +18,7 @@ const titleType: Record<NotificationTypesBase, NotificationSetting> = {
   movieAskingPriceRequested: { text: `A user requests the asking price for a title.`, tooltip: false },
   movieAskingPriceRequestSent: { text: `Your request for the asking price has been sent.`, tooltip: false },
   requestFromUserToJoinOrgCreate: { text: 'A user requests to join your organization.', tooltip: true },
-  requestFromUserToJoinOrgDeclined: { text: 'A user\'s request to join your organization was declined. ', tooltip: false },
+  requestFromUserToJoinOrgDeclined: { text: 'A user\'s request to join your organization was declined. ', tooltip: false }, // TODO 8026
   orgMemberUpdated: { text: 'A user joins or leaves your organization.', tooltip: false },
   requestToAttendEventSent: { text: 'Your request to join an event is successfully sent.', tooltip: false },
   eventIsAboutToStart: { text: 'REMINDER - An event you\'re attending will start in 1 hour. (RECOMMENDED)', tooltip: false },
