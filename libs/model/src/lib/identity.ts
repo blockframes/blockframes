@@ -1,12 +1,11 @@
-import { createStorageFile, StorageFile } from "@blockframes/media/+state/media.firestore";
+import { createStorageFile, StorageFile } from './media';
 import {
   CrewRole,
   Territory,
   ProducerRole,
   MemberStatus,
   DirectorCategory
-} from "../static-model/types";
-
+} from '@blockframes/utils/static-model/types';
 
 //////////////////////////
 // VARIOUS IDENTITY OBJECTS
@@ -48,7 +47,6 @@ export interface Stakeholder extends StakeholderRaw {
   logo?: StorageFile;
   countries?: Territory[],
 }
-
 
 /**
  * @dev interface to represent a movie credit

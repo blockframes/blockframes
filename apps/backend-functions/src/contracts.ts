@@ -1,12 +1,9 @@
 import { db } from './internals/firebase';
-import { Contract, Sale } from '@blockframes/contract/contract/+state/contract.model';
 import { Change } from 'firebase-functions';
-import { Organization } from '@blockframes/organization/+state';
 import { createNotification, triggerNotifications } from './notification';
 import { createDocumentMeta, getDocument, Timestamp } from './data/internals';
-import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
 import { getReviewer } from '@blockframes/contract/negotiation/utils';
-import { NotificationDocument } from './data/types';
+import { Organization, NotificationDocument, Sale, Contract, Negotiation } from '@blockframes/model';
 
 interface ContractNotificationType {
   sender: 'myOrgAcceptedAContract' | 'myOrgDeclinedAContract', //org who accepted/declined a contract

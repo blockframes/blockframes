@@ -1,13 +1,13 @@
 import { Component, ChangeDetectionStrategy, OnInit, Input } from '@angular/core';
-import { Contract, ContractStatus, Sale } from '@blockframes/contract/contract/+state';
 import { ActivatedRoute, Router } from '@angular/router';
 import { filter, map, startWith } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { isInitial } from '@blockframes/contract/negotiation/utils';
-import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
 import { capitalize } from '@blockframes/utils/helpers';
+import { Contract, ContractStatus, Sale, Negotiation } from '@blockframes/model';
+
 
 interface InternalSale extends Sale<Date> {
   licensor: string;

@@ -1,7 +1,5 @@
 import { Firestore } from '@blockframes/firebase-utils';
-import { Movie } from '@blockframes/model';
-import { Organization } from '@blockframes/organization/+state';
-import { Stakeholder } from '@blockframes/utils/common-interfaces';
+import { Stakeholder, Movie, Organization } from '@blockframes/model';
 import { Territory } from '@blockframes/utils/static-model';
 import { runChunks } from '../firebase-utils';
 

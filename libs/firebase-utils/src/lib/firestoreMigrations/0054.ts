@@ -1,6 +1,6 @@
 import { Firestore } from '@blockframes/firebase-utils';
 import { runChunks } from '../firebase-utils';
-import { StorageFile } from '@blockframes/media/+state/media.firestore';
+import { StorageFile } from '@blockframes/model';
 import { privacies } from '@blockframes/utils/file-sanitizer';
 
 function createStorageFile(data: StorageFile) {

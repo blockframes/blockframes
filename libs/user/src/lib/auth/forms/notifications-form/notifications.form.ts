@@ -1,5 +1,5 @@
 import { FormControl, Validators } from '@angular/forms';
-import { NotificationSettings, NotificationSettingsTemplate } from '@blockframes/user/+state/user.model';
+import { NotificationSettings, NotificationSettingsTemplate } from '@blockframes/model';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 
 function createNotificationSettingsControls(settings: Partial<NotificationSettingsTemplate> = {}, disabled = false) {
@@ -43,7 +43,8 @@ function createNotificationsControls(settings: Partial<NotificationSettings> = {
     myContractWasAccepted: new NotificationSettingsForm(settings.myContractWasAccepted),
     myOrgDeclinedAContract: new NotificationSettingsForm(settings.myOrgDeclinedAContract),
     myContractWasDeclined: new NotificationSettingsForm(settings.myContractWasDeclined),
-    underSignature: new NotificationSettingsForm(settings.underSignature, true),
+    // #7946 this may be reactivated later
+    // underSignature: new NotificationSettingsForm(settings.underSignature, true),
   }
 }
 

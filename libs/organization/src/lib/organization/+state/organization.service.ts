@@ -1,24 +1,25 @@
 import { Injectable } from '@angular/core';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { AuthService } from '@blockframes/auth/+state';
-import { Organization, createOrganization, OrganizationDocument } from './organization.model';
 import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
-import { createPermissions, UserRole } from '../../permissions/+state/permissions.model';
 import { AngularFireFunctions } from '@angular/fire/functions';
-import {
-  UserService,
+import { UserService } from '@blockframes/user/+state';
+import { 
   OrganizationMember,
   createOrganizationMember,
   PublicUser,
   User,
-} from '@blockframes/user/+state';
-import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
-import { Movie } from '@blockframes/model';
-import { App, Module, createOrgAppAccess } from '@blockframes/utils/apps';
-import {
+  Movie,
+  Organization,
+  createOrganization,
+  OrganizationDocument,
+  createPermissions,
+  UserRole,
   createDocumentMeta,
   formatDocumentMetaFromFirestore,
-} from '@blockframes/utils/models-meta';
+} from '@blockframes/model';
+import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
+import { App, Module, createOrgAppAccess } from '@blockframes/utils/apps';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { combineLatest, Observable, of } from 'rxjs';
 import { ActiveState, EntityState } from '@datorama/akita';

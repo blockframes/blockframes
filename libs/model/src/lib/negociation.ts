@@ -1,12 +1,11 @@
-import { BucketContract } from "@blockframes/contract/bucket/+state";
-import { Timestamp } from "@blockframes/utils/common-interfaces/timestamp";
-import { DocumentMeta } from "@blockframes/utils/models-meta";
-import { MovieCurrency } from "@blockframes/utils/static-model";
+import { BucketContract } from './bucket';
+import { Timestamp } from './timestamp';
+import { DocumentMeta } from './meta';
+import { MovieCurrency } from '@blockframes/utils/static-model';
 
 export const negotiationStatus = ['pending', 'accepted', 'declined'] as const;
 
 export type NegotiationStatus = typeof negotiationStatus[number];
-
 
 // We extends the BucketContract with some information for rules
 export interface Negotiation<T extends Date | Timestamp = Date> extends BucketContract<T> {
@@ -25,6 +24,5 @@ export interface Negotiation<T extends Date | Timestamp = Date> extends BucketCo
   initial: T;
   currency: MovieCurrency
 }
-
 
 export type NegotiationDocument = Negotiation<Timestamp>;

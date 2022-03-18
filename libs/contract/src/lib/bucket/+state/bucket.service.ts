@@ -1,4 +1,3 @@
-
 import { Injectable } from '@angular/core';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { centralOrgId } from '@env';
@@ -7,14 +6,12 @@ import { AuthService } from '@blockframes/auth/+state';
 import { createOfferId } from '@blockframes/utils/utils';
 import { MovieCurrency } from '@blockframes/utils/static-model';
 import { AvailsFilter } from '@blockframes/contract/avails/avails';
-import { createDocumentMeta } from '@blockframes/utils/models-meta';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { TermService } from '../../term/+state';
 import { OfferService } from '../../offer/+state';
-import { Bucket, createBucket } from './bucket.model';
-import { createBucketTerm, createBucketContract } from './bucket.model';
-import { ContractService, convertDuration } from '../../contract/+state';
+import { ContractService } from '../../contract/+state';
 import { ActiveState, EntityState } from '@datorama/akita';
+import { convertDuration, Bucket, createBucket, createBucketTerm, createBucketContract, createDocumentMeta } from '@blockframes/model';
 
 interface BucketState extends EntityState<Bucket>, ActiveState<string> { }
 

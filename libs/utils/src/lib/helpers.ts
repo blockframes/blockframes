@@ -1,8 +1,6 @@
 import firebase from 'firebase';
-import { staticModel, Scope } from './static-model';
-import { Movie } from '@blockframes/model';
-import { User } from '@blockframes/user/types';
-import { Organization } from '@blockframes/organization/+state/organization.model';
+import { staticModel, Scope, GetKeys } from './static-model';
+import { Movie, User, Organization } from '@blockframes/model';
 
 /**
  * This method is used before pushing data on db
@@ -93,6 +91,10 @@ export async function asyncFilter<T>(items: T[], filterFunction: (item: T) => Pr
   return y.filter((w) => w !== _null) as T[];
 }
 
+function findCorrespondence(code: string) {
+  return ([key, value]: [string, string]) => key.toLowerCase() === code || value.toLowerCase() === code
+}
+
 /**
  * This function is used to check if a given value (code) belongs to a type (base).
  * Return the key of the const if found, undefined otherwise
@@ -109,13 +111,12 @@ export async function asyncFilter<T>(items: T[], filterFunction: (item: T) => Pr
  * getKeyIfExist('storeType', 'Line-Up'); // 'line-up'
  * getKeyIfExist('storeType', 'Test'); // undefined
  */
-export function getKeyIfExists(base: Scope, code: string) {
+export function getKeyIfExists<S extends Scope>(base: S, code: string) {
   // Sanitized input to properly compare with base data
   const sanitizedCode = code.trim().toLowerCase();
-  const candidate = Object.entries(staticModel[base]).find(([key, value]) =>
-    [key.toLowerCase(), value.toLowerCase()].includes(sanitizedCode)
-  );
-  return candidate ? candidate.shift() : undefined;
+  const candidate = Object.entries(staticModel[base])
+    .find(findCorrespondence(sanitizedCode)) as [GetKeys<S>, string];
+  return candidate ? candidate[0] : undefined;
 }
 
 /** Basic function to create a delay in a function when called

@@ -1,6 +1,4 @@
-import { AttendeeStatus, MeetingMediaControl } from '@blockframes/event/+state/event.firestore';
-import { StorageFile } from '@blockframes/media/+state/media.firestore';
-import { MovieDocument, MoviePromotionalElements } from '@blockframes/model';
+import { StorageFile, AttendeeStatus, MeetingMediaControl, MovieDocument, MoviePromotionalElements } from '@blockframes/model';
 import { StoreStatus } from '@blockframes/utils/static-model';
 
 export interface OldStoreConfig {

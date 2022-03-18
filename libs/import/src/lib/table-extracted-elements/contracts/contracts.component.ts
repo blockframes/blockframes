@@ -10,9 +10,9 @@ import { ContractService } from '@blockframes/contract/contract/+state/contract.
 import { sortingDataAccessor } from '@blockframes/utils/table';
 import { ContractsImportState, SpreadsheetImportError } from '../../utils';
 import { TermService } from '@blockframes/contract/term/+state/term.service';
-import { createDocumentMeta } from '@blockframes/utils/models-meta';
 import { AngularFirestore, Query } from '@angular/fire/firestore';
 import { FullMandate, FullSale, territoryAvailabilities } from '@blockframes/contract/avails/avails';
+import { createDocumentMeta } from '@blockframes/model';
 
 const hasImportErrors = (importState: ContractsImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -66,7 +66,9 @@ export class TableExtractedContractsComponent implements OnInit {
 
   async createContract(importState: ContractsImportState): Promise<boolean> {
     const success = await this.addContract(importState, 'create');
-    const message = success ? 'Contract added!' : `Contract terms overlaps with existing mandate terms. Please update your template file and try again.`
+    const message = success
+      ? 'Contract added!'
+      : `Contract terms overlaps with existing mandate terms. Please update your template file and try again.`;
     this.snackBar.open(message, 'close', { duration: 9000 });
     return true;
   }
@@ -129,7 +131,7 @@ export class TableExtractedContractsComponent implements OnInit {
       const data = { avails: term, mandates: [], sales, bucketContracts: [], existingMandates: mandates };
       return territoryAvailabilities(data);
     });
-    const isOverlappingSale = importState.contract.type === 'sale' && availabilities.some(availability => !availability.sold.length);
+    const isOverlappingSale = importState.contract.type === 'sale' && availabilities.some(availability => availability.sold.length);
     const isOverlappingMandate = importState.contract.type === 'mandate' && availabilities.some(availability => availability.available.length);
     return { isOverlappingSale, isOverlappingMandate };
   }

@@ -1,12 +1,11 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { EventService } from '@blockframes/event/+state/event.service';
 import { ViewComponent } from '../view/view.component';
-import { Event } from '@blockframes/event/+state';
 import { Observable } from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { Screening } from '@blockframes/event/+state/event.firestore';
 import { AgendaService } from '@blockframes/utils/agenda/agenda.service';
+import { Event, Screening } from '@blockframes/model';
 
 @Component({
   selector: 'festival-screening',

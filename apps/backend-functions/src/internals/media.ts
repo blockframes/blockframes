@@ -5,13 +5,10 @@ import * as admin from 'firebase-admin';
 
 // Blockframes dependencies
 import { getDocument } from '@blockframes/firebase-utils';
-import { EventDocument, EventMeta, Meeting, Screening } from '@blockframes/event/+state/event.firestore';
-import { createPublicUser } from '@blockframes/user/types';
-import { StorageFile } from '@blockframes/media/+state/media.firestore';
+import { StorageFile, createPublicUser, MovieDocument, EventDocument, EventMeta, Meeting, Screening } from '@blockframes/model';
 
 // Internal dependencies
 import { isUserInvitedToEvent } from './invitations/events';
-import { MovieDocument } from '../data/types';
 import { Privacy } from '@blockframes/utils/file-sanitizer';
 
 export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eventId?: string, email?: string): Promise<boolean> {

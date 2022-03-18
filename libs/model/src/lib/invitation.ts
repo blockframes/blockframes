@@ -1,9 +1,11 @@
-import { PublicOrganization } from "@blockframes/organization/+state/organization.firestore";
-import type firebase from 'firebase';
-import { PublicUser } from "@blockframes/user/+state/user.firestore";
-import type { InvitationStatus, InvitationType } from "@blockframes/utils/static-model";
-export { InvitationType, InvitationStatus, invitationStatus } from "@blockframes/utils/static-model";
-type Timestamp = firebase.firestore.Timestamp;
+import type { InvitationStatus, InvitationType } from '@blockframes/utils/static-model';
+import { Organization, PublicOrganization } from './organisation';
+import { PublicUser } from './user';
+import { Movie } from './movie';
+import { Event } from './event';
+import { Timestamp } from './timestamp';
+
+export { InvitationType, InvitationStatus, invitationStatus } from '@blockframes/utils/static-model';
 
 /**
  * Raw type for Invitation.
@@ -47,7 +49,6 @@ export type InvitationOrUndefined = InvitationDocument | undefined;
 
 export type InvitationMode = 'request' | 'invitation';
 
-
 /** Create an Invitation */
 export function createInvitation(params: Partial<InvitationBase<Date>> = {}): InvitationBase<Date> {
   return {
@@ -58,4 +59,14 @@ export function createInvitation(params: Partial<InvitationBase<Date>> = {}): In
     date: new Date(),
     ...params,
   };
+}
+
+export type Invitation = InvitationBase<Date>;
+
+export interface InvitationDetailed extends Invitation {
+  org: Organization;
+  guestOrg?: Organization;
+  event: Event;
+  guest?: PublicUser;
+  movie?: Movie;
 }

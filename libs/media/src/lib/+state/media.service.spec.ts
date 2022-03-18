@@ -5,8 +5,7 @@ import { SETTINGS, AngularFirestoreModule } from '@angular/fire/firestore';
 import { clearFirestoreData } from '@firebase/rules-unit-testing';
 import { ImageParameters, formatParameters } from '../image/directives/imgix-helpers';
 import { firebase } from '@env';
-import { UploadData } from './media.model';
-import { createStorageFile } from './media.firestore';
+import { createStorageFile, UploadData } from '@blockframes/model';
 
 describe('Media Service Test Suite', () => {
   let service: MediaService;

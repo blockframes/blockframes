@@ -18,15 +18,15 @@ import {
 import { centralOrgId } from '@env';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
-import { User, UserService } from '@blockframes/user/+state';
+import { UserService } from '@blockframes/user/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { Term } from '@blockframes/contract/term/+state/term.firestore';
+import { Term } from '@blockframes/model';
 import { Language, Media, Territory } from '@blockframes/utils/static-model';
-import { MovieLanguageSpecification } from '@blockframes/model';
-import { Mandate, Sale } from '@blockframes/contract/contract/+state/contract.firestore';
+import { createMandate, createSale, Mandate, MovieLanguageSpecification, Sale, User } from '@blockframes/model';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
-import { createMandate, createSale } from '@blockframes/contract/contract/+state/contract.model';
-import { extract, ExtractConfig, getStaticList, SheetTab } from '@blockframes/utils/spreadsheet';
+import {
+  extract, ExtractConfig, getStaticList, SheetTab, getGroupedList
+} from '@blockframes/utils/spreadsheet';
 
 const separator = ';';
 
@@ -38,9 +38,14 @@ interface FieldsConfig {
     buyerId: string;
     id?: string;
     stakeholders: string[];
+    status: string,
   };
+  income: {
+    price: number;
+  },
   term: {
-    territories: Territory[];
+    territories_included: Territory[];
+    territories_excluded: Territory[];
     medias: Media[];
     exclusive: boolean;
     duration: {
@@ -51,19 +56,17 @@ interface FieldsConfig {
     dubbed: Language[];
     subtitle: Language[];
     caption: Language[];
-  };
+  }[];
   parentTerm: string | number;
   _titleId?: string;
 }
 
 type FieldsConfigType = ExtractConfig<FieldsConfig>;
 
-function toTerm(
-  rawTerm: FieldsConfig['term'],
-  contractId: string,
-  firestore: AngularFirestore
-): Term {
-  const { medias, duration, territories, exclusive, licensedOriginal } = rawTerm;
+
+function toTerm(rawTerm: FieldsConfig['term'][number], contractId: string, firestore: AngularFirestore): Term {
+
+  const { medias, duration, territories_excluded, territories_included, exclusive, licensedOriginal } = rawTerm;
 
   const languages: Term['languages'] = {};
 
@@ -78,6 +81,8 @@ function toTerm(
   updateLanguage('caption', rawTerm.caption);
   updateLanguage('dubbed', rawTerm.dubbed);
   updateLanguage('subtitle', rawTerm.subtitle);
+
+  const territories = territories_included.filter(territory => !territories_excluded.includes(territory));
 
   const id = firestore.createId();
 
@@ -116,13 +121,9 @@ export async function formatContract(
   const fieldsConfig: FieldsConfigType = {
     /* a */ 'contract.titleId': async (value: string) => {
       if (!value) return mandatoryError('Title');
-      const titleId = await getTitleId(
-        value,
-        titleService,
-        titleNameCache,
-        userOrgId,
-        blockframesAdmin
-      );
+      const titleId = await getTitleId(value, titleService, titleNameCache, userOrgId, blockframesAdmin);
+      const title = await titleService.getValue(value);
+      if (title) return value;
       if (!titleId) return unknownEntityError('Title');
       return titleId;
     },
@@ -131,16 +132,15 @@ export async function formatContract(
       if (!lower) return mandatoryError('Type');
       const type = getKeyIfExists('contractType', lower[0].toUpperCase() + lower.substr(1));
       if (!type) return wrongValueError('Type');
-      if (type === 'mandate' && !blockframesAdmin)
-        return {
-          value: undefined,
-          error: {
-            type: 'error',
-            name: `Forbidden Type`,
-            reason: 'Only admin can import mandates.',
-            hint: 'Please ensure the corresponding sheet field value is "sale".',
-          },
-        };
+      if (type === 'mandate' && !blockframesAdmin) return {
+        value: undefined,
+        error: {
+          type: 'error',
+          name: `Forbidden Type`,
+          reason: 'Only admin can import mandates.',
+          hint: 'Please ensure the corresponding sheet field value is "sale".'
+        }
+      };
       return lower.toLowerCase() as 'mandate' | 'sale';
     },
     /* c */ 'contract.sellerId': async (value: string) => {
@@ -160,83 +160,85 @@ export async function formatContract(
           };
         return centralOrgId.catalog;
       } else {
-        const sellerId = await getOrgId(value, orgService, orgNameCache);
-        if (!sellerId) return unknownEntityError('Licensor Organization');
-        if (!blockframesAdmin && sellerId !== userOrgId)
-          return {
-            value: undefined,
-            error: {
-              type: 'error',
-              name: 'Forbidden Licensor',
-              reason:
-                'You should be the seller of this contract. The Licensor name should be your own organization name.',
-              hint: 'Please edit the corresponding sheet field',
-            },
-          };
+        let sellerId = await getOrgId(value, orgService, orgNameCache);
+        if (!sellerId) {
+          const seller = await orgService.getValue(value);
+          if (!seller) return unknownEntityError('Licensor Organization');
+          return sellerId = value;
+        }
+        if (!blockframesAdmin && sellerId !== userOrgId) return {
+          value: undefined,
+          error: {
+            type: 'error',
+            name: 'Forbidden Licensor',
+            reason: 'You should be the seller of this contract. The Licensor name should be your organization name.',
+            hint: 'Please edit the corresponding sheet field'
+          }
+        };
         return sellerId;
       }
     },
-    /* d */ 'contract.buyerId': async (value: string, data: FieldsConfig) => {
-      if (!value) return mandatoryError('Licensee');
+    /* d */'contract.buyerId': async (value: string, data: FieldsConfig) => {
       if (data.contract.type === 'mandate') {
-        if (value !== 'Archipel Content')
-          return {
-            value: undefined,
-            error: {
-              type: 'error',
-              name: 'Forbidden Licensee',
-              reason: 'The Licensee name of a mandate must be "Archipel Content".',
-              hint: 'Please edit the corresponding sheet field',
-            },
-          };
+        if (!value) return mandatoryError('Licensee');
+        if (value !== 'Archipel Content' && value !== centralOrgId.catalog) return {
+          value: undefined,
+          error: {
+            type: 'error',
+            name: 'Forbidden Licensee',
+            reason: 'The Licensee name of a mandate must be "Archipel Content".',
+            hint: 'Please edit the corresponding sheet field'
+          }
+        };
         return centralOrgId.catalog;
       } else {
+        if (!value) return '';
         const isInternal = data.contract.sellerId === centralOrgId.catalog;
-        const sellerId = await getOrgId(value, orgService, orgNameCache);
-        if (isInternal && !sellerId) return unknownEntityError('Licensee Organization');
-        return sellerId;
+        let buyerId = await getOrgId(value, orgService, orgNameCache);
+        if (buyerId) return buyerId;
+        const title = await titleService.getValue(value);
+        if (!buyerId && title) buyerId = value;
+        if (isInternal && !buyerId) return unknownEntityError('Licensee Organization');
+        return '';
       }
     },
-    /* e */ 'term.territories': (value: string) =>
-      getStaticList('territories', value, separator, 'Territories', true, 'world') as Territory[],
-    /* f */ 'term.medias': (value: string) =>
-      getStaticList('medias', value, separator, 'Medias') as Media[],
-    /* g */ 'term.exclusive': (value: string) => {
+    /* e */'term[].territories_included': (value: string) => getGroupedList(value, 'territories', separator),
+    /* f */'term[].territories_excluded': (value: string) => getGroupedList(value, 'territories', separator),
+    /* g */'term[].medias': (value: string) => getGroupedList(value, 'medias', separator),
+    /* h */'term[].exclusive': (value: string) => {
       const lower = value.toLowerCase();
       if (!lower) return mandatoryError('Exclusive');
       if (lower !== 'yes' && lower !== 'no') return wrongValueError('Exclusive');
       return lower === 'yes';
     },
-    /* h */ 'term.duration.from': (value: string) => {
+    /* i */'term[].duration.from': (value: string) => {
       if (!value) return mandatoryError('Duration From');
       return getDate(value, 'Start of Contract') as Date;
     },
-    /* i */ 'term.duration.to': (value: string) => {
+    /* j */'term[].duration.to': (value: string) => {
       if (!value) return mandatoryError('Duration To');
       return getDate(value, 'End of Contract') as Date;
     },
 
-    /* j */ 'term.licensedOriginal': (value: string) => {
+    /* k */'term[].licensedOriginal': (value: string) => {
       const lower = value.toLowerCase();
       if (!lower) return mandatoryError('Licensed Original');
       if (lower !== 'yes' && lower !== 'no') return wrongValueError('Licensed Original');
       return lower === 'yes';
     },
-    /* k */ 'term.dubbed': (value: string) =>
-      getStaticList('languages', value, separator, 'Dubbed', false) as Language[],
-    /* l */ 'term.subtitle': (value: string) =>
-      getStaticList('languages', value, separator, 'Subtitle', false) as Language[],
-    /* m */ 'term.caption': (value: string) =>
-      getStaticList('languages', value, separator, 'CC', false) as Language[],
+    /* l */'contract.status': (value: string = 'pending') => value.toLowerCase(),
+    /* m */'term[].dubbed': (value: string) => getStaticList('languages', value, separator, 'Dubbed', false),
+    /* n */'term[].subtitle': (value: string) => getStaticList('languages', value, separator, 'Subtitle', false),
+    /* o */'term[].caption': (value: string) => getStaticList('languages', value, separator, 'CC', false),
 
-    /* n */ 'contract.id': async (value: string) => {
+    /* p */'contract.id': async (value: string) => {
       if (value && !blockframesAdmin) return adminOnlyWarning(firestore.createId(), 'Contract ID');
       if (!value) return firestore.createId();
       const exist = await getContract(value, contractService, contractCache);
       if (exist) return alreadyExistError('Contract ID');
       return value;
     },
-    /* o */ parentTerm: async (value: string, data: FieldsConfig) => {
+    /* q */'parentTerm': async (value: string, data: FieldsConfig) => {
       if (value && !blockframesAdmin) return adminOnlyWarning('', 'Mandate ID/Row');
       if (value && data.contract.type === 'mandate')
         return {
@@ -281,29 +283,10 @@ export async function formatContract(
         return value;
       } else return Number(value);
     },
-    /* p */ _titleId: (value: string) => {
-      if (value && !blockframesAdmin) return adminOnlyWarning('', 'Import ID');
-      if (value)
-        return {
-          value: '',
-          error: {
-            type: 'warning',
-            field: '_titleId',
-            name: 'Deprecated Import ID',
-            reason:
-              'This field is not used anymore and will be removed, the value will be omitted.',
-          },
-        };
-    },
-    /* q */ 'contract.stakeholders': async (value: string, data: FieldsConfig) => {
-      const stakeholders = value
-        .split(separator)
-        .filter((v) => !!v)
-        .map((v) => v.trim());
-      const exists = await Promise.all(
-        stakeholders.map((id) => getUser({ id }, userService, userCache))
-      );
-      const unknownStakeholder = exists.some((e) => !e);
+    /* r */'contract.stakeholders': async (value: string, data: FieldsConfig) => {
+      const stakeholders = value.split(separator).filter(v => !!v).map(v => v.trim());
+      const exists = await Promise.all(stakeholders.map(id => getUser({ id }, userService, userCache)));
+      const unknownStakeholder = exists.some(e => !e);
       if (unknownStakeholder) return unknownEntityError('Stakeholders');
       if (data.contract.type === 'mandate') {
         return [data.contract.buyerId, data.contract.sellerId, ...stakeholders];
@@ -312,26 +295,34 @@ export async function formatContract(
           // internal sale
           // seller ID is archipel, we don't need to add it, as mandate stakeholders will be copied here (copy is done bellow ~line 290)
           return [data.contract.buyerId, ...stakeholders];
-        } else {
-          // external sale
+        } else { // external sale
           // if the sale is external the seller is not archipel (it's the owner org), and the buyer is unknown by definition
-          return [data.contract.sellerId, ...stakeholders];
+          return [data.contract.sellerId, ...stakeholders]
         }
       }
     },
   };
 
-  const results = await extract<FieldsConfig>(sheetTab.rows, fieldsConfig);
-
+  const results = await extract<FieldsConfig>(sheetTab.rows, fieldsConfig, 11);
   for (const result of results) {
     const { data, errors } = result;
 
-    const contract =
-      data.contract.type === 'sale'
-        ? createSale({ ...(data.contract as Sale) })
-        : createMandate({ ...(data.contract as Mandate) });
+    const contract = data.contract.type === 'sale'
+      ? createSale(data.contract as Sale)
+      : createMandate(data.contract as Mandate);
 
-    const term = toTerm(data.term, contract.id, firestore);
+    const { id, sellerId } = contract;
+
+    const movieBelongsToLicensor = await titleService.getValue(id).then(title => title.orgIds.includes(sellerId));
+    if (!movieBelongsToLicensor)
+      errors.push({
+        type: 'error',
+        name: 'Wrong Licensor.',
+        reason: `The movie does not belong to the licensor.`,
+        hint: `Please ensure the movie is a movie owned by the licensor.`
+      });
+
+    const terms = data.term.map(term => toTerm(term, contract.id, firestore));
 
     // for **internal** sales we should check the parentTerm
     const isInternalSale = contract.type === 'sale' && contract.sellerId === centralOrgId.catalog;
@@ -363,8 +354,7 @@ export async function formatContract(
     // remove duplicate from stakeholders
     contract.stakeholders = Array.from(new Set([...contract.stakeholders]));
 
-    contracts.push({ contract, terms: [term], errors, newContract: true });
+    contracts.push({ contract, terms, errors, newContract: true });
   }
-
   return contracts;
 }

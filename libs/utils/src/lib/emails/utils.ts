@@ -2,13 +2,24 @@ import { EmailJSON } from "@sendgrid/helpers/classes/email-address";
 import { AttachmentData } from '@sendgrid/helpers/classes/attachment';
 import { App, sendgridEmailsFrom } from "../apps";
 import { format } from "date-fns";
-import { EventDocument, EventMeta, EventTypes, MeetingEventDocument, ScreeningEventDocument } from "@blockframes/event/+state/event.firestore";
-import { OrganizationDocument, orgName } from "@blockframes/organization/+state/organization.firestore";
-import { User } from "@blockframes/user/+state/user.firestore";
+import {
+  EventDocument,
+  EventMeta,
+  EventTypes,
+  MeetingEventDocument,
+  ScreeningEventDocument,
+  User,
+  PublicUser,
+  OrganizationDocument,
+  orgName,
+  MailBucket,
+  MovieDocument
+} from '@blockframes/model';
+import type { ContractDocument } from '@blockframes/model';
 import { AccessibilityTypes } from "../static-model";
-import { MailBucket } from '@blockframes/contract/bucket/+state/bucket.firestore';
 import { toIcsFile } from "../agenda/utils";
 import { IcsEvent } from "../agenda/agenda.interfaces";
+import { Offer } from "@blockframes/contract/offer/+state";
 
 interface EmailData {
   to: string;
@@ -23,11 +34,19 @@ export interface EmailTemplateRequest {
   data: {
     org?: OrgEmailData | OrganizationDocument, // @TODO #7491 template d-94a20b20085842f68fb2d64fe325638a uses OrganizationDocument but it should use OrgEmailData instead
     user?: UserEmailData,
+    userSubject?: UserEmailData,
     event?: EventEmailData,
+    eventUrl?: string,
     pageURL?: string,
     bucket?: MailBucket,
     baseUrl?: string,
     date?: string,
+    movie?: MovieEmailData | MovieDocument,
+    offer?: OfferEmailData,
+    buyer?: PublicUser | string,
+    contract?: ContractDocument,
+    territories?: string,
+    contractId?: string,
   };
 }
 
@@ -72,6 +91,16 @@ export interface UserEmailData {
   email: string,
   password?: string,
   isRegistered?: boolean
+}
+
+export interface OfferEmailData {
+  id: string
+}
+
+export interface MovieEmailData {
+  title: {
+    international: string
+  }
 }
 
 export type EmailErrorCodes = 'E01-unauthorized' | 'E02-general-error' | 'E03-missing-api-key' | 'E04-no-template-available';
@@ -178,5 +207,19 @@ export function getUserEmailData(user: Partial<User>, password?: string): UserEm
     email: user.email || '',
     password,
     isRegistered: !!user.orgId
+  }
+}
+
+export function getOfferEmailData(offer: Partial<Offer>): OfferEmailData {
+  return {
+    id: offer.id
+  }
+}
+
+export function getMovieEmailData(movie: Partial<MovieDocument>): MovieEmailData {
+  return {
+    title: {
+      international: movie.title.international
+    }
   }
 }

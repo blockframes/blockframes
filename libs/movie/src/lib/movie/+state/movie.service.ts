@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
-import { createMovie, Movie, createMovieAppConfig, MovieAnalytics } from '@blockframes/model';
-import { createDocumentMeta } from '@blockframes/utils/models-meta';
+import { createMovie, Movie, createMovieAppConfig, MovieAnalytics, createDocumentMeta } from '@blockframes/model';
 import { cleanModel } from '@blockframes/utils/helpers';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
 import type firebase from 'firebase';
@@ -26,7 +25,7 @@ export const fromInternalRef = (internalRef: string): QueryFn => (ref) =>
 
 type MovieWithAnalytics = Movie & { analytics: MovieAnalytics };
 
-interface MovieState extends EntityState<Movie, string>, ActiveState<string> {}
+interface MovieState extends EntityState<Movie, string>, ActiveState<string> { }
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies' })

@@ -7,16 +7,21 @@ import { logger, storage } from 'firebase-functions';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 
 // Blockframes dependencies
-import { PublicUser, User } from '@blockframes/user/types';
-import { StorageFile, StorageVideo } from '@blockframes/media/+state/media.firestore';
-import { FileMetaData, isValidMetadata } from '@blockframes/media/+state/media.model';
+import {
+  FileMetaData,
+  isValidMetadata,
+  StorageFile,
+  StorageVideo,
+  PublicUser,
+  User,
+  OrganizationDocument,
+  MovieDocument
+} from '@blockframes/model';
 import { tempUploadDir } from '@blockframes/utils/file-sanitizer';
-import { OrganizationDocument } from '@blockframes/organization/+state/organization.firestore';
 import { ImageParameters, formatParameters } from '@blockframes/media/image/directives/imgix-helpers';
 
 // Internal dependencies
 import { deleteFromJWPlayer, uploadToJWPlayer } from './player';
-import { MovieDocument } from './data/types';
 import { imgixToken } from './environments/environment';
 import { db, getStorageBucketName } from './internals/firebase';
 import { isAllowedToAccessMedia } from './internals/media';

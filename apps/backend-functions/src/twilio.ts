@@ -1,10 +1,7 @@
 
 import { CallableContext } from "firebase-functions/lib/providers/https";
-
 import { getDocument } from "@blockframes/firebase-utils";
-import { EventDocument, Meeting } from "@blockframes/event/+state/event.firestore";
 import { ErrorResultResponse, displayName } from "@blockframes/utils/utils";
-
 import { projectId, twilioAccountSid, twilioAccountSecret, twilioApiKeySecret, twilioApiKeySid } from './environments/environment';
 import Twilio from "twilio/lib/rest/Twilio";
 import AccessToken, { VideoGrant } from "twilio/lib/jwt/AccessToken";
@@ -13,7 +10,7 @@ import * as admin from 'firebase-admin';
 import { getUser } from "./internals/utils";
 import { Request, Response } from "firebase-functions";
 import { isUserInvitedToEvent } from "./internals/invitations/events";
-import { PublicUser } from "@blockframes/user/types";
+import { PublicUser, EventDocument, Meeting } from "@blockframes/model";
 
 export interface RequestAccessToken {
   eventId: string,
