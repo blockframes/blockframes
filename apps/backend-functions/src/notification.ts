@@ -636,7 +636,7 @@ async function sendCreatedCounterOfferConfirmation(recipient: User, notification
   const toUser = getUserEmailData(recipient);
 
   const senderTemplate = counterOfferSenderEmail(toUser, recipientOrg, contract.offerId, negotiation, title, contract.id, { isMailRecipientBuyer });
-  const adminTemplate = toAdminCounterOfferEmail(title);
+  const adminTemplate = toAdminCounterOfferEmail(title, contract.offerId);
 
   return Promise.all([
     sendMailFromTemplate(senderTemplate, app, groupIds.unsubscribeAll),
@@ -699,12 +699,15 @@ async function sendContractStatusChangedConfirmation(recipient: User, notificati
     ? `${appUrl.content}/c/o/marketplace/offer/${contract.offerId}/${contract.id}`
     : `${appUrl.content}/c/o/dashboard/sales/${contract.id}/view`;
 
+    const crmPageUrl = `${appUrl.crm}/c/o/dashboard/crm/offer/${contract.offerId}/view`
+
   const data = {
     user: toUser,
     org: recipientOrg,
     contract,
     movie: getMovieEmailData(title),
     pageURL,
+    crmPageUrl,
     app: { name: appName.catalog }
   };
 
@@ -718,7 +721,7 @@ async function sendContractStatusChangedConfirmation(recipient: User, notificati
   if (options.isActionDeclined) {
     templateId = templateIds.negotiation.myContractWasDeclined;
     if (options.didRecipientAcceptOrDecline) {
-      templateId = templateIds.negotiation.myOrgDeclinedAContract; 
+      templateId = templateIds.negotiation.myOrgDeclinedAContract;
       adminTemplateId = templateIds.negotiation.toAdminContractDeclined;
       data.org = counterOfferSenderOrg;
     }

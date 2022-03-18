@@ -378,6 +378,7 @@ export function buyerOfferCreatedConfirmationEmail(toUser: UserEmailData, org: O
     bucket: { ...bucket, contracts },
     user: toUser,
     pageURL,
+    baseUrl: appUrl.content,
     offer: getOfferEmailData(offer),
     org
   };
@@ -424,9 +425,12 @@ export function counterOfferSenderEmail(
   return { to: toUser.email, templateId: templateIds.negotiation.createdCounterOffer, data };
 }
 
-export function toAdminCounterOfferEmail(title: MovieDocument): EmailTemplateRequest {
+export function toAdminCounterOfferEmail(title: MovieDocument, offerId: string): EmailTemplateRequest {
+  const pageURL = `${appUrl.crm}/c/o/dashboard/crm/offer/${offerId}/view`
+
   const data = {
-    movie: getMovieEmailData(title)
+    movie: getMovieEmailData(title),
+    pageURL
   };
   return { to: supportEmails.catalog, templateId: templateIds.negotiation.toAdminCounterOffer, data };
 }
