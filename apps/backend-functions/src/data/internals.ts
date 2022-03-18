@@ -37,8 +37,7 @@ export function createPublicUserDocument(user: Partial<PublicUser> = {}) {
     avatar: createStorageFile(user.avatar),
     firstName: user.firstName ?? '',
     lastName: user.lastName ?? '',
-    orgId: user.orgId ?? '',
-    _meta: createDocumentMeta(user._meta as DocumentMeta<Timestamp>)
+    orgId: user.orgId ?? ''
   }
 }
 

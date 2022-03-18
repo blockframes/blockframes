@@ -236,8 +236,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
-      uid: credentials.user.uid,
-      _meta: createDocumentMeta({ createdFrom: this.app })
+      uid: credentials.user.uid
     });
   }
 
@@ -259,8 +258,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
-      uid: credentials.user.uid,
-      _meta: createDocumentMeta({ createdFrom: this.app })
+      uid: credentials.user.uid
     });
   }
 

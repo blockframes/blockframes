@@ -157,29 +157,6 @@ async function onRequestFromUserToJoinOrgAccept({
   return sendMailFromTemplate(template, app, groupIds.unsubscribeAll);
 }
 
-/** Send a notification to admins of organization to notify them that the request is declined. */
-async function onRequestFromUserToJoinOrgDecline(invitation: InvitationDocument) {
-  if (!invitation.fromUser || !invitation.toOrg) {
-    console.error('No user or org provided');
-    return;
-  }
-
-  const org = await getDocument<OrganizationDocument>(`orgs/${invitation.toOrg.id}`);
-  const adminIds = await getAdminIds(org.id);
-
-  const notifications = adminIds.map(toUserId =>
-    createNotification({
-      toUserId,
-      user: createPublicUserDocument(invitation.fromUser),
-      organization: createPublicOrganizationDocument(invitation.toOrg),
-      type: 'requestFromUserToJoinOrgDeclined',
-      _meta: createDocumentMeta({ createdFrom: invitation.fromUser._meta.createdFrom })
-    })
-  );
-
-  return triggerNotifications(notifications);
-}
-
 
 /**
 * Dispatch the invitation update call depending on whether the invitation
@@ -211,8 +188,6 @@ export async function onRequestToJoinOrgUpdate(
     return onRequestFromUserToJoinOrgCreate(invitation);
   } else if (wasAccepted(before, after)) {
     return onRequestFromUserToJoinOrgAccept(invitation);
-  } else if (wasDeclined(before, after)) {
-    return onRequestFromUserToJoinOrgDecline(invitation);
   }
   return;
 }
