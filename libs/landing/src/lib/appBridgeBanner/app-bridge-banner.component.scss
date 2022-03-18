@@ -11,6 +11,10 @@ section {
 
   button {
     background-color: rgba(30, 27, 66, 1);
+
+    &:hover {
+      background-color: mix(white, rgba(30, 27, 66, 1), 10)
+    }
   }
   
   a {
