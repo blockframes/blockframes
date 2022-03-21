@@ -90,6 +90,23 @@ function getMatchingSales<T extends (FullSale | BucketContract)>(sales: T[], ava
   }));
 }
 
+export function getMandateTerms(avails: AvailsFilter, terms: Term<Date>[]): Term<Date>[] | undefined {
+  const result = terms.filter(term =>
+    allOf(avails.duration).in(term.duration)
+    && allOf(avails.medias).in(term.medias)
+    && allOf(avails.territories, 'optional').in(term.territories)
+  );
+  // If more medias are selected than there are in the mandates: not available
+  const resultMedias = result.map(term => term.medias).flat();
+  if (!allOf(avails.medias).in(resultMedias)) return [];
+  // If more territories are selected than there are in the mandates: not available
+  if (avails.territories?.length) {
+    const resultTerritories = result.map(term => term.territories).flat();
+    if (!allOf(avails.territories).in(resultTerritories)) return [];
+  }
+  return result;
+}
+
 export function availableTitle(
   avails: AvailsFilter,
   mandates: FullMandate[],
