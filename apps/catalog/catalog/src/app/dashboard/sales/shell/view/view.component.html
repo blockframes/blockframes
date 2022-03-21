@@ -2,23 +2,28 @@
   <ng-container *ngIf="sale.negotiation as negotiation">
     <ng-container *ngIf="negotiation | canNegotiate:orgId">
 
-      <header fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
-        <ng-container *ngIf="negotiation.price else noPrice">
-          <button mat-stroked-button color="primary" (click)="accept(negotiation.id, sale.id, sale.title)">
-            <mat-icon svgIcon="check"></mat-icon>
-            <span>Accept</span>
-          </button>
+      <header fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="16px">
+        <ng-container *ngIf="(user$ | async) as user">
+          <p *ngIf="!user.phoneNumber && user.uid !== negotiation.buyerId">To improve communication with our Team, please <a routerLink="/c/o/account/profile/view/settings">provide your phone number</a>.</p>
         </ng-container>
-        <ng-template #noPrice>
+        <div fxLayoutAlign="center start" fxLayoutGap="16px">
+          <ng-container *ngIf="negotiation.price else noPrice">
+            <button mat-stroked-button color="primary" (click)="accept(negotiation.id, sale.id, sale.title)">
+              <mat-icon svgIcon="check"></mat-icon>
+              <span>Accept</span>
+            </button>
+          </ng-container>
+          <ng-template #noPrice>
             <button disabled mat-stroked-button>
               <mat-icon svgIcon="check"></mat-icon>
               <span matTooltip="You cannot accept a contract without a price">Accept</span>
             </button>
-        </ng-template>
-        <a [disabled]="negotiation.createdByOrg === orgId" mat-stroked-button color="primary" routerLink="../negotiation">
-          <mat-icon svgIcon="negotiate"></mat-icon>
-          <span>Negotiate</span>
-        </a>
+          </ng-template>
+          <a [disabled]="negotiation.createdByOrg === orgId" mat-stroked-button color="primary" routerLink="../negotiation">
+            <mat-icon svgIcon="negotiate"></mat-icon>
+            <span>Negotiate</span>
+          </a>
+        </div>
       </header>
 
     </ng-container>
