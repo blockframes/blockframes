@@ -15,7 +15,7 @@ import { Offer } from '@blockframes/contract/offer/+state';
 import { staticModel } from '@blockframes/utils/static-model';
 import { Timestamp } from '../data/internals';
 import { displayName } from '@blockframes/utils/utils';
-import { supportMailosaur } from 'libs/testing/e2e/src';
+import { supportMailosaur } from '@blockframes/utils/constants';
 
 const ORG_HOME = '/c/o/organization/';
 const USER_CREDENTIAL_INVITATION = '/auth/identity';

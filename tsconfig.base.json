@@ -45,7 +45,7 @@
       "@blockframes/consents/*": ["libs/consents/src/lib/*"],
       "@blockframes/campaign/*": ["libs/campaign/src/lib/*"],
       "@blockframes/testing/unit-tests": ["libs/testing/unit-tests/src/index.ts"],
-      "@blockframes/testing/cypress": ["libs/testing/cypress/src/index.ts"],
+      "@blockframes/testing/cypress/*": ["libs/testing/cypress/src/lib/*"],
       "@blockframes/testing/e2e": ["libs/testing/e2e/src/index.ts"],
       "@blockframes/analytics/*": ["libs/analytics/src/lib/*"],
       "@blockframes/model": ["libs/model/src/index.ts"]

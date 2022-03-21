@@ -1,7 +1,8 @@
-﻿/// <reference types="cypress" />
+﻿/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+/// <reference types="cypress" />
 
 import { clearDataAndPrepareTest } from '@blockframes/e2e/utils/functions';
-import { assertUrlIncludes } from 'libs/testing/e2e/src';
+import { assertUrlIncludes } from '@blockframes/testing/cypress/client';
 import { LandingPage } from '../../support/pages/landing';
 import { HomePage, SearchPage, SelectionPage } from '../../support/pages/marketplace';
 import { avails } from '../../fixtures/bucket';

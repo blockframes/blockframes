@@ -5,7 +5,9 @@ import SearchPage from '../../support/pages/marketplace/SearchPage';
 import ViewPage from '../../support/pages/marketplace/ViewPage';
 import { titleInvest, discussionData, strEmail } from '../../fixtures/investment';
 import { MessageListResult } from 'cypress-mailosaur';
-import { assertUrlIncludes, supportMailosaur, serverId } from 'libs/testing/e2e/src';
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import { assertUrlIncludes } from '@blockframes/testing/cypress/client';
+import { supportMailosaur, serverId } from '@blockframes/utils/constants';
 
 const userFixture = new User();
 const users  =  [ userFixture.getByUID(USER.Vincent) ];

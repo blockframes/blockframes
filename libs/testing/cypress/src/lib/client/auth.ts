@@ -1,3 +1,5 @@
+/// <reference types="cypress" />
+
 import type { AuthService } from '@blockframes/auth/+state';
 import { USER_FIXTURES_PASSWORD } from '@blockframes/firebase-utils/anonymize/util';
 
@@ -16,7 +18,7 @@ export function loginWithRandomUser() {
 export function clearBrowserAuth() {
   cy.window().should('have.property', 'LoginService');
   cy.window().then(async (w) => {
-    await w['LoginService'].signOut();
+    await w['LoginService'].signOut().then(res => console.log('signout res : ', res));
     indexedDB.deleteDatabase('firebaseLocalStorageDb');
   });
 }

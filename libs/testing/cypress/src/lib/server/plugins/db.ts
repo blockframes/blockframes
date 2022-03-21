@@ -1,5 +1,5 @@
 import { db, auth } from '../testing-cypress';
-import { User, Organization } from '../../../../e2e/src'
+import { User, Organization } from '@blockframes/model'
 import { App, ModuleAccess  } from '@blockframes/utils/apps';
 
 export async function getRandomEmail() {

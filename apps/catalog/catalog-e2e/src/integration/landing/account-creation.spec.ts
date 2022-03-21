@@ -1,4 +1,5 @@
-﻿/// <reference types="cypress" />
+﻿/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+/// <reference types="cypress" />
 
 import { LandingPage } from '../../support/pages/landing';
 import { User } from "@blockframes/e2e/utils";
@@ -7,8 +8,8 @@ import { AuthIdentityPage } from "@blockframes/e2e/pages/auth";
 import { OrganizationLiteFormPage } from "@blockframes/e2e/pages/organization";
 import { ORGANIZATION } from '@blockframes/e2e/fixtures/orgs';
 import { MessageListResult } from "cypress-mailosaur";
-import { assertUrlIncludes } from 'libs/testing/e2e/src';
-import { supportMailosaur, serverId } from 'libs/testing/e2e/src';
+import { assertUrlIncludes } from '@blockframes/testing/cypress/client';
+import { supportMailosaur, serverId } from '@blockframes/utils/constants';
 
 const subjects = [
   "A new organization has been created",

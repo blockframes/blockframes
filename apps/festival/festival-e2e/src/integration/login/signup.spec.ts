@@ -1,4 +1,8 @@
+
+
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import {
+  auth,
   get,
   getInList,
   check,
@@ -7,11 +11,10 @@ import {
   deleteEmail,
   assertUrlIncludes,
   createFakeUserDataArray
-} from 'libs/testing/e2e/src';
+} from '@blockframes/testing/cypress/client';
 import { capitalize } from '@blockframes/utils/helpers';
-import { Organization } from '@blockframes/organization/+state';
+import { Organization } from '@blockframes/model';
 import { orgActivity, territories } from '@blockframes/utils/static-model/static-model';
-import { auth } from '@blockframes/testing/e2e';
 
 const [newOrgUser, knownMarketplaceOrgUser, knownDashboardOrgUser] = createFakeUserDataArray(3);
 

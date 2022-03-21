@@ -1,5 +1,6 @@
 ﻿import 'tsconfig-paths/register';
-import { testingCypress } from '@blockframes/testing/cypress'
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import { testingCypress } from '@blockframes/testing/cypress/server'
 
 // ***********************************************************
 // This example plugins/index.js can be used to load plugins

@@ -1,5 +1,5 @@
 import { InterceptOption } from "./type";
-import { serverId } from './env';
+import { serverId } from '@blockframes/utils/constants';
 
 export function awaitElementDeletion(selector: string, timeout?: number) {
   const settings = { timeout };

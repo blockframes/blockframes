@@ -126,8 +126,8 @@ export const createUserFromEmail = async (email: string, createdFrom: App = 'fes
  * Send an informative email to c8 admin
  * @param user
  */
-export const sendFirstConnexionEmail = (user: PublicUser) => {
-  const mailRequest = userFirstConnexion(user);
+export const sendFirstConnexionEmail = async (user: PublicUser) => {
+  const mailRequest = await userFirstConnexion(user);
   const from = getMailSender(user._meta.createdFrom);
   return sendMail(mailRequest, from, groupIds.noUnsubscribeLink).catch(e => console.warn(e.message));
 };

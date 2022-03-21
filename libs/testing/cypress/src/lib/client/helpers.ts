@@ -1,4 +1,4 @@
-import { serverId } from './env';
+import { serverId } from '@blockframes/utils/constants';
 import * as faker from 'faker';
 
 export function createFakeUserData() {

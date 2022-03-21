@@ -1,7 +1,16 @@
+/* eslint-disable @nrwl/nx/enforce-module-boundaries */
 /// <reference types="cypress" />
 
-import { get, getInList, check, interceptEmail, deleteEmail, createFakeUserData, supportMailosaur } from 'libs/testing/e2e/src';
-import { auth } from '@blockframes/testing/e2e';
+import {
+  get,
+  getInList,
+  check,
+  interceptEmail,
+  deleteEmail,
+  createFakeUserData,
+  auth,
+} from '@blockframes/testing/cypress/client';
+import { supportMailosaur } from '@blockframes/utils/constants';
 
 const user = createFakeUserData();
 

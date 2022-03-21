@@ -1,8 +1,8 @@
 ﻿// import { AuthLoginPage } from "../pages/auth";
 import { User } from "./type";
 import { SEC } from './env';
-import { loginWithEmailAndPassword } from "libs/testing/e2e/src/lib/auth";
-import { assertUrlIncludes } from 'libs/testing/e2e/src';
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import { auth } from '@blockframes/testing/cypress/client';
 
 /** Clear cookies, local storage, indexedDB and navigate to the path (/auth by default). */
 export function clearDataAndPrepareTest(path: string = '/auth') {
@@ -22,7 +22,7 @@ export function clearDataAndPrepareTest(path: string = '/auth') {
  */
 export function signIn(user: Partial<User>, fillIdentity: boolean = false) {
   // ! This function will be replaced eventually. We are using the updated login method here now
-  return loginWithEmailAndPassword(user.email);
+  return auth.loginWithEmailAndPassword(user.email);
   // const p1: AuthLoginPage = new AuthLoginPage();
   // p1.fillSignin(user);
   // p1.clickSignIn();

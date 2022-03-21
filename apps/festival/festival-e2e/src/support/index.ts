@@ -14,4 +14,5 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
-import '@blockframes/testing/e2e';
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import '@blockframes/testing/cypress/client';

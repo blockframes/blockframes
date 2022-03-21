@@ -8,7 +8,8 @@ import { ThemeService } from '@blockframes/ui/theme';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
 import { APP } from '@blockframes/utils/routes/utils';
 import { App } from '@blockframes/utils/apps';
-import { supportMailosaur } from 'libs/testing/e2e/src';
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import { supportMailosaur } from '@blockframes/utils/constants';
 
 @Directive({
   selector: 'landing-header, [landingHeader]',

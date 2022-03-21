@@ -3,7 +3,8 @@
 import screeningEvents from '../../fixtures/screening-events';
 import USERS from 'tools/fixtures/users.json'
 import ORGS from 'tools/fixtures/orgs.json'
-import { auth, awaitElementDeletion, events, festival } from '@blockframes/testing/e2e';
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import { auth, events, festival, awaitElementDeletion } from '@blockframes/testing/cypress/client';
 
 const screeningEvent = screeningEvents[0];
 const org = ORGS.find((org) => org.id === screeningEvent.org.id);
