@@ -54,6 +54,11 @@ export class OrganizationViewComponent implements OnDestroy {
   }
 
   goBack() {
-    this.location.historyGo(-this.countRouteEvents);
+    const state = this.location.getState() as { navigationId: number };
+    if (state?.navigationId === 1) {
+      this.router.navigate(['/c/o']);
+    } else {
+      this.location.historyGo(-this.countRouteEvents);
+    }
   }
 }
