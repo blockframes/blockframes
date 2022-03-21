@@ -7,7 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [ConfirmComponent],
-  imports: [CommonModule, MatIconModule, MatButtonModule, FlexLayoutModule,],
+  imports: [CommonModule, MatIconModule, MatButtonModule, FlexLayoutModule],
   exports: [ConfirmComponent]
 })
 export class ConfirmModule { }
