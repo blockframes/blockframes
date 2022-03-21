@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnInit, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { filter, map, startWith } from 'rxjs/operators';
+import { filter, map, shareReplay, startWith } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
@@ -41,7 +41,8 @@ export class InternalSaleListComponent implements OnInit {
       accepted: m.filter(m => m.negotiation?.status === 'accepted').length,
       declined: m.filter(m => m.negotiation?.status === 'declined').length,
       negotiating: m.filter(m => m.negotiation?.status === 'pending' && !isInitial(m.negotiation)).length,
-    }))
+    })),
+    shareReplay({ bufferSize: 1, refCount: true })
   );
 
   constructor(
@@ -75,8 +76,14 @@ export class InternalSaleListComponent implements OnInit {
   }
 
   /* index paramater is unused because it is a default paramater from the filter javascript function */
-  filterBySalesStatus(sale: Sale, index: number, status: ContractStatus): boolean {
+  filterBySalesStatus(sale: InternalSale, index: number, status: ContractStatus): boolean {
     if (!status) return true;
+    if (status === 'negotiating') {
+      return sale.status === 'pending' && !isInitial(sale.negotiation);
+    }
+    if (status === 'pending') {
+      return sale.status === 'pending' && isInitial(sale.negotiation);
+    }
     return sale.status === status;
   }
 
