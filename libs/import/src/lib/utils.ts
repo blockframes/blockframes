@@ -258,7 +258,7 @@ export function alreadyExistError<T = unknown>(name: string): ValueWithError<T> 
     error: {
       type: 'error',
       name: `${name} already exist`,
-      reason: `We could not create a this ${name} because it already exist on the app.`,
+      reason: `We could not create a ${name} because it already exist on the app.`,
       hint: `Please edit the corresponding sheet field with a different value.`,
     },
   };
