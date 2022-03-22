@@ -21,7 +21,8 @@ import {
   MovieRunningTime,
   MovieStakeholders,
   User,
-  createMovie
+  createMovie,
+  Movie
 } from '@blockframes/model';
 import {
   Certification,
@@ -139,9 +140,11 @@ interface FieldsConfig {
 
 type FieldsConfigType = ExtractConfig<FieldsConfig>;
 
-async function getMovie(att: string, value: string, service: MovieService) {
+async function getMovie(att: string, value: string, service: MovieService, cache: Record<string, Movie>) {
+  if (cache[value]) return cache[value];
   const [movie] = await service.getValue(ref => ref.where(att, '==', value));
-  return !!movie;
+  if (movie) cache[value] = movie;
+  return movie;
 }
 
 export async function formatTitle(
@@ -155,13 +158,14 @@ export async function formatTitle(
   const titles: MovieImportState[] = [];
 
   const userCache: Record<string, User> = {};
+  const titleCache: Record<string, Movie> = {};
 
   // ! The order of the property should be the same as excel columns
   const fieldsConfig: FieldsConfigType = {
     /* a */ 'title.international': async (value: string) => {
       if (!value) return optionalWarning('International Title');
-      const isDuplicate = await getMovie('title.international', value, titleService);
-      if (isDuplicate) return alreadyExistError(`Title with name(${value})`);
+      const movie = await getMovie('title.international', value, titleService, titleCache);
+      if (movie) return alreadyExistError(`Title with name(${value})`);
       return value;
     },
     /* b */ 'title.original': (value: string) => {
@@ -171,8 +175,8 @@ export async function formatTitle(
     },
     /* c */ internalRef: async (value: string) => {
       if (!value) return optionalWarning('Internal Ref');
-      const isDuplicate = await getMovie('Title with internalRef', value, titleService);
-      if (isDuplicate) return alreadyExistError(`internal ref(${value})`);
+      const movie = await getMovie('internalRef', value, titleService, titleCache);
+      if (movie) return alreadyExistError(`Title with internalRef(${value})`);
 
       return value;
     },
