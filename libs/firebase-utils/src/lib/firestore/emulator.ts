@@ -10,6 +10,7 @@ import { sleep, throwOnProduction } from '../util';
 import { promises } from 'fs';
 import _, { camelCase } from 'lodash';
 const { writeFile, rename } = promises;
+import type { auth as authType, } from 'firebase-admin'
 
 const firestoreExportFolder = 'firestore_export'; // ! Careful - changing this may cause a bug
 const emulatorMetadataFilename = 'firebase-export-metadata.json';
@@ -209,8 +210,8 @@ function forceEmulatorExport(exportDir = defaultEmulatorBackupPath) {
 
 export type FirestoreEmulator = FirebaseFirestore.Firestore & { clearFirestoreData?: typeof clearFirestoreData; };
 
-let db;
-let auth;
+let db: FirestoreEmulator;
+let auth: authType.Auth;
 
 export function connectFirestoreEmulator() {
   throwOnProduction();
