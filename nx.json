@@ -2,7 +2,6 @@
   "implicitDependencies": {
     "angular.json": "*",
     "package.json": "*",
-    "tslint.json": "*",
     "nx.json": "*",
     "tsconfig.base.json": "*"
   },
@@ -24,7 +23,7 @@
       "tags": ["browser"]
     },
     "utils": {
-      "tags": ["shared"]
+      "tags": ["browser", "deprecated"]
     },
     "contract": {
       "tags": ["browser"]
@@ -39,7 +38,7 @@
       "tags": ["browser"]
     },
     "backend-functions": {
-      "tags": ["node"]
+      "tags": ["node", "cloud"]
     },
     "backend-ops": {
       "tags": ["node", "local"]
@@ -51,14 +50,14 @@
       "tags": ["browser"]
     },
     "catalog-e2e": {
-      "tags": ["browser"],
+      "tags": ["browser", "e2e"],
       "implicitDependencies": ["catalog"]
     },
     "festival": {
       "tags": ["browser"]
     },
     "festival-e2e": {
-      "tags": ["browser"],
+      "tags": ["browser", "e2e"],
       "implicitDependencies": ["festival"]
     },
     "user": {
@@ -68,7 +67,7 @@
       "tags": ["browser"]
     },
     "e2e": {
-      "tags": ["browser"]
+      "tags": ["browser", "e2e", "deprecated"]
     },
     "landing": {
       "tags": ["browser"]
@@ -83,7 +82,7 @@
       "tags": ["browser"]
     },
     "crm-e2e": {
-      "tags": ["browser"],
+      "tags": ["browser", "e2e"],
       "implicitDependencies": ["crm"]
     },
     "invitation": {
@@ -96,7 +95,7 @@
       "tags": ["browser"]
     },
     "financiers-e2e": {
-      "tags": ["browser"],
+      "tags": ["browser", "e2e"],
       "implicitDependencies": ["financiers"]
     },
     "campaign": {
@@ -106,7 +105,7 @@
       "tags": ["browser"]
     },
     "cms-e2e": {
-      "tags": ["browser"],
+      "tags": ["browser", "e2e"],
       "implicitDependencies": ["cms"]
     },
     "consents": {
@@ -122,7 +121,7 @@
       "tags": ["node", "local"]
     },
     "testing-e2e": {
-      "tags": ["shared"]
+      "tags": ["shared", "e2e"]
     },
     "analytics": {
       "tags": ["browser"]
