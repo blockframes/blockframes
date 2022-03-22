@@ -1,6 +1,11 @@
 <ng-container [ngSwitch]="event.type">
-  <!-- Meeting -->
+  <!-- Meeting-->
   <ng-container *ngSwitchCase="'meeting'">
+    <span>{{ event.title }}</span>
+  </ng-container>
+
+  <!-- Slate-->
+  <ng-container *ngSwitchCase="'slate'">
     <span>{{ event.title }}</span>
   </ng-container>
 

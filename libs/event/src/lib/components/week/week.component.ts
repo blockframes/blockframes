@@ -52,7 +52,7 @@ export class CalendarWeekComponent {
   localEvents: CalendarEvent[];
   loading = false;
   @Input() viewDate: Date = new Date();
-  @Input() eventTypes: EventTypes[] = ['screening', 'meeting'];
+  @Input() eventTypes: EventTypes[] = ['screening', 'meeting', 'slate'];
   @Input()
   set events(events: CalendarEvent<unknown>[]) {
     this.loading = !events;

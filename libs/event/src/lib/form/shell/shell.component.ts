@@ -25,6 +25,10 @@ const navTabs: NavTabs = {
     { path: 'invitations', label: 'Invitations' },
     { path: 'files', label: 'Files' },
   ],
+  slate: [
+    { path: 'slate', label: 'Slate Presentation' },
+    { path: 'invitations', label: 'Invitations' }
+  ]
 }
 @Component({
   selector: 'event-shell',

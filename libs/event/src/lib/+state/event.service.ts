@@ -9,7 +9,8 @@ import {
   createCalendarEvent,
   MeetingEvent,
   isMeeting,
-  isScreening
+  isScreening,
+  SlateEvent
 } from '@blockframes/model';
 import { QueryFn } from '@angular/fire/firestore/interfaces';
 import { OrganizationService } from '@blockframes/organization/+state';
@@ -55,7 +56,15 @@ const eventQueries = {
     path: 'events',
     queryFn: ref => queryFn(ref).where('type', '==', 'meeting'),
     org: ({ ownerOrgId }: MeetingEvent) => ({ path: `orgs/${ownerOrgId}` }),
-  })
+  }),
+
+   // Slate : to define
+   slate: (queryFn: QueryFn = (ref) => ref): Query<SlateEvent> => ({
+    path: 'events',
+    queryFn: ref => queryFn(ref).where('type', '==', 'slate'),
+    org: ({ ownerOrgId }: SlateEvent) => ({ path: `orgs/${ownerOrgId}` }),
+  }),
+  
 }
 
 @Injectable({ providedIn: 'root' })
@@ -102,7 +111,7 @@ export class EventService extends CollectionService<EventState> {
 
   /** Query events based on types */
   queryByType(types: EventTypes[], queryFn?: QueryFn): Observable<Event[]> {
-    const queries = types.map(type => eventQueries[type](queryFn));
+    const queries = types.map(type => eventQueries[type](queryFn)); //here
     const queries$ = queries.map(query => queryChanges.call(this, query));
     return combineLatest(queries$).pipe(
       map((results) => results.flat()),

@@ -16,6 +16,9 @@ const navTabs: NavTabs = {
   meeting: [
     { path: 'invitations', label: 'Invitations' },
   ],
+  slate: [
+    { path: 'invitations', label: 'Invitations' }
+  ]
 }
 
 @Component({
