@@ -9,6 +9,7 @@
   <div mat-dialog-content fxLayout="column" fxLayoutAlign="center center">
     <h2>{{ data.title || "Confirm" }}</h2>
     <p>{{ data.question || "Do you confirm ?" }}</p>
+    <p *ngIf="data.advice">{{ data.advice }}</p>
   </div>
   <div mat-dialog-actions fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="16px">
     <button test-id="confirm" mat-flat-button color="primary" (click)="confirm()">
