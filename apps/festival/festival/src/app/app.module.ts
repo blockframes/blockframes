@@ -19,10 +19,10 @@ import { AppComponent } from './app.component';
 
 // Angular Fire
 import { provideFirebaseApp, initializeApp, getApp } from '@angular/fire/app';
-import { provideFunctions, getFunctions } from '@angular/fire/functions';
-import { getFirestore, provideFirestore } from '@angular/fire/firestore';
+import { provideFunctions, getFunctions, connectFunctionsEmulator } from '@angular/fire/functions';
+import { connectFirestoreEmulator, getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { providePerformance, getPerformance } from '@angular/fire/performance';
-import { provideAuth, getAuth } from '@angular/fire/auth';
+import { provideAuth, getAuth, connectAuthEmulator } from '@angular/fire/auth';
 import { provideStorage, getStorage } from '@angular/fire/storage';
 import { provideAnalytics, getAnalytics, ScreenTrackingService, UserTrackingService } from '@angular/fire/analytics';
 import 'firebase/storage';
@@ -79,8 +79,7 @@ import { APP } from '@blockframes/utils/routes/utils';
   providers: [
     ScreenTrackingService,
     UserTrackingService,
-    { provide: APP, useValue: 'festival' },
-    ...emulatorConfig
+    { provide: APP, useValue: 'festival' }
   ],
   bootstrap: [AppComponent],
 })
@@ -93,6 +92,22 @@ export class AppModule {
     gdprService: GDPRService,
     authService: AuthService,
   ) {
+
+    if (emulatorConfig.auth) {
+      const auth = getAuth();
+      connectAuthEmulator(auth, `http://${emulatorConfig.auth.host}:${emulatorConfig.auth.port}`);
+    }
+
+    if (emulatorConfig.firestore) {
+      const db = getFirestore();
+      connectFirestoreEmulator(db, emulatorConfig.firestore.host, emulatorConfig.firestore.port);
+    }
+
+    if (emulatorConfig.functions) {
+      const functions = getFunctions(getApp());
+      connectFunctionsEmulator(functions, emulatorConfig.functions.host, emulatorConfig.functions.port);
+    }
+
     const { intercom, yandex } = gdprService.cookieConsent;
     // if (yandex) yandexService.insertMetrika('festival'); #7936 this may be reactivated later
     intercom && intercomId ? intercomService.enable(authService.profile) : intercomService.disable();

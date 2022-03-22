@@ -15,9 +15,9 @@ import { AppComponent } from './app.component';
 
 // Angular Fire
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
-import { getFirestore, provideFirestore } from '@angular/fire/firestore';
+import { connectFirestoreEmulator, getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { providePerformance, getPerformance } from '@angular/fire/performance';
-import { provideAuth, getAuth } from '@angular/fire/auth';
+import { provideAuth, getAuth, connectAuthEmulator } from '@angular/fire/auth';
 import { provideStorage, getStorage } from '@angular/fire/storage';
 
 // Blockframes
@@ -41,9 +41,21 @@ import { APP } from '@blockframes/utils/routes/utils';
     FormFactoryModule,
   ],
   providers: [
-    { provide: APP, useValue: 'cms' },
-    ...emulatorConfig
+    { provide: APP, useValue: 'cms' }
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {
+
+  constructor() {
+    if (emulatorConfig.auth) {
+      const auth = getAuth();
+      connectAuthEmulator(auth, `http://${emulatorConfig.auth.host}:${emulatorConfig.auth.port}`);
+    }
+
+    if (emulatorConfig.firestore) {
+      const db = getFirestore();
+      connectFirestoreEmulator(db, emulatorConfig.firestore.host, emulatorConfig.firestore.port);
+    }
+  }
+}
