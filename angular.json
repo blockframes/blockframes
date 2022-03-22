@@ -162,10 +162,7 @@
             "outputPath": "dist/apps/backend-functions",
             "main": "apps/backend-functions/src/main.ts",
             "tsConfig": "apps/backend-functions/tsconfig.app.json",
-            "assets": [
-              "apps/backend-functions/src/assets",
-              "apps/backend-functions/src/package.json"
-            ],
+            "assets": ["apps/backend-functions/src/assets", "apps/backend-functions/src/package.json"],
             "maxWorkers": 6,
             "buildLibsFromSource": true
           },
@@ -477,10 +474,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/catalog/catalog/src/**/*.ts",
-              "apps/catalog/catalog/src/**/*.html"
-            ]
+            "lintFilePatterns": ["apps/catalog/catalog/src/**/*.ts", "apps/catalog/catalog/src/**/*.html"]
           }
         },
         "test": {
@@ -575,10 +569,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/catalog/catalog-e2e/src/**/*.ts",
-              "apps/catalog/catalog-e2e/src/**/*.html"
-            ]
+            "lintFilePatterns": ["apps/catalog/catalog-e2e/src/**/*.ts", "apps/catalog/catalog-e2e/src/**/*.html"]
           }
         }
       }
@@ -611,10 +602,7 @@
                 "output": "./assets"
               }
             ],
-            "styles": [
-              "node_modules/angular-calendar/css/angular-calendar.css",
-              "apps/festival/festival/src/styles.scss"
-            ],
+            "styles": ["node_modules/angular-calendar/css/angular-calendar.css", "apps/festival/festival/src/styles.scss"],
             "scripts": [],
             "vendorChunk": true,
             "extractLicenses": false,
@@ -747,10 +735,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/festival/festival/src/**/*.ts",
-              "apps/festival/festival/src/**/*.html"
-            ]
+            "lintFilePatterns": ["apps/festival/festival/src/**/*.ts", "apps/festival/festival/src/**/*.html"]
           }
         },
         "test": {
@@ -848,10 +833,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/festival/festival-e2e/src/**/*.ts",
-              "apps/festival/festival-e2e/src/**/*.html"
-            ]
+            "lintFilePatterns": ["apps/festival/festival-e2e/src/**/*.ts", "apps/festival/festival-e2e/src/**/*.html"]
           }
         }
       }
@@ -1260,10 +1242,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "libs/firebase-utils/src/**/*.ts",
-              "libs/firebase-utils/src/**/*.html"
-            ]
+            "lintFilePatterns": ["libs/firebase-utils/src/**/*.ts", "libs/firebase-utils/src/**/*.html"]
           }
         },
         "test": {
@@ -1399,10 +1378,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/financiers/financiers/src/**/*.ts",
-              "apps/financiers/financiers/src/**/*.html"
-            ]
+            "lintFilePatterns": ["apps/financiers/financiers/src/**/*.ts", "apps/financiers/financiers/src/**/*.html"]
           }
         },
         "test": {
@@ -1494,10 +1470,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/financiers/financiers-e2e/src/**/*.ts",
-              "apps/financiers/financiers-e2e/src/**/*.html"
-            ]
+            "lintFilePatterns": ["apps/financiers/financiers-e2e/src/**/*.ts", "apps/financiers/financiers-e2e/src/**/*.html"]
           }
         }
       }
@@ -1793,10 +1766,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "libs/testing/unit-tests/src/**/*.ts",
-              "libs/testing/unit-tests/src/**/*.html"
-            ]
+            "lintFilePatterns": ["libs/testing/unit-tests/src/**/*.ts", "libs/testing/unit-tests/src/**/*.html"]
           }
         },
         "test": {
@@ -1824,27 +1794,6 @@
           "outputs": ["coverage/libs/testing/cypress"],
           "options": {
             "jestConfig": "libs/testing/cypress/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "testing-e2e": {
-      "root": "libs/testing/e2e",
-      "sourceRoot": "libs/testing/e2e/src",
-      "projectType": "library",
-      "architect": {
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["libs/testing/e2e/**/*.ts"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/testing/e2e"],
-          "options": {
-            "jestConfig": "libs/testing/e2e/jest.config.js",
             "passWithNoTests": true
           }
         }
