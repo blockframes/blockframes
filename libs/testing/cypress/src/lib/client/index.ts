@@ -7,4 +7,3 @@ import * as festival from './festival';
 export { festival };
 export * from './helpers';
 export * from './support';
-export * from './type';

@@ -67,9 +67,3 @@ export interface Currency {
   label: string,
   value: string
 }
-
-export interface InterceptOption {
-  sentTo?: string;
-  subject?: string;
-  body?: string;
-}

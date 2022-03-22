@@ -108,7 +108,7 @@ describe('Signup', () => {
         assertUrlIncludes('c/o/marketplace/home');
         get('skip-preferences').click();
 
-        //TODO: connect with an admin of this org to check if the notification has been received
+        //TODO: connect with an admin of this org to check if the notification has been received - issue #7751
       }
     );
   });
@@ -150,7 +150,7 @@ describe('Signup', () => {
         get('refresh').click();
         assertUrlIncludes('c/o/dashboard/home');
 
-        //TODO: connect with an admin of this org to check if the notification has been received
+        //TODO: connect with an admin of this org to check if the notification has been received - issue #7751
       }
     );
   });

@@ -1,4 +1,3 @@
-import { InterceptOption } from "./type";
 import { serverId } from '@blockframes/utils/constants';
 
 export function awaitElementDeletion(selector: string, timeout?: number) {
@@ -24,7 +23,7 @@ export function get(selector: string) {
   return cy.get(`[test-id="${selector}"]`);
 }
 
-export function getAllStartingWith(selector: string) {
+function getAllStartingWith(selector: string) {
   return cy.get(`[test-id^="${selector}"]`);
 }
 
@@ -45,6 +44,12 @@ export function assertUrl(url: string) {
 
 export function assertUrlIncludes(partialUrl: string) {
   cy.url().should('include', partialUrl);
+}
+
+interface InterceptOption {
+  sentTo?: string;
+  subject?: string;
+  body?: string;
 }
 
 export function interceptEmail(option: InterceptOption) {
