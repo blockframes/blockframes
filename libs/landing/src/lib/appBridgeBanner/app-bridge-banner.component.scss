@@ -11,10 +11,18 @@ section {
 
   button {
     background-color: rgba(30, 27, 66, 1);
+
+    &:hover {
+      background-color: mix(white, rgba(30, 27, 66, 1), 10);
+    }
   }
   
   a {
     background-color: rgba(50, 53, 104, 1);
+
+    &:hover {
+      background-color: mix(white, rgba(50, 53, 104, 1), 10);
+    }
   }
   
   button, a {
@@ -26,6 +34,7 @@ section {
     border: none;
     padding: 16px 32px;
     border-radius: 4px;
+    transition: background-color 0.2s;
     h6, p {
       margin: 0;
     }

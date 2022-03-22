@@ -3,8 +3,13 @@ import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { ModuleGuard } from '@blockframes/utils/routes/module.guard';
 
-export interface ConfirmDeclineData { type: 'seller' | 'buyer' }
+export interface ConfirmDeclineData { 
+  type: 'seller' | 'buyer', 
+  showAcceptTermsCheckbox?: boolean 
+}
 
 @Component({
   selector: 'confirm-offer-decline',
@@ -29,10 +34,14 @@ export class ConfirmDeclineComponent {
   form = new FormGroup({
     reason: new FormControl(''),
     message: new FormControl(''),
+    acceptTerms: new FormControl(false)
   });
+
+  termsPath = `/c/o/${this.moduleGuard.currentModule}/terms`;
 
   constructor(
     private dialog: MatDialogRef<ConfirmDeclineComponent>,
+    private moduleGuard: ModuleGuard,
     @Inject(MAT_DIALOG_DATA) public data: ConfirmDeclineData
   ) { }
 
@@ -44,6 +53,6 @@ export class ConfirmDeclineComponent {
   }
 
   async cancel() {
-    this.dialog.close()
+    this.dialog.close();
   }
 }
