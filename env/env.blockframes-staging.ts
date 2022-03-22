@@ -110,11 +110,6 @@ export const yandex = {
 
 export const intercomId = 'srwfltp4';
 
-// OMDB
-// =======
-
-export const omdbApiKey = '4d1be897';
-
 // Sentry
 // =======
 
