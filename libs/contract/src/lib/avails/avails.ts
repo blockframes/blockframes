@@ -91,11 +91,11 @@ function getMatchingSales<T extends (FullSale | BucketContract)>(sales: T[], ava
 }
 
 export function getMandateTerms(avails: AvailsFilter, terms: Term<Date>[]): Term<Date>[] | undefined {
-  const result = terms.filter(term =>
-    allOf(avails.duration).in(term.duration)
+  const result = terms.filter(term => {
+    return allOf(avails.duration).in(term.duration)
     && allOf(avails.medias).in(term.medias)
-    && allOf(avails.territories, 'optional').in(term.territories)
-  );
+    && allOf(avails.territories, 'optional').in(term.territories);
+  });
   // If more medias are selected than there are in the mandates: not available
   const resultMedias = result.map(term => term.medias).flat();
   if (!allOf(avails.medias).in(resultMedias)) return [];

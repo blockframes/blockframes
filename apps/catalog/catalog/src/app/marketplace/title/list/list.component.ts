@@ -161,13 +161,13 @@ export class ListComponent implements OnDestroy, OnInit {
       return;
     }
 
-    const [mandateTerms] = getMandateTerms(this.availsForm.value, title.mandates[0].terms);
-    if (!mandateTerms) {
+    const [parentTerm] = getMandateTerms(this.availsForm.value, title.mandates[0].terms);
+    if (!parentTerm) {
       this.snackbar.open(`This title is not available`, 'close', { duration: 5000 });
       return;
     }
 
-    this.bucketService.addTerm(title.objectID, mandateTerms.id, this.availsForm.value);
+    this.bucketService.addTerm(title.objectID, parentTerm.id, this.availsForm.value);
 
     this.snackbar.open(`${title.title.international} was added to your Selection`, 'GO TO SELECTION', { duration: 4000 })
       .onAction()
