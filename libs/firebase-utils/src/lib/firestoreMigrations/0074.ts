@@ -8,8 +8,11 @@ import { Movie } from '@blockframes/model';
  * @returns
  */
 export async function upgrade(db: Firestore) {
-  const movies = await db.collection('movies').get();
+  await migrateMovie(db);
+}
 
+async function migrateMovie(db: Firestore) {
+  const movies = await db.collection('movies').get();
   return runChunks(movies.docs, async (doc) => {
     const movie = doc.data() as Movie;
 
@@ -17,13 +20,19 @@ export async function upgrade(db: Firestore) {
     if (movie.crew.length == 0) return
 
     // Replace all bad 'confiremd' with the fix one
-    movie.crew = movie.crew.map((crew) => ({
-      ...crew,
-      status: crew.status as any == 'confiremd' ? 'confirmed' : crew.status
-    }))
-    
-    // Update movie in DB
-    await doc.ref.set(movie);
+    movie.crew = movie.crew.map((crew) => {
 
+      // If status == confiremd
+      if (crew.status as any === "confiremd") {
+        console.log(movie.id)
+        return {
+          ...crew,
+          status: 'confirmed'
+        }
+      }
+    })
+
+    // Update movie in DB
+    // await doc.ref.set(movie);
   }).catch(err => console.error(err));
 }
