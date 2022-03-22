@@ -19,7 +19,7 @@ import { AppComponent } from './app.component';
 // Angular Fire
 import { provideFirebaseApp, initializeApp, getApp } from '@angular/fire/app';
 import { provideFunctions, getFunctions, connectFunctionsEmulator } from '@angular/fire/functions';
-import { connectFirestoreEmulator, getFirestore, provideFirestore } from '@angular/fire/firestore';
+import { connectFirestoreEmulator, getFirestore, initializeFirestore, provideFirestore } from '@angular/fire/firestore';
 import { providePerformance, getPerformance } from '@angular/fire/performance';
 import { provideAuth, getAuth, connectAuthEmulator } from '@angular/fire/auth';
 import { provideStorage, getStorage } from '@angular/fire/storage';
@@ -49,7 +49,7 @@ import { APP } from '@blockframes/utils/routes/utils';
 
     // Firebase
     provideFirebaseApp(() => initializeApp(firebase('crm'))),
-    provideFirestore(() => getFirestore()),
+    provideFirestore(() => initializeFirestore(getApp(), { experimentalAutoDetectLongPolling: true })),
     provideFunctions(() => getFunctions(getApp(), firebaseRegion)),
     providePerformance(() => getPerformance()),
     provideAuth(() => getAuth()),
