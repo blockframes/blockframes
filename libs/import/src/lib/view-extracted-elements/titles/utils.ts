@@ -38,7 +38,6 @@ import {
   ProducerRole,
   ProductionStatus,
   ScreeningStatus,
-  SocialGoal,
   SoundFormat,
   StakeholderRole,
   StoreStatus,
@@ -413,7 +412,7 @@ export async function formatTitle(
       if (!value) return optionalWarning('Social Responsibility Goals');
       const valid = getKeyIfExists('socialGoals', value);
       if (!valid) return wrongValueError('Social Responsibility Goals');
-      return value as SocialGoal;
+      return valid;
     },
     /* ay */ 'reviews[].filmCriticName': (value: string) => {
       if (!value) return optionalWarning('Film Reviews Critic Name');
