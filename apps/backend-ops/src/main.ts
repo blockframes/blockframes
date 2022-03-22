@@ -13,7 +13,16 @@ import { generateFixtures } from './generate-fixtures';
 import { exportFirestore, importFirestore } from './admin';
 import { selectEnvironment } from './select-environment';
 import { healthCheck } from './health-check';
-import { anonymizeLatestProdDb, downloadProdDbBackup, importEmulatorFromBucket, loadEmulator, enableMaintenanceInEmulator, uploadBackup, startEmulators, syncAuthEmulatorWithFirestoreEmulator } from './emulator';
+import {
+  anonymizeLatestProdDb,
+  downloadProdDbBackup,
+  importEmulatorFromBucket,
+  loadEmulator,
+  enableMaintenanceInEmulator,
+  uploadBackup,
+  startEmulators,
+  syncAuthEmulatorWithFirestoreEmulator,
+} from './emulator';
 import { backupEnv, restoreEnv } from './backup';
 import { EIGHT_MINUTES_IN_MS } from '@blockframes/utils/maintenance';
 import { rescueJWP } from './rescueJWP';
