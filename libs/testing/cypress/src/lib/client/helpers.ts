@@ -1,5 +1,5 @@
 import { serverId } from '@blockframes/utils/constants';
-import * as faker from 'faker';
+import faker from '@faker-js/faker';
 
 export function createFakeUserData() {
   const firstname = faker.name.firstName();
