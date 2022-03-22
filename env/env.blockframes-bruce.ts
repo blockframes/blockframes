@@ -79,7 +79,6 @@ export const yandex = {
 
 export const intercomId = '';
 
-
 // Sentry
 // =======
 
