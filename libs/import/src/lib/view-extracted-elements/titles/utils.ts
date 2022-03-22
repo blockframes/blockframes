@@ -9,6 +9,7 @@ import {
   adminOnlyWarning,
   getUser,
   unknownEntityError,
+  alreadyExistError,
 } from '@blockframes/import/utils';
 import { extract, ExtractConfig, SheetTab } from '@blockframes/utils/spreadsheet';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
@@ -44,6 +45,7 @@ import {
   Territory,
 } from '@blockframes/utils/static-model';
 import { Stakeholder } from '@blockframes/utils/common-interfaces';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 
 interface FieldsConfig {
   title: {
@@ -137,9 +139,15 @@ interface FieldsConfig {
 
 type FieldsConfigType = ExtractConfig<FieldsConfig>;
 
+async function getMovie(att: string, value: string, service: MovieService) {
+  const [movie] = await service.getValue(ref => ref.where(att, '==', value));
+  return !!movie;
+}
+
 export async function formatTitle(
   sheetTab: SheetTab,
   userService: UserService,
+  titleService: MovieService,
   blockframesAdmin: boolean,
   userOrgId: string,
   currentApp: App
@@ -150,8 +158,10 @@ export async function formatTitle(
 
   // ! The order of the property should be the same as excel columns
   const fieldsConfig: FieldsConfigType = {
-    /* a */ 'title.international': (value: string) => {
+    /* a */ 'title.international': async (value: string) => {
       if (!value) return optionalWarning('International Title');
+      const isDuplicate = await getMovie('title.international', value, titleService);
+      if (isDuplicate) return alreadyExistError(`Title with name(${value})`);
       return value;
     },
     /* b */ 'title.original': (value: string) => {
@@ -159,8 +169,11 @@ export async function formatTitle(
       if (!value) return mandatoryError('Original Title');
       return value;
     },
-    /* c */ internalRef: (value: string) => {
+    /* c */ internalRef: async (value: string) => {
       if (!value) return optionalWarning('Internal Ref');
+      const isDuplicate = await getMovie('Title with internalRef', value, titleService);
+      if (isDuplicate) return alreadyExistError(`internal ref(${value})`);
+
       return value;
     },
     /* d */ contentType: (value: string) => {

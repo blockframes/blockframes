@@ -12,6 +12,7 @@ import { AuthService } from '@blockframes/auth/+state';
 import { take } from 'rxjs/operators';
 import { APP } from '@blockframes/utils/routes/utils';
 import { App } from '@blockframes/utils/apps';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 
 @Component({
   selector: 'import-view-extracted-titles[sheetTab]',
@@ -29,6 +30,7 @@ export class ViewExtractedTitlesComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private userService: UserService,
+    private titleService: MovieService,
     @Inject(APP) private app: App
   ) { }
 
@@ -37,6 +39,7 @@ export class ViewExtractedTitlesComponent implements OnInit {
     const titles = await formatTitle(
       this.sheetTab,
       this.userService,
+      this.titleService,
       isBlockframesAdmin,
       this.authService.profile.orgId,
       this.app
