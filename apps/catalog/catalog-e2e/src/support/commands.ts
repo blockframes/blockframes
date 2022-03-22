@@ -8,13 +8,11 @@
 // https://on.cypress.io/custom-commands
 // ***********************************************
 //
+import '@angular/compiler'
 import 'cypress-mailosaur';
-
-import firebase  from 'firebase/app';
-import 'firebase/auth';
-import 'firebase/firestore';
-import { firebase as firebaseConfig } from '@env';
 import { App } from 'libs/utils/src/lib/apps';
+import { getAuth, signInWithEmailAndPassword, signOut } from '@angular/fire/auth';
+import { doc, getFirestore, serverTimestamp, updateDoc } from '@angular/fire/firestore';
 
 // -- This is a parent command --
 // Cypress.Commands.add("login", (email, password) => { ... })
@@ -31,24 +29,22 @@ import { App } from 'libs/utils/src/lib/apps';
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
-//Init the app
-const app = firebase.initializeApp(firebaseConfig('catalog'));
-
 const login = (email: string, password: string) => {
-  return app.auth().signInWithEmailAndPassword(email, password);
+  return signInWithEmailAndPassword(getAuth(), email, password);
 }
 
 const logout = () => {
-  return app.auth().signOut();
+  return signOut(getAuth());
 }
 
 const acceptMovieById = (appName: App, movieId: string) => {
-  const movieRef = app.firestore().collection('movies').doc(movieId);
-  return movieRef.update(`app.${appName}`, {
+  const db = getFirestore();
+  const movieRef = doc(db, `movies/${movieId}`);
+  return updateDoc(movieRef, `app.${appName}`, {
     access: true,
     status: 'accepted',
     refusedAt: null,
-    acceptedAt: firebase.firestore.FieldValue.serverTimestamp(),
+    acceptedAt: serverTimestamp(),
   });
 };
 

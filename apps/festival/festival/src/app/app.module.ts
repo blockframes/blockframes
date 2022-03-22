@@ -20,7 +20,7 @@ import { AppComponent } from './app.component';
 // Angular Fire
 import { provideFirebaseApp, initializeApp, getApp } from '@angular/fire/app';
 import { provideFunctions, getFunctions, connectFunctionsEmulator } from '@angular/fire/functions';
-import { connectFirestoreEmulator, getFirestore, initializeFirestore, provideFirestore } from '@angular/fire/firestore';
+import { connectFirestoreEmulator, initializeFirestore, provideFirestore } from '@angular/fire/firestore';
 import { providePerformance, getPerformance } from '@angular/fire/performance';
 import { provideAuth, getAuth, connectAuthEmulator } from '@angular/fire/auth';
 import { provideStorage, getStorage } from '@angular/fire/storage';
@@ -59,10 +59,28 @@ import { APP } from '@blockframes/utils/routes/utils';
 
     // Firebase
     provideFirebaseApp(() => initializeApp(firebase('festival'))),
-    provideFirestore(() => initializeFirestore(getApp(), { experimentalAutoDetectLongPolling: true })),
-    provideFunctions(() => getFunctions(getApp(), firebaseRegion)),
+    provideFirestore(() => {
+      const db = initializeFirestore(getApp(), { experimentalAutoDetectLongPolling: true });
+      if (emulatorConfig.firestore) {
+        connectFirestoreEmulator(db, emulatorConfig.firestore.host, emulatorConfig.firestore.port);
+      }
+      return db;
+    }),
+    provideFunctions(() => {
+      const functions = getFunctions(getApp(), firebaseRegion);
+      if (emulatorConfig.functions) {
+        connectFunctionsEmulator(functions, emulatorConfig.functions.host, emulatorConfig.functions.port);
+      }
+      return functions;
+    }),
     providePerformance(() => getPerformance()),
-    provideAuth(() => getAuth()),
+    provideAuth(() => {
+      const auth = getAuth();
+      if (emulatorConfig.auth) {
+        connectAuthEmulator(auth, `http://${emulatorConfig.auth.host}:${emulatorConfig.auth.port}`);
+      }
+      return auth;
+    }),
     provideStorage(() => getStorage()),
     provideAnalytics(() => getAnalytics()),
 
@@ -92,21 +110,6 @@ export class AppModule {
     gdprService: GDPRService,
     authService: AuthService,
   ) {
-
-    if (emulatorConfig.auth) {
-      const auth = getAuth();
-      connectAuthEmulator(auth, `http://${emulatorConfig.auth.host}:${emulatorConfig.auth.port}`);
-    }
-
-    if (emulatorConfig.firestore) {
-      const db = getFirestore();
-      connectFirestoreEmulator(db, emulatorConfig.firestore.host, emulatorConfig.firestore.port);
-    }
-
-    if (emulatorConfig.functions) {
-      const functions = getFunctions(getApp());
-      connectFunctionsEmulator(functions, emulatorConfig.functions.host, emulatorConfig.functions.port);
-    }
 
     const { intercom, yandex } = gdprService.cookieConsent;
     // if (yandex) yandexService.insertMetrika('festival'); #7936 this may be reactivated later

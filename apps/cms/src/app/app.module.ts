@@ -15,7 +15,7 @@ import { AppComponent } from './app.component';
 
 // Angular Fire
 import { provideFirebaseApp, initializeApp, getApp } from '@angular/fire/app';
-import { connectFirestoreEmulator, getFirestore, initializeFirestore, provideFirestore } from '@angular/fire/firestore';
+import { connectFirestoreEmulator, initializeFirestore, provideFirestore } from '@angular/fire/firestore';
 import { providePerformance, getPerformance } from '@angular/fire/performance';
 import { provideAuth, getAuth, connectAuthEmulator } from '@angular/fire/auth';
 import { provideStorage, getStorage } from '@angular/fire/storage';
@@ -33,9 +33,21 @@ import { APP } from '@blockframes/utils/routes/utils';
     OverlayModule,
     HttpClientModule,
     provideFirebaseApp(() => initializeApp(firebase('cms'))),
-    provideFirestore(() => initializeFirestore(getApp(), { experimentalAutoDetectLongPolling: true })),
+    provideFirestore(() => {
+      const db = initializeFirestore(getApp(), { experimentalAutoDetectLongPolling: true });
+      if (emulatorConfig.firestore) {
+        connectFirestoreEmulator(db, emulatorConfig.firestore.host, emulatorConfig.firestore.port);
+      }
+      return db;
+    }),
     providePerformance(() => getPerformance()),
-    provideAuth(() => getAuth()),
+    provideAuth(() => {
+      const auth = getAuth();
+      if (emulatorConfig.auth) {
+        connectAuthEmulator(auth, `http://${emulatorConfig.auth.host}:${emulatorConfig.auth.port}`);
+      }
+      return auth;
+    }),
     provideStorage(() => getStorage()),
 
     FormFactoryModule,
@@ -45,17 +57,4 @@ import { APP } from '@blockframes/utils/routes/utils';
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {
-
-  constructor() {
-    if (emulatorConfig.auth) {
-      const auth = getAuth();
-      connectAuthEmulator(auth, `http://${emulatorConfig.auth.host}:${emulatorConfig.auth.port}`);
-    }
-
-    if (emulatorConfig.firestore) {
-      const db = getFirestore();
-      connectFirestoreEmulator(db, emulatorConfig.firestore.host, emulatorConfig.firestore.port);
-    }
-  }
-}
+export class AppModule {}
