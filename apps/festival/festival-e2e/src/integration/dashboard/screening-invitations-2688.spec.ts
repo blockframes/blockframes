@@ -34,7 +34,7 @@ describe('Organiser invites other users to private screening', () => {
 
     cy.clearLocalStorage(); // ! If event is deleted manually, it will be stuck in localStorage cache
     cy.contains('Accept cookies').click();
-    cy.task('log', userOrganiser.uid);
+    cy.log('user uid', userOrganiser.uid);
     auth.loginWithEmailAndPassword(userOrganiser.email);
     cy.visit('/c/o/dashboard/event');
     cy.log(`Create screening {${screeningEvent.event}}`);
