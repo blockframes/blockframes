@@ -9,29 +9,30 @@ import { Organization, Movie } from '@blockframes/model';
  */
 export async function upgrade(db: Firestore) {
   await migrateMovie(db);
-
   return await migrateOrg(db);
 }
 
 async function migrateMovie(db: Firestore) {
   const movies = await db.collection('movies').get();
+
   return runChunks(movies.docs, async (doc) => {
     const movie = doc.data() as Movie;
 
     // Check if movie has a crew with mini 1 member
-    if (movie.crew.length == 0) return
+    if (!movie.crew) return false;
+    if (!Object.prototype.hasOwnProperty.call(movie, 'crew')) return false;
+    if (movie.crew.length == 0) return false;
 
     // Replace all bad 'confiremd' with the fix one
     movie.crew = movie.crew.map((crew) => {
-
       // If status == confiremd
       if (crew.status as any === "confiremd") {
-        console.log(movie.id)
         return {
           ...crew,
           status: 'confirmed'
-        }
+        };
       }
+      return crew;
     })
 
     // Update movie in DB
@@ -40,13 +41,13 @@ async function migrateMovie(db: Firestore) {
 }
 
 async function migrateOrg(db: Firestore) {
-  const orgs =  await db.collection('orgs').get()
+  const orgs = await db.collection('orgs').get()
 
   return runChunks(orgs.docs, async (doc) => {
     const org = doc.data() as Organization;
 
     delete (org as any).isBlockchainEnabled;
 
-    await doc.ref.set(org);   
+    await doc.ref.set(org);
   }).catch(err => console.error(err));
 }
