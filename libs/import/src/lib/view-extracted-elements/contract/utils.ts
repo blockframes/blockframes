@@ -1,4 +1,4 @@
-import { doc, Firestore } from '@angular/fire/firestore';
+import { collection, doc, Firestore } from '@angular/fire/firestore';
 import {
   getDate,
   getOrgId,
@@ -83,7 +83,7 @@ function toTerm(rawTerm: FieldsConfig['term'][number], contractId: string, fires
 
   const territories = territories_included.filter(territory => !territories_excluded.includes(territory));
 
-  const id = doc(firestore, '').id; // TODO #7273 '' ok ?
+  const id = doc(collection(firestore, '_')).id;
 
   return {
     id,
@@ -231,8 +231,8 @@ export async function formatContract(
     /* o */'term[].caption': (value: string) => getStaticList('languages', value, separator, 'CC', false),
 
     /* p */'contract.id': async (value: string) => {
-      if (value && !blockframesAdmin) return adminOnlyWarning(doc(firestore, '').id, 'Contract ID'); doc(firestore, '').id; // TODO #7273 '' ok ?
-      if (!value) return doc(firestore, '').id; // TODO #7273 '' ok ?
+      if (value && !blockframesAdmin) return adminOnlyWarning(doc(collection(firestore, '_')).id, 'Contract ID');
+      if (!value) return doc(collection(firestore, '_')).id;
       const exist = await getContract(value, contractService, contractCache);
       if (exist) return alreadyExistError('Contract ID');
       return value;
