@@ -1,14 +1,16 @@
 import { Firestore } from '../types';
 import { runChunks } from '../firebase-utils';
-import { Movie } from '@blockframes/model';
+import { Organization, Movie } from '@blockframes/model';
 
 /**
- * Update all movies genre (old genres becomes keywords)
+ * Remove isBlockchainEnabled from org documents
  * @param db
  * @returns
  */
 export async function upgrade(db: Firestore) {
   await migrateMovie(db);
+
+  return await migrateOrg(db);
 }
 
 async function migrateMovie(db: Firestore) {
@@ -33,6 +35,18 @@ async function migrateMovie(db: Firestore) {
     })
 
     // Update movie in DB
-    // await doc.ref.set(movie);
+    await doc.ref.set(movie);
+  }).catch(err => console.error(err));
+}
+
+async function migrateOrg(db: Firestore) {
+  const orgs =  await db.collection('orgs').get()
+
+  return runChunks(orgs.docs, async (doc) => {
+    const org = doc.data() as Organization;
+
+    delete (org as any).isBlockchainEnabled;
+
+    await doc.ref.set(org);   
   }).catch(err => console.error(err));
 }
