@@ -16,7 +16,7 @@ import {
   dateToMatrixPosition,
   createAvailCalendarState,
 } from './calendar.model';
-import { isCalendarTermInAvails, DurationMarker, CalendarAvailsFilter, getMatchingMarkers } from '../avails';
+import { DurationMarker } from '../avails';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 
 /** Available [A], Today[T], Expired[E]
@@ -86,7 +86,6 @@ export class AvailsCalendarComponent implements OnInit {
   }
 
   @Input() @boolean disableSelect = false;
-  @Input() avails: CalendarAvailsFilter;
 
   @Output() selected = new EventEmitter<DurationMarker>();
 
@@ -161,25 +160,18 @@ export class AvailsCalendarComponent implements OnInit {
       const year = new Date().getFullYear();
       const from = new Date(year + newState.start.row, newState.start.column);
       const to = new Date(year + newState.end.row, newState.end.column);
+      const parentMarker = this._availableMarkers.find(marker => {
+        // From the calendar pov range starts at the first day of the month
+        // but the avail term might not start at the first day of the month
+        const markerFromYear = marker.from.getFullYear();
+        const markerFromMonth = marker.from.getMonth();
+        const startDate = new Date(markerFromYear, markerFromMonth, 1).getTime();
+        return startDate <= from.getTime() && marker.to >= to;
+      });
 
-      /**
-       * If terms differ by media, then there is at least a territory
-       * that is common to all terms.
-       */
-      const termsDifferByMedia = this.avails.territories.some(territory => {
-        return this._availableMarkers.every(marker => marker.term.territories.includes(territory));
-      }); //otherwise terms differ by territory
+      if (!parentMarker) throw new Error(`Calendar Invalid Selection: a selection must be included in a marker!`);
 
-      const fields = termsDifferByMedia ? 'medias' : 'territories';
-      const cache = getMatchingMarkers(this._availableMarkers, this.avails, fields);
-
-      for (const { parentMarker, list } of cache) {
-        if (!parentMarker) throw new Error(`Calendar Invalid Selection: a selection must be included in a marker!`);
-
-        const avail = { ...this.avails, [fields]: list };
-        this.selected.emit({ from, to, term: parentMarker.term, contract: parentMarker.contract, avail });
-      }
+      this.selected.emit({ from, to, term: parentMarker.term, contract: parentMarker.contract });
     }
   }
 }
-
