@@ -13,9 +13,9 @@ export async function upgrade(db: Firestore) {
   return runChunks(orgs.docs, async (doc) => {
     const org = doc.data() as Organization;
 
-    delete (org as any).isBlockchainEnabled
+    delete (org as any).isBlockchainEnabled;
 
-    await doc.ref.set(org)
+    await doc.ref.set(org);
     
   }).catch(err => console.error(err));
 
