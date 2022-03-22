@@ -73,7 +73,7 @@ export class SaleListComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.dynTitle.setPageTitle('My Sales (All)');
+    this.dynTitle.setPageTitle('My Deals (All)');
   }
 
   public openIntercom() {
