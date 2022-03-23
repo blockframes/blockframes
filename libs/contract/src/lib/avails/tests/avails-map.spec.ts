@@ -211,7 +211,6 @@ describe('Test terms are out of movie mandate', () => {
     const markers = territoryAvailabilities(data);
     expect(markers.available.find(m => m.slug === 'china')).not.toBe(undefined)
     expect(markers.available.find(m => m.slug === 'brazil')).not.toBe(undefined)
-    expect(markers.available.find(m => m.slug === 'angola')).not.toBe(undefined)
   })
 
 })
