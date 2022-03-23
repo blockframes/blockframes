@@ -24,7 +24,7 @@ async function migrateMovie(db: Firestore) {
     // Replace all bad 'confiremd' with the fix one
     movie.crew = movie.crew.map((crew) => {
       // If status == confiremd
-      if (crew.status as any === "confiremd") {
+      if (crew.status as any === 'confiremd') {
         return {
           ...crew,
           status: 'confirmed'
@@ -39,7 +39,7 @@ async function migrateMovie(db: Firestore) {
 }
 
 async function migrateOrg(db: Firestore) {
-  const orgs = await db.collection('orgs').get()
+  const orgs = await db.collection('orgs').get();
 
   return runChunks(orgs.docs, async (doc) => {
     const org = doc.data() as Organization;
