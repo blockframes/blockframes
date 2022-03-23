@@ -157,7 +157,7 @@ export async function formatContract(
     },
     /* c */ 'contract.sellerId': async (value: string) => {
       if (!value) return mandatoryError('Licensor');
-      if (value === 'Archipel Content') {
+      if (value === 'Archipel Content' || value === centralOrgId.catalog) {
         if (!blockframesAdmin)
           return {
             value: undefined,
@@ -204,13 +204,6 @@ export async function formatContract(
         };
         return centralOrgId.catalog;
       } else {
-        if (!value) return '';
-        const isInternal = data.contract.sellerId === centralOrgId.catalog;
-        let buyerId = await getOrgId(value, orgService, orgNameCache);
-        if (buyerId) return buyerId;
-        const title = await titleService.getValue(value);
-        if (!buyerId && title) buyerId = value;
-        if (isInternal && !buyerId) return unknownEntityError('Licensee Organization');
         return '';
       }
     },
