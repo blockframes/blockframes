@@ -8,6 +8,7 @@ import { ThemeService } from '@blockframes/ui/theme';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
 import { APP } from '@blockframes/utils/routes/utils';
 import { App } from '@blockframes/utils/apps';
+//TODO define proper way to import next line #8071
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { supportMailosaur } from '@blockframes/utils/constants';
 

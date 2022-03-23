@@ -521,8 +521,8 @@ export function organizationRequestedAccessToApp(org: OrganizationDocument, app:
   };
 }
 
-export async function userFirstConnexion(user: PublicUser): Promise<EmailRequest> {
-  const supportEmail = e2eMode ? supportMailosaur : getSupportEmail(user._meta.createdFrom);
+export function userFirstConnexion(user: PublicUser) {
+  const supportEmail = getSupportEmail(user._meta.createdFrom);
   return {
     to: supportEmail,
     subject: 'New user connexion',

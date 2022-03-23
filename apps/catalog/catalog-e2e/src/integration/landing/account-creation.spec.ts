@@ -51,8 +51,8 @@ describe('User can create new account and create a new organization', () => {
   });
 
   it('Fill all the fields', () => {
-    const newOrg = {...ORGANIZATION, ...{email: supportMailosaur}};
-    const newOrgUSer = {...USER, ...{email: supportMailosaur}};
+    const newOrg = {...ORGANIZATION, ...{ email: supportMailosaur }};
+    const newOrgUSer = {...USER, ...{ email: supportMailosaur }};
     const p1 = new AuthIdentityPage();
     p1.fillUserInformations(newOrgUSer);
 

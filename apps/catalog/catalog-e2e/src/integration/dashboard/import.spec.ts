@@ -2,6 +2,7 @@
 
 import { User as UserType } from '@blockframes/e2e/utils/type';
 import { User, USER } from '@blockframes/e2e/fixtures/users';
+//TODO define proper way to import next line #8071
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { assertUrlIncludes } from '@blockframes/testing/cypress/client';
 

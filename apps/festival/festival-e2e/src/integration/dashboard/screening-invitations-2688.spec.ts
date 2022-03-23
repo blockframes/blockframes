@@ -3,6 +3,7 @@
 import screeningEvents from '../../fixtures/screening-events';
 import USERS from 'tools/fixtures/users.json'
 import ORGS from 'tools/fixtures/orgs.json'
+//TODO define proper way to import next line #8071
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { auth, events, festival, awaitElementDeletion } from '@blockframes/testing/cypress/client';
 

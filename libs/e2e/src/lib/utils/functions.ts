@@ -1,6 +1,7 @@
 ﻿// import { AuthLoginPage } from "../pages/auth";
 import { User } from "./type";
 import { SEC } from './env';
+//TODO define proper way to import next line #8071
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { auth } from '@blockframes/testing/cypress/client';
 

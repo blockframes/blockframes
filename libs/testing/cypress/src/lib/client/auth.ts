@@ -18,7 +18,7 @@ export function loginWithRandomUser() {
 export function clearBrowserAuth() {
   cy.window().should('have.property', 'LoginService');
   cy.window().then(async (w) => {
-    await w['LoginService'].signOut().then(res => console.log('signout res : ', res));
+    await w['LoginService'].signOut();
     indexedDB.deleteDatabase('firebaseLocalStorageDb');
   });
 }
