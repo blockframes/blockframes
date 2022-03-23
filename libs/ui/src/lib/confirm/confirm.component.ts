@@ -14,6 +14,7 @@ export class ConfirmComponent {
       public data: {
         title: string,
         question: string,
+        advice?: string,
         confirm: string,
         cancel: string,
         onConfirm?: () => void

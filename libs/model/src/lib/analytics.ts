@@ -1,5 +1,5 @@
 import { User, Organization, Movie } from "@blockframes/model";
-import { DocumentMeta } from "@blockframes/utils/models-meta";
+import { DocumentMeta } from './meta';
 
 const analyticsEvents = [
   'pageView',

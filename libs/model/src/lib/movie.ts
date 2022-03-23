@@ -1,3 +1,7 @@
+import { MovieLanguageType, productionStatus } from '@blockframes/utils/static-model';
+import { toDate } from '@blockframes/utils/helpers';
+import { createStorageFile, StorageFile, StorageVideo } from './media';
+import { App, getAllAppsExcept } from '@blockframes/utils/apps';
 import type {
   Language,
   MediaValue,
@@ -21,19 +25,15 @@ import type {
   NumberRange,
   ScreeningStatus,
 } from '@blockframes/utils/static-model/types';
-import { MovieLanguageType, productionStatus } from '@blockframes/utils/static-model';
-import { toDate } from '@blockframes/utils/helpers';
-import { StorageFile, StorageVideo, createStorageFile } from '@blockframes/model';
-import { App, getAllAppsExcept } from '@blockframes/utils/apps';
-import {
+import type {
   Producer,
   Crew,
   Cast,
   Stakeholder,
   Director,
-} from '@blockframes/utils/common-interfaces/identity';
-import { DocumentMeta } from '@blockframes/utils/models-meta';
-import type firebase from 'firebase';
+} from './identity';
+import type { DocumentMeta } from './meta';
+import type { Timestamp } from './timestamp';
 
 //////////////////
 // MOVIE OBJECT //
@@ -130,9 +130,6 @@ export interface MoviePromotionalElements {
 ////////////////////
 // MOVIE DETAILS //
 ////////////////////
-
-type Timestamp = firebase.firestore.Timestamp;
-
 export interface MovieAppConfig<D> {
   acceptedAt: D;
   access: boolean;
@@ -260,8 +257,6 @@ export interface MovieGoalsAudience {
 }
 
 // Export for other files
-export { Credit } from '@blockframes/utils/common-interfaces/identity';
-
 export type Movie = MovieBase<Date>;
 
 export interface SyncMovieAnalyticsOptions {
@@ -322,14 +317,12 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
   };
 }
 
-export function createMoviePromotional(
-  params: Partial<MoviePromotionalElements> = {}
-): MoviePromotionalElements {
+export function createMoviePromotional(params: Partial<MoviePromotionalElements> = {}): MoviePromotionalElements {
   return {
     ...params,
     moodboard: createStorageFile(params?.moodboard),
-    notes: params?.notes?.map((note) => createMovieNote(note)) ?? [],
-    still_photo: params?.still_photo?.map((still) => createStorageFile(still)) ?? [],
+    notes: params?.notes?.map(note => createMovieNote(note)) ?? [],
+    still_photo: params?.still_photo?.map(still => createStorageFile(still)) ?? [],
     presentation_deck: createStorageFile(params?.presentation_deck),
     scenario: createStorageFile(params?.scenario),
     videos: createMovieVideos(params?.videos),
@@ -344,9 +337,7 @@ export function createLanguageKey(languages: LanguageRecord = {}): LanguageRecor
   return languageSpecifications;
 }
 
-export function createMovieLanguageSpecification(
-  params: Partial<MovieLanguageSpecification> = {}
-): MovieLanguageSpecification {
+export function createMovieLanguageSpecification(params: Partial<MovieLanguageSpecification> = {}): MovieLanguageSpecification {
   return {
     dubbed: false,
     subtitle: false,
@@ -365,9 +356,7 @@ export function createAppConfig(params: Partial<MovieAppConfig<Date>>) {
   };
 }
 
-export function createMovieAppConfig(
-  _appAccess: Partial<{ [app in App]: MovieAppConfig<Date> }> = {}
-): MovieAppConfigRecord {
+export function createMovieAppConfig(_appAccess: Partial<{ [app in App]: MovieAppConfig<Date> }> = {}): MovieAppConfigRecord {
   const appAccess = {};
   const apps = getAllAppsExcept(['crm']);
   for (const a of apps) {
@@ -394,9 +383,7 @@ export function createMovieReview(params: Partial<MovieReview> = {}): MovieRevie
   };
 }
 
-export function createMovieOriginalRelease(
-  params: Partial<MovieOriginalRelease> = {}
-): MovieOriginalRelease {
+export function createMovieOriginalRelease(params: Partial<MovieOriginalRelease> = {}): MovieOriginalRelease {
   return {
     country: null,
     ...params,
@@ -436,9 +423,7 @@ export function createBoxOffice(params: Partial<BoxOffice> = {}): BoxOffice {
   };
 }
 
-export function createMovieStakeholders(
-  stakeholders: Partial<MovieStakeholders> = {}
-): MovieStakeholders {
+export function createMovieStakeholders(stakeholders: Partial<MovieStakeholders> = {}): MovieStakeholders {
   return {
     productionCompany: [],
     coProductionCompany: [],
@@ -452,12 +437,7 @@ export function createMovieStakeholders(
   };
 }
 
-export function populateMovieLanguageSpecification(
-  spec: LanguageRecord,
-  slug: Language,
-  type: MovieLanguageType,
-  value = true
-) {
+export function populateMovieLanguageSpecification(spec: LanguageRecord, slug: Language, type: MovieLanguageType, value = true) {
   if (!spec[slug]) {
     spec[slug] = createMovieLanguageSpecification();
   }
@@ -489,9 +469,7 @@ export function createShootingPlannedObject(params: Partial<MoviePlannedShooting
   };
 }
 
-export function createExpectedPremiere(
-  params: Partial<MovieExpectedPremiere> = {}
-): MovieExpectedPremiere {
+export function createExpectedPremiere(params: Partial<MovieExpectedPremiere> = {}): MovieExpectedPremiere {
   return {
     event: '',
     ...params,
@@ -523,9 +501,7 @@ export function createMovieNote(params: Partial<MovieNote> = {}): MovieNote {
  * @param movies
  */
 export function getMovieTitleList(movies: Movie[]): string[] {
-  const movieTitles = movies.map((movie) =>
-    movie.title.international ? movie.title.international : movie.title.original
-  );
+  const movieTitles = movies.map(movie => (movie.title.international ? movie.title.international : movie.title.original));
   return movieTitles;
 }
 
@@ -534,7 +510,7 @@ export function createMovieVideos(params: Partial<MovieVideos>): MovieVideos {
     ...params,
     screener: createMovieVideo(params?.screener),
     salesPitch: createMovieVideo(params?.salesPitch),
-    otherVideos: params?.otherVideos?.map((video) => createMovieVideo(video)) || [],
+    otherVideos: params?.otherVideos?.map(video => createMovieVideo(video)) || [],
   };
 }
 
@@ -548,6 +524,6 @@ export function createMovieVideo(params: Partial<MovieVideo>): MovieVideo {
 
 export function getAllowedproductionStatuses(app: App): ProductionStatus[] {
   return Object.keys(productionStatus)
-    .filter((status) => (app === 'catalog' ? status === 'released' : true))
-    .map((s) => s as ProductionStatus);
+    .filter(status => (app === 'catalog' ? status === 'released' : true))
+    .map(s => s as ProductionStatus);
 }

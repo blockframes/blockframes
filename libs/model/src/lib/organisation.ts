@@ -1,11 +1,9 @@
-import type firebase from 'firebase';
 import { Location, createLocation } from '@blockframes/utils/common-interfaces/utility';
 import { OrgAppAccess, createOrgAppAccess, Module, App, getAllAppsExcept } from '@blockframes/utils/apps';
 import type { OrgActivity, OrganizationStatus } from '@blockframes/utils/static-model/types';
-import { createStorageFile, StorageFile, StorageVideo } from '@blockframes/model';
-import { DocumentMeta } from '@blockframes/utils/models-meta';
-
-type Timestamp = firebase.firestore.Timestamp;
+import { createStorageFile, StorageFile, StorageVideo } from './media';
+import { DocumentMeta } from './meta';
+import { Timestamp } from './timestamp';
 
 export interface Denomination {
   full: string;
@@ -33,7 +31,6 @@ export interface OrganizationBase<D> extends PublicOrganization {
   description?: string;
   email: string;
   fiscalNumber: string;
-  isBlockchainEnabled: boolean;
   userIds: string[];
   status: OrganizationStatus;
   wishlist: string[]; // An array of movieIds
@@ -62,7 +59,6 @@ function createOrganizationBase(
     description: '',
     email: '',
     fiscalNumber: '',
-    isBlockchainEnabled: false,
     status: 'pending',
     userIds: [],
     wishlist: [],
