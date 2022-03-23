@@ -102,7 +102,7 @@ export async function getTitleId(
   const titles = await titleService.getValue(queryFn);
   if (!titles.length) throw new Error(`No title found with name "${nameOrId}".`);
   if (titles.length !== 1) throw new Error(`Multiple titles with name "${nameOrId}" found.`);
-  return memo(nameOrId, title[0]);
+  return memo(nameOrId, titles[0]);
 }
 
 export async function getContract(
@@ -258,7 +258,7 @@ export function alreadyExistError<T = unknown>(name: string): ValueWithError<T> 
     error: {
       type: 'error',
       name: `${name} already exist`,
-      reason: `We could not create a this ${name} because it already exist on the app.`,
+      reason: `We could not create a ${name} because it already exist on the app.`,
       hint: `Please edit the corresponding sheet field with a different value.`,
     },
   };

@@ -122,7 +122,7 @@ export async function formatContract(
     /* a */ 'contract.titleId': async (value: string) => {
       if (!value) return mandatoryError('Title');
       try {
-        const titleId = await getTitleId(value, titleService, titleCache, userOrgId, blockframesAdmin);
+        const titleId = await getTitleId(value.trim(), titleService, titleCache, userOrgId, blockframesAdmin);
 
         if (!titleId) return unknownEntityError('Title');
         return titleId;
@@ -157,7 +157,7 @@ export async function formatContract(
     },
     /* c */ 'contract.sellerId': async (value: string) => {
       if (!value) return mandatoryError('Licensor');
-      if (value === 'Archipel Content') {
+      if (value === 'Archipel Content' || value === centralOrgId.catalog) {
         if (!blockframesAdmin)
           return {
             value: undefined,
@@ -204,13 +204,16 @@ export async function formatContract(
         };
         return centralOrgId.catalog;
       } else {
-        if (!value) return '';
-        const isInternal = data.contract.sellerId === centralOrgId.catalog;
-        let buyerId = await getOrgId(value, orgService, orgNameCache);
-        if (buyerId) return buyerId;
-        const title = await titleService.getValue(value);
-        if (!buyerId && title) buyerId = value;
-        if (isInternal && !buyerId) return unknownEntityError('Licensee Organization');
+        /**
+        * @todo #8075
+        * if (!value) return '';
+        * const isInternal = data.contract.sellerId === centralOrgId.catalog;
+        * let buyerId = await getOrgId(value, orgService, orgNameCache);
+        * if (buyerId) return buyerId;
+        * const title = await titleService.getValue(value);
+        * if (!buyerId && title) buyerId = value;
+        * if (isInternal && !buyerId) return unknownEntityError('Licensee Organization');
+        */
         return '';
       }
     },
@@ -238,7 +241,8 @@ export async function formatContract(
       if (lower !== 'yes' && lower !== 'no') return wrongValueError('Licensed Original');
       return lower === 'yes';
     },
-    /* l */'contract.status': (value: string = 'In Negotiation') => {
+    /* l */'contract.status': (value: string) => {
+      if (!value) return mandatoryError('Status');
       const statusCorrespondences: Record<ImportContractStatus, ContractStatus> = {
         'In Negotiation': 'negotiating',
         'Accepted': 'accepted',
@@ -246,7 +250,7 @@ export async function formatContract(
         'On signature': 'accepted',
         'Signed': 'accepted',
       };
-      return statusCorrespondences[value]
+      return statusCorrespondences[value];
     },
     /* m */'term[].dubbed': (value: string) => getStaticList('languages', value, separator, 'Dubbed', false),
     /* n */'term[].subtitle': (value: string) => getStaticList('languages', value, separator, 'Subtitle', false),

@@ -683,7 +683,11 @@ async function sendContractStatusChangedConfirmation(recipient: User, notificati
     ? `${appUrl.content}/c/o/marketplace/offer/${contract.offerId}/${contract.id}`
     : `${appUrl.content}/c/o/dashboard/sales/${contract.id}/view`;
 
-    const crmPageUrl = `${appUrl.crm}/c/o/dashboard/crm/offer/${contract.offerId}/view`
+  const crmPageUrl = `${appUrl.crm}/c/o/dashboard/crm/offer/${contract.offerId}/view`;
+  
+  const termsUrl = isRecipientBuyer
+    ? `${appUrl.content}/c/o/marketplace/terms`
+    : `${appUrl.content}/c/o/dashboard/terms`;
 
   const data = {
     user: toUser,
@@ -692,6 +696,7 @@ async function sendContractStatusChangedConfirmation(recipient: User, notificati
     movie: getMovieEmailData(title),
     pageURL,
     crmPageUrl,
+    termsUrl,
     app: { name: appName.catalog }
   };
 

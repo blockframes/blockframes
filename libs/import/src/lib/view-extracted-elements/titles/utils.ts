@@ -9,6 +9,7 @@ import {
   adminOnlyWarning,
   getUser,
   unknownEntityError,
+  alreadyExistError,
 } from '@blockframes/import/utils';
 import { extract, ExtractConfig, SheetTab } from '@blockframes/utils/spreadsheet';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
@@ -20,7 +21,8 @@ import {
   MovieRunningTime,
   MovieStakeholders,
   User,
-  createMovie
+  createMovie,
+  Movie
 } from '@blockframes/model';
 import {
   Certification,
@@ -38,13 +40,13 @@ import {
   ProducerRole,
   ProductionStatus,
   ScreeningStatus,
-  SocialGoal,
   SoundFormat,
   StakeholderRole,
   StoreStatus,
   Territory,
 } from '@blockframes/utils/static-model';
 import { Stakeholder } from '@blockframes/utils/common-interfaces';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 
 interface FieldsConfig {
   title: {
@@ -138,9 +140,17 @@ interface FieldsConfig {
 
 type FieldsConfigType = ExtractConfig<FieldsConfig>;
 
+async function getMovie(att: string, value: string, service: MovieService, cache: Record<string, Movie>) {
+  if (cache[value]) return cache[value];
+  const [movie] = await service.getValue(ref => ref.where(att, '==', value));
+  if (movie) cache[value] = movie;
+  return movie;
+}
+
 export async function formatTitle(
   sheetTab: SheetTab,
   userService: UserService,
+  titleService: MovieService,
   blockframesAdmin: boolean,
   userOrgId: string,
   currentApp: App
@@ -148,11 +158,14 @@ export async function formatTitle(
   const titles: MovieImportState[] = [];
 
   const userCache: Record<string, User> = {};
+  const titleCache: Record<string, Movie> = {};
 
   // ! The order of the property should be the same as excel columns
   const fieldsConfig: FieldsConfigType = {
-    /* a */ 'title.international': (value: string) => {
+    /* a */ 'title.international': async (value: string) => {
       if (!value) return optionalWarning('International Title');
+      const movie = await getMovie('title.international', value, titleService, titleCache);
+      if (movie) return alreadyExistError(`Title with name(${value})`);
       return value;
     },
     /* b */ 'title.original': (value: string) => {
@@ -160,8 +173,11 @@ export async function formatTitle(
       if (!value) return mandatoryError('Original Title');
       return value;
     },
-    /* c */ internalRef: (value: string) => {
+    /* c */ internalRef: async (value: string) => {
       if (!value) return optionalWarning('Internal Ref');
+      const movie = await getMovie('internalRef', value, titleService, titleCache);
+      if (movie) return alreadyExistError(`Title with internalRef(${value})`);
+
       return value;
     },
     /* d */ contentType: (value: string) => {
@@ -413,7 +429,7 @@ export async function formatTitle(
       if (!value) return optionalWarning('Social Responsibility Goals');
       const valid = getKeyIfExists('socialGoals', value);
       if (!valid) return wrongValueError('Social Responsibility Goals');
-      return value as SocialGoal;
+      return valid;
     },
     /* ay */ 'reviews[].filmCriticName': (value: string) => {
       if (!value) return optionalWarning('Film Reviews Critic Name');
