@@ -19,9 +19,7 @@ async function migrateMovie(db: Firestore) {
     const movie = doc.data() as Movie;
 
     // Check if movie has a crew with mini 1 member
-    if (!movie.crew) return false;
-    if (!Object.prototype.hasOwnProperty.call(movie, 'crew')) return false;
-    if (movie.crew.length == 0) return false;
+    if (!movie.crew?.length) return false;
 
     // Replace all bad 'confiremd' with the fix one
     movie.crew = movie.crew.map((crew) => {
