@@ -40,7 +40,7 @@ export function createPublicUserDocument(user: Partial<PublicUser> = {}) {
   }
 }
 
-export function createDocumentMeta(meta: Partial<DocumentMeta<Timestamp>> = {}): DocumentMeta<admin.firestore.Timestamp> {
+export function createDocumentMeta(meta: Partial<DocumentMeta<any>> = {}): DocumentMeta<any> { // TODO #7273 #8006 any
   return {
     createdBy: 'internal',
     createdAt: admin.firestore.Timestamp.now(),
