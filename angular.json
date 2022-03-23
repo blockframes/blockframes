@@ -1786,27 +1786,6 @@
         }
       }
     },
-    "testing-e2e": {
-      "root": "libs/testing/e2e",
-      "sourceRoot": "libs/testing/e2e/src",
-      "projectType": "library",
-      "targets": {
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["libs/testing/e2e/**/*.ts"]
-          }
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/testing/e2e"],
-          "options": {
-            "jestConfig": "libs/testing/e2e/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
     "analytics": {
       "projectType": "library",
       "root": "libs/analytics",

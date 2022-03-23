@@ -4,8 +4,8 @@
   </mat-label>
   <mat-select [formControl]="control" [placeholder]="placeholder" [required]="required" [multiple]="multiple">
     <mat-option [value]="null" *ngIf="showEmptyOption"></mat-option>
-    <ng-container *ngFor="let value of staticValue">
-      <mat-option [value]="value">
+    <ng-container *ngFor="let value of staticValue; let i = index">
+      <mat-option [value]="value" [attr.test-id]="'country_' + i">
         {{ value | toLabel: scope }}
       </mat-option>
     </ng-container>
