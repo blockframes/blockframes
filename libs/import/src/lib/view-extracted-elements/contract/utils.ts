@@ -204,6 +204,16 @@ export async function formatContract(
         };
         return centralOrgId.catalog;
       } else {
+        /**
+        * @todo #8075
+        * if (!value) return '';
+        * const isInternal = data.contract.sellerId === centralOrgId.catalog;
+        * let buyerId = await getOrgId(value, orgService, orgNameCache);
+        * if (buyerId) return buyerId;
+        * const title = await titleService.getValue(value);
+        * if (!buyerId && title) buyerId = value;
+        * if (isInternal && !buyerId) return unknownEntityError('Licensee Organization');
+        */
         return '';
       }
     },
