@@ -17,7 +17,7 @@ const navTabs: NavTabs = {
     { path: 'invitations', label: 'Invitations' },
   ],
   slate: [
-    { path: 'invitations', label: 'Invitations' }
+    { path: 'invitations', label: 'Invitations' },
   ]
 }
 

@@ -5,6 +5,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { SlateComponent } from './slate.component';
 import { EventFromShellModule } from '../shell/shell.module';
 import { RouterModule } from '@angular/router';
+import { FileNameModule } from '@blockframes/utils/pipes';
 
 // Material
 import { MatSelectModule } from '@angular/material/select';
@@ -25,6 +26,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     ReactiveFormsModule,
     EventFromShellModule,
     ClipboardModule,
+    FileNameModule,
     RouterModule.forChild([{ path: '', component: SlateComponent }]),
 
     // Material
