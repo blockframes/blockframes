@@ -59,10 +59,9 @@
             <span>
               {{ boxOffice.territory | toLabel: 'territories' }} -
               <ng-container *ngIf="boxOffice.unit !== 'admissions' else admissions">
-                <mat-icon [svgIcon]="boxOffice.unit | toLabel: 'unitBox'" class="currency-icon"></mat-icon>
-                {{ boxOffice.value }}
+                {{ boxOffice.unit === 'eur' ? '€' : '$'}} {{ boxOffice.value | number }}
               </ng-container>
-              <ng-template #admissions>{{ boxOffice.value }} Admissions</ng-template>
+              <ng-template #admissions>{{ boxOffice.value | number }} Admissions</ng-template>
             </span>
           </ng-template>
           <ng-template formView let-boxOfficeForm>
