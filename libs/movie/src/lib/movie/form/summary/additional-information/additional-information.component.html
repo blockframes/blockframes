@@ -46,18 +46,16 @@
               <strong>
                 <missing-control [control]="office.get('territory')" [link]="link" scope="territories"></missing-control>
               </strong>
-              <span>&nbsp;</span>
               <missing-control [control]="office.get('unit')" [link]="link">
                 <ng-template let-unit>
-                  <ng-container *ngIf="unit === ('eur' || 'usd'); else admissions">
-                    <mat-icon [svgIcon]="unit | uppercase" id="currency-icon"></mat-icon>
+                  <ng-container *ngIf="unit !== 'admissions' else admissions">
+                    {{ unit === 'eur' ? '€' : '$'}}
                   </ng-container>
                   <ng-template #admissions>
-                    <span>Admissions</span>
+                    Admissions
                   </ng-template>
                 </ng-template>
               </missing-control>
-              <span>&nbsp;</span>
               <missing-control [control]="office.get('value')">
                 <ng-template let-value>{{ value | number }}</ng-template>
               </missing-control>
