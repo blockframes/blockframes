@@ -98,7 +98,9 @@ export function createEvent<Meta extends EventMeta>(
     ? createMeeting(params.meta)
     : isScreening(params as Event)
       ? createScreening(params.meta)
-      : {};
+      : isSlate(params as Event)
+        ? createSlate(params.meta)
+        : {};
 
   return {
     id: '',
@@ -155,10 +157,10 @@ export function createScreening(screening: Partial<Screening>): Screening {
   };
 }
 
-export interface Slate { //to define
+export interface Slate {
   description: string;
   organizerUid: string;
-  titles: Array<any>,
+  titles: Array<string>,
   video: string
 }
 // Slate Presentation

@@ -27,7 +27,7 @@ const navTabs: NavTabs = {
   ],
   slate: [
     { path: 'slate', label: 'Slate Presentation' },
-    { path: 'invitations', label: 'Invitations' }
+    { path: 'invitations', label: 'Invitations' },
   ]
 }
 @Component({

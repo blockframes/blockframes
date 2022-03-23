@@ -1,5 +1,5 @@
 ﻿<section class="surface" [formGroup]="formMeta" fxLayout="column">
-  <h2>Slate Presentation</h2>
+  <h2>Presentation</h2>
   <div class="link" fxLayout>
     <mat-form-field class="link" appearance="outline" fxFlex>
       <mat-label>Direct link to presentation Room</mat-label>
@@ -9,43 +9,44 @@
       <mat-icon svgIcon="file_copy"></mat-icon>
     </button>
   </div>
-  <ng-container *ngIf="(titles$ | async) as titles else loading">
-    <!-- Video -->
-    <p>Add a video you'll want to screen. <br>
-      If you can't find the videos you're looking for, you can upload them directly in <strong>My Files/Company/Videos</strong> section.</p>
-    <mat-form-field appearance="outline">
-      <mat-label>Select video to display</mat-label>
+  <ng-container *ngIf="(titles$ | async) as titles; else loading">
+    <ng-container *ngIf="(videos$ | async) as videos; else loading">
+      <!-- Video -->
+      <p>Add a video you'll want to screen. <br>
+        If you can't find the videos you're looking for, you can upload them directly in <strong>My Files/Company/Videos</strong> section.</p>
+      <mat-form-field appearance="outline">
+        <mat-label>Select video to display</mat-label>
+        <mat-select formControlName="video">
+          <mat-option *ngFor="let video of videos" [value]="video.fileId">
+            {{ video.storagePath | fileName }}
+          </mat-option>
+        </mat-select>
+        <mat-hint id="missing-screener" *ngIf="screenerMissing || titleMissing">{{titleMissing ? 'No title selected' : 'This Title has no Screener attached.'}}</mat-hint>
+      </mat-form-field>
 
-      <mat-select formControlName="videos" (selectionChange)="checkTitleAndScreener($event.value)">
-        <mat-option *ngFor="let title of titles" [value]="title.id">
-          {{ title.title.international }}
-        </mat-option>
-      </mat-select>
-      <mat-hint id="missing-screener" *ngIf="screenerMissing || titleMissing">{{titleMissing ? 'No title selected' : 'This Title has no Screener attached.'}}</mat-hint>
-    </mat-form-field>
-
-    <!-- Description -->
-    <mat-form-field appearance="outline">
-      <mat-label>Description</mat-label>
-      <textarea matInput
-        placeholder="Add a description"
-        formControlName="description"
-        cdkTextareaAutosize
-        #autosize="cdkTextareaAutosize"
-        cdkAutosizeMinRows="4"
-        maxlength="500"></textarea>
-      <mat-hint>Limited to 500 characters.</mat-hint>
-    </mat-form-field>
-    <!-- Title selection-->
-    <mat-form-field appearance="outline">
-      <mat-label>Select the titles you are going to promote</mat-label>
-      <mat-select formControlName="titles" (selectionChange)="checkTitleAndScreener($event.value)">
-        <mat-option *ngFor="let title of titles" [value]="title.id">
-          {{ title.title.international }}
-        </mat-option>
-      </mat-select>
-      <mat-hint id="missing-screener" *ngIf="screenerMissing || titleMissing">{{titleMissing ? 'No title selected' : 'This Title has no Screener attached.'}}</mat-hint>
-    </mat-form-field>
+      <!-- Description -->
+      <mat-form-field appearance="outline">
+        <mat-label>Description</mat-label>
+        <textarea matInput
+          placeholder="Add a description"
+          formControlName="description"
+          cdkTextareaAutosize
+          #autosize="cdkTextareaAutosize"
+          cdkAutosizeMinRows="4"
+          maxlength="500"></textarea>
+        <mat-hint>Limited to 500 characters.</mat-hint>
+      </mat-form-field>
+      <!-- Title selection-->
+      <mat-form-field appearance="outline">
+        <mat-label>Select the titles you are going to promote</mat-label>
+        <mat-select formControlName="titles" multiple>
+          <mat-option *ngFor="let title of titles" [value]="title.id">
+            {{ title.title.international }}
+          </mat-option>
+        </mat-select>
+        <mat-hint id="missing-screener" *ngIf="screenerMissing || titleMissing">{{titleMissing ? 'No title selected' : 'This Title has no Screener attached.'}}</mat-hint>
+      </mat-form-field>
+    </ng-container>
   </ng-container>
   <ng-template #loading>
     <mat-spinner diameter="50"></mat-spinner>

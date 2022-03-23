@@ -3,7 +3,7 @@ import { fromOrgAndAccepted, MovieService } from '@blockframes/movie/+state/movi
 import { Movie, StorageVideo } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { Observable } from 'rxjs';
-import { switchMap, map } from 'rxjs/operators';
+import { switchMap, map, tap } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { EventFormShellComponent } from '../shell/shell.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -18,7 +18,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class SlateComponent implements OnInit {
 
   titles$: Observable<Movie[]>;
-  videos$: Observable<StorageVideo>;
+  videos$: Observable<StorageVideo[]>;
   screenerMissing: boolean;
   titleMissing: boolean;
   constructor(
@@ -41,31 +41,16 @@ export class SlateComponent implements OnInit {
   ngOnInit(): void {
     this.dynTitle.setPageTitle('Add an event', 'Slate info');
 
-    // will be executed only if "screening" as Observable are lazy
     this.titles$ = this.orgService.currentOrg$.pipe(
       switchMap(org => this.movieService.valueChanges(fromOrgAndAccepted(org.id, 'festival'))),
       map(titles => titles.sort((a, b) => a.title.international.localeCompare(b.title.international)))
     );
     this.videos$ = this.orgService.currentOrg$.pipe(
-      switchMap(org => org.documents.videos)
+      map(org => org.documents.videos)
     );
-
-    this.checkTitleAndScreener(this.shell.form.meta.value.titleId);
   }
 
   copied() {
     this.snackBar.open('Link copied', 'CLOSE', { duration: 4000 });
-  }
-
-  async checkTitleAndScreener(titleId: string) {
-    if(!titleId) {
-      this.titleMissing = true;
-    } else {
-      const title = await this.movieService.getValue(titleId);
-      // Titles in draft are not allowed for screenings
-      this.titleMissing = title.app.festival.status === 'draft';
-      this.screenerMissing = !title.promotional.videos?.screener?.jwPlayerId;
-    }
-    this.cdr.markForCheck();
   }
 }
