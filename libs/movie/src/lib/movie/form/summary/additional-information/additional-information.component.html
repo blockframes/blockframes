@@ -44,20 +44,23 @@
           <ng-container *ngFor="let office of boxOffice.controls">
             <li>
               <strong>
-                <missing-control [control]="office.get('territory')" [link]="link" scope="territories"></missing-control>
+                <missing-control [control]="office.get('territory')" [link]="link" scope="territories"></missing-control> -
               </strong>
+              
               <missing-control [control]="office.get('unit')" [link]="link">
                 <ng-template let-unit>
-                  <ng-container *ngIf="unit !== 'admissions' else admissions">
+                  <ng-container *ngIf="unit !== 'admissions'">
                     {{ unit === 'eur' ? '€' : '$'}}
                   </ng-container>
-                  <ng-template #admissions>
-                    Admissions
-                  </ng-template>
                 </ng-template>
               </missing-control>
               <missing-control [control]="office.get('value')">
                 <ng-template let-value>{{ value | number }}</ng-template>
+              </missing-control>
+              <missing-control [control]="office.get('unit')">
+                <ng-template let-unit>
+                  <ng-container *ngIf="unit === 'admissions'"> Admissions</ng-container>
+                </ng-template>
               </missing-control>
             </li>
           </ng-container>
