@@ -11,11 +11,11 @@ import { PublicUser, OrganizationDocument, PublicOrganization, MovieDocument, cr
 import { EventEmailData, OrgEmailData, UserEmailData, getMovieEmailData, getOfferEmailData } from '@blockframes/utils/emails/utils';
 import { App, appName, Module } from '@blockframes/utils/apps';
 import { format } from "date-fns";
-import { testEmail } from "@blockframes/e2e/utils/env";
 import { Offer } from '@blockframes/contract/offer/+state';
 import { staticModel } from '@blockframes/utils/static-model';
 import { Timestamp } from '../data/internals';
 import { displayName } from '@blockframes/utils/utils';
+import { supportMailosaur } from '@blockframes/utils/constants';
 
 const ORG_HOME = '/c/o/organization/';
 const USER_CREDENTIAL_INVITATION = '/auth/identity';
@@ -27,6 +27,7 @@ const ADMIN_REVIEW_MOVIE_PATH = '/c/o/dashboard/crm/movie';
  * @param app
  */
 function getSupportEmail(app?: App) {
+  if (e2eMode) return supportMailosaur;
   if (app && !!supportEmails[app]) {
     return supportEmails[app]
   }
@@ -520,8 +521,8 @@ export function organizationRequestedAccessToApp(org: OrganizationDocument, app:
   };
 }
 
-export function userFirstConnexion(user: PublicUser): EmailRequest {
-  const supportEmail = e2eMode ? testEmail : getSupportEmail(user._meta.createdFrom);
+export function userFirstConnexion(user: PublicUser) {
+  const supportEmail = getSupportEmail(user._meta.createdFrom);
   return {
     to: supportEmail,
     subject: 'New user connexion',

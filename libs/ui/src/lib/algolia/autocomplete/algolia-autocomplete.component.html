@@ -15,6 +15,7 @@
     spellcheck="false"
     [required]="required"
     autocomplete="nope"
+    [attr.test-id]="index"
   /> <!-- https://stackoverflow.com/questions/12374442/chrome-ignores-autocomplete-off -->
   <mat-icon matSuffix svgIcon="close" *ngIf="clearable && control.value" (click)="control.reset()"></mat-icon>
   <mat-icon matPrefix [svgIcon]="prefixIcon" *ngIf="!!prefixIcon?.trim()" class="pointer"></mat-icon>
@@ -26,17 +27,19 @@
   </mat-error>
 </mat-form-field>
 <mat-autocomplete #auto="matAutocomplete">
-  <mat-option *ngFor="let result of (algoliaSearchResults$ | async)" [value]="result | deepKey: keyToDisplay" (onSelectionChange)="selected(result) ">
-
-    <!-- INJECTED CONTENT -->
-    <ng-template [ngTemplateOutlet]="optionRef || default" [ngTemplateOutletContext]="{ $implicit: result }"></ng-template>
-    <ng-template #default> {{ result | json }}</ng-template>
-
-  </mat-option>
+  <ng-container *ngFor="let result of (algoliaSearchResults$ | async); let i = index">
+    <mat-option [value]="result | deepKey: keyToDisplay" (onSelectionChange)="selected(result) " [attr.test-id]="'org_' + i">
+  
+      <!-- INJECTED CONTENT -->
+      <ng-template [ngTemplateOutlet]="optionRef || default" [ngTemplateOutletContext]="{ $implicit: result }"></ng-template>
+      <ng-template #default> {{ result | json }}</ng-template>
+  
+    </mat-option>
+  </ng-container>
 
   <ng-container *ngIf="(control.valueChanges | async) as lastOptionValue">
     <mat-divider></mat-divider>
-    <mat-option *ngIf="lastOptionRef && lastOptionValue.length >= 2" test-id="createNewOrgOption" [value]="lastOptionValue" >
+    <mat-option *ngIf="lastOptionRef && lastOptionValue.length >= 2" test-id="new-org" [value]="lastOptionValue" >
       <ng-template [ngTemplateOutlet]="lastOptionRef" [ngTemplateOutletContext]="{ $implicit: lastOptionValue }"></ng-template>
     </mat-option>
   </ng-container>

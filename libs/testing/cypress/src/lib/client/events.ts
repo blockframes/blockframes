@@ -10,7 +10,7 @@ export function deleteEvent(id: string) {
 export function deleteAllSellerEvents(sellerUid: string) {
   let uidArray: string[];
   return cy.task('getAllSellerEvents', sellerUid).then((uids: string[]) => { uidArray = uids }).window().then(async (w) => {
-    cy.task('log', `Deleting event ids: ${uidArray.toString()}`);
+    cy.log(`Deleting event ids: ${uidArray.toString()}`);
     const eventService = w['eventService'] as EventService;
     await eventService.remove(uidArray);
   });

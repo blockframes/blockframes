@@ -137,6 +137,16 @@ export class AuthService extends FireAuthService<AuthState> {
   }
 
   /**
+   * Force reload of current user state
+   * @returns firebase.User
+   */
+  async reloadUser() {
+    const currentUser = await this.afAuth.currentUser;
+    await currentUser.reload();
+    return this.afAuth.currentUser;
+  }
+
+  /**
    * @description function that gets triggered when
    * AuthService.signOut is called
    */
