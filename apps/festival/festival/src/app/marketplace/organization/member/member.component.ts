@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { ViewComponent } from '../view/view.component';
-import { switchMap, map } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { fade, fadeList } from '@blockframes/utils/animations/fade';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { OrganizationService } from '@blockframes/organization/+state';
@@ -19,8 +19,6 @@ export class MemberComponent implements OnInit {
   public members$ = this.org$.pipe(
     switchMap(org => this.orgService.getMembers(org.id, { removeConcierges: true }))
   );
-  
-
 
   constructor(
     private parent: ViewComponent,
