@@ -166,6 +166,17 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     );
   }
 
+  public async getMembersByFilterEmail(orgId: string): Promise<OrganizationMember[]> {
+    const org = await this.getValue(orgId);
+    const promises = org.userIds.map((uid) => this.userService.getValue(uid));
+    const users = await Promise.all(promises);
+    const usersFilteredByEmail = users.filter(user => !user.email.includes('concierge+' || 'archipelmarket' || 'archipelcontent' || 'mediafinanciers') )    
+    const role = await this.permissionsService.getValue(orgId);
+    return usersFilteredByEmail.map((u) =>
+      createOrganizationMember(u, role.roles[u.uid] ? role.roles[u.uid] : undefined)
+    );  
+  }
+
   public async getMemberRole(_org: Organization | string, uid): Promise<UserRole> {
     const org = typeof _org === 'string' ? await this.getValue(_org) : _org;
     const role = await this.permissionsService.getValue(org.id);
