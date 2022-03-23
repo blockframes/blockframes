@@ -14,16 +14,14 @@ export class HotjarService {
   public insertHotjar(app: App) {
     const hotjarId = hotjar[app];
 
-    if (!isPlatformBrowser(this.platformId) || !hotjarId) {
-      return;
-    }
+    if (!isPlatformBrowser(this.platformId) || !hotjarId) return;
 
     // Get the first head element
     const head = this.document.getElementsByTagName('head')[0];
     // Create a script tag
     const script = document.createElement('script');
     // Specify the id for easily get back the script tag if needed
-    script.id = 'hotjar-script'
+    script.id = 'hotjar-script';
     // Specify the type
     script.type = 'text/javascript';
     // Implement the function

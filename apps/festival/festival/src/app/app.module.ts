@@ -97,7 +97,7 @@ export class AppModule {
     gdprService: GDPRService,
     authService: AuthService,
   ) {
-    const { intercom, yandex, hotjar} = gdprService.cookieConsent;
+    const { intercom, yandex, hotjar } = gdprService.cookieConsent;
     // if (yandex) yandexService.insertMetrika('festival'); #7936 this may be reactivated later
     if (hotjar) hotjarService.insertHotjar('festival');
     intercom && intercomId ? intercomService.enable(authService.profile) : intercomService.disable();
