@@ -156,7 +156,7 @@ export function verifyNotification(message: string, accepted: boolean) {
 }
 
 export function selectSalesAgents() {
-  cy.get('layout-marketplace a').contains('Sales Agents').click();
+  cy.get('marketplace-aside a').contains('Sales Agents').click();
 }
 export function clickOnOrganization(orgName: string) {
   cy.get('festival-organization-list org-card')
