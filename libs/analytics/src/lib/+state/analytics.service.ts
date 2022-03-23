@@ -10,10 +10,8 @@ import { startOfDay } from 'date-fns';
 // Blockframes
 import { Analytics, AnalyticsTypeRecord, AnalyticsTypes, EventName, createTitleMeta} from '@blockframes/model';
 import { AuthService } from '@blockframes/auth/+state';
-import { createMovie } from '@blockframes/model';
-import { createDocumentMeta } from '@blockframes/utils/models-meta';
+import { createMovie, createDocumentMeta, formatDocumentMetaFromFirestore } from '@blockframes/model';
 import { APP } from '@blockframes/utils/routes/utils';
-import { formatDocumentMetaFromFirestore } from '@blockframes/utils/models-meta';
 import { App } from '@blockframes/utils/apps';
 import { Observable } from 'rxjs';
 
@@ -56,6 +54,7 @@ export class AnalyticsService extends CollectionService<AnalyticsState> {
       .where('type', '==', 'title')
       .where('meta.titleId', '==', titleId)
       .where('meta.ownerOrgIds', 'array-contains', orgId)
+      .where('_meta.createdFrom', '==', this.app)
     ) as Observable<Analytics<'title'>[]>;
   }
 
@@ -90,6 +89,7 @@ export class AnalyticsService extends CollectionService<AnalyticsState> {
       const start = startOfDay(new Date());
       const analytics = await this.getValue(ref => ref
         .where('_meta.createdBy', '==', profile.uid)
+        .where('_meta.createdFrom', '==', this.app)
         .where('meta.titleId', '==', id)
         .where('name', '==', 'pageView')
       );
