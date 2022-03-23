@@ -145,6 +145,7 @@ export function goToInvitations() {
 export function refuseInvitationScreening() {
   cy.get('invitation-view [test-id=more]').first().click();
   cy.get('[test-id=decline-invitation]').click();
+  cy.wait(5000);
 }
 
 export function verifyNotification(message: string, accepted: boolean) {
