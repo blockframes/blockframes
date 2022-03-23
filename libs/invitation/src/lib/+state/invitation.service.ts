@@ -33,7 +33,7 @@ interface InvitationState extends EntityState<Invitation>, ActiveState<string> {
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'invitations' })
 export class InvitationService extends CollectionService<InvitationState> {
-  readonly useMemorization = true;
+  readonly useMemorization = false;
   /**
    * Return true if there is already a pending invitation for a list of users
    */

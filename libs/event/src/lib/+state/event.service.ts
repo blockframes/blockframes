@@ -61,7 +61,7 @@ const eventQueries = {
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'events' })
 export class EventService extends CollectionService<EventState> {
-  readonly useMemorization = true;
+  readonly useMemorization = false;
 
   constructor(
     private permissionsService: PermissionsService,

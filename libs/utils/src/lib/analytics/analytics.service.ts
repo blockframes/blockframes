@@ -8,5 +8,5 @@ interface AnalyticsState extends EntityState<MovieAnalytics, string>, ActiveStat
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'analytics' })
 export class AnalyticsService extends CollectionService<AnalyticsState> {
-  readonly useMemorization = true;
+  readonly useMemorization = false;
 }

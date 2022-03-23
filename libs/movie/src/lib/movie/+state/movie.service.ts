@@ -31,7 +31,7 @@ interface MovieState extends EntityState<Movie, string>, ActiveState<string> { }
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies' })
 export class MovieService extends CollectionService<MovieState> {
-  readonly useMemorization = true;
+  readonly useMemorization = false;
 
   constructor(
     private authService: AuthService,

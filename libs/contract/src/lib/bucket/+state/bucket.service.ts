@@ -19,7 +19,7 @@ interface BucketState extends EntityState<Bucket>, ActiveState<string> { }
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'buckets' })
 export class BucketService extends CollectionService<BucketState> {
-  useMemorization = true;
+  useMemorization = false;
   active$ = this.orgService.currentOrg$.pipe(
     switchMap(org => this.valueChanges(org.id)),
   );

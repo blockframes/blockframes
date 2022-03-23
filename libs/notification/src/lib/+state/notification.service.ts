@@ -31,7 +31,7 @@ interface NotificationState extends EntityState<Notification>, ActiveState<strin
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'notifications' })
 export class NotificationService extends CollectionService<NotificationState> {
-  readonly useMemorization = true;
+  readonly useMemorization = false;
   private appName = appName[this.app];
 
   myNotifications$ = this.authService.profile$.pipe(

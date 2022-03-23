@@ -10,7 +10,7 @@ type UserState = EntityState<User>;
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'users' })
 export class UserService extends CollectionService<UserState> {
-  readonly useMemorization = true;
+  readonly useMemorization = false;
 
   /**
    * Check if uid is exists in blockframesAdmin collection.

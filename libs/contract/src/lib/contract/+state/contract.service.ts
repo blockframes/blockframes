@@ -25,7 +25,7 @@ interface ContractState extends EntityState<Sale | Mandate>, ActiveState<string>
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'contracts' })
 export class ContractService extends CollectionService<ContractState> {
-  useMemorization = true;
+  useMemorization = false;
 
   constructor(
     private orgService: OrganizationService,

@@ -14,7 +14,7 @@ interface PermissionsState extends EntityState<Permissions>, ActiveState<string>
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'permissions' })
 export class PermissionsService extends CollectionService<PermissionsState> {
-  readonly useMemorization = true;
+  readonly useMemorization = false;
 
   // The whole permissions document for organization of the current logged in user.
   permissions: Permissions; // @TODO #7273 if this.permissions$ was not already called, this will be undefined

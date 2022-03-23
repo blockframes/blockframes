@@ -9,7 +9,7 @@ interface NegotiationState extends EntityState<Negotiation, string>, ActiveState
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'contracts/:contractId/negotiations' })
 export class NegotiationService extends CollectionService<NegotiationState> {
-  useMemorization = true;
+  useMemorization = false;
   constructor(store: NegotiationStore) {
     super(store)
   }
