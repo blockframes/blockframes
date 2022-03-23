@@ -74,6 +74,14 @@ export const yandex = {
   catalog: 0
 };
 
+// Hotjar
+// ========
+export const hotjar = {
+  festival: 2887118,
+  financiers: 0,
+  catalog: 0
+}
+
 // Intercom
 // ========
 

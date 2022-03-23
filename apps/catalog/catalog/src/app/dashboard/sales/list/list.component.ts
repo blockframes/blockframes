@@ -19,14 +19,14 @@ function queryFn(ref: CollectionReference, orgId: string, options: { internal?: 
       .where('type', '==', 'sale')
       .orderBy('buyerId', 'desc')
       .where('stakeholders', 'array-contains', orgId)
-      .orderBy('_meta.createdAt', 'desc')
+      .orderBy('_meta.createdAt', 'desc');
   }
 
   return ref
     .where('buyerId', '==', '')
     .where('type', '==', 'sale')
     .where('stakeholders', 'array-contains', orgId)
-    .orderBy('_meta.createdAt', 'desc')
+    .orderBy('_meta.createdAt', 'desc');
 }
 
 function getFullName(seller: Organization) {
