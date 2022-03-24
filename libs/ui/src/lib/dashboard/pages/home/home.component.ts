@@ -14,7 +14,7 @@ import { counter } from '@blockframes/analytics/+state/utils';
 
 // RxJs
 import { map, switchMap, shareReplay, tap } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
+import { NEVER, Observable } from 'rxjs';
 
 // Intercom
 import { Intercom } from 'ng-intercom';
@@ -52,7 +52,7 @@ export class HomeComponent implements OnInit {
     map(analytics => analytics.sort((a, b) => a.count - b.count)),
     switchMap(([popularEvent]) => {
       if (popularEvent) return this.movieService.valueChanges(popularEvent.key);
-      return of({} as Movie);
+      return NEVER;
     }),
   );
 

@@ -3,7 +3,7 @@
   <h5>Split by Company Territory</h5>
 </header>
 
-<world-map *ngIf="this.top3.length; else noData">
+<world-map *ngIf="top3.length; else noData">
   <!-- MAP LAYERS -->
   <ng-container *ngFor="let isoA3 of zero">
     <map-feature [tag]="isoA3" color="#ebeef3"></map-feature>
