@@ -247,7 +247,7 @@ export async function formatContract(
         'In Negotiation': 'negotiating',
         'Accepted': 'accepted',
         'Declined': 'declined',
-        'On signature': 'accepted',
+        'On Signature': 'accepted',
         'Signed': 'accepted',
       };
       return statusCorrespondences[value];
