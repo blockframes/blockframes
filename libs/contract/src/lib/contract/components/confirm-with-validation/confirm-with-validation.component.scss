@@ -1,5 +1,6 @@
 :host {
-  display: block;
+  display: flex;
+  flex-direction: column;
 }
 
 section {
@@ -22,6 +23,7 @@ button {
 }
 
 button.close {
+  align-self: flex-end;
   aspect-ratio: 1;
 }
 

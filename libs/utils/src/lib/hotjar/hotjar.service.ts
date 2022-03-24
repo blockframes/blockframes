@@ -15,6 +15,7 @@ export class HotjarService {
     const hotjarId = hotjar[app];
 
     if (!isPlatformBrowser(this.platformId) || !hotjarId) return;
+    if (this.document.getElementById('hotjar-script')) return;
 
     const head = this.document.getElementsByTagName('head')[0];
     const script = document.createElement('script');

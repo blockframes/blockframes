@@ -15,9 +15,8 @@ export class YandexMetricaService {
   public insertMetrika(app: App) {
     const yandexId = yandex[app];
 
-    if (!isPlatformBrowser(this.platformId) || !yandexId) {
-      return;
-    }
+    if (!isPlatformBrowser(this.platformId) || !yandexId) return;
+    if (this.document.getElementById('yandex-script')) return;
 
     const head = this.document.getElementsByTagName('head')[0];
     const script = document.createElement('script');
