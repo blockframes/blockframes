@@ -10,7 +10,7 @@ import { createStorageFile, createDenomination, OrganizationDocument, PublicUser
 
 export { getDocument };
 
-export function createPublicOrganizationDocument(org: OrganizationDocument) {
+export function createPublicOrganizationDocument(org: Partial<OrganizationDocument>) {
   return {
     id: org.id ?? '',
     denomination: createDenomination(org.denomination),

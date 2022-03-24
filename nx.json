@@ -118,17 +118,17 @@
     "testing-unit-tests": {
       "tags": ["node", "local"]
     },
-    "testing-cypress": {
-      "tags": ["node", "local"]
-    },
-    "testing-e2e": {
-      "tags": ["shared"]
-    },
     "analytics": {
       "tags": ["browser"]
     },
     "model": {
       "tags": ["shared"]
+    },
+    "testing-cypress-browser": {
+      "tags": ["browser", "e2e"]
+    },
+    "testing-cypress-node": {
+      "tags": ["node", "e2e"]
     }
   }
 }

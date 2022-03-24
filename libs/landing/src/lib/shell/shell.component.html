@@ -41,18 +41,18 @@
             Please fill out the following form and we will get back to you asap.
           </p>
         </article>
-        <form test-id="demo-form" fxLayout="column" fxLayoutAlign="start center" [formGroup]="form" (ngSubmit)="sendRequest(form)">
+        <form fxLayout="column" fxLayoutAlign="start center" [formGroup]="form" (ngSubmit)="sendRequest(form)">
           <article fxLayout="row" fxLayoutAlign="space-between start" fxLayout.lt-md="column" fxLayoutGap="24px">
             <mat-form-field appearance="outline">
               <mat-label>First Name</mat-label>
-              <input test-id="first-name" matInput type="text" placeholder="First Name" formControlName="firstName" required />
+              <input matInput type="text" placeholder="First Name" formControlName="firstName" required test-id="first-name"/>
               <mat-error *ngIf="form.get('firstName').hasError('required')">
                 First Name is <strong>required</strong>
               </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Last Name</mat-label>
-              <input test-id="last-name" matInput type="text" placeholder="Last Name" formControlName="lastName" required />
+              <input matInput type="text" placeholder="Last Name" formControlName="lastName" required  test-id="last-name"/>
               <mat-error *ngIf="form.get('lastName').hasError('required')">
                 Last Name is <strong>required</strong>
               </mat-error>
@@ -61,15 +61,17 @@
           <article fxLayout="row" fxLayoutAlign="space-between start" fxLayout.lt-md="column" fxLayoutGap="24px">
             <mat-form-field appearance="outline">
               <mat-label>Company Name</mat-label>
-              <input test-id="comp-name" matInput type="text" placeholder="Company Name" formControlName="companyName" required />
+              <input matInput type="text" placeholder="Company Name" formControlName="companyName" required test-id="company"/>
               <mat-error *ngIf="form.get('companyName').hasError('required')">
                 Company Name is <strong>required</strong>
               </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Role</mat-label>
-              <mat-select test-id="role" placeholder="Activity" formControlName="role" required>
-                <mat-option *ngFor="let role of roles" [value]="role">{{ role | roleLabel }}</mat-option>
+              <mat-select placeholder="Activity" formControlName="role" required test-id="role">
+                <ng-container *ngFor="let role of roles, let i = index">
+                  <mat-option [value]="role" [attr.test-id]="'role_' + i">{{ role | roleLabel }}</mat-option>
+                </ng-container>
               </mat-select>
               <mat-error *ngIf="form.get('role').hasError('required')">
                 Role is <strong>required</strong>
@@ -79,19 +81,19 @@
           <article fxLayout fxLayoutAlign="space-between start" fxLayout.lt-md="column" fxLayoutGap="24px">
             <mat-form-field appearance="outline">
               <mat-label>Email Address</mat-label>
-              <input test-id="email" matInput type="email" placeholder="E-mail address" formControlName="email" required />
+              <input matInput type="email" placeholder="E-mail address" formControlName="email" required test-id="demo-email"/>
               <mat-error *ngIf="form.get('email').hasError('required')">
                 Email is <strong>required</strong>
               </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
-              <tel-input test-id="phone-no" [form]="form.get('phoneNumber')" placeholder="Phone Number"></tel-input>
+              <tel-input [form]="form.get('phoneNumber')" placeholder="Phone Number" test-id="phone"></tel-input>
             </mat-form-field> 
           </article>
           <article fxLayout="row" fxLayoutAlign="center center">
-            <mat-checkbox formControlName="newsletters">Subscribe to our newsletters</mat-checkbox>
+            <mat-checkbox formControlName="newsletters" test-id="checkbox-newsletters">Subscribe to our newsletters</mat-checkbox>
           </article>
-          <button test-id="send-request" [disabled]="submitted" fxFlexAlign="center" mat-flat-button color="accent" type="submit">{{ buttonText }}</button>
+          <button test-id="submit-demo-request" [disabled]="submitted" fxFlexAlign="center" mat-flat-button color="accent" type="submit">{{ buttonText }}</button>
         </form>
       </ng-template>
     </section>
@@ -127,7 +129,7 @@
             <button id="newsletterButton" [disabled]="newslettersSubmitted" mat-flat-button color="accent" type="submit">Subscribe</button>
           </form>
         </div>
-        
+
         <mat-divider></mat-divider>
         <div fxLayout fxLayoutAlign="space-between" fxLayout.lt-md="column" fxLayoutGap="56px">
           <article fxLayout="column" fxLayoutAlign="space-between start">

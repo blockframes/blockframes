@@ -1,10 +1,13 @@
-﻿import { acceptCookie, assertMoveTo, clickOnMenu } from '@blockframes/e2e/utils/functions';
-import { SEC, serverId, testEmail } from '@blockframes/e2e/utils';
+﻿import { acceptCookie, clickOnMenu } from '@blockframes/e2e/utils/functions';
+import { SEC } from '@blockframes/e2e/utils';
 import { User, USER } from '@blockframes/e2e/fixtures/users';
 import SearchPage from '../../support/pages/marketplace/SearchPage';
 import ViewPage from '../../support/pages/marketplace/ViewPage';
 import { titleInvest, discussionData, strEmail } from '../../fixtures/investment';
 import { MessageListResult } from 'cypress-mailosaur';
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import { assertUrlIncludes } from '@blockframes/testing/cypress/browser';
+import { supportMailosaur, serverId } from '@blockframes/utils/constants';
 
 const userFixture = new User();
 const users  =  [ userFixture.getByUID(USER.Vincent) ];
@@ -39,7 +42,7 @@ describe.skip('Invest Interest Email Test', () => {
     cy.get('financiers-marketplace h1', { timeout: 90 * SEC });
 
     clickOnMenu(['financiers-marketplace'], 'menu', 'title', false);
-    assertMoveTo(MOVIE_LIST_PATH);
+    assertUrlIncludes(MOVIE_LIST_PATH);
 
     const p3 = new SearchPage();
     cy.wait(2 * SEC);
@@ -73,7 +76,7 @@ describe.skip('Invest Interest Email Test', () => {
       // Check if emails are well sent.
       cy.log('Checking emails...');
       cy.mailosaurSearchMessages(serverId, {
-        sentTo: testEmail,
+        sentTo: supportMailosaur,
       },{
         timeout: 20 * SEC,
         page: 0,

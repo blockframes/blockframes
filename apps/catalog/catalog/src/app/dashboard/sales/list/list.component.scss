@@ -8,3 +8,23 @@
 mat-spinner {
   align-self: center;
 }
+
+section {
+  margin-top: 24px;
+
+  h1 {
+    text-align: center;
+  }
+
+  p {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  button {
+    margin-top: 4px;
+  }
+
+  img {
+    width: 300px;
+  }
+}

@@ -39,7 +39,7 @@ export class ProfileViewComponent implements OnInit, OnDestroy {
   public navLinks = navLinks;
   public user$: Observable<User>;
 
-  private countRouteEvents = 1;
+  private countRouteEvents = 0;
   private sub: Subscription;
 
   constructor(
@@ -48,7 +48,7 @@ export class ProfileViewComponent implements OnInit, OnDestroy {
     private orgService: OrganizationService,
     private authService: AuthService,
     @Inject(APP) private app: App,
-    router: Router
+    private router: Router
   ) {
 
     this.dynTitle.setPageTitle(`
@@ -56,7 +56,7 @@ export class ProfileViewComponent implements OnInit, OnDestroy {
     ${this.authService.profile.firstName}`,
       `${this.orgService.org.denomination.full}`);
 
-    this.sub = router.events.pipe(
+    this.sub = this.router.events.pipe(
       filter((evt: Event) => evt instanceof NavigationEnd),
       distinctUntilChanged((a: NavigationEnd, b: NavigationEnd) => a.url === b.url),
     ).subscribe(() => this.countRouteEvents++);
@@ -80,6 +80,11 @@ export class ProfileViewComponent implements OnInit, OnDestroy {
   }
 
   goBack() {
-    this.location.historyGo(-this.countRouteEvents);
+    const state = this.location.getState() as { navigationId: number };
+    if (state?.navigationId === 1) {
+      this.router.navigate(['/c/o']);
+    } else {
+      this.location.historyGo(-this.countRouteEvents);
+    }
   }
 }

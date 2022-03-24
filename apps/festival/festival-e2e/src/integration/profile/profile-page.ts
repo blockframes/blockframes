@@ -1,4 +1,4 @@
-import { acceptCookies, auth } from "@blockframes/testing/e2e";
+import { acceptCookies, auth } from "@blockframes/testing/cypress/browser";
 
 describe('Basic Landing Page, Login and Profile Page Tests', () => {
 
@@ -8,7 +8,7 @@ describe('Basic Landing Page, Login and Profile Page Tests', () => {
     cy.visit('/')
   })
   it('should load user and log into profile page', () => {
-    auth.loginWithRandomUser().logSubject();
+    auth.loginWithRandomUser();
     cy.visit('c/o/account/profile/view/settings');
     cy.contains('Contact Information').should('exist');
   })
