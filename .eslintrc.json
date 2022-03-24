@@ -16,14 +16,14 @@
                 "sourceTag": "shared",
                 "onlyDependOnLibsWithTags": ["shared"]
               },
-              {
-                "sourceTag": "node",
-                "notDependOnLibsWithTags": ["browser"]
-              },
-              {
-                "sourceTag": "browser",
-                "notDependOnLibsWithTags": ["node"]
-              },
+              // {
+              //   "sourceTag": "node",
+              //   "notDependOnLibsWithTags": ["browser"]
+              // },
+              // {
+              //   "sourceTag": "browser",
+              //   "notDependOnLibsWithTags": ["node"]
+              // },
               {
                 "sourceTag": "local",
                 "onlyDependOnLibsWithTags": ["local","shared"]
@@ -34,8 +34,8 @@
               },
               {
                 "sourceTag": "*",
-                "onlyDependOnLibsWithTags": ["*"],
-                "notDependOnLibsWithTags": ["deprecated"]
+                "onlyDependOnLibsWithTags": ["*"]
+                // ,"notDependOnLibsWithTags": ["deprecated"]
               }
             ]
           }
