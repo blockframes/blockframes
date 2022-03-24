@@ -21,7 +21,7 @@ import type firebase from 'firebase';
 import { ActiveState, EntityState } from '@datorama/akita';
 import { production } from '@env';
 
-interface EventState extends EntityState<Event>, ActiveState<string> {};
+interface EventState extends EntityState<Event>, ActiveState<string> { };
 type Timestamp = firebase.firestore.Timestamp;
 
 const eventQuery = (id: string) => ({
@@ -58,12 +58,11 @@ const eventQueries = {
     org: ({ ownerOrgId }: MeetingEvent) => ({ path: `orgs/${ownerOrgId}` }),
   }),
 
-   slate: (queryFn: QueryFn = (ref) => ref): Query<SlateEvent> => ({
+  slate: (queryFn: QueryFn = (ref) => ref): Query<SlateEvent> => ({
     path: 'events',
     queryFn: ref => queryFn(ref).where('type', '==', 'slate'),
     org: ({ ownerOrgId }: SlateEvent) => ({ path: `orgs/${ownerOrgId}` }),
   }),
-  
 }
 
 @Injectable({ providedIn: 'root' })

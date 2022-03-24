@@ -45,8 +45,9 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
   internalLink: string;
   link: string;
   screenerMissing: boolean;
-  titleMissing: boolean;
-
+  screeningTitleMissing: boolean;
+  slateVideoMissing: boolean;
+  errorChipMessage = '';
   constructor(
     private eventService: EventService,
     private movieService: MovieService,
@@ -78,6 +79,8 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
 
       if (this.form.value.type === 'screening') {
         this.checkTitleAndScreener(this.form.meta.value.titleId);
+      } else if (this.form.value.type === 'slate') {
+        this.checkSlateVideoMissing(this.form.meta.value.video);
       }
 
       this.cdr.markForCheck();
@@ -149,14 +152,21 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
   }
 
   async checkTitleAndScreener(titleId: string) {
-    if(!titleId) {
-      this.titleMissing = true;
+    if (!titleId) {
+      this.screeningTitleMissing = true;
     } else {
       const title = await this.movieService.getValue(titleId);
       // Titles in draft are not allowed for screenings
-      this.titleMissing = title.app.festival.status === 'draft';
+      this.screeningTitleMissing = title.app.festival.status === 'draft';
       this.screenerMissing = !title.promotional.videos?.screener?.jwPlayerId;
     }
+    this.errorChipMessage = this.screeningTitleMissing ? 'No title selected' : 'Screening file missing';
+    this.cdr.markForCheck();
+  }
+
+  async checkSlateVideoMissing(videoId: string) {
+    this.slateVideoMissing = !videoId;
+    this.errorChipMessage = 'Video file missing';
     this.cdr.markForCheck();
   }
 }

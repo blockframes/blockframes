@@ -19,16 +19,23 @@ export class SlateComponent implements OnInit {
 
   titles$: Observable<Movie[]>;
   videos$: Observable<StorageVideo[]>;
-  screenerMissing: boolean;
-  titleMissing: boolean;
-  constructor(
+  videoMissing: boolean;
+  constructor (
     private movieService: MovieService,
     private orgService: OrganizationService,
     private dynTitle: DynamicTitleService,
     private shell: EventFormShellComponent,
     private snackBar: MatSnackBar,
     private cdr: ChangeDetectorRef,
-  ) { }
+  ) { 
+    this.titles$ = this.orgService.currentOrg$.pipe(
+      switchMap(org => this.movieService.valueChanges(fromOrgAndAccepted(org.id, 'festival'))),
+      map(titles => titles.sort((a, b) => a.title.international.localeCompare(b.title.international)))
+    );
+    this.videos$ = this.orgService.currentOrg$.pipe(
+      map(org => org?.documents?.videos || [])
+    );
+  }
 
   get formMeta() {
     return this.shell.form.get('meta');
@@ -40,17 +47,15 @@ export class SlateComponent implements OnInit {
 
   ngOnInit(): void {
     this.dynTitle.setPageTitle('Add an event', 'Slate info');
-
-    this.titles$ = this.orgService.currentOrg$.pipe(
-      switchMap(org => this.movieService.valueChanges(fromOrgAndAccepted(org.id, 'festival'))),
-      map(titles => titles.sort((a, b) => a.title.international.localeCompare(b.title.international)))
-    );
-    this.videos$ = this.orgService.currentOrg$.pipe(
-      map(org => org.documents.videos)
-    );
+    this.checkVideoSelected(this.formMeta.value.video);
   }
 
   copied() {
     this.snackBar.open('Link copied', 'CLOSE', { duration: 4000 });
+  }
+
+  async checkVideoSelected(videoId: string) {
+    this.videoMissing = !videoId;
+    this.cdr.markForCheck();
   }
 }

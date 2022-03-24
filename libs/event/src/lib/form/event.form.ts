@@ -116,6 +116,6 @@ type SlateControl = ReturnType<typeof createSlateControl>;
 
 export class SlateForm extends FormEntity<SlateControl, Slate> {
   constructor(slate?: Partial<Slate>) {
-    super(createSlateControl(slate), compareDates('start', 'end'))
+    super(createSlateControl(slate), compareDates('start', 'end'));
   }
 }
