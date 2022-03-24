@@ -24,9 +24,9 @@
     <span class="mat-body-1">Some insights about your most popular title.</span>
     <span class="mat-body-1">Published on Archipel Market: 01/25/2022</span>
     <bf-carousel flex layout>
-      <analytics-pie-chart fxFlex class="surface" carouselItem [data]="orgActivity$ | async">
+      <analytics-pie-chart fxFlex class="surface" carouselItem [col]="2" [data]="orgActivity$ | async">
       </analytics-pie-chart>
-      <analytics-map fxFlex class="surface" carouselItem [data]="territoryActivity$ | async"></analytics-map>
+      <analytics-map fxFlex class="surface" carouselItem [col]="2" [data]="territoryActivity$ | async"></analytics-map>
     </bf-carousel>
     <a mat-flat-button class="see_titles" routerLink="/c/o/dashboard/analytics/titles">
       <span>View all Titles Activity</span>
