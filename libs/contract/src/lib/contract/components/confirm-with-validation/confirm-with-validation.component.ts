@@ -1,27 +1,32 @@
 import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { ModuleGuard } from '@blockframes/utils/routes/module.guard';
 
 interface ConfirmationData {
   title: string,
   question: string,
-  advice?: string,
   confirm: string,
   cancel: string,
   onConfirm?: () => void
 }
 
 @Component({
-  selector: 'blockframes-confirm',
-  templateUrl: './confirm.component.html',
-  styleUrls: ['./confirm.component.scss'],
+  selector: 'blockframes-confirm-validate',
+  templateUrl: './confirm-with-validation.component.html',
+  styleUrls: ['./confirm-with-validation.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ConfirmComponent {
+export class ConfirmWithValidationComponent {
+
+  acceptTerms = new FormControl(false);
+  termsPath = `/c/o/${this.moduleGuard.currentModule}/terms`;
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data: ConfirmationData,
-    public dialogRef: MatDialogRef<ConfirmComponent>,
+    private moduleGuard: ModuleGuard,
+    public dialogRef: MatDialogRef<ConfirmWithValidationComponent>,
   ) { }
 
   public confirm() {

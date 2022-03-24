@@ -1,6 +1,7 @@
 import { Firestore } from '../types';
 import { runChunks } from '../firebase-utils';
 import { Movie } from '@blockframes/model';
+import { Genre } from '@blockframes/utils/static-model';
 
 /**
  * Update all movies genre (old genres becomes keywords)
@@ -9,7 +10,6 @@ import { Movie } from '@blockframes/model';
  */
 export async function upgrade(db: Firestore) {
   const genresToKeyword = {
-    periodDrama: 'Period Drama',
     youngAdult: 'Young Adult',
     war: 'War',
     police: 'Police',
@@ -24,15 +24,25 @@ export async function upgrade(db: Firestore) {
     tvShow: 'TV Show',
     virtualReality: 'Virtual Reality'
   };
+
+  const genresToRemove = 'other';
+  const genresToUpdate: Record<string, Genre> = {
+    'science-fiction': 'scienceFiction',
+    'periodPiece': 'periodDrama'
+  };
+
   const removedGenres = Object.keys(genresToKeyword);
+  const updatedGenres = Object.keys(genresToUpdate);
   const movies = await db.collection('movies').get();
 
   return runChunks(movies.docs, async (doc) => {
     const movie = doc.data() as Movie;
+    movie.genres = movie.genres.filter((genre: string) => genresToRemove !== genre);
+    movie.genres = movie.genres.map(genre => updatedGenres.includes(genre) ? genresToUpdate[genre] : genre);
     const removed = movie.genres.filter(genre => removedGenres.includes(genre));
     const keywords: string[] = removed.map(genre => genresToKeyword[genre]);
-    movie.keywords = Array.from(new Set([ ...movie.keywords, ...keywords ]));
-    movie.genres =  movie.genres.filter(genre => !removedGenres.includes(genre));
+    movie.keywords = Array.from(new Set([...movie.keywords, ...keywords]));
+    movie.genres = movie.genres.filter(genre => !removedGenres.includes(genre));
     await doc.ref.set(movie);
   }).catch(err => console.error(err));
 }

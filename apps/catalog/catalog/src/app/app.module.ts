@@ -36,6 +36,7 @@ import { IntercomService } from '@blockframes/utils/intercom/intercom.service';
 import { SentryModule } from '@blockframes/utils/sentry.module';
 // #7936 this may be reactivated later
 // import { YandexMetricaService } from '@blockframes/utils/yandex-metrica/yandex-metrica.service';
+import { HotjarService } from '@blockframes/utils/hotjar/hotjar.service';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { ErrorLoggerModule } from '@blockframes/utils/error-logger.module';
 import { CookieBannerModule } from '@blockframes/utils/gdpr-cookie/cookie-banner/cookie-banner.module';
@@ -120,12 +121,14 @@ export class AppModule {
     analytics: FireAnalytics,
     intercomService: IntercomService,
     // yandexService: YandexMetricaService, #7936 this may be reactivated later
+    hotjarService: HotjarService,
     gdprService: GDPRService,
     authService: AuthService,
   ) {
 
-    const { intercom, yandex } = gdprService.cookieConsent;
+    const { intercom, yandex, hotjar } = gdprService.cookieConsent;
     // if (yandex) yandexService.insertMetrika('catalog'); #7936 this may be reactivated later
+    if (hotjar) hotjarService.insertHotjar('catalog');
     intercom && intercomId ? intercomService.enable(authService.profile) : intercomService.disable();
 
     analytics.setUserProperties(getBrowserWithVersion());

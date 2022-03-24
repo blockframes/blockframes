@@ -13,14 +13,22 @@ import { OrganizationService } from '@blockframes/organization/+state';
 import { orderBy, where } from 'firebase/firestore';
 
 function queryConstraints(orgId: string, options: { internal?: boolean }) {
-  const operator = options.internal ? '!=' : "==";
+  if (options.internal) {
+    return [
+      where('buyerId', '!=', ''),
+      where('type', '==', 'sale'),
+      orderBy('buyerId', 'desc'),
+      where('stakeholders', 'array-contains', orgId),
+      orderBy('_meta.createdAt', 'desc')
+    ]
+  }
+
   return [
-    where('buyerId', operator, ''),
+    where('buyerId', '==', ''),
     where('type', '==', 'sale'),
-    orderBy('buyerId', 'desc'),
     where('stakeholders', 'array-contains', orgId),
-    orderBy('_meta.createdAt', 'desc')
-  ];
+    orderBy('_meta.createdAt', 'desc'),
+  ]
 }
 
 function getFullName(seller: Organization) {
@@ -45,7 +53,7 @@ export class SaleListComponent implements OnInit {
     }),
   );
 
-  public externalSales$ = this.contractService.valueChanges(queryConstraints(this.orgId, { internal: true })).pipe(
+  public externalSales$ = this.contractService.valueChanges(queryConstraints(this.orgId, { internal: false })).pipe(
     joinWith({
       licensor: (sale: Sale) => this.orgService.valueChanges(getSeller(sale)).pipe(map(getFullName)),
       licensee: () => of('External'),
@@ -66,7 +74,7 @@ export class SaleListComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.dynTitle.setPageTitle('My Sales (All)');
+    this.dynTitle.setPageTitle('My Deals (All)');
   }
 
   public openIntercom() {

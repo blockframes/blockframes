@@ -80,6 +80,7 @@ export class InvitationService extends CollectionService<InvitationState> {
       }
     }),
     map(i => i.flat()),
+    map(invitations => invitations.filter((i, index) => invitations.findIndex(elm => elm.id === i.id) === index)),
     shareReplay({ refCount: true, bufferSize: 1 }),
   );
 
@@ -90,7 +91,7 @@ export class InvitationService extends CollectionService<InvitationState> {
   ]).pipe(
     map(([user, invitations]) => {
       if (!user?.uid || !user?.orgId) return [];
-      return invitations.filter(i => i.toOrg?.id === user.orgId || i.toUser?.uid === user.uid)
+      return invitations.filter(i => i.toOrg?.id === user.orgId || i.toUser?.uid === user.uid);
     })
   );
 

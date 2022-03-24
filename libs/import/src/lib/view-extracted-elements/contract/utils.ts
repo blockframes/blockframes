@@ -19,7 +19,7 @@ import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { UserService } from '@blockframes/user/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { Term } from '@blockframes/model';
+import { ContractStatus, ImportContractStatus, Movie, Term } from '@blockframes/model';
 import { Language, Media, Territory } from '@blockframes/utils/static-model';
 import { createMandate, createSale, Mandate, MovieLanguageSpecification, Sale, User } from '@blockframes/model';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
@@ -65,7 +65,8 @@ type FieldsConfigType = ExtractConfig<FieldsConfig>;
 
 function toTerm(rawTerm: FieldsConfig['term'][number], contractId: string, firestore: Firestore): Term {
 
-  const { medias, duration, territories_excluded, territories_included, exclusive, licensedOriginal } = rawTerm;
+  const { medias, duration, territories_excluded = [], territories_included = [], exclusive, licensedOriginal } = rawTerm;
+
 
   const languages: Term['languages'] = {};
 
@@ -110,21 +111,31 @@ export async function formatContract(
 ) {
   // Cache to avoid  querying db every time
   const orgNameCache: Record<string, string> = {};
-  const titleNameCache: Record<string, string> = {};
+  const titleCache: Record<string, Movie> = {};
   const userCache: Record<string, User> = {};
   const contractCache: Record<string, Mandate | Sale> = {};
-
   const contracts: ContractsImportState[] = [];
 
   // ! The order of the property should be the same as excel columns
   const fieldsConfig: FieldsConfigType = {
     /* a */ 'contract.titleId': async (value: string) => {
       if (!value) return mandatoryError('Title');
-      const titleId = await getTitleId(value, titleService, titleNameCache, userOrgId, blockframesAdmin);
-      const title = await titleService.getValue(value);
-      if (title) return value;
-      if (!titleId) return unknownEntityError('Title');
-      return titleId;
+      try {
+        const titleId = await getTitleId(value.trim(), titleService, titleCache, userOrgId, blockframesAdmin);
+
+        return titleId || unknownEntityError('Title');
+      } catch (err) {
+        return {
+          value: undefined,
+          error: {
+            type: 'error',
+            name: 'Error on title name or ID',
+            reason: '',
+            hint: err.message,
+          }
+        };
+      }
+
     },
     /* b */ 'contract.type': (value: string) => {
       const lower = value.toLowerCase();
@@ -135,7 +146,7 @@ export async function formatContract(
         value: undefined,
         error: {
           type: 'error',
-          name: `Forbidden Type`,
+          name: 'Forbidden Type',
           reason: 'Only admin can import mandates.',
           hint: 'Please ensure the corresponding sheet field value is "sale".'
         }
@@ -144,15 +155,15 @@ export async function formatContract(
     },
     /* c */ 'contract.sellerId': async (value: string) => {
       if (!value) return mandatoryError('Licensor');
-      if (value === 'Archipel Content') {
+      if (value === 'Archipel Content' || value === centralOrgId.catalog) {
         if (!blockframesAdmin)
           return {
             value: undefined,
             error: {
               type: 'error',
-              name: `Forbidden Licensor`,
+              name: 'Forbidden Licensor',
               reason:
-                "Internal sales don't need to be imported and will appear automatically on your dashboard.",
+                'Internal sales don\'t need to be imported and will appear automatically on your dashboard.',
               hint:
                 'Please ensure that the Licensor name is not "Archipel Content". Only admin can import internal sales.',
             },
@@ -191,18 +202,21 @@ export async function formatContract(
         };
         return centralOrgId.catalog;
       } else {
-        if (!value) return '';
-        const isInternal = data.contract.sellerId === centralOrgId.catalog;
-        let buyerId = await getOrgId(value, orgService, orgNameCache);
-        if (buyerId) return buyerId;
-        const title = await titleService.getValue(value);
-        if (!buyerId && title) buyerId = value;
-        if (isInternal && !buyerId) return unknownEntityError('Licensee Organization');
+        /**
+        * @todo #8075
+        * if (!value) return '';
+        * const isInternal = data.contract.sellerId === centralOrgId.catalog;
+        * let buyerId = await getOrgId(value, orgService, orgNameCache);
+        * if (buyerId) return buyerId;
+        * const title = await titleService.getValue(value);
+        * if (!buyerId && title) buyerId = value;
+        * if (isInternal && !buyerId) return unknownEntityError('Licensee Organization');
+        */
         return '';
       }
     },
     /* e */'term[].territories_included': (value: string) => getGroupedList(value, 'territories', separator),
-    /* f */'term[].territories_excluded': (value: string) => getGroupedList(value, 'territories', separator),
+    /* f */'term[].territories_excluded': (value: string) => getGroupedList(value, 'territories', separator, { required: false }),
     /* g */'term[].medias': (value: string) => getGroupedList(value, 'medias', separator),
     /* h */'term[].exclusive': (value: string) => {
       const lower = value.toLowerCase();
@@ -225,7 +239,17 @@ export async function formatContract(
       if (lower !== 'yes' && lower !== 'no') return wrongValueError('Licensed Original');
       return lower === 'yes';
     },
-    /* l */'contract.status': (value: string = 'pending') => value.toLowerCase(),
+    /* l */'contract.status': (value: string) => {
+      if (!value) return mandatoryError('Status');
+      const statusCorrespondences: Record<ImportContractStatus, ContractStatus> = {
+        'In Negotiation': 'negotiating',
+        'Accepted': 'accepted',
+        'Declined': 'declined',
+        'On Signature': 'accepted',
+        'Signed': 'accepted',
+      };
+      return statusCorrespondences[value];
+    },
     /* m */'term[].dubbed': (value: string) => getStaticList('languages', value, separator, 'Dubbed', false),
     /* n */'term[].subtitle': (value: string) => getStaticList('languages', value, separator, 'Subtitle', false),
     /* o */'term[].caption': (value: string) => getStaticList('languages', value, separator, 'CC', false),
@@ -310,17 +334,18 @@ export async function formatContract(
       ? createSale(data.contract as Sale)
       : createMandate(data.contract as Mandate);
 
-    const { id, sellerId } = contract;
-
-    const movieBelongsToLicensor = await titleService.getValue(id).then(title => title.orgIds.includes(sellerId));
-    if (!movieBelongsToLicensor)
-      errors.push({
-        type: 'error',
-        name: 'Wrong Licensor.',
-        reason: `The movie does not belong to the licensor.`,
-        hint: `Please ensure the movie is a movie owned by the licensor.`
-      });
-
+    const { titleId, sellerId } = contract;
+    if (titleId) {
+      const movieBelongsToLicensor = await titleService.getValue(titleId).then(title => title.orgIds.includes(sellerId));
+      if (!movieBelongsToLicensor) {
+        errors.push({
+          type: 'error',
+          name: 'Wrong Licensor.',
+          reason: `The movie does not belong to the licensor.`,
+          hint: `Please ensure the movie is a movie owned by the licensor.`
+        });
+      }
+    }
     const terms = data.term.map(term => toTerm(term, contract.id, firestore));
 
     // for **internal** sales we should check the parentTerm

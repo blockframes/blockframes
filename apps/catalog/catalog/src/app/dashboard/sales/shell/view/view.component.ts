@@ -2,10 +2,11 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { SaleShellComponent } from '../shell.component';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
+import { ConfirmWithValidationComponent } from '@blockframes/contract/contract/components/confirm-with-validation/confirm-with-validation.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Movie } from '@blockframes/model';
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
+import { AuthService } from '@blockframes/auth/+state';
 
 @Component({
   selector: 'sale-view',
@@ -17,13 +18,15 @@ export class SaleViewComponent {
   centralOrgId = this.shell.centralOrgId;
   sale$ = this.shell.sale$;
   orgId = this.orgService.org.id;
+  user$ = this.authService.profile$;
 
   constructor(
     private negotiationService: NegotiationService,
     private snackbar: MatSnackBar,
     private shell: SaleShellComponent,
     private dialog: MatDialog,
-    private orgService: OrganizationService
+    private orgService: OrganizationService,
+    private authService: AuthService,
   ) {}
 
   accept(negotiationId: string, contractId: string, title: Movie) {
@@ -36,7 +39,7 @@ export class SaleViewComponent {
       confirm: 'Yes, accept Contract',
       cancel: 'Come back & verify Contract',
     };
-    const ref = this.dialog.open(ConfirmComponent, { data });
+    const ref = this.dialog.open(ConfirmWithValidationComponent, { data });
     ref.afterClosed().subscribe((acceptSuccessful) => {
       const config = { duration: 6000 };
       if (acceptSuccessful)

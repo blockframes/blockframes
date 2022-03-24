@@ -58,7 +58,10 @@ export class ContractEditComponent implements NegotiationGuardedComponent, OnIni
 
   async decline() {
     const sale = await this.sale$.pipe(first()).toPromise();
-    const data: ConfirmDeclineData = { type: 'buyer' }
+    const data: ConfirmDeclineData = { 
+      type: 'buyer',
+      showAcceptTermsCheckbox: true
+    };
     const ref = this.dialog.open(ConfirmDeclineComponent, { data });
     const options = { params: { contractId: sale.id } };
     ref.afterClosed().subscribe(declineReason => {
