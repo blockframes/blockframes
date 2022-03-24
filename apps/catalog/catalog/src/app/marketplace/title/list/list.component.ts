@@ -163,7 +163,7 @@ export class ListComponent implements OnDestroy, OnInit {
 
     const [parentTerm] = getMandateTerms(this.availsForm.value, title.mandates[0].terms);
     if (!parentTerm) {
-      this.snackbar.open(`This title is not available`, 'close', { duration: 5000 });
+      this.snackbar.open('This title is not available', 'close', { duration: 5000 });
       return;
     }
 

@@ -63,9 +63,7 @@ export class EventAccessGuard implements CanActivate {
         } else {
           this.snackBar.open('Sorry, it seems that you were not invited to this event', 'Try with other mail', { duration: 6000 })
             .onAction()
-            .subscribe(() => {
-              this.router.navigate([`/event/${event.id}`]);
-            });
+            .subscribe(() => this.router.navigate([`/event/${event.id}`]));
           await this.authService.deleteAnonymousUser();
           return false;
         }

@@ -20,7 +20,7 @@ export class RequestAskingPriceComponent {
     territories: new FormStaticValueArray<'territories'>([], 'territories', [Validators.required]),
     message: new FormControl()
   });
-  disableSendButton = false;
+  sending = false;
   constructor(
     private authService: AuthService,
     private dialog: MatDialogRef<RequestAskingPriceComponent>,
@@ -32,7 +32,7 @@ export class RequestAskingPriceComponent {
 
   async send() {
     try {
-      this.disableSendButton = true;
+      this.sending = true;
       this.form.disable();
       const territories = toLabel(this.form.get('territories').value, 'territories', ', ', ' and ');
       const message = this.form.get('message').value ?? 'No message provided.';
@@ -51,7 +51,7 @@ export class RequestAskingPriceComponent {
       this.dialog.close(true);
     } catch (err) {
       this.form.enable();
-      this.disableSendButton = false;
+      this.sending = false;
       console.error(err);
     }
   }

@@ -418,7 +418,7 @@ export function counterOfferSenderEmail(
 }
 
 export function toAdminCounterOfferEmail(title: MovieDocument, offerId: string): EmailTemplateRequest {
-  const pageURL = `${appUrl.crm}/c/o/dashboard/crm/offer/${offerId}/view`
+  const pageURL = `${appUrl.crm}/c/o/dashboard/crm/offer/${offerId}/view`;
 
   const data = {
     movie: getMovieEmailData(title),

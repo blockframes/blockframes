@@ -169,7 +169,7 @@ export class AvailsCalendarComponent implements OnInit {
         return startDate <= from.getTime() && marker.to >= to;
       });
 
-      if (!parentMarker) throw new Error(`Calendar Invalid Selection: a selection must be included in a marker!`);
+      if (!parentMarker) throw new Error('Calendar Invalid Selection: a selection must be included in a marker!');
 
       this.selected.emit({ from, to, term: parentMarker.term, contract: parentMarker.contract });
     }

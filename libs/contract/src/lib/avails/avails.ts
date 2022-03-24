@@ -93,8 +93,8 @@ function getMatchingSales<T extends (FullSale | BucketContract)>(sales: T[], ava
 export function getMandateTerms(avails: AvailsFilter, terms: Term<Date>[]): Term<Date>[] | undefined {
   const result = terms.filter(term => {
     return allOf(avails.duration).in(term.duration)
-    && allOf(avails.medias).in(term.medias)
-    && allOf(avails.territories, 'optional').in(term.territories);
+      && allOf(avails.medias).in(term.medias)
+      && allOf(avails.territories, 'optional').in(term.territories);
   });
   // If more medias are selected than there are in the mandates: not available
   const resultMedias = result.map(term => term.medias).flat();
@@ -214,7 +214,7 @@ function isAvailInTerm<T extends BucketTerm | Term>(avail: MapAvailsFilter, term
 
 function getMatchingMapMandates(mandates: FullMandate[], avails: MapAvailsFilter): FullMandate[] {
   return mandates
-    .map(({terms, ...rest}) => ({
+    .map(({ terms, ...rest }) => ({
       terms: terms.filter(term => isMapTermInAvails(term, avails)),
       ...rest
     }))
@@ -398,7 +398,7 @@ export function isCalendarTermInAvails<T extends BucketTerm | Term>(term: T, ava
   return allOf(avails.territories).in(term.territories);
 }
 
-function getMatchingCalendarMandates(mandates: FullMandate[], avails: CalendarAvailsFilter): FullMandate[] {
+function getMatchingCalendarMandates(mandates: FullMandate[], avails: CalendarAvailsFilter) {
   return mandates.filter(mandate => mandate.terms.some(term => isCalendarTermInAvails(term, avails)));
 }
 

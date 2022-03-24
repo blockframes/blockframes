@@ -86,11 +86,11 @@ export class TableExtractedContractsComponent implements OnInit {
         const success = await this.addContract(contract, 'create');
         if (success) this.processedContracts++;
       }
-      if (this.processedContracts === creations.length) {
-        this.snackBar.open(`${creations.length}/${creations.length} contract(s) created!`, 'close', { duration: 3000 });
-      } else {
-        this.snackBar.open(`Could not import all contracts (${this.processedContracts} / ${this.selection.selected.length})`, 'close', { duration: 3000 });
-      }
+
+      const text = this.processedContracts === creations.length
+        ? `${creations.length}/${creations.length} contract(s) created!`
+        : `Could not import all contracts (${this.processedContracts} / ${this.selection.selected.length})`;
+      this.snackBar.open(text, 'close', { duration: 3000 });
 
       this.processedContracts = 0;
       return true;

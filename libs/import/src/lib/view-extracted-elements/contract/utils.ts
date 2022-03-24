@@ -124,15 +124,14 @@ export async function formatContract(
       try {
         const titleId = await getTitleId(value.trim(), titleService, titleCache, userOrgId, blockframesAdmin);
 
-        if (!titleId) return unknownEntityError('Title');
-        return titleId;
+        return titleId || unknownEntityError('Title');
       } catch (err) {
         return {
           value: undefined,
           error: {
             type: 'error',
             name: 'Error on title name or ID',
-            reason: ``,
+            reason: '',
             hint: err.message,
           }
         };
@@ -148,7 +147,7 @@ export async function formatContract(
         value: undefined,
         error: {
           type: 'error',
-          name: `Forbidden Type`,
+          name: 'Forbidden Type',
           reason: 'Only admin can import mandates.',
           hint: 'Please ensure the corresponding sheet field value is "sale".'
         }
@@ -163,9 +162,9 @@ export async function formatContract(
             value: undefined,
             error: {
               type: 'error',
-              name: `Forbidden Licensor`,
+              name: 'Forbidden Licensor',
               reason:
-                "Internal sales don't need to be imported and will appear automatically on your dashboard.",
+                'Internal sales don\'t need to be imported and will appear automatically on your dashboard.',
               hint:
                 'Please ensure that the Licensor name is not "Archipel Content". Only admin can import internal sales.',
             },
@@ -339,13 +338,14 @@ export async function formatContract(
     const { titleId, sellerId } = contract;
     if (titleId) {
       const movieBelongsToLicensor = await titleService.getValue(titleId).then(title => title.orgIds.includes(sellerId));
-      if (!movieBelongsToLicensor)
+      if (!movieBelongsToLicensor) {
         errors.push({
           type: 'error',
           name: 'Wrong Licensor.',
           reason: `The movie does not belong to the licensor.`,
           hint: `Please ensure the movie is a movie owned by the licensor.`
         });
+      }
     }
     const terms = data.term.map(term => toTerm(term, contract.id, firestore));
 

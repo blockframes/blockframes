@@ -3,6 +3,14 @@ import { FormControl } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ModuleGuard } from '@blockframes/utils/routes/module.guard';
 
+interface ConfirmationData {
+  title: string,
+  question: string,
+  confirm: string,
+  cancel: string,
+  onConfirm?: () => void
+}
+
 @Component({
   selector: 'blockframes-confirm-validate',
   templateUrl: './confirm-with-validation.component.html',
@@ -16,21 +24,13 @@ export class ConfirmWithValidationComponent {
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    public data: {
-      title: string,
-      question: string,
-      confirm: string,
-      cancel: string,
-      onConfirm?: () => void
-    },
+    public data: ConfirmationData,
     private moduleGuard: ModuleGuard,
     public dialogRef: MatDialogRef<ConfirmWithValidationComponent>,
   ) { }
 
   public confirm() {
-    if (this.data.onConfirm) {
-      this.data.onConfirm();
-    }
+    if (this.data.onConfirm) this.data.onConfirm();
     this.dialogRef.close(true);
   }
 

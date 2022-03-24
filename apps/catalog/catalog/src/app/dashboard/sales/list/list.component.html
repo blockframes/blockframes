@@ -1,4 +1,4 @@
-<ng-container *ngIf="sales$| async as sales; else loading">
+<ng-container *ngIf="sales$ | async as sales; else loading">
   <ng-container *ngIf="sales[0].length || sales[1].length; else empty">
     <header class="import-header" fxLayout="row" fxLayoutAlign="space-between center">
       <h1>My Deals</h1>

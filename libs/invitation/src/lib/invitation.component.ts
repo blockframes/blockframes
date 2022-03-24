@@ -10,10 +10,15 @@ import { combineLatest } from 'rxjs';
 import { APP } from '@blockframes/utils/routes/utils';
 import { Invitation } from '@blockframes/model';
 import { subMonths } from 'date-fns';
+
 const applyFilters = (invitations: Invitation[], filters: { type: string[], status: string[] }) => {
   const inv = filters.type?.length ? invitations.filter(inv => filters.type.includes(inv.type)) : invitations;
   return filters.status?.length ? inv.filter(inv => filters.status.includes(inv.status)) : inv;
 };
+
+const fourMonthsAgo = subMonths(new Date(), 4);
+// Filtering out invitations older than 4 months because there is no timeFrame supporting them in invitation-list component.
+const lastFourMonths = (invitation: Invitation) => invitation.date > fourMonthsAgo;
 
 @Component({
   selector: 'invitation-view',
@@ -27,16 +32,9 @@ export class InvitationComponent {
     status: new FormControl([]),
   });
 
-  private fourMonthsAgo = subMonths(new Date(), 4);
-
   // Invitation count for conditions
   invitationCount$ = this.service.myInvitations$.pipe(
-    map(invitations => {
-      /**
-      * Filtering out invitations older than 4 months because there is no timeFrame supporting them in invitation-list component.
-      */ 
-      return invitations.filter(invitation => invitation.date > this.fourMonthsAgo);
-    }),
+    map(invitations => invitations.filter(lastFourMonths)),
     map(inv => inv.length)
   );
 

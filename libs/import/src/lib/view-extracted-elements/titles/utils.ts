@@ -21,7 +21,6 @@ import {
   MovieStakeholders,
   User,
   createMovie,
-  Movie,
   Stakeholder
 } from '@blockframes/model';
 import {
@@ -148,11 +147,10 @@ export async function formatTitle(
   const titles: MovieImportState[] = [];
 
   const userCache: Record<string, User> = {};
-  const titleCache: Record<string, Movie> = {};
 
   // ! The order of the property should be the same as excel columns
   const fieldsConfig: FieldsConfigType = {
-    /* a */ 'title.international': async (value: string) => {
+    /* a */ 'title.international': (value: string) => {
       if (!value) return optionalWarning('International Title');
       return value;
     },
@@ -161,9 +159,8 @@ export async function formatTitle(
       if (!value) return mandatoryError('Original Title');
       return value;
     },
-    /* c */ internalRef: async (value: string) => {
+    /* c */ internalRef: (value: string) => {
       if (!value) return optionalWarning('Internal Ref');
-
       return value;
     },
     /* d */ contentType: (value: string) => {
