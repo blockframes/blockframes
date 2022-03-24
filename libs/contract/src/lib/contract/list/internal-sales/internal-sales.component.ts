@@ -5,11 +5,9 @@ import { FormControl } from '@angular/forms';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { isInitial } from '@blockframes/contract/negotiation/utils';
+import { capitalize } from '@blockframes/utils/helpers';
 import { Contract, ContractStatus, Sale, Negotiation } from '@blockframes/model';
 
-function capitalize(text: string) {
-  return `${text[0].toUpperCase()}${text.substring(1)}`;
-}
 
 interface InternalSale extends Sale<Date> {
   licensor: string;

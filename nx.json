@@ -121,9 +121,6 @@
     "testing-cypress": {
       "tags": ["node", "local"]
     },
-    "testing-e2e": {
-      "tags": ["shared", "e2e"]
-    },
     "analytics": {
       "tags": ["browser"]
     },
