@@ -9,7 +9,7 @@ import {
   deleteEmail,
   createFakeUserData,
   auth,
-} from '@blockframes/testing/cypress/client';
+} from '@blockframes/testing/cypress/browser';
 import { supportMailosaur } from '@blockframes/utils/constants';
 
 const user = createFakeUserData();
