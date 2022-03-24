@@ -25,8 +25,7 @@ export const descTimeFrames: TimeFrame[] = [
   { type: 'weeks', from: -3, to: -2, way: 'desc' },
   { type: 'weeks', from: -4, to: -3, way: 'desc' },
   { type: 'months', from: -2, to: -1, label: 'Last Month', way: 'desc' },
-  { type: 'months', from: -3, to: -2, way: 'desc' },
-  { type: 'months', from: -4, to: -3, way: 'desc' },
+  { type: 'months', from: -4, to: -2, label: 'Older than two months', way: 'desc' },
 ];
 
 export const ascTimeFrames: TimeFrame[] = [

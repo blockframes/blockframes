@@ -33,7 +33,6 @@ import {
   userLeftYourOrganization,
   requestToAttendEventFromUserRefused,
   invitationToJoinOrgDeclined,
-  requestToJoinOrgDeclined,
   invitationToEventFromOrgUpdated,
   userJoinOrgPendingRequest,
   adminOfferCreatedConfirmationEmail,
@@ -145,11 +144,6 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
         break;
       case 'orgAppAccessChanged':
         await sendOrgAppAccessChangedEmail(recipient, notification)
-          .then(() => notification.email.isSent = true)
-          .catch(e => notification.email.error = e.message)
-        break;
-      case 'requestFromUserToJoinOrgDeclined':
-        await sendRequestToJoinOrgDeclined(recipient, notification)
           .then(() => notification.email.isSent = true)
           .catch(e => notification.email.error = e.message)
         break;
@@ -578,16 +572,6 @@ async function sendInvitationDeclinedToJoinOrgEmail(recipient: User, notificatio
   await sendMailFromTemplate(template, app, groupIds.unsubscribeAll);
 }
 
-/** Let user knows that his request to join an org has been declined */
-async function sendRequestToJoinOrgDeclined(recipient: User, notification: NotificationDocument) {
-  const org = await getDocument<OrganizationDocument>(`orgs/${recipient.orgId}`);
-  const orgData = getOrgEmailData(org);
-  const toUser = getUserEmailData(notification.user);
-  const app = notification._meta.createdFrom;
-  const template = requestToJoinOrgDeclined(toUser, orgData);
-  await sendMailFromTemplate(template, app, groupIds.unsubscribeAll);
-}
-
 /** Send copy of offer that buyer has created to all non-buyer stakeholders */
 async function sendContractCreated(recipient: User, notification: NotificationDocument) {
   const app: App = 'catalog';
@@ -636,7 +620,7 @@ async function sendCreatedCounterOfferConfirmation(recipient: User, notification
   const toUser = getUserEmailData(recipient);
 
   const senderTemplate = counterOfferSenderEmail(toUser, recipientOrg, contract.offerId, negotiation, title, contract.id, { isMailRecipientBuyer });
-  const adminTemplate = toAdminCounterOfferEmail(title);
+  const adminTemplate = toAdminCounterOfferEmail(title, contract.offerId);
 
   return Promise.all([
     sendMailFromTemplate(senderTemplate, app, groupIds.unsubscribeAll),
@@ -699,12 +683,20 @@ async function sendContractStatusChangedConfirmation(recipient: User, notificati
     ? `${appUrl.content}/c/o/marketplace/offer/${contract.offerId}/${contract.id}`
     : `${appUrl.content}/c/o/dashboard/sales/${contract.id}/view`;
 
+  const crmPageUrl = `${appUrl.crm}/c/o/dashboard/crm/offer/${contract.offerId}/view`;
+  
+  const termsUrl = isRecipientBuyer
+    ? `${appUrl.content}/c/o/marketplace/terms`
+    : `${appUrl.content}/c/o/dashboard/terms`;
+
   const data = {
     user: toUser,
     org: recipientOrg,
     contract,
     movie: getMovieEmailData(title),
     pageURL,
+    crmPageUrl,
+    termsUrl,
     app: { name: appName.catalog }
   };
 
@@ -718,7 +710,7 @@ async function sendContractStatusChangedConfirmation(recipient: User, notificati
   if (options.isActionDeclined) {
     templateId = templateIds.negotiation.myContractWasDeclined;
     if (options.didRecipientAcceptOrDecline) {
-      templateId = templateIds.negotiation.myOrgDeclinedAContract; 
+      templateId = templateIds.negotiation.myOrgDeclinedAContract;
       adminTemplateId = templateIds.negotiation.toAdminContractDeclined;
       data.org = counterOfferSenderOrg;
     }

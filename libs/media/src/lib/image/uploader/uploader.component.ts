@@ -317,6 +317,7 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
 
     this.fileUploader.nativeElement.value = null;
     this.selectionChange.emit('removed');
+    this.form?.markAsDirty();
 
     this.nextStep('drop');
   }
