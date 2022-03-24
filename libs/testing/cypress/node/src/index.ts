@@ -1,1 +1,2 @@
-export * from './lib/testing-cypress-node';
+export * from './lib/testing-cypress';
+
