@@ -75,27 +75,34 @@ export async function getOrgId(
 }
 
 export async function getTitleId(
-  name: string,
+  nameOrId: string,
   titleService: MovieService,
-  cache: Record<string, string>,
+  cache: Record<string, Movie>,
   userOrgId: string,
-  blockframesAdmin: boolean
+  isBlockframesAdmin: boolean
 ) {
-  if (!name) return '';
-  if (cache[name]) return cache[name];
 
-  const titles = await titleService.getValue((ref) => {
-    if (blockframesAdmin) {
-      return ref.where('title.international', '==', name);
-    } else {
-      return ref
-        .where('title.international', '==', name)
-        .where('orgIds', 'array-contains', userOrgId);
-    }
-  });
-  const result = titles.length === 1 ? titles[0].id : '';
-  cache[name] = result;
-  return result;
+  const memo = (key: string, value: Movie) => {
+    cache[key] = value;
+    return value.id
+  }
+
+  if (cache[nameOrId]) return cache[nameOrId].id;
+  const title = await titleService.getValue(nameOrId);
+  // Try if nameOrId is an id
+  if (title) {
+    if (isBlockframesAdmin) return memo(nameOrId, title);
+    if (title.orgIds.includes(userOrgId)) return memo(nameOrId, title);
+    throw new Error(`You don't have access to title with id: ${nameOrId}`);
+  }
+  // nameOrId is the international title name
+  const queryFn = isBlockframesAdmin
+    ? ref => ref.where('title.international', '==', nameOrId)
+    : ref => ref.where('title.international', '==', nameOrId).where('orgIds', 'array-contains', userOrgId);
+  const titles = await titleService.getValue(queryFn);
+  if (!titles.length) throw new Error(`No title found with name "${nameOrId}".`);
+  if (titles.length !== 1) throw new Error(`Multiple titles with name "${nameOrId}" found.`);
+  return memo(nameOrId, titles[0]);
 }
 
 export async function getContract(
@@ -251,7 +258,7 @@ export function alreadyExistError<T = unknown>(name: string): ValueWithError<T> 
     error: {
       type: 'error',
       name: `${name} already exist`,
-      reason: `We could not create a this ${name} because it already exist on the app.`,
+      reason: `We could not create a ${name} because it already exist on the app.`,
       hint: `Please edit the corresponding sheet field with a different value.`,
     },
   };

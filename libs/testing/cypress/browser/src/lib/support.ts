@@ -12,7 +12,7 @@ export function awaitElementDeletion(selector: string, timeout?: number) {
 }
 
 export function acceptCookies() {
-  cy.get('body').then(($body) => {
+  cy.get('body').then($body => {
     if ($body.children('cookie-banner')) {
       cy.contains('Accept cookies').click();
     }
@@ -28,7 +28,7 @@ function getAllStartingWith(selector: string) {
 }
 
 export function getInList(selectorStart: string, option: string) {
-  getAllStartingWith(selectorStart).each(($el) => {
+  getAllStartingWith(selectorStart).each($el => {
     // loops between all options
     if ($el[0].innerText === option) $el.trigger('click');
   });
@@ -39,7 +39,7 @@ export function check(selector: string) {
 }
 
 export function assertUrl(url: string) {
-  cy.url().should('eq',`http://localhost:4200/${url}`);
+  cy.url().should('eq', `http://localhost:4200/${url}`);
 }
 
 export function assertUrlIncludes(partialUrl: string) {
