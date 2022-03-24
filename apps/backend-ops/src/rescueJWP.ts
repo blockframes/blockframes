@@ -1,6 +1,5 @@
 import { getCollection, jwplayerApiV2 } from '@blockframes/firebase-utils';
-import { MovieVideo, Movie } from '@blockframes/model';
-import { StorageVideo } from '@blockframes/media/+state/media.firestore';
+import { StorageVideo, MovieVideo, Movie } from '@blockframes/model';
 import { delay } from '@blockframes/utils/helpers';
 import { storageFileExist } from 'libs/firebase-utils/src/lib/firebase-utils';
 

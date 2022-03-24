@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, Pipe, PipeTransform, TemplateRef, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Credit, Director, Filmography } from '@blockframes/utils/common-interfaces';
+import { Credit, Director, Filmography } from '@blockframes/model';
 
 @Component({
   selector: 'title-credit-card',
@@ -21,7 +21,6 @@ export class CreditCardComponent {
       this.dialog.open(this.dialogRef, { maxWidth: 400, maxHeight: '80vh' });
     }
   }
-
 }
 
 @Pipe({ name: 'statusIcon' })

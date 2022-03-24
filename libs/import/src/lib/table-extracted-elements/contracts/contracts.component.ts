@@ -10,9 +10,9 @@ import { ContractService } from '@blockframes/contract/contract/+state/contract.
 import { sortingDataAccessor } from '@blockframes/utils/table';
 import { ContractsImportState, SpreadsheetImportError } from '../../utils';
 import { TermService } from '@blockframes/contract/term/+state/term.service';
-import { createDocumentMeta } from '@blockframes/utils/models-meta';
 import { AngularFirestore, Query } from '@angular/fire/firestore';
 import { FullMandate, FullSale, territoryAvailabilities } from '@blockframes/contract/avails/avails';
+import { createDocumentMeta } from '@blockframes/model';
 
 const hasImportErrors = (importState: ContractsImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;

@@ -1,4 +1,4 @@
-import { DocumentMeta } from "@blockframes/utils/models-meta";
+import { DocumentMeta } from './meta';
 
 export type EventName = 'page_view' | 'screening_requested' | 'promo_video_started' | 'added_to_wishlist' | 'promo_element_opened' | 'asking_price_requested';
 
@@ -30,3 +30,14 @@ export interface MetaEvent {
   orgId?: string;
   ownerOrgId: string;
 }
+
+export const isTitleDataEvent = (event: Partial<Analytics>): event is Analytics<'title'> => event.type === 'title';
+export function createTitleMeta(meta: Partial<MetaTitle>): MetaTitle {
+  return {
+    titleId: '',
+    orgId: '',
+    userId: '',
+    ownerOrgIds: [],
+    ...meta
+  };
+};

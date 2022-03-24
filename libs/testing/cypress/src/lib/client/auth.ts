@@ -1,3 +1,5 @@
+/// <reference types="cypress" />
+
 import type { AuthService } from '@blockframes/auth/+state';
 import { USER_FIXTURES_PASSWORD } from '@blockframes/firebase-utils/anonymize/util';
 

@@ -1,6 +1,8 @@
-﻿/// <reference types="cypress" />
+﻿/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+/// <reference types="cypress" />
 
-import { clearDataAndPrepareTest, assertMoveTo } from '@blockframes/e2e/utils/functions';
+import { clearDataAndPrepareTest } from '@blockframes/e2e/utils/functions';
+import { assertUrlIncludes } from '@blockframes/testing/cypress/client';
 import { LandingPage } from '../../support/pages/landing';
 import { HomePage, SearchPage, SelectionPage } from '../../support/pages/marketplace';
 import { avails } from '../../fixtures/bucket';
@@ -40,7 +42,7 @@ describe.skip('Create a new bucket and finalize a new offer', () => {
     // CREATE NEW BUCKET BY ADDING MOVIES TO IT
     cy.log("Arrive at Titles Search and wait for movies to load");
     const p2 = new SearchPage();
-    assertMoveTo(MOVIE_LIST_PATH);
+    assertUrlIncludes(MOVIE_LIST_PATH);
     cy.wait(15 * SEC);
     cy.log("Movs displayed!")
 
@@ -58,7 +60,7 @@ describe.skip('Create a new bucket and finalize a new offer', () => {
       p2.checkMovieCardDisappears(movie.title);
     }
     p1.openSidenavMenuAndNavigate('selection');
-    assertMoveTo(SELECTION_PATH);
+    assertUrlIncludes(SELECTION_PATH);
 
     // COMPLETE AND SEND A NEW OFFER
     const p3 = new SelectionPage();
@@ -74,7 +76,7 @@ describe.skip('Create a new bucket and finalize a new offer', () => {
 
     cy.log("Creating Offer:");
     p3.createNewOffer(specificText, deliveryText);
-    assertMoveTo('/c/o/marketplace/selection/congratulations');
+    assertUrlIncludes('/c/o/marketplace/selection/congratulations');
     cy.log("Check if offer is sent");
     cy.get('catalog-congratulations h1', {timeout: 10 * SEC}).should('contain', 'has been successfully sent.');
   });

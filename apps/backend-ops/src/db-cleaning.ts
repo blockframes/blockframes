@@ -5,7 +5,8 @@ import {
   PublicOrganization,
   MovieDocument,
   PermissionsDocument,
-  InvitationDocument
+  InvitationDocument,
+  createStorageFile
 } from '@blockframes/model';
 import { removeUnexpectedUsers } from './users';
 import {
@@ -16,7 +17,6 @@ import {
   removeAllSubcollections,
 } from '@blockframes/firebase-utils';
 import admin from 'firebase-admin';
-import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 import { getAllAppsExcept } from '@blockframes/utils/apps';
 import { DatabaseData, loadAllCollections, printDatabaseInconsistencies } from './internals/utils';
 

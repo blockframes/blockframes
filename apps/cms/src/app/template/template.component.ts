@@ -8,7 +8,7 @@ import { CmsService, CmsParams } from '../cms.service'
 import { Subscription } from 'rxjs';
 import { sections as homeSection } from '../home';
 import { switchMap } from 'rxjs/operators';
-import { createStorageFile } from '@blockframes/media/+state/media.firestore';
+import { createStorageFile } from '@blockframes/model';
 
 const templateSections = {
   home: (params: TemplateParams) => homeSection(params),

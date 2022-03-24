@@ -1,11 +1,12 @@
-import { DocumentMeta } from "@blockframes/utils/models-meta";
-import { NotificationTypesBase, UserRole } from '@blockframes/model';
-import { createStorageFile, StorageFile } from "@blockframes/media/+state/media.firestore";
-import { Genre, Language, Media, Territory } from "@blockframes/utils/static-model";
+import { createStorageFile, StorageFile } from './media';
+import type { DocumentMeta } from './meta';
+import type { Genre, Language, Media, Territory } from '@blockframes/utils/static-model';
+import type { NotificationTypesBase } from './notification';
+import type { UserRole } from './permissions';
 
 export interface User extends PublicUser {
   financing: {
-    rank: string
+    rank: string;
   };
   firstName: string;
   lastName: string;
@@ -24,10 +25,13 @@ export interface PrivacyPolicy {
 }
 
 interface UserSettings {
-  notifications?: NotificationSettings,
+  notifications?: NotificationSettings;
 }
 
-export interface NotificationSettingsTemplate { email: boolean, app: boolean };
+export interface NotificationSettingsTemplate {
+  email: boolean;
+  app: boolean;
+}
 
 export type NotificationSettings = Record<NotificationTypesBase, NotificationSettingsTemplate>;
 
@@ -56,8 +60,8 @@ export function createPublicUser(user: Partial<User> = {}): PublicUser {
     avatar: createStorageFile(user?.avatar),
     firstName: user.firstName ?? '',
     lastName: user.lastName ?? '',
-    orgId: user.orgId ?? ''
-  }
+    orgId: user.orgId ?? '',
+  };
 }
 
 export interface OrganizationMember extends PublicUser {
@@ -69,7 +73,7 @@ export function createOrganizationMember(user: Partial<User> = {}, role?: UserRo
   return {
     ...createPublicUser(user),
     role,
-  }
+  };
 }
 
 export function createPreferences(params: Partial<Preferences> = {}): Preferences {
@@ -78,13 +82,13 @@ export function createPreferences(params: Partial<Preferences> = {}): Preference
     medias: [],
     languages: [],
     genres: [],
-    ...params
+    ...params,
   };
 }
 
 export function createUser(user: Partial<User> = {}) {
   return {
     ...user,
-    avatar: createStorageFile(user.avatar)
+    avatar: createStorageFile(user.avatar),
   } as User;
 }

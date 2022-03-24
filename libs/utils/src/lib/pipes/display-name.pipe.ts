@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Person } from '../common-interfaces';
-import { displayName } from '../utils'
+import { Person } from '@blockframes/model';
+import { displayName } from '../utils';
 
 /**
  * This pipe display the firstname and lastname of the person;

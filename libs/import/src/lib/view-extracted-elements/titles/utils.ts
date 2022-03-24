@@ -21,7 +21,8 @@ import {
   MovieStakeholders,
   User,
   createMovie,
-  Movie
+  Movie,
+  Stakeholder
 } from '@blockframes/model';
 import {
   Certification,
@@ -44,8 +45,6 @@ import {
   StoreStatus,
   Territory,
 } from '@blockframes/utils/static-model';
-import { Stakeholder } from '@blockframes/utils/common-interfaces';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
 
 interface FieldsConfig {
   title: {
