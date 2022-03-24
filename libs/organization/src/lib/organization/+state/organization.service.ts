@@ -160,7 +160,6 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     const org = await this.getValue(orgId);
     const promises = org.userIds.map((uid) => this.userService.getValue(uid));
     const users = await Promise.all(promises);
-    // const role = await this.permissionsService.getValue(orgId);
     return users.map((u) => createPublicUser(u)).filter(member => options?.removeConcierges ? !member.email.includes('concierge+') : true);
   }
 
