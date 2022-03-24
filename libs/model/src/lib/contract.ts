@@ -14,7 +14,7 @@ export function createMailContract(contract: BucketContract<Timestamp>) {
 
 export const contractStatus = ['pending', 'accepted', 'declined', 'negotiating'] as const;
 //represents status of contract in excel files
-export const importContractStatus = ['In Negotiation', 'On signature', 'Signed', 'Accepted', 'Declined'] as const;
+export const importContractStatus = ['In Negotiation', 'On Signature', 'Signed', 'Accepted', 'Declined'] as const;
 export type ContractStatus = typeof contractStatus[number];
 export type ImportContractStatus = typeof importContractStatus[number];
 

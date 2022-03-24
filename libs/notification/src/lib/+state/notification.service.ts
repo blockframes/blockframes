@@ -9,8 +9,6 @@ import {
   isMeeting,
   isScreening,
   Notification,
-  Organization,
-  OrganizationDocument,
   Contract
 } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state';
@@ -175,7 +173,7 @@ export class NotificationService extends CollectionService<NotificationState> {
           .toPromise();
         const imgRef = this.getPoster(movie);
         const movieAppAccess = getMovieAppAccess(movie);
-        const message = `<a href="/c/o/marketplace/title/${movie.id}" target="_blank">${
+        const message = `<a href="/c/o/dashboard/title/${movie.id}" target="_blank">${
           movie.title.international
         }</a> was successfully submitted to the ${appName[movieAppAccess[0]]} Team.`;
 
@@ -259,7 +257,7 @@ export class NotificationService extends CollectionService<NotificationState> {
           .toPromise();
         const movieAppAccess = getMovieAppAccess(movie);
         const imgRef = this.getPoster(movie);
-        const message = `<a href="/c/o/marketplace/title/${movie.id}" target="_blank">${movie.title.international}</a> was successfully published on the marketplace.`;
+        const message = `<a href="/c/o/dashboard/title/${movie.id}" target="_blank">${movie.title.international}</a> was successfully published on the marketplace.`;
 
         return {
           ...notification,
