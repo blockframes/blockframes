@@ -6,7 +6,7 @@ import ViewPage from '../../support/pages/marketplace/ViewPage';
 import { titleInvest, discussionData, strEmail } from '../../fixtures/investment';
 import { MessageListResult } from 'cypress-mailosaur';
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import { assertUrlIncludes } from '@blockframes/testing/cypress/client';
+import { assertUrlIncludes } from '@blockframes/testing/cypress/browser';
 import { supportMailosaur, serverId } from '@blockframes/utils/constants';
 
 const userFixture = new User();

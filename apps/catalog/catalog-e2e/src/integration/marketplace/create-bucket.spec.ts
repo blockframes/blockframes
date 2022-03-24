@@ -2,7 +2,7 @@
 /// <reference types="cypress" />
 
 import { clearDataAndPrepareTest } from '@blockframes/e2e/utils/functions';
-import { assertUrlIncludes } from '@blockframes/testing/cypress/client';
+import { assertUrlIncludes } from '@blockframes/testing/cypress/browser';
 import { LandingPage } from '../../support/pages/landing';
 import { HomePage, SearchPage, SelectionPage } from '../../support/pages/marketplace';
 import { avails } from '../../fixtures/bucket';
