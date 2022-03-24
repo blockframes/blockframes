@@ -242,7 +242,7 @@ jobs:
     executor: blockframes-ci
     environment:
         PROJECT_ID: blockframes-staging
-        NG_CONFIG: staging
+        NG_CONFIG: ''
     steps:
       - slack/notify:
           message: '🛵 Deploying to staging...'

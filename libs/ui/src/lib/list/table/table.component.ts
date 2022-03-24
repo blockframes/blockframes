@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, ContentChildren, Directive, EventEmitter, HostBinding, Input, Output, QueryList, TemplateRef } from '@angular/core';
-import { BehaviorSubject, merge, Observable, of } from 'rxjs';
+import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChildren, Directive, EventEmitter, HostBinding, Input, OnDestroy, Output, QueryList, TemplateRef } from '@angular/core';
+import { BehaviorSubject, merge, Observable, of, Subscription } from 'rxjs';
 import { debounceTime, map, startWith, switchMap } from 'rxjs/operators';
 import { getDeepValue } from '@blockframes/utils/pipes/deep-key.pipe';
 import { FormControl } from '@angular/forms';
@@ -95,7 +95,7 @@ export class ColumnDirective<T> {
   },
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableComponent<T> {
+export class TableComponent<T> implements AfterContentInit, OnDestroy {
   private dataSource = new BehaviorSubject<T[]>([]);
   search = new FormControl();
   paginator = new Paginator({
@@ -126,12 +126,23 @@ export class TableComponent<T> {
   @Output() rowClick = new EventEmitter<T>();
   @Output() page = new EventEmitter<PageState>();
 
-  constructor() {
+  private sub: Subscription;
+
+  constructor(private cdr: ChangeDetectorRef) {
     this.data$ = this.dataSource.asObservable().pipe(
       switchMap(data => this.$filter(data)),
       switchMap(data => this.$sort(data)),
       switchMap(data => this.$paginate(data)),
     );
+  }
+
+  ngAfterContentInit() {
+    // Update component in case *ngIf is used in the ng-template of one of the columns
+    this.sub = this.columns.changes.subscribe(_ => this.cdr.markForCheck());
+  }
+
+  ngOnDestroy() {
+    this.sub?.unsubscribe();
   }
 
   private $paginate(data: T[]) {

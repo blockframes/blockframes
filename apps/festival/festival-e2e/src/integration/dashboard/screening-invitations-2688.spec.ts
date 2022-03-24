@@ -3,7 +3,9 @@
 import screeningEvents from '../../fixtures/screening-events';
 import USERS from 'tools/fixtures/users.json'
 import ORGS from 'tools/fixtures/orgs.json'
-import { auth, awaitElementDeletion, events, festival } from '@blockframes/testing/e2e';
+//TODO define proper way to import next line #8071
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import { auth, events, festival, awaitElementDeletion } from '@blockframes/testing/cypress/client';
 
 const screeningEvent = screeningEvents[0];
 const org = ORGS.find((org) => org.id === screeningEvent.org.id);
@@ -33,7 +35,7 @@ describe('Organiser invites other users to private screening', () => {
 
     cy.clearLocalStorage(); // ! If event is deleted manually, it will be stuck in localStorage cache
     cy.contains('Accept cookies').click();
-    cy.task('log', userOrganiser.uid);
+    cy.log('user uid', userOrganiser.uid);
     auth.loginWithEmailAndPassword(userOrganiser.email);
     cy.visit('/c/o/dashboard/event');
     cy.log(`Create screening {${screeningEvent.event}}`);

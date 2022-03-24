@@ -324,8 +324,8 @@ export const screeningStatus = {
 
 export const shootingPeriod = {
   early: 'Early',
-  late: 'Late',
   mid: 'Mid',
+  late: 'Late',
 } as const
 
 export const socialGoals = {
@@ -414,7 +414,7 @@ export const organizationStatus = {
 
 export const invitationType = {
   attendEvent: 'Attend Event',
-  joinOrganization: 'Join organization'
+  joinOrganization: 'Join Organization'
 } as const
 
 export const invitationStatus = {
