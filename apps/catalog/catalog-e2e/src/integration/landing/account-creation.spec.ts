@@ -8,7 +8,7 @@ import { AuthIdentityPage } from "@blockframes/e2e/pages/auth";
 import { OrganizationLiteFormPage } from "@blockframes/e2e/pages/organization";
 import { ORGANIZATION } from '@blockframes/e2e/fixtures/orgs';
 import { MessageListResult } from "cypress-mailosaur";
-import { assertUrlIncludes } from '@blockframes/testing/cypress/client';
+import { assertUrlIncludes } from '@blockframes/testing/cypress/browser';
 import { supportMailosaur, serverId } from '@blockframes/utils/constants';
 
 const subjects = [

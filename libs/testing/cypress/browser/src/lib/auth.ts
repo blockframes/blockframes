@@ -5,7 +5,7 @@ import { USER_FIXTURES_PASSWORD } from '@blockframes/firebase-utils/anonymize/ut
 
 export function loginWithEmailAndPassword(email: string) {
   cy.window().should('have.property', 'LoginService');
-  return cy.window().then((w) => {
+  return cy.window().then(w => {
     const authService = w['LoginService'] as AuthService;
     return authService.signin(email, USER_FIXTURES_PASSWORD);
   });
@@ -17,7 +17,7 @@ export function loginWithRandomUser() {
 
 export function clearBrowserAuth() {
   cy.window().should('have.property', 'LoginService');
-  cy.window().then(async (w) => {
+  cy.window().then(async w => {
     await w['LoginService'].signOut();
     indexedDB.deleteDatabase('firebaseLocalStorageDb');
   });

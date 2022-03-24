@@ -36,10 +36,10 @@ declare namespace Cypress {
 Cypress.Server.defaults({
   delay: 500,
   force404: false,
-  ignore: (xhr) => {
+  ignore: xhr => {
     // handle custom logic for whitelisting
     return true;
-  }
-})
+  },
+});
 
 Cypress.config('defaultCommandTimeout', 60000);
