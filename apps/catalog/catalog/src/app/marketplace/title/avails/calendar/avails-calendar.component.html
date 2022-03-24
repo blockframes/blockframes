@@ -41,11 +41,13 @@
     </ul>
 
     <ng-container *ngIf="availabilities$ | async as availabilities; else loading">
-      <avails-calendar fxFlexAlign="center" fxFlexAlign.lt-md="start" [availableMarkers]="availabilities.available"
-        [soldMarkers]="availabilities.sold" [inSelectionMarkers]="availabilities.inBucket"
-        [selectedMarker]="availabilities.selected" (selected)="selected($event)"
-        [avails]="availsForm.value"
-      ></avails-calendar>
+      <avails-calendar fxFlexAlign="center" fxFlexAlign.lt-md="start" 
+        [availableMarkers]="availabilities.available"
+        [soldMarkers]="availabilities.sold" 
+        [inSelectionMarkers]="availabilities.inBucket"
+        [selectedMarker]="availabilities.selected" 
+        (selected)="selected($event)">
+      </avails-calendar>
     </ng-container>
     <ng-template #loading>
       <mat-spinner></mat-spinner>
