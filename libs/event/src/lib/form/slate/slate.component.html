@@ -16,12 +16,12 @@
         If you can't find the videos you're looking for, you can upload them directly in <strong>My Files/Company/Videos</strong> section.</p>
       <mat-form-field appearance="outline">
         <mat-label>{{videos.length ? 'Select video to display' : 'You have no video to select'}}</mat-label>
-        <mat-select formControlName="video" [disabled]="!videos.length" (selectionChange)="checkVideoSelected($event.value)">
+        <mat-select formControlName="video" [disabled]="!videos.length">
           <mat-option *ngFor="let video of videos" [value]="video.fileId">
             {{ video.storagePath | fileName }}
           </mat-option>
         </mat-select>
-        <mat-hint id='missing-video' *ngIf="videoMissing">No video selected.</mat-hint>
+        <mat-hint id="missing-video" *ngIf="!formMeta.value.video">No video selected.</mat-hint>
       </mat-form-field>
 
       <!-- Description -->

@@ -44,9 +44,6 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
   @ViewChild('confirmExit') confirmExitTemplate: TemplateRef<any>;
   internalLink: string;
   link: string;
-  screenerMissing: boolean;
-  screeningTitleMissing: boolean;
-  slateVideoMissing: boolean;
   errorChipMessage = '';
   constructor(
     private eventService: EventService,
@@ -77,9 +74,9 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
         map(e => e.start < new Date() && e.type !== 'meeting' ? navTabs[type].concat(statisticsTab) : navTabs[type])
       )
 
-      if (this.form.value.type === 'screening') {
+      if (type === 'screening') {
         this.checkTitleAndScreener(this.form.meta.value.titleId);
-      } else if (this.form.value.type === 'slate') {
+      } else if (type === 'slate') {
         this.checkSlateVideoMissing(this.form.meta.value.video);
       }
 
@@ -153,20 +150,23 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
 
   async checkTitleAndScreener(titleId: string) {
     if (!titleId) {
-      this.screeningTitleMissing = true;
+      this.errorChipMessage = 'No title selected';
     } else {
       const title = await this.movieService.getValue(titleId);
+      if (!title.promotional.videos?.screener?.jwPlayerId) {
+        this.errorChipMessage = 'Screening file missing';
+      } else if (title.app.festival.status === 'draft') {
       // Titles in draft are not allowed for screenings
-      this.screeningTitleMissing = title.app.festival.status === 'draft';
-      this.screenerMissing = !title.promotional.videos?.screener?.jwPlayerId;
+        this.errorChipMessage = 'No title selected';
+      } else {
+        this.errorChipMessage = '';
+      }
     }
-    this.errorChipMessage = this.screeningTitleMissing ? 'No title selected' : 'Screening file missing';
     this.cdr.markForCheck();
   }
 
-  async checkSlateVideoMissing(videoId: string) {
-    this.slateVideoMissing = !videoId;
-    this.errorChipMessage = 'Video file missing';
+  checkSlateVideoMissing(videoId: string) {
+    this.errorChipMessage = !videoId ? 'Video file missing' : '';
     this.cdr.markForCheck();
   }
 }

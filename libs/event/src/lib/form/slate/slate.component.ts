@@ -1,9 +1,7 @@
-import { Component, OnInit, ChangeDetectionStrategy, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewEncapsulation } from '@angular/core';
 import { fromOrgAndAccepted, MovieService } from '@blockframes/movie/+state/movie.service';
-import { Movie, StorageVideo } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { Observable } from 'rxjs';
-import { switchMap, map, tap } from 'rxjs/operators';
+import { switchMap, map } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { EventFormShellComponent } from '../shell/shell.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -15,26 +13,24 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SlateComponent implements OnInit {
+export class SlateComponent {
 
-  titles$: Observable<Movie[]>;
-  videos$: Observable<StorageVideo[]>;
-  videoMissing: boolean;
+  titles$ = this.orgService.currentOrg$.pipe(
+    switchMap(org => this.movieService.valueChanges(fromOrgAndAccepted(org.id, 'festival'))),
+    map(titles => titles.sort((a, b) => a.title.international.localeCompare(b.title.international)))
+  );
+  videos$ = this.orgService.currentOrg$.pipe(
+    map(org => org?.documents?.videos || [])
+  );
+
   constructor (
     private movieService: MovieService,
     private orgService: OrganizationService,
     private dynTitle: DynamicTitleService,
     private shell: EventFormShellComponent,
     private snackBar: MatSnackBar,
-    private cdr: ChangeDetectorRef,
-  ) { 
-    this.titles$ = this.orgService.currentOrg$.pipe(
-      switchMap(org => this.movieService.valueChanges(fromOrgAndAccepted(org.id, 'festival'))),
-      map(titles => titles.sort((a, b) => a.title.international.localeCompare(b.title.international)))
-    );
-    this.videos$ = this.orgService.currentOrg$.pipe(
-      map(org => org?.documents?.videos || [])
-    );
+  ) {
+    this.dynTitle.setPageTitle('Add an event', 'Slate info');
   }
 
   get formMeta() {
@@ -45,17 +41,8 @@ export class SlateComponent implements OnInit {
     return this.shell.link;
   }
 
-  ngOnInit(): void {
-    this.dynTitle.setPageTitle('Add an event', 'Slate info');
-    this.checkVideoSelected(this.formMeta.value.video);
-  }
-
   copied() {
     this.snackBar.open('Link copied', 'CLOSE', { duration: 4000 });
   }
 
-  async checkVideoSelected(videoId: string) {
-    this.videoMissing = !videoId;
-    this.cdr.markForCheck();
-  }
 }
