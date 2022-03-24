@@ -1,26 +1,24 @@
-<div fxLayout="column" fxLayoutGap="24px">
-  <ng-container *ngIf="(invitationsToJoinOrganization$ | async) as invitations">
-    <member-request *ngIf="invitations.length > 0"
-      (declined)="declineInvitation($event)"
-      (accepted)="acceptInvitation($event)"
-      [invitations]="invitations"
-      [isAdmin]="isAdmin$ | async">
-    </member-request>
-  </ng-container>
-  <member-repertory
-    [members]="members$ | async"
-    [isSuperAdmin]="isSuperAdmin$ | async"
-    (memberRemoved)="removeMember($event)"
-    (updatedToSuperAdmin)="updateRole($event, 'superAdmin')"
-    (updatedToAdmin)="updateRole($event, 'admin')"
-    (updatedToMember)="updateRole($event, 'member')">
-  </member-repertory>
-  <ng-container *ngIf="(invitationsFromOrganization$ | async) as invitationsMember">
-    <member-pending *ngIf="invitationsMember.length > 0"
-      [invitations]="invitationsMember"
-      (declined)="deleteInvitation($event)"
-      [isAdmin]="isAdmin$ | async">
-    </member-pending>
-  </ng-container>
-  <member-add *ngIf="(isAdmin$ | async)" [org]="org"> </member-add>
-</div>
+<ng-container *ngIf="(invitationsToJoinOrganization$ | async) as invitations">
+  <member-request *ngIf="invitations.length > 0"
+    (declined)="declineInvitation($event)"
+    (accepted)="acceptInvitation($event)"
+    [invitations]="invitations"
+    [isAdmin]="isAdmin$ | async">
+  </member-request>
+</ng-container>
+<member-repertory
+  [members]="members$ | async"
+  [isSuperAdmin]="isSuperAdmin$ | async"
+  (memberRemoved)="removeMember($event)"
+  (updatedToSuperAdmin)="updateRole($event, 'superAdmin')"
+  (updatedToAdmin)="updateRole($event, 'admin')"
+  (updatedToMember)="updateRole($event, 'member')">
+</member-repertory>
+<ng-container *ngIf="(invitationsFromOrganization$ | async) as invitationsMember">
+  <member-pending *ngIf="invitationsMember.length > 0"
+    [invitations]="invitationsMember"
+    (declined)="deleteInvitation($event)"
+    [isAdmin]="isAdmin$ | async">
+  </member-pending>
+</ng-container>
+<member-add *ngIf="(isAdmin$ | async)" [org]="org"> </member-add>
