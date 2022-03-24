@@ -14,6 +14,7 @@
             <mat-form-field appearance="outline">
               <mat-label>Role</mat-label>
               <mat-select test-id="role" [formControl]="noteForm.get('role')">
+                <mat-option [value]="null"></mat-option>
                 <mat-option *ngFor="let role of roles" [value]="role">
                   {{ role | titlecase }}
                 </mat-option>

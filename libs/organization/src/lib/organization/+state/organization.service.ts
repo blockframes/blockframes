@@ -6,7 +6,6 @@ import { AngularFireFunctions } from '@angular/fire/functions';
 import { UserService } from '@blockframes/user/+state';
 import { 
   OrganizationMember,
-  createOrganizationMember,
   PublicUser,
   User,
   Movie,
@@ -15,6 +14,7 @@ import {
   OrganizationDocument,
   createPermissions,
   UserRole,
+  createPublicUser,
   createDocumentMeta,
   formatDocumentMetaFromFirestore,
 } from '@blockframes/model';
@@ -156,14 +156,12 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     return this.update(orgId, { userIds });
   }
 
-  public async getMembers(orgId: string, options?: { removeConcierges: boolean }): Promise<OrganizationMember[]> {
+  public async getMembers(orgId: string, options?: { removeConcierges: boolean }): Promise<PublicUser[]> {
     const org = await this.getValue(orgId);
     const promises = org.userIds.map((uid) => this.userService.getValue(uid));
     const users = await Promise.all(promises);
-    const role = await this.permissionsService.getValue(orgId);
-    return users.map((u) =>
-      createOrganizationMember(u, role.roles[u.uid] ? role.roles[u.uid] : undefined)
-    ).filter(member => options?.removeConcierges ? !member.email.includes('concierge+') : true);
+    // const role = await this.permissionsService.getValue(orgId);
+    return users.map((u) => createPublicUser(u)).filter(member => options?.removeConcierges ? !member.email.includes('concierge+') : true);
   }
 
   public async getMemberRole(_org: Organization | string, uid): Promise<UserRole> {
