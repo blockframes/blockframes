@@ -3,7 +3,7 @@ import { User } from "./type";
 import { SEC } from './env';
 //TODO define proper way to import next line #8071
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import { auth } from '@blockframes/testing/cypress/client';
+import { auth } from '@blockframes/testing/cypress/browser';
 
 /** Clear cookies, local storage, indexedDB and navigate to the path (/auth by default). */
 export function clearDataAndPrepareTest(path: string = '/auth') {

@@ -1,4 +1,4 @@
-import { acceptCookies, auth } from "@blockframes/testing/cypress/client";
+import { acceptCookies, auth } from "@blockframes/testing/cypress/browser";
 
 describe('Basic Landing Page, Login and Profile Page Tests', () => {
 
