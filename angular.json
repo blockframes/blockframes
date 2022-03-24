@@ -1828,6 +1828,27 @@
           }
         }
       }
+    },
+    "testing-cypress-node": {
+      "root": "libs/testing/cypress/node",
+      "sourceRoot": "libs/testing/cypress/node/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/testing/cypress/node/**/*.ts"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/testing/cypress/node"],
+          "options": {
+            "jestConfig": "libs/testing/cypress/node/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   }
 }
