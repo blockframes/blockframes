@@ -5,7 +5,7 @@ import USERS from 'tools/fixtures/users.json'
 import ORGS from 'tools/fixtures/orgs.json'
 //TODO define proper way to import next line #8071
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import { auth, events, festival, awaitElementDeletion } from '@blockframes/testing/cypress/client';
+import { auth, events, festival, awaitElementDeletion } from '@blockframes/testing/cypress/browser';
 
 const screeningEvent = screeningEvents[0];
 const org = ORGS.find((org) => org.id === screeningEvent.org.id);
