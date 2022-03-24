@@ -1765,27 +1765,6 @@
         }
       }
     },
-    "testing-cypress": {
-      "root": "libs/testing/cypress",
-      "sourceRoot": "libs/testing/cypress/src",
-      "projectType": "library",
-      "targets": {
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["libs/testing/cypress/**/*.ts"]
-          }
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/testing/cypress"],
-          "options": {
-            "jestConfig": "libs/testing/cypress/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
     "analytics": {
       "projectType": "library",
       "root": "libs/analytics",
@@ -1824,6 +1803,27 @@
           "outputs": ["coverage/libs/model"],
           "options": {
             "jestConfig": "libs/model/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "testing-cypress-browser": {
+      "root": "libs/testing/cypress/browser",
+      "sourceRoot": "libs/testing/cypress/browser/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/testing/cypress/browser/**/*.ts"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/testing/cypress/browser"],
+          "options": {
+            "jestConfig": "libs/testing/cypress/browser/jest.config.js",
             "passWithNoTests": true
           }
         }
