@@ -3,7 +3,8 @@
     "angular.json": "*",
     "package.json": "*",
     "nx.json": "*",
-    "tsconfig.base.json": "*"
+    "tsconfig.base.json": "*",
+    ".eslintrc.json": "*"
   },
   "affected": {
     "defaultBase": "origin/develop"
