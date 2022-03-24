@@ -125,10 +125,10 @@
       "tags": ["shared"]
     },
     "testing-cypress-browser": {
-      "tags": ["node", "local"]
+      "tags": ["browser", "e2e"]
     },
     "testing-cypress-node": {
-      "tags": []
+      "tags": ["node", "e2e"]
     }
   }
 }
