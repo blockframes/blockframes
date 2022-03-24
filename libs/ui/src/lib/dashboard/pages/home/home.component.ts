@@ -9,15 +9,15 @@ import { Movie } from '@blockframes/model';
 import { App } from '@blockframes/utils/apps';
 import { APP } from '@blockframes/utils/routes/utils';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
+import { joinWith } from '@blockframes/utils/operators';
 import { counter } from '@blockframes/analytics/+state/utils';
 
 // RxJs
 import { map, switchMap, shareReplay, tap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 // Intercom
 import { Intercom } from 'ng-intercom';
-import { joinWith } from '@blockframes/utils/operators';
 
 @Component({
   selector: 'dashboard-home',
@@ -41,12 +41,19 @@ export class HomeComponent implements OnInit {
 
   orgActivity$ = this.titleAnalytics$.pipe(
     map(analytics => counter(analytics, 'org.activity', 'orgActivity')),
-    map(analytics => analytics.sort((a, b) => a.count - b.count))
   );
 
   territoryActivity$ = this.titleAnalytics$.pipe(
     map(analytics => counter(analytics, 'org.addresses.main.country', 'territories')),
-    map(analytics => analytics.sort((a, b) => a.count - b.count))
+  );
+
+  popularTitle$ = this.titleAnalytics$.pipe(
+    map(analytics => counter(analytics, 'meta.titleId', 'appName')),
+    map(analytics => analytics.sort((a, b) => a.count - b.count)),
+    switchMap(([popularEvent]) => {
+      if (popularEvent) return this.movieService.valueChanges(popularEvent.key);
+      return of({} as Movie);
+    }),
   );
 
 

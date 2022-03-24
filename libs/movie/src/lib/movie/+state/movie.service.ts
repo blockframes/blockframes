@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
-import { createMovie, Movie, createMovieAppConfig } from '@blockframes/model';
-import { createDocumentMeta } from '@blockframes/utils/models-meta';
+import { createMovie, Movie, createMovieAppConfig, createDocumentMeta } from '@blockframes/model';
 import { cleanModel } from '@blockframes/utils/helpers';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
 import type firebase from 'firebase';
@@ -10,7 +9,7 @@ import { QueryFn } from '@angular/fire/firestore';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { map } from 'rxjs/operators';
 import { joinWith } from '@blockframes/utils/operators';
-import { AnalyticsService } from '@blockframes/analytics/+state';
+import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 import { AuthService } from '@blockframes/auth/+state';
 import { ActiveState, EntityState } from '@datorama/akita';
 
@@ -118,7 +117,8 @@ export class MovieService extends CollectionService<MovieState> {
           .where('type', '==', 'title')
           .where('name', '==', 'pageView')
           .where('meta.titleId', '==', movie.id)
-          .where('meta.ownerOrgIds', 'array-contains', orgId),
+          .where('meta.ownerOrgIds', 'array-contains', orgId)
+          .where('_meta.createdFrom', '==', app)
         ),
       }),
       map(movies => movies.sort((a, b) => a.title.international < b.title.international ? -1 : 1))

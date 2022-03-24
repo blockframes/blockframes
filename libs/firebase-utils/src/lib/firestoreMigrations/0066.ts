@@ -1,8 +1,5 @@
 import { centralOrgId } from '@env';
-
-import { Mandate, Movie } from '@blockframes/model';
-import { Timestamp } from '@blockframes/utils/common-interfaces/timestamp';
-
+import { Timestamp, Mandate, Movie } from '@blockframes/model';
 import { Firestore } from '../types';
 import { runChunks } from '../firebase-utils';
 

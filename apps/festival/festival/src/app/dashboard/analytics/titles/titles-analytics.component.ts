@@ -2,10 +2,24 @@ import { ChangeDetectionStrategy, Component, Inject } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { map } from "rxjs/operators";
 // Blockframes
-import { AggregatedAnalytic, createAggregatedAnalytic } from "@blockframes/analytics/+state";
+import { AggregatedAnalytic, createAggregatedAnalytic } from "@blockframes/model";
 import { MovieService } from "@blockframes/movie/+state/movie.service";
 import { App } from "@blockframes/utils/apps";
 import { APP } from "@blockframes/utils/routes/utils";
+import { joinWith } from "@blockframes/utils/operators";
+import { EventService } from "@blockframes/event/+state";
+
+interface AggregatedPerTitle extends AggregatedAnalytic {
+  screenings: number;
+}
+
+function createAggregatedPerTitle(data: Partial<AggregatedPerTitle>): AggregatedPerTitle {
+  return {
+    screenings: 0,
+    ...data,
+    ...createAggregatedAnalytic(data),
+  }
+}
 
 @Component({
   selector: 'festival-titles-analytics',
@@ -16,8 +30,16 @@ import { APP } from "@blockframes/utils/routes/utils";
 export class TitlesAnalyticsComponent {
 
   titlesAnalytics$ = this.service.queryDashboard(this.app).pipe(
+    joinWith({
+      events: title => this.eventService.valueChanges(ref => ref
+        .where('type', '==', 'screening')
+        .where('meta.titleId', '==', title.id))
+    }),
     map(titles => titles.map(title => {
-      const aggregated = createAggregatedAnalytic({ title });
+      const aggregated = createAggregatedPerTitle({
+        title,
+        screenings: title.events?.length
+      });
       if (!title.analytics) return aggregated;
       for (const analytic of title.analytics) {
         aggregated[analytic.name]++;
@@ -30,6 +52,7 @@ export class TitlesAnalyticsComponent {
     private route: ActivatedRoute,
     private router: Router,
     private service: MovieService,
+    private eventService: EventService,
     @Inject(APP) public app: App
   ) {}
 

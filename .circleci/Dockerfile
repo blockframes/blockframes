@@ -45,5 +45,4 @@ RUN gcloud config set pass_credentials_to_gsutil true
 ENV GOOGLE_APPLICATION_CREDENTIALS /home/circleci/repo/tools/credentials/creds.json
 ENV NODE_OPTIONS --max_old_space_size=7168
 ENV PROJECT_ID blockframes-ci
-ENV NG_CONFIG ci
 ENV SERVICE_ACCOUNT FIREBASE_CI_SERVICE_ACCOUNT

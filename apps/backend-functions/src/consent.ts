@@ -5,8 +5,8 @@ import {
   createShare,
   ConsentType,
   createConsent as _createConsent,
-} from '@blockframes/consents/+state/consents.firestore';
-import { PublicUser } from '@blockframes/model';
+  PublicUser
+} from '@blockframes/model';
 
 type CallableContext = functions.https.CallableContext;
 

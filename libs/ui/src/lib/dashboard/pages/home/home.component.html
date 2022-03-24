@@ -14,24 +14,24 @@
     </div>
   </div>
   <section class="surface carrousel-container">
-    <div fxFlex fxLayoutAlign="space-between center">
-      <h5>Lobster Film</h5>
-      <button mat-flat-button>
+    <div fxFlex fxLayoutAlign="space-between center" *ngIf="popularTitle$ | async as title">
+      <h5>{{title.title.international}}</h5>
+      <a mat-flat-button routerLink="/c/o/dashboard/analytics/titles/{{title.id}}">
         <span>See Analytics details</span>
         <mat-icon svgIcon="arrow_forward"></mat-icon>
-      </button>
+      </a>
     </div>
-    <span class="indicative-message">Some insights about your most popular title.</span>
-    <span class="indicative-message">Published on Archipel Market: 01/25/2022</span>
+    <span class="mat-body-1">Some insights about your most popular title.</span>
+    <span class="mat-body-1">Published on Archipel Market: 01/25/2022</span>
     <bf-carousel flex layout>
-      <analytics-pie-chart fxFlex [col]="6" class="surface" carouselItem [data]="orgActivity$ | async">
+      <analytics-pie-chart fxFlex class="surface" carouselItem [data]="orgActivity$ | async">
       </analytics-pie-chart>
-      <analytics-map fxFlex [col]="6" class="surface" carouselItem [data]="territoryActivity$ | async"></analytics-map>
+      <analytics-map fxFlex class="surface" carouselItem [data]="territoryActivity$ | async"></analytics-map>
     </bf-carousel>
-    <button mat-flat-button class="see_titles">
+    <a mat-flat-button class="see_titles" routerLink="/c/o/dashboard/analytics/titles">
       <span>View all Titles Activity</span>
       <mat-icon svgIcon="arrow_forward"></mat-icon>
-    </button>
+    </a>
   </section>
 </ng-container>
 <ng-template #loading>

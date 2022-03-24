@@ -7,7 +7,6 @@ export const icons = [
   { name: 'access_time', url: 'assets/icons/access_time.svg' },
   { name: 'account_balance_wallet', url: 'assets/icons/account_balance_wallet.svg' },
   { name: 'account_circle', url: 'assets/icons/account_circle.svg' },
-  { name: 'analytics_interactions', url: 'assets/icons/analytics_interactions.svg' },
   { name: 'add', url: 'assets/icons/add.svg' },
   { name: 'archive', url: 'assets/icons/archive.svg' },
   { name: 'arrow_back', url: 'assets/icons/arrow_back.svg' },

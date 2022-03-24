@@ -8,16 +8,6 @@
   }
 }
 
-.indicative-message {
-  font-family: 'Campton';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 12px;
-  line-height: 14px;
-  display: flex;
-  align-items: center;
-  color: var(--active);
-}
 bf-carousel {
   margin-top: 24px;
 }
@@ -31,6 +21,6 @@ bf-carousel {
 }
 
 .see_titles {
-  justify-self: center;
+  align-self: center;
   margin-top: 24px;
 }

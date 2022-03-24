@@ -1,7 +1,6 @@
 import { AngularFireAnalytics } from '@angular/fire/analytics';
 import { Injectable } from '@angular/core';
-import { AnalyticsUserProperties } from '@blockframes/analytics/+state/analytics.firestore';
-import { EventName } from '@blockframes/analytics/+state/analytics.firestore';
+import { EventName, AnalyticsUserProperties } from '@blockframes/model';
 import { centralOrgId } from '@env';
 import { AuthService } from '@blockframes/auth/+state';
 import { take } from 'rxjs/operators';
