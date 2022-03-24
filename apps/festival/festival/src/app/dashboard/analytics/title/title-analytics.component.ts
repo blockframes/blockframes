@@ -9,6 +9,7 @@ import { joinWith } from "@blockframes/utils/operators";
 import { map, pluck, shareReplay, switchMap } from "rxjs/operators";
 import { counter } from '@blockframes/analytics/+state/utils';
 import { UserService } from "@blockframes/user/+state";
+import { Scope, staticModel } from "@blockframes/utils/static-model";
 
 
 @Component({
@@ -61,6 +62,8 @@ export class TitleAnalyticsComponent {
     })
   )
 
+  filterValue: string;
+
   constructor(
     private location: Location,
     private movieService: MovieService,
@@ -76,5 +79,13 @@ export class TitleAnalyticsComponent {
 
   inWishlist(data: AggregatedAnalytic) {
     return data.addedToWishlist > data.removedFromWishlist;
+  }
+
+  getFilter(scope: Scope) {
+    return (input: string, value: any) => {
+      if (typeof value !== 'string') return false;
+      const label = staticModel[scope][value];
+      return label.toLowerCase().includes(input);
+    };
   }
 }

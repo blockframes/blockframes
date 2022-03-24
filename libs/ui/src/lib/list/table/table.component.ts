@@ -111,6 +111,9 @@ export class TableComponent<T> {
 
   /** Display the filter input above table */
   @Input() @boolean useFilter: boolean;
+  @Input() set filterValue(value: string) {
+    this.search.setValue(value);
+  }
 
   /** The content to display in the table */
   @Input() set source(source: T[]) {
