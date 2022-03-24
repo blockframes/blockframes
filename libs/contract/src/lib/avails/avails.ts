@@ -403,13 +403,14 @@ function getMatchingCalendarMandates(mandates: FullMandate[], avails: CalendarAv
 }
 
 function getMatchingCalendarSales<T extends (FullSale | BucketContract)>(sales: T[], avails: CalendarAvailsFilter): T[] {
-  return sales.filter(sale => sale.terms.some(term => {
-    const exclusivityCheck = exclusivitySomeOf(avails.exclusive).in(term.exclusive);
-    if (!exclusivityCheck) return false;
-    const mediaCheck = someOf(avails.medias).in(term.medias);
-    if (!mediaCheck) return false;
-    return someOf(avails.territories).in(term.territories);
-  }));
+  return sales.filter(sale => {
+    return sale.terms.some(term => {
+      const exclusivityCheck = exclusivitySomeOf(avails.exclusive).in(term.exclusive);
+      const mediaCheck = someOf(avails.medias).in(term.medias);
+      const territoryCheck = someOf(avails.territories).in(term.territories);
+      return exclusivityCheck && mediaCheck && territoryCheck;
+    });
+  });
 }
 
 function isCalendarTermInBucket<T extends BucketTerm | Term>(term: T, avails: CalendarAvailsFilter) {

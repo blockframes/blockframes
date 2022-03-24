@@ -4,7 +4,9 @@
 
       <header fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="16px">
         <ng-container *ngIf="(user$ | async) as user">
-          <p *ngIf="!user.phoneNumber && user.uid !== negotiation.buyerId">To improve communication with our Team, please <a routerLink="/c/o/account/profile/view/settings">provide your phone number</a>.</p>
+          <p *ngIf="!user.phoneNumber && user.uid !== negotiation.buyerId">
+            To improve communication with our Team, please <a routerLink="/c/o/account/profile/view/settings">provide your phone number</a>.
+          </p>
         </ng-container>
         <div fxLayoutAlign="center start" fxLayoutGap="16px">
           <ng-container *ngIf="negotiation.price else noPrice">
