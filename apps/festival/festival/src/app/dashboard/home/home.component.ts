@@ -8,13 +8,13 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { Movie } from '@blockframes/model';
 import { App } from '@blockframes/utils/apps';
 import { APP } from '@blockframes/utils/routes/utils';
-import { MovieAnalytics } from '@blockframes/analytics/components/movie-analytics-chart/movie-analytics.model';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
-import { toMovieAnalytics } from '@blockframes/analytics/components/movie-analytics-chart/utils';
+import { joinWith } from '@blockframes/utils/operators';
+import { counter } from '@blockframes/analytics/+state/utils';
 
 // RxJs
 import { map, switchMap, shareReplay, tap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { NEVER, Observable } from 'rxjs';
 
 // Intercom
 import { Intercom } from 'ng-intercom';
@@ -32,22 +32,39 @@ export class HomeComponent implements OnInit {
   public hasAcceptedMovies$: Observable<boolean>;
   public hasDraftMovies$: Observable<boolean>;
 
-  public titlesAnalytics$: Observable<MovieAnalytics[]> = this.orgService.currentOrg$.pipe(
-    switchMap(({ id }) => this.analytics.valueChanges(ref => ref
-      .where('type', '==', 'title')
-      .where('meta.ownerOrgIds', 'array-contains', id)
-    )),
-    map(toMovieAnalytics)
-  )
+  titleAnalytics$ = this.analyticsService.getAnalytics().pipe(
+    joinWith({
+      org: analytic => this.orgService.valueChanges(analytic.meta.orgId)
+    }),
+    shareReplay({ bufferSize: 1, refCount: true })
+  );
+
+  orgActivity$ = this.titleAnalytics$.pipe(
+    map(analytics => counter(analytics, 'org.activity', 'orgActivity')),
+  );
+
+  territoryActivity$ = this.titleAnalytics$.pipe(
+    map(analytics => counter(analytics, 'org.addresses.main.country', 'territories')),
+  );
+
+  popularTitle$ = this.titleAnalytics$.pipe(
+    map(analytics => counter(analytics, 'meta.titleId', 'appName')),
+    map(analytics => analytics.sort((a, b) => a.count - b.count)),
+    switchMap(([popularEvent]) => {
+      if (popularEvent) return this.movieService.valueChanges(popularEvent.key);
+      return NEVER;
+    }),
+  );
+
 
   constructor(
+    private analyticsService: AnalyticsService,
     private movieService: MovieService,
     private orgService: OrganizationService,
     private dynTitle: DynamicTitleService,
-    private analytics: AnalyticsService,
     @Optional() private intercom: Intercom,
     @Inject(APP) public app: App
-  ) {}
+  ) { }
 
   ngOnInit() {
     const allMoviesFromOrg$ = this.orgService.currentOrg$.pipe(

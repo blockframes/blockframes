@@ -1,0 +1,41 @@
+<ng-container *ngIf="titleAnalytics$ | async; else loading">
+  <div fxFlex fxLayoutAlign="space-between center">
+    <h3>Dashboard</h3>
+    <div fxFlex fxLayoutGap="24px" fxLayoutAlign="end center">
+      <button mat mat-fab color="default">
+        <mat-icon svgIcon="add"></mat-icon>
+      </button>
+      <button mat-fab color="default">
+        <mat-icon svgIcon="movie"></mat-icon>
+      </button>
+      <button mat-fab color="default">
+        <mat-icon svgIcon="excel"></mat-icon>
+      </button>
+    </div>
+  </div>
+  <section class="surface carrousel-container">
+    <div fxFlex fxLayoutAlign="space-between center" *ngIf="popularTitle$ | async as title">
+      <h5>{{title.title.international}}</h5>
+      <a mat-flat-button [routerLink]="['/c/o/dashboard/analytics', title.id]">
+        <span>See Analytics details</span>
+        <mat-icon svgIcon="arrow_forward"></mat-icon>
+      </a>
+    </div>
+    <span class="mat-body-1">Some insights about your most popular title.</span>
+    <span class="mat-body-1">Published on Archipel Market: 01/25/2022</span>
+    <bf-carousel flex layout>
+      <analytics-pie-chart fxFlex class="surface" carouselItem [col]="2" [data]="orgActivity$ | async">
+      </analytics-pie-chart>
+      <analytics-map fxFlex class="surface" carouselItem [col]="2" [data]="territoryActivity$ | async"></analytics-map>
+    </bf-carousel>
+    <a mat-flat-button class="see_titles" routerLink="/c/o/dashboard/analytics">
+      <span>View all Titles Activity</span>
+      <mat-icon svgIcon="arrow_forward"></mat-icon>
+    </a>
+  </section>
+</ng-container>
+<ng-template #loading>
+  <article fxLayout="column" fxLayoutAlign="center center">
+    <mat-spinner color="primary"></mat-spinner>
+  </article>
+</ng-template>
