@@ -58,7 +58,7 @@ interface InterceptOption {
 
 export function interceptEmail(option: InterceptOption) {
   const now = new Date();
-  return cy.mailosaurGetMessage(serverId, option, { receivedAfter: now });
+  return cy.mailosaurGetMessage(serverId, option, { receivedAfter: now, timeout: 15000 });
 }
 
 export function deleteEmail(id: string) {
