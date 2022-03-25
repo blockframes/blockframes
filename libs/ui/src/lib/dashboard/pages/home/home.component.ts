@@ -13,8 +13,8 @@ import { joinWith } from '@blockframes/utils/operators';
 import { counter } from '@blockframes/analytics/+state/utils';
 
 // RxJs
-import { map, switchMap, shareReplay, tap } from 'rxjs/operators';
-import { NEVER, Observable } from 'rxjs';
+import { map, switchMap, shareReplay, tap, filter } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 // Intercom
 import { Intercom } from 'ng-intercom';
@@ -48,12 +48,10 @@ export class HomeComponent implements OnInit {
   );
 
   popularTitle$ = this.titleAnalytics$.pipe(
-    map(analytics => counter(analytics, 'meta.titleId', 'appName')),
+    filter(analytics => analytics.length > 0),
+    map(analytics => counter(analytics, 'meta.titleId')),
     map(analytics => analytics.sort((a, b) => a.count - b.count)),
-    switchMap(([popularEvent]) => {
-      if (popularEvent) return this.movieService.valueChanges(popularEvent.key);
-      return NEVER;
-    }),
+    switchMap(([popularEvent]) => this.movieService.valueChanges(popularEvent.key)),
   );
 
 

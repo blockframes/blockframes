@@ -8,14 +8,14 @@ import { centralOrgId } from '@env';
 import { startOfDay } from 'date-fns';
 
 // Blockframes
-import { Analytics, AnalyticsTypeRecord, AnalyticsTypes, EventName, createTitleMeta} from '@blockframes/model';
+import { Analytics, AnalyticsTypeRecord, AnalyticsTypes, EventName, createTitleMeta } from '@blockframes/model';
 import { AuthService } from '@blockframes/auth/+state';
 import { createMovie, createDocumentMeta, formatDocumentMetaFromFirestore } from '@blockframes/model';
 import { APP } from '@blockframes/utils/routes/utils';
 import { App } from '@blockframes/utils/apps';
 import { Observable } from 'rxjs';
 
-interface AnalyticsState extends EntityState<Analytics>, ActiveState<string> {};
+interface AnalyticsState extends EntityState<Analytics>, ActiveState<string> { };
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'analytics' })
@@ -63,7 +63,8 @@ export class AnalyticsService extends CollectionService<AnalyticsState> {
     return this.valueChanges(ref => ref
       .where('type', '==', 'title')
       .where('meta.ownerOrgIds', 'array-contains', orgId)
-    );
+      .where('_meta.createdFrom', '==', this.app)
+    ) as Observable<Analytics<'title'>[]>;
   }
 
   async addTitle(name: EventName, titleId: string) {
