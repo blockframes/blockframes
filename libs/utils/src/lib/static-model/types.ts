@@ -35,7 +35,9 @@ import {
   screeningStatus,
   memberStatus,
   directorCategory,
-  importContractStatus
+  importContractStatus,
+  offerStatus,
+  negotiationStatus
 } from './static-model';
 
 export type NumberRange = keyof typeof budgetRange;
@@ -50,6 +52,10 @@ export type ContentType = keyof typeof contentType;
 export type ContractStatus = keyof typeof contractStatus;
 
 export type ImportContractStatus = typeof importContractStatus[number];
+
+export type OfferStatus = keyof typeof offerStatus;
+
+export type NegotiationStatus = typeof negotiationStatus[number];
 
 export type ContractType = keyof typeof contractType;
 

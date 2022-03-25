@@ -32,6 +32,8 @@ export const offerStatus = {
   declined: 'Declined',
 } as const
 
+export const negotiationStatus = ['pending', 'accepted', 'declined'] as const;
+
 export const certifications = {
   artEssai: 'Art & Essai',
   eof: 'EOF',
