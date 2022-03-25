@@ -11,6 +11,7 @@ import { deleteAllUsers, importAllUsers } from '@blockframes/testing/unit-tests'
 import * as env from '@env';
 import { PublicUser, User } from '@blockframes/model';
 import { USER_FIXTURES_PASSWORD } from '@blockframes/firebase-utils/anonymize/util';
+import { subMonths } from 'date-fns';
 
 export const { storageBucket } = env.firebase();
 
@@ -57,9 +58,8 @@ async function createAllUsers(users: UserConfig[], auth: Auth) {
  */
 export async function removeUnexpectedUsers(expectedUsers: PublicUser[], auth: Auth, options = { dryRun: false }) {
   let pageToken;
-  const currentTimestamp = new Date().getTime();
-  const dayInMillis = 1000 * 60 * 60 * 24;
-  const threeMonthsAgo = currentTimestamp - (dayInMillis * 30 * 3);
+  const now = new Date();
+  const threeMonthsAgo = subMonths(now, 3);
 
   do {
     const result = await auth.listUsers(1000, pageToken);
@@ -73,13 +73,13 @@ export async function removeUnexpectedUsers(expectedUsers: PublicUser[], auth: A
     const anonymousUsersToRemove = anonymousUsers.filter(authUser => {
       const creationTimeTimestamp = Date.parse(authUser.metadata.creationTime);
       // Anonymous user was created more than 3 months ago
-      if (creationTimeTimestamp < threeMonthsAgo) {
+      if (creationTimeTimestamp < threeMonthsAgo.getTime()) {
         // User never connected, this case should never occur
         if (!authUser.metadata.lastSignInTime) return true;
 
         // User have not signed in within the last 3 months
         const lastSignInTime = Date.parse(authUser.metadata.lastSignInTime);
-        if (lastSignInTime < threeMonthsAgo) return true;
+        if (lastSignInTime < threeMonthsAgo.getTime()) return true;
       }
 
       return false;

@@ -10,7 +10,6 @@ import {
   cleanPermissions,
   cleanDocsIndex,
   cleanNotifications,
-  dayInMillis,
   numberOfDaysToKeepNotifications,
   cleanUsers,
   cleanInvitations,
@@ -24,6 +23,7 @@ import { getCollectionRef } from '@blockframes/firebase-utils';
 import { clearFirestoreData } from '@firebase/rules-unit-testing';
 import { getAllAppsExcept } from '@blockframes/utils/apps';
 import { createPermissions, PermissionsDocument, PublicUser } from '@blockframes/model';
+import { addDays, subDays, subMonths, subYears } from 'date-fns';
 
 type Snapshot = FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>;
 let db: FirebaseFirestore.Firestore;
@@ -98,26 +98,27 @@ describe('DB cleaning script', () => {
   });
 
   it('should remove inactive users', async () => {
-    const currentTimestamp = new Date().getTime();
+    const now = new Date();
     // User without org created 1 month ago, should be kept
-    const oneMonthsAgo = currentTimestamp - (dayInMillis * 30);
+    const oneMonthsAgo = subMonths(now, 1);
     const testUser1 = { uid: 'A', email: 'johndoe@fake.com', firstName: 'john', lastName: 'doe' };
 
     // User wihtout org created 4 months ago, should be deleted
-    const fourMonthsAgo = currentTimestamp - (dayInMillis * 30 * 4);
+    const fourMonthsAgo = subMonths(now, 4);
     const testUser2 = { uid: 'B', email: 'johndoe@fake2.com', firstName: 'mickey', lastName: 'mouse' };
 
     // User that was created more than 3 years ago (3 years and two months) and that never connected wihtin 3 years, should be deleted
-    const threeYearsAgoAndTwoMonths = currentTimestamp - (dayInMillis * 365 * 3) - (dayInMillis * 60);
+    const threeYearsAgo = subYears(now, 3);
+    const threeYearsAgoAndTwoMonths = subMonths(threeYearsAgo, 2);
     const testUser3 = { uid: 'C', email: 'johnmcclain@fake.com', firstName: 'john', lastName: 'mcclain', orgId: 'org-A' };
 
     // User that was created more than 3 years ago (3 years and two months) but connected 3 years ago and 29 days, should be kept
-    const threeYearsAgoAnd29Days = currentTimestamp - (dayInMillis * 365 * 3) - (dayInMillis * 29);
+    const threeYearsAgoAnd29Days = subDays(threeYearsAgo, 29);
     const testUser4 = { uid: 'D', email: 'marchammil@fake.com', firstName: 'marc', lastName: 'hammil', orgId: 'org-A' };
 
     // User that was created more than 5 years ago and connected 3 years ago and 31 days, should be removed
-    const fiveYearsAgo = currentTimestamp - (dayInMillis * 365 * 5);
-    const threeYearsAgoAnd31Days = currentTimestamp - (dayInMillis * 365 * 3) - (dayInMillis * 31);
+    const fiveYearsAgo = subYears(now, 5);
+    const threeYearsAgoAnd31Days = subDays(threeYearsAgo, 31);
     const testUser5 = { uid: 'E', email: 'indianajhones@fake.com', firstName: 'indiana', lastName: 'jhones', orgId: 'org-A' };
 
     const testOrg1 = { id: 'org-A' };
@@ -132,27 +133,27 @@ describe('DB cleaning script', () => {
         uid: 'A',
         email: 'johndoe@fake.com',
         providerData: [{ uid: 'A', email: 'johndoe@fake.com', providerId: 'password' }],
-        metadata: { creationTime: new Date(oneMonthsAgo).toUTCString() }
+        metadata: { creationTime: oneMonthsAgo.toUTCString() }
       },
       {
         uid: 'B',
         email: 'johndoe@fake2.com',
         providerData: [{ uid: 'B', email: 'johndoe@fake2.com', providerId: 'password' }],
-        metadata: { creationTime: new Date(fourMonthsAgo).toUTCString() }
+        metadata: { creationTime: fourMonthsAgo.toUTCString() }
       },
       {
         uid: 'C',
         email: 'johnmcclain@fake.com',
         providerData: [{ uid: 'C', email: 'johnmcclain@fake.com', providerId: 'password' }],
-        metadata: { creationTime: new Date(threeYearsAgoAndTwoMonths).toUTCString() }
+        metadata: { creationTime: threeYearsAgoAndTwoMonths.toUTCString() }
       },
       {
         uid: 'D',
         email: 'marchammil@fake.com',
         providerData: [{ uid: 'D', email: 'marchammil@fake.com', providerId: 'password' }],
         metadata: {
-          creationTime: new Date(threeYearsAgoAndTwoMonths).toUTCString(),
-          lastSignInTime: new Date(threeYearsAgoAnd29Days).toUTCString(),
+          creationTime: threeYearsAgoAndTwoMonths.toUTCString(),
+          lastSignInTime: threeYearsAgoAnd29Days.toUTCString(),
         }
       },
       {
@@ -160,8 +161,8 @@ describe('DB cleaning script', () => {
         email: 'indianajhones@fake.com',
         providerData: [{ uid: 'E', email: 'indianajhones@fake.com', providerId: 'password' }],
         metadata: {
-          creationTime: new Date(fiveYearsAgo).toUTCString(),
-          lastSignInTime: new Date(threeYearsAgoAnd31Days).toUTCString(),
+          creationTime: fiveYearsAgo.toUTCString(),
+          lastSignInTime: threeYearsAgoAnd31Days.toUTCString(),
         }
       }
     ];
@@ -200,9 +201,10 @@ describe('DB cleaning script', () => {
   });
 
   it('should not remove inactive user if superAdmin of his org', async () => {
-    const currentTimestamp = new Date().getTime();
-    const fiveYearsAgo = currentTimestamp - (dayInMillis * 365 * 5);
-    const threeYearsAgoAnd31Days = currentTimestamp - (dayInMillis * 365 * 3) - (dayInMillis * 31);
+    const now = new Date();
+    const fiveYearsAgo = subYears(now, 5);
+    const threeYearsAgo = subYears(now, 3);
+    const threeYearsAgoAnd31Days = subDays(threeYearsAgo, 31);
 
     // User that was created more than 5 years ago and connected 3 years ago and 31 days
     // should be kept because he is superAdmin of his org
@@ -222,8 +224,8 @@ describe('DB cleaning script', () => {
         email: 'indianajhones@fake.com',
         providerData: [{ uid: 'A', email: 'indianajhones@fake.com', providerId: 'password' }],
         metadata: {
-          creationTime: new Date(fiveYearsAgo).toUTCString(),
-          lastSignInTime: new Date(threeYearsAgoAnd31Days).toUTCString(),
+          creationTime: fiveYearsAgo.toUTCString(),
+          lastSignInTime: threeYearsAgoAnd31Days.toUTCString(),
         }
       },
       {
@@ -231,8 +233,8 @@ describe('DB cleaning script', () => {
         email: 'marchammil@fake.com',
         providerData: [{ uid: 'B', email: 'marchammil@fake.com', providerId: 'password' }],
         metadata: {
-          creationTime: new Date(fiveYearsAgo).toUTCString(),
-          lastSignInTime: new Date(threeYearsAgoAnd31Days).toUTCString(),
+          creationTime: fiveYearsAgo.toUTCString(),
+          lastSignInTime: threeYearsAgoAnd31Days.toUTCString(),
         }
       }
     ];
@@ -273,7 +275,7 @@ describe('DB cleaning script', () => {
   });
 
   it('should remove unexpected users from auth', async () => {
-    const currentTimestamp = new Date().getTime();
+    const now = new Date();
 
     const users = [
       { uid: 'A', email: 'A@fake.com' },
@@ -300,31 +302,32 @@ describe('DB cleaning script', () => {
     adminAuth.users.push(fakeAuthUser);
 
     // Add an anonymous user that should not be deleted even if not on DB (created 3 months ago minus a day)
-    const threeMonthsAgoMinusADay = currentTimestamp - (dayInMillis * 30 * 3) + dayInMillis;
+    const threeMonthsAgo = subMonths(now, 3);
+    const threeMonthsAgoMinusADay = addDays(threeMonthsAgo, 1);
     const anonymousUser = { uid: 'anonymous', providerData: [], metadata: { creationTime: new Date(threeMonthsAgoMinusADay).toUTCString() } };
     adminAuth.users.push(anonymousUser);
 
     // Add an anonymous user that should not be deleted because account was created 5 months ago and last connexion is 2 months ago
-    const fiveMonthsAgo = currentTimestamp - (dayInMillis * 30 * 5);
-    const twoMonthsAgo = currentTimestamp - (dayInMillis * 30 * 2);
+    const fiveMonthsAgo = subMonths(now, 5);
+    const twoMonthsAgo = subMonths(now, 2);
     const anonymousUser2 = {
       uid: 'anonymous2',
       providerData: [],
       metadata: {
-        creationTime: new Date(fiveMonthsAgo).toUTCString(),
-        lastSignInTime: new Date(twoMonthsAgo).toUTCString(),
+        creationTime: fiveMonthsAgo.toUTCString(),
+        lastSignInTime: twoMonthsAgo.toUTCString(),
       }
     };
     adminAuth.users.push(anonymousUser2);
 
     // Add an anonymous user that should be deleted because account was created 5 months ago and last connexion is 3 months and a day ago
-    const threeMonthsAgoAndADay = currentTimestamp - (dayInMillis * 30 * 3) - dayInMillis;
+    const threeMonthsAgoAndADay = subDays(threeMonthsAgo, 1);
     const anonymousUser3 = {
       uid: 'anonymous3',
       providerData: [],
       metadata: {
-        creationTime: new Date(fiveMonthsAgo).toUTCString(),
-        lastSignInTime: new Date(threeMonthsAgoAndADay).toUTCString(),
+        creationTime: fiveMonthsAgo.toUTCString(),
+        lastSignInTime: threeMonthsAgoAndADay.toUTCString(),
       }
     };
     adminAuth.users.push(anonymousUser3);
@@ -604,13 +607,13 @@ describe('DB cleaning script', () => {
   });
 
   it('should delete notifications that are too old', async () => {
-    const currentTimestamp = new Date().getTime() / 1000;
+    const now = new Date();
     const testNotifications = [
       {
         id: 'notif-A',
         toUserId: 'A',
         // Should be kept
-        _meta: { createdAt: { _seconds: currentTimestamp } },
+        _meta: { createdAt: { _seconds: now.getTime() / 1000 } },
         type: 'requestToAttendEventSent',
         docId: 'A',
         user: { uid: 'A' }
@@ -619,7 +622,7 @@ describe('DB cleaning script', () => {
         id: 'notif-B',
         toUserId: 'A',
         // Just to the limit, should be kept
-        _meta: { createdAt: { _seconds: 30 + currentTimestamp - (3600 * 24 * numberOfDaysToKeepNotifications) } },
+        _meta: { createdAt: { _seconds: 30 + subDays(now, numberOfDaysToKeepNotifications).getTime() / 1000 } },
         type: 'requestToAttendEventSent',
         docId: 'A',
         user: { uid: 'A' }
@@ -628,7 +631,7 @@ describe('DB cleaning script', () => {
         id: 'notif-C',
         toUserId: 'A',
         // Should be removed
-        _meta: { createdAt: { _seconds: currentTimestamp - (3600 * 24 * (numberOfDaysToKeepNotifications + 1)) } },
+        _meta: { createdAt: { _seconds: subDays(now, numberOfDaysToKeepNotifications + 1).getTime() / 1000 } },
         type: 'requestToAttendEventSent',
         docId: 'A',
         user: { uid: 'A' }
@@ -894,13 +897,13 @@ describe('DB cleaning script', () => {
   });
 
   it('should delete not pending joinOrganization invitations older than n days', async () => {
-    const currentTimestamp = new Date().getTime() / 1000;
+    const now = new Date();
     const testInvitations = [
       {
         id: 'invit-A',
         status: 'pending',
         // Should be kept even if date is passed because of the pending status
-        date: { _seconds: currentTimestamp - (3600 * 24 * (numberOfDaysToKeepNotifications + 1)) },
+        date: { _seconds: subDays(now, numberOfDaysToKeepNotifications + 1).getTime() / 1000 },
         type: 'joinOrganization',
         fromOrg: { id: 'org-A' },
         toUser: { uid: 'A' },
@@ -909,7 +912,7 @@ describe('DB cleaning script', () => {
         id: 'invit-B',
         status: 'accepted',
         // Should be removed
-        date: { _seconds: currentTimestamp - (3600 * 24 * (numberOfDaysToKeepNotifications + 1)) },
+        date: { _seconds: subDays(now, numberOfDaysToKeepNotifications + 1).getTime() / 1000 },
         type: 'joinOrganization',
         toOrg: { id: 'org-A' },
         fromUser: { uid: 'A' },
@@ -918,7 +921,7 @@ describe('DB cleaning script', () => {
         id: 'invit-C',
         status: 'accepted',
         // Just to the limit, should be kept
-        date: { _seconds: 30 + currentTimestamp - (3600 * 24 * numberOfDaysToKeepNotifications) },
+        date: { _seconds: 30 + subDays(now, numberOfDaysToKeepNotifications).getTime() / 1000 },
         type: 'joinOrganization',
         toOrg: { id: 'org-A' },
         fromUser: { uid: 'A' },
@@ -1213,22 +1216,23 @@ describe('DB cleaning script', () => {
   });
 
   it('Auditing users should not update AUTH nor DB', async () => {
-    const currentTimestamp = new Date().getTime();
+    const now = new Date();
 
-    const oneMonthsAgo = currentTimestamp - (dayInMillis * 30);
+    const oneMonthsAgo = subMonths(now, 1);
     const testUser1 = { uid: 'A', email: 'johndoe@fake.com', firstName: 'john', lastName: 'doe' };
 
-    const fourMonthsAgo = currentTimestamp - (dayInMillis * 30 * 4);
+    const fourMonthsAgo = subMonths(now, 4);
     const testUser2 = { uid: 'B', email: 'johndoe@fake2.com', firstName: 'mickey', lastName: 'mouse' };
 
-    const threeYearsAgoAndTwoMonths = currentTimestamp - (dayInMillis * 365 * 3) - (dayInMillis * 60);
+    const threeYearsAgo = subYears(now, 3);
+    const threeYearsAgoAndTwoMonths = subMonths(threeYearsAgo, 2);
     const testUser3 = { uid: 'C', email: 'johnmcclain@fake.com', firstName: 'john', lastName: 'mcclain', orgId: 'org-A' };
 
-    const threeYearsAgoAnd29Days = currentTimestamp - (dayInMillis * 365 * 3) - (dayInMillis * 29);
+    const threeYearsAgoAnd29Days = subDays(threeYearsAgo, 29);
     const testUser4 = { uid: 'D', email: 'marchammil@fake.com', firstName: 'marc', lastName: 'hammil', orgId: 'org-fake' };
 
-    const fiveYearsAgo = currentTimestamp - (dayInMillis * 365 * 5);
-    const threeYearsAgoAnd31Days = currentTimestamp - (dayInMillis * 365 * 3) - (dayInMillis * 31);
+    const fiveYearsAgo = subYears(now, 5);
+    const threeYearsAgoAnd31Days = subDays(threeYearsAgo, 31);
     const testUser5 = { uid: 'E', email: 'indianajhones@fake.com', firstName: 'indiana', lastName: 'jhones', orgId: 'org-A' };
 
     await populate('users', [testUser1, testUser2, testUser3, testUser4, testUser5]);
@@ -1241,27 +1245,27 @@ describe('DB cleaning script', () => {
         uid: 'A',
         email: 'johndoe@fake.com',
         providerData: [{ uid: 'A', email: 'johndoe@fake.com', providerId: 'password' }],
-        metadata: { creationTime: new Date(oneMonthsAgo).toUTCString() }
+        metadata: { creationTime: oneMonthsAgo.toUTCString() }
       },
       {
         uid: 'B',
         email: 'johndoe@fake2.com',
         providerData: [{ uid: 'B', email: 'johndoe@fake2.com', providerId: 'password' }],
-        metadata: { creationTime: new Date(fourMonthsAgo).toUTCString() }
+        metadata: { creationTime: fourMonthsAgo.toUTCString() }
       },
       {
         uid: 'C',
         email: 'johnmcclain@fake.com',
         providerData: [{ uid: 'C', email: 'johnmcclain@fake.com', providerId: 'password' }],
-        metadata: { creationTime: new Date(threeYearsAgoAndTwoMonths).toUTCString() }
+        metadata: { creationTime: threeYearsAgoAndTwoMonths.toUTCString() }
       },
       {
         uid: 'D',
         email: 'marchammil@fake.com',
         providerData: [{ uid: 'D', email: 'marchammil@fake.com', providerId: 'password' }],
         metadata: {
-          creationTime: new Date(threeYearsAgoAndTwoMonths).toUTCString(),
-          lastSignInTime: new Date(threeYearsAgoAnd29Days).toUTCString(),
+          creationTime: threeYearsAgoAndTwoMonths.toUTCString(),
+          lastSignInTime: threeYearsAgoAnd29Days.toUTCString(),
         }
       },
       {
@@ -1269,8 +1273,8 @@ describe('DB cleaning script', () => {
         email: 'indianajhones@fake.com',
         providerData: [{ uid: 'E', email: 'indianajhones@fake.com', providerId: 'password' }],
         metadata: {
-          creationTime: new Date(fiveYearsAgo).toUTCString(),
-          lastSignInTime: new Date(threeYearsAgoAnd31Days).toUTCString(),
+          creationTime: fiveYearsAgo.toUTCString(),
+          lastSignInTime: threeYearsAgoAnd31Days.toUTCString(),
         }
       }
     ];
@@ -1347,7 +1351,7 @@ function isNotificationClean(doc: FirebaseFirestore.DocumentSnapshot) {
   }
 
   const notificationTimestamp = d._meta.createdAt.toMillis();
-  if (notificationTimestamp < new Date().getTime() - (dayInMillis * numberOfDaysToKeepNotifications)) {
+  if (notificationTimestamp < subDays(Date.now(), numberOfDaysToKeepNotifications)) {
     return false;
   }
 

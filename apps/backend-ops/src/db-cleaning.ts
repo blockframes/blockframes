@@ -14,10 +14,9 @@ import admin from 'firebase-admin';
 import { getAllAppsExcept } from '@blockframes/utils/apps';
 import { DatabaseData, loadAllCollections, printDatabaseInconsistencies } from './internals/utils';
 import { deleteSelectedUsers } from 'libs/testing/unit-tests/src/lib/firebase';
+import { subDays, subYears } from 'date-fns';
 
 export const numberOfDaysToKeepNotifications = 14;
-const currentTimestamp = new Date().getTime();
-export const dayInMillis = 1000 * 60 * 60 * 24;
 const EMPTY_MEDIA = createStorageFile();
 let verbose = false;
 
@@ -386,7 +385,7 @@ function isNotificationValid(notification: NotificationDocument, existingIds: st
 
   // Cleaning notifications more than n days
   const notificationTimestamp = notification._meta.createdAt.toMillis();
-  if (notificationTimestamp < currentTimestamp - dayInMillis * numberOfDaysToKeepNotifications) {
+  if (notificationTimestamp < subDays(Date.now(), numberOfDaysToKeepNotifications).getTime()) {
     return false;
   }
 
@@ -423,7 +422,7 @@ function isInvitationValid(invitation: InvitationDocument, existingIds: string[]
       const invitationTimestamp = invitation.date.toMillis();
       if (
         invitation.status !== 'pending' &&
-        invitationTimestamp < currentTimestamp - dayInMillis * numberOfDaysToKeepNotifications
+        invitationTimestamp < subDays(Date.now(), numberOfDaysToKeepNotifications).getTime()
       ) {
         return false;
       }
@@ -444,14 +443,16 @@ function isUserValid(
   authUser: UserRecord,
   permissions: PermissionsDocument[]
 ) {
+  const now = new Date();
   // User does not have orgId and was created more than 90 days ago
   const creationTimeTimestamp = Date.parse(authUser.metadata.creationTime);
-  if (!user.orgId && creationTimeTimestamp < currentTimestamp - (dayInMillis * 90)) {
+  if (!user.orgId && creationTimeTimestamp < subDays(now, 90).getTime()) {
     return false;
   }
 
-  // If account is older than 3 years and a month
-  const threeYearsAndAMonthAgo = currentTimestamp - (dayInMillis * 365 * 3) - (dayInMillis * 30);
+  // If account is older than 3 years and 30 days
+  const threeYearsAgo = subYears(now, 3);
+  const threeYearsAndAMonthAgo = subDays(threeYearsAgo, 30).getTime();
   if (creationTimeTimestamp < threeYearsAndAMonthAgo) {
     // User never connected
     if (!authUser.metadata.lastSignInTime) return false;
