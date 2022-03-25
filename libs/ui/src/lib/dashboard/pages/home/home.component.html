@@ -1,66 +1,38 @@
-<ng-container *ngIf="titles$ | async as titles; else loading">
-  <ng-container *ngIf="(hasAcceptedMovies$ | async) else noAcceptedMovies">
-    <header fxLayout="row" fxLayoutAlign="space-between center">
-      <h1>Dashboard</h1>
-      <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="24px">
-        <a mat-stroked-button color="primary" routerLink="../title">
-          <mat-icon svgIcon="video_library"></mat-icon>
-          <span>View My Titles</span>
-        </a>
-        <a mat-mini-fab color="primary" routerLink="../title/lobby" matTooltip="Add a new Title">
-          <mat-icon svgIcon="add"></mat-icon>
-        </a>
-      </div>
-    </header>
-    <section>
-      <h3>My Marketplace Activity</h3>
-      <ng-container *ngIf="titleAnalytics$ | async as titlesAnalytics; else loading">
-        <movie-analytics-chart [analyticsData]="titlesAnalytics"></movie-analytics-chart>
-      </ng-container>
-      <a mat-button routerLink="../analytics" color="primary">More analytics</a>
-    </section>
-  </ng-container>
-
-  <ng-template #noAcceptedMovies>
-    <section fxLayout="column" fxLayoutAlign="center center">
-      <ng-container *ngIf="(hasMovies$ | async) else noMovies">
-        <h1>No title to display.</h1>
-        <p class="mat-body-1">
-          As long as you have no title to display, your organization will not appear on the marketplace.
-          <br>
-          You can either add several titles at once through bulk import, or just one at a time.
-        </p>
-        <p class="mat-body-2">
-          N.B.: Only submitted projects will appear on the marketplace, not drafts.
-        </p>
-
-      </ng-container>
-      <ng-template #noMovies>
-        <dashboard-no-title></dashboard-no-title>
-      </ng-template>
-      <article fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center" fxLayoutGap="24px">
-        <!-- Should only be shown for noAcceptedMovies && !noMovies -->
-        <ng-container *ngIf="hasDraftMovies$ | async">
-          <mat-card fxLayout="column" fxLayoutalign="center center">
-            <img asset="add_draft.svg" alt="Manage Drafts">
-            <a routerLink="../title" mat-button color="primary">Manage Drafts</a>
-          </mat-card>
-        </ng-container>
-        <mat-card fxLayout="column" fxLayoutalign="center center">
-          <img asset="add_title.svg" alt="Add title image">
-          <a routerLink="../title/lobby" mat-button color="primary">Add one title</a>
-        </mat-card>
-        <mat-card fxLayout="column">
-          <img asset="add_files.svg" alt="Upload files image">
-          <a routerLink="../import" mat-button color="primary" test-id="import">Import titles in bulk</a>
-        </mat-card>
-      </article>
-      <h3>Or</h3>
-      <button (click)="openIntercom()" mat-flat-button color="primary">
-        Contact the {{ app | appName }} team
+<ng-container *ngIf="titleAnalytics$ | async; else loading">
+  <div fxFlex fxLayoutAlign="space-between center">
+    <h3>Dashboard</h3>
+    <div fxFlex fxLayoutGap="24px" fxLayoutAlign="end center">
+      <button mat mat-fab color="default">
+        <mat-icon svgIcon="add"></mat-icon>
       </button>
-    </section>
-  </ng-template>
+      <button mat-fab color="default">
+        <mat-icon svgIcon="movie"></mat-icon>
+      </button>
+      <button mat-fab color="default">
+        <mat-icon svgIcon="excel"></mat-icon>
+      </button>
+    </div>
+  </div>
+  <section class="surface carousel-container">
+    <div fxFlex fxLayoutAlign="space-between center" *ngIf="popularTitle$ | async as title">
+      <h5>{{title.title.international}}</h5>
+      <a mat-flat-button routerLink="/c/o/dashboard/analytics/titles/{{title.id}}">
+        <span>See Analytics details</span>
+        <mat-icon svgIcon="arrow_forward"></mat-icon>
+      </a>
+    </div>
+    <span class="mat-body-1">Some insights about your most popular title.</span>
+    <span class="mat-body-1">Published on Archipel Market: 01/25/2022</span>
+    <bf-carousel flex layout>
+      <analytics-pie-chart fxFlex class="surface" carouselItem [col]="2" [data]="orgActivity$ | async">
+      </analytics-pie-chart>
+      <analytics-map fxFlex class="surface" carouselItem [col]="2" [data]="territoryActivity$ | async"></analytics-map>
+    </bf-carousel>
+    <a mat-flat-button class="see_titles" routerLink="/c/o/dashboard/analytics/titles">
+      <span>View all Titles Activity</span>
+      <mat-icon svgIcon="arrow_forward"></mat-icon>
+    </a>
+  </section>
 </ng-container>
 <ng-template #loading>
   <article fxLayout="column" fxLayoutAlign="center center">

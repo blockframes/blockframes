@@ -16,7 +16,7 @@ export interface AnalyticData {
  * Counts number of occurances in analytics
  * @param path Path to value in object that needs to be counted. This value has to be of type string or number
  */
-export function counter(analytics: AnalyticsWithOrg[], path: string, scope: Scope): AnalyticData[] {
+export function counter(analytics: AnalyticsWithOrg[], path: string, scope?: Scope): AnalyticData[] {
   const counter: Record<string | number, number> = {};
   for (const analytic of analytics) {
     const key = getDeepValue(analytic, path) as string | number;
@@ -28,6 +28,6 @@ export function counter(analytics: AnalyticsWithOrg[], path: string, scope: Scop
   return Object.entries(counter).map(([key, count]) => ({
     key,
     count,
-    label: toLabel(key, scope)
+    label: scope ? toLabel(key, scope) : ''
   }));
 }

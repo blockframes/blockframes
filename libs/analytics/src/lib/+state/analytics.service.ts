@@ -8,14 +8,14 @@ import { centralOrgId } from '@env';
 import { startOfDay } from 'date-fns';
 
 // Blockframes
-import { Analytics, AnalyticsTypeRecord, AnalyticsTypes, EventName, createTitleMeta} from '@blockframes/model';
+import { Analytics, AnalyticsTypeRecord, AnalyticsTypes, EventName, createTitleMeta } from '@blockframes/model';
 import { AuthService } from '@blockframes/auth/+state';
 import { createMovie, createDocumentMeta, formatDocumentMetaFromFirestore } from '@blockframes/model';
 import { APP } from '@blockframes/utils/routes/utils';
 import { App } from '@blockframes/utils/apps';
 import { Observable } from 'rxjs';
 
-interface AnalyticsState extends EntityState<Analytics>, ActiveState<string> {};
+interface AnalyticsState extends EntityState<Analytics>, ActiveState<string> { };
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'analytics' })
@@ -58,12 +58,21 @@ export class AnalyticsService extends CollectionService<AnalyticsState> {
     ) as Observable<Analytics<'title'>[]>;
   }
 
+  getAnalytics() {
+    const { orgId } = this.authService.profile;
+    return this.valueChanges(ref => ref
+      .where('type', '==', 'title')
+      .where('meta.ownerOrgIds', 'array-contains', orgId)
+      .where('_meta.createdFrom', '==', this.app)
+    ) as Observable<Analytics<'title'>[]>;
+  }
+
   async addTitle(name: EventName, titleId: string) {
     if (await this.isOperator()) return;
 
     const profile = this.authService.profile;
 
-    // TODO #7273 use MovieService instead once Akita has been replaced by ng-fire (currently using MovieService results in error) 
+    // TODO #7273 use MovieService instead once Akita has been replaced by ng-fire (currently using MovieService results in error)
     const doc = await this.db.doc(`movies/${titleId}`).ref.get();
     const title = createMovie(doc.data());
 
@@ -96,7 +105,7 @@ export class AnalyticsService extends CollectionService<AnalyticsState> {
       // only one pageView event per day per title per user is recorded.
       if (analytics.some(analytic => analytic._meta.createdAt > start)) return;
 
-      // TODO #7273 use MovieService instead once Akita has been replaced by ng-fire (currently using MovieService results in error) 
+      // TODO #7273 use MovieService instead once Akita has been replaced by ng-fire (currently using MovieService results in error)
       const doc = await this.db.doc(`movies/${id}`).ref.get();
       const title = createMovie(doc.data());
 

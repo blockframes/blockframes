@@ -3,7 +3,7 @@
   <h5>Split by Company Territory</h5>
 </header>
 
-<world-map>
+<world-map *ngIf="top3.length; else noData">
   <!-- MAP LAYERS -->
   <ng-container *ngFor="let isoA3 of zero">
     <map-feature [tag]="isoA3" color="#ebeef3"></map-feature>
@@ -26,7 +26,11 @@
   <mat-list-item *ngFor="let top of top3">
     <span matLine>{{ top.label }}</span>
     <span>{{ top.count }}</span>
-    
+
     <mat-divider></mat-divider>
   </mat-list-item>
 </mat-list>
+
+<ng-template #noData>
+  <img asset="empty_state_analytics_map.svg" alt="Image, you have no movies yet">
+</ng-template>

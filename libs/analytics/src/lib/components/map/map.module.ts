@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { AnalyticsMapComponent } from './map.component';
+import { ImageModule } from "@blockframes/media/image/directives/image.module";
 
 import { MapModule } from '@blockframes/ui/map';
 import { ToLabelModule } from '@blockframes/utils/pipes/to-label.pipe';
@@ -19,6 +20,7 @@ import { MatDividerModule } from '@angular/material/divider';
 
     ToLabelModule,
     MapModule,
+    ImageModule,
 
     MatIconModule,
     MatListModule,
@@ -27,4 +29,4 @@ import { MatDividerModule } from '@angular/material/divider';
   declarations: [AnalyticsMapComponent],
   exports: [AnalyticsMapComponent]
 })
-export class AnalyticsMapModule {}
+export class AnalyticsMapModule { }
