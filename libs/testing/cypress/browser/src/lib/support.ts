@@ -38,6 +38,10 @@ export function check(selector: string) {
   get(selector).find('[type="checkbox"]').check({ force: true });
 }
 
+export function uncheck(selector: string) {
+  get(selector).find('[type="checkbox"]').uncheck({ force: true });
+}
+
 export function assertUrl(url: string) {
   cy.url().should('eq', `http://localhost:4200/${url}`);
 }
@@ -54,7 +58,7 @@ interface InterceptOption {
 
 export function interceptEmail(option: InterceptOption) {
   const now = new Date();
-  return cy.mailosaurGetMessage(serverId, option, { receivedAfter: now });
+  return cy.mailosaurGetMessage(serverId, option, { receivedAfter: now, timeout: 20000 });
 }
 
 export function deleteEmail(id: string) {

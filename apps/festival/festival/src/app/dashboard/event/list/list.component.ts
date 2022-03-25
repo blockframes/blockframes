@@ -26,7 +26,7 @@ const typesLabel = {
 })
 export class EventListComponent implements OnInit {
   typesLabel = typesLabel;
-  types: EventTypes[] = ['screening', 'meeting'];
+  types: EventTypes[] = ['screening', 'meeting', 'slate'];
   filter = new FormControl(this.types);
   editDialog: MatDialogRef<unknown>
   events$: Observable<Event[]>;

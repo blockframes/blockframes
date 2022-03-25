@@ -158,11 +158,11 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     return this.update(orgId, { userIds });
   }
 
-  public async getMembers(orgId: string): Promise<PublicUser[]> {
+  public async getMembers(orgId: string, options?: { removeConcierges: boolean }): Promise<PublicUser[]> {
     const org = await this.getValue(orgId);
     const promises = org.userIds.map((uid) => this.userService.getValue(uid));
     const users = await Promise.all(promises);
-    return users.map((u) => createPublicUser(u));
+    return users.map((u) => createPublicUser(u)).filter(member => options?.removeConcierges ? !member.email.includes('concierge+') : true);
   }
 
   public async getMemberRole(_org: Organization | string, uid): Promise<UserRole> {
