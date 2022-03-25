@@ -162,9 +162,13 @@
             "outputPath": "dist/apps/backend-functions",
             "main": "apps/backend-functions/src/main.ts",
             "tsConfig": "apps/backend-functions/tsconfig.app.json",
-            "assets": ["apps/backend-functions/src/assets", "apps/backend-functions/src/package.json"],
+            "assets": ["apps/backend-functions/src/assets"],
             "maxWorkers": 6,
-            "buildLibsFromSource": true
+            "buildLibsFromSource": true,
+            "webpackConfig": "apps/backend-functions/webpack.config.js",
+            "externalDependencies": "all",
+            "generatePackageJson": true,
+            "nodeVersion": "12"
           },
           "configurations": {
             "ci": {},
