@@ -8,7 +8,11 @@ import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from '.
 
 export const getFirebaseBackupDirname = (d: Date) => `firebase-backup-${d.getDate()}-${d.getMonth() + 1}-${d.getFullYear()}`;
 
-export async function backupEnv(dirName?: string) {
+/**
+ * This function creates a backup of a Firebase project
+ * @param dirName name of backup dir - optional - will use date instead
+ */
+export async function backupLiveEnv(dirName?: string) {
   const backupDir = dirName || getFirebaseBackupDirname(new Date());
   const backupURL = `gs://${backupBucket}/${backupDir}`;
 
@@ -23,7 +27,7 @@ export async function backupEnv(dirName?: string) {
   await runShellCommandExec(cmd);
 
   console.log(`backing up storage to ${storageURL}`);
-  await gsutilTransfer({ from: `gs://${firebase().storageBucket}`, to: storageURL });
+  await gsutilTransfer({ from: `gs://${firebase().storageBucket}`, to: storageURL, quiet: true });
 
   console.log(`backing up auth to ${authURL}`);
   cmd = `firebase auth:export -P ${firebase().projectId} ./tmp/auth-backup.json`;
@@ -34,9 +38,16 @@ export async function backupEnv(dirName?: string) {
   console.log('Firebase backup done!');
 }
 
-export async function restoreEnv(dirName?: string) {
+/**
+ * This function will restore an env back to a live Firestore project from backup
+ * It will also run Algolia sync scripts for that projectId
+ * @param dirName name of backup dir in GCS Bucket
+ */
+export async function restoreLiveEnv(dirName?: string) {
   console.log('When restoring an entire env, this function will check your local environment vars for AUTH_KEY');
-  console.log('If not found, it will manually restore auth with a default password. Otherwise it will restore original auth backup');
+  console.log('You can find this key in your project, and this function will fail without it');
+  if (!process.env['AUTH_KEY']) throw 'No AUTH_KEY found in env...';
+
   const { storage, db, auth } = loadAdminServices();
   const bucket = storage.bucket(backupBucket);
   const backupDir = dirName ? `${dirName}/` : await getLatestDirName(bucket, 'firebase');
@@ -65,14 +76,18 @@ export async function restoreEnv(dirName?: string) {
   console.log('Enabling maintenance in backup...');
   await importFirestoreEmulatorBackup(firestoreURL, defaultEmulatorBackupPath);
   await enableMaintenanceInEmulator({ importFrom: 'defaultImport' });
-  await uploadDbBackupToBucket({ bucketName: backupBucket, remoteDir: `${backupDir}firestore` });
+  try {
+    await uploadDbBackupToBucket({ bucketName: backupBucket, remoteDir: `${backupDir}firestore` });
+  } catch (e) {
+    console.warn(e)
+  }
 
   console.log('Importing Firestore');
   cmd = `gcloud firestore import ${firestoreURL}`;
   await runShellCommandExec(cmd);
 
   console.log('Importing storage');
-  await gsutilTransfer({ from: `${storageURL}`, to: `gs://${firebase().storageBucket}`, mirror: true });
+  await gsutilTransfer({ from: `${storageURL}`, to: `gs://${firebase().storageBucket}`, mirror: true, quiet: true });
 
   console.log('Importing auth');
   await gsutilTransfer({ from: authURL, to: './tmp/', rsync: false });
