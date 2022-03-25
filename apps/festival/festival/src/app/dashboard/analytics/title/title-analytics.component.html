@@ -50,7 +50,7 @@
       <ng-template colRef="org.denomination.public" label="Company name" let-name sort>
         {{ name }}
       </ng-template>
-      <ng-template colRef="org.activity" label="Activity" let-activity sort [filter]="getFilter('orgActivity')">
+      <ng-template colRef="org.activity" label="Activity" let-activity sort [filter]="filters['orgActivity']">
         {{ activity | toLabel:'orgActivity' }}
       </ng-template>
       <ng-template colRef="org.addresses.main.country" label="Country" let-country sort>
