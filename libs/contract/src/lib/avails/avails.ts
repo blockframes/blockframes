@@ -68,7 +68,7 @@ export interface AvailsFilter extends BaseAvailsFilter {
   territories: Territory[],
 }
 
-export function getMatchingTitleMandates(mandates: FullMandate[], avails: AvailsFilter): FullMandate[] {
+export function getMatchingMandates(mandates: FullMandate[], avails: AvailsFilter): FullMandate[] {
   return mandates.filter(mandate => mandate.terms.some(term => {
     const exclusivityCheck = exclusivityAllOf(avails.exclusive).in(term.exclusive);
     const mediaCheck = allOf(avails.medias).in(term.medias);
@@ -90,6 +90,23 @@ function getMatchingSales<T extends (FullSale | BucketContract)>(sales: T[], ava
   }));
 }
 
+export function getMandateTerms(avails: AvailsFilter, terms: Term<Date>[]): Term<Date>[] | undefined {
+  const result = terms.filter(term => {
+    return allOf(avails.duration).in(term.duration)
+      && allOf(avails.medias).in(term.medias)
+      && allOf(avails.territories, 'optional').in(term.territories);
+  });
+  // If more medias are selected than there are in the mandates: not available
+  const resultMedias = result.map(term => term.medias).flat();
+  if (!allOf(avails.medias).in(resultMedias)) return [];
+  // If more territories are selected than there are in the mandates: not available
+  if (avails.territories?.length) {
+    const resultTerritories = result.map(term => term.territories).flat();
+    if (!allOf(avails.territories).in(resultTerritories)) return [];
+  }
+  return result;
+}
+
 export function availableTitle(
   avails: AvailsFilter,
   mandates: FullMandate[],
@@ -103,7 +120,7 @@ export function availableTitle(
 
   // get only the mandates that meets the avails filter criteria,
   // e.g. if we ask for "France" but the title is mandated in "Germany", we don't care
-  const availableMandates = getMatchingTitleMandates(mandates, avails);
+  const availableMandates = getMatchingMandates(mandates, avails);
 
   // if there is no mandates left, the title is not available
   if (!availableMandates.length) return [];
@@ -360,7 +377,6 @@ export interface DurationMarker {
   to: Date,
   contract?: Mandate,
   term?: Term<Date>,
-  avail?: CalendarAvailsFilter,
 }
 
 interface CalendarAvailabilities {
@@ -382,49 +398,8 @@ export function isCalendarTermInAvails<T extends BucketTerm | Term>(term: T, ava
   return allOf(avails.territories).in(term.territories);
 }
 
-
-/**
- * Verify all markers whose terms are available for said avail.
- * return these markers.
- */
-export function getMatchingMarkers(markers: DurationMarker[], avails: CalendarAvailsFilter, fields: 'medias' | 'territories') {
-  const cache: Record<string, { parentMarker: DurationMarker; list: string[]; }> = {};
-  for (const field of avails[fields]) {
-    const localAvail = { ...avails, [fields]: [field] };
-    const marker = markers.find(({ term }) => isCalendarTermInAvails(term, localAvail));
-    if(!marker) continue;
-    if (!cache[marker.term.id]) cache[marker.term.id] = { list: [], parentMarker: marker };
-    cache[marker.term.id].list.push(field);
-  }
-  return Object.values(cache);
-}
-
-
-/**
- * Verify that on a per field [each territories or medias ] basis,
- * each locally created avail is covered by at least one mandate term
- * return these mandates otherwise, return no mandate.
- */
-function getMatchingMandates(mandates: FullMandate[], avails: CalendarAvailsFilter, field: 'territories' | 'medias'): FullMandate[] {
-  const availableMandates: Record<string, FullMandate> = {};
-  const foundFields: unknown[] = [];
-  for (const value of avails[field]) {
-    const mandate = mandates.find(mandate => {
-      const localAvails = { ...avails, [field]: [value] }; // Creates a local avail with one item [ media or territory ]
-      return mandate.terms.some(term => isCalendarTermInAvails(term, localAvails));
-    });
-    if (mandate) {
-      availableMandates[mandate.id] = mandate;
-      foundFields.push(value);
-    }
-  }
-  return foundFields.length === avails[field].length ? Object.values(availableMandates) : [];
-}
-
-export function getMatchingCalendarMandates(mandates: FullMandate[], avails: CalendarAvailsFilter): FullMandate[] {
-  const territoryMandates = getMatchingMandates(mandates, avails, 'territories');
-  if (territoryMandates.length) return territoryMandates;
-  return getMatchingMandates(mandates, avails, 'medias');
+function getMatchingCalendarMandates(mandates: FullMandate[], avails: CalendarAvailsFilter) {
+  return mandates.filter(mandate => mandate.terms.some(term => isCalendarTermInAvails(term, avails)));
 }
 
 function getMatchingCalendarSales<T extends (FullSale | BucketContract)>(sales: T[], avails: CalendarAvailsFilter): T[] {
@@ -434,7 +409,7 @@ function getMatchingCalendarSales<T extends (FullSale | BucketContract)>(sales: 
       const mediaCheck = someOf(avails.medias).in(term.medias);
       const territoryCheck = someOf(avails.territories).in(term.territories);
       return exclusivityCheck && mediaCheck && territoryCheck;
-    })
+    });
   });
 }
 
