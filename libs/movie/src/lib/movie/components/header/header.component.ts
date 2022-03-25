@@ -70,7 +70,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   goBack() {
-    this.navService.back();
+    this.navService.goBack();
   }
 }
 

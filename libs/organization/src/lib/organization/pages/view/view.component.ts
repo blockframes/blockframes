@@ -54,6 +54,6 @@ export class OrganizationViewComponent implements OnDestroy {
   }
 
   goBack() {
-    this.navService.back();
+    this.navService.goBack();
   }
 }

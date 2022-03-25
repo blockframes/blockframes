@@ -65,7 +65,7 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
   }
 
   goBack() {
-    this.navService.back();
+    this.navService.goBack();
   }
 
   getForm<K extends keyof ShellConfig>(name: K): ShellConfig[K]['form'] {

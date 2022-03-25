@@ -38,7 +38,7 @@ export class ViewComponent implements OnInit, OnDestroy {
   }
 
   goBack() {
-    this.navService.back();
+    this.navService.goBack();
   }
 
   scrollIntoView() {
