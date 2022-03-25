@@ -6,7 +6,7 @@ import {
   PipeTransform,
   HostBinding,
 } from '@angular/core';
-import { Movie, ScreeningEvent, MeetingEvent } from '@blockframes/model';
+import { Movie, ScreeningEvent, MeetingEvent, SlateEvent } from '@blockframes/model';
 
 @Component({
   selector: 'event-card',
@@ -15,7 +15,7 @@ import { Movie, ScreeningEvent, MeetingEvent } from '@blockframes/model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardComponent {
-  @Input() event: ScreeningEvent | MeetingEvent;
+  @Input() event: ScreeningEvent | MeetingEvent | SlateEvent;
   @Input() size: 'small' | 'large';
 
   @HostBinding('class')
