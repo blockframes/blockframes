@@ -4,7 +4,7 @@ import { AuthService } from '@blockframes/auth/+state';
 import { AccessibilityTypes } from '@blockframes/utils/static-model/types';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { EventForm } from '../event.form';
-import { Event, Meeting, Screening } from '@blockframes/model';
+import { Event, Meeting, Screening, Slate } from '@blockframes/model';
 
 @Component({
   selector: 'event-create',
@@ -28,7 +28,7 @@ export class EventCreateComponent {
   }
 
   async createAndRedirect() {
-    const event = this.form.value as Event<Meeting | Screening>;
+    const event = this.form.value as Event<Meeting | Screening | Slate>;
     event.ownerOrgId = this.orgService.org.id;
     event.meta.organizerUid = (await this.authService.user).uid;
     if (event.allDay) {
