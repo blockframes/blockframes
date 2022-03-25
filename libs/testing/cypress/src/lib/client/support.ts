@@ -38,6 +38,10 @@ export function check(selector: string) {
   get(selector).find('[type="checkbox"]').check({ force: true });
 }
 
+export function uncheck(selector: string) {
+  get(selector).find('[type="checkbox"]').uncheck({ force: true });
+}
+
 export function assertUrl(url: string) {
   cy.url().should('eq',`http://localhost:4200/${url}`);
 }
