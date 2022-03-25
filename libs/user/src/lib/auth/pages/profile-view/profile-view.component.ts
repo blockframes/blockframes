@@ -1,6 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, Inject } from '@angular/core';
 import { NavigationEnd, Router, Event } from '@angular/router';
-import { Location } from '@angular/common';
 import { Observable, Subscription } from 'rxjs';
 import { distinctUntilChanged, filter } from 'rxjs/operators';
 

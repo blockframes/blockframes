@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input, ViewChild, ElementRef, OnInit, OnDestroy } from '@angular/core';
-import { Movie, Organization } from '@blockframes/model';
+import { Organization } from '@blockframes/model';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { NavigationEnd, Router, RouterOutlet, Event } from '@angular/router';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
