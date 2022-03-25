@@ -15,7 +15,7 @@ import { Movie } from '@blockframes/model';
 import { Router, NavigationEnd, Event } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
-import { NavigationService } from '@blockframes/ui/navigation.service'
+import { NavigationService } from '@blockframes/ui/navigation.service';
 
 function createMovieView(movie: Movie) {
   return {

@@ -12,7 +12,7 @@ import { OrganizationService } from '@blockframes/organization/+state';
 import { AuthService } from '@blockframes/auth/+state';
 import { APP } from '@blockframes/utils/routes/utils';
 import { App } from '@blockframes/utils/apps';
-import { NavigationService } from '@blockframes/ui/navigation.service'
+import { NavigationService } from '@blockframes/ui/navigation.service';
 
 const navLinks = [
   {
