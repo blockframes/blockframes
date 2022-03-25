@@ -1,6 +1,6 @@
 import { db } from '../testing-cypress';
-import { createUser, createOrganization, Organization } from '@blockframes/model';
-import { App, ModuleAccess  } from '@blockframes/utils/apps';
+import { createUser, createOrganization, Organization, createPermissions } from '@blockframes/model';
+import { App, ModuleAccess } from '@blockframes/utils/apps';
 
 export async function getRandomEmail() {
   const { email } = await getRandomUser();
@@ -36,8 +36,8 @@ export async function getRandomOrg(data: { app: App; access: ModuleAccess }) {
     const randomIndex = Math.floor(Math.random() * docs.length);
     console.log(docs.length, randomIndex);
     const tempOrg = createOrganization(docs[randomIndex].data());
-    const orgHasAdmin = !!(await getRandomOrgAdmin(tempOrg.id)).email;
-    if (orgHasAdmin) organization = tempOrg;
+    const orgHasAdmin = await getRandomOrgAdmin(tempOrg.id);
+    if (orgHasAdmin?.email) organization = tempOrg;
   } while (!organization)
   return createOrganization(organization);
 }
@@ -59,7 +59,7 @@ export async function acceptUserInOrg(userEmail: string) {
 
 export async function getRandomOrgAdmin(orgId: string) {
   const permissionsRef = await db.doc(`permissions/${orgId}`).get();
-  const permissions = permissionsRef.data();
+  const permissions = createPermissions(permissionsRef.data());
   const adminIds = Object.keys(permissions.roles).filter(userId => {
     return (
       permissions.roles[userId] === 'superAdmin' ||
@@ -69,6 +69,5 @@ export async function getRandomOrgAdmin(orgId: string) {
   const randomIndex = Math.floor(Math.random() * adminIds.length);
   const adminId = adminIds[randomIndex];
   const adminRef = await db.doc(`users/${adminId}`).get();
-  const admin = adminRef.data();
-  return createUser(admin);
+  return createUser(adminRef.data());
 }
