@@ -193,7 +193,7 @@ describe('Signup', () => {
     });
   });
 
-  it.only('User cannot signup if any input is not valid, or checkbox unchecked', () => {
+  it('User cannot signup if any input is not valid, or checkbox unchecked', () => {
     //checks name and email inputs
     const user = unfillingUser;
     get('cookies').click();
