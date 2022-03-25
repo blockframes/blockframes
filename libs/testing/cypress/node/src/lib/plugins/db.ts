@@ -1,5 +1,5 @@
 import { db } from '../testing-cypress';
-import { createUser, createOrganization } from '@blockframes/model';
+import { createUser, createOrganization, Organization, createPermissions } from '@blockframes/model';
 import { App, ModuleAccess } from '@blockframes/utils/apps';
 
 export async function getRandomEmail() {
@@ -8,10 +8,10 @@ export async function getRandomEmail() {
   return email;
 }
 
-async function getRandomUser() {
+export async function getRandomUser() {
   const { docs } = await db.collection('users').get();
-  const ramdomIndex = Math.floor(Math.random() * docs.length);
-  return createUser(docs[ramdomIndex].data());
+  const randomIndex = Math.floor(Math.random() * docs.length);
+  return createUser(docs[randomIndex].data());
 }
 
 function getMarketplaceOrgs(app: App) {
@@ -30,8 +30,15 @@ function getDashboardOrgs(app: App) {
 export async function getRandomOrg(data: { app: App; access: ModuleAccess }) {
   const { app, access } = data;
   const { docs } = access.dashboard ? await getDashboardOrgs(app) : await getMarketplaceOrgs(app);
-  const ramdomIndex = Math.floor(Math.random() * docs.length);
-  return createOrganization(docs[ramdomIndex].data());
+  // TODO : when issue #8093 is resolved, revert below function code like in PR #7773
+  let organization: Organization;
+  do {
+    const randomIndex = Math.floor(Math.random() * docs.length);
+    const tempOrg = createOrganization(docs[randomIndex].data());
+    const orgHasAdmin = await getRandomOrgAdmin(tempOrg.id);
+    if (orgHasAdmin?.email) organization = tempOrg;
+  } while (!organization)
+  return createOrganization(organization);
 }
 
 export async function validateOrg(orgName: string) {
@@ -47,4 +54,19 @@ export async function acceptUserInOrg(userEmail: string) {
   const [invitation] = userQuery.docs;
   const { id: invitationId } = invitation.data();
   return db.collection('invitations').doc(invitationId).update({ status: 'accepted' });
+}
+
+export async function getRandomOrgAdmin(orgId: string) {
+  const permissionsRef = await db.doc(`permissions/${orgId}`).get();
+  const permissions = createPermissions(permissionsRef.data());
+  const adminIds = Object.keys(permissions.roles).filter(userId => {
+    return (
+      permissions.roles[userId] === 'superAdmin' ||
+      permissions.roles[userId] === 'admin'
+    );
+  });
+  const randomIndex = Math.floor(Math.random() * adminIds.length);
+  const adminId = adminIds[randomIndex];
+  const adminRef = await db.doc(`users/${adminId}`).get();
+  return createUser(adminRef.data());
 }
