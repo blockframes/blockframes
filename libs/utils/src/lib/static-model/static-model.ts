@@ -8,13 +8,12 @@ export const contractStatus = {
    * @dev first status of a contract
    * Starting from this status, the contract is visible by creator only
    */
-  // draft: 'Draft',
   /**
    * @dev once the user hit the submit button, the contract is waiting for approvment
    * Starting from this status, the contract is visible by creator (but not editable anymore) and by admins
    */
   negotiating: 'In Negotiation',
-  pending: 'Pending',
+  pending: 'New',
 } as const
 
 export const importContractStatus = ['In Negotiation', 'On Signature', 'Signed', 'Accepted', 'Declined'] as const;
