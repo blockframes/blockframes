@@ -34,7 +34,6 @@ export async function getRandomOrg(data: { app: App; access: ModuleAccess }) {
   let organization: Organization;
   do {
     const randomIndex = Math.floor(Math.random() * docs.length);
-    console.log(docs.length, randomIndex);
     const tempOrg = createOrganization(docs[randomIndex].data());
     const orgHasAdmin = await getRandomOrgAdmin(tempOrg.id);
     if (orgHasAdmin?.email) organization = tempOrg;
