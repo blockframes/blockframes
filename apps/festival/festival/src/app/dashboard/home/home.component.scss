@@ -8,15 +8,16 @@
   }
 }
 
-bf-carousel {
-  margin-top: 24px;
-}
-
-.carrousel-container {
+.carousel-container {
   display: flex;
   flex-direction: column;
+  
   h5 {
     text-decoration: underline;
+  }
+
+  bf-carousel {
+    margin-top: 24px;
   }
 }
 

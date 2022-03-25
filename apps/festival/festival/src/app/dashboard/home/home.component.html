@@ -13,7 +13,7 @@
       </button>
     </div>
   </div>
-  <section class="surface carrousel-container">
+  <section class="surface carousel-container">
     <div fxFlex fxLayoutAlign="space-between center" *ngIf="popularTitle$ | async as title">
       <h5>{{title.title.international}}</h5>
       <a mat-flat-button [routerLink]="['/c/o/dashboard/analytics', title.id]">
