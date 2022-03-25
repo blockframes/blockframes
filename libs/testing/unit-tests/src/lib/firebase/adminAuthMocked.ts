@@ -2,33 +2,22 @@ export class AdminAuthMocked {
   public users: any[] = [];
 
   getUserByEmail(email: string) {
-    return new Promise((resolve) => {
-      const user = this.users.find(u => u.email === email);
-      resolve(user);
-    });
+    const user = this.users.find(u => u.email === email);
+    return Promise.resolve(user);
   }
 
   getUser(uid: string) {
-    return new Promise((resolve) => {
-      const user = this.users.find(u => u.uid === uid);
-      resolve(user);
-    });
+    const user = this.users.find(u => u.uid === uid);
+    return Promise.resolve(user);
   }
 
   listUsers(_: number, pageToken: any) {
-    return new Promise((resolve) => {
-      const out = {
-        users: this.users,
-        pageToken,
-      };
-      resolve(out);
-    });
+    const out = { users: this.users, pageToken };
+    return Promise.resolve(out);
   }
 
   deleteUsers(uids: string[]) {
-    return new Promise((resolve) => {
-      this.users = this.users.filter(u => !uids.includes(u.uid));
-      resolve(this.users);
-    });
+    this.users = this.users.filter(u => !uids.includes(u.uid));
+    return Promise.resolve(this.users);
   }
 }

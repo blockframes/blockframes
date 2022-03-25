@@ -45,10 +45,7 @@ export async function cleanDeprecatedData(
 }
 
 export async function auditUsers(db: FirebaseFirestore.Firestore, auth?: admin.auth.Auth) {
-  if (!auth) {
-    const services = loadAdminServices();
-    auth = services.auth;
-  }
+  if (!auth) auth = loadAdminServices().auth;
 
   const { dbData } = await loadAllCollections(db);
 

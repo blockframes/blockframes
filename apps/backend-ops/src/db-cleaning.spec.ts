@@ -56,8 +56,10 @@ describe('DB cleaning script', () => {
 
     const testOrg1 = { id: 'org-A' };
 
-    await populate('users', [testUser1, testUser2]);
-    await populate('orgs', [testOrg1]);
+    await Promise.all([
+      populate('users', [testUser1, testUser2]),
+      populate('orgs', [testOrg1])
+    ]);
 
     adminAuth.users = [
       {
@@ -120,8 +122,10 @@ describe('DB cleaning script', () => {
 
     const testOrg1 = { id: 'org-A' };
 
-    await populate('users', [testUser1, testUser2, testUser3, testUser4, testUser5]);
-    await populate('orgs', [testOrg1]);
+    await Promise.all([
+      populate('users', [testUser1, testUser2, testUser3, testUser4, testUser5]),
+      populate('orgs', [testOrg1])
+    ]);
 
     adminAuth.users = [
       {
@@ -233,9 +237,11 @@ describe('DB cleaning script', () => {
       }
     ];
 
-    await populate('users', [testUser1, testUser2]);
-    await populate('orgs', [testOrg1]);
-    await populate('permissions', [testPermissions1]);
+    await Promise.all([
+      populate('users', [testUser1, testUser2]),
+      populate('orgs', [testOrg1]),
+      populate('permissions', [testPermissions1])
+    ]);
 
     const [organizations, usersBefore, permissions] = await Promise.all([
       getCollectionRef('orgs'),
@@ -406,9 +412,11 @@ describe('DB cleaning script', () => {
     ];
 
     // Load our test set
-    await populate('users', testUsers);
-    await populate('orgs', testOrgs);
-    await populate('movies', testMovies);
+    await Promise.all([
+      populate('users', testUsers),
+      populate('orgs', testOrgs),
+      populate('movies', testMovies)
+    ]);
 
     const [users, organizationsBefore, movies] = await Promise.all([
       getCollectionRef('users'),
@@ -458,8 +466,10 @@ describe('DB cleaning script', () => {
     ];
 
     // Load our test set
-    await populate('users', testUsers);
-    await populate('orgs', testOrgs);
+    await Promise.all([
+      populate('users', testUsers),
+      populate('orgs', testOrgs)
+    ]);
 
     const [users, organizationsBefore, movies] = await Promise.all([
       getCollectionRef('users'),
@@ -489,8 +499,10 @@ describe('DB cleaning script', () => {
     const testOrgs = [{ id: 'org-A' }];
 
     // Load our test set
-    await populate('permissions', testPermissions);
-    await populate('orgs', testOrgs);
+    await Promise.all([
+      populate('permissions', testPermissions),
+      populate('orgs', testOrgs)
+    ]);
 
     const [permissionsBefore, organizations] = await Promise.all([
       getCollectionRef('permissions'),
@@ -516,9 +528,11 @@ describe('DB cleaning script', () => {
     const testUsers = [{ uid: 'A', email: 'A@fake.com' }];
 
     // Load our test set
-    await populate('permissions', testPermissions);
-    await populate('orgs', testOrgs);
-    await populate('users', testUsers);
+    await Promise.all([
+      populate('permissions', testPermissions),
+      populate('orgs', testOrgs),
+      populate('users', testUsers)
+    ]);
 
     const [permissionsBefore, organizations, users] = await Promise.all([
       getCollectionRef('permissions'),
@@ -561,10 +575,12 @@ describe('DB cleaning script', () => {
     const testOrgs = [{ id: 'org-A' }];
 
     // Load our test set
-    await populate('movies', testMovies);
-    await populate('events', testEvents);
-    await populate('orgs', testOrgs);
-    await populate('docsIndex', testDocsIndex);
+    await Promise.all([
+      populate('movies', testMovies),
+      populate('events', testEvents),
+      populate('orgs', testOrgs),
+      populate('docsIndex', testDocsIndex)
+    ]);
 
     const [docsIndexBefore, movies, events, orgs] = await Promise.all([
       getCollectionRef('docsIndex'),
@@ -622,8 +638,10 @@ describe('DB cleaning script', () => {
     const testUsers = [{ uid: 'A', email: 'A@fake.com' }];
 
     // Load our test set
-    await populate('notifications', testNotifications);
-    await populate('users', testUsers);
+    await Promise.all([
+      populate('notifications', testNotifications),
+      populate('users', testUsers),
+    ]);
 
     const [notificationsBefore, users] = await Promise.all([
       getCollectionRef('notifications'),
@@ -687,15 +705,17 @@ describe('DB cleaning script', () => {
     const testContracts = [{ id: 'contract-A' }];
 
     // Load our test set
-    await populate('notifications', testNotifications);
-    await populate('users', testUsers);
-    await populate('invitations', testInvitations);
-    await populate('events', testEvents);
-    await populate('offers', testOffers);
-    await populate('movies', testMovies);
-    await populate('orgs', testOrgs);
-    await populate('buckets', testOrgs);
-    await populate('contracts', testContracts);
+    await Promise.all([
+      populate('notifications', testNotifications),
+      populate('users', testUsers),
+      populate('invitations', testInvitations),
+      populate('events', testEvents),
+      populate('offers', testOffers),
+      populate('movies', testMovies),
+      populate('orgs', testOrgs),
+      populate('buckets', testOrgs),
+      populate('contracts', testContracts),
+    ]);
 
     const [notificationsBefore, users, invitations, events, offers, movies, orgs, buckets, contracts] = await Promise.all([
       getCollectionRef('notifications'),
@@ -770,9 +790,11 @@ describe('DB cleaning script', () => {
     const testOrgs = [{ id: 'org-A', email: 'org-A@fake.com', logo: 'org-A.svg' }];
 
     // Load our test set
-    await populate('notifications', testNotifications);
-    await populate('users', testUsers);
-    await populate('orgs', testOrgs);
+    await Promise.all([
+      populate('notifications', testNotifications),
+      populate('users', testUsers),
+      populate('orgs', testOrgs),
+    ]);
 
     const [notificationsBefore, users, orgs] = await Promise.all([
       getCollectionRef('notifications'),
@@ -839,10 +861,12 @@ describe('DB cleaning script', () => {
     const testOrgs = [{ id: 'org-A', email: 'org-A@fake.com' }];
 
     // Load our test set
-    await populate('invitations', testInvitations);
-    await populate('events', testEvents);
-    await populate('users', testUsers);
-    await populate('orgs', testOrgs);
+    await Promise.all([
+      populate('invitations', testInvitations),
+      populate('events', testEvents),
+      populate('users', testUsers),
+      populate('orgs', testOrgs),
+    ]);
 
     const [invitationsBefore, events, users, orgs] = await Promise.all([
       getCollectionRef('invitations'),
@@ -905,9 +929,11 @@ describe('DB cleaning script', () => {
     const testOrgs = [{ id: 'org-A', email: 'org-A@fake.com' }];
 
     // Load our test set
-    await populate('invitations', testInvitations);
-    await populate('users', testUsers);
-    await populate('orgs', testOrgs);
+    await Promise.all([
+      populate('invitations', testInvitations),
+      populate('users', testUsers),
+      populate('orgs', testOrgs)
+    ]);
 
     const [invitationsBefore, users, orgs] = await Promise.all([
       getCollectionRef('invitations'),
@@ -966,9 +992,11 @@ describe('DB cleaning script', () => {
     const testOrgs = [{ id: 'org-A', email: 'org-A@fake.com', logo: 'org-A.svg' }];
 
     // Load our test set
-    await populate('invitations', testInvitations);
-    await populate('users', testUsers);
-    await populate('orgs', testOrgs);
+    await Promise.all([
+      populate('invitations', testInvitations),
+      populate('users', testUsers),
+      populate('orgs', testOrgs),
+    ]);
 
     const [invitationsBefore, users, orgs] = await Promise.all([
       getCollectionRef('invitations'),
@@ -999,8 +1027,10 @@ describe('DB cleaning script', () => {
     ];
 
     // Load our test set
-    await populate('users', testUsers);
-    await populate('orgs', testOrgs);
+    await Promise.all([
+      populate('users', testUsers),
+      populate('orgs', testOrgs)
+    ]);
 
     const [users, organizationsBefore, movies] = await Promise.all([
       getCollectionRef('users'),
@@ -1066,9 +1096,11 @@ describe('DB cleaning script', () => {
       }
     ];
     // Load our test set
-    await populate('orgs', testOrgs);
-    await populate('movies', testMovies);
-    await populate('users', testUsers);
+    await Promise.all([
+      populate('orgs', testOrgs),
+      populate('movies', testMovies),
+      populate('users', testUsers)
+    ]);
 
     const [organizationsBefore, movies, users] = await Promise.all([
       getCollectionRef('orgs'),
@@ -1111,8 +1143,10 @@ describe('DB cleaning script', () => {
       { id: 'org-C', email: 'org-C@fake.com', userIds: [], wishlist: [] },
     ];
 
-    await populate('movies', testMovies);
-    await populate('orgs', testOrgs);
+    await Promise.all([
+      populate('movies', testMovies),
+      populate('orgs', testOrgs)
+    ]);
 
     const [moviesBefore, orgs] = await Promise.all([
       getCollectionRef('movies'),
@@ -1147,8 +1181,10 @@ describe('DB cleaning script', () => {
       { id: 'org-B', email: 'org-B@fake.com', userIds: [], wishlist: [] },
     ];
 
-    await populate('movies', testMovies);
-    await populate('orgs', testOrgs);
+    await Promise.all([
+      populate('movies', testMovies),
+      populate('orgs', testOrgs)
+    ]);
 
     const [moviesBefore, orgs] = await Promise.all([
       getCollectionRef('movies'),
