@@ -72,7 +72,7 @@ export class TitleAnalyticsComponent {
   filters = {
     orgActivity: getFilter('orgActivity')
   };
-  filterValue: string;
+  filterValue?: string;
 
   constructor(
     private location: Location,

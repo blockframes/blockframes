@@ -72,6 +72,6 @@ export class PieChartComponent {
     this.chart?.updateOptions(this.pieChartOptions);
   }
 
-  private previousSelection: string;
+  private previousSelection?: string;
   @Output() selection: EventEmitter<string> = new EventEmitter();
 }
