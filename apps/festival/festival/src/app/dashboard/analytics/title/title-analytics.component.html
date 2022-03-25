@@ -35,12 +35,12 @@
       </a>
 
       <div fxLayout fxLayout.lt-sm="column" fxLayoutGap="16px">
-        <analytics-pie-chart fxFlex class="surface" [data]="orgActivity$ | async"></analytics-pie-chart>
+        <analytics-pie-chart fxFlex class="surface" [data]="orgActivity$ | async" (selection)="filterValue = $event"></analytics-pie-chart>
         <analytics-map fxFlex class="surface" [data]="territoryActivity$ | async"></analytics-map>
       </div>
     </article>
 
-    <bf-table [source]="buyerAnalytics$ | async" pagination="5" useFilter>
+    <bf-table [source]="buyerAnalytics$ | async" pagination="5" useFilter [filterValue]="filterValue">
       <ng-template colRef="user" label="Name" let-user sort>
         <a [href]="'mailto:' + user?.email">{{ user | displayName }}</a>
       </ng-template>
@@ -50,7 +50,7 @@
       <ng-template colRef="org.denomination.public" label="Company name" let-name sort>
         {{ name }}
       </ng-template>
-      <ng-template colRef="org.activity" label="Activity" let-activity sort>
+      <ng-template colRef="org.activity" label="Activity" let-activity sort [filter]="filters['orgActivity']">
         {{ activity | toLabel:'orgActivity' }}
       </ng-template>
       <ng-template colRef="org.addresses.main.country" label="Country" let-country sort>

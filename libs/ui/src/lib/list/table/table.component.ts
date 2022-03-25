@@ -1,4 +1,18 @@
-import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChildren, Directive, EventEmitter, HostBinding, Input, OnDestroy, Output, QueryList, TemplateRef } from '@angular/core';
+import {
+  AfterContentInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ContentChildren,
+  Directive,
+  EventEmitter,
+  HostBinding,
+  Input,
+  OnDestroy,
+  Output,
+  QueryList,
+  TemplateRef,
+} from '@angular/core';
 import { BehaviorSubject, merge, Observable, of, Subscription } from 'rxjs';
 import { debounceTime, map, startWith, switchMap } from 'rxjs/operators';
 import { getDeepValue } from '@blockframes/utils/pipes/deep-key.pipe';
@@ -19,7 +33,6 @@ function sortValue<T>(a: T, b: T) {
   return 0;
 }
 
-
 /** Filter the table fields based on the input value */
 function filterTable<T>(data: T[], value: string, columns: QueryList<ColumnDirective<T>>) {
   const input = removeAccent(value.toLowerCase());
@@ -27,7 +40,7 @@ function filterTable<T>(data: T[], value: string, columns: QueryList<ColumnDirec
     return columns.some(column => {
       const value = removeAccent(getDeepValue(row, column.name));
       return column.filter(input, value, row);
-    })
+    });
   });
 }
 
@@ -54,9 +67,9 @@ export class ColumnDirective<T> {
   @Input() filter = (input: string, value: any, row: T) => {
     if (typeof value !== 'string') return false;
     return value.toLowerCase().includes(input);
-  }
+  };
 
-  constructor(public template: TemplateRef<any>) { }
+  constructor(public template: TemplateRef<any>) {}
 
   get isSortable() {
     return this.sort === '' || !!this.sort;
@@ -72,19 +85,18 @@ export class ColumnDirective<T> {
 
   $sort(data: T[]): Observable<T[]> {
     const sort = this.sort || sortValue;
-    const value$ = this.defaultSort
-      ? this.control.valueChanges.pipe(startWith(this.control.value))
-      : this.control.valueChanges;
+    const value$ = this.defaultSort ? this.control.valueChanges.pipe(startWith(this.control.value)) : this.control.valueChanges;
     return value$.pipe(
-      map(asc => asc ? 1 : -1),
-      map(order => data.sort((a, b) => {
-        const sorting = sort(getDeepValue(a, this.name), getDeepValue(b, this.name));
-        return sorting * order;
-      })),
+      map(asc => (asc ? 1 : -1)),
+      map(order =>
+        data.sort((a, b) => {
+          const sorting = sort(getDeepValue(a, this.name), getDeepValue(b, this.name));
+          return sorting * order;
+        })
+      )
     );
   }
 }
-
 
 @Component({
   selector: 'bf-table',
@@ -93,16 +105,15 @@ export class ColumnDirective<T> {
   host: {
     class: 'surface',
   },
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableComponent<T> implements AfterContentInit, OnDestroy {
   private dataSource = new BehaviorSubject<T[]>([]);
   search = new FormControl();
   paginator = new Paginator({
-    onChange: (page) => this.page.emit(page)
+    onChange: page => this.page.emit(page),
   });
   data$: Observable<T[]>;
-
 
   @ContentChildren(ColumnDirective) columns!: QueryList<ColumnDirective<T>>;
 
@@ -111,6 +122,10 @@ export class TableComponent<T> implements AfterContentInit, OnDestroy {
 
   /** Display the filter input above table */
   @Input() @boolean useFilter: boolean;
+  // TODO #8104
+  @Input() set filterValue(value: string) {
+    this.search.setValue(value);
+  }
 
   /** The content to display in the table */
   @Input() set source(source: T[]) {
@@ -126,13 +141,13 @@ export class TableComponent<T> implements AfterContentInit, OnDestroy {
   @Output() rowClick = new EventEmitter<T>();
   @Output() page = new EventEmitter<PageState>();
 
-  private sub: Subscription;
+  private sub?: Subscription;
 
   constructor(private cdr: ChangeDetectorRef) {
     this.data$ = this.dataSource.asObservable().pipe(
       switchMap(data => this.$filter(data)),
       switchMap(data => this.$sort(data)),
-      switchMap(data => this.$paginate(data)),
+      switchMap(data => this.$paginate(data))
     );
   }
 
@@ -167,7 +182,7 @@ export class TableComponent<T> implements AfterContentInit, OnDestroy {
     return this.search.valueChanges.pipe(
       debounceTime(200),
       map(value => filterTable(data, value, this.columns)),
-      startWith(data),
+      startWith(data)
     );
   }
 }
