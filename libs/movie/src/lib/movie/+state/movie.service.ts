@@ -18,7 +18,7 @@ import { doc, updateDoc } from '@angular/fire/firestore';
 export const fromOrg = (orgId: string) =>
   [where('orgIds', 'array-contains', orgId)];
 export const fromOrgAndAccepted = (orgId: string, appli: App) =>
-  [where(`app.${appli}.status`, '==', 'accepted'), where('orgIds', 'array-contains', orgId)];
+  [where(`app.${appli}.status`, '==', 'accepted'), where(`app.${appli}.access`, '==', true), where('orgIds', 'array-contains', orgId)];
 export const fromOrgAndInternalRef = (orgId: string, internalRef: string) =>
   [where('orgIds', 'array-contains', orgId), where('internalRef', '==', internalRef)];
 export const fromInternalRef = (internalRef: string) =>
