@@ -193,7 +193,7 @@ describe('Signup', () => {
     });
   });
 
-  it('User cannot signup if any input is not completed, or checkbox unchecked', () => {
+  it.only('User cannot signup if any input is not valid, or checkbox unchecked', () => {
     //checks name and email inputs
     const user = unfillingUser;
     get('cookies').click();
@@ -218,6 +218,15 @@ describe('Signup', () => {
     //email
     get('email').clear();
     get('submit').should('be.disabled');
+    get('email').type('mail.beginning');
+    get('submit').should('be.disabled');
+    get('email').clear();
+    get('email').type('@mail.ending.com');
+    get('submit').should('be.disabled');
+    get('email').clear();
+    get('email').type('mail.withtout.domain@');
+    get('submit').should('be.disabled');
+    get('email').clear();
     get('email').type(user.email);
     get('submit').should('be.enabled');
     //firstname
