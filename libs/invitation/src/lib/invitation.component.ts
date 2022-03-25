@@ -33,10 +33,7 @@ export class InvitationComponent {
   });
 
   // Invitation count for conditions
-  invitationCount$ = this.service.myInvitations$.pipe(
-    map(invitations => invitations.filter(lastFourMonths)),
-    map(inv => inv.length)
-  );
+  invitationCount$ = this.service.invitationCounter(true);
 
   // Invitation that require an action
   invitations$ = combineLatest([

@@ -30,9 +30,7 @@ export class MarketplaceComponent implements OnInit {
   public user$ = this.authService.profile$;
   public wishlistCount$: Observable<number>;
   public notificationCount$ = this.notificationService.myNotificationsCount$;
-  public invitationCount$ = this.invitationService.myInvitations$.pipe(
-    map((invitations) => invitations.filter((invitation) => invitation.status === 'pending').length)
-  );
+  public invitationCount$ = this.invitationService.invitationCounter();
 
   @ViewChild(MatSidenav) sidenav: MatSidenav;
   @ViewChild(CdkScrollable) cdkScrollable: CdkScrollable;

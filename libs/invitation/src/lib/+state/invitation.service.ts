@@ -24,6 +24,7 @@ import { map, shareReplay, switchMap } from 'rxjs/operators';
 import { PermissionsService } from '@blockframes/permissions/+state';
 import { ActiveState, EntityState } from '@datorama/akita';
 import { APP } from '@blockframes/utils/routes/utils';
+import { subMonths } from 'date-fns';
 
 interface InvitationState extends EntityState<Invitation>, ActiveState<string> { }
 
@@ -187,4 +188,17 @@ export class InvitationService extends CollectionService<InvitationState> {
     }
   }
 
+  invitationCounter(lastFourMonths: boolean = false) {
+    if (lastFourMonths) {
+      return this.myInvitations$.pipe(
+        map((invitations: Invitation[]) =>
+          invitations.filter(invitation => invitation.date > subMonths(new Date(), 4))
+        ),
+        map((inv: Invitation[]) => inv.length)
+      );
+    }
+    return this.myInvitations$.pipe(
+      map((invitations: Invitation[]) => invitations.filter((invitation) => invitation.status === 'pending').length)
+    );
+  }
 }

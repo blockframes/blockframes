@@ -53,9 +53,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  public invitationCount$ = this.invitationService.myInvitations$.pipe(
-    map(invitations => invitations.filter(invitation => invitation.status === 'pending').length)
-  )
+  public invitationCount$ = this.invitationService.invitationCounter();
 
   public mode$ = this.breakpointsService.ltMd.pipe(
     map(ltMd => ltMd ? 'over' : 'side'),
