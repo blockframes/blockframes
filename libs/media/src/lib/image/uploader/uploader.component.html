@@ -25,11 +25,11 @@
     <image-cropper [imageFile]="file" [aspectRatio]="cropRatio" format="webp" [containWithinAspectRatio]="false"
       [resizeToWidth]="setWidth || parentWidth" (imageCropped)="imageCropped($event)"></image-cropper>
     <div class="buttons" fxLayout="row" fxLayoutAlign="space-evenly center">
-      <button mat-mini-fab color="primary">
-        <mat-icon (click)="cropIt()" svgIcon="check"></mat-icon>
+      <button mat-mini-fab color="primary" (click)="cropIt()">
+        <mat-icon svgIcon="check"></mat-icon>
       </button>
-      <button mat-mini-fab color="warn">
-        <mat-icon (click)="nextStep('drop')" svgIcon="close"></mat-icon>
+      <button mat-mini-fab color="warn" (click)="nextStep('drop')">
+        <mat-icon svgIcon="close"></mat-icon>
       </button>
     </div>
   </article>
@@ -39,16 +39,16 @@
     <img class="croppedImage" [src]="croppedImage || (previewUrl$ | async)" />
     <div class="buttons" fxLayout="row" fxLayoutAlign="space-evenly center">
       <ng-container *ngIf="useFileUploader">
-        <button mat-mini-fab color="primary">
-          <mat-icon (click)="fileUploader.click()" svgIcon="image" matTooltip="Select new picture"></mat-icon>
+        <button mat-mini-fab color="primary" (click)="fileUploader.click()">
+          <mat-icon svgIcon="image" matTooltip="Select new picture"></mat-icon>
         </button>
       </ng-container>
       <button mat-mini-fab color="accent" *ngIf="(previewUrl$ | async) as url">
         <mat-icon [cdkCopyToClipboard]="url" svgIcon="archive" matTooltip="Copy image url"></mat-icon>
       </button>
       <ng-container *ngIf="useDelete">
-        <button mat-mini-fab color="warn">
-          <mat-icon (click)="delete()" svgIcon="delete" matTooltip="Delete current picture"></mat-icon>
+        <button mat-mini-fab color="warn" (click)="delete()">
+          <mat-icon svgIcon="delete" matTooltip="Delete current picture"></mat-icon>
         </button>
       </ng-container>
     </div>

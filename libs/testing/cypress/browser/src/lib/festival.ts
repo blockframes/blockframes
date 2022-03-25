@@ -1,20 +1,12 @@
-
 // * SELLER
 export function createEvent(eventDate: Date, eventType = 'Screening', eventTitle = '') {
   cy.log(`createEvent : {${eventTitle}}`);
-  cy.log(
-    `#Creating event type: [${eventType}] on <${eventDate.toLocaleDateString()}> :> ${eventTitle}`
-  );
+  cy.log(`#Creating event type: [${eventType}] on <${eventDate.toLocaleDateString()}> :> ${eventTitle}`);
 
   const day = eventDate.getDay();
   // if (day === 0) cy.get('button[test-id=arrow_forward]').click();
 
-  cy.get('div [class=cal-day-columns]')
-    .children()
-    .eq(day)
-    .find('mwl-calendar-week-view-hour-segment')
-    .first()
-    .click();
+  cy.get('div [class=cal-day-columns]').children().eq(day).find('mwl-calendar-week-view-hour-segment').first().click();
 
   cy.get('mat-select[test-id="event-type"]').first().click();
 
@@ -110,7 +102,6 @@ export function saveEvent() {
 
 // Org admin
 
-
 // * BUYER
 
 export function acceptInvitationScreening() {
@@ -149,21 +140,14 @@ export function refuseInvitationScreening() {
 
 export function verifyNotification(message: string, accepted: boolean) {
   const notification = accepted ? 'accepted' : 'declined';
-  cy.get('notification-item p[test-id=notification-message]')
-    .contains(message)
-    .contains(notification);
+  cy.get('notification-item p[test-id=notification-message]').contains(message).contains(notification);
 }
 
 export function selectSalesAgents() {
   cy.get('layout-marketplace a').contains('Sales Agents').click();
 }
 export function clickOnOrganization(orgName: string) {
-  cy.get('festival-organization-list org-card')
-    .contains(orgName)
-    .parent()
-    .parent()
-    .find('a')
-    .click();
+  cy.get('festival-organization-list org-card').contains(orgName).parent().parent().find('a').click();
 }
 
 const NAV_SCREENING = 'Screening Schedule';

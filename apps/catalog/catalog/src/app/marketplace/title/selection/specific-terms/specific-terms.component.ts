@@ -17,7 +17,7 @@ export class SpecificTermsComponent implements OnInit {
     specificity: new FormControl(),
     delivery: new FormControl(),
     acceptTerms: new FormControl(false)
-  })
+  });
 
   constructor(
     private bucketService: BucketService,

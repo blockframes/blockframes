@@ -1,0 +1,53 @@
+﻿<section class="surface" [formGroup]="formMeta" fxLayout="column">
+  <h2>Presentation</h2>
+  <div class="link" fxLayout>
+    <mat-form-field appearance="outline" fxFlex>
+      <mat-label>Direct link to presentation Room</mat-label>
+      <input matInput type="text" disabled [value]="link">
+    </mat-form-field>
+    <button mat-icon-button [cdkCopyToClipboard]="link" (click)="copied()" matTooltip="Copy the link">
+      <mat-icon svgIcon="file_copy"></mat-icon>
+    </button>
+  </div>
+  <ng-container *ngIf="(titles$ | async) as titles; else loading">
+    <ng-container *ngIf="(videos$ | async) as videos; else loading">
+      <!-- Video -->
+      <p>Add a video you'll want to screen.<br>
+        If you can't find the videos you're looking for, you can upload them directly in <strong>My Files/Company/Videos</strong> section.</p>
+      <mat-form-field appearance="outline">
+        <mat-label>{{videos.length ? 'Select video to display' : 'You have no video to select'}}</mat-label>
+        <mat-select formControlName="video" [disabled]="!videos.length">
+          <mat-option *ngFor="let video of videos" [value]="video.fileId">
+            {{ video.storagePath | fileName }}
+          </mat-option>
+        </mat-select>
+        <mat-hint id="missing-video" *ngIf="!formMeta.value.video">No video selected.</mat-hint>
+      </mat-form-field>
+
+      <!-- Description -->
+      <mat-form-field appearance="outline">
+        <mat-label>Description</mat-label>
+        <textarea matInput
+          placeholder="Add a description"
+          formControlName="description"
+          cdkTextareaAutosize
+          #autosize="cdkTextareaAutosize"
+          cdkAutosizeMinRows="4"
+          maxlength="500"></textarea>
+        <mat-hint>Limited to 500 characters.</mat-hint>
+      </mat-form-field>
+      <!-- Title selection-->
+      <mat-form-field appearance="outline">
+        <mat-label>{{titles.length ? 'Select the titles you are going to promote' : 'You have no titles to select'}}</mat-label>
+        <mat-select formControlName="titles" [disabled]="!titles.length" multiple>
+          <mat-option *ngFor="let title of titles" [value]="title.id">
+            {{ title.title.international }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </ng-container>
+  </ng-container>
+  <ng-template #loading>
+    <mat-spinner diameter="50"></mat-spinner>
+  </ng-template>
+</section>
