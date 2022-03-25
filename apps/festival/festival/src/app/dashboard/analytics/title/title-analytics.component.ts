@@ -9,7 +9,15 @@ import { joinWith } from "@blockframes/utils/operators";
 import { map, pluck, shareReplay, switchMap } from "rxjs/operators";
 import { counter } from '@blockframes/analytics/+state/utils';
 import { UserService } from "@blockframes/user/+state";
+import { Scope, staticModel } from "@blockframes/utils/static-model";
 
+function getFilter(scope: Scope) {
+  return (input: string, value: any) => {
+    if (typeof value !== 'string') return false;
+    const label = staticModel[scope][value];
+    return label.toLowerCase().includes(input);
+  };
+}
 
 @Component({
   selector: 'festival-title-analytics',
@@ -60,6 +68,11 @@ export class TitleAnalyticsComponent {
       return Object.values(aggregator);
     })
   )
+
+  filters = {
+    orgActivity: getFilter('orgActivity')
+  };
+  filterValue?: string;
 
   constructor(
     private location: Location,
