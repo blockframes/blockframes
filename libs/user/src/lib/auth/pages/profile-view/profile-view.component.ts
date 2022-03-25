@@ -12,6 +12,7 @@ import { OrganizationService } from '@blockframes/organization/+state';
 import { AuthService } from '@blockframes/auth/+state';
 import { APP } from '@blockframes/utils/routes/utils';
 import { App } from '@blockframes/utils/apps';
+import { NavigationService } from '@blockframes/ui/navigation.service'
 
 const navLinks = [
   {
@@ -44,8 +45,9 @@ export class ProfileViewComponent implements OnInit, OnDestroy {
 
   constructor(
     private dynTitle: DynamicTitleService,
-    private location: Location,
     private orgService: OrganizationService,
+    private navService: NavigationService,
+
     private authService: AuthService,
     @Inject(APP) private app: App,
     private router: Router
@@ -80,11 +82,6 @@ export class ProfileViewComponent implements OnInit, OnDestroy {
   }
 
   goBack() {
-    const state = this.location.getState() as { navigationId: number };
-    if (state?.navigationId === 1) {
-      this.router.navigate(['/c/o']);
-    } else {
-      this.location.historyGo(-this.countRouteEvents);
-    }
-  }
+    this.navService.back(['/c/o'])
+}
 }
