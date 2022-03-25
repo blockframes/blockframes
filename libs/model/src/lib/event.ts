@@ -10,7 +10,7 @@ import { Person } from './identity';
 import { Timestamp } from './timestamp';
 
 // Event types
-export type EventTypes = 'standard' | 'meeting' | 'screening' | 'local';
+export type EventTypes = 'standard' | 'meeting' | 'screening' | 'local' | 'slate';
 export type EventMeta = Meeting | Screening | unknown;
 
 export type AttendeeStatus = 'owner' | 'requesting' | 'accepted' | 'denied' | 'ended';
@@ -70,6 +70,7 @@ export interface EventBase<D extends Timestamp | Date, Meta extends EventMeta = 
 export type EventDocument<Meta> = EventBase<Timestamp, Meta>;
 export type MeetingEventDocument = EventDocument<Meeting>;
 export type ScreeningEventDocument = EventDocument<Screening>;
+export type SlateEventDocument = EventDocument<Screening>;
 
 // This variable define the duration (in seconds) of a video link before it expires
 export const linkDuration = 60 * 60 * 5; // 5 hours in seconds = 60 seconds * 60 minutes * 5 = 18 000 seconds
@@ -97,7 +98,9 @@ export function createEvent<Meta extends EventMeta>(
     ? createMeeting(params.meta)
     : isScreening(params as Event)
       ? createScreening(params.meta)
-      : {};
+      : isSlate(params as Event)
+        ? createSlate(params.meta)
+        : {};
 
   return {
     id: '',
@@ -152,6 +155,29 @@ export function createScreening(screening: Partial<Screening>): Screening {
     organizerUid: '',
     ...screening,
   };
+}
+
+export interface Slate {
+  description: string;
+  organizerUid: string;
+  titles: Array<string>,
+  video: string
+}
+// Slate Presentation
+export interface SlateEvent extends Event<Slate> {
+  type: 'slate';
+  movie: Movie;
+  org: Organization;
+}
+export const isSlate = (event: Partial<Event>): event is SlateEvent => event?.type === 'slate';
+export function createSlate(slate: Partial<Slate>): Slate {
+  return {
+    description: '',
+    organizerUid: '',
+    titles: [],
+    video: '',
+    ...slate
+  }
 }
 
 // Calendar Event

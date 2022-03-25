@@ -25,6 +25,10 @@ const navTabs: NavTabs = {
     { path: 'invitations', label: 'Invitations' },
     { path: 'files', label: 'Files' },
   ],
+  slate: [
+    { path: 'slate', label: 'Slate Presentation' },
+    { path: 'invitations', label: 'Invitations' },
+  ]
 }
 @Component({
   selector: 'event-shell',
@@ -40,9 +44,7 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
   @ViewChild('confirmExit') confirmExitTemplate: TemplateRef<any>;
   internalLink: string;
   link: string;
-  screenerMissing: boolean;
-  titleMissing: boolean;
-
+  errorChipMessage = '';
   constructor(
     private eventService: EventService,
     private movieService: MovieService,
@@ -72,8 +74,10 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
         map(e => e.start < new Date() && e.type !== 'meeting' ? navTabs[type].concat(statisticsTab) : navTabs[type])
       )
 
-      if (this.form.value.type === 'screening') {
+      if (type === 'screening') {
         this.checkTitleAndScreener(this.form.meta.value.titleId);
+      } else if (type === 'slate') {
+        this.checkSlateVideoMissing(this.form.meta.value.video);
       }
 
       this.cdr.markForCheck();
@@ -147,14 +151,24 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
   }
 
   async checkTitleAndScreener(titleId: string) {
-    if(!titleId) {
-      this.titleMissing = true;
+    if (!titleId) {
+      this.errorChipMessage = 'No title selected';
     } else {
       const title = await this.movieService.getValue(titleId);
+      if (!title.promotional.videos?.screener?.jwPlayerId) {
+        this.errorChipMessage = 'Screening file missing';
+      } else if (title.app.festival.status === 'draft') {
       // Titles in draft are not allowed for screenings
-      this.titleMissing = title.app.festival.status === 'draft';
-      this.screenerMissing = !title.promotional.videos?.screener?.jwPlayerId;
+        this.errorChipMessage = 'No title selected';
+      } else {
+        this.errorChipMessage = '';
+      }
     }
+    this.cdr.markForCheck();
+  }
+
+  checkSlateVideoMissing(videoId: string) {
+    this.errorChipMessage = !videoId ? 'Video file missing' : '';
     this.cdr.markForCheck();
   }
 }

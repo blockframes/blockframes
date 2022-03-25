@@ -9,7 +9,8 @@ import {
   createCalendarEvent,
   MeetingEvent,
   isMeeting,
-  isScreening
+  isScreening,
+  SlateEvent
 } from '@blockframes/model';
 import { QueryFn } from '@angular/fire/firestore/interfaces';
 import { OrganizationService } from '@blockframes/organization/+state';
@@ -20,7 +21,7 @@ import type firebase from 'firebase';
 import { ActiveState, EntityState } from '@datorama/akita';
 import { production } from '@env';
 
-interface EventState extends EntityState<Event>, ActiveState<string> {};
+interface EventState extends EntityState<Event>, ActiveState<string> { };
 type Timestamp = firebase.firestore.Timestamp;
 
 const eventQuery = (id: string) => ({
@@ -55,7 +56,13 @@ const eventQueries = {
     path: 'events',
     queryFn: ref => queryFn(ref).where('type', '==', 'meeting'),
     org: ({ ownerOrgId }: MeetingEvent) => ({ path: `orgs/${ownerOrgId}` }),
-  })
+  }),
+
+  slate: (queryFn: QueryFn = (ref) => ref): Query<SlateEvent> => ({
+    path: 'events',
+    queryFn: ref => queryFn(ref).where('type', '==', 'slate'),
+    org: ({ ownerOrgId }: SlateEvent) => ({ path: `orgs/${ownerOrgId}` }),
+  }),
 }
 
 @Injectable({ providedIn: 'root' })
