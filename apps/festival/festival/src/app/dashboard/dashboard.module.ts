@@ -127,19 +127,24 @@ const routes: Routes = [{
                   data: { animation: 1 }
                 },
                 {
+                  path: 'slate',
+                  loadChildren: () => import('@blockframes/event/form/slate/slate.module').then(m => m.SlateModule),
+                  data: { animation: 2 }
+                },
+                {
                   path: 'invitations',
                   loadChildren: () => import('@blockframes/event/form/invitation/invitation.module').then(m => m.InvitationModule),
-                  data: { animation: 2 }
+                  data: { animation: 3 }
                 },
                 {
                   path: 'files',
                   loadChildren: () => import('@blockframes/event/form/meeting-files/meeting-files.module').then(m => m.MeetingFilesModule),
-                  data: { animation: 3 }
+                  data: { animation: 4 }
                 },
                 {
                   path: 'statistics',
                   loadChildren: () => import('@blockframes/event/pages/analytics/analytics.module').then(m => m.AnalyticsModule),
-                  data: { animation: 4 }
+                  data: { animation: 5 }
                 }
               ],
             },
