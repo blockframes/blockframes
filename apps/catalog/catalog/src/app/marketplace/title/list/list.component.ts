@@ -28,7 +28,7 @@ import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-enc
 import { ContractService } from '@blockframes/contract/contract/+state';
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { AvailsFilter, filterContractsByTitle, availableTitle, FullMandate } from '@blockframes/contract/avails/avails';
+import { AvailsFilter, filterContractsByTitle, availableTitle, FullMandate, getMandateTerms } from '@blockframes/contract/avails/avails';
 import { Mandate, Sale } from '@blockframes/model';
 
 @Component({
@@ -161,14 +161,13 @@ export class ListComponent implements OnDestroy, OnInit {
       return;
     }
 
-    const titleId = title.objectID;
-    const parentTermId = title.mandates[0]?.id;
-    if (!parentTermId) {
-      this.snackbar.open(`This title is not available`, 'close', { duration: 5000 });
+    const [parentTerm] = getMandateTerms(this.availsForm.value, title.mandates[0].terms);
+    if (!parentTerm) {
+      this.snackbar.open('This title is not available', 'close', { duration: 5000 });
       return;
     }
 
-    this.bucketService.addTerm(titleId, parentTermId, this.availsForm.value);
+    this.bucketService.addTerm(title.objectID, parentTerm.id, this.availsForm.value);
 
     this.snackbar.open(`${title.title.international} was added to your Selection`, 'GO TO SELECTION', { duration: 4000 })
       .onAction()

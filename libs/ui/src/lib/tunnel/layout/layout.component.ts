@@ -79,10 +79,8 @@ export class TunnelLayoutComponent implements OnInit {
 
   public urlBynav$: Observable<[string, TunnelStep[]]>;
   public currentStep$ = this.url$.pipe(
-    map(url => getStepSnapshot(this.steps, url)),
-    tap(currentStep => this.currentStep = currentStep)
+    map(url => getStepSnapshot(this.steps, url))
   );
-  public currentStep: TunnelStepSnapshot;
 
   public next$ = this.url$.pipe(
     map(url => getPage(this.steps, url, 1))
