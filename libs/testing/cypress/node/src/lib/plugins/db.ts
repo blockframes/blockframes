@@ -15,7 +15,8 @@ export async function getRandomUser() {
 }
 
 function getMarketplaceOrgs(app: App) {
-  return db.collection('orgs')
+  return db
+    .collection('orgs')
     .where('status', '==', 'accepted')
     .where(`appAccess.${app}.marketplace`, '==', true)
     .where(`appAccess.${app}.dashboard`, '==', false)
@@ -23,10 +24,7 @@ function getMarketplaceOrgs(app: App) {
 }
 
 function getDashboardOrgs(app: App) {
-  return db.collection('orgs')
-    .where('status', '==', 'accepted')
-    .where(`appAccess.${app}.dashboard`, '==', true)
-    .get();
+  return db.collection('orgs').where('status', '==', 'accepted').where(`appAccess.${app}.dashboard`, '==', true).get();
 }
 
 export async function getRandomOrg(data: { app: App; access: ModuleAccess }) {

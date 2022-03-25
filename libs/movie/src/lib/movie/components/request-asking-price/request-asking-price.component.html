@@ -33,9 +33,9 @@
   </mat-form-field>
 
   <footer class="button-container" fxLayout="column" fxLayoutAlign="center center">
-    <button mat-flat-button color="primary" [disabled]="form.disabled || form.invalid" type="submit" (click)="send()">
+    <button mat-flat-button color="primary" [disabled]="sending || form.invalid" type="submit" (click)="send()">
       <span>Send My Request</span>
-      <ng-container *ngIf="form.disabled">
+      <ng-container *ngIf="sending">
         <mat-spinner diameter="16"></mat-spinner>
       </ng-container>
     </button>

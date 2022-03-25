@@ -13,7 +13,7 @@ import {
   deleteEmail,
   assertUrlIncludes,
   createFakeUserDataArray
-} from '@blockframes/testing/cypress/client';
+} from '@blockframes/testing/cypress/browser';
 import { capitalize } from '@blockframes/utils/helpers';
 import { User, Organization } from '@blockframes/model';
 import { orgActivity, territories } from '@blockframes/utils/static-model/static-model';

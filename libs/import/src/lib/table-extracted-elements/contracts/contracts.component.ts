@@ -83,15 +83,19 @@ export class TableExtractedContractsComponent implements OnInit {
     try {
       const creations = this.selection.selected.filter(importState => importState.newContract && !hasImportErrors(importState));
       for (const contract of creations) {
-        const success = this.addContract(contract, 'create');
-        if (success)
-          this.processedContracts++;
+        const success = await this.addContract(contract, 'create');
+        if (success) this.processedContracts++;
       }
-      this.snackBar.open(`${this.processedContracts}/${creations.length} contracts created!`, 'close', { duration: 3000 });
+
+      const text = this.processedContracts === creations.length
+        ? `${creations.length}/${creations.length} contract(s) created!`
+        : `Could not import all contracts (${this.processedContracts} / ${this.selection.selected.length})`;
+      this.snackBar.open(text, 'close', { duration: 3000 });
+
       this.processedContracts = 0;
       return true;
     } catch (err) {
-      console.error(err)
+      console.error(err);
       this.snackBar.open(`Could not import all contracts (${this.processedContracts} / ${this.selection.selected.length})`, 'close', { duration: 3000 });
       this.processedContracts = 0;
     }

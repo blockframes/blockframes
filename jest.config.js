@@ -7,5 +7,6 @@
     '<rootDir>/apps/libs',
     '<rootDir>/libs/testing/cypress',
     '<rootDir>/libs/model',
+    '<rootDir>/libs/testing/cypress/node',
   ],
 };

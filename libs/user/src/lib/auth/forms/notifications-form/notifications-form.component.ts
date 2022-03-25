@@ -18,7 +18,7 @@ const titleType: Record<NotificationTypesBase, NotificationSetting> = {
   movieAskingPriceRequested: { text: `A user requests the asking price for a title.`, tooltip: false },
   movieAskingPriceRequestSent: { text: `Your request for the asking price has been sent.`, tooltip: false },
   requestFromUserToJoinOrgCreate: { text: 'A user requests to join your organization.', tooltip: true },
-  requestFromUserToJoinOrgDeclined: { text: 'A user\'s request to join your organization was declined. ', tooltip: false },
+  requestFromUserToJoinOrgDeclined: { text: 'A user\'s request to join your organization was declined. ', tooltip: false }, // TODO 8026
   orgMemberUpdated: { text: 'A user joins or leaves your organization.', tooltip: false },
   requestToAttendEventSent: { text: 'Your request to join an event is successfully sent.', tooltip: false },
   eventIsAboutToStart: { text: 'REMINDER - An event you\'re attending will start in 1 hour. (RECOMMENDED)', tooltip: false },
@@ -29,7 +29,7 @@ const titleType: Record<NotificationTypesBase, NotificationSetting> = {
   invitationToAttendMeetingCreated: { text: 'You are invited to a meeting. (RECOMMENDED)', tooltip: true },
   invitationToAttendScreeningCreated: { text: 'You are invited to a screening. (RECOMMENDED)', tooltip: true },
   screeningRequested: { text: 'A screening has been requested. (RECOMMENDED)', tooltip: false },
-  screeningRequestSent: { text: 'Your screening request for screening was successfully sent', tooltip: false },
+  screeningRequestSent: { text: 'Your screening request was successfully sent', tooltip: false },
   offerCreatedConfirmation: { text: 'Your offer is successfully sent', tooltip: false },
   contractCreated: { text: 'An offer has been made on one of your titles. (RECOMMENDED)', tooltip: true },
   createdCounterOffer: { text: 'You\'ve created a counter offer.', tooltip: true },
@@ -45,7 +45,7 @@ const titleType: Record<NotificationTypesBase, NotificationSetting> = {
 const tables: { title: string, types: string[], appAuthorized: App[] }[] = [
   {
     title: 'Company Management',
-    types: ['requestFromUserToJoinOrgCreate', 'orgMemberUpdated', 'requestFromUserToJoinOrgDeclined'],
+    types: ['requestFromUserToJoinOrgCreate', 'orgMemberUpdated'],
     appAuthorized: ['catalog', 'festival', 'financiers']
   },
   {
