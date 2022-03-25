@@ -12,10 +12,10 @@ import {
 
 // Blockframes
 import { Movie } from '@blockframes/model';
-import { Location } from '@angular/common';
 import { Router, NavigationEnd, Event } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
+import { NavigationService } from '@blockframes/ui/navigation.service'
 
 function createMovieView(movie: Movie) {
   return {
@@ -45,7 +45,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private countRouteEvents = 1;
   private sub: Subscription;
 
-  constructor(private location: Location, private router: Router) {}
+  constructor(private router: Router, private navService: NavigationService) {}
 
   @Input() showBackArrow = true;
   @Input() set movie(movie: Movie) {
@@ -70,7 +70,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   goBack() {
-    this.location.historyGo(-this.countRouteEvents);
+    this.navService.back();
   }
 }
 

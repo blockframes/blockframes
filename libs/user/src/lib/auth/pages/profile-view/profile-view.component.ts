@@ -82,6 +82,6 @@ export class ProfileViewComponent implements OnInit, OnDestroy {
   }
 
   goBack() {
-    this.navService.back(['/c/o'])
-}
+    this.navService.back();
+  }
 }

@@ -8,7 +8,6 @@ import {
   Directive,
 } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet, Event, ActivatedRoute } from '@angular/router';
-import { Location } from '@angular/common';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { Subscription } from 'rxjs';
 import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
@@ -18,6 +17,7 @@ import { FORMS_CONFIG, ShellConfig } from '../../form/movie.shell.interfaces';
 import { filter, pluck, switchMap, tap } from 'rxjs/operators';
 import { APP } from '@blockframes/utils/routes/utils';
 import { App } from '@blockframes/utils/apps';
+import { NavigationService } from '@blockframes/ui/navigation.service';
 
 @Directive({ selector: 'movie-cta, [movieCta]' })
 export class MovieCtaDirective {}
@@ -47,8 +47,8 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
     @Inject(APP) public app: App,
     private movieService: MovieService,
     private router: Router,
-    private location: Location,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private navService: NavigationService
   ) {}
 
   async ngOnInit() {
@@ -65,7 +65,7 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
   }
 
   goBack() {
-    this.location.historyGo(-this.countRouteEvents);
+    this.navService.back();
   }
 
   getForm<K extends keyof ShellConfig>(name: K): ShellConfig[K]['form'] {
