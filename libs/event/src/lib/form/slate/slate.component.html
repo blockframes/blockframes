@@ -12,8 +12,8 @@
   <ng-container *ngIf="(titles$ | async) as titles; else loading">
     <ng-container *ngIf="(videos$ | async) as videos; else loading">
       <!-- Video -->
-      <p>Add a video you'll want to screen.<br>
-        If you can't find the videos you're looking for, you can upload them directly in <strong>My Files/Company/Videos</strong> section.</p>
+      <p>Add a video you'll want to screen.<br>If you can't find the videos you're looking for, you can upload them directly in
+      <a routerLink="/c/o/dashboard/files" target="_blank"><strong>My Files/Company/Videos</strong></a> section.</p>
       <mat-form-field appearance="outline">
         <mat-label>{{videos.length ? 'Select video to display' : 'You have no video to select'}}</mat-label>
         <mat-select formControlName="video" [disabled]="!videos.length">
