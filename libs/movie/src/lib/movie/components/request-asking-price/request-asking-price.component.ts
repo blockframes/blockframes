@@ -20,7 +20,7 @@ export class RequestAskingPriceComponent {
     territories: new FormStaticValueArray<'territories'>([], 'territories', [Validators.required]),
     message: new FormControl()
   });
-
+  sending = false;
   constructor(
     private authService: AuthService,
     private dialog: MatDialogRef<RequestAskingPriceComponent>,
@@ -32,6 +32,7 @@ export class RequestAskingPriceComponent {
 
   async send() {
     try {
+      this.sending = true;
       this.form.disable();
       const territories = toLabel(this.form.get('territories').value, 'territories', ', ', ' and ');
       const message = this.form.get('message').value ?? 'No message provided.';
@@ -47,6 +48,7 @@ export class RequestAskingPriceComponent {
       this.dialog.close(true);
     } catch (err) {
       this.form.enable();
+      this.sending = false;
       console.error(err);
     }
   }

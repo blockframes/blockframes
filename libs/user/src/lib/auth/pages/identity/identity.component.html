@@ -15,14 +15,14 @@
         <mat-form-field class="email-input" appearance="outline" fxFlex>
           <mat-icon matPrefix svgIcon="mail"></mat-icon>
           <mat-label>Email</mat-label>
-          <input matInput type="email" aria-label="email" test-id="email" formControlName="email" required email>
+          <input matInput type="email" aria-label="email" formControlName="email" required email test-id="email">
 
         </mat-form-field>
 
         <article fxFlex fxLayout="row" fxLayoutGap="24px" fxLayout.lt-md="column">
           <mat-form-field appearance="outline">
             <mat-label>First Name</mat-label>
-            <input matInput type="text" placeholder="First Name" formControlName="firstName" required />
+            <input matInput type="text" placeholder="First Name" formControlName="firstName" required test-id="first-name"/>
             <mat-error *ngIf="form.get('firstName').hasError('required')">
               First name is <strong>required</strong>
             </mat-error>
@@ -30,7 +30,7 @@
 
           <mat-form-field appearance="outline">
             <mat-label>Last Name</mat-label>
-            <input matInput type="text" placeholder="Last Name" formControlName="lastName" required />
+            <input matInput type="text" placeholder="Last Name" formControlName="lastName" required test-id="last-name"/>
             <mat-error *ngIf="form.get('lastName').hasError('required')">
               Last name is <strong>required</strong>
             </mat-error>
@@ -95,13 +95,13 @@
         <mat-form-field appearance="outline" *ngIf="form.get('password').enabled">
           <mat-label>New Password</mat-label>
           <input
-            test-id="password"
             matInput
             type="password"
             placeholder="New Password"
             formControlName="password"
             [errorStateMatcher]="currentPasswordMatch"
             required
+            test-id="password"
           />
           <mat-hint>Between 6 and 24 characters.</mat-hint>
           <mat-error *ngIf="form.get('password').hasError('required')">
@@ -120,13 +120,13 @@
         <mat-form-field appearance="outline" *ngIf="form.get('confirm').enabled">
           <mat-label>New Password Confirmation</mat-label>
           <input
-            test-id="password-confirm"
             matInput
             type="password"
             placeholder="New Password Confirmation"
             formControlName="confirm"
             [errorStateMatcher]="passwordsMatcher"
             required
+            test-id="password-confirm"
           />
           <mat-hint>Rewrite new password for confirmation.</mat-hint>
           <mat-error *ngIf="form.get('confirm').hasError('required')">
@@ -140,13 +140,13 @@
         <!-- TERMS OF USE & PRIVACY POLICY -->
 
         <div class="privacy" fxLayout="column" fxLayoutAlign="start" fxLayoutGap="16px">
-          <mat-checkbox test-id="checkbox" color="primary" formControlName="termsOfUse">
+          <mat-checkbox test-id="terms" color="primary" formControlName="termsOfUse">
             <span class="mat-caption">I hereby accept {{ app | appName }}&nbsp;
               <a target="_blank" routerLink="/auth/terms">Terms and Conditions</a>.
             </span>
           </mat-checkbox>
-          
-          <mat-checkbox test-id="checkbox" color="primary" formControlName="privacyPolicy">
+
+          <mat-checkbox test-id="gdpr" color="primary" formControlName="privacyPolicy">
             <span class="mat-caption">I hereby accept the Processing of my Personal Data and declare to know&nbsp;
               <a target="_blank" routerLink="/auth/privacy">the Conditions of such Processing and my rights under GDPR Regulation</a>.
             </span>
@@ -156,7 +156,8 @@
 
       <ng-container *ngIf="!creating else creatingAccount">
         <button @slideDown (click)="signUp()" type="submit" mat-flat-button color="accent"
-          [disabled]="form.invalid || orgForm.invalid">
+          [disabled]="form.invalid || orgForm.invalid" test-id="submit"
+        >
           Sign up
         </button>
       </ng-container>

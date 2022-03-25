@@ -2,7 +2,9 @@
 
 import { User as UserType } from '@blockframes/e2e/utils/type';
 import { User, USER } from '@blockframes/e2e/fixtures/users';
-import { assertMoveTo } from '@blockframes/e2e/utils/functions';
+//TODO define proper way to import next line #8071
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import { assertUrlIncludes } from '@blockframes/testing/cypress/browser';
 
 import { SEC } from '@blockframes/e2e/utils/env';
 
@@ -44,14 +46,14 @@ describe('User can import objects with Excel', () => {
     cy.viewport('ipad-2', 'landscape');
   });
 
-  //TODO : Skip for now - Issue : 7249 
+  //TODO : Skip for now - Issue : 7249
   it.skip('Login as Dashboard user, Select Movies and import ', () => {
     logInAndNavigate(jean);
 
     cy.get('aside a[routerlink="title"]', {timeout: 5 * SEC})
       .click();
 
-    assertMoveTo(MY_TITLES_PAGE);
+    assertUrlIncludes(MY_TITLES_PAGE);
 
     cy.log('Navigated to import title page');
     cy.get('a[test-id="import-titles"]', {timeout: 30 * SEC})
@@ -100,7 +102,7 @@ describe('User can import objects with Excel', () => {
     cy.get('aside a[routerlink="sales"]', {timeout: 5 * SEC})
       .click();
 
-    assertMoveTo(MY_SALES_PAGE);
+    assertUrlIncludes(MY_SALES_PAGE);
 
     cy.log('Navigated to import contracts page');
     cy.get('a[test-id="import-contracts"]', {timeout: 30 * SEC})
