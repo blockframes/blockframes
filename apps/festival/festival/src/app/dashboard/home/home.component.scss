@@ -1,0 +1,27 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+
+  & > * {
+    margin-bottom: 24px;
+  }
+}
+
+.carousel-container {
+  display: flex;
+  flex-direction: column;
+  
+  h5 {
+    text-decoration: underline;
+  }
+
+  bf-carousel {
+    margin-top: 24px;
+  }
+}
+
+.see_titles {
+  align-self: center;
+  margin-top: 24px;
+}
