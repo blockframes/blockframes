@@ -188,17 +188,21 @@ export class InvitationService extends CollectionService<InvitationState> {
     }
   }
 
-  invitationCounter(lastFourMonths: boolean = false) {
-    if (lastFourMonths) {
-      return this.myInvitations$.pipe(
-        map((invitations: Invitation[]) =>
-          invitations.filter(invitation => invitation.date > subMonths(new Date(), 4))
-        ),
-        map((inv: Invitation[]) => inv.length)
-      );
-    }
+  invitationCounter(pendingStatus: boolean = true) {
     return this.myInvitations$.pipe(
-      map((invitations: Invitation[]) => invitations.filter((invitation) => invitation.status === 'pending').length)
-    );
+      map((invitations: Invitation[]) => invitations.filter((invitation) => {
+        if (
+          pendingStatus &&
+          invitation.status === 'pending' &&
+          invitation.date > subMonths(new Date(), 4)
+          ) return true;
+        else if (
+          !pendingStatus &&
+          invitation.date > subMonths(new Date(), 4)
+          ) return true;
+        return false;
+      })),
+      map((invitations: Invitation[]) => invitations.length)
+    )
   }
 }
