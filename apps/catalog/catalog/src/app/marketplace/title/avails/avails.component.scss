@@ -14,8 +14,42 @@ mat-card {
 
 .expansion-panel-content {
   margin-left: 32px;
+
+  button {
+    float: right;
+  }
 }
 
 #rights {
   margin-top: 32px;
+}
+
+.excluding-territories-container {
+  margin: 0 auto;
+
+  li {
+    display: grid;
+    grid-template-columns: 90px auto;
+    align-items: center;
+    justify-content: flex-start;
+
+    div {
+      font-size: 13px;
+    }
+
+    span {
+      font-weight: 500;
+    }
+
+    &:first-child {
+      margin-bottom: 8px;
+    }
+    
+  }
+
+  .excluding-territories {
+    mat-chip {
+      opacity: 0.57;
+    }
+  }
 }
