@@ -4,26 +4,20 @@ import { Territory } from './types'
 export const contractStatus = {
   accepted: 'Accepted',
   declined: 'Declined',
-  archived: 'Archived',
-  paid: 'Paid',
-  unknown: 'Unknown',
-  waitingsignature: 'Waiting for signature',
-  waitingpayment: 'Waiting for payment',
-  rejected: 'Rejected',
-  aborted: 'Aborted',
   /**
    * @dev first status of a contract
    * Starting from this status, the contract is visible by creator only
    */
-  draft: 'Draft',
+  // draft: 'Draft',
   /**
    * @dev once the user hit the submit button, the contract is waiting for approvment
    * Starting from this status, the contract is visible by creator (but not editable anymore) and by admins
    */
-  submitted: 'Submitted',
   negotiating: 'In Negotiation',
-  pending: 'New',
+  pending: 'Pending',
 } as const
+
+export const importContractStatus = ['In Negotiation', 'On Signature', 'Signed', 'Accepted', 'Declined'] as const;
 
 export const contractType = {
   mandate: 'Mandate',
