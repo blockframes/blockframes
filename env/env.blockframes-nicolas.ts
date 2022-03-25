@@ -62,7 +62,7 @@ export const supportEmails = {
   default: 'ngermain@cascade8.com',
   catalog: 'ngermain+catalog@cascade8.com',
   festival: 'ngermain+festival@cascade8.com',
-  financiers: 'ngermain+financiers@cascade8.com'
+  financiers: 'ngermain+financiers@cascade8.com',
 }
 
 // Yandex
@@ -73,6 +73,14 @@ export const yandex = {
   financiers: 0,
   catalog: 0
 };
+
+// Hotjar
+// ========
+export const hotjar = {
+  festival: 0,
+  financiers: 0,
+  catalog: 0
+}
 
 // Intercom
 // ========

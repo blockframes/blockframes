@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, ViewChild } from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild } from "@angular/core";
 import { AnalyticData } from "@blockframes/analytics/+state/utils";
 import {
   ApexChart,
@@ -34,7 +34,15 @@ export class PieChartComponent {
     labels: [],
     chart: {
       width: '100%',
-      type: 'pie'
+      type: 'pie',
+      events: {
+        dataPointSelection: (event, chartContext, config) => {
+          const label = config.w.config.labels[config.dataPointIndex];
+          const value = this.previousSelection === label ? '' : label;
+          this.selection.next(value);
+          this.previousSelection = value;
+        }
+      }
     },
     dataLabels: {
       formatter: (value, { seriesIndex, w }) => {
@@ -64,4 +72,6 @@ export class PieChartComponent {
     this.chart?.updateOptions(this.pieChartOptions);
   }
 
+  private previousSelection?: string;
+  @Output() selection: EventEmitter<string> = new EventEmitter();
 }

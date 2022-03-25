@@ -219,3 +219,7 @@ export function hasDisplayName(user: User): boolean {
 export function hasDenomination(organization: Organization): boolean {
   return !!organization && !!organization.denomination.full;
 }
+
+export function capitalize(text: string) {
+  return `${text[0].toUpperCase()}${text.substring(1)}`;
+}

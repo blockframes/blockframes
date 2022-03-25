@@ -14,6 +14,9 @@ export interface SheetTab {
   headers: any[];
   rows: any[][];
 }
+interface GroupedListOptions {
+  required: boolean;
+}
 
 type Join<K extends string, P extends string> = '' extends P ? K : `${K}.${P}`;
 type GetKey<T, K extends Extract<keyof T, string>> =
@@ -242,13 +245,13 @@ export function getStaticList<S extends Scope>(scope: S, value: string, separato
 }
 
 const fromGroup = {
-  territories: (territories, separator) => getStaticList('territories', territories, separator, 'Territories', true, 'world'),
-  medias: (medias, separator) => getStaticList('medias', medias, separator, 'Medias', true, 'all'),
+  territories: (territories, separator, required: boolean) => getStaticList('territories', territories, separator, 'Territories', required, 'world'),
+  medias: (medias, separator, required: boolean) => getStaticList('medias', medias, separator, 'Medias', required, 'all'),
 }
 
-export function getGroupedList(value: string, groupScope: 'territories', separator: string): FromStatic<'territories'>;
-export function getGroupedList(value: string, groupScope: 'medias', separator: string): FromStatic<'medias'>;
-export function getGroupedList<GS extends GroupScope>(value: string, groupScope: GS, separator: string) {
+export function getGroupedList(value: string, groupScope: 'territories', separator: string, options?: GroupedListOptions): FromStatic<'territories'>;
+export function getGroupedList(value: string, groupScope: 'medias', separator: string, options?: GroupedListOptions): FromStatic<'medias'>;
+export function getGroupedList<GS extends GroupScope>(value: string, groupScope: GS, separator: string, options = { required: true }) {
   const elements = split(value, separator);
   const groupLabels = staticGroups[groupScope].map(group => group.label);
   const allElements = elements.map(element => {
@@ -258,8 +261,7 @@ export function getGroupedList<GS extends GroupScope>(value: string, groupScope:
   }).flat();
 
   const elementList = Array.from(new Set(allElements)).join(separator);
-
-  return fromGroup[groupScope](elementList, separator);
+  return fromGroup[groupScope](elementList, separator, options.required);
 }
 
 export function split(cell: string, separator: string) {

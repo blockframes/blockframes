@@ -11,11 +11,11 @@ import { PublicUser, OrganizationDocument, PublicOrganization, MovieDocument, cr
 import { EventEmailData, OrgEmailData, UserEmailData, getMovieEmailData, getOfferEmailData } from '@blockframes/utils/emails/utils';
 import { App, appName, Module } from '@blockframes/utils/apps';
 import { format } from "date-fns";
-import { testEmail } from "@blockframes/e2e/utils/env";
 import { Offer } from '@blockframes/contract/offer/+state';
 import { staticModel } from '@blockframes/utils/static-model';
 import { Timestamp } from '../data/internals';
 import { displayName } from '@blockframes/utils/utils';
+import { supportMailosaur } from '@blockframes/utils/constants';
 
 const ORG_HOME = '/c/o/organization/';
 const USER_CREDENTIAL_INVITATION = '/auth/identity';
@@ -27,6 +27,7 @@ const ADMIN_REVIEW_MOVIE_PATH = '/c/o/dashboard/crm/movie';
  * @param app
  */
 function getSupportEmail(app?: App) {
+  if (e2eMode) return supportMailosaur;
   if (app && !!supportEmails[app]) {
     return supportEmails[app]
   }
@@ -149,15 +150,6 @@ export function invitationToJoinOrgDeclined(toAdmin: UserEmailData, userSubject:
     userSubject,
   };
   return { to: toAdmin.email, templateId: templateIds.invitation.organization.declined, data };
-}
-
-/** Send email to users to inform them that organization has declined their request to join it */
-export function requestToJoinOrgDeclined(toUser: UserEmailData, org: OrgEmailData): EmailTemplateRequest {
-  const data = {
-    user: toUser,
-    org
-  };
-  return { to: toUser.email, templateId: templateIds.request.joinOrganization.declined, data };
 }
 
 /** Send email to org admin to inform him that an user has left his org */
@@ -378,6 +370,7 @@ export function buyerOfferCreatedConfirmationEmail(toUser: UserEmailData, org: O
     bucket: { ...bucket, contracts },
     user: toUser,
     pageURL,
+    baseUrl: appUrl.content,
     offer: getOfferEmailData(offer),
     org
   };
@@ -424,9 +417,12 @@ export function counterOfferSenderEmail(
   return { to: toUser.email, templateId: templateIds.negotiation.createdCounterOffer, data };
 }
 
-export function toAdminCounterOfferEmail(title: MovieDocument): EmailTemplateRequest {
+export function toAdminCounterOfferEmail(title: MovieDocument, offerId: string): EmailTemplateRequest {
+  const pageURL = `${appUrl.crm}/c/o/dashboard/crm/offer/${offerId}/view`;
+
   const data = {
-    movie: getMovieEmailData(title)
+    movie: getMovieEmailData(title),
+    pageURL
   };
   return { to: supportEmails.catalog, templateId: templateIds.negotiation.toAdminCounterOffer, data };
 }
@@ -520,8 +516,8 @@ export function organizationRequestedAccessToApp(org: OrganizationDocument, app:
   };
 }
 
-export function userFirstConnexion(user: PublicUser): EmailRequest {
-  const supportEmail = e2eMode ? testEmail : getSupportEmail(user._meta.createdFrom);
+export function userFirstConnexion(user: PublicUser) {
+  const supportEmail = getSupportEmail(user._meta.createdFrom);
   return {
     to: supportEmail,
     subject: 'New user connexion',
