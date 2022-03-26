@@ -7,7 +7,8 @@ import { joinWith } from '@blockframes/utils/operators';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { IncomeService } from '@blockframes/contract/income/+state';
 import { Intercom } from 'ng-intercom';
-import { Sale, contractStatus } from '@blockframes/model';
+import { Sale } from '@blockframes/model';
+import { contractStatus } from '@blockframes/utils/static-model';
 
 @Component({
   selector: 'sale-shell',
