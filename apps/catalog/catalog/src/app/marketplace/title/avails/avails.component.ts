@@ -41,7 +41,7 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
   public orgId = this.orgService.org.id;
   public periods = ['days', 'weeks', 'months', 'years'];
   public maxTerritories = 30;
-  public maxExcludingTerritories = 20;
+  public maxExcludedTerritories = 20;
 
   public bucketForm = new BucketForm();
 
@@ -236,7 +236,7 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
     this.avails.calendarForm.reset();
   }
 
-  excludingTerritories(currentTerritoryList: Territory[]) {
+  excludedTerritories(currentTerritoryList: Territory[]) {
     // List all keys of territories
     // Remove the word 'world' from the array
     const listKeys = Object.keys(territories).filter((t: Territory) => t !== 'world') as Territory[];

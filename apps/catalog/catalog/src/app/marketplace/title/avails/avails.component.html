@@ -51,7 +51,7 @@
 
               <ng-container *ngIf="(term.territories | toGroupLabel:'territories':'world') as territories">
 
-                <ng-container *ngIf="excludingTerritories(term.territories).length === maxExcludingTerritories; else excluding">
+                <ng-container *ngIf="excludedTerritories(term.territories).length === maxExcludedTerritories; else excluding">
                   <mat-chip disableRipple>
                     <mat-icon svgIcon="world"></mat-icon>
                     <span>World</span>
@@ -59,7 +59,7 @@
                 </ng-container>
 
                 <ng-template #excluding>
-                  <ng-container *ngIf="excludingTerritories(term.territories).length <= maxExcludingTerritories; else default">
+                  <ng-container *ngIf="excludedTerritories(term.territories).length <= maxExcludedTerritories; else default">
                     <div fxFlex fxLayout="column" fxLayoutAlign="start end">
                       <ul fxFlexAlign="start">
                         <li fxLayout="column" gdColumns="90px auto" fxLayoutAlign="center" gdAlignRows="start" fxLayoutGap="8px">
@@ -72,7 +72,7 @@
                         <li class="excluding-territories" fxLayout="column" gdColumns="90px auto" fxLayoutAlign="center" gdAlignRows="start" fxLayoutGap="8px">
                           <div>Excluding :</div>
                           <mat-chip-list aria-label="Territories">
-                            <mat-chip disableRipple *ngFor="let territory of excludingTerritories(term.territories)">{{ territory }}</mat-chip>
+                            <mat-chip disableRipple *ngFor="let territory of excludedTerritories(term.territories)">{{ territory }}</mat-chip>
                           </mat-chip-list>
                         </li>
                       </ul>
@@ -84,11 +84,9 @@
                 </ng-template>
 
                 <ng-template #default>
-                  <ng-container *ngIf="territories.length <= maxTerritories; else moreTerritories">
-                    <mat-chip-list aria-label="Territories">
-                      <mat-chip disableRipple *ngFor="let territory of territories">{{ territory }}</mat-chip>
-                    </mat-chip-list>
-                  </ng-container>
+                  <mat-chip-list aria-label="Territories" *ngIf="territories.length <= maxTerritories; else moreTerritories">
+                    <mat-chip disableRipple *ngFor="let territory of territories">{{ territory }}</mat-chip>
+                  </mat-chip-list>
                 </ng-template>
 
                 <ng-template #moreTerritories>
