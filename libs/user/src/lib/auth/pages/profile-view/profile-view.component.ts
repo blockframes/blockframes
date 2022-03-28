@@ -81,6 +81,6 @@ export class ProfileViewComponent implements OnInit, OnDestroy {
   }
 
   goBack() {
-    this.navService.goBack();
+    this.navService.goBack(this.countRouteEvents);
   }
 }

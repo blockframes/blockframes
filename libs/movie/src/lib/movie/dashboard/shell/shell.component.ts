@@ -31,7 +31,7 @@ export class MovieCtaDirective {}
 })
 export class DashboardTitleShellComponent implements OnInit, OnDestroy {
   private sub: Subscription;
-  private countRouteEvents = 1;
+  private countRouteEvents = 0;
   movie$ = this.route.params.pipe(
     pluck('movieId'),
     switchMap((movieId: string) => this.movieService.valueChanges(movieId)),
@@ -65,7 +65,7 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
   }
 
   goBack() {
-    this.navService.goBack();
+    this.navService.goBack(this.countRouteEvents);
   }
 
   getForm<K extends keyof ShellConfig>(name: K): ShellConfig[K]['form'] {

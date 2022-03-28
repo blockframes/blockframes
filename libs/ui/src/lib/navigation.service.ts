@@ -7,10 +7,10 @@ export class NavigationService {
 
   constructor(private router: Router, private location: Location) {}
     
-  goBack() {
+  goBack(countRouteEvents: number) {
     const state = this.location.getState() as { navigationId: number };
     state?.navigationId === 1
       ? this.router.navigate(['/c/o'])
-      : this.location.historyGo(-1);
+      : this.location.historyGo(-countRouteEvents);
   }
 }

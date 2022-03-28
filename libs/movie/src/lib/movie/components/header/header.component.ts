@@ -42,7 +42,7 @@ type MovieHeaderView = ReturnType<typeof createMovieView>;
 export class HeaderComponent implements OnInit, OnDestroy {
   public movieView: MovieHeaderView;
   private _movie: Movie;
-  private countRouteEvents = 1;
+  private countRouteEvents = 0;
   private sub: Subscription;
 
   constructor(private router: Router, private navService: NavigationService) {}
@@ -70,7 +70,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   goBack() {
-    this.navService.goBack();
+    this.navService.goBack(this.countRouteEvents);
   }
 }
 
