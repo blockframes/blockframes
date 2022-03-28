@@ -10,5 +10,5 @@ export class SummaryMediaVideosComponent {
 
   @Input() movie: MovieForm;
   @Input() link: string;
-
+  
 }
