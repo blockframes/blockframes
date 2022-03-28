@@ -1,11 +1,11 @@
 import { Component, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { NavigationEnd, Router, Event } from '@angular/router';
-import { Location } from '@angular/common';
 import { distinctUntilChanged, filter } from 'rxjs/operators';
 
 // Blockframes
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { OrganizationService } from '@blockframes/organization/+state';
+import { NavigationService } from '@blockframes/ui/navigation.service';
 
 const navLinks = [
   {
@@ -44,8 +44,8 @@ export class OrganizationViewComponent implements OnDestroy {
 
   constructor(
     private orgService: OrganizationService,
+    private navService: NavigationService,
     private dynTitle: DynamicTitleService,
-    private location: Location,
     private router: Router
   ) { }
 
@@ -54,11 +54,6 @@ export class OrganizationViewComponent implements OnDestroy {
   }
 
   goBack() {
-    const state = this.location.getState() as { navigationId: number };
-    if (state?.navigationId === 1) {
-      this.router.navigate(['/c/o']);
-    } else {
-      this.location.historyGo(-this.countRouteEvents);
-    }
+    this.navService.goBack(this.countRouteEvents);
   }
 }
