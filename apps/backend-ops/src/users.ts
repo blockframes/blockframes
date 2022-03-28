@@ -11,6 +11,7 @@ import { deleteAllUsers, importAllUsers } from '@blockframes/testing/unit-tests'
 import * as env from '@env';
 import { PublicUser, User } from '@blockframes/model';
 import { USER_FIXTURES_PASSWORD } from '@blockframes/firebase-utils/anonymize/util';
+import { subMonths } from 'date-fns';
 
 export const { storageBucket } = env.firebase();
 
@@ -55,8 +56,10 @@ async function createAllUsers(users: UserConfig[], auth: Auth) {
  * @param expectedUsers
  * @param auth
  */
-export async function removeUnexpectedUsers(expectedUsers: PublicUser[], auth: Auth) {
+export async function removeUnexpectedUsers(expectedUsers: PublicUser[], auth: Auth, options = { dryRun: false }) {
   let pageToken;
+  const now = new Date();
+  const threeMonthsAgo = subMonths(now, 3);
 
   do {
     const result = await auth.listUsers(1000, pageToken);
@@ -65,17 +68,34 @@ export async function removeUnexpectedUsers(expectedUsers: PublicUser[], auth: A
     const users = result.users.filter(u => u.providerData.length !== 0);
     pageToken = result.pageToken;
 
+    // Anonymous user creation time is older than 3 months and did not connected since
+    const anonymousUsers = result.users.filter(u => u.providerData.length === 0);
+    const anonymousUsersToRemove = anonymousUsers.filter(authUser => {
+      const creationTimeTimestamp = Date.parse(authUser.metadata.creationTime);
+      // Anonymous user was created more than 3 months ago
+      if (creationTimeTimestamp < threeMonthsAgo.getTime()) {
+        // User never connected, this case should never occur
+        if (!authUser.metadata.lastSignInTime) return true;
+
+        // User have not signed in within the last 3 months
+        const lastSignInTime = Date.parse(authUser.metadata.lastSignInTime);
+        if (lastSignInTime < threeMonthsAgo.getTime()) return true;
+      }
+
+      return false;
+    });
+
     // users - expected users => users that we don't want in the database.
-    const usersToRemove = differenceBy(users, expectedUsers, 'uid', 'email');
+    const usersToRemove = differenceBy(users, expectedUsers, 'uid', 'email').concat(anonymousUsersToRemove);
 
     // Note: this is usually bad practice to await in a loop.
     // In this VERY SPECIFIC case we just want to remove the user
     // and wait for some time to avoid exceeding Google's quotas.
     // This is "good enough", but do not reproduce in frontend / backend code.
     for (const user of usersToRemove) {
-      console.log('removing user:', user.email, user.uid);
+      console.log(`removing ${user.providerData.length ? 'regular' : 'anonymous'} user ${user.email} (${user.uid})`);
     }
-    await auth.deleteUsers(usersToRemove.map((user) => user.uid));
+    if (!options.dryRun) await auth.deleteUsers(usersToRemove.map((user) => user.uid));
     await sleep(100);
   } while (pageToken);
 
