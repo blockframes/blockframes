@@ -19,7 +19,7 @@ export class ViewComponent implements OnInit, OnDestroy {
   @Input() org: Organization;
   @ViewChild('main') main: ElementRef<HTMLDivElement>;
   public navClicked = false;
-  private countRouteEvents = 0;
+  private countRouteEvents = 1;
   private sub: Subscription;
 
   constructor(

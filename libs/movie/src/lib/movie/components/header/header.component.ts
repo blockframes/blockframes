@@ -42,10 +42,10 @@ type MovieHeaderView = ReturnType<typeof createMovieView>;
 export class HeaderComponent implements OnInit, OnDestroy {
   public movieView: MovieHeaderView;
   private _movie: Movie;
-  private countRouteEvents = 0;
+  private countRouteEvents = 1;
   private sub: Subscription;
 
-  constructor(private router: Router, private navService: NavigationService) {}
+  constructor(private router: Router, private navService: NavigationService) { }
 
   @Input() showBackArrow = true;
   @Input() set movie(movie: Movie) {

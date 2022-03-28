@@ -20,7 +20,7 @@ import { App } from '@blockframes/utils/apps';
 import { NavigationService } from '@blockframes/ui/navigation.service';
 
 @Directive({ selector: 'movie-cta, [movieCta]' })
-export class MovieCtaDirective {}
+export class MovieCtaDirective { }
 
 @Component({
   selector: '[routes] title-dashboard-shell',
@@ -31,7 +31,7 @@ export class MovieCtaDirective {}
 })
 export class DashboardTitleShellComponent implements OnInit, OnDestroy {
   private sub: Subscription;
-  private countRouteEvents = 0;
+  private countRouteEvents = 1;
   movie$ = this.route.params.pipe(
     pluck('movieId'),
     switchMap((movieId: string) => this.movieService.valueChanges(movieId)),
@@ -49,7 +49,7 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     private navService: NavigationService
-  ) {}
+  ) { }
 
   async ngOnInit() {
     this.configs.movie.onInit();
@@ -65,7 +65,7 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
   }
 
   goBack() {
-    this.navService.goBack(this.countRouteEvents);
+    this.navService.goBack(this.countRouteEvents, ['/c/o/dashboard/title']);
   }
 
   getForm<K extends keyof ShellConfig>(name: K): ShellConfig[K]['form'] {
