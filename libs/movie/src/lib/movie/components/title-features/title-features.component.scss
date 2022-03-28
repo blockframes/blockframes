@@ -3,6 +3,7 @@ p {
   white-space: nowrap;
   text-overflow: ellipsis;
   min-width: 0;
+  flex-wrap: wrap;
 }
 mat-divider {
   display: inline;
