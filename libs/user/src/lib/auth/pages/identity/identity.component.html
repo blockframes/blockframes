@@ -3,9 +3,9 @@
   <section fxLayout="column" fxLayoutAlign="center center">
     <h1>Create your account</h1>
     <p>Please fill in the form below to join the {{ app | appName }} platform</p>
-    <ng-container *ngIf="(user$ | async) === null">
+    <ng-container *ngIf="(user$ | async) === undefined">
       <p class="mat-body-2 text-primary">
-        Already have an account? <a routerLink="/auth/connexion">Log in here</a>
+        Already have an account? <a routerLink="/auth/connexion">Log in here.</a>
       </p>
     </ng-container>
     <article class="surface" fxLayout="column" fxLayoutAlign="center center">
