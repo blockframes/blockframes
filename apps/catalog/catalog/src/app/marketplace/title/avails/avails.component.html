@@ -50,28 +50,38 @@
             <article class="expansion-panel-content">
 
               <ng-container *ngIf="(term.territories | toGroupLabel:'territories':'world') as territories">
-                <ng-container *ngIf="excludingTerritories(term.territories).length <= maxExcludingTerritories; else default">
-                  <div fxFlex fxLayout="column" fxLayoutAlign="start end">
-                    <ul fxFlexAlign="start">
-                      <li fxLayout="column" gdColumns="90px auto" fxLayoutAlign="center" gdAlignRows="start" fxLayoutGap="8px">
-                        <div>Including :</div>
-                        <mat-chip disableRipple>
-                          <mat-icon svgIcon="world"></mat-icon>
-                          <span>World</span>
-                        </mat-chip>
-                      </li>
-                      <li class="excluding-territories" fxLayout="column" gdColumns="90px auto" fxLayoutAlign="center" gdAlignRows="start" fxLayoutGap="8px">
-                        <div>Excluding :</div>
-                        <mat-chip-list aria-label="Territories">
-                          <mat-chip disableRipple *ngFor="let territory of excludingTerritories(term.territories)">{{ territory }}</mat-chip>
-                        </mat-chip-list>
-                      </li>
-                    </ul>
-                    <button fxFlexAlign="end" mat-button class="spacing" (click)="openTerritoryModal(term)">
-                      ...See all the selected coutries
-                    </button>
-                  </div>
+
+                <ng-container *ngIf="excludingTerritories(term.territories).length === maxExcludingTerritories; else excluding">
+                  <mat-chip disableRipple>
+                    <mat-icon svgIcon="world"></mat-icon>
+                    <span>World</span>
+                  </mat-chip>
                 </ng-container>
+
+                <ng-template #excluding>
+                  <ng-container *ngIf="excludingTerritories(term.territories).length <= maxExcludingTerritories; else default">
+                    <div fxFlex fxLayout="column" fxLayoutAlign="start end">
+                      <ul fxFlexAlign="start">
+                        <li fxLayout="column" gdColumns="90px auto" fxLayoutAlign="center" gdAlignRows="start" fxLayoutGap="8px">
+                          <div>Including :</div>
+                          <mat-chip disableRipple>
+                            <mat-icon svgIcon="world"></mat-icon>
+                            <span>World</span>
+                          </mat-chip>
+                        </li>
+                        <li class="excluding-territories" fxLayout="column" gdColumns="90px auto" fxLayoutAlign="center" gdAlignRows="start" fxLayoutGap="8px">
+                          <div>Excluding :</div>
+                          <mat-chip-list aria-label="Territories">
+                            <mat-chip disableRipple *ngFor="let territory of excludingTerritories(term.territories)">{{ territory }}</mat-chip>
+                          </mat-chip-list>
+                        </li>
+                      </ul>
+                      <button fxFlexAlign="end" mat-button class="spacing" (click)="openTerritoryModal(term)">
+                        ...See all the selected coutries
+                      </button>
+                    </div>
+                  </ng-container>
+                </ng-template>
 
                 <ng-template #default>
                   <ng-container *ngIf="territories.length <= maxTerritories; else moreTerritories">
