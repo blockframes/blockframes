@@ -16,10 +16,6 @@ const applyFilters = (invitations: Invitation[], filters: { type: string[], stat
   return filters.status?.length ? inv.filter(inv => filters.status.includes(inv.status)) : inv;
 };
 
-const fourMonthsAgo = subMonths(new Date(), 4);
-// Filtering out invitations older than 4 months because there is no timeFrame supporting them in invitation-list component.
-const lastFourMonths = (invitation: Invitation) => invitation.date > fourMonthsAgo;
-
 @Component({
   selector: 'invitation-view',
   templateUrl: './invitation.component.html',
