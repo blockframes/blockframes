@@ -11,7 +11,7 @@ export async function deleteSelectedUsers(auth: admin.auth.Auth, uidToDelete: st
   await deletedUsers(auth, uidToDelete);
 }
 
-export async function deletedUsers(auth: admin.auth.Auth, uidToDelete: string[] = []) {
+async function deletedUsers(auth: admin.auth.Auth, uidToDelete: string[] = []) {
   let result: Partial<admin.auth.ListUsersResult> = { pageToken: undefined };
 
   console.log('Deleting users now...');

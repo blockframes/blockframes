@@ -206,7 +206,7 @@ export async function cleanUsers(
     const authUser: UserRecord = await auth.getUserByEmail(user.email).catch(() => undefined);
 
     if (authUser) {
-      const validUser = await isUserValid(user, authUser, permissions.docs.map(p => p.data() as PermissionsDocument));
+      const validUser = isUserValid(user, authUser, permissions.docs.map(p => p.data() as PermissionsDocument));
       // Check if ids are the same
       if (authUser.uid !== user.uid) {
         if (verbose) console.error(`ERR - uid missmatch for ${user.email}. db: ${user.uid} - auth : ${authUser.uid}`);
@@ -469,7 +469,7 @@ function isUserValid(
       }
 
       if (permission.roles[user.uid] === 'superAdmin') {
-        if (verbose) console.log(`USer ${user.uid} was not removed because he is superAdmin of orgId: ${user.orgId}`);
+        if (verbose) console.log(`User ${user.uid} was not removed because he is superAdmin of orgId: ${user.orgId}`);
         return true;
       } else {
         return false;
