@@ -1,7 +1,7 @@
 import { Location } from "@angular/common";
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { AggregatedAnalytic, createAggregatedAnalytic } from '@blockframes/model';
+import { AggregatedAnalytic, Analytics, createAggregatedAnalytic, Organization, PublicUser, User } from '@blockframes/model';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 import { MovieService } from "@blockframes/movie/+state/movie.service";
 import { OrganizationService } from "@blockframes/organization/+state";
@@ -17,6 +17,21 @@ function getFilter(scope: Scope) {
     const label = staticModel[scope][value];
     return label.toLowerCase().includes(input);
   };
+}
+
+function aggregatePerUser(analytics: (Analytics<"title"> & { user: User, org: Organization})[]) {
+  const aggregator: Record<string, AggregatedAnalytic> = {};
+  for (const analytic of analytics) {
+    if (!analytic.user?.uid) continue;
+    if (!aggregator[analytic.user.uid]) {
+      aggregator[analytic.user.uid] = createAggregatedAnalytic({
+        user: analytic.user,
+        org: analytic.org
+      });
+    };
+    aggregator[analytic.user.uid][analytic.name]++;
+  }
+  return Object.values(aggregator);
 }
 
 @Component({
@@ -53,20 +68,7 @@ export class TitleAnalyticsComponent {
   );
 
   buyerAnalytics$ = this.titleAnalytics$.pipe(
-    map(analytics => {
-      const aggregator: Record<string, AggregatedAnalytic> = {};
-      for (const analytic of analytics) {
-        if (!analytic.user?.uid) continue;
-        if (!aggregator[analytic.user.uid]) {
-          aggregator[analytic.user.uid] = createAggregatedAnalytic({
-            user: analytic.user,
-            org: analytic.org
-          });
-        };
-        aggregator[analytic.user.uid][analytic.name]++;
-      }
-      return Object.values(aggregator);
-    })
+    map(aggregatePerUser)
   )
 
   filters = {
@@ -84,6 +86,7 @@ export class TitleAnalyticsComponent {
   ) {}
 
   goBack() {
+    // TODO implement NavService: https://github.com/blockframes/blockframes/pull/8103/files
     this.location.back();
   }
 

@@ -5,7 +5,7 @@ import { Component, OnInit, ChangeDetectionStrategy, Optional, Inject } from '@a
 import { MovieService, fromOrg } from '@blockframes/movie/+state/movie.service';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { Movie } from '@blockframes/model';
+import { hasAppStatus, Movie } from '@blockframes/model';
 import { App } from '@blockframes/utils/apps';
 import { APP } from '@blockframes/utils/routes/utils';
 import { MovieAnalytics } from '@blockframes/analytics/components/movie-analytics-chart/movie-analytics.model';
@@ -67,9 +67,7 @@ export class HomeComponent implements OnInit {
     );
 
     this.titles$ = allMoviesFromOrg$.pipe(
-      map((movies) =>
-        movies.filter((movie) => ['accepted', 'submitted'].includes(movie.app[this.app].status))
-      ),
+      map((movies) => movies.filter(hasAppStatus(this.app, ['accepted', 'submitted']))),
       tap((movies) => {
         movies.length
           ? this.dynTitle.setPageTitle('Dashboard')

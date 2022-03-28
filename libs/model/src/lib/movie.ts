@@ -527,3 +527,7 @@ export function getAllowedproductionStatuses(app: App): ProductionStatus[] {
     .filter(status => (app === 'catalog' ? status === 'released' : true))
     .map(s => s as ProductionStatus);
 }
+
+export function hasAppStatus(app: App, status: StoreStatus[]) {
+  return (movie: Movie) => status.includes(movie.app[app].status);
+}

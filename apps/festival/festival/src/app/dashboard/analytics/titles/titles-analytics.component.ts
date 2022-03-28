@@ -2,12 +2,13 @@ import { ChangeDetectionStrategy, Component, Inject } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { map } from "rxjs/operators";
 // Blockframes
-import { AggregatedAnalytic, createAggregatedAnalytic } from "@blockframes/model";
+import { AggregatedAnalytic, Analytics, createAggregatedAnalytic, Movie } from "@blockframes/model";
 import { MovieService } from "@blockframes/movie/+state/movie.service";
 import { App } from "@blockframes/utils/apps";
 import { APP } from "@blockframes/utils/routes/utils";
 import { joinWith } from "@blockframes/utils/operators";
 import { EventService } from "@blockframes/event/+state";
+import { Event } from '@blockframes/model'
 
 interface AggregatedPerTitle extends AggregatedAnalytic {
   screenings: number;
@@ -19,6 +20,18 @@ function createAggregatedPerTitle(data: Partial<AggregatedPerTitle>): Aggregated
     ...data,
     ...createAggregatedAnalytic(data),
   }
+}
+
+function countAnalytics(title: Movie & { analytics?: Analytics[], events?: Event[] }) {
+  const aggregated = createAggregatedPerTitle({
+    title,
+    screenings: title.events?.length
+  });
+  if (!title.analytics) return aggregated;
+  for (const analytic of title.analytics) {
+    aggregated[analytic.name]++;
+  }
+  return aggregated;
 }
 
 @Component({
@@ -35,17 +48,7 @@ export class TitlesAnalyticsComponent {
         .where('type', '==', 'screening')
         .where('meta.titleId', '==', title.id))
     }),
-    map(titles => titles.map(title => {
-      const aggregated = createAggregatedPerTitle({
-        title,
-        screenings: title.events?.length
-      });
-      if (!title.analytics) return aggregated;
-      for (const analytic of title.analytics) {
-        aggregated[analytic.name]++;
-      }
-      return aggregated;
-    }))
+    map(titles => titles.map(countAnalytics))
   );
 
   constructor(

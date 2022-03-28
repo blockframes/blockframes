@@ -85,15 +85,15 @@ export class ColumnDirective<T> {
 
   $sort(data: T[]): Observable<T[]> {
     const sort = this.sort || sortValue;
-    const value$ = this.defaultSort ? this.control.valueChanges.pipe(startWith(this.control.value)) : this.control.valueChanges;
+    const value$ = this.defaultSort
+      ? this.control.valueChanges.pipe(startWith(this.control.value))
+      : this.control.valueChanges;
     return value$.pipe(
       map(asc => (asc ? 1 : -1)),
-      map(order =>
-        data.sort((a, b) => {
-          const sorting = sort(getDeepValue(a, this.name), getDeepValue(b, this.name));
-          return sorting * order;
-        })
-      )
+      map(order => data.sort((a, b) => {
+        const sorting = sort(getDeepValue(a, this.name), getDeepValue(b, this.name));
+        return sorting * order;
+      }))
     );
   }
 }

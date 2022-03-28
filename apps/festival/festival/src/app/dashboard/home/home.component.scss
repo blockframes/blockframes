@@ -2,26 +2,35 @@
   display: flex;
   flex-direction: column;
   padding: 24px;
+  gap: 24px;
+}
 
-  & > * {
-    margin-bottom: 24px;
+header {
+  display: flex;
+  gap: 24px;
+
+  h1 {
+    margin: auto auto auto 0;
   }
 }
 
 .carousel-container {
   display: flex;
   flex-direction: column;
-  
-  h5 {
-    text-decoration: underline;
+
+  article {
+    display: flex;
+
+    h3 {
+      margin: auto auto auto 0;
+    }
   }
 
   bf-carousel {
     margin-top: 24px;
   }
-}
 
-.see_titles {
-  align-self: center;
-  margin-top: 24px;
+  .see_titles {
+    margin: 24px auto auto;
+  }
 }

@@ -13,10 +13,16 @@ header {
 }
 
 section {
+  display: flex;
+  flex-direction: column;
   padding: 24px;
+  gap: 24px;
+
+  a {
+    margin-bottom: 16px;
+  }
 }
 
-.mat-button {
+.film-page-button {
   height: fit-content;
-  width: fit-content;
 }
