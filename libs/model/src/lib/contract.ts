@@ -1,5 +1,5 @@
 import { DocumentMeta, createDocumentMeta } from './meta';
-import type { Media, Territory } from '@blockframes/utils/static-model';
+import type { Media, Territory, ContractStatus } from '@blockframes/utils/static-model';
 import { Timestamp } from './timestamp';
 import { toDate } from '@blockframes/utils/helpers';
 import { createMailTerm, Duration } from './terms';
@@ -11,12 +11,6 @@ export function createMailContract(contract: BucketContract<Timestamp>) {
     terms: createMailTerm(contract.terms)
   })
 }
-
-export const contractStatus = ['pending', 'accepted', 'declined', 'negotiating'] as const;
-//represents status of contract in excel files
-export const importContractStatus = ['In Negotiation', 'On Signature', 'Signed', 'Accepted', 'Declined'] as const;
-export type ContractStatus = typeof contractStatus[number];
-export type ImportContractStatus = typeof importContractStatus[number];
 
 export interface Holdback<D extends Timestamp | Date = Date> {
   territories: Territory[];
