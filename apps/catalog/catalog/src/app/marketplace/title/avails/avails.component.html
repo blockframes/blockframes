@@ -69,7 +69,7 @@
                             <span>World</span>
                           </mat-chip>
                         </li>
-                        <li class="excluding-territories" fxLayout="column" gdColumns="90px auto" fxLayoutAlign="center" gdAlignRows="start" fxLayoutGap="8px">
+                        <li class="excluded-territories" fxLayout="column" gdColumns="90px auto" fxLayoutAlign="center" gdAlignRows="start" fxLayoutGap="8px">
                           <div>Excluding :</div>
                           <mat-chip-list aria-label="Territories">
                             <mat-chip disableRipple *ngFor="let territory of excludedTerritories(term.territories)">{{ territory }}</mat-chip>
@@ -97,7 +97,7 @@
                       </ng-container>
                     </mat-chip-list>
                     <button mat-button class="spacing" (click)="openTerritoryModal(term)">
-                      ...See {{ territories.length - 30 }} More
+                      ...See {{ territories.length - maxTerritories }} More
                     </button>
                   </div>
                 </ng-template>
