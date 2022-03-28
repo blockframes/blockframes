@@ -81,7 +81,6 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
           sales: res.sales,
           bucketContracts: res.bucketContracts,
         };
-        console.log(territoryAvailabilities(data))
         return territoryAvailabilities(data);
       }
     ),
