@@ -51,7 +51,7 @@
 
               <ng-container *ngIf="(term.territories | toGroupLabel:'territories':'world') as territories">
 
-                <ng-container *ngIf="excludedTerritories(term.territories).length === maxExcludedTerritories; else excluding">
+                <ng-container *ngIf="excludedTerritories(term.territories).length === 0; else excluding">
                   <mat-chip disableRipple>
                     <mat-icon svgIcon="world"></mat-icon>
                     <span>World</span>
