@@ -1,17 +1,9 @@
 import { appName } from '@blockframes/utils/apps';
-import { Territory } from './types'
+import { Territory } from './types';
 
 export const contractStatus = {
   accepted: 'Accepted',
   declined: 'Declined',
-  /**
-   * @dev first status of a contract
-   * Starting from this status, the contract is visible by creator only
-   */
-  /**
-   * @dev once the user hit the submit button, the contract is waiting for approvment
-   * Starting from this status, the contract is visible by creator (but not editable anymore) and by admins
-   */
   negotiating: 'In Negotiation',
   pending: 'New',
 } as const

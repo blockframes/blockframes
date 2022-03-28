@@ -1,5 +1,5 @@
-import { DocumentMeta } from '@blockframes/model';
 import { MovieCurrency, OfferStatus } from '@blockframes/utils/static-model';
+import { DocumentMeta } from './meta';
 
 export interface Offer {
   id: string;
