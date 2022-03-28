@@ -53,7 +53,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  public invitationCount$ = this.invitationService.invitationCounter();
+  public invitationCount$ = this.invitationService.invitationCount();
 
   public mode$ = this.breakpointsService.ltMd.pipe(
     map(ltMd => ltMd ? 'over' : 'side'),

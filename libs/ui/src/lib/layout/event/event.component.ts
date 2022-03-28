@@ -30,7 +30,7 @@ export class EventComponent implements OnInit {
   public user$ = this.authService.profile$;
   public wishlistCount$: Observable<number>;
   public notificationCount$ = this.notificationService.myNotificationsCount$;
-  public invitationCount$ = this.invitationService.invitationCounter();
+  public invitationCount$ = this.invitationService.invitationCount();
 
   @ViewChild(MatSidenav) sidenav: MatSidenav;
   @ViewChild(CdkScrollable) cdkScrollable: CdkScrollable;

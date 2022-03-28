@@ -188,21 +188,14 @@ export class InvitationService extends CollectionService<InvitationState> {
     }
   }
 
-  invitationCounter(pendingStatus: boolean = true) {
+  invitationCount({ onlyPending } = { onlyPending: true }) {
+    const fourMonthsAgo = subMonths(new Date(), 4);
+    // Filtering out invitations older than 4 months because there is no timeFrame supporting them in invitation-list component.
+    const lastFourMonths = (invitation: Invitation) => invitation.date > fourMonthsAgo;
     return this.myInvitations$.pipe(
-      map((invitations: Invitation[]) => invitations.filter((invitation) => {
-        if (
-          pendingStatus &&
-          invitation.status === 'pending' &&
-          invitation.date > subMonths(new Date(), 4)
-          ) return true;
-        else if (
-          !pendingStatus &&
-          invitation.date > subMonths(new Date(), 4)
-          ) return true;
-        return false;
-      })),
-      map((invitations: Invitation[]) => invitations.length)
+      map(invitations => invitations.filter(lastFourMonths)),
+      map(invitations => invitations.filter(invitation => onlyPending ? invitation.status === 'pending' : true)),
+      map(invitations => invitations.length)
     )
   }
 }

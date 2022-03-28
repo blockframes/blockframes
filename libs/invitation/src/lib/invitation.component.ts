@@ -9,7 +9,6 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { combineLatest } from 'rxjs';
 import { APP } from '@blockframes/utils/routes/utils';
 import { Invitation } from '@blockframes/model';
-import { subMonths } from 'date-fns';
 
 const applyFilters = (invitations: Invitation[], filters: { type: string[], status: string[] }) => {
   const inv = filters.type?.length ? invitations.filter(inv => filters.type.includes(inv.type)) : invitations;
@@ -29,7 +28,7 @@ export class InvitationComponent {
   });
 
   // Invitation count for conditions
-  invitationCount$ = this.service.invitationCounter(false);
+  invitationCount$ = this.service.invitationCount({ onlyPending: false })
 
   // Invitation that require an action
   invitations$ = combineLatest([
