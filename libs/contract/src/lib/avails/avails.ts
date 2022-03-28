@@ -445,7 +445,14 @@ export function isCalendarTermInAvails<T extends BucketTerm | Term>(term: T, ava
  * In case this does not hold, then nothing is available.
  */
 function getMatchingCalendarMandates(mandates: FullMandate[], avails: CalendarAvailsFilter) {
-  const availableMandates = mandates.map(mandate => {
+  const singleTermMandates: FullMandate[] = [];
+  const multiTermMandates: FullMandate[] = [];
+  for (const mandate of mandates) {
+    if (mandate.terms.length > 1) multiTermMandates.push(mandate);
+    else singleTermMandates.push(mandate);
+  }
+  const availableMandates = singleTermMandates.filter(mandate => mandate.terms.some(term => isCalendarTermInAvails(term, avails)));
+  const availableMultiTermMandates = multiTermMandates.map(mandate => {
     const territoryWise = avails.medias.every(media => mandate.terms.every(term => term.medias.includes(media)));
     const mediaWise = avails.territories.every(territory => mandate.terms.every(term => term.territories.includes(territory)));
     if (!territoryWise && !mediaWise) return;
@@ -490,8 +497,8 @@ function getMatchingCalendarMandates(mandates: FullMandate[], avails: CalendarAv
     if (isAfter(from, to) || isBefore(to, from)) return;
     availableTerms = availableTerms.map(term => ({ ...term, duration: { from, to } }));
     return { ...mandate, terms: availableTerms };
-  });
-  return availableMandates.filter(mandate => mandate);
+  }).filter(mandate => mandate);
+  return [availableMandates, availableMultiTermMandates].flat();
 }
 
 function getMatchingCalendarSales<T extends (FullSale | BucketContract)>(sales: T[], avails: CalendarAvailsFilter): T[] {
@@ -528,7 +535,7 @@ export function durationAvailabilities(
   assertValidTitle(mandates, sales, bucketContracts);
 
   const availableMandates = getMatchingCalendarMandates(mandates, avails);
-  console.log({availableMandates})
+  console.log({ availableMandates })
   const available = availableMandates.map(m => {
     return m.terms.map((t): DurationMarker =>
       ({ from: t.duration.from, to: t.duration.to, contract: m, term: t })
