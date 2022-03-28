@@ -28,7 +28,7 @@ export class InvitationComponent {
   });
 
   // Invitation count for conditions
-  invitationCount$ = this.service.invitationCount({ onlyPending: false })
+  invitationCount$ = this.service.invitationCount({ onlyPending: false });
 
   // Invitation that require an action
   invitations$ = combineLatest([
