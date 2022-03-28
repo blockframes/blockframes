@@ -50,6 +50,11 @@
         <map-feature [tag]="tag.isoA3" color="#1a49f5"
           (mouseover)="displayTerritoryTooltip(tag.label, 'Already in selection')" (mouseout)="clearTerritoryTooltip()">
         </map-feature>
+      </ng-container>      
+      <ng-container *ngFor="let tag of availabilities.notLicensed">
+        <map-feature [tag]="tag.isoA3" 
+          (mouseover)="displayTerritoryTooltip(tag.label, '')" (mouseout)="clearTerritoryTooltip()">
+        </map-feature>
       </ng-container>
 
       <!-- TOOLTIP ON HOVERING-->
