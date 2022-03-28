@@ -238,12 +238,11 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
 
   excludingTerritories(currentTerritoryList: Territory[]) {
     // List all keys of territories
-    const listKeys = Object.keys(territories);
     // Remove the word 'world' from the array
-    listKeys.splice(listKeys.indexOf('world'), 1);
+    const listKeys = Object.keys(territories).filter((t: Territory) => t !== 'world') as Territory[];
     // Filter to include only current territories and get the value of each keys
     return listKeys
-      .filter((territory: Territory) => !currentTerritoryList.includes(territory))
-      .map((territory: Territory) => territories[territory]);
+      .filter(territory => !currentTerritoryList.includes(territory))
+      .map(territory => territories[territory]);
   }
 }
