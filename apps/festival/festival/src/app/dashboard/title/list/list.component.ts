@@ -55,6 +55,10 @@ export class ListComponent {
     this.router.navigate([title.id], { relativeTo: this.route });
   }
 
+  public console(any: any) {
+    console.log(any);
+  }
+
   public openIntercom(): void {
     return this.intercom.show();
   }
@@ -66,5 +70,15 @@ export class ListComponent {
 
   resetFilter() {
     this.filter.reset();
+  }
+
+  view(index) {
+    console.log('view', index)
+  }
+  edit(index) {
+    console.log('edit', index)
+  }
+  archive(index) {
+    console.log('archive', index)
   }
 }
