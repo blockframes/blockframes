@@ -15,7 +15,7 @@
   </div>
 </ng-template>
 
-<ng-container *ngIf="form else loading">
+<ng-container *ngIf="form">
   <ng-template pageBar>
     <header fxLayout fxLayoutAlign="space-between center">
       <div fxLayout fxLayoutGap="40px">
@@ -69,8 +69,8 @@
   <a class="goToEvent" mat-button mat-flat-button color="primary" [routerLink]="internalLink">Go to Event Page</a>
 </ng-container>
 
-<ng-template #loading>
-  <section fxLAyout fxLayoutAlign="center center">
-    <mat-spinner></mat-spinner>
-  </section>
+<ng-template #somethingWentWrong>
+     <span class="snack-bar-text">Something went wrong.</span> 
+     <button class="snack-bar-button" type="button" (click)="refresh()" mat-button >REFRESH</button>
 </ng-template>
+

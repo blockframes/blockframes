@@ -38,6 +38,7 @@ const navTabs: NavTabs = {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EventFormShellComponent implements OnInit, OnDestroy {
+  @ViewChild('somethingWentWrong') somethingWentWrongTemplate: TemplateRef<unknown>;
   tabs$: Observable<TabConfig[]>;
   private sub: Subscription;
   form: EventForm;
@@ -89,12 +90,15 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
   }
 
   async save(options: { showSnackbar: boolean } = { showSnackbar: true }) {
+    try {
+      // throw 'Parameter is not a number!';
     if (this.form.valid && this.form.dirty) {
       const value = this.form.value;
       if (this.form.value.allDay) {
         value.start.setHours(0, 0, 0);
         value.end.setHours(23, 59, 59);
       }
+      // value.start = undefined
       await this.eventService.update(value);
       this.form.markAsPristine();
       this.cdr.markForCheck();
@@ -103,6 +107,15 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
       }
     }
     return true;
+  }
+    catch (err) {
+      console.log(err)
+      this.snackBar.openFromTemplate(this.somethingWentWrongTemplate, { duration: 5000 });
+    }
+  }
+
+  refresh() {
+    window.location.reload();
   }
 
   async remove() {
