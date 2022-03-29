@@ -6,6 +6,7 @@
 </h6>
 <ul>
   <li fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="8px">
+    <strong>Videos</strong>
     <missing-control [control]="movie.promotional.get('videos').get('otherVideos')" [link]="link">
       <ng-template let-videos>
         <ul>
@@ -29,17 +30,21 @@
   </li>
 
   <ng-container *ngIf="movie.promotional.get('videos').get('salesPitch') as salesPitch">
-    <li fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="8px">
-      <ul>
-        <li *ngIf="!!salesPitch.get('storagePath').value" fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="8px">
-          <strong>Sales Pitch</strong>
-          <bf-preview-modal [ref]="salesPitch.value"></bf-preview-modal>
-          {{ salesPitch.get('storagePath').value | fileName }}
-        </li>
-        <li *ngIf="!!salesPitch.get('description').value" fxLayout="row wrap" fxLayoutAlign="start start" fxLayoutGap="8px">
-          {{ salesPitch.get('description').value }}
-        </li>
-      </ul>
+    <li fxLayout="column" fxLayoutAlign="start" fxLayoutGap="8px">
+      <strong class="margin">Sales Pitch</strong>
+      <missing-control [control]="salesPitch.get('storagePath')" [link]="link">
+        <ng-template let-salesPitchStorage>
+          <ul>
+            <li  fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="8px">
+              <bf-preview-modal [ref]="salesPitch.value"></bf-preview-modal>
+              {{ salesPitchStorage | fileName }}
+            </li>
+            <li *ngIf="!!salesPitch.get('description').value" fxLayout="row wrap" fxLayoutAlign="start start" fxLayoutGap="8px">
+              {{ salesPitch.get('description').value }}
+            </li>
+          </ul>
+        </ng-template>
+      </missing-control>
     </li>
   </ng-container>
 </ul>
