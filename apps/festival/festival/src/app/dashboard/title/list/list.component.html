@@ -38,7 +38,7 @@
       <ng-template colRef="directors" label="Director(s)" let-directors>
         {{ directors | displayName | maxLength:50 }}
       </ng-template>
-      <ng-template colRef="productionStatus" label="Production Status" let-prod>
+      <ng-template colRef="productionStatus" label="Production Status" let-prod sort>
         {{ prod | toLabel: 'productionStatus' }}
       </ng-template>
       <ng-template colRef="app.festival.status" label="Status" let-status>
