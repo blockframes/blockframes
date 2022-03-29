@@ -1,11 +1,11 @@
 import { Component, ChangeDetectionStrategy, Input, ViewChild, ElementRef, OnInit, OnDestroy } from '@angular/core';
-import { Movie, Organization } from '@blockframes/model';
+import { Organization } from '@blockframes/model';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
-import { Location } from '@angular/common';
 import { NavigationEnd, Router, RouterOutlet, Event } from '@angular/router';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import { NavigationService } from '@blockframes/ui/navigation.service';
 
 @Component({
   selector: 'org-view',
@@ -23,8 +23,8 @@ export class ViewComponent implements OnInit, OnDestroy {
   private sub: Subscription;
 
   constructor(
-    private location: Location,
     private router: Router,
+    private navService: NavigationService    
   ) { }
 
   ngOnInit() {
@@ -38,7 +38,7 @@ export class ViewComponent implements OnInit, OnDestroy {
   }
 
   goBack() {
-    this.location.historyGo(-this.countRouteEvents);
+    this.navService.goBack(this.countRouteEvents);
   }
 
   scrollIntoView() {

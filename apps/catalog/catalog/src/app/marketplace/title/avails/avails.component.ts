@@ -22,6 +22,7 @@ import { BucketTerm, Term } from '@blockframes/model';
 import { ExplanationComponent } from './explanation/explanation.component';
 import { HoldbackModalComponent } from '@blockframes/contract/contract/holdback/modal/holdback-modal.component';
 import { scrollIntoView } from '../../../../../../../../libs/utils/src/lib/browser/utils';
+import { territories, Territory } from '@blockframes/utils/static-model';
 
 @Component({
   selector: 'catalog-movie-avails',
@@ -40,6 +41,7 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
   public orgId = this.orgService.org.id;
   public periods = ['days', 'weeks', 'months', 'years'];
   public maxTerritories = 30;
+  public maxExcludedTerritories = 20;
 
   public bucketForm = new BucketForm();
 
@@ -232,5 +234,15 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
     scrollIntoView(document.querySelector('#avails'));
     this.avails.mapForm.reset();
     this.avails.calendarForm.reset();
+  }
+
+  excludedTerritories(currentTerritoryList: Territory[]) {
+    // List all keys of territories
+    // Remove the word 'world' from the array
+    const listKeys = Object.keys(territories).filter((t: Territory) => t !== 'world') as Territory[];
+    // Filter to include only current territories and get the value of each keys
+    return listKeys
+      .filter(territory => !currentTerritoryList.includes(territory))
+      .map(territory => territories[territory]);
   }
 }
