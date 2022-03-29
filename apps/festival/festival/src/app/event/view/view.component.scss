@@ -1,3 +1,5 @@
+@import '~@angular/flex-layout/mq';
+
 header {
   padding: 40px;
   background-image: url('/assets/images/banner_empty.png');
@@ -66,7 +68,7 @@ event-request-screening {
   }
 }
 
-.meeting {
+.meeting, .slate {
   h5 {
     text-transform: uppercase;
   }
@@ -75,6 +77,25 @@ event-request-screening {
     img {
       height: 120px;
       border-radius: 50%;
+    }
+  }
+}
+.slate {
+  article {
+    padding: 16px;
+  }
+  movie-card {
+    width: calc(25% - 24px);
+    margin-right: 24px;
+  }
+}
+
+
+@include layout-bp(lt-md) {
+  .slate {
+    movie-card {
+      width: calc(50% - 8px);
+      margin-right: 8px;
     }
   }
 }

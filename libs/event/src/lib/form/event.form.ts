@@ -107,8 +107,8 @@ export function createSlateControl(params?: Partial<Slate>) {
   return {
     description: new FormControl(slate.description, [Validators.maxLength(500)]),
     organizerUid: new FormControl(slate.organizerUid),
-    titles: new FormControl(slate.titles),
-    video: new FormControl(slate.video)
+    titleIds: new FormControl(slate.titleIds),
+    videoId: new FormControl(slate.videoId)
   }
 }
 
