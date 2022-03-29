@@ -35,9 +35,6 @@
       <ng-template colRef="title.international" label="Title" let-title sort>
         <b>{{ title }}</b>
       </ng-template>
-      <ng-template colRef="analytics.views" label="# Views" let-views sort>
-        {{views}}
-      </ng-template>
       <ng-template colRef="directors" label="Director(s)" let-directors>
         {{ directors | displayName | maxLength:50 }}
       </ng-template>
