@@ -58,9 +58,9 @@ const eventQueries = {
     org: ({ ownerOrgId }: MeetingEvent) => ({ path: `orgs/${ownerOrgId}` }),
   }),
 
-  slate: (queryFn: QueryFn = (ref) => ref): Query<SlateEvent> => ({
+  slate: (queryConstraints: QueryConstraint[]): Query<SlateEvent> => ({
     path: 'events',
-    queryFn: ref => queryFn(ref).where('type', '==', 'slate'),
+    queryConstraints: queryConstraints.concat([where('type', '==', 'slate')]),
     org: ({ ownerOrgId }: SlateEvent) => ({ path: `orgs/${ownerOrgId}` }),
   }),
 }
