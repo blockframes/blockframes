@@ -1,5 +1,5 @@
 import { AvailsFilter } from "../avails";
-import { allButSouthKorea, EUROPE } from "./mandatesAndSales";
+import { allButSouthKorea, Europe } from "./mandatesAndSales";
 
 export const availDetailsExclusive: AvailsFilter = {
   duration: {
@@ -292,7 +292,6 @@ export const availsPlanes: AvailsFilter = {
   medias: ['planes']
 };
 
-//
 
 export const availsBrewster1: AvailsFilter = {
   duration: {
@@ -310,7 +309,7 @@ export const availsBrewster2: AvailsFilter = {
     to: new Date(),
   },
   exclusive: false,
-  territories: EUROPE,
+  territories: Europe,
   medias: ['aVod', 'fVod', 'nVod', 'sVod']
 };
 
@@ -320,7 +319,7 @@ export const availsBrewster3: AvailsFilter = {
     to: new Date(),
   },
   exclusive: true,
-  territories: EUROPE,
+  territories: Europe,
   medias: ['aVod', 'fVod', 'nVod', 'sVod']
 };
 

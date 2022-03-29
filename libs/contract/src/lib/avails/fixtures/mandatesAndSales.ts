@@ -8,11 +8,11 @@ import { FullMandate, FullSale } from "../avails";
  */
 
 export const allButSouthKorea = Object.keys(territories).filter((territory) => territory !== 'south-korea') as Territory[];
-export const WORLD = Object.keys(territories) as Territory[];
-export const EUROPE = territoriesGroup.find(({label}) => label==='Europe').items;
-export const ASIA = territoriesGroup.find(({label}) => label==='Asia').items;
-export const ANCILLARY = mediaGroup.find(({label}) => label === 'Ancillary Rights').items;
-const MEDIAS= Object.keys(medias);
+export const World = Object.keys(territories) as Territory[];
+export const Europe = territoriesGroup.find(({ label }) => label === 'Europe').items;
+export const Asia = territoriesGroup.find(({ label }) => label === 'Asia').items;
+export const Ancillary = mediaGroup.find(({ label }) => label === 'Ancillary Rights').items;
+const Medias = Object.keys(medias);
 
 export const mandateMovie1 = {
   ...createMandate({
@@ -128,7 +128,7 @@ export const mandate1Movie2 = {
       to: new Date('01/31/2040')
     },
     medias: ['payTv', 'payPerView', 'freeTv', 'est', 'nVod', 'fVod', 'sVod', 'video', 'hotels', 'planes'],
-    territories: WORLD,
+    territories: World,
     exclusive: true
   }],
 } as FullMandate;
@@ -147,7 +147,7 @@ export const mandate2Movie2 = {
       to: new Date('01/31/2040')
     },
     medias: ['aVod'],
-    territories: WORLD,
+    territories: World,
     exclusive: true
   }],
 } as FullMandate;
@@ -185,7 +185,7 @@ export const saleWorldMovie2 = {
       to: new Date('01/01/2029')
     },
     medias: ['planes'],
-    territories: WORLD,
+    territories: World,
     exclusive: true
   }],
 } as FullSale;
@@ -339,7 +339,7 @@ export const mandateMovie4 = {
       to: new Date('01/31/2035')
     },
     medias: ['payTv', 'payPerView', 'freeTv', 'est', 'nVod', 'aVod', 'fVod', 'sVod', 'video', 'hotels', 'planes'],
-    territories: WORLD,
+    territories: World,
     exclusive: true
   }],
 } as FullMandate;
@@ -507,8 +507,8 @@ export const mandateMovie7 = {
         from: new Date('01/01/2025'),
         to: new Date('12/31/2032')
       },
-      medias: MEDIAS,
-      territories: EUROPE,
+      medias: Medias,
+      territories: Europe,
       exclusive: true
     },
     {
@@ -518,8 +518,8 @@ export const mandateMovie7 = {
         from: new Date('01/01/2022'),
         to: new Date('12/31/2026')
       },
-      medias: ANCILLARY,
-      territories: ASIA,
+      medias: Ancillary,
+      territories: Asia,
       exclusive: true
     },
   ],
