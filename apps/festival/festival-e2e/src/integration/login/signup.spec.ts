@@ -21,6 +21,21 @@ import { USER_FIXTURES_PASSWORD } from '@blockframes/firebase-utils/anonymize/ut
 
 const [newOrgUser, knownMarketplaceOrgUser, knownDashboardOrgUser, unfillingUser] = createFakeUserDataArray(4);
 
+function cleanBeforeRetry(userEmail: string, orgDenomination: string = null) {
+  cy.task('getAuthUserByEmail', userEmail)
+    .then((user: User) => {
+      if (!user) return console.log('No previous user with this email');
+      cy.task('deleteAuthUser', user.uid);
+      cy.task('deleteUser', user.uid);
+  });
+  if (!orgDenomination) return;
+  cy.task('getOrgByDenomination', orgDenomination)
+    .then((org: Organization) => {
+      if (!org) return console.log('No previous organization with this name');
+      cy.task('deleteOrg', org.id);
+  });
+}
+
 describe('Signup', () => {
 
   beforeEach(() => {
@@ -31,6 +46,7 @@ describe('Signup', () => {
 
   it('User from new company can signup', () => {
     const user = newOrgUser;
+    cleanBeforeRetry(user.email, user.company.name);
     get('cookies').click();
     get('email').type(user.email);
     get('first-name').type(user.firstname);
@@ -75,6 +91,7 @@ describe('Signup', () => {
 
   it('User from a known organization with access to festival marketplace can signup', () => {
     const user = knownMarketplaceOrgUser;
+    cleanBeforeRetry(user.email);
     cy.task('getRandomOrg', { app: 'festival', access: { marketplace: true, dashboard: false } }).then((org: Organization) => {
       get('cookies').click();
       get('email').type(user.email);
@@ -125,6 +142,7 @@ describe('Signup', () => {
 
   it('User from a known organization with access to festival dashboard can signup', () => {
     const user = knownDashboardOrgUser;
+    cleanBeforeRetry(user.email);
     cy.task('getRandomOrg', { app: 'festival', access: { marketplace: true, dashboard: true } })
     .then((org: Organization) => {
       get('cookies').click();
