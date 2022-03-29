@@ -14,6 +14,7 @@ import { OrgChipModule } from '@blockframes/organization/components/chip/chip.mo
 import { DisplayNameModule, DisplayPositionModule } from '@blockframes/utils/pipes';
 import { CountdownModule } from '@blockframes/ui/countdown/countdown.module';
 import { ToLabelModule } from '@blockframes/utils/pipes';
+import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe';
 import { InvitationActionModule } from '@blockframes/invitation/components/action/action.module';
 import { AgendaExportModule } from '@blockframes/event/components/agenda-export/agenda-export.module';
 import { RequestScreeningModule } from '@blockframes/event/components/request-screening/request-screening.module';
@@ -43,6 +44,7 @@ import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
     InvitationActionModule,
     CountdownModule,
     ToLabelModule,
+    GetTitlePipeModule,
     RequestScreeningModule,
     RequestAskingPriceModule,
     CarouselModule,

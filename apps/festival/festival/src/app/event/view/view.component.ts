@@ -3,15 +3,15 @@ import { EventService } from '@blockframes/event/+state';
 import { ActivatedRoute } from '@angular/router';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { combineLatest, of, Observable, BehaviorSubject } from 'rxjs';
-import { catchError, filter, switchMap, pluck, tap, startWith, map } from 'rxjs/operators';
+import { catchError, filter, switchMap, pluck, tap, startWith } from 'rxjs/operators';
 import { Location } from '@angular/common';
 import { fade } from '@blockframes/utils/animations/fade';
 import { AuthService } from '@blockframes/auth/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MatDialog } from '@angular/material/dialog';
 import { RequestAskingPriceComponent } from '@blockframes/movie/components/request-asking-price/request-asking-price.component';
-import { Event, Invitation, Movie, Slate } from '@blockframes/model';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { Event, Invitation } from '@blockframes/model';
+import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
 
 @Component({
   selector: 'festival-event-view',
@@ -26,8 +26,8 @@ export class EventViewComponent implements OnInit {
   accessRoute: string;
   user$ = this.authService.profile$;
   event$: Observable<Event>;
-  slateTitles$: Observable<Movie[]>;
   requestSent = false;
+  ltMd$ = this.breakpointsService.ltMd;
   private statusChanged = new BehaviorSubject(false);
   public timerEnded = false;
   private preventBrowserEvent = false;
@@ -36,9 +36,9 @@ export class EventViewComponent implements OnInit {
     private route: ActivatedRoute,
     private service: EventService,
     private invitationService: InvitationService,
+    private breakpointsService: BreakpointsService,
     private location: Location,
     private authService: AuthService,
-    private movieService: MovieService,
     private dynTitle: DynamicTitleService,
     private dialog: MatDialog,
     private cdr: ChangeDetectorRef
@@ -86,11 +86,6 @@ export class EventViewComponent implements OnInit {
         }
       })
     );
-    
-    this.slateTitles$ = this.event$.pipe(
-      map(event => event as Event<Slate>),
-      switchMap(event => this.movieService.valueChanges(event.meta.titles)),
-    )
   }
 
   goBack() {

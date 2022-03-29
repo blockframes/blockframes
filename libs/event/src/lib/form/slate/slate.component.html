@@ -16,12 +16,12 @@
       <a routerLink="/c/o/dashboard/files" target="_blank"><strong>My Files/Company/Videos</strong></a> section.</p>
       <mat-form-field appearance="outline">
         <mat-label>{{videos.length ? 'Select video to display' : 'You have no video to select'}}</mat-label>
-        <mat-select formControlName="video" [disabled]="!videos.length">
+        <mat-select formControlName="videoId" [disabled]="!videos.length">
           <mat-option *ngFor="let video of videos" [value]="video.fileId">
             {{ video.storagePath | fileName }}
           </mat-option>
         </mat-select>
-        <mat-hint id="missing-video" *ngIf="!formMeta.value.video">No video selected.</mat-hint>
+        <mat-hint id="missing-video" *ngIf="!formMeta.value.videoId">No video selected.</mat-hint>
       </mat-form-field>
 
       <!-- Description -->
@@ -39,7 +39,7 @@
       <!-- Title selection-->
       <mat-form-field appearance="outline">
         <mat-label>{{titles.length ? 'Select the titles you are going to promote' : 'You have no titles to select'}}</mat-label>
-        <mat-select formControlName="titles" [disabled]="!titles.length" multiple>
+        <mat-select formControlName="titleIds" [disabled]="!titles.length" multiple>
           <mat-option *ngFor="let title of titles" [value]="title.id">
             {{ title.title.international }}
           </mat-option>
