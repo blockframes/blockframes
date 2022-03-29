@@ -19,3 +19,30 @@ mat-card {
 #rights {
   margin-top: 32px;
 }
+
+ul {
+  margin: 0;
+
+  li {
+    display: grid;
+
+    div {
+      font-size: 13px;
+    }
+
+    span {
+      font-weight: 500;
+    }
+
+    &:first-child {
+      margin-bottom: 8px;
+    }
+    
+  }
+
+  .excluded-territories {
+    mat-chip {
+      opacity: 0.57;
+    }
+  }
+}

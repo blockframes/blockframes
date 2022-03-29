@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { SaleShellComponent } from '../shell.component';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { ConfirmDeclineComponent, ConfirmDeclineData } from '@blockframes/contract/contract/components/confirm-decline/confirm-decline.component';
-import { ContractStatus } from '@blockframes/model';
+import { ContractStatus } from '@blockframes/utils/static-model';
 
 
 @Component({

@@ -20,8 +20,8 @@ import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { UserService } from '@blockframes/user/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { ContractStatus, ImportContractStatus, Movie, Term } from '@blockframes/model';
-import { Language, Media, Territory } from '@blockframes/utils/static-model';
+import { Movie, Term } from '@blockframes/model';
+import { ContractStatus, ImportContractStatus, Language, Media, Territory } from '@blockframes/utils/static-model';
 import { createMandate, createSale, Mandate, MovieLanguageSpecification, Sale, User } from '@blockframes/model';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import {

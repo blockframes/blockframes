@@ -24,6 +24,7 @@ import { map, shareReplay, switchMap } from 'rxjs/operators';
 import { PermissionsService } from '@blockframes/permissions/+state';
 import { ActiveState, EntityState } from '@datorama/akita';
 import { APP } from '@blockframes/utils/routes/utils';
+import { subMonths } from 'date-fns';
 
 interface InvitationState extends EntityState<Invitation>, ActiveState<string> { }
 
@@ -187,4 +188,14 @@ export class InvitationService extends CollectionService<InvitationState> {
     }
   }
 
+  invitationCount({ onlyPending } = { onlyPending: true }) {
+    const fourMonthsAgo = subMonths(new Date(), 4);
+    // Filtering out invitations older than 4 months because there is no timeFrame supporting them in invitation-list component.
+    const lastFourMonths = (invitation: Invitation) => invitation.date > fourMonthsAgo;
+    return this.myInvitations$.pipe(
+      map(invitations => invitations.filter(lastFourMonths)),
+      map(invitations => invitations.filter(invitation => onlyPending ? invitation.status === 'pending' : true)),
+      map(invitations => invitations.length)
+    )
+  }
 }
