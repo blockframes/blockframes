@@ -15,6 +15,15 @@
           alt="Movie poster of the screening"/>
       </a>
     </ng-container>
+    <ng-container *ngIf="event.type === 'slate'">
+      <a fxHide.lt-sm [routerLink]="['/event', event.id, 'r', 'i']">
+        <img 
+          asset="slate_presentation.svg"
+          width="225px"
+          height="300px"
+          alt="Slate placeholder"/>
+      </a>
+    </ng-container>
     <article fxLayout="column" fxLayoutAlign="space-between" fxLayoutGap="16px">
       <div fxLayout="column" fxLayoutAlign.lt-sm="start center">
         <div class="mat-headline" [ngStyle]="{'text-align': (ltSm$ | async) ? 'center' : 'start'}"><a [routerLink]="['/event', event.id, 'r', 'i']">{{ event.title }}</a></div>
