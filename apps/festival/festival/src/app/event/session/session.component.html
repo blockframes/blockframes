@@ -19,12 +19,6 @@
           </article>
         </ng-container>
 
-        <ng-template #showVideo>
-          <article class="screen">
-            <video-viewer [eventId]="event.id" [ref]="screeningFileRef" class="overlay" (stateChange)="isPlaying = $event === 'play'"></video-viewer>
-          </article>
-        </ng-template>
-
         <button class="requestAskingPrice" *ngIf="event.accessibility === 'private'" mat-flat-button color="primary" [disabled]="requestSent" (click)="requestAskingPrice(event.meta.titleId)">Request Asking Price</button>
 
         <img asset="screening_now.svg" alt="Cinema room">
@@ -35,6 +29,37 @@
       </ng-template>
     </section>
 
+    <!-- SLATE TYPE -->
+    <section *ngSwitchCase="'slate'" fxLayout="column" fxLayoutAlign="space-between center" class="slate">
+      <ng-container *ngIf="event.meta.videoId else noVideo">
+        <ng-container *ngIf="showSession else showVideo">
+          <article class="dark-contrast-theme screen" bgAsset="empty_banner.png">
+            <div class="overlay" fxLayout="column" fxLayoutAlign="center center">
+              <img class="organizationLogo" [ref]="event?.org?.logo" asset="empty_organization.svg" type="logo" alt="organization logo">
+              <h4>{{ event.org | orgName }} presents</h4>
+              <span class="mat-caption">Screening now</span>
+              <button test-id="play" mat-flat-button color="accent" (click)="showSession = false">
+                <mat-icon svgIcon="play_arrow"></mat-icon>
+                <span>Play</span>
+              </button>
+            </div>
+          </article>
+        </ng-container>
+
+        <img asset="screening_now.svg" alt="Cinema room">
+      </ng-container>
+
+      <ng-template #noVideo>
+        <p>There is no video associated with this presentation</p>
+      </ng-template>
+    </section>
+    
+    <ng-template #showVideo>
+      <article class="screen">
+        <video-viewer [eventId]="event.id" [ref]="fileRef" class="overlay" (stateChange)="isPlaying = $event === 'play'"></video-viewer>
+      </article>
+    </ng-template>
+    
     <!-- MEETING TYPE -->
     <ng-container *ngSwitchCase="'meeting'">
       <section class="meeting">
@@ -80,36 +105,6 @@
 
     </ng-container>
 
-    <!-- TYPE SLATE-->
-    <section *ngSwitchCase="'slate'" fxLayout="column" fxLayoutAlign="space-between center" class="slate">
-      <ng-container *ngIf="event.meta.video else noVideo">
-        <ng-container *ngIf="showSession else showVideo">
-          <article class="dark-contrast-theme screen" bgAsset="empty_banner.png">
-            <div class="overlay" fxLayout="column" fxLayoutAlign="center center">
-              <img class="organizationLogo" [ref]="event.org.logo" asset="empty_organization.svg" type="logo" alt="organization logo">
-              <h4>{{ event.org | orgName }} presents</h4>
-              <span class="mat-caption">Screening now</span>
-              <button test-id="play" mat-flat-button color="accent" (click)="showSession = false">
-                <mat-icon svgIcon="play_arrow"></mat-icon>
-                <span>Play</span>
-              </button>
-            </div>
-          </article>
-        </ng-container>
-
-        <ng-template #showVideo>
-          <article class="screen">
-            <video-viewer [eventId]="event.id" [ref]="slateFileRef" class="overlay" (stateChange)="isPlaying = $event === 'play'"></video-viewer>
-          </article>
-        </ng-template>
-
-        <img asset="screening_now.svg" alt="Cinema room">
-      </ng-container>
-
-      <ng-template #noVideo>
-        <p>There is no video associated with this presentation</p>
-      </ng-template>
-    </section>
   </ng-container>
 </ng-container>
 
