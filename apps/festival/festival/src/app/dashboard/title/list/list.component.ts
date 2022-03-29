@@ -77,6 +77,7 @@ export class ListComponent {
   edit({ id }: Movie) {
     this.router.navigate([`/c/o/dashboard/tunnel/movie/${id}`]);
   }
+
   async archive({ id }: Movie) {
     await this.service.update(id, (movie) => ({
       ...movie,
