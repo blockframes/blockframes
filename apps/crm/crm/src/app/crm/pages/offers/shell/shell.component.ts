@@ -1,18 +1,15 @@
-
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { QueryConstraint, where } from 'firebase/firestore';
-
 import { Observable } from 'rxjs';
 import { pluck, shareReplay, switchMap } from 'rxjs/operators';
-
-import { Offer, OfferService } from '@blockframes/contract/offer/+state';
+import { OfferService } from '@blockframes/contract/offer/+state';
 import { Income, IncomeService } from '@blockframes/contract/income/+state';
 import { ContractService } from '@blockframes/contract/contract/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { joinWith } from '@blockframes/utils/operators';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { Contract, Organization } from '@blockframes/model';
+import { Contract, Offer, Organization } from '@blockframes/model';
 
 @Component({
   selector: 'offer-shell',
