@@ -1,5 +1,5 @@
 import { createMandate, createSale } from "@blockframes/model";
-import { territories, Territory } from "@blockframes/utils/static-model";
+import { territories, territoriesGroup, Territory, medias, mediaGroup } from "@blockframes/utils/static-model";
 import { FullMandate, FullSale } from "../avails";
 
 /**
@@ -8,7 +8,11 @@ import { FullMandate, FullSale } from "../avails";
  */
 
 export const allButSouthKorea = Object.keys(territories).filter((territory) => territory !== 'south-korea') as Territory[];
-export const world = Object.keys(territories) as Territory[];
+export const WORLD = Object.keys(territories) as Territory[];
+export const EUROPE = territoriesGroup.find(({label}) => label==='Europe').items;
+export const ASIA = territoriesGroup.find(({label}) => label==='Asia').items;
+export const ANCILLARY = mediaGroup.find(({label}) => label === 'Ancillary Rights').items;
+const MEDIAS= Object.keys(medias);
 
 export const mandateMovie1 = {
   ...createMandate({
@@ -124,7 +128,7 @@ export const mandate1Movie2 = {
       to: new Date('01/31/2040')
     },
     medias: ['payTv', 'payPerView', 'freeTv', 'est', 'nVod', 'fVod', 'sVod', 'video', 'hotels', 'planes'],
-    territories: world,
+    territories: WORLD,
     exclusive: true
   }],
 } as FullMandate;
@@ -143,7 +147,7 @@ export const mandate2Movie2 = {
       to: new Date('01/31/2040')
     },
     medias: ['aVod'],
-    territories: world,
+    territories: WORLD,
     exclusive: true
   }],
 } as FullMandate;
@@ -181,7 +185,7 @@ export const saleWorldMovie2 = {
       to: new Date('01/01/2029')
     },
     medias: ['planes'],
-    territories: world,
+    territories: WORLD,
     exclusive: true
   }],
 } as FullSale;
@@ -335,7 +339,7 @@ export const mandateMovie4 = {
       to: new Date('01/31/2035')
     },
     medias: ['payTv', 'payPerView', 'freeTv', 'est', 'nVod', 'aVod', 'fVod', 'sVod', 'video', 'hotels', 'planes'],
-    territories: world,
+    territories: WORLD,
     exclusive: true
   }],
 } as FullMandate;
@@ -462,7 +466,7 @@ export const mandateMovie6 = {
     titleId: 'Movie6',
     id: 'mandate1Movie6',
     termIds: ['termMandate1'],
-    }),
+  }),
   terms: [
     {
       id: 'termMandate1',
@@ -471,8 +475,8 @@ export const mandateMovie6 = {
         from: new Date('02/21/2022'),
         to: new Date('02/21/2032')
       },
-      medias: [ 'payTv', 'planes', 'boats', 'educational'],
-      territories:['france','belgium', 'angola'],
+      medias: ['payTv', 'planes', 'boats', 'educational'],
+      territories: ['france', 'belgium', 'angola'],
       exclusive: true
     },
     {
@@ -483,8 +487,82 @@ export const mandateMovie6 = {
         to: new Date('02/21/2032')
       },
       medias: ['planes', 'boats', 'educational', 'hotels'],
-      territories: ['china','brazil'],
+      territories: ['china', 'brazil'],
       exclusive: true
     },
   ],
 } as FullMandate;
+
+export const mandateMovie7 = {
+  ...createMandate({
+    titleId: 'Movie7',
+    id: 'mandateMovie7',
+    termIds: ['term1MandateMovie7', 'term2MandateMovie7'],
+  }),
+  terms: [
+    {
+      id: 'term1MandateMovie7',
+      contractId: 'mandateMovie7',
+      duration: {
+        from: new Date('01/01/2025'),
+        to: new Date('12/31/2032')
+      },
+      medias: MEDIAS,
+      territories: EUROPE,
+      exclusive: true
+    },
+    {
+      id: 'term2MandateMovie7',
+      contractId: 'mandateMovie7',
+      duration: {
+        from: new Date('01/01/2022'),
+        to: new Date('12/31/2026')
+      },
+      medias: ANCILLARY,
+      territories: ASIA,
+      exclusive: true
+    },
+  ],
+} as FullMandate;
+
+export const sale1Movie7 = {
+  ...createSale({
+    titleId: 'Movie7',
+    id: 'sale2Movie7',
+    termIds: ['term1'],
+  }),
+  terms: [
+    {
+      id: 'term1',
+      contractId: 'sale2Movie7',
+      duration: {
+        from: new Date('01/01/2025'),
+        to: new Date('12/31/2026')
+      },
+      medias: ['aVod', 'fVod', 'nVod', 'sVod'],
+      territories: ['belgium'],
+      exclusive: false
+    },
+  ],
+} as FullSale;
+
+export const sale2Movie7 = {
+  ...createSale({
+    titleId: 'Movie7',
+    id: 'sale2Movie7',
+    termIds: ['term'],
+  }),
+  terms: [
+    {
+      id: 'term',
+      contractId: 'sale2Movie7',
+      duration: {
+        from: new Date('01/01/2024'),
+        to: new Date('12/31/2026')
+      },
+      medias: ['planes'],
+      territories: ['japan'],
+      exclusive: true
+    },
+  ],
+} as FullSale;

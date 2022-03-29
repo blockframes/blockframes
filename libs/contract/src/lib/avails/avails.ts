@@ -399,6 +399,14 @@ export function isCalendarTermInAvails<T extends BucketTerm | Term>(term: T, ava
   return allOf(avails.territories).in(term.territories);
 }
 
+function isCalendarAvailPartiallyInTerm(avail: CalendarAvailsFilter, term: Term<Date>) {
+  const exclusivityCheck = exclusivitySomeOf(avail.exclusive).in(term.exclusive);
+  if (!exclusivityCheck) return false;
+  const mediaCheck = someOf(avail.medias).in(term.medias);
+  if (!mediaCheck) return false;
+  return someOf(avail.territories).in(term.territories);
+}
+
 /**
  * Assuming we have a mandate say mandateA with terms mandateATerms defined as in below.
  * mandateATerms = [
@@ -445,13 +453,28 @@ export function isCalendarTermInAvails<T extends BucketTerm | Term>(term: T, ava
  * In case this does not hold, then nothing is available.
  */
 function getMatchingCalendarMandates(mandates: FullMandate[], avails: CalendarAvailsFilter) {
-  const singleTermMandates: FullMandate[] = [];
+  //multi term mandates for whom the avail needs to be divided territory or media -wise
   const multiTermMandates: FullMandate[] = [];
+  const availableMandates: FullMandate[] = [];
+
+  /**
+  * only continue with mandates that don't need any subdivision of the avail to determine availability.
+  * This happens when all of the avail is found within at least one term of the mandate.
+  * This is always the case with single-term mandates but not forcibly with multi-term mandates.
+  */
   for (const mandate of mandates) {
-    if (mandate.terms.length > 1) multiTermMandates.push(mandate);
-    else singleTermMandates.push(mandate);
+    const term = mandate.terms.find(term => isCalendarTermInAvails(term, avails));
+
+    if (term) {
+      //removing other terms that might not have matched to avoid marking their territories as available.
+      const newMandate = { ...mandate, terms: [term] };
+      availableMandates.push(newMandate);
+    } else {
+      multiTermMandates.push(mandate);
+    }
   }
-  const availableMandates = singleTermMandates.filter(mandate => mandate.terms.some(term => isCalendarTermInAvails(term, avails)));
+
+
   const availableMultiTermMandates = multiTermMandates.map(mandate => {
     const territoryWise = avails.medias.every(media => mandate.terms.every(term => term.medias.includes(media)));
     const mediaWise = avails.territories.every(territory => mandate.terms.every(term => term.territories.includes(territory)));
@@ -461,9 +484,10 @@ function getMatchingCalendarMandates(mandates: FullMandate[], avails: CalendarAv
     /**
      * Dividing avails `field-wise` to search for availability on sub-avails.
      */
-    let availableTerms = avails[field].map(eachField => {
-      const newAvail = { ...avails, [field]: [eachField] }
-      return mandate.terms.find(term => isCalendarTermInAvails(term, newAvail));
+    const subAvails = avails[field].map(eachField => ({ ...avails, [field]: [eachField] }));
+
+    let availableTerms = subAvails.map(subAvail => {
+      return mandate.terms.find(term => isCalendarTermInAvails(term, subAvail));
     });
 
     /**
@@ -498,16 +522,19 @@ function getMatchingCalendarMandates(mandates: FullMandate[], avails: CalendarAv
     availableTerms = availableTerms.map(term => ({ ...term, duration: { from, to } }));
     return { ...mandate, terms: availableTerms };
   }).filter(mandate => mandate);
+
   return [availableMandates, availableMultiTermMandates].flat();
 }
 
 function getMatchingCalendarSales<T extends (FullSale | BucketContract)>(sales: T[], avails: CalendarAvailsFilter): T[] {
+  const subAvails = avails.territories.map(territory => {
+    return avails.medias.map(media => {
+      return { ...avails, territories: [territory], medias: [media] };
+    });
+  }).flat();
   return sales.filter(sale => {
     return sale.terms.some(term => {
-      const exclusivityCheck = exclusivitySomeOf(avails.exclusive).in(term.exclusive);
-      const mediaCheck = someOf(avails.medias).in(term.medias);
-      const territoryCheck = someOf(avails.territories).in(term.territories);
-      return exclusivityCheck && mediaCheck && territoryCheck;
+      return subAvails.some(subAVail => isCalendarAvailPartiallyInTerm(subAVail, term));
     });
   });
 }
@@ -535,7 +562,6 @@ export function durationAvailabilities(
   assertValidTitle(mandates, sales, bucketContracts);
 
   const availableMandates = getMatchingCalendarMandates(mandates, avails);
-  console.log({ availableMandates })
   const available = availableMandates.map(m => {
     return m.terms.map((t): DurationMarker =>
       ({ from: t.duration.from, to: t.duration.to, contract: m, term: t })

@@ -1,5 +1,5 @@
 import { AvailsFilter } from "../avails";
-import { allButSouthKorea } from "./mandatesAndSales";
+import { allButSouthKorea, EUROPE } from "./mandatesAndSales";
 
 export const availDetailsExclusive: AvailsFilter = {
   duration: {
@@ -292,4 +292,44 @@ export const availsPlanes: AvailsFilter = {
   medias: ['planes']
 };
 
+//
 
+export const availsBrewster1: AvailsFilter = {
+  duration: {
+    from: new Date(),
+    to: new Date(),
+  },
+  exclusive: true,
+  territories: ['france', 'china'],
+  medias: ['planes']
+};
+
+export const availsBrewster2: AvailsFilter = {
+  duration: {
+    from: new Date(),
+    to: new Date(),
+  },
+  exclusive: false,
+  territories: EUROPE,
+  medias: ['aVod', 'fVod', 'nVod', 'sVod']
+};
+
+export const availsBrewster3: AvailsFilter = {
+  duration: {
+    from: new Date(),
+    to: new Date(),
+  },
+  exclusive: true,
+  territories: EUROPE,
+  medias: ['aVod', 'fVod', 'nVod', 'sVod']
+};
+
+export const availsBrewster4: AvailsFilter = {
+  duration: {
+    from: new Date(),
+    to: new Date(),
+  },
+  exclusive: true,
+  territories: ['france', 'china'],
+  medias: ['planes', 'payTv']
+};
