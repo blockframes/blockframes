@@ -11,6 +11,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { MatDialog } from '@angular/material/dialog';
 import { RequestAskingPriceComponent } from '@blockframes/movie/components/request-asking-price/request-asking-price.component';
 import { Event, Invitation } from '@blockframes/model';
+import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
 
 @Component({
   selector: 'festival-event-view',
@@ -26,6 +27,7 @@ export class EventViewComponent implements OnInit {
   user$ = this.authService.profile$;
   event$: Observable<Event>;
   requestSent = false;
+  ltMd$ = this.breakpointsService.ltMd;
   private statusChanged = new BehaviorSubject(false);
   public timerEnded = false;
   private preventBrowserEvent = false;
@@ -34,6 +36,7 @@ export class EventViewComponent implements OnInit {
     private route: ActivatedRoute,
     private service: EventService,
     private invitationService: InvitationService,
+    private breakpointsService: BreakpointsService,
     private location: Location,
     private authService: AuthService,
     private dynTitle: DynamicTitleService,
