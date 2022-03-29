@@ -10,6 +10,7 @@ import { Intercom } from 'ng-intercom';
 import { App } from '@blockframes/utils/apps';
 import { StoreStatus } from '@blockframes/utils/static-model/types';
 import { APP } from '@blockframes/utils/routes/utils';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'festival-dashboard-title-list',
@@ -45,6 +46,7 @@ export class ListComponent {
     private service: MovieService,
     private router: Router,
     private route: ActivatedRoute,
+    private snackbar: MatSnackBar,
     private dynTitle: DynamicTitleService,
     @Optional() private intercom: Intercom,
     @Inject(APP) public app: App
@@ -72,13 +74,20 @@ export class ListComponent {
     this.filter.reset();
   }
 
-  view(index) {
-    console.log('view', index)
+  edit({ id }: Movie) {
+    this.router.navigate([`/c/o/dashboard/tunnel/movie/${id}`]);
   }
-  edit(index) {
-    console.log('edit', index)
-  }
-  archive(index) {
-    console.log('archive', index)
+  async archive({ id }: Movie) {
+    await this.service.update(id, (movie) => ({
+      ...movie,
+      app: {
+        ...movie.app,
+        [this.app]: {
+          ...movie.app[this.app],
+          status: 'archived',
+        },
+      },
+    }));
+    this.snackbar.open('Title archived.', '', { duration: 4000 });
   }
 }

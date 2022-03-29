@@ -32,8 +32,8 @@
     </header>
 
     <bf-table [source]="result$ | async" pagination="50" useFilter>
-      <ng-template colRef label="Title" let-row sort>
-        <u (click)="goToTitle(row)" class="clickable">{{ row.title.international | maxLength:50 }}</u>
+      <ng-template colRef label="Title" let-movie sort>
+        <u (click)="goToTitle(movie)" class="clickable">{{ movie.title.international | maxLength:50 }}</u>
       </ng-template>
       <ng-template colRef="directors" label="Director(s)" let-directors>
         {{ directors | displayName | maxLength:50 }}
@@ -45,15 +45,15 @@
         <bf-tag>{{ status | toLabel: 'storeStatus' }}</bf-tag>
       </ng-template>
 
-      <ng-template colRef="action" let-index="index" sticky>
+      <ng-template colRef label="Actions" let-movie>
         <div class="action-buttons">
-          <button type="button" mat-icon-button (click)="view(index)">
+          <button type="button" mat-icon-button (click)="goToTitle(movie)">
             <mat-icon svgIcon="visibility"></mat-icon>
           </button>
-          <button type="button" mat-icon-button (click)="edit(index)">
+          <button type="button" mat-icon-button (click)="edit(movie)">
             <mat-icon svgIcon="edit"></mat-icon>
           </button>
-          <button type="button" mat-icon-button (click)="archive(index)">
+          <button type="button" mat-icon-button (click)="archive(movie)">
             <mat-icon svgIcon="delete"></mat-icon>
           </button>
         </div>
