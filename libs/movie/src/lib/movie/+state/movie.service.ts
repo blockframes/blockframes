@@ -16,7 +16,7 @@ import { ActiveState, EntityState } from '@datorama/akita';
 export const fromOrg = (orgId: string): QueryFn => (ref) =>
   ref.where('orgIds', 'array-contains', orgId);
 export const fromOrgAndAccepted = (orgId: string, appli: App): QueryFn => (ref) =>
-  ref.where(`app.${appli}.status`, '==', 'accepted').where('orgIds', 'array-contains', orgId);
+  ref.where(`app.${appli}.status`, '==', 'accepted').where(`app.${appli}.access`, '==', true).where('orgIds', 'array-contains', orgId);
 export const fromOrgAndInternalRef = (orgId: string, internalRef: string): QueryFn => (ref) =>
   ref.where('orgIds', 'array-contains', orgId).where('internalRef', '==', internalRef);
 export const fromInternalRef = (internalRef: string): QueryFn => (ref) =>
