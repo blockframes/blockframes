@@ -103,11 +103,11 @@ describe('DB cleaning script', () => {
     const oneMonthsAgo = subMonths(now, 1);
     const testUser1 = { uid: 'A', email: 'johndoe@fake.com', firstName: 'john', lastName: 'doe' };
 
-    // User wihtout org created 4 months ago, should be deleted
+    // User without org created 4 months ago, should be deleted
     const fourMonthsAgo = subMonths(now, 4);
     const testUser2 = { uid: 'B', email: 'johndoe@fake2.com', firstName: 'mickey', lastName: 'mouse' };
 
-    // User that was created more than 3 years ago (3 years and two months) and that never connected wihtin 3 years, should be deleted
+    // User that was created more than 3 years ago (3 years and two months) and that never connected within 3 years, should be deleted
     const threeYearsAgo = subYears(now, 3);
     const threeYearsAgoAndTwoMonths = subMonths(threeYearsAgo, 2);
     const testUser3 = { uid: 'C', email: 'johnmcclain@fake.com', firstName: 'john', lastName: 'mcclain', orgId: 'org-A' };
@@ -121,10 +121,14 @@ describe('DB cleaning script', () => {
     const threeYearsAgoAnd31Days = subDays(threeYearsAgo, 31);
     const testUser5 = { uid: 'E', email: 'indianajhones@fake.com', firstName: 'indiana', lastName: 'jhones', orgId: 'org-A' };
 
+    // User without org created 4 months ago, but have logged in last week, should be kept
+    const oneWeekAgo = subDays(now, 7);
+    const testUser6 = { uid: 'F', email: 'johndoe@fake3.com', firstName: 'winnie', lastName: 'pooh' };
+
     const testOrg1 = { id: 'org-A' };
 
     await Promise.all([
-      populate('users', [testUser1, testUser2, testUser3, testUser4, testUser5]),
+      populate('users', [testUser1, testUser2, testUser3, testUser4, testUser5, testUser6]),
       populate('orgs', [testOrg1])
     ]);
 
@@ -164,6 +168,15 @@ describe('DB cleaning script', () => {
           creationTime: fiveYearsAgo.toUTCString(),
           lastSignInTime: threeYearsAgoAnd31Days.toUTCString(),
         }
+      },
+      {
+        uid: 'F',
+        email: 'johndoe@fake3.com',
+        providerData: [{ uid: 'F', email: 'johndoe@fake3.com', providerId: 'password' }],
+        metadata: {
+          creationTime: fourMonthsAgo.toUTCString(),
+          lastSignInTime: oneWeekAgo.toUTCString(),
+        }
       }
     ];
 
@@ -174,7 +187,7 @@ describe('DB cleaning script', () => {
     ]);
 
     // Check if data have been correctly added
-    expect(usersBefore.docs.length).toEqual(5);
+    expect(usersBefore.docs.length).toEqual(6);
     expect(organizations.docs.length).toEqual(1);
     expect(permissions.docs.length).toEqual(0);
 
@@ -186,17 +199,19 @@ describe('DB cleaning script', () => {
     const cleanedDbUsers = usersAfter.docs.filter(u => isUserClean(u, organizationIds));
     const cleanedAuthUsers = await adminAuth.listUsers();
 
-    expect(cleanedDbUsers.length).toEqual(2);
+    expect(cleanedDbUsers.length).toEqual(3);
 
     // Auth should have same size
     expect(cleanedAuthUsers.users.length).toEqual(cleanedDbUsers.length);
 
-    // Users A & D should be kept
+    // Users A, D & F should be kept
     expect(cleanedDbUsers.find(o => o.data().uid === 'A')).toBeTruthy();
     expect(cleanedDbUsers.find(o => o.data().uid === 'D')).toBeTruthy();
+    expect(cleanedDbUsers.find(o => o.data().uid === 'F')).toBeTruthy();
 
     expect(cleanedAuthUsers.users.find(o => o.uid === 'A')).toBeTruthy();
     expect(cleanedAuthUsers.users.find(o => o.uid === 'D')).toBeTruthy();
+    expect(cleanedAuthUsers.users.find(o => o.uid === 'F')).toBeTruthy();
 
   });
 

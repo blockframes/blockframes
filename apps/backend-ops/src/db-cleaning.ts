@@ -444,10 +444,20 @@ function isUserValid(
   permissions: PermissionsDocument[]
 ) {
   const now = new Date();
+
   // User does not have orgId and was created more than 90 days ago
   const creationTimeTimestamp = Date.parse(authUser.metadata.creationTime);
-  if (!user.orgId && creationTimeTimestamp < subDays(now, 90).getTime()) {
-    return false;
+  const ninetyDaysAgo = subDays(now, 90).getTime();
+  if (!user.orgId && creationTimeTimestamp < ninetyDaysAgo) {
+    // User never connected
+    if (!authUser.metadata.lastSignInTime) return false;
+
+    // User have not signed in within the last 90 days
+    const lastSignInTime = Date.parse(authUser.metadata.lastSignInTime);
+    if (lastSignInTime < ninetyDaysAgo) return false;
+
+    // Still considered as active user
+    return true;
   }
 
   // If account is older than 3 years and 30 days
