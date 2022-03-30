@@ -5,8 +5,12 @@ import { Component, OnInit, ChangeDetectionStrategy, Optional, Inject } from '@a
 import { MovieService, fromOrg } from '@blockframes/movie/+state/movie.service';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { Movie } from '@blockframes/model';
+import { hasAppStatus, Movie } from '@blockframes/model';
 import { App } from '@blockframes/utils/apps';
+import { APP } from '@blockframes/utils/routes/utils';
+import { MovieAnalytics } from '@blockframes/analytics/components/movie-analytics-chart/movie-analytics.model';
+import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
+import { toMovieAnalytics } from '@blockframes/analytics/components/movie-analytics-chart/utils';
 
 // RxJs
 import { map, switchMap, shareReplay, tap } from 'rxjs/operators';
@@ -14,7 +18,6 @@ import { Observable } from 'rxjs';
 
 // Intercom
 import { Intercom } from 'ng-intercom';
-import { APP } from '@blockframes/utils/routes/utils';
 
 @Component({
   selector: 'dashboard-home',
@@ -29,10 +32,19 @@ export class HomeComponent implements OnInit {
   public hasAcceptedMovies$: Observable<boolean>;
   public hasDraftMovies$: Observable<boolean>;
 
+  public titlesAnalytics$: Observable<MovieAnalytics[]> = this.orgService.currentOrg$.pipe(
+    switchMap(({ id }) => this.analytics.valueChanges(ref => ref
+      .where('type', '==', 'title')
+      .where('meta.ownerOrgIds', 'array-contains', id)
+    )),
+    map(toMovieAnalytics)
+  )
+
   constructor(
     private movieService: MovieService,
     private orgService: OrganizationService,
     private dynTitle: DynamicTitleService,
+    private analytics: AnalyticsService,
     @Optional() private intercom: Intercom,
     @Inject(APP) public app: App
   ) {}
@@ -55,9 +67,7 @@ export class HomeComponent implements OnInit {
     );
 
     this.titles$ = allMoviesFromOrg$.pipe(
-      map((movies) =>
-        movies.filter((movie) => ['accepted', 'submitted'].includes(movie.app[this.app].status))
-      ),
+      map((movies) => movies.filter(hasAppStatus(this.app, ['accepted', 'submitted']))),
       tap((movies) => {
         movies.length
           ? this.dynTitle.setPageTitle('Dashboard')
