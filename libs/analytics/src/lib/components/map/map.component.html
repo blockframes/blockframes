@@ -6,19 +6,23 @@
 <world-map *ngIf="top3.length; else noData">
   <!-- MAP LAYERS -->
   <ng-container *ngFor="let isoA3 of zero">
-    <map-feature [tag]="isoA3" color="#ebeef3"></map-feature>
+    <map-feature [tag]="isoA3" color="#ebeef3" (click)="toggleSelect(isoA3)"></map-feature>
   </ng-container>
 
   <ng-container *ngFor="let isoA3 of lessThanFive">
-    <map-feature [tag]="isoA3" color="#dee5ff"></map-feature>
+    <map-feature [tag]="isoA3" color="#dee5ff" (click)="toggleSelect(isoA3)"></map-feature>
   </ng-container>
 
   <ng-container *ngFor="let isoA3 of lessThanFifty">
-    <map-feature [tag]="isoA3" color="#8da4fa"></map-feature>
+    <map-feature [tag]="isoA3" color="#8da4fa" (click)="toggleSelect(isoA3)"></map-feature>
   </ng-container>
 
   <ng-container *ngFor="let isoA3 of moreThanFifty">
-    <map-feature [tag]="isoA3" color="#001ec7"></map-feature>
+    <map-feature [tag]="isoA3" color="#001ec7" (click)="toggleSelect(isoA3)"></map-feature>
+  </ng-container>
+
+  <ng-container *ngIf="selected">
+    <map-feature [tag]="selected" color="#ff5145" (click)="toggleSelect(selected)"></map-feature>
   </ng-container>
 </world-map>
 
