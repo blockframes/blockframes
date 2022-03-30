@@ -11,6 +11,7 @@ import { storeStatus } from '@blockframes/utils/static-model';
 import { Intercom } from 'ng-intercom';
 import { App } from '@blockframes/utils/apps';
 import { APP } from '@blockframes/utils/routes/utils';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'catalog-title-list',
@@ -48,6 +49,7 @@ export class TitleListComponent {
     private service: MovieService,
     private router: Router,
     private route: ActivatedRoute,
+    private snackbar: MatSnackBar,
     private dynTitle: DynamicTitleService,
     @Optional() private intercom: Intercom,
     @Inject(APP) public app: App
@@ -70,5 +72,10 @@ export class TitleListComponent {
 
   public openIntercom(): void {
     return this.intercom.show();
+  }
+
+  async archive(movie: Movie) {
+    await this.service.updateStatus(movie, 'archived');
+    this.snackbar.open('Title archived.', '', { duration: 4000 });
   }
 }
