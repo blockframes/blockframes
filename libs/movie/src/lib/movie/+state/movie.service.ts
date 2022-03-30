@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
 import { createMovie, Movie, createMovieAppConfig, MovieAnalytics, createDocumentMeta } from '@blockframes/model';
 import { cleanModel } from '@blockframes/utils/helpers';
@@ -13,6 +13,9 @@ import { joinWith } from '@blockframes/utils/operators';
 import { AnalyticsService } from '@blockframes/utils/analytics/analytics.service';
 import { AuthService } from '@blockframes/auth/+state';
 import { ActiveState, EntityState } from '@datorama/akita';
+import { storeStatus, StoreStatus } from '@blockframes/utils/static-model';
+import { APP } from '@blockframes/utils/routes/utils';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 export const fromOrg = (orgId: string): QueryFn => (ref) =>
   ref.where('orgIds', 'array-contains', orgId);
@@ -36,7 +39,9 @@ export class MovieService extends CollectionService<MovieState> {
     private authService: AuthService,
     private permissionsService: PermissionsService,
     private analyticservice: AnalyticsService,
-    private orgService: OrganizationService
+    private orgService: OrganizationService,
+    private snackbar: MatSnackBar,
+    @Inject(APP) public app: App
   ) {
     super();
   }
@@ -128,5 +133,24 @@ export class MovieService extends CollectionService<MovieState> {
         movies.sort((a, b) => (a.title.international < b.title.international ? -1 : 1))
       )
     );
+  }
+
+  public async updateStatus(movie: Movie, status: StoreStatus, message?: string) {
+    await this.update(movie.id, (movie) => ({
+      ...movie,
+      app: {
+        ...movie.app,
+        [this.app]: {
+          ...movie.app[this.app],
+          status: status,
+        },
+      },
+    }));
+
+    if (message) {
+      this.snackbar.open(message, '', { duration: 4000 });
+    } else {
+      this.snackbar.open(`Title ${storeStatus[status]}.`, '', { duration: 4000 });
+    }
   }
 }

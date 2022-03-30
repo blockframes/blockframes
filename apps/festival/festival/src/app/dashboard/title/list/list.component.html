@@ -33,7 +33,9 @@
 
     <bf-table [source]="result$ | async" pagination="50" useFilter>
       <ng-template colRef label="Title" let-movie sort>
-        <u (click)="goToTitle(movie)" class="clickable">{{ movie.title.international | maxLength:50 }}</u>
+        <a [routerLink]="movie.id" [matTooltip]="movie.title.international">
+          <u>{{ movie.title.international | maxLength:50 }}</u>
+        </a>
       </ng-template>
       <ng-template colRef label="Director(s)" let-movie>
         {{ movie.directors | displayName | maxLength:50 }}
@@ -47,13 +49,13 @@
 
       <ng-template colRef label="Actions" let-movie>
         <div class="action-buttons">
-          <button type="button" mat-icon-button (click)="goToTitle(movie)">
+          <a [routerLink]="movie.id" mat-icon-button matTooltip="View">
             <mat-icon svgIcon="visibility"></mat-icon>
-          </button>
-          <button type="button" mat-icon-button (click)="edit(movie)">
+          </a>
+          <a [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]" mat-icon-button matTooltip="Edit">
             <mat-icon svgIcon="edit"></mat-icon>
-          </button>
-          <button type="button" mat-icon-button (click)="archive(movie)">
+          </a>
+          <button type="button" mat-icon-button (click)="archive(movie)" matTooltip="Archive">
             <mat-icon svgIcon="delete"></mat-icon>
           </button>
         </div>

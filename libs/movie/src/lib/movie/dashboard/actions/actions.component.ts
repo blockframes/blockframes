@@ -67,21 +67,6 @@ export class DashboardActionsShellComponent {
   }
 
   async updateStatus(status: StoreStatus, message?: string) {
-    await this.movieService.update(this.movie.id, (movie) => ({
-      ...movie,
-      app: {
-        ...movie.app,
-        [this.app]: {
-          ...movie.app[this.app],
-          status: status,
-        },
-      },
-    }));
-
-    if (message) {
-      this.snackbar.open(message, '', { duration: 4000 });
-    } else {
-      this.snackbar.open(`Title ${storeStatus[status]}.`, '', { duration: 4000 });
-    }
+    await this.movieService.updateStatus(this.movie, status, message);
   }
 }
