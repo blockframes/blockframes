@@ -71,8 +71,8 @@ export class ActionComponent {
     const { ownerOrgId, id, accessibility } = event;
     this.service.request(ownerOrgId).to('attendEvent', id);
     if (accessibility !== 'public') {
-      this.snackBar.open('Your request has been sent to the organizer.', 'close', { duration: 3000 });
-    }
-    this.requestPending = true;
+      this.snackBar.open('Request sent','close', { duration: 4000 });
+      this.requestPending = true;
+    }    
   }
 }
