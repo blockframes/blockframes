@@ -35,7 +35,7 @@
 
     <div fxLayout fxLayout.lt-sm="column" fxLayoutGap="16px">
       <analytics-pie-chart fxFlex class="surface" [data]="orgActivity$ | async" (selection)="filterValue = $event"></analytics-pie-chart>
-      <analytics-map fxFlex class="surface" [data]="territoryActivity$ | async"></analytics-map>
+      <analytics-map fxFlex class="surface" [data]="territoryActivity$ | async" (selection)="filterValue = $event"></analytics-map>
     </div>
   </article>
 
