@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
 import { AnalyticData } from "@blockframes/analytics/+state/utils";
-import { Territory, TerritoryISOA3Value, parseToAll, territoriesISOA3 } from "@blockframes/utils/static-model";
+import { Territory, TerritoryISOA3Value, parseToAll, territoriesISOA3, staticModel } from "@blockframes/utils/static-model";
+import { getKeyIfExists } from "@blockframes/utils/helpers";
 
 const territories = parseToAll('territories', 'world') as Territory[];
 
@@ -16,6 +17,7 @@ export class AnalyticsMapComponent {
   lessThanFive: TerritoryISOA3Value[] = [];
   lessThanFifty: TerritoryISOA3Value[] = [];
   moreThanFifty: TerritoryISOA3Value[] = [];
+  selected: TerritoryISOA3Value;
 
   top3: AnalyticData[] = [];
 
@@ -42,5 +44,14 @@ export class AnalyticsMapComponent {
 
     const sorted = data.sort((a, b) => b.count - a.count);
     this.top3 = sorted.splice(0, 3);
+  }
+
+  @Output() selection: EventEmitter<string> = new EventEmitter();
+
+  toggleSelect(isoA3: TerritoryISOA3Value) {
+    this.selected = this.selected === isoA3 ? '' : isoA3;
+    const key = getKeyIfExists('territoriesISOA3', this.selected);
+    const selection = key === 'world' ? '' : staticModel.territories[key];
+    this.selection.next(selection);
   }
 }
