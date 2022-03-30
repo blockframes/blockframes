@@ -13,9 +13,7 @@
         <p class="mat-body-1">{{ title.directors | displayName }}</p>
         <div fxLayout fxLayoutAlign="space-between">
           <h1 class="mat-display-1">{{ title.title.international }}</h1>
-          <a mat-button [routerLink]="['/c/o/marketplace/title/', title.id]" class="film-page-button">
-            <span>See Film Page</span>
-          </a>
+          <a mat-button [routerLink]="['/c/o/marketplace/title/', title.id]" class="film-page-button">See Film Page</a>
         </div>
         <h6>{{ title.genres | toLabel: 'genres' }}</h6>
       </div>
