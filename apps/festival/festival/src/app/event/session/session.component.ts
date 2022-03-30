@@ -14,11 +14,12 @@ import { getFileExtension } from '@blockframes/utils/file-sanitizer';
 import { extensionToType } from '@blockframes/utils/utils';
 import { MediaService } from '@blockframes/media/+state';
 import { AngularFireFunctions } from '@angular/fire/functions';
-import { StorageFile, StorageVideo } from '@blockframes/model';
+import { isSlate, Slate, StorageFile, StorageVideo } from '@blockframes/model';
 import { InvitationService } from '@blockframes/invitation/+state/invitation.service';
 import { filter, pluck, scan, switchMap, take } from 'rxjs/operators';
 import { finalizeWithValue } from '@blockframes/utils/observable-helpers';
 import { AuthService } from '@blockframes/auth/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { RequestAskingPriceComponent } from '@blockframes/movie/components/request-asking-price/request-asking-price.component';
 import {
   Event,
@@ -47,7 +48,7 @@ export class SessionComponent implements OnInit, OnDestroy {
   public showSession = true;
   public mediaContainerSize: string;
   public visioContainerSize: string;
-  public screeningFileRef: StorageVideo;
+  public fileRef: StorageVideo;
 
   public creatingControl$ = new BehaviorSubject(false);
 
@@ -72,6 +73,7 @@ export class SessionComponent implements OnInit, OnDestroy {
     private movieService: MovieService,
     private mediaService: MediaService,
     private authService: AuthService,
+    private orgService: OrganizationService,
     private bottomSheet: MatBottomSheet,
     private router: Router,
     private dynTitle: DynamicTitleService,
@@ -91,50 +93,8 @@ export class SessionComponent implements OnInit, OnDestroy {
 
     this.sub = this.event$.subscribe(async event => {
 
-      // SCREENING
-      if (isScreening(event)) {
-        this.dynTitle.setPageTitle(event.title, 'Screening');
-        if ((event.meta as Screening).titleId) {
-          const movie = await this.movieService.getValue(event.meta.titleId as string);
-          this.screeningFileRef = movie.promotional.videos?.screener;
-
-          // if user is not a screening owner we need to track the watch time
-          if (event.ownerOrgId !== this.authService.profile?.orgId) {
-            // Try to get invitation the regular way
-            const uidFilter = (invit: Invitation) => invit.toUser?.uid === this.authService.uid ||  invit.fromUser?.uid === this.authService.uid;
-            const allInvitations = await this.invitationService.allInvitations$.pipe(take(1)).toPromise();
-            let invitation = allInvitations.find(invit => invit.eventId === event.id && uidFilter(invit));
-
-            // If user is logged-in as anonymous
-            if (!invitation && this.authService.anonymousCredentials?.invitationId) {
-              const invitationId = this.authService.anonymousCredentials?.invitationId;
-              invitation = await this.invitationService.getValue(invitationId);
-            }
-
-            if (!invitation && event.accessibility !== 'public') {
-              // this should never happen since previous checks & guard should have worked
-              throw new Error('Missing Screening Invitation');
-            } else if (invitation) {
-              this.watchTimeInterval?.unsubscribe();
-
-              this.watchTimeInterval = interval(1000).pipe(
-                filter(() => !!this.isPlaying),
-                scan(watchTime => watchTime + 1, invitation.watchTime ?? 0),
-                finalizeWithValue(watchTime => {
-                  if (watchTime !== undefined) this.invitationService.update(invitation.id, { watchTime });
-                }),
-                filter(watchTime => watchTime % 60 === 0),
-              ).subscribe(watchTime => {
-                this.invitationService.update(invitation.id, { watchTime });
-              });
-            }
-
-          }
-        }
-
-        // MEETING
-      } else if (isMeeting(event)) {
-
+      // MEETING
+      if (isMeeting(event)) {
         this.dynTitle.setPageTitle(event.title, 'Meeting');
 
         const fileSelected = !!event?.meta?.selectedFile;
@@ -241,10 +201,61 @@ export class SessionComponent implements OnInit, OnDestroy {
             }
           }
         }
+
+        // SCREENING
+      } else if (isScreening(event)) {
+        this.dynTitle.setPageTitle(event.title, 'Screening');
+        if ((event.meta as Screening).titleId) {
+          const movie = await this.movieService.getValue(event.meta.titleId as string);
+          this.fileRef = movie.promotional.videos?.screener;
+          this.trackWatchTime(event);
+        }
+
+        // SLATE
+      } else if (isSlate(event)) {
+        this.dynTitle.setPageTitle(event.title, 'Slate');
+        if ((event.meta as Slate).videoId) {
+          const org = await this.orgService.getValue(event.ownerOrgId);
+          this.fileRef = org.documents.videos.find(v => v.fileId === event.meta.videoId);
+          this.trackWatchTime(event);
+        }
       }
     })
   }
 
+  private async trackWatchTime(event: Event) {
+    // if user is not a slate owner we need to track the watch time
+    if (event.ownerOrgId !== this.authService.profile?.orgId) {
+      // Try to get invitation the regular way
+      const uidFilter = (invit: Invitation) => invit.toUser?.uid === this.authService.uid || invit.fromUser?.uid === this.authService.uid;
+      const allInvitations = await this.invitationService.allInvitations$.pipe(take(1)).toPromise();
+      let invitation = allInvitations.find(invit => invit.eventId === event.id && uidFilter(invit));
+
+      // If user is logged-in as anonymous
+      if (!invitation && this.authService.anonymousCredentials?.invitationId) {
+        const invitationId = this.authService.anonymousCredentials?.invitationId;
+        invitation = await this.invitationService.getValue(invitationId);
+      }
+
+      if (!invitation && event.accessibility !== 'public') {
+        // this should never happen since previous checks & guard should have worked
+        throw new Error('Missing Slate Invitation');
+      } else if (invitation) {
+        this.watchTimeInterval?.unsubscribe();
+
+        this.watchTimeInterval = interval(1000).pipe(
+          filter(() => !!this.isPlaying),
+          scan(watchTime => watchTime + 1, invitation.watchTime ?? 0),
+          finalizeWithValue(watchTime => {
+            if (watchTime !== undefined) this.invitationService.update(invitation.id, { watchTime });
+          }),
+          filter(watchTime => watchTime % 60 === 0),
+        ).subscribe(watchTime => {
+          this.invitationService.update(invitation.id, { watchTime });
+        });
+      }
+    }
+  }
   createCountDown() {
     this.deleteCountDown();
     const durationMinutes = 1;
