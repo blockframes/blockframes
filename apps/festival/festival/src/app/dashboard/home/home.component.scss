@@ -34,3 +34,19 @@ header {
     margin: 24px auto auto auto;
   }
 }
+
+.no-accepted-movies {
+  mat-card {
+    width: 330px;
+    height: 220px;
+  
+    img {
+      width: 100px;
+      align-self: center;
+    }
+  }
+  
+  h3 {
+    margin-top: 24px;
+  }
+}
