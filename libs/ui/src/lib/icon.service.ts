@@ -72,6 +72,7 @@ export const icons = [
   { name: 'info', url: 'assets/icons/info.svg' },
   { name: 'invitation', url: 'assets/icons/invitation.svg' },
   { name: 'JPY', url: 'assets/icons/JPY.svg' },
+  { name: 'landscape', url: 'assets/icons/landscape.svg' },
   { name: 'launch', url: 'assets/icons/launch.svg' },
   { name: 'last_page', url: 'assets/icons/last_page.svg' },
   { name: 'local_offer', url: 'assets/icons/local_offer.svg' },

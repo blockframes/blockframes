@@ -15,8 +15,8 @@ import { FileListPreviewComponent } from '@blockframes/media/file/preview-list/p
 import { MatDialog } from '@angular/material/dialog';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
 import { map, switchMap, tap } from 'rxjs/operators';
+import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 
 @Component({
   selector: 'title-marketplace-shell',
@@ -38,8 +38,8 @@ export class TitleMarketplaceShellComponent implements OnInit {
     private movie: MovieService,
     private route: ActivatedRoute,
     public router: Router,
-    private analytics: FireAnalytics
-  ) {}
+    private analytics: AnalyticsService,
+  ) { }
 
   ngOnInit() {
     this.movie$ = this.route.params.pipe(
@@ -82,7 +82,7 @@ export class TitleMarketplaceShellComponent implements OnInit {
 
   videoStateChanged(movieId: string, event: string) {
     if (event === 'play' && !this.alreadyPlayed) {
-      this.analytics.event('promoReelOpened', { movieId });
+      this.analytics.addTitle('promoReelOpened', movieId);
       this.alreadyPlayed = true;
     }
   }
