@@ -399,14 +399,6 @@ export function isCalendarTermInAvails<T extends BucketTerm | Term>(term: T, ava
   return allOf(avails.territories).in(term.territories);
 }
 
-function isCalendarAvailPartiallyInTerm(avail: CalendarAvailsFilter, term: Term<Date>) {
-  const exclusivityCheck = exclusivitySomeOf(avail.exclusive).in(term.exclusive);
-  if (!exclusivityCheck) return false;
-  const mediaCheck = someOf(avail.medias).in(term.medias);
-  if (!mediaCheck) return false;
-  return someOf(avail.territories).in(term.territories);
-}
-
 /**
  * Assuming we have a mandate say mandateA with terms mandateATerms defined as in below.
  * mandateATerms = [
@@ -469,7 +461,7 @@ function getMatchingCalendarMandates(mandates: FullMandate[], avails: CalendarAv
       //removing other terms that might not have matched to avoid marking their territories as available.
       const newMandate = { ...mandate, terms: [term] };
       availableMandates.push(newMandate);
-    } else {
+    } else if (mandate.terms.length > 1) {
       multiTermMandates.push(mandate);
     }
   }
@@ -524,6 +516,14 @@ function getMatchingCalendarMandates(mandates: FullMandate[], avails: CalendarAv
   }).filter(mandate => mandate);
 
   return [availableMandates, availableMultiTermMandates].flat();
+}
+
+function isCalendarAvailPartiallyInTerm(avail: CalendarAvailsFilter, term: Term<Date>) {
+  const exclusivityCheck = exclusivitySomeOf(avail.exclusive).in(term.exclusive);
+  if (!exclusivityCheck) return false;
+  const mediaCheck = someOf(avail.medias).in(term.medias);
+  if (!mediaCheck) return false;
+  return someOf(avail.territories).in(term.territories);
 }
 
 function getMatchingCalendarSales<T extends (FullSale | BucketContract)>(sales: T[], avails: CalendarAvailsFilter): T[] {
