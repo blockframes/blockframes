@@ -43,7 +43,7 @@ export class RequestScreeningComponent {
     this.analytics.event('screeningRequested', {
       movieId: this.movieId
     });
-    this.snackbar.open('Screening request successfully sent', '', { duration: 3000 });
+    this.snackbar.open('Screening request successfully sent.', 'close', { duration: 4000 });
   }
 }
 
