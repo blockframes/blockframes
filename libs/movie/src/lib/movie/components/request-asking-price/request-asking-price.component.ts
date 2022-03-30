@@ -47,7 +47,7 @@ export class RequestAskingPriceComponent {
         movieId: this.data.movieId,
         territories
       });
-      this.snackbar.open('Asking price request successfully sent.', '', { duration: 3000 });
+      this.snackbar.open('Asking Price request successfully sent.', 'close', { duration: 4000 });
       this.dialog.close(true);
     } catch (err) {
       this.form.enable();
