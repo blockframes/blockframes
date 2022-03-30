@@ -137,7 +137,7 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
 
   onNewRight() {
     this.snackbar
-      .open(`Rights added`, 'Show ⇩', { duration: 5000 })
+      .open(`Terms added`, 'SHOW ⇩', { duration: 5000 })
       .onAction()
       .subscribe(() => {
         scrollIntoView(document.querySelector('#rights'));
