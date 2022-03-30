@@ -15,6 +15,7 @@ import { AuthService } from '@blockframes/auth/+state';
 import { ActiveState, EntityState } from '@datorama/akita';
 import { storeStatus, StoreStatus } from '@blockframes/utils/static-model';
 import { APP } from '@blockframes/utils/routes/utils';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 export const fromOrg = (orgId: string): QueryFn => (ref) =>
   ref.where('orgIds', 'array-contains', orgId);
@@ -39,6 +40,7 @@ export class MovieService extends CollectionService<MovieState> {
     private permissionsService: PermissionsService,
     private analyticservice: AnalyticsService,
     private orgService: OrganizationService,
+    private snackbar: MatSnackBar,
     @Inject(APP) public app: App
   ) {
     super();
@@ -133,7 +135,7 @@ export class MovieService extends CollectionService<MovieState> {
     );
   }
 
-  public async updateStatus(movie: Movie, status: StoreStatus) {
+  public async updateStatus(movie: Movie, status: StoreStatus, message?: string) {
     await this.update(movie.id, (movie) => ({
       ...movie,
       app: {
@@ -144,5 +146,11 @@ export class MovieService extends CollectionService<MovieState> {
         },
       },
     }));
+
+    if (message) {
+      this.snackbar.open(message, '', { duration: 4000 });
+    } else {
+      this.snackbar.open(`Title ${storeStatus[status]}.`, '', { duration: 4000 });
+    }
   }
 }
