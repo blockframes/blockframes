@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, Output, EventEmitter, ViewChild, TemplateRef } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AuthService } from '@blockframes/auth/+state';
@@ -13,6 +13,8 @@ import { InvitationService } from '../../+state';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ActionComponent {
+
+  @ViewChild('viewDetails') viewDetailsTemplate: TemplateRef<unknown>;
 
   @Input() event: Event;
   public invit: Invitation;
@@ -74,5 +76,13 @@ export class ActionComponent {
       this.snackBar.open('Request sent','close', { duration: 4000 });
       this.requestPending = true;
     }    
+    if (accessibility == 'public' ) {
+      
+      console.log(event.id)
+      this.snackBar.openFromTemplate(this.viewDetailsTemplate, { duration: 600000 });
+    }
+  }
+  seeDetails(event: Event) {
+      return this.router.navigate(['/event/', event.id, 'r', 'i'])
   }
 }

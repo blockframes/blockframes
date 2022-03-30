@@ -52,3 +52,8 @@
 <ng-template #loading>
   <mat-spinner diameter="24"></mat-spinner>
 </ng-template>
+
+<ng-template #viewDetails>
+  <span class="snack-bar-text">Screening added to your Calendar.</span>
+  <button (click)="seeDetails(event)" class="snack-bar-button" mat-button>SEE DETAILS</button>
+</ng-template>
