@@ -211,7 +211,7 @@ describe('Signup', () => {
         check('terms');
         check('gdpr');
         get('submit').click();
-        get('existing-email').should('contain', 'This email already exists');
+        get('existing-email').should('exist');
       });
     });
   });
