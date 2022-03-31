@@ -597,7 +597,8 @@ async function sendOfferCreatedConfirmation(recipient: User, notification: Notif
   const buyerOrg = await getDocument<OrganizationDocument>(`orgs/${offer.buyerId}`);
   const app: App = 'catalog';
   const toUser = getUserEmailData(recipient);
-  const adminTemplate = adminOfferCreatedConfirmationEmail(toUser, org, notification.bucket);
+  const toAdmin = {email: supportEmails.catalog};
+  const adminTemplate = adminOfferCreatedConfirmationEmail(toUser, toAdmin, org, notification.bucket);
   const buyerTemplate = buyerOfferCreatedConfirmationEmail(toUser, buyerOrg, offer, notification.bucket);
   await Promise.all([
     sendMailFromTemplate(adminTemplate, app, groupIds.unsubscribeAll),
