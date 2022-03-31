@@ -75,7 +75,7 @@ export class TitleListComponent {
   }
 
   async archive(movie: Movie) {
-    await this.service.updateStatus(movie, 'archived');
+    await this.service.updateStatus(movie.id, 'archived');
     this.snackbar.open('Title archived.', '', { duration: 4000 });
   }
 }

@@ -128,14 +128,14 @@ export class MovieService extends CollectionService<MovieState> {
     );
   }
 
-  public async updateStatus(movie: Movie, status: StoreStatus) {
-    await this.update(movie.id, (movie) => ({
+  public updateStatus(movieId: string, status: StoreStatus) {
+    return this.update(movieId, movie => ({
       ...movie,
       app: {
         ...movie.app,
         [this.app]: {
           ...movie.app[this.app],
-          status: status,
+          status,
         },
       },
     }));
