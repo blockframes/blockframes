@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
-import { createMovie, Movie, createMovieAppConfig, MovieAnalytics, createDocumentMeta } from '@blockframes/model';
+import { createMovie, Movie, createMovieAppConfig, createDocumentMeta } from '@blockframes/model';
 import { cleanModel } from '@blockframes/utils/helpers';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
 import type firebase from 'firebase';
@@ -8,9 +8,8 @@ import { App } from '@blockframes/utils/apps';
 import { QueryFn } from '@angular/fire/firestore';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { map } from 'rxjs/operators';
-import { getViews } from '../pipes/analytics.pipe';
 import { joinWith } from '@blockframes/utils/operators';
-import { AnalyticsService } from '@blockframes/utils/analytics/analytics.service';
+import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 import { AuthService } from '@blockframes/auth/+state';
 import { ActiveState, EntityState } from '@datorama/akita';
 
@@ -23,8 +22,6 @@ export const fromOrgAndInternalRef = (orgId: string, internalRef: string): Query
 export const fromInternalRef = (internalRef: string): QueryFn => (ref) =>
   ref.where('internalRef', '==', internalRef);
 
-type MovieWithAnalytics = Movie & { analytics: MovieAnalytics };
-
 interface MovieState extends EntityState<Movie, string>, ActiveState<string> { }
 
 @Injectable({ providedIn: 'root' })
@@ -35,7 +32,7 @@ export class MovieService extends CollectionService<MovieState> {
   constructor(
     private authService: AuthService,
     private permissionsService: PermissionsService,
-    private analyticservice: AnalyticsService,
+    private analyticService: AnalyticsService,
     private orgService: OrganizationService
   ) {
     super();
@@ -112,21 +109,19 @@ export class MovieService extends CollectionService<MovieState> {
 
   queryDashboard(app: App) {
     const orgId = this.orgService.org.id;
-    const query: QueryFn = (ref) =>
-      ref.where('orgIds', 'array-contains', orgId).where(`app.${app}.access`, '==', true);
-    const addViews = (movie: MovieWithAnalytics) => ({
-      ...movie,
-      analytics: { ...movie.analytics, views: getViews(movie.analytics) },
-    });
+    const query: QueryFn = ref => ref.where('orgIds', 'array-contains', orgId).where(`app.${app}.access`, '==', true);
 
     return this.valueChanges(query).pipe(
       joinWith({
-        analytics: (movie) => this.analyticservice.valueChanges(movie.id),
+        analytics: movie => this.analyticService.valueChanges(ref => ref
+          .where('type', '==', 'title')
+          .where('name', '==', 'pageView')
+          .where('meta.titleId', '==', movie.id)
+          .where('meta.ownerOrgIds', 'array-contains', orgId)
+          .where('_meta.createdFrom', '==', app)
+        ),
       }),
-      map((movies) => movies.map(addViews)),
-      map((movies) =>
-        movies.sort((a, b) => (a.title.international < b.title.international ? -1 : 1))
-      )
+      map(movies => movies.sort((a, b) => a.title.international < b.title.international ? -1 : 1))
     );
   }
 }

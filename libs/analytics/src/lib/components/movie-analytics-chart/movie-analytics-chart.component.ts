@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { MovieAnalytics } from '@blockframes/model';
+import { MovieAnalytics } from './movie-analytics.model';
 import { lineChartOptions } from './default-chart-options';
 
 const chartInfo = [
