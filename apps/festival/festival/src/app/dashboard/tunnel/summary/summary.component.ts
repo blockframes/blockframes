@@ -51,7 +51,7 @@ export class TunnelSummaryComponent implements OnInit {
     if (this.form.valid) {
       await this.shell.layout.update({ publishing: true });
       const text = `${this.form.get('title').get('international').value} successfully published.`;
-      const ref = this.snackBar.open(text, '', { duration: 1000 });
+      const ref = this.snackBar.open(text, 'SEE ON MARKETPLACE', { duration: 7000 });
       ref.afterDismissed().subscribe(() => {
         const movieId = this.route.snapshot.paramMap.get('movieId');
         this.router.navigate(['c/o/dashboard/title', movieId]);
