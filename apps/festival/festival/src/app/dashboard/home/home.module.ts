@@ -22,6 +22,7 @@ import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
 import { AppPipeModule } from '@blockframes/utils/pipes/app.pipe';
 import { NoTitleModule } from '@blockframes/ui/dashboard/components/no-title/no-title.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
+import { HasAppStatusModule } from '@blockframes/movie/pipes/has-app-status.pipe';
 
 @NgModule({
   declarations: [HomeComponent],
@@ -35,6 +36,7 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
     AppPipeModule,
     NoTitleModule,
     ImageModule,
+    HasAppStatusModule,
 
     // Material
     MatButtonModule,

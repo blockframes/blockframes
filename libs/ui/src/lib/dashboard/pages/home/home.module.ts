@@ -3,7 +3,7 @@ import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-//Material
+// Material
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -20,6 +20,7 @@ import { MovieAnalyticsChartModule } from '@blockframes/analytics/components/mov
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { NoTitleModule } from '@blockframes/ui/dashboard/components/no-title/no-title.module';
 import { AppPipeModule } from '@blockframes/utils/pipes/app.pipe';
+import { HasAppStatusModule } from '@blockframes/movie/pipes/has-app-status.pipe';
 
 @NgModule({
   declarations: [HomeComponent],
@@ -30,6 +31,7 @@ import { AppPipeModule } from '@blockframes/utils/pipes/app.pipe';
     ImageModule,
     NoTitleModule,
     AppPipeModule,
+    HasAppStatusModule,
 
     // Material
     MatButtonModule,

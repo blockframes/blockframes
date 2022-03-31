@@ -1,5 +1,5 @@
-<ng-container *ngIf="titles$ | async; else loading">
-  <ng-container *ngIf="(hasAcceptedMovies$ | async) else noAcceptedMovies">
+<ng-container *ngIf="titles$ | async as titles; else loading">
+  <ng-container *ngIf="titles | hasAppStatus:['accepted']; else noAcceptedMovies">
     <header fxLayout="row" fxLayoutAlign="space-between center">
       <h1>Dashboard</h1>
       <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="24px">
@@ -22,7 +22,7 @@
 
   <ng-template #noAcceptedMovies>
     <section fxLayout="column" fxLayoutAlign="center center">
-      <ng-container *ngIf="(hasMovies$ | async) else noMovies">
+      <ng-container *ngIf="titles.length else noMovies">
         <h1>No title to display.</h1>
         <p class="mat-body-1">
           As long as you have no title to display, your organization will not appear on the marketplace.
@@ -39,7 +39,7 @@
       </ng-template>
       <article fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center" fxLayoutGap="24px">
         <!-- Should only be shown for noAcceptedMovies && !noMovies -->
-        <ng-container *ngIf="hasDraftMovies$ | async">
+        <ng-container *ngIf="titles | hasAppStatus:['draft']">
           <div class="surface" fxLayout="column" fxLayoutalign="center center">
             <img asset="add_draft.svg" alt="Manage Drafts">
             <a routerLink="../title" mat-button color="primary">Manage Drafts</a>
