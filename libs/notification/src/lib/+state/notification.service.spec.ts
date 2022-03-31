@@ -9,11 +9,11 @@ import { HttpClient } from '@angular/common/http';
 import { HttpTestingController } from '@angular/common/http/testing';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Observable } from 'rxjs';
-import { AnalyticsService } from '@blockframes/utils/analytics/analytics.service';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { RouterTestingModule } from "@angular/router/testing";
 import { ModuleGuard } from '@blockframes/utils/routes/module.guard';
 import { APP } from '@blockframes/utils/routes/utils';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { ContractService } from '@blockframes/contract/contract/+state';
 
 class InjectedAngularFireAuth {
@@ -41,8 +41,8 @@ describe('Notifications Test Suite', () => {
         NotificationService,
         { provide: HttpClient, useClass: HttpTestingController },
         { provide: AngularFireAuth, useClass: InjectedAngularFireAuth },
-        { provide: AnalyticsService, useClass: DummyService },
         { provide: UserService, useClass: DummyService },
+        { provide: MovieService, useClass: DummyService },
         { provide: ContractService, useClass: DummyService },
         { provide: ModuleGuard, useClass: InjectedModuleGuard },
         { provide: APP, useValue: 'festival' },

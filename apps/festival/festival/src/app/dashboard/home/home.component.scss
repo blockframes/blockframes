@@ -1,0 +1,36 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  gap: 24px;
+}
+
+header {
+  display: flex;
+  gap: 24px;
+
+  h1 {
+    margin: auto auto auto 0;
+  }
+}
+
+.carousel-container {
+  display: flex;
+  flex-direction: column;
+
+  article {
+    display: flex;
+
+    h3 {
+      margin: auto auto auto 0;
+    }
+  }
+
+  bf-carousel {
+    margin-top: 24px;
+  }
+
+  .see_titles {
+    margin: 24px auto auto auto;
+  }
+}
