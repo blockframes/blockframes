@@ -40,7 +40,6 @@ export class HomeComponent {
     joinWith({
       org: analytic => this.orgService.valueChanges(analytic.meta.orgId)
     }, { shouldAwait: true }),
-    tap(console.log),
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
