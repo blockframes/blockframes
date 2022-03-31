@@ -1,5 +1,5 @@
 <ng-container *ngIf="titles$ | async as titles; else loading">
-  <ng-container *ngIf="titles | hasAppStatus:['accepted']; else noAcceptedMovies">
+  <ng-container *ngIf="titles | hasAppStatus:'accepted'; else noAcceptedMovies">
     <header>
       <h1>Dashboard</h1>
       <a mat-fab color="black" routerLink="../title/lobby">
@@ -50,7 +50,7 @@
       </ng-template>
       <article fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center" fxLayoutGap="24px">
         <!-- Should only be shown for noAcceptedMovies && !noMovies -->
-        <ng-container *ngIf="titles | hasAppStatus:['draft']">
+        <ng-container *ngIf="titles | hasAppStatus:'draft'">
           <div class="surface" fxLayout="column" fxLayoutalign="center center">
             <img asset="add_draft.svg" alt="Manage Drafts">
             <a routerLink="../title" mat-button color="primary">Manage Drafts</a>

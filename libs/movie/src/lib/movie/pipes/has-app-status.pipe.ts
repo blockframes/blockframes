@@ -8,8 +8,8 @@ import { StoreStatus } from "@blockframes/utils/static-model";
 export class HasAppStatusPipe implements PipeTransform {
   constructor(@Inject(APP) public app: App) {}
 
-  transform(titles: Movie[], status: StoreStatus[]) {
-    return titles.some(hasAppStatus(this.app, status))
+  transform(titles: Movie[], status: StoreStatus) {
+    return titles.some(hasAppStatus(this.app, [status]))
   }
 }
 
