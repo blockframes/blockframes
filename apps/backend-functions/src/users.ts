@@ -99,7 +99,7 @@ export const onUserCreate = async (user: UserRecord) => {
     if (userDoc.exists) {
       if (!user.emailVerified) {
         const u = userDoc.data() as PublicUser;
-        const tags = [`${appName[u._meta.createdFrom]} subscription`];
+        const tags = ['Firebase new user'];
         registerToNewsletters({email, tags});
         await startAccountCreationEmailFlow({ email, publicUser: u, app: u._meta.createdFrom });
       }
