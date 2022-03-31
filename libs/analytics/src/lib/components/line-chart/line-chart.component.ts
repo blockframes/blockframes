@@ -34,10 +34,9 @@ const eventNameLabel: Record<EventName, string> = {
 }
 
 
-const getUniqueEventNames = (array: Analytics[]) => {
-  return array
-    .filter((item, index) => array.findIndex(i => i.name === item.name) === index)
-    .map(item => item.name);
+const getUniqueEventNames = (analytics: Analytics[]) => {
+  const names = analytics.map(analytic => analytic.name);
+  return Array.from(new Set(names));
 }
 
 @Component({
@@ -87,7 +86,11 @@ export class LineChartComponent {
   };
 
   @Input() set data(data: Analytics[]) {
-    if (!data?.length) return;
+    if (!data) return;
+    if (!data.length) {
+      this.chart?.updateSeries([]);
+      return;
+    }
 
     const analytics = data.sort((a, b) => a._meta.createdAt.getTime() - b._meta.createdAt.getTime());
     const start = analytics[0]._meta.createdAt;
