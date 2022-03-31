@@ -31,13 +31,16 @@ export class TitleListComponent {
   );
   result$ = combineLatest([this.filter$, this.movies$]).pipe(
     map(([status, movies]) =>
-      movies.filter((movie) => (status ? movie.app.catalog.status === status : movies))
+      movies.filter((movie) => {
+        if (status) return movie.app.catalog.status === status;
+        return movie.app.catalog.status !== 'archived';
+      })
     )
   );
 
   movieCount$ = this.movies$.pipe(
     map((m) => ({
-      all: m.length,
+      all: m.filter((m) => m.app.festival.status !== 'archived').length,
       draft: m.filter((m) => m.app.catalog.status === 'draft').length,
       submitted: m.filter((m) => m.app.catalog.status === 'submitted').length,
       accepted: m.filter((m) => m.app.catalog.status === 'accepted').length,
@@ -74,8 +77,8 @@ export class TitleListComponent {
     return this.intercom.show();
   }
 
-  async archive(movie: Movie) {
-    await this.service.updateStatus(movie.id, 'archived');
-    this.snackbar.open('Title archived.', '', { duration: 4000 });
+  async changeMovieStatus(movie: Movie, status: StoreStatus) {
+    await this.service.updateStatus(movie.id, status);
+    this.snackbar.open(`Title ${status}.`, '', { duration: 4000 });
   }
 }
