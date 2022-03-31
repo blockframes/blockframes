@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { TitleMarketplaceShellComponent } from '../shell/shell.component';
 import { Movie } from '@blockframes/model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
+import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 
 @Component({
   selector: 'movie-main',
@@ -25,8 +25,8 @@ export class MainComponent implements OnInit {
   constructor(
     private shell: TitleMarketplaceShellComponent,
     private dynTitle: DynamicTitleService,
-    private analytics: FireAnalytics
-  ) {}
+    private analytics: AnalyticsService,
+  ) { }
 
   ngOnInit() {
     this.dynTitle.setPageTitle('Film Page', 'Main Info');
@@ -40,7 +40,7 @@ export class MainComponent implements OnInit {
 
   videoStateChanged(movieId: string, event: string) {
     if (event === 'play' && !this.alreadyPlayed) {
-      this.analytics.event('promoReelOpened', { movieId });
+      this.analytics.addTitle('promoReelOpened', movieId);
       this.alreadyPlayed = true;
     }
   }

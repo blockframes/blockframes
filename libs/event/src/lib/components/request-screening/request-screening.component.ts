@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, HostBinding, Input } from '@angular
 import { Functions, httpsCallable } from '@angular/fire/functions';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '@blockframes/auth/+state';
-import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
+import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { BehaviorSubject } from 'rxjs';
 
@@ -30,7 +30,7 @@ export class RequestScreeningComponent {
   constructor(
     private authService: AuthService,
     private functions: Functions,
-    private analytics: FireAnalytics,
+    private analytics: AnalyticsService,
     private snackbar: MatSnackBar
   ) {}
 
@@ -40,9 +40,7 @@ export class RequestScreeningComponent {
     const f = httpsCallable(this.functions,'requestScreening');
     await f({ movieId: this.movieId, uid: this.authService.uid });
     this.requestStatus.next('sent');
-    this.analytics.event('screeningRequested', {
-      movieId: this.movieId
-    });
+    this.analytics.addTitle('screeningRequested', this.movieId);
     this.snackbar.open('Screening request successfully sent', '', { duration: 3000 });
   }
 }
