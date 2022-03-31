@@ -80,13 +80,13 @@ export class HomeComponent implements OnInit {
     );
 
     this.hasAcceptedMovies$ = allMoviesFromOrg$.pipe(
-      map((movies) => movies.some((movie) => movie.app[this.app].status === 'accepted'))
+      map((movies) => movies.some(hasAppStatus(this.app, ['accepted'])))
     );
 
     this.hasMovies$ = allMoviesFromOrg$.pipe(map((movies) => !!movies.length));
 
     this.hasDraftMovies$ = allMoviesFromOrg$.pipe(
-      map((movies) => movies.some((movie) => movie.app[this.app].status === 'draft'))
+      map((movies) => movies.some(hasAppStatus(this.app, ['draft'])))
     );
 
     this.titles$ = allMoviesFromOrg$.pipe(
