@@ -1,4 +1,4 @@
-import { GetKeys } from './static-model';
+import { GetKeys } from '@blockframes/model';
 
 export type GroupScope = keyof typeof staticGroups;
 
