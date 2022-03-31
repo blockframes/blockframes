@@ -11,14 +11,16 @@ header h1 {
   margin: 0;
 }
 
-
-// No Movie
 mat-card {
   width: 330px;
   height: 220px;
   img {
     width: 100px;
     align-self: center;
+  }
+
+  bf-carousel {
+    margin-top: 24px;
   }
 }
 
