@@ -1,13 +1,12 @@
 import { Component, ChangeDetectionStrategy, Directive, Input, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
-import { Movie } from '@blockframes/model';
+import { Movie, storeStatus, StoreStatus } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { App, appName, getMovieAppAccess } from '@blockframes/utils/apps';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
-import { storeStatus, StoreStatus } from '@blockframes/utils/static-model';
 import { APP } from '@blockframes/utils/routes/utils';
 
 @Directive({ selector: 'movie-action-menu, [movieActionMenu]' })

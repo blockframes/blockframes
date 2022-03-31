@@ -1,4 +1,4 @@
-import { MovieCurrency, OfferStatus } from '@blockframes/utils/static-model';
+import { MovieCurrency, OfferStatus } from './types';
 import { DocumentMeta } from './meta';
 
 export interface Offer {

@@ -3,7 +3,6 @@ import { combineLatest } from 'rxjs';
 import { map, shareReplay, take, throttleTime } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { TerritoryValue } from '@blockframes/utils/static-model';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
 import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
 import {
@@ -15,7 +14,7 @@ import {
   territoryAvailabilities,
 } from '@blockframes/contract/avails/avails';
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
-import { Bucket, Movie, Mandate, Sale, Term } from '@blockframes/model';
+import { Bucket, Movie, Mandate, Sale, Term, TerritoryValue } from '@blockframes/model';
 
 // TODO(#7820): remove with rxjs 7
 type AvailabilitiesInputs = [

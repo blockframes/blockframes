@@ -2,12 +2,10 @@ import { Component, ChangeDetectionStrategy, Optional, Inject } from '@angular/c
 import { FormControl } from '@angular/forms';
 import { map, shareReplay, startWith, tap } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
-import { StoreStatus } from '@blockframes/utils/static-model/types';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Movie } from '@blockframes/model';
+import { Movie, StoreStatus, storeStatus } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { storeStatus } from '@blockframes/utils/static-model';
 import { Intercom } from 'ng-intercom';
 import { App } from '@blockframes/utils/apps';
 import { APP } from '@blockframes/utils/routes/utils';

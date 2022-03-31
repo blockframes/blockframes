@@ -17,12 +17,10 @@ import { BucketService } from '@blockframes/contract/bucket/+state';
 import { ContractService } from '@blockframes/contract/contract/+state';
 import { Holdback, isMandate, isSale, Mandate, Sale } from '@blockframes/model';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
-import { BucketTerm, Term } from '@blockframes/model';
-
+import { BucketTerm, Term, territories, Territory } from '@blockframes/model';
 import { ExplanationComponent } from './explanation/explanation.component';
 import { HoldbackModalComponent } from '@blockframes/contract/contract/holdback/modal/holdback-modal.component';
 import { scrollIntoView } from '../../../../../../../../libs/utils/src/lib/browser/utils';
-import { territories, Territory } from '@blockframes/utils/static-model';
 
 @Component({
   selector: 'catalog-movie-avails',

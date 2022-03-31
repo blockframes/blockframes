@@ -1,5 +1,19 @@
-import { Media, territories, territoriesISOA3, Territory, TerritoryISOA3, TerritoryISOA3Value, TerritoryValue } from '@blockframes/utils/static-model';
-import { Bucket, BucketContract, Holdback, Mandate, Sale, BucketTerm, Term } from '@blockframes/model';
+import {
+  Bucket,
+  BucketContract,
+  Holdback,
+  Mandate,
+  Sale,
+  BucketTerm,
+  Term,
+  Media,
+  territories,
+  territoriesISOA3,
+  Territory,
+  TerritoryISOA3,
+  TerritoryISOA3Value,
+  TerritoryValue
+} from '@blockframes/model';
 import { allOf, exclusivityAllOf, exclusivitySomeOf, someOf } from './sets';
 
 export interface BaseAvailsFilter {

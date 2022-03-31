@@ -1,9 +1,7 @@
 import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-
 import { BehaviorSubject } from 'rxjs';
-
-import { GroupScope, StaticGroup, staticGroups } from '@blockframes/utils/static-model';
+import { GroupScope, StaticGroup, staticGroups } from '@blockframes/model';
 
 @Component({
   selector: 'contract-detailed-terms',

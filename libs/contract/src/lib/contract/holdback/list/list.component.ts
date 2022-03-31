@@ -1,8 +1,7 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
-import { Holdback } from '@blockframes/model';
-import { Scope } from '@blockframes/utils/static-model';
+import { Scope, Holdback } from '@blockframes/model';
 
 @Component({
   selector: 'holdback-list',
@@ -14,7 +13,6 @@ export class ListComponent {
   @Input() holdbacks: Holdback[] = [];
 
   constructor(private dialog: MatDialog) { }
-
 
   openDetails(terms: string, scope: Scope) {
     this.dialog.open(DetailedTermsComponent, { data: { terms, scope }, maxHeight: '80vh', autoFocus: false });

@@ -4,8 +4,7 @@ import {
   initFirestoreApp,
   rulesFixtures as testFixture,
 } from '@blockframes/testing/unit-tests';
-import { Movie } from '@blockframes/model';
-import { StoreStatus } from '@blockframes/utils/static-model';
+import { Movie, StoreStatus } from '@blockframes/model';
 
 describe('Movies Rules Tests', () => {
   const projectId = `movrules-spec-${Date.now()}`;

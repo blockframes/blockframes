@@ -16,3 +16,6 @@ export * from './lib/consents';
 export * from './lib/analytics';
 export * from './lib/meta';
 export * from './lib/offer';
+export * from './lib/static-model';
+export * from './lib/types';
+export * from './lib/groups';
