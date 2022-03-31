@@ -160,8 +160,8 @@ export function createScreening(screening: Partial<Screening>): Screening {
 export interface Slate {
   description: string;
   organizerUid: string;
-  titles: Array<string>,
-  video: string
+  titleIds: string[],
+  videoId: string
 }
 // Slate Presentation
 export interface SlateEvent extends Event<Slate> {
@@ -174,8 +174,8 @@ export function createSlate(slate: Partial<Slate>): Slate {
   return {
     description: '',
     organizerUid: '',
-    titles: [],
-    video: '',
+    titleIds: [],
+    videoId: '',
     ...slate
   }
 }

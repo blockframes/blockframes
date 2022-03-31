@@ -3,8 +3,8 @@ import { AngularFireFunctions } from "@angular/fire/functions";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { AnalyticsService } from "@blockframes/analytics/+state/analytics.service";
 import { AuthService } from "@blockframes/auth/+state";
-import { FireAnalytics } from "@blockframes/utils/analytics/app-analytics";
 import { FormStaticValueArray } from "@blockframes/utils/form";
 import { toLabel } from "@blockframes/utils/pipes/to-label.pipe";
 
@@ -26,7 +26,7 @@ export class RequestAskingPriceComponent {
     private dialog: MatDialogRef<RequestAskingPriceComponent>,
     private functions: AngularFireFunctions,
     private snackbar: MatSnackBar,
-    private analytics: FireAnalytics,
+    private analytics: AnalyticsService,
     @Inject(MAT_DIALOG_DATA) public data: { movieId: string }
   ) {}
 
@@ -43,11 +43,8 @@ export class RequestAskingPriceComponent {
         territories,
         message
       }).toPromise();
-      this.analytics.event('askingPriceRequested', {
-        movieId: this.data.movieId,
-        territories
-      });
-      this.snackbar.open('Asking Price request successfully sent.', 'close', { duration: 4000 });
+      this.analytics.addTitle('askingPriceRequested', this.data.movieId);
+      this.snackbar.open('Asking price request successfully sent.', '', { duration: 3000 });
       this.dialog.close(true);
     } catch (err) {
       this.form.enable();
