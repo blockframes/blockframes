@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Optional, Inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Optional, Inject, ChangeDetectorRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { startWith, map, tap, shareReplay } from 'rxjs/operators';
@@ -29,13 +29,16 @@ export class ListComponent {
 
   result$ = combineLatest([this.filter$, this.titles$]).pipe(
     map(([status, titles]) =>
-      titles.filter((title) => (status ? title.app.festival.status === status : titles))
+      titles.filter((title) => {
+        if (status) return title.app.festival.status === status;
+        return title.app.festival.status !== 'archived';
+      })
     )
   );
 
   titleCount$: Observable<Record<string, number>> = this.titles$.pipe(
     map((m) => ({
-      all: m.length,
+      all: m.filter((m) => m.app.festival.status !== 'archived').length,
       draft: m.filter((m) => m.app.festival.status === 'draft').length,
       accepted: m.filter((m) => m.app.festival.status === 'accepted').length,
       archived: m.filter((m) => m.app.festival.status === 'archived').length,
@@ -48,6 +51,7 @@ export class ListComponent {
     private route: ActivatedRoute,
     private snackbar: MatSnackBar,
     private dynTitle: DynamicTitleService,
+    private cdr: ChangeDetectorRef,
     @Optional() private intercom: Intercom,
     @Inject(APP) public app: App
   ) {}
@@ -70,8 +74,8 @@ export class ListComponent {
     this.filter.reset();
   }
 
-  async archive(movie: Movie) {
-    await this.service.updateStatus(movie.id, 'archived');
-    this.snackbar.open('Title archived.', '', { duration: 4000 });
+  async changeMovieStatus(movie: Movie, status: StoreStatus) {
+    await this.service.updateStatus(movie.id, status);
+    this.snackbar.open(`Title ${status}.`, '', { duration: 4000 });
   }
 }

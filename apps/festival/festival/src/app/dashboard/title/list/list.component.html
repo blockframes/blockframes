@@ -34,7 +34,7 @@
     <bf-table [source]="result$ | async" pagination="50" useFilter>
       <ng-template colRef label="Title" let-movie sort>
         <a [routerLink]="movie.id" [matTooltip]="movie.title.international">
-          {{ movie.title.international | maxLength:50 }}
+          <u>{{ movie.title.international | maxLength:50 }}</u>
         </a>
       </ng-template>
       <ng-template colRef label="Director(s)" let-movie>
@@ -47,7 +47,7 @@
         <bf-tag>{{ status | toLabel: 'storeStatus' }}</bf-tag>
       </ng-template>
 
-      <ng-template colRef label="Actions" let-movie>
+      <ng-template *ngIf="(filter$ | async) === 'archived'" colRef label="Actions" let-movie sticky>
         <div class="action-buttons">
           <a [routerLink]="movie.id" mat-icon-button matTooltip="View">
             <mat-icon svgIcon="visibility"></mat-icon>
@@ -55,8 +55,22 @@
           <a [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]" mat-icon-button matTooltip="Edit">
             <mat-icon svgIcon="edit"></mat-icon>
           </a>
-          <button type="button" mat-icon-button (click)="archive(movie)" matTooltip="Archive">
-            <mat-icon svgIcon="delete"></mat-icon>
+          <button type="button" mat-icon-button (click)="changeMovieStatus(movie, 'draft')" matTooltip="Restore">
+            <mat-icon svgIcon="restore"></mat-icon>
+          </button>
+        </div>
+      </ng-template>
+
+      <ng-template *ngIf="(filter$ | async) !== 'archived'" colRef label="Actions" let-movie sticky>
+        <div class="action-buttons">
+          <a [routerLink]="movie.id" mat-icon-button matTooltip="View">
+            <mat-icon svgIcon="visibility"></mat-icon>
+          </a>
+          <a [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]" mat-icon-button matTooltip="Edit">
+            <mat-icon svgIcon="edit"></mat-icon>
+          </a>
+          <button type="button" mat-icon-button (click)="changeMovieStatus(movie, 'archived')" matTooltip="Archive">
+            <mat-icon svgIcon="archive"></mat-icon>
           </button>
         </div>
       </ng-template>
