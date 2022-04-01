@@ -8,31 +8,37 @@ import { ThemeService } from '@blockframes/ui/theme';
 import { ConsentsService } from '@blockframes/consents/+state/consents.service';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { MatDialog } from '@angular/material/dialog';
-import { Access, StorageFile } from '@blockframes/model';
+import { Access, StorageFile } from '@blockframes/shared/model';
 import { ActivatedRoute } from '@angular/router';
 
-const budgetData: { serie: keyof Budget, label: string }[] = [{
-  serie: 'development',
-  label: 'Development',
-}, {
-  serie: 'shooting',
-  label: 'Shooting',
-}, {
-  serie: 'postProduction',
-  label: 'Post production',
-}, {
-  serie: 'administration',
-  label: 'Administration',
-}, {
-  serie: 'contingency',
-  label: 'Contingency',
-}];
+const budgetData: { serie: keyof Budget; label: string }[] = [
+  {
+    serie: 'development',
+    label: 'Development',
+  },
+  {
+    serie: 'shooting',
+    label: 'Shooting',
+  },
+  {
+    serie: 'postProduction',
+    label: 'Post production',
+  },
+  {
+    serie: 'administration',
+    label: 'Administration',
+  },
+  {
+    serie: 'contingency',
+    label: 'Contingency',
+  },
+];
 
 @Component({
   selector: 'campaign-marketplace-financing',
   templateUrl: './financing.component.html',
   styleUrls: ['./financing.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MarketplaceFinancingComponent {
   public totalFundings: number;
@@ -40,18 +46,18 @@ export class MarketplaceFinancingComponent {
   campaign$ = this.route.params.pipe(
     pluck('movieId'),
     switchMap((id: string) => this.service.valueChanges(id)),
-    tap(campaign => this.totalFundings = getTotalFundings(campaign.fundings))
+    tap(campaign => (this.totalFundings = getTotalFundings(campaign.fundings)))
   );
   public access: Access<Date>;
   accessConsent: Observable<Access<Date>>;
   budgetData = budgetData;
   formatter = {
     currency: (campaign: Campaign) => ({
-      formatter: (value: number) => typeof value === 'number' ? formatCurrency(value, this.locale, campaign.currency) : '',
+      formatter: (value: number) => (typeof value === 'number' ? formatCurrency(value, this.locale, campaign.currency) : ''),
     }),
     percent: {
-      formatter: (value: number) => typeof value === 'number' ? formatPercent(value / 100, this.locale) : '',
-    }
+      formatter: (value: number) => (typeof value === 'number' ? formatPercent(value / 100, this.locale) : ''),
+    },
   };
 
   constructor(
@@ -60,7 +66,7 @@ export class MarketplaceFinancingComponent {
     private route: ActivatedRoute,
     private consentsService: ConsentsService,
     private dialog: MatDialog
-  ) { }
+  ) {}
 
   consentBeforeDownload(campaignId: string, file: string) {
     this.dialog.open(ConfirmInputComponent, {
@@ -73,16 +79,15 @@ export class MarketplaceFinancingComponent {
         onConfirm: async () => {
           await this.consentsService.createConsent('access', campaignId, file);
           window.open(file, '_blank');
-        }
-      }
+        },
+      },
     });
   }
 }
 
 @Pipe({ name: 'apexBudget' })
 export class ApexBudgetPipe implements PipeTransform {
-
-  constructor(private themeService: ThemeService) { }
+  constructor(private themeService: ThemeService) {}
 
   transform(budget: Budget) {
     const data = budgetData.filter(b => !!budget[b.serie]);
@@ -91,15 +96,15 @@ export class ApexBudgetPipe implements PipeTransform {
     return {
       series: data.map(b => budget[b.serie]),
       labels: data.map(b => b.label),
-      colors: data.map((_, i) => `hsl(${200 + ((270 - 200) * (i / data.length))}, 100%, ${l})`),
-      data
+      colors: data.map((_, i) => `hsl(${200 + (270 - 200) * (i / data.length)}, 100%, ${l})`),
+      data,
     };
   }
 }
 
 @Pipe({ name: 'apexFunding' })
 export class ApexFundingPipe implements PipeTransform {
-  constructor(private themeService: ThemeService) { }
+  constructor(private themeService: ThemeService) {}
 
   transform(fundings: Funding[]) {
     if (!fundings.length) return;
@@ -107,7 +112,7 @@ export class ApexFundingPipe implements PipeTransform {
     return {
       series: fundings.map(f => f.amount),
       labels: fundings.map(f => f.name),
-      colors: fundings.map((_, i) => `hsl(${200 + ((270 - 200) * (i / fundings.length))}, 100%, ${l})`),
+      colors: fundings.map((_, i) => `hsl(${200 + (270 - 200) * (i / fundings.length)}, 100%, ${l})`),
     };
   }
 }
@@ -119,10 +124,12 @@ export class ApexProfitsPipe implements PipeTransform {
     return {
       xAxis: { categories: ['Low', 'Medium', 'High'] },
       yAxis: { title: '%' },
-      series: [{
-        name: "Return on Investment",
-        data: [profits.low, profits.medium, profits.high]
-      }],
+      series: [
+        {
+          name: 'Return on Investment',
+          data: [profits.low, profits.medium, profits.high],
+        },
+      ],
     };
   }
 }

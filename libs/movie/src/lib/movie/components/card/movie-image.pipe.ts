@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
-import { Movie } from '@blockframes/model';
+import { Movie } from '@blockframes/shared/model';
 import { CommonModule } from '@angular/common';
 
 @Pipe({

@@ -1,5 +1,5 @@
 import { NgModule, Pipe, PipeTransform } from '@angular/core';
-import { Prize } from '@blockframes/model';
+import { Prize } from '@blockframes/shared/model';
 import { staticModel } from '@blockframes/utils/static-model';
 
 @Pipe({ name: 'festivalPrize' })
@@ -16,9 +16,8 @@ export class PrizePipe implements PipeTransform {
   }
 }
 
-
 @NgModule({
   exports: [PrizePipe],
   declarations: [PrizePipe],
 })
-export class PrizePipeModule { }
+export class PrizePipeModule {}

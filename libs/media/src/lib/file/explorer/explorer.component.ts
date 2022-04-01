@@ -1,10 +1,21 @@
-import { ChangeDetectionStrategy, Component, ViewChild, TemplateRef, Pipe, PipeTransform, Input, AfterViewInit, OnInit, Inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ViewChild,
+  TemplateRef,
+  Pipe,
+  PipeTransform,
+  Input,
+  AfterViewInit,
+  OnInit,
+  Inject,
+} from '@angular/core';
 import { AngularFirestore, QueryFn } from '@angular/fire/firestore';
 
 // Blockframes
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { App } from '@blockframes/utils/apps';
-import { createStorageFile, StorageFile, Organization } from '@blockframes/model';
+import { createStorageFile, StorageFile, Organization } from '@blockframes/shared/model';
 import { FileUploaderService, MediaService } from '@blockframes/media/+state';
 import { getFileMetadata } from '@blockframes/media/+state/static-files';
 import { APP } from '@blockframes/utils/routes/utils';
@@ -27,10 +38,13 @@ function getDir(root: Directory, path: string) {
  */
 function getCrumbs(path: string) {
   const crumbs = [];
-  path.split('/').filter(v => !!v).forEach((segment, i) => {
-    const previous = crumbs[i - 1] ? `${crumbs[i - 1]}/` : '';
-    crumbs.push(`${previous}${segment}`);
-  });
+  path
+    .split('/')
+    .filter(v => !!v)
+    .forEach((segment, i) => {
+      const previous = crumbs[i - 1] ? `${crumbs[i - 1]}/` : '';
+      crumbs.push(`${previous}${segment}`);
+    });
   return crumbs;
 }
 
@@ -38,7 +52,7 @@ function getCrumbs(path: string) {
   selector: 'file-explorer',
   templateUrl: 'explorer.component.html',
   styleUrls: ['./explorer.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FileExplorerComponent implements OnInit, AfterViewInit {
   root$: Observable<Directory>;
@@ -67,23 +81,16 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
     private mediaService: MediaService,
     private service: FileUploaderService,
     @Inject(APP) private app: App
-  ) { }
+  ) {}
 
   ngOnInit() {
-    const query: QueryFn = ref => ref
-      .where('orgIds', 'array-contains', this.org.id)
-      .where(`app.${this.app}.access`, '==', true);
+    const query: QueryFn = ref => ref.where('orgIds', 'array-contains', this.org.id).where(`app.${this.app}.access`, '==', true);
 
-    const titles$ = this.movieService.valueChanges(query).pipe(
-      map(titles => titles.sort((movieA, movieB) => movieA.title.international < movieB.title.international ? -1 : 1)),
-    );
+    const titles$ = this.movieService
+      .valueChanges(query)
+      .pipe(map(titles => titles.sort((movieA, movieB) => (movieA.title.international < movieB.title.international ? -1 : 1))));
 
-    this.root$ = combineLatest([
-      this.org$.asObservable(),
-      titles$
-    ]).pipe(
-      map(([org, titles]) => getDirectories(org, titles)),
-    );
+    this.root$ = combineLatest([this.org$.asObservable(), titles$]).pipe(map(([org, titles]) => getDirectories(org, titles)));
   }
 
   ngAfterViewInit() {
@@ -92,8 +99,8 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
       file: this.file,
       directory: this.directory,
       imageList: this.imageList,
-      fileList: this.fileList
-    }
+      fileList: this.fileList,
+    };
   }
 
   keepOrder = () => 0;
@@ -126,16 +133,16 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
 
   change($event: 'removed' | 'added', meta) {
     if ($event === 'removed') {
-      const metadata = getFileMetadata(meta[0], meta[1], meta[2])
-      const emptyStorageFile = {}
+      const metadata = getFileMetadata(meta[0], meta[1], meta[2]);
+      const emptyStorageFile = {};
       emptyStorageFile[metadata.field] = createStorageFile({
         collection: null,
         docId: null,
         field: null,
         privacy: null,
-        storagePath: null
-      })
-      this.db.doc(`${metadata.collection}/${metadata.docId}`).update(emptyStorageFile)
+        storagePath: null,
+      });
+      this.db.doc(`${metadata.collection}/${metadata.docId}`).update(emptyStorageFile);
     }
   }
 }

@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { CollectionGuardConfig } from 'akita-ng-fire';
 import { MovieService } from '../+state/movie.service';
 import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
-import { Movie } from '@blockframes/model';
+import { Movie } from '@blockframes/shared/model';
 import { App } from '@blockframes/utils/apps';
 import { APP } from '@blockframes/utils/routes/utils';
 
@@ -11,11 +11,7 @@ import { APP } from '@blockframes/utils/routes/utils';
 export class MovieActiveGuard implements CanActivate {
   public movie: Movie;
 
-  constructor(
-    private movieService: MovieService,
-    private router: Router,
-    @Inject(APP) private app: App
-  ) {}
+  constructor(private movieService: MovieService, private router: Router, @Inject(APP) private app: App) {}
 
   async canActivate(next: ActivatedRouteSnapshot) {
     this.movie = await this.movieService.getValue(next.params.movieId as string);

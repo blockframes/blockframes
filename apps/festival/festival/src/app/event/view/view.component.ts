@@ -10,7 +10,7 @@ import { AuthService } from '@blockframes/auth/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MatDialog } from '@angular/material/dialog';
 import { RequestAskingPriceComponent } from '@blockframes/movie/components/request-asking-price/request-asking-price.component';
-import { Event, Invitation } from '@blockframes/model';
+import { Event, Invitation } from '@blockframes/shared/model';
 import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
 
 @Component({
@@ -18,7 +18,7 @@ import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.se
   templateUrl: './view.component.html',
   styleUrls: ['./view.component.scss'],
   animations: [fade],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EventViewComponent implements OnInit {
   invitation$: Observable<Invitation>;
@@ -42,7 +42,7 @@ export class EventViewComponent implements OnInit {
     private dynTitle: DynamicTitleService,
     private dialog: MatDialog,
     private cdr: ChangeDetectorRef
-  ) { }
+  ) {}
 
   @HostListener('window:popstate', ['$event'])
   onPopState() {
@@ -52,20 +52,22 @@ export class EventViewComponent implements OnInit {
   }
 
   async ngOnInit() {
-
     this.event$ = this.route.params.pipe(
       pluck('eventId'),
       switchMap((eventId: string) => this.service.queryDocs(eventId)),
       tap(event => {
         this.editEvent = `/c/o/dashboard/event/${event.id}/edit`;
         this.dynTitle.setPageTitle(event.title);
-      }),
+      })
     );
 
     this.invitation$ = combineLatest([
       this.event$.pipe(filter(event => !!event)),
-      this.invitationService.guestInvitations$.pipe(startWith([]), catchError(() => of([]))),
-      this.statusChanged
+      this.invitationService.guestInvitations$.pipe(
+        startWith([]),
+        catchError(() => of([]))
+      ),
+      this.statusChanged,
     ]).pipe(
       switchMap(async ([event, invitations]) => {
         this.accessRoute = `/event/${event.id}/r/i/${event.type === 'meeting' ? 'lobby' : 'session'}`;
@@ -103,7 +105,7 @@ export class EventViewComponent implements OnInit {
       data: { movieId },
       maxHeight: '80vh',
       maxWidth: '650px',
-      autoFocus: false
+      autoFocus: false,
     });
     ref.afterClosed().subscribe(isSent => {
       this.requestSent = !!isSent;

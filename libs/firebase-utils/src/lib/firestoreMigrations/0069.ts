@@ -1,7 +1,7 @@
 import * as env from '@env';
 import { Firestore, Storage } from '../types';
 import { runChunks } from '../firebase-utils';
-import { StorageFile, User } from '@blockframes/model';
+import { StorageFile, User } from '@blockframes/shared/model';
 import { privacies } from '@blockframes/utils/file-sanitizer';
 
 export const { storageBucket } = env.firebase();
@@ -17,7 +17,6 @@ interface OldUser extends User {
  * @returns
  */
 export async function upgrade(db: Firestore, storage: Storage) {
-
   const users = await db.collection('users').get();
   await runChunks(users.docs, async doc => {
     const user = doc.data() as OldUser;
@@ -40,7 +39,6 @@ export async function upgrade(db: Firestore, storage: Storage) {
       delete user.watermark;
       await doc.ref.set(user);
     }
-
   }).catch(err => console.error(err));
 
   console.log('watermarks removed !');

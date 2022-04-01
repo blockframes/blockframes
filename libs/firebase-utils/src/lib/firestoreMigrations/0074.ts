@@ -1,6 +1,6 @@
 import { Firestore } from '../types';
 import { runChunks } from '../firebase-utils';
-import { Organization, Movie } from '@blockframes/model';
+import { Organization, Movie } from '@blockframes/shared/model';
 
 /**
  * Remove isBlockchainEnabled from org documents
@@ -15,23 +15,23 @@ export async function upgrade(db: Firestore) {
 async function migrateMovie(db: Firestore) {
   const movies = await db.collection('movies').get();
 
-  return runChunks(movies.docs, async (doc) => {
+  return runChunks(movies.docs, async doc => {
     const movie = doc.data() as Movie;
 
     // Check if movie has a crew with mini 1 member
     if (!movie.crew?.length) return false;
 
     // Replace all bad 'confiremd' with the fix one
-    movie.crew = movie.crew.map((crew) => {
+    movie.crew = movie.crew.map(crew => {
       // If status == confiremd
-      if (crew.status as any === 'confiremd') {
+      if ((crew.status as any) === 'confiremd') {
         return {
           ...crew,
-          status: 'confirmed'
+          status: 'confirmed',
         };
       }
       return crew;
-    })
+    });
 
     // Update movie in DB
     await doc.ref.set(movie);
@@ -41,7 +41,7 @@ async function migrateMovie(db: Firestore) {
 async function migrateOrg(db: Firestore) {
   const orgs = await db.collection('orgs').get();
 
-  return runChunks(orgs.docs, async (doc) => {
+  return runChunks(orgs.docs, async doc => {
     const org = doc.data() as Organization;
 
     delete (org as any).isBlockchainEnabled;

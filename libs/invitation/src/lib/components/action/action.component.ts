@@ -2,7 +2,7 @@ import { Component, Input, ChangeDetectionStrategy, Output, EventEmitter } from 
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AuthService } from '@blockframes/auth/+state';
-import { Event, Invitation, InvitationStatus } from '@blockframes/model';
+import { Event, Invitation, InvitationStatus } from '@blockframes/shared/model';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { InvitationService } from '../../+state';
 
@@ -10,10 +10,9 @@ import { InvitationService } from '../../+state';
   selector: 'invitation-action',
   templateUrl: './action.component.html',
   styleUrls: ['./action.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ActionComponent {
-
   @Input() event: Event;
   public invit: Invitation;
   public accepting = false;
@@ -39,8 +38,8 @@ export class ActionComponent {
     private router: Router,
     private service: InvitationService,
     private snackBar: MatSnackBar,
-    private authService: AuthService,
-  ) { }
+    private authService: AuthService
+  ) {}
 
   accept(invitation: Invitation) {
     this.accepting = true;

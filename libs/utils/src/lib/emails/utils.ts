@@ -1,7 +1,7 @@
-import { EmailJSON } from "@sendgrid/helpers/classes/email-address";
+import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
 import { AttachmentData } from '@sendgrid/helpers/classes/attachment';
-import { App, sendgridEmailsFrom } from "../apps";
-import { format } from "date-fns";
+import { App, sendgridEmailsFrom } from '../apps';
+import { format } from 'date-fns';
 import {
   EventDocument,
   EventMeta,
@@ -13,12 +13,12 @@ import {
   OrganizationDocument,
   orgName,
   MailBucket,
-  MovieDocument
-} from '@blockframes/model';
-import type { ContractDocument, Offer } from '@blockframes/model';
-import { AccessibilityTypes } from "../static-model";
-import { toIcsFile } from "../agenda/utils";
-import { IcsEvent } from "../agenda/agenda.interfaces";
+  MovieDocument,
+} from '@blockframes/shared/model';
+import type { ContractDocument, Offer } from '@blockframes/shared/model';
+import { AccessibilityTypes } from '../static-model';
+import { toIcsFile } from '../agenda/utils';
+import { IcsEvent } from '../agenda/agenda.interfaces';
 
 interface EmailData {
   to: string;
@@ -31,50 +31,50 @@ export interface EmailTemplateRequest {
   to: string;
   templateId: string;
   data: {
-    org?: OrgEmailData | OrganizationDocument, // @TODO #7491 template d-94a20b20085842f68fb2d64fe325638a uses OrganizationDocument but it should use OrgEmailData instead
-    user?: UserEmailData,
-    userSubject?: UserEmailData,
-    event?: EventEmailData,
-    eventUrl?: string,
-    pageURL?: string,
-    bucket?: MailBucket,
-    baseUrl?: string,
-    date?: string,
-    movie?: MovieEmailData | MovieDocument,
-    offer?: OfferEmailData,
-    buyer?: PublicUser | string,
-    contract?: ContractDocument,
-    territories?: string,
-    contractId?: string,
+    org?: OrgEmailData | OrganizationDocument; // @TODO #7491 template d-94a20b20085842f68fb2d64fe325638a uses OrganizationDocument but it should use OrgEmailData instead
+    user?: UserEmailData;
+    userSubject?: UserEmailData;
+    event?: EventEmailData;
+    eventUrl?: string;
+    pageURL?: string;
+    bucket?: MailBucket;
+    baseUrl?: string;
+    date?: string;
+    movie?: MovieEmailData | MovieDocument;
+    offer?: OfferEmailData;
+    buyer?: PublicUser | string;
+    contract?: ContractDocument;
+    territories?: string;
+    contractId?: string;
   };
 }
 
 export interface EmailParameters {
-  request: EmailRequest | EmailTemplateRequest,
-  app?: App,
+  request: EmailRequest | EmailTemplateRequest;
+  app?: App;
 }
 
 export interface EmailAdminParameters {
-  request: EmailRequest | EmailTemplateRequest,
-  from?: EmailJSON,
+  request: EmailRequest | EmailTemplateRequest;
+  from?: EmailJSON;
 }
 
 export interface EventEmailData {
-  id: string,
-  title: string,
-  start: string,
-  end: string,
-  type: EventTypes,
-  viewUrl: string,
-  sessionUrl: string,
-  accessibility: AccessibilityTypes,
-  calendar: AttachmentData
+  id: string;
+  title: string;
+  start: string;
+  end: string;
+  type: EventTypes;
+  viewUrl: string;
+  sessionUrl: string;
+  accessibility: AccessibilityTypes;
+  calendar: AttachmentData;
 }
 
 export interface OrgEmailData {
-  denomination: string,
-  email: string,
-  id: string
+  denomination: string;
+  email: string;
+  id: string;
 }
 
 /**
@@ -85,21 +85,21 @@ export interface OrgEmailData {
  * `hi user.firstName, we let you know that userSubject.firstName has joined your org today`
  */
 export interface UserEmailData {
-  firstName?: string,
-  lastName?: string,
-  email: string,
-  password?: string,
-  isRegistered?: boolean
+  firstName?: string;
+  lastName?: string;
+  email: string;
+  password?: string;
+  isRegistered?: boolean;
 }
 
 export interface OfferEmailData {
-  id: string
+  id: string;
 }
 
 export interface MovieEmailData {
   title: {
-    international: string
-  }
+    international: string;
+  };
 }
 
 export type EmailErrorCodes = 'E01-unauthorized' | 'E02-general-error' | 'E03-missing-api-key' | 'E04-no-template-available';
@@ -107,7 +107,8 @@ export type EmailErrorCodes = 'E01-unauthorized' | 'E02-general-error' | 'E03-mi
 export const emailErrorCodes = {
   unauthorized: {
     code: 'E01-unauthorized' as EmailErrorCodes,
-    message: 'API key is not authorized to send mails. Please visit: https://www.notion.so/cascade8/Setup-SendGrid-c8c6011ad88447169cebe1f65044abf0'
+    message:
+      'API key is not authorized to send mails. Please visit: https://www.notion.so/cascade8/Setup-SendGrid-c8c6011ad88447169cebe1f65044abf0',
   },
   general: {
     code: 'E02-general-error' as EmailErrorCodes,
@@ -115,33 +116,38 @@ export const emailErrorCodes = {
   },
   missingKey: {
     code: 'E03-missing-api-key' as EmailErrorCodes,
-    message: 'No sendgrid API key set'
+    message: 'No sendgrid API key set',
   },
   noTemplate: {
     code: 'E04-no-template-available' as EmailErrorCodes,
     message: 'There is no existing template for this email',
-  }
+  },
 };
 
 export function createEmailRequest(params: Partial<EmailRequest> = {}): EmailRequest {
   return {
     to: 'foo@bar.com',
     subject: 'Default email subject',
-    text: 'This is not spam, I\'m just a lazy developer testing emails and forgot to change default message.',
-    ...params
+    text: "This is not spam, I'm just a lazy developer testing emails and forgot to change default message.",
+    ...params,
   };
 }
 
 interface EventEmailParameters {
-  event: EventDocument<EventMeta>,
-  orgName: string,
-  attachment?: boolean,
-  email?: string,
-  invitationId?: string
+  event: EventDocument<EventMeta>;
+  orgName: string;
+  attachment?: boolean;
+  email?: string;
+  invitationId?: string;
 }
 
-export function getEventEmailData({ event, orgName, attachment = true, email, invitationId }: EventEmailParameters): EventEmailData {
-
+export function getEventEmailData({
+  event,
+  orgName,
+  attachment = true,
+  email,
+  invitationId,
+}: EventEmailParameters): EventEmailData {
   const eventStartDate = new Date(event.start.toDate());
   const eventEndDate = new Date(event.end.toDate());
   const eventUrlParams = email && invitationId ? `?email=${encodeURIComponent(email)}&i=${invitationId}` : '';
@@ -160,8 +166,8 @@ export function getEventEmailData({ event, orgName, attachment = true, email, in
     viewUrl: `/event/${event.id}/r/i${eventUrlParams}`,
     sessionUrl: `/event/${event.id}/r/i/session${eventUrlParams}`,
     accessibility: event.accessibility,
-    calendar: attachment ? getEventEmailAttachment(event, orgName) : undefined
-  }
+    calendar: attachment ? getEventEmailAttachment(event, orgName) : undefined,
+  };
 }
 
 function getEventEmailAttachment(event: EventDocument<EventMeta>, orgName: string): AttachmentData {
@@ -176,7 +182,7 @@ function getEventEmailAttachment(event: EventDocument<EventMeta>, orgName: strin
 
 function createIcsFromEventDocument(e: EventDocument<EventMeta>, orgName: string): IcsEvent {
   if (!['meeting', 'screening'].includes(e.type)) return;
-  const event = e.type == 'meeting' ? e as MeetingEventDocument : e as ScreeningEventDocument;
+  const event = e.type == 'meeting' ? (e as MeetingEventDocument) : (e as ScreeningEventDocument);
 
   return {
     id: event.id,
@@ -186,17 +192,17 @@ function createIcsFromEventDocument(e: EventDocument<EventMeta>, orgName: string
     description: event.meta.description,
     organizer: {
       name: orgName,
-      email: sendgridEmailsFrom.festival.email
-    }
-  }
+      email: sendgridEmailsFrom.festival.email,
+    },
+  };
 }
 
 export function getOrgEmailData(org: Partial<OrganizationDocument>): OrgEmailData {
   return {
     id: org.id,
     denomination: orgName(org, 'full'),
-    email: org.email || ''
-  }
+    email: org.email || '',
+  };
 }
 
 export function getUserEmailData(user: Partial<User>, password?: string): UserEmailData {
@@ -205,20 +211,20 @@ export function getUserEmailData(user: Partial<User>, password?: string): UserEm
     lastName: user.lastName || '',
     email: user.email || '',
     password,
-    isRegistered: !!user.orgId
-  }
+    isRegistered: !!user.orgId,
+  };
 }
 
 export function getOfferEmailData(offer: Partial<Offer>): OfferEmailData {
   return {
-    id: offer.id
-  }
+    id: offer.id,
+  };
 }
 
 export function getMovieEmailData(movie: Partial<MovieDocument>): MovieEmailData {
   return {
     title: {
-      international: movie.title.international
-    }
-  }
+      international: movie.title.international,
+    },
+  };
 }

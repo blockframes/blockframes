@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { InvitationService } from '@blockframes/invitation/+state/invitation.service';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { OrganizationMember, Organization, Invitation, UserRole } from '@blockframes/model';
+import { OrganizationMember, Organization, Invitation, UserRole } from '@blockframes/shared/model';
 import { buildJoinOrgQuery } from '@blockframes/invitation/invitation-utils';
 import { PermissionsService } from '@blockframes/permissions/+state';
 
@@ -11,7 +11,7 @@ import { PermissionsService } from '@blockframes/permissions/+state';
   selector: 'member-edit',
   templateUrl: './member.component.html',
   styleUrls: ['./member.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MemberComponent implements OnInit {
   public orgName: string = this.orgService.org.denomination.full;
@@ -33,8 +33,8 @@ export class MemberComponent implements OnInit {
     private snackBar: MatSnackBar,
     private invitationService: InvitationService,
     private permissionService: PermissionsService,
-    private orgService: OrganizationService,
-  ) { }
+    private orgService: OrganizationService
+  ) {}
 
   ngOnInit() {
     this.members$ = this.orgService.membersWithRole$;

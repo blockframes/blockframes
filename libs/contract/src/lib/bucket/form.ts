@@ -14,8 +14,8 @@ import {
   createBucketTerm,
   Mandate,
   BucketTerm,
-  Term
-} from '@blockframes/model';
+  Term,
+} from '@blockframes/shared/model';
 import {
   AvailableTerritoryMarker,
   AvailsFilter,
@@ -25,7 +25,7 @@ import {
   isSameBucketContract,
   isSameCalendarBucketTerm,
   isSameMapBucketTerm,
-  MapAvailsFilter
+  MapAvailsFilter,
 } from '../avails/avails';
 import { HoldbackForm } from '../contract/holdback/form';
 
@@ -40,18 +40,18 @@ export function createBucketTermControl(params: Partial<BucketTerm> = {}) {
     exclusive: new FormControl(term.exclusive ?? true),
     duration: new FormGroup({
       from: new FormControl(term.duration?.from),
-      to: new FormControl(term.duration?.to)
+      to: new FormControl(term.duration?.to),
     }),
     languages: MovieVersionInfoForm.factory(term.languages, createLanguageControl),
-  }
+  };
 }
 
-type BucketTermControl = ReturnType<typeof createBucketTermControl>
+type BucketTermControl = ReturnType<typeof createBucketTermControl>;
 
 export class BucketTermForm extends FormEntity<BucketTermControl, BucketTerm> {
   constructor(term: Partial<BucketTerm> = {}) {
     const control = createBucketTermControl(term);
-    super(control)
+    super(control);
   }
 }
 
@@ -68,11 +68,10 @@ function createBucketContractControl(params: Partial<BucketContract> = {}) {
     parentTermId: new FormControl(contract.parentTermId),
     terms: FormList.factory(contract.terms, term => BucketTermForm.factory(term, createBucketTermControl)),
     specificity: new FormControl(contract.price),
-    holdbacks: FormList.factory(contract.holdbacks, holdback => new HoldbackForm(holdback), [])
-  }
+    holdbacks: FormList.factory(contract.holdbacks, holdback => new HoldbackForm(holdback), []),
+  };
 }
 type BucketContractControls = ReturnType<typeof createBucketContractControl>;
-
 
 class BucketContractForm extends FormEntity<BucketContractControls, BucketContract> {
   constructor(contract: Partial<BucketContract> = {}) {
@@ -81,14 +80,11 @@ class BucketContractForm extends FormEntity<BucketContractControls, BucketContra
   }
 }
 
-
 ////////////
 // BUCKET //
 ////////////
 
-function toBucketTerm(
-  avail: AvailsFilter | MapAvailsFilter | CalendarAvailsFilter
-): BucketTerm {
+function toBucketTerm(avail: AvailsFilter | MapAvailsFilter | CalendarAvailsFilter): BucketTerm {
   return createBucketTerm({
     medias: avail.medias,
     duration: 'duration' in avail ? avail.duration : undefined,
@@ -114,8 +110,8 @@ function createBucketControl(params: Partial<Bucket> = {}) {
   const bucket = createBucket(params);
   return {
     currency: new FormControl(bucket.currency),
-    contracts: FormList.factory(bucket.contracts, (contract) => new BucketContractForm(contract))
-  }
+    contracts: FormList.factory(bucket.contracts, contract => new BucketContractForm(contract)),
+  };
 }
 
 type BucketControls = ReturnType<typeof createBucketControl>;
@@ -130,12 +126,13 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
   }
 
   selectTerms(titleId: string) {
-    const getTerm = () => this.get('contracts').controls
-      .filter(contract => contract.value.titleId === titleId)
-      .map(contract => contract.get('terms'))
-      .flat()
-      .map(terms => terms.controls)
-      .flat();
+    const getTerm = () =>
+      this.get('contracts')
+        .controls.filter(contract => contract.value.titleId === titleId)
+        .map(contract => contract.get('terms'))
+        .flat()
+        .map(terms => terms.controls)
+        .flat();
 
     return this.change.pipe(startWith([]), map(getTerm));
   }
@@ -164,7 +161,10 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
 
     // New term
     if (termIndex === -1) {
-      this.get('contracts').at(contractIndex).get('terms').add(toBucketTerm({ ...avails, territories: [territory] }));
+      this.get('contracts')
+        .at(contractIndex)
+        .get('terms')
+        .add(toBucketTerm({ ...avails, territories: [territory] }));
       this.markAsDirty();
       this.change.next();
       return true;
@@ -206,9 +206,10 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
 
     if (territories.length > 1) {
       control.setValue(territories.filter(t => t !== territory));
-    } else { // Remove the term as it was the last territory
+    } else {
+      // Remove the term as it was the last territory
       this.get('contracts').at(contractIndex).get('terms').removeAt(termIndex);
-      this.change.next()
+      this.change.next();
     }
   }
 
@@ -259,7 +260,10 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
   /**
    * This function will retrieved the `termIndex` & `contractIndex` based on the given `DurationMarker`
    */
-  getTermIndexForCalendar(avails: CalendarAvailsFilter, marker: DurationMarker): { contractIndex: number, termIndex: number } | undefined {
+  getTermIndexForCalendar(
+    avails: CalendarAvailsFilter,
+    marker: DurationMarker
+  ): { contractIndex: number; termIndex: number } | undefined {
     const { term } = marker;
     const bucket = this.value;
 

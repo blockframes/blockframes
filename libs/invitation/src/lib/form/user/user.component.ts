@@ -9,17 +9,16 @@ import { Validators } from '@angular/forms';
 import { map, startWith } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EventFormShellComponent } from '@blockframes/event/form/shell/shell.component';
-import { Invitation } from '@blockframes/model';
+import { Invitation } from '@blockframes/shared/model';
 
 @Component({
   selector: '[eventId] invitation-form-user',
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.scss'],
   animations: [scaleIn],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserComponent implements OnInit {
-
   /**
    * Id of the document the invitations will refer to.
    * This can be an Organization or an Event for example.
@@ -47,7 +46,7 @@ export class UserComponent implements OnInit {
 
   separators = [ENTER, COMMA, SEMICOLON];
   form = createAlgoliaUserForm(Validators.maxLength(50));
-  currentLimit$: Observable<{ canSend: boolean, total: number }>;
+  currentLimit$: Observable<{ canSend: boolean; total: number }>;
   sending = new BehaviorSubject(false);
   hasLimit: boolean;
 
@@ -55,10 +54,9 @@ export class UserComponent implements OnInit {
     private invitationService: InvitationService,
     private orgService: OrganizationService,
     private snackBar: MatSnackBar
-  ) { }
+  ) {}
 
   ngOnInit() {
-
     this.hasLimit = this.limit !== Infinity;
 
     const existingInvitationNumber$ = this.invitationService.allInvitations$.pipe(
@@ -67,16 +65,13 @@ export class UserComponent implements OnInit {
     );
     const inFormInvitationNumber$ = this.form.valueChanges.pipe(
       map(users => users.length),
-      startWith(this.form.value.length),
+      startWith(this.form.value.length)
     );
 
-    this.currentLimit$ = combineLatest([
-      existingInvitationNumber$,
-      inFormInvitationNumber$,
-    ]).pipe(
+    this.currentLimit$ = combineLatest([existingInvitationNumber$, inFormInvitationNumber$]).pipe(
       map(([existing, current]) => ({ canSend: existing + current <= this.limit, total: existing + current })),
-      startWith({ canSend: false, total: -1 }),
-    )
+      startWith({ canSend: false, total: -1 })
+    );
   }
 
   /** Send an invitation to a list of persons, either to existing user or by creating user  */
@@ -92,7 +87,9 @@ export class UserComponent implements OnInit {
         const emails = unique.filter(email => !this.invitations.some(inv => isInvited(inv, email) || hasRequested(inv, email)));
 
         // Retreive existing requests for emails we want to invite
-        const requests = unique.map(email => this.invitations.find(inv => hasRequested(inv, email) && inv.status === 'pending')).filter(inv => !!inv);
+        const requests = unique
+          .map(email => this.invitations.find(inv => hasRequested(inv, email) && inv.status === 'pending'))
+          .filter(inv => !!inv);
 
         this.form.reset([]);
         this.sending.next(true);

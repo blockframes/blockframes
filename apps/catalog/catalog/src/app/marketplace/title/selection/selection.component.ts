@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
 import { Intercom } from 'ng-intercom';
 import { BucketService } from '@blockframes/contract/bucket/+state';
-import { Movie, Bucket, Holdback } from '@blockframes/model';
+import { Movie, Bucket, Holdback } from '@blockframes/shared/model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { movieCurrencies } from '@blockframes/utils/static-model';
 import { Observable, Subject, merge } from 'rxjs';
@@ -19,9 +19,7 @@ import { FormControl } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MarketplaceSelectionComponent {
-  withoutCurrencies = Object.keys(movieCurrencies).filter(
-    (currency) => currency !== 'EUR' && currency !== 'USD'
-  );
+  withoutCurrencies = Object.keys(movieCurrencies).filter(currency => currency !== 'EUR' && currency !== 'USD');
   public currencyForm = new FormControl('EUR');
 
   bucket$: Observable<Bucket>;
@@ -38,15 +36,15 @@ export class MarketplaceSelectionComponent {
     private snackBar: MatSnackBar
   ) {
     this.bucket$ = this.bucketService.active$.pipe(
-      tap((bucket) => {
+      tap(bucket => {
         this.setTitle(bucket?.contracts.length);
         if (bucket?.currency) this.currencyForm.setValue(bucket.currency);
       })
     );
 
-    const bucketPrices$ = this.bucket$.pipe(map((bucket) => bucket.contracts.map((c) => c.price)));
+    const bucketPrices$ = this.bucket$.pipe(map(bucket => bucket.contracts.map(c => c.price)));
     const localPrice$ = this.priceChanges.pipe(mapTo(this.prices));
-    this.total$ = merge(bucketPrices$, localPrice$).pipe(map((prices) => this.getTotal(prices)));
+    this.total$ = merge(bucketPrices$, localPrice$).pipe(map(prices => this.getTotal(prices)));
   }
 
   private setTitle(amount: number) {
@@ -71,7 +69,7 @@ export class MarketplaceSelectionComponent {
 
   updateHoldbacks(index: number, holdbacks: Holdback[]) {
     const id = this.orgService.org.id;
-    this.bucketService.update(id, (bucket) => {
+    this.bucketService.update(id, bucket => {
       const contracts = [...bucket.contracts];
       contracts[index].holdbacks = holdbacks;
       return { contracts };
@@ -81,7 +79,7 @@ export class MarketplaceSelectionComponent {
   updatePrice(index: number, price: string) {
     const id = this.orgService.org.id;
     const currency = this.currencyForm.value;
-    return this.bucketService.update(id, (bucket) => {
+    return this.bucketService.update(id, bucket => {
       const contracts = [...bucket.contracts];
       contracts[index].price = parseFloat(price);
       return { contracts, currency };
@@ -91,7 +89,7 @@ export class MarketplaceSelectionComponent {
   removeContract(index: number, title: Movie) {
     const id = this.orgService.org.id;
     delete this.prices[index];
-    this.bucketService.update(id, (bucket) => ({
+    this.bucketService.update(id, bucket => ({
       contracts: bucket.contracts.filter((_, i) => i !== index),
     }));
     const text = `${title.title.international} was removed from your Selection`;
@@ -100,7 +98,7 @@ export class MarketplaceSelectionComponent {
 
   removeTerm(contractIndex: number, termIndex: number) {
     const id = this.orgService.org.id;
-    this.bucketService.update(id, (bucket) => {
+    this.bucketService.update(id, bucket => {
       const contracts = [...bucket.contracts];
       const terms = contracts[contractIndex].terms.filter((_, i) => i !== termIndex);
       // If there are no terms anymore, remove contract
@@ -119,38 +117,27 @@ export class MarketplaceSelectionComponent {
 
   createOffer(bucket: Bucket) {
     if (
-      bucket.contracts.some((contract) => {
+      bucket.contracts.some(contract => {
         return contract.terms.some((term, index) => {
           const from = term.duration.from.getTime();
           const to = term.duration.to.getTime();
 
           return contract.terms.some((t, i) => {
             if (i === index) return false;
-            const startDuringDuration =
-              from >= t.duration.from.getTime() && from <= t.duration.to.getTime();
-            const endDuringDuration =
-              to <= t.duration.to.getTime() && to >= t.duration.from.getTime();
-            const wrappedDuration =
-              from <= t.duration.from.getTime() && to >= t.duration.to.getTime();
+            const startDuringDuration = from >= t.duration.from.getTime() && from <= t.duration.to.getTime();
+            const endDuringDuration = to <= t.duration.to.getTime() && to >= t.duration.from.getTime();
+            const wrappedDuration = from <= t.duration.from.getTime() && to >= t.duration.to.getTime();
             const conflictingTime = startDuringDuration || endDuringDuration || wrappedDuration;
-            const conflictingMedias = term.medias.some((media) => t.medias.includes(media));
-            const conflictingTerritories = term.territories.some((territory) =>
-              t.territories.includes(territory)
-            );
+            const conflictingMedias = term.medias.some(media => t.medias.includes(media));
+            const conflictingTerritories = term.territories.some(territory => t.territories.includes(territory));
             const conflictingExclusive = term.exclusive === t.exclusive;
 
-            return (
-              conflictingTime && conflictingMedias && conflictingTerritories && conflictingExclusive
-            );
+            return conflictingTime && conflictingMedias && conflictingTerritories && conflictingExclusive;
           });
         });
       })
     ) {
-      this.snackBar.open(
-        'Some terms conflict with each other. Please remove duplicate terms.',
-        '',
-        { duration: 2000 }
-      );
+      this.snackBar.open('Some terms conflict with each other. Please remove duplicate terms.', '', { duration: 2000 });
     } else {
       this.dialog.open(SpecificTermsComponent, { data: { currency: this.currencyForm.value } });
     }

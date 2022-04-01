@@ -1,15 +1,8 @@
-import {
-  Component,
-  OnInit,
-  ChangeDetectionStrategy,
-  OnDestroy,
-  ChangeDetectorRef,
-  Inject,
-} from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ChangeDetectorRef, Inject } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Movie } from '@blockframes/model';
+import { Movie } from '@blockframes/shared/model';
 import { switchMap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
@@ -28,14 +21,7 @@ import { APP } from '@blockframes/utils/routes/utils';
 export class WishlistComponent implements OnInit, OnDestroy {
   public dataSource: MatTableDataSource<Movie>;
   public hasWishlist: boolean;
-  public columnsToDisplay = [
-    'movie',
-    'director',
-    'productionStatus',
-    'originCountry',
-    'runningTime',
-    'delete',
-  ];
+  public columnsToDisplay = ['movie', 'director', 'productionStatus', 'originCountry', 'runningTime', 'delete'];
 
   private sub: Subscription;
   public isDataLoaded = false;
@@ -54,13 +40,11 @@ export class WishlistComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.sub = this.orgService.currentOrg$
-      .pipe(switchMap((org) => this.movieService.valueChanges(org?.wishlist || [])))
-      .subscribe((allMovies) => {
-        const movies = allMovies.filter((movie) => !!movie && movie.app[this.app].access);
+      .pipe(switchMap(org => this.movieService.valueChanges(org?.wishlist || [])))
+      .subscribe(allMovies => {
+        const movies = allMovies.filter(movie => !!movie && movie.app[this.app].access);
         this.hasWishlist = !!movies.length;
-        this.hasWishlist
-          ? this.dynTitle.setPageTitle('Wishlist')
-          : this.dynTitle.setPageTitle('Wishlist', 'Empty');
+        this.hasWishlist ? this.dynTitle.setPageTitle('Wishlist') : this.dynTitle.setPageTitle('Wishlist', 'Empty');
         this.dataSource = new MatTableDataSource(movies);
         this.isDataLoaded = true;
         this.cdr.markForCheck();

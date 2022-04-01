@@ -6,34 +6,32 @@ import { NegotiationGuardedComponent } from '@blockframes/contract/negotiation/g
 import { NegotiationForm } from '@blockframes/contract/negotiation';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ConfirmDeclineComponent, ConfirmDeclineData } from '@blockframes/contract/contract/components/confirm-decline/confirm-decline.component';
+import {
+  ConfirmDeclineComponent,
+  ConfirmDeclineData,
+} from '@blockframes/contract/contract/components/confirm-decline/confirm-decline.component';
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { combineLatest } from 'rxjs';
 import { ContractService } from '@blockframes/contract/contract/+state';
-import { Negotiation } from '@blockframes/model';
+import { Negotiation } from '@blockframes/shared/model';
 
 @Component({
   selector: 'catalog-contract-edit',
   templateUrl: './contract-edit.component.html',
   styleUrls: ['./contract-edit.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContractEditComponent implements NegotiationGuardedComponent, OnInit {
   negotiation?: Negotiation;
   activeOrgId = this.orgService.org.id;
   activeTerm?: number;
   form = new NegotiationForm();
-  sale$ = combineLatest([
-    this.shell.offer$,
-    this.route.params.pipe(pluck('saleId'))
-  ]).pipe(
+  sale$ = combineLatest([this.shell.offer$, this.route.params.pipe(pluck('saleId'))]).pipe(
     map(([offer, id]) => offer.contracts?.find(contract => contract.id === id))
   );
-  negotiation$ = this.sale$.pipe(
-    map(contract => contract?.negotiation)
-  );
+  negotiation$ = this.sale$.pipe(map(contract => contract?.negotiation));
 
   constructor(
     private snackBar: MatSnackBar,
@@ -43,14 +41,16 @@ export class ContractEditComponent implements NegotiationGuardedComponent, OnIni
     private orgService: OrganizationService,
     private dialog: MatDialog,
     private router: Router,
-    private route: ActivatedRoute,
-  ) { }
+    private route: ActivatedRoute
+  ) {}
 
   async ngOnInit(): Promise<void> {
-    this.negotiation = await this.negotiation$.pipe(
-      filter(data => !!data),
-      first()
-    ).toPromise();
+    this.negotiation = await this.negotiation$
+      .pipe(
+        filter(data => !!data),
+        first()
+      )
+      .toPromise();
     this.form.hardReset(this.negotiation);
     const termIndex = this.route.snapshot.queryParams.termIndex;
     this.activeTerm = termIndex ? parseInt(termIndex) : 0;
@@ -58,9 +58,9 @@ export class ContractEditComponent implements NegotiationGuardedComponent, OnIni
 
   async decline() {
     const sale = await this.sale$.pipe(first()).toPromise();
-    const data: ConfirmDeclineData = { 
+    const data: ConfirmDeclineData = {
       type: 'buyer',
-      showAcceptTermsCheckbox: true
+      showAcceptTermsCheckbox: true,
     };
     const ref = this.dialog.open(ConfirmDeclineComponent, { data });
     const options = { params: { contractId: sale.id } };
@@ -72,7 +72,7 @@ export class ContractEditComponent implements NegotiationGuardedComponent, OnIni
         this.negotiationService.update(id, partialData, options);
         this.form.markAsPristine(); // usefull to be able to route in the NegotiationGuard
         this.router.navigate(['..'], { relativeTo: this.route });
-        this.snackBar.open( `Offer declined.`, null, config);
+        this.snackBar.open(`Offer declined.`, null, config);
       }
     });
   }
@@ -83,21 +83,20 @@ export class ContractEditComponent implements NegotiationGuardedComponent, OnIni
       const config = { duration: 6000 };
       await this.contractService.addNegotiation(sale.id, {
         ...sale.negotiation,
-        ...this.form.value
+        ...this.form.value,
       });
       this.snackBar.open('Your counter offer has been sent', null, config);
       this.form.markAsPristine(); // usefull to be able to route in the NegotiationGuard
       this.router.navigate(['..'], { relativeTo: this.route });
-    }
+    };
 
     const data = {
       onConfirm,
       title: 'Are you sure to submit this contract?',
       question: 'Please verify if all the contract elements are convenient for you.',
       confirm: 'Yes, submit',
-      cancel: 'Come back & verify contract'
+      cancel: 'Come back & verify contract',
     };
     this.dialog.open(ConfirmComponent, { data });
   }
-
 }

@@ -20,11 +20,11 @@ export { InvitationType, InvitationStatus, invitationStatus } from '@blockframes
 export interface InvitationBase<D extends Timestamp | Date> extends PublicInvitation {
   date: D;
   /** @dev An invitation is created by an user or an org (fromOrg or fromUser) */
-  fromOrg?: PublicOrganization,
-  fromUser?: PublicUser,
+  fromOrg?: PublicOrganization;
+  fromUser?: PublicUser;
   /** @dev An invitation is for an user or an org */
-  toOrg?: PublicOrganization,
-  toUser?: PublicUser,
+  toOrg?: PublicOrganization;
+  toUser?: PublicUser;
   /**
    * If empty, the invitation is about Organization and we use directly fromOrg.id or toOrg.id
    */
@@ -39,7 +39,7 @@ export interface InvitationBase<D extends Timestamp | Date> extends PublicInvita
 export interface PublicInvitation {
   id: string;
   type: InvitationType;
-  mode: InvitationMode,
+  mode: InvitationMode;
   status: InvitationStatus;
 }
 
@@ -53,8 +53,8 @@ export type InvitationMode = 'request' | 'invitation';
 export function createInvitation(params: Partial<InvitationBase<Date>> = {}): InvitationBase<Date> {
   return {
     id: '',
-    mode: 'invitation',   // We need a default value for backend-function strict mode
-    type: 'attendEvent',  // We need a default value for backend-function strict mode
+    mode: 'invitation', // We need a default value for backend-function strict mode
+    type: 'attendEvent', // We need a default value for backend-function strict mode
     status: 'pending',
     date: new Date(),
     ...params,

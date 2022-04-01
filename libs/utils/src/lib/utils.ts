@@ -1,5 +1,5 @@
 import { staticModel, Scope } from '@blockframes/utils/static-model';
-import { Person, LanguageRecord } from '@blockframes/model';
+import { Person, LanguageRecord } from '@blockframes/shared/model';
 
 export interface ErrorResultResponse {
   error: string;
@@ -21,11 +21,7 @@ export function jsonDateReviver(key: unknown, value: any) {
 
   const dateFormat = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,}|)Z$/;
   if (typeof value === 'string' && dateFormat.test(value)) return new Date(value);
-  if (
-    typeof value === 'object' &&
-    Object.keys(value).length === 2 &&
-    ['nanoseconds', 'seconds'].every((k) => k in value)
-  )
+  if (typeof value === 'object' && Object.keys(value).length === 2 && ['nanoseconds', 'seconds'].every(k => k in value))
     return new Date(((value.nanoseconds * 1) ^ -6) + value.seconds * 1000);
 
   return value;
@@ -47,9 +43,7 @@ export function displayName(person: Person) {
  * clamp(80, [2, 42, 82, 122, 162]); // 82
  */
 export const clamp = (value: number, clamps: number[]): number => {
-  return clamps.reduce((prev, curr) =>
-    Math.abs(curr - value) < Math.abs(prev - value) ? curr : prev
-  );
+  return clamps.reduce((prev, curr) => (Math.abs(curr - value) < Math.abs(prev - value) ? curr : prev));
 };
 
 export const allowedFileType = ['pdf', 'image', 'video', 'docx', 'xls', 'json', 'csv'] as const;
@@ -69,21 +63,11 @@ export const allowedFiles: Record<AllowedFileType, FileDefinition> = {
     extension: ['.jpg', '.jpeg', '.png', '.webp'],
   },
   video: {
-    mime: [
-      'video/x-msvideo',
-      'video/x-matroska',
-      'video/mp4',
-      'video/3gpp',
-      'video/quicktime',
-      'video/x-ms-wmv',
-    ],
+    mime: ['video/x-msvideo', 'video/x-matroska', 'video/mp4', 'video/3gpp', 'video/quicktime', 'video/x-ms-wmv'],
     extension: ['.avi', '.mkv', '.mp4', '.3gp', '.mov', '.wmv'],
   },
   docx: {
-    mime: [
-      'application/msword',
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    ],
+    mime: ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
     extension: ['.doc', '.docx'],
   },
   xls: {
@@ -118,9 +102,7 @@ export function extensionToType(extension: string): AllowedFileType | 'unknown' 
   // we use a for in loop so we can directly return when a match is found
   // (returning in a forEach just end the current iteration)
   for (const type in allowedFiles) {
-    const match = allowedFiles[type].extension.some(
-      (fileExtension) => fileExtension === dotExtension
-    );
+    const match = allowedFiles[type].extension.some(fileExtension => fileExtension === dotExtension);
     if (match) return type as AllowedFileType;
   }
 
@@ -128,7 +110,7 @@ export function extensionToType(extension: string): AllowedFileType | 'unknown' 
 }
 
 export async function loadJWPlayerScript(document: Document, playerUrl: string) {
-  return new Promise<void>((res) => {
+  return new Promise<void>(res => {
     const id = 'jwplayer-script';
 
     // check if the script tag already exists
@@ -242,17 +224,12 @@ export function getWatermark(email: string = '', firstName: string = '', lastNam
   return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
 }
 
-export function toLabel(
-  value: string | string[],
-  scope: Scope,
-  joinWith?: string,
-  endWith?: string
-): string {
+export function toLabel(value: string | string[], scope: Scope, joinWith?: string, endWith?: string): string {
   if (!value) return '';
   try {
     if (Array.isArray(value)) {
       return smartJoin(
-        value.map((val) => staticModel[scope][val]),
+        value.map(val => staticModel[scope][val]),
         joinWith,
         endWith
       );
@@ -300,6 +277,6 @@ export function toLanguageVersionString(languages: LanguageRecord) {
         return `${toLabel(language, 'languages')} ${smartJoin(types, ', ', ' & ')}`;
       }
     })
-    .filter((d) => d)
+    .filter(d => d)
     .join(', ');
 }

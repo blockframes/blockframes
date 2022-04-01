@@ -1,5 +1,5 @@
 import { db } from '../testing-cypress';
-import { createUser, createOrganization, Organization, createPermissions } from '@blockframes/model';
+import { createUser, createOrganization, Organization, createPermissions } from '@blockframes/shared/model';
 import { App, ModuleAccess } from '@blockframes/utils/apps';
 
 export async function getRandomEmail() {
@@ -37,7 +37,7 @@ export async function getRandomOrg(data: { app: App; access: ModuleAccess }) {
     const tempOrg = createOrganization(docs[randomIndex].data());
     const orgHasAdmin = await getRandomOrgAdmin(tempOrg.id);
     if (orgHasAdmin?.email) organization = tempOrg;
-  } while (!organization)
+  } while (!organization);
   return createOrganization(organization);
 }
 
@@ -58,10 +58,7 @@ export async function getRandomOrgAdmin(orgId: string) {
   const permissionsRef = await db.doc(`permissions/${orgId}`).get();
   const permissions = createPermissions(permissionsRef.data());
   const adminIds = Object.keys(permissions.roles).filter(userId => {
-    return (
-      permissions.roles[userId] === 'superAdmin' ||
-      permissions.roles[userId] === 'admin'
-    );
+    return permissions.roles[userId] === 'superAdmin' || permissions.roles[userId] === 'admin';
   });
   const randomIndex = Math.floor(Math.random() * adminIds.length);
   const adminId = adminIds[randomIndex];
@@ -76,7 +73,7 @@ export function deleteUser(userId: string) {
 export async function getOrgByName(orgName: string) {
   const userQuery = await db.collection('orgs').where('denomination.full', '==', orgName).get();
   const [org] = userQuery.docs;
-  if(!org) return null;
+  if (!org) return null;
   return createOrganization(org.data());
 }
 

@@ -4,7 +4,7 @@ import { map, shareReplay, startWith, tap } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
 import { StoreStatus } from '@blockframes/utils/static-model/types';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Movie } from '@blockframes/model';
+import { Movie } from '@blockframes/shared/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { storeStatus } from '@blockframes/utils/static-model';
@@ -20,27 +20,23 @@ import { APP } from '@blockframes/utils/routes/utils';
 })
 export class TitleListComponent {
   filter = new FormControl();
-  filter$: Observable<StoreStatus | ''> = this.filter.valueChanges.pipe(
-    startWith(this.filter.value || '')
-  );
+  filter$: Observable<StoreStatus | ''> = this.filter.valueChanges.pipe(startWith(this.filter.value || ''));
 
   movies$ = this.service.queryDashboard(this.app).pipe(
-    tap((movies) => this.dynTitle.setPageTitle('My titles', movies.length ? '' : 'Empty')),
+    tap(movies => this.dynTitle.setPageTitle('My titles', movies.length ? '' : 'Empty')),
     shareReplay({ refCount: true, bufferSize: 1 })
   );
   result$ = combineLatest([this.filter$, this.movies$]).pipe(
-    map(([status, movies]) =>
-      movies.filter((movie) => (status ? movie.app.catalog.status === status : movies))
-    )
+    map(([status, movies]) => movies.filter(movie => (status ? movie.app.catalog.status === status : movies)))
   );
 
   movieCount$ = this.movies$.pipe(
-    map((m) => ({
+    map(m => ({
       all: m.length,
-      draft: m.filter((m) => m.app.catalog.status === 'draft').length,
-      submitted: m.filter((m) => m.app.catalog.status === 'submitted').length,
-      accepted: m.filter((m) => m.app.catalog.status === 'accepted').length,
-      archived: m.filter((m) => m.app.catalog.status === 'archived').length,
+      draft: m.filter(m => m.app.catalog.status === 'draft').length,
+      submitted: m.filter(m => m.app.catalog.status === 'submitted').length,
+      accepted: m.filter(m => m.app.catalog.status === 'accepted').length,
+      archived: m.filter(m => m.app.catalog.status === 'archived').length,
     }))
   );
 

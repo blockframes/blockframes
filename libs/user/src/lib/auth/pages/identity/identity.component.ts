@@ -1,4 +1,14 @@
-import { Component, ChangeDetectionStrategy, OnInit, TemplateRef, ViewChild, ChangeDetectorRef, Optional, OnDestroy, Inject } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+  ChangeDetectorRef,
+  Optional,
+  OnDestroy,
+  Inject,
+} from '@angular/core';
 import { AuthService } from '../../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -8,7 +18,7 @@ import { App } from '@blockframes/utils/apps';
 import { AlgoliaOrganization } from '@blockframes/utils/algolia';
 import { OrganizationLiteForm } from '@blockframes/organization/forms/organization-lite.form';
 import { IdentityForm, IdentityFormControl } from '@blockframes/auth/forms/identity.form';
-import { createPublicUser, PublicUser, User, createOrganization, createDocumentMeta} from '@blockframes/model';
+import { createPublicUser, PublicUser, User, createOrganization, createDocumentMeta } from '@blockframes/shared/model';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { hasDisplayName } from '@blockframes/utils/helpers';
 import { Intercom } from 'ng-intercom';
@@ -25,7 +35,7 @@ import { APP } from '@blockframes/utils/routes/utils';
   templateUrl: './identity.component.html',
   styleUrls: ['./identity.component.scss'],
   animations: [slideUp, slideDown],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IdentityComponent implements OnInit, OnDestroy {
   @ViewChild('customSnackBarTemplate') customSnackBarTemplate: TemplateRef<unknown>;
@@ -54,12 +64,10 @@ export class IdentityComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     private route: ActivatedRoute,
     @Optional() private intercom: Intercom,
-    @Inject(APP) public app: App,
-  ) { }
-
+    @Inject(APP) public app: App
+  ) {}
 
   async ngOnInit() {
-
     const existingUserWithDisplayName = !!this.authService.profile && !!hasDisplayName(this.authService.profile);
     const existingUserWithoutDisplayName = !!this.authService.profile && !hasDisplayName(this.authService.profile);
 
@@ -71,10 +79,12 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
     this.form.patchValue(identity);
 
-    this.subs.push(this.orgControl.valueChanges.subscribe(value => {
-      const error = value && this.existingOrgId === undefined ? {} : undefined
-      this.orgControl.setErrors(error);
-    }));
+    this.subs.push(
+      this.orgControl.valueChanges.subscribe(value => {
+        const error = value && this.existingOrgId === undefined ? {} : undefined;
+        this.orgControl.setErrors(error);
+      })
+    );
 
     if (existingUserWithDisplayName) {
       // Updating user (already logged in and with display name setted) : user will only choose or create an org
@@ -87,9 +97,12 @@ export class IdentityComponent implements OnInit, OnDestroy {
     // Listen to changes on input email to check if there is an existing invitation
     if (this.form.get('email').value) this.searchForInvitation();
 
-    this.form.get('email').valueChanges.pipe(debounceTime(500)).subscribe(() => {
-      if (this.form.get('email').valid) this.searchForInvitation();
-    });
+    this.form
+      .get('email')
+      .valueChanges.pipe(debounceTime(500))
+      .subscribe(() => {
+        if (this.form.get('email').valid) this.searchForInvitation();
+      });
   }
 
   async ngOnDestroy() {
@@ -110,7 +123,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
     this.form.patchValue(user);
 
     this.disableControls(['email', 'firstName', 'lastName', 'password', 'confirm', 'generatedPassword']);
-  }  
+  }
 
   private disableControls(keys: (keyof IdentityFormControl)[]) {
     for (const key of keys) {
@@ -123,7 +136,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
     const orgFromAlgolia = createOrganization({
       denomination: { full: result.name },
       addresses: { main: createLocation({ country: result.country }) },
-      activity: result.activity
+      activity: result.activity,
     });
 
     this.orgForm.reset(orgFromAlgolia);
@@ -153,7 +166,6 @@ export class IdentityComponent implements OnInit, OnDestroy {
       } else {
         await this.create();
       }
-
     } catch (err) {
       this.creating = false;
       this.cdr.markForCheck();
@@ -183,11 +195,10 @@ export class IdentityComponent implements OnInit, OnDestroy {
     } else {
       const { denomination, addresses, activity, appAccess } = this.orgForm.value;
 
-
       /**
        * @dev This anonymous user is used to call "this.orgService.uniqueOrgName()"
        * without forcing us to allow orgs collection reads for non-logged-in users in firestore rules
-       * Once the account is converted from anonymous to real, authState will remain as anonymous for a few seconds 
+       * Once the account is converted from anonymous to real, authState will remain as anonymous for a few seconds
        * (this explain the need to allow the anonymous sign-in for user update in firestore rules)
        * #6908
        */
@@ -198,7 +209,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
       const unique = await this.orgService.uniqueOrgName(denomination.full);
       if (!unique) {
         this.orgForm.get('denomination').setErrors({ notUnique: true });
-        this.snackBar.open('This organization\'s name already exists.', 'close', { duration: 2000 });
+        this.snackBar.open("This organization's name already exists.", 'close', { duration: 2000 });
         this.creating = false;
         this.cdr.markForCheck();
         return;
@@ -212,58 +223,65 @@ export class IdentityComponent implements OnInit, OnDestroy {
       org.appAccess[this.app][appAccess] = true;
       await this.orgService.addOrganization(org, this.app, this.publicUser);
 
-      this.snackBar.open('Your User Account was successfully created. Please wait for our team to check your Company Information. ', 'close', { duration: 8000 });
+      this.snackBar.open(
+        'Your User Account was successfully created. Please wait for our team to check your Company Information. ',
+        'close',
+        { duration: 8000 }
+      );
       return this.router.navigate(['c/organization/create-congratulations']);
     }
   }
 
   /**
    * Create the new auth user
-   * @param user 
+   * @param user
    * @returns PublicUser
    */
-  private async createUser(user: { email, password, firstName, lastName }) {
+  private async createUser(user: { email; password; firstName; lastName }) {
     const privacyPolicy = await this.authService.getPrivacyPolicy();
     const ctx = {
       firstName: user.firstName,
       lastName: user.lastName,
       _meta: { createdFrom: this.app },
-      privacyPolicy
+      privacyPolicy,
     };
     const credentials = await this.authService.signup(user.email.trim(), user.password, { ctx });
     return createPublicUser({
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
-      uid: credentials.user.uid
+      uid: credentials.user.uid,
     });
   }
 
   /**
-  * Convert the anonymous user into a real one
-  * @param user 
-  * @returns PublicUser
-  */
-  private async createUserFromAnonymous(user: { email, password, firstName, lastName }) {
+   * Convert the anonymous user into a real one
+   * @param user
+   * @returns PublicUser
+   */
+  private async createUserFromAnonymous(user: { email; password; firstName; lastName }) {
     const privacyPolicy = await this.authService.getPrivacyPolicy();
     const ctx = {
       firstName: user.firstName,
       lastName: user.lastName,
-      _meta: { createdFrom: this.app, createdBy: 'anonymous', },
-      privacyPolicy
+      _meta: { createdFrom: this.app, createdBy: 'anonymous' },
+      privacyPolicy,
     };
     const credentials = await this.authService.signupFromAnonymous(user.email.trim(), user.password, { ctx });
     return createPublicUser({
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
-      uid: credentials.user.uid
+      uid: credentials.user.uid,
     });
   }
 
-
   private async update() {
-    if (this.form.get('generatedPassword').enabled && this.form.get('password').enabled && this.form.get('generatedPassword').value === this.form.get('password').value) {
+    if (
+      this.form.get('generatedPassword').enabled &&
+      this.form.get('password').enabled &&
+      this.form.get('generatedPassword').value === this.form.get('password').value
+    ) {
       this.snackBar.open('Your new password has to be different than the invitation pass.', 'close', { duration: 5000 });
       this.creating = false;
       this.cdr.markForCheck();
@@ -275,11 +293,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
     // Password is updated only if user was asked to fill generatedPassword
     if (this.form.get('generatedPassword').enabled) {
-      await this.authService.updatePassword(
-        generatedPassword,
-        password,
-        email
-      );
+      await this.authService.updatePassword(generatedPassword, password, email);
     }
 
     // User is updated only if user was asked to fill firstName & lastName
@@ -293,14 +307,19 @@ export class IdentityComponent implements OnInit, OnDestroy {
       });
     }
 
-    const invitations = await this.invitationService.getValue(ref => ref.where('mode', '==', 'invitation')
-      .where('type', '==', 'joinOrganization')
-      .where('toUser.uid', '==', this.authService.uid));
+    const invitations = await this.invitationService.getValue(ref =>
+      ref
+        .where('mode', '==', 'invitation')
+        .where('type', '==', 'joinOrganization')
+        .where('toUser.uid', '==', this.authService.uid)
+    );
     const pendingInvitation = invitations.find(invitation => invitation.status === 'pending');
     if (pendingInvitation) {
       // Accept the invitation from the organization.
       await this.invitationService.update(pendingInvitation.id, { status: 'accepted' });
-      this.subs.push(this.authService.profile$.pipe(filter(profile => !!profile.orgId)).subscribe(() => this.router.navigate(['/c/o'])));
+      this.subs.push(
+        this.authService.profile$.pipe(filter(profile => !!profile.orgId)).subscribe(() => this.router.navigate(['/c/o']))
+      );
     } else if (this.authService.profile.orgId) {
       // User already have an orgId (created from CRM)
       this.router.navigate(['/c/o']);
@@ -317,7 +336,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
       const unique = await this.orgService.uniqueOrgName(denomination.full);
       if (!unique) {
         this.orgForm.get('denomination').setErrors({ notUnique: true });
-        this.snackBar.open('This organization\'s name already exists.', 'close', { duration: 2000 });
+        this.snackBar.open("This organization's name already exists.", 'close', { duration: 2000 });
         this.creating = false;
         this.cdr.markForCheck();
         return;
@@ -328,23 +347,31 @@ export class IdentityComponent implements OnInit, OnDestroy {
       org.appAccess[this.app][appAccess] = true;
       await this.orgService.addOrganization(org, this.app, this.authService.profile);
 
-      this.snackBar.open('Your User Account was successfully created. Please wait for our team to check your Company Information.', 'close', { duration: 8000 });
+      this.snackBar.open(
+        'Your User Account was successfully created. Please wait for our team to check your Company Information.',
+        'close',
+        { duration: 8000 }
+      );
       return this.router.navigate(['c/organization/create-congratulations']);
     }
   }
 
   public async searchForInvitation() {
-    const event = await this.invitationService.getInvitationLinkedToEmail(this.form.get('email').value).toPromise<AlgoliaOrganization | boolean>();
+    const event = await this.invitationService
+      .getInvitationLinkedToEmail(this.form.get('email').value)
+      .toPromise<AlgoliaOrganization | boolean>();
     if (event) {
       this.existingUser = true;
       this.form.get('generatedPassword').enable();
       this.form.get('email').disable();
     }
 
-    if (typeof event === 'object') { // User have an invitation to joinOrg
+    if (typeof event === 'object') {
+      // User have an invitation to joinOrg
       this.useAlgolia = false;
       this.setOrg(event);
-    } else if (!event) { // User does not have invitation
+    } else if (!event) {
+      // User does not have invitation
       this.form.get('generatedPassword').disable();
     }
 

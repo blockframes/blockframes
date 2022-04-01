@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { Movie, Organization, orgName, isScreening } from '@blockframes/model';
+import { Movie, Organization, orgName, isScreening } from '@blockframes/shared/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { OrganizationService } from '@blockframes/organization/+state';
@@ -35,13 +35,13 @@ export class MoviesComponent implements OnInit {
     this.movies$ = combineLatest([
       this.movieService.valueChanges(),
       this.orgService.valueChanges(),
-      this.eventService.valueChanges((ref) => ref.where('type', '==', 'screening')),
+      this.eventService.valueChanges(ref => ref.where('type', '==', 'screening')),
     ]).pipe(
       map(([movies, orgs, events]) => {
         const screenings = events.filter(isScreening);
-        return movies.map((movie) => {
-          const org = orgs.find((o) => o.id === movie.orgIds[0]);
-          const screeningCount = screenings.filter((e) => e.meta?.titleId === movie.id).length;
+        return movies.map(movie => {
+          const org = orgs.find(o => o.id === movie.orgIds[0]);
+          const screeningCount = screenings.filter(e => e.meta?.titleId === movie.id).length;
           return { ...movie, org, screeningCount } as CrmMovie;
         });
       })
@@ -64,7 +64,7 @@ export class MoviesComponent implements OnInit {
       this.exporting = true;
       this.cdr.markForCheck();
 
-      const exportedRows = movies.map((m) => ({
+      const exportedRows = movies.map(m => ({
         'movie id': m.id,
         title: m.title.international,
         'internal ref': m.internalRef ?? '--',

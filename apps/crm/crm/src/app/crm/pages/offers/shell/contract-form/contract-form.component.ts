@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 
 // Services
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { Contract, Movie, Negotiation } from '@blockframes/model';
+import { Contract, Movie, Negotiation } from '@blockframes/shared/model';
 import { Income, IncomeService } from '@blockframes/contract/income/+state';
 import { ContractService } from '@blockframes/contract/contract/+state';
 import { TermService } from '@blockframes/contract/term/+state';
@@ -30,7 +30,7 @@ export class ContractFormComponent implements OnInit {
   private income?: Income;
   title?: Movie;
   form = new NegotiationForm();
-  titles$ = this.service.valueChanges((ref) => ref.where('app.catalog.status', '==', 'accepted'));
+  titles$ = this.service.valueChanges(ref => ref.where('app.catalog.status', '==', 'accepted'));
   currency?: string;
   activeTerm?: string;
   contractId: string = this.route.snapshot.params.contractId;
@@ -40,7 +40,7 @@ export class ContractFormComponent implements OnInit {
     joinWith({
       negotiation: () => this.contractService.adminLastNegotiation(this.contractId),
     }),
-    filter((contract) => !!contract.negotiation)
+    filter(contract => !!contract.negotiation)
   );
 
   constructor(
@@ -80,10 +80,10 @@ export class ContractFormComponent implements OnInit {
       const write = this.contractService.batch(); // create a batch
 
       if (this.negotiation.status === 'accepted') {
-        const termList = terms.map((term) => ({ ...term, contractId }));
+        const termList = terms.map(term => ({ ...term, contractId }));
         const termIds = await this.termService.upsert(termList, { write });
         const existingTermIds = this.contract?.termIds || [];
-        const termIdsToDelete = existingTermIds.filter((id) => !termIds.includes(id));
+        const termIdsToDelete = existingTermIds.filter(id => !termIds.includes(id));
         await this.termService.remove(termIdsToDelete, { write });
         await this.contractService.update(contractId, { termIds }, { write });
         if (price !== this.income?.price) {

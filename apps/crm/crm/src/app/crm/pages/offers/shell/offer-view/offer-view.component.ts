@@ -11,23 +11,22 @@ import { IncomeService } from '@blockframes/contract/income/+state';
 import { TermService } from '@blockframes/contract/term/+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
-import { Contract } from '@blockframes/model';
+import { Contract } from '@blockframes/shared/model';
 
 @Component({
   selector: 'offer-view',
   templateUrl: './offer-view.component.html',
   styleUrls: ['./offer-view.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OfferViewComponent implements OnDestroy, OnInit {
-
   public offer$ = this.shell.offer$;
   public offerStatus = Object.keys(staticModel['offerStatus']);
   public form = new FormGroup({
     status: new FormControl('pending'),
     specificity: new FormControl(''),
     delivery: new FormControl(''),
-  })
+  });
   subscription: Subscription;
 
   constructor(
@@ -39,11 +38,11 @@ export class OfferViewComponent implements OnDestroy, OnInit {
     private termService: TermService,
     private snackbar: MatSnackBar,
     private negotiationService: NegotiationService
-  ) { }
+  ) {}
 
   ngOnInit() {
-    this.subscription = this.offer$.subscribe(({ status, specificity, delivery, }) => {
-      this.form.patchValue({ status, specificity, delivery })
+    this.subscription = this.offer$.subscribe(({ status, specificity, delivery }) => {
+      this.form.patchValue({ status, specificity, delivery });
     });
   }
 
@@ -70,24 +69,25 @@ export class OfferViewComponent implements OnDestroy, OnInit {
       const write = this.offerService.batch();
       await this.offerService.update(offerId, { specificity, status, delivery }, { write });
       const updateContract = contract => this.contractService.update(contract.id, sale, { write });
-      const updateNegotiation = (contract) => {
+      const updateNegotiation = contract => {
         const config = { write, params: { contractId: contract.id } };
         return this.negotiationService.update(contract.negotiation?.id, sale, config);
-      }
+      };
       contracts.map(updateContract);
       contracts.map(updateNegotiation);
       await write.commit();
       this.snackbar.open('Updated', '', { duration: 1000 });
-    }
-    if (["signing", "signed"].includes(status)) updateOffer()
-    else this.confirmStatusUpdate(updateOffer)
+    };
+    if (['signing', 'signed'].includes(status)) updateOffer();
+    else this.confirmStatusUpdate(updateOffer);
   }
 
   confirmStatusUpdate(onConfirm: () => void) {
     this.dialog.open(ConfirmInputComponent, {
       data: {
         title: 'Are you sure you want to update this offer?',
-        subtitle: 'The modification that you bring can impact this offer and all the contracts that are inside. Please make sure that you are aware of these modifications.',
+        subtitle:
+          'The modification that you bring can impact this offer and all the contracts that are inside. Please make sure that you are aware of these modifications.',
         confirmationWord: 'update',
         placeholder: 'To confirm the update, please write « UPDATE » in the field below.',
         confirm: 'Confirm and update',
@@ -97,14 +97,13 @@ export class OfferViewComponent implements OnDestroy, OnInit {
       },
       autoFocus: true,
     });
-
   }
 
   confirmDelete(id: string) {
     this.dialog.open(ConfirmInputComponent, {
       data: {
         title: 'Are you sure you want to delete a right from this package?',
-        subtitle: 'This action can\'t be undone. Before we delete this right please write “DELETE” in the field below.',
+        subtitle: "This action can't be undone. Before we delete this right please write “DELETE” in the field below.",
         confirmationWord: 'delete',
         placeholder: 'Please Type « DELETE »',
         confirm: 'Delete this right',
@@ -115,5 +114,4 @@ export class OfferViewComponent implements OnDestroy, OnInit {
       autoFocus: false,
     });
   }
-
 }

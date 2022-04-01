@@ -5,19 +5,18 @@ import { OrganizationService } from '@blockframes/organization/+state';
 import { filter, switchMap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { Intercom } from 'ng-intercom';
-import { User, Organization, Invitation } from '@blockframes/model';
+import { User, Organization, Invitation } from '@blockframes/shared/model';
 import { AuthService } from '@blockframes/auth/+state';
 import { APP } from '@blockframes/utils/routes/utils';
 
-const queryFn = (uid: string) => ref => ref.where('mode', '==', 'request')
-  .where('type', '==', 'joinOrganization')
-  .where('fromUser.uid', '==', uid);
+const queryFn = (uid: string) => ref =>
+  ref.where('mode', '==', 'request').where('type', '==', 'joinOrganization').where('fromUser.uid', '==', uid);
 
 @Component({
   selector: 'organization-pending',
   templateUrl: './organization-pending.component.html',
   styleUrls: ['./organization-pending.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrganizationPendingComponent {
   public invitations: Invitation[];
@@ -35,7 +34,7 @@ export class OrganizationPendingComponent {
     private authService: AuthService,
     @Optional() private intercom: Intercom,
     @Inject(APP) public app: App
-  ) { }
+  ) {}
 
   private async getOrgId(user: User) {
     if (user.orgId) return user.orgId;

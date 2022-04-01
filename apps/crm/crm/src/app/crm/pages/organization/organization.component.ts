@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { OrganizationCrmForm } from '@blockframes/admin/crm/forms/organization-crm.form';
 import { fromOrg, MovieService } from '@blockframes/movie/+state/movie.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Organization, Movie, Invitation, UserRole, createOrganizationMember } from '@blockframes/model';
+import { Organization, Movie, Invitation, UserRole, createOrganizationMember } from '@blockframes/shared/model';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
@@ -62,7 +62,7 @@ export class OrganizationComponent implements OnInit {
     private dialog: MatDialog,
     private router: Router,
     private bucketService: BucketService
-  ) { }
+  ) {}
 
   async ngOnInit() {
     this.orgId = this.route.snapshot.paramMap.get('orgId');
@@ -72,7 +72,7 @@ export class OrganizationComponent implements OnInit {
     this.orgForm.reset(this.org);
 
     const movies = await this.movieService.getValue(fromOrg(this.orgId));
-    this.movies = movies.filter((m) => !!m);
+    this.movies = movies.filter(m => !!m);
 
     this.members = await this.getMembers();
     this.cdRef.markForCheck();
@@ -99,9 +99,9 @@ export class OrganizationComponent implements OnInit {
   private async getMembers() {
     const [members, role] = await Promise.all([
       this.organizationService.getMembers(this.orgId),
-      this.permissionService.getValue(this.orgId)
+      this.permissionService.getValue(this.orgId),
     ]);
-    return members.map((m) => ({
+    return members.map(m => ({
       ...createOrganizationMember(m, role.roles[m.uid] ? role.roles[m.uid] : undefined),
       userId: m.uid,
       edit: {
@@ -127,8 +127,8 @@ export class OrganizationComponent implements OnInit {
 
       for (const app in after) {
         if (
-          Object.keys(after[app]).every((module) => before[app][module] === false) &&
-          Object.keys(after[app]).some((module) => after[app][module] === true)
+          Object.keys(after[app]).every(module => before[app][module] === false) &&
+          Object.keys(after[app]).some(module => after[app][module] === true)
         ) {
           this.organizationService.notifyAppAccessChange(this.orgId, app as App);
         }
@@ -199,37 +199,27 @@ export class OrganizationComponent implements OnInit {
     }
 
     // Calculate how many movie will be removed
-    const movies = await this.movieService.getValue((ref) =>
-      ref.where('orgIds', 'array-contains', organization.id)
-    );
+    const movies = await this.movieService.getValue(ref => ref.where('orgIds', 'array-contains', organization.id));
     if (movies.length) {
       output.push(`${movies.length} movie(s) will be deleted.`);
     }
 
     // Calculate how many events will be removed
-    const ownerEvent = await this.eventService.getValue((ref) =>
-      ref.where('ownerOrgId', '==', organization.id)
-    );
+    const ownerEvent = await this.eventService.getValue(ref => ref.where('ownerOrgId', '==', organization.id));
     if (ownerEvent.length) {
       output.push(`${ownerEvent.length} event(s) will be cancelled or deleted.`);
     }
 
     // Calculate how many invitation will be removed
-    const invitFrom = await this.invitationService.getValue((ref) =>
-      ref.where('fromOrg.id', '==', organization.id)
-    );
-    const invitTo = await this.invitationService.getValue((ref) =>
-      ref.where('toOrg.id', '==', organization.id)
-    );
+    const invitFrom = await this.invitationService.getValue(ref => ref.where('fromOrg.id', '==', organization.id));
+    const invitTo = await this.invitationService.getValue(ref => ref.where('toOrg.id', '==', organization.id));
     const allInvit = [...invitFrom, ...invitTo];
     if (allInvit.length) {
       output.push(`${allInvit.length} invitation(s) will be removed.`);
     }
 
     // Calculate how many contracts will be updated
-    const contracts = await this.contractService.getValue((ref) =>
-      ref.where('partyIds', 'array-contains', organization.id)
-    );
+    const contracts = await this.contractService.getValue(ref => ref.where('partyIds', 'array-contains', organization.id));
     if (contracts.length) {
       output.push(`${contracts.length} contract(s) will be updated.`);
     }

@@ -1,14 +1,7 @@
-import {
-  Component,
-  ChangeDetectionStrategy,
-  Input,
-  ViewChild,
-  ElementRef,
-  OnInit,
-} from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { Observable } from 'rxjs';
-import { StorageFile, Movie } from '@blockframes/model';
+import { StorageFile, Movie } from '@blockframes/shared/model';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
 import { FileListPreviewComponent } from '@blockframes/media/file/preview-list/preview-list.component';
@@ -38,12 +31,12 @@ export class TitleMarketplaceShellComponent implements OnInit {
     private movie: MovieService,
     private route: ActivatedRoute,
     public router: Router,
-    private analytics: AnalyticsService,
-  ) { }
+    private analytics: AnalyticsService
+  ) {}
 
   ngOnInit() {
     this.movie$ = this.route.params.pipe(
-      map((params) => params.movieId),
+      map(params => params.movieId),
       switchMap((id: string) => this.movie.valueChanges(id)),
       tap(() => {
         if (this.route.snapshot.fragment === 'trailer') {
@@ -77,7 +70,7 @@ export class TitleMarketplaceShellComponent implements OnInit {
   }
 
   hasPublicVideos(movie: Movie) {
-    return movie.promotional.videos.otherVideos.some((video) => video.privacy === 'public');
+    return movie.promotional.videos.otherVideos.some(video => video.privacy === 'public');
   }
 
   videoStateChanged(movieId: string, event: string) {

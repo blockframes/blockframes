@@ -12,7 +12,7 @@ import {
   filterContractsByTitle,
 } from '@blockframes/contract/avails/avails';
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
-import { Bucket, Movie, Mandate, Sale, Term } from '@blockframes/model';
+import { Bucket, Movie, Mandate, Sale, Term } from '@blockframes/shared/model';
 
 // TODO(#7820): remove with rxjs 7
 type AvailabilitiesInputs = [
@@ -55,29 +55,11 @@ export class MarketplaceMovieAvailsCalendarComponent implements AfterViewInit, O
     this.shell.bucketForm.value$,
     this.shell.movie$,
   ]).pipe(
-    map(
-      ([
-        avails,
-        mandates,
-        mandateTerms,
-        sales,
-        salesTerms,
-        bucket,
-        movie,
-      ]: AvailabilitiesInputs) => {
-        if (this.availsForm.invalid)
-          return { available: [], sold: [], inBucket: [], selected: undefined };
-        const res = filterContractsByTitle(
-          movie.id,
-          mandates,
-          mandateTerms,
-          sales,
-          salesTerms,
-          bucket
-        );
-        return durationAvailabilities(avails, res.mandates, res.sales, res.bucketContracts);
-      }
-    )
+    map(([avails, mandates, mandateTerms, sales, salesTerms, bucket, movie]: AvailabilitiesInputs) => {
+      if (this.availsForm.invalid) return { available: [], sold: [], inBucket: [], selected: undefined };
+      const res = filterContractsByTitle(movie.id, mandates, mandateTerms, sales, salesTerms, bucket);
+      return durationAvailabilities(avails, res.mandates, res.sales, res.bucketContracts);
+    })
   );
 
   constructor(
@@ -119,15 +101,13 @@ export class MarketplaceMovieAvailsCalendarComponent implements AfterViewInit, O
     if (!decodedData.territories) decodedData.territories = [];
 
     this.availsForm.patchValue(decodedData);
-    const subSearchUrl = this.availsForm.valueChanges
-      .pipe(throttleTime(1000))
-      .subscribe((formState) => {
-        encodeUrl<CalendarAvailsFilter>(this.router, this.route, formState);
-      });
+    const subSearchUrl = this.availsForm.valueChanges.pipe(throttleTime(1000)).subscribe(formState => {
+      encodeUrl<CalendarAvailsFilter>(this.router, this.route, formState);
+    });
     this.subs.push(subSearchUrl);
   }
 
   ngOnDestroy() {
-    this.subs.forEach((s) => s.unsubscribe());
+    this.subs.forEach(s => s.unsubscribe());
   }
 }

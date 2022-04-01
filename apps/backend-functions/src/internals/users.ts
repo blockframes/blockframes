@@ -1,4 +1,3 @@
-
 import { App, getMailSender, applicationUrl } from '@blockframes/utils/apps';
 import { generate as passwordGenerator } from 'generate-password';
 import { createDocumentMeta, createPublicUserDocument, getDocument } from '../data/internals';
@@ -6,7 +5,14 @@ import { userInvite, userFirstConnexion } from '../templates/mail';
 import { groupIds, templateIds } from '@blockframes/utils/emails/ids';
 import { auth, db } from './firebase';
 import { sendMailFromTemplate, sendMail } from './email';
-import { OrganizationDocument, PublicOrganization, InvitationMode, InvitationStatus, InvitationType, PublicUser } from '@blockframes/model';
+import {
+  OrganizationDocument,
+  PublicOrganization,
+  InvitationMode,
+  InvitationStatus,
+  InvitationType,
+  PublicUser,
+} from '@blockframes/shared/model';
 import { EventEmailData, getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
 import { logger } from 'firebase-functions';
 import { hasUserAnOrgOrIsAlreadyInvited } from '../invitation';
@@ -19,7 +25,7 @@ interface UserProposal {
 const generatePassword = () =>
   passwordGenerator({
     length: 12,
-    numbers: true
+    numbers: true,
   });
 
 /**
@@ -27,10 +33,10 @@ const generatePassword = () =>
  */
 export const getOrInviteUserByMail = async (
   email: string,
-  invitation: { id: string, type: InvitationType, mode: InvitationMode, fromOrg: PublicOrganization },
+  invitation: { id: string; type: InvitationType; mode: InvitationMode; fromOrg: PublicOrganization },
   app: App = 'catalog',
   eventData?: EventEmailData
-): Promise<{ user: UserProposal | PublicUser, invitationStatus?: InvitationStatus }> => {
+): Promise<{ user: UserProposal | PublicUser; invitationStatus?: InvitationStatus }> => {
   const fromOrgId = invitation.fromOrg.id;
   let invitationStatus: InvitationStatus;
   try {
@@ -44,19 +50,22 @@ export const getOrInviteUserByMail = async (
       if (invitation.mode === 'invitation' && eventData?.accessibility === 'public') {
         invitationStatus = 'accepted';
       }
-      await sendMailFromTemplate({
-        to: email,
-        templateId: invitationTemplateId,
-        data: {
-          event: eventData,
-          org: getOrgEmailData(invitation.fromOrg)
-        }
-      }, app)
+      await sendMailFromTemplate(
+        {
+          to: email,
+          templateId: invitationTemplateId,
+          data: {
+            event: eventData,
+            org: getOrgEmailData(invitation.fromOrg),
+          },
+        },
+        app
+      );
     }
 
     return {
       user: user || { uid, email },
-      invitationStatus
+      invitationStatus,
     };
   } catch {
     try {
@@ -83,33 +92,35 @@ export const getOrInviteUserByMail = async (
       await sendMailFromTemplate(template, app);
       return {
         user: newUser.user,
-        invitationStatus
+        invitationStatus,
       };
     } catch (e) {
       throw new Error(`There was an error while sending email to newly created user : ${e.message}`);
     }
-
   }
 };
-
 
 /**
  * Creates an user from email address
  * @param email
  */
-export const createUserFromEmail = async (email: string, createdFrom: App = 'festival'): Promise<{ user: PublicUser, password: string }> => {
-
+export const createUserFromEmail = async (
+  email: string,
+  createdFrom: App = 'festival'
+): Promise<{ user: PublicUser; password: string }> => {
   const password = generatePassword();
 
   // User does not exists, we create it with a generated password
-  const user = await auth.createUser({
-    email,
-    password,
-    emailVerified: true,
-    disabled: false
-  }).catch(e => {
-    throw new Error(`There was an error while creating user (email: "${email}" | password: "${password}"): ${e.message}`);
-  });
+  const user = await auth
+    .createUser({
+      email,
+      password,
+      emailVerified: true,
+      disabled: false,
+    })
+    .catch(e => {
+      throw new Error(`There was an error while creating user (email: "${email}" | password: "${password}"): ${e.message}`);
+    });
 
   logger.info(`Successfuly created user "${user.uid}" with email : "${email}" and password: "${password}"`);
 

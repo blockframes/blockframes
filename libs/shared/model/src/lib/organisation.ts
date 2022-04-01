@@ -15,13 +15,13 @@ export interface PublicOrganization {
   id: string;
   denomination: Denomination;
   logo: StorageFile;
-  activity?: OrgActivity
+  activity?: OrgActivity;
 }
 
 export interface OrgMedias {
-  notes: StorageFile[],
-  videos: StorageVideo[],
-};
+  notes: StorageFile[];
+  videos: StorageVideo[];
+}
 
 /** Document model of an Organization */
 export interface OrganizationBase<D> extends PublicOrganization {
@@ -49,11 +49,8 @@ export interface AddressSet {
 /** Default placeholder logo used when an Organization is created. */
 export const PLACEHOLDER_LOGO = '/assets/logo/empty_organization.svg';
 
-
 /** A factory function that creates an OrganizationDocument. */
-function createOrganizationBase(
-  params: Partial<OrganizationBase<Timestamp | Date>> = {}
-): OrganizationBase<Timestamp | Date> {
+function createOrganizationBase(params: Partial<OrganizationBase<Timestamp | Date>> = {}): OrganizationBase<Timestamp | Date> {
   return {
     id: params.id ? params.id : '',
     description: '',
@@ -75,7 +72,7 @@ function createOrganizationBase(
 export function createAddressSet(params: Partial<AddressSet> = {}): AddressSet {
   return {
     main: createLocation(params.main),
-    ...params
+    ...params,
   };
 }
 
@@ -84,16 +81,16 @@ export function createDenomination(params: Partial<Denomination> = {}): Denomina
   return {
     full: '',
     public: '',
-    ...params
-  }
+    ...params,
+  };
 }
 
 export function createOrgMedias(params: Partial<OrgMedias> = {}): OrgMedias {
   return {
     notes: [],
     videos: [],
-    ...params
-  }
+    ...params,
+  };
 }
 
 export function orgName(org: Partial<PublicOrganization>, type: 'public' | 'full' = 'public') {
@@ -121,9 +118,9 @@ export type AppStatus = 'none' | 'requested' | 'accepted';
 export type Organization = OrganizationBase<Date>;
 
 export const organizationRoles = {
-  catalog: { dashboard: 'Seller', marketplace: 'Buyer'},
-  festival: { dashboard: 'Sales Agent', marketplace: 'Buyer'},
-  financiers: { dashboard: 'Partners', marketplace: 'Investor'}
+  catalog: { dashboard: 'Seller', marketplace: 'Buyer' },
+  festival: { dashboard: 'Sales Agent', marketplace: 'Buyer' },
+  financiers: { dashboard: 'Partners', marketplace: 'Investor' },
 };
 
 export interface OrganizationForm {
@@ -131,9 +128,7 @@ export interface OrganizationForm {
 }
 
 /** A factory function that creates an Organization. */
-export function createOrganization(
-  params: Partial<Organization> = {}
-): Organization {
+export function createOrganization(params: Partial<Organization> = {}): Organization {
   return createOrganizationBase(params) as Organization;
 }
 
@@ -143,5 +138,5 @@ export function createPublicOrganization(org: Partial<Organization>): PublicOrga
     id: org.id ?? '',
     denomination: createDenomination(org.denomination),
     logo: createStorageFile(org.logo),
-  }
+  };
 }

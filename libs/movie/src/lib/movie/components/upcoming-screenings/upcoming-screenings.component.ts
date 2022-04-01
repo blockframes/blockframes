@@ -8,7 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 // Blockframes
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { EventService } from '@blockframes/event/+state';
-import { Screening, Event } from '@blockframes/model';
+import { Screening, Event } from '@blockframes/shared/model';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { APP } from '@blockframes/utils/routes/utils';
@@ -19,7 +19,7 @@ import { RequestAskingPriceComponent } from '../request-asking-price/request-ask
   selector: 'movie-screening',
   templateUrl: 'upcoming-screenings.component.html',
   styleUrls: ['./upcoming-screenings.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UpcomingScreeningsComponent {
   @HostBinding('class') class = 'dark-contrast-theme';
@@ -56,27 +56,19 @@ export class UpcomingScreeningsComponent {
     private movieService: MovieService,
     @Inject(APP) private app: App
   ) {
-
     const now = new Date();
     const screenings$ = this.movie$.pipe(
-      map(movie => ref => ref
-        .where('isSecret', '==', false)
-        .where('meta.titleId', '==', movie.id)
-        .orderBy('end')
-        .startAt(now)
-      ),
+      map(movie => ref => ref.where('isSecret', '==', false).where('meta.titleId', '==', movie.id).orderBy('end').startAt(now)),
       switchMap(q => this.eventService.queryByType(['screening'], q)),
       map((screenings: Event<Screening>[]) => screenings.sort(this.sortByDate).slice(0, 5)),
       shareReplay({ refCount: true, bufferSize: 1 })
     );
 
     this.ongoingScreenings$ = screenings$.pipe(
-      map(screenings => screenings.filter(screening => screening.start < now && screening.end > now)),
+      map(screenings => screenings.filter(screening => screening.start < now && screening.end > now))
     );
 
-    this.futureScreenings$ = screenings$.pipe(
-      map(screenings => screenings.filter(screening => screening.start > now))
-    );
+    this.futureScreenings$ = screenings$.pipe(map(screenings => screenings.filter(screening => screening.start > now)));
 
     this.checkInvitationStatus();
   }
@@ -87,19 +79,16 @@ export class UpcomingScreeningsComponent {
   }
 
   private sortByDate(a: Event, b: Event): number {
-    if (a.start.getTime() < b.start.getTime()) return -1
-    if (a.start.getTime() > b.start.getTime()) return 1
-    return 0
+    if (a.start.getTime() < b.start.getTime()) return -1;
+    if (a.start.getTime() > b.start.getTime()) return 1;
+    return 0;
   }
 
   checkInvitationStatus() {
     const index = this.sessionCtrl.value;
-    this.buttonState$ = combineLatest([
-      this.futureScreenings$,
-      this.invitationService.guestInvitations$
-    ]).pipe(
+    this.buttonState$ = combineLatest([this.futureScreenings$, this.invitationService.guestInvitations$]).pipe(
       map(([screenings, invitations]) => invitations.some(invitation => invitation.eventId === screenings[index].id))
-    )
+    );
   }
 
   requestAskingPrice() {
@@ -107,7 +96,7 @@ export class UpcomingScreeningsComponent {
       data: { movieId: this.movieId },
       maxHeight: '80vh',
       maxWidth: '650px',
-      autoFocus: false
+      autoFocus: false,
     });
     ref.afterClosed().subscribe(isSent => {
       this.requestSent = !!isSent;

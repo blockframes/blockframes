@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, OnInit, Optional, Inject } from '@a
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { fromOrg, MovieService } from '@blockframes/movie/+state/movie.service';
-import { Movie } from '@blockframes/model';
+import { Movie } from '@blockframes/shared/model';
 import { CampaignService, MovieCampaign } from '@blockframes/campaign/+state/campaign.service';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
@@ -17,23 +17,17 @@ type Filters = 'all' | 'draft' | 'ongoing' | 'achieved' | 'archived';
 function filterMovieCampaign(movies: MovieCampaign[], filter: Filters) {
   switch (filter) {
     case 'all':
-      return movies.filter((movie) => movie.app.financiers.status !== 'archived');
+      return movies.filter(movie => movie.app.financiers.status !== 'archived');
     case 'draft':
-      return movies.filter((movie) => movie.app.financiers.status === 'draft');
+      return movies.filter(movie => movie.app.financiers.status === 'draft');
     case 'ongoing':
-      return movies.filter(
-        (movie) =>
-          movie.app.financiers.status === 'accepted' &&
-          movie.campaign?.cap > movie.campaign?.received
-      );
+      return movies.filter(movie => movie.app.financiers.status === 'accepted' && movie.campaign?.cap > movie.campaign?.received);
     case 'achieved':
       return movies.filter(
-        (movie) =>
-          movie.app.financiers.status === 'accepted' &&
-          movie.campaign?.cap === movie.campaign?.received
+        movie => movie.app.financiers.status === 'accepted' && movie.campaign?.cap === movie.campaign?.received
       );
     case 'archived':
-      return movies.filter((movie) => movie.app.financiers.status === 'archived');
+      return movies.filter(movie => movie.app.financiers.status === 'archived');
   }
 }
 
@@ -62,41 +56,25 @@ export class ListComponent implements OnInit {
 
   ngOnInit() {
     this.titles$ = this.orgService.currentOrg$.pipe(
-      switchMap((org) =>
-        this.movieService
-          .valueChanges(fromOrg(org.id))
-          .pipe(map((movies) => movies.map((m) => m.id)))
-      ),
-      switchMap((movieIds) => this.campaignService.queryMoviesCampaign(movieIds)),
-      map((movies) => movies.filter((movie) => movie.app.financiers.access)),
-      switchMap((movies) =>
-        this.filter$.pipe(map((filter) => filterMovieCampaign(movies, filter)))
-      ),
-      tap((movies) => {
-        movies.length
-          ? this.dynTitle.setPageTitle('My titles')
-          : this.dynTitle.setPageTitle('My titles', 'Empty');
+      switchMap(org => this.movieService.valueChanges(fromOrg(org.id)).pipe(map(movies => movies.map(m => m.id)))),
+      switchMap(movieIds => this.campaignService.queryMoviesCampaign(movieIds)),
+      map(movies => movies.filter(movie => movie.app.financiers.access)),
+      switchMap(movies => this.filter$.pipe(map(filter => filterMovieCampaign(movies, filter)))),
+      tap(movies => {
+        movies.length ? this.dynTitle.setPageTitle('My titles') : this.dynTitle.setPageTitle('My titles', 'Empty');
       })
     );
 
     this.titleCount$ = this.orgService.currentOrg$.pipe(
-      switchMap((org) =>
-        this.movieService
-          .valueChanges(fromOrg(org.id))
-          .pipe(map((movies) => movies.map((m) => m.id)))
-      ),
-      switchMap((movieIds) => this.campaignService.queryMoviesCampaign(movieIds)),
-      map((movies) => movies.filter((movie) => movie.app.financiers.access)),
-      map((m) => ({
+      switchMap(org => this.movieService.valueChanges(fromOrg(org.id)).pipe(map(movies => movies.map(m => m.id)))),
+      switchMap(movieIds => this.campaignService.queryMoviesCampaign(movieIds)),
+      map(movies => movies.filter(movie => movie.app.financiers.access)),
+      map(m => ({
         all: m.length,
-        draft: m.filter((m) => m.app.financiers.status === 'draft').length,
-        ongoing: m.filter(
-          (m) => m.app.financiers.status === 'submitted' && m.campaign?.cap > m.campaign?.received
-        ).length,
-        achieved: m.filter(
-          (m) => m.app.financiers.status === 'accepted' && m.campaign?.cap === m.campaign?.received
-        ).length,
-        archived: m.filter((m) => m.app.financiers.status === 'archived').length,
+        draft: m.filter(m => m.app.financiers.status === 'draft').length,
+        ongoing: m.filter(m => m.app.financiers.status === 'submitted' && m.campaign?.cap > m.campaign?.received).length,
+        achieved: m.filter(m => m.app.financiers.status === 'accepted' && m.campaign?.cap === m.campaign?.received).length,
+        archived: m.filter(m => m.app.financiers.status === 'archived').length,
       }))
     );
   }

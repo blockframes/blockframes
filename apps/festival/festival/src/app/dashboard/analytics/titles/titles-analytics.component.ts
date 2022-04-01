@@ -1,14 +1,14 @@
-import { ChangeDetectionStrategy, Component, Inject } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
-import { map } from "rxjs/operators";
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { map } from 'rxjs/operators';
 // Blockframes
-import { AggregatedAnalytic, Analytics, createAggregatedAnalytic, Movie } from "@blockframes/model";
-import { MovieService } from "@blockframes/movie/+state/movie.service";
-import { App } from "@blockframes/utils/apps";
-import { APP } from "@blockframes/utils/routes/utils";
-import { joinWith } from "@blockframes/utils/operators";
-import { EventService } from "@blockframes/event/+state";
-import { Event } from '@blockframes/model'
+import { AggregatedAnalytic, Analytics, createAggregatedAnalytic, Movie } from '@blockframes/shared/model';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { App } from '@blockframes/utils/apps';
+import { APP } from '@blockframes/utils/routes/utils';
+import { joinWith } from '@blockframes/utils/operators';
+import { EventService } from '@blockframes/event/+state';
+import { Event } from '@blockframes/shared/model';
 
 interface AggregatedPerTitle extends AggregatedAnalytic {
   screenings: number;
@@ -19,13 +19,13 @@ function createAggregatedPerTitle(data: Partial<AggregatedPerTitle>): Aggregated
     screenings: 0,
     ...data,
     ...createAggregatedAnalytic(data),
-  }
+  };
 }
 
-function countAnalytics(title: Movie & { analytics?: Analytics[], events?: Event[] }) {
+function countAnalytics(title: Movie & { analytics?: Analytics[]; events?: Event[] }) {
   const aggregated = createAggregatedPerTitle({
     title,
-    screenings: title.events?.length
+    screenings: title.events?.length,
   });
   if (!title.analytics) return aggregated;
   for (const analytic of title.analytics) {
@@ -38,15 +38,13 @@ function countAnalytics(title: Movie & { analytics?: Analytics[], events?: Event
   selector: 'festival-titles-analytics',
   templateUrl: './titles-analytics.component.html',
   styleUrls: ['./titles-analytics.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TitlesAnalyticsComponent {
-
   titlesAnalytics$ = this.service.queryDashboard(this.app).pipe(
     joinWith({
-      events: title => this.eventService.valueChanges(ref => ref
-        .where('type', '==', 'screening')
-        .where('meta.titleId', '==', title.id))
+      events: title =>
+        this.eventService.valueChanges(ref => ref.where('type', '==', 'screening').where('meta.titleId', '==', title.id)),
     }),
     map(titles => titles.map(countAnalytics))
   );

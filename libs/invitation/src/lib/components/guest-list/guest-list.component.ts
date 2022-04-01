@@ -5,17 +5,19 @@ import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { startWith, debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { algolia } from '@env';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Invitation, InvitationStatus } from '@blockframes/model';
+import { Invitation, InvitationStatus } from '@blockframes/shared/model';
 
 function filterGuest(invitation: Invitation, search: string) {
-  return invitation.toUser?.email.toLowerCase().includes(search)
-    || invitation.toUser?.firstName.toLowerCase().includes(search)
-    || invitation.toUser?.lastName.toLowerCase().includes(search)
-    || invitation.fromUser?.email.toLowerCase().includes(search)
-    || invitation.fromUser?.firstName.toLowerCase().includes(search)
-    || invitation.fromUser?.lastName.toLowerCase().includes(search)
-    || invitation.toOrg?.denomination.full.toLowerCase().includes(search)
-    || invitation.toOrg?.denomination.public?.toLowerCase().includes(search)
+  return (
+    invitation.toUser?.email.toLowerCase().includes(search) ||
+    invitation.toUser?.firstName.toLowerCase().includes(search) ||
+    invitation.toUser?.lastName.toLowerCase().includes(search) ||
+    invitation.fromUser?.email.toLowerCase().includes(search) ||
+    invitation.fromUser?.firstName.toLowerCase().includes(search) ||
+    invitation.fromUser?.lastName.toLowerCase().includes(search) ||
+    invitation.toOrg?.denomination.full.toLowerCase().includes(search) ||
+    invitation.toOrg?.denomination.public?.toLowerCase().includes(search)
+  );
 }
 
 const points: Record<InvitationStatus, number> = {
@@ -29,16 +31,16 @@ const points: Record<InvitationStatus, number> = {
   templateUrl: './guest-list.component.html',
   styleUrls: ['./guest-list.component.scss'],
   host: {
-    class: 'surface'
+    class: 'surface',
   },
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GuestListComponent implements OnInit {
   private _invitations = new BehaviorSubject<Invitation[]>([]);
   userIndex = algolia.indexNameUsers;
   searchControl = new FormControl();
   search$: Observable<Invitation[]>;
-  @Input() title: string
+  @Input() title: string;
 
   @ContentChild(TemplateRef) itemTemplate: TemplateRef<unknown>;
 
@@ -53,16 +55,10 @@ export class GuestListComponent implements OnInit {
     return this._invitations.getValue();
   }
 
-  constructor(
-    private snackBar: MatSnackBar,
-  ) { }
+  constructor(private snackBar: MatSnackBar) {}
 
   ngOnInit() {
-    const search$ = this.searchControl.valueChanges.pipe(
-      debounceTime(200),
-      distinctUntilChanged(),
-      startWith('')
-    );
+    const search$ = this.searchControl.valueChanges.pipe(debounceTime(200), distinctUntilChanged(), startWith(''));
     this.search$ = combineLatest([this._invitations, search$]).pipe(
       map(([invitations, search]) => invitations.filter(guest => filterGuest(guest, search.trim())))
     );
@@ -79,5 +75,4 @@ export class GuestListComponent implements OnInit {
   copied() {
     this.snackBar.open('Guests emails copied', 'CLOSE', { duration: 4000 });
   }
-
 }

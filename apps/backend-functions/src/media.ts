@@ -1,4 +1,3 @@
-
 // External dependencies
 import { createHash } from 'crypto';
 import { get, set } from 'lodash';
@@ -15,8 +14,8 @@ import {
   PublicUser,
   User,
   OrganizationDocument,
-  MovieDocument
-} from '@blockframes/model';
+  MovieDocument,
+} from '@blockframes/shared/model';
 import { tempUploadDir } from '@blockframes/utils/file-sanitizer';
 import { ImageParameters, formatParameters } from '@blockframes/media/image/directives/imgix-helpers';
 
@@ -28,13 +27,11 @@ import { isAllowedToAccessMedia } from './internals/media';
 import { testVideoId } from '@env';
 import { getDeepValue } from './internals/utils';
 
-
 /**
  * This function is executed on every files uploaded on the tmp directory of the storage.
  * It check if a new file in tmp directory is already referenced on DB and move it to correct folder
  */
 export async function linkFile(data: storage.ObjectMetadata) {
-
   if (!data.name) return false;
 
   const bucket = admin.storage().bucket(getStorageBucketName());
@@ -53,7 +50,6 @@ export async function linkFile(data: storage.ObjectMetadata) {
   const uploaderUid = metadata?.uid;
   const [tmp] = data.name.split('/');
   if (tmp === tempUploadDir) {
-
     // (1) Security checks, (2) copy file to final destination, (3) update db, (4) delete tmp/file
 
     /** Will throw if the condition is **false**. If the function throws it will delete/clean the file beforehand. */
@@ -66,114 +62,106 @@ export async function linkFile(data: storage.ObjectMetadata) {
 
     await assertFile(isValid, `Invalid meta data for file ${data.name} : '${JSON.stringify(metadata)}'`);
 
-    await db.runTransaction(async transaction => {
-      // because of possible nested map and arrays, we need to retrieve the whole document
-      // modify it, then update the whole doc with the new (modified) version
-      const docRef = db.collection(metadata.collection).doc(metadata.docId);
-      const docSnap = await transaction.get(docRef);
-      await assertFile(docSnap.exists, `Document ${metadata.collection}/${metadata.docId} does not exists`);
-      const doc = docSnap.data();
+    await db
+      .runTransaction(async transaction => {
+        // because of possible nested map and arrays, we need to retrieve the whole document
+        // modify it, then update the whole doc with the new (modified) version
+        const docRef = db.collection(metadata.collection).doc(metadata.docId);
+        const docSnap = await transaction.get(docRef);
+        await assertFile(docSnap.exists, `Document ${metadata.collection}/${metadata.docId} does not exists`);
+        const doc = docSnap.data();
 
-      // (1) Security checks
+        // (1) Security checks
 
-      const blockframesAdminRef = db.doc(`blockframesAdmin/${uploaderUid}`);
-      const blockframesAdminSnap = await transaction.get(blockframesAdminRef);
-      if (!blockframesAdminSnap.exists) {
+        const blockframesAdminRef = db.doc(`blockframesAdmin/${uploaderUid}`);
+        const blockframesAdminSnap = await transaction.get(blockframesAdminRef);
+        if (!blockframesAdminSnap.exists) {
+          const notAllowedError = `User ${uploaderUid} not allowed to upload to ${metadata.collection}/${metadata.docId}`;
 
-        const notAllowedError = `User ${uploaderUid} not allowed to upload to ${metadata.collection}/${metadata.docId}`;
+          // Is the user allowed to upload this file ?
+          switch (metadata.collection) {
+            case 'users': {
+              // only the user is allowed to upload files about himself
+              await assertFile(metadata.docId === uploaderUid, notAllowedError);
+              break;
+            }
+            case 'movies':
+            case 'campaigns': {
+              // only users members of orgs which are part of a movie, are allowed to upload to this movie/campaign
+              const userRef = db.collection('users').doc(uploaderUid);
+              const userSnap = await transaction.get(userRef);
+              await assertFile(userSnap.exists, notAllowedError);
 
-        // Is the user allowed to upload this file ?
-        switch (metadata.collection) {
-          case 'users': {
-            // only the user is allowed to upload files about himself
-            await assertFile(metadata.docId === uploaderUid, notAllowedError);
-            break;
+              const movieRef = db.collection('movies').doc(metadata.docId);
+              const movieSnap = await transaction.get(movieRef);
+              await assertFile(movieSnap.exists, notAllowedError);
 
-          }
-          case 'movies':
-          case 'campaigns': {
-            // only users members of orgs which are part of a movie, are allowed to upload to this movie/campaign
-            const userRef = db.collection('users').doc(uploaderUid);
-            const userSnap = await transaction.get(userRef);
-            await assertFile(userSnap.exists, notAllowedError);
-
-            const movieRef = db.collection('movies').doc(metadata.docId);
-            const movieSnap = await transaction.get(movieRef);
-            await assertFile(movieSnap.exists, notAllowedError);
-
-            const user = userSnap.data() as User;
-            const movie = movieSnap.data() as MovieDocument;
-            const isAllowed = movie.orgIds.some(orgId => orgId === user.orgId);
-            await assertFile(isAllowed, notAllowedError);
-            break;
-
-          }
-          case 'orgs': {
-            // only member of an org can upload to this org
-            const userRef = db.collection('users').doc(uploaderUid);
-            const userSnap = await transaction.get(userRef);
-            await assertFile(userSnap.exists, notAllowedError);
-            const user = userSnap.data() as User;
-            await assertFile(user.orgId === metadata.docId, notAllowedError);
-            break;
-
-          }
-          default: {
-            await assertFile(false, `UNKNOWN COLLECTION : ${metadata.collection}`);
+              const user = userSnap.data() as User;
+              const movie = movieSnap.data() as MovieDocument;
+              const isAllowed = movie.orgIds.some(orgId => orgId === user.orgId);
+              await assertFile(isAllowed, notAllowedError);
+              break;
+            }
+            case 'orgs': {
+              // only member of an org can upload to this org
+              const userRef = db.collection('users').doc(uploaderUid);
+              const userSnap = await transaction.get(userRef);
+              await assertFile(userSnap.exists, notAllowedError);
+              const user = userSnap.data() as User;
+              await assertFile(user.orgId === metadata.docId, notAllowedError);
+              break;
+            }
+            default: {
+              await assertFile(false, `UNKNOWN COLLECTION : ${metadata.collection}`);
+            }
           }
         }
-      }
 
-      // (2) copy file to final destination
+        // (2) copy file to final destination
 
-      const segments = data.name.split('/');
-      segments.shift(); // remove tmp/
-      const finalPath = segments.join('/');
-      const to = bucket.file(`${metadata.privacy}/${finalPath}`);
+        const segments = data.name.split('/');
+        segments.shift(); // remove tmp/
+        const finalPath = segments.join('/');
+        const to = bucket.file(`${metadata.privacy}/${finalPath}`);
 
-      await file.copy(to);
+        await file.copy(to);
 
-      // (3) update db
+        // (3) update db
 
-      // separate extraData from metadata
-      const keysToDelete = [
-        'uid',
-        'firebaseStorageDownloadTokens',
-      ];
-      for (const key of keysToDelete) {
-        delete metadata[key];
-      }
+        // separate extraData from metadata
+        const keysToDelete = ['uid', 'firebaseStorageDownloadTokens'];
+        for (const key of keysToDelete) {
+          delete metadata[key];
+        }
 
-      const uploadData: StorageFile = {
-        ...metadata,
-        storagePath: finalPath,
-      }
+        const uploadData: StorageFile = {
+          ...metadata,
+          storagePath: finalPath,
+        };
 
-      let fieldValue: StorageFile | StorageFile[] = get(doc, metadata.field);
+        let fieldValue: StorageFile | StorageFile[] = get(doc, metadata.field);
 
-      if (Array.isArray(fieldValue)) {
-        fieldValue.push(uploadData);
-      } else {
-        fieldValue = uploadData;
-      }
+        if (Array.isArray(fieldValue)) {
+          fieldValue.push(uploadData);
+        } else {
+          fieldValue = uploadData;
+        }
 
-      set(doc, metadata.field, fieldValue);
+        set(doc, metadata.field, fieldValue);
 
-      await transaction.update(docRef, doc);
-    }).catch(err => console.error('Transaction Failed:', err));
+        await transaction.update(docRef, doc);
+      })
+      .catch(err => console.error('Transaction Failed:', err));
 
     // (4) delete tmp/file
     return file.delete();
-
   } else {
-
     if (!isValid) throw new Error('Invalid metadata after file copy');
 
     // Post processing such as: signal end of upload flow, trigger upload to JWPlayer, ...
 
     const isVideo = data.contentType.indexOf('video/') === 0 && ['movies', 'orgs'].includes(metadata.collection);
     if (isVideo && metadata.moving !== 'true') {
-
       const uploadResult = await uploadToJWPlayer(file);
 
       // There was an error when uploading file to jwPlayer
@@ -194,16 +182,18 @@ export async function linkFile(data: storage.ObjectMetadata) {
 
         const fieldValue: StorageVideo | StorageVideo[] = get(doc, metadata.field);
         if (Array.isArray(fieldValue)) {
-
           const index = fieldValue.findIndex(video => video.fileId === metadata.fileId);
 
           if (index < 0) {
-            console.error(`UPDATE DB FAILED: Video ${uploadResult.key} was successfully uploaded to JWPlayer, but we didn't found the db document to update`, JSON.stringify(data.name), JSON.stringify(data.metadata));
+            console.error(
+              `UPDATE DB FAILED: Video ${uploadResult.key} was successfully uploaded to JWPlayer, but we didn't found the db document to update`,
+              JSON.stringify(data.name),
+              JSON.stringify(data.metadata)
+            );
             return false;
           }
 
           fieldValue[index].jwPlayerId = uploadResult.key;
-
         } else {
           fieldValue.jwPlayerId = uploadResult.key;
         }
@@ -213,11 +203,10 @@ export async function linkFile(data: storage.ObjectMetadata) {
       });
       return true;
     } else if (metadata.moving === 'true') {
-      // removing the 'moving' flag from metadata 
+      // removing the 'moving' flag from metadata
       file.setMetadata({ metadata: { moving: null } });
     }
   }
-
 }
 
 /**
@@ -230,9 +219,13 @@ export async function linkFile(data: storage.ObjectMetadata) {
  * @see https://github.com/imgix/imgix-blueprint#securing-urls
  * @see https://www.notion.so/cascade8/Setup-ImgIx-c73142c04f8349b4a6e17e74a9f2209a
  */
-export const getMediaToken = async (data: { file: StorageFile, parametersSet: ImageParameters[], eventId?: string }, context: CallableContext): Promise<string[]> => {
-
-  if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
+export const getMediaToken = async (
+  data: { file: StorageFile; parametersSet: ImageParameters[]; eventId?: string },
+  context: CallableContext
+): Promise<string[]> => {
+  if (!context?.auth) {
+    throw new Error('Permission denied: missing auth context.');
+  }
 
   const canAccess = await isAllowedToAccessMedia(data.file, context.auth.uid, data.eventId);
   if (!canAccess) {
@@ -240,7 +233,6 @@ export const getMediaToken = async (data: { file: StorageFile, parametersSet: Im
   }
 
   return data.parametersSet.map((p: ImageParameters) => {
-
     // ImgIx secured URLs doc : https://github.com/imgix/imgix-blueprint#securing-urls
 
     // add a leading '/' to the path if it doesn't exists
@@ -254,11 +246,9 @@ export const getMediaToken = async (data: { file: StorageFile, parametersSet: Im
 
     return createHash('md5').update(toSign).digest('hex');
   });
-
-}
+};
 
 export const deleteMedia = async (file: StorageFile) => {
-
   const bucket = admin.storage().bucket(getStorageBucketName());
   const filePath = `${file.privacy}/${file.storagePath}`;
   const fileObject = bucket.file(filePath);
@@ -267,7 +257,6 @@ export const deleteMedia = async (file: StorageFile) => {
   if (!exists) {
     console.log(`Delete Error : File "${filePath}" does not exists in the storage`);
   } else {
-
     // if the file has a jwPlayerId, we need to delete the video from JWPlayer's CDN
     // to avoid orphaned videos taking storage space
     if (file.jwPlayerId && file.jwPlayerId !== testVideoId) {
@@ -279,11 +268,11 @@ export const deleteMedia = async (file: StorageFile) => {
 
     return fileObject.delete();
   }
-}
+};
 
 function needsToBeCleaned(before: StorageFile | undefined, after: StorageFile | undefined) {
   return !!before?.storagePath && before.storagePath !== after?.storagePath;
-};
+}
 
 function checkFileList(before: StorageFile[] | undefined, after: StorageFile[] | undefined) {
   const filesToClean: StorageFile[] = [];
@@ -292,7 +281,7 @@ function checkFileList(before: StorageFile[] | undefined, after: StorageFile[] |
     if (!existsInAfter) filesToClean.push(beforeFile);
   });
   return filesToClean;
-};
+}
 
 export async function cleanUserMedias(before: PublicUser, after?: PublicUser): Promise<unknown> {
   // Updating, check if avatar have been changed/removed
@@ -306,26 +295,21 @@ export async function cleanUserMedias(before: PublicUser, after?: PublicUser): P
 
 export async function cleanOrgMedias(before: OrganizationDocument, after?: OrganizationDocument): Promise<void> {
   const mediaToDelete: StorageFile[] = [];
-  if (after) { // Updating
+  if (after) {
+    // Updating
     if (needsToBeCleaned(before.logo, after.logo)) {
       mediaToDelete.push(before.logo);
     }
 
     if (!!before.documents && !!before.documents?.notes) {
-      const notesToDelete = checkFileList(
-        before.documents?.notes,
-        after.documents?.notes
-      );
+      const notesToDelete = checkFileList(before.documents?.notes, after.documents?.notes);
       mediaToDelete.push(...notesToDelete);
     }
 
-    const orgVideosToDelete = checkFileList(
-      before.documents.videos,
-      after.documents.videos
-    );
+    const orgVideosToDelete = checkFileList(before.documents.videos, after.documents.videos);
     mediaToDelete.push(...orgVideosToDelete);
-
-  } else { // Deleting
+  } else {
+    // Deleting
     if (before.logo) {
       mediaToDelete.push(before.logo);
     }
@@ -343,9 +327,9 @@ export async function cleanOrgMedias(before: OrganizationDocument, after?: Organ
 }
 
 export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocument): Promise<void> {
-
   const mediaToDelete: StorageFile[] = [];
-  if (after) { // Updating
+  if (after) {
+    // Updating
 
     // SINGLE FILE
 
@@ -379,26 +363,16 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
 
     // FILES LIST
 
-    const otherVideosToDelete = checkFileList(
-      before.promotional.videos?.otherVideos,
-      after.promotional.videos?.otherVideos
-    );
+    const otherVideosToDelete = checkFileList(before.promotional.videos?.otherVideos, after.promotional.videos?.otherVideos);
     mediaToDelete.push(...otherVideosToDelete);
 
-    const stillToDelete = checkFileList(
-      before.promotional?.still_photo,
-      after.promotional?.still_photo
-    );
+    const stillToDelete = checkFileList(before.promotional?.still_photo, after.promotional?.still_photo);
     mediaToDelete.push(...stillToDelete);
 
-    const notesToDelete = checkFileList(
-      before.promotional.notes,
-      after.promotional.notes
-    );
+    const notesToDelete = checkFileList(before.promotional.notes, after.promotional.notes);
     mediaToDelete.push(...notesToDelete);
-
-
-  } else { // Deleting
+  } else {
+    // Deleting
 
     if (before.banner) {
       mediaToDelete.push(before.banner);
@@ -442,11 +416,9 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
   }
 
   await Promise.all(mediaToDelete.map(m => deleteMedia(m)));
-
 }
 
 export const moveMedia = async (before: StorageFile, after: StorageFile) => {
-
   const bucket = admin.storage().bucket(getStorageBucketName());
   const beforePath = `${before.privacy}/${before.storagePath}`;
   const afterPath = `${after.privacy}/${after.storagePath}`;
@@ -456,31 +428,24 @@ export const moveMedia = async (before: StorageFile, after: StorageFile) => {
   if (!exists) {
     logger.error(`Move Error : File "${beforePath}" does not exists in the storage`);
   } else {
-
     // set moving flag to prevent upload to jwPlayer
     await fileObject.setMetadata({
       metadata: {
         privacy: after.privacy,
-        moving: 'true'
-      }
+        moving: 'true',
+      },
     });
     return fileObject.move(afterPath);
   }
-}
+};
 
 export async function moveMovieMedia(before: MovieDocument, after: MovieDocument): Promise<void> {
-
-  const paths = [
-    'promotional.videos.salesPitch',
-    'promotional.videos.otherVideos'
-  ];
+  const paths = ['promotional.videos.salesPitch', 'promotional.videos.otherVideos'];
 
   const containsFile = (file: StorageFile) => file && file.storagePath !== null;
   const needsToBeMoved = (beforeFile: StorageFile, afterFile: StorageFile) => {
-    return containsFile(beforeFile)
-        && containsFile(afterFile)
-        && beforeFile.storagePath !== afterFile.storagePath;
-  }
+    return containsFile(beforeFile) && containsFile(afterFile) && beforeFile.storagePath !== afterFile.storagePath;
+  };
 
   for (const path of paths) {
     const beforeFile: StorageFile | StorageFile[] = getDeepValue(before, path);
@@ -492,7 +457,6 @@ export async function moveMovieMedia(before: MovieDocument, after: MovieDocument
           moveMedia(beforeFile, afterFile);
         }
       });
-
     } else {
       const afterFile: StorageFile = getDeepValue(after, path);
       if (needsToBeMoved(beforeFile, afterFile)) {

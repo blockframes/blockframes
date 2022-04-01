@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, Inject } 
 import { InvitationService } from '../../+state';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { EventService } from '@blockframes/event/+state/event.service';
-import { PublicOrganization, PublicUser, isMeeting, Event, Invitation } from '@blockframes/model';
+import { PublicOrganization, PublicUser, isMeeting, Event, Invitation } from '@blockframes/shared/model';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { App, applicationUrl } from '@blockframes/utils/apps';
 import { isSafari } from '@blockframes/utils/browser/utils';
@@ -13,7 +13,7 @@ import { APP } from '@blockframes/utils/routes/utils';
   selector: 'invitation-item',
   templateUrl: './item.component.html',
   styleUrls: ['./item.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ItemComponent {
   public applicationUrl = applicationUrl;
@@ -26,12 +26,11 @@ export class ItemComponent {
 
       if (!invitation.fromUser.orgId) return;
       this.organizationService.getValue(this.fromUser.orgId).then(org => {
-        this.fromOrg = org
+        this.fromOrg = org;
         this.cdr.markForCheck();
-      })
-
+      });
     } else if (invitation.fromOrg) {
-      this.fromOrg = invitation.fromOrg
+      this.fromOrg = invitation.fromOrg;
       this.cdr.markForCheck();
 
       if (invitation.type === 'attendEvent') {
@@ -41,12 +40,12 @@ export class ItemComponent {
             this.userService.getValue(event.meta.organizerUid as string).then(user => {
               this.fromUser = user;
               this.cdr.markForCheck();
-            })
+            });
           }
-        })
+        });
       }
     }
-  };
+  }
 
   _invitation: Invitation;
 

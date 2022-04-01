@@ -1,22 +1,21 @@
-import { Inject, Injectable } from "@angular/core";
-import { CookiesConsent } from "../cookie-form/cookie.form";
+import { Inject, Injectable } from '@angular/core';
+import { CookiesConsent } from '../cookie-form/cookie.form';
 import { IntercomService } from '@blockframes/utils/intercom/intercom.service';
-import { User } from "@blockframes/model";
+import { User } from '@blockframes/shared/model';
 // #7936 this may be reactivated later
 // import { YandexMetricaService } from '@blockframes/utils/yandex-metrica/yandex-metrica.service';
-import { App } from "@blockframes/utils/apps";
+import { App } from '@blockframes/utils/apps';
 import { APP } from '@blockframes/utils/routes/utils';
 import { HotjarService } from '@blockframes/utils/hotjar/hotjar.service';
 
 @Injectable({ providedIn: 'root' })
 export class GDPRService {
-
   constructor(
     private intercom: IntercomService,
     // private yandex: YandexMetricaService,
     private hotjar: HotjarService,
     @Inject(APP) private app: App
-  ) { }
+  ) {}
 
   get cookieConsent(): CookiesConsent {
     return JSON.parse(localStorage.getItem('gdpr')) ?? {};

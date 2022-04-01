@@ -4,26 +4,26 @@ import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { FormGroupSchema, FormEntity, createForms } from 'ng-form-factory';
 import { CmsTemplate, Section, TemplateParams } from '@blockframes/admin/cms';
 import { templateSchema } from './template.model';
-import { CmsService, CmsParams } from '../cms.service'
+import { CmsService, CmsParams } from '../cms.service';
 import { Subscription } from 'rxjs';
 import { sections as homeSection } from '../home';
 import { switchMap } from 'rxjs/operators';
-import { createStorageFile } from '@blockframes/model';
+import { createStorageFile } from '@blockframes/shared/model';
 
 const templateSections = {
   home: (params: TemplateParams) => homeSection(params),
-}
+};
 
 const mediaFields = {
   banner: ['background', 'image'],
-  hero: ['background']
-}
+  hero: ['background'],
+};
 
 @Component({
   selector: 'cms-template',
   templateUrl: './template.component.html',
   styleUrls: ['./template.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TemplateComponent implements OnInit, OnDestroy {
   private sub?: Subscription;
@@ -33,35 +33,31 @@ export class TemplateComponent implements OnInit, OnDestroy {
   form?: FormEntity<FormGroupSchema<CmsTemplate>>;
   schema?: FormGroupSchema<CmsTemplate>;
 
-  constructor(
-    private service: CmsService,
-    private route: ActivatedRoute,
-    private cdr: ChangeDetectorRef
-  ) { }
+  constructor(private service: CmsService, private route: ActivatedRoute, private cdr: ChangeDetectorRef) {}
 
   get sections() {
     return this.form?.get('sections');
   }
 
   ngOnInit(): void {
-    this.sub = this.route.params.pipe(
-      switchMap(params => this.service.doc<CmsTemplate>(params))
-    ).subscribe((template: Partial<CmsTemplate> = {}) => {
-      const params = this.route.snapshot.params as TemplateParams;
-      const sections = templateSections[params.page](params);
-      const factory = (section: Section) => sections[section._type];
-      this.types = Object.keys(sections);
-      this.schema = templateSchema(factory, template);
+    this.sub = this.route.params
+      .pipe(switchMap(params => this.service.doc<CmsTemplate>(params)))
+      .subscribe((template: Partial<CmsTemplate> = {}) => {
+        const params = this.route.snapshot.params as TemplateParams;
+        const sections = templateSections[params.page](params);
+        const factory = (section: Section) => sections[section._type];
+        this.types = Object.keys(sections);
+        this.schema = templateSchema(factory, template);
 
-      // quick fix waiting for lib to be updated. Don't let this too long (4 march 2021). Ask Francois for that
-      if (!this.form) {
-        this.form = createForms(this.schema, template);
-      } else {
-        this.form.reset(createForms(this.schema, template).value)
-      }
+        // quick fix waiting for lib to be updated. Don't let this too long (4 march 2021). Ask Francois for that
+        if (!this.form) {
+          this.form = createForms(this.schema, template);
+        } else {
+          this.form.reset(createForms(this.schema, template).value);
+        }
 
-      this.cdr.markForCheck();
-    });
+        this.cdr.markForCheck();
+      });
   }
 
   ngOnDestroy() {
@@ -91,7 +87,7 @@ export class TemplateComponent implements OnInit, OnDestroy {
 
   save() {
     const params = this.route.snapshot.params as CmsParams;
-    const value = this.updateMediaMetadata(this.form.value, params)
+    const value = this.updateMediaMetadata(this.form.value, params);
     this.service.save(value, params);
   }
 
@@ -107,7 +103,7 @@ export class TemplateComponent implements OnInit, OnDestroy {
           docId: template,
           field: `section[${i}].${field}`,
           privacy: 'public',
-          storagePath: section[field].storagePath
+          storagePath: section[field].storagePath,
         });
       }
     });

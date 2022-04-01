@@ -13,7 +13,7 @@ import { routeAnimation } from '@blockframes/utils/animations/router-animations'
 import { InvitationService } from '@blockframes/invitation/+state';
 import { NotificationService } from '@blockframes/notification/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { Movie } from '@blockframes/model';
+import { Movie } from '@blockframes/shared/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { App } from '@blockframes/utils/apps';
 import { AuthService } from '@blockframes/auth/+state';
@@ -47,8 +47,8 @@ export class MarketplaceComponent implements OnInit {
 
   ngOnInit() {
     this.wishlistCount$ = this.orgService.currentOrg$.pipe(
-      map((org) => org?.wishlist || []),
-      switchMap((movieIds) => this.movieService.getValue(movieIds)),
+      map(org => org?.wishlist || []),
+      switchMap(movieIds => this.movieService.getValue(movieIds)),
       map((movies: Movie[]) => movies.filter(filterMovieByAppAccess(this.app)).length)
     );
   }

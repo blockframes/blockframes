@@ -1,5 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import { Movie } from '@blockframes/model';
+import { Movie } from '@blockframes/shared/model';
 import { scaleIn } from '@blockframes/utils/animations/fade';
 import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
 

@@ -7,7 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
 
 import { FormEntity, FormGroupSchema } from 'ng-form-factory';
-import { Movie } from '@blockframes/model';
+import { Movie } from '@blockframes/shared/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { TitlesSection, TemplateParams } from '@blockframes/admin/cms';
 import { TextFormModule, matText } from '../../forms/text';
@@ -22,7 +22,7 @@ export type TitlesSchema = FormGroupSchema<TitlesSection>;
 
 export const titlesSchema = (params: TemplateParams): TitlesSchema => ({
   form: 'group',
-  load: async () => import('./titles.component').then((m) => m.TitlesComponent),
+  load: async () => import('./titles.component').then(m => m.TitlesComponent),
   controls: {
     _type: { form: 'control' },
     title: matText({ label: 'Title' }),
@@ -49,10 +49,10 @@ export class TitlesComponent implements OnInit {
   private mode?: 'query' | 'titleIds';
   @Input() form?: FormEntity<TitlesSchema>;
 
-  app$ = this.route.paramMap.pipe(map((p) => p.get('app')));
+  app$ = this.route.paramMap.pipe(map(p => p.get('app')));
   titles$ = this.app$.pipe(
-    map((app) => getTitlesQueryFn(app)),
-    switchMap((queryFn) => this.service.valueChanges(queryFn)),
+    map(app => getTitlesQueryFn(app)),
+    switchMap(queryFn => this.service.valueChanges(queryFn)),
     map(toMap),
     shareReplay({ refCount: true, bufferSize: 1 })
   );

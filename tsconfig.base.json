@@ -44,9 +44,9 @@
       "@blockframes/campaign/*": ["libs/campaign/src/lib/*"],
       "@blockframes/testing/unit-tests": ["libs/testing/unit-tests/src/index.ts"],
       "@blockframes/analytics/*": ["libs/analytics/src/lib/*"],
-      "@blockframes/model": ["libs/model/src/index.ts"],
       "@blockframes/testing/cypress/browser": ["libs/testing/cypress/browser/src/index.ts"],
-      "@blockframes/testing/cypress/node": ["libs/testing/cypress/node/src/index.ts"]
+      "@blockframes/testing/cypress/node": ["libs/testing/cypress/node/src/index.ts"],
+      "@blockframes/shared/model": ["libs/shared/model/src/index.ts"]
     }
   },
   "angularCompilerOptions": {

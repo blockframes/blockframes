@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Output, Input } from '@angular/core';
 import { OrganizationForm } from '../../forms/organization.form';
-import { Organization, PLACEHOLDER_LOGO } from '@blockframes/model';
+import { Organization, PLACEHOLDER_LOGO } from '@blockframes/shared/model';
 
 @Component({
   selector: 'organization-display',
   templateUrl: './organization-display.component.html',
   styleUrls: ['./organization-display.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrganizationDisplayComponent {
   public placeholderUrl = PLACEHOLDER_LOGO;
@@ -22,8 +22,6 @@ export class OrganizationDisplayComponent {
   }
 
   get org() {
-    return this.organizationInformations
-      ? this.organizationInformations.value
-      : this.organization;
+    return this.organizationInformations ? this.organizationInformations.value : this.organization;
   }
 }

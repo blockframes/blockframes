@@ -20,13 +20,11 @@ import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { UserService } from '@blockframes/user/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { Movie, Term } from '@blockframes/model';
+import { Movie, Term } from '@blockframes/shared/model';
 import { ContractStatus, ImportContractStatus, Language, Media, Territory } from '@blockframes/utils/static-model';
-import { createMandate, createSale, Mandate, MovieLanguageSpecification, Sale, User } from '@blockframes/model';
+import { createMandate, createSale, Mandate, MovieLanguageSpecification, Sale, User } from '@blockframes/shared/model';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
-import {
-  extract, ExtractConfig, getStaticList, SheetTab, getGroupedList
-} from '@blockframes/utils/spreadsheet';
+import { extract, ExtractConfig, getStaticList, SheetTab, getGroupedList } from '@blockframes/utils/spreadsheet';
 
 const separator = ';';
 
@@ -38,11 +36,11 @@ interface FieldsConfig {
     buyerId: string;
     id?: string;
     stakeholders: string[];
-    status: string,
+    status: string;
   };
   income: {
     price: number;
-  },
+  };
   term: {
     territories_included: Territory[];
     territories_excluded: Territory[];
@@ -63,18 +61,14 @@ interface FieldsConfig {
 
 type FieldsConfigType = ExtractConfig<FieldsConfig>;
 
-
 function toTerm(rawTerm: FieldsConfig['term'][number], contractId: string, firestore: AngularFirestore): Term {
-
   const { medias, duration, territories_excluded = [], territories_included = [], exclusive, licensedOriginal } = rawTerm;
-
 
   const languages: Term['languages'] = {};
 
   const updateLanguage = (key: keyof MovieLanguageSpecification, rawLanguages: Language[]) => {
     for (const language of rawLanguages) {
-      if (!languages[language])
-        languages[language] = { caption: false, dubbed: false, subtitle: false };
+      if (!languages[language]) languages[language] = { caption: false, dubbed: false, subtitle: false };
       languages[language][key] = true;
     }
   };
@@ -133,25 +127,25 @@ export async function formatContract(
             name: 'Error on title name or ID',
             reason: '',
             hint: err.message,
-          }
+          },
         };
       }
-
     },
     /* b */ 'contract.type': (value: string) => {
       const lower = value.toLowerCase();
       if (!lower) return mandatoryError('Type');
       const type = getKeyIfExists('contractType', lower[0].toUpperCase() + lower.substr(1));
       if (!type) return wrongValueError('Type');
-      if (type === 'mandate' && !blockframesAdmin) return {
-        value: undefined,
-        error: {
-          type: 'error',
-          name: 'Forbidden Type',
-          reason: 'Only admin can import mandates.',
-          hint: 'Please ensure the corresponding sheet field value is "sale".'
-        }
-      };
+      if (type === 'mandate' && !blockframesAdmin)
+        return {
+          value: undefined,
+          error: {
+            type: 'error',
+            name: 'Forbidden Type',
+            reason: 'Only admin can import mandates.',
+            hint: 'Please ensure the corresponding sheet field value is "sale".',
+          },
+        };
       return lower.toLowerCase() as 'mandate' | 'sale';
     },
     /* c */ 'contract.sellerId': async (value: string) => {
@@ -163,10 +157,8 @@ export async function formatContract(
             error: {
               type: 'error',
               name: 'Forbidden Licensor',
-              reason:
-                'Internal sales don\'t need to be imported and will appear automatically on your dashboard.',
-              hint:
-                'Please ensure that the Licensor name is not "Archipel Content". Only admin can import internal sales.',
+              reason: "Internal sales don't need to be imported and will appear automatically on your dashboard.",
+              hint: 'Please ensure that the Licensor name is not "Archipel Content". Only admin can import internal sales.',
             },
           };
         return centralOrgId.catalog;
@@ -175,94 +167,97 @@ export async function formatContract(
         if (!sellerId) {
           const seller = await orgService.getValue(value);
           if (!seller) return unknownEntityError('Licensor Organization');
-          return sellerId = value;
+          return (sellerId = value);
         }
-        if (!blockframesAdmin && sellerId !== userOrgId) return {
-          value: undefined,
-          error: {
-            type: 'error',
-            name: 'Forbidden Licensor',
-            reason: 'You should be the seller of this contract. The Licensor name should be your organization name.',
-            hint: 'Please edit the corresponding sheet field'
-          }
-        };
+        if (!blockframesAdmin && sellerId !== userOrgId)
+          return {
+            value: undefined,
+            error: {
+              type: 'error',
+              name: 'Forbidden Licensor',
+              reason: 'You should be the seller of this contract. The Licensor name should be your organization name.',
+              hint: 'Please edit the corresponding sheet field',
+            },
+          };
         return sellerId;
       }
     },
-    /* d */'contract.buyerId': async (value: string, data: FieldsConfig) => {
+    /* d */ 'contract.buyerId': async (value: string, data: FieldsConfig) => {
       if (data.contract.type === 'mandate') {
         if (!value) return mandatoryError('Licensee');
-        if (value !== 'Archipel Content' && value !== centralOrgId.catalog) return {
-          value: undefined,
-          error: {
-            type: 'error',
-            name: 'Forbidden Licensee',
-            reason: 'The Licensee name of a mandate must be "Archipel Content".',
-            hint: 'Please edit the corresponding sheet field'
-          }
-        };
+        if (value !== 'Archipel Content' && value !== centralOrgId.catalog)
+          return {
+            value: undefined,
+            error: {
+              type: 'error',
+              name: 'Forbidden Licensee',
+              reason: 'The Licensee name of a mandate must be "Archipel Content".',
+              hint: 'Please edit the corresponding sheet field',
+            },
+          };
         return centralOrgId.catalog;
       } else {
         /**
-        * @todo #8075
-        * if (!value) return '';
-        * const isInternal = data.contract.sellerId === centralOrgId.catalog;
-        * let buyerId = await getOrgId(value, orgService, orgNameCache);
-        * if (buyerId) return buyerId;
-        * const title = await titleService.getValue(value);
-        * if (!buyerId && title) buyerId = value;
-        * if (isInternal && !buyerId) return unknownEntityError('Licensee Organization');
-        */
+         * @todo #8075
+         * if (!value) return '';
+         * const isInternal = data.contract.sellerId === centralOrgId.catalog;
+         * let buyerId = await getOrgId(value, orgService, orgNameCache);
+         * if (buyerId) return buyerId;
+         * const title = await titleService.getValue(value);
+         * if (!buyerId && title) buyerId = value;
+         * if (isInternal && !buyerId) return unknownEntityError('Licensee Organization');
+         */
         return '';
       }
     },
-    /* e */'term[].territories_included': (value: string) => getGroupedList(value, 'territories', separator),
-    /* f */'term[].territories_excluded': (value: string) => getGroupedList(value, 'territories', separator, { required: false }),
-    /* g */'term[].medias': (value: string) => getGroupedList(value, 'medias', separator),
-    /* h */'term[].exclusive': (value: string) => {
+    /* e */ 'term[].territories_included': (value: string) => getGroupedList(value, 'territories', separator),
+    /* f */ 'term[].territories_excluded': (value: string) =>
+      getGroupedList(value, 'territories', separator, { required: false }),
+    /* g */ 'term[].medias': (value: string) => getGroupedList(value, 'medias', separator),
+    /* h */ 'term[].exclusive': (value: string) => {
       const lower = value.toLowerCase();
       if (!lower) return mandatoryError('Exclusive');
       if (lower !== 'yes' && lower !== 'no') return wrongValueError('Exclusive');
       return lower === 'yes';
     },
-    /* i */'term[].duration.from': (value: string) => {
+    /* i */ 'term[].duration.from': (value: string) => {
       if (!value) return mandatoryError('Duration From');
       return getDate(value, 'Start of Contract') as Date;
     },
-    /* j */'term[].duration.to': (value: string) => {
+    /* j */ 'term[].duration.to': (value: string) => {
       if (!value) return mandatoryError('Duration To');
       return getDate(value, 'End of Contract') as Date;
     },
 
-    /* k */'term[].licensedOriginal': (value: string) => {
+    /* k */ 'term[].licensedOriginal': (value: string) => {
       const lower = value.toLowerCase();
       if (!lower) return mandatoryError('Licensed Original');
       if (lower !== 'yes' && lower !== 'no') return wrongValueError('Licensed Original');
       return lower === 'yes';
     },
-    /* l */'contract.status': (value: string) => {
+    /* l */ 'contract.status': (value: string) => {
       if (!value) return mandatoryError('Status');
       const statusCorrespondences: Record<ImportContractStatus, ContractStatus> = {
         'In Negotiation': 'negotiating',
-        'Accepted': 'accepted',
-        'Declined': 'declined',
+        Accepted: 'accepted',
+        Declined: 'declined',
         'On Signature': 'accepted',
-        'Signed': 'accepted',
+        Signed: 'accepted',
       };
       return statusCorrespondences[value];
     },
-    /* m */'term[].dubbed': (value: string) => getStaticList('languages', value, separator, 'Dubbed', false),
-    /* n */'term[].subtitle': (value: string) => getStaticList('languages', value, separator, 'Subtitle', false),
-    /* o */'term[].caption': (value: string) => getStaticList('languages', value, separator, 'CC', false),
+    /* m */ 'term[].dubbed': (value: string) => getStaticList('languages', value, separator, 'Dubbed', false),
+    /* n */ 'term[].subtitle': (value: string) => getStaticList('languages', value, separator, 'Subtitle', false),
+    /* o */ 'term[].caption': (value: string) => getStaticList('languages', value, separator, 'CC', false),
 
-    /* p */'contract.id': async (value: string) => {
+    /* p */ 'contract.id': async (value: string) => {
       if (value && !blockframesAdmin) return adminOnlyWarning(firestore.createId(), 'Contract ID');
       if (!value) return firestore.createId();
       const exist = await getContract(value, contractService, contractCache);
       if (exist) return alreadyExistError('Contract ID');
       return value;
     },
-    /* q */'parentTerm': async (value: string, data: FieldsConfig) => {
+    /* q */ parentTerm: async (value: string, data: FieldsConfig) => {
       if (value && !blockframesAdmin) return adminOnlyWarning('', 'Mandate ID/Row');
       if (value && data.contract.type === 'mandate')
         return {
@@ -276,26 +271,17 @@ export async function formatContract(
             hint: 'Remove the corresponding sheet field to silence this warning.',
           },
         };
-      if (
-        !value &&
-        data.contract.type === 'sale' &&
-        data.contract.sellerId === centralOrgId.catalog
-      ) {
+      if (!value && data.contract.type === 'sale' && data.contract.sellerId === centralOrgId.catalog) {
         return mandatoryError('Mandate ID/Row');
       }
-      if (
-        value &&
-        data.contract.type === 'sale' &&
-        data.contract.sellerId !== centralOrgId.catalog
-      ) {
+      if (value && data.contract.type === 'sale' && data.contract.sellerId !== centralOrgId.catalog) {
         return {
           value: '',
           error: {
             type: 'warning',
             field: 'parentTerm',
             name: 'Unused Mandate ID/Row',
-            reason:
-              'Mandate ID is used only for internal sales, here the value will be omitted because the sale is external.',
+            reason: 'Mandate ID is used only for internal sales, here the value will be omitted because the sale is external.',
             hint: 'Remove the corresponding sheet field to silence this warning.',
           },
         };
@@ -307,8 +293,11 @@ export async function formatContract(
         return value;
       } else return Number(value);
     },
-    /* r */'contract.stakeholders': async (value: string, data: FieldsConfig) => {
-      const stakeholders = value.split(separator).filter(v => !!v).map(v => v.trim());
+    /* r */ 'contract.stakeholders': async (value: string, data: FieldsConfig) => {
+      const stakeholders = value
+        .split(separator)
+        .filter(v => !!v)
+        .map(v => v.trim());
       const exists = await Promise.all(stakeholders.map(id => getUser({ id }, userService, userCache)));
       const unknownStakeholder = exists.some(e => !e);
       if (unknownStakeholder) return unknownEntityError('Stakeholders');
@@ -319,9 +308,10 @@ export async function formatContract(
           // internal sale
           // seller ID is archipel, we don't need to add it, as mandate stakeholders will be copied here (copy is done bellow ~line 290)
           return [data.contract.buyerId, ...stakeholders];
-        } else { // external sale
+        } else {
+          // external sale
           // if the sale is external the seller is not archipel (it's the owner org), and the buyer is unknown by definition
-          return [data.contract.sellerId, ...stakeholders]
+          return [data.contract.sellerId, ...stakeholders];
         }
       }
     },
@@ -331,9 +321,7 @@ export async function formatContract(
   for (const result of results) {
     const { data, errors } = result;
 
-    const contract = data.contract.type === 'sale'
-      ? createSale(data.contract as Sale)
-      : createMandate(data.contract as Mandate);
+    const contract = data.contract.type === 'sale' ? createSale(data.contract as Sale) : createMandate(data.contract as Mandate);
 
     const { titleId, sellerId } = contract;
     if (titleId) {
@@ -343,7 +331,7 @@ export async function formatContract(
           type: 'error',
           name: 'Wrong Licensor.',
           reason: `The movie does not belong to the licensor.`,
-          hint: `Please ensure the movie is a movie owned by the licensor.`
+          hint: `Please ensure the movie is a movie owned by the licensor.`,
         });
       }
     }
@@ -367,11 +355,7 @@ export async function formatContract(
         // here we are sure that the term exist because we already tested it above (~line 210, column o: contract.parentTerm)
         contract.parentTermId = data.parentTerm;
         // moreover the corresponding mandate is already in the contractCache so the look up should be efficient
-        const mandate = await checkParentTerm(
-          contract.parentTermId,
-          contractService,
-          contractCache
-        );
+        const mandate = await checkParentTerm(contract.parentTermId, contractService, contractCache);
         contract.stakeholders.concat(mandate.stakeholders);
       }
     }

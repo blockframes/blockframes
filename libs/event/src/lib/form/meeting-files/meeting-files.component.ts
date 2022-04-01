@@ -6,25 +6,24 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { MatDialog } from '@angular/material/dialog';
 import { FilePickerComponent } from '@blockframes/media/file/picker/picker.component';
 import { FilePreviewComponent } from '@blockframes/media/file/preview/preview.component';
-import { StorageFile } from '@blockframes/model';
+import { StorageFile } from '@blockframes/shared/model';
 
 @Component({
   selector: 'event-meeting-files',
   templateUrl: './meeting-files.component.html',
   styleUrls: ['./meeting-files.component.scss'],
   host: {
-    class: 'surface'
+    class: 'surface',
   },
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MeetingFilesComponent implements OnInit {
-
   constructor(
     private cdr: ChangeDetectorRef,
     private dynTitle: DynamicTitleService,
     private dialog: MatDialog,
-    private shell: EventFormShellComponent,
-  ) { }
+    private shell: EventFormShellComponent
+  ) {}
 
   get files() {
     return (this.shell.form.get('meta') as MeetingForm).get('files');
@@ -41,21 +40,25 @@ export class MeetingFilesComponent implements OnInit {
   }
 
   previewFile(ref: StorageFile) {
-    this.dialog.open(FilePreviewComponent, { data: { ref }, width: '80vw', height: '80vh', autoFocus: false })
+    this.dialog.open(FilePreviewComponent, { data: { ref }, width: '80vw', height: '80vh', autoFocus: false });
   }
 
   openFileSelector() {
-    this.dialog.open(FilePickerComponent, {
-      width: '80%',
-      height: '80%',
-      disableClose: true,
-      data: {
-        selectedFiles: this.files.value,
-      }
-    }).afterClosed().pipe(take(1)).subscribe(result => {
-      this.files.patchAllValue(result);
-      this.files.markAsDirty();
-      this.cdr.markForCheck();
-    });
+    this.dialog
+      .open(FilePickerComponent, {
+        width: '80%',
+        height: '80%',
+        disableClose: true,
+        data: {
+          selectedFiles: this.files.value,
+        },
+      })
+      .afterClosed()
+      .pipe(take(1))
+      .subscribe(result => {
+        this.files.patchAllValue(result);
+        this.files.markAsDirty();
+        this.cdr.markForCheck();
+      });
   }
 }

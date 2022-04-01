@@ -25,13 +25,7 @@ import type {
   NumberRange,
   ScreeningStatus,
 } from '@blockframes/utils/static-model/types';
-import type {
-  Producer,
-  Crew,
-  Cast,
-  Stakeholder,
-  Director,
-} from './identity';
+import type { Producer, Crew, Cast, Stakeholder, Director } from './identity';
 import type { DocumentMeta } from './meta';
 import type { Timestamp } from './timestamp';
 

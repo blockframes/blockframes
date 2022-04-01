@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { MeetingPdfControl } from '@blockframes/model';
+import { MeetingPdfControl } from '@blockframes/shared/model';
 
 @Component({
   selector: '[control] pdf-control',
@@ -9,7 +9,6 @@ import { MeetingPdfControl } from '@blockframes/model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PdfControlComponent {
-
   control$ = new BehaviorSubject<MeetingPdfControl>(undefined);
   @Input() set control(value: MeetingPdfControl | undefined) {
     this.control$.next(value);
@@ -19,7 +18,6 @@ export class PdfControlComponent {
 
     if (value?.currentPage < value?.totalPages) this.nextDisable$.next(false);
     else this.nextDisable$.next(true);
-
   }
 
   @Output() controlChange = new EventEmitter<MeetingPdfControl>();

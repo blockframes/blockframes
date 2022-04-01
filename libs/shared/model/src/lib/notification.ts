@@ -83,7 +83,7 @@ interface NotificationBase<D> {
    * eg: contracts/{contractId}/negotiations/{negotiationId}
    */
   docPath?: string;
-  offerId?: string,
+  offerId?: string;
   organization?: PublicOrganization;
   invitation?: PublicInvitation;
   bucket?: Bucket<Timestamp>;
@@ -94,10 +94,10 @@ interface NotificationBase<D> {
   email?: {
     isSent: boolean;
     error?: EmailErrorCodes;
-  },
+  };
   app?: {
     isRead: boolean;
-  }
+  };
 }
 
 type Timestamp = firestore.Timestamp;

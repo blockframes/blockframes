@@ -1,6 +1,6 @@
 import { FormControl } from '@angular/forms';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
-import { Movie, createMovie } from '@blockframes/model';
+import { Movie, createMovie } from '@blockframes/shared/model';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
 import { FormList } from '@blockframes/utils/form/forms/list.form';
 
@@ -9,7 +9,7 @@ function createMovieCrmControls(entity: Partial<Movie>) {
   return {
     productionStatus: new FormControl(movie.productionStatus),
     internalRef: new FormControl(movie.internalRef),
-    orgIds: FormList.factory(movie.orgIds, (el) => new FormControl(el)),
+    orgIds: FormList.factory(movie.orgIds, el => new FormControl(el)),
   };
 }
 
@@ -27,7 +27,7 @@ function createMovieImageCrmControls(entity: Partial<Movie>) {
   return {
     poster: new StorageFileForm(movie.poster),
     banner: new StorageFileForm(movie.banner),
-    still_photo: FormList.factory(movie.promotional.still_photo, (el) => new StorageFileForm(el)),
+    still_photo: FormList.factory(movie.promotional.still_photo, el => new StorageFileForm(el)),
   };
 }
 
@@ -57,12 +57,8 @@ export class MoviePictureCrmForm extends FormEntity<MoviePictureCrmControl> {
     ];
 
     const applyFilters = (invitations, filters) => {
-      const inv = filters.name?.length
-        ? invitations.filter((inv) => filters.name.includes(inv.name))
-        : invitations;
-      return filters.lastName?.length
-        ? inv.filter((inv) => filters.lastName.includes(inv.lastName))
-        : inv;
+      const inv = filters.name?.length ? invitations.filter(inv => filters.name.includes(inv.name)) : invitations;
+      return filters.lastName?.length ? inv.filter(inv => filters.lastName.includes(inv.lastName)) : inv;
     };
 
     const arrByName = applyFilters(arr, { name: ['jean', 'seguillon', 'test'] });

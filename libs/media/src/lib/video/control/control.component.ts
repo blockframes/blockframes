@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { MatSliderChange } from '@angular/material/slider';
-import { MeetingVideoControl } from '@blockframes/model';
-
+import { MeetingVideoControl } from '@blockframes/shared/model';
 
 @Component({
   selector: '[control] video-control',
@@ -11,8 +10,6 @@ import { MeetingVideoControl } from '@blockframes/model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VideoControlComponent {
-
-
   control$ = new BehaviorSubject<MeetingVideoControl>(undefined);
   @Input() set control(value: MeetingVideoControl) {
     this.control$.next(value);
@@ -20,13 +17,11 @@ export class VideoControlComponent {
 
   @Output() controlChange = new EventEmitter<MeetingVideoControl>();
 
-
   /**
    * Hold the id of the setInterval callback that is used to
    * increment the time-code & slider of the video position
    */
   intervalId: number;
-
 
   startInterval() {
     this.intervalId = window.setInterval(() => {

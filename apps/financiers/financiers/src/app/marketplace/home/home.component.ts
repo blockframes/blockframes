@@ -1,6 +1,6 @@
 // Angular
 import { Component, OnInit, ChangeDetectionStrategy, HostBinding } from '@angular/core';
-import { createStorageFile } from '@blockframes/model';
+import { createStorageFile } from '@blockframes/shared/model';
 
 // Blockframes
 import { AlgoliaMovie, AlgoliaOrganization, AlgoliaService, SearchResponse } from '@blockframes/utils/algolia';
@@ -12,18 +12,17 @@ interface CarouselSection {
   title: string;
   movies: Promise<SearchResponse<AlgoliaMovie>>;
   queryParams?: Record<string, string>;
-  size: 'banner' | 'poster'
+  size: 'banner' | 'poster';
 }
 
 @Component({
   selector: 'financiers-marketplace-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent implements OnInit {
-
-  @HostBinding('test-id="content"') testId
+  @HostBinding('test-id="content"') testId;
 
   public sections: CarouselSection[];
   public orgs: Promise<SearchResponse<AlgoliaOrganization>>;
@@ -32,12 +31,14 @@ export class HomeComponent implements OnInit {
     {
       title: 'Tag along with professional content financiers',
       imgAsset: 'tag_along.svg',
-      description: 'Co-invest with professional funds and benefit from « pari passu » financial conditions, already optimized thanks to their expertise. '
+      description:
+        'Co-invest with professional funds and benefit from « pari passu » financial conditions, already optimized thanks to their expertise. ',
     },
     {
       title: 'Get access to prominent film companies and projects',
       imgAsset: 'topfilms.svg',
-      description: 'Find the hottest projects selected by a pool of industry veterans and benefit from their knowledge of the industry.'
+      description:
+        'Find the hottest projects selected by a pool of industry veterans and benefit from their knowledge of the industry.',
     },
     {
       title: 'Learn about investing in the content industry',
@@ -45,21 +46,17 @@ export class HomeComponent implements OnInit {
       description: 'No experience needed. \n Discover why content is a profitable investment.',
       link: {
         href: 'assets/docs/film-industry.pdf',
-        text: 'Download our investment guide.'
-      }
+        text: 'Download our investment guide.',
+      },
     },
     {
       title: 'Enjoy exclusive privileges',
       imgAsset: 'exclusive_priviledges.svg',
-      description: 'Get perks and live the full experience \n of the content industry.'
-    }
+      description: 'Get perks and live the full experience \n of the content industry.',
+    },
   ];
 
-
-  constructor(
-    private algoliaService: AlgoliaService,
-    private dynTitle: DynamicTitleService,
-  ) { }
+  constructor(private algoliaService: AlgoliaService, private dynTitle: DynamicTitleService) {}
 
   ngOnInit() {
     this.dynTitle.setPageTitle('Home');
@@ -67,11 +64,12 @@ export class HomeComponent implements OnInit {
       {
         title: 'New on Media Financiers',
         movies: this.algoliaService.query('movie', { activePage: 0, limitResultsTo: 50, facets: { storeStatus: 'accepted' } }),
-        size: 'poster'
-      }
+        size: 'poster',
+      },
       // CMS will add more
     ];
-    this.orgs = this.algoliaService.query('org', { activePage: 0, limitResultsTo: 50, facets: { isAccepted: true, hasAcceptedMovies: true } })
+    this.orgs = this.algoliaService
+      .query('org', { activePage: 0, limitResultsTo: 50, facets: { isAccepted: true, hasAcceptedMovies: true } })
       .then(result => {
         for (const org of result.hits) {
           org.logo = createStorageFile({
@@ -79,10 +77,10 @@ export class HomeComponent implements OnInit {
             collection: 'orgs',
             docId: org.objectID,
             field: 'logo',
-            privacy: 'public'
+            privacy: 'public',
           }) as any;
         }
-        return result
-      })
+        return result;
+      });
   }
 }

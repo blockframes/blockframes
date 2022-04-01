@@ -1,6 +1,6 @@
 import { NgModule, Pipe, PipeTransform } from '@angular/core';
 import { formatDate } from '@angular/common';
-import { MovieShooting } from '@blockframes/model';
+import { MovieShooting } from '@blockframes/shared/model';
 import { territories } from '@blockframes/utils/static-model/static-model';
 import { TerritoryValue } from '@blockframes/utils/static-model';
 import { toDate } from '@blockframes/utils/helpers';
@@ -20,8 +20,8 @@ export class ShootingDatesPipe implements PipeTransform {
       return `Shooting starting the ${started} and is still in progress`;
     } else if (shooting.dates.planned) {
       const { from, to } = shooting.dates.planned;
-      const start = [from.period, from.month, from.year].filter((v) => !!v).join(' ');
-      const end = [to.period, to.month, to.year].filter((v) => !!v).join(' ');
+      const start = [from.period, from.month, from.year].filter(v => !!v).join(' ');
+      const end = [to.period, to.month, to.year].filter(v => !!v).join(' ');
       return `Shooting is planned from ${start} until ${end}`;
     } else {
       return 'No shooting date provided';

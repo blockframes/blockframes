@@ -4,7 +4,7 @@ import { CollectionService, CollectionConfig } from 'akita-ng-fire';
 import { Campaign } from './campaign.model';
 import { removeUndefined } from '@blockframes/utils/helpers';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { Movie } from '@blockframes/model';
+import { Movie } from '@blockframes/shared/model';
 import { combineLatest, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ActiveState, EntityState } from '@datorama/akita';

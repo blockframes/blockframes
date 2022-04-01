@@ -3,7 +3,7 @@ import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 
 // Blockframes
-import { createReleaseYear, Movie } from '@blockframes/model';
+import { createReleaseYear, Movie } from '@blockframes/shared/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { App } from '@blockframes/utils/apps';
 import { APP } from '@blockframes/utils/routes/utils';
@@ -31,11 +31,7 @@ const predefinedTitleConfig: Record<App, Partial<Movie>> = {
 export class MovieFormStartTunnelComponent {
   public loadingTunnel = new BehaviorSubject(false);
 
-  constructor(
-    private movieService: MovieService,
-    private router: Router,
-    @Inject(APP) private app: App
-  ) {}
+  constructor(private movieService: MovieService, private router: Router, @Inject(APP) private app: App) {}
 
   async navigateToTunnel() {
     this.loadingTunnel.next(true);

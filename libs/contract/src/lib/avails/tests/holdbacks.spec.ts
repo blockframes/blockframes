@@ -1,24 +1,56 @@
 import { Media, Territory } from '@blockframes/utils/static-model';
 import { collidingHoldback, getCollidingHoldbacks } from '../avails';
-import { createHoldback, Holdback, Duration, Term, createTerm } from '@blockframes/model';
+import { createHoldback, Holdback, Duration, Term, createTerm } from '@blockframes/shared/model';
 
 // Territories
 const nonCollidingTerritoriesA: Territory[] = [
-  'argentina', 'armenia', 'aruba', 'australia',
-  'austria', 'azerbaijan', 'bahamas', 'bahrain',
-  'bangladesh', 'barbados', 'belarus', 'belgium',
-  'belize', 'benin', 'bermuda', 'bhutan', 'bolivia', 'botswana', 'brazil',
-]
+  'argentina',
+  'armenia',
+  'aruba',
+  'australia',
+  'austria',
+  'azerbaijan',
+  'bahamas',
+  'bahrain',
+  'bangladesh',
+  'barbados',
+  'belarus',
+  'belgium',
+  'belize',
+  'benin',
+  'bermuda',
+  'bhutan',
+  'bolivia',
+  'botswana',
+  'brazil',
+];
 const nonCollidingTerritoriesB: Territory[] = [
-  'kyrgyzstan', 'laos', 'latvia', 'lebanon',
-  'lesotho', 'liberia', 'libya', 'liechtenstein',
-  'lithuania', 'luxembourg', 'macao', 'madagascar',
-  'malawi', 'malaysia', 'maldives', 'mali', 'malta',
-  'marshall', 'martinique', 'mauritania', 'mauritius',
-  'mexico', 'micronesia',
-]
-const collidingTerritoriesA = nonCollidingTerritoriesA
-const collidingTerritoriesB = [...nonCollidingTerritoriesB, collidingTerritoriesA[0]]
+  'kyrgyzstan',
+  'laos',
+  'latvia',
+  'lebanon',
+  'lesotho',
+  'liberia',
+  'libya',
+  'liechtenstein',
+  'lithuania',
+  'luxembourg',
+  'macao',
+  'madagascar',
+  'malawi',
+  'malaysia',
+  'maldives',
+  'mali',
+  'malta',
+  'marshall',
+  'martinique',
+  'mauritania',
+  'mauritius',
+  'mexico',
+  'micronesia',
+];
+const collidingTerritoriesA = nonCollidingTerritoriesA;
+const collidingTerritoriesB = [...nonCollidingTerritoriesB, collidingTerritoriesA[0]];
 
 // Durations
 const nonCollidingBeforeDurationA: Duration = { from: new Date('01/01/2028'), to: new Date('06/30/2029') };
@@ -29,87 +61,69 @@ const collidingDurationA: Duration = { from: new Date('01/01/2030'), to: new Dat
 const collidingDurationB: Duration = { from: new Date('06/01/2030'), to: new Date('08/01/2030') };
 
 // Medias
-const nonCollidingMediaA: Media[] = [
-  'payTv', 'freeTv', 'payPerView', 'est', 'nVod', 'aVod', 'fVod',
-]
-const nonCollidingMediaB: Media[] = [
-  'theatrical', 'video', 'planes', 'boats', 'hotels', 'educational', 'rental',
-]
-const collidingMediaA = nonCollidingMediaA
-const collidingMediaB = [...nonCollidingMediaB, collidingMediaA[0]]
+const nonCollidingMediaA: Media[] = ['payTv', 'freeTv', 'payPerView', 'est', 'nVod', 'aVod', 'fVod'];
+const nonCollidingMediaB: Media[] = ['theatrical', 'video', 'planes', 'boats', 'hotels', 'educational', 'rental'];
+const collidingMediaA = nonCollidingMediaA;
+const collidingMediaB = [...nonCollidingMediaB, collidingMediaA[0]];
 
 // Holdbacks and terms
 const nonCollidingHoldback: Holdback = createHoldback({
   territories: nonCollidingTerritoriesA,
   medias: nonCollidingMediaA,
   duration: nonCollidingBeforeDurationA,
-})
+});
 const nonCollidingTerm: Term = createTerm({
   territories: nonCollidingTerritoriesB,
   medias: nonCollidingMediaB,
   duration: nonCollidingBeforeDurationB,
-})
+});
 const collidingAllHoldback: Holdback = createHoldback({
   territories: collidingTerritoriesA,
   medias: collidingMediaA,
   duration: collidingDurationA,
-})
+});
 const collidingAllTerm: Term = createTerm({
   territories: collidingTerritoriesB,
   medias: collidingMediaB,
   duration: collidingDurationB,
-})
+});
 const collidingTerritoriesHoldback: Holdback = createHoldback({
   territories: collidingTerritoriesA,
   medias: nonCollidingMediaA,
   duration: nonCollidingBeforeDurationA,
-})
+});
 const collidingTerritoriesTerm: Term = createTerm({
   territories: collidingTerritoriesB,
   medias: nonCollidingMediaB,
   duration: nonCollidingBeforeDurationB,
-})
+});
 const collidingMediasHoldback: Holdback = createHoldback({
   territories: nonCollidingTerritoriesA,
   medias: collidingMediaA,
   duration: nonCollidingAfterDurationA,
-})
+});
 const collidingMediasTerm: Term = createTerm({
   territories: nonCollidingTerritoriesB,
   medias: collidingMediaB,
   duration: nonCollidingAfterDurationB,
-})
+});
 const collidingDurationHoldback: Holdback = createHoldback({
   territories: nonCollidingTerritoriesA,
   medias: nonCollidingMediaA,
   duration: collidingDurationA,
-})
+});
 const collidingDurationTerm: Term = createTerm({
   territories: nonCollidingTerritoriesB,
   medias: nonCollidingMediaB,
   duration: collidingDurationA,
-})
-
+});
 
 // Holdback[] and term[]
 
-const nonCollidingHoldbacks = [
-  nonCollidingHoldback,
-  collidingTerritoriesHoldback,
-  collidingMediasHoldback,
-]
-const nonCollidingTerms = [
-  nonCollidingTerm, collidingTerritoriesTerm,
-  collidingMediasTerm, collidingDurationTerm,
-]
-const collidingHoldbacks = [
-  ...nonCollidingHoldbacks,
-  collidingAllHoldback,
-]
-const collidingTerms = [
-  ...nonCollidingTerms,
-  collidingAllTerm,
-]
+const nonCollidingHoldbacks = [nonCollidingHoldback, collidingTerritoriesHoldback, collidingMediasHoldback];
+const nonCollidingTerms = [nonCollidingTerm, collidingTerritoriesTerm, collidingMediasTerm, collidingDurationTerm];
+const collidingHoldbacks = [...nonCollidingHoldbacks, collidingAllHoldback];
+const collidingTerms = [...nonCollidingTerms, collidingAllTerm];
 
 describe('Holdbacks', () => {
   describe('Test collidingHoldback pure function', () => {

@@ -1,12 +1,12 @@
 import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
-import { OrganizationMember, UserRole } from '@blockframes/model';
+import { OrganizationMember, UserRole } from '@blockframes/shared/model';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 
 @Component({
   selector: 'member-repertory',
   templateUrl: './member-repertory.component.html',
   styleUrls: ['./member-repertory.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MemberRepertoryComponent {
   @Input() members: OrganizationMember[];
@@ -26,14 +26,13 @@ export class MemberRepertoryComponent {
     lastName: 'Last Name',
     email: 'Email Address',
     position: 'Position',
-    role: 'Permissions'
+    role: 'Permissions',
   };
 
   @Input() memberColumnsIndex = ['firstName', 'lastName', 'email', 'position', 'role'];
 
-
   get variableColumns() {
-    return this.memberColumnsIndex.filter(col => !['firstName', 'lastName', 'role', 'uid', 'edit'].includes(col))
+    return this.memberColumnsIndex.filter(col => !['firstName', 'lastName', 'role', 'uid', 'edit'].includes(col));
   }
 
   public displayRole(role: UserRole) {

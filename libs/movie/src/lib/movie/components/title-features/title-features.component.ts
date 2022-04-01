@@ -1,5 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import { Movie } from '@blockframes/model';
+import { Movie } from '@blockframes/shared/model';
 import {
   productionStatus,
   contentType,
@@ -17,14 +17,12 @@ interface TitleFeature {
 function createTitleFeatureView(movie: Movie): TitleFeature[] {
   const { genres, runningTime, originalLanguages, originCountries } = movie;
   const isTv = movie.contentType === 'tv';
-  const convertedGenres = genres.map((genre) => staticGenres[genre]);
-  const convertedRunTime = isTv
-    ? [formatRunningTime(runningTime), 'Per Episode']
-    : formatRunningTime(runningTime);
-  const convertedOriginalLanguages = originalLanguages.map((language) => languages[language]);
+  const convertedGenres = genres.map(genre => staticGenres[genre]);
+  const convertedRunTime = isTv ? [formatRunningTime(runningTime), 'Per Episode'] : formatRunningTime(runningTime);
+  const convertedOriginalLanguages = originalLanguages.map(language => languages[language]);
   const convertedOriginCountries = originCountries
-    .map((country) => getISO3166TerritoryFromSlug(country))
-    .map((country) => country.iso_a2);
+    .map(country => getISO3166TerritoryFromSlug(country))
+    .map(country => country.iso_a2);
   const statusLabel = productionStatus[movie.productionStatus];
   const season = movie.title.series > 0 ? `Season ${movie.title.series}` : '';
   const episodeCount = runningTime.episodeCount > 0 ? `${runningTime.episodeCount} episodes` : '';
@@ -38,7 +36,7 @@ function createTitleFeatureView(movie: Movie): TitleFeature[] {
     episodeCount,
     statusLabel,
   ];
-  return features.map((feature) => {
+  return features.map(feature => {
     /* If feature is an array, take the first value for displaying it and the rest for the tooltip */
     if (Array.isArray(feature)) {
       return {

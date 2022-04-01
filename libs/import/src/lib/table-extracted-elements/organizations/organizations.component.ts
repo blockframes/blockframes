@@ -10,7 +10,7 @@ import { sortingDataAccessor } from '@blockframes/utils/table';
 import { OrganizationsImportState, SpreadsheetImportError } from '../../utils';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { AuthService } from '@blockframes/auth/+state';
-import { PublicUser } from '@blockframes/model';
+import { PublicUser } from '@blockframes/shared/model';
 import { getOrgAppAccess } from '@blockframes/utils/apps';
 import { OrgEmailData } from '@blockframes/utils/emails/utils';
 
@@ -22,10 +22,9 @@ const hasImportErrors = (importState: OrganizationsImportState, type: string = '
   selector: 'import-table-extracted-organizations',
   templateUrl: './organizations.component.html',
   styleUrls: ['./organizations.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableExtractedOrganizationsComponent implements OnInit {
-
   @Input() rows: MatTableDataSource<OrganizationsImportState>;
   @Input() mode: string;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -50,7 +49,7 @@ export class TableExtractedOrganizationsComponent implements OnInit {
     private dialog: MatDialog,
     private authService: AuthService,
     private orgService: OrganizationService
-  ) { }
+  ) {}
 
   ngOnInit() {
     // Mat table setup @TODO #7429
@@ -83,7 +82,11 @@ export class TableExtractedOrganizationsComponent implements OnInit {
       this.processedOrgs = 0;
       return true;
     } catch (err) {
-      this.snackBar.open(`Could not import all organizations (${this.processedOrgs} / ${this.selection.selected.length})`, 'close', { duration: 3000 });
+      this.snackBar.open(
+        `Could not import all organizations (${this.processedOrgs} / ${this.selection.selected.length})`,
+        'close',
+        { duration: 3000 }
+      );
       this.processedOrgs = 0;
     }
   }
@@ -99,7 +102,11 @@ export class TableExtractedOrganizationsComponent implements OnInit {
       this.processedOrgs = 0;
       return true;
     } catch (err) {
-      this.snackBar.open(`Could not update all organizations (${this.processedOrgs} / ${this.selection.selected.length})`, 'close', { duration: 3000 });
+      this.snackBar.open(
+        `Could not update all organizations (${this.processedOrgs} / ${this.selection.selected.length})`,
+        'close',
+        { duration: 3000 }
+      );
       this.processedOrgs = 0;
     }
   }
@@ -109,21 +116,16 @@ export class TableExtractedOrganizationsComponent implements OnInit {
    * @param importState
    */
   private async addOrganization(importState: OrganizationsImportState): Promise<boolean> {
-
     const [firstApp] = getOrgAppAccess(importState.org);
     const superAdmin = importState.superAdmin;
 
     const orgData: OrgEmailData = {
       denomination: importState.org.denomination.full ?? importState.org.denomination.public,
       id: importState.org.id || '',
-      email: importState.org.email || ''
-    }
+      email: importState.org.email || '',
+    };
 
-    const newUser: PublicUser = await this.authService.createUser(
-      importState.superAdmin.email,
-      orgData,
-      firstApp
-    );
+    const newUser: PublicUser = await this.authService.createUser(importState.superAdmin.email, orgData, firstApp);
 
     superAdmin.uid = newUser.uid;
 
@@ -173,9 +175,7 @@ export class TableExtractedOrganizationsComponent implements OnInit {
    * Selects all rows if they are not all selected; otherwise clear selection.
    */
   masterToggle() {
-    this.isAllSelected()
-      ? this.selection.clear()
-      : this.rows.data.forEach(row => this.selection.select(row));
+    this.isAllSelected() ? this.selection.clear() : this.rows.data.forEach(row => this.selection.select(row));
   }
 
   /**
@@ -203,5 +203,4 @@ export class TableExtractedOrganizationsComponent implements OnInit {
     const dataStr = data.org.id + data.org.denomination.full + data.org.denomination.public + data.org.email;
     return dataStr.toLowerCase().indexOf(filter) !== -1;
   }
-
 }

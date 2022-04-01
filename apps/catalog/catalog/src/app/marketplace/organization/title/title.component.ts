@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { ViewComponent } from '../view/view.component';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { Movie } from '@blockframes/model';
+import { Movie } from '@blockframes/shared/model';
 import { scaleIn } from '@blockframes/utils/animations/fade';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Observable } from 'rxjs';
@@ -19,17 +19,13 @@ export class TitleComponent implements OnInit {
 
   trackById = (i: number, doc: { id: string }) => doc.id;
 
-  constructor(
-    private service: MovieService,
-    private parent: ViewComponent,
-    private dynTitle: DynamicTitleService
-  ) {}
+  constructor(private service: MovieService, private parent: ViewComponent, private dynTitle: DynamicTitleService) {}
 
   ngOnInit() {
     this.dynTitle.setPageTitle('Sales Agent', 'Line-up');
     this.titles$ = this.parent.org$.pipe(
-      switchMap((org) => {
-        return this.service.valueChanges((ref) =>
+      switchMap(org => {
+        return this.service.valueChanges(ref =>
           ref
             .where('orgIds', 'array-contains', org.id)
             .where('app.catalog.status', '==', 'accepted')

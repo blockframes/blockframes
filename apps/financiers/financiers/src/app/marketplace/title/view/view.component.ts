@@ -3,7 +3,7 @@ import { getCurrencySymbol } from '@angular/common';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { mainRoute, additionalRoute, artisticRoute, productionRoute } from '@blockframes/movie/marketplace';
-import { Organization } from '@blockframes/model';
+import { Organization } from '@blockframes/shared/model';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { CampaignService } from '@blockframes/campaign/+state';
 import { RouteDescription } from '@blockframes/utils/common-interfaces';
@@ -30,7 +30,7 @@ interface EmailData {
   selector: 'financiers-movie-view',
   templateUrl: './view.component.html',
   styleUrls: ['./view.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MarketplaceMovieViewComponent {
   @ViewChild('dialogTemplate') dialogTemplate: TemplateRef<unknown>;
@@ -42,12 +42,12 @@ export class MarketplaceMovieViewComponent {
 
   public orgs$ = this.movie$.pipe(
     switchMap(movie => this.orgService.valueChanges(movie.orgIds)),
-    shareReplay({ refCount: true, bufferSize: 1 }),
+    shareReplay({ refCount: true, bufferSize: 1 })
   );
 
   public campaign$ = this.movie$.pipe(
     switchMap(movie => this.campaignService.valueChanges(movie.id)),
-    tap(campaign => this.currency = campaign.currency)
+    tap(campaign => (this.currency = campaign.currency))
   );
 
   public currency: string;
@@ -57,23 +57,20 @@ export class MarketplaceMovieViewComponent {
     artisticRoute,
     {
       ...productionRoute,
-      label: 'Production'
+      label: 'Production',
     },
     additionalRoute,
     {
       path: 'financing',
-      label: 'Financial'
+      label: 'Financial',
     },
     {
       path: 'investment',
-      label: 'Investment'
-    }
+      label: 'Investment',
+    },
   ];
 
-  promoLinks = [
-    'scenario',
-    'presentation_deck',
-  ];
+  promoLinks = ['scenario', 'presentation_deck'];
 
   constructor(
     private route: ActivatedRoute,
@@ -86,19 +83,19 @@ export class MarketplaceMovieViewComponent {
     private snackbar: MatSnackBar,
     private sendgrid: SendgridService,
     public router: Router
-  ) { }
+  ) {}
 
   openForm(orgs: Organization[]) {
     const form = new FormGroup({
       subject: new FormControl('', Validators.required),
       scope: new FormGroup({
         from: new FormControl(),
-        to: new FormControl()
+        to: new FormControl(),
       }),
       message: new FormControl(),
     });
     this.dialog.open(this.dialogTemplate, {
-      data: { orgs, form }
+      data: { orgs, form },
     });
   }
 
@@ -110,8 +107,8 @@ export class MarketplaceMovieViewComponent {
     const orgUserSubject: OrgEmailData = {
       denomination: org.denomination.full ?? org.denomination.public,
       id: org.id || '',
-      email: org.email || ''
-    }
+      email: org.email || '',
+    };
 
     const promises: Promise<ErrorResultResponse>[] = [];
 
@@ -143,7 +140,7 @@ export class MarketplaceMovieViewComponent {
          * store it for access in E2E test.
          * A single email is sufficient to check the email template
          */
-        if (cyCheck && (userEmail !== userSubject.email)) {
+        if (cyCheck && userEmail !== userSubject.email) {
           emailReady = true;
           ++numEmails;
           window['cyEmailData'] = data;
@@ -151,7 +148,7 @@ export class MarketplaceMovieViewComponent {
 
         const promise = this.sendgrid.sendWithTemplate({
           request: { templateId, data, to: toUser.email },
-          app: 'financiers'
+          app: 'financiers',
         });
         promises.push(promise);
       }
@@ -162,9 +159,7 @@ export class MarketplaceMovieViewComponent {
     }
     const res = await Promise.all(promises);
     const success = res.some(r => r.result);
-    const message = success
-      ? 'Your email has been sent.'
-      : 'An error occurred. Your email was not sent.';
+    const message = success ? 'Your email has been sent.' : 'An error occurred. Your email was not sent.';
     this.snackbar.open(message, null, { duration: 3000 });
   }
 }

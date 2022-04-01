@@ -9,8 +9,8 @@ import {
   createPublicOrganization,
   Organization,
   PublicOrganization,
-  Invitation
-} from '@blockframes/model';
+  Invitation,
+} from '@blockframes/shared/model';
 import { DbRecord, throwOnProduction } from '../util';
 import { CollectionReference, QueryDocumentSnapshot, QuerySnapshot } from '../types';
 import { Queue } from '../queue';
@@ -43,24 +43,11 @@ function fakeIp() {
 function fakeFiscalNumber() {
   const fakeValues = ['FR', 'EN', 'PL', 'GB', 'AL'];
   const start = fakeValues[Math.floor(Math.random() * fakeValues.length)];
-  return (
-    start +
-    ' ' +
-    randomNumber() +
-    '-' +
-    randomNumber() +
-    '-' +
-    randomNumber() +
-    '-' +
-    randomNumber()
-  );
+  return start + ' ' + randomNumber() + '-' + randomNumber() + '-' + randomNumber() + '-' + randomNumber();
 }
 
-function hasKeys<T extends Record<string, any>>(
-  doc: Record<string, any>,
-  ...keys: (keyof T)[]
-): doc is T {
-  return keys.every((key) => key in doc);
+function hasKeys<T extends Record<string, any>>(doc: Record<string, any>, ...keys: (keyof T)[]): doc is T {
+  return keys.every(key => key in doc);
 }
 
 function processUser<T extends User | PublicUser>(u: T): T {
@@ -139,9 +126,7 @@ function processMovie(movie: Movie): Movie {
     movie.promotional.videos.screener = updateHostedVideo(movie.promotional.videos.screener);
   }
   if (movie.promotional?.videos?.otherVideos) {
-    movie.promotional.videos.otherVideos = movie.promotional.videos.otherVideos.map(
-      updateHostedVideo
-    );
+    movie.promotional.videos.otherVideos = movie.promotional.videos.otherVideos.map(updateHostedVideo);
   }
   if (movie.promotional?.videos?.salesPitch?.jwPlayerId) {
     movie.promotional.videos.salesPitch = updateHostedVideo(movie.promotional.videos.salesPitch);
@@ -169,7 +154,7 @@ export function anonymizeDocument({ docPath, content: doc }: DbRecord) {
     'incomes/',
     'offers/',
   ];
-  if (!doc || ignorePaths.some((path) => docPath.includes(path))) return { docPath, content: doc };
+  if (!doc || ignorePaths.some(path => docPath.includes(path))) return { docPath, content: doc };
 
   try {
     if (docPath.includes('users/') && hasKeys<User>(doc, 'uid') && doc?.email) {
@@ -194,8 +179,7 @@ export function anonymizeDocument({ docPath, content: doc }: DbRecord) {
     }
     if (docPath.includes('_META')) {
       // Always set maintenance
-      if (hasKeys<IMaintenanceDoc>(doc, 'endedAt'))
-        return { docPath, content: processMaintenanceDoc(doc) };
+      if (hasKeys<IMaintenanceDoc>(doc, 'endedAt')) return { docPath, content: processMaintenanceDoc(doc) };
       return { docPath, content: doc };
     }
   } catch (e) {
@@ -203,8 +187,7 @@ export function anonymizeDocument({ docPath, content: doc }: DbRecord) {
   }
   const error = 'CRITICAL: could not clean a document, docPath not handled';
   const location = `Document path: ${docPath}`;
-  const solution =
-    'The collection name might be missing in the anonymisation script. Update file tools/scripts/anonymize-db.ts';
+  const solution = 'The collection name might be missing in the anonymisation script. Update file tools/scripts/anonymize-db.ts';
   throw new Error([error, location, solution].join('/n'));
 }
 
@@ -244,7 +227,7 @@ async function loadDb(db: FirebaseFirestore.Firestore) {
 
   // retrieve all the collections at the root.
   const collections: CollectionReference[] = await db.listCollections();
-  collections.forEach((x) => processingQueue.push(x.path));
+  collections.forEach(x => processingQueue.push(x.path));
 
   while (!processingQueue.isEmpty()) {
     // Note: we could speed up the code by processing multiple collections at once,
@@ -269,7 +252,7 @@ async function loadDb(db: FirebaseFirestore.Firestore) {
 
       // Adding the current path to the subcollections to backup
       const subCollections = await doc.ref.listCollections();
-      subCollections.forEach((x) => processingQueue.push(x.path));
+      subCollections.forEach(x => processingQueue.push(x.path));
     });
 
     // Wait for this backup to complete

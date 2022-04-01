@@ -1,12 +1,6 @@
-import {
-  Component,
-  OnInit,
-  ChangeDetectionStrategy,
-  ViewEncapsulation,
-  ChangeDetectorRef,
-} from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
 import { fromOrgAndAccepted, MovieService } from '@blockframes/movie/+state/movie.service';
-import { Movie } from '@blockframes/model';
+import { Movie } from '@blockframes/shared/model';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { Observable } from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
@@ -47,10 +41,8 @@ export class ScreeningComponent implements OnInit {
 
     // will be executed only if "screening" as Observable are lazy
     this.titles$ = this.orgService.currentOrg$.pipe(
-      switchMap((org) => this.movieService.valueChanges(fromOrgAndAccepted(org.id, 'festival'))),
-      map((titles) =>
-        titles.sort((a, b) => a.title.international.localeCompare(b.title.international))
-      )
+      switchMap(org => this.movieService.valueChanges(fromOrgAndAccepted(org.id, 'festival'))),
+      map(titles => titles.sort((a, b) => a.title.international.localeCompare(b.title.international)))
     );
 
     this.checkTitleAndScreener(this.shell.form.meta.value.titleId);

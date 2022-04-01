@@ -3,24 +3,26 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SaleShellComponent } from '../shell.component';
 import { NegotiationForm } from '@blockframes/contract/negotiation/form';
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
-import { NegotiationGuardedComponent } from '@blockframes/contract/negotiation/guard'
+import { NegotiationGuardedComponent } from '@blockframes/contract/negotiation/guard';
 import { ContractService } from '@blockframes/contract/contract/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { ConfirmDeclineComponent, ConfirmDeclineData } from '@blockframes/contract/contract/components/confirm-decline/confirm-decline.component';
+import {
+  ConfirmDeclineComponent,
+  ConfirmDeclineData,
+} from '@blockframes/contract/contract/components/confirm-decline/confirm-decline.component';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
-import { filter, first, pluck } from 'rxjs/operators'
-import { Negotiation } from '@blockframes/model';
+import { filter, first, pluck } from 'rxjs/operators';
+import { Negotiation } from '@blockframes/shared/model';
 
 @Component({
   selector: 'sale-negotiation',
   templateUrl: './negotiation.component.html',
   styleUrls: ['./negotiation.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NegotiationComponent implements NegotiationGuardedComponent, OnInit {
-
   negotiation: Negotiation;
   centralOrgId = this.shell.centralOrgId;
   sale$ = this.shell.sale$;
@@ -37,15 +39,17 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
     private orgService: OrganizationService,
     private dialog: MatDialog,
     private router: Router,
-    private route: ActivatedRoute,
-  ) { }
+    private route: ActivatedRoute
+  ) {}
 
   async ngOnInit(): Promise<void> {
-    this.negotiation = await this.sale$.pipe(
-      pluck('negotiation'),
-      filter(data => !!data),
-      first()
-    ).toPromise();
+    this.negotiation = await this.sale$
+      .pipe(
+        pluck('negotiation'),
+        filter(data => !!data),
+        first()
+      )
+      .toPromise();
     this.form.hardReset(this.negotiation);
     const termIndex = this.route.snapshot.queryParams.termIndex;
     this.activeTerm = termIndex ? parseInt(termIndex) : 0;
@@ -54,9 +58,9 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
   async decline() {
     this.form.markAsPristine(); // usefull to be able to route in the NegotiationGuard
     const sale = await this.sale$.pipe(first()).toPromise();
-    const data: ConfirmDeclineData = { 
+    const data: ConfirmDeclineData = {
       type: 'seller',
-      showAcceptTermsCheckbox: true 
+      showAcceptTermsCheckbox: true,
     };
     const ref = this.dialog.open(ConfirmDeclineComponent, { data });
     const options = { params: { contractId: sale.id } };
@@ -89,7 +93,7 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
       title: 'Are you sure to submit this contract?',
       question: 'Please verify if all the contract elements are convenient for you.',
       confirm: 'Yes, submit',
-      cancel: 'Come back & verify contract'
+      cancel: 'Come back & verify contract',
     };
     this.dialog.open(ConfirmComponent, { data });
   }

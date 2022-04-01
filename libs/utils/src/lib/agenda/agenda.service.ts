@@ -1,24 +1,23 @@
-import { Injectable } from "@angular/core";
-import { orgName, Event, isMeeting, isScreening, isSlate } from "@blockframes/model";
-import { OrganizationService } from "@blockframes/organization/+state";
-import { sendgridEmailsFrom } from "../apps";
-import { IcsEvent } from "./agenda.interfaces";
-import { downloadIcs, toGoogleLink } from "./utils";
+import { Injectable } from '@angular/core';
+import { orgName, Event, isMeeting, isScreening, isSlate } from '@blockframes/shared/model';
+import { OrganizationService } from '@blockframes/organization/+state';
+import { sendgridEmailsFrom } from '../apps';
+import { IcsEvent } from './agenda.interfaces';
+import { downloadIcs, toGoogleLink } from './utils';
 
 @Injectable({ providedIn: 'root' })
 export class AgendaService {
-
-  constructor(
-    private orgService: OrganizationService
-  ) { }
+  constructor(private orgService: OrganizationService) {}
 
   public async download(events: Event[]) {
     if (events.length === 0) return;
     const filename = events.length > 1 ? 'events.ics' : `${events[0].title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.ics`;
-    const promises = events.map(async event => {
-      const ownerOrg = await this.orgService.getValue(event.ownerOrgId);
-      return createIcsFromEvent(event, orgName(ownerOrg, 'full'));
-    }).filter(e => !!e);
+    const promises = events
+      .map(async event => {
+        const ownerOrg = await this.orgService.getValue(event.ownerOrgId);
+        return createIcsFromEvent(event, orgName(ownerOrg, 'full'));
+      })
+      .filter(e => !!e);
 
     const icsEvents = await Promise.all(promises);
     downloadIcs(icsEvents, filename);
@@ -41,7 +40,7 @@ function createIcsFromEvent(e: Event, orgName?: string): IcsEvent {
     description: event.meta.description,
     organizer: {
       name: orgName,
-      email: sendgridEmailsFrom.festival.email
-    }
-  }
+      email: sendgridEmailsFrom.festival.email,
+    },
+  };
 }

@@ -1,4 +1,15 @@
-import { Component, Input, ChangeDetectionStrategy, OnInit, HostListener, ElementRef, ViewChild, Output, EventEmitter, OnDestroy } from '@angular/core';
+import {
+  Component,
+  Input,
+  ChangeDetectionStrategy,
+  OnInit,
+  HostListener,
+  ElementRef,
+  ViewChild,
+  Output,
+  EventEmitter,
+  OnDestroy,
+} from '@angular/core';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { MediaService } from '../../+state/media.service';
@@ -6,7 +17,7 @@ import { ImageParameters } from '../../image/directives/imgix-helpers';
 import { sanitizeFileName, getMimeType } from '@blockframes/utils/file-sanitizer';
 import { SafeUrl, DomSanitizer } from '@angular/platform-browser';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { StorageFile, FileMetaData } from '@blockframes/model';
+import { StorageFile, FileMetaData } from '@blockframes/shared/model';
 import { CollectionHoldingFile, FileLabel, getFileMetadata, getFileStoragePath } from '../../+state/static-files';
 import { FileUploaderService } from '../../+state/file-uploader.service';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
@@ -23,7 +34,7 @@ const mediaRatio = {
   square: 1 / 1,
   banner: 16 / 9,
   poster: 3 / 4,
-  still: 16 / 10
+  still: 16 / 10,
 };
 
 /** Convert base64 from ngx-image-cropper to blob for uploading in firebase */
@@ -47,7 +58,6 @@ function b64toBlob(data: string) {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ImageUploaderComponent implements OnInit, OnDestroy {
-
   ////////////////////////
   // Private Variables //
   //////////////////////
@@ -104,17 +114,21 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
   }
 
   private _form: StorageFileForm;
-  get form() { return this._form; }
+  get form() {
+    return this._form;
+  }
   @Input() set form(value: StorageFileForm) {
     this._form = value;
     if (this.form.storagePath.value) {
-      this.mediaService.generateImgIxUrl({
-        ...this.metadata,
-        storagePath: this.form.storagePath.value,
-      }).then(previewUrl => {
-        this.previewUrl$.next(previewUrl);
-        this.nextStep('show');
-      });
+      this.mediaService
+        .generateImgIxUrl({
+          ...this.metadata,
+          storagePath: this.form.storagePath.value,
+        })
+        .then(previewUrl => {
+          this.previewUrl$.next(previewUrl);
+          this.nextStep('show');
+        });
     } else {
       const retrieved = this.uploaderService.retrieveFromQueue(this.storagePath, this.queueIndex);
       if (retrieved) {
@@ -127,7 +141,7 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
   }
 
   @Input() set meta(value: [CollectionHoldingFile, FileLabel, string]) {
-    const [ collection, label, docId ] = value;
+    const [collection, label, docId] = value;
     this.storagePath = getFileStoragePath(collection, label, docId);
     this.metadata = getFileMetadata(collection, label, docId);
   }
@@ -137,8 +151,8 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
 
   @Input() setWidth?: number;
   /** Disable fileUploader & delete buttons in 'show' step */
-  @Input() useFileUploader?= true;
-  @Input() useDelete?= true;
+  @Input() useFileUploader? = true;
+  @Input() useDelete? = true;
 
   @Input() types: string[] = allowedFiles.image.mime;
   @Input() accept: string[] = allowedFiles.image.extension;
@@ -158,24 +172,28 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
     private mediaService: MediaService,
     private sanitizer: DomSanitizer,
     private snackBar: MatSnackBar,
-    private uploaderService: FileUploaderService,
-  ) { }
+    private uploaderService: FileUploaderService
+  ) {}
 
   async ngOnInit() {
     if (this.listenToChanges) {
-      this.docSub = this.db.doc(`${this.metadata.collection}/${this.metadata.docId}`).valueChanges().subscribe(data => {
-        const media = this.formIndex !== undefined
-          ? getDeepValue(data, this.metadata.field)[this.formIndex]
-          : getDeepValue(data, this.metadata.field);
-        if (media) {
-          this.form.setValue(media);
-        }
-      })
+      this.docSub = this.db
+        .doc(`${this.metadata.collection}/${this.metadata.docId}`)
+        .valueChanges()
+        .subscribe(data => {
+          const media =
+            this.formIndex !== undefined
+              ? getDeepValue(data, this.metadata.field)[this.formIndex]
+              : getDeepValue(data, this.metadata.field);
+          if (media) {
+            this.form.setValue(media);
+          }
+        });
     }
   }
 
   ngOnDestroy() {
-    if (this.docSub) this.docSub.unsubscribe()
+    if (this.docSub) this.docSub.unsubscribe();
   }
 
   @HostListener('drop', ['$event'])
@@ -205,20 +223,22 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
 
   private resetState() {
     if (this.form.storagePath.value) {
-      this.mediaService.generateImgIxUrl({
-        ...this.metadata,
-        storagePath: this.form.storagePath.value,
-      }).then(previewUrl => {
-        this.previewUrl$.next(previewUrl);
-        this.nextStep('show');
-      });
+      this.mediaService
+        .generateImgIxUrl({
+          ...this.metadata,
+          storagePath: this.form.storagePath.value,
+        })
+        .then(previewUrl => {
+          this.previewUrl$.next(previewUrl);
+          this.nextStep('show');
+        });
     } else {
       const retrieved = this.uploaderService.retrieveFromQueue(this.storagePath, this.queueIndex);
       if (retrieved) {
         this.nextStep('show');
       } else {
         this.nextStep('drop');
-      };
+      }
     }
   }
 
@@ -227,16 +247,17 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
   ///////////
 
   async goToShow() {
-    this.previewUrl$.next(await this.getDownloadUrl({
-      privacy: this.metadata.privacy,
-      collection: this.metadata.collection,
-      docId: this.metadata.docId,
-      field: this.metadata.field,
-      storagePath: this.storagePath
-    }));
+    this.previewUrl$.next(
+      await this.getDownloadUrl({
+        privacy: this.metadata.privacy,
+        collection: this.metadata.collection,
+        docId: this.metadata.docId,
+        field: this.metadata.field,
+        storagePath: this.storagePath,
+      })
+    );
     this.nextStep('show');
   }
-
 
   // drop
   filesSelected(fileList: FileList): void {
@@ -256,14 +277,15 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
       this.snackBar.open(`Unsupported file type: "${fileType}".`, 'close', { duration: 3000 });
       this.delete();
     } else if (this.file.size >= this.maxSize) {
-      this.snackBar.open(`Your image is too big: max allowed size is ${fileSizeToString(this.maxSize)}.`, 'close', { duration: 4000 });
+      this.snackBar.open(`Your image is too big: max allowed size is ${fileSizeToString(this.maxSize)}.`, 'close', {
+        duration: 4000,
+      });
       this.delete();
       return;
     } else {
       this.nextStep('crop');
       this.fileUploader.nativeElement.value = null;
     }
-
   }
 
   // crop
@@ -281,7 +303,9 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
 
       if (blob.size >= this.maxSize) {
         // b64toBlob can increase file size of image and thus cross the maxSize limit after first check (issue #7336)
-        this.snackBar.open(`Your image is too big: max allowed size is ${fileSizeToString(this.maxSize)}.`, 'close', { duration: 4000 });
+        this.snackBar.open(`Your image is too big: max allowed size is ${fileSizeToString(this.maxSize)}.`, 'close', {
+          duration: 4000,
+        });
         this.delete();
         return;
       }
@@ -291,17 +315,18 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
       // regexp selects part of string after the last . in the string (which is always the file extension)
       // replaces this by '.webp'
       // and also postfix file name with a small random id allow the same image to be cropped several time without collision
-      this.fileName = sanitizeFileName(this.file.name.replace(/(\.[\w\d_-]+)$/i, `-${Math.random().toString(36).substr(2)}.webp`));
+      this.fileName = sanitizeFileName(
+        this.file.name.replace(/(\.[\w\d_-]+)$/i, `-${Math.random().toString(36).substr(2)}.webp`)
+      );
 
       this.uploaderService.addToQueue(this.storagePath, {
         fileName: this.fileName,
         file: blob,
-        metadata: this.metadata
+        metadata: this.metadata,
       });
       this.selectionChange.emit('added');
 
       this.form?.markAsDirty();
-
     } catch (err) {
       console.error(err);
     }

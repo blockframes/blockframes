@@ -1,7 +1,7 @@
 import * as env from '@env';
 import { Firestore } from '../types';
 import { runChunks } from '../firebase-utils';
-import { createMovieVideo, createMovieVideos } from '@blockframes/model';
+import { createMovieVideo, createMovieVideos } from '@blockframes/shared/model';
 
 export const { storageBucket } = env.firebase();
 
@@ -14,7 +14,7 @@ export const { storageBucket } = env.firebase();
  */
 export async function upgrade(db: Firestore) {
   const movies = await db.collection('movies').get();
-  await runChunks(movies.docs, async (doc) => {
+  await runChunks(movies.docs, async doc => {
     const movie = doc.data();
 
     if (!movie.promotional.videos) {
@@ -25,7 +25,7 @@ export async function upgrade(db: Firestore) {
     delete movie.promotional.salesPitch;
 
     if (movie.promotional.videos?.otherVideos?.length) {
-      movie.promotional.videos.otherVideos.forEach((video) => {
+      movie.promotional.videos.otherVideos.forEach(video => {
         if (video.type === 'pitch') {
           video.type = 'other';
         }

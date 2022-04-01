@@ -1,14 +1,6 @@
 import { algolia } from '@env';
-import {
-  Territory,
-  Genre,
-  Language,
-  StoreStatus,
-  ProductionStatus,
-  OrgActivity,
-  ContentType,
-} from '../static-model';
-import { MovieRunningTime, MovieRelease, MovieLanguageSpecification } from '@blockframes/model';
+import { Territory, Genre, Language, StoreStatus, ProductionStatus, OrgActivity, ContentType } from '../static-model';
+import { MovieRunningTime, MovieRelease, MovieLanguageSpecification } from '@blockframes/shared/model';
 import { Module, ModuleAccess } from '../apps';
 export { SearchResponse } from '@algolia/client-search';
 

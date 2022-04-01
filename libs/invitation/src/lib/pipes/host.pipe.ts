@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
-import { Invitation } from '@blockframes/model';
+import { Invitation } from '@blockframes/shared/model';
 
 type Host<type> = type extends 'user' ? Invitation['fromUser'] : Invitation['fromOrg'];
 
@@ -11,8 +11,8 @@ export class HostPipe implements PipeTransform {
 /**
  * Get the host of an invitation
  */
-export function getHost(invitation: Invitation, hostType: 'user'): Invitation['fromUser']
-export function getHost(invitation: Invitation, hostType: 'org'): Invitation['fromOrg']
+export function getHost(invitation: Invitation, hostType: 'user'): Invitation['fromUser'];
+export function getHost(invitation: Invitation, hostType: 'org'): Invitation['fromOrg'];
 export function getHost(invitation: Invitation, hostType: 'user' | 'org' = 'org'): Host<typeof hostType> {
   const { fromOrg, fromUser, toOrg, toUser, mode } = invitation;
   if (mode === 'invitation') {
@@ -22,7 +22,6 @@ export function getHost(invitation: Invitation, hostType: 'user' | 'org' = 'org'
     return hostType === 'org' ? toOrg : toUser;
   }
 }
-
 
 @NgModule({
   declarations: [HostPipe],

@@ -11,7 +11,7 @@ import { FormChipsAutocompleteModule } from '../../forms/chips-autocomplete';
 import { SelectFormModule } from '../../forms/select';
 import { getTitlesQueryFn, toMap } from '../pipes';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
-import { Movie } from '@blockframes/model';
+import { Movie } from '@blockframes/shared/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 
 @Component({
@@ -24,10 +24,10 @@ export class SliderComponent implements OnInit {
   private mode?: 'query' | 'titleIds';
   @Input() form?: FormEntity<SliderSchema>;
 
-  app$ = this.route.paramMap.pipe(map((p) => p.get('app')));
+  app$ = this.route.paramMap.pipe(map(p => p.get('app')));
   titles$ = this.app$.pipe(
-    map((app) => getTitlesQueryFn(app)),
-    switchMap((queryFn) => this.service.valueChanges(queryFn)),
+    map(app => getTitlesQueryFn(app)),
+    switchMap(queryFn => this.service.valueChanges(queryFn)),
     map(toMap),
     shareReplay({ refCount: true, bufferSize: 1 })
   );

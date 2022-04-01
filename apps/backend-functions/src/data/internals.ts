@@ -6,7 +6,16 @@
 import * as admin from 'firebase-admin';
 import { App, getOrgAppAccess } from '@blockframes/utils/apps';
 import { getDocument } from '@blockframes/firebase-utils';
-import { createStorageFile, createDenomination, OrganizationDocument, PublicUser, InvitationDocument, PublicInvitation, PermissionsDocument, DocumentMeta } from '@blockframes/model';
+import {
+  createStorageFile,
+  createDenomination,
+  OrganizationDocument,
+  PublicUser,
+  InvitationDocument,
+  PublicInvitation,
+  PermissionsDocument,
+  DocumentMeta,
+} from '@blockframes/shared/model';
 
 export { getDocument };
 
@@ -16,7 +25,7 @@ export function createPublicOrganizationDocument(org: Partial<OrganizationDocume
     denomination: createDenomination(org.denomination),
     logo: createStorageFile(org.logo),
     activity: org.activity ?? null,
-  }
+  };
 }
 
 export function createPublicInvitationDocument(invitation: InvitationDocument) {
@@ -25,7 +34,7 @@ export function createPublicInvitationDocument(invitation: InvitationDocument) {
     type: invitation.type ?? '',
     mode: invitation.mode ?? '',
     status: invitation.status ?? '',
-  } as PublicInvitation
+  } as PublicInvitation;
 }
 
 export function createPublicUserDocument(user: Partial<PublicUser> = {}) {
@@ -35,8 +44,8 @@ export function createPublicUserDocument(user: Partial<PublicUser> = {}) {
     avatar: createStorageFile(user.avatar),
     firstName: user.firstName ?? '',
     lastName: user.lastName ?? '',
-    orgId: user.orgId ?? ''
-  }
+    orgId: user.orgId ?? '',
+  };
 }
 
 export type Timestamp = admin.firestore.Timestamp;
@@ -45,8 +54,8 @@ export function createDocumentMeta(meta: Partial<DocumentMeta<Timestamp>> = {}):
   return {
     createdBy: 'internal',
     createdAt: admin.firestore.Timestamp.now(),
-    ...meta
-  }
+    ...meta,
+  };
 }
 
 /**
@@ -58,13 +67,14 @@ export async function getOrganizationsOfMovie(movieId: string) {
   const db = admin.firestore();
   const movie = await db.doc(`movies/${movieId}`).get();
   const orgIds = movie.data().orgIds;
-  const promises = orgIds.map(id => db.doc(`orgs/${id}`).get())
+  const promises = orgIds.map(id => db.doc(`orgs/${id}`).get());
   const orgs = await Promise.all(promises);
-  return orgs.map((orgDoc: FirebaseFirestore.DocumentSnapshot<OrganizationDocument>) => orgDoc.data())
+  return orgs.map((orgDoc: FirebaseFirestore.DocumentSnapshot<OrganizationDocument>) => orgDoc.data());
 }
 
 /** Retrieve the list of superAdmins and admins of an organization */
-export async function getAdminIds(organizationId: string): Promise<string[]> { // @TODO #4046 this may be removed at the end
+export async function getAdminIds(organizationId: string): Promise<string[]> {
+  // @TODO #4046 this may be removed at the end
   const permissions = await getDocument<PermissionsDocument>(`permissions/${organizationId}`);
 
   if (!permissions) {
@@ -72,10 +82,7 @@ export async function getAdminIds(organizationId: string): Promise<string[]> { /
   }
 
   const adminIds = Object.keys(permissions.roles).filter(userId => {
-    return (
-      permissions.roles[userId] === 'superAdmin' ||
-      permissions.roles[userId] === 'admin'
-    );
+    return permissions.roles[userId] === 'superAdmin' || permissions.roles[userId] === 'admin';
   });
   return adminIds;
 }
@@ -90,5 +97,5 @@ export async function getOrgAppKey(_org: OrganizationDocument | string): Promise
     return getOrgAppAccess(org)[0];
   } else {
     return getOrgAppAccess(_org)[0];
-  };
+  }
 }

@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, Directive, Input, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
-import { Movie } from '@blockframes/model';
+import { Movie } from '@blockframes/shared/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { App, appName, getMovieAppAccess } from '@blockframes/utils/apps';
 import { MatDialog } from '@angular/material/dialog';
@@ -34,11 +34,9 @@ export class DashboardActionsShellComponent {
 
   removeAppAccess() {
     const appsName = getMovieAppAccess(this.movie)
-      .filter((value) => value !== this.app)
-      .map((a) => appName[a]);
-    const subtitle = appsName.length
-      ? `This Title will still be available on <i>${appsName.join(', ')}</i>.<br/>`
-      : '';
+      .filter(value => value !== this.app)
+      .map(a => appName[a]);
+    const subtitle = appsName.length ? `This Title will still be available on <i>${appsName.join(', ')}</i>.<br/>` : '';
 
     this.dialog.open(ConfirmInputComponent, {
       data: {
@@ -48,7 +46,7 @@ export class DashboardActionsShellComponent {
         confirmButtonText: 'delete Title',
         cancelButtonText: 'keep Title',
         onConfirm: async () => {
-          await this.movieService.update(this.movie.id, (movie) => ({
+          await this.movieService.update(this.movie.id, movie => ({
             ...movie,
             app: {
               ...movie.app,
@@ -67,7 +65,7 @@ export class DashboardActionsShellComponent {
   }
 
   async updateStatus(status: StoreStatus, message?: string) {
-    await this.movieService.update(this.movie.id, (movie) => ({
+    await this.movieService.update(this.movie.id, movie => ({
       ...movie,
       app: {
         ...movie.app,

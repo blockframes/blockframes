@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { formatDate } from '@angular/common';
-import { add, startOfDay } from 'date-fns/fp'
-import { Event } from '@blockframes/model';
+import { add, startOfDay } from 'date-fns/fp';
+import { Event } from '@blockframes/shared/model';
 import { getValue } from '../helpers';
 
 interface TimeFrame {
@@ -52,12 +52,14 @@ function filterByDate(value: unknown[], timeFrame: TimeFrame, key: string = 'dat
   const now = startOfDay(Date.now());
   const fromDate = add({ [type]: from }, now);
   const toDate = add({ [type]: to }, now);
-  return value.filter(v => {
-    if (keyFinish) {
-      return getValue(v, key) < toDate && getValue(v, keyFinish) >= fromDate;
-    }
-    return getValue(v, key) >= fromDate && getValue(v, key) < toDate;
-  }).sort((a, b) => way === 'asc' ? getValue(a, key) - getValue(b, key) : getValue(b, key) - getValue(a, key))
+  return value
+    .filter(v => {
+      if (keyFinish) {
+        return getValue(v, key) < toDate && getValue(v, keyFinish) >= fromDate;
+      }
+      return getValue(v, key) >= fromDate && getValue(v, key) < toDate;
+    })
+    .sort((a, b) => (way === 'asc' ? getValue(a, key) - getValue(b, key) : getValue(b, key) - getValue(a, key)));
 }
 
 @Pipe({ name: 'filterByDate', pure: true })
@@ -84,9 +86,12 @@ export class LabelByDatePipe implements PipeTransform {
     const now = startOfDay(Date.now());
     const fromDate = add({ [type]: from }, now);
     switch (type) {
-      case 'days': return formatDate(fromDate, 'EEEE', 'en');
-      case 'weeks': return `Week of ${formatDate(fromDate, 'MMMM d', 'en')}`;
-      case 'years': return formatDate(fromDate, 'longDate', 'en');
+      case 'days':
+        return formatDate(fromDate, 'EEEE', 'en');
+      case 'weeks':
+        return `Week of ${formatDate(fromDate, 'MMMM d', 'en')}`;
+      case 'years':
+        return formatDate(fromDate, 'longDate', 'en');
     }
   }
 }
@@ -96,15 +101,17 @@ export class EventsToTimeFramePipe implements PipeTransform {
   transform(events: Event[], order: 'asc' | 'desc' = 'asc') {
     if (!events) return;
     const timeFrames = order === 'asc' ? ascTimeFrames : descTimeFrames;
-    return timeFrames.map(timeFrame => {
-      timeFrame['events'] = filterByDate(events, timeFrame, 'start', 'end');
-      return timeFrame;
-    }).filter(timeFrame => timeFrame['events']?.length);
+    return timeFrames
+      .map(timeFrame => {
+        timeFrame['events'] = filterByDate(events, timeFrame, 'start', 'end');
+        return timeFrame;
+      })
+      .filter(timeFrame => timeFrame['events']?.length);
   }
 }
 
 @NgModule({
   declarations: [FilterByDatePipe, LabelByDatePipe, EventsToTimeFramePipe],
-  exports: [FilterByDatePipe, LabelByDatePipe, EventsToTimeFramePipe]
+  exports: [FilterByDatePipe, LabelByDatePipe, EventsToTimeFramePipe],
 })
-export class FilterByDateModule { }
+export class FilterByDateModule {}

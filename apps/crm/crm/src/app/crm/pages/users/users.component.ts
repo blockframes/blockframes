@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@
 import { Router } from '@angular/router';
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { UserService } from '@blockframes/user/+state';
-import { User, Organization, orgName } from '@blockframes/model';
+import { User, Organization, orgName } from '@blockframes/shared/model';
 import { CrmService } from '@blockframes/admin/crm/+state/crm.service';
 import { CrmQuery } from '@blockframes/admin/crm/+state/crm.query';
 import { OrganizationService } from '@blockframes/organization/+state';
@@ -23,7 +23,7 @@ interface CrmUser extends User {
   selector: 'crm-users',
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UsersComponent implements OnInit {
   public users$?: Observable<CrmUser[]>;
@@ -36,15 +36,15 @@ export class UsersComponent implements OnInit {
     private crmService: CrmService,
     private crmQuery: CrmQuery,
     private orgService: OrganizationService,
-    private router: Router,
-  ) { }
+    private router: Router
+  ) {}
 
   async ngOnInit() {
     // Use valueChanges to take advantage of caching.
     this.users$ = combineLatest([
       this.userService.valueChanges(),
       this.orgService.valueChanges(),
-      this.crmService.loadAnalyticsData()
+      this.crmService.loadAnalyticsData(),
     ]).pipe(
       map(([users, orgs]) => {
         return users.map(u => {
@@ -58,9 +58,9 @@ export class UsersComponent implements OnInit {
             createdFrom: u._meta?.createdFrom ? appName[u._meta?.createdFrom] : '',
             org,
           };
-        })
+        });
       })
-    )
+    );
   }
 
   public goToEdit(user) {
@@ -69,7 +69,7 @@ export class UsersComponent implements OnInit {
 
   public goToEditNewTab(uid: string, $event: Event) {
     $event.stopPropagation();
-    const urlTree = this.router.createUrlTree([`c/o/dashboard/crm/user/${uid}`])
+    const urlTree = this.router.createUrlTree([`c/o/dashboard/crm/user/${uid}`]);
     const url = this.router.serializeUrl(urlTree);
     window.open(url, '_blank', 'noreferrer');
   }
@@ -77,23 +77,23 @@ export class UsersComponent implements OnInit {
   public async exportTable(users: CrmUser[]) {
     try {
       this.exporting = true;
-      this.cdr.markForCheck()
+      this.cdr.markForCheck();
       const getRows = users.map(async r => {
         const role = r.org ? await this.orgService.getMemberRole(r.org, r.uid) : '--';
-        const type = r.org ? getOrgModuleAccess(r.org).includes('dashboard') ? 'seller' : 'buyer' : '--';
+        const type = r.org ? (getOrgModuleAccess(r.org).includes('dashboard') ? 'seller' : 'buyer') : '--';
         const row = {
-          'userId': r.uid,
+          userId: r.uid,
           'first name': r.firstName ?? '--',
           'last name': r.lastName ?? '--',
-          'organization': r.org ? orgName(r.org) : '--',
+          organization: r.org ? orgName(r.org) : '--',
           'org id': r.orgId ?? '--',
           'org status': r.org ? r.org.status : '--',
-          'type': type ?? '--',
-          'country': r.org?.addresses.main.country ?? '--',
-          'role': role ?? '--',
-          'position': r.position ?? '--',
+          type: type ?? '--',
+          country: r.org?.addresses.main.country ?? '--',
+          role: role ?? '--',
+          position: r.position ?? '--',
           'org activity': r.org ? r.org.activity : '--',
-          'email': r.email,
+          email: r.email,
           'first connection': r.firstConnection ?? '--',
           'last connection': r.lastConnection ?? '--',
           'page view': r.pageView ?? '--',
@@ -102,7 +102,7 @@ export class UsersComponent implements OnInit {
           'buying preferences language': r.preferences?.languages.join(', ') ?? '--',
           'buying preferences genres': r.preferences?.genres.join(', ') ?? '--',
           'buying preferences medias': r.preferences?.medias.join(', ') ?? '--',
-          'buying preferences territories': r.preferences?.territories.join(', ') ?? '--'
+          'buying preferences territories': r.preferences?.territories.join(', ') ?? '--',
         };
 
         for (const a of this.app) {

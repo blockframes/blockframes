@@ -1,12 +1,6 @@
 import * as functions from 'firebase-functions';
 import { db } from './internals/firebase';
-import {
-  createAccess,
-  createShare,
-  ConsentType,
-  createConsent as _createConsent,
-  PublicUser
-} from '@blockframes/model';
+import { createAccess, createShare, ConsentType, createConsent as _createConsent, PublicUser } from '@blockframes/shared/model';
 
 type CallableContext = functions.https.CallableContext;
 

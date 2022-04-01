@@ -3,7 +3,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { Router } from '@angular/router';
-import { createPublicUser } from '@blockframes/model';
+import { createPublicUser } from '@blockframes/shared/model';
 import { AuthService } from '@blockframes/auth/+state';
 import { FormControl, Validators, AbstractControl } from '@angular/forms';
 import { UserService } from '@blockframes/user/+state';
@@ -16,15 +16,18 @@ import { OrgEmailData } from '@blockframes/utils/emails/utils';
   selector: 'organization-create',
   templateUrl: './create.component.html',
   styleUrls: ['./create.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrganizationCreateComponent {
   public form = new OrganizationCrmForm();
-  public superAdminForm = new FormEntity({
-    email: new FormControl('', [Validators.required, Validators.email], this.emailValidator.bind(this))
-  }, {
-    updateOn: 'blur'
-  });
+  public superAdminForm = new FormEntity(
+    {
+      email: new FormControl('', [Validators.required, Validators.email], this.emailValidator.bind(this)),
+    },
+    {
+      updateOn: 'blur',
+    }
+  );
   public fromApp = new FormControl('');
 
   constructor(
@@ -33,12 +36,12 @@ export class OrganizationCreateComponent {
     private snackBar: MatSnackBar,
     private orgService: OrganizationService,
     private userService: UserService,
-    private router: Router,
-  ) { }
+    private router: Router
+  ) {}
 
   async emailValidator(control: AbstractControl): Promise<{ [key: string]: unknown } | null> {
     const [existingSuperAdmin] = await this.userService.getValue(ref => ref.where('email', '==', control.value));
-    return (!!existingSuperAdmin && !!existingSuperAdmin.orgId) ? { taken: true } : null;
+    return !!existingSuperAdmin && !!existingSuperAdmin.orgId ? { taken: true } : null;
   }
 
   async addOrganization() {
@@ -49,8 +52,8 @@ export class OrganizationCreateComponent {
 
     const [fromApp] = getOrgAppAccess(this.form.value, this.fromApp.value);
     if (!fromApp) {
-      this.snackBar.open('Please pick an app where the user is created from or give org app access', 'close', { duration: 2000 })
-      return
+      this.snackBar.open('Please pick an app where the user is created from or give org app access', 'close', { duration: 2000 });
+      return;
     }
 
     const superAdminEmail = this.superAdminForm.get('email').value;
@@ -65,16 +68,12 @@ export class OrganizationCreateComponent {
     const orgEmailData: OrgEmailData = {
       denomination: this.form.get('denomination').get('full').value,
       id: '',
-      email: this.form.get('email').value
-    }
+      email: this.form.get('email').value,
+    };
 
     const baseUser = existingSuperAdmin
       ? existingSuperAdmin
-      : await this.authService.createUser(
-        superAdminEmail,
-        orgEmailData,
-        fromApp
-      );
+      : await this.authService.createUser(superAdminEmail, orgEmailData, fromApp);
     const superAdmin = createPublicUser(baseUser);
 
     const orgId = await this.orgService.addOrganization(this.form.value, fromApp, superAdmin);
@@ -82,5 +81,4 @@ export class OrganizationCreateComponent {
     this.router.navigate(['/c/o/dashboard/crm/organization/', orgId]);
     this.dialogRef.close();
   }
-
 }

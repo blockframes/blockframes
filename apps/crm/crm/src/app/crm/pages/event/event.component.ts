@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EventService } from '@blockframes/event/+state/event.service';
-import { InvitationDetailed, Movie, Event, isScreening } from '@blockframes/model';
+import { InvitationDetailed, Movie, Event, isScreening } from '@blockframes/shared/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
@@ -53,20 +53,18 @@ export class EventComponent implements OnInit {
     }
 
     this.invitations$ = this.invitationService
-      .valueChanges((ref) =>
-        ref.where('type', '==', 'attendEvent').where('eventId', '==', this.eventId)
-      )
+      .valueChanges(ref => ref.where('type', '==', 'attendEvent').where('eventId', '==', this.eventId))
       .pipe(
         switchMap(async (invitations: InvitationDetailed[]) => {
-          const hostOrgs = invitations.map((i) => getHost(i, 'org').id).filter((id) => id);
-          const guestOrgs = invitations.map((i) => getGuest(i, 'user').orgId).filter((id) => id);
+          const hostOrgs = invitations.map(i => getHost(i, 'org').id).filter(id => id);
+          const guestOrgs = invitations.map(i => getGuest(i, 'user').orgId).filter(id => id);
           const orgIds = Array.from(new Set(hostOrgs.concat(guestOrgs)));
-          const orgsPromises = orgIds.map((id) => this.orgService.getValue(id));
+          const orgsPromises = orgIds.map(id => this.orgService.getValue(id));
           const orgs = await Promise.all(orgsPromises);
 
           for (const invitation of invitations) {
-            invitation.org = orgs.find((org) => org.id === getHost(invitation, 'org').id);
-            invitation.guestOrg = orgs.find((org) => org.id === getGuest(invitation, 'user').orgId);
+            invitation.org = orgs.find(org => org.id === getHost(invitation, 'org').id);
+            invitation.guestOrg = orgs.find(org => org.id === getGuest(invitation, 'user').orgId);
             invitation.event = this.event;
             invitation.movie = this.movie;
           }

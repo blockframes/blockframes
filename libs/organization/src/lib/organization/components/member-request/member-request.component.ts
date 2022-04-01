@@ -1,13 +1,12 @@
 import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
-import { PublicUser, Invitation } from '@blockframes/model';
+import { PublicUser, Invitation } from '@blockframes/shared/model';
 
 @Component({
   selector: 'member-request',
   templateUrl: './member-request.component.html',
   styleUrls: ['./member-request.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-
 export class MemberRequestComponent {
   @Output() accepted = new EventEmitter<Invitation>();
   @Output() declined = new EventEmitter<Invitation>();
@@ -20,8 +19,9 @@ export class MemberRequestComponent {
     this.users = invitations.map(invitation => invitation.fromUser);
   }
 
-
   public findRequest(uid: string) {
-    return this.memberInvitations.find(invitation => (invitation.fromUser.uid === uid && invitation.type === 'joinOrganization' && invitation.mode === 'request'));
+    return this.memberInvitations.find(
+      invitation => invitation.fromUser.uid === uid && invitation.type === 'joinOrganization' && invitation.mode === 'request'
+    );
   }
 }

@@ -10,8 +10,8 @@ import {
   MeetingEvent,
   isMeeting,
   isScreening,
-  SlateEvent
-} from '@blockframes/model';
+  SlateEvent,
+} from '@blockframes/shared/model';
 import { QueryFn } from '@angular/fire/firestore/interfaces';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { PermissionsService } from '@blockframes/permissions/+state';
@@ -21,7 +21,7 @@ import type firebase from 'firebase';
 import { ActiveState, EntityState } from '@datorama/akita';
 import { production } from '@env';
 
-interface EventState extends EntityState<Event>, ActiveState<string> { };
+interface EventState extends EntityState<Event>, ActiveState<string> {}
 type Timestamp = firebase.firestore.Timestamp;
 
 const eventQuery = (id: string) => ({
@@ -29,51 +29,48 @@ const eventQuery = (id: string) => ({
   org: ({ ownerOrgId }: ScreeningEvent) => ({ path: `orgs/${ownerOrgId}` }),
   movie: (event: Event) => {
     if (isScreening(event)) {
-      return event.meta.titleId ? { path: `movies/${event.meta.titleId}` } : undefined
+      return event.meta.titleId ? { path: `movies/${event.meta.titleId}` } : undefined;
     }
   },
   organizedBy: (event: Event) => {
     if (isMeeting(event)) {
-      return event.meta.organizerUid ? { path: `users/${event.meta.organizerUid}` } : undefined
+      return event.meta.organizerUid ? { path: `users/${event.meta.organizerUid}` } : undefined;
     }
-  }
-})
+  },
+});
 
 /** Hold all the different queries for an event */
 const eventQueries = {
   // Screening
-  screening: (queryFn: QueryFn = (ref) => ref): Query<ScreeningEvent> => ({
+  screening: (queryFn: QueryFn = ref => ref): Query<ScreeningEvent> => ({
     path: 'events',
     queryFn: ref => queryFn(ref).where('type', '==', 'screening'),
     movie: ({ meta }: ScreeningEvent) => {
-      return meta?.titleId ? { path: `movies/${meta.titleId}` } : undefined
+      return meta?.titleId ? { path: `movies/${meta.titleId}` } : undefined;
     },
     org: (e: ScreeningEvent) => ({ path: `orgs/${e.ownerOrgId}` }),
   }),
 
   // Meeting
-  meeting: (queryFn: QueryFn = (ref) => ref): Query<MeetingEvent> => ({
+  meeting: (queryFn: QueryFn = ref => ref): Query<MeetingEvent> => ({
     path: 'events',
     queryFn: ref => queryFn(ref).where('type', '==', 'meeting'),
     org: ({ ownerOrgId }: MeetingEvent) => ({ path: `orgs/${ownerOrgId}` }),
   }),
 
-  slate: (queryFn: QueryFn = (ref) => ref): Query<SlateEvent> => ({
+  slate: (queryFn: QueryFn = ref => ref): Query<SlateEvent> => ({
     path: 'events',
     queryFn: ref => queryFn(ref).where('type', '==', 'slate'),
     org: ({ ownerOrgId }: SlateEvent) => ({ path: `orgs/${ownerOrgId}` }),
   }),
-}
+};
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'events' })
 export class EventService extends CollectionService<EventState> {
   readonly useMemorization = true;
 
-  constructor(
-    private permissionsService: PermissionsService,
-    private orgService: OrganizationService,
-  ) {
+  constructor(private permissionsService: PermissionsService, private orgService: OrganizationService) {
     super();
     if (!production && window['Cypress']) window['eventService'] = this; // instrument Cypress only out of PROD
   }
@@ -112,21 +109,21 @@ export class EventService extends CollectionService<EventState> {
     const queries = types.map(type => eventQueries[type](queryFn));
     const queries$ = queries.map(query => queryChanges.call(this, query));
     return combineLatest(queries$).pipe(
-      map((results) => results.flat()),
+      map(results => results.flat()),
       distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
     );
   }
 
   /** Query one or many event by id */
-  queryDocs(ids: string[]): Observable<Event[]>
-  queryDocs(ids: string): Observable<Event>
+  queryDocs(ids: string[]): Observable<Event[]>;
+  queryDocs(ids: string): Observable<Event>;
   queryDocs(ids: string | string[]): Observable<Event | Event[]> {
     if (typeof ids === 'string') {
-      return queryChanges.call(this, eventQuery(ids))
+      return queryChanges.call(this, eventQuery(ids));
     } else if (ids.length === 0) {
       return of([]);
     } else {
-      const queries = ids.map(id => queryChanges.call(this, eventQuery(id)))
+      const queries = ids.map(id => queryChanges.call(this, eventQuery(id)));
       return combineLatest(queries);
     }
   }

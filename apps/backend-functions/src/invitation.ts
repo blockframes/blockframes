@@ -1,9 +1,9 @@
 ﻿import { getDocument, createPublicOrganizationDocument, createPublicUserDocument } from './data/internals';
-import { getUser } from "./internals/utils";
-import { db } from './internals/firebase'
+import { getUser } from './internals/utils';
+import { db } from './internals/firebase';
 import { onInvitationToJoinOrgUpdate, onRequestToJoinOrgUpdate } from './internals/invitations/organizations';
 import { onInvitationToAnEventUpdate } from './internals/invitations/events';
-import { 
+import {
   createPublicUser,
   PublicUser,
   OrganizationDocument,
@@ -15,8 +15,8 @@ import {
   InvitationOrUndefined,
   createInvitation,
   InvitationStatus,
-  InvitationBase
-} from '@blockframes/model';
+  InvitationBase,
+} from '@blockframes/shared/model';
 import { getOrInviteUserByMail } from './internals/users';
 import { ErrorResultResponse } from './utils';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
@@ -176,7 +176,8 @@ export const inviteUsers = async (data: UserInvitation, context: CallableContext
   for (const email of data.emails) {
     const invitationId = db.collection('invitations').doc().id;
     const { type, mode, fromOrg } = invitation;
-    const eventData = type == 'attendEvent' ? getEventEmailData({ event, orgName: orgName(fromOrg, 'full'), email, invitationId }) : undefined;
+    const eventData =
+      type == 'attendEvent' ? getEventEmailData({ event, orgName: orgName(fromOrg, 'full'), email, invitationId }) : undefined;
     const user = await getOrInviteUserByMail(email, { id: invitationId, type, mode, fromOrg }, data.app, eventData);
 
     if (user.invitationStatus) invitation.status = user.invitationStatus;
@@ -245,7 +246,8 @@ export const acceptOrDeclineInvitationAsAnonymous = async (data: AnonymousInvita
 
   if (!invitation || invitation.type !== 'attendEvent') throw new Error('Permission denied: invalid invitation');
 
-  if (invitation.mode !== 'invitation' || invitation.toUser.email.toLowerCase() !== data.email.toLowerCase()) throw new Error('Permission denied: invalid invitation');
+  if (invitation.mode !== 'invitation' || invitation.toUser.email.toLowerCase() !== data.email.toLowerCase())
+    throw new Error('Permission denied: invalid invitation');
 
   invitation.status = data.status;
 

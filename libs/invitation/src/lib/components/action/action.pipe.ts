@@ -1,16 +1,18 @@
 import { NgModule } from '@angular/core';
-import { Pipe, PipeTransform } from "@angular/core";
+import { Pipe, PipeTransform } from '@angular/core';
 import { AuthService } from '@blockframes/auth/+state';
-import { Invitation } from "@blockframes/model";
+import { Invitation } from '@blockframes/shared/model';
 
 @Pipe({ name: 'hasAction', pure: true })
 export class InvitationHasActionPipe implements PipeTransform {
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService) {}
   transform(invitation: Invitation) {
     const userId = this.authService.uid;
     const isNotFromUser = !(invitation.fromUser?.uid === userId);
     const isToOrg = invitation.toOrg?.id && invitation.toOrg.id === this.authService.profile?.orgId;
-    const isToUser = invitation.toUser && (invitation.toUser?.uid === userId || invitation.toUser.email === this.authService.anonymousCredentials?.email);
+    const isToUser =
+      invitation.toUser &&
+      (invitation.toUser?.uid === userId || invitation.toUser.email === this.authService.anonymousCredentials?.email);
     return invitation.status === 'pending' && ((isNotFromUser && isToOrg) || isToUser);
   }
 }
@@ -29,4 +31,4 @@ export class InvitationStatusPipe implements PipeTransform {
   exports: [InvitationHasActionPipe, InvitationStatusPipe],
   declarations: [InvitationHasActionPipe, InvitationStatusPipe],
 })
-export class InvitationActionPipeModule { }
+export class InvitationActionPipeModule {}

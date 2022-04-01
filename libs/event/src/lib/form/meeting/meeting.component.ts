@@ -1,9 +1,9 @@
-import { Component, OnInit, ChangeDetectionStrategy, ViewEncapsulation  } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ViewEncapsulation } from '@angular/core';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { UserService } from '@blockframes/user/+state';
-import { User } from '@blockframes/model';
+import { User } from '@blockframes/shared/model';
 import { Observable } from 'rxjs';
-import { switchMap, } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { EventFormShellComponent } from '../shell/shell.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -13,10 +13,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   templateUrl: './meeting.component.html',
   styleUrls: ['./meeting.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MeetingComponent implements OnInit {
-
   members$: Observable<User[]>;
 
   constructor(
@@ -24,8 +23,8 @@ export class MeetingComponent implements OnInit {
     private orgService: OrganizationService,
     private dynTitle: DynamicTitleService,
     private shell: EventFormShellComponent,
-    private snackBar: MatSnackBar,
-  ) { }
+    private snackBar: MatSnackBar
+  ) {}
 
   get formMeta() {
     return this.shell.form.get('meta');
@@ -38,13 +37,10 @@ export class MeetingComponent implements OnInit {
   ngOnInit(): void {
     this.dynTitle.setPageTitle('Add an event', 'Meeting info');
 
-    this.members$ = this.orgService.currentOrg$.pipe(
-      switchMap(org => this.userService.valueChanges(org.userIds))
-    )
+    this.members$ = this.orgService.currentOrg$.pipe(switchMap(org => this.userService.valueChanges(org.userIds)));
   }
 
   copied() {
     this.snackBar.open('Link copied', 'CLOSE', { duration: 4000 });
   }
-
 }

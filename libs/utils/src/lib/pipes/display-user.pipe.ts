@@ -2,19 +2,18 @@ import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { displayName } from '../utils';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
-import { Organization, orgName, PublicUser } from '@blockframes/model';
+import { Organization, orgName, PublicUser } from '@blockframes/shared/model';
 
 /**
  * This pipe is used to display the firstname and lastname of the user but also the organization in parenthesis.
  * If you want only firstname and lastname, you can use the displayName pipe.
  */
 @Pipe({
-  name: 'displayUser'
+  name: 'displayUser',
 })
 export class DisplayUserPipe implements PipeTransform {
-
   private cachedOrgs: Organization[] = [];
-  constructor(private orgService: OrganizationService) { }
+  constructor(private orgService: OrganizationService) {}
 
   async transform(users: PublicUser | PublicUser[]) {
     const getUserName = async (user: PublicUser) => {
@@ -24,7 +23,7 @@ export class DisplayUserPipe implements PipeTransform {
       } else {
         return displayName(user);
       }
-    }
+    };
 
     return Array.isArray(users) ? Promise.all(users.map(getUserName)) : getUserName(users);
   }
@@ -45,6 +44,6 @@ export class DisplayUserPipe implements PipeTransform {
 @NgModule({
   declarations: [DisplayUserPipe],
   imports: [CommonModule],
-  exports: [DisplayUserPipe]
+  exports: [DisplayUserPipe],
 })
-export class DisplayUserModule { }
+export class DisplayUserModule {}

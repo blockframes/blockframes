@@ -7,14 +7,12 @@ import { eventTime } from '../pipes/event-time.pipe';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { AuthService } from '@blockframes/auth/+state';
-import { Event, Meeting } from '@blockframes/model';
+import { Event, Meeting } from '@blockframes/shared/model';
 import { TwilioService } from '../components/meeting/+state/twilio.service';
 import { take } from 'rxjs/operators';
 
-
 @Injectable({ providedIn: 'root' })
 export class EventGuard implements CanActivate, CanDeactivate<unknown> {
-
   private event: Event;
 
   constructor(
@@ -23,8 +21,8 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
     private eventService: EventService,
     private router: Router,
     private dialog: MatDialog,
-    private twilioService: TwilioService,
-  ) { }
+    private twilioService: TwilioService
+  ) {}
 
   async canActivate(next: ActivatedRouteSnapshot): Promise<boolean | UrlTree> {
     const eventId: string = next.params.eventId;
@@ -33,7 +31,8 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
     // if the event is not a meeting the lobby page is not accessible
     // redirect directly to the session page,
     // the guard will then be re-evaluated for invitation etc... on the session page
-    if (this.event.type !== 'meeting' && next.routeConfig.path === 'lobby') return this.router.parseUrl(`/event/${this.event.id}/r/i/session`);
+    if (this.event.type !== 'meeting' && next.routeConfig.path === 'lobby')
+      return this.router.parseUrl(`/event/${this.event.id}/r/i/session`);
 
     if (eventTime(this.event) !== 'onTime') return this.router.parseUrl(`/event/${this.event.id}/r/i`);
 
@@ -46,13 +45,12 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
         const isInvited = invitation.mode === 'invitation' && invitation.toUser.uid === this.authService.uid;
         return hasRequested || isInvited;
       });
-    }
+    };
 
     switch (this.event.accessibility) {
       case 'public':
         return true;
       case 'protected': {
-
         if (this.event.isOwner) return true;
 
         const hasAnonymousInvitation = async () => {
@@ -64,7 +62,7 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
           if (invitation?.status !== 'accepted') return false;
           if (invitation?.toUser?.email !== anonymousCreds.email) return false;
           return true;
-        }
+        };
 
         // if user wasn't invited OR hasn't accepted yet
         if (!(await hasRegularInvitation()) && !(await hasAnonymousInvitation())) {
@@ -74,7 +72,6 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
         return true;
       }
       case 'private': {
-
         if (this.event.isOwner) return true;
 
         // if user wasn't invited OR hasn't accepted yet
@@ -82,9 +79,7 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
 
         return true;
       }
-
     }
-
   }
 
   canDeactivate(
@@ -92,8 +87,7 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
     __: ActivatedRouteSnapshot,
     ___: RouterStateSnapshot,
     nextState: RouterStateSnapshot
-  ): (boolean | Observable<boolean>) {
-
+  ): boolean | Observable<boolean> {
     // we don't show the confirm dialog if the user don't quit the event
     // i.e. if the user navigate  lobby <-> session
     const nextPage = nextState.url.split('/').pop();
@@ -121,9 +115,8 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
           cancel: 'Stay',
         },
         autoFocus: false,
-      })
+      });
       return dialogRef.afterClosed();
     }
-
   }
 }

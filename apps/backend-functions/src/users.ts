@@ -1,7 +1,14 @@
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 import { db } from './internals/firebase';
-import { userResetPassword, sendDemoRequestMail, sendContactEmail, accountCreationEmail, userInvite, userVerifyEmail } from './templates/mail';
+import {
+  userResetPassword,
+  sendDemoRequestMail,
+  sendContactEmail,
+  accountCreationEmail,
+  userInvite,
+  userVerifyEmail,
+} from './templates/mail';
 import { sendMailFromTemplate, sendMail } from './internals/email';
 import { RequestDemoInformations } from '@blockframes/utils/request-demo';
 import { getCollection, storeSearchableUser, deleteObject, algolia } from '@blockframes/firebase-utils';
@@ -12,7 +19,7 @@ import { production } from './environments/environment';
 import { cleanUserMedias } from './media';
 import { getUserEmailData, OrgEmailData } from '@blockframes/utils/emails/utils';
 import { groupIds } from '@blockframes/utils/emails/ids';
-import { User, OrganizationDocument, PublicUser, InvitationDocument, PermissionsDocument } from '@blockframes/model';
+import { User, OrganizationDocument, PublicUser, InvitationDocument, PermissionsDocument } from '@blockframes/shared/model';
 import { updateMemberTags } from './mailchimp';
 import { getPreferenceTag, MailchimpTag } from '@blockframes/utils/mailchimp/mailchimp-model';
 import { ErrorResultResponse } from './utils';
@@ -20,8 +27,11 @@ import { ErrorResultResponse } from './utils';
 type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
 
-
-interface EmailFlowData { email: string, app: App, publicUser: PublicUser }
+interface EmailFlowData {
+  email: string;
+  app: App;
+  publicUser: PublicUser;
+}
 
 export const startVerifyEmailFlow = async (data: EmailFlowData) => {
   const { email, app, publicUser } = data;
@@ -55,7 +65,6 @@ export const startAccountCreationEmailFlow = async (data: EmailFlowData) => {
   } catch (e) {
     throw new Error(`There was an error while sending account creation email : ${e.message}`);
   }
-
 };
 
 export const startResetPasswordEmail = async (data: EmailFlowData): Promise<ErrorResultResponse> => {
@@ -71,22 +80,23 @@ export const startResetPasswordEmail = async (data: EmailFlowData): Promise<Erro
     await sendMailFromTemplate(template, app);
     return {
       error: '',
-      result: 'OK'
-    }
+      result: 'OK',
+    };
   } catch (e) {
     return {
       error: e?.code || 'ERROR',
-      result: e?.message
-    }
+      result: e?.message,
+    };
   }
-
 };
 
 export const onUserCreate = async (user: UserRecord) => {
   const { email, uid } = user;
 
   if (!email || !uid) {
-    functions.logger.warn(`Email and uid are mandatory parameter, provided email (${email}), uid (${uid}). The user may have been created anonymously.`);
+    functions.logger.warn(
+      `Email and uid are mandatory parameter, provided email (${email}), uid (${uid}). The user may have been created anonymously.`
+    );
     return;
   }
 
@@ -117,7 +127,9 @@ export const onUserCreate = async (user: UserRecord) => {
 
 export async function onUserCreateDocument(snap: FirebaseFirestore.DocumentSnapshot) {
   const after = snap.data() as PublicUser;
-  if (after.firstName) { await initUser(after); }
+  if (after.firstName) {
+    await initUser(after);
+  }
   return true;
 }
 
@@ -130,9 +142,8 @@ export async function onUserUpdate(change: functions.Change<FirebaseFirestore.Do
 
   await cleanUserMedias(before, after);
 
-
   // Sync preferences with mailchimp
-  const tags: MailchimpTag[] = []
+  const tags: MailchimpTag[] = [];
   if (after?.preferences) {
     for (const key in after.preferences) {
       const activeTags = getPreferenceTag(key, after.preferences[key], 'active');
@@ -150,7 +161,7 @@ export async function onUserUpdate(change: functions.Change<FirebaseFirestore.Do
       tags.push(...removedTags);
     }
   }
-  if (tags.length) updateMemberTags(after.email, tags)
+  if (tags.length) updateMemberTags(after.email, tags);
 
   // if name, email, avatar or orgId has changed : update algolia record
   if (
@@ -178,7 +189,6 @@ async function initUser(user: PublicUser) {
 }
 
 export async function onUserDelete(userSnapshot: FirebaseFirestore.DocumentSnapshot<PublicUser>) {
-
   const user = userSnapshot.data() as PublicUser;
 
   // update Algolia index
@@ -193,7 +203,7 @@ export async function onUserDelete(userSnapshot: FirebaseFirestore.DocumentSnaps
   if (user.orgId) {
     const orgRef = db.doc(`orgs/${user.orgId}`);
     const orgDoc = await orgRef.get();
-    const org = orgDoc.data() as OrganizationDocument
+    const org = orgDoc.data() as OrganizationDocument;
     const userIds = org.userIds.filter(userId => userId !== user.uid);
     orgRef.update({ userIds });
   }
@@ -209,7 +219,7 @@ export async function onUserDelete(userSnapshot: FirebaseFirestore.DocumentSnaps
   }
 
   // remove all invitations related to user
-  const invitations = await getCollection<InvitationDocument>(`invitations`)
+  const invitations = await getCollection<InvitationDocument>(`invitations`);
   invitations
     .filter(invitation => invitation.fromUser?.uid === user.uid || invitation.toUser?.uid === user.uid)
     .map(invitation => invitation.id)
@@ -228,12 +238,14 @@ export const sendDemoRequest = async (data: RequestDemoInformations): Promise<Re
   const from = getMailSender(data.app);
   await sendMail(sendDemoRequestMail(data), from, groupIds.noUnsubscribeLink);
   return data;
-}
+};
 
-export const sendUserMail = async (data: { subject: string, message: string, app: App }, context: CallableContext) => {
+export const sendUserMail = async (data: { subject: string; message: string; app: App }, context: CallableContext) => {
   const { subject, message, app } = data;
 
-  if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
+  if (!context?.auth) {
+    throw new Error('Permission denied: missing auth context.');
+  }
   const user = await getDocument<PublicUser>(`users/${context.auth.uid}`);
 
   if (!subject || !message) {
@@ -243,8 +255,7 @@ export const sendUserMail = async (data: { subject: string, message: string, app
   const from = getMailSender(app);
 
   await sendMail(sendContactEmail(`${user.firstName} ${user.lastName}`, user.email, subject, message, app), from);
-}
-
+};
 
 /**
  * Create an user.
@@ -252,12 +263,19 @@ export const sendUserMail = async (data: { subject: string, message: string, app
  * @param data
  * @param context
  */
-export const createUser = async (data: { email: string, orgEmailData: OrgEmailData, app: App }, context: CallableContext): Promise<PublicUser> => {
+export const createUser = async (
+  data: { email: string; orgEmailData: OrgEmailData; app: App },
+  context: CallableContext
+): Promise<PublicUser> => {
   const { email, orgEmailData, app } = data;
 
-  if (!context?.auth) { throw new functions.https.HttpsError('permission-denied', 'Missing auth context!'); }
+  if (!context?.auth) {
+    throw new functions.https.HttpsError('permission-denied', 'Missing auth context!');
+  }
   const blockframesAdmin = await db.doc(`blockframesAdmin/${context.auth.uid}`).get();
-  if (!blockframesAdmin.exists) { throw new functions.https.HttpsError('permission-denied', 'You are not a blockframes admin!'); }
+  if (!blockframesAdmin.exists) {
+    throw new functions.https.HttpsError('permission-denied', 'You are not a blockframes admin!');
+  }
 
   if (!email) {
     throw new functions.https.HttpsError('invalid-argument', '"email" is mandatory to create a user!');
@@ -281,25 +299,32 @@ export const createUser = async (data: { email: string, orgEmailData: OrgEmailDa
     } catch (err) {
       if (production) throw err;
 
-      functions.logger.warn(`Email hasn't been sent because of error! This will fail in prod, we prevented the function to crash because we are not in prod.`);
+      functions.logger.warn(
+        `Email hasn't been sent because of error! This will fail in prod, we prevented the function to crash because we are not in prod.`
+      );
       functions.logger.warn(`Please check that your sendgrid key is authorized to send emails.`);
       functions.logger.error(err);
     }
 
-
     return newUser.user;
   } catch (e) {
-    throw new functions.https.HttpsError('internal', `There was an error while sending email to newly created user : ${e.message}`);
+    throw new functions.https.HttpsError(
+      'internal',
+      `There was an error while sending email to newly created user : ${e.message}`
+    );
   }
-
-}
+};
 
 export const verifyEmail = async (data: { uid: string }, context: CallableContext) => {
   const { uid } = data;
 
-  if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
+  if (!context?.auth) {
+    throw new Error('Permission denied: missing auth context.');
+  }
   const blockframesAdmin = await db.doc(`blockframesAdmin/${context.auth.uid}`).get();
-  if (!blockframesAdmin.exists) { throw new Error('Permission denied: you are not blockframes admin'); }
+  if (!blockframesAdmin.exists) {
+    throw new Error('Permission denied: you are not blockframes admin');
+  }
 
   if (!uid) {
     throw new Error('uid is mandatory for verifying email');
@@ -314,4 +339,4 @@ export const verifyEmail = async (data: { uid: string }, context: CallableContex
   } catch (e) {
     throw new Error(`There was an error while verifying email : ${e.message}`);
   }
-}
+};

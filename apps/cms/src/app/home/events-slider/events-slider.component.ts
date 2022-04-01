@@ -11,29 +11,24 @@ import { SelectFormModule } from '../../forms/select';
 import { getEventsQueryFn, toMap } from '../pipes';
 import { map } from 'rxjs/operators';
 import { EventService } from '@blockframes/event/+state/event.service';
-import { Event } from '@blockframes/model';
-
+import { Event } from '@blockframes/shared/model';
 
 @Component({
   selector: 'form-events-slider',
   templateUrl: './events-slider.component.html',
   styleUrls: ['./events-slider.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EventsSliderComponent implements OnInit {
   private mode?: 'query' | 'eventIds';
   @Input() form?: FormEntity<EventsSliderSchema>;
 
-  events$ = this.service.valueChanges(getEventsQueryFn()).pipe(
-    map(toMap)
-  );
+  events$ = this.service.valueChanges(getEventsQueryFn()).pipe(map(toMap));
 
   displayLabel = (event?: Event) => event?.title;
   getValue = (event?: Event) => event?.id;
 
-  constructor(
-    private service: EventService
-  ) {}
+  constructor(private service: EventService) {}
 
   get queryMode() {
     return this.mode || (this.form?.get('eventIds').length ? 'eventIds' : 'query');
@@ -41,9 +36,7 @@ export class EventsSliderComponent implements OnInit {
 
   private selectForm() {
     for (const key of ['eventIds', 'query'] as const) {
-      this.queryMode === key
-        ? this.form?.get(key).enable()
-        : this.form?.get(key).disable();
+      this.queryMode === key ? this.form?.get(key).enable() : this.form?.get(key).disable();
     }
   }
 
@@ -57,7 +50,6 @@ export class EventsSliderComponent implements OnInit {
   }
 }
 
-
 @NgModule({
   declarations: [EventsSliderComponent],
   exports: [EventsSliderComponent],
@@ -68,7 +60,7 @@ export class EventsSliderComponent implements OnInit {
     FormChipsAutocompleteModule,
     SelectFormModule,
     FirestoreFormModule,
-    MatRadioModule
-  ]
+    MatRadioModule,
+  ],
 })
-export class SliderModule { }
+export class SliderModule {}

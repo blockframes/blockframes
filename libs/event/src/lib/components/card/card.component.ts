@@ -1,12 +1,5 @@
-import {
-  Component,
-  ChangeDetectionStrategy,
-  Input,
-  Pipe,
-  PipeTransform,
-  HostBinding,
-} from '@angular/core';
-import { Movie, ScreeningEvent, MeetingEvent, SlateEvent } from '@blockframes/model';
+import { Component, ChangeDetectionStrategy, Input, Pipe, PipeTransform, HostBinding } from '@angular/core';
+import { Movie, ScreeningEvent, MeetingEvent, SlateEvent } from '@blockframes/shared/model';
 
 @Component({
   selector: 'event-card',

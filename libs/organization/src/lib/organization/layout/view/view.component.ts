@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input, ViewChild, ElementRef, OnInit, OnDestroy } from '@angular/core';
-import { Organization } from '@blockframes/model';
+import { Organization } from '@blockframes/shared/model';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { NavigationEnd, Router, RouterOutlet, Event } from '@angular/router';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
@@ -12,7 +12,7 @@ import { NavigationService } from '@blockframes/ui/navigation.service';
   templateUrl: './view.component.html',
   styleUrls: ['./view.component.scss'],
   animations: [routeAnimation],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ViewComponent implements OnInit, OnDestroy {
   @Input() navLinks;
@@ -22,10 +22,7 @@ export class ViewComponent implements OnInit, OnDestroy {
   private countRouteEvents = 1;
   private sub: Subscription;
 
-  constructor(
-    private router: Router,
-    private navService: NavigationService    
-  ) { }
+  constructor(private router: Router, private navService: NavigationService) {}
 
   ngOnInit() {
     this.sub = this.router.events

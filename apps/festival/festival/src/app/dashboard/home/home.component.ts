@@ -5,7 +5,7 @@ import { Component, ChangeDetectionStrategy, Optional, Inject } from '@angular/c
 import { MovieService, fromOrg } from '@blockframes/movie/+state/movie.service';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { hasAppStatus } from '@blockframes/model';
+import { hasAppStatus } from '@blockframes/shared/model';
 import { App } from '@blockframes/utils/apps';
 import { APP } from '@blockframes/utils/routes/utils';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
@@ -28,7 +28,7 @@ import { Intercom } from 'ng-intercom';
 export class HomeComponent {
   public titles$ = this.orgService.currentOrg$.pipe(
     switchMap(({ id }) => this.movieService.valueChanges(fromOrg(id))),
-    map((titles) => titles.filter((title) => title.app[this.app].access)),
+    map(titles => titles.filter(title => title.app[this.app].access)),
     tap(titles => {
       titles.filter(hasAppStatus(this.app, ['accepted', 'submitted'])).length
         ? this.dynTitle.setPageTitle('Dashboard')
@@ -38,7 +38,7 @@ export class HomeComponent {
 
   titleAnalytics$ = this.analyticsService.getAnalytics().pipe(
     joinWith({
-      org: analytic => this.orgService.valueChanges(analytic.meta.orgId)
+      org: analytic => this.orgService.valueChanges(analytic.meta.orgId),
     }),
     shareReplay({ bufferSize: 1, refCount: true })
   );
@@ -46,26 +46,20 @@ export class HomeComponent {
   popularTitle$ = this.titleAnalytics$.pipe(
     filter(analytics => analytics.length > 0),
     map(analytics => counter(analytics, 'meta.titleId')),
-    map(analytics => analytics.sort((a, b) => a.count > b.count ? -1 : 1)),
+    map(analytics => analytics.sort((a, b) => (a.count > b.count ? -1 : 1))),
     switchMap(([popularEvent]) => this.movieService.valueChanges(popularEvent.key)),
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
-  orgActivityOfPopularTitle$ = combineLatest([
-    this.popularTitle$,
-    this.titleAnalytics$
-  ]).pipe(
+  orgActivityOfPopularTitle$ = combineLatest([this.popularTitle$, this.titleAnalytics$]).pipe(
     map(([title, titleAnalytics]) => titleAnalytics.filter(analytics => analytics.meta.titleId === title.id)),
     map(analytics => counter(analytics, 'org.activity', 'orgActivity'))
-  )
+  );
 
-  territoryActivityOfPopularTitle$ = combineLatest([
-    this.popularTitle$,
-    this.titleAnalytics$
-  ]).pipe(
+  territoryActivityOfPopularTitle$ = combineLatest([this.popularTitle$, this.titleAnalytics$]).pipe(
     map(([title, titleAnalytics]) => titleAnalytics.filter(analytics => analytics.meta.titleId === title.id)),
-    map(analytics => counter(analytics, 'org.addresses.main.country', 'territories')),
-  )
+    map(analytics => counter(analytics, 'org.addresses.main.country', 'territories'))
+  );
 
   constructor(
     private analyticsService: AnalyticsService,
@@ -74,7 +68,7 @@ export class HomeComponent {
     private dynTitle: DynamicTitleService,
     @Optional() private intercom: Intercom,
     @Inject(APP) public app: App
-  ) { }
+  ) {}
 
   public openIntercom(): void {
     return this.intercom.show();

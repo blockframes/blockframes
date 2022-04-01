@@ -1,12 +1,12 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { getGuest } from '@blockframes/invitation/pipes/guest.pipe';
-import { Invitation, InvitationDetailed } from '@blockframes/model';
+import { Invitation, InvitationDetailed } from '@blockframes/shared/model';
 
 @Component({
   selector: 'invitation-guest-table',
   templateUrl: './guest-table.component.html',
   styleUrls: ['./guest-table.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GuestTableComponent {
   public _invitations: Invitation[] | InvitationDetailed[];

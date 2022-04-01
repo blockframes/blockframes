@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { User, Organization, Invitation, UserRole } from '@blockframes/model';
+import { User, Organization, Invitation, UserRole } from '@blockframes/shared/model';
 import { UserCrmForm } from '@blockframes/admin/crm/forms/user-crm.form';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { OrganizationService } from '@blockframes/organization/+state';
@@ -24,12 +24,12 @@ import { Scope } from '@blockframes/utils/static-model';
   selector: 'crm-user',
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserComponent implements OnInit {
   public userId = '';
   public user: User;
-  public user$: Observable<User>
+  public user$: Observable<User>;
   public userOrg: Organization;
   public userOrgRole: UserRole;
   public isUserBlockframesAdmin = false;
@@ -37,7 +37,7 @@ export class UserComponent implements OnInit {
   public invitations: Invitation[];
   private originalOrgValue: string;
 
-  public dashboardURL: SafeResourceUrl
+  public dashboardURL: SafeResourceUrl;
 
   constructor(
     private userService: UserService,
@@ -52,7 +52,7 @@ export class UserComponent implements OnInit {
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private functions: AngularFireFunctions
-  ) { }
+  ) {}
 
   async ngOnInit() {
     this.route.params.subscribe(async params => {
@@ -82,7 +82,7 @@ export class UserComponent implements OnInit {
       return;
     }
 
-    const { email, orgId, firstName, lastName, phoneNumber, position } = this.userForm.value
+    const { email, orgId, firstName, lastName, phoneNumber, position } = this.userForm.value;
 
     if (!!orgId && !!this.originalOrgValue && orgId !== this.originalOrgValue) {
       // get the users current permissions
@@ -92,7 +92,9 @@ export class UserComponent implements OnInit {
       // remove user from org
       try {
         await this.organizationService.removeMember(this.userId);
-        this.snackBar.open('Member removed for previous org... Please wait until it is added to the new one', 'close', { duration: 2000 });
+        this.snackBar.open('Member removed for previous org... Please wait until it is added to the new one', 'close', {
+          duration: 2000,
+        });
       } catch (error) {
         this.snackBar.open(error.message, 'close', { duration: 2000 });
         return;
@@ -100,13 +102,13 @@ export class UserComponent implements OnInit {
 
       // Waiting for backend function to be triggered (which removes the orgId from a user when userId is removed from org)
       let subscription: Subscription;
-      await new Promise((resolve) => {
-        subscription = this.userService.valueChanges(this.userId).subscribe((res) => {
+      await new Promise(resolve => {
+        subscription = this.userService.valueChanges(this.userId).subscribe(res => {
           if (!!res && res.orgId === '') {
             resolve(undefined);
           }
-        })
-      })
+        });
+      });
       subscription.unsubscribe();
 
       // add user to organization
@@ -125,7 +127,7 @@ export class UserComponent implements OnInit {
       firstName,
       lastName,
       phoneNumber,
-      position
+      position,
     };
 
     await this.userService.update(this.user.uid, update);
@@ -136,7 +138,6 @@ export class UserComponent implements OnInit {
 
     this.snackBar.open('Informations updated !', 'close', { duration: 5000 });
   }
-
 
   public async setBlockframesAdmin() {
     this.isUserBlockframesAdmin = !this.isUserBlockframesAdmin;
@@ -165,9 +166,7 @@ export class UserComponent implements OnInit {
 
   public async sendPasswordResetEmail() {
     // User can have no org or access to multiple applcations, in that case we don't know which application name to user in the email and thus send a general Cascade8 email
-    const app: App = this.userOrg && getOrgAppAccess(this.userOrg).length === 1
-      ? getOrgAppAccess(this.userOrg)[0]
-      : 'crm';
+    const app: App = this.userOrg && getOrgAppAccess(this.userOrg).length === 1 ? getOrgAppAccess(this.userOrg)[0] : 'crm';
 
     await this.crmService.sendPasswordResetEmail(this.user.email, app);
     this.snackBar.open(`Reset password email sent to : ${this.user.email}`, 'close', { duration: 2000 });
@@ -185,7 +184,7 @@ export class UserComponent implements OnInit {
     this.dialog.open(ConfirmInputComponent, {
       data: {
         title: 'You are currently deleting this user from Archipel, are you sure?',
-        text: 'If yes, please write \'HARD DELETE\' inside the form below.',
+        text: "If yes, please write 'HARD DELETE' inside the form below.",
         warning: 'This user will be deleted from the application.',
         simulation,
         confirmationWord: 'hard delete',
@@ -194,8 +193,8 @@ export class UserComponent implements OnInit {
           await this.userService.remove(this.userId);
           this.snackBar.open('User deleted !', 'close', { duration: 5000 });
           this.router.navigate(['c/o/dashboard/crm/users']);
-        }
-      }
+        },
+      },
     });
   }
 
@@ -220,7 +219,7 @@ export class UserComponent implements OnInit {
     const invitTo = await this.invitationService.getValue(ref => ref.where('toUser.uid', '==', user.uid));
     const allInvit = [...invitFrom, ...invitTo];
     if (allInvit.length) {
-      output.push(`${allInvit.length} invitation(s) will be removed.`)
+      output.push(`${allInvit.length} invitation(s) will be removed.`);
     }
 
     const organizerEvent = await this.eventService.getValue(ref => ref.where('meta.organizerUid', '==', user.uid));

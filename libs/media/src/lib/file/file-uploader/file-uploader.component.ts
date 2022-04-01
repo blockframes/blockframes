@@ -10,15 +10,12 @@ import {
   Output,
   EventEmitter,
   OnDestroy,
-  OnInit
+  OnInit,
 } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import {
-  getMimeType,
-  sanitizeFileName,
-} from '@blockframes/utils/file-sanitizer';
+import { getMimeType, sanitizeFileName } from '@blockframes/utils/file-sanitizer';
 import { FileUploaderService } from '@blockframes/media/+state';
-import { FileMetaData } from '@blockframes/model';
+import { FileMetaData } from '@blockframes/shared/model';
 import { allowedFiles, AllowedFileType, fileSizeToString, maxAllowedFileSize } from '@blockframes/utils/utils';
 import { CollectionHoldingFile, FileLabel, getFileMetadata, getFileStoragePath } from '../../+state/static-files';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
@@ -36,12 +33,13 @@ type UploadState = 'waiting' | 'hovering' | 'ready' | 'file';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FileUploaderComponent implements OnInit, OnDestroy {
-
   public storagePath: string;
   public metadata: FileMetaData;
 
   private _form: StorageFileForm;
-  get form() { return this._form; }
+  get form() {
+    return this._form;
+  }
   @Input() set form(value: StorageFileForm) {
     this._form = value;
     this.sub?.unsubscribe();
@@ -50,14 +48,14 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
       if (storageFile.privacy) this.metadata.privacy = storageFile.privacy;
       const extra = this.getExtra();
       if (extra) {
-        this.metadata = { ...this.metadata, ...extra }
+        this.metadata = { ...this.metadata, ...extra };
         const task = this.uploaderService.retrieveFromQueue(this.storagePath, this.queueIndex);
         if (task) {
           task.metadata = this.metadata;
           this.computeState();
         }
       }
-    })
+    });
   }
 
   @Input() queueIndex: number;
@@ -69,7 +67,7 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
     this.computeState();
   }
   @Input() set accept(fileType: AllowedFileType | AllowedFileType[]) {
-    const types = Array.isArray(fileType) ? fileType : [fileType]
+    const types = Array.isArray(fileType) ? fileType : [fileType];
     types.forEach(type => {
       this.allowedTypes = this.allowedTypes.concat(allowedFiles[type].extension);
       this.types = this.types.concat(allowedFiles[type].mime);
@@ -101,25 +99,25 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
   private sub: Subscription;
   private docSub: Subscription;
 
-  constructor(
-    private db: AngularFirestore,
-    private snackBar: MatSnackBar,
-    private uploaderService: FileUploaderService,
-  ) { }
+  constructor(private db: AngularFirestore, private snackBar: MatSnackBar, private uploaderService: FileUploaderService) {}
 
   ngOnInit() {
     if (this.listenToChanges) {
-      this.docSub = this.db.doc(`${this.metadata.collection}/${this.metadata.docId}`).valueChanges().subscribe(data => {
-        const media = this.formIndex !== undefined
-          ? getDeepValue(data, this.metadata.field)[this.formIndex]
-          : getDeepValue(data, this.metadata.field);
-        if (media) {
-          const extra = this.getExtra();
-          // jwPlayer comes from the doc, not from the form.
-          delete extra?.['jwPlayerId'];
-          this.form.patchValue({ ...media, ...extra });
-        }
-      })
+      this.docSub = this.db
+        .doc(`${this.metadata.collection}/${this.metadata.docId}`)
+        .valueChanges()
+        .subscribe(data => {
+          const media =
+            this.formIndex !== undefined
+              ? getDeepValue(data, this.metadata.field)[this.formIndex]
+              : getDeepValue(data, this.metadata.field);
+          if (media) {
+            const extra = this.getExtra();
+            // jwPlayer comes from the doc, not from the form.
+            delete extra?.['jwPlayerId'];
+            this.form.patchValue({ ...media, ...extra });
+          }
+        });
     }
   }
 
@@ -149,10 +147,9 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
     this.computeState();
   }
 
-
   public selected(files: FileList | File) {
-
-    if ('item' in files) { // FileList
+    if ('item' in files) {
+      // FileList
       if (!files.item(0)) {
         this.snackBar.open('No file found', 'close', { duration: 1000 });
         if (this.file) {
@@ -164,17 +161,18 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
         return;
       }
       this.file = files.item(0);
-
-    } else if (!files) { // No files
-        this.snackBar.open('No file found', 'close', { duration: 1000 });
-        if (this.file) {
-          this.state$.next('file');
-        } else {
-          this.state$.next('waiting');
-          this.fileExplorer.nativeElement.value = null;
-        }
-        return;
-    } else { // Single file
+    } else if (!files) {
+      // No files
+      this.snackBar.open('No file found', 'close', { duration: 1000 });
+      if (this.file) {
+        this.state$.next('file');
+      } else {
+        this.state$.next('waiting');
+        this.fileExplorer.nativeElement.value = null;
+      }
+      return;
+    } else {
+      // Single file
       this.file = files;
     }
 
@@ -197,10 +195,12 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
     }
 
     if (this.file.size >= this.maxSize) {
-      this.snackBar.open(`Your file is too big: max allowed size is ${fileSizeToString(this.maxSize)}.`, 'close', { duration: 4000 });
+      this.snackBar.open(`Your file is too big: max allowed size is ${fileSizeToString(this.maxSize)}.`, 'close', {
+        duration: 4000,
+      });
       this.state$.next('waiting');
       this.fileExplorer.nativeElement.value = null;
-      return
+      return;
     }
 
     this.state$.next('ready');
@@ -234,7 +234,9 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
   }
 
   private getExtra() {
-    const extraKeys = Object.keys(this.form.value).filter(key => !['privacy', 'collection', 'docId', 'field', 'storagePath'].includes(key));
+    const extraKeys = Object.keys(this.form.value).filter(
+      key => !['privacy', 'collection', 'docId', 'field', 'storagePath'].includes(key)
+    );
     if (extraKeys.length) {
       const extra = {};
       for (const key of extraKeys) {

@@ -9,48 +9,28 @@ import {
   getDocument,
 } from '@blockframes/firebase-utils';
 import { algolia } from '@env';
-import {
-  OrganizationDocument,
-  orgName,
-  MovieDocument,
-  PublicUser
-} from '@blockframes/model';
+import { OrganizationDocument, orgName, MovieDocument, PublicUser } from '@blockframes/shared/model';
 import { App, getAllAppsExcept } from '@blockframes/utils/apps';
 import { Campaign } from '@blockframes/campaign/+state/campaign.model';
 import { AlgoliaConfig } from '@blockframes/utils/algolia';
 
 export async function upgradeAlgoliaOrgs(appConfig?: App, db = loadAdminServices().db) {
   if (!appConfig) {
-    const promises = getAllAppsExcept(['crm']).map((app) => upgradeAlgoliaOrgs(app, db));
+    const promises = getAllAppsExcept(['crm']).map(app => upgradeAlgoliaOrgs(app, db));
     await Promise.all(promises);
   } else {
     // reset config, clear index and fill it up from the db (which is the only source of truth)
     const config: AlgoliaConfig = {
       searchableAttributes: ['name'],
-      attributesForFaceting: [
-        'appAccess',
-        'appModule',
-        'name',
-        'country',
-        'isAccepted',
-        'hasAcceptedMovies',
-      ],
+      attributesForFaceting: ['appAccess', 'appModule', 'name', 'country', 'isAccepted', 'hasAcceptedMovies'],
       customRanking: ['asc(name)'],
     };
     await clearIndex(algolia.indexNameOrganizations[appConfig], process.env['ALGOLIA_API_KEY']);
-    await setIndexConfiguration(
-      algolia.indexNameOrganizations[appConfig],
-      config,
-      process.env['ALGOLIA_API_KEY']
-    );
+    await setIndexConfiguration(algolia.indexNameOrganizations[appConfig], config, process.env['ALGOLIA_API_KEY']);
 
-    const orgsIterator = getCollectionInBatches<OrganizationDocument>(
-      db.collection('orgs'),
-      'id',
-      300
-    );
+    const orgsIterator = getCollectionInBatches<OrganizationDocument>(db.collection('orgs'), 'id', 300);
     for await (const orgs of orgsIterator) {
-      const promises = orgs.map((org) => storeSearchableOrg(org, process.env['ALGOLIA_API_KEY']));
+      const promises = orgs.map(org => storeSearchableOrg(org, process.env['ALGOLIA_API_KEY']));
 
       await Promise.all(promises);
       console.log(`chunk of ${orgs.length} orgs processed...`);
@@ -62,36 +42,28 @@ export async function upgradeAlgoliaOrgs(appConfig?: App, db = loadAdminServices
 
 export async function upgradeAlgoliaMovies(appConfig?: App, db = loadAdminServices().db) {
   if (!appConfig) {
-    const promises = getAllAppsExcept(['crm']).map((app) => upgradeAlgoliaMovies(app, db));
+    const promises = getAllAppsExcept(['crm']).map(app => upgradeAlgoliaMovies(app, db));
     await Promise.all(promises);
   } else {
     // reset config, clear index and fill it up from the db (which is the only source of truth)
     const config = movieConfig(appConfig);
 
     await clearIndex(algolia.indexNameMovies[appConfig], process.env['ALGOLIA_API_KEY']);
-    await setIndexConfiguration(
-      algolia.indexNameMovies[appConfig],
-      config,
-      process.env['ALGOLIA_API_KEY']
-    );
+    await setIndexConfiguration(algolia.indexNameMovies[appConfig], config, process.env['ALGOLIA_API_KEY']);
 
-    const moviesIterator = getCollectionInBatches<MovieDocument>(
-      db.collection('movies'),
-      'id',
-      300
-    );
+    const moviesIterator = getCollectionInBatches<MovieDocument>(db.collection('movies'), 'id', 300);
 
     for await (const movies of moviesIterator) {
-      const promises = movies.map(async (movie) => {
+      const promises = movies.map(async movie => {
         try {
-          const orgsDocs = await Promise.all(movie.orgIds.map((id) => db.doc(`orgs/${id}`).get()));
-          const orgs = orgsDocs.map((doc) => doc.data() as OrganizationDocument);
+          const orgsDocs = await Promise.all(movie.orgIds.map(id => db.doc(`orgs/${id}`).get()));
+          const orgs = orgsDocs.map(doc => doc.data() as OrganizationDocument);
 
           if (!orgs.length) {
             console.error(`Movie ${movie.id} is not part of any orgs`);
           }
 
-          const organizationNames = orgs.map((org) => orgName(org));
+          const organizationNames = orgs.map(org => orgName(org));
 
           if (appConfig === 'financiers') {
             const campaign = await getDocument<Campaign>(`campaign/${movie.id}`);
@@ -127,7 +99,7 @@ export async function upgradeAlgoliaUsers(db = loadAdminServices().db) {
 
   const usersIterator = getCollectionInBatches<PublicUser>(db.collection('users'), 'uid', 300);
   for await (const users of usersIterator) {
-    const promises = users.map(async (user) => {
+    const promises = users.map(async user => {
       try {
         await storeSearchableUser(user, process.env['ALGOLIA_API_KEY']);
       } catch (error) {
@@ -181,11 +153,7 @@ function movieConfig(appConfig: App): AlgoliaConfig {
     case 'financiers':
       return {
         searchableAttributes: baseConfig.searchableAttributes,
-        attributesForFaceting: [
-          ...baseConfig.attributesForFaceting,
-          'socialGoals',
-          'filterOnly(minPledge)',
-        ],
+        attributesForFaceting: [...baseConfig.attributesForFaceting, 'socialGoals', 'filterOnly(minPledge)'],
       };
     default:
       return baseConfig;

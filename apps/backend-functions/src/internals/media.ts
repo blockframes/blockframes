@@ -1,11 +1,18 @@
-
 // External dependencies
 import { get } from 'lodash';
 import * as admin from 'firebase-admin';
 
 // Blockframes dependencies
 import { getDocument } from '@blockframes/firebase-utils';
-import { StorageFile, createPublicUser, MovieDocument, EventDocument, EventMeta, Meeting, Screening } from '@blockframes/model';
+import {
+  StorageFile,
+  createPublicUser,
+  MovieDocument,
+  EventDocument,
+  EventMeta,
+  Meeting,
+  Screening,
+} from '@blockframes/shared/model';
 
 // Internal dependencies
 import { isUserInvitedToEvent } from './invitations/events';
@@ -26,7 +33,9 @@ export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eve
   }
 
   const blockframesAdmin = await db.collection('blockframesAdmin').doc(uid).get();
-  if (blockframesAdmin.exists) { return true; }
+  if (blockframesAdmin.exists) {
+    return true;
+  }
 
   // We should not trust `privacy` & `storagePath` that comes from the parameters
   // instead we use `collection`, `docId` & `field` to retrieve the trusted values form the db
@@ -37,22 +46,28 @@ export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eve
   let storagePath = 'unknown';
 
   if (Array.isArray(storageFile)) {
-
-    if (storageFile.length === 0) { return false; }
+    if (storageFile.length === 0) {
+      return false;
+    }
 
     const retrievedFile = storageFile.find(storage => storage.storagePath === file.storagePath);
-    if (!retrievedFile) { return false; }
+    if (!retrievedFile) {
+      return false;
+    }
 
     privacy = retrievedFile.privacy;
     storagePath = retrievedFile.storagePath;
-
   } else {
-    if (!storageFile) { return false; }
+    if (!storageFile) {
+      return false;
+    }
     privacy = storageFile.privacy;
     storagePath = storageFile.storagePath;
   }
 
-  if (privacy === 'public') { return true; }
+  if (privacy === 'public') {
+    return true;
+  }
 
   let canAccess = false;
   switch (file.collection) {
@@ -62,14 +77,15 @@ export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eve
     case 'orgs':
       canAccess = file.docId === userDoc.orgId;
       break;
-    case 'movies':
-      {
-        const movieSnap = await db.collection('movies').doc(file.docId).get();
-        if (!movieSnap.exists) { return false; }
-        const movie = movieSnap.data() as MovieDocument;
-        canAccess = movie.orgIds.some(id => userDoc.orgId === id);
-        break;
+    case 'movies': {
+      const movieSnap = await db.collection('movies').doc(file.docId).get();
+      if (!movieSnap.exists) {
+        return false;
       }
+      const movie = movieSnap.data() as MovieDocument;
+      canAccess = movie.orgIds.some(id => userDoc.orgId === id);
+      break;
+    }
     default:
       canAccess = false;
       break;
@@ -78,7 +94,6 @@ export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eve
   // use is not currently authorized,
   // but he might be invited to an event where the file is shared
   if (!canAccess && eventData?.id) {
-
     const now = admin.firestore.Timestamp.now();
 
     // check if meeting is ongoing (not too early nor too late)
@@ -87,24 +102,24 @@ export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eve
     }
 
     const isInvited = await isUserInvitedToEvent(uid, eventData, email);
-    if (!isInvited) { return false; }
+    if (!isInvited) {
+      return false;
+    }
 
     // if event is a Meeting and has the file
     if (eventData.type === 'meeting') {
-
       // Check if the given file exists among the event's files
-      canAccess = (eventData.meta as Meeting).files.some(eventFile =>
-        eventFile.privacy === privacy && // trusted value from db
-        eventFile.collection === file.collection &&
-        eventFile.docId === file.docId &&
-        eventFile.field === file.field &&
-        eventFile.storagePath === storagePath // trusted value from db
+      canAccess = (eventData.meta as Meeting).files.some(
+        eventFile =>
+          eventFile.privacy === privacy && // trusted value from db
+          eventFile.collection === file.collection &&
+          eventFile.docId === file.docId &&
+          eventFile.field === file.field &&
+          eventFile.storagePath === storagePath // trusted value from db
       );
-
     } else if (eventData.type === 'screening') {
       // only give access for this specific movie screener
-      canAccess = file.field === 'promotional.videos.screener'
-        && file.docId === (eventData.meta as Screening).titleId;
+      canAccess = file.field === 'promotional.videos.screener' && file.docId === (eventData.meta as Screening).titleId;
     }
   }
 

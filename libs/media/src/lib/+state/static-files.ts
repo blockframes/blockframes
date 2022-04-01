@@ -1,11 +1,6 @@
-import { FileMetaData } from '@blockframes/model';
+import { FileMetaData } from '@blockframes/shared/model';
 
-export const collectionHoldingFiles = [
-  'orgs',
-  'users',
-  'movies',
-  'campaigns'
-] as const;
+export const collectionHoldingFiles = ['orgs', 'users', 'movies', 'campaigns'] as const;
 export type CollectionHoldingFile = typeof collectionHoldingFiles[number];
 
 export const fileLabels = [
@@ -48,15 +43,15 @@ export const storagePaths: Record<CollectionHoldingFile, Partial<Record<FileLabe
     videos: 'documents.videos',
   },
   users: {
-    avatar: 'avatar'
+    avatar: 'avatar',
   },
   movies: {
     poster: 'poster',
     banner: 'banner',
     scenario: 'promotional.scenario',
     moodboard: 'promotional.moodboard',
-    'presentation_deck': 'promotional.presentation_deck',
-    'still_photo': 'promotional.still_photo',
+    presentation_deck: 'promotional.presentation_deck',
+    still_photo: 'promotional.still_photo',
     screener: 'promotional.videos.screener',
     otherVideos: 'promotional.videos.otherVideos',
     salesPitch: 'promotional.videos.salesPitch',
@@ -86,15 +81,15 @@ export function getFileMetadata(collection: CollectionHoldingFile, label: FileLa
       videos: { uid: '', privacy: 'protected', collection, docId, field: 'documents.videos', fileId },
     },
     users: {
-      avatar: { uid: '', privacy: 'public', collection, docId, field: 'avatar' }
+      avatar: { uid: '', privacy: 'public', collection, docId, field: 'avatar' },
     },
     movies: {
       poster: { uid: '', privacy: 'public', collection, docId, field: 'poster' },
       banner: { uid: '', privacy: 'public', collection, docId, field: 'banner' },
       scenario: { uid: '', privacy: 'public', collection, docId, field: 'promotional.scenario' },
       moodboard: { uid: '', privacy: 'public', collection, docId, field: 'promotional.moodboard' },
-      'presentation_deck': { uid: '', privacy: 'public', collection, docId, field: 'promotional.presentation_deck' },
-      'still_photo': { uid: '', privacy: 'public', collection, docId, field: 'promotional.still_photo' },
+      presentation_deck: { uid: '', privacy: 'public', collection, docId, field: 'promotional.presentation_deck' },
+      still_photo: { uid: '', privacy: 'public', collection, docId, field: 'promotional.still_photo' },
       notes: { uid: '', privacy: 'public', collection, docId, field: 'promotional.notes' },
       screener: { uid: '', privacy: 'protected', collection, docId, field: 'promotional.videos.screener' },
       otherVideos: { uid: '', privacy: 'public', collection, docId, field: 'promotional.videos.otherVideos', fileId },

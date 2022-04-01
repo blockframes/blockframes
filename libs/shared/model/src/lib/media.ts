@@ -49,7 +49,7 @@ export interface FileMetaData {
   docId: string;
   field: string;
   [K: string]: string; // extra-data
-};
+}
 
 export function isValidMetadata(meta?: FileMetaData, options?: { uidRequired: boolean }) {
   if (!meta) return false;
@@ -62,34 +62,30 @@ export function isValidMetadata(meta?: FileMetaData, options?: { uidRequired: bo
 }
 
 export function isFile(object: any) {
-  return typeof object === 'object'
-    && 'privacy' in object
-    && 'collection' in object
-    && 'docId' in object
-    && 'field' in object
-    && 'storagePath' in object
-    && !!object.storagePath
-    ;
+  return (
+    typeof object === 'object' &&
+    'privacy' in object &&
+    'collection' in object &&
+    'docId' in object &&
+    'field' in object &&
+    'storagePath' in object &&
+    !!object.storagePath
+  );
 }
 
 export function recursivelyListFiles(document: any): StorageFile[] {
-
   if (!document) {
     return [];
-
   } else if (Array.isArray(document)) {
     const result = document.map(el => recursivelyListFiles(el));
     return result.flat();
-
   } else if (typeof document === 'object') {
-
     if (isFile(document)) {
       return [document];
     } else {
       const result = Object.keys(document).map(key => recursivelyListFiles(document[key]));
       return result.flat();
     }
-
   } else {
     return [];
   }

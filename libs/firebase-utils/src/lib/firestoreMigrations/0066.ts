@@ -1,5 +1,5 @@
 import { centralOrgId } from '@env';
-import { Timestamp, Mandate, Movie } from '@blockframes/model';
+import { Timestamp, Mandate, Movie } from '@blockframes/shared/model';
 import { Firestore } from '../types';
 import { runChunks } from '../firebase-utils';
 
@@ -10,7 +10,7 @@ import { runChunks } from '../firebase-utils';
  */
 export async function upgrade(db: Firestore) {
   const mandates = await db.collection('contracts').where('type', '==', 'mandate').get();
-  await runChunks(mandates.docs, async (doc) => {
+  await runChunks(mandates.docs, async doc => {
     const mandate = doc.data() as Mandate<Timestamp>;
 
     // clean weird legacy contract in the db (e.g: 'contracts/CDFArchipelMandate')

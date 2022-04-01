@@ -7,32 +7,34 @@ import { combineLatest } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { EventService } from '../+state';
 import type firebase from 'firebase';
-import { Event } from '@blockframes/model';
+import { Event } from '@blockframes/shared/model';
 import { AnonymousCredentials } from '@blockframes/auth/+state/auth.model';
-import { createInvitation } from '@blockframes/model';
+import { createInvitation } from '@blockframes/shared/model';
 
 @Injectable({ providedIn: 'root' })
 export class EventAccessGuard implements CanActivate {
-
   constructor(
     private service: EventService,
     private invitationService: InvitationService,
     private authService: AuthService,
     private router: Router,
     private snackBar: MatSnackBar
-  ) { }
+  ) {}
 
   canActivate(next: ActivatedRouteSnapshot) {
     return combineLatest([
       this.authService.user,
       this.service.getValue(next.params.eventId as string),
-      this.authService.anonymousCredentials$
-    ]).pipe(
-      switchMap(([user, event, credentials]) => this.guard(next, user, event, credentials))
-    );
+      this.authService.anonymousCredentials$,
+    ]).pipe(switchMap(([user, event, credentials]) => this.guard(next, user, event, credentials)));
   }
 
-  private async guard(next: ActivatedRouteSnapshot, user: firebase.User, event: Event<unknown>, credentials: AnonymousCredentials) {
+  private async guard(
+    next: ActivatedRouteSnapshot,
+    user: firebase.User,
+    event: Event<unknown>,
+    credentials: AnonymousCredentials
+  ) {
     if (!user.isAnonymous) return true;
     switch (event.accessibility) {
       case 'protected': {
@@ -41,7 +43,7 @@ export class EventAccessGuard implements CanActivate {
           this.authService.updateAnonymousCredentials({ invitationId: next.queryParams?.i });
         }
 
-        const invitationId = next.queryParams?.i as string || credentials?.invitationId;
+        const invitationId = (next.queryParams?.i as string) || credentials?.invitationId;
         if (invitationId) {
           const invitation = await this.invitationService.getValue(invitationId).catch(() => createInvitation());
           const isEmailMatchingInvitation = invitation?.toUser?.email === credentials?.email;
@@ -61,7 +63,8 @@ export class EventAccessGuard implements CanActivate {
 
           return true;
         } else {
-          this.snackBar.open('Sorry, it seems that you were not invited to this event', 'Try with other mail', { duration: 6000 })
+          this.snackBar
+            .open('Sorry, it seems that you were not invited to this event', 'Try with other mail', { duration: 6000 })
             .onAction()
             .subscribe(() => this.router.navigate([`/event/${event.id}`]));
           await this.authService.deleteAnonymousUser();
@@ -73,4 +76,3 @@ export class EventAccessGuard implements CanActivate {
     }
   }
 }
-

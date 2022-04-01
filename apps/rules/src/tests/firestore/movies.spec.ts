@@ -1,10 +1,6 @@
 ﻿import { apps, assertFails, assertSucceeds } from '@firebase/rules-unit-testing';
-import {
-  Firestore,
-  initFirestoreApp,
-  rulesFixtures as testFixture,
-} from '@blockframes/testing/unit-tests';
-import { Movie } from '@blockframes/model';
+import { Firestore, initFirestoreApp, rulesFixtures as testFixture } from '@blockframes/testing/unit-tests';
+import { Movie } from '@blockframes/shared/model';
 import { StoreStatus } from '@blockframes/utils/static-model';
 
 describe('Movies Rules Tests', () => {
@@ -43,7 +39,7 @@ describe('Movies Rules Tests', () => {
       });
     });
 
-    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+    afterAll(() => Promise.all(apps().map(app => app.delete())));
 
     describe('Read Movie', () => {
       test('should be able to read movie with status draft', async () => {
@@ -63,7 +59,7 @@ describe('Movies Rules Tests', () => {
         const moviesSnap = await movieRef.get();
         const movieDocs = moviesSnap.docs;
         const movies = [];
-        movieDocs.forEach((doc) => movies.push(doc.data()));
+        movieDocs.forEach(doc => movies.push(doc.data()));
         expect(movies.length).toEqual(3);
       });
     });
@@ -149,7 +145,7 @@ describe('Movies Rules Tests', () => {
       });
     });
 
-    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+    afterAll(() => Promise.all(apps().map(app => app.delete())));
 
     test('should not be able to delete movie', async () => {
       const movieRef = db.doc(`movies/${draftMovieId}`);
@@ -169,7 +165,7 @@ describe('Movies Rules Tests', () => {
       });
     });
 
-    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+    afterAll(() => Promise.all(apps().map(app => app.delete())));
 
     test('user without valid org should be able to read movie title', async () => {
       const movieRef = db.doc('movies/M001');
@@ -203,7 +199,7 @@ describe('Movies Rules Tests', () => {
       });
     });
 
-    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+    afterAll(() => Promise.all(apps().map(app => app.delete())));
 
     test('should not be able to fetch movie collection for org where current user is not member of', async () => {
       const orgId = 'O001';
@@ -226,7 +222,7 @@ describe('Movies Rules Tests', () => {
       const moviesSnap = await movieRef.get();
       const movieDocs = moviesSnap.docs;
       const movies = [];
-      movieDocs.forEach((doc) => movies.push(doc.data()));
+      movieDocs.forEach(doc => movies.push(doc.data()));
       expect(movies.length).toEqual(1);
     });
 
@@ -249,7 +245,7 @@ describe('Movies Rules Tests', () => {
       });
     });
 
-    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+    afterAll(() => Promise.all(apps().map(app => app.delete())));
 
     test('should not be able to list all movies', async () => {
       const allDocs = db.collection('movies');

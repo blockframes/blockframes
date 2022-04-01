@@ -1,7 +1,7 @@
 import { FormControl } from '@angular/forms';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
-import { createStorageFile, StorageFile, User } from '@blockframes/model';
+import { createStorageFile, StorageFile, User } from '@blockframes/shared/model';
 
 export interface Profile {
   firstName: string;
@@ -32,7 +32,7 @@ function createProfileControls(entity: Partial<User>) {
     phoneNumber: new FormControl(profile.phoneNumber),
     position: new FormControl(profile.position),
     avatar: new StorageFileForm(profile.avatar),
-    email: new FormControl({ value: profile.email, disabled: true })
+    email: new FormControl({ value: profile.email, disabled: true }),
   };
 }
 
@@ -43,5 +43,7 @@ export class ProfileForm extends FormEntity<ProfileControl, User> {
     super(createProfileControls(profile));
   }
 
-  get avatar() { return this.get('avatar'); }
+  get avatar() {
+    return this.get('avatar');
+  }
 }

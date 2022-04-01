@@ -11,8 +11,8 @@ import { FormChipsAutocompleteModule } from '../../forms/chips-autocomplete';
 import { matMultiSelect } from '../../forms/select';
 import { getOrgsQueryFn, toMap } from '../pipes';
 import { FirestoreFormModule, firestoreQuery, orgsFromApp } from '../../forms/firestore';
-import { map,shareReplay,switchMap } from 'rxjs/operators';
-import { Organization, orgName } from '@blockframes/model';
+import { map, shareReplay, switchMap } from 'rxjs/operators';
+import { Organization, orgName } from '@blockframes/shared/model';
 
 export type OrgsSchema = FormGroupSchema<OrgsSection>;
 
@@ -29,15 +29,15 @@ export const orgsSchema = (params: TemplateParams): OrgsSchema => ({
   value: (value: OrgsSection) => ({
     _type: 'orgs',
     query: orgsFromApp(params.app),
-    ...value
-  })
+    ...value,
+  }),
 });
 
 @Component({
   selector: 'form-orgs',
   templateUrl: './orgs.component.html',
   styleUrls: ['./orgs.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrgsComponent implements OnInit {
   private mode?: 'query' | 'orgIds';
@@ -48,16 +48,13 @@ export class OrgsComponent implements OnInit {
     map(params => getOrgsQueryFn(params.get('app'))),
     switchMap(queryFn => this.service.valueChanges(queryFn)),
     map(toMap),
-    shareReplay({ refCount: true, bufferSize: 1 }),
+    shareReplay({ refCount: true, bufferSize: 1 })
   );
 
   displayLabel = (org?: Organization) => orgName(org);
   getValue = (org?: Organization) => org?.id;
 
-  constructor(
-    private route: ActivatedRoute,
-    private service: OrganizationService
-  ) {}
+  constructor(private route: ActivatedRoute, private service: OrganizationService) {}
 
   get queryMode() {
     return this.mode || (this.form?.get('orgIds').length ? 'orgIds' : 'query');
@@ -65,9 +62,7 @@ export class OrgsComponent implements OnInit {
 
   private selectForm() {
     for (const key of ['orgIds', 'query'] as const) {
-      this.queryMode === key
-        ? this.form?.get(key).enable()
-        : this.form?.get(key).disable();
+      this.queryMode === key ? this.form?.get(key).enable() : this.form?.get(key).disable();
     }
   }
 
@@ -81,18 +76,8 @@ export class OrgsComponent implements OnInit {
   }
 }
 
-
-
-
 @NgModule({
   declarations: [OrgsComponent],
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    FormChipsAutocompleteModule,
-    TextFormModule,
-    FirestoreFormModule,
-    MatRadioModule,
-  ]
+  imports: [CommonModule, ReactiveFormsModule, FormChipsAutocompleteModule, TextFormModule, FirestoreFormModule, MatRadioModule],
 })
-export class OrgsModule { }
+export class OrgsModule {}

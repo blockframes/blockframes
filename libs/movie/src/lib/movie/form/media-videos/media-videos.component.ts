@@ -6,7 +6,7 @@ import { MovieService } from '../../+state/movie.service';
 import { getFileMetadata } from '@blockframes/media/+state/static-files';
 import { getDeepValue } from '@blockframes/utils/pipes';
 import { Subscription } from 'rxjs';
-import { MovieVideo } from '@blockframes/model';
+import { MovieVideo } from '@blockframes/shared/model';
 
 @Component({
   selector: 'movie-form-media-videos',
@@ -30,7 +30,7 @@ export class MovieFormMediaVideosComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.dynTitle.setPageTitle('Videos');
 
-    this.sub = this.movie.valueChanges(this.movieId).subscribe((title) => {
+    this.sub = this.movie.valueChanges(this.movieId).subscribe(title => {
       const metadata = getFileMetadata('movies', 'otherVideos', this.movieId);
       const mediaArray: Partial<MovieVideo>[] = getDeepValue(title, metadata.field);
       this.videoList.patchValue(mediaArray);

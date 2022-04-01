@@ -1,12 +1,11 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { movieLanguageTypes } from '../static-model/static-model';
-import { MovieLanguageSpecification } from '@blockframes/model';
+import { MovieLanguageSpecification } from '@blockframes/shared/model';
 
 @Pipe({ name: 'versionPipe' })
 export class VersionPipe implements PipeTransform {
   transform(language: MovieLanguageSpecification) {
-    const formatKey = (key: string) =>
-      key ? movieLanguageTypes[key.trim().toLocaleLowerCase()] : '';
+    const formatKey = (key: string) => (key ? movieLanguageTypes[key.trim().toLocaleLowerCase()] : '');
     const results = [];
 
     Object.entries(language).map(([key, value]) => {

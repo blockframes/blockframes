@@ -5,13 +5,13 @@ import { InvitationService } from '@blockframes/invitation/+state';
 import { Router } from '@angular/router';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { toLabel } from '@blockframes/utils/pipes';
-import { orgName } from '@blockframes/model';
+import { orgName } from '@blockframes/shared/model';
 
 @Component({
   selector: 'crm-events',
   templateUrl: './events.component.html',
   styleUrls: ['./events.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EventsComponent implements OnInit {
   public rows = [];
@@ -23,17 +23,17 @@ export class EventsComponent implements OnInit {
     private cdRef: ChangeDetectorRef,
     private router: Router,
     private orgService: OrganizationService
-  ) { }
+  ) {}
 
   async ngOnInit() {
     const [events, invites] = await Promise.all([
       this.eventService.getValue(),
-      this.invitationService.getValue(ref => ref.where('type', '==', 'attendEvent'))
+      this.invitationService.getValue(ref => ref.where('type', '==', 'attendEvent')),
     ]);
 
     const ownerOrgIds = events.map(event => event.ownerOrgId);
     const orgs = await this.orgService.getValue(ownerOrgIds);
-    
+
     this.rows = events.map(event => {
       const row = { ...event } as any;
       const invitations = invites.filter(inv => inv.eventId === event.id);
@@ -45,14 +45,14 @@ export class EventsComponent implements OnInit {
       row.accessibility = toLabel(event.accessibility, 'accessibility');
       row.isSecret = event.isSecret ? 'Yes' : 'No';
       return row;
-    })
+    });
 
     this.eventListLoaded = true;
     this.cdRef.markForCheck();
   }
 
   goToEdit(event) {
-    this.router.navigate([`/c/o/dashboard/crm/event/${event.id}`])
+    this.router.navigate([`/c/o/dashboard/crm/event/${event.id}`]);
   }
 
   public exportTable() {
@@ -63,12 +63,12 @@ export class EventsComponent implements OnInit {
       'start date': i.start,
       'end date': i.end,
       'hosted by': i.hostedBy ? orgName(i.hostedBy, 'full') : '--',
-      'invited': i.invited,
-      'confirmed': i.confirmed,
-      'pending': i.pending,
-      'accessibility': i.accessibility,
-      'hidden on marketplace': i.isSecret
-    }))
+      invited: i.invited,
+      confirmed: i.confirmed,
+      pending: i.pending,
+      accessibility: i.accessibility,
+      'hidden on marketplace': i.isSecret,
+    }));
     downloadCsvFromJson(exportedRows, 'events-list');
   }
 }

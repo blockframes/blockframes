@@ -9,7 +9,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { AngularFirestore } from '@angular/fire/firestore';
 import { CmsPage } from '@blockframes/admin/cms/template';
 import { AuthService } from '@blockframes/auth/+state';
-import { createPreferences } from '@blockframes/model';
+import { createPreferences } from '@blockframes/shared/model';
 
 // Material
 import { MatDialog } from '@angular/material/dialog';
@@ -21,7 +21,7 @@ import { canHavePreferences } from '@blockframes/user/+state/user.utils';
   selector: 'festival-marketplace-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent implements OnInit, AfterViewInit {
   @ViewChild('banner') banner?: TemplateRef<unknown>;
@@ -32,10 +32,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
   @ViewChild('orgTitles') orgTitles?: TemplateRef<unknown>;
   @ViewChild('eventsSlider') eventsSlider?: TemplateRef<unknown>;
 
-  @HostBinding('test-id="content"') testId
+  @HostBinding('test-id="content"') testId;
   public page$: Observable<CmsPage>;
   public templates: Record<string, TemplateRef<unknown>> = {};
-
 
   constructor(
     private dynTitle: DynamicTitleService,
@@ -43,13 +42,14 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private dialog: MatDialog,
     private authService: AuthService,
     private orgService: OrganizationService
-  ) { }
+  ) {}
 
   async ngOnInit() {
     this.dynTitle.setPageTitle('Home');
-    this.page$ = this.db.doc<CmsPage>('cms/festival/home/live').valueChanges().pipe(
-      distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
-    );
+    this.page$ = this.db
+      .doc<CmsPage>('cms/festival/home/live')
+      .valueChanges()
+      .pipe(distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b)));
 
     if (this.authService.profile.preferences) return;
     const org = await this.orgService.getValue(this.authService.profile.orgId);
@@ -59,7 +59,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       this.dialog.open(PreferencesComponent, {
         maxHeight: '80vh',
         maxWidth: '650px',
-        autoFocus: false
+        autoFocus: false,
       });
     }
   }
@@ -72,7 +72,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       slider: this.slider,
       orgs: this.orgs,
       orgTitles: this.orgTitles,
-      eventsSlider: this.eventsSlider
-    }
+      eventsSlider: this.eventsSlider,
+    };
   }
 }

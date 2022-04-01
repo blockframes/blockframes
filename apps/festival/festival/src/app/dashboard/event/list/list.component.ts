@@ -10,24 +10,24 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { AgendaService } from '@blockframes/utils/agenda/agenda.service';
 import { eventTime } from '@blockframes/event/pipes/event-time.pipe';
 import { ActivatedRoute } from '@angular/router';
-import { Event, EventTypes } from '@blockframes/model';
+import { Event, EventTypes } from '@blockframes/shared/model';
 
 const typesLabel = {
   screening: 'Screenings',
-  meeting: 'Meetings'
-}
+  meeting: 'Meetings',
+};
 
 @Component({
   selector: 'festival-event-list',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EventListComponent implements OnInit {
   typesLabel = typesLabel;
   types: EventTypes[] = ['screening', 'meeting', 'slate'];
   filter = new FormControl(this.types);
-  editDialog: MatDialogRef<unknown>
+  editDialog: MatDialogRef<unknown>;
   events$: Observable<Event[]>;
   viewDate = new Date();
 
@@ -41,23 +41,18 @@ export class EventListComponent implements OnInit {
     private dynTitle: DynamicTitleService,
     private agendaService: AgendaService,
     private route: ActivatedRoute
-  ) { }
+  ) {}
 
   ngOnInit() {
     const params = this.route.snapshot.queryParams;
     if (params.date) {
       this.viewDate = new Date(params.date);
     }
-    this.events$ = combineLatest([
-      this.orgService.currentOrg$,
-      this.filter.valueChanges.pipe(startWith(this.filter.value))
-    ]).pipe(
+    this.events$ = combineLatest([this.orgService.currentOrg$, this.filter.valueChanges.pipe(startWith(this.filter.value))]).pipe(
       switchMap(([org, types]) => this.service.queryByType(types, ref => ref.where('ownerOrgId', '==', org.id))),
       tap(events => {
-        events.length ?
-          this.dynTitle.setPageTitle('My events') :
-          this.dynTitle.setPageTitle('My events', 'Empty');
-      }),
+        events.length ? this.dynTitle.setPageTitle('My events') : this.dynTitle.setPageTitle('My events', 'Empty');
+      })
     );
   }
 
@@ -80,9 +75,10 @@ export class EventListComponent implements OnInit {
    */
   async edit(data: Event) {
     this.editDialog = this.dialog.open(this.editTemplate, { data: new EventForm(data) });
-    this.editDialog.afterClosed().pipe(
-      filter(event => !!event)
-    ).subscribe(async event => this.service.update(event));
+    this.editDialog
+      .afterClosed()
+      .pipe(filter(event => !!event))
+      .subscribe(async event => this.service.update(event));
   }
 
   remove(event: Event) {

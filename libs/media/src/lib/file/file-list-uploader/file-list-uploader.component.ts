@@ -1,15 +1,12 @@
-
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { FileUploaderService } from '@blockframes/media/+state';
-import { StorageFile } from '@blockframes/model';
+import { StorageFile } from '@blockframes/shared/model';
 import { CollectionHoldingFile, FileLabel } from '@blockframes/media/+state/static-files';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
 import { FormList } from '@blockframes/utils/form';
 import { AllowedFileType } from '@blockframes/utils/utils';
 import { getDeepValue } from '@blockframes/utils/pipes/deep-key.pipe';
-
-
 
 @Component({
   selector: '[form] [meta] [accept] file-list-uploader',
@@ -18,7 +15,6 @@ import { getDeepValue } from '@blockframes/utils/pipes/deep-key.pipe';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FileListUploaderComponent {
-
   public disabled = true;
   public newFileForm = new StorageFileForm();
 
@@ -30,10 +26,7 @@ export class FileListUploaderComponent {
 
   @Input() togglePrivacy: boolean;
 
-  constructor(
-    private db: AngularFirestore,
-    private uploadService: FileUploaderService,
-  ) {}
+  constructor(private db: AngularFirestore, private uploadService: FileUploaderService) {}
 
   save() {
     this.uploadService.upload();

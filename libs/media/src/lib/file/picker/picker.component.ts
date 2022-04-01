@@ -1,14 +1,6 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  HostListener,
-  Inject,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, Inject, OnDestroy, OnInit } from '@angular/core';
 import { fromOrg, MovieService } from '@blockframes/movie/+state/movie.service';
-import { StorageFile, recursivelyListFiles, Movie } from '@blockframes/model';
+import { StorageFile, recursivelyListFiles, Movie } from '@blockframes/shared/model';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
@@ -41,23 +33,19 @@ export class FilePickerComponent implements OnInit, OnDestroy {
     this.selectedFiles = this.data.selectedFiles ?? [];
 
     const org = this.orgService.org;
-    this.orgFiles = recursivelyListFiles(org).map((file) => ({
+    this.orgFiles = recursivelyListFiles(org).map(file => ({
       file,
-      isSelected: this.selectedFiles.some(
-        (selectedFile) => selectedFile.storagePath === file.storagePath
-      ),
+      isSelected: this.selectedFiles.some(selectedFile => selectedFile.storagePath === file.storagePath),
     }));
     this.movies = await this.movieService.getValue(fromOrg(org.id));
     this.moviesFiles = {};
     this.movies.forEach(
-      (movie) =>
+      movie =>
         (this.moviesFiles[movie.id] = recursivelyListFiles(movie)
-          .filter((file) => !!file.storagePath)
-          .map((file) => ({
+          .filter(file => !!file.storagePath)
+          .map(file => ({
             file,
-            isSelected: this.selectedFiles.some(
-              (selectedFile) => selectedFile.storagePath === file.storagePath
-            ),
+            isSelected: this.selectedFiles.some(selectedFile => selectedFile.storagePath === file.storagePath),
           })))
     );
 
@@ -89,9 +77,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
         if (orgFile.isSelected) {
           this.selectedFiles.push(file);
         } else {
-          const newSelectedFiles = this.selectedFiles.filter(
-            (selected) => selected.storagePath !== file.storagePath
-          );
+          const newSelectedFiles = this.selectedFiles.filter(selected => selected.storagePath !== file.storagePath);
           this.selectedFiles = newSelectedFiles;
         }
         return; // avoid further iterations
@@ -106,9 +92,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
           if (movieFile.isSelected) {
             this.selectedFiles.push(file);
           } else {
-            const newSelectedFiles = this.selectedFiles.filter(
-              (selected) => selected.storagePath !== file.storagePath
-            );
+            const newSelectedFiles = this.selectedFiles.filter(selected => selected.storagePath !== file.storagePath);
             this.selectedFiles = newSelectedFiles;
           }
           return; // avoid further iterations

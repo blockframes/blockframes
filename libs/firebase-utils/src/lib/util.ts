@@ -5,7 +5,7 @@ import { config } from 'dotenv';
 import requiredVars from 'tools/mandatory-env-vars.json';
 import { resolve } from 'path';
 import { App } from '@blockframes/utils/apps';
-import { OrganizationDocument } from '@blockframes/model';
+import { OrganizationDocument } from '@blockframes/shared/model';
 
 /**
  * This function is an iterator that allows you to fetch documents from a collection in chunks
@@ -21,14 +21,14 @@ export async function* getCollectionInBatches<K>(ref: admin.firestore.Collection
 
   function getDocs(querySnap: FirebaseFirestore.QuerySnapshot) {
     return querySnap.docs.map((snap, i, arr) => {
-      if (i === (arr.length - 1)) lastSnapshot = snap;
+      if (i === arr.length - 1) lastSnapshot = snap;
       return snap.data() as K;
-    })
+    });
   }
 
   while (!querySnapshot.empty) {
     yield getDocs(querySnapshot);
-    querySnapshot = await ref.orderBy(orderBy).startAfter(lastSnapshot).limit(batchSize).get()
+    querySnapshot = await ref.orderBy(orderBy).startAfter(lastSnapshot).limit(batchSize).get();
   }
 }
 
@@ -42,10 +42,10 @@ let missingVarsMessageShown = false;
 export function warnMissingVars(): void | never {
   if (process.env['PROJECT_ID'] !== firebase().projectId) {
     console.warn(
-      'WARNING! Your PROJECT_ID in your shell environment does not match your'
-      + 'Firebase project ID found in your Firebase configuration!'
-      + 'Please use the "use" command to reset this unless you know what you\'re doing.'
-      + '\nIf you are using a demo project ID for emulator, this is to be expected.'
+      'WARNING! Your PROJECT_ID in your shell environment does not match your' +
+        'Firebase project ID found in your Firebase configuration!' +
+        'Please use the "use" command to reset this unless you know what you\'re doing.' +
+        '\nIf you are using a demo project ID for emulator, this is to be expected.'
     );
   }
   const warn = (key: string, msg: string) => {
@@ -53,9 +53,10 @@ export function warnMissingVars(): void | never {
     console.warn(`More info: ${msg}\n`);
   };
   // Use '||' instead of '??' to detect empty string
-  if (!missingVarsMessageShown) requiredVars.map(
-    ({ key, msg }: { key: string; msg: string }) => process.env?.[key] || warn(key, msg) // TODO #7858 warnMissingVars should check for prefixed env vars
-  );
+  if (!missingVarsMessageShown)
+    requiredVars.map(
+      ({ key, msg }: { key: string; msg: string }) => process.env?.[key] || warn(key, msg) // TODO #7858 warnMissingVars should check for prefixed env vars
+    );
   missingVarsMessageShown = true;
 }
 
@@ -128,8 +129,7 @@ export function getServiceAccountObj(keyFile: string): admin.ServiceAccount {
 }
 
 export async function hasAcceptedMovies(org: OrganizationDocument, appli: App) {
-  const moviesColRef = await admin.firestore().collection('movies')
-    .where('orgIds', 'array-contains', org.id).get();
+  const moviesColRef = await admin.firestore().collection('movies').where('orgIds', 'array-contains', org.id).get();
   const movies = moviesColRef.docs.map(doc => doc.data());
   return movies.some(movie => movie?.app?.[appli].status === 'accepted' && movie?.app?.[appli].access);
 }
@@ -154,7 +154,7 @@ export async function removeAllSubcollections(
   for (const x of subCollections) {
     if (options.verbose) console.log(`deleting sub collection : ${x.path}`);
     const documents = await db.collection(x.path).listDocuments();
-    documents.forEach(ref => batch.delete(ref))
+    documents.forEach(ref => batch.delete(ref));
   }
   return batch;
 }

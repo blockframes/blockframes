@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { Movie } from '@blockframes/model';
+import { Movie } from '@blockframes/shared/model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { pluck, switchMap } from 'rxjs/operators';
 
@@ -17,11 +17,7 @@ export class MarketplaceMovieFinanceComponent implements OnInit {
     switchMap((movieId: string) => this.movieService.valueChanges(movieId))
   );
 
-  constructor(
-    private route: ActivatedRoute,
-    private movieService: MovieService,
-    private dynTitle: DynamicTitleService
-  ) {}
+  constructor(private route: ActivatedRoute, private movieService: MovieService, private dynTitle: DynamicTitleService) {}
 
   ngOnInit() {
     this.dynTitle.setPageTitle('Film Page', 'Financing Conditions');

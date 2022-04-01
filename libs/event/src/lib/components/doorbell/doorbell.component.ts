@@ -1,19 +1,18 @@
 import { Component, Inject, ChangeDetectionStrategy } from '@angular/core';
 import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
-import { Meeting, MeetingAttendee } from '@blockframes/model';
+import { Meeting, MeetingAttendee } from '@blockframes/shared/model';
 import { EventService } from '@blockframes/event/+state/event.service';
 
 @Component({
   selector: 'event-doorbell',
   templateUrl: './doorbell.component.html',
   styleUrls: ['./doorbell.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DoorbellBottomSheetComponent {
-
   constructor(
     private bottomSheetRef: MatBottomSheetRef<DoorbellBottomSheetComponent>,
-    @Inject(MAT_BOTTOM_SHEET_DATA) public data: { eventId: string, requests: MeetingAttendee[] },
+    @Inject(MAT_BOTTOM_SHEET_DATA) public data: { eventId: string; requests: MeetingAttendee[] },
     private eventService: EventService
   ) {}
 
@@ -25,7 +24,7 @@ export class DoorbellBottomSheetComponent {
     this.data.requests = this.data.requests.filter(requestor => requestor.uid !== uid);
 
     if (this.data.requests.length === 0) {
-      this.bottomSheetRef.dismiss({ accepted, uid })
+      this.bottomSheetRef.dismiss({ accepted, uid });
     }
   }
 }

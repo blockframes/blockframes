@@ -8,9 +8,9 @@ import { map, startWith, tap } from 'rxjs/operators';
 import { FormControl, FormGroup } from '@angular/forms';
 import { combineLatest } from 'rxjs';
 import { APP } from '@blockframes/utils/routes/utils';
-import { Invitation } from '@blockframes/model';
+import { Invitation } from '@blockframes/shared/model';
 
-const applyFilters = (invitations: Invitation[], filters: { type: string[], status: string[] }) => {
+const applyFilters = (invitations: Invitation[], filters: { type: string[]; status: string[] }) => {
   const inv = filters.type?.length ? invitations.filter(inv => filters.type.includes(inv.type)) : invitations;
   return filters.status?.length ? inv.filter(inv => filters.status.includes(inv.status)) : inv;
 };
@@ -19,7 +19,7 @@ const applyFilters = (invitations: Invitation[], filters: { type: string[], stat
   selector: 'invitation-view',
   templateUrl: './invitation.component.html',
   styleUrls: ['./invitation.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InvitationComponent {
   form = new FormGroup({
@@ -33,24 +33,23 @@ export class InvitationComponent {
   // Invitation that require an action
   invitations$ = combineLatest([
     this.service.myInvitations$,
-    this.form.valueChanges.pipe(startWith({ type: [], status: []  }))
-  ])
-  .pipe(
+    this.form.valueChanges.pipe(startWith({ type: [], status: [] })),
+  ]).pipe(
     map(([invitations, filters]) => applyFilters(invitations, filters)),
     tap(invitations => {
-      invitations.length ?
-        this.dynTitle.setPageTitle('Invitations List') :
-        this.dynTitle.setPageTitle('Invitations List', 'Empty');
+      invitations.length
+        ? this.dynTitle.setPageTitle('Invitations List')
+        : this.dynTitle.setPageTitle('Invitations List', 'Empty');
     })
-  )
-  
+  );
+
   constructor(
     private service: InvitationService,
     private dynTitle: DynamicTitleService,
     private router: Router,
     private orgService: OrganizationService,
     @Inject(APP) private app: App
-  ) { }
+  ) {}
 
   acceptAll(invitations: Invitation[]) {
     const pendingInvitations = invitations.filter(invitation => invitation.status === 'pending');

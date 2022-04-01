@@ -1,4 +1,3 @@
-
 import { getDocument, getOrgAppKey, createDocumentMeta } from './data/internals';
 import {
   NotificationSettingsTemplate,
@@ -16,10 +15,17 @@ import {
   ContractDocument,
   Screening,
   NegotiationDocument,
-  Offer
-} from '@blockframes/model';
+  Offer,
+} from '@blockframes/shared/model';
 import { sendMailFromTemplate } from './internals/email';
-import { emailErrorCodes, EventEmailData, getEventEmailData, getMovieEmailData, getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
+import {
+  emailErrorCodes,
+  EventEmailData,
+  getEventEmailData,
+  getMovieEmailData,
+  getOrgEmailData,
+  getUserEmailData,
+} from '@blockframes/utils/emails/utils';
 import {
   reminderEventToUser,
   userJoinedYourOrganization,
@@ -85,7 +91,7 @@ async function appendNotificationSettings(notification: NotificationDocument) {
   const updateNotif = ({ email, app }: NotificationSettingsTemplate) => {
     if (email) notification.email = { isSent: false };
     if (app) notification.app = { isRead: false };
-  }
+  };
 
   if (!!user.settings?.notifications && notification.type in user.settings.notifications) {
     updateNotif(user.settings.notifications[notification.type]);
@@ -102,7 +108,7 @@ async function appendNotificationSettings(notification: NotificationDocument) {
     'invitationToAttendMeetingCreated',
 
     // user does not have access to app yet, notification only used to send email
-    'requestFromUserToJoinOrgPending'
+    'requestFromUserToJoinOrgPending',
   ];
 
   if (notificationsForInvitations.includes(notification.type)) {
@@ -112,8 +118,6 @@ async function appendNotificationSettings(notification: NotificationDocument) {
   return notification;
 }
 
-
-
 /** Create a Notification with required and generic information. */
 export function createNotification(notification: Partial<NotificationDocument> = {}): NotificationDocument {
   const db = admin.firestore();
@@ -122,7 +126,7 @@ export function createNotification(notification: Partial<NotificationDocument> =
     type: 'movieAccepted', // We need a default value for backend-function strict mode
     toUserId: '',
     id: db.collection('notifications').doc().id,
-    ...notification
+    ...notification,
   };
 }
 
@@ -135,22 +139,21 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
     const recipient = await getDocument<User>(`users/${notification.toUserId}`);
 
     switch (notification.type) {
-
       // Notification related to organization
       case 'organizationAcceptedByArchipelContent':
         await sendMailToOrgAcceptedAdmin(recipient, notification)
-          .then(() => notification.email.isSent = true)
-          .catch(e => notification.email.error = e.message);
+          .then(() => (notification.email.isSent = true))
+          .catch(e => (notification.email.error = e.message));
         break;
       case 'orgAppAccessChanged':
         await sendOrgAppAccessChangedEmail(recipient, notification)
-          .then(() => notification.email.isSent = true)
-          .catch(e => notification.email.error = e.message)
+          .then(() => (notification.email.isSent = true))
+          .catch(e => (notification.email.error = e.message));
         break;
       case 'invitationToJoinOrgDeclined':
         await sendInvitationDeclinedToJoinOrgEmail(recipient, notification)
-          .then(() => notification.email.isSent = true)
-          .catch(e => notification.email.error = e.message)
+          .then(() => (notification.email.isSent = true))
+          .catch(e => (notification.email.error = e.message));
         break;
       // Notifications relative to movies
       case 'movieSubmitted':
@@ -159,130 +162,130 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
         break;
       case 'movieAccepted':
         await sendMovieAcceptedEmail(recipient, notification)
-          .then(() => notification.email.isSent = true)
-          .catch(e => notification.email.error = e.message);
+          .then(() => (notification.email.isSent = true))
+          .catch(e => (notification.email.error = e.message));
         break;
       case 'movieAskingPriceRequested':
         await sendMovieAskingPriceRequested(recipient, notification)
-          .then(() => notification.email.isSent = true)
-          .catch(e => notification.email.error = e.message);
+          .then(() => (notification.email.isSent = true))
+          .catch(e => (notification.email.error = e.message));
         break;
       case 'movieAskingPriceRequestSent':
         await sendMovieAskingPriceRequestSent(recipient, notification)
-          .then(() => notification.email.isSent = true)
-          .catch(e => notification.email.error = e.message);
+          .then(() => (notification.email.isSent = true))
+          .catch(e => (notification.email.error = e.message));
         break;
       // Notifications relative to invitations
       case 'orgMemberUpdated':
         await sendOrgMemberUpdatedEmail(recipient, notification)
-          .then(() => notification.email.isSent = true)
-          .catch(e => notification.email.error = e.message);
+          .then(() => (notification.email.isSent = true))
+          .catch(e => (notification.email.error = e.message));
         break;
       case 'requestFromUserToJoinOrgCreate':
         await sendUserRequestedToJoinYourOrgEmail(recipient, notification)
-          .then(() => notification.email.isSent = true)
-          .catch(e => notification.email.error = e.message);
+          .then(() => (notification.email.isSent = true))
+          .catch(e => (notification.email.error = e.message));
         break;
       case 'requestFromUserToJoinOrgPending':
         await sendPendingRequestToJoinOrgEmail(notification)
-          .then(() => notification.email.isSent = true)
-          .catch(e => notification.email.error = e.message);
+          .then(() => (notification.email.isSent = true))
+          .catch(e => (notification.email.error = e.message));
         break;
       // Events related notifications
       case 'requestToAttendEventCreated':
         await sendRequestToAttendEventCreatedEmail(recipient, notification)
-          .then(() => notification.email.isSent = true)
-          .catch(e => notification.email.error = e.message);
+          .then(() => (notification.email.isSent = true))
+          .catch(e => (notification.email.error = e.message));
         break;
       case 'invitationToAttendMeetingCreated':
       case 'invitationToAttendScreeningCreated':
         await sendInvitationToAttendEventCreatedEmail(recipient, notification)
-          .then(() => notification.email.isSent = true)
-          .catch(e => notification.email.error = e.message);
+          .then(() => (notification.email.isSent = true))
+          .catch(e => (notification.email.error = e.message));
         break;
       case 'requestToAttendEventSent':
         await sendRequestToAttendSentEmail(recipient, notification)
-          .then(() => notification.email.isSent = true)
-          .catch(e => notification.email.error = e.message);
+          .then(() => (notification.email.isSent = true))
+          .catch(e => (notification.email.error = e.message));
         break;
       case 'eventIsAboutToStart':
         await sendReminderEmails(recipient, notification, templateIds.eventReminder.oneHour)
-          .then(() => notification.email.isSent = true)
-          .catch(e => notification.email.error = e.message)
+          .then(() => (notification.email.isSent = true))
+          .catch(e => (notification.email.error = e.message));
         break;
       case 'oneDayReminder':
         await sendReminderEmails(recipient, notification, templateIds.eventReminder.oneDay)
-          .then(() => notification.email.isSent = true)
-          .catch(e => notification.email.error = e.message)
+          .then(() => (notification.email.isSent = true))
+          .catch(e => (notification.email.error = e.message));
         break;
       case 'requestToAttendEventUpdated':
         await sendRequestToAttendEventUpdatedEmail(recipient, notification)
-          .then(() => notification.email.isSent = true)
-          .catch(e => notification.email.error = e.message);
+          .then(() => (notification.email.isSent = true))
+          .catch(e => (notification.email.error = e.message));
         break;
       case 'invitationToAttendEventUpdated':
         await sendInvitationToAttendEventUpdatedEmail(recipient, notification)
-          .then(() => notification.email.isSent = true)
-          .catch(e => notification.email.error = e.message);
+          .then(() => (notification.email.isSent = true))
+          .catch(e => (notification.email.error = e.message));
         break;
       case 'screeningRequested':
         await sendScreeningRequested(recipient, notification)
-          .then(() => notification.email.isSent = true)
-          .catch(e => notification.email.error = e.message);
+          .then(() => (notification.email.isSent = true))
+          .catch(e => (notification.email.error = e.message));
         break;
       case 'screeningRequestSent':
         // No email is sent to user that requested the screening, only a notification
         break;
       case 'contractCreated':
         await sendContractCreated(recipient, notification)
-          .then(() => notification.email.isSent = true)
-          .catch(e => notification.email.error = e.message);
+          .then(() => (notification.email.isSent = true))
+          .catch(e => (notification.email.error = e.message));
         break;
       case 'offerCreatedConfirmation':
         await sendOfferCreatedConfirmation(recipient, notification)
-          .then(() => notification.email.isSent = true)
-          .catch(e => notification.email.error = e.message);
+          .then(() => (notification.email.isSent = true))
+          .catch(e => (notification.email.error = e.message));
         break;
 
       case 'createdCounterOffer':
         await sendCreatedCounterOfferConfirmation(recipient, notification)
-          .then(() => notification.email.isSent = true)
-          .catch(e => notification.email.error = e.message);
+          .then(() => (notification.email.isSent = true))
+          .catch(e => (notification.email.error = e.message));
         break;
 
       case 'receivedCounterOffer':
         await sendReceivedCounterOfferConfirmation(recipient, notification)
-          .then(() => notification.email.isSent = true)
-          .catch(e => notification.email.error = e.message);
+          .then(() => (notification.email.isSent = true))
+          .catch(e => (notification.email.error = e.message));
         break;
 
       case 'myOrgAcceptedAContract': {
         const orgAcceptedContractConfig = { isActionDeclined: false, didRecipientAcceptOrDecline: true } as const;
         await sendContractStatusChangedConfirmation(recipient, notification, orgAcceptedContractConfig)
-          .then(() => notification.email.isSent = true)
-          .catch(e => notification.email.error = e.message);
+          .then(() => (notification.email.isSent = true))
+          .catch(e => (notification.email.error = e.message));
         break;
       }
 
       case 'myContractWasAccepted': {
         const orgContractWasAcceptedConfig = { isActionDeclined: false, didRecipientAcceptOrDecline: false } as const;
         await sendContractStatusChangedConfirmation(recipient, notification, orgContractWasAcceptedConfig)
-          .then(() => notification.email.isSent = true)
-          .catch(e => notification.email.error = e.message);
+          .then(() => (notification.email.isSent = true))
+          .catch(e => (notification.email.error = e.message));
         break;
       }
       case 'myOrgDeclinedAContract': {
         const orgDeclinedContractConfig = { isActionDeclined: true, didRecipientAcceptOrDecline: true } as const;
         await sendContractStatusChangedConfirmation(recipient, notification, orgDeclinedContractConfig)
-          .then(() => notification.email.isSent = true)
-          .catch(e => notification.email.error = e.message);
+          .then(() => (notification.email.isSent = true))
+          .catch(e => (notification.email.error = e.message));
         break;
       }
       case 'myContractWasDeclined': {
         const orgContractWasDeclinedConfig = { isActionDeclined: true, didRecipientAcceptOrDecline: false } as const;
         await sendContractStatusChangedConfirmation(recipient, notification, orgContractWasDeclinedConfig)
-          .then(() => notification.email.isSent = true)
-          .catch(e => notification.email.error = e.message);
+          .then(() => (notification.email.isSent = true))
+          .catch(e => (notification.email.error = e.message));
         break;
       }
       // #7946 this may be reactivated later
@@ -303,8 +306,8 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
       //   break;
       case 'userRequestAppAccess':
         await requestAppAccessEmail(recipient, notification)
-          .then(() => notification.email.isSent = true)
-          .catch(e => notification.email.error = e.message);
+          .then(() => (notification.email.isSent = true))
+          .catch(e => (notification.email.error = e.message));
         break;
       default:
         notification.email.error = emailErrorCodes.noTemplate.code;
@@ -362,7 +365,6 @@ async function sendOrgMemberUpdatedEmail(recipient: User, notification: Notifica
     const template = userLeftYourOrganization(toAdmin, userSubject, orgData);
     await sendMailFromTemplate(template, app, groupIds.unsubscribeAll);
   }
-
 }
 
 /** Send a reminder email 24h or 1h before event starts */
@@ -370,8 +372,13 @@ async function sendReminderEmails(recipient: User, notification: NotificationDoc
   const event = await getDocument<EventDocument<Screening>>(`events/${notification.docId}`);
   const org = await getDocument<OrganizationDocument>(`orgs/${event.ownerOrgId}`);
   const orgData = getOrgEmailData(org);
-  const toUser = getUserEmailData(recipient)
-  const eventData = getEventEmailData({ event, orgName: orgData.denomination, email: recipient.email, invitationId: notification.invitation?.id });
+  const toUser = getUserEmailData(recipient);
+  const eventData = getEventEmailData({
+    event,
+    orgName: orgData.denomination,
+    email: recipient.email,
+    invitationId: notification.invitation?.id,
+  });
 
   const email = reminderEventToUser(toUser, orgData, eventData, template);
   return await sendMailFromTemplate(email, eventAppKey, groupIds.unsubscribeAll);
@@ -411,17 +418,37 @@ async function sendInvitationToAttendEventUpdatedEmail(recipient: User, notifica
     const user = await getDocument<User>(`users/${notification.user.uid}`);
     const userOrg = await getDocument<OrganizationDocument>(`orgs/${user.orgId}`);
     const userOrgData = getOrgEmailData(userOrg);
-    const eventData = getEventEmailData({ event, orgName: userOrgData.denomination, email: user.email, invitationId: notification.invitation.id, attachment: false });
+    const eventData = getEventEmailData({
+      event,
+      orgName: userOrgData.denomination,
+      email: user.email,
+      invitationId: notification.invitation.id,
+      attachment: false,
+    });
     const userSubject = getUserEmailData(user);
     const toAdmin = getUserEmailData(recipient);
 
     if (notification.invitation.status === 'accepted') {
       const templateId = templateIds.invitation.attendEvent.accepted;
-      const template = invitationToEventFromOrgUpdated(toAdmin, userSubject, userOrgData, eventData, invitation.fromOrg.id, templateId);
+      const template = invitationToEventFromOrgUpdated(
+        toAdmin,
+        userSubject,
+        userOrgData,
+        eventData,
+        invitation.fromOrg.id,
+        templateId
+      );
       return sendMailFromTemplate(template, eventAppKey, groupIds.unsubscribeAll);
     } else {
       const templateId = templateIds.invitation.attendEvent.declined;
-      const template = invitationToEventFromOrgUpdated(toAdmin, userSubject, userOrgData, eventData, invitation.fromOrg.id, templateId);
+      const template = invitationToEventFromOrgUpdated(
+        toAdmin,
+        userSubject,
+        userOrgData,
+        eventData,
+        invitation.fromOrg.id,
+        templateId
+      );
       return sendMailFromTemplate(template, eventAppKey, groupIds.unsubscribeAll);
     }
   } else {
@@ -461,17 +488,25 @@ async function sendRequestToAttendEventCreatedEmail(recipient: User, notificatio
   const org = await getDocument<OrganizationDocument>(`orgs/${notification.user.orgId}`);
   const userOrg = getOrgEmailData(org);
   const userSubject = getUserEmailData(notification.user);
-  const eventData: EventEmailData = getEventEmailData({ event, orgName: userOrg.denomination, email: userSubject.email, invitationId: notification.invitation.id, attachment: false });
+  const eventData: EventEmailData = getEventEmailData({
+    event,
+    orgName: userOrg.denomination,
+    email: userSubject.email,
+    invitationId: notification.invitation.id,
+    attachment: false,
+  });
   const link = getEventLink({
     invitation: notification.invitation,
     eventData: eventData,
     org: org,
-    email: userSubject.email
+    email: userSubject.email,
   });
   const urlToUse = applicationUrl[eventAppKey];
   const toAdmin = getUserEmailData(recipient);
 
-  logger.log(`Sending request email to attend an event (${notification.docId}) from ${notification.user.uid} to : ${toAdmin.email}`);
+  logger.log(
+    `Sending request email to attend an event (${notification.docId}) from ${notification.user.uid} to : ${toAdmin.email}`
+  );
   const templateRequest = requestToAttendEventFromUser(toAdmin, userSubject, userOrg, eventData, link, urlToUse);
   return sendMailFromTemplate(templateRequest, eventAppKey, groupIds.unsubscribeAll).catch(e => logger.warn(e.message));
 }
@@ -480,21 +515,31 @@ async function sendInvitationToAttendEventCreatedEmail(recipient: User, notifica
   const event = await getDocument<EventDocument<EventMeta>>(`events/${notification.docId}`);
   const org = await getDocument<OrganizationDocument>(`orgs/${notification.organization.id}`);
   const orgData = getOrgEmailData(org);
-  const eventEmailData: EventEmailData = getEventEmailData({ event, orgName: orgData.denomination, email: recipient.email, invitationId: notification.invitation.id });
+  const eventEmailData: EventEmailData = getEventEmailData({
+    event,
+    orgName: orgData.denomination,
+    email: recipient.email,
+    invitationId: notification.invitation.id,
+  });
   const toUser = getUserEmailData(recipient);
   const urlToUse = applicationUrl[eventAppKey];
   const link = getEventLink({
     invitation: notification.invitation,
     eventData: eventEmailData,
     org: org,
-    email: recipient.email
+    email: recipient.email,
   });
   logger.log(`Sending invitation email for an event (${notification.docId}) from ${orgData.denomination} to : ${toUser.email}`);
   const templateInvitation = invitationToEventFromOrg(toUser, orgData, eventEmailData, link, urlToUse);
   return sendMailFromTemplate(templateInvitation, eventAppKey, groupIds.unsubscribeAll).catch(e => logger.warn(e.message));
 }
 
-function getEventLink(data: { invitation: PublicInvitation, eventData: EventEmailData, org: OrganizationDocument, email: string }) {
+function getEventLink(data: {
+  invitation: PublicInvitation;
+  eventData: EventEmailData;
+  org: OrganizationDocument;
+  email: string;
+}) {
   const { invitation, eventData, org, email } = data;
   const isPrivateInvitation = invitation.mode === 'invitation' && eventData.accessibility === 'private';
   if (invitation.mode === 'request' || isPrivateInvitation) {
@@ -539,9 +584,7 @@ async function sendMovieAskingPriceRequestSent(recipient: User, notification: No
   const toUser = getUserEmailData(recipient);
   const { territories, message } = notification.data;
 
-  const orgs = await Promise.all(
-    movie.orgIds.map(orgId => getDocument<OrganizationDocument>(`orgs/${orgId}`))
-  );
+  const orgs = await Promise.all(movie.orgIds.map(orgId => getDocument<OrganizationDocument>(`orgs/${orgId}`)));
   const orgNames = orgs.map(org => orgName(org)).join(', ');
 
   const app = notification._meta.createdFrom;
@@ -554,7 +597,13 @@ async function sendRequestToAttendSentEmail(recipient: User, notification: Notif
   const event = await getDocument<EventDocument<EventMeta>>(`events/${notification.docId}`);
   const org = await getDocument<OrganizationDocument>(`orgs/${event.ownerOrgId}`);
   const organizerOrg = getOrgEmailData(org);
-  const eventEmailData: EventEmailData = getEventEmailData({ event, orgName: organizerOrg.denomination, email: recipient.email, invitationId: notification.invitation.id, attachment: false });
+  const eventEmailData: EventEmailData = getEventEmailData({
+    event,
+    orgName: organizerOrg.denomination,
+    email: recipient.email,
+    invitationId: notification.invitation.id,
+    attachment: false,
+  });
   const toUser = getUserEmailData(recipient);
 
   const app = notification._meta.createdFrom;
@@ -564,7 +613,7 @@ async function sendRequestToAttendSentEmail(recipient: User, notification: Notif
 
 /** Let admins knows their invitation to an user to join their org has been declined */
 async function sendInvitationDeclinedToJoinOrgEmail(recipient: User, notification: NotificationDocument) {
-  const userSubject = getUserEmailData(notification.user)
+  const userSubject = getUserEmailData(notification.user);
   const toAdmin = getUserEmailData(recipient);
 
   const app = notification._meta.createdFrom;
@@ -601,13 +650,13 @@ async function sendOfferCreatedConfirmation(recipient: User, notification: Notif
   const buyerTemplate = buyerOfferCreatedConfirmationEmail(toUser, buyerOrg, offer, notification.bucket);
   await Promise.all([
     sendMailFromTemplate(adminTemplate, app, groupIds.unsubscribeAll),
-    sendMailFromTemplate(buyerTemplate, app, groupIds.unsubscribeAll)
+    sendMailFromTemplate(buyerTemplate, app, groupIds.unsubscribeAll),
   ]);
 }
 
 async function sendCreatedCounterOfferConfirmation(recipient: User, notification: NotificationDocument) {
   const path = notification.docPath;
-  const contractId = path.split('/')[1]
+  const contractId = path.split('/')[1];
   const [contract, negotiation] = await Promise.all([
     getDocument<ContractDocument>(`contracts/${contractId}`),
     getDocument<NegotiationDocument>(`${path}`),
@@ -619,18 +668,20 @@ async function sendCreatedCounterOfferConfirmation(recipient: User, notification
   const app: App = 'catalog';
   const toUser = getUserEmailData(recipient);
 
-  const senderTemplate = counterOfferSenderEmail(toUser, recipientOrg, contract.offerId, negotiation, title, contract.id, { isMailRecipientBuyer });
+  const senderTemplate = counterOfferSenderEmail(toUser, recipientOrg, contract.offerId, negotiation, title, contract.id, {
+    isMailRecipientBuyer,
+  });
   const adminTemplate = toAdminCounterOfferEmail(title, contract.offerId);
 
   return Promise.all([
     sendMailFromTemplate(senderTemplate, app, groupIds.unsubscribeAll),
-    sendMailFromTemplate(adminTemplate, app, groupIds.unsubscribeAll)
+    sendMailFromTemplate(adminTemplate, app, groupIds.unsubscribeAll),
   ]);
 }
 
 async function sendReceivedCounterOfferConfirmation(recipient: User, notification: NotificationDocument) {
   const path = notification.docPath;
-  const contractId = path.split('/')[1]
+  const contractId = path.split('/')[1];
   const [contract, negotiation] = await Promise.all([
     getDocument<ContractDocument>(`contracts/${contractId}`),
     getDocument<NegotiationDocument>(`${path}`),
@@ -644,7 +695,9 @@ async function sendReceivedCounterOfferConfirmation(recipient: User, notificatio
   const app: App = 'catalog';
   const toUser = getUserEmailData(recipient);
 
-  const recipientTemplate = counterOfferRecipientEmail(toUser, senderOrg, contract.offerId, title, contract.id, { isMailRecipientBuyer });
+  const recipientTemplate = counterOfferRecipientEmail(toUser, senderOrg, contract.offerId, title, contract.id, {
+    isMailRecipientBuyer,
+  });
   return sendMailFromTemplate(recipientTemplate, app, groupIds.unsubscribeAll);
 }
 
@@ -664,19 +717,37 @@ async function getNegotiationUpdatedEmailData(recipient: User, notification: Not
   const isRecipientBuyer = recipient.orgId === negotiation.buyerId;
   const toUser = getUserEmailData(recipient);
   return {
-    path, contractId, contract, negotiation, title, app,
-    isRecipientBuyer, toUser, recipientOrg, counterOfferSenderOrg
+    path,
+    contractId,
+    contract,
+    negotiation,
+    title,
+    app,
+    isRecipientBuyer,
+    toUser,
+    recipientOrg,
+    counterOfferSenderOrg,
   };
 }
 
 type ContractUpdatedConfig = {
-  didRecipientAcceptOrDecline: boolean,
-  isActionDeclined: boolean,
-}
+  didRecipientAcceptOrDecline: boolean;
+  isActionDeclined: boolean;
+};
 
-async function sendContractStatusChangedConfirmation(recipient: User, notification: NotificationDocument, options: ContractUpdatedConfig) {
+async function sendContractStatusChangedConfirmation(
+  recipient: User,
+  notification: NotificationDocument,
+  options: ContractUpdatedConfig
+) {
   const {
-    contract, title, app, isRecipientBuyer, toUser, recipientOrg, counterOfferSenderOrg
+    contract,
+    title,
+    app,
+    isRecipientBuyer,
+    toUser,
+    recipientOrg,
+    counterOfferSenderOrg,
   } = await getNegotiationUpdatedEmailData(recipient, notification);
 
   const pageURL = isRecipientBuyer
@@ -684,10 +755,8 @@ async function sendContractStatusChangedConfirmation(recipient: User, notificati
     : `${appUrl.content}/c/o/dashboard/sales/${contract.id}/view`;
 
   const crmPageUrl = `${appUrl.crm}/c/o/dashboard/crm/offer/${contract.offerId}/view`;
-  
-  const termsUrl = isRecipientBuyer
-    ? `${appUrl.content}/c/o/marketplace/terms`
-    : `${appUrl.content}/c/o/dashboard/terms`;
+
+  const termsUrl = isRecipientBuyer ? `${appUrl.content}/c/o/marketplace/terms` : `${appUrl.content}/c/o/dashboard/terms`;
 
   const data = {
     user: toUser,
@@ -697,7 +766,7 @@ async function sendContractStatusChangedConfirmation(recipient: User, notificati
     pageURL,
     crmPageUrl,
     termsUrl,
-    app: { name: appName.catalog }
+    app: { name: appName.catalog },
   };
 
   let templateId = templateIds.negotiation.myContractWasAccepted;
@@ -720,7 +789,7 @@ async function sendContractStatusChangedConfirmation(recipient: User, notificati
 
   if (adminTemplateId) {
     const adminTemplate = { to: supportEmails.catalog, templateId: adminTemplateId, data };
-    mailToSend.push(sendMailFromTemplate(adminTemplate, app, groupIds.unsubscribeAll))
+    mailToSend.push(sendMailFromTemplate(adminTemplate, app, groupIds.unsubscribeAll));
   }
   return Promise.all(mailToSend);
 }
@@ -759,7 +828,6 @@ async function sendContractStatusChangedConfirmation(recipient: User, notificati
 //     .orderBy('_meta.createdAt', 'desc').limit(1);
 //   const negotiation = await ref.get().then(snap => snap.docs[0]?.data() as NegotiationDocument);
 //   const movie = await getDocument<MovieDocument>(`movies/${contract.titleId}`);
-
 
 //   const mailContract: MailContract = createMailContract(negotiation);
 

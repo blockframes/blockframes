@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { StorageFile, MeetingMediaControl } from '@blockframes/model';
+import { StorageFile, MeetingMediaControl } from '@blockframes/shared/model';
 
 @Component({
   selector: '[ref] file-viewers',

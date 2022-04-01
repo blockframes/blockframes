@@ -17,9 +17,8 @@ import {
   MovieAppConfig,
   PublicUser,
   MovieDocument,
-  createDocPermissions
-} from '@blockframes/model';
-
+  createDocPermissions,
+} from '@blockframes/shared/model';
 
 const apps: App[] = getAllAppsExcept(['crm']);
 
@@ -38,7 +37,7 @@ export async function onMovieCreate(snap: FirebaseFirestore.DocumentSnapshot) {
   for (const org of organizations) {
     await storeSearchableOrg(org);
   }
-  const orgNames = organizations.map((org) => orgName(org)).filter((orgName) => !!orgName);
+  const orgNames = organizations.map(org => orgName(org)).filter(orgName => !!orgName);
   return storeSearchableMovie(movie, orgNames);
 }
 
@@ -55,18 +54,18 @@ export async function onMovieDelete(snap: FirebaseFirestore.DocumentSnapshot, co
 
   await batch.commit();
 
-  await db.runTransaction(async (tx) => {
+  await db.runTransaction(async tx => {
     // Read events
     const events = await tx.get(db.collection('events').where('meta.titleId', '==', movie.id));
 
     // Read permissions
-    const orgsPromises = movie.orgIds.map((o) => tx.get(db.collection('orgs').where('id', '==', o)));
+    const orgsPromises = movie.orgIds.map(o => tx.get(db.collection('orgs').where('id', '==', o)));
     const _orgs = await Promise.all(orgsPromises);
     const orgIds: string[] = [];
-    _orgs.forEach((s) => {
-      s.docs.forEach((d) => orgIds.push(d.id));
+    _orgs.forEach(s => {
+      s.docs.forEach(d => orgIds.push(d.id));
     });
-    const permissionsPromises = orgIds.map((orgId) => tx.get(db.doc(`permissions/${orgId}/documentPermissions/${movie.id}`)));
+    const permissionsPromises = orgIds.map(orgId => tx.get(db.doc(`permissions/${orgId}/documentPermissions/${movie.id}`)));
     const permissions = await Promise.all(permissionsPromises);
 
     // Read notifications
@@ -79,10 +78,10 @@ export async function onMovieDelete(snap: FirebaseFirestore.DocumentSnapshot, co
     const bucketsCollectionRef = await tx.get(db.collection('buckets'));
 
     // Delete events
-    events.docs.forEach((d) => tx.delete(d.ref));
+    events.docs.forEach(d => tx.delete(d.ref));
 
     // Delete permissions
-    permissions.forEach((p) => tx.delete(p.ref));
+    permissions.forEach(p => tx.delete(p.ref));
 
     // Delete notifications
     for (const doc of notifsCollectionRef.docs) {
@@ -98,8 +97,8 @@ export async function onMovieDelete(snap: FirebaseFirestore.DocumentSnapshot, co
     for (const doc of bucketsCollectionRef.docs) {
       const bucket = doc.data() as Bucket;
 
-      if (bucket.contracts.some((c) => c.titleId === movie.id)) {
-        bucket.contracts = bucket.contracts.filter((c) => c.titleId !== movie.id);
+      if (bucket.contracts.some(c => c.titleId === movie.id)) {
+        bucket.contracts = bucket.contracts.filter(c => c.titleId !== movie.id);
         tx.update(doc.ref, bucket);
       }
     }
@@ -108,7 +107,7 @@ export async function onMovieDelete(snap: FirebaseFirestore.DocumentSnapshot, co
   // Update algolia's index
   const movieAppAccess = getMovieAppAccess(movie);
   const promises = movieAppAccess.map(
-    (appName) => deleteObject(algolia.indexNameMovies[appName], context.params.movieId) as Promise<boolean>
+    appName => deleteObject(algolia.indexNameMovies[appName], context.params.movieId) as Promise<boolean>
   );
 
   await Promise.all(promises);
@@ -128,7 +127,7 @@ export async function onMovieUpdate(change: Change<FirebaseFirestore.DocumentSna
 
   const isMovieSubmitted = isSubmitted(before.app, after.app);
   const isMovieAccepted = isAccepted(before.app, after.app);
-  const appAccess = apps.find((a) => !!after.app[a].access);
+  const appAccess = apps.find(a => !!after.app[a].access);
   const organizations = await getOrganizationsOfMovie(after.id);
 
   if (isMovieSubmitted) {
@@ -140,9 +139,9 @@ export async function onMovieUpdate(change: Change<FirebaseFirestore.DocumentSna
 
     // Notification to users related to current movie
     const notifications = organizations
-      .filter((organizationDocument) => !!organizationDocument?.userIds?.length)
+      .filter(organizationDocument => !!organizationDocument?.userIds?.length)
       .reduce((ids: string[], org) => ids.concat(org.userIds), [])
-      .map((toUserId) =>
+      .map(toUserId =>
         createNotification({
           toUserId,
           type: 'movieSubmitted',
@@ -157,9 +156,9 @@ export async function onMovieUpdate(change: Change<FirebaseFirestore.DocumentSna
   if (isMovieAccepted) {
     // When Archipel Content accept the movie
     const notifications = organizations
-      .filter((organizationDocument) => !!organizationDocument?.userIds?.length)
+      .filter(organizationDocument => !!organizationDocument?.userIds?.length)
       .reduce((ids: string[], org) => ids.concat(org.userIds), [])
-      .map((toUserId) => {
+      .map(toUserId => {
         return createNotification({
           toUserId,
           type: 'movieAccepted',
@@ -172,26 +171,26 @@ export async function onMovieUpdate(change: Change<FirebaseFirestore.DocumentSna
   }
 
   // If movie was accepted but is not anymore, clean wishlists
-  if (Object.keys(after.app).map((a) => before.app[a].status === 'accepted' && after.app[a].status !== before.app[a].status)) {
+  if (Object.keys(after.app).map(a => before.app[a].status === 'accepted' && after.app[a].status !== before.app[a].status)) {
     await removeMovieFromWishlists(after);
   }
 
   // Change documentPermission docs based on orgIds change
-  const addedOrgIds = after.orgIds.filter((id) => !before.orgIds.includes(id));
-  const removedOrgIds = before.orgIds.filter((id) => !after.orgIds.includes(id));
+  const addedOrgIds = after.orgIds.filter(id => !before.orgIds.includes(id));
+  const removedOrgIds = before.orgIds.filter(id => !after.orgIds.includes(id));
 
-  const addedPromises = addedOrgIds.map((orgId) => {
+  const addedPromises = addedOrgIds.map(orgId => {
     const permissions = createDocPermissions({ id: after.id, ownerId: orgId });
     return db.doc(`permissions/${orgId}/documentPermissions/${after.id}`).set(permissions);
   });
-  const removedPromises = removedOrgIds.map((orgId) => db.doc(`permissions/${orgId}/documentPermissions/${after.id}`).delete());
+  const removedPromises = removedOrgIds.map(orgId => db.doc(`permissions/${orgId}/documentPermissions/${after.id}`).delete());
   await Promise.all([...addedPromises, ...removedPromises]);
 
   // insert orgName & orgID to the algolia movie index (this is needed in order to filter on the frontend)
   for (const org of organizations) {
     await storeSearchableOrg(org);
   }
-  const orgNames = organizations.map((org) => orgName(org)).filter((orgName) => !!orgName);
+  const orgNames = organizations.map(org => orgName(org)).filter(orgName => !!orgName);
   await storeSearchableMovie(after, orgNames);
 
   for (const app in after.app) {
@@ -214,7 +213,7 @@ export async function createAskingPriceRequest(
   const [user, movie] = await Promise.all([getDocument<PublicUser>(`users/${uid}`), getDocument<Movie>(`movies/${movieId}`)]);
 
   const getNotifications = (org: Organization) =>
-    org.userIds.map((userId) =>
+    org.userIds.map(userId =>
       createNotification({
         toUserId: userId,
         type: 'movieAskingPriceRequested',
@@ -243,7 +242,7 @@ export async function createAskingPriceRequest(
 
 /** Checks if the store status is going from draft to submitted. */
 function isSubmitted(previousAppConfig: AppConfigMap, currentAppConfig: AppConfigMap) {
-  return apps.some((app) => {
+  return apps.some(app => {
     return (
       previousAppConfig &&
       previousAppConfig[app].status === 'draft' &&
@@ -255,7 +254,7 @@ function isSubmitted(previousAppConfig: AppConfigMap, currentAppConfig: AppConfi
 
 /** Return from which app(s) a movie is going from draft to submitted. */
 function wasSubmittedOn(previousAppConfig: AppConfigMap, currentAppConfig: AppConfigMap): App[] {
-  return apps.filter((app) => {
+  return apps.filter(app => {
     if (!previousAppConfig[app] || !currentAppConfig[app]) return false;
     const wasDraft = previousAppConfig[app].status === 'draft';
     const isSubmitted = currentAppConfig[app].status === 'submitted';
@@ -265,7 +264,7 @@ function wasSubmittedOn(previousAppConfig: AppConfigMap, currentAppConfig: AppCo
 
 /** Checks if the store status is going from submitted to accepted. */
 function isAccepted(previousAppConfig: AppConfigMap, currentAppConfig: AppConfigMap) {
-  return apps.some((app) => {
+  return apps.some(app => {
     if (app === 'festival') {
       // in festival `draft` -> `accepted`
       return (
@@ -291,7 +290,7 @@ async function removeMovieFromWishlists(movie: MovieDocument, batch?: FirebaseFi
   const updates: Promise<FirebaseFirestore.WriteResult>[] = [];
   for (const o of orgsWithWishlists.docs) {
     const org = o.data();
-    org.wishlist = org.wishlist.filter((movieId) => movieId !== movie.id);
+    org.wishlist = org.wishlist.filter(movieId => movieId !== movie.id);
     if (batch) {
       batch.update(o.ref, org);
     } else {

@@ -1,14 +1,13 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Event } from '@blockframes/model';
+import { Event } from '@blockframes/shared/model';
 
 function minute(amount: number) {
   return 1000 * 60 * amount;
 }
 
-@Pipe({name: 'eventSize', pure: true})
+@Pipe({ name: 'eventSize', pure: true })
 export class EventSizePipe implements PipeTransform {
-
-  transform(event: Event): 'local'|'small'|'large' {
+  transform(event: Event): 'local' | 'small' | 'large' {
     if (event.type === 'local') {
       return 'local';
     }

@@ -1,17 +1,9 @@
-import {
-  Component,
-  ChangeDetectionStrategy,
-  Input,
-  OnInit,
-  OnDestroy,
-  Inject,
-  Directive,
-} from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, OnInit, OnDestroy, Inject, Directive } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet, Event, ActivatedRoute } from '@angular/router';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { Subscription } from 'rxjs';
 import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
-import { Movie } from '@blockframes/model';
+import { Movie } from '@blockframes/shared/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { FORMS_CONFIG, ShellConfig } from '../../form/movie.shell.interfaces';
 import { filter, pluck, switchMap, tap } from 'rxjs/operators';
@@ -20,7 +12,7 @@ import { App } from '@blockframes/utils/apps';
 import { NavigationService } from '@blockframes/ui/navigation.service';
 
 @Directive({ selector: 'movie-cta, [movieCta]' })
-export class MovieCtaDirective { }
+export class MovieCtaDirective {}
 
 @Component({
   selector: '[routes] title-dashboard-shell',
@@ -35,7 +27,7 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
   movie$ = this.route.params.pipe(
     pluck('movieId'),
     switchMap((movieId: string) => this.movieService.valueChanges(movieId)),
-    tap((movie) => (this.movie = movie))
+    tap(movie => (this.movie = movie))
   );
 
   public movie: Movie;
@@ -49,7 +41,7 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     private navService: NavigationService
-  ) { }
+  ) {}
 
   async ngOnInit() {
     this.configs.movie.onInit();

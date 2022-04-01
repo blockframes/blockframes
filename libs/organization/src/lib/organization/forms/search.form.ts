@@ -2,7 +2,7 @@
 import { Territory } from '@blockframes/utils/static-model';
 import { FormEntity, FormList } from '@blockframes/utils/form';
 import { AlgoliaSearch } from '@blockframes/utils/algolia';
-import { Organization } from '@blockframes/model';
+import { Organization } from '@blockframes/shared/model';
 import { App, Module } from '@blockframes/utils/apps';
 
 // Utils
@@ -11,10 +11,10 @@ import { algolia } from '@env';
 import { FormControl } from '@angular/forms';
 
 export interface OrganizationSearch extends AlgoliaSearch {
-  appModule: Module[],
-  isAccepted: boolean,
-  hasAcceptedMovies: boolean,
-  countries?: Territory[],
+  appModule: Module[];
+  isAccepted: boolean;
+  hasAcceptedMovies: boolean;
+  countries?: Territory[];
 }
 
 export function createOrganizationSearch(search: Partial<OrganizationSearch> = {}): OrganizationSearch {
@@ -26,8 +26,8 @@ export function createOrganizationSearch(search: Partial<OrganizationSearch> = {
     hitsPerPage: 25,
     isAccepted: true,
     hasAcceptedMovies: true,
-    ...search
-    };
+    ...search,
+  };
 }
 
 function createOrganizationSearchControl(search: OrganizationSearch) {
@@ -38,14 +38,13 @@ function createOrganizationSearchControl(search: OrganizationSearch) {
     countries: FormList.factory<Territory>(search.countries),
     appModule: new FormControl(search.appModule),
     isAccepted: new FormControl(search.isAccepted),
-    hasAcceptedMovies: new FormControl(search.hasAcceptedMovies)
+    hasAcceptedMovies: new FormControl(search.hasAcceptedMovies),
   };
 }
 
 export type OrganizationSearchControl = ReturnType<typeof createOrganizationSearchControl>;
 
 export class OrganizationSearchForm extends FormEntity<OrganizationSearchControl> {
-
   private organizationIndex: SearchIndex;
 
   constructor(app: App, search: Partial<OrganizationSearch> = {}) {
@@ -55,14 +54,27 @@ export class OrganizationSearchForm extends FormEntity<OrganizationSearchControl
     this.organizationIndex = algoliasearch(algolia.appId, algolia.searchKey).initIndex(algolia.indexNameOrganizations[app]);
   }
 
-  get query() { return this.get('query'); }
-  get page() { return this.get('page'); }
-  get hitsPerPage() { return this.get('hitsPerPage') }
-  get countries() { return this.get('countries'); }
-  get appModule() { return this.get('appModule') }
-  get isAccepted() { return this.get('isAccepted') }
-  get hasAcceptedMovies() { return this.get('hasAcceptedMovies') }
-
+  get query() {
+    return this.get('query');
+  }
+  get page() {
+    return this.get('page');
+  }
+  get hitsPerPage() {
+    return this.get('hitsPerPage');
+  }
+  get countries() {
+    return this.get('countries');
+  }
+  get appModule() {
+    return this.get('appModule');
+  }
+  get isAccepted() {
+    return this.get('isAccepted');
+  }
+  get hasAcceptedMovies() {
+    return this.get('hasAcceptedMovies');
+  }
 
   search() {
     return this.organizationIndex.search<Organization>(this.query.value, {
@@ -72,8 +84,8 @@ export class OrganizationSearchForm extends FormEntity<OrganizationSearchControl
         this.countries.value.map(country => `country:${country}`),
         [`appModule:${this.appModule.value}`],
         [`isAccepted:${this.isAccepted.value}`],
-        [`hasAcceptedMovies:${this.hasAcceptedMovies.value}`]
-      ]
+        [`hasAcceptedMovies:${this.hasAcceptedMovies.value}`],
+      ],
     });
   }
 }

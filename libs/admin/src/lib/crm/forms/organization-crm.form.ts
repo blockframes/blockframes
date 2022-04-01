@@ -4,14 +4,14 @@ import { ModuleAccessCrmForm } from './module-access-crm.form';
 import { getAllAppsExcept } from '@blockframes/utils/apps';
 import { OrganizationDenominationForm, OrganizationAddressesForm } from '@blockframes/organization/forms/organization.form';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
-import { createOrganization, Organization } from '@blockframes/model';
+import { createOrganization, Organization } from '@blockframes/shared/model';
 
 function createOrgCrmControls(entity: Partial<Organization>) {
   const org = createOrganization(entity);
   const appAccess = new FormGroup({});
   const apps = getAllAppsExcept(['crm']);
   for (const a of apps) {
-    appAccess.addControl(a, new ModuleAccessCrmForm(org.appAccess[a]))
+    appAccess.addControl(a, new ModuleAccessCrmForm(org.appAccess[a]));
   }
   return {
     denomination: new OrganizationDenominationForm(org.denomination),

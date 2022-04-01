@@ -1,15 +1,15 @@
-import { Directive, Input, OnInit, HostBinding, ChangeDetectorRef, OnDestroy } from '@angular/core'
+import { Directive, Input, OnInit, HostBinding, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { BehaviorSubject, combineLatest, Subscription, Observable } from 'rxjs';
 import { ThemeService } from '@blockframes/ui/theme';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { map } from 'rxjs/operators';
-import { StorageFile } from '@blockframes/model';
+import { StorageFile } from '@blockframes/shared/model';
 import { ImageParameters } from './imgix-helpers';
 import { MediaService } from '../../+state/media.service';
 import { getAssetPath } from './utils';
 
 @Directive({
-  selector: '[bgRef] [bgAsset], [bgAsset]'
+  selector: '[bgRef] [bgAsset], [bgAsset]',
 })
 export class BackgroundDirective implements OnInit, OnDestroy {
   private sub: Subscription;
@@ -31,7 +31,8 @@ export class BackgroundDirective implements OnInit, OnDestroy {
     if (!file) {
       this.ref$.next('');
     } else {
-      this.mediaService.generateBackgroundImageUrl(file, this.parameters)
+      this.mediaService
+        .generateBackgroundImageUrl(file, this.parameters)
         .then(url => this.ref$.next(url))
         .catch(() => this.ref$.next(''));
     }
@@ -53,30 +54,18 @@ export class BackgroundDirective implements OnInit, OnDestroy {
     private themeService: ThemeService,
     private cdr: ChangeDetectorRef,
     private sanitazier: DomSanitizer,
-    private mediaService: MediaService,
-  ) { }
+    private mediaService: MediaService
+  ) {}
 
   ngOnInit() {
-
     // Can force a local theme
-    const theme$ = combineLatest([
-      this.localTheme$,
-      this.themeService.theme$
-    ]).pipe(
-      map(([local, global]) => local || global)
+    const theme$ = combineLatest([this.localTheme$, this.themeService.theme$]).pipe(map(([local, global]) => local || global));
+
+    this.assetUrl$ = combineLatest([theme$, this.asset$]).pipe(
+      map(([theme, asset]) => (asset ? getAssetPath(asset, theme, 'images') : ''))
     );
 
-    this.assetUrl$ = combineLatest([
-      theme$,
-      this.asset$
-    ]).pipe(
-      map(([theme, asset]) => asset ? getAssetPath(asset, theme, 'images') : '')
-    );
-
-    this.sub = combineLatest([
-      this.ref$,
-      this.assetUrl$
-    ]).subscribe(([ref, assetUrl]) => {
+    this.sub = combineLatest([this.ref$, this.assetUrl$]).subscribe(([ref, assetUrl]) => {
       if (ref) {
         this.src = this.sanitazier.bypassSecurityTrustStyle(`url("${ref}"), url("${assetUrl}")`);
         this.cdr.markForCheck();
@@ -84,7 +73,7 @@ export class BackgroundDirective implements OnInit, OnDestroy {
         this.src = this.sanitazier.bypassSecurityTrustStyle(`url("${assetUrl}")`);
         this.cdr.markForCheck();
       }
-    })
+    });
   }
 
   ngOnDestroy() {

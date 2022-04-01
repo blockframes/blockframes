@@ -1,7 +1,6 @@
-
 import { Injectable } from '@angular/core';
 import { AngularFireFunctions } from '@angular/fire/functions';
-import { PublicUser } from '@blockframes/model';
+import { PublicUser } from '@blockframes/shared/model';
 import { ErrorResultResponse } from '@blockframes/utils/utils';
 import { BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -20,24 +19,16 @@ import {
   LocalAudioTrackPublication,
 } from 'twilio-video';
 
-import {
-  TrackKind,
-  RemoteTracks,
-  LocalAttendee,
-  RemoteAttendee,
-  createRemoteAttendee,
-  Attendees,
-} from './twilio.model';
+import { TrackKind, RemoteTracks, LocalAttendee, RemoteAttendee, createRemoteAttendee, Attendees } from './twilio.model';
 
 type GetAttendee<Id> = Id extends 'local' ? LocalAttendee : RemoteAttendee;
 
 @Injectable({ providedIn: 'root' })
 export class TwilioService {
-
   private room: Room;
   private getAccessToken = this.functions.httpsCallable('getAccessToken');
 
-  private preference: { [K in TrackKind]: boolean } = { 'video': true, 'audio': true };
+  private preference: { [K in TrackKind]: boolean } = { video: true, audio: true };
 
   private _attendees = new BehaviorSubject<Attendees>({});
   private _attendees$ = this._attendees.asObservable();
@@ -48,7 +39,7 @@ export class TwilioService {
     return this._attendees.value['local'] as LocalAttendee;
   }
 
-  constructor(private functions: AngularFireFunctions) { }
+  constructor(private functions: AngularFireFunctions) {}
 
   getToken(eventId: string, credentials: Partial<PublicUser>) {
     return this.getAccessToken({ eventId, credentials }).toPromise<ErrorResultResponse>();
@@ -59,7 +50,6 @@ export class TwilioService {
   }
 
   async initLocal(userName: string) {
-
     const local: LocalAttendee = {
       id: 'local',
       kind: 'local',
@@ -68,10 +58,10 @@ export class TwilioService {
     };
     this.upsertAttendee(local.id, local);
 
-    const [video, audio] = await Promise.all([
+    const [video, audio] = (await Promise.all([
       createLocalVideoTrack().catch(() => null),
-      createLocalAudioTrack().catch(() => null)
-    ]) as [LocalVideoTrack | null, LocalAudioTrack | null];
+      createLocalAudioTrack().catch(() => null),
+    ])) as [LocalVideoTrack | null, LocalAudioTrack | null];
 
     // check user preference and disable tracks accordingly
     if (!this.preference['video']) video.disable();
@@ -88,7 +78,7 @@ export class TwilioService {
     const cleanTrack = (track: LocalVideoTrack | LocalAudioTrack) => {
       track?.stop();
       track?.removeAllListeners();
-    }
+    };
 
     cleanTrack(local.tracks?.video);
     cleanTrack(local.tracks?.audio);
@@ -108,9 +98,9 @@ export class TwilioService {
       this.upsertAttendee(localAttendee.id, {
         ...localAttendee,
         tracks: {
-          video: kind === 'video' ? track as LocalVideoTrack : localAttendee.tracks.video,
-          audio: kind === 'audio' ? track as LocalAudioTrack : localAttendee.tracks.audio
-        }
+          video: kind === 'video' ? (track as LocalVideoTrack) : localAttendee.tracks.video,
+          audio: kind === 'audio' ? (track as LocalAudioTrack) : localAttendee.tracks.audio,
+        },
       });
 
       if (this.room) {
@@ -118,20 +108,19 @@ export class TwilioService {
         this.room.localParticipant[key].forEach((publication: LocalVideoTrackPublication | LocalAudioTrackPublication) => {
           publication.track.stop();
           publication.unpublish();
-        })
+        });
       }
     } else {
       // https://www.twilio.com/docs/video/javascript-getting-started#mute-and-unmute-audio-and-video
-      const localTrack = kind === 'video'
-        ? await createLocalVideoTrack().catch(() => null)
-        : await createLocalAudioTrack().catch(() => null);
+      const localTrack =
+        kind === 'video' ? await createLocalVideoTrack().catch(() => null) : await createLocalAudioTrack().catch(() => null);
 
       this.upsertAttendee(localAttendee.id, {
         ...localAttendee,
         tracks: {
-          video: kind === 'video' ? localTrack as LocalVideoTrack : localAttendee.tracks.video,
-          audio: kind === 'audio' ? localTrack as LocalAudioTrack : localAttendee.tracks.audio
-        }
+          video: kind === 'video' ? (localTrack as LocalVideoTrack) : localAttendee.tracks.video,
+          audio: kind === 'audio' ? (localTrack as LocalAudioTrack) : localAttendee.tracks.audio,
+        },
       });
 
       if (this.room) {
@@ -166,7 +155,7 @@ export class TwilioService {
     // Existing participants list
     this.room.participants.forEach((participant: RemoteParticipant) => {
       this.upsertAttendee(participant.sid, createRemoteAttendee(participant));
-    })
+    });
 
     // A new participant connected to room
     this.room.on('participantConnected', (participant: RemoteParticipant) => {
@@ -174,26 +163,20 @@ export class TwilioService {
     });
 
     // When other (already connected or new) participants activate audio or video
-    this.room.on(
-      'trackSubscribed',
-      (track: RemoteTrack, _: RemoteTrackPublication, participant: RemoteParticipant) => {
-        if (track.kind === 'data') return;
-        const remoteTracks: RemoteTracks = { [track.kind]: track };
+    this.room.on('trackSubscribed', (track: RemoteTrack, _: RemoteTrackPublication, participant: RemoteParticipant) => {
+      if (track.kind === 'data') return;
+      const remoteTracks: RemoteTracks = { [track.kind]: track };
 
-        this.addTracks(participant.sid, participant, remoteTracks);
-      },
-    );
+      this.addTracks(participant.sid, participant, remoteTracks);
+    });
 
     // When other already connected participants deactivate audio or video or leave the room
-    this.room.on(
-      'trackUnsubscribed',
-      (track: RemoteTrack, _: RemoteTrackPublication, participant: RemoteParticipant) => {
-        if (track.kind === 'data') return;
-        const remoteTracks: RemoteTracks = { [track.kind]: null };
+    this.room.on('trackUnsubscribed', (track: RemoteTrack, _: RemoteTrackPublication, participant: RemoteParticipant) => {
+      if (track.kind === 'data') return;
+      const remoteTracks: RemoteTracks = { [track.kind]: null };
 
-        this.addTracks(participant.sid, participant, remoteTracks);
-      }
-    )
+      this.addTracks(participant.sid, participant, remoteTracks);
+    });
 
     // A participant leaved the room
     this.room.on('participantDisconnected', (participant: RemoteParticipant) => {
@@ -216,7 +199,10 @@ export class TwilioService {
   private addTracks(id: string, participant: RemoteParticipant, tracks: RemoteTracks) {
     const remoteAttendee = createRemoteAttendee(participant, tracks);
     const existingAttendee = this.getAttendee(id);
-    this.upsertAttendee(id, existingAttendee ? { ...existingAttendee, tracks: { ...existingAttendee.tracks, ...tracks } } : remoteAttendee);
+    this.upsertAttendee(
+      id,
+      existingAttendee ? { ...existingAttendee, tracks: { ...existingAttendee.tracks, ...tracks } } : remoteAttendee
+    );
   }
 
   private upsertAttendee(id: string, attendee: LocalAttendee | RemoteAttendee) {

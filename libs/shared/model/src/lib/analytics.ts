@@ -1,4 +1,4 @@
-import { User, Organization, Movie } from "@blockframes/model";
+import { User, Organization, Movie } from '@blockframes/model';
 import { DocumentMeta } from './meta';
 
 const analyticsEvents = [
@@ -7,7 +7,7 @@ const analyticsEvents = [
   'addedToWishlist',
   'removedFromWishlist',
   'screeningRequested',
-  'askingPriceRequested'
+  'askingPriceRequested',
 ] as const;
 export type EventName = typeof analyticsEvents[number];
 
@@ -59,9 +59,9 @@ export function createTitleMeta(meta: Partial<MetaTitle>): MetaTitle {
     orgId: '',
     uid: '',
     ownerOrgIds: [],
-    ...meta
+    ...meta,
   };
-};
+}
 
 export function createAggregatedAnalytic(analytic: Partial<AggregatedAnalytic>): AggregatedAnalytic {
   return {
@@ -71,6 +71,6 @@ export function createAggregatedAnalytic(analytic: Partial<AggregatedAnalytic>):
     promoReelOpened: 0,
     removedFromWishlist: 0,
     screeningRequested: 0,
-    ...analytic
+    ...analytic,
   };
 }

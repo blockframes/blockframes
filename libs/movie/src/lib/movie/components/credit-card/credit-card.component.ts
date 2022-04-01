@@ -1,20 +1,20 @@
 import { ChangeDetectionStrategy, Component, Input, Pipe, PipeTransform, TemplateRef, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Credit, Director, Filmography } from '@blockframes/model';
+import { Credit, Director, Filmography } from '@blockframes/shared/model';
 
 @Component({
   selector: 'title-credit-card',
   templateUrl: './credit-card.component.html',
   styleUrls: ['./credit-card.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreditCardComponent {
   icon = 'check';
   @Input() credit: Credit | Director;
   @Input() type: 'director' | 'crew' | 'cast';
-  @ViewChild("dialogRef") dialogRef: TemplateRef<any>;
+  @ViewChild('dialogRef') dialogRef: TemplateRef<any>;
 
-  constructor(private dialog: MatDialog) { }
+  constructor(private dialog: MatDialog) {}
 
   openDialog() {
     if (this.credit.description.length >= 125) {
@@ -26,11 +26,15 @@ export class CreditCardComponent {
 @Pipe({ name: 'statusIcon' })
 export class StatusIconPipe implements PipeTransform {
   transform(role?: Credit['role']) {
-    switch(role) {
-      case 'confirmed': return 'check_circle';
-      case 'target': return 'estimated';
-      case 'looselyAttached': return 'unpublished'
-      default: return '';
+    switch (role) {
+      case 'confirmed':
+        return 'check_circle';
+      case 'target':
+        return 'estimated';
+      case 'looselyAttached':
+        return 'unpublished';
+      default:
+        return '';
     }
   }
 }
@@ -38,10 +42,13 @@ export class StatusIconPipe implements PipeTransform {
 @Pipe({ name: 'emptyImg' })
 export class EmptyImgPipe implements PipeTransform {
   transform(type: 'director' | 'crew' | 'cast') {
-    switch(type) {
-      case 'director': return 'empty_director_description.svg';
-      case 'crew': return 'empty_crew_description.svg';
-      case 'cast': return 'empty_cast_description.svg';
+    switch (type) {
+      case 'director':
+        return 'empty_director_description.svg';
+      case 'crew':
+        return 'empty_crew_description.svg';
+      case 'cast':
+        return 'empty_cast_description.svg';
     }
   }
 }

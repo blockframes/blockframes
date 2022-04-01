@@ -1,15 +1,15 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Event, Invitation } from '@blockframes/model';
+import { Event, Invitation } from '@blockframes/shared/model';
 import { EventService } from '@blockframes/event/+state';
 
 @Pipe({
-  name: 'eventFromInvitation'
+  name: 'eventFromInvitation',
 })
 export class EventFromInvitationPipe implements PipeTransform {
-  constructor(private eventService: EventService) { }
+  constructor(private eventService: EventService) {}
   transform(invitation: Invitation): Observable<Event> {
-    return this.eventService.valueChanges(invitation.eventId)
+    return this.eventService.valueChanges(invitation.eventId);
   }
 }
 
@@ -17,4 +17,4 @@ export class EventFromInvitationPipe implements PipeTransform {
   exports: [EventFromInvitationPipe],
   declarations: [EventFromInvitationPipe],
 })
-export class EventFromInvitationPipeModule { }
+export class EventFromInvitationPipeModule {}

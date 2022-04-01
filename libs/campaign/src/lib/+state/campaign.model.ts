@@ -1,4 +1,4 @@
-import { StorageFile } from '@blockframes/model';
+import { StorageFile } from '@blockframes/shared/model';
 import { MovieCurrency } from '@blockframes/utils/static-model';
 
 export interface Campaign {
@@ -10,25 +10,24 @@ export interface Campaign {
   perks: Perk[];
   fundings: Funding[];
   profits: {
-    low?: number,
-    medium?: number,
-    high?: number
+    low?: number;
+    medium?: number;
+    high?: number;
   };
-  budget?: Budget,
+  budget?: Budget;
   files: {
     financingPlan?: StorageFile;
     waterfall?: StorageFile;
     budget?: StorageFile;
-  }
+  };
 }
 
-
 export interface Budget {
-  development?: number,
-  shooting?: number,
-  postProduction?: number,
-  administration?: number,
-  contingency?: number,
+  development?: number;
+  shooting?: number;
+  postProduction?: number;
+  administration?: number;
+  contingency?: number;
 }
 
 export interface Funding {
@@ -39,13 +38,13 @@ export interface Funding {
 }
 
 export interface Perk {
-  title: string,
-  description: string,
-  minPledge: number,
+  title: string;
+  description: string;
+  minPledge: number;
   amount: {
-    current: number,
-    total: number
-  }
+    current: number;
+    total: number;
+  };
 }
 
 export function createCampaign(params: Partial<Campaign> = {}): Campaign {
@@ -56,8 +55,8 @@ export function createCampaign(params: Partial<Campaign> = {}): Campaign {
     fundings: [],
     profits: {},
     files: {},
-    ...params
-  }
+    ...params,
+  };
 }
 
 export function createPerk(params: Partial<Perk> = {}): Perk {
@@ -69,6 +68,6 @@ export function createPerk(params: Partial<Perk> = {}): Perk {
       total: 0,
       current: 0,
     },
-    ...params
-  }
+    ...params,
+  };
 }

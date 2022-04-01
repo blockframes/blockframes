@@ -4,25 +4,19 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { FormEntity, FormGroupSchema } from 'ng-form-factory';
 import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
-import { Organization, orgName, Movie } from '@blockframes/model';
+import { Organization, orgName, Movie } from '@blockframes/shared/model';
 import { OrgTitlesSection } from '@blockframes/admin/cms';
 import { FormAutocompleteModule } from '../../forms/autocomplete';
 import { FormChipsAutocompleteModule } from '../../forms/chips-autocomplete';
 import { TextFormModule, matText } from '../../forms/text';
 import { matMultiSelect, matSelect } from '../../forms/select';
-import {
-  FirestoreFormModule,
-  firestoreQuery,
-  titlesFromOrg,
-  titlesFromApp,
-  limit,
-} from '../../forms/firestore';
+import { FirestoreFormModule, firestoreQuery, titlesFromOrg, titlesFromApp, limit } from '../../forms/firestore';
 import { HomePipesModule } from '../pipes';
 import { App } from '@blockframes/utils/apps';
 
 export const orgTitleSchema: FormGroupSchema<OrgTitlesSection> = {
   form: 'group',
-  load: async () => import('./org-titles.component').then((m) => m.OrgsComponent),
+  load: async () => import('./org-titles.component').then(m => m.OrgsComponent),
   controls: {
     _type: { form: 'control' },
     title: matText({ label: 'title' }),

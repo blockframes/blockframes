@@ -6,9 +6,9 @@ import { map, switchMap, tap } from 'rxjs/operators';
 import { AuthService } from '@blockframes/auth/+state';
 import { combineLatest, Observable, of } from 'rxjs';
 import { ActiveState, EntityState } from '@datorama/akita';
-import { createDocPermissions, PermissionsDocument, UserRole, Permissions } from '@blockframes/model';
+import { createDocPermissions, PermissionsDocument, UserRole, Permissions } from '@blockframes/shared/model';
 
-interface PermissionsState extends EntityState<Permissions>, ActiveState<string> { }
+interface PermissionsState extends EntityState<Permissions>, ActiveState<string> {}
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'permissions' })
@@ -18,31 +18,21 @@ export class PermissionsService extends CollectionService<PermissionsState> {
   // The whole permissions document for organization of the current logged in user.
   permissions: Permissions; // @TODO #7273 if this.permissions$ was not already called, this will be undefined
   permissions$: Observable<Permissions> = this.authService.profile$.pipe(
-    switchMap(user => user?.orgId ? this.valueChanges(user.orgId) : of(undefined)),
-    tap(permissions => this.permissions = permissions)
+    switchMap(user => (user?.orgId ? this.valueChanges(user.orgId) : of(undefined))),
+    tap(permissions => (this.permissions = permissions))
   );
 
   // Checks if the connected user is superAdmin of his organization.
-  public isSuperAdmin$ = combineLatest([
-    this.authService.profile$,
-    this.permissions$,
-  ]).pipe(
+  public isSuperAdmin$ = combineLatest([this.authService.profile$, this.permissions$]).pipe(
     map(([user, p]) => user?.uid && p?.roles[user?.uid] === 'superAdmin')
   );
 
   // Checks if the connected user is admin of his organization.
-  public isAdmin$ = combineLatest([
-    this.authService.profile$,
-    this.permissions$,
-    this.isSuperAdmin$,
-  ]).pipe(
+  public isAdmin$ = combineLatest([this.authService.profile$, this.permissions$, this.isSuperAdmin$]).pipe(
     map(([user, p, isSuperAdmin]) => isSuperAdmin || p?.roles[user?.uid] === 'admin')
-  )
+  );
 
-  constructor(
-    private authService: AuthService,
-    private userService: UserService,
-  ) {
+  constructor(private authService: AuthService, private userService: UserService) {
     super();
   }
 

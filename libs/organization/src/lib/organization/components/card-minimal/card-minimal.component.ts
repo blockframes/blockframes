@@ -1,5 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import { createDenomination } from '@blockframes/model';
+import { createDenomination } from '@blockframes/shared/model';
 import { AlgoliaOrganization } from '@blockframes/utils/algolia';
 
 function parseOrg(org) {
@@ -9,8 +9,8 @@ function parseOrg(org) {
     return {
       id: algoliaOrg.objectID,
       logo: algoliaOrg.logo,
-      denomination: createDenomination({ full: algoliaOrg.name })
-    }
+      denomination: createDenomination({ full: algoliaOrg.name }),
+    };
   }
   return org;
 }
@@ -19,14 +19,14 @@ function parseOrg(org) {
   selector: '[org] org-card-minimal',
   templateUrl: './card-minimal.component.html',
   styleUrls: ['./card-minimal.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrganizationCardMinimalComponent {
-
   private _org;
-  get org() { return this._org }
+  get org() {
+    return this._org;
+  }
   @Input() set org(org) {
     this._org = parseOrg(org);
-  };
-
+  }
 }

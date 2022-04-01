@@ -15,8 +15,8 @@ export type EventMeta = Meeting | Screening | unknown;
 
 export type AttendeeStatus = 'owner' | 'requesting' | 'accepted' | 'denied' | 'ended';
 export interface MeetingAttendee extends Person {
-  uid: string,
-  status: AttendeeStatus,
+  uid: string;
+  status: AttendeeStatus;
 }
 
 export interface Meeting {
@@ -25,7 +25,7 @@ export interface Meeting {
   attendees: Record<string, MeetingAttendee>;
   files: StorageFile[];
   selectedFile: string;
-  controls: Record<string, MeetingMediaControl>
+  controls: Record<string, MeetingMediaControl>;
 }
 
 export interface MeetingPdfControl {
@@ -62,7 +62,7 @@ export interface EventBase<D extends Timestamp | Date, Meta extends EventMeta = 
   title: string;
   start: D;
   end: D;
-  allDay: boolean,
+  allDay: boolean;
   meta: Meta;
 }
 
@@ -76,9 +76,7 @@ export type SlateEventDocument = EventDocument<Screening>;
 export const linkDuration = 60 * 60 * 5; // 5 hours in seconds = 60 seconds * 60 minutes * 5 = 18 000 seconds
 
 // Event
-export interface Event<Meta extends EventMeta = unknown>
-  extends EventBase<Date, Meta>,
-  CalendarEvent<Meta> {
+export interface Event<Meta extends EventMeta = unknown> extends EventBase<Date, Meta>, CalendarEvent<Meta> {
   id: string;
   isOwner: boolean;
   allDay: boolean;
@@ -91,16 +89,14 @@ export interface Event<Meta extends EventMeta = unknown>
   organizedBy?: User;
 }
 
-export function createEvent<Meta extends EventMeta>(
-  params: Partial<EventBase<Date | Timestamp, Meta>> = {}
-): Event<Meta> {
+export function createEvent<Meta extends EventMeta>(params: Partial<EventBase<Date | Timestamp, Meta>> = {}): Event<Meta> {
   const meta: EventMeta = isMeeting(params as Event)
     ? createMeeting(params.meta)
     : isScreening(params as Event)
-      ? createScreening(params.meta)
-      : isSlate(params as Event)
-        ? createSlate(params.meta)
-        : {};
+    ? createScreening(params.meta)
+    : isSlate(params as Event)
+    ? createSlate(params.meta)
+    : {};
 
   return {
     id: '',
@@ -160,8 +156,8 @@ export function createScreening(screening: Partial<Screening>): Screening {
 export interface Slate {
   description: string;
   organizerUid: string;
-  titleIds: string[],
-  videoId: string
+  titleIds: string[];
+  videoId: string;
 }
 // Slate Presentation
 export interface SlateEvent extends Event<Slate> {
@@ -176,15 +172,12 @@ export function createSlate(slate: Partial<Slate>): Slate {
     organizerUid: '',
     titleIds: [],
     videoId: '',
-    ...slate
-  }
+    ...slate,
+  };
 }
 
 // Calendar Event
-export function createCalendarEvent<M>(
-  event: Partial<EventBase<Date | Timestamp, M>>,
-  isOwner: boolean
-): Event<M> {
+export function createCalendarEvent<M>(event: Partial<EventBase<Date | Timestamp, M>>, isOwner: boolean): Event<M> {
   return {
     ...createEvent(event),
     isOwner,
@@ -193,10 +186,7 @@ export function createCalendarEvent<M>(
   };
 }
 
-export function createMeetingAttendee(
-  user: User | AnonymousCredentials,
-  status: AttendeeStatus = 'requesting'
-): MeetingAttendee {
+export function createMeetingAttendee(user: User | AnonymousCredentials, status: AttendeeStatus = 'requesting'): MeetingAttendee {
   return {
     uid: user.uid,
     firstName: user.firstName,

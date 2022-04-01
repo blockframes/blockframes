@@ -1787,27 +1787,6 @@
         }
       }
     },
-    "model": {
-      "root": "libs/model",
-      "sourceRoot": "libs/model/src",
-      "projectType": "library",
-      "targets": {
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["libs/model/**/*.ts"]
-          }
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/model"],
-          "options": {
-            "jestConfig": "libs/model/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
     "testing-cypress-browser": {
       "root": "libs/testing/cypress/browser",
       "sourceRoot": "libs/testing/cypress/browser/src",
@@ -1845,6 +1824,27 @@
           "outputs": ["coverage/libs/testing/cypress/node"],
           "options": {
             "jestConfig": "libs/testing/cypress/node/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "shared-model": {
+      "root": "libs/shared/model",
+      "sourceRoot": "libs/shared/model/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/shared/model/**/*.ts"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/shared/model"],
+          "options": {
+            "jestConfig": "libs/shared/model/jest.config.js",
             "passWithNoTests": true
           }
         }

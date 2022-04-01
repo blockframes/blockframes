@@ -2,7 +2,7 @@ import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { startWith } from 'rxjs/operators';
-import { Contract, Movie, Negotiation, Offer } from '@blockframes/model';
+import { Contract, Movie, Negotiation, Offer } from '@blockframes/shared/model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -25,15 +25,9 @@ interface OfferView extends Offer {
 export class ListComponent {
   @Input() offers?: null | OfferView[];
   filter = new FormControl('');
-  filter$: Observable<AllOfferStatus> = this.filter.valueChanges.pipe(
-    startWith(this.filter.value ?? '')
-  );
+  filter$: Observable<AllOfferStatus> = this.filter.valueChanges.pipe(startWith(this.filter.value ?? ''));
 
-  constructor(
-    private router: Router,
-    private route: ActivatedRoute,
-    private dynTitle: DynamicTitleService
-  ) {
+  constructor(private router: Router, private route: ActivatedRoute, private dynTitle: DynamicTitleService) {
     this.dynTitle.setPageTitle('Offers & Deals');
   }
 

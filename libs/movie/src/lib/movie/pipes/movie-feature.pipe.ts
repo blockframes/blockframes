@@ -1,10 +1,6 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
-import { Movie } from '@blockframes/model';
-import {
-  genres as staticGenres,
-  languages,
-  territoriesISOA2,
-} from '@blockframes/utils/static-model/static-model';
+import { Movie } from '@blockframes/shared/model';
+import { genres as staticGenres, languages, territoriesISOA2 } from '@blockframes/utils/static-model/static-model';
 import { formatRunningTime } from '@blockframes/movie/pipes/running-time.pipe';
 
 @Pipe({
@@ -25,8 +21,7 @@ export class MovieFeaturePipe implements PipeTransform {
 
     let displayedCountries = '';
     if (originCountries.length > 0) displayedCountries += territoriesISOA2[originCountries[0]];
-    if (originCountries.length > 1)
-      displayedCountries += `, ${territoriesISOA2[originCountries[1]]}`;
+    if (originCountries.length > 1) displayedCountries += `, ${territoriesISOA2[originCountries[1]]}`;
     if (originCountries.length > 2) displayedCountries += ', ...';
 
     return [
@@ -37,7 +32,7 @@ export class MovieFeaturePipe implements PipeTransform {
       release.year,
       formatRunningTime(runningTime, false),
     ]
-      .filter((v) => !!v)
+      .filter(v => !!v)
       .join(' | ');
   }
 }

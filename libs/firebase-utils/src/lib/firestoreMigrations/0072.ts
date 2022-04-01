@@ -1,6 +1,6 @@
 import { Firestore } from '../types';
 import { runChunks } from '../firebase-utils';
-import { Movie } from '@blockframes/model';
+import { Movie } from '@blockframes/shared/model';
 
 /**
  * Update movies content type
@@ -20,11 +20,11 @@ export async function upgrade(db: Firestore) {
   };
   const movies = await db.collection('movies').get();
 
-  return runChunks(movies.docs, async (doc) => {
+  return runChunks(movies.docs, async doc => {
     const movie = doc.data();
     if (Object.keys(transform).includes(movie.contentType)) {
       movie.contentType = transform[movie.contentType](movie);
     }
     await doc.ref.set(movie);
-  }).catch((err) => console.error(err));
+  }).catch(err => console.error(err));
 }

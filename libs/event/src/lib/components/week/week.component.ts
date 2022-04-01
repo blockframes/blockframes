@@ -10,7 +10,7 @@ import { addDays, addMinutes, endOfWeek, startOfWeek } from 'date-fns';
 
 import { EventSmallDirective, EventLargeDirective } from '../event.directive';
 import { EventService } from '../../+state/event.service';
-import { EventTypes, createEvent } from '@blockframes/model';
+import { EventTypes, createEvent } from '@blockframes/shared/model';
 import { EventCreateComponent } from '../../form/create/create.component';
 import { fromEvent } from 'rxjs';
 import { map, finalize, takeUntil, distinctUntilChanged } from 'rxjs/operators';
@@ -26,7 +26,6 @@ function ceilToNearest(amount: number, precision: number) {
   return Math.ceil(amount / precision) * precision;
 }
 
-
 @Component({
   selector: 'cal-week',
   templateUrl: './week.component.html',
@@ -36,15 +35,15 @@ function ceilToNearest(amount: number, precision: number) {
     trigger('fadeIn', [
       transition('void => true', [
         style({ opacity: 0, transform: 'translateY(20px)' }),
-        animate('200ms cubic-bezier(0.16, 1, 0.3, 1)')
+        animate('200ms cubic-bezier(0.16, 1, 0.3, 1)'),
       ]),
     ]),
     trigger('fadeOut', [
       transition(':leave', [
-        animate('200ms cubic-bezier(0.7, 0, 0.84, 0)', style({ opacity: 0, transform: 'translateY(20px)' }))
+        animate('200ms cubic-bezier(0.7, 0, 0.84, 0)', style({ opacity: 0, transform: 'translateY(20px)' })),
       ]),
-    ])
-  ]
+    ]),
+  ],
 })
 export class CalendarWeekComponent {
   private _editable: boolean;
@@ -78,13 +77,10 @@ export class CalendarWeekComponent {
     private dialog: MatDialog,
     private router: Router,
     private route: ActivatedRoute,
-    private cdr: ChangeDetectorRef,
-  ) { }
+    private cdr: ChangeDetectorRef
+  ) {}
 
-  startDragToCreate(
-    segment: WeekViewHourSegment,
-    segmentElement: HTMLElement
-  ) {
+  startDragToCreate(segment: WeekViewHourSegment, segmentElement: HTMLElement) {
     if (!this.editable) {
       return;
     }
@@ -94,7 +90,7 @@ export class CalendarWeekComponent {
       title: 'New event',
       start: segment.date,
       end: addMinutes(segment.date, 30),
-      type: 'local'
+      type: 'local',
     });
     this.localEvents.push(localEvent);
     const segmentPosition = segmentElement.getBoundingClientRect();
@@ -134,7 +130,9 @@ export class CalendarWeekComponent {
   /** Open a create dialog and redirect if needed */
   private createEvent(calEvent: CalendarEvent) {
     const data = { event: { ...calEvent, type: '' }, types: this.eventTypes };
-    this.dialog.open(EventCreateComponent, { data, width: '650px', autoFocus: false }).afterClosed()
+    this.dialog
+      .open(EventCreateComponent, { data, width: '650px', autoFocus: false })
+      .afterClosed()
       .subscribe(async ({ event } = {}) => {
         if (event) {
           this.loading = true;
@@ -147,12 +145,10 @@ export class CalendarWeekComponent {
       });
   }
 
-
   updateEvent(timeChange: CalendarEventTimesChangedEvent) {
     if (timeChange.event['isOwner']) {
       const event = { id: timeChange.event.id as string, start: timeChange.newStart, end: timeChange.newEnd };
       this.service.update(event);
     }
   }
-
 }

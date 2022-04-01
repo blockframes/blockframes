@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { NotificationService } from '../../+state';
-import { Notification } from '@blockframes/model';
+import { Notification } from '@blockframes/shared/model';
 import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
 import { isSafari } from '@blockframes/utils/browser/utils';
 
@@ -8,14 +8,13 @@ import { isSafari } from '@blockframes/utils/browser/utils';
   selector: 'notification-item',
   templateUrl: './item.component.html',
   styleUrls: ['./item.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ItemComponent {
-
   @Input() notification: Notification;
   public xs$ = this.breakpointsService.xs;
 
-  constructor(private service: NotificationService, private breakpointsService: BreakpointsService) { }
+  constructor(private service: NotificationService, private breakpointsService: BreakpointsService) {}
 
   public markAsRead(notification: Notification) {
     this.service.readNotification(notification);

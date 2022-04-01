@@ -8,7 +8,7 @@ import { AuthService } from '@blockframes/auth/+state';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { APP } from '@blockframes/utils/routes/utils';
-import { organizationRoles } from '@blockframes/model';
+import { organizationRoles } from '@blockframes/shared/model';
 
 type Steps = 'initial' | 'request';
 
@@ -16,7 +16,7 @@ type Steps = 'initial' | 'request';
   selector: 'org-request-access',
   templateUrl: './request-access.component.html',
   styleUrls: ['./request-access.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrgRequestAccessComponent implements OnInit {
   public roles = organizationRoles;
@@ -36,7 +36,7 @@ export class OrgRequestAccessComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     @Inject(APP) public currentApp: App
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.step$ = this.step.asObservable();

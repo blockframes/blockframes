@@ -1,6 +1,6 @@
 import { firebase } from '@env';
 import { privacies, Privacy } from '@blockframes/utils/file-sanitizer';
-import { StorageFile } from '@blockframes/model';
+import { StorageFile } from '@blockframes/shared/model';
 
 /**
  * Interface that hold the image options for imgix processing.
@@ -52,7 +52,6 @@ export function getImgSize(ref?: string) {
  * formatParameters(param); // 'fit=crop&w=100&h=100&'
  */
 export function formatParameters(parameters: ImageParameters): string {
-
   const query = Object.keys(parameters)
     .filter(key => parameters[key])
     .map(key => `${key}=${parameters[key]}`)
@@ -75,9 +74,7 @@ export function getImgIxResourceUrl(file: StorageFile, parameters: ImageParamete
    */
   const protectedMediaDir: Privacy = 'protected';
   const query = formatParameters(parameters);
-  const imgixSource = parameters.s
-    ? `${firebase().projectId}-${protectedMediaDir}`
-    : firebase().projectId;
+  const imgixSource = parameters.s ? `${firebase().projectId}-${protectedMediaDir}` : firebase().projectId;
 
   // This is a safeguard for old storagePaths. Image wont work if privacy is still in the path and is therefore removed in case its there.
   if (privacies.some(privacy => privacy === file.storagePath?.split('/').shift())) {

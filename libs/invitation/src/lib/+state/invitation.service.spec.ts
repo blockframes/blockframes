@@ -9,7 +9,7 @@ import { readFileSync } from 'fs';
 import firebase from 'firebase/app';
 import { Observable, of } from 'rxjs';
 import { UserService } from '@blockframes/user/+state/user.service';
-import { createInvitation, createUser, InvitationDocument } from '@blockframes/model';
+import { createInvitation, createUser, InvitationDocument } from '@blockframes/shared/model';
 import { ActivatedRoute } from '@angular/router';
 import { APP } from '@blockframes/utils/routes/utils';
 
@@ -18,12 +18,12 @@ class InjectedAuthService {
 
   profile = {
     orgId: 'orgId',
-  }
+  };
 
   profile$ = new Observable();
 }
 
-class DummyService { }
+class DummyService {}
 
 const today = new Date();
 const invitationParamsOrg = {
@@ -31,15 +31,15 @@ const invitationParamsOrg = {
   toOrg: {
     id: 'orgId',
     denomination: { full: 'MyOrg' },
-    logo: undefined
+    logo: undefined,
   },
 };
 const invitationParamsUser = {
   date: today,
   toUser: {
     uid: 'userId',
-    email: 'userId@myorg.org'
-  }
+    email: 'userId@myorg.org',
+  },
 };
 
 describe('Invitations Test Suite', () => {
@@ -48,17 +48,14 @@ describe('Invitations Test Suite', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      imports: [
-        AngularFireModule.initializeApp({ projectId: 'test' }),
-        AngularFirestoreModule
-      ],
+      imports: [AngularFireModule.initializeApp({ projectId: 'test' }), AngularFirestoreModule],
       providers: [
         InvitationService,
         { provide: AuthService, useClass: InjectedAuthService },
         { provide: UserService, useClass: DummyService },
         { provide: ActivatedRoute, useValue: { params: of({}) } },
         { provide: APP, useValue: 'festival' },
-        { provide: SETTINGS, useValue: { host: 'localhost:8080', ssl: false } }
+        { provide: SETTINGS, useValue: { host: 'localhost:8080', ssl: false } },
       ],
     });
     db = TestBed.inject(AngularFirestore);
@@ -66,9 +63,8 @@ describe('Invitations Test Suite', () => {
 
     await loadFirestoreRules({
       projectId: 'test',
-      rules: readFileSync('./firestore.test.rules', "utf8")
+      rules: readFileSync('./firestore.test.rules', 'utf8'),
     });
-
   });
 
   afterEach(() => clearFirestoreData({ projectId: 'test' }));
@@ -78,7 +74,7 @@ describe('Invitations Test Suite', () => {
 
   it('Should check invitation service is created', () => {
     expect(service).toBeTruthy();
-  })
+  });
 
   it('Formats invitation from firestore', () => {
     const invitationService = TestBed.inject(InvitationService);
@@ -87,7 +83,7 @@ describe('Invitations Test Suite', () => {
 
     //Create an Invitation Document
     const newInvite = createInvitation();
-    const invite: InvitationDocument = { ...newInvite, ...{ date: timestamp } }
+    const invite: InvitationDocument = { ...newInvite, ...{ date: timestamp } };
     const formattedInvite = invitationService.formatFromFirestore(invite);
     expect(formattedInvite.date).toEqual(formattedDate);
   });
@@ -110,7 +106,7 @@ describe('Invitations Test Suite', () => {
       type: 'attendEvent',
       mode: 'invitation',
       status: 'pending',
-      date: new Date()
+      date: new Date(),
     });
     const doc = await db.doc('invitations/1').ref.get();
     expect((doc.data() as InvitationDocument).status).toBe('accepted');
@@ -123,7 +119,7 @@ describe('Invitations Test Suite', () => {
       type: 'attendEvent',
       mode: 'invitation',
       status: 'pending',
-      date: new Date()
+      date: new Date(),
     });
     const doc = await db.doc('invitations/2').ref.get();
     expect((doc.data() as InvitationDocument).status).toBe('declined');
@@ -133,7 +129,7 @@ describe('Invitations Test Suite', () => {
     const requestBy = createUser({
       uid: 'userId',
       financing: {
-        rank: 'first'
+        rank: 'first',
       },
       firstName: 'Unit',
       lastName: 'Tester',
@@ -142,8 +138,8 @@ describe('Invitations Test Suite', () => {
       position: 'Sr.Tester',
       orgId: 'O001',
       avatar: null,
-      privacyPolicy: null
-    })
+      privacyPolicy: null,
+    });
 
     const invitationService = TestBed.inject(InvitationService);
     const mock = jest.spyOn(invitationService, 'add');
@@ -156,8 +152,8 @@ describe('Invitations Test Suite', () => {
       type: 'attendEvent',
       eventId: 'E001',
       toOrg: { id: 'O002' },
-      fromUser: { uid: 'userId', orgId: 'O001' }
-    }
+      fromUser: { uid: 'userId', orgId: 'O001' },
+    };
     expect(inviteParam).toMatchObject(expectedParam);
   });
 });

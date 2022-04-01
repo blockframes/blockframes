@@ -6,18 +6,31 @@ import { difference } from 'lodash';
  * Right now this is solely used to update our algolia index (full-text search on org names).
  */
 import { db } from './internals/firebase';
-import { getUser } from "./internals/utils";
+import { getUser } from './internals/utils';
 import { sendMail } from './internals/email';
 import { organizationCreated, organizationRequestedAccessToApp } from './templates/mail';
 import { triggerNotifications, createNotification } from './notification';
 import { app, App, getOrgAppAccess, getMailSender, Module } from '@blockframes/utils/apps';
-import { getAdminIds, createPublicOrganizationDocument, createPublicUserDocument, getDocument, createDocumentMeta } from './data/internals';
+import {
+  getAdminIds,
+  createPublicOrganizationDocument,
+  createPublicUserDocument,
+  getDocument,
+  createDocumentMeta,
+} from './data/internals';
 import { ErrorResultResponse } from './utils';
 import { cleanOrgMedias } from './media';
 import { Change, EventContext } from 'firebase-functions';
 import { algolia, deleteObject, storeSearchableOrg, findOrgAppAccess, storeSearchableUser } from '@blockframes/firebase-utils';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
-import { User, NotificationDocument, NotificationTypes, OrganizationDocument, PublicUser, PermissionsDocument } from '@blockframes/model';
+import {
+  User,
+  NotificationDocument,
+  NotificationTypes,
+  OrganizationDocument,
+  PublicUser,
+  PermissionsDocument,
+} from '@blockframes/shared/model';
 import { groupIds } from '@blockframes/utils/emails/ids';
 
 /** Create a notification with user and org. */
@@ -28,7 +41,7 @@ function notifyUser(toUserId: string, notificationType: NotificationTypes, org: 
     type: notificationType,
     user: createPublicUserDocument(user),
     organization: createPublicOrganizationDocument(org),
-    _meta: createDocumentMeta({ createdFrom: createdFrom[0] })
+    _meta: createDocumentMeta({ createdFrom: createdFrom[0] }),
   });
 }
 
@@ -61,9 +74,12 @@ async function notifyOnOrgMemberChanges(before: OrganizationDocument, after: Org
       .collection(`invitations`)
       .where('toUser.uid', '==', userAddedId)
       .where('type', '==', 'joinOrganization')
-      .where('fromOrg.id', '==', after.id).get();
+      .where('fromOrg.id', '==', after.id)
+      .get();
     if (invitationsSnapshot.docs.length) {
-      const notifications = after.userIds.filter(userId => userId !== userAdded.uid).map(userId => notifyUser(userId, 'orgMemberUpdated', after, userAdded));
+      const notifications = after.userIds
+        .filter(userId => userId !== userAdded.uid)
+        .map(userId => notifyUser(userId, 'orgMemberUpdated', after, userAdded));
       return triggerNotifications(notifications);
     }
 
@@ -94,7 +110,7 @@ export function onOrganizationCreate(snap: FirebaseFirestore.DocumentSnapshot) {
     // Send a mail to c8 admin to inform about the created organization
     sendMail(emailRequest, from, groupIds.noUnsubscribeLink).catch(e => console.warn(e.message)),
     // Update algolia's index
-    storeSearchableOrg(org)
+    storeSearchableOrg(org),
   ]);
 }
 
@@ -108,15 +124,14 @@ export async function onOrganizationUpdate(change: Change<FirebaseFirestore.Docu
   }
 
   // Update algolia's index
-  if (before.denomination.full !== after.denomination.full
-    || before.denomination.public !== after.denomination.public) {
+  if (before.denomination.full !== after.denomination.full || before.denomination.public !== after.denomination.public) {
     for (const userId of after.userIds) {
       const userDocRef = db.doc(`users/${userId}`);
       const userSnap = await userDocRef.get();
       const userData = userSnap.data() as PublicUser;
       await storeSearchableUser(userData);
     }
-    console.warn('Organization\'s name has been updated, be careful !');
+    console.warn("Organization's name has been updated, be careful !");
   }
 
   await cleanOrgMedias(before, after);
@@ -135,7 +150,7 @@ export async function onOrganizationUpdate(change: Change<FirebaseFirestore.Docu
       toUserId: after.userIds[0],
       organization: createPublicOrganizationDocument(before),
       type: 'organizationAcceptedByArchipelContent',
-      _meta: createDocumentMeta({ createdFrom: appAccess[0] })
+      _meta: createDocumentMeta({ createdFrom: appAccess[0] }),
     });
     await triggerNotifications([notification]);
   }
@@ -144,8 +159,8 @@ export async function onOrganizationUpdate(change: Change<FirebaseFirestore.Docu
 
   /* If an org gets his accepted status removed, we want to remove it also from all the indices on algolia */
   if (before.status === 'accepted' && after.status !== 'accepted') {
-    const promises = app.map(access => deleteObject(algolia.indexNameOrganizations[access], after.id) as Promise<boolean>)
-    await Promise.all(promises)
+    const promises = app.map(access => deleteObject(algolia.indexNameOrganizations[access], after.id) as Promise<boolean>);
+    await Promise.all(promises);
   }
 
   await storeSearchableOrg(after);
@@ -157,14 +172,13 @@ export async function onOrganizationDelete(
   orgSnapshot: FirebaseFirestore.DocumentSnapshot<OrganizationDocument>,
   context: EventContext
 ) {
-
   const org = orgSnapshot.data() as OrganizationDocument;
 
   // Reset the orgId field on user document
   for (const userId of org.userIds) {
     const userSnapshot = await db.doc(`users/${userId}`).get();
     const user = userSnapshot.data() as PublicUser;
-    await userSnapshot.ref.update({ ...user, orgId: null })
+    await userSnapshot.ref.update({ ...user, orgId: null });
   }
 
   // Delete persmission document related to the organization
@@ -229,17 +243,16 @@ export async function onOrganizationDelete(
 
   const orgAppAccess = findOrgAppAccess(org);
   // Update algolia's index
-  const promises = orgAppAccess.map(appName => deleteObject(algolia.indexNameOrganizations[appName], context.params.orgID) as Promise<boolean>);
+  const promises = orgAppAccess.map(
+    appName => deleteObject(algolia.indexNameOrganizations[appName], context.params.orgID) as Promise<boolean>
+  );
 
   await Promise.all(promises);
 
   console.log(`Organization ${org.id} removed`);
 }
 
-export const accessToAppChanged = async (
-  data: { orgId: string, app: App }
-): Promise<ErrorResultResponse> => {
-
+export const accessToAppChanged = async (data: { orgId: string; app: App }): Promise<ErrorResultResponse> => {
   const adminIds = await getAdminIds(data.orgId);
   const admins = await Promise.all(adminIds.map(id => getUser(id)));
   const organization = await getDocument<OrganizationDocument>(`orgs/${data.orgId}`);
@@ -250,7 +263,7 @@ export const accessToAppChanged = async (
       docId: admin.orgId,
       organization: createPublicOrganizationDocument(organization),
       appAccess: data.app,
-      type: 'orgAppAccessChanged'
+      type: 'orgAppAccessChanged',
     });
 
     notifications.push(notification);
@@ -260,12 +273,15 @@ export const accessToAppChanged = async (
 
   return {
     error: '',
-    result: 'OK'
+    result: 'OK',
   };
-}
+};
 
 /** Send an email to C8 Admins when an organization requests to access to a new platform */
-export const onRequestFromOrgToAccessApp = async (data: { app: App, module: Module, orgId: string }, context?: CallableContext) => {
+export const onRequestFromOrgToAccessApp = async (
+  data: { app: App; module: Module; orgId: string },
+  context?: CallableContext
+) => {
   if (!!context.auth.uid && !!data.app && !!data.orgId && !!data.module) {
     const organization = await getDocument<OrganizationDocument>(`orgs/${data.orgId}`);
     const mailRequest = organizationRequestedAccessToApp(organization, data.app, data.module);
@@ -277,11 +293,11 @@ export const onRequestFromOrgToAccessApp = async (data: { app: App, module: Modu
       organization: createPublicOrganizationDocument(organization),
       user: createPublicUserDocument(userDocument),
       _meta: createDocumentMeta({ createdFrom: data.app }),
-      type: 'userRequestAppAccess'
+      type: 'userRequestAppAccess',
     });
     await triggerNotifications([notification]);
     await sendMail(mailRequest, from, groupIds.noUnsubscribeLink).catch(e => console.warn(e.message));
     return true;
   }
   return;
-}
+};

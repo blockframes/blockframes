@@ -4,13 +4,13 @@ import { AuthService } from '@blockframes/auth/+state';
 import { AccessibilityTypes } from '@blockframes/utils/static-model/types';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { EventForm } from '../event.form';
-import { Event, Meeting, Screening, Slate } from '@blockframes/model';
+import { Event, Meeting, Screening, Slate } from '@blockframes/shared/model';
 
 @Component({
   selector: 'event-create',
   templateUrl: './create.component.html',
   styleUrls: ['./create.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EventCreateComponent {
   types: string[];
@@ -18,7 +18,7 @@ export class EventCreateComponent {
   accessibility: AccessibilityTypes;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) data: { event: Event, types: string[] },
+    @Inject(MAT_DIALOG_DATA) data: { event: Event; types: string[] },
     public dialogRef: MatDialogRef<EventCreateComponent>,
     private orgService: OrganizationService,
     private authService: AuthService

@@ -8,8 +8,8 @@ import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { IncomeService } from '@blockframes/contract/income/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { CollectionReference } from '@angular/fire/firestore';
-import { getSeller } from '@blockframes/contract/contract/+state/utils'
-import { Organization, Sale } from '@blockframes/model';
+import { getSeller } from '@blockframes/contract/contract/+state/utils';
+import { Organization, Sale } from '@blockframes/shared/model';
 import { OrganizationService } from '@blockframes/organization/+state';
 
 function queryFn(ref: CollectionReference, orgId: string, options: { internal?: boolean }) {
@@ -37,29 +37,32 @@ function getFullName(seller: Organization) {
   selector: 'catalog-sale-list',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SaleListComponent implements OnInit {
   private orgId = this.orgService.org.id;
 
+  public internalSales$ = this.contractService
+    .valueChanges(ref => queryFn(ref, this.orgId, { internal: true }))
+    .pipe(
+      joinWith({
+        licensor: (sale: Sale) => this.orgService.valueChanges(getSeller(sale)).pipe(map(getFullName)),
+        licensee: (sale: Sale) => this.orgService.valueChanges(sale.buyerId).pipe(map(getFullName)),
+        title: (sale: Sale) => this.titleService.valueChanges(sale.titleId).pipe(map(title => title.title.international)),
+        negotiation: (sale: Sale) => this.contractService.lastNegotiation(sale.id),
+      })
+    );
 
-  public internalSales$ = this.contractService.valueChanges(ref => queryFn(ref, this.orgId, { internal: true })).pipe(
-    joinWith({
-      licensor: (sale: Sale) => this.orgService.valueChanges(getSeller(sale)).pipe(map(getFullName)),
-      licensee: (sale: Sale) => this.orgService.valueChanges(sale.buyerId).pipe(map(getFullName)),
-      title: (sale: Sale) => this.titleService.valueChanges(sale.titleId).pipe(map(title => title.title.international)),
-      negotiation: (sale: Sale) => this.contractService.lastNegotiation(sale.id)
-    }),
-  );
-
-  public externalSales$ = this.contractService.valueChanges(ref => queryFn(ref, this.orgId, { internal: false })).pipe(
-    joinWith({
-      licensor: (sale: Sale) => this.orgService.valueChanges(getSeller(sale)).pipe(map(getFullName)),
-      licensee: () => of('External'),
-      title: (sale: Sale) => this.titleService.valueChanges(sale.titleId).pipe(map(title => title.title.international)),
-      price: (sale: Sale) => this.incomeService.valueChanges(sale.id),
-    }),
-  );
+  public externalSales$ = this.contractService
+    .valueChanges(ref => queryFn(ref, this.orgId, { internal: false }))
+    .pipe(
+      joinWith({
+        licensor: (sale: Sale) => this.orgService.valueChanges(getSeller(sale)).pipe(map(getFullName)),
+        licensee: () => of('External'),
+        title: (sale: Sale) => this.titleService.valueChanges(sale.titleId).pipe(map(title => title.title.international)),
+        price: (sale: Sale) => this.incomeService.valueChanges(sale.id),
+      })
+    );
 
   public sales$ = combineLatest([this.internalSales$, this.externalSales$]);
 
@@ -69,8 +72,8 @@ export class SaleListComponent implements OnInit {
     private titleService: MovieService,
     private incomeService: IncomeService,
     private dynTitle: DynamicTitleService,
-    @Optional() private intercom: Intercom,
-  ) { }
+    @Optional() private intercom: Intercom
+  ) {}
 
   ngOnInit() {
     this.dynTitle.setPageTitle('My Deals (All)');
@@ -79,5 +82,4 @@ export class SaleListComponent implements OnInit {
   public openIntercom() {
     return this.intercom.show();
   }
-
 }

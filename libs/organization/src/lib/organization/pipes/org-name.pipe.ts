@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
-import { orgName, PublicOrganization } from '@blockframes/model';
+import { orgName, PublicOrganization } from '@blockframes/shared/model';
 
 @Pipe({ name: 'orgName', pure: true })
 export class OrgNamePipe implements PipeTransform {
@@ -14,6 +14,6 @@ export class OrgNamePipe implements PipeTransform {
 
 @NgModule({
   declarations: [OrgNamePipe],
-  exports: [OrgNamePipe]
+  exports: [OrgNamePipe],
 })
-export class OrgNameModule { }
+export class OrgNameModule {}

@@ -1,5 +1,5 @@
 import { NgModule, Pipe, PipeTransform } from '@angular/core';
-import { Negotiation } from '@blockframes/model';
+import { Negotiation } from '@blockframes/shared/model';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { ContractStatus } from '@blockframes/utils/static-model';
 import { Observable, of } from 'rxjs';
@@ -14,17 +14,13 @@ function canNegotiate(negotiation: Negotiation, activeOrgId: string) {
 export class NegotiationStagePipe implements PipeTransform {
   activeOrgId = this.orgService.org.id;
 
-  constructor(
-    private orgService: OrganizationService,
-  ) { }
+  constructor(private orgService: OrganizationService) {}
 
   transform(negotiation: Negotiation): Observable<string> {
     if (negotiation?.status !== 'pending') return of('');
     if (negotiation?.createdByOrg !== this.activeOrgId) return of('To be Reviewed');
     const reviewer = getReviewer(negotiation);
-    return this.orgService.valueChanges(reviewer).pipe(
-      map(org => `Waiting for ${org.denomination.public} answer`)
-    );
+    return this.orgService.valueChanges(reviewer).pipe(map(org => `Waiting for ${org.denomination.public} answer`));
   }
 }
 
@@ -45,7 +41,7 @@ export class CanNegotiatePipe implements PipeTransform {
 @Pipe({ name: 'negotiationStatus' })
 export class NegotiationStatusPipe implements PipeTransform {
   transform(negotiation: Negotiation): ContractStatus {
-    const pending = negotiation?.status === 'pending'
+    const pending = negotiation?.status === 'pending';
     if (isInitial(negotiation) && pending) return 'pending';
     if (negotiation?.status === 'pending') return 'negotiating';
     return negotiation?.status;
@@ -54,11 +50,9 @@ export class NegotiationStatusPipe implements PipeTransform {
 
 @Pipe({ name: 'canAccept' })
 export class CanAcceptNegotiationPipe implements PipeTransform {
-  constructor(private orgService: OrganizationService) { }
+  constructor(private orgService: OrganizationService) {}
   transform(negotiation: Negotiation) {
-    return negotiation.status === 'pending'
-      && negotiation.price
-      && negotiation.createdByOrg !== this.orgService.org.id;
+    return negotiation.status === 'pending' && negotiation.price && negotiation.createdByOrg !== this.orgService.org.id;
   }
 }
 
@@ -70,12 +64,6 @@ export class CanAcceptNegotiationPipe implements PipeTransform {
     NegotiationStatusPipe,
     CanNegotiatePipe,
   ],
-  exports: [
-    NegotiationStagePipe,
-    CanAcceptNegotiationPipe,
-    IsInitialNegotiationPipe,
-    NegotiationStatusPipe,
-    CanNegotiatePipe,
-  ]
+  exports: [NegotiationStagePipe, CanAcceptNegotiationPipe, IsInitialNegotiationPipe, NegotiationStatusPipe, CanNegotiatePipe],
 })
-export class NegotiationPipeModule { }
+export class NegotiationPipeModule {}

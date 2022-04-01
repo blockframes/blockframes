@@ -2,7 +2,7 @@ import { promises as fsPromises } from 'fs';
 import { join } from 'path';
 import { USER_FIXTURES_PASSWORD } from '@blockframes/firebase-utils/anonymize/util';
 import staticUsers from 'tools/static-users.json';
-import type { Movie, Organization, User } from '@blockframes/model';
+import type { Movie, Organization, User } from '@blockframes/shared/model';
 
 export async function generateFixtures(db: FirebaseFirestore.Firestore) {
   await generateUsers(db);
@@ -19,10 +19,10 @@ async function generateUsers(db: FirebaseFirestore.Firestore) {
 
   console.time('Fetching users from Firestore');
   const { docs } = await db.collection('users').get();
-  const users = docs.map((d) => d.data() as User);
+  const users = docs.map(d => d.data() as User);
   console.timeEnd('Fetching users from Firestore');
 
-  const output = users.map((user) => ({
+  const output = users.map(user => ({
     firstName: user.firstName,
     lastName: user.lastName,
     email: user.email,
@@ -42,10 +42,10 @@ async function generateMovies(db: FirebaseFirestore.Firestore) {
 
   console.time('Fetching movies from Firestore');
   const { docs } = await db.collection('movies').get();
-  const movies = docs.map((d) => d.data() as Movie);
+  const movies = docs.map(d => d.data() as Movie);
   console.timeEnd('Fetching movies from Firestore');
 
-  const output: Partial<Movie>[] = movies.map((movie) => ({
+  const output: Partial<Movie>[] = movies.map(movie => ({
     id: movie.id,
     title: movie.title,
     app: movie.app,
@@ -63,10 +63,10 @@ async function generateOrgs(db: FirebaseFirestore.Firestore) {
 
   console.time('Fetching orgs from Firestore');
   const { docs } = await db.collection('orgs').get();
-  const orgs = docs.map((d) => d.data() as Organization);
+  const orgs = docs.map(d => d.data() as Organization);
   console.timeEnd('Fetching orgs from Firestore');
 
-  const output: Partial<Organization>[] = orgs.map((org) => ({
+  const output: Partial<Organization>[] = orgs.map(org => ({
     id: org.id,
     denomination: org.denomination,
     description: org.description,

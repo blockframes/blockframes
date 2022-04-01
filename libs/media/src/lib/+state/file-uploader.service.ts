@@ -1,20 +1,18 @@
-
-import { Injectable, Injector } from "@angular/core";
-import { ComponentPortal } from "@angular/cdk/portal";
-import { Overlay, OverlayRef } from "@angular/cdk/overlay";
-import { AngularFirestore } from "@angular/fire/firestore";
-import { AngularFireStorage, AngularFireUploadTask } from "@angular/fire/storage";
-import { AuthService } from "@blockframes/auth/+state";
-import { tempUploadDir } from "@blockframes/utils/file-sanitizer";
-import { BehaviorStore } from "@blockframes/utils/observable-helpers";
+import { Injectable, Injector } from '@angular/core';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/storage';
+import { AuthService } from '@blockframes/auth/+state';
+import { tempUploadDir } from '@blockframes/utils/file-sanitizer';
+import { BehaviorStore } from '@blockframes/utils/observable-helpers';
 import { delay } from '@blockframes/utils/helpers';
-import { UploadData, isValidMetadata } from '@blockframes/model';
-import { UploadWidgetComponent } from "../file/upload-widget/upload-widget.component";
-import { getTaskStateObservable } from "../file/upload-widget/task.pipe";
+import { UploadData, isValidMetadata } from '@blockframes/shared/model';
+import { UploadWidgetComponent } from '../file/upload-widget/upload-widget.component';
+import { getTaskStateObservable } from '../file/upload-widget/task.pipe';
 
 @Injectable({ providedIn: 'root' })
 export class FileUploaderService {
-
   private tasks = new BehaviorStore<AngularFireUploadTask[]>([]);
   private tasksState = new BehaviorStore<unknown[]>([]);
 
@@ -24,15 +22,15 @@ export class FileUploaderService {
   private overlayOptions = {
     width: '500px',
     panelClass: 'upload-widget',
-    positionStrategy: this.overlay.position().global().bottom('16px').left('16px')
-  }
+    positionStrategy: this.overlay.position().global().bottom('16px').left('16px'),
+  };
 
   constructor(
     private overlay: Overlay,
     private db: AngularFirestore,
     private authService: AuthService,
-    private storage: AngularFireStorage,
-  ) { }
+    private storage: AngularFireStorage
+  ) {}
 
   /**
    * Add a file in the queue, ready to be uploaded
@@ -47,14 +45,14 @@ export class FileUploaderService {
    * such as privacy, where is the corresponding db document, etc...
    */
   addToQueue(storagePath: string, uploadData: UploadData) {
-
     const { fileName, file, metadata } = uploadData;
 
     // instantiate array if it doesn't exists yet
     if (!this.queue[storagePath]) this.queue[storagePath] = [];
 
     // Throw in case of duplicated path, instead of silently overwriting the first occurrence
-    if (this.queue[storagePath].some(upload => upload.fileName === fileName)) throw new Error(`This file already exists in the queue : ${storagePath} -> ${fileName}`);
+    if (this.queue[storagePath].some(upload => upload.fileName === fileName))
+      throw new Error(`This file already exists in the queue : ${storagePath} -> ${fileName}`);
 
     this.queue[storagePath].push({ file, fileName, metadata });
   }
@@ -65,7 +63,6 @@ export class FileUploaderService {
    * this function will not throw any error and simply do nothing
    */
   removeFromQueue(storagePath: string, fileName: string) {
-
     const uploads = this.queue[storagePath];
 
     if (!uploads || !uploads.length) return;
@@ -99,9 +96,9 @@ export class FileUploaderService {
           console.warn('INVALID METADATA: upload will be skipped!');
           console.warn(storagePath, upload.metadata);
         }
-        return isValid
-      })
-      return !!arr.length
+        return isValid;
+      });
+      return !!arr.length;
     });
 
     const tasks = validQueue.map(([storagePath, uploads]) => {
@@ -112,7 +109,8 @@ export class FileUploaderService {
         const finalPath = `${tempUploadDir}/${storagePath}/${upload.fileName}`;
 
         // avoid double uploading
-        const alreadyUploading = (fullPath: string) => this.tasks.value.some(task => task.task.snapshot.ref.fullPath === fullPath);
+        const alreadyUploading = (fullPath: string) =>
+          this.tasks.value.some(task => task.task.snapshot.ref.fullPath === fullPath);
         if (alreadyUploading(finalPath)) return undefined;
 
         const afTask = this.storage.upload(finalPath, upload.file, { customMetadata: upload.metadata });
@@ -128,7 +126,10 @@ export class FileUploaderService {
       });
     });
 
-    const tasksState = tasks.flat().filter(task => !!task).map(task => getTaskStateObservable(task).toPromise());
+    const tasksState = tasks
+      .flat()
+      .filter(task => !!task)
+      .map(task => getTaskStateObservable(task).toPromise());
     this.tasks.value = [...this.tasks.value, ...tasks.flat().filter(task => !!task)];
     this.tasksState.value = [...this.tasksState.value, ...tasksState];
     Promise.allSettled(tasks)
@@ -137,7 +138,6 @@ export class FileUploaderService {
     this.showWidget();
   }
 
-
   // --------------------------
   //          WIDGET         //
   // --------------------------
@@ -145,8 +145,8 @@ export class FileUploaderService {
   private async detachWidget() {
     if (!this.overlayRef) return;
 
-    const states = await Promise.all(this.tasksState.value)
-    const canClose = states.every(state => state === 'success')
+    const states = await Promise.all(this.tasksState.value);
+    const canClose = states.every(state => state === 'success');
     if (canClose) {
       this.overlayRef.detach();
       delete this.overlayRef;
@@ -159,9 +159,13 @@ export class FileUploaderService {
     if (!this.overlayRef) {
       this.overlayRef = this.overlay.create(this.overlayOptions);
       const instance = new ComponentPortal(UploadWidgetComponent);
-      instance.injector = Injector.create({ providers: [{ provide: 'tasks', useValue: this.tasks }, { provide: 'db', useValue: this.db }] });
+      instance.injector = Injector.create({
+        providers: [
+          { provide: 'tasks', useValue: this.tasks },
+          { provide: 'db', useValue: this.db },
+        ],
+      });
       this.overlayRef.attach(instance);
     }
   }
-
 }

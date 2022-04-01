@@ -41,13 +41,10 @@ import {
   Stakeholder,
   createStakeholder,
   Director,
-  createStorageFile
-} from '@blockframes/model';
+  createStorageFile,
+} from '@blockframes/shared/model';
 import { FormArray, FormControl, Validators, ValidatorFn } from '@angular/forms';
-import {
-  FormStaticValue,
-  FormStaticValueArray,
-} from '@blockframes/utils/form/forms/static-value.form';
+import { FormStaticValue, FormStaticValueArray } from '@blockframes/utils/form/forms/static-value.form';
 import { FormEntity, EntityControl } from '@blockframes/utils/form/forms/entity.form';
 import { FormList } from '@blockframes/utils/form/forms/list.form';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
@@ -67,50 +64,42 @@ function createMovieControls(movie: Partial<Movie>) {
     // Root data
     audience: new AudienceAndGoalsForm(entity.audience),
     banner: new StorageFileForm(entity.banner),
-    boxOffice: FormList.factory(entity.boxOffice, (el) => new BoxOfficeForm(el)),
-    cast: FormList.factory(entity.cast, (el) => new CreditForm(el)),
+    boxOffice: FormList.factory(entity.boxOffice, el => new BoxOfficeForm(el)),
+    cast: FormList.factory(entity.cast, el => new CreditForm(el)),
     certifications: new FormControl(entity.certifications),
     color: new FormControl(entity.color),
     contentType: new FormControl(entity.contentType, [Validators.required]),
-    crew: FormList.factory(entity.crew, (el) => new CreditForm(el)),
-    customGenres: FormList.factory(entity.customGenres, (el) => new FormControl(el)),
-    directors: FormList.factory(entity.directors, (el) => new DirectorForm(el), [
-      Validators.required,
-    ]),
+    crew: FormList.factory(entity.crew, el => new CreditForm(el)),
+    customGenres: FormList.factory(entity.customGenres, el => new FormControl(el)),
+    directors: FormList.factory(entity.directors, el => new DirectorForm(el), [Validators.required]),
     // We use FormControl because objet { from, to } is one value (cannot update separately)
     estimatedBudget: new FormControl(entity.estimatedBudget),
     expectedPremiere: new ExpectedPremiereForm(entity.expectedPremiere),
     format: new FormControl(entity.format),
     formatQuality: new FormControl(entity.formatQuality),
-    genres: FormList.factory(entity.genres, (el) => new FormStaticValue(el, 'genres'), [
-      Validators.required,
-    ]),
+    genres: FormList.factory(entity.genres, el => new FormStaticValue(el, 'genres'), [Validators.required]),
     internalRef: new FormControl(entity.internalRef, [Validators.maxLength(30)]),
     keyAssets: new FormControl(entity.keyAssets, [Validators.maxLength(750)]),
-    keywords: FormList.factory(entity.keywords, (el) => new FormControl(el)),
+    keywords: FormList.factory(entity.keywords, el => new FormControl(el)),
     languages: MovieVersionInfoForm.factory(entity.languages, createLanguageControl),
     logline: new FormControl(entity.logline, [Validators.maxLength(350)]),
     /* If no value is set for this property we want it to be true by default */
     isOriginalVersionAvailable: new FormControl(entity.isOriginalVersionAvailable ?? true),
-    originalLanguages: FormList.factory(
-      entity.originalLanguages,
-      (el) => new FormStaticValue<'languages'>(el, 'languages'),
-      [Validators.required]
-    ),
-    originalRelease: FormList.factory(entity.originalRelease, (el) => new OriginalReleaseForm(el)),
-    originCountries: FormList.factory(
-      entity.originCountries,
-      (el) => new FormStaticValue<'territories'>(el, 'territories'),
-      [Validators.required]
-    ),
+    originalLanguages: FormList.factory(entity.originalLanguages, el => new FormStaticValue<'languages'>(el, 'languages'), [
+      Validators.required,
+    ]),
+    originalRelease: FormList.factory(entity.originalRelease, el => new OriginalReleaseForm(el)),
+    originCountries: FormList.factory(entity.originCountries, el => new FormStaticValue<'territories'>(el, 'territories'), [
+      Validators.required,
+    ]),
     poster: new StorageFileForm(entity.poster),
-    prizes: FormList.factory(entity.prizes, (el) => new MoviePrizeForm(el)),
-    customPrizes: FormList.factory(entity.customPrizes, (el) => new MoviePrizeForm(el)),
-    producers: FormList.factory(entity.producers, (el) => new CreditForm(el)),
+    prizes: FormList.factory(entity.prizes, el => new MoviePrizeForm(el)),
+    customPrizes: FormList.factory(entity.customPrizes, el => new MoviePrizeForm(el)),
+    producers: FormList.factory(entity.producers, el => new CreditForm(el)),
     productionStatus: new FormControl(entity.productionStatus, [Validators.required]),
-    rating: FormList.factory(entity.rating, (el) => new MovieRatingForm(el)),
+    rating: FormList.factory(entity.rating, el => new MovieRatingForm(el)),
     release: new ReleaseYearForm(entity.release),
-    review: FormList.factory(entity.review, (el) => new MovieReviewForm(el)),
+    review: FormList.factory(entity.review, el => new MovieReviewForm(el)),
     runningTime: new RunningTimeForm(entity.runningTime),
     scoring: new FormControl(entity.scoring),
     shooting: new MovieShootingForm(entity.shooting),
@@ -420,9 +409,7 @@ export class DirectorForm extends FormEntity<DirectorFormControl> {
 }
 
 function createDirectorFormControl(director?: Partial<Director>) {
-  const { firstName, lastName, filmography, status, description, category } = createDirector(
-    director
-  );
+  const { firstName, lastName, filmography, status, description, category } = createDirector(director);
   return {
     firstName: new FormControl(firstName, Validators.required),
     lastName: new FormControl(lastName, Validators.required),
@@ -473,11 +460,7 @@ function createStakeholderControl(stakeholder?: Partial<Stakeholder>) {
   const { displayName, countries } = createStakeholder(stakeholder);
   return {
     displayName: new FormControl(displayName, Validators.required),
-    countries: FormList.factory(
-      countries,
-      (e) => new FormStaticValue<'territories'>(e, 'territories'),
-      Validators.required
-    ),
+    countries: FormList.factory(countries, e => new FormStaticValue<'territories'>(e, 'territories'), Validators.required),
   };
 }
 
@@ -493,13 +476,11 @@ export class StakeholderMapForm extends FormEntity<StakeholderMapControl> {
   }
 }
 
-function createStakeholderMapControl(
-  stakeholders?: Partial<MovieStakeholders>
-): StakeholderMapControl {
+function createStakeholderMapControl(stakeholders?: Partial<MovieStakeholders>): StakeholderMapControl {
   const entity = createMovieStakeholders(stakeholders);
   const control = {};
   for (const key in entity) {
-    control[key] = FormList.factory(entity[key], (e) => new StakeholderForm(e));
+    control[key] = FormList.factory(entity[key], e => new StakeholderForm(e));
   }
   return control as StakeholderMapControl;
 }
@@ -616,28 +597,24 @@ type AppConfigControl = ReturnType<typeof createAppConfigFormControl>;
 //   Every Promotional Elements
 // ------------------------------
 
-function createMoviePromotionalElementsControls(
-  promotionalElements?: Partial<MoviePromotionalElements>
-) {
+function createMoviePromotionalElementsControls(promotionalElements?: Partial<MoviePromotionalElements>) {
   const entity = createMoviePromotional(promotionalElements);
   return {
     // Images
-    still_photo: FormList.factory(entity.still_photo, (el) => new StorageFileForm(el)),
+    still_photo: FormList.factory(entity.still_photo, el => new StorageFileForm(el)),
 
     // Hosted Media
     presentation_deck: new StorageFileForm(entity.presentation_deck),
     scenario: new StorageFileForm(entity.scenario),
     moodboard: new StorageFileForm(entity.moodboard),
-    notes: FormList.factory(entity.notes, (el) => new MovieNoteForm(el)),
+    notes: FormList.factory(entity.notes, el => new MovieNoteForm(el)),
 
     // Hosted Videos
     videos: new MovieVideosForm(entity.videos),
   };
 }
 
-export type MoviePromotionalElementsControl = ReturnType<
-  typeof createMoviePromotionalElementsControls
->;
+export type MoviePromotionalElementsControl = ReturnType<typeof createMoviePromotionalElementsControls>;
 
 export class MoviePromotionalElementsForm extends FormEntity<MoviePromotionalElementsControl> {
   constructor(promotionalElements?: MoviePromotionalElements) {
@@ -754,9 +731,7 @@ export class OriginalReleaseForm extends FormEntity<OriginalReleaseFormControl> 
   }
 }
 
-export function createMovieOriginalRelease(
-  params: Partial<MovieOriginalRelease> = {}
-): MovieOriginalRelease {
+export function createMovieOriginalRelease(params: Partial<MovieOriginalRelease> = {}): MovieOriginalRelease {
   return {
     country: null,
     ...params,
@@ -806,9 +781,7 @@ export class VersionSpecificationForm extends FormEntity<any> {
 }
 
 const versionLanguagesValidator: ValidatorFn = (version: VersionSpecificationForm) => {
-  return Object.values(version.value).every((hasVersion) => !hasVersion)
-    ? { noVersion: true }
-    : null;
+  return Object.values(version.value).every(hasVersion => !hasVersion) ? { noVersion: true } : null;
 };
 
 // ------------------------------
@@ -847,7 +820,7 @@ function createShootingFormControl(entity?: Partial<MovieShooting>) {
   const { locations, dates } = createShooting(entity);
   return {
     dates: new ShootingDateForm(dates),
-    locations: FormList.factory(locations, (el) => new ShootingLocationsForm(el)),
+    locations: FormList.factory(locations, el => new ShootingLocationsForm(el)),
   };
 }
 
@@ -872,9 +845,7 @@ export class ShootingDateForm extends FormEntity<ShootingDateFormControl> {
   }
 }
 
-export function createMovieShootingDate(
-  params: Partial<MovieShootingDate> = {}
-): MovieShootingDate {
+export function createMovieShootingDate(params: Partial<MovieShootingDate> = {}): MovieShootingDate {
   return {
     ...params,
     completed: toDate(params.completed),
@@ -972,10 +943,10 @@ function createAudienceAndGoalsFormControl(entity?: Partial<MovieGoalsAudience>)
   const { targets, goals } = createAudienceGoals(entity);
   return {
     targets: FormList.factory(
-      targets.filter((t) => !!t),
-      (el) => new FormControl(el)
+      targets.filter(t => !!t),
+      el => new FormControl(el)
     ),
-    goals: new FormStaticValueArray<'socialGoals'>(goals.filter((g) => !!g) ?? [], 'socialGoals'),
+    goals: new FormStaticValueArray<'socialGoals'>(goals.filter(g => !!g) ?? [], 'socialGoals'),
   };
 }
 
@@ -1035,7 +1006,7 @@ function createMovieVideosControl(videos: Partial<MovieVideos> = {}) {
   return {
     screener: new MovieVideoForm(screener),
     salesPitch: new MovieVideoForm(salesPitch),
-    otherVideos: FormList.factory(otherVideos, (otherVideo) => new MovieVideoForm(otherVideo)),
+    otherVideos: FormList.factory(otherVideos, otherVideo => new MovieVideoForm(otherVideo)),
   };
 }
 

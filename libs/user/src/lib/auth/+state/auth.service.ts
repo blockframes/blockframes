@@ -5,7 +5,7 @@ import { UserCredential } from '@firebase/auth-types';
 import { FireAuthService, CollectionConfig, FireAuthState, RoleState, initialAuthState } from 'akita-ng-fire';
 import { map, switchMap, take, tap } from 'rxjs/operators';
 import { App } from '@blockframes/utils/apps';
-import { createUser, PublicUser, User, PrivacyPolicy, createDocumentMeta, DocumentMeta } from '@blockframes/model';
+import { createUser, PublicUser, User, PrivacyPolicy, createDocumentMeta, DocumentMeta } from '@blockframes/shared/model';
 import { Intercom } from 'ng-intercom';
 import { getIntercomOptions } from '@blockframes/utils/intercom/intercom.service';
 import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.service';
@@ -23,16 +23,18 @@ import { APP } from '@blockframes/utils/routes/utils';
 
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'auth' })
-class AuthStore extends Store<AuthState> { // @TODO #7273 remove when we get rid of akita
+class AuthStore extends Store<AuthState> {
+  // @TODO #7273 remove when we get rid of akita
   constructor() {
     super(initialAuthState);
   }
-
 }
 
-interface Roles { blockframesAdmin: boolean }
+interface Roles {
+  blockframesAdmin: boolean;
+}
 
-interface AuthState extends FireAuthState<User>, RoleState<Roles> { }
+interface AuthState extends FireAuthState<User>, RoleState<Roles> {}
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'users', idKey: 'uid' })
@@ -45,13 +47,15 @@ export class AuthService extends FireAuthService<AuthState> {
   uid: string; // Will be defined for regular and anonymous users
 
   // Firebase Auth User Object
-  user$ = this.afAuth.authState.pipe(tap(auth => {
-    this.uid = auth?.uid;
-    if (!auth?.uid) this.profile = undefined;
-  }));
+  user$ = this.afAuth.authState.pipe(
+    tap(auth => {
+      this.uid = auth?.uid;
+      if (!auth?.uid) this.profile = undefined;
+    })
+  );
 
   // Firebase Auth User Object and User object in Firestore DB (profile)
-  auth$: Observable<{ uid: string, isAnonymous: boolean, emailVerified: boolean, profile?: User }> = this.user$.pipe(
+  auth$: Observable<{ uid: string; isAnonymous: boolean; emailVerified: boolean; profile?: User }> = this.user$.pipe(
     switchMap(authState => {
       if (!authState || authState.isAnonymous) return of(undefined).pipe(map(() => [undefined, authState]));
       return this.userService.valueChanges(authState.uid).pipe(map(profile => [profile, authState]));
@@ -63,8 +67,8 @@ export class AuthService extends FireAuthService<AuthState> {
       if (userAuth?.emailVerified && profile && !profile._meta?.emailVerified) {
         const _meta: DocumentMeta<Date | FirebaseFirestore.Timestamp> = {
           ...profile._meta,
-          emailVerified: true
-        }
+          emailVerified: true,
+        };
         this.userService.update(userAuth.uid, { _meta });
       }
 
@@ -73,8 +77,8 @@ export class AuthService extends FireAuthService<AuthState> {
         uid: userAuth.uid,
         isAnonymous,
         emailVerified,
-        profile
-      }
+        profile,
+      };
     }),
     tap(auth => {
       this.uid = auth?.uid;
@@ -85,14 +89,20 @@ export class AuthService extends FireAuthService<AuthState> {
   isBlockframesAdmin$ = this.user$.pipe(
     switchMap(user => {
       if (!user || user.isAnonymous) return of(false);
-      return this.db.collection('blockframesAdmin').doc(user.uid).ref.get().then(snap => snap.exists);
+      return this.db
+        .collection('blockframesAdmin')
+        .doc(user.uid)
+        .ref.get()
+        .then(snap => snap.exists);
     })
   );
 
   // User object in Firestore DB
   profile$ = this.auth$.pipe(map(auth => auth?.profile));
 
-  get anonymouseOrRegularProfile() { return this.profile || this.anonymousCredentials };
+  get anonymouseOrRegularProfile() {
+    return this.profile || this.anonymousCredentials;
+  }
 
   constructor(
     protected store: AuthStore,
@@ -103,10 +113,10 @@ export class AuthService extends FireAuthService<AuthState> {
     private afAuth: AngularFireAuth,
     private userService: UserService,
     @Inject(APP) private app: App,
-    @Optional() public ngIntercom?: Intercom,
+    @Optional() public ngIntercom?: Intercom
   ) {
     super(store);
-    if (!production && window['Cypress']) window['LoginService'] = this;    // instrument Cypress only out of PROD
+    if (!production && window['Cypress']) window['LoginService'] = this; // instrument Cypress only out of PROD
   }
 
   //////////
@@ -116,7 +126,7 @@ export class AuthService extends FireAuthService<AuthState> {
   /**
    * Initiate the password reset process for this user.
    * @param email email of the user
-  */
+   */
   public resetPasswordInit(email: string, app: App = this.app) {
     const callSendReset = this.functions.httpsCallable('sendResetPasswordEmail');
     return callSendReset({ email, app }).toPromise();
@@ -185,12 +195,15 @@ export class AuthService extends FireAuthService<AuthState> {
   }
 
   /** Create the user in users collection on firestore. */
-  public createProfile(user: Partial<User>, ctx: {
-    firstName: string,
-    lastName: string,
-    _meta: DocumentMeta<Date>,
-    privacyPolicy: PrivacyPolicy
-  }) {
+  public createProfile(
+    user: Partial<User>,
+    ctx: {
+      firstName: string;
+      lastName: string;
+      _meta: DocumentMeta<Date>;
+      privacyPolicy: PrivacyPolicy;
+    }
+  ) {
     return {
       _meta: createDocumentMeta({ emailVerified: false, ...ctx._meta }),
       uid: user.uid,
@@ -218,17 +231,21 @@ export class AuthService extends FireAuthService<AuthState> {
   public async getPrivacyPolicy(): Promise<PrivacyPolicy> {
     return {
       date: new Date(),
-      ip: await this.ipService.get()
-    }
+      ip: await this.ipService.get(),
+    };
   }
 
   private updateIntercom(userCredential: UserCredential) {
     const { intercom } = this.gdprService.cookieConsent;
     if (!intercom || !intercomId) return;
 
-    this.db.doc<User>(`users/${userCredential.user.uid}`).valueChanges().pipe(take(1)).subscribe(user => {
-      this.ngIntercom?.update(getIntercomOptions(user));
-    });
+    this.db
+      .doc<User>(`users/${userCredential.user.uid}`)
+      .valueChanges()
+      .pipe(take(1))
+      .subscribe(user => {
+        this.ngIntercom?.update(getIntercomOptions(user));
+      });
   }
 
   ////////////////////
@@ -317,18 +334,19 @@ export class AuthService extends FireAuthService<AuthState> {
   }
 
   private resetAnonymousCredentials() {
-    const keys = ['uid', 'role', 'email', 'invitationId', 'lastName', 'firstName'];  // keys of AnonymousCredentials
+    const keys = ['uid', 'role', 'email', 'invitationId', 'lastName', 'firstName']; // keys of AnonymousCredentials
     keys.forEach(k => sessionStorage.removeItem(`anonymousCredentials.${k}`));
   }
 
   updateAnonymousCredentials(creds: Partial<AnonymousCredentials>, options?: { reset: boolean }) {
-
     if (options?.reset) {
       this.resetAnonymousCredentials();
     }
 
     for (const [key, value] of Object.entries(creds)) {
-      !value ? sessionStorage.removeItem(`anonymousCredentials.${key}`) : sessionStorage.setItem(`anonymousCredentials.${key}`, value as string);
+      !value
+        ? sessionStorage.removeItem(`anonymousCredentials.${key}`)
+        : sessionStorage.setItem(`anonymousCredentials.${key}`, value as string);
     }
 
     this.anonymousCredentials$.next(this.anonymousCredentials);
@@ -347,5 +365,3 @@ export class AuthService extends FireAuthService<AuthState> {
     };
   }
 }
-
-

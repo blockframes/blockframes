@@ -9,7 +9,7 @@ import readline from 'readline';
 import { Auth, UserRecord } from '@blockframes/firebase-utils';
 import { deleteAllUsers, importAllUsers } from '@blockframes/testing/unit-tests';
 import * as env from '@env';
-import { PublicUser, User } from '@blockframes/model';
+import { PublicUser, User } from '@blockframes/shared/model';
 import { USER_FIXTURES_PASSWORD } from '@blockframes/firebase-utils/anonymize/util';
 import { subMonths } from 'date-fns';
 
@@ -46,7 +46,7 @@ async function createUserIfNonexistent(auth: Auth, userConfig: UserConfig): Prom
  * @param auth  Firestore Admin Auth object
  */
 async function createAllUsers(users: UserConfig[], auth: Auth) {
-  const ps = users.map((user) => createUserIfNonexistent(auth, user));
+  const ps = users.map(user => createUserIfNonexistent(auth, user));
   return Promise.all(ps);
 }
 
@@ -95,7 +95,7 @@ export async function removeUnexpectedUsers(expectedUsers: PublicUser[], auth: A
     for (const user of usersToRemove) {
       console.log(`removing ${user.providerData.length ? 'regular' : 'anonymous'} user ${user.email} (${user.uid})`);
     }
-    if (!options.dryRun) await auth.deleteUsers(usersToRemove.map((user) => user.uid));
+    if (!options.dryRun) await auth.deleteUsers(usersToRemove.map(user => user.uid));
     await sleep(100);
   } while (pageToken);
 
@@ -133,7 +133,7 @@ export async function printUsers() {
     const users = result.users;
     pageToken = result.pageToken;
 
-    users.forEach((u) => {
+    users.forEach(u => {
       console.log(JSON.stringify(u.toJSON()));
     });
   } while (pageToken);
@@ -161,7 +161,7 @@ function readUsersFromSTDIN(): Promise<UserConfig[]> {
   return new Promise((resolve, reject) => {
     // read the lines sent from stdin and parse them as JSON.
     // on error, toggle the `failed' flag and ignore all lines, we're going to exit.
-    rl.on('line', (line) => {
+    rl.on('line', line => {
       if (failed || line === '') {
         return;
       }

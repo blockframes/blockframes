@@ -1,5 +1,5 @@
 import { FormControl, Validators } from '@angular/forms';
-import { createUser, User } from '@blockframes/model';
+import { createUser, User } from '@blockframes/shared/model';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 
 function createUserCrmControls(entity: Partial<User>) {

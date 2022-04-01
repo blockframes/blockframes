@@ -11,7 +11,7 @@ import { MovieService } from '../../+state/movie.service';
 import { getDeepValue } from '@blockframes/utils/pipes';
 import { getFileMetadata } from '@blockframes/media/+state/static-files';
 import { Subscription } from 'rxjs';
-import { MovieNote } from '@blockframes/model';
+import { MovieNote } from '@blockframes/shared/model';
 
 @Component({
   selector: 'movie-form-media-notes',
@@ -37,7 +37,7 @@ export class MovieFormMediaNotesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.sub = this.movie.valueChanges(this.movieId).subscribe((title) => {
+    this.sub = this.movie.valueChanges(this.movieId).subscribe(title => {
       const metadata = getFileMetadata('movies', 'notes', this.movieId);
       const mediaArray: Partial<MovieNote>[] = getDeepValue(title, metadata.field);
       this.form.promotional.get('notes').patchValue(mediaArray);

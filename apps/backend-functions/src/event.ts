@@ -2,7 +2,7 @@ import { db } from './internals/firebase';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { createDocumentMeta, createPublicUserDocument, getDocument } from './data/internals';
 import { createNotification, triggerNotifications } from './notification';
-import { Movie, Organization, PublicUser, EventDocument, EventMeta } from '@blockframes/model';
+import { Movie, Organization, PublicUser, EventDocument, EventMeta } from '@blockframes/shared/model';
 
 /**
  * Removes invitations and notifications related to an event when event is deleted
@@ -12,28 +12,19 @@ export async function onEventDelete(snap: FirebaseFirestore.DocumentSnapshot) {
   const event = snap.data() as EventDocument<EventMeta>;
   const batch = db.batch();
 
-  const invitsCollectionRef = await db
-    .collection('invitations')
-    .where('eventId', '==', event.id)
-    .get();
+  const invitsCollectionRef = await db.collection('invitations').where('eventId', '==', event.id).get();
   for (const doc of invitsCollectionRef.docs) {
     batch.delete(doc.ref);
   }
 
-  const notifsCollectionRef = await db
-    .collection('notifications')
-    .where('docId', '==', event.id)
-    .get();
+  const notifsCollectionRef = await db.collection('notifications').where('docId', '==', event.id).get();
   for (const doc of notifsCollectionRef.docs) {
     batch.delete(doc.ref);
   }
   return batch.commit();
 }
 
-export async function createScreeningRequest(
-  data: { uid: string; movieId: string },
-  context: CallableContext
-) {
+export async function createScreeningRequest(data: { uid: string; movieId: string }, context: CallableContext) {
   const { uid, movieId } = data;
 
   if (!context?.auth) {
@@ -46,13 +37,10 @@ export async function createScreeningRequest(
     throw new Error('Movie id is mandatory for screening requested');
   }
 
-  const [user, movie] = await Promise.all([
-    getDocument<PublicUser>(`users/${uid}`),
-    getDocument<Movie>(`movies/${movieId}`),
-  ]);
+  const [user, movie] = await Promise.all([getDocument<PublicUser>(`users/${uid}`), getDocument<Movie>(`movies/${movieId}`)]);
 
   const getNotifications = (org: Organization) =>
-    org.userIds.map((userId) =>
+    org.userIds.map(userId =>
       createNotification({
         toUserId: userId,
         type: 'screeningRequested',

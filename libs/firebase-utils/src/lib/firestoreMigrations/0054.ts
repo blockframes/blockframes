@@ -1,6 +1,6 @@
 import { Firestore } from '@blockframes/firebase-utils';
 import { runChunks } from '../firebase-utils';
-import { StorageFile } from '@blockframes/model';
+import { StorageFile } from '@blockframes/shared/model';
 import { privacies } from '@blockframes/utils/file-sanitizer';
 
 function createStorageFile(data: StorageFile) {
@@ -13,20 +13,19 @@ function createStorageFile(data: StorageFile) {
     }
     data.storagePath = elements.join('/');
   } else {
-    data.storagePath = ''
+    data.storagePath = '';
   }
-  
+
   return data;
 }
 
 /**
  * File Migration - Issue #4881
-*/
+ */
 export async function upgrade(db: Firestore) {
-
   // ORG
   const orgs = await db.collection('orgs').get();
-  await runChunks(orgs.docs, async (orgDoc) => {
+  await runChunks(orgs.docs, async orgDoc => {
     const data = orgDoc.data();
 
     // documents.notes
@@ -38,9 +37,9 @@ export async function upgrade(db: Firestore) {
           collection: 'orgs',
           docId: data.id,
           field: `documents.notes`,
-          ...note
+          ...note,
         });
-      })
+      });
     }
     // logo
     data.logo = createStorageFile({
@@ -52,11 +51,11 @@ export async function upgrade(db: Firestore) {
     });
 
     await orgDoc.ref.set(data);
-  })
+  });
 
   // MOVIE
-  const movies = await db.collection('movies').get()
-  await runChunks(movies.docs, async (movieDoc) => {
+  const movies = await db.collection('movies').get();
+  await runChunks(movies.docs, async movieDoc => {
     const data = movieDoc.data();
 
     const fields = ['poster', 'banner'];
@@ -66,9 +65,9 @@ export async function upgrade(db: Firestore) {
         privacy: 'public',
         collection: 'movies',
         docId: data.id,
-        field
-      })
-    })
+        field,
+      });
+    });
 
     const promotionalFields = ['financialDetails', 'presentation_deck', 'scenario', 'moodboard'];
     promotionalFields.forEach(field => {
@@ -77,18 +76,20 @@ export async function upgrade(db: Firestore) {
         privacy: 'public',
         collection: 'movies',
         docId: data.id,
-        field: `promotional.${field}`
-      })
-    })
+        field: `promotional.${field}`,
+      });
+    });
 
     // promotional.still_photo
-    data.promotional.still_photo = data.promotional.still_photo.map(still => createStorageFile({
-      storagePath: still,
-      privacy: 'public',
-      collection: 'movies',
-      docId: data.id,
-      field: `promotional.still_photo`
-    }));
+    data.promotional.still_photo = data.promotional.still_photo.map(still =>
+      createStorageFile({
+        storagePath: still,
+        privacy: 'public',
+        collection: 'movies',
+        docId: data.id,
+        field: `promotional.still_photo`,
+      })
+    );
 
     // promotional.salesPitch
     if (data.promotional.salesPitch) {
@@ -98,10 +99,10 @@ export async function upgrade(db: Firestore) {
         collection: 'movies',
         docId: data.id,
         field: `promotional.salesPitch`,
-        ...data.promotional.salesPitch
-      })
+        ...data.promotional.salesPitch,
+      });
     }
-  
+
     if (data.promotional.videos) {
       // promotional.videos.screener
       if (data.promotional.videos.screener) {
@@ -111,60 +112,64 @@ export async function upgrade(db: Firestore) {
           collection: 'movies',
           docId: data.id,
           field: `promotional.videos.screener`,
-          ...data.promotional.videos.screener
+          ...data.promotional.videos.screener,
         });
       }
 
       // promotional.videos.otherVideos
       if (data.promotional.videos.otherVideos) {
-        data.promotional.videos.otherVideos = data.promotional.videos.otherVideos.map(video => createStorageFile({
-          storagePath: video.ref,
-          privacy: 'public',
-          collection: 'movies',
-          docId: data.id,
-          field: `promotional.videos.otherVideos`,
-          ...video
-        }));
+        data.promotional.videos.otherVideos = data.promotional.videos.otherVideos.map(video =>
+          createStorageFile({
+            storagePath: video.ref,
+            privacy: 'public',
+            collection: 'movies',
+            docId: data.id,
+            field: `promotional.videos.otherVideos`,
+            ...video,
+          })
+        );
       }
     }
 
     // promotional.notes
     if (data.promotional.notes) {
-      data.promotional.notes = data.promotional.notes.map(note => createStorageFile({
-        storagePath: note.ref,
-        privacy: 'public',
-        collection: 'movies',
-        docId: data.id,
-        field: `promotional.notes`,
-        ...note
-      }))
+      data.promotional.notes = data.promotional.notes.map(note =>
+        createStorageFile({
+          storagePath: note.ref,
+          privacy: 'public',
+          collection: 'movies',
+          docId: data.id,
+          field: `promotional.notes`,
+          ...note,
+        })
+      );
     }
 
     await movieDoc.ref.set(data);
-  })
+  });
 
   // CAMPAIGN
   const campaigns = await db.collection('campaigns').get();
-  await runChunks(campaigns.docs, async (campaignDoc) => {
+  await runChunks(campaigns.docs, async campaignDoc => {
     const data = campaignDoc.data();
 
     const fields = ['budget', 'financingPlan', 'waterfall'];
     fields.forEach(field => {
-       data.files[field] = createStorageFile({
+      data.files[field] = createStorageFile({
         storagePath: data.files[field],
         privacy: 'public',
         collection: 'campaigns',
         docId: data.id,
-        field: `files.${field}`
-      })
-    })
+        field: `files.${field}`,
+      });
+    });
 
     await campaignDoc.ref.set(data);
-  })
+  });
 
   // USER
   const users = await db.collection('users').get();
-  await runChunks(users.docs, async (userDoc) => {
+  await runChunks(users.docs, async userDoc => {
     const data = userDoc.data();
 
     const fields = ['avatar', 'watermark'];
@@ -174,16 +179,16 @@ export async function upgrade(db: Firestore) {
         privacy: 'public',
         collection: 'users',
         docId: data.uid,
-        field
-      })
-    })
+        field,
+      });
+    });
 
-    await userDoc.ref.set(data)
+    await userDoc.ref.set(data);
   });
 
   // INVITATION
   const invitations = await db.collection('invitations').get();
-  await runChunks(invitations.docs, async (invitationDoc) => {
+  await runChunks(invitations.docs, async invitationDoc => {
     const data = invitationDoc.data();
 
     const orgFields = ['fromOrg', 'toOrg'];
@@ -194,26 +199,23 @@ export async function upgrade(db: Firestore) {
           privacy: 'public',
           collection: 'orgs',
           docId: data[field].id,
-          field: 'logo'
-        })
+          field: 'logo',
+        });
       }
     });
 
     const userFields = ['fromUser', 'toUser'];
     const userMediaFields = ['avatar', 'watermark'];
     userFields.forEach(field => {
-
       if (data[field]) {
         userMediaFields.forEach(mediaField => {
-
           data[field][mediaField] = createStorageFile({
             storagePath: data[field][mediaField],
             privacy: 'public',
             collection: 'users',
             docId: data[field].uid,
-            field: mediaField
+            field: mediaField,
           });
-
         });
       }
     });
@@ -223,12 +225,11 @@ export async function upgrade(db: Firestore) {
 
   // CMS
   const cms = await db.collection('cms/festival/home').get();
-  await runChunks(cms.docs, async (cmsDoc) => {
+  await runChunks(cms.docs, async cmsDoc => {
     const data = cmsDoc.data();
 
     data.sections.forEach((section, i) => {
       if (section._type === 'banner') {
-
         const fields = ['background', 'image'];
         fields.forEach(field => {
           section[field] = createStorageFile({
@@ -236,7 +237,7 @@ export async function upgrade(db: Firestore) {
             collection: 'cms/festival/home',
             docId: cmsDoc.id,
             field: `section[${i}].${field}`,
-            privacy: 'public'
+            privacy: 'public',
           });
         });
       }
@@ -247,10 +248,10 @@ export async function upgrade(db: Firestore) {
           collection: 'cms/festival/home',
           docId: cmsDoc.id,
           field: `section[${i}].background`,
-          privacy: 'public'
+          privacy: 'public',
         });
       }
     });
     await cmsDoc.ref.set(data);
-  })
+  });
 }

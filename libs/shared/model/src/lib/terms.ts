@@ -5,12 +5,10 @@ import { toLanguageVersionString } from '@blockframes/utils/utils';
 import { LanguageRecord } from './movie';
 
 export function createMailTerm(terms: BucketTerm<Timestamp>[]) {
-  return terms.map((term) => ({
+  return terms.map(term => ({
     ...term,
-    territories: term.territories
-      .map((territory) => staticModel['territories'][territory])
-      .join(', '),
-    medias: term.medias.map((media) => staticModel['medias'][media] ?? media).join(', '),
+    territories: term.territories.map(territory => staticModel['territories'][territory]).join(', '),
+    medias: term.medias.map(media => staticModel['medias'][media] ?? media).join(', '),
     duration: {
       from: format(term.duration.from.toDate(), 'dd MMM, yyyy'),
       to: format(term.duration.to.toDate(), 'dd MMM, yyyy'),
@@ -62,6 +60,6 @@ export function createTerm(params: Partial<Term<Date>> = {}): Term<Date> {
     licensedOriginal: null,
     languages: {},
     criteria: [],
-    ...params
-  }
+    ...params,
+  };
 }

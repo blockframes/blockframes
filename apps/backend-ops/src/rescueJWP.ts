@@ -1,21 +1,14 @@
 import { getCollection, jwplayerApiV2 } from '@blockframes/firebase-utils';
-import { StorageVideo, MovieVideo, Movie } from '@blockframes/model';
+import { StorageVideo, MovieVideo, Movie } from '@blockframes/shared/model';
 import { delay } from '@blockframes/utils/helpers';
 import { storageFileExist } from 'libs/firebase-utils/src/lib/firebase-utils';
 
 type StorageVideoKeys = keyof StorageVideo;
 
-const keysToCheck: StorageVideoKeys[] = [
-  'jwPlayerId',
-  'privacy',
-  'collection',
-  'docId',
-  'field',
-  'storagePath',
-];
+const keysToCheck: StorageVideoKeys[] = ['jwPlayerId', 'privacy', 'collection', 'docId', 'field', 'storagePath'];
 
 function isVideoOK(video: StorageVideo) {
-  return keysToCheck.every((key) => !!video[key]);
+  return keysToCheck.every(key => !!video[key]);
 }
 
 function checkStorageFile(video: StorageVideo) {
@@ -47,17 +40,13 @@ export async function rescueJWP(options: { jwplayerKey: string; jwplayerApiV2Sec
 
   if (!jwplayerKey) {
     console.log('\nMISSING JWPLAYER KEY ! you should pass it as the 1st argument');
-    console.log(
-      '\ncommand syntax :\n\tnpm run backend-ops rescueJWP <JWP-KEY> <JPW-API-V2-SECRET>\n'
-    );
+    console.log('\ncommand syntax :\n\tnpm run backend-ops rescueJWP <JWP-KEY> <JPW-API-V2-SECRET>\n');
     return;
   }
 
   if (!jwplayerApiV2Secret) {
     console.log('\nMISSING JWPLAYER API V2 SECRET ! you should pass it as the 2nd argument');
-    console.log(
-      '\ncommand syntax :\n\tnpm run backend-ops rescueJWP <JWP-KEY> <JPW-API-V2-SECRET>\n'
-    );
+    console.log('\ncommand syntax :\n\tnpm run backend-ops rescueJWP <JWP-KEY> <JPW-API-V2-SECRET>\n');
     return;
   }
 
@@ -89,14 +78,14 @@ export async function rescueJWP(options: { jwplayerKey: string; jwplayerApiV2Sec
   };
 
   const movies = await getCollection<Movie>('movies');
-  movies.forEach((movie) => {
+  movies.forEach(movie => {
     const { videos } = movie.promotional;
 
     if (videos) {
       sortVideo(videos.screener, movie.id);
       sortVideo(videos.salesPitch, movie.id);
 
-      videos.otherVideos?.forEach((video) => sortVideo(video, movie.id));
+      videos.otherVideos?.forEach(video => sortVideo(video, movie.id));
     }
   });
 
@@ -117,30 +106,22 @@ export async function rescueJWP(options: { jwplayerKey: string; jwplayerApiV2Sec
 
   console.log(`\nThere is ${okVideos.length} correct videos`);
   console.log(`${emptyVideos.length} empty videos.`);
-  console.log(
-    `${notInStorage.length} videos that exists in JWP but not in storage (need to be downloaded)`
-  );
-  console.log(
-    `${notInJWP.length} videos that exists in the storage but not in JWP (need to be uploaded)`
-  );
-  console.log(
-    `${wrongJWPId.length} videos that have a non-existent JWP ID (need to be re-uploaded)`
-  );
-  console.log(
-    `${wrongStoragePath.length} videos that have a non-existent storage path (need to be re-downloaded)`
-  );
+  console.log(`${notInStorage.length} videos that exists in JWP but not in storage (need to be downloaded)`);
+  console.log(`${notInJWP.length} videos that exists in the storage but not in JWP (need to be uploaded)`);
+  console.log(`${wrongJWPId.length} videos that have a non-existent JWP ID (need to be re-uploaded)`);
+  console.log(`${wrongStoragePath.length} videos that have a non-existent storage path (need to be re-downloaded)`);
 
   console.log('\nVIDEO THAT NEED TO BE DOWNLOADED');
-  notInStorage.forEach((v) => console.log(v));
+  notInStorage.forEach(v => console.log(v));
 
   console.log('\nVIDEO THAT NEED TO BE UPLOADED');
-  notInJWP.forEach((v) => console.log(v));
+  notInJWP.forEach(v => console.log(v));
   console.log('\n');
 
   console.log('\nVIDEO THAT NEED TO BE RE-UPLOADED (wrong ID)');
-  wrongJWPId.forEach((v) => console.log(v));
+  wrongJWPId.forEach(v => console.log(v));
   console.log('\n');
 
   console.log('\nVIDEO THAT NEED TO BE RE-DOWNLOADED (wrong path)');
-  notInStorage.forEach((v) => console.log(v));
+  notInStorage.forEach(v => console.log(v));
 }

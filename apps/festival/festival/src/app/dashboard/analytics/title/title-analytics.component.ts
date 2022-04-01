@@ -1,15 +1,22 @@
-import { Location } from "@angular/common";
-import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
-import { AggregatedAnalytic, Analytics, createAggregatedAnalytic, Organization, PublicUser, User } from '@blockframes/model';
+import { Location } from '@angular/common';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import {
+  AggregatedAnalytic,
+  Analytics,
+  createAggregatedAnalytic,
+  Organization,
+  PublicUser,
+  User,
+} from '@blockframes/shared/model';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
-import { MovieService } from "@blockframes/movie/+state/movie.service";
-import { OrganizationService } from "@blockframes/organization/+state";
-import { joinWith } from "@blockframes/utils/operators";
-import { map, pluck, shareReplay, switchMap } from "rxjs/operators";
+import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { OrganizationService } from '@blockframes/organization/+state';
+import { joinWith } from '@blockframes/utils/operators';
+import { map, pluck, shareReplay, switchMap } from 'rxjs/operators';
 import { counter } from '@blockframes/analytics/+state/utils';
-import { UserService } from "@blockframes/user/+state";
-import { Scope, staticModel } from "@blockframes/utils/static-model";
+import { UserService } from '@blockframes/user/+state';
+import { Scope, staticModel } from '@blockframes/utils/static-model';
 
 function getFilter(scope: Scope) {
   return (input: string, value: any) => {
@@ -19,16 +26,16 @@ function getFilter(scope: Scope) {
   };
 }
 
-function aggregatePerUser(analytics: (Analytics<"title"> & { user: User, org: Organization})[]) {
+function aggregatePerUser(analytics: (Analytics<'title'> & { user: User; org: Organization })[]) {
   const aggregator: Record<string, AggregatedAnalytic> = {};
   for (const analytic of analytics) {
     if (!analytic.user?.uid) continue;
     if (!aggregator[analytic.user.uid]) {
       aggregator[analytic.user.uid] = createAggregatedAnalytic({
         user: analytic.user,
-        org: analytic.org
+        org: analytic.org,
       });
-    };
+    }
     aggregator[analytic.user.uid][analytic.name]++;
   }
   return Object.values(aggregator);
@@ -38,41 +45,32 @@ function aggregatePerUser(analytics: (Analytics<"title"> & { user: User, org: Or
   selector: 'festival-title-analytics',
   templateUrl: './title-analytics.component.html',
   styleUrls: ['./title-analytics.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TitleAnalyticsComponent {
+  titleId$ = this.route.params.pipe(pluck('titleId'));
 
-  titleId$ = this.route.params.pipe(
-    pluck('titleId')
-  );
-
-  title$ = this.titleId$.pipe(
-    switchMap((titleId: string) => this.movieService.valueChanges(titleId))
-  );
+  title$ = this.titleId$.pipe(switchMap((titleId: string) => this.movieService.valueChanges(titleId)));
 
   titleAnalytics$ = this.titleId$.pipe(
     switchMap((titleId: string) => this.analyticsService.getTitleAnalytics(titleId)),
     joinWith({
       org: analytic => this.orgService.valueChanges(analytic.meta.orgId),
-      user: analytic => this.userService.valueChanges(analytic.meta.uid)
+      user: analytic => this.userService.valueChanges(analytic.meta.uid),
     }),
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
-  orgActivity$ = this.titleAnalytics$.pipe(
-    map(analytics => counter(analytics, 'org.activity', 'orgActivity'))
-  );
+  orgActivity$ = this.titleAnalytics$.pipe(map(analytics => counter(analytics, 'org.activity', 'orgActivity')));
 
   territoryActivity$ = this.titleAnalytics$.pipe(
-    map(analytics => counter(analytics, 'org.addresses.main.country', 'territories')),
+    map(analytics => counter(analytics, 'org.addresses.main.country', 'territories'))
   );
 
-  buyerAnalytics$ = this.titleAnalytics$.pipe(
-    map(aggregatePerUser)
-  )
+  buyerAnalytics$ = this.titleAnalytics$.pipe(map(aggregatePerUser));
 
   filters = {
-    orgActivity: getFilter('orgActivity')
+    orgActivity: getFilter('orgActivity'),
   };
   filterValue?: string;
 
@@ -82,7 +80,7 @@ export class TitleAnalyticsComponent {
     private orgService: OrganizationService,
     private route: ActivatedRoute,
     private analyticsService: AnalyticsService,
-    private userService: UserService,
+    private userService: UserService
   ) {}
 
   goBack() {

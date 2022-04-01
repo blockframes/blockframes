@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Pipe, PipeTransform } from '@angular/core';
-import { StorageFile } from '@blockframes/model';
+import { StorageFile } from '@blockframes/shared/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { UserService } from '@blockframes/user/+state';
@@ -9,7 +9,6 @@ import { extensionToType, titleCase } from '../utils';
 
 @Pipe({ name: 'fileName' })
 export class FileNamePipe implements PipeTransform {
-
   /**
    * Returns the name of the file
    * e.g. org/id/logo/abc.jpg => 'abc.jpg'
@@ -28,12 +27,7 @@ export class FileNamePipe implements PipeTransform {
 
 @Pipe({ name: 'filePath' })
 export class FilePathPipe implements PipeTransform {
-
-  constructor(
-    private movieService: MovieService,
-    private orgService: OrganizationService,
-    private userService: UserService,
-  ) {}
+  constructor(private movieService: MovieService, private orgService: OrganizationService, private userService: UserService) {}
 
   /**
    * Returns a readable version of the file path
@@ -70,10 +64,9 @@ export class FilePathPipe implements PipeTransform {
 }
 
 @Pipe({
-  name: 'fileType'
+  name: 'fileType',
 })
 export class FileTypePipe implements PipeTransform {
-
   /**
    * Returns the type of the file
    * e.g. abc.jpg => 'image'
@@ -92,16 +85,14 @@ export class FileTypePipe implements PipeTransform {
 }
 
 @Pipe({
-  name: 'fileTypeImage'
+  name: 'fileTypeImage',
 })
 export class FileTypeImagePipe implements PipeTransform {
-
   /**
    * Returns the image or icon path for type of file
    * e.g. abc.jpg => 'image.svg' for image or 'picture' for icon
    */
   transform(fileName: string, kind: 'image' | 'icon' = 'image'): string {
-
     if (!fileName) return kind === 'image' ? 'image.svg' : 'document';
     if (typeof fileName !== 'string') {
       console.warn('UNEXPECTED FILE', fileName);
@@ -118,7 +109,7 @@ export class FileTypeImagePipe implements PipeTransform {
       case 'xls':
         return kind === 'image' ? 'xls.svg' : 'document';
       case 'image':
-        return kind === 'image' ? 'image.svg' : 'image' ;
+        return kind === 'image' ? 'image.svg' : 'image';
       case 'pdf':
         return kind === 'image' ? 'pdf.svg' : 'pdf';
       case 'video':
@@ -132,21 +123,20 @@ export class FileTypeImagePipe implements PipeTransform {
 export const getFileFolder = (folder: string) => {
   switch (folder) {
     case 'notes':
-      return 'Note'
+      return 'Note';
     case 'still_photo':
-      return 'Image'
+      return 'Image';
     case 'otherVideos':
-      return 'Video'
+      return 'Video';
     case 'presentation_deck':
-      return 'Presentation deck'
+      return 'Presentation deck';
     default:
       return titleCase(folder);
   }
-}
+};
 
 @Pipe({ name: 'fileFolder' })
 export class FileFolderPipe implements PipeTransform {
-
   /**
    * Returns the name of the folder where the file is stored
    * e.g. orgs/id/documents.notes/abc.pdf => 'Note'
@@ -160,7 +150,7 @@ export class FileFolderPipe implements PipeTransform {
       return 'Unknown';
     }
 
-    const segments = filePath.split('/')
+    const segments = filePath.split('/');
     segments.pop();
     const field = segments.pop();
     const folder = field.split('.').pop();
@@ -171,7 +161,6 @@ export class FileFolderPipe implements PipeTransform {
 
 @Pipe({ name: 'selectedFile' })
 export class SelectedFilePipe implements PipeTransform {
-
   /**
    * Retrieve the selected file of a Meeting form its file array
    */
@@ -185,4 +174,4 @@ export class SelectedFilePipe implements PipeTransform {
   exports: [FileNamePipe, FileTypePipe, FileTypeImagePipe, FilePathPipe, FileFolderPipe, SelectedFilePipe],
   declarations: [FileNamePipe, FileTypePipe, FileTypeImagePipe, FilePathPipe, FileFolderPipe, SelectedFilePipe],
 })
-export class FileNameModule { }
+export class FileNameModule {}

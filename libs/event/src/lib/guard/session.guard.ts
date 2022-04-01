@@ -1,18 +1,12 @@
-
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, UrlTree } from '@angular/router';
 import { AuthService } from '@blockframes/auth/+state';
 import { EventService } from '../+state';
-import { Meeting } from '@blockframes/model';
+import { Meeting } from '@blockframes/shared/model';
 
 @Injectable({ providedIn: 'root' })
 export class SessionGuard implements CanActivate {
-
-  constructor(
-    private authService: AuthService,
-    private eventService: EventService,
-    private router: Router,
-  ) { }
+  constructor(private authService: AuthService, private eventService: EventService, private router: Router) {}
 
   async canActivate(next: ActivatedRouteSnapshot): Promise<boolean | UrlTree> {
     const eventId: string = next.params.eventId;

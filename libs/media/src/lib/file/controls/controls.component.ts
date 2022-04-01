@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 import { EventService } from '@blockframes/event/+state';
-import { Event, Meeting, MeetingMediaControl } from '@blockframes/model';
+import { Event, Meeting, MeetingMediaControl } from '@blockframes/shared/model';
 import { debounceFactory } from '@blockframes/utils/helpers';
 
 @Component({
@@ -11,15 +11,15 @@ import { debounceFactory } from '@blockframes/utils/helpers';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FileControlsComponent {
-
   @Input() event: Event<Meeting>;
 
   /** A debounced version of `updateRemoteControl` to avoid writing on the db more than every 1s */
-  private debouncedUpdateRemoteControl = debounceFactory((newControl: MeetingMediaControl) => this.updateRemoteControl(newControl), 1000);
+  private debouncedUpdateRemoteControl = debounceFactory(
+    (newControl: MeetingMediaControl) => this.updateRemoteControl(newControl),
+    1000
+  );
 
-  constructor(
-    private eventService: EventService,
-  ) { }
+  constructor(private eventService: EventService) {}
 
   updateRemoteControl(control: MeetingMediaControl) {
     const controls = { ...this.event.meta.controls, [this.event.meta.selectedFile]: control };

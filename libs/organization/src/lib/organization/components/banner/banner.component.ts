@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { Movie, Organization } from '@blockframes/model';
+import { Movie, Organization } from '@blockframes/shared/model';
 
 @Component({
   selector: '[org] org-banner',

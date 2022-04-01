@@ -18,7 +18,7 @@ export interface Negotiation<T extends Date | Timestamp = Date> extends BucketCo
   declineReason?: string;
   status: NegotiationStatus;
   initial: T;
-  currency: MovieCurrency
+  currency: MovieCurrency;
 }
 
 export type NegotiationDocument = Negotiation<Timestamp>;

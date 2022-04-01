@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnInit, Input, Optional, Inject } from '@angular/core';
 import { AuthService } from '@blockframes/auth/+state';
-import { Movie, Organization } from '@blockframes/model';
+import { Movie, Organization } from '@blockframes/shared/model';
 import { App, getOrgModuleAccess } from '@blockframes/utils/apps';
 import { BehaviorSubject } from 'rxjs';
 import { Intercom } from 'ng-intercom';
@@ -13,16 +13,16 @@ import { APP } from '@blockframes/utils/routes/utils';
   selector: 'auth-data-validation',
   templateUrl: './data-validation.component.html',
   styleUrls: ['./data-validation.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthDataValidationComponent implements OnInit {
   @Input() set organization(org: Organization) {
     this.orgData = hasDenomination(org);
     const isUserInOrg = org.userIds.includes(this.user.uid);
-    const isOrgAccepted = org.status === "accepted";
+    const isOrgAccepted = org.status === 'accepted';
     const orgHaveAccesToAtLeastOneModule = !!getOrgModuleAccess(org, this.app).length;
     this.orgApproval = isOrgAccepted && orgHaveAccesToAtLeastOneModule && isUserInOrg;
-  };
+  }
 
   public profileData = false;
   public orgData = false;
@@ -35,8 +35,8 @@ export class AuthDataValidationComponent implements OnInit {
     private functions: AngularFireFunctions,
     private snackbar: MatSnackBar,
     @Optional() private intercom: Intercom,
-    @Inject(APP) public app: App,
-  ) { }
+    @Inject(APP) public app: App
+  ) {}
 
   ngOnInit() {
     // Filled checkbox

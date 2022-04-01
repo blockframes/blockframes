@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input, OnDestroy, ChangeDetectorRef, OnInit } from '@angular/core';
 import { InvitationService } from '@blockframes/invitation/+state';
-import { Invitation, ScreeningEvent } from '@blockframes/model';
+import { Invitation, ScreeningEvent } from '@blockframes/shared/model';
 import { BehaviorSubject, combineLatest, Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { fade } from '@blockframes/utils/animations/fade';
@@ -12,7 +12,7 @@ import { RequestAskingPriceComponent } from '@blockframes/movie/components/reque
   templateUrl: './screening-item.component.html',
   styleUrls: ['./screening-item.component.scss'],
   animations: [fade],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ScreeningItemComponent implements OnInit, OnDestroy {
   private sub: Subscription;
@@ -29,22 +29,15 @@ export class ScreeningItemComponent implements OnInit, OnDestroy {
     return this._event.getValue();
   }
 
-  constructor(
-    private cdr: ChangeDetectorRef,
-    private dialog: MatDialog,
-    private invitationService: InvitationService
-  ) { }
+  constructor(private cdr: ChangeDetectorRef, private dialog: MatDialog, private invitationService: InvitationService) {}
 
   ngOnInit() {
-    this.sub = combineLatest([
-      this.event$.pipe(filter(event => !!event)),
-      this.invitationService.guestInvitations$
-    ]).pipe(
-      map(([event, invitations]) => invitations.find(invitation => invitation.eventId === event.id) ?? null)
-    ).subscribe(invitation => {
-      this.invitation = invitation
-      this.cdr.markForCheck()
-    });
+    this.sub = combineLatest([this.event$.pipe(filter(event => !!event)), this.invitationService.guestInvitations$])
+      .pipe(map(([event, invitations]) => invitations.find(invitation => invitation.eventId === event.id) ?? null))
+      .subscribe(invitation => {
+        this.invitation = invitation;
+        this.cdr.markForCheck();
+      });
   }
 
   ngOnDestroy() {
@@ -56,12 +49,11 @@ export class ScreeningItemComponent implements OnInit, OnDestroy {
       data: { movieId },
       maxHeight: '80vh',
       maxWidth: '650px',
-      autoFocus: false
+      autoFocus: false,
     });
     ref.afterClosed().subscribe(isSent => {
       this.requestSent = !!isSent;
       this.cdr.markForCheck();
     });
   }
-
 }

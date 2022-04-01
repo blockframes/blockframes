@@ -4,7 +4,7 @@ import { SaleShellComponent } from '../shell.component';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { ConfirmWithValidationComponent } from '@blockframes/contract/contract/components/confirm-with-validation/confirm-with-validation.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Movie } from '@blockframes/model';
+import { Movie } from '@blockframes/shared/model';
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
 import { AuthService } from '@blockframes/auth/+state';
 
@@ -26,7 +26,7 @@ export class SaleViewComponent {
     private shell: SaleShellComponent,
     private dialog: MatDialog,
     private orgService: OrganizationService,
-    private authService: AuthService,
+    private authService: AuthService
   ) {}
 
   accept(negotiationId: string, contractId: string, title: Movie) {
@@ -40,10 +40,9 @@ export class SaleViewComponent {
       cancel: 'Come back & verify Contract',
     };
     const ref = this.dialog.open(ConfirmWithValidationComponent, { data });
-    ref.afterClosed().subscribe((acceptSuccessful) => {
+    ref.afterClosed().subscribe(acceptSuccessful => {
       const config = { duration: 6000 };
-      if (acceptSuccessful)
-        this.snackbar.open(`You accepted contract for ${title.title.international}`, null, config);
+      if (acceptSuccessful) this.snackbar.open(`You accepted contract for ${title.title.international}`, null, config);
     });
   }
 }

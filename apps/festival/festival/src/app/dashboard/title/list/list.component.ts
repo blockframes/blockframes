@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { startWith, map, tap, shareReplay } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
-import { Movie } from '@blockframes/model';
+import { Movie } from '@blockframes/shared/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Intercom } from 'ng-intercom';
@@ -22,22 +22,20 @@ export class ListComponent {
   filter$ = this.filter.valueChanges.pipe(startWith(this.filter.value));
 
   titles$ = this.service.queryDashboard(this.app).pipe(
-    tap((movies) => this.dynTitle.setPageTitle('My titles', movies.length ? '' : 'Empty')),
+    tap(movies => this.dynTitle.setPageTitle('My titles', movies.length ? '' : 'Empty')),
     shareReplay({ refCount: true, bufferSize: 1 })
   );
 
   result$ = combineLatest([this.filter$, this.titles$]).pipe(
-    map(([status, titles]) =>
-      titles.filter((title) => (status ? title.app.festival.status === status : titles))
-    )
+    map(([status, titles]) => titles.filter(title => (status ? title.app.festival.status === status : titles)))
   );
 
   titleCount$: Observable<Record<string, number>> = this.titles$.pipe(
-    map((m) => ({
+    map(m => ({
       all: m.length,
-      draft: m.filter((m) => m.app.festival.status === 'draft').length,
-      accepted: m.filter((m) => m.app.festival.status === 'accepted').length,
-      archived: m.filter((m) => m.app.festival.status === 'archived').length,
+      draft: m.filter(m => m.app.festival.status === 'draft').length,
+      accepted: m.filter(m => m.app.festival.status === 'accepted').length,
+      archived: m.filter(m => m.app.festival.status === 'archived').length,
     }))
   );
 

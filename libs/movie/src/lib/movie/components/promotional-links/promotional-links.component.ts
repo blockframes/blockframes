@@ -1,5 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { Movie } from '@blockframes/model';
+import { Movie } from '@blockframes/shared/model';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
 
 @Component({
@@ -14,9 +14,7 @@ export class PromotionalLinksComponent implements OnInit {
   public videos = false;
 
   ngOnInit() {
-    this.videos = this.movie.promotional.videos.otherVideos.some(
-      (video) => video.storagePath && video.privacy === 'public'
-    );
+    this.videos = this.movie.promotional.videos.otherVideos.some(video => video.storagePath && video.privacy === 'public');
   }
 
   scrollToFooter() {

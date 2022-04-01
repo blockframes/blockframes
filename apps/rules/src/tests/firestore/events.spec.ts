@@ -1,6 +1,6 @@
 ﻿import { apps, assertFails, assertSucceeds } from '@firebase/rules-unit-testing';
 import { Firestore, initFirestoreApp, rulesFixtures as testFixture } from '@blockframes/testing/unit-tests';
-import { EventDocument, Meeting, MeetingAttendee } from '@blockframes/model';
+import { EventDocument, Meeting, MeetingAttendee } from '@blockframes/shared/model';
 
 describe('Events Rules Tests', () => {
   const projectId = `evrules-spec-${Date.now()}`;
@@ -8,10 +8,13 @@ describe('Events Rules Tests', () => {
 
   describe('With User in org', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2', firebase: { sign_in_provider: 'password' } });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {
+        uid: 'uid-user2',
+        firebase: { sign_in_provider: 'password' },
+      });
     });
 
-    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+    afterAll(() => Promise.all(apps().map(app => app.delete())));
 
     test('user with valid org should be able to read event', async () => {
       const eventRef = db.doc('events/E001');
@@ -61,7 +64,7 @@ describe('Events Rules Tests', () => {
 
     test('user with valid org, ownerOrgId as orgId should be able to allow user access to meeting event', async () => {
       const docRef = db.doc('events/E003');
-      const doc = await docRef.get()
+      const doc = await docRef.get();
       const event = doc.data() as EventDocument<Meeting>;
 
       // Load our test set
@@ -108,10 +111,13 @@ describe('Events Rules Tests', () => {
 
   describe('With Anonymous user', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-c8-anon', firebase: { sign_in_provider: 'anonymous' } });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {
+        uid: 'uid-c8-anon',
+        firebase: { sign_in_provider: 'anonymous' },
+      });
     });
 
-    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+    afterAll(() => Promise.all(apps().map(app => app.delete())));
 
     test('should not be able to list all events', async () => {
       const allDocs = db.collection('events');
@@ -125,7 +131,7 @@ describe('Events Rules Tests', () => {
 
     it('user can request to enter meeting room', async () => {
       const docRef = db.doc('events/E003');
-      const doc = await docRef.get()
+      const doc = await docRef.get();
       const event = doc.data() as EventDocument<Meeting>;
 
       // Load our test set
@@ -142,7 +148,7 @@ describe('Events Rules Tests', () => {
 
     it('user can leave meeting room', async () => {
       const docRef = db.doc('events/E003');
-      const doc = await docRef.get()
+      const doc = await docRef.get();
       const event = doc.data() as EventDocument<Meeting>;
 
       // Load our test set
@@ -159,7 +165,7 @@ describe('Events Rules Tests', () => {
 
     it('user cannot allow himself into meeting room', async () => {
       const docRef = db.doc('events/E003');
-      const doc = await docRef.get()
+      const doc = await docRef.get();
       const event = doc.data() as EventDocument<Meeting>;
 
       // Load our test set
@@ -173,15 +179,17 @@ describe('Events Rules Tests', () => {
       event.meta.attendees[credentials.uid] = credentials;
       await assertFails(docRef.update(event));
     });
-
   });
 
   describe('With User not in org', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-peeptom', firebase: { sign_in_provider: 'password' } });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {
+        uid: 'uid-peeptom',
+        firebase: { sign_in_provider: 'password' },
+      });
     });
 
-    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+    afterAll(() => Promise.all(apps().map(app => app.delete())));
 
     test("user without valid org shouldn't be able to list all event", async () => {
       const allEvents = db.collection('events');

@@ -1,4 +1,10 @@
-import { StorageFile, AttendeeStatus, MeetingMediaControl, MovieDocument, MoviePromotionalElements } from '@blockframes/model';
+import {
+  StorageFile,
+  AttendeeStatus,
+  MeetingMediaControl,
+  MovieDocument,
+  MoviePromotionalElements,
+} from '@blockframes/shared/model';
 import { StoreStatus } from '@blockframes/utils/static-model';
 
 export interface OldStoreConfig {

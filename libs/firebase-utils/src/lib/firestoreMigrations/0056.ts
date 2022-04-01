@@ -1,25 +1,21 @@
-import { StorageFile, Event, MeetingEvent } from '@blockframes/model';
+import { StorageFile, Event, MeetingEvent } from '@blockframes/shared/model';
 import { Firestore } from '@blockframes/firebase-utils';
 import { get } from 'lodash';
 import { runChunks } from '../firebase-utils';
 import { OldMeeting } from './old-types';
 
-
 export async function upgrade(db: Firestore) {
-
   const meetings = await db.collection('events').where('type', '==', 'meeting').get();
 
   /*
     Media Refactoring for meetings files:
     `string` -> `StorageFile`
   */
-  return runChunks(meetings.docs, async (meetingDoc) => {
+  return runChunks(meetings.docs, async meetingDoc => {
     const meeting = meetingDoc.data() as Event<OldMeeting>;
 
     if (meeting.meta.files) {
-
       const filesPromises = meeting.meta.files.map(async ref => {
-
         const segments = ref.split('/').filter(part => !!part);
         const privacy = segments.shift();
         const collection = segments.shift();
@@ -46,7 +42,7 @@ export async function upgrade(db: Firestore) {
       });
       const files = await Promise.all(filesPromises);
       // convert old event into new event
-      (meeting as unknown as MeetingEvent).meta.files = files.filter(file => !!file);
+      ((meeting as unknown) as MeetingEvent).meta.files = files.filter(file => !!file);
     }
     meeting.meta.selectedFile = '';
     await meetingDoc.ref.set(meeting);

@@ -3,26 +3,25 @@ import { InvitationService } from '@blockframes/invitation/+state';
 import { Observable } from 'rxjs';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { EventFormShellComponent } from '../shell/shell.component';
-import { Invitation } from '@blockframes/model';
+import { Invitation } from '@blockframes/shared/model';
 
 @Component({
   selector: 'event-invitation',
   templateUrl: './invitation.component.html',
   styleUrls: ['./invitation.component.scss'],
   host: {
-    class: 'invitations surface'
+    class: 'invitations surface',
   },
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InvitationComponent implements OnInit {
-
   invitations$: Observable<Invitation[]>;
 
   constructor(
     private invitationService: InvitationService,
     private dynTitle: DynamicTitleService,
-    public shell: EventFormShellComponent,
-  ) { }
+    public shell: EventFormShellComponent
+  ) {}
 
   get eventId() {
     return this.shell.form.get('id').value;
@@ -30,6 +29,8 @@ export class InvitationComponent implements OnInit {
 
   ngOnInit(): void {
     this.dynTitle.setPageTitle('Add an event', 'Event invitations');
-    this.invitations$ = this.invitationService.valueChanges(ref => ref.where('type', '==', 'attendEvent').where('eventId', '==', this.eventId));
+    this.invitations$ = this.invitationService.valueChanges(ref =>
+      ref.where('type', '==', 'attendEvent').where('eventId', '==', this.eventId)
+    );
   }
 }

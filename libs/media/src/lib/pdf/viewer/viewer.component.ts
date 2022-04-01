@@ -2,7 +2,7 @@ import { DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ElementRef, HostListener, Inject, Input, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { MediaService } from '../../+state/media.service';
-import { StorageFile, MeetingPdfControl } from '@blockframes/model';
+import { StorageFile, MeetingPdfControl } from '@blockframes/shared/model';
 import { ImageParameters } from '../../image/directives/imgix-helpers';
 import { toggleFullScreen } from '../../file/viewers/utils';
 
@@ -13,17 +13,20 @@ import { toggleFullScreen } from '../../file/viewers/utils';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PdfViewerComponent implements OnInit {
-
   fullScreen = false;
 
   private _ref: StorageFile;
-  get ref() { return this._ref; }
+  get ref() {
+    return this._ref;
+  }
   @Input() set ref(file: StorageFile) {
     this._ref = file;
   }
 
   private _control: MeetingPdfControl;
-  get control() { return this._control; }
+  get control() {
+    return this._control;
+  }
   @Input() set control(value: MeetingPdfControl) {
     this._control = value;
     this.isPuppet$.next(!!value);
@@ -31,7 +34,9 @@ export class PdfViewerComponent implements OnInit {
   }
 
   private _eventId: string;
-  get eventId() { return this._eventId; }
+  get eventId() {
+    return this._eventId;
+  }
   @Input() set eventId(value: string) {
     this._eventId = value;
     this.generatePdfUrl();
@@ -54,20 +59,14 @@ export class PdfViewerComponent implements OnInit {
     this.fullScreen = !this.fullScreen;
   }
 
-  constructor(
-    private el: ElementRef,
-    private mediaService: MediaService,
-    @Inject(DOCUMENT) private document: Document,
-  ) { }
+  constructor(private el: ElementRef, private mediaService: MediaService, @Inject(DOCUMENT) private document: Document) {}
 
   async ngOnInit() {
     if (this.control) {
-
       // The parent passed a control in the Inputs.
       // It means that the component is a puppet (i.e. it should display the pdf as is)
       this.isPuppet$.next(true);
     } else {
-
       // The parent didn't pass any control, it's means the component is a standalone viewer
       // The component should handle the controls itself.
       this.isPuppet$.next(false);
@@ -87,7 +86,6 @@ export class PdfViewerComponent implements OnInit {
   }
 
   async generatePdfUrl() {
-
     const isLoading = !this.ref || !this.control || this.control.type !== 'pdf';
     if (isLoading) {
       this.pdfUrl$.next('');
@@ -99,8 +97,8 @@ export class PdfViewerComponent implements OnInit {
     const param: ImageParameters = {
       page: this.control.currentPage,
       auto: 'compress,format',
-      dpr: 2
-    }
+      dpr: 2,
+    };
     const url = await this.mediaService.generateImgIxUrl(this.ref, param, this.eventId);
     this.pdfUrl$.next(url);
     this.fetching$.next(false);

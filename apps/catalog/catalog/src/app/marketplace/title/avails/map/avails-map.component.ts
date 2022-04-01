@@ -15,18 +15,10 @@ import {
   territoryAvailabilities,
 } from '@blockframes/contract/avails/avails';
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
-import { Bucket, Movie, Mandate, Sale, Term } from '@blockframes/model';
+import { Bucket, Movie, Mandate, Sale, Term } from '@blockframes/shared/model';
 
 // TODO(#7820): remove with rxjs 7
-type AvailabilitiesInputs = [
-  MapAvailsFilter,
-  Mandate<Date>[],
-  Term<Date>[],
-  Sale<Date>[],
-  Term<Date>[],
-  Bucket<Date>,
-  Movie
-];
+type AvailabilitiesInputs = [MapAvailsFilter, Mandate<Date>[], Term<Date>[], Sale<Date>[], Term<Date>[], Bucket<Date>, Movie];
 
 @Component({
   selector: 'catalog-movie-avails-map',
@@ -56,34 +48,17 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
     this.shell.bucketForm.value$,
     this.shell.movie$,
   ]).pipe(
-    map(
-      ([
+    map(([avails, mandates, mandateTerms, sales, salesTerms, bucket, movie]: AvailabilitiesInputs) => {
+      if (this.availsForm.invalid) return emptyAvailabilities;
+      const res = filterContractsByTitle(movie.id, mandates, mandateTerms, sales, salesTerms, bucket);
+      const data = {
         avails,
-        mandates,
-        mandateTerms,
-        sales,
-        salesTerms,
-        bucket,
-        movie,
-      ]: AvailabilitiesInputs) => {
-        if (this.availsForm.invalid) return emptyAvailabilities;
-        const res = filterContractsByTitle(
-          movie.id,
-          mandates,
-          mandateTerms,
-          sales,
-          salesTerms,
-          bucket
-        );
-        const data = {
-          avails,
-          mandates: res.mandates,
-          sales: res.sales,
-          bucketContracts: res.bucketContracts,
-        };
-        return territoryAvailabilities(data);
-      }
-    ),
+        mandates: res.mandates,
+        sales: res.sales,
+        bucketContracts: res.bucketContracts,
+      };
+      return territoryAvailabilities(data);
+    }),
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
@@ -118,12 +93,9 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
     const available = await this.availabilities$
       .pipe(take(1))
       .toPromise()
-      .then((a) => a.available);
+      .then(a => a.available);
     for (const marker of available) {
-      const alreadyInBucket = this.shell.bucketForm.isAlreadyInBucket(
-        this.availsForm.value,
-        marker
-      );
+      const alreadyInBucket = this.shell.bucketForm.isAlreadyInBucket(this.availsForm.value, marker);
       if (!alreadyInBucket) {
         this.shell.bucketForm.addTerritory(this.availsForm.value, marker);
       }
@@ -151,7 +123,7 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
     if (decodedData.duration?.to) decodedData.duration.to = new Date(decodedData.duration.to);
 
     this.availsForm.patchValue(decodedData);
-    this.availsForm.valueChanges.pipe(throttleTime(1000)).subscribe((formState) => {
+    this.availsForm.valueChanges.pipe(throttleTime(1000)).subscribe(formState => {
       encodeUrl<MapAvailsFilter>(this.router, this.route, formState);
     });
   }

@@ -1,4 +1,3 @@
-
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, ChangeDetectionStrategy, OnDestroy, AfterViewInit } from '@angular/core';
@@ -15,9 +14,9 @@ import { BucketForm, BucketTermForm } from '@blockframes/contract/bucket/form';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { BucketService } from '@blockframes/contract/bucket/+state';
 import { ContractService } from '@blockframes/contract/contract/+state';
-import { Holdback, isMandate, isSale, Mandate, Sale } from '@blockframes/model';
+import { Holdback, isMandate, isSale, Mandate, Sale } from '@blockframes/shared/model';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
-import { BucketTerm, Term } from '@blockframes/model';
+import { BucketTerm, Term } from '@blockframes/shared/model';
 
 import { ExplanationComponent } from './explanation/explanation.component';
 import { HoldbackModalComponent } from '@blockframes/contract/contract/holdback/modal/holdback-modal.component';
@@ -28,7 +27,7 @@ import { territories, Territory } from '@blockframes/utils/static-model';
   selector: 'catalog-movie-avails',
   templateUrl: './avails.component.html',
   styleUrls: ['./avails.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy {
   private subs: Subscription[] = [];
@@ -47,41 +46,37 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
 
   public avails = {
     mapForm: new MapAvailsForm(),
-    calendarForm: new CalendarAvailsForm()
+    calendarForm: new CalendarAvailsForm(),
   };
 
-  public movieOrg$ = this.movie$.pipe(
-    switchMap(movie => this.orgService.valueChanges(movie.orgIds[0]))
-  );
+  public movieOrg$ = this.movie$.pipe(switchMap(movie => this.orgService.valueChanges(movie.orgIds[0])));
 
   /** Raw mandates, straight from the db
    *
    * _(mandates = contracts to sold might be available or already sold)_
-  */
+   */
   public mandates$ = new ReplaySubject<Mandate[]>();
 
   /** Raw mandate terms, straight from the db (might be available or already sold)
    *
    * _(term = continuous subdivision of a contract, a contract is composed of one or more terms)_
-  */
+   */
   public mandateTerms$ = new ReplaySubject<Term<Date>[]>();
 
   /** Raw sales, straight from the db
    *
    * _(sales = contracts already sold)_
-  */
+   */
   public sales$ = new ReplaySubject<Sale[]>();
 
   /** Raw **sold** terms, straight from the db
    *
    * _(term = continuous subdivision of a contract, a contract is composed of one or more terms)_
-  */
+   */
   public salesTerms$ = new ReplaySubject<Term<Date>[]>();
 
   /** Selected terms in the local bucket form, those where available terms that have been selected by the user */
-  public terms$ = this.movie$.pipe(
-    switchMap(movie => this.bucketForm.selectTerms(movie.id))
-  );
+  public terms$ = this.movie$.pipe(switchMap(movie => this.bucketForm.selectTerms(movie.id)));
 
   public holdbacks: Holdback[] = [];
 
@@ -93,7 +88,7 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
     private termService: TermService,
     private bucketService: BucketService,
     private orgService: OrganizationService,
-    private contractService: ContractService,
+    private contractService: ContractService
   ) {
     const sub = this.bucketService.active$.subscribe(bucket => {
       this.bucketForm.patchAllValue(bucket);
@@ -104,32 +99,32 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
   }
 
   ngAfterViewInit() {
-    const queryParams = this.route.snapshot.queryParams
+    const queryParams = this.route.snapshot.queryParams;
     let skipValue = 0;
     if ('contract' in queryParams) {
-      skipValue = 1
-      const selector = "[data-scroll-to-view-id='" + queryParams.contract + "']"
+      skipValue = 1;
+      const selector = "[data-scroll-to-view-id='" + queryParams.contract + "']";
       //@why: #6383
       setTimeout(() => {
         const element = document.querySelector<HTMLElement>(selector);
         scrollIntoView(element);
       }, 400);
-
     }
 
-
-    const fragSub = this.route.fragment.pipe(
-      filter(fragment => !!fragment),
-      skip(skipValue),
-      //@why: #6383
-      delay(100)
-    ).subscribe(fragment => scrollIntoView(document.querySelector(`#${fragment}`)));
+    const fragSub = this.route.fragment
+      .pipe(
+        filter(fragment => !!fragment),
+        skip(skipValue),
+        //@why: #6383
+        delay(100)
+      )
+      .subscribe(fragment => scrollIntoView(document.querySelector(`#${fragment}`)));
 
     this.subs.push(fragSub);
 
     const paramsSub = combineLatest([
       this.route.queryParams.pipe(filter(params => !!params.contract && !!params.term)),
-      this.bucketService.active$.pipe(filter(bucket => !!bucket))
+      this.bucketService.active$.pipe(filter(bucket => !!bucket)),
     ]).subscribe(([params, bucket]) => {
       const term = bucket.contracts[params.contract].terms[params.term];
       this.edit(term);
@@ -143,9 +138,10 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
   }
 
   private async init() {
-
     const movieId = this.route.snapshot.params.movieId;
-    const contracts = await this.contractService.getValue(ref => ref.where('titleId', '==', movieId).where('status', '==', 'accepted'));
+    const contracts = await this.contractService.getValue(ref =>
+      ref.where('titleId', '==', movieId).where('status', '==', 'accepted')
+    );
 
     const mandates = contracts.filter(isMandate);
     const sales = contracts.filter(isSale);
@@ -174,13 +170,17 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
     this.dialog.open(ExplanationComponent, {
       height: '80vh',
       width: '80vw',
-      autoFocus: false
+      autoFocus: false,
     });
   }
 
   /** Open a modal to display the entire list of territories when this one is too long */
   public openTerritoryModal(term: BucketTerm) {
-    this.dialog.open(DetailedTermsComponent, { data: { terms: term.territories, scope: 'territories' }, maxHeight: '80vh', autoFocus: false });
+    this.dialog.open(DetailedTermsComponent, {
+      data: { terms: term.territories, scope: 'territories' },
+      maxHeight: '80vh',
+      autoFocus: false,
+    });
   }
 
   /** Open a modal to display holdback warnings */
@@ -241,8 +241,6 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
     // Remove the word 'world' from the array
     const listKeys = Object.keys(territories).filter((t: Territory) => t !== 'world') as Territory[];
     // Filter to include only current territories and get the value of each keys
-    return listKeys
-      .filter(territory => !currentTerritoryList.includes(territory))
-      .map(territory => territories[territory]);
+    return listKeys.filter(territory => !currentTerritoryList.includes(territory)).map(territory => territories[territory]);
   }
 }

@@ -1,14 +1,27 @@
-import { DOCUMENT } from "@angular/common";
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Inject, Input, OnDestroy, Output, ViewChild, ViewEncapsulation } from "@angular/core";
-import { AngularFireFunctions } from "@angular/fire/functions";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { AuthService } from "@blockframes/auth/+state";
-import { StorageVideo, MeetingVideoControl } from '@blockframes/model';
-import { getWatermark, loadJWPlayerScript } from "@blockframes/utils/utils";
-import { BehaviorSubject } from "rxjs";
+import { DOCUMENT } from '@angular/common';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  Inject,
+  Input,
+  OnDestroy,
+  Output,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
+import { AngularFireFunctions } from '@angular/fire/functions';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { AuthService } from '@blockframes/auth/+state';
+import { StorageVideo, MeetingVideoControl } from '@blockframes/shared/model';
+import { getWatermark, loadJWPlayerScript } from '@blockframes/utils/utils';
+import { BehaviorSubject } from 'rxjs';
 import { toggleFullScreen } from '../../file/viewers/utils';
-import { EventService } from "@blockframes/event/+state";
-import { hasAnonymousIdentity } from "@blockframes/auth/+state/auth.model";
+import { EventService } from '@blockframes/event/+state';
+import { hasAnonymousIdentity } from '@blockframes/auth/+state/auth.model';
 
 declare const jwplayer: any;
 
@@ -21,7 +34,6 @@ declare const jwplayer: any;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VideoViewerComponent implements AfterViewInit, OnDestroy {
-
   @ViewChild('container') playerContainer: ElementRef<HTMLDivElement>;
   fullScreen = false;
 
@@ -32,14 +44,16 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
   private waitForPlayerReady: Promise<void>;
 
   private signalViewReady: () => void;
-  private waitForViewReady: Promise<void> = new Promise(res => this.signalViewReady = res);
+  private waitForViewReady: Promise<void> = new Promise(res => (this.signalViewReady = res));
 
   private destroyed = false;
 
   public loading$ = new BehaviorSubject(true);
 
   private _ref: StorageVideo;
-  get ref() { return this._ref; }
+  get ref() {
+    return this._ref;
+  }
   @Input() set ref(value: StorageVideo) {
     // if the video file has changed
     if (!!value && this.ref?.storagePath !== value.storagePath) {
@@ -49,13 +63,12 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-
   private _control: MeetingVideoControl;
-  get control() { return this._control; }
+  get control() {
+    return this._control;
+  }
   @Input() set control(value: MeetingVideoControl) {
-
-    const controlChange = this.control?.isPlaying !== value.isPlaying
-      || this.control.position !== value.position;
+    const controlChange = this.control?.isPlaying !== value.isPlaying || this.control.position !== value.position;
 
     if (!!value && controlChange) {
       this._control = value;
@@ -64,7 +77,9 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
   }
 
   private _eventId: string;
-  get eventId() { return this._eventId; }
+  get eventId() {
+    return this._eventId;
+  }
   @Input() set eventId(value: string) {
     this._eventId = value;
   }
@@ -87,14 +102,13 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
     this.fullScreen = !this.fullScreen;
   }
 
-
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private authService: AuthService,
     private functions: AngularFireFunctions,
     private snackBar: MatSnackBar,
-    private eventService: EventService,
-  ) { }
+    private eventService: EventService
+  ) {}
 
   async initPlayer() {
     try {
@@ -107,13 +121,16 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
       const anonymousCredentials = this.authService.anonymousCredentials;
 
       const privateVideo = this.functions.httpsCallable('privateVideo');
-      const { error, result } = await privateVideo({ eventId: this.eventId, video: this.ref, email: anonymousCredentials?.email }).toPromise();
+      const { error, result } = await privateVideo({
+        eventId: this.eventId,
+        video: this.ref,
+        email: anonymousCredentials?.email,
+      }).toPromise();
 
       if (error) {
         // if error is set, result will contain the error message
         throw new Error(result);
       } else {
-
         // Watermark
         let watermark;
         const event = await this.eventService.getValue(this.eventId);
@@ -140,7 +157,9 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
         // this can happen if the component is placed in template that depend on an observable (`| async`)
         // in this case the jwp lib will not be able to instantiate the player
         // since the container div doesn't exists anymore
-        if (this.destroyed) { return; }
+        if (this.destroyed) {
+          return;
+        }
 
         this.timeout = window.setTimeout(() => window.location.reload(), refreshCountdown);
 
@@ -175,11 +194,10 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
   }
 
   resetPlayerState() {
-    this.waitForPlayerReady = new Promise(res => this.signalPlayerReady = res);
+    this.waitForPlayerReady = new Promise(res => (this.signalPlayerReady = res));
   }
 
   async updatePlayer() {
-
     if (!this.ref || !this.control || this.control.type !== 'video') return;
 
     await this.waitForPlayerReady;

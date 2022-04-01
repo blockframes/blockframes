@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { TitleMarketplaceShellComponent } from '../shell/shell.component';
-import { Movie } from '@blockframes/model';
+import { Movie } from '@blockframes/shared/model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 
@@ -25,8 +25,8 @@ export class MainComponent implements OnInit {
   constructor(
     private shell: TitleMarketplaceShellComponent,
     private dynTitle: DynamicTitleService,
-    private analytics: AnalyticsService,
-  ) { }
+    private analytics: AnalyticsService
+  ) {}
 
   ngOnInit() {
     this.dynTitle.setPageTitle('Film Page', 'Main Info');

@@ -1,5 +1,5 @@
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { Movie, Organization, User, Mandate, Sale, Term } from '@blockframes/model';
+import { Movie, Organization, User, Mandate, Sale, Term } from '@blockframes/shared/model';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { SheetTab, ValueWithError } from '@blockframes/utils/spreadsheet';
 import { centralOrgId } from '@env';
@@ -58,17 +58,13 @@ export const sheetRanges: Record<SpreadsheetImportType, string> = {
   organizations: `A${sheetHeaderLine.organizations}:Z100`,
 };
 
-export async function getOrgId(
-  name: string,
-  orgService: OrganizationService,
-  cache: Record<string, string>
-) {
+export async function getOrgId(name: string, orgService: OrganizationService, cache: Record<string, string>) {
   if (!name) return '';
   if (name === 'Archipel Content') return centralOrgId.catalog;
 
   if (cache[name]) return cache[name];
 
-  const orgs = await orgService.getValue((ref) => ref.where('denomination.full', '==', name));
+  const orgs = await orgService.getValue(ref => ref.where('denomination.full', '==', name));
   const result = orgs.length === 1 ? orgs[0].id : '';
   cache[name] = result;
   return result;
@@ -81,11 +77,10 @@ export async function getTitleId(
   userOrgId: string,
   isBlockframesAdmin: boolean
 ) {
-
   const memo = (key: string, value: Movie) => {
     cache[key] = value;
-    return value.id
-  }
+    return value.id;
+  };
 
   if (cache[nameOrId]) return cache[nameOrId].id;
   const title = await titleService.getValue(nameOrId);
@@ -105,11 +100,7 @@ export async function getTitleId(
   return memo(nameOrId, titles[0]);
 }
 
-export async function getContract(
-  id: string,
-  contractService: ContractService,
-  cache: Record<string, Mandate | Sale>
-) {
+export async function getContract(id: string, contractService: ContractService, cache: Record<string, Mandate | Sale>) {
   if (!id) return;
 
   if (cache[id]) return cache[id];
@@ -119,11 +110,7 @@ export async function getContract(
   return contract;
 }
 
-export async function checkParentTerm(
-  id: string,
-  contractService: ContractService,
-  cache: Record<string, Mandate | Sale>
-) {
+export async function checkParentTerm(id: string, contractService: ContractService, cache: Record<string, Mandate | Sale>) {
   if (!id) return undefined;
 
   for (const contractId in cache) {
@@ -132,28 +119,16 @@ export async function checkParentTerm(
     if (isMandate && containTerm) return cache[id] as Mandate;
   }
 
-  const [contract] = await contractService.getValue((ref) =>
+  const [contract] = await contractService.getValue(ref =>
     ref.where('type', '==', 'mandate').where('termIds', 'array-contains', id)
   );
   cache[contract.id] = contract;
   return contract as Mandate;
 }
 
-export async function getUser(
-  { email }: { email: string },
-  userService: UserService,
-  cache: Record<string, User>
-): Promise<User>;
-export async function getUser(
-  { id }: { id: string },
-  userService: UserService,
-  cache: Record<string, User>
-): Promise<User>;
-export async function getUser(
-  query: { email: string } | { id: string },
-  userService: UserService,
-  cache: Record<string, User>
-) {
+export async function getUser({ email }: { email: string }, userService: UserService, cache: Record<string, User>): Promise<User>;
+export async function getUser({ id }: { id: string }, userService: UserService, cache: Record<string, User>): Promise<User>;
+export async function getUser(query: { email: string } | { id: string }, userService: UserService, cache: Record<string, User>) {
   if (!query) return undefined;
 
   let user: User;
@@ -162,9 +137,7 @@ export async function getUser(
       if (cache[id].email === query.email) return cache[id];
     }
 
-    user = await userService
-      .getValue((ref) => ref.where('email', '==', query.email))
-      .then((u) => u[0]);
+    user = await userService.getValue(ref => ref.where('email', '==', query.email)).then(u => u[0]);
   }
 
   if ('id' in query) {

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
-import { Movie } from '@blockframes/model';
+import { Movie } from '@blockframes/shared/model';
 import { Scope } from '@blockframes/utils/static-model';
 import { NegotiationForm } from '../form';
 
@@ -23,7 +23,7 @@ export class NegotiationFormComponent {
       this.indexId = parseFloat(termId);
     } else {
       const tabTerms = this.form.get('terms').value;
-      this.indexId = tabTerms.findIndex((value) => value.id === termId);
+      this.indexId = tabTerms.findIndex(value => value.id === termId);
     }
   }
 

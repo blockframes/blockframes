@@ -21,8 +21,8 @@ import {
   MovieStakeholders,
   User,
   createMovie,
-  Stakeholder
-} from '@blockframes/model';
+  Stakeholder,
+} from '@blockframes/shared/model';
 import {
   Certification,
   Color,
@@ -566,8 +566,7 @@ export async function formatTitle(
       errors.push(optionalWarning('Stakeholders').error);
     }
 
-    const getStakeholders = (role: StakeholderRole): Stakeholder[] =>
-      data.stakeholders?.filter((s) => s.role === role) ?? [];
+    const getStakeholders = (role: StakeholderRole): Stakeholder[] => data.stakeholders?.filter(s => s.role === role) ?? [];
 
     const stakeholders: MovieStakeholders = {
       productionCompany: getStakeholders('executiveProducer'),

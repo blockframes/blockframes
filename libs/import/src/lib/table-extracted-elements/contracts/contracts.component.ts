@@ -12,25 +12,22 @@ import { ContractsImportState, SpreadsheetImportError } from '../../utils';
 import { TermService } from '@blockframes/contract/term/+state/term.service';
 import { AngularFirestore, Query } from '@angular/fire/firestore';
 import { FullMandate, FullSale, territoryAvailabilities } from '@blockframes/contract/avails/avails';
-import { createDocumentMeta } from '@blockframes/model';
+import { createDocumentMeta } from '@blockframes/shared/model';
 
 const hasImportErrors = (importState: ContractsImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
 };
 
-const getTitleContracts = (type: 'mandate' | 'sale', titleId: string) => (ref: Query) => ref.where('type', '==', type)
-  .where('titleId', '==', titleId)
-  .where('status', '==', 'accepted');
-
+const getTitleContracts = (type: 'mandate' | 'sale', titleId: string) => (ref: Query) =>
+  ref.where('type', '==', type).where('titleId', '==', titleId).where('status', '==', 'accepted');
 
 @Component({
   selector: 'import-table-extracted-contracts',
   templateUrl: './contracts.component.html',
   styleUrls: ['./contracts.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableExtractedContractsComponent implements OnInit {
-
   @Input() rows: MatTableDataSource<ContractsImportState>;
   @Input() mode: string;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -38,23 +35,15 @@ export class TableExtractedContractsComponent implements OnInit {
   public processedContracts = 0;
 
   public selection = new SelectionModel<ContractsImportState>(true, []);
-  public displayedColumns: string[] = [
-    'id',
-    'select',
-    'contract.id',
-    'contract.type',
-    'errors',
-    'warnings',
-    'actions',
-  ];
+  public displayedColumns: string[] = ['id', 'select', 'contract.id', 'contract.type', 'errors', 'warnings', 'actions'];
 
   constructor(
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
     private contractService: ContractService,
     private termService: TermService,
-    private db: AngularFirestore,
-  ) { }
+    private db: AngularFirestore
+  ) {}
 
   ngOnInit() {
     // Mat table setup @TODO #7429
@@ -87,16 +76,21 @@ export class TableExtractedContractsComponent implements OnInit {
         if (success) this.processedContracts++;
       }
 
-      const text = this.processedContracts === creations.length
-        ? `${creations.length}/${creations.length} contract(s) created!`
-        : `Could not import all contracts (${this.processedContracts} / ${this.selection.selected.length})`;
+      const text =
+        this.processedContracts === creations.length
+          ? `${creations.length}/${creations.length} contract(s) created!`
+          : `Could not import all contracts (${this.processedContracts} / ${this.selection.selected.length})`;
       this.snackBar.open(text, 'close', { duration: 3000 });
 
       this.processedContracts = 0;
       return true;
     } catch (err) {
       console.error(err);
-      this.snackBar.open(`Could not import all contracts (${this.processedContracts} / ${this.selection.selected.length})`, 'close', { duration: 3000 });
+      this.snackBar.open(
+        `Could not import all contracts (${this.processedContracts} / ${this.selection.selected.length})`,
+        'close',
+        { duration: 3000 }
+      );
       this.processedContracts = 0;
     }
   }
@@ -112,7 +106,11 @@ export class TableExtractedContractsComponent implements OnInit {
       this.processedContracts = 0;
       return true;
     } catch (err) {
-      this.snackBar.open(`Could not update all contracts (${this.processedContracts} / ${this.selection.selected.length})`, 'close', { duration: 3000 });
+      this.snackBar.open(
+        `Could not update all contracts (${this.processedContracts} / ${this.selection.selected.length})`,
+        'close',
+        { duration: 3000 }
+      );
       this.processedContracts = 0;
     }
   }
@@ -122,9 +120,9 @@ export class TableExtractedContractsComponent implements OnInit {
   async getExistingContracts(type: 'sale' | 'mandate', titleId: string): Promise<(FullSale | FullMandate)[]> {
     const query = getTitleContracts(type, titleId);
     const contracts = await this.contractService.getValue(query);
-    const promises = contracts.map(contract => this.termService.getValue(contract.termIds))
+    const promises = contracts.map(contract => this.termService.getValue(contract.termIds));
     const terms = await Promise.all(promises);
-    return contracts.map((contract, idx) => ({ ...contract, terms: terms[idx] }) as FullSale | FullMandate)
+    return contracts.map((contract, idx) => ({ ...contract, terms: terms[idx] } as FullSale | FullMandate));
   }
 
   /**Verifies if terms overlap with existing mandate terms in the Db */
@@ -135,8 +133,10 @@ export class TableExtractedContractsComponent implements OnInit {
       const data = { avails: term, mandates: [], sales, bucketContracts: [], existingMandates: mandates };
       return territoryAvailabilities(data);
     });
-    const isOverlappingSale = importState.contract.type === 'sale' && availabilities.some(availability => availability.sold.length);
-    const isOverlappingMandate = importState.contract.type === 'mandate' && availabilities.some(availability => availability.available.length);
+    const isOverlappingSale =
+      importState.contract.type === 'sale' && availabilities.some(availability => availability.sold.length);
+    const isOverlappingMandate =
+      importState.contract.type === 'mandate' && availabilities.some(availability => availability.available.length);
     return { isOverlappingSale, isOverlappingMandate };
   }
 
@@ -145,7 +145,7 @@ export class TableExtractedContractsComponent implements OnInit {
    * @param importState
    */
   private async addContract(importState: ContractsImportState, mode: 'create' | 'update' = 'update'): Promise<boolean> {
-    importState.terms.forEach(t => t.id = this.db.createId());
+    importState.terms.forEach(t => (t.id = this.db.createId()));
     importState.contract.termIds = importState.terms.map(t => t.id);
     if (mode === 'create') {
       const overlapConditions = await this.verifyOverlappingMandatesAndSales(importState);
@@ -154,7 +154,7 @@ export class TableExtractedContractsComponent implements OnInit {
           type: 'error',
           name: 'Contract',
           reason: 'The Terms of a Contract overlap with that of an already existing Mandate.',
-          hint: 'The Terms of a Contract overlap with that of an already existing Mandate.'
+          hint: 'The Terms of a Contract overlap with that of an already existing Mandate.',
         });
         return false;
       }
@@ -163,14 +163,14 @@ export class TableExtractedContractsComponent implements OnInit {
           type: 'error',
           name: 'Contract',
           reason: 'The terms of the imported sale have been sold already.',
-          hint: 'The terms of the imported sale have been sold already.'
+          hint: 'The terms of the imported sale have been sold already.',
         });
         return false;
       }
     }
     await this.contractService.add({
       ...importState.contract,
-      _meta: createDocumentMeta({ createdAt: new Date() })
+      _meta: createDocumentMeta({ createdAt: new Date() }),
     });
 
     // @dev: Create terms after contract because rules require contract to be created first
@@ -180,7 +180,7 @@ export class TableExtractedContractsComponent implements OnInit {
       type: 'error',
       name: 'Contract',
       reason: 'Contract already added',
-      hint: 'Contract already added'
+      hint: 'Contract already added',
     });
     return true;
   }
@@ -219,9 +219,7 @@ export class TableExtractedContractsComponent implements OnInit {
    * Selects all rows if they are not all selected; otherwise clear selection.
    */
   masterToggle() {
-    this.isAllSelected()
-      ? this.selection.clear()
-      : this.rows.data.forEach(row => this.selection.select(row));
+    this.isAllSelected() ? this.selection.clear() : this.rows.data.forEach(row => this.selection.select(row));
   }
 
   /**
@@ -249,5 +247,4 @@ export class TableExtractedContractsComponent implements OnInit {
     const dataStr = data.contract.id;
     return dataStr.toLowerCase().indexOf(filter) !== -1;
   }
-
 }

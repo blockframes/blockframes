@@ -4,23 +4,22 @@ import { InvitationService } from '@blockframes/invitation/+state';
 import { Observable } from 'rxjs';
 import { ReviewComponent } from '@blockframes/event/layout/review/review.component';
 import { switchMap } from 'rxjs/operators';
-import { Invitation } from '@blockframes/model';
+import { Invitation } from '@blockframes/shared/model';
 
 @Component({
   selector: 'event-guest-list',
   templateUrl: './guest-list.component.html',
   styleUrls: ['./guest-list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GuestListComponent implements OnInit {
-
   invitations$: Observable<Invitation[]>;
 
   constructor(
     private invitationService: InvitationService,
     private dynTitle: DynamicTitleService,
-    private shell: ReviewComponent,
-  ) { }
+    private shell: ReviewComponent
+  ) {}
 
   get event$() {
     return this.shell.event$;
@@ -29,8 +28,9 @@ export class GuestListComponent implements OnInit {
   ngOnInit(): void {
     this.dynTitle.setPageTitle('Event', 'Event invitations');
     this.invitations$ = this.event$.pipe(
-      switchMap(event => this.invitationService.valueChanges(ref => ref.where('type', '==', 'attendEvent').where('eventId', '==', event.id))
-      ));
+      switchMap(event =>
+        this.invitationService.valueChanges(ref => ref.where('type', '==', 'attendEvent').where('eventId', '==', event.id))
+      )
+    );
   }
-
 }

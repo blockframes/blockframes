@@ -1,19 +1,19 @@
 import { FormControl, Validators } from '@angular/forms';
-import { NotificationSettings, NotificationSettingsTemplate } from '@blockframes/model';
+import { NotificationSettings, NotificationSettingsTemplate } from '@blockframes/shared/model';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 
 function createNotificationSettingsControls(settings: Partial<NotificationSettingsTemplate> = {}, disabled = false) {
   return {
     email: new FormControl({ value: settings.email ?? true, disabled: false }, Validators.required),
     app: new FormControl({ value: settings.app ?? true, disabled }, Validators.required),
-  }
+  };
 }
 
 type NotificationSettingsControl = ReturnType<typeof createNotificationSettingsControls>;
 
 class NotificationSettingsForm extends FormEntity<NotificationSettingsControl> {
   constructor(data: NotificationSettingsTemplate, disabled = false) {
-    super(createNotificationSettingsControls(data, disabled))
+    super(createNotificationSettingsControls(data, disabled));
   }
 }
 
@@ -45,13 +45,13 @@ function createNotificationsControls(settings: Partial<NotificationSettings> = {
     myContractWasDeclined: new NotificationSettingsForm(settings.myContractWasDeclined),
     // #7946 this may be reactivated later
     // underSignature: new NotificationSettingsForm(settings.underSignature, true),
-  }
+  };
 }
 
 type NotificationsControl = ReturnType<typeof createNotificationsControls>;
 
 export class NotificationsForm extends FormEntity<NotificationsControl, NotificationSettings> {
   constructor(data: Partial<NotificationSettings> = {}) {
-    super(createNotificationsControls(data))
+    super(createNotificationsControls(data));
   }
 }

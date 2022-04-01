@@ -8,17 +8,17 @@ import { MatDialog } from '@angular/material/dialog';
 import { AuthService } from '@blockframes/auth/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { canHavePreferences } from '@blockframes/user/+state/user.utils';
-import { createPreferences } from '@blockframes/model';
+import { createPreferences } from '@blockframes/shared/model';
 import { PreferencesComponent } from '@blockframes/auth/pages/preferences/modal/preferences.component';
 
 @Component({
   selector: 'catalog-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MarketplaceHomeComponent implements OnInit, AfterViewInit {
-  @HostBinding('test-id="content"') testId
+  @HostBinding('test-id="content"') testId;
   @ViewChild('banner') banner?: TemplateRef<unknown>;
   @ViewChild('hero') hero?: TemplateRef<unknown>;
   @ViewChild('titles') titles?: TemplateRef<unknown>;
@@ -36,13 +36,14 @@ export class MarketplaceHomeComponent implements OnInit, AfterViewInit {
     private dialog: MatDialog,
     private authService: AuthService,
     private orgService: OrganizationService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.dynTitle.setPageTitle('Home');
-    this.page$ = this.db.doc<CmsPage>('cms/catalog/home/live').valueChanges().pipe(
-      distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
-    );
+    this.page$ = this.db
+      .doc<CmsPage>('cms/catalog/home/live')
+      .valueChanges()
+      .pipe(distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b)));
 
     if (this.authService.profile.preferences) return;
     const org = this.orgService.org;
@@ -52,7 +53,7 @@ export class MarketplaceHomeComponent implements OnInit, AfterViewInit {
       this.dialog.open(PreferencesComponent, {
         maxHeight: '80vh',
         maxWidth: '650px',
-        autoFocus: false
+        autoFocus: false,
       });
     }
   }
@@ -65,6 +66,6 @@ export class MarketplaceHomeComponent implements OnInit, AfterViewInit {
       slider: this.slider,
       orgs: this.orgs,
       orgTitles: this.orgTitles,
-    }
+    };
   }
 }

@@ -1,11 +1,19 @@
 import { Territory } from '@blockframes/utils/static-model';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { UserService } from '@blockframes/user/+state';
-import { createUser, User, createOrganization, Organization } from '@blockframes/model';
+import { createUser, User, createOrganization, Organization } from '@blockframes/shared/model';
 import { Module, ModuleAccess, modules } from '@blockframes/utils/apps';
 import { extract, ExtractConfig, SheetTab } from '@blockframes/utils/spreadsheet';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { alreadyExistError, getOrgId, getUser, mandatoryError, optionalWarning, OrganizationsImportState, wrongValueError } from '@blockframes/import/utils';
+import {
+  alreadyExistError,
+  getOrgId,
+  getUser,
+  mandatoryError,
+  optionalWarning,
+  OrganizationsImportState,
+  wrongValueError,
+} from '@blockframes/import/utils';
 
 const separator = ',';
 
@@ -20,7 +28,7 @@ interface FieldsConfig {
         region: string;
         street: string;
         zipCode: string;
-      }
+      };
     };
     appAccess: {
       catalog: ModuleAccess;
@@ -29,7 +37,7 @@ interface FieldsConfig {
     };
     denomination: {
       full: string;
-      public: string
+      public: string;
     };
     email: string;
     fiscalNumber: string;
@@ -54,7 +62,6 @@ function formatAccess(value: string, name: string) {
 type FieldsConfigType = ExtractConfig<FieldsConfig>;
 
 export async function formatOrg(sheetTab: SheetTab, organizationService: OrganizationService, userService: UserService) {
-
   const orgs: OrganizationsImportState[] = [];
 
   // Cache to avoid  querying db every time
@@ -67,7 +74,7 @@ export async function formatOrg(sheetTab: SheetTab, organizationService: Organiz
       if (!value) return mandatoryError('Organization Name');
       const exist = await getOrgId(value, organizationService, orgNameCache);
       if (exist) return alreadyExistError('Organization Name');
-      return value
+      return value;
     },
     /* b */ 'org.denomination.public': async (value: string, data: Partial<FieldsConfig>) => {
       if (!value) return optionalWarning('Organization Public Name', data.org.denomination.full);
@@ -145,4 +152,3 @@ export async function formatOrg(sheetTab: SheetTab, organizationService: Organiz
 
   return orgs;
 }
-

@@ -1,9 +1,4 @@
-import {
-  initFunctionsTestMock,
-  getTestingProjectId,
-  populate,
-  AdminAuthMocked
-} from '@blockframes/testing/unit-tests';
+import { initFunctionsTestMock, getTestingProjectId, populate, AdminAuthMocked } from '@blockframes/testing/unit-tests';
 import {
   cleanMovies,
   cleanOrganizations,
@@ -22,7 +17,7 @@ import { removeUnexpectedUsers } from './users';
 import { getCollectionRef } from '@blockframes/firebase-utils';
 import { clearFirestoreData } from '@firebase/rules-unit-testing';
 import { getAllAppsExcept } from '@blockframes/utils/apps';
-import { createPermissions, PermissionsDocument, PublicUser } from '@blockframes/model';
+import { createPermissions, PermissionsDocument, PublicUser } from '@blockframes/shared/model';
 import { addDays, subDays, subMonths, subYears } from 'date-fns';
 
 type Snapshot = FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>;
@@ -56,24 +51,21 @@ describe('DB cleaning script', () => {
 
     const testOrg1 = { id: 'org-A' };
 
-    await Promise.all([
-      populate('users', [testUser1, testUser2]),
-      populate('orgs', [testOrg1])
-    ]);
+    await Promise.all([populate('users', [testUser1, testUser2]), populate('orgs', [testOrg1])]);
 
     adminAuth.users = [
       {
         uid: 'A',
         email: 'johndoe@fake.com',
         providerData: [{ uid: 'A', email: 'johndoe@fake.com', providerId: 'password' }],
-        metadata: { creationTime: new Date().toUTCString() }
+        metadata: { creationTime: new Date().toUTCString() },
       },
       {
         uid: 'B',
         email: 'johnmcclain@fake.com',
         providerData: [{ uid: 'B', email: 'johnmcclain@fake.com', providerId: 'password' }],
-        metadata: { creationTime: new Date().toUTCString() }
-      }
+        metadata: { creationTime: new Date().toUTCString() },
+      },
     ];
 
     const [organizations, usersBefore, permissions] = await Promise.all([
@@ -129,7 +121,7 @@ describe('DB cleaning script', () => {
 
     await Promise.all([
       populate('users', [testUser1, testUser2, testUser3, testUser4, testUser5, testUser6]),
-      populate('orgs', [testOrg1])
+      populate('orgs', [testOrg1]),
     ]);
 
     adminAuth.users = [
@@ -137,19 +129,19 @@ describe('DB cleaning script', () => {
         uid: 'A',
         email: 'johndoe@fake.com',
         providerData: [{ uid: 'A', email: 'johndoe@fake.com', providerId: 'password' }],
-        metadata: { creationTime: oneMonthsAgo.toUTCString() }
+        metadata: { creationTime: oneMonthsAgo.toUTCString() },
       },
       {
         uid: 'B',
         email: 'johndoe@fake2.com',
         providerData: [{ uid: 'B', email: 'johndoe@fake2.com', providerId: 'password' }],
-        metadata: { creationTime: fourMonthsAgo.toUTCString() }
+        metadata: { creationTime: fourMonthsAgo.toUTCString() },
       },
       {
         uid: 'C',
         email: 'johnmcclain@fake.com',
         providerData: [{ uid: 'C', email: 'johnmcclain@fake.com', providerId: 'password' }],
-        metadata: { creationTime: threeYearsAgoAndTwoMonths.toUTCString() }
+        metadata: { creationTime: threeYearsAgoAndTwoMonths.toUTCString() },
       },
       {
         uid: 'D',
@@ -158,7 +150,7 @@ describe('DB cleaning script', () => {
         metadata: {
           creationTime: threeYearsAgoAndTwoMonths.toUTCString(),
           lastSignInTime: threeYearsAgoAnd29Days.toUTCString(),
-        }
+        },
       },
       {
         uid: 'E',
@@ -167,7 +159,7 @@ describe('DB cleaning script', () => {
         metadata: {
           creationTime: fiveYearsAgo.toUTCString(),
           lastSignInTime: threeYearsAgoAnd31Days.toUTCString(),
-        }
+        },
       },
       {
         uid: 'F',
@@ -176,14 +168,14 @@ describe('DB cleaning script', () => {
         metadata: {
           creationTime: fourMonthsAgo.toUTCString(),
           lastSignInTime: oneWeekAgo.toUTCString(),
-        }
-      }
+        },
+      },
     ];
 
     const [organizations, usersBefore, permissions] = await Promise.all([
       getCollectionRef('orgs'),
       getCollectionRef('users'),
-      getCollectionRef('permissions')
+      getCollectionRef('permissions'),
     ]);
 
     // Check if data have been correctly added
@@ -212,7 +204,6 @@ describe('DB cleaning script', () => {
     expect(cleanedAuthUsers.users.find(o => o.uid === 'A')).toBeTruthy();
     expect(cleanedAuthUsers.users.find(o => o.uid === 'D')).toBeTruthy();
     expect(cleanedAuthUsers.users.find(o => o.uid === 'F')).toBeTruthy();
-
   });
 
   it('should not remove inactive user if superAdmin of his org', async () => {
@@ -241,7 +232,7 @@ describe('DB cleaning script', () => {
         metadata: {
           creationTime: fiveYearsAgo.toUTCString(),
           lastSignInTime: threeYearsAgoAnd31Days.toUTCString(),
-        }
+        },
       },
       {
         uid: 'B',
@@ -250,14 +241,14 @@ describe('DB cleaning script', () => {
         metadata: {
           creationTime: fiveYearsAgo.toUTCString(),
           lastSignInTime: threeYearsAgoAnd31Days.toUTCString(),
-        }
-      }
+        },
+      },
     ];
 
     await Promise.all([
       populate('users', [testUser1, testUser2]),
       populate('orgs', [testOrg1]),
-      populate('permissions', [testPermissions1])
+      populate('permissions', [testPermissions1]),
     ]);
 
     const [organizations, usersBefore, permissions] = await Promise.all([
@@ -313,13 +304,21 @@ describe('DB cleaning script', () => {
     ];
 
     // Add a new auth user that is not on db
-    const fakeAuthUser = { uid: 'D', email: 'D@fake.com', providerData: [{ uid: 'D', email: 'D@fake.com', providerId: 'password' }] };
+    const fakeAuthUser = {
+      uid: 'D',
+      email: 'D@fake.com',
+      providerData: [{ uid: 'D', email: 'D@fake.com', providerId: 'password' }],
+    };
     adminAuth.users.push(fakeAuthUser);
 
     // Add an anonymous user that should not be deleted even if not on DB (created 3 months ago minus a day)
     const threeMonthsAgo = subMonths(now, 3);
     const threeMonthsAgoMinusADay = addDays(threeMonthsAgo, 1);
-    const anonymousUser = { uid: 'anonymous', providerData: [], metadata: { creationTime: new Date(threeMonthsAgoMinusADay).toUTCString() } };
+    const anonymousUser = {
+      uid: 'anonymous',
+      providerData: [],
+      metadata: { creationTime: new Date(threeMonthsAgoMinusADay).toUTCString() },
+    };
     adminAuth.users.push(anonymousUser);
 
     // Add an anonymous user that should not be deleted because account was created 5 months ago and last connexion is 2 months ago
@@ -331,7 +330,7 @@ describe('DB cleaning script', () => {
       metadata: {
         creationTime: fiveMonthsAgo.toUTCString(),
         lastSignInTime: twoMonthsAgo.toUTCString(),
-      }
+      },
     };
     adminAuth.users.push(anonymousUser2);
 
@@ -343,14 +342,17 @@ describe('DB cleaning script', () => {
       metadata: {
         creationTime: fiveMonthsAgo.toUTCString(),
         lastSignInTime: threeMonthsAgoAndADay.toUTCString(),
-      }
+      },
     };
     adminAuth.users.push(anonymousUser3);
 
     const authBefore = await adminAuth.listUsers();
     expect(authBefore.users.length).toEqual(7);
 
-    await removeUnexpectedUsers(usersBefore.docs.map(u => u.data() as PublicUser), adminAuth);
+    await removeUnexpectedUsers(
+      usersBefore.docs.map(u => u.data() as PublicUser),
+      adminAuth
+    );
 
     // An user should have been removed from auth because it is not in DB.
     const authAfter = await adminAuth.listUsers();
@@ -363,11 +365,9 @@ describe('DB cleaning script', () => {
     // Check if the good user (uid: 'anonymousUser3') have been removed.
     const deletedUser2 = await adminAuth.getUser(anonymousUser3.uid);
     expect(deletedUser2).toEqual(undefined);
-
   });
 
   it('should smoothly delete users that are not in auth', async () => {
-
     // User with no orgId
     const testUser1 = { uid: 'A', email: 'johndoe@fake.com' };
     // User with fake orgId
@@ -380,10 +380,7 @@ describe('DB cleaning script', () => {
     await populate('users', [testUser1, testUser2]);
 
     // Check if users have been correctly added
-    const [usersBefore, permissions] = await Promise.all([
-      getCollectionRef('users'),
-      getCollectionRef('permissions')
-    ]);
+    const [usersBefore, permissions] = await Promise.all([getCollectionRef('users'), getCollectionRef('permissions')]);
 
     expect(usersBefore.docs.length).toEqual(2);
     expect(permissions.docs.length).toEqual(0);
@@ -393,53 +390,56 @@ describe('DB cleaning script', () => {
     // Check if user have been correctly removed
     const usersAfter = await getCollectionRef('users');
     expect(usersAfter.docs.length).toEqual(0);
-
   });
 
   it('should clean organizations', async () => {
-    const testUsers = [{ uid: 'A', email: 'A@fake.com' }, { uid: 'B', email: 'B@fake.com' }, { uid: 'C', email: 'C@fake.com' }, { uid: 'D', email: 'D@fake.com' }];
+    const testUsers = [
+      { uid: 'A', email: 'A@fake.com' },
+      { uid: 'B', email: 'B@fake.com' },
+      { uid: 'C', email: 'C@fake.com' },
+      { uid: 'D', email: 'D@fake.com' },
+    ];
     const testMovies = [
       {
-        id: 'mov-A', app: {
+        id: 'mov-A',
+        app: {
           catalog: { status: 'accepted', access: true },
           festival: { status: 'draft', access: false },
-          financiers: { status: 'draft', access: false }
-        }
+          financiers: { status: 'draft', access: false },
+        },
       },
       {
-        id: 'mov-B', app: {
+        id: 'mov-B',
+        app: {
           catalog: { status: 'draft', access: true },
           festival: { status: 'draft', access: false },
-          financiers: { status: 'draft', access: false }
-        }
+          financiers: { status: 'draft', access: false },
+        },
       },
       {
-        id: 'mov-C', app: {
+        id: 'mov-C',
+        app: {
           catalog: { status: 'refused', access: false },
           festival: { status: 'draft', access: false },
-          financiers: { status: 'draft', access: false }
-        }
-      }
+          financiers: { status: 'draft', access: false },
+        },
+      },
     ];
 
     const testOrgs = [
       { id: 'org-A', email: 'org-A@fake.com', members: [testUsers[0]], userIds: [testUsers[0].uid] },
       { id: 'org-B', email: 'org-B@fake.com', members: [testUsers[1]], userIds: [testUsers[1].uid, 'fakeUid'], wishlist: [] },
       { id: 'org-C', email: 'org-C@fake.com', userIds: [testUsers[2].uid], wishlist: ['mov-C', 'mov-D', 'mov-A'] },
-      { id: 'org-D', email: 'org-D@fake.com', userIds: [testUsers[3].uid], wishlist: ['mov-B'] }
+      { id: 'org-D', email: 'org-D@fake.com', userIds: [testUsers[3].uid], wishlist: ['mov-B'] },
     ];
 
     // Load our test set
-    await Promise.all([
-      populate('users', testUsers),
-      populate('orgs', testOrgs),
-      populate('movies', testMovies)
-    ]);
+    await Promise.all([populate('users', testUsers), populate('orgs', testOrgs), populate('movies', testMovies)]);
 
     const [users, organizationsBefore, movies] = await Promise.all([
       getCollectionRef('users'),
       getCollectionRef('orgs'),
-      getCollectionRef('movies')
+      getCollectionRef('movies'),
     ]);
 
     // Check if data have been correctly added
@@ -474,7 +474,7 @@ describe('DB cleaning script', () => {
     const testUsers = [
       { uid: 'A', email: 'A@fake.com' },
       { uid: 'B', email: 'B@fake.com' },
-      { uid: 'C', email: 'C@fake.com' }
+      { uid: 'C', email: 'C@fake.com' },
     ];
 
     const testOrgs = [
@@ -484,15 +484,12 @@ describe('DB cleaning script', () => {
     ];
 
     // Load our test set
-    await Promise.all([
-      populate('users', testUsers),
-      populate('orgs', testOrgs)
-    ]);
+    await Promise.all([populate('users', testUsers), populate('orgs', testOrgs)]);
 
     const [users, organizationsBefore, movies] = await Promise.all([
       getCollectionRef('users'),
       getCollectionRef('orgs'),
-      getCollectionRef('movies')
+      getCollectionRef('movies'),
     ]);
 
     // Check if data have been correctly added
@@ -512,20 +509,16 @@ describe('DB cleaning script', () => {
   });
 
   it('should remove permissions not belonging to existing org', async () => {
-
-    const testPermissions = [{ id: 'org-A', roles: {} }, { id: 'org-B', roles: {} }];
+    const testPermissions = [
+      { id: 'org-A', roles: {} },
+      { id: 'org-B', roles: {} },
+    ];
     const testOrgs = [{ id: 'org-A' }];
 
     // Load our test set
-    await Promise.all([
-      populate('permissions', testPermissions),
-      populate('orgs', testOrgs)
-    ]);
+    await Promise.all([populate('permissions', testPermissions), populate('orgs', testOrgs)]);
 
-    const [permissionsBefore, organizations] = await Promise.all([
-      getCollectionRef('permissions'),
-      getCollectionRef('orgs'),
-    ]);
+    const [permissionsBefore, organizations] = await Promise.all([getCollectionRef('permissions'), getCollectionRef('orgs')]);
 
     // Check if data have been correctly added
     expect(permissionsBefore.docs.length).toEqual(2);
@@ -540,17 +533,12 @@ describe('DB cleaning script', () => {
   });
 
   it('should clean permissions documents from un-existing users', async () => {
-
     const testPermissions = [{ id: 'org-A', roles: { A: {}, B: {} } }];
     const testOrgs = [{ id: 'org-A' }];
     const testUsers = [{ uid: 'A', email: 'A@fake.com' }];
 
     // Load our test set
-    await Promise.all([
-      populate('permissions', testPermissions),
-      populate('orgs', testOrgs),
-      populate('users', testUsers)
-    ]);
+    await Promise.all([populate('permissions', testPermissions), populate('orgs', testOrgs), populate('users', testUsers)]);
 
     const [permissionsBefore, organizations, users] = await Promise.all([
       getCollectionRef('permissions'),
@@ -574,7 +562,6 @@ describe('DB cleaning script', () => {
   });
 
   it('should remove documents undefined or not linked to existing document from docsIndex (movies, events, orgs)', async () => {
-
     const testDocsIndex = [
       // Valid ones
       { id: 'mov-A', authorOrgId: 'org-A' },
@@ -597,14 +584,14 @@ describe('DB cleaning script', () => {
       populate('movies', testMovies),
       populate('events', testEvents),
       populate('orgs', testOrgs),
-      populate('docsIndex', testDocsIndex)
+      populate('docsIndex', testDocsIndex),
     ]);
 
     const [docsIndexBefore, movies, events, orgs] = await Promise.all([
       getCollectionRef('docsIndex'),
       getCollectionRef('movies'),
       getCollectionRef('events'),
-      getCollectionRef('orgs')
+      getCollectionRef('orgs'),
     ]);
 
     // Check if data have been correctly added
@@ -631,7 +618,7 @@ describe('DB cleaning script', () => {
         _meta: { createdAt: { _seconds: now.getTime() / 1000 } },
         type: 'requestToAttendEventSent',
         docId: 'A',
-        user: { uid: 'A' }
+        user: { uid: 'A' },
       },
       {
         id: 'notif-B',
@@ -640,7 +627,7 @@ describe('DB cleaning script', () => {
         _meta: { createdAt: { _seconds: 30 + subDays(now, numberOfDaysToKeepNotifications).getTime() / 1000 } },
         type: 'requestToAttendEventSent',
         docId: 'A',
-        user: { uid: 'A' }
+        user: { uid: 'A' },
       },
       {
         id: 'notif-C',
@@ -649,22 +636,16 @@ describe('DB cleaning script', () => {
         _meta: { createdAt: { _seconds: subDays(now, numberOfDaysToKeepNotifications + 1).getTime() / 1000 } },
         type: 'requestToAttendEventSent',
         docId: 'A',
-        user: { uid: 'A' }
+        user: { uid: 'A' },
       },
     ];
 
     const testUsers = [{ uid: 'A', email: 'A@fake.com' }];
 
     // Load our test set
-    await Promise.all([
-      populate('notifications', testNotifications),
-      populate('users', testUsers),
-    ]);
+    await Promise.all([populate('notifications', testNotifications), populate('users', testUsers)]);
 
-    const [notificationsBefore, users] = await Promise.all([
-      getCollectionRef('notifications'),
-      getCollectionRef('users')
-    ]);
+    const [notificationsBefore, users] = await Promise.all([getCollectionRef('notifications'), getCollectionRef('users')]);
 
     // Check if data have been correctly added
     expect(notificationsBefore.docs.length).toEqual(3);
@@ -758,7 +739,8 @@ describe('DB cleaning script', () => {
     expect(buckets.docs.length).toEqual(1);
     expect(contracts.docs.length).toEqual(1);
 
-    const documentIds = users.docs.map(d => d.id)
+    const documentIds = users.docs
+      .map(d => d.id)
       .concat(invitations.docs.map(d => d.id))
       .concat(events.docs.map(d => d.id))
       .concat(offers.docs.map(d => d.id))
@@ -781,7 +763,7 @@ describe('DB cleaning script', () => {
         _meta: { createdAt: { _seconds: currentTimestamp } },
         type: 'requestToAttendEventSent',
         docId: 'A',
-        user: { uid: 'A' }
+        user: { uid: 'A' },
       },
       {
         id: 'notif-B',
@@ -789,35 +771,31 @@ describe('DB cleaning script', () => {
         _meta: { createdAt: { _seconds: currentTimestamp } },
         type: 'requestToAttendEventSent',
         docId: 'A',
-        user: { uid: 'B' }
+        user: { uid: 'B' },
       },
       {
         id: 'notif-C',
         toUserId: 'B',
         _meta: { createdAt: { _seconds: currentTimestamp } },
         type: 'organizationAcceptedByArchipelContent',
-        organization: { id: 'org-A' }
+        organization: { id: 'org-A' },
       },
     ];
 
     const testUsers = [
       { uid: 'A', email: 'A@fake.com', avatar: 'A.png' },
-      { uid: 'B', email: 'B@fake.com', avatar: 'B.png' }
+      { uid: 'B', email: 'B@fake.com', avatar: 'B.png' },
     ];
 
     const testOrgs = [{ id: 'org-A', email: 'org-A@fake.com', logo: 'org-A.svg' }];
 
     // Load our test set
-    await Promise.all([
-      populate('notifications', testNotifications),
-      populate('users', testUsers),
-      populate('orgs', testOrgs),
-    ]);
+    await Promise.all([populate('notifications', testNotifications), populate('users', testUsers), populate('orgs', testOrgs)]);
 
     const [notificationsBefore, users, orgs] = await Promise.all([
       getCollectionRef('notifications'),
       getCollectionRef('users'),
-      getCollectionRef('orgs')
+      getCollectionRef('orgs'),
     ]);
 
     // Check if data have been correctly added
@@ -864,7 +842,7 @@ describe('DB cleaning script', () => {
         eventId: 'event-B',
         toOrg: { id: 'org-A' },
         fromUser: { uid: 'B' }, // B doest not exists, should be removed
-      }
+      },
     ];
 
     const testEvents = [
@@ -872,7 +850,7 @@ describe('DB cleaning script', () => {
         id: 'event-B',
         // Outdated by 30 seconds, but should be kept since we keep old invitations to make some stats
         end: { _seconds: currentTimestamp - 30 },
-      }
+      },
     ];
 
     const testUsers = [{ uid: 'A', email: 'A@fake.com' }];
@@ -890,7 +868,7 @@ describe('DB cleaning script', () => {
       getCollectionRef('invitations'),
       getCollectionRef('events'),
       getCollectionRef('users'),
-      getCollectionRef('orgs')
+      getCollectionRef('orgs'),
     ]);
 
     // Check if data have been correctly added
@@ -899,10 +877,10 @@ describe('DB cleaning script', () => {
     expect(users.docs.length).toEqual(1);
     expect(orgs.docs.length).toEqual(1);
 
-    const documentIds = users.docs.map(d => d.id)
+    const documentIds = users.docs
+      .map(d => d.id)
       .concat(events.docs.map(d => d.id))
       .concat(orgs.docs.map(d => d.id));
-
 
     await cleanInvitations(invitationsBefore, documentIds);
     const invitationsAfter: Snapshot = await getCollectionRef('invitations');
@@ -940,23 +918,19 @@ describe('DB cleaning script', () => {
         type: 'joinOrganization',
         toOrg: { id: 'org-A' },
         fromUser: { uid: 'A' },
-      }
+      },
     ];
 
     const testUsers = [{ uid: 'A', email: 'A@fake.com' }];
     const testOrgs = [{ id: 'org-A', email: 'org-A@fake.com' }];
 
     // Load our test set
-    await Promise.all([
-      populate('invitations', testInvitations),
-      populate('users', testUsers),
-      populate('orgs', testOrgs)
-    ]);
+    await Promise.all([populate('invitations', testInvitations), populate('users', testUsers), populate('orgs', testOrgs)]);
 
     const [invitationsBefore, users, orgs] = await Promise.all([
       getCollectionRef('invitations'),
       getCollectionRef('users'),
-      getCollectionRef('orgs')
+      getCollectionRef('orgs'),
     ]);
 
     // Check if data have been correctly added
@@ -999,27 +973,23 @@ describe('DB cleaning script', () => {
         type: 'joinOrganization',
         toOrg: { id: 'org-A' },
         fromUser: { uid: 'B' },
-      }
+      },
     ];
 
     const testUsers = [
       { uid: 'A', email: 'A@fake.com', avatar: 'A.png' },
-      { uid: 'B', email: 'B@fake.com', avatar: 'B.png' }
+      { uid: 'B', email: 'B@fake.com', avatar: 'B.png' },
     ];
 
     const testOrgs = [{ id: 'org-A', email: 'org-A@fake.com', logo: 'org-A.svg' }];
 
     // Load our test set
-    await Promise.all([
-      populate('invitations', testInvitations),
-      populate('users', testUsers),
-      populate('orgs', testOrgs),
-    ]);
+    await Promise.all([populate('invitations', testInvitations), populate('users', testUsers), populate('orgs', testOrgs)]);
 
     const [invitationsBefore, users, orgs] = await Promise.all([
       getCollectionRef('invitations'),
       getCollectionRef('users'),
-      getCollectionRef('orgs')
+      getCollectionRef('orgs'),
     ]);
 
     // Check if data have been correctly added
@@ -1037,23 +1007,29 @@ describe('DB cleaning script', () => {
   });
 
   it('should remove duplicates in org.userIds', async () => {
-    const testUsers = [{ uid: 'A', email: 'A@fake.com' }, { uid: 'B', email: 'B@fake.com' }, { uid: 'C', email: 'C@fake.com' }, { uid: 'D', email: 'D@fake.com' }];
+    const testUsers = [
+      { uid: 'A', email: 'A@fake.com' },
+      { uid: 'B', email: 'B@fake.com' },
+      { uid: 'C', email: 'C@fake.com' },
+      { uid: 'D', email: 'D@fake.com' },
+    ];
     const testOrgs = [
       { id: 'org-A', email: 'org-A@fake.com', userIds: [testUsers[0].uid, testUsers[1].uid, testUsers[0].uid, testUsers[2].uid] },
       { id: 'org-B', email: 'org-B@fake.com', userIds: [testUsers[1].uid, testUsers[3].uid] },
-      { id: 'org-C', email: 'org-C@fake.com', userIds: [testUsers[1].uid, testUsers[2].uid, testUsers[2].uid, testUsers[3].uid, testUsers[2].uid] },
+      {
+        id: 'org-C',
+        email: 'org-C@fake.com',
+        userIds: [testUsers[1].uid, testUsers[2].uid, testUsers[2].uid, testUsers[3].uid, testUsers[2].uid],
+      },
     ];
 
     // Load our test set
-    await Promise.all([
-      populate('users', testUsers),
-      populate('orgs', testOrgs)
-    ]);
+    await Promise.all([populate('users', testUsers), populate('orgs', testOrgs)]);
 
     const [users, organizationsBefore, movies] = await Promise.all([
       getCollectionRef('users'),
       getCollectionRef('orgs'),
-      getCollectionRef('movies')
+      getCollectionRef('movies'),
     ]);
 
     // Check if data have been correctly added
@@ -1078,11 +1054,10 @@ describe('DB cleaning script', () => {
   });
 
   it('should remove duplicates in org.wishlist', async () => {
-
     const testUsers = [
       { uid: 'A', email: 'A@fake.com' },
       { uid: 'B', email: 'B@fake.com' },
-      { uid: 'C', email: 'C@fake.com' }
+      { uid: 'C', email: 'C@fake.com' },
     ];
 
     const testOrgs = [
@@ -1092,33 +1067,32 @@ describe('DB cleaning script', () => {
     ];
     const testMovies = [
       {
-        id: 'mov-A', app: {
+        id: 'mov-A',
+        app: {
           catalog: { status: 'accepted', access: true },
           festival: { status: 'accepted', access: true },
-          financiers: { status: 'accepted', access: true }
-        }
+          financiers: { status: 'accepted', access: true },
+        },
       },
       {
-        id: 'mov-B', app: {
+        id: 'mov-B',
+        app: {
           catalog: { status: 'accepted', access: true },
           festival: { status: 'accepted', access: true },
-          financiers: { status: 'accepted', access: true }
-        }
+          financiers: { status: 'accepted', access: true },
+        },
       },
       {
-        id: 'mov-C', app: {
+        id: 'mov-C',
+        app: {
           catalog: { status: 'accepted', access: true },
           festival: { status: 'accepted', access: true },
-          financiers: { status: 'accepted', access: true }
-        }
-      }
+          financiers: { status: 'accepted', access: true },
+        },
+      },
     ];
     // Load our test set
-    await Promise.all([
-      populate('orgs', testOrgs),
-      populate('movies', testMovies),
-      populate('users', testUsers)
-    ]);
+    await Promise.all([populate('orgs', testOrgs), populate('movies', testMovies), populate('users', testUsers)]);
 
     const [organizationsBefore, movies, users] = await Promise.all([
       getCollectionRef('orgs'),
@@ -1161,20 +1135,17 @@ describe('DB cleaning script', () => {
       { id: 'org-C', email: 'org-C@fake.com', userIds: [], wishlist: [] },
     ];
 
-    await Promise.all([
-      populate('movies', testMovies),
-      populate('orgs', testOrgs)
-    ]);
+    await Promise.all([populate('movies', testMovies), populate('orgs', testOrgs)]);
 
-    const [moviesBefore, orgs] = await Promise.all([
-      getCollectionRef('movies'),
-      getCollectionRef('orgs'),
-    ]);
+    const [moviesBefore, orgs] = await Promise.all([getCollectionRef('movies'), getCollectionRef('orgs')]);
 
     expect(moviesBefore.docs.length).toEqual(3);
     expect(orgs.docs.length).toEqual(3);
 
-    await cleanMovies(moviesBefore, orgs.docs.map(o => o.id));
+    await cleanMovies(
+      moviesBefore,
+      orgs.docs.map(o => o.id)
+    );
     const moviesAfter: Snapshot = await getCollectionRef('movies');
 
     const movA = moviesAfter.docs.find(o => o.data().id === 'mov-A');
@@ -1199,20 +1170,17 @@ describe('DB cleaning script', () => {
       { id: 'org-B', email: 'org-B@fake.com', userIds: [], wishlist: [] },
     ];
 
-    await Promise.all([
-      populate('movies', testMovies),
-      populate('orgs', testOrgs)
-    ]);
+    await Promise.all([populate('movies', testMovies), populate('orgs', testOrgs)]);
 
-    const [moviesBefore, orgs] = await Promise.all([
-      getCollectionRef('movies'),
-      getCollectionRef('orgs'),
-    ]);
+    const [moviesBefore, orgs] = await Promise.all([getCollectionRef('movies'), getCollectionRef('orgs')]);
 
     expect(moviesBefore.docs.length).toEqual(3);
     expect(orgs.docs.length).toEqual(2);
 
-    await cleanMovies(moviesBefore, orgs.docs.map(o => o.id));
+    await cleanMovies(
+      moviesBefore,
+      orgs.docs.map(o => o.id)
+    );
     const moviesAfter: Snapshot = await getCollectionRef('movies');
 
     const movA = moviesAfter.docs.find(o => o.data().id === 'mov-A');
@@ -1260,19 +1228,19 @@ describe('DB cleaning script', () => {
         uid: 'A',
         email: 'johndoe@fake.com',
         providerData: [{ uid: 'A', email: 'johndoe@fake.com', providerId: 'password' }],
-        metadata: { creationTime: oneMonthsAgo.toUTCString() }
+        metadata: { creationTime: oneMonthsAgo.toUTCString() },
       },
       {
         uid: 'B',
         email: 'johndoe@fake2.com',
         providerData: [{ uid: 'B', email: 'johndoe@fake2.com', providerId: 'password' }],
-        metadata: { creationTime: fourMonthsAgo.toUTCString() }
+        metadata: { creationTime: fourMonthsAgo.toUTCString() },
       },
       {
         uid: 'C',
         email: 'johnmcclain@fake.com',
         providerData: [{ uid: 'C', email: 'johnmcclain@fake.com', providerId: 'password' }],
-        metadata: { creationTime: threeYearsAgoAndTwoMonths.toUTCString() }
+        metadata: { creationTime: threeYearsAgoAndTwoMonths.toUTCString() },
       },
       {
         uid: 'D',
@@ -1281,7 +1249,7 @@ describe('DB cleaning script', () => {
         metadata: {
           creationTime: threeYearsAgoAndTwoMonths.toUTCString(),
           lastSignInTime: threeYearsAgoAnd29Days.toUTCString(),
-        }
+        },
       },
       {
         uid: 'E',
@@ -1290,14 +1258,11 @@ describe('DB cleaning script', () => {
         metadata: {
           creationTime: fiveYearsAgo.toUTCString(),
           lastSignInTime: threeYearsAgoAnd31Days.toUTCString(),
-        }
-      }
+        },
+      },
     ];
 
-    const [organizations, usersBefore] = await Promise.all([
-      getCollectionRef('orgs'),
-      getCollectionRef('users')
-    ]);
+    const [organizations, usersBefore] = await Promise.all([getCollectionRef('orgs'), getCollectionRef('users')]);
 
     // Check if data have been correctly added
     expect(usersBefore.docs.length).toEqual(5);
@@ -1316,7 +1281,6 @@ describe('DB cleaning script', () => {
     // OrgId should not have been removed
     expect(usersAfter.docs.filter(u => u.data().orgId).length).toEqual(3);
   });
-
 });
 
 function isOrgClean(
@@ -1329,10 +1293,12 @@ function isOrgClean(
     return false;
   }
 
-  const existingAndValidMovieIds = existingMovies.docs.filter(m => {
-    const movie = m.data();
-    return getAllAppsExcept(['crm']).some(appli => movie.app[appli].status === 'accepted');
-  }).map(m => m.id);
+  const existingAndValidMovieIds = existingMovies.docs
+    .filter(m => {
+      const movie = m.data();
+      return getAllAppsExcept(['crm']).some(appli => movie.app[appli].status === 'accepted');
+    })
+    .map(m => m.id);
 
   const { userIds = [], wishlist = [] } = o;
 
@@ -1375,11 +1341,11 @@ function isNotificationClean(doc: FirebaseFirestore.DocumentSnapshot) {
 
 function isInvitationClean(doc: FirebaseFirestore.DocumentSnapshot) {
   const d = doc.data();
-  if (d.fromOrg?.id && (!d.fromOrg.logo)) {
+  if (d.fromOrg?.id && !d.fromOrg.logo) {
     return false;
   }
 
-  if (d.toOrg?.id && (!d.toOrg.logo)) {
+  if (d.toOrg?.id && !d.toOrg.logo) {
     return false;
   }
 

@@ -7,17 +7,17 @@ import { Observable } from 'rxjs';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { toLabel } from '@blockframes/utils/pipes';
-import { orgName } from '@blockframes/model';
+import { orgName } from '@blockframes/shared/model';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { Event, EventMeta, EventTypes } from '@blockframes/model';
+import { Event, EventMeta, EventTypes } from '@blockframes/shared/model';
 
 interface WatchTimeInfo {
-  name: string, // firstName + lastName
-  email: string,
-  orgName?: string,
-  orgActivity?: string,
-  orgCountry?: string,
-  watchTime?: number, // in seconds
+  name: string; // firstName + lastName
+  email: string;
+  orgName?: string;
+  orgActivity?: string;
+  orgCountry?: string;
+  watchTime?: number; // in seconds
 }
 
 @Component({
@@ -25,18 +25,16 @@ interface WatchTimeInfo {
   templateUrl: './analytics.component.html',
   styleUrls: ['./analytics.component.scss'],
   host: {
-    class: 'surface'
+    class: 'surface',
   },
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AnalyticsComponent implements OnInit {
-
-
   event$: Observable<Event<EventMeta>>;
   private eventType: EventTypes;
   analytics: WatchTimeInfo[];
   public hasWatchTime = false;
-  public exporting = false
+  public exporting = false;
   public averageWatchTime = 0; // in seconds
   public dataMissing = '(Not Registered)';
 
@@ -46,8 +44,8 @@ export class AnalyticsComponent implements OnInit {
     private service: EventService,
     private invitationService: InvitationService,
     private cdr: ChangeDetectorRef,
-    private orgService: OrganizationService,
-  ) { }
+    private orgService: OrganizationService
+  ) {}
 
   ngOnInit(): void {
     this.dynTitle.setPageTitle('Event', 'Event Statistics');
@@ -81,7 +79,7 @@ export class AnalyticsComponent implements OnInit {
             name,
             orgName: orgName(org),
             orgActivity: org?.activity,
-            orgCountry: org?.addresses?.main.country
+            orgCountry: org?.addresses?.main.country,
           };
         });
 
@@ -105,11 +103,11 @@ export class AnalyticsComponent implements OnInit {
 
       const exportedRows = this.analytics.map(analytic => {
         const row: any = {
-          'Name': analytic.name,
+          Name: analytic.name,
           'Email Address': analytic.email,
           'Company Name': analytic.orgName ?? '--',
-          'Company Activity': analytic.orgActivity ? toLabel(analytic.orgActivity, 'orgActivity') as string : '--',
-          'Country': analytic.orgCountry ? toLabel(analytic.orgCountry, 'territories') as string : '--',
+          'Company Activity': analytic.orgActivity ? (toLabel(analytic.orgActivity, 'orgActivity') as string) : '--',
+          Country: analytic.orgCountry ? (toLabel(analytic.orgCountry, 'territories') as string) : '--',
         };
 
         if (this.eventType === 'screening') {
@@ -133,5 +131,4 @@ export class AnalyticsComponent implements OnInit {
     const start = event.start;
     return start.getTime() < Date.now();
   }
-
 }

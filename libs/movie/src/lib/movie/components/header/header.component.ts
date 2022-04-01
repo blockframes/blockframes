@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 
 // Blockframes
-import { Movie } from '@blockframes/model';
+import { Movie } from '@blockframes/shared/model';
 import { Router, NavigationEnd, Event } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
@@ -45,7 +45,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private countRouteEvents = 1;
   private sub: Subscription;
 
-  constructor(private router: Router, private navService: NavigationService) { }
+  constructor(private router: Router, private navService: NavigationService) {}
 
   @Input() showBackArrow = true;
   @Input() set movie(movie: Movie) {

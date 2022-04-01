@@ -1,8 +1,8 @@
 import { Firestore } from '../types';
 import { BigQuery } from '@google-cloud/bigquery';
-import { Analytics, createTitleMeta, createDocumentMeta  } from '@blockframes/model';
+import { Analytics, createTitleMeta, createDocumentMeta } from '@blockframes/shared/model';
 import { getCollection } from '../firebase-utils';
-import { MovieDocument } from '@blockframes/model';
+import { MovieDocument } from '@blockframes/shared/model';
 import { MovieAnalytics } from '@blockframes/analytics/components/movie-analytics-chart/movie-analytics.model';
 import { getCollectionInBatches } from '../util';
 import { bigQueryAnalyticsTable, firebase } from '@env';
@@ -43,7 +43,7 @@ const events_query = `
     AND uid IS NOT NULL
     AND titleId IS NOT NULL
     AND orgId IS NOT NULL
-`
+`;
 
 const page_view_query = `
   SELECT *
@@ -91,8 +91,7 @@ const page_view_query = `
     AND uid IS NOT NULL
     AND titleId IS NOT NULL
     AND orgId IS NOT NULL
-`
-
+`;
 
 /**
  * Import data from Google Analytics into Firestore
@@ -120,7 +119,7 @@ export async function upgrade(db: Firestore) {
   const [[pageViews], [otherEvents], titles] = await Promise.all([
     executeQuery(page_view_query),
     executeQuery(events_query),
-    getCollection<MovieDocument>(`movies`)
+    getCollection<MovieDocument>(`movies`),
   ]).catch(error => {
     if (error.errors?.length) {
       if (error.errors.some(error => error.reason === 'notFound')) {
@@ -134,28 +133,29 @@ export async function upgrade(db: Firestore) {
   }
   const rows = pageViews.concat(otherEvents);
 
-  const events = rows.map(row => {
-    const title = titles.find(title => title.id === row.titleId);
-    if (!title) return;
+  const events = rows
+    .map(row => {
+      const title = titles.find(title => title.id === row.titleId);
+      if (!title) return;
 
-    const event: Analytics = {
-      id: undefined, // id is added later
-      name: row.name,
-      type: 'title',
-      _meta: createDocumentMeta({
-        createdAt: new Date(row.createdAt / 1000),
-        createdFrom: row.createdFrom,
-      }),
-      meta: createTitleMeta({
-        orgId: row.orgId,
-        titleId: row.titleId,
-        uid: row.uid,
-        ownerOrgIds: title.orgIds
-      })
-    };
-    return event;
-
-  }).filter(row => !!row);
+      const event: Analytics = {
+        id: undefined, // id is added later
+        name: row.name,
+        type: 'title',
+        _meta: createDocumentMeta({
+          createdAt: new Date(row.createdAt / 1000),
+          createdFrom: row.createdFrom,
+        }),
+        meta: createTitleMeta({
+          orgId: row.orgId,
+          titleId: row.titleId,
+          uid: row.uid,
+          ownerOrgIds: title.orgIds,
+        }),
+      };
+      return event;
+    })
+    .filter(row => !!row);
 
   let i = 1;
   let batch = db.batch();
@@ -177,7 +177,6 @@ export async function upgrade(db: Firestore) {
     i++;
   }
 }
-
 
 async function executeQuery(query) {
   const bigqueryClient = new BigQuery();

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
-import { createMovie, Movie, createMovieAppConfig, createDocumentMeta } from '@blockframes/model';
+import { createMovie, Movie, createMovieAppConfig, createDocumentMeta } from '@blockframes/shared/model';
 import { cleanModel } from '@blockframes/utils/helpers';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
 import type firebase from 'firebase';
@@ -13,16 +13,17 @@ import { AnalyticsService } from '@blockframes/analytics/+state/analytics.servic
 import { AuthService } from '@blockframes/auth/+state';
 import { ActiveState, EntityState } from '@datorama/akita';
 
-export const fromOrg = (orgId: string): QueryFn => (ref) =>
-  ref.where('orgIds', 'array-contains', orgId);
-export const fromOrgAndAccepted = (orgId: string, appli: App): QueryFn => (ref) =>
-  ref.where(`app.${appli}.status`, '==', 'accepted').where(`app.${appli}.access`, '==', true).where('orgIds', 'array-contains', orgId);
-export const fromOrgAndInternalRef = (orgId: string, internalRef: string): QueryFn => (ref) =>
+export const fromOrg = (orgId: string): QueryFn => ref => ref.where('orgIds', 'array-contains', orgId);
+export const fromOrgAndAccepted = (orgId: string, appli: App): QueryFn => ref =>
+  ref
+    .where(`app.${appli}.status`, '==', 'accepted')
+    .where(`app.${appli}.access`, '==', true)
+    .where('orgIds', 'array-contains', orgId);
+export const fromOrgAndInternalRef = (orgId: string, internalRef: string): QueryFn => ref =>
   ref.where('orgIds', 'array-contains', orgId).where('internalRef', '==', internalRef);
-export const fromInternalRef = (internalRef: string): QueryFn => (ref) =>
-  ref.where('internalRef', '==', internalRef);
+export const fromInternalRef = (internalRef: string): QueryFn => ref => ref.where('internalRef', '==', internalRef);
 
-interface MovieState extends EntityState<Movie, string>, ActiveState<string> { }
+interface MovieState extends EntityState<Movie, string>, ActiveState<string> {}
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies' })
@@ -60,7 +61,7 @@ export class MovieService extends CollectionService<MovieState> {
     movie.app = {
       ...createMovieAppConfig(movieImported?.app),
     };
-    await this.runTransaction(async (tx) => {
+    await this.runTransaction(async tx => {
       movie.id = await this.add(cleanModel(movie), { write: tx });
     });
     return movie;
@@ -70,11 +71,7 @@ export class MovieService extends CollectionService<MovieState> {
     const ref = this.getRef(movie.id);
     write.update(ref, { '_meta.createdAt': new Date() });
     for (const orgId of movie.orgIds) {
-      this.permissionsService.addDocumentPermissions(
-        movie.id,
-        write as firebase.firestore.Transaction,
-        orgId
-      );
+      this.permissionsService.addDocumentPermissions(movie.id, write as firebase.firestore.Transaction, orgId);
     }
   }
 
@@ -113,15 +110,17 @@ export class MovieService extends CollectionService<MovieState> {
 
     return this.valueChanges(query).pipe(
       joinWith({
-        analytics: movie => this.analyticService.valueChanges(ref => ref
-          .where('type', '==', 'title')
-          .where('name', '==', 'pageView')
-          .where('meta.titleId', '==', movie.id)
-          .where('meta.ownerOrgIds', 'array-contains', orgId)
-          .where('_meta.createdFrom', '==', app)
-        ),
+        analytics: movie =>
+          this.analyticService.valueChanges(ref =>
+            ref
+              .where('type', '==', 'title')
+              .where('name', '==', 'pageView')
+              .where('meta.titleId', '==', movie.id)
+              .where('meta.ownerOrgIds', 'array-contains', orgId)
+              .where('_meta.createdFrom', '==', app)
+          ),
       }),
-      map(movies => movies.sort((a, b) => a.title.international < b.title.international ? -1 : 1))
+      map(movies => movies.sort((a, b) => (a.title.international < b.title.international ? -1 : 1)))
     );
   }
 }

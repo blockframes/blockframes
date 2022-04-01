@@ -3,18 +3,17 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { InvitationService } from '@blockframes/invitation/+state/invitation.service';
 import { BehaviorSubject } from 'rxjs';
 import { slideUp, slideDown } from '@blockframes/utils/animations/fade';
-import { Movie, Organization } from '@blockframes/model';
+import { Movie, Organization } from '@blockframes/shared/model';
 import { AbstractControl, FormControl, Validators } from '@angular/forms';
 import { FormList } from '@blockframes/utils/form';
 import { ENTER, COMMA, SEMICOLON, SPACE } from '@angular/cdk/keycodes';
-
 
 @Component({
   selector: '[org] member-add',
   templateUrl: './member-add.component.html',
   styleUrls: ['./member-add.component.scss'],
   animations: [slideUp, slideDown],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MemberAddComponent {
   @Input() org: Organization;
@@ -22,20 +21,19 @@ export class MemberAddComponent {
   public isSending$ = this._isSending.asObservable();
   public separatorKeysCodes = [ENTER, COMMA, SEMICOLON, SPACE];
   public emailForm = new FormControl('', Validators.email);
-  public form = FormList.factory<string, FormControl>([], email => new FormControl(email, [Validators.required, Validators.email]));
+  public form = FormList.factory<string, FormControl>(
+    [],
+    email => new FormControl(email, [Validators.required, Validators.email])
+  );
   public error: string;
 
-
-  constructor(
-    private snackBar: MatSnackBar,
-    private invitationService: InvitationService,
-  ) { }
+  constructor(private snackBar: MatSnackBar, private invitationService: InvitationService) {}
 
   add() {
     this.error = '';
     if (this.emailForm.value) {
       const emails: string[] = this.emailForm.value.split(',');
-      const invalid = emails.filter(value => Validators.email({value} as AbstractControl));
+      const invalid = emails.filter(value => Validators.email({ value } as AbstractControl));
       if (invalid.length) {
         this.error = `The following emails are invalid: ${invalid.join(', ')}.`;
       } else {

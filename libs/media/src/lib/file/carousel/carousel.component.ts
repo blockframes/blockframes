@@ -1,7 +1,6 @@
-
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { StorageFile } from '@blockframes/model';
+import { StorageFile } from '@blockframes/shared/model';
 import { FilePickerComponent } from '../picker/picker.component';
 
 @Component({
@@ -11,7 +10,6 @@ import { FilePickerComponent } from '../picker/picker.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FileCarouselComponent {
-
   /** Array of file path to display in the Carousel */
   @Input() files: StorageFile[];
 
@@ -23,9 +21,7 @@ export class FileCarouselComponent {
   /** Emit the new files list (array) that has been picked by the user */
   @Output() picked = new EventEmitter<string[]>();
 
-  constructor(
-    private dialog: MatDialog,
-  ) { }
+  constructor(private dialog: MatDialog) {}
 
   isSelected(file: string) {
     return this.selectedFile === file;
@@ -37,15 +33,18 @@ export class FileCarouselComponent {
   }
 
   openFileSelector() {
-    this.dialog.open(FilePickerComponent, {
-      width: '80%',
-      height: '80%',
-      disableClose: true,
-      data: {
-        selectedFiles: this.files,
-      }
-    }).afterClosed().subscribe((result: string[]) => {
-      this.picked.emit(result);
-    });
+    this.dialog
+      .open(FilePickerComponent, {
+        width: '80%',
+        height: '80%',
+        disableClose: true,
+        data: {
+          selectedFiles: this.files,
+        },
+      })
+      .afterClosed()
+      .subscribe((result: string[]) => {
+        this.picked.emit(result);
+      });
   }
 }

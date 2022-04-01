@@ -1,7 +1,7 @@
 import { FormControl } from '@angular/forms';
 import { Privacy } from '@blockframes/utils/file-sanitizer';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
-import { createStorageFile, StorageFile } from '@blockframes/model';
+import { createStorageFile, StorageFile } from '@blockframes/shared/model';
 
 // ------------------------------
 //          File Meta Data
@@ -26,7 +26,9 @@ export class StorageFileForm extends FormEntity<StorageFileControl> {
     super(control);
   }
 
-  get storagePath() { return this.get('storagePath') };
+  get storagePath() {
+    return this.get('storagePath');
+  }
 
   get isPublic(): boolean {
     return this.get('privacy').value === 'public';

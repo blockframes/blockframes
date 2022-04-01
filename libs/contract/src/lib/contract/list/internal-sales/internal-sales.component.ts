@@ -6,25 +6,23 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { isInitial } from '@blockframes/contract/negotiation/utils';
 import { capitalize } from '@blockframes/utils/helpers';
-import { Contract, Sale, Negotiation } from '@blockframes/model';
+import { Contract, Sale, Negotiation } from '@blockframes/shared/model';
 import { ContractStatus } from '@blockframes/utils/static-model';
-
 
 interface InternalSale extends Sale<Date> {
   licensor: string;
   licensee: string;
   title: string;
-  negotiation: Negotiation<Date>
+  negotiation: Negotiation<Date>;
 }
 
 @Component({
   selector: 'internal-sales-list',
   templateUrl: './internal-sales.component.html',
   styleUrls: ['./internal-sales.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InternalSaleListComponent implements OnInit {
-
   private title = 'All Sales';
 
   private _sales = new BehaviorSubject<InternalSale[]>([]);
@@ -44,11 +42,7 @@ export class InternalSaleListComponent implements OnInit {
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
-  constructor(
-    private router: Router,
-    private dynTitle: DynamicTitleService,
-    private route: ActivatedRoute
-  ) { }
+  constructor(private router: Router, private dynTitle: DynamicTitleService, private route: ActivatedRoute) {}
 
   @Input() set sales(sale: InternalSale[]) {
     this._sales.next(sale);

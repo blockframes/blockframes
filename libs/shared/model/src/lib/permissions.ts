@@ -35,7 +35,7 @@ export function createPermissions(params: Partial<PermissionsDocument>): Permiss
     canRead: [],
     canUpdate: [],
     canDelete: [],
-    ...params
+    ...params,
   };
 }
 
@@ -49,7 +49,7 @@ export function createDocPermissions(params: Partial<DocPermissionsDocument> = {
     canRead: true,
     canUpdate: true,
     canDelete: true,
-    ...params
+    ...params,
   };
 }
 

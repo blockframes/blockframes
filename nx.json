@@ -121,14 +121,14 @@
     "analytics": {
       "tags": ["browser"]
     },
-    "model": {
-      "tags": ["shared"]
-    },
     "testing-cypress-browser": {
       "tags": ["browser", "e2e"]
     },
     "testing-cypress-node": {
       "tags": ["node", "e2e"]
+    },
+    "shared-model": {
+      "tags": ["shared"]
     }
   }
 }

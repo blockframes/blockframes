@@ -10,10 +10,9 @@ import {
   createSlate,
   Meeting,
   Screening,
-  Slate
-} from '@blockframes/model';
+  Slate,
+} from '@blockframes/shared/model';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-
 
 // Event
 export function createEventControl(params?: Partial<Event>) {
@@ -28,7 +27,7 @@ export function createEventControl(params?: Partial<Event>) {
     start: new FormControl(event.start, compareDates('start', 'end', 'start')),
     end: new FormControl(event.end, compareDates('start', 'end', 'end')),
     allDay: new FormControl(event.allDay),
-    meta: createMetaControl(event)
+    meta: createMetaControl(event),
   };
 }
 
@@ -36,7 +35,7 @@ type EventControl = ReturnType<typeof createEventControl>;
 
 export class EventForm extends FormEntity<EventControl, Event> {
   constructor(event?: Partial<Event>) {
-    super(createEventControl(event))
+    super(createEventControl(event));
   }
 
   get meta() {
@@ -51,7 +50,7 @@ export class EventForm extends FormEntity<EventControl, Event> {
 // Meta
 function createMetaControl(event: Event): MeetingForm | ScreeningForm | SlateForm | FormGroup {
   if (isMeeting(event)) {
-    return new MeetingForm(event.meta)
+    return new MeetingForm(event.meta);
   } else if (isScreening(event)) {
     return new ScreeningForm(event.meta);
   } else if (isSlate(event)) {
@@ -68,14 +67,14 @@ export function createMeetingControl(params?: Partial<Meeting>) {
     organizerUid: new FormControl(meeting.organizerUid),
     description: new FormControl(meeting.description, [Validators.maxLength(500)]),
     files: FormList.factory(meeting.files, el => new FormControl(el)),
-  }
+  };
 }
 
 type MeetingControl = ReturnType<typeof createMeetingControl>;
 
 export class MeetingForm extends FormEntity<MeetingControl, Meeting> {
   constructor(meeting?: Partial<Meeting>) {
-    super(createMeetingControl(meeting), compareDates('start', 'end'))
+    super(createMeetingControl(meeting), compareDates('start', 'end'));
   }
 
   get files() {
@@ -89,15 +88,15 @@ export function createScreeningControl(params?: Partial<Screening>) {
   return {
     titleId: new FormControl(screening.titleId),
     description: new FormControl(screening.description, [Validators.maxLength(500)]),
-    organizerUid: new FormControl(screening.organizerUid)
-  }
+    organizerUid: new FormControl(screening.organizerUid),
+  };
 }
 
 type ScreeningControl = ReturnType<typeof createScreeningControl>;
 
 export class ScreeningForm extends FormEntity<ScreeningControl, Screening> {
   constructor(screening?: Partial<Screening>) {
-    super(createScreeningControl(screening), compareDates('start', 'end'))
+    super(createScreeningControl(screening), compareDates('start', 'end'));
   }
 }
 
@@ -108,8 +107,8 @@ export function createSlateControl(params?: Partial<Slate>) {
     description: new FormControl(slate.description, [Validators.maxLength(500)]),
     organizerUid: new FormControl(slate.organizerUid),
     titleIds: new FormControl(slate.titleIds),
-    videoId: new FormControl(slate.videoId)
-  }
+    videoId: new FormControl(slate.videoId),
+  };
 }
 
 type SlateControl = ReturnType<typeof createSlateControl>;

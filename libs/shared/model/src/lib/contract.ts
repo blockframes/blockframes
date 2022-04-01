@@ -6,10 +6,10 @@ import { createMailTerm, Duration } from './terms';
 import { BucketContract } from './bucket';
 
 export function createMailContract(contract: BucketContract<Timestamp>) {
-  return ({
+  return {
     ...contract,
-    terms: createMailTerm(contract.terms)
-  })
+    terms: createMailTerm(contract.terms),
+  };
 }
 
 export interface Holdback<D extends Timestamp | Date = Date> {
@@ -58,7 +58,7 @@ export interface Sale<D extends Timestamp | Date = Date> extends Contract<D> {
 
 export type ContractDocument = Mandate<Timestamp> | Sale<Timestamp>;
 
-export type MailContract = ReturnType<typeof createMailContract>
+export type MailContract = ReturnType<typeof createMailContract>;
 
 export function createHoldback(params: Partial<Holdback<Date>> = {}): Holdback {
   return {
@@ -66,7 +66,7 @@ export function createHoldback(params: Partial<Holdback<Date>> = {}): Holdback {
     medias: [],
     duration: { from: new Date(), to: new Date() },
     ...params,
-  }
+  };
 }
 
 export function createMandate(params: Partial<Mandate> = {}): Mandate {
@@ -82,8 +82,8 @@ export function createMandate(params: Partial<Mandate> = {}): Mandate {
     type: 'mandate',
     status: 'pending',
     stakeholders: [],
-    ...params
-  }
+    ...params,
+  };
 }
 
 export function createSale(params: Partial<Sale> = {}): Sale {
@@ -102,8 +102,8 @@ export function createSale(params: Partial<Sale> = {}): Sale {
     status: 'pending',
     stakeholders: [],
     holdbacks: [],
-    ...params
-  }
+    ...params,
+  };
 }
 
 export function isMandate(contract: Contract): contract is Mandate {
@@ -118,5 +118,5 @@ export function convertDuration(duration: Duration<Date | Timestamp>): Duration<
   return {
     from: toDate(duration.from),
     to: toDate(duration.to),
-  }
+  };
 }

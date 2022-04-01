@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { Invitation, ScreeningEvent } from '@blockframes/model';
+import { Invitation, ScreeningEvent } from '@blockframes/shared/model';
 import { InvitationService } from '@blockframes/invitation/+state/invitation.service';
 import { fade } from '@blockframes/utils/animations/fade';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
@@ -11,7 +11,7 @@ import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.se
   templateUrl: './slide.component.html',
   styleUrls: ['./slide.component.scss'],
   animations: [fade],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EventSlideComponent {
   private _event = new BehaviorSubject<ScreeningEvent>(null);
@@ -28,18 +28,11 @@ export class EventSlideComponent {
     return this._event.getValue();
   }
 
-  constructor(
-    private breakpointsService: BreakpointsService,
-    private invitationService: InvitationService
-  ) { }
+  constructor(private breakpointsService: BreakpointsService, private invitationService: InvitationService) {}
 
   ngOnInit() {
-    this.invitation$ = combineLatest([
-      this.event$.pipe(filter(event => !!event)),
-      this.invitationService.guestInvitations$
-    ]).pipe(
+    this.invitation$ = combineLatest([this.event$.pipe(filter(event => !!event)), this.invitationService.guestInvitations$]).pipe(
       map(([event, invitations]) => invitations.find(invitation => invitation.eventId === event.id) ?? null)
     );
   }
-
 }

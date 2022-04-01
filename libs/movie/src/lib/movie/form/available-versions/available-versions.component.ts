@@ -6,7 +6,7 @@ import { FormControl } from '@angular/forms';
 import { MovieFormShellComponent } from '../shell/shell.component';
 
 // Blockframes
-import { createMovieLanguageSpecification } from '@blockframes/model';
+import { createMovieLanguageSpecification } from '@blockframes/shared/model';
 import { VersionSpecificationForm } from '@blockframes/movie/form/movie.form';
 import { Language } from '@blockframes/utils/static-model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
@@ -38,7 +38,7 @@ export class MovieFormAvailableVersionsComponent implements OnInit, OnDestroy {
     this.formIsEmpty ? (this.showButtons = true) : (this.showButtons = false);
     this.sub = this.form.languages.valueChanges
       .pipe(
-        tap((value) => {
+        tap(value => {
           if (Object.keys(value).includes('all')) {
             this.languageCtrl.disable();
             Object.keys(value).forEach((language: Language) => {

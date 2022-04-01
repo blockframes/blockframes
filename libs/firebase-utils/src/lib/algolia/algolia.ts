@@ -3,13 +3,8 @@ import { algolia as algoliaClient, centralOrgId } from '@env';
 import * as functions from 'firebase-functions';
 import { festival, Language } from '@blockframes/utils/static-model';
 import { App, app, getOrgModuleAccess, modules } from '@blockframes/utils/apps';
-import {
-  AlgoliaOrganization,
-  AlgoliaMovie,
-  AlgoliaUser,
-  AlgoliaConfig,
-} from '@blockframes/utils/algolia';
-import { MovieDocument, OrganizationDocument, orgName, PublicUser } from '@blockframes/model';
+import { AlgoliaOrganization, AlgoliaMovie, AlgoliaUser, AlgoliaConfig } from '@blockframes/utils/algolia';
+import { MovieDocument, OrganizationDocument, orgName, PublicUser } from '@blockframes/shared/model';
 import * as admin from 'firebase-admin';
 import { hasAcceptedMovies } from '../util';
 import { getMovieAppAccess } from '@blockframes/utils/apps';
@@ -71,7 +66,7 @@ export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string)
   const orgAppAccess = findOrgAppAccess(org);
 
   // Update algolia's index
-  const promises = orgAppAccess.map(async (appName) => {
+  const promises = orgAppAccess.map(async appName => {
     org['hasAcceptedMovies'] = await hasAcceptedMovies(org, appName);
     const orgRecord = createAlgoliaOrganization(org);
     if (orgRecord.name) {
@@ -99,11 +94,7 @@ export function createAlgoliaOrganization(org: OrganizationDocument): AlgoliaOrg
 //               MOVIES
 // ------------------------------------
 
-export function storeSearchableMovie(
-  movie: MovieDocument,
-  organizationNames: string[],
-  adminKey?: string
-): Promise<any> {
+export function storeSearchableMovie(movie: MovieDocument, organizationNames: string[], adminKey?: string): Promise<any> {
   if (!algolia.adminKey && !adminKey) {
     console.warn('No algolia id set, assuming dev config: skipping');
     return Promise.resolve(true);
@@ -118,35 +109,24 @@ export function storeSearchableMovie(
         international: movie.title.international || '',
         original: movie.title.original,
       },
-      directors: movie.directors
-        ? movie.directors.map((director) => `${director.firstName} ${director.lastName}`)
-        : [],
+      directors: movie.directors ? movie.directors.map(director => `${director.firstName} ${director.lastName}`) : [],
       keywords: movie.keywords ? movie.keywords : [],
       // Register the entire festival name because it will be used for research by users
-      festivals: movie.prizes.map((prize) => festival[prize.name]) || [],
-      productionCompany:
-        movie.stakeholders.productionCompany.map((company) => company.displayName) || [],
-      salesAgent: movie.stakeholders.salesAgent.map((agent) => agent.displayName) || [],
+      festivals: movie.prizes.map(prize => festival[prize.name]) || [],
+      productionCompany: movie.stakeholders.productionCompany.map(company => company.displayName) || [],
+      salesAgent: movie.stakeholders.salesAgent.map(agent => agent.displayName) || [],
 
       // facets
       genres: movie.genres ? movie.genres : [],
       originCountries: movie.originCountries ? movie.originCountries : [],
       languages: {
         original: movie.originalLanguages ? movie.originalLanguages : [],
-        dubbed: movie.languages
-          ? (Object.keys(movie.languages).filter(
-              (lang) => movie.languages[lang]?.dubbed
-            ) as Language[])
-          : [],
+        dubbed: movie.languages ? (Object.keys(movie.languages).filter(lang => movie.languages[lang]?.dubbed) as Language[]) : [],
         subtitle: movie.languages
-          ? (Object.keys(movie.languages).filter(
-              (lang) => movie.languages[lang]?.subtitle
-            ) as Language[])
+          ? (Object.keys(movie.languages).filter(lang => movie.languages[lang]?.subtitle) as Language[])
           : [],
         caption: movie.languages
-          ? (Object.keys(movie.languages).filter(
-              (lang) => movie.languages[lang]?.caption
-            ) as Language[])
+          ? (Object.keys(movie.languages).filter(lang => movie.languages[lang]?.caption) as Language[])
           : [],
       },
       status: movie.productionStatus ? movie.productionStatus : '',
@@ -175,7 +155,7 @@ export function storeSearchableMovie(
 
     const movieAppAccess = getMovieAppAccess(movie);
 
-    const promises = movieAppAccess.map((appName) =>
+    const promises = movieAppAccess.map(appName =>
       indexBuilder(algolia.indexNameMovies[appName], adminKey).saveObject({
         ...movieRecord,
         storeStatus: movie.app[appName]?.status || '',
@@ -184,11 +164,9 @@ export function storeSearchableMovie(
 
     return Promise.all(promises);
   } catch (error) {
-    console.error(
-      `\n\n\tFailed to format the movie ${movie.id} into an algolia record : skipping\n\n`
-    );
+    console.error(`\n\n\tFailed to format the movie ${movie.id} into an algolia record : skipping\n\n`);
     console.error(error);
-    return new Promise((res) => res(true));
+    return new Promise(res => res(true));
   }
 }
 
@@ -221,14 +199,12 @@ export async function storeSearchableUser(user: PublicUser, adminKey?: string): 
 
     return indexBuilder(algolia.indexNameUsers, adminKey).saveObject(userRecord);
   } catch (error) {
-    console.error(
-      `\n\n\tFailed to format the user ${user.uid} into an algolia record : skipping\n\n`
-    );
+    console.error(`\n\n\tFailed to format the user ${user.uid} into an algolia record : skipping\n\n`);
     console.error(error);
-    return new Promise((res) => res(true));
+    return new Promise(res => res(true));
   }
 }
 
 export function findOrgAppAccess(org: OrganizationDocument): App[] {
-  return app.filter((a) => modules.some((m) => org.appAccess[a]?.[m]));
+  return app.filter(a => modules.some(m => org.appAccess[a]?.[m]));
 }

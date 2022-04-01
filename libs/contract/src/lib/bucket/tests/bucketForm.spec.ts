@@ -1,7 +1,12 @@
-import { AvailableTerritoryMarker, BucketTerritoryMarker, CalendarAvailsFilter, DurationMarker, MapAvailsFilter } from '@blockframes/contract/avails/avails';
-import { Mandate, Term } from '@blockframes/model';
+import {
+  AvailableTerritoryMarker,
+  BucketTerritoryMarker,
+  CalendarAvailsFilter,
+  DurationMarker,
+  MapAvailsFilter,
+} from '@blockframes/contract/avails/avails';
+import { Mandate, Term } from '@blockframes/shared/model';
 import { BucketForm } from '../form';
-
 
 function fakeMandate(mandate?: Partial<Mandate>): Mandate {
   return {
@@ -15,7 +20,7 @@ function fakeMandate(mandate?: Partial<Mandate>): Mandate {
     termIds: [],
     titleId: '',
     ...mandate,
-  }
+  };
 }
 
 function fakeTerm(term?: Partial<Term>): Term {
@@ -30,18 +35,18 @@ function fakeTerm(term?: Partial<Term>): Term {
     medias: [],
     territories: [],
     ...term,
-  }
+  };
 }
 
 const mapFilterA: MapAvailsFilter = {
   exclusive: true,
-  medias: [ 'payTv' ],
+  medias: ['payTv'],
   duration: { from: new Date(2), to: new Date(8) },
 };
 
 const mapFilterB: MapAvailsFilter = {
   exclusive: true,
-  medias: [ 'payTv' ],
+  medias: ['payTv'],
   duration: { from: new Date(9), to: new Date(24) },
 };
 
@@ -50,8 +55,6 @@ const calendarFilterA: CalendarAvailsFilter = {
   medias: ['payTv'],
   territories: ['france', 'germany'],
 };
-
-
 
 describe('BucketForm', () => {
   describe('addTerritory', () => {
@@ -223,7 +226,6 @@ describe('BucketForm', () => {
       expect(bucket.value.contracts[0].terms[0].territories[0]).toBe('france');
       expect(bucket.value.contracts[0].terms[0].territories[1]).toBe('germany');
 
-
       const bucketMarker: BucketTerritoryMarker = {
         type: 'in-bucket',
         slug: 'france',
@@ -321,7 +323,6 @@ describe('BucketForm', () => {
   });
   describe('addDuration', () => {
     it('Add one duration', () => {
-
       const bucket = new BucketForm();
 
       const marker: DurationMarker = {
@@ -396,7 +397,6 @@ describe('BucketForm', () => {
     });
   });
   describe('getTermIndexForCalendar', () => {
-
     const bucket = new BucketForm();
 
     const mandateA = fakeMandate({ id: 'A' });
@@ -452,7 +452,6 @@ describe('BucketForm', () => {
     };
 
     it('Check index', () => {
-
       bucket.addDuration(calendarFilterA, markerA);
       bucket.addDuration(calendarFilterA, markerB);
       bucket.addDuration(calendarFilterA, markerC);

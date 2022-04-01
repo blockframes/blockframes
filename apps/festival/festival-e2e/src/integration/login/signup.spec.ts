@@ -1,5 +1,3 @@
-
-
 //TODO define proper way to import next line #8071
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import {
@@ -12,34 +10,31 @@ import {
   interceptEmail,
   deleteEmail,
   assertUrlIncludes,
-  createFakeUserDataArray
+  createFakeUserDataArray,
 } from '@blockframes/testing/cypress/browser';
 import { capitalize } from '@blockframes/utils/helpers';
-import { User, Organization } from '@blockframes/model';
+import { User, Organization } from '@blockframes/shared/model';
 import { orgActivity, territories } from '@blockframes/utils/static-model/static-model';
 import { USER_FIXTURES_PASSWORD } from '@blockframes/firebase-utils/anonymize/util';
 
 const [newOrgUser, knownMarketplaceOrgUser, knownDashboardOrgUser, unfillingUser] = createFakeUserDataArray(4);
 
 function deleteUserIfExists(userEmail: string) {
-  cy.task('getAuthUserByEmail', userEmail)
-    .then((user: User) => {
-      if (!user) return console.log('No previous user with this email');
-      cy.task('deleteAuthUser', user.uid);
-      cy.task('deleteUser', user.uid);
+  cy.task('getAuthUserByEmail', userEmail).then((user: User) => {
+    if (!user) return console.log('No previous user with this email');
+    cy.task('deleteAuthUser', user.uid);
+    cy.task('deleteUser', user.uid);
   });
 }
 
 function deleteOrgIfExists(orgName: string) {
-  cy.task('getOrgByName', orgName)
-    .then((org: Organization) => {
-      if (!org) return console.log('No previous organization with this name');
-      cy.task('deleteOrg', org.id);
+  cy.task('getOrgByName', orgName).then((org: Organization) => {
+    if (!org) return console.log('No previous organization with this name');
+    cy.task('deleteOrg', org.id);
   });
 }
 
 describe('Signup', () => {
-
   beforeEach(() => {
     cy.visit('');
     auth.clearBrowserAuth();
@@ -68,12 +63,11 @@ describe('Signup', () => {
     check('terms');
     check('gdpr');
     get('submit').click();
-    interceptEmail({ sentTo: user.email })
-      .then((mail) => deleteEmail(mail.id));
-    interceptEmail({ subject: `Archipel Market - ${user.company.name} was created and needs a review` })
-      .then((mail) => deleteEmail(mail.id));
-    interceptEmail({ body: `${user.email}` })
-      .then((mail) => deleteEmail(mail.id));
+    interceptEmail({ sentTo: user.email }).then(mail => deleteEmail(mail.id));
+    interceptEmail({ subject: `Archipel Market - ${user.company.name} was created and needs a review` }).then(mail =>
+      deleteEmail(mail.id)
+    );
+    interceptEmail({ body: `${user.email}` }).then(mail => deleteEmail(mail.id));
     cy.log('all mails received');
     assertUrl('c/organization/create-congratulations');
     get('profile-data-ok').should('exist');
@@ -81,11 +75,9 @@ describe('Signup', () => {
     get('email-pending').should('exist');
     get('org-approval-pending').should('exist');
     cy.log('waiting for user confirmation and organisation approval');
-    cy.task('validateOrg', user.company.name)
-      .then(() => cy.log('Org validated'));
+    cy.task('validateOrg', user.company.name).then(() => cy.log('Org validated'));
     get('org-approval-ok').should('exist');
-    cy.task('validateAuthUser', user.email)
-      .then(() => cy.log('User validated'));
+    cy.task('validateAuthUser', user.email).then(() => cy.log('User validated'));
     get('email-ok').should('exist');
     get('refresh').click();
     assertUrlIncludes('c/o/marketplace/home');
@@ -148,8 +140,7 @@ describe('Signup', () => {
     const user = knownDashboardOrgUser;
     deleteUserIfExists(user.email);
     deleteOrgIfExists(user.company.name);
-    cy.task('getRandomOrg', { app: 'festival', access: { marketplace: true, dashboard: true } })
-    .then((org: Organization) => {
+    cy.task('getRandomOrg', { app: 'festival', access: { marketplace: true, dashboard: true } }).then((org: Organization) => {
       get('cookies').click();
       get('email').type(user.email);
       get('first-name').type(user.firstname);
@@ -196,14 +187,12 @@ describe('Signup', () => {
   });
 
   it('User cannot signup with an existing email', () => {
-    cy.task('getRandomUser')
-    .then((user: User) => {
+    cy.task('getRandomUser').then((user: User) => {
       get('cookies').click();
       get('email').type(user.email);
       get('first-name').type(user.firstName);
       get('last-name').type(user.lastName);
-      cy.task('getRandomOrg', { app: 'festival', access: { marketplace: true, dashboard: true } })
-      .then((org: Organization) => {
+      cy.task('getRandomOrg', { app: 'festival', access: { marketplace: true, dashboard: true } }).then((org: Organization) => {
         get('org').type(org.denomination.full);
         getInList('org_', org.denomination.full);
         get('password').type(USER_FIXTURES_PASSWORD);

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { EntityState } from '@datorama/akita';
-import { User } from '@blockframes/model';
+import { User } from '@blockframes/shared/model';
 
 type UserState = EntityState<User>;
 

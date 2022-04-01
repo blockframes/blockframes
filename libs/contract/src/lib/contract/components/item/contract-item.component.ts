@@ -1,15 +1,11 @@
-import {
-  Component, Input, TemplateRef, ContentChild, ChangeDetectionStrategy
-} from '@angular/core';
-import { BucketContract } from '@blockframes/model';
+import { Component, Input, TemplateRef, ContentChild, ChangeDetectionStrategy } from '@angular/core';
+import { BucketContract } from '@blockframes/shared/model';
 import { Scope, mediaGroup, territoriesGroup } from '@blockframes/utils/static-model';
 import { MatDialog } from '@angular/material/dialog';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 import { HoldbackModalComponent } from '../../holdback/modal/holdback-modal.component';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { Holdback, Sale } from '@blockframes/model';
-
-
+import { Holdback, Sale } from '@blockframes/shared/model';
 
 @Component({
   selector: 'contract-item',
@@ -18,9 +14,9 @@ import { Holdback, Sale } from '@blockframes/model';
   changeDetection: ChangeDetectionStrategy.OnPush,
   // eslint-disable-next-line
   host: {
-    'class': 'surface',
-    'test-id': 'avails-section'
-  }
+    class: 'surface',
+    'test-id': 'avails-section',
+  },
 })
 export class ContractItemComponent {
   mediaGroup = mediaGroup;
@@ -31,10 +27,7 @@ export class ContractItemComponent {
   @ContentChild('priceTemplate') priceTemplate: TemplateRef<unknown>;
   @ContentChild('termAction') actionTemplate?: TemplateRef<unknown>;
 
-  constructor(
-    private dialog: MatDialog,
-    private orgService: OrganizationService,
-  ) { }
+  constructor(private dialog: MatDialog, private orgService: OrganizationService) {}
 
   openDetails(terms: string[], scope: Scope) {
     this.dialog.open(DetailedTermsComponent, { data: { terms, scope }, maxHeight: '80vh', autoFocus: false });
@@ -43,6 +36,4 @@ export class ContractItemComponent {
   openHoldbackModal(existingHoldbacks: Holdback[]) {
     this.dialog.open(HoldbackModalComponent, { data: { holdbacks: existingHoldbacks }, maxHeight: '80vh' });
   }
-
 }
-

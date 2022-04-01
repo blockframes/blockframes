@@ -9,15 +9,15 @@ import { MatDialog } from '@angular/material/dialog';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { ActivatedRoute } from '@angular/router';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
-import { Organization } from '@blockframes/model';
+import { Organization } from '@blockframes/shared/model';
 
 @Component({
   selector: 'festival-movie-view',
   templateUrl: './view.component.html',
   styleUrls: ['./view.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MarketplaceMovieViewComponent  {
+export class MarketplaceMovieViewComponent {
   public movie$ = this.route.params.pipe(
     pluck('movieId'),
     tap((movieId: string) => this.analytics.addPageView('title', movieId)),
@@ -25,22 +25,21 @@ export class MarketplaceMovieViewComponent  {
     shareReplay({ refCount: true, bufferSize: 1 })
   );
 
-  public orgs$ = this.movie$.pipe(
-    switchMap(movie => this.orgService.valueChanges(movie.orgIds)),
-  );
+  public orgs$ = this.movie$.pipe(switchMap(movie => this.orgService.valueChanges(movie.orgIds)));
 
   public eventId$ = this.movie$.pipe(
-    map(movie => ref => ref
-      .where('isSecret', '==', false)
-      .where('meta.titleId', '==', movie.id)
-      .where('type', '==', 'screening')
-      .orderBy('end', 'asc')
-      .startAt(new Date())
+    map(movie => ref =>
+      ref
+        .where('isSecret', '==', false)
+        .where('meta.titleId', '==', movie.id)
+        .where('type', '==', 'screening')
+        .orderBy('end', 'asc')
+        .startAt(new Date())
     ),
-    switchMap(q =>  this.eventService.valueChanges(q)),
+    switchMap(q => this.eventService.valueChanges(q)),
     map(events => events.filter(e => e.start < new Date())),
-    map(events => events.length ? events[events.length - 1].id : null)
-  )
+    map(events => (events.length ? events[events.length - 1].id : null))
+  );
 
   public requestSent = false;
 
@@ -51,15 +50,11 @@ export class MarketplaceMovieViewComponent  {
     additionalRoute,
     {
       path: 'screenings',
-      label: 'Upcoming Screenings'
-    }
+      label: 'Upcoming Screenings',
+    },
   ];
 
-  promoLinks = [
-    'scenario',
-    'presentation_deck',
-    'moodboard'
-  ];
+  promoLinks = ['scenario', 'presentation_deck', 'moodboard'];
 
   constructor(
     private route: ActivatedRoute,
@@ -69,10 +64,10 @@ export class MarketplaceMovieViewComponent  {
     private dialog: MatDialog,
     private cdr: ChangeDetectorRef,
     private analytics: AnalyticsService
-  ) { }
+  ) {}
 
   getEmails(orgs: Organization[]) {
-    return orgs.map(org => org.email).join(', ')
+    return orgs.map(org => org.email).join(', ');
   }
 
   requestAskingPrice(movieId: string) {
@@ -80,7 +75,7 @@ export class MarketplaceMovieViewComponent  {
       data: { movieId },
       maxHeight: '80vh',
       maxWidth: '650px',
-      autoFocus: false
+      autoFocus: false,
     });
     ref.afterClosed().subscribe(isSent => {
       this.requestSent = !!isSent;

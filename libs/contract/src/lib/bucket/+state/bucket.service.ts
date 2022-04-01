@@ -11,24 +11,29 @@ import { TermService } from '../../term/+state';
 import { OfferService } from '../../offer/+state';
 import { ContractService } from '../../contract/+state';
 import { ActiveState, EntityState } from '@datorama/akita';
-import { convertDuration, Bucket, createBucket, createBucketTerm, createBucketContract, createDocumentMeta } from '@blockframes/model';
+import {
+  convertDuration,
+  Bucket,
+  createBucket,
+  createBucketTerm,
+  createBucketContract,
+  createDocumentMeta,
+} from '@blockframes/shared/model';
 
-interface BucketState extends EntityState<Bucket>, ActiveState<string> { }
+interface BucketState extends EntityState<Bucket>, ActiveState<string> {}
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'buckets' })
 export class BucketService extends CollectionService<BucketState> {
   useMemorization = true;
-  active$ = this.orgService.currentOrg$.pipe(
-    switchMap(org => this.valueChanges(org.id)),
-  );
+  active$ = this.orgService.currentOrg$.pipe(switchMap(org => this.valueChanges(org.id)));
 
   constructor(
     private orgService: OrganizationService,
     private termService: TermService,
     private offerService: OfferService,
     private contractService: ContractService,
-    private authService: AuthService,
+    private authService: AuthService
   ) {
     super();
   }
@@ -58,7 +63,7 @@ export class BucketService extends CollectionService<BucketState> {
     await this.update(orgId, {
       specificity,
       delivery,
-      uid: this.authService.uid  // Specify who is updating the bucket (this is used in the backend)
+      uid: this.authService.uid, // Specify who is updating the bucket (this is used in the backend)
     });
 
     // Create offer
@@ -74,7 +79,7 @@ export class BucketService extends CollectionService<BucketState> {
       id: offerId,
     });
 
-    const promises = bucket.contracts.map(async (contract) => {
+    const promises = bucket.contracts.map(async contract => {
       const contractId = this.db.createId();
       const parentTerms = await this.termService.getValue(contract.parentTermId);
       const parentContract = await this.contractService.getValue(parentTerms.contractId);
@@ -98,23 +103,23 @@ export class BucketService extends CollectionService<BucketState> {
         offerId,
         specificity,
         delivery,
-        ...commonFields
+        ...commonFields,
       });
 
       // Add the default negotiation.
-       this.contractService.addNegotiation(contractId, {
-        ...contract,
-        ...commonFields,
-        initial: new Date(),
-        currency,
-      }).catch(err => console.error(err));
+      this.contractService
+        .addNegotiation(contractId, {
+          ...contract,
+          ...commonFields,
+          initial: new Date(),
+          currency,
+        })
+        .catch(err => console.error(err));
     });
     return Promise.all(promises);
   }
 
-
   async addTerm(titleId: string, parentTermId: string, avails: AvailsFilter) {
-
     const orgId = this.orgService.org.id;
     const rawBucket = await this.getActive();
     const bucket = createBucket({ id: orgId, ...rawBucket });
