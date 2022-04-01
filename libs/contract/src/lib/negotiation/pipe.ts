@@ -1,7 +1,7 @@
 import { NgModule, Pipe, PipeTransform } from '@angular/core';
 import { Negotiation } from '@blockframes/shared/model';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { ContractStatus } from '@blockframes/utils/static-model';
+import { ContractStatus } from '@blockframes/shared/model';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { getReviewer, isInitial } from './utils';

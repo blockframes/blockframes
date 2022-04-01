@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { LanguageVersionControl } from '@blockframes/movie/form/search.form';
-import { staticModel } from '@blockframes/utils/static-model';
+import { staticModel } from '@blockframes/shared/model';
 
 @Component({
   selector: '[form] title-language-filter',

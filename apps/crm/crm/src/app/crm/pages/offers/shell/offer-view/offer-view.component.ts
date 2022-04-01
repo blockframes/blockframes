@@ -6,7 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { ContractService } from '@blockframes/contract/contract/+state';
 import { OfferService } from '@blockframes/contract/offer/+state';
-import { staticModel } from '@blockframes/utils/static-model';
+import { staticModel } from '@blockframes/shared/model';
 import { IncomeService } from '@blockframes/contract/income/+state';
 import { TermService } from '@blockframes/contract/term/+state';
 import { MatSnackBar } from '@angular/material/snack-bar';

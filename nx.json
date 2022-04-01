@@ -129,6 +129,9 @@
     },
     "shared-model": {
       "tags": ["shared"]
+    },
+    "shared-util": {
+      "tags": []
     }
   }
 }

@@ -1,7 +1,7 @@
 import { BucketContract } from './bucket';
 import { Timestamp } from './timestamp';
 import { DocumentMeta } from './meta';
-import { MovieCurrency, NegotiationStatus } from '@blockframes/utils/static-model';
+import { MovieCurrency, NegotiationStatus } from '@blockframes/shared/model';
 
 // We extends the BucketContract with some information for rules
 export interface Negotiation<T extends Date | Timestamp = Date> extends BucketContract<T> {

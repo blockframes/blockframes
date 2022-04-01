@@ -1,6 +1,6 @@
 import { Organization, Analytics, AnalyticsTypes } from "@blockframes/model";
 import { getDeepValue, toLabel } from "@blockframes/utils/pipes";
-import { Scope } from "@blockframes/utils/static-model";
+import { Scope } from "@blockframes/shared/model";
 
 interface AnalyticsWithOrg extends Analytics<AnalyticsTypes> {
   org?: Organization

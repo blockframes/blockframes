@@ -3,9 +3,9 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { format } from 'date-fns';
 import { combineLatest, Subscription } from "rxjs";
 import { first, map, shareReplay, startWith, throttleTime } from "rxjs/operators";
-import { medias } from '@blockframes/utils/static-model'
+import { medias } from '@blockframes/shared/model'
 import { downloadCsvFromJson } from "@blockframes/utils/helpers";
-import { TerritoryValue } from "@blockframes/utils/static-model";
+import { TerritoryValue } from "@blockframes/shared/model";
 import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
 import { filterContractsByTitle, MapAvailsFilter, territoryAvailabilities } from "@blockframes/contract/avails/avails";
 import { CatalogAvailsShellComponent } from "../shell/shell.component";

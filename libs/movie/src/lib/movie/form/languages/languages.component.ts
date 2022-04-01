@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { createMovieLanguageSpecification } from '@blockframes/shared/model';
 import { MovieVersionInfoForm, VersionSpecificationForm } from '@blockframes/movie/form/movie.form';
-import { Language } from '@blockframes/utils/static-model';
+import { Language } from '@blockframes/shared/model';
 
 @Component({
   selector: '[form] languages-form',

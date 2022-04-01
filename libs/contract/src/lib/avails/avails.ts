@@ -6,7 +6,7 @@ import {
   TerritoryISOA3,
   TerritoryISOA3Value,
   TerritoryValue,
-} from '@blockframes/utils/static-model';
+} from '@blockframes/shared/model';
 import { Bucket, BucketContract, Holdback, Mandate, Sale, BucketTerm, Term } from '@blockframes/shared/model';
 import { allOf, exclusivityAllOf, exclusivitySomeOf, someOf } from './sets';
 

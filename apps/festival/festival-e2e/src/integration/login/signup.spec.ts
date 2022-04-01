@@ -14,7 +14,7 @@ import {
 } from '@blockframes/testing/cypress/browser';
 import { capitalize } from '@blockframes/utils/helpers';
 import { User, Organization } from '@blockframes/shared/model';
-import { orgActivity, territories } from '@blockframes/utils/static-model/static-model';
+import { orgActivity, territories } from '@blockframes/shared/model/static-model';
 import { USER_FIXTURES_PASSWORD } from '@blockframes/firebase-utils/anonymize/util';
 
 const [newOrgUser, knownMarketplaceOrgUser, knownDashboardOrgUser, unfillingUser] = createFakeUserDataArray(4);

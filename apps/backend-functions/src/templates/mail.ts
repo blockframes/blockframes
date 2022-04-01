@@ -28,7 +28,7 @@ import {
 } from '@blockframes/utils/emails/utils';
 import { App, appName, Module } from '@blockframes/utils/apps';
 import { format } from 'date-fns';
-import { staticModel } from '@blockframes/utils/static-model';
+import { staticModel } from '@blockframes/shared/model';
 import { Timestamp } from '../data/internals';
 import { displayName } from '@blockframes/utils/utils';
 import { supportMailosaur } from '@blockframes/utils/constants';

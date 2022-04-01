@@ -16,7 +16,7 @@ import {
   MovieDocument,
 } from '@blockframes/shared/model';
 import type { ContractDocument, Offer } from '@blockframes/shared/model';
-import { AccessibilityTypes } from '../static-model';
+import { AccessibilityTypes } from '@blockframes/shared/model';
 import { toIcsFile } from '../agenda/utils';
 import { IcsEvent } from '../agenda/agenda.interfaces';
 

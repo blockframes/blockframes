@@ -1,7 +1,7 @@
 ﻿import { apps, assertFails, assertSucceeds } from '@firebase/rules-unit-testing';
 import { Firestore, initFirestoreApp, rulesFixtures as testFixture } from '@blockframes/testing/unit-tests';
 import { Movie } from '@blockframes/shared/model';
-import { StoreStatus } from '@blockframes/utils/static-model';
+import { StoreStatus } from '@blockframes/shared/model';
 
 describe('Movies Rules Tests', () => {
   const projectId = `movrules-spec-${Date.now()}`;

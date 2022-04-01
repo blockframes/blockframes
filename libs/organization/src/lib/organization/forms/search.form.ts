@@ -1,5 +1,5 @@
 // Blockframes
-import { Territory } from '@blockframes/utils/static-model';
+import { Territory } from '@blockframes/shared/model';
 import { FormEntity, FormList } from '@blockframes/utils/form';
 import { AlgoliaSearch } from '@blockframes/utils/algolia';
 import { Organization } from '@blockframes/shared/model';

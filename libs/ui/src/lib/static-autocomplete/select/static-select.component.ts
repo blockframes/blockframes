@@ -3,7 +3,7 @@ import { Component, ChangeDetectionStrategy, Input, ContentChild, TemplateRef, O
 import { FormControl } from '@angular/forms';
 
 // Blockframes
-import { Scope, staticModel } from '@blockframes/utils/static-model';
+import { Scope, staticModel } from '@blockframes/shared/model';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 
 @Component({

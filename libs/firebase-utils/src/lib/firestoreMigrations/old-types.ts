@@ -5,7 +5,7 @@ import {
   MovieDocument,
   MoviePromotionalElements,
 } from '@blockframes/shared/model';
-import { StoreStatus } from '@blockframes/utils/static-model';
+import { StoreStatus } from '@blockframes/shared/model';
 
 export interface OldStoreConfig {
   appAccess: {

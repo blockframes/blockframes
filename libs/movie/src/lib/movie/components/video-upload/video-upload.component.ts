@@ -3,7 +3,7 @@ import { Privacy } from '@blockframes/utils/file-sanitizer';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Movie, MovieVideos } from '@blockframes/shared/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { hostedVideoTypes } from '@blockframes/utils/static-model';
+import { hostedVideoTypes } from '@blockframes/shared/model';
 import { MovieVideosForm } from '@blockframes/movie/form/movie.form';
 import { FileUploaderService } from '@blockframes/media/+state/file-uploader.service';
 

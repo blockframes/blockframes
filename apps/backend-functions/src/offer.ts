@@ -1,7 +1,7 @@
 import { db } from './internals/firebase';
 import { getDocument } from '@blockframes/firebase-utils';
 import { Movie, Offer, User } from '@blockframes/model';
-import { staticModel } from '@blockframes/utils/static-model';
+import { staticModel } from '@blockframes/shared/model';
 import { createNotification, triggerNotifications } from './notification';
 // #7946 this may be reactivated later
 // import { templateIds } from '@blockframes/utils/emails/ids';

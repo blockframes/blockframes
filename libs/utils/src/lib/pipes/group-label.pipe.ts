@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
-import { GroupScope, StaticGroup, staticGroups, staticModel } from '@blockframes/utils/static-model';
+import { GroupScope, StaticGroup, staticGroups, staticModel } from '@blockframes/shared/model';
 
 export function toGroupLabel(value: string[], scope: GroupScope, all?: string) {
 

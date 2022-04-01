@@ -1,5 +1,5 @@
 import { createStorageFile, StorageFile } from './media';
-import { CrewRole, Territory, ProducerRole, MemberStatus, DirectorCategory } from '@blockframes/utils/static-model/types';
+import { CrewRole, Territory, ProducerRole, MemberStatus, DirectorCategory } from '@blockframes/shared/model/types';
 
 //////////////////////////
 // VARIOUS IDENTITY OBJECTS

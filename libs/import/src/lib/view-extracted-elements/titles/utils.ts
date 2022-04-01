@@ -43,7 +43,7 @@ import {
   StakeholderRole,
   StoreStatus,
   Territory,
-} from '@blockframes/utils/static-model';
+} from '@blockframes/shared/model';
 
 interface FieldsConfig {
   title: {

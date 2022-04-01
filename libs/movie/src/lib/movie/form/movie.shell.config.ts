@@ -2,7 +2,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { mergeDeep } from '@blockframes/utils/helpers';
 import { FileUploaderService } from '@blockframes/media/+state';
-import { ProductionStatus } from '@blockframes/utils/static-model';
+import { ProductionStatus } from '@blockframes/shared/model';
 import { App, getMoviePublishStatus } from '@blockframes/utils/apps';
 import { FormSaveOptions } from '@blockframes/utils/common-interfaces';
 import { MovieControl, MovieForm } from './movie.form';

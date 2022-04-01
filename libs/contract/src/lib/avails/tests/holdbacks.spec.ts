@@ -1,4 +1,4 @@
-import { Media, Territory } from '@blockframes/utils/static-model';
+import { Media, Territory } from '@blockframes/shared/model';
 import { collidingHoldback, getCollidingHoldbacks } from '../avails';
 import { createHoldback, Holdback, Duration, Term, createTerm } from '@blockframes/shared/model';
 

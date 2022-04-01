@@ -1,4 +1,4 @@
-import { Territory } from '@blockframes/utils/static-model';
+import { Territory } from '@blockframes/shared/model';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { UserService } from '@blockframes/user/+state';
 import { createUser, User, createOrganization, Organization } from '@blockframes/shared/model';

@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { orgActivity } from '@blockframes/utils/static-model';
+import { orgActivity } from '@blockframes/shared/model';
 
 @Component({
   selector: '[fiscalNumber] [activity] [description] organization-form-description',

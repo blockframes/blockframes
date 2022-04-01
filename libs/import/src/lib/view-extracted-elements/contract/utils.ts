@@ -21,7 +21,7 @@ import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { UserService } from '@blockframes/user/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { Movie, Term } from '@blockframes/shared/model';
-import { ContractStatus, ImportContractStatus, Language, Media, Territory } from '@blockframes/utils/static-model';
+import { ContractStatus, ImportContractStatus, Language, Media, Territory } from '@blockframes/shared/model';
 import { createMandate, createSale, Mandate, MovieLanguageSpecification, Sale, User } from '@blockframes/shared/model';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { extract, ExtractConfig, getStaticList, SheetTab, getGroupedList } from '@blockframes/utils/spreadsheet';

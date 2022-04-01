@@ -1,4 +1,4 @@
-import type { MovieCurrency } from '@blockframes/utils/static-model';
+import type { MovieCurrency } from '@blockframes/shared/model';
 import { createHoldback, Holdback, MailContract } from './contract';
 import { BucketTerm } from './terms';
 import { createLanguageKey } from './movie';

@@ -3,7 +3,7 @@ import { Intercom } from 'ng-intercom';
 import { BucketService } from '@blockframes/contract/bucket/+state';
 import { Movie, Bucket, Holdback } from '@blockframes/shared/model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { movieCurrencies } from '@blockframes/utils/static-model';
+import { movieCurrencies } from '@blockframes/shared/model';
 import { Observable, Subject, merge } from 'rxjs';
 import { map, mapTo, tap } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';

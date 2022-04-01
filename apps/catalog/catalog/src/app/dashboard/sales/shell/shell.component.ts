@@ -8,7 +8,7 @@ import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { IncomeService } from '@blockframes/contract/income/+state';
 import { Intercom } from 'ng-intercom';
 import { Sale } from '@blockframes/shared/model';
-import { contractStatus } from '@blockframes/utils/static-model';
+import { contractStatus } from '@blockframes/shared/model';
 
 @Component({
   selector: 'sale-shell',

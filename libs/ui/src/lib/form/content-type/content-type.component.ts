@@ -1,6 +1,6 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { FormStaticValue } from '@blockframes/utils/form';
-import { contentType, ContentType } from '@blockframes/utils/static-model';
+import { contentType, ContentType } from '@blockframes/shared/model';
 
 @Component({
   selector: '[form] form-content-type',

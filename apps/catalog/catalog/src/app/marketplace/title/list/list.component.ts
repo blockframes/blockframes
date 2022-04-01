@@ -13,7 +13,7 @@ import { centralOrgId } from '@env';
 import { AlgoliaMovie } from '@blockframes/utils/algolia';
 import { PdfService } from '@blockframes/utils/pdf/pdf.service';
 import { Term } from '@blockframes/shared/model';
-import { StoreStatus } from '@blockframes/utils/static-model/types';
+import { StoreStatus } from '@blockframes/shared/model/types';
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
 import { BucketService } from '@blockframes/contract/bucket/+state';
 import { Bucket } from '@blockframes/shared/model';

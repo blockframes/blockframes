@@ -1,6 +1,6 @@
 import { centralOrgId } from '@env';
 import { Timestamp, LanguageRecord, Duration, Negotiation } from '@blockframes/model';
-import { Language, Media, Territory } from '@blockframes/utils/static-model';
+import { Language, Media, Territory } from '@blockframes/shared/model';
 
 interface ArrayDifferences<T = string> {
   added: T[];

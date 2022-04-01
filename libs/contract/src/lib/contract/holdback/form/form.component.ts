@@ -4,7 +4,7 @@ import { DetailedTermsComponent } from '@blockframes/contract/term/components/de
 import { Holdback, Movie } from '@blockframes/shared/model';
 import { FormTableComponent } from '@blockframes/ui/form/table/form-table.component';
 import { FormList } from '@blockframes/utils/form';
-import { Scope } from '@blockframes/utils/static-model';
+import { Scope } from '@blockframes/shared/model';
 import { HoldbackForm } from '../form';
 
 @Component({

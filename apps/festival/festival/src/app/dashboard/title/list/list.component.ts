@@ -8,7 +8,7 @@ import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Intercom } from 'ng-intercom';
 import { App } from '@blockframes/utils/apps';
-import { StoreStatus } from '@blockframes/utils/static-model/types';
+import { StoreStatus } from '@blockframes/shared/model/types';
 import { APP } from '@blockframes/utils/routes/utils';
 
 @Component({

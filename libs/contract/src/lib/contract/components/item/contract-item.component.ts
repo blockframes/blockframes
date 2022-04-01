@@ -1,6 +1,6 @@
 import { Component, Input, TemplateRef, ContentChild, ChangeDetectionStrategy } from '@angular/core';
 import { BucketContract } from '@blockframes/shared/model';
-import { Scope, mediaGroup, territoriesGroup } from '@blockframes/utils/static-model';
+import { Scope, mediaGroup, territoriesGroup } from '@blockframes/shared/model';
 import { MatDialog } from '@angular/material/dialog';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 import { HoldbackModalComponent } from '../../holdback/modal/holdback-modal.component';

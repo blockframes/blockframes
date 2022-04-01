@@ -20,7 +20,7 @@ import { Observable, Subscription } from 'rxjs';
 import { startWith, map, distinctUntilChanged } from 'rxjs/operators';
 
 // Blockframes
-import { staticModel, Scope } from '@blockframes/utils/static-model';
+import { staticModel, Scope } from '@blockframes/shared/model';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { FormList } from '@blockframes/utils/form';
 import { getKeyIfExists } from '@blockframes/utils/helpers';

@@ -7,7 +7,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { isInitial } from '@blockframes/contract/negotiation/utils';
 import { capitalize } from '@blockframes/utils/helpers';
 import { Contract, Sale, Negotiation } from '@blockframes/shared/model';
-import { ContractStatus } from '@blockframes/utils/static-model';
+import { ContractStatus } from '@blockframes/shared/model';
 
 interface InternalSale extends Sale<Date> {
   licensor: string;

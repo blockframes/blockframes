@@ -1,7 +1,7 @@
 /**
  * Apps definition
  */
-import { StoreStatus } from './static-model';
+import { StoreStatus } from '@blockframes/shared/model';
 import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
 import { appUrl } from '@env';
 import { MovieBase, MovieDocument, OrganizationBase, OrganizationDocument } from '@blockframes/shared/model';

@@ -18,7 +18,7 @@ import { EventService } from '@blockframes/event/+state/event.service';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { App, getOrgAppAccess } from '@blockframes/utils/apps';
-import { Scope } from '@blockframes/utils/static-model';
+import { Scope } from '@blockframes/shared/model';
 
 @Component({
   selector: 'crm-user',

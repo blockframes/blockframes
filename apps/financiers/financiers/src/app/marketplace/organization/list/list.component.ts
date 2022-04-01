@@ -11,7 +11,7 @@ import { OrganizationSearchForm, createOrganizationSearch } from '@blockframes/o
 // RxJs
 import { debounceTime, distinctUntilChanged, map, pluck, startWith, switchMap, tap } from 'rxjs/operators';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
-import { Territory } from '@blockframes/utils/static-model';
+import { Territory } from '@blockframes/shared/model';
 
 @Component({
   selector: 'financiers-organization-list',

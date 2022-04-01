@@ -7,7 +7,7 @@ import { App, appName, getMovieAppAccess } from '@blockframes/utils/apps';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
-import { storeStatus, StoreStatus } from '@blockframes/utils/static-model';
+import { storeStatus, StoreStatus } from '@blockframes/shared/model';
 import { APP } from '@blockframes/utils/routes/utils';
 
 @Directive({ selector: 'movie-action-menu, [movieActionMenu]' })

@@ -3,7 +3,7 @@ import { combineLatest } from 'rxjs';
 import { map, shareReplay, take, throttleTime } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { TerritoryValue } from '@blockframes/utils/static-model';
+import { TerritoryValue } from '@blockframes/shared/model';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
 import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
 import {

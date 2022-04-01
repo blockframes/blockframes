@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 import { Movie } from '@blockframes/shared/model';
-import { Scope } from '@blockframes/utils/static-model';
+import { Scope } from '@blockframes/shared/model';
 import { NegotiationForm } from '../form';
 
 const isNumber = (v: string) => !isNaN(parseFloat(v));

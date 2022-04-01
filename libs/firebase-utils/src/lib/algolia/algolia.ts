@@ -1,7 +1,7 @@
 import algoliasearch from 'algoliasearch';
 import { algolia as algoliaClient, centralOrgId } from '@env';
 import * as functions from 'firebase-functions';
-import { festival, Language } from '@blockframes/utils/static-model';
+import { festival, Language } from '@blockframes/shared/model';
 import { App, app, getOrgModuleAccess, modules } from '@blockframes/utils/apps';
 import { AlgoliaOrganization, AlgoliaMovie, AlgoliaUser, AlgoliaConfig } from '@blockframes/utils/algolia';
 import { MovieDocument, OrganizationDocument, orgName, PublicUser } from '@blockframes/shared/model';

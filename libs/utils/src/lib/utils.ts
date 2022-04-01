@@ -1,4 +1,4 @@
-import { staticModel, Scope } from '@blockframes/utils/static-model';
+import { staticModel, Scope } from '@blockframes/shared/model';
 import { Person, LanguageRecord } from '@blockframes/shared/model';
 
 export interface ErrorResultResponse {

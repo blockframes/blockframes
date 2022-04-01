@@ -4,7 +4,7 @@ import { centralOrgId } from '@env';
 import { switchMap, take } from 'rxjs/operators';
 import { AuthService } from '@blockframes/auth/+state';
 import { createOfferId } from '@blockframes/utils/utils';
-import { MovieCurrency } from '@blockframes/utils/static-model';
+import { MovieCurrency } from '@blockframes/shared/model';
 import { AvailsFilter } from '@blockframes/contract/avails/avails';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { TermService } from '../../term/+state';

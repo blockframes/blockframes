@@ -21,7 +21,7 @@ import { BucketTerm, Term } from '@blockframes/shared/model';
 import { ExplanationComponent } from './explanation/explanation.component';
 import { HoldbackModalComponent } from '@blockframes/contract/contract/holdback/modal/holdback-modal.component';
 import { scrollIntoView } from '../../../../../../../../libs/utils/src/lib/browser/utils';
-import { territories, Territory } from '@blockframes/utils/static-model';
+import { territories, Territory } from '@blockframes/shared/model';
 
 @Component({
   selector: 'catalog-movie-avails',

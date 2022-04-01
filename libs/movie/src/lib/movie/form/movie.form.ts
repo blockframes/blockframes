@@ -51,7 +51,7 @@ import { StorageFileForm } from '@blockframes/media/form/media.form';
 import { yearValidators, urlValidators } from '@blockframes/utils/form/validators/validators';
 import { FormValue } from '@blockframes/utils/form';
 import { toDate } from '@blockframes/utils/helpers';
-import { Language } from '@blockframes/utils/static-model';
+import { Language } from '@blockframes/shared/model';
 import { App } from '@blockframes/utils/apps';
 import { Privacy } from '@blockframes/utils/file-sanitizer';
 

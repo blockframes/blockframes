@@ -6,7 +6,7 @@ import { Intercom } from 'ng-intercom';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { EventService } from '@blockframes/event/+state';
-import { AccessibilityTypes } from '@blockframes/utils/static-model';
+import { AccessibilityTypes } from '@blockframes/shared/model';
 
 @Component({
   selector: '[form] event-details-edit',

@@ -2,7 +2,7 @@
 import { Component, Input, ContentChild, TemplateRef, ChangeDetectionStrategy, OnInit } from '@angular/core';
 
 // Blockframes
-import { Scope, staticModel } from '@blockframes/utils/static-model';
+import { Scope, staticModel } from '@blockframes/shared/model';
 import { FormStaticValueArray } from '@blockframes/utils/form';
 
 // RxJs

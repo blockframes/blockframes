@@ -16,7 +16,7 @@ import { joinWith } from '@blockframes/utils/operators';
 import { map, pluck, shareReplay, switchMap } from 'rxjs/operators';
 import { counter } from '@blockframes/analytics/+state/utils';
 import { UserService } from '@blockframes/user/+state';
-import { Scope, staticModel } from '@blockframes/utils/static-model';
+import { Scope, staticModel } from '@blockframes/shared/model';
 
 function getFilter(scope: Scope) {
   return (input: string, value: any) => {

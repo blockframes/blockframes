@@ -1,4 +1,4 @@
-import { MovieLanguageType, productionStatus } from '@blockframes/utils/static-model';
+import { MovieLanguageType, productionStatus } from '@blockframes/shared/model';
 import { toDate } from '@blockframes/utils/helpers';
 import { createStorageFile, StorageFile, StorageVideo } from './media';
 import { App, getAllAppsExcept } from '@blockframes/utils/apps';
@@ -24,7 +24,7 @@ import type {
   SocialGoal,
   NumberRange,
   ScreeningStatus,
-} from '@blockframes/utils/static-model/types';
+} from '@blockframes/shared/model/types';
 import type { Producer, Crew, Cast, Stakeholder, Director } from './identity';
 import type { DocumentMeta } from './meta';
 import type { Timestamp } from './timestamp';

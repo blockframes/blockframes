@@ -1,5 +1,5 @@
 import { createMandate, createSale } from '@blockframes/shared/model';
-import { territories, Territory } from '@blockframes/utils/static-model';
+import { territories, Territory } from '@blockframes/shared/model';
 import { FullMandate, FullSale } from '../avails';
 
 /**

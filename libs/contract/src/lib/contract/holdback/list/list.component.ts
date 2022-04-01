@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 import { Holdback } from '@blockframes/shared/model';
-import { Scope } from '@blockframes/utils/static-model';
+import { Scope } from '@blockframes/shared/model';
 
 @Component({
   selector: 'holdback-list',
