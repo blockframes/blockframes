@@ -5,7 +5,7 @@ import type {
   ProducerRole,
   MemberStatus,
   DirectorCategory
-} from './types';
+} from './static';
 
 //////////////////////////
 // VARIOUS IDENTITY OBJECTS

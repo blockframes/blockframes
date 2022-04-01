@@ -1,9 +1,8 @@
-import { Media, Territory } from './types';
+import { Media, Territory, staticModel } from './static';
 import { Timestamp } from './timestamp';
 import { format } from 'date-fns';
 import { toLanguageVersionString } from '@blockframes/utils/utils';
 import { LanguageRecord } from './movie';
-import { staticModel } from './static-model';
 
 export function createMailTerm(terms: BucketTerm<Timestamp>[]) {
   return terms.map((term) => ({

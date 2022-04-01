@@ -1,4 +1,4 @@
-import { AccessibilityTypes } from './types';
+import { AccessibilityTypes } from './static';
 import { toDate } from '@blockframes/utils/helpers';
 import { CalendarEvent } from 'angular-calendar';
 import { AnonymousCredentials } from '@blockframes/auth/+state/auth.model';

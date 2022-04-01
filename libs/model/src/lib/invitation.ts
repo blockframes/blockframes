@@ -1,4 +1,4 @@
-import type { InvitationStatus, InvitationType } from './types';
+import type { InvitationStatus, InvitationType } from './static';
 import { Organization, PublicOrganization } from './organisation';
 import { PublicUser } from './user';
 import { Movie } from './movie';

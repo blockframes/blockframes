@@ -1,5 +1,5 @@
 import { DocumentMeta, createDocumentMeta } from './meta';
-import type { Media, Territory, ContractStatus } from './types';
+import type { Media, Territory, ContractStatus } from './static';
 import { Timestamp } from './timestamp';
 import { toDate } from '@blockframes/utils/helpers';
 import { createMailTerm, Duration } from './terms';

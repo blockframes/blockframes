@@ -1,4 +1,4 @@
-import { MovieCurrency, OfferStatus } from './types';
+import { MovieCurrency, OfferStatus } from './static';
 import { DocumentMeta } from './meta';
 
 export interface Offer {

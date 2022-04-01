@@ -1,4 +1,4 @@
-import type { MovieCurrency } from './types';
+import type { MovieCurrency } from './static';
 import { createHoldback, Holdback, MailContract } from './contract';
 import { BucketTerm } from './terms';
 import { createLanguageKey } from './movie';

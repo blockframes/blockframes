@@ -24,7 +24,7 @@ import type {
   SocialGoal,
   NumberRange,
   ScreeningStatus,
-} from './types';
+} from './static';
 import type {
   Producer,
   Crew,
@@ -34,7 +34,7 @@ import type {
 } from './identity';
 import type { DocumentMeta } from './meta';
 import type { Timestamp } from './timestamp';
-import { productionStatus } from './static-model';
+import { productionStatus } from './static';
 
 //////////////////
 // MOVIE OBJECT //
