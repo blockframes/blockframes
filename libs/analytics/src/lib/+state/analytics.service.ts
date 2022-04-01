@@ -20,7 +20,7 @@ interface AnalyticsState extends EntityState<Analytics>, ActiveState<string> { }
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'analytics' })
 export class AnalyticsService extends CollectionService<AnalyticsState> {
-  readonly useMemorization = true;
+  readonly useMemorization = false;
 
   constructor(
     private analytics: AngularFireAnalytics,

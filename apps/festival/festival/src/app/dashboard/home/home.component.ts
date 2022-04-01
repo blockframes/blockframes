@@ -36,10 +36,10 @@ export class HomeComponent {
     })
   );
 
-  titleAnalytics$ = this.analyticsService.getAnalytics().pipe(
+  private titleAnalytics$ = this.analyticsService.getAnalytics().pipe(
     joinWith({
       org: analytic => this.orgService.valueChanges(analytic.meta.orgId)
-    }),
+    }, { shouldAwait: true }),
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
@@ -47,25 +47,29 @@ export class HomeComponent {
     filter(analytics => analytics.length > 0),
     map(analytics => counter(analytics, 'meta.titleId')),
     map(analytics => analytics.sort((a, b) => a.count > b.count ? -1 : 1)),
-    switchMap(([popularEvent]) => this.movieService.valueChanges(popularEvent.key)),
+    switchMap(([popularEvent]) => this.movieService.getValue(popularEvent.key))
+  );
+
+  private titleAnalyticsOfPopularTitle$ = combineLatest([ this.popularTitle$, this.titleAnalytics$ ]).pipe(
+    map(([title, titleAnalytics]) => titleAnalytics.filter(analytics => analytics.meta.titleId === title.id)),
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
-  orgActivityOfPopularTitle$ = combineLatest([
-    this.popularTitle$,
-    this.titleAnalytics$
-  ]).pipe(
-    map(([title, titleAnalytics]) => titleAnalytics.filter(analytics => analytics.meta.titleId === title.id)),
-    map(analytics => counter(analytics, 'org.activity', 'orgActivity'))
-  )
+  orgActivityOfPopularTitle$ = this.titleAnalyticsOfPopularTitle$.pipe(
+    map(analytics => counter(analytics, 'org.activity', 'orgActivity')),
+  );
 
-  territoryActivityOfPopularTitle$ = combineLatest([
-    this.popularTitle$,
-    this.titleAnalytics$
-  ]).pipe(
-    map(([title, titleAnalytics]) => titleAnalytics.filter(analytics => analytics.meta.titleId === title.id)),
+  territoryActivityOfPopularTitle$ = this.titleAnalyticsOfPopularTitle$.pipe(
     map(analytics => counter(analytics, 'org.addresses.main.country', 'territories')),
-  )
+  );
+
+  interactionsOfPopularTitle$ = this.titleAnalyticsOfPopularTitle$.pipe(
+    map(analytics => analytics.filter(analytic => analytic.name !== 'pageView'))
+  );
+
+  pageViewsOfPopularTitle$ = this.titleAnalyticsOfPopularTitle$.pipe(
+    map(analytics => analytics.filter(analytic => analytic.name === 'pageView'))
+  );
 
   constructor(
     private analyticsService: AnalyticsService,
