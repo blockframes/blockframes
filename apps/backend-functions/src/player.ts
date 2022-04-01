@@ -3,7 +3,7 @@ import { createHash } from 'crypto';
 import { File as GFile } from '@google-cloud/storage';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { jwplayerApiV2 } from '@blockframes/firebase-utils';
-import { StorageVideo, linkDuration } from '@blockframes/model';
+import { StorageVideo, linkDuration } from '@blockframes/shared/model';
 import { ErrorResultResponse } from './utils';
 import { getDocument } from './data/internals';
 import { isAllowedToAccessMedia } from './internals/media';

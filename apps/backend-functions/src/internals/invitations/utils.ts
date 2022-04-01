@@ -1,4 +1,4 @@
-import { InvitationDocument, InvitationOrUndefined, invitationStatus } from '@blockframes/model';
+import { InvitationDocument, InvitationOrUndefined, invitationStatus } from '@blockframes/shared/model';
 import * as admin from 'firebase-admin';
 
 /** Checks if an invitation just got accepted. */

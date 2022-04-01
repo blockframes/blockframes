@@ -1,5 +1,5 @@
 import { db } from './internals/firebase';
-import { Bucket, Term } from '@blockframes/model';
+import { Bucket, Term } from '@blockframes/shared/model';
 
 export async function onTermDelete(termSnapshot: FirebaseFirestore.DocumentSnapshot<Term>) {
 

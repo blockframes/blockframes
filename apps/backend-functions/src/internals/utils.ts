@@ -1,4 +1,4 @@
-import { PublicUser } from '@blockframes/model';
+import { PublicUser } from '@blockframes/shared/model';
 import * as admin from 'firebase-admin';
 export { firebaseRegion } from '@env';
 

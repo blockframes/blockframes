@@ -2,10 +2,9 @@ import { db } from './internals/firebase';
 import { Change, EventContext } from 'firebase-functions';
 import { createDocumentMeta, getDocument, Timestamp } from './data/internals';
 import { centralOrgId } from 'env/env.blockframes-ci';
-import { Contract, formatDocumentMetaFromFirestore, Negotiation, Organization, Sale, NotificationTypes, Offer } from '@blockframes/model';
 import { createNotification, triggerNotifications } from './notification';
 import { getReviewer, isInitial } from '@blockframes/contract/negotiation/utils'
-import { ContractStatus } from '@blockframes/shared/model';
+import { ContractStatus, Contract, formatDocumentMetaFromFirestore, Negotiation, Organization, Sale, NotificationTypes, Offer } from '@blockframes/shared/model';
 
 // KEEP THE OFFER STATUS IN SYNC WITH IT'S CONTRACTS AND NEGOTIATIONS
 async function updateOfferStatus(contract: Contract) {
