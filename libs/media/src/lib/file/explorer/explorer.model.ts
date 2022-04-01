@@ -2,7 +2,7 @@ import { MediaRatioType } from '../../image/uploader/uploader.component';
 import { MovieForm, MovieVideoForm } from '@blockframes/movie/form/movie.form';
 import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
 import { AllowedFileType } from '@blockframes/utils/utils';
-import { StorageFile, StorageVideo, Movie, MovieVideo, Organization } from '@blockframes/model';
+import { StorageFile, StorageVideo, Movie, MovieVideo, Organization } from '@blockframes/shared/model';
 import { getDeepValue } from '@blockframes/utils/pipes/deep-key.pipe';
 import { CollectionHoldingFile, FileLabel, getFileMetadata } from '../../+state/static-files';
 import { StorageFileForm } from '@blockframes/media/form/media.form';

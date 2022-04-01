@@ -11,9 +11,9 @@ import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap } from 'rxjs/operators';
 
 import { PdfService } from '@blockframes/utils/pdf/pdf.service';
-import { StoreStatus } from '@blockframes/shared/model/types';
+import { StoreStatus } from '@blockframes/shared/model';
 import { AlgoliaMovie } from '@blockframes/utils/algolia/algolia.interfaces';
-import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
+import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MovieSearchForm, createMovieSearch, MovieSearch } from '@blockframes/movie/form/search.form';
 

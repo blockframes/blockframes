@@ -12,7 +12,7 @@ import {
   createInvitation,
   Invitation,
   InvitationDocument
-} from '@blockframes/model';
+} from '@blockframes/shared/model';
 import { toDate } from '@blockframes/utils/helpers';
 import { cleanInvitation } from '../invitation-utils';
 import {

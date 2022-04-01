@@ -1,8 +1,6 @@
 import { NgModule, Pipe, PipeTransform } from '@angular/core';
 import { formatDate } from '@angular/common';
-import { MovieShooting } from '@blockframes/shared/model';
-import { territories } from '@blockframes/shared/model/static-model';
-import { TerritoryValue } from '@blockframes/shared/model';
+import { MovieShooting, territories, TerritoryValue} from '@blockframes/shared/model';
 import { toDate } from '@blockframes/utils/helpers';
 
 @Pipe({ name: 'shootingDates' })

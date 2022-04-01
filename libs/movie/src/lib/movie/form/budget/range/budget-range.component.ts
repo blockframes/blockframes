@@ -3,7 +3,7 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 // Blockframes  Utils
-import { budgetRange } from '@blockframes/shared/model/static-model';
+import { budgetRange } from '@blockframes/shared/model';
 
 @Component({
   selector: '[form]movie-form-budget-range',

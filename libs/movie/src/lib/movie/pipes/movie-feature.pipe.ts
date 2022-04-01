@@ -1,6 +1,5 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
-import { Movie } from '@blockframes/shared/model';
-import { genres as staticGenres, languages, territoriesISOA2 } from '@blockframes/shared/model/static-model';
+import { genres as staticGenres, languages, territoriesISOA2, Movie } from '@blockframes/shared/model';
 import { formatRunningTime } from '@blockframes/movie/pipes/running-time.pipe';
 
 @Pipe({

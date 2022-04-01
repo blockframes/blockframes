@@ -1,6 +1,6 @@
-import { Injectable } from "@angular/core";
-import { Term } from "@blockframes/model";
-import { ActiveState, EntityState, EntityStore, StoreConfig } from "@datorama/akita";
+import { Injectable } from '@angular/core';
+import { Term } from '@blockframes/shared/model';
+import { ActiveState, EntityState, EntityStore, StoreConfig } from '@datorama/akita';
 
 export interface TermState extends EntityState<Term, string>, ActiveState<string> {}
 

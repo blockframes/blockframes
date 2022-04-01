@@ -24,7 +24,7 @@ import type {
   SocialGoal,
   NumberRange,
   ScreeningStatus,
-} from '@blockframes/shared/model/types';
+} from '@blockframes/shared/model';
 import type { Producer, Crew, Cast, Stakeholder, Director } from './identity';
 import type { DocumentMeta } from './meta';
 import type { Timestamp } from './timestamp';

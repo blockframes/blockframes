@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
-import { Event } from '@blockframes/model';
+import { Event } from '@blockframes/shared/model';
 import { ModuleGuard } from '@blockframes/utils/routes/module.guard';
 
 @Pipe({ name: 'eventLink', pure: false })

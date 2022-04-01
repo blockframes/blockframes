@@ -1,4 +1,4 @@
-import { Analytics, EventName } from "@blockframes/model";
+import { Analytics, EventName } from '@blockframes/shared/model';
 import { MovieAnalytics, MovieEventAnalytics } from '@blockframes/analytics/components/movie-analytics-chart/movie-analytics.model';
 
 import { subDays, format } from 'date-fns'

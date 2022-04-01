@@ -1,5 +1,5 @@
 import { NgModule, Pipe, PipeTransform } from '@angular/core';
-import { Filmography } from '@blockframes/model';
+import { Filmography } from '@blockframes/shared/model';
 
 @Pipe({ name: 'filmography' })
 export class FilmographyPipe implements PipeTransform {

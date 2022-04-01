@@ -7,9 +7,8 @@ import { Observable } from 'rxjs';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { toLabel } from '@blockframes/utils/pipes';
-import { orgName } from '@blockframes/shared/model';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { Event, EventMeta, EventTypes } from '@blockframes/shared/model';
+import { Event, EventMeta, EventTypes, orgName } from '@blockframes/shared/model';
 
 interface WatchTimeInfo {
   name: string; // firstName + lastName

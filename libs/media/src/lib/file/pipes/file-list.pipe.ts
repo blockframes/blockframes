@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
-import { StorageFile } from '@blockframes/model';
+import { StorageFile } from '@blockframes/shared/model';
 
 @Pipe({ name: 'fileListIndex' })
 export class FileListIndexPipe implements PipeTransform {

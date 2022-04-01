@@ -1,4 +1,4 @@
-import { User, Organization, Movie } from '@blockframes/model';
+import { User, Organization, Movie } from '@blockframes/shared/model';
 import { DocumentMeta } from './meta';
 
 const analyticsEvents = [

@@ -1,6 +1,5 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
-import { movieLanguageTypes } from '../static-model/static-model';
-import { MovieLanguageSpecification } from '@blockframes/shared/model';
+import { MovieLanguageSpecification, movieLanguageTypes } from '@blockframes/shared/model';
 
 @Pipe({ name: 'versionPipe' })
 export class VersionPipe implements PipeTransform {

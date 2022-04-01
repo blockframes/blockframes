@@ -13,7 +13,7 @@ import {
 import { AbstractControl, FormArray, FormGroup } from '@angular/forms';
 
 // Blockframes
-import { Scope } from '@blockframes/shared/model/static-model';
+import { Scope } from '@blockframes/shared/model';
 
 // RxJs
 import { Subscription } from 'rxjs';
