@@ -13,14 +13,14 @@ import { sendMailFromTemplate, sendMail } from './internals/email';
 import { RequestDemoInformations } from '@blockframes/utils/request-demo';
 import { getCollection, storeSearchableUser, deleteObject, algolia } from '@blockframes/firebase-utils';
 import { getDocument } from './data/internals';
-import { getMailSender, applicationUrl, App } from '@blockframes/utils/apps';
+import { getMailSender, applicationUrl, App, appName } from '@blockframes/utils/apps';
 import { sendFirstConnexionEmail, createUserFromEmail } from './internals/users';
 import { production } from './environments/environment';
 import { cleanUserMedias } from './media';
 import { getUserEmailData, OrgEmailData } from '@blockframes/utils/emails/utils';
 import { groupIds } from '@blockframes/utils/emails/ids';
 import { User, OrganizationDocument, PublicUser, InvitationDocument, PermissionsDocument } from '@blockframes/shared/model';
-import { updateMemberTags } from './mailchimp';
+import { updateMemberTags, registerToNewsletters } from './mailchimp';
 import { getPreferenceTag, MailchimpTag } from '@blockframes/utils/mailchimp/mailchimp-model';
 import { ErrorResultResponse } from './utils';
 
@@ -109,6 +109,8 @@ export const onUserCreate = async (user: UserRecord) => {
     if (userDoc.exists) {
       if (!user.emailVerified) {
         const u = userDoc.data() as PublicUser;
+        const tags = ['Firebase new user'];
+        registerToNewsletters({email, tags});
         await startAccountCreationEmailFlow({ email, publicUser: u, app: u._meta.createdFrom });
       }
       tx.update(userDocRef, { email, uid });

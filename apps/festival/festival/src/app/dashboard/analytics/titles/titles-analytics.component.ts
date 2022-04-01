@@ -43,9 +43,10 @@ function countAnalytics(title: Movie & { analytics?: Analytics[]; events?: Event
 export class TitlesAnalyticsComponent {
   titlesAnalytics$ = this.service.queryDashboard(this.app).pipe(
     joinWith({
-      events: title =>
-        this.eventService.valueChanges(ref => ref.where('type', '==', 'screening').where('meta.titleId', '==', title.id)),
-    }),
+      events: title => this.eventService.valueChanges(ref => ref
+        .where('type', '==', 'screening')
+        .where('meta.titleId', '==', title.id))
+    }, { shouldAwait: true }),
     map(titles => titles.map(countAnalytics))
   );
 
