@@ -21,6 +21,23 @@ import { USER_FIXTURES_PASSWORD } from '@blockframes/firebase-utils/anonymize/ut
 
 const [newOrgUser, knownMarketplaceOrgUser, knownDashboardOrgUser, unfillingUser] = createFakeUserDataArray(4);
 
+function deleteUserIfExists(userEmail: string) {
+  cy.task('getAuthUserByEmail', userEmail)
+    .then((user: User) => {
+      if (!user) return console.log('No previous user with this email');
+      cy.task('deleteAuthUser', user.uid);
+      cy.task('deleteUser', user.uid);
+  });
+}
+
+function deleteOrgIfExists(orgName: string) {
+  cy.task('getOrgByName', orgName)
+    .then((org: Organization) => {
+      if (!org) return console.log('No previous organization with this name');
+      cy.task('deleteOrg', org.id);
+  });
+}
+
 describe('Signup', () => {
 
   beforeEach(() => {
@@ -31,6 +48,8 @@ describe('Signup', () => {
 
   it('User from new company can signup', () => {
     const user = newOrgUser;
+    deleteUserIfExists(user.email);
+    deleteOrgIfExists(user.company.name);
     get('cookies').click();
     get('email').type(user.email);
     get('first-name').type(user.firstname);
@@ -75,6 +94,8 @@ describe('Signup', () => {
 
   it('User from a known organization with access to festival marketplace can signup', () => {
     const user = knownMarketplaceOrgUser;
+    deleteUserIfExists(user.email);
+    deleteOrgIfExists(user.company.name);
     cy.task('getRandomOrg', { app: 'festival', access: { marketplace: true, dashboard: false } }).then((org: Organization) => {
       get('cookies').click();
       get('email').type(user.email);
@@ -125,6 +146,8 @@ describe('Signup', () => {
 
   it('User from a known organization with access to festival dashboard can signup', () => {
     const user = knownDashboardOrgUser;
+    deleteUserIfExists(user.email);
+    deleteOrgIfExists(user.company.name);
     cy.task('getRandomOrg', { app: 'festival', access: { marketplace: true, dashboard: true } })
     .then((org: Organization) => {
       get('cookies').click();
@@ -188,7 +211,7 @@ describe('Signup', () => {
         check('terms');
         check('gdpr');
         get('submit').click();
-        get('existing-email').should('contain', 'This email already exists');
+        get('existing-email').should('exist');
       });
     });
   });

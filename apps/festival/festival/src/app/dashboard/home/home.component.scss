@@ -34,3 +34,18 @@ header {
     margin: 24px auto auto auto;
   }
 }
+
+.no-accepted-movies {
+  .surface {
+    width: 330px;
+
+    img {
+      width: 100px;
+      align-self: center;
+    }
+  }
+  
+  h3 {
+    margin-top: 24px;
+  }
+}
