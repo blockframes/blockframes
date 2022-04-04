@@ -117,7 +117,7 @@ export class ListComponent implements OnInit {
     return this.intercom.show();
   }
 
-  async changeMovieStatus(movie: Movie, status: StoreStatus, message?: string) {
+  async updateStatus(movie: Movie, status: StoreStatus, message?: string) {
     await this.movieService.updateStatus(movie.id, status);
     this.snackbar.open(message || `Title ${storeStatus[status]}.`, '', { duration: 4000 });
   }
