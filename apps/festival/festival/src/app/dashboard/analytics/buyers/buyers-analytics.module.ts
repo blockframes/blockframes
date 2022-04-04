@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { SellersAnalyticsComponent } from './sellers-analytics.component';
+import { BuyersAnalyticsComponent } from './buyers-analytics.component';
 
 // Blockframes
 import { TableModule } from '@blockframes/ui/list/table/table.module';
@@ -15,10 +15,10 @@ import { TableModule } from '@blockframes/ui/list/table/table.module';
     RouterModule.forChild([
       {
         path: '',
-        component: SellersAnalyticsComponent
+        component: BuyersAnalyticsComponent
       }
     ])
   ],
-  declarations: [SellersAnalyticsComponent]
+  declarations: [BuyersAnalyticsComponent]
 })
-export class SellersAnalyticsModule {}
+export class BuyersAnalyticsModule {}
