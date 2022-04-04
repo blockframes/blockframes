@@ -81,7 +81,7 @@ export class TitleListComponent {
     return this.intercom.show();
   }
 
-  async changeMovieStatus(movie: Movie, status: StoreStatus, message?: string) {
+  async updateStatus(movie: Movie, status: StoreStatus, message?: string) {
     await this.service.updateStatus(movie.id, status);
     this.snackbar.open(message || `Title ${storeStatus[status]}.`, '', { duration: 4000 });
   }
