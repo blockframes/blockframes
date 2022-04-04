@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, Input, ViewChild } from "@angular/core";
-import { Analytics, EventName } from "@blockframes/model";
-import { eachDayOfInterval, isSameDay } from "date-fns";
+import { ChangeDetectionStrategy, Component, Input, ViewChild } from '@angular/core';
+import { Analytics, EventName } from '@blockframes/shared/model';
+import { eachDayOfInterval, isSameDay } from 'date-fns';
 import {
   ApexAxisChartSeries,
   ApexChart,
@@ -11,7 +11,7 @@ import {
   ApexTheme,
   ApexXAxis,
   ChartComponent,
-} from "ng-apexcharts";
+} from 'ng-apexcharts';
 
 interface LineChartOptions {
   series: ApexAxisChartSeries;
