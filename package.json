@@ -2,6 +2,10 @@
   "name": "blockframes",
   "version": "0.0.2",
   "license": "MIT",
+  "engines": {
+    "node": "16.14.0",
+    "npm": "8.5.2"
+  },
   "scripts": {
     "ng": "nx",
     "start": "ts-node -P tools/tsconfig.tools.json apps/backend-ops/src/main.ts",
