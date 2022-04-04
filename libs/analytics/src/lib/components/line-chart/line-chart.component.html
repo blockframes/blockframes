@@ -1,0 +1,16 @@
+<header fxLayout fxLayoutGap="8px">
+  <ng-content></ng-content>
+</header>
+<apx-chart
+  #chart
+  [series]="lineChartOptions.series"
+  [chart]="lineChartOptions.chart"
+  [theme]="lineChartOptions.theme"
+  [legend]="lineChartOptions.legend"
+  [xaxis]="lineChartOptions.xaxis"
+  [dataLabels]="lineChartOptions.dataLabels"
+  [stroke]="lineChartOptions.stroke"
+></apx-chart>
+<ng-template #noData>
+  <img asset="empty_state_analytics_pie_chart.svg" alt="Image, you have no movies yet">
+</ng-template>

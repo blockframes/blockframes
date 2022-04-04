@@ -3,24 +3,29 @@ import { AngularFireAnalytics } from '@angular/fire/analytics';
 import { ActiveState, EntityState } from '@datorama/akita';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 
-import { take } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { centralOrgId } from '@env';
 import { startOfDay } from 'date-fns';
 
 // Blockframes
-import { Analytics, AnalyticsTypeRecord, AnalyticsTypes, EventName, createTitleMeta } from '@blockframes/model';
+import { Analytics, AnalyticsTypeRecord, AnalyticsTypes, EventName, createTitleMeta, Organization } from '@blockframes/model';
 import { AuthService } from '@blockframes/auth/+state';
 import { createMovie, createDocumentMeta, formatDocumentMetaFromFirestore } from '@blockframes/model';
 import { APP } from '@blockframes/utils/routes/utils';
 import { App } from '@blockframes/utils/apps';
 import { Observable } from 'rxjs';
+import { joinWith } from '@blockframes/utils/operators';
+import { QueryFn } from '@angular/fire/firestore';
 
 interface AnalyticsState extends EntityState<Analytics>, ActiveState<string> { };
+interface AnalyticsWithOrg extends Analytics<'title'> {
+  org: Organization;
+}
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'analytics' })
 export class AnalyticsService extends CollectionService<AnalyticsState> {
-  readonly useMemorization = true;
+  readonly useMemorization = false;
 
   constructor(
     private analytics: AngularFireAnalytics,
@@ -48,23 +53,28 @@ export class AnalyticsService extends CollectionService<AnalyticsState> {
     }
   }
 
-  getTitleAnalytics(titleId: string) {
+  getTitleAnalytics(titleId?: string) {
     const { orgId } = this.authService.profile;
-    return this.valueChanges(ref => ref
-      .where('type', '==', 'title')
-      .where('meta.titleId', '==', titleId)
-      .where('meta.ownerOrgIds', 'array-contains', orgId)
-      .where('_meta.createdFrom', '==', this.app)
-    ) as Observable<Analytics<'title'>[]>;
-  }
 
-  getAnalytics() {
-    const { orgId } = this.authService.profile;
-    return this.valueChanges(ref => ref
-      .where('type', '==', 'title')
-      .where('meta.ownerOrgIds', 'array-contains', orgId)
-      .where('_meta.createdFrom', '==', this.app)
-    ) as Observable<Analytics<'title'>[]>;
+    const query: QueryFn = titleId
+      ? ref => ref
+        .where('type', '==', 'title')
+        .where('meta.ownerOrgIds', 'array-contains', orgId)
+        .where('_meta.createdFrom', '==', this.app)
+        .where('meta.titleId', '==', titleId)
+      : ref => ref
+        .where('type', '==', 'title')
+        .where('meta.ownerOrgIds', 'array-contains', orgId)
+        .where('_meta.createdFrom', '==', this.app);
+
+    return this.valueChanges(query).pipe(
+      joinWith({
+        // TODO #7273 use OrganizationService instead once Akita has been replaced by ng-fire (currently using MovieService results in error)
+        org: analytic => this.db.doc(`orgs/${analytic.meta.orgId}`).valueChanges() as Observable<Organization>
+      }, { shouldAwait: true }),
+      // Filter out analytics from owners of title
+      map((analytics: AnalyticsWithOrg[]) => analytics.filter(analytic => !analytic.meta.ownerOrgIds.includes(analytic.org.id) ))
+    );
   }
 
   async addTitle(name: EventName, titleId: string) {
