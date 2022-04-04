@@ -60,7 +60,6 @@
       <ng-template colRef="app.catalog.status" label="Status" let-status>
         <bf-tag>{{ status | toLabel: 'storeStatus' }}</bf-tag>
       </ng-template>
-
       <ng-template colRef label="Actions" let-movie sticky>
         <div class="action-buttons">
           <a [routerLink]="movie.id" mat-icon-button matTooltip="View">
