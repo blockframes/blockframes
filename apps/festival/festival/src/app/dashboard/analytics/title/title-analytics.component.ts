@@ -1,7 +1,7 @@
 import { Location } from "@angular/common";
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { AggregatedAnalytic, Analytics, createAggregatedAnalytic, Organization, PublicUser, User } from '@blockframes/model';
+import { AggregatedAnalytic, Analytics, createAggregatedAnalytic, Organization, User } from '@blockframes/model';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 import { MovieService } from "@blockframes/movie/+state/movie.service";
 import { OrganizationService } from "@blockframes/organization/+state";
@@ -47,7 +47,8 @@ export class TitleAnalyticsComponent {
   );
 
   title$ = this.titleId$.pipe(
-    switchMap((titleId: string) => this.movieService.valueChanges(titleId))
+    switchMap((titleId: string) => this.movieService.valueChanges(titleId)),
+    shareReplay({ bufferSize: 1, refCount: true })
   );
 
   titleAnalytics$ = this.titleId$.pipe(
@@ -55,7 +56,7 @@ export class TitleAnalyticsComponent {
     joinWith({
       org: analytic => this.orgService.valueChanges(analytic.meta.orgId),
       user: analytic => this.userService.valueChanges(analytic.meta.uid)
-    }),
+    }, { shouldAwait: true }),
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
