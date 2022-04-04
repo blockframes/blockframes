@@ -120,8 +120,8 @@ export async function keepAlive<T>(promise: Promise<T>) {
   let running = true;
   async function timer(s: number) {
     while (running) {
-      console.log('Process is running quietly...')
-      await sleep(1000 * s)
+      console.log('Process is running quietly...');
+      await sleep(1000 * s);
     }
   }
   await Promise.race([promise, timer(60)]);
