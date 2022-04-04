@@ -1,5 +1,4 @@
 import { Component, ChangeDetectionStrategy, OnInit, Optional, Inject } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { fromOrg, MovieService } from '@blockframes/movie/+state/movie.service';
 import { Movie } from '@blockframes/model';
@@ -54,8 +53,6 @@ export class ListComponent implements OnInit {
   constructor(
     private campaignService: CampaignService,
     private orgService: OrganizationService,
-    private router: Router,
-    private route: ActivatedRoute,
     private dynTitle: DynamicTitleService,
     private snackbar: MatSnackBar,
     private movieService: MovieService,
