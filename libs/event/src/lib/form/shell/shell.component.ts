@@ -12,6 +12,7 @@ import { map, pluck, switchMap } from 'rxjs/operators';
 import { NavTabs, TabConfig } from '@blockframes/utils/event';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { APP } from '@blockframes/utils/routes/utils';
+import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/snackbar-error.component';
 
 const statisticsTab = { path: 'statistics', label: 'Statistics' };
 
@@ -91,31 +92,24 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
 
   async save(options: { showSnackbar: boolean } = { showSnackbar: true }) {
     try {
-      // throw 'Parameter is not a number!';
-    if (this.form.valid && this.form.dirty) {
-      const value = this.form.value;
-      if (this.form.value.allDay) {
-        value.start.setHours(0, 0, 0);
-        value.end.setHours(23, 59, 59);
+      if (this.form.valid && this.form.dirty) {
+        const value = this.form.value;
+        if (this.form.value.allDay) {
+          value.start.setHours(0, 0, 0);
+          value.end.setHours(23, 59, 59);
+        }
+        await this.eventService.update(value);
+        this.form.markAsPristine();
+        this.cdr.markForCheck();
+        if (options.showSnackbar) {
+          this.snackBar.open('Event saved', 'CLOSE', { duration: 4000 });
+        }
       }
-      // value.start = undefined
-      await this.eventService.update(value);
-      this.form.markAsPristine();
-      this.cdr.markForCheck();
-      if (options.showSnackbar) {
-        this.snackBar.open('Event saved', 'CLOSE', { duration: 4000 });
-      }
+      return true;
     }
-    return true;
-  }
     catch (err) {
-      console.log(err)
-      this.snackBar.openFromTemplate(this.somethingWentWrongTemplate, { duration: 5000 });
+      this.snackBar.openFromComponent(SnackbarErrorComponent, { duration: 5000 });
     }
-  }
-
-  refresh() {
-    window.location.reload();
   }
 
   async remove() {
@@ -171,7 +165,7 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
       if (!title.promotional.videos?.screener?.jwPlayerId) {
         this.errorChipMessage = 'Screening file missing';
       } else if (title.app.festival.status === 'draft') {
-      // Titles in draft are not allowed for screenings
+        // Titles in draft are not allowed for screenings
         this.errorChipMessage = 'No title selected';
       } else {
         this.errorChipMessage = '';
