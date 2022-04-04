@@ -230,16 +230,20 @@ export class UserComponent implements OnInit {
     return output;
   }
 
+  openDetails(terms: string[], scope: Scope) {
+    this.dialog.open(DetailedTermsComponent, { data: { terms, scope }, maxHeight: '80vh', autoFocus: false });
+  }
+
   goTo(invitation: Invitation) {
     if (invitation.type === 'attendEvent') {
-      this.router.navigate(['/c/o/dashboard/crm/event', invitation.eventId]);
+      return ['/c/o/dashboard/crm/event', invitation.eventId];
     } else if (invitation.type === 'joinOrganization') {
       const id = invitation.fromOrg ? invitation.fromOrg.id : invitation.toOrg?.id;
-      this.router.navigate(['/c/o/dashboard/crm/organization', id]);
+      return ['/c/o/dashboard/crm/organization', id];
     }
   }
 
-  openDetails(terms: string[], scope: Scope) {
-    this.dialog.open(DetailedTermsComponent, { data: { terms, scope }, maxHeight: '80vh', autoFocus: false });
+  console(any: any) {
+    console.log(any);
   }
 }

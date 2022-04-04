@@ -130,9 +130,13 @@
   </mat-card>
 </section>
 
-<bf-table *ngIf="invitations" [source]="invitations" useFilter pagination="50" (rowClick)="goTo($event)">
-  <ng-template colRef="date" label="Date Created" let-date sort>
-    <span>{{ date | date: 'short' }}</span>
+<bf-table *ngIf="invitations" [source]="invitations" useFilter pagination="50">
+  {{ console(invitations) }}
+  <ng-template colRef label="Date Created" let-event sort>
+    <a [routerLink]="goTo(event)">{{ event.date | date: 'short' }}</a>
+  </ng-template>
+  <ng-template colRef label="Event Name" let-event sort>
+    Event Name
   </ng-template>
   <ng-template colRef="mode" label="Mode" let-mode sort>
     {{mode}}
