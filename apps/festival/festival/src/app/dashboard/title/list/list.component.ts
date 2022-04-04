@@ -10,6 +10,8 @@ import { Intercom } from 'ng-intercom';
 import { App } from '@blockframes/utils/apps';
 import { StoreStatus } from '@blockframes/utils/static-model/types';
 import { APP } from '@blockframes/utils/routes/utils';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { storeStatus } from '@blockframes/utils/static-model';
 
 @Component({
   selector: 'festival-dashboard-title-list',
@@ -32,13 +34,16 @@ export class ListComponent {
 
   result$ = combineLatest([this.filter$, this.titles$]).pipe(
     map(([status, titles]) =>
-      titles.filter((title) => (status ? title.app.festival.status === status : titles))
+      titles.filter((title) => {
+        if (status) return title.app.festival.status === status;
+        return title.app.festival.status !== 'archived';
+      })
     )
   );
 
   titleCount$: Observable<Record<string, number>> = this.titles$.pipe(
     map((m) => ({
-      all: m.length,
+      all: m.filter((m) => m.app.festival.status !== 'archived').length,
       draft: m.filter((m) => m.app.festival.status === 'draft').length,
       accepted: m.filter((m) => m.app.festival.status === 'accepted').length,
       archived: m.filter((m) => m.app.festival.status === 'archived').length,
@@ -49,6 +54,7 @@ export class ListComponent {
     private service: MovieService,
     private router: Router,
     private route: ActivatedRoute,
+    private snackbar: MatSnackBar,
     private dynTitle: DynamicTitleService,
     @Optional() private intercom: Intercom,
     @Inject(APP) public app: App
@@ -70,5 +76,10 @@ export class ListComponent {
 
   resetFilter() {
     this.filter.reset();
+  }
+
+  async updateStatus(movie: Movie, status: StoreStatus, message?: string) {
+    await this.service.updateStatus(movie.id, status);
+    this.snackbar.open(message || `Title ${storeStatus[status]}.`, '', { duration: 4000 });
   }
 }
