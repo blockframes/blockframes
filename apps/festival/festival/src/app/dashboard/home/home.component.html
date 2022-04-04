@@ -22,8 +22,16 @@
       </article>
       <p class="mat-body-1">Some insights about your most popular title.<br/>Published on Archipel Market: 01/25/2022</p>
       <bf-carousel flex layout>
-        <analytics-pie-chart fxFlex class="surface" carouselItem [col]="2" [data]="orgActivityOfPopularTitle$ | async"></analytics-pie-chart>
-        <analytics-map fxFlex class="surface" carouselItem [col]="2" [data]="territoryActivityOfPopularTitle$ | async"></analytics-map>
+        <analytics-pie-chart class="surface" carouselItem [col]="6" [data]="orgActivityOfPopularTitle$ | async"></analytics-pie-chart>
+        <analytics-map class="surface" carouselItem [col]="6" [data]="territoryActivityOfPopularTitle$ | async"></analytics-map>
+        <analytics-line-chart class="surface" carouselItem [col]="6" [data]="interactionsOfPopularTitle$ | async">
+          <mat-icon svgIcon="switch_access_shortcut"></mat-icon>
+          <h5>Interactions</h5>
+        </analytics-line-chart>
+        <analytics-line-chart class="surface" carouselItem [col]="6" [data]="pageViewsOfPopularTitle$ | async">
+          <mat-icon svgIcon="visibility"></mat-icon>
+          <h5>Film Page Views</h5>
+        </analytics-line-chart>
       </bf-carousel>
       <a mat-flat-button class="see_titles" routerLink="/c/o/dashboard/analytics">
         <span>View all Titles Activity</span>
@@ -72,12 +80,6 @@
     </section>
   </ng-template>
 </ng-container>
-<ng-template #loading>
-  <article fxLayout="column" fxLayoutAlign="center center">
-    <mat-spinner color="primary"></mat-spinner>
-  </article>
-</ng-template>
-
 <ng-template #loading>
   <article fxLayout="column" fxLayoutAlign="center center">
     <mat-spinner color="primary"></mat-spinner>
