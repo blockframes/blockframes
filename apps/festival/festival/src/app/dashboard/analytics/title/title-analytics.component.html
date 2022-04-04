@@ -1,0 +1,77 @@
+<header fxLayout="column" fxLayoutGap="20px" class="dark-contrast-theme" bgAsset="background_header.png" bgTheme="dark">
+  <button mat-icon-button (click)="goBack()">
+    <mat-icon svgIcon="arrow_back"></mat-icon>
+  </button>
+
+  <ng-container *ngIf="title$ | async as title">
+    <article fxLayout fxLayoutGap="24px">
+      <a [routerLink]="['/c/o/marketplace/title/', title.id]">
+        <img fxHide.lt-md [ref]="title.poster" asset="empty_poster.svg" alt="Movie Poster" class="poster">
+      </a>
+
+      <div fxFlex fxLayout="column">
+        <p class="mat-body-1">{{ title.directors | displayName }}</p>
+        <div fxLayout fxLayoutAlign="space-between">
+          <h1 class="mat-display-1">{{ title.title.international }}</h1>
+          <a mat-button [routerLink]="['/c/o/marketplace/title/', title.id]" class="film-page-button">See Film Page</a>
+        </div>
+        <h6>{{ title.genres | toLabel: 'genres' }}</h6>
+      </div>
+    </article>
+  </ng-container>
+</header>
+
+<section>
+  <article>
+    <h2>Interested Users</h2>
+    <p class="mat-body-1">See how many users interacted with your movie (viewed your title, added to wishlist, requested a screening, etc).</p>
+  </article>
+
+  <article class="surface">
+    <a mat-button [routerLink]="['/c/o/dashboard']">
+      <mat-icon svgIcon="arrow_back"></mat-icon>
+      <span>Come back to Dashboard</span>
+    </a>
+
+    <div fxLayout fxLayout.lt-sm="column" fxLayoutGap="16px">
+      <analytics-pie-chart fxFlex class="surface" [data]="orgActivity$ | async" (selection)="filterValue = $event"></analytics-pie-chart>
+      <analytics-map fxFlex class="surface" [data]="territoryActivity$ | async" (selection)="filterValue = $event"></analytics-map>
+    </div>
+  </article>
+
+  <bf-table [source]="buyerAnalytics$ | async" pagination="5" useFilter [filterValue]="filterValue">
+    <ng-template colRef="user" label="Name" let-user sort>
+      <a [href]="'mailto:' + user?.email">{{ user | displayName }}</a>
+    </ng-template>
+    <ng-template colRef="user.email" label="Email address" let-email sort>
+      {{ email }}
+    </ng-template>
+    <ng-template colRef="org.denomination.public" label="Company name" let-name sort>
+      {{ name }}
+    </ng-template>
+    <ng-template colRef="org.activity" label="Activity" let-activity sort [filter]="filters['orgActivity']">
+      {{ activity | toLabel:'orgActivity' }}
+    </ng-template>
+    <ng-template colRef="org.addresses.main.country" label="Country" let-country sort>
+      {{ country | toLabel:'territories' }}
+    </ng-template>
+    <ng-template colRef="user.position" label="Position" let-position sort>
+      {{ position }}
+    </ng-template>
+    <ng-template colRef="pageView" label="Views" let-pageView sort>
+      {{ pageView }}
+    </ng-template>
+    <ng-template colRef="promoReelOpened" label="Promo reels" let-promoReelOpened sort>
+      {{ promoReelOpened ? promoReelOpened : '-' }}
+    </ng-template>
+    <ng-template colRef="" label="In wishlist" let-item sort>
+      {{ inWishlist(item) ? 'Yes' : '-' }}
+    </ng-template>
+    <ng-template colRef="screeningRequested" label="Screening requested" let-screeningRequested sort>
+      {{ screeningRequested ? 'Yes' : '-' }}
+    </ng-template>
+    <ng-template colRef="askingPriceRequested" label="Asking price requested" let-askingPriceRequested sort>
+      {{ askingPriceRequested ? 'Yes' : '-' }}
+    </ng-template>
+  </bf-table>
+</section>
