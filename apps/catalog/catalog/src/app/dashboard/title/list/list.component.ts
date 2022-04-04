@@ -3,7 +3,6 @@ import { FormControl } from '@angular/forms';
 import { map, shareReplay, startWith, tap } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
 import { StoreStatus } from '@blockframes/utils/static-model/types';
-import { Router, ActivatedRoute } from '@angular/router';
 import { Movie } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
@@ -54,8 +53,6 @@ export class TitleListComponent {
 
   constructor(
     private service: MovieService,
-    private router: Router,
-    private route: ActivatedRoute,
     private snackbar: MatSnackBar,
     private dynTitle: DynamicTitleService,
     @Optional() private intercom: Intercom,
@@ -71,10 +68,6 @@ export class TitleListComponent {
   resetFilter() {
     this.filter.reset('');
     this.dynTitle.useDefault();
-  }
-
-  goToTitle(title: Movie) {
-    this.router.navigate([title.id], { relativeTo: this.route });
   }
 
   public openIntercom(): void {
