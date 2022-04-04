@@ -36,10 +36,7 @@ export class HomeComponent {
     })
   );
 
-  private titleAnalytics$ = this.analyticsService.getAnalytics().pipe(
-    joinWith({
-      org: analytic => this.orgService.valueChanges(analytic.meta.orgId)
-    }, { shouldAwait: true }),
+  private titleAnalytics$ = this.analyticsService.getTitleAnalytics().pipe(
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
