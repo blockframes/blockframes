@@ -29,7 +29,7 @@ interface OrganizationState extends EntityState<Organization>, ActiveState<strin
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'orgs' })
 export class OrganizationService extends CollectionService<OrganizationState> {
-  readonly useMemorization = true;
+  readonly useMemorization = false;
 
   // Organization of the current logged in user or undefined if user have no org
   org: Organization; // For this to be defined, one of the observable below must be called before
