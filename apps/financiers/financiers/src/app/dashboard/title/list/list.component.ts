@@ -12,7 +12,7 @@ import { Intercom } from 'ng-intercom';
 import { App } from '@blockframes/utils/apps';
 import { APP } from '@blockframes/utils/routes/utils';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { StoreStatus } from '@blockframes/utils/static-model';
+import { storeStatus, StoreStatus } from '@blockframes/utils/static-model';
 
 type Filters = 'all' | 'draft' | 'ongoing' | 'achieved' | 'archived';
 
@@ -117,8 +117,8 @@ export class ListComponent implements OnInit {
     return this.intercom.show();
   }
 
-  public async changeMovieStatus(movie: Movie, status: StoreStatus) {
+  async changeMovieStatus(movie: Movie, status: StoreStatus, message?: string) {
     await this.movieService.updateStatus(movie.id, status);
-    this.snackbar.open(`Title ${status}.`, '', { duration: 4000 });
+    this.snackbar.open(message || `Title ${storeStatus[status]}.`, '', { duration: 4000 });
   }
 }
