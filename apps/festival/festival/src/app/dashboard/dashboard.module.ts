@@ -70,7 +70,7 @@ const routes: Routes = [{
               loadChildren: () => import('./analytics/sellers/sellers-analytics.module').then(m => m.SellersAnalyticsModule)
             },
             {
-              path: ':orgId',
+              path: ':userId',
               loadChildren: () => import('./analytics/seller/seller-analytics.module').then(m => m.SellerAnalyticsModule)
             }
           ]
