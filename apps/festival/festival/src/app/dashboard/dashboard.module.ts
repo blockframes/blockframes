@@ -63,15 +63,15 @@ const routes: Routes = [{
             }
           ]
         }, {
-          path: 'seller',
+          path: 'buyer',
           children: [
             {
               path: '',
-              loadChildren: () => import('./analytics/sellers/sellers-analytics.module').then(m => m.SellersAnalyticsModule)
+              loadChildren: () => import('./analytics/buyers/buyers-analytics.module').then(m => m.BuyersAnalyticsModule)
             },
             {
-              path: ':orgId',
-              loadChildren: () => import('./analytics/seller/seller-analytics.module').then(m => m.SellerAnalyticsModule)
+              path: ':userId',
+              loadChildren: () => import('./analytics/buyer/buyer-analytics.module').then(m => m.BuyerAnalyticsModule)
             }
           ]
         }
