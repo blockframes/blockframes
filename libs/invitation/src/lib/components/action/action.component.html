@@ -54,6 +54,8 @@
 </ng-template>
 
 <ng-template #viewDetails>
-  <span class="snack-bar-text">Screening added to your Calendar.</span>
-  <button (click)="seeDetails(event)" class="snack-bar-button" mat-button>SEE DETAILS</button>
-</ng-template>
+  <div class="custom-snackbar-message" fxLayoutGap="50px">
+    <span class="snack-bar-text">Screening added to your Calendar.</span>
+    <a [routerLink]="['/event/', event.id, 'r', 'i']">SEE DETAILS</a>
+  </div>
+ </ng-template>

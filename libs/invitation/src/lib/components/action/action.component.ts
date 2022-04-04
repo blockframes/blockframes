@@ -80,8 +80,4 @@ export class ActionComponent {
     }
     this.requestPending = true;
   }
-
-  seeDetails(event: Event) {
-      return this.router.navigate(['/event/', event.id, 'r', 'i'])
-  }
 }
