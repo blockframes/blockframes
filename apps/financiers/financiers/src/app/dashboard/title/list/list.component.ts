@@ -104,11 +104,6 @@ export class ListComponent implements OnInit {
     );
   }
 
-  /** Navigate to tunnel if status is draft, else go to page */
-  public goToTitle(title: Movie) {
-    this.router.navigate([title.id], { relativeTo: this.route });
-  }
-
   public applyFilter(filter: Filters) {
     this.filter.setValue(filter);
   }
