@@ -3,21 +3,25 @@
   <ng-container *ngIf="invit | hasAction else displayStatus">
     <section fxLayout fxLayout.lt-sm="column" fxLayoutGap="16px">
       <ng-container *ngIf="flat else defaultButtons">
-        <button mat-flat-button color="primary" test-id="invitation-accept" (click)="accept(invit)" [matTooltip]="small ? 'Accept Invitation' : undefined">
+        <button mat-flat-button color="primary" test-id="invitation-accept" (click)="accept(invit)"
+          [matTooltip]="small ? 'Accept Invitation' : undefined">
           <mat-icon *ngIf="!accepting else loading" svgIcon="check_circle" title="Accept Invitation"></mat-icon>
           <span *ngIf="!small">Accept Invitation</span>
         </button>
-        <button mat-stroked-button test-id="invitation-refuse" (click)="decline(invit)" [matTooltip]="small ? 'Decline Invitation' : undefined">
+        <button mat-stroked-button test-id="invitation-refuse" (click)="decline(invit)"
+          [matTooltip]="small ? 'Decline Invitation' : undefined">
           <mat-icon *ngIf="!declining else loading" svgIcon="cancel" title="Decline Invitation"></mat-icon>
           <span *ngIf="!small">Decline Invitation</span>
         </button>
       </ng-container>
       <ng-template #defaultButtons>
-        <button mat-button test-id="invitation-accept" (click)="accept(invit)" [matTooltip]="small ? 'Accept Invitation' : undefined">
+        <button mat-button test-id="invitation-accept" (click)="accept(invit)"
+          [matTooltip]="small ? 'Accept Invitation' : undefined">
           <mat-icon *ngIf="!accepting else loading" svgIcon="check_circle" title="Accept Invitation"></mat-icon>
           <span *ngIf="!small">Accept Invitation</span>
         </button>
-        <button mat-button test-id="invitation-refuse" (click)="decline(invit)" [matTooltip]="small ? 'Decline Invitation' : undefined">
+        <button mat-button test-id="invitation-refuse" (click)="decline(invit)"
+          [matTooltip]="small ? 'Decline Invitation' : undefined">
           <mat-icon *ngIf="!declining else loading" svgIcon="cancel" title="Decline Invitation"></mat-icon>
           <span *ngIf="!small">Decline Invitation</span>
         </button>
@@ -33,7 +37,7 @@
   <!-- TODO : Use ng-content here -->
   <section fxLayout="column">
     <ng-container [ngSwitch]="event | eventTime">
-      <ng-container  *ngSwitchCase="'early'">
+      <ng-container *ngSwitchCase="'early'">
         <button *ngIf="user$ | async" test-id="invitation-request" mat-button (click)="request(event)">
           <mat-icon svgIcon="calendar_today"></mat-icon>
           <span>{{ event.accessibility === 'public' ? 'Add to My Calendar' : 'Ask for Invitation' }}</span>
@@ -55,7 +59,7 @@
 
 <ng-template #viewDetails>
   <div class="custom-snackbar-message" fxLayoutGap="50px">
-    <span class="snack-bar-text">Screening added to your Calendar.</span>
+    <span>Screening added to your Calendar.</span>
     <a [routerLink]="['/event/', event.id, 'r', 'i']">SEE DETAILS</a>
   </div>
 </ng-template>
