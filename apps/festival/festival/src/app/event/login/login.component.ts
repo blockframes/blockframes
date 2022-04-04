@@ -44,7 +44,7 @@ export class EventLoginComponent implements OnInit {
     }
     this.signinIn = true;
     try {
-      this.buttonText = 'Logging in...'
+      this.buttonText = 'Logging in...';
       const { email, password } = this.form.value;
       this.service.updateAnonymousCredentials({}, { reset: true });
       await this.service.signin(email.trim(), password);
