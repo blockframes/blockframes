@@ -33,7 +33,7 @@ export class OrganizationComponent implements OnInit {
         this.uploaderService.upload();
         this.service.update(this.service.org.id, this.organizationForm.value);
 
-        this.snackBar.open('Organization profile was successfully changed', 'close', { duration: 2000 });
+        this.snackBar.open('Organization Profile updated.', 'close', { duration: 4000 });
       }
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });
