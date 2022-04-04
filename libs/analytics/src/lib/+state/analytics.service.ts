@@ -18,7 +18,7 @@ import { joinWith } from '@blockframes/utils/operators';
 import { QueryFn } from '@angular/fire/firestore';
 
 interface AnalyticsState extends EntityState<Analytics>, ActiveState<string> { };
-interface AnalyticsWithOrg extends Analytics<'title'> {
+export interface AnalyticsWithOrg extends Analytics<'title'> {
   org: Organization;
 }
 
