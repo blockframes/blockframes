@@ -11,6 +11,8 @@ import { map, startWith, switchMap, tap } from 'rxjs/operators';
 import { Intercom } from 'ng-intercom';
 import { App } from '@blockframes/utils/apps';
 import { APP } from '@blockframes/utils/routes/utils';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { StoreStatus } from '@blockframes/utils/static-model';
 
 type Filters = 'all' | 'draft' | 'ongoing' | 'achieved' | 'archived';
 
@@ -55,6 +57,7 @@ export class ListComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private dynTitle: DynamicTitleService,
+    private snackbar: MatSnackBar,
     private movieService: MovieService,
     @Optional() private intercom: Intercom,
     @Inject(APP) public app: App
@@ -112,5 +115,10 @@ export class ListComponent implements OnInit {
 
   public openIntercom(): void {
     return this.intercom.show();
+  }
+
+  public async changeMovieStatus(movie: Movie, status: StoreStatus) {
+    await this.movieService.updateStatus(movie.id, status);
+    this.snackbar.open(`Title ${status}.`, '', { duration: 4000 });
   }
 }

@@ -26,8 +26,12 @@
           *ngIf="(titleCount$ | async) as titleCount">({{ titleCount.archived }})</span></button>
     </header>
 
-    <bf-table [source]="titles" useFilter pagination="50" clickable (rowClick)="goToTitle($event)">
-      <ng-template colRef="title.international" label="Title" let-title sort><b>{{ title }}</b></ng-template>
+    <bf-table [source]="titles" useFilter pagination="50">
+      <ng-template colRef label="Title" let-movie sort defaultSort>
+        <a [routerLink]="movie.id" [matTooltip]="movie.title.international">
+          <u>{{ movie.title.international | maxLength:50 }}</u>
+        </a>
+      </ng-template>
       <ng-template colRef="productionStatus" label="Production Status" let-prod>{{ prod | toLabel: 'productionStatus'
         }}</ng-template>
       <ng-template colRef="campaign.cap" label="Goal Funding" let-cap let-movie="item" sort>
@@ -37,6 +41,34 @@
         {{ received ? (received | currency : movie.campaign.currency : 'symbol' : '1.0-0') : '-' }}
       </ng-template>
       <ng-template colRef="campaignStarted" label="Campaign Started" let-date sort>{{ date | date: 'short' }}</ng-template>
+
+      <ng-template *ngIf="filter.value === 'archived'" colRef label="Actions" let-movie sticky>
+        <div class="action-buttons">
+          <a [routerLink]="movie.id" mat-icon-button matTooltip="View">
+            <mat-icon svgIcon="visibility"></mat-icon>
+          </a>
+          <a [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]" mat-icon-button matTooltip="Edit">
+            <mat-icon svgIcon="edit"></mat-icon>
+          </a>
+          <button type="button" mat-icon-button (click)="changeMovieStatus(movie, 'draft')" matTooltip="Restore">
+            <mat-icon svgIcon="restore"></mat-icon>
+          </button>
+        </div>
+      </ng-template>
+
+      <ng-template *ngIf="filter.value !== 'archived'" colRef label="Actions" let-movie sticky>
+        <div class="action-buttons">
+          <a [routerLink]="movie.id" mat-icon-button matTooltip="View">
+            <mat-icon svgIcon="visibility"></mat-icon>
+          </a>
+          <a [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]" mat-icon-button matTooltip="Edit">
+            <mat-icon svgIcon="edit"></mat-icon>
+          </a>
+          <button type="button" mat-icon-button (click)="changeMovieStatus(movie, 'archived')" matTooltip="Archive">
+            <mat-icon svgIcon="archive"></mat-icon>
+          </button>
+        </div>
+      </ng-template>
     </bf-table>
   </ng-container>
 
