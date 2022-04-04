@@ -106,7 +106,7 @@ export class MarketplaceMovieAvailsCalendarComponent implements AfterViewInit, O
     }
 
     this.snackbar
-      .open(`Rights ${result ? 'updated' : 'added'}`, 'Show ⇩', { duration: 5000 })
+      .open(`Terms  ${result ? 'updated' : 'added'}`, 'SHOW ⇩', { duration: 5000 })
       .onAction()
       .subscribe(() => {
         scrollIntoView(document.querySelector('#rights'));
