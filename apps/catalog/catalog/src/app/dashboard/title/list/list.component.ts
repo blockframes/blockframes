@@ -25,6 +25,10 @@ export class TitleListComponent {
   );
 
   movies$ = this.service.queryDashboard(this.app).pipe(
+    map(titles => titles.map(title => {
+      title.analytics = title.analytics.filter(analytic => analytic.name === 'pageView');
+      return title;
+    })),
     tap((movies) => this.dynTitle.setPageTitle('My titles', movies.length ? '' : 'Empty')),
     shareReplay({ refCount: true, bufferSize: 1 })
   );
