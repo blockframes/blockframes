@@ -27,7 +27,7 @@ export class ProfileCookieComponent {
   update() {
     const settings = this.form.value;
 
-    this.snackbar.open('Cookies updated.', 'close', { duration: 5000 });
+    this.snackbar.open('Cookie Preferences updated.', 'close', { duration: 4000 });
 
     if (settings) {
       this.gdpr.enableIntercom(this.authService.profile, settings.intercom);
