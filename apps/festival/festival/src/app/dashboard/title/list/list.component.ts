@@ -21,7 +21,11 @@ export class ListComponent {
   filter$ = this.filter.valueChanges.pipe(startWith(this.filter.value));
 
   titles$ = this.service.queryDashboard(this.app).pipe(
-    tap(movies => this.dynTitle.setPageTitle('My titles', movies.length ? '' : 'Empty')),
+    map(titles => titles.map(title => {
+      title.analytics = title.analytics.filter(analytic => analytic.name === 'pageView');
+      return title;
+    })),
+    tap((movies) => this.dynTitle.setPageTitle('My titles', movies.length ? '' : 'Empty')),
     shareReplay({ refCount: true, bufferSize: 1 })
   );
 

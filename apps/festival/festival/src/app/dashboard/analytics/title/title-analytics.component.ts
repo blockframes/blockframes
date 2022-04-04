@@ -10,12 +10,12 @@ import {
 } from '@blockframes/shared/model';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { OrganizationService } from '@blockframes/organization/+state';
 import { joinWith } from '@blockframes/utils/operators';
 import { map, pluck, shareReplay, switchMap } from 'rxjs/operators';
 import { counter } from '@blockframes/analytics/+state/utils';
 import { UserService } from '@blockframes/user/+state';
 import { Scope, staticModel } from '@blockframes/shared/model';
+import { NavigationService } from "@blockframes/ui/navigation.service";
 
 function getFilter(scope: Scope) {
   return (input: string, value: any) => {
@@ -57,7 +57,6 @@ export class TitleAnalyticsComponent {
   titleAnalytics$ = this.titleId$.pipe(
     switchMap((titleId: string) => this.analyticsService.getTitleAnalytics(titleId)),
     joinWith({
-      org: analytic => this.orgService.valueChanges(analytic.meta.orgId),
       user: analytic => this.userService.valueChanges(analytic.meta.uid)
     }, { shouldAwait: true }),
     shareReplay({ bufferSize: 1, refCount: true })
@@ -79,15 +78,14 @@ export class TitleAnalyticsComponent {
   constructor(
     private location: Location,
     private movieService: MovieService,
-    private orgService: OrganizationService,
     private route: ActivatedRoute,
     private analyticsService: AnalyticsService,
-    private userService: UserService
+    private userService: UserService,
+    private navService: NavigationService
   ) {}
 
   goBack() {
-    // TODO implement NavService: https://github.com/blockframes/blockframes/pull/8103/files
-    this.location.back();
+    this.navService.goBack(1);
   }
 
   inWishlist(data: AggregatedAnalytic) {

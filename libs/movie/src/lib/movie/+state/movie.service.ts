@@ -110,17 +110,14 @@ export class MovieService extends CollectionService<MovieState> {
 
     return this.valueChanges(query).pipe(
       joinWith({
-        analytics: movie =>
-          this.analyticService.valueChanges(ref =>
-            ref
-              .where('type', '==', 'title')
-              .where('name', '==', 'pageView')
-              .where('meta.titleId', '==', movie.id)
-              .where('meta.ownerOrgIds', 'array-contains', orgId)
-              .where('_meta.createdFrom', '==', app)
-          ),
-      }),
-      map(movies => movies.sort((a, b) => (a.title.international < b.title.international ? -1 : 1)))
+        analytics: movie => this.analyticService.valueChanges(ref => ref
+          .where('type', '==', 'title')
+          .where('meta.titleId', '==', movie.id)
+          .where('meta.ownerOrgIds', 'array-contains', orgId)
+          .where('_meta.createdFrom', '==', app)
+        ),
+      }, { shouldAwait: true }),
+      map(movies => movies.sort((a, b) => a.title.international < b.title.international ? -1 : 1))
     );
   }
 }
