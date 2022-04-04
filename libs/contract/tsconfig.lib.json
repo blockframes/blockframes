@@ -22,5 +22,5 @@
     "enableResourceInlining": true
   },
   "include": ["src/lib"],
-  "exclude": ["src/test-setup.ts", "**/*.spec.ts"]
+  "exclude": ["src/test-setup.ts", "**/*.spec.ts", "**/*.test.ts"]
 }

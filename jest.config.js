@@ -1,12 +1,5 @@
-﻿module.exports = {
-  projects: [
-    '<rootDir>/apps/backend-functions',
-    '<rootDir>/apps/backend-ops',
-    '<rootDir>/apps/festival',
-    '<rootDir>/apps/rules',
-    '<rootDir>/apps/libs',
-    '<rootDir>/libs/testing/cypress',
-    '<rootDir>/libs/model',
-    '<rootDir>/libs/testing/cypress/node',
-  ],
+const { getJestProjects } = require('@nrwl/jest');
+
+module.exports = {
+  projects: [...getJestProjects(), '<rootDir>/apps/festival', '<rootDir>/apps/libs', '<rootDir>/libs/testing/cypress'],
 };
