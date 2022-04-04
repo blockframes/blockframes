@@ -15,7 +15,7 @@
     <section class="surface carousel-container">
       <article *ngIf="popularTitle$ | async as title">
         <h3>{{ title.title.international }}</h3>
-        <a mat-flat-button [routerLink]="['/c/o/dashboard/analytics', title.id]">
+        <a mat-flat-button [routerLink]="['title', title.id]">
           <span>See Analytics details</span>
           <mat-icon svgIcon="arrow_forward"></mat-icon>
         </a>
@@ -33,7 +33,7 @@
           <h5>Film Page Views</h5>
         </analytics-line-chart>
       </bf-carousel>
-      <a mat-flat-button class="see_titles" routerLink="/c/o/dashboard/analytics">
+      <a mat-flat-button class="see_titles" routerLink="title">
         <span>View all Titles Activity</span>
         <mat-icon svgIcon="arrow_forward"></mat-icon>
       </a>

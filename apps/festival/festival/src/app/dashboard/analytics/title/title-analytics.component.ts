@@ -4,12 +4,12 @@ import { ActivatedRoute } from "@angular/router";
 import { AggregatedAnalytic, Analytics, createAggregatedAnalytic, Organization, User } from '@blockframes/model';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 import { MovieService } from "@blockframes/movie/+state/movie.service";
-import { OrganizationService } from "@blockframes/organization/+state";
 import { joinWith } from "@blockframes/utils/operators";
 import { map, pluck, shareReplay, switchMap } from "rxjs/operators";
 import { counter } from '@blockframes/analytics/+state/utils';
 import { UserService } from "@blockframes/user/+state";
 import { Scope, staticModel } from "@blockframes/utils/static-model";
+import { NavigationService } from "@blockframes/ui/navigation.service";
 
 function getFilter(scope: Scope) {
   return (input: string, value: any) => {
@@ -79,15 +79,14 @@ export class TitleAnalyticsComponent {
   constructor(
     private location: Location,
     private movieService: MovieService,
-    private orgService: OrganizationService,
     private route: ActivatedRoute,
     private analyticsService: AnalyticsService,
     private userService: UserService,
+    private navService: NavigationService
   ) {}
 
   goBack() {
-    // TODO implement NavService: https://github.com/blockframes/blockframes/pull/8103/files
-    this.location.back();
+    this.navService.goBack(1);
   }
 
   inWishlist(data: AggregatedAnalytic) {
