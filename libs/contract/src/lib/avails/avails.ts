@@ -1,7 +1,16 @@
 import { Media, territories, territoriesISOA3, Territory, TerritoryISOA3, TerritoryISOA3Value, TerritoryValue } from '@blockframes/utils/static-model';
 import { Bucket, BucketContract, Holdback, Mandate, Sale, BucketTerm, Term } from '@blockframes/model';
 import { allOf, exclusivityAllOf, exclusivitySomeOf, someOf } from './sets';
-import { max, min, isAfter, isBefore } from 'date-fns'
+import { max, min, isAfter } from 'date-fns'
+import { Duration } from '@blockframes/model'
+
+
+interface AvailResult {
+  periodAvailable: Duration<Date> | null;
+  available: FullMandate[];
+  sold: FullSale[];
+}
+
 
 export interface BaseAvailsFilter {
   medias: Media[],
@@ -399,144 +408,100 @@ export function isCalendarTermInAvails<T extends BucketTerm | Term>(term: T, ava
   return allOf(avails.territories).in(term.territories);
 }
 
-/**
- * Assuming we have a mandate say mandateA with terms mandateATerms defined as in below.
- * mandateATerms = [
- *   { territories:[terA], medias:[mediaA], duration:ConstantX},
- *   { territories:[terB], medias:[mediaA], duration:ConstantX},
- * ]
- *
- * And AvailsResearch researchA
- * researchA = {territories:[terA, terB], medias:[mediaA], duration:ConstantX}
- * We notice that, researchA as a whole isn't avaible in any of the terms of mandateA but when researchA is
- * thought of as being constituted of 2 sub avails as shown below
- *
- * researchA1 = {territories:[terA], medias:[mediaA], duration:ConstantX}
- *               ------------------
- * researchA2 = {territories:[terB], medias:[mediaA], duration:ConstantX}
- *               ------------------
- *
- * both researchA1 and researchA2 are available on mandateA and we can safely conclude that
- *
- * --researchA is available on mandateA--
- *
- * ----------------------------------------------------------------------------------------------------------
- * NB: The division done above is called `territory-wise` division. Given mandateB with terms
- * mandateBTerms = [
- *   { territories:[terA], medias:[mediaA], duration:ConstantX},
- *   { territories:[terA], medias:[mediaB], duration:ConstantX},
- * ]
- *
- * and an availResearch say researchB where
- * researchB = {territories:[terA], medias:[mediaA, mediaB], duration:ConstantX}
- * We notice that, researchB as a whole isn't avaible in any of the terms of mandateB but when divided `media-wise`
- *
- * researchB1 = {territories:[terA], medias:[mediaA], duration:ConstantX}
- *                                   ---------------
- * researchB2 = {territories:[terA], medias:[mediaB], duration:ConstantX}
- *                                   ---------------
- * We can safely assume that,
- * --researchB is available on mandateB.--
- * ----------------------------------------------------------------------------------------------------------
- *
- * We should note that when it's a `territory-wise` division, the media of the availResearch is a subset to
- * each term media of the mandate in question and when it's a `media-wise` division, the territories of the
- * availResearch is a subset to each of the terms' territories of the corresponding mandate.
- * In case this does not hold, then nothing is available.
- */
-function getMatchingCalendarMandates(mandates: FullMandate[], avails: CalendarAvailsFilter) {
-  //multi term mandates for whom the avail needs to be divided territory or media -wise
-  const multiTermMandates: FullMandate[] = [];
-  const availableMandates: FullMandate[] = [];
+export function getMatchingCalendar(avails: CalendarAvailsFilter, mandates: FullMandate[], sales: FullSale[]) {
+  const results: AvailResult[] = [];
+
+  const subAvails = avails.territories.flatMap(ter => {
+    return avails.medias.map(m => ({ ...avails, territories: [ter], medias: [m] }));
+  });
+
+  for (const subAvail of subAvails) {
+    const result: Partial<AvailResult> = { available: [], sold: [] };
+
+    mandateLoop: for (const contract of mandates) {
+
+      for (const term of contract.terms) {
+        const availInTerm = isCalendarTermInAvails(term, subAvail);
+        if (!availInTerm) continue;
+
+        result.periodAvailable = term?.duration;
+        result.available.push({ ...contract, terms: [term] });
+        break mandateLoop;
+      }
+
+    }
+
+    saleLoop: for (const sale of sales) {
+
+      for (const term of sale.terms) {
+        const someOfTermInAvail = isCalendarAvailPartiallyInTerm(subAvail, term);
+        if (!someOfTermInAvail) continue;
+        result.sold.push({ ...sale, terms: [term] });
+        break saleLoop;
+      }
+
+    }
+    results.push(result as AvailResult)
+  }
 
   /**
-  * only continue with mandates that don't need any subdivision of the avail to determine availability.
-  * This happens when all of the avail is found within at least one term of the mandate.
-  * This is always the case with single-term mandates but not forcibly with multi-term mandates.
-  */
-  for (const mandate of mandates) {
-    const term = mandate.terms.find(term => isCalendarTermInAvails(term, avails));
+   * Each availableTerm's duration might differ from the rest so we need
+   * to change their durations to be the period that's the intersection of all their
+   * individual durations.
+   */
+  const from = max(results.map((result) => result.periodAvailable?.from));
+  const to = min(results.map((result) => result.periodAvailable?.to));
 
-    if (term) {
-      //removing other terms that might not have matched to avoid marking their territories as available.
-      const newMandate = { ...mandate, terms: [term] };
-      availableMandates.push(newMandate);
-    } else if (mandate.terms.length > 1) {
-      multiTermMandates.push(mandate);
+  //There exists a subavail that didn't match with any of the mandates
+  const emptyResult = results.find(result => !result.available.length)
+
+  const sold = results
+    .map(({ sold }) => sold)
+    .filter(sold => sold.length)
+    .flat();
+
+  /** This might happen if the duration of one term has no time intersection with the rest of the other terms.
+   * assuming `dA` stands for duration of `termA` and `dB` for duration of `termB`, etc...
+   *
+   *           dA.to |   dC.from    dC.to  dB.to   |  dF.from
+   *          <-|    |      |->     AAAA| <-|      |     |->
+   *    0------------|-----------------------------|----------------> time
+   *       |->       | |->         |AAAA    <-|    |         <-|
+   *       dA.from   | dB.from   dE.from     dE.to |        dF.to
+   *
+   * We notice that, `dA` and `dF` make it such that, there can't be no intersection period between
+   * the durations of [dA, dB, dC, dE, dF].
+   * But assuming we only have the durations [dB, dC, dE] to take into account, then `A` marks the intersection period.
+   */
+  const noPossibleIntersection = isAfter(from, to);
+
+  if (noPossibleIntersection || emptyResult) {
+    return {
+      periodAvailable: null,
+      available: [],
+      sold
     }
   }
 
+  // If there is an overlapping duration
+  const available = results
+    .map(({ available }) => available)
+    .filter(available => available.length)
+    .flat()
 
-  const availableMultiTermMandates = multiTermMandates.map(mandate => {
-    const territoryWise = avails.medias.every(media => mandate.terms.every(term => term.medias.includes(media)));
-    const mediaWise = avails.territories.every(territory => mandate.terms.every(term => term.territories.includes(territory)));
-    if (!territoryWise && !mediaWise) return;
-    const field = territoryWise ? 'territories' : 'medias';
-
-    /**
-     * Dividing avails `field-wise` to search for availability on sub-avails.
-     */
-    const subAvails = avails[field].map(eachField => ({ ...avails, [field]: [eachField] }));
-
-    let availableTerms = subAvails.map(subAvail => {
-      return mandate.terms.find(term => isCalendarTermInAvails(term, subAvail));
-    });
-
-    /**
-     * if one of the sub-avails resulting from the division of the avails `field-wise`
-     * is not available, then nothing is available.
-     */
-    const unavailableSubAvail = availableTerms.includes(undefined);
-    if (unavailableSubAvail) return;
-
-    /**
-     * Each availableTerm's duration might differ from the rest so we need
-     * to change their durations to be the period that's the intersection of all their
-     * individual durations.
-     */
-    const from = max(availableTerms.map(term => term.duration.from));
-    const to = min(availableTerms.map(term => term.duration.to));
-
-    /** This might happen if the duration of one term has no time intersection with the rest of the other terms.
-     * assuming `dA` stands for duration of `termA` and `dB` for duration of `termB`, etc...
-     *
-     *           dA.to |   dC.from    dC.to  dB.to   |  dF.from
-     *          <-|    |      |->     AAAA| <-|      |     |->
-     *    0------------|-----------------------------|----------------> time
-     *       |->       | |->         |AAAA    <-|    |         <-|
-     *       dA.from   | dB.from   dE.from     dE.to |        dF.to
-     *
-     * We notice that, `dA` and `dF` make it such that, there can't be no intersection period between
-     * the durations of [dA, dB, dC, dE, dF].
-     * But assuming we only have the durations [dB, dC, dE] to take into account, then `A` marks the intersection period.
-     */
-    if (isAfter(from, to) || isBefore(to, from)) return;
-    availableTerms = availableTerms.map(term => ({ ...term, duration: { from, to } }));
-    return { ...mandate, terms: availableTerms };
-  }).filter(mandate => mandate);
-
-  return [availableMandates, availableMultiTermMandates].flat();
+  return {
+    periodAvailable: { from, to },
+    available,
+    sold
+  }
 }
 
-function isCalendarAvailPartiallyInTerm(avail: CalendarAvailsFilter, term: Term<Date>) {
+export function isCalendarAvailPartiallyInTerm(avail: CalendarAvailsFilter, term: Term<Date>) {
   const exclusivityCheck = exclusivitySomeOf(avail.exclusive).in(term.exclusive);
   if (!exclusivityCheck) return false;
   const mediaCheck = someOf(avail.medias).in(term.medias);
   if (!mediaCheck) return false;
   return someOf(avail.territories).in(term.territories);
-}
-
-function getMatchingCalendarSales<T extends (FullSale | BucketContract)>(sales: T[], avails: CalendarAvailsFilter): T[] {
-  const subAvails = avails.territories.map(territory => {
-    return avails.medias.map(media => {
-      return { ...avails, territories: [territory], medias: [media] };
-    });
-  }).flat();
-  return sales.filter(sale => {
-    return sale.terms.some(term => {
-      return subAvails.some(subAVail => isCalendarAvailPartiallyInTerm(subAVail, term));
-    });
-  });
 }
 
 function isCalendarTermInBucket<T extends BucketTerm | Term>(term: T, avails: CalendarAvailsFilter) {
@@ -561,14 +526,17 @@ export function durationAvailabilities(
 
   assertValidTitle(mandates, sales, bucketContracts);
 
-  const availableMandates = getMatchingCalendarMandates(mandates, avails);
+  const {
+    available: availableMandates, sold: salesToExclude,
+    periodAvailable
+  } = getMatchingCalendar(avails, mandates, sales);
+
   const available = availableMandates.map(m => {
     return m.terms.map((t): DurationMarker =>
-      ({ from: t.duration.from, to: t.duration.to, contract: m, term: t })
+      ({ from: periodAvailable.from, to: periodAvailable.to, contract: m, term: t })
     );
   }).flat();
 
-  const salesToExclude = getMatchingCalendarSales(sales, avails);
   const sold = salesToExclude.map(s =>
     s.terms.map((t): DurationMarker =>
       ({ from: t.duration.from, to: t.duration.to, term: t })
