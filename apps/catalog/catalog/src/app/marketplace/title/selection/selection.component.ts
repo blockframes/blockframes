@@ -114,7 +114,7 @@ export class MarketplaceSelectionComponent {
       contracts[contractIndex].terms = terms;
       return { contracts };
     });
-    this.snackBar.open(`Rights deleted`, 'close', { duration: 4000 });
+    this.snackBar.open('Terms deleted', 'close', { duration: 4000 });
   }
 
   createOffer(bucket: Bucket) {

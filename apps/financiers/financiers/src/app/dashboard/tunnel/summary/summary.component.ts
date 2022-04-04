@@ -67,7 +67,7 @@ export class TunnelSummaryComponent implements OnInit {
             const movieId = this.route.snapshot.paramMap.get('movieId');
             await this.consentsService.createConsent('share', movieId);
             const text = `${this.form.get('title').get('international').value} was successfully submitted.`;
-            const ref = this.snackBar.open(text, '', { duration: 1000 });
+            const ref = this.snackBar.open(text, '', { duration: 4000 });
             ref.afterDismissed().subscribe(() => this.router.navigate(['../end'], { relativeTo: this.route }))
           } catch (err) {
             // Log the invalid forms
