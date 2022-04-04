@@ -61,7 +61,7 @@
         <bf-tag>{{ status | toLabel: 'storeStatus' }}</bf-tag>
       </ng-template>
 
-      <ng-template  colRef label="Actions" let-movie sticky>
+      <ng-template colRef label="Actions" let-movie sticky>
         <div class="action-buttons">
           <a [routerLink]="movie.id" mat-icon-button matTooltip="View">
             <mat-icon svgIcon="visibility"></mat-icon>
