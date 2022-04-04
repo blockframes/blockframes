@@ -82,8 +82,4 @@ export class ListComponent {
     await this.service.updateStatus(movie.id, status);
     this.snackbar.open(message || `Title ${storeStatus[status]}.`, '', { duration: 4000 });
   }
-
-  console(any: any) {
-    console.log(any);
-  }
 }
