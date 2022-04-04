@@ -46,8 +46,36 @@ const routes: Routes = [{
       redirectTo: 'home'
     },
     {
-      path: 'home',   // Home (dashboard if film, welcome if not)
-      loadChildren: () => import('./home/home.module').then(m => m.HomeModule),
+      path: 'home',
+      children: [
+        {
+          path: '',
+          loadChildren: () => import('./home/home.module').then(m => m.HomeModule),
+        }, {
+          path: 'title',
+          children: [
+            {
+              path: '',
+              loadChildren: () => import('./analytics/titles/titles-analytics.module').then(m => m.TitlesAnalyticsModule),
+            }, {
+              path: ':titleId',
+              loadChildren: () => import('./analytics/title/title-analytics.module').then(m => m.TitleAnalyticsModule)
+            }
+          ]
+        }, {
+          path: 'seller',
+          children: [
+            {
+              path: '',
+              loadChildren: () => import('./analytics/sellers/sellers-analytics.module').then(m => m.SellersAnalyticsModule)
+            },
+            {
+              path: ':orgId',
+              loadChildren: () => import('./analytics/seller/seller-analytics.module').then(m => m.SellerAnalyticsModule)
+            }
+          ]
+        }
+      ]
     },
     {
       path: 'notifications',
@@ -151,19 +179,6 @@ const routes: Routes = [{
           ],
         },
       ],
-    },
-    {
-      path: 'analytics',
-      children: [
-        {
-          path: '',
-          loadChildren: () => import('./analytics/titles/titles-analytics.module').then(m => m.TitlesAnalyticsModule)
-        },
-        {
-          path: ':titleId',
-          loadChildren: () => import('./analytics/title/title-analytics.module').then(m => m.TitleAnalyticsModule)
-        }
-      ]
     },
     {
       path: 'files',
