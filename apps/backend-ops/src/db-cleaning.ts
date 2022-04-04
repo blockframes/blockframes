@@ -7,7 +7,7 @@ import {
   PermissionsDocument,
   InvitationDocument,
   createStorageFile
-} from '@blockframes/model';
+} from '@blockframes/shared/model';
 import { removeUnexpectedUsers } from './users';
 import { Auth, QueryDocumentSnapshot, getDocument, runChunks, removeAllSubcollections, UserRecord, loadAdminServices } from '@blockframes/firebase-utils';
 import admin from 'firebase-admin';
