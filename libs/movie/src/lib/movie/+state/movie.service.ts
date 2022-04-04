@@ -12,7 +12,7 @@ import { joinWith } from '@blockframes/utils/operators';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 import { AuthService } from '@blockframes/auth/+state';
 import { ActiveState, EntityState } from '@datorama/akita';
-import { storeStatus, StoreStatus } from '@blockframes/utils/static-model';
+import { StoreStatus } from '@blockframes/utils/static-model';
 import { APP } from '@blockframes/utils/routes/utils';
 
 export const fromOrg = (orgId: string): QueryFn => (ref) =>
