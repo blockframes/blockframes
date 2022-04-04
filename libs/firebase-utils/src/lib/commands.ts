@@ -124,7 +124,7 @@ export async function keepAlive<T>(promise: Promise<T>) {
       await sleep(1000 * s)
     }
   }
-  await Promise.race([promise, timer(60)])
+  await Promise.race([promise, timer(60)]);
   running = false;
   return promise;
 }
