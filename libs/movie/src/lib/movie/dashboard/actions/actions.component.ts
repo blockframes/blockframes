@@ -68,6 +68,6 @@ export class DashboardActionsShellComponent {
 
   async updateStatus(status: StoreStatus, message?: string) {
     await this.movieService.updateStatus(this.movie.id, status);
-    this.snackbar.open(message ? message : `Title ${storeStatus[status]}.`, '', { duration: 4000 });
+    this.snackbar.open(message || `Title ${storeStatus[status]}.`, '', { duration: 4000 });
   }
 }

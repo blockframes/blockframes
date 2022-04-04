@@ -34,7 +34,7 @@ export class MovieService extends CollectionService<MovieState> {
   constructor(
     private authService: AuthService,
     private permissionsService: PermissionsService,
-    private analyticservice: AnalyticsService,
+    private analyticService: AnalyticsService,
     private orgService: OrganizationService,
     @Inject(APP) public app: App
   ) {
@@ -116,7 +116,7 @@ export class MovieService extends CollectionService<MovieState> {
 
     return this.valueChanges(query).pipe(
       joinWith({
-        analytics: movie => this.analyticservice.valueChanges(ref => ref
+        analytics: movie => this.analyticService.valueChanges(ref => ref
           .where('type', '==', 'title')
           .where('name', '==', 'pageView')
           .where('meta.titleId', '==', movie.id)

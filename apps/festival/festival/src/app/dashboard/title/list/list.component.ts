@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Optional, Inject, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Optional, Inject } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { startWith, map, tap, shareReplay } from 'rxjs/operators';
@@ -11,6 +11,7 @@ import { App } from '@blockframes/utils/apps';
 import { StoreStatus } from '@blockframes/utils/static-model/types';
 import { APP } from '@blockframes/utils/routes/utils';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { storeStatus } from '@blockframes/utils/static-model';
 
 @Component({
   selector: 'festival-dashboard-title-list',
@@ -51,7 +52,6 @@ export class ListComponent {
     private route: ActivatedRoute,
     private snackbar: MatSnackBar,
     private dynTitle: DynamicTitleService,
-    private cdr: ChangeDetectorRef,
     @Optional() private intercom: Intercom,
     @Inject(APP) public app: App
   ) {}
@@ -74,8 +74,12 @@ export class ListComponent {
     this.filter.reset();
   }
 
-  async changeMovieStatus(movie: Movie, status: StoreStatus) {
+  async changeMovieStatus(movie: Movie, status: StoreStatus, message?: string) {
     await this.service.updateStatus(movie.id, status);
-    this.snackbar.open(`Title ${status}.`, '', { duration: 4000 });
+    this.snackbar.open(message || `Title ${storeStatus[status]}.`, '', { duration: 4000 });
+  }
+
+  console(any: any) {
+    console.log(any);
   }
 }
