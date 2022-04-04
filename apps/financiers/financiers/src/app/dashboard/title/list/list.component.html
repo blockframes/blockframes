@@ -42,7 +42,7 @@
       </ng-template>
       <ng-template colRef="campaignStarted" label="Campaign Started" let-date sort>{{ date | date: 'short' }}</ng-template>
 
-      <ng-template  colRef label="Actions" let-movie sticky>
+      <ng-template colRef label="Actions" let-movie sticky>
         <div class="action-buttons">
           <a [routerLink]="movie.id" mat-icon-button matTooltip="View">
             <mat-icon svgIcon="visibility"></mat-icon>
