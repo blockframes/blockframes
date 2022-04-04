@@ -164,11 +164,6 @@
     border-radius: 26px;
   }
 
-  .mat-fab,
-  .mat-mini-fab {
-    @include mat.overridable-elevation(0);
-  }
-
   .mat-fab {
     &.active {
       background-color: var(--active);

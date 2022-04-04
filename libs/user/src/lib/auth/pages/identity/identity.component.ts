@@ -159,7 +159,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
       this.cdr.markForCheck();
       switch (err.code) {
         case 'auth/email-already-in-use':
-          this.snackBar.openFromTemplate(this.customSnackBarTemplate, { duration: 8000 });
+          this.snackBar.openFromTemplate(this.customSnackBarTemplate, { duration: 6000 });
           break;
         case 'auth/wrong-password':
           this.snackBar.open('Incorrect Invitation Pass. Please check your invitation email.', 'close', { duration: 8000 });

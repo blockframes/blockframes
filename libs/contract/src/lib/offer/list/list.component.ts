@@ -1,9 +1,8 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import { Offer } from '@blockframes/contract/offer/+state';
 import { Observable } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { startWith } from 'rxjs/operators';
-import { Contract, Movie, Negotiation } from '@blockframes/model';
+import { Contract, Movie, Negotiation, Offer } from '@blockframes/model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { ActivatedRoute, Router } from '@angular/router';
 

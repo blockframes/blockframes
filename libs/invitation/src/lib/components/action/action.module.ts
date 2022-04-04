@@ -5,7 +5,7 @@ import { InvitationActionPipeModule } from './action.pipe';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { EventTimeModule } from '@blockframes/event/pipes/event-time.pipe'
 import { TagModule } from '@blockframes/ui/tag/tag.module';
-
+import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -20,6 +20,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     FlexLayoutModule,
     InvitationActionPipeModule,
     TagModule,
+    RouterModule,
 
     MatTooltipModule,
     MatButtonModule,

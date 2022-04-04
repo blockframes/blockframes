@@ -3,11 +3,10 @@ import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-//Material
+// Material
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 // Libraries
@@ -17,11 +16,11 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { HomeComponent } from './home.component';
 
 // Modules
-import { MovieAnalyticsChartModule } from '@blockframes/movie/components/movie-analytics-chart/movie-analytics-chart.module';
+import { MovieAnalyticsChartModule } from '@blockframes/analytics/components/movie-analytics-chart/movie-analytics-chart.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { NoTitleModule } from '@blockframes/ui/dashboard/components/no-title/no-title.module';
-import { AnalyticsPipeModule } from '@blockframes/movie/pipes/analytics.pipe';
 import { AppPipeModule } from '@blockframes/utils/pipes/app.pipe';
+import { HasAppStatusModule } from '@blockframes/movie/pipes/has-app-status.pipe';
 
 @NgModule({
   declarations: [HomeComponent],
@@ -31,14 +30,13 @@ import { AppPipeModule } from '@blockframes/utils/pipes/app.pipe';
     MovieAnalyticsChartModule,
     ImageModule,
     NoTitleModule,
-    AnalyticsPipeModule,
     AppPipeModule,
+    HasAppStatusModule,
 
     // Material
     MatButtonModule,
     MatIconModule,
     MatTooltipModule,
-    MatCardModule,
     MatProgressSpinnerModule,
 
     // Routing

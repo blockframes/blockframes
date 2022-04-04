@@ -42,10 +42,8 @@ export async function getRandomOrg(data: { app: App; access: ModuleAccess }) {
 }
 
 export async function validateOrg(orgName: string) {
-  const userQuery = await db.collection('orgs').where('denomination.full', '==', orgName).get();
-  const [org] = userQuery.docs;
-  const { id: orgId } = org.data();
-  const docRef = db.collection('orgs').doc(orgId);
+  const org = await getOrgByName(orgName);
+  const docRef = db.collection('orgs').doc(org.id);
   return docRef.update({ status: 'accepted' });
 }
 
@@ -69,4 +67,19 @@ export async function getRandomOrgAdmin(orgId: string) {
   const adminId = adminIds[randomIndex];
   const adminRef = await db.doc(`users/${adminId}`).get();
   return createUser(adminRef.data());
+}
+
+export function deleteUser(userId: string) {
+  return db.doc(`users/${userId}`).delete();
+}
+
+export async function getOrgByName(orgName: string) {
+  const userQuery = await db.collection('orgs').where('denomination.full', '==', orgName).get();
+  const [org] = userQuery.docs;
+  if(!org) return null;
+  return createOrganization(org.data());
+}
+
+export function deleteOrg(orgId: string) {
+  return db.doc(`orgs/${orgId}`).delete();
 }

@@ -6,7 +6,8 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { isInitial } from '@blockframes/contract/negotiation/utils';
 import { capitalize } from '@blockframes/utils/helpers';
-import { Contract, ContractStatus, Sale, Negotiation } from '@blockframes/model';
+import { Contract, Sale, Negotiation } from '@blockframes/model';
+import { ContractStatus } from '@blockframes/utils/static-model';
 
 
 interface InternalSale extends Sale<Date> {
