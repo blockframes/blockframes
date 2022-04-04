@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
 import { createMovie, Movie, createMovieAppConfig, createDocumentMeta } from '@blockframes/model';
 import { cleanModel } from '@blockframes/utils/helpers';
@@ -12,6 +12,8 @@ import { joinWith } from '@blockframes/utils/operators';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 import { AuthService } from '@blockframes/auth/+state';
 import { ActiveState, EntityState } from '@datorama/akita';
+import { storeStatus, StoreStatus } from '@blockframes/utils/static-model';
+import { APP } from '@blockframes/utils/routes/utils';
 
 export const fromOrg = (orgId: string): QueryFn => (ref) =>
   ref.where('orgIds', 'array-contains', orgId);
@@ -33,7 +35,8 @@ export class MovieService extends CollectionService<MovieState> {
     private authService: AuthService,
     private permissionsService: PermissionsService,
     private analyticService: AnalyticsService,
-    private orgService: OrganizationService
+    private orgService: OrganizationService,
+    @Inject(APP) public app: App
   ) {
     super();
   }
@@ -113,15 +116,22 @@ export class MovieService extends CollectionService<MovieState> {
 
     return this.valueChanges(query).pipe(
       joinWith({
-        analytics: movie => this.analyticService.valueChanges(ref => ref
-          .where('type', '==', 'title')
-          .where('name', '==', 'pageView')
-          .where('meta.titleId', '==', movie.id)
-          .where('meta.ownerOrgIds', 'array-contains', orgId)
-          .where('_meta.createdFrom', '==', app)
-        ),
-      }),
+        analytics: movie => this.analyticService.getTitleAnalytics(movie.id)
+      }, { shouldAwait: true }),
       map(movies => movies.sort((a, b) => a.title.international < b.title.international ? -1 : 1))
     );
+  }
+
+  public updateStatus(movieId: string, status: StoreStatus) {
+    return this.update(movieId, movie => ({
+      ...movie,
+      app: {
+        ...movie.app,
+        [this.app]: {
+          ...movie.app[this.app],
+          status,
+        },
+      },
+    }));
   }
 }

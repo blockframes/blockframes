@@ -73,15 +73,10 @@ export class ActionComponent {
     const { ownerOrgId, id, accessibility } = event;
     this.service.request(ownerOrgId).to('attendEvent', id);
     if (accessibility !== 'public') {
-      this.snackBar.open('Request sent','close', { duration: 4000 });
-    }   
-    else if (accessibility == 'public' ) {
+      this.snackBar.open('Request sent', 'close', { duration: 4000 });
+    } else if (accessibility === 'public') {
       this.snackBar.openFromTemplate(this.viewDetailsTemplate, { duration: 6000 });
     }
     this.requestPending = true;
-  }
-
-  seeDetails(event: Event) {
-      return this.router.navigate(['/event/', event.id, 'r', 'i'])
   }
 }

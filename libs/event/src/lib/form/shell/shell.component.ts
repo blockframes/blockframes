@@ -39,7 +39,6 @@ const navTabs: NavTabs = {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EventFormShellComponent implements OnInit, OnDestroy {
-  @ViewChild('somethingWentWrong') somethingWentWrongTemplate: TemplateRef<unknown>;
   tabs$: Observable<TabConfig[]>;
   private sub: Subscription;
   form: EventForm;
