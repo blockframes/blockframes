@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
-import { SellerAnalyticsComponent } from './seller-analytics.component';
+import { BuyerAnalyticsComponent } from './buyer-analytics.component';
 
 @NgModule({
   imports: [
@@ -12,10 +12,10 @@ import { SellerAnalyticsComponent } from './seller-analytics.component';
     RouterModule.forChild([
       {
         path: '',
-        component: SellerAnalyticsComponent
+        component: BuyerAnalyticsComponent
       }
     ])
   ],
-  declarations: [SellerAnalyticsComponent]
+  declarations: [BuyerAnalyticsComponent]
 })
-export class SellerAnalyticsModule {}
+export class BuyerAnalyticsModule {}
