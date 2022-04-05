@@ -7,7 +7,7 @@ import {
   Validators,
   FormArray
 } from '@angular/forms';
-import { languages, isInKeys, Scope, staticModel } from '@blockframes/utils/static-model';
+import { languages, isInKeys, Scope, staticModel } from '@blockframes/model';
 
 export const urlValidators = Validators.pattern(/^(http(s)?:\/\/www\.|http(s)?:\/\/)[a-z0-9]+([-.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/);
 
