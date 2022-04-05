@@ -137,7 +137,7 @@ export class NotificationsFormComponent {
     const uid = this.authService.uid;
     await this.authService.update({ uid, settings: { notifications } });
 
-    this.snackBar.open('Notifications settings updated.', 'close', { duration: 2000 });
+    this.snackBar.open('Notification Settings updated.', 'close', { duration: 4000 });
   }
 }
 

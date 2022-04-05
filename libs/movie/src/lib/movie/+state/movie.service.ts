@@ -12,7 +12,7 @@ import { joinWith } from '@blockframes/utils/operators';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 import { AuthService } from '@blockframes/auth/+state';
 import { ActiveState, EntityState } from '@datorama/akita';
-import { storeStatus, StoreStatus } from '@blockframes/utils/static-model';
+import { StoreStatus } from '@blockframes/utils/static-model';
 import { APP } from '@blockframes/utils/routes/utils';
 
 export const fromOrg = (orgId: string): QueryFn => (ref) =>
@@ -116,12 +116,7 @@ export class MovieService extends CollectionService<MovieState> {
 
     return this.valueChanges(query).pipe(
       joinWith({
-        analytics: movie => this.analyticService.valueChanges(ref => ref
-          .where('type', '==', 'title')
-          .where('meta.titleId', '==', movie.id)
-          .where('meta.ownerOrgIds', 'array-contains', orgId)
-          .where('_meta.createdFrom', '==', app)
-        ),
+        analytics: movie => this.analyticService.getTitleAnalytics(movie.id)
       }, { shouldAwait: true }),
       map(movies => movies.sort((a, b) => a.title.international < b.title.international ? -1 : 1))
     );
