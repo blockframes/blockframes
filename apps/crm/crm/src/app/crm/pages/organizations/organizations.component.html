@@ -19,16 +19,19 @@
     </div>
   </article>
 
-  <bf-table clickable [source]="orgs" pagination="50" useFilter (rowClick)="goToEdit($event)">
+  <bf-table [source]="orgs" pagination="50" useFilter>
     <ng-template colRef="id" let-id sort>{{ id }}</ng-template>
     <ng-template colRef="status" let-status sort>
       <bf-tag>{{ status }}</bf-tag>
     </ng-template>
-    <ng-template colRef="denomination.full" label="Name" sort let-fullName>
+    <ng-template colRef="denomination.full" label="Organization Name" sort let-fullName>
       {{ fullName }}
     </ng-template>
     <ng-template colRef="addresses.main.country" defaultSort label="Country" sort let-country>
       {{ country ?? '--' | titlecase }}
+    </ng-template>
+    <ng-template colRef label="Status" sort let-org>
+      {{ org.status ?? '--' | titlecase }}
     </ng-template>
     <ng-template colRef="activity" sort let-activity>
       {{ activity | toLabel: 'orgActivity'}}
@@ -39,6 +42,11 @@
           <li>{{ a | appName:'short' }} : {{ appAccess[a]?.dashboard ? 'yes': 'no' }} : {{ appAccess[a]?.marketplace ? 'yes': 'no' }} </li>
         </ng-container>
       </ul>
+    </ng-template>
+    <ng-template colRef label="Action" let-org sticky>
+      <a target="_blank" [routerLink]="['/c/o/dashboard/crm/organization', org.id]">
+        <mat-icon svgIcon="launch"></mat-icon>
+      </a>
     </ng-template>
   </bf-table>
 </ng-container>
