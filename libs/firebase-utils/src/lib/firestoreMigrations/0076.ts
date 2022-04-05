@@ -1,39 +1,33 @@
 import { Firestore } from '../types';
-
 import { createUser } from '@blockframes/model';
-
-// MAILCHIMP
+import * as mailchimp from '@mailchimp/mailchimp_marketing';
 
 const mailchimpAPIKey = process.env.MAILCHIMP_API_KEY;
 const mailchimpServer = process.env.MAILCHIMP_SERVER;
 const mailchimpListId = process.env.MAILCHIMP_LIST_ID;
-let _mailchimp;
 
-async function getMailChimp() {
-  if (!_mailchimp) {
-    _mailchimp = await import("@mailchimp/mailchimp_marketing").then(mailchimp => mailchimp.default);
-  }
-  return _mailchimp
+interface MailchimpMember {
+  email: string,
+  status: string
 }
 
-export async function batch(membersArray): Promise<void> {
-  const mailchimp = await getMailChimp();
-  mailchimp.setConfig({
+export async function batch(members: MailchimpMember[]): Promise<void> {
+  // const mailchimp = await getMailChimp();
+  mailchimp.default.setConfig({
     apiKey: mailchimpAPIKey,
     server: mailchimpServer
   });
 
   return mailchimp.lists.batchListMembers(mailchimpListId, {
-    members: membersArray,
+    members,
     update_existing: false
   });
 }
+
 /**
  * Update mailchimp users list. Add non existing user, don't update existing ones.
  * @param db
- * @returns
  */
-
 
 export async function upgrade(db: Firestore) {
   const users = await db.collection('users').get();
