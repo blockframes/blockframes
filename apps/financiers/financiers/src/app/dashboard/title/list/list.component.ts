@@ -1,8 +1,7 @@
 import { Component, ChangeDetectionStrategy, OnInit, Optional, Inject } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { fromOrg, MovieService } from '@blockframes/movie/+state/movie.service';
-import { Movie } from '@blockframes/model';
+import { Movie, storeStatus, StoreStatus } from '@blockframes/model';
 import { CampaignService, MovieCampaign } from '@blockframes/campaign/+state/campaign.service';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
@@ -11,6 +10,7 @@ import { map, startWith, switchMap, tap } from 'rxjs/operators';
 import { Intercom } from 'ng-intercom';
 import { App } from '@blockframes/utils/apps';
 import { APP } from '@blockframes/utils/routes/utils';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 type Filters = 'all' | 'draft' | 'ongoing' | 'achieved' | 'archived';
 
@@ -52,9 +52,8 @@ export class ListComponent implements OnInit {
   constructor(
     private campaignService: CampaignService,
     private orgService: OrganizationService,
-    private router: Router,
-    private route: ActivatedRoute,
     private dynTitle: DynamicTitleService,
+    private snackbar: MatSnackBar,
     private movieService: MovieService,
     @Optional() private intercom: Intercom,
     @Inject(APP) public app: App
@@ -101,16 +100,16 @@ export class ListComponent implements OnInit {
     );
   }
 
-  /** Navigate to tunnel if status is draft, else go to page */
-  public goToTitle(title: Movie) {
-    this.router.navigate([title.id], { relativeTo: this.route });
-  }
-
   public applyFilter(filter: Filters) {
     this.filter.setValue(filter);
   }
 
   public openIntercom(): void {
     return this.intercom.show();
+  }
+
+  async updateStatus(movie: Movie, status: StoreStatus, message?: string) {
+    await this.movieService.updateStatus(movie.id, status);
+    this.snackbar.open(message || `Title ${storeStatus[status]}.`, '', { duration: 4000 });
   }
 }
