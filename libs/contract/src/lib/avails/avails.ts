@@ -444,46 +444,35 @@ export function getMatchingCalendar(avails: CalendarAvailsFilter, mandates: Full
     results.push(result as AvailResult)
   }
 
-  /**
-   * Each availableTerm's duration might differ from the rest so we need
-   * to change their durations to be the period that's the intersection of all their
-   * individual durations.
-   */
+  // Take the intersection of all the available duration
   const from = max(results.map((result) => result.periodAvailable?.from));
   const to = min(results.map((result) => result.periodAvailable?.to));
 
-  //There exists a subavail that didn't match with any of the mandates
-  const emptyResult = results.find(result => !result.available.length)
-
+  // Get the none empty sold result
   const sold = results
     .map(({ sold }) => sold)
     .filter(sold => sold.length)
     .flat();
 
-  /** This might happen if the duration of one term has no time intersection with the rest of the other terms.
-   * assuming `dA` stands for duration of `termA` and `dB` for duration of `termB`, etc...
-   *
-   *           dA.to |   dC.from    dC.to  dB.to   |  dF.from
-   *          <-|    |      |->     AAAA| <-|      |     |->
-   *    0------------|-----------------------------|----------------> time
-   *       |->       | |->         |AAAA    <-|    |         <-|
-   *       dA.from   | dB.from   dE.from     dE.to |        dF.to
-   *
-   * We notice that, `dA` and `dF` make it such that, there can't be no intersection period between
-   * the durations of [dA, dB, dC, dE, dF].
-   * But assuming we only have the durations [dB, dC, dE] to take into account, then `A` marks the intersection period.
-   */
-  const noPossibleIntersection = isAfter(from, to);
+    const noResult = results.find(result => !result.available.length)
 
-  if (noPossibleIntersection || emptyResult) {
-    return {
+    /**
+     * Intersection     |   No Intersection
+     * |-----***|....   |   |---|.........
+     * .....|***----|   |   .......|------|
+     */
+    const noIntersection = from > to;
+
+    // If no result or if no intersection return only the sold result
+    if (noResult || noIntersection) {
+      return {
       periodAvailable: null,
       available: [],
       sold
     }
   }
 
-  // If there is an overlapping duration
+  // Get non-empty available results
   const available = results
     .map(({ available }) => available)
     .filter(available => available.length)
@@ -532,15 +521,20 @@ export function durationAvailabilities(
   } = getMatchingCalendar(avails, mandates, sales);
 
   const available = availableMandates.map(m => {
-    return m.terms.map((t): DurationMarker =>
-      ({ from: periodAvailable.from, to: periodAvailable.to, contract: m, term: t })
-    );
+    return m.terms.map((t): DurationMarker => ({
+      from: periodAvailable.from,
+      to: periodAvailable.to,
+      contract: m,
+      term: t
+    }));
   }).flat();
 
   const sold = salesToExclude.map(s =>
-    s.terms.map((t): DurationMarker =>
-      ({ from: t.duration.from, to: t.duration.to, term: t })
-    )
+    s.terms.map((t): DurationMarker => ({
+      from: t.duration.from,
+      to: t.duration.to,
+      term: t
+    }))
   ).flat();
 
 
