@@ -3,6 +3,7 @@ import { OrganizationForm } from '@blockframes/organization/forms/organization.f
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FileUploaderService } from '@blockframes/media/+state';
+import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/snackbar-error.component';
 
 @Component({
   selector: 'organization-edit',
@@ -29,14 +30,16 @@ export class OrganizationComponent implements OnInit {
         if (this.organizationForm.invalid) {
           throw new Error('Your organization profile information are not valid');
         }
-
         this.uploaderService.upload();
         this.service.update(this.service.org.id, this.organizationForm.value);
-
         this.snackBar.open('Organization Profile updated.', 'close', { duration: 4000 });
       }
     } catch (error) {
-      this.snackBar.open(error.message, 'close', { duration: 2000 });
+      if (error.message === 'Your organization profile information are not valid') {
+        this.snackBar.open(error.message, 'close', { duration: 2000 });
+      } else {
+        this.snackBar.openFromComponent(SnackbarErrorComponent, { duration: 5000 });
+      }
     }
   }
 
