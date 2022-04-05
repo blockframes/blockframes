@@ -458,17 +458,18 @@ export function getMatchingCalendar(avails: CalendarAvailsFilter, mandates: Full
     results.push(result as AvailResult)
   }
 
-  // Take the intersection of all the available duration
-  const from = max(results.map((result) => result.periodAvailable?.from));
-  const to = min(results.map((result) => result.periodAvailable?.to));
-
   // Get the none empty sold result
   const sold = results
     .map(({ sold }) => sold)
     .filter(sold => sold.length)
     .flat();
 
-  const noResult = results.find(result => !result.available.length)
+  // If one of the subAvails has no availability, return empty result
+  const unavailableSubAvail = results.find(result => !result.available.length)
+
+  // Take the intersection of all the available duration
+  const from = max(results.map((result) => result.periodAvailable?.from));
+  const to = min(results.map((result) => result.periodAvailable?.to));
 
   /**
    * Intersection     |   No Intersection
@@ -478,7 +479,7 @@ export function getMatchingCalendar(avails: CalendarAvailsFilter, mandates: Full
   const noIntersection = from > to;
 
   // If no result or if no intersection return only the sold result
-  if (noResult || noIntersection) {
+  if (unavailableSubAvail || noIntersection) {
     return {
       periodAvailable: null,
       available: [],
