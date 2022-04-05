@@ -179,7 +179,6 @@ jobs:
       - run: npm start cleanBackups 45 gs://blockframes-ci-storage-backup
       - run: npm start use blockframes
       - run: npm start cleanBackups 45 gs://blockframes-backups
-      - run: npm start cleanBackups 45 gs://blockframes-backups-storage
   build-deploy-prepare-branch-against-selected-env:
     executor: blockframes-ci
     environment:
