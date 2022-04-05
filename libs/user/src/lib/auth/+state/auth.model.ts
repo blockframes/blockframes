@@ -1,5 +1,5 @@
 import { Person } from '@blockframes/model';
-import { AccessibilityTypes } from "@blockframes/utils/static-model/types";
+import type { AccessibilityTypes } from '@blockframes/model';
 
 export type AnonymousRole = 'guest' | 'organizer'; // Role for events
 

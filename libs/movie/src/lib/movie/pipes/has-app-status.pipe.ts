@@ -1,8 +1,7 @@
 import { Inject, NgModule, Pipe, PipeTransform } from "@angular/core";
-import { hasAppStatus, Movie } from "@blockframes/model";
+import { hasAppStatus, Movie, StoreStatus } from "@blockframes/model";
 import { App } from "@blockframes/utils/apps";
 import { APP } from "@blockframes/utils/routes/utils";
-import { StoreStatus } from "@blockframes/utils/static-model";
 
 @Pipe({ name: 'hasAppStatus' })
 export class HasAppStatusPipe implements PipeTransform {
