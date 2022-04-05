@@ -13,6 +13,7 @@ export class MemberRepertoryComponent {
   @Input() showFilter = false;
   @Input() isSuperAdmin: boolean;
   @Input() @boolean showEdit = false;
+  @Input() @boolean showPermission = true;
 
   @Output() memberRemoved = new EventEmitter<string>();
 

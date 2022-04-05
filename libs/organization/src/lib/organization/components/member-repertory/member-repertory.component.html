@@ -12,7 +12,7 @@
         {{ value }}
       </ng-template>
     </ng-container>
-    <ng-template colRef="role" label="Permissions" let-role sort>
+    <ng-template *ngIf="showPermission" colRef="role" label="Permissions" let-role sort>
       {{ displayRole(role) }}
     </ng-template>
     <ng-template *ngIf="isSuperAdmin" colRef="uid" let-uid>
@@ -21,10 +21,13 @@
         (updatedToMember)="updatedToMember.emit(uid)">
       </member-permissions>
     </ng-template>
-    <ng-template *ngIf="showEdit" colRef="edit" label="Edit" let-edit>
-      <a [routerLink]="edit?.link">
+    <ng-template *ngIf="showEdit" colRef label="Edit" let-user>
+      <a mat-icon-button [routerLink]="user.edit?.link">
         <mat-icon svgIcon="edit"></mat-icon>
       </a>
+      <button mat-icon-button [cdkCopyToClipboard]="user.uid" (click)="$event.stopPropagation()">
+        <mat-icon svgIcon="file_copy"></mat-icon>
+      </button>
     </ng-template>
   </bf-table>
   <h6>What is “Grant permissions”?</h6>
