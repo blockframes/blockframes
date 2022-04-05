@@ -9,20 +9,14 @@ import {
   createStorageFile
 } from '@blockframes/model';
 import { removeUnexpectedUsers } from './users';
-import {
-  Auth,
-  QueryDocumentSnapshot,
-  getDocument,
-  runChunks,
-  removeAllSubcollections,
-} from '@blockframes/firebase-utils';
+import { Auth, QueryDocumentSnapshot, getDocument, runChunks, removeAllSubcollections, UserRecord, loadAdminServices } from '@blockframes/firebase-utils';
 import admin from 'firebase-admin';
 import { getAllAppsExcept } from '@blockframes/utils/apps';
 import { DatabaseData, loadAllCollections, printDatabaseInconsistencies } from './internals/utils';
+import { deleteSelectedUsers } from 'libs/testing/unit-tests/src/lib/firebase';
+import { subDays, subYears } from 'date-fns';
 
 export const numberOfDaysToKeepNotifications = 14;
-const currentTimestamp = new Date().getTime();
-export const dayInMillis = 1000 * 60 * 60 * 24;
 const EMPTY_MEDIA = createStorageFile();
 let verbose = false;
 
@@ -49,11 +43,22 @@ export async function cleanDeprecatedData(
   return true;
 }
 
-async function cleanData(
-  dbData: DatabaseData,
-  db: FirebaseFirestore.Firestore,
-  auth?: admin.auth.Auth
-) {
+export async function auditUsers(db: FirebaseFirestore.Firestore, auth?: admin.auth.Auth) {
+  if (!auth) auth = loadAdminServices().auth;
+
+  const { dbData } = await loadAllCollections(db);
+
+  const organizationIds = dbData.orgs.refs.docs.map(ref => ref.id);
+
+  console.log('Auditing users...');
+  await cleanUsers(dbData.users.refs, organizationIds, dbData.permissions.refs, auth, { dryRun: true });
+  console.log('Audit ended.');
+
+  return true;
+}
+
+async function cleanData(dbData: DatabaseData, db: FirebaseFirestore.Firestore, auth?: admin.auth.Auth) {
+
   // Getting existing document ids to compare
   const [movieIds, organizationIds, eventIds, invitationIds, offerIds, contractIds] = [
     dbData.movies.refs.docs.map((ref) => ref.id),
@@ -65,7 +70,7 @@ async function cleanData(
   ];
 
   // Compare and update/delete documents with references to non existing documents
-  if (auth) await cleanUsers(dbData.users.refs, organizationIds, auth);
+  if (auth) await cleanUsers(dbData.users.refs, organizationIds, dbData.permissions.refs, auth);
   if (verbose) console.log('Cleaned users');
 
   // Loading users list after "cleanUsers" since some may have been removed
@@ -184,46 +189,52 @@ async function cleanOneInvitation(doc: QueryDocumentSnapshot, invitation: Invita
 export async function cleanUsers(
   users: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
   existingOrganizationIds: string[],
-  auth: Auth
+  permissions: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
+  auth: Auth,
+  options = { dryRun: false }
 ) {
+  if (options.dryRun) verbose = true;
   // Check if auth users have their record on DB
-  await removeUnexpectedUsers(
-    users.docs.map((u) => u.data() as PublicUser),
-    auth
-  );
+  await removeUnexpectedUsers(users.docs.map(u => u.data() as PublicUser), auth, options);
 
-  return runChunks(
-    users.docs,
-    async (userDoc: FirebaseFirestore.DocumentSnapshot) => {
-      const user = userDoc.data() as PublicUser;
+  const authUsersToDelete: string[] = [];
 
-      // Check if a DB user have a record in Auth.
-      const authUserId = await auth
-        .getUserByEmail(user.email)
-        .then((u) => u.uid)
-        .catch(() => undefined);
-      if (authUserId) {
-        // Check if ids are the same
-        if (authUserId !== user.uid) {
-          if (verbose)
-            console.error(
-              `uid mistmatch for ${user.email}. db: ${user.uid} - auth : ${authUserId}`
-            );
-        } else if (!existingOrganizationIds.includes(user.orgId)) {
-          delete user.orgId;
-          await userDoc.ref.set(user);
+  await runChunks(users.docs, async (userDoc: FirebaseFirestore.DocumentSnapshot) => {
+    const user = userDoc.data() as PublicUser;
+
+    // Check if a DB user have a record in Auth.
+    const authUser: UserRecord = await auth.getUserByEmail(user.email).catch(() => undefined);
+
+    if (authUser) {
+      const validUser = isUserValid(user, authUser, permissions.docs.map(p => p.data() as PermissionsDocument));
+      // Check if ids are the same
+      if (authUser.uid !== user.uid) {
+        if (verbose) console.error(`ERR - uid missmatch for ${user.email}. db: ${user.uid} - auth : ${authUser.uid}`);
+      } else if (!validUser) {
+        if (verbose) {
+          console.log(`DB - Too old user "${user.uid}" will be deleted`);
+          console.log(`AUTH - Too old user "${user.uid}" will be deleted`);
         }
-      } else {
-        // User is deleted, we don't delete or update other documents as orgs, permissions, notifications etc
-        // because this will be handled in the next parts of the script (cleanOrganizations, cleanPermissions, etc)
-        // related storage documents will also be deleted in the cleanStorage and algolia will be updated at end of "upgrade" process
-        if (verbose) console.log(`Deleting user : ${user.uid}.`);
-        await userDoc.ref.delete();
+
+        if (!options.dryRun) {
+          authUsersToDelete.push(authUser.uid);
+          await userDoc.ref.delete();
+        }
+      } else if (user.orgId && !existingOrganizationIds.includes(user.orgId)) {
+        if (verbose) console.error(`DB - invalid orgId "${user.orgId}" for user ${user.uid}`);
+        delete user.orgId;
+        if (!options.dryRun) await userDoc.ref.set(user);
       }
-    },
-    undefined,
-    verbose
-  );
+    } else {
+      // User is deleted, we don't delete or update other documents as orgs, permissions, notifications etc
+      // because this will be handled in the next parts of the script (cleanOrganizations, cleanPermissions, etc)
+      // related storage documents will also be deleted in the cleanStorage and algolia will be updated at end of "upgrade" process
+      if (verbose) console.log(`DB - Deleting user not found in AUTH : ${user.uid}.`);
+      if (!options.dryRun) await userDoc.ref.delete();
+    }
+  }, undefined, verbose);
+
+  return deleteSelectedUsers(auth, authUsersToDelete);
 }
 
 export function cleanOrganizations(
@@ -374,7 +385,7 @@ function isNotificationValid(notification: NotificationDocument, existingIds: st
 
   // Cleaning notifications more than n days
   const notificationTimestamp = notification._meta.createdAt.toMillis();
-  if (notificationTimestamp < currentTimestamp - dayInMillis * numberOfDaysToKeepNotifications) {
+  if (notificationTimestamp < subDays(Date.now(), numberOfDaysToKeepNotifications).getTime()) {
     return false;
   }
 
@@ -411,7 +422,7 @@ function isInvitationValid(invitation: InvitationDocument, existingIds: string[]
       const invitationTimestamp = invitation.date.toMillis();
       if (
         invitation.status !== 'pending' &&
-        invitationTimestamp < currentTimestamp - dayInMillis * numberOfDaysToKeepNotifications
+        invitationTimestamp < subDays(Date.now(), numberOfDaysToKeepNotifications).getTime()
       ) {
         return false;
       }
@@ -425,4 +436,56 @@ function isInvitationValid(invitation: InvitationDocument, existingIds: string[]
     default:
       return false;
   }
+}
+
+function isUserValid(
+  user: PublicUser,
+  authUser: UserRecord,
+  permissions: PermissionsDocument[]
+) {
+  const now = new Date();
+
+  // User does not have orgId and was created more than 90 days ago
+  const creationTimeTimestamp = Date.parse(authUser.metadata.creationTime);
+  const ninetyDaysAgo = subDays(now, 90).getTime();
+  if (!user.orgId && creationTimeTimestamp < ninetyDaysAgo) {
+    // User never connected
+    if (!authUser.metadata.lastSignInTime) return false;
+
+    // User have not signed in within the last 90 days
+    const lastSignInTime = Date.parse(authUser.metadata.lastSignInTime);
+    if (lastSignInTime < ninetyDaysAgo) return false;
+
+    // Still considered as active user
+    return true;
+  }
+
+  // If account is older than 3 years and 30 days
+  const threeYearsAgo = subYears(now, 3);
+  const threeYearsAndAMonthAgo = subDays(threeYearsAgo, 30).getTime();
+  if (creationTimeTimestamp < threeYearsAndAMonthAgo) {
+    // User never connected
+    if (!authUser.metadata.lastSignInTime) return false;
+
+    // User have not signed in within the last 3 years
+    const lastSignInTime = Date.parse(authUser.metadata.lastSignInTime);
+    if (lastSignInTime < threeYearsAndAMonthAgo) {
+      if (!user.orgId) return false;
+      // Check if not superAdmin
+      const permission = permissions.find(p => p.id === user.orgId);
+      if (!permission) {
+        if (verbose) console.log(`Permission document not found for user ${user.uid}, orgId: ${user.orgId}`);
+        return false;
+      }
+
+      if (permission.roles[user.uid] === 'superAdmin') {
+        if (verbose) console.log(`User ${user.uid} was not removed because he is superAdmin of orgId: ${user.orgId}`);
+        return true;
+      } else {
+        return false;
+      }
+    };
+  }
+
+  return true;
 }

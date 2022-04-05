@@ -15,13 +15,11 @@ import { BucketForm, BucketTermForm } from '@blockframes/contract/bucket/form';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { BucketService } from '@blockframes/contract/bucket/+state';
 import { ContractService } from '@blockframes/contract/contract/+state';
-import { Holdback, isMandate, isSale, Mandate, Sale } from '@blockframes/model';
+import { Holdback, isMandate, isSale, Mandate, Sale, BucketTerm, Term, Territory, territories } from '@blockframes/model';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
-import { BucketTerm, Term } from '@blockframes/model';
-
 import { ExplanationComponent } from './explanation/explanation.component';
 import { HoldbackModalComponent } from '@blockframes/contract/contract/holdback/modal/holdback-modal.component';
-import { scrollIntoView } from '../../../../../../../../libs/utils/src/lib/browser/utils';
+import { scrollIntoView } from '@blockframes/utils/browser/utils';
 
 @Component({
   selector: 'catalog-movie-avails',
@@ -40,6 +38,7 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
   public orgId = this.orgService.org.id;
   public periods = ['days', 'weeks', 'months', 'years'];
   public maxTerritories = 30;
+  public maxExcludedTerritories = 20;
 
   public bucketForm = new BucketForm();
 
@@ -232,5 +231,15 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
     scrollIntoView(document.querySelector('#avails'));
     this.avails.mapForm.reset();
     this.avails.calendarForm.reset();
+  }
+
+  excludedTerritories(currentTerritoryList: Territory[]) {
+    // List all keys of territories
+    // Remove the word 'world' from the array
+    const listKeys = Object.keys(territories).filter((t: Territory) => t !== 'world') as Territory[];
+    // Filter to include only current territories and get the value of each keys
+    return listKeys
+      .filter(territory => !currentTerritoryList.includes(territory))
+      .map(territory => territories[territory]);
   }
 }

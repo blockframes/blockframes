@@ -1,9 +1,8 @@
 
 import { WorkBook, WorkSheet, utils, read } from 'xlsx';
-import { GetKeys, GroupScope, StaticGroup, staticGroups } from '@blockframes/utils/static-model';
+import { GetKeys, GroupScope, StaticGroup, staticGroups, parseToAll, Scope } from '@blockframes/model';
 import { mandatoryError, SpreadsheetImportError } from 'libs/import/src/lib/utils';
 import { getKeyIfExists } from '../helpers';
-import { parseToAll, Scope } from '../static-model';
 
 type Matrix = any[][]; // @todo find better type
 

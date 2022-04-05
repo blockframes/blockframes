@@ -104,7 +104,7 @@
               <div fxLayout="column" fxLayoutGap="4px">
                 <h6><a [routerLink]="['/c/o/marketplace/organization', event.org.id]">{{ event.org | orgName }}</a></h6>
                 <ng-container *ngIf="event.organizedBy as user">
-                  <span>{{ user | displayName }}{{ user | displayPosition }}</span>
+                  <span>{{ user | displayName }} {{ user | displayPosition }}</span>
                 </ng-container>
               </div>
             </ng-container>
@@ -113,17 +113,53 @@
               <div fxLayout="column" fxLayoutGap="4px">
                 <h6>{{ event.org | orgName }}</h6>
                 <ng-container *ngIf="event.organizedBy as user">
-                  <span>{{ user | displayName }}{{ user | displayPosition }}</span>
+                  <span>{{ user | displayName }} {{ user | displayPosition }}</span>
                 </ng-container>
               </div>
             </ng-template>
           </div>
-          <ng-container *ngIf="!!event.meta.description">
-            <h5>Description</h5>
-            <p>{{ event.meta.description }}</p>
-          </ng-container>
         </article>
       </section>
 
+      <!-- Slate -->
+      <section class="slate" fxLayout="column" fxLayoutGap="40px" *ngSwitchCase="'slate'">
+        <article fxLayout="column" fxLayoutGap="16px" class="organized-by">
+          <h2>Organized by</h2>
+          <div fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
+            <ng-container *ngIf="user$ | async else anonymous">
+              <a matRipple [routerLink]="['/c/o/marketplace/organization', event.org.id]">
+                <img [ref]="event.org.logo" asset="empty_organization.svg" type="logo" alt="Organization Logo">
+              </a>
+              <div fxLayout="column" fxLayoutGap="4px">
+                <h6><a [routerLink]="['/c/o/marketplace/organization', event.org.id]">{{ event.org | orgName }}</a></h6>
+                <ng-container *ngIf="event.organizedBy as user">
+                  <span>{{ user | displayName }} {{ user | displayPosition }}</span>
+                </ng-container>
+              </div>
+            </ng-container>
+            <ng-template #anonymous>
+              <img [ref]="event.org.logo" asset="empty_organization.svg" type="logo" alt="Organization Logo">
+              <div fxLayout="column" fxLayoutGap="4px">
+                <h6>{{ event.org | orgName }}</h6>
+                <ng-container *ngIf="event.organizedBy as user">
+                  <span>{{ user | displayName }} {{ user | displayPosition }}</span>
+                </ng-container>
+              </div>
+            </ng-template>
+          </div>
+        </article>
+        <article *ngIf="event.meta.titleIds | getTitle | async as titles" >
+          <ng-container *ngIf="titles.length">
+            <h2>Titles in presentation</h2>
+            <bf-carousel flex [min]="(ltMd$ | async) ? 2 : 4">
+              <ng-container *ngFor="let title of titles">
+                <movie-card [movie]="title" size="banner" [link]="['/c/o/marketplace/title', title.id]" carouselItem>
+                </movie-card>
+              </ng-container>
+            </bf-carousel>
+          </ng-container>
+        </article>
+      </section>
+    
     </ng-container>
 </ng-container>

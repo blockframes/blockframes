@@ -1,5 +1,5 @@
 <ng-container *ngIf="titles$ | async as titles; else loading">
-  <ng-container *ngIf="(hasAcceptedMovies$ | async) else noAcceptedMovies">
+  <ng-container *ngIf="titles | hasAppStatus:'accepted'; else noAcceptedMovies">
     <header fxLayout="row" fxLayoutAlign="space-between center">
       <h1>Dashboard</h1>
       <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="24px">
@@ -14,7 +14,7 @@
     </header>
     <section>
       <h3>My Marketplace Activity</h3>
-      <ng-container *ngIf="(titles | getTitlesAnalytics | async) as titlesAnalytics; else loading">
+      <ng-container *ngIf="titlesAnalytics$ | async as titlesAnalytics; else loading">
         <movie-analytics-chart [analyticsData]="titlesAnalytics"></movie-analytics-chart>
       </ng-container>
     </section>
@@ -22,7 +22,7 @@
 
   <ng-template #noAcceptedMovies>
     <section fxLayout="column" fxLayoutAlign="center center">
-      <ng-container *ngIf="(hasMovies$ | async) else noMovies">
+      <ng-container *ngIf="titles.length else noMovies">
         <h1>No title to display.</h1>
         <p class="mat-body-1">
           As long as you have no title to display, your organization will not appear on the marketplace.
@@ -39,20 +39,20 @@
       </ng-template>
       <article fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center" fxLayoutGap="24px">
         <!-- Should only be shown for noAcceptedMovies && !noMovies -->
-        <ng-container *ngIf="hasDraftMovies$ | async">
-          <mat-card fxLayout="column" fxLayoutalign="center center">
+        <ng-container *ngIf="titles | hasAppStatus:'draft'">
+          <div class="surface" fxLayout="column" fxLayoutalign="center center">
             <img asset="add_draft.svg" alt="Manage Drafts">
             <a routerLink="../title" mat-button color="primary">Manage Drafts</a>
-          </mat-card>
+          </div>
         </ng-container>
-        <mat-card fxLayout="column" fxLayoutalign="center center">
+        <div class="surface" fxLayout="column" fxLayoutalign="center center">
           <img asset="add_title.svg" alt="Add title image">
           <a routerLink="../title/lobby" mat-button color="primary">Add one title</a>
-        </mat-card>
-        <mat-card fxLayout="column">
+        </div>
+        <div class="surface" fxLayout="column">
           <img asset="add_files.svg" alt="Upload files image">
           <a routerLink="../import" mat-button color="primary" test-id="import">Import titles in bulk</a>
-        </mat-card>
+        </div>
       </article>
       <h3>Or</h3>
       <button (click)="openIntercom()" mat-flat-button color="primary">

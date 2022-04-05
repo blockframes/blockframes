@@ -1,8 +1,19 @@
 import { DocumentMeta } from './meta';
+import { Movie } from './movie';
+import { Organization } from './organisation';
+import { User } from './user';
 
-export type EventName = 'page_view' | 'screening_requested' | 'promo_video_started' | 'added_to_wishlist' | 'promo_element_opened' | 'asking_price_requested';
+const analyticsEvents = [
+  'pageView',
+  'promoReelOpened',
+  'addedToWishlist',
+  'removedFromWishlist',
+  'screeningRequested',
+  'askingPriceRequested'
+] as const;
+export type EventName = typeof analyticsEvents[number];
 
-interface AnalyticsTypeRecord {
+export interface AnalyticsTypeRecord {
   title: MetaTitle;
   event: MetaEvent;
 }
@@ -20,15 +31,27 @@ export interface Analytics<type extends AnalyticsTypes = AnalyticsTypes> {
 export interface MetaTitle {
   titleId: string;
   orgId: string;
-  userId: string;
+  uid: string;
   ownerOrgIds: string[];
 }
 
 export interface MetaEvent {
   eventId: string;
-  userId: string;
+  uid: string;
   orgId?: string;
   ownerOrgId: string;
+}
+
+export interface AggregatedAnalytic extends Record<EventName, number> {
+  user?: User;
+  org?: Organization;
+  title?: Movie;
+}
+
+// FireAnalytics
+export interface AnalyticsUserProperties {
+  browser_name: string;
+  browser_version: string;
 }
 
 export const isTitleDataEvent = (event: Partial<Analytics>): event is Analytics<'title'> => event.type === 'title';
@@ -36,8 +59,20 @@ export function createTitleMeta(meta: Partial<MetaTitle>): MetaTitle {
   return {
     titleId: '',
     orgId: '',
-    userId: '',
+    uid: '',
     ownerOrgIds: [],
     ...meta
   };
 };
+
+export function createAggregatedAnalytic(analytic: Partial<AggregatedAnalytic>): AggregatedAnalytic {
+  return {
+    addedToWishlist: 0,
+    askingPriceRequested: 0,
+    pageView: 0,
+    promoReelOpened: 0,
+    removedFromWishlist: 0,
+    screeningRequested: 0,
+    ...analytic
+  };
+}

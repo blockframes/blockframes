@@ -2,13 +2,12 @@
 import { Inject, Injectable } from '@angular/core';
 import { mergeDeep } from '@blockframes/utils/helpers';
 import { FileUploaderService } from '@blockframes/media/+state';
-import { ProductionStatus } from '@blockframes/utils/static-model';
 import { App, getMoviePublishStatus } from '@blockframes/utils/apps';
 import { FormSaveOptions } from '@blockframes/utils/common-interfaces';
 import { MovieControl, MovieForm } from './movie.form';
 import type { FormShellConfig } from './movie.shell.interfaces'
 import { MovieService } from '../+state/movie.service';
-import { Movie, MoviePromotionalElements } from '@blockframes/model';
+import { Movie, MoviePromotionalElements, ProductionStatus } from '@blockframes/model';
 import { MovieActiveGuard } from '../guards/movie-active.guard';
 import { APP } from '@blockframes/utils/routes/utils';
 

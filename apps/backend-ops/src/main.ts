@@ -29,6 +29,7 @@ import { rescueJWP } from './rescueJWP';
 import { loadAndShrinkLatestAnonDbAndUpload } from './db-shrink';
 import { printDatabaseInconsistencies } from './internals/utils';
 import { cleanBackups } from './clean-backups';
+import { auditUsers } from './db-cleaning';
 
 const args = process.argv.slice(2);
 const [cmd, ...flags] = args;
@@ -139,6 +140,9 @@ async function runCommand() {
       break;
     case 'printUsers':
       await printUsers();
+      break;
+    case 'auditUsers':
+      await auditUsers(db);
       break;
     case 'clearUsers':
       await startMaintenance(db);

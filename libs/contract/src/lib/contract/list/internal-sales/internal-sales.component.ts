@@ -8,7 +8,6 @@ import { isInitial } from '@blockframes/contract/negotiation/utils';
 import { capitalize } from '@blockframes/utils/helpers';
 import { Contract, ContractStatus, Sale, Negotiation } from '@blockframes/model';
 
-
 interface InternalSale extends Sale<Date> {
   licensor: string;
   licensee: string;

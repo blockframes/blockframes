@@ -1,8 +1,8 @@
-import { MovieLanguageType, productionStatus } from '@blockframes/utils/static-model';
 import { toDate } from '@blockframes/utils/helpers';
 import { createStorageFile, StorageFile, StorageVideo } from './media';
 import { App, getAllAppsExcept } from '@blockframes/utils/apps';
 import type {
+  MovieLanguageType,
   Language,
   MediaValue,
   Scoring,
@@ -24,7 +24,7 @@ import type {
   SocialGoal,
   NumberRange,
   ScreeningStatus,
-} from '@blockframes/utils/static-model/types';
+} from './static';
 import type {
   Producer,
   Crew,
@@ -32,9 +32,9 @@ import type {
   Stakeholder,
   Director,
 } from './identity';
-import type { AnalyticsEvents, AnalyticsBase } from '@blockframes/utils/analytics/analytics-model';
 import type { DocumentMeta } from './meta';
 import type { Timestamp } from './timestamp';
+import { productionStatus } from './static';
 
 //////////////////
 // MOVIE OBJECT //
@@ -255,32 +255,6 @@ export type MovieExpectedPremiere = MovieExpectedPremiereRaw<Date>;
 export interface MovieGoalsAudience {
   targets: string[];
   goals: SocialGoal[];
-}
-
-/////////////////////
-// MOVIE ANALYTICS //
-/////////////////////
-
-export interface MovieEventAnalytics {
-  event_date: string;
-  event_name: AnalyticsEvents;
-  hits: number;
-  movieId: string;
-}
-
-export interface MovieAnalytics extends AnalyticsBase {
-  addedToWishlist: {
-    current: MovieEventAnalytics[];
-    past: MovieEventAnalytics[];
-  };
-  movieViews: {
-    current: MovieEventAnalytics[];
-    past: MovieEventAnalytics[];
-  };
-  promoReelOpened: {
-    current: MovieEventAnalytics[];
-    past: MovieEventAnalytics[];
-  };
 }
 
 // Export for other files
@@ -532,19 +506,6 @@ export function getMovieTitleList(movies: Movie[]): string[] {
   return movieTitles;
 }
 
-/**
- * Returns the number of views of a movie page.
- * @param analytics
- * @param movieId
- */
-export function getMovieTotalViews(analytics: MovieAnalytics[], movieId: string): number {
-  const movieAnalytic = analytics.find(analytic => analytic.id === movieId);
-  if (movieAnalytic) {
-    const movieHits = movieAnalytic.movieViews.current.map(event => event.hits);
-    return movieHits.reduce((sum, val) => sum + val, 0);
-  }
-}
-
 export function createMovieVideos(params: Partial<MovieVideos>): MovieVideos {
   return {
     ...params,
@@ -566,4 +527,8 @@ export function getAllowedproductionStatuses(app: App): ProductionStatus[] {
   return Object.keys(productionStatus)
     .filter(status => (app === 'catalog' ? status === 'released' : true))
     .map(s => s as ProductionStatus);
+}
+
+export function hasAppStatus(app: App, status: StoreStatus[]) {
+  return (movie: Movie) => status.includes(movie.app[app].status);
 }

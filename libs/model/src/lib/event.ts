@@ -1,4 +1,4 @@
-import { AccessibilityTypes } from '@blockframes/utils/static-model/types';
+import { AccessibilityTypes } from './static';
 import { toDate } from '@blockframes/utils/helpers';
 import { CalendarEvent } from 'angular-calendar';
 import { AnonymousCredentials } from '@blockframes/auth/+state/auth.model';
@@ -160,8 +160,8 @@ export function createScreening(screening: Partial<Screening>): Screening {
 export interface Slate {
   description: string;
   organizerUid: string;
-  titles: Array<string>,
-  video: string
+  titleIds: string[],
+  videoId: string
 }
 // Slate Presentation
 export interface SlateEvent extends Event<Slate> {
@@ -174,8 +174,8 @@ export function createSlate(slate: Partial<Slate>): Slate {
   return {
     description: '',
     organizerUid: '',
-    titles: [],
-    video: '',
+    titleIds: [],
+    videoId: '',
     ...slate
   }
 }

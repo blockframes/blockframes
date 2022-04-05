@@ -1,6 +1,6 @@
 import { AngularFireAnalytics } from '@angular/fire/analytics';
 import { Injectable } from '@angular/core';
-import { AnalyticsEvents, AnalyticsUserProperties } from './analytics-model';
+import { EventName, AnalyticsUserProperties } from '@blockframes/model';
 import { centralOrgId } from '@env';
 import { AuthService } from '@blockframes/auth/+state';
 import { take } from 'rxjs/operators';
@@ -12,7 +12,7 @@ export class FireAnalytics {
     private authService: AuthService,
   ) { }
 
-  public async event(name: AnalyticsEvents, params: Record<string, unknown>) {
+  public async event(name: EventName, params: Record<string, unknown>) {
     const isBlockframesAdmin = await this.authService.isBlockframesAdmin$.pipe(take(1)).toPromise();
     const profile = await this.authService.profile$.pipe(take(1)).toPromise();
     const isOperator = isBlockframesAdmin || Object.values(centralOrgId).includes(profile?.orgId);
