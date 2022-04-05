@@ -78,7 +78,9 @@ export async function restoreLiveEnv(dirName?: string) {
   await enableMaintenanceInEmulator({ importFrom: 'defaultImport' });
   try {
     await uploadDbBackupToBucket({ bucketName: backupBucket, remoteDir: `${backupDir}firestore` });
-  } catch (e) console.warn(e) ;
+  } catch (e) {
+    console.warn(e);
+  }
 
   console.log('Importing Firestore');
   cmd = `gcloud firestore import ${firestoreURL}`;
