@@ -141,7 +141,6 @@ function getMatchingAvailabilities(
   // Take the intersection of all the available duration
   const from = max(results.map((result) => result.periodAvailable?.from));
   const to = min(results.map((result) => result.periodAvailable?.to));
-  console.log({ results, from, to })
 
   /**
    * Intersection     |   No Intersection
@@ -253,12 +252,6 @@ export function availableTitle(
 
   // if there is no mandates left, the title is not available
   if (!availableMandates.length) return [];
-
-  // else we should now check the sales
-
-  // get only the sales that meets the avails filter criteria
-  // e.g. if we ask for "France" but the title has been sold in "Germany", we don't care
-  // const salesToExclude = getMatchingSales(sales, avails);
 
   // if there is at least one sale that match the avails, the title is not available
   if (salesToExclude.length) return [];
