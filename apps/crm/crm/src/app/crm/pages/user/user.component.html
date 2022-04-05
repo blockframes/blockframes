@@ -133,7 +133,9 @@
 <bf-table *ngIf="invitations" [source]="invitations" useFilter pagination="50">
   {{ console(invitations) }}
   <ng-template colRef label="Date Created" let-event sort>
-    <a [routerLink]="goTo(event)">{{ event.date | date: 'short' }}</a>
+    <a [routerLink]="goTo(event)">
+      <u>{{ event.date | date: 'short' }}</u>
+    </a>
   </ng-template>
   <ng-template colRef label="Event Name" let-event sort>
     Event Name

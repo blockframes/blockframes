@@ -72,7 +72,24 @@ export class UserComponent implements OnInit {
 
     const invitationTo = await this.invitationService.getValue(ref => ref.where('toUser.uid', '==', this.userId));
     const invitationFrom = await this.invitationService.getValue(ref => ref.where('fromUser.uid', '==', this.userId));
-    this.invitations = [...invitationFrom, ...invitationTo];
+    // this.invitations = [...invitationFrom, ...invitationTo];
+    const currentInvitation = [...invitationFrom, ...invitationTo];
+
+    const test = currentInvitation.map(async (invitation) => {
+      const event = await this.eventService.getValue(invitation.eventId);
+      return {
+        ...invitation,
+        event,
+      }
+    })
+
+    const testWithEvent = await Promise.all(test)
+
+    console.log(testWithEvent);
+
+    // const organizerEvent = await this.eventService.getValue(ref => ref.where('meta.organizerUid', '==', user.uid));
+
+    this.invitations = currentInvitation;
   }
 
   public async update() {
