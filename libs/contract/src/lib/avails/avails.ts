@@ -15,7 +15,7 @@ import {
   TerritoryValue
 } from '@blockframes/model';
 import { allOf, exclusivityAllOf, exclusivitySomeOf, someOf } from './sets';
-import { max, min, isAfter } from 'date-fns'
+import { max, min } from 'date-fns'
 import { Duration } from '@blockframes/model'
 
 
@@ -468,18 +468,18 @@ export function getMatchingCalendar(avails: CalendarAvailsFilter, mandates: Full
     .filter(sold => sold.length)
     .flat();
 
-    const noResult = results.find(result => !result.available.length)
+  const noResult = results.find(result => !result.available.length)
 
-    /**
-     * Intersection     |   No Intersection
-     * |-----***|....   |   |---|.........
-     * .....|***----|   |   .......|------|
-     */
-    const noIntersection = from > to;
+  /**
+   * Intersection     |   No Intersection
+   * |-----***|....   |   |---|.........
+   * .....|***----|   |   .......|------|
+   */
+  const noIntersection = from > to;
 
-    // If no result or if no intersection return only the sold result
-    if (noResult || noIntersection) {
-      return {
+  // If no result or if no intersection return only the sold result
+  if (noResult || noIntersection) {
+    return {
       periodAvailable: null,
       available: [],
       sold

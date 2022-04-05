@@ -39,5 +39,5 @@ describe('test isCalendarAvailPartiallyInTerm', () => {
     const nonOverlapping = isCalendarAvailPartiallyInTerm(availsBrewster3, nonOverlappingTerm);
     expect(nonOverlapping).toBe(false);
     expect(overlapping).toBe(true);
-  })
-})
+  });
+});
