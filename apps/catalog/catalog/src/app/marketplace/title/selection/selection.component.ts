@@ -62,7 +62,7 @@ export class MarketplaceSelectionComponent {
 
   setPrice(index: number, price: string | null) {
     this.prices[index] = parseFloat(price || '0'); // if "", fallback to '0'
-    this.priceChanges.next();
+    this.priceChanges.next(null); // TODO #7273 check
   }
 
   trackById(i: number, doc: { id: string }) {

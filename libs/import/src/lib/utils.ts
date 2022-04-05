@@ -5,6 +5,7 @@ import { SheetTab, ValueWithError } from '@blockframes/utils/spreadsheet';
 import { centralOrgId } from '@env';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { UserService } from '@blockframes/user/+state';
+import { where } from 'firebase/firestore';
 
 export const spreadsheetImportTypes = ['titles', 'organizations', 'contracts'] as const;
 
@@ -68,7 +69,7 @@ export async function getOrgId(
 
   if (cache[name]) return cache[name];
 
-  const orgs = await orgService.getValue((ref) => ref.where('denomination.full', '==', name));
+  const orgs = await orgService.getValue([where('denomination.full', '==', name)]);
   const result = orgs.length === 1 ? orgs[0].id : '';
   cache[name] = result;
   return result;
@@ -97,8 +98,8 @@ export async function getTitleId(
   }
   // nameOrId is the international title name
   const queryFn = isBlockframesAdmin
-    ? ref => ref.where('title.international', '==', nameOrId)
-    : ref => ref.where('title.international', '==', nameOrId).where('orgIds', 'array-contains', userOrgId);
+    ? [where('title.international', '==', nameOrId)]
+    : [where('title.international', '==', nameOrId), where('orgIds', 'array-contains', userOrgId)];
   const titles = await titleService.getValue(queryFn);
   if (!titles.length) throw new Error(`No title found with name "${nameOrId}".`);
   if (titles.length !== 1) throw new Error(`Multiple titles with name "${nameOrId}" found.`);
@@ -132,9 +133,10 @@ export async function checkParentTerm(
     if (isMandate && containTerm) return cache[id] as Mandate;
   }
 
-  const [contract] = await contractService.getValue((ref) =>
-    ref.where('type', '==', 'mandate').where('termIds', 'array-contains', id)
-  );
+  const [contract] = await contractService.getValue([
+    where('type', '==', 'mandate'),
+    where('termIds', 'array-contains', id)
+  ]);
   cache[contract.id] = contract;
   return contract as Mandate;
 }
@@ -163,7 +165,7 @@ export async function getUser(
     }
 
     user = await userService
-      .getValue((ref) => ref.where('email', '==', query.email))
+      .getValue([where('email', '==', query.email)])
       .then((u) => u[0]);
   }
 

@@ -17,6 +17,7 @@ import { map, finalize, takeUntil, distinctUntilChanged } from 'rxjs/operators';
 
 import { ActivatedRoute, Router } from '@angular/router';
 import { OrganizationService } from '@blockframes/organization/+state';
+import { collection, doc } from '@angular/fire/firestore';
 
 function floorToNearest(amount: number, precision: number) {
   return Math.floor(amount / precision) * precision;
@@ -89,7 +90,7 @@ export class CalendarWeekComponent {
       return;
     }
     const localEvent: CalendarEvent = createEvent({
-      id: this.service['db'].createId(),
+      id: doc(collection(this.service['db'], '_')).id,
       ownerOrgId: this.orgService.org.id,
       title: 'New event',
       start: segment.date,

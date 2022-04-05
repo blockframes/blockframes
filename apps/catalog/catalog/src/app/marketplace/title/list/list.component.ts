@@ -1,4 +1,3 @@
-// Angular
 import {
   OnInit,
   OnDestroy,
@@ -8,6 +7,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { where } from 'firebase/firestore';
 
 // RxJs
 import { SearchResponse } from '@algolia/client-search';
@@ -69,15 +69,20 @@ export class ListComponent implements OnDestroy, OnInit {
 
   async ngOnInit() {
     this.searchForm.hitsPerPage.setValue(1000);
+    const mandatesQuery = [
+      where('type', '==', 'mandate'),
+      where('buyerId', '==', centralOrgId.catalog),
+      where('status', '==', 'accepted')
+    ];
+
+    const salesQuery = [
+      where('type', '==', 'sale'),
+      where('status', '==', 'accepted')
+    ];
 
     this.queries$ = combineLatest([
-      this.contractService.valueChanges(ref => ref.where('type', '==', 'mandate')
-        .where('buyerId', '==', centralOrgId.catalog)
-        .where('status', '==', 'accepted')
-      ),
-      this.contractService.valueChanges(ref => ref.where('type', '==', 'sale')
-        .where('status', '==', 'accepted')
-      ),
+      this.contractService.valueChanges(mandatesQuery),
+      this.contractService.valueChanges(salesQuery),
     ]).pipe(
       switchMap(([mandates, sales]) => {
         const mandateTermIds = mandates.map(mandate => mandate.termIds).flat();

@@ -1,9 +1,9 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { CollectionReference } from '@angular/fire/firestore';
 import { ContractService } from '@blockframes/contract/contract/+state';
 import { OfferService } from '@blockframes/contract/offer/+state';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { joinWith } from '@blockframes/utils/operators';
+import { orderBy, where } from 'firebase/firestore';
 
 
 @Component({
@@ -14,7 +14,7 @@ import { joinWith } from '@blockframes/utils/operators';
 })
 export class OffersListComponent {
 
-  offers$ = this.service.valueChanges(ref => ref.orderBy('_meta.createdAt', 'desc')).pipe(
+  offers$ = this.service.valueChanges([orderBy('_meta.createdAt', 'desc')]).pipe(
     joinWith({
       contracts: offer => this.getContracts(offer.id)
     })
@@ -26,8 +26,7 @@ export class OffersListComponent {
   ) { }
 
   private getContracts(offerId: string) {
-    const queryContracts = (ref: CollectionReference) => ref.where('offerId', '==', offerId);
-    return this.contractService.valueChanges(queryContracts).pipe(
+    return this.contractService.valueChanges([where('offerId', '==', offerId)]).pipe(
       joinWith({
         title: contract => this.titleService.valueChanges(contract.titleId),
         negotiation: contract => this.contractService.adminLastNegotiation(contract.id)

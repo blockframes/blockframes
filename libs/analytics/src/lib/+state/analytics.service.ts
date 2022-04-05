@@ -1,7 +1,8 @@
 import { Inject, Injectable } from '@angular/core';
-import { AngularFireAnalytics } from '@angular/fire/analytics';
+import { getAnalytics, logEvent } from '@angular/fire/analytics';
 import { ActiveState, EntityState } from '@datorama/akita';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
+import { doc, DocumentReference, docData, getDoc } from '@angular/fire/firestore';
 
 import { map, take } from 'rxjs/operators';
 import { centralOrgId } from '@env';
@@ -13,9 +14,7 @@ import { AuthService } from '@blockframes/auth/+state';
 import { createMovie, createDocumentMeta, formatDocumentMetaFromFirestore } from '@blockframes/model';
 import { APP } from '@blockframes/utils/routes/utils';
 import { App } from '@blockframes/utils/apps';
-import { Observable } from 'rxjs';
 import { joinWith } from '@blockframes/utils/operators';
-import { QueryFn } from '@angular/fire/firestore';
 
 interface AnalyticsState extends EntityState<Analytics>, ActiveState<string> { };
 export interface AnalyticsWithOrg extends Analytics<'title'> {
@@ -26,9 +25,9 @@ export interface AnalyticsWithOrg extends Analytics<'title'> {
 @CollectionConfig({ path: 'analytics' })
 export class AnalyticsService extends CollectionService<AnalyticsState> {
   readonly useMemorization = false;
+  private analytics = getAnalytics();
 
   constructor(
-    private analytics: AngularFireAnalytics,
     private authService: AuthService,
     @Inject(APP) private app: App
   ) {
@@ -56,21 +55,24 @@ export class AnalyticsService extends CollectionService<AnalyticsState> {
   getTitleAnalytics(titleId?: string) {
     const { orgId } = this.authService.profile;
 
-    const query: QueryFn = titleId
-      ? ref => ref
-        .where('type', '==', 'title')
-        .where('meta.ownerOrgIds', 'array-contains', orgId)
-        .where('_meta.createdFrom', '==', this.app)
-        .where('meta.titleId', '==', titleId)
-      : ref => ref
-        .where('type', '==', 'title')
-        .where('meta.ownerOrgIds', 'array-contains', orgId)
-        .where('_meta.createdFrom', '==', this.app);
+    const query = titleId ? [
+      where('type', '==', 'title'),
+      where('meta.ownerOrgIds', 'array-contains', orgId),
+      where('_meta.createdFrom', '==', this.app),
+      where('meta.titleId', '==', titleId),
+    ] : [
+      where('type', '==', 'title'),
+      where('meta.ownerOrgIds', 'array-contains', orgId),
+      where('_meta.createdFrom', '==', this.app)
+    ];
 
     return this.valueChanges(query).pipe(
       joinWith({
         // TODO #7273 use OrganizationService instead once Akita has been replaced by ng-fire (currently using MovieService results in error)
-        org: analytic => this.db.doc(`orgs/${analytic.meta.orgId}`).valueChanges() as Observable<Organization>
+        org: analytic => {
+          const ref = doc(this.db, `orgs/${analytic.meta.orgId}`) as DocumentReference<Organization>;
+          return docData(ref);
+        }
       }, { shouldAwait: true }),
       // Filter out analytics from owners of title
       map((analytics: AnalyticsWithOrg[]) => analytics.filter(analytic => !analytic.meta.ownerOrgIds.includes(analytic.org.id) ))
@@ -83,8 +85,9 @@ export class AnalyticsService extends CollectionService<AnalyticsState> {
     const profile = this.authService.profile;
 
     // TODO #7273 use MovieService instead once Akita has been replaced by ng-fire (currently using MovieService results in error)
-    const doc = await this.db.doc(`movies/${titleId}`).ref.get();
-    const title = createMovie(doc.data());
+    const ref = doc(this.db, `movies/${titleId}`);
+    const document = await getDoc(ref);
+    const title = createMovie(document.data());
 
     const meta = createTitleMeta({
       titleId,
@@ -92,8 +95,7 @@ export class AnalyticsService extends CollectionService<AnalyticsState> {
       uid: profile.uid,
       ownerOrgIds: title.orgIds
     });
-
-    this.analytics.logEvent(name, meta);
+    logEvent(this.analytics, name, meta);
     return this.add({ type: 'title', name, meta });
   }
 
@@ -106,18 +108,19 @@ export class AnalyticsService extends CollectionService<AnalyticsState> {
     let meta: AnalyticsTypeRecord[AnalyticsTypes];
     if (type === 'title') {
       const start = startOfDay(new Date());
-      const analytics = await this.getValue(ref => ref
-        .where('_meta.createdBy', '==', profile.uid)
-        .where('_meta.createdFrom', '==', this.app)
-        .where('meta.titleId', '==', id)
-        .where('name', '==', 'pageView')
-      );
+      const analytics = await this.getValue([
+        where('_meta.createdBy', '==', profile.uid),
+        where('_meta.createdFrom', '==', this.app),
+        where('meta.titleId', '==', id),
+        where('name', '==', 'pageView')
+      ]);
       // only one pageView event per day per title per user is recorded.
       if (analytics.some(analytic => analytic._meta.createdAt > start)) return;
 
       // TODO #7273 use MovieService instead once Akita has been replaced by ng-fire (currently using MovieService results in error)
-      const doc = await this.db.doc(`movies/${id}`).ref.get();
-      const title = createMovie(doc.data());
+      const ref = doc(this.db, `movies/${id}`);
+      const document = await getDoc(ref);
+      const title = createMovie(document.data());
 
       meta = createTitleMeta({
         titleId: id,

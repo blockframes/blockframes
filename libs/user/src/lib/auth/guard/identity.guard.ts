@@ -6,6 +6,7 @@ import { hasDisplayName } from '@blockframes/utils/helpers';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { CanActivate, Router } from '@angular/router';
+import { where } from 'firebase/firestore';
 
 @Injectable({ providedIn: 'root' })
 export class IdentityGuard implements CanActivate {
@@ -35,17 +36,23 @@ export class IdentityGuard implements CanActivate {
 
           return this.router.createUrlTree(['c/organization/create-congratulations']);
         } else {
-          const requests = await this.invitationService.getValue(ref => ref.where('mode', '==', 'request')
-            .where('type', '==', 'joinOrganization')
-            .where('fromUser.uid', '==', authState.profile.uid));
+          const requestQuery = [
+            where('mode', '==', 'request'),
+            where('type', '==', 'joinOrganization'),
+            where('fromUser.uid', '==', authState.profile.uid)
+          ];
+          const requests = await this.invitationService.getValue(requestQuery);
 
           if (requests.find(request => request.status === 'pending')) return this.router.createUrlTree(['c/organization/join-congratulations']);
 
           if (requests.find(invitation => invitation.status === 'accepted')) return this.router.createUrlTree(['c/o']);
 
-          const invitations = await this.invitationService.getValue(ref => ref.where('mode', '==', 'invitation')
-            .where('type', '==', 'joinOrganization')
-            .where('toUser.uid', '==', authState.profile.uid));
+          const invitationsQuery = [
+            where('mode', '==', 'invitation'),
+            where('type', '==', 'joinOrganization'),
+            where('toUser.uid', '==', authState.profile.uid)
+          ];
+          const invitations = await this.invitationService.getValue(invitationsQuery);
 
           if (invitations.find(invitation => invitation.status === 'accepted')) return this.router.createUrlTree(['c/o']);
 

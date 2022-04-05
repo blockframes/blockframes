@@ -12,13 +12,14 @@ import { OfferService } from '../../offer/+state';
 import { ContractService } from '../../contract/+state';
 import { ActiveState, EntityState } from '@datorama/akita';
 import { convertDuration, Bucket, createBucket, createBucketTerm, createBucketContract, createDocumentMeta } from '@blockframes/model';
+import { collection, doc } from '@angular/fire/firestore';
 
 interface BucketState extends EntityState<Bucket>, ActiveState<string> { }
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'buckets' })
 export class BucketService extends CollectionService<BucketState> {
-  useMemorization = true;
+  useMemorization = false;
   active$ = this.orgService.currentOrg$.pipe(
     switchMap(org => this.valueChanges(org.id)),
   );
@@ -75,7 +76,7 @@ export class BucketService extends CollectionService<BucketState> {
     });
 
     const promises = bucket.contracts.map(async (contract) => {
-      const contractId = this.db.createId();
+      const contractId = doc(collection(this.db, '_')).id;
       const parentTerms = await this.termService.getValue(contract.parentTermId);
       const parentContract = await this.contractService.getValue(parentTerms.contractId);
 

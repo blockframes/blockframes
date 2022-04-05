@@ -7,6 +7,7 @@ import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { Contract, isMandate, isSale, Movie, Term } from '@blockframes/model';
 import { combineLatest, Observable, of } from 'rxjs';
 import { map, pluck, shareReplay, switchMap } from 'rxjs/operators';
+import { where } from 'firebase/firestore';
 
 @Component({
   templateUrl: './shell.component.html',
@@ -26,11 +27,10 @@ export class CatalogAvailsShellComponent {
   };
 
   private contracts$ = this.movie$.pipe(
-    switchMap((movie: Movie) =>
-      this.contractService.valueChanges((ref) =>
-        ref.where('titleId', '==', movie.id).where('status', '==', 'accepted')
-      )
-    )
+    switchMap((movie: Movie) => this.contractService.valueChanges([
+      where('titleId', '==', movie.id),
+      where('status', '==', 'accepted')
+    ]))
   );
 
   public mandates$ = this.contracts$.pipe(map((contracts) => contracts.filter(isMandate)));
@@ -50,7 +50,7 @@ export class CatalogAvailsShellComponent {
     private termsService: TermService,
     private movieService: MovieService,
     private contractService: ContractService
-  ) {}
+  ) { }
 
   private getTerms(contracts$: Observable<Contract[]>) {
     return contracts$.pipe(

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, HostBinding, Input } from '@angular/core';
-import { AngularFireFunctions } from '@angular/fire/functions';
+import { Functions, httpsCallable } from '@angular/fire/functions';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '@blockframes/auth/+state';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
@@ -29,7 +29,7 @@ export class RequestScreeningComponent {
 
   constructor(
     private authService: AuthService,
-    private functions: AngularFireFunctions,
+    private functions: Functions,
     private analytics: AnalyticsService,
     private snackbar: MatSnackBar
   ) {}
@@ -37,8 +37,8 @@ export class RequestScreeningComponent {
   async requestScreening() {
     this.animated = false;
     this.requestStatus.next('sending');
-    const f = this.functions.httpsCallable('requestScreening');
-    await f({ movieId: this.movieId, uid: this.authService.uid }).toPromise();
+    const f = httpsCallable(this.functions,'requestScreening');
+    await f({ movieId: this.movieId, uid: this.authService.uid });
     this.requestStatus.next('sent');
     this.analytics.addTitle('screeningRequested', this.movieId);
     this.snackbar.open('Screening request successfully sent', '', { duration: 3000 });

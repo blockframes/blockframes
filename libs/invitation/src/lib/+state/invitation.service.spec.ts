@@ -1,18 +1,26 @@
 ﻿import { TestBed } from '@angular/core/testing';
 import { InvitationService } from './invitation.service';
 import { AuthService } from '@blockframes/auth/+state';
-import { AngularFireModule } from '@angular/fire';
 import { toDate } from '@blockframes/utils/helpers';
-import { SETTINGS, AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestore';
+import {
+  Firestore,
+  provideFirestore,
+  initializeFirestore,
+  connectFirestoreEmulator,
+  disableNetwork,
+  doc,
+  getDoc,
+  updateDoc
+} from '@angular/fire/firestore';
 import { loadFirestoreRules, clearFirestoreData } from '@firebase/rules-unit-testing';
 import { readFileSync } from 'fs';
-import firebase from 'firebase/app';
 import { Observable, of } from 'rxjs';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { createInvitation, createUser, InvitationDocument } from '@blockframes/model';
 import { ActivatedRoute } from '@angular/router';
 import { APP } from '@blockframes/utils/routes/utils';
-
+import { getApp, initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import firestore from 'firebase/firestore';
 class InjectedAuthService {
   uid = 'userId';
 
@@ -44,13 +52,17 @@ const invitationParamsUser = {
 
 describe('Invitations Test Suite', () => {
   let service: InvitationService;
-  let db: AngularFirestore;
+  let db: Firestore;
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
       imports: [
-        AngularFireModule.initializeApp({ projectId: 'test' }),
-        AngularFirestoreModule
+        provideFirebaseApp(() => initializeApp({ projectId: 'test' })),
+        provideFirestore(() => {
+          const db = initializeFirestore(getApp(), { experimentalAutoDetectLongPolling: true });
+          connectFirestoreEmulator(db, 'localhost:8080', 8080);
+          return db;
+        }),
       ],
       providers: [
         InvitationService,
@@ -58,10 +70,9 @@ describe('Invitations Test Suite', () => {
         { provide: UserService, useClass: DummyService },
         { provide: ActivatedRoute, useValue: { params: of({}) } },
         { provide: APP, useValue: 'festival' },
-        { provide: SETTINGS, useValue: { host: 'localhost:8080', ssl: false } }
       ],
     });
-    db = TestBed.inject(AngularFirestore);
+    db = TestBed.inject(Firestore);
     service = TestBed.inject(InvitationService);
 
     await loadFirestoreRules({
@@ -74,7 +85,7 @@ describe('Invitations Test Suite', () => {
   afterEach(() => clearFirestoreData({ projectId: 'test' }));
 
   // To prevent "This usually means that there are asynchronous operations that weren't stopped in your tests. Consider running Jest with `--detectOpenHandles` to troubleshoot this issue."
-  afterAll(() => db.firestore.disableNetwork());
+  afterAll(() => disableNetwork(db));
 
   it('Should check invitation service is created', () => {
     expect(service).toBeTruthy();
@@ -82,7 +93,7 @@ describe('Invitations Test Suite', () => {
 
   it('Formats invitation from firestore', () => {
     const invitationService = TestBed.inject(InvitationService);
-    const timestamp = firebase.firestore.Timestamp.fromDate(today);
+    const timestamp = firestore.Timestamp.fromDate(today);
     const formattedDate = toDate(timestamp);
 
     //Create an Invitation Document
@@ -104,7 +115,8 @@ describe('Invitations Test Suite', () => {
   });
 
   it('Should invitation status become accepted', async () => {
-    await db.doc('invitations/1').set({ status: 'pending' });
+    const ref = doc(db, 'invitations/1');
+    await updateDoc(ref, 'status', 'pending');
     await service.acceptInvitation({
       id: '1',
       type: 'attendEvent',
@@ -112,12 +124,13 @@ describe('Invitations Test Suite', () => {
       status: 'pending',
       date: new Date()
     });
-    const doc = await db.doc('invitations/1').ref.get();
-    expect((doc.data() as InvitationDocument).status).toBe('accepted');
+    const invitation = await getDoc(ref);
+    expect((invitation.data() as InvitationDocument).status).toBe('accepted');
   });
 
   it('Should invitation status become declined', async () => {
-    await db.doc('invitations/2').set({ status: 'pending' });
+    const ref = doc(db, 'invitations/2');
+    await updateDoc(ref, 'status', 'pending');
     await service.declineInvitation({
       id: '2',
       type: 'attendEvent',
@@ -125,8 +138,8 @@ describe('Invitations Test Suite', () => {
       status: 'pending',
       date: new Date()
     });
-    const doc = await db.doc('invitations/2').ref.get();
-    expect((doc.data() as InvitationDocument).status).toBe('declined');
+    const invitation = await getDoc(ref);
+    expect((invitation.data() as InvitationDocument).status).toBe('declined');
   });
 
   it('Should create invitation request', async () => {

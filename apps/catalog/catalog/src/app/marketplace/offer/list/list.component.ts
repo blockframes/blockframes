@@ -5,7 +5,7 @@ import { OrganizationService } from '@blockframes/organization/+state';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { joinWith } from '@blockframes/utils/operators';
 import { switchMap } from 'rxjs/operators';
-import { CollectionReference, QueryFn } from '@angular/fire/firestore';
+import { orderBy, QueryConstraint, where } from 'firebase/firestore';
 
 @Component({
   selector: 'catalog-offer-list',
@@ -18,7 +18,7 @@ export class ListComponent {
     switchMap(org => this.service.valueChanges(query(org.id))),
     joinWith({
       contracts: offer => this.getContracts(offer.id)
-    }, {shouldAwait:true}),
+    }, { shouldAwait: true }),
   )
 
   constructor(
@@ -29,8 +29,7 @@ export class ListComponent {
   ) { }
 
   private getContracts(offerId: string) {
-    const queryContracts = (ref: CollectionReference) => ref.where('offerId', '==', offerId);
-    return this.contractService.valueChanges(queryContracts).pipe(
+    return this.contractService.valueChanges([where('offerId', '==', offerId)]).pipe(
       joinWith({
         title: contract => this.titleService.valueChanges(contract.titleId),
         negotiation: contract => this.contractService.lastNegotiation(contract.id)
@@ -39,6 +38,6 @@ export class ListComponent {
   }
 }
 
-const query: (orgId: string) => QueryFn = (orgId: string) => {
-  return ref => ref.where('buyerId', '==', orgId).orderBy('_meta.createdAt', 'desc');
+const query: (orgId: string) => QueryConstraint[] = (orgId: string) => {
+  return [where('buyerId', '==', orgId), orderBy('_meta.createdAt', 'desc')];
 }

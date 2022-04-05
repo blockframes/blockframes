@@ -7,26 +7,28 @@ import { combineLatest, of } from 'rxjs';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { IncomeService } from '@blockframes/contract/income/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { CollectionReference } from '@angular/fire/firestore';
 import { getSeller } from '@blockframes/contract/contract/+state/utils'
 import { Organization, Sale } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state';
+import { orderBy, where } from 'firebase/firestore';
 
-function queryFn(ref: CollectionReference, orgId: string, options: { internal?: boolean }) {
+function queryConstraints(orgId: string, options: { internal?: boolean }) {
   if (options.internal) {
-    return ref
-      .where('buyerId', '!=', '')
-      .where('type', '==', 'sale')
-      .orderBy('buyerId', 'desc')
-      .where('stakeholders', 'array-contains', orgId)
-      .orderBy('_meta.createdAt', 'desc');
+    return [
+      where('buyerId', '!=', ''),
+      where('type', '==', 'sale'),
+      orderBy('buyerId', 'desc'),
+      where('stakeholders', 'array-contains', orgId),
+      orderBy('_meta.createdAt', 'desc')
+    ]
   }
 
-  return ref
-    .where('buyerId', '==', '')
-    .where('type', '==', 'sale')
-    .where('stakeholders', 'array-contains', orgId)
-    .orderBy('_meta.createdAt', 'desc');
+  return [
+    where('buyerId', '==', ''),
+    where('type', '==', 'sale'),
+    where('stakeholders', 'array-contains', orgId),
+    orderBy('_meta.createdAt', 'desc'),
+  ]
 }
 
 function getFullName(seller: Organization) {
@@ -42,8 +44,7 @@ function getFullName(seller: Organization) {
 export class SaleListComponent implements OnInit {
   private orgId = this.orgService.org.id;
 
-
-  public internalSales$ = this.contractService.valueChanges(ref => queryFn(ref, this.orgId, { internal: true })).pipe(
+  public internalSales$ = this.contractService.valueChanges(queryConstraints(this.orgId, { internal: true })).pipe(
     joinWith({
       licensor: (sale: Sale) => this.orgService.valueChanges(getSeller(sale)).pipe(map(getFullName)),
       licensee: (sale: Sale) => this.orgService.valueChanges(sale.buyerId).pipe(map(getFullName)),
@@ -52,7 +53,7 @@ export class SaleListComponent implements OnInit {
     }),
   );
 
-  public externalSales$ = this.contractService.valueChanges(ref => queryFn(ref, this.orgId, { internal: false })).pipe(
+  public externalSales$ = this.contractService.valueChanges(queryConstraints(this.orgId, { internal: false })).pipe(
     joinWith({
       licensor: (sale: Sale) => this.orgService.valueChanges(getSeller(sale)).pipe(map(getFullName)),
       licensee: () => of('External'),
