@@ -123,6 +123,7 @@ export const icons = [
   { name: 'specific_delivery_list', url: 'assets/icons/specific_delivery_list.svg' },
   { name: 'star', url: 'assets/icons/star.svg' },
   { name: 'star_fill', url: 'assets/icons/star_fill.svg' },
+  { name: 'switch_access_shortcut', url: 'assets/icons/switch_access_shortcut.svg' },
   { name: 'territories_avails', url: 'assets/icons/territories_avails.svg' },
   { name: 'thumb_up', url: 'assets/icons/thumb_up.svg' },
   { name: 'unicorn', url: 'assets/icons/unicorn.svg' },

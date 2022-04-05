@@ -47,7 +47,7 @@ export class TitlesAnalyticsComponent {
       events: title => this.eventService.valueChanges(ref => ref
         .where('type', '==', 'screening')
         .where('meta.titleId', '==', title.id))
-    }),
+    }, { shouldAwait: true }),
     map(titles => titles.map(countAnalytics))
   );
 
