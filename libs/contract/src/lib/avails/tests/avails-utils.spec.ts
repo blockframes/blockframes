@@ -35,8 +35,8 @@ const overlappingTerm: Term<Date> = {
 
 describe('test isCalendarAvailPartiallyInTerm', () => {
   it('test overlap between term and avail', () => {
-    const overlapping = isCalendarAvailPartiallyInTerm(availsBrewster3, overlappingTerm);
-    const nonOverlapping = isCalendarAvailPartiallyInTerm(availsBrewster3, nonOverlappingTerm);
+    const overlapping = isCalendarAvailPartiallyInTerm(overlappingTerm, availsBrewster3);
+    const nonOverlapping = isCalendarAvailPartiallyInTerm(nonOverlappingTerm, availsBrewster3);
     expect(nonOverlapping).toBe(false);
     expect(overlapping).toBe(true);
   });

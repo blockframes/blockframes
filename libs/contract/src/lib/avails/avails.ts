@@ -82,6 +82,95 @@ function assertValidTitle(mandates: FullMandate[], sales: FullSale[], bucketCont
   const differentTitleIds = uniqueIds.size > 1;
   if (differentTitleIds) throw new Error('Mandates & Sales must all have the same title id!');
 }
+interface MatchingAvailabilitiesOptions {
+  avails: CalendarAvailsFilter,
+  mandates: FullMandate[],
+  sales: FullSale[],
+  mandateFilterFn: (term: Term<Date>, avail: AvailsFilter | CalendarAvailsFilter) => boolean,
+  saleFilterFn: (term: Term<Date>, avail: AvailsFilter | CalendarAvailsFilter) => boolean,
+  verifyDurationIntersection: boolean
+};
+
+function getMatchingAvailabilities(
+  { avails, mandates, sales, mandateFilterFn, saleFilterFn, verifyDurationIntersection }: MatchingAvailabilitiesOptions
+) {
+  const results: AvailResult[] = [];
+
+  const subAvails = avails.territories.flatMap(ter => {
+    return avails.medias.map(m => ({ ...avails, territories: [ter], medias: [m] }));
+  });
+
+  for (const subAvail of subAvails) {
+    const result: Partial<AvailResult> = { available: [], sold: [] };
+
+    mandateLoop: for (const contract of mandates) {
+
+      for (const term of contract.terms) {
+        const availInTerm = mandateFilterFn(term, subAvail);
+        if (!availInTerm) continue;
+
+        result.periodAvailable = term?.duration;
+        result.available.push({ ...contract, terms: [term] });
+        break mandateLoop;
+      }
+
+    }
+
+    saleLoop: for (const sale of sales) {
+
+      for (const term of sale.terms) {
+        const someOfTermInAvail = saleFilterFn(term, subAvail);
+        if (!someOfTermInAvail) continue;
+        result.sold.push({ ...sale, terms: [term] });
+        break saleLoop;
+      }
+
+    }
+    results.push(result as AvailResult)
+  }
+
+  // Get the none empty sold result
+  const sold = results
+    .map(({ sold }) => sold)
+    .filter(sold => sold.length)
+    .flat();
+
+  // If one of the subAvails has no availability, return empty result
+  const unavailableSubAvail = results.find(result => !result.available.length)
+
+  // Take the intersection of all the available duration
+  const from = max(results.map((result) => result.periodAvailable?.from));
+  const to = min(results.map((result) => result.periodAvailable?.to));
+  console.log({ results, from, to })
+
+  /**
+   * Intersection     |   No Intersection
+   * |-----***|....   |   |---|.........
+   * .....|***----|   |   .......|------|
+   */
+  const noIntersection = from > to;
+
+  // If no result or if no intersection return only the sold result
+  if (unavailableSubAvail || (noIntersection && verifyDurationIntersection)) {
+    return {
+      periodAvailable: null,
+      available: [],
+      sold
+    }
+  }
+
+  // Get non-empty available results
+  const available = results
+    .map(({ available }) => available)
+    .filter(available => available.length)
+    .flat()
+
+  return {
+    periodAvailable: { from, to },
+    available,
+    sold
+  }
+}
 
 // ----------------------------
 //          TITLE LIST
@@ -92,25 +181,38 @@ export interface AvailsFilter extends BaseAvailsFilter {
   territories: Territory[],
 }
 
-export function getMatchingMandates(mandates: FullMandate[], avails: AvailsFilter): FullMandate[] {
-  return mandates.filter(mandate => mandate.terms.some(term => {
-    const exclusivityCheck = exclusivityAllOf(avails.exclusive).in(term.exclusive);
-    const mediaCheck = allOf(avails.medias).in(term.medias);
-    const durationCheck = allOf(avails.duration).in(term.duration);
-    const territoryCheck = allOf(avails.territories).in(term.territories);
+function isAvailAllInTerm(term: Term<Date>, avails: AvailsFilter) {
+  const exclusivityCheck = exclusivityAllOf(avails.exclusive).in(term.exclusive);
+  const mediaCheck = allOf(avails.medias).in(term.medias);
+  const durationCheck = allOf(avails.duration).in(term.duration);
+  const territoryCheck = allOf(avails.territories).in(term.territories);
 
-    return exclusivityCheck && mediaCheck && durationCheck && territoryCheck;
-  }));
+  return exclusivityCheck && mediaCheck && durationCheck && territoryCheck;
+}
+
+function isListAvailPartiallyInTerm(term: BucketTerm<Date>, avails: AvailsFilter) {
+  const exclusivityCheck = exclusivitySomeOf(avails.exclusive).in(term.exclusive);
+  if (!exclusivityCheck) return false;
+  const mediaCheck = someOf(avails.medias).in(term.medias);
+  if (!mediaCheck) return false;
+  const durationCheck = someOf(avails.duration).in(term.duration);
+  if (!durationCheck) return false;
+  return someOf(avails.territories).in(term.territories);
+}
+
+export function getListMatchingAvailabilities(mandates: FullMandate[], sales: FullSale[], avails: AvailsFilter) {
+  const options = {
+    mandates, sales, avails,
+    mandateFilterFn: isAvailAllInTerm,
+    saleFilterFn: isListAvailPartiallyInTerm,
+    verifyDurationIntersection: false
+  };
+  return getMatchingAvailabilities(options);
 }
 
 function getMatchingSales<T extends (FullSale | BucketContract)>(sales: T[], avails: AvailsFilter): T[] {
   return sales.filter(sale => sale.terms.some(term => {
-    const exclusivityCheck = exclusivitySomeOf(avails.exclusive).in(term.exclusive);
-    const mediaCheck = someOf(avails.medias).in(term.medias);
-    const durationCheck = someOf(avails.duration).in(term.duration);
-    const territoryCheck = someOf(avails.territories).in(term.territories);
-
-    return exclusivityCheck && mediaCheck && durationCheck && territoryCheck;
+    return isListAvailPartiallyInTerm(term, avails);
   }));
 }
 
@@ -144,7 +246,10 @@ export function availableTitle(
 
   // get only the mandates that meets the avails filter criteria,
   // e.g. if we ask for "France" but the title is mandated in "Germany", we don't care
-  const availableMandates = getMatchingMandates(mandates, avails);
+  const {
+    available: availableMandates,
+    sold: salesToExclude
+  } = getListMatchingAvailabilities(mandates, sales, avails);
 
   // if there is no mandates left, the title is not available
   if (!availableMandates.length) return [];
@@ -153,7 +258,7 @@ export function availableTitle(
 
   // get only the sales that meets the avails filter criteria
   // e.g. if we ask for "France" but the title has been sold in "Germany", we don't care
-  const salesToExclude = getMatchingSales(sales, avails);
+  // const salesToExclude = getMatchingSales(sales, avails);
 
   // if there is at least one sale that match the avails, the title is not available
   if (salesToExclude.length) return [];
@@ -422,85 +527,17 @@ export function isCalendarTermInAvails<T extends BucketTerm | Term>(term: T, ava
   return allOf(avails.territories).in(term.territories);
 }
 
-export function getMatchingCalendar(avails: CalendarAvailsFilter, mandates: FullMandate[], sales: FullSale[]) {
-  const results: AvailResult[] = [];
-
-  const subAvails = avails.territories.flatMap(ter => {
-    return avails.medias.map(m => ({ ...avails, territories: [ter], medias: [m] }));
-  });
-
-  for (const subAvail of subAvails) {
-    const result: Partial<AvailResult> = { available: [], sold: [] };
-
-    mandateLoop: for (const contract of mandates) {
-
-      for (const term of contract.terms) {
-        const availInTerm = isCalendarTermInAvails(term, subAvail);
-        if (!availInTerm) continue;
-
-        result.periodAvailable = term?.duration;
-        result.available.push({ ...contract, terms: [term] });
-        break mandateLoop;
-      }
-
-    }
-
-    saleLoop: for (const sale of sales) {
-
-      for (const term of sale.terms) {
-        const someOfTermInAvail = isCalendarAvailPartiallyInTerm(subAvail, term);
-        if (!someOfTermInAvail) continue;
-        result.sold.push({ ...sale, terms: [term] });
-        break saleLoop;
-      }
-
-    }
-    results.push(result as AvailResult)
-  }
-
-  // Get the none empty sold result
-  const sold = results
-    .map(({ sold }) => sold)
-    .filter(sold => sold.length)
-    .flat();
-
-  // If one of the subAvails has no availability, return empty result
-  const unavailableSubAvail = results.find(result => !result.available.length)
-
-  // Take the intersection of all the available duration
-  const from = max(results.map((result) => result.periodAvailable?.from));
-  const to = min(results.map((result) => result.periodAvailable?.to));
-
-  /**
-   * Intersection     |   No Intersection
-   * |-----***|....   |   |---|.........
-   * .....|***----|   |   .......|------|
-   */
-  const noIntersection = from > to;
-
-  // If no result or if no intersection return only the sold result
-  if (unavailableSubAvail || noIntersection) {
-    return {
-      periodAvailable: null,
-      available: [],
-      sold
-    }
-  }
-
-  // Get non-empty available results
-  const available = results
-    .map(({ available }) => available)
-    .filter(available => available.length)
-    .flat()
-
-  return {
-    periodAvailable: { from, to },
-    available,
-    sold
-  }
+export function getMatchingCalendarAvailabilities(avails: CalendarAvailsFilter, mandates: FullMandate[], sales: FullSale[]) {
+  const options = {
+    avails, mandates, sales,
+    mandateFilterFn: isCalendarTermInAvails,
+    saleFilterFn: isCalendarAvailPartiallyInTerm,
+    verifyDurationIntersection: true
+  };
+  return getMatchingAvailabilities(options);
 }
 
-export function isCalendarAvailPartiallyInTerm(avail: CalendarAvailsFilter, term: Term<Date>) {
+export function isCalendarAvailPartiallyInTerm(term: Term<Date>, avail: CalendarAvailsFilter) {
   const exclusivityCheck = exclusivitySomeOf(avail.exclusive).in(term.exclusive);
   if (!exclusivityCheck) return false;
   const mediaCheck = someOf(avail.medias).in(term.medias);
@@ -533,14 +570,20 @@ export function durationAvailabilities(
   const {
     available: availableMandates, sold: salesToExclude,
     periodAvailable
-  } = getMatchingCalendar(avails, mandates, sales);
+  } = getMatchingCalendarAvailabilities(avails, mandates, sales);
 
   const available = availableMandates.map(m => {
     return m.terms.map((t): DurationMarker => ({
       from: periodAvailable.from,
       to: periodAvailable.to,
       contract: m,
-      term: t
+      term: {
+        ...t,
+        duration: {
+          from: periodAvailable.from,
+          to: periodAvailable.to
+        }
+      }
     }));
   }).flat();
 

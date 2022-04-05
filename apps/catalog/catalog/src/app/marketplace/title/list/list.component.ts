@@ -152,7 +152,6 @@ export class ListComponent implements OnDestroy, OnInit {
   }
 
   async addAvail(title: (AlgoliaMovie & { mandates: FullMandate[] })) {
-
     if (this.availsForm.invalid) {
       this.snackbar.open('Fill in avails filter to add title to your Selection.', 'close', { duration: 5000 })
       return;
@@ -164,6 +163,12 @@ export class ListComponent implements OnDestroy, OnInit {
       return;
     }
 
+    /**
+     * @Continue from here:
+     * 1. Break up the availResearch passed to addTerm to multiple sub avails.
+     * 2. Ensure each sub avail get's the corresponding parentTerm.id it matched with.
+     * A better place to do this is the `getMandateTerms` method called above.
+     */
     this.bucketService.addTerm(title.objectID, parentTerm.id, this.availsForm.value);
 
     this.snackbar.open(`${title.title.international} was added to your Selection`, 'GO TO SELECTION', { duration: 4000 })

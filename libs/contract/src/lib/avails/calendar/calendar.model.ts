@@ -241,7 +241,6 @@ export function markersToMatrix(markers: readonly DurationMarker[], stateMatrix:
   for (const marker of markers) {
 
     const start = dateToMatrixPosition(marker.from) ?? { row: 0, column: 0 };
-
     const end = dateToMatrixPosition(marker.to) ?? { row: stateMatrix.length - 1, column: stateMatrix[0].length - 1 };
 
     applyToRange(start, end, stateMatrix[0].length, (row, column) => {
