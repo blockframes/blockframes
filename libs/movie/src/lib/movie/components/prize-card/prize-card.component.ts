@@ -2,8 +2,7 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 
 // Blockframes
-import { Prize } from '@blockframes/model';
-import { festival } from '@blockframes/utils/static-model';
+import { Prize, festival } from '@blockframes/model';
 
 @Component({
   selector: '[prize] title-prize-card',

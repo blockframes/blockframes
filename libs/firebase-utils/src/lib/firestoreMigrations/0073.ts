@@ -1,7 +1,6 @@
 import { Firestore } from '../types';
 import { runChunks } from '../firebase-utils';
-import { Movie } from '@blockframes/model';
-import { Genre } from '@blockframes/utils/static-model';
+import { Movie, Genre } from '@blockframes/model';
 
 /**
  * Update all movies genre (old genres becomes keywords)

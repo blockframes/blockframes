@@ -1,5 +1,5 @@
 import { FormControl, ValidatorFn } from '@angular/forms';
-import { Scope, GetKeys } from '../../static-model/static-model'
+import { Scope, GetKeys } from '@blockframes/model';
 import { isKeyValidator, isKeyArrayValidator } from '../validators';
 import { Observable } from 'rxjs';
 

@@ -1,10 +1,9 @@
 /**
  * Apps definition
  */
-import { StoreStatus } from './static-model';
 import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
 import { appUrl } from '@env';
-import { MovieBase, MovieDocument, OrganizationBase, OrganizationDocument } from '@blockframes/model';
+import { StoreStatus, MovieBase, MovieDocument, OrganizationBase, OrganizationDocument } from '@blockframes/model';
 
 export interface AppMailSetting {
   description: string;

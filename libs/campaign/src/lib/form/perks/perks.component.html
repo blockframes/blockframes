@@ -31,7 +31,7 @@
         <form [formGroup]="perkForm" fxLayout="column" fxLayoutGap="8px">
           <!-- Title -->
           <mat-form-field appearance="outline">
-            <mat-label>Title</mat-label>
+            <mat-label>Name</mat-label>
             <input matInput formControlName="title" required />
             <mat-hint>Please pay attention, amount should be in dollars.</mat-hint>
             <mat-error *ngIf="perkForm.hasError('required', 'title')">

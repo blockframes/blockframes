@@ -6,7 +6,7 @@ import { ActivatedRoute, Data } from '@angular/router';
 // Blockframes
 import { TunnelRoot, TunnelStep, TunnelLayoutComponent } from '@blockframes/ui/tunnel';
 import { FORMS_CONFIG, ShellConfig } from '../movie.shell.interfaces';
-import { ProductionStatus } from '@blockframes/utils/static-model';
+import { ProductionStatus } from '@blockframes/model';
 import { isChrome } from '@blockframes/utils/browser/utils';
 
 // RxJs
