@@ -1,16 +1,16 @@
 import { runInBackground } from '@blockframes/firebase-utils';
 
-export async function cleanBackups({ bucketName, maxDays }) {
+export async function cleanBackups({ bucketName, maxDays }: { bucketName: string, maxDays: number }) {
   if (!bucketName) throw 'This command needs GCS URI starting with gs:// preceeded by an integer number of days to keep backups';
 
   const maxMilliseconds = 1000 * 60 * 60 * 24 * maxDays;
 
   const output = await runInBackground(`gsutil ls ${bucketName}`).procPromise;
-  const URIs = output.split('\n').filter(line => Boolean(line));
+  const URIs = output.split('\n').filter(line => !!line);
   const deleteURIs = URIs.filter(uri => {
     const dir = uri
       .split('/')
-      .filter(chunk => Boolean(chunk))
+      .filter(chunk => !!chunk)
       .pop();
 
     if (!dir.match(/\d{1,2}-\d{1,2}-\d\d\d\d/)) return false;
