@@ -20,7 +20,7 @@ import {
 } from '@blockframes/model';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
 import { App, Module, createOrgAppAccess } from '@blockframes/utils/apps';
-import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
+import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 import { combineLatest, Observable, of } from 'rxjs';
 import { ActiveState, EntityState } from '@datorama/akita';
 
@@ -29,7 +29,7 @@ interface OrganizationState extends EntityState<Organization>, ActiveState<strin
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'orgs' })
 export class OrganizationService extends CollectionService<OrganizationState> {
-  readonly useMemorization = true;
+  readonly useMemorization = false;
 
   // Organization of the current logged in user or undefined if user have no org
   org: Organization; // For this to be defined, one of the observable below must be called before
@@ -69,8 +69,8 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     private functions: AngularFireFunctions,
     private userService: UserService,
     private permissionsService: PermissionsService,
-    private analytics: FireAnalytics,
-    private authService: AuthService
+    private analytics: AnalyticsService,
+    private authService: AuthService,
   ) {
     super();
   }
@@ -185,17 +185,11 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     const orgState = this.org;
     let wishlist = Array.from(new Set([...orgState.wishlist])) || [];
     if (wishlist.includes(movie.id)) {
-      wishlist = orgState.wishlist.filter((id) => id !== movie.id);
-      this.analytics.event('removedFromWishlist', {
-        movieId: movie.id,
-        movieTitle: movie.title.original,
-      });
+      wishlist = orgState.wishlist.filter(id => id !== movie.id);
+      this.analytics.addTitle('removedFromWishlist', movie.id);
     } else {
       wishlist.push(movie.id);
-      this.analytics.event('addedToWishlist', {
-        movieId: movie.id,
-        movieTitle: movie.title.original,
-      });
+      this.analytics.addTitle('addedToWishlist', movie.id);
     }
 
     this.update(orgState.id, { wishlist });

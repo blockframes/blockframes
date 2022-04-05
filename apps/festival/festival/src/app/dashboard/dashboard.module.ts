@@ -46,8 +46,36 @@ const routes: Routes = [{
       redirectTo: 'home'
     },
     {
-      path: 'home',   // Home (dashboard if film, welcome if not)
-      loadChildren: () => import('@blockframes/ui/dashboard/pages/home/home.module').then(m => m.HomeModule),
+      path: 'home',
+      children: [
+        {
+          path: '',
+          loadChildren: () => import('./home/home.module').then(m => m.HomeModule),
+        }, {
+          path: 'title',
+          children: [
+            {
+              path: '',
+              loadChildren: () => import('./analytics/titles/titles-analytics.module').then(m => m.TitlesAnalyticsModule),
+            }, {
+              path: ':titleId',
+              loadChildren: () => import('./analytics/title/title-analytics.module').then(m => m.TitleAnalyticsModule)
+            }
+          ]
+        }, {
+          path: 'buyer',
+          children: [
+            {
+              path: '',
+              loadChildren: () => import('./analytics/buyers/buyers-analytics.module').then(m => m.BuyersAnalyticsModule)
+            },
+            {
+              path: ':userId',
+              loadChildren: () => import('./analytics/buyer/buyer-analytics.module').then(m => m.BuyerAnalyticsModule)
+            }
+          ]
+        }
+      ]
     },
     {
       path: 'notifications',

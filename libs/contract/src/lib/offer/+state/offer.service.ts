@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
-import { Offer } from './offer.model';
 import { Income } from '../../income/+state';
 import { ActiveState, EntityState } from '@datorama/akita';
-import { Contract, formatDocumentMetaFromFirestore } from '@blockframes/model';
+import { Contract, formatDocumentMetaFromFirestore, Offer } from '@blockframes/model';
 
 interface OfferState extends EntityState<Offer>, ActiveState<string> { }
 

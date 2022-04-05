@@ -4,12 +4,14 @@ import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
 import { AuthService } from '@blockframes/auth/+state';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { combineLatest } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, take } from 'rxjs/operators';
 import { EventService } from '../+state';
 import type firebase from 'firebase';
 import { Event } from '@blockframes/model';
 import { AnonymousCredentials } from '@blockframes/auth/+state/auth.model';
 import { createInvitation } from '@blockframes/model';
+import { hasDisplayName } from '@blockframes/utils/helpers';
+import { OrganizationService } from '@blockframes/organization/+state';
 
 @Injectable({ providedIn: 'root' })
 export class EventAccessGuard implements CanActivate {
@@ -17,6 +19,7 @@ export class EventAccessGuard implements CanActivate {
   constructor(
     private service: EventService,
     private invitationService: InvitationService,
+    private orgService: OrganizationService,
     private authService: AuthService,
     private router: Router,
     private snackBar: MatSnackBar
@@ -33,7 +36,17 @@ export class EventAccessGuard implements CanActivate {
   }
 
   private async guard(next: ActivatedRouteSnapshot, user: firebase.User, event: Event<unknown>, credentials: AnonymousCredentials) {
-    if (!user.isAnonymous) return true;
+    if (!user.isAnonymous) {
+      const profile = await this.authService.profile$.pipe(take(1)).toPromise();
+      const validUser = hasDisplayName(profile) && user.emailVerified && profile.orgId;
+      if (!validUser) return this.router.createUrlTree(['/auth/identity']);
+
+      const org = await this.orgService.currentOrg$.pipe(take(1)).toPromise();
+      if (org.status !== 'accepted') return this.router.createUrlTree(['/c/organization/create-congratulations']);
+
+      return true;
+    };
+
     switch (event.accessibility) {
       case 'protected': {
         const credentialsUpdateNeeded = !credentials.invitationId || credentials.invitationId !== next.queryParams?.i;
