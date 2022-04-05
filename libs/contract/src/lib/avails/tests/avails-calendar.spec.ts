@@ -356,13 +356,13 @@ describe('Test terms out of movie mandates', () => {
   });
 
   it('Check exclusive on planes in France and China', () => {
-    const { available: [{ from, to }] } = durationAvailabilities(availsBrewster1, [mandateMovie7],  [sale1Movie7, sale2Movie7], []);
+    const { available: [{ from, to }] } = durationAvailabilities(availsBrewster1, [mandateMovie7], [sale1Movie7, sale2Movie7], []);
     assertDate(to, new Date('12/31/2026'));
     assertDate(from, new Date('01/01/2025'));
   });
 
   it('Check non-exclusive on europe vod', () => {
-    const { available: [{ from, to }] } = durationAvailabilities(availsBrewster2, [mandateMovie7],  [sale1Movie7, sale2Movie7], []);
+    const { available: [{ from, to }] } = durationAvailabilities(availsBrewster2, [mandateMovie7], [sale1Movie7, sale2Movie7], []);
     assertDate(to, new Date('12/31/2032'));
     assertDate(from, new Date('01/01/2025'));
   });
@@ -379,7 +379,7 @@ describe('Test terms out of movie mandates', () => {
   });
 
   it('Check not available on france china vod non-exclusive', () => {
-    const { available } = durationAvailabilities(availsBrewster4, [mandateMovie7],  [sale1Movie7, sale2Movie7], []);
+    const { available } = durationAvailabilities(availsBrewster4, [mandateMovie7], [sale1Movie7, sale2Movie7], []);
     expect(available.length).toBe(0);
   });
 });
