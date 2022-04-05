@@ -13,7 +13,7 @@ export async function cleanBackups({ bucketName, maxDays }) {
       .filter(chunk => Boolean(chunk))
       .pop();
 
-    if (!dir.match(/\d\d-\d\d-\d\d\d\d/)) return false;
+    if (!dir.match(/\d{1,2}-\d{1,2}-\d\d\d\d/)) return false;
 
     const [day, month, year] = dir.split('-').slice(-3);
     const date = new Date(`${month}-${day}-${year}`);
