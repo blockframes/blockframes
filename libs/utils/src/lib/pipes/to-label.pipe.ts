@@ -1,7 +1,7 @@
 import { NgModule, Pipe, PipeTransform } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { toLabel } from '../utils';
-import { Scope } from '../static-model';
+import { Scope } from '@blockframes/model';
 export { toLabel } from '../utils';
 
 @Pipe({ name: 'toLabel' })

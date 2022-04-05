@@ -1,10 +1,10 @@
 
-import { GetKeys } from '@blockframes/utils/static-model/static-model';
+import { GetKeys } from '@blockframes/model';
+import type { StoreStatus, ProductionStatus, Territory, Genre, SocialGoal, ContentType } from '@blockframes/model';
 import { FormControl, Validators } from '@angular/forms';
 import { EntityControl, FormEntity, FormList, FormStaticValueArray } from '@blockframes/utils/form';
 import { algolia } from '@env';
 import algoliasearch, { SearchIndex } from 'algoliasearch';
-import { StoreStatus, ProductionStatus, Territory, Genre, SocialGoal, ContentType } from '@blockframes/utils/static-model/types';
 import { App } from "@blockframes/utils/apps";
 import { AlgoliaMovie, AlgoliaOrganization, AlgoliaSearch } from '@blockframes/utils/algolia';
 import { max } from './filters/budget/budget.component';

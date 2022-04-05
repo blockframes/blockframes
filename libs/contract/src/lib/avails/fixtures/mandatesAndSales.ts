@@ -1,6 +1,9 @@
-import { createMandate, createSale } from "@blockframes/model";
-import { territories, territoriesGroup, Territory, medias, mediaGroup } from "@blockframes/utils/static-model";
-import { FullMandate, FullSale } from "../avails";
+import {
+  createMandate, createSale,
+  territories, Territory,
+  territoriesGroup, medias, mediaGroup
+} from '@blockframes/model';
+import { FullMandate, FullSale } from '../avails';
 
 /**
  * AVAILS AND SALES ARE GOTTEN FROM HERE.

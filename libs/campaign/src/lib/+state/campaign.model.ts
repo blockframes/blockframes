@@ -1,5 +1,4 @@
-import { StorageFile } from '@blockframes/model';
-import { MovieCurrency } from '@blockframes/utils/static-model';
+import { StorageFile, MovieCurrency } from '@blockframes/model';
 
 export interface Campaign {
   id: string;

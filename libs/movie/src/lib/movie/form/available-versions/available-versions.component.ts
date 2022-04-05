@@ -6,9 +6,8 @@ import { FormControl } from '@angular/forms';
 import { MovieFormShellComponent } from '../shell/shell.component';
 
 // Blockframes
-import { createMovieLanguageSpecification } from '@blockframes/model';
+import { createMovieLanguageSpecification, Language } from '@blockframes/model';
 import { VersionSpecificationForm } from '@blockframes/movie/form/movie.form';
-import { Language } from '@blockframes/utils/static-model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 // RxJs

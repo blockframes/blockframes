@@ -9,10 +9,9 @@ import {
 } from "@angular/forms";
 import { BehaviorSubject, combineLatest, Observable, Subscription, defer, Subject } from "rxjs";
 import { map, startWith, shareReplay, pairwise } from "rxjs/operators";
-import { GroupScope, Scope, StaticGroup, staticGroups, staticModel } from '@blockframes/utils/static-model';
+import { GroupScope, Scope, StaticGroup, staticGroups, staticModel } from '@blockframes/model';
 import { MatFormFieldControl } from "@angular/material/form-field";
 import { coerceBooleanProperty } from "@angular/cdk/coercion";
-
 
 type GroupMode = 'indeterminate' | 'checked' | 'unchecked';
 

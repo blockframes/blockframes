@@ -7,8 +7,10 @@ import {
   ProductionStatus,
   OrgActivity,
   ContentType,
-} from '../static-model';
-import { MovieRunningTime, MovieRelease, MovieLanguageSpecification } from '@blockframes/model';
+  MovieRunningTime,
+  MovieRelease,
+  MovieLanguageSpecification
+} from '@blockframes/model';
 import { Module, ModuleAccess } from '../apps';
 export { SearchResponse } from '@algolia/client-search';
 

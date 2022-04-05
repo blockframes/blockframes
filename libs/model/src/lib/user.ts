@@ -1,6 +1,6 @@
 import { createStorageFile, StorageFile } from './media';
 import type { DocumentMeta } from './meta';
-import type { Genre, Language, Media, Territory } from '@blockframes/utils/static-model';
+import type { Genre, Language, Media, Territory } from './static';
 import type { NotificationTypesBase } from './notification';
 import type { UserRole } from './permissions';
 
