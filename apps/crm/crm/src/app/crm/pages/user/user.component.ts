@@ -273,8 +273,4 @@ export class UserComponent implements OnInit {
       return ['/c/o/dashboard/crm/organization', id];
     }
   }
-  
-  console(any: any) {
-    console.log(any);
-  }
 }

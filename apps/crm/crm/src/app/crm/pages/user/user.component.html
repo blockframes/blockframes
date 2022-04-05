@@ -131,7 +131,6 @@
 </section>
 
 <bf-table *ngIf="invitations | async as invitations" [source]="invitations" useFilter pagination="50">
-  {{ console(invitations) }}
   <ng-template colRef label="Date Created" let-event sort>
     <a [routerLink]="goTo(event)">
       <u>{{ event.date | date: 'short' }}</u>
