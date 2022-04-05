@@ -2,6 +2,8 @@
 $dark-theme: (
   is-dark: true,
   primary: (
+    100: #000000, // TODO #7273 bruce
+    700: #000000, // TODO #7273 bruce
     200: #2a3052,
     500: #9eb1ff,
     800: #8298ff,
@@ -12,6 +14,8 @@ $dark-theme: (
     ),
   ),
   accent: (
+    100: #000000, // TODO #7273 bruce
+    700: #000000, // TODO #7273 bruce
     200: #ffb7b0,
     500: #ff6e61,
     800: #ff5145,
@@ -22,6 +26,8 @@ $dark-theme: (
     ),
   ),
   warn: (
+    100: #000000, // TODO #7273 bruce
+    700: #000000, // TODO #7273 bruce
     500: #ff3f33,
     contrast: (
       500: #ffffff,
@@ -47,6 +53,8 @@ $dark-theme: (
 $light-theme: (
   is-dark: false,
   primary: (
+    100: #000000, // TODO #7273 bruce
+    700: #000000, // TODO #7273 bruce
     200: #8da4fa,
     500: #3C64F7,
     800: #0f31f0,
@@ -57,6 +65,8 @@ $light-theme: (
     ),
   ),
   accent: (
+    100: #000000, // TODO #7273 bruce
+    700: #000000, // TODO #7273 bruce
     200: #ffb7b0,
     500: #ff6e61,
     800: #ff5145,
@@ -67,6 +77,8 @@ $light-theme: (
     ),
   ),
   warn: (
+    100: #000000, // TODO #7273 bruce
+    700: #000000, // TODO #7273 bruce
     500: #ff3f33,
     contrast: (
       500: #ffffff,

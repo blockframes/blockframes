@@ -138,6 +138,6 @@ export class MovieService extends CollectionService<MovieState> {
           status,
         },
       },
-    }));
+    } as any)); // TODO #7273
   }
 }

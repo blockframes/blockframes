@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { getAnalytics, logEvent } from '@angular/fire/analytics';
 import { ActiveState, EntityState } from '@datorama/akita';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
-import { doc, DocumentReference, docData, getDoc } from '@angular/fire/firestore';
+import { doc, DocumentReference, docData, getDoc, where } from '@angular/fire/firestore';
 
 import { map, take } from 'rxjs/operators';
 import { centralOrgId } from '@env';

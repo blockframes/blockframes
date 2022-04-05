@@ -213,7 +213,7 @@ export class SliderComponent implements OnDestroy, AfterContentInit, AfterViewIn
   }
 
   @HostListener('wheel', ['$event'])
-  public onMouseWheel(event: MouseWheelEvent) {
+  public onMouseWheel(event: WheelEvent) {
     if (this.swipe) {
       event.preventDefault(); // prevent window to scroll
       const delta = Math.sign(event.deltaY);
