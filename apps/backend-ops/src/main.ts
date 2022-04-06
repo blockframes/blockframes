@@ -23,7 +23,7 @@ import {
   startEmulators,
   syncAuthEmulatorWithFirestoreEmulator,
 } from './emulator';
-import { backupEnv, restoreEnv } from './backup';
+import { backupLiveEnv, restoreLiveEnv } from './backup';
 import { EIGHT_MINUTES_IN_MS } from '@blockframes/utils/maintenance';
 import { rescueJWP } from './rescueJWP';
 import { loadAndShrinkLatestAnonDbAndUpload } from './db-shrink';
@@ -102,11 +102,11 @@ async function runCommand() {
       break;
     case 'restoreEnv':
       await startMaintenance(db);
-      await restoreEnv();
+      await restoreLiveEnv();
       await endMaintenance(db);
       break
     case 'backupEnv':
-      await backupEnv()
+      await backupLiveEnv()
       break
     case 'startMaintenance':
       await startMaintenance();
