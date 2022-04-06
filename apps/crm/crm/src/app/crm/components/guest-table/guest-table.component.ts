@@ -25,8 +25,4 @@ export class GuestTableComponent {
   @Input() @boolean showInvitationMode = false;
   @Input() @boolean showMovie = false;
   @Input() @boolean showEvent = false;
-
-  console(any: any) {
-    console.log(any)
-  }
 }
