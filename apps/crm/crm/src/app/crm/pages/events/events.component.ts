@@ -5,7 +5,7 @@ import { InvitationService } from '@blockframes/invitation/+state';
 import { Router } from '@angular/router';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { toLabel } from '@blockframes/utils/pipes';
-import { orgName } from '@blockframes/model';
+import { Event, orgName } from '@blockframes/model';
 
 @Component({
   selector: 'crm-events',
@@ -51,8 +51,8 @@ export class EventsComponent implements OnInit {
     this.cdRef.markForCheck();
   }
 
-  goToEdit(event) {
-    this.router.navigate([`/c/o/dashboard/crm/event/${event.id}`])
+  goToEdit(event: Event) {
+    return ['/c/o/dashboard/crm/event', event.id]
   }
 
   public exportTable() {

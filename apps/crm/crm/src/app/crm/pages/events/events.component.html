@@ -7,7 +7,7 @@
     </button>
   </article>
 
-  <bf-table [source]="rows" pagination="50" useFilter clickable (rowClick)="goToEdit($event)">
+  <bf-table [source]="rows" pagination="50" useFilter>
     <ng-template colRef="id" label="Id" let-id sort>
       {{id}}
     </ng-template>
@@ -19,6 +19,9 @@
     </ng-template>
     <ng-template colRef="start" label="Start" let-start sort>
       {{ start | date: 'medium'}}
+    </ng-template>
+    <ng-template colRef="end" label="Start" let-end sort>
+      {{ end | date: 'medium'}}
     </ng-template>
     <ng-template colRef="hostedBy" label="Hosted by" let-hostedBy sort>
       {{hostedBy}}
@@ -37,6 +40,14 @@
     </ng-template>
     <ng-template colRef="isSecret" label="Hidden on Marketplace" let-isSecret sort>
       {{isSecret}}
+    </ng-template>
+    <ng-template colRef label="Action" let-event sticky>
+      <a mat-icon-button [routerLink]="goToEdit(event)">
+        <mat-icon svgIcon="visibility"></mat-icon>
+      </a>
+      <button mat-icon-button [cdkCopyToClipboard]="event.id" (click)="$event.stopPropagation()">
+        <mat-icon svgIcon="file_copy"></mat-icon>
+      </button>
     </ng-template>
   </bf-table>
 
