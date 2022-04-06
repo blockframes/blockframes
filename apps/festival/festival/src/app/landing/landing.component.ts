@@ -166,4 +166,7 @@ export class LandingComponent {
     }
   ]
 
+  scrollToPartners() {
+    document.getElementById("landing-partners").scrollIntoView({behavior: "smooth"});
+  }
 }

@@ -17,6 +17,11 @@ landing-header {
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center center;  
+
+    button {
+      background: none;
+      border: none;
+    }
   }
 }
 
@@ -25,7 +30,7 @@ landing-content {
     margin-bottom: 12px;
   }
   
-  .landing-partners {
+  #landing-partners {
     background-color: var(--background-card);
     article {
       padding: 80px;
@@ -170,18 +175,59 @@ landing-app-link {
 }
 
 @include layout-bp(lt-sm) {
+  landing-header {
+    #headerToScroll {
+      height: calc(100vh - 80px);
+      text-align: center;
+      padding-inline: 16px;
+      a {
+        margin-bottom: 32px;
+      }
+      button {
+        margin-top: auto;
+      }
+    }
+  }
+
   landing-content {
-    mat-tab-group {
-      padding-inline: 0;
+    #landing-partners {
+      article {
+        padding: 16px;
+      }
+    }
+    .landing-presentation {
+      padding: 16px;
+      mat-tab-group {
+        padding-inline: 0;
+        header {
+          padding: 0;
+        }
+      }
+    }
+    .landing-clients-opinion {
+      padding: 16px;
+      .opinions > div {
+        text-align: start;
+        padding: 24px;
+      }
     }
     text-align: center;
     article .surface{
       width: 100%;
     }
   }
+  
   landing-detail {
+    padding: 16px;
     a {
       width: 100%
+    }
+  }
+
+  landing-app-link {
+    section {
+      padding-inline: 16px;
+      text-align: center;
     }
   }
 }

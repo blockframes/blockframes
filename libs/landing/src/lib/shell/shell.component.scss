@@ -162,19 +162,27 @@ landing-shell-page {
 }
 
 @include layout-bp(lt-sm) {
-  landing-shell-page main {
-    landing-header {
-      header {
-        padding: 60px 16px;
-      }
+  landing-shell-page {
+    button[app-logo] {
+      margin-right: 0;
     }
-    section {
-      h1 {
-        text-align: center;
+
+    main {
+      scrollbar-width: none;  /* Firefox */
+      &::-webkit-scrollbar {
+        display: none;
       }
-    }
-    form article {
-      width: 90%;
+      section {
+        h1 {
+          text-align: center;
+        }
+      }
+      form article {
+        width: 90%;
+      }
+      footer section {
+        padding: 16px;
+      }
     }
   }
 }
