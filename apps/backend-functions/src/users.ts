@@ -152,7 +152,7 @@ export async function onUserUpdate(change: functions.Change<FirebaseFirestore.Do
       tags.push(...removedTags);
     }
   }
-  if (tags.length) updateMemberTags(after.email, tags)
+  if (tags.length) updateMemberTags(after.email, tags);
 
   // if name, email, avatar or orgId has changed : update algolia record
   if (
