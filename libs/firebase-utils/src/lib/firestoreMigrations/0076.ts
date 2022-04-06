@@ -1,5 +1,6 @@
 import { Firestore } from '../types';
 import { createUser } from '@blockframes/model';
+import { production } from '@env';
 import * as mailchimp from '@mailchimp/mailchimp_marketing';
 
 const mailchimpAPIKey = process.env.MAILCHIMP_API_KEY;
@@ -35,7 +36,9 @@ export async function upgrade(db: Firestore) {
 
   for (let i = 0; i < users.docs.length; i++) {
     const user = createUser(users.docs[i].data());
-
+    
+    const isBlockframeEmail = ['dev+', 'concierge+', 'blockframes.io'].some(str => user.email.includes(str));
+    if(production && !isBlockframeEmail) continue;
     const member = {
       email_address: user.email,
       status: 'subscribed'
