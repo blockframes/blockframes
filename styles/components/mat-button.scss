@@ -180,6 +180,10 @@
   tunnel-page section article button[mat-mini-fab] .mat-button-wrapper {
     padding: 0;
   }
+
+  .translucent-button {
+    background: rgba(mat.get-color-from-palette($primary), .16);
+  }
 }
 
 // TYPOGRAPHY

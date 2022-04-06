@@ -1,13 +1,13 @@
 <ng-container *ngIf="!small; else smallButton">
 
   <ng-container *ngIf="(toggle$ | async); else alreadyAdded">
-    <button test-id="heart-button" mat-button (click)="removeFromWishlist($event)">
-      <mat-icon color="warn" svgIcon="favorite_filled"></mat-icon>
+    <button test-id="heart-button" class="translucent-button" mat-button (click)="removeFromWishlist($event)">
+      <mat-icon svgIcon="favorite_filled"></mat-icon>
       <span class="mat-caption">Remove from Wishlist</span>
     </button>
   </ng-container>
   <ng-template #alreadyAdded>
-    <button test-id="heart-button" mat-button (click)="addToWishlist($event)">
+    <button test-id="heart-button" class="translucent-button" mat-button (click)="addToWishlist($event)">
       <mat-icon svgIcon="favorite_border"></mat-icon>
       <span class="mat-caption">Add to Wishlist</span>
     </button>
@@ -17,19 +17,13 @@
 <ng-template #smallButton>
 
   <ng-container *ngIf="(toggle$ | async); else alreadyAddedSmall">
-    <button test-id="heart-button" mat-icon-button (click)="removeFromWishlist($event)">
-      <mat-icon color="warn" svgIcon="favorite_filled"></mat-icon>
-      <span>
-        <ng-content select="wishlist-remove-text"></ng-content>
-      </span>
+    <button test-id="heart-button" class="translucent-button" mat-icon-button (click)="removeFromWishlist($event)">
+      <mat-icon svgIcon="favorite_filled"></mat-icon>
     </button>
   </ng-container>
   <ng-template #alreadyAddedSmall>
-    <button test-id="heart-button" mat-icon-button (click)="addToWishlist($event)">
+    <button test-id="heart-button" class="translucent-button" mat-icon-button (click)="addToWishlist($event)">
       <mat-icon svgIcon="favorite_border"></mat-icon>
-      <span>
-        <ng-content select="wishlist-add-text"></ng-content>
-      </span>
     </button>
   </ng-template>
 
