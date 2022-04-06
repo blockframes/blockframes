@@ -164,6 +164,10 @@ export class ListComponent implements OnDestroy, OnInit {
     }
 
     availResults.forEach(({ match: term, avail }, index) => {
+      /**
+       * required to give firebase enough time to store and
+       * retrieve data stored during the previous iteration.
+       */
       setTimeout(() => {
         this.bucketService.addTerm(title.objectID, term.id, avail);
       }, index * 1000);

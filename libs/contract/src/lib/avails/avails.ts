@@ -590,13 +590,7 @@ export function durationAvailabilities(
       from: periodAvailable.from,
       to: periodAvailable.to,
       contract: m,
-      term: {
-        ...t,
-        duration: {
-          from: periodAvailable.from,
-          to: periodAvailable.to
-        }
-      }
+      term: t
     }));
   }).flat();
 
