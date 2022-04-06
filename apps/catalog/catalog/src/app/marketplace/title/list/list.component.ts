@@ -157,19 +157,17 @@ export class ListComponent implements OnDestroy, OnInit {
       return;
     }
 
-    const [parentTerm] = getMandateTerms(this.availsForm.value, title.mandates[0].terms);
-    if (!parentTerm) {
+    const availResults = getMandateTerms(this.availsForm.value, title.mandates);
+    if (!availResults.length) {
       this.snackbar.open('This title is not available', 'close', { duration: 5000 });
       return;
     }
 
-    /**
-     * @Continue from here:
-     * 1. Break up the availResearch passed to addTerm to multiple sub avails.
-     * 2. Ensure each sub avail get's the corresponding parentTerm.id it matched with.
-     * A better place to do this is the `getMandateTerms` method called above.
-     */
-    this.bucketService.addTerm(title.objectID, parentTerm.id, this.availsForm.value);
+    availResults.forEach(({ match: term, avail }, index) => {
+      setTimeout(() => {
+        this.bucketService.addTerm(title.objectID, term.id, avail);
+      }, index * 1000);
+    });
 
     this.snackbar.open(`${title.title.international} was added to your Selection`, 'GO TO SELECTION', { duration: 4000 })
       .onAction()

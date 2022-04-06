@@ -109,7 +109,7 @@ export class BucketService extends CollectionService<BucketState> {
       });
 
       // Add the default negotiation.
-       this.contractService.addNegotiation(contractId, {
+      this.contractService.addNegotiation(contractId, {
         ...contract,
         ...commonFields,
         initial: new Date(),
