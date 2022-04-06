@@ -163,15 +163,9 @@ export class ListComponent implements OnDestroy, OnInit {
       return;
     }
 
-    availResults.forEach(({ match: term, avail }, index) => {
-      /**
-       * required to give firebase enough time to store and
-       * retrieve data stored during the previous iteration.
-       */
-      setTimeout(() => {
-        this.bucketService.addTerm(title.objectID, term.id, avail);
-      }, index * 1000);
-    });
+    for (const { match: term, avail } of availResults) {
+      await this.bucketService.addTerm(title.objectID, term.id, avail);
+    }
 
     this.snackbar.open(`${title.title.international} was added to your Selection`, 'GO TO SELECTION', { duration: 4000 })
       .onAction()
