@@ -181,7 +181,7 @@
     padding: 0;
   }
 
-  .translucent-button {
+  button.translucent, a.translucent {
     background: rgba(mat.get-color-from-palette($primary), .16);
   }
 }
