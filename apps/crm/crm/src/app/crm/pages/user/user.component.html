@@ -154,6 +154,14 @@
   <ng-template colRef="status" label="Status" let-status sort>
     {{status}}
   </ng-template>
+  <ng-template colRef label="Action" let-event sticky>
+    <a [routerLink]="goTo(event)" mat-icon-button matTooltip="Open">
+      <mat-icon svgIcon="visibility"></mat-icon>
+    </a>
+    <button mat-icon-button [cdkCopyToClipboard]="event.eventId" (click)="$event.stopPropagation()">
+      <mat-icon svgIcon="file_copy"></mat-icon>
+    </button>
+  </ng-template>
 </bf-table>
 
 <crm-dashboard dashboard="user" [params]="{ 'ds2.user_id': userId }"></crm-dashboard>
