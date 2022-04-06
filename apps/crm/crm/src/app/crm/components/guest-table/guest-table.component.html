@@ -1,12 +1,9 @@
 <bf-table [source]="_invitations" useFilter pagination="100">
+  <ng-template colRef="id" label="Id" let-invitId>
+    {{ invitId }}
+  </ng-template>
   <ng-template colRef="date" label="Invitation date" let-date sort>
     {{ date | date: 'medium'}}
-  </ng-template>
-  <ng-template colRef="org" label="Org" let-org>
-    <a [routerLink]="['/c/o/dashboard/crm/organization', org.id]">
-      <span>{{ org | orgName:'long' }} </span>
-      <mat-icon svgIcon="visibility"></mat-icon>
-    </a>
   </ng-template>
   <ng-template colRef="guestOrg" label="Guest org" let-guestOrg>
     <ng-container *ngIf="guestOrg else noOrg">
@@ -17,19 +14,25 @@
     </ng-container>
     <ng-template #noOrg>--</ng-template>
   </ng-template>
-  <ng-template colRef="event.id" label="" let-eventId>
-    <a [routerLink]="['/c/o/dashboard/crm/event', eventId]">
+  <ng-template label="First Name" colRef="guest.firstName" let-firstName>
+    {{ firstName }}
+  </ng-template>
+  <ng-template label="Last Name" colRef="guest.lastName" let-lastName>
+    {{ lastName }}
+  </ng-template>
+  <ng-template label="Email" colRef="guest.email" let-email>
+    {{ email }}
+  </ng-template>
+  <ng-template label="User" colRef="guest.uid" let-uid>
+    <a mat-icon-button [routerLink]="['/c/o/dashboard/crm/user', uid]">
       <mat-icon svgIcon="visibility"></mat-icon>
     </a>
   </ng-template>
-  <ng-template colRef="event.start" label="Event start" let-start sort>
-    {{ start | date: 'medium'}}
-  </ng-template>
-  <ng-template colRef="event.end" label="Event end" let-end sort>
-    {{ end | date: 'medium'}}
-  </ng-template>
-  <ng-template colRef="event.accessibility" label="Accessibility" let-accessibility>
+  <ng-template colRef="event.accessibility" label="Accessibility" let-accessibility sort>
     {{ accessibility | toLabel:'accessibility' }}
+  </ng-template>
+  <ng-template colRef="status" label="Status" let-status sort>
+    {{ status | titlecase }}
   </ng-template>
   <ng-template colRef="movie" label="Movie" let-movie>
     <div *ngIf="movie else noMovie" fxLayout="row">

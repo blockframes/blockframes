@@ -19,4 +19,8 @@ export class GuestTableComponent {
       });
     }
   }
+
+  console(any: any) {
+    console.log(any)
+  }
 }
