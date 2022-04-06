@@ -1,40 +1,34 @@
 <bf-table [source]="_invitations" useFilter pagination="100">
+  {{ console(_invitations) }}
+
   <ng-template colRef="id" label="Id" let-invitId>
     {{ invitId }}
   </ng-template>
-  <ng-template colRef="date" label="Invitation date" let-date sort>
-    {{ date | date: 'medium'}}
-  </ng-template>
-  <ng-template colRef="guestOrg" label="Guest org" let-guestOrg>
-    <ng-container *ngIf="guestOrg else noOrg">
-      <a [routerLink]="['/c/o/dashboard/crm/organization', guestOrg.id]">
-        <span>{{ guestOrg | orgName:'long' }} </span>
-        <mat-icon svgIcon="visibility"></mat-icon>
-      </a>
-    </ng-container>
-    <ng-template #noOrg>--</ng-template>
-  </ng-template>
-  <ng-template label="First Name" colRef="guest.firstName" let-firstName>
-    {{ firstName }}
-  </ng-template>
-  <ng-template label="Last Name" colRef="guest.lastName" let-lastName>
-    {{ lastName }}
-  </ng-template>
-  <ng-template label="Email" colRef="guest.email" let-email>
-    {{ email }}
-  </ng-template>
-  <ng-template label="User" colRef="guest.uid" let-uid>
-    <a mat-icon-button [routerLink]="['/c/o/dashboard/crm/user', uid]">
+
+  <ng-template *ngIf="showOrganization" colRef="org" label="Organization" let-org>
+    <a [routerLink]="['/c/o/dashboard/crm/organization', org.id]">
+      <span>{{ org | orgName:'long' }} </span>
       <mat-icon svgIcon="visibility"></mat-icon>
     </a>
   </ng-template>
-  <ng-template colRef="event.accessibility" label="Accessibility" let-accessibility sort>
-    {{ accessibility | toLabel:'accessibility' }}
+
+  <ng-template *ngIf="showEvent" label="Event Title" colRef="event.title" let-title>
+    {{ title }}
   </ng-template>
-  <ng-template colRef="status" label="Status" let-status sort>
-    {{ status | titlecase }}
+
+  <ng-template *ngIf="showEvent" colRef="event.start" label="Event start" let-start sort>
+    {{ start | date: 'medium'}}
   </ng-template>
-  <ng-template colRef="movie" label="Movie" let-movie>
+
+  <ng-template *ngIf="showEvent" colRef="event.end" label="Event end" let-end sort>
+    {{ end | date: 'medium'}}
+  </ng-template>
+
+  <ng-template *ngIf="showEvent" label="Event Type" colRef="event.type" let-type>
+    {{ type | titlecase }}
+  </ng-template>
+
+  <ng-template *ngIf="showMovie" colRef="movie" label="Movie" let-movie>
     <div *ngIf="movie else noMovie" fxLayout="row">
       <ng-container *ngIf="movie.poster as poster;">
         <img class="poster" [ref]="poster" asset="empty_poster.svg">
@@ -45,5 +39,49 @@
       </a>
     </div>
     <ng-template #noMovie>--</ng-template>
-  </ng-template>>
+  </ng-template>
+
+  <ng-template colRef="event.accessibility" label="Accessibility" let-accessibility sort>
+    {{ accessibility | toLabel:'accessibility' }}
+  </ng-template>
+
+  <ng-template colRef="guestOrg" label="Guest org" let-guestOrg>
+    <ng-container *ngIf="guestOrg else noOrg">
+      <a [routerLink]="['/c/o/dashboard/crm/organization', guestOrg.id]">
+        <span>{{ guestOrg | orgName:'long' }} </span>
+        <mat-icon svgIcon="visibility"></mat-icon>
+      </a>
+    </ng-container>
+    <ng-template #noOrg>--</ng-template>
+  </ng-template>
+
+  <ng-template *ngIf="showUser" label="First Name" colRef="guest.firstName" let-firstName>
+    {{ firstName }}
+  </ng-template>
+
+  <ng-template *ngIf="showUser" label="Last Name" colRef="guest.lastName" let-lastName>
+    {{ lastName }}
+  </ng-template>
+
+  <ng-template *ngIf="showUser" label="Email" colRef="guest.email" let-email>
+    {{ email }}
+  </ng-template>
+
+  <ng-template *ngIf="showUser" label="User" colRef="guest.uid" let-uid>
+    <a mat-icon-button [routerLink]="['/c/o/dashboard/crm/user', uid]">
+      <mat-icon svgIcon="visibility"></mat-icon>
+    </a>
+  </ng-template>
+
+  <ng-template colRef="date" label="Invitation date" let-date sort>
+    {{ date | date: 'medium'}}
+  </ng-template>
+
+  <ng-template *ngIf="showInvitationMode" colRef="mode" label="Mode" let-mode sort>
+    {{ mode | titlecase }}
+  </ng-template>
+
+  <ng-template colRef="status" label="Status" let-status sort>
+    {{ status | titlecase }}
+  </ng-template>
 </bf-table>
