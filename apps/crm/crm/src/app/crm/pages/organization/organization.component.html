@@ -62,16 +62,8 @@
 
     <mat-card fxFlex>
       <h2>Movies</h2>
-      <bf-table
-        [source]="movies"
-        pagination="50"
-        useFilter
-        clickable
-        (rowClick)="goToMovieEdit($event)">
-        <ng-template colRef="id" label="Id" let-id sort>
-          {{id}}
-        </ng-template>
-        <ng-template colRef="poster" label="Internal Ref" let-posters>
+      <bf-table [source]="movies" pagination="50" useFilter clickable (rowClick)="goToMovieEdit($event)">
+        <ng-template colRef="poster" label="Poster" let-posters>
           <ng-container *ngIf="posters.storagePath; else noposter">
             <img class="poster" [ref]="posters" asset="empty_poster.svg">
           </ng-container>
@@ -79,14 +71,21 @@
             --
           </ng-template>
         </ng-template>
-        <ng-template colRef="internalRef" label="Poster" let-internalRef sort>
-          {{internalRef}}
+        <ng-template colRef="id" label="Id" let-id sort>
+          {{ id }}
         </ng-template>
         <ng-template colRef="title.international" label="International title" let-international sort>
-          {{international}}
+          {{ international | maxLength:50 }}
         </ng-template>
         <ng-template colRef="releaseYear" label="Release year" let-releaseYear sort>
-          {{releaseYear}}
+          {{ releaseYear }}
+        </ng-template>
+        <ng-template colRef="app" label="Status" let-appAccess>
+          <ul>
+            <li *ngFor="let a of app">
+              {{ a | appName:'short' }} : {{ appAccess[a]?.status | titlecase }}
+            </li>
+          </ul>
         </ng-template>
       </bf-table>
     </mat-card>

@@ -29,6 +29,7 @@ import { AdminOrganizationFormModule } from '../../components/organization/forms
 import { FileExplorerModule } from '@blockframes/media/file/explorer/explorer.module';
 import { BreadCrumbModule } from '../../components/bread-crumb/bread-crumb.module';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
+import { AppPipeModule, ToLabelModule, MaxLengthModule } from '@blockframes/utils/pipes';
 
 @NgModule({
   imports: [
@@ -55,6 +56,9 @@ import { TableModule } from '@blockframes/ui/list/table/table.module';
     GoToModule,
     AdminOrganizationFormModule,
     FileExplorerModule,
+    AppPipeModule,
+    ToLabelModule,
+    MaxLengthModule,
     BreadCrumbModule
   ],
   declarations: [
