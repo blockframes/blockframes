@@ -167,7 +167,6 @@
             "buildLibsFromSource": true
           },
           "configurations": {
-            "ci": {},
             "production": {
               "optimization": true,
               "extractLicenses": true,
@@ -179,19 +178,7 @@
                 }
               ]
             },
-            "staging": {
-              "optimization": true,
-              "extractLicenses": true,
-              "inspect": false,
-              "fileReplacements": [
-                {
-                  "replace": "apps/backend-functions/src/environments/environment.ts",
-                  "with": "apps/backend-functions/src/environments/environment.prod.ts"
-                }
-              ]
-            },
             "e2e": {
-              "optimization": true,
               "fileReplacements": [
                 {
                   "replace": "apps/backend-functions/src/environments/environment.ts",
@@ -242,15 +229,6 @@
             ],
             "parallel": false,
             "color": true
-          },
-          "configurations": {
-            "staging": {
-              "commands": [
-                "npx nx build backend-functions --configuration=staging",
-                "npx npm run deploy:functions:config blockframes-staging",
-                "npx cross-env SKIP_PREDEPLOY_HOOKS=true firebase deploy --project=blockframes-staging --force --only functions"
-              ]
-            }
           }
         }
       }
@@ -367,12 +345,6 @@
               ]
             },
             "production": {
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.blockframes.ts"
-                }
-              ],
               "optimization": true,
               "outputHashing": "all",
               "extractCss": true,
@@ -394,60 +366,6 @@
               ],
               "serviceWorker": true,
               "ngswConfigPath": "apps/catalog/catalog/ngsw-config.json"
-            },
-            "ci": {
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.blockframes-ci.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "extractCss": true,
-              "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "6mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb"
-                }
-              ],
-              "serviceWorker": false
-            },
-            "staging": {
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.blockframes-staging.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "extractCss": true,
-              "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "6mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb"
-                }
-              ],
-              "serviceWorker": false
             }
           }
         },
@@ -459,9 +377,6 @@
           "configurations": {
             "emulator": {
               "browserTarget": "catalog:build:emulator"
-            },
-            "production": {
-              "browserTarget": "catalog:build:production"
             }
           }
         },
@@ -494,14 +409,6 @@
             ],
             "parallel": false,
             "color": true
-          },
-          "configurations": {
-            "staging": {
-              "commands": [
-                "npx nx build catalog --configuration=staging",
-                "npx firebase deploy --project=blockframes-staging --only hosting:catalog"
-              ]
-            }
           }
         }
       }
@@ -625,12 +532,6 @@
               ]
             },
             "production": {
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.blockframes.ts"
-                }
-              ],
               "optimization": true,
               "outputHashing": "all",
               "extractCss": true,
@@ -650,60 +551,6 @@
                   "maximumError": "10kb"
                 }
               ]
-            },
-            "ci": {
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.blockframes-ci.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "extractCss": true,
-              "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "6mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb"
-                }
-              ],
-              "serviceWorker": false
-            },
-            "staging": {
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.blockframes-staging.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "extractCss": true,
-              "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "6mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb"
-                }
-              ],
-              "serviceWorker": false
             }
           }
         },
@@ -715,9 +562,6 @@
           "configurations": {
             "emulator": {
               "browserTarget": "festival:build:emulator"
-            },
-            "production": {
-              "browserTarget": "festival:build:production"
             }
           }
         },
@@ -750,14 +594,6 @@
             ],
             "parallel": false,
             "color": true
-          },
-          "configurations": {
-            "staging": {
-              "commands": [
-                "npx nx build festival --configuration=staging",
-                "npx firebase deploy --project=blockframes-staging --only hosting:festival"
-              ]
-            }
           }
         }
       }
@@ -1000,12 +836,6 @@
               ]
             },
             "production": {
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.blockframes.ts"
-                }
-              ],
               "optimization": true,
               "outputHashing": "all",
               "extractCss": true,
@@ -1025,60 +855,6 @@
                   "maximumError": "10kb"
                 }
               ]
-            },
-            "ci": {
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.blockframes-ci.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "extractCss": true,
-              "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "6mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb"
-                }
-              ],
-              "serviceWorker": false
-            },
-            "staging": {
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.blockframes-staging.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "extractCss": true,
-              "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "6mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb"
-                }
-              ],
-              "serviceWorker": false
             }
           }
         },
@@ -1090,9 +866,6 @@
           "configurations": {
             "emulator": {
               "browserTarget": "crm:build:emulator"
-            },
-            "production": {
-              "browserTarget": "crm:build:production"
             }
           }
         },
@@ -1125,14 +898,6 @@
             ],
             "parallel": false,
             "color": true
-          },
-          "configurations": {
-            "staging": {
-              "commands": [
-                "npx nx build crm --configuration=staging",
-                "npx firebase deploy --project=blockframes-staging --only hosting:crm"
-              ]
-            }
           }
         }
       }
@@ -1290,12 +1055,6 @@
               ]
             },
             "production": {
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.blockframes.ts"
-                }
-              ],
               "optimization": true,
               "outputHashing": "all",
               "extractCss": true,
@@ -1317,30 +1076,6 @@
               ],
               "serviceWorker": true,
               "ngswConfigPath": "apps/financiers/financiers/ngsw-config.json"
-            },
-            "ci": {
-              "outputHashing": "media",
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.blockframes-ci.ts"
-                }
-              ]
-            },
-            "staging": {
-              "optimization": true,
-              "outputHashing": "all",
-              "extractCss": true,
-              "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.blockframes-staging.ts"
-                }
-              ]
             }
           }
         },
@@ -1352,9 +1087,6 @@
           "configurations": {
             "emulator": {
               "browserTarget": "financiers:build:emulator"
-            },
-            "production": {
-              "browserTarget": "financiers:build:production"
             }
           }
         },
@@ -1388,14 +1120,6 @@
             ],
             "parallel": false,
             "color": true
-          },
-          "configurations": {
-            "staging": {
-              "commands": [
-                "npx nx build financiers --configuration=staging",
-                "npx firebase deploy --project blockframes-staging --only hosting:financiers"
-              ]
-            }
           }
         }
       }
@@ -1528,12 +1252,6 @@
               ]
             },
             "production": {
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.blockframes.ts"
-                }
-              ],
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -1554,36 +1272,7 @@
                   "maximumError": "10kb"
                 }
               ]
-            },
-            "staging": {
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.blockframes-staging.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb",
-                  "maximumError": "10kb"
-                }
-              ]
-            },
-            "ci": {}
+            }
           }
         },
         "serve": {
@@ -1594,9 +1283,6 @@
           "configurations": {
             "emulator": {
               "browserTarget": "cms:build:emulator"
-            },
-            "production": {
-              "browserTarget": "cms:build:production"
             }
           }
         },
@@ -1622,10 +1308,6 @@
             ],
             "parallel": false,
             "color": true
-          },
-          "configurations": {
-            "production": {},
-            "staging": {}
           }
         }
       }

@@ -81,38 +81,55 @@ async function findSAKFilename(dirPath: string, projectId: string) {
 
 export async function selectEnvironment(projectId: string) {
   if (!projectId) throw Error('Please specify a project ID!');
-  console.log('Selecting project ID:', projectId);
-
-  await updateDotenv('PROJECT_ID', projectId);
-
-  await updateSAKPathInDotenv(projectId);
 
   let cmd: string;
   let output: string;
+  const isDemo = projectId.startsWith('demo-');
 
-  cmd = `firebase use ${projectId}`;
-  console.log('Run:', cmd);
-  await runShellCommand(cmd);
+  console.log('Selecting project ID:', projectId);
 
-  cmd = `gcloud config set pass_credentials_to_gsutil true`;
-  console.log('Run:', cmd);
-  await runShellCommand(cmd);
+  if (isDemo) console.log('DETECTED DEMO PROJECT NAME!')
 
-  cmd = `gcloud auth activate-service-account --key-file=${process.env[SAKKeyName]}`;
-  console.log('Run:', cmd);
-  output = execSync(cmd).toString();
-  console.log(output);
+  await updateDotenv('PROJECT_ID', projectId);
 
-  cmd = `gcloud --quiet config set project ${projectId}`;
-  console.log('Run:', cmd);
-  output = execSync(cmd).toString();
-  console.log(output);
+  if (!isDemo) await updateSAKPathInDotenv(projectId)
+  else updateDotenv('GOOGLE_APPLICATION_CREDENTIALS', '');
 
-  const fileName = `env.${projectId}`;
-  const envLine = `export * from 'env/${fileName}'`;
-  const localEnvFile = join(process.cwd(), 'env', 'env.ts');
-  await writeFile(localEnvFile, envLine);
-  console.log(`env.ts file now contains: ${envLine} `);
+  if (!isDemo) await setFirebaseToolsProject();
+
+  if (!isDemo) await setGcloudProject();
+
+  await updateEnvFile();
+
+  async function updateEnvFile() {
+    const fileName = `env.${projectId}`;
+    const envLine = `export * from 'env/${fileName}'`;
+    const localEnvFile = join(process.cwd(), 'env', 'env.ts');
+    await writeFile(localEnvFile, envLine);
+    console.log(`env.ts file now contains: ${envLine} `);
+  }
+
+  async function setGcloudProject() {
+    cmd = `gcloud config set pass_credentials_to_gsutil true`;
+    console.log('Run:', cmd);
+    await runShellCommand(cmd);
+
+    cmd = `gcloud auth activate-service-account --key-file=${process.env[SAKKeyName]}`;
+    console.log('Run:', cmd);
+    output = execSync(cmd).toString();
+    console.log(output);
+
+    cmd = `gcloud --quiet config set project ${projectId}`;
+    console.log('Run:', cmd);
+    output = execSync(cmd).toString();
+    console.log(output);
+  }
+
+  async function setFirebaseToolsProject() {
+    cmd = `firebase use ${projectId}`;
+    console.log('Run:', cmd);
+    await runShellCommand(cmd);
+  }
 }
 
 /**

@@ -15,4 +15,4 @@ async function predeploy() {
   }
 }
 
-predeploy().then(() => process.exit(0));
+predeploy().then(() => process.exit(0)).catch(() => process.exit(1));

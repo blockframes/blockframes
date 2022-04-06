@@ -1,6 +1,6 @@
 {
   "projects": {
-    "default": "blockframes-test",
+    "default": "demo-blockframes",
     "prod": "blockframes",
     "staging": "blockframes-staging",
     "francois": "blockframes-francois",
@@ -62,13 +62,6 @@
         ],
         "cms": [
           "blockframes-ci-cms"
-        ]
-      }
-    },
-    "blockframes-test": {
-      "hosting": {
-        "catalog": [
-          "blockframes-test"
         ]
       }
     },
