@@ -6,9 +6,9 @@
 
       <bf-form-table [columns]="castColumns" [form]="cast">
         <ng-template colRef="status" let-status>{{ status ? (status | toLabel: 'memberStatus') : 'Confirmed' }}</ng-template>
-        <ng-template colRef="description" let-description>{{ description | maxLength: 80 }}</ng-template>
+        <ng-template colRef="description" let-description>{{ description | maxLength: 75 }}</ng-template>
         <ng-template colRef="filmography" let-filmography>
-          <span *ngFor="let film of filmography">{{ film | filmography }} </span>
+          {{ memberFilmography(filmography) | maxLength: 50 }}
         </ng-template>
         <ng-template formView let-castForm>
           <article [formGroup]="castForm" fxLayout="column" fxLayoutGap="24px">
@@ -74,10 +74,10 @@
 
       <bf-form-table [columns]="crewColumns" [form]="crew">
         <ng-template colRef="status" let-status>{{ status ? (status | toLabel: 'memberStatus') : 'Confirmed' }}</ng-template>
-        <ng-template colRef="description" let-description>{{ description | maxLength: 80 }}</ng-template>
+        <ng-template colRef="description" let-description>{{ description | maxLength: 75 }}</ng-template>
         <ng-template colRef="role" let-role>{{ role | toLabel:'crewRoles' }}</ng-template>
         <ng-template colRef="filmography" let-filmography>
-          <span *ngFor="let film of filmography">{{ film | filmography }} </span>
+          {{ memberFilmography(filmography) | maxLength: 50 }}
         </ng-template>
         <ng-template formView let-crewForm>
           <article [formGroup]="crewForm" fxLayout="column" fxLayoutGap="24px">

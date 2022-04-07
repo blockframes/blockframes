@@ -203,14 +203,13 @@
       <h3>Director(s)*</h3>
 
       <bf-form-table [columns]="displayedColumns" [form]="form.directors">
-        <ng-template colRef="description" let-description>{{ description | maxLength: 80 }}</ng-template>
+        <ng-template colRef="description" let-description>{{ description | maxLength: 75 }}</ng-template>
         <ng-template colRef="status" let-status>{{ status ? (status | toLabel: 'memberStatus') : 'Confirmed' }}
         </ng-template>
         <ng-template colRef="category" let-category>{{ category | toLabel: 'directorCategory' }}
         </ng-template>
         <ng-template colRef="filmography" let-filmography>
-          <ng-container *ngFor="let film of filmography">{{ film | filmography }}
-          </ng-container>
+          {{ directorFilmography(filmography) | maxLength: 50 }}
         </ng-template>
         <ng-template formView let-directorForm>
           <article [formGroup]="directorForm">

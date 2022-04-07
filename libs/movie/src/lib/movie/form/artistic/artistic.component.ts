@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MovieFormShellComponent } from '../shell/shell.component';
+import { Filmography } from '@blockframes/model';
 
 @Component({
   selector: 'movie-form-artistic',
@@ -41,4 +42,7 @@ export class MovieFormArtisticComponent {
     return this.form.cast;
   }
 
+  public memberFilmography(filmography?: Filmography[]) {
+    return filmography.map(film => `${film.title} (${film.year})`).join(", ");
+  }
 }
