@@ -170,6 +170,15 @@ executors:
     working_directory: ~/repo
     resource_class: large
 jobs:
+  clean-backups:
+    executor: blockframes-ci
+    environment:
+      PROJECT_ID: blockframes-ci
+    steps:
+      - prepare_environment
+      - run: npm start cleanBackups 45 gs://blockframes-ci-storage-backup
+      - run: npm start use blockframes
+      - run: npm start cleanBackups 45 gs://blockframes-backups
   build-deploy-prepare-branch-against-selected-env:
     executor: blockframes-ci
     environment:
@@ -405,6 +414,7 @@ workflows:
               only:
                 - develop
     jobs:
+      - clean-backups
       - copy-storage-from-prod
       - push-anon-db-to-ci:
           requires:
