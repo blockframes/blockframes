@@ -163,10 +163,10 @@ export class ListComponent implements OnDestroy, OnInit {
       return;
     }
 
-    const results = availResults.map(({ mandateOrTerm: term, avail }) => ({
+    const results = availResults.map(res => ({
       titleId: title.objectID,
-      parentTermId: term.id,
-      avail
+      parentTermId: res.term.id,
+      avail: res.avail
     }));
 
     this.bucketService.addBatchTerms(results);
