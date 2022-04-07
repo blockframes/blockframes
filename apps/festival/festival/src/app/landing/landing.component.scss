@@ -104,7 +104,7 @@ landing-content {
   }
   
 
-  .opinions > div {
+  .opinion {
     padding: 24px 56px;
     background-color: var(--background-card);
     img {
@@ -201,7 +201,7 @@ landing-app-link {
     }
     .landing-clients-opinion {
       padding: 16px;
-      .opinions > div {
+      .opinion {
         text-align: start;
         padding: 24px;
       }

@@ -112,9 +112,9 @@
 
     <section class="landing-clients-opinion max-width" fxLayout="column" fxLayoutGap="24px">
       <h2 class="mat-display-1">What our clients say</h2>
-      <article class="opinions" fxLayout.lt-lg="column" fxLayoutAlign="center stretch" fxLayoutGap="24px">
+      <article fxLayout.lt-lg="column" fxLayoutAlign="center stretch" fxLayoutGap="24px">
         <ng-container *ngFor="let opinion of clientOpinion">
-          <div fxLayout="column" fxLayoutAlign="center" fxFlex>
+          <div class="opinion" fxLayout="column" fxLayoutAlign="center" fxFlex>
             <h3>{{opinion.name}}</h3>
             <p>{{opinion.jobTitle}}</p>
             <p class="mat-body-1">{{opinion.text}}</p>
