@@ -285,7 +285,7 @@ export function availableTitle(
   // if there is at least one sale that match the avails, the title is not available
   if (bucketSalesToExclude.length) return [];
 
-  return availableMandates.map(({ mandate: match }) => match);
+  return availableMandates.map(({ mandate }) => mandate);
 }
 
 // ----------------------------
