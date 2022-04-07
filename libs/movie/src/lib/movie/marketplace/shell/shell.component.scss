@@ -1,3 +1,5 @@
+@import "~@angular/flex-layout/mq";
+
 nav {
   margin: 0 24px;
 }
@@ -23,6 +25,12 @@ footer {
     }
   }
 
+  #videoFooter div {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 16px;
+  }
+
   .video-container {
     margin: 0 24px;
     video-viewer {
@@ -32,6 +40,20 @@ footer {
     p {
       padding-top: 8px;
       text-align: center;
+    }
+  }
+}
+
+
+
+@include layout-bp(lt-sm) {
+  footer {
+    .video-container {
+      margin: 0;
+    }
+    #videoFooter div {
+      display: flex;
+      flex-direction: column;
     }
   }
 }

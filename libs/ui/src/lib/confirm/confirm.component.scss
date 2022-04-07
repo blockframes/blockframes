@@ -1,3 +1,5 @@
+@import "~@angular/flex-layout/mq";
+
 :host {
   display: block;
 }
@@ -23,4 +25,10 @@ button {
 
 button.close {
   aspect-ratio: 1;
+}
+
+@include layout-bp(lt-sm) {
+  section {
+    padding: 0;
+  }
 }

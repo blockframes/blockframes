@@ -1,5 +1,6 @@
 @use 'sass:map';
 @use '~@angular/material' as mat;
+@import "~@angular/flex-layout/mq";
 
 @mixin color($theme) {
   $config: mat.get-color-config($theme);
@@ -11,6 +12,12 @@
       position: absolute;
       top: 0;
       right: 0;
+    }
+  }
+
+  @include layout-bp(lt-sm) {
+    .mat-dialog-container { 
+      padding-inline: 24px;
     }
   }
 }

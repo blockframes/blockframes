@@ -1,5 +1,5 @@
 header {
-  padding: 48px;
+  padding: clamp(16px, 5vw, 48px);
   padding-bottom: 0px; // Remove padding for filters
   background-position: center center;
   background-size: cover;
@@ -20,11 +20,11 @@ header {
   z-index: 2;
   background-position: center center;
   background-size: cover;
-  padding: 16px 64px;
+  padding: 16px clamp(16px, 5vw, 64px);
 }
 
 section {
-  padding: 24px;
+  padding: clamp(8px, 3vw, 24px);
   width: 100%;
   img {
     width: 500px;
