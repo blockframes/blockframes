@@ -1,6 +1,6 @@
 
 import { emulatorConfig } from '../environment/environment';
-import { firebase } from '@env';
+import { firebase, firebaseRegion } from '@env';
 import { FormFactoryModule } from 'ng-form-factory';
 
 // Angular
@@ -19,6 +19,7 @@ import { connectFirestoreEmulator, initializeFirestore, provideFirestore } from 
 import { providePerformance, getPerformance } from '@angular/fire/performance';
 import { provideAuth, getAuth, connectAuthEmulator } from '@angular/fire/auth';
 import { provideStorage, getStorage } from '@angular/fire/storage';
+import { connectFunctionsEmulator, getFunctions, provideFunctions } from '@angular/fire/functions';
 
 // Blockframes
 import { CmsModule } from './cms.module';
@@ -47,6 +48,13 @@ import { APP } from '@blockframes/utils/routes/utils';
         connectAuthEmulator(auth, `http://${emulatorConfig.auth.host}:${emulatorConfig.auth.port}`);
       }
       return auth;
+    }),
+    provideFunctions(() => {
+      const functions = getFunctions(getApp(), firebaseRegion);
+      if (emulatorConfig.functions) {
+        connectFunctionsEmulator(functions, emulatorConfig.functions.host, emulatorConfig.functions.port);
+      }
+      return functions;
     }),
     provideStorage(() => getStorage()),
 
