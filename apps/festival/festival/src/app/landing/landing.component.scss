@@ -17,11 +17,6 @@ landing-header {
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center center;  
-
-    button {
-      background: none;
-      border: none;
-    }
   }
 }
 
@@ -30,7 +25,7 @@ landing-content {
     margin-bottom: 12px;
   }
   
-  #landing-partners {
+  .landing-partners {
     background-color: var(--background-card);
     article {
       padding: 80px;
@@ -190,7 +185,7 @@ landing-app-link {
   }
 
   landing-content {
-    #landing-partners {
+    .landing-partners {
       article {
         padding: 16px;
       }

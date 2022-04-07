@@ -54,7 +54,7 @@ export class LandingShellComponent implements OnDestroy {
   public submitted = false;
   public newslettersSubmitted = false;
   public buttonText = 'Submit Demo Request';
-  ltSm$ = this.breakpointsService.ltSm;
+  ltMd$ = this.breakpointsService.ltMd;
 
   @Input() roles: RequestDemoRole[] = [
     'buyer',

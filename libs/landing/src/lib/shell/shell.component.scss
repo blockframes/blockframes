@@ -26,14 +26,12 @@ landing-shell-page {
 
     nav {
       width: 100%;
-      a:nth-child(2) {
-        margin-right: auto;
-      }
 
       #demo-link {
         letter-spacing: 0.5px;
         line-height: 24px;
         font-weight: 600;
+        margin-right: auto;
       }
     }
   }
@@ -168,17 +166,10 @@ landing-shell-page {
     }
 
     main {
-      scrollbar-width: none;  /* Firefox */
-      &::-webkit-scrollbar {
-        display: none;
-      }
       section {
         h1 {
           text-align: center;
         }
-      }
-      form article {
-        width: 90%;
       }
       footer section {
         padding: 16px;
