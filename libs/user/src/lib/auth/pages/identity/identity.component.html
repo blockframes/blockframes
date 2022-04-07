@@ -15,7 +15,7 @@
         <mat-form-field class="email-input" appearance="outline" fxFlex>
           <mat-icon matPrefix svgIcon="mail"></mat-icon>
           <mat-label>Email Address</mat-label>
-          <input matInput type="email" aria-label="email" formControlName="email" email test-id="email">
+          <input matInput type="email" aria-label="email" formControlName="email" email required test-id="email">
           <mat-error *ngIf="form.get('email').hasError('required')">
             Email Address is <strong>required</strong>.
           </mat-error>
@@ -101,6 +101,7 @@
             placeholder="New Password"
             formControlName="password"
             [errorStateMatcher]="currentPasswordMatch"
+            required
             test-id="password"
           />
           <mat-hint>Between 6 and 24 characters.</mat-hint>
@@ -125,6 +126,7 @@
             placeholder="New Password Confirmation"
             formControlName="confirm"
             [errorStateMatcher]="passwordsMatcher"
+            required
             test-id="password-confirm"
           />
           <mat-hint>Please rewrite your password for confirmation.</mat-hint>
