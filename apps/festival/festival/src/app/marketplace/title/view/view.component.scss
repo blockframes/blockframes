@@ -1,3 +1,5 @@
+@import '~@angular/flex-layout/mq';
+
 movie-header-cta {
   width: 100%;
   margin-bottom: 16px;
@@ -5,6 +7,13 @@ movie-header-cta {
   .orgs {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+
+    @include layout-bp(xs) {
+      org-chip {
+        display: flex;
+        justify-content: center;
+      }
+    }
   }
 
   section {
@@ -47,5 +56,9 @@ movie-header-cta {
       }
     }
   }
+}
+
+movie-header-actions {
+  width: 100%;
 }
  

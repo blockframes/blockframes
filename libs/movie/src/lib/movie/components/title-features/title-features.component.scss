@@ -1,9 +1,15 @@
+@import '~@angular/flex-layout/mq';
+
 p {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   min-width: 0;
   flex-wrap: wrap;
+
+  @include layout-bp(xs) {
+    justify-content: center;
+  }
 }
 mat-divider {
   display: inline;
