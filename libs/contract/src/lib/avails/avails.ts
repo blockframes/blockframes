@@ -42,7 +42,7 @@ export interface FullSale extends Sale<Date> {
 interface AvailResult<A extends BaseAvailsFilter> {
   periodAvailable: Duration<Date> | null;
   available: AvailSearchResult<A>[];
-  sold: FullSale[];
+  sales: FullSale[];
 }
 
 export function filterContractsByTitle(titleId: string, mandates: Mandate[], mandateTerms: Term[], sales: Sale[], saleTerms: Term[], bucket?: Bucket) {
@@ -117,7 +117,7 @@ function getMatchingAvailabilities<A extends AvailsFilter | CalendarAvailsFilter
   }).flat();
 
   for (const subAvail of subAvails) {
-    const result: Partial<AvailResult<A>> = { available: [], sold: [] };
+    const result: Partial<AvailResult<A>> = { available: [], sales: [] };
 
     mandateLoop: for (const contract of mandates) {
 
@@ -142,7 +142,7 @@ function getMatchingAvailabilities<A extends AvailsFilter | CalendarAvailsFilter
         for (const term of sale.terms) {
           const someOfTermInAvail = saleFilterFn(term, subAvail);
           if (!someOfTermInAvail) continue;
-          result.sold.push({ ...sale, terms: [term] });
+          result.sales.push({ ...sale, terms: [term] });
           break saleLoop;
         }
 
@@ -152,9 +152,9 @@ function getMatchingAvailabilities<A extends AvailsFilter | CalendarAvailsFilter
   }
 
   // Get the none empty sold result
-  const sold = results
-    .map(({ sold }) => sold)
-    .filter(sold => sold.length)
+  const salesToExclude = results
+    .map(({ sales: sales }) => sales)
+    .filter(sales => sales.length)
     .flat();
 
   // If one of the subAvails has no availability, return empty result
@@ -176,7 +176,7 @@ function getMatchingAvailabilities<A extends AvailsFilter | CalendarAvailsFilter
     return {
       periodAvailable: null,
       available: [],
-      sold
+      sales: salesToExclude
     }
   }
 
@@ -189,7 +189,7 @@ function getMatchingAvailabilities<A extends AvailsFilter | CalendarAvailsFilter
   return {
     periodAvailable: { from, to },
     available,
-    sold
+    sales: salesToExclude
   }
 }
 
@@ -265,13 +265,13 @@ export function availableTitle(
 
   // get only the mandates that meets the avails filter criteria,
   // e.g. if we ask for "France" but the title is mandated in "Germany", we don't care
-  const { available, sold } = getListMatchingAvailabilities(mandates, sales, avails);
+  const { available, sales: salesToExclude } = getListMatchingAvailabilities(mandates, sales, avails);
 
   // if there is no mandates left, the title is not available
   if (!available.length) return [];
 
   // if there is at least one sale that match the avails, the title is not available
-  if (sold.length) return [];
+  if (salesToExclude.length) return [];
 
   // else we should check the bucket (if we have one)
 
@@ -579,8 +579,9 @@ export function durationAvailabilities(
   assertValidTitle(mandates, sales, bucketContracts);
 
   const {
-    sold: salesToExclude,
-    periodAvailable, ...rest
+    sales: salesToExclude,
+    periodAvailable,
+    ...rest
   } = getMatchingCalendarAvailabilities(avails, mandates, sales);
 
   const available = rest.available.map(a => a.mandate).map(m => {
