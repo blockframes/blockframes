@@ -1,4 +1,4 @@
-import '@angular/compiler'
+import '@angular/compiler';
 import { signInWithEmailAndPassword, signOut, getAuth } from '@angular/fire/auth';
 
 //Note:

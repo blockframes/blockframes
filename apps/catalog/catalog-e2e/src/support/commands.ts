@@ -8,7 +8,7 @@
 // https://on.cypress.io/custom-commands
 // ***********************************************
 //
-import '@angular/compiler'
+import '@angular/compiler';
 import 'cypress-mailosaur';
 import { App } from 'libs/utils/src/lib/apps';
 import { getAuth, signInWithEmailAndPassword, signOut } from '@angular/fire/auth';

@@ -6,6 +6,15 @@ import { BucketTerm, Negotiation, formatDocumentMetaFromFirestore } from "@block
 
 interface NegotiationState extends EntityState<Negotiation, string>, ActiveState<string> { }
 
+// BOILERPLATE
+@Injectable({ providedIn: 'root' })
+@StoreConfig({ name: 'negotiation' })
+class NegotiationStore extends EntityStore<NegotiationState> {
+  constructor() {
+    super();
+  }
+}
+
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'contracts/:contractId/negotiations' })
 export class NegotiationService extends CollectionService<NegotiationState> {
@@ -29,14 +38,5 @@ export class NegotiationService extends CollectionService<NegotiationState> {
     const terms = this.formatDocumentDurationFromFirestore(_negotiation.terms)
     const initial = _negotiation.initial?.toDate();
     return { ..._negotiation, _meta, initial, terms };
-  }
-}
-
-// BOILETPLATE
-@Injectable({ providedIn: 'root' })
-@StoreConfig({ name: 'negotiation' })
-class NegotiationStore extends EntityStore<NegotiationState> {
-  constructor() {
-    super();
   }
 }

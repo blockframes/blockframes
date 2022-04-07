@@ -1,4 +1,5 @@
-﻿import { TestBed } from '@angular/core/testing';
+﻿process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
+import { TestBed } from '@angular/core/testing';
 import { InvitationService } from './invitation.service';
 import { AuthService } from '@blockframes/auth/+state';
 import { toDate } from '@blockframes/utils/helpers';
@@ -9,18 +10,21 @@ import {
   connectFirestoreEmulator,
   disableNetwork,
   doc,
+  setDoc,
   getDoc,
-  updateDoc
+  Timestamp
 } from '@angular/fire/firestore';
 import { loadFirestoreRules, clearFirestoreData } from '@firebase/rules-unit-testing';
 import { readFileSync } from 'fs';
 import { Observable, of } from 'rxjs';
 import { UserService } from '@blockframes/user/+state/user.service';
+import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 import { createInvitation, createUser, InvitationDocument } from '@blockframes/model';
 import { ActivatedRoute } from '@angular/router';
 import { APP } from '@blockframes/utils/routes/utils';
 import { getApp, initializeApp, provideFirebaseApp } from '@angular/fire/app';
-import firestore from 'firebase/firestore';
+import { connectFunctionsEmulator, getFunctions, provideFunctions } from '@angular/fire/functions';
+
 class InjectedAuthService {
   uid = 'userId';
 
@@ -59,15 +63,22 @@ describe('Invitations Test Suite', () => {
       imports: [
         provideFirebaseApp(() => initializeApp({ projectId: 'test' })),
         provideFirestore(() => {
-          const db = initializeFirestore(getApp(), { experimentalAutoDetectLongPolling: true });
-          connectFirestoreEmulator(db, 'localhost:8080', 8080);
+          if(db) return db;
+          db = initializeFirestore(getApp(), { experimentalAutoDetectLongPolling: true });
+          connectFirestoreEmulator(db, 'localhost', 8080);
           return db;
+        }),
+        provideFunctions(() => {
+          const functions = getFunctions(getApp());
+          connectFunctionsEmulator(functions, 'localhost', 5001);
+          return functions;
         }),
       ],
       providers: [
         InvitationService,
         { provide: AuthService, useClass: InjectedAuthService },
         { provide: UserService, useClass: DummyService },
+        { provide: AnalyticsService, useClass: DummyService },
         { provide: ActivatedRoute, useValue: { params: of({}) } },
         { provide: APP, useValue: 'festival' },
       ],
@@ -93,7 +104,7 @@ describe('Invitations Test Suite', () => {
 
   it('Formats invitation from firestore', () => {
     const invitationService = TestBed.inject(InvitationService);
-    const timestamp = firestore.Timestamp.fromDate(today);
+    const timestamp = Timestamp.fromDate(today);
     const formattedDate = toDate(timestamp);
 
     //Create an Invitation Document
@@ -116,7 +127,7 @@ describe('Invitations Test Suite', () => {
 
   it('Should invitation status become accepted', async () => {
     const ref = doc(db, 'invitations/1');
-    await updateDoc(ref, 'status', 'pending');
+    await setDoc(ref, { status: 'pending'});
     await service.acceptInvitation({
       id: '1',
       type: 'attendEvent',
@@ -130,7 +141,7 @@ describe('Invitations Test Suite', () => {
 
   it('Should invitation status become declined', async () => {
     const ref = doc(db, 'invitations/2');
-    await updateDoc(ref, 'status', 'pending');
+    await setDoc(ref, { status: 'pending'});
     await service.declineInvitation({
       id: '2',
       type: 'attendEvent',

@@ -32,7 +32,7 @@ export class TitleComponent implements OnInit {
           where('orgIds', 'array-contains', org.id),
           where('app.financiers.status', '==', 'accepted'),
           where('app.financiers.access', '==', true),
-          orderBy('_meta.createdAt', 'desc'),
+          orderBy('_meta.createdAt', 'desc')
         ]);
       }),
       distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))

@@ -27,7 +27,7 @@ function queryConstraints(orgId: string, options: { internal?: boolean }) {
     where('buyerId', '==', ''),
     where('type', '==', 'sale'),
     where('stakeholders', 'array-contains', orgId),
-    orderBy('_meta.createdAt', 'desc'),
+    orderBy('_meta.createdAt', 'desc')
   ]
 }
 

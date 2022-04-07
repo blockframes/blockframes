@@ -5,8 +5,8 @@
   globals: {
     'ts-jest': { tsconfig: '<rootDir>/tsconfig.spec.json' },
   },
-  transform: {
-    '^.+\\.(ts|html)$': 'ts-jest',
+  transform: { 
+    '^.+.(ts|mjs|js|html)$': 'jest-preset-angular'
   },
   transformIgnorePatterns: ['node_modules/(?!.*.mjs$)'],
   moduleFileExtensions: ['ts', 'js', 'html'],
