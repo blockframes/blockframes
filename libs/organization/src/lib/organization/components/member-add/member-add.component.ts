@@ -19,7 +19,6 @@ import { ENTER, COMMA, SEMICOLON, SPACE } from '@angular/cdk/keycodes';
 export class MemberAddComponent {
   @Input() org: Organization;
   private _isSending = new BehaviorSubject<boolean>(false);
-  private  emailsInvited: any;
   public isSending$ = this._isSending.asObservable();
   public separatorKeysCodes = [ENTER, COMMA, SEMICOLON, SPACE];
   public emailForm = new FormControl('', Validators.email);
@@ -58,9 +57,8 @@ export class MemberAddComponent {
       const emails = Array.from(new Set(this.form.value.map(email => email.trim().toLowerCase())));
       const invitationsExist = await this.invitationService.hasUserAnOrgOrIsAlreadyInvited(emails).toPromise<boolean>();
       if (invitationsExist) throw new Error('There is already an invitation existing for one or more of these users');
-      this.emailsInvited = await this.invitationService.invite(emails, this.org).to('joinOrganization');
-      if (this.emailsInvited.length == 0 ) throw new Error('There was a problem sending your invitation...');
-      this.snackBar.open(( this.emailsInvited.length > 1 ? 'Invitations sent.' : 'Invitation sent.'), 'close', { duration: 5000 });
+      await this.invitationService.invite(emails, this.org).to('joinOrganization');
+      this.snackBar.open('Your invitation was sent', 'close', { duration: 5000 });
       this._isSending.next(false);
       this.form.reset();
     } catch (error) {
@@ -69,7 +67,3 @@ export class MemberAddComponent {
     }
   }
 }
-
-
-
-

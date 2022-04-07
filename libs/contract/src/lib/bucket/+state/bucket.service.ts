@@ -4,14 +4,21 @@ import { centralOrgId } from '@env';
 import { switchMap, take } from 'rxjs/operators';
 import { AuthService } from '@blockframes/auth/+state';
 import { createOfferId } from '@blockframes/utils/utils';
-import { MovieCurrency } from '@blockframes/utils/static-model';
 import { AvailsFilter } from '@blockframes/contract/avails/avails';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { TermService } from '../../term/+state';
 import { OfferService } from '../../offer/+state';
 import { ContractService } from '../../contract/+state';
 import { ActiveState, EntityState } from '@datorama/akita';
-import { convertDuration, Bucket, createBucket, createBucketTerm, createBucketContract, createDocumentMeta } from '@blockframes/model';
+import {
+  convertDuration,
+  Bucket,
+  createBucket,
+  createBucketTerm,
+  createBucketContract,
+  createDocumentMeta,
+  MovieCurrency
+} from '@blockframes/model';
 
 interface BucketState extends EntityState<Bucket>, ActiveState<string> { }
 

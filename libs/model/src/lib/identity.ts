@@ -1,11 +1,11 @@
 import { createStorageFile, StorageFile } from './media';
-import {
+import type {
   CrewRole,
   Territory,
   ProducerRole,
   MemberStatus,
   DirectorCategory
-} from '@blockframes/utils/static-model/types';
+} from './static';
 
 //////////////////////////
 // VARIOUS IDENTITY OBJECTS

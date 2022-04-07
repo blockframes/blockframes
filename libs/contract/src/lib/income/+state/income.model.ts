@@ -1,4 +1,4 @@
-import { MovieCurrency } from "@blockframes/utils/static-model";
+import type { MovieCurrency } from '@blockframes/model';
 
 export interface Income {
   /** Should be the same as the sale that generated this income */

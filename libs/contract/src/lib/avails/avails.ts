@@ -1,6 +1,30 @@
-import { Media, territories, territoriesISOA3, Territory, TerritoryISOA3, TerritoryISOA3Value, TerritoryValue } from '@blockframes/utils/static-model';
-import { Bucket, BucketContract, Holdback, Mandate, Sale, BucketTerm, Term } from '@blockframes/model';
+import {
+  Bucket,
+  BucketContract,
+  Holdback,
+  Mandate,
+  Sale,
+  BucketTerm,
+  Term,
+  Media,
+  territories,
+  territoriesISOA3,
+  Territory,
+  TerritoryISOA3,
+  TerritoryISOA3Value,
+  TerritoryValue
+} from '@blockframes/model';
 import { allOf, exclusivityAllOf, exclusivitySomeOf, someOf } from './sets';
+import { max, min } from 'date-fns'
+import { Duration } from '@blockframes/model'
+
+
+interface AvailResult {
+  periodAvailable: Duration<Date> | null;
+  available: FullMandate[];
+  sold: FullSale[];
+}
+
 
 export interface BaseAvailsFilter {
   medias: Media[],
@@ -398,19 +422,90 @@ export function isCalendarTermInAvails<T extends BucketTerm | Term>(term: T, ava
   return allOf(avails.territories).in(term.territories);
 }
 
-function getMatchingCalendarMandates(mandates: FullMandate[], avails: CalendarAvailsFilter) {
-  return mandates.filter(mandate => mandate.terms.some(term => isCalendarTermInAvails(term, avails)));
+export function getMatchingCalendar(avails: CalendarAvailsFilter, mandates: FullMandate[], sales: FullSale[]) {
+  const results: AvailResult[] = [];
+
+  const subAvails = avails.territories.flatMap(ter => {
+    return avails.medias.map(m => ({ ...avails, territories: [ter], medias: [m] }));
+  });
+
+  for (const subAvail of subAvails) {
+    const result: Partial<AvailResult> = { available: [], sold: [] };
+
+    mandateLoop: for (const contract of mandates) {
+
+      for (const term of contract.terms) {
+        const availInTerm = isCalendarTermInAvails(term, subAvail);
+        if (!availInTerm) continue;
+
+        result.periodAvailable = term?.duration;
+        result.available.push({ ...contract, terms: [term] });
+        break mandateLoop;
+      }
+
+    }
+
+    saleLoop: for (const sale of sales) {
+
+      for (const term of sale.terms) {
+        const someOfTermInAvail = isCalendarAvailPartiallyInTerm(subAvail, term);
+        if (!someOfTermInAvail) continue;
+        result.sold.push({ ...sale, terms: [term] });
+        break saleLoop;
+      }
+
+    }
+    results.push(result as AvailResult)
+  }
+
+  // Get the none empty sold result
+  const sold = results
+    .map(({ sold }) => sold)
+    .filter(sold => sold.length)
+    .flat();
+
+  // If one of the subAvails has no availability, return empty result
+  const unavailableSubAvail = results.find(result => !result.available.length)
+
+  // Take the intersection of all the available duration
+  const from = max(results.map((result) => result.periodAvailable?.from));
+  const to = min(results.map((result) => result.periodAvailable?.to));
+
+  /**
+   * Intersection     |   No Intersection
+   * |-----***|....   |   |---|.........
+   * .....|***----|   |   .......|------|
+   */
+  const noIntersection = from > to;
+
+  // If no result or if no intersection return only the sold result
+  if (unavailableSubAvail || noIntersection) {
+    return {
+      periodAvailable: null,
+      available: [],
+      sold
+    }
+  }
+
+  // Get non-empty available results
+  const available = results
+    .map(({ available }) => available)
+    .filter(available => available.length)
+    .flat()
+
+  return {
+    periodAvailable: { from, to },
+    available,
+    sold
+  }
 }
 
-function getMatchingCalendarSales<T extends (FullSale | BucketContract)>(sales: T[], avails: CalendarAvailsFilter): T[] {
-  return sales.filter(sale => {
-    return sale.terms.some(term => {
-      const exclusivityCheck = exclusivitySomeOf(avails.exclusive).in(term.exclusive);
-      const mediaCheck = someOf(avails.medias).in(term.medias);
-      const territoryCheck = someOf(avails.territories).in(term.territories);
-      return exclusivityCheck && mediaCheck && territoryCheck;
-    });
-  });
+export function isCalendarAvailPartiallyInTerm(avail: CalendarAvailsFilter, term: Term<Date>) {
+  const exclusivityCheck = exclusivitySomeOf(avail.exclusive).in(term.exclusive);
+  if (!exclusivityCheck) return false;
+  const mediaCheck = someOf(avail.medias).in(term.medias);
+  if (!mediaCheck) return false;
+  return someOf(avail.territories).in(term.territories);
 }
 
 function isCalendarTermInBucket<T extends BucketTerm | Term>(term: T, avails: CalendarAvailsFilter) {
@@ -435,18 +530,26 @@ export function durationAvailabilities(
 
   assertValidTitle(mandates, sales, bucketContracts);
 
-  const availableMandates = getMatchingCalendarMandates(mandates, avails);
-  const available = availableMandates.map(m =>
-    m.terms.map((t): DurationMarker =>
-      ({ from: t.duration.from, to: t.duration.to, contract: m, term: t })
-    )
-  ).flat();
+  const {
+    available: availableMandates, sold: salesToExclude,
+    periodAvailable
+  } = getMatchingCalendar(avails, mandates, sales);
 
-  const salesToExclude = getMatchingCalendarSales(sales, avails);
+  const available = availableMandates.map(m => {
+    return m.terms.map((t): DurationMarker => ({
+      from: periodAvailable.from,
+      to: periodAvailable.to,
+      contract: m,
+      term: t
+    }));
+  }).flat();
+
   const sold = salesToExclude.map(s =>
-    s.terms.map((t): DurationMarker =>
-      ({ from: t.duration.from, to: t.duration.to, term: t })
-    )
+    s.terms.map((t): DurationMarker => ({
+      from: t.duration.from,
+      to: t.duration.to,
+      term: t
+    }))
   ).flat();
 
 

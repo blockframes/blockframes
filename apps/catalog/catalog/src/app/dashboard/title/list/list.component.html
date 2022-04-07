@@ -36,15 +36,17 @@
       </button>
     </header>
 
-    <bf-table [source]="result$ | async" (rowClick)="goToTitle($event)" clickable useFilter pagination="50">
-      <ng-template colRef="title.international" label="Title" let-title sort defaultSort>
-        <b>{{ title| maxLength:50 }}</b>
+    <bf-table [source]="result$ | async" useFilter pagination="50">
+      <ng-template colRef label="Title" let-movie sort defaultSort>
+        <a [routerLink]="movie.id" [matTooltip]="movie.title.international">
+          <u>{{ movie.title.international | maxLength:50 }}</u>
+        </a>
       </ng-template>
       <ng-template colRef="directors" label="Director(s)" let-directors>
-        <b>{{ directors | displayName | maxLength:50 }}</b>
+        {{ directors | displayName | maxLength:50 }}
       </ng-template>
       <ng-template colRef="release.year" label="Release Year" let-year sort>
-        <b>{{ year }}</b>
+        {{ year }}
       </ng-template>
       <ng-template colRef="id" label="#Sales (Total Gross Receipt)" let-titleId>
         <ng-container *ngIf="titleId | getIncomesFromTitle | async as incomes">
@@ -57,6 +59,22 @@
       </ng-template>
       <ng-template colRef="app.catalog.status" label="Status" let-status>
         <bf-tag>{{ status | toLabel: 'storeStatus' }}</bf-tag>
+      </ng-template>
+      <ng-template colRef label="Actions" let-movie sticky>
+        <a [routerLink]="movie.id" mat-icon-button matTooltip="View">
+          <mat-icon svgIcon="visibility"></mat-icon>
+        </a>
+        <a [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]" mat-icon-button matTooltip="Edit">
+          <mat-icon svgIcon="edit"></mat-icon>
+        </a>
+        <button *ngIf="movie.app[app].status === 'archived' else archive" type="button" mat-icon-button (click)="updateStatus(movie, 'draft', 'Title restored.')" matTooltip="Restore">
+          <mat-icon svgIcon="restore"></mat-icon>
+        </button>
+        <ng-template #archive>
+          <button type="button" mat-icon-button (click)="updateStatus(movie, 'archived')" matTooltip="Archive">
+            <mat-icon svgIcon="archive"></mat-icon>
+          </button>
+        </ng-template>
       </ng-template>
     </bf-table>
   </ng-container>
