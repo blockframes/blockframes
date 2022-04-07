@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
-import { OrganizationMember, UserRole } from '@blockframes/model';
+import { OrganizationMember } from '@blockframes/model';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 
 @Component({
@@ -34,18 +34,5 @@ export class MemberRepertoryComponent {
 
   get variableColumns() {
     return this.memberColumnsIndex.filter(col => !['firstName', 'lastName', 'role', 'uid', 'edit'].includes(col))
-  }
-
-  public displayRole(role: UserRole) {
-    switch (role) {
-      case 'superAdmin':
-        return 'Super Admin';
-      case 'admin':
-        return 'Admin';
-      case 'member':
-        return 'Member';
-      default:
-        return 'Member';
-    }
   }
 }
