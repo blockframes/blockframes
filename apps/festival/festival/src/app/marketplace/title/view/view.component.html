@@ -12,7 +12,7 @@
           <ng-container *ngIf="(eventId$ | async) as eventId; else request">
             <button mat-button class="translucent" [disabled]="requestSent" (click)="requestAskingPrice(movie.id)">
               <mat-icon svgIcon="local_offer"></mat-icon>
-              <span *ngIf="gtSm$ | async" class="linear-wipe">Request Asking Price</span>
+              <span fxHide.lt-md class="linear-wipe">Request Asking Price</span>
             </button>
             <wishlist-button small [movieId]="movie.id"></wishlist-button>
             <a ongoing-event-button [routerLink]="['/event', eventId, 'r', 'i']">Ongoing Screening</a>
@@ -21,7 +21,7 @@
             <event-request-screening [movieId]="movie.id" animated></event-request-screening>
             <button mat-button class="translucent" [disabled]="requestSent" (click)="requestAskingPrice(movie.id)">
               <mat-icon svgIcon="local_offer"></mat-icon>
-              <span *ngIf="gtSm$ | async" class="linear-wipe">Request Asking Price</span>
+              <span fxHide.lt-md class="linear-wipe">Request Asking Price</span>
             </button>
             <wishlist-button small [movieId]="movie.id"></wishlist-button>
           </ng-template>

@@ -7,13 +7,6 @@ movie-header-cta {
   .orgs {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-
-    @include layout-bp(xs) {
-      org-chip {
-        display: flex;
-        justify-content: center;
-      }
-    }
   }
 
   section {
@@ -62,3 +55,9 @@ movie-header-actions {
   width: 100%;
 }
  
+@include layout-bp(xs) {
+  org-chip {
+    display: flex;
+    justify-content: center;
+  }
+}

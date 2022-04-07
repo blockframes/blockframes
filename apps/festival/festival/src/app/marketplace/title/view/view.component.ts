@@ -10,7 +10,6 @@ import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { ActivatedRoute } from '@angular/router';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 import { Organization } from '@blockframes/model';
-import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
 
 @Component({
   selector: 'festival-movie-view',
@@ -62,8 +61,6 @@ export class MarketplaceMovieViewComponent  {
     'moodboard'
   ];
 
-  public gtSm$ = this.breakpointsService.gtSm;
-
   constructor(
     private route: ActivatedRoute,
     private movieService: MovieService,
@@ -71,8 +68,7 @@ export class MarketplaceMovieViewComponent  {
     private eventService: EventService,
     private dialog: MatDialog,
     private cdr: ChangeDetectorRef,
-    private analytics: AnalyticsService,
-    private breakpointsService: BreakpointsService
+    private analytics: AnalyticsService
   ) { }
 
   getEmails(orgs: Organization[]) {
