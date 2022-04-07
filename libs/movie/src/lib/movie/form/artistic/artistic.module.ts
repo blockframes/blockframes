@@ -19,6 +19,7 @@ import { FormTableModule } from '@blockframes/ui/form/table/form-table.module';
 import { HasStatusModule } from '@blockframes/movie/pipes/has-status.pipe'
 import { FilmographyPipeModule} from '@blockframes/movie/pipes/filmography.pipe';
 import { MaxLengthModule, ToLabelModule } from '@blockframes/utils/pipes';
+import { FilmographyJoinPipeModule } from './filmographyJoin.pipe';
 
 import { MovieFormArtisticComponent } from './artistic.component';
 
@@ -38,6 +39,7 @@ import { MovieFormArtisticComponent } from './artistic.component';
     HasStatusModule,
     ToLabelModule,
     FilmographyPipeModule,
+    FilmographyJoinPipeModule,
     MaxLengthModule,
 
     // Material

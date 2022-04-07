@@ -8,7 +8,7 @@
         <ng-template colRef="status" let-status>{{ status ? (status | toLabel: 'memberStatus') : 'Confirmed' }}</ng-template>
         <ng-template colRef="description" let-description>{{ description | maxLength: 75 }}</ng-template>
         <ng-template colRef="filmography" let-filmography>
-          {{ memberFilmography(filmography) | maxLength: 50 }}
+          {{ filmography | filmographyJoin | maxLength: 50 }}
         </ng-template>
         <ng-template formView let-castForm>
           <article [formGroup]="castForm" fxLayout="column" fxLayoutGap="24px">
@@ -77,7 +77,7 @@
         <ng-template colRef="description" let-description>{{ description | maxLength: 75 }}</ng-template>
         <ng-template colRef="role" let-role>{{ role | toLabel:'crewRoles' }}</ng-template>
         <ng-template colRef="filmography" let-filmography>
-          {{ memberFilmography(filmography) | maxLength: 50 }}
+          {{ filmography | filmographyJoin | maxLength: 50 }}
         </ng-template>
         <ng-template formView let-crewForm>
           <article [formGroup]="crewForm" fxLayout="column" fxLayoutGap="24px">

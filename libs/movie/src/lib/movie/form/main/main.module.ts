@@ -31,6 +31,7 @@ import { MovieFormMainComponent } from './main.component';
 import { HasStatusModule } from '@blockframes/movie/pipes/has-status.pipe';
 import { MaxLengthModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { FilmographyPipeModule } from '@blockframes/movie/pipes/filmography.pipe';
+import { FilmographyJoinPipeModule } from './filmographyJoin.pipe';
 
 @NgModule({
   declarations: [MovieFormMainComponent],
@@ -48,6 +49,7 @@ import { FilmographyPipeModule } from '@blockframes/movie/pipes/filmography.pipe
     FormTableModule,
     HasStatusModule,
     FilmographyPipeModule,
+    FilmographyJoinPipeModule,
     FormDisplayNameModule,
     MaxLengthModule,
     ToLabelModule,

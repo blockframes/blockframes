@@ -209,7 +209,7 @@
         <ng-template colRef="category" let-category>{{ category | toLabel: 'directorCategory' }}
         </ng-template>
         <ng-template colRef="filmography" let-filmography>
-          {{ directorFilmography(filmography) | maxLength: 50 }}
+          {{ filmography | filmographyJoin | maxLength: 50 }}
         </ng-template>
         <ng-template formView let-directorForm>
           <article [formGroup]="directorForm">

@@ -16,7 +16,6 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { maxYear } from '@blockframes/utils/form/validators/validators';
-import { Filmography } from '@blockframes/model';
 
 @Component({
   selector: 'movie-form-main',
@@ -93,9 +92,5 @@ export class MovieFormMainComponent implements OnInit, OnDestroy {
     } else {
       this.form.runningTime.get('time').setErrors(null);
     }
-  }
-
-  public directorFilmography(filmography?: Filmography[]) {
-    return filmography.map(film => `${film.title} (${film.year})`).join(", ");
   }
 }
