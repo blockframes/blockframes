@@ -10,15 +10,8 @@ header {
     background-image: linear-gradient(to right, black, transparent);
 
     .movie-info{
-
       .poster {
         height: 240px;
-      }
-
-      @include layout-bp(gt-sm) {
-        .poster {
-          height: 400px;
-        }
       }
 
       .movie-details {
@@ -52,4 +45,10 @@ header {
 
 .movie-header-actions {
   display: flex;
+}
+
+@include layout-bp(gt-sm) {
+  .poster {
+    height: 400px;
+  }
 }
