@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/
 import { FormControl } from '@angular/forms';
 import { distinctUntilChanged, filter } from 'rxjs/operators';
 import { MovieFormShellComponent } from '../shell/shell.component';
-import { shootingPeriod, months } from '@blockframes/utils/static-model';
+import { shootingPeriod, months } from '@blockframes/model';
 import { hasValue } from '@blockframes/utils/pipes/has-keys.pipe';
 import { Subscription } from 'rxjs';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';

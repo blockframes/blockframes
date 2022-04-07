@@ -6,8 +6,8 @@ import { Intercom } from 'ng-intercom';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { EventService } from '@blockframes/event/+state';
-import { AccessibilityTypes } from '@blockframes/utils/static-model';
 import { where } from 'firebase/firestore';
+import { AccessibilityTypes } from '@blockframes/model';
 
 @Component({
   selector: '[form] event-details-edit',

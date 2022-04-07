@@ -1,14 +1,12 @@
-import { Location } from "@angular/common";
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { AggregatedAnalytic, Analytics, createAggregatedAnalytic, Organization, User } from '@blockframes/model';
+import { AggregatedAnalytic, Analytics, createAggregatedAnalytic, Organization, User, Scope, staticModel } from '@blockframes/model';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 import { MovieService } from "@blockframes/movie/+state/movie.service";
 import { joinWith } from "@blockframes/utils/operators";
 import { map, pluck, shareReplay, switchMap } from "rxjs/operators";
 import { counter } from '@blockframes/analytics/+state/utils';
 import { UserService } from "@blockframes/user/+state";
-import { Scope, staticModel } from "@blockframes/utils/static-model";
 import { NavigationService } from "@blockframes/ui/navigation.service";
 
 function getFilter(scope: Scope) {
@@ -77,7 +75,6 @@ export class TitleAnalyticsComponent {
   filterValue?: string;
 
   constructor(
-    private location: Location,
     private movieService: MovieService,
     private route: ActivatedRoute,
     private analyticsService: AnalyticsService,

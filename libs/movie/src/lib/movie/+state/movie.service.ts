@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@angular/core';
 import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
-import { createMovie, Movie, createMovieAppConfig, createDocumentMeta } from '@blockframes/model';
+import { createMovie, Movie, createMovieAppConfig, createDocumentMeta, StoreStatus } from '@blockframes/model';
 import { cleanModel } from '@blockframes/utils/helpers';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
 import type firestore from 'firebase/firestore';
@@ -11,7 +11,6 @@ import { joinWith } from '@blockframes/utils/operators';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 import { AuthService } from '@blockframes/auth/+state';
 import { ActiveState, EntityState } from '@datorama/akita';
-import { StoreStatus } from '@blockframes/utils/static-model';
 import { APP } from '@blockframes/utils/routes/utils';
 import { where } from 'firebase/firestore';
 import { doc, updateDoc } from '@angular/fire/firestore';

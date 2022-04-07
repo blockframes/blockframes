@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
-import { AnalyticData } from "@blockframes/analytics/+state/utils";
-import { Territory, TerritoryISOA3Value, parseToAll, territoriesISOA3, staticModel } from "@blockframes/utils/static-model";
-import { getKeyIfExists } from "@blockframes/utils/helpers";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { AnalyticData } from '@blockframes/analytics/+state/utils';
+import { Territory, TerritoryISOA3Value, parseToAll, territoriesISOA3, staticModel } from '@blockframes/model';
+import { getKeyIfExists } from '@blockframes/utils/helpers';
 
 const territories = parseToAll('territories', 'world') as Territory[];
 
