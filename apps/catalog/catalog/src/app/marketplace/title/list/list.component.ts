@@ -163,9 +163,13 @@ export class ListComponent implements OnDestroy, OnInit {
       return;
     }
 
-    for (const { mandateOrTerm: term, avail } of availResults) {
-      await this.bucketService.addTerm(title.objectID, term.id, avail);
-    }
+    const results = availResults.map(({ mandateOrTerm: term, avail }) => ({
+      titleId: title.objectID,
+      parentTermId: term.id,
+      avail
+    }));
+
+    this.bucketService.addBatchTerms(results);
 
     this.snackbar.open(`${title.title.international} was added to your Selection`, 'GO TO SELECTION', { duration: 4000 })
       .onAction()

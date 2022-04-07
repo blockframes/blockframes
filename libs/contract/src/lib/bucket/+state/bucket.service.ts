@@ -21,6 +21,12 @@ import {
 } from '@blockframes/model';
 
 interface BucketState extends EntityState<Bucket>, ActiveState<string> { }
+interface AddTermConfig {
+  titleId: string,
+  parentTermId: string,
+  avail: AvailsFilter
+};
+
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'buckets' })
@@ -119,28 +125,22 @@ export class BucketService extends CollectionService<BucketState> {
     return Promise.all(promises);
   }
 
-
-  async addTerm(titleId: string, parentTermId: string, avails: AvailsFilter) {
-
+  async addBatchTerms(list: AddTermConfig[]) {
     const orgId = this.orgService.org.id;
-    const rawBucket = await this.getActive();
-    const bucket = createBucket({ id: orgId, ...rawBucket });
-
-    const term = createBucketTerm(avails);
-
-    const sale = bucket.contracts.find(contract => contract.titleId === titleId && contract.parentTermId === parentTermId);
-
-    if (sale) {
-      sale.terms.push(term);
-    } else {
-      const contract = createBucketContract({ titleId, parentTermId, terms: [term] });
-      bucket.contracts.push(contract);
+    const bucket = await this.getActive();
+    const contracts = bucket?.contracts ?? [];
+    for (const { titleId, parentTermId, avail } of list) {
+      const term = createBucketTerm(avail);
+      const sale = contracts.find(c => c.titleId === titleId && c.parentTermId === parentTermId);
+      if (sale) {
+        sale.terms.push(term);
+      } else {
+        const contract = createBucketContract({ titleId, parentTermId, terms: [term] });
+        contracts.push(contract);
+      }
     }
-
-    if (rawBucket) {
-      this.update(orgId, bucket);
-    } else {
-      this.add(bucket);
-    }
+    bucket
+      ? this.update(orgId, { contracts })
+      : this.add({ ...bucket, contracts })
   }
 }
