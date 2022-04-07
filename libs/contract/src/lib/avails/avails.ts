@@ -153,7 +153,7 @@ function getMatchingAvailabilities<A extends AvailsFilter | CalendarAvailsFilter
 
   // Get the none empty sold result
   const salesToExclude = results
-    .map(({ sales: sales }) => sales)
+    .map(({ sales }) => sales)
     .filter(sales => sales.length)
     .flat();
 
