@@ -163,7 +163,7 @@ export class ListComponent implements OnDestroy, OnInit {
       return;
     }
 
-    for (const { match: term, avail } of availResults) {
+    for (const { mandateOrTerm: term, avail } of availResults) {
       await this.bucketService.addTerm(title.objectID, term.id, avail);
     }
 
