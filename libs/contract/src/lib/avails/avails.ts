@@ -265,21 +265,18 @@ export function availableTitle(
 
   // get only the mandates that meets the avails filter criteria,
   // e.g. if we ask for "France" but the title is mandated in "Germany", we don't care
-  const {
-    available: availableMandates,
-    sold: salesToExclude
-  } = getListMatchingAvailabilities(mandates, sales, avails);
+  const { available, sold } = getListMatchingAvailabilities(mandates, sales, avails);
 
   // if there is no mandates left, the title is not available
-  if (!availableMandates.length) return [];
+  if (!available.length) return [];
 
   // if there is at least one sale that match the avails, the title is not available
-  if (salesToExclude.length) return [];
+  if (sold.length) return [];
 
   // else we should check the bucket (if we have one)
 
   // for now the title is available and we have no bucket to check
-  if (!bucketContracts) return availableMandates.map(({ mandate: match }) => match);
+  if (!bucketContracts) return available.map(({ mandate }) => mandate);
 
   // get only the sales that meets the avails filter criteria
   // e.g. if we ask for "France" but the title has been sold in "Germany", we don't care
@@ -288,7 +285,7 @@ export function availableTitle(
   // if there is at least one sale that match the avails, the title is not available
   if (bucketSalesToExclude.length) return [];
 
-  return availableMandates.map(({ mandate }) => mandate);
+  return available.map(({ mandate }) => mandate);
 }
 
 // ----------------------------
