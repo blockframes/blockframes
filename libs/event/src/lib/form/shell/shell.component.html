@@ -4,7 +4,7 @@
       <mat-icon svgIcon="close"></mat-icon>
     </button>
     <h1>You are about to leave the form.</h1>
-    <p>Some changes have not been saved.<br/>If you leave now, you will lose these changes.</p>
+    <p>Some changes have not been saved.<br />If you leave now, you will lose these changes.</p>
     <div fxLayout="column" fxLayoutAlign="center">
       <button class="save" mat-flat-button color="primary" [mat-dialog-close]="true">
         Save & Exit</button>
@@ -51,19 +51,15 @@
     </mat-card>
 
     <nav mat-tab-nav-bar>
-      <ng-container *ngFor="let tab of (tabs$ |async)"> 
-        <a mat-tab-link 
-        [routerLink]="tab.path" 
-        routerLinkActive 
-        #rla="routerLinkActive"
-        [active]="rla.isActive">
-        {{ tab.label }}</a>
+      <ng-container *ngFor="let tab of (tabs$ |async)">
+        <a mat-tab-link [routerLink]="tab.path" routerLinkActive #rla="routerLinkActive" [active]="rla.isActive">
+          {{ tab.label }}</a>
       </ng-container>
     </nav>
   </form>
 
   <div class="routerContainer" [@routeAnimation]="animationOutlet(outlet)">
-    <router-outlet #outlet="outlet"></router-outlet> 
+    <router-outlet #outlet="outlet"></router-outlet>
   </div>
 
   <a class="goToEvent" mat-button mat-flat-button color="primary" [routerLink]="internalLink">Go to Event Page</a>
@@ -73,10 +69,4 @@
   <section fxLAyout fxLayoutAlign="center center">
     <mat-spinner></mat-spinner>
   </section>
-</ng-template> 
-
-<ng-template #somethingWentWrong>
-     <span class="snack-bar-text">Something went wrong.</span> 
-     <button class="snack-bar-button" type="button" (click)="refresh()" mat-button >REFRESH</button>
 </ng-template>
-

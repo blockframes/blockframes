@@ -18,11 +18,13 @@ import {
   availFrance, availsSVODArgentina, availsPayTVArgentina,
   availsGermany, availsBelgium, availsExistingEndedSales,
   availsOngoingSales, availsTerritoryWithExclusivity, availsTerritoryWithoutExclusivity,
-  availsFranceLuxembourg, availsAllButSouthKorea,
+  availsFranceLuxembourg, availsAllButSouthKorea, availsBrewster1,
+  availsBrewster2, availsBrewster3, availsBrewster4,
 } from './../fixtures/availsFilters';
 import { assertDate } from './utils'
 import {
   mandateMovie1, saleArgentinaMovie1, saleGermanyMovie1, saleCanadaMovie1, saleBelgiumFranceLuxembourgMovie1,
+  mandateMovie7, sale1Movie7, sale2Movie7,
 } from './../fixtures/mandatesAndSales';
 
 const sales = [saleArgentinaMovie1, saleGermanyMovie1, saleCanadaMovie1, saleBelgiumFranceLuxembourgMovie1]
@@ -209,7 +211,7 @@ describe('Test terms out of movie mandates', () => {
     assertDate(soldTo, saleGermanyTo);
 
     //Available on mandate duration.
-    expect(markers.available.length).toBe(1);
+    expect(markers.available.length).toBe(3);
     const [{ from: availableFrom, to: availableTo }] = markers.available;
     assertDate(availableFrom, mandateFrom);
     assertDate(availableTo, mandateTo);
@@ -226,7 +228,7 @@ describe('Test terms out of movie mandates', () => {
     assertDate(soldTo, saleGermanyTo);
 
     //Available on mandate duration.
-    expect(markers.available.length).toBe(1);
+    expect(markers.available.length).toBe(3);
     const [{ from: availableFrom, to: availableTo }] = markers.available;
     assertDate(availableFrom, mandateFrom);
     assertDate(availableTo, mandateTo);
@@ -236,7 +238,7 @@ describe('Test terms out of movie mandates', () => {
 
   it('Check available non exclusive', () => {
     const markers = durationAvailabilities(availsTerritoryWithoutExclusivity, [mandateMovie1], sales, []);
-    expect(markers.available.length).toBe(1);
+    expect(markers.available.length).toBe(3);
     const [{ from, to }] = markers.available;
     assertDate(from, mandateFrom);
     assertDate(to, mandateTo);
@@ -252,7 +254,7 @@ describe('Test terms out of movie mandates', () => {
     assertDate(soldTo, saleGermanyTo);
 
     //Available on mandate duration
-    expect(markers.available.length).toBe(1);
+    expect(markers.available.length).toBe(3);
     const [{ from: availableFrom, to: availableTo }] = markers.available;
     assertDate(availableFrom, mandateFrom);
     assertDate(availableTo, mandateTo);
@@ -318,13 +320,13 @@ describe('Test terms out of movie mandates', () => {
   it('Check not available due to terms with existing future sales', () => {
     const markers = durationAvailabilities(availsFranceLuxembourg, [mandateMovie1], sales, []);
     //France/Luxembourg are sold
-    expect(markers.sold.length).toBe(1);
+    expect(markers.sold.length).toBe(2);
     const [{ from: soldFrom, to: soldTo }] = markers.sold;
     assertDate(soldFrom, saleBelgiumFranceLuxembourgFrom);
     assertDate(soldTo, saleBelgiumFranceLuxembourgTo);
 
     //Available on mandate duration.
-    expect(markers.available.length).toBe(1);
+    expect(markers.available.length).toBe(2);
     const [{ from: availableFrom, to: availableTo }] = markers.available;
     assertDate(availableFrom, mandateFrom);
     assertDate(availableTo, mandateTo);
@@ -338,7 +340,7 @@ describe('Test terms out of movie mandates', () => {
     const germanyMarker = markers.sold.find(marker => marker.term.contractId === saleGermanyMovie1.id)
     const canadaMarker = markers.sold.find(marker => marker.term.contractId === saleCanadaMovie1.id)
 
-    expect(markers.sold.length).toBe(3);
+    expect(markers.sold.length).toBe(21);
 
     assertDate(argentinaMarker?.from, saleArgentinaFrom);
     assertDate(argentinaMarker?.to, saleArgentinaTo);
@@ -351,5 +353,33 @@ describe('Test terms out of movie mandates', () => {
     const [{ from, to }] = markers.available;
     assertDate(from, mandateFrom);
     assertDate(to, mandateTo);
+  });
+
+  it('Check exclusive on planes in France and China', () => {
+    const { available: [{ from, to }] } = durationAvailabilities(availsBrewster1, [mandateMovie7], [sale1Movie7, sale2Movie7], []);
+    assertDate(to, new Date('12/31/2026'));
+    assertDate(from, new Date('01/01/2025'));
+  });
+
+  it('Check non-exclusive on europe vod', () => {
+    const { available: [{ from, to }] } = durationAvailabilities(availsBrewster2, [mandateMovie7], [sale1Movie7, sale2Movie7], []);
+    assertDate(to, new Date('12/31/2032'));
+    assertDate(from, new Date('01/01/2025'));
+  });
+
+  it('Check availes on europe vod exclusive', () => {
+    const {
+      available: [{ from: availableFrom, to: availableTo }],
+      sold: [{ from: soldFrom, to: soldTo }]
+    } = durationAvailabilities(availsBrewster3, [mandateMovie7], [sale1Movie7, sale2Movie7], []);
+    assertDate(availableFrom, new Date('01/01/2025'));
+    assertDate(availableTo, new Date('12/31/2032'));
+    assertDate(soldFrom, new Date('01/01/2025'));
+    assertDate(soldTo, new Date('12/31/2026'));
+  });
+
+  it('Check not available on france china vod non-exclusive', () => {
+    const { available } = durationAvailabilities(availsBrewster4, [mandateMovie7], [sale1Movie7, sale2Movie7], []);
+    expect(available.length).toBe(0);
   });
 });

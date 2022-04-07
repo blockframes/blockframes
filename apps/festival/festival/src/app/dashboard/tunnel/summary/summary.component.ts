@@ -54,7 +54,7 @@ export class TunnelSummaryComponent implements OnInit {
       const ref = this.snackBar.open(text, 'SEE ON MARKETPLACE', { duration: 7000 });
       ref.afterDismissed().subscribe(() => {
         const movieId = this.route.snapshot.paramMap.get('movieId');
-        this.router.navigate(['c/o/dashboard/title', movieId]);
+        this.router.navigate(['c/o/marketplace/title', movieId]);
       })
     } else {
       // Log the invalid forms

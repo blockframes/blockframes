@@ -164,11 +164,6 @@
     border-radius: 26px;
   }
 
-  .mat-fab,
-  .mat-mini-fab {
-    @include mat.overridable-elevation(0);
-  }
-
   .mat-fab {
     &.active {
       background-color: var(--active);
@@ -184,6 +179,10 @@
   // For example, see available versions page.
   tunnel-page section article button[mat-mini-fab] .mat-button-wrapper {
     padding: 0;
+  }
+
+  button.translucent, a.translucent {
+    background: rgba(mat.get-color-from-palette($primary), .16);
   }
 }
 

@@ -99,10 +99,10 @@ export class AvailsCalendarComponent implements OnInit {
 
     // set available/sold/selected blocks into the stateMatrix (this will display the colored rectangles)
     let matrix: CellState[][] = this.rows.map(() => this.columns.map(() => 'empty'));
-    if (this._availableMarkers.length) matrix = markersToMatrix(this._availableMarkers, this.stateMatrix, 'available');
-    if (this._soldMarkers.length) matrix = markersToMatrix(this._soldMarkers, this.stateMatrix, 'sold');
-    if (this._inSelectionMarkers.length) matrix = markersToMatrix(this._inSelectionMarkers, this.stateMatrix, 'selected');
-    if (this._expiredMarkers.length) matrix = markersToMatrix(this._expiredMarkers, this.stateMatrix, 'expired');
+    if (this._availableMarkers.length) matrix = markersToMatrix(this._availableMarkers, matrix, 'available');
+    if (this._soldMarkers.length) matrix = markersToMatrix(this._soldMarkers, matrix, 'sold');
+    if (this._inSelectionMarkers.length) matrix = markersToMatrix(this._inSelectionMarkers, matrix, 'selected');
+    if (this._expiredMarkers.length) matrix = markersToMatrix(this._expiredMarkers, matrix, 'expired');
     this.stateMatrix = matrix;
 
     const currentState = this.state$.getValue();

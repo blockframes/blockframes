@@ -1,5 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy, OnInit, } from '@angular/core';
-import { staticModel, Scope } from '@blockframes/utils/static-model';
+import { staticModel, Scope } from '@blockframes/model';
 import { FormStaticValueArray } from '@blockframes/utils/form';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 

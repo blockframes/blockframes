@@ -15,8 +15,7 @@ import {
   createFakeUserDataArray
 } from '@blockframes/testing/cypress/browser';
 import { capitalize } from '@blockframes/utils/helpers';
-import { User, Organization } from '@blockframes/model';
-import { orgActivity, territories } from '@blockframes/utils/static-model/static-model';
+import { User, Organization, orgActivity, territories } from '@blockframes/model';
 import { USER_FIXTURES_PASSWORD } from '@blockframes/firebase-utils/anonymize/util';
 
 const [newOrgUser, knownMarketplaceOrgUser, knownDashboardOrgUser, unfillingUser] = createFakeUserDataArray(4);
@@ -211,7 +210,7 @@ describe('Signup', () => {
         check('terms');
         check('gdpr');
         get('submit').click();
-        get('existing-email').should('contain', 'This email already exists');
+        get('existing-email').should('exist');
       });
     });
   });

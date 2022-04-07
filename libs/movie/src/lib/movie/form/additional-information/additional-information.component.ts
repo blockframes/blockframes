@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { MovieFormShellComponent } from '../shell/shell.component';
 import { Observable } from 'rxjs';
-import { unitBox, UnitBox, certifications, SocialGoal, socialGoals } from '@blockframes/utils/static-model';
+import { unitBox, UnitBox, certifications, SocialGoal, socialGoals } from '@blockframes/model';
 import { startWith, map } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 

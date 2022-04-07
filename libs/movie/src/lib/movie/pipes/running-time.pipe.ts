@@ -1,6 +1,5 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
-import { MovieRunningTime } from '@blockframes/model';
-import { screeningStatus } from '@blockframes/utils/static-model/static-model';
+import { MovieRunningTime, screeningStatus } from '@blockframes/model';
 
 /**
  * Format the running time to show 'time min' and the status if needed

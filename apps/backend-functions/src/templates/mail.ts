@@ -17,12 +17,12 @@ import {
   createMailTerm, 
   ContractDocument, 
   NegotiationDocument, 
-  Offer 
+  Offer,
+  staticModel
 } from '@blockframes/model';
 import { EventEmailData, OrgEmailData, UserEmailData, getMovieEmailData, getOfferEmailData } from '@blockframes/utils/emails/utils';
 import { App, appName, Module } from '@blockframes/utils/apps';
 import { format } from "date-fns";
-import { staticModel } from '@blockframes/utils/static-model';
 import { Timestamp } from '../data/internals';
 import { displayName } from '@blockframes/utils/utils';
 import { supportMailosaur } from '@blockframes/utils/constants';
@@ -368,7 +368,7 @@ export function adminOfferCreatedConfirmationEmail(toUser: UserEmailData, org: O
   const date = format(new Date(), 'dd MMM, yyyy');
   const contracts = bucket.contracts.map(contract => createMailContract(contract));
   const data = { org, bucket: { ...bucket, contracts }, user: toUser, baseUrl: appUrl.content, date };
-  return { to: toUser.email, templateId: templateIds.offer.toAdmin, data };
+  return { to: supportEmails.catalog, templateId: templateIds.offer.toAdmin, data };
 }
 
 /**To inform buyer that his offer has been successfully created. */
