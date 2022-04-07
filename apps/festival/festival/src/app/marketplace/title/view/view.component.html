@@ -3,31 +3,32 @@
     <movie-header [movie]="movie">
 
       <movie-header-cta fxLayout="column" fxLayoutGap="32px">
-        <section>
+        <section class="orgs">
           <ng-container *ngFor="let org of orgs$ | async">
             <org-chip [org]="org"></org-chip>
           </ng-container>
         </section>
-        <ng-container *ngIf="(eventId$ | async) as eventId; else request">
-          <section fxLayout fxLayoutAlign="space-between" fxLayout.lt-sm="column">
-            <button mat-stroked-button [disabled]="requestSent" (click)="requestAskingPrice(movie.id)">
+        <section fxLayout fxLayout.lt-sm="column">
+          <ng-container *ngIf="(eventId$ | async) as eventId; else request">
+            <button mat-button  class="translucent-button" [disabled]="requestSent" (click)="requestAskingPrice(movie.id)">
+              <mat-icon svgIcon="local_offer"></mat-icon>
               <span class="linear-wipe">Request Asking Price</span>
             </button>
+            <wishlist-button small [movieId]="movie.id"></wishlist-button>
             <a ongoing-event-button [routerLink]="['/event', eventId, 'r', 'i']">Ongoing Screening</a>
-          </section>
-        </ng-container>
-        <ng-template #request>
-          <section fxLayout fxLayout.lt-sm="column">
+          </ng-container>
+          <ng-template #request>
             <event-request-screening [movieId]="movie.id" animated></event-request-screening>
-            <button mat-stroked-button  [disabled]="requestSent" (click)="requestAskingPrice(movie.id)">
+            <button mat-button class="translucent-button" [disabled]="requestSent" (click)="requestAskingPrice(movie.id)">
+              <mat-icon svgIcon="local_offer"></mat-icon>
               <span class="linear-wipe">Request Asking Price</span>
             </button>
-          </section>
-        </ng-template>
+            <wishlist-button small [movieId]="movie.id"></wishlist-button>
+          </ng-template>
+        </section>
       </movie-header-cta>
 
       <movie-header-actions fxHide.lt-sm fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="24px">
-        <wishlist-button [movieId]="movie.id"></wishlist-button>
         <movie-promotional-links [movie]="movie" [links]="promoLinks"></movie-promotional-links>
       </movie-header-actions>
     </movie-header>
