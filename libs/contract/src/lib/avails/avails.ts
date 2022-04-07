@@ -224,7 +224,9 @@ function isListAvailPartiallyInTerm(term: BucketTerm<Date>, avails: AvailsFilter
 
 export function getListMatchingAvailabilities(mandates: FullMandate[], sales: FullSale[], avails: AvailsFilter) {
   const options = {
-    mandates, sales, avails,
+    mandates,
+    sales,
+    avails,
     mandateFilterFn: isAvailAllInTerm,
     saleFilterFn: isListAvailPartiallyInTerm,
   };
@@ -239,7 +241,8 @@ function getMatchingSales<T extends (FullSale | BucketContract)>(sales: T[], ava
 
 export function getMandateTerms(avails: AvailsFilter, mandates: FullMandate[]): AvailSearchResult<AvailsFilter>[] | undefined {
   const options = {
-    mandates, avails,
+    mandates,
+    avails,
     mandateFilterFn: isAvailAllInTerm,
   };
   const { available } = getMatchingAvailabilities(options);
@@ -539,7 +542,9 @@ export function isCalendarTermInAvails<T extends BucketTerm | Term>(term: T, ava
 
 export function getMatchingCalendarAvailabilities(avails: CalendarAvailsFilter, mandates: FullMandate[], sales: FullSale[]) {
   const options = {
-    avails, mandates, sales,
+    avails,
+    mandates,
+    sales,
     mandateFilterFn: isCalendarTermInAvails,
     saleFilterFn: isCalendarAvailPartiallyInTerm,
   };

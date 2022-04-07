@@ -139,7 +139,7 @@ export class BucketService extends CollectionService<BucketState> {
         contracts.push(contract);
       }
     }
-    bucket
+    return bucket
       ? this.update(orgId, { contracts })
       : this.add({ ...bucket, contracts })
   }
