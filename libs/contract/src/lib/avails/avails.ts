@@ -97,6 +97,38 @@ interface SearchAvailsConfig<A extends BaseAvailsFilter> {
   saleFilterFn?: (term: Term<Date>, avail: A) => boolean
 };
 
+function combineAvailResults<A extends CalendarAvailsFilter | AvailsFilter>(results: AvailResult<A>[]) {
+  const availableResults = results
+    .map(({ available }) => available)
+    .filter(available => available.length)
+    .flat()
+
+  //combine all sub-avails with the same matching term.
+  const termIds = availableResults.map(({ mandate }) => mandate.terms[0].id)
+  const uniqueTermIds = Array.from(new Set(termIds).values());
+  const combinedAvailableResults: AvailSearchResult<A>[] = [];
+
+  for (const termId of uniqueTermIds) {
+    const correspondingResults = availableResults.filter(({ mandate }) => mandate.terms[0].id === termId)
+    const mandate = correspondingResults[0].mandate;
+    const subavailTerritories: Territory[] = [];
+    const subavailMedias: Media[] = [];
+    for (const result of correspondingResults) {
+      subavailMedias.push(...result.avail.medias)
+      subavailTerritories.push(...result.avail.territories)
+    }
+    const avail = {
+      ...correspondingResults[0].avail,
+      territories: subavailTerritories,
+      medias: subavailMedias
+    };
+    combinedAvailableResults.push({ mandate, avail });
+  }
+
+
+  return combinedAvailableResults;
+}
+
 function getMatchingAvailabilities<A extends AvailsFilter | CalendarAvailsFilter>(config: SearchAvailsConfig<A>) {
   const {
     avails,
@@ -180,34 +212,7 @@ function getMatchingAvailabilities<A extends AvailsFilter | CalendarAvailsFilter
     }
   }
 
-  // Get non-empty available results
-  const available = results
-    .map(({ available }) => available)
-    .filter(available => available.length)
-    .flat()
-
-  //combine all sub-avails with the same matching term.
-  const termIds = available.map(({ mandate }) => mandate.terms[0].id)
-  const uniqueTermIds = new Set(termIds);
-
-  const combinedAvailableResults = Array.from(uniqueTermIds.values())
-    .map(termId => {
-      const correspondingResults = available.filter(({ mandate }) => mandate.terms[0].id === termId)
-      const mandate = correspondingResults[0].mandate;
-      const subavailTerritories: Territory[] = [];
-      const subavailMedias: Media[] = [];
-      for (const result of correspondingResults) {
-        subavailMedias.push(...result.avail.medias)
-        subavailTerritories.push(...result.avail.territories)
-      }
-      const avail = {
-        ...correspondingResults[0].avail,
-        territories: subavailTerritories,
-        medias: subavailMedias
-      };
-      return { mandate, avail };
-    });
-
+  const combinedAvailableResults = combineAvailResults(results)
 
   return {
     periodAvailable: { from, to },
