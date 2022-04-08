@@ -186,7 +186,7 @@ function getMatchingAvailabilities<A extends AvailsFilter | CalendarAvailsFilter
     .filter(available => available.length)
     .flat()
 
-  //combine all sub-avails with the same term
+  //combine all sub-avails with the same matching term.
   const termIds = available.map(({ mandate }) => mandate.terms[0].id)
   const uniqueTermIds = new Set(termIds);
 
