@@ -46,14 +46,13 @@ footer {
 
 
 
-@include layout-bp(lt-sm) {
+@include layout-bp(xs) {
   footer {
     .video-container {
       margin: 0;
     }
     #videoFooter div {
-      display: flex;
-      flex-direction: column;
+      grid-template-columns: 1fr;
     }
   }
 }

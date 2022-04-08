@@ -14,10 +14,4 @@
       right: 0;
     }
   }
-
-  @include layout-bp(lt-sm) {
-    .mat-dialog-container { 
-      padding-inline: 24px;
-    }
-  }
 }

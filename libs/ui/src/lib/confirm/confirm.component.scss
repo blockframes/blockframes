@@ -27,7 +27,7 @@ button.close {
   aspect-ratio: 1;
 }
 
-@include layout-bp(lt-sm) {
+@include layout-bp(xs) {
   section {
     padding: 0;
   }

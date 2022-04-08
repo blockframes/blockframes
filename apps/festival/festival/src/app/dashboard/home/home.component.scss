@@ -9,8 +9,8 @@
 
 header {
   display: flex;
-  gap: 24px;
-
+  justify-content: space-between;
+  align-items: center;
   h1 {
     margin: auto auto auto 0;
   }
@@ -52,18 +52,11 @@ header {
   }
 }
 
-@include layout-bp(lt-sm) {
+@include layout-bp(xs) {
   header {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: 1fr 1fr;
-
+    flex-direction: column;
     h1 {
-      grid-column: 1 / 4;
-      margin-inline: auto;
-    }
-    a {
-      margin-inline: auto;
+      margin: 0 0 24px 0;
     }
   }
 }

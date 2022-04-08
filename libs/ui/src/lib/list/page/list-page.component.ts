@@ -9,10 +9,10 @@ import {
   Input,
   AfterContentInit, Output, EventEmitter, HostBinding
 } from '@angular/core';
-import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
 // Blockframes
 import { fadeList, slideUp } from '@blockframes/utils/animations/fade';
 import { boolean } from '@blockframes/utils/decorators/decorators';
+import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
 
 @Directive({ selector: '[listPageAppBar], list-page-app-bar' })
 export class PageAppBarSearchDirective { }
