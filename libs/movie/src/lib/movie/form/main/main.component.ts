@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 
 // Component
 import { MovieFormShellComponent } from '../shell/shell.component';
+import { CellModalComponent } from '@blockframes/ui/cell-modal/cell-modal.component';
 
 // RxJs
 import { Subscription, Observable } from 'rxjs';
@@ -16,6 +17,7 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { maxYear } from '@blockframes/utils/form/validators/validators';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'movie-form-main',
@@ -52,7 +54,12 @@ export class MovieFormMainComponent implements OnInit, OnDestroy {
   };
 
   private sub: Subscription;
-  constructor(private shell: MovieFormShellComponent, private route: ActivatedRoute, private dynTitle: DynamicTitleService) { }
+  constructor(
+    private shell: MovieFormShellComponent,
+    private route: ActivatedRoute,
+    private dialog: MatDialog,
+    private dynTitle: DynamicTitleService
+  ) { }
 
   ngOnInit() {
     this.dynTitle.setPageTitle('Main Information')
@@ -92,5 +99,9 @@ export class MovieFormMainComponent implements OnInit, OnDestroy {
     } else {
       this.form.runningTime.get('time').setErrors(null);
     }
+  }
+
+  openDetails(title: string, values: string[]) {
+    this.dialog.open(CellModalComponent, { data: { title, values }, maxHeight: '80vh', autoFocus: false });
   }
 }
