@@ -1,6 +1,13 @@
-<h1>{{ data.title }}</h1>
-<ng-container fxLayout fxFlex>
-  <p *ngFor="let textValue of data.values">
-    {{ textValue }}
-  </p>
-</ng-container>
+{{ console(data) }}
+
+<header>
+  <h2>{{ data.title }}</h2>
+
+  <button mat-icon-button (click)="close()">
+    <mat-icon svgIcon="close"></mat-icon>
+  </button>
+</header>
+
+<mat-dialog-content>
+  <p class="mat-body-1" *ngFor="let value of data.values">{{ value }}</p>
+</mat-dialog-content>

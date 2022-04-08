@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
-  selector: 'cell-modal',
+  selector: 'cellmodal',
   templateUrl: 'cell-modal.component.html',
   styleUrls: ['./cell-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -16,5 +16,9 @@ export class CellModalComponent {
 
   close() {
     this.dialogRef.close()
+  }
+
+  console(any: any) {
+    console.log(any)
   }
 }

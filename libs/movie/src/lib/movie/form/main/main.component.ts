@@ -107,6 +107,6 @@ export class MovieFormMainComponent implements OnInit, OnDestroy {
 
   openDetails(title: string, values: string[]) {
     console.log("Test ?");
-    this.dialog.open(CellModalComponent, { data: { title, values }, maxHeight: '80vh', autoFocus: false });
+    this.dialog.open(CellModalComponent, { data: { title, values }, maxHeight: '80vh',  minWidth: '50vw', maxWidth: '80vw', minHeight: '50vh', autoFocus: false });
   }
 }
