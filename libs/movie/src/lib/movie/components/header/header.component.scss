@@ -26,10 +26,6 @@ header {
         h2 {
           margin-bottom: 8px;
         }
-
-        @include layout-bp(xs) {
-          text-align: center;
-        }
       }
     }
 
@@ -50,5 +46,11 @@ header {
 @include layout-bp(gt-sm) {
   .poster {
     height: 400px;
+  }
+}
+
+@include layout-bp(xs) {
+  h2 {
+    text-align: center;
   }
 }
