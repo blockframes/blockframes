@@ -15,10 +15,10 @@ describe('Basic Landing Page, Login and Profile Page Tests', () => {
   it('should now show Accept Cookies after being accepted', () => {
     acceptCookies();
     cy.visit('/');
-    cy.contains('Accept cookies').should('not.exist');
+    cy.contains('Accept Cookies').should('not.exist');
   })
   it('should show the Accept Cookies banner', () => {
-    cy.contains('Accept cookies').should('exist');
+    cy.contains('Accept Cookies').should('exist');
   })
 
 })
