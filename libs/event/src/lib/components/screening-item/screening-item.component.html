@@ -31,7 +31,7 @@
       <ng-template #notOwner>
         <ng-container *ngIf="invitation !== undefined">
           <invitation-action @fade [invitation]="invitation" [event]="event"></invitation-action>
-          <button mat-button class="translucent-button" [disabled]="requestSent" (click)="requestAskingPrice(event.meta.titleId)">
+          <button mat-button class="translucent" [disabled]="requestSent" (click)="requestAskingPrice(event.meta.titleId)">
             <mat-icon svgIcon="local_offer"></mat-icon>
             <span>Request Asking Price</span>
           </button>
