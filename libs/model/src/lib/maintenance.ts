@@ -1,9 +1,8 @@
-import firebase from 'firebase/app';
-import 'firebase/firestore';
+import type { Timestamp } from './timestamp';
 
 export interface IMaintenanceDoc {
-  endedAt: firebase.firestore.Timestamp
-  startedAt: firebase.firestore.Timestamp
+  endedAt: Timestamp;
+  startedAt: Timestamp;
 }
 
 export interface IVersionDoc {
