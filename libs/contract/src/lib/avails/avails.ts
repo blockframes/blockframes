@@ -516,6 +516,7 @@ export interface DurationMarker {
   to: Date,
   contract?: Mandate,
   term?: Term<Date>,
+  avail?: CalendarAvailsFilter,
 }
 
 interface CalendarAvailabilities {
@@ -584,12 +585,14 @@ export function durationAvailabilities(
     ...rest
   } = getMatchingCalendarAvailabilities(avails, mandates, sales);
 
-  const available = rest.available.map(a => a.mandate).map(m => {
-    return m.terms.map((t): DurationMarker => ({
+  const available = rest.available.map(availability => {
+    const { mandate, avail } = availability;
+    return mandate.terms.map((t): DurationMarker => ({
       from: periodAvailable.from,
       to: periodAvailable.to,
-      contract: m,
-      term: t
+      contract: mandate,
+      term: t,
+      avail
     }));
   }).flat();
 
