@@ -1,5 +1,4 @@
-//import 'firebase/firestore'; // TODO #7273 useful ?
-import { Timestamp } from 'firebase/firestore'; // TODO #7273 #8006 ok with backend-functions ?
+import { Timestamp } from 'firebase/firestore';
 
 export interface IMaintenanceDoc {
   endedAt: Timestamp
@@ -35,8 +34,8 @@ export function _isInMaintenance(maintenanceDoc: IMaintenanceDoc, delay = EIGHT_
       // Wait `delay` minutes before allowing any operation on the db.
       // this prevents triggering firebase events.
       // NOTE: this is hack-ish but good enough for our needs! we'll revisit this later.
-      const now = Timestamp.now();
-      return maintenanceDoc.endedAt.toMillis() + delay > now.toMillis();
+      const now = Date.now();
+      return maintenanceDoc.endedAt.toMillis() + delay > now;
     }
 
     // We shouldn't throw here else if this happen it create cache issues

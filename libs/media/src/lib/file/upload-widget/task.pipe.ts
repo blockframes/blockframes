@@ -3,7 +3,7 @@ import { UploadTask, UploadTaskSnapshot, percentage } from '@angular/fire/storag
 
 // Rxjs
 import { Observable, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
 export function getTaskStateObservable(task: UploadTask): Observable<string> {
 
@@ -37,7 +37,8 @@ export function getTaskStateObservable(task: UploadTask): Observable<string> {
 export class TaskProgressPipe implements PipeTransform {
   transform(task: UploadTask) {
     return percentage(task).pipe(
-      catchError(() => of())
+      map(e => e.progress),
+      catchError(() => of(0))
     );
   }
 }
