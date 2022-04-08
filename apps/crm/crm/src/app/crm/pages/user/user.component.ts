@@ -75,33 +75,19 @@ export class UserComponent implements OnInit {
     const toInvit = this.invitationService
       .valueChanges(ref => ref.where('toUser.uid', '==', this.userId))
       .pipe(
-        joinWith(
-          {
-            toOrg: (invit) => this.organizationService.valueChanges(invit.toUser.orgId)
-          }
-        )
+        joinWith({ toOrg: invit => this.organizationService.valueChanges(invit.toUser.orgId) })
       )
     const fromInvit = this.invitationService
       .valueChanges(ref => ref.where('fromUser.uid', '==', this.userId))
       .pipe(
-        joinWith(
-          {
-            fromOrg: (invit) => this.organizationService.valueChanges(invit.fromUser.orgId)
-          }
-        )
+        joinWith({ fromOrg: invit => this.organizationService.valueChanges(invit.fromUser.orgId) })
       )
 
     this.invitations = combineLatest([toInvit, fromInvit]).pipe(
-      map(
-        ([toInvit, fromInvit]) => [...toInvit, ...fromInvit]
-      ),
+      map(([toInvit, fromInvit]) => [...toInvit, ...fromInvit]),
       joinWith(
-        {
-          event: (invit) => this.eventService.valueChanges(invit.eventId),
-        },
-        {
-          shouldAwait: true
-        }
+        { event: (invit) => this.eventService.valueChanges(invit.eventId) },
+        { shouldAwait: true }
       )
     )
   }
@@ -265,7 +251,7 @@ export class UserComponent implements OnInit {
     this.dialog.open(DetailedTermsComponent, { data: { terms, scope }, maxHeight: '80vh', autoFocus: false });
   }
 
-  goTo(invitation: Invitation) {
+  getLink(invitation: Invitation) {
     if (invitation.type === 'attendEvent') {
       return ['/c/o/dashboard/crm/event', invitation.eventId];
     } else if (invitation.type === 'joinOrganization') {
