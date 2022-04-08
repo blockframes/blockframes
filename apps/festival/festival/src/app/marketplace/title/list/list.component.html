@@ -4,7 +4,7 @@
   <list-page-app-bar>
     <form class="app-bar" [formGroup]="searchForm">
       <input type="text" formControlName="query" [value]="searchForm.query.value"
-        placeholder="Search for titles, directors, keywords, ...">
+        placeholder="Search for titles, directors, keywords...">
     </form>
   </list-page-app-bar>
 
@@ -17,7 +17,7 @@
   <list-page-search>
     <form [formGroup]="searchForm">
       <mat-form-field appearance="outline">
-        <mat-label>Search for titles, directors, keywords, ...</mat-label>
+        <mat-label>Search for titles, directors, keywords...</mat-label>
         <mat-icon matPrefix svgIcon="search"></mat-icon>
         <input matInput type="text" formControlName="query" [value]="searchForm.get('query').value" />
       </mat-form-field>

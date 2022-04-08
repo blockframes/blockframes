@@ -101,7 +101,7 @@ export async function getTitleId(
     ? [where('title.international', '==', nameOrId)]
     : [where('title.international', '==', nameOrId), where('orgIds', 'array-contains', userOrgId)];
   const titles = await titleService.getValue(queryFn);
-  if (!titles.length) throw new Error(`No title found with name "${nameOrId}".`);
+  if (!titles.length) throw new Error(`No title found with name/id "${nameOrId}".`);
   if (titles.length !== 1) throw new Error(`Multiple titles with name "${nameOrId}" found.`);
   return memo(nameOrId, titles[0]);
 }

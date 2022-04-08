@@ -157,19 +157,24 @@ export class ListComponent implements OnDestroy, OnInit {
   }
 
   async addAvail(title: (AlgoliaMovie & { mandates: FullMandate[] })) {
-
     if (this.availsForm.invalid) {
       this.snackbar.open('Fill in avails filter to add title to your Selection.', 'close', { duration: 5000 })
       return;
     }
 
-    const [parentTerm] = getMandateTerms(this.availsForm.value, title.mandates[0].terms);
-    if (!parentTerm) {
+    const availResults = getMandateTerms(this.availsForm.value, title.mandates);
+    if (!availResults.length) {
       this.snackbar.open('This title is not available', 'close', { duration: 5000 });
       return;
     }
 
-    this.bucketService.addTerm(title.objectID, parentTerm.id, this.availsForm.value);
+    const results = availResults.map(res => ({
+      titleId: title.objectID,
+      parentTermId: res.term.id,
+      avail: res.avail
+    }));
+
+    this.bucketService.addBatchTerms(results);
 
     this.snackbar.open(`${title.title.international} was added to your Selection`, 'GO TO SELECTION', { duration: 4000 })
       .onAction()
