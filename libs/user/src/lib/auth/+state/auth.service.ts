@@ -35,7 +35,7 @@ import { ErrorResultResponse } from '@blockframes/utils/utils';
 
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'auth' })
-class AuthStore extends Store<AuthState> { // @TODO #7273 remove when we get rid of akita
+class AuthStore extends Store<AuthState> {
   constructor() {
     super(initialAuthState);
   }

@@ -103,13 +103,13 @@ export class SliderComponent implements OnDestroy, AfterContentInit, AfterViewIn
 
   // Tracks the time for interval$
   private timer$: Observable<number>;
-  private timerStop$ = new Subject<void>(); // TODO #7273 check
+  private timerStop$ = new Subject<void>();
 
   private _slideDirection: Slider['slideDirection'] = 'ltr';
   private slideDirection$ = new Subject<Slider['slideDirection']>();
 
   // Cancels all the subscription
-  private destroy$ = new Subject<void>(); // TODO #7273 check
+  private destroy$ = new Subject<void>();
 
   // Flag to indicate if animation is playing
   private playing = false;
@@ -128,7 +128,7 @@ export class SliderComponent implements OnDestroy, AfterContentInit, AfterViewIn
     private renderer: Renderer2,
     private cdr: ChangeDetectorRef,
     private slideWrapper: ElementRef
-  ) {}
+  ) { }
 
   ngAfterViewInit() {
     this.calculateRatio();

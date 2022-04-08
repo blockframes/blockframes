@@ -16,7 +16,7 @@ export class SendgridService {
   public async sendAsAdmin(data: EmailAdminParameters) {
     const r = await this.sendMailAsAdmin(data);
     return r.data;
-  } // TODO #7273 test
+  }
 
 
   /**
@@ -27,7 +27,7 @@ export class SendgridService {
   public async sendWithTemplate(data: EmailParameters) {
     const r = await this.sendMailWithTemplate(data);
     return r.data;
-  } // TODO #7273 test
+  }
 
   constructor(private functions: Functions) { }
 

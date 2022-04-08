@@ -17,7 +17,7 @@ export class PermissionsService extends CollectionService<PermissionsState> {
   readonly useMemorization = false;
 
   // The whole permissions document for organization of the current logged in user.
-  permissions: Permissions; // @TODO #7273 if this.permissions$ was not already called, this will be undefined
+  permissions: Permissions;
   permissions$: Observable<Permissions> = this.authService.profile$.pipe(
     switchMap(user => user?.orgId ? this.valueChanges(user.orgId) : of(undefined)),
     tap(permissions => this.permissions = permissions)

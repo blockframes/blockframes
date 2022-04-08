@@ -40,7 +40,7 @@ export class ContactComponent implements OnInit {
   /**
    * Function to send email to BF admin from an user
    */
-  public sendMessage() { // TODO #7273 test
+  public sendMessage() {
     const userSubject = this.form.get('subject').value;
     const userMessage = this.form.get('message').value;
 

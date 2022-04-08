@@ -85,7 +85,7 @@ export class MovieService extends CollectionService<MovieState> {
     const movieRef = doc(this.db, `movies/${movie.id}`);
     write.update(movieRef,
       '_meta.updatedBy', this.authService.uid,
-      '_meta.updatedAt', new Date(), // TODO #7273 check
+      '_meta.updatedAt', new Date(),
     );
   }
 
