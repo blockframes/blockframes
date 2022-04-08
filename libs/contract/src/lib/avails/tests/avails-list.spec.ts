@@ -52,19 +52,19 @@ describe('Avails data', () => {
   });
 
   it('tests ended sales', () => {
-    assertTitleAvailability(availsListGermanyRussiaCzech, movieMandates, movieSales, [1, 0, 1, 0, 1]);
+    assertTitleAvailability(availsListGermanyRussiaCzech, movieMandates, movieSales, [3, 0, 3, 0, 3]);
   });
 
   it('tests ongoing sales request exclusive', () => {
-    assertTitleAvailability(availsListOngoingSalesExclusive, movieMandates, movieSales, [0, 1, 1, 1, 1]);
+    assertTitleAvailability(availsListOngoingSalesExclusive, movieMandates, movieSales, [0, 3, 3, 3, 3]);
   });
 
   it('tests ongoing sales request non exclusive', () => {
-    assertTitleAvailability(availsListOngoingSalesNonExclusive, movieMandates, movieSales, [1, 1, 0, 1, 0]);
+    assertTitleAvailability(availsListOngoingSalesNonExclusive, movieMandates, movieSales, [3, 3, 0, 3, 0]);
   });
 
   it('tests territory with exclusivity', () => {
-    assertTitleAvailability(availsListGermanyRussiaCzechExclusive, movieMandates, movieSales, [0, 1, 0, 0, 0]);
+    assertTitleAvailability(availsListGermanyRussiaCzechExclusive, movieMandates, movieSales, [0, 3, 0, 0, 0]);
   });
 
   it('tests media (svod) on argentina ', () => {
