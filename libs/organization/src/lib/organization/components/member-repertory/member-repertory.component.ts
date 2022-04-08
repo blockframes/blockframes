@@ -12,8 +12,8 @@ export class MemberRepertoryComponent {
   @Input() members: OrganizationMember[];
   @Input() showFilter = false;
   @Input() isSuperAdmin: boolean;
-  @Input() @boolean showEdit = false;
-  @Input() @boolean showPermission = true;
+  @Input() @boolean showActions = false;
+  @Input() @boolean showPermissions = true;
 
   @Output() memberRemoved = new EventEmitter<string>();
 
@@ -22,19 +22,14 @@ export class MemberRepertoryComponent {
   @Output() updatedToMember = new EventEmitter<string>();
 
   @Input() memberColumns = {
-    uid: '',
-    firstName: 'First Name',
-    lastName: 'Last Name',
     email: 'Email Address',
-    position: 'Position',
-    role: 'Permissions'
+    position: 'Position'
   };
 
-  @Input() memberColumnsIndex = ['firstName', 'lastName', 'email', 'position', 'role'];
-
+  @Input() memberColumnsIndex = ['email', 'position'];
 
   get variableColumns() {
-    return this.memberColumnsIndex.filter(col => !['firstName', 'lastName', 'role', 'uid', 'edit'].includes(col))
+    return this.memberColumnsIndex;
   }
 
   public displayRole(role: UserRole) {

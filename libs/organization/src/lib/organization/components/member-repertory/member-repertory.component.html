@@ -1,27 +1,36 @@
 <mat-card>
   <mat-card-title>Company Members</mat-card-title>
   <bf-table [source]="members" pagination="50" [useFilter]="showFilter">
+    <ng-template colRef="avatar" let-avatar>
+      <img class="avatar" [ref]="avatar" asset="profil_user.svg">
+    </ng-template>
+
     <ng-template colRef="firstName" label="First Name" let-firstName sort>
       <b>{{ firstName }}</b>
     </ng-template>
+
     <ng-template colRef="lastName" label="Last Name" let-lastName sort>
       <b>{{ lastName }}</b>
     </ng-template>
+
     <ng-container *ngFor="let col of variableColumns">
       <ng-template [colRef]="col" [label]="memberColumns[col]" let-value sort>
         {{ value }}
       </ng-template>
     </ng-container>
-    <ng-template *ngIf="showPermission" colRef="role" label="Permissions" let-role sort>
+
+    <ng-template *ngIf="showPermissions" colRef="role" label="Permissions" let-role sort>
       {{ displayRole(role) }}
     </ng-template>
+
     <ng-template *ngIf="isSuperAdmin" colRef="uid" let-uid>
       <member-permissions [uid]="uid" (memberRemoved)="memberRemoved.emit(uid)"
         (updatedToSuperAdmin)="updatedToSuperAdmin.emit(uid)" (updatedToAdmin)="updatedToAdmin.emit(uid)"
         (updatedToMember)="updatedToMember.emit(uid)">
       </member-permissions>
     </ng-template>
-    <ng-template *ngIf="showEdit" colRef label="Edit" let-user>
+
+    <ng-template *ngIf="showActions" colRef label="Actions" let-user>
       <a mat-icon-button [routerLink]="user.edit?.link">
         <mat-icon svgIcon="edit"></mat-icon>
       </a>

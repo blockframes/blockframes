@@ -31,15 +31,15 @@
       {{ country ?? '--' | titlecase }}
     </ng-template>
     <ng-template colRef label="Status" sort let-org>
-      {{ org.status ?? '--' | titlecase }}
+      {{ org.status ?? '--' | toLabel: 'organizationStatus' }}
     </ng-template>
     <ng-template colRef="activity" sort let-activity>
       {{ activity | toLabel: 'orgActivity'}}
     </ng-template>
     <ng-template colRef="appAccess" label="App Access" let-appAccess>
       <ul>
-        <ng-container *ngFor="let a of app">
-          <li>{{ a | appName:'short' }} : {{ appAccess[a]?.dashboard ? 'yes': 'no' }} : {{ appAccess[a]?.marketplace ? 'yes': 'no' }} </li>
+        <ng-container *ngFor="let app of apps">
+          <li>{{ app | appName:'short' }} : {{ appAccess[app]?.dashboard ? 'yes': 'no' }} : {{ appAccess[app]?.marketplace ? 'yes': 'no' }} </li>
         </ng-container>
       </ul>
     </ng-template>

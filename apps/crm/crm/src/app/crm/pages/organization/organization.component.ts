@@ -38,16 +38,11 @@ export class OrganizationComponent implements OnInit {
   public invitationsToJoinOrganization$: Observable<Invitation[]>;
 
   public memberColumns = {
-    uid: '',
-    firstName: 'First Name',
-    lastName: 'Last Name',
     email: 'Email Address',
-    position: 'Position',
-    role: 'Permissions',
-    edit: 'Edit',
+    position: 'Position'
   };
 
-  public memberColumnsIndex = ['firstName', 'lastName', 'email', 'position', 'role', 'edit'];
+  public memberColumnsIndex = ['firstName', 'lastName', 'email', 'position'];
 
   constructor(
     private organizationService: OrganizationService,
