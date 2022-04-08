@@ -34,24 +34,26 @@ export async function upgrade(db: Firestore) {
   const users = await db.collection('users').get();
   let membersBatch = [];
 
-  for (let i = 0; i < users.docs.length; i++) {
-    const user = createUser(users.docs[i].data());
+  if(production) {
+    for (let i = 0; i < users.docs.length; i++) {
+      const user = createUser(users.docs[i].data());
     
-    const isBlockframeEmail = ['dev+', 'concierge+', 'blockframes.io'].some(str => user.email.includes(str));
-    if(production && !isBlockframeEmail) continue;
-    const member = {
-      email_address: user.email,
-      status: 'subscribed'
-    };
-    membersBatch.push(member);
-
-    if (i === users.docs.length) {
-      await batch(membersBatch);
-      break;
-    } else if (i % 500 === 0) {
-      // max size of batch is 500
-      await batch(membersBatch);
-      membersBatch = [];
+      const isBlockframeEmail = ['dev+', 'concierge+', 'blockframes.io'].some(str => user.email.includes(str));
+      if(isBlockframeEmail) continue;
+      const member = {
+        email_address: user.email,
+        status: 'subscribed'
+      };
+      membersBatch.push(member);
+  
+      if (i === users.docs.length) {
+        await batch(membersBatch);
+        break;
+      } else if (i % 500 === 0) {
+        // max size of batch is 500
+        await batch(membersBatch);
+        membersBatch = [];
+      }
     }
   }
 }

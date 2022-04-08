@@ -38,13 +38,6 @@
         </a>
         <ng-template #noOrg>--</ng-template>
       </ng-template>
-      <ng-template colRef="avatar" let-avatar>
-        <img class="avatar" [ref]="avatar" asset="profil_user.svg">
-      </ng-template>
-      <ng-template colRef="orgCountry" label="Org Country" sort let-orgCountry>
-        <span *ngIf="orgCountry else noOrgCountry">{{ orgCountry }}</span>
-        <ng-template #noOrgCountry>--</ng-template>
-      </ng-template>
       <ng-template colRef="firstConnection" sort  label="First Connection" let-firstConnection>
         {{ firstConnection | date: 'mediumDate' }}
       </ng-template>
