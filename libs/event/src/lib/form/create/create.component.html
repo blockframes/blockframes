@@ -7,9 +7,9 @@
 <form [formGroup]="form" fxLayout="column">
   <mat-form-field fxFlex appearance="outline">
     <mat-label>Select Event Type</mat-label>
-    <mat-select test-id="event-type" required formControlName="type" (selectionChange)="onTypeSelected($event)">
-      <ng-container *ngFor="let type of types">
-        <mat-option [value]="type">{{ type | titlecase }}</mat-option>
+    <mat-select required formControlName="type" (selectionChange)="onTypeSelected($event)" test-id="event-type">
+      <ng-container *ngFor="let type of types; let i = index">
+        <mat-option [value]="type" [attr.test-id]="'type_' + i">{{ type | titlecase }}</mat-option>
       </ng-container>
     </mat-select>
   </mat-form-field>

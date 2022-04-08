@@ -1,11 +1,11 @@
 ﻿<form [formGroup]="form" fxLayout="column">
   <mat-form-field appearance="outline">
     <mat-label>Title</mat-label>
-    <input test-id="event-title-modal" matInput required formControlName="title" />
+    <input matInput required formControlName="title" test-id="event-title-modal"/>
   </mat-form-field>
 
   <div fxLayout="column" fxLayoutGap="24px">
-    <mat-slide-toggle test-id="all-day" formControlName="allDay" color="primary">All day</mat-slide-toggle>
+    <mat-slide-toggle formControlName="allDay" color="primary" test-id="all-day">All day</mat-slide-toggle>
     <div fxLayout fxLayoutAlign="space-between center" fxLayoutGap="24px">
       <mat-form-field fxFlex appearance="outline" test-id="event-start">
         <mat-label>Start</mat-label>
@@ -25,22 +25,22 @@
     <h3>Privacy Settings</h3>
     <mat-radio-group fxLayout="column" formControlName="accessibility" (change)="accessibilityChanged($event)">
       <div fxLayout fxLayoutAlign="start center" fxLayoutGap="8px">
-        <mat-radio-button  color="primary" value="public">
+        <mat-radio-button  color="primary" value="public" test-id="public">
           PUBLIC - Open to anyone with a link
         </mat-radio-button>
         <mat-icon svgIcon="info" matTooltip="Best for meetings"></mat-icon>
       </div>
-      <mat-radio-button  color="primary" value="protected">
+      <mat-radio-button  color="primary" value="protected" test-id="protected">
         PROTECTED - Open to anyone invited to the event (Archipel Market user or not)
       </mat-radio-button>
       <div fxLayout fxLayoutAlign="start center" fxLayoutGap="8px">
-        <mat-radio-button  color="primary" value="private" >
+        <mat-radio-button  color="primary" value="private" test-id="private">
           PRIVATE - Open to invited, identified Archipel Market users only
         </mat-radio-button>
         <mat-icon svgIcon="info" matTooltip="Best for screenings"></mat-icon>
       </div>
     </mat-radio-group>
-    
+
     <div fxLayout fxLayoutAlign="start center" fxLayoutGap="8px" *ngIf="form.value.type !== 'meeting'">
       <mat-checkbox formControlName="isSecret" color="primary">SECRET - not listed on the Marketplace</mat-checkbox>
       <mat-icon svgIcon="info" matTooltip="Only users with a direct link will be able to access your event."></mat-icon>

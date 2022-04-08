@@ -13,10 +13,9 @@
     <!-- Title -->
     <mat-form-field appearance="outline">
       <mat-label>Select the title to display</mat-label>
-      <mat-select formControlName="titleId" (selectionChange)="checkTitleAndScreener($event.value)">
-        <mat-option *ngFor="let title of titles" [value]="title.id">
-          {{ title.title.international }}
-        </mat-option>
+      <mat-select formControlName="titleId" (selectionChange)="checkTitleAndScreener($event.value)" test-id="title">
+        <!-- keep below line as is, because dividing it in multiple lines somehow adds a space at both end -->
+        <mat-option *ngFor="let title of titles; let i = index" [value]="title.id" [attr.test-id]="'title_' + i">{{ title.title.international }}</mat-option>
       </mat-select>
       <mat-hint id="missing-screener" *ngIf="screenerMissing || titleMissing">{{titleMissing ? 'No title selected' : 'This Title has no Screener attached.'}}</mat-hint>
     </mat-form-field>
@@ -30,7 +29,8 @@
         cdkTextareaAutosize
         #autosize="cdkTextareaAutosize"
         cdkAutosizeMinRows="4"
-        maxlength="500"></textarea>
+        maxlength="500"
+        test-id="description"></textarea>
       <mat-hint>Limited to 500 characters.</mat-hint>
     </mat-form-field>
   </ng-container>

@@ -23,7 +23,11 @@ export function get(selector: string) {
   return cy.get(`[test-id="${selector}"]`);
 }
 
-function getAllStartingWith(selector: string) {
+export function getByClass(selector: string) {
+  return cy.get(`.${selector}`);
+}
+
+export function getAllStartingWith(selector: string) {
   return cy.get(`[test-id^="${selector}"]`);
 }
 
