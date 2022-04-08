@@ -24,7 +24,7 @@ export class DownloadUrl implements PipeTransform {
   constructor(private storage: Storage) { }
   transform(storageFile: StorageFile, basePath: 'protected' | 'public' = 'public'): Promise<string> {
     const pathReference = ref(this.storage, `/${basePath}/${storageFile.storagePath}`);
-    return getDownloadURL(pathReference); // TODO #7273 test
+    return getDownloadURL(pathReference);
   }
 }
 

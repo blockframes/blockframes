@@ -233,7 +233,7 @@ export function connectFirestoreEmulator() {
     process.env['FIRESTORE_EMULATOR_HOST'] = 'localhost:8080';
   }
 
-  const app = admin.initializeApp({ projectId: firebase().projectId }, 'firestore'); // TODO #7273 https://github.com/firebase/firebase-admin-node/issues/593
+  const app = admin.initializeApp({ projectId: firebase().projectId }, 'firestore');
   db = app.firestore() as FirestoreEmulator;
 
   db.settings({
@@ -262,7 +262,7 @@ export function connectAuthEmulator() {
   }
 
 
-  const app = admin.initializeApp({ projectId: firebase().projectId }, 'auth'); // TODO #7273 https://github.com/firebase/firebase-admin-node/issues/593
+  const app = admin.initializeApp({ projectId: firebase().projectId }, 'auth');
   auth = app.auth();
 
   return auth;
