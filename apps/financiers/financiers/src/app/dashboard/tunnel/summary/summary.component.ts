@@ -9,6 +9,7 @@ import { map, pluck, switchMap } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/snackbar-error.component';
 
 @Component({
   selector: 'financiers-summary-tunnel',
@@ -72,9 +73,17 @@ export class TunnelSummaryComponent implements OnInit {
           } catch (err) {
             // Log the invalid forms
             if (this.invalidFields.length) {
-              this.snackBar.open('Some fields have invalid information.', '', { duration: 2000 });
+              const invalidError = this.snackBar.open('Some fields have invalid information.', 'VERIFY FIELDS', { duration: 5000 });
+              invalidError.afterDismissed().subscribe(() => {
+                document.getElementById("main-information").scrollIntoView({ behavior: "smooth" });
+              })
             } else if (this.missingFields.length) {
-              this.snackBar.open('Mandatory information is missing.', '', { duration: 2000 });
+              const missingError = this.snackBar.open('Mandatory information is missing.', 'VERIFY FIELDS', { duration: 5000 });
+              missingError.afterDismissed().subscribe(() => {
+                document.getElementById("main-information").scrollIntoView({ behavior: "smooth" });
+              })
+            } else {
+              this.snackBar.openFromComponent(SnackbarErrorComponent, { duration: 5000 });
             }
           }
         }

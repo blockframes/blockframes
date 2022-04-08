@@ -61,9 +61,15 @@ export class TunnelSummaryComponent implements OnInit {
       } else {
         // Log the invalid forms
         if (this.invalidFields.length) {
-          this.snackBar.open('Some fields have invalid information.', '', { duration: 2000 });
+          const invalidError = this.snackBar.open('Some fields have invalid information.', 'VERIFY FIELDS', { duration: 5000 });
+          invalidError.afterDismissed().subscribe(() => {
+            document.getElementById("main-information").scrollIntoView({ behavior: "smooth" });
+          })
         } else if (this.missingFields.length) {
-          this.snackBar.open('Mandatory information is missing.', '', { duration: 2000 });
+          const missingError = this.snackBar.open('Mandatory information is missing.', 'VERIFY FIELDS', { duration: 5000 });
+          missingError.afterDismissed().subscribe(() => {
+            document.getElementById("main-information").scrollIntoView({ behavior: "smooth" });
+          })
         }
       }
     } catch (err) {

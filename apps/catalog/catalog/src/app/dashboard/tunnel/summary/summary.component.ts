@@ -6,6 +6,7 @@ import { map, pluck, switchMap } from 'rxjs/operators';
 import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
 import { findInvalidControls } from '@blockframes/ui/tunnel/layout/layout.component'
 import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/snackbar-error.component';
 
 @Component({
   selector: 'catalog-summary-tunnel',
@@ -48,21 +49,30 @@ export class TunnelSummaryComponent implements OnInit {
   }
 
   public async submit() {
-    if (this.form.valid) {
-      await this.shell.layout.update({ publishing: true });
-      const text = `${this.form.get('title').get('international').value} was successfully submitted.`;
-      const ref = this.snackBar.open(text, '', { duration: 4000 });
-      ref.afterDismissed().subscribe(() => {
-        this.router.navigate(['../', 'end'], { relativeTo: this.route })
-      })
-    } else {
-      // Log the invalid forms
-      if (this.invalidFields.length) {
-        this.snackBar.open('Some fields have invalid information.', '', { duration: 2000 });
-      } else if (this.missingFields.length) {
-        this.snackBar.open('Mandatory information is missing.', '', { duration: 2000 });
+    try {
+      if (this.form.valid) {
+        await this.shell.layout.update({ publishing: true });
+        const text = `${this.form.get('title').get('international').value} was successfully submitted.`;
+        const ref = this.snackBar.open(text, '', { duration: 4000 });
+        ref.afterDismissed().subscribe(() => {
+          this.router.navigate(['../', 'end'], { relativeTo: this.route })
+        })
+      } else {
+        // Log the invalid forms
+        if (this.invalidFields.length) {
+          const invalidError = this.snackBar.open('Some fields have invalid information.', 'VERIFY FIELDS', { duration: 5000 });
+          invalidError.afterDismissed().subscribe(() => {
+            document.getElementById("main-information").scrollIntoView({ behavior: "smooth" });
+          })
+        } else if (this.missingFields.length) {
+          const missingError = this.snackBar.open('Mandatory information is missing.', 'VERIFY FIELDS', { duration: 5000 });
+          missingError.afterDismissed().subscribe(() => {
+            document.getElementById("main-information").scrollIntoView({ behavior: "smooth" });
+          })
+        }
       }
+    } catch (err) {
+      this.snackBar.openFromComponent(SnackbarErrorComponent, { duration: 5000 });
     }
   }
-
 }
