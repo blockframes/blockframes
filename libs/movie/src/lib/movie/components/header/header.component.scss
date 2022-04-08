@@ -1,3 +1,5 @@
+@import '~@angular/flex-layout/mq';
+
 header {
   background-repeat: no-repeat;
   background-position: center center;
@@ -9,7 +11,7 @@ header {
 
     .movie-info{
       .poster {
-        height: 400px;
+        height: 240px;
       }
 
       .movie-details {
@@ -39,4 +41,16 @@ header {
 
 .movie-header-actions {
   display: flex;
+}
+
+@include layout-bp(gt-sm) {
+  .poster {
+    height: 400px;
+  }
+}
+
+@include layout-bp(xs) {
+  h2 {
+    text-align: center;
+  }
 }
