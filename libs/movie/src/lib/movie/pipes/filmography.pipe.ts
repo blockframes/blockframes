@@ -3,9 +3,16 @@ import { Filmography } from '@blockframes/model';
 
 @Pipe({ name: 'filmography' })
 export class FilmographyPipe implements PipeTransform {
-  transform(filmography?: Filmography) {
-    if (filmography?.title) {
-      return filmography.year ? `${filmography.title} (${filmography.year})` : filmography.title;
+  transform(filmography?: Filmography | Filmography[]) {
+    const filmographyArray = !Array.isArray(filmography) ? [filmography] : filmography;
+    if (filmographyArray.length) {
+      return filmographyArray
+        .map(film => {
+          if (film?.title) {
+            return film.year ? `${film.title} (${film.year})` : film.title;
+          }
+        })
+        .join(', ');
     }
   }
 }

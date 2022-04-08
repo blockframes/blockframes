@@ -209,7 +209,7 @@
         <ng-template colRef="category" let-category>{{ category | toLabel: 'directorCategory' }}
         </ng-template>
         <ng-template colRef="filmography" let-filmography>
-          <span (click)="openDetails('Filmography', filmography)">{{ filmography | filmographyJoin | maxLength: 50 }}</span>
+          <span (click)="openDetails('Filmography', parseFilmography(filmography))">{{ filmography | filmography | maxLength: 50 }}</span>
         </ng-template>
         <ng-template formView let-directorForm>
           <article [formGroup]="directorForm">

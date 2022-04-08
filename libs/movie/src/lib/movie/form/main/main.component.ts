@@ -101,7 +101,12 @@ export class MovieFormMainComponent implements OnInit, OnDestroy {
     }
   }
 
+  parseFilmography(filmography: { title: string, year: number }[]) {
+    return filmography.map(film => `${film.title} (${film.year})`);
+  }
+
   openDetails(title: string, values: string[]) {
+    console.log("Test ?");
     this.dialog.open(CellModalComponent, { data: { title, values }, maxHeight: '80vh', autoFocus: false });
   }
 }
