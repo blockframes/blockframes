@@ -4,7 +4,7 @@
     <form class="app-bar" [formGroup]="searchForm" fxLayout fxLayoutAlign="center center">
       <mat-icon matPrefix svgIcon="search"></mat-icon>
       <input type="text" formControlName="query" [value]="searchForm.query.value"
-        placeholder="Search for a specific company...">
+        placeholder="Search for a sale's company">
     </form>
   </list-page-app-bar>
 
@@ -14,7 +14,7 @@
 
   <list-page-search>
     <mat-form-field appearance="outline" [formGroup]="searchForm">
-      <mat-label>Search for a specific company...</mat-label>
+      <mat-label>Search for a sale's company</mat-label>
       <mat-icon matPrefix svgIcon="search"></mat-icon>
       <input matInput type="text" formControlName="query" [value]="searchForm.query.value">
     </mat-form-field>
