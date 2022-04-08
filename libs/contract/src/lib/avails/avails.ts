@@ -186,9 +186,32 @@ function getMatchingAvailabilities<A extends AvailsFilter | CalendarAvailsFilter
     .filter(available => available.length)
     .flat()
 
+  //combine all sub-avails with the same term
+  const termIds = available.map(({ mandate }) => mandate.terms[0].id)
+  const uniqueTermIds = new Set(termIds);
+
+  const combinedAvailableResults = Array.from(uniqueTermIds.values())
+    .map(termId => {
+      const correspondingResults = available.filter(({ mandate }) => mandate.terms[0].id === termId)
+      const mandate = correspondingResults[0].mandate;
+      const subavailTerritories: Territory[] = [];
+      const subavailMedias: Media[] = [];
+      for (const result of correspondingResults) {
+        subavailMedias.push(...result.avail.medias)
+        subavailTerritories.push(...result.avail.territories)
+      }
+      const avail = {
+        ...correspondingResults[0].avail,
+        territories: subavailTerritories,
+        medias: subavailMedias
+      };
+      return { mandate, avail };
+    });
+
+
   return {
     periodAvailable: { from, to },
-    available,
+    available: combinedAvailableResults,
     sales: salesToExclude
   }
 }
