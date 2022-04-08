@@ -7,7 +7,7 @@ import { Movie, Organization } from '@blockframes/model';
 import { AbstractControl, FormControl, Validators } from '@angular/forms';
 import { FormList } from '@blockframes/utils/form';
 import { ENTER, COMMA, SEMICOLON, SPACE } from '@angular/cdk/keycodes';
-
+import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/snackbar-error.component';
 
 @Component({
   selector: '[org] member-add',
@@ -25,7 +25,6 @@ export class MemberAddComponent {
   public form = FormList.factory<string, FormControl>([], email => new FormControl(email, [Validators.required, Validators.email]));
   public error: string;
 
-
   constructor(
     private snackBar: MatSnackBar,
     private invitationService: InvitationService,
@@ -35,7 +34,7 @@ export class MemberAddComponent {
     this.error = '';
     if (this.emailForm.value) {
       const emails: string[] = this.emailForm.value.split(',');
-      const invalid = emails.filter(value => Validators.email({value} as AbstractControl));
+      const invalid = emails.filter(value => Validators.email({ value } as AbstractControl));
       if (invalid.length) {
         this.error = `The following emails are invalid: ${invalid.join(', ')}.`;
       } else {
@@ -58,12 +57,16 @@ export class MemberAddComponent {
       const invitationsExist = await this.invitationService.hasUserAnOrgOrIsAlreadyInvited(emails).toPromise<boolean>();
       if (invitationsExist) throw new Error('There is already an invitation existing for one or more of these users');
       await this.invitationService.invite(emails, this.org).to('joinOrganization');
-      this.snackBar.open('Your invitation was sent', 'close', { duration: 5000 });
+      this.snackBar.open(this.form.value.length > 1 ? 'Your invitations was sent' : 'Your invitation was sent', 'close', { duration: 5000 });
       this._isSending.next(false);
       this.form.reset();
     } catch (error) {
       this._isSending.next(false);
-      this.snackBar.open(error.message, 'close', { duration: 5000 });
+      if (error.message === 'There is already an invitation existing for one or more of these users') {
+        this.snackBar.open(error.message, 'close', { duration: 5000 });
+      } else {
+        this.snackBar.openFromComponent(SnackbarErrorComponent, { data: (this.form.value.length > 1 ? 'There was a problem sending your invitations...' : 'There was a problem sending your invitation...'), duration: 5000 });
+      }
     }
   }
 }

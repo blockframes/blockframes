@@ -22,7 +22,7 @@
 
   <div fxLayout="row" fxLayoutAlign="center">
     <ng-container *ngIf="(isSending$ | async) === false; else sendingInvitations">
-      <button class="send" mat-flat-button color="accent" test-id="add" [disabled]="error || (isSending$ | async)" (click)="sendInvitations()">
+      <button class="send" mat-flat-button color="accent" test-id="add" [disabled]=" emailForm.value === '' || error || (isSending$ | async)" (click)="sendInvitations()">
         <mat-icon svgIcon="send"></mat-icon>
         <span i18n>Send invitation{ form.controls.length, plural, =1 {} other {s} }</span>
       </button>
