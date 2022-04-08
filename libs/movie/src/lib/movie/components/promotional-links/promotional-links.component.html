@@ -1,51 +1,23 @@
-<ng-container *ngIf="(links | promotionalLinks: movie | async); let _links">
-
-  <ng-container *ngIf="xs$ | async; else gtxs">
-    <ng-container *ngIf="videos || _links.length">
-      <button mat-fab color="primary" [matMenuTriggerFor]="moreXs">
-        <mat-icon svgIcon="more_horiz"></mat-icon>
+<section fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="24px">
+  <ng-container *ngIf="(links | promotionalLinks: movie | async); let _links">
+    <ng-container *ngIf="videos; else noVideosBtn">
+      <button mat-button (click)="scrollToFooter()">
+        <mat-icon svgIcon="video_library"></mat-icon>
+        <span class="mat-caption">Watch Trailer</span>
       </button>
     </ng-container>
-
-    <mat-menu #moreXs>
-      <ng-container *ngIf="videos">
-        <button mat-button (click)="scrollToFooter()" id="mat-menu-open">
-          <mat-icon svgIcon="video_library"></mat-icon>
-          <span class="mat-caption">Watch Trailer</span>
-        </button>
-      </ng-container>
-  
-      <ng-container *ngFor="let link of _links">
-        <a mat-menu-item [href]="link.url" target="_blank">
+    <ng-template #noVideosBtn>
+      <ng-container *ngFor="let link of _links | slice:0:1">
+        <a mat-button [href]="link.url" target="_blank">
           <mat-icon [svgIcon]="link.icon"></mat-icon>
           <span class="mat-caption">{{ link.label }}</span>
         </a>
       </ng-container>
-    </mat-menu>
-  </ng-container>
-
-  <ng-template #gtxs>
-    <section fxLayout fxLayoutGap="24px">
-      <ng-container *ngIf="videos; else noVideosBtn">
-        <button mat-button (click)="scrollToFooter()">
-          <mat-icon svgIcon="video_library"></mat-icon>
-          <span class="mat-caption">Watch Trailer</span>
-        </button>
-      </ng-container>
-      <ng-template #noVideosBtn>
-        <ng-container *ngFor="let link of _links | slice:0:1">
-          <a mat-button [href]="link.url" target="_blank">
-            <mat-icon [svgIcon]="link.icon"></mat-icon>
-            <span class="mat-caption">{{ link.label }}</span>
-          </a>
-        </ng-container>
-      </ng-template>
-      <button mat-button *ngIf="_links.length > 1 || (videos && _links.length > 0)" [matMenuTriggerFor]="more">
-        <mat-icon svgIcon="more_horiz"></mat-icon>
-        <span class="mat-caption">More</span>
-      </button>
-    </section>
-
+    </ng-template>
+    <button mat-button *ngIf="_links.length > 1 || (videos && _links.length > 0)" [matMenuTriggerFor]="more">
+      <mat-icon svgIcon="more_horiz"></mat-icon>
+      <span class="mat-caption">More</span>
+    </button>
     <mat-menu #more>
       <ng-container *ngIf="videos; else noVideos">
         <ng-container *ngFor="let link of _links">
@@ -64,6 +36,5 @@
         </ng-container>
       </ng-template>
     </mat-menu>
-  </ng-template>
-
-</ng-container>
+  </ng-container>
+</section>
