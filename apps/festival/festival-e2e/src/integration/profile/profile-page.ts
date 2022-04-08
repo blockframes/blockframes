@@ -10,7 +10,7 @@ describe('Basic Landing Page, Login and Profile Page Tests', () => {
   it('should load user and log into profile page', () => {
     auth.loginWithRandomUser();
     cy.visit('c/o/account/profile/view/settings');
-    cy.contains('Contact Information').should('exist');
+    cy.contains('Profile Information').should('exist');
   })
   it('should now show Accept Cookies after being accepted', () => {
     acceptCookies();
