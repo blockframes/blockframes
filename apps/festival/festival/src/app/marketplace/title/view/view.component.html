@@ -8,27 +8,27 @@
             <org-chip [org]="org"></org-chip>
           </ng-container>
         </section>
-        <section fxLayout fxLayout.lt-sm="column">
+        <section fxLayout="row wrap" fxLayoutAlign.xs="center">
           <ng-container *ngIf="(eventId$ | async) as eventId; else request">
-            <button mat-button  class="translucent-button" [disabled]="requestSent" (click)="requestAskingPrice(movie.id)">
+            <button mat-button class="translucent" [disabled]="requestSent" (click)="requestAskingPrice(movie.id)">
               <mat-icon svgIcon="local_offer"></mat-icon>
-              <span class="linear-wipe">Request Asking Price</span>
+              <span fxHide.lt-md class="linear-wipe">Request Asking Price</span>
             </button>
             <wishlist-button small [movieId]="movie.id"></wishlist-button>
             <a ongoing-event-button [routerLink]="['/event', eventId, 'r', 'i']">Ongoing Screening</a>
           </ng-container>
           <ng-template #request>
             <event-request-screening [movieId]="movie.id" animated></event-request-screening>
-            <button mat-button class="translucent-button" [disabled]="requestSent" (click)="requestAskingPrice(movie.id)">
+            <button mat-button class="translucent" [disabled]="requestSent" (click)="requestAskingPrice(movie.id)">
               <mat-icon svgIcon="local_offer"></mat-icon>
-              <span class="linear-wipe">Request Asking Price</span>
+              <span fxHide.lt-md class="linear-wipe">Request Asking Price</span>
             </button>
             <wishlist-button small [movieId]="movie.id"></wishlist-button>
           </ng-template>
         </section>
       </movie-header-cta>
 
-      <movie-header-actions fxHide.lt-sm fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="24px">
+      <movie-header-actions fxLayout fxLayoutAlign="start center" fxLayoutAlign.lt-sm="center start" fxLayoutGap="24px">
         <movie-promotional-links [movie]="movie" [links]="promoLinks"></movie-promotional-links>
       </movie-header-actions>
     </movie-header>
