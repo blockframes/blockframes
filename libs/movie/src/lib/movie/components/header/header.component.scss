@@ -50,7 +50,7 @@ header {
 }
 
 @include layout-bp(xs) {
-  h2 {
+  .movie-details {
     text-align: center;
   }
 }
