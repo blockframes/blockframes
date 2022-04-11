@@ -26,4 +26,17 @@ export class MemberRepertoryComponent {
   };
 
   @Input() memberColumnsIndex = ['email', 'position'];
+
+  public displayRole(role: UserRole) {
+    switch (role) {
+      case 'superAdmin':
+        return 'Super Admin';
+      case 'admin':
+        return 'Admin';
+      case 'member':
+        return 'Member';
+      default:
+        return 'Member';
+    }
+  }
 }
