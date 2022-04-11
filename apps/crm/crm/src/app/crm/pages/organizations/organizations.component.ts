@@ -4,7 +4,7 @@ import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { MatDialog } from '@angular/material/dialog';
 import { OrganizationCreateComponent } from '../../components/organization/create-organization/create.component';
-import { Movie, Organization } from '@blockframes/model';
+import { Organization } from '@blockframes/model';
 import { getAllAppsExcept, appName, modules } from '@blockframes/utils/apps';
 
 @Component({
@@ -15,7 +15,7 @@ import { getAllAppsExcept, appName, modules } from '@blockframes/utils/apps';
 })
 export class OrganizationsComponent {
   public orgs$ = this.service.valueChanges();
-  public app = getAllAppsExcept(['crm']);
+  public apps = getAllAppsExcept(['crm']);
 
   constructor(
     private service: OrganizationService,
@@ -41,7 +41,7 @@ export class OrganizationsComponent {
         activity: r.activity ?? '--',
       }
 
-      for (const a of this.app) {
+      for (const a of this.apps) {
         for (const module of modules) {
           row[`${appName[a]} - ${module}`] = r.appAccess[a]?.[module] ? 'true' : 'false';
         }
