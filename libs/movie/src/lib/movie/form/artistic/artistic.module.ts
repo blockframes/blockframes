@@ -22,6 +22,9 @@ import { MaxLengthModule, ToLabelModule } from '@blockframes/utils/pipes';
 
 import { MovieFormArtisticComponent } from './artistic.component';
 
+// Cell Modal
+import { CellModalModule } from '@blockframes/ui/cell-modal/cell-modal.module';
+
 @NgModule({
   declarations: [MovieFormArtisticComponent],
   imports: [
@@ -39,6 +42,7 @@ import { MovieFormArtisticComponent } from './artistic.component';
     ToLabelModule,
     FilmographyPipeModule,
     MaxLengthModule,
+    CellModalModule,
 
     // Material
     MatFormFieldModule,

@@ -1,5 +1,3 @@
-{{ console(data) }}
-
 <header fxLayout="column" fxLayoutGap="2">
   <button mat-icon-button (click)="close()" fxFlexAlign="end">
     <mat-icon svgIcon="close"></mat-icon>
@@ -9,5 +7,12 @@
 </header>
 
 <mat-dialog-content>
-  <p class="mat-body-1" *ngFor="let value of data.values">{{ value }}</p>
+  <ul *ngIf="isArray(data.values) else notArray">
+    <li class="mat-body-1" *ngFor="let value of data.values">
+      {{ value }}
+    </li>
+  </ul>
+  <ng-template #notArray>
+    <p class="mat-body-1">{{ data.values }}</p>
+  </ng-template>
 </mat-dialog-content>

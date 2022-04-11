@@ -1,4 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { CellModalComponent } from '@blockframes/ui/cell-modal/cell-modal.component';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MovieFormShellComponent } from '../shell/shell.component';
 
@@ -29,7 +31,11 @@ export class MovieFormArtisticComponent {
   }
 
 
-  constructor(private shell: MovieFormShellComponent, private dynTitle: DynamicTitleService) {
+  constructor(
+    private shell: MovieFormShellComponent,
+    private dynTitle: DynamicTitleService,
+    private dialog: MatDialog,
+  ) {
     this.dynTitle.setPageTitle('Artistic Team')
   }
 
@@ -39,5 +45,13 @@ export class MovieFormArtisticComponent {
 
   get cast() {
     return this.form.cast;
+  }
+
+  parseFilmography(filmography: { title: string, year: number }[]) {
+    return filmography.map(film => `${film.title} (${film.year})`);
+  }
+
+  openDetails(title: string, values: string[] | string) {
+    this.dialog.open(CellModalComponent, { data: { title, values }, maxHeight: '80vh',  minWidth: '50vw', maxWidth: '80vw', minHeight: '50vh', autoFocus: false });
   }
 }

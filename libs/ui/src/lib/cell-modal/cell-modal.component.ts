@@ -10,7 +10,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 export class CellModalComponent {
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: { title: string, values: string[] },
+    @Inject(MAT_DIALOG_DATA) public data: { title: string, values: string[] | string },
     public dialogRef: MatDialogRef<CellModalComponent>
   ) { }
 
@@ -18,7 +18,7 @@ export class CellModalComponent {
     this.dialogRef.close()
   }
 
-  console(any: any) {
-    console.log(any)
+  isArray(array: string[] | string) {
+    return Array.isArray(array);
   }
 }

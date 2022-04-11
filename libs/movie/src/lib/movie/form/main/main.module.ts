@@ -32,7 +32,7 @@ import { HasStatusModule } from '@blockframes/movie/pipes/has-status.pipe';
 import { MaxLengthModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { FilmographyPipeModule } from '@blockframes/movie/pipes/filmography.pipe';
 
-// Test
+// Cell Modal
 import { CellModalModule } from '@blockframes/ui/cell-modal/cell-modal.module';
 
 @NgModule({
