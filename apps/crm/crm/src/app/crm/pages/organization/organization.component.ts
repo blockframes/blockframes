@@ -14,7 +14,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { EventService } from '@blockframes/event/+state';
 import { ContractService } from '@blockframes/contract/contract/+state';
 import { FileUploaderService } from '@blockframes/media/+state/file-uploader.service';
-import { App, OrgAppAccess } from '@blockframes/utils/apps';
+import { App, getAllAppsExcept, OrgAppAccess } from '@blockframes/utils/apps';
 import { BucketService } from '@blockframes/contract/bucket/+state/bucket.service';
 import { where } from 'firebase/firestore';
 import { PermissionsService } from '@blockframes/permissions/+state';
@@ -33,21 +33,10 @@ export class OrganizationComponent implements OnInit {
   public members;
   public notifyCheckbox = new FormControl(true);
   public storagePath: string;
+  public apps = getAllAppsExcept(['crm']);
 
   public invitationsFromOrganization$: Observable<Invitation[]>;
   public invitationsToJoinOrganization$: Observable<Invitation[]>;
-
-  public memberColumns = {
-    uid: '',
-    firstName: 'First Name',
-    lastName: 'Last Name',
-    email: 'Email Address',
-    position: 'Position',
-    role: 'Permissions',
-    edit: 'Edit',
-  };
-
-  public memberColumnsIndex = ['firstName', 'lastName', 'email', 'position', 'role', 'edit'];
 
   constructor(
     private organizationService: OrganizationService,
