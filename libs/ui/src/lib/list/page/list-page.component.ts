@@ -9,10 +9,10 @@ import {
   Input,
   AfterContentInit, Output, EventEmitter, HostBinding
 } from '@angular/core';
-
 // Blockframes
 import { fadeList, slideUp } from '@blockframes/utils/animations/fade';
 import { boolean } from '@blockframes/utils/decorators/decorators';
+import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
 
 @Directive({ selector: '[listPageAppBar], list-page-app-bar' })
 export class PageAppBarSearchDirective { }
@@ -60,8 +60,12 @@ export class ListPageComponent implements AfterContentInit {
 
   public listView = false;
   public canToggle = false;
+  public ltMd$ = this.breakpointsService.ltMd;
 
-  constructor(private location: Location) { }
+  constructor(
+    private location: Location,
+    private breakpointsService: BreakpointsService
+  ) { }
 
   ngAfterContentInit() {
     if (this.cardTemplate && this.listItemTemplate) {

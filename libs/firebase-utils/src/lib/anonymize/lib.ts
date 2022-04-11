@@ -9,7 +9,8 @@ import {
   createPublicOrganization,
   Organization,
   PublicOrganization,
-  Invitation
+  Invitation,
+  IMaintenanceDoc
 } from '@blockframes/model';
 import { DbRecord, throwOnProduction } from '../util';
 import { CollectionReference, QueryDocumentSnapshot, QuerySnapshot } from '../types';
@@ -17,7 +18,6 @@ import { Queue } from '../queue';
 import { FirestoreEmulator } from '../firestore/emulator';
 import { firebase, testVideoId } from '@env';
 import { runChunks } from '../firebase-utils';
-import { IMaintenanceDoc } from '@blockframes/utils/maintenance';
 import { firestore } from 'firebase-admin';
 
 const userCache: { [uid: string]: User | PublicUser } = {};

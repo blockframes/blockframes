@@ -1,3 +1,5 @@
+@import '~@angular/flex-layout/mq';
+
 p {
   overflow: hidden;
   white-space: nowrap;
@@ -5,7 +7,14 @@ p {
   min-width: 0;
   flex-wrap: wrap;
 }
+
 mat-divider {
   display: inline;
   margin: 5px 8px;
+}
+
+@include layout-bp(xs) {
+  p {
+    justify-content: center;
+  }
 }
