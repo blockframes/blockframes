@@ -26,6 +26,12 @@
   }
 }
 
+//TODO #8228 remove when needed
+.privacy-banner {
+  text-align: center;
+  padding-block: 8px;
+}
+
 .hero {
   padding: 40px;
   background-image: url("/assets/images/banner_empty.png");

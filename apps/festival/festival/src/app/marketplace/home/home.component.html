@@ -6,6 +6,7 @@
 
 <!-- Banner -->
 <ng-template #banner let-section>
+  <span class="mat-caption privacy-banner">We have updated our <a href="/c/o/marketplace/privacy" target="_blank">Privacy Policy</a>. In the absence of explicit disapproval, any use of the platform is considered as acceptance without restriction of the new policy. </span> <!-- TODO #8228 remove when needed -->
   <header class="banner dark-contrast-theme" [bgRef]="section.background" bgAsset="banner.png">
     <div class="banner-details">
       <h4 *ngIf="section.subtitle">{{ section.subtitle }}</h4>
