@@ -37,6 +37,6 @@
 
   <h2>Invitations</h2>
   <mat-card *ngIf="invitations$ | async as invitations">
-    <invitation-guest-table [invitations]="invitations" showUser></invitation-guest-table>
+    <invitation-guest-table [invitations]="invitations"></invitation-guest-table>
   </mat-card>
 </main>

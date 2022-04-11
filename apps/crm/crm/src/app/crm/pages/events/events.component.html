@@ -42,7 +42,7 @@
       {{isSecret}}
     </ng-template>
     <ng-template colRef label="Action" let-event sticky>
-      <a mat-icon-button [routerLink]="goToEdit(event)">
+      <a mat-icon-button [routerLink]="['/c/o/dashboard/crm/event', event.id]">
         <mat-icon svgIcon="visibility"></mat-icon>
       </a>
       <button mat-icon-button [cdkCopyToClipboard]="event.id" (click)="$event.stopPropagation()">

@@ -20,9 +20,6 @@ export class GuestTableComponent {
       });
     }
   }
-  @Input() @boolean showOrganization = false;
-  @Input() @boolean showUser = false;
-  @Input() @boolean showInvitationMode = false;
-  @Input() @boolean showMovie = false;
-  @Input() @boolean showEvent = false;
+
+  @Input() @boolean showInvitationListColumns = false;
 }
