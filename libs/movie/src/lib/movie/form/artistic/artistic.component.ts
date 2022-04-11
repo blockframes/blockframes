@@ -30,7 +30,6 @@ export class MovieFormArtisticComponent {
     filmography: 'Filmography',
   }
 
-
   constructor(
     private shell: MovieFormShellComponent,
     private dynTitle: DynamicTitleService,
