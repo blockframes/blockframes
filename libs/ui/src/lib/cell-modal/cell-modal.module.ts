@@ -1,6 +1,6 @@
 
 import { NgModule } from '@angular/core';
-
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { CommonModule } from '@angular/common';
 
 import { MatIconModule } from '@angular/material/icon';
@@ -13,7 +13,7 @@ import { CellModalComponent } from './cell-modal.component';
 @NgModule({
   imports: [
     CommonModule,
-
+    FlexLayoutModule,
     MatIconModule,
     MatButtonModule,
     MatDialogModule,

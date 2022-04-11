@@ -1,11 +1,11 @@
 {{ console(data) }}
 
-<header>
-  <h2>{{ data.title }}</h2>
-
-  <button mat-icon-button (click)="close()">
+<header fxLayout="column" fxLayoutGap="2">
+  <button mat-icon-button (click)="close()" fxFlexAlign="end">
     <mat-icon svgIcon="close"></mat-icon>
   </button>
+  
+  <h2 fxFlexAlign="start">{{ data.title }}</h2>
 </header>
 
 <mat-dialog-content>
