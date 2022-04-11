@@ -5,7 +5,7 @@ import { InvitationService } from '@blockframes/invitation/+state';
 import { Router } from '@angular/router';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { toLabel } from '@blockframes/utils/pipes';
-import { Event, orgName } from '@blockframes/model';
+import { orgName } from '@blockframes/model';
 
 @Component({
   selector: 'crm-events',
