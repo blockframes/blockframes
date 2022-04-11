@@ -4,9 +4,10 @@ import { ThemeService } from '@blockframes/ui/theme';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { UserService } from '@blockframes/user/+state';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { dbVersionDoc, IVersionDoc } from '@blockframes/utils/maintenance';
+import { dbVersionDoc } from '@blockframes/utils/maintenance';
 import { emulators } from '@env';
 import { OrganizationService } from '@blockframes/organization/+state';
+import { IVersionDoc } from '@blockframes/model';
 
 @Component({
   selector: 'auth-widget',

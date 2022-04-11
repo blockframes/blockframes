@@ -16,7 +16,7 @@ import { NavigationService } from '@blockframes/ui/navigation.service';
 const navLinks = [
   {
     path: 'settings',
-    label: 'Profile'
+    label: 'My Profile'
   },
   {
     path: 'notifications',

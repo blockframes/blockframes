@@ -12,7 +12,7 @@ import { clearUsers, createUsers, printUsers, syncUsers } from './users';
 import { generateFixtures } from './generate-fixtures';
 import { exportFirestore, importFirestore } from './admin';
 import { selectEnvironment } from './select-environment';
-import { healthCheck } from './health-check';
+import { healthCheck } from '@blockframes/devops';
 import {
   anonymizeLatestProdDb,
   downloadProdDbBackup,
@@ -28,6 +28,7 @@ import { EIGHT_MINUTES_IN_MS } from '@blockframes/utils/maintenance';
 import { rescueJWP } from './rescueJWP';
 import { loadAndShrinkLatestAnonDbAndUpload } from './db-shrink';
 import { printDatabaseInconsistencies } from './internals/utils';
+import { cleanBackups } from './clean-backups';
 import { auditUsers } from './db-cleaning';
 
 const args = process.argv.slice(2);
@@ -57,6 +58,9 @@ async function runCommand() {
       break;
     case 'prepareEmulators':
       await prepareEmulators({ dbBackupURL: arg1 });
+      break;
+    case 'cleanBackups':
+      await cleanBackups({ maxDays: arg1, bucketName: arg2 });
       break;
     case 'anonProdDb':
       await anonymizeLatestProdDb();
