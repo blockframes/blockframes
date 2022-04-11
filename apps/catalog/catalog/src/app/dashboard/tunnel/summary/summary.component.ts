@@ -55,7 +55,7 @@ export class TunnelSummaryComponent implements OnInit {
         const text = `${this.form.get('title').get('international').value} was successfully submitted.`;
         const ref = this.snackBar.open(text, '', { duration: 4000 });
         ref.afterDismissed().subscribe(() => {
-          this.router.navigate(['../', 'end'], { relativeTo: this.route })
+          this.router.navigate(['../', 'end'], { relativeTo: this.route });
         })
       } else {
         // Log the invalid forms
@@ -67,7 +67,7 @@ export class TunnelSummaryComponent implements OnInit {
         }
         const section = document.getElementById('main-information');
         const ref = this.snackBar.open(message, 'VERIFY FIELDS', { duration: 5000 });
-        ref.afterDismissed().subscribe(() => section.scrollIntoView({ behavior: 'smooth' }))
+        ref.afterDismissed().subscribe(() => section.scrollIntoView({ behavior: 'smooth' }));
       }
     } catch (_) {
       this.snackBar.openFromComponent(SnackbarErrorComponent, { duration: 5000 });

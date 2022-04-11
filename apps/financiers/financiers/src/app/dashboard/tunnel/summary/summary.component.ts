@@ -82,7 +82,7 @@ export class TunnelSummaryComponent implements OnInit {
             }
             const section = document.getElementById('main-information');
             const ref = this.snackBar.open(message, 'VERIFY FIELDS', { duration: 5000 });
-            ref.afterDismissed().subscribe(() => section.scrollIntoView({ behavior: 'smooth' }))
+            ref.afterDismissed().subscribe(() => section.scrollIntoView({ behavior: 'smooth' }));
           }
         }
       }
