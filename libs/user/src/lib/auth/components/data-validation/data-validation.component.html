@@ -4,7 +4,7 @@
       <img class="illustration" asset="user.svg" alt="user profile ilustration" />
       <p>Profile Data</p>
       <mat-icon class="icon-tooltip" svgIcon="info"
-        matTooltip="Fill in your Personal Information (First Name, Last Name...)"></mat-icon>
+        matTooltip="Fill in your profile information (first name, last name, etc.)"></mat-icon>
     </div>
     <mat-icon *ngIf="profileData" svgIcon="check_circle" color="primary" test-id="profile-data-ok"></mat-icon>
     <mat-icon *ngIf="!profileData" class="refresh-icon" (click)="refresh()" svgIcon="update" matTooltip="Refresh page." test-id="profile-data-pending">
@@ -18,7 +18,7 @@
       <img class="illustration" asset="org.svg" alt="organization illustration" />
       <p>Organization Data</p>
       <mat-icon class="icon-tooltip" svgIcon="info"
-        matTooltip="Fill in your Company Information (Activity, Country...)"></mat-icon>
+        matTooltip="Fill in your company information (activity, country, etc.)"></mat-icon>
     </div>
     <mat-icon *ngIf="orgData" svgIcon="check_circle" color="primary" test-id="org-data-ok"></mat-icon>
     <mat-icon *ngIf="!orgData" class="refresh-icon" (click)="refresh()" svgIcon="update" matTooltip="Refresh page." test-id="org-data-pending">

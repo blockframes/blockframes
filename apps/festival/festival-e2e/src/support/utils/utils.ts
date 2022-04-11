@@ -29,7 +29,7 @@ export function signInAndNavigateToMain(user: Partial<User>, debugMovieId: strin
   }
 
   cy.log('->Click: Add New Title');
-  cy.get('a[mattooltip="Add a new title"]', {timeout: 15 * SEC})
+  cy.get('a[mattooltip="Add Title"]', {timeout: 15 * SEC})
     .click();
   cy.wait(3 * SEC);
 
