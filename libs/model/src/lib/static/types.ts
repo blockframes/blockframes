@@ -70,7 +70,6 @@ export type HostedVideoType = keyof typeof hostedVideoTypes;
 export type InvitationType = keyof typeof invitationType;
 
 export type Language = keyof typeof languages;
-export type LanguageValue = typeof languages[Language];
 
 export type Media = keyof typeof medias;
 export type MediaValue = typeof medias[Media];
