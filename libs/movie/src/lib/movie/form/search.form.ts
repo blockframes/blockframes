@@ -79,14 +79,14 @@ export function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearc
   };
 }
 
-export type Versions = {
+type Versions = {
   original: boolean,
   dubbed: boolean,
   subtitle: boolean,
   caption: boolean,
 }
 
-export type LanguageVersion = {
+type LanguageVersion = {
   languages: GetKeys<'languages'>[],
   versions: Versions
 }
@@ -125,7 +125,7 @@ function createMovieSearchControl(search: MovieSearch) {
   };
 }
 
-export type MovieSearchControl = ReturnType<typeof createMovieSearchControl>;
+type MovieSearchControl = ReturnType<typeof createMovieSearchControl>;
 
 export class MovieSearchForm extends FormEntity<MovieSearchControl> {
 
