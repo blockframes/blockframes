@@ -11,7 +11,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { InvitationsComponent } from './invitations.component';
 
 // Modules
-import { GuestTableModule } from '../../components/guest-table/guest-table.module';
+import { InvitationListModule } from '../../components/invitation-list/invitation-list.module';
 import { BreadCrumbModule } from '../../components/bread-crumb/bread-crumb.module';
 
 @NgModule({
@@ -21,7 +21,7 @@ import { BreadCrumbModule } from '../../components/bread-crumb/bread-crumb.modul
     MatIconModule,
     MatButtonModule,
     RouterModule,
-    GuestTableModule,
+    InvitationListModule,
     BreadCrumbModule
   ],
   declarations: [
