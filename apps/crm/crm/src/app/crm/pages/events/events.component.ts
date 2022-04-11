@@ -52,10 +52,6 @@ export class EventsComponent implements OnInit {
     this.cdRef.markForCheck();
   }
 
-  goToEdit(event) {
-    this.router.navigate([`/c/o/dashboard/crm/event/${event.id}`])
-  }
-
   public exportTable() {
     const exportedRows = this.rows.map(i => ({
       'event id': i.id,

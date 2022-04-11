@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule } from '@angular/router';
 import { InvitationFormUserModule } from '@blockframes/invitation/form/user/user.module';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -32,7 +33,8 @@ import { EventComponent } from './event.component';
     ImageModule,
     InvitationFormUserModule,
     BreadCrumbModule,
-    GuestTableModule
+    GuestTableModule,
+    ClipboardModule
   ],
   declarations: [
     EventComponent,
