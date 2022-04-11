@@ -12,6 +12,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { displayName } from '@blockframes/utils/utils';
 import { CellModalComponent } from '@blockframes/ui/cell-modal/cell-modal.component';
+import { displayPerson } from '@blockframes/utils/pipes';
 
 @Component({
   selector: 'catalog-title-list',
@@ -81,16 +82,14 @@ export class TitleListComponent {
     this.snackbar.open(message || `Title ${storeStatus[status]}.`, '', { duration: 4000 });
   }
 
-  parseDirectors(directors: any) {
-    if (Array.isArray(directors)) {
-      return directors
-        .map(person => typeof person === 'string' ? person : displayName(person))
-    } else {
-      return displayName(directors);
-    }
-  }
-
-  openDetails(title: string, values: string[] | string) {
-    this.dialog.open(CellModalComponent, { data: { title, values }, maxHeight: '80vh',  minWidth: '50vw', maxWidth: '80vw', minHeight: '50vh', autoFocus: false });
+  openDetails(title: string, values: string[]) {
+    this.dialog.open(CellModalComponent, {
+      data: { title, values: displayPerson(values) },
+      maxHeight: '80vh',
+      minWidth: '50vw',
+      maxWidth: '80vw',
+      minHeight: '50vh',
+      autoFocus: false,
+    });
   }
 }

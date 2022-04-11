@@ -43,7 +43,7 @@
         </a>
       </ng-template>
       <ng-template colRef="directors" label="Director(s)" let-directors>
-        <span (click)="openDetails('Director\'s', parseDirectors(directors))">
+        <span (click)="openDetails('Director\'s', directors)">
           {{ directors | displayName | maxLength:50 }}
         </span>
       </ng-template>

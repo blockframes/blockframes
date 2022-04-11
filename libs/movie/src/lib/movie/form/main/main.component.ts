@@ -19,6 +19,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { maxYear } from '@blockframes/utils/form/validators/validators';
 import { MatDialog } from '@angular/material/dialog';
 import { Filmography } from '@blockframes/model';
+import { displayFilmography } from '@blockframes/movie/pipes/filmography.pipe';
 @Component({
   selector: 'movie-form-main',
   templateUrl: './main.component.html',
@@ -101,11 +102,15 @@ export class MovieFormMainComponent implements OnInit, OnDestroy {
     }
   }
 
-  parseFilmography(filmography: Filmography[]) {
-    return filmography.map(film => `${film.title} (${film.year})`);
-  }
-
-  openDetails(title: string, values: string[] | string) {
-    this.dialog.open(CellModalComponent, { data: { title, values }, maxHeight: '80vh',  minWidth: '50vw', maxWidth: '80vw', minHeight: '50vh', autoFocus: false });
+  openDetails(title: string, values: string[], type: 'filmography' | 'description') {
+    const arrayValues = type === 'filmography' ? displayFilmography(values as Filmography[]) : values;
+    this.dialog.open(CellModalComponent, {
+      data: { title, values: arrayValues },
+      maxHeight: '80vh',
+      minWidth: '50vw',
+      maxWidth: '80vw',
+      minHeight: '50vh',
+      autoFocus: false,
+    });
   }
 }

@@ -7,12 +7,12 @@
       <bf-form-table [columns]="castColumns" [form]="cast">
         <ng-template colRef="status" let-status>{{ status ? (status | toLabel: 'memberStatus') : 'Confirmed' }}</ng-template>
         <ng-template colRef="description" let-description>
-          <span (click)="openDetails('Description', description)">
+          <span (click)="openDetails('Description', [description], 'description')">
             {{ description | maxLength: 75 }}
           </span>
         </ng-template>
         <ng-template colRef="filmography" let-filmography>
-          <span (click)="openDetails('Filmography', parseFilmography(filmography))">
+          <span (click)="openDetails('Filmography', filmography, 'filmography')">
             {{ filmography | filmography | maxLength: 50 }}
           </span>
         </ng-template>
@@ -81,13 +81,13 @@
       <bf-form-table [columns]="crewColumns" [form]="crew">
         <ng-template colRef="status" let-status>{{ status ? (status | toLabel: 'memberStatus') : 'Confirmed' }}</ng-template>
         <ng-template colRef="description" let-description>
-          <span (click)="openDetails('Description', description)">
+          <span (click)="openDetails('Description', [description], 'description')">
             {{ description | maxLength: 75 }}
           </span>
         </ng-template>
         <ng-template colRef="role" let-role>{{ role | toLabel:'crewRoles' }}</ng-template>
         <ng-template colRef="filmography" let-filmography>
-          <span (click)="openDetails('Filmography', parseFilmography(filmography))">
+          <span (click)="openDetails('Filmography', filmography, 'filmography')">
             {{ filmography | filmography | maxLength: 50 }}
           </span>
         </ng-template>

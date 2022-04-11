@@ -1,5 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Filmography } from '@blockframes/model';
+import { displayFilmography } from '@blockframes/movie/pipes/filmography.pipe';
 import { CellModalComponent } from '@blockframes/ui/cell-modal/cell-modal.component';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MovieFormShellComponent } from '../shell/shell.component';
@@ -46,11 +48,15 @@ export class MovieFormArtisticComponent {
     return this.form.cast;
   }
 
-  parseFilmography(filmography: { title: string, year: number }[]) {
-    return filmography.map(film => `${film.title} (${film.year})`);
-  }
-
-  openDetails(title: string, values: string[] | string) {
-    this.dialog.open(CellModalComponent, { data: { title, values }, maxHeight: '80vh',  minWidth: '50vw', maxWidth: '80vw', minHeight: '50vh', autoFocus: false });
+  openDetails(title: string, values: string[], type: 'filmography' | 'description') {
+    const arrayValues = type === 'filmography' ? displayFilmography(values as Filmography[]) : values;
+    this.dialog.open(CellModalComponent, {
+      data: { title, values: arrayValues },
+      maxHeight: '80vh',
+      minWidth: '50vw',
+      maxWidth: '80vw',
+      minHeight: '50vh',
+      autoFocus: false,
+    });
   }
 }
