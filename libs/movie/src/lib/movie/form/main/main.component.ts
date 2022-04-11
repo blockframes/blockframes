@@ -63,7 +63,7 @@ export class MovieFormMainComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.dynTitle.setPageTitle('Main Information')
+    this.dynTitle.setPageTitle('Main Information');
     this.valuesCustomGenres$ = this.form.customGenres.valueChanges.pipe(startWith(this.form.customGenres.value));
 
     this.validateRunningTime(this.form.runningTime.value);
@@ -78,7 +78,7 @@ export class MovieFormMainComponent implements OnInit, OnDestroy {
   public addCustomGenre(event: MatChipInputEvent): void {
     const { value = '' } = event;
 
-    this.form.customGenres.add(value)
+    this.form.customGenres.add(value);
     this.customGenreCtrl.reset();
   }
 
