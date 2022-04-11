@@ -1,0 +1,56 @@
+<bf-table [source]="_invitations" useFilter pagination="100">
+  <ng-template colRef="id" label="Id" let-invitId>
+    {{ invitId }}
+  </ng-template>
+  <ng-template colRef="org" label="Organization" let-org>
+    <a [routerLink]="['/c/o/dashboard/crm/organization', org.id]">
+      <span>{{ org | orgName:'long' }} </span>
+      <mat-icon svgIcon="visibility"></mat-icon>
+    </a>
+  </ng-template>
+  <ng-template label="Event Title" colRef="event.title" let-title>
+    {{ title }}
+  </ng-template>
+  <ng-template colRef="event.start" label="Event start" let-start sort>
+    {{ start | date: 'medium'}}
+  </ng-template>
+  <ng-template colRef="event.end" label="Event end" let-end sort>
+    {{ end | date: 'medium'}}
+  </ng-template>
+  <ng-template label="Event Type" colRef="event.type" let-type>
+    {{ type | titlecase }}
+  </ng-template>
+  <ng-template colRef="movie" label="Movie" let-movie>
+    <div *ngIf="movie else noMovie" fxLayout="row">
+      <ng-container *ngIf="movie.poster as poster;">
+        <img class="poster" [ref]="poster" asset="empty_poster.svg">
+      </ng-container>
+      <a [routerLink]="['/c/o/dashboard/crm/movie', movie.id]">
+        <span>{{ movie.title.international }} {{ movie.internalRef ? '(' + movie.internalRef + ')': ''}} </span>
+        <mat-icon svgIcon="visibility"></mat-icon>
+      </a>
+    </div>
+    <ng-template #noMovie>--</ng-template>
+  </ng-template>
+  <ng-template colRef="event.accessibility" label="Accessibility" let-accessibility sort>
+    {{ accessibility | toLabel:'accessibility' }}
+  </ng-template>
+  <ng-template colRef="guestOrg" label="Guest org" let-guestOrg>
+    <ng-container *ngIf="guestOrg else noOrg">
+      <a [routerLink]="['/c/o/dashboard/crm/organization', guestOrg.id]">
+        <span>{{ guestOrg | orgName:'long' }} </span>
+        <mat-icon svgIcon="visibility"></mat-icon>
+      </a>
+    </ng-container>
+    <ng-template #noOrg>--</ng-template>
+  </ng-template>
+  <ng-template colRef="date" label="Invitation date" let-date sort>
+    {{ date | date: 'medium'}}
+  </ng-template>
+  <ng-template colRef="mode" label="Mode" let-mode sort>
+    {{ mode | titlecase }}
+  </ng-template>
+  <ng-template colRef="status" label="Status" let-status sort>
+    {{ status | titlecase }}
+  </ng-template>
+</bf-table>

@@ -3,12 +3,12 @@ import { getGuest } from '@blockframes/invitation/pipes/guest.pipe';
 import { Invitation, InvitationDetailed } from '@blockframes/model';
 
 @Component({
-  selector: 'invitation-guest-table',
-  templateUrl: './guest-table.component.html',
-  styleUrls: ['./guest-table.component.scss'],
+  selector: 'invitation-list-table',
+  templateUrl: './invitation-list.component.html',
+  styleUrls: ['./invitation-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class GuestTableComponent {
+export class InvitationListComponent {
   public _invitations: Invitation[] | InvitationDetailed[];
 
   @Input() set invitations(invitations: InvitationDetailed[]) {
