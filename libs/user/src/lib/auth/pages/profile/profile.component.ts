@@ -62,8 +62,10 @@ export class ProfileComponent implements OnInit {
         case 'Your profile information are not valid':
         case 'Your information to change your password are not valid.':
           this.snackBar.open(err.message, 'close', { duration: 2000 });
+          break;
         default:
           this.snackBar.openFromComponent(SnackbarErrorComponent, { duration: 5000 });
+          break;
       }
     }
   }
