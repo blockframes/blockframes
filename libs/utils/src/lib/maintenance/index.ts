@@ -1,13 +1,4 @@
-import { Timestamp } from 'firebase/firestore';
-
-export interface IMaintenanceDoc {
-  endedAt: Timestamp
-  startedAt: Timestamp
-}
-
-export interface IVersionDoc {
-  currentVersion: number;
-}
+import { IMaintenanceDoc } from '@blockframes/model';
 
 /** Delay before considering the maintenance over */
 export const EIGHT_MINUTES_IN_MS = 8 * 60 * 1000; // 8 minutes in ms

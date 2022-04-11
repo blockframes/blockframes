@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { doc, docData, DocumentReference, Firestore } from '@angular/fire/firestore';
 import { filter, tap, map, first } from 'rxjs/operators';
-import { _isInMaintenance, IMaintenanceDoc, META_COLLECTION_NAME, MAINTENANCE_DOCUMENT_NAME } from '@blockframes/utils/maintenance';
+import { _isInMaintenance, META_COLLECTION_NAME, MAINTENANCE_DOCUMENT_NAME } from '@blockframes/utils/maintenance';
+import { IMaintenanceDoc } from '@blockframes/model';
 
 @Injectable({ providedIn: 'root' })
 export class MaintenanceService {
