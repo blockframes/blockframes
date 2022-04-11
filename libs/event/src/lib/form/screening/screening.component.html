@@ -12,7 +12,7 @@
   <ng-container *ngIf="(titles$ | async) as titles else loading">
     <!-- Title -->
     <mat-form-field appearance="outline">
-      <mat-label>Select the title to display</mat-label>
+      <mat-label>Select the Title to display</mat-label>
       <mat-select formControlName="titleId" (selectionChange)="checkTitleAndScreener($event.value)">
         <mat-option *ngFor="let title of titles" [value]="title.id">
           {{ title.title.international }}
