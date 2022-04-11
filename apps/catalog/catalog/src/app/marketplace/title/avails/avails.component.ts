@@ -172,7 +172,7 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
       await this.bucketService.upsert({ id: this.orgId, contracts });
       this.bucketForm.markAsPristine();
       this.router.navigate(['/c/o/marketplace/selection']);
-    } catch (err) {
+    } catch (_) {
       this.snackBar.openFromComponent(SnackbarErrorComponent, { duration: 5000 });
     }
   }

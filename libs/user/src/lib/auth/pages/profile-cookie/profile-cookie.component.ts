@@ -27,14 +27,11 @@ export class ProfileCookieComponent {
 
   update() {
     const settings = this.form.value;
-
     if (settings) {
       this.gdpr.enableIntercom(this.authService.profile, settings.intercom);
       // this.gdpr.enableYandex(settings.yandex); #7936 this may be reactivated later
       this.gdpr.enableHotjar(settings.hotjar);
       this.snackBar.open('Cookie Preferences updated.', 'close', { duration: 4000 });
-    } else {
-      this.snackBar.openFromComponent(SnackbarErrorComponent, { duration: 5000 });
     }
   }
 }

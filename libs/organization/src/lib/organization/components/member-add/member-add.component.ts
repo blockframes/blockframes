@@ -57,16 +57,18 @@ export class MemberAddComponent {
       const invitationsExist = await this.invitationService.hasUserAnOrgOrIsAlreadyInvited(emails).toPromise<boolean>();
       if (invitationsExist) throw new Error('There is already an invitation existing for one or more of these users');
       await this.invitationService.invite(emails, this.org).to('joinOrganization');
-      this.snackBar.open(this.form.value.length > 1 ? 'Your invitations was sent' : 'Your invitation was sent', 'close', { duration: 5000 });
+      const multipleEmails = this.form.value.length > 1;
+      this.snackBar.open(multipleEmails ? 'Your invitations were sent' : 'Your invitation was sent', 'close', { duration: 5000 });
       this._isSending.next(false);
       this.form.reset();
-    } catch (error) {
+    } catch (err) {
       this._isSending.next(false);
-      if (error.message === 'There is already an invitation existing for one or more of these users') {
-        this.snackBar.open(error.message, 'close', { duration: 5000 });
+      if (err.message === 'There is already an invitation existing for one or more of these users') {
+        this.snackBar.open(err.message, 'close', { duration: 5000 });
       } else {
         this.snackBar.openFromComponent(SnackbarErrorComponent, { data: (this.form.value.length > 1 ? 'There was a problem sending your invitations...' : 'There was a problem sending your invitation...'), duration: 5000 });
       }
     }
   }
 }
+

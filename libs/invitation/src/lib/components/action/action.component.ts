@@ -76,11 +76,11 @@ export class ActionComponent {
       await this.service.request(ownerOrgId).to('attendEvent', id);
       if (accessibility !== 'public') {
         this.snackBar.open('Request sent', 'close', { duration: 4000 });
-      } else if (accessibility === 'public') {
+      } else {
         this.snackBar.openFromTemplate(this.viewDetailsTemplate, { duration: 6000 });
       }
       this.requestPending = true;
-    } catch (err) {
+    } catch (_) {
       this.snackBar.openFromComponent(SnackbarErrorComponent, { data: 'There was a problem sending your request...', duration: 5000 });
     }
   }

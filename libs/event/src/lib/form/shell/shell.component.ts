@@ -106,7 +106,7 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
       }
       return true;
     }
-    catch (err) {
+    catch (_) {
       this.snackBar.openFromComponent(SnackbarErrorComponent, { duration: 5000 });
     }
   }
