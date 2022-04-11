@@ -31,7 +31,7 @@
       {{ country ?? '--' | titlecase }}
     </ng-template>
     <ng-template colRef label="Status" sort let-org>
-      {{ org.status ?? '--' | toLabel: 'organizationStatus' }}
+      {{ org.status | toLabel: 'organizationStatus' }}
     </ng-template>
     <ng-template colRef="activity" sort let-activity>
       {{ activity | toLabel: 'orgActivity'}}
