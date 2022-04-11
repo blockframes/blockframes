@@ -29,9 +29,7 @@
       [members]="members"
       [isSuperAdmin]="true"
       [showFilter]="true"
-      [memberColumns]="memberColumns"
       showActions
-      [memberColumnsIndex]="memberColumnsIndex"
       (memberRemoved)="removeMember($event)"
       (updatedToSuperAdmin)="updateRole($event, 'superAdmin')"
       (updatedToAdmin)="updateRole($event, 'admin')"
@@ -79,10 +77,10 @@
         <ng-template colRef="releaseYear" label="Release year" let-releaseYear sort>
           {{ releaseYear }}
         </ng-template>
-        <ng-template colRef="app" label="Status" let-appAccess>
+        <ng-template colRef="apps" label="Status" let-appAccess>
           <ul>
-            <li *ngFor="let a of app">
-              {{ a | appName:'short' }} : {{ appAccess[a]?.status | titlecase }}
+            <li *ngFor="let app of apps">
+              {{ app | appName:'short' }} : {{ appAccess[app]?.status | titlecase }}
             </li>
           </ul>
         </ng-template>

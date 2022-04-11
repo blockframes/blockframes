@@ -20,13 +20,6 @@ export class MemberRepertoryComponent {
   @Output() updatedToAdmin = new EventEmitter<string>();
   @Output() updatedToMember = new EventEmitter<string>();
 
-  @Input() memberColumns = {
-    email: 'Email Address',
-    position: 'Position'
-  };
-
-  @Input() memberColumnsIndex = ['email', 'position'];
-
   public displayRole(role: UserRole) {
     switch (role) {
       case 'superAdmin':

@@ -32,17 +32,10 @@ export class OrganizationComponent implements OnInit {
   public members;
   public notifyCheckbox = new FormControl(true);
   public storagePath: string;
-  public app = getAllAppsExcept(['crm']);
+  public apps = getAllAppsExcept(['crm']);
 
   public invitationsFromOrganization$: Observable<Invitation[]>;
   public invitationsToJoinOrganization$: Observable<Invitation[]>;
-
-  public memberColumns = {
-    email: 'Email Address',
-    position: 'Position'
-  };
-
-  public memberColumnsIndex = ['email', 'position'];
 
   constructor(
     private organizationService: OrganizationService,
