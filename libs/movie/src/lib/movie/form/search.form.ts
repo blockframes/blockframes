@@ -79,14 +79,14 @@ export function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearc
   };
 }
 
-type Versions = {
+interface Versions {
   original: boolean,
   dubbed: boolean,
   subtitle: boolean,
   caption: boolean,
 }
 
-type LanguageVersion = {
+interface LanguageVersion {
   languages: GetKeys<'languages'>[],
   versions: Versions
 }
