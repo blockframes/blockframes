@@ -1,9 +1,9 @@
 <mat-card *ngIf="!hasAccepted">
   <mat-card-content fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center center">
-    <p fxFlex="shrink">By continuing to browse this site, you are agreeing with the use of cookies,
-      whose purpose is to provide personalize content, deliver our services and monitor analytics.
-      You can change your cookie preferences at any time.</p>
-    <button test-id="preferences" fxFlex="1 0 auto" mat-button (click)="changePreferences()">Change preferences</button>
-    <button test-id="cookies" fxFlex="1 0 auto" mat-flat-button color="primary" (click)="acceptCookies()">Accept cookies</button>
+    <p fxFlex="shrink">By continuing to browse this website, you are agreeing to the use of cookies, 
+      which purpose is to ensure the delivery of our services, 
+      monitor analytics and provide you with personalized content.</p>
+    <button test-id="preferences" fxFlex="1 0 auto" mat-button (click)="changePreferences()">Change Preferences</button>
+    <button test-id="cookies" fxFlex="1 0 auto" mat-flat-button color="primary" (click)="acceptCookies()">Accept Cookies</button>
   </mat-card-content>
 </mat-card>

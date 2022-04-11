@@ -3,7 +3,7 @@
 <div class="actions" fxLayout fxLayoutAlign="center center">
   <button mat-stroked-button (click)="openHoldbacks(formTemplate)">
     <mat-icon svgIcon="add"></mat-icon>
-    <span>Add and manage holdbacks for "{{ title.title.international | maxLength:10 }}"</span>
+    <span>Add and manage Holdbacks for "{{ title.title.international | maxLength:10 }}"</span>
   </button>
 </div>
 
@@ -46,7 +46,7 @@
     <ng-template formView let-control>
       <h3>Holdback Territories*</h3>
       <mat-form-field appearance="outline">
-        <mat-label>Select territories</mat-label>
+        <mat-label>Select Territories</mat-label>
         <static-group [formControl]="control.get('territories')" scope="territories" displayAll="World"
           placeholder="Specify territory to filter" required test-id="territories">
         </static-group>
@@ -57,7 +57,7 @@
 
       <h3>Holdback Rights*</h3>
       <mat-form-field appearance="outline">
-        <mat-label>Select rights</mat-label>
+        <mat-label>Select Rights</mat-label>
         <static-group [formControl]="control.get('medias')" scope="medias" displayAll="All Rights" required
           placeholder="Specify right(s) to filter" [withoutValues]="['theatrical']" test-id="medias">
         </static-group>
