@@ -8,7 +8,7 @@
   <ng-template colRef="guestOrg" label="Guest org" let-guestOrg>
     <ng-container *ngIf="guestOrg else noOrg">
       <a [routerLink]="['/c/o/dashboard/crm/organization', guestOrg.id]">
-        <span>{{ guestOrg | orgName:'long' }} </span>
+        <span>{{ guestOrg | orgName:'long' }}</span>
         <mat-icon svgIcon="visibility"></mat-icon>
       </a>
     </ng-container>
@@ -32,6 +32,6 @@
     {{ accessibility | toLabel:'accessibility' }}
   </ng-template>
   <ng-template colRef="status" label="Status" let-status sort>
-    {{ status | titlecase }}
+    {{ status | toLabel: 'invitationStatus' }}
   </ng-template>
 </bf-table>

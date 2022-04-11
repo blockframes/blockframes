@@ -1,4 +1,4 @@
-<bf-table [source]="_invitations" useFilter pagination="100">
+<bf-table [source]="invitations" useFilter pagination="100">
   <ng-template colRef="id" label="Id" let-invitId>
     {{ invitId }}
   </ng-template>
@@ -22,7 +22,7 @@
   </ng-template>
   <ng-template colRef="movie" label="Movie" let-movie>
     <div *ngIf="movie else noMovie" fxLayout="row">
-      <ng-container *ngIf="movie.poster as poster;">
+      <ng-container *ngIf="movie.poster as poster">
         <img class="poster" [ref]="poster" asset="empty_poster.svg">
       </ng-container>
       <a [routerLink]="['/c/o/dashboard/crm/movie', movie.id]">
@@ -51,6 +51,6 @@
     {{ mode | titlecase }}
   </ng-template>
   <ng-template colRef="status" label="Status" let-status sort>
-    {{ status | titlecase }}
+    {{ status | toLabel: 'invitationStatus' }}
   </ng-template>
 </bf-table>
