@@ -26,8 +26,4 @@ export class MemberRepertoryComponent {
   };
 
   @Input() memberColumnsIndex = ['email', 'position'];
-
-  get variableColumns() {
-    return this.memberColumnsIndex;
-  }
 }

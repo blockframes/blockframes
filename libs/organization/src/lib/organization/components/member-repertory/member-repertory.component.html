@@ -13,8 +13,8 @@
       <b>{{ lastName }}</b>
     </ng-template>
 
-    <ng-container *ngFor="let col of variableColumns">
-      <ng-template [colRef]="col" [label]="memberColumns[col]" let-value sort>
+    <ng-container *ngFor="let col of memberColumnsIndex">
+      <ng-template [colRef]="col" [label]="col" let-value sort>
         {{ value }}
       </ng-template>
     </ng-container>
