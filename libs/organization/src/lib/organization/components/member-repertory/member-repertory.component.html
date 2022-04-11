@@ -19,10 +19,6 @@
       </ng-template>
     </ng-container>
 
-    <ng-template *ngIf="showPermissions" colRef="role" label="Permissions" let-role sort>
-      {{ displayRole(role) }}
-    </ng-template>
-
     <ng-template *ngIf="isSuperAdmin" colRef="uid" let-uid>
       <member-permissions [uid]="uid" (memberRemoved)="memberRemoved.emit(uid)"
         (updatedToSuperAdmin)="updatedToSuperAdmin.emit(uid)" (updatedToAdmin)="updatedToAdmin.emit(uid)"

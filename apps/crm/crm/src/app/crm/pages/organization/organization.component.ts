@@ -42,7 +42,7 @@ export class OrganizationComponent implements OnInit {
     position: 'Position'
   };
 
-  public memberColumnsIndex = ['firstName', 'lastName', 'email', 'position'];
+  public memberColumnsIndex = ['email', 'position'];
 
   constructor(
     private organizationService: OrganizationService,

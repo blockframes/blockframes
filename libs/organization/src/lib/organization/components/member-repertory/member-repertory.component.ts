@@ -13,7 +13,6 @@ export class MemberRepertoryComponent {
   @Input() showFilter = false;
   @Input() isSuperAdmin: boolean;
   @Input() @boolean showActions = false;
-  @Input() @boolean showPermissions = true;
 
   @Output() memberRemoved = new EventEmitter<string>();
 
@@ -30,18 +29,5 @@ export class MemberRepertoryComponent {
 
   get variableColumns() {
     return this.memberColumnsIndex;
-  }
-
-  public displayRole(role: UserRole) {
-    switch (role) {
-      case 'superAdmin':
-        return 'Super Admin';
-      case 'admin':
-        return 'Admin';
-      case 'member':
-        return 'Member';
-      default:
-        return 'Member';
-    }
   }
 }
