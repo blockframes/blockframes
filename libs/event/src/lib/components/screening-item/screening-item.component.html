@@ -1,6 +1,6 @@
 <ng-container *ngIf="event$ | async as event">
   <a matRipple [routerLink]="['/event', event.id, 'r', 'i']">
-    <img fxHide.lt-sm
+    <img fxHide.xs
     [ref]="(event.meta.titleId | getTitle | async)?.poster"
     asset="empty_poster.svg"
     width="225px"

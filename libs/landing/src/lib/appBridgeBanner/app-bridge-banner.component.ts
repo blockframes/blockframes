@@ -42,6 +42,6 @@ export class AppBridgeBannerComponent {
   ) {}
 
   scrollToHeader() {
-    document.getElementById("headerToScroll").scrollIntoView({behavior: "smooth"});
+    document.getElementById("header-to-scroll").scrollIntoView({behavior: "smooth"});
   }
 }

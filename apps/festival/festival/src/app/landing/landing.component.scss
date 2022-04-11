@@ -171,7 +171,7 @@ landing-app-link {
 
 @include layout-bp(lt-sm) {
   landing-header {
-    #headerToScroll {
+    #header-to-scroll {
       height: calc(100vh - 80px);
       text-align: center;
       padding-inline: 16px;

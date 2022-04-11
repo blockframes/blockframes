@@ -1,9 +1,9 @@
 <landing-shell-page>
 
-  <app-bridge-banner fxHide.lt-sm></app-bridge-banner>
+  <app-bridge-banner fxHide.xs></app-bridge-banner>
 
   <landing-header>
-    <header id="headerToScroll" class="max-width" fxLayout="column" fxLayoutAlign="start start" fxLayoutAlign.lt-sm="start center" fxLayoutGap="32px">
+    <header id="header-to-scroll" class="max-width" fxLayout="column" fxLayoutAlign="start start" fxLayoutAlign.xs="start center" fxLayoutGap="32px">
       <span class="mat-subheading-1">WELCOME TO ARCHIPEL MARKET</span>
       <h1 class="mat-display-2">The ongoing<br />film market</h1>
       <h2>One tool for your year-round <br/>B2B promotion & acquisitions</h2>
@@ -22,7 +22,7 @@
       <article class="max-width" fxLayout="column" fxLayoutAlign="start" fxLayoutGap="16px">
         <h2 class="mat-display-1">They're using it</h2>
         <p class="mat-body-1">Over 1400 buyers are already using Archipel, from companies like:</p>
-        <div fxLayout="row wrap" fxLayoutAlign.lt-sm="space-around center" fxLayoutGap="32px" fxLayoutGap.lt-sm="16px">
+        <div fxLayout="row wrap" fxLayoutAlign.xs="space-around center" fxLayoutGap="32px" fxLayoutGap.xs="16px">
           <img *ngFor="let partnerLogo of partnerLogoList" [asset]='partnerLogo' [alt]='partnerLogo'>
         </div>
       </article>
