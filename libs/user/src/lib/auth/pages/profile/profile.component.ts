@@ -57,11 +57,13 @@ export class ProfileComponent implements OnInit {
         this.passwordForm.reset();
         this.passwordForm.markAsPristine();
       }
-    } catch (error) {
-      if (error.message === 'Your profile information are not valid.' || error.message === 'Your information to change your password are not valid.') {
-        this.snackBar.open(error.message, 'close', { duration: 2000 });
-      } else {
-        this.snackBar.openFromComponent(SnackbarErrorComponent, { duration: 5000 });
+    } catch (err) {
+      switch (err.message) {
+        case 'Your profile information are not valid':
+        case 'Your information to change your password are not valid.':
+          this.snackBar.open(err.message, 'close', { duration: 2000 });
+        default:
+          this.snackBar.openFromComponent(SnackbarErrorComponent, { duration: 5000 });
       }
     }
   }
