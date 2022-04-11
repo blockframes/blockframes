@@ -12,7 +12,7 @@ import { clearUsers, createUsers, printUsers, syncUsers } from './users';
 import { generateFixtures } from './generate-fixtures';
 import { exportFirestore, importFirestore } from './admin';
 import { selectEnvironment } from './select-environment';
-import { healthCheck } from '@blockframes/devops';
+import { healthCheck } from './health-check';
 import {
   anonymizeLatestProdDb,
   downloadProdDbBackup,
