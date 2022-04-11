@@ -64,7 +64,8 @@ export class ListPageComponent implements AfterContentInit {
 
   constructor(
     private location: Location,
-    private breakpointsService: BreakpointsService) { }
+    private breakpointsService: BreakpointsService
+  ) { }
 
   ngAfterContentInit() {
     if (this.cardTemplate && this.listItemTemplate) {

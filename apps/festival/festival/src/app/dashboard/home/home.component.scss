@@ -11,9 +11,6 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  h1 {
-    margin: auto auto auto 0;
-  }
 }
 
 .carousel-container {
@@ -55,8 +52,5 @@ header {
 @include layout-bp(xs) {
   header {
     flex-direction: column;
-    h1 {
-      margin: 0 0 24px 0;
-    }
   }
 }
