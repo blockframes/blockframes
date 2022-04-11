@@ -12,6 +12,7 @@ export class FilmographyPipe implements PipeTransform {
             return film.year ? `${film.title} (${film.year})` : film.title;
           }
         })
+        .filter(Boolean)
         .join(', ');
     }
   }
