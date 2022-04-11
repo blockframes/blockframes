@@ -1,37 +1,68 @@
 import { Firestore } from '../types';
-import { runChunks } from '../firebase-utils';
-import { Movie } from '@blockframes/model';
+import { createUser } from '@blockframes/model';
+import { production } from '@env';
+import * as mailchimp from '@mailchimp/mailchimp_marketing';
+import { getPreferenceTag, MailchimpTag } from '@blockframes/utils/mailchimp/mailchimp-model';
+import { createHash } from 'crypto';
+
+const apiKey = process.env.MAILCHIMP_API_KEY;
+const server = process.env.MAILCHIMP_SERVER;
+const list_id = process.env.MAILCHIMP_LIST_ID;
+
+interface batchOperations {
+  method: string;
+  path: string;
+  body: string;
+}
+
+export async function batchOperations(operations: batchOperations[]): Promise<void> {
+  mailchimp.default.setConfig({ apiKey, server });
+
+  return mailchimp.batches.start({ operations });
+}
 
 /**
- * Remove all from available versions on Movie #7151
- * Some titles have incorrect model for customPrizes #7812
+ * Update mailchimp users list. Add non existing user, don't update existing ones.
  * @param db
- * @returns
  */
+
 export async function upgrade(db: Firestore) {
+  if (!production) return;
 
-  const movies = await db.collection('movies').get();
+  const users = await db.collection('users').get();
+  let batchCalls = [];
 
-  return runChunks(movies.docs, async (doc) => {
-    const movie = doc.data() as Movie;
+  for (let i = 0; i < users.docs.length; i++) {
+    const user = createUser(users.docs[i].data());
+    const isBlockframeEmail = ['dev+', 'concierge+', 'blockframes.io'].some(str => user.email.includes(str));
+    if (isBlockframeEmail) continue;
+    
+    const method = 'POST';
+    const subscriber_hash = createHash('md5').update(user.email).digest('hex');
 
-    let update = false;
-    if ((movie.languages as any).all) {
-      delete (movie.languages as any).all;
-      update = true;
+    const path = `lists/${list_id}/members/${subscriber_hash}/tags`;
+    const tags: MailchimpTag[] = [];
+
+    for (const key in user.preferences) {
+      const activeTags = getPreferenceTag(key, user.preferences[key], 'active');
+      tags.push(...activeTags);
     }
 
-    if (movie.customPrizes?.length && movie.customPrizes.some(p => Array.isArray(p.premiere))) {
-      update = true;
-      movie.customPrizes = movie.customPrizes.map(p => {
-        if (Array.isArray(p.premiere)) {
-          return { ...p, premiere: p.premiere[0] };
-        } else {
-          return p;
-        }
-      })
-    }
+    const body = JSON.stringify({
+      list_id,
+      subscriber_hash,
+      tags
+    });
 
-    if (update) await doc.ref.set(movie);
-  }).catch(err => console.error(err));
+    batchCalls.push({ method, path, body });
+    
+    if (i === users.docs.length) {
+      await batchOperations(batchCalls);
+      break;
+    } else if (i % 500 === 0) {
+      // max size of batch is 500
+      await batchOperations(batchCalls);
+      batchCalls = [];
+    }
+  }
 }

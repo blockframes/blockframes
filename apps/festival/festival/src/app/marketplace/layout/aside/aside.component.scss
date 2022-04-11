@@ -1,4 +1,10 @@
 :host {
   display: block;
-  height: 100%;
+}
+
+section {
+  display: flex;
+  margin-top: 16px;
+  margin-left: 20px;
+  gap: 24px;
 }
