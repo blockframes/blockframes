@@ -76,7 +76,7 @@
   <pdf-export *ngIf="movies$ | async as movies">
     <button [disabled]="exporting" mat-button (click)="export(movies)" matTooltip="Export to PDF">
       <mat-icon svgIcon="pdf"></mat-icon>
-      <span>Export Titles</span>
+      <span>Export {nbHits, plural, =1 {title} other {titles}} </span>
     </button>
   </pdf-export>
 

@@ -23,7 +23,7 @@
   <events-export *ngIf="(events$ | async) || [] as events">
     <button mat-button (click)="exportToCalendar(events)">
       <mat-icon svgIcon="cloud_download"></mat-icon>
-      <span>Export All Events</span>
+      <span>Export {events.length, plural, =1 {} other {all}} Event{events.length, plural, =1 {} other {s}}</span>
     </button>
   </events-export>
 
