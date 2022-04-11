@@ -43,7 +43,9 @@
         </a>
       </ng-template>
       <ng-template colRef="directors" label="Director(s)" let-directors>
-        {{ directors | displayName | maxLength:50 }}
+        <span (click)="openDetails('Director\'s', parseDirectors(directors))">
+          {{ directors | displayName | maxLength:50 }}
+        </span>
       </ng-template>
       <ng-template colRef="release.year" label="Release Year" let-year sort>
         {{ year }}

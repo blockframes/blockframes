@@ -8,6 +8,9 @@ import { TableModule } from "@blockframes/ui/list/table/table.module";
 
 import { TitleListComponent } from './list.component';
 
+// Cell Modal
+import { CellModalModule } from '@blockframes/ui/cell-modal/cell-modal.module';
+
 // Blockframes
 import { AppPipeModule, DisplayNameModule, MaxLengthModule, NumberPipeModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
@@ -41,7 +44,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     NumberPipeModule,
     IncomePipeModule,
     AppPipeModule,
-
+    CellModalModule,
     // Material
     MatButtonModule,
     MatTabsModule,
