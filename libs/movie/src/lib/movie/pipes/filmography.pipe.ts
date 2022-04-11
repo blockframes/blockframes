@@ -15,7 +15,7 @@ export const displayFilmography = (filmography: Filmography[]) => {
 export class FilmographyPipe implements PipeTransform {
   transform(filmography?: Filmography | Filmography[]) {
     const filmographyArray = !Array.isArray(filmography) ? [filmography] : filmography;
-    if (filmographyArray.every(film => !film)) return "--";
+    if (filmographyArray.every(film => !film)) return "";
     return displayFilmography(filmographyArray).join(', ')
   }
 }
