@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Materials
 import { MatIconModule } from '@angular/material/icon';
@@ -19,7 +18,6 @@ import { TableModule } from '@blockframes/ui/list/table/table.module';
   imports: [
     CommonModule,
     TableModule,
-    FlexLayoutModule,
     OrgNameModule,
     MatIconModule,
     RouterModule,
