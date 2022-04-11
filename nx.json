@@ -129,9 +129,6 @@
     },
     "testing-cypress-node": {
       "tags": ["node", "e2e"]
-    },
-    "devops": {
-      "tags": ["node", "local"]
     }
   }
 }

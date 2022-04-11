@@ -1849,27 +1849,6 @@
           }
         }
       }
-    },
-    "devops": {
-      "root": "libs/devops",
-      "sourceRoot": "libs/devops/src",
-      "projectType": "library",
-      "targets": {
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["libs/devops/**/*.ts"]
-          }
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/devops"],
-          "options": {
-            "jestConfig": "libs/devops/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
     }
   }
 }
