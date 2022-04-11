@@ -9,6 +9,9 @@ import { Intercom } from 'ng-intercom';
 import { App } from '@blockframes/utils/apps';
 import { APP } from '@blockframes/utils/routes/utils';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { CellModalComponent } from '@blockframes/ui/cell-modal/cell-modal.component';
+import { displayName } from '@blockframes/utils/utils';
 
 @Component({
   selector: 'festival-dashboard-title-list',
@@ -51,6 +54,7 @@ export class ListComponent {
     private service: MovieService,
     private snackbar: MatSnackBar,
     private dynTitle: DynamicTitleService,
+    private dialog: MatDialog,
     @Optional() private intercom: Intercom,
     @Inject(APP) public app: App
   ) {}
@@ -71,5 +75,18 @@ export class ListComponent {
   async updateStatus(movie: Movie, status: StoreStatus, message?: string) {
     await this.service.updateStatus(movie.id, status);
     this.snackbar.open(message || `Title ${storeStatus[status]}.`, '', { duration: 4000 });
+  }
+
+  parseDirectors(directors: any) {
+    if (Array.isArray(directors)) {
+      return directors
+        .map(person => typeof person === 'string' ? person : displayName(person))
+    } else {
+      return displayName(directors);
+    }
+  }
+
+  openDetails(title: string, values: string[] | string) {
+    this.dialog.open(CellModalComponent, { data: { title, values }, maxHeight: '80vh',  minWidth: '50vw', maxWidth: '80vw', minHeight: '50vh', autoFocus: false });
   }
 }

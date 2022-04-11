@@ -8,6 +8,9 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 // Component
 import { ListComponent } from './list.component';
 
+// Cell Modal
+import { CellModalModule } from '@blockframes/ui/cell-modal/cell-modal.module';
+
 // Blockframes
 import { AppPipeModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { DisplayNameModule } from '@blockframes/utils/pipes';
@@ -41,6 +44,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     TagModule,
     MaxLengthModule,
     AppPipeModule,
+    CellModalModule,
     // Material
     MatButtonModule,
     MatTabsModule,

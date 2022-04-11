@@ -38,7 +38,9 @@
         </a>
       </ng-template>
       <ng-template colRef label="Director(s)" let-movie>
-        {{ movie.directors | displayName | maxLength:50 }}
+        <span (click)="openDetails('Director\'s', parseDirectors(movie.directors))">
+          {{ movie.directors | displayName | maxLength:50 }}
+        </span>
       </ng-template>
       <ng-template colRef="productionStatus" label="Production Status" let-prod sort>
         {{ prod | toLabel: 'productionStatus' }}
