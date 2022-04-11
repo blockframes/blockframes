@@ -8,8 +8,8 @@ import { OrgAccessModule } from '@blockframes/organization/pipes/org-access.pipe
 // Material
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
+import { MatBadgeModule } from '@angular/material/badge';
 import { MatToolbarModule } from '@angular/material/toolbar';
-
 
 @NgModule({
   declarations: [AsideComponent],
@@ -21,7 +21,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     // Material
     MatListModule,
     MatIconModule,
-    MatToolbarModule,
+    MatBadgeModule,
+    MatToolbarModule
   ],
   exports: [AsideComponent]
 })

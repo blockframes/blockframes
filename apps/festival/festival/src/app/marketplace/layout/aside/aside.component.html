@@ -30,5 +30,39 @@
       <span matLine><b>My Dashboard</b></span>
     </a>
   </ng-container>
+  <mat-divider></mat-divider>
+  <a mat-list-item routerLink="/c/o/account/profile" routerLinkActive="active">
+    <mat-icon matListIcon svgIcon="account_circle"></mat-icon>
+    <span matLine><b>Profile</b></span>
+  </a>
+  <a mat-list-item [routerLink]="['/c/o/organization', org.id]" routerLinkActive="active">
+    <mat-icon matListIcon svgIcon="business"></mat-icon>
+    <span matLine><b>Organization</b></span>
+  </a>
+  <mat-list-item (click)="logout()">
+    <mat-icon matListIcon svgIcon="logout"></mat-icon>
+    <span matLine><b>Log out</b></span>
+  </mat-list-item>
 </mat-nav-list>
 
+<section>
+  <!-- Invitations -->
+  <a mat-icon-button routerLink="invitations" matTooltip="Invitations">
+    <ng-container *ngIf="invitationCount$ | async as count; else noInvitation">
+      <mat-icon svgIcon="invitation" [matBadge]="count" matBadgeColor="accent" matBadgeSize="small"></mat-icon>
+    </ng-container>
+    <ng-template #noInvitation>
+      <mat-icon svgIcon="invitation"></mat-icon>
+    </ng-template>
+  </a>
+  <!-- Notifications -->
+  <a mat-icon-button routerLink="notifications" matTooltip="Notifications">
+    <ng-container *ngIf="notificationCount$ | async as count; else noNotification">
+      <mat-icon svgIcon="notifications" [matBadge]="count" matBadgeColor="accent" matBadgeSize="small">
+      </mat-icon>
+    </ng-container>
+    <ng-template #noNotification>
+      <mat-icon svgIcon="notifications"></mat-icon>
+    </ng-template>
+  </a>
+</section>
