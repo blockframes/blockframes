@@ -7,7 +7,7 @@
         <mat-checkbox formControlName="subtitle" color="primary">Subtitles</mat-checkbox>
         <mat-checkbox formControlName="dubbed" color="primary">Dubbings</mat-checkbox>
         <mat-checkbox formControlName="caption" color="primary">Closed Captions</mat-checkbox>
-        <button mat-icon-button (click)="deleteLanguage(language.key)" color="warn">
+        <button mat-icon-button (click)="deleteLanguage(language.key)" color="warn" matTooltip="Delete language">
           <mat-icon svgIcon="delete"></mat-icon>
         </button>
       </div>

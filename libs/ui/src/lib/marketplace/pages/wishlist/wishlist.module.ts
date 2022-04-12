@@ -18,6 +18,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatRippleModule } from '@angular/material/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { WishlistComponent } from './wishlist.component';
 
@@ -40,6 +41,7 @@ import { WishlistComponent } from './wishlist.component';
     MatRippleModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
+    MatTooltipModule,
     RouterModule.forChild([{ path: '', component: WishlistComponent }])
   ]
 })

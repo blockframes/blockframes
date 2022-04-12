@@ -44,8 +44,8 @@
       <ng-container matColumnDef="delete">
         <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let element">
-          <button test-id="remove" mat-icon-button (click)="remove(element, $event)">
-            <mat-icon svgIcon="delete" title="Remove from Wishlist"></mat-icon>
+          <button test-id="remove" mat-icon-button (click)="remove(element, $event)" matTooltip="Remove from Wishlist">
+            <mat-icon svgIcon="delete"></mat-icon>
           </button>
         </td>
       </ng-container>
