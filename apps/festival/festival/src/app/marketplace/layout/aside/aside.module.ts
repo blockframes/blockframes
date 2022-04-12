@@ -5,12 +5,12 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { AsideComponent } from './aside.component';
 import { OrgAccessModule } from '@blockframes/organization/pipes/org-access.pipe';
+import { SidenavAuthModule } from '@blockframes/auth/components/sidenav-auth/sidenav-auth.module';
+import { SidenavWidgetModule } from '@blockframes/auth/components/sidenav-widget/sidenav-widget.module';
 
 // Material
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
-import { MatBadgeModule } from '@angular/material/badge';
-import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
 @NgModule({
@@ -20,12 +20,12 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     CommonModule,
     OrgAccessModule,
     FlexLayoutModule,
+    SidenavAuthModule,
+    SidenavWidgetModule,
 
     // Material
     MatListModule,
     MatIconModule,
-    MatBadgeModule,
-    MatButtonModule,
     MatToolbarModule
   ],
   exports: [AsideComponent]
