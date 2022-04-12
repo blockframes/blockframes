@@ -3,9 +3,9 @@ import { Filmography } from '@blockframes/model';
 
 export const displayFilmographies = (filmographies: Filmography[]) => {
   return filmographies
-    .map(filmographiy => {
-      if (filmographiy?.title) {
-        return filmographiy.year ? `${filmographiy.title} (${filmographiy.year})` : filmographiy.title;
+    .map(filmography => {
+      if (filmography?.title) {
+        return filmography.year ? `${filmography.title} (${filmography.year})` : filmography.title;
       }
     })
     .filter(f => !!f);
