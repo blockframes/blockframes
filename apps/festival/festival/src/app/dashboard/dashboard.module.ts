@@ -18,6 +18,8 @@ import { EventFormShellComponent } from '@blockframes/event/form/shell/shell.com
 import { EventFromShellModule } from '@blockframes/event/form/shell/shell.module';
 import { ReviewComponent } from '@blockframes/event/layout/review/review.component';
 import { LayoutEventReviewModule } from '@blockframes/event/layout/review/review.module';
+import { SidenavAuthModule } from '@blockframes/auth/components/sidenav-auth/sidenav-auth.module';
+import { SidenavWidgetModule } from '@blockframes/auth/components/sidenav-widget/sidenav-widget.module';
 
 // Tunnel routes
 import { tunnelRoutes } from './tunnel/movie-tunnel.routes';
@@ -228,6 +230,8 @@ const routes: Routes = [{
     MovieFormShellModule,
     EventFromShellModule,
     LayoutEventReviewModule,
+    SidenavAuthModule,
+    SidenavWidgetModule,
 
     // Material
     MatDividerModule,
