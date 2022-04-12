@@ -7,7 +7,7 @@ import { Movie, Organization } from '@blockframes/model';
 import { AbstractControl, FormControl, Validators } from '@angular/forms';
 import { FormList } from '@blockframes/utils/form';
 import { ENTER, COMMA, SEMICOLON, SPACE } from '@angular/cdk/keycodes';
-
+import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/snackbar-error.component';
 
 @Component({
   selector: '[org] member-add',
@@ -24,7 +24,6 @@ export class MemberAddComponent {
   public emailForm = new FormControl('', Validators.email);
   public form = FormList.factory<string, FormControl>([], email => new FormControl(email, [Validators.required, Validators.email]));
   public error: string;
-
 
   constructor(
     private snackBar: MatSnackBar,
@@ -52,18 +51,24 @@ export class MemberAddComponent {
   public async sendInvitations() {
     this.add();
     if (this.error) return;
+    const multipleEmails = this.form.value.length > 1;
     try {
       this._isSending.next(true);
       const emails = Array.from(new Set(this.form.value.map(email => email.trim().toLowerCase())));
       const { data: invitationsExist } = await this.invitationService.hasUserAnOrgOrIsAlreadyInvited(emails);
       if (invitationsExist) throw new Error('There is already an invitation existing for one or more of these users');
       await this.invitationService.invite(emails, this.org).to('joinOrganization');
-      this.snackBar.open('Your invitation was sent', 'close', { duration: 5000 });
+      this.snackBar.open(multipleEmails ? 'Your invitations were sent' : 'Your invitation was sent', 'close', { duration: 5000 });
       this._isSending.next(false);
       this.form.reset();
-    } catch (error) {
+    } catch (err) {
       this._isSending.next(false);
-      this.snackBar.open(error.message, 'close', { duration: 5000 });
+      if (err.message === 'There is already an invitation existing for one or more of these users') {
+        this.snackBar.open(err.message, 'close', { duration: 5000 });
+      } else {
+        this.snackBar.openFromComponent(SnackbarErrorComponent, { data: (`There was a problem sending your invitation${multipleEmails ? 's' : ''}...`), duration: 5000 });
+      }
     }
   }
 }
+

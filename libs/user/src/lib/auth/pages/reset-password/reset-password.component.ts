@@ -29,7 +29,7 @@ export class ResetPasswordComponent implements OnInit {
   public async resetPassword() {
     try {
       if (this.emailForm.invalid) {
-        throw new Error('Invalid format of email');
+        throw new Error('Incorrect email address');
       }
       const { data: res } = await this.service.resetPasswordInit(this.emailForm.value.email);
       if (res.error === 'auth/email-not-found') {

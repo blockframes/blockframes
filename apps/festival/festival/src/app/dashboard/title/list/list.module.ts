@@ -17,6 +17,7 @@ import { FilterByModule } from '@blockframes/utils/pipes/filter-by.pipe';
 import { TagModule } from '@blockframes/ui/tag/tag.module';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { MaxLengthModule } from "@blockframes/utils/pipes";
+import { CellModalModule } from '@blockframes/ui/cell-modal/cell-modal.module';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -41,6 +42,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     TagModule,
     MaxLengthModule,
     AppPipeModule,
+    CellModalModule,
     // Material
     MatButtonModule,
     MatTabsModule,

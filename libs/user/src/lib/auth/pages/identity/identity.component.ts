@@ -162,6 +162,9 @@ export class IdentityComponent implements OnInit, OnDestroy {
         case 'auth/email-already-in-use':
           this.snackBar.openFromTemplate(this.customSnackBarTemplate, { duration: 6000 });
           break;
+        case 'auth/invalid-email':
+          this.snackBar.open('Incorrect email address, please enter: text@example.com', 'close', { duration: 5000 });
+          break;
         case 'auth/wrong-password':
           this.snackBar.open('Incorrect Invitation Pass. Please check your invitation email.', 'close', { duration: 8000 });
           break;
