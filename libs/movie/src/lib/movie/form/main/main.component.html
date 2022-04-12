@@ -204,7 +204,7 @@
 
       <bf-form-table [columns]="displayedColumns" [form]="form.directors">
         <ng-template colRef="description" let-description>
-          <span (click)="openDetails('Description', [description], 'description')">
+          <span (click)="openDetails('Description', [description])">
             {{ description | maxLength: 75 }}
           </span>
         </ng-template>
@@ -213,7 +213,7 @@
         <ng-template colRef="category" let-category>{{ category | toLabel: 'directorCategory' }}
         </ng-template>
         <ng-template colRef="filmography" let-filmography>
-          <span (click)="openDetails('Filmography', filmography, 'filmography')">
+          <span (click)="openDetails('Filmography', filmography)">
             {{ filmography | filmography | maxLength: 50 }}
           </span>
         </ng-template>

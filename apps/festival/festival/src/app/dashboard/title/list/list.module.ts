@@ -8,9 +8,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 // Component
 import { ListComponent } from './list.component';
 
-// Cell Modal
-import { CellModalModule } from '@blockframes/ui/cell-modal/cell-modal.module';
-
 // Blockframes
 import { AppPipeModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { DisplayNameModule } from '@blockframes/utils/pipes';
@@ -20,6 +17,7 @@ import { FilterByModule } from '@blockframes/utils/pipes/filter-by.pipe';
 import { TagModule } from '@blockframes/ui/tag/tag.module';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { MaxLengthModule } from "@blockframes/utils/pipes";
+import { CellModalModule } from '@blockframes/ui/cell-modal/cell-modal.module';
 
 // Material
 import { MatCardModule } from '@angular/material/card';

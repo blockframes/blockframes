@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, Optional, Inject } from '@angular/c
 import { FormControl } from '@angular/forms';
 import { map, shareReplay, startWith, tap } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
-import { Movie, StoreStatus, storeStatus } from '@blockframes/model';
+import { Movie, StoreStatus, storeStatus, Person } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Intercom } from 'ng-intercom';
@@ -81,7 +81,8 @@ export class TitleListComponent {
     this.snackbar.open(message || `Title ${storeStatus[status]}.`, '', { duration: 4000 });
   }
 
-  openDetails(title: string, values: string[]) {
+  //TODO #6507
+  openDetails(title: string, values: Person[]) {
     this.dialog.open(CellModalComponent, {
       data: { title, values: displayPerson(values) },
       maxHeight: '80vh',

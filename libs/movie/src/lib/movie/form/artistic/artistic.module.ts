@@ -19,11 +19,9 @@ import { FormTableModule } from '@blockframes/ui/form/table/form-table.module';
 import { HasStatusModule } from '@blockframes/movie/pipes/has-status.pipe'
 import { FilmographyPipeModule} from '@blockframes/movie/pipes/filmography.pipe';
 import { MaxLengthModule, ToLabelModule } from '@blockframes/utils/pipes';
+import { CellModalModule } from '@blockframes/ui/cell-modal/cell-modal.module';
 
 import { MovieFormArtisticComponent } from './artistic.component';
-
-// Cell Modal
-import { CellModalModule } from '@blockframes/ui/cell-modal/cell-modal.module';
 
 @NgModule({
   declarations: [MovieFormArtisticComponent],
