@@ -7,6 +7,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Blockframes
 import { OrgAccessModule } from '@blockframes/organization/pipes';
+import { SidenavAuthModule } from '@blockframes/auth/components/sidenav-auth/sidenav-auth.module';
+import { SidenavWidgetModule } from '@blockframes/auth/components/sidenav-widget/sidenav-widget.module';
 
 // Guards
 import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
@@ -116,6 +118,8 @@ const routes: Routes = [{
     MatIconModule,
     MatButtonModule,
     MarketplaceLayoutModule,
+    SidenavAuthModule,
+    SidenavWidgetModule,
     MatBadgeModule,
     MatTooltipModule,
     RouterModule.forChild(routes)
