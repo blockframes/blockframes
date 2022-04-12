@@ -2,6 +2,7 @@
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, ChangeDetectionStrategy, OnDestroy, AfterViewInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { delay, filter, pluck, skip, switchMap } from 'rxjs/operators';
 import { combineLatest, of, ReplaySubject, Subscription } from 'rxjs';
@@ -19,6 +20,7 @@ import { Holdback, isMandate, isSale, Mandate, Sale, BucketTerm, Term, Territory
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 import { ExplanationComponent } from './explanation/explanation.component';
 import { HoldbackModalComponent } from '@blockframes/contract/contract/holdback/modal/holdback-modal.component';
+import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/snackbar-error.component';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
 
 @Component({
@@ -91,6 +93,7 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
     private bucketService: BucketService,
     private orgService: OrganizationService,
     private contractService: ContractService,
+    private snackBar: MatSnackBar,
   ) {
     const sub = this.bucketService.active$.subscribe(bucket => {
       this.bucketForm.patchAllValue(bucket);
@@ -161,10 +164,14 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
   }
 
   public async addToSelection() {
-    const contracts = this.bucketForm.value.contracts;
-    await this.bucketService.upsert({ id: this.orgId, contracts });
-    this.bucketForm.markAsPristine();
-    this.router.navigate(['/c/o/marketplace/selection']);
+    try {
+      const contracts = this.bucketForm.value.contracts;
+      await this.bucketService.upsert({ id: this.orgId, contracts });
+      this.bucketForm.markAsPristine();
+      this.router.navigate(['/c/o/marketplace/selection']);
+    } catch (_) {
+      this.snackBar.openFromComponent(SnackbarErrorComponent, { duration: 5000 });
+    }
   }
 
   public explain() {

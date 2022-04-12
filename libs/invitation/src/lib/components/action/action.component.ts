@@ -3,6 +3,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AuthService } from '@blockframes/auth/+state';
 import { Event, Invitation, InvitationStatus } from '@blockframes/model';
+import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/snackbar-error.component';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { InvitationService } from '../../+state';
 
@@ -69,14 +70,18 @@ export class ActionComponent {
   }
 
   /** Request the owner to accept invitation (automatically accepted if event is public) */
-  request(event: Event) {
-    const { ownerOrgId, id, accessibility } = event;
-    this.service.request(ownerOrgId).to('attendEvent', id);
-    if (accessibility !== 'public') {
-      this.snackBar.open('Request sent', 'close', { duration: 4000 });
-    } else if (accessibility === 'public') {
-      this.snackBar.openFromTemplate(this.viewDetailsTemplate, { duration: 6000 });
+  async request(event: Event) {
+    try {
+      const { ownerOrgId, id, accessibility } = event;
+      await this.service.request(ownerOrgId).to('attendEvent', id);
+      if (accessibility !== 'public') {
+        this.snackBar.open('Request sent', 'close', { duration: 4000 });
+      } else {
+        this.snackBar.openFromTemplate(this.viewDetailsTemplate, { duration: 6000 });
+      }
+      this.requestPending = true;
+    } catch (_) {
+      this.snackBar.openFromComponent(SnackbarErrorComponent, { data: 'There was a problem sending your request...', duration: 5000 });
     }
-    this.requestPending = true;
   }
 }

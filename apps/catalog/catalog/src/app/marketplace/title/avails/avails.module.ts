@@ -4,7 +4,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-
 // Material
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -16,10 +15,9 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatTooltipModule } from '@angular/material/tooltip';
-
-
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { LanguagesFormModule } from '@blockframes/movie/form/languages/languages.module';
+import { SnackbarErrorModule } from '@blockframes/ui/snackbar/snackbar-error.module';
 
 import { AvailsGuard } from './avails.guard';
 import { MarketplaceMovieAvailsComponent } from './avails.component';
@@ -75,6 +73,7 @@ const routes: Routes = [
     MatSelectModule,
     MatFormFieldModule,
     MatTooltipModule,
+    SnackbarErrorModule,
 
     RouterModule.forChild(routes)
   ]
