@@ -2,7 +2,7 @@
 <article>
   <h6>
     Production Compan{ movie.stakeholders.get('productionCompany').controls.length, plural, =0 {y} =1 {y} other {ies}}
-    <a mat-icon-button [routerLink]="link" fragment="company">
+    <a mat-icon-button [routerLink]="link" fragment="company" matTooltip="Edit">
       <mat-icon svgIcon="edit" color="primary"></mat-icon>
     </a>
   </h6>
@@ -28,7 +28,7 @@
 <article>
   <h6>Co-Production Compan{ movie.stakeholders.get('coProductionCompany').controls.length, plural, =0 {y} =1 {y} other
     {ies}}
-    <a mat-icon-button [routerLink]="link" fragment="co-company">
+    <a mat-icon-button [routerLink]="link" fragment="co-company" matTooltip="Edit">
       <mat-icon svgIcon="edit" color="primary"></mat-icon>
     </a>
   </h6>
@@ -52,7 +52,7 @@
 <article>
   <h6>
     Producer{ movie.producers.controls.length, plural, =0 {} =1 {} other {s}}
-    <a mat-icon-button [routerLink]="link" fragment="producers">
+    <a mat-icon-button [routerLink]="link" fragment="producers" matTooltip="Edit">
       <mat-icon svgIcon="edit" color="primary"></mat-icon>
     </a>
   </h6>
@@ -78,7 +78,7 @@
 <article>
   <h6>
     Distributor{ movie.stakeholders.get('distributor').controls.length, plural, =0 {} =1 {} other {s}}
-    <a mat-icon-button [routerLink]="link" fragment="distributors">
+    <a mat-icon-button [routerLink]="link" fragment="distributors" matTooltip="Edit">
       <mat-icon svgIcon="edit" color="primary"></mat-icon>
     </a>
   </h6>
@@ -102,7 +102,7 @@
 <article>
   <h6>
     International Sales
-    <a mat-icon-button [routerLink]="link" fragment="sales">
+    <a mat-icon-button [routerLink]="link" fragment="sales" matTooltip="Edit">
       <mat-icon svgIcon="edit" color="primary"></mat-icon>
     </a>
   </h6>

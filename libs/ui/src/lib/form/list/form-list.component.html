@@ -10,7 +10,7 @@
         <mat-list-item *ngFor="let item of list; let index = index">
           <ng-template [ngTemplateOutlet]="itemRef || text" [ngTemplateOutletContext]="{ $implicit: item, index: index }" matLine>
           </ng-template>
-          <button mat-icon-button (click)="edit(index)">
+          <button mat-icon-button (click)="edit(index)" matTooltip="Edit">
             <mat-icon svgIcon="edit"></mat-icon>
           </button>
           <button mat-icon-button (click)="remove(index)">

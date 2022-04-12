@@ -1,7 +1,7 @@
 <!-- ORIGINAL VERSION -->
 <article>
   <h6>Original Version
-    <a mat-icon-button [routerLink]="link" fragment="original-version">
+    <a mat-icon-button [routerLink]="link" fragment="original-version" matTooltip="Edit">
       <mat-icon svgIcon="edit" color="primary"></mat-icon>
     </a>
   </h6>
@@ -16,7 +16,7 @@
 <article>
   <h6>
     Available Version{ versionLength, plural, =1 {} other {s}}
-    <a mat-icon-button [routerLink]="link" fragment="available-versions">
+    <a mat-icon-button [routerLink]="link" fragment="available-versions" matTooltip="Edit">
       <mat-icon svgIcon="edit" color="primary"></mat-icon>
     </a>
   </h6>

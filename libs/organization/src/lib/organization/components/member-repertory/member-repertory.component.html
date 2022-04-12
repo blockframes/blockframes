@@ -22,7 +22,7 @@
       </member-permissions>
     </ng-template>
     <ng-template *ngIf="showEdit" colRef="edit" label="Edit" let-edit>
-      <a [routerLink]="edit?.link">
+      <a mat-icon-button [routerLink]="edit?.link" matTooltip="Edit">
         <mat-icon svgIcon="edit"></mat-icon>
       </a>
     </ng-template>

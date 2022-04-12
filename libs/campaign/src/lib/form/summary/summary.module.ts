@@ -14,6 +14,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { SummaryFundingsComponent } from './fundings/fundings.component';
 import { SummaryProfitsComponent } from './profits/profits.component';
 import { SummaryBudgetComponent } from './budget/budget.component';
@@ -34,6 +35,7 @@ import { SummaryBudgetComponent } from './budget/budget.component';
     MissingControlModule,
     MatButtonModule,
     MatIconModule,
+    MatTooltipModule,
     RouterModule
   ]
 })

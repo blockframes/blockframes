@@ -16,6 +16,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { TableModule } from '../../list/table/table.module';
 
@@ -35,6 +36,7 @@ import { TableModule } from '../../list/table/table.module';
     MatIconModule,
     MatButtonModule,
     MatDividerModule,
+    MatTooltipModule,
   ],
   declarations: [FormTableComponent, FormViewDirective, QueryListFindPipe],
   exports: [FormTableComponent, FormViewDirective, TableModule, ButtonTextModule]

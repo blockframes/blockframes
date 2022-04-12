@@ -15,6 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
 import { RouterModule } from '@angular/router';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { RouterModule } from '@angular/router';
     MatIconModule,
     MatCardModule,
     MatListModule,
+    MatTooltipModule,
   ],
   exports: [
     MemberRepertoryComponent
